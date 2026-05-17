@@ -15,7 +15,19 @@ export function hebrewQuestionFingerprint(q) {
   const pf = q.params?.patternFamily || q.params?.subtype || "";
   const stem = hebrewStemNorm(q.question || q.exerciseText || "");
   const mode = q.answerMode || "";
-  return `${topic}|${pf}|${mode}|${stem}`;
+  const answers = Array.isArray(q.answers)
+    ? q.answers
+        .slice(0, 6)
+        .map((a) =>
+          String(a ?? "")
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .slice(0, 40)
+        )
+        .join("|")
+    : "";
+  return `${topic}|${pf}|${mode}|${stem}|${answers}`;
 }
 
 /** מפתח לדימוי כפול — תחילת גזע + נושא (לא כל הטקסט) */

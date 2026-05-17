@@ -18,6 +18,8 @@ import {
   saveScoreEntry,
 } from "../../utils/moledet-geography-storage";
 import { generateQuestion } from "../../utils/moledet-geography-question-generator";
+import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
+import { getQuestionFingerprintForSubject } from "../../utils/question-fingerprints";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
@@ -1065,8 +1067,7 @@ useEffect(() => {
       }
     }
 
-    // עותק מקומי של recentQuestions כדי לא לעדכן state בתוך הלולאה
-    const localRecentQuestions = new Set(recentQuestions);
+    const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
 
     do {
       let opForQuestion = operationForState;
@@ -1091,17 +1092,15 @@ useEffect(() => {
         break;
       }
 
-      // יצירת מפתח ייחודי לשאלה
-      const questionKey = question.question;
+      const questionKey =
+        getQuestionFingerprintForSubject(question, "moledet", {
+          grade,
+          topic: opForQuestion,
+        }) ||
+        `moledet|${question.question}|${question.correctAnswer}`;
 
-      // אם השאלה לא הייתה לאחרונה, נשתמש בה
-      if (!localRecentQuestions.has(questionKey)) {
-        localRecentQuestions.add(questionKey);
-        // שמירה רק על 60 שאלות אחרונות
-        if (localRecentQuestions.size > 60) {
-          const first = Array.from(localRecentQuestions)[0];
-          localRecentQuestions.delete(first);
-        }
+      if (localRecentQuestions.wouldAccept(questionKey)) {
+        localRecentQuestions.record(questionKey);
         break;
       }
     } while (attempts < maxAttempts);
@@ -1124,12 +1123,12 @@ useEffect(() => {
 
     // עדכון state רק פעם אחת אחרי הלולאה
     if (attempts >= maxAttempts) {
-      console.warn(`Too many attempts (${attempts}) to generate new question, resetting recent questions`);
-      // איפוס ההיסטוריה כדי לאפשר שאלות חוזרות
-      setRecentQuestions(new Set());
-    } else {
-      setRecentQuestions(localRecentQuestions);
+      console.warn(
+        `Too many attempts (${attempts}) to generate new question, softening anti-repeat buffer`
+      );
+      localRecentQuestions.softenOnExhaustion();
     }
+    setRecentQuestions(localRecentQuestions.toSet());
 
     // מעקב זמן - סיום שאלה קודמת (אם יש)
     trackCurrentQuestionTime();

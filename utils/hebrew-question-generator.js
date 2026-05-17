@@ -21,6 +21,11 @@ import {
   attachUpperGradeSubtopicParams,
 } from './hebrew-g3456-subtopic';
 import { pickDiagnosticContractFields } from './diagnostic-question-contract.js';
+import {
+  dedupeMcqOptionsInPlace,
+  rebalanceGenericHebrewReadingDistractors,
+} from './question-quality.js';
+import { hebrewStemNorm, hebrewQuestionFingerprint } from './hebrew-learning-intel.js';
 
 /** Layer 3: typing רק לפריטים עם preferredAnswerMode + תת־נושא מאושר (א׳–ב׳). */
 const G12_ALLOWED_TYPING_SUBTOPICS = new Set([
@@ -4476,43 +4481,36 @@ const G6_HARD_QUESTIONS = {
  * @param {{ answers: string[], correct: number, optionCount?: number }} q
  */
 function scrubHebrewMcqAnswers(q) {
-  const answers = Array.isArray(q.answers)
-    ? q.answers.map((a) => String(a ?? "").trim())
-    : [];
-  if (answers.length < 2) return;
-  let correctIdx = Number(q.correct);
-  if (!Number.isFinite(correctIdx) || correctIdx < 0 || correctIdx >= answers.length) {
-    correctIdx = 0;
-  }
-  const correctText = answers[correctIdx];
-  const banned = (t) =>
-    /כל\s*התשובות|שניהם\s*נכון|שנייהם\s*נכון|גם\s*וגם|^אף\s+אחת\s+לא$/i.test(
-      String(t).trim()
-    );
-  if (banned(correctText)) return;
+  if (!Array.isArray(q.answers) || q.answers.length < 2) return;
+  dedupeMcqOptionsInPlace(q);
+  rebalanceGenericHebrewReadingDistractors(q);
+}
 
-  const entries = answers
-    .map((t, i) => ({ t, isCorrect: i === correctIdx }))
-    .filter(({ t }) => t && !banned(t));
-  if (entries.length < 2) return;
+const MIN_HEBREW_TOPIC_POOL = 18;
 
-  const seen = new Map();
-  const acc = [];
-  for (const { t, isCorrect } of entries) {
-    const key = t.toLowerCase();
-    if (!seen.has(key)) {
-      seen.set(key, acc.length);
-      acc.push({ t, isCorrect });
-    } else if (isCorrect) {
-      acc[seen.get(key)] = { t, isCorrect: true };
-    }
+function dedupeHebrewPoolByStem(items) {
+  if (!Array.isArray(items) || items.length === 0) return [];
+  const seen = new Set();
+  const out = [];
+  for (const item of items) {
+    const k = hebrewStemNorm(item?.question || "");
+    if (!k || seen.has(k)) continue;
+    seen.add(k);
+    out.push(item);
   }
-  const out = acc.map((x) => x.t);
-  const newCorrect = acc.findIndex((x) => x.isCorrect);
-  if (newCorrect < 0 || out.length < 2) return;
-  q.answers = out;
-  q.correct = newCorrect;
-  if (q.optionCount != null) q.optionCount = out.length;
+  return out;
+}
+
+function augmentThinHebrewPool(merged, gradeKey, levelKey, topic) {
+  if (!merged || merged.length >= MIN_HEBREW_TOPIC_POOL) return merged;
+  const levels = ["easy", "medium", "hard"];
+  const extra = [];
+  for (const alt of levels) {
+    if (alt === levelKey) continue;
+    const leg = getQuestionsForGradeAndLevel(gradeKey, alt, topic);
+    extra.push(...mergeTopicPoolsRaw(gradeKey, alt, topic, leg));
+  }
+  return dedupeHebrewPoolByStem([...merged, ...extra]);
 }
 
 export function finalizeHebrewMcq(raw, selectedTopic, levelKey, gradeKey) {
@@ -4663,8 +4661,17 @@ function isShallowLegacyQuestion(raw, levelKey, gradeKey) {
   return false;
 }
 
-function pickWeightedHebrewItem(merged, levelKey, selectedTopic, gradeKey) {
+function pickWeightedHebrewItem(
+  merged,
+  levelKey,
+  selectedTopic,
+  gradeKey,
+  excludeFingerprints = null
+) {
   if (!merged || merged.length === 0) return null;
+  const exclude = excludeFingerprints instanceof Set ? excludeFingerprints : null;
+
+  const pickOne = () => {
   const rich = merged.filter((q) => q._fromRich === true);
   const legacy = merged.filter((q) => !q._fromRich);
   const legacyStrong = legacy.filter(
@@ -4673,16 +4680,59 @@ function pickWeightedHebrewItem(merged, levelKey, selectedTopic, gradeKey) {
   const ratio =
     levelKey === "hard" ? 0.82 : levelKey === "medium" ? 0.72 : 0.58;
   const roll = Math.random();
-  if (rich.length && roll < ratio) {
-    return rich[Math.floor(Math.random() * rich.length)];
+    if (rich.length && roll < ratio) {
+      return rich[Math.floor(Math.random() * rich.length)];
+    }
+    if (legacyStrong.length) {
+      return legacyStrong[Math.floor(Math.random() * legacyStrong.length)];
+    }
+    return merged[Math.floor(Math.random() * merged.length)];
+  };
+
+  if (!exclude || exclude.size === 0) {
+    return pickOne();
   }
-  if (legacyStrong.length) {
-    return legacyStrong[Math.floor(Math.random() * legacyStrong.length)];
+
+  for (let attempt = 0; attempt < 48; attempt++) {
+    const raw = pickOne();
+    if (!raw) return null;
+    const preview = finalizeHebrewMcq(
+      { ...raw },
+      selectedTopic,
+      levelKey,
+      gradeKey
+    );
+    const fp = hebrewQuestionFingerprint({
+      topic: selectedTopic,
+      question: preview.question,
+      answers: preview.answers,
+      params: { patternFamily: preview.patternFamily, subtype: preview.subtype },
+    });
+    if (!exclude.has(fp)) return raw;
   }
-  return merged[Math.floor(Math.random() * merged.length)];
+
+  const unused = merged.filter((raw) => {
+    const preview = finalizeHebrewMcq(
+      { ...raw },
+      selectedTopic,
+      levelKey,
+      gradeKey
+    );
+    const fp = hebrewQuestionFingerprint({
+      topic: selectedTopic,
+      question: preview.question,
+      answers: preview.answers,
+      params: { patternFamily: preview.patternFamily, subtype: preview.subtype },
+    });
+    return !exclude.has(fp);
+  });
+  if (unused.length) {
+    return unused[Math.floor(Math.random() * unused.length)];
+  }
+  return pickOne();
 }
 
-function mergeTopicPools(gradeKey, levelKey, topic, legacyList) {
+function mergeTopicPoolsRaw(gradeKey, levelKey, topic, legacyList) {
   const richRows = filterRichHebrewPool(gradeKey, levelKey, topic);
   const fromRich = richRows.map(
     ({
@@ -4698,7 +4748,12 @@ function mergeTopicPools(gradeKey, levelKey, topic, legacyList) {
     })
   );
   const base = Array.isArray(legacyList) ? [...legacyList] : [];
-  return base.concat(fromRich);
+  return dedupeHebrewPoolByStem(base.concat(fromRich));
+}
+
+function mergeTopicPools(gradeKey, levelKey, topic, legacyList) {
+  const merged = mergeTopicPoolsRaw(gradeKey, levelKey, topic, legacyList);
+  return augmentThinHebrewPool(merged, gradeKey, levelKey, topic);
 }
 
 /** מאגרי עברית חיים ב־UI — לא `data/hebrew-questions/*` (אין ייבוא בריפו). */
@@ -4822,7 +4877,17 @@ function getQuestionsForGradeAndLevel(gradeKey, levelKey, topic) {
 }
 
 // ========== פונקציה עיקרית ליצירת שאלה ==========
-export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = null) {
+export function generateQuestion(
+  levelConfig,
+  topic,
+  gradeKey,
+  mixedTopics = null,
+  selectionOpts = null
+) {
+  const excludeFingerprints =
+    selectionOpts?.excludeFingerprints instanceof Set
+      ? selectionOpts.excludeFingerprints
+      : null;
   const gradeCfg = GRADES[gradeKey] || GRADES.g3;
 
   let allowedTopics = gradeCfg.topics.filter((t) => t !== "mixed");
@@ -5054,7 +5119,8 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
       mergedForPick,
       fallbackLevelKey,
       fallbackTopic,
-      gradeKey
+      gradeKey,
+      excludeFingerprints
     );
     const randomQ = finalizeHebrewMcq(
       rawPick,
@@ -5146,7 +5212,8 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
     topicQuestionsMerged,
     poolLevelKey,
     selectedTopic,
-    gradeKey
+    gradeKey,
+    excludeFingerprints
   );
   const randomQ = finalizeHebrewMcq(
     rawPick,

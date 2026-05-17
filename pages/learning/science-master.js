@@ -48,6 +48,7 @@ import {
 } from "../../utils/learning-ui-classes";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import { buildQuestionFingerprint } from "../../utils/question-quality";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import { warnDuplicateMcqOptionsDevOnly } from "../../utils/answer-compare";
 import {
@@ -310,6 +311,7 @@ function loadScienceIntel() {
     return {
       topicStats: {},
       recentIds: [],
+      recentStemFps: [],
       answerTail: [],
       topicAnswerTails: {},
     };
@@ -320,6 +322,7 @@ function loadScienceIntel() {
       return {
         topicStats: {},
         recentIds: [],
+      recentStemFps: [],
         answerTail: [],
         topicAnswerTails: {},
       };
@@ -329,6 +332,7 @@ function loadScienceIntel() {
       return {
         topicStats: {},
         recentIds: [],
+      recentStemFps: [],
         answerTail: [],
         topicAnswerTails: {},
       };
@@ -337,11 +341,15 @@ function loadScienceIntel() {
     const recentIds = sanitizeRecentIds(p.recentIds);
     const answerTail = sanitizeAnswerTail(p.answerTail);
     const topicAnswerTails = sanitizeTopicAnswerTails(p.topicAnswerTails);
-    return { topicStats, recentIds, answerTail, topicAnswerTails };
+    const recentStemFps = Array.isArray(p.recentStemFps)
+      ? p.recentStemFps.map(String).slice(-40)
+      : [];
+    return { topicStats, recentIds, recentStemFps, answerTail, topicAnswerTails };
   } catch {
     return {
       topicStats: {},
       recentIds: [],
+      recentStemFps: [],
       answerTail: [],
       topicAnswerTails: {},
     };
@@ -355,6 +363,9 @@ function persistScienceIntel(intel) {
       v: INTEL_FORMAT_VERSION,
       topicStats: sanitizeTopicStats(intel.topicStats),
       recentIds: sanitizeRecentIds(intel.recentIds),
+      recentStemFps: Array.isArray(intel.recentStemFps)
+        ? intel.recentStemFps.slice(-40)
+        : [],
       answerTail: sanitizeAnswerTail(intel.answerTail),
       topicAnswerTails: sanitizeTopicAnswerTails(intel.topicAnswerTails),
     };
@@ -1394,13 +1405,25 @@ useEffect(() => {
     setInsightRevision((n) => n + 1);
   }
 
-  function pushRecentQuestionId(qid) {
-    if (!qid) return;
+  function pushRecentQuestionId(q, qid) {
     const intel = scienceIntelRef.current;
-    const next = [...intel.recentIds.filter((x) => x !== qid), qid].slice(
-      -INTEL_RECENT_MAX
-    );
-    intel.recentIds = next;
+    if (qid) {
+      intel.recentIds = [...intel.recentIds.filter((x) => x !== qid), qid].slice(
+        -INTEL_RECENT_MAX
+      );
+    }
+    if (q) {
+      const stemFp = buildQuestionFingerprint(q, {
+        subject: "science",
+        topic: q.topic,
+      });
+      if (stemFp) {
+        intel.recentStemFps = [
+          ...(intel.recentStemFps || []).filter((x) => x !== stemFp),
+          stemFp,
+        ].slice(-40);
+      }
+    }
     persistScienceIntel(intel);
   }
 
@@ -1863,6 +1886,10 @@ function saveScienceAnswerInParallel({
 
     const intel = scienceIntelRef.current;
     const recentSet = new Set(intel.recentIds);
+    const recentStemSet = new Set(intel.recentStemFps || []);
+    const lastStemFp = (intel.recentStemFps || [])[
+      (intel.recentStemFps || []).length - 1
+    ];
     const smartPicking = focusedPracticeMode !== "mistakes";
 
     const probeAtStart = pendingDiagnosticProbeRef.current;
@@ -1874,7 +1901,16 @@ function saveScienceAnswerInParallel({
     const usedRetryDequeue = !!q;
 
     if (!q) {
-      const avoidRecent = pool.filter((item) => !recentSet.has(item.id));
+      const avoidRecent = pool.filter((item) => {
+        if (recentSet.has(item.id)) return false;
+        const fp = buildQuestionFingerprint(item, {
+          subject: "science",
+          topic: item.topic,
+        });
+        if (fp && recentStemSet.has(fp)) return false;
+        if (fp && lastStemFp && fp === lastStemFp) return false;
+        return true;
+      });
       const usedRecentFallback = avoidRecent.length === 0;
       const eligible = usedRecentFallback ? pool : avoidRecent;
 
@@ -1917,7 +1953,7 @@ function saveScienceAnswerInParallel({
       q = randomItem(pool);
     }
 
-    pushRecentQuestionId(q.id);
+    pushRecentQuestionId(q, q.id);
 
     // ערבוב התשובות (options) - Fisher-Yates shuffle
     let shuffledOptions = [...(q.options || [])];

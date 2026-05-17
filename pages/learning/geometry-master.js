@@ -24,6 +24,7 @@ import {
   newGeometryMistakeId,
   buildGeometryQuestionSnapshot,
 } from "../../utils/geometry-learning-intel";
+import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
 import { generateQuestion } from "../../utils/geometry-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
@@ -884,8 +885,7 @@ useEffect(() => {
     let attempts = 0;
     const maxAttempts = 50;
     
-    // עותק מקומי של recentQuestions כדי לא לעדכן state בתוך הלולאה
-    const localRecentQuestions = new Set(recentQuestions);
+    const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
     const probeAtSessionStart = geometryPendingDiagnosticProbeRef.current;
 
     do {
@@ -1002,17 +1002,15 @@ useEffect(() => {
       const lineageBlock =
         conceptualKind && lineageRepeats >= 3 && attempts < maxAttempts - 2;
 
-      if (!localRecentQuestions.has(questionKey) && !lineageBlock) {
-        localRecentQuestions.add(questionKey);
+      if (
+        localRecentQuestions.wouldAccept(questionKey, lineageKey) &&
+        !lineageBlock
+      ) {
+        localRecentQuestions.record(questionKey, lineageKey);
         if (conceptualKind) {
           geometryConceptLineageTailRef.current = [...lineageTail, lineageKey].slice(
             -14
           );
-        }
-        // שמירה רק על 60 שאלות אחרונות
-        if (localRecentQuestions.size > 60) {
-          const first = Array.from(localRecentQuestions)[0];
-          localRecentQuestions.delete(first);
         }
         break;
       }
@@ -1025,13 +1023,15 @@ useEffect(() => {
     
     // עדכון state רק פעם אחת אחרי הלולאה
     if (attempts >= maxAttempts) {
-      console.warn(`Too many attempts (${attempts}) to generate new question, resetting recent questions`);
-      // איפוס ההיסטוריה כדי לאפשר שאלות חוזרות
-      setRecentQuestions(new Set());
-      geometryConceptLineageTailRef.current = [];
-    } else {
-      setRecentQuestions(localRecentQuestions);
+      console.warn(
+        `Too many attempts (${attempts}) to generate new question, softening anti-repeat buffer`
+      );
+      localRecentQuestions.softenOnExhaustion();
+      geometryConceptLineageTailRef.current = geometryConceptLineageTailRef.current.slice(
+        -6
+      );
     }
+    setRecentQuestions(localRecentQuestions.toSet());
     
     // בדיקה שהשאלה תקינה לפני הצגתה
     if (!question || !question.answers || question.answers.length === 0) {

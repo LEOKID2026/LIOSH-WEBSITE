@@ -138,6 +138,7 @@ export function runIntegrityChecks(normalized, ctx = {}) {
         });
       }
     }
+
   } else if (!hasCorrect) {
     /* numeric / open answer */
     warnings.push({ code: "non_mcq_shape", message: "no answers array — assuming numeric/free response" });

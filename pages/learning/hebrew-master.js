@@ -26,6 +26,7 @@ import {
   hebrewCognitiveTemplateKey,
   hebrewTaskShapeKey,
 } from "../../utils/hebrew-learning-intel";
+import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
 import {
   getHint,
   getSolutionSteps,
@@ -1260,8 +1261,7 @@ useEffect(() => {
       }
     }
 
-    // עותק מקומי של recentQuestions כדי לא לעדכן state בתוך הלולאה
-    const localRecentQuestions = new Set(recentQuestions);
+    const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
 
     const probeAtStart = hebrewPendingDiagnosticProbeRef.current;
     const probeCandidate =
@@ -1286,7 +1286,8 @@ useEffect(() => {
         levelConfigCopy,
         opForQuestion,
         grade,
-        opForQuestion === "mixed" ? mixedOperations : null
+        opForQuestion === "mixed" ? mixedOperations : null,
+        { excludeFingerprints: localRecentQuestions.toSet() }
       );
       attempts++;
 
@@ -1321,7 +1322,7 @@ useEffect(() => {
       const taskShapeBlock = earlyHebrewChild && taskShapeRepeats >= 2;
 
       const baseOk =
-        !localRecentQuestions.has(questionKey) &&
+        localRecentQuestions.wouldAccept(questionKey, nearKey) &&
         !pfCooldownBlock &&
         !nearBlock &&
         !cogBlock &&
@@ -1355,16 +1356,11 @@ useEffect(() => {
             };
           }
         }
-        localRecentQuestions.add(questionKey);
+        localRecentQuestions.record(questionKey, nearKey);
         hebrewPatternFamilyTailRef.current = [...tail, pf || "gen"].slice(-12);
         hebrewNearDuplicateTailRef.current = [...nearTail, nearKey].slice(-16);
         hebrewCognitiveTemplateTailRef.current = [...cogTail, cogKey].slice(-12);
         hebrewTaskShapeTailRef.current = [...taskShapeTail, taskShapeKey || "gen"].slice(-10);
-        // שמירה רק על 60 שאלות אחרונות
-        if (localRecentQuestions.size > 60) {
-          const first = Array.from(localRecentQuestions)[0];
-          localRecentQuestions.delete(first);
-        }
         break;
       }
     } while (attempts < maxAttempts);
@@ -1376,16 +1372,16 @@ useEffect(() => {
 
     // עדכון state רק פעם אחת אחרי הלולאה
     if (attempts >= maxAttempts) {
-      console.warn(`Too many attempts (${attempts}) to generate new question, resetting recent questions`);
-      // איפוס ההיסטוריה כדי לאפשר שאלות חוזרות
-      setRecentQuestions(new Set());
-      hebrewPatternFamilyTailRef.current = [];
-      hebrewNearDuplicateTailRef.current = [];
-      hebrewCognitiveTemplateTailRef.current = [];
-      hebrewTaskShapeTailRef.current = [];
-    } else {
-      setRecentQuestions(localRecentQuestions);
+      console.warn(
+        `Too many attempts (${attempts}) to generate new question, softening anti-repeat buffer`
+      );
+      localRecentQuestions.softenOnExhaustion();
+      hebrewPatternFamilyTailRef.current = hebrewPatternFamilyTailRef.current.slice(-4);
+      hebrewNearDuplicateTailRef.current = hebrewNearDuplicateTailRef.current.slice(-6);
+      hebrewCognitiveTemplateTailRef.current = hebrewCognitiveTemplateTailRef.current.slice(-4);
+      hebrewTaskShapeTailRef.current = hebrewTaskShapeTailRef.current.slice(-4);
     }
+    setRecentQuestions(localRecentQuestions.toSet());
 
     // מעקב זמן - סיום שאלה קודמת (אם יש)
     trackCurrentQuestionTime();

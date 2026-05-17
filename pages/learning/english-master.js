@@ -64,6 +64,7 @@ import {
   TRANSLATION_POOLS,
 } from "../../data/english-questions";
 import { englishQuestionFingerprint } from "../../utils/english-learning-intel";
+import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
 import {
   englishClassSplitBucket,
   englishPoolItemAllowedWithClassSplit,
@@ -2264,7 +2265,7 @@ const refreshMonthlyProgress = useCallback(() => {
     let attempts = 0;
     const maxAttempts = 50;
     trackCurrentQuestionTime();
-    const localRecentQuestions = new Set(recentQuestions);
+    const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
     const probeAtStart = englishPendingDiagnosticProbeRef.current;
     const probeMetaHolder = { current: null };
     do {
@@ -2282,20 +2283,15 @@ const refreshMonthlyProgress = useCallback(() => {
       );
       attempts++;
       const questionKey = englishQuestionFingerprint(question);
-      if (!localRecentQuestions.has(questionKey)) {
-        localRecentQuestions.add(questionKey);
-        if (localRecentQuestions.size > 48) {
-          const first = Array.from(localRecentQuestions)[0];
-          localRecentQuestions.delete(first);
-        }
+      if (localRecentQuestions.wouldAccept(questionKey)) {
+        localRecentQuestions.record(questionKey);
         break;
       }
     } while (attempts < maxAttempts);
     if (attempts >= maxAttempts) {
-      setRecentQuestions(new Set());
-    } else {
-      setRecentQuestions(localRecentQuestions);
+      localRecentQuestions.softenOnExhaustion();
     }
+    setRecentQuestions(localRecentQuestions.toSet());
     question.gradeKey = gradeForQuestion;
     question.levelKey = levelForQuestion;
     question.practiceFocus = mode === "practice" ? practiceFocus : "default";

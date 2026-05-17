@@ -29,6 +29,7 @@ import {
   newMathMistakeId,
   buildMathQuestionSnapshot,
 } from "../../utils/math-learning-intel";
+import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
 import {
   getHint,
   getSolutionSteps,
@@ -1431,8 +1432,7 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
       }
     }
 
-    // עותק מקומי של recentQuestions כדי לא לעדכן state בתוך הלולאה
-    const localRecentQuestions = new Set(recentQuestions);
+    const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
 
     const probeAtStart = mathPendingDiagnosticProbeRef.current;
     const probeMetaHolder = { current: null };
@@ -1464,26 +1464,19 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
         mathQuestionFingerprint(question) ||
         `fallback|${question.question}|${question.correctAnswer}`;
 
-      // אם השאלה לא הייתה לאחרונה, נשתמש בה
-      if (!localRecentQuestions.has(questionKey)) {
-        localRecentQuestions.add(questionKey);
-        // שמירה רק על 60 שאלות אחרונות
-        if (localRecentQuestions.size > 60) {
-          const first = Array.from(localRecentQuestions)[0];
-          localRecentQuestions.delete(first);
-        }
+      if (localRecentQuestions.wouldAccept(questionKey)) {
+        localRecentQuestions.record(questionKey);
         break;
       }
     } while (attempts < maxAttempts);
 
-    // עדכון state רק פעם אחת אחרי הלולאה
     if (attempts >= maxAttempts) {
-      console.warn(`Too many attempts (${attempts}) to generate new question, resetting recent questions`);
-      // איפוס ההיסטוריה כדי לאפשר שאלות חוזרות
-      setRecentQuestions(new Set());
-    } else {
-      setRecentQuestions(localRecentQuestions);
+      console.warn(
+        `Too many attempts (${attempts}) to generate new question, softening anti-repeat buffer`
+      );
+      localRecentQuestions.softenOnExhaustion();
     }
+    setRecentQuestions(localRecentQuestions.toSet());
 
     // מעקב זמן - סיום שאלה קודמת (אם יש)
     if (questionStartTime) {

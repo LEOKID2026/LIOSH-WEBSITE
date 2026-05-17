@@ -54,6 +54,8 @@
     "audit:hebrew-subtopics": "tsx scripts/hebrew-subtopic-coverage-audit.mjs",
     "audit:questions": "tsx scripts/generator-deterministic-harness.mjs && tsx scripts/audit-question-banks.mjs",
     "qa:student-question-stem-metadata": "tsx scripts/qa-student-question-stem-metadata.mjs",
+    "qa:question-quality": "tsx scripts/qa-question-quality.mjs",
+    "qa:session-question-variety": "tsx scripts/qa-session-question-variety.mjs",
     "test:e2e:stem-metadata": "playwright test tests/e2e/student-question-stem-metadata.spec.ts --project=chromium",
     "test:e2e:question-display": "playwright test tests/e2e/student-question-display.spec.ts tests/e2e/student-question-display-closure.spec.ts --project=chromium",
     "audit:curriculum:inventory": "tsx scripts/curriculum-audit/scan-question-inventory.mjs",
