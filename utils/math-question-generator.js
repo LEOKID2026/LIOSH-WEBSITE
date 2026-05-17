@@ -3,6 +3,7 @@ import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contrac
 import { probeMatchesSession } from './active-diagnostic-runtime/session-match.js';
 import { attachProfessionalMathMetadata } from './math-question-metadata.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
+import { attachMathEquationInstructionLabel } from './student-question-display.js';
 
 function mathLevelKeyFromConfig(levelConfig) {
   const n = String(levelConfig?.name || "").trim();
@@ -394,9 +395,8 @@ function applyMathLevelPresentation(question, ctx) {
       g5: "מצאו את הנעלם:",
       g6: "מצאו x:",
     };
-    const opener = openers[gradeKey] || "השלימו את המשוואה:";
     if (/^מצאו|^השלימו|^חידת/.test(raw.trim())) return raw;
-    return `${opener} ${raw}`;
+    return raw;
   }
 
   const looksNumericExercise =
@@ -1016,11 +1016,14 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
 
   const finalizeMathQuestionOutput = (out) =>
     sanitizeQuestionForStudentDisplay(
-      attachProfessionalMathMetadata(out, {
-        selectedOp,
-        gradeKey,
-        mathLevelKey,
-      })
+      attachMathEquationInstructionLabel(
+        attachProfessionalMathMetadata(out, {
+          selectedOp,
+          gradeKey,
+          mathLevelKey,
+        }),
+        gradeKey
+      )
     );
 
   const densSmallProbe = [2, 4, 5, 10];

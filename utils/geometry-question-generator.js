@@ -532,7 +532,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
             const rw = Math.floor(Math.random() * 3);
             if (levelKey === "easy") {
               question = [
-                `מלבן אורך ${length}, רוחב ${width}: שטח = אורך×רוחב. מה התוצאה?`,
+                `מלבן אורך ${length}, רוחב ${width}: שטח = אורך × רוחב. מה התוצאה?`,
                 `מלבן במישור: ${length} על ${width}. מה שטח הפנים?`,
                 `כפל אורך ברוחב — מלבן ${length}×${width}. מה יוצא?`,
               ][rw];
@@ -573,7 +573,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
             question = `משולש: בסיס ${base}, גובה ${height}. שטח ≈ חצי מ־(בסיס × גובה). כמה?`;
           } else if (formulaBand === "mid") {
             if (levelKey === "easy") {
-              question = `משולש בסיס ${base}, גובה ${height}: שטח = חצי×בסיס×גובה. מה התוצאה?`;
+              question = `משולש בסיס ${base}, גובה ${height}: שטח = חצי × בסיס × גובה. מה התוצאה?`;
             } else if (levelKey === "medium") {
               question = `מה השטח של משולש עם בסיס ${base} וגובה ${height}?`;
             } else {
@@ -593,7 +593,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           if (formulaBand === "late") {
             question = `מקבילית במישור: בסיס ${base}, גובה לבסיס ${height}. מה השטח?`;
           } else if (levelKey === "easy") {
-            question = `מקבילית: בסיס ${base}, גובה ${height}. שטח = בסיס×גובה. מה התוצאה?`;
+            question = `מקבילית: בסיס ${base}, גובה ${height}. שטח = בסיס × גובה. מה התוצאה?`;
           } else if (levelKey === "medium") {
             question = `מה השטח של מקבילית עם בסיס ${base} וגובה ${height}?`;
           } else {

@@ -18,6 +18,7 @@ import {
   saveScoreEntry,
 } from "../../utils/moledet-geography-storage";
 import { generateQuestion } from "../../utils/moledet-geography-question-generator";
+import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import {
   getHint,
   getSolutionSteps,
@@ -1137,7 +1138,7 @@ useEffect(() => {
     }
     moledetTrackingTopicKeyRef.current =
       question.topic || question.operation || "mixed";
-    setCurrentQuestion(question);
+    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
     setSelectedAnswer(null);
     setFeedback(null);
     setQuestionStartTime(Date.now());
@@ -3172,7 +3173,10 @@ useEffect(() => {
                     </div>
                   )}
 
-                  <div className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2">
+                  <div
+                    data-testid="moledet-question-stem"
+                    className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2"
+                  >
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
                     <div className="mb-4 flex gap-6 items-center justify-center flex-wrap" style={{ direction: "ltr" }}>

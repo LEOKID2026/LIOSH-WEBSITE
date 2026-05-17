@@ -11,6 +11,7 @@ const {
   collectStudentFacingStemsFromQuestion,
   detectStudentStemMetadataLeaks,
   sanitizeQuestionForStudentDisplay,
+  sanitizeStudentQuestionStem,
 } = await import("../utils/student-question-stem-sanitizer.js");
 const { generateForMatrixCell, SUPPORTED_SUBJECTS } = await import(
   "./learning-simulator/lib/question-generator-adapters.mjs"
@@ -23,6 +24,71 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const OUT_DIR = join(ROOT, "reports", "question-audit");
 const OUT_JSON = join(OUT_DIR, "student-stem-metadata-leaks.json");
+const OUT_EXAMPLES = join(OUT_DIR, "student-stem-metadata-examples.json");
+
+const BEFORE_AFTER_SEEDS = [
+  {
+    subject: "math",
+    topic: "equations",
+    before:
+      "רמה קלה — משוואה, מצאו את הנעלם: ___ = 1 × 5 + 12 · כיתה ג׳",
+  },
+  {
+    subject: "geometry",
+    topic: "area",
+    before:
+      "(כיתה ג׳) מושגים (קל): רוצים גדר סביב מגרש מלבני. במה בדרך כלל מחשבים כדי לדעת כמה חומר גדר לקנות?",
+  },
+  {
+    subject: "science",
+    topic: "body",
+    before:
+      "סימון ייחודי זוהה · כיתה ג׳ · נושא body · רמת easy · חקר בית־ספרי: מה ההתנהגות המתאימה יותר כשמתמקדים בסיווג תוצאות לפי קריטריון ברור?",
+  },
+  {
+    subject: "hebrew",
+    topic: "grammar",
+    before: "בהתאם לכיתה ג׳ [רמה easy]: איזה משפט נכון?",
+  },
+  {
+    subject: "english",
+    topic: "vocabulary",
+    before: "(כיתה ד׳) · רמת medium · Choose the correct word:",
+  },
+  {
+    subject: "moledet",
+    topic: "homeland",
+    before: "שאלה בנושא: מולדת — מהו סמל המדינה?",
+  },
+  {
+    subject: "math",
+    topic: "addition",
+    before: "(כיתה א׳) חישוב קל: 3 + 4 = __",
+  },
+  {
+    subject: "geometry",
+    topic: "perimeter",
+    before: "כיתה ד׳: מה היקף המלבן עם צלע 5 ס״מ?",
+  },
+  {
+    subject: "science",
+    topic: "materials",
+    before: "נושא materials · רמת hard · מה מאפיין חומר מבודד?",
+  },
+  {
+    subject: "hebrew",
+    topic: "reading",
+    before: "זיהוי כתיב: קרא את המילה ___",
+  },
+];
+
+const PRESERVATION_MUST_KEEP = [
+  "בכיתה יש 24 תלמידים ו-6 תלמידות. כמה תלמידים בסך הכול?",
+  "בבית הספר יש מגרש מלבני. רוצים גדר סביב המגרש.",
+  "מה נושא המשפט הראשי בקטע?",
+  "לפני ניסוי בכיתה, מה חשוב לתעד?",
+  "איך נבדיל פשוט בין חומר מוליך חשמלי למבודד בכיתה?",
+];
 
 const SAMPLES_PER_CELL = Math.max(
   1,
@@ -166,9 +232,41 @@ async function scanEnglishPools() {
   }
 }
 
+function buildBeforeAfterReport() {
+  return BEFORE_AFTER_SEEDS.map((row) => {
+    const after = sanitizeStudentQuestionStem(row.before);
+    return { ...row, after };
+  });
+}
+
+function verifyPreservation() {
+  const failures = [];
+  for (const raw of PRESERVATION_MUST_KEEP) {
+    const cleaned = sanitizeStudentQuestionStem(raw);
+    if (cleaned !== raw.trim()) {
+      failures.push({ raw, cleaned, reason: "over-cleaned" });
+    }
+    const { leak } = detectStudentStemMetadataLeaks(cleaned);
+    if (leak) failures.push({ raw, cleaned, reason: "false-positive-leak" });
+  }
+  return failures;
+}
+
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
   leaks.length = 0;
+
+  const preservationFailures = verifyPreservation();
+  if (preservationFailures.length > 0) {
+    console.error("FAIL: sanitizer over-cleaned preserved educational wording");
+    for (const f of preservationFailures.slice(0, 5)) {
+      console.error(`  [${f.reason}] ${f.raw.slice(0, 80)} → ${f.cleaned.slice(0, 80)}`);
+    }
+    process.exit(1);
+  }
+
+  const beforeAfterExamples = buildBeforeAfterReport();
+  await writeFile(OUT_EXAMPLES, JSON.stringify({ beforeAfterExamples }, null, 2), "utf8");
 
   await scanGeneratedSubjects();
   await scanScienceBank();
@@ -179,6 +277,8 @@ async function main() {
     samplesPerCell: SAMPLES_PER_CELL,
     leakCount: leaks.length,
     leaks: leaks.slice(0, 500),
+    beforeAfterExamples,
+    preservationChecked: PRESERVATION_MUST_KEEP.length,
   };
   await writeFile(OUT_JSON, JSON.stringify(payload, null, 2), "utf8");
 

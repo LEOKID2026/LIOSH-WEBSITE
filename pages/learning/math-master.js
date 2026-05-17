@@ -18,6 +18,8 @@ import {
   saveScoreEntry,
 } from "../../utils/math-storage";
 import { generateQuestion } from "../../utils/math-question-generator";
+import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
   loadMathIntel,
   persistMathIntel,
@@ -1551,7 +1553,7 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
 
     mathTrackingOperationKeyRef.current = question.operation;
     if (currentQuestion) setPreviousExplanationQuestion(currentQuestion);
-    setCurrentQuestion(question);
+    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
     setSelectedAnswer(null);
     setTextAnswer("");
     setFeedback(null);
@@ -4261,78 +4263,62 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
                       )}
 
                     {/* הפרדה בין שורת השאלה לשורת התרגיל */}
-                    {currentQuestion.exerciseText ? (
+                    {isVerticalDisplay &&
+                    canDisplayVertically &&
+                    currentQuestion.exerciseText ? (
                       <div className="relative w-full pr-2 pl-2 pt-0">
-                        {currentQuestion.questionLabel && (
-                          <div className="w-full flex justify-center">
-                            <p
-                              className="text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full"
-                              style={{
-                                direction: "rtl",
-                                unicodeBidi: "plaintext",
-                                ...getQuestionFontStyle({
-                                  text: currentQuestion.questionLabel,
-                                  kind: "label",
-                                }),
-                              }}
-                            >
-                              {currentQuestion.questionLabel}
-                            </p>
-                          </div>
-                        )}
+                        {currentQuestion.questionLabel ? (
+                          <p
+                            className="text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full px-2"
+                            dir="rtl"
+                            data-testid="student-question-lead"
+                            style={{
+                              direction: "rtl",
+                              unicodeBidi: "plaintext",
+                              ...getQuestionFontStyle({
+                                text: currentQuestion.questionLabel,
+                                kind: "label",
+                              }),
+                            }}
+                          >
+                            {currentQuestion.questionLabel}
+                          </p>
+                        ) : null}
 
-                        {/* תצוגת התרגיל - מאוזן או מאונך */}
-                        {isVerticalDisplay && canDisplayVertically ? (
-                          <div className="flex justify-center w-full max-w-full px-2">
-                            <pre
-                              className="text-3xl text-center text-white font-bold font-mono whitespace-pre break-words overflow-wrap-anywhere max-w-full"
-                              style={{
-                                direction: "ltr",
-                                unicodeBidi: "plaintext",
-                                ...getQuestionFontStyle({
-                                  text: getVerticalExercise() || currentQuestion.exerciseText,
-                                }),
-                              }}
-                            >
-                              {getVerticalExercise() || currentQuestion.exerciseText}
-                            </pre>
-                          </div>
-                        ) : (
-                          <div className="w-full flex justify-center">
-                            <p
-                              className={`text-4xl text-center text-white font-bold break-words overflow-wrap-anywhere max-w-full px-2 ${
-                                currentQuestion.operation === "sequences"
-                                  ? "whitespace-normal"
-                                  : ""
-                              }`}
-                              style={{
-                                direction: "ltr",
-                                unicodeBidi: "plaintext",
-                                ...getQuestionFontStyle({
-                                  text: currentQuestion.exerciseText,
-                                }),
-                              }}
-                            >
-                              {currentQuestion.exerciseText}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="w-full flex justify-center">
                         <div
-                          className="text-4xl font-black text-white text-center break-words overflow-wrap-anywhere max-w-full px-2"
-                          style={{
-                            direction: currentQuestion.isStory ? "rtl" : "ltr",
-                            unicodeBidi: "plaintext",
-                            ...getQuestionFontStyle({
-                              text: currentQuestion.question,
-                            }),
-                          }}
+                          className="flex justify-center w-full max-w-full px-2 overflow-x-auto"
+                          data-testid="student-question-body"
+                          dir="ltr"
                         >
-                          {currentQuestion.question}
+                          <pre
+                            className="text-3xl text-center text-white font-bold font-mono whitespace-pre"
+                            style={{
+                              direction: "ltr",
+                              unicodeBidi: "isolate",
+                              ...getQuestionFontStyle({
+                                text:
+                                  getVerticalExercise() ||
+                                  currentQuestion.exerciseText,
+                              }),
+                            }}
+                          >
+                            {getVerticalExercise() || currentQuestion.exerciseText}
+                          </pre>
                         </div>
                       </div>
+                    ) : (
+                      <StudentQuestionDisplay
+                        question={currentQuestion.question}
+                        questionLabel={currentQuestion.questionLabel}
+                        exerciseText={currentQuestion.exerciseText}
+                        getQuestionFontStyle={getQuestionFontStyle}
+                        wrapperClassName="relative w-full pr-2 pl-2 pt-0 w-full flex flex-col items-center justify-center gap-1"
+                        bodyClassName={`text-4xl text-center text-white font-bold max-w-full px-2 ${
+                          currentQuestion.operation === "sequences"
+                            ? "whitespace-normal break-words overflow-wrap-anywhere"
+                            : ""
+                        }`}
+                      />
                     )}
                   </div>
 

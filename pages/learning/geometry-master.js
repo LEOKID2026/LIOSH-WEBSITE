@@ -25,6 +25,8 @@ import {
   buildGeometryQuestionSnapshot,
 } from "../../utils/geometry-learning-intel";
 import { generateQuestion } from "../../utils/geometry-question-generator";
+import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
   getHint,
   buildGeometryAnimationSteps,
@@ -1076,7 +1078,7 @@ useEffect(() => {
 
     decrementPendingProbeExpiry(geometryPendingDiagnosticProbeRef);
 
-    setCurrentQuestion(question);
+    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
     setSelectedAnswer(null);
     setTextAnswer("");
     setFeedback(null);
@@ -2948,49 +2950,15 @@ useEffect(() => {
                     </div>
                   ) : (
                     <>
-                      {/* הפרדה בין שורת השאלה לשורת התרגיל */}
-                      {currentQuestion.questionLabel && currentQuestion.exerciseText ? (
-                        <>
-                          <p
-                            className="text-xl text-center text-white mb-1"
-                            style={{
-                              direction: "rtl",
-                              unicodeBidi: "plaintext",
-                              ...getQuestionFontStyle({
-                                text: currentQuestion.questionLabel,
-                                kind: "label",
-                              }),
-                            }}
-                          >
-                            {currentQuestion.questionLabel}
-                          </p>
-                          <p
-                            className="text-3xl text-center text-white font-bold whitespace-nowrap"
-                            style={{
-                              direction: "ltr",
-                              unicodeBidi: "plaintext",
-                              ...getQuestionFontStyle({
-                                text: currentQuestion.exerciseText,
-                              }),
-                            }}
-                          >
-                            {currentQuestion.exerciseText}
-                          </p>
-                        </>
-                      ) : (
-                        <div
-                          className="text-3xl font-black text-white text-center"
-                          style={{
-                            direction: "rtl",
-                            unicodeBidi: "plaintext",
-                            ...getQuestionFontStyle({
-                              text: currentQuestion.question,
-                            }),
-                          }}
-                        >
-                          {currentQuestion.question}
-                        </div>
-                      )}
+                      <StudentQuestionDisplay
+                        question={currentQuestion.question}
+                        questionLabel={currentQuestion.questionLabel}
+                        exerciseText={currentQuestion.exerciseText}
+                        getQuestionFontStyle={getQuestionFontStyle}
+                        leadClassName="text-xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
+                        formulaClassName="text-3xl text-center text-white font-bold font-mono max-w-full px-2 py-1"
+                        bodyClassName="text-3xl font-black text-white text-center break-words overflow-wrap-anywhere max-w-full px-2"
+                      />
                     </>
                   )}
                   </div>

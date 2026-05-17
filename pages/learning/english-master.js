@@ -26,6 +26,7 @@ import {
 import { useSound } from "../../hooks/useSound";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import { compareAnswers } from "../../utils/answer-compare";
 import {
   computeMcqIndicesForQuestion,
@@ -2328,7 +2329,7 @@ const refreshMonthlyProgress = useCallback(() => {
     if (currentQuestion) {
       setPreviousExplanationQuestion(currentQuestion);
     }
-    setCurrentQuestion(question);
+    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
     setSelectedAnswer(null);
     setTypedAnswer("");
     setFeedback(null);
@@ -3644,14 +3645,12 @@ const refreshMonthlyProgress = useCallback(() => {
                   )}
 
                   <div className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2">
-                    <div
-                      data-testid="english-question-stem"
-                      className="text-4xl font-black text-white text-center max-w-full px-2"
-                      dir="auto"
-                      style={getQuestionFontStyle({ text: currentQuestion.question })}
-                    >
-                      {currentQuestion.question}
-                    </div>
+                    <StudentQuestionDisplay
+                      testId="english-question-stem"
+                      question={currentQuestion.question}
+                      getQuestionFontStyle={getQuestionFontStyle}
+                      bodyClassName="text-4xl font-black text-white text-center max-w-full px-2 break-words overflow-wrap-anywhere"
+                    />
                   </div>
 
                   <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">

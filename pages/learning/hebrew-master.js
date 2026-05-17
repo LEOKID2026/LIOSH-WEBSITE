@@ -18,6 +18,7 @@ import {
   saveScoreEntry,
 } from "../../utils/hebrew-storage";
 import { generateQuestion } from "../../utils/hebrew-question-generator";
+import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import {
   hebrewQuestionFingerprint,
   hebrewNearDuplicateKey,
@@ -1404,7 +1405,7 @@ useEffect(() => {
       topic: questionOut.topic || questionOut.operation || operationForState,
       sequenceIndex: audioBuild1CounterRef.current,
     });
-    setCurrentQuestion(questionOut);
+    setCurrentQuestion(sanitizeQuestionForStudentDisplay(questionOut));
     setSelectedAnswer(null);
     setTypedAnswer("");
     setFeedback(null);

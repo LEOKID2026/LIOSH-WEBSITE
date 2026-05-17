@@ -1,3 +1,5 @@
+import { normalizeStudentQuestionDisplayFields } from "./student-question-display.js";
+
 /**
  * Strip UI-duplicated metadata from student-facing question stems (all subjects).
  * Grade/topic/level/mode already appear in the page header — not in the stem body.
@@ -82,10 +84,16 @@ export function sanitizeStudentQuestionStem(text) {
   // Dot-separated metadata chains (science batch style) — avoid heavy backtracking regex
   if (/[·•]/.test(t)) {
     const parts = t.split(/\s*[·•]\s*/).map((p) => p.trim()).filter(Boolean);
-    const metaSeg = new RegExp(`^(?:כיתה|נושא|${LEVEL_WORD}|תחום)${SP}`, "iu");
-    if (parts.length >= 2 && metaSeg.test(parts[0])) {
+    const metaSeg = new RegExp(
+      `^(?:\\(?\\s*כיתה|נושא|${LEVEL_WORD}|תחום)${SP}`,
+      "iu"
+    );
+    const isMetaPart = (p) =>
+      metaSeg.test(p) ||
+      metaSeg.test(p.replace(/^\(+|\)+$/g, "").trim());
+    if (parts.length >= 2 && isMetaPart(parts[0])) {
       let i = 0;
-      while (i < parts.length && metaSeg.test(parts[i])) i += 1;
+      while (i < parts.length && isMetaPart(parts[i])) i += 1;
       if (i > 0 && i < parts.length) {
         t = parts.slice(i).join(" · ");
       }
@@ -208,7 +216,7 @@ export function sanitizeQuestionForStudentDisplay(q) {
     typeof next.questionLabel === "string" &&
     !next.questionLabel.trim()
   ) {
-    next.questionLabel = undefined;
+    delete next.questionLabel;
   }
-  return next;
+  return normalizeStudentQuestionDisplayFields(next);
 }
