@@ -3998,7 +3998,7 @@ useEffect(() => {
                         </p>
                       ) : null}
                       <div
-                        className={`${questionBottomSpacingClass} flex justify-center w-full max-w-full px-2 overflow-x-auto`}
+                        className={`${questionBottomSpacingClass} flex justify-center w-full max-w-full px-2 overflow-x-hidden`}
                         data-testid="student-question-body"
                         dir="ltr"
                       >

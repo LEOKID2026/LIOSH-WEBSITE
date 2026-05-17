@@ -3,7 +3,15 @@ import { test, expect, type Page } from "@playwright/test";
 import {
   splitStudentQuestionForDisplay,
   formatFormulaSpacing,
+  formatCompactExpression,
+  shouldOmitInstructionLead,
+  formatGeometryChildFriendlyQuestion,
 } from "../../utils/student-question-display.js";
+import {
+  assertStemNoHorizontalScroll,
+  assertGeometryWording,
+  assertCompactMathSpacing,
+} from "./helpers/student-question-stem-layout";
 
 const QA_USER = "e2e-display-qa";
 const MOBILE_VIEW = { width: 390, height: 844 };
@@ -54,23 +62,33 @@ test.describe("Student question display — layout (mobile)", () => {
     await mockStudentSession(page);
   });
 
-  test("unit: splits instruction from equation", () => {
-    const split = splitStudentQuestionForDisplay(
-      "מצאו את הנעלם: ___ = 8 × (4 - 19)"
-    );
-    expect(split.leadText).toBe("מצאו את הנעלם:");
-    expect(split.bodyText).toContain("8 × (4 - 19)");
-    expect(split.bodyKind).toBe("equation");
-    expect(split.bodyText).not.toMatch(/מצאו/);
+  test("unit: compact expression and omit redundant lead", () => {
+    expect(formatCompactExpression("13   +   10 × 6 = __")).toBe("13 + 10 × 6 = __");
+    expect(
+      shouldOmitInstructionLead("מצאו את הנעלם:", "13 + 10 × 6 = __")
+    ).toBe(true);
+    const split = splitStudentQuestionForDisplay("מצאו את הנעלם: 13 + 10 × 6 = __");
+    expect(split.leadText).toBe("");
+    expect(split.bodyText).toBe("13 + 10 × 6 = __");
   });
 
-  test("unit: formats geometry formula spacing", () => {
+  test("unit: formats geometry formula spacing and child-friendly wording", () => {
     expect(formatFormulaSpacing("שטח = חצי×בסיס×גובה")).toBe(
       "שטח = חצי × בסיס × גובה"
     );
+    expect(
+      formatGeometryChildFriendlyQuestion(
+        "מלבן במישור: 2 על 4. מה שטח הפנים?"
+      )
+    ).toContain("מלבן שאורכו 2 יחידות ורוחבו 4 יחידות");
+    expect(
+      formatGeometryChildFriendlyQuestion(
+        "מלבן במישור: 2 על 4. מה שטח הפנים?"
+      )
+    ).toContain("מה שטח המלבן");
   });
 
-  test("math: equation stem split in DOM", async ({ page }) => {
+  test("math: compact equation without horizontal scroll", async ({ page }) => {
     await page.goto("/learning/math-master");
     await page.locator("select").first().selectOption("6");
     await page.locator("select").nth(1).selectOption("easy");
@@ -84,16 +102,19 @@ test.describe("Student question display — layout (mobile)", () => {
 
     const lead = surface.getByTestId("student-question-lead");
     const body = surface.getByTestId("student-question-body");
-    await expect(lead).toBeVisible();
     await expect(body).toBeVisible();
-    await expect(lead).toContainText("מצאו");
+    if (await lead.isVisible()) {
+      await expect(lead).not.toContainText("מצאו את הנעלם");
+    }
     const bodyText = await body.innerText();
     expect(bodyText).toMatch(/=|×|\+|−|-|\(/);
     expect(bodyText).not.toMatch(/מצאו את הנעלם/);
     await expect(body).toHaveAttribute("dir", "ltr");
+    await assertStemNoHorizontalScroll(surface);
+    await assertCompactMathSpacing(body);
   });
 
-  test("geometry: formula readable in DOM", async ({ page }) => {
+  test("geometry: child-friendly wording and no horizontal scroll", async ({ page }) => {
     await page.goto("/learning/geometry-master");
     await page.locator("select").first().selectOption("g3");
     await page.locator("select").nth(1).selectOption("easy");
@@ -114,6 +135,10 @@ test.describe("Student question display — layout (mobile)", () => {
       expect(full).not.toMatch(/חציבסיסגובה/);
       expect(full).toMatch(/×/);
     }
+    if (/מלבן/u.test(full)) {
+      assertGeometryWording(full);
+    }
+    await assertStemNoHorizontalScroll(stem);
   });
 
   test("screenshots: math and geometry display (mobile)", async ({ page }) => {
@@ -128,25 +153,44 @@ test.describe("Student question display — layout (mobile)", () => {
     await page.getByTestId("math-start-game").click();
     const mathSurface = page.getByTestId("math-question-surface");
     await expect(mathSurface).toBeVisible({ timeout: 60_000 });
+    await assertStemNoHorizontalScroll(mathSurface);
     await mathSurface.screenshot({
-      path: `${SCREENSHOT_DIR}/math-display-mobile.png`,
+      path: `${SCREENSHOT_DIR}/math-display-mobile-expression.png`,
     });
 
     await page.goto("/learning/geometry-master");
     await page.locator("select").first().selectOption("g3");
-    await page.locator("select").nth(1).selectOption("easy");
+    await page.locator("select").nth(1).selectOption("medium");
     const topicSel = page.getByTestId("geometry-topic-select");
     const vals = await topicSel.evaluate((el: HTMLSelectElement) =>
       [...el.options].map((o) => o.value).filter((v) => v && v !== "mixed")
     );
-    if (vals[0]) await topicSel.selectOption(vals[0]);
+    const areaVal = vals.find((v) => v === "area") || vals[0];
+    if (areaVal) await topicSel.selectOption(areaVal);
     await expect(page.getByTestId("geometry-player-name")).toContainText(QA_USER);
     await confirmMixedModal(page);
     await page.getByTestId("geometry-start-game").click();
     const geoStem = page.getByTestId("geometry-question-stem");
     await expect(geoStem).toBeVisible({ timeout: 60_000 });
+    await assertStemNoHorizontalScroll(geoStem);
     await geoStem.screenshot({
-      path: `${SCREENSHOT_DIR}/geometry-display-mobile.png`,
+      path: `${SCREENSHOT_DIR}/geometry-display-mobile-rectangle.png`,
     });
+
+    const perimeterVal = vals.find((v) => v === "perimeter");
+    if (perimeterVal) {
+      await page.goto("/learning/geometry-master");
+      await page.locator("select").first().selectOption("g3");
+      await page.locator("select").nth(1).selectOption("medium");
+      await page.getByTestId("geometry-topic-select").selectOption(perimeterVal);
+      await expect(page.getByTestId("geometry-player-name")).toContainText(QA_USER);
+      await confirmMixedModal(page);
+      await page.getByTestId("geometry-start-game").click();
+      const perimeterStem = page.getByTestId("geometry-question-stem");
+      await expect(perimeterStem).toBeVisible({ timeout: 60_000 });
+      await perimeterStem.screenshot({
+        path: `${SCREENSHOT_DIR}/geometry-display-mobile-perimeter.png`,
+      });
+    }
   });
 });

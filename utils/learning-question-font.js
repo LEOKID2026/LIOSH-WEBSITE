@@ -24,6 +24,25 @@ function pickViewportScale(pressure) {
   return 6.2;
 }
 
+/** Compact sizing for numeric exercises — avoids oversized vw on short stems. */
+export function getCompactEquationFontStyle({
+  text,
+  mobileMinPx = 16,
+  mobileMaxPx = 28,
+} = {}) {
+  const pressure = computePressure(text);
+  const vw = Math.min(5.2, pickViewportScale(pressure) * 0.52);
+
+  return {
+    fontSize: `clamp(${mobileMinPx}px, ${vw.toFixed(2)}vw, ${mobileMaxPx}px)`,
+    lineHeight: 1.22,
+    letterSpacing: "normal",
+    wordSpacing: "normal",
+    wordBreak: "normal",
+    overflowWrap: "normal",
+  };
+}
+
 export function getQuestionFontStyle({
   text,
   kind = "main",

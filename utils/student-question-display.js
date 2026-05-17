@@ -42,6 +42,66 @@ export function isFormulaLikeText(s) {
   return isEquationLikeText(t);
 }
 
+/**
+ * Collapse whitespace and normalize operator spacing for compact exercise lines.
+ * @param {string} text
+ */
+export function formatCompactExpression(text) {
+  let t = String(text ?? "")
+    .replace(/\u2066|\u2067|\u2068|\u2069/gu, "")
+    .trim();
+  if (!t) return t;
+  t = t.replace(/\s+/g, " ");
+  t = t.replace(/\s*([+\-×÷*/=(),])\s*/g, " $1 ");
+  t = t.replace(/\s+/g, " ").trim();
+  return t;
+}
+
+/** @param {string} lead @param {string} body */
+export function shouldOmitInstructionLead(lead, body) {
+  const leadT = String(lead ?? "")
+    .trim()
+    .replace(/:$/, "");
+  const bodyT = formatCompactExpression(body);
+  if (!leadT || !bodyT) return true;
+  if (!isKnownInstructionLead(leadT)) return false;
+  if (isEquationLikeText(bodyT) && bodyT.length <= 56) return true;
+  if (
+    isFormulaLikeText(bodyT) &&
+    /^(שטח|היקף)\s*=/.test(bodyT) &&
+    bodyT.length <= 40
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/** Child-friendly geometry question wording (display + generator post-process). */
+export function formatGeometryChildFriendlyQuestion(text) {
+  let t = String(text ?? "");
+  if (!t.trim()) return t;
+
+  t = t.replace(/מה\s+שטח\s+הפנים/gu, "מה שטח המלבן");
+  t = t.replace(/מה\s+היקף\s+הפנים/gu, "מה היקף המלבן");
+  t = t.replace(
+    /מלבן\s+במישור:\s*(\d+(?:[.,]\d+)?)\s+על\s+(\d+(?:[.,]\d+)?)/gu,
+    "מלבן שאורכו $1 יחידות ורוחבו $2 יחידות"
+  );
+  t = t.replace(
+    /שטח\s+מלבן\s+ללא\s+ציור:\s*(\d+(?:[.,]\d+)?)\s+על\s+(\d+(?:[.,]\d+)?)/gu,
+    "מלבן שאורכו $1 יחידות ורוחבו $2 יחידות. מה שטח המלבן?"
+  );
+  t = t.replace(
+    /מלבן\s+(\d+(?:[.,]\d+)?)\s+על\s+(\d+(?:[.,]\d+)?)\s*—/gu,
+    "מלבן שאורכו $1 יחידות ורוחבו $2 יחידות —"
+  );
+  t = t.replace(
+    /מלבן\s+אורך\s+(\d+(?:[.,]\d+)?),\s*רוחב\s+(\d+(?:[.,]\d+)?):\s*שטח\s*=\s*אורך\s*×\s*רוחב\.\s*מה\s+התוצאה\?/gu,
+    "מלבן שאורכו $1 יחידות ורוחבו $2 יחידות. מה שטח המלבן?"
+  );
+  return t.replace(/\s{2,}/g, " ").trim();
+}
+
 /** @param {string} lead */
 function isKnownInstructionLead(lead) {
   const t = String(lead ?? "").trim().replace(/:$/, "");
@@ -59,7 +119,7 @@ function isKnownInstructionLead(lead) {
  * @returns {string}
  */
 export function formatFormulaSpacing(text) {
-  let t = String(text ?? "");
+  let t = formatGeometryChildFriendlyQuestion(String(text ?? ""));
   if (!t) return t;
 
   t = t.replace(/חצי\s*×\s*בסיס\s*×\s*גובה/gu, "חצי × בסיס × גובה");
@@ -99,13 +159,14 @@ export function splitStudentQuestionForDisplay(text) {
       (isKnownInstructionLead(lead) ||
         (lead.length <= 56 && (isEquationLikeText(body) || isFormulaLikeText(body))))
     ) {
+      const bodyText = formatCompactExpression(formatFormulaSpacing(body));
+      const leadText = `${lead}:`;
       const bodyKind =
-        isEquationLikeText(body) ? "equation" : isFormulaLikeText(body) ? "mixed" : "text";
-      return {
-        leadText: `${lead}:`,
-        bodyText: formatFormulaSpacing(body),
-        bodyKind,
-      };
+        isEquationLikeText(bodyText) ? "equation" : isFormulaLikeText(bodyText) ? "mixed" : "text";
+      if (shouldOmitInstructionLead(leadText, bodyText)) {
+        return { leadText: "", bodyText, bodyKind };
+      }
+      return { leadText, bodyText, bodyKind };
     }
   }
 
@@ -122,7 +183,7 @@ export function splitStudentQuestionForDisplay(text) {
     }
   }
 
-  const formatted = formatFormulaSpacing(raw);
+  const formatted = formatCompactExpression(formatFormulaSpacing(raw));
   const bodyKind = isEquationLikeText(formatted)
     ? "equation"
     : isFormulaLikeText(formatted)
@@ -146,9 +207,21 @@ export function resolveStudentQuestionDisplayParts(q) {
   const question = typeof q.question === "string" ? q.question.trim() : "";
 
   if (label && exercise) {
-    const bodyText = formatFormulaSpacing(exercise);
+    const bodyText = formatCompactExpression(formatFormulaSpacing(exercise));
+    const leadText = label.endsWith(":") ? label : `${label}:`;
+    if (shouldOmitInstructionLead(leadText, bodyText)) {
+      return {
+        leadText: "",
+        bodyText,
+        bodyKind: isEquationLikeText(bodyText)
+          ? "equation"
+          : isFormulaLikeText(bodyText)
+            ? "mixed"
+            : "text",
+      };
+    }
     return {
-      leadText: label.endsWith(":") ? label : `${label}:`,
+      leadText,
       bodyText,
       bodyKind: isEquationLikeText(bodyText)
         ? "equation"
@@ -161,8 +234,12 @@ export function resolveStudentQuestionDisplayParts(q) {
   if (label && !exercise && question) {
     const split = splitStudentQuestionForDisplay(question);
     if (split.bodyText) {
+      const leadText = label.endsWith(":") ? label : `${label}:`;
+      if (shouldOmitInstructionLead(leadText, split.bodyText)) {
+        return { leadText: "", bodyText: split.bodyText, bodyKind: split.bodyKind };
+      }
       return {
-        leadText: label.endsWith(":") ? label : `${label}:`,
+        leadText,
         bodyText: split.bodyText,
         bodyKind: split.bodyKind,
       };
@@ -222,11 +299,22 @@ export function attachMathEquationInstructionLabel(q, gradeKey) {
   const question = typeof q.question === "string" ? q.question.trim() : "";
   const body = exercise || question;
   if (!body || !isEquationLikeText(body)) return q;
-  if (typeof q.questionLabel === "string" && q.questionLabel.trim()) return q;
+  if (typeof q.questionLabel === "string" && q.questionLabel.trim()) {
+    const existing = q.questionLabel.trim();
+    if (shouldOmitInstructionLead(existing, body)) {
+      const next = { ...q };
+      delete next.questionLabel;
+      return next;
+    }
+    return q;
+  }
+
+  const proposed = MATH_EQUATION_LABELS[gradeKey] || "השלימו את המשוואה:";
+  if (shouldOmitInstructionLead(proposed, body)) return q;
 
   return {
     ...q,
-    questionLabel: MATH_EQUATION_LABELS[gradeKey] || "השלימו את המשוואה:",
+    questionLabel: proposed,
   };
 }
 
@@ -259,8 +347,15 @@ export function normalizeStudentQuestionDisplayFields(q) {
   }
 
   if (label && exercise) {
-    next.questionLabel = label.endsWith(":") ? label : `${label}:`;
-    next.exerciseText = formatFormulaSpacing(exercise);
+    const bodyText = formatCompactExpression(formatFormulaSpacing(exercise));
+    const leadText = label.endsWith(":") ? label : `${label}:`;
+    if (!shouldOmitInstructionLead(leadText, bodyText)) {
+      next.questionLabel = leadText;
+    } else {
+      delete next.questionLabel;
+    }
+    next.exerciseText = bodyText;
+    next.question = bodyText;
     return next;
   }
 
@@ -269,15 +364,19 @@ export function normalizeStudentQuestionDisplayFields(q) {
 
   const split = splitStudentQuestionForDisplay(source);
   if (split.leadText && split.bodyText) {
-    if (!label) next.questionLabel = split.leadText;
-    next.exerciseText = split.bodyText;
-    next.question = split.bodyText;
+    if (!label && !shouldOmitInstructionLead(split.leadText, split.bodyText)) {
+      next.questionLabel = split.leadText;
+    }
+    next.exerciseText = formatCompactExpression(split.bodyText);
+    next.question = next.exerciseText;
     return next;
   }
 
   if (isEquationLikeText(source) || isFormulaLikeText(source)) {
-    next.exerciseText = formatFormulaSpacing(source);
-    if (!label && split.leadText) next.questionLabel = split.leadText;
+    next.exerciseText = formatCompactExpression(formatFormulaSpacing(source));
+    if (!label && split.leadText && !shouldOmitInstructionLead(split.leadText, next.exerciseText)) {
+      next.questionLabel = split.leadText;
+    }
     return next;
   }
 

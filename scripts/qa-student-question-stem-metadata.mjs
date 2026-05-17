@@ -82,6 +82,12 @@ const BEFORE_AFTER_SEEDS = [
   },
 ];
 
+const FORBIDDEN_GEOMETRY_WORDING = [
+  { id: "dims_על", re: /\d+\s+על\s+\d+/u, label: "N על N dimensions" },
+  { id: "plane_rectangle", re: /מלבן\s+במישור/u, label: "מלבן במישור" },
+  { id: "surface_area_2d", re: /שטח\s+הפנים/u, label: "שטח הפנים for 2D" },
+];
+
 const PRESERVATION_MUST_KEEP = [
   "בכיתה יש 24 תלמידים ו-6 תלמידות. כמה תלמידים בסך הכול?",
   "בבית הספר יש מגרש מלבני. רוצים גדר סביב המגרש.",
@@ -117,6 +123,15 @@ function scanQuestion(q, ctx) {
     if (typeof stem !== "string" || !stem.trim()) continue;
     const { leak, checks } = detectStudentStemMetadataLeaks(stem);
     if (leak) recordLeak(ctx, field, stem, checks);
+    if (ctx.subject === "geometry") {
+      for (const rule of FORBIDDEN_GEOMETRY_WORDING) {
+        if (rule.re.test(stem)) {
+          recordLeak(ctx, field, stem, [
+            { id: rule.id, label: rule.label, match: rule.re.source },
+          ]);
+        }
+      }
+    }
   }
 }
 

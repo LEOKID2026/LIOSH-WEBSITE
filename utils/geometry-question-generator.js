@@ -532,21 +532,21 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
             const rw = Math.floor(Math.random() * 3);
             if (levelKey === "easy") {
               question = [
-                `מלבן אורך ${length}, רוחב ${width}: שטח = אורך × רוחב. מה התוצאה?`,
-                `מלבן במישור: ${length} על ${width}. מה שטח הפנים?`,
-                `כפל אורך ברוחב — מלבן ${length}×${width}. מה יוצא?`,
+                `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. מה שטח המלבן?`,
+                `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. שטח = אורך × רוחב. מה השטח?`,
+                `נתון מלבן: אורך = ${length} יחידות, רוחב = ${width} יחידות. מה שטחו?`,
               ][rw];
             } else if (levelKey === "medium") {
               question = [
-                `מה השטח של מלבן עם אורך ${length} ורוחב ${width}?`,
-                `חישוב שטח מלבני: ${length} ו-${width} הם הניצבים. מה התוצאה?`,
-                `נתון מלבן ${length}×${width}. מה שטחו?`,
+                `מה שטח המלבן? אורך ${length} יחידות, רוחב ${width} יחידות.`,
+                `שטח = אורך × רוחב. מלבן באורך ${length} יחידות וברוחב ${width} יחידות — מה השטח?`,
+                `מלבן באורך ${length} יחידות וברוחב ${width} יחידות. מה שטחו?`,
               ][rw];
             } else {
               question = [
-                `אתגר שטח — מלבן ${length}×${width}. מה השטח?`,
-                `שטח מלבן ללא ציור: ${length} על ${width}.`,
-                `בדקו פעמיים לפני בחירה — מלבן ${length}×${width}, מה השטח?`,
+                `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. מה שטח המלבן?`,
+                `מלבן באורך ${length} יחידות וברוחב ${width} יחידות (ללא ציור). מה השטח?`,
+                `בדקו לפני בחירה — מלבן ${length}×${width} יחידות. מה שטח המלבן?`,
               ][rw];
             }
           } else {
@@ -695,7 +695,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           } else if (formulaBand === "mid") {
             question = `מה ההיקף של מלבן עם אורך ${length} ורוחב ${width}?`;
           } else {
-            question = `היקף מלבן: ${length} × ${width}. מה התוצאה?`;
+            question = `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. היקף = 2 × (אורך + רוחב). מה היקף המלבן?`;
           }
           break;
         }
@@ -1484,7 +1484,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           } else if (levelKey === "medium") {
             question = [
               `מה אורך האלכסון של מלבן עם אורך ${side} ורוחב ${width}?`,
-              `מלבן ${side} על ${width} — מה אורך האלכסון הפנימי?`,
+              `מלבן באורך ${side} יחידות וברוחב ${width} יחידות — מה אורך האלכסון?`,
               `חישוב אלכסון מניצבים ${side} ו-${width} במלבן.`,
             ][diagW];
           } else {

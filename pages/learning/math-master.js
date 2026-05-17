@@ -4286,7 +4286,7 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
                         ) : null}
 
                         <div
-                          className="flex justify-center w-full max-w-full px-2 overflow-x-auto"
+                          className="flex justify-center w-full max-w-full px-2 overflow-x-hidden"
                           data-testid="student-question-body"
                           dir="ltr"
                         >

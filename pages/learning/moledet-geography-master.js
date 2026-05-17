@@ -3374,7 +3374,7 @@ useEffect(() => {
                         </p>
                       ) : null}
                       <div
-                        className="mb-4 flex justify-center w-full max-w-full px-2 overflow-x-auto"
+                        className="mb-4 flex justify-center w-full max-w-full px-2 overflow-x-hidden"
                         data-testid="student-question-body"
                         dir="ltr"
                       >
