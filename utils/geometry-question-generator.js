@@ -20,6 +20,30 @@ function shuffleMcqList(answers) {
 /**
  * מסיחים סבירים לפי סוג שאלה — לא לולאת 1..10 אקראית כשהקשר הוא שטח/נפח וכו'.
  */
+/** Stems use (1 = …, 2 = …) — options must be index strings, not unrelated numeric distractors. */
+const GEOMETRY_INDEX_LABEL_KINDS = {
+  shapes_basic_square: 2,
+  shapes_basic_rectangle: 2,
+  shapes_basic_properties_square: 4,
+  shapes_basic_properties_rectangle: 4,
+  shapes_basic_properties_angles: 4,
+  quadrilaterals: 4,
+  solids: 6,
+};
+
+const GEOMETRY_HEBREW_LABEL_OPTIONS = {
+  parallel_perpendicular: ["מקבילות", "מאונכות"],
+  triangles: ["שווה צלעות", "שווה שוקיים", "שונה צלעות"],
+  transformations: ["הזזה", "שיקוף"],
+};
+
+function geometryIndexLabelAnswers(correctAnswer, optionCount) {
+  const opts = Array.from({ length: optionCount }, (_, i) => String(i + 1));
+  const correct = String(Math.round(Number(correctAnswer)));
+  if (!opts.includes(correct)) return shuffleMcqList(opts);
+  return shuffleMcqList(opts);
+}
+
 export function buildGeometryMcqAnswers({
   correctAnswer,
   params,
@@ -28,9 +52,18 @@ export function buildGeometryMcqAnswers({
   selectedTopic,
   shape,
 }) {
-  const ca = Number(correctAnswer);
   const kind = params?.kind || "";
   const baseKind = kind.replace(/^story_/, "");
+  const hebrewOpts = GEOMETRY_HEBREW_LABEL_OPTIONS[baseKind];
+  if (hebrewOpts) {
+    return shuffleMcqList(hebrewOpts);
+  }
+  const labelCount = GEOMETRY_INDEX_LABEL_KINDS[baseKind];
+  if (labelCount) {
+    return geometryIndexLabelAnswers(correctAnswer, labelCount);
+  }
+
+  const ca = Number(correctAnswer);
   const wrong = new Set();
   const r = (n) => round(n);
 
@@ -57,25 +90,6 @@ export function buildGeometryMcqAnswers({
     takeFromPool([60, 90, 120]);
   } else if (baseKind === "rotation") {
     takeFromPool([90, 180, 270]);
-  } else if (
-    baseKind === "shapes_basic_square" ||
-    baseKind === "shapes_basic_rectangle"
-  ) {
-    takeFromPool([1, 2]);
-  } else if (
-    baseKind === "shapes_basic_properties_square" ||
-    baseKind === "shapes_basic_properties_rectangle" ||
-    baseKind === "shapes_basic_properties_angles"
-  ) {
-    takeFromPool([1, 2, 3, 4]);
-  } else if (baseKind === "parallel_perpendicular") {
-    takeFromPool([1, 2]);
-  } else if (baseKind === "triangles") {
-    takeFromPool([1, 2, 3]);
-  } else if (baseKind === "quadrilaterals") {
-    takeFromPool([1, 2, 3, 4]);
-  } else if (baseKind === "transformations") {
-    takeFromPool([1, 2]);
   } else if (baseKind === "triangle_angles") {
     const { angle1, angle2, angle3 } = params;
     add(angle1);
@@ -1229,7 +1243,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
         patternFamily: `parallel_perpendicular_${levelKey}`,
         subtype: formulaBand === "mid" ? "mid_band" : "late_band",
       };
-      correctAnswer = isParallel ? 1 : 2; // 1 = מקבילות, 2 = מאונכות
+      correctAnswer = selectedType;
       if (formulaBand === "mid") {
         question =
           levelKey === "easy"
@@ -1259,7 +1273,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
         patternFamily: `triangles_classify_${levelKey}`,
         subtype: formulaBand === "mid" ? "mid_band" : "late_band",
       };
-      correctAnswer = types.indexOf(selectedType) + 1;
+      correctAnswer = selectedType;
       if (formulaBand === "mid") {
         question =
           levelKey === "easy"
@@ -1299,7 +1313,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
       const isTranslation = selectedType === "הזזה";
       
       params = { type: selectedType, isTranslation, kind: "transformations" };
-      correctAnswer = isTranslation ? 1 : 2; // 1 = הזזה, 2 = שיקוף
+      correctAnswer = selectedType;
       if (gradeKey === "g1") {
         question =
           levelKey === "easy"
@@ -1672,9 +1686,17 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
     shape,
   });
 
+  const baseKindOut = params?.kind?.replace(/^story_/, "") || "";
+  const labelMcq =
+    Boolean(GEOMETRY_INDEX_LABEL_KINDS[baseKindOut]) ||
+    Boolean(GEOMETRY_HEBREW_LABEL_OPTIONS[baseKindOut]);
+  const resolvedCorrect = GEOMETRY_INDEX_LABEL_KINDS[baseKindOut]
+    ? String(Math.round(Number(correctAnswer)))
+    : correctAnswer;
+
   return sanitizeQuestionForStudentDisplay({
     question,
-    correctAnswer,
+    correctAnswer: resolvedCorrect,
     answers: shuffledAnswers,
     topic: selectedTopic,
     shape,

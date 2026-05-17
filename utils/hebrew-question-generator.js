@@ -26,6 +26,11 @@ import {
   rebalanceGenericHebrewReadingDistractors,
 } from './question-quality.js';
 import { hebrewStemNorm, hebrewQuestionFingerprint } from './hebrew-learning-intel.js';
+import {
+  G3_READING_EASY,
+  G3_READING_MEDIUM as G3_READING_MEDIUM_BANK,
+  G3_READING_HARD,
+} from '../data/hebrew-g3-reading-bank.js';
 
 /** Layer 3: typing רק לפריטים עם preferredAnswerMode + תת־נושא מאושר (א׳–ב׳). */
 const G12_ALLOWED_TYPING_SUBTOPICS = new Set([
@@ -2950,21 +2955,7 @@ const G2_HARD_QUESTIONS = {
 
 // ========== כיתה ג' ==========
 const G3_EASY_QUESTIONS = {
-  reading: [
-    { question: "קרא את הטקסט: 'הילד קורא ספר מעניין בכיתה. הספר מספר על הרפתקאות.' מה הנושא העיקרי?", answers: ["ילד קורא ספר על הרפתקאות", "ילד משחק", "ילד כותב", "ילד אוכל"], correct: 0 },
-    {
-      question: "קרא את המשפט: 'הילדים קוראים ספרים ומתכוננים למבחן'",
-      answers: [
-        "הילדים קוראים ספרים ומתכוננים למבחן",
-        "הילדים קוראים ספרים ומתכוננים למבחן.",
-        "ילדים קוראים ספרים ומתכוננים למבחן",
-        "הילדים קוראים ספרים מתכוננים למבחן",
-      ],
-      correct: 0,
-    },
-    { question: "מה המילה הנכונה: מ_בחן?", answers: ["מבחן", "מבחנה", "מבחני", "מבחנת"], correct: 0 },
-    { question: "קרא את הטקסט: 'השמש זורחת בבוקר. הציפורים שרות. הכל יפה.' כמה משפטים יש?", answers: ["3", "2", "4", "1"], correct: 0 },
-  ],
+  reading: G3_READING_EASY,
   comprehension: [
     { question: "מה המשמעות של 'ילדים קוראים ספרים ומתכוננים למבחן'?", answers: ["ילדים קוראים ספרים ומתכוננים למבחן", "ילדים משחקים", "ילדים אוכלים", "ילדים ישנים"], correct: 0 },
     { question: "מה ההשוואה בין 'בוקר' ל-'ערב'?", answers: ["בוקר - התחלת היום, ערב - סוף היום", "בוקר - ערב", "אין הבדל", "בוקר - לילה"], correct: 0 },
@@ -3070,8 +3061,7 @@ const G3_EASY_QUESTIONS = {
 
 const G3_MEDIUM_QUESTIONS = {
   reading: [
-    { question: "קרא את הטקסט: 'הילד קורא ספר מעניין בכיתה. הספר מספר על הרפתקאות של ילדים. הילד נהנה מהסיפור.' מה הרעיון המרכזי?", answers: ["ילד נהנה מספר על הרפתקאות", "ילד משחק", "ילד כותב", "ילד אוכל"], correct: 0 },
-    { question: "קרא את הטקסט: 'השמש זורחת בבוקר. הציפורים שרות. הכל יפה ונעים.' מה המסר?", answers: ["בוקר יפה ונעים", "לילה", "עננים", "גשם"], correct: 0 },
+    ...G3_READING_MEDIUM_BANK,
     {
       question:
         "כיתה ג׳ — טקסט מידעי מול סיפור (1): 'בטבלה: 12 ימים עם גשם, 18 בלי גשם.' לעומת סיפור: 'הגשם דפק על החלון.' מה ההבדל בז׳אנר?",
@@ -3265,9 +3255,7 @@ const G3_MEDIUM_QUESTIONS = {
 };
 
 const G3_HARD_QUESTIONS = {
-  reading: [
-    { question: "קרא את הטקסט הספרותי: 'הילד קורא ספר מעניין בכיתה. הספר מספר על הרפתקאות של ילדים שטיילו ביער. הילד נהנה מהסיפור ומדמיין את עצמו שם.' מה הנושא והמסר?", answers: ["קריאה מעודדת דמיון והרפתקאות", "ילד משחק", "ילד כותב", "ילד אוכל"], correct: 0 },
-  ],
+  reading: G3_READING_HARD,
   comprehension: [
     { question: "מה הניתוח של הטקסט הספרותי?", answers: ["ניתוח עומק של התוכן והמסר", "רק קריאה", "רק כתיבה", "רק האזנה"], correct: 0 },
     {

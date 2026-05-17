@@ -141,7 +141,7 @@ function englishFlattenPools(poolRoot) {
   return out;
 }
 
-function englishItemsForMatrixTopic(topic, pools) {
+export function englishItemsForMatrixTopic(topic, pools) {
   const t = String(topic || "").toLowerCase();
   if (t === "grammar") return englishFlattenPools(pools.grammar);
   if (t === "sentences") return englishFlattenPools(pools.sentences);
@@ -154,7 +154,7 @@ function englishItemsForMatrixTopic(topic, pools) {
   return [];
 }
 
-function filterEnglishByGrade(items, gNum) {
+export function filterEnglishByGrade(items, gNum) {
   return items.filter((it) => {
     const lo = Number(it.minGrade);
     const hi = Number(it.maxGrade);
@@ -164,7 +164,7 @@ function filterEnglishByGrade(items, gNum) {
 }
 
 /** Translation flashcards (en/he only) are not MCQ — exclude from bank integrity. */
-function isEnglishMcqLike(it) {
+export function isEnglishMcqLike(it) {
   if (!it || typeof it !== "object") return false;
   const stem = it.question ?? it.template ?? "";
   const opts = it.options ?? it.answers;

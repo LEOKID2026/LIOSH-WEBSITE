@@ -24,7 +24,7 @@ export function getQuestionFingerprintForSubject(q, subject, ctx = {}) {
     case "hebrew":
       return hebrewQuestionFingerprint(q) || buildQuestionFingerprint(q, { ...ctx, subject: subj });
     case "science":
-      if (q?.id) return `science|id:${q.id}`;
+      if (q?.id || q?._scienceBankId) return `science|id:${q.id || q._scienceBankId}`;
       return buildQuestionFingerprint(q, { ...ctx, subject: subj });
     case "moledet":
     case "moledet_geography":

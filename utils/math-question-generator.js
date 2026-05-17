@@ -551,12 +551,29 @@ export function buildMathMcqAnswerList(correctAnswer, selectedOp, params, randIn
   } else if (kind === "sub_two" || kind === "sub_vertical") {
     const x = params?.a;
     const y = params?.b;
-    if (x != null && y != null) {
-      addI(x + y);
-      addI(Math.abs(x - y));
-      if (x > y) addI(y - x);
-      addI(x - y + 1);
-      addI(x - y - 1);
+    if (x != null && y != null && Number.isFinite(x - y)) {
+      const diff = Math.round(x - y);
+      const wrong = new Set();
+      const tryAdd = (n) => {
+        const v = Math.round(n);
+        if (!Number.isFinite(v) || v < 0 || v === diff || v > 50000) return;
+        wrong.add(v);
+      };
+      const deltas =
+        diff >= 10
+          ? [2, 3, 5, 7, 11, 13, -2, -3, -5, -7]
+          : [1, 2, 3, 5, 7, -1, -2, -3];
+      for (const d of deltas) tryAdd(diff + d);
+      if (x + y !== diff && x + y >= 0 && String(x + y).length <= String(diff).length + 1) {
+        tryAdd(x + y);
+      }
+      let bump = diff >= 10 ? 15 : 4;
+      while (wrong.size < 3 && bump < 30) {
+        tryAdd(diff + bump);
+        tryAdd(diff - bump);
+        bump += 1;
+      }
+      return shuffleMcqList([diff, ...Array.from(wrong).slice(0, 3)]);
     }
   } else if (
     kind === "mul" ||
@@ -3224,9 +3241,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     operandA = num;
     operandB = null;
     
-    // יצירת תשובות (תשובה נכונה + תשובה שגויה + תשובות נוספות)
     const wrongAnswer = isNumPrime ? "פריק" : "ראשוני";
-    const answers = [correctAnswer, wrongAnswer, "זוגי", "אי-זוגי"];
+    const answers = shuffleMcqList([correctAnswer, wrongAnswer]);
     
     // ערבוב התשובות
     for (let i = answers.length - 1; i > 0; i--) {

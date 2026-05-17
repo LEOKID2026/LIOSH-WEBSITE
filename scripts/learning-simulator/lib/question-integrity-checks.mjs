@@ -30,7 +30,19 @@ export function normalizeQuestionPayload(raw) {
   let correctAnswer = raw.correctAnswer ?? raw.correct ?? null;
   const correctIndex = Number.isFinite(Number(raw.correctIndex)) ? Number(raw.correctIndex) : null;
 
-  if (typeof correctAnswer === "number" && answers && answers.length && correctAnswer < answers.length) {
+  const singleDigitLabelOptions =
+    Array.isArray(answers) &&
+    answers.length >= 2 &&
+    answers.length <= 9 &&
+    answers.every((x) => /^[1-9]$/.test(String(x ?? "").trim()));
+
+  if (
+    typeof correctAnswer === "number" &&
+    answers &&
+    answers.length &&
+    correctAnswer < answers.length &&
+    !singleDigitLabelOptions
+  ) {
     /* likely index — treat as index when all answers are strings */
     const allStr = answers.every((x) => typeof x === "string" || typeof x === "number");
     if (allStr && correctAnswer >= 0 && correctAnswer <= 9) {

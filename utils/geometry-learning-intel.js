@@ -97,9 +97,18 @@ export function geometryQuestionFingerprint(q) {
 export function geometryConceptLineageKey(q) {
   if (!q) return "";
   const topic = q.topic ?? "";
-  const pf = q.params?.patternFamily ?? "";
-  const ct = q.params?.conceptTag ?? "";
-  const st = q.params?.subtype ?? "";
+  const kind = q.params?.kind ?? "";
+  const p = q.params || {};
+  if (kind) {
+    const dims = ["side", "length", "width", "side1", "side2", "side3", "radius", "base", "height"]
+      .filter((k) => p[k] != null && p[k] !== "")
+      .map((k) => `${k}:${p[k]}`)
+      .join(",");
+    return `${topic}|${kind}|${dims}`;
+  }
+  const pf = p.patternFamily ?? "";
+  const ct = p.conceptTag ?? "";
+  const st = p.subtype ?? "";
   return `${topic}|${pf}|${ct}|${st}`;
 }
 

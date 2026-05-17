@@ -560,7 +560,5 @@ function scienceProductionBatch1Augment() {
   return out;
 }
 
-export const SCIENCE_QUESTIONS_PRODUCTION_BATCH1 = [
-  ...SCIENCE_QUESTIONS_PRODUCTION_BATCH1_CORE,
-  ...scienceProductionBatch1Augment(),
-];
+/** Meta-stem augment removed — generic study-skills clones caused near-duplicate QA failures. */
+export const SCIENCE_QUESTIONS_PRODUCTION_BATCH1 = [...SCIENCE_QUESTIONS_PRODUCTION_BATCH1_CORE];

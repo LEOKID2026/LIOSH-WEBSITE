@@ -1,47 +1,393 @@
+import {
+  G3_READING_EASY,
+  G3_READING_MEDIUM,
+  G3_READING_HARD,
+} from "./hebrew-g3-reading-bank.js";
+
 ﻿// Metadata enrichment (safe pass): skillId, subtype (grade subskill), difficulty, cognitiveLevel, expectedErrorTypes. Inline // comments inside arrays may be normalized when this file is rewritten from structured data. See reports/question-metadata-qa/hebrew-archive-metadata-apply-report.json.
 // Metadata enrichment (safe pass): skillId, subtype (grade subskill), difficulty, cognitiveLevel, expectedErrorTypes. Inline // comments inside arrays may be normalized when this file is rewritten from structured data. See reports/question-metadata-qa/hebrew-archive-metadata-apply-report.json.
 export const G3_EASY_QUESTIONS = {
   "reading": [
     {
-      "question": "קרא את הטקסט: 'הילד קורא ספר מעניין בכיתה. הספר מספר על הרפתקאות.' מה הנושא העיקרי?",
+      "question": "קרא את הטקסט: 'מיה קוראת ספר על חיות בגן החיות. היא לומדת על האוכל של כל חיה.' מה הנושא העיקרי?",
       "answers": [
-        "ילד קורא ספר על הרפתקאות",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
+        "למידה על חיות בגן החיות",
+        "משחק בכדורגל",
+        "ציור בכיתה",
+        "אוכל בחדר האוכל"
       ],
       "correct": 0,
-      "skillId": "hebrew_archive_reading",
+      "skillId": "hebrew_reading_g3",
       "subtype": "g3",
       "difficulty": "basic",
       "cognitiveLevel": "understanding",
       "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
         "reading_comprehension_error",
-        "detail_recall_error"
-      ]
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_main_idea"
     },
     {
       "question": "קרא את המשפט: 'הילדים קוראים ספרים ומתכוננים למבחן'. על מה מדבר המשפט?",
       "answers": [
         "קריאה והכנה למבחן",
-        "משחק בחצר בית הספר",
+        "משחק בחצר",
         "ציור על הלוח",
-        "אוכל בחדר האוכל"
+        "אוכל בצהריים"
       ],
       "correct": 0,
-      "skillId": "hebrew_archive_reading",
+      "skillId": "hebrew_reading_g3",
       "subtype": "g3",
       "difficulty": "basic",
       "cognitiveLevel": "recall",
       "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
         "vocabulary_confusion",
         "careless_error"
-      ]
+      ],
+      "patternFamily": "g3_read_sentence_topic"
     },
     {
-      "question": "מה המילה הנכונה: מ_בחן?",
+      "question": "קרא את הטקסט: 'השמש זורחת בבוקר. הציפורים שרות. הכל יפה.' כמה משפטים יש בטקסט?",
+      "answers": [
+        "3",
+        "2",
+        "4",
+        "1"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_count_sentences"
+    },
+    {
+      "question": "קרא את הטקסט: 'אמא אפתה עוגה ליום ההולדת. הריח ממלא את הבית. כולם מחכים לטעום.' מה קורה בבית?",
+      "answers": [
+        "מכינים עוגה ומחכים לטעום",
+        "יוצאים לטיול ביער",
+        "קונים נעליים חדשות",
+        "כותבים מכתב לסבתא"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_main_idea"
+    },
+    {
+      "question": "קרא את הטקסט: 'נועם שמר על הצמח בחלון. הוא השקה אותו בכל יום. העלים נשארו ירוקים.' מה עשה נועם?",
+      "answers": [
+        "השקה את הצמח בקביעות",
+        "שבר את האגרטל",
+        "שכח להדליק אור",
+        "מכר את הצמח"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'בכיתה יש מפה על הקיר. התלמידים מוצאים עליה את העיר שלהם.' למה המפה בכיתה?",
+      "answers": [
+        "לעזור למצוא מקומות",
+        "לצייר פנים של חיות",
+        "להחליף ספרים",
+        "לשמור על השקט"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_purpose_lite"
+    },
+    {
+      "question": "קרא את הטקסט: 'גשם ירד בבוקר. התלמידים נכנסו עם מעילים. המורה פתחה את החלון מעט.' מה מספר הטקסט על מזג האוויר?",
+      "answers": [
+        "יום גשום בבית הספר",
+        "יום חם בחופש",
+        "לילה שלם בים",
+        "סופת שלג בקיץ"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_main_idea"
+    },
+    {
+      "question": "קרא את הטקסט: 'הכלב של דנה רץ בגינה. הוא מצא עציץ ושיחק איתו. אחר כך שתה מים מהקערה.' מה עשה הכלב אחרי המשחק?",
+      "answers": [
+        "שתה מים מהקערה",
+        "כתב סיפור בכיתה",
+        "נסע באוטובוס",
+        "קנה כובע חדש"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_sequence"
+    },
+    {
+      "question": "קרא את הטקסט: 'המורה קראה סיפור על ידידות. התלמידים הקשיבו בשקט. בסוף דיברו על הדמויות.' מה עשו התלמידים בסוף?",
+      "answers": [
+        "דיברו על הדמויות בסיפור",
+        "יצאו לחצר מיד",
+        "כתבו מבחן מתמטיקה",
+        "אכלו ארוחת בוקר"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'ליאו אסף פחיתים למיחזור. הוא מיין אותן לשקית נפרדת. הכיתה קיבלה תג מצטיינים.' למה אסף ליאו פחיות?",
+      "answers": [
+        "למחזר ולשמור על הסביבה",
+        "לבנות בית מניווט",
+        "למכור צעצועים",
+        "לצבוע את הקירות"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_inference_lite"
+    },
+    {
+      "question": "קרא את הטקסט: 'שרה שמרה סימניה בין עמודי הספר. היא חזרה לקרוא באותו מקום למחרת.' למה שרה השתמשה בסימניה?",
+      "answers": [
+        "כדי לזכור היכן הפסיקה לקרוא",
+        "כדי למחוק את הספר",
+        "כדי לצבוע את העמודים",
+        "כדי להחליף כריכה"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_inference_lite"
+    },
+    {
+      "question": "קרא את הטקסט: 'בספרייה שקט. ילדים יושבים וקוראים. הספרנית עוזרת למצוא ספר.' איך מתנהגים הילדים?",
+      "answers": [
+        "בשקט וקוראים",
+        "צועקים ורצים",
+        "רוקדים בין המדפים",
+        "מבשלים אוכל"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'אביב נתן לחבר מחברת צבעים. החבר חייך והודה לו. שניהם חזרו לצייר.' מה למדנו על אביב?",
+      "answers": [
+        "הוא נתן מתנה לחברו",
+        "הוא מחק את הציור",
+        "הוא איבד את התיק",
+        "הוא ישן בכיתה"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_character"
+    },
+    {
+      "question": "קרא את הטקסט: 'הרוח נשפה. העלה עף מהעץ. התלמידים תפסו אותו בחצר.' מה קרה לעלה?",
+      "answers": [
+        "עף בגלל הרוח",
+        "נשרף באש",
+        "הפך לעוגה",
+        "נבלע במים"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_cause_effect"
+    },
+    {
+      "question": "קרא את הטקסט: 'הילדים כתבו ברכה לחג. כל אחד קרא בקול. המורה אספה את הדפים לקיר.' מה עשתה המורה?",
+      "answers": [
+        "הציגה את הברכות על הקיר",
+        "מכרה את הדפים",
+        "זרקה את הדפים",
+        "שכחה את השיעור"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'תמר אהבה את הסיפור כי הגיבור סייע לחבר. היא אמרה שהלב חשוב.' מה חשוב לתמר בסיפור?",
+      "answers": [
+        "עזרה לחברים וטוב לב",
+        "ניצחון במירוץ בלבד",
+        "קניית צעצועים",
+        "אכילת ממתקים"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_message"
+    },
+    {
+      "question": "קרא את הטקסט: 'בבוקר הכיתה מדדה אורך השולחן. אחר כך רשמה את המספר בטבלה.' למה מדדו את השולחן?",
+      "answers": [
+        "כדי לרשום מדידה בטבלה",
+        "כדי לצבוע את הקיר",
+        "כדי לשיר שיר",
+        "כדי לפתוח חלון"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'האח הגדול עזר לאחותו לקשור שרוכים. היא חייכה והצליחה לבד.' מה תפקיד האח?",
+      "answers": [
+        "עזר לאחותו עד שהצליחה",
+        "לקח את השרוכים",
+        "כתב את שיעורי הבית",
+        "שיחק בטלפון"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "basic",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_character"
+    },
+    {
+      "question": "מ_בחן?",
       "answers": [
         "מבחן",
         "מבחנה",
@@ -49,1114 +395,59 @@ export const G3_EASY_QUESTIONS = {
         "מבחנת"
       ],
       "correct": 0,
-      "skillId": "hebrew_archive_reading",
+      "skillId": "hebrew_reading_g3",
       "subtype": "g3",
       "difficulty": "basic",
       "cognitiveLevel": "recall",
       "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
         "vocabulary_confusion",
         "careless_error"
-      ]
+      ],
+      "patternFamily": "g3_read_spelling"
     },
     {
-      "question": "קרא את הטקסט: 'השמש זורחת בבוקר. הציפורים שרות. הכל יפה.' כמה משפטים יש?",
+      "question": "קרא את הטקסט: 'הדגים בכסא נראו כחולים. הילדים ספרו כמה דגים ראו.' על מה מדבר הטקסט?",
       "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
+        "ספירת דגים בכסא",
+        "בישול עוגה",
+        "טיול בחלל",
+        "כתיבת שיר אופרה"
       ],
       "correct": 0,
-      "skillId": "hebrew_archive_reading",
+      "skillId": "hebrew_reading_g3",
       "subtype": "g3",
       "difficulty": "basic",
       "cognitiveLevel": "understanding",
       "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
         "reading_comprehension_error",
-        "detail_recall_error"
-      ]
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_main_idea"
     },
     {
-      "question": "קרא את הטקסט: 'הילדה קוראת סיפור יפה. הסיפור מספר על חברות. הילדה נהנית מהסיפור.' מה הנושא?",
+      "question": "קרא את הטקסט: 'לפני הצגה הכיתה תרגלה. כולם זכרו את התפקיד. ההצגה עברה בהצלחה.' מה עשתה הכיתה לפני ההצגה?",
       "answers": [
-        "ילדה קוראת סיפור על חברות",
-        "ילדה משחקת",
-        "ילדה כותבת",
-        "ילדה אוכלת"
+        "תרגלה את התפקידים",
+        "אכלה פיצה",
+        "נעצרה בבית חולים",
+        "מכרה כרטיסים"
       ],
       "correct": 0,
-      "skillId": "hebrew_archive_reading",
+      "skillId": "hebrew_reading_g3",
       "subtype": "g3",
       "difficulty": "basic",
       "cognitiveLevel": "understanding",
       "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
         "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים לומדים למבחן. הם קוראים את החומר. הם רוצים להצליח.' מה המסר?",
-      "answers": [
-        "תלמידים לומדים כדי להצליח",
-        "תלמידים משחקים",
-        "תלמידים אוכלים",
-        "תלמידים ישנים"
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
       ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים בחצר. הם משחקים בכדור. הם נהנים מאוד.' כמה פעלים יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מסבירה את החומר. התלמידים מקשיבים. הם מבינים את השיעור.' מה הנושא?",
-      "answers": [
-        "מורה מסבירה ותלמידים מבינים",
-        "מורה משחקת",
-        "מורה כותבת",
-        "מורה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד מצייר ציור יפה. הציור הוא של בית. הציור תלוי על הקיר.' מה הנושא?",
-      "answers": [
-        "ילד מצייר ציור של בית",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים שרים שירים יפים. השירים הם על הטבע. הילדים נהנים מהשירה.' מה המסר?",
-      "answers": [
-        "ילדים שרים ונהנים משירים על הטבע",
-        "ילדים משחקים",
-        "ילדים אוכלים",
-        "ילדים ישנים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור. החיבור הוא על המשפחה. החיבור יפה ומעניין.' מה הנושא?",
-      "answers": [
-        "תלמידים כותבים חיבור על המשפחה",
-        "תלמידים משחקים",
-        "תלמידים אוכלים",
-        "תלמידים ישנים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה קוראת ספר על בעלי חיים. הספר מעניין מאוד. הילדה לומדת הרבה.' מה המסר?",
-      "answers": [
-        "קריאה מלמדת על בעלי חיים",
-        "קריאה משעממת",
-        "קריאה לא חשובה",
-        "קריאה קשה"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים. המשחקים הם מעניינים. הילדים נהנים מאוד.' כמה שמות עצם יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מלמדת את הילדים. הילדים לומדים. הם מבינים את החומר.' מה הנושא?",
-      "answers": [
-        "מורה מלמדת וילדים מבינים",
-        "מורה משחקת",
-        "מורה כותבת",
-        "מורה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד קורא ספר על הרפתקאות. הספר מעניין מאוד. הילד נהנה מהסיפור.' מה הנושא?",
-      "answers": [
-        "ילד נהנה מספר על הרפתקאות",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים מתכוננים למבחן. הם קוראים את החומר. הם רוצים להצליח.' מה המסר?",
-      "answers": [
-        "הכנה למבחן עוזרת להצלחה",
-        "הכנה לא חשובה",
-        "אין קשר",
-        "לא יודע"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים מציירים ציורים יפים. הציורים הם על הטבע. הציורים תלויים על הקיר.' כמה שמות עצם יש?",
-      "answers": [
-        "4",
-        "3",
-        "5",
-        "2"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה שרה שירים יפים. השירים הם על החברות. הילדה נהנית מהשירה.' מה הנושא?",
-      "answers": [
-        "ילדה שרה שירים על חברות",
-        "ילדה משחקת",
-        "ילדה כותבת",
-        "ילדה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור על המשפחה. החיבור יפה ומעניין. המורה מרוצה מהחיבור.' מה המסר?",
-      "answers": [
-        "כתיבה טובה משמחת את המורה",
-        "כתיבה לא חשובה",
-        "אין קשר",
-        "לא יודע"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד קורא ספר על בעלי חיים. הספר מעניין מאוד. הילד לומד הרבה.' מה הנושא?",
-      "answers": [
-        "ילד לומד מספר על בעלי חיים",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים מעניינים. המשחקים הם מהנים. הילדים נהנים מאוד.' כמה פעלים יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מסבירה את החומר. התלמידים מקשיבים. הם מבינים את השיעור.' מה המסר?",
-      "answers": [
-        "הקשבה עוזרת להבנה",
-        "הקשבה לא חשובה",
-        "אין קשר",
-        "לא יודע"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד מצייר ציור יפה. הציור הוא של בית. הציור תלוי על הקיר.' מה הנושא?",
-      "answers": [
-        "ילד מצייר ציור של בית",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים שרים שירים יפים. השירים הם על הטבע. הילדים נהנים מהשירה.' כמה שמות עצם יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור על המשפחה. החיבור יפה ומעניין. המורה מרוצה מהחיבור.' מה הנושא?",
-      "answers": [
-        "תלמידים כותבים חיבור על המשפחה",
-        "תלמידים משחקים",
-        "תלמידים אוכלים",
-        "תלמידים ישנים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה קוראת ספר על הרפתקאות. הספר מעניין מאוד. הילדה נהנית מהסיפור.' מה המסר?",
-      "answers": [
-        "קריאה מהנה ומעניינת",
-        "קריאה משעממת",
-        "קריאה לא חשובה",
-        "קריאה קשה"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים מעניינים. המשחקים הם מהנים. הילדים נהנים מאוד.' מה הנושא?",
-      "answers": [
-        "ילדים נהנים ממשחקים מעניינים",
-        "ילדים קוראים",
-        "ילדים כותבים",
-        "ילדים אוכלים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מלמדת את הילדים. הילדים לומדים. הם מבינים את החומר.' כמה פעלים יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד מצייר ציור יפה. הציור הוא של בית. הציור תלוי על הקיר.' מה המסר?",
-      "answers": [
-        "ציור יפה תלוי על הקיר",
-        "ציור לא חשוב",
-        "אין קשר",
-        "לא יודע"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים שרים שירים יפים. השירים הם על הטבע. הילדים נהנים מהשירה.' מה הנושא?",
-      "answers": [
-        "ילדים שרים ונהנים משירים על הטבע",
-        "ילדים משחקים",
-        "ילדים אוכלים",
-        "ילדים ישנים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור על המשפחה. החיבור יפה ומעניין. המורה מרוצה מהחיבור.' כמה שמות עצם יש?",
-      "answers": [
-        "4",
-        "3",
-        "5",
-        "2"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה קוראת ספר על בעלי חיים. הספר מעניין מאוד. הילדה לומדת הרבה.' מה הנושא?",
-      "answers": [
-        "ילדה לומדת מספר על בעלי חיים",
-        "ילדה משחקת",
-        "ילדה כותבת",
-        "ילדה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים מעניינים. המשחקים הם מהנים. הילדים נהנים מאוד.' מה המסר?",
-      "answers": [
-        "משחקים מעניינים מהנים",
-        "משחקים משעממים",
-        "משחקים לא חשובים",
-        "משחקים קשים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מסבירה את החומר. התלמידים מקשיבים. הם מבינים את השיעור.' מה הנושא?",
-      "answers": [
-        "מורה מסבירה ותלמידים מבינים",
-        "מורה משחקת",
-        "מורה כותבת",
-        "מורה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד מצייר ציור יפה. הציור הוא של בית. הציור תלוי על הקיר.' כמה פעלים יש?",
-      "answers": [
-        "2",
-        "1",
-        "3",
-        "4"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים שרים שירים יפים. השירים הם על הטבע. הילדים נהנים מהשירה.' מה המסר?",
-      "answers": [
-        "שירה על הטבע מהנה",
-        "שירה משעממת",
-        "שירה לא חשובה",
-        "שירה קשה"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור על המשפחה. החיבור יפה ומעניין. המורה מרוצה מהחיבור.' מה הנושא?",
-      "answers": [
-        "תלמידים כותבים חיבור על המשפחה",
-        "תלמידים משחקים",
-        "תלמידים אוכלים",
-        "תלמידים ישנים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה קוראת ספר על הרפתקאות. הספר מעניין מאוד. הילדה נהנית מהסיפור.' כמה שמות עצם יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים מעניינים. המשחקים הם מהנים. הילדים נהנים מאוד.' מה הנושא?",
-      "answers": [
-        "ילדים נהנים ממשחקים מעניינים",
-        "ילדים קוראים",
-        "ילדים כותבים",
-        "ילדים אוכלים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מלמדת את הילדים. הילדים לומדים. הם מבינים את החומר.' מה המסר?",
-      "answers": [
-        "למידה עוזרת להבנה",
-        "למידה לא חשובה",
-        "אין קשר",
-        "לא יודע"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד מצייר ציור יפה. הציור הוא של בית. הציור תלוי על הקיר.' מה הנושא?",
-      "answers": [
-        "ילד מצייר ציור של בית",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים שרים שירים יפים. השירים הם על הטבע. הילדים נהנים מהשירה.' כמה פעלים יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור על המשפחה. החיבור יפה ומעניין. המורה מרוצה מהחיבור.' מה המסר?",
-      "answers": [
-        "כתיבה טובה משמחת את המורה",
-        "כתיבה לא חשובה",
-        "אין קשר",
-        "לא יודע"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה קוראת ספר על בעלי חיים. הספר מעניין מאוד. הילדה לומדת הרבה.' מה הנושא?",
-      "answers": [
-        "ילדה לומדת מספר על בעלי חיים",
-        "ילדה משחקת",
-        "ילדה כותבת",
-        "ילדה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים מעניינים. המשחקים הם מהנים. הילדים נהנים מאוד.' כמה שמות עצם יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מסבירה את החומר. התלמידים מקשיבים. הם מבינים את השיעור.' מה הנושא?",
-      "answers": [
-        "מורה מסבירה ותלמידים מבינים",
-        "מורה משחקת",
-        "מורה כותבת",
-        "מורה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד מצייר ציור יפה. הציור הוא של בית. הציור תלוי על הקיר.' מה המסר?",
-      "answers": [
-        "ציור יפה תלוי על הקיר",
-        "ציור לא חשוב",
-        "אין קשר",
-        "לא יודע"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים שרים שירים יפים. השירים הם על הטבע. הילדים נהנים מהשירה.' מה הנושא?",
-      "answers": [
-        "ילדים שרים ונהנים משירים על הטבע",
-        "ילדים משחקים",
-        "ילדים אוכלים",
-        "ילדים ישנים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור על המשפחה. החיבור יפה ומעניין. המורה מרוצה מהחיבור.' כמה פעלים יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה קוראת ספר על הרפתקאות. הספר מעניין מאוד. הילדה נהנית מהסיפור.' מה המסר?",
-      "answers": [
-        "קריאה מהנה ומעניינת",
-        "קריאה משעממת",
-        "קריאה לא חשובה",
-        "קריאה קשה"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים מעניינים. המשחקים הם מהנים. הילדים נהנים מאוד.' מה הנושא?",
-      "answers": [
-        "ילדים נהנים ממשחקים מעניינים",
-        "ילדים קוראים",
-        "ילדים כותבים",
-        "ילדים אוכלים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מלמדת את הילדים. הילדים לומדים. הם מבינים את החומר.' כמה שמות עצם יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילד מצייר ציור יפה. הציור הוא של בית. הציור תלוי על הקיר.' מה הנושא?",
-      "answers": [
-        "ילד מצייר ציור של בית",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים שרים שירים יפים. השירים הם על הטבע. הילדים נהנים מהשירה.' מה המסר?",
-      "answers": [
-        "שירה על הטבע מהנה",
-        "שירה משעממת",
-        "שירה לא חשובה",
-        "שירה קשה"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'התלמידים כותבים חיבור על המשפחה. החיבור יפה ומעניין. המורה מרוצה מהחיבור.' מה הנושא?",
-      "answers": [
-        "תלמידים כותבים חיבור על המשפחה",
-        "תלמידים משחקים",
-        "תלמידים אוכלים",
-        "תלמידים ישנים"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדה קוראת ספר על בעלי חיים. הספר מעניין מאוד. הילדה לומדת הרבה.' מה המסר?",
-      "answers": [
-        "קריאה מלמדת על בעלי חיים",
-        "קריאה משעממת",
-        "קריאה לא חשובה",
-        "קריאה קשה"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'הילדים משחקים במשחקים מעניינים. המשחקים הם מהנים. הילדים נהנים מאוד.' כמה פעלים יש?",
-      "answers": [
-        "3",
-        "2",
-        "4",
-        "1"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
-    },
-    {
-      "question": "קרא את הטקסט: 'המורה מסבירה את החומר. התלמידים מקשיבים. הם מבינים את השיעור.' מה הנושא?",
-      "answers": [
-        "מורה מסבירה ותלמידים מבינים",
-        "מורה משחקת",
-        "מורה כותבת",
-        "מורה אוכלת"
-      ],
-      "correct": 0,
-      "skillId": "hebrew_archive_reading",
-      "subtype": "g3",
-      "difficulty": "basic",
-      "cognitiveLevel": "understanding",
-      "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
-        "reading_comprehension_error",
-        "detail_recall_error"
-      ]
+      "patternFamily": "g3_read_sequence"
     }
   ],
   "comprehension": [
@@ -1417,32 +708,347 @@ export const G3_EASY_QUESTIONS = {
 export const G3_MEDIUM_QUESTIONS = {
   "reading": [
     {
-      "question": "קרא את הטקסט: 'הילד קורא ספר מעניין בכיתה. הספר מספר על הרפתקאות של ילדים. הילד נהנה מהסיפור.' מה הרעיון המרכזי?",
+      "question": "קרא את הטקסט: 'רוני הגיע מוקדם לספרייה. הוא חיפש ספר על כוכבים. הספרנית הראתה לו מדף מיוחד.' מה רצה רוני לקרוא?",
       "answers": [
-        "ילד נהנה מספר על הרפתקאות",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
+        "ספר על כוכבים",
+        "ספר בישול",
+        "ספר על בגדים",
+        "ספר בלי תמונות"
       ],
       "correct": 0,
-      "skillId": "hebrew_archive_reading",
+      "skillId": "hebrew_reading_g3",
       "subtype": "g3",
       "difficulty": "standard",
       "cognitiveLevel": "understanding",
       "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
         "reading_comprehension_error",
-        "detail_recall_error"
-      ]
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_detail"
     },
     {
-      "question": "קרא את הטקסט: 'השמש זורחת בבוקר. הציפורים שרות. הכל יפה ונעים.' מה המסר?",
+      "question": "קרא את הטקסט: 'בשדה התלמידים ראו פרפרים צבעוניים. הם רשמו בחוברת כמה צבעים מצאו. אחר כך שיתפו ממצאים.' מה עשו התלמידים אחרי הספירה?",
       "answers": [
-        "בוקר יפה ונעים",
-        "לילה",
-        "עננים",
-        "גשם"
+        "שיתפו את הממצאים עם הכיתה",
+        "מחקו את החוברת",
+        "יצאו מהבית ספר",
+        "החליפו מורה"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_sequence"
+    },
+    {
+      "question": "קרא את הטקסט: 'נעמה שמרה על כלב במשך שבוע. היא האכילה אותו בזמן והוליכה לטיול. הבעלים הודו לה בכתב.' למה כתבו הבעלים תודה?",
+      "answers": [
+        "כי נעמה דאגה לכלב היטב",
+        "כי נעמה איבדה את הכלב",
+        "כי הכלב לא אכל",
+        "כי נעמה לא הגיעה"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_inference"
+    },
+    {
+      "question": "קרא את הטקסט: 'במקראה קראו על גיבורה שעזרה לקהילה. הילדים דנו אם היו מעיזים לעשות כמוה.' מה נושא השיחה בכיתה?",
+      "answers": [
+        "האם היו מעיזים לעזור כמו הגיבורה",
+        "איך לקנות מחברות",
+        "מתי מתחיל החופש",
+        "למה יש שיעורי בית"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_message"
+    },
+    {
+      "question": "קרא את הטקסט: 'איתי שכח מטריה ונרטב בדרך. המורה נתנה לו חולצה יבשה ודיברה איתו על תכנון.' מה הלקח של איתי?",
+      "answers": [
+        "לתכנן לקחת מטריה בגשם",
+        "לא ללכת לבית ספר",
+        "למחוק את התיק",
+        "לצייר על הקיר"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_inference"
+    },
+    {
+      "question": "קרא את הטקסט: 'הכיתה ביקרה במוזיאון טבע. מדריך הסביר על שלד דינוזאור. התלמידים רשמו שאלה אחת.' מה עשו התלמידים במוזיאון?",
+      "answers": [
+        "האזינו להסבר ורשמו שאלה",
+        "שיחקו כדורגל",
+        "קנו גלידה",
+        "ישנו באולם"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'שתי דמויות בסיפור לא הסכימו בתחילה. בסוף מצאו פתרון ושיתפו פעולה.' מה השתנה בסוף הסיפור?",
+      "answers": [
+        "הן שיתפו פעולה",
+        "הן נעלמו",
+        "הן הפסיקו לדבר לנצח",
+        "הן עזבו את בית הספר"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_plot"
+    },
+    {
+      "question": "קרא את הטקסט: 'בעיתון בית הספר פורסם כתבה על מיחזור. התלמידים הוסיפו ציור וטיפ לקוראים.' למי מיועה הטיפ בכתבה?",
+      "answers": [
+        "לתלמידי בית הספר",
+        "לחייזרים בחלל",
+        "לדינוזאורים",
+        "לדגים בים בלבד"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_audience"
+    },
+    {
+      "question": "קרא את הטקסט: 'הסבתא סיפרה על בית ילדותה בכפר. הנכדים שאלו על החיות והגינה.' מה רצו הנכדים לדעת?",
+      "answers": [
+        "איך היה החיים בכפר",
+        "כמה עולה מכונית",
+        "איך מפעילים טלוויזיה",
+        "מתי מתחיל מבחן"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'לפני המשחק התלמידים קראו חוקים. כולם הסכימו לכבד אחד את השני.' למה קראו חוקים?",
+      "answers": [
+        "כדי לשחק בצורה הוגנת",
+        "כדי לא לשחק בכלל",
+        "כדי לישון",
+        "כדי לצבוע קירות"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_purpose"
+    },
+    {
+      "question": "קרא את הטקסט: 'הגיבור בחר להגיד את האמת, גם כשהיה קשה. חבריו סלחו לו בסוף.' מה עשה הגיבור?",
+      "answers": [
+        "אמר את האמת",
+        "גנב צעצוע",
+        "הסתיר ספר",
+        "ברח מהכיתה"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_character"
+    },
+    {
+      "question": "קרא את הטקסט: 'בטיול הכיתה מצאה נוצה על שביל. המורה ביקשה לא לקחת מטבעות טבע.' מה ביקשה המורה?",
+      "answers": [
+        "לשמור על הטבע ולא לאסוף הכל",
+        "לאכול את הנוצה",
+        "לזרוק אשפה בשביל",
+        "לרוץ לבד"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_message"
+    },
+    {
+      "question": "קרא את הטקסט: 'הילדה כתבה יומן על יום גשום. היא תיארה ריח של אדמה וצליל טיפות.' מה סוג הטקסט?",
+      "answers": [
+        "תיאור אישי של יום גשום",
+        "טבלת מספרים",
+        "רשימת קניות",
+        "הוראות מבחן"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_genre"
+    },
+    {
+      "question": "קרא את הטקסט: 'בסוף הסיפור הגיבור החזיר חפץ שמצא. הבעלים שמח והזמין אותו לתה.' למה שמח הבעלים?",
+      "answers": [
+        "כי החזירו לו חפץ שאבד",
+        "כי הגיבור עזב את העיר",
+        "כי לא היה סיפור",
+        "כי ירד שלג"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_inference"
+    },
+    {
+      "question": "קרא את הטקסט: 'התלמידים השוו בין שני סיפורים: באחד הגיבור עזר, בשני הוא ויתר. הם דנו מה עדיף.' מה נושא הדיון?",
+      "answers": [
+        "השוואה בין עזרה לוויתור",
+        "ספירת כיסאות",
+        "צבעי עפרונות",
+        "זמני ארוחה"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_medium_compare"
+    },
+    {
+      "question": "טקסט מידעי מול סיפור (1): 'בטבלה: 12 ימים עם גשם, 18 בלי גשם.' לעומת סיפור: 'הגשם דפק על החלון.' מה ההבדל בז׳אנר?",
+      "answers": [
+        "במידע יש עובדות ובסיפור יש עלילה ותיאור חווייתי",
+        "אין הבדל",
+        "שניהם רק שירים",
+        "במידע חייבת להיות עלילה"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_archive_reading",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error"
+      ],
+      "subtopicId": "g3.genre_tag_info_vs_story",
+      "patternFamily": "phase717_p0_genre"
+    },
+    {
+      "question": "'המים רותחים ב - 100°C ( בלחץ אטמוספרי רגיל ) .' לעומת: 'הקומקום שרק כועס.' מה נכון?",
+      "answers": [
+        "במשפט המידעי יש ניסוח עובדתי; בסיפור יש דימוי",
+        "בשניהם רק מספרים",
+        "במידע אסור להשתמש במילים",
+        "בסיפור חייבים רק טבלאות"
       ],
       "correct": 0,
       "skillId": "hebrew_archive_reading",
@@ -1454,7 +1060,53 @@ export const G3_MEDIUM_QUESTIONS = {
         "careless_error",
         "reading_comprehension_error",
         "detail_recall_error"
-      ]
+      ],
+      "subtopicId": "g3.genre_tag_info_vs_story",
+      "patternFamily": "phase717_p0_genre"
+    },
+    {
+      "question": "טקסט מידעי מול סיפור (3): 'מחקר מצא ששתיית מים מסייעת בריכוז.' לעומת: 'דני שתה והרגיש גיבור.' מה מאפיין את המידע?",
+      "answers": [
+        "מקור/ממצא מנוסח בזהירות; בסיפור דגש על דמות ורגש",
+        "רק שמות",
+        "רק צחוק",
+        "אין הבדל"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_archive_reading",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "vocabulary_confusion",
+        "careless_error",
+        "reading_comprehension_error",
+        "detail_recall_error"
+      ],
+      "subtopicId": "g3.genre_tag_info_vs_story",
+      "patternFamily": "phase717_p0_genre"
+    },
+    {
+      "question": "טקסט מידעי מול סיפור (4): 'לוח שנה: 365 ימים.' לעומת: 'השנה רצה מהר כמו סוס.' מה ההבדל?",
+      "answers": [
+        "במידע עובדות; במטפורה בסיפור יש השוואה דימוית",
+        "שניהם טבלאות",
+        "במידע חייבת מטפורה",
+        "בסיפור אין משפטים"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_archive_reading",
+      "subtype": "g3",
+      "difficulty": "standard",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "vocabulary_confusion",
+        "careless_error",
+        "reading_comprehension_error",
+        "detail_recall_error"
+      ],
+      "subtopicId": "g3.genre_tag_info_vs_story",
+      "patternFamily": "phase717_p0_genre"
     }
   ],
   "comprehension": [
@@ -1640,24 +1292,214 @@ export const G3_MEDIUM_QUESTIONS = {
 export const G3_HARD_QUESTIONS = {
   "reading": [
     {
-      "question": "קרא את הטקסט הספרותי: 'הילד קורא ספר מעניין בכיתה. הספר מספר על הרפתקאות של ילדים שטיילו ביער. הילד נהנה מהסיפור ומדמיין את עצמו שם.' מה הנושא והמסר?",
+      "question": "קרא את הטקסט: 'מיכל קראה סיפור על ילדה שעברה לעיר חדשה. בתחילה היא התביישה, אחר כך מצאה חברה לשחק איתה בחצר.' מה השתנה אצל מיכל בקריאה?",
       "answers": [
-        "קריאה מעודדת דמיון והרפתקאות",
-        "ילד משחק",
-        "ילד כותב",
-        "ילד אוכל"
+        "הבינה שהתביישות יכולה לעבור",
+        "למדה שאין חברים בעולם",
+        "גילתה שאסור לקרוא",
+        "החליטה שלא ללכת לבית ספר"
       ],
       "correct": 0,
-      "skillId": "hebrew_archive_reading",
+      "skillId": "hebrew_reading_g3",
       "subtype": "g3",
       "difficulty": "advanced",
       "cognitiveLevel": "understanding",
       "expectedErrorTypes": [
-        "vocabulary_confusion",
-        "careless_error",
         "reading_comprehension_error",
-        "detail_recall_error"
-      ]
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_inference"
+    },
+    {
+      "question": "קרא את הטקסט: 'במסע הקריאה הכיתה קראה על מדען שטעה ותיקן את הטעות. המורה אמרה שגם טעויות עוזרות ללמוד.' מה המסר?",
+      "answers": [
+        "טעויות יכולות לעזור ללמידה",
+        "אסור לטעות לעולם",
+        "מדענים לא לומדים",
+        "ספרים מיותרים"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_message"
+    },
+    {
+      "question": "קרא את הטקסט: 'הדמות סירבה לרמות בחברים, אך בסוף הסבירה למה כנות חשובה. החברים התנצלו.' למה התנצלו החברים?",
+      "answers": [
+        "הבינו שכנות חשובה",
+        "שכחו את השיעור",
+        "מחקו את הספר",
+        "עזבו את העיר"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_plot"
+    },
+    {
+      "question": "קרא את הטקסט: 'בטקסט מידע כתוב: לדגים צריך מים נקיים. בסיפור לידו דג מדבר על חלום לשחות בנהר.' מה ההבדל בין הטקסטים?",
+      "answers": [
+        "מידע נותן עובדה, סיפור מוסיף דמיון",
+        "אין הבדל ביניהם",
+        "שניהם רק שירים",
+        "מידע תמיד בלי מילים"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_genre"
+    },
+    {
+      "question": "קרא את הטקסט: 'הילד שמר סוד על מתנה לסבתא. הוא לא סיפר, כדי שלא יתקלקל ההפתעה.' למה שמר על סוד?",
+      "answers": [
+        "כדי לשמור על הפתעה",
+        "כי שכח את המתנה",
+        "כי לא אהב את סבתא",
+        "כי לא יצא מבית"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_inference"
+    },
+    {
+      "question": "קרא את הטקסט: 'בסיפור מסע הגיבור חזר הביתה עייף אך גאה. הוא למד שהדרך הקשה שווה את הסוף.' איך הרגיש הגיבור בסוף?",
+      "answers": [
+        "עייף אבל גאה",
+        "שמח לשכוח הכל",
+        "כועס על חברים",
+        "לא אכפת לו בכלל"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_feeling"
+    },
+    {
+      "question": "קרא את הטקסט: 'הכיתה קראה מכתב מכפר בגליל. התלמידים סימנו על מפה את הכפר וכתבו שאלה למחבר.' מה עשו אחרי הקריאה?",
+      "answers": [
+        "סימנו מפה וכתבו שאלה",
+        "מחקו את המפה",
+        "שברו את המכתב",
+        "לא קראו כלל"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_detail"
+    },
+    {
+      "question": "קרא את הטקסט: 'בסיפור עם שני קולות, ילד אחד חשב שהשני כועס, אבל הוא רק היה עייף.' מה הייתה הטעות?",
+      "answers": [
+        "חשבו שכעס במקום עייף",
+        "חשבו שמדובר במתמטיקה",
+        "חשבו שאין סיפור",
+        "חשבו שזה ספר בישול"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_misunderstanding"
+    },
+    {
+      "question": "קרא את הטקסט: 'המחבר כתב: אני כותב כדי לשתף חוויה, לא רק עובדות.' איזו מילה מבטאת כוונה?",
+      "answers": [
+        "לשתף חוויה",
+        "רק עובדות",
+        "אני כותב",
+        "לא רק"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "analysis",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_author"
+    },
+    {
+      "question": "קרא את הטקסט: 'בסוף הספר הגיבור מחליט לסלוח. הקורא מבין שהסליחה מאפשרת להמשיך הלאה.' מה מאפשרת הסליחה?",
+      "answers": [
+        "להמשיך הלאה בלי להישאר כועס",
+        "למחוק את הספר",
+        "לא לדבר לעולם",
+        "לברוח מהבית"
+      ],
+      "correct": 0,
+      "skillId": "hebrew_reading_g3",
+      "subtype": "g3",
+      "difficulty": "advanced",
+      "cognitiveLevel": "understanding",
+      "expectedErrorTypes": [
+        "reading_comprehension_error",
+        "detail_recall_error",
+        "vocabulary_confusion",
+        "careless_error"
+      ],
+      "patternFamily": "g3_read_hard_message"
     }
   ],
   "comprehension": [
