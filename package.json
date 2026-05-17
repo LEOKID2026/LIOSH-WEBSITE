@@ -55,7 +55,7 @@
     "audit:questions": "tsx scripts/generator-deterministic-harness.mjs && tsx scripts/audit-question-banks.mjs",
     "qa:student-question-stem-metadata": "tsx scripts/qa-student-question-stem-metadata.mjs",
     "test:e2e:stem-metadata": "playwright test tests/e2e/student-question-stem-metadata.spec.ts --project=chromium",
-    "test:e2e:question-display": "playwright test tests/e2e/student-question-display.spec.ts --project=chromium",
+    "test:e2e:question-display": "playwright test tests/e2e/student-question-display.spec.ts tests/e2e/student-question-display-closure.spec.ts --project=chromium",
     "audit:curriculum:inventory": "tsx scripts/curriculum-audit/scan-question-inventory.mjs",
     "audit:curriculum": "tsx scripts/curriculum-audit/run-curriculum-audit.mjs",
     "audit:curriculum:rollup": "tsx scripts/curriculum-audit/build-topic-rollup.mjs",

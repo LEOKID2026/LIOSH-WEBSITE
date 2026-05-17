@@ -19,6 +19,7 @@ import {
 } from "../../utils/moledet-geography-storage";
 import { generateQuestion } from "../../utils/moledet-geography-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
   getHint,
   getSolutionSteps,
@@ -3341,133 +3342,64 @@ useEffect(() => {
                     </div>
                   )}
                   
-                  {/* הפרדה בין שורת השאלה לשורת התרגיל */}
-                  {currentQuestion.questionLabel && currentQuestion.exerciseText ? (
-                    <>
-                      <p
-                        className="text-2xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
-                        style={{
-                          direction: currentQuestion.isStory ? "rtl" : "rtl",
-                          unicodeBidi: "plaintext",
-                          wordBreak: "break-word",
-                          overflowWrap: "break-word",
-                          ...getQuestionFontStyle({
-                            text: currentQuestion.questionLabel || "",
-                          }),
-                        }}
+                  {canDisplayVertically && (
+                    <div className="flex justify-center mb-2">
+                      <button
+                        onClick={() => setIsVerticalDisplay((prev) => !prev)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
+                        title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
                       >
-                        {currentQuestion.questionLabel}
-                      </p>
-                      
-                      {/* כפתור החלפה מאוזן/מאונך - רק אם התרגיל יכול להיות מאונך */}
-                      {canDisplayVertically && (
-                        <div className="flex justify-center mb-2">
-                          <button
-                            onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
-                            title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
-                          >
-                            {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
-                          </button>
-                        </div>
-                      )}
-                      
-                      {/* תצוגת התרגיל - מאוזן או מאונך */}
-                      {isVerticalDisplay && canDisplayVertically ? (
-                        <div className="mb-4 flex justify-center w-full max-w-full px-2">
-                          <pre
-                            className="text-3xl text-center text-white font-bold font-mono whitespace-pre break-words overflow-wrap-anywhere max-w-full"
-                            style={{
-                              direction: "ltr",
-                              unicodeBidi: "plaintext",
-                              wordBreak: "break-word",
-                              overflowWrap: "break-word",
-                            }}
-                          >
-                            {getVerticalExercise() || currentQuestion.exerciseText}
-                          </pre>
-                        </div>
-                      ) : (
-                        <p
-                          className={`text-4xl text-center text-white font-bold mb-4 break-words overflow-wrap-anywhere max-w-full px-2 ${
-                            currentQuestion.operation === "sequences" ? "whitespace-normal" : ""
-                          }`}
-                          style={{
-                            direction: "ltr",
-                            unicodeBidi: "plaintext",
-                            wordBreak: "break-word",
-                            overflowWrap: "break-word",
-                            ...getQuestionFontStyle({
-                              text: currentQuestion.exerciseText || "",
-                            }),
-                          }}
-                        >
-                          {currentQuestion.exerciseText}
-                        </p>
-                      )}
-                    </>
-                  ) : currentQuestion.exerciseText ? (
+                        {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
+                      </button>
+                    </div>
+                  )}
+                  {isVerticalDisplay &&
+                  canDisplayVertically &&
+                  currentQuestion.exerciseText ? (
                     <>
-                      {/* כפתור החלפה מאוזן/מאונך - רק אם התרגיל יכול להיות מאונך */}
-                      {canDisplayVertically && (
-                        <div className="flex justify-center mb-2">
-                          <button
-                            onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
-                            title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
-                          >
-                            {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
-                          </button>
-                        </div>
-                      )}
-                      
-                      {/* תצוגת התרגיל - מאוזן או מאונך */}
-                      {isVerticalDisplay && canDisplayVertically ? (
-                        <div className="mb-4 flex justify-center w-full max-w-full px-2">
-                          <pre
-                            className="text-3xl text-center text-white font-bold font-mono whitespace-pre break-words overflow-wrap-anywhere max-w-full"
-                            style={{
-                              direction: "ltr",
-                              unicodeBidi: "plaintext",
-                              wordBreak: "break-word",
-                              overflowWrap: "break-word",
-                            }}
-                          >
-                            {getVerticalExercise() || currentQuestion.exerciseText}
-                          </pre>
-                        </div>
-                      ) : (
+                      {currentQuestion.questionLabel ? (
                         <p
-                          className="text-4xl text-center text-white font-bold mb-4 break-words overflow-wrap-anywhere max-w-full px-2"
+                          className="text-2xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
+                          dir="rtl"
+                          data-testid="student-question-lead"
                           style={{
-                            direction: "ltr",
+                            direction: "rtl",
                             unicodeBidi: "plaintext",
-                            wordBreak: "break-word",
-                            overflowWrap: "break-word",
                             ...getQuestionFontStyle({
-                              text: currentQuestion.exerciseText || "",
+                              text: currentQuestion.questionLabel || "",
                             }),
                           }}
                         >
-                          {currentQuestion.exerciseText}
+                          {currentQuestion.questionLabel}
                         </p>
-                      )}
+                      ) : null}
+                      <div
+                        className="mb-4 flex justify-center w-full max-w-full px-2 overflow-x-auto"
+                        data-testid="student-question-body"
+                        dir="ltr"
+                      >
+                        <pre
+                          className="text-3xl text-center text-white font-bold font-mono whitespace-pre"
+                          style={{ direction: "ltr", unicodeBidi: "isolate" }}
+                        >
+                          {getVerticalExercise() || currentQuestion.exerciseText}
+                        </pre>
+                      </div>
                     </>
                   ) : (
-                    <div
-                      className="text-4xl font-black text-white mb-4 text-center break-words overflow-wrap-anywhere max-w-full px-2"
-                      style={{
-                        direction: currentQuestion.isStory ? "rtl" : "ltr",
-                        unicodeBidi: "plaintext",
-                        wordBreak: "break-word",
-                        overflowWrap: "break-word",
-                        ...getQuestionFontStyle({
-                          text: currentQuestion.question || "",
-                        }),
-                      }}
-                    >
-                      {currentQuestion.question}
-                    </div>
+                    <StudentQuestionDisplay
+                      question={currentQuestion.question}
+                      questionLabel={currentQuestion.questionLabel}
+                      exerciseText={currentQuestion.exerciseText}
+                      getQuestionFontStyle={getQuestionFontStyle}
+                      leadClassName="text-2xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
+                      bodyClassName={`text-4xl text-center text-white font-bold mb-4 max-w-full px-2 ${
+                        currentQuestion.operation === "sequences"
+                          ? "whitespace-normal break-words overflow-wrap-anywhere"
+                          : ""
+                      }`}
+                      formulaClassName="text-3xl text-center text-white font-bold font-mono max-w-full px-2 py-1"
+                    />
                   )}
                   </div>
 

@@ -48,6 +48,7 @@ import {
 } from "../../utils/learning-ui-classes";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import { warnDuplicateMcqOptionsDevOnly } from "../../utils/answer-compare";
 import {
   distractorFamilyFromOptionCell,
@@ -3438,21 +3439,16 @@ function saveScienceAnswerInParallel({
                         🧠 מה חשוב לזכור?
                       </button>
                     )}
-                  <div
-                    data-testid="science-question-stem"
-                    className="text-base sm:text-lg md:text-xl font-bold text-white text-center leading-snug max-w-xl mx-auto"
-                    style={{
-                      direction: "rtl",
-                      unicodeBidi: "plaintext",
-                      ...getQuestionFontStyle({
-                        text: currentQuestion?.stem || "אין שאלה זמינה להגדרה זו.",
-                      }),
-                    }}
-                  >
-                    {currentQuestion
-                      ? currentQuestion.stem
-                      : "אין שאלה זמינה להגדרה זו."}
-                  </div>
+                  <StudentQuestionDisplay
+                    testId="science-question-stem"
+                    question={
+                      currentQuestion?.stem || "אין שאלה זמינה להגדרה זו."
+                    }
+                    getQuestionFontStyle={getQuestionFontStyle}
+                    leadClassName="text-base sm:text-lg md:text-xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-xl mx-auto px-2"
+                    bodyClassName="text-base sm:text-lg md:text-xl font-bold text-white text-center leading-snug max-w-xl mx-auto break-words overflow-wrap-anywhere px-2"
+                    wrapperClassName="w-full flex flex-col items-center justify-center gap-1 max-w-xl mx-auto"
+                  />
                 </div>
 
                 <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">

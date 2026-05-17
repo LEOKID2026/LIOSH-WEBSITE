@@ -234,12 +234,29 @@ export function normalizeStudentQuestionDisplayFields(q) {
   if (!q || typeof q !== "object") return q;
   const next = { ...q };
 
+  if (
+    typeof next.stem === "string" &&
+    next.stem.trim() &&
+    !(typeof next.question === "string" && next.question.trim())
+  ) {
+    next.question = next.stem.trim();
+  }
+
   const label =
     typeof next.questionLabel === "string" ? next.questionLabel.trim() : "";
   let exercise =
     typeof next.exerciseText === "string" ? next.exerciseText.trim() : "";
   const question =
     typeof next.question === "string" ? next.question.trim() : "";
+
+  if (
+    label &&
+    /^\d+$/.test(label) &&
+    typeof next.stem === "string" &&
+    next.stem.trim()
+  ) {
+    delete next.questionLabel;
+  }
 
   if (label && exercise) {
     next.questionLabel = label.endsWith(":") ? label : `${label}:`;

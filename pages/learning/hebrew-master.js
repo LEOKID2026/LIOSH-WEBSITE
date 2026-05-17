@@ -19,6 +19,7 @@ import {
 } from "../../utils/hebrew-storage";
 import { generateQuestion } from "../../utils/hebrew-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
+import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import {
   hebrewQuestionFingerprint,
   hebrewNearDuplicateKey,
@@ -3966,144 +3967,64 @@ useEffect(() => {
                     </div>
                   )}
                   
-                  {/* הפרדה בין שורת השאלה לשורת התרגיל */}
-                  {currentQuestion.questionLabel && currentQuestion.exerciseText ? (
-                    <>
-                      {!suppressAudioOnlyShamaLabel && (
-                      <p
-                        className={`text-xl md:text-2xl text-center text-white ${questionBottomSpacingClass} break-words overflow-wrap-anywhere max-w-full px-2`}
-                        style={{
-                          direction: currentQuestion.isStory ? "rtl" : "rtl",
-                          unicodeBidi: "plaintext",
-                          wordBreak: "break-word",
-                          overflowWrap: "break-word",
-                          lineHeight: questionLineHeightByPressure,
-                          ...getQuestionFontStyle({
-                            text: disQuestionLabel || "",
-                          }),
-                        }}
+                  {canDisplayVertically && (
+                    <div className="flex justify-center mb-2">
+                      <button
+                        onClick={() => setIsVerticalDisplay((prev) => !prev)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
+                        title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
                       >
-                        {disQuestionLabel}
-                      </p>
-                      )}
-                      
-                      {/* כפתור החלפה מאוזן/מאונך - רק אם התרגיל יכול להיות מאונך */}
-                      {canDisplayVertically && (
-                        <div className="flex justify-center mb-2">
-                          <button
-                            onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
-                            title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
-                          >
-                            {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
-                          </button>
-                        </div>
-                      )}
-                      
-                      {/* תצוגת התרגיל - מאוזן או מאונך */}
-                      {isVerticalDisplay && canDisplayVertically ? (
-                        <div className={`${questionBottomSpacingClass} flex justify-center w-full max-w-full px-2`}>
-                          <pre
-                            className="text-2xl md:text-3xl text-center text-white font-bold font-mono whitespace-pre break-words overflow-wrap-anywhere max-w-full"
-                            style={{
-                              direction: "ltr",
-                              unicodeBidi: "plaintext",
-                              wordBreak: "break-word",
-                              overflowWrap: "break-word",
-                            }}
-                          >
-                            {getVerticalExercise() || disExerciseText}
-                          </pre>
-                        </div>
-                      ) : (
-                        <p
-                          className={`text-2xl md:text-3xl lg:text-4xl text-center text-white font-bold mb-4 break-words overflow-wrap-anywhere max-w-full px-2 ${
-                            currentQuestion.operation === "sequences" ? "whitespace-normal" : ""
-                          }`}
-                          style={{
-                            direction: "ltr",
-                            unicodeBidi: "plaintext",
-                            wordBreak: "break-word",
-                            overflowWrap: "break-word",
-                            lineHeight: questionLineHeightByPressure,
-                            ...getQuestionFontStyle({
-                              text: disExerciseText || "",
-                            }),
-                          }}
-                        >
-                          {disExerciseText}
-                        </p>
-                      )}
-                    </>
-                  ) : currentQuestion.exerciseText ? (
-                    <>
-                      {/* כפתור החלפה מאוזן/מאונך - רק אם התרגיל יכול להיות מאונך */}
-                      {canDisplayVertically && (
-                        <div className="flex justify-center mb-2">
-                          <button
-                            onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
-                            title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
-                          >
-                            {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
-                          </button>
-                        </div>
-                      )}
-                      
-                      {/* תצוגת התרגיל - מאוזן או מאונך */}
-                      {isVerticalDisplay && canDisplayVertically ? (
-                        <div className={`${questionBottomSpacingClass} flex justify-center w-full max-w-full px-2`}>
-                          <pre
-                            className="text-2xl md:text-3xl text-center text-white font-bold font-mono whitespace-pre break-words overflow-wrap-anywhere max-w-full"
-                            style={{
-                              direction: "ltr",
-                              unicodeBidi: "plaintext",
-                              wordBreak: "break-word",
-                              overflowWrap: "break-word",
-                            }}
-                          >
-                            {getVerticalExercise() || disExerciseText}
-                          </pre>
-                        </div>
-                      ) : (
-                        <p
-                          className={`text-2xl md:text-3xl lg:text-4xl text-center text-white font-bold ${questionBottomSpacingClass} break-words overflow-wrap-anywhere max-w-full px-2`}
-                          style={{
-                            direction: "ltr",
-                            unicodeBidi: "plaintext",
-                            wordBreak: "break-word",
-                            overflowWrap: "break-word",
-                            lineHeight: questionLineHeightByPressure,
-                            ...getQuestionFontStyle({
-                              text: disExerciseText || "",
-                            }),
-                          }}
-                        >
-                          {disExerciseText}
-                        </p>
-                      )}
-                    </>
-                  ) : (
-                    !suppressAudioOnlyShamaBody ? (
-                    <div
-                      className={`text-2xl md:text-3xl lg:text-4xl font-black text-white ${questionBottomSpacingClass} text-center break-words overflow-wrap-anywhere max-w-full px-2`}
-                      style={{
-                        direction: currentQuestion.isStory ? "rtl" : "ltr",
-                        unicodeBidi: "plaintext",
-                        wordBreak: "break-word",
-                        overflowWrap: "break-word",
-                        lineHeight: questionLineHeightByPressure,
-                        ...getQuestionFontStyle({
-                          text: disQuestionBody || "",
-                        }),
-                      }}
-                    >
-                      {disQuestionBody}
+                        {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
+                      </button>
                     </div>
-                    ) : null
                   )}
-                  
-
+                  {isVerticalDisplay && canDisplayVertically && disExerciseText ? (
+                    <>
+                      {!suppressAudioOnlyShamaLabel && disQuestionLabel ? (
+                        <p
+                          className={`text-xl md:text-2xl text-center text-white ${questionBottomSpacingClass} break-words overflow-wrap-anywhere max-w-full px-2`}
+                          dir="rtl"
+                          data-testid="student-question-lead"
+                          style={{
+                            direction: "rtl",
+                            unicodeBidi: "plaintext",
+                            wordBreak: "break-word",
+                            overflowWrap: "break-word",
+                            lineHeight: questionLineHeightByPressure,
+                            ...getQuestionFontStyle({ text: disQuestionLabel || "" }),
+                          }}
+                        >
+                          {disQuestionLabel}
+                        </p>
+                      ) : null}
+                      <div
+                        className={`${questionBottomSpacingClass} flex justify-center w-full max-w-full px-2 overflow-x-auto`}
+                        data-testid="student-question-body"
+                        dir="ltr"
+                      >
+                        <pre
+                          className="text-2xl md:text-3xl text-center text-white font-bold font-mono whitespace-pre"
+                          style={{ direction: "ltr", unicodeBidi: "isolate" }}
+                        >
+                          {getVerticalExercise() || disExerciseText}
+                        </pre>
+                      </div>
+                    </>
+                  ) : suppressAudioOnlyShamaBody && !disExerciseText ? null : (
+                    <StudentQuestionDisplay
+                      question={suppressAudioOnlyShamaBody ? "" : disQuestionBody}
+                      questionLabel={
+                        suppressAudioOnlyShamaLabel ? "" : disQuestionLabel
+                      }
+                      exerciseText={disExerciseText}
+                      getQuestionFontStyle={getQuestionFontStyle}
+                      leadClassName={`text-xl md:text-2xl text-center text-white ${questionBottomSpacingClass} break-words overflow-wrap-anywhere max-w-full px-2`}
+                      bodyClassName={`text-2xl md:text-3xl lg:text-4xl text-center text-white font-bold ${questionBottomSpacingClass} max-w-full px-2 break-words overflow-wrap-anywhere`}
+                      formulaClassName="text-2xl md:text-3xl text-center text-white font-bold font-mono max-w-full px-2 py-1"
+                      leadStyle={{ lineHeight: questionLineHeightByPressure }}
+                      bodyStyle={{ lineHeight: questionLineHeightByPressure }}
+                    />
+                  )}
                   </div>
 
                   <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
