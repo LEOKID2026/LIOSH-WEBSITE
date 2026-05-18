@@ -247,6 +247,8 @@
     "test:parent-copilot-qa": "tsx scripts/parent-copilot-qa-selftest.mjs",
     "test:parent-copilot-classifier": "tsx scripts/parent-copilot-classifier-selftest.mjs",
     "test:parent-copilot-hebrew-understanding": "tsx scripts/parent-copilot-hebrew-understanding-selftest.mjs",
+    "test:parent-report-diagnostic-evidence": "tsx scripts/parent-report-diagnostic-evidence.mjs",
+    "test:parent-copilot-answer-quality": "tsx scripts/parent-copilot-answer-quality-suite.mjs",
     "test:parent-copilot-ui-product-verify": "tsx scripts/parent-copilot-ui-product-verify.mjs",
     "test:parent-copilot-classifier:live-smoke": "tsx scripts/parent-copilot-classifier-live-smoke.mjs",
     "test:parent-copilot-async-live-smoke": "tsx scripts/parent-copilot-async-live-smoke.mjs",

@@ -45,7 +45,11 @@ export function computeDiagnosticRestraint(ctx) {
   let conclusionStrength /** @type {ConclusionStrength} */ = "strong";
   let band /** @type {DiagnosticConfidenceBand} */ = "high";
 
-  if (q < 4) {
+  if (q >= 40 && ev !== "low") {
+    reasons.push("high_volume_topic_evidence");
+    if (level === "weak" || level === "insufficient") level = "likely";
+    band = acc >= 78 || acc <= 42 ? "high" : "medium";
+  } else if (q < 4) {
     reasons.push("very_low_volume");
     level = "insufficient";
   } else if (q < 8) {

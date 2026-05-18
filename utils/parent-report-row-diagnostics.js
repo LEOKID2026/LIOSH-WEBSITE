@@ -270,6 +270,23 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
       suppressAggressiveStep: true,
     };
   }
+  if (q >= 40) {
+    return {
+      level: "strong",
+      labelHe: "נפח גבוה — אפשר לסמוך על מסקנת נושא ברמת הכיתה/התוכן של השורה.",
+      suppressAggressiveStep: false,
+    };
+  }
+  if (q >= 12 && evidenceStrength !== "low") {
+    return {
+      level: evidenceStrength === "strong" ? "strong" : "medium",
+      labelHe:
+        evidenceStrength === "strong"
+          ? "נפח ואותות מספקים — אפשר לסמוך יותר על מה שרואים בשורה הזו."
+          : "נפח מספיק למסקנת נושא — שינויים זהירים בתת־מיומנות בלבד.",
+      suppressAggressiveStep: false,
+    };
+  }
   if (q < 8 || evidenceStrength === "low" || (confidence01 ?? 0) < 0.22) {
     return {
       level: "medium",

@@ -80,6 +80,15 @@ import {
   subjectAccuracyFromReportSummary,
   subjectQuestionCountFromReportSummary,
 } from "./parent-data-presence.js";
+import {
+  executiveRowDedupeKey,
+  parentFacingTopicRowLabelHe,
+  resolveParentTopicConfidenceBand,
+  resolveParentTopicReadiness,
+  resolveRowDataSufficiencyLevel,
+  shouldThinEvidenceDowngradeRecommendation,
+} from "./parent-report-topic-evidence.js";
+import { buildGradeEvidenceFields } from "../lib/learning-supabase/practice-grade-resolution.js";
 
 const SUBJECT_IDS = [
   "math",
@@ -250,8 +259,15 @@ function uniqueTopLabels(rows, labelKey, max) {
   const seen = new Set();
   for (const r of rows) {
     const lab = String(r[labelKey] || "").trim();
-    if (!lab || seen.has(lab)) continue;
-    seen.add(lab);
+    if (!lab) continue;
+    const dedupe = executiveRowDedupeKey({
+      topicRowKey: r.topicRowKey,
+      labelHe: lab,
+      subjectId: r.subjectId,
+      contentGradeKey: r.contentGradeKey,
+    });
+    if (seen.has(dedupe)) continue;
+    seen.add(dedupe);
     out.push(`${lab} (${r.subjectLabelHe})`);
     if (out.length >= max) break;
   }
@@ -1864,41 +1880,6 @@ function recommendationFromV2Unit(u, mapRow) {
   const mapEvidenceValidation =
     mapCv?.evidenceValidation && typeof mapCv.evidenceValidation === "object" ? mapCv.evidenceValidation : null;
 
-  const contractsV1 = {
-    ...(gatingContracts || {}),
-    decision: {
-      ...baseDecision,
-      contractVersion: String(baseDecision?.contractVersion || "v1"),
-      topicKey: topicKey || String(baseDecision?.topicKey || "__unknown_topic__"),
-      subjectId,
-      decisionTier: canonicalDecisionTier,
-      cannotConcludeYet: gated,
-    },
-    readiness: {
-      ...baseReadiness,
-      contractVersion: String(baseReadiness?.contractVersion || "v1"),
-      topicKey: topicKey || String(baseReadiness?.topicKey || "__unknown_topic__"),
-      subjectId,
-      readiness: canonicalReadiness,
-    },
-    confidence: {
-      ...baseConfidence,
-      contractVersion: String(baseConfidence?.contractVersion || "v1"),
-      topicKey: topicKey || String(baseConfidence?.topicKey || "__unknown_topic__"),
-      subjectId,
-      confidenceBand: canonicalConfidenceBand,
-    },
-  };
-  if (mapEvidence) {
-    contractsV1.evidence = { ...mapEvidence };
-    if (mapEvidenceValidation) {
-      contractsV1.evidenceValidation = {
-        ok: !!mapEvidenceValidation.ok,
-        errors: Array.isArray(mapEvidenceValidation.errors) ? [...mapEvidenceValidation.errors] : [],
-      };
-    }
-  }
-
   let outQuestions = questions;
   let outAccuracy = accuracy;
   if (mapEvidence) {
@@ -1915,15 +1896,70 @@ function recommendationFromV2Unit(u, mapRow) {
     Number(u?.priority?.score)
     || PRIORITY_SCORE_BY_LEVEL[priorityLevel]
     || 0;
-  const lowEvidenceByCount = outQuestions < TOPIC_REC_MIN_ACTIONABLE_QUESTIONS;
-  const lowEvidenceBySignal =
-    String(u?.confidence?.rowSignals?.dataSufficiencyLevel || "").toLowerCase() === "low"
-    || gateReadiness === "insufficient";
-  const thinEvidenceDowngraded = lowEvidenceByCount || lowEvidenceBySignal;
+  const rowSignalSuff = String(u?.confidence?.rowSignals?.dataSufficiencyLevel || "medium").toLowerCase();
+  const dataSufficiencyLevel = resolveRowDataSufficiencyLevel(
+    outQuestions,
+    rowSignalSuff,
+    evidenceStrength,
+  );
+  const effectiveReadiness = resolveParentTopicReadiness(outQuestions, gateReadiness);
+  const effectiveConfidenceBand = resolveParentTopicConfidenceBand(
+    outQuestions,
+    outAccuracy,
+    canonicalConfidenceBand,
+  );
+  const thinEvidenceDowngraded = shouldThinEvidenceDowngradeRecommendation({
+    questionCount: outQuestions,
+    dataSufficiencyLevel,
+    gateReadiness: effectiveReadiness,
+    evidenceStrength,
+  });
+  const cannotConcludeYet =
+    gated && !(outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS && dataSufficiencyLevel === "strong");
+
+  const contractsV1 = {
+    ...(gatingContracts || {}),
+    decision: {
+      ...baseDecision,
+      contractVersion: String(baseDecision?.contractVersion || "v1"),
+      topicKey: topicKey || String(baseDecision?.topicKey || "__unknown_topic__"),
+      subjectId,
+      decisionTier: canonicalDecisionTier,
+      cannotConcludeYet,
+    },
+    readiness: {
+      ...baseReadiness,
+      contractVersion: String(baseReadiness?.contractVersion || "v1"),
+      topicKey: topicKey || String(baseReadiness?.topicKey || "__unknown_topic__"),
+      subjectId,
+      readiness: effectiveReadiness,
+    },
+    confidence: {
+      ...baseConfidence,
+      contractVersion: String(baseConfidence?.contractVersion || "v1"),
+      topicKey: topicKey || String(baseConfidence?.topicKey || "__unknown_topic__"),
+      subjectId,
+      confidenceBand: effectiveConfidenceBand,
+    },
+  };
+  if (mapEvidence) {
+    contractsV1.evidence = { ...mapEvidence };
+    if (mapEvidenceValidation) {
+      contractsV1.evidenceValidation = {
+        ok: !!mapEvidenceValidation.ok,
+        errors: Array.isArray(mapEvidenceValidation.errors) ? [...mapEvidenceValidation.errors] : [],
+      };
+    }
+  }
+
   const finalStep = thinEvidenceDowngraded ? "maintain_and_strengthen" : step;
   const finalLabel =
-    finalStep === "remediate_same_level" ? label : "לאסוף עוד מידע לפני החלטה";
-  const conclusionStrength = gated
+    finalStep === "remediate_same_level"
+      ? label
+      : outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS
+        ? "חיזוק ממוקד לפי הדוח"
+        : "לאסוף עוד מידע לפני החלטה";
+  const conclusionStrength = cannotConcludeYet
     ? "withheld"
     : canonicalDecisionTier >= 3
       ? "strong"
@@ -1952,7 +1988,7 @@ function recommendationFromV2Unit(u, mapRow) {
     questions: outQuestions,
     accuracy: outAccuracy,
     mistakeEventCount,
-    dataSufficiencyLevel: String(u?.confidence?.rowSignals?.dataSufficiencyLevel || "medium"),
+    dataSufficiencyLevel,
     isEarlySignalOnly: Boolean(u?.confidence?.rowSignals?.isEarlySignalOnly),
     evidenceStrength,
     confidenceLevel: confLev,
@@ -2242,26 +2278,71 @@ function buildSubjectProfilesFromV2(baseReport) {
     );
     const goodList = strengthUnits.filter((u) => csOf(u)?.evidence?.positiveAuthorityLevel === "good");
 
-    const topStrengths = veryGoodList.slice(0, 3).map((u) => ({
-      labelHe: String(u?.displayName || ""),
-      questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
-      accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
-      excellent: false,
-    }));
+    const topStrengths = veryGoodList.slice(0, 3).map((u) => {
+      const trk = String(u?.topicRowKey || "");
+      const mapR = trk && topicMapForSid[trk] && typeof topicMapForSid[trk] === "object" ? topicMapForSid[trk] : null;
+      const gk = gradeKeyForV2UnitFromReport(baseReport, u);
+      const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
+      return {
+        topicRowKey: trk,
+        subjectId: sid,
+        contentGradeKey: gk,
+        labelHe: parentFacingTopicRowLabelHe({
+          displayName: String(u?.displayName || ""),
+          contentGradeKey: gk,
+          registeredGradeKey: baseReport?.registeredGradeKey,
+          gradeRelation: ge.gradeRelation,
+          topicRowKey: trk,
+        }),
+        questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+        accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+        excellent: false,
+      };
+    });
 
-    const maintain = goodList.slice(0, 5).map((u) => ({
-      labelHe: String(u?.displayName || ""),
-      questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
-      accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
-    }));
+    const maintain = goodList.slice(0, 5).map((u) => {
+      const trk = String(u?.topicRowKey || "");
+      const gk = gradeKeyForV2UnitFromReport(baseReport, u);
+      const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
+      return {
+        topicRowKey: trk,
+        subjectId: sid,
+        contentGradeKey: gk,
+        labelHe: parentFacingTopicRowLabelHe({
+          displayName: String(u?.displayName || ""),
+          contentGradeKey: gk,
+          registeredGradeKey: baseReport?.registeredGradeKey,
+          gradeRelation: ge.gradeRelation,
+          topicRowKey: trk,
+        }),
+        questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+        accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+      };
+    });
 
     const topWeaknesses = diagnosed
       .filter((u) => String(u?.taxonomy?.patternHe || "").trim())
       .slice(0, 3)
-      .map((u) => ({
-        labelHe: String(u?.taxonomy?.patternHe || ""),
-        mistakeCount: Number(u?.recurrence?.wrongCountForRules) || 0,
-      }));
+      .map((u) => {
+        const trk = String(u?.topicRowKey || "");
+        const gk = gradeKeyForV2UnitFromReport(baseReport, u);
+        const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
+        const topicLabel = parentFacingTopicRowLabelHe({
+          displayName: String(u?.displayName || ""),
+          contentGradeKey: gk,
+          registeredGradeKey: baseReport?.registeredGradeKey,
+          gradeRelation: ge.gradeRelation,
+          topicRowKey: trk,
+        });
+        const patternHe = String(u?.taxonomy?.patternHe || "").trim();
+        return {
+          topicRowKey: trk,
+          subjectId: sid,
+          contentGradeKey: gk,
+          labelHe: patternHe ? `${topicLabel} — ${patternHe}` : topicLabel,
+          mistakeCount: Number(u?.recurrence?.wrongCountForRules) || 0,
+        };
+      });
 
     const POSITIVE_LEVEL_RANK_D = { excellent: 3, very_good: 2, good: 1, none: 0 };
     const rankPosD = (a, b) => {

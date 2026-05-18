@@ -4,6 +4,11 @@
  */
 
 import { pickVariant } from "../parent-report-language/variants.js";
+import {
+  buildSubskillLimitationUncertaintyHe,
+  hasTopicLevelEvidence,
+  TOPIC_EVIDENCE_THRESHOLDS,
+} from "../parent-report-topic-evidence.js";
 
 export const NARRATIVE_CONTRACT_VERSION = "v1";
 
@@ -90,12 +95,35 @@ function deriveRecommendationEligibility(input) {
 }
 
 function deriveEnvelope(input) {
+  const q = Math.max(
+    0,
+    Math.round(Number(input?.questions ?? input?.q ?? input?.contractsV1?.evidence?.questionCount) || 0),
+  );
   const readiness = normalizeReadiness(input?.contractsV1?.readiness?.readiness);
   const confidenceBand = normalizeConfidenceBand(input?.contractsV1?.confidence?.confidenceBand);
   const decisionTier = normalizeDecisionTier(input?.contractsV1?.decision?.decisionTier);
   const cannotConcludeYet = deriveCannotConcludeYet(input);
   const eligible = deriveRecommendationEligibility(input);
   const recIntensity = normalizeRecommendationIntensity(input?.contractsV1?.recommendation?.intensity);
+
+  if (q >= TOPIC_EVIDENCE_THRESHOLDS.minQuestionsHighVolume && !cannotConcludeYet) {
+    if (eligible && readiness === "ready" && confidenceBand === "high" && RI_RANK[recIntensity] >= 2) {
+      return "WE4";
+    }
+    if (confidenceBand === "high" && decisionTier >= 2) return "WE3";
+    return "WE2";
+  }
+  if (
+    q >= TOPIC_EVIDENCE_THRESHOLDS.minQuestionsModerate &&
+    hasTopicLevelEvidence(q) &&
+    !cannotConcludeYet &&
+    readiness !== "insufficient"
+  ) {
+    if (cannotConcludeYet) return "WE1";
+    if (confidenceBand === "low") return "WE2";
+    if (eligible && readiness === "ready" && confidenceBand === "high") return "WE4";
+    return "WE3";
+  }
 
   if (cannotConcludeYet || readiness === "insufficient" || confidenceBand === "low") return "WE0";
   if (readiness === "forming" || decisionTier <= 1) return "WE1";
@@ -225,6 +253,18 @@ export function buildNarrativeContractV1(input) {
   const capIntensity = ENVELOPE_CAP[envelope] || "RI0";
   const cappedIntensity = RI_RANK[existingIntensity] > RI_RANK[capIntensity] ? capIntensity : existingIntensity;
   const baseSeed = `${topicKey}|${subjectId}|${displayName}|${envelope}|${q}|${acc}|${cappedIntensity}|${hedgeLevel}`;
+  const hasSubskillMetadata = !!(
+    input?.hasSubskillMetadata ||
+    input?.subskillDetailAvailable ||
+    input?.contractsV1?.evidence?.subskillBreakdownAvailable
+  );
+  let uncertainty = buildUncertaintySlot(hedgeLevel, `${baseSeed}:unc`);
+  if (hasTopicLevelEvidence(q) && !hasSubskillMetadata) {
+    const subskillNote = buildSubskillLimitationUncertaintyHe(false);
+    if (subskillNote) {
+      uncertainty = uncertainty && hedgeLevel !== "mandatory" ? `${uncertainty} ${subskillNote}` : subskillNote;
+    }
+  }
 
   return {
     contractVersion: NARRATIVE_CONTRACT_VERSION,
@@ -241,7 +281,7 @@ export function buildNarrativeContractV1(input) {
       observation: buildObservationSlot(displayName, q, acc, `${baseSeed}:obs`),
       interpretation: buildInterpretationSlot(envelope, cannotConcludeYet, `${baseSeed}:int`),
       action: buildActionSlot(cappedIntensity, recommendationEligible, `${baseSeed}:act`),
-      uncertainty: buildUncertaintySlot(hedgeLevel, `${baseSeed}:unc`),
+      uncertainty,
     },
   };
 }

@@ -68,7 +68,14 @@ export function deriveTopicInsights(aggregate) {
       const totalQ = Math.max(0, Math.round(safeNumber(t.answers)));
       if (totalQ === 0) continue;
       const acc = Math.max(0, Math.min(100, safeNumber(t.accuracy)));
-      const sourceId = buildTopicSourceId(subjectKey, topicKey);
+      const topicPart = String(topicKey).split("::")[0] || topicKey;
+      const gradeSuffix =
+        typeof t.contentGradeLevel === "string" && t.contentGradeLevel.trim()
+          ? `:${t.contentGradeLevel.trim().toLowerCase()}`
+          : "";
+      const sourceId =
+        buildTopicSourceId(subjectKey, topicPart) ||
+        (topicPart && subjectKey ? `topic:${subjectKey}:${topicPart}${gradeSuffix}` : "");
       if (!sourceId) continue;
       const labelHe = safeHebrewLabel(getTopicDisplayNameHe(subjectKey, topicKey), getSubjectDisplayNameHe(subjectKey));
       const isStrength = totalQ >= STRENGTH_MIN_Q && acc >= STRENGTH_ACC_THRESHOLD;
@@ -156,16 +163,16 @@ export function deriveSubjectInsights(aggregate, subjectTrends) {
 
 export function pickStrengths(topicInsights, subjectInsights) {
   const out = [];
-  const seenLabels = new Set();
-  const safe = (label) => {
-    if (!label) return false;
-    if (seenLabels.has(label)) return false;
-    seenLabels.add(label);
+  const seenKeys = new Set();
+  const safe = (sourceId) => {
+    if (!sourceId) return false;
+    if (seenKeys.has(sourceId)) return false;
+    seenKeys.add(sourceId);
     return true;
   };
   for (const sub of subjectInsights) {
     if (!sub.isStrength) continue;
-    if (!safe(sub.displayNameHe)) continue;
+    if (!safe(sub.sourceId)) continue;
     out.push({
       sourceId: sub.sourceId,
       scope: "subject",
@@ -178,7 +185,7 @@ export function pickStrengths(topicInsights, subjectInsights) {
     .filter((t) => t.isStrength)
     .sort((a, b) => b.accuracyPct - a.accuracyPct || b.totalQuestions - a.totalQuestions);
   for (const t of topicStrengths) {
-    if (!safe(t.displayNameHe)) continue;
+    if (!safe(t.sourceId)) continue;
     out.push({
       sourceId: t.sourceId,
       scope: "topic",
@@ -192,22 +199,24 @@ export function pickStrengths(topicInsights, subjectInsights) {
 
 export function pickFocusAreas(topicInsights, subjectInsights) {
   const out = [];
-  const seenLabels = new Set();
-  const safe = (label) => {
-    if (!label) return false;
-    if (seenLabels.has(label)) return false;
-    seenLabels.add(label);
+  const seenKeys = new Set();
+  const safe = (sourceId) => {
+    if (!sourceId) return false;
+    if (seenKeys.has(sourceId)) return false;
+    seenKeys.add(sourceId);
     return true;
   };
   for (const sub of subjectInsights) {
     if (!sub.isFocusArea) continue;
-    if (!safe(sub.displayNameHe)) continue;
+    if (!safe(sub.sourceId)) continue;
     out.push({
       sourceId: sub.sourceId,
       scope: "subject",
       displayNameHe: sub.displayNameHe,
       evidenceHe: sub.evidenceHe,
-      thinData: sub.dataConfidence === "thin" || sub.dataConfidence === "low",
+      thinData:
+        (sub.dataConfidence === "thin" || sub.dataConfidence === "low") &&
+        sub.totalQuestions < 12,
     });
     if (out.length >= MAX_FOCUS) return out;
   }
@@ -215,13 +224,14 @@ export function pickFocusAreas(topicInsights, subjectInsights) {
     .filter((t) => t.isFocusArea)
     .sort((a, b) => a.accuracyPct - b.accuracyPct || b.totalQuestions - a.totalQuestions);
   for (const t of topicFocus) {
-    if (!safe(t.displayNameHe)) continue;
+    if (!safe(t.sourceId)) continue;
     out.push({
       sourceId: t.sourceId,
       scope: "topic",
       displayNameHe: t.displayNameHe,
       evidenceHe: topicEvidenceHe({ answers: t.totalQuestions, accuracy: t.accuracyPct }),
-      thinData: t.dataConfidence === "thin" || t.dataConfidence === "low",
+      thinData:
+        (t.dataConfidence === "thin" || t.dataConfidence === "low") && t.totalQuestions < 12,
     });
     if (out.length >= MAX_FOCUS) break;
   }

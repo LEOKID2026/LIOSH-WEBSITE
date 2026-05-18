@@ -20,6 +20,8 @@ export function resolveConfidenceLevel({ events, wrongs, row, recurrenceFull, hi
   const needsPractice = !!row?.needsPractice;
   if (needsPractice && dom === "stable_mastery") return "contradictory";
 
+  if (q >= 40) return "high";
+  if (q >= 12 && w >= 2) return "moderate";
   if (q < 2 && w === 0) return "insufficient_data";
   if (q < 4 && w < 2) return "insufficient_data";
 
