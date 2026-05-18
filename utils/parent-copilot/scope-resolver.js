@@ -19,6 +19,7 @@ import {
   SUBJECT_EVIDENCE_TIER,
   zeroEvidenceSubjectCopilotHe,
 } from "../parent-report-language/subject-evidence-policy.js";
+import { tryResolveInheritedScope } from "./conversation-scope-inheritance.js";
 
 /**
  * @param {string} s
@@ -37,7 +38,14 @@ function subjectQuestionCountFromPayload(payload, subjectId) {
   const sp = (Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : []).find(
     (p) => String(p?.subject || "") === subjectId,
   );
-  return Math.max(0, Number(sp?.subjectQuestionCount ?? sp?.questionCount) || 0);
+  const explicit = Math.max(0, Number(sp?.subjectQuestionCount ?? sp?.questionCount) || 0);
+  if (explicit > 0) return explicit;
+  const topics = Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : [];
+  let sum = 0;
+  for (const tr of topics) {
+    sum += Math.max(0, Number(tr?.questions ?? tr?.questionCount) || 0);
+  }
+  return sum;
 }
 
 /**
@@ -205,6 +213,7 @@ function attachScopeInterpretation(scope, stageA) {
  * @param {string} input.utterance
  * @param {null|{ scopeType?: string; scopeId?: string; subjectId?: string }} input.selectedContextRef
  * @param {ReturnType<typeof interpretFreeformStageA>} [input.stageA]
+ * @param {object} [input.conversationState]
  * @returns {{
  *   resolutionStatus: "resolved"|"clarification_required";
  *   clarificationQuestionHe?: string;
@@ -432,6 +441,19 @@ export function resolveScope(input) {
   const subjectId = matchSubjectFromUtterance(utterance, payload);
   if (subjectId) {
     return resolveSubjectScopeOrZeroEvidence(subjectId, payload, stageA, "utterance_subject_match", 0.73);
+  }
+
+  const inherited = tryResolveInheritedScope({
+    utterance: normalizedUtterance || rawUtterance,
+    payload,
+    conversationState: input?.conversationState,
+    stageA,
+  });
+  if (inherited?.resolutionStatus === "resolved" && inherited.scope) {
+    return {
+      ...inherited,
+      scope: attachScopeInterpretation(inherited.scope, stageA),
+    };
   }
 
   /**

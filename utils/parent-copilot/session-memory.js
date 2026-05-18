@@ -38,6 +38,11 @@ function emptyState() {
     answerSummaryFingerprints: [],
     lastOfferedFollowupFamily: null,
     lastScopeLabelHe: "",
+    lastResolvedSubject: "",
+    lastResolvedTopic: "",
+    lastResolvedRowIds: [],
+    lastIntent: "",
+    lastAnswerSummary: "",
     lastPlannerIntent: "",
     lastAssistantAnswerDigestHe: "",
     lastAnswerAggregateClass: "",
@@ -123,7 +128,10 @@ export function getConversationState(sessionId) {
  */
 export function applyConversationStateDelta(sessionId, delta) {
   const s = getConversationState(sessionId);
-  if (delta.addedIntent) s.priorIntents.push(delta.addedIntent);
+  if (delta.addedIntent) {
+    s.priorIntents.push(delta.addedIntent);
+    s.lastIntent = String(delta.addedIntent).trim();
+  }
   if (delta.addedFollowUpFamily) {
     s.priorFollowupFamilies.push(delta.addedFollowUpFamily);
   }
@@ -136,6 +144,18 @@ export function applyConversationStateDelta(sessionId, delta) {
     if (sk) {
       s.priorScopes.push(sk);
       while (s.priorScopes.length > MAX_PRIOR_SCOPES) s.priorScopes.shift();
+      const colon = sk.indexOf(":");
+      if (colon > 0) {
+        const scopeType = sk.slice(0, colon);
+        const scopeId = sk.slice(colon + 1);
+        if (scopeType === "topic" && scopeId) s.lastResolvedTopic = scopeId;
+        if (scopeType === "subject" && scopeId) s.lastResolvedSubject = scopeId;
+        if (scopeId) {
+          if (!Array.isArray(s.lastResolvedRowIds)) s.lastResolvedRowIds = [];
+          s.lastResolvedRowIds.push(scopeId);
+          while (s.lastResolvedRowIds.length > MAX_PRIOR_SCOPES) s.lastResolvedRowIds.shift();
+        }
+      }
     }
   }
   if (delta.answeredConstraintTag != null && delta.answeredConstraintTag !== "") {
@@ -194,6 +214,7 @@ export function applyConversationStateDelta(sessionId, delta) {
   }
   const ans = String(delta.assistantAnswerSummary || "").trim();
   if (ans) {
+    s.lastAnswerSummary = ans.slice(0, 480);
     s.lastAssistantAnswerDigestHe = ans.slice(0, 480);
     const fp = fingerprintAnswerSummaryHe(ans);
     if (fp) {

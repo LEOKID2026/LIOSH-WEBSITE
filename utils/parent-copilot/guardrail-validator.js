@@ -12,6 +12,7 @@
  */
 
 import { clinicalBoundaryJoinedFingerprintHe, sensitiveEducationChoiceJoinedFingerprintHe } from "./answer-composer.js";
+import { textViolatesPolarityForEvidence } from "./evidence-polarity.js";
 import { STRONG_GLOBAL_QUESTION_FLOOR } from "./report-volume-context.js";
 
 /** Deterministic clinical / diagnostic labeling (joined parent copy + contract slots). Not the fixed boundary fingerprint. */
@@ -277,6 +278,52 @@ export function validateAnswerDraft(draft, truthPacket, hints = null) {
     }
   }
   if (RAW_INTENSITY_RE.test(joined)) failCodes.push("raw_intensity_code_leak");
+
+  const scopeQ = Math.max(0, Number(truthPacket?.surfaceFacts?.questions) || 0);
+  const scopeAcc = Math.max(0, Math.min(100, Math.round(Number(truthPacket?.surfaceFacts?.accuracy) || 0)));
+  if (
+    intent !== "off_topic_redirect" &&
+    intent !== "clinical_boundary" &&
+    intent !== "sensitive_education_choice" &&
+    intent !== "parent_policy_refusal" &&
+    String(truthPacket?.scopeType || "") === "topic" &&
+    scopeQ > 0 &&
+    textViolatesPolarityForEvidence(joined, scopeQ, scopeAcc)
+  ) {
+    failCodes.push("polarity_contradicts_evidence");
+  }
+
+  const answerContract = String(hints?.answerContract || "").trim();
+  const priorFp = String(hints?.priorAnswerFingerprint || "").trim();
+  const joinedFp = joined.replace(/\d+/g, "#").replace(/\s+/g, " ").trim().slice(0, 220);
+
+  if (answerContract === "mistake_pattern") {
+    const hasMistakeFraming = /הטעות|דפוס|סוג הטעות|פירוט מספיק|לרשום משפט|לפני שטעה/u.test(joined);
+    const metricOnly =
+      /\d+\s*שאלות/u.test(joined) &&
+      /דיוק/u.test(joined) &&
+      !hasMistakeFraming;
+    if (metricOnly) failCodes.push("mistake_intent_metric_only_repeat");
+  }
+
+  if (answerContract === "report_explanation") {
+    const reportLevel =
+      /מקצוע|תורגל|סה״כ|מה שעובד|מקצועות שלא|בטווח התקופה|תמונה כללית/u.test(joined);
+    const singleWeakOnly =
+      /שברים|נושא/u.test(joined) &&
+      /\d+\s*שאלות/u.test(joined) &&
+      /דיוק/u.test(joined) &&
+      !reportLevel;
+    if (singleWeakOnly) failCodes.push("report_explanation_single_topic_only");
+  }
+
+  if (answerContract && priorFp && priorFp.length > 40 && joinedFp === priorFp) {
+    failCodes.push("intent_answer_duplicate_prior_turn");
+  }
+
+  if (/אפשר לפרק יחד|נפרק יחד|ננסה לפרק/u.test(joined) && joined.length < 140 && blocks.length <= 2) {
+    failCodes.push("empty_deflection_without_answer");
+  }
 
   if (ROBOTIC_SYSTEM_RE.test(joined)) failCodes.push("robotic_system_phrasing");
   if (PARENT_META_INSTRUCTION_RE.test(composedJoined)) failCodes.push("parent_meta_instruction_wording");

@@ -6,6 +6,7 @@
 import { listTopicRowsForClassifier } from "../parent-ai-topic-classifier/classifier.js";
 import { SUBJECT_ORDER, subjectLabelHe } from "./contract-reader.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
+import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 
 /** @type {Record<string, string[]>} */
 export const SUBJECT_HE_ALIASES = Object.freeze({
@@ -423,6 +424,7 @@ function isStandaloneGenericKnowledgeQuestion(folded) {
 export function utteranceQualifiesAsReportQuestion(utterance, payload) {
   if (!payload || typeof payload !== "object") return false;
   const folded = foldUtteranceForHeMatch(utterance);
+  if (hasAnchoredReportRows(payload) && isContextualFollowUpUtterance(utterance)) return true;
   if (
     isStandaloneGenericKnowledgeQuestion(folded) &&
     !/דוח|תרגול|מתקשה|חזק|חלש|לפי\s+הדוח|בבית\s+ספר|למידה/u.test(folded)

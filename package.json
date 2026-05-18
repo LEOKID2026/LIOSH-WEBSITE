@@ -256,6 +256,8 @@
     "test:parent-report-real-output-signoff": "tsx scripts/parent-report-real-output-signoff.mjs",
     "export:parent-report-localStorage-fixture": "tsx scripts/export-parent-report-localStorage-fixture.mjs",
     "test:parent-copilot-answer-quality": "tsx scripts/parent-copilot-answer-quality-suite.mjs",
+    "test:parent-copilot-conversation-quality": "tsx scripts/parent-copilot-conversation-quality.mjs",
+    "test:parent-copilot-intent-answer-contracts": "tsx scripts/parent-copilot-intent-answer-contracts.mjs",
     "test:parent-copilot-ui-product-verify": "tsx scripts/parent-copilot-ui-product-verify.mjs",
     "test:parent-copilot-classifier:live-smoke": "tsx scripts/parent-copilot-classifier-live-smoke.mjs",
     "test:parent-copilot-async-live-smoke": "tsx scripts/parent-copilot-async-live-smoke.mjs",

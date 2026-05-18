@@ -31,6 +31,7 @@ import { maybeGenerateGroundedLlmDraft } from "./llm-orchestrator.js";
 import { getLlmGateDecision } from "./rollout-gates.js";
 import { appendTurnTelemetryTrace } from "./telemetry-store.js";
 import { tryBuildParentShortFollowupDraft } from "./short-followup-composer.js";
+import { tryComposeIntentAnswer, fingerprintAnswerHe } from "./intent-answer-composers.js";
 import { tryBuildComparisonPracticalFollowupDraft } from "./comparison-practical-continuity.js";
 import { compactParentAnswerBlocks } from "./answer-compaction.js";
 import { maxGlobalReportQuestionCount, STRONG_GLOBAL_QUESTION_FLOOR } from "./report-volume-context.js";
@@ -49,6 +50,7 @@ import {
   AMBIGUOUS_RESPONSE_HE,
 } from "./question-router.js";
 import { classifyParentQuestionViaLlm } from "./question-classifier-llm.js";
+import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 
 /**
  * @param {Record<string, unknown>} base
@@ -738,9 +740,31 @@ function runDeterministicCore(input, options) {
   // Hard guarantees for off_topic / diagnostic_sensitive / ambiguous_or_unclear:
   //   - No truthPacket built. No answer-LLM call. No subject/topic name leakage.
   //   - Telemetry stamps classifierBucket/source/confidence so live tests can verify.
-  const qaRoute = options?.preRoute
+  let qaRoute = options?.preRoute
     ? options.preRoute
     : routeParentQuestion(String(input?.utterance || ""), scopedInput?.payload);
+  if (
+    qaRoute.exitEarly &&
+    qaRoute.classifierBucket === "ambiguous_or_unclear" &&
+    isContextualFollowUpUtterance(utteranceStr)
+  ) {
+    const hasPriorScope =
+      (Array.isArray(conv.priorScopes) && conv.priorScopes.length > 0) ||
+      String(conv.lastResolvedTopic || "").trim() ||
+      String(conv.lastResolvedSubject || "").trim();
+    if (hasPriorScope) {
+      qaRoute = {
+        routerIntent: "unknown_report_question",
+        requiresLlm: true,
+        deterministicResponse: null,
+        exitEarly: false,
+        classifierBucket: "report_related",
+        classifierConfidence: Math.max(Number(qaRoute.classifierConfidence) || 0, 0.8),
+        classifierSource: "deterministic",
+        classifierSignals: qaRoute.classifierSignals,
+      };
+    }
+  }
   if (qaRoute.exitEarly && qaRoute.deterministicResponse) {
     const earlyExit = packageClassifierEarlyExit({
       qaRoute,
@@ -829,6 +853,7 @@ function runDeterministicCore(input, options) {
     utterance: utteranceStr,
     selectedContextRef: scopedInput?.selectedContextRef ?? null,
     stageA,
+    conversationState: conv,
   });
 
   const scopeMeta = {
@@ -925,6 +950,64 @@ function runDeterministicCore(input, options) {
     });
     validateParentCopilotResponseV1(r);
     return { response: r, audience, sessionId, conv, truthPacket: null, intent, scopeMeta, utteranceStr };
+  }
+
+  const inheritedScope = String(scopeMeta.scopeReason || "").includes("conversation_inherited");
+
+  const intentAnswerDraft = tryComposeIntentAnswer({
+    utteranceStr,
+    truthPacket,
+    scope,
+    payload: scopedInput.payload,
+    plannerIntent: intent,
+    stageAIntent: intent,
+    inheritedScope,
+  });
+  if (intentAnswerDraft?.answerBlocks?.length) {
+    const compactedIntent = compactParentAnswerBlocks(
+      intentAnswerDraft.answerBlocks.map((b) => ({
+        ...b,
+        textHe: normalizeParentFacingHe(String(b.textHe || "").trim()),
+      })),
+      { scopeType: String(truthPacket.scopeType || ""), maxBlocks: 5, maxTotalChars: 2600 },
+    );
+    const intentPlanner = intentAnswerDraft.plannerIntent || intent;
+    const vIntent = validateAnswerDraft(
+      { answerBlocks: compactedIntent },
+      truthPacket,
+      {
+        intent: intentPlanner,
+        answerContract: intentAnswerDraft.answerContract,
+        priorAnswerFingerprint: String(conv.lastAnswerSummary || "").trim()
+          ? fingerprintAnswerHe({ answerBlocks: [{ textHe: conv.lastAnswerSummary }] })
+          : "",
+      },
+    );
+    if (vIntent.ok) {
+      if (process.env.COPILOT_EVIDENCE_DEBUG === "1") {
+        process.stderr.write(
+          `${JSON.stringify({
+            utterance: utteranceStr,
+            resolvedIntent: intentPlanner,
+            answerContract: intentAnswerDraft.answerContract,
+            resolvedScope: intentAnswerDraft.resolvedScope,
+            inheritedScope: intentAnswerDraft.inheritedScope,
+            answerComposerUsed: intentAnswerDraft.answerComposerUsed,
+            evidenceUsed: intentAnswerDraft.evidenceUsed,
+          })}\n`,
+        );
+      }
+      return packageParentResolvedEarlyTurn(scopedInput, sessionId, priorRepeated, conv, utteranceStr, {
+        truthPacket,
+        plannerIntent: intentPlanner,
+        scopeMeta: {
+          ...scopeMeta,
+          answerContract: intentAnswerDraft.answerContract,
+          answerComposerUsed: intentAnswerDraft.answerComposerUsed,
+        },
+        answerBlocks: compactedIntent,
+      });
+    }
   }
 
   if (aggregateQuestionClass === "none") {

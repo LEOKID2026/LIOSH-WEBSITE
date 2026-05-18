@@ -99,6 +99,16 @@ function deriveEnvelope(input) {
     0,
     Math.round(Number(input?.questions ?? input?.q ?? input?.contractsV1?.evidence?.questionCount) || 0),
   );
+  const acc = Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(
+        Number(input?.accuracy ?? input?.contractsV1?.evidence?.accuracyPct ?? input?.contractsV1?.evidence?.accuracy) ||
+          0,
+      ),
+    ),
+  );
   const readiness = normalizeReadiness(input?.contractsV1?.readiness?.readiness);
   const confidenceBand = normalizeConfidenceBand(input?.contractsV1?.confidence?.confidenceBand);
   const decisionTier = normalizeDecisionTier(input?.contractsV1?.decision?.decisionTier);
@@ -107,10 +117,12 @@ function deriveEnvelope(input) {
   const recIntensity = normalizeRecommendationIntensity(input?.contractsV1?.recommendation?.intensity);
 
   if (q >= TOPIC_EVIDENCE_THRESHOLDS.minQuestionsHighVolume && !cannotConcludeYet) {
-    if (eligible && readiness === "ready" && confidenceBand === "high" && RI_RANK[recIntensity] >= 2) {
+    if (acc <= 54) return "WE1";
+    if (acc < 75) return "WE2";
+    if (eligible && readiness === "ready" && confidenceBand === "high" && RI_RANK[recIntensity] >= 2 && acc >= 78) {
       return "WE4";
     }
-    if (confidenceBand === "high" && decisionTier >= 2) return "WE3";
+    if (confidenceBand === "high" && decisionTier >= 2 && acc >= 70) return "WE3";
     return "WE2";
   }
   if (
@@ -121,7 +133,9 @@ function deriveEnvelope(input) {
   ) {
     if (cannotConcludeYet) return "WE1";
     if (confidenceBand === "low") return "WE2";
-    if (eligible && readiness === "ready" && confidenceBand === "high") return "WE4";
+    if (acc <= 54) return "WE1";
+    if (acc < 75) return "WE2";
+    if (eligible && readiness === "ready" && confidenceBand === "high" && acc >= 78) return "WE4";
     return "WE3";
   }
 
@@ -147,7 +161,7 @@ function buildObservationSlot(displayName, q, acc, seed) {
   ]);
 }
 
-function buildInterpretationSlot(envelope, cannotConcludeYet, seed) {
+function buildInterpretationSlot(envelope, cannotConcludeYet, seed, q = 0, acc = 0) {
   if (cannotConcludeYet || envelope === "WE0") {
     return pickVariant(seed, [
       "עדיין לא צריך לסגור כאן מסקנה חזקה — נשארים בשפה זהירה ונמשיך לעקוב.",
@@ -156,6 +170,15 @@ function buildInterpretationSlot(envelope, cannotConcludeYet, seed) {
     ]);
   }
   if (envelope === "WE1") {
+    const qWeak = Math.max(0, Math.round(Number(q) || 0));
+    const accWeak = Math.max(0, Math.min(100, Math.round(Number(acc) || 0)));
+    if (qWeak >= 8 && accWeak <= 54) {
+      return pickVariant(seed, [
+        "יש כאן מספיק תרגול כדי לראות דפוס, אבל הדיוק עדיין נמוך יחסית — זה מצב שדורש חיזוק ממוקד, לא יציבות חזקה.",
+        "נרשמו מספיק שאלות לתמונה ראשונית, אך התוצאות עדיין מצביעות על קושי — כדאי חיזוק ממוקד לפני מסקנה חיובית.",
+        "הנתון מראה פעילות בתקופה, אבל הדיוק נמוך יחסית — נשארים עם ניסוח זהיר ותרגול ממוקד.",
+      ]);
+    }
     return pickVariant(seed, [
       "מתחילים לראות סימנים ראשונים לכיוון, ועדיין צריך עוד קצת תרגול לפני שננעל על משפט אחד.",
       "נשמע שיש כאן התחלה טובה, אבל עדיין עדיף לחזק עוד קצת לפני מסקנה חדה.",
@@ -279,7 +302,7 @@ export function buildNarrativeContractV1(input) {
     recommendationIntensityCap: capIntensity,
     textSlots: {
       observation: buildObservationSlot(displayName, q, acc, `${baseSeed}:obs`),
-      interpretation: buildInterpretationSlot(envelope, cannotConcludeYet, `${baseSeed}:int`),
+      interpretation: buildInterpretationSlot(envelope, cannotConcludeYet, `${baseSeed}:int`, q, acc),
       action: buildActionSlot(cappedIntensity, recommendationEligible, `${baseSeed}:act`),
       uncertainty,
     },

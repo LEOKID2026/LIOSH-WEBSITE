@@ -35,7 +35,7 @@ import { maxGlobalReportQuestionCount, STRONG_GLOBAL_QUESTION_FLOOR } from "./re
  * @param {string} subjectId
  * @param {string} topicRowKey
  */
-function findDiagnosticUnitForIntelligence(payload, subjectId, topicRowKey) {
+export function findDiagnosticUnitForIntelligence(payload, subjectId, topicRowKey) {
   const units = payload?.diagnosticEngineV2?.units;
   if (!Array.isArray(units)) return null;
   const sid = String(subjectId || "");
@@ -1477,6 +1477,7 @@ export function buildTruthPacketV1(payload, scope) {
       contentGradeKey: topicRow?.rowIdentityV1?.contentGradeKey ?? null,
       gradeRelation: topicRow?.rowIdentityV1?.gradeRelation ?? null,
       displayName,
+      subjectId: String(subjectId || "").trim() || null,
       subjectLabelHe: subjectLabelHe(subjectId),
       weakFocusSubjectLabelHe,
       weakFocusTopicDisplayNameHe,
