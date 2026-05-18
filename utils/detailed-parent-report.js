@@ -1614,9 +1614,7 @@ function buildCrossSubjectInsights(baseReport, subjects) {
   const coverage = buildSubjectCoverage(baseReport);
   const zeroSubjects = coverage.filter((c) => c.questionCount === 0).map((c) => c.subjectLabelHe);
   if (zeroSubjects.length) {
-    bulletsHe.push(
-      `במקצועות ${zeroSubjects.join(", ")} נאספו מעט מאוד שאלות בטווח — ההערות שם יתייצבו כשייגדל נפח התרגול.`
-    );
+    bulletsHe.push(`מקצועות שלא תורגלו בתקופה: ${zeroSubjects.join(", ")}.`);
   }
   const sparse = coverage.filter((c) => c.questionCount > 0 && c.questionCount < 10);
   if (sparse.length) {
@@ -2745,13 +2743,19 @@ function buildCrossSubjectInsightsFromV2(baseReport) {
 function buildHomePlanFromV2(baseReport) {
   const units = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
   const actionOf = (u) => u?.canonicalState?.actionState || "withhold";
+  const subjectHasPractice = (u) =>
+    subjectQuestionCountFromReportSummary(baseReport, String(u?.subjectId || "")) > 0;
   const focusUnits = units.filter((u) => {
     const a = actionOf(u);
-    return a === "diagnose_only" || a === "intervene";
+    return (a === "diagnose_only" || a === "intervene") && subjectHasPractice(u);
   });
   const maintainUnits = units.filter((u) => {
     const a = actionOf(u);
-    return (a === "maintain" || a === "expand_cautiously") && resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u));
+    return (
+      (a === "maintain" || a === "expand_cautiously") &&
+      subjectHasPractice(u) &&
+      resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u))
+    );
   });
   const itemsHe = [];
   for (const u of focusUnits.slice(0, 4)) {

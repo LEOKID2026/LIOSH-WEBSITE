@@ -63,7 +63,10 @@ import { getActiveDiagnosisSessionSummaryForReport } from "./active-diagnosis-se
 import {
   evidenceExampleBodyFallbackHe,
   evidenceExampleTitleFallbackHe,
-  insufficientSubjectQuestionsLineHe,
+  buildSubjectEvidenceCoverageLines,
+  practicedSubjectsSummaryLineHe,
+  notPracticedSubjectsSummaryLineHe,
+  filterInsightLinesForUnpracticedSubjects,
   normalizeParentFacingHe,
   tierStableStrengthHe,
   tierWeaknessRecurringHe,
@@ -1083,11 +1086,18 @@ function overviewShortLineWithSubject(subjectId, unit, kind) {
 function buildDiagnosticOverviewHeV2(p) {
   void p?.patternDiagnostics;
   void p?.maps;
-  const units = Array.isArray(p?.diagnosticEngineV2?.units) ? p.diagnosticEngineV2.units : [];
+  const allUnits = Array.isArray(p?.diagnosticEngineV2?.units) ? p.diagnosticEngineV2.units : [];
+  const subjectQuestionCounts =
+    p?.subjectQuestionCounts && typeof p.subjectQuestionCounts === "object" ? p.subjectQuestionCounts : {};
+  const units = allUnits.filter((u) => {
+    const sid = String(u?.subjectId || "");
+    return (Number(subjectQuestionCounts[sid]) || 0) > 0;
+  });
   const fallback = p?.fallbackOverview && typeof p.fallbackOverview === "object" ? p.fallbackOverview : {};
   const insufficientDataSubjectsHe = Array.isArray(p?.insufficientDataSubjectsHe)
     ? p.insufficientDataSubjectsHe
     : [];
+  const thinEvidenceSubjectsHe = Array.isArray(p?.thinEvidenceSubjectsHe) ? p.thinEvidenceSubjectsHe : [];
 
   if (units.length === 0) {
     return {
@@ -1100,6 +1110,10 @@ function buildDiagnosticOverviewHeV2(p) {
         ? fallback.requiresAttentionPreviewHe
         : [],
       insufficientDataSubjectsHe,
+      notPracticedSubjectsHe: [],
+      thinEvidenceSubjectsHe,
+      practicedSubjectsSummaryHe: p?.practicedSubjectsSummaryHe ?? null,
+      notPracticedSubjectsSummaryHe: p?.notPracticedSubjectsSummaryHe ?? null,
     };
   }
 
@@ -1211,6 +1225,10 @@ function buildDiagnosticOverviewHeV2(p) {
     readyForProgressPreviewHe,
     requiresAttentionPreviewHe,
     insufficientDataSubjectsHe,
+    notPracticedSubjectsHe: [],
+    thinEvidenceSubjectsHe,
+    practicedSubjectsSummaryHe: p?.practicedSubjectsSummaryHe ?? null,
+    notPracticedSubjectsSummaryHe: p?.notPracticedSubjectsSummaryHe ?? null,
   };
 }
 
@@ -2225,37 +2243,42 @@ export function generateParentReportV2(
       )
     : legacyPatternDiagnostics;
 
-  const INSUFFICIENT_SUBJECT_Q = 8;
-  const insufficientDataSubjectsHe = [];
-  if ((mathTotalQuestions || 0) < INSUFFICIENT_SUBJECT_Q) {
-    insufficientDataSubjectsHe.push(insufficientSubjectQuestionsLineHe(V2_SUBJECT_LABEL_HE.math, mathTotalQuestions));
-  }
-  if ((geometryTotalQuestions || 0) < INSUFFICIENT_SUBJECT_Q) {
-    insufficientDataSubjectsHe.push(
-      insufficientSubjectQuestionsLineHe(V2_SUBJECT_LABEL_HE.geometry, geometryTotalQuestions)
-    );
-  }
-  if ((englishTotalQuestions || 0) < INSUFFICIENT_SUBJECT_Q) {
-    insufficientDataSubjectsHe.push(insufficientSubjectQuestionsLineHe(V2_SUBJECT_LABEL_HE.english, englishTotalQuestions));
-  }
-  if ((scienceTotalQuestions || 0) < INSUFFICIENT_SUBJECT_Q) {
-    insufficientDataSubjectsHe.push(insufficientSubjectQuestionsLineHe(V2_SUBJECT_LABEL_HE.science, scienceTotalQuestions));
-  }
-  if ((hebrewTotalQuestions || 0) < INSUFFICIENT_SUBJECT_Q) {
-    insufficientDataSubjectsHe.push(insufficientSubjectQuestionsLineHe(V2_SUBJECT_LABEL_HE.hebrew, hebrewTotalQuestions));
-  }
-  if ((moledetGeographyTotalQuestions || 0) < INSUFFICIENT_SUBJECT_Q) {
-    insufficientDataSubjectsHe.push(
-      insufficientSubjectQuestionsLineHe(V2_SUBJECT_LABEL_HE["moledet-geography"], moledetGeographyTotalQuestions)
-    );
-  }
+  const evidenceCoverage = buildSubjectEvidenceCoverageLines(subjectQuestionCounts, V2_SUBJECT_LABEL_HE);
+  const practicedSubjectsSummaryHe = practicedSubjectsSummaryLineHe(
+    subjectQuestionCounts,
+    V2_SUBJECT_LABEL_HE,
+  );
+  const notPracticedSubjectsSummaryHe = notPracticedSubjectsSummaryLineHe(
+    subjectQuestionCounts,
+    V2_SUBJECT_LABEL_HE,
+  );
 
   const fallbackDiagnosticOverviewHe = {
-    strongestAreaLineHe: excellent[0] || null,
-    mainFocusAreaLineHe: needsPractice[0] || null,
-    readyForProgressPreviewHe: excellent.filter(Boolean).slice(1, 4),
-    requiresAttentionPreviewHe: needsPractice.slice(0, 5),
-    insufficientDataSubjectsHe,
+    strongestAreaLineHe: filterInsightLinesForUnpracticedSubjects(
+      [excellent[0]].filter(Boolean),
+      subjectQuestionCounts,
+      V2_SUBJECT_LABEL_HE,
+    )[0] || null,
+    mainFocusAreaLineHe: filterInsightLinesForUnpracticedSubjects(
+      [needsPractice[0]].filter(Boolean),
+      subjectQuestionCounts,
+      V2_SUBJECT_LABEL_HE,
+    )[0] || null,
+    readyForProgressPreviewHe: filterInsightLinesForUnpracticedSubjects(
+      excellent.filter(Boolean).slice(1, 4),
+      subjectQuestionCounts,
+      V2_SUBJECT_LABEL_HE,
+    ),
+    requiresAttentionPreviewHe: filterInsightLinesForUnpracticedSubjects(
+      needsPractice.slice(0, 5),
+      subjectQuestionCounts,
+      V2_SUBJECT_LABEL_HE,
+    ),
+    insufficientDataSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
+    notPracticedSubjectsHe: [],
+    thinEvidenceSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
+    practicedSubjectsSummaryHe,
+    notPracticedSubjectsSummaryHe,
   };
 
   const diagnosticOverviewHe = hasV2Units
@@ -2263,8 +2286,12 @@ export function generateParentReportV2(
         diagnosticEngineV2,
         patternDiagnostics,
         maps,
+        subjectQuestionCounts,
         fallbackOverview: fallbackDiagnosticOverviewHe,
-        insufficientDataSubjectsHe,
+        insufficientDataSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
+        thinEvidenceSubjectsHe: evidenceCoverage.thinEvidenceSubjectsHe,
+        practicedSubjectsSummaryHe,
+        notPracticedSubjectsSummaryHe,
       })
     : fallbackDiagnosticOverviewHe;
 

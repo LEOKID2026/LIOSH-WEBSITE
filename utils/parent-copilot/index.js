@@ -846,6 +846,16 @@ function runDeterministicCore(input, options) {
   };
 
   if (scopeRes.resolutionStatus === "clarification_required") {
+    if (String(scopeRes.scopeReason || "") === "subject_zero_evidence_in_period") {
+      const r = buildClarificationParentCopilotResponse({
+        clarificationQuestionHe: scopeRes.clarificationQuestionHe || "בתקופה הזו אין נתוני תרגול במקצוע הזה.",
+        intent,
+        priorRepeated,
+        metadata: scopeMeta,
+      });
+      validateParentCopilotResponseV1(r);
+      return { response: r, audience, sessionId, conv, truthPacket: null, intent, scopeMeta, utteranceStr };
+    }
     const categorySpecificClarification = buildNoScopeCategorySpecificClarification(utteranceStr);
     if (categorySpecificClarification) {
       const r = buildClarificationParentCopilotResponse({

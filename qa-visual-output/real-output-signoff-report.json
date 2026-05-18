@@ -248,7 +248,7 @@
     ],
     "blockingFailures": []
   },
-  "generatedAt": "2026-05-18T21:21:04.749Z",
+  "generatedAt": "2026-05-18T22:01:51.931Z",
   "rowCount": 3,
   "pdfChecks": [
     "PASS: in-process print bundle (SIGNOFF_SKIP_PDF_EXPORT=1)"

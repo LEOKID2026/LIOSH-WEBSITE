@@ -117,8 +117,14 @@ export function collectParentFacingTextBundle(detailed) {
     }
   }
   for (const sp of detailed?.subjectProfiles || []) {
+    for (const row of sp?.topicOverviewRows || []) {
+      parts.push(String(row.narrativeTitleHe || row.labelHe || row.displayName || ""));
+      parts.push(String(row.overviewStatusHe || ""));
+      parts.push(String(row.gradeRelationSublineHe || ""));
+    }
     for (const tr of sp?.topicRecommendations || []) {
-      parts.push(String(tr.displayName || ""));
+      parts.push(String(tr.narrativeTitleHe || tr.displayName || ""));
+      parts.push(String(tr.gradeRelationSublineHe || ""));
       parts.push(String(tr.recommendedStepLabelHe || ""));
       const slots = tr?.contractsV1?.narrative?.textSlots;
       if (slots) {

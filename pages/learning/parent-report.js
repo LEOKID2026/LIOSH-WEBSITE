@@ -998,7 +998,14 @@ export default function ParentReport() {
         return;
       }
       const { data: sessData } = await supabase.auth.getSession();
-      const token = sessData?.session?.access_token;
+      let token = sessData?.session?.access_token;
+      if (
+        !token &&
+        typeof window !== "undefined" &&
+        window.__parentReportPlaywrightE2eSession === true
+      ) {
+        token = "playwright-e2e-parent-report";
+      }
       if (!token) {
         if (!cancelled) {
           setParentReportError("נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב.");
@@ -1055,7 +1062,10 @@ export default function ParentReport() {
           setParentReportError("");
           setLoading(false);
         }
-      } catch {
+      } catch (loadErr) {
+        if (process.env.NODE_ENV === "development") {
+          console.error("[parent-report] report load failed:", loadErr);
+        }
         if (!cancelled) {
           setParentReportError("שגיאת רשת בטעינת הדוח.");
           setReport(null);
@@ -1953,6 +1963,11 @@ export default function ParentReport() {
           {report.summary?.diagnosticOverviewHe ? (
             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-amber-400/25 bg-amber-950/15 p-3 md:p-4 text-sm text-white/90 space-y-2">
               <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">מה הכי בולט עכשיו (לפי מה שנאסף בתקופה)</p>
+              {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe ? (
+                <p className="m-0 leading-relaxed text-white/70 text-xs md:text-sm">
+                  {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe}
+                </p>
+              ) : null}
               {!shortContractTop && report.summary.diagnosticOverviewHe.mainFocusAreaLineHe ? (
                 <p className="m-0 leading-relaxed">
                   <span className="text-white/55">דורש תשומת לב כעת: </span>
@@ -1984,10 +1999,15 @@ export default function ParentReport() {
                   {report.summary.diagnosticOverviewHe.requiresAttentionPreviewHe.join(" · ")}
                 </p>
               ) : null}
-              {report.summary.diagnosticOverviewHe.insufficientDataSubjectsHe?.length ? (
+              {report.summary.diagnosticOverviewHe.notPracticedSubjectsSummaryHe ? (
                 <p className="m-0 leading-relaxed text-white/50 text-xs">
-                  נתונים חלקיים במקצועות:{" "}
-                  {report.summary.diagnosticOverviewHe.insufficientDataSubjectsHe.join(" · ")}
+                  {report.summary.diagnosticOverviewHe.notPracticedSubjectsSummaryHe}
+                </p>
+              ) : null}
+              {report.summary.diagnosticOverviewHe.thinEvidenceSubjectsHe?.length ? (
+                <p className="m-0 leading-relaxed text-white/50 text-xs">
+                  נתונים מצומצמים במקצועות:{" "}
+                  {report.summary.diagnosticOverviewHe.thinEvidenceSubjectsHe.join(" · ")}
                 </p>
               ) : null}
             </div>

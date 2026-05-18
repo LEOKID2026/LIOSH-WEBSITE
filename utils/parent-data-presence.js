@@ -21,7 +21,7 @@ const PATTERN_SUBJECT_ORDER = [
 
 /** Minimum questions in window for a subject to qualify for a “strength” line from raw metrics. */
 const RAW_STRENGTH_MIN_Q = 10;
-/** High accuracy threshold (percent) for executive strength bullet (“נושא שהילד מצליח בו יותר”). */
+/** High accuracy threshold (percent) for executive strength bullet (“מקצוע שהילד מצליח בו יותר”). */
 const RAW_STRENGTH_HIGH_ACC = 82;
 /** Mid band for consistency bullet (“תוצאות די עקביות בתקופה”). */
 const RAW_STRENGTH_MID_LO = 72;
@@ -146,7 +146,7 @@ export function deriveRawMetricStrengthLinesHe(summary) {
     const ac = Math.round(Number(acc) || 0);
     if (nq < RAW_STRENGTH_MIN_Q) continue;
     if (ac >= RAW_STRENGTH_HIGH_ACC) {
-      out.push(`${label} נראה כמו נושא שהילד מצליח בו יותר כרגע: דיוק גבוה (${ac}%) לאורך ${nq} שאלות בתקופה.`);
+      out.push(`${label} נראה כמו מקצוע שהילד מצליח בו יותר כרגע: דיוק גבוה (${ac}%) לאורך ${nq} שאלות בתקופה.`);
     } else if (ac >= RAW_STRENGTH_MID_LO && ac < RAW_STRENGTH_HIGH_ACC) {
       out.push(
         `ב${label} התוצאות נראות די עקביות בתקופה הזו (${ac}% דיוק, ${nq} שאלות) — יש עדיין נושאים שכדאי לחזק.`

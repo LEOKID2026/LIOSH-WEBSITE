@@ -22,6 +22,11 @@ async function load(rel) {
 const { buildRealGradeSplitRegressionBaseReport } = await import(
   pathToFileURL(join(ROOT, "fixtures", "parent-report-real-regression-payload.mjs")).href,
 );
+const {
+  buildSixSubjectContextLabelingMatrixBaseReport,
+  CONTEXT_LABELING_SUBJECT_IDS,
+  matrixRowKeysForSubject,
+} = await import(pathToFileURL(join(ROOT, "fixtures", "parent-report-context-labeling-matrix.mjs")).href);
 const { buildDetailedParentReportFromBaseReport } = await load("utils/detailed-parent-report.js");
 const {
   assertDistinctSourceIds,
@@ -337,6 +342,75 @@ const regressionLoaded = fixturePath
 const { auditParentFacingSurfaces, PARENT_FACING_SURFACES } = await import(
   pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "surface-classification-audit.js")).href,
 );
+
+// ─── Six-subject matrix (all subjects) — always run before primary payload ───
+const { runContextLabelingMatrixAssertions } = await import(
+  pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "context-labeling-matrix.js")).href,
+);
+const matrixBase = buildSixSubjectContextLabelingMatrixBaseReport();
+const matrixDetailed = buildDetailedParentReportFromBaseReport(matrixBase, { period: "week" });
+const matrixFailures = runContextLabelingMatrixAssertions(matrixBase, matrixDetailed, {
+  subjectIds: CONTEXT_LABELING_SUBJECT_IDS,
+  matrixRowKeysForSubject,
+});
+for (const msg of matrixFailures) {
+  fail(`six-subject matrix: ${msg}`);
+}
+for (const sid of CONTEXT_LABELING_SUBJECT_IDS) {
+  const sp = matrixDetailed.subjectProfiles.find((s) => s.subject === sid);
+  if ((sp?.topicOverviewRows?.length || 0) !== 3) {
+    fail(`${sid}: topicOverviewRows expected 3, got ${sp?.topicOverviewRows?.length || 0}`);
+  }
+  if ((sp?.topicRecommendations?.length || 0) !== 1) {
+    fail(`${sid}: topicRecommendations expected 1 focus row`);
+  }
+}
+
+const { buildMathOnlyOtherSubjectsZeroBaseReport } = await import(
+  pathToFileURL(join(ROOT, "fixtures", "parent-report-zero-evidence-fixture.mjs")).href,
+);
+const { assertZeroEvidencePolicyOnReports, subjectQuestionCountsFromBase } = await import(
+  pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "zero-evidence-policy-tests.js")).href,
+);
+const { buildDiagnosticOverviewHeV2ForTests } = await import(
+  pathToFileURL(join(REPO, "utils", "parent-report-v2.js")).href,
+);
+const {
+  buildSubjectEvidenceCoverageLines,
+  practicedSubjectsSummaryLineHe,
+  notPracticedSubjectsSummaryLineHe,
+} = await import(
+  pathToFileURL(join(REPO, "utils", "parent-report-language", "subject-evidence-policy.js")).href,
+);
+const { hardenBaseReportWithRowIdentity } = await import(
+  pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "harden-report-rows.js")).href,
+);
+const zeroBase = buildMathOnlyOtherSubjectsZeroBaseReport();
+hardenBaseReportWithRowIdentity(zeroBase);
+const zLabels = {
+  math: "חשבון",
+  geometry: "גאומטריה",
+  english: "אנגלית",
+  science: "מדעים",
+  hebrew: "עברית",
+  "moledet-geography": "מולדת וגאוגרפיה",
+};
+const zCounts = subjectQuestionCountsFromBase(zeroBase);
+const zCov = buildSubjectEvidenceCoverageLines(zCounts, zLabels);
+zeroBase.summary.diagnosticOverviewHe = buildDiagnosticOverviewHeV2ForTests({
+  diagnosticEngineV2: zeroBase.diagnosticEngineV2,
+  subjectQuestionCounts: zCounts,
+  maps: { math: zeroBase.mathOperations },
+  fallbackOverview: {},
+  insufficientDataSubjectsHe: zCov.thinEvidenceSubjectsHe,
+  thinEvidenceSubjectsHe: zCov.thinEvidenceSubjectsHe,
+  practicedSubjectsSummaryHe: practicedSubjectsSummaryLineHe(zCounts, zLabels),
+  notPracticedSubjectsSummaryHe: notPracticedSubjectsSummaryLineHe(zCounts, zLabels),
+});
+const zeroDetailed = buildDetailedParentReportFromBaseReport(zeroBase, { period: "week" });
+for (const msg of assertZeroEvidencePolicyOnReports(zeroBase, zeroDetailed)) {
+  fail(`zero-evidence: ${msg}`);
+}
 
 const base = regressionLoaded.base;
 const detailed = buildDetailedParentReportFromBaseReport(base, { period: "week" });

@@ -2,11 +2,11 @@
  * דוח הורים קצר (V2) — ניסוח הורי בלבד, פרמטרים בלבד.
  */
 
-/** @param {string} subjectLabel @param {number} q */
-export function insufficientSubjectQuestionsLineHe(subjectLabel, q) {
-  const n = Math.max(0, Number(q) || 0);
-  return `${subjectLabel}: ${n} שאלות בטווח התקופה — עדיין מעט מדי לסיכום עשיר, אבל אפשר לקבל כיוון ראשוני`;
-}
+export {
+  insufficientSubjectQuestionsLineHe,
+  zeroEvidenceSubjectLineHe,
+  thinEvidenceSubjectLineHe,
+} from "./subject-evidence-policy.js";
 
 export function tierStableStrengthHe() {
   return "חוזק יציב";

@@ -56,3 +56,17 @@ export {
 } from "./subject-withhold-summary-he.js";
 export { GRADE_AWARE_RECOMMENDATION_TEMPLATES } from "./grade-aware-recommendation-templates.js";
 export { resolveGradeAwareParentRecommendationHe } from "./grade-aware-recommendation-resolver.js";
+export {
+  SUBJECT_VALID_MIN_QUESTIONS,
+  SUBJECT_EVIDENCE_TIER,
+  ZERO_EVIDENCE_FORBIDDEN_RE,
+  classifySubjectEvidenceTier,
+  zeroEvidenceSubjectLineHe,
+  thinEvidenceSubjectLineHe,
+  buildSubjectEvidenceCoverageLines,
+  practicedSubjectsSummaryLineHe,
+  notPracticedSubjectsSummaryLineHe,
+  zeroEvidenceSubjectCopilotHe,
+  textViolatesZeroEvidencePolicy,
+  filterInsightLinesForUnpracticedSubjects,
+} from "./subject-evidence-policy.js";

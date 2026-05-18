@@ -14,6 +14,11 @@ import { detectAggregateQuestionClass } from "./semantic-question-class.js";
 import { foldUtteranceForHeMatch, normalizeFreeformParentUtteranceHe } from "./utterance-normalize-he.js";
 import { interpretFreeformStageA } from "./stage-a-freeform-interpretation.js";
 import { resolveReportRowFromUtterance, utteranceNamesTopicRow } from "./report-row-resolver.js";
+import {
+  classifySubjectEvidenceTier,
+  SUBJECT_EVIDENCE_TIER,
+  zeroEvidenceSubjectCopilotHe,
+} from "../parent-report-language/subject-evidence-policy.js";
 
 /**
  * @param {string} s
@@ -22,6 +27,50 @@ function norm(s) {
   return String(s || "")
     .trim()
     .replace(/\s+/g, " ");
+}
+
+/**
+ * @param {unknown} payload
+ * @param {string} subjectId
+ */
+function subjectQuestionCountFromPayload(payload, subjectId) {
+  const sp = (Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : []).find(
+    (p) => String(p?.subject || "") === subjectId,
+  );
+  return Math.max(0, Number(sp?.subjectQuestionCount ?? sp?.questionCount) || 0);
+}
+
+/**
+ * @param {string} subjectId
+ * @param {unknown} payload
+ * @param {unknown} stageA
+ * @param {string} reason
+ * @param {number} [confidence]
+ */
+function resolveSubjectScopeOrZeroEvidence(subjectId, payload, stageA, reason, confidence = 0.73) {
+  if (classifySubjectEvidenceTier(subjectQuestionCountFromPayload(payload, subjectId)) === SUBJECT_EVIDENCE_TIER.none) {
+    return {
+      resolutionStatus: "clarification_required",
+      clarificationQuestionHe: zeroEvidenceSubjectCopilotHe(subjectLabelHe(subjectId)),
+      scopeConfidence: 0,
+      scopeReason: "subject_zero_evidence_in_period",
+      stageA,
+    };
+  }
+  return {
+    resolutionStatus: "resolved",
+    scope: attachScopeInterpretation(
+      {
+        scopeType: "subject",
+        scopeId: subjectId,
+        scopeLabel: subjectLabelHe(subjectId),
+      },
+      stageA,
+    ),
+    scopeConfidence: confidence,
+    scopeReason: reason,
+    stageA,
+  };
 }
 
 /**
@@ -301,20 +350,7 @@ export function resolveScope(input) {
         stageA,
       };
     }
-    return {
-      resolutionStatus: "resolved",
-      scope: attachScopeInterpretation(
-        {
-          scopeType: "subject",
-          scopeId: subjectId,
-          scopeLabel: subjectLabelHe(subjectId),
-        },
-        stageA,
-      ),
-      scopeConfidence: 0.9,
-      scopeReason: "selected_context_subject",
-      stageA,
-    };
+    return resolveSubjectScopeOrZeroEvidence(subjectId, payload, stageA, "selected_context_subject", 0.9);
   }
 
   const rowRes = resolveReportRowFromUtterance(normalizedUtterance || rawUtterance, payload);
@@ -357,20 +393,13 @@ export function resolveScope(input) {
     };
   }
   if (rowRes.subjectId && !rowRes.best) {
-    return {
-      resolutionStatus: "resolved",
-      scope: attachScopeInterpretation(
-        {
-          scopeType: "subject",
-          scopeId: rowRes.subjectId,
-          scopeLabel: subjectLabelHe(rowRes.subjectId),
-        },
-        stageA,
-      ),
-      scopeConfidence: 0.8,
-      scopeReason: "report_row_subject_match",
+    return resolveSubjectScopeOrZeroEvidence(
+      rowRes.subjectId,
+      payload,
       stageA,
-    };
+      "report_row_subject_match",
+      0.8,
+    );
   }
 
   const topicMatch = matchTopicFromUtterance(utterance, payload);
@@ -402,20 +431,7 @@ export function resolveScope(input) {
 
   const subjectId = matchSubjectFromUtterance(utterance, payload);
   if (subjectId) {
-    return {
-      resolutionStatus: "resolved",
-      scope: attachScopeInterpretation(
-        {
-          scopeType: "subject",
-          scopeId: subjectId,
-          scopeLabel: subjectLabelHe(subjectId),
-        },
-        stageA,
-      ),
-      scopeConfidence: 0.73,
-      scopeReason: "utterance_subject_match",
-      stageA,
-    };
+    return resolveSubjectScopeOrZeroEvidence(subjectId, payload, stageA, "utterance_subject_match", 0.73);
   }
 
   /**

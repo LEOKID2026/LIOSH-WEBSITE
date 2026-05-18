@@ -16,6 +16,11 @@ import {
 } from "./fixtures/parent-report-output-integrity-fixtures.mjs";
 import { buildRealGradeSplitRegressionBaseReport } from "./fixtures/parent-report-real-regression-payload.mjs";
 import {
+  buildSixSubjectContextLabelingMatrixBaseReport,
+  CONTEXT_LABELING_SUBJECT_IDS,
+  matrixRowKeysForSubject,
+} from "./fixtures/parent-report-context-labeling-matrix.mjs";
+import {
   collectParentFacingTextBundle,
   verifyPdfOrPrintOutput,
 } from "./lib/parent-report-pdf-output-verify.mjs";
@@ -397,6 +402,92 @@ for (const t of TRACE_TABLE.slice(0, 4)) {
     assert.fail(`I-aggregate: ${msg}`);
   }
   assert.ok((realDetailed.executiveSummary?.gradeSplitTopicNoticesHe || []).length >= 1, "I: grade split notice");
+}
+
+// ─── J: Six-subject context-labeling matrix (all subjects) ───────────────────
+{
+  const { runContextLabelingMatrixAssertions } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "context-labeling-matrix.js")).href,
+  );
+  const matrixBase = buildSixSubjectContextLabelingMatrixBaseReport();
+  const matrixDetailed = buildDetailedParentReportFromBaseReport(matrixBase, { period: "week" });
+  const matrixFailures = runContextLabelingMatrixAssertions(matrixBase, matrixDetailed, {
+    subjectIds: CONTEXT_LABELING_SUBJECT_IDS,
+    matrixRowKeysForSubject,
+  });
+  for (const msg of matrixFailures) {
+    assert.fail(`J-matrix: ${msg}`);
+  }
+  for (const sid of CONTEXT_LABELING_SUBJECT_IDS) {
+    const sp = matrixDetailed.subjectProfiles.find((s) => s.subject === sid);
+    assert.equal(sp?.topicOverviewRows?.length, 3, `J: ${sid} overview has 3 rows`);
+    assert.equal(sp?.topicRecommendations?.length, 1, `J: ${sid} focus has 1 row`);
+    const keys = matrixRowKeysForSubject(sid);
+    assert.ok(
+      sp?.topicRecommendations?.some((r) => r.topicRowKey === keys.splitG5),
+      `J: ${sid} focus is higher-grade weak split`,
+    );
+  }
+  assert.ok(
+    (matrixDetailed.executiveSummary?.gradeSplitTopicNoticesHe || []).length >= CONTEXT_LABELING_SUBJECT_IDS.length,
+    "J: grade-split notices for all subjects with split topics",
+  );
+}
+
+// ─── K: Zero-evidence policy (math only, others 0) ───────────────────────────
+{
+  const { buildMathOnlyOtherSubjectsZeroBaseReport } = await import(
+    pathToFileURL(join(ROOT, "fixtures", "parent-report-zero-evidence-fixture.mjs")).href,
+  );
+  const {
+    assertZeroEvidencePolicyOnReports,
+    assertEvidenceTierClassification,
+  } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "zero-evidence-policy-tests.js")).href,
+  );
+  const { buildDiagnosticOverviewHeV2ForTests } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-v2.js")).href,
+  );
+  const {
+    buildSubjectEvidenceCoverageLines,
+    practicedSubjectsSummaryLineHe,
+    notPracticedSubjectsSummaryLineHe,
+  } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-language", "subject-evidence-policy.js")).href,
+  );
+  const { hardenBaseReportWithRowIdentity } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "harden-report-rows.js")).href,
+  );
+  const { subjectQuestionCountsFromBase } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "zero-evidence-policy-tests.js")).href,
+  );
+  for (const msg of assertEvidenceTierClassification()) assert.fail(`K-tier: ${msg}`);
+  const zBase = buildMathOnlyOtherSubjectsZeroBaseReport();
+  hardenBaseReportWithRowIdentity(zBase);
+  const zCounts = subjectQuestionCountsFromBase(zBase);
+  const labels = {
+    math: "חשבון",
+    geometry: "גאומטריה",
+    english: "אנגלית",
+    science: "מדעים",
+    hebrew: "עברית",
+    "moledet-geography": "מולדת וגאוגרפיה",
+  };
+  const zCov = buildSubjectEvidenceCoverageLines(zCounts, labels);
+  zBase.summary.diagnosticOverviewHe = buildDiagnosticOverviewHeV2ForTests({
+    diagnosticEngineV2: zBase.diagnosticEngineV2,
+    subjectQuestionCounts: zCounts,
+    maps: { math: zBase.mathOperations },
+    fallbackOverview: {},
+    insufficientDataSubjectsHe: zCov.thinEvidenceSubjectsHe,
+    thinEvidenceSubjectsHe: zCov.thinEvidenceSubjectsHe,
+    practicedSubjectsSummaryHe: practicedSubjectsSummaryLineHe(zCounts, labels),
+    notPracticedSubjectsSummaryHe: notPracticedSubjectsSummaryLineHe(zCounts, labels),
+  });
+  const zDetailed = buildDetailedParentReportFromBaseReport(zBase, { period: "week" });
+  for (const msg of assertZeroEvidencePolicyOnReports(zBase, zDetailed)) {
+    assert.fail(`K-zero: ${msg}`);
+  }
 }
 
 process.stdout.write("\nOK parent-report-output-integrity\n");
