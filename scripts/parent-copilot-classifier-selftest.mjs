@@ -288,7 +288,6 @@ const ambiguous = [
   "מה?",
   "בסדר",
   "אוקיי",
-  "תסביר לי שברים",  // topic match alone, no pronoun, no strong intent
 ];
 
 for (const q of ambiguous) {
@@ -318,6 +317,11 @@ const reportRelated = [
   "האם יש סיבה לדאגה?",
   "הוא מתקשה בשברים?",
   "מה עם גאומטריה?",
+  "תסביר לי שברים",
+  "תסביר לי על שברים מה הבעיה",
+  "חשבון שברים",
+  "מה הבעיה?",
+  "איך הוא בחשבון?",
   // Regression: strength/explain/weakness phrasing must clear deterministic threshold (0.5)
   "מה המקצוע החזק?",
   "תסביר לי על הדוח",
@@ -404,13 +408,13 @@ process.stdout.write("\n── Group E: Two-tier proof ──\n");
   );
 }
 
-// "תסביר לי שברים" — topic name alone, no pronoun, no strong verb = ambiguous (NOT report_related)
+// "תסביר לי שברים" — anchored topic in utterance = report_related (report-row-first)
 {
   const q = "תסביר לי שברים";
   const det = classifyParentQuestionDeterministic({ utterance: q, payload: richReportPayload() });
   check(
-    `[E] "תסביר לי שברים" must NOT be report_related (topic alone is not enough)`,
-    det.bucket !== "report_related",
+    `[E] "תסביר לי שברים" must be report_related (topic row match + explain framing)`,
+    det.bucket === "report_related",
     `bucket=${det.bucket} signals=${JSON.stringify(det.signals)}`,
   );
 }

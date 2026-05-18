@@ -19,11 +19,17 @@
 
 import {
   classifyParentQuestionDeterministic,
+  buildTopicClarificationQuestionHe,
   OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
   CLASSIFIER_THRESHOLDS,
 } from "./question-classifier.js";
+import {
+  hasAnchoredReportRows,
+  isVagueTopicSelectionRequest,
+} from "./report-row-resolver.js";
+import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 
 export { OFF_TOPIC_RESPONSE_HE, DIAGNOSTIC_BOUNDARY_RESPONSE_HE, AMBIGUOUS_RESPONSE_HE };
 
@@ -57,6 +63,30 @@ export { OFF_TOPIC_RESPONSE_HE, DIAGNOSTIC_BOUNDARY_RESPONSE_HE, AMBIGUOUS_RESPO
  * @returns {QaRouterResult}
  */
 export function routeParentQuestion(utteranceRaw, payload) {
+  const folded = foldUtteranceForHeMatch(utteranceRaw);
+  if (hasAnchoredReportRows(payload) && isVagueTopicSelectionRequest(folded)) {
+    return {
+      routerIntent: "ambiguous_or_unclear",
+      requiresLlm: false,
+      deterministicResponse: buildTopicClarificationQuestionHe(payload),
+      exitEarly: true,
+      classifierBucket: "report_related",
+      classifierConfidence: 0.72,
+      classifierSource: "deterministic",
+      classifierSignals: {
+        reportSignal: 0.7,
+        offTopicSignal: 0,
+        diagnosticSignal: 0,
+        ambiguitySignal: 0.2,
+        hasStrongReportToken: true,
+        hasGenericKnowledgeFraming: false,
+        subjectTopicNameMatched: false,
+        pronounsMatched: false,
+        meaningfulTokenCount: 3,
+      },
+    };
+  }
+
   const result = classifyParentQuestionDeterministic({ utterance: utteranceRaw, payload });
 
   switch (result.bucket) {

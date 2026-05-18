@@ -20,6 +20,26 @@ export function detectAggregateQuestionClass(utterance) {
   if (t.length < 3) return "none";
 
   if (
+    /^מה\s+הבעיה\??$/u.test(t) ||
+    /^מה\s+הבעיה\s/u.test(t) ||
+    /^מה\s+קשה(?:\s+לו|\s+לה)?/u.test(t) ||
+    /^מה\s+לחזק/u.test(t) ||
+    /^מה\s+טוב(?:\s+לו|\s+לה)?/u.test(t) ||
+    /^איפה\s+הוא\s+חלש/u.test(t) ||
+    /^איפה\s+הוא\s+חזק/u.test(t) ||
+    /^איפה\s+היא\s+חלש/u.test(t) ||
+    /^איפה\s+היא\s+חזק/u.test(t)
+  ) {
+    return "needs_attention";
+  }
+
+  if (
+    /שתי\s+כיתות|כיתה\s+אחרת|תרגל\s+כיתה\s+אחרת|כיתה\s+גבוהה\s+יותר|יחסית\s+לכיתה/u.test(t)
+  ) {
+    return "still_unclear";
+  }
+
+  if (
     /^ו?בקיצור\??$/u.test(t) ||
     /^אז\s*מה\s*בעצם\??$/u.test(t) ||
     /מה\s*השורה\s*התחתונה/u.test(t) ||

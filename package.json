@@ -246,6 +246,7 @@
     "test:parent-report-ai-narrative:live-smoke": "node scripts/parent-report-ai-narrative-live-smoke.mjs",
     "test:parent-copilot-qa": "tsx scripts/parent-copilot-qa-selftest.mjs",
     "test:parent-copilot-classifier": "tsx scripts/parent-copilot-classifier-selftest.mjs",
+    "test:parent-copilot-hebrew-understanding": "tsx scripts/parent-copilot-hebrew-understanding-selftest.mjs",
     "test:parent-copilot-classifier:live-smoke": "tsx scripts/parent-copilot-classifier-live-smoke.mjs",
     "test:parent-copilot-async-live-smoke": "tsx scripts/parent-copilot-async-live-smoke.mjs",
     "test:parent-copilot-llm-fallback": "node scripts/parent-copilot-llm-fallback-selftest.mjs",

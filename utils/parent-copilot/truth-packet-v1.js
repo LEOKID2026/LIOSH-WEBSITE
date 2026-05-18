@@ -1436,6 +1436,13 @@ export function buildTruthPacketV1(payload, scope) {
       weakFocusSubjectLabelHe,
       weakFocusTopicDisplayNameHe,
       relevantSummaryLines: summaryLines,
+      registeredGradeKey:
+        String(payload?.registeredGradeKey || payload?.gradePracticeMeta?.registeredGradeKey || "").trim() ||
+        null,
+      gradePracticeMeta:
+        payload?.gradePracticeMeta && typeof payload.gradePracticeMeta === "object"
+          ? { ...payload.gradePracticeMeta }
+          : null,
     },
     allowedClaimEnvelope: {
       wordingEnvelope,

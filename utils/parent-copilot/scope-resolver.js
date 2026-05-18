@@ -13,6 +13,7 @@ import {
 import { detectAggregateQuestionClass } from "./semantic-question-class.js";
 import { foldUtteranceForHeMatch, normalizeFreeformParentUtteranceHe } from "./utterance-normalize-he.js";
 import { interpretFreeformStageA } from "./stage-a-freeform-interpretation.js";
+import { resolveReportRowFromUtterance } from "./report-row-resolver.js";
 
 /**
  * @param {string} s
@@ -307,6 +308,56 @@ export function resolveScope(input) {
       ),
       scopeConfidence: 0.9,
       scopeReason: "selected_context_subject",
+      stageA,
+    };
+  }
+
+  const rowRes = resolveReportRowFromUtterance(normalizedUtterance || rawUtterance, payload);
+  if (rowRes.ambiguous && rowRes.candidates.length >= 2) {
+    const names = rowRes.candidates
+      .slice(0, 3)
+      .map((r) => r.displayName)
+      .filter(Boolean)
+      .join(" או ");
+    return {
+      resolutionStatus: "clarification_required",
+      clarificationQuestionHe: names
+        ? `יש כמה נושאים דומים בדוח — על איזה מהם לענות: ${names}?`
+        : "יש כאן יותר מנושא אחד — על איזה נושא לענות?",
+      scopeConfidence: 0.25,
+      scopeReason: "utterance_topic_ambiguous",
+      stageA,
+    };
+  }
+  if (rowRes.best?.topicRowKey) {
+    return {
+      resolutionStatus: "resolved",
+      scope: attachScopeInterpretation(
+        {
+          scopeType: "topic",
+          scopeId: rowRes.best.topicRowKey,
+          scopeLabel: rowRes.best.displayName,
+        },
+        stageA,
+      ),
+      scopeConfidence: 0.88,
+      scopeReason: "report_row_topic_match",
+      stageA,
+    };
+  }
+  if (rowRes.subjectId && !rowRes.best) {
+    return {
+      resolutionStatus: "resolved",
+      scope: attachScopeInterpretation(
+        {
+          scopeType: "subject",
+          scopeId: rowRes.subjectId,
+          scopeLabel: subjectLabelHe(rowRes.subjectId),
+        },
+        stageA,
+      ),
+      scopeConfidence: 0.8,
+      scopeReason: "report_row_subject_match",
       stageA,
     };
   }

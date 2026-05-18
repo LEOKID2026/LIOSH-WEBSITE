@@ -7,6 +7,8 @@
 import { narrativeSectionTextHe } from "../contracts/narrative-contract-v1.js";
 import { coachingVariantIndex, applyParentCoachingPacks, pickUncertaintyReasonScript } from "./parent-coaching-packs.js";
 import { parentDirectOpenerHe } from "./direct-answer-openers.js";
+import { isMixedGradeReportQuestion } from "./report-row-resolver.js";
+import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 import { compactParentAnswerBlocks } from "./answer-compaction.js";
 
 /** Fixed Copilot-only clinical boundary copy (Task C / Task G). */
@@ -484,6 +486,18 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
     maxBlocks: truthPacket?.scopeType === "executive" ? 4 : 5,
     maxTotalChars: truthPacket?.scopeType === "executive" ? 1900 : 2400,
   });
+
+  const parentUtterance = String(coachingCtx?.parentUtterance || plan?.parentUtterance || "");
+  const gpm = truthPacket?.surfaceFacts?.gradePracticeMeta;
+  if (isMixedGradeReportQuestion(foldUtteranceForHeMatch(parentUtterance)) && gpm?.mixedGradePractice) {
+    const note = String(gpm.mixedGradePracticeNoteHe || "").trim();
+    const gradeLine = note
+      ? `${note} כל שורה בדוח מציגה את כיתת התוכן שבה בוצע התרגול — לא למזג בין כיתות כשמסיקים מסקנה.`
+      : "כשאותו נושא מופיע בכיתות תוכן שונות, כל שורה בדוח נספרת בנפרד — לא למזג בין כיתות.";
+    if (!composed.some((b) => String(b.textHe || "").includes("כיתה"))) {
+      composed = [...composed, { type: "meaning", textHe: gradeLine, source: "composed" }];
+    }
+  }
 
   return {
     answerBlocks: composed,

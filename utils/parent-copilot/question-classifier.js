@@ -34,6 +34,15 @@ import { SUBJECT_ORDER, normalizeSubjectId } from "./contract-reader.js";
 import { detectAggregateQuestionClass } from "./semantic-question-class.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 import { looksLikeExternalPastedQuestion, matchLooseTopicFromUtterance } from "../parent-ai-topic-classifier/classifier.js";
+import {
+  buildTopicClarificationQuestionHe,
+  hasAnchoredReportRows,
+  isGeneralReportQuestion,
+  resolveReportRowFromUtterance,
+  utteranceQualifiesAsReportQuestion,
+} from "./report-row-resolver.js";
+
+export { buildTopicClarificationQuestionHe };
 
 /**
  * @typedef {(
@@ -387,8 +396,10 @@ function subjectLabelLocalHe(subjectId) {
 /**
  * @param {string} t — normalized utterance
  * @param {{ subjectsHe: string[]; topicsHe: string[] }} vocab
+ * @param {unknown} payload
+ * @param {string} rawUtterance
  */
-function scoreReportSignal(t, vocab) {
+function scoreReportSignal(t, vocab, payload, rawUtterance) {
   let score = 0;
   let hasStrong = false;
   let pronounsMatched = false;
@@ -428,7 +439,6 @@ function scoreReportSignal(t, vocab) {
     }
   }
 
-  // Subject / topic name matches
   for (const lbl of vocab.subjectsHe) {
     if (lbl && t.includes(lbl)) {
       subjectTopicNameMatched = true;
@@ -444,14 +454,26 @@ function scoreReportSignal(t, vocab) {
     }
   }
 
-  // Generic-knowledge framing clamp
+  if (payload && utteranceQualifiesAsReportQuestion(rawUtterance, payload)) {
+    const rowRes = resolveReportRowFromUtterance(rawUtterance, payload);
+    if (rowRes.best || rowRes.subjectId) {
+      subjectTopicNameMatched = true;
+      score += STRONG_REPORT_INTENT_WEIGHT;
+      hasStrong = true;
+    }
+  }
+
   for (const re of GENERIC_KNOWLEDGE_FRAMING) {
     if (re.test(t)) {
       hasGenericKnowledgeFraming = true;
       break;
     }
   }
-  if (hasGenericKnowledgeFraming && score > 0.3) {
+  if (hasGenericKnowledgeFraming && subjectTopicNameMatched && utteranceQualifiesAsReportQuestion(rawUtterance, payload)) {
+    hasGenericKnowledgeFraming = false;
+    score = Math.max(score, STRONG_REPORT_INTENT_WEIGHT);
+    hasStrong = true;
+  } else if (hasGenericKnowledgeFraming && score > 0.3) {
     score = 0.3;
   }
 
@@ -536,7 +558,7 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
   const vocab = extractReportVocabulary(payload);
   const meaningfulTokenCount = countMeaningfulTokens(t);
 
-  const reportRes = scoreReportSignal(t, vocab);
+  const reportRes = scoreReportSignal(t, vocab, payload, String(utterance || ""));
   const offTopicSignal = scoreOffTopicSignal(t, reportRes.hasStrong);
   const diagnosticSignal = scoreDiagnosticSignal(t);
   const ambiguitySignal = computeAmbiguity({
@@ -568,6 +590,23 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
       confidence: diagnosticSignal,
       source: "deterministic",
       signals,
+    };
+  }
+
+  // 1a. Report-row-first: anchored report + row/subject/general question (before off-topic / ambiguous).
+  if (hasAnchoredReportRows(payload) && utteranceQualifiesAsReportQuestion(String(utterance || ""), payload)) {
+    const rowRes = resolveReportRowFromUtterance(String(utterance || ""), payload);
+    return {
+      bucket: "report_related",
+      confidence: 0.84,
+      source: "deterministic",
+      signals: {
+        ...signals,
+        reportSignal: Math.max(reportRes.score, 0.78),
+        hasStrongReportToken: true,
+        subjectTopicNameMatched: !!(rowRes.best || rowRes.subjectId),
+        ambiguitySignal: Math.min(ambiguitySignal, 0.2),
+      },
     };
   }
 

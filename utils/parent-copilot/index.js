@@ -1002,6 +1002,7 @@ function runDeterministicCore(input, options) {
       continuityRepeat,
       conversationState: conv,
       turnOrdinal: priorIntents.length,
+      parentUtterance: utteranceStr,
     });
     draft = {
       ...draft,
