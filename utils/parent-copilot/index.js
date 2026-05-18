@@ -51,6 +51,7 @@ import {
 } from "./question-router.js";
 import { classifyParentQuestionViaLlm } from "./question-classifier-llm.js";
 import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
+import { utteranceQualifiesAsReportQuestion } from "./report-row-resolver.js";
 
 /**
  * @param {Record<string, unknown>} base
@@ -425,6 +426,7 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
   };
   const semanticAggregateSatisfied = false;
   const aggregateQuestionClass = "none";
+  const intentComposerPath = String(scopeMeta?.generationPath || "") === "intent_composer";
   let vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
   let fallbackUsed = false;
   /** @type {string[]} */
@@ -565,11 +567,14 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     fallbackReasonCodes,
     validatorFailCodes,
     semanticAggregateSatisfied,
-    generationPath: "deterministic",
+    generationPath: intentComposerPath ? "intent_composer" : "deterministic",
     truthPacket,
     resolutionStatus: "resolved",
     scopeType: truthPacket.scopeType,
     scopeId: truthPacket.scopeId,
+    ...(scopeMeta?.answerContract ? { answerContract: scopeMeta.answerContract } : {}),
+    ...(scopeMeta?.answerComposerUsed ? { answerComposerUsed: scopeMeta.answerComposerUsed } : {}),
+    ...(scopeMeta?.evidenceUsed ? { evidenceUsed: scopeMeta.evidenceUsed } : {}),
   });
   response = { ...response, telemetry };
 
@@ -743,23 +748,23 @@ function runDeterministicCore(input, options) {
   let qaRoute = options?.preRoute
     ? options.preRoute
     : routeParentQuestion(String(input?.utterance || ""), scopedInput?.payload);
-  if (
-    qaRoute.exitEarly &&
-    qaRoute.classifierBucket === "ambiguous_or_unclear" &&
-    isContextualFollowUpUtterance(utteranceStr)
-  ) {
+  if (qaRoute.exitEarly && qaRoute.classifierBucket === "ambiguous_or_unclear") {
     const hasPriorScope =
       (Array.isArray(conv.priorScopes) && conv.priorScopes.length > 0) ||
       String(conv.lastResolvedTopic || "").trim() ||
       String(conv.lastResolvedSubject || "").trim();
-    if (hasPriorScope) {
+    const reportQualified = utteranceQualifiesAsReportQuestion(utteranceStr, scopedInput?.payload);
+    if (
+      (isContextualFollowUpUtterance(utteranceStr) && hasPriorScope) ||
+      reportQualified
+    ) {
       qaRoute = {
         routerIntent: "unknown_report_question",
         requiresLlm: true,
         deterministicResponse: null,
         exitEarly: false,
         classifierBucket: "report_related",
-        classifierConfidence: Math.max(Number(qaRoute.classifierConfidence) || 0, 0.8),
+        classifierConfidence: Math.max(Number(qaRoute.classifierConfidence) || 0, 0.85),
         classifierSource: "deterministic",
         classifierSignals: qaRoute.classifierSignals,
       };
@@ -962,6 +967,7 @@ function runDeterministicCore(input, options) {
     plannerIntent: intent,
     stageAIntent: intent,
     inheritedScope,
+    conversationState: conv,
   });
   if (intentAnswerDraft?.answerBlocks?.length) {
     const compactedIntent = compactParentAnswerBlocks(
@@ -984,9 +990,18 @@ function runDeterministicCore(input, options) {
       },
     );
     if (vIntent.ok) {
+      const intentScopeMeta = {
+        ...scopeMeta,
+        answerContract: intentAnswerDraft.answerContract,
+        answerComposerUsed: intentAnswerDraft.answerComposerUsed,
+        generationPath: "intent_composer",
+        evidenceUsed: intentAnswerDraft.evidenceUsed,
+        inheritedScope: intentAnswerDraft.inheritedScope,
+      };
       if (process.env.COPILOT_EVIDENCE_DEBUG === "1") {
         process.stderr.write(
           `${JSON.stringify({
+            endpoint: "runParentCopilotTurn",
             utterance: utteranceStr,
             resolvedIntent: intentPlanner,
             answerContract: intentAnswerDraft.answerContract,
@@ -994,19 +1009,25 @@ function runDeterministicCore(input, options) {
             inheritedScope: intentAnswerDraft.inheritedScope,
             answerComposerUsed: intentAnswerDraft.answerComposerUsed,
             evidenceUsed: intentAnswerDraft.evidenceUsed,
+            fallbackUsed: false,
           })}\n`,
         );
       }
-      return packageParentResolvedEarlyTurn(scopedInput, sessionId, priorRepeated, conv, utteranceStr, {
+      const early = packageParentResolvedEarlyTurn(scopedInput, sessionId, priorRepeated, conv, utteranceStr, {
         truthPacket,
         plannerIntent: intentPlanner,
-        scopeMeta: {
-          ...scopeMeta,
-          answerContract: intentAnswerDraft.answerContract,
-          answerComposerUsed: intentAnswerDraft.answerComposerUsed,
-        },
+        scopeMeta: intentScopeMeta,
         answerBlocks: compactedIntent,
       });
+      if (early.response?.telemetry) {
+        early.response.telemetry = {
+          ...early.response.telemetry,
+          generationPath: "intent_composer",
+          answerContract: intentAnswerDraft.answerContract,
+          answerComposerUsed: intentAnswerDraft.answerComposerUsed,
+        };
+      }
+      return early;
     }
   }
 
@@ -1439,6 +1460,19 @@ export async function runParentCopilotTurnAsync(input) {
 
   const core = runDeterministicCore(input, { preRoute: effectiveRoute });
   const baseResponse = core.response;
+  if (
+    baseResponse?.telemetry?.generationPath === "intent_composer" ||
+    baseResponse?.telemetry?.answerComposerUsed
+  ) {
+    return finalizeTurnResponse(baseResponse, {
+      audience: core.audience,
+      sessionId: core.sessionId,
+      truthPacket: core.truthPacket,
+      intent: core.intent,
+      utteranceLength: String(core.utteranceStr || "").trim().length,
+      generationPath: "intent_composer",
+    });
+  }
   if (baseResponse?.resolutionStatus !== "resolved" || !core.truthPacket || !core.utteranceStr) {
     return finalizeTurnResponse(baseResponse, {
       audience: core.audience,

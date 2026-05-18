@@ -134,6 +134,24 @@ function sanitizeDiagnosticUnitForCopilotGrounding(u) {
       positiveAuthorityLevel: og.positiveAuthorityLevel != null ? String(og.positiveAuthorityLevel) : undefined,
     };
   }
+  const tax = u.taxonomy && typeof u.taxonomy === "object" ? u.taxonomy : null;
+  if (tax) {
+    const patternHe = tax.patternHe != null ? String(tax.patternHe).trim() : "";
+    const subskillHe = tax.subskillHe != null ? String(tax.subskillHe).trim() : "";
+    if (patternHe || subskillHe) {
+      out.taxonomy = { ...(patternHe ? { patternHe } : {}), ...(subskillHe ? { subskillHe } : {}) };
+    }
+  }
+  const diag = u.diagnosis && typeof u.diagnosis === "object" ? u.diagnosis : null;
+  if (diag) {
+    const lineHe = diag.lineHe != null ? String(diag.lineHe).trim() : "";
+    if (lineHe) {
+      out.diagnosis = {
+        lineHe,
+        allowed: diag.allowed !== false,
+      };
+    }
+  }
   return out;
 }
 

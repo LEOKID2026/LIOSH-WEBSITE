@@ -31,7 +31,7 @@ export const TOPIC_HE_ALIASES = Object.freeze({
 });
 
 const TOPIC_INQUIRY_PREFIX_RE =
-  /^(?:תסביר\s+לי\s+|תסביר\s+|הסבר\s+לי\s+|הסבר\s+|מה\s+הבעיה\s+(?:ב|ב)?|מה\s+קורה\s+(?:ב|ב)?|מה\s+עם\s+|איך\s+הוא\s+(?:ב|ב)?|איך\s+היא\s+(?:ב|ב)?|איך\s+הילד\s+(?:ב|ב)?|מה\s+לעשות\s+(?:ב|ב)?|מה\s+לחזק\s+(?:ב|ב)?|רוצה\s+לדעת\s+(?:על\s+)?|רוצה\s+להבין\s+(?:על\s+)?|אני\s+רוצה\s+לדעת\s+(?:על\s+)?|אני\s+רוצה\s+להבין\s+(?:על\s+)?)/u;
+  /^(?:תסביר\s+לי\s+|תסביר\s+|הסבר\s+לי\s+|הסבר\s+|מה\s+הבעיה\s+(?:ב|ב)?|מה\s+קורה\s+(?:ב|ב)?|מה\s+עם\s+|מה\s+לגבי\s+|איך\s+הוא\s+(?:ב|ב)?|איך\s+היא\s+(?:ב|ב)?|איך\s+הילד\s+(?:ב|ב)?|מה\s+לעשות\s+(?:ב|ב)?|מה\s+לחזק\s+(?:ב|ב)?|רוצה\s+לדעת\s+(?:על\s+)?|רוצה\s+להבין\s+(?:על\s+)?|אני\s+רוצה\s+לדעת\s+(?:על\s+)?|אני\s+רוצה\s+להבין\s+(?:על\s+)?)/u;
 
 const FOLDED_PHRASE_BOUNDARY = /[\s?!.,:;״׳]/u;
 
@@ -425,6 +425,14 @@ export function utteranceQualifiesAsReportQuestion(utterance, payload) {
   if (!payload || typeof payload !== "object") return false;
   const folded = foldUtteranceForHeMatch(utterance);
   if (hasAnchoredReportRows(payload) && isContextualFollowUpUtterance(utterance)) return true;
+  if (
+    hasAnchoredReportRows(payload) &&
+    /מה\s*חשוב|חשוב\s*כאן|מה\s*לגבי|מה\s*המקצוע\s*החזק|המקצוע\s*החזק|מה\s*הטעויות|מה\s*הטעיות|הטעויות\s*הבולטות/u.test(
+      folded,
+    )
+  ) {
+    return true;
+  }
   if (
     isStandaloneGenericKnowledgeQuestion(folded) &&
     !/דוח|תרגול|מתקשה|חזק|חלש|לפי\s+הדוח|בבית\s+ספר|למידה/u.test(folded)

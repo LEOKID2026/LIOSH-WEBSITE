@@ -220,6 +220,8 @@ export default function ParentReportDetailedPage() {
   /** Same shape as short report `report.parentAiExplanation` — populated asynchronously. */
   const [parentAiExplanation, setParentAiExplanation] = useState(/** @type {null | { ok: true; text: string; source?: string }} */ (null));
   const [parentReportError, setParentReportError] = useState("");
+  /** Student UUID for secured `/api/parent/copilot-turn` (parent dashboard or cookie session). */
+  const [copilotStudentId, setCopilotStudentId] = useState(/** @type {string | null} */ (null));
 
   const isParentSource = useMemo(
     () =>
@@ -238,6 +240,60 @@ export default function ParentReportDetailedPage() {
   const queryStart = typeof router.query.start === "string" ? router.query.start : null;
   const queryEnd = typeof router.query.end === "string" ? router.query.end : null;
   const queryModeRaw = router.query.mode;
+
+  const customDatesForCopilot = queryPeriod === "custom" && queryStart && queryEnd;
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !router.isReady) return undefined;
+    if (isParentSource && parentStudentId) {
+      setCopilotStudentId(parentStudentId);
+      return undefined;
+    }
+    let cancelled = false;
+    fetch("/api/student/me", { credentials: "include", cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled || !data?.ok || !data?.student?.id) return;
+        setCopilotStudentId(String(data.student.id));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [router.isReady, isParentSource, parentStudentId]);
+
+  const detailedCopilotTurnRunner = useMemo(() => {
+    if (!payload) return null;
+    return async (input) => {
+      const r = await fetch("/api/parent/copilot-turn", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          utterance: input.utterance,
+          sessionId: input.sessionId,
+          audience: input.audience,
+          payload: input.payload,
+          reportPeriod: queryPeriod,
+          ...(customDatesForCopilot ? { rangeFrom: queryStart, rangeTo: queryEnd } : {}),
+          ...(copilotStudentId ? { studentId: copilotStudentId } : {}),
+          selectedContextRef: input.selectedContextRef ?? null,
+          clickedFollowupFamily: input.clickedFollowupFamily ?? null,
+        }),
+      });
+      let data = {};
+      try {
+        data = await r.json();
+      } catch {
+        data = {};
+      }
+      if (!r.ok || !data.ok) {
+        const err = typeof data.error === "string" ? data.error : `copilot-turn failed (${r.status})`;
+        throw new Error(err);
+      }
+      return data.result;
+    };
+  }, [payload, queryPeriod, customDatesForCopilot, queryStart, queryEnd, copilotStudentId]);
 
   const backHref = useMemo(() => {
     const q = { period: queryPeriod };
@@ -1409,7 +1465,7 @@ export default function ParentReportDetailedPage() {
           {payload ? (
             <>
               <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
-                <ParentCopilotShell payload={payload} />
+                <ParentCopilotShell payload={payload} asyncTurnRunner={detailedCopilotTurnRunner} />
               </div>
             </>
           ) : null}

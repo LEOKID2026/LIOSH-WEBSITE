@@ -9,7 +9,9 @@ import { classifySubjectEvidenceTier, SUBJECT_EVIDENCE_TIER } from "../parent-re
 
 export const ANSWER_CONTRACT = Object.freeze({
   report_explanation: "report_explanation",
+  important_focus: "important_focus",
   topic_problem: "topic_problem",
+  topic_lookup: "topic_lookup",
   mistake_pattern: "mistake_pattern",
   home_practice: "home_practice",
   strength: "strength",
@@ -18,6 +20,11 @@ export const ANSWER_CONTRACT = Object.freeze({
 
 const REPORT_EXPLAIN_RE =
   /תסביר\s*(?:לי\s*)?(?:על\s*)?(?:ה)?דוח|מה\s*הדוח\s*אומר|תן\s*לי\s*סיכום|מה\s*רואים\s*פה|מה\s*מראה\s*הדוח|סיכום\s*הדוח|תמונה\s*כללית/u;
+
+const IMPORTANT_FOCUS_RE =
+  /מה\s*חשוב\s*כאן|מה\s*חשוב\s*עכשיו|מה\s*הכי\s*חשוב|תסביר\s*לי\s*מה\s*חשוב|מה\s*לשים\s*דגש|על\s*מה\s*לשים\s*דגש/u;
+
+const TOPIC_LOOKUP_RE = /^מה\s*לגבי\s+/u;
 
 const TOPIC_PROBLEM_RE =
   /מה\s*הבעיה|מה\s*הקושי|איפה\s*הבעיה|איפה\s*הקושי|למה\s*(?:הוא|היא|הילד)?\s*(?:חלש|קשה)|מה\s*לא\s*עובד|מה\s*חלש|למה\s*קשה/u;
@@ -64,6 +71,10 @@ export function resolveAnswerContract(params) {
 
   if (isMistakePatternQuestion(utteranceStr)) return ANSWER_CONTRACT.mistake_pattern;
 
+  if (IMPORTANT_FOCUS_RE.test(folded)) return ANSWER_CONTRACT.important_focus;
+
+  if (TOPIC_LOOKUP_RE.test(folded) || /^מה\s*עם\s+/u.test(folded)) return ANSWER_CONTRACT.topic_lookup;
+
   if (
     HOME_PRACTICE_RE.test(folded) ||
     stageAIntent === "what_to_do_today" ||
@@ -76,6 +87,10 @@ export function resolveAnswerContract(params) {
 
   if (stageAIntent === "what_is_going_well" || STRENGTH_RE.test(folded)) {
     return ANSWER_CONTRACT.strength;
+  }
+
+  if (stageAIntent === "what_is_most_important" && scopeType === "executive") {
+    return ANSWER_CONTRACT.important_focus;
   }
 
   if (

@@ -8,6 +8,11 @@ import { planConversation } from "./conversation-planner.js";
 import { composeAnswerDraft } from "./answer-composer.js";
 import { compactParentAnswerBlocks } from "./answer-compaction.js";
 import { normalizeParentFacingHe } from "../parent-report-language/parent-facing-normalize-he.js";
+import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
+
+/** Full new report questions must not be treated as short reply-class continuations. */
+const EXPLICIT_NEW_REPORT_QUESTION_RE =
+  /תסביר\s+לי\s+מה\s+חשוב|מה\s+חשוב\s+כאן|מה\s+לגבי|מה\s+המקצוע\s+החזק|מה\s+הטעויות|מה\s+הטעיות|מה\s+הבעיה|מה\s+לעשות\s+בבית|תסביר\s+לי\s+על\s+הדוח|מה\s+הדוח\s+אומר/u;
 
 /**
  * @param {string} family
@@ -115,6 +120,10 @@ export function tryBuildParentShortFollowupDraft(ctx) {
   const utteranceStr = String(ctx.utteranceStr || "").trim();
   const conv = ctx.conv || {};
   const payload = ctx.payload;
+
+  const folded = foldUtteranceForHeMatch(utteranceStr);
+  if (EXPLICIT_NEW_REPORT_QUESTION_RE.test(folded)) return null;
+  if (utteranceStr.length > 52) return null;
 
   const replyClass = classifyShortParentReplyClassHe(utteranceStr, { conv });
   if (!replyClass) return null;

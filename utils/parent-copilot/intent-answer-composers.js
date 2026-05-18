@@ -4,11 +4,12 @@
 
 import {
   findTopicRowByKey,
-  listAllAnchoredTopicRows,
+  listCopilotAnchoredTopicRows,
   normalizeSubjectId,
   subjectLabelHe,
   SUBJECT_ORDER,
 } from "./contract-reader.js";
+import { resolveReportRowFromUtterance } from "./report-row-resolver.js";
 import { findDiagnosticUnitForIntelligence } from "./truth-packet-v1.js";
 import { extractMistakePatternHeFromUnit, isMistakePatternQuestion } from "./topic-evidence-answer.js";
 import {
@@ -59,17 +60,88 @@ function rowMetrics(tr) {
 }
 
 /**
+ * All in-window topic rows with practice (matches real detailed-report UI rows).
  * @param {unknown} payload
  */
-function collectAnchoredMetrics(payload) {
-  const rows = listAllAnchoredTopicRows(payload);
+function collectPracticeMetrics(payload) {
+  const profiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
   /** @type {ReturnType<typeof rowMetrics>[]} */
   const metas = [];
-  for (const { subject, tr } of rows) {
+  for (const sp of profiles) {
+    const sid = normalizeSubjectId(sp?.subject);
+    const list = Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : [];
+    for (const tr of list) {
+      const m = rowMetrics({ ...tr, subjectId: sid });
+      if (m.q > 0) metas.push(m);
+    }
+  }
+  if (metas.length) return metas;
+  const anchored = listCopilotAnchoredTopicRows(payload);
+  for (const { subject, tr } of anchored) {
     const m = rowMetrics({ ...tr, subjectId: subject });
     if (m.q > 0) metas.push(m);
   }
   return metas;
+}
+
+/**
+ * Focus topic for mistake/home/topic contracts when scope is executive or inherited.
+ * @param {object} params
+ */
+export function resolveFocusTopicContext(params) {
+  const payload = params?.payload;
+  const truthPacket = params?.truthPacket;
+  const conv = params?.conversationState;
+
+  if (String(truthPacket?.scopeType || "") === "topic" && truthPacket?.scopeId) {
+    const subjectId = String(truthPacket.surfaceFacts?.subjectId || "").trim();
+    const hit = findTopicRowByKey(payload, String(truthPacket.scopeId), subjectId);
+    if (hit?.tr) {
+      const m = rowMetrics({ ...hit.tr, subjectId: hit.subject || subjectId });
+      return {
+        topicRowKey: m.topicRowKey,
+        subjectId: m.sid,
+        displayName: m.displayName,
+        gradeSplitTopicRowKeys: Array.isArray(truthPacket.gradeSplitTopicRowKeys)
+          ? truthPacket.gradeSplitTopicRowKeys
+          : [],
+      };
+    }
+  }
+
+  const lastTopic = String(conv?.lastResolvedTopic || "").trim();
+  if (lastTopic) {
+    const hit = findTopicRowByKey(payload, lastTopic);
+    if (hit?.tr) {
+      const m = rowMetrics({ ...hit.tr, subjectId: hit.subject });
+      return { topicRowKey: m.topicRowKey, subjectId: m.sid, displayName: m.displayName, gradeSplitTopicRowKeys: [] };
+    }
+  }
+
+  const metas = collectPracticeMetrics(payload);
+  const weak = pickWeakestRow(metas) || metas.sort((a, b) => b.q - a.q)[0];
+  if (!weak) return null;
+  const sameName = metas.filter((m) => m.displayName === weak.displayName && m.sid === weak.sid);
+  const gradeSplitTopicRowKeys =
+    sameName.length >= 2 ? sameName.map((m) => m.topicRowKey).filter(Boolean) : [];
+  return {
+    topicRowKey: weak.topicRowKey,
+    subjectId: weak.sid,
+    displayName: weak.displayName,
+    gradeSplitTopicRowKeys,
+  };
+}
+
+/**
+ * @param {string} contract
+ */
+function contractNeedsTopicFocus(contract) {
+  return (
+    contract === ANSWER_CONTRACT.mistake_pattern ||
+    contract === ANSWER_CONTRACT.topic_problem ||
+    contract === ANSWER_CONTRACT.home_practice ||
+    contract === ANSWER_CONTRACT.topic_lookup
+  );
 }
 
 /**
@@ -179,7 +251,7 @@ function buildEvidenceUsed(params) {
  */
 function composeReportExplanation(params) {
   const payload = params.payload;
-  const metas = collectAnchoredMetrics(payload);
+  const metas = collectPracticeMetrics(payload);
   const totalQ = metas.reduce((s, m) => s + m.q, 0);
   const subjectsPracticed = new Set(metas.map((m) => m.sid));
   const subjectLabels = [...subjectsPracticed].map((sid) => subjectLabelHe(sid));
@@ -248,7 +320,7 @@ function composeTopicProblem(params) {
   let rowMetricsList = gatherTopicRowMetrics(params);
   if (scopeType === "subject") {
     const sid = normalizeSubjectId(truthPacket.scopeId);
-    rowMetricsList = collectAnchoredMetrics(payload).filter((m) => m.sid === sid);
+    rowMetricsList = collectPracticeMetrics(payload).filter((m) => m.sid === sid);
   }
   const primary = pickWeakestRow(rowMetricsList) || rowMetricsList[0];
   if (!primary) return null;
@@ -322,7 +394,7 @@ function composeMistakePattern(params) {
 
   if (scopeType === "subject") {
     subjectId = String(truthPacket.scopeId || subjectId).trim();
-    const rows = collectAnchoredMetrics(payload)
+    const rows = collectPracticeMetrics(payload)
       .filter((m) => m.sid === subjectId && m.q >= STRONG_Q_MIN)
       .sort((a, b) => a.acc - b.acc || b.q - a.q);
     const weak = rows[0];
@@ -425,10 +497,38 @@ function composeHomePractice(params) {
  */
 function composeStrength(params) {
   const payload = params.payload;
-  const metas = collectAnchoredMetrics(payload)
+  const practicedSubjects = SUBJECT_ORDER.filter(
+    (sid) => classifySubjectEvidenceTier(subjectQuestionCountFromPayload(payload, sid)) !== SUBJECT_EVIDENCE_TIER.none,
+  );
+  const metas = collectPracticeMetrics(payload)
     .filter((m) => m.q >= STRONG_Q_MIN && m.acc >= STRONG_ACC_MIN)
     .sort((a, b) => b.acc - a.acc || b.q - a.q)
     .slice(0, 3);
+
+  if (practicedSubjects.length === 1 && metas.length === 0) {
+    const sid = practicedSubjects[0];
+    const subQ = subjectQuestionCountFromPayload(payload, sid);
+    const subMetas = collectPracticeMetrics(payload).filter((m) => m.sid === sid);
+    const best = [...subMetas].sort((a, b) => b.acc - a.acc || b.q - a.q)[0];
+    return {
+      answerBlocks: [
+        {
+          type: "observation",
+          textHe: `בטווח התקופה תורגל רק ${subjectLabelHe(sid)} (${subQ} שאלות) — אין מספיק נתונים להשוואה בין מקצועות.`,
+          source: "intent_composer",
+        },
+        {
+          type: "meaning",
+          textHe: best
+            ? `לפי מה שיש בדוח, ${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול — ${best.displayName} בכ־${best.acc}% על ${best.q} שאלות.`
+            : `${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול בטווח — אי אפשר לדרג «חזק/חלש» בין מקצועות.`,
+          source: "intent_composer",
+        },
+      ],
+      plannerIntent: "what_is_going_well",
+      answerComposerUsed: ANSWER_CONTRACT.strength,
+    };
+  }
 
   if (!metas.length) {
     return {
@@ -453,11 +553,16 @@ function composeStrength(params) {
     .map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName}: כ־${m.acc}% על ${m.q} שאלות`)
     .join("; ");
 
+  const singleSubjectNote =
+    practicedSubjects.length === 1
+      ? `בטווח התקופה תורגל רק ${subjectLabelHe(practicedSubjects[0])} — אין מספיק נתונים להשוואה בין מקצועות. `
+      : "";
+
   return {
     answerBlocks: [
       {
         type: "observation",
-        textHe: `לפי נתוני התרגול בטווח, אלה התחומים החזקים יחסית:`,
+        textHe: `${singleSubjectNote}לפי נתוני התרגול בטווח, אלה התחומים החזקים יחסית בתוך מה שתורגל:`,
         source: "intent_composer",
       },
       { type: "meaning", textHe: list + ".", source: "intent_composer" },
@@ -475,6 +580,78 @@ function composeStrength(params) {
 /**
  * @param {object} params
  */
+/**
+ * @param {object} params
+ */
+function composeTopicLookup(params) {
+  const payload = params.payload;
+  const utteranceStr = String(params?.utteranceStr || "");
+  const rowRes = resolveReportRowFromUtterance(utteranceStr, payload);
+  const best = rowRes.best;
+  const label = String(best?.displayName || "").trim();
+
+  if (!best?.topicRowKey) {
+    const tail = utteranceStr.replace(/^מה\s*(?:לגבי|עם)\s+/u, "").trim();
+    return {
+      answerBlocks: [
+        {
+          type: "observation",
+          textHe: tail
+            ? `בתקופה הזו אין נתוני תרגול על ${tail} בדוח הנוכחי.`
+            : "בתקופה הזו אין נתוני תרגול על הנושא הזה בדוח הנוכחי.",
+          source: "intent_composer",
+        },
+        {
+          type: "meaning",
+          textHe: "אפשר לבחור נושא אחר מהדוח, או לצבור תרגול בנושא הזה ולשאול שוב.",
+          source: "intent_composer",
+        },
+      ],
+      plannerIntent: "ask_topic_specific",
+      answerComposerUsed: ANSWER_CONTRACT.topic_lookup,
+    };
+  }
+
+  const hit = findTopicRowByKey(payload, best.topicRowKey, rowRes.subjectId || "");
+  const m = hit?.tr ? rowMetrics({ ...hit.tr, subjectId: hit.subject }) : null;
+  const q = m?.q ?? 0;
+  if (q === 0) {
+    return {
+      answerBlocks: [
+        {
+          type: "observation",
+          textHe: `בתקופה הזו אין נתוני תרגול על ${label || "הנושא"} בדוח הנוכחי.`,
+          source: "intent_composer",
+        },
+        {
+          type: "meaning",
+          textHe: "הנושא מופיע ברשימה, אבל לא נספרו בו שאלות בטווח התאריכים.",
+          source: "intent_composer",
+        },
+      ],
+      plannerIntent: "ask_topic_specific",
+      answerComposerUsed: ANSWER_CONTRACT.topic_lookup,
+    };
+  }
+
+  return composeTopicProblem({
+    ...params,
+    truthPacket: {
+      ...params.truthPacket,
+      scopeType: "topic",
+      scopeId: best.topicRowKey,
+      scopeLabel: label,
+      surfaceFacts: {
+        ...(params.truthPacket?.surfaceFacts || {}),
+        subjectId: m?.sid || rowRes.subjectId,
+        displayName: label,
+        questions: q,
+        accuracy: m?.acc ?? 0,
+      },
+    },
+  });
+}
+
 function composeZeroEvidence(params) {
   const subjectId = String(params?.subjectId || params?.truthPacket?.scopeId || "").trim();
   const label = subjectLabelHe(subjectId);
@@ -500,11 +677,13 @@ function composeZeroEvidence(params) {
  * @param {object} params
  */
 export function tryComposeIntentAnswer(params) {
-  const truthPacket = params?.truthPacket;
-  if (!truthPacket) return null;
+  const truthPacketIn = params?.truthPacket;
+  if (!truthPacketIn) return null;
 
   const utteranceStr = String(params?.utteranceStr || "");
   const payload = params?.payload;
+  const conv = params?.conversationState;
+  let truthPacket = truthPacketIn;
   const scopeType = String(truthPacket.scopeType || "");
   const stageAIntent = String(params?.plannerIntent || params?.stageAIntent || "");
   const inheritedScope = !!params?.inheritedScope;
@@ -520,37 +699,58 @@ export function tryComposeIntentAnswer(params) {
 
   if (!contract) return null;
 
-  if (contract === ANSWER_CONTRACT.report_explanation && scopeType !== "executive") return null;
-
   if (
-    contract === ANSWER_CONTRACT.mistake_pattern &&
-    scopeType !== "topic" &&
-    scopeType !== "subject"
-  ) {
-    return null;
-  }
-
-  if (
-    contract === ANSWER_CONTRACT.topic_problem &&
-    scopeType !== "topic" &&
-    scopeType !== "subject"
+    (contract === ANSWER_CONTRACT.report_explanation || contract === ANSWER_CONTRACT.important_focus) &&
+    scopeType !== "executive"
   ) {
     return null;
   }
 
   if (contract === ANSWER_CONTRACT.zero_evidence && scopeType !== "subject") return null;
 
+  if (contractNeedsTopicFocus(contract) && scopeType !== "topic") {
+    const focus = resolveFocusTopicContext({ payload, truthPacket, conversationState: conv });
+    if (!focus?.topicRowKey) return null;
+    truthPacket = {
+      ...truthPacket,
+      scopeType: "topic",
+      scopeId: focus.topicRowKey,
+      scopeLabel: focus.displayName,
+      gradeSplitTopicRowKeys: focus.gradeSplitTopicRowKeys,
+      surfaceFacts: {
+        ...(truthPacket.surfaceFacts || {}),
+        subjectId: focus.subjectId,
+        displayName: focus.displayName,
+        questions:
+          collectPracticeMetrics(payload).find((m) => m.topicRowKey === focus.topicRowKey)?.q ??
+          truthPacket.surfaceFacts?.questions,
+        accuracy:
+          collectPracticeMetrics(payload).find((m) => m.topicRowKey === focus.topicRowKey)?.acc ??
+          truthPacket.surfaceFacts?.accuracy,
+      },
+    };
+  }
+
   const base = {
     utteranceStr,
     truthPacket,
     payload,
+    conversationState: conv,
     subjectId: String(truthPacket.surfaceFacts?.subjectId || truthPacket.scopeId || "").trim(),
   };
 
   let composed = null;
   switch (contract) {
     case ANSWER_CONTRACT.report_explanation:
+    case ANSWER_CONTRACT.important_focus:
       composed = composeReportExplanation(base);
+      if (composed && contract === ANSWER_CONTRACT.important_focus) {
+        composed.answerComposerUsed = ANSWER_CONTRACT.important_focus;
+        composed.plannerIntent = "what_is_most_important";
+      }
+      break;
+    case ANSWER_CONTRACT.topic_lookup:
+      composed = composeTopicLookup(base);
       break;
     case ANSWER_CONTRACT.topic_problem:
       composed = composeTopicProblem(base);
