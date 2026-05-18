@@ -1686,6 +1686,12 @@ export default function ParentReportDetailedPage() {
                   />
                 </SectionCard>
 
+                {payload?.gradePracticeMeta?.mixedGradePracticeNoteHe ? (
+                  <p className="text-center text-sm text-amber-100/95 bg-amber-500/15 border border-amber-400/40 rounded-lg px-3 py-2 mb-3">
+                    {payload.gradePracticeMeta.mixedGradePracticeNoteHe}
+                  </p>
+                ) : null}
+
                 <ParentReportImportantDisclaimer />
               </div>
 

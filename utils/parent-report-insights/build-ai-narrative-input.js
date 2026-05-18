@@ -89,6 +89,19 @@ export function buildAiNarrativeInput(packet) {
   return {
     studentDisplayName: trimText(packet.student?.displayName, 80),
     gradeLevel: trimText(packet.student?.gradeLevel, 8) || "unknown",
+    registeredGradeLevel: trimText(packet.student?.registeredGradeLevel, 8) || trimText(packet.student?.gradeLevel, 8) || "unknown",
+    mixedGradePractice: packet.mixedGradePractice === true,
+    mixedGradePracticeNoteHe: trimText(packet.mixedGradePracticeNoteHe, 220) || null,
+    gradePracticeBreakdown: Array.isArray(packet.gradePracticeBreakdown)
+      ? packet.gradePracticeBreakdown.slice(0, 24).map((row) => ({
+          subjectKey: trimText(row?.subjectKey, 32),
+          displayNameHe: trimText(row?.displayNameHe, 60),
+          contentGradeLevel: trimText(row?.contentGradeLevel, 8),
+          gradeRelation: trimText(row?.gradeRelation, 16) || "unknown",
+          totalQuestions: Math.max(0, Math.round(Number(row?.totalQuestions) || 0)),
+          accuracyPct: Math.max(0, Math.min(100, Math.round(Number(row?.accuracyPct) || 0))),
+        }))
+      : [],
     rangeLabel: trimText(packet.range?.label, 16),
     overall: {
       totalQuestions: Math.max(0, Math.round(Number(overall.totalQuestions) || 0)),

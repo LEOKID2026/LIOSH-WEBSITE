@@ -2001,7 +2001,7 @@ function runParentReportOutputStabilizationGoldenMatrix() {
     },
   });
   assert.equal(Object.keys(mathCollapsed).length, 1, "G6: math topic must collapse to canonical single entity");
-  const g6 = mathCollapsed.addition;
+  const g6 = mathCollapsed["addition::grade:g4"] || mathCollapsed.addition;
   assert.equal(Number(g6?.questions) || 0, 22, "G6: merged questions must be summed");
   assert.ok(
     Array.isArray(g6?.parentTopicSubSignals?.modeBreakdown) && g6.parentTopicSubSignals.modeBreakdown.length >= 2,
@@ -2033,6 +2033,34 @@ function runParentReportOutputStabilizationGoldenMatrix() {
   });
   assert.equal(Object.keys(englishCollapsed).length, 1, "G7: non-math topic must collapse by pedagogical bucket");
   assert.equal(Number(englishCollapsed.vocabulary?.questions) || 0, 18, "G7: non-math merged questions must be summed");
+
+  const mathMixedGrades = collapseTopicRowsToCanonicalTopicEntityForTests("math", {
+    "fractions\u0001learning\u0001g4\u0001easy": {
+      bucketKey: "fractions",
+      displayName: "שברים",
+      questions: 10,
+      correct: 8,
+      wrong: 2,
+      gradeKey: "g4",
+      levelKey: "easy",
+      modeKey: "learning",
+    },
+    "fractions\u0001learning\u0001g5\u0001easy": {
+      bucketKey: "fractions",
+      displayName: "שברים",
+      questions: 6,
+      correct: 3,
+      wrong: 3,
+      gradeKey: "g5",
+      levelKey: "easy",
+      modeKey: "learning",
+    },
+  });
+  assert.equal(Object.keys(mathMixedGrades).length, 2, "G6b: different practice grades must not merge");
+  assert.ok(mathMixedGrades["fractions::grade:g4"], "G6b: grade 4 row must exist");
+  assert.ok(mathMixedGrades["fractions::grade:g5"], "G6b: grade 5 row must exist");
+  assert.equal(Number(mathMixedGrades["fractions::grade:g4"]?.questions) || 0, 10);
+  assert.equal(Number(mathMixedGrades["fractions::grade:g5"]?.questions) || 0, 6);
 
   // G8: different pedagogical topics must stay separate.
   const noOverMerge = collapseTopicRowsToCanonicalTopicEntityForTests("math", {

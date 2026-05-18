@@ -31,6 +31,11 @@ import {
   MATH_MISTAKE_UNSCOPED_MARKER,
   MATH_SCOPE_UNKNOWN,
 } from "./parent-report-row-diagnostics";
+import {
+  buildGradeEvidenceFields,
+  practiceGradeRelation,
+} from "../lib/learning-supabase/practice-grade-resolution.js";
+import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
 import { enrichTopicMapsWithRowTrends, filterMistakesForRow } from "./parent-report-row-trend";
 import { buildWeaknessConfidencePatternsV1 } from "./intelligence-layer-v1/weakness-confidence-patterns.js";
 import { enrichTopicMapsWithRowBehaviorProfiles } from "./parent-report-row-behavior";
@@ -201,14 +206,9 @@ function buildMapFromBucket({
     for (const s of list) {
       if (!sessionInRange(s, startMs, endMs)) continue;
       const modeNorm = normalizeSessionModeForMath(s);
-      let compositeKey;
-      if (subject === "math") {
-        const g = mathScopeGradeFromSession(s);
-        const l = mathScopeLevelFromSession(s);
-        compositeKey = `${rowBucketKey}${TRACK_ROW_MODE_SEP}${modeNorm}${TRACK_ROW_MODE_SEP}${g}${TRACK_ROW_MODE_SEP}${l}`;
-      } else {
-        compositeKey = `${rowBucketKey}${TRACK_ROW_MODE_SEP}${modeNorm}`;
-      }
+      const g = mathScopeGradeFromSession(s);
+      const l = mathScopeLevelFromSession(s);
+      const compositeKey = `${rowBucketKey}${TRACK_ROW_MODE_SEP}${modeNorm}${TRACK_ROW_MODE_SEP}${g}${TRACK_ROW_MODE_SEP}${l}`;
       if (!map[compositeKey]) map[compositeKey] = [];
       map[compositeKey].push(s);
     }
@@ -271,9 +271,23 @@ function countsToSortedList(counts) {
     .sort((a, b) => b.count - a.count);
 }
 
+/** Collapse key: pedagogical topic + practiced content grade (never merge different grades). */
+export function canonicalTopicGradeCollapseKey(subjectId, row, rowKey) {
+  const split = splitTopicRowKey(String(rowKey || ""));
+  const canonicalBucket =
+    subjectId === "math"
+      ? mathReportBaseOperationKey(String(row?.bucketKey || split.bucketKey || rowKey || ""))
+      : String(row?.bucketKey || split.bucketKey || rowKey || "").trim();
+  const gradePart =
+    String(row?.gradeKey || "").trim() ||
+    (split.gradeScope && split.gradeScope !== MATH_SCOPE_UNKNOWN ? String(split.gradeScope).trim() : "") ||
+    MATH_SCOPE_UNKNOWN;
+  return `${canonicalBucket}${TRACK_ROW_MODE_SEP}gradeScope${TRACK_ROW_MODE_SEP}${gradePart}`;
+}
+
 /**
- * Canonical parent-report entity: child + subject + pedagogical topic.
- * Mode/grade/level are retained only as sub-signals.
+ * Canonical parent-report entity: child + subject + pedagogical topic + content grade.
+ * Mode/level variants within the same grade merge; different practice grades stay separate rows.
  * @param {string} subjectId
  * @param {Record<string, Record<string, unknown>>} rowsByKey
  */
@@ -283,20 +297,17 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
   const grouped = {};
   for (const [rowKey, row] of Object.entries(input)) {
     if (!row || typeof row !== "object") continue;
-    const split = splitTopicRowKey(String(rowKey || ""));
-    const canonicalBucket =
-      subjectId === "math"
-        ? mathReportBaseOperationKey(String(row?.bucketKey || split.bucketKey || rowKey || ""))
-        : String(row?.bucketKey || split.bucketKey || rowKey || "").trim();
-    if (!canonicalBucket) continue;
-    if (!grouped[canonicalBucket]) grouped[canonicalBucket] = { rows: [], rowKeys: [] };
-    grouped[canonicalBucket].rows.push(row);
-    grouped[canonicalBucket].rowKeys.push(String(rowKey));
+    const groupKey = canonicalTopicGradeCollapseKey(subjectId, row, rowKey);
+    if (!groupKey) continue;
+    if (!grouped[groupKey]) grouped[groupKey] = { rows: [], rowKeys: [] };
+    grouped[groupKey].rows.push(row);
+    grouped[groupKey].rowKeys.push(String(rowKey));
   }
 
   /** @type {Record<string, Record<string, unknown>>} */
   const collapsed = {};
-  for (const [bucketKey, pack] of Object.entries(grouped)) {
+  for (const [groupKey, pack] of Object.entries(grouped)) {
+    const bucketKey = String(groupKey).split(TRACK_ROW_MODE_SEP)[0] || groupKey;
     const rows = Array.isArray(pack?.rows) ? pack.rows : [];
     if (!rows.length) continue;
     let questions = 0;
@@ -339,9 +350,21 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
     const gradeKey = dominantKey(gradeCounts) || String(representative?.gradeKey || "").trim() || null;
     const levelKey = dominantKey(levelCounts) || String(representative?.levelKey || "").trim() || null;
     const accuracy = questions > 0 ? Math.round((correct / questions) * 100) : 0;
+    const registeredGradeKey =
+      normalizeGradeLevelToKey(representative?.registeredGradeKey) ||
+      normalizeGradeLevelToKey(representative?.registeredGrade) ||
+      null;
+    const contentGradeKey = gradeKey || null;
+    const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
     const merged = {
       ...representative,
       bucketKey,
+      topicRowKey: groupKey,
+      registeredGradeKey: gradeEvidence.registeredGradeLevel,
+      contentGradeKey: gradeEvidence.contentGradeLevel,
+      actualGradeKey: gradeEvidence.contentGradeLevel,
+      gradeRelation: gradeEvidence.gradeRelation,
+      gradeDelta: gradeEvidence.gradeDelta,
       questions,
       correct,
       wrong,
@@ -368,7 +391,11 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
         sourceRowKeys: Array.isArray(pack?.rowKeys) ? [...pack.rowKeys] : [],
       },
     };
-    collapsed[bucketKey] = merged;
+    const outputKey =
+      gradeKey && gradeKey !== MATH_SCOPE_UNKNOWN
+        ? `${bucketKey}::grade:${gradeKey}`
+        : bucketKey;
+    collapsed[outputKey] = merged;
   }
   return collapsed;
 }
@@ -457,7 +484,7 @@ function buildRowSummary({
   let levelKey;
   let modeKey;
 
-  if (subject === "math" && String(itemKey).split(TRACK_ROW_MODE_SEP).length >= 4) {
+  if (String(itemKey).split(TRACK_ROW_MODE_SEP).length >= 4) {
     gradeKeyRaw =
       tp.gradeScope === MATH_SCOPE_UNKNOWN ? null : String(tp.gradeScope).trim() || null;
     gradeKey = gradeKeyRaw ? canonicalParentReportGradeKey(gradeKeyRaw) : null;
@@ -479,6 +506,9 @@ function buildRowSummary({
         ? modeFromKey
         : dominantKey(modeDist) || "learning";
   }
+  const registeredFromSession = latestSessionFieldValue(sessions, "registeredGrade");
+  const registeredGradeKey = canonicalParentReportGradeKey(registeredFromSession);
+  const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, gradeKey);
   const needsPractice = accuracy < 70;
   const excellent = accuracy >= 90 && questions >= 10;
   const topicOpLabel = displayNameFn(bucketKey);
@@ -500,6 +530,11 @@ function buildRowSummary({
     excellent,
     grade: formatParentReportGradeLabel(gradeKeyRaw),
     gradeKey,
+    registeredGradeKey: gradeEvidence.registeredGradeLevel,
+    contentGradeKey: gradeEvidence.contentGradeLevel,
+    actualGradeKey: gradeEvidence.contentGradeLevel,
+    gradeRelation: gradeEvidence.gradeRelation,
+    gradeDelta: gradeEvidence.gradeDelta,
     level: levelKey ? LEVEL_LABELS[levelKey] || levelKey : "לא זמין",
     levelKey,
     mode: modeStr,
@@ -2202,6 +2237,28 @@ export function generateParentReportV2(
       })
     : fallbackDiagnosticOverviewHe;
 
+  const registeredGradeKey = (() => {
+    for (const map of Object.values(maps)) {
+      for (const row of Object.values(map || {})) {
+        const g = normalizeGradeLevelToKey(row?.registeredGradeKey);
+        if (g) return g;
+      }
+    }
+    return null;
+  })();
+  let mixedGradePractice = false;
+  const gradeRelationsSeen = new Set();
+  for (const map of Object.values(maps)) {
+    for (const row of Object.values(map || {})) {
+      const rel = String(row?.gradeRelation || "").trim();
+      if (rel) gradeRelationsSeen.add(rel);
+      if (rel === "lower" || rel === "higher") mixedGradePractice = true;
+    }
+  }
+  const mixedGradePracticeNoteHe = mixedGradePractice
+    ? "חלק מהתרגול בוצע בכיתה שונה מהכיתה הרשומה, ולכן הוא מוצג בנפרד."
+    : null;
+
   const rawMetricStrengthsHe = deriveRawMetricStrengthLinesHe({
     totalQuestions,
     englishQuestions: englishTotalQuestions,
@@ -2225,6 +2282,13 @@ export function generateParentReportV2(
     startDate: startDate.toISOString().split("T")[0],
     endDate: endDate.toISOString().split("T")[0],
     generatedAt: now.toISOString(),
+    registeredGradeKey,
+    gradePracticeMeta: {
+      registeredGradeKey,
+      mixedGradePractice,
+      mixedGradePracticeNoteHe,
+      gradeRelationsSeen: [...gradeRelationsSeen],
+    },
     summary: {
       totalTimeMinutes,
       totalTimeHours: (totalTimeMinutes / 60).toFixed(2),

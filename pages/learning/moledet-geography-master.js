@@ -1336,9 +1336,11 @@ useEffect(() => {
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
           timeSpentMs,
+          gradeLevel: String(grade || ""),
           clientMeta: {
             source: "moledet-geography-master",
             version: "phase-2d-b7",
+            gradeKey: String(grade || ""),
           },
         });
       })

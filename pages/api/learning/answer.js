@@ -16,6 +16,12 @@ import {
   canonicalGradeLevelKeyFromAuth,
   logLearningPipelineDebug,
 } from "../../../lib/learning-supabase/canonical-learning-write-meta.server";
+import {
+  buildGradeEvidenceFields,
+  resolveContentGradeFromAnswerPayload,
+  resolveContentGradeFromSessionMetadata,
+  normalizePracticeGradeKey,
+} from "../../../lib/learning-supabase/practice-grade-resolution.js";
 
 async function verifyLearningSessionOwnership(supabase, learningSessionId, studentId) {
   const { data, error } = await supabase
@@ -103,7 +109,18 @@ export default async function handler(req, res) {
     const sessionMeta = ownership.metadata || {};
     const sessionMode =
       normalizeLearningGameMode(sessionMeta.mode) || "learning";
-    const canonicalGradeKey = canonicalGradeLevelKeyFromAuth(auth);
+    const registeredGradeKey = canonicalGradeLevelKeyFromAuth(auth);
+    const clientGradeHint = normalizeOptionalString(body.gradeLevel, 40);
+    const clientMeta = normalizeClientMeta(body.clientMeta);
+    const contentGradeKey =
+      normalizePracticeGradeKey(clientGradeHint) ||
+      resolveContentGradeFromAnswerPayload(
+        { clientMeta, gradeLevel: clientGradeHint },
+        sessionMeta,
+        registeredGradeKey
+      ) ||
+      resolveContentGradeFromSessionMetadata(sessionMeta, registeredGradeKey);
+    const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
 
     const answerPayload = {
       subject,
@@ -114,17 +131,21 @@ export default async function handler(req, res) {
       userAnswer: normalizeOptionalString(body.userAnswer, 1000),
       hintsUsed: normalizeOptionalInteger(body.hintsUsed, 0, 1000) ?? 0,
       timeSpentMs: normalizeOptionalInteger(body.timeSpentMs, 0, 36000000),
-      clientMeta: normalizeClientMeta(body.clientMeta),
-      gradeLevel: canonicalGradeKey,
+      clientMeta,
+      registeredGradeLevel: gradeEvidence.registeredGradeLevel,
+      contentGradeLevel: gradeEvidence.contentGradeLevel,
+      gradeRelation: gradeEvidence.gradeRelation,
+      gradeLevel: gradeEvidence.contentGradeLevel || gradeEvidence.registeredGradeLevel,
       gameMode: sessionMode,
     };
 
     logLearningPipelineDebug("answer-save", {
       authenticatedStudentId: auth.studentId,
       authenticatedGradeLevel: auth.student?.grade_level ?? null,
-      canonicalGradeLevelKey: canonicalGradeKey,
-      clientProvidedGradeLevel: normalizeOptionalString(body.gradeLevel, 40),
-      finalPersistedGradeLevelKey: canonicalGradeKey,
+      canonicalGradeLevelKey: registeredGradeKey,
+      clientProvidedGradeLevel: clientGradeHint,
+      finalPersistedContentGradeLevelKey: gradeEvidence.contentGradeLevel,
+      finalPersistedRegisteredGradeLevelKey: gradeEvidence.registeredGradeLevel,
       sessionGameMode: sessionMode,
       finalPersistedGameMode: sessionMode,
       learningSessionId,

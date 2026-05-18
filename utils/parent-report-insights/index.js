@@ -260,11 +260,31 @@ export function buildParentReportInsightPacket(args, options = {}) {
     },
   }));
 
+  const gradePracticeBreakdown = topicInsights
+    .filter((t) => t.contentGradeLevel)
+    .map((t) => ({
+      subjectKey: t.subjectKey,
+      topicKey: t.key,
+      displayNameHe: t.displayNameHe,
+      contentGradeLevel: t.contentGradeLevel,
+      registeredGradeLevel: t.registeredGradeLevel,
+      gradeRelation: t.gradeRelation,
+      totalQuestions: t.totalQuestions,
+      accuracyPct: t.accuracyPct,
+    }));
+  const mixedGradePractice = gradePracticeBreakdown.some(
+    (row) => row.gradeRelation === "lower" || row.gradeRelation === "higher"
+  );
+
   const topics = topicInsights.map((t) => ({
     key: t.key,
     subjectKey: t.subjectKey,
     sourceId: t.sourceId,
     displayNameHe: t.displayNameHe,
+    contentGradeLevel: t.contentGradeLevel,
+    registeredGradeLevel: t.registeredGradeLevel,
+    gradeRelation: t.gradeRelation,
+    gradeDelta: t.gradeDelta,
     totalQuestions: t.totalQuestions,
     accuracyPct: t.accuracyPct,
     avgTimePerQuestionSec: t.avgTimePerQuestionSec,
@@ -301,6 +321,11 @@ export function buildParentReportInsightPacket(args, options = {}) {
     deterministicRecommendationsHe,
     thinDataWarnings,
     limitations,
+    mixedGradePractice,
+    mixedGradePracticeNoteHe: mixedGradePractice
+      ? "חלק מהתרגול בוצע בכיתה שונה מהכיתה הרשומה, ולכן הוא מוצג בנפרד."
+      : null,
+    gradePracticeBreakdown,
     sourceMetadata: {
       engineVersion: "v2",
       aggregateVersion,

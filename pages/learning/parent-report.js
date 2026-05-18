@@ -4023,6 +4023,12 @@ export default function ParentReport() {
             </div>
           )}
 
+          {report?.gradePracticeMeta?.mixedGradePracticeNoteHe ? (
+            <p className="text-center text-sm md:text-base text-amber-100/95 bg-amber-500/15 border border-amber-400/40 rounded-lg px-3 py-2 mb-3 md:mb-4 max-w-3xl mx-auto">
+              {report.gradePracticeMeta.mixedGradePracticeNoteHe}
+            </p>
+          ) : null}
+
           <ParentReportImportantDisclaimer />
 
           {/* כפתורים */}

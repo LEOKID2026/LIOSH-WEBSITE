@@ -1258,9 +1258,11 @@ useEffect(() => {
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
           timeSpentMs,
+          gradeLevel: String(grade || ""),
           clientMeta: {
             source: "geometry-master",
             version: "phase-2d-b3",
+            gradeKey: String(grade || ""),
           },
         });
       })

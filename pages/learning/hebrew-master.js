@@ -1605,9 +1605,11 @@ useEffect(() => {
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
           timeSpentMs,
+          gradeLevel: String(grade || ""),
           clientMeta: {
             source: "hebrew-master",
             version: "phase-2d-b5",
+            gradeKey: String(grade || ""),
           },
         });
       })

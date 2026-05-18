@@ -16,6 +16,10 @@ import {
   canonicalGradeLevelKeyFromAuth,
   logLearningPipelineDebug,
 } from "../../../../lib/learning-supabase/canonical-learning-write-meta.server";
+import {
+  buildGradeEvidenceFields,
+  resolveContentGradeForSessionWrite,
+} from "../../../../lib/learning-supabase/practice-grade-resolution.js";
 
 async function insertLearningSession(supabase, row) {
   const fullInsert = await supabase
@@ -67,24 +71,30 @@ export default async function handler(req, res) {
     const clientMeta = normalizeClientMeta(body.clientMeta);
     const startedAt = new Date().toISOString();
 
-    const canonicalGradeKey = canonicalGradeLevelKeyFromAuth(auth);
+    const registeredGradeKey = canonicalGradeLevelKeyFromAuth(auth);
+    const contentGradeKey = resolveContentGradeForSessionWrite(clientGradeHint, registeredGradeKey);
+    const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
     const metadata = mergeJsonObjects(clientMeta, {
       mode: clientMode,
-      gradeLevel: canonicalGradeKey,
       level,
-      ...(clientGradeHint && canonicalGradeKey && clientGradeHint.toLowerCase() !== canonicalGradeKey
-        ? { clientReportedGradeLevel: clientGradeHint }
+      registeredGradeLevel: gradeEvidence.registeredGradeLevel,
+      contentGradeLevel: gradeEvidence.contentGradeLevel,
+      gradeRelation: gradeEvidence.gradeRelation,
+      ...(contentGradeKey && registeredGradeKey && contentGradeKey !== registeredGradeKey
+        ? { clientReportedGradeLevel: contentGradeKey }
         : {}),
+      gradeLevel: contentGradeKey || registeredGradeKey,
     });
 
     logLearningPipelineDebug("session-start", {
       authenticatedStudentId: auth.studentId,
       authenticatedGradeLevel: auth.student?.grade_level ?? null,
-      canonicalGradeLevelKey: canonicalGradeKey,
+      canonicalGradeLevelKey: registeredGradeKey,
       clientProvidedGradeLevel: clientGradeHint,
       clientProvidedMode: body.mode ?? null,
       persistedMode: clientMode,
-      persistedGradeLevelKey: canonicalGradeKey,
+      persistedContentGradeLevelKey: contentGradeKey,
+      persistedRegisteredGradeLevelKey: registeredGradeKey,
       subject,
       topic,
     });

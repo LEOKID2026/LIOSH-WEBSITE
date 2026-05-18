@@ -131,6 +131,20 @@ function fillTopicsFromMap(subjectAgg, topicMap) {
     t.correct = correct;
     t.wrong = wrong;
     t.accuracy = Number(accuracy.toFixed(2));
+    if (row.contentGradeKey != null && String(row.contentGradeKey).trim()) {
+      t.contentGradeLevel = String(row.contentGradeKey).trim().toLowerCase();
+    } else if (row.gradeKey != null && String(row.gradeKey).trim()) {
+      t.contentGradeLevel = String(row.gradeKey).trim().toLowerCase();
+    }
+    if (row.registeredGradeKey != null && String(row.registeredGradeKey).trim()) {
+      t.registeredGradeLevel = String(row.registeredGradeKey).trim().toLowerCase();
+    }
+    if (typeof row.gradeRelation === "string" && row.gradeRelation.trim()) {
+      t.gradeRelation = row.gradeRelation.trim();
+    }
+    if (row.gradeDelta != null && Number.isFinite(Number(row.gradeDelta))) {
+      t.gradeDelta = Number(row.gradeDelta);
+    }
     subjectAgg.topics[key] = t;
   }
 }
@@ -246,7 +260,69 @@ export function synthesizeAggregateFromV2Snapshot(report) {
  * @param {Record<string, unknown>|null|undefined} report — V2 parent-report snapshot
  * @param {object} [options] — passed through to `buildParentReportInsightPacket`
  */
+function gradePracticeBreakdownFromV2Maps(report) {
+  /** @type {Array<Record<string, unknown>>} */
+  const rows = [];
+  const subjectFieldPairs = [
+    ["math", "mathOperations"],
+    ["geometry", "geometryTopics"],
+    ["english", "englishTopics"],
+    ["hebrew", "hebrewTopics"],
+    ["science", "scienceTopics"],
+    ["moledet_geography", "moledetGeographyTopics"],
+  ];
+  for (const [subjectKey, field] of subjectFieldPairs) {
+    const map = report?.[field];
+    if (!map || typeof map !== "object") continue;
+    for (const [topicKey, row] of Object.entries(map)) {
+      if (!row || typeof row !== "object") continue;
+      const q = Math.max(0, Math.round(safeNumber(row.questions)));
+      if (q <= 0) continue;
+      const content =
+        typeof row.contentGradeKey === "string" && row.contentGradeKey.trim()
+          ? row.contentGradeKey.trim().toLowerCase()
+          : typeof row.gradeKey === "string" && row.gradeKey.trim()
+          ? row.gradeKey.trim().toLowerCase()
+          : null;
+      rows.push({
+        subjectKey,
+        topicKey,
+        displayNameHe: String(row.displayName || topicKey).trim() || topicKey,
+        contentGradeLevel: content,
+        registeredGradeLevel:
+          typeof row.registeredGradeKey === "string" && row.registeredGradeKey.trim()
+            ? row.registeredGradeKey.trim().toLowerCase()
+            : typeof report?.registeredGradeKey === "string"
+            ? report.registeredGradeKey.trim().toLowerCase()
+            : null,
+        gradeRelation:
+          typeof row.gradeRelation === "string" && row.gradeRelation.trim()
+            ? row.gradeRelation.trim()
+            : "unknown",
+        totalQuestions: q,
+        accuracyPct: Math.max(0, Math.min(100, safeNumber(row.accuracy))),
+      });
+    }
+  }
+  return rows;
+}
+
 export function buildInsightPacketFromV2Snapshot(report, options = {}) {
   const aggregate = synthesizeAggregateFromV2Snapshot(report || {});
-  return buildParentReportInsightPacket({ aggregate, v2Report: report }, options);
+  const packet = buildParentReportInsightPacket({ aggregate, v2Report: report }, options);
+  if (!packet || packet.ok === false) return packet;
+  const v2Breakdown = gradePracticeBreakdownFromV2Maps(report || {});
+  if (v2Breakdown.length) {
+    packet.gradePracticeBreakdown = v2Breakdown;
+    packet.mixedGradePractice =
+      v2Breakdown.some((r) => r.gradeRelation === "lower" || r.gradeRelation === "higher") ||
+      report?.gradePracticeMeta?.mixedGradePractice === true;
+    if (packet.mixedGradePractice && !packet.mixedGradePracticeNoteHe) {
+      packet.mixedGradePracticeNoteHe =
+        typeof report?.gradePracticeMeta?.mixedGradePracticeNoteHe === "string"
+          ? report.gradePracticeMeta.mixedGradePracticeNoteHe
+          : "חלק מהתרגול בוצע בכיתה שונה מהכיתה הרשומה, ולכן הוא מוצג בנפרד.";
+    }
+  }
+  return packet;
 }

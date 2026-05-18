@@ -78,6 +78,17 @@ export function deriveTopicInsights(aggregate) {
         subjectKey: String(subjectKey),
         sourceId,
         displayNameHe: labelHe,
+        contentGradeLevel:
+          typeof t.contentGradeLevel === "string" && t.contentGradeLevel.trim()
+            ? t.contentGradeLevel.trim().toLowerCase()
+            : null,
+        registeredGradeLevel:
+          typeof t.registeredGradeLevel === "string" && t.registeredGradeLevel.trim()
+            ? t.registeredGradeLevel.trim().toLowerCase()
+            : null,
+        gradeRelation:
+          typeof t.gradeRelation === "string" && t.gradeRelation.trim() ? t.gradeRelation.trim() : "unknown",
+        gradeDelta: t.gradeDelta != null && Number.isFinite(Number(t.gradeDelta)) ? Number(t.gradeDelta) : null,
         totalQuestions: totalQ,
         accuracyPct: Number(acc.toFixed(2)),
         avgTimePerQuestionSec:

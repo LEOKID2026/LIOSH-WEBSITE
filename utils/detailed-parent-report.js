@@ -2645,6 +2645,11 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
         attached: true,
       },
     },
+    registeredGradeKey: baseReport.registeredGradeKey ?? null,
+    gradePracticeMeta:
+      baseReport.gradePracticeMeta && typeof baseReport.gradePracticeMeta === "object"
+        ? { ...baseReport.gradePracticeMeta }
+        : null,
   };
 }
 

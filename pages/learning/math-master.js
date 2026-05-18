@@ -1768,9 +1768,11 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
           isCorrect,
           hintsUsed: hintUsed ? 1 : 0,
           timeSpentMs,
+          gradeLevel: String(grade || ""),
           clientMeta: {
             source: "math-master",
             version: "phase-2d-b2",
+            gradeKey: String(grade || ""),
           },
         });
       })

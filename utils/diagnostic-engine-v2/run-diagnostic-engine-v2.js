@@ -265,6 +265,17 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
       }
       if (!chosenId && wrongCountForRules > 0) cannotConclude.push("לא נמצאה התאמה ברורה לסוג טעות אחרי סינון חזרתיות");
 
+      const gradeRelation =
+        typeof row.gradeRelation === "string" ? row.gradeRelation.trim() : "unknown";
+      const gradeEvidenceScope =
+        gradeRelation === "same"
+          ? "registered_grade_primary"
+          : gradeRelation === "lower"
+          ? "prerequisite_foundation"
+          : gradeRelation === "higher"
+          ? "enrichment_stretch"
+          : "unknown_scope";
+
       const unit = {
         blueprintRef: BLUEPRINT_REF,
         engineVersion: ENGINE_VERSION,
@@ -273,6 +284,13 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
         topicRowKey,
         bucketKey,
         displayName: row.displayName || bucketKey,
+        gradeEvidence: {
+          registeredGradeKey: row.registeredGradeKey ?? null,
+          contentGradeKey: row.contentGradeKey ?? row.gradeKey ?? null,
+          gradeRelation,
+          gradeDelta: row.gradeDelta ?? null,
+          evidenceScope: gradeEvidenceScope,
+        },
         classification: {
           state: classificationState,
           reasonCode: classificationReasonCode,

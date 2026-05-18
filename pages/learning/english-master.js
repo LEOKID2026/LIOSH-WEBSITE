@@ -1967,9 +1967,11 @@ const refreshMonthlyProgress = useCallback(() => {
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
           timeSpentMs,
+          gradeLevel: String(grade || ""),
           clientMeta: {
             source: "english-master",
             version: "phase-2d-b4",
+            gradeKey: String(grade || ""),
           },
         });
       })

@@ -270,6 +270,35 @@ function inferGradeFragment(report, subjectKey) {
 }
 
 /**
+ * @param {Record<string, unknown>|null|undefined} report
+ */
+function buildGradePracticeBreakdownFromV2(report) {
+  const mapFields = Object.values(MAP_FIELD);
+  /** @type {Array<Record<string, unknown>>} */
+  const rows = [];
+  for (const mapName of mapFields) {
+    const m = report && typeof report === "object" ? report[mapName] : null;
+    if (!m || typeof m !== "object") continue;
+    for (const [topicRowKey, row] of Object.entries(m)) {
+      if (!row || typeof row !== "object") continue;
+      const q = Number(row.questions) || 0;
+      if (q <= 0) continue;
+      rows.push({
+        topicRowKey,
+        bucketKey: row.bucketKey || topicRowKey,
+        displayName: row.displayName || topicRowKey,
+        contentGradeKey: row.contentGradeKey || row.gradeKey || null,
+        registeredGradeKey: row.registeredGradeKey || report.registeredGradeKey || null,
+        gradeRelation: row.gradeRelation || "unknown",
+        questions: q,
+        accuracy: Number(row.accuracy) || 0,
+      });
+    }
+  }
+  return rows;
+}
+
+/**
  * @param {string} band
  */
 function accuracyBandFromPct(band) {
@@ -358,12 +387,27 @@ export function buildStrictParentReportAIInputFromParentReportV2(report) {
   const engine = inferEngineDecisionFromCounts(nForEngine, accForEngine);
   const { plannerNextAction, plannerTargetDifficulty, plannerQuestionCount } = plannerShapeFromEngineDecision(engine);
   const recommendedNextStep = mapPlannerNextActionToHebrew(plannerNextAction);
-  const grade = inferGradeFragment(report, subject);
+  const grade =
+    (typeof report.registeredGradeKey === "string" && /^g[1-6]$/.test(report.registeredGradeKey.trim().toLowerCase())
+      ? report.registeredGradeKey.trim().toLowerCase()
+      : null) || inferGradeFragment(report, subject);
+  const gradePracticeBreakdown = buildGradePracticeBreakdownFromV2(report);
+  const mixedGradePractice =
+    report?.gradePracticeMeta?.mixedGradePractice === true ||
+    gradePracticeBreakdown.some((r) => r.gradeRelation === "lower" || r.gradeRelation === "higher");
   const { mainStrengths, mainPracticeNeeds } = buildStrengthAndNeedsLines(report);
   const nForConfidence = Math.max(nSubject, totalQ);
   const raw = {
     subject,
     grade,
+    gradePracticeBreakdown,
+    mixedGradePractice,
+    mixedGradePracticeNoteHe:
+      typeof report?.gradePracticeMeta?.mixedGradePracticeNoteHe === "string"
+        ? report.gradePracticeMeta.mixedGradePracticeNoteHe
+        : mixedGradePractice
+        ? "חלק מהתרגול בוצע בכיתה שונה מהכיתה הרשומה, ולכן הוא מוצג בנפרד."
+        : null,
     plannerNextAction,
     plannerTargetDifficulty,
     plannerQuestionCount,
