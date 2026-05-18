@@ -201,7 +201,7 @@
     "ai-hybrid:review-export": "tsx scripts/ai-hybrid-review-case-export.ts",
     "ai-hybrid:generate-gold": "tsx scripts/ai-hybrid-generate-synthetic-gold.mjs",
     "ai-hybrid:offline-eval": "tsx scripts/ai-hybrid-offline-eval.mjs",
-    "test:parent-report-phase6": "tsx scripts/parent-report-hebrew-language-selftest.mjs && tsx scripts/parent-report-phase6-suite.mjs && tsx scripts/parent-report-pages-ssr.mjs && tsx scripts/parent-report-phase1-text-guard.mjs",
+    "test:parent-report-phase6": "tsx scripts/parent-report-hebrew-language-selftest.mjs && tsx scripts/parent-report-activity-time-selftest.mjs && tsx scripts/parent-report-phase6-suite.mjs && tsx scripts/parent-report-pages-ssr.mjs && tsx scripts/parent-report-phase1-text-guard.mjs",
     "test:parent-report-product-contract": "tsx scripts/parent-report-product-contract-audit.mjs",
     "audit:parent-report-ui-binding": "tsx scripts/parent-report-product-ui-binding-audit.mjs",
     "snapshots:parent-report-product": "tsx scripts/parent-report-rendered-product-snapshots.mjs",

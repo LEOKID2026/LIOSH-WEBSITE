@@ -74,6 +74,8 @@ export default async function handler(req, res) {
     const serviceClient = getLearningSupabaseServiceRoleClient();
     const analytics = await aggregateParentReportPayload(serviceClient, student, fromDate, toDate);
     const payload = await attachStudentLearningAccountToParentReportPayload(serviceClient, student, analytics);
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
     return res.status(200).json(payload);
   } catch {
     return res.status(500).json({ ok: false, error: "Unexpected server error" });

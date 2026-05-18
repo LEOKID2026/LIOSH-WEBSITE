@@ -294,7 +294,11 @@ export default function ParentReportDetailedPage() {
 
           const qs = new URLSearchParams({ from, to });
           const url = `/api/parent/students/${encodeURIComponent(parentStudentId)}/report-data?${qs}`;
-          const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+          const res = await fetch(url, {
+            credentials: "include",
+            cache: "no-store",
+            headers: { Authorization: `Bearer ${token}` },
+          });
           const body = await res.json().catch(() => ({}));
           if (!res.ok || body?.ok === false) {
             if (!cancelled) {

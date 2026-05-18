@@ -17,6 +17,10 @@ import {
   canonicalParentReportGradeKey,
 } from "./math-report-generator";
 import { mistakeTimestampMs, normalizeMistakeEvent } from "./mistake-event";
+import {
+  formatParentReportActivityIsrael,
+  parseActivityTimestampMs,
+} from "../lib/learning-supabase/parent-report-activity-time.js";
 import { analyzeLearningPatterns } from "./learning-patterns-analysis";
 import {
   enrichTopicMapsWithRowDiagnostics,
@@ -146,16 +150,9 @@ function latestSessionMs(sessions) {
   return max;
 }
 
-/** DD/MM/YYYY HH:mm (local), matches report date style + time when available. */
+/** DD/MM/YYYY HH:mm in Asia/Jerusalem (never raw UTC / browser local). */
 function formatLastSessionAt(ms) {
-  if (!Number.isFinite(ms)) return "לא זמין";
-  const d = new Date(ms);
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  const hh = String(d.getHours()).padStart(2, "0");
-  const mi = String(d.getMinutes()).padStart(2, "0");
-  return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+  return formatParentReportActivityIsrael(ms);
 }
 
 /** Ensure sessions is always an array (never drop keys due to wrong shape). */
@@ -316,6 +313,9 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
     let timeMinutes = 0;
     let lastSessionMs = null;
     let lastSessionAt = null;
+    let latestActivitySource = null;
+    let lastAnswerAt = null;
+    let lastAnswerMs = null;
     const modeCounts = {};
     const gradeCounts = {};
     const levelCounts = {};
@@ -339,6 +339,12 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       if (Number.isFinite(lms) && (lastSessionMs == null || lms > lastSessionMs)) {
         lastSessionMs = lms;
         lastSessionAt = r?.lastSessionAt || null;
+        latestActivitySource = r?.latestActivitySource || latestActivitySource;
+      }
+      const lam = Number(r?.lastAnswerMs);
+      if (Number.isFinite(lam) && (lastAnswerMs == null || lam > lastAnswerMs)) {
+        lastAnswerMs = lam;
+        lastAnswerAt = r?.lastAnswerAt || null;
       }
       const repQ = Number(representative?.questions) || 0;
       const repMs = Number(representative?.lastSessionMs);
@@ -382,6 +388,13 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       displayName: String(representative?.displayName || "").trim() || String(representative?.bucketKey || bucketKey),
       lastSessionMs: Number.isFinite(Number(lastSessionMs)) ? Number(lastSessionMs) : null,
       lastSessionAt: lastSessionAt || representative?.lastSessionAt || "לא זמין",
+      latestActivityAt:
+        Number.isFinite(Number(lastSessionMs)) ? formatParentReportActivityIsrael(lastSessionMs) : "לא זמין",
+      latestActivityMs: Number.isFinite(Number(lastSessionMs)) ? Number(lastSessionMs) : null,
+      lastAnswerMs: Number.isFinite(Number(lastAnswerMs)) ? Number(lastAnswerMs) : null,
+      lastAnswerAt: lastAnswerAt || representative?.lastAnswerAt || null,
+      latestActivitySource:
+        latestActivitySource || representative?.latestActivitySource || null,
       canonicalTopicEntity: true,
       rowCountMerged: rows.length,
       parentTopicSubSignals: {
@@ -515,11 +528,28 @@ function buildRowSummary({
   const modeStr = modeLabel(modeKey);
   const lastMs = latestSessionMs(sessions);
   const lastSessionAt = formatLastSessionAt(lastMs);
+  const lastAnswerMsFromSessions = (() => {
+    let max = null;
+    for (const s of sessions) {
+      const t = parseActivityTimestampMs(s?.lastAnswerAt);
+      if (!Number.isFinite(t)) continue;
+      if (max == null || t > max) max = t;
+    }
+    return max;
+  })();
+  const latestActivitySourceFromSessions = latestSessionFieldValue(sessions, "latestActivitySource");
   const base = {
     subject,
     bucketKey,
     lastSessionAt,
     lastSessionMs: Number.isFinite(lastMs) ? lastMs : null,
+    latestActivityAt: lastSessionAt,
+    latestActivityMs: Number.isFinite(lastMs) ? lastMs : null,
+    lastAnswerMs: Number.isFinite(lastAnswerMsFromSessions) ? lastAnswerMsFromSessions : null,
+    lastAnswerAt: Number.isFinite(lastAnswerMsFromSessions)
+      ? formatParentReportActivityIsrael(lastAnswerMsFromSessions)
+      : null,
+    latestActivitySource: latestActivitySourceFromSessions || null,
     questions,
     correct,
     wrong: questions - correct,
