@@ -13,7 +13,7 @@ import {
 import { detectAggregateQuestionClass } from "./semantic-question-class.js";
 import { foldUtteranceForHeMatch, normalizeFreeformParentUtteranceHe } from "./utterance-normalize-he.js";
 import { interpretFreeformStageA } from "./stage-a-freeform-interpretation.js";
-import { resolveReportRowFromUtterance } from "./report-row-resolver.js";
+import { resolveReportRowFromUtterance, utteranceNamesTopicRow } from "./report-row-resolver.js";
 
 /**
  * @param {string} s
@@ -209,7 +209,12 @@ export function resolveScope(input) {
   }
 
   const aggregateClass = detectAggregateQuestionClass(normalizedUtterance);
-  if (aggregateClass !== "none") {
+  const rowResPre = resolveReportRowFromUtterance(normalizedUtterance || rawUtterance, payload);
+  const foldedPre = foldUtteranceForHeMatch(normalizedUtterance);
+  const topicNamedInAggregateQuestion =
+    rowResPre.best && utteranceNamesTopicRow(foldedPre, rowResPre.best);
+
+  if (aggregateClass !== "none" && !topicNamedInAggregateQuestion) {
     /** Next-step questions on a single anchored topic row should bind to that topic's contracts (ineligible hedges live in topic textSlots), not the executive rollup narrative. */
     if (aggregateClass === "recommendation_action") {
       const anchors = listCopilotAnchoredTopicRows(payload);
@@ -330,6 +335,10 @@ export function resolveScope(input) {
     };
   }
   if (rowRes.best?.topicRowKey) {
+    const gradeSplitTopicRowKeys =
+      Array.isArray(rowRes.gradeSplitTopicRows) && rowRes.gradeSplitTopicRows.length >= 2
+        ? rowRes.gradeSplitTopicRows.map((r) => String(r.topicRowKey || "").trim()).filter(Boolean)
+        : [];
     return {
       resolutionStatus: "resolved",
       scope: attachScopeInterpretation(
@@ -337,11 +346,13 @@ export function resolveScope(input) {
           scopeType: "topic",
           scopeId: rowRes.best.topicRowKey,
           scopeLabel: rowRes.best.displayName,
+          ...(gradeSplitTopicRowKeys.length >= 2 ? { gradeSplitTopicRowKeys } : {}),
         },
         stageA,
       ),
       scopeConfidence: 0.88,
-      scopeReason: "report_row_topic_match",
+      scopeReason:
+        gradeSplitTopicRowKeys.length >= 2 ? "report_row_topic_match_grade_split" : "report_row_topic_match",
       stageA,
     };
   }

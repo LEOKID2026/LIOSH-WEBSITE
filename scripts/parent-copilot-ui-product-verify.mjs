@@ -27,27 +27,52 @@ const runTurn = parentCopilot.runParentCopilotTurn;
 
 const AMBIGUOUS_LEAK = AMBIGUOUS_RESPONSE_HE.slice(0, 24);
 
-function makeContract(topicRowKey, subjectId, displayName, qCount = 12, acc = 72) {
+function makeContract(topicRowKey, subjectId, displayName, qCount = 12, acc = 72, extra = {}) {
+  const hasSubskill = extra.hasSubskillMetadata === true;
+  const gradeSuffix =
+    topicRowKey.includes("g4") ? " (כיתה ד׳)" : topicRowKey.includes("g5") ? " (תרגול בכיתה ה׳ — מעל הכיתה הרשומה)" : "";
   return {
     topicRowKey,
     displayName,
     questions: qCount,
     accuracy: acc,
+    contentGradeKey: extra.contentGradeKey || null,
+    gradeRelation: extra.gradeRelation || null,
+    hasSubskillMetadata: hasSubskill,
+    thinEvidenceDowngraded: false,
     contractsV1: {
       narrative: {
         textSlots: {
-          observation: `ב${displayName} נצפו ${qCount} שאלות עם דיוק של ${acc}%.`,
-          interpretation: `${displayName} דורש תרגול ממוקד.`,
-          action: `מומלץ לתרגל ${displayName}.`,
-          uncertainty: "",
+          observation: `ב${displayName}${gradeSuffix} נצפו ${qCount} שאלות עם דיוק של ${acc}%.`,
+          interpretation: hasSubskill
+            ? `בנושא ${displayName}${gradeSuffix} חוזר דפוס: השוואה לפי מונה בלבד.`
+            : `${displayName}${gradeSuffix} — מצב הנושא ברור ברמת הכיתה, בלי פירוט תת־מיומנות מדויק.`,
+          action: `מומלץ לתרגל ${displayName}${gradeSuffix}.`,
+          uncertainty: hasSubskill
+            ? ""
+            : "יש מספיק מידע על מצב הנושא, אבל אין מספיק פירוט כדי לזהות את תת־המיומנות המדויקת.",
         },
       },
+      evidence: { questionCount: qCount, accuracyPct: acc, subskillBreakdownAvailable: hasSubskill },
       decision: { cannotConcludeYet: false },
       readiness: { readiness: "emerging" },
       confidence: { confidenceBand: "medium" },
       recommendation: { eligible: true, intensity: "RI2" },
     },
   };
+}
+
+/** Grade-split payload from shared output-integrity fixture (no PDF topic names). */
+async function screenshotGradeSplitPayload() {
+  const { buildDetailedParentReportFromBaseReport } = await load("utils/detailed-parent-report.js");
+  const { buildGradeSplitBaseReport } = await import(
+    pathToFileURL(join(ROOT, "fixtures/parent-report-output-integrity-fixtures.mjs")).href
+  );
+  const { detailedReportToCopilotPayload } = await load(
+    "utils/parent-report-output-integrity/trace-row-pipeline.js",
+  );
+  const detailed = buildDetailedParentReportFromBaseReport(buildGradeSplitBaseReport(), { period: "week" });
+  return detailedReportToCopilotPayload(detailed);
 }
 
 /** Loaded-report shape passed to ParentCopilotShell `payload` prop. */
@@ -314,10 +339,34 @@ const cases = [
       assert.equal(route.exitEarly, true);
     },
   },
+  {
+    id: 13,
+    q: "מה הבעיה בנושא א׳?",
+    async run() {
+      const shot = await screenshotGradeSplitPayload();
+      const res = uiTurn(this.q, shot);
+      assert.equal(res.resolutionStatus, "resolved");
+      assertNoAmbiguousLeak(answerText(res), this.q);
+      const t = answerText(res);
+      assert.ok(
+        /שבר|367|66|38|87|כיתה|נושא/i.test(t),
+        `grounded fractions/grade answer :: ${t.slice(0, 160)}`,
+      );
+      assert.ok(!/לאסוף עוד מידע|עדיין מוקדם לקבוע|אין מספיק מידע על המצב/u.test(t), "no thin-data phrasing on high-volume rows");
+      assert.ok(
+        (t.includes("367") && t.includes("87")) || (t.includes("66") && t.includes("38")) || /כיתה|מעל|נפרד/i.test(t),
+        "must reference grade-split or both volume bands — not a single averaged score",
+      );
+      assert.ok(
+        !t.includes("367") || !t.includes("38") || (t.includes("87") && t.includes("66")),
+        "must not treat high-accuracy g4 row as the problem because of g5 failure",
+      );
+    },
+  },
 ];
 
 for (const c of cases) {
-  c.run();
+  await Promise.resolve(c.run());
   process.stdout.write(`  ok  UI case ${c.id}: ${c.q}\n`);
 }
 

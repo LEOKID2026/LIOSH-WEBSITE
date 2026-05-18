@@ -127,6 +127,46 @@ export function buildSubskillLimitationUncertaintyHe(hasSubskillMetadata) {
 }
 
 /**
+ * Whether real row/engine data already exposes subskill or repeated-mistake detail.
+ * @param {object|null|undefined} unit — diagnosticEngineV2 unit
+ * @param {object|null|undefined} mapRow — collapsed topic map row
+ */
+export function resolveHasSubskillMetadataFromRowSources(unit, mapRow) {
+  const patternHe = String(unit?.taxonomy?.patternHe || "").trim();
+  const subskillHe = String(unit?.taxonomy?.subskillHe || "").trim();
+  if (patternHe || subskillHe) return true;
+
+  const lineHe = String(unit?.diagnosis?.lineHe || "").trim();
+  if (unit?.diagnosis?.allowed && lineHe.length >= 8) return true;
+
+  const iv = unit?.intelligenceV1;
+  if (iv && typeof iv === "object") {
+    const p = iv.patterns && typeof iv.patterns === "object" ? iv.patterns : {};
+    const taxonomyId = p.taxonomyId != null && String(p.taxonomyId).trim() !== "" ? String(p.taxonomyId).trim() : null;
+    const recurrence = !!p.recurrenceFull;
+    const noPatternClaims = !!p.noPatternClaims;
+    const weaknessLevel = String(iv.weakness?.level || "none");
+    if (recurrence && taxonomyId && !noPatternClaims && weaknessLevel !== "none") return true;
+  }
+
+  const bp = mapRow?.behaviorProfile;
+  if (bp && typeof bp === "object") {
+    const dt = String(bp.dominantType || "").trim().toLowerCase();
+    if (dt && dt !== "unknown" && dt !== "insufficient_evidence" && dt !== "none") return true;
+  }
+
+  const mistakeBuckets = mapRow?.mistakeBuckets;
+  if (Array.isArray(mistakeBuckets) && mistakeBuckets.length > 0) return true;
+
+  const patternFamilies = mapRow?.patternFamilies;
+  if (Array.isArray(patternFamilies) && patternFamilies.length > 0) return true;
+
+  if (mapRow?.contractsV1?.evidence?.subskillBreakdownAvailable === true) return true;
+
+  return false;
+}
+
+/**
  * Dedupe key for executive strength/weakness lists — grade-scoped rows must not collapse.
  * @param {{ topicRowKey?: string; labelHe?: string; subjectId?: string; contentGradeKey?: string|null }} row
  */
@@ -176,6 +216,7 @@ export default {
   resolveParentTopicConfidenceBand,
   resolveParentTopicReadiness,
   buildSubskillLimitationUncertaintyHe,
+  resolveHasSubskillMetadataFromRowSources,
   executiveRowDedupeKey,
   parentFacingTopicRowLabelHe,
 };

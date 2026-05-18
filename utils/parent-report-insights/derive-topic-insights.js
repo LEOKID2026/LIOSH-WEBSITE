@@ -18,7 +18,8 @@ import {
   getTopicDisplayNameHe,
   safeHebrewLabel,
 } from "./normalize-parent-facing-labels.js";
-import { buildSubjectSourceId, buildTopicSourceId } from "./source-ids.js";
+import { buildSubjectSourceId, buildTopicRowSourceId } from "./source-ids.js";
+import { parentFacingTopicRowLabelHe } from "../parent-report-topic-evidence.js";
 
 const STRENGTH_ACC_THRESHOLD = 80;
 const FOCUS_ACC_THRESHOLD = 55;
@@ -68,16 +69,27 @@ export function deriveTopicInsights(aggregate) {
       const totalQ = Math.max(0, Math.round(safeNumber(t.answers)));
       if (totalQ === 0) continue;
       const acc = Math.max(0, Math.min(100, safeNumber(t.accuracy)));
-      const topicPart = String(topicKey).split("::")[0] || topicKey;
-      const gradeSuffix =
+      const contentGradeLevel =
         typeof t.contentGradeLevel === "string" && t.contentGradeLevel.trim()
-          ? `:${t.contentGradeLevel.trim().toLowerCase()}`
-          : "";
-      const sourceId =
-        buildTopicSourceId(subjectKey, topicPart) ||
-        (topicPart && subjectKey ? `topic:${subjectKey}:${topicPart}${gradeSuffix}` : "");
+          ? t.contentGradeLevel.trim().toLowerCase()
+          : null;
+      const sourceId = buildTopicRowSourceId(subjectKey, topicKey, contentGradeLevel);
       if (!sourceId) continue;
-      const labelHe = safeHebrewLabel(getTopicDisplayNameHe(subjectKey, topicKey), getSubjectDisplayNameHe(subjectKey));
+      const baseLabel = safeHebrewLabel(
+        getTopicDisplayNameHe(subjectKey, topicKey),
+        getSubjectDisplayNameHe(subjectKey),
+      );
+      const labelHe = parentFacingTopicRowLabelHe({
+        displayName: baseLabel,
+        contentGradeKey: contentGradeLevel,
+        registeredGradeKey:
+          typeof t.registeredGradeLevel === "string" && t.registeredGradeLevel.trim()
+            ? t.registeredGradeLevel.trim().toLowerCase()
+            : null,
+        gradeRelation:
+          typeof t.gradeRelation === "string" && t.gradeRelation.trim() ? t.gradeRelation.trim() : null,
+        topicRowKey: topicKey,
+      });
       const isStrength = totalQ >= STRENGTH_MIN_Q && acc >= STRENGTH_ACC_THRESHOLD;
       const isFocusArea = totalQ >= FOCUS_MIN_Q && acc < FOCUS_ACC_THRESHOLD;
       out.push({

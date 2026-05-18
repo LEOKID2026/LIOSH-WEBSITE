@@ -20,6 +20,13 @@ export function detectAggregateQuestionClass(utterance) {
   if (t.length < 3) return "none";
 
   if (
+    /^מה\s+הבעיה\s+(?:ב|בנושא|לגבי)\s*[\u0590-\u05FF]{2,}/u.test(t) ||
+    /^מה\s+קשה\s+(?:ב|בנושא|לגבי)\s*[\u0590-\u05FF]{2,}/u.test(t)
+  ) {
+    return "none";
+  }
+
+  if (
     /^מה\s+הבעיה\??$/u.test(t) ||
     /^מה\s+הבעיה\s/u.test(t) ||
     /^מה\s+קשה(?:\s+לו|\s+לה)?/u.test(t) ||

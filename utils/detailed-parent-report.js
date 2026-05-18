@@ -86,8 +86,10 @@ import {
   resolveParentTopicConfidenceBand,
   resolveParentTopicReadiness,
   resolveRowDataSufficiencyLevel,
+  resolveHasSubskillMetadataFromRowSources,
   shouldThinEvidenceDowngradeRecommendation,
 } from "./parent-report-topic-evidence.js";
+import { buildRowIdentityV1 } from "./parent-report-output-integrity/row-identity-v1.js";
 import { buildGradeEvidenceFields } from "../lib/learning-supabase/practice-grade-resolution.js";
 
 const SUBJECT_IDS = [
@@ -220,6 +222,8 @@ function collectStrengthRows(subjects) {
       rows.push({
         subjectId: sid,
         subjectLabelHe: SUBJECT_LABEL_HE[sid],
+        topicRowKey: String(r.topicRowKey || "").trim() || null,
+        contentGradeKey: r.contentGradeKey != null ? String(r.contentGradeKey).trim() : null,
         labelHe: String(r.labelHe || "").trim(),
         questions: Number(r.questions) || 0,
         accuracy: Number(r.accuracy) || 0,
@@ -245,8 +249,12 @@ function collectWeaknessRows(subjects) {
       rows.push({
         subjectId: sid,
         subjectLabelHe: SUBJECT_LABEL_HE[sid],
+        topicRowKey: String(w.topicRowKey || "").trim() || null,
+        contentGradeKey: w.contentGradeKey != null ? String(w.contentGradeKey).trim() : null,
         labelHe: String(w.labelHe || "").trim(),
         mistakeCount: Number(w.mistakeCount) || 0,
+        questions: Number(w.questions) || 0,
+        accuracy: Number(w.accuracy) || 0,
       });
     }
   }
@@ -1821,7 +1829,7 @@ function groupV2UnitsBySubject(diag) {
  * @param {object} u — diagnosticEngineV2 unit
  * @param {object|null|undefined} mapRow — same-topic row from generateParentReportV2 maps (mathOperations / …Topics)
  */
-function recommendationFromV2Unit(u, mapRow) {
+function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   const traces = Array.isArray(u?.evidenceTrace) ? u.evidenceTrace : [];
   const volume = traces.find((t) => String(t?.type || "") === "volume")?.value || {};
   const recurrence = u?.recurrence && typeof u.recurrence === "object" ? u.recurrence : {};
@@ -1914,6 +1922,23 @@ function recommendationFromV2Unit(u, mapRow) {
     gateReadiness: effectiveReadiness,
     evidenceStrength,
   });
+  const hasSubskillMetadata = resolveHasSubskillMetadataFromRowSources(u, mapRow);
+  const rowGkFromTopicKeyEarly = (() => {
+    if (!topicKey) return null;
+    const parsed = splitTopicRowKey(topicKey);
+    const g = parsed?.gradeScope;
+    if (g != null && String(g).trim() !== "" && String(g).trim() !== "unknown") {
+      return String(g).trim();
+    }
+    const gradeSep = "::grade:";
+    if (topicKey.includes(gradeSep)) return topicKey.split(gradeSep)[1] || null;
+    return null;
+  })();
+  const rowGkForIdentity =
+    mapRow && typeof mapRow === "object" && mapRow.gradeKey != null && String(mapRow.gradeKey).trim()
+      ? String(mapRow.gradeKey).trim()
+      : rowGkFromTopicKeyEarly;
+  const geForIdentity = buildGradeEvidenceFields(reportMeta?.registeredGradeKey, rowGkForIdentity);
   const cannotConcludeYet =
     gated && !(outQuestions >= TOPIC_REC_MIN_ACTIONABLE_QUESTIONS && dataSufficiencyLevel === "strong");
 
@@ -1943,13 +1968,18 @@ function recommendationFromV2Unit(u, mapRow) {
     },
   };
   if (mapEvidence) {
-    contractsV1.evidence = { ...mapEvidence };
+    contractsV1.evidence = {
+      ...mapEvidence,
+      subskillBreakdownAvailable: hasSubskillMetadata,
+    };
     if (mapEvidenceValidation) {
       contractsV1.evidenceValidation = {
         ok: !!mapEvidenceValidation.ok,
         errors: Array.isArray(mapEvidenceValidation.errors) ? [...mapEvidenceValidation.errors] : [],
       };
     }
+  } else if (hasSubskillMetadata) {
+    contractsV1.evidence = { subskillBreakdownAvailable: true };
   }
 
   const finalStep = thinEvidenceDowngraded ? "maintain_and_strengthen" : step;
@@ -2023,6 +2053,25 @@ function recommendationFromV2Unit(u, mapRow) {
     _priorityScore: priorityScore,
     _priorityLevel: priorityLevel || null,
     thinEvidenceDowngraded,
+    hasSubskillMetadata,
+    rowIdentityV1: buildRowIdentityV1({
+      subjectId,
+      topicRowKey: topicKey,
+      displayName: String(u?.displayName || ""),
+      contentGradeKey: rowGkForIdentity,
+      registeredGradeKey: reportMeta?.registeredGradeKey ?? null,
+      gradeRelation: geForIdentity.gradeRelation,
+      questions: outQuestions,
+      accuracy: outAccuracy,
+      correct: mapRow?.correct,
+      timeSpentMinutes: mapRow?.timeMinutes,
+      latestActivityAt: mapRow?.latestActivityAt || mapRow?.lastAnswerAt || null,
+      dataSufficiencyLevel,
+      thinEvidenceDowngraded,
+      hasSubskillMetadata,
+      recommendedStepLabelHe: finalLabel,
+      diagnosticPatternHe: String(u?.taxonomy?.patternHe || "").trim() || null,
+    }),
     threshold_policy_used: `topic_recommendation_questions>=${TOPIC_REC_MIN_ACTIONABLE_QUESTIONS}`,
     contractsV1,
   };
@@ -2061,6 +2110,9 @@ function attachNarrativeContractsToTopicRecommendations(subjectId, topicRecommen
       ...tr,
       subjectId: tr?.subjectId || subjectId,
       topicKey: tr?.topicKey || tr?.topicRowKey,
+      hasSubskillMetadata:
+        tr?.hasSubskillMetadata === true ||
+        tr?.contractsV1?.evidence?.subskillBreakdownAvailable === true,
       contractsV1: tr?.contractsV1 && typeof tr.contractsV1 === "object" ? tr.contractsV1 : {},
       cannotConcludeYet:
         tr?.cannotConcludeYet === true ||
@@ -2251,7 +2303,11 @@ function buildSubjectProfilesFromV2(baseReport) {
             const a = actionOf(u);
             return a === "diagnose_only" || a === "intervene";
           })
-          .map((u) => recommendationFromV2Unit(u, topicMapForSid[String(u?.topicRowKey || "")] || null))
+          .map((u) =>
+            recommendationFromV2Unit(u, topicMapForSid[String(u?.topicRowKey || "")] || null, {
+              registeredGradeKey: baseReport?.registeredGradeKey,
+            }),
+          )
           .slice(0, 8)
       )
     );
@@ -2296,7 +2352,19 @@ function buildSubjectProfilesFromV2(baseReport) {
         }),
         questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
         accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+        timeMinutes: Number(mapR?.timeMinutes) || 0,
         excellent: false,
+        rowIdentityV1: buildRowIdentityV1({
+          subjectId: sid,
+          topicRowKey: trk,
+          displayName: String(u?.displayName || ""),
+          contentGradeKey: gk,
+          registeredGradeKey: baseReport?.registeredGradeKey,
+          gradeRelation: ge.gradeRelation,
+          questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+          accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+          timeSpentMinutes: Number(mapR?.timeMinutes) || 0,
+        }),
       };
     });
 
@@ -2341,6 +2409,22 @@ function buildSubjectProfilesFromV2(baseReport) {
           contentGradeKey: gk,
           labelHe: patternHe ? `${topicLabel} — ${patternHe}` : topicLabel,
           mistakeCount: Number(u?.recurrence?.wrongCountForRules) || 0,
+          questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+          accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+          timeMinutes: Number(topicMapForSid[trk]?.timeMinutes) || 0,
+          rowIdentityV1: buildRowIdentityV1({
+            subjectId: sid,
+            topicRowKey: trk,
+            displayName: String(u?.displayName || ""),
+            contentGradeKey: gk,
+            registeredGradeKey: baseReport?.registeredGradeKey,
+            gradeRelation: ge.gradeRelation,
+            questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+            accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+            timeSpentMinutes: Number(topicMapForSid[trk]?.timeMinutes) || 0,
+            hasSubskillMetadata: !!patternHe,
+            diagnosticPatternHe: patternHe || null,
+          }),
         };
       });
 

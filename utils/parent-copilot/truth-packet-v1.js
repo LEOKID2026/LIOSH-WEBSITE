@@ -1068,6 +1068,7 @@ export function buildTruthPacketV1(payload, scope) {
   let subjectId = "";
   let q = 0;
   let acc = 0;
+  let timeSpentMinutes = 0;
   let displayName = "הנושא";
   let readiness = "insufficient";
   let confidenceBand = "low";
@@ -1123,10 +1124,44 @@ export function buildTruthPacketV1(payload, scope) {
 
     q = Math.max(0, Number(topicRow?.questions ?? topicRow?.q) || 0);
     acc = Math.max(0, Math.min(100, Math.round(Number(topicRow?.accuracy) || 0)));
+    timeSpentMinutes = Math.max(
+      0,
+      Math.round(
+        Number(topicRow?.rowIdentityV1?.timeSpentMinutes ?? topicRow?.timeMinutes ?? 0) || 0,
+      ),
+    );
     const narrative = contracts.narrative && typeof contracts.narrative === "object" ? contracts.narrative : {};
     displayName = String(topicRow?.displayName || narrative?.topicKey || "הנושא").trim() || "הנושא";
-    const obsLine = String(narrative?.textSlots?.observation || "").trim();
-    relevantSummaryLines = obsLine ? [obsLine] : [displayName];
+    let obsLine = String(narrative?.textSlots?.observation || "").trim();
+    const splitKeys = Array.isArray(scope.gradeSplitTopicRowKeys)
+      ? scope.gradeSplitTopicRowKeys.map((k) => String(k || "").trim()).filter(Boolean)
+      : [];
+    if (splitKeys.length >= 2) {
+      const splitObs = [];
+      for (const trk of splitKeys) {
+        const sl = readContractsSliceForScope("topic", trk, subjectId, payload);
+        const line = String(sl?.contracts?.narrative?.textSlots?.observation || "").trim();
+        if (line) splitObs.push(line);
+      }
+      if (splitObs.length >= 2) {
+        obsLine = splitObs.join("\n");
+        relevantSummaryLines = splitObs;
+        contracts = {
+          ...contracts,
+          narrative: {
+            ...narrative,
+            textSlots: {
+              ...(narrative.textSlots && typeof narrative.textSlots === "object" ? narrative.textSlots : {}),
+              observation: obsLine,
+            },
+          },
+        };
+      } else {
+        relevantSummaryLines = obsLine ? [obsLine] : [displayName];
+      }
+    } else {
+      relevantSummaryLines = obsLine ? [obsLine] : [displayName];
+    }
     if (cannotConcludeYet || confidenceBand === "low" || readiness === "insufficient" || readiness === "forming") {
       anchorUncertaintyRows = 1;
     }
@@ -1401,12 +1436,17 @@ export function buildTruthPacketV1(payload, scope) {
 
   const globalQCount = maxGlobalReportQuestionCount(payload);
 
+  const gradeSplitTopicRowKeys = Array.isArray(scope.gradeSplitTopicRowKeys)
+    ? scope.gradeSplitTopicRowKeys.map((k) => String(k || "").trim()).filter(Boolean)
+    : [];
+
   return {
     schemaVersion: "v1",
     audience: "parent",
     scopeType: scope.scopeType,
     scopeId: scope.scopeId,
     scopeLabel: scope.scopeLabel,
+    gradeSplitTopicRowKeys,
     interpretationScope,
     topicStateId,
     stateHash,
@@ -1431,6 +1471,11 @@ export function buildTruthPacketV1(payload, scope) {
       questions: q,
       reportQuestionTotalGlobal: Math.max(q, globalQCount),
       accuracy: acc,
+      timeSpentMinutes,
+      topicRowKey: String(topicRow?.topicRowKey || topicRow?.topicKey || scope.scopeId || "").trim() || null,
+      rowSourceId: String(topicRow?.rowIdentityV1?.sourceId || "").trim() || null,
+      contentGradeKey: topicRow?.rowIdentityV1?.contentGradeKey ?? null,
+      gradeRelation: topicRow?.rowIdentityV1?.gradeRelation ?? null,
       displayName,
       subjectLabelHe: subjectLabelHe(subjectId),
       weakFocusSubjectLabelHe,

@@ -24,8 +24,12 @@ const {
   SUBSKILL_DETAIL_LIMITATION_HE,
 } = await load("utils/parent-report-topic-evidence.js");
 const { evaluateDataSufficiency } = await load("utils/parent-report-row-diagnostics.js");
-const { buildTopicRecommendationFromV2UnitForPhaseTests } = await load("utils/detailed-parent-report.js");
+const {
+  buildTopicRecommendationFromV2UnitForPhaseTests,
+  buildDetailedParentReportFromBaseReport,
+} = await load("utils/detailed-parent-report.js");
 const { buildNarrativeContractV1 } = await load("utils/contracts/narrative-contract-v1.js");
+const { resolveHasSubskillMetadataFromRowSources } = await load("utils/parent-report-topic-evidence.js");
 const { deriveTopicInsights, pickStrengths, pickFocusAreas } = await load(
   "utils/parent-report-insights/derive-topic-insights.js",
 );
@@ -179,9 +183,9 @@ for (const [sid, key, name] of [
   assert.ok(rows[1].labelHe.includes("g5") || rows[1].labelHe.includes("מעל"));
 }
 
-// ─── H: Many answers, narrative subskill limitation not generic thin ─────────
+// ─── H: Subskill limitation only when metadata truly absent ─────────────────
 {
-  const nar = buildNarrativeContractV1({
+  const narMissing = buildNarrativeContractV1({
     topicKey: "geometry::grade:g4",
     subjectId: "geometry",
     displayName: "צורות",
@@ -195,12 +199,52 @@ for (const [sid, key, name] of [
     },
     hasSubskillMetadata: false,
   });
-  const unc = String(nar.textSlots?.uncertainty || "");
+  const uncMissing = String(narMissing.textSlots?.uncertainty || "");
   assert.ok(
-    unc.includes("תת") || unc.includes(SUBSKILL_DETAIL_LIMITATION_HE.slice(0, 12)),
-    "subskill limitation wording when topic evidence exists",
+    uncMissing.includes(SUBSKILL_DETAIL_LIMITATION_HE.slice(0, 20)),
+    "subskill limitation when pattern metadata absent",
   );
-  assert.ok(!unc.includes("עדיין מוקדם לקבוע"), "high volume must not use early generic thin hedge");
+  assert.ok(!uncMissing.includes("עדיין מוקדם לקבוע"), "high volume must not use early generic thin hedge");
+
+  const narPresent = buildNarrativeContractV1({
+    topicKey: "fractions::grade:g5",
+    subjectId: "math",
+    displayName: "שברים",
+    questions: 66,
+    accuracy: 38,
+    hasSubskillMetadata: true,
+    contractsV1: {
+      readiness: { readiness: "ready" },
+      confidence: { confidenceBand: "high" },
+      decision: { decisionTier: 3, cannotConcludeYet: false },
+      recommendation: { eligible: true, intensity: "RI2" },
+      evidence: { subskillBreakdownAvailable: true },
+    },
+  });
+  const uncPresent = String(narPresent.textSlots?.uncertainty || "");
+  assert.ok(
+    !uncPresent.includes(SUBSKILL_DETAIL_LIMITATION_HE.slice(0, 20)),
+    "must not show subskill limitation when pattern metadata exists",
+  );
+}
+
+// ─── I: High-volume grade-split (delegates to output-integrity fixture) ──────
+const { buildGradeSplitBaseReport } = await import(
+  pathToFileURL(join(ROOT, "fixtures/parent-report-output-integrity-fixtures.mjs")).href
+);
+
+{
+  const base = buildGradeSplitBaseReport();
+  const detailed = buildDetailedParentReportFromBaseReport(base, { period: "week" });
+  const mathP = detailed.subjectProfiles.find((s) => s.subject === "math");
+  assert.ok(mathP, "grade-split math profile exists");
+  const keys = Object.keys(base.mathOperations);
+  assert.equal(keys.length, 2, "two grade-scoped map rows");
+  const recs = mathP.topicRecommendations || [];
+  const weakRec = recs.find((t) => (t.questions || 0) < 100);
+  assert.ok(weakRec, "weak row in topic recommendations");
+  assert.equal(weakRec.thinEvidenceDowngraded, false);
+  assert.notEqual(weakRec.recommendedStepLabelHe, "לאסוף עוד מידע לפני החלטה");
 }
 
 // ─── Insights: strong topic not flagged thin in focus metadata ───────────────

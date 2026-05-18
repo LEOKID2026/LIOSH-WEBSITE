@@ -78,6 +78,15 @@ export function hasAnchoredReportRows(payload) {
  */
 export function listReportRows(payload) {
   const raw = listTopicRowsForClassifier(payload);
+  const profiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
+  const trByKey = new Map();
+  for (const sp of profiles) {
+    const sid = String(sp?.subject || "");
+    for (const tr of Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : []) {
+      const trk = String(tr?.topicRowKey || tr?.topicKey || "").trim();
+      if (trk) trByKey.set(`${sid}|${trk}`, tr);
+    }
+  }
   return raw.map((row) => {
     const topicRowKey = String(row.topicRowKey || "").trim();
     let contentGradeKey = null;
@@ -88,6 +97,12 @@ export function listReportRows(payload) {
       topicBaseKey = parts[0] || topicRowKey;
       contentGradeKey = parts[1] || null;
     }
+    const tr = trByKey.get(`${row.subjectId}|${topicRowKey}`);
+    const questions = Math.max(0, Math.round(Number(tr?.questions ?? tr?.contractsV1?.evidence?.questionCount) || 0));
+    const accuracy = Math.max(
+      0,
+      Math.min(100, Math.round(Number(tr?.accuracy ?? tr?.contractsV1?.evidence?.accuracyPct) || 0)),
+    );
     return {
       subjectId: row.subjectId,
       subjectLabelHe: subjectLabelHe(row.subjectId),
@@ -97,8 +112,29 @@ export function listReportRows(payload) {
       anchored: row.anchored,
       contentGradeKey,
       topicBaseKey,
+      questions,
+      accuracy,
     };
   });
+}
+
+/**
+ * @param {string} folded
+ */
+export function isTopicWeaknessInquiry(folded) {
+  const t = String(folded || "").trim();
+  return /^מה\s+הבעיה/u.test(t) || /^מה\s+קשה/u.test(t) || /^איפה\s+הוא\s+מתקשה/u.test(t) || /^איפה\s+היא\s+מתקשה/u.test(t);
+}
+
+/**
+ * @param {string} folded
+ * @param {ReturnType<typeof listReportRows>[number]} row
+ */
+export function utteranceNamesTopicRow(folded, row) {
+  if (!row) return false;
+  const u = String(folded || "");
+  if (foldedIncludesPhrase(u, row.displayNameFolded)) return true;
+  return topicAliasPhrases(row.subjectId, row.topicBaseKey).some((a) => foldedIncludesPhrase(u, a));
 }
 
 /**
@@ -238,12 +274,32 @@ export function resolveReportRowFromUtterance(utterance, payload) {
   const sameTopicBase =
     best && second && best.row.topicBaseKey && best.row.topicBaseKey === second.row.topicBaseKey;
 
+  let gradeSplitTopicRows = [];
+  if (sameTopicBase && best?.row?.topicBaseKey) {
+    gradeSplitTopicRows = hits
+      .filter((h) => h.row.topicBaseKey === best.row.topicBaseKey && h.score > 0)
+      .map((h) => h.row);
+    const grades = new Set(gradeSplitTopicRows.map((r) => r.contentGradeKey).filter(Boolean));
+    if (grades.size < 2) gradeSplitTopicRows = [];
+  }
+
+  if (gradeSplitTopicRows.length >= 2 && isTopicWeaknessInquiry(folded)) {
+    const weakest = [...gradeSplitTopicRows].sort(
+      (a, b) => (Number(a.accuracy) || 0) - (Number(b.accuracy) || 0) || (Number(a.questions) || 0) - (Number(b.questions) || 0),
+    )[0];
+    if (weakest) {
+      best = { row: weakest, score: best?.score ?? 0 };
+      ambiguous = false;
+    }
+  }
+
   return {
     best: best ? best.row : null,
     bestScore: best?.score ?? 0,
     subjectId: best ? best.row.subjectId : subjectId,
     ambiguous: ambiguous && !sameTopicBase,
     candidates: hits.slice(0, 4).map((h) => h.row),
+    gradeSplitTopicRows,
     mixedGradeQuestion: isMixedGradeReportQuestion(folded),
     foldedUtterance: folded,
   };
