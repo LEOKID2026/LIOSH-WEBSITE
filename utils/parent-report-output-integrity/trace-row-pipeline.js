@@ -150,8 +150,22 @@ export function traceRowThroughPipeline(args) {
             rowIdentityV1: tr.rowIdentityV1 || null,
           }
         : null,
-      detailedStrength: strength,
-      detailedWeakness: weakness,
+      detailedStrength: strength
+        ? {
+            questions: strength.questions,
+            accuracy: strength.accuracy,
+            labelHe: strength.labelHe,
+            rowIdentityV1: strength.rowIdentityV1 || null,
+          }
+        : null,
+      detailedWeakness: weakness
+        ? {
+            questions: weakness.questions,
+            accuracy: weakness.accuracy,
+            labelHe: weakness.labelHe,
+            rowIdentityV1: weakness.rowIdentityV1 || null,
+          }
+        : null,
       narrativeUncertainty: narrativeUnc || null,
       copilotAnchored: cop
         ? {

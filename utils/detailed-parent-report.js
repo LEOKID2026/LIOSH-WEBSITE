@@ -90,6 +90,16 @@ import {
   shouldThinEvidenceDowngradeRecommendation,
 } from "./parent-report-topic-evidence.js";
 import { buildRowIdentityV1 } from "./parent-report-output-integrity/row-identity-v1.js";
+import {
+  detectGradeSplitContradictions,
+  executiveLineFromV2Unit,
+  hardenBaseReportWithRowIdentity,
+  homePlanLineFromV2Unit,
+  parentFacingDisplayLabelsForV2Unit,
+  parentFacingLabelForV2Unit,
+} from "./parent-report-output-integrity/harden-report-rows.js";
+import { resolveNarrativeDisplayLabels } from "./parent-report-output-integrity/row-display-label-context.js";
+import { parseCanonicalTopicFromRowKey } from "./parent-report-output-integrity/row-identity-v1.js";
 import { buildGradeEvidenceFields } from "../lib/learning-supabase/practice-grade-resolution.js";
 
 const SUBJECT_IDS = [
@@ -1829,6 +1839,62 @@ function groupV2UnitsBySubject(diag) {
  * @param {object} u — diagnosticEngineV2 unit
  * @param {object|null|undefined} mapRow — same-topic row from generateParentReportV2 maps (mathOperations / …Topics)
  */
+function topicOverviewPlacementFromUnit(u) {
+  const action = String(u?.canonicalState?.actionState || "");
+  const q = Number(u?.evidenceTrace?.[0]?.value?.questions) || 0;
+  const acc = Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0;
+  if (action === "maintain" || action === "expand_cautiously" || (q >= 40 && acc >= 78)) {
+    return { overviewStatusHe: "יציב / חזק", placementKind: "strength" };
+  }
+  if (action === "intervene" || action === "diagnose_only" || (q >= 12 && acc < 55)) {
+    return { overviewStatusHe: "דורש ליווי", placementKind: "focus" };
+  }
+  return { overviewStatusHe: "במעקב", placementKind: "neutral" };
+}
+
+/**
+ * @param {unknown} baseReport
+ * @param {string} sid
+ * @param {object[]} units
+ * @param {Record<string, object>} topicMapForSid
+ */
+function buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid) {
+  return (units || [])
+    .filter((u) => (Number(u?.evidenceTrace?.[0]?.value?.questions) || 0) > 0)
+    .map((u) => {
+      const trk = String(u?.topicRowKey || "");
+      const gk = gradeKeyForV2UnitFromReport(baseReport, u);
+      const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
+      const labels = parentFacingDisplayLabelsForV2Unit(baseReport, u);
+      const place = topicOverviewPlacementFromUnit(u);
+      const mapR = topicMapForSid[trk];
+      return {
+        topicRowKey: trk,
+        subjectId: sid,
+        displayName: String(u?.displayName || "").trim(),
+        narrativeTitleHe: labels.titleHe,
+        gradeRelationSublineHe: labels.gradeRelationSublineHe,
+        questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+        accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+        timeMinutes: Number(mapR?.timeMinutes) || 0,
+        overviewStatusHe: place.overviewStatusHe,
+        placementKind: place.placementKind,
+        rowIdentityV1: buildRowIdentityV1({
+          subjectId: sid,
+          topicRowKey: trk,
+          displayName: String(u?.displayName || ""),
+          contentGradeKey: gk,
+          registeredGradeKey: baseReport?.registeredGradeKey,
+          gradeRelation: ge.gradeRelation,
+          questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
+          accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
+          timeSpentMinutes: Number(mapR?.timeMinutes) || 0,
+        }),
+      };
+    })
+    .sort((a, b) => (Number(b.questions) || 0) - (Number(a.questions) || 0));
+}
+
 function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   const traces = Array.isArray(u?.evidenceTrace) ? u.evidenceTrace : [];
   const volume = traces.find((t) => String(t?.type || "") === "volume")?.value || {};
@@ -2010,7 +2076,13 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
     topicRowKey: topicKey,
     topicKey,
     subjectId,
-    displayName: String(u?.displayName || ""),
+    displayName: String(u?.displayName || "").trim(),
+    narrativeTitleHe: reportMeta?.baseReport
+      ? parentFacingDisplayLabelsForV2Unit(reportMeta.baseReport, u).titleHe
+      : String(u?.displayName || "").trim(),
+    gradeRelationSublineHe: reportMeta?.baseReport
+      ? parentFacingDisplayLabelsForV2Unit(reportMeta.baseReport, u).gradeRelationSublineHe
+      : null,
     topicStateId: cs?.topicStateId || null,
     stateHash: cs?.stateHash || null,
     recommendedNextStep: finalStep,
@@ -2256,6 +2328,7 @@ function buildSubjectProfilesFromV2(baseReport) {
         maintain: [],
         improving: [],
         excellence: [],
+        topicOverviewRows: [],
         topicRecommendations: [],
         parentActionHe: null,
         nextWeekGoalHe: null,
@@ -2306,11 +2379,14 @@ function buildSubjectProfilesFromV2(baseReport) {
           .map((u) =>
             recommendationFromV2Unit(u, topicMapForSid[String(u?.topicRowKey || "")] || null, {
               registeredGradeKey: baseReport?.registeredGradeKey,
+              baseReport,
             }),
           )
           .slice(0, 8)
       )
     );
+    const topicOverviewRows = buildTopicOverviewRowsFromUnits(baseReport, sid, units, topicMapForSid);
+
     const topicRecommendations = [...topicRecommendationsBase]
       .sort((a, b) => {
         const pa = Number(a?._priorityScore) || 0;
@@ -2339,17 +2415,15 @@ function buildSubjectProfilesFromV2(baseReport) {
       const mapR = trk && topicMapForSid[trk] && typeof topicMapForSid[trk] === "object" ? topicMapForSid[trk] : null;
       const gk = gradeKeyForV2UnitFromReport(baseReport, u);
       const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
+      const labels = parentFacingDisplayLabelsForV2Unit(baseReport, u);
       return {
         topicRowKey: trk,
         subjectId: sid,
         contentGradeKey: gk,
-        labelHe: parentFacingTopicRowLabelHe({
-          displayName: String(u?.displayName || ""),
-          contentGradeKey: gk,
-          registeredGradeKey: baseReport?.registeredGradeKey,
-          gradeRelation: ge.gradeRelation,
-          topicRowKey: trk,
-        }),
+        displayName: String(u?.displayName || "").trim(),
+        narrativeTitleHe: labels.titleHe,
+        gradeRelationSublineHe: labels.gradeRelationSublineHe,
+        labelHe: labels.titleHe,
         questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
         accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
         timeMinutes: Number(mapR?.timeMinutes) || 0,
@@ -2376,13 +2450,7 @@ function buildSubjectProfilesFromV2(baseReport) {
         topicRowKey: trk,
         subjectId: sid,
         contentGradeKey: gk,
-        labelHe: parentFacingTopicRowLabelHe({
-          displayName: String(u?.displayName || ""),
-          contentGradeKey: gk,
-          registeredGradeKey: baseReport?.registeredGradeKey,
-          gradeRelation: ge.gradeRelation,
-          topicRowKey: trk,
-        }),
+        labelHe: parentFacingLabelForV2Unit(baseReport, u),
         questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
         accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
       };
@@ -2395,13 +2463,7 @@ function buildSubjectProfilesFromV2(baseReport) {
         const trk = String(u?.topicRowKey || "");
         const gk = gradeKeyForV2UnitFromReport(baseReport, u);
         const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
-        const topicLabel = parentFacingTopicRowLabelHe({
-          displayName: String(u?.displayName || ""),
-          contentGradeKey: gk,
-          registeredGradeKey: baseReport?.registeredGradeKey,
-          gradeRelation: ge.gradeRelation,
-          topicRowKey: trk,
-        });
+        const topicLabel = parentFacingLabelForV2Unit(baseReport, u);
         const patternHe = String(u?.taxonomy?.patternHe || "").trim();
         return {
           topicRowKey: trk,
@@ -2488,7 +2550,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       maintain,
       improving: [],
       excellence: excellentList.slice(0, 5).map((u) => ({
-        labelHe: String(u?.displayName || ""),
+        labelHe: parentFacingLabelForV2Unit(baseReport, u),
         questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
         accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
         excellent: true,
@@ -2499,6 +2561,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       nextWeekGoalHe: resolveUnitNextGoalHe(subjectAnchorUnit, anchorGradeKey),
       evidenceExamples: [],
       trendVsPreviousPeriod: null,
+      topicOverviewRows,
       topicRecommendations,
       dominantLearningRisk: subjectAnchorUnit?.competingHypotheses?.hypotheses?.[0]?.hypothesisId || null,
       dominantSuccessPattern: stable > 0 ? "stable_mastery" : null,
@@ -2600,19 +2663,24 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
   const stableRanked = [...stable].sort(rankPosX);
   const leadPosX = stableRanked[0] || null;
 
-  let topStrengthsAcrossHe = stable.slice(0, 3).map((u) => `${u.displayName} (${SUBJECT_LABEL_HE[u.subjectId] || u.subjectId})`);
+  let topStrengthsAcrossHe = stable.slice(0, 3).map((u) => executiveLineFromV2Unit(baseReport, u));
   const rawMetricHeV2 = deriveRawMetricStrengthLinesHe(baseReport.summary);
   topStrengthsAcrossHe = mergeExecutiveStrengthLinesHe(rawMetricHeV2, topStrengthsAcrossHe, 5);
   const topFocusAreasHe = diagnosed
     .filter((u) => u?.taxonomy?.patternHe)
     .slice(0, 3)
-    .map((u) => `${u.taxonomy.patternHe} (${SUBJECT_LABEL_HE[u.subjectId] || u.subjectId})`);
+    .map((u) => {
+      const topicLabel = executiveLineFromV2Unit(baseReport, u);
+      return `${u.taxonomy.patternHe} — ${topicLabel}`;
+    });
+  const gradeSplitTopicNoticesHe = detectGradeSplitContradictions(units, baseReport);
 
   return {
     version: 2,
     windowTotalQuestions: Number(baseReport.summary?.totalQuestions) || 0,
     topStrengthsAcrossHe,
     topFocusAreasHe,
+    gradeSplitTopicNoticesHe,
     homeFocusHe: executiveV2HomeFocusHe(topFocusAreasHe),
     majorTrendsHe: executiveV2MajorTrendsLinesHe({
       units: units.length,
@@ -2645,13 +2713,16 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
         diagnosed[1]?.intervention?.immediateActionHe ||
         ""
       : "",
-    monitoringOnlyAreasHe: units.filter((u) => actionOf(u) === "withhold" || actionOf(u) === "probe_only").slice(0, 4).map((u) => `${u.displayName} (${SUBJECT_LABEL_HE[u.subjectId] || u.subjectId})`),
+    monitoringOnlyAreasHe: units
+      .filter((u) => actionOf(u) === "withhold" || actionOf(u) === "probe_only")
+      .slice(0, 4)
+      .map((u) => executiveLineFromV2Unit(baseReport, u)),
     deferForNowAreasHe: [],
     reviewBeforeAdvanceAreasHe: diagnosed
       .filter((u) => u?.probe?.objectiveHe)
       .slice(0, 4)
       .map((u) => `${SUBJECT_LABEL_HE[u.subjectId] || u.subjectId}: ${u.probe.objectiveHe}`),
-    transferReadyAreasHe: stable.slice(0, 3).map((u) => `${SUBJECT_LABEL_HE[u.subjectId] || u.subjectId}: ${u.displayName}`),
+    transferReadyAreasHe: stable.slice(0, 3).map((u) => executiveLineFromV2Unit(baseReport, u)),
     anchoredTopicStateIds: stable.slice(0, 3).map((u) => csOf(u)?.topicStateId || null).filter(Boolean),
   };
 }
@@ -2673,15 +2744,33 @@ function buildCrossSubjectInsightsFromV2(baseReport) {
 
 function buildHomePlanFromV2(baseReport) {
   const units = Array.isArray(baseReport?.diagnosticEngineV2?.units) ? baseReport.diagnosticEngineV2.units : [];
-  const itemsHe = units
-    .filter((u) => resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u)))
-    .slice(0, 6)
-    .map((u) => {
-      const action =
-        resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u)) || "";
-      return `ב${SUBJECT_LABEL_HE[u.subjectId] || u.subjectId} (${u.displayName}): ${rewriteParentRecommendationForDetailedHe(String(action))}`;
-    });
-  return { itemsHe: itemsHe.length ? itemsHe : [homePlanV2EmptyFallbackHe()] };
+  const actionOf = (u) => u?.canonicalState?.actionState || "withhold";
+  const focusUnits = units.filter((u) => {
+    const a = actionOf(u);
+    return a === "diagnose_only" || a === "intervene";
+  });
+  const maintainUnits = units.filter((u) => {
+    const a = actionOf(u);
+    return (a === "maintain" || a === "expand_cautiously") && resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u));
+  });
+  const itemsHe = [];
+  for (const u of focusUnits.slice(0, 4)) {
+    const action = resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u)) || "";
+    itemsHe.push(
+      homePlanLineFromV2Unit(baseReport, u, rewriteParentRecommendationForDetailedHe(String(action))),
+    );
+  }
+  for (const u of maintainUnits.slice(0, 3)) {
+    const action =
+      resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u)) ||
+      "להמשיך באותו קצב תרגול — המצב יציב בטווח הזה.";
+    itemsHe.push(
+      homePlanLineFromV2Unit(baseReport, u, rewriteParentRecommendationForDetailedHe(String(action))),
+    );
+  }
+  const splitNotices = detectGradeSplitContradictions(units, baseReport);
+  const merged = [...splitNotices.slice(0, 2), ...itemsHe];
+  return { itemsHe: merged.length ? merged : [homePlanV2EmptyFallbackHe()] };
 }
 
 function buildNextPeriodGoalsFromV2(baseReport) {
@@ -2703,6 +2792,7 @@ function buildNextPeriodGoalsFromV2(baseReport) {
  */
 export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
   if (!baseReport || typeof baseReport !== "object") return null;
+  hardenBaseReportWithRowIdentity(baseReport);
   const playerName = meta.playerName ?? baseReport.playerName ?? "_fixture_";
   const period = meta.period ?? baseReport.period ?? "week";
 

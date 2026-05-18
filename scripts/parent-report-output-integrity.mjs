@@ -14,6 +14,11 @@ import {
   OUTPUT_INTEGRITY_SUBJECT_IDS,
   SUBJECT_TOPIC,
 } from "./fixtures/parent-report-output-integrity-fixtures.mjs";
+import { buildRealGradeSplitRegressionBaseReport } from "./fixtures/parent-report-real-regression-payload.mjs";
+import {
+  collectParentFacingTextBundle,
+  verifyPdfOrPrintOutput,
+} from "./lib/parent-report-pdf-output-verify.mjs";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const REPO = join(ROOT, "..");
@@ -167,7 +172,7 @@ function aggregateFromBase(base) {
   const dup = insights.filter((i) => i.sourceId.startsWith("topic:math:topic_alpha:grade:"));
   assert.equal(dup.length, 2, "A: two insight rows for same canonical topic, different grades");
   assert.notEqual(dup[0].sourceId, dup[1].sourceId, "A: insights distinct sourceIds");
-  assert.ok(dup[0].displayNameHe.includes("כיתה") || dup[0].displayNameHe.includes("תרגול"), "A: grade in parent label");
+  assert.ok(dup[0].displayNameHe.includes(" - כיתה "), "A: short grade in parent label");
 }
 
 // ─── B / C / D: Volume bands ─────────────────────────────────────────────────
@@ -247,29 +252,69 @@ for (const sid of OUTPUT_INTEGRITY_SUBJECT_IDS) {
   assert.equal(res.resolutionStatus, "resolved");
   const text = (res.answerBlocks || []).map((b) => b.textHe).join("\n");
   assert.ok(!/ממוצע\s*דיוק\s*של\s*כ־80/u.test(text), "copilot: no silent 80% subject average");
-  assert.ok(res.scopeType === "topic" || /כיתה|367|66|38|\d+\s*שאלות/u.test(text), "copilot: topic or row-grounded");
+  assert.ok(res.scopeType === "topic" || /כיתה|450|76|41|\d+\s*שאלות/u.test(text), "copilot: topic or row-grounded");
 }
 
-// ─── H: PDF fixture strings (generic checks only) ────────────────────────────
-const pdfPaths = [
-  join(REPO, "qa-visual-output", "parent-detailed-full.pdf"),
-  join(REPO, "qa-visual-output", "parent-report-main.pdf"),
-];
-for (const pdfPath of pdfPaths) {
-  if (!existsSync(pdfPath)) continue;
-  try {
-    const pdfParse = await import("pdf-parse");
-    const buf = readFileSync(pdfPath);
-    const parsed = await pdfParse.default(buf);
-    const text = String(parsed.text || "");
-    if (text.length < 80) continue;
-    assert.ok(
-      !/לאסוף עוד מידע לפני החלטה[\s\S]{0,40}367/u.test(text) && !/367[\s\S]{0,80}לאסוף עוד מידע/u.test(text),
-      `H: PDF ${pdfPath} must not pair high-volume with collect-more-data`,
+// ─── H: Real regression payload print bundle (always) ───────────────────────
+{
+  const realBase = buildRealGradeSplitRegressionBaseReport();
+  const realDetailed = buildDetailedParentReportFromBaseReport(realBase, { period: "week" });
+  const printBundle = collectParentFacingTextBundle(realDetailed);
+  assert.ok(printBundle.length >= 200, "H: real regression print bundle must be non-trivial");
+  await verifyPdfOrPrintOutput({
+    label: "real-regression-print-bundle",
+    printDomText: printBundle,
+  });
+  const realKeys = listTopicRowKeysFromBaseReport(realBase).filter((k) => k.subjectId === "math");
+  assert.equal(realKeys.length, 3, "H: three math topic rows in real regression");
+  const mathProfile = realDetailed.subjectProfiles.find((s) => s.subject === "math");
+  assert.equal(mathProfile?.topicOverviewRows?.length, 3, "H: topic overview lists all practiced rows");
+  assert.equal(mathProfile?.topicRecommendations?.length, 1, "H: focus section only weak row");
+  for (const k of realKeys) {
+    const tr = traceRowThroughPipeline({
+      baseReport: realBase,
+      detailedReport: realDetailed,
+      ...k,
+    });
+    const overviewRow = (mathProfile?.topicOverviewRows || []).find(
+      (r) => r.topicRowKey === k.topicRowKey,
     );
-  } catch {
-    process.stdout.write(`  skip PDF parse ${pdfPath}\n`);
+    assert.ok(overviewRow?.narrativeTitleHe, `H: overview title for ${k.topicRowKey}`);
+    assert.ok(!/תרגול ב|מעל הכיתה הרשומה/u.test(String(overviewRow?.narrativeTitleHe || "")), "H: short overview title");
+    const surfacedIdentity =
+      tr.stages.detailedTopicRec?.rowIdentityV1 ||
+      tr.stages.detailedStrength?.rowIdentityV1 ||
+      tr.stages.detailedWeakness?.rowIdentityV1 ||
+      overviewRow?.rowIdentityV1;
+    assert.ok(surfacedIdentity?.sourceId, `H: rowIdentity on surfaced row ${k.topicRowKey}`);
+    assert.ok(tr.identity.timeSpentMinutes > 0, `H: time preserved ${k.topicRowKey}`);
   }
+}
+
+// ─── H2: Exported PDF bytes — PASS or explicit FAIL (no silent skip) ─────────
+const pdfPaths = [
+  { path: join(REPO, "qa-visual-output", "parent-detailed-full.pdf"), label: "parent-detailed-full.pdf" },
+  { path: join(REPO, "qa-visual-output", "parent-report-main.pdf"), label: "parent-report-main.pdf" },
+];
+const realBaseForFallback = buildRealGradeSplitRegressionBaseReport();
+const fallbackBundle = collectParentFacingTextBundle(
+  buildDetailedParentReportFromBaseReport(realBaseForFallback, { period: "week" }),
+);
+let pdfIntegrityNote = "";
+for (const { path: pdfPath, label } of pdfPaths) {
+  if (!existsSync(pdfPath)) {
+    pdfIntegrityNote = `PDF files missing — run npm run test:parent-report-real-output-signoff with dev server`;
+    continue;
+  }
+  const buf = readFileSync(pdfPath);
+  await verifyPdfOrPrintOutput({
+    label,
+    pdfBuffer: buf,
+    printDomText: fallbackBundle,
+  });
+}
+if (pdfIntegrityNote && !pdfPaths.some(({ path: p }) => existsSync(p))) {
+  assert.fail(`H2: ${pdfIntegrityNote}`);
 }
 
 // ─── Product contract + time on topic row ────────────────────────────────────
@@ -295,6 +340,63 @@ for (const t of TRACE_TABLE.slice(0, 4)) {
   process.stdout.write(
     `${t.sourceId} | q=${t.identity.questions} acc=${t.identity.accuracy}% time=${t.identity.timeSpentMinutes}m | map→detailed ${t.stages.mapRow?.questions}→${t.stages.detailedTopicRec?.questions}\n`,
   );
+}
+
+// ─── I: Context-aware display labels (table vs narrative) ─────────────────────
+{
+  const {
+    assertTableLabelsStayClean,
+    assertNarrativeSurfacesDisambiguateDuplicates,
+    assertAggregateExplainsGradeSplit,
+    assertNoLongNarrativeTitles,
+    assertTopicOverviewCompleteness,
+    assertHomePlanReflectsStrengthAndSupport,
+  } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-output-integrity", "display-context-label-tests.js")).href
+  );
+  const realBase = buildRealGradeSplitRegressionBaseReport();
+  const realDetailed = buildDetailedParentReportFromBaseReport(realBase, { period: "week" });
+  for (const msg of assertTableLabelsStayClean(realBase)) {
+    assert.fail(`I-table: ${msg}`);
+  }
+  const mathRows = Object.entries(realBase.mathOperations || {});
+  assert.equal(mathRows.length, 3, "I: three math topic rows in table");
+  const frac = mathRows.filter(([k]) => k.includes("fractions"));
+  assert.equal(frac.length, 2, "I: two fractions rows");
+  const cleanLabels = frac.map(([, r]) => r.cleanTopicLabelHe);
+  assert.ok(cleanLabels.every((l) => l === "שברים"), "I: table clean labels stay שברים");
+  assert.ok(
+    frac.every(([, r]) => String(r.narrativeTopicLabelHe || "").includes(" - כיתה ")),
+    "I: short narrative titles for grade-split topic",
+  );
+  assert.ok(
+    frac.every(([, r]) => !/תרגול ב|מעל הכיתה הרשומה/u.test(String(r.narrativeTopicLabelHe || ""))),
+    "I: relation not embedded in narrative title",
+  );
+  assert.notEqual(frac[0][1].narrativeTopicLabelHe, frac[1][1].narrativeTopicLabelHe, "I: distinct narrative labels");
+  const mathP = realDetailed.subjectProfiles.find((s) => s.subject === "math");
+  assert.equal(mathP?.topicOverviewRows?.length, 3, "I: topic overview shows all 3 practiced rows");
+  assert.equal(mathP?.topicRecommendations?.length, 1, "I: focus section only weak row");
+  assert.ok(
+    String(mathP?.topicRecommendations?.[0]?.narrativeTitleHe || "").includes("ה׳"),
+    "I: focus row is grade ה׳ fractions",
+  );
+  for (const msg of assertNarrativeSurfacesDisambiguateDuplicates(realDetailed)) {
+    assert.fail(`I-narrative: ${msg}`);
+  }
+  for (const msg of assertNoLongNarrativeTitles(realDetailed)) {
+    assert.fail(`I-title: ${msg}`);
+  }
+  for (const msg of assertTopicOverviewCompleteness(realDetailed, realBase)) {
+    assert.fail(`I-overview: ${msg}`);
+  }
+  for (const msg of assertHomePlanReflectsStrengthAndSupport(realDetailed)) {
+    assert.fail(`I-home: ${msg}`);
+  }
+  for (const msg of assertAggregateExplainsGradeSplit(realDetailed)) {
+    assert.fail(`I-aggregate: ${msg}`);
+  }
+  assert.ok((realDetailed.executiveSummary?.gradeSplitTopicNoticesHe || []).length >= 1, "I: grade split notice");
 }
 
 process.stdout.write("\nOK parent-report-output-integrity\n");

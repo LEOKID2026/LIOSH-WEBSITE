@@ -1598,20 +1598,35 @@ export default function ParentReportDetailedPage() {
                               </div>
                             ) : null}
 
+                            {sp.topicOverviewRows?.length ? (
+                              <div className="pr-detailed-topic-overview-block">
+                                <p className="pr-detailed-topic-rec-head">תמונת מצב לפי נושאים</p>
+                                <div className="space-y-2">
+                                  {sp.topicOverviewRows.map((row) => (
+                                    <div
+                                      key={row.topicRowKey}
+                                      className="pr-detailed-topic-overview-item rounded-lg border border-white/12 bg-white/[0.04] px-3 py-2.5"
+                                    >
+                                      <div className="pr-detailed-body-text font-bold text-white/95 leading-snug">
+                                        {row.narrativeTitleHe}
+                                      </div>
+                                      {row.gradeRelationSublineHe ? (
+                                        <p className="pr-detailed-muted text-xs m-0 mt-0.5 text-white/60">
+                                          {row.gradeRelationSublineHe}
+                                        </p>
+                                      ) : null}
+                                      <p className="pr-detailed-body-text text-sm m-0 mt-1.5 text-white/[0.88]">
+                                        {row.overviewStatusHe} · {row.questions} שאלות · דיוק {row.accuracy}%
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : null}
+
                             {sp.topicRecommendations?.length ? (
                               <div className="pr-detailed-topic-rec-block">
-                                <p className="pr-detailed-topic-rec-head">
-                                  {(sp.topicRecommendations || []).some((tr) => {
-                                    const step = String(tr?.recommendedNextStep || "");
-                                    const isSupportStep =
-                                      step === "remediate_same_level" ||
-                                      step === "drop_one_level_topic_only" ||
-                                      step === "drop_one_grade_topic_only";
-                                    return isSupportStep || (Number(tr?.accuracy) || 0) < 75;
-                                  })
-                                    ? "נושאים שדורשים ליווי בטווח זה"
-                                    : "נושאים שנבדקו בטווח זה"}
-                                </p>
+                                <p className="pr-detailed-topic-rec-head">נושאים שדורשים ליווי בטווח זה</p>
                                 <div className="space-y-2.5">
                                   {sp.topicRecommendations.map((tr, idx) => {
                                     const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
@@ -1625,9 +1640,16 @@ export default function ParentReportDetailedPage() {
                                           className={`pr-detailed-topic-nextstep-card pr-detailed-topic-rec-item pr-detailed-topic-nextstep--${tv}`}
                                         >
                                           <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
-                                            <span className="pr-detailed-body-text font-bold text-white/95 leading-snug">
-                                              {tr.displayName}
-                                            </span>
+                                            <div className="min-w-0 flex-1">
+                                              <span className="pr-detailed-body-text font-bold text-white/95 leading-snug block">
+                                                {tr.narrativeTitleHe || tr.labelHe || tr.displayName}
+                                              </span>
+                                              {tr.gradeRelationSublineHe ? (
+                                                <p className="pr-detailed-muted text-xs m-0 mt-0.5 text-white/60">
+                                                  {tr.gradeRelationSublineHe}
+                                                </p>
+                                              ) : null}
+                                            </div>
                                             <span
                                               className={`pr-detailed-topic-badge shrink-0 pr-detailed-topic-badge--${tv}`}
                                             >

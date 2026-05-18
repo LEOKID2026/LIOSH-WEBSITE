@@ -1,0 +1,323 @@
+{
+  "verdict": "PASS",
+  "regressionPayload": {
+    "verdict": "PASS",
+    "source": "scripts/fixtures/parent-report-real-regression-payload.mjs",
+    "kind": "baseReport"
+  },
+  "exactChildPayload": {
+    "verdict": "SKIPPED",
+    "source": null,
+    "note": "pass --fixture scripts/fixtures/snapshots/<child>.fixture.mjs for exact blob"
+  },
+  "surfaceIdentityAudit": {
+    "verdict": "PASS",
+    "classificationTable": [
+      {
+        "id": "short_report_table",
+        "labelHe": "טבלת דוח קצר",
+        "classification": "row-scoped",
+        "requiresRowIdentity": true,
+        "implementation": "pages/learning/parent-report.js + baseReport topic maps"
+      },
+      {
+        "id": "short_report_smart_summary",
+        "labelHe": "סיכום חכם — דוח קצר",
+        "classification": "aggregate-only",
+        "requiresRowIdentity": false,
+        "requiresGradeSplitRespect": true,
+        "implementation": "parent-report contract strip / rawMetricStrengthsHe + executive via detailed payload"
+      },
+      {
+        "id": "detailed_smart_summary",
+        "labelHe": "סיכום חכם — דוח מפורט",
+        "classification": "aggregate-only",
+        "requiresRowIdentity": false,
+        "requiresGradeSplitRespect": true,
+        "implementation": "ParentAiInsight + executiveSummary"
+      },
+      {
+        "id": "detailed_strengths",
+        "labelHe": "חוזקות",
+        "classification": "row-scoped",
+        "requiresRowIdentity": true,
+        "implementation": "utils/detailed-parent-report.js topStrengths"
+      },
+      {
+        "id": "detailed_weaknesses",
+        "labelHe": "מיקוד / חולשות",
+        "classification": "row-scoped",
+        "requiresRowIdentity": true,
+        "implementation": "utils/detailed-parent-report.js topWeaknesses"
+      },
+      {
+        "id": "topic_recommendations",
+        "labelHe": "המלצות לנושא",
+        "classification": "row-scoped",
+        "requiresRowIdentity": true,
+        "implementation": "utils/detailed-parent-report.js topicRecommendations"
+      },
+      {
+        "id": "home_plan",
+        "labelHe": "מה לעשות בבית",
+        "classification": "mixed",
+        "requiresRowIdentity": false,
+        "requiresGradeSplitRespect": true,
+        "implementation": "buildHomePlanFromV2 — per-unit lines with parentFacingLabel"
+      },
+      {
+        "id": "executive_summary",
+        "labelHe": "סיכום מנהלים",
+        "classification": "aggregate-only",
+        "requiresRowIdentity": false,
+        "requiresGradeSplitRespect": true,
+        "implementation": "buildExecutiveSummaryFromV2 + gradeSplitTopicNoticesHe"
+      },
+      {
+        "id": "charts",
+        "labelHe": "גרפים / תוויות",
+        "classification": "row-scoped",
+        "requiresRowIdentity": true,
+        "implementation": "parent-report.js buildTopicRowsForChart"
+      },
+      {
+        "id": "pdf_print",
+        "labelHe": "PDF / הדפסה",
+        "classification": "mixed",
+        "requiresRowIdentity": true,
+        "requiresGradeSplitRespect": true,
+        "implementation": "Playwright print of pages above"
+      },
+      {
+        "id": "copilot_truth_packet",
+        "labelHe": "Copilot truth packet",
+        "classification": "row-scoped",
+        "requiresRowIdentity": true,
+        "implementation": "utils/parent-copilot/truth-packet-v1.js"
+      },
+      {
+        "id": "copilot_answer_composer",
+        "labelHe": "Copilot answer composer",
+        "classification": "mixed",
+        "requiresRowIdentity": true,
+        "requiresGradeSplitRespect": true,
+        "implementation": "utils/parent-copilot/* + gradeSplitTopicRowKeys"
+      }
+    ],
+    "results": [
+      {
+        "surfaceId": "topic_overview",
+        "status": "pass",
+        "reason": "math.topicOverviewRows: 3 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_recommendations",
+        "status": "pass",
+        "reason": "math.topicRecommendations: 1 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_strengths",
+        "status": "pass",
+        "reason": "math.topStrengths: 1 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_weaknesses",
+        "status": "pass",
+        "reason": "math.topWeaknesses: 1 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_overview",
+        "status": "pass",
+        "reason": "geometry.topicOverviewRows: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_recommendations",
+        "status": "pass",
+        "reason": "geometry.topicRecommendations: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_strengths",
+        "status": "pass",
+        "reason": "geometry.topStrengths: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_weaknesses",
+        "status": "pass",
+        "reason": "geometry.topWeaknesses: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_overview",
+        "status": "pass",
+        "reason": "english.topicOverviewRows: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_recommendations",
+        "status": "pass",
+        "reason": "english.topicRecommendations: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_strengths",
+        "status": "pass",
+        "reason": "english.topStrengths: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_weaknesses",
+        "status": "pass",
+        "reason": "english.topWeaknesses: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_overview",
+        "status": "pass",
+        "reason": "science.topicOverviewRows: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_recommendations",
+        "status": "pass",
+        "reason": "science.topicRecommendations: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_strengths",
+        "status": "pass",
+        "reason": "science.topStrengths: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_weaknesses",
+        "status": "pass",
+        "reason": "science.topWeaknesses: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_overview",
+        "status": "pass",
+        "reason": "hebrew.topicOverviewRows: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_recommendations",
+        "status": "pass",
+        "reason": "hebrew.topicRecommendations: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_strengths",
+        "status": "pass",
+        "reason": "hebrew.topStrengths: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_weaknesses",
+        "status": "pass",
+        "reason": "hebrew.topWeaknesses: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_overview",
+        "status": "pass",
+        "reason": "moledet-geography.topicOverviewRows: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "topic_recommendations",
+        "status": "pass",
+        "reason": "moledet-geography.topicRecommendations: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_strengths",
+        "status": "pass",
+        "reason": "moledet-geography.topStrengths: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "detailed_weaknesses",
+        "status": "pass",
+        "reason": "moledet-geography.topWeaknesses: 0 row(s) keyed"
+      },
+      {
+        "surfaceId": "executive_summary",
+        "status": "pass",
+        "reason": "grade-split notices present (1)"
+      },
+      {
+        "surfaceId": "short_report_table",
+        "status": "pass",
+        "reason": "all 3 rows: clean topic + rowIdentity"
+      },
+      {
+        "surfaceId": "charts",
+        "status": "pass",
+        "reason": "chart narrative labels disambiguated when topic repeats across grades"
+      },
+      {
+        "surfaceId": "copilot_truth_packet",
+        "status": "pass",
+        "reason": "copilot payload rows keyed (1)"
+      }
+    ],
+    "blockingFailures": []
+  },
+  "generatedAt": "2026-05-18T21:21:04.749Z",
+  "rowCount": 3,
+  "pdfChecks": [
+    "PASS: in-process print bundle (SIGNOFF_SKIP_PDF_EXPORT=1)"
+  ],
+  "pdfExportSkipped": true,
+  "failures": [],
+  "traceTable": [
+    {
+      "rowSourceId": "topic:math:fractions:grade:g4",
+      "subject": "math",
+      "topic": "fractions",
+      "contentGradeKey": "g4",
+      "registeredGradeKey": "g4",
+      "gradeRelation": "same",
+      "questions": 450,
+      "correct": 396,
+      "accuracy": 88,
+      "timeSpentMinutes": 48,
+      "latestActivityAt": "2026-05-10T12:00:00.000Z",
+      "status": "strength",
+      "sectionPlacement": "strength",
+      "recommendationLabel": null,
+      "patternSubskill": null,
+      "summaryItem": "שברים - כיתה ד׳",
+      "copilotTruthSnippet": null,
+      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%. לכן התמונה מוגבל",
+      "hasRowIdentityV1": true
+    },
+    {
+      "rowSourceId": "topic:math:fractions:grade:g5",
+      "subject": "math",
+      "topic": "fractions",
+      "contentGradeKey": "g5",
+      "registeredGradeKey": "g4",
+      "gradeRelation": "higher",
+      "questions": 76,
+      "correct": 31,
+      "accuracy": 41,
+      "timeSpentMinutes": 14,
+      "latestActivityAt": "2026-05-10T12:00:00.000Z",
+      "status": "חיזוק ממוקד לפי הדוח",
+      "sectionPlacement": "weakness",
+      "recommendationLabel": "חיזוק ממוקד לפי הדוח",
+      "patternSubskill": "subskill-present",
+      "summaryItem": "שברים - כיתה ה׳",
+      "copilotTruthSnippet": "בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%.",
+      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%. לכן התמונה מוגבל",
+      "hasRowIdentityV1": true
+    },
+    {
+      "rowSourceId": "topic:math:subtraction:grade:g4",
+      "subject": "math",
+      "topic": "subtraction",
+      "contentGradeKey": "g4",
+      "registeredGradeKey": "g4",
+      "gradeRelation": "same",
+      "questions": 67,
+      "correct": 56,
+      "accuracy": 84,
+      "timeSpentMinutes": 12,
+      "latestActivityAt": "2026-05-10T12:00:00.000Z",
+      "status": "strength",
+      "sectionPlacement": "strength",
+      "recommendationLabel": null,
+      "patternSubskill": null,
+      "summaryItem": "חיסור - כיתה ד׳",
+      "copilotTruthSnippet": null,
+      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%. לכן התמונה מוגבל",
+      "hasRowIdentityV1": false
+    }
+  ]
+}

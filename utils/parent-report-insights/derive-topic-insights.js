@@ -19,7 +19,11 @@ import {
   safeHebrewLabel,
 } from "./normalize-parent-facing-labels.js";
 import { buildSubjectSourceId, buildTopicRowSourceId } from "./source-ids.js";
-import { parentFacingTopicRowLabelHe } from "../parent-report-topic-evidence.js";
+import {
+  cleanTopicLabelHe,
+  narrativeTopicRowLabelHe,
+} from "../parent-report-output-integrity/row-display-label-context.js";
+import { parseCanonicalTopicFromRowKey } from "../parent-report-output-integrity/row-identity-v1.js";
 
 const STRENGTH_ACC_THRESHOLD = 80;
 const FOCUS_ACC_THRESHOLD = 55;
@@ -57,8 +61,32 @@ function subjectEvidenceHe(s) {
   return `${totalQ} שאלות, דיוק ${Math.round(acc)}%`;
 }
 
+function buildDuplicateCanonicalKeysFromAggregate(subjectsObj) {
+  /** @type {Map<string, Set<string>>} */
+  const gradesByCanon = new Map();
+  for (const [subjectKey, s] of Object.entries(subjectsObj || {})) {
+    const topics = s?.topics && typeof s.topics === "object" ? s.topics : {};
+    for (const topicKey of Object.keys(topics)) {
+      const t = topics[topicKey];
+      const parsed = parseCanonicalTopicFromRowKey(topicKey);
+      const canon = parsed.canonicalTopicKey || topicKey;
+      const gk =
+        (t?.contentGradeLevel && String(t.contentGradeLevel).trim()) || parsed.contentGradeKey || null;
+      const mapKey = `${subjectKey}|${canon}`;
+      if (!gradesByCanon.has(mapKey)) gradesByCanon.set(mapKey, new Set());
+      if (gk) gradesByCanon.get(mapKey).add(String(gk));
+    }
+  }
+  const dup = new Set();
+  for (const [k, grades] of gradesByCanon) {
+    if (grades.size >= 2) dup.add(k);
+  }
+  return dup;
+}
+
 export function deriveTopicInsights(aggregate) {
   const subjectsObj = aggregate?.subjects && typeof aggregate.subjects === "object" ? aggregate.subjects : {};
+  const duplicateCanonicalKeys = buildDuplicateCanonicalKeysFromAggregate(subjectsObj);
   const out = [];
   for (const subjectKey of Object.keys(subjectsObj).sort()) {
     const s = subjectsObj[subjectKey];
@@ -79,8 +107,12 @@ export function deriveTopicInsights(aggregate) {
         getTopicDisplayNameHe(subjectKey, topicKey),
         getSubjectDisplayNameHe(subjectKey),
       );
-      const labelHe = parentFacingTopicRowLabelHe({
-        displayName: baseLabel,
+      const parsedTopic = parseCanonicalTopicFromRowKey(topicKey);
+      const requiresGradeContext = duplicateCanonicalKeys.has(
+        `${subjectKey}|${parsedTopic.canonicalTopicKey || topicKey}`,
+      );
+      const labelHe = narrativeTopicRowLabelHe({
+        displayName: cleanTopicLabelHe(baseLabel),
         contentGradeKey: contentGradeLevel,
         registeredGradeKey:
           typeof t.registeredGradeLevel === "string" && t.registeredGradeLevel.trim()
@@ -89,6 +121,7 @@ export function deriveTopicInsights(aggregate) {
         gradeRelation:
           typeof t.gradeRelation === "string" && t.gradeRelation.trim() ? t.gradeRelation.trim() : null,
         topicRowKey: topicKey,
+        requiresGradeContext,
       });
       const isStrength = totalQ >= STRENGTH_MIN_Q && acc >= STRENGTH_ACC_THRESHOLD;
       const isFocusArea = totalQ >= FOCUS_MIN_Q && acc < FOCUS_ACC_THRESHOLD;

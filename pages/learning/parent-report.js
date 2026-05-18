@@ -111,6 +111,8 @@ function parentReportChartLabelFromAllItemKey(key, data) {
 }
 
 function subjectTopicLabelForParentHe(subjectId, data, fallbackTopic) {
+  const cleanFromRow = String(data?.cleanTopicLabelHe || data?.rowIdentityV1?.cleanTopicLabelHe || "").trim();
+  if (cleanFromRow) return normalizeParentFacingHe(cleanFromRow);
   const displayName = String(data?.displayName || "").trim();
   const bucket = String(data?.bucketKey ?? fallbackTopic ?? "").trim();
   const raw =
@@ -244,10 +246,24 @@ function buildSubjectOverviewRows(report) {
   ];
 }
 
+function chartSubjectIdFromKeyPrefix(keyPrefix) {
+  if (String(keyPrefix || "").startsWith("math_")) return "math";
+  if (String(keyPrefix || "").startsWith("geometry_")) return "geometry";
+  if (String(keyPrefix || "").startsWith("english_")) return "english";
+  if (String(keyPrefix || "").startsWith("science_")) return "science";
+  if (String(keyPrefix || "").startsWith("hebrew_")) return "hebrew";
+  if (String(keyPrefix || "").startsWith("moledet")) return "moledet-geography";
+  return "math";
+}
+
 function buildTopicRowsForChart(map, keyPrefix) {
+  const subjectId = chartSubjectIdFromKeyPrefix(keyPrefix);
   const rows = Object.entries(map || {}).map(([k, data]) => ({
     rowKey: `${keyPrefix}_${k}`,
-    label: parentReportChartLabelFromAllItemKey(`${keyPrefix}_${k}`, data),
+    rowSourceId: data?.rowSourceId || data?.rowIdentityV1?.sourceId || null,
+    label:
+      String(data?.narrativeTopicLabelHe || data?.rowIdentityV1?.narrativeTopicLabelHe || "").trim() ||
+      parentReportChartLabelFromAllItemKey(`${keyPrefix}_${k}`, data),
     accuracy: Math.round(Number(data?.accuracy) || 0),
     timeMinutes: Math.round(Number(data?.timeMinutes) || 0),
     questions: Number(data?.questions) || 0,

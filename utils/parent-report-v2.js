@@ -73,6 +73,7 @@ import {
   topicRecommendationV2CautionGatedHe,
 } from "./parent-report-language/index.js";
 import { withholdSummaryCopyHe } from "./parent-report-language/subject-withhold-summary-he.js";
+import { hardenBaseReportWithRowIdentity } from "./parent-report-output-integrity/harden-report-rows.js";
 import {
   resolveUnitHomeMethodHe,
   resolveUnitNextGoalHe,
@@ -2303,6 +2304,16 @@ export function generateParentReportV2(
     geometryAccuracy,
     moledetGeographyQuestions: moledetGeographyTotalQuestions,
     moledetGeographyAccuracy,
+  });
+
+  hardenBaseReportWithRowIdentity({
+    registeredGradeKey,
+    mathOperations,
+    geometryTopics,
+    englishTopics,
+    scienceTopics,
+    hebrewTopics,
+    moledetGeographyTopics,
   });
 
   return {
