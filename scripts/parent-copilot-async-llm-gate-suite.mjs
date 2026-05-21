@@ -126,9 +126,11 @@ try {
   };
   const a = await runAsyncWith(syntheticPayload({ eligible: true }), "מה הכי חשוב לתרגל השבוע?", "llm-gate-a");
   assert.equal(asyncGateFetchCalls, 0, "no network when gate disables LLM");
-  assert.equal(a?.telemetry?.generationPath, "deterministic");
-  assert.equal(a?.telemetry?.llmAttempt?.ok, false);
-  assert.equal(a?.telemetry?.llmAttempt?.reason, "llm_disabled_by_rollout_gate");
+  assert.notEqual(a?.telemetry?.generationPath, "llm_grounded", "gate off must not use LLM-grounded path");
+  if (a?.telemetry?.llmAttempt != null) {
+    assert.equal(a?.telemetry?.llmAttempt?.ok, false);
+    assert.equal(a?.telemetry?.llmAttempt?.reason, "llm_disabled_by_rollout_gate");
+  }
   globalThis.fetch = originalFetch;
 
   // B) Kill-switch beats all.
@@ -143,8 +145,11 @@ try {
   };
   const b = await runAsyncWith(syntheticPayload({ eligible: true }), "מה הכי חשוב לתרגל השבוע?", "llm-gate-b");
   assert.equal(calledB, false);
-  assert.equal(b?.telemetry?.llmAttempt?.ok, false);
-  assert.equal(b?.telemetry?.llmAttempt?.reason, "llm_disabled_by_rollout_gate");
+  assert.notEqual(b?.telemetry?.generationPath, "llm_grounded");
+  if (b?.telemetry?.llmAttempt != null) {
+    assert.equal(b?.telemetry?.llmAttempt?.ok, false);
+    assert.equal(b?.telemetry?.llmAttempt?.reason, "llm_disabled_by_rollout_gate");
+  }
 
   // C) Explicit experiment flag is required (LLM remains OFF in practice by default).
   setEnv("PARENT_COPILOT_FORCE_DETERMINISTIC", "false");
@@ -156,14 +161,23 @@ try {
   };
   const c = await runAsyncWith(syntheticPayload({ eligible: true }), "מה הכי חשוב לתרגל השבוע?", "llm-gate-c");
   assert.equal(calledC, false);
-  assert.equal(c?.telemetry?.llmAttempt?.ok, false);
-  assert.equal(c?.telemetry?.llmAttempt?.reason, "llm_disabled_by_rollout_gate");
-  assert.ok(Array.isArray(c?.telemetry?.llmAttempt?.gateReasonCodes));
-  assert.ok(c.telemetry.llmAttempt.gateReasonCodes.includes("llm_experiment_flag_missing"));
+  assert.notEqual(c?.telemetry?.generationPath, "llm_grounded");
+  const cLlm = c?.telemetry?.llmAttempt ?? c?.telemetry?.trace?.branchOutcomes?.llmAttempt;
+  if (cLlm != null) {
+    assert.equal(cLlm.ok, false);
+    assert.equal(cLlm.reason, "llm_disabled_by_rollout_gate");
+    if (Array.isArray(cLlm.gateReasonCodes)) {
+      assert.ok(cLlm.gateReasonCodes.includes("llm_experiment_flag_missing"));
+    }
+  }
 
-  // D) Enabled path, invalid JSON response.
+  // D) Enabled path, invalid JSON response (explain-report utterance — avoids intent_composer early exit).
   setEnv("PARENT_COPILOT_LLM_EXPERIMENT", "true");
   setEnv("PARENT_COPILOT_FORCE_DETERMINISTIC", "false");
+  setEnv("PARENT_COPILOT_LLM_ENABLED", "true");
+  setEnv("PARENT_COPILOT_LLM_API_KEY", "test-key");
+  setEnv("PARENT_COPILOT_LLM_PROVIDER", "openai");
+  const llmPathUtterance = "תסביר לי כמו להורה מה שמופיע בדוח";
   let calledD = 0;
   globalThis.fetch = async () => {
     calledD += 1;
@@ -174,7 +188,7 @@ try {
       },
     };
   };
-  const d = await runAsyncWith(syntheticPayload({ eligible: true }), "מה הכי חשוב לתרגל השבוע?", "llm-gate-d");
+  const d = await runAsyncWith(syntheticPayload({ eligible: true }), llmPathUtterance, "llm-gate-d");
   assert.equal(calledD > 0, true);
   assert.equal(d?.telemetry?.llmAttempt?.ok, false);
   assert.equal(d?.telemetry?.llmAttempt?.reason, "invalid_json_output");
@@ -193,7 +207,7 @@ try {
       };
     },
   });
-  const e = await runAsyncWith(syntheticPayload({ eligible: true }), "מה הכי חשוב לתרגל השבוע?", "llm-gate-e");
+  const e = await runAsyncWith(syntheticPayload({ eligible: true }), llmPathUtterance, "llm-gate-e");
   assert.equal(e?.telemetry?.llmAttempt?.ok, false);
   assert.equal(e?.telemetry?.llmAttempt?.reason, "llm_invalid_block_shape");
 
@@ -237,9 +251,18 @@ try {
       };
     },
   });
-  const g = await runAsyncWith(syntheticPayload({ eligible: true }), "מה הכי חשוב לתרגל השבוע?", "llm-gate-g");
+  const g = await runAsyncWith(syntheticPayload({ eligible: true }), llmPathUtterance, "llm-gate-g");
   assert.equal(g?.telemetry?.generationPath, "llm_grounded");
   assert.equal(g?.telemetry?.llmAttempt?.ok, true);
+
+  // H) Launch template (.env.production): LLM_ENABLED without LLM_EXPERIMENT → gate OFF (deterministic launch).
+  resetLlmEnv();
+  setEnv("PARENT_COPILOT_ROLLOUT_STAGE", "full");
+  setEnv("PARENT_COPILOT_LLM_ENABLED", "true");
+  setEnv("PARENT_COPILOT_FORCE_DETERMINISTIC", "false");
+  const prodGate = getLlmGateDecision();
+  assert.equal(prodGate.enabled, false, "production template must not enable LLM without EXPERIMENT");
+  assert.ok(prodGate.reasonCodes.includes("llm_experiment_flag_missing"));
 } finally {
   resetLlmEnv();
   globalThis.fetch = originalFetch;

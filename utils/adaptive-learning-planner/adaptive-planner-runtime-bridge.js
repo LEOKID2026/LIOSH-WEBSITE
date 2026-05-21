@@ -151,7 +151,7 @@ function runtimeFacetDisplayName(normalizedSubject, topicKey, topicBucketKeys) {
  * @param {string} gradeFrag g1..g6
  * @param {string} scenarioId
  */
-function buildSyntheticDiagnosticReport(practice, normalizedSubject, gradeFrag, scenarioId) {
+export function buildSyntheticDiagnosticReport(practice, normalizedSubject, gradeFrag, scenarioId) {
   const topic = String(practice.topic || "").trim();
   const topicBucketKeys = inferDefaultTopicBucketKeys(normalizedSubject, topic, practice.topicBucketKeys);
   const totalQuestions = Math.max(0, Number(practice.totalQuestions) || 0);

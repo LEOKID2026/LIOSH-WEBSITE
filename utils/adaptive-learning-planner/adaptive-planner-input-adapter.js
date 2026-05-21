@@ -264,8 +264,16 @@ export function buildPlannerInputFromDiagnosticPayload(root, options = {}) {
   let skillFromUnit = String(unit.skillId || unit.taxonomySkillId || "").trim();
   let subFromUnit = String(unit.subskillId || unit.taxonomySubskillId || "").trim();
 
+  const plannerAlignmentSubjects = new Set([
+    "english",
+    "geometry",
+    "math",
+    "hebrew",
+    "science",
+    "moledet-geography",
+  ]);
   if (
-    (subject.toLowerCase() === "english" || subject.toLowerCase() === "geometry") &&
+    plannerAlignmentSubjects.has(subject.toLowerCase()) &&
     (!skillFromUnit || !subFromUnit) &&
     options.metadataIndex &&
     typeof options.metadataIndex === "object"
@@ -273,7 +281,12 @@ export function buildPlannerInputFromDiagnosticPayload(root, options = {}) {
     const topicBucketKeys = facets?.topicLayer?.topicBucketKeys;
     const aligned = resolveDiagnosticUnitSkillAlignment(
       { ...unit, subjectId: subject },
-      { scenarioId, metadataIndex: options.metadataIndex, topicBucketKeys }
+      {
+        scenarioId,
+        metadataIndex: options.metadataIndex,
+        topicBucketKeys,
+        allowEnglishSkillRouting: subject.toLowerCase() === "english",
+      }
     );
     if (
       (aligned.confidence === "exact" || aligned.confidence === "inferred_safe") &&

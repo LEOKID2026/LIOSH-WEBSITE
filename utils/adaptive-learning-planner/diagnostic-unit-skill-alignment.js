@@ -235,6 +235,32 @@ export function validateBankTaxonomyPair(subject, skillId, subskillId) {
  * @param {string} skillId
  * @param {string} subskillId
  */
+/**
+ * Map science diagnostic topic bucket → first indexed bank skill/subskill (sci_* rows).
+ * @param {string} bucketKey
+ * @param {{ entries?: unknown[] }} [index]
+ */
+function scienceTopicPairFromMetadataIndex(bucketKey, index) {
+  if (!index || !Array.isArray(index.entries)) return null;
+  const topic = String(bucketKey || "").trim();
+  if (!topic) return null;
+  const needle = `_${topic}_`;
+  const hit = index.entries.find(
+    (e) =>
+      e &&
+      typeof e === "object" &&
+      String(e.subject || "").toLowerCase() === "science" &&
+      (String(e.skillId || "").includes(needle) ||
+        String(e.subskillId || "").includes(needle) ||
+        String(e.skillId || "") === topic)
+  );
+  if (!hit || typeof hit !== "object") return null;
+  const skillId = String(hit.skillId || "").trim();
+  const subskillId = String(hit.subskillId || "").trim();
+  if (!skillId || !subskillId) return null;
+  return { skillId, subskillId };
+}
+
 function indexHasExactPair(index, subject, skillId, subskillId) {
   if (!index || !Array.isArray(index.entries) || !skillId || !subskillId) return true;
   const sub = String(subject || "").toLowerCase();
@@ -428,6 +454,17 @@ export function resolveDiagnosticUnitSkillAlignment(unit, context = {}) {
     const bucketKey = String(unit?.bucketKey || "").trim();
     if (!bucketKey || !SCIENCE_TOPIC_ORDER.includes(bucketKey)) {
       return { ...empty(), warnings: [...warnings] };
+    }
+    const fromIndex = scienceTopicPairFromMetadataIndex(bucketKey, context.metadataIndex);
+    if (fromIndex) {
+      return {
+        subject,
+        skillId: fromIndex.skillId,
+        subskillId: fromIndex.subskillId,
+        confidence: "inferred_safe",
+        source: "topic_mapping",
+        warnings,
+      };
     }
     const skillId = bucketKey;
     const subskillId = `sci_${bucketKey}_general`;
