@@ -1,4 +1,6 @@
 // Metadata enrichment (safe pass): difficulty, cognitiveLevel, expectedErrorTypes, skillId (when no diagnostic), subtype (pool bucket when taxonomy-valid), prerequisiteSkillIds (gated). See reports/question-metadata-qa/english-metadata-apply-report.json.
+import { enrichEnglishGrammarPools } from "../../utils/english-grammar-diagnostic-metadata-enrich.js";
+
 export const GRAMMAR_POOLS = {
   "be_basic": [
     {
@@ -10768,3 +10770,5 @@ export const GRAMMAR_POOLS = {
     }
   ]
 };
+
+enrichEnglishGrammarPools(GRAMMAR_POOLS);

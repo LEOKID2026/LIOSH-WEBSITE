@@ -115,6 +115,73 @@ export const PROBE_BY_ERROR_TAG = {
     suggestedQuestionType: "english_vocab_in_context_cloze",
     reasonHe: "להשלים מילה במשפט עם הקשר ברור.",
   },
+  present_simple_3rd_singular_error: {
+    skill: "הטיית פועל בגוף שלישי בזמן הווה פשוט",
+    suggestedQuestionType: "english_subject_verb_agreement_short",
+    reasonHe: "לבודד משפטים קצרים עם he/she/it ולבחור צורת פועל מתאימה.",
+  },
+  past_tense_form_error: {
+    skill: "צורת עבר פשוט",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבחור זוגות מינימליים עבר/הווה עם אותו שורש.",
+  },
+  progressive_aspect_error: {
+    skill: "הווה מתמשך (am/is/are + V-ing)",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבדוק בחירה בין פעולה מתמשכת לבין זמן פשוט.",
+  },
+  question_word_order_error: {
+    skill: "סדר מילים בשאלה",
+    suggestedQuestionType: "english_question_frame_word_order",
+    reasonHe: "לבודד משפטי שאלה קצרים עם do/does/is/are במקום הנכון.",
+  },
+  modal_verb_error: {
+    skill: "פועלי עזר (can/must/should)",
+    suggestedQuestionType: "english_modal_minimal_pair",
+    reasonHe: "לבחור בין שני פועלי עזר במשפט קצר עם אותו פועל ראשי.",
+  },
+  quantifier_choice_error: {
+    skill: "כמותיות (some/many/much)",
+    suggestedQuestionType: "english_quantifier_minimal_pair",
+    reasonHe: "להבחין בין כמות ספירה לבין כמות לא ספירה במשפט קצר.",
+  },
+  comparative_form_error: {
+    skill: "צורת השוואה",
+    suggestedQuestionType: "english_comparative_form_short",
+    reasonHe: "לבחור -er/-est או more/most במשפט קצר.",
+  },
+  future_form_error: {
+    skill: "עתיד (will / going to)",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבחור בין will ל-going to בהקשר ברור.",
+  },
+  perfect_aspect_error: {
+    skill: "זמנים מורכבים (have/had + V3)",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבדוק צורת perfect מול זמן פשוט באותו הקשר.",
+  },
+  conditional_clause_error: {
+    skill: "משפט תנאי",
+    suggestedQuestionType: "english_conditional_clause_short",
+    reasonHe: "לבודד if/when עם צורת פועל מתאימה בגוף אחד.",
+  },
+  sentence_structure_error: {
+    skill: "מבנה משפט",
+    suggestedQuestionType: "english_subject_verb_agreement_short",
+    reasonHe: "לבודד משפטים קצרים עם סדר מילים וצורת פועל עקביים.",
+  },
+  advanced_grammar_error: {
+    skill: "דקדוק מתקדם",
+    suggestedQuestionType: "english_subject_verb_agreement_short",
+    reasonHe: "לבודד משפט אחד עם דפוס דקדוקי ברור לבדיקה.",
+  },
+};
+
+/** Shared fallback when only generic grammar_pattern_error is inferred. */
+const EN_GRAMMAR_PROBE_FALLBACK = {
+  skill: "התאמת צורת הפועל לנושא",
+  suggestedQuestionType: "english_subject_verb_agreement_short",
+  reasonHe: "לבודד משפטים קצרים עם נושא יחיד/רבים והטיית פועל מתאימה.",
 };
 
 /** @type {Record<string, ProbeHint>} */
@@ -134,6 +201,63 @@ export const PROBE_BY_DIAGNOSTIC_SKILL_ID = {
     skill: "הטיות be עם נושא",
     suggestedQuestionType: "english_be_agreement_gate",
     reasonHe: "לבודד משפטים עם I/he/they ולבחור צורת be מתאימה.",
+  },
+  en_grammar_present_simple: {
+    skill: "הווה פשוט — התאמת נושא לפועל",
+    suggestedQuestionType: "english_subject_verb_agreement_short",
+    reasonHe: "לבודד משפטים קצרים עם he/she/it ולבחור צורת פועל מתאימה.",
+  },
+  en_grammar_past_simple: {
+    skill: "עבר פשוט",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבחור זוגות מינימליים עבר/הווה עם אותו שורש.",
+  },
+  en_grammar_progressive: {
+    skill: "הווה מתמשך",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבדוק בחירה בין פעולה מתמשכת לבין זמן פשוט.",
+  },
+  en_grammar_question_frames: {
+    skill: "מסגרות שאלה",
+    suggestedQuestionType: "english_question_frame_word_order",
+    reasonHe: "לבודד משפטי שאלה קצרים עם do/does/is/are במקום הנכון.",
+  },
+  en_grammar_modals: {
+    skill: "פועלי עזר",
+    suggestedQuestionType: "english_modal_minimal_pair",
+    reasonHe: "לבחור בין שני פועלי עזר במשפט קצר.",
+  },
+  en_grammar_quantifiers: {
+    skill: "כמותיות",
+    suggestedQuestionType: "english_quantifier_minimal_pair",
+    reasonHe: "להבחין בין some/many/much במשפט קצר.",
+  },
+  en_grammar_comparatives: {
+    skill: "השוואה",
+    suggestedQuestionType: "english_comparative_form_short",
+    reasonHe: "לבחור צורת השוואה במשפט קצר.",
+  },
+  en_grammar_future_forms: {
+    skill: "עתיד",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבחור בין will ל-going to בהקשר ברור.",
+  },
+  en_grammar_complex_tenses: {
+    skill: "זמנים מורכבים",
+    suggestedQuestionType: "english_tense_minimal_pair",
+    reasonHe: "לבדוק perfect מול זמן פשוט באותו הקשר.",
+  },
+  en_grammar_conditionals: {
+    skill: "תנאי",
+    suggestedQuestionType: "english_conditional_clause_short",
+    reasonHe: "לבודד if/when עם צורת פועל מתאימה.",
+  },
+  /** phase29 standard/advanced: intentional generic grammar probe (no separate UI type). */
+  en_grammar_phase29_standard: EN_GRAMMAR_PROBE_FALLBACK,
+  en_grammar_phase29_advanced: {
+    ...EN_GRAMMAR_PROBE_FALLBACK,
+    skill: "דקדוק מתקדם — שלב ביניים",
+    reasonHe: "לבודד משפט אחד עם דפוס דקדוקי ברור לבדיקה.",
   },
   he_comp_explicit_detail: {
     skill: "שליפת פרט מפורש מטקסט קצר",

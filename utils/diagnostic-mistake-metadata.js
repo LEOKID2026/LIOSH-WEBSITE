@@ -102,6 +102,13 @@ function extractParamsLikeFields(question) {
   const patternFamily =
     pick("patternFamily", "patternFamily") ??
     pick("semanticFamily", "semanticFamily");
+  const rawTags = params.expectedErrorTags ?? question.expectedErrorTags;
+  /** @type {string[]|undefined} */
+  let expectedErrorTags;
+  if (Array.isArray(rawTags)) {
+    const arr = rawTags.map((t) => String(t).trim()).filter(Boolean);
+    if (arr.length) expectedErrorTags = arr;
+  }
   return {
     patternFamily: patternFamily ?? undefined,
     semanticFamily: strOrNull(params.semanticFamily ?? question.semanticFamily) ?? undefined,
@@ -113,6 +120,9 @@ function extractParamsLikeFields(question) {
       strOrNull(question.diagnosticSkillId) ??
       strOrNull(params.diagnosticSkillId) ??
       undefined,
+    expectedErrorTags,
+    probePower: pick("probePower", "probePower") ?? undefined,
+    nextProbeSkillId: pick("nextProbeSkillId", "nextProbeSkillId") ?? undefined,
   };
 }
 

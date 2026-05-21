@@ -564,12 +564,14 @@ async function auditEnglish(results) {
         
         // Check metadata
         let hasPatternFamily = 0;
+        let hasConceptTag = 0;
         let hasDiagnosticSkillId = 0;
         let hasExpectedErrorTags = 0;
         let isProbeCapable = 0;
         
         for (const item of levelItems) {
           if (item.patternFamily) hasPatternFamily++;
+          if (item.conceptTag) hasConceptTag++;
           if (item.diagnosticSkillId) hasDiagnosticSkillId++;
           if (item.expectedErrorTags?.length || item.expectedErrorTypes?.length) hasExpectedErrorTags++;
           if (item.diagnosticSkillId && (item.expectedErrorTags?.length || item.expectedErrorTypes?.length)) isProbeCapable++;
@@ -618,7 +620,7 @@ async function auditEnglish(results) {
           duplicateCount: staticCount - uniqueCount,
           metadataCoverage: {
             patternFamily: Math.round((hasPatternFamily / total) * 100),
-            conceptTag: Math.round((hasDiagnosticSkillId / total) * 100),
+            conceptTag: Math.round((hasConceptTag / total) * 100),
             diagnosticSkillId: Math.round((hasDiagnosticSkillId / total) * 100),
             expectedErrorTags: Math.round((hasExpectedErrorTags / total) * 100),
             probePower: Math.round((hasDiagnosticSkillId / total) * 100)

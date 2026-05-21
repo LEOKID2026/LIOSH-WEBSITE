@@ -197,6 +197,7 @@
     "qa:product-simulation:launch-rehearsal-summary": "tsx scripts/product-simulation/build-full-product-launch-rehearsal-summary.mjs",
     "qa:parent-ai:re-audit-mass-output": "tsx scripts/parent-ai-mass-simulation/re-audit-mass-simulation-output.mjs",
     "test:diagnostic-engine-v2-harness": "tsx scripts/diagnostic-engine-v2-harness.mjs",
+    "test:english-grammar-diagnostic-e2e": "node scripts/certify-english-grammar-diagnostic-e2e.mjs",
     "test:ai-hybrid-harness": "tsx scripts/ai-hybrid-harness.mjs",
     "ai-hybrid:review-export": "tsx scripts/ai-hybrid-review-case-export.ts",
     "ai-hybrid:generate-gold": "tsx scripts/ai-hybrid-generate-synthetic-gold.mjs",

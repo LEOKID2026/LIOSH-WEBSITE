@@ -55,6 +55,20 @@ export function inferNormalizedTags(ev, subjectId) {
     if (pf.includes("grammar") || ct.includes("grammar")) add("grammar_pattern_error");
     if (pf.includes("spell") || ct.includes("spell")) add("spelling_pattern_error");
     if (pf.includes("read") || ct.includes("rc")) add("reading_comprehension_gap");
+    // Safety when bank tags missing but enriched conceptTag prefix is present.
+    if (ct.startsWith("english_present_simple")) add("present_simple_3rd_singular_error");
+    else if (ct.startsWith("english_past_simple")) add("past_tense_form_error");
+    else if (ct.startsWith("english_progressive")) add("progressive_aspect_error");
+    else if (ct.startsWith("english_question_frames")) add("question_word_order_error");
+    else if (ct.startsWith("english_modals")) add("modal_verb_error");
+    else if (ct.startsWith("english_quantifiers")) add("quantifier_choice_error");
+    else if (ct.startsWith("english_comparatives")) add("comparative_form_error");
+    else if (ct.startsWith("english_future_forms")) add("future_form_error");
+    else if (ct.startsWith("english_complex_tenses")) add("perfect_aspect_error");
+    else if (ct.startsWith("english_conditionals")) add("conditional_clause_error");
+    else if (ct.startsWith("english_phase29_advanced")) add("advanced_grammar_error");
+    else if (ct.startsWith("english_phase29_standard")) add("sentence_structure_error");
+    else if (ct.startsWith("english_be_agreement")) add("grammar_pattern_error");
   }
 
   if (sid === "hebrew") {
