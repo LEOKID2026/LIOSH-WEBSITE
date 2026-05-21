@@ -263,6 +263,7 @@ function composeReportExplanation(params) {
     .filter((m) => m.q >= STRONG_Q_MIN && m.acc <= WEAK_ACC_MAX)
     .sort((a, b) => a.acc - b.acc || b.q - a.q)
     .slice(0, 2);
+  const allThin = metas.length > 0 && metas.every((m) => m.q < STRONG_Q_MIN);
   const unpracticed = unpracticedSubjectLabels(payload);
 
   const practicedPhrase =
@@ -292,12 +293,32 @@ function composeReportExplanation(params) {
     meaningParts.push(`מקצועות שלא תורגלו בתקופה: ${unpracticed.join(", ")}.`);
   }
 
-  const action =
+  let action =
     weak.length > 0
       ? `השבוע: תרגול ממוקד 5–10 דקות ביום סביב ${weak[0].displayName}, ואז לבדוק אם הדיוק עולה.`
       : strong.length > 0
         ? "השבוע: לשמר תרגול קצר ושגרתי בנושאים החזקים, ולעקוב שהכיוון נשמר."
         : "השבוע: להוסיף תרגול קצר ממוקד בנושא אחד, ואז לחזור לשאול שוב על הדוח.";
+  if (allThin) {
+    const primary = metas[0];
+    let unc = "";
+    for (const sp of Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : []) {
+      if (primary?.sid && normalizeSubjectId(sp?.subject) !== primary.sid) continue;
+      for (const tr of Array.isArray(sp?.topicRecommendations) ? sp.topicRecommendations : []) {
+        const u = tr?.contractsV1?.narrative?.textSlots?.uncertainty;
+        if (u) {
+          unc = String(u).trim();
+          break;
+        }
+      }
+      if (unc) break;
+    }
+    if (unc) action = unc;
+    else if (primary) {
+      meaningParts.push(meaningHeForPolarity(primary.displayName, primary.q, primary.acc));
+      action = "נכון לעכשיו כדאי לאסוף עוד תרגול לפני החלטה.";
+    }
+  }
 
   return {
     answerBlocks: [
@@ -405,6 +426,43 @@ function composeMistakePattern(params) {
   }
 
   const unit = findDiagnosticUnitForIntelligence(payload, subjectId, scopeId);
+  const rowMetricsList = collectPracticeMetrics(payload).filter(
+    (m) => (!scopeId || m.topicRowKey === scopeId) && (!subjectId || m.sid === subjectId),
+  );
+  const primaryRow = rowMetricsList.sort((a, b) => a.acc - b.acc || b.q - a.q)[0];
+  const q = primaryRow?.q ?? (Number(truthPacket?.surfaceFacts?.questions) || 0);
+  const acc = primaryRow?.acc ?? (Number(truthPacket?.surfaceFacts?.accuracy) || 0);
+  const polarity = classifyPracticePolarity(q, acc);
+  if (polarity === POLARITY.thin || polarity === POLARITY.none) {
+    const label = String(displayName || primaryRow?.displayName || "הנושא").trim();
+    const unc =
+      payload?.subjectProfiles
+        ?.flatMap((sp) => sp?.topicRecommendations || [])
+        ?.find((tr) => String(tr?.topicRowKey || "") === scopeId || String(tr?.displayName || "") === label)
+        ?.contractsV1?.narrative?.textSlots?.uncertainty || "";
+    return {
+      answerBlocks: [
+        {
+          type: "observation",
+          textHe: `ב${label} יש ${q} שאלות בטווח התקופה — עדיין מעט נתון.`,
+          source: "intent_composer",
+        },
+        {
+          type: "meaning",
+          textHe: meaningHeForPolarity(label, q, acc),
+          source: "intent_composer",
+        },
+        {
+          type: "action",
+          textHe: String(unc || "").trim() || "נכון לעכשיו כדאי לאסוף עוד תרגול לפני החלטה.",
+          source: "intent_composer",
+        },
+      ],
+      plannerIntent: "what_is_still_difficult",
+      answerComposerUsed: ANSWER_CONTRACT.mistake_pattern,
+    };
+  }
+
   const patternHe = extractMistakePatternHeFromUnit(unit);
   const diagLine =
     unit?.diagnosis?.allowed !== false ? String(unit?.diagnosis?.lineHe || "").trim() : "";
@@ -466,6 +524,13 @@ function composeHomePractice(params) {
   const truthPacket = params.truthPacket;
   const displayName = String(truthPacket?.scopeLabel || truthPacket?.surfaceFacts?.displayName || "הנושא").trim();
   const utterance = foldUtteranceForHeMatch(String(params?.utteranceStr || ""));
+  const q = Math.max(0, Number(truthPacket?.surfaceFacts?.questions) || 0);
+  const acc = Math.max(0, Math.min(100, Math.round(Number(truthPacket?.surfaceFacts?.accuracy) || 0)));
+  const cannot = truthPacket?.derivedLimits?.cannotConcludeYet === true;
+  const recEligible = truthPacket?.derivedLimits?.recommendationEligible !== false;
+  if (cannot || !recEligible || classifyPracticePolarity(q, acc) === POLARITY.thin) {
+    return null;
+  }
   const duration =
     /כמה\s*זמן/u.test(utterance) ? "5–10 דקות ביום, לא יותר" : "בערך 5–10 דקות ביום";
 
