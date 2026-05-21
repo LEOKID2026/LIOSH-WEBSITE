@@ -1,5 +1,7 @@
 # Learning simulator QA
 
+> **Launch certification:** Full orchestrator PASS and **critical-deep** / **profile-stress** closure are recorded in **[FULL_LAUNCH_READINESS_STATUS.md](./FULL_LAUNCH_READINESS_STATUS.md)** (2026-05-21).
+
 This document describes the **unified learning-simulator quality gates**: what they validate, how to run them, where artifacts land, and what they **do not** prove.
 
 ## What the simulator does (high level)

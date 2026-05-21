@@ -1,5 +1,7 @@
 # Learning Site Launch Readiness Audit
 
+> **Superseded for launch decision:** Point-in-time audit snapshot. Current certified status: **[docs/FULL_LAUNCH_READINESS_STATUS.md](docs/FULL_LAUNCH_READINESS_STATUS.md)** (automated gates, 2026-05-21).
+
 **Date:** 2026-05-21
 **Scope:** Full system audit - NO CODE CHANGES MADE
 **Auditor:** Cascade AI

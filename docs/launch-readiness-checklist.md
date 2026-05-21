@@ -1,5 +1,7 @@
 # Launch Readiness Checklist (Hebrew Learning Website)
 
+> **Automated certification (2026-05-21):** See **[FULL_LAUNCH_READINESS_STATUS.md](./FULL_LAUNCH_READINESS_STATUS.md)** for the closed gate record, command table, and re-run instructions. This file remains the **manual** browser/product-flow checklist for owner smoke before public rollout.
+
 Scope: documentation-only pre-launch checklist prepared during running simulation.
 
 ## Product Flows And Features
