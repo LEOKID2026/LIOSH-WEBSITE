@@ -249,7 +249,7 @@ async function auditGeometry(results) {
         // SAMPLE GENERATOR: Generate multiple questions to count actual unique capacity
         const sampledQuestions = new Set();
         const sampledMetadata = [];
-        const sampleSize = 100; // Generate 100 samples to estimate capacity (increased from 50)
+        const sampleSize = 200; // Generate 200 samples to estimate capacity (increased from 100)
         
         for (let i = 0; i < sampleSize; i++) {
           try {
