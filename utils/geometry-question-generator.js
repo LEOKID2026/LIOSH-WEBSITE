@@ -6,6 +6,7 @@ import {
   geometryConceptualProbability,
 } from "./geometry-conceptual-bank.js";
 import { gradeBandForKey } from "./grade-gating.js";
+import { enrichGeometryProceduralParams } from "./geometry-diagnostic-metadata-bridge.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 
 function shuffleMcqList(answers) {
@@ -2087,13 +2088,19 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
     ? String(Math.round(Number(correctAnswer)))
     : correctAnswer;
 
+  const enrichedParams = enrichGeometryProceduralParams(params, {
+    topic: selectedTopic,
+    gradeKey,
+    levelKey,
+  });
+
   return sanitizeQuestionForStudentDisplay({
     question,
     correctAnswer: resolvedCorrect,
     answers: shuffledAnswers,
     topic: selectedTopic,
     shape,
-    params,
+    params: enrichedParams,
   });
 }
 

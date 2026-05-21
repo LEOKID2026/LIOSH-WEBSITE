@@ -391,6 +391,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "same_perimeter",
     "conceptTag": "compare_area",
     "distractorFamily": "comparison_trap",
+    "diagnosticSkillId": "geo_rect_area_plan",
+    "expectedErrorTags": [
+      "compare_area",
+      "same_perimeter_area_trap",
+      "visual_reasoning_error"
+    ],
     "question": "שני מלבנים שונים עם אותו היקף. מה נכון לגבי השטח שלהם?",
     "correct": "השטחים יכולים להיות שונים",
     "options": [
@@ -448,6 +454,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "inference_reasoning",
     "conceptTag": "tri_sum_180_late",
     "distractorFamily": "angle_misconception",
+    "diagnosticSkillId": "geo_angle_measure",
+    "expectedErrorTags": [
+      "tri_sum_180_late",
+      "triangle_angle_sum_error",
+      "angle_measure_error"
+    ],
     "question": "במשולש במישור, שתי זוויות פנימיות ידועות (למשל 50° ו־60°). לפני חישוב המספר המדויק — איזה עיקרון גיאומטרי מאפשר להסיק על השלישית?",
     "correct": "סכום שלוש הזוויות במשולש הוא 180°",
     "options": [
@@ -544,6 +556,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "concept_only",
     "conceptTag": "corresponding",
     "distractorFamily": "parallel_confusion",
+    "diagnosticSkillId": "geo_angle_measure",
+    "expectedErrorTags": [
+      "corresponding",
+      "parallel_corresponding_angle_error",
+      "angle_equality_error"
+    ],
     "question": "שני ישרים מקבילים חותכים על ידי קו חוצה. זוג זוויות מתאימות (באותו מיקום יחסי) — מה הקשר ביניהן?",
     "correct": "שוות בגודל",
     "options": [
@@ -631,6 +649,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "parallelogram",
     "conceptTag": "para_parallel",
     "distractorFamily": "shape_family",
+    "diagnosticSkillId": "geo_quad_properties",
+    "expectedErrorTags": [
+      "para_parallel",
+      "opposite_sides_parallel_error",
+      "shape_property_misread"
+    ],
     "question": "במקבילית, כל זוג צלעות נגדיות:",
     "correct": "מקבילות ושוות באורך",
     "options": [
@@ -661,6 +685,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "parallelogram_late",
     "conceptTag": "para_parallel_late",
     "distractorFamily": "shape_family",
+    "diagnosticSkillId": "geo_quad_properties",
+    "expectedErrorTags": [
+      "para_parallel_late",
+      "opposite_sides_parallel_error",
+      "shape_property_misread"
+    ],
     "question": "במקבילית במישור — לגבי זוגות צלעות נגדיות נכון לומר שהם:",
     "correct": "מקבילות ושוות באורך",
     "options": [
@@ -690,6 +720,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "square_rectangle",
     "conceptTag": "square_special",
     "distractorFamily": "hierarchy_confusion",
+    "diagnosticSkillId": "geo_quad_classification",
+    "expectedErrorTags": [
+      "square_special",
+      "hierarchy_inclusion_error",
+      "shape_family_mislabel"
+    ],
     "question": "כל ריבוע הוא גם:",
     "correct": "מלבן",
     "options": [
@@ -719,6 +755,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "square_rectangle_late",
     "conceptTag": "square_special_late",
     "distractorFamily": "hierarchy_confusion",
+    "diagnosticSkillId": "geo_quad_classification",
+    "expectedErrorTags": [
+      "square_special_late",
+      "hierarchy_inclusion_error",
+      "shape_family_mislabel"
+    ],
     "question": "במושגי הכללה: לכל ריבוע יש תכונות של:",
     "correct": "מלבן",
     "options": [
@@ -749,6 +791,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "meaning",
     "conceptTag": "mirror",
     "distractorFamily": "transform_confusion",
+    "diagnosticSkillId": "geo_symmetry_reflection",
+    "expectedErrorTags": [
+      "mirror",
+      "reflection_vs_rotation_confusion",
+      "transform_confusion"
+    ],
     "question": "שיקוף מול ציר סימטרייה דומה בעיקר ל:",
     "correct": "תמונה במראה",
     "options": [
@@ -779,6 +827,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "meaning_axis",
     "conceptTag": "mirror_late",
     "distractorFamily": "transform_confusion",
+    "diagnosticSkillId": "geo_symmetry_reflection",
+    "expectedErrorTags": [
+      "mirror_late",
+      "reflection_vs_rotation_confusion",
+      "transform_confusion"
+    ],
     "question": "שיקוף ביחס לציר סימטרייה — הדימוי הקרוב ביותר הוא:",
     "correct": "תמונה במראה",
     "options": [
@@ -809,6 +863,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "same_size_shape",
     "conceptTag": "congruent_def",
     "distractorFamily": "congruence_vs_similar",
+    "diagnosticSkillId": "geo_symmetry_reflection",
+    "expectedErrorTags": [
+      "congruent_def",
+      "congruence_vs_similarity_error",
+      "transform_confusion"
+    ],
     "question": "שתי צורות חופפות אומרות ש:",
     "correct": "אותו צורה ואותו גודל (אפשר להניח אחת על השנייה)",
     "options": [
@@ -954,6 +1014,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "definition",
     "conceptTag": "volume_3d",
     "distractorFamily": "dimension_confusion",
+    "diagnosticSkillId": "geo_volume_unit_reasoning",
+    "expectedErrorTags": [
+      "volume_3d",
+      "dimension_confusion",
+      "measurement_error"
+    ],
     "question": "נפח של תיבה מבטא בעיקר:",
     "correct": "כמה מקום תפוס בתוך התיבה (שלושה ממדים)",
     "options": [
@@ -983,6 +1049,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "definition_capacity",
     "conceptTag": "volume_3d_late",
     "distractorFamily": "dimension_confusion",
+    "diagnosticSkillId": "geo_volume_unit_reasoning",
+    "expectedErrorTags": [
+      "volume_3d_late",
+      "dimension_confusion",
+      "measurement_error"
+    ],
     "question": "כשמדברים על נפח של תיבה סגורה — מה המשמעות הגיאומטרית העיקרית?",
     "correct": "כמה מקום תפוס בתוך התיבה (שלושה ממדים)",
     "options": [
@@ -1012,6 +1084,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "order_ops",
     "conceptTag": "vol_box",
     "distractorFamily": "formula_order",
+    "diagnosticSkillId": "geo_volume_prism_formula",
+    "expectedErrorTags": [
+      "vol_box",
+      "formula_selection_error",
+      "volume_unit_error"
+    ],
     "question": "תיבה מלבנית: קודם כל רוצים את הנפח. מה סדר חישוב סביר?",
     "correct": "אורך × רוחב × גובה",
     "options": [
@@ -1075,6 +1153,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "interpret",
     "conceptTag": "wheel_rotation",
     "distractorFamily": "circle_measure_confusion",
+    "diagnosticSkillId": "geo_perimeter_formula",
+    "expectedErrorTags": [
+      "wheel_rotation",
+      "circumference_vs_area_confusion",
+      "measurement_error"
+    ],
     "question": "כמה מטרים עובר גלגל אופניים במסלול מעגלי אחד מלא — זה קשור בעיקר ל:",
     "correct": "היקף (היקף המעגל)",
     "options": [
@@ -1426,6 +1510,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "square_count",
     "conceptTag": "square_4_equal",
     "distractorFamily": "count_confusion",
+    "diagnosticSkillId": "geo_shape_classification",
+    "expectedErrorTags": [
+      "square_4_equal",
+      "polygon_side_count_error",
+      "careless_error"
+    ],
     "question": "לריבוע יש כמה צלעות?",
     "correct": "4",
     "options": [
@@ -1455,6 +1545,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "square_count_mid",
     "conceptTag": "square_4_equal_mid",
     "distractorFamily": "count_confusion",
+    "diagnosticSkillId": "geo_shape_classification",
+    "expectedErrorTags": [
+      "square_4_equal_mid",
+      "polygon_side_count_error",
+      "careless_error"
+    ],
     "question": "בצורה מרובעת עם כל הצלעות שוות (ריבוע) — כמה צלעות יש?",
     "correct": "4",
     "options": [
@@ -1484,6 +1580,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "rectangle_angles",
     "conceptTag": "rect_all_90",
     "distractorFamily": "polar",
+    "diagnosticSkillId": "geo_shape_properties",
+    "expectedErrorTags": [
+      "rect_all_90",
+      "right_angle_property_error",
+      "shape_property_misread"
+    ],
     "binary": true,
     "question": "במלבן כל ארבע הזוויות הפנימיות ישרות (90°). נכון או לא נכון?",
     "correct": "נכון",
@@ -1512,6 +1614,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "rectangle_angles_mid",
     "conceptTag": "rect_all_90_mid",
     "distractorFamily": "polar",
+    "diagnosticSkillId": "geo_shape_properties",
+    "expectedErrorTags": [
+      "rect_all_90_mid",
+      "right_angle_property_error",
+      "shape_property_misread"
+    ],
     "binary": true,
     "question": "במלבן במישור, כל ארבע הזוויות הפנימיות ישרות (90°). נכון או לא נכון?",
     "correct": "נכון",
@@ -1540,6 +1648,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "rhombus_rectangle",
     "conceptTag": "not_always_both",
     "distractorFamily": "polar",
+    "diagnosticSkillId": "geo_quad_classification",
+    "expectedErrorTags": [
+      "not_always_both",
+      "rhombus_rectangle_overgeneralization",
+      "shape_family_mislabel"
+    ],
     "binary": true,
     "question": "כל מעוין הוא תמיד גם מלבן. נכון או לא נכון?",
     "correct": "לא נכון",
@@ -1568,6 +1682,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "rhombus_rectangle_late",
     "conceptTag": "not_always_both_late",
     "distractorFamily": "polar",
+    "diagnosticSkillId": "geo_quad_classification",
+    "expectedErrorTags": [
+      "not_always_both_late",
+      "rhombus_rectangle_overgeneralization",
+      "shape_family_mislabel"
+    ],
     "binary": true,
     "question": "טענה: כל מעוין הוא בהכרח גם מלבן. נכון או לא נכון?",
     "correct": "לא נכון",
@@ -1596,6 +1716,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "obtuse_count",
     "conceptTag": "one_obtuse_max",
     "distractorFamily": "polar",
+    "diagnosticSkillId": "geo_triangle_properties",
+    "expectedErrorTags": [
+      "one_obtuse_max",
+      "obtuse_angle_misconception",
+      "triangle_angle_type_error"
+    ],
     "binary": true,
     "question": "במשולש יכולות להיות שתי זוויות כהות (גדולות מ־90°). נכון או לא נכון?",
     "correct": "לא נכון",
@@ -1711,6 +1837,12 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "square_from_perimeter",
     "conceptTag": "perim_to_side",
     "distractorFamily": "algebra_misstep",
+    "diagnosticSkillId": "geo_perimeter_formula",
+    "expectedErrorTags": [
+      "perim_to_side",
+      "side_from_perimeter_error",
+      "formula_selection_error"
+    ],
     "question": "לריבוע היקף 20 ס״מ. מה נכון לגבי אורך צלע?",
     "correct": "אורך צלע הוא 5 ס״מ (כי 20 ÷ 4 = 5)",
     "options": [
