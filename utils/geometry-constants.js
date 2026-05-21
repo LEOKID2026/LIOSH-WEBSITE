@@ -159,7 +159,7 @@ export const GRADES = {
   },
   g6: {
     name: "כיתה ו'",
-    topics: ["solids", "circles", "volume", "area", "perimeter", "angles", "pythagoras", "mixed"], // גופים, מעגל ועיגול, חישובי נפחים, שטח, היקף, זוויות, פיתגורס, ערבוב
+    topics: ["solids", "circles", "volume", "area", "perimeter", "angles", "triangles", "symmetry", "pythagoras", "mixed"], // גופים, מעגל ועיגול, חישובי נפחים, שטח, היקף, זוויות, משולשים, סימטרייה, פיתגורס, ערבוב
     shapes: ["square", "rectangle", "triangle", "circle", "parallelogram", "trapezoid", "cylinder", "sphere", "cube", "rectangular_prism", "pyramid", "cone", "prism"],
   },
 };
@@ -201,6 +201,7 @@ export const TOPIC_SHAPES = {
   },
   triangles: {
     g3: ["triangle"],
+    g6: ["triangle"],
   },
   quadrilaterals: {
     g3: ["square", "rectangle", "quadrilateral"],
@@ -215,6 +216,7 @@ export const TOPIC_SHAPES = {
   },
   symmetry: {
     g4: ["square", "rectangle", "triangle"],
+    g6: ["square", "rectangle", "triangle"],
   },
   diagonal: {
     g4: ["square", "rectangle"], // אלכסון - כיתה ד'

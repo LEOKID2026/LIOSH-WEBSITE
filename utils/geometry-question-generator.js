@@ -1715,7 +1715,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
       const shapes = ["ריבוע", "מלבן", "משולש שווה צלעות"];
       const selectedShape = shapes[Math.floor(Math.random() * shapes.length)];
       const axes = selectedShape === "ריבוע" ? 4 : selectedShape === "מלבן" ? 2 : 3;
-      const symW = Math.floor(Math.random() * (formulaBand === "mid" ? 8 : 16));
+      const pickSymStem = (stems) =>
+        stems[Math.floor(Math.random() * stems.length)];
+      const symW = Math.floor(Math.random() * 8);
       
       params = {
         shape: selectedShape,
@@ -1760,7 +1762,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
                   `הוכחת מספר צירים: ${selectedShape} — כמה?`,
                 ][symW];
       } else if (levelKey === "easy") {
-        question = [
+        question = pickSymStem([
           `כמה צירי סימטרייה יש לצורה ${selectedShape}?`,
           `ספירת צירים: ${selectedShape} — כמה צירי שיקוף?`,
           `בדיקה: מספר צירי סימטרייה ל${selectedShape}.`,
@@ -1773,9 +1775,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           `בדיקת סימטרייה: ${selectedShape} — מספר צירים?`,
           `חקר צירי שיקוף: ${selectedShape}.`,
           `ניתוח צירים: ${selectedShape} — כמה צירי סימטרייה?`,
-        ][symW];
+        ]);
       } else if (levelKey === "medium") {
-        question = [
+        question = pickSymStem([
           `כמה צירי סימטרייה (התאמות) יש לצורה ${selectedShape}?`,
           `ניתוח: מספר צירי שיקוף ל${selectedShape}.`,
           `בדיקת התאמה: צירי סימטרייה ל${selectedShape}.`,
@@ -1788,9 +1790,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           `ניתוח מעמיק: ${selectedShape} — כמה צירים?`,
           `חקר מדויק: צירי סימטרייה ל${selectedShape}.`,
           `הבנת צירי שיקוף: ${selectedShape}.`,
-        ][symW];
+        ]);
       } else {
-        question = [
+        question = pickSymStem([
           `בשלב אתגר — כמה צירי סימטרייה יש ל${selectedShape}?`,
           `אתגר: מספר צירי שיקוף ל${selectedShape}.`,
           `ניתוח מתקדם: צירי סימטרייה ל${selectedShape}.`,
@@ -1803,7 +1805,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           `אתגר ניתוח: צירי סימטרייה ב${selectedShape}.`,
           `חקר מתקדם: מספר צירים ל${selectedShape}.`,
           `הבנת מעמיקה: צירי שיקוף ל${selectedShape}.`,
-        ][symW];
+        ]);
       }
       break;
     }
