@@ -9931,6 +9931,20 @@ export const GRAMMAR_POOLS = {
       "expectedErrorTypes": ["grammar_error", "grammar_pattern_error", "careless_error"],
       "skillId": "phase29_g3_adv_11",
       "subtype": "phase29_g3_advanced"
+    },
+    {
+      "minGrade": 3,
+      "maxGrade": 3,
+      "patternFamily": "phase29_g3_adv_12",
+      "question": "Choose: \"Nobody ___ the answer yet\"",
+      "options": ["know", "knows", "knowing"],
+      "correct": "knows",
+      "explanation": "Nobody → נושא יחיד → knows.",
+      "difficulty": "advanced",
+      "cognitiveLevel": "application",
+      "expectedErrorTypes": ["grammar_error", "grammar_pattern_error", "careless_error"],
+      "skillId": "phase29_g3_adv_12",
+      "subtype": "phase29_g3_advanced"
     }
   ],
   "phase29_g4_advanced": [
@@ -10086,6 +10100,20 @@ export const GRAMMAR_POOLS = {
       "cognitiveLevel": "application",
       "expectedErrorTypes": ["grammar_error", "grammar_pattern_error", "careless_error"],
       "skillId": "phase29_g4_adv_11",
+      "subtype": "phase29_g4_advanced"
+    },
+    {
+      "minGrade": 4,
+      "maxGrade": 4,
+      "patternFamily": "phase29_g4_adv_12",
+      "question": "Choose: \"Neither of the answers ___ correct\"",
+      "options": ["is", "are", "am"],
+      "correct": "is",
+      "explanation": "Neither of → נושא יחיד → is.",
+      "difficulty": "advanced",
+      "cognitiveLevel": "application",
+      "expectedErrorTypes": ["grammar_error", "grammar_pattern_error", "careless_error"],
+      "skillId": "phase29_g4_adv_12",
       "subtype": "phase29_g4_advanced"
     }
   ],
