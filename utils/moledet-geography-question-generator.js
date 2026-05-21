@@ -1,5 +1,8 @@
-import { GRADES, TOPICS } from './moledet-geography-constants';
+import { GRADES, TOPICS } from './moledet-geography-constants.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
+import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contract.js';
+import { moledetDiagnosticContractFromBankRow } from './moledet-geography-diagnostic-metadata-bridge.js';
+import { selectQuestionWithProbe } from './active-diagnostic-runtime/select-with-probe.js';
 import {
   G1_EASY_QUESTIONS,
   G1_MEDIUM_QUESTIONS,
@@ -49,7 +52,13 @@ const questionsMap = {
  * @param {string} topic
  * @returns {Array<{ question: string, answers: string[], correct: number }>}
  */
-function listTopicQuestionsForGradeLevel(gradeKey, levelKey, topic) {
+/** @param {Record<string, unknown>} row @param {string} topic */
+export function moledetBankRowKey(row, topic) {
+  const stem = String(row?.question || "").trim().slice(0, 48);
+  return `${topic}:${stem}`;
+}
+
+export function listTopicQuestionsForGradeLevel(gradeKey, levelKey, topic) {
   const key = `${String(gradeKey).toUpperCase()}_${String(levelKey).toUpperCase()}_QUESTIONS`;
   const questionsPool = questionsMap[key];
   if (!questionsPool || typeof questionsPool !== "object") {
@@ -68,6 +77,22 @@ function shuffleAnswersAndBuild(randomQ, selectedTopic, gradeKey, levelKey, uiLe
   const correctAnswer = randomQ.answers[randomQ.correct];
   const newCorrectIndex = shuffledAnswers.findIndex((ans) => ans === correctAnswer);
   const contentPoolLevel = levelKey;
+  const diag = moledetDiagnosticContractFromBankRow(
+    /** @type {Record<string, unknown>} */ (randomQ),
+    selectedTopic
+  );
+  const params = mergeDiagnosticContractIntoParams(
+    {
+      kind: selectedTopic,
+      grade: gradeKey,
+      gradeKey,
+      levelKey,
+      uiLevel,
+      contentPoolLevel,
+      poolFallbackCode,
+    },
+    diag
+  );
   return sanitizeQuestionForStudentDisplay({
     question: randomQ.question,
     questionLabel: "",
@@ -81,15 +106,11 @@ function shuffleAnswersAndBuild(randomQ, selectedTopic, gradeKey, levelKey, uiLe
     levelKey,
     a: null,
     b: null,
-    params: {
-      kind: selectedTopic,
-      grade: gradeKey,
-      gradeKey,
-      levelKey,
-      uiLevel,
-      contentPoolLevel,
-      poolFallbackCode,
-    },
+    params,
+    id: moledetBankRowKey(
+      /** @type {Record<string, unknown>} */ (randomQ),
+      selectedTopic
+    ),
   });
 }
 
@@ -122,10 +143,12 @@ function buildEmptyPoolResult(gradeKey, uiLevel) {
   };
 }
 
-// ========== פונקציה עיקרית ליצירת שאלה ==========
-export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = null) {
+/**
+ * Resolve pool for grade/level/topic (same fallback rules as generateQuestion).
+ * @returns {{ topicQuestions: object[], resolvedTopic: string, poolFallbackCode: string }}
+ */
+export function resolveMoledetTopicPool(levelConfig, topic, gradeKey, mixedTopics = null) {
   const gradeCfg = GRADES[gradeKey] || GRADES.g3;
-
   let allowedTopics = gradeCfg.topics.filter((t) => t !== "mixed");
   if (mixedTopics) {
     allowedTopics = allowedTopics.filter((t) => mixedTopics[t]);
@@ -133,18 +156,14 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
   if (allowedTopics.length === 0) {
     allowedTopics = ["homeland", "community", "citizenship", "geography", "values", "maps"];
   }
-
   const isMixed = topic === "mixed";
   let selectedTopic = topic;
-
   if (isMixed) {
     selectedTopic = allowedTopics[Math.floor(Math.random() * allowedTopics.length)];
   }
-
   if (!allowedTopics.includes(selectedTopic)) {
     selectedTopic = "homeland";
   }
-
   const levelKey =
     levelConfig?.name === "קל"
       ? "easy"
@@ -153,7 +172,6 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
         : levelConfig?.name === "קשה"
           ? "hard"
           : "easy";
-  const uiLevel = levelKey;
 
   let topicQuestions = listTopicQuestionsForGradeLevel(gradeKey, levelKey, selectedTopic);
   let resolvedTopic = selectedTopic;
@@ -169,9 +187,7 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
 
   if (!topicQuestions.length) {
     const alreadyChecked = new Set([selectedTopic]);
-    if (selectedTopic !== "homeland") {
-      alreadyChecked.add("homeland");
-    }
+    if (selectedTopic !== "homeland") alreadyChecked.add("homeland");
     for (const alt of allowedTopics) {
       if (alreadyChecked.has(alt)) continue;
       alreadyChecked.add(alt);
@@ -185,11 +201,58 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
     }
   }
 
+  return { topicQuestions, resolvedTopic, levelKey, poolFallbackCode };
+}
+
+// ========== פונקציה עיקרית ליצירת שאלה ==========
+/**
+ * @param {object} [probeOpts]
+ * @param {import('./active-diagnostic-runtime/build-pending-probe.js').PendingDiagnosticProbe|null} [probeOpts.pendingProbe]
+ * @param {Set<string>|string[]} [probeOpts.recentIds]
+ * @param {{ usedProbe?: boolean, reason?: string }} [probeOpts.resultHolder]
+ */
+export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = null, probeOpts = null) {
+  const { topicQuestions, resolvedTopic, levelKey, poolFallbackCode } = resolveMoledetTopicPool(
+    levelConfig,
+    topic,
+    gradeKey,
+    mixedTopics
+  );
+  const uiLevel = levelKey;
+
   if (!topicQuestions.length) {
     return buildEmptyPoolResult(gradeKey, uiLevel);
   }
 
-  const randomQ = topicQuestions[Math.floor(Math.random() * topicQuestions.length)];
+  const fallbackPick = () =>
+    topicQuestions[Math.floor(Math.random() * topicQuestions.length)];
+
+  let randomQ = fallbackPick();
+  const pendingProbe = probeOpts?.pendingProbe;
+  if (pendingProbe && pendingProbe.expiresAfterQuestions > 0) {
+    const items = topicQuestions.map((q) => ({
+      ...q,
+      topic: resolvedTopic,
+      id: moledetBankRowKey(/** @type {Record<string, unknown>} */ (q), resolvedTopic),
+    }));
+    const pr = selectQuestionWithProbe({
+      items,
+      pendingProbe,
+      recentIds: probeOpts.recentIds || [],
+      currentTopic: resolvedTopic,
+      fallbackPick,
+      getItemTopic: () => resolvedTopic,
+      getItemId: (q) => String(q.id || ""),
+    });
+    if (pr.question) {
+      randomQ = pr.question;
+      if (probeOpts.resultHolder) {
+        probeOpts.resultHolder.usedProbe = pr.usedProbe;
+        probeOpts.resultHolder.reason = pr.reason;
+      }
+    }
+  }
+
   return sanitizeQuestionForStudentDisplay(
     shuffleAnswersAndBuild(
       randomQ,

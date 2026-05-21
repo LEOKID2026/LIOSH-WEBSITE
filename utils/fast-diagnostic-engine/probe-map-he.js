@@ -175,6 +175,11 @@ export const PROBE_BY_ERROR_TAG = {
     suggestedQuestionType: "english_subject_verb_agreement_short",
     reasonHe: "לבודד משפט אחד עם דפוס דקדוקי ברור לבדיקה.",
   },
+  place_identification_error: {
+    skill: "זיהוי מקום/יישוב",
+    suggestedQuestionType: "moledet_place_identification_short",
+    reasonHe: "שאלה קצרה על מיקום או סוג יישוב מהחומר.",
+  },
 };
 
 /** Shared fallback when only generic grammar_pattern_error is inferred. */
@@ -273,6 +278,36 @@ export const PROBE_BY_DIAGNOSTIC_SKILL_ID = {
     skill: "תפקיד מערכת הנשימה בחילוף גזים",
     suggestedQuestionType: "science_concept_minimal_contrast",
     reasonHe: "להבדיל בין הובלת דם לבין חילוף חמצן/פחמן דו־חמצני מול האוויר.",
+  },
+  moledet_geo_homeland: {
+    skill: "מולדת — עובדות בסיס",
+    suggestedQuestionType: "moledet_fact_one_line_recall",
+    reasonHe: "שאלת עובדה קצרה על ארץ ישראל/יישובים.",
+  },
+  moledet_geo_community: {
+    skill: "קהילה — תפקידים ומוסדות",
+    suggestedQuestionType: "moledet_fact_one_line_recall",
+    reasonHe: "שאלה קצרה על חיי קהילה מהחומר.",
+  },
+  moledet_geo_citizenship: {
+    skill: "אזרחות — יסודות",
+    suggestedQuestionType: "moledet_concept_minimal_contrast",
+    reasonHe: "להבחין בין שני מושגי אזרחות במשפט קצר.",
+  },
+  moledet_geo_geography: {
+    skill: "גאוגרפיה — נוף ואקלים",
+    suggestedQuestionType: "moledet_fact_one_line_recall",
+    reasonHe: "שאלת עובדה על נוף/אקלים/יישובים.",
+  },
+  moledet_geo_values: {
+    skill: "ערכים וזהות",
+    suggestedQuestionType: "moledet_fact_one_line_recall",
+    reasonHe: "שאלה קצרה על ערך או מסורת מהשיעור.",
+  },
+  moledet_geo_maps: {
+    skill: "קריאת מפה",
+    suggestedQuestionType: "moledet_map_reading_short",
+    reasonHe: "שאלת מפה קצרה עם קנה מידה או כיוון ברור.",
   },
 };
 

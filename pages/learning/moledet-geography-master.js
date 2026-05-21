@@ -60,6 +60,13 @@ import {
   extractDiagnosticMetadataFromQuestion,
   mergeDiagnosticIntoMistakeEntry,
 } from "../../utils/diagnostic-mistake-metadata";
+import { normalizeMistakeEvent } from "../../utils/mistake-event.js";
+import {
+  buildPendingProbeFromMistake,
+  probeMatchesSession,
+  attachProbeMetaToQuestion,
+  decrementPendingProbeExpiry,
+} from "../../utils/active-diagnostic-runtime/index.js";
 import {
   finishLearningSession,
   saveLearningAnswer,
@@ -166,6 +173,7 @@ export default function MoledetGeographyMaster() {
   const pendingMoledetGeographyTrackMetaRef = useRef(null);
   /** Real topic/operation bucket for the question on screen (avoids stale currentQuestion) */
   const moledetTrackingTopicKeyRef = useRef(null);
+  const moledetPendingDiagnosticProbeRef = useRef(null);
   const yearMonthRef = useRef(getCurrentYearMonth());
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
@@ -1068,6 +1076,7 @@ useEffect(() => {
     }
 
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
+    const probeAtStart = moledetPendingDiagnosticProbeRef.current;
 
     do {
       let opForQuestion = operationForState;
@@ -1080,12 +1089,32 @@ useEffect(() => {
         }
       }
 
+      const probeResultHolder = {};
+      const probeOpts =
+        probeAtStart &&
+        probeMatchesSession(probeAtStart, grade, level, opForQuestion)
+          ? {
+              pendingProbe: probeAtStart,
+              recentIds: recentQuestions,
+              resultHolder: probeResultHolder,
+            }
+          : null;
       question = generateQuestion(
         levelConfigCopy,
         opForQuestion,
         grade,
-        opForQuestion === "mixed" ? mixedOperations : null
+        opForQuestion === "mixed" ? mixedOperations : null,
+        probeOpts
       );
+      if (probeResultHolder.usedProbe && probeAtStart && question && !question.emptyPool) {
+        question = attachProbeMetaToQuestion(question, {
+          probeSnapshot: probeAtStart,
+          probeReason: probeResultHolder.reason,
+          expectedErrorTags: Array.isArray(question.params?.expectedErrorTags)
+            ? [...question.params.expectedErrorTags]
+            : undefined,
+        });
+      }
       attempts++;
 
       if (question?.emptyPool) {
@@ -1104,6 +1133,11 @@ useEffect(() => {
         break;
       }
     } while (attempts < maxAttempts);
+
+    decrementPendingProbeExpiry(moledetPendingDiagnosticProbeRef);
+    if (probeAtStart) {
+      moledetPendingDiagnosticProbeRef.current = null;
+    }
 
     if (question?.emptyPool) {
       if (
@@ -1906,6 +1940,24 @@ useEffect(() => {
             distractorFamily: dfOpt,
           });
         }
+      }
+      try {
+        const normalized = normalizeMistakeEvent(mistake, "moledet-geography");
+        moledetPendingDiagnosticProbeRef.current = buildPendingProbeFromMistake(
+          normalized,
+          {
+            wrongAvoidKey:
+              currentQuestion.id != null
+                ? String(currentQuestion.id)
+                : undefined,
+            fallbackTopicId: topicKey,
+            fallbackGrade: grade,
+            fallbackLevel: level,
+          },
+          "moledet-geography"
+        );
+      } catch {
+        moledetPendingDiagnosticProbeRef.current = null;
       }
       setMistakes((prev) => {
         const updated = [...prev, mistake].slice(-50); // שמור רק 50 שגיאות אחרונות
