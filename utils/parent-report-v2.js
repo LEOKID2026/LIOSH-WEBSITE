@@ -73,6 +73,7 @@ import {
   tierWeaknessSupportHe,
   v2SubjectDiagnosticRestraintHe,
   v2SubjectMemoryPartialEvidenceHe,
+  v2ShortOverviewCannotConcludeHe,
   topicRecommendationV2CautionGatedHe,
 } from "./parent-report-language/index.js";
 import { withholdSummaryCopyHe } from "./parent-report-language/subject-withhold-summary-he.js";
@@ -1042,6 +1043,45 @@ function unitStrengthOverviewSortKey(u) {
 }
 
 /**
+ * @param {Record<string, unknown>} unit
+ */
+function unitTopicQuestionCount(unit) {
+  const vol = unit?.evidenceTrace?.find((e) => e?.type === "volume")?.value;
+  return Math.max(0, Math.round(safeNumber(vol?.questions)));
+}
+
+/**
+ * Thin topic row: 1–3 questions, engine cannot conclude, recommendation withheld.
+ * @param {Record<string, unknown>} unit
+ */
+function unitRequiresShortThinOverviewHedge(unit) {
+  if (!unit || typeof unit !== "object") return false;
+  const q = unitTopicQuestionCount(unit);
+  if (q < 1 || q > 3) return false;
+  const cs = unit.canonicalState;
+  const cannot =
+    unit.outputGating?.cannotConcludeYet === true || cs?.assessment?.cannotConcludeYet === true;
+  if (!cannot) return false;
+  const action = String(cs?.actionState || "").trim();
+  if (action !== "withhold" && action !== "probe_only") return false;
+  const suff = String(unit?.confidence?.rowSignals?.dataSufficiencyLevel || "").toLowerCase();
+  if (suff && suff !== "low" && q <= 3) return false;
+  return true;
+}
+
+/**
+ * @param {string} line
+ * @param {Record<string, unknown>} unit
+ */
+function appendThinOverviewHedgeToLine(line, unit) {
+  const base = String(line || "").trim();
+  if (!base || !unitRequiresShortThinOverviewHedge(unit)) return base;
+  const hedge = v2ShortOverviewCannotConcludeHe();
+  if (base.includes(hedge)) return base;
+  return `${base} — ${hedge}`;
+}
+
+/**
  * @param {string} subjectId
  * @param {Record<string, unknown>} unit
  * @param {"attention"|"strength"} kind
@@ -1070,7 +1110,8 @@ function overviewShortLineWithSubject(subjectId, unit, kind) {
     }
   }
   const line = `${subj}: ${core}`.replace(/\s+/g, " ").trim();
-  return stripParentOverviewLeakageHe(line);
+  const out = stripParentOverviewLeakageHe(line);
+  return kind === "attention" ? appendThinOverviewHedgeToLine(out, unit) : out;
 }
 
 /**

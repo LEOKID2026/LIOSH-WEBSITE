@@ -490,4 +490,73 @@ for (const t of TRACE_TABLE.slice(0, 4)) {
   }
 }
 
+// ─── L: Thin-data short overview (2–3 questions, cannot conclude, withhold) ───
+{
+  const { buildDiagnosticOverviewHeV2ForTests } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-v2.js")).href,
+  );
+  const { v2ShortOverviewCannotConcludeHe } = await import(
+    pathToFileURL(join(REPO, "utils", "parent-report-language", "short-report-v2-copy.js")).href,
+  );
+  const thinCopy = v2ShortOverviewCannotConcludeHe();
+  const thinUnit = {
+    subjectId: "geometry",
+    topicRowKey: "shapes::grade:g3",
+    displayName: "צורות",
+    evidenceTrace: [{ type: "volume", value: { questions: 3, correct: 1, wrong: 2, accuracy: 33 } }],
+    taxonomy: {},
+    priority: { level: "P2" },
+    outputGating: { cannotConcludeYet: true, diagnosisAllowed: false },
+    diagnosis: { allowed: false },
+    canonicalState: {
+      actionState: "withhold",
+      assessment: { cannotConcludeYet: true, readiness: "insufficient" },
+    },
+    confidence: { rowSignals: { dataSufficiencyLevel: "low" } },
+  };
+  const strongUnit = {
+    subjectId: "math",
+    topicRowKey: "fractions::grade:g5",
+    displayName: "שברים",
+    evidenceTrace: [{ type: "volume", value: { questions: 55, correct: 21, wrong: 34, accuracy: 38 } }],
+    taxonomy: { patternHe: "בלבול מכנה משותף" },
+    priority: { level: "P4" },
+    recurrence: { wrongCountForRules: 12 },
+    outputGating: { cannotConcludeYet: false, diagnosisAllowed: true },
+    diagnosis: { allowed: true, lineHe: "בלבול מכנה משותף" },
+    canonicalState: {
+      actionState: "intervene",
+      assessment: { cannotConcludeYet: false, readiness: "ready" },
+    },
+  };
+  const thinOv = buildDiagnosticOverviewHeV2ForTests({
+    diagnosticEngineV2: { units: [thinUnit] },
+    subjectQuestionCounts: { geometry: 3 },
+    maps: {},
+    fallbackOverview: {},
+    insufficientDataSubjectsHe: [],
+    thinEvidenceSubjectsHe: [],
+  });
+  const mixedOv = buildDiagnosticOverviewHeV2ForTests({
+    diagnosticEngineV2: { units: [thinUnit, strongUnit] },
+    subjectQuestionCounts: { geometry: 3, math: 55 },
+    maps: {},
+    fallbackOverview: {},
+    insufficientDataSubjectsHe: [],
+    thinEvidenceSubjectsHe: [],
+  });
+  assert.ok(
+    String(thinOv.mainFocusAreaLineHe || "").includes(thinCopy),
+    "L: thin mainFocus must include partial-data collect-more copy",
+  );
+  assert.ok(
+    !/פער ידע|התערבות אגרסיבית/i.test(String(thinOv.mainFocusAreaLineHe || "")),
+    "L: thin mainFocus must not over-diagnose",
+  );
+  assert.ok(
+    !String(mixedOv.mainFocusAreaLineHe || "").includes(thinCopy),
+    "L: strong attention row must not get thin hedge on mainFocus",
+  );
+}
+
 process.stdout.write("\nOK parent-report-output-integrity\n");

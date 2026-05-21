@@ -35,3 +35,8 @@ export function v2SubjectMemoryPartialEvidenceHe() {
 export function v2SubjectDiagnosticRestraintHe() {
   return "לא סוגרים מסקנה חזקה על כל הנושאים בבת אחת — עדיף לתת לתרגול עקבי עוד זמן.";
 }
+
+/** Short overview when topic engine cannot conclude (2–3 questions, withhold). */
+export function v2ShortOverviewCannotConcludeHe() {
+  return "הנתונים עדיין חלקיים, ולכן כדאי לאסוף עוד מידע לפני מסקנה סופית.";
+}
