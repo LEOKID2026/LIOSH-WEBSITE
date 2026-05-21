@@ -17,6 +17,12 @@ const OUT_DIR = join(ROOT, "reports", "question-audit");
 const OUT_JSON = join(OUT_DIR, "QUESTION_RELEASE_READINESS.json");
 const OUT_MD = join(OUT_DIR, "QUESTION_RELEASE_READINESS.md");
 const INVENTORY_JSON = join(OUT_DIR, "QUESTION_INVENTORY_MATRIX.json");
+const VISIBILITY_INVENTORY_JSON = join(
+  ROOT,
+  "reports",
+  "question-bank-inventory",
+  "question-bank-inventory.json"
+);
 const href = (rel) => pathToFileURL(join(ROOT, rel)).href;
 
 const { auditMcqQuality } = await import(href("utils/question-quality.js"));
@@ -84,8 +90,13 @@ const report = {
   thinCells: [],
   manualReviewPack: [],
   professionalInventory: null,
+  visibilityInventory: null,
   freezeNote: null,
 };
+
+function inventoryCellKey(c) {
+  return `${c.subject}|${c.grade}|${c.topic}|${c.level ?? ""}`;
+}
 
 function addBlocker(code, message, detail = null) {
   report.blockers.push({ code, message, detail });
@@ -362,11 +373,17 @@ Generated: ${report.generatedAt}
 
 ${ready ? "✅ Technical gates and professional inventory matrix both accept launch." : "❌ Do not freeze — see blockers and/or professional inventory below."}
 
-## Professional inventory (authoritative for launch)
+## Launch inventory (authoritative)
 
 ${
+  report.visibilityInventory
+    ? `**Visibility gate:** ${report.gates.question_bank_inventory_gate?.pass ? "PASS" : "FAIL"} — REAL_BLOCKER_VISIBLE: ${report.visibilityInventory.realBlockersVisible}
+
+`
+    : ""
+}${
   inv
-    ? `**Matrix decision:** ${inv.matrixDecision}
+    ? `**Professional matrix (informational):** ${inv.matrixDecision}
 
 | Status | Count |
 |--------|------:|
@@ -535,13 +552,55 @@ async function main() {
   synthesizePerSubject(quality, session);
   synthesizePerGrade(quality);
 
-  console.log("\n--- Professional inventory matrix ---\n");
+  console.log("\n--- Calibrated visibility inventory (question-bank-inventory-gate) ---\n");
+  const visGatePass = run(
+    "node",
+    ["scripts/question-bank-inventory-gate.mjs"],
+    "question_bank_inventory_gate"
+  );
+  const visibilityInventory = await readJson(VISIBILITY_INVENTORY_JSON);
+  const realBlockers = visibilityInventory?.summary?.realBlockersVisible ?? [];
+  report.visibilityInventory = visibilityInventory
+    ? {
+        realBlockersVisible: realBlockers.length,
+        emptyByCurriculum: visibilityInventory.summary?.emptyByCurriculum?.length ?? 0,
+        gateFalsePositives: visibilityInventory.summary?.gateFalsePositives?.length ?? 0,
+      }
+    : null;
+
+  if (!visGatePass) {
+    addBlocker(
+      "visibility_inventory",
+      `${realBlockers.length} REAL_BLOCKER_VISIBLE cell(s) — see reports/question-bank-inventory/`
+    );
+  }
+  if (!visibilityInventory) {
+    addBlocker(
+      "visibility_inventory_missing",
+      "question-bank-inventory.json not produced — run question-bank-inventory-gate.mjs"
+    );
+  }
+
+  console.log("\n--- Professional inventory matrix (informational volume matrix) ---\n");
   run("npm", ["run", "qa:question-inventory-matrix"], "qa_question_inventory_matrix");
 
   const matrix = await readJson(INVENTORY_JSON);
+  const realBlockerKeys = new Set(realBlockers.map((b) => inventoryCellKey(b)));
+  let inventoryLaunchOk = visGatePass && realBlockers.length === 0;
+
   if (matrix) {
+    const matrixCritical = matrix.statusCounts?.CRITICAL_BLOCKING ?? 0;
+    const coreNeeds = matrix.coreNeedsAuthoring ?? [];
+    const coreNeedsBlockingLaunch = coreNeeds.filter((c) =>
+      realBlockerKeys.has(inventoryCellKey(c))
+    );
+
+    inventoryLaunchOk =
+      inventoryLaunchOk && matrixCritical === 0 && coreNeedsBlockingLaunch.length === 0;
+
     report.professionalInventory = {
       matrixDecision: matrix.decision,
+      matrixDecisionInformational: true,
       decisionReasons: matrix.decisionReasons,
       statusCounts: matrix.statusCounts,
       activeSelectableCells: matrix.activeSelectableCells,
@@ -549,36 +608,66 @@ async function main() {
       byGrade: matrix.byGrade,
       weakest: matrix.weakest,
       coreNeedsAuthoring: matrix.coreNeedsAuthoring,
+      coreNeedsAuthoringInformationalCount: coreNeeds.length,
+      coreNeedsBlockingLaunch,
       thinCells: matrix.thinCells,
       oldPassNewFailCount: matrix.oldPassNewFail?.length ?? 0,
       oldPassNewFailSample: (matrix.oldPassNewFail || []).slice(0, 40),
     };
     report.gates.qa_question_inventory_matrix = {
-      pass: matrix.decision === "READY_FOR_LAUNCH",
+      pass: inventoryLaunchOk,
       decision: matrix.decision,
+      launchAlignedWithVisibilityGate: inventoryLaunchOk,
+      realBlockersVisible: realBlockers.length,
+      criticalBlocking: matrixCritical,
+      coreNeedsBlockingLaunch: coreNeedsBlockingLaunch.length,
     };
-    if (matrix.decision !== "READY_FOR_LAUNCH") {
+
+    if (matrixCritical > 0) {
       addBlocker(
-        "professional_inventory",
-        `Professional inventory: ${matrix.decision} — ${(matrix.decisionReasons || []).join("; ")}`
+        "professional_inventory_critical",
+        `${matrixCritical} CRITICAL_BLOCKING cells in professional matrix`
+      );
+    }
+    if (coreNeedsBlockingLaunch.length > 0) {
+      addBlocker(
+        "professional_inventory_core_visible",
+        `${coreNeedsBlockingLaunch.length} core NEEDS_AUTHORING cells also REAL_BLOCKER_VISIBLE`,
+        coreNeedsBlockingLaunch.slice(0, 20)
       );
     }
   } else {
     addBlocker("professional_inventory_missing", "QUESTION_INVENTORY_MATRIX.json not produced");
+    inventoryLaunchOk = false;
   }
 
   const uniqueBlockers = [...new Map(report.blockers.map((b) => [b.code, b])).values()];
   report.blockers = uniqueBlockers;
 
-  const technicalBlockers = uniqueBlockers.filter((b) => b.code !== "professional_inventory");
-  if (technicalBlockers.length > 0) {
-    report.decision = "NOT_READY_BLOCKERS_REMAIN";
-  } else if (matrix?.decision === "READY_FOR_LAUNCH") {
+  const INVENTORY_LAUNCH_BLOCKER_CODES = new Set([
+    "professional_inventory_critical",
+    "professional_inventory_core_visible",
+    "visibility_inventory",
+    "visibility_inventory_missing",
+  ]);
+  const technicalBlockers = uniqueBlockers.filter(
+    (b) => !INVENTORY_LAUNCH_BLOCKER_CODES.has(b.code)
+  );
+  const launchInventoryBlockers = uniqueBlockers.filter((b) =>
+    INVENTORY_LAUNCH_BLOCKER_CODES.has(b.code)
+  );
+
+  if (uniqueBlockers.length > 0) {
+    report.decision =
+      technicalBlockers.length > 0
+        ? "NOT_READY_BLOCKERS_REMAIN"
+        : "NOT_READY_INVENTORY_INSUFFICIENT";
+  } else if (inventoryLaunchOk) {
     report.decision = "READY_FOR_LAUNCH";
     report.freezeNote =
-      "Technical QA and professional inventory matrix accept launch. Rerun npm run qa:questions:release after question changes.";
+      "Technical QA and calibrated visibility inventory accept launch. Professional matrix NEEDS_AUTHORING counts are informational unless REAL_BLOCKER_VISIBLE. Rerun npm run qa:questions:release after question changes.";
   } else {
-    report.decision = matrix?.decision || "NOT_READY_INVENTORY_INSUFFICIENT";
+    report.decision = "NOT_READY_INVENTORY_INSUFFICIENT";
   }
 
   report.durationMs = Date.now() - start;

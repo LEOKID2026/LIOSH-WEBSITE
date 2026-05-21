@@ -1,7 +1,7 @@
 {
-  "verdict": "PASS",
+  "verdict": "FAIL",
   "regressionPayload": {
-    "verdict": "PASS",
+    "verdict": "FAIL",
     "source": "scripts/fixtures/parent-report-real-regression-payload.mjs",
     "kind": "baseReport"
   },
@@ -248,13 +248,17 @@
     ],
     "blockingFailures": []
   },
-  "generatedAt": "2026-05-18T22:01:51.931Z",
+  "generatedAt": "2026-05-21T23:28:03.711Z",
   "rowCount": 3,
   "pdfChecks": [
-    "PASS: in-process print bundle (SIGNOFF_SKIP_PDF_EXPORT=1)"
+    "FAIL: PDF export — fetch failed",
+    "parent-report-main.pdf: PASS (stale file + print-bundle fallback)",
+    "parent-detailed-full.pdf: PASS (stale file + print-bundle fallback)"
   ],
   "pdfExportSkipped": true,
-  "failures": [],
+  "failures": [
+    "PDF export/verify failed: fetch failed"
+  ],
   "traceTable": [
     {
       "rowSourceId": "topic:math:fractions:grade:g4",
@@ -274,7 +278,7 @@
       "patternSubskill": null,
       "summaryItem": "שברים - כיתה ד׳",
       "copilotTruthSnippet": null,
-      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%. לכן התמונה מוגבל",
+      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים נרשמו 76 שאלות, ורמת הדיוק סביב 41%. לכן התמונה מוגבלת למה",
       "hasRowIdentityV1": true
     },
     {
@@ -294,8 +298,8 @@
       "recommendationLabel": "חיזוק ממוקד לפי הדוח",
       "patternSubskill": "subskill-present",
       "summaryItem": "שברים - כיתה ה׳",
-      "copilotTruthSnippet": "בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%.",
-      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%. לכן התמונה מוגבל",
+      "copilotTruthSnippet": "בשברים נרשמו 76 שאלות, ורמת הדיוק סביב 41%.",
+      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים נרשמו 76 שאלות, ורמת הדיוק סביב 41%. לכן התמונה מוגבלת למה",
       "hasRowIdentityV1": true
     },
     {
@@ -316,7 +320,7 @@
       "patternSubskill": null,
       "summaryItem": "חיסור - כיתה ד׳",
       "copilotTruthSnippet": null,
-      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים בתקופה הזו יש 76 שאלות, עם דיוק של כ־41%. לכן התמונה מוגבל",
+      "pdfTextSnippet": "מה שמופיע בדוח כרגע הוא בעיקר מוקד אחד: חשבון — שברים. בשברים נרשמו 76 שאלות, ורמת הדיוק סביב 41%. לכן התמונה מוגבלת למה",
       "hasRowIdentityV1": false
     }
   ]

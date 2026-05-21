@@ -2,7 +2,7 @@ import {
   G3_READING_EASY,
   G3_READING_MEDIUM,
   G3_READING_HARD,
-} from "./hebrew-g3-reading-bank.js";
+} from "../hebrew-g3-reading-bank.js";
 
 ﻿// Metadata enrichment (safe pass): skillId, subtype (grade subskill), difficulty, cognitiveLevel, expectedErrorTypes. Inline // comments inside arrays may be normalized when this file is rewritten from structured data. See reports/question-metadata-qa/hebrew-archive-metadata-apply-report.json.
 // Metadata enrichment (safe pass): skillId, subtype (grade subskill), difficulty, cognitiveLevel, expectedErrorTypes. Inline // comments inside arrays may be normalized when this file is rewritten from structured data. See reports/question-metadata-qa/hebrew-archive-metadata-apply-report.json.

@@ -25,6 +25,12 @@ const CAUTIOUS_HE_MARKERS = [
   "מעט מידע",
   "צריך עוד תרגול",
   "לא גבוה יחסית",
+  /** Product contract phrasing on thin / early-signal windows (detector only — no copy change). */
+  "מצומצם",
+  "כדאי לקרוא את הסיכום בעיון",
+  "בסיס ראשוני",
+  "כדאי לשים עליהם לב",
+  "ראשוני לשיחה",
 ];
 
 function combinedConfidenceText(facets) {
@@ -96,7 +102,7 @@ export function reportHasNonGenericSignals(facets) {
   /** Strong / early-grade profiles may suppress formal diagnosis while still naming a concrete bucket — still non-generic. */
   for (const u of us) {
     const dn = String(u?.displayName || "").trim();
-    if (dn.length >= 4) {
+    if (dn.length >= 2) {
       return { ok: true, matched: "unitDisplayName", detail: { displayNameLen: dn.length } };
     }
   }

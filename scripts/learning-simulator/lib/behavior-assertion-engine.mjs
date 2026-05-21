@@ -26,6 +26,20 @@ function row(assertionId, pass, expected, actual, likelyCause, evidence = {}) {
   };
 }
 
+/** Matches legacy plain topic keys and grade-aware keys (`topic::grade:g5`). */
+function topicBucketKeysIncludeTarget(bucketKeys, topic) {
+  const t = String(topic || "").trim();
+  if (!t || !Array.isArray(bucketKeys)) return false;
+  for (const raw of bucketKeys) {
+    const k = String(raw || "").trim();
+    if (!k) continue;
+    if (k === t || k.startsWith(`${t}::grade:`)) return true;
+    const base = k.split("::grade:")[0];
+    if (base === t) return true;
+  }
+  return false;
+}
+
 /**
  * When storage trend contradicts profile trendPolicy, data generation may be wrong.
  * When thresholds are arbitrary, flag oracle.
@@ -333,9 +347,8 @@ export function evaluateScenarioBehavior(scenario, oracle, report) {
     const bk = rs?.topicBucketKeys || [];
     const reportHintsWeak =
       bk.length === 0 ||
-      bk.includes(topic) ||
-      bk[0] === topic ||
-      (subject === "science" && topic === "experiments" && bk.includes("experiments"));
+      topicBucketKeysIncludeTarget(bk, topic) ||
+      (subject === "science" && topic === "experiments" && topicBucketKeysIncludeTarget(bk, "experiments"));
     add(
       `${label}_report_topic_bucket_alignment`,
       reportHintsWeak,

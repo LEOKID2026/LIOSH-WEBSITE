@@ -13,6 +13,15 @@ const ROOT = join(__dirname, "..", "..", "..");
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** @param {object} scenario */
+export function isThinEvidenceScenario(scenario) {
+  if (scenario?.criticalDeepProfileType === "thin_data_on_target_cell") return true;
+  const id = String(scenario?.scenarioId || "");
+  if (id.includes("thin_data")) return true;
+  if (/_thin$/.test(id) || id.includes("_thin_")) return true;
+  return false;
+}
+
 async function loadDeepLearningSim() {
   const url = pathToFileURL(join(ROOT, "scripts", "lib", "deep-learning-sim-storage.mjs")).href;
   return import(url);
@@ -71,7 +80,7 @@ export function materializeSessions(scenario, profile, matrixRows, mg) {
       rng: sessionRng,
     });
 
-    const thin = scenario.scenarioId.includes("thin_data");
+    const thin = isThinEvidenceScenario(scenario);
     const qMin = thin ? 5 : 10;
     const qMax = thin ? 9 : 22;
     const total = Math.max(qMin, Math.min(qMax, Math.round(qMin + sessionRng() * (qMax - qMin))));
@@ -139,6 +148,15 @@ export function validateScenarioOutput(scenario, sessions, stats, storage) {
   if (scenario.scenarioId === "thin_data_g3_1d") {
     if (stats.sessionCount > 4) errors.push("thin_data should have very low session count");
     if (stats.questionTotal > 45) warnings.push("thin_data questionTotal higher than expected thin volume");
+  }
+
+  if (isThinEvidenceScenario(scenario)) {
+    if (stats.sessionCount > 6) {
+      errors.push(`thin evidence scenario should have <=6 sessions, got ${stats.sessionCount}`);
+    }
+    if (stats.questionTotal > 55) {
+      errors.push(`thin evidence scenario should have <=55 questions, got ${stats.questionTotal}`);
+    }
   }
 
   const targets = (scenario.topicTargets || []).filter((t) => !t.optional);

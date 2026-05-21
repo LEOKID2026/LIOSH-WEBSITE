@@ -76,6 +76,14 @@ const BEFORE_AFTER_SEEDS = [
     before: "נושא materials · רמת hard · מה מאפיין חומר מבודד?",
   },
   {
+    subject: "science",
+    grade: "g5",
+    topic: "body",
+    level: "medium",
+    before: "בכיתה ה׳ — רמה בינונית: מה קשר בין דם לריאות?",
+    expectedAfter: "מה קשר בין דם לריאות?",
+  },
+  {
     subject: "hebrew",
     topic: "reading",
     before: "זיהוי כתיב: קרא את המילה ___",
@@ -250,6 +258,11 @@ async function scanEnglishPools() {
 function buildBeforeAfterReport() {
   return BEFORE_AFTER_SEEDS.map((row) => {
     const after = sanitizeStudentQuestionStem(row.before);
+    if (row.expectedAfter != null && after !== row.expectedAfter) {
+      throw new Error(
+        `before/after mismatch [${row.subject}]: expected "${row.expectedAfter}" got "${after}"`
+      );
+    }
     return { ...row, after };
   });
 }

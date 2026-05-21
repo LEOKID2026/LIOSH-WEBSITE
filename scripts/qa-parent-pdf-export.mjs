@@ -14,12 +14,28 @@
 import fs from "fs";
 import path from "path";
 import assert from "node:assert/strict";
+import { dirname, join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 import { PDFParse } from "pdf-parse";
 import {
   domInsightCardShowsParentAiHeading,
   pdfTextContainsParentAiInsightFingerprint,
 } from "./lib/parent-report-pdf-insight-fingerprint.mjs";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const { buildRealGradeSplitRegressionBaseReport } = await import(
+  pathToFileURL(join(__dirname, "fixtures", "parent-report-real-regression-payload.mjs")).href
+);
+const { baseReportToLocalStorageSnapshot } = await import(
+  pathToFileURL(join(__dirname, "lib", "base-report-to-local-storage.mjs")).href
+);
+
+/** Regression-shaped localStorage — enough volume for detailed report + deterministic Parent AI insight. */
+const QA_STORAGE_SNAPSHOT = baseReportToLocalStorageSnapshot(
+  buildRealGradeSplitRegressionBaseReport(),
+  "PDFQA"
+);
 
 const base = process.env.QA_BASE_URL || "http://127.0.0.1:3001";
 
@@ -62,42 +78,16 @@ async function assertDevServerReachable(baseUrl) {
   );
 }
 
-function seedStorageScript() {
-  return () => {
-    try {
-      const now = Date.now();
-      localStorage.setItem("mleo_player_name", "PDFQA");
-      localStorage.setItem(
-        "mleo_time_tracking",
-        JSON.stringify({
-          operations: {
-            addition: {
-              sessions: [
-                { timestamp: now, total: 22, correct: 16, mode: "learning", grade: "g3", level: "medium", duration: 460 },
-                { timestamp: now - 120000, total: 14, correct: 8, mode: "practice", grade: "g3", level: "easy", duration: 260 },
-              ],
-            },
-          },
-        })
-      );
-      localStorage.setItem("mleo_math_master_progress", JSON.stringify({ progress: { addition: { total: 220, correct: 162 } } }));
-      localStorage.setItem("mleo_mistakes", JSON.stringify([]));
-      localStorage.setItem(
-        "mleo_geometry_time_tracking",
-        JSON.stringify({
-          topics: {
-            perimeter: {
-              sessions: [{ timestamp: now, total: 18, correct: 12, mode: "learning", grade: "g4", level: "hard", duration: 390 }],
-            },
-          },
-        })
-      );
-      localStorage.setItem("mleo_geometry_master_progress", JSON.stringify({ progress: { perimeter: { total: 66, correct: 45 } } }));
-      localStorage.setItem("mleo_geometry_mistakes", JSON.stringify([]));
-    } catch {
-      // ignore seeding errors in QA context
+/** @param {Record<string, string>} snap */
+function applyStorageSnapshot(snap) {
+  try {
+    for (const [key, value] of Object.entries(snap || {})) {
+      if (value == null) continue;
+      localStorage.setItem(key, typeof value === "string" ? value : String(value));
     }
-  };
+  } catch {
+    // ignore seeding errors in QA context
+  }
 }
 
 /**
@@ -164,11 +154,17 @@ async function main() {
   fs.mkdirSync(outDir, { recursive: true });
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1366, height: 900 }, locale: "he-IL" });
-  await context.addInitScript(seedStorageScript());
+  await context.addInitScript(applyStorageSnapshot, QA_STORAGE_SNAPSHOT);
   const page = await context.newPage();
   /** Warm origin + re-apply seed so localStorage is populated before the detailed route reads it. */
   await page.goto(`${base}/`, { waitUntil: "domcontentloaded", timeout: 120_000 });
-  await page.evaluate(seedStorageScript());
+  await page.evaluate((data) => {
+    localStorage.clear();
+    for (const [k, v] of Object.entries(data || {})) {
+      if (v == null) continue;
+      localStorage.setItem(k, typeof v === "string" ? v : String(v));
+    }
+  }, QA_STORAGE_SNAPSHOT);
 
   const pdfOpts = {
     format: "A4",
@@ -177,7 +173,11 @@ async function main() {
     preferCSSPageSize: true,
   };
 
-  await page.goto(`${base}/learning/parent-report-detailed`, { waitUntil: "domcontentloaded", timeout: 120_000 });
+  /** month window keeps regression fixture sessions in-range (same as learning-simulator pdf gate). */
+  await page.goto(`${base}/learning/parent-report-detailed?period=month`, {
+    waitUntil: "domcontentloaded",
+    timeout: 120_000,
+  });
   await assertDetailedInsightAndCopilotPrintBehavior(page, "detailed-full");
   /* Playwright PDF uses current media; assert* ends in screen mode — re-enter print so .no-pdf applies. */
   await page.emulateMedia({ media: "print" });
@@ -187,7 +187,7 @@ async function main() {
   await assertPdfBufferContainsInsightHeading(buf, "detailed-full pdf");
   await assertPdfBufferExcludesCopilotPlaceholder(buf, "detailed-full pdf");
 
-  await page.goto(`${base}/learning/parent-report-detailed?mode=summary`, {
+  await page.goto(`${base}/learning/parent-report-detailed?period=month&mode=summary`, {
     waitUntil: "domcontentloaded",
     timeout: 120_000,
   });
@@ -199,7 +199,10 @@ async function main() {
   await assertPdfBufferContainsInsightHeading(buf, "detailed-summary pdf");
   await assertPdfBufferExcludesCopilotPlaceholder(buf, "detailed-summary pdf");
 
-  await page.goto(`${base}/learning/parent-report`, { waitUntil: "domcontentloaded", timeout: 120_000 });
+  await page.goto(`${base}/learning/parent-report?period=month`, {
+    waitUntil: "domcontentloaded",
+    timeout: 120_000,
+  });
   await assertShortInsightVisible(page, "short-report");
   await page.emulateMedia({ media: "print" });
   buf = await page.pdf({ ...pdfOpts });

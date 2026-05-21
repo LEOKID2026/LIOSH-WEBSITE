@@ -208,7 +208,7 @@ async function main() {
       const refCount = matrixCoverageRefs.length;
       const isThin = profileStressType === "thin_data";
       const horizonDays = isThin ? 3 : 14;
-      const targetSessions = isThin ? Math.max(refCount * 2, 14) : Math.max(refCount * 3, 36);
+      const targetSessions = isThin ? Math.max(2, Math.min(5, refCount)) : Math.max(refCount * 3, 36);
 
       const subjects =
         profileStressType === "mixed_strengths"
@@ -236,6 +236,7 @@ async function main() {
         anchorDate,
         artifactOptions: {},
         profileStressType,
+        ...(isThin ? { criticalDeepProfileType: "thin_data_on_target_cell" } : {}),
         stressMatrixSubject: stressSubject === "mixed" ? null : stressSubject,
         stressMatrixTopic: stressTopic,
       };

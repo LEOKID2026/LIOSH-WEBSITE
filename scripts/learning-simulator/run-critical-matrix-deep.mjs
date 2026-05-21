@@ -186,9 +186,10 @@ async function main() {
         profileType === "strong_on_target_cell" ? "strong" : profileType === "weak_on_target_cell" ? "weak" : "thin";
       const scenarioId = `critical_deep_${grade}_${subject}_${shortPt}`;
 
+      /** Thin profile: cap sessions so effectiveQ stays in thin-evidence band (refs×2 min 16 was ~200+ Q). */
       const targetSessions =
         profileType === "thin_data_on_target_cell"
-          ? Math.max(matrixCoverageRefs.length * 2, 16)
+          ? Math.max(2, Math.min(5, matrixCoverageRefs.length))
           : Math.max(matrixCoverageRefs.length * 4, 52);
       const horizonDays = profileType === "thin_data_on_target_cell" ? 3 : 14;
 

@@ -93,13 +93,34 @@ const MATRIX = [
   },
   {
     subject: "hebrew",
-    grade: "g1",
-    weakness: "writing (archive g1 — g3 bank load blocked)",
-    expectedFollowUp: "practice_current on hebrew_archive_writing",
+    grade: "g3",
+    weakness: "reading",
+    expectedFollowUp: "practice_current on hebrew_archive_reading (g3)",
     practice: {
-      scenarioSimulatorId: "cert_hebrew_writing_g1",
+      scenarioSimulatorId: "cert_hebrew_reading_g3",
       subject: "hebrew",
-      grade: "g1",
+      grade: "g3",
+      topic: "reading",
+      totalQuestions: 12,
+      correctAnswers: 4,
+      wrongAnswers: 8,
+      accuracy: 33,
+      durationSeconds: 480,
+    },
+    assert(ctx) {
+      assertRemediateFamily(ctx, /hebrew_archive_reading|reading/i, "hebrew");
+      assert(ctx.out.diagnostics?.metadataSubjectFallback !== true, "g3 reading used subject fallback");
+    },
+  },
+  {
+    subject: "hebrew",
+    grade: "g3",
+    weakness: "writing",
+    expectedFollowUp: "practice_current on hebrew_archive_writing (g3)",
+    practice: {
+      scenarioSimulatorId: "cert_hebrew_writing_g3",
+      subject: "hebrew",
+      grade: "g3",
       topic: "writing",
       totalQuestions: 12,
       correctAnswers: 4,
@@ -109,6 +130,7 @@ const MATRIX = [
     },
     assert(ctx) {
       assertRemediateFamily(ctx, /hebrew_archive_writing|writing/i, "hebrew");
+      assert(ctx.out.diagnostics?.metadataSubjectFallback !== true, "g3 writing used subject fallback");
     },
   },
   {
@@ -344,14 +366,21 @@ async function loadMetadataIndex() {
     const raw = JSON.parse(await readFile(SNAPSHOT, "utf8"));
     if (Array.isArray(raw.entries) && raw.entries.length) {
       const leaks = validateLightEntriesNoForbiddenFields(raw.entries);
-      if (!leaks.length) return { entries: raw.entries };
+      const loadErrors = Array.isArray(raw.stats?.loadErrors) ? raw.stats.loadErrors : [];
+      const g3Load = loadErrors.filter((e) => String(e?.path || "").includes("hebrew-questions/g3"));
+      assert(g3Load.length === 0, `hebrew g3 bank load error still present: ${JSON.stringify(g3Load)}`);
+      if (!leaks.length) return { entries: raw.entries, loadErrors };
     }
   } catch {
     /* build below */
   }
   console.log("Building metadata index (snapshot missing)…");
   const index = await buildPlannerQuestionMetadataIndex({ rootAbs: ROOT });
-  return { entries: index.entries };
+  const g3Load = (index.stats?.loadErrors || []).filter((e) =>
+    String(e?.path || "").includes("hebrew-questions/g3")
+  );
+  assert(g3Load.length === 0, `hebrew g3 bank load error: ${JSON.stringify(g3Load)}`);
+  return { entries: index.entries, loadErrors: index.stats?.loadErrors || [] };
 }
 
 function runProbeMatchSmoke() {

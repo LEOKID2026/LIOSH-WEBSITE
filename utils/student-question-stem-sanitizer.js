@@ -33,6 +33,11 @@ export const STUDENT_STEM_METADATA_LEAK_CHECKS = [
     label: "grade suffix after ·",
   },
   {
+    id: "grade_level_composite_prefix",
+    re: /^בכיתה\s+[אבגדהו]['׳]?\s*[—–-]\s*רמה\s+(קלה|בינונית|קשה|מאתגרת)/u,
+    label: "בכיתה grade — רמה level composite prefix",
+  },
+  {
     id: "level_he",
     re: /רמה\s+(קלה|בינונית|קשה|מאתגרת)/u,
     label: "Hebrew level prefix",
@@ -80,6 +85,15 @@ export function sanitizeStudentQuestionStem(text) {
   // Debug / bank batch markers
   t = t.replace(/סימון\s+ייחודי\s*[\u0590-\u05FFa-zA-Z0-9]*\s*/gu, "");
   t = t.replace(/(?:במסגרת\s+)?חקר\s+בית[\s־-]?ספרי\s*:\s*/gu, "");
+
+  // Science / batch opener: "בכיתה ה׳ — רמה בינונית: …" (metadata header only — not in-question grade mentions)
+  t = t.replace(
+    new RegExp(
+      `^בכיתה\\s+${GRADE_HEB}\\s*[—–-]\\s*${LEVEL_WORD}\\s*(?:קלה|בינונית|קשה|מאתגרת|easy|medium|hard)\\s*:\\s*`,
+      "u"
+    ),
+    ""
+  );
 
   // Dot-separated metadata chains (science batch style) — avoid heavy backtracking regex
   if (/[·•]/.test(t)) {

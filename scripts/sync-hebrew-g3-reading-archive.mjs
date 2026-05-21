@@ -116,7 +116,7 @@ const hardReading = enrich(G3_READING_HARD, "hard");
 let src = readFileSync(G3_PATH, "utf8");
 if (!src.includes("hebrew-g3-reading-bank")) {
   src =
-    `import {\n  G3_READING_EASY,\n  G3_READING_MEDIUM,\n  G3_READING_HARD,\n} from "./hebrew-g3-reading-bank.js";\n\n` +
+    `import {\n  G3_READING_EASY,\n  G3_READING_MEDIUM,\n  G3_READING_HARD,\n} from "../hebrew-g3-reading-bank.js";\n\n` +
     src.replace(/^\/\/ Metadata enrichment.*\n\/\/ Metadata enrichment.*\n/, "");
 }
 

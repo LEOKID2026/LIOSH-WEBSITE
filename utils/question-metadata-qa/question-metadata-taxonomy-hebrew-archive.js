@@ -13,9 +13,11 @@ export const HEBREW_ARCHIVE_CATEGORY_KEYS = [
   "speaking",
 ];
 
-export const HEBREW_ARCHIVE_SKILL_IDS = new Set(
-  HEBREW_ARCHIVE_CATEGORY_KEYS.map((c) => `hebrew_archive_${c}`)
-);
+export const HEBREW_ARCHIVE_SKILL_IDS = new Set([
+  ...HEBREW_ARCHIVE_CATEGORY_KEYS.map((c) => `hebrew_archive_${c}`),
+  /** G3 reading bank import (`data/hebrew-questions/g3.js`) — grade-scoped diagnostic skill id */
+  "hebrew_reading_g3",
+]);
 
 export const HEBREW_ARCHIVE_GRADE_SUBSKILL_IDS = new Set(["g1", "g2", "g3", "g4", "g5", "g6"]);
 
@@ -26,6 +28,7 @@ export function buildHebrewArchiveSubskillAllowlistBySkill() {
   for (const s of HEBREW_ARCHIVE_SKILL_IDS) {
     m[s] = new Set(HEBREW_ARCHIVE_GRADE_SUBSKILL_IDS);
   }
+  m.hebrew_reading_g3 = new Set(["g3"]);
   return m;
 }
 

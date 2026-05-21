@@ -183,9 +183,9 @@ assert("invalid_explicit", r.confidence === "missing" && r.warnings.some((w) => 
 
 r = resolveDiagnosticUnitSkillAlignment(
   { subjectId: "hebrew", bucketKey: "comprehension" },
-  { scenarioId: "weak_hebrew_comprehension_g1_7d", metadataIndex }
+  { scenarioId: "weak_hebrew_comprehension_g3_7d", metadataIndex }
 );
-assert("hebrew_archive_topic", r.skillId === "hebrew_archive_comprehension" && r.subskillId === "g1");
+assert("hebrew_archive_topic", r.skillId === "hebrew_archive_comprehension" && r.subskillId === "g3");
 
 r = resolveDiagnosticUnitSkillAlignment(
   { subjectId: "english", skillId: "en_grammar_be_present", subskillId: "be_basic" },

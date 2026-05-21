@@ -18,6 +18,7 @@ import {
   MOLEDET_GEOGRAPHY_SKILL_IDS,
   MOLEDET_GEOGRAPHY_SUBSKILL_ALLOWLIST_BY_SKILL,
 } from "./question-metadata-taxonomy-geography.js";
+import { BANK_ENRICHED_EXPECTED_ERROR_TYPES } from "./bank-enriched-expected-error-types.js";
 
 export { ENGLISH_SKILL_IDS, ENGLISH_SUBSKILL_ALLOWLIST_BY_SKILL };
 export {
@@ -81,7 +82,15 @@ export const CANONICAL_DIFFICULTY = new Set([
 ]);
 
 /** Legacy / in-repo normalizations still accepted. */
-export const LEGACY_DIFFICULTY = new Set(["easy", "medium", "hard", "low", "high"]);
+export const LEGACY_DIFFICULTY = new Set([
+  "easy",
+  "medium",
+  "hard",
+  "low",
+  "high",
+  /** Science enrichment pass — between basic and advanced */
+  "intermediate",
+]);
 
 /** Union used by scanner validation. */
 export const ALL_VALID_DIFFICULTY = new Set([...CANONICAL_DIFFICULTY, ...LEGACY_DIFFICULTY]);
@@ -123,6 +132,7 @@ export const GENERIC_EXPECTED_ERROR_TYPES = [
  */
 export const EXTENDED_EXPECTED_ERROR_TYPES = new Set([
   ...GENERIC_EXPECTED_ERROR_TYPES,
+  ...BANK_ENRICHED_EXPECTED_ERROR_TYPES,
   "fact_recall_gap",
   "classification_error",
   "cause_effect_gap",
@@ -189,7 +199,22 @@ function buildGeometrySubskillAllowlist() {
   m["equilateral_late"] = new Set(["equal_sides_review"]);
   m["geo_angle_right_identify"] = new Set(["classification", "classification_late"]);
   m["geo_pv_area_vs_perimeter"] = new Set(["choose_measure", "choose_measure_floor", "fence", "fence_perimeter_project"]);
-  m["geo_rect_area_plan"] = new Set(["area_rectangle", "area_rectangle_site"]);
+  m["geo_rect_area_plan"] = new Set(["area_rectangle", "area_rectangle_site", "same_perimeter"]);
+  m["geo_angle_measure"] = new Set(["inference_reasoning", "concept_only"]);
+  m["geo_quad_properties"] = new Set(["parallelogram", "parallelogram_late"]);
+  m["geo_quad_classification"] = new Set([
+    "square_rectangle",
+    "square_rectangle_late",
+    "rhombus_rectangle",
+    "rhombus_rectangle_late",
+  ]);
+  m["geo_symmetry_reflection"] = new Set(["meaning", "meaning_axis", "same_size_shape"]);
+  m["geo_volume_unit_reasoning"] = new Set(["definition", "definition_capacity"]);
+  m["geo_volume_prism_formula"] = new Set(["order_ops"]);
+  m["geo_perimeter_formula"] = new Set(["interpret", "square_from_perimeter"]);
+  m["geo_shape_classification"] = new Set(["square_count", "square_count_mid"]);
+  m["geo_shape_properties"] = new Set(["rectangle_angles", "rectangle_angles_mid"]);
+  m["geo_triangle_properties"] = new Set(["obtuse_count"]);
   m["hyp_opposite_right"] = new Set(["hypotenuse_side"]);
   m["mirror"] = new Set(["meaning"]);
   m["mirror_flip"] = new Set(["reflection"]);
