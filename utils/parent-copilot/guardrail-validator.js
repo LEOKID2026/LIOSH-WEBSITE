@@ -11,7 +11,11 @@
  * Deterministic and LLM paths both pass through `validateAnswerDraft` / `validateParentCopilotResponseV1` as appropriate.
  */
 
-import { clinicalBoundaryJoinedFingerprintHe, sensitiveEducationChoiceJoinedFingerprintHe } from "./answer-composer.js";
+import {
+  clinicalBoundaryJoinedFingerprintHe,
+  peerComparisonBoundaryJoinedFingerprintHe,
+  sensitiveEducationChoiceJoinedFingerprintHe,
+} from "./answer-composer.js";
 import { textViolatesPolarityForEvidence } from "./evidence-polarity.js";
 import { STRONG_GLOBAL_QUESTION_FLOOR } from "./report-volume-context.js";
 
@@ -254,9 +258,12 @@ export function validateAnswerDraft(draft, truthPacket, hints = null) {
   const joinedNorm = normalizeWsHe(joined);
   const boundaryNorm = normalizeWsHe(clinicalBoundaryJoinedFingerprintHe());
   const boundaryNormSensitive = normalizeWsHe(sensitiveEducationChoiceJoinedFingerprintHe());
+  const boundaryNormPeer = normalizeWsHe(peerComparisonBoundaryJoinedFingerprintHe());
   const isApprovedClinicalBoundaryCopy = joinedNorm === boundaryNorm;
   const isApprovedSensitiveEducationCopy = joinedNorm === boundaryNormSensitive;
-  const isApprovedFixedBoundaryCopy = isApprovedClinicalBoundaryCopy || isApprovedSensitiveEducationCopy;
+  const isApprovedPeerComparisonCopy = joinedNorm === boundaryNormPeer;
+  const isApprovedFixedBoundaryCopy =
+    isApprovedClinicalBoundaryCopy || isApprovedSensitiveEducationCopy || isApprovedPeerComparisonCopy;
 
   if (/\bcontractsV1\b|validatorFailCodes|schemaVersion|fail_codes\b|telemetry\.trace\b/i.test(joined)) {
     failCodes.push("internal_surface_leak");

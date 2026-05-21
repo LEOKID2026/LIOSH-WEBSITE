@@ -22,6 +22,7 @@ import {
   buildTopicClarificationQuestionHe,
   OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
   CLASSIFIER_THRESHOLDS,
 } from "./question-classifier.js";
@@ -31,7 +32,7 @@ import {
 } from "./report-row-resolver.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 
-export { OFF_TOPIC_RESPONSE_HE, DIAGNOSTIC_BOUNDARY_RESPONSE_HE, AMBIGUOUS_RESPONSE_HE };
+export { OFF_TOPIC_RESPONSE_HE, DIAGNOSTIC_BOUNDARY_RESPONSE_HE, PEER_COMPARISON_RESPONSE_HE, AMBIGUOUS_RESPONSE_HE };
 
 /**
  * @typedef {(
@@ -112,6 +113,17 @@ export function routeParentQuestion(utteranceRaw, payload) {
         classifierSource: "deterministic",
         classifierSignals: result.signals,
       };
+    case "peer_comparison":
+      return {
+        routerIntent: "peer_comparison_request",
+        requiresLlm: false,
+        deterministicResponse: PEER_COMPARISON_RESPONSE_HE,
+        exitEarly: true,
+        classifierBucket: result.bucket,
+        classifierConfidence: result.confidence,
+        classifierSource: "deterministic",
+        classifierSignals: result.signals,
+      };
     case "ambiguous_or_unclear":
       return {
         routerIntent: "ambiguous_or_unclear",
@@ -160,6 +172,7 @@ export default {
   routerIntentToCanonical,
   OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
   CLASSIFIER_THRESHOLDS,
 };

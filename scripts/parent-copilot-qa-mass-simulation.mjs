@@ -610,8 +610,9 @@ function validateTurn(ctx) {
     failures.push({ code: "validator_fail_codes", detail: record.validatorFailCodes.join(",") });
   }
 
-  if (/ביטחו[ןנ]|בטחו[ןנ]/.test(text)) {
-    failures.push({ code: "emotional_confidence_banned", detail: "ביטחון/בטחון" });
+  // Align with guardrail-validator: allow contract statistical phrasing (בביטחון / הביטחון).
+  if (/((?<!ב)(?<!ה)ביטחו[ןנ]|בטחו[ןנ]|confidence)/iu.test(text)) {
+    failures.push({ code: "emotional_confidence_banned", detail: "ביטחון/בטחון (emotional framing)" });
   }
   if (hasRawEnglishKeys(text)) {
     failures.push({ code: "raw_english_keys", detail: text.slice(0, 120) });
@@ -704,13 +705,22 @@ function validateTurn(ctx) {
         /שברים/u.test(question) ||
         /הבנת\s+הנקרא|הנקרא/u.test(question) ||
         /קריאה/u.test(question);
+      const metaScope = String(record.semanticIntentMetadata || "");
       const subjectOk =
         sem === "topic_specific" ||
         sem === "subject_specific" ||
+        metaScope === "topic_specific" ||
+        metaScope === "subject_specific" ||
         record.intent === "ask_topic_specific" ||
         record.intent === "ask_subject_specific" ||
-        (String(record.intent) === "unclear" && bucket === "report_related" && mentionsScopedSubject);
-      if (!subjectOk) failures.push({ code: "expected_subject_or_topic_specific", detail: `${sem}/${record.intent}` });
+        (mentionsScopedSubject &&
+          bucket === "report_related" &&
+          (sem === "ask_weaknesses" ||
+            sem === "ask_strengths" ||
+            String(record.intent) === "what_is_still_difficult" ||
+            String(record.intent) === "what_is_going_well" ||
+            String(record.intent) === "unclear"));
+      if (!subjectOk) failures.push({ code: "expected_subject_or_topic_specific", detail: `${sem}/${record.intent}/${metaScope}` });
     }
   }
 

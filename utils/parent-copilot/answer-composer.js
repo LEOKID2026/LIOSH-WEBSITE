@@ -10,6 +10,7 @@ import { parentDirectOpenerHe } from "./direct-answer-openers.js";
 import { isMixedGradeReportQuestion } from "./report-row-resolver.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
 import { compactParentAnswerBlocks } from "./answer-compaction.js";
+import { PEER_COMPARISON_RESPONSE_HE } from "./question-classifier.js";
 
 /** Fixed Copilot-only clinical boundary copy (Task C / Task G). */
 export const CLINICAL_BOUNDARY_LINE_1_HE =
@@ -45,6 +46,11 @@ export function buildClinicalBoundaryAnswerDraft() {
  */
 export function clinicalBoundaryJoinedFingerprintHe() {
   return [CLINICAL_BOUNDARY_LINE_1_HE, CLINICAL_BOUNDARY_LINE_2_HE, CLINICAL_BOUNDARY_LINE_3_HE].join(" ");
+}
+
+/** Approved peer-comparison early-exit (single line). */
+export function peerComparisonBoundaryJoinedFingerprintHe() {
+  return PEER_COMPARISON_RESPONSE_HE;
 }
 
 /**

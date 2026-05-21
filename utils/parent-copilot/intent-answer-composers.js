@@ -324,7 +324,7 @@ function composeReportExplanation(params) {
     answerBlocks: [
       { type: "observation", textHe: practicedPhrase, source: "intent_composer" },
       { type: "meaning", textHe: meaningParts.join(" "), source: "intent_composer" },
-      { type: "action", textHe: action, source: "intent_composer" },
+      { type: "next_step", textHe: action, source: "intent_composer" },
     ],
     plannerIntent: "explain_report",
     answerComposerUsed: ANSWER_CONTRACT.report_explanation,
@@ -395,7 +395,7 @@ function composeTopicProblem(params) {
     answerBlocks: [
       { type: "observation", textHe: observation, source: "intent_composer" },
       { type: "meaning", textHe: meaningParts.join(" "), source: "intent_composer" },
-      { type: "action", textHe: action, source: "intent_composer" },
+      { type: "next_step", textHe: action, source: "intent_composer" },
     ],
     plannerIntent: "what_is_still_difficult",
     answerComposerUsed: ANSWER_CONTRACT.topic_problem,
@@ -453,7 +453,7 @@ function composeMistakePattern(params) {
           source: "intent_composer",
         },
         {
-          type: "action",
+          type: "next_step",
           textHe: String(unc || "").trim() || "נכון לעכשיו כדאי לאסוף עוד תרגול לפני החלטה.",
           source: "intent_composer",
         },
@@ -482,7 +482,7 @@ function composeMistakePattern(params) {
           source: "intent_composer",
         },
         {
-          type: "action",
+          type: "next_step",
           textHe: `תרגול ממוקד: 2–3 שאלות מאותו סוג, בלי לדלג על שלב — ולשאול את הילד לומר בקול מה הוא עושה לפני התשובה.`,
           source: "intent_composer",
         },
@@ -506,7 +506,7 @@ function composeMistakePattern(params) {
         source: "intent_composer",
       },
       {
-        type: "action",
+        type: "next_step",
         textHe:
           "כדי לאסוף את זה: בזמן תרגול, לרשום משפט אחד על מה הילד עשה לפני שטעה — אחרי 3–4 פעמים יופיע דפוס.",
         source: "intent_composer",
@@ -547,7 +547,7 @@ function composeHomePractice(params) {
         source: "intent_composer",
       },
       {
-        type: "action",
+        type: "next_step",
         textHe: "לעקוב אחרי 3–4 ימים כאלה, ואז לבדוק בדוח אם הדיוק עולה או שהדפוס חוזר.",
         source: "intent_composer",
       },
@@ -632,7 +632,7 @@ function composeStrength(params) {
       },
       { type: "meaning", textHe: list + ".", source: "intent_composer" },
       {
-        type: "action",
+        type: "next_step",
         textHe: "כדאי לשמר תרגול קצר ושגרתי שם — בלי למהר להעלות רמה.",
         source: "intent_composer",
       },

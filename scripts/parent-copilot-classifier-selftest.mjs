@@ -18,6 +18,7 @@ const {
   classifyParentQuestionDeterministic,
   OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
 } = classifierMod;
 const { routeParentQuestion } = routerMod;
@@ -251,6 +252,31 @@ for (const q of offTopicOrAmbiguous) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// Group B2 — Peer comparison
+// ═══════════════════════════════════════════════════════════════════════════════
+process.stdout.write("\n── Group B2: Peer comparison ──\n");
+
+const peerQuestions = [
+  "האם הוא חלש יותר מילדים אחרים בכיתה?",
+  "האם הוא יותר חלש מילדים אחרים?",
+  "האם הוא חלש יותר מילדים אחרים?",
+  "האם הוא טוב יותר מילדים אחרים בכיתה?",
+  "לעומת שאר הכיתה איך הוא?",
+];
+
+for (const q of peerQuestions) {
+  const det = classifyParentQuestionDeterministic({ utterance: q, payload: richReportPayload() });
+  check(`[B2] classifier peer_comparison :: "${q}"`, det.bucket === "peer_comparison", `bucket=${det.bucket}`);
+  if (det.bucket === "peer_comparison") {
+    pipelineHardGateChecks("B2-pipe", q, "peer_comparison", PEER_COMPARISON_RESPONSE_HE);
+  }
+}
+const detClinical = classifyParentQuestionDeterministic({
+  utterance: "האם הוא דיסלקסי?",
+  payload: richReportPayload(),
+});
+check("[B2] clinical still diagnostic_sensitive", detClinical.bucket === "diagnostic_sensitive", detClinical.bucket);
+
 // Group B — Diagnostic
 // ═══════════════════════════════════════════════════════════════════════════════
 process.stdout.write("\n── Group B: Diagnostic ──\n");

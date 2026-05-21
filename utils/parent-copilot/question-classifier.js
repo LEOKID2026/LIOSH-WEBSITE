@@ -49,6 +49,7 @@ export { buildTopicClarificationQuestionHe };
  *   "report_related" |
  *   "off_topic" |
  *   "diagnostic_sensitive" |
+ *   "peer_comparison" |
  *   "ambiguous_or_unclear"
  * )} ClassifierBucket
  */
@@ -80,6 +81,9 @@ export const OFF_TOPIC_RESPONSE_HE =
 
 export const DIAGNOSTIC_BOUNDARY_RESPONSE_HE =
   "על סמך הדוח הזה אי אפשר לקבוע אבחנה או להצמיד תווית קלינית. הדוח מבוסס על נתוני תרגול בלבד. אם יש חשש, מומלץ לפנות לאיש מקצוע מוסמך.";
+
+export const PEER_COMPARISON_RESPONSE_HE =
+  "הדוח מתבסס על תרגול הילד בלבד ואינו משווה לילדים אחרים בכיתה. אפשר להתמקד במה שמופיע בדוח ולשאול על נושא ספציפי.";
 
 export const AMBIGUOUS_RESPONSE_HE =
   "לא הבנתי בדיוק על מה השאלה. אפשר לשאול כאן שאלות על הדוח, למשל: מה הכי חשוב לתרגל השבוע? או איפה נראו תוצאות טובות יחסית? או מה לעשות בבית?";
@@ -211,7 +215,10 @@ function hasAnchoredTopicObservation(payload) {
 }
 
 function hasWeaknessStem(t) {
-  return /חלש|מתקשה|מתקשים|קושי|חולשות|דורש\s+חיזוק|לא\s+הולך|לא\s*יושב/u.test(t);
+  return (
+    /חלש|מתקשה|מתקשים|קושי|חולשות|דורש\s+חיזוק|לא\s+הולך|לא\s*יושב/u.test(t) ||
+    (/קשה|מאתגר/u.test(t) && /מקצוע|נושא/u.test(t))
+  );
 }
 
 function hasLearningInquiryFrame(t) {
@@ -317,7 +324,16 @@ const DIAGNOSTIC_PATTERNS = [
   /דיכאון|בדיכאון/u,
   /עצוב\s+מאוד/u,
   /(?:^|\s)(הוא|היא)\s+חרד(?:\s|$)/u,
-  /ילדים\s+אחרים|מילדים\s+אחרים|לעומת\s+ילדים|חלש\s+יותר\s+מילדים/u,
+];
+
+/** Peer / class norm comparison — not clinical diagnosis; separate early-exit copy. */
+const PEER_COMPARISON_PATTERNS = [
+  /ילדים\s+אחרים|מילדים\s+אחרים/u,
+  /לעומת\s+ילדים|מול\s+ילדים\s+אחרים/u,
+  /חלש\s+יותר\s+מילדים|יותר\s+חלש\s+מילדים|טוב\s+יותר\s+מילדים|חזק\s+יותר\s+מילדים/u,
+  /ביחס\s+לילדים\s+אחרים|לעומת\s+שאר\s+הכיתה|לעומת\s+הכיתה/u,
+  /האם\s+הוא\s+יותר\s+חלש\s+מילדים|האם\s+היא\s+יותר\s+חלשה\s+מילדים/u,
+  /האם\s+הוא\s+חלש\s+יותר\s+מילדים/u,
 ];
 
 // ─── Normalization ──────────────────────────────────────────────────────────
@@ -519,6 +535,16 @@ function scoreDiagnosticSignal(t) {
 }
 
 /**
+ * @param {string} t — normalized utterance
+ */
+function scorePeerComparisonSignal(t) {
+  for (const re of PEER_COMPARISON_PATTERNS) {
+    if (re.test(t)) return 0.92;
+  }
+  return 0;
+}
+
+/**
  * "מה עם …?" where the remainder names a subject/topic label present in the payload.
  * Category-level shorthand (not per-sentence FAQ).
  * @param {string} t
@@ -591,6 +617,36 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
       confidence: diagnosticSignal,
       source: "deterministic",
       signals,
+    };
+  }
+
+  const peerComparisonSignal = scorePeerComparisonSignal(t);
+  if (peerComparisonSignal >= 0.9) {
+    return {
+      bucket: "peer_comparison",
+      confidence: peerComparisonSignal,
+      source: "deterministic",
+      signals: { ...signals, peerComparisonSignal },
+    };
+  }
+
+  const aggregateQuestionClass = detectAggregateQuestionClass(String(utterance || ""));
+  if (
+    aggregateQuestionClass !== "none" &&
+    aggregateQuestionClass !== "vague_summary_question" &&
+    aggregateQuestionClass !== "recommendation_action"
+  ) {
+    return {
+      bucket: "report_related",
+      confidence: 0.82,
+      source: "deterministic",
+      signals: {
+        ...signals,
+        reportSignal: Math.max(reportRes.score, 0.78),
+        hasStrongReportToken: true,
+        ambiguitySignal: Math.min(ambiguitySignal, 0.2),
+        aggregateQuestionClass,
+      },
     };
   }
 
@@ -988,6 +1044,7 @@ export function bucketToCanonicalIntent(bucket) {
   switch (bucket) {
     case "off_topic": return "off_topic_redirect";
     case "diagnostic_sensitive": return "clinical_boundary";
+    case "peer_comparison": return "unclear";
     case "ambiguous_or_unclear": return "unclear";
     case "report_related":
     default:
@@ -1001,6 +1058,7 @@ export default {
   maImSubjectAbsentFromPayload,
   OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
   CLASSIFIER_THRESHOLDS,
 };

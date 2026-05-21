@@ -47,6 +47,7 @@ import {
   routeParentQuestion,
   OFF_TOPIC_RESPONSE_HE,
   DIAGNOSTIC_BOUNDARY_RESPONSE_HE,
+  PEER_COMPARISON_RESPONSE_HE,
   AMBIGUOUS_RESPONSE_HE,
 } from "./question-router.js";
 import { classifyParentQuestionViaLlm } from "./question-classifier-llm.js";
@@ -425,7 +426,7 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     }),
   };
   const semanticAggregateSatisfied = false;
-  const aggregateQuestionClass = "none";
+  const aggregateQuestionClass = detectAggregateQuestionClass(utteranceStr);
   const intentComposerPath = String(scopeMeta?.generationPath || "") === "intent_composer";
   let vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
   let fallbackUsed = false;
@@ -492,7 +493,9 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     answerBodyTextHe,
     answerBlockTypes,
     clickedFollowupFamilyThisTurn: input?.clickedFollowupFamily ? String(input.clickedFollowupFamily).trim() : null,
-    omitFollowUpEntirely: false,
+    omitFollowUpEntirely:
+      (aggregateQuestionClass !== "none" && aggregateQuestionClass !== "vague_summary_question") ||
+      (truthPacket.scopeType === "executive" && vDraft.ok),
     truthPacket: {
       cannotConcludeYet: truthPacket.derivedLimits.cannotConcludeYet,
       readiness: truthPacket.derivedLimits.readiness,
@@ -633,6 +636,7 @@ function classifierIntentToCanonical(routerIntent) {
   switch (routerIntent) {
     case "off_topic": return "off_topic_redirect";
     case "unsafe_or_diagnostic_request": return "clinical_boundary";
+    case "peer_comparison_request": return "unclear";
     case "ambiguous_or_unclear": return "unclear";
     case "unknown_report_question":
     default:

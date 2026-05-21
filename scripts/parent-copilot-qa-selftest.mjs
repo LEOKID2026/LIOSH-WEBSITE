@@ -707,10 +707,10 @@ const badDraft3 = {
 const v3 = validateAnswerDraft(badDraft3, highVol, { intent: "explain_report" });
 check("[J5] validator: high volume rejects אין מספיק נתונים (unscoped)", !v3.ok && v3.failCodes.includes("truth_contradiction_global_thin_language_high_volume"), v3.failCodes?.join(","));
 
-// J6 — Validator: emotional confidence blocked
+// J6 — Validator: emotional confidence blocked (unscoped ביטחון — not statistical הביטחון)
 const emoDraft = {
   answerBlocks: [
-    { type: "observation", textHe: "נראה שכדאי לחזק את הביטחון בתרגול.", source: "composed" },
+    { type: "observation", textHe: "נראה שכדאי לחזק ביטחון רגשי בתרגול.", source: "composed" },
     { type: "meaning", textHe: "עוד משפט ארוך כדי למלא את דרישות האורך למשפט שני כאן בעברית.", source: "composed" },
   ],
 };

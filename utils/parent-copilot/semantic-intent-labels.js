@@ -19,6 +19,7 @@
  *   "topic_specific" |
  *   "off_topic" |
  *   "diagnostic_sensitive" |
+ *   "peer_comparison" |
  *   "ambiguous_or_unclear" |
  *   "other"
  * )} SemanticParentIntent
@@ -70,6 +71,8 @@ export function semanticIntentFromClassifierBucket(bucket) {
       return "off_topic";
     case "diagnostic_sensitive":
       return "diagnostic_sensitive";
+    case "peer_comparison":
+      return "peer_comparison";
     case "ambiguous_or_unclear":
       return "ambiguous_or_unclear";
     case "report_related":

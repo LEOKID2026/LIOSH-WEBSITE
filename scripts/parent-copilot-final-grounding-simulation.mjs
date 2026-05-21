@@ -27,9 +27,10 @@ const runTurn = parentCopilot.runParentCopilotTurn ?? parentCopilot.default?.run
 const { redactPayloadForCopilotGrounding } = await load(
   "utils/parent-copilot/redact-payload-for-copilot-grounding.js",
 );
-const { OFF_TOPIC_RESPONSE_HE, DIAGNOSTIC_BOUNDARY_RESPONSE_HE } = await load(
+const { OFF_TOPIC_RESPONSE_HE, DIAGNOSTIC_BOUNDARY_RESPONSE_HE, PEER_COMPARISON_RESPONSE_HE } = await load(
   "utils/parent-copilot/question-router.js",
 );
+const PEER_COMPARISON_HE = PEER_COMPARISON_RESPONSE_HE;
 const { buildDetailedParentReportFromBaseReport } = await load("utils/detailed-parent-report.js");
 
 const LEAK_RE = [
@@ -435,7 +436,10 @@ function scanLeaks(text) {
  * @param {unknown} res
  */
 function answerText(res) {
-  return (res?.answerBlocks || []).map((b) => String(b.textHe || "")).join("\n");
+  if (res?.resolutionStatus === "resolved") {
+    return (res?.answerBlocks || []).map((b) => String(b.textHe || "")).join("\n");
+  }
+  return String(res?.clarificationQuestionHe || "");
 }
 
 /**
@@ -470,12 +474,9 @@ function runCase(sc, group, question, payload) {
       }
     }
     if (question.includes("ילדים אחרים")) {
-      if (
-        res.resolutionStatus === "resolved" &&
-        !/אבחון|מומחה|קליני|אי אפשר לקבוע|תרגול בלבד/u.test(text)
-      ) {
-        failures.push("compare_children_not_guarded");
-      }
+      if (!text.includes(PEER_COMPARISON_HE)) failures.push("compare_children_missing_approved_copy");
+      if (/אבחנה|דיסלקצ|ADHD|הפרעת קשב/i.test(text)) failures.push("compare_children_clinical_copy");
+      if (/ממוצע הכיתה|אחוזון|percentile/i.test(text)) failures.push("compare_children_invented_benchmark");
     }
     if (sc.expectThinHedge && question.includes("בטוחה")) {
       if (FIRM_WEAKNESS_RE.test(text)) failures.push("thin_parent_pressure_upgraded_to_firm_weakness");
