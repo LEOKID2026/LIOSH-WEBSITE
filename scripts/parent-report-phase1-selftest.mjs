@@ -1443,3 +1443,4 @@ assert.ok(rec.trend == null || typeof rec.trend === "object");
 }
 
 console.log("parent-report phase1 selftest: OK");
+process.exit(0);

@@ -194,6 +194,10 @@ function runTests() {
   console.log(JSON.stringify(reportInput.probeEvidence[0], null, 2));
   console.log("\n2. Copilot redacted probeEvidence[0]:");
   console.log(JSON.stringify(redactedProbe, null, 2));
+  process.exit(0);
 }
 
-runTests();
+runTests().catch((e) => {
+  console.error("\n❌ FAIL:", e.message);
+  process.exit(1);
+});

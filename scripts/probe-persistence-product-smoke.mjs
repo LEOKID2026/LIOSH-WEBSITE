@@ -290,6 +290,7 @@ async function main() {
 
   console.log("\n✅ PASS: Probe persistence product smoke test complete");
   console.log(`Report written to: ${join(REPORTS_DIR, "product-smoke-summary.json")}`);
+  process.exit(0);
 }
 
 main().catch((e) => {
