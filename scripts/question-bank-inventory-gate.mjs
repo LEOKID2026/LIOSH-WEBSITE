@@ -398,22 +398,13 @@ function isTopicInGeometryCurriculum(grade, topic) {
 async function auditHebrew(results) {
   console.log("Auditing Hebrew...");
   const { HEBREW_RICH_POOL } = await import(modUrl("utils/hebrew-rich-question-bank.js"));
+  const { itemAllowedForGrade } = await import(modUrl("utils/grade-gating.js"));
   
   const cells = [];
   const topics = ["comprehension", "grammar", "spelling", "vocabulary", "reading"];
   const levels = ["easy", "medium", "hard"];
   
-  // Rich pool questions by grade/topic
-  const richByGradeTopic = {};
-  for (const q of HEBREW_RICH_POOL) {
-    const grade = `g${q.minGrade || q.maxGrade || 3}`;
-    const topic = q.topic || "general";
-    const key = `${grade}:${topic}`;
-    if (!richByGradeTopic[key]) richByGradeTopic[key] = [];
-    richByGradeTopic[key].push(q);
-  }
-  
-  // Archive questions
+  // Archive questions (volume estimate only — not used for metadata %)
   const archiveCounts = {
     g1: 300, g2: 313, g3: 77, g4: 174, g5: 118, g6: 98
   };
@@ -422,26 +413,33 @@ async function auditHebrew(results) {
     const grade = `g${g}`;
     for (const topic of topics) {
       for (const level of levels) {
-        const richItems = richByGradeTopic[`${grade}:${topic}`] || [];
+        const richItems = HEBREW_RICH_POOL.filter(
+          (item) =>
+            item.topic === topic &&
+            itemAllowedForGrade(item, grade) &&
+            Array.isArray(item.levels) &&
+            item.levels.includes(level)
+        );
         const richCount = richItems.length;
         const archiveCount = archiveCounts[grade] || 0;
         const totalStatic = richCount + Math.floor(archiveCount / topics.length);
         
-        // Check metadata in rich pool
         let hasPatternFamily = 0;
+        let hasConceptTag = 0;
         let hasDiagnosticSkillId = 0;
         let hasExpectedErrorTags = 0;
         let isProbeCapable = 0;
         
         for (const item of richItems) {
           if (item.patternFamily) hasPatternFamily++;
+          if (item.conceptTag) hasConceptTag++;
           if (item.diagnosticSkillId) hasDiagnosticSkillId++;
           if (item.expectedErrorTags?.length) hasExpectedErrorTags++;
           if (item.diagnosticSkillId && item.expectedErrorTags?.length) isProbeCapable++;
         }
         
         const total = richCount || 1;
-        const uniqueEstimate = Math.min(totalStatic, Math.floor(totalStatic * 0.9)); // Estimate 90% unique
+        const uniqueEstimate = Math.min(totalStatic, Math.floor(totalStatic * 0.9));
         
         const status = uniqueEstimate < THRESHOLDS.PRACTICE_MIN ? "BLOCKER" :
                   uniqueEstimate < THRESHOLDS.MODERATE_MIN ? "NEEDS_MORE" :
@@ -460,7 +458,7 @@ async function auditHebrew(results) {
           duplicateCount: totalStatic - uniqueEstimate,
           metadataCoverage: {
             patternFamily: Math.round((hasPatternFamily / total) * 100),
-            conceptTag: 100, // Rich pool has conceptTags
+            conceptTag: Math.round((hasConceptTag / total) * 100),
             diagnosticSkillId: Math.round((hasDiagnosticSkillId / total) * 100),
             expectedErrorTags: Math.round((hasExpectedErrorTags / total) * 100),
             probePower: Math.round((hasDiagnosticSkillId / total) * 100)
@@ -471,7 +469,7 @@ async function auditHebrew(results) {
           moderateReady: uniqueEstimate >= THRESHOLDS.MODERATE_MIN,
           strongDiagnosisReady: uniqueEstimate >= THRESHOLDS.STRONG_DIAGNOSIS_MIN,
           status,
-          notes: `Rich pool: ${richCount}, Archive: ~${Math.floor(archiveCount / topics.length)}`
+          notes: `Rich pool (grade+level): ${richCount}, Archive: ~${Math.floor(archiveCount / topics.length)}`
         };
         
         cells.push(cell);
