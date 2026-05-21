@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { navigateToParentDashboard } from "../../lib/parent-report-navigation";
 import Layout from "../../components/Layout";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
@@ -716,6 +717,9 @@ function sanitizeDiagnosticsFootnoteDetailHe(raw) {
 export default function ParentReport() {
   useIOSViewportFix();
   const router = useRouter();
+  const handleBackToParentDashboard = useCallback(() => {
+    navigateToParentDashboard(router);
+  }, [router]);
   /** Phase D — staged Parent Copilot on short report (server-side turns). Default off. */
   const enableParentCopilotOnShort =
     typeof process !== "undefined" && process.env.NEXT_PUBLIC_ENABLE_PARENT_COPILOT_ON_SHORT === "true";
@@ -1228,13 +1232,8 @@ export default function ParentReport() {
             {/* כפתור חזרה */}
             <div className="mb-4 text-left">
               <button
-                onClick={() => {
-                  if (typeof window !== "undefined" && window.history.length > 1) {
-                    router.back();
-                  } else {
-                    router.push("/learning");
-                  }
-                }}
+                type="button"
+                onClick={handleBackToParentDashboard}
                 className="px-4 py-2 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all"
               >
                 חזרה
@@ -1776,13 +1775,8 @@ export default function ParentReport() {
           {/* כפתור חזרה (לא נכנס ל-PDF) */}
           <div className="mb-0 text-left no-pdf">
             <button
-              onClick={() => {
-                if (typeof window !== "undefined" && window.history.length > 1) {
-                  router.back();
-                } else {
-                  router.push("/learning");
-                }
-              }}
+              type="button"
+              onClick={handleBackToParentDashboard}
               className="px-4 py-2 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all"
             >
               חזרה

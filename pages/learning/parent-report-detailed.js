@@ -34,6 +34,7 @@ import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
 } from "../../lib/learning-supabase/parent-dashboard-report-bridge.js";
+import { navigateToParentDashboard } from "../../lib/parent-report-navigation";
 
 /**
  * מיפוי ויזואלי בלבד לפי recommendedNextStep מה־payload — לא משנה מנוע או תוכן.
@@ -214,6 +215,9 @@ function buildDetailedReportQueryFromQueryObject(query, mode) {
 export default function ParentReportDetailedPage() {
   useIOSViewportFix();
   const router = useRouter();
+  const handleBackToParentDashboard = useCallback(() => {
+    navigateToParentDashboard(router);
+  }, [router]);
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [displayMode, setDisplayMode] = useState("full");
@@ -294,19 +298,6 @@ export default function ParentReportDetailedPage() {
       return data.result;
     };
   }, [payload, queryPeriod, customDatesForCopilot, queryStart, queryEnd, copilotStudentId]);
-
-  const backHref = useMemo(() => {
-    const q = { period: queryPeriod };
-    if (queryPeriod === "custom" && queryStart && queryEnd) {
-      q.start = queryStart;
-      q.end = queryEnd;
-    }
-    if (isParentSource && parentStudentId) {
-      q.studentId = parentStudentId;
-      q.source = "parent";
-    }
-    return { pathname: "/learning/parent-report", query: q };
-  }, [queryPeriod, queryStart, queryEnd, isParentSource, parentStudentId]);
 
   useEffect(() => {
     if (!router.isReady || typeof window === "undefined") return undefined;
@@ -1452,13 +1443,13 @@ export default function ParentReportDetailedPage() {
         <div className="max-w-4xl mx-auto w-full min-w-0 overflow-x-hidden">
           <div className="no-pdf flex flex-col gap-3 mb-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <Link
-                href={backHref}
-                prefetch={false}
+              <button
+                type="button"
+                onClick={handleBackToParentDashboard}
                 className="inline-flex px-4 py-2 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all"
               >
-                ← חזרה לדוח המקוצר
-              </Link>
+                חזרה
+              </button>
             </div>
             <ModeToggle />
           </div>
@@ -1802,13 +1793,13 @@ export default function ParentReportDetailedPage() {
                 >
                   🖨️ הדפס תקציר
                 </button>
-                <Link
-                  href={backHref}
-                  prefetch={false}
+                <button
+                  type="button"
+                  onClick={handleBackToParentDashboard}
                   className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all text-center"
                 >
-                  חזרה לדוח המקוצר
-                </Link>
+                  חזרה
+                </button>
                 <Link
                   href="/learning"
                   className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-bold bg-violet-600/50 border border-violet-300/40 hover:bg-violet-600/65 text-white transition-all text-center"
