@@ -900,27 +900,27 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ב׳ · רמה מתקדמת — למה לציפור יש כנפיים? · מוקד bird_wings_v1",
+  "stem": "כיתה ב׳ · רמה מתקדמת — למה חשוב לשמור על בית גידול? · מוקד habitat_protection_v1",
   "options": [
-    "לתעופה",
-    "לשחייה",
-    "לנשימה במים",
-    "לייצור אור"
+    "מספק מזון ומחסה",
+    "מונע גידול",
+    "לא חשוב",
+    "מחליף מים"
   ],
   "correctIndex": 0,
-  "explanation": "כנפיים מאפשרות תעופה.",
+  "explanation": "שמירת טבע חשובה.",
   "params": {
-    "patternFamily": "sci_vol_animals_g2_hard_bird_wings",
+    "patternFamily": "sci_vol_animals_g2_hard_habitat_protection",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g2_hard_bird_wings",
-    "diagnosticSkillId": "sci_animals_g2_hard_bird_wings",
+    "conceptTag": "sci_vol_animals_g2_hard_habitat_protection",
+    "diagnosticSkillId": "sci_animals_g2_hard_habitat_protection",
     "probePower": "medium",
     "expectedErrorTags": [
-      "bird_wings",
+      "habitat_protection",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "bird_wings",
+      "habitat_protection",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "application",
@@ -937,27 +937,27 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ב׳ · רמה מתקדמת — מה תפקיד טורף בשרשרת מזון? · מוקד predator_role_v2",
+  "stem": "כיתה ב׳ · רמה מתקדמת — מה מאפיין זוחל? · מוקד reptile_traits_v2",
   "options": [
-    "שולט על אוכלוסיית טרף",
-    "אוכל רק עלים",
-    "אין תפקיד",
-    "מייצר אור"
+    "עור יבש ושיניים",
+    "זימים במים",
+    "פרווה ומינק",
+    "אין חום גוף"
   ],
   "correctIndex": 0,
-  "explanation": "טורף מאזן מערכת.",
+  "explanation": "זוחלים בעלי עור יבש.",
   "params": {
-    "patternFamily": "sci_vol_animals_g2_hard_predator_role",
+    "patternFamily": "sci_vol_animals_g2_hard_reptile_traits",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g2_hard_predator_role",
-    "diagnosticSkillId": "sci_animals_g2_hard_predator_role",
+    "conceptTag": "sci_vol_animals_g2_hard_reptile_traits",
+    "diagnosticSkillId": "sci_animals_g2_hard_reptile_traits",
     "probePower": "medium",
     "expectedErrorTags": [
-      "predator_role",
+      "reptile_traits",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "predator_role",
+      "reptile_traits",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "application",
@@ -1159,44 +1159,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ג׳ · רמה מתקדמת — מה תפקיד העור הגדול בגוף? · מוקד skin_protection_v1",
-  "options": [
-    "הגנה וויסות חום",
-    "ייצור חמצן",
-    "הובלת דם",
-    "עיכול פחממים"
-  ],
-  "correctIndex": 0,
-  "explanation": "עור מגן ומווסת.",
-  "params": {
-    "patternFamily": "sci_vol_body_g3_hard_skin_protection",
-    "subtype": "sci_body_general",
-    "conceptTag": "sci_vol_body_g3_hard_skin_protection",
-    "diagnosticSkillId": "sci_body_g3_hard_skin_protection",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "skin_protection",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "skin_protection",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "application",
-    "difficulty": "advanced",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g3_body_hard_02",
-  "topic": "body",
-  "grades": [
-    "g3"
-  ],
-  "minLevel": "hard",
-  "maxLevel": "hard",
-  "type": "mcq",
-  "stem": "כיתה ג׳ · רמה מתקדמת — מה מחבר בין המוח לשרירים? · מוקד nervous_signals_v2",
+  "stem": "כיתה ג׳ · רמה מתקדמת — מה מחבר בין המוח לשרירים? · מוקד nervous_signals_v1",
   "options": [
     "מערכת העצבים",
     "מערכת העיכול",
@@ -1217,6 +1180,43 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     ],
     "expectedErrorTypes": [
       "nervous_signals",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "application",
+    "difficulty": "advanced",
+    "kind": "needs_more_volume"
+  }
+},
+{
+  "id": "sci_vol_g3_body_hard_02",
+  "topic": "body",
+  "grades": [
+    "g3"
+  ],
+  "minLevel": "hard",
+  "maxLevel": "hard",
+  "type": "mcq",
+  "stem": "כיתה ג׳ · רמה מתקדמת — מה תפקיד הכבד בעיכול? · מוקד liver_role_v2",
+  "options": [
+    "עוזר בעיבוד חומרים",
+    "מחליף את הריאות",
+    "שואב אור",
+    "מחזיק את העצמות"
+  ],
+  "correctIndex": 0,
+  "explanation": "כבד תומך בעיבוד.",
+  "params": {
+    "patternFamily": "sci_vol_body_g3_hard_liver_role",
+    "subtype": "sci_body_general",
+    "conceptTag": "sci_vol_body_g3_hard_liver_role",
+    "diagnosticSkillId": "sci_body_g3_hard_liver_role",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "liver_role",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "liver_role",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "application",
@@ -1418,27 +1418,27 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "כיתה ג׳ · רמה קלה — מה עושה דבורה לפרחים? · מוקד bee_pollination_v2",
+  "stem": "כיתה ג׳ · רמה קלה — מה עושה צמח ליונק herbivore? · מוקד plant_consumer_v2",
   "options": [
-    "מאבקת",
-    "אוכלת עלים",
-    "שוחה במים",
-    "מייצרת דם"
+    "משמש מזון",
+    "צד טרף",
+    "מחליף מים",
+    "מייצר דם"
   ],
   "correctIndex": 0,
-  "explanation": "דבורים מעבירות אבקה.",
+  "explanation": "צמחים מזינים אוכלי צמחים.",
   "params": {
-    "patternFamily": "sci_vol_animals_g3_easy_bee_pollination",
+    "patternFamily": "sci_vol_animals_g3_easy_plant_consumer",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g3_easy_bee_pollination",
-    "diagnosticSkillId": "sci_animals_g3_easy_bee_pollination",
+    "conceptTag": "sci_vol_animals_g3_easy_plant_consumer",
+    "diagnosticSkillId": "sci_animals_g3_easy_plant_consumer",
     "probePower": "medium",
     "expectedErrorTags": [
-      "bee_pollination",
+      "plant_consumer",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "bee_pollination",
+      "plant_consumer",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "recall",
@@ -1492,27 +1492,27 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ג׳ · רמה מתקדמת — למה חשוב לשמור על בית גידול? · מוקד habitat_protection_v2",
+  "stem": "כיתה ג׳ · רמה מתקדמת — למה לדג יש סנפירים? · מוקד fish_fins_v2",
   "options": [
-    "מספק מזון ומחסה",
-    "מונע גידול",
-    "לא חשוב",
-    "מחליף מים"
+    "לשחייה ושיווי משקל",
+    "לתעופה",
+    "לעיכול",
+    "להאזנה"
   ],
   "correctIndex": 0,
-  "explanation": "שמירת טבע חשובה.",
+  "explanation": "סנפירים עוזרים בשחייה.",
   "params": {
-    "patternFamily": "sci_vol_animals_g3_hard_habitat_protection",
+    "patternFamily": "sci_vol_animals_g3_hard_fish_fins",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g3_hard_habitat_protection",
-    "diagnosticSkillId": "sci_animals_g3_hard_habitat_protection",
+    "conceptTag": "sci_vol_animals_g3_hard_fish_fins",
+    "diagnosticSkillId": "sci_animals_g3_hard_fish_fins",
     "probePower": "medium",
     "expectedErrorTags": [
-      "habitat_protection",
+      "fish_fins",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "habitat_protection",
+      "fish_fins",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "application",
@@ -1665,80 +1665,6 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     ],
     "cognitiveLevel": "application",
     "difficulty": "advanced",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g4_body_easy_01",
-  "topic": "body",
-  "grades": [
-    "g4"
-  ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
-  "type": "mcq",
-  "stem": "כיתה ד׳ · רמה קלה — מה תפקיד הכבד בעיכול? · מוקד liver_role_v1",
-  "options": [
-    "עוזר בעיבוד חומרים",
-    "מחליף את הריאות",
-    "שואב אור",
-    "מחזיק את העצמות"
-  ],
-  "correctIndex": 0,
-  "explanation": "כבד תומך בעיבוד.",
-  "params": {
-    "patternFamily": "sci_vol_body_g4_easy_liver_role",
-    "subtype": "sci_body_general",
-    "conceptTag": "sci_vol_body_g4_easy_liver_role",
-    "diagnosticSkillId": "sci_body_g4_easy_liver_role",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "liver_role",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "liver_role",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g4_body_easy_02",
-  "topic": "body",
-  "grades": [
-    "g4"
-  ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
-  "type": "mcq",
-  "stem": "כיתה ד׳ · רמה קלה — למה חשוב לאימון מתון ללב? · מוקד exercise_heart_v2",
-  "options": [
-    "מחזק את מערכת הדם",
-    "מבטל צורך בנשימה",
-    "מונע ספיגת מזון",
-    "מחליף שינה"
-  ],
-  "correctIndex": 0,
-  "explanation": "פעילות תומכת בלב.",
-  "params": {
-    "patternFamily": "sci_vol_body_g4_easy_exercise_heart",
-    "subtype": "sci_body_general",
-    "conceptTag": "sci_vol_body_g4_easy_exercise_heart",
-    "diagnosticSkillId": "sci_body_g4_easy_exercise_heart",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "exercise_heart",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "exercise_heart",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
     "kind": "needs_more_volume"
   }
 },
@@ -1965,80 +1891,6 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
-  "id": "sci_vol_g4_animals_easy_01",
-  "topic": "animals",
-  "grades": [
-    "g4"
-  ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
-  "type": "mcq",
-  "stem": "כיתה ד׳ · רמה קלה — מה מאפיין זוחל? · מוקד reptile_traits_v1",
-  "options": [
-    "עור יבש ושיניים",
-    "זימים במים",
-    "פרווה ומינק",
-    "אין חום גוף"
-  ],
-  "correctIndex": 0,
-  "explanation": "זוחלים בעלי עור יבש.",
-  "params": {
-    "patternFamily": "sci_vol_animals_g4_easy_reptile_traits",
-    "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g4_easy_reptile_traits",
-    "diagnosticSkillId": "sci_animals_g4_easy_reptile_traits",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "reptile_traits",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "reptile_traits",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g4_animals_easy_02",
-  "topic": "animals",
-  "grades": [
-    "g4"
-  ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
-  "type": "mcq",
-  "stem": "כיתה ד׳ · רמה קלה — מה עושה צמח ליונק herbivore? · מוקד plant_consumer_v2",
-  "options": [
-    "משמש מזון",
-    "צד טרף",
-    "מחליף מים",
-    "מייצר דם"
-  ],
-  "correctIndex": 0,
-  "explanation": "צמחים מזינים אוכלי צמחים.",
-  "params": {
-    "patternFamily": "sci_vol_animals_g4_easy_plant_consumer",
-    "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g4_easy_plant_consumer",
-    "diagnosticSkillId": "sci_animals_g4_easy_plant_consumer",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "plant_consumer",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "plant_consumer",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
-    "kind": "needs_more_volume"
-  }
-},
-{
   "id": "sci_vol_g4_animals_hard_01",
   "topic": "animals",
   "grades": [
@@ -2047,44 +1899,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ד׳ · רמה מתקדמת — למה לדג יש סנפירים? · מוקד fish_fins_v1",
-  "options": [
-    "לשחייה ושיווי משקל",
-    "לתעופה",
-    "לעיכול",
-    "להאזנה"
-  ],
-  "correctIndex": 0,
-  "explanation": "סנפירים עוזרים בשחייה.",
-  "params": {
-    "patternFamily": "sci_vol_animals_g4_hard_fish_fins",
-    "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g4_hard_fish_fins",
-    "diagnosticSkillId": "sci_animals_g4_hard_fish_fins",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "fish_fins",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "fish_fins",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "application",
-    "difficulty": "advanced",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g4_animals_hard_02",
-  "topic": "animals",
-  "grades": [
-    "g4"
-  ],
-  "minLevel": "hard",
-  "maxLevel": "hard",
-  "type": "mcq",
-  "stem": "כיתה ד׳ · רמה מתקדמת — מה מאפיין עוף לעומת דג? · מוקד bird_vs_fish_v2",
+  "stem": "כיתה ד׳ · רמה מתקדמת — מה מאפיין עוף לעומת דג? · מוקד bird_vs_fish_v1",
   "options": [
     "נושם באוויר בנוסף",
     "חי רק במים",
@@ -2113,6 +1928,43 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
+  "id": "sci_vol_g4_animals_hard_02",
+  "topic": "animals",
+  "grades": [
+    "g4"
+  ],
+  "minLevel": "hard",
+  "maxLevel": "hard",
+  "type": "mcq",
+  "stem": "כיתה ד׳ · רמה מתקדמת — מה תפקיד האבקה לצמח? · מוקד pollen_role_v2",
+  "options": [
+    "מאבקת פרחים",
+    "שוחה",
+    "צד חיות",
+    "מייצרת דם"
+  ],
+  "correctIndex": 0,
+  "explanation": "אבקה מזרעת צמחים.",
+  "params": {
+    "patternFamily": "sci_vol_animals_g4_hard_pollen_role",
+    "subtype": "sci_animals_general",
+    "conceptTag": "sci_vol_animals_g4_hard_pollen_role",
+    "diagnosticSkillId": "sci_animals_g4_hard_pollen_role",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "pollen_role",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "pollen_role",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "application",
+    "difficulty": "advanced",
+    "kind": "needs_more_volume"
+  }
+},
+{
   "id": "sci_vol_g5_body_easy_01",
   "topic": "body",
   "grades": [
@@ -2121,7 +1973,44 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה קלה — מה עושים כליות בגוף? · מוקד kidney_filter_v1",
+  "stem": "כיתה ה׳ · רמה קלה — למה חשוב לאימון מתון ללב? · מוקד exercise_heart_v1",
+  "options": [
+    "מחזק את מערכת הדם",
+    "מבטל צורך בנשימה",
+    "מונע ספיגת מזון",
+    "מחליף שינה"
+  ],
+  "correctIndex": 0,
+  "explanation": "פעילות תומכת בלב.",
+  "params": {
+    "patternFamily": "sci_vol_body_g5_easy_exercise_heart",
+    "subtype": "sci_body_general",
+    "conceptTag": "sci_vol_body_g5_easy_exercise_heart",
+    "diagnosticSkillId": "sci_body_g5_easy_exercise_heart",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "exercise_heart",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "exercise_heart",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "recall",
+    "difficulty": "basic",
+    "kind": "needs_more_volume"
+  }
+},
+{
+  "id": "sci_vol_g5_body_easy_02",
+  "topic": "body",
+  "grades": [
+    "g5"
+  ],
+  "minLevel": "easy",
+  "maxLevel": "easy",
+  "type": "mcq",
+  "stem": "כיתה ה׳ · רמה קלה — מה עושים כליות בגוף? · מוקד kidney_filter_v2",
   "options": [
     "מסננות פסולת מדם",
     "מייצרות חמצן",
@@ -2150,7 +2039,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
-  "id": "sci_vol_g5_body_easy_02",
+  "id": "sci_vol_g5_body_easy_03",
   "topic": "body",
   "grades": [
     "g5"
@@ -2158,7 +2047,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "easy",
   "maxLevel": "easy",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה קלה — מה קורה כשנשארים ללא מים זמן רב? · מוקד dehydration_risk_v2",
+  "stem": "כיתה ה׳ · רמה קלה — מה קורה כשנשארים ללא מים זמן רב? · מוקד dehydration_risk_v3",
   "options": [
     "עלולה להיפגע איזון הגוף",
     "הגוף מייצר יותר חמצן",
@@ -2187,15 +2076,15 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
-  "id": "sci_vol_g5_body_medium_01",
+  "id": "sci_vol_g5_body_easy_04",
   "topic": "body",
   "grades": [
     "g5"
   ],
-  "minLevel": "medium",
-  "maxLevel": "medium",
+  "minLevel": "easy",
+  "maxLevel": "easy",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה בינונית — מה תפקיד הדם ברקמות? · מוקד blood_supply_v1",
+  "stem": "כיתה ה׳ · רמה קלה — מה תפקיד הדם ברקמות? · מוקד blood_supply_v4",
   "options": [
     "מספק חמצן וחומרים",
     "מחליף את השרירים",
@@ -2205,10 +2094,10 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "correctIndex": 0,
   "explanation": "דם מזין רקמות.",
   "params": {
-    "patternFamily": "sci_vol_body_g5_medium_blood_supply",
+    "patternFamily": "sci_vol_body_g5_easy_blood_supply",
     "subtype": "sci_body_general",
-    "conceptTag": "sci_vol_body_g5_medium_blood_supply",
-    "diagnosticSkillId": "sci_body_g5_medium_blood_supply",
+    "conceptTag": "sci_vol_body_g5_easy_blood_supply",
+    "diagnosticSkillId": "sci_body_g5_easy_blood_supply",
     "probePower": "medium",
     "expectedErrorTags": [
       "blood_supply",
@@ -2218,13 +2107,13 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
       "blood_supply",
       "fact_recall_gap"
     ],
-    "cognitiveLevel": "understanding",
-    "difficulty": "standard",
+    "cognitiveLevel": "recall",
+    "difficulty": "basic",
     "kind": "needs_more_volume"
   }
 },
 {
-  "id": "sci_vol_g5_body_medium_02",
+  "id": "sci_vol_g5_body_medium_01",
   "topic": "body",
   "grades": [
     "g5"
@@ -2232,7 +2121,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה בינונית — למה חשוב לאכול ארוחה מאוזנת? · מוקד balanced_diet_v2",
+  "stem": "כיתה ה׳ · רמה בינונית — למה חשוב לאכול ארוחה מאוזנת? · מוקד balanced_diet_v1",
   "options": [
     "לספק חומרי מזון שונים",
     "כדי לבטל עיכול",
@@ -2261,15 +2150,15 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
-  "id": "sci_vol_g5_body_hard_01",
+  "id": "sci_vol_g5_body_medium_02",
   "topic": "body",
   "grades": [
     "g5"
   ],
-  "minLevel": "hard",
-  "maxLevel": "hard",
+  "minLevel": "medium",
+  "maxLevel": "medium",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה מתקדמת — מה תפקיד המוח בגוף? · מוקד brain_control_v1",
+  "stem": "כיתה ה׳ · רמה בינונית — מה תפקיד המוח בגוף? · מוקד brain_control_v2",
   "options": [
     "מרכז בקרה ותיאום",
     "מפרק מזון",
@@ -2279,10 +2168,10 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "correctIndex": 0,
   "explanation": "מוח מתאם פעולות.",
   "params": {
-    "patternFamily": "sci_vol_body_g5_hard_brain_control",
+    "patternFamily": "sci_vol_body_g5_medium_brain_control",
     "subtype": "sci_body_general",
-    "conceptTag": "sci_vol_body_g5_hard_brain_control",
-    "diagnosticSkillId": "sci_body_g5_hard_brain_control",
+    "conceptTag": "sci_vol_body_g5_medium_brain_control",
+    "diagnosticSkillId": "sci_body_g5_medium_brain_control",
     "probePower": "medium",
     "expectedErrorTags": [
       "brain_control",
@@ -2292,13 +2181,13 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
       "brain_control",
       "fact_recall_gap"
     ],
-    "cognitiveLevel": "application",
-    "difficulty": "advanced",
+    "cognitiveLevel": "understanding",
+    "difficulty": "standard",
     "kind": "needs_more_volume"
   }
 },
 {
-  "id": "sci_vol_g5_body_hard_02",
+  "id": "sci_vol_g5_body_hard_01",
   "topic": "body",
   "grades": [
     "g5"
@@ -2306,7 +2195,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה מתקדמת — למה חשוב חימום לפני ספורט? · מוקד warmup_muscles_v2",
+  "stem": "כיתה ה׳ · רמה מתקדמת — למה חשוב חימום לפני ספורט? · מוקד warmup_muscles_v1",
   "options": [
     "מכין שרירים לפעילות",
     "מבטל צורך בלב",
@@ -2327,6 +2216,43 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     ],
     "expectedErrorTypes": [
       "warmup_muscles",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "application",
+    "difficulty": "advanced",
+    "kind": "needs_more_volume"
+  }
+},
+{
+  "id": "sci_vol_g5_body_hard_02",
+  "topic": "body",
+  "grades": [
+    "g5"
+  ],
+  "minLevel": "hard",
+  "maxLevel": "hard",
+  "type": "mcq",
+  "stem": "כיתה ה׳ · רמה מתקדמת — מה קורה כשחוטפים נשימה זמן קצר? · מוקד breath_hold_co2_v2",
+  "options": [
+    "מצטבר פחמן דו-חמצני",
+    "הגוף מייצר יותר חמצן",
+    "העיכול נעצר לצמיתות",
+    "השלד נעלם"
+  ],
+  "correctIndex": 0,
+  "explanation": "עצירת נשימה מצטברת CO₂.",
+  "params": {
+    "patternFamily": "sci_vol_body_g5_hard_breath_hold_co2",
+    "subtype": "sci_body_general",
+    "conceptTag": "sci_vol_body_g5_hard_breath_hold_co2",
+    "diagnosticSkillId": "sci_body_g5_hard_breath_hold_co2",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "breath_hold_co2",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "breath_hold_co2",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "application",
@@ -2446,6 +2372,80 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
+  "id": "sci_vol_g5_experiments_medium_02",
+  "topic": "experiments",
+  "grades": [
+    "g5"
+  ],
+  "minLevel": "medium",
+  "maxLevel": "medium",
+  "type": "mcq",
+  "stem": "כיתה ה׳ · רמה בינונית — מה קורה כשהשערה לא נתמכת? · מוקד hypothesis_reject_v2",
+  "options": [
+    "מנסחים הסבר חדש",
+    "מוחקים נתונים",
+    "משנים מדידה",
+    "מדלגים"
+  ],
+  "correctIndex": 0,
+  "explanation": "מדע מתקדם מהפרכה.",
+  "params": {
+    "patternFamily": "sci_vol_experiments_g5_medium_hypothesis_reject",
+    "subtype": "sci_experiments_general",
+    "conceptTag": "sci_vol_experiments_g5_medium_hypothesis_reject",
+    "diagnosticSkillId": "sci_experiments_g5_medium_hypothesis_reject",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "hypothesis_reject",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "hypothesis_reject",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "understanding",
+    "difficulty": "standard",
+    "kind": "needs_more_volume"
+  }
+},
+{
+  "id": "sci_vol_g5_experiments_medium_03",
+  "topic": "experiments",
+  "grades": [
+    "g5"
+  ],
+  "minLevel": "medium",
+  "maxLevel": "medium",
+  "type": "mcq",
+  "stem": "כיתה ה׳ · רמה בינונית — מהי השערה בניסוי מדעי? · מוקד hypothesis_v3",
+  "options": [
+    "חיזוי שניתן לבדוק",
+    "תוצאה סופית",
+    "מחיקת נתונים",
+    "ציור בלבד"
+  ],
+  "correctIndex": 0,
+  "explanation": "השערה נבדקת בניסוי.",
+  "params": {
+    "patternFamily": "sci_vol_experiments_g5_medium_hypothesis",
+    "subtype": "sci_experiments_general",
+    "conceptTag": "sci_vol_experiments_g5_medium_hypothesis",
+    "diagnosticSkillId": "sci_experiments_g5_medium_hypothesis",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "hypothesis",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "hypothesis",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "understanding",
+    "difficulty": "standard",
+    "kind": "needs_more_volume"
+  }
+},
+{
   "id": "sci_vol_g5_animals_easy_01",
   "topic": "animals",
   "grades": [
@@ -2520,6 +2520,80 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
+  "id": "sci_vol_g5_animals_easy_03",
+  "topic": "animals",
+  "grades": [
+    "g5"
+  ],
+  "minLevel": "easy",
+  "maxLevel": "easy",
+  "type": "mcq",
+  "stem": "כיתה ה׳ · רמה קלה — מה עושה חילזון בלחות? · מוקד snail_moisture_v3",
+  "options": [
+    "שומר על לחות גוף",
+    "עף",
+    "צד טרף",
+    "מייצר דם"
+  ],
+  "correctIndex": 0,
+  "explanation": "לחות חשובה לחילזון.",
+  "params": {
+    "patternFamily": "sci_vol_animals_g5_easy_snail_moisture",
+    "subtype": "sci_animals_general",
+    "conceptTag": "sci_vol_animals_g5_easy_snail_moisture",
+    "diagnosticSkillId": "sci_animals_g5_easy_snail_moisture",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "snail_moisture",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "snail_moisture",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "recall",
+    "difficulty": "basic",
+    "kind": "needs_more_volume"
+  }
+},
+{
+  "id": "sci_vol_g5_animals_easy_04",
+  "topic": "animals",
+  "grades": [
+    "g5"
+  ],
+  "minLevel": "easy",
+  "maxLevel": "easy",
+  "type": "mcq",
+  "stem": "כיתה ה׳ · רמה קלה — מה מאפיין חרק עם שלד חיצון? · מוקד insect_exoskeleton_v4",
+  "options": [
+    "שלד חיצון",
+    "פרווה",
+    "זימים",
+    "מינק"
+  ],
+  "correctIndex": 0,
+  "explanation": "לחרקים שלד חיצון.",
+  "params": {
+    "patternFamily": "sci_vol_animals_g5_easy_insect_exoskeleton",
+    "subtype": "sci_animals_general",
+    "conceptTag": "sci_vol_animals_g5_easy_insect_exoskeleton",
+    "diagnosticSkillId": "sci_animals_g5_easy_insect_exoskeleton",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "insect_exoskeleton",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "insect_exoskeleton",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "recall",
+    "difficulty": "basic",
+    "kind": "needs_more_volume"
+  }
+},
+{
   "id": "sci_vol_g5_animals_medium_01",
   "topic": "animals",
   "grades": [
@@ -2528,27 +2602,27 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה בינונית — מה תפקיד האבקה לצמח? · מוקד pollen_role_v1",
+  "stem": "כיתה ה׳ · רמה בינונית — למה חשוב לשמור על בית גידול? (הקשר g5 medium) · מוקד habitat_protection_v1",
   "options": [
-    "מאבקת פרחים",
-    "שוחה",
-    "צד חיות",
-    "מייצרת דם"
+    "מספק מזון ומחסה",
+    "מונע גידול",
+    "לא חשוב",
+    "מחליף מים"
   ],
   "correctIndex": 0,
-  "explanation": "אבקה מזרעת צמחים.",
+  "explanation": "שמירת טבע חשובה.",
   "params": {
-    "patternFamily": "sci_vol_animals_g5_medium_pollen_role",
+    "patternFamily": "sci_vol_animals_g5_medium_habitat_protection",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g5_medium_pollen_role",
-    "diagnosticSkillId": "sci_animals_g5_medium_pollen_role",
+    "conceptTag": "sci_vol_animals_g5_medium_habitat_protection",
+    "diagnosticSkillId": "sci_animals_g5_medium_habitat_protection",
     "probePower": "medium",
     "expectedErrorTags": [
-      "pollen_role",
+      "habitat_protection",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "pollen_role",
+      "habitat_protection",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "understanding",
@@ -2565,27 +2639,27 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "medium",
   "maxLevel": "medium",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה בינונית — מה עושה חילזון בלחות? · מוקד snail_moisture_v2",
+  "stem": "כיתה ה׳ · רמה בינונית — מה מחזור חיים של פרפר? (הקשר g5 medium) · מוקד butterfly_lifecycle_v2",
   "options": [
-    "שומר על לחות גוף",
-    "עף",
-    "צד טרף",
-    "מייצר דם"
+    "ביצה, זחל, גולם, בוגר",
+    "רק בוגר",
+    "אין שלבים",
+    "רק ביצה"
   ],
   "correctIndex": 0,
-  "explanation": "לחות חשובה לחילזון.",
+  "explanation": "יש גלגול מלא.",
   "params": {
-    "patternFamily": "sci_vol_animals_g5_medium_snail_moisture",
+    "patternFamily": "sci_vol_animals_g5_medium_butterfly_lifecycle",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g5_medium_snail_moisture",
-    "diagnosticSkillId": "sci_animals_g5_medium_snail_moisture",
+    "conceptTag": "sci_vol_animals_g5_medium_butterfly_lifecycle",
+    "diagnosticSkillId": "sci_animals_g5_medium_butterfly_lifecycle",
     "probePower": "medium",
     "expectedErrorTags": [
-      "snail_moisture",
+      "butterfly_lifecycle",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "snail_moisture",
+      "butterfly_lifecycle",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "understanding",
@@ -2602,44 +2676,7 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   "minLevel": "hard",
   "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ה׳ · רמה מתקדמת — מה מאפיין חרק עם שלד חיצון? · מוקד insect_exoskeleton_v1",
-  "options": [
-    "שלד חיצון",
-    "פרווה",
-    "זימים",
-    "מינק"
-  ],
-  "correctIndex": 0,
-  "explanation": "לחרקים שלד חיצון.",
-  "params": {
-    "patternFamily": "sci_vol_animals_g5_hard_insect_exoskeleton",
-    "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g5_hard_insect_exoskeleton",
-    "diagnosticSkillId": "sci_animals_g5_hard_insect_exoskeleton",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "insect_exoskeleton",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "insect_exoskeleton",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "application",
-    "difficulty": "advanced",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g5_animals_hard_02",
-  "topic": "animals",
-  "grades": [
-    "g5"
-  ],
-  "minLevel": "hard",
-  "maxLevel": "hard",
-  "type": "mcq",
-  "stem": "כיתה ה׳ · רמה מתקדמת — למה לדג יש סנפירים? (הקשר g5 hard) · מוקד fish_fins_v2",
+  "stem": "כיתה ה׳ · רמה מתקדמת — למה לדג יש סנפירים? (הקשר g5 hard) · מוקד fish_fins_v1",
   "options": [
     "לשחייה ושיווי משקל",
     "לתעופה",
@@ -2668,76 +2705,39 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
-  "id": "sci_vol_g6_body_easy_01",
-  "topic": "body",
+  "id": "sci_vol_g5_animals_hard_02",
+  "topic": "animals",
   "grades": [
-    "g6"
+    "g5"
   ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
+  "minLevel": "hard",
+  "maxLevel": "hard",
   "type": "mcq",
-  "stem": "כיתה ו׳ · רמה קלה — מה קורה כשחוטפים נשימה זמן קצר? · מוקד breath_hold_co2_v1",
+  "stem": "כיתה ה׳ · רמה מתקדמת — מה מאפיין עוף לעומת דג? (הקשר g5 hard) · מוקד bird_vs_fish_v2",
   "options": [
-    "מצטבר פחמן דו-חמצני",
-    "הגוף מייצר יותר חמצן",
-    "העיכול נעצר לצמיתות",
-    "השלד נעלם"
+    "נושם באוויר בנוסף",
+    "חי רק במים",
+    "אין שלד",
+    "אוכל אבנים"
   ],
   "correctIndex": 0,
-  "explanation": "עצירת נשימה מצטברת CO₂.",
+  "explanation": "עוף מותאם לאוויר.",
   "params": {
-    "patternFamily": "sci_vol_body_g6_easy_breath_hold_co2",
-    "subtype": "sci_body_general",
-    "conceptTag": "sci_vol_body_g6_easy_breath_hold_co2",
-    "diagnosticSkillId": "sci_body_g6_easy_breath_hold_co2",
+    "patternFamily": "sci_vol_animals_g5_hard_bird_vs_fish",
+    "subtype": "sci_animals_general",
+    "conceptTag": "sci_vol_animals_g5_hard_bird_vs_fish",
+    "diagnosticSkillId": "sci_animals_g5_hard_bird_vs_fish",
     "probePower": "medium",
     "expectedErrorTags": [
-      "breath_hold_co2",
+      "bird_vs_fish",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "breath_hold_co2",
+      "bird_vs_fish",
       "fact_recall_gap"
     ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g6_body_easy_02",
-  "topic": "body",
-  "grades": [
-    "g6"
-  ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
-  "type": "mcq",
-  "stem": "כיתה ו׳ · רמה קלה — מה עוזר השריר בזרוע להתכווץ? (הקשר g6 easy) · מוקד muscle_movement_v2",
-  "options": [
-    "יוצר תנועה",
-    "מסנן אוויר",
-    "שומר על שיניים",
-    "מייצר זרעים"
-  ],
-  "correctIndex": 0,
-  "explanation": "שרירים מאפשרים תנועה.",
-  "params": {
-    "patternFamily": "sci_vol_body_g6_easy_muscle_movement",
-    "subtype": "sci_body_general",
-    "conceptTag": "sci_vol_body_g6_easy_muscle_movement",
-    "diagnosticSkillId": "sci_body_g6_easy_muscle_movement",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "muscle_movement",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "muscle_movement",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
+    "cognitiveLevel": "application",
+    "difficulty": "advanced",
     "kind": "needs_more_volume"
   }
 },
@@ -2890,80 +2890,6 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
-  "id": "sci_vol_g6_experiments_easy_01",
-  "topic": "experiments",
-  "grades": [
-    "g6"
-  ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
-  "type": "mcq",
-  "stem": "כיתה ו׳ · רמה קלה — מה קורה כשהשערה לא נתמכת? · מוקד hypothesis_reject_v1",
-  "options": [
-    "מנסחים הסבר חדש",
-    "מוחקים נתונים",
-    "משנים מדידה",
-    "מדלגים"
-  ],
-  "correctIndex": 0,
-  "explanation": "מדע מתקדם מהפרכה.",
-  "params": {
-    "patternFamily": "sci_vol_experiments_g6_easy_hypothesis_reject",
-    "subtype": "sci_experiments_general",
-    "conceptTag": "sci_vol_experiments_g6_easy_hypothesis_reject",
-    "diagnosticSkillId": "sci_experiments_g6_easy_hypothesis_reject",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "hypothesis_reject",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "hypothesis_reject",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
-    "kind": "needs_more_volume"
-  }
-},
-{
-  "id": "sci_vol_g6_experiments_easy_02",
-  "topic": "experiments",
-  "grades": [
-    "g6"
-  ],
-  "minLevel": "easy",
-  "maxLevel": "easy",
-  "type": "mcq",
-  "stem": "כיתה ו׳ · רמה קלה — מהי השערה בניסוי מדעי? · מוקד hypothesis_v2",
-  "options": [
-    "חיזוי שניתן לבדוק",
-    "תוצאה סופית",
-    "מחיקת נתונים",
-    "ציור בלבד"
-  ],
-  "correctIndex": 0,
-  "explanation": "השערה נבדקת בניסוי.",
-  "params": {
-    "patternFamily": "sci_vol_experiments_g6_easy_hypothesis",
-    "subtype": "sci_experiments_general",
-    "conceptTag": "sci_vol_experiments_g6_easy_hypothesis",
-    "diagnosticSkillId": "sci_experiments_g6_easy_hypothesis",
-    "probePower": "medium",
-    "expectedErrorTags": [
-      "hypothesis",
-      "fact_recall_gap"
-    ],
-    "expectedErrorTypes": [
-      "hypothesis",
-      "fact_recall_gap"
-    ],
-    "cognitiveLevel": "recall",
-    "difficulty": "basic",
-    "kind": "needs_more_volume"
-  }
-},
-{
   "id": "sci_vol_g6_experiments_medium_01",
   "topic": "experiments",
   "grades": [
@@ -2993,6 +2919,80 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
     ],
     "expectedErrorTypes": [
       "outlier_check",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "understanding",
+    "difficulty": "standard",
+    "kind": "needs_more_volume"
+  }
+},
+{
+  "id": "sci_vol_g6_experiments_medium_02",
+  "topic": "experiments",
+  "grades": [
+    "g6"
+  ],
+  "minLevel": "medium",
+  "maxLevel": "medium",
+  "type": "mcq",
+  "stem": "כיתה ו׳ · רמה בינונית — למה חשוב יחידות מידה? (הקשר g6 medium) · מוקד measurement_units_v2",
+  "options": [
+    "להבין גודל אמיתי",
+    "לציור בלבד",
+    "להחלפת צבע",
+    "למחיקת ניסוי"
+  ],
+  "correctIndex": 0,
+  "explanation": "יחידות נותנות משמעות.",
+  "params": {
+    "patternFamily": "sci_vol_experiments_g6_medium_measurement_units",
+    "subtype": "sci_experiments_general",
+    "conceptTag": "sci_vol_experiments_g6_medium_measurement_units",
+    "diagnosticSkillId": "sci_experiments_g6_medium_measurement_units",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "measurement_units",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "measurement_units",
+      "fact_recall_gap"
+    ],
+    "cognitiveLevel": "understanding",
+    "difficulty": "standard",
+    "kind": "needs_more_volume"
+  }
+},
+{
+  "id": "sci_vol_g6_experiments_medium_03",
+  "topic": "experiments",
+  "grades": [
+    "g6"
+  ],
+  "minLevel": "medium",
+  "maxLevel": "medium",
+  "type": "mcq",
+  "stem": "כיתה ו׳ · רמה בינונית — מה עושה תצפית מדויקת? (הקשר g6 medium) · מוקד observation_skill_v3",
+  "options": [
+    "אוספת מידע בלי הטיה",
+    "מוחקת נתונים",
+    "משנה תוצאה",
+    "מבטלת ביקורת"
+  ],
+  "correctIndex": 0,
+  "explanation": "תצפית היא כלי מחקר.",
+  "params": {
+    "patternFamily": "sci_vol_experiments_g6_medium_observation_skill",
+    "subtype": "sci_experiments_general",
+    "conceptTag": "sci_vol_experiments_g6_medium_observation_skill",
+    "diagnosticSkillId": "sci_experiments_g6_medium_observation_skill",
+    "probePower": "medium",
+    "expectedErrorTags": [
+      "observation_skill",
+      "fact_recall_gap"
+    ],
+    "expectedErrorTypes": [
+      "observation_skill",
       "fact_recall_gap"
     ],
     "cognitiveLevel": "understanding",
@@ -3075,76 +3075,76 @@ export const SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME = [
   }
 },
 {
-  "id": "sci_vol_g6_animals_medium_01",
+  "id": "sci_vol_g6_animals_easy_03",
   "topic": "animals",
   "grades": [
     "g6"
   ],
-  "minLevel": "medium",
-  "maxLevel": "medium",
+  "minLevel": "easy",
+  "maxLevel": "easy",
   "type": "mcq",
-  "stem": "כיתה ו׳ · רמה בינונית — למה חשוב מגוון בעלי חיים? (הקשר g6 medium) · מוקד biodiversity_v1",
+  "stem": "כיתה ו׳ · רמה קלה — למה לדג יש סנפירים? (הקשר g6 easy) · מוקד fish_fins_v3",
   "options": [
-    "מייצב מערכת אקולוגית",
-    "מונע גשם",
-    "מבטל מזון",
-    "מחליף אור"
+    "לשחייה ושיווי משקל",
+    "לתעופה",
+    "לעיכול",
+    "להאזנה"
   ],
   "correctIndex": 0,
-  "explanation": "מגוון תומך ביציבות.",
+  "explanation": "סנפירים עוזרים בשחייה.",
   "params": {
-    "patternFamily": "sci_vol_animals_g6_medium_biodiversity",
+    "patternFamily": "sci_vol_animals_g6_easy_fish_fins",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g6_medium_biodiversity",
-    "diagnosticSkillId": "sci_animals_g6_medium_biodiversity",
+    "conceptTag": "sci_vol_animals_g6_easy_fish_fins",
+    "diagnosticSkillId": "sci_animals_g6_easy_fish_fins",
     "probePower": "medium",
     "expectedErrorTags": [
-      "biodiversity",
+      "fish_fins",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "biodiversity",
+      "fish_fins",
       "fact_recall_gap"
     ],
-    "cognitiveLevel": "understanding",
-    "difficulty": "standard",
+    "cognitiveLevel": "recall",
+    "difficulty": "basic",
     "kind": "needs_more_volume"
   }
 },
 {
-  "id": "sci_vol_g6_animals_medium_02",
+  "id": "sci_vol_g6_animals_easy_04",
   "topic": "animals",
   "grades": [
     "g6"
   ],
-  "minLevel": "medium",
-  "maxLevel": "medium",
+  "minLevel": "easy",
+  "maxLevel": "easy",
   "type": "mcq",
-  "stem": "כיתה ו׳ · רמה בינונית — מה עושה אריה בטבע? (הקשר g6 medium) · מוקד lion_predator_v2",
+  "stem": "כיתה ו׳ · רמה קלה — מה מאפיין עוף לעומת דג? (הקשר g6 easy) · מוקד bird_vs_fish_v4",
   "options": [
-    "צד טרף",
-    "אוכלת רק עלים",
-    "מאבקת פרחים",
-    "מייצרת חמצן"
+    "נושם באוויר בנוסף",
+    "חי רק במים",
+    "אין שלד",
+    "אוכל אבנים"
   ],
   "correctIndex": 0,
-  "explanation": "אריה היא טורפת.",
+  "explanation": "עוף מותאם לאוויר.",
   "params": {
-    "patternFamily": "sci_vol_animals_g6_medium_lion_predator",
+    "patternFamily": "sci_vol_animals_g6_easy_bird_vs_fish",
     "subtype": "sci_animals_general",
-    "conceptTag": "sci_vol_animals_g6_medium_lion_predator",
-    "diagnosticSkillId": "sci_animals_g6_medium_lion_predator",
+    "conceptTag": "sci_vol_animals_g6_easy_bird_vs_fish",
+    "diagnosticSkillId": "sci_animals_g6_easy_bird_vs_fish",
     "probePower": "medium",
     "expectedErrorTags": [
-      "lion_predator",
+      "bird_vs_fish",
       "fact_recall_gap"
     ],
     "expectedErrorTypes": [
-      "lion_predator",
+      "bird_vs_fish",
       "fact_recall_gap"
     ],
-    "cognitiveLevel": "understanding",
-    "difficulty": "standard",
+    "cognitiveLevel": "recall",
+    "difficulty": "basic",
     "kind": "needs_more_volume"
   }
 },

@@ -69,4 +69,40 @@ export const SCIENCE_DIAGNOSTIC_WEAK_CLOSURE_BY_ID = {
     expectedErrorTags: ["skeletal_support", "structure_function_confusion", "fact_recall_gap"],
     expectedErrorTypes: ["skeletal_support", "structure_function_confusion", "fact_recall_gap"],
   },
+  exp_3: {
+    conceptTag: "experiment_variable_control",
+    diagnosticSkillId: "sci_experiments_variable_control",
+    expectedErrorTags: ["experiment_variable_control", "procedure_order_confusion", "fact_recall_gap"],
+    expectedErrorTypes: ["experiment_variable_control", "procedure_order_confusion", "fact_recall_gap"],
+  },
+  exp_29: {
+    conceptTag: "experiment_data_recording",
+    diagnosticSkillId: "sci_experiments_data_recording",
+    expectedErrorTags: ["experiment_data_recording", "procedure_order_confusion", "fact_recall_gap"],
+    expectedErrorTypes: ["experiment_data_recording", "procedure_order_confusion", "fact_recall_gap"],
+  },
+  exp_34: {
+    conceptTag: "experiment_safety_rules",
+    diagnosticSkillId: "sci_experiments_safety_rules",
+    expectedErrorTags: ["experiment_safety_rules", "procedure_order_confusion", "fact_recall_gap"],
+    expectedErrorTypes: ["experiment_safety_rules", "procedure_order_confusion", "fact_recall_gap"],
+  },
+  animals_gapfix_easy_g456: {
+    conceptTag: "animal_grouping_easy",
+    diagnosticSkillId: "sci_animals_grouping_easy",
+    expectedErrorTags: ["animal_grouping_easy", "classification_confusion", "fact_recall_gap"],
+    expectedErrorTypes: ["animal_grouping_easy", "classification_confusion", "fact_recall_gap"],
+  },
+  sci_pb1_g4_animals_easy_01: {
+    conceptTag: "animal_habitat_easy",
+    diagnosticSkillId: "sci_animals_habitat_easy",
+    expectedErrorTags: ["animal_habitat_easy", "habitat_adaptation_confusion", "fact_recall_gap"],
+    expectedErrorTypes: ["animal_habitat_easy", "habitat_adaptation_confusion", "fact_recall_gap"],
+  },
+  science_remaining_g56_easy_experiments: {
+    conceptTag: "experiment_observation_easy",
+    diagnosticSkillId: "sci_experiments_observation_easy",
+    expectedErrorTags: ["experiment_observation_easy", "procedure_order_confusion", "fact_recall_gap"],
+    expectedErrorTypes: ["experiment_observation_easy", "procedure_order_confusion", "fact_recall_gap"],
+  },
 };
