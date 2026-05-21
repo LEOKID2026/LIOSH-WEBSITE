@@ -1,4 +1,4 @@
-import { itemAllowedForGrade, itemAllowedForLevel } from "./grade-gating";
+import { itemAllowedForGrade, itemAllowedForLevel } from "./grade-gating.js";
 
 /**
  * בנק שאלות עברית מובנה — משלים את המאגר הקלאסי.

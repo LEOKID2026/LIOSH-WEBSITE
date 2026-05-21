@@ -1,11 +1,11 @@
 // יצירת שאלות גיאומטריה
 
-import { GRADES, PI, getShapesForTopic } from "./geometry-constants";
+import { GRADES, PI, getShapesForTopic } from "./geometry-constants.js";
 import {
   pickGeometryConceptualQuestion,
   geometryConceptualProbability,
-} from "./geometry-conceptual-bank";
-import { gradeBandForKey } from "./grade-gating";
+} from "./geometry-conceptual-bank.js";
+import { gradeBandForKey } from "./grade-gating.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 
 function shuffleMcqList(answers) {
@@ -491,24 +491,39 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
               question = `בלי רמז חזותי — ריבוע במישור, צלע ${side}. מה שטחו?`;
             }
           } else if (formulaBand === "mid") {
-            const aw = Math.floor(Math.random() * 3);
+            const aw = Math.floor(Math.random() * 8);
             if (levelKey === "easy") {
               question = [
                 `ריבוע עם צלע ${side}: חשבו שטח (כפל צלע בעצמה). מה התוצאה?`,
                 `שטח במישור: ריבוע צלע ${side} — מה גודל השטח (ביחידות ריבוע)?`,
                 `כפל הצלע בעצמה: ריבוע ${side}. מה השטח?`,
+                `ריבוע ${side} על ${side}: כמה יחידות שטח?`,
+                `חשבו: ריבוע צלע ${side}. שטח = צלע × צלע.`,
+                `ריבוע באורך ${side} — מה שטח הפנים?`,
+                `נתון ריבוע צלע ${side}. מה השטח הכולל?`,
+                `כמה שטח יש לריבוע עם צלע ${side} יחידות?`,
               ][aw];
             } else if (levelKey === "medium") {
               question = [
                 `מה השטח של ריבוע עם צלע ${side}?`,
                 `נתון ריבוע, צלע ${side}. חשבו שטח פנים.`,
                 `ביטוי לשטח ריבוע: צלע ${side}. מה הערך המספרי?`,
+                `ריבוע מידות ${side}×${side}: חישוב שטח.`,
+                `חשבו שטח ריבוע צלע ${side} יחידות.`,
+                `ריבוע ${side} יחידות — מה שטחו במישור?`,
+                `שטח ריבוע: צלע ${side}. מה התוצאה?`,
+                `אורך ${side}, רוחב ${side}: חשבו שטח הריבוע.`,
               ][aw];
             } else {
               question = [
                 `אתגר — שטח ריבוע במישור: צלע ${side}, ללא הנחיות נוספות. מה השטח?`,
                 `שטח ריבוע ללא רמזים: צלע ${side} בלבד.`,
                 `הוכיחו בראש ואז חשבו — ריבוע צלע ${side}, מה השטח?`,
+                `אתגר חישוב: ריבוע ${side}×${side} (ללא עזרה).`,
+                `ריבוע צלע ${side}: חישוב עצמאי של שטח.`,
+                `שטח במישור — ריבוע ${side} יחידות. מהו?`,
+                `בדיקת הבנה: ריבוע ${side}, מה השטח?`,
+                `ריבוע ${side} יחידות — הוכיחו וחשבו שטח.`,
               ][aw];
             }
           } else {
@@ -543,24 +558,39 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
               question = `אתגר: מלבן ${length}×${width} במישור — מה השטח ללא ציור עזר?`;
             }
           } else if (formulaBand === "mid") {
-            const rw = Math.floor(Math.random() * 3);
+            const rw = Math.floor(Math.random() * 8);
             if (levelKey === "easy") {
               question = [
                 `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. מה שטח המלבן?`,
                 `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. שטח = אורך × רוחב. מה השטח?`,
                 `נתון מלבן: אורך = ${length} יחידות, רוחב = ${width} יחידות. מה שטחו?`,
+                `חשבו שטח מלבן באורך ${length} וברוחב ${width}.`,
+                `מלבן ${length} על ${width} — כמה יחידות שטח?`,
+                `מלבן: ${length} יחידות ארוכה ו-${width} יחידות רחבה. מה השטח?`,
+                `מה השטח? מלבן מידות ${length} ו-${width} יחידות.`,
+                `מלבן באורך ${length} וברוחב ${width}. מה שטח הפנים?`,
               ][rw];
             } else if (levelKey === "medium") {
               question = [
                 `מה שטח המלבן? אורך ${length} יחידות, רוחב ${width} יחידות.`,
                 `שטח = אורך × רוחב. מלבן באורך ${length} יחידות וברוחב ${width} יחידות — מה השטח?`,
                 `מלבן באורך ${length} יחידות וברוחב ${width} יחידות. מה שטחו?`,
+                `חישוב שטח: מלבן ${length} יחידות על ${width} יחידות.`,
+                `מלבן מידות ${length} ו-${width} — מה השטח הכולל?`,
+                `אורך ${length}, רוחב ${width}: חשבו שטח.`,
+                `כמה שטח במלבן ${length} על ${width} יחידות?`,
+                `מלבן ${length}×${width}: מה שטחו במישור?`,
               ][rw];
             } else {
               question = [
                 `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. מה שטח המלבן?`,
                 `מלבן באורך ${length} יחידות וברוחב ${width} יחידות (ללא ציור). מה השטח?`,
                 `בדקו לפני בחירה — מלבן ${length}×${width} יחידות. מה שטח המלבן?`,
+                `אתגר: מלבן ${length}×${width} במישור — חשבו שטח.`,
+                `מלבן ${length} על ${width}: מה השטח ללא רמז?`,
+                `שטח מלבן ${length} ו-${width} — חישוב מהיר.`,
+                `מלבן מידות ${length} ו-${width} יחידות. מה השטח?`,
+                `חישוב: מלבן ${length}×${width} (ללא עזרה חזותית).`,
               ][rw];
             }
           } else {
@@ -679,13 +709,39 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           correctAnswer = round(side * 4);
 
           if (useStory) {
-            question = `ליאו רוצה לשים גדר מסביב לגינה בצורת ריבוע, אורך כל צלע הוא ${side} מטר. מה אורך הגדר הכולל שהוא צריך?`;
+            const storyVariants = [
+              `ליאו רוצה לשים גדר מסביב לגינה בצורת ריבוע, אורך כל צלע הוא ${side} מטר. מה אורך הגדר הכולל שהוא צריך?`,
+              `גינה ריבועית עם צלע ${side} מטר. כמה מטרים של גדר צריך להקיף אותה?`,
+              `רצפת ריבועית צלעה ${side} מטר. כמה מטרים של מסגרת צריך?`,
+              `מגרש משחקים ריבועי באורך ${side} מטר. מה אורך הגדר סביבו?`,
+            ];
+            question = storyVariants[Math.floor(Math.random() * storyVariants.length)];
           } else if (formulaBand === "early") {
-            question = `ריבוע: כל צלע ${side}. מה ההיקף? (חברו את ארבע הצלעות)`;
+            const earlyVariants = [
+              `ריבוע: כל צלע ${side}. מה ההיקף? (חברו את ארבע הצלעות)`,
+              `חשבו היקף ריבוע: צלע ${side}. (4×צלע)`,
+              `ריבוע ${side} יחידות לכל צלע — מה סכום המעטפת?`,
+            ];
+            question = earlyVariants[Math.floor(Math.random() * earlyVariants.length)];
           } else if (formulaBand === "mid") {
-            question = `מה ההיקף של ריבוע עם צלע ${side}?`;
+            const variants = [
+              `מה ההיקף של ריבוע עם צלע ${side}?`,
+              `חישוב היקף: ריבוע צלע ${side} יחידות.`,
+              `ריבוע צלע ${side} — מה ההיקף הכולל?`,
+              `היקף ריבוע: כל צלע ${side} יחידות.`,
+              `כמה יחידות היקף יש לריבוע ${side} לכל צלע?`,
+              `צלע ${side}: חשבו היקף הריבוע.`,
+              `ריבוע מידות ${side} לכל צלע. מה ההיקף?`,
+              `ריבוע ${side}×${side}: מה סכום צלעות המעטפת?`,
+            ];
+            question = variants[Math.floor(Math.random() * variants.length)];
           } else {
-            question = `היקף ריבוע במישור: צלע ${side}. מה סכום צלעות המעטפת?`;
+            const lateVariants = [
+              `היקף ריבוע במישור: צלע ${side}. מה סכום צלעות המעטפת?`,
+              `חישוב היקף — ריבוע צלע ${side} (נוסחה).`,
+              `ריבוע צלע ${side}: הוכיחו וחשבו היקף.`,
+            ];
+            question = lateVariants[Math.floor(Math.random() * lateVariants.length)];
           }
           break;
         }
@@ -694,6 +750,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           const length = Math.floor(Math.random() * level.maxSide) + 1;
           const width = Math.floor(Math.random() * level.maxSide) + 1;
           const useStory = allowStory && Math.random() < 0.5;
+          const phrasing = Math.floor(Math.random() * 8);
 
           params = {
             length,
@@ -703,13 +760,39 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
           correctAnswer = round((length + width) * 2);
 
           if (useStory) {
-            question = `גינה מלבנית מוקפת בגדר. האורך ${length} מטר והרוחב ${width} מטר. כמה מטרים של גדר צריך בסך הכל?`;
+            const storyVariants = [
+              `גינה מלבנית מוקפת בגדר. האורך ${length} מטר והרוחב ${width} מטר. כמה מטרים של גדר צריך בסך הכל?`,
+              `רצפת חדר מלבנית באורך ${length} מטר ורוחב ${width} מטר. כמה מטרים של מסגרת צריך?`,
+              `מגרש משחקים מלבני אורכו ${length} מטר ורוחבו ${width} מטר. מה אורך הגדר סביבו?`,
+              `בריכה מלבנית באורך ${length} מטר וברוחב ${width} מטר. כמה מטרים של מסגרת?`,
+            ];
+            question = storyVariants[Math.floor(Math.random() * storyVariants.length)];
           } else if (formulaBand === "early") {
-            question = `מלבן: אורך ${length}, רוחב ${width}. מה ההיקף? (פעמיים אורך+רוחב)`;
+            const earlyVariants = [
+              `מלבן: אורך ${length}, רוחב ${width}. מה ההיקף? (פעמיים אורך+רוחב)`,
+              `חשבו היקף מלבן: ${length} ו-${width}. (2×(א+ר))`,
+              `מלבן ${length} על ${width}: חברו את ארבע הצלעות.`,
+            ];
+            question = earlyVariants[phrasing % earlyVariants.length];
           } else if (formulaBand === "mid") {
-            question = `מה ההיקף של מלבן עם אורך ${length} ורוחב ${width}?`;
+            const variants = [
+              `מה ההיקף של מלבן עם אורך ${length} ורוחב ${width}?`,
+              `חישוב היקף: מלבן ${length} יחידות על ${width} יחידות.`,
+              `מלבן אורכו ${length} ורוחבו ${width} — מה ההיקף?`,
+              `היקף מלבן: ${length} ו-${width} יחידות.`,
+              `כמה יחידות היקף יש במלבן ${length} על ${width}?`,
+              `אורך ${length}, רוחב ${width}: חשבו היקף המלבן.`,
+              `מלבן מידות ${length} ו-${width}. מה סכום צלעות המעטפת?`,
+              `מלבן ${length}×${width}: מה ההיקף הכולל?`,
+            ];
+            question = variants[phrasing];
           } else {
-            question = `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. היקף = 2 × (אורך + רוחב). מה היקף המלבן?`;
+            const lateVariants = [
+              `מלבן שאורכו ${length} יחידות ורוחבו ${width} יחידות. היקף = 2 × (אורך + רוחב). מה היקף המלבן?`,
+              `חישוב היקף — מלבן ${length} ו-${width} יחידות (נוסחה).`,
+              `מלבן מידות ${length} ו-${width}: הוכיחו וחשבו היקף.`,
+            ];
+            question = lateVariants[phrasing % lateVariants.length];
           }
           break;
         }
@@ -1142,6 +1225,79 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
                     `זיהוי לפי תכונות: שני אורכי צלע שונים (${side}, ${width}). מה המשמעות? (1 = ריבוע, 2 = מלבן)`,
                     `הסבר מילולי: למה זה מלבן ולא ריבוע? (1 = ריבוע, 2 = מלבן)`,
                   ][rectW];
+        }
+      } else if (gradeKey === "g2" || gradeKey === "g3") {
+        // כיתה ב'-ג' - זיהוי ותכונות בסיסיות (5 variants each)
+        const side = Math.floor(Math.random() * level.maxSide) + 1;
+        const width = Math.floor(Math.random() * level.maxSide) + 1;
+        const isSquare = Math.random() < 0.5;
+        const g23w = Math.floor(Math.random() * 5);
+        
+        if (isSquare) {
+          params = {
+            shape: "ריבוע",
+            side,
+            kind: "shapes_basic_square",
+            patternFamily: `shapes_basic_square_${gradeKey}_${levelKey}`,
+          };
+          correctAnswer = 1;
+          question =
+            levelKey === "easy"
+              ? [
+                  `זיהוי: ארבע צלעות שוות (${side}), ארבע זוויות ישרות. ריבוע או מלבן? (1=ריבוע, 2=מלבן)`,
+                  `בדיקה: מרובע עם צלעות ${side} לכל הצדדים — ריבוע או מלבן? (1=ריבוע, 2=מלבן)`,
+                  `מהי הצורה? ארבע צלעות ${side}, זוויות ישרות. (1=ריבוע, 2=מלבן)`,
+                  `צורה סגורה: ${side} לכל צלע — ריבוע או מלבן? (1=ריבוע, 2=מלבן)`,
+                  `זיהוי: כל הצלעות ${side}, זוויות ישרות. (1=ריבוע, 2=מלבן)`,
+                ][g23w]
+              : levelKey === "medium"
+                ? [
+                    `תכונות: צלע ${side} לכל הצלעות. ריבוע או מלבן? (1=ריבוע, 2=מלבן)`,
+                    `השוו: ארבע צלעות ${side} שוות. (1=ריבוע, 2=מלבן)`,
+                    `זיהוי לפי צלעות: ${side} לכל צלע. (1=ריבוע, 2=מלבן)`,
+                    `סוג המרובע? כל הצלעות ${side}. (1=ריבוע, 2=מלבן)`,
+                    `בדיקה: צלעות שוות ${side}. (1=ריבוע, 2=מלבן)`,
+                  ][g23w]
+                : [
+                    `ניתוח: מרובע עם ארבע צלעות שוות ${side} וזוויות ישרות. (1=ריבוע, 2=מלבן)`,
+                    `תכונות מתמטיות: ארבע צלעות ${side}. (1=ריבוע, 2=מלבן)`,
+                    `הוכחה: מדוע ארבע צלעות ${side} יוצרות ריבוע? (1=ריבוע, 2=מלבן)`,
+                    `זיהוי מתקדם: מרובע עם צלעות ${side}. (1=ריבוע, 2=מלבן)`,
+                    `אתגר: תאר את המרובע עם צלעות ${side}. (1=ריבוע, 2=מלבן)`,
+                  ][g23w];
+        } else {
+          params = {
+            shape: "מלבן",
+            length: side,
+            width,
+            kind: "shapes_basic_rectangle",
+            patternFamily: `shapes_basic_rect_${gradeKey}_${levelKey}`,
+          };
+          correctAnswer = 2;
+          question =
+            levelKey === "easy"
+              ? [
+                  `זיהוי: אורך ${side}, רוחב ${width} (שונים). ריבוע או מלבן? (1=ריבוע, 2=מלבן)`,
+                  `בדיקה: זוגות צלעות ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                  `מהי הצורה? ${side} ו-${width} לסירוגין. (1=ריבוע, 2=מלבן)`,
+                  `צורה עם צלעות ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                  `זיהוי: שני אורכים שונים ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                ][g23w]
+              : levelKey === "medium"
+                ? [
+                    `תכונות: אורך ${side}, רוחב ${width} (שונה). (1=ריבוע, 2=מלבן)`,
+                    `השוו: זוגות ${side} מול ${width}. (1=ריבוע, 2=מלבן)`,
+                    `זיהוי לפי צלעות: ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                    `סוג המרובע? ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                    `בדיקה: צלעות ${side} ו-${width} לסירוגין. (1=ריבוע, 2=מלבן)`,
+                  ][g23w]
+                : [
+                    `ניתוח: מרובע עם זוגות צלעות ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                    `תכונות מתמטיות: ${side} ו-${width} לסירוגין. (1=ריבוע, 2=מלבן)`,
+                    `הוכחה: למה ${side} ו-${width} יוצרים מלבן? (1=ריבוע, 2=מלבן)`,
+                    `זיהוי מתקדם: מרובע עם צלעות ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                    `אתגר: תאר את המרובע עם ${side} ו-${width}. (1=ריבוע, 2=מלבן)`,
+                  ][g23w];
         }
       } else {
         // כיתה ד' - תכונות ריבוע ומלבן
