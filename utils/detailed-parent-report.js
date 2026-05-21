@@ -2909,6 +2909,7 @@ export function buildDetailedParentReportFromBaseReport(baseReport, meta = {}) {
       baseReport.gradePracticeMeta && typeof baseReport.gradePracticeMeta === "object"
         ? { ...baseReport.gradePracticeMeta }
         : null,
+    probeEvidence: baseReport.probeEvidence ?? null,
   };
 }
 

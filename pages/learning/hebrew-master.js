@@ -73,6 +73,7 @@ import {
   bankQuestionProbeMatch,
   attachProbeMetaToQuestion,
   applyProbeOutcome,
+  buildDiagnosticProbeClientMeta,
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
@@ -1579,6 +1580,7 @@ useEffect(() => {
     isCorrect,
     timeSpentMs,
     usedHint,
+    diagnosticProbeMeta,
   }) {
     const questionFingerprint = hebrewQuestionFingerprint(question) || null;
     const questionId = question?.id
@@ -1610,6 +1612,7 @@ useEffect(() => {
             source: "hebrew-master",
             version: "phase-2d-b5",
             gradeKey: String(grade || ""),
+            ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
       })
@@ -1938,11 +1941,13 @@ useEffect(() => {
       acceptedList: acceptedAnswers,
     });
 
+    let diagnosticProbeMetaForSave = null;
     if (
       questionForSave._diagnosticProbeAttempt === true &&
       questionForSave._probeMeta
     ) {
       let inferredTags = [];
+      const probeAnsweredAt = Date.now();
       if (!isCorrect) {
         const topicKeyProbe =
           currentQuestion.topic || currentQuestion.operation || "reading";
@@ -1993,9 +1998,16 @@ useEffect(() => {
           isCorrect,
           inferredTags,
           probeMeta: questionForSave._probeMeta,
-          now: Date.now(),
+          now: probeAnsweredAt,
         }
       );
+      diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
+        probeMeta: questionForSave._probeMeta,
+        ledger: hebrewHypothesisLedgerRef.current,
+        inferredTags,
+        answeredAt: probeAnsweredAt,
+        learningSessionId: learningSessionIdRef.current,
+      });
       setCurrentQuestion((prev) => {
         if (!prev || prev !== questionForSave) return prev;
         const { _diagnosticProbeAttempt: _a, _probeMeta: _b, ...rest } = prev;
@@ -2011,6 +2023,7 @@ useEffect(() => {
       isCorrect,
       timeSpentMs,
       usedHint: hintUsedForSave,
+      diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
     pendingHebrewTrackMetaRef.current = {
       correct: isCorrect ? 1 : 0,

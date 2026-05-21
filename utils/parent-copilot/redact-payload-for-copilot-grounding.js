@@ -156,6 +156,38 @@ function sanitizeDiagnosticUnitForCopilotGrounding(u) {
 }
 
 /**
+ * Sanitizes probeEvidence item for Copilot grounding.
+ * Keeps only context fields useful for LLM explanations; removes internal metadata.
+ * @param {unknown} item
+ * @returns {object|null}
+ */
+function sanitizeProbeEvidenceForCopilot(item) {
+  if (!item || typeof item !== "object") return null;
+  if (item.isDiagnosticProbeAttempt !== true) return null;
+  const out = {
+    subjectId: item.subjectId != null ? String(item.subjectId) : "",
+    topicId: item.topicId != null ? String(item.topicId) : "",
+    probeId: item.probeId != null ? String(item.probeId) : "",
+    outcomeStatus: item.outcomeStatus != null ? String(item.outcomeStatus) : "",
+    supportCount: Math.max(0, Math.floor(Number(item.supportCount) || 0)),
+    weakenCount: Math.max(0, Math.floor(Number(item.weakenCount) || 0)),
+  };
+  if (Array.isArray(item.expectedErrorTags) && item.expectedErrorTags.length > 0) {
+    out.expectedErrorTags = item.expectedErrorTags.filter((t) => typeof t === "string").slice(0, 4);
+  }
+  if (Array.isArray(item.inferredTags) && item.inferredTags.length > 0) {
+    out.inferredTags = item.inferredTags.filter((t) => typeof t === "string").slice(0, 4);
+  }
+  if (item.dominantTag != null && String(item.dominantTag).trim()) {
+    out.dominantTag = String(item.dominantTag).slice(0, 120);
+  }
+  if (item.answeredAt != null && String(item.answeredAt).trim()) {
+    out.answeredAt = String(item.answeredAt).slice(0, 80);
+  }
+  return out;
+}
+
+/**
  * Deep-clones the detailed-report payload and replaces `diagnosticEngineV2.units[]`
  * with parent-safe numeric / structural fields only (no taxonomy / probe / intervention / diagnosis).
  *
@@ -182,6 +214,10 @@ export function redactPayloadForCopilotGrounding(payload) {
       ...de,
       units: units.map((u) => sanitizeDiagnosticUnitForCopilotGrounding(u)),
     };
+  }
+  const pe = clone.probeEvidence;
+  if (pe && Array.isArray(pe)) {
+    clone.probeEvidence = pe.map((item) => sanitizeProbeEvidenceForCopilot(item)).filter(Boolean);
   }
   return clone;
 }

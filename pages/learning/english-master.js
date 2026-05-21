@@ -42,6 +42,7 @@ import {
   probeMatchesSession,
   attachProbeMetaToQuestion,
   applyProbeOutcome,
+  buildDiagnosticProbeClientMeta,
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
@@ -1941,6 +1942,7 @@ const refreshMonthlyProgress = useCallback(() => {
     isCorrect,
     timeSpentMs,
     usedHint,
+    diagnosticProbeMeta,
   }) {
     const questionFingerprint = englishQuestionFingerprint(question) || null;
     const questionId = question?.id
@@ -1972,6 +1974,7 @@ const refreshMonthlyProgress = useCallback(() => {
             source: "english-master",
             version: "phase-2d-b4",
             gradeKey: String(grade || ""),
+            ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
       })
@@ -2511,11 +2514,13 @@ const refreshMonthlyProgress = useCallback(() => {
     });
     const questionGradeKey = currentQuestion.gradeKey || grade;
 
+    let diagnosticProbeMetaForSave = null;
     if (
       questionForSave._diagnosticProbeAttempt === true &&
       questionForSave._probeMeta
     ) {
       let inferredTags = [];
+      const probeAnsweredAt = Date.now();
       if (!isCorrect) {
         let wrongEntry = {
           topic: currentQuestion.topic,
@@ -2568,9 +2573,16 @@ const refreshMonthlyProgress = useCallback(() => {
           isCorrect,
           inferredTags,
           probeMeta: questionForSave._probeMeta,
-          now: Date.now(),
+          now: probeAnsweredAt,
         }
       );
+      diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
+        probeMeta: questionForSave._probeMeta,
+        ledger: englishHypothesisLedgerRef.current,
+        inferredTags,
+        answeredAt: probeAnsweredAt,
+        learningSessionId: learningSessionIdRef.current,
+      });
       setCurrentQuestion((prev) => {
         if (!prev || prev !== questionForSave) return prev;
         const { _diagnosticProbeAttempt: _a, _probeMeta: _b, ...rest } = prev;
@@ -2591,6 +2603,7 @@ const refreshMonthlyProgress = useCallback(() => {
       isCorrect,
       timeSpentMs,
       usedHint: hintUsedForSave,
+      diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
     let awardedPoints = 0;
     if (isCorrect) {

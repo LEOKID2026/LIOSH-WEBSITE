@@ -3,8 +3,8 @@
  * ללא תלות ב־parent-report-v2 (מניעת מעגל ייבוא).
  */
 
-import { mathReportBaseOperationKey, canonicalParentReportGradeKey } from "./math-report-generator";
-import { DEFAULT_TOPIC_NEXT_STEP_CONFIG } from "./topic-next-step-config";
+import { mathReportBaseOperationKey, canonicalParentReportGradeKey } from "./math-report-generator.js";
+import { DEFAULT_TOPIC_NEXT_STEP_CONFIG } from "./topic-next-step-config.js";
 import { buildEvidenceContractV1, validateEvidenceContractV1 } from "./contracts/parent-report-contracts-v1.js";
 export const TRACK_ROW_MODE_SEP = "\u0001";
 

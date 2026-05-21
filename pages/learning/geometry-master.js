@@ -93,6 +93,7 @@ import {
   buildPendingProbeFromMistake,
   attachProbeMetaToQuestion,
   applyProbeOutcome,
+  buildDiagnosticProbeClientMeta,
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
   probeMatchesSession,
@@ -1237,6 +1238,7 @@ useEffect(() => {
     isCorrect,
     timeSpentMs,
     usedHint,
+    diagnosticProbeMeta,
   }) {
     const questionFingerprint = geometryQuestionFingerprint(question) || null;
     const questionId = question?.id
@@ -1263,6 +1265,7 @@ useEffect(() => {
             source: "geometry-master",
             version: "phase-2d-b3",
             gradeKey: String(grade || ""),
+            ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
       })
@@ -1297,11 +1300,13 @@ useEffect(() => {
       minTolerance: GEOMETRY_NUMERIC_MIN_TOLERANCE,
     });
 
+    let diagnosticProbeMetaForSave = null;
     if (
       questionForSave._diagnosticProbeAttempt === true &&
       questionForSave._probeMeta
     ) {
       let inferredTags = [];
+      const probeAnsweredAt = Date.now();
       if (!isCorrect) {
         const prm = questionForSave.params || {};
         let wrongEntry = {
@@ -1347,9 +1352,16 @@ useEffect(() => {
           isCorrect,
           inferredTags,
           probeMeta: questionForSave._probeMeta,
-          now: Date.now(),
+          now: probeAnsweredAt,
         }
       );
+      diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
+        probeMeta: questionForSave._probeMeta,
+        ledger: geometryHypothesisLedgerRef.current,
+        inferredTags,
+        answeredAt: probeAnsweredAt,
+        learningSessionId: learningSessionIdRef.current,
+      });
       patchLearningDiagnosticDebug({
         hypothesisLedger: { geometry: geometryHypothesisLedgerRef.current },
         lastProbeOutcome: {
@@ -1377,6 +1389,7 @@ useEffect(() => {
       isCorrect,
       timeSpentMs,
       usedHint: hintUsedForSave,
+      diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
 
     if (isCorrect) {

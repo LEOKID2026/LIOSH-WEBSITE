@@ -63,6 +63,7 @@ import {
   probeMatchesSession,
   attachProbeMetaToQuestion,
   applyProbeOutcome,
+  buildDiagnosticProbeClientMeta,
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
@@ -1683,6 +1684,7 @@ function saveScienceAnswerInParallel({
   isCorrect,
   timeSpentMs,
   usedHint,
+  diagnosticProbeMeta,
 }) {
   const questionFingerprint = question?.id ? String(question.id) : null;
   const questionId = question?.id
@@ -1717,6 +1719,7 @@ function saveScienceAnswerInParallel({
           source: "science-master",
           version: "phase-2d-b6",
           gradeKey: String(grade || ""),
+          ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
         },
       });
     })
@@ -2225,11 +2228,13 @@ function saveScienceAnswerInParallel({
     // MCQ uses index-based comparison by design
     const isCorrect = idx === currentQuestion.correctIndex;
 
+    let diagnosticProbeMetaForSave = null;
     if (
       questionForSave._diagnosticProbeAttempt === true &&
       questionForSave._probeMeta
     ) {
       let inferredTags = [];
+      const probeAnsweredAt = Date.now();
       if (!isCorrect) {
         const wrongEntry = buildScienceMistakeEntry(questionForSave, answerText, {
           selectedOptionIndex: idx,
@@ -2251,9 +2256,16 @@ function saveScienceAnswerInParallel({
           isCorrect,
           inferredTags,
           probeMeta: questionForSave._probeMeta,
-          now: Date.now(),
+          now: probeAnsweredAt,
         }
       );
+      diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
+        probeMeta: questionForSave._probeMeta,
+        ledger: scienceHypothesisLedgerRef.current,
+        inferredTags,
+        answeredAt: probeAnsweredAt,
+        learningSessionId: learningSessionIdRef.current,
+      });
       setCurrentQuestion((prev) => {
         if (!prev || prev !== questionForSave) return prev;
         const {
@@ -2274,6 +2286,7 @@ function saveScienceAnswerInParallel({
       isCorrect,
       timeSpentMs,
       usedHint: hintUsedForSave,
+      diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
     pendingScienceTrackMetaRef.current = {
       correct: isCorrect ? 1 : 0,

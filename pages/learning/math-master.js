@@ -122,6 +122,7 @@ import {
   buildPendingProbeFromMistake,
   attachProbeMetaToQuestion,
   applyProbeOutcome,
+  buildDiagnosticProbeClientMeta,
   clearActiveDiagnosticState,
   decrementPendingProbeExpiry,
 } from "../../utils/active-diagnostic-runtime/index.js";
@@ -1752,6 +1753,7 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
     questionId,
     topic,
     timeSpentMs,
+    diagnosticProbeMeta,
   }) {
     ensureLearningSessionId()
       .then((learningSessionId) => {
@@ -1773,6 +1775,7 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
             source: "math-master",
             version: "phase-2d-b2",
             gradeKey: String(grade || ""),
+            ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
       })
@@ -2008,11 +2011,13 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
 
     const timeSpentMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
 
+    let diagnosticProbeMetaForSave = null;
     if (
       questionForSave._diagnosticProbeAttempt === true &&
       questionForSave._probeMeta
     ) {
       let inferredTags = [];
+      const probeAnsweredAt = Date.now();
       if (!isCorrect) {
         const prm = questionForSave.params || {};
         let wrongEntry = {
@@ -2064,9 +2069,16 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
           isCorrect,
           inferredTags,
           probeMeta: questionForSave._probeMeta,
-          now: Date.now(),
+          now: probeAnsweredAt,
         }
       );
+      diagnosticProbeMetaForSave = buildDiagnosticProbeClientMeta({
+        probeMeta: questionForSave._probeMeta,
+        ledger: mathHypothesisLedgerRef.current,
+        inferredTags,
+        answeredAt: probeAnsweredAt,
+        learningSessionId: learningSessionIdRef.current,
+      });
       patchLearningDiagnosticDebug({
         hypothesisLedger: { math: mathHypothesisLedgerRef.current },
         lastProbeOutcome: { subjectId: "math", at: Date.now() },
@@ -2097,6 +2109,7 @@ const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
       questionId,
       topic: resolvedTopic,
       timeSpentMs,
+      diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
 
     pendingTimeTrackMetaRef.current = {
