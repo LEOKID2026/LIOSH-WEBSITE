@@ -2,8 +2,8 @@
  * בדיקות שלמות נתונים לפני/אחרי בניית דוח הורים V2 — מבנה JSON לבדיקה ולא ל־UI.
  */
 
-import { mistakeTimestampMs } from "./mistake-event";
-import { mathReportBaseOperationKey } from "./math-report-generator";
+import { mistakeTimestampMs } from "./mistake-event.js";
+import { mathReportBaseOperationKey } from "./math-report-generator.js";
 
 const VALID_MODES = new Set([
   "learning",

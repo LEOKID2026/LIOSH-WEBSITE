@@ -9,7 +9,7 @@ import {
   getScienceTopicName,
   getHebrewTopicName,
   getMoledetGeographyTopicName,
-} from "./math-report-generator";
+} from "./math-report-generator.js";
 
 /**
  * כשאין מספיק מידע לתווית ספציפית — אותו ניסוח לכל המקצועות.

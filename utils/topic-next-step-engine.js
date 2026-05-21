@@ -3,17 +3,17 @@
  * מבוסס על שורות דוח V2 + מפת טעויות (עם נירמול מפתחות מול אחסון אמיתי).
  */
 
-import { splitBucketModeRowKey } from "./parent-report-row-diagnostics";
-import { canonicalParentReportGradeKey, mathReportBaseOperationKey } from "./math-report-generator";
-import { DEFAULT_TOPIC_NEXT_STEP_CONFIG } from "./topic-next-step-config";
+import { splitBucketModeRowKey } from "./parent-report-row-diagnostics.js";
+import { canonicalParentReportGradeKey, mathReportBaseOperationKey } from "./math-report-generator.js";
+import { DEFAULT_TOPIC_NEXT_STEP_CONFIG } from "./topic-next-step-config.js";
 
-export { DEFAULT_TOPIC_NEXT_STEP_CONFIG } from "./topic-next-step-config";
+export { DEFAULT_TOPIC_NEXT_STEP_CONFIG } from "./topic-next-step-config.js";
 import {
   computeConfidence01,
   computeRowDiagnosticSignals,
   computeStability01,
   rowMistakeEventCount,
-} from "./parent-report-row-diagnostics";
+} from "./parent-report-row-diagnostics.js";
 import {
   applyPhase2GuardsToStep,
   applyPhase7RestraintGuards,
@@ -32,7 +32,7 @@ import {
   confidenceBadgeFromScore,
   mergePhase7SoftHebrewCopy,
   sufficiencyBadgeFromLevel,
-} from "./topic-next-step-phase2";
+} from "./topic-next-step-phase2.js";
 import { computeDiagnosticRestraint } from "./parent-report-diagnostic-restraint.js";
 import { estimateRowRootCause } from "./parent-report-root-cause.js";
 import { buildInterventionPlanPhase8 } from "./parent-report-intervention-plan.js";

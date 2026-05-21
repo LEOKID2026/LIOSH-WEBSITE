@@ -1,4 +1,4 @@
-import { LEVELS, GRADES, GRADE_LEVELS, OPERATIONS, STORAGE_KEY } from './math-constants';
+import { LEVELS, GRADES, GRADE_LEVELS, OPERATIONS, STORAGE_KEY } from './math-constants.js';
 
 // מחזיר את ההגדרות האקטואליות לפי כיתה + רמת קושי
 export function getLevelConfig(grade, levelKey) {

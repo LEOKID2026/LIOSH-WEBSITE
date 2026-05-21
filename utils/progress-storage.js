@@ -1,7 +1,7 @@
 import {
   isTrackingDebugEnabled,
   trackingDebugRecordSession,
-} from "./tracking-debug";
+} from "./tracking-debug.js";
 import { safeGetItem, safeSetJson, safeGetJsonArray } from "./safe-local-storage.js";
 
 /** Parent / legacy UI (no student id): keep original global keys. */

@@ -456,6 +456,7 @@ assert.ok(rec.trend == null || typeof rec.trend === "object");
     maps: {},
     fallbackOverview: fallback,
     insufficientDataSubjectsHe: [],
+    subjectQuestionCounts: { math: 5, geometry: 12 },
   });
 
   assert.ok(

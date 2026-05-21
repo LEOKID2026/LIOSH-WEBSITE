@@ -1,4 +1,4 @@
-import { itemAllowedForGrade } from "./grade-gating";
+import { itemAllowedForGrade } from "./grade-gating.js";
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 

@@ -3,7 +3,7 @@
 import {
   isTrackingDebugEnabled,
   trackingDebugRecordTrack,
-} from "./tracking-debug";
+} from "./tracking-debug.js";
 
 const TIME_TRACKING_KEY = "mleo_time_tracking";
 const GEOMETRY_TIME_TRACKING_KEY = "mleo_geometry_time_tracking";

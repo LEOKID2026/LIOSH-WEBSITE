@@ -1,7 +1,7 @@
 import {
   isTrackingDebugEnabled,
   trackingDebugRecordTrack,
-} from "./tracking-debug";
+} from "./tracking-debug.js";
 
 const SCIENCE_TIME_TRACKING_KEY = "mleo_science_time_tracking";
 

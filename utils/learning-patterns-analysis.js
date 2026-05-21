@@ -3,12 +3,12 @@ import {
   MIN_MISTAKES_FOR_STRONG_RECOMMENDATION,
   normalizeMistakeEvent,
   mistakePatternClusterKey,
-} from "./mistake-event";
+} from "./mistake-event.js";
 import {
   weaknessLabelHe,
   sessionRowLabelHe,
   GENERIC_WEAKNESS_HE,
-} from "./diagnostic-labels-he";
+} from "./diagnostic-labels-he.js";
 import {
   CONCLUSION_FRESHNESS_LABEL_HE,
   EXPECTED_VS_OBSERVED_MATCH_LABEL_HE,

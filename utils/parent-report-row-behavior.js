@@ -2,8 +2,8 @@
  * פרופיל התנהגות ברמת שורת דוח — מבוסס אירועי טעות מנורמלים + מדדי שורה (ללא UI).
  */
 
-import { mistakePatternClusterKey } from "./mistake-event";
-import { filterMistakesForRow } from "./parent-report-row-trend";
+import { mistakePatternClusterKey } from "./mistake-event.js";
+import { filterMistakesForRow } from "./parent-report-row-trend.js";
 
 /** @typedef {"knowledge_gap"|"careless_pattern"|"speed_pressure"|"instruction_friction"|"fragile_success"|"stable_mastery"|"undetermined"} BehaviorDominantType */
 

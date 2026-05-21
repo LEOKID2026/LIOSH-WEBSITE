@@ -1,4 +1,4 @@
-import { GRADES, BLANK } from './math-constants';
+import { GRADES, BLANK } from './math-constants.js';
 import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contract.js';
 import { probeMatchesSession } from './active-diagnostic-runtime/session-match.js';
 import { attachProfessionalMathMetadata } from './math-question-metadata.js';

@@ -1,4 +1,4 @@
-import { BLANK } from './math-constants';
+import { BLANK } from './math-constants.js';
 import { convertMissingNumberEquation, buildVerticalOperation } from './math-animations';
 
 export function getHint(question, operation, gradeKey) {

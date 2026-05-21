@@ -1,12 +1,12 @@
 // מערכת יצירת דוחות להורים
 
-import { STORAGE_KEY } from './math-constants';
-import { getTimeByPeriod, getTimeByCustomPeriod, getAllTimeTracking } from './math-time-tracking';
-import { getGeometryTimeByPeriod, getGeometryTimeByCustomPeriod } from './math-time-tracking';
-import { getEnglishTimeByCustomPeriod } from './english-time-tracking';
-import { getScienceTimeByCustomPeriod } from './science-time-tracking';
-import { getHebrewTimeByCustomPeriod } from './hebrew-time-tracking';
-import { getMoledetGeographyTimeByCustomPeriod } from './moledet-geography-time-tracking';
+import { STORAGE_KEY } from './math-constants.js';
+import { getTimeByPeriod, getTimeByCustomPeriod, getAllTimeTracking } from './math-time-tracking.js';
+import { getGeometryTimeByPeriod, getGeometryTimeByCustomPeriod } from './math-time-tracking.js';
+import { getEnglishTimeByCustomPeriod } from './english-time-tracking.js';
+import { getScienceTimeByCustomPeriod } from './science-time-tracking.js';
+import { getHebrewTimeByCustomPeriod } from './hebrew-time-tracking.js';
+import { getMoledetGeographyTimeByCustomPeriod } from './moledet-geography-time-tracking.js';
 
 // שמות פעולות בעברית (חשבון)
 const OPERATION_NAMES = {

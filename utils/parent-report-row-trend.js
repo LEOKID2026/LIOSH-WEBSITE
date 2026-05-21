@@ -11,9 +11,9 @@ import {
   mathScopeGradeFromSession,
   mathScopeLevelFromSession,
   normalizeSessionModeForMath,
-} from "./parent-report-row-diagnostics";
-import { normalizeMistakeEvent } from "./mistake-event";
-import { mathReportBaseOperationKey } from "./math-report-generator";
+} from "./parent-report-row-diagnostics.js";
+import { normalizeMistakeEvent } from "./mistake-event.js";
+import { mathReportBaseOperationKey } from "./math-report-generator.js";
 
 /** @param {unknown} session */
 function parseSessionTime(session) {

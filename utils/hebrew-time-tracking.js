@@ -1,7 +1,7 @@
 import {
   isTrackingDebugEnabled,
   trackingDebugRecordTrack,
-} from "./tracking-debug";
+} from "./tracking-debug.js";
 
 const HEBREW_TIME_TRACKING_KEY = "mleo_hebrew_time_tracking";
 

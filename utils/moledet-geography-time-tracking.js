@@ -1,7 +1,7 @@
 import {
   isTrackingDebugEnabled,
   trackingDebugRecordTrack,
-} from "./tracking-debug";
+} from "./tracking-debug.js";
 
 const MOLEDET_GEOGRAPHY_TIME_TRACKING_KEY = "mleo_moledet_geography_time_tracking";
 

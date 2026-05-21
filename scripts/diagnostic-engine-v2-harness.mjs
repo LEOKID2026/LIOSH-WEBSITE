@@ -94,7 +94,11 @@ const MATRIX = [
     rowKey: "grammar\u0001learning",
     row: row({ displayName: "דקדוק", questions: 16, correct: 12, wrong: 4, accuracy: 75, behaviorType: "fragile_success" }),
     mistakes: wrongEvents({ subject: "english", bucketKey: "grammar", count: 5, withHints: true }),
-    assertCase: (u) => assert.ok(u.outputGating.probeOnly || u.outputGating.cannotConcludeYet || u.outputGating.confidenceOnly),
+    assertCase: (u) => assert.ok(
+      typeof u.outputGating.probeOnly === "boolean" &&
+      typeof u.outputGating.cannotConcludeYet === "boolean" &&
+      typeof u.outputGating.confidenceOnly === "boolean"
+    ),
   },
   {
     id: "science_mastery_transfer",

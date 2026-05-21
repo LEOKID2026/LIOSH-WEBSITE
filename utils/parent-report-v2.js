@@ -3,7 +3,7 @@
  * One storage bucket (operations.* or topics.*) = one table row; no V1 fallback.
  */
 
-import { STORAGE_KEY } from "./math-constants";
+import { STORAGE_KEY } from "./math-constants.js";
 import {
   generateRecommendations,
   getMathReportBucketDisplayName,
@@ -15,13 +15,13 @@ import {
   mathReportBaseOperationKey,
   formatParentReportGradeLabel,
   canonicalParentReportGradeKey,
-} from "./math-report-generator";
-import { mistakeTimestampMs, normalizeMistakeEvent } from "./mistake-event";
+} from "./math-report-generator.js";
+import { mistakeTimestampMs, normalizeMistakeEvent } from "./mistake-event.js";
 import {
   formatParentReportActivityIsrael,
   parseActivityTimestampMs,
 } from "../lib/learning-supabase/parent-report-activity-time.js";
-import { analyzeLearningPatterns } from "./learning-patterns-analysis";
+import { analyzeLearningPatterns } from "./learning-patterns-analysis.js";
 import {
   enrichTopicMapsWithRowDiagnostics,
   attachEvidenceContractsV1ToTopicMaps,
@@ -34,17 +34,17 @@ import {
   buildMathScopedMistakeAggregationKey,
   MATH_MISTAKE_UNSCOPED_MARKER,
   MATH_SCOPE_UNKNOWN,
-} from "./parent-report-row-diagnostics";
+} from "./parent-report-row-diagnostics.js";
 import {
   buildGradeEvidenceFields,
   practiceGradeRelation,
 } from "../lib/learning-supabase/practice-grade-resolution.js";
 import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
-import { enrichTopicMapsWithRowTrends, filterMistakesForRow } from "./parent-report-row-trend";
+import { enrichTopicMapsWithRowTrends, filterMistakesForRow } from "./parent-report-row-trend.js";
 import { buildWeaknessConfidencePatternsV1 } from "./intelligence-layer-v1/weakness-confidence-patterns.js";
-import { enrichTopicMapsWithRowBehaviorProfiles } from "./parent-report-row-behavior";
-import { validateParentReportDataIntegrity } from "./parent-report-data-integrity";
-import { enrichReportMapsWithTopicStepHints } from "./topic-next-step-engine";
+import { enrichTopicMapsWithRowBehaviorProfiles } from "./parent-report-row-behavior.js";
+import { validateParentReportDataIntegrity } from "./parent-report-data-integrity.js";
+import { enrichReportMapsWithTopicStepHints } from "./topic-next-step-engine.js";
 import { applyConsistencyGuards } from "./system-intelligence/consistency-engine.js";
 import { applyDependencyGuards } from "./system-intelligence/dependency-engine.js";
 import { attachFeedbackSignal } from "./system-intelligence/feedback-engine.js";
