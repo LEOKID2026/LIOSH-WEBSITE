@@ -1,6 +1,38 @@
 /** Science production completion — Batch 1 (grade-targeted MCQs, varied stems). Wired from data/science-questions.js. */
 
-function mcq(id, topic, gradeKey, lvl, stem, options, correctIndex, explanation, subtype, pDiff, cog) {
+function mcq(
+  id,
+  topic,
+  gradeKey,
+  lvl,
+  stem,
+  options,
+  correctIndex,
+  explanation,
+  subtype,
+  pDiff,
+  cog,
+  meta = {},
+) {
+  const patternFamily =
+    meta.patternFamily || `sci_pb1_${topic}_${gradeKey}_${lvl}`;
+  const params = {
+    patternFamily,
+    subtype,
+    cognitiveLevel: cog,
+    expectedErrorTypes: meta.expectedErrorTypes || [
+      "concept_confusion",
+      "fact_recall_gap",
+    ],
+    difficulty: pDiff,
+    kind: meta.kind || "production_batch1_fill",
+  };
+  if (meta.conceptTag) params.conceptTag = meta.conceptTag;
+  if (meta.diagnosticSkillId) params.diagnosticSkillId = meta.diagnosticSkillId;
+  if (meta.expectedErrorTags) {
+    params.expectedErrorTags = meta.expectedErrorTags;
+  }
+  if (meta.probePower) params.probePower = meta.probePower;
   return {
     id,
     topic,
@@ -16,16 +48,11 @@ function mcq(id, topic, gradeKey, lvl, stem, options, correctIndex, explanation,
       "שאלות אלו נועדו לחזק כיסוי מאגר לפי נושא, כיתה ורמת הממשק.",
       "בדקו את ההסבר כדי לחבר את התשובה לתצפית או לניסוי מהכיתה.",
     ],
-    params: {
-      patternFamily: `sci_pb1_${topic}_${gradeKey}_${lvl}`,
-      subtype,
-      cognitiveLevel: cog,
-      expectedErrorTypes: ["concept_confusion", "fact_recall_gap"],
-      difficulty: pDiff,
-      kind: "production_batch1_fill",
-    },
+    params,
   };
 }
+
+export { mcq as scienceMcq };
 
 const SCIENCE_QUESTIONS_PRODUCTION_BATCH1_CORE = [
   mcq(

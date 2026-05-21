@@ -5,6 +5,8 @@ import { SCIENCE_QUESTIONS_PHASE3 } from "./science-questions-phase3.js";
 import { SCIENCE_QUESTIONS_PHASE4B1 } from "./science-questions-phase4b1.js";
 import { SCIENCE_QUESTIONS_CLOSURE_FILL } from "./science-questions-closure-fill.js";
 import { SCIENCE_QUESTIONS_PRODUCTION_BATCH1 } from "./science-questions-production-batch1.js";
+import { SCIENCE_QUESTIONS_P0_G123_FILL } from "./science-questions-p0-g123-fill.js";
+import { SCIENCE_QUESTIONS_P1_G456_FILL } from "./science-questions-p1-g456-fill.js";
 import { SCIENCE_G3_BODY_BANK } from "./science-questions-g3-body-bank.js";
 
 export const SCIENCE_QUESTIONS = [
@@ -10830,4 +10832,6 @@ export const SCIENCE_QUESTIONS = [
   .concat(SCIENCE_QUESTIONS_PHASE4B1)
   .concat(SCIENCE_QUESTIONS_CLOSURE_FILL)
   .concat(SCIENCE_QUESTIONS_PRODUCTION_BATCH1)
+  .concat(SCIENCE_QUESTIONS_P0_G123_FILL)
+  .concat(SCIENCE_QUESTIONS_P1_G456_FILL)
   .concat(SCIENCE_G3_BODY_BANK);
