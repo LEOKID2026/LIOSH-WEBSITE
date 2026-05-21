@@ -67,6 +67,17 @@ const SCIENCE_QUESTIONS_PRODUCTION_BATCH1_CORE = [
     "sci_body_general",
     "basic",
     "recall",
+    {
+      patternFamily: "science_respiratory_gas_exchange",
+      conceptTag: "lungs_primary_gas_exchange",
+      diagnosticSkillId: "sci_respiration_concept",
+      expectedErrorTags: [
+        "lungs_primary_gas_exchange",
+        "respiration_system_confusion",
+        "cause_effect_gap",
+      ],
+      probePower: "high",
+    },
   ),
   mcq(
     "sci_pb1_g3_body_easy_02",
@@ -80,6 +91,15 @@ const SCIENCE_QUESTIONS_PRODUCTION_BATCH1_CORE = [
     "sci_body_general",
     "basic",
     "recall",
+    {
+      conceptTag: "digestive_organs_after_swallow",
+      diagnosticSkillId: "sci_g3_body_systems_basic",
+      expectedErrorTags: [
+        "digestive_organs_after_swallow",
+        "organ_system_confusion",
+        "fact_recall_gap",
+      ],
+    },
   ),
   mcq(
     "sci_pb1_g3_body_hard_01",

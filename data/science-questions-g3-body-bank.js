@@ -3,7 +3,125 @@
  * Target: 50+ unique items for g3 easy body sessions.
  */
 
+/** @type {Record<string, { diagnosticSkillId: string, expectedErrorTags: string[] }>} */
+const G3_BODY_SKILL_FAMILIES = {
+  senses_and_skin: {
+    diagnosticSkillId: "sci_g3_body_senses_and_skin",
+    expectedErrorTags: ["sense_organ_confusion", "fact_recall_gap"],
+  },
+  breathing_respiration: {
+    diagnosticSkillId: "sci_g3_body_breathing_respiration",
+    expectedErrorTags: ["respiration_system_confusion", "cause_effect_gap"],
+  },
+  skeleton_muscles: {
+    diagnosticSkillId: "sci_g3_body_skeleton_muscles",
+    expectedErrorTags: ["structure_function_confusion", "fact_recall_gap"],
+  },
+  nutrition_health: {
+    diagnosticSkillId: "sci_g3_body_nutrition_health",
+    expectedErrorTags: ["health_habit_confusion", "fact_recall_gap"],
+  },
+  heart_blood_circulation: {
+    diagnosticSkillId: "sci_g3_body_heart_blood_circulation",
+    expectedErrorTags: ["circulation_confusion", "cause_effect_gap"],
+  },
+  body_systems_basic: {
+    diagnosticSkillId: "sci_g3_body_systems_basic",
+    expectedErrorTags: ["organ_system_confusion", "fact_recall_gap"],
+  },
+  body_function_matching: {
+    diagnosticSkillId: "sci_g3_body_function_matching",
+    expectedErrorTags: ["system_role_confusion", "cause_effect_gap"],
+  },
+};
+
+/** patternFamily → diagnostic family + conceptTag (+ optional probe-aligned skill) */
+const G3_BODY_PATTERN_META = {
+  sci_body_g3_hearing: { family: "senses_and_skin", conceptTag: "sense_hearing" },
+  sci_body_g3_skin_role: { family: "senses_and_skin", conceptTag: "skin_protection_touch" },
+  sci_body_g3_taste: { family: "senses_and_skin", conceptTag: "sense_taste" },
+  sci_body_g3_smell: { family: "senses_and_skin", conceptTag: "sense_smell" },
+  sci_body_g3_vision_path: { family: "senses_and_skin", conceptTag: "vision_signal_path" },
+  sci_body_g3_brain_senses: { family: "senses_and_skin", conceptTag: "brain_interprets_senses" },
+  sci_body_g3_eye_care: { family: "senses_and_skin", conceptTag: "eye_health_habits" },
+  sci_body_g3_hearing_safety: { family: "senses_and_skin", conceptTag: "hearing_noise_safety" },
+  sci_body_g3_eyelashes: { family: "senses_and_skin", conceptTag: "eye_protection" },
+  sci_body_g3_touch_pair: { family: "senses_and_skin", conceptTag: "touch_skin_brain" },
+  sci_body_g3_respiratory_organs: {
+    family: "breathing_respiration",
+    conceptTag: "respiratory_organs",
+    diagnosticSkillId: "sci_respiration_concept",
+    probePower: "high",
+  },
+  sci_body_g3_breathing_exercise: {
+    family: "breathing_respiration",
+    conceptTag: "breathing_after_exercise",
+    diagnosticSkillId: "sci_respiration_concept",
+    probePower: "high",
+  },
+  sci_body_g3_lung_gas: {
+    family: "breathing_respiration",
+    conceptTag: "lung_gas_exchange",
+    diagnosticSkillId: "sci_respiration_concept",
+    probePower: "high",
+  },
+  sci_body_g3_muscle_oxygen: {
+    family: "breathing_respiration",
+    conceptTag: "muscle_oxygen_demand",
+    diagnosticSkillId: "sci_respiration_concept",
+    probePower: "high",
+  },
+  sci_body_g3_muscles: { family: "skeleton_muscles", conceptTag: "muscle_movement" },
+  sci_body_g3_skeleton: { family: "skeleton_muscles", conceptTag: "skeleton_support" },
+  sci_body_g3_spine: { family: "skeleton_muscles", conceptTag: "spine_protection" },
+  sci_body_g3_bone_muscle_team: { family: "skeleton_muscles", conceptTag: "bone_muscle_movement" },
+  sci_body_g3_calcium: { family: "skeleton_muscles", conceptTag: "calcium_bone_strength" },
+  sci_body_g3_posture: { family: "skeleton_muscles", conceptTag: "posture_spine" },
+  sci_body_g3_dental_hygiene: { family: "nutrition_health", conceptTag: "dental_hygiene" },
+  sci_body_g3_hydration: { family: "nutrition_health", conceptTag: "hydration" },
+  sci_body_g3_healthy_habits: { family: "nutrition_health", conceptTag: "healthy_lifestyle" },
+  sci_body_g3_hand_washing: { family: "nutrition_health", conceptTag: "hand_hygiene" },
+  sci_body_g3_balanced_diet: { family: "nutrition_health", conceptTag: "balanced_diet" },
+  sci_body_g3_fatigue_rest: { family: "nutrition_health", conceptTag: "rest_recovery" },
+  sci_body_g3_breakfast: { family: "nutrition_health", conceptTag: "breakfast_energy" },
+  sci_body_g3_sleep: { family: "nutrition_health", conceptTag: "sleep_growth" },
+  sci_body_g3_kitchen_safety: { family: "nutrition_health", conceptTag: "kitchen_safety" },
+  sci_body_g3_exercise: { family: "nutrition_health", conceptTag: "exercise_benefits" },
+  sci_body_g3_fruits_veggies: { family: "nutrition_health", conceptTag: "fruits_vegetables" },
+  sci_body_g3_wound_care: { family: "nutrition_health", conceptTag: "wound_bandage" },
+  sci_body_g3_heat_hydration: { family: "nutrition_health", conceptTag: "heat_fluid_loss" },
+  sci_body_g3_cold_care: { family: "nutrition_health", conceptTag: "cold_rest_hygiene" },
+  sci_body_g3_safety_helmet: { family: "nutrition_health", conceptTag: "head_safety" },
+  sci_body_g3_heart_pump: { family: "heart_blood_circulation", conceptTag: "heart_pumps_blood" },
+  sci_body_g3_blood_role: { family: "heart_blood_circulation", conceptTag: "blood_transports" },
+  sci_body_g3_pulse_observation: { family: "heart_blood_circulation", conceptTag: "pulse_after_activity" },
+  sci_body_g3_pulse_jump: { family: "heart_blood_circulation", conceptTag: "pulse_jump_activity" },
+  sci_body_g3_digestive_stomach: { family: "body_systems_basic", conceptTag: "digestive_stomach" },
+  sci_body_g3_liver_role: { family: "body_systems_basic", conceptTag: "liver_processing" },
+  sci_body_g3_mouth_digestion: { family: "body_systems_basic", conceptTag: "mouth_chewing" },
+  sci_body_g3_kidneys: { family: "body_systems_basic", conceptTag: "kidney_filtration" },
+  sci_body_g3_saliva: { family: "body_systems_basic", conceptTag: "saliva_digestion" },
+  sci_body_g3_excretory: { family: "body_systems_basic", conceptTag: "excretory_kidney" },
+  sci_body_g3_small_intestine: { family: "body_systems_basic", conceptTag: "small_intestine_absorption" },
+  sci_body_g3_reflex: { family: "body_function_matching", conceptTag: "spinal_reflex" },
+  sci_body_g3_nervous_system: { family: "body_function_matching", conceptTag: "nervous_messages" },
+  sci_body_g3_cold_response: { family: "body_function_matching", conceptTag: "shivering_heat" },
+  sci_body_g3_brain_learning: { family: "body_function_matching", conceptTag: "brain_learning" },
+  sci_body_g3_sweat_cooling: { family: "body_function_matching", conceptTag: "sweat_cooling" },
+  sci_body_g3_systems_together: { family: "body_function_matching", conceptTag: "body_systems_cooperation" },
+};
+
 function bodyMcq(id, stem, options, correctIndex, explanation, patternFamily, cog = "recall") {
+  const rowMeta = G3_BODY_PATTERN_META[patternFamily] || {
+    family: "body_systems_basic",
+    conceptTag: patternFamily.replace(/^sci_body_g3_/, ""),
+  };
+  const familyMeta = G3_BODY_SKILL_FAMILIES[rowMeta.family];
+  const diagnosticSkillId = rowMeta.diagnosticSkillId || familyMeta.diagnosticSkillId;
+  const expectedErrorTags = [
+    rowMeta.conceptTag,
+    ...familyMeta.expectedErrorTags,
+  ];
   return {
     id,
     topic: "body",
@@ -21,9 +139,12 @@ function bodyMcq(id, stem, options, correctIndex, explanation, patternFamily, co
     params: {
       patternFamily,
       subtype: "sci_body_g3_authored",
-      conceptTag: patternFamily,
+      conceptTag: rowMeta.conceptTag,
+      diagnosticSkillId,
+      probePower: rowMeta.probePower || "medium",
+      expectedErrorTags,
       cognitiveLevel: cog,
-      expectedErrorTypes: ["fact_recall_gap", "concept_confusion"],
+      expectedErrorTypes: expectedErrorTags,
       difficulty: "basic",
     },
   };

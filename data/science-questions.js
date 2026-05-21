@@ -8,8 +8,9 @@ import { SCIENCE_QUESTIONS_PRODUCTION_BATCH1 } from "./science-questions-product
 import { SCIENCE_QUESTIONS_P0_G123_FILL } from "./science-questions-p0-g123-fill.js";
 import { SCIENCE_QUESTIONS_P1_G456_FILL } from "./science-questions-p1-g456-fill.js";
 import { SCIENCE_G3_BODY_BANK } from "./science-questions-g3-body-bank.js";
+import { applyPass1ScienceMetadata } from "./science-questions-metadata-pass1-enrich.js";
 
-export const SCIENCE_QUESTIONS = [
+const SCIENCE_QUESTIONS_RAW = [
   {
     "id": "body_1",
     "topic": "body",
@@ -1448,11 +1449,19 @@ export const SCIENCE_QUESTIONS = [
     "params": {
       "patternFamily": "sci_body_systems",
       "subtype": "sci_body_general",
+      "conceptTag": "digestion_first_organ",
+      "diagnosticSkillId": "sci_g3_body_systems_basic",
+      "probePower": "medium",
+      "expectedErrorTags": [
+        "digestion_first_organ",
+        "organ_system_confusion",
+        "fact_recall_gap"
+      ],
       "cognitiveLevel": "recall",
       "expectedErrorTypes": [
-        "misconception",
-        "concept_confusion",
-        "careless_error"
+        "digestion_first_organ",
+        "organ_system_confusion",
+        "fact_recall_gap"
       ],
       "difficulty": "basic"
     }
@@ -1483,11 +1492,19 @@ export const SCIENCE_QUESTIONS = [
     "params": {
       "patternFamily": "sci_body_systems",
       "subtype": "sci_body_general",
+      "conceptTag": "lungs_gas_exchange",
+      "diagnosticSkillId": "sci_respiration_concept",
+      "probePower": "high",
+      "expectedErrorTags": [
+        "lungs_gas_exchange",
+        "respiration_system_confusion",
+        "cause_effect_gap"
+      ],
       "cognitiveLevel": "recall",
       "expectedErrorTypes": [
-        "misconception",
-        "concept_confusion",
-        "careless_error"
+        "lungs_gas_exchange",
+        "respiration_system_confusion",
+        "cause_effect_gap"
       ],
       "difficulty": "basic"
     }
@@ -1518,11 +1535,19 @@ export const SCIENCE_QUESTIONS = [
     "params": {
       "patternFamily": "sci_body_systems",
       "subtype": "sci_body_general",
+      "conceptTag": "bones_support_protect",
+      "diagnosticSkillId": "sci_g3_body_skeleton_muscles",
+      "probePower": "medium",
+      "expectedErrorTags": [
+        "bones_support_protect",
+        "structure_function_confusion",
+        "fact_recall_gap"
+      ],
       "cognitiveLevel": "recall",
       "expectedErrorTypes": [
-        "misconception",
-        "concept_confusion",
-        "careless_error"
+        "bones_support_protect",
+        "structure_function_confusion",
+        "fact_recall_gap"
       ],
       "difficulty": "basic"
     }
@@ -3663,11 +3688,19 @@ export const SCIENCE_QUESTIONS = [
     "params": {
       "patternFamily": "sci_body_systems",
       "subtype": "sci_body_general",
+      "conceptTag": "skeleton_support_protect",
+      "diagnosticSkillId": "sci_g3_body_skeleton_muscles",
+      "probePower": "medium",
+      "expectedErrorTags": [
+        "skeleton_support_protect",
+        "structure_function_confusion",
+        "fact_recall_gap"
+      ],
       "cognitiveLevel": "recall",
       "expectedErrorTypes": [
-        "misconception",
-        "concept_confusion",
-        "careless_error"
+        "skeleton_support_protect",
+        "structure_function_confusion",
+        "fact_recall_gap"
       ],
       "difficulty": "basic"
     }
@@ -10835,3 +10868,5 @@ export const SCIENCE_QUESTIONS = [
   .concat(SCIENCE_QUESTIONS_P0_G123_FILL)
   .concat(SCIENCE_QUESTIONS_P1_G456_FILL)
   .concat(SCIENCE_G3_BODY_BANK);
+
+export const SCIENCE_QUESTIONS = SCIENCE_QUESTIONS_RAW.map(applyPass1ScienceMetadata);
