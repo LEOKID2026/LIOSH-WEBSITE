@@ -50,6 +50,7 @@ export default function Layout({ children }) {
     pathname.startsWith("/student/home") ||
     pathname.startsWith("/student/arcade") ||
     pathname === "/learning" ||
+    pathname.startsWith("/learning/dev") ||
     pathname === "/game" ||
     pathname.startsWith("/offline") ||
     pathname.startsWith("/gallery") ||
