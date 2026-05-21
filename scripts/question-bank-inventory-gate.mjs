@@ -401,7 +401,8 @@ async function auditHebrew(results) {
   const { itemAllowedForGrade } = await import(modUrl("utils/grade-gating.js"));
   
   const cells = [];
-  const topics = ["comprehension", "grammar", "spelling", "vocabulary", "reading"];
+  // Align with runtime/curriculum (`writing` in hebrew-constants + generator); gate formerly used stale `spelling`.
+  const topics = ["comprehension", "grammar", "writing", "vocabulary", "reading"];
   const levels = ["easy", "medium", "hard"];
   
   // Archive questions (volume estimate only — not used for metadata %)

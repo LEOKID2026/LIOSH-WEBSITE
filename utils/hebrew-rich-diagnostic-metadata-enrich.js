@@ -197,9 +197,85 @@ const BY_PATTERN = {
     conceptTag: "paragraph_role",
     expectedErrorTags: ["main_idea_error", "structural_role_error"],
   },
+  spell_word_early_ab_writing: {
+    diagnosticSkillId: "he_spell_word_form",
+    conceptTag: "orthography_choice",
+    expectedErrorTags: ["spelling_pattern_error", "niqqud_error", "careless_error"],
+  },
+  structured_completion: {
+    diagnosticSkillId: "he_spell_register_choice",
+    conceptTag: "formal_register",
+    expectedErrorTags: ["register_error", "completion_error", "careless_error"],
+  },
+  rephrase: {
+    diagnosticSkillId: "he_spell_sentence_clarity",
+    conceptTag: "clarity_rewrite",
+    expectedErrorTags: ["word_order_error", "sentence_fix_error", "careless_error"],
+  },
+  logic_completion: {
+    diagnosticSkillId: "he_spell_logic_completion",
+    conceptTag: "conclusion_link",
+    expectedErrorTags: ["completion_error", "inference_error", "careless_error"],
+  },
 };
 
-const SKIP_TOPICS = new Set(["spelling", "writing", "speaking"]);
+const SKIP_TOPICS = new Set(["spelling", "speaking"]);
+
+/** P1: extend `levels` only where missing cells match existing row semantics (no stem changes). */
+const P1_LEVEL_EXTENSIONS = {
+  binary_fact_early_g1: ["medium", "hard"],
+  binary_fact_early_g2: ["hard"],
+  gender_number_early_g1: ["medium", "hard"],
+  gender_number_early_g2: ["hard"],
+  word_context_early_g1: ["medium", "hard"],
+  word_context_early_g2: ["hard"],
+  word_level_early_g1: ["medium", "hard"],
+  word_level_early_g2: ["hard"],
+  sentence_read: ["easy", "hard"],
+  tense_shift: ["easy"],
+  verb_agreement: ["easy"],
+  transform: ["easy"],
+  context_fit: ["easy"],
+  category_exclusion: ["easy"],
+  structural: ["easy"],
+  spell_word_early_ab_writing: ["hard"],
+  structured_completion: ["hard"],
+  logic_completion: ["easy", "hard"],
+  rephrase: ["easy"],
+};
+
+/**
+ * @param {Record<string, unknown>[]} pool
+ */
+export function applyHebrewRichPoolLevelEligibilityP1(pool) {
+  for (const row of pool) {
+    const pf = String(row.patternFamily || "");
+    const extra = P1_LEVEL_EXTENSIONS[pf];
+    if (!extra?.length || !Array.isArray(row.levels)) continue;
+    const merged = [...new Set([...row.levels.map(String), ...extra])];
+    row.levels = merged;
+  }
+}
+
+/**
+ * P1: widen grade eligibility for basic rows that apply across upper primary (no copy changes).
+ * @param {Record<string, unknown>[]} pool
+ */
+export function applyHebrewRichPoolGradeEligibilityP1(pool) {
+  for (const row of pool) {
+    const pf = String(row.patternFamily || "");
+    if (pf === "synonym" && row.gradeBand === "mid") {
+      delete row.gradeBand;
+      row.minGrade = 3;
+      row.maxGrade = 6;
+    }
+    if (pf === "part_of_speech" && row.gradeBand === "mid") {
+      delete row.gradeBand;
+      row.minGrade = 3;
+      row.maxGrade = 6;
+    }
+  }
+}
 
 /**
  * @param {Record<string, unknown>} row
@@ -233,5 +309,7 @@ export function enrichHebrewRichPoolRow(row) {
  * @param {Record<string, unknown>[]} pool
  */
 export function enrichHebrewRichPoolRows(pool) {
+  applyHebrewRichPoolGradeEligibilityP1(pool);
+  applyHebrewRichPoolLevelEligibilityP1(pool);
   for (const row of pool) enrichHebrewRichPoolRow(row);
 }

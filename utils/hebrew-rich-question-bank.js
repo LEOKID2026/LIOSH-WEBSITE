@@ -1407,6 +1407,7 @@ export const HEBREW_RICH_POOL = [
   }
 ];
 
+// P0/P1 diagnostic metadata + level/grade eligibility (no stem/answer changes).
 enrichHebrewRichPoolRows(HEBREW_RICH_POOL);
 
 export function filterRichHebrewPool(gradeKey, levelKey, topic) {
