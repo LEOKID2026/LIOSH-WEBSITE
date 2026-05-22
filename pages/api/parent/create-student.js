@@ -1,42 +1,5 @@
 import { getLearningSupabaseServerUserClient } from "../../../lib/learning-supabase/server";
-
-const DEFAULT_PARENT_STUDENT_LIMIT = 3;
-
-/**
- * Resolve the per-parent student creation limit.
- *
- * Default product behavior: every parent can create up to 3 students.
- *
- * QA escape hatch (server-side only, never exposed to the browser):
- *   QA_PARENT_STUDENT_LIMIT_EMAILS = comma-separated list of parent emails
- *     allowed a higher limit (e.g. "admin@admin.com"). Compared case-
- *     insensitively after trimming.
- *   QA_PARENT_STUDENT_LIMIT = positive integer override (e.g. 50). Only
- *     applies to emails in the allowlist; ignored otherwise.
- *
- * If either env var is missing, malformed, or the email is not in the
- * allowlist, the default 3-student cap is enforced unchanged.
- */
-function resolveParentStudentLimit(rawEmail) {
-  const email = String(rawEmail || "").trim().toLowerCase();
-  if (!email) return DEFAULT_PARENT_STUDENT_LIMIT;
-
-  const rawAllowlist = String(process.env.QA_PARENT_STUDENT_LIMIT_EMAILS || "");
-  const allowlist = rawAllowlist
-    .split(",")
-    .map((entry) => entry.trim().toLowerCase())
-    .filter(Boolean);
-  if (allowlist.length === 0) return DEFAULT_PARENT_STUDENT_LIMIT;
-  if (!allowlist.includes(email)) return DEFAULT_PARENT_STUDENT_LIMIT;
-
-  const rawOverride = String(process.env.QA_PARENT_STUDENT_LIMIT || "").trim();
-  if (!rawOverride) return DEFAULT_PARENT_STUDENT_LIMIT;
-  const overrideNum = Number.parseInt(rawOverride, 10);
-  if (!Number.isFinite(overrideNum) || overrideNum < DEFAULT_PARENT_STUDENT_LIMIT) {
-    return DEFAULT_PARENT_STUDENT_LIMIT;
-  }
-  return overrideNum;
-}
+import { resolveParentStudentLimit } from "../../../lib/parent-server/parent-student-limit.server";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

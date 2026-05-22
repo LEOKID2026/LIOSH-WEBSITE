@@ -66,12 +66,78 @@ export function pickAnswerForArithmetic({ profile, computedAnswer, rng, topicKey
 }
 
 /**
- * Tiny seedable RNG so scenario behavior is repeatable across runs.
+ * Decide which MCQ option index to click for the current question, based on
+ * the active profile and the known correct option index.
+ *
+ * Phase C consumers (hebrew/english/science MCQ drivers) feed `correctIndex`
+ * obtained from a React-fiber probe of the page's `currentQuestion` state —
+ * we never modify product data, we only read it to decide click intent.
+ *
+ * @param {object} args
+ * @param {string} args.profile
+ * @param {number} args.correctIndex   - 0-based index of the correct option
+ * @param {number} args.optionsCount   - total number of MCQ buttons available
+ * @param {() => number} args.rng
+ * @param {string} [args.topicKey]
+ * @param {string[]} [args.weaknessTopics]
+ * @returns {{index: number, intendedCorrect: boolean}}
+ */
+export function pickMcqIndex({
+  profile,
+  correctIndex,
+  optionsCount,
+  rng,
+  topicKey,
+  weaknessTopics,
+}) {
+  const total = Math.max(1, Number(optionsCount) || 0);
+  const correct = Number.isInteger(correctIndex) ? correctIndex : -1;
+  const safeCorrect = correct >= 0 && correct < total ? correct : 0;
+
+  if (total <= 1) {
+    return { index: 0, intendedCorrect: safeCorrect === 0 };
+  }
+
+  const spec = profileSpec(profile);
+  let correctRate = spec.correctRate;
+  if (
+    profile === "targeted" &&
+    Array.isArray(weaknessTopics) &&
+    topicKey &&
+    weaknessTopics.includes(topicKey)
+  ) {
+    correctRate = spec.weakTopicRate ?? 0.25;
+  }
+
+  const wantsCorrect = rng() < correctRate;
+  if (wantsCorrect) {
+    return { index: safeCorrect, intendedCorrect: true };
+  }
+  // Pick a wrong index uniformly from the remaining options.
+  const wrongCount = total - 1;
+  let pick = Math.floor(rng() * wrongCount);
+  if (pick >= safeCorrect) pick += 1;
+  if (pick < 0 || pick >= total) pick = (safeCorrect + 1) % total;
+  return { index: pick, intendedCorrect: false };
+}
+
+/**
+ * Tiny seedable RNG so scenario behaviour is repeatable across runs.
+ *
+ * Important: `state >>> 0` already keeps `state` in the unsigned 32-bit
+ * range (0..2^32-1). A subsequent `state & 0xffffffff` would convert it
+ * BACK to a signed 32-bit int (because JS bitwise operators treat their
+ * operands as signed int32), which yields negative results once the high
+ * bit is set. That bug silently broke all profile correctRate gating in
+ * Phase C's first run — values like -0.4 always satisfied `rng() < 0.7`,
+ * so weak/average looked indistinguishable from strong. We divide the
+ * unsigned state directly to produce a value in [0, 1).
  */
 export function makeRng(seed) {
   let state = (Number(seed) | 0) || 0xc0ffee;
+  if (state < 0) state >>>= 0;
   return function next() {
     state = (state * 1664525 + 1013904223) >>> 0;
-    return (state & 0xffffffff) / 0x100000000;
+    return state / 0x100000000;
   };
 }

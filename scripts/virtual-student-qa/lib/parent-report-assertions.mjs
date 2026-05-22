@@ -26,7 +26,7 @@ const SUBJECT_EMOJI = {
   math: "🧮",
   geometry: "📐",
   english: "📘",
-  hebrew: "✍️",
+  hebrew: "📚",
   science: "🔬",
   "moledet-geography": "🗺️",
 };

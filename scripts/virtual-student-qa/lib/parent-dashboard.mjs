@@ -117,9 +117,19 @@ function locateStudentCard(page, expectedName) {
     .first();
 }
 
+const PARENT_DASHBOARD_PATH = "/parent/dashboard";
+
 /**
  * Verify the dashboard contains the expected student and click the real
  * parent-facing "דוח הורים" link to navigate to the report.
+ *
+ * If the page is not currently on /parent/dashboard, this will navigate
+ * to the dashboard URL first so callers (e.g. Phase C snapshot loops) can
+ * be invoked from any prior page state without bypassing the real UI.
+ *
+ * `screenshotPrefix` — when provided, screenshots written by this helper
+ * are prefixed with it so repeated snapshots in the same run do not
+ * overwrite each other.
  */
 export async function verifyParentDashboardAndOpenReport({
   page,
@@ -127,7 +137,35 @@ export async function verifyParentDashboardAndOpenReport({
   expectedStudentName,
   log,
   artifacts,
+  artifactPrefix,
 }) {
+  const screenshotPrefix = artifactPrefix
+    ? `${artifactPrefix}-`
+    : "";
+
+  const currentUrl = page.url();
+  const isOnDashboard = (() => {
+    try {
+      const u = new URL(currentUrl);
+      return u.pathname === PARENT_DASHBOARD_PATH;
+    } catch {
+      return false;
+    }
+  })();
+  if (!isOnDashboard) {
+    if (!baseUrl) {
+      throw new Error(
+        "verifyParentDashboardAndOpenReport: baseUrl is required when the " +
+          "page is not already on /parent/dashboard"
+      );
+    }
+    const target = new URL(PARENT_DASHBOARD_PATH, baseUrl).toString();
+    log?.(
+      `parent-dashboard: navigating to ${target} (current=${currentUrl})`
+    );
+    await page.goto(target, { waitUntil: "domcontentloaded" });
+  }
+
   const dashboardUrl = page.url();
   const dashReadyInfo = await waitForDashboardReady(page, log, expectedStudentName);
 
@@ -135,7 +173,10 @@ export async function verifyParentDashboardAndOpenReport({
   const cardCount = await card.count();
   if (cardCount === 0) {
     if (artifacts?.saveScreenshot) {
-      await artifacts.saveScreenshot(page, "parent-dashboard-student-missing");
+      await artifacts.saveScreenshot(
+        page,
+        `${screenshotPrefix}parent-dashboard-student-missing`
+      );
     }
     const childrenSection = page
       .locator("section")
@@ -157,7 +198,10 @@ export async function verifyParentDashboardAndOpenReport({
   }
 
   if (artifacts?.saveScreenshot) {
-    await artifacts.saveScreenshot(page, "parent-dashboard-with-student");
+    await artifacts.saveScreenshot(
+      page,
+      `${screenshotPrefix}parent-dashboard-with-student`
+    );
   }
 
   const reportLink = card.getByRole("link", { name: "דוח הורים" });

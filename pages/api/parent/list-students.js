@@ -2,6 +2,10 @@ import {
   getLearningSupabaseServerUserClient,
   getLearningSupabaseServiceRoleClient,
 } from "../../../lib/learning-supabase/server";
+import {
+  DEFAULT_PARENT_STUDENT_LIMIT,
+  resolveParentStudentLimit,
+} from "../../../lib/parent-server/parent-student-limit.server";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -86,7 +90,18 @@ export default async function handler(req, res) {
       };
     });
 
-    return res.status(200).json({ ok: true, students: enriched });
+    // Expose the resolved per-parent student-creation cap so the dashboard
+    // can render and gate the Add form against the same number the API
+    // will accept. The QA allowlist itself is never sent — only the
+    // integer the server has already decided to permit for this caller.
+    const studentLimit = resolveParentStudentLimit(userData.user.email);
+
+    return res.status(200).json({
+      ok: true,
+      students: enriched,
+      studentLimit,
+      defaultStudentLimit: DEFAULT_PARENT_STUDENT_LIMIT,
+    });
   } catch (_e) {
     return res.status(500).json({ ok: false, error: "Unexpected server error" });
   }

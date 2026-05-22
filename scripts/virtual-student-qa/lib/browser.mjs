@@ -75,6 +75,25 @@ export function attachLearningNetworkObserver(page) {
     summary() {
       return summarizeEvents(events);
     },
+    /**
+     * Capture the current event-list length so the caller can later read
+     * just the events that happened after this point. Phase C uses this
+     * to compute a per-scenario Tier 1 summary even though the observer
+     * is shared across the entire suite.
+     */
+    mark() {
+      return { sliceStart: events.length };
+    },
+    summarizeSince(marker) {
+      const start =
+        marker && Number.isInteger(marker.sliceStart) ? marker.sliceStart : 0;
+      return summarizeEvents(events.slice(start));
+    },
+    eventsSince(marker) {
+      const start =
+        marker && Number.isInteger(marker.sliceStart) ? marker.sliceStart : 0;
+      return events.slice(start);
+    },
   };
 }
 

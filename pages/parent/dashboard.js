@@ -23,7 +23,14 @@ function normalizeBalance(student) {
   return rel || null;
 }
 
-const MAX_CHILDREN = 3;
+/**
+ * Default per-parent cap. The authoritative cap is decided server-side
+ * (see lib/parent-server/parent-student-limit.server.js) and returned by
+ * /api/parent/list-students as `studentLimit`. We keep this constant as
+ * a safe fallback so the UI never accidentally allows more than 3 when
+ * the API response is missing the field (e.g. older cached deploys).
+ */
+const MAX_CHILDREN_DEFAULT = 3;
 
 export default function ParentDashboardPage() {
   const router = useRouter();
@@ -31,6 +38,7 @@ export default function ParentDashboardPage() {
 
   const [session, setSession] = useState(null);
   const [students, setStudents] = useState([]);
+  const [studentLimit, setStudentLimit] = useState(MAX_CHILDREN_DEFAULT);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [clientReady, setClientReady] = useState(false);
@@ -69,6 +77,16 @@ export default function ParentDashboardPage() {
         return;
       }
       setStudents(payload.students || []);
+      // The API returns the resolved cap for the authenticated parent
+      // (3 by default; QA allowlist may raise it). Fall back to the
+      // hardcoded default if the field is missing so we never allow
+      // more than 3 by mistake.
+      const apiLimit = Number(payload?.studentLimit);
+      setStudentLimit(
+        Number.isFinite(apiLimit) && apiLimit >= MAX_CHILDREN_DEFAULT
+          ? apiLimit
+          : MAX_CHILDREN_DEFAULT
+      );
       setMessage("");
     } catch (_err) {
       setMessage("Network error while loading students");
@@ -106,8 +124,8 @@ export default function ParentDashboardPage() {
   const createStudent = async (e) => {
     e.preventDefault();
     if (!session?.access_token) return;
-    if (students.length >= MAX_CHILDREN) {
-      setMessage("ניתן להוסיף עד 3 ילדים בלבד לחשבון הורה");
+    if (students.length >= studentLimit) {
+      setMessage(`ניתן להוסיף עד ${studentLimit} ילדים בלבד לחשבון הורה`);
       return;
     }
     if (!newGrade) {
@@ -363,14 +381,14 @@ export default function ParentDashboardPage() {
 
         <form
           onSubmit={createStudent}
-          className={`space-y-2 rounded border border-white/15 p-4 bg-black/30 ${students.length >= MAX_CHILDREN ? "opacity-60" : ""}`}
+          className={`space-y-2 rounded border border-white/15 p-4 bg-black/30 ${students.length >= studentLimit ? "opacity-60" : ""}`}
         >
           <h2 className="font-semibold">הוספת ילד</h2>
           <p className="text-sm text-white/75">
-            ילדים בחשבון: {students.length} / {MAX_CHILDREN}
+            ילדים בחשבון: {students.length} / {studentLimit}
           </p>
-          {students.length >= MAX_CHILDREN ? (
-            <p className="text-sm text-amber-200">הגעת למגבלת 3 ילדים לחשבון</p>
+          {students.length >= studentLimit ? (
+            <p className="text-sm text-amber-200">{`הגעת למגבלת ${studentLimit} ילדים לחשבון`}</p>
           ) : null}
           <input
             className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
@@ -378,14 +396,14 @@ export default function ParentDashboardPage() {
             onChange={(e) => setNewName(e.target.value)}
             placeholder="שם הילד"
             required
-            disabled={busy || students.length >= MAX_CHILDREN}
+            disabled={busy || students.length >= studentLimit}
           />
           <select
             className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
             value={newGrade}
             onChange={(e) => setNewGrade(e.target.value)}
             required
-            disabled={busy || students.length >= MAX_CHILDREN}
+            disabled={busy || students.length >= studentLimit}
           >
             <option value="">בחר כיתה</option>
             {GRADE_OPTIONS.map((g) => (
@@ -396,7 +414,7 @@ export default function ParentDashboardPage() {
           </select>
           <button
             className="rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"
-            disabled={busy || students.length >= MAX_CHILDREN}
+            disabled={busy || students.length >= studentLimit}
           >
             הוסף ילד
           </button>

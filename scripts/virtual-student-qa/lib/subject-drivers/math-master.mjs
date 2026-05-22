@@ -1,18 +1,27 @@
 /**
- * Math master driver — Phase A.
+ * Math master driver — Phase A + Phase C.
  *
  * Drives the real /learning/math-master page using the page's stable testids:
  *   math-player-name (display, auto-filled from /api/student/me)
  *   math-grade-select  / math-operation-select
  *   math-start-game
  *   math-text-answer + math-check-answer (text input answer flow)
- *   "שאלה הבאה" button (no testid; matched by role+name)
  *   learning-stop-game (fires session/finish)
  *
- * Phase A scenario uses operation='addition', which renders the text-input
- * answer UI in mode='learning' (default). That branch is responsible for
- * firing /api/learning/answer per submission.
+ * Phase C: profile-driven correctness uses computed arithmetic answers; the
+ * driver tallies intended vs observed (from /api/learning/answer's request
+ * body) so the run summary can prove that profiles really differentiate.
  */
+
+import {
+  waitForSessionStart,
+  waitForAnswerSave,
+  waitForSessionFinish,
+  readAnswerIsCorrect,
+  buildAnsweredQuestionEntry,
+  tallyCorrectness,
+  shortText,
+} from "../learning-session-helpers.mjs";
 
 const MATH_PATH = "/learning/math-master";
 
@@ -50,8 +59,7 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
   // Capture the actual student state from the visible UI BEFORE we override
   // anything. The grade-select reflects the student's account grade (page
   // forces it to match grade_level on mount). The player-name div reflects
-  // the student's full_name from /api/student/me. Both are needed by
-  // Phase B (parent dashboard match + run-summary disclosure).
+  // the student's full_name from /api/student/me.
   const playerName = (await playerNameDiv.innerText().catch(() => "")).trim();
   const accountGradeRaw = await gradeSelect.inputValue().catch(() => "");
   const accountGradeNumber = Number(accountGradeRaw) || null;
@@ -66,30 +74,17 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
 
   await startButton.waitFor({ state: "visible", timeout: 10_000 });
   log(
-    `math-master: starting game grade=${scenario.grade} operation=${scenario.operation} questions=${scenario.questionCount}`
+    `math-master: starting game grade=${scenario.grade} operation=${scenario.operation} ` +
+      `profile=${scenario.profile} questions=${scenario.questionCount}`
   );
 
-  // The page fires POST /api/learning/session/start asynchronously inside
-  // ensureLearningSessionId() and then immediately renders the first question.
-  // If we answer before the start response lands, learningSessionIdRef stays
-  // null on the page, every saveAnswer waits on the same start promise, and
-  // — critically — recordSessionProgress in stopGame() will see a null ref and
-  // SKIP finishLearningSession entirely. So we explicitly wait for the
-  // start response to arrive before doing anything else.
-  const sessionStartResponse = page
-    .waitForResponse(
-      (response) =>
-        response.request().method() === "POST" &&
-        response.url().includes("/api/learning/session/start"),
-      { timeout: 30_000 }
-    )
-    .catch(() => null);
+  const sessionStartPromise = waitForSessionStart({
+    page,
+    log,
+    subject: "math-master",
+  });
   await startButton.click();
-  const startRes = await sessionStartResponse;
-  if (!startRes) {
-    throw new Error("math-master: did not observe /api/learning/session/start response after start click");
-  }
-  log(`math-master: observed /api/learning/session/start response (status=${startRes.status()})`);
+  await sessionStartPromise;
 
   const textInput = page.getByTestId("math-text-answer");
   const checkButton = page.getByTestId("math-check-answer");
@@ -108,7 +103,9 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
 
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
-    log(`math-master: question ${questionIndex}/${scenario.questionCount} - waiting for prompt`);
+    log(
+      `math-master: question ${questionIndex}/${scenario.questionCount} - waiting for prompt`
+    );
 
     await page.waitForFunction(
       () => {
@@ -138,51 +135,37 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
         `submit=${pick.value} intendedCorrect=${pick.intendedCorrect}`
     );
 
-    // Capture the answer-save response promise BEFORE clicking check, so we
-    // are guaranteed to observe THIS question's POST /api/learning/answer
-    // before moving on. Same reasoning as session/start above.
-    const answerResponse = page
-      .waitForResponse(
-        (response) =>
-          response.request().method() === "POST" &&
-          response.url().includes("/api/learning/answer"),
-        { timeout: 20_000 }
-      )
-      .catch(() => null);
-
-    await textInput.fill(pick.value);
-    await checkButton.click();
-
-    await page.waitForFunction(
-      () => {
-        const input = document.querySelector('[data-testid="math-text-answer"]');
-        return Boolean(input) && input.disabled === true;
+    const answerRes = await waitForAnswerSave({
+      page,
+      log,
+      subject: "math-master",
+      questionIndex,
+      doClick: async () => {
+        await textInput.fill(pick.value);
+        await checkButton.click();
       },
-      null,
-      { timeout: 15_000 }
-    );
-
-    const answerRes = await answerResponse;
-    if (!answerRes) {
-      throw new Error(
-        `math-master: q${questionIndex} did not observe /api/learning/answer response within timeout`
-      );
-    }
-
-    answeredQuestions.push({
-      index: questionIndex,
-      exerciseText: shortText(exerciseText),
-      computed,
-      submitted: pick.value,
-      intendedCorrect: pick.intendedCorrect,
     });
 
-    // In mode='learning', math-master auto-advances via setTimeout(
-    // generateNewQuestion, 1000ms) for correct answers and 2000ms for wrong
-    // answers. The "שאלה הבאה" button only appears in the brief window
-    // between submit and auto-advance, so we DON'T click it. The next
-    // iteration's wait for "input enabled and empty" naturally synchronizes
-    // on the auto-advance.
+    // After waitForAnswerSave returns, the answer save has been ack'd by the
+    // server. The original Phase A driver also waited for input.disabled===true
+    // here, but with the unified helper that wait races the page's auto-advance
+    // back to an enabled input on the next question; it's safe to rely on the
+    // top-of-loop "input enabled and empty" wait for synchronization instead.
+
+    const observedCorrect = await readAnswerIsCorrect(answerRes);
+
+    answeredQuestions.push(
+      buildAnsweredQuestionEntry({
+        index: questionIndex,
+        topic: scenario.operation,
+        exerciseText,
+        computedAnswer: computed,
+        submittedValue: pick.value,
+        intendedCorrect: pick.intendedCorrect,
+        observedCorrect,
+        flow: "text",
+      })
+    );
   }
 
   await screenshotter("03-math-master-questions-complete");
@@ -192,32 +175,23 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
   log("math-master: clicking learning-stop-game (fires session/finish)");
   await stopButton.click();
 
-  // session/finish is fire-and-forget inside the page's recordSessionProgress.
-  // Wait until the request actually resolves (success OR failure), with a
-  // generous timeout. networkidle is unreliable under `next dev` because HMR
-  // keeps a long-lived connection open, so we poll Playwright directly for a
-  // POST response on the finish endpoint instead.
-  try {
-    await page.waitForResponse(
-      (response) =>
-        response.request().method() === "POST" &&
-        response.url().includes("/api/learning/session/finish"),
-      { timeout: 30_000 }
-    );
-    log("math-master: observed /api/learning/session/finish response");
-  } catch (error) {
-    log(
-      `math-master: did not observe /api/learning/session/finish within timeout: ${error?.message || error}`
-    );
-  }
+  await waitForSessionFinish({ page, log, subject: "math-master" });
 
   await screenshotter("04-math-master-after-stop");
+
+  const tally = tallyCorrectness(answeredQuestions);
+  log(
+    `math-master: profile=${scenario.profile} intendedCorrect=${tally.intendedCorrect}/${tally.total} ` +
+      `observedCorrect=${tally.observedCorrect ?? "n/a"}/${tally.observedKnown}`
+  );
 
   return {
     answeredQuestions,
     playerName,
     accountGrade: accountGradeNumber,
     accountGradeRaw,
+    tally,
+    answerFlow: "text",
   };
 }
 
@@ -257,8 +231,4 @@ function safeArith(a, op, b) {
     default:
       return null;
   }
-}
-
-function shortText(text) {
-  return String(text || "").replace(/\s+/g, " ").trim().slice(0, 80);
 }
