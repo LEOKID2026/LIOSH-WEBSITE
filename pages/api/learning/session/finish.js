@@ -17,6 +17,7 @@ import {
   canonicalGradeLevelKeyFromAuth,
   logLearningPipelineDebug,
 } from "../../../../lib/learning-supabase/canonical-learning-write-meta.server";
+import { awardLearningSessionCoins } from "../../../../lib/learning-supabase/learning-coin-award.server";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
@@ -116,6 +117,24 @@ export default async function handler(req, res) {
     );
     if (error) {
       return res.status(500).json({ ok: false, error: "Failed to finish learning session" });
+    }
+
+    // Phase 1 — Child World: award Learning Coins for a completed session.
+    // Controlled by ENABLE_SESSION_COIN_AWARDS env flag.
+    // Failure is caught and logged; it must never affect the session-finish response.
+    try {
+      await awardLearningSessionCoins(supabase, {
+        studentId: auth.studentId,
+        learningSessionId,
+        durationSeconds: patch.duration_seconds,
+        accuracy: summary.accuracy,
+        subject: sessionRow.subject,
+      });
+    } catch (coinErr) {
+      logLearningPipelineDebug("session-finish-coin-award-error", {
+        learningSessionId,
+        error: coinErr?.message || String(coinErr),
+      });
     }
 
     return res.status(200).json({ ok: true });
