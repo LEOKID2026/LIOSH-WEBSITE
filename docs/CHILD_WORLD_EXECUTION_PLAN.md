@@ -326,22 +326,24 @@ The MVP is the smallest version of the Child World that is safe, useful, and vis
 
 **Owner approval checkpoint:** Owner approves coin amounts and daily cap before Phase 1 begins (Decisions D1, D2)
 
-> **✅ Owner Decision (2026-05-22): Asia/Jerusalem calendar days — mandatory for all daily logic**
+> **✅ Owner Decision (2026-05-22): Asia/Jerusalem calendar — mandatory for all student-facing day/month logic**
 >
-> All student-facing daily resets (daily caps, daily missions, streaks) **must** use
-> `Asia/Jerusalem` calendar days. UTC midnight must never be used for student-facing daily logic.
-> This is a Hebrew Israeli learning site; the student's "day" must match the child's real local day.
+> All student-facing daily resets (daily caps, daily missions, streaks) and monthly progress
+> display **must** use `Asia/Jerusalem` calendar boundaries. UTC midnight and UTC calendar
+> months must never be used for student-facing logic.
 >
-> **Implemented in Phase 1:** `getTodaySessionEarnings()` in
-> `lib/learning-supabase/learning-coin-award.server.js` uses `getTodayIsraelMidnightUtc()`,
-> which resolves midnight in `Asia/Jerusalem` (UTC+2 winter / UTC+3 summer) and converts it
-> to a UTC timestamp for the database query. The daily cap resets at Israel midnight —
-> 02:00 UTC in winter, 03:00 UTC in summer.
+> **Shared helper:** `lib/learning-supabase/israel-calendar.server.js`
+> - `getIsraelDateString()` — today's date in Israel (`YYYY-MM-DD`)
+> - `getTodayIsraelMidnightUtc()` — Israel day start as UTC instant
+> - `getIsraelMonthBounds()` — Israel month start/end as UTC instants + `ym` key
 >
-> **Binding for all future phases:** Phase 2 daily missions, Phase 3 streaks, and any other
-> per-day logic must use the same `getTodayIsraelMidnightUtc()` helper or an equivalent
-> `Asia/Jerusalem`-aware calculation. No new daily-reset logic may use `setUTCHours(0,0,0,0)`
-> or raw UTC midnight.
+> **Phase 1 (daily cap):** `learning-coin-award.server.js` uses `getTodayIsraelMidnightUtc()`.
+>
+> **Phase 2 (monthly display):** `computeStudentLearningDerived()` in
+> `student-learning-profile.server.js` uses `getIsraelMonthBounds()` for
+> `monthlyMinutesIsraelMonth` / `yearMonthIsrael`. Legacy field names
+> (`monthlyMinutesUtcMonth`, `yearMonthUtc`) are kept as aliases with identical values —
+> they are misnamed and should be migrated away in a future cleanup.
 
 ---
 
