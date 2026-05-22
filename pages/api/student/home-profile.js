@@ -10,6 +10,7 @@ import {
   LEARNING_PROFILE_SUBJECT_KEYS,
   normalizeLearningProfileRow,
 } from "../../../lib/learning-supabase/student-learning-profile.server";
+import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-progress.server";
 
 function shouldLogStudentHomeDebug() {
   return process.env.NEXT_PUBLIC_DEBUG_STUDENT_IDENTITY === "true";
@@ -58,6 +59,17 @@ export default async function handler(req, res) {
     const accountSnapshot = buildAccountSnapshotForParentReport(normalized, derived, displayName);
     const subjectsProgressOnly = buildSubjectsProgressOnly(normalized);
 
+    // Phase 2 — Child World: ensure today's daily missions exist in DB.
+    // Non-fatal: falls back to whatever is in normalized.challenges if init fails.
+    let currentChallenges = normalized.challenges;
+    try {
+      const gradeLevel = String(auth.student?.grade_level || "");
+      const freshChallenges = await ensureDailyMissionsInDb(supabase, studentId, gradeLevel);
+      if (freshChallenges != null) currentChallenges = freshChallenges;
+    } catch {
+      // Keep existing challenges; do not fail the page load
+    }
+
     const payload = {
       ok: true,
       studentId,
@@ -65,7 +77,7 @@ export default async function handler(req, res) {
       accountSnapshot,
       monthly: normalized.monthly,
       profile: normalized.profile,
-      challenges: normalized.challenges,
+      challenges: currentChallenges,
       streaks: normalized.streaks,
       achievements: normalized.achievements,
       subjectsProgressOnly,

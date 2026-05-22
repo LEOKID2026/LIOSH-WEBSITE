@@ -18,6 +18,7 @@ import {
   logLearningPipelineDebug,
 } from "../../../../lib/learning-supabase/canonical-learning-write-meta.server";
 import { awardLearningSessionCoins } from "../../../../lib/learning-supabase/learning-coin-award.server";
+import { updateDailyMissionProgress } from "../../../../lib/learning-supabase/mission-progress.server";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
@@ -134,6 +135,23 @@ export default async function handler(req, res) {
       logLearningPipelineDebug("session-finish-coin-award-error", {
         learningSessionId,
         error: coinErr?.message || String(coinErr),
+      });
+    }
+
+    // Phase 2 — Child World: update daily mission progress.
+    // Failure is isolated — must never affect the session-finish response.
+    try {
+      await updateDailyMissionProgress(supabase, {
+        studentId:      auth.studentId,
+        gradeLevel:     auth.student?.grade_level ?? null,
+        totalQuestions: summary.totalQuestions,
+        durationSeconds: patch.duration_seconds,
+        subject:        sessionRow.subject ?? null,
+      });
+    } catch (missionErr) {
+      logLearningPipelineDebug("session-finish-mission-progress-error", {
+        learningSessionId,
+        error: missionErr?.message || String(missionErr),
       });
     }
 
