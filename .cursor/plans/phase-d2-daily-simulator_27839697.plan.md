@@ -37,10 +37,10 @@ todos:
     status: completed
   - id: d2-scheduler-script
     content: Create scripts/virtual-student-qa/scripts/run-nightly.ps1 that loads %USERPROFILE%\Documents\liosh-qa\.env.virtual-student-qa, sets cwd to repo root, runs the node command, and tee-logs to that day's reports/virtual-student-daily/YYYY-MM-DD/scheduler.log.
-    status: pending
+    status: completed
   - id: d2-scheduler-docs
     content: Create scripts/virtual-student-qa/docs/SCHEDULER-SETUP.md with the schtasks /Create command, the .env.virtual-student-qa template, and the manual one-time validation steps.
-    status: pending
+    status: completed
   - id: d2-validate-1-localhost-fast
     content: "Validation gate 1: fast-mode dry-run against localhost — planner emits a sane plan and preflight passes; no UI is driven."
     status: completed
