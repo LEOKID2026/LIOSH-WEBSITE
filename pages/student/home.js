@@ -13,6 +13,8 @@ import {
 } from "../../lib/learning-client/studentLearningProfileClient";
 import { formatGradeLevelHe } from "../../lib/learning-student-defaults";
 import StudentAvatarPickerModal from "../../components/student/StudentAvatarPickerModal";
+import StudentDailyMissionsPanel from "../../components/student/StudentDailyMissionsPanel";
+import StudentMonthlyPersistencePanel from "../../components/student/StudentMonthlyPersistencePanel";
 
 const HOME_PROFILE_PATH = "/api/student/home-profile";
 
@@ -281,7 +283,7 @@ export default function StudentHomePage() {
 
   return (
     <Layout>
-      <div key={student.id} className="max-w-6xl mx-auto px-3 sm:px-4 py-6 md:py-10 pb-16 space-y-6 md:space-y-8">
+      <div key={student.id} className="max-w-6xl mx-auto px-3 sm:px-4 py-6 md:py-10 pb-16 space-y-6 md:space-y-8 overflow-x-hidden">
         <section className="rounded-3xl border border-emerald-500/25 bg-gradient-to-br from-emerald-950/50 via-[#0c1224] to-indigo-950/40 p-5 md:p-8 shadow-xl shadow-black/40">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
             <div className="flex items-start gap-4">
@@ -410,112 +412,13 @@ export default function StudentHomePage() {
               </div>
             </section>
 
-            {/* Phase 2 — Daily missions panel */}
-            {dashboardView.dailyMissions ? (
-              <section className="rounded-3xl border border-emerald-500/30 bg-emerald-950/20 p-5 md:p-7">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg md:text-xl font-bold text-white text-right">המשימות שלי להיום</h2>
-                  {dashboardView.dailyMissions.allCompleted ? (
-                    <span className="text-emerald-300 text-sm font-semibold">כל המשימות הושלמו! 🎉</span>
-                  ) : (
-                    <span className="text-white/50 text-sm">
-                      {dashboardView.dailyMissions.totalCompleted}/{dashboardView.dailyMissions.missions.length} הושלמו
-                    </span>
-                  )}
-                </div>
-                <div className="space-y-3">
-                  {dashboardView.dailyMissions.missions.map((m) => (
-                    <div
-                      key={m.id}
-                      className={`rounded-xl border px-4 py-3 ${m.completed ? "border-emerald-500/40 bg-emerald-900/25" : "border-white/10 bg-white/[0.03]"}`}
-                    >
-                      <div className="flex items-center justify-between mb-2 gap-3">
-                        <div className="flex items-center gap-2 min-w-0">
-                          {m.completed ? (
-                            <span className="shrink-0 text-emerald-400 text-base leading-none" aria-label="הושלם">✓</span>
-                          ) : (
-                            <span className="shrink-0 w-4 h-4 rounded-full border border-white/25 inline-block" aria-hidden />
-                          )}
-                          <span className={`text-sm font-medium leading-snug ${m.completed ? "text-emerald-200/80 line-through" : "text-white/90"}`}>
-                            {m.textHe}
-                          </span>
-                        </div>
-                        <span className="shrink-0 text-xs text-amber-300/80 tabular-nums whitespace-nowrap">
-                          {m.completed && m.coinAwarded ? `+${m.rewardCoins} ✓` : `+${m.rewardCoins} 🪙`}
-                        </span>
-                      </div>
-                      {!m.completed && m.target > 0 ? (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-1.5 rounded-full bg-black/40 overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-emerald-500/70 transition-all duration-500"
-                              style={{ width: `${m.progressPct}%` }}
-                            />
-                          </div>
-                          <span className="text-[10px] text-white/40 tabular-nums whitespace-nowrap">
-                            {m.type === "minutes"
-                              ? `${Math.round(m.progress * 10) / 10}/${m.target} דק׳`
-                              : `${m.progress}/${m.target}`}
-                          </span>
-                        </div>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ) : null}
+            <StudentDailyMissionsPanel dailyMissions={dashboardView.dailyMissions} />
 
-            {/* Phase 2 — Monthly persistence coin tiers */}
-            {dashboardView.monthlyPersistence ? (
-              <section className="rounded-3xl border border-amber-500/20 bg-amber-950/10 p-5 md:p-7">
-                <h2 className="text-lg md:text-xl font-bold text-white mb-1 text-right">ההתקדמות החודשית שלי</h2>
-                <p className="text-white/55 text-sm text-right mb-4">
-                  למד דקות לימוד אמיתיות החודש וקבל מטבעות למידה כפרס
-                </p>
-                <div className="space-y-2 mb-4">
-                  {dashboardView.monthlyPersistence.tiers.map((tier) => {
-                    const done = dashboardView.monthlyPersistence.currentMinutes >= tier.minutes;
-                    return (
-                      <div
-                        key={tier.minutes}
-                        className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm ${done ? "bg-amber-500/15 border border-amber-500/30" : "bg-white/[0.02] border border-white/8"}`}
-                      >
-                        <span className={done ? "text-amber-200 font-semibold" : "text-white/60"}>
-                          {done ? "✓ " : ""}{tier.minutes} דקות
-                        </span>
-                        <span className={`tabular-nums font-bold ${done ? "text-amber-300" : "text-white/40"}`}>
-                          {tier.label}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-                {dashboardView.monthlyPersistence.nextTier ? (
-                  <>
-                    <p className="text-white/70 text-sm text-right mb-1">
-                      התקדמות לפרס הבא:{" "}
-                      <span className="font-bold text-amber-200">
-                        {Math.round(dashboardView.monthlyPersistence.currentMinutes * 10) / 10}
-                      </span>
-                      {" / "}{dashboardView.monthlyPersistence.nextTier.minutes} דקות
-                    </p>
-                    <div className="h-2.5 rounded-full bg-black/40 overflow-hidden border border-white/10">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-l from-amber-400 to-yellow-500 transition-all duration-500"
-                        style={{ width: `${dashboardView.monthlyPersistence.progressToNextTierPct}%` }}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-amber-200 font-semibold text-right text-sm">
-                    השגת את כל פרסי החודש! כל הכבוד! 🏆
-                  </p>
-                )}
-              </section>
-            ) : null}
+            <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />
 
             <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 md:p-7">
-              <h2 className="text-lg md:text-xl font-bold text-white mb-4 text-right">מסע חודשי</h2>              <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+              <h2 className="text-lg md:text-xl font-bold text-white mb-4 text-right">מסע חודשי</h2>
+              <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
                 <div className="flex-1 space-y-3 text-right">
                   <p className="text-white/90">
                     דקות החודש:{" "}
