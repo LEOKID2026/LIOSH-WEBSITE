@@ -192,8 +192,12 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
         // deterministic index per scenario rng but flag this question's
         // intended correctness as null so the run summary marks the
         // subject as profile-uncontrollable.
+        //
+        // scenario.rng is `() => rng` so calling it returns the rng
+        // function itself; we must invoke it again to consume a draw.
+        const rngFn = scenario.rng();
         pickedIndex = optionsCount > 0
-          ? Math.floor(scenario.rng() * optionsCount)
+          ? Math.floor(rngFn() * optionsCount)
           : 0;
         intendedCorrect = null;
         probeNote = `fiber-probe-failed:${probe.reason || "unknown"}`;

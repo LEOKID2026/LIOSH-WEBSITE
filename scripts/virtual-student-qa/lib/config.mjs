@@ -95,14 +95,22 @@ function parseAccountsJson() {
 }
 
 function indexedFallbackAccounts() {
+  // Phase D introduces 12 real QA students (AAA1..AAA12) under one parent.
+  // The indexed fallback allows operators to set
+  //   E2E_STUDENT_{1..24}_USERNAME / E2E_STUDENT_{N}_PIN
+  // as a non-JSON shape. The label defaults to `student-{N}` but a
+  // friendly label can be provided via E2E_STUDENT_{N}_LABEL — used by
+  // the Phase D plan to match plan entries to the real account.
   const accounts = [];
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= 24; i++) {
     const username = String(process.env[`E2E_STUDENT_${i}_USERNAME`] || "").trim();
     const code = String(process.env[`E2E_STUDENT_${i}_CODE`] || "").trim();
     const pin = String(process.env[`E2E_STUDENT_${i}_PIN`] || "").replace(/\D/g, "").trim();
     if (!username && !code) continue;
     if (!pin || pin.length !== 4) continue;
-    accounts.push({ label: `student-${i}`, username, code, pin });
+    const explicitLabel = String(process.env[`E2E_STUDENT_${i}_LABEL`] || "").trim();
+    const label = explicitLabel || username || code || `student-${i}`;
+    accounts.push({ label, username, code, pin });
   }
   return accounts;
 }

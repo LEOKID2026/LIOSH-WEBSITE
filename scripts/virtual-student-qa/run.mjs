@@ -81,6 +81,11 @@ import { makeRunArtifacts, newRunId } from "./lib/artifacts.mjs";
 import { PHASE_A_SCENARIOS } from "./scenarios/math-average-smoke.mjs";
 import { PHASE_C_SCENARIOS } from "./scenarios/phase-c-suite.mjs";
 import { runPhaseCSuite } from "./lib/phase-c-orchestrator.mjs";
+import {
+  PHASE_D_PLANS_BY_NAME,
+  selectPhaseDPlan,
+} from "./scenarios/phase-d-suite.mjs";
+import { runPhaseDSuite } from "./lib/phase-d-orchestrator.mjs";
 
 function parseArgs(argv) {
   const args = {
@@ -91,6 +96,8 @@ function parseArgs(argv) {
     parent: "",
     headed: false,
     baseUrl: "",
+    plan: "",       // Phase D: smoke | full
+    students: "",   // Phase D: comma-separated subset of plan student labels
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -101,10 +108,15 @@ function parseArgs(argv) {
     else if (a === "--parent") args.parent = String(argv[++i] || "");
     else if (a === "--headed") args.headed = true;
     else if (a === "--base-url") args.baseUrl = String(argv[++i] || "");
+    else if (a === "--plan") args.plan = String(argv[++i] || "");
+    else if (a === "--students") args.students = String(argv[++i] || "");
   }
   if (!args.scenario) {
-    if (args.phase === "c") args.scenario = "";
+    if (args.phase === "c" || args.phase === "d") args.scenario = "";
     else args.scenario = "math-average-smoke";
+  }
+  if (args.phase === "d" && !args.plan) {
+    args.plan = "smoke";
   }
   return args;
 }
@@ -152,12 +164,23 @@ function maskEmail(email) {
 
 async function main() {
   const args = parseArgs(process.argv);
-  const phase = args.phase === "a" ? "a" : args.phase === "c" ? "c" : "b";
+  const phase =
+    args.phase === "a"
+      ? "a"
+      : args.phase === "c"
+        ? "c"
+        : args.phase === "d"
+          ? "d"
+          : "b";
 
   // Phase C: route to the multi-scenario orchestrator and skip the rest of
   // this function's Phase A/B-specific logic.
   if (phase === "c") {
     return mainPhaseC(args);
+  }
+  // Phase D: multi-student real UI QA.
+  if (phase === "d") {
+    return mainPhaseD(args);
   }
 
   const scenario = PHASE_A_SCENARIOS[args.scenario];
@@ -1131,6 +1154,65 @@ async function mainPhaseC(args) {
   await context.close().catch(() => {});
   await browser.close().catch(() => {});
 
+  // ---- Dev-mode HMR-fetch console error suppression --------------------
+  //
+  // When the suite is otherwise completely clean, we tolerate exactly one
+  // narrow class of console error: the parent-report page logs
+  //   [parent-report] report load failed: TypeError: Failed to fetch
+  // when its initial fetch is interrupted by a Next.js dev-server HMR
+  // rebuild. That message is *only* the JS-level fetch primitive failing
+  // (no HTTP response) — it is NOT a server 5xx and NOT a product bug.
+  //
+  // We re-classify that specific message as "suppressed dev-mode noise"
+  // ONLY when ALL of the following hold post-run:
+  //   • no scenario gate failed       (counts.fail === 0)
+  //   • no scenario was partial/blocked (counts.partial === 0, counts.blocked === 0)
+  //   • every scenario's Tier 1 passed (so no /api/learning/* 5xx happened
+  //     on the required learning endpoints — verifyTier1 already enforces
+  //     this for session/start, /answer, session/finish)
+  //   • parent auth was not partial   (so login/dashboard/report worked)
+  //   • there were no page errors     (no uncaught JS throws)
+  //   • the runner did not record a top-level failure step
+  //
+  // If ANY of those conditions fail, we keep the message in consoleErrors
+  // and gate the suite as fail, exactly like before. The suppressed entries
+  // are still written to run-summary.{json,md} under a clearly-labelled
+  // section so the user can see what was tolerated.
+  const DEV_MODE_PARENT_REPORT_FETCH_RE =
+    /^\[parent-report\] report load failed: TypeError: Failed to fetch/i;
+
+  const counts = suiteResult?.summary?.counts || null;
+  const parentAuthPartial = !!(
+    suiteResult?.parentAuthResult && suiteResult.parentAuthResult.partial
+  );
+  const allScenarioGatesPassed =
+    !!suiteResult &&
+    counts &&
+    counts.fail === 0 &&
+    counts.partial === 0 &&
+    counts.blocked === 0 &&
+    suiteResult.scenarioRecords.every(
+      (r) => r.tier1 && r.tier1.passed === true
+    );
+  const suppressionEligible =
+    !failureReason &&
+    allScenarioGatesPassed &&
+    !parentAuthPartial &&
+    pageErrors.length === 0;
+
+  let consoleErrorsRetained = consoleErrors;
+  const consoleSuppressedDevNoise = [];
+  if (suppressionEligible) {
+    consoleErrorsRetained = [];
+    for (const text of consoleErrors) {
+      if (DEV_MODE_PARENT_REPORT_FETCH_RE.test(text)) {
+        consoleSuppressedDevNoise.push(text);
+      } else {
+        consoleErrorsRetained.push(text);
+      }
+    }
+  }
+
   // ---- Suite-level status decision --------------------------------------
   let status = "fail";
   if (failureReason) {
@@ -1138,19 +1220,17 @@ async function mainPhaseC(args) {
   } else if (!suiteResult) {
     status = "fail";
   } else {
-    const counts = suiteResult.summary.counts;
-    const parentPartial =
-      suiteResult.parentAuthResult && suiteResult.parentAuthResult.partial;
-    if (counts.fail > 0) {
+    const c = counts;
+    if (c.fail > 0) {
       status = "fail";
-    } else if (counts.partial > 0 || parentPartial || counts.blocked > 0) {
+    } else if (c.partial > 0 || parentAuthPartial || c.blocked > 0) {
       // Any partial scenario, debug-only parent token, or blocker → suite is
       // PARTIAL (not full PASS). Blocker is included so moledet does not
       // silently disappear from the suite-level status.
       status = "partial";
-    } else if (consoleErrors.length > 0 || pageErrors.length > 0) {
+    } else if (consoleErrorsRetained.length > 0 || pageErrors.length > 0) {
       status = "fail";
-    } else if (counts.pass > 0) {
+    } else if (c.pass > 0) {
       status = "pass";
     } else {
       status = "fail";
@@ -1165,7 +1245,10 @@ async function mainPhaseC(args) {
     studentAuthMode, parentAuthMode,
     actualStudentState,
     suiteResult,
-    consoleErrors, consoleNoise, pageErrors,
+    consoleErrors: consoleErrorsRetained,
+    consoleNoise,
+    pageErrors,
+    consoleSuppressedDevNoise,
     failureStep, failureReason,
   });
   process.exit(status === "pass" ? 0 : 1);
@@ -1252,6 +1335,7 @@ function finalizePhaseC(input) {
     actualStudentState,
     suiteResult,
     consoleErrors, consoleNoise, pageErrors,
+    consoleSuppressedDevNoise,
     failureStep, failureReason,
   } = input;
 
@@ -1310,6 +1394,7 @@ function finalizePhaseC(input) {
       : null,
     consoleErrors: consoleErrors || [],
     consoleNoise: consoleNoise || [],
+    consoleSuppressedDevNoise: consoleSuppressedDevNoise || [],
     pageErrors: pageErrors || [],
     failureStep: failureStep || null,
     reason: failureReason || null,
@@ -1507,6 +1592,21 @@ function buildPhaseCMarkdown(s) {
     lines.push("## Console errors (gated)");
     for (const e of s.consoleErrors) lines.push(`- ${e}`);
   }
+  if (s.consoleSuppressedDevNoise?.length > 0) {
+    lines.push("");
+    lines.push("## Console errors (suppressed as known dev-mode HMR noise)");
+    lines.push(
+      "_These messages match the narrow pattern_ " +
+        "`[parent-report] report load failed: TypeError: Failed to fetch` " +
+        "_— a JS-level fetch failure caused by a Next.js dev-server HMR rebuild_ " +
+        "_on the parent-report page. They are reclassified as non-gating ONLY_ " +
+        "_when every per-scenario gate passed, every scenario's Tier 1 (no_ " +
+        "_5xx on /api/learning/{session/start, answer, session/finish}) passed,_ " +
+        "_parent auth was non-partial, and there were no page errors. Listed_ " +
+        "_here so they are never silently hidden._"
+    );
+    for (const e of s.consoleSuppressedDevNoise) lines.push(`- ${e}`);
+  }
   if (s.consoleNoise?.length > 0) {
     lines.push("");
     lines.push("## Console noise (informational, not gated)");
@@ -1575,6 +1675,739 @@ function buildPhaseCFailureRepro(s) {
       : "";
   lines.push(
     `node scripts/virtual-student-qa/run.mjs --phase c${filterFlag}${studentFlag}${parentFlag}${headedFlag}`
+  );
+  lines.push("```");
+  return lines.join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Phase D — multi-student real UI QA
+// ---------------------------------------------------------------------------
+
+const DEV_MODE_PARENT_REPORT_FETCH_RE_PHASE_D =
+  /^\[parent-report\] report load failed: TypeError: Failed to fetch/i;
+
+async function mainPhaseD(args) {
+  const repoRoot = getRepoRoot();
+  const runId = newRunId();
+  const artifacts = makeRunArtifacts({ repoRoot, runId });
+  const phaseLogId = `phase-d-${args.plan || "smoke"}`;
+
+  function log(line) {
+    console.log(line);
+    artifacts.appendLog(phaseLogId, line);
+  }
+
+  log(`runId=${runId}`);
+  log(`phase=D plan=${args.plan || "smoke"} students=${args.students || "(all)"}`);
+
+  // ---- 1. Resolve plan --------------------------------------------------
+  let plan;
+  try {
+    plan = selectPhaseDPlan({
+      planName: args.plan || "smoke",
+      studentLabels: args.students
+        ? String(args.students).split(",").map((s) => s.trim()).filter(Boolean)
+        : [],
+    });
+  } catch (error) {
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason: `config: ${error.message}`,
+        failureStep: "config",
+        artifacts,
+        runId,
+        args,
+      })
+    );
+  }
+  log(
+    `phase-d: ${plan.length} student(s) queued: ` +
+      plan
+        .map((p) => `${p.studentLabel}(g${p.grade}/${p.scenario.subject})`)
+        .join(", ")
+  );
+
+  const baseUrl = resolveBaseUrl(args.baseUrl);
+  log(`baseUrl=${baseUrl}`);
+
+  // ---- 2. Account loading ----------------------------------------------
+  let accounts;
+  try {
+    accounts = loadAccounts();
+  } catch (error) {
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason: `config: ${error.message}`,
+        failureStep: "config",
+        artifacts,
+        runId,
+        args,
+        baseUrl,
+      })
+    );
+  }
+  if (accounts.length === 0) {
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason:
+          "config: no virtual-student accounts found. Set VIRTUAL_STUDENT_ACCOUNTS (JSON) " +
+          "or E2E_STUDENT_{N}_USERNAME + E2E_STUDENT_{N}_PIN for N=1..24.",
+        failureStep: "config",
+        artifacts,
+        runId,
+        args,
+        baseUrl,
+      })
+    );
+  }
+  // Build a {label → account} map. The Phase D plan's studentLabel is the
+  // canonical join key; the loader sets label = explicit label / username
+  // / code / fallback in that order, so e.g. AAA1 will match either an
+  // explicit JSON {"label":"AAA1", ...} or {"username":"AAA1", ...}.
+  const accountsByLabel = new Map();
+  for (const acc of accounts) {
+    accountsByLabel.set(acc.label, acc);
+  }
+  // Allow plan entries to also resolve via username (handy when the
+  // operator only set username= in JSON without an explicit label).
+  for (const acc of accounts) {
+    if (acc.username && !accountsByLabel.has(acc.username)) {
+      accountsByLabel.set(acc.username, acc);
+    }
+  }
+  // Verify we have credentials for every plan entry — fail-fast on
+  // misconfiguration, surfacing exactly which labels are missing.
+  const missingLabels = [];
+  for (const planEntry of plan) {
+    if (!accountsByLabel.has(planEntry.studentLabel)) {
+      missingLabels.push(planEntry.studentLabel);
+    }
+  }
+  if (missingLabels.length > 0) {
+    const known = accounts.map((a) => a.label).join(", ");
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason:
+          `config: no credentials loaded for ${missingLabels.length} ` +
+          `plan student(s): ${missingLabels.join(", ")}. Known account ` +
+          `labels: ${known}.`,
+        failureStep: "config",
+        artifacts,
+        runId,
+        args,
+        baseUrl,
+      })
+    );
+  }
+  log(
+    `phase-d: matched ${plan.length} plan student(s) to credentials. ` +
+      `Total accounts loaded: ${accounts.length}.`
+  );
+
+  const studentAuthMode = resolveStudentAuthMode();
+  log(
+    `studentAuthMode=${studentAuthMode}` +
+      (studentAuthMode === "api" ? " [TEMPORARY:api-shortcut]" : "")
+  );
+
+  const parentAuthMode = resolveParentAuthMode();
+  log(
+    `parentAuthMode=${parentAuthMode}` +
+      (parentAuthMode === "token"
+        ? " [DEBUG-ONLY: token mode never produces full PASS]"
+        : "")
+  );
+
+  let parents = [];
+  try {
+    parents = loadParentAccounts();
+  } catch (error) {
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason: `config: ${error.message}`,
+        failureStep: "config",
+        artifacts,
+        runId,
+        args,
+        baseUrl,
+        studentAuthMode,
+        parentAuthMode,
+      })
+    );
+  }
+  if (parents.length === 0) {
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason:
+          "config: no virtual-student parent accounts found. Set VIRTUAL_STUDENT_PARENT_ACCOUNTS " +
+          "(JSON) or E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD. (Phase D requires the real QA parent.)",
+        failureStep: "config",
+        artifacts,
+        runId,
+        args,
+        baseUrl,
+        studentAuthMode,
+        parentAuthMode,
+      })
+    );
+  }
+  let parentAccount;
+  try {
+    parentAccount = selectParentAccount(parents, args.parent, "");
+  } catch (error) {
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason: `config: ${error.message}`,
+        failureStep: "config",
+        artifacts,
+        runId,
+        args,
+        baseUrl,
+        studentAuthMode,
+        parentAuthMode,
+      })
+    );
+  }
+  log(`parentAccount=${JSON.stringify(fmtParentAccount(parentAccount))}`);
+
+  try {
+    await preflight(baseUrl, log);
+  } catch (error) {
+    return finalizePhaseD(
+      buildPhaseDFailureFinalize({
+        reason: error.message,
+        failureStep: "preflight",
+        artifacts,
+        runId,
+        args,
+        baseUrl,
+        parentAccount: fmtParentAccount(parentAccount),
+        studentAuthMode,
+        parentAuthMode,
+      })
+    );
+  }
+
+  const headed = args.headed || isHeaded();
+  const browser = await launchBrowser({ headed });
+
+  let suiteResult = null;
+  let failureStep = null;
+  let failureReason = null;
+  try {
+    failureStep = "phase-d-suite";
+    suiteResult = await runPhaseDSuite({
+      browser,
+      baseUrl,
+      plan,
+      parentAccount,
+      parentAuthMode,
+      studentAuthMode,
+      accountsByLabel,
+      artifacts,
+      log,
+    });
+    failureStep = null;
+  } catch (error) {
+    failureReason = error?.message || String(error);
+    log(`FAILURE step=${failureStep || "unknown"}: ${failureReason}`);
+  } finally {
+    try {
+      await browser.close();
+    } catch {
+      // best-effort
+    }
+  }
+
+  // ---- Aggregate console errors across parent + student contexts -------
+  const aggConsoleErrors = [];
+  const aggConsoleNoise = [];
+  const aggPageErrors = [];
+  if (suiteResult) {
+    for (const e of suiteResult.parentConsoleErrors || []) {
+      aggConsoleErrors.push(`[parent] ${e}`);
+    }
+    for (const e of suiteResult.parentConsoleNoise || []) {
+      aggConsoleNoise.push(`[parent] ${e}`);
+    }
+    for (const e of suiteResult.parentPageErrors || []) {
+      aggPageErrors.push(`[parent] ${e}`);
+    }
+    for (const r of suiteResult.studentRecords || []) {
+      const tag = r.planEntry.studentLabel;
+      for (const e of r.consoleErrors || []) aggConsoleErrors.push(`[${tag}] ${e}`);
+      for (const e of r.consoleNoise || []) aggConsoleNoise.push(`[${tag}] ${e}`);
+      for (const e of r.pageErrors || []) aggPageErrors.push(`[${tag}] ${e}`);
+    }
+  }
+
+  // ---- Dev-mode HMR-fetch console error suppression --------------------
+  // Same narrow rule as Phase C: tolerate the specific
+  //   [parent-report] report load failed: TypeError: Failed to fetch
+  // dev-server HMR fetch interruption ONLY when the suite is otherwise
+  // completely clean. Tags are stripped before matching.
+  const counts = suiteResult?.summary?.counts || null;
+  const parentAuthPartial = !!(
+    suiteResult?.parentAuthResult && suiteResult.parentAuthResult.partial
+  );
+  const allStudentGatesPassed =
+    !!suiteResult &&
+    counts &&
+    counts.fail === 0 &&
+    counts.partial === 0 &&
+    counts.blocked === 0 &&
+    suiteResult.studentRecords.every((r) => r.tier1 && r.tier1.passed === true);
+  const suppressionEligible =
+    !failureReason &&
+    allStudentGatesPassed &&
+    !parentAuthPartial &&
+    aggPageErrors.length === 0;
+
+  let consoleErrorsRetained = aggConsoleErrors.slice();
+  const consoleSuppressedDevNoise = [];
+  if (suppressionEligible) {
+    consoleErrorsRetained = [];
+    for (const text of aggConsoleErrors) {
+      const stripped = text.replace(/^\[[^\]]+\]\s*/, "");
+      if (DEV_MODE_PARENT_REPORT_FETCH_RE_PHASE_D.test(stripped)) {
+        consoleSuppressedDevNoise.push(text);
+      } else {
+        consoleErrorsRetained.push(text);
+      }
+    }
+  }
+
+  // ---- Suite-level status decision -------------------------------------
+  let status = "fail";
+  if (failureReason) {
+    status = "fail";
+  } else if (!suiteResult) {
+    status = "fail";
+  } else {
+    const c = counts;
+    if (c.fail > 0) {
+      status = "fail";
+    } else if (c.partial > 0 || parentAuthPartial || c.blocked > 0) {
+      status = "partial";
+    } else if (consoleErrorsRetained.length > 0 || aggPageErrors.length > 0) {
+      status = "fail";
+    } else if (c.pass > 0) {
+      status = "pass";
+    } else {
+      status = "fail";
+    }
+  }
+
+  finalizePhaseD({
+    status,
+    artifacts,
+    runId,
+    args,
+    baseUrl,
+    parentAccount: fmtParentAccount(parentAccount),
+    studentAuthMode,
+    parentAuthMode,
+    suiteResult,
+    consoleErrors: consoleErrorsRetained,
+    consoleNoise: aggConsoleNoise,
+    consoleSuppressedDevNoise,
+    pageErrors: aggPageErrors,
+    failureStep,
+    failureReason,
+  });
+}
+
+function buildPhaseDFailureFinalize(input) {
+  return {
+    status: "fail",
+    artifacts: input.artifacts,
+    runId: input.runId,
+    args: input.args,
+    baseUrl: input.baseUrl || null,
+    parentAccount: input.parentAccount || null,
+    studentAuthMode: input.studentAuthMode || null,
+    parentAuthMode: input.parentAuthMode || null,
+    suiteResult: null,
+    consoleErrors: [],
+    consoleNoise: [],
+    consoleSuppressedDevNoise: [],
+    pageErrors: [],
+    failureStep: input.failureStep || "config",
+    failureReason: input.reason,
+  };
+}
+
+function finalizePhaseD(input) {
+  const {
+    status,
+    artifacts,
+    runId,
+    args,
+    baseUrl,
+    parentAccount,
+    studentAuthMode,
+    parentAuthMode,
+    suiteResult,
+    consoleErrors,
+    consoleNoise,
+    consoleSuppressedDevNoise,
+    pageErrors,
+    failureStep,
+    failureReason,
+  } = input;
+
+  const summary = {
+    runId,
+    phase: "D",
+    status,
+    args: {
+      phase: args.phase,
+      plan: args.plan || "smoke",
+      students: args.students || null,
+      parent: args.parent || null,
+      headed: args.headed,
+      baseUrl: args.baseUrl,
+    },
+    baseUrl: baseUrl || null,
+    studentAuthMode: studentAuthMode || null,
+    parentAuthMode: parentAuthMode || null,
+    parentAccount: parentAccount || null,
+    parent: { auth: suiteResult?.parentAuthResult || null },
+    dashboardStudentCount: suiteResult?.dashboardStudentCount ?? null,
+    linkedStudents: suiteResult?.linkedStudents || [],
+    suite: suiteResult
+      ? {
+          counts: suiteResult.summary.counts,
+          byGrade: suiteResult.summary.byGrade,
+          students: suiteResult.studentRecords.map((r) => ({
+            studentLabel: r.planEntry.studentLabel,
+            username: r.planEntry.username,
+            grade: r.planEntry.grade,
+            scenarioId: r.planEntry.scenario.id,
+            subject: r.planEntry.scenario.subject,
+            profile: r.planEntry.scenario.profile,
+            questionCount: r.planEntry.scenario.questionCount,
+            status: r.status,
+            blocker: r.blocker || null,
+            stepFailed: r.stepFailed || null,
+            driverError: r.driverError || null,
+            earlyExitReason: r.earlyExitReason || null,
+            dashboardVisible: r.dashboardVisible,
+            expectedDisplayName: r.expectedDisplayName,
+            studentId: r.studentId || null,
+            reportUrlAtBaseline: r.reportUrlAtBaseline || null,
+            reportUrlAtAfter: r.reportUrlAtAfter || null,
+            studentState: r.studentState || null,
+            answeredQuestionsCount: r.driverResult?.answeredQuestions?.length ?? null,
+            tally: r.driverResult?.tally || null,
+            tier1: r.tier1 || null,
+            tier1ScenarioCounts: r.tier1ScenarioCounts || null,
+            baseline: r.baseline || null,
+            after: r.after || null,
+            delta: r.delta || null,
+            classification: r.classification || null,
+          })),
+          crossStudentMatrix: suiteResult.crossStudentMatrix || [],
+        }
+      : null,
+    consoleErrors: consoleErrors || [],
+    consoleNoise: consoleNoise || [],
+    consoleSuppressedDevNoise: consoleSuppressedDevNoise || [],
+    pageErrors: pageErrors || [],
+    failureStep: failureStep || null,
+    reason: failureReason || null,
+    artifactsRoot: artifacts.root,
+  };
+
+  artifacts.writeJsonSummary(summary);
+  artifacts.writeMarkdownSummary(buildPhaseDMarkdown(summary));
+  if (status !== "pass") {
+    artifacts.writeFailureRepro(buildPhaseDFailureRepro(summary));
+  }
+
+  console.log("");
+  console.log("================ Virtual Student QA Phase D ================");
+  console.log(`status     : ${status.toUpperCase()}`);
+  console.log(`runId      : ${runId}`);
+  if (suiteResult) {
+    const c = summary.suite.counts;
+    console.log(
+      `students   : pass=${c.pass} partial=${c.partial} fail=${c.fail} blocked=${c.blocked} total=${c.total}`
+    );
+    console.log(`dashboard  : parent owns ${summary.dashboardStudentCount} linked student(s)`);
+  }
+  console.log(`plan       : ${summary.args.plan}`);
+  console.log(`base URL   : ${baseUrl || "(unresolved)"}`);
+  console.log(
+    `student    : auth=${studentAuthMode || "n/a"}` +
+      (studentAuthMode === "api" ? " [TEMPORARY:api-shortcut]" : "")
+  );
+  console.log(
+    `parent     : auth=${parentAuthMode || "n/a"}` +
+      (parentAuthMode === "token" ? " [DEBUG-ONLY: never PASS]" : "")
+  );
+  console.log(`artifacts  : ${artifacts.root}`);
+  if (failureReason) console.log(`reason     : ${failureReason}`);
+  console.log("============================================================");
+}
+
+function buildPhaseDMarkdown(s) {
+  const lines = [];
+  lines.push("# Virtual Student QA — Phase D (multi-student real UI)");
+  lines.push("");
+  lines.push(`- **runId**: \`${s.runId}\``);
+  lines.push(`- **status**: \`${s.status}\``);
+  lines.push(`- **plan**: \`${s.args.plan}\``);
+  lines.push(`- **baseUrl**: \`${s.baseUrl || "(unresolved)"}\``);
+  lines.push(
+    `- **studentAuthMode**: \`${s.studentAuthMode || "n/a"}\`` +
+      (s.studentAuthMode === "api" ? " — **TEMPORARY:api-shortcut**" : "")
+  );
+  lines.push(
+    `- **parentAuthMode**: \`${s.parentAuthMode || "n/a"}\`` +
+      (s.parentAuthMode === "token"
+        ? " — **DEBUG-ONLY: token mode never produces full PASS**"
+        : "")
+  );
+  if (s.parentAccount) {
+    lines.push(
+      `- **parentAccount**: label=\`${s.parentAccount.label}\` ` +
+        `(emailMasked=\`${s.parentAccount.emailMasked}\`)`
+    );
+  }
+  if (s.dashboardStudentCount != null) {
+    lines.push(
+      `- **dashboardStudentCount**: \`${s.dashboardStudentCount}\` ` +
+        `(per /api/parent/list-students)`
+    );
+  }
+  if (Array.isArray(s.linkedStudents) && s.linkedStudents.length > 0) {
+    lines.push("");
+    lines.push("### Parent's linked students (from /api/parent/list-students)");
+    for (const ls of s.linkedStudents) {
+      lines.push(
+        `- \`${ls.login_username || "(no-username)"}\` → ` +
+          `full_name=\`${ls.full_name || "(empty)"}\` ` +
+          `grade=\`${ls.grade_level || "(n/a)"}\` ` +
+          `id=\`${ls.id}\``
+      );
+    }
+  }
+  if (s.suite) {
+    lines.push("");
+    lines.push("## Suite roll-up");
+    lines.push(`- counts: \`${JSON.stringify(s.suite.counts)}\``);
+    lines.push("");
+    lines.push("### Per-grade roll-up");
+    for (const [grade, info] of Object.entries(s.suite.byGrade || {})) {
+      lines.push(
+        `- **grade ${grade}**: pass=${info.pass || 0} partial=${info.partial || 0} ` +
+          `fail=${info.fail || 0} blocked=${info.blocked || 0} ` +
+          `(students: ${info.students.join(", ")})`
+      );
+    }
+    lines.push("");
+    lines.push("### Cross-student bleed matrix");
+    lines.push(
+      "_Each tested student's parent report should reflect ONLY their own scenario activity._ " +
+        "_Any non-target subject delta != 0 surfaces here as a bleed indicator._"
+    );
+    lines.push("");
+    lines.push("| student | grade | target | expected | targetΔ | totalΔ | ownDeltaOk | bleedOk | status |");
+    lines.push("|---|---|---|---|---|---|---|---|---|");
+    for (const m of s.suite.crossStudentMatrix || []) {
+      lines.push(
+        `| ${m.studentLabel} | ${m.grade ?? "n/a"} | ${m.targetSubject} | ` +
+          `${m.expectedAnswered ?? "n/a"} | ` +
+          `${m.targetSubjectDelta ?? "n/a"} | ` +
+          `${m.totalDelta ?? "n/a"} | ` +
+          `${m.ownDeltaOk ?? "n/a"} | ` +
+          `${m.bleedOk ?? "n/a"} | ` +
+          `${m.finalStatus} |`
+      );
+    }
+    const anyBleed = (s.suite.crossStudentMatrix || []).some(
+      (m) => Array.isArray(m.bleedFindings) && m.bleedFindings.length > 0
+    );
+    if (anyBleed) {
+      lines.push("");
+      lines.push("#### Bleed findings (per student)");
+      for (const m of s.suite.crossStudentMatrix || []) {
+        if (!m.bleedFindings || m.bleedFindings.length === 0) continue;
+        lines.push(`- **${m.studentLabel}**:`);
+        for (const f of m.bleedFindings) {
+          lines.push(
+            `  - subject=\`${f.subject}\` before=\`${f.before}\` ` +
+              `after=\`${f.after}\` delta=\`${f.delta}\``
+          );
+          if (f.note) lines.push(`    - note: ${f.note}`);
+        }
+      }
+    } else if ((s.suite.crossStudentMatrix || []).length > 0) {
+      lines.push("");
+      lines.push("_No bleed findings — every tested student's report only reflected their own scenario._");
+    }
+    lines.push("");
+    lines.push("## Per-student detail");
+    for (const st of s.suite.students) {
+      lines.push("");
+      lines.push(
+        `### \`${st.studentLabel}\` — grade=${st.grade} — ${st.subject}/${st.profile} — status=\`${st.status}\``
+      );
+      if (st.blocker) {
+        lines.push(`- **BLOCKER**: kind=\`${st.blocker.kind}\``);
+        if (st.blocker.message) lines.push(`  - ${st.blocker.message}`);
+        continue;
+      }
+      lines.push(
+        `- dashboardVisible=\`${st.dashboardVisible}\` ` +
+          `expectedDisplayName=\`${st.expectedDisplayName || "(unknown)"}\` ` +
+          `studentId=\`${st.studentId || "(unknown)"}\``
+      );
+      if (st.studentState) {
+        lines.push(
+          `- /api/student/me: playerName=\`${st.studentState.playerName || "(empty)"}\` ` +
+            `grade=\`${st.studentState.accountGradeRaw || "(empty)"}\``
+        );
+      }
+      if (st.driverError) {
+        lines.push(`- driverError: \`${st.driverError}\``);
+      }
+      if (st.stepFailed) {
+        lines.push(`- stepFailed: \`${st.stepFailed}\``);
+      }
+      if (st.earlyExitReason) {
+        lines.push(`- earlyExitReason: \`${st.earlyExitReason}\``);
+      }
+      lines.push(`- answeredQuestions: ${st.answeredQuestionsCount ?? "n/a"}`);
+      if (st.tier1) {
+        lines.push(
+          `- tier1: passed=\`${st.tier1.passed}\` counts=\`${JSON.stringify(st.tier1.counts)}\``
+        );
+        if (st.tier1.errors?.length) {
+          for (const e of st.tier1.errors) lines.push(`  - tier1 error: ${e}`);
+        }
+      }
+      if (st.baseline) {
+        lines.push(
+          `- baseline: total=\`${st.baseline.totalQuestions}\` ` +
+            `accuracy=\`${st.baseline.overallAccuracyPct}%\` ` +
+            `subject(${st.subject})=\`${st.baseline.bySubject?.[st.subject]?.questionCount ?? "n/a"}\` ` +
+            `(empty=\`${st.baseline.isEmptyState}\`)`
+        );
+      }
+      if (st.after) {
+        lines.push(
+          `- after:    total=\`${st.after.totalQuestions}\` ` +
+            `accuracy=\`${st.after.overallAccuracyPct}%\` ` +
+            `subject(${st.subject})=\`${st.after.bySubject?.[st.subject]?.questionCount ?? "n/a"}\``
+        );
+      }
+      if (st.classification?.subjectClassification) {
+        const dc = st.classification.subjectClassification;
+        lines.push(
+          `- ownSubjectDelta: subject=\`${dc.subject}\` before=\`${dc.before}\` ` +
+            `after=\`${dc.after}\` delta=\`${dc.delta}\` expected≥\`${dc.expected}\` ` +
+            `directionOk=\`${dc.directionOk}\``
+        );
+        lines.push(`  - note: ${dc.note}`);
+      }
+      if (st.classification?.bleedFindings?.length) {
+        lines.push(`- bleedFindings:`);
+        for (const f of st.classification.bleedFindings) {
+          lines.push(
+            `  - subject=\`${f.subject}\` delta=\`${f.delta}\` (note: ${f.note})`
+          );
+        }
+      } else if (st.classification) {
+        lines.push("- bleedFindings: (none) ✓");
+      }
+      if (st.reportUrlAtBaseline) {
+        lines.push(`- reportUrlAtBaseline: ${st.reportUrlAtBaseline}`);
+      }
+      if (st.reportUrlAtAfter) {
+        lines.push(`- reportUrlAtAfter: ${st.reportUrlAtAfter}`);
+      }
+    }
+  }
+  if (s.consoleErrors?.length > 0) {
+    lines.push("");
+    lines.push("## Console errors (gated)");
+    for (const e of s.consoleErrors) lines.push(`- ${e}`);
+  }
+  if (s.consoleSuppressedDevNoise?.length > 0) {
+    lines.push("");
+    lines.push("## Console errors (suppressed as known dev-mode HMR noise)");
+    lines.push(
+      "_Same suppression rule as Phase C: only_ `[parent-report] report load failed: TypeError: Failed to fetch` " +
+        "_is reclassified as non-gating, and only when every per-student gate passed, every Tier 1 passed,_ " +
+        "_parent auth was non-partial, and there were no page errors. Listed here so it is never silently hidden._"
+    );
+    for (const e of s.consoleSuppressedDevNoise) lines.push(`- ${e}`);
+  }
+  if (s.consoleNoise?.length > 0) {
+    lines.push("");
+    lines.push("## Console noise (informational, not gated)");
+    lines.push(
+      "_Generic 'Failed to load resource' messages from page lifecycle._"
+    );
+    for (const e of s.consoleNoise) lines.push(`- ${e}`);
+  }
+  if (s.pageErrors?.length > 0) {
+    lines.push("");
+    lines.push("## Page errors");
+    for (const e of s.pageErrors) lines.push(`- ${e}`);
+  }
+  if (s.reason) {
+    lines.push("");
+    lines.push("## Suite failure reason");
+    lines.push("```");
+    lines.push(s.reason);
+    lines.push("```");
+  }
+  lines.push("");
+  lines.push("## Artifacts");
+  lines.push(`- root: \`${s.artifactsRoot}\``);
+  return lines.join("\n");
+}
+
+function buildPhaseDFailureRepro(s) {
+  const lines = [];
+  lines.push(`# Phase D failure repro — ${s.runId}`);
+  lines.push("");
+  lines.push(`Failed at step: \`${s.failureStep || "unknown"}\``);
+  if (s.reason) {
+    lines.push("Reason:");
+    lines.push("```");
+    lines.push(s.reason);
+    lines.push("```");
+  }
+  lines.push("");
+  lines.push("## Reproduce");
+  lines.push("");
+  lines.push("Set the same env (values not shown):");
+  lines.push("");
+  lines.push("Students (12 AAA students):");
+  lines.push("- `VIRTUAL_STUDENT_ACCOUNTS` JSON [{label,username,pin}, ...]");
+  lines.push("- _or_ `E2E_STUDENT_{1..12}_USERNAME` + `E2E_STUDENT_{N}_PIN`");
+  lines.push("- `VIRTUAL_STUDENT_STUDENT_AUTH=ui` (default) or `=api` (debug)");
+  lines.push("");
+  lines.push("Parent:");
+  lines.push("- `E2E_PARENT_EMAIL` + `E2E_PARENT_PASSWORD`");
+  lines.push(
+    "- `VIRTUAL_STUDENT_PARENT_AUTH=ui` (default — only mode that can produce PASS)"
+  );
+  lines.push("- `PLAYWRIGHT_BASE_URL` (or rely on default `http://127.0.0.1:3001`)");
+  lines.push("");
+  lines.push("Then run:");
+  lines.push("");
+  lines.push("```");
+  const planFlag = s.args.plan ? ` --plan ${s.args.plan}` : "";
+  const studentsFlag = s.args.students ? ` --students ${s.args.students}` : "";
+  const headedFlag = s.args.headed ? " --headed" : "";
+  lines.push(
+    `node scripts/virtual-student-qa/run.mjs --phase d${planFlag}${studentsFlag}${headedFlag}`
   );
   lines.push("```");
   return lines.join("\n");

@@ -441,8 +441,11 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
         pickedIndex = decision.index;
         intendedCorrect = decision.intendedCorrect;
       } else {
+        // scenario.rng is `() => rng`; the call returns the rng function
+        // itself, so we have to invoke it again to consume a draw.
+        const rngFn = scenario.rng();
         pickedIndex = optionsCount > 0
-          ? Math.floor(scenario.rng() * optionsCount)
+          ? Math.floor(rngFn() * optionsCount)
           : 0;
         intendedCorrect = null;
         probeNote = `fiber-probe-failed:${probe.reason || "unknown"}`;
