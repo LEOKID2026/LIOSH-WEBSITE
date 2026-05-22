@@ -13,6 +13,8 @@ import {
   normalizeLearningProfileRow,
   sanitizeProfileForStorage,
 } from "../../../lib/learning-supabase/student-learning-profile.server";
+import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-progress.server";
+import { evaluateMonthlyPersistenceReward } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
 
 function buildSubjectsResponse(normalized) {
   /** @type {Record<string, unknown>} */
@@ -44,19 +46,47 @@ export default async function handler(req, res) {
       const row = await ensureStudentLearningStateRow(supabase, studentId);
       const normalized = normalizeLearningProfileRow(row);
       const derived = await computeStudentLearningDerived(supabase, studentId);
+
+      let currentChallenges = normalized.challenges;
+      try {
+        const gradeLevel = String(auth.student?.grade_level || "");
+        const freshChallenges = await ensureDailyMissionsInDb(supabase, studentId, gradeLevel);
+        if (freshChallenges != null) currentChallenges = freshChallenges;
+      } catch {
+        /* non-fatal */
+      }
+
+      let monthlyPersistenceStatus = null;
+      try {
+        const evalResult = await evaluateMonthlyPersistenceReward(supabase, { studentId });
+        if (evalResult.ok) {
+          monthlyPersistenceStatus = {
+            yearMonthIsrael: evalResult.yearMonthIsrael,
+            activeMinutes: evalResult.activeMinutes,
+            tierMinutes: evalResult.tierMinutes,
+            wouldAward: evalResult.wouldAward,
+            alreadyAwarded: evalResult.alreadyAwarded,
+            eligible: evalResult.eligible,
+          };
+        }
+      } catch {
+        /* non-fatal */
+      }
+
       return res.status(200).json({
         ok: true,
         studentId,
         row: {
           subjects: buildSubjectsResponse(normalized),
           monthly: normalized.monthly,
-          challenges: normalized.challenges,
+          challenges: currentChallenges,
           streaks: normalized.streaks,
           achievements: normalized.achievements,
           profile: normalized.profile,
           updated_at: row.updated_at,
         },
         derived,
+        monthlyPersistenceStatus,
       });
     }
 
@@ -114,6 +144,22 @@ export default async function handler(req, res) {
       const fresh = await ensureStudentLearningStateRow(supabase, studentId);
       const normalized = normalizeLearningProfileRow(fresh);
       const derived = await computeStudentLearningDerived(supabase, studentId);
+      let monthlyPersistenceStatus = null;
+      try {
+        const evalResult = await evaluateMonthlyPersistenceReward(supabase, { studentId });
+        if (evalResult.ok) {
+          monthlyPersistenceStatus = {
+            yearMonthIsrael: evalResult.yearMonthIsrael,
+            activeMinutes: evalResult.activeMinutes,
+            tierMinutes: evalResult.tierMinutes,
+            wouldAward: evalResult.wouldAward,
+            alreadyAwarded: evalResult.alreadyAwarded,
+            eligible: evalResult.eligible,
+          };
+        }
+      } catch {
+        /* non-fatal */
+      }
       return res.status(200).json({
         ok: true,
         studentId,
@@ -127,6 +173,7 @@ export default async function handler(req, res) {
           updated_at: fresh.updated_at,
         },
         derived,
+        monthlyPersistenceStatus,
       });
     }
 

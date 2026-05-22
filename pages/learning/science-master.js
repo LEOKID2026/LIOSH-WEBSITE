@@ -19,18 +19,11 @@ import {
 import { useSound } from "../../hooks/useSound";
 import {
   addSessionProgress,
-  loadRewardChoice,
-  saveRewardChoice,
-  getCurrentYearMonth,
-  hasRewardCelebrationShown,
-  markRewardCelebrationShown,
 } from "../../utils/progress-storage";
 import {
-  REWARD_OPTIONS,
   MONTHLY_MINUTES_TARGET,
-  getRewardLabel,
 } from "../../data/reward-options";
-import { splitRewardAmountLabel } from "../../utils/dashboard-setup-ui";
+
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
 import {
   learningModalOverlay,
@@ -106,6 +99,11 @@ import {
   buildStudentSubjectDashboardView,
   logStudentSubjectDashboardDiagnostics,
 } from "../../lib/learning-shared/student-subject-dashboard-view";
+import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMissionsModal";
+import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthlyPrizeJourney";
+import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
+import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
+import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 
 // ================== CONFIG ==================
 
@@ -751,7 +749,7 @@ export default function ScienceMaster() {
   const scienceHypothesisLedgerRef = useRef(null);
   /** Question pool topic id for the question currently being timed (matches localStorage bucket). */
   const scienceTrackingTopicKeyRef = useRef(null);
-  const yearMonthRef = useRef(getCurrentYearMonth());
+
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
@@ -887,37 +885,17 @@ export default function ScienceMaster() {
   });
   
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
-  const [monthlyProgress, setMonthlyProgress] = useState({
-    totalMinutes: 0,
-    totalExercises: 0,
-  });
-  const [goalPercent, setGoalPercent] = useState(0);
-  const [minutesRemaining, setMinutesRemaining] = useState(MONTHLY_MINUTES_TARGET);
-  const [rewardChoice, setRewardChoice] = useState(null);
-  /** Display-only: `payload.student.coin_balance` from GET /api/student/me. */
+  const [monthlyPersistenceView, setMonthlyPersistenceView] = useState(null);
+  /** Display-only: `payload.student.coin_balance` from GET /api/student/me (same source as student defaults). */
   const [childCoinBalance, setChildCoinBalance] = useState(0);
-  const [showRewardCelebration, setShowRewardCelebration] = useState(false);
-  const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
-  const refreshMonthlyProgress = useCallback(() => {
+  const [subjectDailyMissions, setSubjectDailyMissions] = useState(null);
+  const [subjectDailyMissionsLoading, setSubjectDailyMissionsLoading] = useState(false);
+
+  const refreshMonthlyPersistenceView = useCallback(() => {
     if (typeof window === "undefined") return;
     try {
       const profile = getCachedStudentLearningProfile();
-      const sid = learningProfileStudentIdRef.current || undefined;
-      const mins = profile?.derived?.monthlyMinutesUtcMonth ?? 0;
-      const ex = profile?.derived?.monthlyAnswersCountUtcMonth ?? 0;
-      setMonthlyProgress({ totalMinutes: mins, totalExercises: ex });
-      const percent = MONTHLY_MINUTES_TARGET
-        ? Math.min(100, Math.round((mins / MONTHLY_MINUTES_TARGET) * 100))
-        : 0;
-      setGoalPercent(percent);
-      setMinutesRemaining(Math.max(0, MONTHLY_MINUTES_TARGET - mins));
-      const ym = yearMonthRef.current;
-      const choiceFromServer = profile?.row?.monthly?.rewardChoices?.[ym];
-      const choice =
-        choiceFromServer != null && choiceFromServer !== ""
-          ? choiceFromServer
-          : loadRewardChoice(ym, sid);
-      setRewardChoice(choice);
+      setMonthlyPersistenceView(buildSubjectMonthlyPersistenceViewFromProfile(profile));
     } catch {
       // ignore
     }
@@ -951,8 +929,8 @@ export default function ScienceMaster() {
   }, [level, topic, playerName, learningProfileHydrationTick]);
 
   useEffect(() => {
-    refreshMonthlyProgress();
-  }, [refreshMonthlyProgress]);
+    refreshMonthlyPersistenceView();
+  }, [refreshMonthlyPersistenceView]);
 
   // טעינת תמונת אווטר מ-localStorage
   useEffect(() => {
@@ -1032,7 +1010,7 @@ export default function ScienceMaster() {
           learningProfileHydratedRef.current = true;
           progressLoadedRef.current = true;
           setLearningProfileHydrationTick((n) => n + 1);
-          refreshMonthlyProgress();
+          refreshMonthlyPersistenceView();
           return;
         }
         learningProfileStudentIdRef.current = profile.studentId;
@@ -1081,19 +1059,19 @@ export default function ScienceMaster() {
         }
         progressLoadedRef.current = true;
         setLearningProfileHydrationTick((n) => n + 1);
-        refreshMonthlyProgress();
+        refreshMonthlyPersistenceView();
       })
       .catch(() => {
         if (cancelled) return;
         learningProfileHydratedRef.current = true;
         progressLoadedRef.current = true;
         setLearningProfileHydrationTick((n) => n + 1);
-        refreshMonthlyProgress();
+        refreshMonthlyPersistenceView();
       });
     return () => {
       cancelled = true;
     };
-  }, [refreshMonthlyProgress]);
+  }, [refreshMonthlyPersistenceView]);
 
   useEffect(() => {
     if (!learningProfileHydratedRef.current) return;
@@ -1143,25 +1121,6 @@ export default function ScienceMaster() {
     playerAvatarImage,
     insightRevision,
   ]);
-
-useEffect(() => {
-  if (typeof window === "undefined") return;
-  if (monthlyProgress.totalMinutes < MONTHLY_MINUTES_TARGET) return;
-  const ym = yearMonthRef.current;
-  const profile = getCachedStudentLearningProfile();
-  if (profile?.row?.monthly?.celebrationsShown?.[ym]) return;
-  if (hasRewardCelebrationShown(ym, learningProfileStudentIdRef.current || undefined)) return;
-
-  const label = rewardChoice ? getRewardLabel(rewardChoice) : "";
-  setRewardCelebrationLabel(label);
-  setShowRewardCelebration(true);
-  markRewardCelebrationShown(ym, learningProfileStudentIdRef.current || undefined);
-  void patchStudentLearningProfile({
-    monthly: { celebrationsShown: { [ym]: true } },
-  }).catch(() => {});
-  sound.playSound("badge-earned");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [monthlyProgress.totalMinutes, rewardChoice]);
 
   useEffect(() => {
     correctRef.current = correct;
@@ -1581,7 +1540,7 @@ function recordSessionProgress(opts = {}) {
   );
   void refreshStudentLearningProfileAfterSession().then((p) => {
     if (p?.ok) {
-      refreshMonthlyProgress();
+      refreshMonthlyPersistenceView();
       const acc = accountAccuracyDisplayFromDerived(p.derived, "science");
       if (acc != null) setServerAccountSubjectAccuracyPct(acc);
     }
@@ -2687,11 +2646,11 @@ function saveScienceAnswerInParallel({
         scoresStoreSnapshot: scoresStoreRef.current,
         topicScopeKey: `${level}_${topic}`,
         monthlyState: {
-          totalMinutes: monthlyProgress.totalMinutes,
-          goalMinutes: MONTHLY_MINUTES_TARGET,
-          yearMonth: yearMonthRef.current,
-          selectedRewardKey: rewardChoice,
-          celebrationShownForMonth: !!profileSnap?.row?.monthly?.celebrationsShown?.[yearMonthRef.current],
+          totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
+          goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
+          yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
+          selectedRewardKey: null,
+          celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
         mode,
         gameActive,
@@ -2714,8 +2673,7 @@ function saveScienceAnswerInParallel({
       playerName,
       level,
       topic,
-      monthlyProgress.totalMinutes,
-      rewardChoice,
+      monthlyPersistenceView,
       mode,
       playerAvatar,
       playerAvatarImage,
@@ -3027,31 +2985,6 @@ function saveScienceAnswerInParallel({
             </div>
           )}
 
-          {showRewardCelebration && (
-            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[130] p-4" dir="rtl">
-              <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white rounded-2xl p-6 w-full max-w-md text-center relative shadow-2xl">
-                <div className="text-4xl mb-3">🎁</div>
-                <div className="text-2xl font-bold mb-2">השלמת את מסע הפרס החודשי!</div>
-                {rewardCelebrationLabel ? (
-                  <p className="text-base mb-4">
-                    הפרס שבחרת:{" "}
-                    <span dir="ltr" className="font-bold">
-                      {rewardCelebrationLabel}
-                    </span>
-                  </p>
-                ) : (
-                  <p className="text-base mb-4">בחרו עכשיו את הפרס שאתם רוצים לקבל החודש!</p>
-                )}
-                <button
-                  onClick={() => setShowRewardCelebration(false)}
-                  className="mt-2 px-5 py-2 rounded-lg bg-white/90 text-emerald-700 font-bold hover:bg-white"
-                >
-                  הבנתי, תודה!
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* SETUP / GAME */}
           {!gameActive ? (
             <div className="flex flex-col flex-1 min-h-0 min-w-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
@@ -3158,17 +3091,18 @@ function saveScienceAnswerInParallel({
                     <button
                       type="button"
                       onClick={() => {
-                        void fetchStudentLearningProfile()
+                        setSubjectDailyMissionsLoading(true);
+                        void fetchStudentHomeProfile()
                           .then((p) => {
-                            if (!p?.ok) return;
-                            const { daily, weekly } = pickSubjectChallengeBlobs(p.row.challenges, "science");
-                            if (daily) setDailyChallenge(daily);
-                            if (weekly) setWeeklyChallenge(weekly);
-                            const acc = accountAccuracyDisplayFromDerived(p.derived, "science");
-                            if (acc != null) setServerAccountSubjectAccuracyPct(acc);
-                            logAccountTileSync("science", { tile: "challengesPrefetch" });
+                            if (p?.ok) {
+                              setSubjectDailyMissions(buildDailyMissionsView(p.challenges));
+                            }
                           })
-                          .finally(() => setShowDailyChallenge(true));
+                          .catch(() => {})
+                          .finally(() => {
+                            setSubjectDailyMissionsLoading(false);
+                            setShowDailyChallenge(true);
+                          });
                       }}
                       className="h-7 md:h-8 w-full max-w-[3.5rem] md:max-w-[4rem] px-1.5 md:px-2 rounded-md bg-blue-500/85 hover:bg-blue-500 text-white text-[11px] md:text-sm lg:text-base font-bold"
                     >
@@ -3183,194 +3117,7 @@ function saveScienceAnswerInParallel({
                 onRecommendedPractice={handleAdaptivePlannerRecommendedPractice}
               />
 
-              <div className="bg-white/5 border border-white/10 rounded-md md:rounded-lg px-2 pt-2.5 pb-3 md:px-4 md:py-4 lg:py-5 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto opacity-90 shrink-0 md:min-h-[12.5rem] lg:min-h-[13rem]">
-                <div className="flex items-center justify-between text-[10px] md:text-xs lg:text-sm text-white/82 md:text-white/90 lg:text-white/95 mb-1 md:mb-1.5 lg:mb-2 leading-tight font-semibold md:font-bold">
-                  <span>🎁 מסע פרס חודשי</span>
-                  <span>
-                    {Math.round(monthlyProgress.totalMinutes)} / {MONTHLY_MINUTES_TARGET} דק׳
-                  </span>
-                </div>
-                <p className="text-[10px] md:text-xs lg:text-sm text-white/82 md:text-white/88 lg:text-white/92 mb-1 md:mb-1.5 lg:mb-2 text-center leading-snug">
-                  {minutesRemaining > 0
-                    ? `נותרו עוד ${Math.round(minutesRemaining)} דק׳ (~${Math.ceil(
-                        Math.round(minutesRemaining) / 60
-                      )} ש׳)`
-                    : "🎉 יעד הושלם! בקשו מההורה לבחור פרס."}
-                </p>
-                <div className="w-full bg-white/10 rounded-full h-1.5 md:h-2 overflow-hidden mb-2.5 md:mb-3">
-                  <div
-                    className="h-1.5 md:h-2 bg-emerald-400 rounded-full transition-all"
-                    style={{ width: `${goalPercent}%` }}
-                  />
-                </div>
-                <div className="grid grid-cols-4 gap-2 md:gap-2 lg:gap-2.5 w-full">
-                  {REWARD_OPTIONS.map((option) => {
-                    const displayLabel = lobbyMonthlyRewardDisplayLabel(option.key);
-                    const rewardParts = splitRewardAmountLabel(displayLabel);
-                    const prizePicked = rewardChoice === option.key;
-                    return (
-                    <button
-                      type="button"
-                      key={option.key}
-                      onClick={() => {
-                        saveRewardChoice(yearMonthRef.current, option.key, learningProfileStudentIdRef.current || undefined);
-                        setRewardChoice(option.key);
-                        void patchStudentLearningProfile({
-                          monthly: {
-                            rewardChoices: { [yearMonthRef.current]: option.key },
-                          },
-                        }).catch(() => {});
-                      }}
-                      className={`rounded-lg border py-2.5 px-1.5 md:py-2.5 md:px-2 lg:py-3 lg:px-2.5 min-h-[4.85rem] md:min-h-[5.5rem] lg:min-h-[6rem] bg-black/35 flex flex-col items-center justify-center gap-1.5 md:gap-1.5 min-w-0 transition-colors ${
-                        prizePicked
-                          ? "border-emerald-400 text-emerald-200 bg-emerald-500/20"
-                          : "border-white/15 text-white hover:border-white/40"
-                      }`}
-                    >
-                      <span className="text-xl md:text-xl lg:text-2xl leading-none shrink-0" aria-hidden>
-                        {LOBBY_MONTHLY_PRIZE_COIN_ICON}
-                      </span>
-                      {rewardParts.amount != null ? (
-                        <>
-                          <span className="text-xs md:text-sm font-extrabold tabular-nums leading-none text-emerald-100" dir="ltr">{rewardParts.amount}</span>
-                          <span
-                            className={`text-[9px] md:text-[11px] lg:text-xs font-semibold leading-snug text-center px-0.5 md:px-1 line-clamp-2 ${
-                              prizePicked ? "text-emerald-100" : "text-white"
-                            }`}
-                            dir="ltr"
-                          >
-                            {rewardParts.name}
-                          </span>
-                        </>
-                      ) : (
-                        <span
-                          className={`text-[10px] md:text-xs lg:text-sm font-semibold leading-snug text-center px-0.5 md:px-1 line-clamp-3 ${
-                            prizePicked ? "text-emerald-100" : "text-white"
-                          }`}
-                          dir="rtl"
-                        >
-                          {rewardParts.full}
-                        </span>
-                      )}
-                    </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* סיכום התקדמות — נתונים מקומיים בלבד */}
-              <div
-                className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto mb-3 rounded-md border border-white/10 bg-black/20 px-1.5 py-1 text-[8px] sm:text-[9px] leading-tight text-white/85 shrink-0"
-                dir="rtl"
-              >
-                <div className="font-semibold text-emerald-200/90 mb-0.5 flex justify-between gap-2 items-baseline">
-                  <span>📊 סיכום למידה (שמור מקומית)</span>
-                  {progressInsights.base &&
-                    progressInsights.base.totalAttempts > 0 && (
-                      <span className="text-white/50 font-normal shrink-0">
-                        {progressInsights.base.totalAttempts} תשובות
-                      </span>
-                    )}
-                </div>
-                {!progressInsights.base ||
-                progressInsights.base.totalAttempts < 1 ? (
-                  <p className="text-white/55 leading-tight">
-                    אחרי מענה על שאלות: דיוק מעקב, נושאים חזקים/חלשים ומגמה לפי הרצף האחרון.
-                  </p>
-                ) : (
-                  <>
-                    <p className="text-white/82 leading-tight mb-0.5">
-                      רמה:{" "}
-                      <span className="font-bold text-amber-200">
-                        {progressInsights.currentLevelLabel}
-                      </span>
-                      {" · "}
-                      יומן שגיאות:{" "}
-                      <span className="font-bold text-rose-300">
-                        {progressInsights.mistakeLogCount}
-                      </span>
-                      {" · "}
-                      שגויים במעקב:{" "}
-                      <span className="font-bold text-white/90">
-                        {progressInsights.base.totalWrong}
-                      </span>
-                    </p>
-                    <p className="text-white/82 leading-tight mb-0.5">
-                      דיוק במעקב:{" "}
-                      <span className="font-bold text-emerald-300">
-                        {progressInsights.base.overallPct}%
-                      </span>
-                      {progressInsights.base.recentN > 0 ? (
-                        <>
-                          {" · "}
-                          {progressInsights.base.recentN} אחרונות:{" "}
-                          <span className="font-bold text-sky-200">
-                            {progressInsights.base.recentPct}%
-                          </span>
-                          {progressInsights.base.recentN >= 10 &&
-                            progressInsights.base.trend && (
-                              <>
-                                {" · "}
-                                <span className="text-white/65">
-                                  {progressInsights.base.trend === "up" && "מגמה ↑"}
-                                  {progressInsights.base.trend === "down" && "מגמה ↓"}
-                                  {progressInsights.base.trend === "stable" && "מגמה →"}
-                                </span>
-                              </>
-                            )}
-                        </>
-                      ) : (
-                        <span className="text-white/45"> · אין רצף אחרון</span>
-                      )}
-                    </p>
-                    {(progressInsights.base.strongest &&
-                      TOPICS[progressInsights.base.strongest.key]) ||
-                    (progressInsights.base.weakest &&
-                      TOPICS[progressInsights.base.weakest.key]) ? (
-                      <p className="text-white/75 leading-tight mb-0.5">
-                        {progressInsights.base.strongest &&
-                          TOPICS[progressInsights.base.strongest.key] && (
-                            <>
-                              חזק:{" "}
-                              <span className="text-white/90 font-semibold">
-                                {TOPICS[progressInsights.base.strongest.key].name}
-                              </span>
-                            </>
-                          )}
-                        {progressInsights.base.strongest &&
-                          TOPICS[progressInsights.base.strongest.key] &&
-                          progressInsights.base.weakest &&
-                          TOPICS[progressInsights.base.weakest.key] &&
-                          " · "}
-                        {progressInsights.base.weakest &&
-                          TOPICS[progressInsights.base.weakest.key] && (
-                            <>
-                              לחזק:{" "}
-                              <span className="text-white/90 font-semibold">
-                                {TOPICS[progressInsights.base.weakest.key].name}
-                              </span>
-                            </>
-                          )}
-                      </p>
-                    ) : null}
-                    <p className="text-[8px] text-white/48 leading-tight mb-0.5">
-                      מינ׳ {INSIGHT_MIN_TOPIC_ATTEMPTS} ניסיונות/נושא · נשמר מקומית בלבד
-                    </p>
-                    {progressInsights.feedback.length > 0 && (
-                      <ul className="list-disc list-inside space-y-0 text-white/76 leading-tight border-t border-white/10 pt-0.5 mt-0.5">
-                        {progressInsights.feedback.map((line, i) => (
-                          <li
-                            key={`${i}-${line.slice(0, 32)}`}
-                            style={learningMixedHebrewMathStyle}
-                          >
-                            {line}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </>
-                )}
-              </div>
+              <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
@@ -4164,24 +3911,16 @@ function saveScienceAnswerInParallel({
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
                     <div className="text-sm text-white/60 mb-2">התקדמות חודשית</div>
                     <div className="flex justify-between text-xs text-white/60 mb-1">
-                      <span>{Math.round(monthlyProgress.totalMinutes)} / {MONTHLY_MINUTES_TARGET} דק׳</span>
-                      <span>{goalPercent}%</span>
+                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {MONTHLY_MINUTES_TARGET} דק׳</span>
+                      <span>{monthlyPersistenceView?.progressPct ?? 0}%</span>
                     </div>
                     <div className="w-full bg-black/50 rounded-full h-3 mb-2">
                       <div
                         className="bg-gradient-to-r from-emerald-500 to-blue-500 h-3 rounded-full transition-all duration-300"
-                        style={{ width: `${goalPercent}%` }}
+                        style={{ width: `${monthlyPersistenceView?.progressPct ?? 0}%` }}
                       />
                     </div>
-                    {minutesRemaining > 0 ? (
-                      <div className="text-xs text-white/60">
-                        נותרו עוד {Math.round(minutesRemaining)} דק׳ (~{Math.ceil(Math.round(minutesRemaining) / 60)} שעות)
-                      </div>
-                    ) : (
-                      <div className="text-xs text-emerald-400 font-bold">
-                        🎉 השלמת את היעד החודשי!
-                      </div>
-                    )}
+                    {monthlyPersistenceView?.encouragementHe ?? "טוען..."}
                   </div>
 
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
@@ -4303,61 +4042,12 @@ function saveScienceAnswerInParallel({
             </div>
           )}
 
-          {showDailyChallenge && (
-            <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
-              onClick={() => setShowDailyChallenge(false)}
-              dir="rtl"
-            >
-              <div
-                className="bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-blue-400/60 rounded-2xl p-6 max-w-md w-full text-sm text-white"
-                dir="rtl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h2 className="text-2xl font-extrabold mb-4 text-center">
-                  📅 אתגר יומי
-                </h2>
-                <div className="space-y-3 mb-4">
-                  <div className="bg-black/30 rounded-lg p-3">
-                    <div className="text-xs text-white/60 mb-1">שאלות היום</div>
-                    <div className="text-2xl font-bold text-white">
-                      {subjectView.dailyChallenge.questionsToday}
-                    </div>
-                  </div>
-                  <div className="bg-black/30 rounded-lg p-3">
-                    <div className="text-xs text-white/60 mb-1">תשובות נכונות</div>
-                    <div className="text-2xl font-bold text-emerald-400">
-                      {subjectView.dailyChallenge.correctToday}
-                    </div>
-                  </div>
-                  <div className="bg-black/30 rounded-lg p-3">
-                    <div className="text-xs text-white/60 mb-1">ניקוד שיא</div>
-                    <div className="text-2xl font-bold text-yellow-400">
-                      {subjectView.dailyChallenge.scoreToday}
-                    </div>
-                  </div>
-                  {(subjectView.dailyChallenge.questionsToday || 0) > 0 && (
-                    <div className="bg-black/30 rounded-lg p-3">
-                      <div className="text-xs text-white/60 mb-1">דיוק</div>
-                      <div className="text-2xl font-bold text-blue-400">
-                        {subjectView.dailyChallenge.accuracyToday != null
-                          ? `${subjectView.dailyChallenge.accuracyToday}%`
-                          : "—"}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="text-center">
-                  <button
-                    onClick={() => setShowDailyChallenge(false)}
-                    className="px-6 py-2 rounded-lg bg-blue-500/80 hover:bg-blue-500 font-bold text-sm"
-                  >
-                    סגור
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          <SubjectDailyMissionsModal
+            open={showDailyChallenge}
+            onClose={() => setShowDailyChallenge(false)}
+            dailyMissions={subjectDailyMissions}
+            loading={subjectDailyMissionsLoading}
+          />
         </div>
       </div>
     </div>

@@ -35,18 +35,10 @@ import LearningPlannerRecommendationBlock from "../../components/LearningPlanner
 import { reportModeFromGameState } from "../../utils/report-track-meta";
 import {
   addSessionProgress,
-  loadRewardChoice,
-  saveRewardChoice,
-  getCurrentYearMonth,
-  hasRewardCelebrationShown,
-  markRewardCelebrationShown,
 } from "../../utils/progress-storage";
 import {
-  REWARD_OPTIONS,
   MONTHLY_MINUTES_TARGET,
-  getRewardLabel,
 } from "../../data/reward-options";
-import { splitRewardAmountLabel } from "../../utils/dashboard-setup-ui";
 import {
   updateDailyStreak,
   getStreakReward,
@@ -108,6 +100,11 @@ import {
   buildStudentSubjectDashboardView,
   logStudentSubjectDashboardDiagnostics,
 } from "../../lib/learning-shared/student-subject-dashboard-view";
+import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMissionsModal";
+import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthlyPrizeJourney";
+import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
+import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
+import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 
 const AVATAR_OPTIONS = [
   "👤",
@@ -141,20 +138,6 @@ const REFERENCE_CATEGORY_KEYS = Object.keys(REFERENCE_CATEGORIES);
 /** Matches `utils/math-report-generator.js` and parent-report mistake readers. */
 const MOLEDET_GEOGRAPHY_MISTAKES_KEY = "mleo_moledet_geography_mistakes";
 
-/** Lobby monthly prizes: storage keys unchanged; visible labels aligned with Math. */
-const LOBBY_MONTHLY_REWARD_DISPLAY_BY_KEY = {
-  ROBUX: "10K מטבעות משחק",
-  VBUCKS: "30K מטבעות משחק",
-  CLASH_ROYALE: "60K מטבעות משחק",
-  MINECOINS: "100K מטבעות משחק",
-};
-const LOBBY_MONTHLY_PRIZE_COIN_ICON = "🪙";
-
-function lobbyMonthlyRewardDisplayLabel(key) {
-  if (!key) return "";
-  return LOBBY_MONTHLY_REWARD_DISPLAY_BY_KEY[key] || getRewardLabel(key);
-}
-
 export default function MoledetGeographyMaster() {
   useIOSViewportFix();
   const router = useRouter();
@@ -174,7 +157,6 @@ export default function MoledetGeographyMaster() {
   /** Real topic/operation bucket for the question on screen (avoids stale currentQuestion) */
   const moledetTrackingTopicKeyRef = useRef(null);
   const moledetPendingDiagnosticProbeRef = useRef(null);
-  const yearMonthRef = useRef(getCurrentYearMonth());
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
@@ -250,37 +232,17 @@ export default function MoledetGeographyMaster() {
   const [showPlayerProfile, setShowPlayerProfile] = useState(false);
   const [playerAvatar, setPlayerAvatar] = useState("👤"); // אווטר ברירת מחדל
   const [playerAvatarImage, setPlayerAvatarImage] = useState(null); // תמונת אווטר מותאמת אישית
-  const [monthlyProgress, setMonthlyProgress] = useState({
-    totalMinutes: 0,
-    totalExercises: 0,
-  });
-  const [goalPercent, setGoalPercent] = useState(0);
-  const [minutesRemaining, setMinutesRemaining] = useState(MONTHLY_MINUTES_TARGET);
-  const [rewardChoice, setRewardChoice] = useState(null);
-  const [showRewardCelebration, setShowRewardCelebration] = useState(false);
-  const [rewardCelebrationLabel, setRewardCelebrationLabel] = useState("");
+  const [monthlyPersistenceView, setMonthlyPersistenceView] = useState(null);
+  /** Display-only: `payload.student.coin_balance` from GET /api/student/me (same source as student defaults). */
   const [childCoinBalance, setChildCoinBalance] = useState(0);
+  const [subjectDailyMissions, setSubjectDailyMissions] = useState(null);
+  const [subjectDailyMissionsLoading, setSubjectDailyMissionsLoading] = useState(false);
 
-  const refreshMonthlyProgress = useCallback(() => {
+  const refreshMonthlyPersistenceView = useCallback(() => {
     if (typeof window === "undefined") return;
     try {
       const profile = getCachedStudentLearningProfile();
-      const sid = learningProfileStudentIdRef.current || undefined;
-      const mins = profile?.derived?.monthlyMinutesUtcMonth ?? 0;
-      const ex = profile?.derived?.monthlyAnswersCountUtcMonth ?? 0;
-      setMonthlyProgress({ totalMinutes: mins, totalExercises: ex });
-      const percent = MONTHLY_MINUTES_TARGET
-        ? Math.min(100, Math.round((mins / MONTHLY_MINUTES_TARGET) * 100))
-        : 0;
-      setGoalPercent(percent);
-      setMinutesRemaining(Math.max(0, MONTHLY_MINUTES_TARGET - mins));
-      const ym = yearMonthRef.current;
-      const choiceFromServer = profile?.row?.monthly?.rewardChoices?.[ym];
-      const choice =
-        choiceFromServer != null && choiceFromServer !== ""
-          ? choiceFromServer
-          : loadRewardChoice(ym, sid);
-      setRewardChoice(choice);
+      setMonthlyPersistenceView(buildSubjectMonthlyPersistenceViewFromProfile(profile));
     } catch {
       // ignore
     }
@@ -475,27 +437,8 @@ export default function MoledetGeographyMaster() {
   }, [showSolution, animationSteps, currentQuestion]);
 
   useEffect(() => {
-    refreshMonthlyProgress();
-  }, [refreshMonthlyProgress]);
-
-useEffect(() => {
-  if (typeof window === "undefined") return;
-  if (monthlyProgress.totalMinutes < MONTHLY_MINUTES_TARGET) return;
-  const ym = yearMonthRef.current;
-  const profile = getCachedStudentLearningProfile();
-  if (profile?.row?.monthly?.celebrationsShown?.[ym]) return;
-  if (hasRewardCelebrationShown(ym, learningProfileStudentIdRef.current || undefined)) return;
-
-  const label = rewardChoice ? lobbyMonthlyRewardDisplayLabel(rewardChoice) : "";
-  setRewardCelebrationLabel(label);
-  setShowRewardCelebration(true);
-  markRewardCelebrationShown(ym, learningProfileStudentIdRef.current || undefined);
-  void patchStudentLearningProfile({
-    monthly: { celebrationsShown: { [ym]: true } },
-  }).catch(() => {});
-  sound.playSound("badge-earned");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [monthlyProgress.totalMinutes, rewardChoice]);
+    refreshMonthlyPersistenceView();
+  }, [refreshMonthlyPersistenceView]);
 
   // הסבר לטעות אחרונה
   const [errorExplanation, setErrorExplanation] = useState("");
@@ -673,7 +616,7 @@ useEffect(() => {
           learningProfileHydratedRef.current = true;
           progressLoadedRef.current = true;
           setLearningProfileHydrationTick((n) => n + 1);
-          refreshMonthlyProgress();
+          refreshMonthlyPersistenceView();
           return;
         }
         learningProfileStudentIdRef.current = profile.studentId;
@@ -714,19 +657,19 @@ useEffect(() => {
         }
         progressLoadedRef.current = true;
         setLearningProfileHydrationTick((n) => n + 1);
-        refreshMonthlyProgress();
+        refreshMonthlyPersistenceView();
       })
       .catch(() => {
         if (cancelled) return;
         learningProfileHydratedRef.current = true;
         progressLoadedRef.current = true;
         setLearningProfileHydrationTick((n) => n + 1);
-        refreshMonthlyProgress();
+        refreshMonthlyPersistenceView();
       });
     return () => {
       cancelled = true;
     };
-  }, [refreshMonthlyProgress]);
+  }, [refreshMonthlyPersistenceView]);
 
   useEffect(() => {
     if (!learningProfileHydratedRef.current) return;
@@ -1235,7 +1178,7 @@ useEffect(() => {
     );
     void refreshStudentLearningProfileAfterSession().then((p) => {
       if (p?.ok) {
-        refreshMonthlyProgress();
+        refreshMonthlyPersistenceView();
         const acc = accountAccuracyDisplayFromDerived(p.derived, "moledet_geography");
         if (acc != null) setServerAccountSubjectAccuracyPct(acc);
       }
@@ -2125,11 +2068,11 @@ useEffect(() => {
         scoresStoreSnapshot: scoresStoreRef.current,
         topicScopeKey: `${level}_${operation}`,
         monthlyState: {
-          totalMinutes: monthlyProgress.totalMinutes,
-          goalMinutes: MONTHLY_MINUTES_TARGET,
-          yearMonth: yearMonthRef.current,
-          selectedRewardKey: rewardChoice,
-          celebrationShownForMonth: !!profileSnap?.row?.monthly?.celebrationsShown?.[yearMonthRef.current],
+          totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
+          goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
+          yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
+          selectedRewardKey: null,
+          celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
         mode,
         gameActive,
@@ -2152,8 +2095,7 @@ useEffect(() => {
       playerName,
       level,
       operation,
-      monthlyProgress.totalMinutes,
-      rewardChoice,
+      monthlyPersistenceView,
       mode,
       playerAvatar,
       playerAvatarImage,
@@ -2499,31 +2441,6 @@ useEffect(() => {
             </div>
           )}
 
-          {showRewardCelebration && (
-            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[205] p-4" dir="rtl">
-              <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white rounded-2xl p-6 w-full max-w-md text-center relative shadow-2xl">
-                <div className="text-4xl mb-3">🎁</div>
-                <div className="text-2xl font-bold mb-2">השלמת את מסע הפרס החודשי!</div>
-                {rewardCelebrationLabel ? (
-                  <p className="text-base mb-4">
-                    הפרס שבחרת:{" "}
-                    <span dir="ltr" className="font-bold">
-                      {rewardCelebrationLabel}
-                    </span>
-                  </p>
-                ) : (
-                  <p className="text-base mb-4">בחרו עכשיו את הפרס שאתם רוצים לקבל החודש!</p>
-                )}
-                <button
-                  onClick={() => setShowRewardCelebration(false)}
-                  className="mt-2 px-5 py-2 rounded-lg bg-white/90 text-emerald-700 font-bold hover:bg-white"
-                >
-                  הבנתי, תודה!
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* פרופיל שחקן */}
           {showPlayerProfile && (
             <div
@@ -2682,24 +2599,16 @@ useEffect(() => {
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
                     <div className="text-sm text-white/60 mb-2">התקדמות חודשית</div>
                     <div className="flex justify-between text-xs text-white/60 mb-1">
-                      <span>{Math.round(monthlyProgress.totalMinutes)} / {MONTHLY_MINUTES_TARGET} דק׳</span>
-                      <span>{goalPercent}%</span>
+                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {MONTHLY_MINUTES_TARGET} דק׳</span>
+                      <span>{monthlyPersistenceView?.progressPct ?? 0}%</span>
                     </div>
                     <div className="w-full bg-black/50 rounded-full h-3 mb-2">
                       <div
                         className="bg-gradient-to-r from-emerald-500 to-blue-500 h-3 rounded-full transition-all duration-300"
-                        style={{ width: `${goalPercent}%` }}
+                        style={{ width: `${monthlyPersistenceView?.progressPct ?? 0}%` }}
                       />
                     </div>
-                    {minutesRemaining > 0 ? (
-                      <div className="text-xs text-white/60">
-                        נותרו עוד {Math.round(minutesRemaining)} דק׳ (~{Math.ceil(Math.round(minutesRemaining) / 60)} שעות)
-                      </div>
-                    ) : (
-                      <div className="text-xs text-emerald-400 font-bold">
-                        🎉 השלמת את היעד החודשי!
-                      </div>
-                    )}
+                    {monthlyPersistenceView?.encouragementHe ?? "טוען..."}
                   </div>
 
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
@@ -3032,81 +2941,8 @@ useEffect(() => {
                 onRecommendedPractice={handleAdaptivePlannerRecommendedPractice}
               />
               
-              <div className="bg-white/5 border border-white/10 rounded-md md:rounded-lg px-2 pt-2.5 pb-3 md:px-4 md:py-4 lg:py-5 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto opacity-90 md:min-h-[12.5rem] lg:min-h-[13rem]">
-                <div className="flex items-center justify-between text-[10px] md:text-xs lg:text-sm text-white/82 md:text-white/90 lg:text-white/95 mb-1 md:mb-1.5 lg:mb-2 leading-tight font-semibold md:font-bold">
-                  <span>🎁 מסע פרס חודשי</span>
-                  <span>
-                    {Math.round(monthlyProgress.totalMinutes)} / {MONTHLY_MINUTES_TARGET} דק׳
-                  </span>
-                </div>
-                <p className="text-[10px] md:text-xs lg:text-sm text-white/82 md:text-white/88 lg:text-white/92 mb-1 md:mb-1.5 lg:mb-2 text-center leading-snug">
-                  {minutesRemaining > 0
-                    ? `נותרו עוד ${Math.round(minutesRemaining)} דק׳ (~${Math.ceil(
-                        Math.round(minutesRemaining) / 60
-                      )} ש׳)`
-                    : "🎉 יעד הושלם! בקשו מההורה לבחור פרס."}
-                </p>
-                <div className="w-full bg-white/10 rounded-full h-1.5 md:h-2 overflow-hidden mb-2.5 md:mb-3">
-                  <div
-                    className="h-1.5 md:h-2 bg-emerald-400 rounded-full transition-all"
-                    style={{ width: `${goalPercent}%` }}
-                  />
-                </div>
-                <div className="grid grid-cols-4 gap-2 md:gap-2 lg:gap-2.5 w-full">
-                  {REWARD_OPTIONS.map((option) => {
-                    const displayLabel = lobbyMonthlyRewardDisplayLabel(option.key);
-                    const rewardParts = splitRewardAmountLabel(displayLabel);
-                    const prizePicked = rewardChoice === option.key;
-                    return (
-                    <button
-                      type="button"
-                      key={option.key}
-                      onClick={() => {
-                        saveRewardChoice(yearMonthRef.current, option.key, learningProfileStudentIdRef.current || undefined);
-                        setRewardChoice(option.key);
-                        void patchStudentLearningProfile({
-                          monthly: {
-                            rewardChoices: { [yearMonthRef.current]: option.key },
-                          },
-                        }).catch(() => {});
-                      }}
-                      className={`rounded-lg border py-2.5 px-1.5 md:py-2.5 md:px-2 lg:py-3 lg:px-2.5 min-h-[4.85rem] md:min-h-[5.5rem] lg:min-h-[6rem] bg-black/35 flex flex-col items-center justify-center gap-1.5 md:gap-1.5 min-w-0 transition-colors ${
-                        prizePicked
-                          ? "border-emerald-400 text-emerald-200 bg-emerald-500/20"
-                          : "border-white/15 text-white hover:border-white/40"
-                      }`}
-                    >
-                      <span className="text-xl md:text-xl lg:text-2xl leading-none shrink-0" aria-hidden>
-                        {LOBBY_MONTHLY_PRIZE_COIN_ICON}
-                      </span>
-                      {rewardParts.amount != null ? (
-                        <>
-                          <span className="text-xs md:text-sm font-extrabold tabular-nums leading-none text-emerald-100" dir="ltr">{rewardParts.amount}</span>
-                          <span
-                            className={`text-[9px] md:text-[11px] lg:text-xs font-semibold leading-snug text-center px-0.5 md:px-1 line-clamp-2 ${
-                              prizePicked ? "text-emerald-100" : "text-white"
-                            }`}
-                            dir="ltr"
-                          >
-                            {rewardParts.name}
-                          </span>
-                        </>
-                      ) : (
-                        <span
-                          className={`text-[10px] md:text-xs lg:text-sm font-semibold leading-snug text-center px-0.5 md:px-1 line-clamp-3 ${
-                            prizePicked ? "text-emerald-100" : "text-white"
-                          }`}
-                          dir="rtl"
-                        >
-                          {rewardParts.full}
-                        </span>
-                      )}
-                    </button>
-                    );
-                  })}
-                </div>
-              </div>
-              
+              <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
+
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
                 <button
@@ -3872,61 +3708,12 @@ useEffect(() => {
           )}
 
           {/* Daily Challenge Modal */}
-          {showDailyChallenge && (
-            <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
-              onClick={() => setShowDailyChallenge(false)}
-              dir="rtl"
-            >
-              <div
-                className="bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-blue-400/60 rounded-2xl p-6 max-w-md w-full text-sm text-white"
-                dir="rtl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h2 className="text-2xl font-extrabold mb-4 text-center">
-                  📅 אתגר יומי
-                </h2>
-                <div className="space-y-3 mb-4">
-                  <div className="bg-black/30 rounded-lg p-3">
-                    <div className="text-xs text-white/60 mb-1">שאלות היום</div>
-                    <div className="text-2xl font-bold text-white">
-                      {subjectView.dailyChallenge.questionsToday}
-                    </div>
-                  </div>
-                  <div className="bg-black/30 rounded-lg p-3">
-                    <div className="text-xs text-white/60 mb-1">תשובות נכונות</div>
-                    <div className="text-2xl font-bold text-emerald-400">
-                      {subjectView.dailyChallenge.correctToday}
-                    </div>
-                  </div>
-                  <div className="bg-black/30 rounded-lg p-3">
-                    <div className="text-xs text-white/60 mb-1">ניקוד שיא</div>
-                    <div className="text-2xl font-bold text-yellow-400">
-                      {subjectView.dailyChallenge.scoreToday}
-                    </div>
-                  </div>
-                  {(subjectView.dailyChallenge.questionsToday || 0) > 0 && (
-                    <div className="bg-black/30 rounded-lg p-3">
-                      <div className="text-xs text-white/60 mb-1">דיוק</div>
-                      <div className="text-2xl font-bold text-blue-400">
-                        {subjectView.dailyChallenge.accuracyToday != null
-                          ? `${subjectView.dailyChallenge.accuracyToday}%`
-                          : "—"}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="text-center">
-                  <button
-                    onClick={() => setShowDailyChallenge(false)}
-                    className="px-6 py-2 rounded-lg bg-blue-500/80 hover:bg-blue-500 font-bold text-sm"
-                  >
-                    סגור
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          <SubjectDailyMissionsModal
+            open={showDailyChallenge}
+            onClose={() => setShowDailyChallenge(false)}
+            dailyMissions={subjectDailyMissions}
+            loading={subjectDailyMissionsLoading}
+          />
 
           {showHowTo && (
             <div

@@ -10,10 +10,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const MVP_VERIFY_ROOT = resolve(__dirname, "../..");
 
-/** Combined approved paths for Phases 1–2.6 on one working tree. */
+/** Combined approved paths for Phases 1–2.8 on one working tree. */
 export const MVP_APPROVED_FILE_PATTERNS = [
   /^\.env\.local$/,
   /^lib\/learning-client\/studentHomeDashboardClient\.js$/,
+  /^lib\/learning-client\/dailyMissionsView\.js$/,
+  /^lib\/learning-client\/fetchStudentHomeProfile\.js$/,
+  /^lib\/learning-client\/subjectMonthlyPersistenceView\.js$/,
   /^lib\/learning-supabase\/israel-calendar\.server\.js$/,
   /^lib\/learning-supabase\/learning-coin-award\.server\.js$/,
   /^lib\/learning-supabase\/mission-progress\.server\.js$/,
@@ -21,9 +24,13 @@ export const MVP_APPROVED_FILE_PATTERNS = [
   /^pages\/student\/home\.js$/,
   /^pages\/api\/learning\/session\/finish\.js$/,
   /^pages\/api\/student\/home-profile\.js$/,
+  /^pages\/api\/student\/learning-profile\.js$/,
   /^pages\/api\/admin\/monthly-persistence-award\.js$/,
+  /^pages\/learning\/(math|geometry|hebrew|english|science|moledet-geography)-master\.js$/,
   /^components\/student\/StudentDailyMissionsPanel\.js$/,
   /^components\/student\/StudentMonthlyPersistencePanel\.js$/,
+  /^components\/learning\/SubjectDailyMissionsModal\.js$/,
+  /^components\/learning\/SubjectMonthlyPrizeJourney\.js$/,
   /^scripts\/lib\/mvp-verify-helpers\.mjs$/,
   /^scripts\/lib\/mvp-verify-http-preflight\.mjs$/,
   /^scripts\/verify-phase\d/,
@@ -34,7 +41,6 @@ export const MVP_APPROVED_FILE_PATTERNS = [
 ];
 
 export const MVP_FORBIDDEN_PREFIXES = [
-  "pages/learning/",
   "lib/parent-server/",
   "pages/api/learning/session/start",
   "pages/api/learning/session/answer",
