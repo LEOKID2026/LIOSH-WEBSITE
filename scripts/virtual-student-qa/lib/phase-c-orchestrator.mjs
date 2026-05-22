@@ -29,10 +29,7 @@ import { runGeometryScenario } from "./subject-drivers/geometry-master.mjs";
 import { runHebrewScenario } from "./subject-drivers/hebrew-master.mjs";
 import { runEnglishScenario } from "./subject-drivers/english-master.mjs";
 import { runScienceScenario } from "./subject-drivers/science-master.mjs";
-import {
-  runMoledetGeographyScenario,
-  MoledetGeographyBlockerError,
-} from "./subject-drivers/moledet-geography-master.mjs";
+import { runMoledetGeographyScenario } from "./subject-drivers/moledet-geography-master.mjs";
 import { authenticateParent } from "./parent-auth.mjs";
 import {
   snapshotParentReportViaDashboard,
@@ -249,33 +246,26 @@ export async function runPhaseCSuite({
       networkEvents: null,
     };
 
-    // Handle BLOCKED scenarios up front (e.g. moledet) — we still record a
-    // baseline snapshot for completeness but never run a driver for them.
+    // Phase C originally used `scenario.blocker` to mark moledet-geography
+    // as a verified blocker because that page lacked stable testids. The
+    // Phase C repair pass added the canonical testids, so all scenarios
+    // now run their drivers. The flag stays supported here for any future
+    // blocker scenario that might be added to the suite without touching
+    // the orchestrator.
     if (scenario.blocker) {
       record.blocked = true;
       record.blocker = {
-        kind: "moledet-geography-missing-testids",
-        recommendedAction:
-          "Open a separate change request to add canonical {subject}-* testids " +
-          "to /pages/learning/moledet-geography-master.js, then re-run.",
+        kind: scenario.blocker.kind || "verified-blocker",
+        message: scenario.blocker.message || null,
+        missingTestids: scenario.blocker.missingTestids || null,
+        recommendedAction: scenario.blocker.recommendedAction || null,
       };
       record.status = "blocked";
       log(
-        `phase-c: scenario ${scenario.id} BLOCKED — moledet-geography is missing ` +
-          `the stable testids the runner needs. Recording blocker and continuing.`
+        `phase-c: scenario ${scenario.id} BLOCKED — ${
+          scenario.blocker.message || scenario.blocker.kind || "verified blocker"
+        }. Recording blocker and continuing.`
       );
-      // Try the driver to capture the canonical structured error.
-      try {
-        await runMoledetGeographyScenario();
-      } catch (error) {
-        if (error instanceof MoledetGeographyBlockerError) {
-          record.blocker.message = error.message;
-          record.blocker.missingTestids = error.missingTestids;
-          record.blocker.recommendedAction = error.recommendedAction;
-        } else {
-          record.blocker.message = String(error?.message || error);
-        }
-      }
       scenarioRecords.push(record);
       continue;
     }

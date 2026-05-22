@@ -161,6 +161,19 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
           : null,
         topic: typeof q.topic === "string" ? q.topic : null,
         paramsKind: q.params?.kind ?? null,
+        // answerMode is the discriminator hebrew-master uses to swap between
+        // MCQ buttons, a typed text input, and audio-recorded-manual mode.
+        // Surface it so subject drivers can branch without relying on DOM
+        // sniffing alone. Other subjects either don't set it or always set it
+        // to a fixed value, in which case the field is harmless.
+        answerMode: typeof q.answerMode === "string" ? q.answerMode : null,
+        // acceptedAnswers is hebrew-specific. When the question accepts
+        // multiple correct spellings (with/without niqqud, etc.), submitting
+        // any of them still passes hebrew's compareAnswers check. We expose
+        // the list (capped) so the typing-mode driver can pick one.
+        acceptedAnswersSample: Array.isArray(q.acceptedAnswers)
+          ? q.acceptedAnswers.slice(0, 8).map((a) => safe(a))
+          : null,
       };
     },
     { prefix: mcqTestidPrefix || null, entry: entryTestid || null }
@@ -188,6 +201,8 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
     optionsCount: fiberResult.optionsCount,
     topic: fiberResult.topic,
     paramsKind: fiberResult.paramsKind,
+    answerMode: fiberResult.answerMode || null,
+    acceptedAnswersSample: fiberResult.acceptedAnswersSample || null,
     visibleLabels: trimmedLabels,
     resolvedCorrectIndex,
   };

@@ -21,8 +21,12 @@
  *   reliably resolving correctAnswer/correctIndex (Hebrew / English /
  *   Science) or the geometry numeric path.
  *
- * Moledet/geography is intentionally listed as a BLOCKED scenario; the
- * driver throws a structured error the orchestrator records as BLOCKED.
+ * Moledet/geography was originally a BLOCKED scenario because that page
+ * lacked stable testids. The Phase C repair pass added the canonical
+ * testids without changing design / Hebrew copy / behaviour, so
+ * moledet-geography now runs as a real MCQ scenario like the others.
+ * The makeBlockerScenario helper stays for any future blocker we need to
+ * record honestly.
  *
  * Determinism:
  *   Each scenario carries its own seedable RNG so reruns reproduce the
@@ -169,7 +173,12 @@ export const PHASE_C_SCENARIOS = [
     profile: "average",
     topic: null,
     questionCount: 10,
-    seed: 0xa1d206,
+    // Effective profile-controlled questions are ~8 (utils/hebrew-audio-attach.js
+    // deterministically inserts recording-mode audio at sequenceIndex 5 and 8
+    // for grade-3 reading; the runner skips those via the real-UI 'דילוג'
+    // button). Seed tuned by tools/find-hebrew-seed.mjs for ~6/8 (75%) at N=8,
+    // landing inside the average profile band (55–85%).
+    seed: 0xa1d002,
   }),
   makeMcqScenario({
     subject: "english",
@@ -187,12 +196,16 @@ export const PHASE_C_SCENARIOS = [
     questionCount: 10,
     seed: 0xa1f206,
   }),
-  makeBlockerScenario({
-    id: "moledet-geography-blocked",
+  makeMcqScenario({
     subject: "moledet-geography",
+    id: "moledet-geography-average",
     profile: "average",
+    // Default topic is "homeland" (set in pages/learning/moledet-geography-master.js).
+    // Leaving topic null keeps the page on its default selection — the
+    // factory will fall back to whatever `currentQuestion.topic` reports.
     topic: null,
-    questionCount: 0,
+    questionCount: 10,
+    seed: 0xa20206,
   }),
 ];
 

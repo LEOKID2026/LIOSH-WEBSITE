@@ -1295,6 +1295,8 @@ function finalizePhaseC(input) {
             tier1: r.tier1 || null,
             tier1ScenarioCounts: r.tier1ScenarioCounts || null,
             answeredQuestionsCount: r.driverResult?.answeredQuestions?.length ?? null,
+            skippedAudioCount: r.driverResult?.skippedAudioQuestions?.length ?? null,
+            shapeCounts: r.driverResult?.shapeCounts || null,
             tally: r.driverResult?.tally || null,
             answerFlow: r.driverResult?.answerFlow || null,
             profileEvidence: r.profileEvidence || null,
@@ -1437,6 +1439,18 @@ function buildPhaseCMarkdown(s) {
         );
       }
       lines.push(`- answeredQuestions: ${sc.answeredQuestionsCount ?? "n/a"}`);
+      if (sc.shapeCounts && Object.keys(sc.shapeCounts).length > 0) {
+        const parts = Object.entries(sc.shapeCounts)
+          .map(([k, v]) => `${k}=${v}`)
+          .join(", ");
+        lines.push(`- shapeCounts: ${parts}`);
+      }
+      if (sc.skippedAudioCount && sc.skippedAudioCount > 0) {
+        lines.push(
+          `- audioSkipped: ${sc.skippedAudioCount} question(s) advanced via the real-UI 'דילוג' button ` +
+            `(no /api/learning/answer fired; product behaviour for hebrew_audio_recorded_manual mode)`
+        );
+      }
       if (sc.tier1) {
         lines.push(
           `- tier1: passed=\`${sc.tier1.passed}\` counts=\`${JSON.stringify(sc.tier1.counts)}\``

@@ -2888,6 +2888,7 @@ useEffect(() => {
                   dir="rtl"
                 >
                   <div
+                    data-testid="moledet-player-name"
                     className="h-10 md:h-11 shrink-0 w-[3.5rem] md:w-[8.5rem] lg:w-[9.25rem] px-1.5 md:px-3 lg:px-3.5 rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold box-border flex items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap select-none pointer-events-none min-w-0"
                     dir={playerName && /[\u0590-\u05FF]/.test(playerName) ? "rtl" : "ltr"}
                     title={playerName.trim() ? playerName.trim() : undefined}
@@ -2896,6 +2897,7 @@ useEffect(() => {
                     {playerName.trim() ? playerName.trim() : "שחקן"}
                   </div>
                   <select
+                    data-testid="moledet-grade-select"
                     value={gradeNumber}
                     title={`כיתה ${["א", "ב", "ג", "ד", "ה", "ו"][gradeNumber - 1]}`}
                     onChange={(e) => {
@@ -2930,6 +2932,7 @@ useEffect(() => {
                   <div className="flex flex-1 min-w-0 md:flex-none md:max-w-[min(22rem,42vw)] items-center gap-1.5 md:gap-2 shrink">
                     <select
                       ref={operationSelectRef}
+                      data-testid="moledet-topic-select"
                       value={operation}
                       title={getOperationName(operation)}
                       onChange={(e) => {
@@ -3107,6 +3110,7 @@ useEffect(() => {
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
                 <button
+                  data-testid="moledet-start-game"
                   onClick={startGame}
                   disabled={!playerName.trim()}
                   className="h-9 md:h-10 px-4 md:px-5 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 disabled:bg-gray-500/50 disabled:cursor-not-allowed font-bold text-xs md:text-sm"
@@ -3471,6 +3475,7 @@ useEffect(() => {
                       return (
                         <button
                           key={idx}
+                          data-testid={`moledet-mcq-${idx}`}
                           onClick={() => handleAnswer(answer)}
                           disabled={!!selectedAnswer}
                           className={`rounded-xl border-2 px-6 py-6 text-2xl font-bold transition-all active:scale-95 disabled:opacity-50 ${
@@ -3610,6 +3615,7 @@ useEffect(() => {
               )}
 
               <button
+                data-testid="learning-stop-game"
                 onClick={stopGame}
                 className="h-9 px-4 rounded-lg bg-red-500/80 hover:bg-red-500 font-bold text-sm"
               >
