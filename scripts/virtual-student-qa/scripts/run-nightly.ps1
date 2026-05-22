@@ -12,6 +12,11 @@
   %LOCALAPPDATA%\liosh-qa\nightly-logs\, and propagates the runner's
   exit code so Task Scheduler's "last result" column reflects PASS / FAIL.
 
+  Owner's safe runtime window: 02:00–12:00 local time (10 h = 600 min).
+  This wrapper applies VIRTUAL_STUDENT_DAILY_MAX_MINUTES = 600 by default
+  if the env file did not set it. The runner (lib/config.mjs +
+  realtime-pacer.mjs) treats that as a hard wall-clock cap.
+
   The runner itself enforces all D2 invariants (state-advance gate,
   idempotency without --force, atomic .json + .json.bak rotation,
   preflight-only / dry-run never touching state). This wrapper only
@@ -245,6 +250,21 @@ try {
 }
 
 Write-Tee "[run-nightly] env loaded   = OK (parent=$($env:E2E_PARENT_EMAIL.Substring(0,1))***@..., accounts=$($accountsParsed.Count))"
+
+# Apply the nightly max-runtime default. The owner's safe observation
+# window is 02:00–12:00 local time = 10 h = 600 min, so the nightly
+# scheduler path defaults VIRTUAL_STUDENT_DAILY_MAX_MINUTES to 600 if
+# the env file did not set it. The runner (lib/config.mjs +
+# realtime-pacer.mjs) reads this env var as a hard wall-clock cap and
+# stops studying further sessions once it would be exceeded. The nightly
+# scheduler path NEVER falls back to the runner's internal 480 default.
+$existingDailyCap = [System.Environment]::GetEnvironmentVariable('VIRTUAL_STUDENT_DAILY_MAX_MINUTES')
+if (-not $existingDailyCap) {
+  $env:VIRTUAL_STUDENT_DAILY_MAX_MINUTES = '600'
+  Write-Tee "[run-nightly] dailyCap     = 600 min (wrapper default; env file did not set VIRTUAL_STUDENT_DAILY_MAX_MINUTES)"
+} else {
+  Write-Tee "[run-nightly] dailyCap     = $existingDailyCap min (from env file)"
+}
 
 # ---------------------------------------------------------------------------
 # 4. Locate node.

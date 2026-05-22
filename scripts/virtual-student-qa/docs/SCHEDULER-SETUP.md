@@ -21,11 +21,29 @@
    and propagates the runner's exit code so Task Scheduler shows
    PASS / FAIL correctly.
 3. A **Windows Task Scheduler trigger** that runs the wrapper every
-   night at a chosen local time (recommended: 22:30 → 02:00 window).
+   night inside the owner's safe 02:00 → 12:00 local-time window
+   (10 hours = 600 minutes).
 4. A **two-step controlled validation** procedure (dry-run +
    preflight-only) that proves the wrapper works **without** advancing
    the longitudinal state, so you can stage the scheduler safely
    before turning it loose for a full nightly run.
+
+> **Owner's daily observation window.**
+> The recurring run is anchored to **02:00 local time** with a hard cap
+> of **600 minutes (= 10 hours)**, so it can run anywhere inside the
+> **02:00 → 12:00** window before being forcibly stopped. This is the
+> window during which the owner does not work on the live site, so it
+> is safe for the simulator to drive Vercel UI for an extended period.
+> The cap is enforced in two places:
+>
+> 1. **Inside the runner** via `VIRTUAL_STUDENT_DAILY_MAX_MINUTES = 600`
+>    (`lib/config.mjs` + `realtime-pacer.mjs`). Once the per-day
+>    wall-clock total would exceed this, the runner stops scheduling
+>    further sessions and finishes cleanly with `state.json` correctly
+>    reflecting what *did* run.
+> 2. **Inside Windows Task Scheduler** via the task's
+>    "Stop the task if it runs longer than: 10 hours" setting (Step 4
+>    below). Belt-and-suspenders in case the runner ever hangs.
 
 ---
 
@@ -96,6 +114,16 @@ $env:E2E_PARENT_PASSWORD = "<parent-password-here>"
 # JSON list of all 12 AAA student accounts. Each entry must have
 # label / username / pin. PIN is a 4-digit string ("1234"), NOT a number.
 $env:VIRTUAL_STUDENT_ACCOUNTS = '[{"label":"AAA1","username":"AAA1","pin":"1234"},{"label":"AAA2","username":"AAA2","pin":"1234"},{"label":"AAA3","username":"AAA3","pin":"1234"},{"label":"AAA4","username":"AAA4","pin":"1234"},{"label":"AAA5","username":"AAA5","pin":"1234"},{"label":"AAA6","username":"AAA6","pin":"1234"},{"label":"AAA7","username":"AAA7","pin":"1234"},{"label":"AAA8","username":"AAA8","pin":"1234"},{"label":"AAA9","username":"AAA9","pin":"1234"},{"label":"AAA10","username":"AAA10","pin":"1234"},{"label":"AAA11","username":"AAA11","pin":"1234"},{"label":"AAA12","username":"AAA12","pin":"1234"}]'
+
+# Hard wall-clock cap for one daily run, in minutes.
+# 600 min = 10 h = the owner's safe 02:00 → 12:00 window.
+# The runner stops scheduling further sessions once this would be exceeded;
+# state.json still advances correctly with whatever did finish.
+# If this line is omitted, run-nightly.ps1 applies 600 as its default
+# anyway (see SCHEDULER-SETUP.md), but setting it here makes the cap
+# explicit and survives running the Node runner directly without the
+# wrapper.
+$env:VIRTUAL_STUDENT_DAILY_MAX_MINUTES = "600"
 
 # Optional: pin a specific deployment URL. The wrapper defaults to
 # https://liosh-website.vercel.app — uncomment to override (e.g. for a
@@ -171,8 +199,10 @@ nightly run will fail at the same step, just at 02:00.
 
 ## Step 4 — Configure Windows Task Scheduler
 
-You can use either the GUI or `schtasks`. The trigger should match the
-Vercel-deployed app's expected nightly window.
+You can use either the GUI or `schtasks`. The trigger fires at **02:00
+local time** and the task is configured to be force-stopped by Windows
+if it ever runs longer than **10 hours**, matching the owner's safe
+02:00 → 12:00 observation window.
 
 ### Option A: schtasks one-liner
 
@@ -184,7 +214,7 @@ schtasks /Create ^
   /TN "Liosh QA — virtual student nightly" ^
   /TR "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\scripts\virtual-student-qa\scripts\run-nightly.ps1\"" ^
   /SC DAILY ^
-  /ST 22:30 ^
+  /ST 02:00 ^
   /RL LIMITED ^
   /F
 ```
@@ -192,15 +222,19 @@ schtasks /Create ^
 Notes:
 - `/RL LIMITED` runs as the current user without elevation — sufficient
   because everything writes only to `%LOCALAPPDATA%`.
-- `/ST 22:30` is the daily start time. Change this if 22:30 conflicts
-  with your own Vercel usage.
+- `/ST 02:00` is the daily start time. The 02:00 → 12:00 window is the
+  owner's safe span; do not move the trigger outside it without also
+  raising/lowering `VIRTUAL_STUDENT_DAILY_MAX_MINUTES` accordingly.
 - `/F` overwrites an existing task with the same name (safe to rerun).
+- `schtasks /Create` cannot set the "Stop the task if it runs longer
+  than" option — finish that step in the GUI (see Option B,
+  Settings step).
 
 ### Option B: Task Scheduler GUI
 
 1. Open **Task Scheduler** (`taskschd.msc`).
 2. **Create Basic Task** → name it `Liosh QA — virtual student nightly`.
-3. **Trigger:** Daily, 22:30 (or your chosen time).
+3. **Trigger:** Daily, **02:00** local time.
 4. **Action:** Start a program.
    - **Program/script:** `powershell.exe`
    - **Add arguments:**
@@ -212,18 +246,30 @@ Notes:
 5. Finish the wizard.
 6. Open the task's **Properties → Settings**:
    - ☑ "Allow task to be run on demand" (so you can right-click → Run).
+   - ☑ **"Stop the task if it runs longer than:"** → **10 hours**.
+     This is the Windows-side safety cap matching the runner's
+     `VIRTUAL_STUDENT_DAILY_MAX_MINUTES = 600` cap. The runner is
+     authoritative; this setting only fires if the runner ever fails to
+     stop itself in time.
    - ☑ "If the running task does not end when requested, force it to
-     stop" (a 480-min hard cap is already enforced by the runner; this
-     is just a Windows-side belt-and-suspenders).
+     stop".
    - **If the task is already running:** "Do not start a new instance".
    - **If the task fails, restart every:** *Leave unchecked* — the
      runner has its own idempotency / state-safety. Restart-on-fail
      would re-run a partial day and confuse `state.json`.
 7. **Conditions:**
    - **Wake the computer to run this task:** ☑ if you want it to run
-     even if the laptop is asleep at 22:30.
+     even if the laptop is asleep at 02:00.
    - **Start the task only if the computer is on AC power:** *Operator's
      choice. Recommended ☑ for laptops.*
+
+> **Why two caps?** The runner enforces 600 minutes via
+> `VIRTUAL_STUDENT_DAILY_MAX_MINUTES` (set by the env file or applied as
+> a default by `run-nightly.ps1`). It is the *primary* cap because it
+> stops cleanly between sessions, lets the longitudinal state advance
+> with whatever finished, and writes a coherent `run-summary.json`. The
+> Task Scheduler 10-hour "Stop the task" setting is a *fail-safe* — it
+> only matters if the runner itself hangs.
 
 ---
 
@@ -258,7 +304,7 @@ Recommended approach: **stage it once with eyes on the screen first.**
    half-write.)
 
 If anything in the above is off, **disable the task** in Task
-Scheduler before the next 22:30 trigger and investigate from the log
+Scheduler before the next 02:00 trigger and investigate from the log
 file.
 
 ---
@@ -366,8 +412,8 @@ the simulation history.
     state.json.bak                    ← atomic-write previous version
     timeline.md                       ← human-readable append-only log
   nightly-logs\
-    2026-05-22_223005__realtime__2026-05-22__full-run.log
-    2026-05-22_223005__realtime__2026-05-22__dry-run.log     (validation runs)
+    2026-05-22_020005__realtime__2026-05-22__full-run.log
+    2026-05-22_020005__realtime__2026-05-22__dry-run.log     (validation runs)
     ...
 
 <repo>\reports\virtual-student-daily\
