@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Virtual Student QA Runner — CLI entry (Phase A + Phase B + Phase C).
+ * Virtual Student QA Runner — CLI entry (Phases A / B / C / D / D2).
  *
  * Phase A (student): real student → real /student/login UI → real
  *   /learning/math-master → real /api/learning/session/start + answer + finish.
@@ -10,15 +10,30 @@
  *   the visible parent report matches the student activity from Phase A.
  *
  * Phase C (multi-subject): same student loops through scenarios across
- *   math + geometry + hebrew + english + science (+ moledet-geography as a
- *   verified BLOCKER) with per-scenario before/after parent-report snapshots
- *   and explicit profile evidence (strong / average / weak / targeted).
+ *   math + geometry + hebrew + english + science + moledet-geography with
+ *   per-scenario before/after parent-report snapshots and explicit profile
+ *   evidence (strong / average / weak / targeted).
  *
- * Artifacts under reports/virtual-student-qa/{ISO-timestamp}/ regardless of
- * phase.
+ * Phase D (multi-student): all 12 AAA QA students under one parent. One
+ *   short scenario per student, sequential isolated browser contexts,
+ *   cross-student bleed verification.
+ *
+ * Phase D2 (daily simulator — slices D2.1+D2.2+D2.3 wired): scheduled
+ *   daily real-learning simulator that drives the same 12 AAA students
+ *   over real calendar dates with longitudinal state outside the repo.
+ *   D2.1: personas + state + planner + --dry-run artifacts.
+ *   D2.2: --preflight-only (parent + 12 students UI login probes).
+ *   D2.3: fast-mode full daily run on localhost (orchestrator + pacer +
+ *         per-student multi-session learning + atomic state-advance).
+ *   D2.4 (Vercel fast) / D2.5 (Vercel realtime) / D2.6 (Task Scheduler
+ *   wrapper) are still gated.
+ *
+ * Artifacts:
+ *   - Phases A/B/C/D: reports/virtual-student-qa/{ISO-timestamp}/
+ *   - Phase D2:       reports/virtual-student-daily/YYYY-MM-DD/
  *
  * CLI:
- *   --phase a|b|c        (default: b)
+ *   --phase a|b|c|d|d2   (default: b)
  *   --scenario <id>      (Phase A/B: which scenario to run; Phase C: filter
  *                          the suite to a single scenario id)
  *   --scenarios id1,id2  (Phase C only: comma-separated suite filter)
@@ -27,6 +42,14 @@
  *                          parent whose linkedStudent label matches --student)
  *   --headed             (visible browser)
  *   --base-url <url>     (override PLAYWRIGHT_BASE_URL)
+ *   --plan smoke|full    (Phase D)
+ *   --students AAA1,AAA5 (Phase D filter; Phase D2: D2.3+ smoke filter)
+ *   --mode realtime|fast (Phase D2: daily mode; default 'realtime')
+ *   --date YYYY-MM-DD    (Phase D2: target calendar date; default today
+ *                          in Asia/Jerusalem)
+ *   --dry-run            (Phase D2: emit plan only, no UI, no state advance)
+ *   --preflight-only     (Phase D2: D2.2+ only — preflight checks, no learning)
+ *   --force              (Phase D2: bypass same-day idempotency check)
  *
  * Env (Phase A — student):
  *   VIRTUAL_STUDENT_ACCOUNTS      JSON [{label, username|code, pin}]   - preferred
@@ -55,6 +78,7 @@
  *
  * Exit codes: 0 PASS, 1 FAIL or PARTIAL, 2 misuse.
  */
+import { pathToFileURL } from "node:url";
 import {
   loadAccounts,
   selectAccount,
@@ -65,6 +89,14 @@ import {
   resolveParentAuthMode,
   isHeaded,
   getRepoRoot,
+  resolveStateDir,
+  resolveDailyMode,
+  resolveDailyDate,
+  resolveDailyMaxMinutes,
+  resolveDailyPacerScale,
+  resolveDailyDryRun,
+  resolveDailyPreflightOnly,
+  resolveDailyForce,
 } from "./lib/config.mjs";
 import {
   launchBrowser,
@@ -77,7 +109,11 @@ import { verifyTier1, verifyTier2 } from "./lib/persistence-evidence.mjs";
 import { authenticateParent } from "./lib/parent-auth.mjs";
 import { verifyParentDashboardAndOpenReport } from "./lib/parent-dashboard.mjs";
 import { verifyParentReport } from "./lib/parent-report-assertions.mjs";
-import { makeRunArtifacts, newRunId } from "./lib/artifacts.mjs";
+import {
+  makeRunArtifacts,
+  makeDailyArtifacts,
+  newRunId,
+} from "./lib/artifacts.mjs";
 import { PHASE_A_SCENARIOS } from "./scenarios/math-average-smoke.mjs";
 import { PHASE_C_SCENARIOS } from "./scenarios/phase-c-suite.mjs";
 import { runPhaseCSuite } from "./lib/phase-c-orchestrator.mjs";
@@ -86,6 +122,28 @@ import {
   selectPhaseDPlan,
 } from "./scenarios/phase-d-suite.mjs";
 import { runPhaseDSuite } from "./lib/phase-d-orchestrator.mjs";
+import {
+  PERSONAS,
+  PERSONA_LABELS,
+} from "./scenarios/student-personas.mjs";
+import {
+  loadState,
+  isAlreadyRunForDate,
+  applyDailyResults,
+  saveStateAtomically,
+  appendTimelineRow,
+} from "./lib/longitudinal-state.mjs";
+import {
+  generateDailyPlan,
+  renderPlanMarkdown,
+} from "./lib/daily-plan-generator.mjs";
+import {
+  runDailyPreflight,
+  runStandaloneDailyPreflight,
+  renderPreflightMarkdown,
+} from "./lib/daily-preflight.mjs";
+import { runPhaseD2Suite } from "./lib/phase-d2-orchestrator.mjs";
+import { makeDailyPacer } from "./lib/realtime-pacer.mjs";
 
 function parseArgs(argv) {
   const args = {
@@ -96,8 +154,14 @@ function parseArgs(argv) {
     parent: "",
     headed: false,
     baseUrl: "",
-    plan: "",       // Phase D: smoke | full
-    students: "",   // Phase D: comma-separated subset of plan student labels
+    plan: "",          // Phase D: smoke | full
+    students: "",      // Phase D: comma-separated subset of plan student labels
+    // ---- Phase D2 (daily simulator) ----
+    mode: "",          // realtime | fast (resolved with env fallback)
+    date: "",          // YYYY-MM-DD (resolved with Asia/Jerusalem default)
+    dryRun: false,     // emit plan only, no UI, no state advance
+    preflightOnly: false, // run preflight only, no learning, no state advance
+    force: false,      // bypass same-day idempotency check
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -110,10 +174,16 @@ function parseArgs(argv) {
     else if (a === "--base-url") args.baseUrl = String(argv[++i] || "");
     else if (a === "--plan") args.plan = String(argv[++i] || "");
     else if (a === "--students") args.students = String(argv[++i] || "");
+    else if (a === "--mode") args.mode = String(argv[++i] || "");
+    else if (a === "--date") args.date = String(argv[++i] || "");
+    else if (a === "--dry-run" || a === "--dry") args.dryRun = true;
+    else if (a === "--preflight-only" || a === "--preflight") args.preflightOnly = true;
+    else if (a === "--force") args.force = true;
   }
   if (!args.scenario) {
-    if (args.phase === "c" || args.phase === "d") args.scenario = "";
-    else args.scenario = "math-average-smoke";
+    if (args.phase === "c" || args.phase === "d" || args.phase === "d2") {
+      args.scenario = "";
+    } else args.scenario = "math-average-smoke";
   }
   if (args.phase === "d" && !args.plan) {
     args.plan = "smoke";
@@ -171,7 +241,9 @@ async function main() {
         ? "c"
         : args.phase === "d"
           ? "d"
-          : "b";
+          : args.phase === "d2"
+            ? "d2"
+            : "b";
 
   // Phase C: route to the multi-scenario orchestrator and skip the rest of
   // this function's Phase A/B-specific logic.
@@ -181,6 +253,10 @@ async function main() {
   // Phase D: multi-student real UI QA.
   if (phase === "d") {
     return mainPhaseD(args);
+  }
+  // Phase D2: scheduled daily real-learning simulator.
+  if (phase === "d2") {
+    return mainPhaseD2(args);
   }
 
   const scenario = PHASE_A_SCENARIOS[args.scenario];
@@ -2413,7 +2489,1689 @@ function buildPhaseDFailureRepro(s) {
   return lines.join("\n");
 }
 
-main().catch((error) => {
-  console.error("virtual-student-qa: unexpected fatal error", error);
+// ---------------------------------------------------------------------------
+// Phase D2 — scheduled daily real-learning simulator
+// ---------------------------------------------------------------------------
+//
+// D2.1 (this slice): personas + state + planner + dry-run artifacts.
+//   - Implements the `--phase d2 --dry-run` path end-to-end:
+//       resolve mode/date → load state → generate plan → write plan-only
+//       artifacts under reports/virtual-student-daily/<date>/ → exit 0.
+//   - DOES NOT drive any UI.
+//   - DOES NOT advance longitudinal state.
+//
+// D2.2 / D2.3 / D2.4 / D2.5 (later slices): preflight-only, fast localhost
+// full run, fast Vercel full run, realtime Vercel run. Until those slices
+// land, the non-dry-run paths short-circuit with a clear message pointing
+// at the gated-slice contract in the plan (no UI is driven).
+//
+// State-advancement safety contract (plan §17): on D2.1, state.json is
+// NEVER written. The dry-run artifact captures what WOULD happen, and
+// the operator can inspect it with no side effects.
+
+async function mainPhaseD2(args) {
+  const repoRoot = getRepoRoot();
+  const mode = resolveDailyMode(args.mode);
+  const date = resolveDailyDate(args.date);
+  const dryRun = resolveDailyDryRun(args.dryRun);
+  const preflightOnly = resolveDailyPreflightOnly(args.preflightOnly);
+  const force = resolveDailyForce(args.force);
+  const stateDir = resolveStateDir();
+  const dailyMaxMinutes = resolveDailyMaxMinutes();
+  const pacerScale = resolveDailyPacerScale(mode);
+
+  const dailyArtifacts = makeDailyArtifacts({ repoRoot, date });
+  const phaseLogId = `phase-d2-${date}`;
+
+  function log(line) {
+    console.log(line);
+    dailyArtifacts.appendLog(phaseLogId, line);
+  }
+
+  log(`runId=phase-d2-${date}`);
+  log(
+    `phase=D2 mode=${mode} date=${date} ` +
+      `dryRun=${dryRun} preflightOnly=${preflightOnly} force=${force}`
+  );
+  log(`stateDir=${stateDir}`);
+  log(`dailyMaxMinutes=${dailyMaxMinutes} pacerScale=${pacerScale}`);
+
+  // ---- Mutually exclusive mode flags ------------------------------------
+  if (dryRun && preflightOnly) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "config",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      reason:
+        "config: --dry-run and --preflight-only are mutually exclusive. " +
+        "Use one or the other.",
+      dailyArtifacts,
+    });
+  }
+
+  // ---- Load state (read-only — never written in D2.1 / D2.2) -----------
+  // The state file is loaded to surface lastRunDate / lastRunStatus in
+  // the artifact for operator context. State advancement is gated on
+  // a successful FULL run (D2.3+); the preflight-only and dry-run paths
+  // never call saveStateAtomically().
+  let stateLoad;
+  try {
+    stateLoad = loadState({ stateDir, personas: PERSONAS, todayIso: date });
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "state-load",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      reason: `state-load: ${error?.message || error}`,
+      dailyArtifacts,
+    });
+  }
+  const { state, filePath: stateFilePath, fresh: stateFresh, parseErrors } =
+    stateLoad;
+  log(
+    `state: filePath=${stateFilePath} fresh=${stateFresh} ` +
+      `lastRunDate=${state.lastRunDate || "(none)"} ` +
+      `lastRunStatus=${state.lastRunStatus || "(none)"}`
+  );
+  if (parseErrors && parseErrors.length > 0) {
+    for (const e of parseErrors) log(`state-warn: ${e}`);
+  }
+
+  // ---- Preflight-only branch (D2.2) ------------------------------------
+  // We branch HERE — before plan generation — because preflight-only is
+  // strictly a "can-the-night-succeed?" guard and does not need a plan.
+  // The user's design contract: preflight-only never advances state and
+  // never drives any learning UI. Failures exit 1 cleanly.
+  if (preflightOnly) {
+    return runPhaseD2PreflightOnly({
+      args,
+      mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      dailyArtifacts,
+      log,
+    });
+  }
+
+  // ---- Idempotency check (full-run only) -------------------------------
+  // If the canonical state already has a successful (or partial) run for
+  // this date AND --force was not passed, we exit early without doing
+  // anything. State is NOT advanced. This keeps the nightly Task
+  // Scheduler safe even if it accidentally fires twice.
+  //
+  // Dry-run intentionally bypasses this check: producing a plan-only
+  // artifact for an already-recorded day is harmless and useful (e.g.
+  // "what plan would have been generated tonight?"). The operator's
+  // mental model: --dry-run is read-only.
+  // Preflight-only also bypasses this — preflight is itself read-only.
+  if (!dryRun && !force && isAlreadyRunForDate(state, date)) {
+    return finalizePhaseD2({
+      status: "already-ran-today",
+      mode: "idempotency-skip",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      reason:
+        `already-ran-today: state.lastRunDate=${state.lastRunDate} ` +
+        `matches target date=${date}. Pass --force to rerun.`,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+    });
+  }
+
+  // ---- Generate the daily plan -----------------------------------------
+  let plan;
+  try {
+    plan = generateDailyPlan({
+      state,
+      date,
+      mode,
+      personas: PERSONAS,
+    });
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "plan-generation",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      reason: `plan-generation: ${error?.message || error}`,
+      dailyArtifacts,
+    });
+  }
+  // Always write the plan artifact — both dry-run and full-run want it.
+  try {
+    dailyArtifacts.writePlanArtifact(plan);
+  } catch (error) {
+    log(`plan-artifact: write failed: ${error?.message || error}`);
+  }
+  log(
+    `plan: studied=${plan.summary.studied} skipped=${plan.summary.skipped} ` +
+      `totalSessions=${plan.summary.totalSessions} ` +
+      `totalMinutes=${plan.summary.totalMinutes}`
+  );
+
+  // ---- Dry-run path: D2.1 fully implemented ----------------------------
+  if (dryRun) {
+    return finalizePhaseD2({
+      status: "pass",
+      mode: "dry-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      dailyMaxMinutes,
+      pacerScale,
+      plan,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+    });
+  }
+
+  // ---- Full-run path: D2.3 (fast localhost full run) -------------------
+  return runPhaseD2FullRun({
+    args,
+    mode,
+    date,
+    dryRun,
+    preflightOnly,
+    force,
+    stateDir,
+    stateFilePath,
+    stateFresh,
+    state,
+    plan,
+    dailyMaxMinutes,
+    pacerScale,
+    dailyArtifacts,
+    log,
+  });
+}
+
+/**
+ * D2.3 — fast-mode full daily run.
+ *
+ * Order of operations:
+ *   1. Resolve baseUrl + accounts + parents (same loaders as preflight).
+ *   2. HTTP availability probe.
+ *   3. Launch one Playwright browser shared by preflight + orchestrator.
+ *   4. Run preflight (parent UI login + list-students + per-student UI
+ *      logins). FAIL here returns immediately, state untouched.
+ *   5. Run runPhaseD2Suite (multi-session per studied student).
+ *   6. Gate: orchestrator returns stateAdvanceShouldRun. PASS / PARTIAL
+ *      → invoke state-advance writer (applyDailyResults +
+ *      saveStateAtomically + appendTimelineRow + state-snapshot.json).
+ *      FAIL → state stays at yesterday's value.
+ *   7. Finalize artifacts and exit.
+ *
+ * State-advance contract:
+ *   The longitudinal state.json is mutated EXACTLY ONCE inside this
+ *   function, only after the orchestrator returned a non-FAIL verdict.
+ *   On any earlier failure path we return a fail finalize() without
+ *   touching state. This is the implementation of plan §17 "state
+ *   advancement only after all required checks complete".
+ */
+async function runPhaseD2FullRun({
+  args,
+  mode,
+  date,
+  dryRun,
+  preflightOnly,
+  force,
+  stateDir,
+  stateFilePath,
+  stateFresh,
+  state,
+  plan,
+  dailyMaxMinutes,
+  pacerScale,
+  dailyArtifacts,
+  log,
+}) {
+  const baseUrl = resolveBaseUrl(args.baseUrl);
+  log(`fullrun: baseUrl=${baseUrl}`);
+
+  // ---- Account + parent loaders (same as preflight) -------------------
+  let accounts;
+  try {
+    accounts = loadAccounts();
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "full-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      plan,
+      dailyMaxMinutes,
+      pacerScale,
+      reason: `config: ${error?.message || error}`,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      baseUrl,
+    });
+  }
+
+  const accountsByLabel = new Map();
+  for (const acc of accounts) accountsByLabel.set(acc.label, acc);
+  for (const acc of accounts) {
+    if (acc.username && !accountsByLabel.has(acc.username)) {
+      accountsByLabel.set(acc.username, acc);
+    }
+  }
+  const expectedStudentLabels = PERSONA_LABELS.slice();
+  const missingCreds = expectedStudentLabels.filter(
+    (label) => !accountsByLabel.has(label)
+  );
+  if (missingCreds.length > 0) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "full-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      plan,
+      dailyMaxMinutes,
+      pacerScale,
+      reason:
+        `config: no credentials loaded for ${missingCreds.length} ` +
+        `expected AAA student(s): ${missingCreds.join(", ")}.`,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      baseUrl,
+    });
+  }
+
+  let parents = [];
+  try {
+    parents = loadParentAccounts();
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "full-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      plan,
+      dailyMaxMinutes,
+      pacerScale,
+      reason: `config: ${error?.message || error}`,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      baseUrl,
+    });
+  }
+  if (parents.length === 0) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "full-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      plan,
+      dailyMaxMinutes,
+      pacerScale,
+      reason:
+        "config: no virtual-student parent accounts found. Set " +
+        "VIRTUAL_STUDENT_PARENT_ACCOUNTS or E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD.",
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      baseUrl,
+    });
+  }
+  let parentAccount;
+  try {
+    parentAccount = selectParentAccount(parents, args.parent, "");
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "full-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      plan,
+      dailyMaxMinutes,
+      pacerScale,
+      reason: `config: ${error?.message || error}`,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      baseUrl,
+    });
+  }
+
+  const studentAuthMode = resolveStudentAuthMode();
+  const parentAuthMode = resolveParentAuthMode();
+  log(
+    `fullrun: studentAuthMode=${studentAuthMode}` +
+      (studentAuthMode === "api" ? " [TEMPORARY:api-shortcut]" : "")
+  );
+  log(
+    `fullrun: parentAuthMode=${parentAuthMode}` +
+      (parentAuthMode === "token" ? " [DEBUG-ONLY: token never PASS]" : "")
+  );
+
+  // ---- Smoke filter parsing -------------------------------------------
+  let studentLabelsFilter = null;
+  if (args.students) {
+    studentLabelsFilter = String(args.students)
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    log(
+      `fullrun: --students filter active: ${studentLabelsFilter.join(", ")}`
+    );
+  }
+
+  // ---- HTTP preflight --------------------------------------------------
+  try {
+    await preflight(baseUrl, log);
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "full-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      plan,
+      dailyMaxMinutes,
+      pacerScale,
+      reason: `http-preflight: ${error?.message || error}`,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      baseUrl,
+      parentAuthMode,
+      studentAuthMode,
+    });
+  }
+
+  // ---- Browser launch (shared by preflight + orchestrator) ------------
+  const headed = args.headed || isHeaded();
+  const browser = await launchBrowser({ headed });
+  let preflightReport = null;
+  let suiteResult = null;
+  let stateWriteInfo = null;
+  let stateWriteError = null;
+  let suiteRuntimeError = null;
+  try {
+    // ---- 1. Preflight inside the shared browser ----------------------
+    log(
+      "fullrun: running preflight (parent UI + list-students + 12 student logins)"
+    );
+    preflightReport = await runDailyPreflight({
+      browser,
+      baseUrl,
+      parentAccount,
+      parentAuthMode,
+      studentAuthMode,
+      expectedStudentLabels,
+      accountsByLabel,
+      log,
+    });
+    if (!preflightReport.passed) {
+      log(
+        `fullrun: preflight FAILED — ${preflightReport.errors.length} ` +
+          `check(s); ${preflightReport.errors.slice(0, 3).join("; ")}`
+      );
+      return finalizePhaseD2({
+        status: "fail",
+        mode: "full-run",
+        args,
+        mode_: mode,
+        date,
+        dryRun,
+        preflightOnly,
+        force,
+        stateDir,
+        stateFilePath,
+        stateFresh,
+        plan,
+        dailyMaxMinutes,
+        pacerScale,
+        dailyArtifacts,
+        baseUrl,
+        parentAuthMode,
+        studentAuthMode,
+        preflightReport,
+        expectedStudentLabels,
+        stateLastRunDate: state.lastRunDate,
+        stateLastRunStatus: state.lastRunStatus,
+        reason:
+          `preflight: ${preflightReport.errors.length} check(s) failed — ` +
+          preflightReport.errors.slice(0, 3).join("; "),
+        suiteResult: null,
+      });
+    }
+
+    // ---- 2. Pacer ----------------------------------------------------
+    const pacer = makeDailyPacer({
+      mode,
+      scale: pacerScale,
+      log: (line) => log(line),
+    });
+    log(
+      `fullrun: pacer mode=${pacer.mode} scale=${pacer.scale} ` +
+        `(fast=zero-pause; realtime=human-pause)`
+    );
+
+    // ---- 3. Suite ----------------------------------------------------
+    suiteResult = await runPhaseD2Suite({
+      browser,
+      baseUrl,
+      plan,
+      parentAccount,
+      parentAuthMode,
+      studentAuthMode,
+      accountsByLabel,
+      artifacts: dailyArtifacts,
+      log,
+      pacer,
+      studentLabelsFilter,
+    });
+    log(
+      `fullrun: suite verdict=${suiteResult.verdict} ` +
+        `pass=${suiteResult.summary.counts.pass} ` +
+        `partial=${suiteResult.summary.counts.partial} ` +
+        `fail=${suiteResult.summary.counts.fail} ` +
+        `blocked=${suiteResult.summary.counts.blocked} ` +
+        `studied=${suiteResult.summary.studiedCount} ` +
+        `stateAdvanceShouldRun=${suiteResult.stateAdvanceShouldRun}`
+    );
+  } catch (error) {
+    suiteRuntimeError = String(error?.message || error);
+    log(`fullrun: suite-runtime fatal — ${suiteRuntimeError}`);
+  } finally {
+    try {
+      await browser.close();
+    } catch {
+      // best-effort cleanup
+    }
+  }
+
+  if (suiteRuntimeError) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "full-run",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      plan,
+      dailyMaxMinutes,
+      pacerScale,
+      dailyArtifacts,
+      baseUrl,
+      parentAuthMode,
+      studentAuthMode,
+      preflightReport,
+      expectedStudentLabels,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
+      reason: `suite-runtime: ${suiteRuntimeError}`,
+      suiteResult: null,
+    });
+  }
+
+  // ---- 4. State-advance gate ------------------------------------------
+  // The orchestrator returns stateAdvanceShouldRun=false on any FAIL.
+  // We DEFENSIVELY also re-check verdict !== 'fail' here so a future
+  // refactor that forgets to set the flag still cannot torch state.
+  const advance =
+    suiteResult.verdict !== "fail" && suiteResult.stateAdvanceShouldRun;
+  if (advance) {
+    try {
+      const applied = applyDailyResults({
+        state,
+        date,
+        mode,
+        verdict: suiteResult.verdict,
+        studentRecords: suiteResult.records,
+      });
+      const writeInfo = saveStateAtomically({ stateDir, state });
+      stateWriteInfo = {
+        ...writeInfo,
+        rowsAppended: applied.studentTimelineRows.length,
+        updatedStudents: applied.updatedStudents,
+      };
+      for (const row of applied.studentTimelineRows) {
+        try {
+          appendTimelineRow({ stateDir, row });
+        } catch (timelineError) {
+          // Timeline append is informative-only; do NOT roll back the
+          // state.json save for a timeline.md hiccup.
+          log(
+            `state-advance: timeline append failed for ${row.student} — ${
+              timelineError?.message || timelineError
+            }`
+          );
+        }
+      }
+      try {
+        dailyArtifacts.writeStateSnapshot(state);
+      } catch (snapshotError) {
+        log(
+          `state-advance: state-snapshot artifact write failed — ${
+            snapshotError?.message || snapshotError
+          }`
+        );
+      }
+      log(
+        `state-advance: state.json updated atomically (rowsAppended=` +
+          `${applied.studentTimelineRows.length}, ` +
+          `updatedStudents=[${applied.updatedStudents.join(", ")}], ` +
+          `lastRunStatus=${state.lastRunStatus})`
+      );
+    } catch (error) {
+      stateWriteError = String(error?.message || error);
+      log(`state-advance: FAILED — ${stateWriteError}`);
+    }
+  } else {
+    log(
+      `state-advance: SKIPPED (verdict=${suiteResult.verdict}, ` +
+        `stateAdvanceShouldRun=${suiteResult.stateAdvanceShouldRun}). ` +
+        `state.json left at lastRunDate=${state.lastRunDate || "(none)"}.`
+    );
+  }
+
+  // ---- 5. Finalize ----------------------------------------------------
+  return finalizePhaseD2({
+    status:
+      suiteResult.verdict === "fail"
+        ? "fail"
+        : suiteResult.verdict === "partial"
+          ? "partial"
+          : "pass",
+    mode: "full-run",
+    args,
+    mode_: mode,
+    date,
+    dryRun,
+    preflightOnly,
+    force,
+    stateDir,
+    stateFilePath,
+    stateFresh,
+    plan,
+    dailyMaxMinutes,
+    pacerScale,
+    dailyArtifacts,
+    baseUrl,
+    parentAuthMode,
+    studentAuthMode,
+    preflightReport,
+    expectedStudentLabels,
+    stateLastRunDate: state.lastRunDate,
+    stateLastRunStatus: state.lastRunStatus,
+    suiteResult,
+    stateWriteInfo,
+    stateWriteError,
+    studentLabelsFilter,
+    reason:
+      suiteResult.verdict === "fail"
+        ? suiteResult.error ||
+          `suite: ${suiteResult.summary.counts.fail} student(s) failed`
+        : null,
+  });
+}
+
+/**
+ * D2.2 preflight-only path.
+ *
+ * Lightweight runtime guard:
+ *   - Loads accounts + parent + base URL.
+ *   - Performs a quick HTTP availability check on the base URL.
+ *   - Runs runStandaloneDailyPreflight() (the four checks from plan §2:
+ *     parent UI login, list-students returns ≥12 AAA labels with
+ *     metadata, 12 student UI logins).
+ *   - Writes the preflight artifact (run-summary.json/.md including the
+ *     preflight report and a failure-repro.md on FAIL).
+ *   - Exit 0 on PASS, 1 on FAIL.
+ *   - State is NEVER advanced — saveStateAtomically() is not called.
+ *
+ * Reuses authenticateParent / authenticateStudent / list-students fetch
+ * pattern from existing A-D code; no new deep-QA logic is introduced.
+ */
+async function runPhaseD2PreflightOnly({
+  args,
+  mode,
+  date,
+  dryRun,
+  preflightOnly,
+  force,
+  stateDir,
+  stateFilePath,
+  stateFresh,
+  stateLastRunDate,
+  stateLastRunStatus,
+  dailyArtifacts,
+  log,
+}) {
+  // ---- Resolve target URL + the four-check input set -------------------
+  const baseUrl = resolveBaseUrl(args.baseUrl);
+  log(`preflight: baseUrl=${baseUrl}`);
+
+  let accounts;
+  try {
+    accounts = loadAccounts();
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason: `config: ${error?.message || error}`,
+      dailyArtifacts,
+    });
+  }
+  if (accounts.length === 0) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason:
+        "config: no virtual-student accounts found. Set " +
+        "VIRTUAL_STUDENT_ACCOUNTS (JSON) or " +
+        "E2E_STUDENT_{1..12}_USERNAME + E2E_STUDENT_{N}_PIN.",
+      dailyArtifacts,
+    });
+  }
+
+  // Build {label → account} the same way Phase D's mainPhaseD does, so
+  // operators can use either explicit JSON labels (AAA1..AAA12) or
+  // username-based loaders.
+  const accountsByLabel = new Map();
+  for (const acc of accounts) accountsByLabel.set(acc.label, acc);
+  for (const acc of accounts) {
+    if (acc.username && !accountsByLabel.has(acc.username)) {
+      accountsByLabel.set(acc.username, acc);
+    }
+  }
+  const expectedStudentLabels = PERSONA_LABELS.slice(); // AAA1..AAA12
+  const missingCreds = expectedStudentLabels.filter(
+    (label) => !accountsByLabel.has(label)
+  );
+  if (missingCreds.length > 0) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason:
+        `config: no credentials loaded for ${missingCreds.length} ` +
+        `expected AAA student(s): ${missingCreds.join(", ")}. Loaded ` +
+        `account labels: ${accounts.map((a) => a.label).join(", ")}.`,
+      dailyArtifacts,
+    });
+  }
+
+  let parents = [];
+  try {
+    parents = loadParentAccounts();
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason: `config: ${error?.message || error}`,
+      dailyArtifacts,
+    });
+  }
+  if (parents.length === 0) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason:
+        "config: no virtual-student parent accounts found. Set " +
+        "VIRTUAL_STUDENT_PARENT_ACCOUNTS or E2E_PARENT_EMAIL + " +
+        "E2E_PARENT_PASSWORD.",
+      dailyArtifacts,
+    });
+  }
+  let parentAccount;
+  try {
+    parentAccount = selectParentAccount(parents, args.parent, "");
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason: `config: ${error?.message || error}`,
+      dailyArtifacts,
+    });
+  }
+
+  const studentAuthMode = resolveStudentAuthMode();
+  const parentAuthMode = resolveParentAuthMode();
+  log(
+    `preflight: studentAuthMode=${studentAuthMode}` +
+      (studentAuthMode === "api" ? " [TEMPORARY:api-shortcut]" : "")
+  );
+  log(
+    `preflight: parentAuthMode=${parentAuthMode}` +
+      (parentAuthMode === "token" ? " [DEBUG-ONLY: token never PASS]" : "")
+  );
+
+  // ---- HTTP availability check ----------------------------------------
+  // Reuses the existing top-of-file preflight() helper that A-D phases
+  // use to confirm the server is up before launching a browser.
+  try {
+    await preflight(baseUrl, log);
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason: `http-preflight: ${error?.message || error}`,
+      dailyArtifacts,
+    });
+  }
+
+  // ---- Run the four lightweight UI checks ------------------------------
+  const headed = args.headed || isHeaded();
+  let preflightReport;
+  try {
+    preflightReport = await runStandaloneDailyPreflight({
+      baseUrl,
+      parentAccount,
+      parentAuthMode,
+      studentAuthMode,
+      expectedStudentLabels,
+      accountsByLabel,
+      headed,
+      log,
+    });
+  } catch (error) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "preflight-only",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      stateLastRunDate,
+      stateLastRunStatus,
+      reason: `preflight-runtime: ${error?.message || error}`,
+      dailyArtifacts,
+    });
+  }
+
+  log(
+    `preflight: overall=${preflightReport.passed ? "PASS" : "FAIL"} ` +
+      `parent=${preflightReport.parent?.ok} ` +
+      `list-students=${preflightReport.listStudents?.ok} ` +
+      `students=${preflightReport.students.filter((s) => s.ok).length}/` +
+      `${preflightReport.students.length} ` +
+      `(${preflightReport.durationMs}ms)`
+  );
+
+  return finalizePhaseD2({
+    status: preflightReport.passed ? "pass" : "fail",
+    mode: "preflight-only",
+    args,
+    mode_: mode,
+    date,
+    dryRun,
+    preflightOnly,
+    force,
+    stateDir,
+    stateFilePath,
+    stateFresh,
+    stateLastRunDate,
+    stateLastRunStatus,
+    dailyArtifacts,
+    baseUrl,
+    parentAuthMode,
+    studentAuthMode,
+    preflightReport,
+    expectedStudentLabels,
+    reason: preflightReport.passed
+      ? null
+      : `preflight: ${preflightReport.errors.length} check(s) failed — ${preflightReport.errors.slice(0, 3).join("; ")}`,
+  });
+}
+
+function finalizePhaseD2(input) {
+  const {
+    status,
+    mode: stage,
+    args,
+    mode_,
+    date,
+    dryRun,
+    preflightOnly,
+    force,
+    stateDir,
+    stateFilePath = null,
+    stateFresh = false,
+    dailyMaxMinutes = null,
+    pacerScale = null,
+    plan = null,
+    dailyArtifacts,
+    reason = null,
+    stateLastRunDate = null,
+    stateLastRunStatus = null,
+    baseUrl = null,
+    parentAuthMode = null,
+    studentAuthMode = null,
+    preflightReport = null,
+    expectedStudentLabels = null,
+    suiteResult = null,
+    stateWriteInfo = null,
+    stateWriteError = null,
+    studentLabelsFilter = null,
+  } = input;
+
+  const sliceForStage =
+    stage === "full-run"
+      ? sliceForFullRunStage({ baseUrl, mode: mode_ })
+      : stage === "preflight-only"
+        ? "D2.2"
+        : "D2.1";
+
+  const summary = {
+    runId: `phase-d2-${date}`,
+    phase: "D2",
+    slice: sliceForStage,
+    status,
+    stage,
+    args: {
+      phase: args.phase,
+      mode: args.mode || null,
+      date: args.date || null,
+      dryRun: !!args.dryRun,
+      preflightOnly: !!args.preflightOnly,
+      force: !!args.force,
+      headed: !!args.headed,
+      baseUrl: args.baseUrl || null,
+    },
+    resolved: {
+      mode: mode_,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      dailyMaxMinutes,
+      pacerScale,
+      stateLastRunDate,
+      stateLastRunStatus,
+      baseUrl: baseUrl || null,
+      parentAuthMode,
+      studentAuthMode,
+    },
+    plan: plan
+      ? {
+          date: plan.date,
+          mode: plan.mode,
+          generatedAt: plan.generatedAt,
+          summary: plan.summary,
+          students: plan.students,
+        }
+      : null,
+    preflight: preflightReport || null,
+    expectedStudentLabels: expectedStudentLabels || null,
+    suite: suiteResult ? summarizeSuiteForArtifact(suiteResult) : null,
+    stateAdvance: suiteResult
+      ? {
+          attempted: suiteResult.verdict !== "fail",
+          shouldRun: !!suiteResult.stateAdvanceShouldRun,
+          succeeded: !!stateWriteInfo && !stateWriteError,
+          error: stateWriteError || null,
+          info: stateWriteInfo || null,
+        }
+      : null,
+    studentLabelsFilter: studentLabelsFilter || null,
+    reason: reason || null,
+    artifactsRoot: dailyArtifacts.root,
+    timestampUtc: new Date().toISOString(),
+  };
+
+  try {
+    dailyArtifacts.writeJsonSummary(summary);
+  } catch (error) {
+    console.error(
+      `phase-d2: failed to write run-summary.json: ${error?.message || error}`
+    );
+  }
+  try {
+    dailyArtifacts.writeMarkdownSummary(buildPhaseD2Markdown(summary));
+  } catch (error) {
+    console.error(
+      `phase-d2: failed to write run-summary.md: ${error?.message || error}`
+    );
+  }
+  if (status !== "pass" && status !== "already-ran-today") {
+    try {
+      dailyArtifacts.writeFailureRepro(buildPhaseD2FailureRepro(summary));
+    } catch {
+      // best-effort
+    }
+  }
+
+  console.log("");
+  console.log("================ Virtual Student QA Phase D2 ===============");
+  console.log(`status     : ${String(status).toUpperCase()}`);
+  console.log(`slice      : ${summary.slice}`);
+  console.log(`stage      : ${stage}`);
+  console.log(`date       : ${date}`);
+  console.log(`mode       : ${mode_}`);
+  console.log(`dry-run    : ${dryRun}`);
+  console.log(`preflight  : ${preflightOnly}`);
+  console.log(`force      : ${force}`);
+  console.log(`stateDir   : ${stateDir}`);
+  console.log(
+    `state file : ${stateFilePath || "(unresolved)"} ` +
+      `(fresh=${stateFresh})`
+  );
+  if (plan) {
+    console.log(
+      `plan       : studied=${plan.summary.studied} ` +
+        `skipped=${plan.summary.skipped} ` +
+        `totalSessions=${plan.summary.totalSessions} ` +
+        `totalMinutes=${plan.summary.totalMinutes}`
+    );
+  }
+  if (preflightReport) {
+    const okStudents = preflightReport.students.filter((s) => s.ok).length;
+    const totalStudents = preflightReport.students.length;
+    console.log(
+      `preflight  : parent=${preflightReport.parent?.ok ? "OK" : "FAIL"} ` +
+        `list=${preflightReport.listStudents?.ok ? "OK" : "FAIL"} ` +
+        `students=${okStudents}/${totalStudents} ` +
+        `(${preflightReport.durationMs}ms)`
+    );
+  }
+  if (suiteResult) {
+    const c = suiteResult.summary.counts;
+    console.log(
+      `suite      : verdict=${suiteResult.verdict} ` +
+        `pass=${c.pass} partial=${c.partial} fail=${c.fail} blocked=${c.blocked} ` +
+        `studied=${suiteResult.summary.studiedCount} ` +
+        `(${suiteResult.durationMs}ms)`
+    );
+    const stateLine = stateWriteError
+      ? `state-write FAILED: ${stateWriteError}`
+      : stateWriteInfo
+        ? `advanced (rows=${stateWriteInfo.rowsAppended || 0}, ` +
+          `students=[${(stateWriteInfo.updatedStudents || []).join(", ")}])`
+        : suiteResult.verdict === "fail"
+          ? "skipped (verdict=fail)"
+          : "skipped";
+    console.log(`state      : ${stateLine}`);
+    if (studentLabelsFilter && studentLabelsFilter.length > 0) {
+      console.log(
+        `filter     : --students=${studentLabelsFilter.join(",")} (smoke subset)`
+      );
+    }
+  }
+  console.log(`artifacts  : ${dailyArtifacts.root}`);
+  if (reason) console.log(`reason     : ${reason}`);
+  console.log("============================================================");
+
+  // Exit-code policy:
+  //   - 'pass'                    : exit 0
+  //   - 'partial' (D2.3 full-run): exit 0 — state still advanced, day
+  //                                   counted; treat like a "yellow"
+  //                                   green-light for the scheduler.
+  //   - 'already-ran-today'       : exit 0 (idempotency-skip is not an error)
+  //   - 'not-yet-implemented'     : exit 0 (legacy stub status; future-
+  //                                   proofing in case any path still
+  //                                   returns it)
+  //   - 'fail'                    : exit 1
+  if (
+    status === "pass" ||
+    status === "partial" ||
+    status === "already-ran-today" ||
+    status === "not-yet-implemented"
+  ) {
+    process.exit(0);
+  }
   process.exit(1);
-});
+}
+
+/**
+ * Map a full-run invocation (stage='full-run') to the D2 milestone
+ * slice that was validated, so the operator's audit trail in
+ * run-summary.json / run-summary.md is self-describing without
+ * re-reading the resolved.baseUrl + resolved.mode pair every time:
+ *
+ *   - localhost / 127.0.0.1, mode=fast       → D2.3
+ *   - any other host, mode=fast              → D2.4 (e.g. Vercel)
+ *   - any host, mode=realtime                → D2.5
+ *
+ * This is a labeling helper only; the actual code path is the same
+ * for D2.3 / D2.4 / D2.5 (the orchestrator is mode- and target-
+ * agnostic). Future code changes that introduce new modes should
+ * extend this mapping rather than the orchestrator.
+ */
+function sliceForFullRunStage({ baseUrl, mode }) {
+  const m = String(mode || "").toLowerCase();
+  const isLocal =
+    !baseUrl ||
+    /^(https?:\/\/)?(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)/i.test(
+      String(baseUrl)
+    );
+  if (m === "realtime") return "D2.5";
+  return isLocal ? "D2.3" : "D2.4";
+}
+
+/**
+ * Build the JSON-friendly suite summary for run-summary.json. We
+ * deliberately strip Playwright objects + ApiResponse handles and keep
+ * only structured data (labels, status, deltas, network counts). The
+ * full per-student snapshot/screenshot evidence already lives on disk
+ * inside dailyArtifacts.
+ */
+function summarizeSuiteForArtifact(suiteResult) {
+  const safe = {
+    verdict: suiteResult.verdict,
+    durationMs: suiteResult.durationMs,
+    empty: !!suiteResult.empty,
+    summary: suiteResult.summary,
+    parentAuth: suiteResult.parentAuthResult
+      ? {
+          mode: suiteResult.parentAuthResult.mode || null,
+          pass: !!suiteResult.parentAuthResult.pass,
+          partial: !!suiteResult.parentAuthResult.partial,
+          alreadyAuthenticated:
+            !!suiteResult.parentAuthResult.alreadyAuthenticated,
+        }
+      : null,
+    dashboardStudentCount: suiteResult.dashboardStudentCount ?? null,
+    crossStudentMatrix: suiteResult.crossStudentMatrix || [],
+    parentConsole: {
+      errors: (suiteResult.parentConsole?.errors || []).slice(0, 20),
+      noiseCount: suiteResult.parentConsole?.noise?.length || 0,
+      pageErrors: (suiteResult.parentConsole?.pageErrors || []).slice(0, 20),
+    },
+    students: (suiteResult.records || []).map((r) => ({
+      label: r.label,
+      grade: r.grade,
+      personaKind: r.personaKind,
+      defaultProfile: r.defaultProfile,
+      intendedMinutes: r.intendedMinutes,
+      status: r.status,
+      blocker: r.blocker,
+      stepFailed: r.stepFailed,
+      driverError: r.driverError,
+      dashboardVisible: r.dashboardVisible,
+      expectedDisplayName: r.expectedDisplayName,
+      reportUrlAtBaseline: r.reportUrlAtBaseline,
+      reportUrlAtAfter: r.reportUrlAtAfter,
+      sessions: (r.sessionResults || []).map((s) => ({
+        index: s.index,
+        subject: s.subject,
+        profile: s.profile,
+        topic: s.topic,
+        intendedQuestionCount: s.intendedQuestionCount,
+        answeredCount: s.answeredCount,
+        correctIntended: s.correctIntended,
+        correctObserved: s.correctObserved,
+        completed: !!s.completed,
+        earlyExitReason: s.earlyExitReason,
+        error: s.error,
+        tier1Counts: s.tier1Counts,
+        tier1Passed: s.tier1?.passed ?? null,
+        durationMs:
+          s.endedAt && s.startedAt ? s.endedAt - s.startedAt : null,
+      })),
+      delta: r.delta || null,
+      classification: r.classification || null,
+      tier1: r.tier1 || null,
+      consoleErrors: (r.consoleErrors || []).slice(0, 20),
+      consoleNoiseCount: (r.consoleNoise || []).length,
+      pageErrors: (r.pageErrors || []).slice(0, 20),
+      earlyExitReasons: r.earlyExitReasons || [],
+    })),
+    skipped: (suiteResult.adapted?.skipped || []).map((e) => ({
+      label: e.label,
+      reason: e.reason,
+      grade: e.grade,
+      personaKind: e.personaKind,
+      configBlocker: !!e.configBlocker,
+    })),
+    filteredOut: (suiteResult.adapted?.filteredOut || []).map((e) => ({
+      label: e.label,
+      reason: e.reason,
+      grade: e.grade,
+      personaKind: e.personaKind,
+    })),
+  };
+  return safe;
+}
+
+function buildPhaseD2Markdown(s) {
+  const lines = [];
+  lines.push("# Virtual Student QA — Phase D2 (daily simulator)");
+  lines.push("");
+  lines.push(`- **runId**: \`${s.runId}\``);
+  lines.push(`- **slice**: \`${s.slice}\``);
+  lines.push(`- **status**: \`${s.status}\``);
+  lines.push(`- **stage**: \`${s.stage}\``);
+  lines.push(`- **date**: \`${s.resolved.date}\``);
+  lines.push(`- **mode**: \`${s.resolved.mode}\``);
+  lines.push(
+    `- **dry-run / preflight-only / force**: \`${s.resolved.dryRun}\` / ` +
+      `\`${s.resolved.preflightOnly}\` / \`${s.resolved.force}\``
+  );
+  if (s.resolved.baseUrl) {
+    lines.push(`- **baseUrl**: \`${s.resolved.baseUrl}\``);
+  }
+  if (s.resolved.parentAuthMode) {
+    lines.push(
+      `- **parentAuthMode**: \`${s.resolved.parentAuthMode}\`` +
+        (s.resolved.parentAuthMode === "token"
+          ? " — **DEBUG-ONLY: token mode never produces full PASS**"
+          : "")
+    );
+  }
+  if (s.resolved.studentAuthMode) {
+    lines.push(
+      `- **studentAuthMode**: \`${s.resolved.studentAuthMode}\`` +
+        (s.resolved.studentAuthMode === "api"
+          ? " — **TEMPORARY:api-shortcut**"
+          : "")
+    );
+  }
+  lines.push(`- **stateDir**: \`${s.resolved.stateDir}\``);
+  lines.push(
+    `- **stateFile**: \`${s.resolved.stateFilePath || "(unresolved)"}\`` +
+      ` (fresh=\`${s.resolved.stateFresh}\`)`
+  );
+  if (s.resolved.stateLastRunDate) {
+    lines.push(
+      `- **lastRunDate**: \`${s.resolved.stateLastRunDate}\` ` +
+        `(lastRunStatus=\`${s.resolved.stateLastRunStatus || "(none)"}\`)`
+    );
+  }
+  lines.push(
+    `- **dailyMaxMinutes**: \`${s.resolved.dailyMaxMinutes ?? "n/a"}\``
+  );
+  lines.push(`- **pacerScale**: \`${s.resolved.pacerScale ?? "n/a"}\``);
+  if (s.reason) {
+    lines.push("");
+    lines.push("## Note");
+    lines.push("");
+    lines.push("```");
+    lines.push(s.reason);
+    lines.push("```");
+  }
+  if (s.preflight) {
+    lines.push("");
+    lines.push(
+      renderPreflightMarkdown(s.preflight, {
+        expectedStudentLabels: s.expectedStudentLabels,
+      })
+    );
+  }
+  if (s.suite) {
+    lines.push("");
+    lines.push(renderSuiteMarkdown(s.suite, s.stateAdvance));
+  }
+  if (s.plan) {
+    lines.push("");
+    // Reuse the planner's own renderer for consistency with plan.json.
+    const planMd = renderPlanMarkdown(
+      {
+        date: s.plan.date,
+        mode: s.plan.mode,
+        generatedAt: s.plan.generatedAt,
+        summary: s.plan.summary,
+        students: s.plan.students,
+      },
+      {
+        stateMeta: {
+          fresh: s.resolved.stateFresh,
+          filePath: s.resolved.stateFilePath,
+          lastRunDate: s.resolved.stateLastRunDate,
+          lastRunStatus: s.resolved.stateLastRunStatus,
+        },
+      }
+    );
+    lines.push(planMd);
+  }
+  lines.push("");
+  lines.push("## Artifacts");
+  lines.push(`- root: \`${s.artifactsRoot}\``);
+  lines.push(`- run-summary.json`);
+  lines.push(`- run-summary.md (this file)`);
+  if (s.plan) lines.push(`- plan.json (planner output)`);
+  if (s.status !== "pass" && s.status !== "already-ran-today") {
+    lines.push(`- failure-repro.md`);
+  }
+  lines.push("");
+  lines.push("## Safety guarantees");
+  lines.push("");
+  if (s.stage === "full-run") {
+    if (s.stateAdvance && s.stateAdvance.succeeded) {
+      lines.push(
+        "- The longitudinal state.json was advanced ATOMICALLY (write-to-tmp " +
+          "→ rename, plus state.json.bak rotation). This was the LAST step " +
+          "and only ran because every required check (preflight + parent " +
+          "auth + parent dashboard + per-student baselines + per-student " +
+          "sessions + per-student afters + own-subject delta + cross-subject " +
+          "bleed) completed successfully or partial-only."
+      );
+    } else if (s.suite && s.suite.verdict === "fail") {
+      lines.push(
+        "- The longitudinal state.json was NOT advanced. " +
+          "`state.json` and `state.json.bak` are at yesterday's value. " +
+          "Inspect failure-repro.md and rerun this date with --force after " +
+          "fixing the underlying issue."
+      );
+    } else {
+      lines.push(
+        "- The longitudinal state.json advance was attempted but did not " +
+          "fully succeed; see `stateAdvance.error` in run-summary.json."
+      );
+    }
+  } else {
+    lines.push(
+      "- This run did NOT advance the longitudinal state. " +
+        "`state.json` and `state.json.bak` (in the state dir above) are unchanged."
+    );
+  }
+  if (s.stage === "preflight-only") {
+    lines.push(
+      "- This run drove ONLY the preflight UI checks (parent UI login + " +
+        "list-students fetch + 12 sequential student UI logins). It did " +
+        "NOT navigate to /learning/*, did NOT call any /api/learning/* " +
+        "endpoint, and did NOT generate or persist any learning activity."
+    );
+  } else if (s.stage === "full-run") {
+    lines.push(
+      "- This run drove the real /parent/login, /parent/dashboard, real " +
+        "parent-report dashboard clicks, real /student/login, and real " +
+        "/learning/* pages. Every learning answer was submitted through " +
+        "the real product UI; persistence is verified via observed " +
+        "/api/learning/session/start, /answer, /session/finish responses."
+    );
+  } else {
+    lines.push(
+      "- This run did NOT drive any UI, did NOT log in any student or " +
+        "parent, and did NOT call any /api/learning/* endpoint."
+    );
+  }
+  return lines.join("\n");
+}
+
+function renderSuiteMarkdown(suite, stateAdvance) {
+  const lines = [];
+  lines.push("## Suite (D2.3 full-run)");
+  lines.push("");
+  const c = suite.summary?.counts || {};
+  lines.push(
+    `- **verdict**: \`${suite.verdict}\` ` +
+      `(pass=\`${c.pass || 0}\` partial=\`${c.partial || 0}\` ` +
+      `fail=\`${c.fail || 0}\` blocked=\`${c.blocked || 0}\` ` +
+      `studied=\`${suite.summary?.studiedCount ?? 0}\`)`
+  );
+  lines.push(`- **durationMs**: \`${suite.durationMs ?? "n/a"}\``);
+  if (suite.parentAuth) {
+    lines.push(
+      `- **parent-auth**: mode=\`${suite.parentAuth.mode}\` ` +
+        `pass-eligible=\`${suite.parentAuth.pass}\` ` +
+        `partial=\`${suite.parentAuth.partial}\``
+    );
+  }
+  if (suite.dashboardStudentCount != null) {
+    lines.push(
+      `- **dashboardStudentCount**: \`${suite.dashboardStudentCount}\``
+    );
+  }
+  if (stateAdvance) {
+    lines.push(
+      `- **state-advance**: shouldRun=\`${stateAdvance.shouldRun}\` ` +
+        `succeeded=\`${stateAdvance.succeeded}\`` +
+        (stateAdvance.error ? ` error=\`${stateAdvance.error}\`` : "") +
+        (stateAdvance.info && stateAdvance.info.rowsAppended != null
+          ? ` rowsAppended=\`${stateAdvance.info.rowsAppended}\``
+          : "")
+    );
+  }
+  lines.push("");
+  lines.push("### Per-student");
+  lines.push("");
+  lines.push(
+    "| student | grade | persona | status | sessions | answered | ownSubjects | bleedOk | tier1 | reason |"
+  );
+  lines.push("|---|---|---|---|---|---|---|---|---|---|");
+  for (const r of suite.students || []) {
+    const sessionsCount = (r.sessions || []).length;
+    const answered = (r.sessions || []).reduce(
+      (acc, s) => acc + (s.answeredCount || 0),
+      0
+    );
+    const ownSubjects = r.classification?.ownSubjects?.join("+") || "—";
+    const bleedOk = r.classification?.bleedOk ?? "—";
+    const tier1 = r.tier1?.passed ?? "—";
+    const reason = r.driverError || r.blocker?.message || "";
+    lines.push(
+      `| ${r.label} | ${r.grade} | ${r.personaKind} | ${r.status} | ` +
+        `${sessionsCount} | ${answered} | ${ownSubjects} | ${bleedOk} | ` +
+        `${tier1} | ${String(reason).slice(0, 120)} |`
+    );
+  }
+  if ((suite.skipped || []).length > 0) {
+    lines.push("");
+    lines.push("### Planner-skipped (attendance roll = no, etc.)");
+    for (const e of suite.skipped) {
+      lines.push(`- \`${e.label}\` (${e.personaKind}, grade=${e.grade}): ${e.reason}`);
+    }
+  }
+  if ((suite.filteredOut || []).length > 0) {
+    lines.push("");
+    lines.push("### Filtered out by --students CLI flag");
+    for (const e of suite.filteredOut) {
+      lines.push(`- \`${e.label}\` (${e.personaKind}, grade=${e.grade}): ${e.reason}`);
+    }
+  }
+  if ((suite.crossStudentMatrix || []).length > 0) {
+    lines.push("");
+    lines.push("### Cross-student / own-subject delta matrix");
+    lines.push("");
+    lines.push(
+      "| student | grade | ownSubjects | ownDeltaOk | bleedOk | bleedFindings | totalAnswered | finalStatus |"
+    );
+    lines.push("|---|---|---|---|---|---|---|---|");
+    for (const m of suite.crossStudentMatrix) {
+      const findings = (m.bleedFindings || [])
+        .map((f) => `${f.subject}+${f.delta}`)
+        .join(", ");
+      lines.push(
+        `| ${m.studentLabel} | ${m.grade} | ` +
+          `${(m.ownSubjects || []).join("+") || "—"} | ` +
+          `${m.ownDeltaOk ?? "—"} | ${m.bleedOk ?? "—"} | ${findings || "—"} | ` +
+          `${m.totalAnswered ?? "—"} | ${m.finalStatus} |`
+      );
+    }
+  }
+  return lines.join("\n");
+}
+
+function buildPhaseD2FailureRepro(s) {
+  const lines = [];
+  lines.push(`# Phase D2 — failure / not-yet-implemented repro — ${s.runId}`);
+  lines.push("");
+  lines.push(`Status: \`${s.status}\``);
+  lines.push(`Stage: \`${s.stage}\``);
+  if (s.reason) {
+    lines.push("Reason:");
+    lines.push("```");
+    lines.push(s.reason);
+    lines.push("```");
+  }
+  lines.push("");
+  if (s.stage === "preflight-only") {
+    lines.push("## Reproduce (D2.2 preflight-only)");
+    lines.push("");
+    lines.push("```");
+    lines.push(
+      `node scripts/virtual-student-qa/run.mjs --phase d2 ` +
+        `--date ${s.resolved.date} --preflight-only`
+    );
+    lines.push("```");
+  } else if (s.stage === "full-run") {
+    lines.push("## Reproduce (D2.3 full-run, fast mode)");
+    lines.push("");
+    lines.push("Re-run for the same date with `--force` to bypass idempotency:");
+    lines.push("");
+    lines.push("```");
+    lines.push(
+      `node scripts/virtual-student-qa/run.mjs --phase d2 --mode ${s.resolved.mode} ` +
+        `--date ${s.resolved.date} --force`
+    );
+    lines.push("```");
+    lines.push("");
+    lines.push("Smoke against a single student first:");
+    lines.push("");
+    lines.push("```");
+    lines.push(
+      `node scripts/virtual-student-qa/run.mjs --phase d2 --mode fast ` +
+        `--date ${s.resolved.date} --force --students AAA1`
+    );
+    lines.push("```");
+    if (s.suite && Array.isArray(s.suite.students)) {
+      const failedLabels = s.suite.students
+        .filter((r) => r.status === "fail" || r.status === "blocked")
+        .map((r) => r.label);
+      if (failedLabels.length > 0) {
+        lines.push("");
+        lines.push("Failed / blocked students this run:");
+        lines.push("");
+        for (const label of failedLabels) {
+          const rec = s.suite.students.find((r) => r.label === label);
+          lines.push(
+            `- \`${label}\` (status=${rec?.status}): ` +
+              `${rec?.driverError || rec?.blocker?.message || "(no reason recorded)"}`
+          );
+        }
+      }
+    }
+  } else {
+    lines.push("## Reproduce (D2.1 dry-run)");
+    lines.push("");
+    lines.push("```");
+    lines.push(
+      `node scripts/virtual-student-qa/run.mjs --phase d2 --mode ${s.resolved.mode} ` +
+        `--date ${s.resolved.date} --dry-run`
+    );
+    lines.push("```");
+  }
+  lines.push("");
+  lines.push("## Env reminders");
+  lines.push("");
+  lines.push("- `VIRTUAL_STUDENT_DAILY_STATE_DIR` (default outside the repo)");
+  lines.push("- `VIRTUAL_STUDENT_DAILY_MODE=realtime|fast`");
+  lines.push("- `VIRTUAL_STUDENT_DAILY_DATE=YYYY-MM-DD`");
+  lines.push("- `VIRTUAL_STUDENT_DAILY_MAX_MINUTES=480`");
+  lines.push("- `VIRTUAL_STUDENT_DAILY_PACER_SCALE=1.0`");
+  lines.push(
+    "- `VIRTUAL_STUDENT_DAILY_DRY_RUN=1` (alternative to --dry-run)"
+  );
+  lines.push(
+    "- `VIRTUAL_STUDENT_DAILY_PREFLIGHT_ONLY=1` (alternative to --preflight-only)"
+  );
+  lines.push(
+    "- `VIRTUAL_STUDENT_DAILY_FORCE=1` (alternative to --force)"
+  );
+  return lines.join("\n");
+}
+
+/**
+ * Only invoke main() when this file is executed directly (e.g. via
+ * `node scripts/virtual-student-qa/run.mjs ...`). When the file is
+ * imported by another module (a smoke tool, a unit test, or the
+ * accidental `import('./run.mjs')` that surfaced during D2.4), the
+ * importer gets the module's exports without triggering CLI side
+ * effects. We compare the resolved import.meta.url against the file
+ * URL of the script Node was invoked with — the cross-platform
+ * equivalent of CommonJS's `require.main === module` check.
+ *
+ * Tests / external callers that *want* to run the CLI programmatically
+ * can still do so by calling `runCli()` explicitly; otherwise importing
+ * is a pure no-op.
+ */
+export async function runCli() {
+  return main();
+}
+
+function isInvokedDirectly() {
+  try {
+    const argv1 = process.argv?.[1];
+    if (!argv1) return false;
+    const invokedUrl = pathToFileURL(argv1).href;
+    return invokedUrl === import.meta.url;
+  } catch {
+    // If we can't resolve the entry-point URL, fall back to NOT running
+    // (safer default — never run by accident).
+    return false;
+  }
+}
+
+if (isInvokedDirectly()) {
+  main().catch((error) => {
+    console.error("virtual-student-qa: unexpected fatal error", error);
+    process.exit(1);
+  });
+}

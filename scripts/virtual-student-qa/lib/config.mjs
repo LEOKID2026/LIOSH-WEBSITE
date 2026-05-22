@@ -15,6 +15,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { homedir } from "node:os";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..", "..", "..");
@@ -259,4 +260,135 @@ export function isHeaded() {
 
 export function getRepoRoot() {
   return REPO_ROOT;
+}
+
+// ---------------------------------------------------------------------------
+// Phase D2 — daily-simulator config helpers
+// ---------------------------------------------------------------------------
+//
+// All Phase D2 daily/longitudinal config flows through these helpers. They
+// follow the same precedence rule as the existing helpers above: explicit
+// CLI argument > env > sensible default.
+//
+// State directory rationale (see plan §10):
+//   The longitudinal state.json must live OUTSIDE the repo so it is not
+//   committed, not deleted by `reports/*` cleanup, and survives `git
+//   clean -fdx`. Default per OS:
+//     Windows:   %LOCALAPPDATA%\liosh-qa\virtual-student-state
+//     POSIX:     $XDG_DATA_HOME/liosh-qa/virtual-student-state
+//                 (falls back to ~/.local/share/...)
+
+function isTruthy(value) {
+  if (value === true) return true;
+  const s = String(value ?? "").trim().toLowerCase();
+  return s === "1" || s === "true" || s === "yes";
+}
+
+/**
+ * Resolve the directory where state.json + state.json.bak + timeline.md
+ * live. Honour VIRTUAL_STUDENT_DAILY_STATE_DIR if set, else use an
+ * OS-appropriate default OUTSIDE the repo.
+ */
+export function resolveStateDir() {
+  tryLoadDotenvFiles();
+  const envOverride = String(
+    process.env.VIRTUAL_STUDENT_DAILY_STATE_DIR || ""
+  ).trim();
+  if (envOverride) return envOverride;
+  // process.platform is a string ('win32', 'darwin', 'linux', ...).
+  // Note: importing `platform` from 'node:os' returns a FUNCTION, so we
+  // intentionally use the string form here.
+  if (process.platform === "win32") {
+    const local =
+      process.env.LOCALAPPDATA ||
+      join(process.env.USERPROFILE || homedir(), "AppData", "Local");
+    return join(local, "liosh-qa", "virtual-student-state");
+  }
+  const xdg = String(process.env.XDG_DATA_HOME || "").trim();
+  if (xdg) return join(xdg, "liosh-qa", "virtual-student-state");
+  return join(homedir(), ".local", "share", "liosh-qa", "virtual-student-state");
+}
+
+/**
+ * Resolve the daily mode. CLI flag wins; env fallback; default
+ * 'realtime' (because the canonical use case is the nightly Task
+ * Scheduler run).
+ */
+export function resolveDailyMode(explicit) {
+  tryLoadDotenvFiles();
+  const raw = String(
+    explicit || process.env.VIRTUAL_STUDENT_DAILY_MODE || "realtime"
+  )
+    .trim()
+    .toLowerCase();
+  return raw === "fast" ? "fast" : "realtime";
+}
+
+/**
+ * Resolve the target date. CLI flag wins; env fallback; default 'today
+ * in Asia/Jerusalem' (matches when the owner's evening starts).
+ */
+export function resolveDailyDate(explicit) {
+  tryLoadDotenvFiles();
+  const candidate = String(
+    explicit || process.env.VIRTUAL_STUDENT_DAILY_DATE || ""
+  ).trim();
+  if (candidate && /^\d{4}-\d{2}-\d{2}$/.test(candidate)) return candidate;
+  // 'en-CA' returns YYYY-MM-DD natively, which is the format we want.
+  try {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Jerusalem",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+  } catch {
+    // Fallback to UTC date if Intl with timeZone is unavailable.
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
+/**
+ * Hard wall-clock cap on a single nightly run. Default 480 min = 8 h.
+ */
+export function resolveDailyMaxMinutes() {
+  tryLoadDotenvFiles();
+  const raw = String(process.env.VIRTUAL_STUDENT_DAILY_MAX_MINUTES || "480").trim();
+  const num = Number(raw);
+  return Number.isFinite(num) && num > 0 ? num : 480;
+}
+
+/**
+ * Pacer scale: 1.0 in realtime mode, 0.0 in fast mode, overridable via
+ * VIRTUAL_STUDENT_DAILY_PACER_SCALE.
+ */
+export function resolveDailyPacerScale(mode) {
+  tryLoadDotenvFiles();
+  const raw = String(process.env.VIRTUAL_STUDENT_DAILY_PACER_SCALE || "").trim();
+  if (raw) {
+    const num = Number(raw);
+    if (Number.isFinite(num) && num >= 0) return num;
+  }
+  return String(mode || "").toLowerCase() === "fast" ? 0.0 : 1.0;
+}
+
+/** --dry-run | VIRTUAL_STUDENT_DAILY_DRY_RUN=1 — generate plan only. */
+export function resolveDailyDryRun(cliFlag) {
+  if (isTruthy(cliFlag)) return true;
+  tryLoadDotenvFiles();
+  return isTruthy(process.env.VIRTUAL_STUDENT_DAILY_DRY_RUN);
+}
+
+/** --preflight-only | VIRTUAL_STUDENT_DAILY_PREFLIGHT_ONLY=1. */
+export function resolveDailyPreflightOnly(cliFlag) {
+  if (isTruthy(cliFlag)) return true;
+  tryLoadDotenvFiles();
+  return isTruthy(process.env.VIRTUAL_STUDENT_DAILY_PREFLIGHT_ONLY);
+}
+
+/** --force | VIRTUAL_STUDENT_DAILY_FORCE=1 — bypass same-day idempotency. */
+export function resolveDailyForce(cliFlag) {
+  if (isTruthy(cliFlag)) return true;
+  tryLoadDotenvFiles();
+  return isTruthy(process.env.VIRTUAL_STUDENT_DAILY_FORCE);
 }

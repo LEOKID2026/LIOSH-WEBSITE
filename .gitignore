@@ -13,6 +13,15 @@ node_modules/
 # Generated QA/report outputs
 reports/
 
+# Phase D2 daily simulator outputs (already covered by reports/, listed
+# explicitly so intent is obvious to readers / future cleanups). The
+# canonical longitudinal state file lives OUTSIDE the repo (default
+# %LOCALAPPDATA%\liosh-qa\virtual-student-state on Windows) and is
+# overrideable via VIRTUAL_STUDENT_DAILY_STATE_DIR. These two paths only
+# catch local debugging copies that may end up under the repo's reports/.
+reports/virtual-student-daily/
+reports/virtual-student-longitudinal/
+
 # Next.js
 /.next/
 /out/

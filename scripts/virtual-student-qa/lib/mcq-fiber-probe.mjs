@@ -36,11 +36,14 @@
  * @returns {Promise<{
  *   ok: boolean,
  *   reason?: string,
+ *   matchedByLabels?: boolean,
  *   correctAnswer?: string|number|null,
  *   correctIndex?: number|null,
  *   optionsCount?: number|null,
  *   topic?: string|null,
  *   paramsKind?: string|null,
+ *   answerMode?: string|null,
+ *   acceptedAnswersSample?: (string|number|null)[]|null,
  *   visibleLabels?: string[],
  *   resolvedCorrectIndex?: number|null,
  * }>}
@@ -65,7 +68,7 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
   }
 
   const fiberResult = await page.evaluate(
-    ({ prefix, entry }) => {
+    ({ prefix, entry, expectedLabels }) => {
       let entryNode = null;
       if (prefix) {
         const buttons = Array.from(
@@ -95,6 +98,59 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
         const hasAns = "answers" in v && Array.isArray(v.answers);
         return hasCA || hasCI || hasAns;
       }
+      // Normalize a label/option text the same way Playwright trims it on the
+      // outside, so we can compare DOM labels against fiber options without
+      // tripping over whitespace, niqqud-spacing, or stray RTL marks.
+      function norm(s) {
+        return String(s == null ? "" : s)
+          .replace(/[\s\u00a0\u200e\u200f\u202a-\u202e]+/g, " ")
+          .trim();
+      }
+      // Extract the option text from one slot of `options[]` or `answers[]`.
+      // English / hebrew / science / moledet store options as either plain
+      // strings, or as small objects like { label } / { text } — accept all.
+      function optionText(opt) {
+        if (opt == null) return "";
+        if (typeof opt === "string") return opt;
+        if (typeof opt === "object") {
+          if (typeof opt.label === "string") return opt.label;
+          if (typeof opt.text === "string") return opt.text;
+          if (typeof opt.value === "string") return opt.value;
+        }
+        return String(opt);
+      }
+      // True iff `q` is a question whose option labels match the MCQ buttons
+      // currently rendered in the DOM. Used to disambiguate between
+      // `currentQuestion` and other question-shaped state hooks (the
+      // top offender being `previousExplanationQuestion`, which carries the
+      // *previous* question's correctAnswer and would otherwise be returned
+      // by the first `find(looksLikeQuestion)` if React happens to commit
+      // it before currentQuestion in the hook list, or if a parent component
+      // holds its own question-shaped memo. The DOM is the ground truth for
+      // which question the student is currently looking at.).
+      function matchesVisibleLabels(q) {
+        if (!Array.isArray(expectedLabels) || expectedLabels.length === 0) {
+          return true;
+        }
+        const opts = Array.isArray(q.options)
+          ? q.options
+          : Array.isArray(q.answers)
+            ? q.answers
+            : null;
+        if (!Array.isArray(opts) || opts.length === 0) return false;
+        if (opts.length !== expectedLabels.length) return false;
+        const visible = expectedLabels.map((l) => norm(l));
+        const fromFiber = opts.map((o) => norm(optionText(o)));
+        // Same multiset (order-independent): every visible label must match
+        // some fiber option. Using a count map handles duplicates safely.
+        const counts = Object.create(null);
+        for (const v of fromFiber) counts[v] = (counts[v] || 0) + 1;
+        for (const v of visible) {
+          if (!counts[v]) return false;
+          counts[v]--;
+        }
+        return true;
+      }
       function walkHooks(memo) {
         const out = [];
         let h = memo;
@@ -106,24 +162,37 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
         }
         return out;
       }
-      function search(node, depth) {
+      function search(node, depth, predicate) {
         if (!node || depth > 200) return null;
         if (node.memoizedState) {
           const states = walkHooks(node.memoizedState);
-          const q = states.find(looksLikeQuestion);
+          const q = states.find(predicate);
           if (q) return q;
         }
-        let r = search(node.child, depth + 1);
+        let r = search(node.child, depth + 1, predicate);
         if (r) return r;
         let s = node.sibling;
         while (s) {
-          r = search(s, depth + 1);
+          r = search(s, depth + 1, predicate);
           if (r) return r;
           s = s.sibling;
         }
         return null;
       }
-      const q = search(root, 0);
+      // Pass 1 (preferred): the question whose options match the DOM buttons.
+      //
+      // Pass 2 (fallback): any question-shaped state. Preserves the original
+      // probe behaviour for callers/subjects that don't pass expectedLabels
+      // (e.g. text-input subjects via entryTestid) and for first-question
+      // scenarios where there is no stale alternate to disambiguate against.
+      let q =
+        Array.isArray(expectedLabels) && expectedLabels.length > 0
+          ? search(root, 0, (v) => looksLikeQuestion(v) && matchesVisibleLabels(v))
+          : null;
+      let matchedByLabels = q != null;
+      if (!q) {
+        q = search(root, 0, looksLikeQuestion);
+      }
       if (!q) return { ok: false, reason: "not-found" };
 
       const correctAnswer =
@@ -153,6 +222,7 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
       }
       return {
         ok: true,
+        matchedByLabels: !!matchedByLabels,
         correctAnswer: safe(correctAnswer),
         correctIndex: Number.isInteger(q.correctIndex) ? q.correctIndex : null,
         optionsCount: Array.isArray(optionsArray) ? optionsArray.length : null,
@@ -176,7 +246,11 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
           : null,
       };
     },
-    { prefix: mcqTestidPrefix || null, entry: entryTestid || null }
+    {
+      prefix: mcqTestidPrefix || null,
+      entry: entryTestid || null,
+      expectedLabels: trimmedLabels,
+    }
   );
 
   if (!fiberResult || !fiberResult.ok) {
@@ -196,6 +270,13 @@ export async function probeCurrentQuestion({ page, mcqTestidPrefix, entryTestid 
 
   return {
     ok: true,
+    // True iff the returned fiber question's options matched the visible MCQ
+    // button labels. False means we fell back to the first question-shaped
+    // state hook in the tree, which may or may not be the live currentQuestion
+    // (a known offender on english-master is `previousExplanationQuestion`).
+    // Subject drivers can downgrade probe confidence to "uncertain" when this
+    // is false to surface a clearer signal than `resolvedCorrectIndex == null`.
+    matchedByLabels: !!fiberResult.matchedByLabels,
     correctAnswer: fiberResult.correctAnswer,
     correctIndex: fiberResult.correctIndex,
     optionsCount: fiberResult.optionsCount,

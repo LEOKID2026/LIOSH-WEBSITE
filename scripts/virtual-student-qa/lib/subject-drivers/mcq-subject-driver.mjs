@@ -161,9 +161,19 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
 
       const stemText = await readStemText({ page, questionStemTestid });
 
-      const probe = await probeCurrentQuestion({
+      // Probe with short retry loop until the fiber's question state matches
+      // the DOM's MCQ buttons. Even after Playwright sees buttons enabled,
+      // some pages (notably english-master) take an extra render tick before
+      // `currentQuestion` settles to the new question — without retry the
+      // probe would return a stale state (e.g. previousExplanationQuestion)
+      // and the profile picker would silently fall back to "answer index 0".
+      // Retry budget is small (capped ~600ms total) so a real probe failure
+      // still surfaces quickly.
+      const probe = await probeWithLabelMatchRetry({
         page,
         mcqTestidPrefix: mcqPrefix,
+        maxAttempts: 6,
+        intervalMs: 100,
       });
 
       const visibleLabels = probe.visibleLabels || [];
@@ -207,6 +217,7 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
       log(
         `${subjectLabel}: q${questionIndex} stem="${shortText(stemText)}" ` +
           `correctAnswer(probe)=${probe.ok ? probe.correctAnswer : "n/a"} ` +
+          `matchedByLabels=${probe.ok ? probe.matchedByLabels : "n/a"} ` +
           `pickedIndex=${pickedIndex}/${optionsCount} intendedCorrect=${intendedCorrect}`
       );
 
@@ -347,6 +358,43 @@ async function clickMcqRobustly({
     undefined,
     { timeout: 10_000 }
   );
+}
+
+/**
+ * Run `probeCurrentQuestion` in a short retry loop, returning the first probe
+ * whose `matchedByLabels` is true (i.e. the fiber's question state's options
+ * line up with the rendered MCQ buttons). If every attempt fails, return the
+ * LAST probe so the caller's existing fallback path runs (intendedCorrect is
+ * marked uncertain, the question is still answered through the real UI, and
+ * `probeFailures` is incremented).
+ *
+ * Why: after a click, several setStates can land in slightly separate React
+ * commits (timer reset, streak/score, generateNewQuestion's
+ * `setPreviousExplanationQuestion(currentQuestion); setCurrentQuestion(new)`).
+ * Buttons can be visually enabled with the new question's labels for a brief
+ * window before the parent component's `currentQuestion` hook is committed
+ * (or, conversely, while a sibling/child component still holds a memo of the
+ * old question). The label-match check from mcq-fiber-probe is the cheapest
+ * way to detect that window; the retry loop simply waits it out.
+ */
+async function probeWithLabelMatchRetry({
+  page,
+  mcqTestidPrefix,
+  maxAttempts = 6,
+  intervalMs = 100,
+}) {
+  let lastProbe = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const probe = await probeCurrentQuestion({ page, mcqTestidPrefix });
+    if (probe.ok && probe.matchedByLabels) {
+      return probe;
+    }
+    lastProbe = probe;
+    if (attempt < maxAttempts) {
+      await page.waitForTimeout(intervalMs);
+    }
+  }
+  return lastProbe;
 }
 
 async function readStemText({ page, questionStemTestid }) {
