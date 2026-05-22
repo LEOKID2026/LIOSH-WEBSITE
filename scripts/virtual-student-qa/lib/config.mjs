@@ -21,10 +21,13 @@ const REPO_ROOT = resolve(__dirname, "..", "..", "..");
 
 const TRACKED_ENV_PREFIXES = [
   "E2E_STUDENT_",
+  "E2E_PARENT_",
   "VIRTUAL_STUDENT_",
   "PLAYWRIGHT_",
   "PORT",
   "SUPABASE_",
+  "NEXT_PUBLIC_LEARNING_SUPABASE_",
+  "LEARNING_SUPABASE_",
 ];
 
 function tryLoadDotenvFiles() {
@@ -166,6 +169,79 @@ export function resolveBaseUrl(explicit) {
 export function resolveStudentAuthMode() {
   const raw = String(process.env.VIRTUAL_STUDENT_STUDENT_AUTH || "ui").trim().toLowerCase();
   return raw === "api" ? "api" : "ui";
+}
+
+export function resolveParentAuthMode() {
+  // 'ui' is the DEFAULT and the only mode that can produce full PASS.
+  // 'token' is debug-only: it must always result in 'partial', never 'pass'.
+  const raw = String(process.env.VIRTUAL_STUDENT_PARENT_AUTH || "ui").trim().toLowerCase();
+  return raw === "token" ? "token" : "ui";
+}
+
+function normalizeParentEntry(entry, index) {
+  if (!entry || typeof entry !== "object") {
+    throw new Error(`VIRTUAL_STUDENT_PARENT_ACCOUNTS[${index}] must be an object`);
+  }
+  const label = String(entry.label || `parent-${index + 1}`).trim() || `parent-${index + 1}`;
+  const email = String(entry.email || "").trim();
+  const password = String(entry.password || "");
+  const linkedStudentLabel = entry.linkedStudent ? String(entry.linkedStudent).trim() : "";
+  if (!email) throw new Error(`VIRTUAL_STUDENT_PARENT_ACCOUNTS[${index}] requires "email"`);
+  if (!password) throw new Error(`VIRTUAL_STUDENT_PARENT_ACCOUNTS[${index}] requires "password"`);
+  return { label, email, password, linkedStudentLabel };
+}
+
+function parseParentAccountsJson() {
+  const raw = String(process.env.VIRTUAL_STUDENT_PARENT_ACCOUNTS || "").trim();
+  if (!raw) return null;
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (error) {
+    throw new Error(`VIRTUAL_STUDENT_PARENT_ACCOUNTS parse failed: ${error?.message || error}`);
+  }
+  if (!Array.isArray(parsed)) {
+    throw new Error("VIRTUAL_STUDENT_PARENT_ACCOUNTS must be a JSON array");
+  }
+  return parsed.map((entry, index) => normalizeParentEntry(entry, index));
+}
+
+function singleFallbackParentAccount() {
+  const email = String(process.env.E2E_PARENT_EMAIL || "").trim();
+  const password = String(process.env.E2E_PARENT_PASSWORD || "");
+  if (!email || !password) return null;
+  return { label: "parent-primary", email, password, linkedStudentLabel: "" };
+}
+
+export function loadParentAccounts() {
+  tryLoadDotenvFiles();
+  const fromJson = parseParentAccountsJson();
+  if (fromJson && fromJson.length > 0) return fromJson;
+  const single = singleFallbackParentAccount();
+  return single ? [single] : [];
+}
+
+export function selectParentAccount(parents, label, linkedStudentLabel) {
+  if (!Array.isArray(parents) || parents.length === 0) {
+    throw new Error(
+      "No virtual-student parent accounts found. Set VIRTUAL_STUDENT_PARENT_ACCOUNTS (JSON) or E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD."
+    );
+  }
+  const wanted = String(label || "").trim();
+  if (wanted) {
+    const match = parents.find((p) => p.label === wanted);
+    if (!match) {
+      const known = parents.map((p) => p.label).join(", ");
+      throw new Error(`No parent account with label "${wanted}". Available: ${known}`);
+    }
+    return match;
+  }
+  const studentLabel = String(linkedStudentLabel || "").trim();
+  if (studentLabel) {
+    const match = parents.find((p) => p.linkedStudentLabel === studentLabel);
+    if (match) return match;
+  }
+  return parents[0];
 }
 
 export function isHeaded() {

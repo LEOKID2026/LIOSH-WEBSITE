@@ -1,38 +1,64 @@
 #!/usr/bin/env node
 /**
- * Virtual Student QA Runner — CLI entry (Phase A only).
+ * Virtual Student QA Runner — CLI entry (Phase A + Phase B).
  *
- * Real student → real /student/login UI form → real /learning/math-master →
- * real /api/learning/session/start + answer + finish → artifacts under
- * reports/virtual-student-qa/{ISO-timestamp}/.
+ * Phase A (student): real student → real /student/login UI → real
+ *   /learning/math-master → real /api/learning/session/start + answer + finish.
+ *
+ * Phase B (parent): real parent → real /parent/login UI → /parent/dashboard
+ *   → click the real "דוח הורים" affordance for the linked student → verify
+ *   the visible parent report matches the student activity from Phase A.
+ *
+ * Phase B is enabled by default (`--phase b`). Use `--phase a` to skip the
+ * parent verification leg (legacy Phase A smoke).
+ *
+ * Artifacts under reports/virtual-student-qa/{ISO-timestamp}/ regardless of
+ * phase.
  *
  * CLI:
- *   --phase a            (default; only 'a' is implemented in this PR)
+ *   --phase a|b          (default: b — student scenario + parent verification)
  *   --scenario <id>      (default: math-average-smoke)
- *   --student <label>    (default: first configured account)
+ *   --student <label>    (default: first configured student account)
+ *   --parent <label>     (default: first configured parent account, or the
+ *                          parent whose linkedStudent label matches --student)
  *   --headed             (visible browser)
  *   --base-url <url>     (override PLAYWRIGHT_BASE_URL)
  *
- * Env (Phase A):
+ * Env (Phase A — student):
  *   VIRTUAL_STUDENT_ACCOUNTS      JSON [{label, username|code, pin}]   - preferred
  *   E2E_STUDENT_USERNAME          single-student fallback
  *   E2E_STUDENT_CODE              single-student fallback (alternative to username)
  *   E2E_STUDENT_PIN               4-digit PIN (required)
  *   E2E_STUDENT_{N}_USERNAME      indexed multi-student fallback (1..9)
  *   E2E_STUDENT_{N}_PIN           indexed multi-student fallback (1..9)
- *   PLAYWRIGHT_BASE_URL           dev server URL (default http://127.0.0.1:3001)
  *   VIRTUAL_STUDENT_STUDENT_AUTH  'ui' (default, REAL UI form) | 'api' (TEMPORARY)
+ *
+ * Env (Phase B — parent):
+ *   VIRTUAL_STUDENT_PARENT_ACCOUNTS JSON [{label, email, password, linkedStudent}]
+ *   E2E_PARENT_EMAIL              single-parent fallback
+ *   E2E_PARENT_PASSWORD           single-parent fallback
+ *   VIRTUAL_STUDENT_PARENT_AUTH   'ui' (default, REAL UI form, only mode that
+ *                                  can produce full PASS) | 'token' (debug-only,
+ *                                  always 'partial', never PASS)
+ *   NEXT_PUBLIC_LEARNING_SUPABASE_URL       required for 'token' mode only
+ *   NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY  required for 'token' mode only
+ *
+ * Env (shared):
+ *   PLAYWRIGHT_BASE_URL           dev server URL (default http://127.0.0.1:3001)
  *   VIRTUAL_STUDENT_HEADED        '1' to run headed
  *   SUPABASE_URL                  optional (Tier 2 row-count evidence)
  *   SUPABASE_SERVICE_ROLE_KEY     optional (Tier 2 row-count evidence)
  *
- * Exit codes: 0 PASS, 1 FAIL, 2 misuse.
+ * Exit codes: 0 PASS, 1 FAIL or PARTIAL, 2 misuse.
  */
 import {
   loadAccounts,
   selectAccount,
+  loadParentAccounts,
+  selectParentAccount,
   resolveBaseUrl,
   resolveStudentAuthMode,
+  resolveParentAuthMode,
   isHeaded,
   getRepoRoot,
 } from "./lib/config.mjs";
@@ -44,22 +70,27 @@ import {
 import { authenticateStudent } from "./lib/student-auth.mjs";
 import { runMathScenario } from "./lib/subject-drivers/math-master.mjs";
 import { verifyTier1, verifyTier2 } from "./lib/persistence-evidence.mjs";
+import { authenticateParent } from "./lib/parent-auth.mjs";
+import { verifyParentDashboardAndOpenReport } from "./lib/parent-dashboard.mjs";
+import { verifyParentReport } from "./lib/parent-report-assertions.mjs";
 import { makeRunArtifacts, newRunId } from "./lib/artifacts.mjs";
 import { PHASE_A_SCENARIOS } from "./scenarios/math-average-smoke.mjs";
 
 function parseArgs(argv) {
   const args = {
-    phase: "a",
+    phase: "b",
     scenario: "math-average-smoke",
     student: "",
+    parent: "",
     headed: false,
     baseUrl: "",
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
-    if (a === "--phase") args.phase = String(argv[++i] || "a").toLowerCase();
+    if (a === "--phase") args.phase = String(argv[++i] || "b").toLowerCase();
     else if (a === "--scenario") args.scenario = String(argv[++i] || "");
     else if (a === "--student") args.student = String(argv[++i] || "");
+    else if (a === "--parent") args.parent = String(argv[++i] || "");
     else if (a === "--headed") args.headed = true;
     else if (a === "--base-url") args.baseUrl = String(argv[++i] || "");
   }
@@ -91,15 +122,26 @@ function fmtAccount(account) {
   };
 }
 
+function fmtParentAccount(account) {
+  if (!account) return null;
+  return {
+    label: account.label,
+    emailMasked: maskEmail(account.email),
+    linkedStudentLabel: account.linkedStudentLabel || null,
+  };
+}
+
+function maskEmail(email) {
+  const value = String(email || "");
+  const at = value.indexOf("@");
+  if (at <= 1) return "***";
+  return `${value.slice(0, 1)}***${value.slice(at)}`;
+}
+
 async function main() {
   const args = parseArgs(process.argv);
-  if (args.phase !== "a") {
-    console.error(
-      `phase '${args.phase}' is not implemented yet. Phase A only in this PR. ` +
-        "Phases B–E are pending owner approval per the plan."
-    );
-    process.exit(2);
-  }
+  const phase = args.phase === "a" ? "a" : "b";
+
   const scenario = PHASE_A_SCENARIOS[args.scenario];
   if (!scenario) {
     console.error(
@@ -119,82 +161,41 @@ async function main() {
   }
 
   log(`runId=${runId}`);
-  log(`phase=A scenario=${scenario.id}`);
+  log(`phase=${phase.toUpperCase()} scenario=${scenario.id}`);
 
   const baseUrl = resolveBaseUrl(args.baseUrl);
   log(`baseUrl=${baseUrl}`);
 
+  // ---- Student account loading ------------------------------------------
   let accounts;
   try {
     accounts = loadAccounts();
   } catch (error) {
-    return finalize({
-      status: "fail",
+    return finalize(buildFinalizeInputForFailure({
       reason: `config: ${error.message}`,
-      artifacts,
-      runId,
-      scenario,
-      args,
-      baseUrl,
-      account: null,
-      networkSummary: null,
-      tier1: null,
-      tier2: null,
-      consoleErrors: [],
-      consoleNoise: [],
-      pageErrors: [],
-      studentAuthMode: null,
       failureStep: "config",
-      driverResult: null,
-    });
+      artifacts, runId, scenario, args, phase, baseUrl,
+    }));
   }
   if (accounts.length === 0) {
-    return finalize({
-      status: "fail",
+    return finalize(buildFinalizeInputForFailure({
       reason:
         "config: no virtual-student accounts found. Set VIRTUAL_STUDENT_ACCOUNTS (JSON) " +
         "or E2E_STUDENT_USERNAME + E2E_STUDENT_PIN.",
-      artifacts,
-      runId,
-      scenario,
-      args,
-      baseUrl,
-      account: null,
-      networkSummary: null,
-      tier1: null,
-      tier2: null,
-      consoleErrors: [],
-      consoleNoise: [],
-      pageErrors: [],
-      studentAuthMode: null,
       failureStep: "config",
-      driverResult: null,
-    });
+      artifacts, runId, scenario, args, phase, baseUrl,
+    }));
   }
 
   let account;
   try {
     account = selectAccount(accounts, args.student);
   } catch (error) {
-    return finalize({
-      status: "fail",
+    return finalize(buildFinalizeInputForFailure({
       reason: `config: ${error.message}`,
-      artifacts,
-      runId,
-      scenario,
-      args,
-      baseUrl,
-      account: null,
-      networkSummary: null,
-      tier1: null,
-      tier2: null,
-      consoleErrors: [],
-      consoleNoise: [],
-      pageErrors: [],
-      studentAuthMode: null,
       failureStep: "config",
-      driverResult: null,
-    });
+      artifacts, runId, scenario, args, phase, baseUrl,
+    }));
   }
   log(`account=${JSON.stringify(fmtAccount(account))}`);
 
@@ -204,28 +205,67 @@ async function main() {
       (studentAuthMode === "api" ? " [TEMPORARY:api-shortcut]" : "")
   );
 
+  // ---- Parent account loading (Phase B only) ----------------------------
+  let parentAccount = null;
+  let parentAuthMode = null;
+  if (phase === "b") {
+    parentAuthMode = resolveParentAuthMode();
+    log(
+      `parentAuthMode=${parentAuthMode}` +
+        (parentAuthMode === "token"
+          ? " [DEBUG-ONLY: token mode never produces PASS]"
+          : "")
+    );
+    let parents = [];
+    try {
+      parents = loadParentAccounts();
+    } catch (error) {
+      return finalize(buildFinalizeInputForFailure({
+        reason: `config: ${error.message}`,
+        failureStep: "config",
+        artifacts, runId, scenario, args, phase, baseUrl,
+        account: fmtAccount(account), studentAuthMode, parentAuthMode,
+      }));
+    }
+    if (parents.length === 0) {
+      return finalize(buildFinalizeInputForFailure({
+        reason:
+          "config: no virtual-student parent accounts found. Set VIRTUAL_STUDENT_PARENT_ACCOUNTS (JSON) " +
+          "or E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD. (Phase B requires a real parent account.)",
+        failureStep: "config",
+        artifacts, runId, scenario, args, phase, baseUrl,
+        account: fmtAccount(account), studentAuthMode, parentAuthMode,
+      }));
+    }
+    try {
+      parentAccount = selectParentAccount(
+        parents,
+        args.parent,
+        account.label
+      );
+    } catch (error) {
+      return finalize(buildFinalizeInputForFailure({
+        reason: `config: ${error.message}`,
+        failureStep: "config",
+        artifacts, runId, scenario, args, phase, baseUrl,
+        account: fmtAccount(account), studentAuthMode, parentAuthMode,
+      }));
+    }
+    log(`parentAccount=${JSON.stringify(fmtParentAccount(parentAccount))}`);
+  }
+
   try {
     await preflight(baseUrl, log);
   } catch (error) {
-    return finalize({
-      status: "fail",
+    return finalize(buildFinalizeInputForFailure({
       reason: error.message,
-      artifacts,
-      runId,
-      scenario,
-      args,
-      baseUrl,
-      account: fmtAccount(account),
-      networkSummary: null,
-      tier1: null,
-      tier2: null,
-      consoleErrors: [],
-      consoleNoise: [],
-      pageErrors: [],
-      studentAuthMode,
       failureStep: "preflight",
-      driverResult: null,
-    });
+      artifacts, runId, scenario, args, phase, baseUrl,
+      account: fmtAccount(account),
+      parentAccount: fmtParentAccount(parentAccount),
+      studentAuthMode,
+      parentAuthMode,
+    }));
   }
 
   const headed = args.headed || isHeaded();
@@ -236,11 +276,6 @@ async function main() {
   const consoleErrors = [];
   const consoleNoise = [];
   const pageErrors = [];
-  // "Failed to load resource: ..." is the generic console line emitted by
-  // Chromium for ANY non-2xx response (including pre-login /api/student/me 401
-  // and missing asset 404s). It is not a product bug, so we record it as
-  // informational noise but do not gate PASS on it. Real JavaScript errors
-  // surface as 'pageerror' events, which are separately gated below.
   const NOISE_RE = /^Failed to load resource:/i;
   page.on("console", (msg) => {
     const text = String(msg.text()).slice(0, 400);
@@ -273,6 +308,9 @@ async function main() {
   }
 
   let driverResult = null;
+  let parentAuthResult = null;
+  let parentDashboardResult = null;
+  let parentReportFindings = null;
   let failureReason = null;
   let failureStep = null;
 
@@ -322,11 +360,81 @@ async function main() {
     log(`tier2: ${JSON.stringify(tier2)}`);
   }
 
+  // ---- Phase B parent verification --------------------------------------
+  // Run parent leg only if Phase A succeeded (driver completed AND tier1
+  // passed). Otherwise the report has nothing to verify against.
+  const phaseAOk =
+    !failureReason && driverResult && tier1?.passed && (tier2?.enabled !== true || tier2.passed);
+
+  let parentBlockReason = null;
+  if (phase === "b" && !phaseAOk) {
+    parentBlockReason =
+      "phase-A failed; parent verification skipped (no fresh student activity to assert on)";
+    log(`parent: SKIPPED — ${parentBlockReason}`);
+  }
+
+  if (phase === "b" && phaseAOk) {
+    try {
+      failureStep = "parent-auth";
+      parentAuthResult = await authenticateParent({
+        context,
+        page,
+        account: parentAccount,
+        baseUrl,
+        mode: parentAuthMode,
+        log,
+      });
+      log(
+        `parent-auth: ok mode=${parentAuthResult.mode} pass-eligible=${parentAuthResult.pass} ` +
+          `partial=${parentAuthResult.partial} alreadyAuthenticated=${parentAuthResult.alreadyAuthenticated || false}`
+      );
+      await artifacts.saveScreenshot(page, "10-after-parent-auth");
+
+      failureStep = "parent-dashboard";
+      const expectedStudentName = (driverResult?.playerName || "").trim();
+      if (!expectedStudentName) {
+        throw new Error(
+          "parent-dashboard: cannot verify linked student — driver did not surface playerName"
+        );
+      }
+      log(`parent-dashboard: expecting student "${expectedStudentName}"`);
+      parentDashboardResult = await verifyParentDashboardAndOpenReport({
+        page,
+        baseUrl,
+        expectedStudentName,
+        log,
+        artifacts: {
+          saveScreenshot: (p, n) => artifacts.saveScreenshot(p, n),
+        },
+      });
+      await artifacts.saveScreenshot(page, "11-parent-dashboard-after-click");
+
+      failureStep = "parent-report-assertions";
+      parentReportFindings = await verifyParentReport({
+        page,
+        scenarioContext: {
+          subject: scenario.subject,
+          profile: scenario.profile,
+          expectedAnsweredCount: driverResult.answeredQuestions.length,
+        },
+        log,
+      });
+      await artifacts.saveScreenshot(page, "12-parent-report-populated");
+      failureStep = null;
+    } catch (error) {
+      failureReason = error?.message || String(error);
+      log(`FAILURE step=${failureStep || "unknown"}: ${failureReason}`);
+      await artifacts
+        .saveScreenshot(page, `failure-${failureStep || "parent"}`)
+        .catch(() => {});
+    }
+  }
+
   await artifacts.saveScreenshot(page, "99-final-state").catch(() => {});
   await context.close().catch(() => {});
   await browser.close().catch(() => {});
 
-  let status = "fail";
+  // ---- Status decision --------------------------------------------------
   const errors = [];
   if (failureReason) errors.push(`driver: ${failureReason}`);
   if (tier1 && !tier1.passed) errors.push(...tier1.errors.map((e) => `tier1: ${e}`));
@@ -336,14 +444,37 @@ async function main() {
   if (consoleErrors.length > 0) errors.push(...consoleErrors.map((e) => `console: ${e}`));
   if (pageErrors.length > 0) errors.push(...pageErrors.map((e) => `pageerror: ${e}`));
 
-  if (
-    !failureReason &&
-    tier1?.passed &&
-    (tier2?.enabled !== true || tier2.passed) &&
-    consoleErrors.length === 0 &&
-    pageErrors.length === 0
-  ) {
-    status = "pass";
+  // Phase B status logic.
+  // - If phase=A, status follows Phase A rules (unchanged).
+  // - If phase=B and phase-A failed, status = fail.
+  // - If phase=B and phase-A passed but parent legs failed, status = fail.
+  // - If phase=B and parent leg succeeded but used token mode, status = partial.
+  // - If phase=B and parent leg succeeded with ui mode, status = pass.
+  let status;
+  if (phase === "a") {
+    status =
+      !failureReason &&
+      tier1?.passed &&
+      (tier2?.enabled !== true || tier2.passed) &&
+      consoleErrors.length === 0 &&
+      pageErrors.length === 0
+        ? "pass"
+        : "fail";
+  } else {
+    // phase === "b"
+    if (!phaseAOk || failureReason) {
+      status = "fail";
+    } else if (
+      parentAuthResult &&
+      parentDashboardResult &&
+      parentReportFindings &&
+      consoleErrors.length === 0 &&
+      pageErrors.length === 0
+    ) {
+      status = parentAuthResult.partial ? "partial" : "pass";
+    } else {
+      status = "fail";
+    }
   }
 
   finalize({
@@ -353,19 +484,55 @@ async function main() {
     runId,
     scenario,
     args,
+    phase,
     baseUrl,
     account: fmtAccount(account),
+    parentAccount: fmtParentAccount(parentAccount),
     networkSummary,
     tier1,
     tier2,
+    parentAuthResult,
+    parentDashboardResult,
+    parentReportFindings,
+    parentBlockReason,
     consoleErrors,
     consoleNoise,
     pageErrors,
     studentAuthMode,
+    parentAuthMode,
     failureStep,
     driverResult,
   });
   process.exit(status === "pass" ? 0 : 1);
+}
+
+function buildFinalizeInputForFailure(input) {
+  return {
+    status: "fail",
+    reason: input.reason,
+    artifacts: input.artifacts,
+    runId: input.runId,
+    scenario: input.scenario,
+    args: input.args,
+    phase: input.phase,
+    baseUrl: input.baseUrl,
+    account: input.account || null,
+    parentAccount: input.parentAccount || null,
+    networkSummary: null,
+    tier1: null,
+    tier2: null,
+    parentAuthResult: null,
+    parentDashboardResult: null,
+    parentReportFindings: null,
+    parentBlockReason: null,
+    consoleErrors: [],
+    consoleNoise: [],
+    pageErrors: [],
+    studentAuthMode: input.studentAuthMode || null,
+    parentAuthMode: input.parentAuthMode || null,
+    failureStep: input.failureStep || "unknown",
+    driverResult: null,
+  };
 }
 
 function finalize(input) {
@@ -376,22 +543,29 @@ function finalize(input) {
     runId,
     scenario,
     args,
+    phase,
     baseUrl,
     account,
+    parentAccount,
     networkSummary,
     tier1,
     tier2,
+    parentAuthResult,
+    parentDashboardResult,
+    parentReportFindings,
+    parentBlockReason,
     consoleErrors,
     consoleNoise,
     pageErrors,
     studentAuthMode,
+    parentAuthMode,
     failureStep,
     driverResult,
   } = input;
 
   const summary = {
     runId,
-    phase: "A",
+    phase: String(phase).toUpperCase(),
     status,
     scenario: {
       id: scenario.id,
@@ -405,16 +579,36 @@ function finalize(input) {
       phase: args.phase,
       scenario: args.scenario,
       student: args.student,
+      parent: args.parent,
       headed: args.headed,
       baseUrl: args.baseUrl,
     },
     baseUrl,
     studentAuthMode: studentAuthMode || null,
+    parentAuthMode: parentAuthMode || null,
     account: account || null,
+    parentAccount: parentAccount || null,
+    actualStudentState: driverResult
+      ? {
+          playerName: driverResult.playerName || null,
+          accountGrade: driverResult.accountGrade ?? null,
+          accountGradeRaw: driverResult.accountGradeRaw || null,
+          scenarioRequestedGrade: scenario.grade,
+          gradeOverridden:
+            driverResult.accountGrade != null &&
+            Number(driverResult.accountGrade) !== Number(scenario.grade),
+        }
+      : null,
     evidence: {
       network: networkSummary || null,
       tier1: tier1 || null,
       tier2: tier2 || null,
+    },
+    parent: {
+      auth: parentAuthResult || null,
+      dashboard: parentDashboardResult || null,
+      report: parentReportFindings || null,
+      blockReason: parentBlockReason || null,
     },
     driverResult: driverResult || null,
     consoleErrors: consoleErrors || [],
@@ -432,15 +626,25 @@ function finalize(input) {
   }
 
   console.log("");
-  console.log("================ Virtual Student QA Phase A ================");
+  const banner =
+    summary.phase === "B"
+      ? "================ Virtual Student QA Phase B ================"
+      : "================ Virtual Student QA Phase A ================";
+  console.log(banner);
   console.log(`status     : ${status.toUpperCase()}`);
   console.log(`runId      : ${runId}`);
   console.log(`scenario   : ${scenario.id}`);
   console.log(`base URL   : ${baseUrl}`);
   console.log(
-    `auth mode  : ${studentAuthMode || "n/a"}` +
+    `student    : auth=${studentAuthMode || "n/a"}` +
       (studentAuthMode === "api" ? " [TEMPORARY:api-shortcut]" : "")
   );
+  if (summary.phase === "B") {
+    console.log(
+      `parent     : auth=${parentAuthMode || "n/a"}` +
+        (parentAuthMode === "token" ? " [DEBUG-ONLY: never PASS]" : "")
+    );
+  }
   console.log(`artifacts  : ${artifacts.root}`);
   if (reason) console.log(`reason     : ${reason}`);
   console.log("============================================================");
@@ -448,7 +652,7 @@ function finalize(input) {
 
 function buildMarkdownSummary(s) {
   const lines = [];
-  lines.push("# Virtual Student QA — Phase A");
+  lines.push(`# Virtual Student QA — Phase ${s.phase}`);
   lines.push("");
   lines.push(`- **runId**: \`${s.runId}\``);
   lines.push(`- **status**: \`${s.status}\``);
@@ -462,10 +666,39 @@ function buildMarkdownSummary(s) {
     `- **studentAuthMode**: \`${s.studentAuthMode || "n/a"}\`` +
       (s.studentAuthMode === "api" ? " — **TEMPORARY:api-shortcut**" : "")
   );
+  if (s.phase === "B") {
+    lines.push(
+      `- **parentAuthMode**: \`${s.parentAuthMode || "n/a"}\`` +
+        (s.parentAuthMode === "token"
+          ? " — **DEBUG-ONLY: token mode never produces PASS**"
+          : "")
+    );
+  }
   if (s.account) {
     lines.push(
-      `- **account**: label=\`${s.account.label}\` ` +
+      `- **studentAccount**: label=\`${s.account.label}\` ` +
         `(usernameSet=${s.account.hasUsername}, codeSet=${s.account.hasCode})`
+    );
+  }
+  if (s.parentAccount) {
+    lines.push(
+      `- **parentAccount**: label=\`${s.parentAccount.label}\` ` +
+        `(emailMasked=\`${s.parentAccount.emailMasked}\`, ` +
+        `linkedStudentLabel=\`${s.parentAccount.linkedStudentLabel || "(n/a)"}\`)`
+    );
+  }
+  if (s.actualStudentState) {
+    lines.push("");
+    lines.push("## Actual student state (as observed by the live UI)");
+    lines.push(`- playerName: \`${s.actualStudentState.playerName || "(unknown)"}\``);
+    lines.push(
+      `- accountGrade (live): \`${s.actualStudentState.accountGradeRaw || "(empty)"}\` ` +
+        `(numeric=\`${s.actualStudentState.accountGrade ?? "(n/a)"}\`)`
+    );
+    lines.push(
+      `- scenarioRequestedGrade: \`${s.actualStudentState.scenarioRequestedGrade}\` — ` +
+        `\`gradeOverridden=${s.actualStudentState.gradeOverridden}\` ` +
+        "(the page forces grade to the student's account grade; this is real product behaviour and is recorded here for traceability)"
     );
   }
   lines.push("");
@@ -499,6 +732,62 @@ function buildMarkdownSummary(s) {
     }
   } else {
     lines.push("- not evaluated (driver did not complete)");
+  }
+  if (s.phase === "B") {
+    lines.push("");
+    lines.push("## Parent verification (Phase B)");
+    if (s.parent.blockReason) {
+      lines.push(`- skipped: ${s.parent.blockReason}`);
+    } else {
+      const auth = s.parent.auth;
+      const dash = s.parent.dashboard;
+      const rep = s.parent.report;
+      lines.push("### Parent auth (real /parent/login UI)");
+      if (auth) {
+        lines.push(`- mode: \`${auth.mode}\``);
+        lines.push(`- alreadyAuthenticated: \`${auth.alreadyAuthenticated || false}\``);
+        lines.push(`- pass-eligible: \`${auth.pass}\` (partial=\`${auth.partial}\`)`);
+        if (auth.note) lines.push(`- note: ${auth.note}`);
+      } else {
+        lines.push("- not run (earlier failure)");
+      }
+      lines.push("");
+      lines.push("### Parent dashboard → report opener");
+      if (dash) {
+        lines.push(`- dashboardUrl: \`${dash.dashboardUrl}\``);
+        lines.push(`- studentMatched: \`${dash.studentName}\``);
+        lines.push(`- reportLinkHref: \`${dash.reportLinkHref}\``);
+        lines.push(`- reportUrl (post-click): \`${dash.reportUrl}\``);
+        lines.push(`- studentIdFromUrl: \`${dash.studentIdFromUrl}\``);
+      } else {
+        lines.push("- not run (earlier failure)");
+      }
+      lines.push("");
+      lines.push("### Parent report DOM assertions");
+      if (rep) {
+        lines.push(`- headingVisible (\"דוח להורים\"): \`${rep.headingVisible}\``);
+        lines.push(`- loadingTextHidden: \`${rep.loadingTextHidden}\``);
+        lines.push(`- errorTextHidden: \`${rep.errorTextHidden}\``);
+        lines.push(`- authRequiredHidden: \`${rep.authRequiredHidden}\``);
+        lines.push(`- notEmptyState: \`${rep.notEmptyState}\``);
+        lines.push(
+          `- subjectVisible (\`${rep.subjectLabel}\`): \`${rep.subjectVisible}\` ` +
+            `(questionCount=\`${rep.subjectQuestionCount ?? "n/a"}\`)`
+        );
+        lines.push(`- totalQuestions: \`${rep.totalQuestions ?? "n/a"}\``);
+        lines.push(`- overallAccuracyPct: \`${rep.overallAccuracyPct ?? "n/a"}\``);
+        lines.push(
+          `- accuracyDirectionOk: \`${rep.accuracyDirectionOk}\` (${rep.accuracyDirectionNote || "—"})`
+        );
+        lines.push(`- rawKeyLeaks: \`${JSON.stringify(rep.rawKeyLeaks || [])}\``);
+        lines.push(`- rtlOk: \`${rep.rtlOk}\``);
+        if (rep.studentNameVisible) {
+          lines.push(`- studentNameVisible: \`${rep.studentNameVisible}\``);
+        }
+      } else {
+        lines.push("- not run (earlier failure)");
+      }
+    }
   }
   lines.push("");
   if (s.driverResult) {
@@ -558,17 +847,32 @@ function buildFailureRepro(s) {
   lines.push("");
   lines.push("Set the same env (values not shown):");
   lines.push("");
+  lines.push("Student (Phase A):");
   lines.push("- `VIRTUAL_STUDENT_ACCOUNTS` _or_ `E2E_STUDENT_USERNAME` + `E2E_STUDENT_PIN`");
-  lines.push("- `PLAYWRIGHT_BASE_URL` (or rely on default `http://127.0.0.1:3001`)");
   lines.push("- `VIRTUAL_STUDENT_STUDENT_AUTH=ui` (default) or `=api` (debug shortcut)");
+  if (s.phase === "B") {
+    lines.push("");
+    lines.push("Parent (Phase B):");
+    lines.push("- `VIRTUAL_STUDENT_PARENT_ACCOUNTS` _or_ `E2E_PARENT_EMAIL` + `E2E_PARENT_PASSWORD`");
+    lines.push(
+      "- `VIRTUAL_STUDENT_PARENT_AUTH=ui` (default, only mode that can produce PASS) " +
+        "or `=token` (debug-only, always partial)"
+    );
+    lines.push(
+      "- For `token` mode only: `NEXT_PUBLIC_LEARNING_SUPABASE_URL`, `NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY`"
+    );
+  }
+  lines.push("- `PLAYWRIGHT_BASE_URL` (or rely on default `http://127.0.0.1:3001`)");
   lines.push("");
   lines.push("Then run:");
   lines.push("");
   lines.push("```");
   const headedFlag = s.args.headed ? " --headed" : "";
   const studentFlag = s.args.student ? ` --student ${s.args.student}` : "";
+  const parentFlag = s.args.parent ? ` --parent ${s.args.parent}` : "";
+  const phaseFlag = ` --phase ${s.phase.toLowerCase()}`;
   lines.push(
-    `node scripts/virtual-student-qa/run.mjs --phase a --scenario ${s.scenario.id}${studentFlag}${headedFlag}`
+    `node scripts/virtual-student-qa/run.mjs${phaseFlag} --scenario ${s.scenario.id}${studentFlag}${parentFlag}${headedFlag}`
   );
   lines.push("```");
   return lines.join("\n");

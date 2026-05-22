@@ -47,6 +47,18 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
   const operationSelect = page.getByTestId("math-operation-select");
   const startButton = page.getByTestId("math-start-game");
 
+  // Capture the actual student state from the visible UI BEFORE we override
+  // anything. The grade-select reflects the student's account grade (page
+  // forces it to match grade_level on mount). The player-name div reflects
+  // the student's full_name from /api/student/me. Both are needed by
+  // Phase B (parent dashboard match + run-summary disclosure).
+  const playerName = (await playerNameDiv.innerText().catch(() => "")).trim();
+  const accountGradeRaw = await gradeSelect.inputValue().catch(() => "");
+  const accountGradeNumber = Number(accountGradeRaw) || null;
+  log(
+    `math-master: detected playerName='${playerName}' accountGrade=${accountGradeRaw || "(empty)"}`
+  );
+
   await gradeSelect.selectOption({ value: String(scenario.grade) });
   await operationSelect.selectOption({ value: scenario.operation });
 
@@ -201,7 +213,12 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
 
   await screenshotter("04-math-master-after-stop");
 
-  return { answeredQuestions };
+  return {
+    answeredQuestions,
+    playerName,
+    accountGrade: accountGradeNumber,
+    accountGradeRaw,
+  };
 }
 
 function parseAndCompute(text) {
