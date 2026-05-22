@@ -50,6 +50,12 @@ const { calculateSessionCoins } = await import(
 const { applySessionToMissions, ensureTodayMissions, getIsraelDateString, getGradeBand } = await import(
   pathToFileURL(resolve(ROOT, "lib/learning-supabase/mission-progress.server.js")).href
 );
+const { assertMvpWorkingTreeScope } = await import(
+  pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-helpers.mjs")).href
+);
+const { assertDevServerReady } = await import(
+  pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-http-preflight.mjs")).href
+);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL,
@@ -200,7 +206,8 @@ const E2E_PIN      = process.env.E2E_STUDENT_PIN;
 const BASE_URL     = "http://127.0.0.1:3001";
 
 let homeChallenges = null;
-if (E2E_USERNAME && E2E_PIN) {
+const serverOk = E2E_USERNAME && E2E_PIN ? await assertDevServerReady({ pass, fail }, BASE_URL) : false;
+if (E2E_USERNAME && E2E_PIN && serverOk) {
   // Login
   const loginRes = await fetch(`${BASE_URL}/api/student/login`, {
     method: "POST",
@@ -235,10 +242,12 @@ if (E2E_USERNAME && E2E_PIN) {
       fail("home-profile returns ok=true", `got: ${JSON.stringify(hpBody)?.slice(0, 200)}`);
     }
   } else {
-    console.log("  SKIP HTTP section: auth cookie not obtained");
+    fail("home-profile HTTP auth", "auth cookie not obtained");
   }
-} else {
+} else if (!E2E_USERNAME || !E2E_PIN) {
   console.log("  SKIP HTTP section: E2E creds not set");
+} else {
+  fail("home-profile HTTP", "dev server not ready");
 }
 console.log();
 
@@ -267,7 +276,7 @@ await supabase.from("student_learning_state").update({ challenges: resetChalleng
 const session7 = await createTestSession(testStudentId, "math");
 const sessionIdStr = session7;
 
-if (E2E_USERNAME && E2E_PIN) {
+if (E2E_USERNAME && E2E_PIN && serverOk) {
   const loginRes = await fetch(`${BASE_URL}/api/student/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -387,7 +396,11 @@ if (E2E_USERNAME && E2E_PIN) {
       const count = await countMissionTx(ikey);
       assertEq(`idempotency: only 1 tx row for mission ${m.id}`, count, 1);
     }
+  } else {
+    fail("session/finish HTTP auth", "auth cookie not obtained");
   }
+} else if (E2E_USERNAME && E2E_PIN) {
+  fail("session/finish HTTP", "dev server not ready");
 }
 console.log();
 
@@ -408,28 +421,14 @@ assertEq("reset missions all have progress=0", reset.daily?.missions?.every(m =>
 assertEq("reset missions all have completed=false", reset.daily?.missions?.every(m => m.completed === false), true);
 console.log();
 
-// ── Section 10: file safety ────────────────────────────────────────────────
-console.log("── Section 10: Changed files (Phase 1 + 2 only) ──");
-let changedFiles = "";
-try { changedFiles = execSync("git diff --name-only HEAD", { cwd: ROOT }).toString().trim(); } catch { changedFiles = ""; }
-const lines = changedFiles ? changedFiles.split("\n").filter(Boolean) : [];
-const allowedPatterns = [
-  /^lib\/learning-supabase\/learning-coin-award\.server\.js$/,
-  /^lib\/learning-supabase\/mission-progress\.server\.js$/,
-  /^pages\/api\/learning\/session\/finish\.js$/,
-  /^pages\/api\/student\/home-profile\.js$/,
-  /^lib\/learning-client\/studentHomeDashboardClient\.js$/,
-  /^pages\/student\/home\.js$/,
-  /^\.env\.local$/,
-  /^docs\//,
-  /^scripts\//,
-  /^\.cursor\//,
-];
-const forbidden = lines.filter(f => !allowedPatterns.some(p => p.test(f)));
-if (forbidden.length === 0) pass("No forbidden files changed");
-else fail("No forbidden files changed", `Unexpected: ${forbidden.join(", ")}`);
-console.log("  Changed files:");
-lines.forEach(l => console.log("    " + l));
+// ── Section 10: Combined MVP working tree scope ────────────────────────────
+console.log("── Section 10: MVP working tree scope ──");
+const mvpHooks = { pass, fail };
+const { files: mvpFiles } = assertMvpWorkingTreeScope(mvpHooks, {
+  label: "Combined MVP working tree (no forbidden paths)",
+});
+console.log("  Working tree files:");
+mvpFiles.forEach((l) => console.log(`    ${l}`));
 console.log();
 
 // ── Summary ──────────────────────────────────────────────────────────────

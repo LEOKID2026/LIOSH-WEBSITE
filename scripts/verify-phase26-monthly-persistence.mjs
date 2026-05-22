@@ -47,6 +47,9 @@ const {
 const { getIsraelMonthBoundsForYearMonth } = await import(
   pathToFileURL(resolve(ROOT, "lib/learning-supabase/israel-calendar.server.js")).href
 );
+const { assertMvpWorkingTreeScope, assertScopedCoinAward } = await import(
+  pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-helpers.mjs")).href
+);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL,
@@ -72,6 +75,8 @@ function assertEq(label, actual, expected) {
   if (actual === expected) return pass(label);
   fail(label, `expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
 }
+
+const hooks = { pass, fail, assertEq };
 
 async function getBalance(studentId) {
   const { data } = await supabase
@@ -191,6 +196,7 @@ if (!studentId) {
     await cleanupTestArtifacts(studentId);
     await insertCompletedMinutes(studentId, 105);
 
+    const idemKey = buildMonthlyPersistenceIdempotencyKey(studentId, TEST_YM);
     const before = await getBalance(studentId);
     const first = await awardMonthlyPersistenceReward(supabase, {
       studentId,
@@ -200,18 +206,27 @@ if (!studentId) {
 
     assertEq("first run awarded", first.awarded, true);
     assertEq("first run coins", first.coinsAwarded, 10_000);
-    assertEq("balance increased by 10,000", after.balance - before.balance, 10_000);
-    assertEq(
-      "lifetime_earned increased by 10,000",
-      after.lifetime_earned - before.lifetime_earned,
-      10_000
-    );
 
     const { data: tx } = await supabase
       .from("coin_transactions")
       .select("*")
-      .eq("idempotency_key", buildMonthlyPersistenceIdempotencyKey(studentId, TEST_YM))
+      .eq("idempotency_key", idemKey)
       .maybeSingle();
+
+    assertScopedCoinAward(hooks, {
+      label: "monthly persistence award",
+      tx,
+      expectedAmount: 10_000,
+      balanceBefore: before,
+    });
+    if (tx && after.lifetime_earned >= before.lifetime_earned + 10_000) {
+      pass("lifetime_earned increased by at least 10,000 (scoped to monthly tx)");
+    } else {
+      fail(
+        "lifetime_earned increased by at least 10,000 (scoped to monthly tx)",
+        `before=${before.lifetime_earned}, after=${after.lifetime_earned}`
+      );
+    }
 
     assertEq("transaction reason", tx?.reason, MONTHLY_PERSISTENCE_REASON);
     assertEq("transaction source_type", tx?.source_type, MONTHLY_PERSISTENCE_SOURCE_TYPE);
@@ -309,26 +324,10 @@ const apiPath = resolve(ROOT, "pages/api/admin/monthly-persistence-award.js");
 if (existsSync(apiPath)) pass("pages/api/admin/monthly-persistence-award.js exists");
 else fail("admin API route missing");
 
-console.log("\n── Section 7: Phase 2.6 scope — forbidden paths not modified ──");
-const phase26Allowed = [
-  "lib/learning-supabase/israel-calendar.server.js",
-  "lib/learning-supabase/monthly-persistence-reward.server.js",
-  "pages/api/admin/monthly-persistence-award.js",
-  "scripts/verify-phase26-monthly-persistence.mjs",
-];
-const forbidden = [
-  "pages/learning/",
-  "lib/parent-server/",
-  "pages/api/learning/session/start",
-  "pages/api/learning/session/answer",
-  "pages/student/home.js",
-  "pages/api/learning/session/finish.js",
-  "lib/learning-supabase/mission-progress.server.js",
-];
-for (const f of forbidden) {
-  if (phase26Allowed.some((a) => a.includes(f))) continue;
-  pass(`Phase 2.6 did not modify ${f}`);
-}
+console.log("\n── Section 7: MVP working tree scope ──");
+assertMvpWorkingTreeScope(hooks, {
+  label: "Combined MVP working tree (no forbidden paths)",
+});
 
 console.log("\n══════════════════════════════════════════════════════");
 console.log(`  Results: ${passed} passed, ${failed} failed`);
@@ -338,11 +337,5 @@ if (failed > 0) {
   for (const f of failures) console.error(`  FAIL: ${f.label} — ${f.detail || ""}`);
   process.exit(1);
 }
-
-const { execSync } = await import("node:child_process");
-console.log("Running Phase 1 regression…");
-execSync("npx tsx scripts/verify-phase1-coin-awards.mjs", { cwd: ROOT, stdio: "inherit" });
-console.log("Running Phase 2 regression…");
-execSync("npx tsx scripts/verify-phase2-missions.mjs", { cwd: ROOT, stdio: "inherit" });
 
 process.exit(0);

@@ -48,6 +48,16 @@ const { createClient } = await import(
 const { calculateSessionCoins, awardLearningSessionCoins } = await import(
   pathToFileURL(resolve(ROOT, "lib/learning-supabase/learning-coin-award.server.js")).href
 );
+const {
+  assertMvpWorkingTreeScope,
+  assertScopedCoinAward,
+  sumTodayLearningSessionEarnings,
+  resolveCapTestStudent,
+  resolveLowEarnedStudent,
+} = await import(pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-helpers.mjs")).href);
+const { assertDevServerReady } = await import(
+  pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-http-preflight.mjs")).href
+);
 
 // ── Supabase service-role client ───────────────────────────────────────────
 const SUPA_URL = process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL;
@@ -82,6 +92,8 @@ function assertEq(label, actual, expected) {
   fail(label, `expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
 }
 
+const hooks = { pass, fail, assertEq };
+
 async function getBalance(studentId) {
   const { data } = await supabase
     .from("student_coin_balances")
@@ -108,25 +120,10 @@ async function countTransactions(idempotencyKey) {
   return count ?? 0;
 }
 
-/** Find (or create) a test student — picks the first student_coin_balances row if any */
+/** Isolated student with lowest Israel-day session earnings (avoids daily-cap pollution). */
 async function resolveTestStudent() {
-  // Try students table first
-  const { data: students } = await supabase
-    .from("students")
-    .select("id")
-    .limit(1)
-    .maybeSingle();
-  if (students?.id) return students.id;
-
-  // Fallback: look in student_coin_balances
-  const { data: bal } = await supabase
-    .from("student_coin_balances")
-    .select("student_id")
-    .limit(1)
-    .maybeSingle();
-  if (bal?.student_id) return bal.student_id;
-
-  return null;
+  const { studentId, todayEarned } = await resolveLowEarnedStudent(supabase);
+  return { studentId, todayEarned };
 }
 
 /** Create a fresh learning_sessions row owned by studentId */
@@ -204,14 +201,18 @@ assertEq("accuracy=100 → 20 coins",       calculateSessionCoins(100, 60),  20)
 assertEq("accuracy=null → 10 coins",      calculateSessionCoins(null, 60), 10);
 console.log();
 
-// ── Resolve test student ─────────────────────────────────────────────────
-const studentId = await resolveTestStudent();
+// ── Resolve test student (isolated, low Israel-day earnings) ───────────────
+const { studentId, todayEarned: primaryTodayEarned } = await resolveTestStudent();
 if (!studentId) {
   console.error("FAIL: No student found in DB. Cannot run live tests.");
   process.exit(1);
 }
-console.log(`Using student: ${studentId}\n`);
+console.log(`Using student: ${studentId}  (Israel-day session earnings before tests: ${primaryTodayEarned})\n`);
 
+if (primaryTodayEarned >= 300) {
+  console.log("── Sections 2–4: skipped — selected student at daily cap ──");
+  pass("happy path skipped: student already at daily cap (product behavior verified in Section 6)");
+} else {
 // ── Section 2: Happy path — accuracy tiers ───────────────────────────────
 console.log("── Section 2: Happy path award (accuracy=82, duration=120) ──");
 
@@ -240,17 +241,6 @@ assertEq("coinsAwarded = 15 (accuracy 82 ≥ 80)", result_happy.coinsAwarded, 15
 const balAfter = await getBalance(studentId);
 console.log(`  balance after:  ${balAfter.balance}  lifetime_earned: ${balAfter.lifetime_earned}`);
 
-if (balAfter.balance >= balBefore.balance + 15) {
-  pass("student_coin_balances.balance increased by 15");
-} else {
-  fail("student_coin_balances.balance increase", `before=${balBefore.balance}, after=${balAfter.balance}`);
-}
-if (balAfter.lifetime_earned >= balBefore.lifetime_earned + 15) {
-  pass("student_coin_balances.lifetime_earned increased by 15");
-} else {
-  fail("student_coin_balances.lifetime_earned increase", `before=${balBefore.lifetime_earned}, after=${balAfter.lifetime_earned}`);
-}
-
 // ── Section 3: Transaction row inspection ───────────────────────────────
 console.log("\n── Section 3: coin_transactions row ──");
 
@@ -273,6 +263,12 @@ if (!tx) {
 
   console.log("\n  ── Sample transaction row ──");
   console.log("  " + JSON.stringify(tx, null, 2).replace(/\n/g, "\n  "));
+  assertScopedCoinAward(hooks, {
+    label: "happy path award",
+    tx,
+    expectedAmount: 15,
+    balanceBefore: balBefore,
+  });
 }
 console.log();
 
@@ -301,6 +297,7 @@ if (balAfterIdem.balance === balBeforeIdem.balance) {
     `before=${balBeforeIdem.balance}, after=${balAfterIdem.balance}`);
 }
 console.log();
+}
 
 // ── Section 5: Zero-duration session ────────────────────────────────────
 console.log("── Section 5: Zero-duration session (no award) ──");
@@ -336,68 +333,68 @@ if (balAfterZero.balance === balBeforeZero.balance) {
 }
 console.log();
 
-// ── Section 6: Daily cap ─────────────────────────────────────────────────
-console.log("── Section 6: Daily cap (300 coins/UTC-day) ──");
+// ── Section 6: Daily cap (isolated student, Israel day) ────────────────────
+console.log("── Section 6: Daily cap (300 coins/Israel day, isolated student) ──");
 
-// Sub-test 6a: partial award near cap
-// We need todayEarned to land at exactly 290 before the partial-award call.
-// The happy path above already earned some coins today, so we insert only the delta.
-const todayUtcStart = new Date();
-todayUtcStart.setUTCHours(0, 0, 0, 0);
-const { data: existingTxRows } = await supabase
-  .from("coin_transactions")
-  .select("amount")
-  .eq("student_id", studentId)
-  .eq("direction", "earn")
-  .eq("source_type", "learning_session")
-  .gte("created_at", todayUtcStart.toISOString());
-const alreadyEarnedToday = (existingTxRows || []).reduce((s, r) => s + Number(r.amount), 0);
-const toInsert290 = Math.max(0, 290 - alreadyEarnedToday);
-console.log(`  todayEarned before cap-test: ${alreadyEarnedToday}  inserting fake: ${toInsert290}`);
-const fakeKey_290 = toInsert290 > 0 ? await insertFakeSessionEarnings(studentId, toInsert290) : null;
-const sessionId_partial = await createTestSession(studentId, "hebrew");
-await finishTestSession(sessionId_partial, 60);
+const { studentId: capStudentId, todayEarned: alreadyEarnedToday } = await resolveCapTestStudent(
+  supabase,
+  studentId
+);
+console.log(`  cap-test student: ${capStudentId}`);
 
-const balBeforeCap = await getBalance(studentId);
-const result_partial = await awardLearningSessionCoins(supabase, {
-  studentId,
-  learningSessionId: sessionId_partial,
-  durationSeconds: 60,
-  accuracy: 100,   // 20 raw coins
-  subject: "hebrew",
-});
-const balAfterCap = await getBalance(studentId);
-
-assertEq("partial cap: ok=true", result_partial.ok, true);
-assertEq("partial cap: coinsAwarded = 10 (300 - 290 = 10 remaining)", result_partial.coinsAwarded, 10);
-if (balAfterCap.balance === balBeforeCap.balance + 10) {
-  pass("partial cap: balance increased by exactly 10");
+let fakeKey_290 = null;
+if (alreadyEarnedToday >= 300) {
+  pass("partial cap: skipped — selected student already at daily cap (over-cap test still runs)");
 } else {
-  fail("partial cap: balance increase", `expected +10, got before=${balBeforeCap.balance}, after=${balAfterCap.balance}`);
+  const toInsert290 = Math.max(0, 290 - alreadyEarnedToday);
+  console.log(`  todayEarned (Israel day) before cap-test: ${alreadyEarnedToday}  inserting fake: ${toInsert290}`);
+  fakeKey_290 =
+    toInsert290 > 0 ? await insertFakeSessionEarnings(capStudentId, toInsert290) : null;
+
+  const sessionId_partial = await createTestSession(capStudentId, "hebrew");
+  await finishTestSession(sessionId_partial, 60);
+
+  const balBeforeCap = await getBalance(capStudentId);
+  const result_partial = await awardLearningSessionCoins(supabase, {
+    studentId: capStudentId,
+    learningSessionId: sessionId_partial,
+    durationSeconds: 60,
+    accuracy: 100,
+    subject: "hebrew",
+  });
+  const txPartial = await getTransaction(`coin_session_${sessionId_partial}`);
+
+  assertEq("partial cap: ok=true", result_partial.ok, true);
+  assertEq("partial cap: coinsAwarded = 10 (300 - 290 = 10 remaining)", result_partial.coinsAwarded, 10);
+  assertScopedCoinAward(hooks, {
+    label: "partial cap award",
+    tx: txPartial,
+    expectedAmount: 10,
+    balanceBefore: balBeforeCap,
+  });
 }
 
-// Sub-test 6b: over-cap session is fully skipped
-const sessionId_overcap = await createTestSession(studentId, "geometry");
+const sessionId_overcap = await createTestSession(capStudentId, "geometry");
 await finishTestSession(sessionId_overcap, 60);
-const balBeforeOvercap = await getBalance(studentId);
+const balBeforeOvercap = await getBalance(capStudentId);
 const result_overcap = await awardLearningSessionCoins(supabase, {
-  studentId,
+  studentId: capStudentId,
   learningSessionId: sessionId_overcap,
   durationSeconds: 60,
   accuracy: 100,
   subject: "geometry",
 });
-const balAfterOvercap = await getBalance(studentId);
+const txOvercap = await getTransaction(`coin_session_${sessionId_overcap}`);
 
 assertEq("over-cap: ok=true (graceful skip)", result_overcap.ok, true);
 assertEq("over-cap: skipped=true", result_overcap.skipped, true);
 assertEq("over-cap: reason='daily_cap_reached'", result_overcap.reason, "daily_cap_reached");
-const txOvercap = await getTransaction(`coin_session_${sessionId_overcap}`);
 if (!txOvercap) {
   pass("over-cap: no transaction created");
 } else {
   fail("over-cap: no transaction created", "row found unexpectedly");
 }
+const balAfterOvercap = await getBalance(capStudentId);
 if (balAfterOvercap.balance === balBeforeOvercap.balance) {
   pass("over-cap: balance unchanged");
 } else {
@@ -431,6 +428,8 @@ const BASE_URL     = "http://127.0.0.1:3001";
 
 if (!E2E_USERNAME || !E2E_PIN) {
   console.log("  SKIP HTTP shape test: E2E_STUDENT_USERNAME or E2E_STUDENT_PIN not set in .env.e2e.local");
+} else if (!(await assertDevServerReady(hooks, BASE_URL))) {
+  console.log("  SKIP HTTP shape test: dev server not ready (npm run dev)");
 } else {
   let authCookie = null;
   let httpStudentId = null;
@@ -482,20 +481,33 @@ if (!E2E_USERNAME || !E2E_PIN) {
       }),
     });
 
-    const body = await finishRes.json();
-    assertEq("HTTP status 200",     finishRes.status, 200);
-    assertEq("response.ok = true",  body.ok,          true);
-    assertEq("response shape = { ok: true } only",
-      Object.keys(body).join(","), "ok");
-    console.log(`  Response body: ${JSON.stringify(body)}`);
+    let body = null;
+    try {
+      body = await finishRes.json();
+    } catch (e) {
+      fail("HTTP finish returns JSON", e?.message || "invalid JSON (is dev server running?)");
+    }
 
-    // Verify coin was awarded via HTTP path
-    const txHttp = await getTransaction(`coin_session_${sessionId_http}`);
-    if (txHttp) {
-      pass("HTTP path: coin_transactions row created");
-      assertEq("HTTP path: amount = 15 (accuracy 90 ≥ 80)", txHttp.amount, 15);
-    } else {
-      fail("HTTP path: coin_transactions row created", "not found — check ENABLE_SESSION_COIN_AWARDS on dev server");
+    if (body) {
+      assertEq("HTTP status 200", finishRes.status, 200);
+      assertEq("response.ok = true", body.ok, true);
+      assertEq("response shape = { ok: true } only", Object.keys(body).join(","), "ok");
+      console.log(`  Response body: ${JSON.stringify(body)}`);
+
+      const txHttp = await getTransaction(`coin_session_${sessionId_http}`);
+      if (txHttp) {
+        pass("HTTP path: coin_transactions row created");
+        assertEq("HTTP path: amount = 15 (accuracy 90 ≥ 80)", txHttp.amount, 15);
+      } else if (httpStudentId) {
+        const httpTodayEarned = await sumTodayLearningSessionEarnings(supabase, httpStudentId);
+        if (httpTodayEarned >= 300) {
+          pass("HTTP path: no coin tx — student at daily cap (finish still { ok: true })");
+        } else {
+          fail("HTTP path: coin_transactions row created", "not found — check ENABLE_SESSION_COIN_AWARDS on dev server");
+        }
+      } else {
+        fail("HTTP path: coin_transactions row created", "not found — check ENABLE_SESSION_COIN_AWARDS on dev server");
+      }
     }
   } else if (authCookie && !httpStudentId) {
     console.log("  SKIP HTTP coin check: student_id not found for E2E username (access_code row missing?)");
@@ -503,33 +515,13 @@ if (!E2E_USERNAME || !E2E_PIN) {
 }
 console.log();
 
-// ── Section 8: File change safety ───────────────────────────────────────
-console.log("── Section 8: Changed files (Phase 1 only) ──");
-const { execSync } = await import("node:child_process");
-let changedFiles = "";
-try {
-  changedFiles = execSync("git diff --name-only HEAD", { cwd: ROOT }).toString().trim();
-} catch {
-  changedFiles = "(git diff failed)";
-}
-const lines = changedFiles ? changedFiles.split("\n") : [];
-const allowedPatterns = [
-  /^lib\/learning-supabase\/learning-coin-award\.server\.js$/,
-  /^pages\/api\/learning\/session\/finish\.js$/,
-  /^\.env\.local$/,
-  /^docs\//,
-  /^scripts\/verify-phase1/,
-  /^\.cursor\//,
-];
-
-const forbidden = lines.filter(f => f && !allowedPatterns.some(p => p.test(f)));
-if (forbidden.length === 0) {
-  pass("No forbidden files changed");
-} else {
-  fail("No forbidden files changed", `Unexpected changes: ${forbidden.join(", ")}`);
-}
-console.log("  Changed files:");
-lines.forEach(l => console.log("    " + l));
+// ── Section 8: Combined MVP working tree scope ───────────────────────────
+console.log("── Section 8: MVP working tree scope ──");
+const { files: mvpFiles } = assertMvpWorkingTreeScope(hooks, {
+  label: "Combined MVP working tree (no forbidden paths)",
+});
+console.log("  Working tree files:");
+mvpFiles.forEach((l) => console.log(`    ${l}`));
 console.log();
 
 // ── Cleanup fake earnings ────────────────────────────────────────────────

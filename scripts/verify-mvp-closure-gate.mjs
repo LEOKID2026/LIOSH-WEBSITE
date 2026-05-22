@@ -31,10 +31,27 @@ loadEnv(".env.local");
 loadEnv(".env.e2e.local");
 process.env.ENABLE_MONTHLY_PERSISTENCE_REWARD_ADMIN = "true";
 
+const {
+  getWorkingTreeFiles,
+  isMvpApprovedFile,
+  MVP_FORBIDDEN_PREFIXES,
+} = await import(pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-helpers.mjs")).href);
+const { assertDevServerReady } = await import(
+  pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-http-preflight.mjs")).href
+);
+
 const suites = [];
 function suite(name, ok, detail) {
   suites.push({ name, ok, detail });
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? ` — ${detail}` : ""}`);
+}
+
+async function waitForDevServer() {
+  const hooks = {
+    pass: () => {},
+    fail: () => {},
+  };
+  return assertDevServerReady(hooks, BASE, { retries: 12, delayMs: 2000 });
 }
 
 function runScript(label, scriptPath) {
@@ -72,6 +89,16 @@ console.log("  Child World MVP Closure Gate");
 console.log("  " + new Date().toISOString());
 console.log("══════════════════════════════════════════════════════\n");
 
+// ── Dev server (HTTP suites need it) ───────────────────────────────────────
+console.log("── Dev server preflight ──");
+const serverReady = await waitForDevServer();
+if (!serverReady) {
+  suite("Dev server ready for HTTP tests", false, "run: npm run dev");
+} else {
+  suite("Dev server ready for HTTP tests", true);
+}
+console.log();
+
 // ── 1–4: Phase verification scripts ───────────────────────────────────────
 console.log("── Phase test suites ──");
 runScript("Phase 1 coin awards", "scripts/verify-phase1-coin-awards.mjs");
@@ -82,6 +109,11 @@ console.log();
 
 // ── 5: /student/home HTTP 200 for ERAN + AAA1–AAA12 ───────────────────────
 console.log("── /student/home HTTP 200 (ERAN + AAA1–AAA12) ──");
+const httpSuiteHooks = {
+  pass: (l) => suite(l, true),
+  fail: (l, d) => suite(l, false, d),
+};
+const serverOk = serverReady && (await assertDevServerReady(httpSuiteHooks, BASE, { retries: 3, delayMs: 500 }));
 const accounts = [];
 if (process.env.E2E_STUDENT_USERNAME) {
   accounts.push({
@@ -95,7 +127,9 @@ for (let i = 1; i <= 12; i++) {
 }
 let homeOk = 0;
 let homeFail = 0;
-for (const acc of accounts) {
+if (!serverOk) {
+  suite("All student homes (13 accounts)", false, "dev server not ready");
+} else for (const acc of accounts) {
   const cookie = await loginStudent(acc.username, acc.pin);
   if (!cookie) {
     homeFail++;
@@ -111,11 +145,16 @@ for (const acc of accounts) {
     suite(`${acc.label} /student/home HTTP 200`, false, `status=${res?.status}`);
   }
 }
-suite("All student homes (13 accounts)", homeFail === 0, `${homeOk}/${accounts.length} OK`);
+if (serverOk) {
+  suite("All student homes (13 accounts)", homeFail === 0, `${homeOk}/${accounts.length} OK`);
+}
 console.log();
 
 // ── 6: session/finish returns exactly { ok: true } ────────────────────────
 console.log("── /api/learning/session/finish response shape ──");
+if (!serverOk) {
+  suite("session/finish body exactly { ok: true }", false, "dev server not ready");
+} else {
 const eranCookie = await loginStudent(
   process.env.E2E_STUDENT_USERNAME || "ERAN",
   process.env.E2E_STUDENT_PIN || "7479"
@@ -151,52 +190,17 @@ if (eranCookie) {
 } else {
   suite("session/finish shape test", false, "ERAN login failed");
 }
+}
 console.log();
 
 // ── 7–9: Forbidden paths unchanged (git diff vs HEAD) ─────────────────────
 console.log("── Forbidden paths untouched (git diff HEAD) ──");
-let diffNames = "";
-try {
-  diffNames = execSync("git diff --name-only HEAD", { cwd: ROOT, encoding: "utf8" });
-} catch {
-  diffNames = "";
-}
-const untracked = execSync("git ls-files --others --exclude-standard", { cwd: ROOT, encoding: "utf8" })
-  .split("\n")
-  .filter(Boolean);
-const allTouched = [...diffNames.split("\n").filter(Boolean), ...untracked].map((f) => f.replace(/\\/g, "/"));
-
-const forbiddenPrefixes = [
-  "pages/learning/",
-  "lib/parent-server/",
-  "pages/api/learning/session/start",
-  "pages/api/learning/session/answer",
-  "utils/expert-review",
-  "lib/diagnostic",
-];
-const mvpAllowed = [
-  /^lib\/learning-client\/studentHomeDashboardClient\.js$/,
-  /^lib\/learning-supabase\/israel-calendar\.server\.js$/,
-  /^lib\/learning-supabase\/monthly-persistence-reward\.server\.js$/,
-  /^lib\/learning-supabase\/mission-progress\.server\.js$/,
-  /^lib\/learning-supabase\/learning-coin-award\.server\.js$/,
-  /^pages\/student\/home\.js$/,
-  /^pages\/api\/learning\/session\/finish\.js$/,
-  /^pages\/api\/student\/home-profile\.js$/,
-  /^pages\/api\/admin\/monthly-persistence-award\.js$/,
-  /^components\/student\/StudentDailyMissionsPanel\.js$/,
-  /^components\/student\/StudentMonthlyPersistencePanel\.js$/,
-  /^scripts\/verify-phase/,
-  /^scripts\/verify-mvp-closure-gate\.mjs$/,
-  /^scripts\/verify-israel-monthly-display\.mjs$/,
-];
-
-for (const prefix of forbiddenPrefixes) {
+const allTouched = getWorkingTreeFiles(ROOT);
+for (const prefix of MVP_FORBIDDEN_PREFIXES) {
   const hits = allTouched.filter((f) => f.includes(prefix));
   suite(`No changes under ${prefix}`, hits.length === 0, hits.join(", ") || undefined);
 }
-
-const unexpected = allTouched.filter((f) => !mvpAllowed.some((p) => p.test(f)) && f !== ".env.local");
+const unexpected = allTouched.filter((f) => f !== ".env.local" && !isMvpApprovedFile(f));
 suite("Only MVP-scoped files changed (excl. .env.local)", unexpected.length === 0, unexpected.join(", ") || "clean");
 console.log();
 
@@ -223,12 +227,6 @@ console.log();
 console.log("── Admin monthly persistence route ──");
 const adminToken = (process.env.ENGINE_REVIEW_ADMIN_TOKEN || "").trim();
 
-const noFlag = await fetch(`${BASE}/api/admin/monthly-persistence-award`, {
-  method: "POST",
-  headers: { "content-type": "application/json" },
-  body: JSON.stringify({ dryRun: true }),
-}).catch(() => null);
-// Flag is enabled in this script's env; test missing token instead
 const noToken = await fetch(`${BASE}/api/admin/monthly-persistence-award`, {
   method: "POST",
   headers: { "content-type": "application/json" },

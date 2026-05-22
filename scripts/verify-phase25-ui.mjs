@@ -5,8 +5,15 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
+import { pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const { assertMvpWorkingTreeScope } = await import(
+  pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-helpers.mjs")).href
+);
+const { assertDevServerReady } = await import(
+  pathToFileURL(resolve(ROOT, "scripts/lib/mvp-verify-http-preflight.mjs")).href
+);
 const BASE = "http://127.0.0.1:3001";
 
 function loadEnv(file) {
@@ -66,28 +73,14 @@ console.log("\n═════════════════════�
 console.log("  Phase 2.5 UI Verification");
 console.log("══════════════════════════════════════════════════════\n");
 
-// ── File safety ──
-console.log("── Changed files (UI only) ──");
-const diff = execSync("git diff --name-only HEAD", { cwd: ROOT }).toString().trim();
-const untracked = execSync("git ls-files --others --exclude-standard", { cwd: ROOT })
-  .toString()
-  .trim()
-  .split("\n")
-  .filter((f) => f.includes("StudentDaily") || f.includes("StudentMonthly") || f.includes("verify-phase25"));
-
-const allowed = [
-  /^lib\/learning-client\/studentHomeDashboardClient\.js$/,
-  /^pages\/student\/home\.js$/,
-  /^components\/student\/StudentDailyMissionsPanel\.js$/,
-  /^components\/student\/StudentMonthlyPersistencePanel\.js$/,
-  /^scripts\/verify-phase25/,
-];
-const allChanged = [...(diff ? diff.split("\n") : []), ...untracked.filter(Boolean)];
-const forbidden = allChanged.filter((f) => f && !allowed.some((p) => p.test(f)));
-if (forbidden.length === 0) pass("Only UI/display files changed");
-else fail("Only UI/display files changed", forbidden.join(", "));
-console.log("  Modified:", diff || "(none tracked)");
-console.log("  New:", untracked.filter(Boolean).join(", ") || "(none)");
+// ── Combined MVP working tree (Phases 1–2.6) ──
+console.log("── MVP working tree scope ──");
+const mvpHooks = { pass, fail };
+const { files: mvpFiles } = assertMvpWorkingTreeScope(mvpHooks, {
+  label: "Combined MVP working tree (no forbidden paths)",
+});
+console.log("  Working tree files:");
+mvpFiles.forEach((l) => console.log(`    ${l}`));
 console.log();
 
 // ── Backend files untouched ──
@@ -110,6 +103,8 @@ console.log();
 
 // ── Student home loads ──
 console.log("── /student/home loads ──");
+const httpHooks = { pass, fail };
+const serverOk = await assertDevServerReady(httpHooks, BASE);
 const accounts = [];
 if (process.env.VIRTUAL_STUDENT_ACCOUNTS) {
   try {
@@ -131,18 +126,21 @@ if (process.env.E2E_STUDENT_USERNAME) {
 }
 
 let loaded = 0;
-for (const acc of accounts) {
-  const cookie = await loginStudent(acc.username || acc.label, acc.pin);
-  if (!cookie) {
-    console.log(`  SKIP ${acc.label}: login failed`);
-    continue;
+if (!serverOk) {
+  fail("At least one student home load", "dev server not ready — start: npm run dev");
+} else {
+  for (const acc of accounts) {
+    const cookie = await loginStudent(acc.username || acc.label, acc.pin);
+    if (!cookie) {
+      fail(`${acc.label}: login`, "no session cookie");
+      continue;
+    }
+    await checkHome(cookie, acc.label);
+    loaded++;
   }
-  await checkHome(cookie, acc.label);
-  loaded++;
+  if (loaded === 0) fail("At least one student home load", "all logins failed");
+  else pass(`${loaded} student(s) verified`);
 }
-
-if (loaded === 0) fail("At least one student home load", "all logins failed");
-else pass(`${loaded} student(s) verified`);
 console.log();
 
 // ── View model display fields ──
