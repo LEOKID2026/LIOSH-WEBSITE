@@ -346,6 +346,100 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 This is intentionally an **explicit operator action** — Task Scheduler
 should never do it automatically.
 
+> `-Force` only relaxes the **same-day** idempotency check. It does
+> NOT bypass the **date-safety guard** below. If `state.lastRunDate`
+> is `2026-05-27` and you pass `-Date 2026-05-26`, the runner will
+> FAIL hard before any learning starts — even with `-Force` —
+> because rewinding history would corrupt `timeline.md`,
+> `state.json`, and the parent dashboard's cumulative view.
+
+### Date semantics and the date-safety guard
+
+The wrapper's `-Date` parameter defaults to **today's local-time
+date** every time the wrapper runs (PowerShell evaluates parameter
+defaults at parameter-bind time, not at task-registration time, so
+the 02:00 Task Scheduler trigger captures the calendar date as it
+exists at 02:00 — not a stale date from when you registered the
+task). You will normally never need to pass `-Date` manually; doing
+so is a deliberate operator action for `-Force` reruns.
+
+The runner additionally enforces a **date-safety guard** in
+`run.mjs → mainPhaseD2`:
+
+| Condition | Behavior |
+|---|---|
+| `targetDate > state.lastRunDate` | proceed (normal nightly forward progression) |
+| `targetDate == state.lastRunDate` | defer to idempotency rule (`-Force` allows rerun) |
+| `targetDate <  state.lastRunDate` | **hard FAIL before plan generation** — `-Force` does NOT bypass |
+| `state.lastRunDate` is empty (fresh state) | proceed (first-ever run) |
+
+When the guard fires, the run-summary's `slice = D2.6`,
+`stage = date-guard`, `status = fail`, and `failure-repro.md`
+explains both options for proceeding (wait for the calendar to
+catch up, or reset state — see below). State is left **bit-identical
+to before the run**. To verify, compare the SHA-256 of
+`%LOCALAPPDATA%\liosh-qa\virtual-student-state\state.json` before
+and after the failed run; they must match.
+
+### Resetting longitudinal state
+
+If `state.lastRunDate` has been artificially advanced past the wall
+clock by validation / smoke runs, the date-safety guard will block
+every full-run until the calendar catches up. To start *official*
+nightly operation cleanly, archive the existing test state and let
+the next run start from a fresh first-day baseline.
+
+> **Why archive instead of delete.** `state.json` and
+> `timeline.md` may be useful later as a reference point for
+> reproducing past test results. Moving them into a dated archive
+> folder keeps that history available without confusing the
+> simulator's "what's the current truth" lookup.
+>
+> **Local-only effect.** This procedure resets the *simulator's
+> longitudinal model*. It does NOT touch Supabase, the parent
+> dashboard, the AAA1–AAA12 student accounts, or any product data
+> on Vercel. The parent dashboard at
+> `https://liosh-website.vercel.app/parent/dashboard` will still
+> show all the activity that the simulator's previous validation
+> runs created. After reset, new nightly runs will *add to* that
+> Supabase data while the simulator's local state starts at day 1.
+
+Procedure (Windows PowerShell, run from any directory):
+
+```powershell
+$stateRoot = "$env:LOCALAPPDATA\liosh-qa\virtual-student-state"
+$archiveRoot = Join-Path $stateRoot 'archive'
+$stamp = Get-Date -Format 'yyyy-MM-dd_HHmmss'
+$archive = Join-Path $archiveRoot "pre-launch_$stamp"
+New-Item -ItemType Directory -Force -Path $archive | Out-Null
+
+# Move the longitudinal state into the archive folder (NOT delete).
+Get-ChildItem $stateRoot -File | Where-Object { $_.FullName -notlike "$archiveRoot*" } |
+  ForEach-Object {
+    Move-Item -Path $_.FullName -Destination (Join-Path $archive $_.Name)
+  }
+
+# Confirm the live state directory is now empty of state files.
+Get-ChildItem $stateRoot -File
+"Archived to: $archive"
+```
+
+After this:
+
+- The next `-DryRun` invocation will report `state: ... fresh=true`
+  and produce a first-day plan based on `PERSONAS` defaults.
+- The first real nightly run will become "day 1" of official
+  operation. `state.json` and `timeline.md` will be created fresh.
+- The archived files remain at
+  `%LOCALAPPDATA%\liosh-qa\virtual-student-state\archive\pre-launch_<stamp>\`
+  and can be restored by moving them back if you need to compare
+  historical behavior.
+
+> **Do not run this procedure during an active nightly run.** Wait
+> until any in-flight Task Scheduler invocation has finished (check
+> Task Scheduler's "Last Run Result"), or temporarily disable the
+> task per "Disabling temporarily" below.
+
 ### Disabling temporarily
 
 ```bat
@@ -376,6 +470,7 @@ the simulation history.
 | `preflight: list-students FAIL — missing labels: AAA?` | A QA student was deleted in Supabase, or `login_username` was changed. | Restore the account; rerun preflight. |
 | `preflight: student AAAx FAIL — pin mismatch / locked` | Student PIN changed in Supabase. | Reset to `1234` (or update env file accordingly). |
 | `suite verdict=fail` | One or more student sessions failed mid-run. | Read the per-student log under `reports/virtual-student-daily/<date>/`. State is **not** advanced on fail. |
+| `date-guard: target=YYYY-MM-DD < state.lastRunDate=...` | Target date is earlier than longitudinal state's last run. State has time-traveled forward (usually from validation / smoke runs). | Either wait until the wall clock reaches `state.lastRunDate`, or follow *Resetting longitudinal state* above. State is **not** touched; verify with a SHA-256 comparison. |
 | `state-advance: ... succeeded=false, error=...` | Disk full / permission issue writing `state.json`. | Free space, fix permissions, then `-Force` rerun the date. |
 | Task ran but no log file appeared | Task Scheduler couldn't even find PowerShell, OR a typo in the `-File` path. | Check **Task Scheduler → History** for the launch error. |
 | Task ran, log says exit 2, no `runnerExit` line | Wrapper-level fatal. The reason is the line just above `exit 2`. | Fix the wrapper-level prerequisite (env file / node / repo path). |

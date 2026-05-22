@@ -108,6 +108,14 @@ param(
   [ValidateSet('realtime', 'fast')]
   [string]$Mode = 'realtime',
 
+  # NOTE on date semantics: PowerShell evaluates parameter defaults at
+  # parameter-bind time (not script-load time), so this default is the
+  # CURRENT local-time date every time the wrapper is invoked — including
+  # the 02:00 Task Scheduler trigger, which captures the just-rolled-over
+  # calendar date. There is no stale/fixed date captured at registration.
+  # The runner's date-safety guard (run.mjs mainPhaseD2 → date-guard
+  # branch) additionally refuses to start a learning day for any target
+  # date earlier than state.lastRunDate.
   [ValidatePattern('^\d{4}-\d{2}-\d{2}$')]
   [string]$Date = (Get-Date -Format 'yyyy-MM-dd'),
 
@@ -184,8 +192,14 @@ Write-Tee "[run-nightly] repoRoot     = $repoRoot"
 Write-Tee "[run-nightly] envFile      = $EnvFile"
 Write-Tee "[run-nightly] logDir       = $LogDir"
 Write-Tee "[run-nightly] logPath      = $logPath"
+$dateExplicit = $PSBoundParameters.ContainsKey('Date')
+$dateOrigin = if ($dateExplicit) { 'explicit (-Date arg)' } else { "default (today's local date, $(Get-Date -Format 'zzz'))" }
+$todayCheck = Get-Date -Format 'yyyy-MM-dd'
 Write-Tee "[run-nightly] mode         = $Mode"
-Write-Tee "[run-nightly] date         = $Date"
+Write-Tee "[run-nightly] date         = $Date  [$dateOrigin]"
+if ($Date -ne $todayCheck) {
+  Write-Tee "[run-nightly] note         = $Date != today ($todayCheck). The runner's date-guard will FAIL safely if $Date < state.lastRunDate."
+}
 Write-Tee "[run-nightly] baseUrl      = $BaseUrl"
 Write-Tee "[run-nightly] students     = $(if ($Students) { $Students } else { '(all participating)' })"
 Write-Tee "[run-nightly] force        = $Force"

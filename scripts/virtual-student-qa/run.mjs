@@ -2594,6 +2594,11 @@ async function mainPhaseD2(args) {
   // strictly a "can-the-night-succeed?" guard and does not need a plan.
   // The user's design contract: preflight-only never advances state and
   // never drives any learning UI. Failures exit 1 cleanly.
+  //
+  // Preflight-only intentionally bypasses the date-safety guard below:
+  // a "can my creds still log into Vercel?" probe is harmless to run on
+  // any date and useful when state has time-traveled (you may want to
+  // confirm Vercel is still reachable before deciding how to reset).
   if (preflightOnly) {
     return runPhaseD2PreflightOnly({
       args,
@@ -2609,6 +2614,64 @@ async function mainPhaseD2(args) {
       stateLastRunStatus: state.lastRunStatus,
       dailyArtifacts,
       log,
+    });
+  }
+
+  // ---- Date-safety guard (D2.6 follow-up) -------------------------------
+  // Refuse to run a learning day for a target date that is BEFORE the
+  // longitudinal state's lastRunDate. Each historical day's plan is
+  // seeded by date and is meant to be applied on top of cumulative
+  // prior state; "going back in time" would corrupt the simulation
+  // (re-entering closed days, contradicting timeline.md, producing
+  // plan→state inconsistencies that survive into the parent dashboard).
+  //
+  // Rules:
+  //   - target < state.lastRunDate  → hard FAIL here, BEFORE any
+  //     plan generation, browser launch, or learning. --force does
+  //     NOT bypass this guard: --force is for *same-day* reruns,
+  //     not for rewinding history.
+  //   - target == state.lastRunDate → defer to the existing
+  //     idempotency rule + --force semantics below.
+  //   - target  > state.lastRunDate → allow (the normal nightly
+  //     forward progression).
+  //   - state is fresh (no lastRunDate) → allow (first-ever run).
+  //
+  // This guard is intentionally NOT applied to dry-run (read-only,
+  // useful for inspecting "what plan would have been generated for
+  // a past date") or preflight-only (read-only Vercel reachability +
+  // login probe, not date-sensitive). Preflight-only branches above
+  // and returns before reaching this point; dry-run requires the
+  // explicit !dryRun gate below because the dry-run finalize lives
+  // AFTER plan generation, lower in this function.
+  if (!dryRun && state.lastRunDate && date < state.lastRunDate) {
+    log(
+      `date-guard: target=${date} < state.lastRunDate=${state.lastRunDate}; ` +
+        `refusing to advance backward in time. State left untouched.`
+    );
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "date-guard",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath,
+      stateFresh,
+      reason:
+        `date-guard: target date=${date} is BEFORE state.lastRunDate=` +
+        `${state.lastRunDate}. Running an earlier date against a ` +
+        `more-advanced longitudinal state would corrupt the simulation. ` +
+        `--force does NOT bypass this guard. To proceed: (a) wait until ` +
+        `the wall-clock date is >= ${state.lastRunDate} and let the ` +
+        `nightly trigger fire normally, or (b) reset/archive the ` +
+        `longitudinal state per scripts/virtual-student-qa/docs/` +
+        `SCHEDULER-SETUP.md "Resetting longitudinal state".`,
+      dailyArtifacts,
+      stateLastRunDate: state.lastRunDate,
+      stateLastRunStatus: state.lastRunStatus,
     });
   }
 
@@ -3524,7 +3587,9 @@ function finalizePhaseD2(input) {
       ? sliceForFullRunStage({ baseUrl, mode: mode_ })
       : stage === "preflight-only"
         ? "D2.2"
-        : "D2.1";
+        : stage === "date-guard"
+          ? "D2.6"
+          : "D2.1";
 
   const summary = {
     runId: `phase-d2-${date}`,
@@ -4071,6 +4136,60 @@ function buildPhaseD2FailureRepro(s) {
         `--date ${s.resolved.date} --preflight-only`
     );
     lines.push("```");
+  } else if (s.stage === "date-guard") {
+    lines.push("## Why this fired");
+    lines.push("");
+    lines.push(
+      "The runner refused to advance backward in time. The target " +
+        `date \`${s.resolved.date}\` is earlier than the longitudinal ` +
+        `state's \`lastRunDate=${s.resolved.stateLastRunDate ?? "(none)"}\`. ` +
+        "Running an earlier date against a more-advanced state would " +
+        "corrupt the simulation timeline (closed days reopened, " +
+        "timeline.md/state.json/parent-dashboard going out of sync). " +
+        "`--force` does NOT bypass this guard — `--force` is only for " +
+        "same-day reruns, not for rewinding history."
+    );
+    lines.push("");
+    lines.push("## How to proceed");
+    lines.push("");
+    lines.push(
+      "Pick exactly ONE of the following, then re-run the scheduler " +
+        "(or `node scripts/virtual-student-qa/run.mjs --phase d2 ...`):"
+    );
+    lines.push("");
+    lines.push(
+      "1. **Wait until the wall-clock date is `>= " +
+        `${s.resolved.stateLastRunDate ?? "(unknown)"}\`** and let the ` +
+        "next 02:00 trigger fire normally. The natural forward " +
+        "progression of the calendar makes the guard a no-op once " +
+        "today catches up to / overtakes `state.lastRunDate`."
+    );
+    lines.push("");
+    lines.push(
+      "2. **Reset / archive the longitudinal state** per the " +
+        "*Resetting longitudinal state* section in " +
+        "`scripts/virtual-student-qa/docs/SCHEDULER-SETUP.md`. This " +
+        "moves `state.json` / `state.json.bak` / `timeline.md` into " +
+        "an archive folder so the next run starts from a clean " +
+        "first-day baseline. Use this when the test/validation " +
+        "history has artificially advanced state past the calendar " +
+        "and you want to start *official* nightly operation cleanly."
+    );
+    lines.push("");
+    lines.push("## Verifying the fail-safe contract");
+    lines.push("");
+    lines.push(
+      "Because this guard fires BEFORE plan generation, BEFORE the " +
+        "browser is launched, and BEFORE any per-student session, no " +
+        "longitudinal state can have been advanced by this run. To " +
+        "verify, compare the SHA-256 of " +
+        "`%LOCALAPPDATA%\\liosh-qa\\virtual-student-state\\state.json` " +
+        "before and after — they MUST be bit-identical. " +
+        "`timeline.md` MUST NOT have a new row. " +
+        "Likewise no per-student artifact directories are written " +
+        "under `reports/virtual-student-daily/" +
+        `${s.resolved.date}/s*-AAA*/\`.`
+    );
   } else if (s.stage === "full-run") {
     lines.push("## Reproduce (D2.3 full-run, fast mode)");
     lines.push("");
