@@ -369,6 +369,7 @@ export default function ParentDashboardPage() {
 
   return (
     <Layout>
+      <ParentPolicyAcceptanceGate accessToken={session.access_token} onLogout={logout}>
       <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -380,7 +381,6 @@ export default function ParentDashboardPage() {
           </button>
         </div>
 
-        <ParentPolicyAcceptanceGate accessToken={session.access_token}>
         <form
           onSubmit={createStudent}
           className={`space-y-2 rounded border border-white/15 p-4 bg-black/30 ${students.length >= studentLimit ? "opacity-60" : ""}`}
@@ -725,8 +725,8 @@ export default function ParentDashboardPage() {
             </div>
           </div>
         ) : null}
-        </ParentPolicyAcceptanceGate>
       </div>
+      </ParentPolicyAcceptanceGate>
     </Layout>
   );
 }

@@ -11,13 +11,13 @@
 export const CONTACT_EMAIL = "18eran@gmail.com";
 
 /** ISO date shown on all policy pages (update when content materially changes). */
-export const POLICY_LAST_UPDATED = "2026-05-23";
+export const POLICY_LAST_UPDATED = "2026-05-24";
 
 /** Stable version ids for Terms acceptance audit (bump when Terms materially change). */
-export const TERMS_VERSION = POLICY_LAST_UPDATED;
+export const TERMS_VERSION = "2026-05-24";
 
 /** Stable version ids for Privacy acceptance audit (bump when Privacy materially change). */
-export const PRIVACY_VERSION = POLICY_LAST_UPDATED;
+export const PRIVACY_VERSION = "2026-05-24";
 
 export const DELETION_SLA_BUSINESS_DAYS = 7;
 

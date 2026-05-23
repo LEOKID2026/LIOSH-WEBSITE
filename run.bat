@@ -1,6 +1,7 @@
 @echo off
 setlocal EnableExtensions
 REM Runs on 3002 so it never fights with "npm run dev" on 3001.
+REM Always stops any existing Node listener on this port before starting — never reuses a stale server.
 cd /d "%~dp0"
 
 set "PORT=3002"
@@ -9,18 +10,10 @@ set "URL=http://127.0.0.1:%PORT%"
 echo Starting MLEO website (port %PORT%)...
 echo Open in browser: %URL%
 echo.
+echo [INFO] Stopping any existing Node process on port %PORT% so code changes are picked up.
+echo [INFO] If you need a production build instead of dev, use scripts\dev\restart-local-3002.bat
+echo.
 
-REM Server already up? Reuse it instead of failing with EADDRINUSE.
-powershell -NoProfile -Command "try { Invoke-WebRequest -Uri '%URL%' -UseBasicParsing -TimeoutSec 3 | Out-Null; exit 0 } catch { exit 1 }" >nul 2>&1
-if %ERRORLEVEL%==0 (
-  echo [OK] Server is already running on port %PORT%.
-  start "" "%URL%"
-  echo.
-  pause
-  exit /b 0
-)
-
-REM Port taken but not responding — stop stale Node listener on this port.
 call :FreePortNode %PORT%
 
 call npm run dev:run-button
@@ -41,8 +34,13 @@ for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%P%" ^| findstr LISTENING')
     pause
     exit /b 1
   )
-  echo [INFO] Port %P% was busy — stopping old Node process ^(PID %%a^)...
+  echo [INFO] Stopping old Node process on port %P% ^(PID %%a^)...
   taskkill /PID %%a /F >nul 2>&1
 )
-if "%FOUND%"=="1" timeout /t 2 /nobreak >nul
+if "%FOUND%"=="1" (
+  timeout /t 2 /nobreak >nul
+  echo [OK] Port %P% cleared — starting fresh dev server.
+) else (
+  echo [OK] Port %P% was free — starting dev server.
+)
 exit /b 0

@@ -95,9 +95,9 @@ export function routeForJob(job) {
   }
 
   if (section === "parent-report") {
-    const detailed = region === "detailed-report" || slug === "detailed-report";
+    const detailedPage = slug === "detailed-report";
     return {
-      path: detailed ? "__PARENT_REPORT_DETAILED__" : "__PARENT_REPORT__",
+      path: detailedPage ? "__PARENT_REPORT_DETAILED__" : "__PARENT_REPORT__",
       auth: "parent",
     };
   }

@@ -14,33 +14,51 @@ function ensureDir(p) {
 }
 
 function main() {
-  const manifestFile = existsSync(approvedPath) ? approvedPath : manifestPath;
-  const manifest = JSON.parse(readFileSync(manifestFile, "utf8"));
-  let copied = 0;
-  let skipped = 0;
+  if (!existsSync(approvedPath)) {
+    console.error("Missing approved manifest — run: npm run help:data-safety-review");
+    process.exit(1);
+  }
 
-  for (const rel of manifest.publicPaths || []) {
+  const approvedDoc = JSON.parse(readFileSync(approvedPath, "utf8"));
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const required = manifest.publicPaths || [];
+  const approved = approvedDoc.publicPaths || [];
+
+  if (!approvedDoc.publishAllowed) {
+    console.error(
+      `Publish blocked: publishAllowed=false (${approvedDoc.approvedCount}/${required.length} approved)`
+    );
+    process.exit(1);
+  }
+
+  if (approved.length !== required.length) {
+    console.error(
+      `Publish blocked: approved count ${approved.length} !== manifest requirement ${required.length}`
+    );
+    process.exit(1);
+  }
+
+  let copied = 0;
+  for (const rel of required) {
+    if (!approved.includes(rel)) {
+      console.error(`Publish blocked: ${rel} not in approved list`);
+      process.exit(1);
+    }
     const pubPath = join(publicRoot, rel);
     ensureDir(dirname(pubPath));
 
     const parts = rel.replace(/^help-center\/screenshots\//, "").split("/");
-    const section = parts[0];
-    const slug = parts[1];
-    const viewport = parts[2];
-    const file = parts[3];
-    const auditPath = join(auditRoot, section, slug, viewport, file);
+    const auditPath = join(auditRoot, ...parts);
 
     if (!existsSync(auditPath)) {
-      console.warn(`SKIP (no raw): ${rel}`);
-      skipped++;
-      continue;
+      console.error(`Publish blocked: missing raw file for ${rel}`);
+      process.exit(1);
     }
     copyFileSync(auditPath, pubPath);
     copied++;
   }
 
-  console.log(`Published ${copied} file(s), skipped ${skipped}`);
-  if (skipped > 0) process.exit(1);
+  console.log(`Published ${copied}/${required.length} approved screenshot(s) to public/`);
 }
 
 main();

@@ -1,43 +1,81 @@
 #!/usr/bin/env node
 /**
- * Agent internal data-safety review for raw Help Center screenshots.
- * - Rejects 1x1 placeholder PNGs (tiny file size)
- * - Writes data/help-center/screenshots-manifest-approved.json
+ * Data-safety + quality review for raw Help Center screenshots.
+ * Writes data/help-center/screenshots-manifest-approved.json only when all manifest paths pass.
  */
-import { readFileSync, writeFileSync, statSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { evaluateScreenshotFile, MIN_APPROVED_BYTES } from "./capture-quality.mjs";
 
-const MIN_BYTES = 8_000;
-const FORBIDDEN_PATTERNS = [
-  /@gmail\.com/i,
-  /\b\d{3}-\d{7}\b/,
-];
+const FORBIDDEN_PATTERNS = [/@gmail\.com/i, /\b\d{3}-\d{7}\b/];
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const manifestPath = join(root, "data", "help-center", "screenshots-manifest.json");
 const auditRoot = join(root, "qa-evidence-audit", "help-center");
 const outPath = join(root, "data", "help-center", "screenshots-manifest-approved.json");
 
+function relToAuditPath(rel) {
+  const parts = rel.replace(/^help-center\/screenshots\//, "").split("/");
+  return join(auditRoot, ...parts);
+}
+
+function viewportFromRel(rel) {
+  const parts = rel.split("/");
+  const vp = parts[parts.length - 2];
+  if (vp === "mobile" || vp === "tablet" || vp === "desktop") return vp;
+  return "desktop";
+}
+
 function main() {
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const required = manifest.publicPaths || [];
   const approved = [];
   const rejected = [];
+  /** @type {Map<string, string>} hash -> first rel */
+  const hashOwners = new Map();
 
-  for (const rel of manifest.publicPaths || []) {
-    const parts = rel.replace(/^help-center\/screenshots\//, "").split("/");
-    const auditPath = join(auditRoot, ...parts);
+  for (const rel of required) {
+    const auditPath = relToAuditPath(rel);
     if (!existsSync(auditPath)) {
       rejected.push({ rel, reason: "missing raw file" });
       continue;
     }
-    const size = statSync(auditPath).size;
-    if (size < MIN_BYTES) {
-      rejected.push({ rel, reason: `file too small (${size} bytes) — likely placeholder` });
+
+    const viewport = viewportFromRel(rel);
+    const quality = evaluateScreenshotFile({
+      filePath: auditPath,
+      viewport,
+      minBytes: MIN_APPROVED_BYTES,
+    });
+    if (!quality.ok) {
+      rejected.push({ rel, reason: quality.reasons.join("; ") });
       continue;
     }
+
+    const hash = quality.sha256;
+    if (hashOwners.has(hash) && hashOwners.get(hash) !== rel) {
+      rejected.push({
+        rel,
+        reason: `duplicate content hash (same file as ${hashOwners.get(hash)})`,
+      });
+      continue;
+    }
+    if (!hashOwners.has(hash)) hashOwners.set(hash, rel);
+
+    const nameCheck = rel + auditPath;
+    for (const pat of FORBIDDEN_PATTERNS) {
+      if (pat.test(nameCheck)) {
+        rejected.push({ rel, reason: `forbidden pattern in path metadata` });
+        break;
+      }
+    }
+    if (rejected.some((r) => r.rel === rel)) continue;
+
     approved.push(rel);
   }
+
+  const fullPass = approved.length === required.length && rejected.length === 0;
 
   writeFileSync(
     outPath,
@@ -45,14 +83,17 @@ function main() {
       {
         version: 1,
         reviewedAt: new Date().toISOString(),
-        minBytes: MIN_BYTES,
+        minBytes: MIN_APPROVED_BYTES,
+        requiredCount: required.length,
         approvedCount: approved.length,
         rejectedCount: rejected.length,
-        publicPaths: approved,
+        publishAllowed: fullPass,
+        publicPaths: fullPass ? approved : [],
         rejected,
         notes: [
-          "Review checks file size only; visual PII scan is manual in MANUAL-QA.md.",
+          "Checks size, PNG dimensions, mobile height cap, duplicate SHA-256 across jobs.",
           "Demo account ADMIN / child ישראל ישראלי only.",
+          "publishAllowed is true only when every manifest path is approved.",
         ],
       },
       null,
@@ -61,16 +102,16 @@ function main() {
     "utf8"
   );
 
-  console.log(`Approved: ${approved.length}, Rejected: ${rejected.length}`);
+  console.log(
+    `Approved: ${approved.length}/${required.length}, Rejected: ${rejected.length}, publishAllowed: ${fullPass}`
+  );
   if (rejected.length) {
     console.warn("Rejected samples:");
-    for (const r of rejected.slice(0, 15)) {
+    for (const r of rejected.slice(0, 20)) {
       console.warn(`  - ${r.rel}: ${r.reason}`);
     }
   }
-  if (approved.length === 0) {
-    process.exit(1);
-  }
+  if (!fullPass) process.exit(1);
 }
 
 main();

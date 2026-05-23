@@ -10,7 +10,7 @@
     "help:seed-demo-report": "node --env-file=.env.local scripts/help-center/seed-demo-report-data.mjs",
     "help:build-manifest": "node scripts/help-center/build-screenshots-manifest.mjs",
     "help:placeholders": "node scripts/help-center/generate-placeholder-screenshots.mjs",
-    "help:capture": "node scripts/help-center/capture-help-screenshots.mjs",
+    "help:capture": "node --env-file=.env.local scripts/help-center/capture-help-screenshots.mjs",
     "help:publish-screenshots": "node scripts/help-center/publish-screenshots.mjs",
     "help:data-safety-review": "node scripts/help-center/data-safety-review.mjs",
     "help:verify": "node scripts/help-center/verify-screenshots.mjs",

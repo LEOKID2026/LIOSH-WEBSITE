@@ -3,6 +3,12 @@
 **Date:** 2026-05-23  
 **Phase D.1 verification:** 2026-05-23 — **PASS** (dev DB + API smoke)  
 **Phase D.2:** 2026-05-23 — full policy acceptance panel (replaces weak checkbox-only UX)  
+**Phase D.2B:** 2026-05-23 — auto-forced full policy window + Hebrew auth errors (real browser fix)  
+**Phase D.2C:** 2026-05-23 — page scroll (no nested scroll trap / left scrollbar) — **rejected in real browser**  
+**Phase D.2D:** 2026-05-23 — eliminate internal scroll completely (`overflow-x-hidden` CSS trap fix)  
+**Phase D.2F:** 2026-05-23 — policy API route availability + fail-closed gate (stale-server root cause)  
+**Phase D.2G:** 2026-05-23 — operational hardening + version re-acceptance proof  
+**Phase D.2H:** 2026-05-24 — **global** Terms/Privacy version bump (`2026-05-23` → `2026-05-24`)  
 **Status:** code + dev migration applied; production migration = owner apply same SQL
 
 ---
@@ -14,10 +20,18 @@ File: `data/legal/sitePolicies.he.js`
 | Constant | Purpose |
 |----------|---------|
 | `POLICY_LAST_UPDATED` | Display date on legal pages |
-| `TERMS_VERSION` | Acceptance audit id for Terms (currently equals `POLICY_LAST_UPDATED`) |
-| `PRIVACY_VERSION` | Acceptance audit id for Privacy (currently equals `POLICY_LAST_UPDATED`) |
+| `TERMS_VERSION` | Acceptance audit id for Terms (**active: `2026-05-24`**) |
+| `PRIVACY_VERSION` | Acceptance audit id for Privacy (**active: `2026-05-24`**) |
 
 When Terms or Privacy change materially, bump the relevant version constant(s). Existing parents will be prompted to re-accept on next dashboard visit.
+
+**Official re-acceptance mechanism (Phase D.2G — do not delete rows):**
+
+- Bump `TERMS_VERSION` and/or `PRIVACY_VERSION` in `data/legal/sitePolicies.he.js`.
+- Rebuild and redeploy (or restart local server after clean build).
+- Parents with an older acceptance row see the full policy panel again automatically.
+- Accepting inserts a **new append-only row**; prior rows remain in `parent_policy_acceptances`.
+- **Do not** globally `DELETE` acceptance rows for normal policy updates — that bypasses audit history and is for QA/dev reset only.
 
 ---
 
@@ -181,7 +195,7 @@ Shared section renderer: `components/legal/PolicySectionsBody.jsx`.
 
 | Step | Behavior |
 |------|----------|
-| Signup mode | No checkbox-only acceptance. Button: «פתחו וקראו את תנאי השימוש ומדיניות הפרטיות» opens full panel. |
+| Signup mode | **Auto-shows** full policy window (no open button). Form hidden until acceptance completed. |
 | Pre-signup panel | `persistToApi={false}` — local `preSignupPolicyCompleted` flag only. |
 | Submit disabled | Until full panel accepted (`preSignupPolicyCompleted === true`). |
 | Decline | Panel closes; signup blocked; message shown. |
@@ -230,7 +244,320 @@ Replaces lightweight one-click gate:
 
 ---
 
-## Phase D.1 UI smoke results (superseded for signup/gate UX by D.2)
+## Phase D.2B — Auto-forced policy window + Hebrew auth (2026-05-23)
+
+### Real browser issues found (D.2 rejection)
+
+1. **English auth errors** — Supabase `Invalid login credentials` was shown raw in the UI (`הכניסה נכשלה: Invalid login credentials`).
+2. **Teaser gate, not forced window** — Dashboard gate showed a short intro + «פתחו וקראו…» button; parents could reach the dashboard header without reading policy content.
+3. **Signup “open policy” button** — Signup required clicking a button to open the panel instead of auto-showing the full policy window.
+
+### Fixes applied
+
+| Area | D.2B behavior |
+|------|----------------|
+| Auth errors | `lib/parent-client/parent-auth-errors.he.js` maps Supabase/provider strings to safe Hebrew (e.g. `Invalid login credentials` → `פרטי ההתחברות שגויים…`). |
+| Dashboard gate | `ParentPolicyAcceptanceGate` **auto-renders** `FullPolicyAcceptancePanel` immediately when `accepted === false`. No teaser / open button. Entire dashboard (header + content) wrapped inside gate. |
+| Decline | `PolicyAcceptanceDeclinedBlock` — Hebrew message `לא ניתן להמשיך לאזור ההורים…`; only «קראו שוב» or «יציאה והחזרה למסך הכניסה» (logout). |
+| Signup | Switching to **הרשמה** auto-shows full policy window; signup form hidden until scroll + checkbox + accept. No standalone open button. |
+| Login redirect | Successful login → `/parent/dashboard` → gate auto-shows full window if versions not accepted. |
+
+### Decline behavior (D.2B)
+
+| Context | Result |
+|---------|--------|
+| Dashboard | Declined block; dashboard content not rendered; logout returns to `/parent/login`. |
+| Signup | Declined block with signup-specific message; «חזרה למסך הכניסה» switches to login tab. |
+
+### Browser validation (D.2B smoke)
+
+**Script:** `scripts/legal/policy-acceptance-browser-smoke.mjs`  
+**Run:** `npm run build` → `npx next start -p 3108` → `node --env-file=.env.local scripts/legal/policy-acceptance-browser-smoke.mjs --base http://localhost:3108`
+
+**Result:** **PASS** (2026-05-23)
+
+| Scenario | Result |
+|----------|--------|
+| A — Wrong credentials | Hebrew error shown; no English `Invalid login credentials` |
+| B — Unaccepted parent login | Full policy window auto-shown; dashboard hidden; decline blocks; scroll + checkbox + accept unlocks; refresh stays unlocked |
+| C — Version mismatch | Unit check: stale versions → not accepted (no repo version bump) |
+| D — Signup | Full policy window auto-shown; no open button; decline blocks signup form |
+
+**Playwright spec (optional):** `tests/e2e/parent-policy-acceptance-d2b.spec.ts`
+
+### DB / API changes in D.2B
+
+**None.**
+
+---
+
+## Phase D.2C — Page scroll / scroll-trap fix (2026-05-23)
+
+### Real browser issue (D.2B rejection)
+
+The full policy panel used an internal `overflow-y: auto` region with `max-height`, `overscroll-contain`, and RTL direction. In the browser this caused:
+
+- Mouse wheel / trackpad feeling **stuck** when the cursor was over the policy area
+- An **internal scrollbar on the left** (RTL nested scroll)
+- Scroll not chaining naturally to the page
+
+### Fix
+
+`FullPolicyAcceptancePanel` now uses **normal page/document scroll**:
+
+| Before (D.2B) | After (D.2C) |
+|---------------|--------------|
+| Nested `overflow-y-auto` + `max-h-[…vh]` | No nested scroll container |
+| IntersectionObserver `root` = inner div | IntersectionObserver `root: null` (viewport) + window scroll listener |
+| Footer pinned below fixed-height scroll box | Footer flows at bottom of inline page content |
+| `overscroll-contain` scroll trap | Removed — page scroll chains naturally |
+
+Bottom detection: bottom sentinel (`data-policy-bottom-sentinel`) + viewport IntersectionObserver + `window.scroll` / `resize`.
+
+Panel marker: `data-policy-scroll-mode="page"`.
+
+Approval rules unchanged: scroll to bottom + confirmation checkbox → enable **אני מסכים/ה וממשיך/ה**.
+
+### Browser validation (D.2C)
+
+**Result:** **PASS** (2026-05-23, same smoke script)
+
+| Check | Result |
+|-------|--------|
+| Full policy visible immediately on dashboard | PASS |
+| No nested max-height scroll trap in panel | PASS |
+| Checkbox disabled until page scrolled to bottom | PASS |
+| Approve disabled until checkbox checked | PASS |
+| Decline blocks; accept unlocks; refresh stays unlocked | PASS |
+| Signup auto-forces full panel; Hebrew errors | PASS (carried from D.2B) |
+
+### DB / API changes in D.2C
+
+**None.** (Rejected in real browser — internal scrollbar still visible.)
+
+---
+
+## Phase D.2D — Eliminate internal scroll completely (2026-05-23)
+
+### Why D.2C was rejected
+
+Real browser screenshot showed a **left-side internal scrollbar** inside the policy card and wheel/trackpad still trapped when the cursor was over the policy area. Root cause: **`overflow-x-hidden` on the content wrapper** — per CSS, when `overflow-x` is `hidden`/`clip`, computed `overflow-y` becomes `auto`, creating an implicit nested scroll box (worse in RTL = scrollbar on the left).
+
+D.2C smoke did not catch this because it only checked explicit `overflow-y-auto` classes, not computed styles from `overflow-x-hidden`.
+
+### D.2D fix
+
+| Removed | Replaced with |
+|---------|----------------|
+| `overflow-y-auto`, `max-h-[…vh]`, `overscroll-contain`, `overflow-hidden` on card | Normal block layout — no overflow classes |
+| `overflow-x-hidden` on policy content | `break-words` / `min-w-0` only |
+| Single card with header / scroll region / footer | Three stacked blocks in **one page flow**; sentinel immediately before checkbox |
+| `data-policy-scroll-mode="page"` | `data-policy-scroll-mode="page-only"` + `data-policy-acceptance-root` |
+
+**Acceptance criterion:** exactly **one** vertical scrollbar — the browser window scrollbar (far right). No internal scrollboxes inside `[data-policy-acceptance-root]`.
+
+### Browser validation (D.2D)
+
+**Script:** `scripts/legal/policy-acceptance-browser-smoke.mjs` (strict computed-style audit)
+
+**Result:** **PASS** (2026-05-23)
+
+| Check | Result |
+|-------|--------|
+| No `overflow-x: hidden` inside acceptance root | PASS — audit |
+| No computed `overflow-y: auto/scroll` inside root | PASS — audit |
+| No `max-height` / fixed height scroll traps | PASS — audit |
+| Page document height ~9109px (natural page scroll) | PASS |
+| Checkbox/approve gating + decline/accept flows | PASS |
+| Screenshot | `reports/legal/policy-acceptance-d2d-scroll.png` |
+
+### DB / API changes in D.2D
+
+**None.**
+
+---
+
+## Phase D.2F — Policy API availability + fail-closed gate (2026-05-23)
+
+### Stale-server root cause (critical)
+
+Symptoms in browser console:
+
+- `/api/parent/policy-acceptance/status` → **404**
+- Client tried to parse HTML 404 as JSON (`Unexpected token '<'…`)
+- Dashboard could appear to “work” while policy gate was broken
+
+**Root cause:** `run.bat` previously **reused** an existing listener on port **3002** without restarting. That process served an **old `.next` build** that did not include new API routes (`policy-acceptance/*`, and sometimes `list-students`).
+
+**Not the cause:** DB reset, wrong route path, wrong repo, missing SQL.
+
+### D.2F client/gate fix
+
+| File | Fix |
+|------|-----|
+| `lib/parent-client/policy-acceptance-api.js` | Check `Content-Type`; never parse HTML as JSON; Hebrew-safe errors |
+| `components/parent/ParentPolicyAcceptanceGate.jsx` | `statusChecked` flag — children only when valid status returns `accepted: true`; Hebrew retry panel on any failure |
+
+### DB / API changes in D.2F
+
+**None.**
+
+---
+
+## Phase D.2G — Operational hardening + version re-acceptance proof (2026-05-23)
+
+### Stale-server prevention
+
+| Change | Purpose |
+|--------|---------|
+| `run.bat` | **Removed silent reuse.** Always stops existing Node on port 3002, then starts fresh `next dev -p 3002`. |
+| `scripts/dev/restart-local-3002.bat` | Safe path after API/route changes: kill port → delete `.next` → `npm run build` → `next start -p 3002`. |
+
+**Safe local restart (recommended after policy/API work):**
+
+```bat
+scripts\dev\restart-local-3002.bat
+```
+
+Or manually:
+
+```powershell
+# stop Node on 3002, then:
+Remove-Item -Recurse -Force .next
+npm run build
+npx next start -p 3002
+```
+
+**Owner browser testing:** use `http://localhost:3002` on a **freshly restarted** local server — not an old Vercel tab or a stale `run.bat` reuse session.
+
+### Version bump re-acceptance proof
+
+**Script:** `scripts/legal/policy-acceptance-version-reaccept-smoke.mjs`
+
+**Result:** **PASS** (2026-05-23)
+
+| Step | Result |
+|------|--------|
+| Parent accepted on baseline `TERMS_VERSION=2026-05-23` | PASS |
+| Temp bump to `2026-05-23-d2g-test` + rebuild | PASS |
+| Status API → `accepted: false` | PASS |
+| Dashboard hidden; full policy panel auto-shown | PASS |
+| Accept → dashboard unlocks; refresh stays unlocked | PASS |
+| DB: **2 rows** — old `2026-05-23` row **preserved**; new `2026-05-23-d2g-test` row inserted | PASS |
+| `TERMS_VERSION` reverted to `2026-05-23` in repo | PASS |
+
+### Fail-closed re-check (D.2G)
+
+Simulated HTML 404 on status API during browser login:
+
+| Check | Result |
+|-------|--------|
+| Dashboard content hidden | PASS |
+| Hebrew message + `נסו שוב` | PASS |
+| No JSON parse crash | PASS |
+| No English user-facing error | PASS |
+
+### Scroll re-check on fresh latest local build (D.2G)
+
+Strict D.2D computed-style audit inside version-bump browser flow:
+
+| Check | Result |
+|-------|--------|
+| `data-policy-scroll-mode="page-only"` | PASS |
+| No internal `overflow-y: auto/scroll` inside acceptance root | PASS |
+| No `overflow-x: hidden` trap inside root | PASS |
+| Single page scrollbar (document scroll only) | PASS |
+
+### API curl (fresh `next start -p 3002`, no auth)
+
+| Route | Expected | Result |
+|-------|----------|--------|
+| `GET /api/parent/policy-acceptance/status` | 401 JSON | PASS |
+| `POST /api/parent/policy-acceptance/accept` | 401 JSON | PASS |
+| `GET /api/parent/list-students` | 401 JSON | PASS |
+
+### DB / API / ENV changes in D.2G
+
+**None** (operational scripts + docs only; version bump test was temporary and reverted).
+
+---
+
+## Phase D.2H — Global version bump (`2026-05-23` → `2026-05-24`) (2026-05-24)
+
+### What changed (kept — not reverted)
+
+File: `data/legal/sitePolicies.he.js`
+
+| Constant | Old | New (active) |
+|----------|-----|--------------|
+| `POLICY_LAST_UPDATED` | `2026-05-23` | `2026-05-24` |
+| `TERMS_VERSION` | `2026-05-23` | `2026-05-24` |
+| `PRIVACY_VERSION` | `2026-05-23` | `2026-05-24` |
+
+**No rows deleted.** This is the official global “reset” for all parents — bump versions only.
+
+### Status logic (verified)
+
+`resolveParentPolicyAcceptanceStatus()` / `isCurrentPolicyAccepted()`:
+
+- Loads **latest** row by `accepted_at`.
+- Returns `accepted: true` only when `terms_version === TERMS_VERSION` **and** `privacy_version === PRIVACY_VERSION`.
+- Parent with only `2026-05-23` row → `accepted: false`.
+- Parent with no rows → `accepted: false`.
+
+### Validation script
+
+`scripts/legal/policy-acceptance-global-version-d2h.mjs`  
+Report: `reports/legal/policy-acceptance-d2h-global-bump.json`
+
+**Result:** **PASS** (2026-05-24)
+
+| Parent | Status after bump | DB rows (append-only) |
+|--------|-------------------|------------------------|
+| `18eran@gmail.com` (`be71653c-…`) | `accepted: false` — must re-accept | 1 row: `2026-05-23` preserved |
+| `admin@admin.com` (`05c73a19-…`) | `accepted: true` — already re-accepted during prior QA | 2 rows: `2026-05-23` + `2026-05-24` both preserved |
+| Synthetic parent (old version only) | Full browser: gate → scroll → decline/accept → dashboard | 2 rows after accept; old row not deleted |
+
+### Browser (synthetic old-version parent)
+
+| Check | Result |
+|-------|--------|
+| Dashboard hidden until accept | PASS |
+| Full policy panel auto-shown | PASS |
+| Page-only scroll (no internal scrollbar) | PASS |
+| Decline blocks | PASS |
+| Accept inserts `2026-05-24` row | PASS |
+| Refresh stays unlocked | PASS |
+
+**Owner account `18eran@gmail.com`:** status API confirms gate will block dashboard on next login (no password in repo for automated browser — manual login on `localhost:3002` will show the full policy screen).
+
+### DB / API / ENV changes in D.2H
+
+**None** beyond version constants in `sitePolicies.he.js`. No schema changes. No global `DELETE`.
+
+---
+
+## איך מחייבים את כל ההורים לאשר מחדש
+
+כאשר תנאי השימוש ו/או מדיניות הפרטיות מתעדכנים materially:
+
+1. **עדכנו גרסאות בקוד** — `data/legal/sitePolicies.he.js`:
+   - `POLICY_LAST_UPDATED` (תאריך תצוגה)
+   - `TERMS_VERSION` ו/או `PRIVACY_VERSION` (מזהי audit — חובה להעלות גרסה)
+2. **אל תמחקו שורות** מ-`parent_policy_acceptances`. הטבלה append-only; שורות ישנות נשארות כהיסטוריית audit.
+3. **בנו מחדש ופרסמו** (או הפעילו מחדש שרת מקומי אחרי build):
+   - `scripts\dev\restart-local-3002.bat` (מקומי)
+   - deploy ל-Vercel/production (בבעלות — מחוץ לסCOPE של שלב זה)
+4. **התנהגות לאחר deploy:**
+   - הורה whose latest row **אינו** תואם ל-`TERMS_VERSION` + `PRIVACY_VERSION` הנוכחיים → `accepted: false`
+   - בכניסה ל-`/parent/dashboard` — **מסך אישור מלא** (גלילת דף + תיבת סימון + אישור)
+   - אין `/parent-consent`, אין checkbox זהות הורה, אין כפתור «פתחו מדיניות»
+5. **לאחר אישור:** INSERT של שורה חדשה עם הגרסאות הנוכחיות; שורות קודמות **נשמרות**.
+6. **אין מנגנון «איפוס גלובלי» באמצעות DELETE** — רק bump גרסה.
+
+---
+
+## Phase D.1 UI smoke results (superseded for signup/gate UX by D.2 / D.2B / D.2C / D.2D)
 
 **Static routes:** `/parent/login`, `/parent/dashboard`, `/terms`, `/privacy` → HTTP 200.
 
@@ -238,13 +565,9 @@ Replaces lightweight one-click gate:
 
 | Check | Result |
 |-------|--------|
-| Signup full panel (D.2) | PASS — `FullPolicyAcceptancePanel` + open button |
-| Submit disabled until panel accepted | PASS — `preSignupPolicyCompleted` |
-| Hebrew text, no guardian wording | PASS — grep clean |
-| Links to `/terms`, `/privacy` (informational on login mode) | PASS |
-| No `/parent-consent` route | PASS |
-| Dashboard gate inline full panel (D.2) | PASS — `ParentPolicyAcceptanceGate.jsx` |
-| Gate intro + open panel button | PASS |
+| Signup full panel auto-forced (D.2B) | PASS — הרשמה tab opens panel immediately |
+| Dashboard gate auto full panel (D.2B) | PASS — no teaser / open button |
+| Hebrew auth errors (D.2B) | PASS — `mapParentAuthError` |
 | Status load failure → retry panel (not blank) | PASS — D.1 fix |
 | POST failure → error message, gate remains | PASS |
 | No bypass when not accepted | PASS — children not rendered until `accepted` |
@@ -274,15 +597,16 @@ Replaces lightweight one-click gate:
 
 ---
 
-## Failure behavior (Phase D.1)
+## Failure behavior (Phase D.1 / D.2F fail-closed)
 
 | Scenario | Behavior |
 |----------|----------|
-| Migration missing | GET/POST → 500; gate shows error + «נסו שוב» (no blank crash) |
-| API 500 on status | Error panel with retry; dashboard header/logout still visible |
-| POST fails | Error under gate; user can retry accept |
-| Network fail | Same as API fail |
-| Not accepted | Dashboard content hidden; no infinite refetch loop |
+| Migration missing | GET/POST → 500; gate shows Hebrew error + «נסו שוב» (no blank crash) |
+| API 404 / HTML / non-JSON on status | **Dashboard content hidden**; Hebrew retry panel; no JSON parse crash; no English user-facing error |
+| API 500 on status | Same fail-closed retry panel |
+| POST fails | Error under full policy panel; user can retry accept |
+| Network fail | Same fail-closed retry panel |
+| Not accepted (incl. version mismatch) | Dashboard content hidden; full policy panel auto-shown |
 
 ---
 
@@ -305,22 +629,30 @@ One bullet added under Privacy → «אילו נתונים נאספים» for ac
 
 ---
 
-## Files (Phase D + D.1 + D.2)
+## Files (Phase D + D.1 + D.2 + D.2B)
 
 | File | Role |
 |------|------|
 | `supabase/migrations/018_parent_policy_acceptances.sql` | DDL |
 | `lib/parent-server/policy-acceptance.server.js` | Server logic |
 | `lib/parent-client/policy-acceptance-api.js` | Browser API helpers |
+| `lib/parent-client/parent-auth-errors.he.js` | Hebrew auth error mapping (D.2B) |
 | `pages/api/parent/policy-acceptance/status.js` | GET |
 | `pages/api/parent/policy-acceptance/accept.js` | POST |
-| `components/parent/ParentPolicyAcceptanceGate.jsx` | Dashboard gate (D.2 full panel) |
-| `components/parent/FullPolicyAcceptancePanel.jsx` | Reusable scroll + confirm panel (D.2) |
-| `components/legal/PolicySectionsBody.jsx` | Shared policy section renderer (D.2) |
-| `data/legal/fullPolicyAcceptanceContent.js` | Assembled document from `SITE_POLICIES` (D.2) |
-| `pages/parent/login.js` | Signup open-panel flow (D.2) |
-| `pages/parent/dashboard.js` | Gate wrapper |
+| `components/parent/ParentPolicyAcceptanceGate.jsx` | Auto-forced dashboard gate (D.2B) |
+| `components/parent/FullPolicyAcceptancePanel.jsx` | Scroll + confirm panel |
+| `components/parent/PolicyAcceptanceDeclinedBlock.jsx` | Decline blocked state (D.2B) |
+| `components/legal/PolicySectionsBody.jsx` | Shared policy section renderer |
+| `data/legal/fullPolicyAcceptanceContent.js` | Assembled document from `SITE_POLICIES` |
+| `pages/parent/login.js` | Signup auto-panel + Hebrew errors (D.2B) |
+| `pages/parent/dashboard.js` | Gate wraps all dashboard content (D.2B) |
 | `scripts/legal/policy-acceptance-api-smoke.mjs` | API smoke (D.1) |
+| `scripts/legal/policy-acceptance-browser-smoke.mjs` | Browser smoke (D.2B/D.2D) |
+| `scripts/legal/policy-acceptance-global-version-d2h.mjs` | Global bump validation (D.2H) |
+| `reports/legal/policy-acceptance-d2h-global-bump.json` | D.2H DB/status report |
+| `scripts/dev/restart-local-3002.bat` | Safe clean rebuild + prod server on 3002 (D.2G) |
+| `run.bat` | Dev launcher — stops stale Node on 3002 before start (D.2G) |
+| `tests/e2e/parent-policy-acceptance-d2b.spec.ts` | Playwright spec (D.2B) |
 
 ---
 
@@ -340,6 +672,10 @@ One bullet added under Privacy → «אילו נתונים נאספים» for ac
 - [x] API smoke PASS
 - [x] UI code review PASS
 - [x] `npm run build` PASS
-- [x] Phase D.2 full panel UX implemented
-- [x] `npm run build` PASS (D.2)
-- [ ] Manual browser signup full panel + gate QA (owner)
+- [x] Phase D.2D page-only scroll (no overflow-x-hidden trap)
+- [x] D.2D strict browser audit PASS
+- [x] Phase D.2F fail-closed gate + API route availability PASS
+- [x] Phase D.2G stale-server hardening + version re-acceptance proof PASS
+- [x] Phase D.2H global bump `2026-05-24` + append-only re-accept PASS
+- [x] `npm run build` PASS (D.2H)
+- [ ] Manual browser: `18eran@gmail.com` login on fresh `localhost:3002` (owner password not in repo)
