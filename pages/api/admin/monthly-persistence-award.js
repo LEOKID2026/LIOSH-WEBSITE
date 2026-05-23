@@ -9,6 +9,7 @@
  */
 import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
 import { runMonthlyPersistenceAwardJob } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
+import { timingSafeCompareStrings } from "../../../lib/security/timing-safe-equal.js";
 
 function isAdminEnabled() {
   return process.env.ENABLE_MONTHLY_PERSISTENCE_REWARD_ADMIN === "true";
@@ -25,7 +26,7 @@ function validateAdminToken(req) {
   if (!sent) {
     return { ok: false, status: 401, code: "missing_token", error: "Missing x-admin-token header" };
   }
-  if (sent !== expected) {
+  if (!timingSafeCompareStrings(sent, String(expected).trim())) {
     return { ok: false, status: 401, code: "invalid_token", error: "Admin token does not match server configuration" };
   }
   return { ok: true };

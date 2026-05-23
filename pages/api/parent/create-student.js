@@ -1,5 +1,11 @@
 import { getLearningSupabaseServerUserClient } from "../../../lib/learning-supabase/server";
 import { resolveParentStudentLimit } from "../../../lib/parent-server/parent-student-limit.server";
+import {
+  MAX_PARENT_GRADE_LEVEL_LEN,
+  MAX_PARENT_STUDENT_NAME_LEN,
+  parseBoundedTrimmedString,
+  trimString,
+} from "../../../lib/security/api-input.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -11,12 +17,22 @@ export default async function handler(req, res) {
     return res.status(401).json({ ok: false, error: "Missing bearer token" });
   }
 
-  const fullName = String(req.body?.fullName || "").trim();
-  const gradeLevel = String(req.body?.gradeLevel || "").trim();
-
-  if (!fullName) {
+  const fullNameParsed = parseBoundedTrimmedString(req.body?.fullName, MAX_PARENT_STUDENT_NAME_LEN);
+  if (!fullNameParsed.ok) {
+    return res.status(400).json({ ok: false, error: "fullName too long" });
+  }
+  if (!fullNameParsed.value) {
     return res.status(400).json({ ok: false, error: "fullName is required" });
   }
+  const fullName = fullNameParsed.value;
+
+  if (req.body?.gradeLevel != null && String(req.body.gradeLevel).trim() !== "") {
+    const gradeParsed = parseBoundedTrimmedString(req.body.gradeLevel, MAX_PARENT_GRADE_LEVEL_LEN);
+    if (!gradeParsed.ok) {
+      return res.status(400).json({ ok: false, error: "gradeLevel too long" });
+    }
+  }
+  const gradeLevel = trimString(req.body?.gradeLevel);
 
   try {
     const supabase = getLearningSupabaseServerUserClient(authHeader);

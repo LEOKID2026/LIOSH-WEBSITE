@@ -1,8 +1,11 @@
 // pages/api/gallery.js
 import fs from "fs";
 import path from "path";
+import { rejectIfGalleryRateLimited } from "../../lib/security/public-api-rate-limit.js";
 
 export default function handler(req, res) {
+  if (rejectIfGalleryRateLimited(req, res)) return;
+
   const imagesDir = path.join(process.cwd(), "public/images2");
   const videosDir = path.join(process.cwd(), "public/videos2");
 

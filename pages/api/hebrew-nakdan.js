@@ -1,4 +1,6 @@
 import { vocalizeHebrewWithDicta } from "../../utils/hebrew-dicta-nakdan";
+import { rejectIfHebrewNakdanRateLimited } from "../../lib/security/public-api-rate-limit.js";
+import { MAX_HEBREW_NAKDAN_ENTRY_ID_LEN } from "../../lib/security/api-input.server.js";
 
 const MAX_ENTRIES = 24;
 const MAX_TEXT_LEN = 3500;
@@ -12,6 +14,8 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed" });
   }
+
+  if (rejectIfHebrewNakdanRateLimited(req, res)) return;
 
   let body = req.body;
   if (typeof body === "string") {
@@ -33,8 +37,11 @@ export default async function handler(req, res) {
   const normalized = [];
   const seenIds = new Set();
   for (const e of entries) {
-    const id = e?.id != null ? String(e.id) : "";
+    const id = e?.id != null ? String(e.id).trim() : "";
     const text = e?.text != null ? String(e.text) : "";
+    if (id.length > MAX_HEBREW_NAKDAN_ENTRY_ID_LEN) {
+      return res.status(400).json({ error: "Entry id too long" });
+    }
     if (!id || seenIds.has(id)) {
       return res.status(400).json({ error: "Each entry needs a unique `id`" });
     }

@@ -3,6 +3,7 @@
  * Requires ENGINE_REVIEW_ADMIN_TOKEN and NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN=true.
  */
 import { buildExpertReviewPackSnapshot } from "../../../utils/expert-review-pack-artifact-snapshot.js";
+import { timingSafeCompareStrings } from "../../../lib/security/timing-safe-equal.js";
 
 function deploymentInfo() {
   const vercel = Boolean(process.env.VERCEL || process.env.VERCEL_ENV);
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
     });
   }
 
-  if (sent !== expected) {
+  if (!timingSafeCompareStrings(sent, String(expected).trim())) {
     return res.status(401).json({
       code: "invalid_token",
       error: "x-engine-review-token does not match server configuration",

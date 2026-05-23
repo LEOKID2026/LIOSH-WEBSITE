@@ -9,36 +9,32 @@ Establish a periodic dependency audit and a lockfile policy. **Read-only audit; 
 
 ## Current top-level dependencies
 
-From [package.json](../../package.json):
+From [package.json](../../package.json) — **reconciled 2026-05-23 (Wave 2J)** after Waves 2D–2G:
 
-### Runtime
+### Runtime (current)
 
-- `next@14.1.0`
+- `next@15.5.18` (upgraded Wave 2D — **do not downgrade**; `14.2.35` superseded)
 - `react@18.2.0`, `react-dom@18.2.0`
+- `jspdf@4.2.1`, `html2pdf.js@0.14.0`, `jspdf-autotable@5.0.8` (Wave 2G)
 - `@supabase/supabase-js@^2.105.1`
-- `framer-motion@^10.18.0`
-- `recharts@^3.5.0`
-- `canvas-confetti@^1.9.2`
-- `chess.js@^1.4.0`
-- `js-sha256@^0.11.1`
-- `jspdf@^3.0.4`, `jspdf-autotable@^5.0.2`
-- `html2pdf.js@^0.10.1`
-- `node-edge-tts@^1.2.10`
+- `framer-motion@^10.18.0`, `recharts@^3.5.0`, `canvas-confetti@^1.9.2`, `chess.js@^1.4.0`
+- `js-sha256@^0.11.1`, `node-edge-tts@^1.2.10`
 
 ### Dev / build
 
 - `@playwright/test@^1.59.1`, `playwright@^1.49.1`
 - `tailwindcss@^4.1.17`, `@tailwindcss/postcss@^4.1.17`, `postcss@^8.5.6`, `autoprefixer@^10.4.22`
-- `pdf-parse@^2.4.5`
-- `tsx@^4.19.2`
+- `pdf-parse@^2.4.5`, `tsx@^4.19.2`
+
+> **Historical baseline (pre-2D):** `next@14.1.0`, `jspdf@^3.0.4` — see [wave-2b-dependency-risk-triage.md](../../reports/security/wave-2b-dependency-risk-triage.md).
 
 ## Specific concerns
 
 | Dep | Concern |
 |-----|---------|
-| `next@14.1.0` | versions before 14.1.1 had advisories; confirm patched in next fix pass |
+| `next@15.5.18` | Next **critical** closed at 2D; **2 moderate** PostCSS residue remain — accept; do not `npm audit fix --force` |
 | `node-edge-tts` | calls Microsoft Edge TTS via WS; runs server-side; confirm no sensitive text logged client-side |
-| `html2pdf.js`, `jspdf` | client-only PDF; confirm no remote font / image calls leak data |
+| `html2pdf.js`, `jspdf` | client PDF — upgraded 2G; QA PASS |
 | `recharts@^3.5.0` | major-version churn historically; pin and review |
 | `framer-motion@^10.18.0` | confirm peer-deps OK with React 18 |
 
@@ -78,4 +74,4 @@ From [package.json](../../package.json):
 - Renovate / Dependabot wired.
 - Lockfile pinned to current contents.
 - `package-lock.json` committed (verify).
-- R-DEP-01 may move to `fixed` once these checks pass.
+- R-DEP-01 may move to `fixed` once audit is clean **or** remaining issues are accepted with evidence (current: **2 moderate PostCSS residue**, 0 critical/high — see [wave-2j-non-env-security-closure-map.md](../../reports/security/wave-2j-non-env-security-closure-map.md)).

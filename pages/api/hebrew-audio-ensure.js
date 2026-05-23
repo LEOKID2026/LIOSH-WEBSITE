@@ -8,6 +8,7 @@ import fs from "node:fs";
 import { getHebrewGenMp3Paths } from "../../utils/hebrew-audio-gen-store.js";
 import { hebrewGenStreamUrl } from "../../utils/hebrew-audio-gen-url.js";
 import { narrationContentHash16 } from "../../utils/hebrew-audio-narration-binding.js";
+import { rejectIfHebrewAudioEnsureRateLimited } from "../../lib/security/public-api-rate-limit.js";
 
 export const config = {
   api: {
@@ -22,6 +23,8 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, error: "method_not_allowed" });
   }
+
+  if (rejectIfHebrewAudioEnsureRateLimited(req, res)) return;
 
   const text = String(req.body?.text ?? "").trim();
   if (!text || text.length > 2200) {

@@ -16,6 +16,7 @@ import {
   buildAdaptivePlannerAIExplanation,
   isAdaptivePlannerAIExplainerServerEnabled,
 } from "../../../utils/adaptive-learning-planner/adaptive-planner-ai-explainer.js";
+import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 
 /**
  * Load snapshot only (no scanner import — keeps API bundle free of dynamic bank requires).
@@ -73,6 +74,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
+
+  if (guardCookieMutationOrigin(req, res)) return;
 
   const disabledPayload = {
     ok: false,

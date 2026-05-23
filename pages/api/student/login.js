@@ -11,11 +11,22 @@ import {
   sessionExpiryIsoFromNow,
   setStudentSessionCookie,
 } from "../../../lib/learning-supabase/student-auth";
+import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
+import {
+  checkLoginRateLimit,
+  recordLoginFailure,
+  recordLoginSuccess,
+} from "../../../lib/security/login-rate-limit.js";
+import { safeApiLog } from "../../../lib/security/safe-log.js";
+
+const GENERIC_LOGIN_FAILURE = { ok: false, error: "שם משתמש או PIN שגויים" };
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
+
+  if (guardCookieMutationOrigin(req, res)) return;
 
   res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
   res.setHeader("Pragma", "no-cache");
@@ -25,8 +36,17 @@ export default async function handler(req, res) {
   const codeFallback = normalizeStudentCode(req.body?.code);
   const pin = normalizeStudentPin(req.body?.pin);
   const credential = usernameNormalized || codeFallback;
+
   if (!credential || pin.length !== 4) {
-    return res.status(400).json({ ok: false, error: "שם משתמש או PIN לא תקינים" });
+    return res.status(401).json(GENERIC_LOGIN_FAILURE);
+  }
+
+  const rate = checkLoginRateLimit(req, credential);
+  if (!rate.allowed) {
+    if (rate.retryAfterSec) {
+      res.setHeader("Retry-After", String(rate.retryAfterSec));
+    }
+    return res.status(429).json(GENERIC_LOGIN_FAILURE);
   }
 
   try {
@@ -47,26 +67,29 @@ export default async function handler(req, res) {
       .maybeSingle();
 
     if (codeErr || !accessCode?.id) {
+      recordLoginFailure(req, credential);
       clearStudentSessionCookie(res);
-      return res.status(401).json({ ok: false, error: "שם משתמש או PIN שגויים" });
+      return res.status(401).json(GENERIC_LOGIN_FAILURE);
     }
 
     if (accessCode.expires_at) {
       const expMs = new Date(accessCode.expires_at).getTime();
       if (!Number.isFinite(expMs) || expMs <= Date.now()) {
+        recordLoginFailure(req, credential);
         clearStudentSessionCookie(res);
-        return res.status(401).json({ ok: false, error: "שם משתמש או PIN שגויים" });
+        return res.status(401).json(GENERIC_LOGIN_FAILURE);
       }
     }
 
     const storedUsername = normalizeStudentUsername(accessCode.login_username || "");
     if (usernameNormalized && storedUsername && storedUsername !== usernameNormalized) {
+      recordLoginFailure(req, credential);
       clearStudentSessionCookie(res);
-      return res.status(401).json({ ok: false, error: "שם משתמש או PIN שגויים" });
+      return res.status(401).json(GENERIC_LOGIN_FAILURE);
     }
 
     if (isStudentIdentityDebugEnabled()) {
-      console.info("[student-login-api] matched credential", {
+      safeApiLog("[student-login-api] matched credential", {
         submittedUsername: usernameNormalized || null,
         matchedStudentId: accessCode.student_id,
         accessCodeId: accessCode.id,
@@ -79,8 +102,9 @@ export default async function handler(req, res) {
       .eq("id", accessCode.student_id)
       .maybeSingle();
     if (studentErr || !student?.id || student.is_active !== true) {
+      recordLoginFailure(req, credential);
       clearStudentSessionCookie(res);
-      return res.status(403).json({ ok: false, error: "התלמיד אינו פעיל" });
+      return res.status(401).json(GENERIC_LOGIN_FAILURE);
     }
 
     const token = generateStudentSessionToken();
@@ -99,14 +123,16 @@ export default async function handler(req, res) {
       client_meta: {},
     });
     if (sessErr) {
+      recordLoginFailure(req, credential);
       clearStudentSessionCookie(res);
-      return res.status(500).json({ ok: false, error: "יצירת סשן תלמיד נכשלה" });
+      return res.status(401).json(GENERIC_LOGIN_FAILURE);
     }
 
+    recordLoginSuccess(req, credential);
     setStudentSessionCookie(res, token);
     const debugStudentIdentity = devStudentIdentityPayload("student-login-api", student);
     if (isStudentIdentityDebugEnabled() && debugStudentIdentity) {
-      console.info("[LIOSH student identity] API", debugStudentIdentity);
+      safeApiLog("[LIOSH student identity] API", debugStudentIdentity);
     }
     return res.status(200).json({
       ok: true,
@@ -114,8 +140,8 @@ export default async function handler(req, res) {
       ...(debugStudentIdentity ? { debugStudentIdentity } : {}),
     });
   } catch (_e) {
+    recordLoginFailure(req, credential);
     clearStudentSessionCookie(res);
-    return res.status(500).json({ ok: false, error: "שגיאת שרת" });
+    return res.status(401).json(GENERIC_LOGIN_FAILURE);
   }
 }
-

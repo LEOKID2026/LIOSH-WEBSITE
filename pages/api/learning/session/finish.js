@@ -19,6 +19,7 @@ import {
 } from "../../../../lib/learning-supabase/canonical-learning-write-meta.server";
 import { awardLearningSessionCoins } from "../../../../lib/learning-supabase/learning-coin-award.server";
 import { updateDailyMissionProgress } from "../../../../lib/learning-supabase/mission-progress.server";
+import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
@@ -47,6 +48,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
+
+  if (guardCookieMutationOrigin(req, res)) return;
 
   try {
     const auth = await getAuthenticatedStudentSession(req);

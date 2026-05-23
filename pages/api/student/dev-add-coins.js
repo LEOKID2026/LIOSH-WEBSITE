@@ -1,4 +1,6 @@
 import crypto from "node:crypto";
+import { guardDevOnlyApiRoute } from "../../../lib/security/api-guards.js";
+import { timingSafeCompareStrings } from "../../../lib/security/timing-safe-equal.js";
 import { getAuthenticatedStudentSession } from "../../../lib/learning-supabase/student-auth";
 import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
 import { applyArcadeCoinMove } from "../../../lib/arcade/server/arcade-coins";
@@ -9,6 +11,8 @@ const DEV_TOPUP_SECRET_CODE = "7479";
 const TOPUP_AMOUNT = 1000;
 
 export default async function handler(req, res) {
+  if (guardDevOnlyApiRoute(req, res)) return;
+
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
@@ -25,7 +29,7 @@ export default async function handler(req, res) {
   const body = typeof req.body === "object" && req.body ? req.body : {};
   const code = String(body.code ?? "").trim();
 
-  if (code !== DEV_TOPUP_SECRET_CODE) {
+  if (!timingSafeCompareStrings(code, DEV_TOPUP_SECRET_CODE)) {
     return res.status(403).json({
       ok: false,
       error: "קוד שגוי",

@@ -1,13 +1,15 @@
 /**
  * Phase 1C — RLS verification (non-destructive).
  *
- * Does not print secrets. Loads env from process first, then optional .env.local / .env (gitignored).
+ * Does not print secrets.
  *
  * Modes:
- * - Always: anon-key checks (private tables should return zero rows).
- * - Optional: authenticated parent checks if credentials or auto-setup is enabled.
+ * - Default: loads optional .env.local / .env if present, then full flow.
+ * - `--no-dotenv`: never reads .env*; requires vars in shell.
+ * - `--anon-only`: SELECT-only anon checks; no auth users, no INSERT/UPDATE/DELETE.
+ * - Combine: `node scripts/verify-learning-rls.mjs --no-dotenv --anon-only`
  *
- * Auto-setup (optional): LEARNING_RLS_AUTO_SETUP=1 + LEARNING_SUPABASE_SERVICE_ROLE_KEY
+ * Auto-setup (optional, NOT used with --anon-only): LEARNING_RLS_AUTO_SETUP=1 + service role
  * Creates two users with email prefix rls-verify-, runs checks, then deletes only those Auth users
  * in a finally block (and if B creation fails after A, deletes A). Deletion uses Admin API;
  * public rows cascade from auth.users — no arbitrary row deletes.
@@ -21,6 +23,9 @@ import { createClient } from "@supabase/supabase-js";
 
 const PROJECT_ROOT = process.cwd();
 const EMAIL_PREFIX = "rls-verify-";
+
+const CLI_NO_DOTENV = process.argv.includes("--no-dotenv");
+const CLI_ANON_ONLY = process.argv.includes("--anon-only");
 
 const PRIVATE_TABLES = [
   "parent_profiles",
@@ -64,6 +69,9 @@ function loadDotEnvFile(filePath) {
 }
 
 function loadEnv() {
+  if (CLI_NO_DOTENV) {
+    return;
+  }
   loadDotEnvFile(path.join(PROJECT_ROOT, ".env.local"));
   loadDotEnvFile(path.join(PROJECT_ROOT, ".env"));
 }
@@ -81,6 +89,7 @@ function requireEnv(name) {
   const v = process.env[name];
   if (!v || !String(v).trim()) {
     fail(`Missing required env: ${name}`);
+    return "";
   }
   return String(v).trim();
 }
@@ -653,6 +662,21 @@ async function autoCreateParents(admin, runId) {
 
 async function main() {
   loadEnv();
+
+  if (CLI_ANON_ONLY) {
+    const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
+    const anonKey = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY");
+    if (process.exitCode) return;
+
+    if (!url.includes("ajxwmlwbzxwffrtlfuoe.supabase.co")) {
+      fail("NEXT_PUBLIC_LEARNING_SUPABASE_URL must point at the learning Supabase project");
+      return;
+    }
+
+    console.log("Learning RLS verification (--anon-only, read-only SELECT) starting…");
+    await runAnonChecks(url, anonKey);
+    return;
+  }
 
   const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
   const anonKey = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY");

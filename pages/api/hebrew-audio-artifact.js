@@ -7,6 +7,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { normalizeReviewQueueRow } from "../../utils/hebrew-audio-review-queue.js";
+import { rejectIfHebrewAudioArtifactRateLimited } from "../../lib/security/public-api-rate-limit.js";
 
 const STORE = path.join(process.cwd(), "data", "_audio_store");
 const QUEUE_FILE = path.join(process.cwd(), "data", "hebrew-audio-review-queue.json");
@@ -35,6 +36,8 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, error: "method_not_allowed" });
   }
+
+  if (rejectIfHebrewAudioArtifactRateLimited(req, res)) return;
 
   try {
     const body = typeof req.body === "object" && req.body ? req.body : {};

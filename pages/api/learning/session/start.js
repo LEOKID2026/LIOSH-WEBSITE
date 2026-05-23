@@ -20,6 +20,7 @@ import {
   buildGradeEvidenceFields,
   resolveContentGradeForSessionWrite,
 } from "../../../../lib/learning-supabase/practice-grade-resolution.js";
+import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
 
 async function insertLearningSession(supabase, row) {
   const fullInsert = await supabase
@@ -50,6 +51,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
+
+  if (guardCookieMutationOrigin(req, res)) return;
 
   try {
     const auth = await getAuthenticatedStudentSession(req);

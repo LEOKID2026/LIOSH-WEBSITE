@@ -38,6 +38,13 @@ const QA_STORAGE_SNAPSHOT = baseReportToLocalStorageSnapshot(
 );
 
 const base = process.env.QA_BASE_URL || "http://127.0.0.1:3001";
+/** Brief settle after route navigation — avoids Next dev compile/HMR racing insight wait (Wave 3C). */
+const settleMs = Math.max(0, Number(process.env.QA_PDF_SETTLE_MS) || 1500);
+const insightTimeoutMs = Math.max(5_000, Number(process.env.QA_PDF_INSIGHT_TIMEOUT_MS) || 90_000);
+
+function logStep(message) {
+  console.log(`qa-parent-pdf-export: ${message}`);
+}
 
 /** pdf-parse v2 (ESM): no default export; use PDFParse like scripts/hebrew-official-extract-excerpts.mjs */
 async function extractPdfText(buf) {
@@ -56,26 +63,70 @@ async function assertDevServerReachable(baseUrl) {
   const root = String(baseUrl || "").replace(/\/$/, "");
   const url = `${root}/learning/parent-report-detailed`;
   let lastErr = null;
-  for (let attempt = 0; attempt < 2; attempt++) {
+  for (let attempt = 0; attempt < 8; attempt++) {
     const ac = new AbortController();
-    const timer = setTimeout(() => ac.abort(), 15_000);
+    const timer = setTimeout(() => ac.abort(), 20_000);
     try {
       const res = await fetch(url, { method: "GET", redirect: "follow", signal: ac.signal });
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}`);
       }
+      logStep(`dev server reachable (${url}) after ${attempt + 1} attempt(s)`);
       return;
     } catch (e) {
       lastErr = e?.name === "AbortError" ? new Error("timeout") : e;
-      await new Promise((r) => setTimeout(r, 600));
+      await new Promise((r) => setTimeout(r, attempt < 3 ? 800 : 1500));
     } finally {
       clearTimeout(timer);
     }
   }
   const msg = lastErr ? String(lastErr.message || lastErr) : "unknown";
   throw new Error(
-    `QA PDF gate cannot reach ${url} (${msg}). Start Next dev (e.g. npm run dev), then set QA_BASE_URL if not using default port.`
+    `QA PDF gate cannot reach ${url} (${msg}). Start Next dev (e.g. npm run dev), wait for Ready, then set QA_BASE_URL if not using default port.`
   );
+}
+
+/**
+ * @param {import('playwright').Page} page
+ * @param {string} label
+ */
+async function dumpInsightWaitDiagnostics(page, label) {
+  const diag = await page.evaluate(() => ({
+    url: location.href,
+    printRoot: !!document.querySelector("#parent-report-detailed-print"),
+    displayMode: document.querySelector("#parent-report-detailed-print")?.getAttribute("data-display-mode") || null,
+    insightCount: document.querySelectorAll(".parent-report-parent-ai-insight").length,
+    bodyLen: (document.body?.innerText || "").length,
+  }));
+  console.error(`qa-parent-pdf-export: ${label} insight wait failed — ${JSON.stringify(diag)}`);
+}
+
+/**
+ * Navigate to a parent-report route and wait for print root + Parent AI insight.
+ * @param {import('playwright').Page} page
+ * @param {string} routeUrl
+ * @param {string} label
+ */
+async function gotoReportRouteAndWaitForInsight(page, routeUrl, label) {
+  logStep(`${label}: goto ${routeUrl}`);
+  await page.goto(routeUrl, { waitUntil: "load", timeout: 120_000 });
+  if (settleMs > 0) {
+    await page.waitForTimeout(settleMs);
+  }
+  const printRoot = page.locator("#parent-report-detailed-print");
+  if ((await printRoot.count()) > 0) {
+    await printRoot.first().waitFor({ state: "attached", timeout: insightTimeoutMs });
+  }
+  try {
+    await page.locator(".parent-report-parent-ai-insight").first().waitFor({
+      state: "attached",
+      timeout: insightTimeoutMs,
+    });
+  } catch (err) {
+    await dumpInsightWaitDiagnostics(page, label);
+    throw err;
+  }
+  logStep(`${label}: insight attached`);
 }
 
 /** @param {Record<string, string>} snap */
@@ -114,11 +165,8 @@ async function assertPdfBufferExcludesCopilotPlaceholder(buf, label) {
  * @param {string} label
  */
 async function assertDetailedInsightAndCopilotPrintBehavior(page, label) {
-  await page.waitForSelector(".parent-report-parent-ai-insight", {
-    timeout: 90_000,
-    state: "attached",
-  });
   const card = page.locator(".parent-report-parent-ai-insight").first();
+  await card.waitFor({ state: "attached", timeout: insightTimeoutMs });
   assert.ok(
     domInsightCardShowsParentAiHeading(await card.innerText()),
     `${label}: insight card must show heading תובנה להורה or סיכום חכם להורה`,
@@ -141,11 +189,9 @@ async function assertDetailedInsightAndCopilotPrintBehavior(page, label) {
 
 /** Short report: wait for insight (async enrich may still apply; often fast). */
 async function assertShortInsightVisible(page, label) {
-  await page.waitForSelector(".parent-report-parent-ai-insight", {
-    timeout: 90_000,
-    state: "attached",
-  });
-  const txt = await page.locator(".parent-report-parent-ai-insight").first().innerText();
+  const insight = page.locator(".parent-report-parent-ai-insight").first();
+  await insight.waitFor({ state: "attached", timeout: insightTimeoutMs });
+  const txt = await insight.innerText();
   assert.ok(domInsightCardShowsParentAiHeading(txt), `${label}: short report insight heading`);
 }
 
@@ -174,10 +220,11 @@ async function main() {
   };
 
   /** month window keeps regression fixture sessions in-range (same as learning-simulator pdf gate). */
-  await page.goto(`${base}/learning/parent-report-detailed?period=month`, {
-    waitUntil: "domcontentloaded",
-    timeout: 120_000,
-  });
+  await gotoReportRouteAndWaitForInsight(
+    page,
+    `${base}/learning/parent-report-detailed?period=month`,
+    "detailed-full",
+  );
   await assertDetailedInsightAndCopilotPrintBehavior(page, "detailed-full");
   /* Playwright PDF uses current media; assert* ends in screen mode — re-enter print so .no-pdf applies. */
   await page.emulateMedia({ media: "print" });
@@ -187,10 +234,11 @@ async function main() {
   await assertPdfBufferContainsInsightHeading(buf, "detailed-full pdf");
   await assertPdfBufferExcludesCopilotPlaceholder(buf, "detailed-full pdf");
 
-  await page.goto(`${base}/learning/parent-report-detailed?period=month&mode=summary`, {
-    waitUntil: "domcontentloaded",
-    timeout: 120_000,
-  });
+  await gotoReportRouteAndWaitForInsight(
+    page,
+    `${base}/learning/parent-report-detailed?period=month&mode=summary`,
+    "detailed-summary",
+  );
   await assertDetailedInsightAndCopilotPrintBehavior(page, "detailed-summary");
   await page.emulateMedia({ media: "print" });
   buf = await page.pdf({ ...pdfOpts });
@@ -199,11 +247,21 @@ async function main() {
   await assertPdfBufferContainsInsightHeading(buf, "detailed-summary pdf");
   await assertPdfBufferExcludesCopilotPlaceholder(buf, "detailed-summary pdf");
 
+  logStep("short-report: goto");
   await page.goto(`${base}/learning/parent-report?period=month`, {
-    waitUntil: "domcontentloaded",
+    waitUntil: "load",
     timeout: 120_000,
   });
-  await assertShortInsightVisible(page, "short-report");
+  if (settleMs > 0) {
+    await page.waitForTimeout(settleMs);
+  }
+  try {
+    await assertShortInsightVisible(page, "short-report");
+  } catch (err) {
+    await dumpInsightWaitDiagnostics(page, "short-report");
+    throw err;
+  }
+  logStep("short-report: insight attached");
   await page.emulateMedia({ media: "print" });
   buf = await page.pdf({ ...pdfOpts });
   const parentPath = path.join(outDir, "parent-report-main.pdf");

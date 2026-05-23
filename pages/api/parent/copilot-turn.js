@@ -23,6 +23,12 @@ import { runParentCopilotTurnAsync } from "../../../utils/parent-copilot/index.j
 import { getLearningSupabaseServerUserClient } from "../../../lib/learning-supabase/server";
 import { getAuthenticatedStudentSession } from "../../../lib/learning-supabase/student-auth";
 import { resolveCopilotTurnPayloadForApi } from "../../../lib/parent-copilot/copilot-turn-payload.server.js";
+import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
+import {
+  rejectIfCopilotIpRateLimited,
+  rejectIfCopilotAuthRateLimited,
+} from "../../../lib/security/public-api-rate-limit.js";
+import { MAX_COPILOT_UTTERANCE_LEN, clampTrimmedString } from "../../../lib/security/api-input.server.js";
 
 export const config = {
   api: {
@@ -55,7 +61,11 @@ async function authorizeRequest(req, res, studentIdFromBody) {
       return { ok: false, error: "studentId must match the authenticated student session", status: 403 };
     }
     res.setHeader("X-LIOSH-Parent-Copilot-Auth", "student_session");
-    return { ok: true, mode: "student_session" };
+    return {
+      ok: true,
+      mode: "student_session",
+      authenticatedStudentId: studentAuth.student.id,
+    };
   }
 
   const authHeader = req.headers.authorization || "";
@@ -82,13 +92,23 @@ async function authorizeRequest(req, res, studentIdFromBody) {
         return { ok: false, error: "Student not found for this parent", status: 404 };
       }
       res.setHeader("X-LIOSH-Parent-Copilot-Auth", "parent_bearer");
-      return { ok: true, mode: "parent_bearer" };
+      return {
+        ok: true,
+        mode: "parent_bearer",
+        parentUserId: userData.user.id,
+      };
     } catch {
       return { ok: false, error: "Authorization failed", status: 401 };
     }
   }
 
   if (allowUnauthDevPayload) {
+    if (isProd) {
+      return { ok: false, error: "Unauthorized", status: 403 };
+    }
+    if (studentId) {
+      return { ok: false, error: "studentId is not allowed in unauthenticated dev mode", status: 403 };
+    }
     res.setHeader("X-LIOSH-Parent-Copilot-Auth", "dev_local_unverified");
     return { ok: true, mode: "dev_local" };
   }
@@ -107,20 +127,44 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
+  if (rejectIfCopilotIpRateLimited(req, res)) return;
+
+  const studentSessionPeek = await getAuthenticatedStudentSession(req);
+  if (studentSessionPeek?.student?.id && guardCookieMutationOrigin(req, res)) {
+    return;
+  }
+
   try {
     const body = typeof req.body === "object" && req.body ? req.body : {};
-    const utterance = String(body.utterance || "").trim();
-    const sessionId = String(body.sessionId || "").trim() || "default";
-    const audience = String(body.audience || "parent").trim() || "parent";
+    const utterance = clampTrimmedString(body.utterance, MAX_COPILOT_UTTERANCE_LEN);
+    const sessionId = clampTrimmedString(body.sessionId, 128) || "default";
+    const audience = clampTrimmedString(body.audience, 32) || "parent";
 
     if (!utterance) {
       return res.status(400).json({ ok: false, error: "Missing utterance" });
+    }
+    if (String(body.utterance || "").trim().length > MAX_COPILOT_UTTERANCE_LEN) {
+      return res.status(400).json({ ok: false, error: "Utterance too long" });
     }
 
     const auth = await authorizeRequest(req, res, body.studentId);
     if (!auth.ok) {
       return res.status(auth.status || 401).json({ ok: false, error: auth.error || "Unauthorized" });
     }
+
+    if (process.env.NODE_ENV === "production" && auth.mode === "dev_local") {
+      return res.status(403).json({ ok: false, error: "Unauthorized" });
+    }
+
+    const authBucketKey =
+      auth.mode === "student_session"
+        ? `student_session:${studentSessionPeek?.student?.id || body.studentId || ""}`
+        : auth.mode === "parent_bearer"
+          ? `parent_bearer:${body.studentId || ""}`
+          : auth.mode === "dev_local"
+            ? "dev_local"
+            : "";
+    if (rejectIfCopilotAuthRateLimited(req, res, authBucketKey)) return;
 
     const payloadResolution = await resolveCopilotTurnPayloadForApi({
       body,
@@ -151,8 +195,7 @@ export default async function handler(req, res) {
     });
 
     return res.status(200).json({ ok: true, result, authMode: auth.mode });
-  } catch (e) {
-    const msg = String(e?.message || e || "copilot_turn_failed");
-    return res.status(500).json({ ok: false, error: msg });
+  } catch (_e) {
+    return res.status(500).json({ ok: false, error: "Unexpected server error" });
   }
 }

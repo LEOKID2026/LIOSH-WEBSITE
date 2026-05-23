@@ -8,6 +8,8 @@ import {
   getLearningSupabaseServerUserClient,
   getLearningSupabaseServiceRoleClient,
 } from "../../../lib/learning-supabase/server";
+import { safeApiLog } from "../../../lib/security/safe-log.js";
+import { safeUuid } from "../../../lib/security/api-input.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -19,7 +21,7 @@ export default async function handler(req, res) {
     return res.status(401).json({ ok: false, error: "Missing bearer token" });
   }
 
-  const studentId = String(req.body?.studentId || "").trim();
+  const studentId = safeUuid(req.body?.studentId);
   const usernameRaw = String(req.body?.username || "");
   const pinRaw = String(req.body?.pin || "");
   if (!studentId) {
@@ -105,9 +107,8 @@ export default async function handler(req, res) {
     }
 
     if (isStudentIdentityDebugEnabled()) {
-      console.info("[create-student-access-code] saved credential", {
+      safeApiLog("[create-student-access-code] saved credential", {
         studentId,
-        username,
       });
     }
 

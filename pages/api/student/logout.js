@@ -4,11 +4,14 @@ import {
   getStudentSessionCookie,
   hashStudentSecret,
 } from "../../../lib/learning-supabase/student-auth";
+import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
+
+  if (guardCookieMutationOrigin(req, res)) return;
 
   const token = getStudentSessionCookie(req);
   clearStudentSessionCookie(res);

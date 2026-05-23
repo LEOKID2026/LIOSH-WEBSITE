@@ -23,7 +23,7 @@ A pilot may proceed when **all** of the following are true:
 | G-PILOT-3 | Cookie + CSRF posture per [COOKIE_SESSION_CSRF_AUDIT_PLAN.md](./COOKIE_SESSION_CSRF_AUDIT_PLAN.md) (Origin check on cookie-authenticated mutating routes; documented session cookie flags). | doc 10 |
 | G-PILOT-4 | Generic login error behavior (no username-existence leak). | [RATE_LIMITING_PLAN.md](./RATE_LIMITING_PLAN.md) |
 | G-PILOT-5 | Privacy notice published; parental consent recorded for every pilot account. | [PRIVACY_COOKIES_CHILD_DATA_PLAN.md](./PRIVACY_COOKIES_CHILD_DATA_PLAN.md) |
-| G-PILOT-6 | IR-1, IR-2 runbooks rehearsed (table-top read-through is enough). | [INCIDENT_RESPONSE_AND_RECOVERY_PLAN.md](./INCIDENT_RESPONSE_AND_RECOVERY_PLAN.md) |
+| G-PILOT-6 | IR-1, IR-2 runbooks rehearsed (table-top read-through is enough). | [INCIDENT_RESPONSE_AND_RECOVERY_PLAN.md](./INCIDENT_RESPONSE_AND_RECOVERY_PLAN.md) — **table-top completed 2026-05-23** ([wave-3d-ir-tabletop-and-pending-evidence-pack.md](../../reports/security/wave-3d-ir-tabletop-and-pending-evidence-pack.md)) |
 | G-PILOT-7 | Owner has signed the pilot waiver listing every accepted P1 **and** every `DEFERRED-BY-OWNER — FINAL PRE-LAUNCH ENV` row. | "owner-decision log" + "Pilot waiver" templates below |
 | G-PILOT-8 | Pilot signoff acknowledges that the **Final Pre-Launch ENV Review / Rotation / Vercel Verification** phase has not yet run. The pilot proceeds **only** with this acknowledgment. | this doc |
 
@@ -130,6 +130,28 @@ docs/security/SECURITY_GATES_AND_SIGNOFF_PLAN.md.
 
 Signed: <owner>
 ```
+
+## Wave 3D gate status (2026-05-23)
+
+IR table-top rehearsal + final pending evidence pack: [wave-3d-ir-tabletop-and-pending-evidence-pack.md](../../reports/security/wave-3d-ir-tabletop-and-pending-evidence-pack.md).
+
+| Item | Status |
+|------|--------|
+| G-PILOT-6 (IR table-top) | **Satisfied** (2026-05-23 documentation walk-through) |
+| Full non-ENV closure | **Not passed** — live ownership, RLS, CSP soak, privacy pages, ENV phase remain |
+| Public launch | **Blocked** |
+
+## Wave 3B gate status (2026-05-23)
+
+Final non-ENV security closure gate recorded in [wave-3b-final-non-env-security-closure-gate.md](../../reports/security/wave-3b-final-non-env-security-closure-gate.md).
+
+| Gate slice | Status |
+|------------|--------|
+| Non-ENV implementation waves (1–3A) | **Complete** |
+| Wave 3B verification | build + selftests + CSP smoke **PASS**; PDF QA **FAIL** → **recovered Wave 3C**; RLS anon **PENDING**; ownership live **PENDING** |
+| G-PILOT-* (closed pilot) | **Not auto-satisfied** — waiver + privacy notice + IR rehearsal still required |
+| G-PUB-* (public launch) | **Blocked** — includes mandatory **G-PUB-ENV** |
+| Next authorized phase | **Final Pre-Launch ENV Review** (owner-opened) or live-evidence passes (D-OWNERSHIP-1, RLS) — not Wave 3B |
 
 ## Acceptance for next fix pass (gates slice)
 

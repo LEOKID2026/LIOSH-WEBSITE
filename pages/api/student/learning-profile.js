@@ -15,6 +15,7 @@ import {
 } from "../../../lib/learning-supabase/student-learning-profile.server";
 import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-progress.server";
 import { evaluateMonthlyPersistenceReward } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
+import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 
 function buildSubjectsResponse(normalized) {
   /** @type {Record<string, unknown>} */
@@ -91,6 +92,8 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "PATCH" || req.method === "POST") {
+      if (guardCookieMutationOrigin(req, res)) return;
+
       const raw = typeof req.body === "string" ? req.body : JSON.stringify(req.body ?? {});
       assertPatchSizeOk(raw);
       const body = typeof req.body === "object" && req.body != null ? req.body : {};

@@ -5,6 +5,7 @@ import {
   clearStudentSessionCookie,
   getAuthenticatedStudentSession,
 } from "../../../lib/learning-supabase/student-auth";
+import { safeApiLog } from "../../../lib/security/safe-log.js";
 
 export default async function handler(req, res) {
   // Authenticated identity must never be served from a shared or disk cache — otherwise
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
     };
     const debugStudentIdentity = devStudentIdentityPayload("student-me-api", student);
     if (isStudentIdentityDebugEnabled() && debugStudentIdentity) {
-      console.info("[LIOSH student identity] API", debugStudentIdentity);
+      safeApiLog("[LIOSH student identity] API", debugStudentIdentity);
     }
 
     return res.status(200).json({

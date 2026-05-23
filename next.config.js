@@ -1,4 +1,59 @@
 /** @type {import('next').NextConfig} */
+const isProdBuild = process.env.NODE_ENV === "production";
+
+function buildContentSecurityPolicy() {
+  const connectSrc = [
+    "'self'",
+    "https://*.supabase.co",
+    "wss://*.supabase.co",
+  ];
+  if (!isProdBuild) {
+    connectSrc.push(
+      "ws://localhost:*",
+      "wss://localhost:*",
+      "http://localhost:*",
+      "http://127.0.0.1:*"
+    );
+  }
+
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isProdBuild ? "" : " 'unsafe-eval'"}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https://*.supabase.co",
+    "font-src 'self' data:",
+    "media-src 'self' blob: data:",
+    `connect-src ${connectSrc.join(" ")}`,
+    "worker-src 'self' blob:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "object-src 'none'",
+    "report-uri /api/security/csp-report",
+  ].join("; ");
+}
+
+const globalSecurityHeaders = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+  },
+  { key: "X-Frame-Options", value: "DENY" },
+  {
+    key: "Content-Security-Policy",
+    value: buildContentSecurityPolicy(),
+  },
+];
+
+if (isProdBuild) {
+  globalSecurityHeaders.push({
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains",
+  });
+}
+
 const nextConfig = {
   reactStrictMode: false, // זמנית - כדי למנוע רענון אינסופי בפיתוח
   webpack: (config, { dev, isServer }) => {
@@ -30,6 +85,10 @@ const nextConfig = {
   // PWA support
   async headers() {
     return [
+      {
+        source: "/:path*",
+        headers: globalSecurityHeaders,
+      },
       {
         source: '/sw.js',
         headers: [

@@ -1,12 +1,15 @@
 import fs from "node:fs";
 
 import { getHebrewGenMp3Paths } from "../../utils/hebrew-audio-gen-store.js";
+import { rejectIfHebrewAudioStreamRateLimited } from "../../lib/security/public-api-rate-limit.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ ok: false, error: "method_not_allowed" });
   }
+
+  if (rejectIfHebrewAudioStreamRateLimited(req, res)) return;
 
   const raw = String(req.query.h ?? "").trim().toLowerCase();
   if (!/^[a-f0-9]{16}$/.test(raw)) {

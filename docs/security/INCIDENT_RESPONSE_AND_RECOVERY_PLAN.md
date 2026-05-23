@@ -1,6 +1,7 @@
 # Incident Response + Recovery Plan
 
-**Generated:** 2026-05-23
+**Generated:** 2026-05-23  
+**Updated:** 2026-05-23 (Wave 3A — operational runbooks moved to [INCIDENT_RESPONSE_RUNBOOK.md](./INCIDENT_RESPONSE_RUNBOOK.md))  
 **Risk rows:** R-IR-01 (P2), R-MON-01 (P2), R-ENV-01 (P0)
 
 ## Goal

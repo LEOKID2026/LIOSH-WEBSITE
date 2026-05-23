@@ -4,6 +4,8 @@
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { isProductionRuntime } from "../../../lib/security/production-guard.js";
+import { validateEngineReviewAdminToken } from "../../../lib/security/admin-token.js";
 
 function deploymentInfo() {
   const vercel = Boolean(process.env.VERCEL || process.env.VERCEL_ENV);
@@ -32,6 +34,15 @@ export default async function handler(req, res) {
     return res.status(403).json({ code: "admin_disabled", error: "NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN is not true" });
   }
 
+  if (isProductionRuntime()) {
+    const auth = validateEngineReviewAdminToken(req, ["x-engine-review-token", "x-admin-token"]);
+    if (!auth.ok) {
+      return res.status(auth.status).json({ code: auth.code, error: auth.error });
+    }
+  }
+
+  const maskInternals = isProductionRuntime();
+  const deployment = maskInternals ? { kind: "masked" } : deploymentInfo();
   const base = join(process.cwd(), "reports/learning-simulator/engine-professionalization");
   const readJson = async (rel) => {
     try {
@@ -48,9 +59,13 @@ export default async function handler(req, res) {
   return res.status(200).json({
     ok: true,
     code: "ok",
-    deployment: deploymentInfo(),
-    artifactBaseRelative: "reports/learning-simulator/engine-professionalization",
-    expertReviewIndexRelative: "reports/learning-simulator/engine-professionalization/expert-review-pack/index.md",
+    deployment,
+    artifactBaseRelative: maskInternals
+      ? null
+      : "reports/learning-simulator/engine-professionalization",
+    expertReviewIndexRelative: maskInternals
+      ? null
+      : "reports/learning-simulator/engine-professionalization/expert-review-pack/index.md",
     packMeta,
     engineFinal,
     profVal,

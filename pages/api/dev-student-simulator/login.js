@@ -1,3 +1,4 @@
+import { guardDevOnlyApiRoute } from "../../../lib/security/api-guards.js";
 import {
   isDevStudentSimulatorEnabled,
   verifyDevStudentSimulatorPassword,
@@ -6,6 +7,8 @@ import {
 } from "../../../utils/server/dev-student-simulator-auth";
 
 export default function handler(req, res) {
+  if (guardDevOnlyApiRoute(req, res)) return;
+
   if (!isDevStudentSimulatorEnabled()) {
     res.status(404).end();
     return;

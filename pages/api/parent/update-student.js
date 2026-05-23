@@ -1,4 +1,11 @@
 import { getLearningSupabaseServerUserClient } from "../../../lib/learning-supabase/server";
+import {
+  MAX_PARENT_GRADE_LEVEL_LEN,
+  MAX_PARENT_STUDENT_NAME_LEN,
+  parseBoundedTrimmedString,
+  safeUuid,
+  trimString,
+} from "../../../lib/security/api-input.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -10,9 +17,7 @@ export default async function handler(req, res) {
     return res.status(401).json({ ok: false, error: "Missing bearer token" });
   }
 
-  const studentId = String(req.body?.studentId || "").trim();
-  const fullName = String(req.body?.fullName || "").trim();
-  const gradeLevel = String(req.body?.gradeLevel || "").trim();
+  const studentId = safeUuid(req.body?.studentId);
   const isActiveRaw = req.body?.isActive;
 
   if (!studentId) {
@@ -20,8 +25,20 @@ export default async function handler(req, res) {
   }
 
   const patch = {};
-  if (fullName) patch.full_name = fullName;
-  if (gradeLevel) patch.grade_level = gradeLevel;
+  if (req.body?.fullName != null && String(req.body.fullName).trim() !== "") {
+    const fullNameParsed = parseBoundedTrimmedString(req.body.fullName, MAX_PARENT_STUDENT_NAME_LEN);
+    if (!fullNameParsed.ok) {
+      return res.status(400).json({ ok: false, error: "fullName too long" });
+    }
+    patch.full_name = fullNameParsed.value;
+  }
+  if (req.body?.gradeLevel != null && String(req.body.gradeLevel).trim() !== "") {
+    const gradeParsed = parseBoundedTrimmedString(req.body.gradeLevel, MAX_PARENT_GRADE_LEVEL_LEN);
+    if (!gradeParsed.ok) {
+      return res.status(400).json({ ok: false, error: "gradeLevel too long" });
+    }
+    patch.grade_level = gradeParsed.value;
+  }
   if (typeof isActiveRaw === "boolean") patch.is_active = isActiveRaw;
 
   if (Object.keys(patch).length === 0) {

@@ -37,6 +37,10 @@ function dedupeScenariosById(scenarios) {
 }
 
 export async function getServerSideProps() {
+  if (process.env.NODE_ENV === "production") {
+    return { notFound: true };
+  }
+
   if (process.env.NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN !== "true") {
     return { notFound: true };
   }

@@ -296,3 +296,10 @@ export default function DevDbReportPreviewPage() {
     </Layout>
   );
 }
+
+export async function getServerSideProps() {
+  if (process.env.NODE_ENV === "production") {
+    return { notFound: true };
+  }
+  return { props: {} };
+}

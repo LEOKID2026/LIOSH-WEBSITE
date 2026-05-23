@@ -10,6 +10,10 @@ const DevStudentSimulatorClient = dynamic(
 );
 
 export async function getServerSideProps(ctx) {
+  if (process.env.NODE_ENV === "production") {
+    return { notFound: true };
+  }
+
   const mod = await import("../../utils/server/dev-student-simulator-auth");
   if (!mod.isDevStudentSimulatorEnabled()) {
     return { notFound: true };
