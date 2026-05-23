@@ -7,79 +7,79 @@ todos:
     status: completed
   - id: doc1-master
     content: docs/security/SECURITY_MASTER_PLAN.md — index, scope, pilot vs public banding, links to all 24 sub-docs
-    status: pending
+    status: completed
   - id: doc2-inventory
     content: docs/security/SECURITY_DATA_INVENTORY.md — every data category, sensitivity, retention
-    status: pending
+    status: completed
   - id: doc3-threat
     content: docs/security/THREAT_MODEL.md — actor model + STRIDE-lite per surface
-    status: pending
+    status: completed
   - id: doc4-register
     content: docs/security/SECURITY_RISK_REGISTER.md — central ranked P0/P1/P2/P3 register with pilot vs public bands
-    status: in_progress
+    status: completed
   - id: doc5-api
     content: docs/security/API_ROUTE_SECURITY_INVENTORY_PLAN.md — every API route + required auth + data scope
-    status: pending
+    status: completed
   - id: doc6-authz
     content: docs/security/AUTHORIZATION_AUDIT_PLAN.md — IDOR / vertical / horizontal escalation test matrix
-    status: pending
+    status: completed
   - id: doc7-rls
     content: docs/security/SUPABASE_RLS_SERVICE_ROLE_AUDIT_PLAN.md — RLS review + service-role inventory + migration plan
-    status: pending
+    status: completed
   - id: doc8-dev
     content: docs/security/DEV_ROUTE_HARDENING_PLAN.md — dev/admin/simulator routes lockdown plan
-    status: pending
+    status: completed
   - id: doc9-rate
     content: docs/security/RATE_LIMITING_PLAN.md — strategy + per-route caps + brute-force
-    status: pending
+    status: completed
   - id: doc10-cookies
     content: docs/security/COOKIE_SESSION_CSRF_AUDIT_PLAN.md — cookie flags + session + CSRF
-    status: pending
+    status: completed
   - id: doc11-xss
     content: docs/security/XSS_INPUT_OUTPUT_AUDIT_PLAN.md — dangerouslySetInnerHTML scan + Hebrew rendering
-    status: pending
+    status: completed
   - id: doc12-headers
     content: docs/security/SECURITY_HEADERS_CSP_PLAN.md — CSP draft + headers
-    status: pending
+    status: completed
   - id: doc13-cors
     content: docs/security/CORS_ORIGIN_AUDIT_PLAN.md — origin allowlist for /api/*
-    status: pending
+    status: completed
   - id: doc14-env
     content: docs/security/ENV_SECRETS_AUDIT_PLAN.md — env flag classification + rotation
-    status: pending
+    status: completed
   - id: doc15-ownership
     content: docs/security/PARENT_STUDENT_OWNERSHIP_BOUNDARY_PLAN.md — cross-tenant test matrix
-    status: pending
+    status: completed
   - id: doc16-reportpriv
     content: docs/security/PARENT_REPORT_PRIVACY_AUDIT_PLAN.md — raw-key scan + narrative safety + screenshot privacy
-    status: pending
+    status: completed
   - id: doc17-copilot
     content: docs/security/PARENT_COPILOT_SECURITY_PLAN.md — HTTP 422 invariant + scope-leak tests + short-report stays off
-    status: pending
+    status: completed
   - id: doc18-logs
     content: docs/security/LOGGING_ARTIFACT_PRIVACY_PLAN.md — reports/ privacy + retention
-    status: pending
+    status: completed
   - id: doc19-public
     content: docs/security/PUBLIC_SURFACE_SECURITY_PLAN.md — /, /about, /contact, gallery, mleo-* games
-    status: pending
+    status: completed
   - id: doc20-deps
     content: docs/security/DEPENDENCY_SUPPLY_CHAIN_AUDIT_PLAN.md — npm audit + lockfile + transitive
-    status: pending
+    status: completed
   - id: doc21-vercel
     content: docs/security/VERCEL_DEPLOYMENT_SECURITY_PLAN.md — env separation + build + preview policy
-    status: pending
+    status: completed
   - id: doc22-childpriv
     content: docs/security/PRIVACY_COOKIES_CHILD_DATA_PLAN.md — child data + parental consent + cookie banner
-    status: pending
+    status: completed
   - id: doc23-ir
     content: docs/security/INCIDENT_RESPONSE_AND_RECOVERY_PLAN.md — leak / abuse / CVE / rollback playbooks
-    status: pending
+    status: completed
   - id: doc24-gates
     content: docs/security/SECURITY_GATES_AND_SIGNOFF_PLAN.md — pilot + public signoff gates + re-audit triggers
-    status: pending
+    status: completed
   - id: doc25-summary
     content: reports/security/security-planning-summary.md — 5-section summary (P0 / P1 / pilot-deferrable / owner decisions / next pass)
-    status: pending
+    status: completed
 isProject: false
 ---
 

@@ -8,6 +8,24 @@
 
 Produce a complete, actionable security planning package that gives a clear next step for security hardening, **without reopening any closed product area** (curriculum, question banks, diagnostic engine, parent report engine, deterministic Copilot, 12 QA accounts, parent linkage, Hebrew UI/content, in-progress nightly).
 
+## Owner-deferred ENV decision (2026-05-23)
+
+**ENV / secrets / Vercel-env work is intentionally postponed to a dedicated final pre-launch phase.** Specifically, the owner has decided:
+
+- No `.env`, `.env.local`, `.env.example`, or other `.env*` file may be edited as part of any current security fix wave.
+- No Vercel environment variable may be added, renamed, removed, or rotated as part of any current security fix wave.
+- No env flag's name, value, semantics, or product-behavior effect may be changed now.
+- No secret or token rotation now.
+- No production / preview env settings changes now.
+
+This decision **does not** mean the ENV-side risk is accepted or waivered. It means execution is **sequenced** to a later phase named **Final Pre-Launch ENV Review / Rotation / Vercel Verification**. Until that phase opens:
+
+1. The ENV-side risks (R-ENV-01, R-COPILOT-01 verification, R-COPILOT-03 verification, R-AUTH-02 flag-authority semantics, R-VERCEL-01 env-side checks) are tagged in [SECURITY_RISK_REGISTER.md](./SECURITY_RISK_REGISTER.md) with execution status **`DEFERRED-BY-OWNER — FINAL PRE-LAUNCH ENV REVIEW / ROTATION`**.
+2. Public launch is **blocked** until the Final ENV phase resolves them.
+3. A controlled pilot may proceed only with an **explicit owner waiver** for these specific deferred items, captured in [SECURITY_GATES_AND_SIGNOFF_PLAN.md](./SECURITY_GATES_AND_SIGNOFF_PLAN.md).
+
+Current security hardening work continues in parallel **without** any ENV modifications. The non-ENV portion is scheduled as **Wave 1 — Non-ENV Pilot Security Hardening** in [reports/security/security-planning-summary.md](../../reports/security/security-planning-summary.md).
+
 ## Working principles
 
 1. **Single source of risks.** [SECURITY_RISK_REGISTER.md](./SECURITY_RISK_REGISTER.md) is the only place where severity, pilot impact, public impact, state, and owner-decision flag are recorded. Other docs reference `R-*` IDs.

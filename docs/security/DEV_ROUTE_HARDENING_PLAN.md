@@ -4,6 +4,13 @@
 **Risk rows:** R-DEV-01 (P0), R-DEV-02 (P0), R-AUTH-02 (P1), R-AUTH-03 (P1), R-DBG-01 (P2)
 **Companion to:** [API_ROUTE_SECURITY_INVENTORY_PLAN.md](./API_ROUTE_SECURITY_INVENTORY_PLAN.md)
 
+## Wave allocation (post-2026-05-23 owner ENV deferral)
+
+This doc has two kinds of actions:
+
+- **Code-only, allowed in Wave 1.** Adds a runtime hard-disable inside each handler using the **existing** `process.env.NODE_ENV === 'production'` value. Reads env, does **not** modify, rename, or rotate any env value. Does not change any flag's semantics. Allowed under the current scope.
+- **ENV-side, deferred to Final ENV phase.** Pipeline pre-deploy preflight that *reads* deployed env state to fail bad combinations; rotation of `ENGINE_REVIEW_ADMIN_TOKEN` placeholder; replacing `NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN` authority with a server-only flag. **Forbidden** in current waves.
+
 ## Goal
 
 Every dev / admin / simulator surface must be one of:
@@ -61,8 +68,10 @@ function isAdmin(req) {
 
 ## Env flag policy
 
-| Flag | Today | Target |
-|------|-------|--------|
+> **DEFERRED-BY-OWNER — FINAL PRE-LAUNCH ENV REVIEW / ROTATION.** Any change to a flag's name, value, or authority semantics is forbidden in current waves. The table below is the **target state** to be implemented during the Final ENV phase.
+
+| Flag | Today | Target (Final ENV phase) |
+|------|-------|--------------------------|
 | `NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN` | gates UI **and** authority | UI hint only; authority moves to server-only `ENGINE_REVIEW_ADMIN_ENABLED` (or simply: route exists when token present) |
 | `ENGINE_REVIEW_ADMIN_TOKEN` | in `.env.example` with placeholder `7479` | rotate; remove placeholder; document as "32+ random bytes" in [ENV_SECRETS_AUDIT_PLAN.md](./ENV_SECRETS_AUDIT_PLAN.md) |
 | `NEXT_PUBLIC_ARCADE_DEBUG` | dev hint | UI hint only; never authority |
@@ -71,7 +80,11 @@ function isAdmin(req) {
 | `ARCADE_ALLOW_FOUNDATION_ACTIONS` | testing-only | confirm off in public production |
 | `NEXT_PUBLIC_DEBUG_STUDENT_IDENTITY` | noisy logs | confirm off in public production |
 
+> Note: the runtime handler check `if (process.env.NODE_ENV === 'production') return 404;` only **reads** `NODE_ENV` and is allowed in Wave 1 — it does not change any env value or any other flag.
+
 ## Pipeline / pre-launch checklist (target)
+
+> **DEFERRED-BY-OWNER — FINAL PRE-LAUNCH ENV REVIEW / ROTATION.** Implementation belongs to the Final ENV phase, not Wave 1 or Wave 2.
 
 A pre-deploy script reads the production environment and **fails the deploy** if any of the following are true:
 
@@ -85,7 +98,7 @@ A pre-deploy script reads the production environment and **fails the deploy** if
 - `LEARNING_STUDENT_ACCESS_SECRET` empty
 - `LEARNING_SUPABASE_SERVICE_ROLE_KEY` empty
 
-> Definition only. Implementation belongs in the next fix pass.
+> Definition only. **Do not implement now.** Implementing today would either (a) require an env change to make the check pass, or (b) start blocking legitimate deploys before the owner has reviewed deployed env state.
 
 ## Dev-only tooling that must stay reachable in development
 
@@ -94,10 +107,17 @@ A pre-deploy script reads the production environment and **fails the deploy** if
 
 The hardening pattern keeps both available in dev while ensuring production cannot reach them.
 
-## Acceptance for next fix pass (dev-route slice)
+## Acceptance — Wave 1 (allowed now, code-only, no ENV changes)
 
-- All Class A routes verifiably 404 in production env.
-- All Class B routes require admin token; non-token call returns 401/403; timing-safe compare in place.
+- All Class A routes verifiably return 404 when `process.env.NODE_ENV === 'production'`.
+- Existing dev/admin handlers gain the runtime hard-disable as the **first** statement.
+- Class B handlers add `timingSafeEqual` for any token compare (the token value itself is **not** changed).
+- Register rows R-DEV-01, R-DEV-02 may move from `known` to `fixed` for the runtime aspect.
+- R-AUTH-03 may move toward `fixed` for the timing-safe-compare aspect.
+
+## Acceptance — Final ENV phase (DEFERRED-BY-OWNER)
+
 - Pipeline pre-deploy check active.
 - `.env.example` placeholder `7479` rotated and replaced with a clearly fake non-numeric placeholder.
-- Register rows R-DEV-01, R-DEV-02, R-AUTH-02, R-AUTH-03 may move from `known` to `fixed` once the above evidence is captured.
+- `NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN` authority moved to a server-only flag (R-AUTH-02 final closure).
+- Register rows R-AUTH-02 (env-flag-authority) and R-DEV-01 (placeholder rotation) achieve full closure here.
