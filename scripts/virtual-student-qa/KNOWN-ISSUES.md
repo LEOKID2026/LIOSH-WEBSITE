@@ -11,11 +11,87 @@
 
 ## Open driver-quality issues
 
-_(none currently)_
+_(none currently — see Resolved section below)_
 
 ---
 
 ## Resolved driver-quality issues
+
+### English driver — typing questions not handled; mcq-buttons-not-ready timeout (RESOLVED 2026-05-23)
+
+**Status:** Fixed in QA tooling only. No product change.
+**Surfaced in:** D2.5 nightly run 2026-05-23 (laptop), AAA7 grade 4 English, q4.
+**Resolved in:** Desktop fix session 2026-05-23 (two-part fix).
+
+**Symptom (before fix).** AAA7 grade 4 English session answered 3 questions
+then hit `mcq-buttons-not-ready-q4: page.waitForFunction: Timeout 20000ms exceeded`.
+The session finished cleanly (session/finish was called) but only 3/16 questions
+were answered → run status `partial`.
+
+**Root cause — Part 1: driver not handling typing questions.**
+The English learning page renders TWO question shapes within the same vocabulary session:
+
+- **MCQ ("choice")** for `en_to_he` direction questions (e.g. "What is 'ninety'?"
+  → Hebrew buttons shown).
+- **Free-text typing** for `he_to_en` direction questions (e.g. "What does 'נמל'
+  mean?" → student types the English word).
+
+Typing mode is triggered by `determineMcqOrTyping()` in
+`pages/learning/english-master.js`:
+```js
+if (selectedTopic === "vocabulary") {
+  if (params?.direction === "en_to_he") return "choice";
+  ...
+  if (isHardLevel || gNum >= 4) return "typing";  // ← grade 4 he_to_en
+```
+
+q1–q3 were `en_to_he` → MCQ (worked fine). q4 was `he_to_en` + grade 4 → typing
+mode; the generic MCQ driver waited 20 s for MCQ buttons that would never appear.
+
+**Root cause — Part 2: double-advance from "שאלה הבאה" click (found during desktop validation).**
+The English page in "learning" mode (the default) calls `generateNewQuestion()`
+automatically via `setTimeout` in `handleAnswer`:
+
+- correct answer → 1 000 ms delay
+- wrong answer   → 1 500 ms delay
+
+The initial fix clicked the "שאלה הבאה" button after each typing answer, which
+triggered an IMMEDIATE `generateNewQuestion()` call. The pending auto-advance
+`setTimeout` then fired ~1–1.5 s later and called `generateNewQuestion()` again —
+a **double-advance** that replaced the intended next question mid-interaction.
+When the driver tried to press Enter into the now-removed typing input, Playwright
+waited 10 s for a locator that would never reappear → `locator.press: Timeout
+10000ms exceeded`.
+
+**Fix (QA driver only — no product change).**
+
+`scripts/virtual-student-qa/lib/subject-drivers/english-master.mjs` was rewritten
+from a thin wrapper around `makeMcqSubjectDriver` into a standalone driver that:
+
+1. Uses a per-question shape detector (`waitForAnswerableQuestion`) that polls for
+   either MCQ buttons *or* the free-text typing input — returns `"mcq"` or
+   `"typing"`.
+2. For `"mcq"` shape: same fiber-probe-based `probeWithLabelMatchRetry` +
+   `pickMcqIndex` + `clickMcqRobustly` path as before, with added stability wait
+   for entrance animations.
+3. For `"typing"` shape: probes `currentQuestion` via the always-present
+   `learning-stop-game` fiber anchor, picks the answer per profile (correct or
+   wrong sentinel), types into `input[placeholder="כתוב את התשובה שלך כאן..."]`,
+   and submits with `page.keyboard.press("Enter")` (no locator actionability
+   re-checks that could race with React re-renders after `fill()`).
+4. **Never clicks "שאלה הבאה"** — waits passively (up to 3.5 s) for the page's
+   own auto-advance `setTimeout` to commit the next question (stem text change or
+   typing input disappearance).
+5. Logs `shapes={mcq:N,typing:N}` for observability.
+
+**Files touched (QA-tooling only):**
+- `scripts/virtual-student-qa/lib/subject-drivers/english-master.mjs` — rewritten.
+- `scripts/virtual-student-qa/KNOWN-ISSUES.md` — this entry.
+
+**No changes to:** `pages/`, `components/`, root `lib/`, `supabase/`, Hebrew copy,
+English educational content, parent-report logic, learning engine, or Supabase schema.
+
+---
 
 ### English driver — observed-vs-intended accuracy mismatch (RESOLVED 2026-05-22)
 
