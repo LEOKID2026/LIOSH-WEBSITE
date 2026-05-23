@@ -1462,7 +1462,7 @@ export default function ScienceMaster() {
     if (!questionStartTime) return;
     const elapsedMs = Date.now() - questionStartTime;
     if (elapsedMs <= 0) return;
-    const cappedMs = Math.min(elapsedMs, 60000);
+    const cappedMs = Math.min(elapsedMs, 120_000);
     sessionSecondsRef.current += cappedMs;
     const duration = cappedMs / 1000;
     if (duration > 0 && duration <= 300) {

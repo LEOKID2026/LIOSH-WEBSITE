@@ -2153,7 +2153,7 @@ export default function EnglishMaster() {
     if (!questionStartTime) return;
     const elapsed = Date.now() - questionStartTime;
     if (elapsed <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsed, 60000);
+    sessionSecondsRef.current += Math.min(elapsed, 120_000);
   }, [questionStartTime]);
 
   function generateNewQuestion() {

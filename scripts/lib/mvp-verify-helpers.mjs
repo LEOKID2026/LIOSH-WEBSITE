@@ -36,6 +36,7 @@ export const MVP_APPROVED_FILE_PATTERNS = [
   /^scripts\/verify-phase\d/,
   /^scripts\/verify-mvp-/,
   /^scripts\/verify-israel-monthly-display\.mjs$/,
+  /^scripts\/verify-time-cap\.mjs$/,
   /^docs\//,
   /^\.cursor\//,
 ];

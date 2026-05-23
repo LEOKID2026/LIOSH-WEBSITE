@@ -1231,7 +1231,7 @@ export default function MathMaster() {
     if (!questionStartTime) return;
     const elapsed = Date.now() - questionStartTime;
     if (elapsed <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsed, 60000);
+    sessionSecondsRef.current += Math.min(elapsed, 120_000);
   }, [questionStartTime]);
 
   function generateNewQuestion() {
@@ -1509,7 +1509,7 @@ export default function MathMaster() {
     if (!storageKey) return;
     const elapsedMs = Date.now() - questionStartTime;
     if (elapsedMs <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsedMs, 60000);
+    sessionSecondsRef.current += Math.min(elapsedMs, 120_000);
     const duration = (Date.now() - questionStartTime) / 1000;
     if (duration > 0 && duration < 300) {
       const meta = pendingTimeTrackMetaRef.current;
@@ -1548,7 +1548,6 @@ export default function MathMaster() {
     const scoreForFinish = score;
     if (!sessionStartRef.current) return;
     trackCurrentQuestionTime();
-    accumulateQuestionTime();
     const elapsedMs = Date.now() - sessionStartRef.current;
     if (elapsedMs <= 0) {
       sessionStartRef.current = null;
