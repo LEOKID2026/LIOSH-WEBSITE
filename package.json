@@ -6,6 +6,7 @@
     "dev": "next dev -p 3001",
     "dev:run-button": "next dev -p 3002",
     "build": "next build",
+    "qa:launch:daily-gate": "node scripts/launch-readiness/build-launch-readiness-daily.mjs",
     "qa:learning-simulator:matrix": "tsx scripts/learning-simulator/run-coverage-matrix.mjs",
     "qa:learning-simulator:schema": "tsx scripts/learning-simulator/run-schema-validation.mjs",
     "qa:learning-simulator:aggregate": "tsx scripts/learning-simulator/run-aggregate.mjs",
