@@ -965,6 +965,118 @@ function buildMobileRtlLayer({ audit, source, readError }) {
 }
 
 /**
+ * Build the `crossDevicePersistence` layer from cross-device-persistence-audit.json (E9B).
+ */
+function buildCrossDevicePersistenceLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא cross-device-persistence-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `cross-device-persistence-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:cross-device -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:cross-device -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const passCount = Array.isArray(audit.checkedClaims)
+    ? audit.checkedClaims.filter((c) => c.status === "pass").length
+    : 0;
+  const claimCount = Array.isArray(audit.checkedClaims) ? audit.checkedClaims.length : 0;
+  const live = audit.liveMultiDeviceTestPerformed === true;
+
+  const summary =
+    `סנכרון בין-מכשירים (E9B evidence): ${passCount}/${claimCount} claims pass, overallStatus=${overall}.` +
+    (live ? " בוצעה בדיקת multi-device חיה." : " ללא בדיקת multi-device חיה — docs/artifacts בלבד.");
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `failureRecovery` layer from failure-recovery-audit.json (E9C).
+ */
+function buildFailureRecoveryLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא failure-recovery-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `failure-recovery-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:failure-recovery -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:failure-recovery -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const eventCount = Array.isArray(audit.events) ? audit.events.length : 0;
+  const partialCount = Array.isArray(audit.students)
+    ? audit.students.filter((s) => s.status === "partial").length
+    : 0;
+  const injected = audit.failureInjectionPerformed === true;
+
+  const summary =
+    `התאוששות מכשלים (E9C MVP): ${eventCount} events, partial=${partialCount}, overallStatus=${overall}.` +
+    (injected ? " בוצעה הזרקת כשלים." : " ללא הזרקת כשלים — artifacts/logs בלבד.");
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
  * Build a `not_run` placeholder for layers that this MVP doesn't read yet.
  */
 function buildNotRunLayer(layerName, phaseName) {
@@ -1060,6 +1172,20 @@ export async function aggregateLayers({ repoRoot, date }) {
     date,
     "mobile-rtl-audit.json"
   );
+  const crossDevicePersistencePath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "cross-device-persistence-audit.json"
+  );
+  const failureRecoveryPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "failure-recovery-audit.json"
+  );
 
   const [
     nightlyRead,
@@ -1073,6 +1199,8 @@ export async function aggregateLayers({ repoRoot, date }) {
     parentRecommendationRead,
     copilotTruthRead,
     mobileRtlRead,
+    crossDevicePersistenceRead,
+    failureRecoveryRead,
   ] = await Promise.all([
     readJsonSafe(nightlyPath),
     readJsonSafe(questionMetadataPath),
@@ -1085,6 +1213,8 @@ export async function aggregateLayers({ repoRoot, date }) {
     readJsonSafe(parentRecommendationPath),
     readJsonSafe(copilotTruthPath),
     readJsonSafe(mobileRtlPath),
+    readJsonSafe(crossDevicePersistencePath),
+    readJsonSafe(failureRecoveryPath),
   ]);
 
   const layers = {
@@ -1133,8 +1263,16 @@ export async function aggregateLayers({ repoRoot, date }) {
       source: relSource(repoRoot, mobileRtlPath, mobileRtlRead.exists),
       readError: mobileRtlRead.error,
     }),
-    crossDevicePersistence: buildNotRunLayer("crossDevicePersistence", "E9"),
-    failureRecovery: buildNotRunLayer("failureRecovery", "E9"),
+    crossDevicePersistence: buildCrossDevicePersistenceLayer({
+      audit: crossDevicePersistenceRead.data,
+      source: relSource(repoRoot, crossDevicePersistencePath, crossDevicePersistenceRead.exists),
+      readError: crossDevicePersistenceRead.error,
+    }),
+    failureRecovery: buildFailureRecoveryLayer({
+      audit: failureRecoveryRead.data,
+      source: relSource(repoRoot, failureRecoveryPath, failureRecoveryRead.exists),
+      readError: failureRecoveryRead.error,
+    }),
     pdfExport: buildPdfExportLayer({
       orchestrator: orchRead.data,
       source: relSource(repoRoot, orchestratorPath, orchRead.exists),
@@ -1184,6 +1322,16 @@ export async function aggregateLayers({ repoRoot, date }) {
       path: relPath(repoRoot, mobileRtlPath),
       exists: mobileRtlRead.exists,
       readError: mobileRtlRead.error,
+    },
+    crossDevicePersistence: {
+      path: relPath(repoRoot, crossDevicePersistencePath),
+      exists: crossDevicePersistenceRead.exists,
+      readError: crossDevicePersistenceRead.error,
+    },
+    failureRecovery: {
+      path: relPath(repoRoot, failureRecoveryPath),
+      exists: failureRecoveryRead.exists,
+      readError: failureRecoveryRead.error,
     },
   };
 

@@ -16,6 +16,8 @@
     "qa:launch:parent-recommendation": "node scripts/launch-readiness/build-parent-recommendation-audit.mjs",
     "qa:launch:parent-copilot-truth": "node scripts/launch-readiness/run-copilot-truth-prompts.mjs",
     "qa:launch:mobile": "node scripts/launch-readiness/probe-mobile-rtl.mjs",
+    "qa:launch:cross-device": "node scripts/launch-readiness/probe-cross-device-persistence.mjs",
+    "qa:launch:failure-recovery": "node scripts/launch-readiness/probe-failure-recovery.mjs",
     "qa:learning-simulator:matrix": "tsx scripts/learning-simulator/run-coverage-matrix.mjs",
     "qa:learning-simulator:schema": "tsx scripts/learning-simulator/run-schema-validation.mjs",
     "qa:learning-simulator:aggregate": "tsx scripts/learning-simulator/run-aggregate.mjs",
