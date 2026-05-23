@@ -127,6 +127,18 @@ export default function ParentLoginPage() {
 
         {message ? <p className="mt-3 text-sm text-white/80">{message}</p> : null}
 
+        <p className="mt-4 text-xs text-white/60 leading-relaxed">
+          ביצירת חשבון או בשימוש באתר, מומלץ לעיין ב
+          <Link href="/terms" className="text-amber-300 underline mx-1">
+            תנאי שימוש
+          </Link>
+          וב
+          <Link href="/privacy" className="text-amber-300 underline mx-1">
+            מדיניות פרטיות
+          </Link>
+          .
+        </p>
+
         <p className="mt-6 text-sm text-white/70">
           אחרי כניסה:{" "}
           <Link href="/parent/dashboard" className="text-amber-300 underline">

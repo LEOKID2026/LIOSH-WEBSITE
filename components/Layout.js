@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
+import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
 
 const menuLinksBase = [
   { href: "/", label: "בית" },
@@ -56,7 +57,14 @@ export default function Layout({ children }) {
     pathname.startsWith("/offline") ||
     pathname.startsWith("/gallery") ||
     pathname.startsWith("/contact") ||
-    pathname.startsWith("/about");
+    pathname.startsWith("/about") ||
+    pathname.startsWith("/help") ||
+    pathname === "/privacy" ||
+    pathname === "/terms" ||
+    pathname === "/accessibility" ||
+    pathname === "/data-deletion" ||
+    pathname === "/ai-disclosure" ||
+    pathname === "/security";
 
   return (
     <div
@@ -136,13 +144,17 @@ export default function Layout({ children }) {
 
       <main className="min-h-[calc(100vh-56px)]">{children}</main>
       <footer className="border-t border-white/10 bg-black/40 mt-10">
-        <div className="max-w-6xl mx-auto px-4 py-4 text-xs text-white/60 flex flex-wrap gap-4 justify-between items-center">
+        <div className="max-w-6xl mx-auto px-4 py-4 text-xs text-white/60 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-between items-start sm:items-center">
           <span>
             © {new Date().getFullYear()} LEO K · משחקים ולמידה לילדים
           </span>
-          <Link href="/help" className="hover:text-white transition">
-            מרכז עזרה
-          </Link>
+          <nav aria-label="קישורים משפטיים" className="flex flex-wrap gap-x-4 gap-y-1">
+            {LEGAL_FOOTER_LINKS.map((link) => (
+              <Link key={link.href} href={link.href} className="hover:text-white transition">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </footer>
     </div>

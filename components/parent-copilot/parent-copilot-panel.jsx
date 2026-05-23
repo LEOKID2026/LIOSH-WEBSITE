@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import parentCopilot from "../../utils/parent-copilot/index.js";
 import { ParentCopilotQuickActions } from "./parent-copilot-quick-actions.jsx";
 
@@ -233,7 +234,15 @@ export function ParentCopilotPanel({ payload, selectedContextRef = null, asyncTu
       className="w-full flex flex-col rounded-xl border border-white/12 bg-black/25 p-3 text-right text-white/90"
       style={{ height: "420px", minHeight: "420px" }}
     >
-      <div className="text-xs font-extrabold tracking-wide text-white/70 shrink-0 mb-2">שאלו על הדוח</div>
+      <div className="flex items-center justify-between gap-2 shrink-0 mb-1">
+        <div className="text-xs font-extrabold tracking-wide text-white/70">שאלו על הדוח</div>
+        <Link
+          href="/ai-disclosure"
+          className="text-[10px] text-sky-300/80 hover:text-sky-200 underline whitespace-nowrap shrink-0"
+        >
+          מידע על שימוש ב-AI
+        </Link>
+      </div>
       <p className="text-[11px] leading-snug text-white/45 shrink-0 mb-2 pr-0.5">
         אפשר לשאול כאן בחופשיות על הדוח, למשל: מה הכי חשוב כרגע, במה להתמקד השבוע, מה הולך טוב, או איך להסביר את זה לילד.
       </p>

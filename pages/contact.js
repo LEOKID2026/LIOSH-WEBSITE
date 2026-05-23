@@ -1,4 +1,5 @@
 import Layout from "../components/Layout";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -194,6 +195,27 @@ export default function Contact() {
             </motion.button>
           ))}
         </div>
+
+        <motion.p
+          className="text-sm text-white/60 text-center max-w-xl mx-auto pb-8 leading-relaxed"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          לפניות בנושא פרטיות, מחיקת נתונים או נגישות —{" "}
+          <Link href="/privacy" className="text-amber-300 underline">
+            מדיניות פרטיות
+          </Link>
+          ,{" "}
+          <Link href="/data-deletion" className="text-amber-300 underline">
+            מחיקת נתונים
+          </Link>
+          ,{" "}
+          <Link href="/accessibility" className="text-amber-300 underline">
+            נגישות
+          </Link>
+          .
+        </motion.p>
       </div>
 
       {activeAnswer && (
