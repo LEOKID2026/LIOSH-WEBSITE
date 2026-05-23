@@ -1,6 +1,6 @@
 # Launch Readiness QA Master Plan — Fast-Track Revision
 
-> **מצב מסמך:** approved by owner (E0+E1 בלבד מאושרים להרצה). שכבות E2+ דורשות אישור נוסף לפני הרצה.
+> **מצב מסמך:** approved by owner. **E0–E8 מאושרים ומיושמים (2026-05-23).** E9–E11 ממתינות לאישור.
 > **שפה:** עברית.
 > **גישה:** MVP-first. כל שכבה מקבלת גרסת MVP שעובדת היום + גרסת Full שמתווספת אחר כך.
 > **מסמך קנוני (פרוט מלא):** [.cursor/plans/launch_readiness_qa_master_plan_9756f606.plan.md](.cursor/plans/launch_readiness_qa_master_plan_9756f606.plan.md)
@@ -60,14 +60,16 @@ flowchart LR
 |-------|------|-----------|--------|
 | **E0** | Fast inventory | [docs/launch-readiness/E0-INVENTORY.md](launch-readiness/E0-INVENTORY.md) | approved, יום 0 |
 | **E1** | Launch Gate MVP | `reports/launch-readiness/<date>/LAUNCH_READINESS_DAILY.{md,json}` | approved, יום 0-1 |
-| E2 | Coverage Matrix MVP | `coverage-summary.{md,json}` | ממתין לאישור אחרי E1 |
-| E3 | Parent Report Truth MVP | `parent-report-truth-audit.{md,json}` | ממתין |
-| E4 | Data Integrity MVP | `data-integrity-audit.{md,json}` | ממתין |
-| E5 | Diagnostic Ground Truth | `diagnostic-ground-truth-report.{md,json}` | week 2 |
-| E6 | Similar Questions / Adaptive Follow-up | `similar-question-audit.{md,json}` | week 2 |
-| E7 | Parent Recommendation Audit | `parent-recommendation-audit.{md,json}` | week 2-3 |
-| E8 | Parent Copilot Truth | `parent-copilot-truth-audit.{md,json}` | week 3 |
-| E9 | Mobile + Cross-device + Failure recovery | 3 probes + reports | week 3-4 |
+| **E2** | Coverage Matrix MVP | `coverage-summary.{md,json}` | **approved** (2026-05-23) |
+| **E3** | Parent Report Truth MVP | `parent-report-truth-audit.{md,json}` | **approved** (2026-05-23) |
+| **E4** | Data Integrity MVP | `data-integrity-audit.{md,json}` | **approved** (2026-05-23) |
+| **E5** | Diagnostic Ground Truth MVP | `diagnostic-ground-truth-report.{md,json}` | **approved** (2026-05-23) |
+| **E5.1** | Parent Report Snapshot Capture | `parent-report-snapshots/*-after.json` | **approved** (2026-05-23) |
+| **E5.2** | Diagnostic Evidence Guard + Backfill | evidence guard in diagnostic-ground-truth.mjs | **approved** (2026-05-23) |
+| **E6** | Similar Questions / Adaptive Follow-up | `similar-question-audit.{md,json}` | **approved** (2026-05-23) |
+| **E7** | Parent Recommendation Audit | `parent-recommendation-audit.{md,json}` | **approved** (2026-05-23) |
+| **E8** | Parent Copilot Truth | `parent-copilot-truth-audit.{md,json}` | **approved** (2026-05-23) — 40 turns, 0 blockers |
+| E9 | Mobile + Cross-device + Failure recovery | 3 probes + reports | **ממתין לאישור** |
 | E10 | Extra personas (only if needed) | persona table update | על פי דרישה |
 | E11 | Wire gate ל-laptop nightly | עדכון run-nightly.ps1 | סוף תהליך |
 

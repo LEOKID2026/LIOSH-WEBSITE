@@ -225,7 +225,7 @@ async function main() {
   console.log(`launch-readiness/daily-gate: date=${args.date} repoRoot=${repoRoot}`);
 
   // ---- Read all available artifacts (read-only) ----
-  const { layers, sources, runMeta } = await aggregateLayers({
+  const { layers, sources, runMeta, coverageSummary } = await aggregateLayers({
     repoRoot,
     date: args.date,
   });
@@ -233,8 +233,8 @@ async function main() {
   // ---- Compute verdict (runMeta drives filtered-run guardrails — E1.1) ----
   const verdict = computeVerdict({ layers, runMeta });
 
-  // ---- Compute coverage gaps (MVP: only "no nightly" detection) ----
-  const coverageGaps = computeCoverageGaps({ layers, sources });
+  // ---- Compute coverage gaps (E2: from coverage-summary when available) ----
+  const coverageGaps = computeCoverageGaps({ layers, sources, coverageSummary });
 
   // ---- Assemble final report ----
   // E1.1: top-level `isFullNightlyRun` + `runKind` make the filtered-run

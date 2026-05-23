@@ -9,26 +9,32 @@ todos:
     content: "E1 (יום 0-1): scripts/launch-readiness/build-launch-readiness-daily.mjs v1 — אגרגטור ראשון שקורא reports קיימים ומפיק LAUNCH_READINESS_DAILY.{md,json} עם NOT_RUN לשכבות שעדיין לא מחוברות [DONE 2026-05-23 — gate ran on 2026-05-23 nightly, status=PARTIAL, 0 blockers]"
     status: completed
   - id: e2-coverage-mvp
-    content: "E2 (יום 1-2): build-coverage-matrix.mjs v1 — student×grade×subject×questions-answered מ-nightly run-summary בלבד"
-    status: pending
+    content: "E2 (יום 1-2): build-coverage-matrix.mjs v1 — student×grade×subject×questions-answered מ-nightly run-summary בלבד [DONE 2026-05-23 — approved]"
+    status: completed
   - id: e3-parent-report-truth-mvp
-    content: "E3 (יום 2-3): build-parent-report-truth-audit.mjs v1 — report exists, opens, no raw keys, student name + activity present"
-    status: pending
+    content: "E3 (יום 2-3): build-parent-report-truth-audit.mjs v1 — report exists, opens, no raw keys, student name + activity present [DONE 2026-05-23 — approved]"
+    status: completed
   - id: e4-data-integrity-mvp
-    content: "E4 (יום 3-4): build-data-integrity-audit.mjs v1 — מסכם session/start=finish, אין fail/blocked, ללא Supabase read"
-    status: pending
+    content: "E4 (יום 3-4): build-data-integrity-audit.mjs v1 — session/start=finish, tier1Counts, bleed, stateAdvance [DONE 2026-05-23 — approved]"
+    status: completed
   - id: e5-diagnostic-ground-truth
-    content: "E5 (שבוע 2): build-diagnostic-ground-truth-report.mjs — אימות persona.weakness → diagnosis match"
-    status: pending
+    content: "E5 (שבוע 2): build-diagnostic-ground-truth-report.mjs — persona weakness vs diagnosis match [APPROVED 2026-05-23 — incl. E5.1 snapshots + E5.2 evidence guard]"
+    status: completed
+  - id: e5-1-parent-report-snapshots
+    content: "E5.1: capture-parent-report-snapshots.mjs — parent-report text/diagnostic artifacts [APPROVED 2026-05-23]"
+    status: completed
+  - id: e5-2-diagnostic-evidence-guard
+    content: "E5.2: Diagnostic Evidence Guard + Snapshot Coverage Backfill [APPROVED 2026-05-23 — Gate PARTIAL 0 blockers]"
+    status: completed
   - id: e6-similar-questions
-    content: "E6 (שבוע 2): build-similar-question-audit.mjs — follow-up coverage לתשובות שגויות"
-    status: pending
+    content: "E6 (שבוע 2): build-similar-question-audit.mjs — follow-up coverage לתשובות שגויות [APPROVED 2026-05-23]"
+    status: completed
   - id: e7-parent-recommendation
-    content: "E7 (שבוע 2-3): build-parent-recommendation-audit.mjs — recommendation tied to real weakness + grade-aware"
-    status: pending
+    content: "E7 (שבוע 2-3): build-parent-recommendation-audit.mjs — recommendation tied to real weakness + grade-aware [APPROVED 2026-05-23]"
+    status: completed
   - id: e8-copilot-truth
-    content: "E8 (שבוע 3): run-copilot-truth-prompts.mjs — 10 prompts × 12 personas deterministic"
-    status: pending
+    content: "E8 (שבוע 3): run-copilot-truth-prompts.mjs — 5 prompts × 8 students deterministic [APPROVED 2026-05-23 — 40 turns, 0 blockers]"
+    status: completed
   - id: e9-mobile-persistence-recovery
     content: "E9 (שבוע 3-4): probe-mobile-rtl.mjs + probe-cross-device-persistence.mjs + probe-failure-recovery.mjs"
     status: pending
@@ -42,7 +48,7 @@ todos:
 
 # Launch Readiness QA Master Plan — Fast-Track Revision
 
-> **מצב מסמך:** approved by owner. E0 + E1 הושלמו (2026-05-23). E2-E11 ממתינות לאישור נפרד.
+> **מצב מסמך:** approved by owner. **E0–E8 מאושרים ומיושמים (2026-05-23).** E9–E11 ממתינות לאישור.
 > **שינוי עיקרי מול הגרסה הקודמת:** Launch Gate MVP יוצא תוך 24-48 שעות מאישור, לא תוך 26-28 ימים.
 > **שפה:** עברית.
 > **גישה:** MVP-first. כל שכבה מקבלת גרסת MVP שעובדת היום + גרסת Full שמתווספת אחר כך.
@@ -53,11 +59,18 @@ todos:
 | פאזה | מצב | מועד | פלט |
 |------|------|------|-----|
 | **E0 — Fast Inventory** | **DONE** | 2026-05-23 | [docs/launch-readiness/E0-INVENTORY.md](docs/launch-readiness/E0-INVENTORY.md) |
-| **E1 — Launch Gate MVP** | **DONE** | 2026-05-23 | gate ראשון רץ נגד 2026-05-23, status=PARTIAL, 0 blockers, 0 warnings, 12/13 שכבות `not_run` כצפוי |
-| E2 — Coverage Matrix MVP | ממתין לאישור | — | — |
-| E3 — Parent Report Truth MVP | ממתין לאישור | — | — |
-| E4 — Data Integrity MVP | ממתין לאישור | — | — |
-| E5-E11 | ממתינות | — | — |
+| **E1 — Launch Gate MVP** | **DONE** | 2026-05-23 | gate ראשון רץ נגד 2026-05-23, status=PARTIAL |
+| **E1.1 — Filtered-run detection** | **DONE** | 2026-05-23 | runKind/isFullNightlyRun ב-gate |
+| **E2 — Coverage Matrix MVP** | **APPROVED** | 2026-05-23 | `coverage-summary.{md,json}` |
+| **E3 — Parent Report Truth MVP** | **APPROVED** | 2026-05-23 | `parent-report-truth-audit.{md,json}` |
+| **E4 — Data Integrity MVP** | **APPROVED** | 2026-05-23 | `data-integrity-audit.{md,json}` |
+| **E5 — Diagnostic Ground Truth MVP** | **APPROVED** | 2026-05-23 | `diagnostic-ground-truth-report.{md,json}` |
+| **E5.1 — Parent Report Snapshot Capture** | **APPROVED** | 2026-05-23 | `parent-report-snapshots/<label>-after.json` |
+| **E5.2 — Diagnostic Evidence Guard** | **APPROVED** | 2026-05-23 | evidence guard fix + 8/8 snapshot backfill |
+| **E6 — Similar / Adaptive Follow-up MVP** | **APPROVED** | 2026-05-23 | `similar-question-audit.{md,json}` |
+| **E7 — Parent Recommendation Audit MVP** | **APPROVED** | 2026-05-23 | `parent-recommendation-audit.{md,json}` |
+| **E8 — Parent Copilot Truth MVP** | **APPROVED** | 2026-05-23 | `parent-copilot-truth-audit.{md,json}` — 40 turns, 0 blockers |
+| E9–E11 | ממתינות | — | — |
 
 ---
 
@@ -197,7 +210,7 @@ flowchart LR
 - **WARN:** הקובץ נוצר אבל >50% מהשכבות `not_run`.
 - **BLOCKED:** הקובץ לא נוצר כלל.
 
-### E2 — Coverage Matrix MVP (יום 1-2, 4-6 שעות)
+### E2 — Coverage Matrix MVP (יום 1-2, 4-6 שעות) **[APPROVED 2026-05-23]**
 - **MVP scope:** student × grade × subject × questions-answered × status (pass/partial/fail). מקור יחיד: `reports/virtual-student-daily/<date>/run-summary.json`.
 - **Full scope (אחר כך):** + topic × level × skill × question-shape, הצלבה מול `qa:question-inventory-matrix`.
 - **קבצים שיווצרו:** [scripts/launch-readiness/build-coverage-matrix.mjs](scripts/launch-readiness/build-coverage-matrix.mjs).
@@ -211,7 +224,7 @@ flowchart LR
 - **WARN:** subject×grade שתומך תוכן ולא נוסה ב-7 ימים אחרונים.
 - **BLOCKED:** persona שאין לה אף שורה ב-7 ימים אחרונים (תקלה ב-state).
 
-### E3 — Parent Report Truth MVP (יום 2-3, 4-6 שעות)
+### E3 — Parent Report Truth MVP (יום 2-3, 4-6 שעות) **[APPROVED 2026-05-23]**
 - **MVP scope:** הדוח קיים, נטען (status 200), אין raw keys (regex blacklist), יש שם תלמיד, יש תאריך פעילות אחרון.
 - **Full scope (אחר כך):** הצלבה numeric של answers count, accuracy ±2%, recommendation tied to grade.
 - **קבצים שיווצרו:** [scripts/launch-readiness/build-parent-report-truth-audit.mjs](scripts/launch-readiness/build-parent-report-truth-audit.mjs) + [scripts/launch-readiness/lib/raw-keys-blacklist.mjs](scripts/launch-readiness/lib/raw-keys-blacklist.mjs).
@@ -226,7 +239,7 @@ flowchart LR
 - **WARN:** דוח נטען אבל חסר accuracy או חסר recommendation אחת.
 - **BLOCKED (P0):** raw keys מופיעים בדוח, או דוח של פרסונה שונה מופיע (cross-student bleed).
 
-### E4 — Data Integrity MVP (יום 3-4, 4-6 שעות)
+### E4 — Data Integrity MVP (יום 3-4, 4-6 שעות) **[APPROVED 2026-05-23]**
 - **MVP scope:** מסתמך **רק** על `run-summary.json` של ה-nightly: `session/start` count = `session/finish` count לכל פרסונה, אין `fail`, אין `blocked`, אין `partial` ללא הסבר QA-driver מתועד.
 - **Full scope (שבוע 2):** read-only Supabase queries דרך MCP/service-role לחיפוש orphans + cross-student rows + duplicate finishes.
 - **קבצים שיווצרו:** [scripts/launch-readiness/build-data-integrity-audit.mjs](scripts/launch-readiness/build-data-integrity-audit.mjs).
@@ -246,7 +259,7 @@ flowchart LR
 
 ---
 
-### E5 — Diagnostic Ground Truth (שבוע 2)
+### E5 — Diagnostic Ground Truth (שבוע 2) **[APPROVED 2026-05-23]**
 - **MVP scope:** לכל פרסונה עם `weakness` מוגדרת ב-[scripts/virtual-student-qa/scenarios/student-personas.mjs](scripts/virtual-student-qa/scenarios/student-personas.mjs): לחפש `diagnosticEngineV2.units[]` בדוח שתואם `subjectId == weakness.subject`. רק MATCH/PARTIAL/MISS, ללא ניתוח skill-level עמוק.
 - **Full scope (אחר כך):** ניתוח skill-level, false-positive על strong personas, אבחון רב-מקצועות.
 - **קבצים שיווצרו:** [scripts/launch-readiness/build-diagnostic-ground-truth-report.mjs](scripts/launch-readiness/build-diagnostic-ground-truth-report.mjs) + [scripts/launch-readiness/lib/persona-truth-helpers.mjs](scripts/launch-readiness/lib/persona-truth-helpers.mjs).
@@ -260,7 +273,18 @@ flowchart LR
 - **WARN:** match 6-8/12 או thin-data ל-1-2.
 - **BLOCKED (P0):** false-positive על פרסונה strong (אבחון חולשה מומצאת).
 
-### E6 — Similar / Adaptive Follow-up (שבוע 2)
+#### E5.1 — Parent Report Snapshot Capture **[APPROVED 2026-05-23]**
+- **מטרה:** backfill read-only של parent-report text/diagnostic snapshots מ-report URLs ב-run-summary.
+- **קבצים:** [scripts/virtual-student-qa/capture-parent-report-snapshots.mjs](scripts/virtual-student-qa/capture-parent-report-snapshots.mjs), [scripts/virtual-student-qa/lib/parent-report-evidence.mjs](scripts/virtual-student-qa/lib/parent-report-evidence.mjs).
+- **פלט:** `reports/virtual-student-daily/<date>/parent-report-snapshots/<label>-{baseline,after}.{json,md}`.
+- **npm:** `qa:capture:parent-report-snapshots`.
+
+#### E5.2 — Diagnostic Evidence Guard + Snapshot Backfill **[APPROVED 2026-05-23]**
+- **מטרה:** מניעת P0 false-positive מ-AAA7 bleed; כיסוי snapshot ל-8/8 תלמידי suite.
+- **קבצים:** [scripts/launch-readiness/lib/diagnostic-ground-truth.mjs](scripts/launch-readiness/lib/diagnostic-ground-truth.mjs) (evidence guard).
+- **תוצאה:** Gate PARTIAL, 0 diagnostic blockers.
+
+### E6 — Similar / Adaptive Follow-up (שבוע 2) **[APPROVED 2026-05-23]**
 - **MVP scope:** לכל wrong-answer של פרסונה חלשה ב-state.json: לבדוק שהשאלות הבאות באותו session כללו ≥1 follow-up מאותו skill או topic.
 - **Full scope (אחר כך):** הצלבה מול `scripts/adaptive-weakness-followup-certification.mjs`, חישוב cross-session 7-day window.
 - **קבצים שיווצרו:** [scripts/launch-readiness/build-similar-question-audit.mjs](scripts/launch-readiness/build-similar-question-audit.mjs).
@@ -271,7 +295,7 @@ flowchart LR
 - **WARN:** 50-80%.
 - **BLOCKED:** 0 follow-up לפרסונה חלשה ידועה.
 
-### E7 — Parent Recommendation Audit (שבוע 2-3)
+### E7 — Parent Recommendation Audit (שבוע 2-3) **[APPROVED 2026-05-23]**
 - **MVP scope:** ההמלצה בדוח של פרסונה (אם קיימת) מקושרת ל-subject שבאמת נצפתה בו חולשה (לפי `wrong_rate > 0.40`).
 - **Full scope (אחר כך):** grade-aware vocabulary check, practical-action check, Hebrew style check.
 - **קבצים שיווצרו:** [scripts/launch-readiness/build-parent-recommendation-audit.mjs](scripts/launch-readiness/build-parent-recommendation-audit.mjs).
@@ -281,8 +305,8 @@ flowchart LR
 - **WARN:** המלצה כללית מדי.
 - **BLOCKED (P0):** המלצה למקצוע שלא נלמד.
 
-### E8 — Parent Copilot Truth Audit (שבוע 3)
-- **MVP scope:** 10 prompts × 5 פרסונות (לא 12 מיד) במצב deterministic בלבד. בודק grounding, no raw keys, no over-diagnosis.
+### E8 — Parent Copilot Truth Audit (שבוע 3) **[APPROVED 2026-05-23]**
+- **MVP scope (מיושם):** 5 prompts × 8 students (עם after.json) במצב deterministic בלבד. בודק grounding, no raw keys, no over-diagnosis.
 - **Full scope (אחר כך):** 12 פרסונות, LLM live, scope-collision tests.
 - **קבצים שיווצרו:** [scripts/launch-readiness/run-copilot-truth-prompts.mjs](scripts/launch-readiness/run-copilot-truth-prompts.mjs).
 - **פלט:** `reports/launch-readiness/<date>/parent-copilot-truth-audit.{md,json}`.
@@ -291,8 +315,9 @@ flowchart LR
 - **PASS:** 0 hallucinations, 0 raw keys על 50 turns.
 - **WARN:** תשובה כללית מדי.
 - **BLOCKED (P0):** טענה רפואית/פסיכולוגית, raw key, scope leak.
+- **תוצאה 2026-05-23:** 40 turns, overallStatus=warn (MVP scope), 0 blockers.
 
-### E9 — Mobile + Persistence + Failure Recovery (שבוע 3-4)
+### E9 — Mobile + Persistence + Failure Recovery (שבוע 3-4) **[ממתין לאישור]**
 - **MVP scope (mobile):** Playwright iPhone 12 viewport, טוען student/home + 1 subject lobby + parent-report, בודק horizontal scroll וגודל כפתורים. **לא מריץ session מלאה במובייל ב-MVP.**
 - **MVP scope (persistence):** קריאה בלבד של ה-state.json + 1 בדיקה ידנית של "login משני דפדפן". **לא** סקריפט אוטומטי מלא ב-MVP.
 - **MVP scope (recovery):** רק רישום של event types ב-run-summary של ה-nightly: refresh-events, double-click events. ללא תרחישי injection.
@@ -459,8 +484,6 @@ qa:launch:all               — מריץ all-layers ברצף
 
 ## 10. הוראה מפורשת לבעלים
 
-**אם זו הגרסה הנכונה — נדרש אישור מפורש לפני שאתחיל ב-E0+E1.**
+**מצב נוכחי (2026-05-23):** E0–E8 מאושרים ומחוברים ל-Gate. **ממתין לאישור לפני E9.**
 
-**אם משהו לא נכון — נא לציין מה (לפני שמתחילים), כי אחרי E1 כל שינוי באגרגטור ישפיע גם על השכבות הבאות.**
-
-**Awaiting owner approval before implementation.**
+**Gate אחרון (2026-05-23):** status=PARTIAL, blockers=0, warnings=24, copilotTruth=warn.

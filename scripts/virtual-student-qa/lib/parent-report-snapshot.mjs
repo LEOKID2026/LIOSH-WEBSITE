@@ -15,6 +15,11 @@
  */
 
 import { verifyParentDashboardAndOpenReport } from "./parent-dashboard.mjs";
+import {
+  extractParentReportEvidenceFromPage,
+  buildParentReportEvidenceMarkdown,
+  inferPhaseFromArtifactPrefix,
+} from "./parent-report-evidence.mjs";
 
 const HEADING_REGEX = /דוח להורים/u;
 const LOADING_TEXT = "טוען דוח...";
@@ -101,6 +106,8 @@ export async function snapshotParentReportViaDashboard({
   log,
   artifacts,
   artifactPrefix,
+  studentLabel = null,
+  phase = null,
 }) {
   log?.(
     `parent-report-snapshot: navigating dashboard to capture ${artifactPrefix}`
@@ -143,7 +150,7 @@ export async function snapshotParentReportViaDashboard({
       "parent-report-snapshot: empty-state branch detected " +
         `("${NO_DATA_TEXT}") — student has no prior activity yet.`
     );
-    return {
+    const emptyResult = {
       url: page.url(),
       isEmptyState: true,
       totalQuestions: null,
@@ -152,6 +159,18 @@ export async function snapshotParentReportViaDashboard({
         ALL_SUBJECTS.map((s) => [s, { questionCount: null }])
       ),
     };
+    await writeParentReportEvidenceArtifacts({
+      page,
+      artifacts,
+      studentLabel,
+      phase,
+      artifactPrefix,
+      expectedStudentName,
+      reportUrl: emptyResult.url,
+      numericSnapshot: emptyResult,
+      log,
+    });
+    return emptyResult;
   }
 
   // Populated state: wait for the totals card to mount.
@@ -178,13 +197,71 @@ export async function snapshotParentReportViaDashboard({
       `subjects=${ALL_SUBJECTS.map((s) => `${s}:${bySubject[s].questionCount}`).join(",")}`
   );
 
-  return {
+  const populatedResult = {
     url: page.url(),
     isEmptyState: false,
     totalQuestions,
     overallAccuracyPct,
     bySubject,
   };
+
+  await writeParentReportEvidenceArtifacts({
+    page,
+    artifacts,
+    studentLabel,
+    phase,
+    artifactPrefix,
+    expectedStudentName,
+    reportUrl: populatedResult.url,
+    numericSnapshot: populatedResult,
+    log,
+  });
+
+  return populatedResult;
+}
+
+async function writeParentReportEvidenceArtifacts({
+  page,
+  artifacts,
+  studentLabel,
+  phase,
+  artifactPrefix,
+  expectedStudentName,
+  reportUrl,
+  numericSnapshot,
+  log,
+}) {
+  if (!artifacts?.writeParentReportEvidence || !studentLabel) return;
+  const resolvedPhase = phase || inferPhaseFromArtifactPrefix(artifactPrefix);
+  if (resolvedPhase === "unknown") {
+    log?.(
+      `parent-report-snapshot: skip text evidence — cannot infer phase from ${artifactPrefix}`
+    );
+    return;
+  }
+  try {
+    const evidence = await extractParentReportEvidenceFromPage(page, {
+      studentLabel,
+      phase: resolvedPhase,
+      reportUrl,
+      expectedStudentName,
+      numericSnapshot,
+    });
+    artifacts.writeParentReportEvidence(evidence);
+    if (artifacts.writeParentReportEvidenceMarkdown) {
+      artifacts.writeParentReportEvidenceMarkdown(
+        evidence,
+        buildParentReportEvidenceMarkdown(evidence)
+      );
+    }
+    log?.(
+      `parent-report-snapshot: wrote parent-report-snapshots/${studentLabel}-${resolvedPhase}.{json,md}`
+    );
+  } catch (err) {
+    log?.(
+      `parent-report-snapshot: evidence capture failed (non-fatal): ${err?.message || err}`
+    );
+  }
 }
 
 /** Compute deltas between two snapshots. Null inputs propagate as null. */

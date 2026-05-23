@@ -189,5 +189,32 @@ export function makeDailyArtifacts({ repoRoot, date }) {
         "utf8"
       );
     },
+
+    /**
+     * E5.1 — machine-readable parent report evidence (JSON + MD).
+     * reports/virtual-student-daily/<date>/parent-report-snapshots/<label>-<phase>.{json,md}
+     */
+    writeParentReportEvidence(evidence) {
+      if (!evidence?.studentLabel || !evidence?.phase) {
+        throw new Error("writeParentReportEvidence: studentLabel and phase required");
+      }
+      const dir = join(root, "parent-report-snapshots");
+      mkdirSync(dir, { recursive: true });
+      const safeLabel = String(evidence.studentLabel).replace(/[^a-zA-Z0-9._-]/g, "_");
+      const safePhase = String(evidence.phase).replace(/[^a-zA-Z0-9._-]/g, "_");
+      const base = join(dir, `${safeLabel}-${safePhase}`);
+      writeFileSync(`${base}.json`, JSON.stringify(evidence, null, 2), "utf8");
+      return base;
+    },
+
+    writeParentReportEvidenceMarkdown(evidence, markdown) {
+      const dir = join(root, "parent-report-snapshots");
+      mkdirSync(dir, { recursive: true });
+      const safeLabel = String(evidence.studentLabel).replace(/[^a-zA-Z0-9._-]/g, "_");
+      const safePhase = String(evidence.phase).replace(/[^a-zA-Z0-9._-]/g, "_");
+      const mdPath = join(dir, `${safeLabel}-${safePhase}.md`);
+      writeFileSync(mdPath, markdown, "utf8");
+      return mdPath;
+    },
   };
 }

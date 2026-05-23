@@ -504,6 +504,467 @@ function buildPdfExportLayer({ orchestrator, source }) {
 }
 
 /**
+ * Build the `coverage` layer from coverage-summary.json (E2).
+ * If file missing => not_run.
+ */
+function buildCoverageLayer({ coverage, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא coverage-summary.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `coverage-summary.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:coverage -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!coverage) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:coverage -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(coverage.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(coverage.blockers) ? coverage.blockers : [];
+  const warnings = Array.isArray(coverage.warnings) ? coverage.warnings : [];
+  const gapCount = Array.isArray(coverage.gaps) ? coverage.gaps.length : 0;
+  const studentCount = Array.isArray(coverage.students) ? coverage.students.length : 0;
+  const subjectCount = coverage.subjects ? Object.keys(coverage.subjects).length : 0;
+
+  const kindNote = coverage.isFullNightlyRun
+    ? "כיסוי מלא"
+    : `כיסוי ממוקד (runKind=${coverage.runKind || "unknown"})`;
+
+  const summary =
+    coverage.summary ||
+    `${kindNote}: ${studentCount} תלמידים, ${subjectCount} מקצועות, ${gapCount} פערים — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `parentReportTruth` layer from parent-report-truth-audit.json (E3).
+ */
+function buildParentReportTruthLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא parent-report-truth-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `parent-report-truth-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:parent-report-truth -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:parent-report-truth -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const studentCount = Array.isArray(audit.students) ? audit.students.length : 0;
+  const checked = audit.students?.map((s) => s.label).join(", ") || "—";
+
+  const kindNote = audit.isFullNightlyRun
+    ? "ביקורת מלאה"
+    : `ביקורת ממוקדת (runKind=${audit.runKind || "unknown"})`;
+
+  const summary =
+    audit.summary ||
+    `${kindNote}: ${studentCount} דוחות (${checked}) — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `dataIntegrity` layer from data-integrity-audit.json (E4).
+ */
+function buildDataIntegrityLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא data-integrity-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `data-integrity-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:data-integrity -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:data-integrity -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const studentCount = Array.isArray(audit.students) ? audit.students.length : 0;
+  const sessionCount = Array.isArray(audit.sessions) ? audit.sessions.length : 0;
+
+  const kindNote = audit.isFullNightlyRun
+    ? "שלמות מלאה"
+    : `שלמות ממוקדת (runKind=${audit.runKind || "unknown"})`;
+
+  const summary =
+    audit.summary ||
+    `${kindNote}: ${studentCount} תלמידים, ${sessionCount} sessions — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `diagnosticGroundTruth` layer from diagnostic-ground-truth-report.json (E5).
+ */
+function buildDiagnosticGroundTruthLayer({ report, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא diagnostic-ground-truth-report.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `diagnostic-ground-truth-report.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:diagnostic-ground-truth -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!report) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:diagnostic-ground-truth -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(report.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(report.blockers) ? report.blockers : [];
+  const warnings = Array.isArray(report.warnings) ? report.warnings : [];
+  const studentCount = Array.isArray(report.students) ? report.students.length : 0;
+  const checked = report.students?.map((s) => s.label).join(", ") || "—";
+
+  const kindNote = report.isFullNightlyRun
+    ? "אבחון מלא"
+    : `אבחון ממוקד (runKind=${report.runKind || "unknown"})`;
+
+  const summary =
+    report.summary ||
+    `${kindNote}: ${studentCount} personas (${checked}) — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `similarQuestions` layer from similar-question-audit.json (E6).
+ */
+function buildSimilarQuestionsLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא similar-question-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `similar-question-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:similar-questions -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:similar-questions -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const studentCount = Array.isArray(audit.students) ? audit.students.length : 0;
+  const eventCount = Array.isArray(audit.events) ? audit.events.length : 0;
+  const checked = audit.students?.map((s) => s.label).join(", ") || "—";
+
+  const kindNote = audit.isFullNightlyRun
+    ? "follow-up מלא"
+    : `follow-up ממוקד (runKind=${audit.runKind || "unknown"})`;
+
+  const summary =
+    audit.summary ||
+    `${kindNote}: ${studentCount} תלמידים (${checked}), ${eventCount} wrong-answer events — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `recommendation` layer from parent-recommendation-audit.json (E7).
+ */
+function buildParentRecommendationLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא parent-recommendation-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `parent-recommendation-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:parent-recommendation -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:parent-recommendation -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const studentCount = Array.isArray(audit.students) ? audit.students.length : 0;
+  const recCount = Array.isArray(audit.recommendations) ? audit.recommendations.length : 0;
+  const checked = audit.students?.map((s) => s.label).join(", ") || "—";
+
+  const kindNote = audit.isFullNightlyRun
+    ? "המלצות מלא"
+    : `המלצות ממוקדות (runKind=${audit.runKind || "unknown"})`;
+
+  const summary =
+    audit.summary ||
+    `${kindNote}: ${studentCount} תלמידים (${checked}), ${recCount} recommendation snippets — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `copilotTruth` layer from parent-copilot-truth-audit.json (E8).
+ */
+function buildCopilotTruthLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא parent-copilot-truth-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `parent-copilot-truth-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:parent-copilot-truth -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:parent-copilot-truth -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const studentCount = Array.isArray(audit.students) ? audit.students.length : 0;
+  const turnCount = Array.isArray(audit.turns) ? audit.turns.length : 0;
+  const generated = audit.adapter?.generatedAnswers ?? 0;
+  const checked = audit.students?.map((s) => s.label).join(", ") || "—";
+
+  const kindNote = audit.isFullNightlyRun
+    ? "Copilot Truth מלא"
+    : `Copilot Truth ממוקד (runKind=${audit.runKind || "unknown"})`;
+
+  const summary =
+    audit.summary ||
+    `${kindNote}: ${studentCount} תלמידים (${checked}), ${turnCount} turns, ${generated} תשובות deterministic — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
+ * Build the `mobile` layer from mobile-rtl-audit.json (E9A).
+ */
+function buildMobileRtlLayer({ audit, source, readError }) {
+  if (readError) {
+    return {
+      status: "fail",
+      source,
+      summary: `לא ניתן לקרוא mobile-rtl-audit.json: ${readError}`,
+      blockers: [
+        {
+          severity: "P0",
+          detail: `mobile-rtl-audit.json קיים אך לא תקין: ${readError}`,
+          source,
+          action: "הרץ npm run qa:launch:mobile -- --date <date> מחדש.",
+        },
+      ],
+      warnings: [],
+    };
+  }
+  if (!audit) {
+    return {
+      status: "not_run",
+      source: null,
+      summary: `${NOT_RUN_DEFAULT_NOTE} הרץ \`npm run qa:launch:mobile -- --date <date>\` כדי לחבר.`,
+    };
+  }
+
+  const overall = String(audit.overallStatus || "unknown").toLowerCase();
+  let status = "not_run";
+  if (overall === "pass") status = "pass";
+  else if (overall === "warn") status = "warn";
+  else if (overall === "fail") status = "fail";
+  else if (overall === "not_run") status = "not_run";
+
+  const blockers = Array.isArray(audit.blockers) ? audit.blockers : [];
+  const warnings = Array.isArray(audit.warnings) ? audit.warnings : [];
+  const pageCount = Array.isArray(audit.pages) ? audit.pages.length : 0;
+  const checked = audit.pages?.filter((p) => p.checked).map((p) => p.name).join(", ") || "—";
+  const vp = audit.viewport
+    ? `${audit.viewport.label || "mobile"} ${audit.viewport.width}×${audit.viewport.height}`
+    : "390×844";
+
+  const summary =
+    audit.summary ||
+    `Mobile RTL MVP (${vp}): ${pageCount} pages, checked=[${checked}] — overallStatus=${overall}.`;
+
+  return {
+    status,
+    source,
+    summary,
+    blockers,
+    warnings,
+  };
+}
+
+/**
  * Build a `not_run` placeholder for layers that this MVP doesn't read yet.
  */
 function buildNotRunLayer(layerName, phaseName) {
@@ -543,11 +1004,87 @@ export async function aggregateLayers({ repoRoot, date }) {
     "orchestrator",
     "run-summary.json"
   );
+  const coveragePath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "coverage-summary.json"
+  );
+  const parentReportTruthPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "parent-report-truth-audit.json"
+  );
+  const dataIntegrityPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "data-integrity-audit.json"
+  );
+  const diagnosticGroundTruthPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "diagnostic-ground-truth-report.json"
+  );
+  const similarQuestionsPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "similar-question-audit.json"
+  );
+  const parentRecommendationPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "parent-recommendation-audit.json"
+  );
+  const copilotTruthPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "parent-copilot-truth-audit.json"
+  );
+  const mobileRtlPath = path.join(
+    repoRoot,
+    "reports",
+    "launch-readiness",
+    date,
+    "mobile-rtl-audit.json"
+  );
 
-  const [nightlyRead, qmRead, orchRead] = await Promise.all([
+  const [
+    nightlyRead,
+    qmRead,
+    orchRead,
+    coverageRead,
+    parentReportTruthRead,
+    dataIntegrityRead,
+    diagnosticGroundTruthRead,
+    similarQuestionsRead,
+    parentRecommendationRead,
+    copilotTruthRead,
+    mobileRtlRead,
+  ] = await Promise.all([
     readJsonSafe(nightlyPath),
     readJsonSafe(questionMetadataPath),
     readJsonSafe(orchestratorPath),
+    readJsonSafe(coveragePath),
+    readJsonSafe(parentReportTruthPath),
+    readJsonSafe(dataIntegrityPath),
+    readJsonSafe(diagnosticGroundTruthPath),
+    readJsonSafe(similarQuestionsPath),
+    readJsonSafe(parentRecommendationPath),
+    readJsonSafe(copilotTruthPath),
+    readJsonSafe(mobileRtlPath),
   ]);
 
   const layers = {
@@ -556,14 +1093,46 @@ export async function aggregateLayers({ repoRoot, date }) {
       summarySource: relSource(repoRoot, nightlyPath, nightlyRead.exists),
       runSummaryReadError: nightlyRead.error,
     }),
-    coverage: buildNotRunLayer("coverage", "E2"),
-    parentReportTruth: buildNotRunLayer("parentReportTruth", "E3"),
-    dataIntegrity: buildNotRunLayer("dataIntegrity", "E4"),
-    diagnosticGroundTruth: buildNotRunLayer("diagnosticGroundTruth", "E5"),
-    similarQuestions: buildNotRunLayer("similarQuestions", "E6"),
-    recommendation: buildNotRunLayer("recommendation", "E7"),
-    copilotTruth: buildNotRunLayer("copilotTruth", "E8"),
-    mobile: buildNotRunLayer("mobile", "E9"),
+    coverage: buildCoverageLayer({
+      coverage: coverageRead.data,
+      source: relSource(repoRoot, coveragePath, coverageRead.exists),
+      readError: coverageRead.error,
+    }),
+    parentReportTruth: buildParentReportTruthLayer({
+      audit: parentReportTruthRead.data,
+      source: relSource(repoRoot, parentReportTruthPath, parentReportTruthRead.exists),
+      readError: parentReportTruthRead.error,
+    }),
+    dataIntegrity: buildDataIntegrityLayer({
+      audit: dataIntegrityRead.data,
+      source: relSource(repoRoot, dataIntegrityPath, dataIntegrityRead.exists),
+      readError: dataIntegrityRead.error,
+    }),
+    diagnosticGroundTruth: buildDiagnosticGroundTruthLayer({
+      report: diagnosticGroundTruthRead.data,
+      source: relSource(repoRoot, diagnosticGroundTruthPath, diagnosticGroundTruthRead.exists),
+      readError: diagnosticGroundTruthRead.error,
+    }),
+    similarQuestions: buildSimilarQuestionsLayer({
+      audit: similarQuestionsRead.data,
+      source: relSource(repoRoot, similarQuestionsPath, similarQuestionsRead.exists),
+      readError: similarQuestionsRead.error,
+    }),
+    recommendation: buildParentRecommendationLayer({
+      audit: parentRecommendationRead.data,
+      source: relSource(repoRoot, parentRecommendationPath, parentRecommendationRead.exists),
+      readError: parentRecommendationRead.error,
+    }),
+    copilotTruth: buildCopilotTruthLayer({
+      audit: copilotTruthRead.data,
+      source: relSource(repoRoot, copilotTruthPath, copilotTruthRead.exists),
+      readError: copilotTruthRead.error,
+    }),
+    mobile: buildMobileRtlLayer({
+      audit: mobileRtlRead.data,
+      source: relSource(repoRoot, mobileRtlPath, mobileRtlRead.exists),
+      readError: mobileRtlRead.error,
+    }),
     crossDevicePersistence: buildNotRunLayer("crossDevicePersistence", "E9"),
     failureRecovery: buildNotRunLayer("failureRecovery", "E9"),
     pdfExport: buildPdfExportLayer({
@@ -580,6 +1149,42 @@ export async function aggregateLayers({ repoRoot, date }) {
     nightly: { path: relPath(repoRoot, nightlyPath), exists: nightlyRead.exists, readError: nightlyRead.error },
     questionMetadata: { path: relPath(repoRoot, questionMetadataPath), exists: qmRead.exists, readError: qmRead.error },
     orchestrator: { path: relPath(repoRoot, orchestratorPath), exists: orchRead.exists, readError: orchRead.error },
+    coverage: { path: relPath(repoRoot, coveragePath), exists: coverageRead.exists, readError: coverageRead.error },
+    parentReportTruth: {
+      path: relPath(repoRoot, parentReportTruthPath),
+      exists: parentReportTruthRead.exists,
+      readError: parentReportTruthRead.error,
+    },
+    dataIntegrity: {
+      path: relPath(repoRoot, dataIntegrityPath),
+      exists: dataIntegrityRead.exists,
+      readError: dataIntegrityRead.error,
+    },
+    diagnosticGroundTruth: {
+      path: relPath(repoRoot, diagnosticGroundTruthPath),
+      exists: diagnosticGroundTruthRead.exists,
+      readError: diagnosticGroundTruthRead.error,
+    },
+    similarQuestions: {
+      path: relPath(repoRoot, similarQuestionsPath),
+      exists: similarQuestionsRead.exists,
+      readError: similarQuestionsRead.error,
+    },
+    parentRecommendation: {
+      path: relPath(repoRoot, parentRecommendationPath),
+      exists: parentRecommendationRead.exists,
+      readError: parentRecommendationRead.error,
+    },
+    copilotTruth: {
+      path: relPath(repoRoot, copilotTruthPath),
+      exists: copilotTruthRead.exists,
+      readError: copilotTruthRead.error,
+    },
+    mobileRtl: {
+      path: relPath(repoRoot, mobileRtlPath),
+      exists: mobileRtlRead.exists,
+      readError: mobileRtlRead.error,
+    },
   };
 
   // Top-level run metadata — surfaced separately so the CLI can put
@@ -591,12 +1196,21 @@ export async function aggregateLayers({ repoRoot, date }) {
     filterReason: layers.nightly.filterReason || null,
   };
 
-  return { layers, sources, runMeta };
+  return { layers, sources, runMeta, coverageSummary: coverageRead.data };
 }
 
-/** Compute coverage gaps from nightly run-summary (very rough MVP). */
-export function computeCoverageGaps({ layers, sources }) {
-  // MVP: only report when the entire nightly is missing.
+/** Compute coverage gaps — prefers E2 coverage-summary when available. */
+export function computeCoverageGaps({ layers, sources, coverageSummary }) {
+  if (coverageSummary && Array.isArray(coverageSummary.gaps) && coverageSummary.gaps.length > 0) {
+    return coverageSummary.gaps.map((g) => ({
+      kind: g.kind,
+      detail: g.detail,
+      severity: g.severity || null,
+      status: g.status || null,
+    }));
+  }
+
+  // Fallback when coverage-summary not yet generated.
   if (!sources?.nightly?.exists) {
     return [
       {
@@ -605,8 +1219,6 @@ export function computeCoverageGaps({ layers, sources }) {
       },
     ];
   }
-  // We intentionally do NOT compute topic/grade gaps here in v1; that arrives
-  // in E2 (`build-coverage-matrix.mjs`).
   return [];
 }
 

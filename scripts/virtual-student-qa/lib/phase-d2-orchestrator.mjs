@@ -563,6 +563,8 @@ export async function runPhaseD2Suite({
         log,
         artifacts,
         artifactPrefix: `${tag}-baseline`,
+        studentLabel: record.label,
+        phase: "baseline",
       });
       record.reportUrlAtBaseline = record.baseline.url;
     } catch (error) {
@@ -812,6 +814,8 @@ export async function runPhaseD2Suite({
         log,
         artifacts,
         artifactPrefix: `${tag}-after`,
+        studentLabel: record.label,
+        phase: "after",
       });
       record.reportUrlAtAfter = record.after.url;
     } catch (error) {
