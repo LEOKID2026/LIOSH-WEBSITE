@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcceptanceGate";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 
 const GRADE_OPTIONS = [
@@ -379,6 +380,7 @@ export default function ParentDashboardPage() {
           </button>
         </div>
 
+        <ParentPolicyAcceptanceGate accessToken={session.access_token}>
         <form
           onSubmit={createStudent}
           className={`space-y-2 rounded border border-white/15 p-4 bg-black/30 ${students.length >= studentLimit ? "opacity-60" : ""}`}
@@ -723,6 +725,7 @@ export default function ParentDashboardPage() {
             </div>
           </div>
         ) : null}
+        </ParentPolicyAcceptanceGate>
       </div>
     </Layout>
   );

@@ -13,6 +13,12 @@ export const CONTACT_EMAIL = "18eran@gmail.com";
 /** ISO date shown on all policy pages (update when content materially changes). */
 export const POLICY_LAST_UPDATED = "2026-05-23";
 
+/** Stable version ids for Terms acceptance audit (bump when Terms materially change). */
+export const TERMS_VERSION = POLICY_LAST_UPDATED;
+
+/** Stable version ids for Privacy acceptance audit (bump when Privacy materially change). */
+export const PRIVACY_VERSION = POLICY_LAST_UPDATED;
+
 export const DELETION_SLA_BUSINESS_DAYS = 7;
 
 export const NORMAL_PARENT_CHILD_LIMIT = 3;
@@ -71,6 +77,7 @@ export const SITE_POLICIES = {
           "דוחות והמלצות לימודיות להורים.",
           "נתוני משחקים, מטבעות וארקייד — לפי השימוש בפועל.",
           "פניות דרך עמוד «צור קשר» (אימייל).",
+          "אישור תנאי שימוש ומדיניות פרטיות: גרסת המסמכים וזמן האישור (באזור ההורים).",
         ],
       },
       {

@@ -61,15 +61,63 @@ function resolvePath(route, baseUrl, studentId) {
   return route.path;
 }
 
-async function findStudentIdOnParentDashboard(page) {
+async function findStudentIdOnParentDashboard(page, timeoutMs = 30_000) {
   const link = page.locator(`a[href*="parent-report"][href*="studentId"]`).first();
-  await link.waitFor({ state: "visible", timeout: 30_000 });
+  await link.waitFor({ state: "visible", timeout: timeoutMs });
   const href = await link.getAttribute("href");
   if (!href) throw new Error("report link missing href on parent dashboard");
   const u = new URL(href, page.url());
   const id = u.searchParams.get("studentId");
   if (!id) throw new Error("studentId not found in report link");
   return id;
+}
+
+/** Resolve demo child for parent-report URLs without relying on dashboard DOM (policy-gate safe). */
+async function resolveDemoStudentIdForCapture({ page, baseUrl, parentAccount, log }) {
+  const envId = String(process.env.HELP_DEMO_STUDENT_ID || "").trim();
+  if (envId) {
+    log?.("demo studentId from HELP_DEMO_STUDENT_ID");
+    return envId;
+  }
+  try {
+    return await findStudentIdOnParentDashboard(page, 8_000);
+  } catch {
+    log?.("dashboard report link not visible; resolving demo child via /api/parent/list-students");
+  }
+  const supabaseUrl = String(process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL || "").trim();
+  const anonKey = String(process.env.NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY || "").trim();
+  if (!supabaseUrl || !anonKey) {
+    throw new Error("HELP_DEMO_STUDENT_ID unset and Supabase anon env missing for parent API fallback");
+  }
+  const { createClient } = await import("@supabase/supabase-js");
+  const node = createClient(supabaseUrl, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data, error } = await node.auth.signInWithPassword({
+    email: parentAccount.email,
+    password: parentAccount.password,
+  });
+  if (error || !data?.session?.access_token) {
+    throw new Error(`parent API fallback sign-in failed: ${error?.message || "no session"}`);
+  }
+  const res = await fetch(new URL("/api/parent/list-students", baseUrl).toString(), {
+    headers: { Authorization: `Bearer ${data.session.access_token}` },
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok || !json?.ok) {
+    throw new Error(`list-students failed (${res.status}): ${json?.error || "unknown"}`);
+  }
+  const students = Array.isArray(json.students) ? json.students : [];
+  const match =
+    students.find((s) => s?.full_name === EXPECTED_CHILD_NAME) ||
+    students.find((s) => String(s?.full_name || "").includes("ישראל"));
+  if (!match?.id) {
+    throw new Error(
+      `demo child "${EXPECTED_CHILD_NAME}" not found under parent account (${students.length} students)`
+    );
+  }
+  log?.(`demo studentId resolved via API: ${match.id}`);
+  return match.id;
 }
 
 async function ensureStudentSession(page, context, baseUrl, log) {
@@ -96,13 +144,22 @@ async function ensureStudentSession(page, context, baseUrl, log) {
 async function ensureParentSession(page, context, baseUrl, log) {
   const parents = loadParentAccounts();
   const parent = selectParentAccount(parents, null, null);
-  await page.goto(new URL("/parent/login", baseUrl).toString(), {
-    waitUntil: "domcontentloaded",
-    timeout: 60_000,
+  // Default token auth for Help Center capture: avoids flaky /parent/login UI (e.g. parallel
+  // policy-gate work on that page). Override with HELP_CAPTURE_PARENT_AUTH=ui if needed.
+  const parentAuthMode =
+    String(process.env.HELP_CAPTURE_PARENT_AUTH || "token").toLowerCase() === "ui"
+      ? "ui"
+      : "token";
+  await authenticateParent({
+    context,
+    page,
+    account: parent,
+    baseUrl,
+    mode: parentAuthMode,
+    log,
   });
-  await authenticateParent({ context, page, account: parent, baseUrl, mode: "ui", log });
   await page.waitForURL((url) => url.pathname.includes("/parent/dashboard"), { timeout: 60_000 });
-  return findStudentIdOnParentDashboard(page);
+  return resolveDemoStudentIdForCapture({ page, baseUrl, parentAccount: parent, log });
 }
 
 async function captureUrl(page, baseUrl, path, viewport) {
