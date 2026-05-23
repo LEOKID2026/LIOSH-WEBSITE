@@ -13,6 +13,7 @@ const menuLinksBase = [
   { href: "/about", label: "אודות" },
   { href: "/gallery", label: "גלריה" },
   { href: "/contact", label: "צור קשר" },
+  { href: "/help", label: "מרכז עזרה" },
 ];
 
 const engineReviewNav =
@@ -139,6 +140,9 @@ export default function Layout({ children }) {
           <span>
             © {new Date().getFullYear()} LEO K · משחקים ולמידה לילדים
           </span>
+          <Link href="/help" className="hover:text-white transition">
+            מרכז עזרה
+          </Link>
         </div>
       </footer>
     </div>

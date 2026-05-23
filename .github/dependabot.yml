@@ -10,3 +10,7 @@ updates:
         dependency-type: production
       development-dependencies:
         dependency-type: development
+    ignore:
+      # Track A only: next@15.5.18 + react@18.2.0. Next 16 needs a separate migration plan.
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]

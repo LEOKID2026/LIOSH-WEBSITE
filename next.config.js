@@ -1,3 +1,5 @@
+const path = require("path");
+
 /** @type {import('next').NextConfig} */
 const isProdBuild = process.env.NODE_ENV === "production";
 
@@ -55,6 +57,8 @@ if (isProdBuild) {
 }
 
 const nextConfig = {
+  // Avoid wrong workspace root when another package-lock.json exists under the user profile.
+  outputFileTracingRoot: path.join(__dirname),
   reactStrictMode: false, // זמנית - כדי למנוע רענון אינסופי בפיתוח
   webpack: (config, { dev, isServer }) => {
     if (dev) {

@@ -12,6 +12,7 @@ node_modules/
 
 # Generated QA/report outputs
 reports/
+qa-evidence-audit/help-center/
 
 # Phase D2 daily simulator outputs (already covered by reports/, listed
 # explicitly so intent is obvious to readers / future cleanups). The

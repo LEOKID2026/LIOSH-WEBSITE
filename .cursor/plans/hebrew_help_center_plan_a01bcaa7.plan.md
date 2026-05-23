@@ -4,43 +4,43 @@ overview: A complete, design-preserving Hebrew (RTL) Help Center under `/help`, 
 todos:
   - id: scaffold-routes
     content: Add new routes pages/help/index.js, pages/help/{parents,students,parent-report,subjects}/index.js, and matching [slug].js, all using existing Layout and reusing pages/about.js visual patterns
-    status: pending
+    status: completed
   - id: shared-components
     content: Create components/help/{HelpLayoutShell,HelpHubCard,HelpArticleBody,HelpScreenshot,HelpVideoEmbed,HelpRelatedLinks,HelpBreadcrumb,HelpTOC,HelpSearchClient}.js without introducing new colors or animations
-    status: pending
+    status: completed
   - id: content-registry
     content: Create data/help-center/index.js (registry + selectors + alt-text validator) and one Hebrew article module per article in subfolders parents/, students/, parent-report/, subjects/
-    status: pending
+    status: completed
   - id: parent-articles
     content: Author 13 Parent Guide articles in Hebrew under data/help-center/parents/, sourced from real flows in pages/parent/dashboard.js, pages/parent/login.js, pages/parent/rewards.js, components/InstallAppPrompt.js
-    status: pending
+    status: completed
   - id: student-articles
     content: Author 11 Student Guide articles in Hebrew under data/help-center/students/, sourced from pages/student/{home,login,arcade}.js, pages/learning/* and components/student/*
-    status: pending
+    status: completed
   - id: parent-report-articles
     content: Author 12 Parent Report explanation articles, with the disclaimer article quoting components/ParentReportImportantDisclaimer.js verbatim
-    status: pending
+    status: completed
   - id: subject-articles
     content: Author 6 Subject Guide articles (math, geometry, english, science, hebrew, moledet-geography) using existing curriculum data files (data/{science,hebrew,english,moledet-geography}-curriculum.js) for topic labels
-    status: pending
+    status: completed
   - id: additive-nav-link
     content: "Append exactly one new menuLinks entry { href: '/help', label: 'מרכז עזרה' } in components/Layout.js and one matching footer link — no other change to that file"
-    status: pending
+    status: completed
   - id: future-video-readiness
     content: Implement HelpVideoEmbed to render nothing when src is null and to support <track kind="captions"> + transcript <details> when populated; document authoring rules in data/help-center/AUTHORING.md
-    status: pending
+    status: completed
   - id: accessibility-manual-checks
-    content: "Document and run the manual accessibility checklist in docs/help-center/MANUAL-QA.md (keyboard walk-through, focus visibility, heading order, alt text, RTL alignment, contrast spot-check). Optional axe-core/@axe-core/playwright automation is GATED on explicit approval to add a new devDependency \u2014 default path is manual-only."
-    status: pending
+    content: Document and run the manual accessibility checklist in docs/help-center/MANUAL-QA.md (keyboard walk-through, focus visibility, heading order, alt text, RTL alignment, contrast spot-check). Optional axe-core/@axe-core/playwright automation is GATED on explicit approval to add a new devDependency — default path is manual-only.
+    status: completed
   - id: signoff-doc
     content: Create docs/help-center/SIGNOFF.md mirroring the §12 acceptance criteria; merge only after all items in SIGNOFF are checked
-    status: pending
+    status: completed
   - id: final-screenshots-manifest
-    content: "FINAL PHASE only \u2014 Define data/help-center/screenshots-manifest.json mapping every screenshot block to a public file path, then add scripts/help-center/verify-screenshots.mjs (npm run help:verify) and a --publish step that copies curated PNGs from qa-evidence-audit/help-center/ into public/help-center/screenshots/"
-    status: pending
+    content: FINAL PHASE only — Define data/help-center/screenshots-manifest.json mapping every screenshot block to a public file path, then add scripts/help-center/verify-screenshots.mjs (npm run help:verify) and a --publish step that copies curated PNGs from qa-evidence-audit/help-center/ into public/help-center/screenshots/
+    status: completed
   - id: final-screenshot-script
-    content: "FINAL PHASE only \u2014 Add scripts/help-center/capture-help-screenshots.mjs (reusing scripts/virtual-student-qa/lib/{config,parent-auth,student-auth}.mjs). Capture uses the demo account Username ADMIN / PIN 1234 / visible child name '\u05d9\u05e9\u05e8\u05d0\u05dc \u05d9\u05e9\u05e8\u05d0\u05dc\u05d9'. Refuses to run against the production main domain (localhost or *.vercel.app preview only). Writes raw artifacts to qa-evidence-audit/help-center/ at mobile/tablet/desktop viewports. Screenshot capture happens only after pages, articles, docs, and the agent's internal/manual review work are complete, and is not a separate user approval checkpoint \u2014 after final manual user approval for implementation is given, screenshot capture proceeds as part of the same continuous pass per \u00a714.1, unless a true blocker occurs."
-    status: pending
+    content: FINAL PHASE only — Add scripts/help-center/capture-help-screenshots.mjs (reusing scripts/virtual-student-qa/lib/{config,parent-auth,student-auth}.mjs). Capture uses the demo account Username ADMIN / PIN 1234 / visible child name 'ישראל ישראלי'. Refuses to run against the production main domain (localhost or *.vercel.app preview only). Writes raw artifacts to qa-evidence-audit/help-center/ at mobile/tablet/desktop viewports. Screenshot capture happens only after pages, articles, docs, and the agent's internal/manual review work are complete, and is not a separate user approval checkpoint — after final manual user approval for implementation is given, screenshot capture proceeds as part of the same continuous pass per §14.1, unless a true blocker occurs.
+    status: completed
 isProject: false
 ---
 
