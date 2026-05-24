@@ -7,6 +7,7 @@ import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
 const menuLinksBase = [
   { href: "/", label: "בית" },
   { href: "/parent/login", label: "עמוד הורים" },
+  { href: "/teacher/login", label: "כניסת מורים" },
   { href: "/student/home", label: "עמוד תלמיד" },
   { href: "/game", label: "משחקים" },
   { href: "/offline", label: "לא מקוון" },
@@ -48,6 +49,8 @@ export default function Layout({ children }) {
   const layoutRtlHebrew =
     pathname === "/" ||
     pathname.startsWith("/parent") ||
+    pathname.startsWith("/teacher") ||
+    pathname.startsWith("/guardian") ||
     pathname === "/student/login" ||
     pathname.startsWith("/student/home") ||
     pathname.startsWith("/student/arcade") ||

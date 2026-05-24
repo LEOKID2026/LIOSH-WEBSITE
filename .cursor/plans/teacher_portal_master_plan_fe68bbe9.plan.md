@@ -3,17 +3,17 @@ name: Teacher Portal Master Plan
 overview: Planning-only blueprint for adding a Teacher Portal alongside the existing Parent/Student system, including teacher-issued limited parent/guardian access. No code, schema, or Hebrew content changes in this phase. Final deliverable will be `docs/teacher-portal/TEACHER_PORTAL_MASTER_PLAN.md`.
 todos:
   - id: write-master-plan
-    content: Write the master plan document to docs/teacher-portal/TEACHER_PORTAL_MASTER_PLAN.md (after user confirms this plan).
-    status: pending
+    content: "Phase 0 (DONE 2026-05-24): Master plan written to docs/teacher-portal/TEACHER_PORTAL_MASTER_PLAN.md and owner-approved."
+    status: completed
   - id: phase1-schema-proposal
-    content: "Phase 1: Draft supabase/migrations/019_teacher_portal_foundation.sql under docs/teacher-portal/sql-proposals/ (proposal-only, not applied)."
-    status: pending
+    content: "Phase 1 (DONE 2026-05-24): Schema proposal delivered as docs/teacher-portal/sql-proposals/019_teacher_portal_foundation.md (markdown, no .sql under supabase/migrations/). Owner-approved."
+    status: completed
   - id: phase2-rls-security
-    content: "Phase 2: Write docs/teacher-portal/RLS_SECURITY_PROPOSAL.md and update docs/security/SECURITY_RISK_REGISTER.md with TEACHER + GUARDIAN_VIEW personas."
-    status: pending
+    content: "Phase 2 (DONE 2026-05-24): RLS/security proposal delivered as docs/teacher-portal/RLS_SECURITY_PROPOSAL.md, with appended sections in docs/security/SECURITY_RISK_REGISTER.md and docs/security/AUTHORIZATION_AUDIT_PLAN.md (TEACHER + GUARDIAN_VIEW persona bands). Owner-approved."
+    status: completed
   - id: phase3-api-contracts
-    content: "Phase 3: Write docs/teacher-portal/API_CONTRACTS.md covering /api/teacher/* and /api/guardian/* with input/output schemas and ownership gates."
-    status: pending
+    content: "Phase 3 (DONE 2026-05-24): API contracts written to docs/teacher-portal/API_CONTRACTS.md covering /api/teacher/* and /api/guardian/* with input/output schemas, ownership gates, audit events, rate limits, and privacy boundaries. Owner-approved."
+    status: completed
   - id: phase4-teacher-login
     content: "Phase 4: Implement /teacher/login + teacher_profiles provisioning + role-aware Supabase signup."
     status: pending
@@ -41,6 +41,17 @@ isProject: false
 # Teacher Portal Master Plan (Planning-Only)
 
 > Deliverable: after explicit owner approval, write this content to `docs/teacher-portal/TEACHER_PORTAL_MASTER_PLAN.md` — **created/updated locally only — no commit, no push** (the owner commits manually). No product code, DB, RLS, routes, auth, or Hebrew/RTL UI is changed in this phase. Architectural decisions noted as decided. Architectural decisions noted as deferred carry an explicit comparison.
+
+## Status snapshot (last updated: 2026-05-24)
+
+- **DONE — Phase 0** Master plan — `docs/teacher-portal/TEACHER_PORTAL_MASTER_PLAN.md`. *(L1 closed.)*
+- **DONE — Phase 1** DB schema proposal — `docs/teacher-portal/sql-proposals/019_teacher_portal_foundation.md`. Markdown-only proposal; the `019_*.sql` filename remains reserved under `supabase/migrations/`. *(L2 closed.)*
+- **DONE — Phase 2** RLS / Security proposal — `docs/teacher-portal/RLS_SECURITY_PROPOSAL.md`, plus appended sections in `docs/security/SECURITY_RISK_REGISTER.md` and `docs/security/AUTHORIZATION_AUDIT_PLAN.md`. *(L3 closed.)*
+- **DONE — Phase 3** API contracts — `docs/teacher-portal/API_CONTRACTS.md`. *(L4 closed.)*
+- **NEXT — Phase 4** Teacher login + session implementation. *Awaiting explicit owner approval before any work begins.*
+- **PENDING** Phases 5, 6, 7, 8, 9. None approved. None started.
+
+> All completed phases were created/updated locally only — **no commit, no push**. The owner commits manually. Approval of one phase does **not** approve the next.
 
 ## Decided up-front
 
@@ -250,14 +261,16 @@ Compute on read in Phase 6/7 to avoid a new persistence layer. Add caching/mater
 
 > Each phase below is gated. Owner approval is required before each phase begins. All phase deliverables are **created/updated locally only — no commit, no push**; the owner commits manually.
 
-- **Phase 0 — Planning only (this doc).** No code/DB changes. Output **created/updated locally only — no commit, no push** to `docs/teacher-portal/`. Phase 0 ends when the owner approves the master plan.
-- **Phase 1 — DB schema proposal.** Draft `019_teacher_portal_foundation.sql` as a *proposal file under `docs/teacher-portal/sql-proposals/`* (**not** under `supabase/migrations/`). Include: all `teacher_*` tables, `student_guardian_access`, `student_guardian_sessions`, `teacher_access_audit`, `teacher_access_invitations`, seed data for `teacher_plans`. Saved to repo for review only; **do not run against any environment**, **no commit, no push**. Stop and wait for owner approval.
-- **Phase 2 — RLS/security proposal.** Per-table RLS policies, server-only patterns, service-role usage, audit posture written to a new `docs/teacher-portal/RLS_SECURITY_PROPOSAL.md`. Add a per-table threat-model entry to `docs/security/SECURITY_RISK_REGISTER.md` and update [`docs/security/AUTHORIZATION_AUDIT_PLAN.md`](docs/security/AUTHORIZATION_AUDIT_PLAN.md) with new persona bands `TEACHER` and `GUARDIAN_VIEW`. Doc edits **only** — no SQL applied. **No commit, no push.** Stop and wait for owner approval.
-- **Phase 3 — APIs (proposal — docs only).** Document every endpoint contract in `docs/teacher-portal/API_CONTRACTS.md`:
+- **`[DONE 2026-05-24]` Phase 0 — Planning only (this doc).** No code/DB changes. Output **created/updated locally only — no commit, no push** to `docs/teacher-portal/`. Phase 0 ends when the owner approves the master plan. *Owner approval received.*
+- **`[DONE 2026-05-24]` Phase 1 — DB schema proposal.** Draft `019_teacher_portal_foundation.sql` as a *proposal file under `docs/teacher-portal/sql-proposals/`* (**not** under `supabase/migrations/`). Include: all `teacher_*` tables, `student_guardian_access`, `student_guardian_sessions`, `teacher_access_audit`, `teacher_access_invitations`, seed data for `teacher_plans`. Saved to repo for review only; **do not run against any environment**, **no commit, no push**. Stop and wait for owner approval. *Owner approval received; delivered as markdown proposal at `docs/teacher-portal/sql-proposals/019_teacher_portal_foundation.md`. The `.sql` filename remains reserved.*
+- **`[DONE 2026-05-24]` Phase 2 — RLS/security proposal.** Per-table RLS policies, server-only patterns, service-role usage, audit posture written to a new `docs/teacher-portal/RLS_SECURITY_PROPOSAL.md`. Add a per-table threat-model entry to `docs/security/SECURITY_RISK_REGISTER.md` and update [`docs/security/AUTHORIZATION_AUDIT_PLAN.md`](docs/security/AUTHORIZATION_AUDIT_PLAN.md) with new persona bands `TEACHER` and `GUARDIAN_VIEW`. Doc edits **only** — no SQL applied. **No commit, no push.** Stop and wait for owner approval. *Owner approval received; deliverables: `docs/teacher-portal/RLS_SECURITY_PROPOSAL.md` and appended sections in `docs/security/SECURITY_RISK_REGISTER.md` and `docs/security/AUTHORIZATION_AUDIT_PLAN.md`.*
+- **`[DONE 2026-05-24]` Phase 3 — APIs (proposal — docs only).** *Owner approval received; deliverable: `docs/teacher-portal/API_CONTRACTS.md`.*
+
+  Original spec (preserved): Document every endpoint contract in `docs/teacher-portal/API_CONTRACTS.md`:
   - `/api/teacher/onboard`, `/api/teacher/me`, `/api/teacher/students`, `/api/teacher/students/link`, `/api/teacher/students/unlink`, `/api/teacher/students/[studentId]/report-data`, `/api/teacher/classes/*`, `/api/teacher/student-access/*`, `/api/teacher/audit`.
   - `/api/guardian/login`, `/api/guardian/logout`, `/api/guardian/me`, `/api/guardian/student/report-data`.
   - Inline-check pattern, no new framework, mirroring parent API style. Plan helpers `lib/teacher-server/teacher-session.server.js` (parallel to `lib/parent-server/policy-acceptance.server.js`'s `resolveAuthenticatedParentUserId`) and `lib/guardian-server/guardian-session.server.js` (parallel to [`lib/learning-supabase/student-auth.js`](lib/learning-supabase/student-auth.js)). **No code, no API files** in Phase 3 — contracts only. **No commit, no push.** Stop and wait for owner approval.
-- **Phase 4 — Teacher login/session (implementation).** Build `pages/teacher/login.js`, role-aware Supabase signup, `teacher_profiles` provisioning RPC, and a client-side redirect guard on `/teacher/*` mirroring the parent dashboard pattern. **All visible UI strings remain hidden behind a feature flag that ships disabled** until the owner approves Hebrew copy. No English placeholder text on production. **No commit, no push.** Stop and wait for owner approval.
+- **`[NEXT — awaiting approval]` Phase 4 — Teacher login/session (implementation).** Build `pages/teacher/login.js`, role-aware Supabase signup, `teacher_profiles` provisioning RPC, and a client-side redirect guard on `/teacher/*` mirroring the parent dashboard pattern. **All visible UI strings remain hidden behind a feature flag that ships disabled** until the owner approves Hebrew copy. No English placeholder text on production. **No commit, no push.** Stop and wait for owner approval.
 - **Phase 5 — Teacher dashboard (implementation).** `pages/teacher/dashboard.js` listing students + classes; CRUD for `teacher_students`/`teacher_classes`. **Link-only** student management — teacher cannot create new student rows in this phase (see Section J: "Teacher-side student creation deferred"). Configurable limit honored (default 20). UI strings stay flag-gated until Hebrew approved. **No commit, no push.** Stop and wait for owner approval.
 - **Phase 6 — Teacher single-student report (implementation).** `pages/teacher/student/[studentId].js` calling `/api/teacher/students/[studentId]/report-data`. Reuses parent report rendering components without modifying parent logic. UI strings stay flag-gated until Hebrew approved. **No commit, no push.** Stop and wait for owner approval.
 - **Phase 7 — Class report (implementation).** `pages/teacher/class/[classId].js` + `lib/teacher-server/class-aggregate.server.js`. UI strings flag-gated. **No commit, no push.** Stop and wait for owner approval.
@@ -302,10 +315,10 @@ Compute on read in Phase 6/7 to avoid a new persistence layer. Add caching/mater
 
 > Each item is a separate gate. The owner approves each one in writing before the next begins. No item may be skipped, batched, or auto-completed.
 
-- [ ] **L1. Architecture approval (this master plan).** Owner reviews and explicitly approves the master plan in `docs/teacher-portal/TEACHER_PORTAL_MASTER_PLAN.md`. *(Phase 0 exit gate.)*
-- [ ] **L2. DB schema proposal approved.** `docs/teacher-portal/sql-proposals/019_teacher_portal_foundation.sql` reviewed; no application to any environment. *(Phase 1 exit gate.)*
-- [ ] **L3. RLS / security proposal approved.** `docs/teacher-portal/RLS_SECURITY_PROPOSAL.md` + updates to `docs/security/SECURITY_RISK_REGISTER.md` and `docs/security/AUTHORIZATION_AUDIT_PLAN.md` reviewed. *(Phase 2 exit gate.)*
-- [ ] **L4. API contracts approved.** `docs/teacher-portal/API_CONTRACTS.md` reviewed; no API code written. *(Phase 3 exit gate.)*
+- [x] **L1. Architecture approval (this master plan).** Owner reviews and explicitly approves the master plan in `docs/teacher-portal/TEACHER_PORTAL_MASTER_PLAN.md`. *(Phase 0 exit gate.)* — **closed 2026-05-24.**
+- [x] **L2. DB schema proposal approved.** `docs/teacher-portal/sql-proposals/019_teacher_portal_foundation.sql` reviewed; no application to any environment. *(Phase 1 exit gate.)* — **closed 2026-05-24.** Delivered as markdown proposal at `docs/teacher-portal/sql-proposals/019_teacher_portal_foundation.md`; the `.sql` filename remains reserved (no `019_*.sql` exists under `supabase/migrations/`).
+- [x] **L3. RLS / security proposal approved.** `docs/teacher-portal/RLS_SECURITY_PROPOSAL.md` + updates to `docs/security/SECURITY_RISK_REGISTER.md` and `docs/security/AUTHORIZATION_AUDIT_PLAN.md` reviewed. *(Phase 2 exit gate.)* — **closed 2026-05-24.**
+- [x] **L4. API contracts approved.** `docs/teacher-portal/API_CONTRACTS.md` reviewed; no API code written. *(Phase 3 exit gate.)* — **closed 2026-05-24.**
 - [ ] **L5. Teacher login + session implemented & owner-approved.** `pages/teacher/login.js`, `teacher_profiles` provisioning, role guards. UI strings remain flag-gated/hidden. *(Phase 4 exit gate.)*
 - [ ] **L6. Teacher dashboard (link-only) implemented & owner-approved.** Configurable limit (default 20). No teacher-side student creation. *(Phase 5 exit gate.)*
 - [ ] **L7. Teacher single-student report implemented & owner-approved.** Reuses diagnostic engine; new ownership gate. *(Phase 6 exit gate.)*
