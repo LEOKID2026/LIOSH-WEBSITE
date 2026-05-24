@@ -1,0 +1,79 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "parent_account_configured",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "parent_qa_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "list_students",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "demo_child_on_dashboard",
+      "ok": true,
+      "message": "d119f721-05b3-4fe2-ac58-4174ac06f733"
+    },
+    {
+      "id": "other_children_warning",
+      "ok": true,
+      "message": "Other children on dashboard: בדיקה-א1, בדיקה-א2, בדיקה-ב1, בדיקה-ב2, בדיקה-ג1, בדיקה-ג2, בדיקה-ד1, בדיקה-ד2, בדיקה-ה1, בדיקה-ה2, בדיקה-ו1, בדיקה-ו2, בדיקה — capture must crop/highlight demo card only"
+    },
+    {
+      "id": "short_report_nonempty",
+      "ok": true,
+      "message": "totalQuestions=329"
+    },
+    {
+      "id": "parent_ui_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "dashboard_child_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "report_link_works",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "short_report_loads",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "detailed_report_opens",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "copilot_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "copilot_useful_answer",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "no_blank_page",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "studentId": "d119f721-05b3-4fe2-ac58-4174ac06f733",
+  "at": "2026-05-24T12:58:14.151Z"
+}

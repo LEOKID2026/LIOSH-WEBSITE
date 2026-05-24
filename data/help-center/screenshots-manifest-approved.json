@@ -1,538 +1,149 @@
 {
   "version": 1,
-  "reviewedAt": "2026-05-24T00:01:00.270Z",
+  "reviewedAt": "2026-05-24T12:54:28.488Z",
   "minBytes": 8000,
   "requiredCount": 135,
-  "approvedCount": 4,
-  "rejectedCount": 131,
-  "publishAllowed": false,
-  "publicPaths": [],
-  "rejected": [
-    {
-      "rel": "help-center/screenshots/parent-report/challenges-section/desktop/challenges.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/challenges-section/desktop/challenges)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/challenges-section/mobile/challenges.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/challenges-section/tablet/challenges.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/data-presence/desktop/low-data.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/data-presence/desktop/low-data)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/data-presence/mobile/low-data.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/data-presence/tablet/low-data.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/detailed-report/desktop/letter.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/detailed-report/mobile/letter.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/detailed-report/tablet/letter.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/printing-and-pdf/desktop/pdf.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/printing-and-pdf/mobile/pdf.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/printing-and-pdf/tablet/pdf.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/recommendations/desktop/recommendations.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/recommendations/desktop/recommendations)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/recommendations/mobile/recommendations.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/recommendations/tablet/recommendations.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/recommendations/tablet/recommendations)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/desktop/detailed-report.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/desktop/short-report.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/topics-and-buckets/desktop/topics-table)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/mobile/detailed-report.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/mobile/short-report.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/report-overview/mobile/short-report)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/tablet/detailed-report.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/tablet/short-report.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/report-overview/tablet/short-report)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/strengths-and-improvements/desktop/strengths.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/strengths-and-improvements/desktop/strengths)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/strengths-and-improvements/mobile/strengths.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/strengths-and-improvements/mobile/strengths)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/strengths-and-improvements/tablet/strengths.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/strengths-and-improvements/tablet/strengths)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/subjects-overview/desktop/six-subjects.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/subjects-overview/desktop/six-subjects)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/subjects-overview/mobile/six-subjects.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/subjects-overview/mobile/six-subjects)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/subjects-overview/tablet/six-subjects.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/subjects-overview/tablet/six-subjects)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/summary-card/desktop/summary.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/summary-card/mobile/summary.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/summary-card/mobile/summary)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/summary-card/tablet/summary.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/summary-card/tablet/summary)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/topics-and-buckets/desktop/topics-table.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/topics-and-buckets/desktop/topics-table)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/topics-and-buckets/mobile/topics-table.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/topics-and-buckets/mobile/topics-table)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/topics-and-buckets/tablet/topics-table.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/trends-and-confidence/desktop/trend.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/trends-and-confidence/desktop/trend)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/trends-and-confidence/mobile/trend.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/trends-and-confidence/tablet/trend.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/understanding-the-disclaimer/desktop/disclaimer.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/understanding-the-disclaimer/desktop/disclaimer)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/understanding-the-disclaimer/mobile/disclaimer.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/understanding-the-disclaimer/mobile/disclaimer)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/understanding-the-disclaimer/tablet/disclaimer.png",
-      "reason": "duplicate content hash (same file as capture-state:parent-report/understanding-the-disclaimer/tablet/disclaimer)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/add-students/desktop/form.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/add-students/desktop/form)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/add-students/mobile/form.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/add-students/mobile/form)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/add-students/tablet/form.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/add-students/tablet/form)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/create-parent-account/mobile/login.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/create-parent-account/mobile/login)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/create-parent-account/tablet/login.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/create-parent-account/tablet/login)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/edit-or-delete-student/desktop/edit.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/edit-or-delete-student/desktop/edit)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/edit-or-delete-student/mobile/edit.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/edit-or-delete-student/mobile/edit)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/edit-or-delete-student/tablet/edit.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/edit-or-delete-student/tablet/edit)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/how-to-read-report/desktop/report-link.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/how-to-read-report/desktop/report-link)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/how-to-read-report/mobile/report-link.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/how-to-read-report/mobile/report-link)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/how-to-read-report/tablet/report-link.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/how-to-read-report/tablet/report-link)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/install-as-app/mobile/install-prompt.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/install-as-app/mobile/install-prompt)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/install-as-app/tablet/install-prompt.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/mobile-and-offline/desktop/offline-hub.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/mobile-and-offline/desktop/offline-hub)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/mobile-and-offline/mobile/offline-hub.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/mobile-and-offline/mobile/offline-hub)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/mobile-and-offline/tablet/offline-hub.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/monthly-rewards/desktop/rewards.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/monthly-rewards/desktop/rewards)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/monthly-rewards/mobile/rewards.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/monthly-rewards/mobile/rewards)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/monthly-rewards/tablet/rewards.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/monthly-rewards/tablet/rewards)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-copilot/desktop/copilot-panel.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/parent-copilot/desktop/copilot-panel)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-copilot/mobile/copilot-panel.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-copilot/tablet/copilot-panel.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-dashboard-tour/desktop/dashboard.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/parent-dashboard-tour/desktop/dashboard)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-dashboard-tour/mobile/dashboard.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/parent-dashboard-tour/mobile/dashboard)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-dashboard-tour/tablet/dashboard.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/parent-dashboard-tour/tablet/dashboard)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/student-pin-and-credentials/desktop/pin-display.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/student-pin-and-credentials/desktop/pin-display)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/student-pin-and-credentials/mobile/pin-display.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/student-pin-and-credentials/mobile/pin-display)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/student-pin-and-credentials/tablet/pin-display.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/student-pin-and-credentials/tablet/pin-display)"
-    },
-    {
-      "rel": "help-center/screenshots/parents/welcome-and-overview/mobile/overview.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/welcome-and-overview/tablet/overview.png",
-      "reason": "duplicate content hash (same file as capture-state:parents/welcome-and-overview/tablet/overview)"
-    },
-    {
-      "rel": "help-center/screenshots/students/answering-questions/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/answering-questions/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/answering-questions/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/avatar-and-profile/desktop/avatar.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/avatar-and-profile/mobile/avatar.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/avatar-and-profile/tablet/avatar.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/choose-subject-and-grade/desktop/subjects.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/choose-subject-and-grade/mobile/subjects.png",
-      "reason": "duplicate content hash (same file as capture-state:students/choose-subject-and-grade/mobile/subjects)"
-    },
-    {
-      "rel": "help-center/screenshots/students/choose-subject-and-grade/tablet/subjects.png",
-      "reason": "duplicate content hash (same file as capture-state:students/choose-subject-and-grade/tablet/subjects)"
-    },
-    {
-      "rel": "help-center/screenshots/students/coins-and-arcade/desktop/arcade.png",
-      "reason": "duplicate content hash (same file as capture-state:students/coins-and-arcade/desktop/arcade)"
-    },
-    {
-      "rel": "help-center/screenshots/students/coins-and-arcade/mobile/arcade.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/coins-and-arcade/tablet/arcade.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/daily-missions/desktop/missions.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/daily-missions/mobile/missions.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/daily-missions/tablet/missions.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/monthly-persistence/desktop/persistence.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/monthly-persistence/mobile/persistence.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/monthly-persistence/tablet/persistence.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/offline-games/desktop/offline.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/offline-games/mobile/offline.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/offline-games/tablet/offline.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/student-home-tour/desktop/home.png",
-      "reason": "duplicate content hash (same file as capture-state:students/student-home-tour/desktop/home)"
-    },
-    {
-      "rel": "help-center/screenshots/students/student-home-tour/mobile/home.png",
-      "reason": "duplicate content hash (same file as capture-state:students/student-home-tour/mobile/home)"
-    },
-    {
-      "rel": "help-center/screenshots/students/student-home-tour/tablet/home.png",
-      "reason": "duplicate content hash (same file as capture-state:students/student-home-tour/tablet/home)"
-    },
-    {
-      "rel": "help-center/screenshots/students/student-login/mobile/login.png",
-      "reason": "duplicate content hash (same file as capture-state:students/student-login/mobile/login)"
-    },
-    {
-      "rel": "help-center/screenshots/students/student-login/tablet/login.png",
-      "reason": "duplicate content hash (same file as capture-state:students/student-login/tablet/login)"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/tablet/question.png",
-      "reason": "missing raw file"
-    }
+  "approvedCount": 135,
+  "rejectedCount": 0,
+  "publishAllowed": true,
+  "publicPaths": [
+    "help-center/screenshots/parent-report/challenges-section/desktop/challenges.png",
+    "help-center/screenshots/parent-report/challenges-section/mobile/challenges.png",
+    "help-center/screenshots/parent-report/challenges-section/tablet/challenges.png",
+    "help-center/screenshots/parent-report/data-presence/desktop/low-data.png",
+    "help-center/screenshots/parent-report/data-presence/mobile/low-data.png",
+    "help-center/screenshots/parent-report/data-presence/tablet/low-data.png",
+    "help-center/screenshots/parent-report/detailed-report/desktop/letter.png",
+    "help-center/screenshots/parent-report/detailed-report/mobile/letter.png",
+    "help-center/screenshots/parent-report/detailed-report/tablet/letter.png",
+    "help-center/screenshots/parent-report/printing-and-pdf/desktop/pdf.png",
+    "help-center/screenshots/parent-report/printing-and-pdf/mobile/pdf.png",
+    "help-center/screenshots/parent-report/printing-and-pdf/tablet/pdf.png",
+    "help-center/screenshots/parent-report/recommendations/desktop/recommendations.png",
+    "help-center/screenshots/parent-report/recommendations/mobile/recommendations.png",
+    "help-center/screenshots/parent-report/recommendations/tablet/recommendations.png",
+    "help-center/screenshots/parent-report/report-overview/desktop/detailed-report.png",
+    "help-center/screenshots/parent-report/report-overview/desktop/short-report.png",
+    "help-center/screenshots/parent-report/report-overview/mobile/detailed-report.png",
+    "help-center/screenshots/parent-report/report-overview/mobile/short-report.png",
+    "help-center/screenshots/parent-report/report-overview/tablet/detailed-report.png",
+    "help-center/screenshots/parent-report/report-overview/tablet/short-report.png",
+    "help-center/screenshots/parent-report/strengths-and-improvements/desktop/strengths.png",
+    "help-center/screenshots/parent-report/strengths-and-improvements/mobile/strengths.png",
+    "help-center/screenshots/parent-report/strengths-and-improvements/tablet/strengths.png",
+    "help-center/screenshots/parent-report/subjects-overview/desktop/six-subjects.png",
+    "help-center/screenshots/parent-report/subjects-overview/mobile/six-subjects.png",
+    "help-center/screenshots/parent-report/subjects-overview/tablet/six-subjects.png",
+    "help-center/screenshots/parent-report/summary-card/desktop/summary.png",
+    "help-center/screenshots/parent-report/summary-card/mobile/summary.png",
+    "help-center/screenshots/parent-report/summary-card/tablet/summary.png",
+    "help-center/screenshots/parent-report/topics-and-buckets/desktop/topics-table.png",
+    "help-center/screenshots/parent-report/topics-and-buckets/mobile/topics-table.png",
+    "help-center/screenshots/parent-report/topics-and-buckets/tablet/topics-table.png",
+    "help-center/screenshots/parent-report/trends-and-confidence/desktop/trend.png",
+    "help-center/screenshots/parent-report/trends-and-confidence/mobile/trend.png",
+    "help-center/screenshots/parent-report/trends-and-confidence/tablet/trend.png",
+    "help-center/screenshots/parent-report/understanding-the-disclaimer/desktop/disclaimer.png",
+    "help-center/screenshots/parent-report/understanding-the-disclaimer/mobile/disclaimer.png",
+    "help-center/screenshots/parent-report/understanding-the-disclaimer/tablet/disclaimer.png",
+    "help-center/screenshots/parents/add-students/desktop/form.png",
+    "help-center/screenshots/parents/add-students/mobile/form.png",
+    "help-center/screenshots/parents/add-students/tablet/form.png",
+    "help-center/screenshots/parents/create-parent-account/desktop/login.png",
+    "help-center/screenshots/parents/create-parent-account/mobile/login.png",
+    "help-center/screenshots/parents/create-parent-account/tablet/login.png",
+    "help-center/screenshots/parents/edit-or-delete-student/desktop/edit.png",
+    "help-center/screenshots/parents/edit-or-delete-student/mobile/edit.png",
+    "help-center/screenshots/parents/edit-or-delete-student/tablet/edit.png",
+    "help-center/screenshots/parents/how-to-read-report/desktop/report-link.png",
+    "help-center/screenshots/parents/how-to-read-report/mobile/report-link.png",
+    "help-center/screenshots/parents/how-to-read-report/tablet/report-link.png",
+    "help-center/screenshots/parents/install-as-app/desktop/install-prompt.png",
+    "help-center/screenshots/parents/install-as-app/mobile/install-prompt.png",
+    "help-center/screenshots/parents/install-as-app/tablet/install-prompt.png",
+    "help-center/screenshots/parents/mobile-and-offline/desktop/offline-hub.png",
+    "help-center/screenshots/parents/mobile-and-offline/mobile/offline-hub.png",
+    "help-center/screenshots/parents/mobile-and-offline/tablet/offline-hub.png",
+    "help-center/screenshots/parents/monthly-rewards/desktop/rewards.png",
+    "help-center/screenshots/parents/monthly-rewards/mobile/rewards.png",
+    "help-center/screenshots/parents/monthly-rewards/tablet/rewards.png",
+    "help-center/screenshots/parents/parent-copilot/desktop/copilot-panel.png",
+    "help-center/screenshots/parents/parent-copilot/mobile/copilot-panel.png",
+    "help-center/screenshots/parents/parent-copilot/tablet/copilot-panel.png",
+    "help-center/screenshots/parents/parent-dashboard-tour/desktop/dashboard.png",
+    "help-center/screenshots/parents/parent-dashboard-tour/mobile/dashboard.png",
+    "help-center/screenshots/parents/parent-dashboard-tour/tablet/dashboard.png",
+    "help-center/screenshots/parents/student-pin-and-credentials/desktop/pin-display.png",
+    "help-center/screenshots/parents/student-pin-and-credentials/mobile/pin-display.png",
+    "help-center/screenshots/parents/student-pin-and-credentials/tablet/pin-display.png",
+    "help-center/screenshots/parents/welcome-and-overview/desktop/overview.png",
+    "help-center/screenshots/parents/welcome-and-overview/mobile/overview.png",
+    "help-center/screenshots/parents/welcome-and-overview/tablet/overview.png",
+    "help-center/screenshots/students/answering-questions/desktop/question.png",
+    "help-center/screenshots/students/answering-questions/mobile/question.png",
+    "help-center/screenshots/students/answering-questions/tablet/question.png",
+    "help-center/screenshots/students/avatar-and-profile/desktop/avatar.png",
+    "help-center/screenshots/students/avatar-and-profile/mobile/avatar.png",
+    "help-center/screenshots/students/avatar-and-profile/tablet/avatar.png",
+    "help-center/screenshots/students/choose-subject-and-grade/desktop/subjects.png",
+    "help-center/screenshots/students/choose-subject-and-grade/mobile/subjects.png",
+    "help-center/screenshots/students/choose-subject-and-grade/tablet/subjects.png",
+    "help-center/screenshots/students/coins-and-arcade/desktop/arcade.png",
+    "help-center/screenshots/students/coins-and-arcade/mobile/arcade.png",
+    "help-center/screenshots/students/coins-and-arcade/tablet/arcade.png",
+    "help-center/screenshots/students/daily-missions/desktop/missions.png",
+    "help-center/screenshots/students/daily-missions/mobile/missions.png",
+    "help-center/screenshots/students/daily-missions/tablet/missions.png",
+    "help-center/screenshots/students/monthly-persistence/desktop/persistence.png",
+    "help-center/screenshots/students/monthly-persistence/mobile/persistence.png",
+    "help-center/screenshots/students/monthly-persistence/tablet/persistence.png",
+    "help-center/screenshots/students/offline-games/desktop/offline.png",
+    "help-center/screenshots/students/offline-games/mobile/offline.png",
+    "help-center/screenshots/students/offline-games/tablet/offline.png",
+    "help-center/screenshots/students/student-home-tour/desktop/home.png",
+    "help-center/screenshots/students/student-home-tour/mobile/home.png",
+    "help-center/screenshots/students/student-home-tour/tablet/home.png",
+    "help-center/screenshots/students/student-login/desktop/login.png",
+    "help-center/screenshots/students/student-login/mobile/login.png",
+    "help-center/screenshots/students/student-login/tablet/login.png",
+    "help-center/screenshots/subjects/english/desktop/explanation.png",
+    "help-center/screenshots/subjects/english/desktop/question.png",
+    "help-center/screenshots/subjects/english/mobile/explanation.png",
+    "help-center/screenshots/subjects/english/mobile/question.png",
+    "help-center/screenshots/subjects/english/tablet/explanation.png",
+    "help-center/screenshots/subjects/english/tablet/question.png",
+    "help-center/screenshots/subjects/geometry/desktop/explanation.png",
+    "help-center/screenshots/subjects/geometry/desktop/question.png",
+    "help-center/screenshots/subjects/geometry/mobile/explanation.png",
+    "help-center/screenshots/subjects/geometry/mobile/question.png",
+    "help-center/screenshots/subjects/geometry/tablet/explanation.png",
+    "help-center/screenshots/subjects/geometry/tablet/question.png",
+    "help-center/screenshots/subjects/hebrew/desktop/explanation.png",
+    "help-center/screenshots/subjects/hebrew/desktop/question.png",
+    "help-center/screenshots/subjects/hebrew/mobile/explanation.png",
+    "help-center/screenshots/subjects/hebrew/mobile/question.png",
+    "help-center/screenshots/subjects/hebrew/tablet/explanation.png",
+    "help-center/screenshots/subjects/hebrew/tablet/question.png",
+    "help-center/screenshots/subjects/math/desktop/explanation.png",
+    "help-center/screenshots/subjects/math/desktop/question.png",
+    "help-center/screenshots/subjects/math/mobile/explanation.png",
+    "help-center/screenshots/subjects/math/mobile/question.png",
+    "help-center/screenshots/subjects/math/tablet/explanation.png",
+    "help-center/screenshots/subjects/math/tablet/question.png",
+    "help-center/screenshots/subjects/moledet-geography/desktop/explanation.png",
+    "help-center/screenshots/subjects/moledet-geography/desktop/question.png",
+    "help-center/screenshots/subjects/moledet-geography/mobile/explanation.png",
+    "help-center/screenshots/subjects/moledet-geography/mobile/question.png",
+    "help-center/screenshots/subjects/moledet-geography/tablet/explanation.png",
+    "help-center/screenshots/subjects/moledet-geography/tablet/question.png",
+    "help-center/screenshots/subjects/science/desktop/explanation.png",
+    "help-center/screenshots/subjects/science/desktop/question.png",
+    "help-center/screenshots/subjects/science/mobile/explanation.png",
+    "help-center/screenshots/subjects/science/mobile/question.png",
+    "help-center/screenshots/subjects/science/tablet/explanation.png",
+    "help-center/screenshots/subjects/science/tablet/question.png"
   ],
+  "rejected": [],
   "notes": [
     "Checks size, PNG dimensions, mobile height cap, duplicate SHA-256 across jobs.",
     "Demo account ADMIN / child ישראל ישראלי only.",

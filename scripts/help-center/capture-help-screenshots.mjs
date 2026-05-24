@@ -307,15 +307,30 @@ async function captureElementShot(page, target, viewport, outPath, captureState,
       : viewport.name === "tablet"
         ? MAX_TABLET_ELEMENT_HEIGHT
         : Math.min(box.height, 12_000);
-  const shotHeight = Math.min(box.height, maxHeight);
+  let shotHeight = Math.min(box.height, maxHeight);
+  if (
+    viewport.name === "mobile" &&
+    target.expandMobileClipTo &&
+    shotHeight < target.expandMobileClipTo
+  ) {
+    shotHeight = Math.min(target.expandMobileClipTo, maxHeight);
+  }
 
   const clipRect = { x: box.x, y: box.y, width: box.width, height: shotHeight };
   if (useClip) {
-    await page.screenshot({
-      path: outPath,
-      animations: "disabled",
-      clip: clipRect,
-    });
+    try {
+      await page.screenshot({
+        path: outPath,
+        animations: "disabled",
+        clip: clipRect,
+      });
+    } catch {
+      await locator.screenshot({
+        path: outPath,
+        animations: "disabled",
+        clip: { x: 0, y: 0, width: Math.max(40, box.width), height: shotHeight },
+      });
+    }
   } else {
     await locator.screenshot({ path: outPath, animations: "disabled" });
   }

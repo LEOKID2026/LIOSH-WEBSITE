@@ -20,6 +20,7 @@ const LOADING_HIDE = [
  * @property {string[]} [hideLoading]
  * @property {(page: import("playwright").Page) => Promise<void>} [prepare]
  * @property {(page: import("playwright").Page) => Promise<void>} [afterGoto]
+ * @property {number} [expandMobileClipTo] — minimum clip height on mobile (px from element top)
  */
 
 /** @returns {CaptureTarget} */
@@ -86,10 +87,11 @@ export function resolveCaptureTarget(job, studentId) {
       afterGoto: waitParentReportReady,
     },
     "parent-report/challenges-section/challenges": {
-      selector: "h2:has-text('אתגרים')",
-      ancestorLevels: 1,
-      minTextLength: 6,
+      selector: ".bg-black\\/30.border:has(> h2:has-text('אתגרים'))",
+      minTextLength: 16,
+      expandMobileClipTo: 360,
       afterGoto: waitParentReportReady,
+      prepare: scrollHeadingIntoView("h2:has-text('אתגרים')"),
     },
     "parent-report/detailed-report/letter": {
       selector: ".pr-detailed-subject-letter, .pr-detailed-subject-inner",
@@ -238,9 +240,8 @@ export function resolveCaptureTarget(job, studentId) {
     // —— subjects (question + explanation share master URL) ——
     "subjects/*/question": {
       selector:
-        '[data-testid$="-check-answer"], [data-testid*="-mcq-"], button:has-text("בדוק")',
-      ancestorLevels: 2,
-      minTextLength: 4,
+        'div:has([data-testid$="-question-surface"]), div:has([data-testid$="-question-stem"])',
+      minTextLength: 12,
       afterGoto: waitLearningQuestionReady,
     },
     "subjects/*/explanation": {

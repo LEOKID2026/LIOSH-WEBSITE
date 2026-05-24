@@ -32,6 +32,8 @@
     "help:publish-videos": "node scripts/help-center/publish-videos.mjs",
     "help:verify-videos": "node scripts/help-center/verify-videos.mjs",
     "help:capture-video-pilot": "node scripts/help-center/capture-video-pilot-help-overview.mjs",
+    "parent-video:preflight": "node --env-file=.env.local --env-file=.env.e2e.local scripts/parent-video-pilot/preflight-parent-workflow.mjs",
+    "parent-video:capture": "node --env-file=.env.local --env-file=.env.e2e.local scripts/parent-video-pilot/capture-parent-workflow.mjs",
     "dev:help-video-pilot": "next dev -p 3098",
     "dev:help-video-pilot-alt": "next dev -p 3108",
     "dev:help-video-pilot-capture": "next dev -p 3110",
