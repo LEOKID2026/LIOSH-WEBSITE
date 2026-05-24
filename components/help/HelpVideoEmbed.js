@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const MOBILE_MQ = "(max-width: 640px)";
+const PREVIEW_LABEL = "צפו בסרטון הדרכה";
+const CLOSE_LABEL = "סגירת סרטון";
 
 function pickViewport(sourcesByViewport) {
   if (!sourcesByViewport) return null;
@@ -19,9 +21,7 @@ function resolveSources({ src, sources, sourcesByViewport }) {
       poster: pack.poster || null,
       captions: pack.captionsHe || pack.captions || null,
       durationSec:
-        typeof pack.durationSec === "number"
-          ? pack.durationSec
-          : undefined,
+        typeof pack.durationSec === "number" ? pack.durationSec : undefined,
     };
   }
   if (sources?.webm || sources?.mp4) {
@@ -45,8 +45,21 @@ function resolveSources({ src, sources, sourcesByViewport }) {
   return null;
 }
 
+function PlayIcon() {
+  return (
+    <span
+      className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-amber-500/90 text-black shadow-lg ring-2 ring-white/20"
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" className="h-6 w-6 sm:h-7 sm:w-7 ms-0.5" fill="currentColor">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </span>
+  );
+}
+
 /**
- * Tutorial video embed — lazy-mounted, no autoplay, dual viewport via sourcesByViewport.
+ * Compact tutorial video preview + modal player (no large inline video).
  */
 export default function HelpVideoEmbed({
   src,
@@ -57,9 +70,10 @@ export default function HelpVideoEmbed({
   transcriptHe,
   durationSec,
 }) {
-  const containerRef = useRef(null);
-  const [mounted, setMounted] = useState(false);
   const [activeVp, setActiveVp] = useState("desktop");
+  const [open, setOpen] = useState(false);
+  const modalVideoRef = useRef(null);
+  const closeBtnRef = useRef(null);
 
   useEffect(() => {
     if (!sourcesByViewport) return undefined;
@@ -70,19 +84,6 @@ export default function HelpVideoEmbed({
     return () => mq.removeEventListener("change", update);
   }, [sourcesByViewport]);
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return undefined;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setMounted(true);
-      },
-      { rootMargin: "200px 0px", threshold: 0.01 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
   const resolved = resolveSources({
     src,
     sources,
@@ -91,8 +92,6 @@ export default function HelpVideoEmbed({
     captions,
     durationSec,
   });
-
-  if (!resolved?.webm && !resolved?.mp4) return null;
 
   const posterUrl =
     poster ||
@@ -114,56 +113,86 @@ export default function HelpVideoEmbed({
       ? sourcesByViewport[activeVp]?.durationSec
       : null);
 
-  const label =
+  const closeModal = useCallback(() => {
+    const el = modalVideoRef.current;
+    if (el) {
+      el.pause();
+      el.currentTime = 0;
+    }
+    setOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") closeModal();
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    closeBtnRef.current?.focus();
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, closeModal]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const el = modalVideoRef.current;
+    if (!el) return undefined;
+    el.muted = false;
+    const t = window.setTimeout(() => {
+      el.play().catch(() => {});
+    }, 50);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
+  if (!resolved?.webm && !resolved?.mp4) return null;
+
+  const modalLabel =
     activeVp === "mobile" ? "סרטון הדרכה (נייד)" : "סרטון הדרכה (מחשב)";
 
   return (
-    <div ref={containerRef} className="my-6 space-y-3" dir="rtl">
-      {mounted ? (
-        <video
-          controls
-          preload="metadata"
-          playsInline
-          poster={posterUrl || undefined}
-          className="w-full rounded-xl border border-white/10 bg-black"
-          aria-label={label}
-        >
-          {resolved.mp4 ? <source src={resolved.mp4} type="video/mp4" /> : null}
-          {resolved.webm ? (
-            <source src={resolved.webm} type="video/webm" />
-          ) : null}
-          {captionsUrl ? (
-            <track
-              kind="captions"
-              srcLang="he"
-              src={captionsUrl}
-              label="עברית"
-              default
-            />
-          ) : null}
-        </video>
-      ) : (
-        <div
-          className="w-full aspect-video rounded-xl border border-white/10 bg-black/80 flex items-center justify-center text-white/60 text-sm"
-          aria-hidden="true"
-        >
+    <div className="my-4 space-y-2 max-w-full" dir="rtl">
+      <button
+        type="button"
+        data-help-video-preview="true"
+        onClick={() => setOpen(true)}
+        className="group relative flex w-full max-w-xl mx-auto sm:mx-0 overflow-hidden rounded-xl border border-white/15 bg-black/60 text-right shadow-md transition hover:border-amber-400/40 hover:shadow-amber-900/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-label={PREVIEW_LABEL}
+      >
+        <span className="relative block w-full h-[9.5rem] sm:h-[11rem] max-h-[44vh]">
           {posterUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={posterUrl}
               alt=""
-              className="w-full h-full object-contain rounded-xl opacity-90"
+              className="absolute inset-0 h-full w-full object-cover opacity-90"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
-            "סרטון הדרכה"
+            <span className="absolute inset-0 bg-gradient-to-b from-white/10 to-black/80" />
           )}
-        </div>
-      )}
+          <span className="absolute inset-0 bg-black/35 group-hover:bg-black/25 transition-colors" />
+          <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3">
+            <PlayIcon />
+            <span className="text-sm sm:text-base font-semibold text-white drop-shadow-md">
+              {PREVIEW_LABEL}
+            </span>
+          </span>
+        </span>
+      </button>
+
       {duration ? (
-        <p className="text-xs text-white/50">
+        <p className="text-xs text-white/50 text-right">
           משך משוער: {Math.max(1, Math.round(duration / 60))} דקות
         </p>
       ) : null}
+
       {transcriptHe ? (
         <details className="rounded-lg border border-white/10 bg-black/50 p-3 text-right">
           <summary className="cursor-pointer font-semibold text-amber-200 min-h-[44px] flex items-center">
@@ -173,6 +202,68 @@ export default function HelpVideoEmbed({
             {transcriptHe}
           </p>
         </details>
+      ) : null}
+
+      {open ? (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6"
+          role="presentation"
+          onClick={closeModal}
+        >
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"
+            aria-hidden="true"
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={modalLabel}
+            className="relative z-[101] flex w-full max-w-3xl max-h-[min(90vh,720px)] flex-col rounded-xl border border-white/15 bg-[#0f1419] shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4">
+              <span className="text-sm font-semibold text-amber-100 truncate">
+                {PREVIEW_LABEL}
+              </span>
+              <button
+                ref={closeBtnRef}
+                type="button"
+                onClick={closeModal}
+                className="shrink-0 min-h-[44px] min-w-[44px] rounded-lg border border-white/20 bg-white/10 px-3 text-sm font-bold text-white hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                aria-label={CLOSE_LABEL}
+              >
+                סגור
+              </button>
+            </div>
+            <div className="flex min-h-0 flex-1 items-center justify-center p-2 sm:p-3 bg-black">
+              <video
+                ref={modalVideoRef}
+                controls
+                playsInline
+                controlsList="nofullscreen noremoteplayback"
+                disablePictureInPicture
+                preload="metadata"
+                className="max-h-[min(70vh,560px)] w-full max-w-full rounded-lg"
+                aria-label={modalLabel}
+              >
+                {resolved.mp4 ? (
+                  <source src={resolved.mp4} type="video/mp4" />
+                ) : null}
+                {resolved.webm ? (
+                  <source src={resolved.webm} type="video/webm" />
+                ) : null}
+                {captionsUrl ? (
+                  <track
+                    kind="captions"
+                    srcLang="he"
+                    src={captionsUrl}
+                    label="עברית"
+                  />
+                ) : null}
+              </video>
+            </div>
+          </div>
+        </div>
       ) : null}
     </div>
   );

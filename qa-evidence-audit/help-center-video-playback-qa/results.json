@@ -1,0 +1,259 @@
+{
+  "generatedAt": "2026-05-24T19:49:47.014Z",
+  "uxMode": "compact-preview-modal",
+  "baseURL": "http://127.0.0.1:3001",
+  "primary": [
+    {
+      "path": "/help/parent-report/report-overview",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parent-report/report-overview/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/parent-report/report-overview",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parent-report/report-overview/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/parents/add-students",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parents/add-students/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/parents/add-students",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parents/add-students/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/students/student-login",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/student-login/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/students/student-login",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/student-login/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/parents/how-to-read-report",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parents/how-to-read-report/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/parents/how-to-read-report",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parents/how-to-read-report/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/parents/parent-copilot",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parents/parent-copilot/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/parents/parent-copilot",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/parents/parent-copilot/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/students/student-home-tour",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/student-home-tour/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/students/student-home-tour",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/student-home-tour/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/students/choose-subject-and-grade",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/choose-subject-and-grade/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/students/choose-subject-and-grade",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/choose-subject-and-grade/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/subjects/math",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/subjects/math/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/subjects/math",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/subjects/math/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/subjects/geometry",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/subjects/geometry/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/subjects/geometry",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/subjects/geometry/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/students/hints-and-explanations",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/hints-and-explanations/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/students/hints-and-explanations",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/hints-and-explanations/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/students/answering-questions",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/answering-questions/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/students/answering-questions",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/answering-questions/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/students/daily-missions",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/daily-missions/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/students/daily-missions",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/daily-missions/mobile/main.webm",
+      "previewHeight": 154
+    },
+    {
+      "path": "/help/students/coins-and-arcade",
+      "viewport": "desktop",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/coins-and-arcade/desktop/main.webm",
+      "previewHeight": 178
+    },
+    {
+      "path": "/help/students/coins-and-arcade",
+      "viewport": "mobile",
+      "pass": true,
+      "issues": [],
+      "media404": [],
+      "webm": "/help-center/videos/students/coins-and-arcade/mobile/main.webm",
+      "previewHeight": 154
+    }
+  ],
+  "negative": [
+    {
+      "path": "/help/parents/create-parent-account",
+      "label": "Parent #2 deferred",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "path": "/help/parent-report/subjects-overview",
+      "label": "Parent report subjects (not SL9)",
+      "pass": true,
+      "issues": []
+    }
+  ],
+  "summary": {
+    "passed": 28,
+    "failed": 0
+  }
+}
