@@ -5,6 +5,7 @@ import {
   list,
   callout,
   screenshotBlock,
+  videoBlock,
   relatedLinks,
   disclaimerQuoteBlock,
 } from "../articleHelpers";
@@ -25,6 +26,7 @@ export const reportOverview = baseArticle({
     heading(2, "short", "דוח מקוצר"),
     paragraph("מציג תמונת מצב מהירה: ביצועים, מגמות והמלצות עיקריות."),
     screenshotBlock(S, "report-overview", "short-report", "דף דוח הורים מקוצר"),
+    videoBlock(S, "report-overview"),
     heading(2, "detailed", "דוח מפורט"),
     paragraph("כולל פירוט לפי מקצוע, נושאים, מכתב הורי והמלצות ממוקדות."),
     screenshotBlock(S, "report-overview", "detailed-report", "דף דוח מפורט"),
@@ -42,6 +44,7 @@ export const summaryCard = baseArticle({
     heading(2, "card", "כרטיס הסיכום"),
     paragraph("מציג בקצרה את רמת הביצועים, כמות התרגול והמסר העיקרי להמשך."),
     screenshotBlock(S, "summary-card", "summary", "כרטיס סיכום בראש הדוח"),
+    videoBlock(S, "summary-card"),
   ],
 });
 
@@ -57,6 +60,7 @@ export const dataPresence = baseArticle({
     paragraph("אם התלמיד תרגל מעט, הדוח יציין שאין עדיין מספיק מידע. זה תקין — המשיכו לתרגל."),
     callout("info", "ככל שיש יותר תרגול, התובנות בדוח נעשות מדויקות יותר."),
     screenshotBlock(S, "data-presence", "low-data", "הודעה על מעט נתונים בדוח"),
+    videoBlock(S, "data-presence"),
   ],
 });
 
@@ -71,6 +75,7 @@ export const trendsAndConfidence = baseArticle({
     heading(2, "trends", "מגמות"),
     paragraph("מגמה מראה אם הביצועים משתפרים, יציבים או דורשים חיזוק. רמת הביטחון מסבירה כמה הנתון אמין."),
     screenshotBlock(S, "trends-and-confidence", "trend", "שורת מגמה בדוח"),
+    videoBlock(S, "trends-and-confidence"),
   ],
 });
 
@@ -88,6 +93,7 @@ export const strengthsAndImprovements = baseArticle({
       "לשיפור — נושאים שדורשים תרגול נוסף",
     ]),
     screenshotBlock(S, "strengths-and-improvements", "strengths", "רשימת חוזקות ושיפורים"),
+    videoBlock(S, "strengths-and-improvements"),
   ],
 });
 
@@ -102,6 +108,7 @@ export const topicsAndBuckets = baseArticle({
     heading(2, "topics", "טבלאות נושאים"),
     paragraph("לכל מקצוע מופיעים נושאים ספציפיים — למשל חיבור במתמטיקה או אוצר מילים באנגלית."),
     screenshotBlock(S, "topics-and-buckets", "topics-table", "טבלת נושאים במתמטיקה"),
+    videoBlock(S, "topics-and-buckets"),
   ],
 });
 
@@ -116,6 +123,7 @@ export const subjectsOverview = baseArticle({
     heading(2, "chart", "תרשים מקצועות"),
     paragraph("מאפשר לראות במבט אחד איפה הילד חזק ואיפה פחות."),
     screenshotBlock(S, "subjects-overview", "six-subjects", "תרשים שש מקצועות"),
+    videoBlock(S, "subjects-overview"),
   ],
 });
 
@@ -130,6 +138,7 @@ export const recommendations = baseArticle({
     heading(2, "rec", "המלצות"),
     paragraph("ההמלצות מבוססות על טעויות חוזרות ונושאים שטרם הותקפו."),
     screenshotBlock(S, "recommendations", "recommendations", "אזור המלצות בדוח"),
+    videoBlock(S, "recommendations"),
   ],
 });
 
@@ -144,6 +153,7 @@ export const challengesSection = baseArticle({
     heading(2, "challenges", "אתגרים"),
     paragraph("אתגרים מציעים תרגול ממוקד בנושאים שדורשים חיזוק."),
     screenshotBlock(S, "challenges-section", "challenges", "אזור אתגרים בדוח"),
+    videoBlock(S, "challenges-section"),
   ],
 });
 
@@ -163,6 +173,7 @@ export const detailedReport = baseArticle({
     heading(2, "letter", "מכתב הורי"),
     paragraph("לכל מקצוע יש הסבר מילולי להורים — מה התלמיד יודע ומה כדאי לחזק."),
     screenshotBlock(S, "detailed-report", "letter", "מכתב הורי במקצוע אחד"),
+    videoBlock(S, "detailed-report"),
   ],
 });
 
@@ -177,6 +188,7 @@ export const printingAndPdf = baseArticle({
     heading(2, "export", "ייצוא"),
     paragraph("בדוח יש אפשרות לייצא לקובץ PDF או להדפיס — שימושי לפגישה עם המורה."),
     screenshotBlock(S, "printing-and-pdf", "pdf", "כפתור ייצוא PDF"),
+    videoBlock(S, "printing-and-pdf"),
     callout("tip", "בהדפסה — בדקו בתצוגה מקדימה שהכל נכנס לעמוד."),
   ],
 });
@@ -198,6 +210,7 @@ export const understandingTheDisclaimer = baseArticle({
       "disclaimer",
       "תיבת הבהרה חשובה בדוח הורים"
     ),
+    videoBlock(S, "understanding-the-disclaimer"),
   ],
 });
 

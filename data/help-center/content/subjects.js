@@ -5,6 +5,7 @@ import {
   list,
   callout,
   screenshotBlock,
+  videoBlock,
   relatedLinks,
 } from "../articleHelpers";
 
@@ -31,6 +32,7 @@ function subjectArticle(slug, title, emoji, topics, masterPath) {
       heading(2, "practice", "איך נראה תרגול?"),
       paragraph("בוחרים כיתה ורמה, עונים על שאלות ומקבלים הסבר אחרי כל תשובה."),
       screenshotBlock(S, slug, "question", `מסך תרגול ב${title}`),
+      videoBlock(S, slug),
       screenshotBlock(S, slug, "explanation", `הסבר לשאלה ב${title}`),
       heading(2, "tips", "טיפים"),
       callout("tip", "תרגלו בקצב קבוע — קצת כל יום עדיף על הרבה ביום אחד."),

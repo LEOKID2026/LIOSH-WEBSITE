@@ -5,6 +5,7 @@ import {
   list,
   callout,
   screenshotBlock,
+  videoBlock,
   relatedLinks,
 } from "../articleHelpers";
 
@@ -26,6 +27,7 @@ export const welcomeAndOverview = baseArticle({
       "ליאו הוא מרחב לימודי בעברית לתלמידי כיתות א׳–ו׳, עם תרגול במקצועות שונים, משחקים ודוחות התקדמות להורים."
     ),
     screenshotBlock(S, "welcome-and-overview", "overview", "דף הבית של ליאו עם אזורי לימוד ומשחקים"),
+    videoBlock(S, "welcome-and-overview"),
     heading(2, "parent-role", "תפקיד ההורה"),
     list([
       "יצירת חשבון הורה והתחברות",
@@ -50,6 +52,7 @@ export const createParentAccount = baseArticle({
     heading(2, "login-page", "עמוד הכניסה"),
     paragraph("גלשו לעמוד כניסת ההורים והשלימו הרשמה או התחברות עם האימייל והסיסמה שלכם."),
     screenshotBlock(S, "create-parent-account", "login", "מסך כניסת הורים"),
+    videoBlock(S, "create-parent-account"),
     callout("tip", "שמרו את פרטי ההתחברות במקום בטוח — הם נדרשים לכל כניסה חוזרת."),
     relatedLinks([{ href: "/parent/login", label: "מעבר לכניסת הורים" }]),
   ],
@@ -69,6 +72,7 @@ export const parentDashboardTour = baseArticle({
     heading(2, "children-list", "רשימת הילדים"),
     paragraph("בעמוד ההורה תראו את כל הילדים המשויכים לחשבון, עם שם, כיתה ואפשרויות ניהול."),
     screenshotBlock(S, "parent-dashboard-tour", "dashboard", "עמוד ההורה עם רשימת תלמידים"),
+    videoBlock(S, "parent-dashboard-tour"),
     heading(2, "limits", "מגבלות חשבון"),
     paragraph("ברירת המחדל מאפשרת עד שלושה ילדים לכל חשבון הורה."),
     callout("info", "אם הגעתם למגבלה, יש לערוך או למחוק תלמיד קיים לפני הוספת חדש."),
@@ -86,6 +90,7 @@ export const addStudents = baseArticle({
     heading(2, "add-form", "טופס הוספה"),
     paragraph("הזינו שם לתלמיד ובחרו כיתה (א׳ עד ו׳). לאחר השמירה יוצגו פרטי כניסה לתלמיד."),
     screenshotBlock(S, "add-students", "form", "טופס הוספת תלמיד עם בחירת כיתה"),
+    videoBlock(S, "add-students"),
     list(["כיתה א׳ — grade_1", "כיתה ב׳ — grade_2", "ועד כיתה ו׳ — grade_6"], false),
   ],
 });
@@ -104,6 +109,7 @@ export const studentPinAndCredentials = baseArticle({
     heading(2, "what-is-pin", "מה זה PIN?"),
     paragraph("התלמיד נכנס עם שם משתמש וקוד בן 4 ספרות. לאחר יצירה או איפוס, הקוד מוצג פעם אחת — שמרו אותו."),
     screenshotBlock(S, "student-pin-and-credentials", "pin-display", "הודעה עם קוד PIN חדש"),
+    videoBlock(S, "student-pin-and-credentials"),
     heading(2, "reset", "איפוס"),
     paragraph("בעמוד ההורה אפשר ליצור קוד כניסה חדש לתלמיד. הקוד הישן יפסיק לעבוד."),
     callout("warning", "אל תשתפו את הקוד ברשתות חברתיות או בקבוצות ציבוריות."),
@@ -121,6 +127,7 @@ export const editOrDeleteStudent = baseArticle({
     heading(2, "edit", "עריכה"),
     paragraph("לחצו על עריכה ליד שם התלמיד, עדכנו פרטים ושמרו."),
     screenshotBlock(S, "edit-or-delete-student", "edit", "מצב עריכת פרטי תלמיד"),
+    videoBlock(S, "edit-or-delete-student"),
     heading(2, "delete", "מחיקה"),
     paragraph("מחיקה דורשת הקלדת שם התלמיד לאישור — פעולה שלא ניתן לבטל."),
     callout("warning", "מחיקת תלמיד מסירה את הגישה והנתונים המשויכים אליו מהחשבון שלכם."),
@@ -138,6 +145,7 @@ export const howToReadReport = baseArticle({
     heading(2, "open-report", "פתיחת דוח"),
     paragraph("מעמוד ההורה בחרו ילד ולחצו על צפייה בדוח. תוכלו לעבור בין דוח מקוצר לדוח מפורט."),
     screenshotBlock(S, "how-to-read-report", "report-link", "כפתור מעבר לדוח מהורה"),
+    videoBlock(S, "how-to-read-report"),
     relatedLinks([
       { href: "/help/parent-report/report-overview", label: "סקירת הדוח" },
       { href: "/help/parent-report/summary-card", label: "כרטיס סיכום" },
@@ -159,6 +167,7 @@ export const parentCopilot = baseArticle({
     heading(2, "how-to-ask", "איך שואלים?"),
     paragraph("בתוך הדוח פתחו את אזור «שאלו על הדוח» והקלידו שאלה בעברית על הביצועים, הנושאים או ההמלצות."),
     screenshotBlock(S, "parent-copilot", "copilot-panel", "פאנל שאלות על הדוח"),
+    videoBlock(S, "parent-copilot"),
     heading(2, "limits", "מגבלות"),
     list([
       "התשובות מבוססות על נתוני התרגול באתר",
@@ -179,6 +188,7 @@ export const monthlyRewards = baseArticle({
     heading(2, "journey", "מסע התמדה"),
     paragraph("הילד צובר התמדה בתרגול חודשי. בעמוד הפרסים תוכלו לראות התקדמות לפי מקצוע."),
     screenshotBlock(S, "monthly-rewards", "rewards", "עמוד פרסי התמדה"),
+    videoBlock(S, "monthly-rewards"),
     relatedLinks([{ href: "/parent/rewards", label: "מעבר לעמוד הפרסים" }]),
   ],
 });
@@ -194,6 +204,7 @@ export const installAsApp = baseArticle({
     heading(2, "install", "התקנה"),
     paragraph("בדף הבית או בדפדפן תופיע אפשרות «התקן כאפליקציה» — לחצו ואשרו. כך תוכלו לפתוח את ליאו כמו אפליקציה."),
     screenshotBlock(S, "install-as-app", "install-prompt", "הודעת התקנת אפליקציה"),
+    videoBlock(S, "install-as-app"),
     callout("tip", "באייפון: שתפו → הוסף למסך הבית."),
   ],
 });
@@ -214,6 +225,7 @@ export const mobileAndOffline = baseArticle({
     heading(2, "offline", "לא מקוון"),
     paragraph("באזור «לא מקוון» יש משחקים שעובדים על אותו מכשיר בלי חיבור לאינטרנט."),
     screenshotBlock(S, "mobile-and-offline", "offline-hub", "עמוד משחקים לא מקוונים"),
+    videoBlock(S, "mobile-and-offline"),
     relatedLinks([{ href: "/offline", label: "משחקים לא מקוונים" }]),
   ],
 });
@@ -233,6 +245,7 @@ export const troubleshootingLogin = baseArticle({
       "דף לא נטען — נסו רענון או ניקוי מטמון הדפדפן",
     ]),
     callout("info", "אם הבעיה נמשכת, פנו אלינו דרך עמוד צור קשר."),
+    videoBlock(S, "troubleshooting-login"),
     relatedLinks([{ href: "/contact", label: "צור קשר" }]),
   ],
 });
@@ -250,6 +263,7 @@ export const privacyAndData = baseArticle({
       "המערכת שומרת נתוני תרגול כדי להציג התקדמות ודוחות. אין לשתף קודי כניסה של תלמידים עם אחרים."
     ),
     callout("info", "לשאלות או בקשות בנושא פרטיות — השתמשו בעמוד צור קשר."),
+    videoBlock(S, "privacy-and-data"),
     relatedLinks([{ href: "/contact", label: "צור קשר" }]),
   ],
 });

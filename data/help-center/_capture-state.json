@@ -113,13 +113,13 @@
       "sha256": "99c8f91000f3846a1909dac1197082ee515e6d4e8770d3fe0117a8e0204293b6",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\summary-card\\mobile\\summary.png",
-      "capturedAt": "2026-05-23T23:53:42.454Z"
+      "capturedAt": "2026-05-24T04:47:51.993Z"
     },
     "parent-report/topics-and-buckets/mobile/topics-table": {
       "sha256": "b1de4a1853c5ea9eda62eb8e76dbc11dfc6cbac266d24a8fd3941f7ef3cd4f37",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\topics-and-buckets\\mobile\\topics-table.png",
-      "capturedAt": "2026-05-23T23:53:42.455Z"
+      "capturedAt": "2026-05-24T04:47:51.994Z"
     },
     "parent-report/understanding-the-disclaimer/mobile/disclaimer": {
       "sha256": "53b0d56d89077ee9728b2812741c6343ad9ca66abf2bc3525b563af4dc9aa493",
@@ -167,7 +167,7 @@
       "sha256": "a74674ade6d2d8ff1396c39c56de7020f646322bc607fed20351bac0d29515fe",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\recommendations\\tablet\\recommendations.png",
-      "capturedAt": "2026-05-23T23:53:42.461Z"
+      "capturedAt": "2026-05-24T04:50:05.441Z"
     },
     "parent-report/report-overview/tablet/short-report": {
       "sha256": "4c1522a1f35d43ee787d8ec17b08ad55d856e734777092fdc36fbd633c589797",
@@ -191,7 +191,7 @@
       "sha256": "56737fb19b08b61e8813c588fc4394af59066f647a77af70ab5f36fa7bf06e13",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\summary-card\\tablet\\summary.png",
-      "capturedAt": "2026-05-23T23:53:42.462Z"
+      "capturedAt": "2026-05-24T04:51:05.446Z"
     },
     "parent-report/understanding-the-disclaimer/tablet/disclaimer": {
       "sha256": "988e892d01f3115de47201b190d606528e18b00c124145182ee69cfdc9b7ee0d",
@@ -221,7 +221,7 @@
       "sha256": "5710f797f558c7c7fff458f8d7be3c335211e50c8dea3cdaf044eabca7f0d761",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\recommendations\\desktop\\recommendations.png",
-      "capturedAt": "2026-05-23T23:54:17.086Z"
+      "capturedAt": "2026-05-24T04:53:17.012Z"
     },
     "parent-report/report-overview/desktop/short-report": {
       "sha256": "50b92463021b6c98aecbd59653b61d64ee2b9025e9f04f0a0c5a44637b403ad8",
@@ -245,13 +245,13 @@
       "sha256": "5fd0ae0b68541315a5e5ff94f4252b6456c0bca31b4cf16ba45bd25e596cd036",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\topics-and-buckets\\desktop\\topics-table.png",
-      "capturedAt": "2026-05-23T23:54:17.932Z"
+      "capturedAt": "2026-05-24T04:54:17.443Z"
     },
     "parent-report/trends-and-confidence/desktop/trend": {
       "sha256": "6d327de5ce03810f7e309631c48b77b6b9b58010e827225adff95bbc5237d6a4",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\trends-and-confidence\\desktop\\trend.png",
-      "capturedAt": "2026-05-23T23:54:17.933Z"
+      "capturedAt": "2026-05-24T04:54:17.443Z"
     },
     "parent-report/understanding-the-disclaimer/desktop/disclaimer": {
       "sha256": "3ac7cdf3bab763bea9fa1f867d8bc67b652370ed35889035f1501cb1bb283582",
@@ -317,19 +317,277 @@
       "sha256": "e2cda83f2c5cab9e0cf74f188b40a178cf853465e597ad04051d6d96fb942e0d",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-copilot\\desktop\\copilot-panel.png",
-      "capturedAt": "2026-05-23T23:54:16.609Z"
+      "capturedAt": "2026-05-24T04:52:08.247Z"
     },
     "parent-report/challenges-section/desktop/challenges": {
       "sha256": "bb4cb1801c2c2721660ba0e821a01f602b3cfe6398410013f18b3bcdd75139ae",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\challenges-section\\desktop\\challenges.png",
-      "capturedAt": "2026-05-23T23:54:16.609Z"
+      "capturedAt": "2026-05-24T04:52:08.248Z"
     },
     "parent-report/data-presence/desktop/low-data": {
       "sha256": "9f83be5a9489de8988c7b1a7c9a70d840ec4b802732e0b6986500fe273ba8863",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\data-presence\\desktop\\low-data.png",
-      "capturedAt": "2026-05-23T23:54:16.610Z"
+      "capturedAt": "2026-05-24T04:52:08.248Z"
+    },
+    "parents/parent-copilot/tablet/copilot-panel": {
+      "sha256": "2128c2b5a65ca68b69022b5c71889b429d5733b68bfc596a86782a8b3eefe660",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-copilot\\tablet\\copilot-panel.png",
+      "capturedAt": "2026-05-24T04:48:55.894Z"
+    },
+    "subjects/english/mobile/question": {
+      "sha256": "f372bf0b9736416ec294179abf2dc7f046b03842eecf77506579bf7ae6781a5d",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\english\\mobile\\question.png",
+      "capturedAt": "2026-05-24T04:34:16.432Z"
+    },
+    "subjects/geometry/mobile/question": {
+      "sha256": "14da1a4c3cbd875989c0994ca198d0ea7391b4e8bd760bdccf6cbed74aac8d8a",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\geometry\\mobile\\question.png",
+      "capturedAt": "2026-05-24T04:35:08.124Z"
+    },
+    "subjects/hebrew/mobile/question": {
+      "sha256": "7a35cc0c5ae2a746bac80bd60c1aa18aee3589e70bcc4b20b833a4b32df6a10f",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\hebrew\\mobile\\question.png",
+      "capturedAt": "2026-05-24T04:35:40.221Z"
+    },
+    "subjects/math/mobile/question": {
+      "sha256": "f70e3545c82f6700a59a25a2517fa2160941e40a85ada1f096fbf1d258202c69",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\math\\mobile\\question.png",
+      "capturedAt": "2026-05-24T04:36:31.925Z"
+    },
+    "subjects/moledet-geography/mobile/question": {
+      "sha256": "db9521cace216cde87827813201ae9beecfa77cdd35583a6e70267d33d58e379",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\moledet-geography\\mobile\\question.png",
+      "capturedAt": "2026-05-24T04:37:03.498Z"
+    },
+    "subjects/science/mobile/question": {
+      "sha256": "4bb164726d5b5779168df6db21903eda83a56e4ea36be07236d2baad0dafa97e",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\science\\mobile\\question.png",
+      "capturedAt": "2026-05-24T04:37:34.868Z"
+    },
+    "subjects/english/tablet/question": {
+      "sha256": "b992e7b437085e6ef791d6ee199d6bd19d60e3431bd4a12f892eb885fc48623b",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\english\\tablet\\question.png",
+      "capturedAt": "2026-05-24T04:38:06.038Z"
+    },
+    "subjects/geometry/tablet/question": {
+      "sha256": "8cd6fdaca5642f47f6b14c7c7bce4e5dd10a55ea473a48f53af02d70749205fb",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\geometry\\tablet\\question.png",
+      "capturedAt": "2026-05-24T04:38:57.065Z"
+    },
+    "subjects/hebrew/tablet/question": {
+      "sha256": "61e4ccd749ea80d88191597750013405489dc9b81843986037163c0b7f626275",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\hebrew\\tablet\\question.png",
+      "capturedAt": "2026-05-24T04:39:28.224Z"
+    },
+    "subjects/math/tablet/question": {
+      "sha256": "240db90ad0c0c125bc92179c17491b41cd095ad8a101b03218666d3e8e029d10",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\math\\tablet\\question.png",
+      "capturedAt": "2026-05-24T04:40:19.278Z"
+    },
+    "subjects/moledet-geography/tablet/question": {
+      "sha256": "a99b3eaf2981635e9d0cf3e4f0d976582c334982e331800f1a297aa9b2503a48",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\moledet-geography\\tablet\\question.png",
+      "capturedAt": "2026-05-24T04:40:50.550Z"
+    },
+    "subjects/science/tablet/question": {
+      "sha256": "3160efc391ae20d97057e4b94faa02857217e9e23b9cf69a15454a47483f9b65",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\science\\tablet\\question.png",
+      "capturedAt": "2026-05-24T04:41:21.710Z"
+    },
+    "subjects/english/desktop/question": {
+      "sha256": "1c0eba84128f77bcde298a9f1ab57000eb773c863d8e43ebb027148dc46e24e2",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\english\\desktop\\question.png",
+      "capturedAt": "2026-05-24T04:41:53.397Z"
+    },
+    "subjects/geometry/desktop/question": {
+      "sha256": "3b8c770568ca0d38a82f614da27ddc5d1a2ddf2fdd1d2bdd5c74d39fa87fd7d7",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\geometry\\desktop\\question.png",
+      "capturedAt": "2026-05-24T04:42:44.722Z"
+    },
+    "subjects/hebrew/desktop/question": {
+      "sha256": "416af30fd9d654dc3589ce5ab86ba079ec27a641f081c7e7ba23cdfed44a13dc",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\hebrew\\desktop\\question.png",
+      "capturedAt": "2026-05-24T04:43:15.911Z"
+    },
+    "subjects/math/desktop/question": {
+      "sha256": "c5a6b7957c8a27079efd27dbb5b082b9ef0d5b8760a4457e0da3e6deac12bbba",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\math\\desktop\\question.png",
+      "capturedAt": "2026-05-24T04:44:07.019Z"
+    },
+    "subjects/moledet-geography/desktop/question": {
+      "sha256": "b414690b52a1c53278f1d7704837c3cf97f696c519666db935ac17a2dfed0b13",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\moledet-geography\\desktop\\question.png",
+      "capturedAt": "2026-05-24T04:44:38.325Z"
+    },
+    "subjects/science/desktop/question": {
+      "sha256": "e751a8a093793e553bbde6d03eeb8fe91d5d8665c997853e636767bb89112f93",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\science\\desktop\\question.png",
+      "capturedAt": "2026-05-24T04:45:09.766Z"
+    },
+    "parents/parent-copilot/mobile/copilot-panel": {
+      "sha256": "ebf20cf0a69bdffb1e30f64082efa634e3ea6ec03208ce5c77de62606e3f6fc9",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-copilot\\mobile\\copilot-panel.png",
+      "capturedAt": "2026-05-24T04:45:50.487Z"
+    },
+    "parent-report/challenges-section/mobile/challenges": {
+      "sha256": "b3ff06ca8c7019c67d7eec33ac58e697a30cae5ae62632e816bd09e85fe097f1",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\challenges-section\\mobile\\challenges.png",
+      "capturedAt": "2026-05-24T04:45:50.930Z"
+    },
+    "parent-report/data-presence/mobile/low-data": {
+      "sha256": "52cbc5397e9d7641bbc908bb0cbcf20b824da0b8517412a968c91c133aa18e10",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\data-presence\\mobile\\low-data.png",
+      "capturedAt": "2026-05-24T04:45:51.381Z"
+    },
+    "parent-report/challenges-section/tablet/challenges": {
+      "sha256": "daa32f9f09262843948ad58e3c66e768835fa57d1cb17418536a664c90e83823",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\challenges-section\\tablet\\challenges.png",
+      "capturedAt": "2026-05-24T04:49:04.925Z"
+    },
+    "parent-report/data-presence/tablet/low-data": {
+      "sha256": "1af87bb3c2c50ad2afaf44f838af0724b84d72b59794578267bf29e6a3bcc66e",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\data-presence\\tablet\\low-data.png",
+      "capturedAt": "2026-05-24T04:49:05.393Z"
+    },
+    "parent-report/trends-and-confidence/tablet/trend": {
+      "sha256": "c8fafe14df5f5d3ff588c299372ba5a887024a3208f2dfaf3c1fd97536501771",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\trends-and-confidence\\tablet\\trend.png",
+      "capturedAt": "2026-05-24T04:51:06.956Z"
+    },
+    "subjects/english/mobile/explanation": {
+      "sha256": "96aafe835f8c3e6ec941c0bcff6df4a8c848c506b52a287ceaddc245dee4fea6",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\english\\mobile\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:10.199Z"
+    },
+    "subjects/geometry/mobile/explanation": {
+      "sha256": "ca0987162924e614a3ab248660717adaaa1aa75967aae87de9ab85b0d2aec2b7",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\geometry\\mobile\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:17.071Z"
+    },
+    "subjects/hebrew/mobile/explanation": {
+      "sha256": "bc8b755adc222c994cc8a12c3a527de8626f6fb31b6b94f597cbe493f85bac0b",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\hebrew\\mobile\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:24.237Z"
+    },
+    "subjects/math/mobile/explanation": {
+      "sha256": "feb87fc784733c565adb7c75bdb9d3396aff887455a380b307393400e833aff0",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\math\\mobile\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:30.904Z"
+    },
+    "subjects/moledet-geography/mobile/explanation": {
+      "sha256": "845cfbdf30918920ee0715f0e70527ec318c52c59964bbd400d78fe1c8e794d5",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\moledet-geography\\mobile\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:38.286Z"
+    },
+    "subjects/science/mobile/explanation": {
+      "sha256": "44758084b0a3dfafdcf7cedb89097b0c06cd0d064b516e29be248bb7160c1f9f",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\science\\mobile\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:45.089Z"
+    },
+    "subjects/english/tablet/explanation": {
+      "sha256": "1f56c095b57bc5258335d36c4ce785f3765f3ae79722f7a416623bbe249a3d2b",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\english\\tablet\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:51.226Z"
+    },
+    "subjects/geometry/tablet/explanation": {
+      "sha256": "9ecfb3509d09448ae66bdd9c6900413abc89559f5af118fd13a167711fdcd6a4",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\geometry\\tablet\\explanation.png",
+      "capturedAt": "2026-05-24T05:27:57.292Z"
+    },
+    "subjects/hebrew/tablet/explanation": {
+      "sha256": "f0eeb85e24fcc94e49e9f42f4c1fb5328a44479b7ec2f304303b54c81d9a1639",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\hebrew\\tablet\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:03.498Z"
+    },
+    "subjects/math/tablet/explanation": {
+      "sha256": "16bad2bc50bd3a2708b11acbfe844b63fb4fdf2c7c2bb3a2abd6f693114f318e",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\math\\tablet\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:09.689Z"
+    },
+    "subjects/moledet-geography/tablet/explanation": {
+      "sha256": "9a857c948fc9cc86987ff4dfaaa87f56b7c26129783940bb61e57c2655ade5fb",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\moledet-geography\\tablet\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:15.855Z"
+    },
+    "subjects/science/tablet/explanation": {
+      "sha256": "d782481f0535d5dcfa6b7150a7bb83c97c44eafc7e4d788caf8f19e43a465242",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\science\\tablet\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:22.010Z"
+    },
+    "subjects/english/desktop/explanation": {
+      "sha256": "e0e0f2a59549f88296f3849688060cf43c853d103f1dc96b5a295385b3618e2f",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\english\\desktop\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:28.060Z"
+    },
+    "subjects/geometry/desktop/explanation": {
+      "sha256": "0de3162a265f1e5c72a3ddcab1a3c6631e123e4a554be59d2e68ef23ba982e99",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\geometry\\desktop\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:34.140Z"
+    },
+    "subjects/hebrew/desktop/explanation": {
+      "sha256": "9d5e7faa4d4918f0eb3570b01cd426c3faedb38be1e6b4c03e7439b96eb0f6ff",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\hebrew\\desktop\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:40.169Z"
+    },
+    "subjects/math/desktop/explanation": {
+      "sha256": "76b5cfbc891d294a19ad0357d59e074260bf517915e890a09c2632ac78b9e144",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\math\\desktop\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:46.304Z"
+    },
+    "subjects/moledet-geography/desktop/explanation": {
+      "sha256": "b612717ea86bb40ee1cb225af82cda1ca611244805c95f850368f5712ebd0531",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\moledet-geography\\desktop\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:52.357Z"
+    },
+    "subjects/science/desktop/explanation": {
+      "sha256": "f3469c146b7c235c9998d362f6ea3823b0ba0b41f023e2a7fa63f28b2a6151a1",
+      "batch": "D",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\science\\desktop\\explanation.png",
+      "capturedAt": "2026-05-24T05:28:58.490Z"
     }
   }
 }

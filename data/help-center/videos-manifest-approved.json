@@ -1,0 +1,352 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-05-24T04:59:33.279Z",
+  "requiredCount": 0,
+  "approvedCount": 0,
+  "rejectedCount": 84,
+  "publishAllowed": false,
+  "publicPaths": [],
+  "rejected": [
+    {
+      "id": "parent-report/detailed-report/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/detailed-report/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/report-overview/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/report-overview/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/add-students/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/add-students/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/create-parent-account/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/create-parent-account/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/how-to-read-report/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/how-to-read-report/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/install-as-app/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/install-as-app/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/mobile-and-offline/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/mobile-and-offline/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/parent-copilot/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/parent-copilot/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/parent-dashboard-tour/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/parent-dashboard-tour/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/student-pin-and-credentials/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/student-pin-and-credentials/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/answering-questions/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/answering-questions/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/choose-subject-and-grade/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/choose-subject-and-grade/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/student-home-tour/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/student-home-tour/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/student-login/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/student-login/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/english/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/english/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/geometry/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/geometry/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/hebrew/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/hebrew/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/math/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/math/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/moledet-geography/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/moledet-geography/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/science/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "subjects/science/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/challenges-section/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/challenges-section/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/data-presence/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/data-presence/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/printing-and-pdf/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/printing-and-pdf/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/recommendations/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/recommendations/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/strengths-and-improvements/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/strengths-and-improvements/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/subjects-overview/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/subjects-overview/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/summary-card/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/summary-card/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/topics-and-buckets/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/topics-and-buckets/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/trends-and-confidence/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/trends-and-confidence/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/understanding-the-disclaimer/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parent-report/understanding-the-disclaimer/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/edit-or-delete-student/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/edit-or-delete-student/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/monthly-rewards/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/monthly-rewards/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/privacy-and-data/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/privacy-and-data/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/troubleshooting-login/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/troubleshooting-login/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/welcome-and-overview/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "parents/welcome-and-overview/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/avatar-and-profile/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/avatar-and-profile/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/coins-and-arcade/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/coins-and-arcade/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/daily-missions/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/daily-missions/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/hints-and-explanations/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/hints-and-explanations/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/monthly-persistence/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/monthly-persistence/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/offline-games/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/offline-games/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/tips-for-good-practice/main/desktop",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    },
+    {
+      "id": "students/tips-for-good-practice/main/mobile",
+      "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+    }
+  ],
+  "notes": [
+    "Internal agent review only — not a user approval checkpoint.",
+    "Placeholder assets are never publishable and must not use internalReview.status=passed.",
+    "publishAllowed true only when all captured (non-placeholder) assets pass."
+  ]
+}

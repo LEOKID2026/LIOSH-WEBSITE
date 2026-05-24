@@ -1,6 +1,43 @@
 /**
  * Shared builders for Help Center article modules.
  */
+import videosManifest from "./videos-manifest.json";
+
+function publicUrl(rel) {
+  if (!rel) return null;
+  return rel.startsWith("/") ? rel : `/${rel}`;
+}
+
+function entryAssetKind(entry) {
+  return entry?.assetKind ?? videosManifest.assetKindDefault ?? "placeholder";
+}
+
+/** Tutorial video block — only exposes URLs when manifest marks a real capture. */
+export function videoBlock(section, slug, id = "main") {
+  const entryId = `${section}/${slug}/${id}`;
+  const entry = videosManifest.videos.find((v) => v.id === entryId);
+  if (!entry || entryAssetKind(entry) !== "captured") {
+    return { kind: "video", src: null };
+  }
+  const mapVp = (vp) => ({
+    webm: publicUrl(entry.assets[vp].webm),
+    mp4: entry.assets[vp].mp4 ? publicUrl(entry.assets[vp].mp4) : null,
+    poster: publicUrl(entry.assets[vp].poster),
+    captionsHe: entry.assets[vp].captionsHe
+      ? publicUrl(entry.assets[vp].captionsHe)
+      : null,
+  });
+  return {
+    kind: "video",
+    sourcesByViewport: {
+      desktop: mapVp("desktop"),
+      mobile: mapVp("mobile"),
+    },
+    transcriptHe: entry.transcriptHe || null,
+    durationSec: entry.durationSecTarget || null,
+    audience: entry.audience,
+  };
+}
 
 export function screenshotBlock(section, slug, region, alt, caption) {
   const base = `/help-center/screenshots/${section}/${slug}`;

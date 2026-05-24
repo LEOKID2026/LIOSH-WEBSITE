@@ -85,6 +85,8 @@ export default function HelpArticleBody({ blocks, audience = "parent" }) {
             <HelpVideoEmbed
               key={key}
               src={block.src}
+              sources={block.sources}
+              sourcesByViewport={block.sourcesByViewport}
               poster={block.poster}
               captions={block.captions}
               transcriptHe={block.transcriptHe}

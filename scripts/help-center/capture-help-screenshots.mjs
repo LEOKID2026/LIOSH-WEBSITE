@@ -175,17 +175,27 @@ async function resolveDemoStudentIdForCapture({ page, baseUrl, parentAccount, lo
 
 async function ensureStudentSession(context, baseUrl, log) {
   await verifyDemoStudentLoginPayload(baseUrl);
-  const mode =
-    String(process.env.HELP_CAPTURE_STUDENT_AUTH || "api").toLowerCase() === "ui" ? "ui" : "api";
+  const preferUi =
+    String(process.env.HELP_CAPTURE_STUDENT_AUTH || "api").toLowerCase() === "ui";
   const page = await context.newPage();
-  await authenticateStudent({
-    context,
-    page,
-    account: DEMO_STUDENT,
-    baseUrl,
-    mode,
-    log,
+  const authArgs = { context, page, account: DEMO_STUDENT, baseUrl, log };
+
+  if (preferUi) {
+    try {
+      await authenticateStudent({ ...authArgs, mode: "ui" });
+    } catch (err) {
+      log(`student-auth(ui) failed (${err.message}), falling back to api`);
+      await authenticateStudent({ ...authArgs, mode: "api" });
+    }
+  } else {
+    await authenticateStudent({ ...authArgs, mode: "api" });
+  }
+
+  await page.goto(new URL("/student/home", baseUrl).toString(), {
+    waitUntil: "domcontentloaded",
+    timeout: 90_000,
   });
+  await page.waitForTimeout(800);
   await page.close();
 }
 
@@ -261,8 +271,12 @@ async function captureElementShot(page, target, viewport, outPath, captureState,
   if (target.prepare) await target.prepare(page);
   const locator = resolveLocator(page, target);
   await locator.waitFor({ state: "attached", timeout: SELECTOR_TIMEOUT_MS });
-  const visible = await locator.isVisible().catch(() => false);
+  let visible = await locator.isVisible().catch(() => false);
   if (!visible) {
+    await locator.scrollIntoViewIfNeeded().catch(() => {});
+    visible = await locator.isVisible().catch(() => false);
+  }
+  if (!visible && !target.allowAttachedOnly) {
     throw new Error("target selector attached but not visible");
   }
 
@@ -296,11 +310,19 @@ async function captureElementShot(page, target, viewport, outPath, captureState,
   const shotHeight = Math.min(box.height, maxHeight);
 
   if (useClip) {
-    await page.screenshot({
-      path: outPath,
-      animations: "disabled",
-      clip: { x: box.x, y: box.y, width: box.width, height: shotHeight },
-    });
+    try {
+      await page.screenshot({
+        path: outPath,
+        animations: "disabled",
+        clip: { x: box.x, y: box.y, width: box.width, height: shotHeight },
+      });
+    } catch {
+      await locator.screenshot({
+        path: outPath,
+        animations: "disabled",
+        clip: { x: 0, y: 0, width: Math.max(40, box.width), height: shotHeight },
+      });
+    }
   } else {
     await locator.screenshot({ path: outPath, animations: "disabled" });
   }
@@ -470,7 +492,6 @@ async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
   };
 
   for (const vp of VIEWPORTS) {
-    studentReady = false;
     parentReady = false;
     studentId = null;
     await page.setViewportSize({ width: vp.width, height: vp.height });

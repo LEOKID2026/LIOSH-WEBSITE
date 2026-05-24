@@ -4,43 +4,43 @@ overview: A plan-only design for a Help Center Video Tutorials Phase that adds s
 todos:
   - id: wave-a-manifest
     content: Define data/help-center/videos-manifest.json with the 20 Wave A entries (section, slug, audience, viewports, wave, durationSecTarget, auth, route, captureSteps, assets shape).
-    status: pending
+    status: completed
   - id: helpvideoembed-upgrade
     content: "Whitelisted upgrade to components/help/HelpVideoEmbed.js (per §9): dual <source> (webm + mp4-deferred), IntersectionObserver-based lazy mount, keep back-compat with existing `src` prop, no autoplay."
-    status: pending
+    status: completed
   - id: videoblock-helper
     content: Add videoBlock(section, slug, id?) helper in data/help-center/articleHelpers.js that reads videos-manifest.json and emits the existing kind:"video" block shape.
-    status: pending
+    status: completed
   - id: wave-a-article-wiring
     content: Insert one videoBlock(...) call in each of the 20 Wave A articles under data/help-center/content/{parents,students,parent-report,subjects}.js — no other text changes.
-    status: pending
+    status: completed
   - id: capture-script
     content: Add scripts/help-center/capture-help-videos.mjs (Playwright recordVideo, reuses virtual-student-qa lib for auth, enforces base-URL allowlist, deterministic captureSteps, synthetic cursor overlay, no new npm deps).
-    status: pending
+    status: completed
   - id: build-videos-manifest-script
     content: Add scripts/help-center/build-videos-manifest.mjs to validate the manifest schema and pre-compute derived paths.
-    status: pending
+    status: completed
   - id: data-safety-review-videos
     content: Add scripts/help-center/video-data-safety-review.mjs mirroring the screenshots data-safety review. The agent performs this review internally during the continuous pass — it is NOT a user approval checkpoint.
-    status: pending
+    status: completed
   - id: publish-videos-script
     content: Add scripts/help-center/publish-videos.mjs that copies ONLY clips that pass the internal data-safety review from qa-evidence-audit/help-center/videos/ to public/help-center/videos/.
-    status: pending
+    status: completed
   - id: verify-videos-script
     content: "Add scripts/help-center/verify-videos.mjs: file existence, VTT validity, file-size caps, no autoplay, orphan check, build SSR check."
-    status: pending
+    status: completed
   - id: package-scripts
     content: "Add help:* npm scripts: help:build-video-manifest, help:capture-videos, help:video-data-safety-review, help:publish-videos, help:verify-videos, help:videos (chained)."
-    status: pending
+    status: completed
   - id: ffmpeg-deferred
     content: ffmpeg is NOT approved. MP4 transcoding is DEFERRED. The first execution publishes WebM only; manifest mp4 fields stay null. A future explicit plan update may approve ffmpeg later; the agent must not ask about it during execution.
-    status: pending
+    status: completed
   - id: wave-b-continuation
     content: Wave B (remaining 22 articles) is internal sequencing only and is produced immediately after Wave A inside the SAME continuous implementation pass. No separate approval. No separate merge. Failure to complete Wave B inside the same pass is a blocker, not a partial ship.
-    status: pending
+    status: completed
   - id: docs-and-final-report
     content: Author docs/help-center/VIDEO-TUTORIALS-PLAN.md, VIDEO-MANUAL-QA.md, and VIDEO-SIGNOFF.md. VIDEO-SIGNOFF.md is filled out by the agent at the end of the continuous pass as part of the final implementation report (per §11.3) — it is not a mid-pass approval gate.
-    status: pending
+    status: completed
 isProject: false
 ---
 

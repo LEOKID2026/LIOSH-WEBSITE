@@ -1,24 +1,8 @@
 {
-  "blockedAt": "2026-05-24T00:00:59.773Z",
+  "blockedAt": "2026-05-24T11:47:16.544Z",
   "requiredCount": 135,
-  "missingCount": 77,
+  "missingCount": 34,
   "missing": [
-    {
-      "rel": "help-center/screenshots/parent-report/challenges-section/mobile/challenges.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/challenges-section/tablet/challenges.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/data-presence/mobile/low-data.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/data-presence/tablet/low-data.png",
-      "reason": "missing raw file"
-    },
     {
       "rel": "help-center/screenshots/parent-report/detailed-report/desktop/letter.png",
       "reason": "missing raw file"
@@ -72,23 +56,11 @@
       "reason": "missing raw file"
     },
     {
-      "rel": "help-center/screenshots/parent-report/trends-and-confidence/tablet/trend.png",
-      "reason": "missing raw file"
-    },
-    {
       "rel": "help-center/screenshots/parents/install-as-app/tablet/install-prompt.png",
       "reason": "missing raw file"
     },
     {
       "rel": "help-center/screenshots/parents/mobile-and-offline/tablet/offline-hub.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-copilot/mobile/copilot-panel.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/parent-copilot/tablet/copilot-panel.png",
       "reason": "missing raw file"
     },
     {
@@ -165,150 +137,6 @@
     },
     {
       "rel": "help-center/screenshots/students/offline-games/tablet/offline.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/english/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/geometry/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/hebrew/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/math/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/moledet-geography/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/desktop/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/mobile/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/tablet/explanation.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/subjects/science/tablet/question.png",
       "reason": "missing raw file"
     }
   ],

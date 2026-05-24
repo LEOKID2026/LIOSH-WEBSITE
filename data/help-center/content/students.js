@@ -5,6 +5,7 @@ import {
   list,
   callout,
   screenshotBlock,
+  videoBlock,
   relatedLinks,
 } from "../articleHelpers";
 
@@ -24,6 +25,7 @@ export const studentLogin = studentArticle({
     heading(2, "steps", "שלבים"),
     list(["בקשו מההורה את שם המשתמש והקוד", "הקלידו בעמוד הכניסה", "לחצו התחבר"], true),
     screenshotBlock(S, "student-login", "login", "מסך כניסת תלמיד"),
+    videoBlock(S, "student-login"),
   ],
 });
 
@@ -37,6 +39,7 @@ export const studentHomeTour = studentArticle({
     heading(2, "home", "עמוד הבית"),
     paragraph("כאן תראו את השם שלכם, כמה מטבעות יש לכם, ולאיזה מקצועים אפשר להיכנס."),
     screenshotBlock(S, "student-home-tour", "home", "עמוד בית תלמיד עם כרטיסי מקצועות"),
+    videoBlock(S, "student-home-tour"),
   ],
 });
 
@@ -50,6 +53,7 @@ export const chooseSubjectAndGrade = studentArticle({
     heading(2, "learning-hub", "אזור לימודים"),
     paragraph("בחרו מקצוע מהרשימה. המשחק יתאים לכיתה שלכם."),
     screenshotBlock(S, "choose-subject-and-grade", "subjects", "רשימת מקצועות באזור לימודים"),
+    videoBlock(S, "choose-subject-and-grade"),
     relatedLinks([{ href: "/learning", label: "לאזור הלימודים" }]),
   ],
 });
@@ -68,6 +72,7 @@ export const answeringQuestions = studentArticle({
       "אחרי התשובה תראו אם צדקתם",
     ]),
     screenshotBlock(S, "answering-questions", "question", "שאלת תרגול על המסך"),
+    videoBlock(S, "answering-questions"),
   ],
 });
 
@@ -81,6 +86,7 @@ export const hintsAndExplanations = studentArticle({
     heading(2, "after", "אחרי התשובה"),
     paragraph("אם טעיתם — קראו את ההסבר ונסו שוב. אם צדקתם — המשיכו לשאלה הבאה!"),
     callout("tip", "אל תמהרו — קריאת ההסבר עוזרת להבין."),
+    videoBlock(S, "hints-and-explanations"),
   ],
 });
 
@@ -94,6 +100,7 @@ export const dailyMissions = studentArticle({
     heading(2, "missions", "משימות"),
     paragraph("בעמוד הבית תראו משימות יומיות. כשמסיימים אותן — מקבלים נקודות והתקדמות."),
     screenshotBlock(S, "daily-missions", "missions", "פאנל משימות יומיות"),
+    videoBlock(S, "daily-missions"),
   ],
 });
 
@@ -107,6 +114,7 @@ export const monthlyPersistence = studentArticle({
     heading(2, "persistence", "התמדה"),
     paragraph("ככל שמתאמנים יותר בחודש — המסע מתקדם. זה מראה כמה התמדתם!"),
     screenshotBlock(S, "monthly-persistence", "persistence", "מסע התמדה חודשי"),
+    videoBlock(S, "monthly-persistence"),
   ],
 });
 
@@ -120,6 +128,7 @@ export const coinsAndArcade = studentArticle({
     heading(2, "coins", "מטבעות"),
     paragraph("מתרגלים ומרוויחים מטבעות. בארקייד אפשר לשחק משחקי לוח עם חברים."),
     screenshotBlock(S, "coins-and-arcade", "arcade", "עמוד ארקייד"),
+    videoBlock(S, "coins-and-arcade"),
     relatedLinks([{ href: "/student/arcade", label: "לארקייד" }]),
   ],
 });
@@ -134,6 +143,7 @@ export const avatarAndProfile = studentArticle({
     heading(2, "avatar", "אווטאר"),
     paragraph("לחצו על התמונה בעמוד הבית ובחרו אווטאר חדש."),
     screenshotBlock(S, "avatar-and-profile", "avatar", "בחירת אווטאר"),
+    videoBlock(S, "avatar-and-profile"),
   ],
 });
 
@@ -147,6 +157,7 @@ export const offlineGames = studentArticle({
     heading(2, "offline", "לא מקוון"),
     paragraph("איקס־עיגול ומשחקים נוספים — בלי צורך ברשת."),
     screenshotBlock(S, "offline-games", "offline", "רשימת משחקים לא מקוונים"),
+    videoBlock(S, "offline-games"),
     relatedLinks([{ href: "/offline", label: "משחקים לא מקוונים" }]),
   ],
 });
@@ -165,6 +176,7 @@ export const tipsForGoodPractice = studentArticle({
       "קראו הסברים כשלא מבינים",
     ]),
     callout("tip", "כיף ללמוד כשלא לוחצים על עצמכם!"),
+    videoBlock(S, "tips-for-good-practice"),
   ],
 });
 

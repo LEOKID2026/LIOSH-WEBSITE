@@ -1,0 +1,3955 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-24",
+  "videos": [
+    {
+      "id": "parent-report/detailed-report/main",
+      "section": "parent-report",
+      "slug": "detailed-report",
+      "audience": "parent",
+      "title": "דוח מפורט",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT_DETAILED__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/detailed-report/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/detailed-report/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/detailed-report/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/detailed-report/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/report-overview/main",
+      "section": "parent-report",
+      "slug": "report-overview",
+      "audience": "parent",
+      "title": "סקירת דוח ההורים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/report-overview/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/report-overview/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/report-overview/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/report-overview/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/add-students/main",
+      "section": "parents",
+      "slug": "add-students",
+      "audience": "parent",
+      "title": "הוספת תלמיד",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "parent",
+      "route": "/parent/dashboard",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/add-students/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/add-students/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/add-students/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/add-students/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/create-parent-account/main",
+      "section": "parents",
+      "slug": "create-parent-account",
+      "audience": "parent",
+      "title": "יצירת חשבון הורה",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "none",
+      "route": "/parent/login",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/create-parent-account/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/create-parent-account/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/create-parent-account/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/create-parent-account/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/how-to-read-report/main",
+      "section": "parents",
+      "slug": "how-to-read-report",
+      "audience": "parent",
+      "title": "איך מתחילים לקרוא את הדוח?",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "parent",
+      "route": "/parent/dashboard",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/how-to-read-report/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/how-to-read-report/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/how-to-read-report/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/how-to-read-report/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/install-as-app/main",
+      "section": "parents",
+      "slug": "install-as-app",
+      "audience": "parent",
+      "title": "התקנה כיישומון",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "none",
+      "route": "/",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/install-as-app/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/install-as-app/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/install-as-app/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/install-as-app/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/mobile-and-offline/main",
+      "section": "parents",
+      "slug": "mobile-and-offline",
+      "audience": "parent",
+      "title": "נייד ומשחקים לא מקוונים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "none",
+      "route": "/offline",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/mobile-and-offline/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/mobile-and-offline/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/mobile-and-offline/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/mobile-and-offline/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/parent-copilot/main",
+      "section": "parents",
+      "slug": "parent-copilot",
+      "audience": "parent",
+      "title": "שאלו על הדוח (Copilot)",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/parent-copilot/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/parent-copilot/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/parent-copilot/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/parent-copilot/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/parent-dashboard-tour/main",
+      "section": "parents",
+      "slug": "parent-dashboard-tour",
+      "audience": "parent",
+      "title": "סיור בעמוד ההורה",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "parent",
+      "route": "/parent/dashboard",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/parent-dashboard-tour/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/parent-dashboard-tour/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/parent-dashboard-tour/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/parent-dashboard-tour/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/student-pin-and-credentials/main",
+      "section": "parents",
+      "slug": "student-pin-and-credentials",
+      "audience": "parent",
+      "title": "קוד PIN ופרטי כניסה לתלמיד",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "parent",
+      "route": "/parent/dashboard",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/student-pin-and-credentials/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/student-pin-and-credentials/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/student-pin-and-credentials/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/student-pin-and-credentials/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/answering-questions/main",
+      "section": "students",
+      "slug": "answering-questions",
+      "audience": "student",
+      "title": "איך עונים על שאלות?",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning/math-master",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 100
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/answering-questions/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/answering-questions/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/answering-questions/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/answering-questions/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/choose-subject-and-grade/main",
+      "section": "students",
+      "slug": "choose-subject-and-grade",
+      "audience": "student",
+      "title": "בחירת מקצוע וכיתה",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/choose-subject-and-grade/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/choose-subject-and-grade/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/choose-subject-and-grade/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/choose-subject-and-grade/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/student-home-tour/main",
+      "section": "students",
+      "slug": "student-home-tour",
+      "audience": "student",
+      "title": "עמוד הבית שלי",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/student/home",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/student-home-tour/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/student-home-tour/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/student-home-tour/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/student-home-tour/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/student-login/main",
+      "section": "students",
+      "slug": "student-login",
+      "audience": "student",
+      "title": "איך מתחברים?",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "none",
+      "route": "/student/login",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1000
+          },
+          {
+            "type": "click",
+            "selector": "input[name=\"username\"], input[placeholder*=\"שם\"]"
+          },
+          {
+            "type": "pause",
+            "ms": 600
+          },
+          {
+            "type": "scroll",
+            "y": 0
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1000
+          },
+          {
+            "type": "click",
+            "selector": "input[name=\"username\"], input[placeholder*=\"שם\"]"
+          },
+          {
+            "type": "pause",
+            "ms": 600
+          },
+          {
+            "type": "scroll",
+            "y": 80
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/student-login/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/student-login/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/student-login/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/student-login/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "subjects/english/main",
+      "section": "subjects",
+      "slug": "english",
+      "audience": "both",
+      "title": "מדריך אנגלית",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning/english-master",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/subjects/english/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/english/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/subjects/english/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/english/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "subjects/geometry/main",
+      "section": "subjects",
+      "slug": "geometry",
+      "audience": "both",
+      "title": "מדריך גיאומטריה",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning/geometry-master",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/subjects/geometry/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/geometry/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/subjects/geometry/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/geometry/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "subjects/hebrew/main",
+      "section": "subjects",
+      "slug": "hebrew",
+      "audience": "both",
+      "title": "מדריך עברית",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning/hebrew-master",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/subjects/hebrew/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/hebrew/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/subjects/hebrew/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/hebrew/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "subjects/math/main",
+      "section": "subjects",
+      "slug": "math",
+      "audience": "both",
+      "title": "מדריך חשבון",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning/math-master",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/subjects/math/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/math/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/subjects/math/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/math/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "subjects/moledet-geography/main",
+      "section": "subjects",
+      "slug": "moledet-geography",
+      "audience": "both",
+      "title": "מדריך מולדת וגיאוגרפיה",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning/moledet-geography-master",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/subjects/moledet-geography/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/moledet-geography/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/subjects/moledet-geography/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/moledet-geography/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "subjects/science/main",
+      "section": "subjects",
+      "slug": "science",
+      "audience": "both",
+      "title": "מדריך מדעים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "A",
+      "durationSecTarget": {
+        "desktop": 45,
+        "mobile": 50
+      },
+      "auth": "student",
+      "route": "/learning/science-master",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/subjects/science/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/science/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/subjects/science/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/subjects/science/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/challenges-section/main",
+      "section": "parent-report",
+      "slug": "challenges-section",
+      "audience": "parent",
+      "title": "אתגרים מומלצים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/challenges-section/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/challenges-section/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/challenges-section/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/challenges-section/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/data-presence/main",
+      "section": "parent-report",
+      "slug": "data-presence",
+      "audience": "parent",
+      "title": "מספיק נתונים?",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/data-presence/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/data-presence/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/data-presence/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/data-presence/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/printing-and-pdf/main",
+      "section": "parent-report",
+      "slug": "printing-and-pdf",
+      "audience": "parent",
+      "title": "הדפסה וייצוא PDF",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/printing-and-pdf/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/printing-and-pdf/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/printing-and-pdf/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/printing-and-pdf/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/recommendations/main",
+      "section": "parent-report",
+      "slug": "recommendations",
+      "audience": "parent",
+      "title": "המלצות תרגול",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/recommendations/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/recommendations/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/recommendations/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/recommendations/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/strengths-and-improvements/main",
+      "section": "parent-report",
+      "slug": "strengths-and-improvements",
+      "audience": "parent",
+      "title": "חוזקות ונקודות לשיפור",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/strengths-and-improvements/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/strengths-and-improvements/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/strengths-and-improvements/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/strengths-and-improvements/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/subjects-overview/main",
+      "section": "parent-report",
+      "slug": "subjects-overview",
+      "audience": "parent",
+      "title": "סקירת שש המקצועות",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/subjects-overview/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/subjects-overview/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/subjects-overview/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/subjects-overview/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/summary-card/main",
+      "section": "parent-report",
+      "slug": "summary-card",
+      "audience": "parent",
+      "title": "כרטיס סיכום",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/summary-card/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/summary-card/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/summary-card/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/summary-card/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/topics-and-buckets/main",
+      "section": "parent-report",
+      "slug": "topics-and-buckets",
+      "audience": "parent",
+      "title": "נושאים לפי מקצוע",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/topics-and-buckets/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/topics-and-buckets/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/topics-and-buckets/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/topics-and-buckets/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/trends-and-confidence/main",
+      "section": "parent-report",
+      "slug": "trends-and-confidence",
+      "audience": "parent",
+      "title": "מגמות ורמת ביטחון",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/trends-and-confidence/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/trends-and-confidence/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/trends-and-confidence/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/trends-and-confidence/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parent-report/understanding-the-disclaimer/main",
+      "section": "parent-report",
+      "slug": "understanding-the-disclaimer",
+      "audience": "parent",
+      "title": "הבנת ההבהרה החשובה",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "__PARENT_REPORT__",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 400
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 300
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 2000
+          },
+          {
+            "type": "scroll",
+            "y": 200
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parent-report/understanding-the-disclaimer/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/understanding-the-disclaimer/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parent-report/understanding-the-disclaimer/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parent-report/understanding-the-disclaimer/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/edit-or-delete-student/main",
+      "section": "parents",
+      "slug": "edit-or-delete-student",
+      "audience": "parent",
+      "title": "עריכה ומחיקת תלמיד",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "/parent/dashboard",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/edit-or-delete-student/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/edit-or-delete-student/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/edit-or-delete-student/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/edit-or-delete-student/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/monthly-rewards/main",
+      "section": "parents",
+      "slug": "monthly-rewards",
+      "audience": "parent",
+      "title": "פרס התמדה חודשי",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "/parent/rewards",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/monthly-rewards/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/monthly-rewards/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/monthly-rewards/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/monthly-rewards/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/privacy-and-data/main",
+      "section": "parents",
+      "slug": "privacy-and-data",
+      "audience": "parent",
+      "title": "פרטיות ונתונים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "/parent/dashboard",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/privacy-and-data/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/privacy-and-data/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/privacy-and-data/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/privacy-and-data/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/troubleshooting-login/main",
+      "section": "parents",
+      "slug": "troubleshooting-login",
+      "audience": "parent",
+      "title": "פתרון בעיות כניסה",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "parent",
+      "route": "/parent/dashboard",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/troubleshooting-login/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/troubleshooting-login/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/troubleshooting-login/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/troubleshooting-login/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "parents/welcome-and-overview/main",
+      "section": "parents",
+      "slug": "welcome-and-overview",
+      "audience": "parent",
+      "title": "ברוכים הבאים למדריך להורים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "none",
+      "route": "/",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/parents/welcome-and-overview/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/welcome-and-overview/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/parents/welcome-and-overview/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/parents/welcome-and-overview/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/avatar-and-profile/main",
+      "section": "students",
+      "slug": "avatar-and-profile",
+      "audience": "student",
+      "title": "שינוי אווטאר",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "student",
+      "route": "/student/home",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/avatar-and-profile/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/avatar-and-profile/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/avatar-and-profile/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/avatar-and-profile/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/coins-and-arcade/main",
+      "section": "students",
+      "slug": "coins-and-arcade",
+      "audience": "student",
+      "title": "מטבעות וארקייד",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "student",
+      "route": "/student/arcade",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/coins-and-arcade/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/coins-and-arcade/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/coins-and-arcade/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/coins-and-arcade/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/daily-missions/main",
+      "section": "students",
+      "slug": "daily-missions",
+      "audience": "student",
+      "title": "משימות יומיות",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "student",
+      "route": "/student/home",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/daily-missions/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/daily-missions/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/daily-missions/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/daily-missions/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/hints-and-explanations/main",
+      "section": "students",
+      "slug": "hints-and-explanations",
+      "audience": "student",
+      "title": "רמזים והסברים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "student",
+      "route": "/student/home",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/hints-and-explanations/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/hints-and-explanations/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/hints-and-explanations/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/hints-and-explanations/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/monthly-persistence/main",
+      "section": "students",
+      "slug": "monthly-persistence",
+      "audience": "student",
+      "title": "מסע התמדה חודשי",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "student",
+      "route": "/student/home",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/monthly-persistence/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/monthly-persistence/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/monthly-persistence/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/monthly-persistence/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/offline-games/main",
+      "section": "students",
+      "slug": "offline-games",
+      "audience": "student",
+      "title": "משחקים לא מקוונים",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "student",
+      "route": "/offline",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/offline-games/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/offline-games/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/offline-games/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/offline-games/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    },
+    {
+      "id": "students/tips-for-good-practice/main",
+      "section": "students",
+      "slug": "tips-for-good-practice",
+      "audience": "student",
+      "title": "טיפים לתרגול טוב",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "wave": "B",
+      "durationSecTarget": {
+        "desktop": 35,
+        "mobile": 40
+      },
+      "auth": "student",
+      "route": "/student/home",
+      "captureSteps": {
+        "desktop": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 280
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 320
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ],
+        "mobile": [
+          {
+            "type": "pause",
+            "ms": 1200
+          },
+          {
+            "type": "scroll",
+            "y": 120
+          },
+          {
+            "type": "pause",
+            "ms": 1500
+          },
+          {
+            "type": "scroll",
+            "y": 180
+          },
+          {
+            "type": "pause",
+            "ms": 1200
+          }
+        ]
+      },
+      "assets": {
+        "desktop": {
+          "webm": "help-center/videos/students/tips-for-good-practice/desktop/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/tips-for-good-practice/desktop/main.jpg",
+          "captionsHe": null
+        },
+        "mobile": {
+          "webm": "help-center/videos/students/tips-for-good-practice/mobile/main.webm",
+          "mp4": null,
+          "poster": "help-center/videos/students/tips-for-good-practice/mobile/main.jpg",
+          "captionsHe": null
+        }
+      },
+      "internalReview": {
+        "desktop": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        },
+        "mobile": {
+          "status": "excluded",
+          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+        }
+      },
+      "transcriptHe": null,
+      "assetKind": "placeholder"
+    }
+  ],
+  "publicPaths": [
+    "help-center/videos/parent-report/detailed-report/desktop/main.webm",
+    "help-center/videos/parent-report/detailed-report/mobile/main.webm",
+    "help-center/videos/parent-report/detailed-report/desktop/main.jpg",
+    "help-center/videos/parent-report/detailed-report/mobile/main.jpg",
+    "help-center/videos/parent-report/report-overview/desktop/main.webm",
+    "help-center/videos/parent-report/report-overview/mobile/main.webm",
+    "help-center/videos/parent-report/report-overview/desktop/main.jpg",
+    "help-center/videos/parent-report/report-overview/mobile/main.jpg",
+    "help-center/videos/parents/add-students/desktop/main.webm",
+    "help-center/videos/parents/add-students/mobile/main.webm",
+    "help-center/videos/parents/add-students/desktop/main.jpg",
+    "help-center/videos/parents/add-students/mobile/main.jpg",
+    "help-center/videos/parents/create-parent-account/desktop/main.webm",
+    "help-center/videos/parents/create-parent-account/mobile/main.webm",
+    "help-center/videos/parents/create-parent-account/desktop/main.jpg",
+    "help-center/videos/parents/create-parent-account/mobile/main.jpg",
+    "help-center/videos/parents/how-to-read-report/desktop/main.webm",
+    "help-center/videos/parents/how-to-read-report/mobile/main.webm",
+    "help-center/videos/parents/how-to-read-report/desktop/main.jpg",
+    "help-center/videos/parents/how-to-read-report/mobile/main.jpg",
+    "help-center/videos/parents/install-as-app/desktop/main.webm",
+    "help-center/videos/parents/install-as-app/mobile/main.webm",
+    "help-center/videos/parents/install-as-app/desktop/main.jpg",
+    "help-center/videos/parents/install-as-app/mobile/main.jpg",
+    "help-center/videos/parents/mobile-and-offline/desktop/main.webm",
+    "help-center/videos/parents/mobile-and-offline/mobile/main.webm",
+    "help-center/videos/parents/mobile-and-offline/desktop/main.jpg",
+    "help-center/videos/parents/mobile-and-offline/mobile/main.jpg",
+    "help-center/videos/parents/parent-copilot/desktop/main.webm",
+    "help-center/videos/parents/parent-copilot/mobile/main.webm",
+    "help-center/videos/parents/parent-copilot/desktop/main.jpg",
+    "help-center/videos/parents/parent-copilot/mobile/main.jpg",
+    "help-center/videos/parents/parent-dashboard-tour/desktop/main.webm",
+    "help-center/videos/parents/parent-dashboard-tour/mobile/main.webm",
+    "help-center/videos/parents/parent-dashboard-tour/desktop/main.jpg",
+    "help-center/videos/parents/parent-dashboard-tour/mobile/main.jpg",
+    "help-center/videos/parents/student-pin-and-credentials/desktop/main.webm",
+    "help-center/videos/parents/student-pin-and-credentials/mobile/main.webm",
+    "help-center/videos/parents/student-pin-and-credentials/desktop/main.jpg",
+    "help-center/videos/parents/student-pin-and-credentials/mobile/main.jpg",
+    "help-center/videos/students/answering-questions/desktop/main.webm",
+    "help-center/videos/students/answering-questions/mobile/main.webm",
+    "help-center/videos/students/answering-questions/desktop/main.jpg",
+    "help-center/videos/students/answering-questions/mobile/main.jpg",
+    "help-center/videos/students/choose-subject-and-grade/desktop/main.webm",
+    "help-center/videos/students/choose-subject-and-grade/mobile/main.webm",
+    "help-center/videos/students/choose-subject-and-grade/desktop/main.jpg",
+    "help-center/videos/students/choose-subject-and-grade/mobile/main.jpg",
+    "help-center/videos/students/student-home-tour/desktop/main.webm",
+    "help-center/videos/students/student-home-tour/mobile/main.webm",
+    "help-center/videos/students/student-home-tour/desktop/main.jpg",
+    "help-center/videos/students/student-home-tour/mobile/main.jpg",
+    "help-center/videos/students/student-login/desktop/main.webm",
+    "help-center/videos/students/student-login/mobile/main.webm",
+    "help-center/videos/students/student-login/desktop/main.jpg",
+    "help-center/videos/students/student-login/mobile/main.jpg",
+    "help-center/videos/subjects/english/desktop/main.webm",
+    "help-center/videos/subjects/english/mobile/main.webm",
+    "help-center/videos/subjects/english/desktop/main.jpg",
+    "help-center/videos/subjects/english/mobile/main.jpg",
+    "help-center/videos/subjects/geometry/desktop/main.webm",
+    "help-center/videos/subjects/geometry/mobile/main.webm",
+    "help-center/videos/subjects/geometry/desktop/main.jpg",
+    "help-center/videos/subjects/geometry/mobile/main.jpg",
+    "help-center/videos/subjects/hebrew/desktop/main.webm",
+    "help-center/videos/subjects/hebrew/mobile/main.webm",
+    "help-center/videos/subjects/hebrew/desktop/main.jpg",
+    "help-center/videos/subjects/hebrew/mobile/main.jpg",
+    "help-center/videos/subjects/math/desktop/main.webm",
+    "help-center/videos/subjects/math/mobile/main.webm",
+    "help-center/videos/subjects/math/desktop/main.jpg",
+    "help-center/videos/subjects/math/mobile/main.jpg",
+    "help-center/videos/subjects/moledet-geography/desktop/main.webm",
+    "help-center/videos/subjects/moledet-geography/mobile/main.webm",
+    "help-center/videos/subjects/moledet-geography/desktop/main.jpg",
+    "help-center/videos/subjects/moledet-geography/mobile/main.jpg",
+    "help-center/videos/subjects/science/desktop/main.webm",
+    "help-center/videos/subjects/science/mobile/main.webm",
+    "help-center/videos/subjects/science/desktop/main.jpg",
+    "help-center/videos/subjects/science/mobile/main.jpg",
+    "help-center/videos/parent-report/challenges-section/desktop/main.webm",
+    "help-center/videos/parent-report/challenges-section/mobile/main.webm",
+    "help-center/videos/parent-report/challenges-section/desktop/main.jpg",
+    "help-center/videos/parent-report/challenges-section/mobile/main.jpg",
+    "help-center/videos/parent-report/data-presence/desktop/main.webm",
+    "help-center/videos/parent-report/data-presence/mobile/main.webm",
+    "help-center/videos/parent-report/data-presence/desktop/main.jpg",
+    "help-center/videos/parent-report/data-presence/mobile/main.jpg",
+    "help-center/videos/parent-report/printing-and-pdf/desktop/main.webm",
+    "help-center/videos/parent-report/printing-and-pdf/mobile/main.webm",
+    "help-center/videos/parent-report/printing-and-pdf/desktop/main.jpg",
+    "help-center/videos/parent-report/printing-and-pdf/mobile/main.jpg",
+    "help-center/videos/parent-report/recommendations/desktop/main.webm",
+    "help-center/videos/parent-report/recommendations/mobile/main.webm",
+    "help-center/videos/parent-report/recommendations/desktop/main.jpg",
+    "help-center/videos/parent-report/recommendations/mobile/main.jpg",
+    "help-center/videos/parent-report/strengths-and-improvements/desktop/main.webm",
+    "help-center/videos/parent-report/strengths-and-improvements/mobile/main.webm",
+    "help-center/videos/parent-report/strengths-and-improvements/desktop/main.jpg",
+    "help-center/videos/parent-report/strengths-and-improvements/mobile/main.jpg",
+    "help-center/videos/parent-report/subjects-overview/desktop/main.webm",
+    "help-center/videos/parent-report/subjects-overview/mobile/main.webm",
+    "help-center/videos/parent-report/subjects-overview/desktop/main.jpg",
+    "help-center/videos/parent-report/subjects-overview/mobile/main.jpg",
+    "help-center/videos/parent-report/summary-card/desktop/main.webm",
+    "help-center/videos/parent-report/summary-card/mobile/main.webm",
+    "help-center/videos/parent-report/summary-card/desktop/main.jpg",
+    "help-center/videos/parent-report/summary-card/mobile/main.jpg",
+    "help-center/videos/parent-report/topics-and-buckets/desktop/main.webm",
+    "help-center/videos/parent-report/topics-and-buckets/mobile/main.webm",
+    "help-center/videos/parent-report/topics-and-buckets/desktop/main.jpg",
+    "help-center/videos/parent-report/topics-and-buckets/mobile/main.jpg",
+    "help-center/videos/parent-report/trends-and-confidence/desktop/main.webm",
+    "help-center/videos/parent-report/trends-and-confidence/mobile/main.webm",
+    "help-center/videos/parent-report/trends-and-confidence/desktop/main.jpg",
+    "help-center/videos/parent-report/trends-and-confidence/mobile/main.jpg",
+    "help-center/videos/parent-report/understanding-the-disclaimer/desktop/main.webm",
+    "help-center/videos/parent-report/understanding-the-disclaimer/mobile/main.webm",
+    "help-center/videos/parent-report/understanding-the-disclaimer/desktop/main.jpg",
+    "help-center/videos/parent-report/understanding-the-disclaimer/mobile/main.jpg",
+    "help-center/videos/parents/edit-or-delete-student/desktop/main.webm",
+    "help-center/videos/parents/edit-or-delete-student/mobile/main.webm",
+    "help-center/videos/parents/edit-or-delete-student/desktop/main.jpg",
+    "help-center/videos/parents/edit-or-delete-student/mobile/main.jpg",
+    "help-center/videos/parents/monthly-rewards/desktop/main.webm",
+    "help-center/videos/parents/monthly-rewards/mobile/main.webm",
+    "help-center/videos/parents/monthly-rewards/desktop/main.jpg",
+    "help-center/videos/parents/monthly-rewards/mobile/main.jpg",
+    "help-center/videos/parents/privacy-and-data/desktop/main.webm",
+    "help-center/videos/parents/privacy-and-data/mobile/main.webm",
+    "help-center/videos/parents/privacy-and-data/desktop/main.jpg",
+    "help-center/videos/parents/privacy-and-data/mobile/main.jpg",
+    "help-center/videos/parents/troubleshooting-login/desktop/main.webm",
+    "help-center/videos/parents/troubleshooting-login/mobile/main.webm",
+    "help-center/videos/parents/troubleshooting-login/desktop/main.jpg",
+    "help-center/videos/parents/troubleshooting-login/mobile/main.jpg",
+    "help-center/videos/parents/welcome-and-overview/desktop/main.webm",
+    "help-center/videos/parents/welcome-and-overview/mobile/main.webm",
+    "help-center/videos/parents/welcome-and-overview/desktop/main.jpg",
+    "help-center/videos/parents/welcome-and-overview/mobile/main.jpg",
+    "help-center/videos/students/avatar-and-profile/desktop/main.webm",
+    "help-center/videos/students/avatar-and-profile/mobile/main.webm",
+    "help-center/videos/students/avatar-and-profile/desktop/main.jpg",
+    "help-center/videos/students/avatar-and-profile/mobile/main.jpg",
+    "help-center/videos/students/coins-and-arcade/desktop/main.webm",
+    "help-center/videos/students/coins-and-arcade/mobile/main.webm",
+    "help-center/videos/students/coins-and-arcade/desktop/main.jpg",
+    "help-center/videos/students/coins-and-arcade/mobile/main.jpg",
+    "help-center/videos/students/daily-missions/desktop/main.webm",
+    "help-center/videos/students/daily-missions/mobile/main.webm",
+    "help-center/videos/students/daily-missions/desktop/main.jpg",
+    "help-center/videos/students/daily-missions/mobile/main.jpg",
+    "help-center/videos/students/hints-and-explanations/desktop/main.webm",
+    "help-center/videos/students/hints-and-explanations/mobile/main.webm",
+    "help-center/videos/students/hints-and-explanations/desktop/main.jpg",
+    "help-center/videos/students/hints-and-explanations/mobile/main.jpg",
+    "help-center/videos/students/monthly-persistence/desktop/main.webm",
+    "help-center/videos/students/monthly-persistence/mobile/main.webm",
+    "help-center/videos/students/monthly-persistence/desktop/main.jpg",
+    "help-center/videos/students/monthly-persistence/mobile/main.jpg",
+    "help-center/videos/students/offline-games/desktop/main.webm",
+    "help-center/videos/students/offline-games/mobile/main.webm",
+    "help-center/videos/students/offline-games/desktop/main.jpg",
+    "help-center/videos/students/offline-games/mobile/main.jpg",
+    "help-center/videos/students/tips-for-good-practice/desktop/main.webm",
+    "help-center/videos/students/tips-for-good-practice/mobile/main.webm",
+    "help-center/videos/students/tips-for-good-practice/desktop/main.jpg",
+    "help-center/videos/students/tips-for-good-practice/mobile/main.jpg"
+  ],
+  "assetKindDefault": "placeholder",
+  "publishPolicy": {
+    "allowPlaceholderInPublic": false,
+    "note": "Only assetKind=captured may be published or shown in UI."
+  },
+  "checksumWhitelist": {
+    "desktop": {
+      "webm": [],
+      "poster": []
+    },
+    "mobile": {
+      "webm": [],
+      "poster": []
+    }
+  }
+}
