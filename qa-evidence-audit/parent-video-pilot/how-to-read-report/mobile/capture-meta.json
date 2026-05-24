@@ -1,0 +1,50 @@
+{
+  "title": "קריאת דוח הורים — דוח קצר מול דוח מקיף",
+  "pilot": "how-to-read-report-v5-mobile",
+  "capturedAt": "2026-05-24T14:16:12.835Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/parent-video-pilot/how-to-read-report/mobile/main.webm",
+  "fileSizeBytes": 923445,
+  "wallClockSec": 109.038,
+  "frameCount": 576,
+  "fps": 8,
+  "decodedDurationSec": 72,
+  "pagesSeen": {
+    "login": true,
+    "dashboard": true,
+    "shortReport": true,
+    "detailedReport": true
+  },
+  "sectionsSeen": {
+    "shortHeader": true,
+    "shortKpi": true,
+    "shortDiagnostic": true,
+    "shortSubjects": true,
+    "detailedHeader": true,
+    "detailedPeriodSummary": true,
+    "detailedActivity": true
+  },
+  "copilotAvoided": true,
+  "badFrames": {
+    "whiteish": 0,
+    "errorText": 0,
+    "loadingText": 0,
+    "whiteishFrameCount": 0
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "endState": {
+    "demoStudentId": "d119f721-05b3-4fe2-ac58-4174ac06f733",
+    "finalCaption": "הדוח הקצר = מבט מהיר; המקיף = פירוט, מקצועות והמלצות"
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 19
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "manifestTouched": false
+}

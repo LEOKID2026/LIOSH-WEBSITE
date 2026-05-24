@@ -34,6 +34,7 @@ import { resolveCaptureTarget } from "./capture-targets.mjs";
 import {
   evaluateScreenshotFile,
   MAX_MOBILE_ELEMENT_HEIGHT,
+  MAX_DESKTOP_ELEMENT_HEIGHT,
   MAX_TABLET_ELEMENT_HEIGHT,
 } from "./capture-quality.mjs";
 import {
@@ -43,6 +44,7 @@ import {
   checkDuplicateHash,
   recordCapture,
 } from "./capture-state.mjs";
+import { RECAPTURE_JOB_KEYS } from "./recapture-visual-fix-jobs.mjs";
 
 const DEMO_STUDENT = { label: "help-center-demo", username: "ADMIN", pin: "1234", code: "" };
 const EXPECTED_CHILD_NAME = "ישראל ישראלי";
@@ -246,7 +248,7 @@ function sortJobsForCapture(jobs) {
 }
 
 function resolveLocator(page, target) {
-  let loc = page.locator(target.selector).first();
+  let loc = page.locator(target.selector).filter({ visible: true }).first();
   for (let i = 0; i < (target.ancestorLevels || 0); i++) {
     loc = loc.locator("xpath=..");
   }
@@ -300,37 +302,56 @@ async function captureElementShot(page, target, viewport, outPath, captureState,
   mkdirSync(dirname(outPath), { recursive: true });
   if (existsSync(outPath)) unlinkSync(outPath);
 
-  const useClip = viewport.name === "mobile" || viewport.name === "tablet";
   const maxHeight =
     viewport.name === "mobile"
       ? MAX_MOBILE_ELEMENT_HEIGHT
       : viewport.name === "tablet"
         ? MAX_TABLET_ELEMENT_HEIGHT
-        : Math.min(box.height, 12_000);
+        : MAX_DESKTOP_ELEMENT_HEIGHT;
   let shotHeight = Math.min(box.height, maxHeight);
-  if (
-    viewport.name === "mobile" &&
-    target.expandMobileClipTo &&
-    shotHeight < target.expandMobileClipTo
-  ) {
-    shotHeight = Math.min(target.expandMobileClipTo, maxHeight);
+  if (viewport.name === "desktop" && target.capDesktopClipHeight) {
+    shotHeight = Math.min(shotHeight, target.capDesktopClipHeight);
   }
+  const expandClipTo =
+    target.expandMobileClipTo || target.expandTabletClipTo || target.expandDesktopClipTo;
+  if (expandClipTo && shotHeight < expandClipTo) {
+    shotHeight = Math.min(expandClipTo, maxHeight);
+  }
+  const useClip =
+    viewport.name === "mobile" ||
+    viewport.name === "tablet" ||
+    (viewport.name === "desktop" && box.height > shotHeight);
 
-  const clipRect = { x: box.x, y: box.y, width: box.width, height: shotHeight };
-  if (useClip) {
-    try {
-      await page.screenshot({
-        path: outPath,
-        animations: "disabled",
-        clip: clipRect,
-      });
-    } catch {
-      await locator.screenshot({
-        path: outPath,
-        animations: "disabled",
-        clip: { x: 0, y: 0, width: Math.max(40, box.width), height: shotHeight },
-      });
+  const needsPageClip = useClip && box.height > shotHeight + 4;
+
+  if (needsPageClip) {
+    let clipX = Math.max(0, box.x);
+    let clipW = Math.ceil(box.width);
+    if (target.minDesktopClipWidth && viewport.name === "desktop" && clipW < target.minDesktopClipWidth) {
+      clipW = target.minDesktopClipWidth;
+      clipX = Math.max(0, box.x + box.width / 2 - clipW / 2);
     }
+    await page.screenshot({
+      path: outPath,
+      animations: "disabled",
+      clip: {
+        x: clipX,
+        y: Math.max(0, box.y),
+        width: clipW,
+        height: shotHeight,
+      },
+    });
+  } else if (useClip) {
+    await locator.screenshot({
+      path: outPath,
+      animations: "disabled",
+      clip: {
+        x: 0,
+        y: 0,
+        width: Math.max(40, box.width),
+        height: shotHeight,
+      },
+    });
   } else {
     await locator.screenshot({ path: outPath, animations: "disabled" });
   }
@@ -419,13 +440,30 @@ function writeBlockerReport(missing) {
 
 function parseArgs(argv) {
   const args = argv.slice(2);
+  const recaptureVisualFix = args.includes("--recapture-visual-fix");
   const batchArg = args.find((a) => a.startsWith("--batch="));
-  const batch = batchArg ? batchArg.slice(8).toUpperCase() : null;
-  if (!batch || !["A", "B", "C", "D"].includes(batch)) {
-    throw new Error("Required: --batch=A|B|C|D");
+  const batch = batchArg
+    ? batchArg.slice(8).toUpperCase()
+    : recaptureVisualFix
+      ? "VISUAL-FIX"
+      : null;
+  if (!batch || (!recaptureVisualFix && !["A", "B", "C", "D"].includes(batch))) {
+    throw new Error("Required: --batch=A|B|C|D or --recapture-visual-fix");
   }
+  const onlyKeysArg = args.find((a) => a.startsWith("--only-keys="));
+  const onlyKeys = onlyKeysArg
+    ? new Set(
+        onlyKeysArg
+          .slice(12)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      )
+    : null;
   return {
     batch,
+    recaptureVisualFix,
+    onlyKeys,
     baseUrl: resolveBaseUrl(args.find((a) => a.startsWith("--base-url="))?.slice(11)),
     reset: args.includes("--reset"),
     onlyFailed: args.includes("--only-failed"),
@@ -433,7 +471,7 @@ function parseArgs(argv) {
   };
 }
 
-async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
+async function runBatch({ batch, baseUrl, reset, onlyFailed, headed, recaptureVisualFix, onlyKeys }) {
   const log = (line) => console.log(`[help-capture:${batch}] ${line}`);
   assertAllowedBaseUrl(baseUrl);
   await devHealthGate(baseUrl, log);
@@ -445,7 +483,22 @@ async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
   }
   mkdirSync(auditRoot, { recursive: true });
 
-  let jobs = sortJobsForCapture(filterJobsForBatch(loadScreenshotJobs(), batch));
+  const recaptureKeys = new Set(RECAPTURE_JOB_KEYS);
+  let jobs = recaptureVisualFix
+    ? sortJobsForCapture(
+        loadScreenshotJobs().filter((job) =>
+          recaptureKeys.has(`${job.section}/${job.slug}/${job.region}`)
+        )
+      )
+    : sortJobsForCapture(filterJobsForBatch(loadScreenshotJobs(), batch));
+
+  if (recaptureVisualFix && onlyKeys?.size) {
+    jobs = jobs.filter((job) => onlyKeys.has(`${job.section}/${job.slug}/${job.region}`));
+  }
+
+  if (recaptureVisualFix) {
+    log(`recapture-visual-fix: ${jobs.length} logical job(s), ${jobs.length * VIEWPORTS.length} shots`);
+  }
 
   if (onlyFailed) {
     const failedIds = loadOnlyFailedJobs(batch);
@@ -501,6 +554,7 @@ async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
 
   for (const vp of VIEWPORTS) {
     parentReady = false;
+    studentReady = false;
     studentId = null;
     await page.setViewportSize({ width: vp.width, height: vp.height });
     let currentNavKey = null;
@@ -556,7 +610,7 @@ async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
 
       let jobTarget;
       try {
-        jobTarget = resolveCaptureTarget(job, studentId);
+        jobTarget = resolveCaptureTarget(job, studentId, vp.name);
       } catch (err) {
         stats.skipped.push({ job: id, reason: err.message });
         touchProgress();
@@ -568,6 +622,7 @@ async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
 
       if (navKey !== currentNavKey) {
         try {
+          if (jobTarget.beforeGoto) await jobTarget.beforeGoto(page);
           const waitUntil =
             jobTarget.path === "/offline" ? "commit" : "domcontentloaded";
           await page.goto(new URL(jobTarget.path, baseUrl).toString(), {
@@ -630,7 +685,9 @@ async function main() {
   }
 }
 
-const isMain = process.argv.some((a) => a.startsWith("--batch="));
+const isMain = process.argv.some(
+  (a) => a.startsWith("--batch=") || a === "--recapture-visual-fix"
+);
 
 if (isMain) {
   main().catch((err) => {

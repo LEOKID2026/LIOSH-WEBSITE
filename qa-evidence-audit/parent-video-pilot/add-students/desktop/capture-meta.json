@@ -1,0 +1,34 @@
+{
+  "title": "הוספת ילד וקבלת קוד תלמיד",
+  "pilot": "add-students-v3-desktop",
+  "capturedAt": "2026-05-24T14:51:10.385Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/parent-video-pilot/add-students/desktop/main.webm",
+  "fileSizeBytes": 1597888,
+  "wallClockSec": 103.769,
+  "frameCount": 520,
+  "fps": 8,
+  "decodedDurationSec": 65,
+  "pagesSeen": {
+    "login": true,
+    "dashboard": true,
+    "childCreated": true,
+    "credentialsSaved": true,
+    "credentialConfirm": true
+  },
+  "endState": {
+    "finalCaption": "כך ההורה מוסיף ילד ומקבל קוד כניסה.",
+    "disposableUsername": "videochildmpjw9rkr"
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 20
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "manifestTouched": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

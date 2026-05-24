@@ -1,0 +1,78 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "parent_account_configured",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "parent_qa_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "demo_child_on_dashboard",
+      "ok": true,
+      "message": "d119f721-05b3-4fe2-ac58-4174ac06f733"
+    },
+    {
+      "id": "short_report_nonempty",
+      "ok": true,
+      "message": "totalAnswers=329"
+    },
+    {
+      "id": "copilot_api_useful_answer",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "parent_ui_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "dashboard_demo_child_scrollable",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "demo_child_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "short_report_loads",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "detailed_report_opens",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "copilot_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "copilot_useful_answer",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "first_frame_not_blank",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "studentId": "d119f721-05b3-4fe2-ac58-4174ac06f733",
+  "at": "2026-05-24T13:36:03.036Z"
+}

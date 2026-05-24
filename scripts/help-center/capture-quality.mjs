@@ -7,8 +7,11 @@ import { readFileSync, statSync } from "node:fs";
 
 export const MIN_CAPTURE_BYTES = 4_000;
 export const MIN_APPROVED_BYTES = 8_000;
-export const MAX_MOBILE_ELEMENT_HEIGHT = 1_400;
-export const MAX_TABLET_ELEMENT_HEIGHT = 2_200;
+/** Max PNG height for mobile help screenshots (section crops, not full-page strips). */
+export const MAX_MOBILE_ELEMENT_HEIGHT = 520;
+export const MAX_TABLET_ELEMENT_HEIGHT = 700;
+/** Max PNG height for desktop help screenshots inside article column. */
+export const MAX_DESKTOP_ELEMENT_HEIGHT = 960;
 export const MAX_ELEMENT_ASPECT_RATIO = 4.5;
 
 /** @returns {{ width: number, height: number } | null} */
@@ -39,7 +42,12 @@ export function evaluateScreenshotFile({
   filePath,
   viewport = "desktop",
   minBytes = MIN_CAPTURE_BYTES,
-  maxHeight = viewport === "mobile" ? MAX_MOBILE_ELEMENT_HEIGHT : 12_000,
+  maxHeight =
+    viewport === "mobile"
+      ? MAX_MOBILE_ELEMENT_HEIGHT
+      : viewport === "tablet"
+        ? MAX_TABLET_ELEMENT_HEIGHT
+        : MAX_DESKTOP_ELEMENT_HEIGHT,
 }) {
   const reasons = [];
   let size = 0;

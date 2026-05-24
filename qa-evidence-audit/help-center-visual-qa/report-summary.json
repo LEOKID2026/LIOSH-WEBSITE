@@ -1,0 +1,383 @@
+{
+  "routeTable": [
+    {
+      "route": "/help",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/challenges-section",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/data-presence",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/detailed-report",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/printing-and-pdf",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/recommendations",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/report-overview",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/strengths-and-improvements",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/subjects-overview",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/summary-card",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/topics-and-buckets",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/trends-and-confidence",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parent-report/understanding-the-disclaimer",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/add-students",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/create-parent-account",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/edit-or-delete-student",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/how-to-read-report",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/install-as-app",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/mobile-and-offline",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/monthly-rewards",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/parent-copilot",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/parent-dashboard-tour",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/privacy-and-data",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/student-pin-and-credentials",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/troubleshooting-login",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/parents/welcome-and-overview",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/answering-questions",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/avatar-and-profile",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/choose-subject-and-grade",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/coins-and-arcade",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/daily-missions",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/hints-and-explanations",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/monthly-persistence",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/offline-games",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/student-home-tour",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/student-login",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/students/tips-for-good-practice",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/subjects",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "N/A",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/subjects/english",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/subjects/geometry",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/subjects/hebrew",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/subjects/math",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/subjects/moledet-geography",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    },
+    {
+      "route": "/help/subjects/science",
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "screenshot": "PASS",
+      "text": "PASS",
+      "notes": ""
+    }
+  ],
+  "fails": [],
+  "auditedAt": "2026-05-24T17:26:12.085Z",
+  "baseUrl": "http://127.0.0.1:3001"
+}

@@ -1,0 +1,30 @@
+{
+  "ok": false,
+  "checks": [
+    {
+      "id": "demo_account_access",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    },
+    {
+      "id": "preflight_browser_flow",
+      "ok": false,
+      "message": "page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/geometry-master\", waiting until \"domcontentloaded\"\n"
+    }
+  ],
+  "blockers": [
+    "browser: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/geometry-master\", waiting until \"domcontentloaded\"\n"
+  ],
+  "baseUrl": "http://127.0.0.1:3001",
+  "slug": "geometry-step-explanation",
+  "viewport": "mobile",
+  "workflowId": "SL4",
+  "title": "תרגול בגאומטריה — שאלה חזותית והסבר צעד־צעד",
+  "pilot": "student-video-geometry-step-explanation-mobile",
+  "at": "2026-05-24T17:35:15.320Z"
+}

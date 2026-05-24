@@ -1,0 +1,31 @@
+{
+  "title": "כניסת תלמיד עם קוד ו-PIN",
+  "pilot": "student-login-v4-desktop",
+  "capturedAt": "2026-05-24T14:43:47.720Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/parent-video-pilot/student-login/desktop/main.webm",
+  "fileSizeBytes": 1178612,
+  "wallClockSec": 95.959,
+  "frameCount": 376,
+  "fps": 8,
+  "decodedDurationSec": 47,
+  "pagesSeen": {
+    "login": true,
+    "home": true,
+    "greeting": true
+  },
+  "endState": {
+    "finalCaption": "כך התלמיד נכנס עם הקוד שקיבל מההורה."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 16
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "manifestTouched": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

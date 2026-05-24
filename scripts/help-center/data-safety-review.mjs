@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { evaluateScreenshotFile, MIN_APPROVED_BYTES } from "./capture-quality.mjs";
+import { evaluateScreenshotFile, MIN_CAPTURE_BYTES } from "./capture-quality.mjs";
 import { loadCaptureState } from "./capture-state.mjs";
 
 const FORBIDDEN_PATTERNS = [/@gmail\.com/i, /\b\d{3}-\d{7}\b/];
@@ -53,7 +53,7 @@ function main() {
     const quality = evaluateScreenshotFile({
       filePath: auditPath,
       viewport,
-      minBytes: MIN_APPROVED_BYTES,
+      minBytes: MIN_CAPTURE_BYTES,
     });
     if (!quality.ok) {
       rejected.push({ rel, reason: quality.reasons.join("; ") });
@@ -90,7 +90,7 @@ function main() {
       {
         version: 1,
         reviewedAt: new Date().toISOString(),
-        minBytes: MIN_APPROVED_BYTES,
+        minBytes: MIN_CAPTURE_BYTES,
         requiredCount: required.length,
         approvedCount: approved.length,
         rejectedCount: rejected.length,

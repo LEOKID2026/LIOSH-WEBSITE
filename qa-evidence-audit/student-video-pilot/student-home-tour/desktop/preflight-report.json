@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "demo_account_access",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    },
+    {
+      "id": "home_greeting",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "home_dashboard",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "subject_links",
+      "ok": true,
+      "message": "direct=1 hub=3"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "slug": "student-home-tour",
+  "viewport": "desktop",
+  "workflowId": "SL1",
+  "title": "כניסת תלמיד ועמוד הבית",
+  "pilot": "student-video-student-home-tour-desktop",
+  "at": "2026-05-24T17:33:29.896Z"
+}

@@ -1,0 +1,116 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "parent_account_configured",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "parent_qa_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "list_students",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "demo_child_on_dashboard",
+      "ok": true,
+      "message": "d119f721-05b3-4fe2-ac58-4174ac06f733"
+    },
+    {
+      "id": "short_report_nonempty",
+      "ok": true,
+      "message": "totalQuestions=329"
+    },
+    {
+      "id": "detailed_payload_available",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "parent_ui_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "policy_gate_clear",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "dashboard_not_500",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "dashboard_child_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "report_link_works",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "short_report_loads",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "short_kpi_cards_present",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "short_diagnostic_present",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "no_copilot_focus",
+      "ok": true,
+      "message": "no Copilot on page"
+    },
+    {
+      "id": "detailed_report_opens",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "section_period_summary",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "section_activity",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "no_copilot_focus",
+      "ok": true,
+      "message": "Copilot present but not focused/dominant"
+    },
+    {
+      "id": "no_copilot_focus",
+      "ok": true,
+      "message": "Copilot present but not focused/dominant"
+    },
+    {
+      "id": "no_loading_only_screen",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "studentId": "d119f721-05b3-4fe2-ac58-4174ac06f733",
+  "title": "קריאת דוח הורים — דוח קצר מול דוח מקיף",
+  "pilot": "how-to-read-report-v5-desktop",
+  "at": "2026-05-24T13:53:19.498Z"
+}

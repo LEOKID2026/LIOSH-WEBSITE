@@ -9,6 +9,112 @@ const LOADING_HIDE = [
   'text=/טוען|טוענת|ממתין/u',
 ];
 
+/** Must match Help Center demo child (see seed-demo-report-data.mjs). */
+const DEMO_PLAYER_NAME = "ישראל ישראלי";
+
+async function seedLocalPlayerName(page) {
+  await page.evaluate((name) => {
+    localStorage.setItem("mleo_player_name", name);
+  }, DEMO_PLAYER_NAME);
+}
+
+function detailedReportSeedPayload(playerName) {
+  const now = Date.now();
+  const mkTopic = (sessions) => ({ topics: { t1: { sessions } } });
+  const one = (correct, total) => [
+    {
+      timestamp: now,
+      total,
+      correct,
+      mode: "learning",
+      grade: "g3",
+      level: "medium",
+      duration: 300,
+    },
+  ];
+
+  localStorage.setItem("mleo_player_name", playerName);
+  localStorage.setItem(
+    "mleo_time_tracking",
+    JSON.stringify({
+      operations: {
+        addition: {
+          sessions: Array.from({ length: 8 }, (_, i) => ({
+            timestamp: now - i * 3600000,
+            total: 24,
+            correct: 22,
+            mode: "learning",
+            grade: "g4",
+            level: "medium",
+            duration: 400,
+          })),
+        },
+      },
+    })
+  );
+  localStorage.setItem(
+    "mleo_math_master_progress",
+    JSON.stringify({ progress: { addition: { total: 400, correct: 360 } } })
+  );
+  localStorage.setItem("mleo_mistakes", JSON.stringify([]));
+  localStorage.setItem(
+    "mleo_geometry_time_tracking",
+    JSON.stringify({
+      topics: {
+        perimeter: {
+          sessions: Array.from({ length: 6 }, (_, i) => ({
+            timestamp: now - i * 400000,
+            total: 20,
+            correct: 18,
+            mode: "learning",
+            grade: "g4",
+            level: "hard",
+            duration: 380,
+          })),
+        },
+      },
+    })
+  );
+  localStorage.setItem(
+    "mleo_geometry_master_progress",
+    JSON.stringify({ progress: { perimeter: { total: 120, correct: 108 } } })
+  );
+  localStorage.setItem("mleo_geometry_mistakes", JSON.stringify([]));
+  localStorage.setItem("mleo_english_time_tracking", JSON.stringify(mkTopic(one(8, 10))));
+  localStorage.setItem(
+    "mleo_english_master_progress",
+    JSON.stringify({ progress: { t1: { total: 50, correct: 42 } } })
+  );
+  localStorage.setItem("mleo_english_mistakes", JSON.stringify([]));
+  localStorage.setItem("mleo_science_time_tracking", JSON.stringify(mkTopic(one(7, 10))));
+  localStorage.setItem(
+    "mleo_science_master_progress",
+    JSON.stringify({ progress: { t1: { total: 40, correct: 30 } } })
+  );
+  localStorage.setItem("mleo_science_mistakes", JSON.stringify([]));
+  localStorage.setItem("mleo_hebrew_time_tracking", JSON.stringify(mkTopic(one(9, 11))));
+  localStorage.setItem(
+    "mleo_hebrew_master_progress",
+    JSON.stringify({ progress: { t1: { total: 44, correct: 38 } } })
+  );
+  localStorage.setItem("mleo_hebrew_mistakes", JSON.stringify([]));
+  localStorage.setItem(
+    "mleo_moledet_geography_time_tracking",
+    JSON.stringify(mkTopic(one(6, 9)))
+  );
+  localStorage.setItem(
+    "mleo_moledet_geography_master_progress",
+    JSON.stringify({ progress: { t1: { total: 36, correct: 28 } } })
+  );
+  localStorage.setItem("mleo_moledet_geography_mistakes", JSON.stringify([]));
+}
+
+/** Rich v2 local practice data (parity with overnight strong-stable profile). */
+async function seedDetailedReportLocalStorage(page) {
+  await page.addInitScript(detailedReportSeedPayload, DEMO_PLAYER_NAME);
+  await page.evaluate(detailedReportSeedPayload, DEMO_PLAYER_NAME);
+}
+
 /**
  * @typedef {object} CaptureTarget
  * @property {string} path
@@ -19,31 +125,36 @@ const LOADING_HIDE = [
  * @property {string} [mustIncludeText]
  * @property {string[]} [hideLoading]
  * @property {(page: import("playwright").Page) => Promise<void>} [prepare]
+ * @property {(page: import("playwright").Page) => Promise<void>} [beforeGoto]
  * @property {(page: import("playwright").Page) => Promise<void>} [afterGoto]
  * @property {number} [expandMobileClipTo] — minimum clip height on mobile (px from element top)
  */
 
 /** @returns {CaptureTarget} */
-export function resolveCaptureTarget(job, studentId) {
+export function resolveCaptureTarget(job, studentId, viewportName = "desktop") {
   const route = routeForJob(job);
   const path = resolvePath(route.path, studentId);
   const base = { path, auth: route.auth, hideLoading: LOADING_HIDE };
 
   const key = `${job.section}/${job.slug}/${job.region}`;
+  const isMobile = viewportName === "mobile";
 
   /** @type {Record<string, Partial<CaptureTarget>>} */
   const map = {
     // —— parent-report ——
     "parent-report/report-overview/short-report": {
-      selector: "h1:has-text('דוח להורים')",
+      selector: ".parent-report-print-summary-card >> nth=0",
       ancestorLevels: 1,
       minTextLength: 8,
       afterGoto: waitParentReportReady,
     },
     "parent-report/report-overview/detailed-report": {
-      selector: ".pr-detailed-subject-block, .pr-detailed-summary-subject",
-      minTextLength: 30,
-      afterGoto: navigateToParentDetailedReportFromShort,
+      selector: "a:has-text('דוח מקיף לתקופה')",
+      ancestorLevels: 2,
+      minTextLength: 8,
+      expandMobileClipTo: 320,
+      afterGoto: waitParentReportReady,
+      prepare: scrollHeadingIntoView("a:has-text('דוח מקיף לתקופה')"),
     },
     "parent-report/summary-card/summary": {
       selector: ".parent-report-print-summary-card >> nth=0",
@@ -58,9 +169,10 @@ export function resolveCaptureTarget(job, studentId) {
       afterGoto: waitParentReportReady,
     },
     "parent-report/trends-and-confidence/trend": {
-      selector: ".parent-report-graph-section .rounded-xl.border >> nth=0",
-      minTextLength: 4,
+      selector: ".parent-report-graph-section .parent-report-chart-card >> nth=0",
+      minTextLength: 8,
       afterGoto: waitParentReportReady,
+      prepare: scrollHeadingIntoView(".parent-report-graph-section .parent-report-chart-card"),
     },
     "parent-report/strengths-and-improvements/strengths": {
       selector: ":text-matches('איפה נראו תוצאות טובות|מה הכי בולט עכשיו')",
@@ -69,10 +181,15 @@ export function resolveCaptureTarget(job, studentId) {
       afterGoto: waitParentReportReady,
     },
     "parent-report/topics-and-buckets/topics-table": {
-      selector: ".parent-report-table-wrap-print, h2:has-text('התקדמות בחשבון')",
-      ancestorLevels: 1,
-      minTextLength: 8,
+      selector:
+        viewportName === "mobile"
+          ? "div.avoid-break:has(h2.parent-report-math-progress-title) div.bg-black\\/40.border.rounded-lg >> nth=0"
+          : "div.avoid-break:has(h2.parent-report-math-progress-title)",
+      minTextLength: 12,
+      expandTabletClipTo: viewportName === "mobile" ? undefined : 420,
+      expandDesktopClipTo: viewportName === "desktop" ? 420 : undefined,
       afterGoto: waitParentReportReady,
+      prepare: scrollHeadingIntoView(".parent-report-math-progress-title"),
     },
     "parent-report/subjects-overview/six-subjects": {
       selector:
@@ -81,10 +198,12 @@ export function resolveCaptureTarget(job, studentId) {
       afterGoto: waitParentReportReady,
     },
     "parent-report/recommendations/recommendations": {
-      selector: ".parent-report-recommendations-print .parent-report-rec-item >> nth=0",
-      ancestorLevels: 2,
+      selector: isMobile
+        ? ".parent-report-recommendations-print"
+        : ".parent-report-recommendations-print .parent-report-rec-item >> nth=0",
       minTextLength: 12,
       afterGoto: waitParentReportReady,
+      prepare: scrollHeadingIntoView("h2:has-text('המלצות')"),
     },
     "parent-report/challenges-section/challenges": {
       selector: ".bg-black\\/30.border:has(> h2:has-text('אתגרים'))",
@@ -94,14 +213,20 @@ export function resolveCaptureTarget(job, studentId) {
       prepare: scrollHeadingIntoView("h2:has-text('אתגרים')"),
     },
     "parent-report/detailed-report/letter": {
-      selector: ".pr-detailed-subject-letter, .pr-detailed-subject-inner",
-      minTextLength: 30,
+      selector: "#parent-report-detailed-print .pr-detailed-subject-block >> nth=0",
+      minTextLength: 16,
+      expandMobileClipTo: isMobile ? 380 : undefined,
+      expandTabletClipTo: 420,
+      expandDesktopClipTo: 480,
       afterGoto: waitParentReportDetailedReady,
+      prepare: scrollHeadingIntoView("#parent-report-detailed-print .pr-detailed-subject-block"),
     },
     "parent-report/printing-and-pdf/pdf": {
       selector: "button:has-text('ייצא ל-PDF')",
-      ancestorLevels: 4,
+      ancestorLevels: 2,
       minTextLength: 8,
+      expandMobileClipTo: 220,
+      expandTabletClipTo: 220,
       afterGoto: waitParentReportReady,
       prepare: async (page) => {
         const btn = page.locator("button:has-text('ייצא ל-PDF')").first();
@@ -116,15 +241,16 @@ export function resolveCaptureTarget(job, studentId) {
 
     // —— parents ——
     "parents/welcome-and-overview/overview": {
-      selector: "main h1, header h1",
-      ancestorLevels: 2,
-      minTextLength: 16,
+      selector: "main h1",
+      minTextLength: 12,
     },
     "parents/create-parent-account/login": {
-      selector: "form:has([placeholder='שם משתמש']), form:has([type='password'])",
-      minTextLength: 10,
+      selector: "main form:has([placeholder='אימייל הורה'])",
+      ancestorLevels: 1,
+      minTextLength: 5,
       mustIncludeText: "כניסה",
       allowAttachedOnly: true,
+      beforeGoto: clearAuthStorageForPublicLogin,
     },
     "parents/parent-dashboard-tour/dashboard": {
       selector: "section:has(h2:has-text('הילדים שלי')) .rounded.border",
@@ -140,8 +266,25 @@ export function resolveCaptureTarget(job, studentId) {
       minTextLength: 8,
     },
     "parents/edit-or-delete-student/edit": {
-      selector: "section:has(h2:has-text('הילדים שלי')) .rounded.border",
-      minTextLength: 8,
+      selector: "section:has(h2:has-text('הילדים שלי')) button:has-text('איפוס PIN')",
+      ancestorLevels: 1,
+      minTextLength: 6,
+      allowAttachedOnly: true,
+      prepare: async (page) => {
+        const pinBtn = page
+          .locator("section:has(h2:has-text('הילדים שלי')) button:has-text('איפוס PIN')")
+          .first();
+        if (await pinBtn.count()) {
+          await pinBtn.scrollIntoViewIfNeeded().catch(() => {});
+          return;
+        }
+        const setPin = page
+          .locator("section:has(h2:has-text('הילדים שלי')) button:has-text('הגדרת שם משתמש ו-PIN')")
+          .first();
+        if (await setPin.count()) {
+          await setPin.scrollIntoViewIfNeeded().catch(() => {});
+        }
+      },
     },
     "parents/how-to-read-report/report-link": {
       selector: "a:has-text('דוח הורים')",
@@ -160,23 +303,27 @@ export function resolveCaptureTarget(job, studentId) {
       },
     },
     "parents/monthly-rewards/rewards": {
-      selector: "main, h1, h2",
-      minTextLength: 8,
+      selector: "main section >> nth=0",
+      minTextLength: 12,
+      prepare: async (page) => {
+        const main = page.locator("main section").first();
+        await main.waitFor({ state: "visible", timeout: 60_000 });
+        await main.scrollIntoViewIfNeeded().catch(() => {});
+      },
     },
     "parents/install-as-app/install-prompt": {
-      selector: ":text-matches('התקן|הוסף למסך', 'i')",
-      ancestorLevels: 4,
+      selector: "button:has-text('התקן אפליקציה')",
+      ancestorLevels: 2,
       minTextLength: 8,
       allowAttachedOnly: true,
       prepare: async (page) => {
-        const el = page.locator(":text-matches('התקן|הוסף למסך', 'i')").first();
-        if (await el.isVisible().catch(() => false)) {
-          await el.scrollIntoViewIfNeeded();
-        }
+        await page.evaluate(() => localStorage.removeItem("app-install-dismissed"));
+        const btn = page.locator("button:has-text('התקן אפליקציה')").first();
+        await btn.scrollIntoViewIfNeeded().catch(() => {});
       },
     },
     "parents/mobile-and-offline/offline-hub": {
-      selector: "header:has(h1:has-text('לא מקוונים'))",
+      selector: "section.grid a[href^='/offline/'] >> nth=0",
       minTextLength: 10,
       allowAttachedOnly: true,
     },
@@ -186,14 +333,14 @@ export function resolveCaptureTarget(job, studentId) {
       selector: "form:has([placeholder='שם משתמש'])",
       minTextLength: 6,
       allowAttachedOnly: true,
+      beforeGoto: clearAuthStorageForPublicLogin,
     },
     "students/student-home-tour/home": {
-      selector: "main, #__next",
-      minTextLength: 12,
+      selector: "section.rounded-3xl.border-emerald-500\\/25",
+      minTextLength: 16,
     },
     "students/choose-subject-and-grade/subjects": {
-      selector: "h1:has-text('מרכז משחקי'), a[href*='master']",
-      ancestorLevels: 1,
+      selector: "section.grid.sm\\:grid-cols-3 > a >> nth=0",
       minTextLength: 10,
     },
     "students/answering-questions/question": {
@@ -217,13 +364,13 @@ export function resolveCaptureTarget(job, studentId) {
     },
     "students/coins-and-arcade/arcade": {
       selector: "h1:has-text('משחקים')",
-      ancestorLevels: 2,
+      ancestorLevels: 1,
       minTextLength: 6,
+      expandDesktopClipTo: 420,
     },
     "students/avatar-and-profile/avatar": {
-      selector: "#student-avatar-modal-title",
-      ancestorLevels: 2,
-      minTextLength: 6,
+      selector: "[role='dialog'][aria-labelledby='student-avatar-modal-title'] > div.max-w-md",
+      minTextLength: 12,
       prepare: async (page) => {
         const btn = page.getByRole("button", { name: /בחירת אווטר/u }).first();
         await btn.waitFor({ state: "visible", timeout: 30_000 });
@@ -232,23 +379,27 @@ export function resolveCaptureTarget(job, studentId) {
       },
     },
     "students/offline-games/offline": {
-      selector: "a[href^='/offline/']",
-      ancestorLevels: 2,
+      selector: "a[href='/offline/memory-match']",
+      ancestorLevels: 1,
       minTextLength: 10,
+      expandMobileClipTo: 280,
     },
 
     // —— subjects (question + explanation share master URL) ——
     "subjects/*/question": {
-      selector:
-        'div:has([data-testid$="-question-surface"]), div:has([data-testid$="-question-stem"])',
-      minTextLength: 12,
+      selector: '[data-testid$="-question-surface"]',
+      minTextLength: 8,
+      expandMobileClipTo: 300,
+      expandTabletClipTo: 320,
+      expandDesktopClipTo: 360,
       afterGoto: waitLearningQuestionReady,
     },
     "subjects/*/explanation": {
-      selector:
-        ".fixed.inset-0 h3, .fixed.inset-0 h4, h3:has-text('איך פותרים'), h3:has-text('פתרון')",
-      ancestorLevels: 2,
+      selector: ".fixed.inset-0.z-\\[200\\] [class*='border-emerald-400'][class*='rounded-2xl']",
       minTextLength: 16,
+      capDesktopClipHeight: 420,
+      minDesktopClipWidth: 820,
+      expandMobileClipTo: 400,
       afterGoto: waitLearningQuestionReady,
       prepare: openFullExplanationModal,
     },
@@ -294,16 +445,41 @@ async function waitParentReportReady(page) {
   await page.waitForTimeout(400);
 }
 
+async function clearAuthStorageForPublicLogin(page) {
+  await page.context().clearCookies().catch(() => {});
+  if (!/^https?:/i.test(page.url())) return;
+  await page
+    .evaluate(() => {
+      const keys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k.includes("supabase") || k.includes("liosh") || k.includes("student"))) {
+          keys.push(k);
+        }
+      }
+      keys.forEach((k) => localStorage.removeItem(k));
+    })
+    .catch(() => {});
+}
+
 async function waitParentReportDetailedReady(page) {
+  await seedDetailedReportLocalStorage(page);
+  if (new URL(page.url()).pathname.includes("parent-report-detailed")) {
+    await page.reload({ waitUntil: "domcontentloaded", timeout: 90_000 });
+  }
   await page.waitForLoadState("domcontentloaded", { timeout: 60_000 }).catch(() => {});
   await page.waitForTimeout(2500);
   const block = page
     .locator(
-      ".pr-detailed-subject-block, .pr-detailed-summary-subject, .pr-detailed-subject-inner, .pr-detailed-subject-letter",
+      "#parent-report-detailed-print .pr-detailed-subject-letter, #parent-report-detailed-print .pr-detailed-subject-block, #parent-report-detailed-print .pr-detailed-summary-subject, #parent-report-detailed-print .pr-detailed-section",
     )
     .first();
   await block.scrollIntoViewIfNeeded().catch(() => {});
   await block.waitFor({ state: "visible", timeout: 90_000 });
+  await page
+    .locator("#parent-report-detailed-print")
+    .waitFor({ state: "visible", timeout: 90_000 })
+    .catch(() => {});
   await page.waitForTimeout(400);
 }
 
@@ -319,9 +495,10 @@ function scrollHeadingIntoView(selector) {
 
 async function navigateToParentDetailedReportFromShort(page) {
   await waitParentReportReady(page);
+  await seedDetailedReportLocalStorage(page);
   const current = new URL(page.url());
   const studentId = current.searchParams.get("studentId");
-  const link = page.getByRole("link", { name: /דוח מקיף/i }).first();
+  const link = page.getByRole("link", { name: /דוח מקיף לתקופה/i }).first();
   if (await link.isVisible().catch(() => false)) {
     await link.click();
     await page.waitForURL(/parent-report-detailed/, { timeout: 90_000 });

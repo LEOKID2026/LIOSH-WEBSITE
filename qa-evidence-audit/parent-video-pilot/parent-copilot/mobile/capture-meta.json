@@ -1,0 +1,36 @@
+{
+  "title": "שימוש ב-Copilot לשאלות המשך",
+  "pilot": "parent-copilot-v6-mobile",
+  "capturedAt": "2026-05-24T14:38:49.928Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/parent-video-pilot/parent-copilot/mobile/main.webm",
+  "fileSizeBytes": 663738,
+  "wallClockSec": 91.241,
+  "frameCount": 536,
+  "fps": 8,
+  "decodedDurationSec": 67,
+  "pagesSeen": {
+    "login": true,
+    "dashboard": true,
+    "detailedReport": true,
+    "copilotQ1": true,
+    "copilotA1": true,
+    "copilotQ2": true,
+    "copilotA2": true
+  },
+  "endState": {
+    "demoStudentId": "d119f721-05b3-4fe2-ac58-4174ac06f733",
+    "finalCaption": "כך אפשר לשאול שאלות המשך ולקבל המלצות ממוקדות."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 22
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "manifestTouched": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

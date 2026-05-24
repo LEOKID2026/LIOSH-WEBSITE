@@ -1,0 +1,60 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "not_shared_qa_parent",
+      "ok": true,
+      "message": "parent-video-isolated-mpjw47uh-33968993@example.com"
+    },
+    {
+      "id": "isolated_parent_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "list_students",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "no_demo_child_on_isolated",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "create_student_api",
+      "ok": true,
+      "message": "47802767-1eee-4f38-ace0-f3e5dcd9e933"
+    },
+    {
+      "id": "parent_ui_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "add_child_form_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "add_child_form_controls",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "probe_child_on_dashboard",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "probe_child_cleaned",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "title": "הוספת ילד וקבלת קוד תלמיד",
+  "pilot": "add-students-v3-desktop",
+  "at": "2026-05-24T14:46:27.568Z"
+}

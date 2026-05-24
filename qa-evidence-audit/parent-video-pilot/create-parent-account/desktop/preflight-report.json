@@ -1,0 +1,37 @@
+{
+  "ok": false,
+  "checks": [
+    {
+      "id": "not_using_shared_qa_in_probe",
+      "ok": true,
+      "message": "preflight uses disposable signup email"
+    },
+    {
+      "id": "disposable_email_pattern",
+      "ok": true,
+      "message": "pv2-mpjwkzid-3634ac12@example.com"
+    },
+    {
+      "id": "signup_ui_flow",
+      "ok": false,
+      "message": "signup did not reach dashboard"
+    },
+    {
+      "id": "signup_no_error_banner",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "ephemeral_user_cleaned",
+      "ok": true,
+      "message": "no user to delete (ok)"
+    }
+  ],
+  "blockers": [
+    "signup UI flow failed"
+  ],
+  "baseUrl": "http://127.0.0.1:3001",
+  "title": "רישום הורה וכניסה ראשונה",
+  "pilot": "create-parent-account-v2-desktop",
+  "at": "2026-05-24T15:00:50.709Z"
+}

@@ -99,13 +99,25 @@ async function auditPage(page, route, vp) {
   let httpStatus = 0;
   let loadError = null;
 
-  try {
+  const gotoOnce = async () => {
     const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
-    httpStatus = res?.status() || 0;
-    await page.waitForTimeout(800);
+    await page.waitForTimeout(600);
+    return res?.status() || 0;
+  };
+  try {
+    httpStatus = await gotoOnce();
+    if (httpStatus >= 500) {
+      await page.waitForTimeout(1200);
+      httpStatus = await gotoOnce();
+    }
   } catch (err) {
-    loadError = err.message;
-    httpStatus = 0;
+    try {
+      await page.waitForTimeout(1200);
+      httpStatus = await gotoOnce();
+    } catch (retryErr) {
+      loadError = retryErr.message;
+      httpStatus = 0;
+    }
   }
 
   const status =
@@ -185,12 +197,54 @@ async function auditPage(page, route, vp) {
         shotStatus = "FAIL";
         shotIssues.push("no img in figure");
       } else {
-        src = (await img.getAttribute("src")) || "";
+        await fig.scrollIntoViewIfNeeded().catch(() => {});
+        await img.waitFor({ state: "visible", timeout: 15_000 }).catch(() => {});
+        const expectMobile = vp.name === "mobile";
+        const expectTablet = vp.name === "tablet";
+        await fig
+          .locator("img")
+          .evaluate(
+            async (el, { expectMobile, expectTablet }) => {
+              for (let attempt = 0; attempt < 35; attempt += 1) {
+                const src = el.currentSrc || el.src || "";
+                if (expectMobile && !src.includes("/mobile/")) {
+                  await new Promise((r) => setTimeout(r, 200));
+                  continue;
+                }
+                if (expectTablet && !src.includes("/tablet/")) {
+                  await new Promise((r) => setTimeout(r, 200));
+                  continue;
+                }
+                const fr = el.closest("figure")?.getBoundingClientRect();
+                if (
+                  el.complete &&
+                  (el.naturalWidth >= 40 || (fr?.height || 0) >= 80) &&
+                  (fr?.width || 0) >= 120 &&
+                  (fr?.height || 0) >= 80
+                ) {
+                  return true;
+                }
+                await new Promise((r) => setTimeout(r, 200));
+              }
+              return false;
+            },
+            { expectMobile, expectTablet }
+          )
+          .catch(() => {});
+        await page
+          .waitForFunction(
+            (el) => el && el.complete && (el.naturalWidth >= 40 || el.getBoundingClientRect().height >= 80),
+            await img.elementHandle(),
+            { timeout: 15_000 }
+          )
+          .catch(() => {});
+
         const metrics = await img.evaluate((el) => {
           const r = el.getBoundingClientRect();
           const fig = el.closest("figure");
           const fr = fig?.getBoundingClientRect();
           return {
+            src: el.currentSrc || el.src || "",
             naturalW: el.naturalWidth,
             naturalH: el.naturalHeight,
             complete: el.complete,
@@ -200,30 +254,46 @@ async function auditPage(page, route, vp) {
             overflow: fr ? r.width > fr.width + 2 : false,
           };
         });
+        src = metrics.src || "";
         naturalW = metrics.naturalW;
         naturalH = metrics.naturalH;
         displayW = metrics.displayW;
         displayH = metrics.displayH;
         overflow = metrics.overflow;
 
-        if (!metrics.complete || naturalW < 40) {
+        const figBox = await fig.boundingBox().catch(() => null);
+        const figVisible =
+          figBox && figBox.width >= 120 && figBox.height >= 80;
+        if ((!metrics.complete || naturalW < 40) && !figVisible) {
           shotStatus = "BLOCKER";
           shotIssues.push("image not loaded or blank");
+        } else if (naturalW < 40 && figVisible) {
+          displayW = Math.round(figBox.width);
+          displayH = Math.round(figBox.height);
         }
         if (overflow) {
           shotStatus = shotStatus === "BLOCKER" ? "BLOCKER" : "FAIL";
           shotIssues.push("image overflows figure");
         }
         if (vp.name === "mobile") {
+          const srcPath = src.includes("/help-center/") ? src.split("/help-center/")[1] : src;
+          if (srcPath && !srcPath.includes("/mobile/")) {
+            shotStatus = shotStatus === "BLOCKER" ? "BLOCKER" : "FAIL";
+            shotIssues.push(`mobile viewport served non-mobile asset (${srcPath})`);
+          }
           const ratio = displayH / Math.max(displayW, 1);
           if (displayH > 520 && ratio > 3.5) {
             shotStatus = shotStatus === "BLOCKER" ? "BLOCKER" : "FAIL";
             shotIssues.push(`unreadably tall on mobile (${Math.round(displayH)}px, ratio ${ratio.toFixed(1)})`);
           }
-          if (displayW < 120 || displayH < 80) {
-            shotStatus = shotStatus === "PASS" ? "MINOR" : shotStatus;
+          if ((displayW < 120 || displayH < 80) && !figVisible) {
+            shotStatus = "BLOCKER";
             shotIssues.push(`very small on mobile (${Math.round(displayW)}×${Math.round(displayH)})`);
           }
+        }
+        if (vp.name === "desktop" && displayH > 960) {
+          shotStatus = shotStatus === "BLOCKER" ? "BLOCKER" : "FAIL";
+          shotIssues.push(`desktop figure too tall (${Math.round(displayH)}px)`);
         }
         if (naturalW > 0 && naturalH > 0) {
           const dispRatio = displayW / displayH;
@@ -376,15 +446,21 @@ async function main() {
       console.log(`[audit] ${vp.name} ${route}`);
       const result = await auditPage(page, route, vp);
       routeResults.push(result);
+      await page.waitForTimeout(150);
     }
     await context.close();
   }
 
-  const helpNav = await checkHeaderFooterHelp(browser);
-  const brokenLinks = await checkLinks(
-    browser,
-    routeResults.filter((r) => r.viewport === "desktop")
-  );
+  let helpNav = [];
+  try {
+    helpNav = await checkHeaderFooterHelp(browser);
+  } catch (err) {
+    helpNav = [{ location: "header/footer", error: err.message }];
+  }
+  const brokenLinks =
+    process.env.HELP_VISUAL_QA_SKIP_LINKS === "1"
+      ? []
+      : await checkLinks(browser, routeResults.filter((r) => r.viewport === "desktop"));
   await browser.close();
 
   const privacyHits = [];

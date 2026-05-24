@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "student_account_resolved",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_login_api",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "student_login_page_loads",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "student_home_greeting",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "title": "כניסת תלמיד עם קוד ו-PIN",
+  "pilot": "student-login-v4-desktop",
+  "at": "2026-05-24T14:40:33.361Z"
+}

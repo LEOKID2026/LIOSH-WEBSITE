@@ -1,0 +1,41 @@
+{
+  "title": "מדריך להורה — כניסה לדוח ושימוש ב-AI",
+  "pilot": "parent-workflow-v1-mobile",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "capturedAt": "2026-05-24T13:37:58.673Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/parent-video-pilot/parent-report-ai/mobile/main.webm",
+  "fileSizeBytes": 1000585,
+  "wallClockSec": 87.291,
+  "frameCount": 568,
+  "fps": 8,
+  "decodedDurationSec": 71,
+  "pagesSeen": {
+    "login": true,
+    "dashboard": true,
+    "shortReport": true,
+    "detailedReport": true,
+    "copilotQ": true,
+    "copilotA": true
+  },
+  "endState": {
+    "finalUrl": "http://127.0.0.1:3001/learning/parent-report-detailed?period=week&studentId=d119f721-05b3-4fe2-ac58-4174ac06f733&source=parent",
+    "finalCaption": "כך ההורה יכול לעקוב, להבין ולקבל המלצות להמשך.",
+    "demoStudentId": "d119f721-05b3-4fe2-ac58-4174ac06f733",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 21
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "manifestTouched": false
+}
