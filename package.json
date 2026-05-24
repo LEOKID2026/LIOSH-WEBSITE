@@ -34,6 +34,7 @@
     "help:capture-video-pilot": "node scripts/help-center/capture-video-pilot-help-overview.mjs",
     "dev:help-video-pilot": "next dev -p 3098",
     "dev:help-video-pilot-alt": "next dev -p 3108",
+    "dev:help-video-pilot-capture": "next dev -p 3110",
     "help:videos": "npm run help:build-video-manifest && npm run help:capture-videos && npm run help:video-data-safety-review && npm run help:publish-videos && npm run help:verify-videos",
     "qa:launch:daily-gate": "node scripts/launch-readiness/build-launch-readiness-daily.mjs",
     "qa:launch:coverage": "node scripts/launch-readiness/build-coverage-matrix.mjs",

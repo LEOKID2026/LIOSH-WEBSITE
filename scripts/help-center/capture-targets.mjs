@@ -35,13 +35,13 @@ export function resolveCaptureTarget(job, studentId) {
     // —— parent-report ——
     "parent-report/report-overview/short-report": {
       selector: "h1:has-text('דוח להורים')",
-      ancestorLevels: 2,
+      ancestorLevels: 1,
       minTextLength: 8,
       afterGoto: waitParentReportReady,
     },
     "parent-report/report-overview/detailed-report": {
-      selector: "h1, #parent-report-detailed-print, main",
-      minTextLength: 12,
+      selector: ".pr-detailed-subject-block, .pr-detailed-summary-subject",
+      minTextLength: 30,
       afterGoto: navigateToParentDetailedReportFromShort,
     },
     "parent-report/summary-card/summary": {
@@ -81,6 +81,7 @@ export function resolveCaptureTarget(job, studentId) {
     },
     "parent-report/recommendations/recommendations": {
       selector: ".parent-report-recommendations-print .parent-report-rec-item >> nth=0",
+      ancestorLevels: 2,
       minTextLength: 12,
       afterGoto: waitParentReportReady,
     },
@@ -91,13 +92,14 @@ export function resolveCaptureTarget(job, studentId) {
       afterGoto: waitParentReportReady,
     },
     "parent-report/detailed-report/letter": {
-      selector: ".pr-detailed-subject-letter",
-      minTextLength: 20,
+      selector: ".pr-detailed-subject-letter, .pr-detailed-subject-inner",
+      minTextLength: 30,
       afterGoto: waitParentReportDetailedReady,
     },
     "parent-report/printing-and-pdf/pdf": {
       selector: "button:has-text('ייצא ל-PDF')",
-      minTextLength: 4,
+      ancestorLevels: 4,
+      minTextLength: 8,
       afterGoto: waitParentReportReady,
       prepare: async (page) => {
         const btn = page.locator("button:has-text('ייצא ל-PDF')").first();
@@ -160,8 +162,8 @@ export function resolveCaptureTarget(job, studentId) {
       minTextLength: 8,
     },
     "parents/install-as-app/install-prompt": {
-      selector: ":text-matches('התקן|הוסף למסך|אפליקציה|PWA|install', 'i')",
-      ancestorLevels: 2,
+      selector: ":text-matches('התקן|הוסף למסך', 'i')",
+      ancestorLevels: 4,
       minTextLength: 8,
       allowAttachedOnly: true,
       prepare: async (page) => {
@@ -202,11 +204,13 @@ export function resolveCaptureTarget(job, studentId) {
     "students/daily-missions/missions": {
       selector: "section[aria-labelledby='daily-missions-heading']",
       minTextLength: 8,
+      afterGoto: waitStudentHomeReady,
       prepare: scrollHeadingIntoView("#daily-missions-heading"),
     },
     "students/monthly-persistence/persistence": {
-      selector: "section[aria-labelledby='monthly-persistence-heading']",
-      minTextLength: 8,
+      selector: "section[aria-labelledby='monthly-persistence-heading'], #monthly-persistence-heading",
+      minTextLength: 6,
+      afterGoto: waitStudentHomeReady,
       prepare: scrollHeadingIntoView("#monthly-persistence-heading"),
     },
     "students/coins-and-arcade/arcade": {
@@ -291,10 +295,14 @@ async function waitParentReportReady(page) {
 
 async function waitParentReportDetailedReady(page) {
   await page.waitForLoadState("domcontentloaded", { timeout: 60_000 }).catch(() => {});
-  await page.waitForTimeout(2000);
-  const letter = page.locator(".pr-detailed-subject-letter").first();
-  await letter.scrollIntoViewIfNeeded().catch(() => {});
-  await letter.waitFor({ state: "visible", timeout: 90_000 });
+  await page.waitForTimeout(2500);
+  const block = page
+    .locator(
+      ".pr-detailed-subject-block, .pr-detailed-summary-subject, .pr-detailed-subject-inner, .pr-detailed-subject-letter",
+    )
+    .first();
+  await block.scrollIntoViewIfNeeded().catch(() => {});
+  await block.waitFor({ state: "visible", timeout: 90_000 });
   await page.waitForTimeout(400);
 }
 
@@ -310,14 +318,39 @@ function scrollHeadingIntoView(selector) {
 
 async function navigateToParentDetailedReportFromShort(page) {
   await waitParentReportReady(page);
+  const current = new URL(page.url());
+  const studentId = current.searchParams.get("studentId");
   const link = page.getByRole("link", { name: /דוח מקיף/i }).first();
-  await link.waitFor({ state: "visible", timeout: 30_000 });
-  await link.click();
-  await page.waitForURL(/parent-report-detailed/, { timeout: 90_000 });
+  if (await link.isVisible().catch(() => false)) {
+    await link.click();
+    await page.waitForURL(/parent-report-detailed/, { timeout: 90_000 });
+  } else if (studentId) {
+    const detailed = new URL("/learning/parent-report-detailed", current.origin);
+    detailed.searchParams.set("studentId", studentId);
+    detailed.searchParams.set("source", "parent");
+    detailed.searchParams.set("period", "month");
+    await page.goto(detailed.toString(), {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+  } else {
+    throw new Error("cannot reach parent-report-detailed (no link or studentId)");
+  }
   await page.waitForLoadState("domcontentloaded", { timeout: 60_000 }).catch(() => {});
   await page.waitForTimeout(1500);
-  await page.locator("h1").first().waitFor({ state: "visible", timeout: 90_000 });
-  await page.waitForTimeout(400);
+  await waitParentReportDetailedReady(page);
+}
+
+async function waitStudentHomeReady(page) {
+  const path = new URL(page.url()).pathname;
+  if (path !== "/student/home") {
+    await page.goto(new URL("/student/home", page.url()).toString(), {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+  }
+  await page.waitForLoadState("domcontentloaded", { timeout: 60_000 }).catch(() => {});
+  await page.waitForTimeout(1200);
 }
 
 async function warmMasterFromHome(page) {

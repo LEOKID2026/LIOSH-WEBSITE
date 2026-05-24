@@ -5,337 +5,337 @@
       "sha256": "aff150f3dc4616e778fde6e23704a677917df84065c6962242b8675a2473d179",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\create-parent-account\\mobile\\login.png",
-      "capturedAt": "2026-05-23T22:36:29.349Z"
+      "capturedAt": "2026-05-24T12:08:18.813Z"
     },
     "parents/install-as-app/mobile/install-prompt": {
       "sha256": "9fbcc0f89dcade2e46a422ffae0530a8abd33fa6ee5266f3576f7878eb6f8481",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\install-as-app\\mobile\\install-prompt.png",
-      "capturedAt": "2026-05-23T22:36:29.349Z"
+      "capturedAt": "2026-05-24T12:10:50.095Z"
     },
     "parents/mobile-and-offline/mobile/offline-hub": {
       "sha256": "ba556ea91c30fadff8f98db54b9a6ecbe921f7992f442960a59a5abbae71073c",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\mobile-and-offline\\mobile\\offline-hub.png",
-      "capturedAt": "2026-05-23T22:36:31.000Z"
+      "capturedAt": "2026-05-24T12:08:18.818Z"
     },
     "students/student-login/mobile/login": {
       "sha256": "3cfa0c792544faafeeecab1e6fcb752ccd842c21cd3774c709a0c3bc35101ff7",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\student-login\\mobile\\login.png",
-      "capturedAt": "2026-05-23T22:36:34.178Z"
+      "capturedAt": "2026-05-24T12:08:20.809Z"
     },
     "parents/create-parent-account/tablet/login": {
       "sha256": "1cee0edf70624ffbce8fb4157c2ca0c9edabcb61d5d6041247e106441fdf109f",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\create-parent-account\\tablet\\login.png",
-      "capturedAt": "2026-05-23T22:36:34.184Z"
+      "capturedAt": "2026-05-24T12:08:20.833Z"
     },
     "parents/welcome-and-overview/tablet/overview": {
       "sha256": "ebf700713b13f3a6d6677c9345224d3c50e543404e0d0200923ea42b2d3ff3ab",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\welcome-and-overview\\tablet\\overview.png",
-      "capturedAt": "2026-05-23T22:38:35.731Z"
+      "capturedAt": "2026-05-24T12:08:25.508Z"
     },
     "students/student-login/tablet/login": {
       "sha256": "5d72eb1a7afdcc1f24dd51ae97f332bd5954f140ae6b798057c11c077692ead2",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\student-login\\tablet\\login.png",
-      "capturedAt": "2026-05-23T22:39:20.333Z"
+      "capturedAt": "2026-05-24T12:08:25.510Z"
     },
     "parents/mobile-and-offline/desktop/offline-hub": {
       "sha256": "d29bc704d4e61b9339c007925bb9a31df793819b8c056995f712df6970dba740",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\mobile-and-offline\\desktop\\offline-hub.png",
-      "capturedAt": "2026-05-23T22:40:24.113Z"
+      "capturedAt": "2026-05-24T12:08:25.523Z"
     },
     "parents/welcome-and-overview/desktop/overview": {
-      "sha256": "308b9a0aff45028fdd5d8bf384c1e359093d8fc0433d24fbb8d5c7247fa2b88f",
+      "sha256": "802ce8ad83c2c4ac59640dfc0230cb79c9c54ab581d24925cadb4872f96b5c4d",
       "batch": "A",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\welcome-and-overview\\desktop\\overview.png",
-      "capturedAt": "2026-05-23T22:40:25.518Z"
+      "capturedAt": "2026-05-24T12:08:25.525Z"
     },
     "parents/add-students/mobile/form": {
       "sha256": "d7c8e89e504efd229f43b4677f18b865a69618b143ba91acf5dc4d16c927b055",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\add-students\\mobile\\form.png",
-      "capturedAt": "2026-05-23T22:41:44.870Z"
+      "capturedAt": "2026-05-24T11:49:25.355Z"
     },
     "parents/edit-or-delete-student/mobile/edit": {
       "sha256": "19be41521ef1fc4c67d98584e1b4f038531c61c7f0b31d8ec4e172e88290b2c9",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\edit-or-delete-student\\mobile\\edit.png",
-      "capturedAt": "2026-05-23T22:41:44.871Z"
+      "capturedAt": "2026-05-24T11:49:25.355Z"
     },
     "parents/how-to-read-report/mobile/report-link": {
       "sha256": "b466a119ee579c965e05b96ef6d5dd6ded8590fbfdf18c4cf2f624ae7d62eed6",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\how-to-read-report\\mobile\\report-link.png",
-      "capturedAt": "2026-05-23T22:41:44.872Z"
+      "capturedAt": "2026-05-24T11:49:25.356Z"
     },
     "parents/monthly-rewards/mobile/rewards": {
       "sha256": "6ccf3378f15eb2e526ac3eeb302b7e1eb3851b271066b3afe8b6071ec2887f00",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\monthly-rewards\\mobile\\rewards.png",
-      "capturedAt": "2026-05-23T23:53:42.452Z"
+      "capturedAt": "2026-05-24T11:49:25.357Z"
     },
     "parents/parent-dashboard-tour/mobile/dashboard": {
       "sha256": "d6484e8e7d4bda269eb8ec9aed1508cd49b99e2b97031d5cb3f7602ae1625238",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-dashboard-tour\\mobile\\dashboard.png",
-      "capturedAt": "2026-05-23T23:53:42.451Z"
+      "capturedAt": "2026-05-24T11:49:25.356Z"
     },
     "parents/student-pin-and-credentials/mobile/pin-display": {
       "sha256": "823bbec96b52b4e17bc3bb5d994b6b2458431959b45ea5c01f0c4ac5f4d9d19a",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\student-pin-and-credentials\\mobile\\pin-display.png",
-      "capturedAt": "2026-05-23T23:53:42.452Z"
+      "capturedAt": "2026-05-24T11:49:25.356Z"
     },
     "parent-report/report-overview/mobile/short-report": {
       "sha256": "25422f47c33d0043e8b1f5983d6f0d9e1a501a013eed4b1218964e634af6749b",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\report-overview\\mobile\\short-report.png",
-      "capturedAt": "2026-05-23T22:43:15.083Z"
+      "capturedAt": "2026-05-24T12:22:22.338Z"
     },
     "parent-report/strengths-and-improvements/mobile/strengths": {
       "sha256": "c1f5b04fe33bf6d511a51df312ea8b6a5379be536589a3b88de5d4c7acf0089a",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\strengths-and-improvements\\mobile\\strengths.png",
-      "capturedAt": "2026-05-23T22:43:15.084Z"
+      "capturedAt": "2026-05-24T11:49:45.947Z"
     },
     "parent-report/subjects-overview/mobile/six-subjects": {
       "sha256": "9f4177f5b0ff1baef7fdf5e5e23d8c0c0a9f03cda8f6cdf7db194c4b9007e3cb",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\subjects-overview\\mobile\\six-subjects.png",
-      "capturedAt": "2026-05-23T22:43:15.085Z"
+      "capturedAt": "2026-05-24T11:49:45.947Z"
     },
     "parent-report/summary-card/mobile/summary": {
       "sha256": "99c8f91000f3846a1909dac1197082ee515e6d4e8770d3fe0117a8e0204293b6",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\summary-card\\mobile\\summary.png",
-      "capturedAt": "2026-05-24T04:47:51.993Z"
+      "capturedAt": "2026-05-24T12:12:18.779Z"
     },
     "parent-report/topics-and-buckets/mobile/topics-table": {
       "sha256": "b1de4a1853c5ea9eda62eb8e76dbc11dfc6cbac266d24a8fd3941f7ef3cd4f37",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\topics-and-buckets\\mobile\\topics-table.png",
-      "capturedAt": "2026-05-24T04:47:51.994Z"
+      "capturedAt": "2026-05-24T12:12:18.780Z"
     },
     "parent-report/understanding-the-disclaimer/mobile/disclaimer": {
       "sha256": "53b0d56d89077ee9728b2812741c6343ad9ca66abf2bc3525b563af4dc9aa493",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\understanding-the-disclaimer\\mobile\\disclaimer.png",
-      "capturedAt": "2026-05-23T22:43:15.857Z"
+      "capturedAt": "2026-05-24T11:49:46.443Z"
     },
     "parents/add-students/tablet/form": {
       "sha256": "e92d60dc09002eed869127bae2f464071ba3057e21cc90d425e99fd4ebd0d426",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\add-students\\tablet\\form.png",
-      "capturedAt": "2026-05-23T22:43:16.089Z"
+      "capturedAt": "2026-05-24T11:51:50.921Z"
     },
     "parents/edit-or-delete-student/tablet/edit": {
       "sha256": "420764505e63cd335fc2da11b6e0953850218ae1765011a3b1241328bc8a0ee7",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\edit-or-delete-student\\tablet\\edit.png",
-      "capturedAt": "2026-05-23T22:43:16.090Z"
+      "capturedAt": "2026-05-24T11:51:50.922Z"
     },
     "parents/how-to-read-report/tablet/report-link": {
       "sha256": "7fc88618e56121214b195222d1dd5f1a8577bfa3815d7b62f3643688c6504cbe",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\how-to-read-report\\tablet\\report-link.png",
-      "capturedAt": "2026-05-23T22:43:16.091Z"
+      "capturedAt": "2026-05-24T11:51:50.923Z"
     },
     "parents/monthly-rewards/tablet/rewards": {
       "sha256": "1569a5394d67be5efb68718c5fce072c12b57e09b8bb8e7c0a130d08622d9853",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\monthly-rewards\\tablet\\rewards.png",
-      "capturedAt": "2026-05-23T23:53:42.460Z"
+      "capturedAt": "2026-05-24T11:51:50.928Z"
     },
     "parents/parent-dashboard-tour/tablet/dashboard": {
       "sha256": "f07908e8902b7ab74c72cb73b38eeae9f7d1e9b88e37ee7d38e0a29caf7e65b4",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-dashboard-tour\\tablet\\dashboard.png",
-      "capturedAt": "2026-05-23T23:53:42.458Z"
+      "capturedAt": "2026-05-24T11:51:50.926Z"
     },
     "parents/student-pin-and-credentials/tablet/pin-display": {
       "sha256": "7676514a8ebd5b93225db233ee224475a26be56fa6f5380bdaf2cfb9d47fd6fd",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\student-pin-and-credentials\\tablet\\pin-display.png",
-      "capturedAt": "2026-05-23T23:53:42.458Z"
+      "capturedAt": "2026-05-24T11:51:50.927Z"
     },
     "parent-report/recommendations/tablet/recommendations": {
       "sha256": "a74674ade6d2d8ff1396c39c56de7020f646322bc607fed20351bac0d29515fe",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\recommendations\\tablet\\recommendations.png",
-      "capturedAt": "2026-05-24T04:50:05.441Z"
+      "capturedAt": "2026-05-24T12:22:41.160Z"
     },
     "parent-report/report-overview/tablet/short-report": {
       "sha256": "4c1522a1f35d43ee787d8ec17b08ad55d856e734777092fdc36fbd633c589797",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\report-overview\\tablet\\short-report.png",
-      "capturedAt": "2026-05-23T22:43:16.102Z"
+      "capturedAt": "2026-05-24T12:22:41.161Z"
     },
     "parent-report/strengths-and-improvements/tablet/strengths": {
       "sha256": "d7bc87a03e0ae41720d9257e133e8c3fa5593ae52860724b3198a8217b65a4c4",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\strengths-and-improvements\\tablet\\strengths.png",
-      "capturedAt": "2026-05-23T22:43:16.104Z"
+      "capturedAt": "2026-05-24T11:52:04.683Z"
     },
     "parent-report/subjects-overview/tablet/six-subjects": {
       "sha256": "ce952ad68ca5d8081a92e2b4cbe379ce4f03880b7835f5aa5df63b1964654df8",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\subjects-overview\\tablet\\six-subjects.png",
-      "capturedAt": "2026-05-23T22:43:16.105Z"
+      "capturedAt": "2026-05-24T11:52:04.684Z"
     },
     "parent-report/summary-card/tablet/summary": {
       "sha256": "56737fb19b08b61e8813c588fc4394af59066f647a77af70ab5f36fa7bf06e13",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\summary-card\\tablet\\summary.png",
-      "capturedAt": "2026-05-24T04:51:05.446Z"
+      "capturedAt": "2026-05-24T12:14:25.366Z"
     },
     "parent-report/understanding-the-disclaimer/tablet/disclaimer": {
       "sha256": "988e892d01f3115de47201b190d606528e18b00c124145182ee69cfdc9b7ee0d",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\understanding-the-disclaimer\\tablet\\disclaimer.png",
-      "capturedAt": "2026-05-23T22:43:16.110Z"
+      "capturedAt": "2026-05-24T11:53:04.692Z"
     },
     "parents/add-students/desktop/form": {
       "sha256": "cd285257a5ff575a825a31b0eb38d2469ea4088956ce4d47c8f29252714f40d7",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\add-students\\desktop\\form.png",
-      "capturedAt": "2026-05-23T22:43:22.688Z"
+      "capturedAt": "2026-05-24T11:55:08.357Z"
     },
     "parents/edit-or-delete-student/desktop/edit": {
       "sha256": "a145090a2585a281fca6c7b279fa9f6a02ef78b1ac0e9aad3ab9cb0e1b9b88ce",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\edit-or-delete-student\\desktop\\edit.png",
-      "capturedAt": "2026-05-23T22:43:23.127Z"
+      "capturedAt": "2026-05-24T11:55:08.358Z"
     },
     "parents/how-to-read-report/desktop/report-link": {
       "sha256": "8fcb46e4cdfc9141944a21b3d283b05c7c5cebbc63a509b1e7a03e231969c781",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\how-to-read-report\\desktop\\report-link.png",
-      "capturedAt": "2026-05-23T22:43:23.572Z"
+      "capturedAt": "2026-05-24T11:55:08.359Z"
     },
     "parent-report/recommendations/desktop/recommendations": {
       "sha256": "5710f797f558c7c7fff458f8d7be3c335211e50c8dea3cdaf044eabca7f0d761",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\recommendations\\desktop\\recommendations.png",
-      "capturedAt": "2026-05-24T04:53:17.012Z"
+      "capturedAt": "2026-05-24T12:22:55.908Z"
     },
     "parent-report/report-overview/desktop/short-report": {
-      "sha256": "50b92463021b6c98aecbd59653b61d64ee2b9025e9f04f0a0c5a44637b403ad8",
+      "sha256": "207571bbcc698fc78ca923e96d9c834f9be69181f23ad35d696619e106569506",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\report-overview\\desktop\\short-report.png",
-      "capturedAt": "2026-05-23T22:47:39.875Z"
+      "capturedAt": "2026-05-24T12:22:56.389Z"
     },
     "parent-report/strengths-and-improvements/desktop/strengths": {
       "sha256": "e4abd5bd1d732e99584415c0414b9f3280b23430a344513b785847e4a0e2d2d8",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\strengths-and-improvements\\desktop\\strengths.png",
-      "capturedAt": "2026-05-23T22:47:40.345Z"
+      "capturedAt": "2026-05-24T11:56:21.867Z"
     },
     "parent-report/subjects-overview/desktop/six-subjects": {
       "sha256": "0efd9149ffca511d96fc88a8380334eda1fd1b016b8a49c0f8be8d93681b7f00",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\subjects-overview\\desktop\\six-subjects.png",
-      "capturedAt": "2026-05-23T22:47:40.783Z"
+      "capturedAt": "2026-05-24T11:56:21.868Z"
     },
     "parent-report/topics-and-buckets/desktop/topics-table": {
       "sha256": "5fd0ae0b68541315a5e5ff94f4252b6456c0bca31b4cf16ba45bd25e596cd036",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\topics-and-buckets\\desktop\\topics-table.png",
-      "capturedAt": "2026-05-24T04:54:17.443Z"
+      "capturedAt": "2026-05-24T12:18:00.235Z"
     },
     "parent-report/trends-and-confidence/desktop/trend": {
       "sha256": "6d327de5ce03810f7e309631c48b77b6b9b58010e827225adff95bbc5237d6a4",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\trends-and-confidence\\desktop\\trend.png",
-      "capturedAt": "2026-05-24T04:54:17.443Z"
+      "capturedAt": "2026-05-24T11:57:21.878Z"
     },
     "parent-report/understanding-the-disclaimer/desktop/disclaimer": {
       "sha256": "3ac7cdf3bab763bea9fa1f867d8bc67b652370ed35889035f1501cb1bb283582",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\understanding-the-disclaimer\\desktop\\disclaimer.png",
-      "capturedAt": "2026-05-23T22:47:43.062Z"
+      "capturedAt": "2026-05-24T11:57:21.879Z"
     },
     "students/choose-subject-and-grade/mobile/subjects": {
       "sha256": "e985834f8ea13e89dfb2b1fa91af876a2dda66850076496aa58085e5d667acd8",
       "batch": "C",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\choose-subject-and-grade\\mobile\\subjects.png",
-      "capturedAt": "2026-05-23T22:51:15.806Z"
+      "capturedAt": "2026-05-24T12:00:01.514Z"
     },
     "students/student-home-tour/mobile/home": {
       "sha256": "eb663ed0e9a4db28b26e2c351f24bb991244820389b5db6c8313d9525127da36",
       "batch": "C",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\student-home-tour\\mobile\\home.png",
-      "capturedAt": "2026-05-23T22:53:18.706Z"
+      "capturedAt": "2026-05-24T12:02:09.717Z"
     },
     "students/choose-subject-and-grade/tablet/subjects": {
       "sha256": "1713113682876757ee9f1c761ae205ccea5b6057f0aacd8f047c0907a471dced",
       "batch": "C",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\choose-subject-and-grade\\tablet\\subjects.png",
-      "capturedAt": "2026-05-23T22:56:34.812Z"
+      "capturedAt": "2026-05-24T12:05:00.365Z"
     },
     "students/student-home-tour/tablet/home": {
       "sha256": "f970fc3cd287db245d6a037ce70d6fe3ad2f6ce10be49f345d822528fc1c9f61",
       "batch": "C",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\student-home-tour\\tablet\\home.png",
-      "capturedAt": "2026-05-23T22:59:43.011Z"
+      "capturedAt": "2026-05-24T12:07:16.458Z"
     },
     "students/coins-and-arcade/desktop/arcade": {
       "sha256": "b1c02f9fa76d2d22cac9cdd0284ecfd406b0b7673cc3b2bc8ec2a33e8e024402",
       "batch": "C",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\coins-and-arcade\\desktop\\arcade.png",
-      "capturedAt": "2026-05-23T23:02:53.554Z"
+      "capturedAt": "2026-05-24T12:07:34.729Z"
     },
     "students/student-home-tour/desktop/home": {
       "sha256": "76e8dda278cb9c1106bfd64ba49c261c8771e4a22ae586631d01db689b712a05",
       "batch": "C",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\student-home-tour\\desktop\\home.png",
-      "capturedAt": "2026-05-23T23:04:58.864Z"
+      "capturedAt": "2026-05-24T12:08:09.002Z"
     },
     "parents/parent-dashboard-tour/desktop/dashboard": {
       "sha256": "198e5a42bad7175840459c47b61b3c020ce68c072872f6dc74c77c7279031b88",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-dashboard-tour\\desktop\\dashboard.png",
-      "capturedAt": "2026-05-23T23:53:42.466Z"
+      "capturedAt": "2026-05-24T11:55:08.362Z"
     },
     "parents/student-pin-and-credentials/desktop/pin-display": {
       "sha256": "0a884beed30f2a41083a7ef1be8f65b5f9ae91d07043cc39aa2f681692b1086c",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\student-pin-and-credentials\\desktop\\pin-display.png",
-      "capturedAt": "2026-05-23T23:53:42.467Z"
+      "capturedAt": "2026-05-24T11:55:08.364Z"
     },
     "parents/monthly-rewards/desktop/rewards": {
       "sha256": "43f83f688ef2485d131e73dbc283400a75dfe50bb7de35ffd1db987efda9fe5a",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\monthly-rewards\\desktop\\rewards.png",
-      "capturedAt": "2026-05-23T23:53:51.977Z"
+      "capturedAt": "2026-05-24T11:55:08.365Z"
     },
     "parents/parent-copilot/desktop/copilot-panel": {
       "sha256": "e2cda83f2c5cab9e0cf74f188b40a178cf853465e597ad04051d6d96fb942e0d",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-copilot\\desktop\\copilot-panel.png",
-      "capturedAt": "2026-05-24T04:52:08.247Z"
+      "capturedAt": "2026-05-24T11:55:08.366Z"
     },
     "parent-report/challenges-section/desktop/challenges": {
       "sha256": "bb4cb1801c2c2721660ba0e821a01f602b3cfe6398410013f18b3bcdd75139ae",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\challenges-section\\desktop\\challenges.png",
-      "capturedAt": "2026-05-24T04:52:08.248Z"
+      "capturedAt": "2026-05-24T11:55:08.367Z"
     },
     "parent-report/data-presence/desktop/low-data": {
       "sha256": "9f83be5a9489de8988c7b1a7c9a70d840ec4b802732e0b6986500fe273ba8863",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\data-presence\\desktop\\low-data.png",
-      "capturedAt": "2026-05-24T04:52:08.248Z"
+      "capturedAt": "2026-05-24T11:55:08.368Z"
     },
     "parents/parent-copilot/tablet/copilot-panel": {
       "sha256": "2128c2b5a65ca68b69022b5c71889b429d5733b68bfc596a86782a8b3eefe660",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-copilot\\tablet\\copilot-panel.png",
-      "capturedAt": "2026-05-24T04:48:55.894Z"
+      "capturedAt": "2026-05-24T11:51:50.929Z"
     },
     "subjects/english/mobile/question": {
       "sha256": "f372bf0b9736416ec294179abf2dc7f046b03842eecf77506579bf7ae6781a5d",
@@ -449,37 +449,37 @@
       "sha256": "ebf20cf0a69bdffb1e30f64082efa634e3ea6ec03208ce5c77de62606e3f6fc9",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\parent-copilot\\mobile\\copilot-panel.png",
-      "capturedAt": "2026-05-24T04:45:50.487Z"
+      "capturedAt": "2026-05-24T11:49:25.358Z"
     },
     "parent-report/challenges-section/mobile/challenges": {
       "sha256": "b3ff06ca8c7019c67d7eec33ac58e697a30cae5ae62632e816bd09e85fe097f1",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\challenges-section\\mobile\\challenges.png",
-      "capturedAt": "2026-05-24T04:45:50.930Z"
+      "capturedAt": "2026-05-24T11:49:25.358Z"
     },
     "parent-report/data-presence/mobile/low-data": {
       "sha256": "52cbc5397e9d7641bbc908bb0cbcf20b824da0b8517412a968c91c133aa18e10",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\data-presence\\mobile\\low-data.png",
-      "capturedAt": "2026-05-24T04:45:51.381Z"
+      "capturedAt": "2026-05-24T11:49:25.359Z"
     },
     "parent-report/challenges-section/tablet/challenges": {
       "sha256": "daa32f9f09262843948ad58e3c66e768835fa57d1cb17418536a664c90e83823",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\challenges-section\\tablet\\challenges.png",
-      "capturedAt": "2026-05-24T04:49:04.925Z"
+      "capturedAt": "2026-05-24T11:51:50.930Z"
     },
     "parent-report/data-presence/tablet/low-data": {
       "sha256": "1af87bb3c2c50ad2afaf44f838af0724b84d72b59794578267bf29e6a3bcc66e",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\data-presence\\tablet\\low-data.png",
-      "capturedAt": "2026-05-24T04:49:05.393Z"
+      "capturedAt": "2026-05-24T11:51:50.930Z"
     },
     "parent-report/trends-and-confidence/tablet/trend": {
       "sha256": "c8fafe14df5f5d3ff588c299372ba5a887024a3208f2dfaf3c1fd97536501771",
       "batch": "B",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\trends-and-confidence\\tablet\\trend.png",
-      "capturedAt": "2026-05-24T04:51:06.956Z"
+      "capturedAt": "2026-05-24T11:53:04.691Z"
     },
     "subjects/english/mobile/explanation": {
       "sha256": "96aafe835f8c3e6ec941c0bcff6df4a8c848c506b52a287ceaddc245dee4fea6",
@@ -588,6 +588,228 @@
       "batch": "D",
       "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\subjects\\science\\desktop\\explanation.png",
       "capturedAt": "2026-05-24T05:28:58.490Z"
+    },
+    "parent-report/trends-and-confidence/mobile/trend": {
+      "sha256": "1dbb766a171b9a0f06b91fc840856007327ab1f4d69d37b5d71b075e5392a0ca",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\trends-and-confidence\\mobile\\trend.png",
+      "capturedAt": "2026-05-24T11:49:46.442Z"
+    },
+    "parent-report/report-overview/tablet/detailed-report": {
+      "sha256": "48e73f6c70a03f915deace6a903f07ea663fbd72ff6d1aa2cc2cae6e82b1ccf0",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\report-overview\\tablet\\detailed-report.png",
+      "capturedAt": "2026-05-24T12:31:37.495Z"
+    },
+    "parent-report/report-overview/desktop/detailed-report": {
+      "sha256": "eee0099acc57c8b6aeb6897b3ad8bd788e9190d346b2fb84181307741d1bb017",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\report-overview\\desktop\\detailed-report.png",
+      "capturedAt": "2026-05-24T12:31:37.529Z"
+    },
+    "students/avatar-and-profile/mobile/avatar": {
+      "sha256": "3af7297721de561bc0dbc1e18e9978771eeb373c1cfaf021b832284b01f83776",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\avatar-and-profile\\mobile\\avatar.png",
+      "capturedAt": "2026-05-24T12:20:29.164Z"
+    },
+    "students/coins-and-arcade/mobile/arcade": {
+      "sha256": "02240701d169b5d38ee28456691996d185d060a4032cb4af3677ce28c951a48f",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\coins-and-arcade\\mobile\\arcade.png",
+      "capturedAt": "2026-05-24T12:00:06.893Z"
+    },
+    "students/coins-and-arcade/tablet/arcade": {
+      "sha256": "c7562c80af793dac22b6b2d9a446a649e501f092fb0dddeb13b6f826f82f6f50",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\coins-and-arcade\\tablet\\arcade.png",
+      "capturedAt": "2026-05-24T12:05:09.431Z"
+    },
+    "students/avatar-and-profile/desktop/avatar": {
+      "sha256": "d4d0747c6c8b9eb0c06aa06d7be9beb17d0c3ff9e82b0e6ce786e63fc18b96e8",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\avatar-and-profile\\desktop\\avatar.png",
+      "capturedAt": "2026-05-24T12:21:01.928Z"
+    },
+    "students/choose-subject-and-grade/desktop/subjects": {
+      "sha256": "e1dfa8401d6f507389bab504f53eab9e0530a0fe103aeffde2329235fad79c51",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\choose-subject-and-grade\\desktop\\subjects.png",
+      "capturedAt": "2026-05-24T12:07:34.726Z"
+    },
+    "students/daily-missions/desktop/missions": {
+      "sha256": "8bd6a2bb9a4a23f6c8b12ea6af5b7add448fd2d525904be8e609672400c2bd62",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\daily-missions\\desktop\\missions.png",
+      "capturedAt": "2026-05-24T12:21:01.930Z"
+    },
+    "students/monthly-persistence/desktop/persistence": {
+      "sha256": "4ae4287532e2f0c0c79a8421d75c18fb0d6d1ba84e70e254de6a9955c61729ac",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\monthly-persistence\\desktop\\persistence.png",
+      "capturedAt": "2026-05-24T12:21:01.932Z"
+    },
+    "students/offline-games/desktop/offline": {
+      "sha256": "89c9efaa3e21048d207a06d65f3386cf290fe1e6881309edec3c8f6b2789096a",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\offline-games\\desktop\\offline.png",
+      "capturedAt": "2026-05-24T12:21:01.933Z"
+    },
+    "parents/welcome-and-overview/mobile/overview": {
+      "sha256": "340f65e1740fe6c4deca5dfc23ec2aa59bdae14c48358ad68de7cd48c7abc0a7",
+      "batch": "A",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\welcome-and-overview\\mobile\\overview.png",
+      "capturedAt": "2026-05-24T12:08:20.808Z"
+    },
+    "parents/mobile-and-offline/tablet/offline-hub": {
+      "sha256": "3be155d385552c591770dbf59cf02fc88765c34a55e33ab39aaabdf503d01a6c",
+      "batch": "A",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\mobile-and-offline\\tablet\\offline-hub.png",
+      "capturedAt": "2026-05-24T12:08:25.506Z"
+    },
+    "parents/create-parent-account/desktop/login": {
+      "sha256": "c88150e3d5f13f0ce6747078ac3b57b9149e786e9f438bb254ea6d4c1983e899",
+      "batch": "A",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\create-parent-account\\desktop\\login.png",
+      "capturedAt": "2026-05-24T12:08:25.519Z"
+    },
+    "parents/install-as-app/desktop/install-prompt": {
+      "sha256": "8af1c1171d5a9593f9944154c5231f24635a939f1fe30e68df143d418f34da22",
+      "batch": "A",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\install-as-app\\desktop\\install-prompt.png",
+      "capturedAt": "2026-05-24T12:10:51.629Z"
+    },
+    "students/student-login/desktop/login": {
+      "sha256": "209b8b530abe93583b84fe842fc683605b2d990af9240af44d1f0f942f490f32",
+      "batch": "A",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\student-login\\desktop\\login.png",
+      "capturedAt": "2026-05-24T12:08:25.526Z"
+    },
+    "parents/install-as-app/tablet/install-prompt": {
+      "sha256": "f9c032b36e932ae88c681d02d2d4b8d733ef189d4afd9ec26b5a82dd5628487d",
+      "batch": "A",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parents\\install-as-app\\tablet\\install-prompt.png",
+      "capturedAt": "2026-05-24T12:10:51.621Z"
+    },
+    "parent-report/topics-and-buckets/tablet/topics-table": {
+      "sha256": "032b50819421840006ca6b397148687ab596e8d0cc319a57e39622b44e67a264",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\topics-and-buckets\\tablet\\topics-table.png",
+      "capturedAt": "2026-05-24T12:15:40.027Z"
+    },
+    "parent-report/summary-card/desktop/summary": {
+      "sha256": "a4bb9856c6d20a9276a49564cca8d79c67e09abde28894256aca0ab8820cbed0",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\summary-card\\desktop\\summary.png",
+      "capturedAt": "2026-05-24T12:18:00.232Z"
+    },
+    "students/answering-questions/mobile/question": {
+      "sha256": "cd2e50100fb7e5621358ded438ca0d5088af970613dbc7476c99618c61d96d95",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\answering-questions\\mobile\\question.png",
+      "capturedAt": "2026-05-24T12:20:29.162Z"
+    },
+    "students/daily-missions/mobile/missions": {
+      "sha256": "dbac0cd6f115de9bb371fccb1653179619644f9ca3c9eda1bb4342f6d030b58f",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\daily-missions\\mobile\\missions.png",
+      "capturedAt": "2026-05-24T12:20:35.123Z"
+    },
+    "students/monthly-persistence/mobile/persistence": {
+      "sha256": "f40f1aab09c5340d177a83fff737f3b82ac1687e74c9e7f3c8e139035b61dfec",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\monthly-persistence\\mobile\\persistence.png",
+      "capturedAt": "2026-05-24T12:20:35.926Z"
+    },
+    "students/offline-games/mobile/offline": {
+      "sha256": "188ea41795005b15c54195f3468ded9004d61ce4b87815f6221adab81cb047b9",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\offline-games\\mobile\\offline.png",
+      "capturedAt": "2026-05-24T12:20:38.369Z"
+    },
+    "students/answering-questions/tablet/question": {
+      "sha256": "02e6af09e017c2df760b770bf8e67c1123f8c4f65d85d8b2a930fce4337b4ebf",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\answering-questions\\tablet\\question.png",
+      "capturedAt": "2026-05-24T12:20:44.420Z"
+    },
+    "students/avatar-and-profile/tablet/avatar": {
+      "sha256": "ffee3ff852bb977c8dc243171700fc3a90c6b801fb3ab2d4896227f3e1828494",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\avatar-and-profile\\tablet\\avatar.png",
+      "capturedAt": "2026-05-24T12:20:51.248Z"
+    },
+    "students/daily-missions/tablet/missions": {
+      "sha256": "31a223f6f550644798472eb32f51e82bbdcf8a4857aafc3d433b5af3dfc19889",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\daily-missions\\tablet\\missions.png",
+      "capturedAt": "2026-05-24T12:20:51.998Z"
+    },
+    "students/monthly-persistence/tablet/persistence": {
+      "sha256": "2d27355c1030fc8008209328b91ee634f18776ddd38a20436eddc66fab553f1d",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\monthly-persistence\\tablet\\persistence.png",
+      "capturedAt": "2026-05-24T12:20:52.778Z"
+    },
+    "students/offline-games/tablet/offline": {
+      "sha256": "4251eff6267fd2a6e59068e51af5b44bdf01bc85635fafd1ddb880551c13339c",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\offline-games\\tablet\\offline.png",
+      "capturedAt": "2026-05-24T12:20:55.571Z"
+    },
+    "students/answering-questions/desktop/question": {
+      "sha256": "01cb41b4871371677bbf9d81948fa869dade29cd5886beeaa74cf1cc50bb607e",
+      "batch": "C",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\students\\answering-questions\\desktop\\question.png",
+      "capturedAt": "2026-05-24T12:21:01.926Z"
+    },
+    "parent-report/printing-and-pdf/mobile/pdf": {
+      "sha256": "9e2b7682f317d21c9d25f94ebac77e90e73a2991b7c03612ce3117fbb55a67cf",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\printing-and-pdf\\mobile\\pdf.png",
+      "capturedAt": "2026-05-24T12:21:21.710Z"
+    },
+    "parent-report/recommendations/mobile/recommendations": {
+      "sha256": "77fb8455b0222f4ab955046faf7d63ec8c19bf494e7934be1638e1643302b6d5",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\recommendations\\mobile\\recommendations.png",
+      "capturedAt": "2026-05-24T12:21:22.334Z"
+    },
+    "parent-report/detailed-report/mobile/letter": {
+      "sha256": "4f2fd951e65d3f414ebe2eb57d332b6f36fe3782c0e28388f8d3ee5e7b18adfd",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\detailed-report\\mobile\\letter.png",
+      "capturedAt": "2026-05-24T12:22:30.200Z"
+    },
+    "parent-report/printing-and-pdf/tablet/pdf": {
+      "sha256": "7f0e27858c1d6269a5cd7d6e4ce73b638d3e9adf2ce0376417b5aef81150cc16",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\printing-and-pdf\\tablet\\pdf.png",
+      "capturedAt": "2026-05-24T12:22:41.159Z"
+    },
+    "parent-report/detailed-report/tablet/letter": {
+      "sha256": "3166bb3ea554f0934d671eca3889a53d329377d94888db48cc42adf7ef6bc5f5",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\detailed-report\\tablet\\letter.png",
+      "capturedAt": "2026-05-24T12:22:47.217Z"
+    },
+    "parent-report/printing-and-pdf/desktop/pdf": {
+      "sha256": "dc1459e6cc966d2f2fcdeff73ce648cfa5e260045a42b7fa2829b0a98263f8b6",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\printing-and-pdf\\desktop\\pdf.png",
+      "capturedAt": "2026-05-24T12:22:55.908Z"
+    },
+    "parent-report/detailed-report/desktop/letter": {
+      "sha256": "384e2b9c6d96589d4eddeddc5e00e2e977b24dbe96e8aa56906715239f09406c",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\detailed-report\\desktop\\letter.png",
+      "capturedAt": "2026-05-24T12:23:02.580Z"
+    },
+    "parent-report/report-overview/mobile/detailed-report": {
+      "sha256": "ed7722d528628de467687e8099d4539607ed2adde69793b7d6e3e49a91758d01",
+      "batch": "B",
+      "filePath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\qa-evidence-audit\\help-center\\parent-report\\report-overview\\mobile\\detailed-report.png",
+      "capturedAt": "2026-05-24T12:31:37.446Z"
     }
   }
 }

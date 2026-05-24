@@ -309,20 +309,13 @@ async function captureElementShot(page, target, viewport, outPath, captureState,
         : Math.min(box.height, 12_000);
   const shotHeight = Math.min(box.height, maxHeight);
 
+  const clipRect = { x: box.x, y: box.y, width: box.width, height: shotHeight };
   if (useClip) {
-    try {
-      await page.screenshot({
-        path: outPath,
-        animations: "disabled",
-        clip: { x: box.x, y: box.y, width: box.width, height: shotHeight },
-      });
-    } catch {
-      await locator.screenshot({
-        path: outPath,
-        animations: "disabled",
-        clip: { x: 0, y: 0, width: Math.max(40, box.width), height: shotHeight },
-      });
-    }
+    await page.screenshot({
+      path: outPath,
+      animations: "disabled",
+      clip: clipRect,
+    });
   } else {
     await locator.screenshot({ path: outPath, animations: "disabled" });
   }
@@ -560,8 +553,10 @@ async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
 
       if (navKey !== currentNavKey) {
         try {
+          const waitUntil =
+            jobTarget.path === "/offline" ? "commit" : "domcontentloaded";
           await page.goto(new URL(jobTarget.path, baseUrl).toString(), {
-            waitUntil: "domcontentloaded",
+            waitUntil,
             timeout: 90_000,
           });
           assertNotErrorPage(page);

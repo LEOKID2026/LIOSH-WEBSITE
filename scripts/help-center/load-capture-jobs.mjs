@@ -67,7 +67,7 @@ export function routeForJob(job) {
       "student-login": { path: "/student/login", auth: "none" },
       "student-home-tour": { path: "/student/home", auth: "student" },
       "choose-subject-and-grade": { path: "/learning", auth: "student" },
-      "answering-questions": { path: "/learning/math-master", auth: "student" },
+      "answering-questions": { path: "/learning/hebrew-master", auth: "student" },
       "daily-missions": { path: "/student/home", auth: "student" },
       "monthly-persistence": { path: "/student/home", auth: "student" },
       "coins-and-arcade": { path: "/student/arcade", auth: "student" },

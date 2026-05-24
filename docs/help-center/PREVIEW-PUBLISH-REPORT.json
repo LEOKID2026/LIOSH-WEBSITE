@@ -1,19 +1,29 @@
 {
   "mode": "preview",
-  "publishedAt": "2026-05-24T05:29:04.841Z",
+  "publishedAt": "2026-05-24T12:31:38.702Z",
   "requiredCount": 135,
-  "copiedCount": 94,
-  "skippedCount": 41,
+  "copiedCount": 128,
+  "skippedCount": 7,
   "copied": [
     "help-center/screenshots/parent-report/challenges-section/desktop/challenges.png",
     "help-center/screenshots/parent-report/challenges-section/tablet/challenges.png",
     "help-center/screenshots/parent-report/data-presence/desktop/low-data.png",
     "help-center/screenshots/parent-report/data-presence/mobile/low-data.png",
     "help-center/screenshots/parent-report/data-presence/tablet/low-data.png",
+    "help-center/screenshots/parent-report/detailed-report/desktop/letter.png",
+    "help-center/screenshots/parent-report/detailed-report/mobile/letter.png",
+    "help-center/screenshots/parent-report/detailed-report/tablet/letter.png",
+    "help-center/screenshots/parent-report/printing-and-pdf/desktop/pdf.png",
+    "help-center/screenshots/parent-report/printing-and-pdf/mobile/pdf.png",
+    "help-center/screenshots/parent-report/printing-and-pdf/tablet/pdf.png",
     "help-center/screenshots/parent-report/recommendations/desktop/recommendations.png",
+    "help-center/screenshots/parent-report/recommendations/mobile/recommendations.png",
     "help-center/screenshots/parent-report/recommendations/tablet/recommendations.png",
+    "help-center/screenshots/parent-report/report-overview/desktop/detailed-report.png",
     "help-center/screenshots/parent-report/report-overview/desktop/short-report.png",
+    "help-center/screenshots/parent-report/report-overview/mobile/detailed-report.png",
     "help-center/screenshots/parent-report/report-overview/mobile/short-report.png",
+    "help-center/screenshots/parent-report/report-overview/tablet/detailed-report.png",
     "help-center/screenshots/parent-report/report-overview/tablet/short-report.png",
     "help-center/screenshots/parent-report/strengths-and-improvements/desktop/strengths.png",
     "help-center/screenshots/parent-report/strengths-and-improvements/mobile/strengths.png",
@@ -21,11 +31,14 @@
     "help-center/screenshots/parent-report/subjects-overview/desktop/six-subjects.png",
     "help-center/screenshots/parent-report/subjects-overview/mobile/six-subjects.png",
     "help-center/screenshots/parent-report/subjects-overview/tablet/six-subjects.png",
+    "help-center/screenshots/parent-report/summary-card/desktop/summary.png",
     "help-center/screenshots/parent-report/summary-card/mobile/summary.png",
     "help-center/screenshots/parent-report/summary-card/tablet/summary.png",
     "help-center/screenshots/parent-report/topics-and-buckets/desktop/topics-table.png",
     "help-center/screenshots/parent-report/topics-and-buckets/mobile/topics-table.png",
+    "help-center/screenshots/parent-report/topics-and-buckets/tablet/topics-table.png",
     "help-center/screenshots/parent-report/trends-and-confidence/desktop/trend.png",
+    "help-center/screenshots/parent-report/trends-and-confidence/mobile/trend.png",
     "help-center/screenshots/parent-report/trends-and-confidence/tablet/trend.png",
     "help-center/screenshots/parent-report/understanding-the-disclaimer/desktop/disclaimer.png",
     "help-center/screenshots/parent-report/understanding-the-disclaimer/mobile/disclaimer.png",
@@ -44,8 +57,10 @@
     "help-center/screenshots/parents/how-to-read-report/tablet/report-link.png",
     "help-center/screenshots/parents/install-as-app/desktop/install-prompt.png",
     "help-center/screenshots/parents/install-as-app/mobile/install-prompt.png",
+    "help-center/screenshots/parents/install-as-app/tablet/install-prompt.png",
     "help-center/screenshots/parents/mobile-and-offline/desktop/offline-hub.png",
     "help-center/screenshots/parents/mobile-and-offline/mobile/offline-hub.png",
+    "help-center/screenshots/parents/mobile-and-offline/tablet/offline-hub.png",
     "help-center/screenshots/parents/monthly-rewards/desktop/rewards.png",
     "help-center/screenshots/parents/monthly-rewards/mobile/rewards.png",
     "help-center/screenshots/parents/monthly-rewards/tablet/rewards.png",
@@ -59,10 +74,29 @@
     "help-center/screenshots/parents/student-pin-and-credentials/mobile/pin-display.png",
     "help-center/screenshots/parents/student-pin-and-credentials/tablet/pin-display.png",
     "help-center/screenshots/parents/welcome-and-overview/desktop/overview.png",
+    "help-center/screenshots/parents/welcome-and-overview/mobile/overview.png",
     "help-center/screenshots/parents/welcome-and-overview/tablet/overview.png",
+    "help-center/screenshots/students/answering-questions/desktop/question.png",
+    "help-center/screenshots/students/answering-questions/mobile/question.png",
+    "help-center/screenshots/students/answering-questions/tablet/question.png",
+    "help-center/screenshots/students/avatar-and-profile/desktop/avatar.png",
+    "help-center/screenshots/students/avatar-and-profile/mobile/avatar.png",
+    "help-center/screenshots/students/avatar-and-profile/tablet/avatar.png",
+    "help-center/screenshots/students/choose-subject-and-grade/desktop/subjects.png",
     "help-center/screenshots/students/choose-subject-and-grade/mobile/subjects.png",
     "help-center/screenshots/students/choose-subject-and-grade/tablet/subjects.png",
     "help-center/screenshots/students/coins-and-arcade/desktop/arcade.png",
+    "help-center/screenshots/students/coins-and-arcade/mobile/arcade.png",
+    "help-center/screenshots/students/coins-and-arcade/tablet/arcade.png",
+    "help-center/screenshots/students/daily-missions/desktop/missions.png",
+    "help-center/screenshots/students/daily-missions/mobile/missions.png",
+    "help-center/screenshots/students/daily-missions/tablet/missions.png",
+    "help-center/screenshots/students/monthly-persistence/desktop/persistence.png",
+    "help-center/screenshots/students/monthly-persistence/mobile/persistence.png",
+    "help-center/screenshots/students/monthly-persistence/tablet/persistence.png",
+    "help-center/screenshots/students/offline-games/desktop/offline.png",
+    "help-center/screenshots/students/offline-games/mobile/offline.png",
+    "help-center/screenshots/students/offline-games/tablet/offline.png",
     "help-center/screenshots/students/student-home-tour/desktop/home.png",
     "help-center/screenshots/students/student-home-tour/mobile/home.png",
     "help-center/screenshots/students/student-home-tour/tablet/home.png",
@@ -104,142 +138,6 @@
     {
       "rel": "help-center/screenshots/parent-report/challenges-section/mobile/challenges.png",
       "reason": "below min bytes (6804 < 8000)"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/detailed-report/desktop/letter.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/detailed-report/mobile/letter.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/detailed-report/tablet/letter.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/printing-and-pdf/desktop/pdf.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/printing-and-pdf/mobile/pdf.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/printing-and-pdf/tablet/pdf.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/recommendations/mobile/recommendations.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/desktop/detailed-report.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/mobile/detailed-report.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/report-overview/tablet/detailed-report.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/summary-card/desktop/summary.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/topics-and-buckets/tablet/topics-table.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parent-report/trends-and-confidence/mobile/trend.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/install-as-app/tablet/install-prompt.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/mobile-and-offline/tablet/offline-hub.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/parents/welcome-and-overview/mobile/overview.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/answering-questions/desktop/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/answering-questions/mobile/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/answering-questions/tablet/question.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/avatar-and-profile/desktop/avatar.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/avatar-and-profile/mobile/avatar.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/avatar-and-profile/tablet/avatar.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/choose-subject-and-grade/desktop/subjects.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/coins-and-arcade/mobile/arcade.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/coins-and-arcade/tablet/arcade.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/daily-missions/desktop/missions.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/daily-missions/mobile/missions.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/daily-missions/tablet/missions.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/monthly-persistence/desktop/persistence.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/monthly-persistence/mobile/persistence.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/monthly-persistence/tablet/persistence.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/offline-games/desktop/offline.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/offline-games/mobile/offline.png",
-      "reason": "missing raw file"
-    },
-    {
-      "rel": "help-center/screenshots/students/offline-games/tablet/offline.png",
-      "reason": "missing raw file"
     },
     {
       "rel": "help-center/screenshots/subjects/geometry/desktop/question.png",
