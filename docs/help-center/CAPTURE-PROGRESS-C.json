@@ -1,0 +1,84 @@
+{
+  "batch": "C",
+  "ok": 6,
+  "skipped": [
+    {
+      "job": "students/offline-games/tablet/offline",
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/offline\nCall log:\n  - navigating to \"http://127.0.0.1:3001/offline\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+      "job": "students/choose-subject-and-grade/desktop/subjects",
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/learning\nCall log:\n  - navigating to \"http://127.0.0.1:3001/learning\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+      "job": "students/offline-games/desktop/offline",
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/offline\nCall log:\n  - navigating to \"http://127.0.0.1:3001/offline\", waiting until \"domcontentloaded\"\n"
+    }
+  ],
+  "rejected": [
+    {
+      "job": "students/answering-questions/mobile/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/avatar-and-profile/mobile/avatar",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator(':text-matches(\\'אווטאר|אווטר|פרופיל\\')').first().locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/coins-and-arcade/mobile/arcade",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('main, h1').first()\n    - waiting for\" http://127.0.0.1:3001/student/arcade\" navigation to finish...\n    - navigated to \"http://127.0.0.1:3001/student/arcade\"\n"
+    },
+    {
+      "job": "students/daily-missions/mobile/missions",
+      "reason": "page.screenshot: Clipped area is either empty or outside the resulting image\nCall log:\n  - taking page screenshot\n    - disabled all CSS animations\n  - waiting for fonts to load...\n  - fonts loaded\n"
+    },
+    {
+      "job": "students/monthly-persistence/mobile/persistence",
+      "reason": "quality gate: tiny dimensions 332x47"
+    },
+    {
+      "job": "students/offline-games/mobile/offline",
+      "reason": "duplicate content hash (same as parents/mobile-and-offline/mobile/offline-hub)"
+    },
+    {
+      "job": "students/answering-questions/tablet/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/avatar-and-profile/tablet/avatar",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator(':text-matches(\\'אווטאר|אווטר|פרופיל\\')').first().locator('..').locator('..')\n    - waiting for\" http://127.0.0.1:3001/student/home\" navigation to finish...\n    - navigated to \"http://127.0.0.1:3001/student/home\"\n"
+    },
+    {
+      "job": "students/coins-and-arcade/tablet/arcade",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('main, h1').first()\n"
+    },
+    {
+      "job": "students/daily-missions/tablet/missions",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('#daily-missions-heading').first().locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/monthly-persistence/tablet/persistence",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('#monthly-persistence-heading').first().locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/answering-questions/desktop/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/avatar-and-profile/desktop/avatar",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator(':text-matches(\\'אווטאר|אווטר|פרופיל\\')').first().locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/daily-missions/desktop/missions",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('#daily-missions-heading').first().locator('..').locator('..')\n"
+    },
+    {
+      "job": "students/monthly-persistence/desktop/persistence",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('#monthly-persistence-heading').first().locator('..').locator('..')\n"
+    }
+  ],
+  "startedAt": "2026-05-23T22:47:58.352Z",
+  "expectedJobs": 24,
+  "rawCount": 57,
+  "endedAt": "2026-05-23T23:04:58.963Z"
+}

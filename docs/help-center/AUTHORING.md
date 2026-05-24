@@ -18,6 +18,16 @@
 3. עדכון `screenshots-manifest.json` אם נוספו מסגרות
 4. `npm run help:publish-screenshots` ואז `npm run help:verify`
 
+### תצוגה מקדימה בפיתוח (חלקי)
+
+כשעדיין אין 135/135:
+
+1. `npm run help:publish-screenshots:preview` — מעתיק ל־`public/` רק קבצים שעברו בדיקת איכות ב־`qa-evidence-audit/`
+2. ודאו `NEXT_PUBLIC_HELP_CENTER_ALLOW_MISSING_SCREENSHOTS=1` ב־`.env.development` (מציג "תמונת מסך תתווסף בקרוב" לחסרים)
+3. `npm run dev` וגלישה ל־`/help/...`
+
+דוח: `docs/help-center/PREVIEW-PUBLISH-REPORT.json`
+
 ## סרטונים (עתידי)
 
 קבצים ב־`public/help-center/videos/` + כתוביות `.he.vtt`. מומלץ עד 120 שניות ו־25MB.

@@ -104,3 +104,41 @@ export function routeForJob(job) {
 
   return { path: "/", auth: "none" };
 }
+
+/** @param {"A"|"B"|"C"|"D"|string} batch */
+export function filterJobsForBatch(jobs, batch) {
+  const b = String(batch || "")
+    .trim()
+    .toUpperCase();
+  if (!["A", "B", "C", "D"].includes(b)) {
+    throw new Error(`Unknown batch "${batch}" — use A, B, C, or D`);
+  }
+  return jobs.filter((job) => {
+    const route = routeForJob(job);
+    if (b === "A") return route.auth === "none";
+    if (b === "B") return route.auth === "parent";
+    if (b === "C") return route.auth === "student" && job.section === "students";
+    if (b === "D") return route.auth === "student" && job.section === "subjects";
+    return false;
+  });
+}
+
+/** Parse progress-report job id: section/slug/viewport/region */
+export function parseJobId(id) {
+  const parts = String(id).split("/");
+  if (parts.length !== 4) return null;
+  return {
+    section: parts[0],
+    slug: parts[1],
+    viewport: parts[2],
+    region: parts[3],
+  };
+}
+
+export function jobMatchesParsed(job, parsed) {
+  return (
+    job.section === parsed.section &&
+    job.slug === parsed.slug &&
+    job.region === parsed.region
+  );
+}

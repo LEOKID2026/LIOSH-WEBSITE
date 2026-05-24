@@ -1,0 +1,92 @@
+{
+  "batch": "B",
+  "ok": 19,
+  "skipped": [
+    {
+      "job": "parents/parent-copilot/mobile/copilot-panel",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/challenges-section/mobile/challenges",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/data-presence/mobile/low-data",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/printing-and-pdf/mobile/pdf",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/recommendations/mobile/recommendations",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/report-overview/mobile/detailed-report",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/trends-and-confidence/mobile/trend",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/detailed-report/mobile/letter",
+      "reason": "parent report detailed requires studentId"
+    },
+    {
+      "job": "parents/parent-copilot/tablet/copilot-panel",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/challenges-section/tablet/challenges",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/data-presence/tablet/low-data",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/printing-and-pdf/tablet/pdf",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/report-overview/tablet/detailed-report",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/topics-and-buckets/tablet/topics-table",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/trends-and-confidence/tablet/trend",
+      "reason": "parent report requires studentId"
+    },
+    {
+      "job": "parent-report/detailed-report/tablet/letter",
+      "reason": "parent report detailed requires studentId"
+    },
+    {
+      "job": "parent-report/detailed-report/desktop/letter",
+      "reason": "navigation/auth: locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('.pr-detailed-subject-letter').first() to be visible\n"
+    }
+  ],
+  "rejected": [
+    {
+      "job": "parent-report/printing-and-pdf/desktop/pdf",
+      "reason": "quality gate: below min bytes (2830 < 4000); tiny dimensions 241x49"
+    },
+    {
+      "job": "parent-report/report-overview/desktop/detailed-report",
+      "reason": "quality gate: below min bytes (1865 < 4000); tiny dimensions 148x38"
+    },
+    {
+      "job": "parent-report/summary-card/desktop/summary",
+      "reason": "quality gate: below min bytes (3901 < 4000)"
+    }
+  ],
+  "startedAt": "2026-05-23T23:53:42.446Z",
+  "expectedJobs": 39,
+  "rawCount": 58,
+  "endedAt": "2026-05-23T23:55:21.571Z"
+}

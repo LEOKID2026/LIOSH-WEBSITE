@@ -1,0 +1,36 @@
+{
+  "batch": "A",
+  "ok": 9,
+  "skipped": [
+    {
+      "job": "parents/install-as-app/desktop/install-prompt",
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/\nCall log:\n  - navigating to \"http://127.0.0.1:3001/\", waiting until \"domcontentloaded\"\n"
+    }
+  ],
+  "rejected": [
+    {
+      "job": "parents/welcome-and-overview/mobile/overview",
+      "reason": "duplicate content hash (same as parents/install-as-app/mobile/install-prompt)"
+    },
+    {
+      "job": "parents/install-as-app/tablet/install-prompt",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('main, body').first() to be visible\n    122 × locator resolved to hidden <body>…</body>\n"
+    },
+    {
+      "job": "parents/mobile-and-offline/tablet/offline-hub",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('main, h1').first() to be visible\n    122 × locator resolved to hidden <main class=\"min-h-[calc(100vh-56px)]\">…</main>\n"
+    },
+    {
+      "job": "parents/create-parent-account/desktop/login",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('form:has([type=\\'password\\']), main').first() to be visible\n    122 × locator resolved to hidden <main class=\"min-h-[calc(100vh-56px)]\">…</main>\n"
+    },
+    {
+      "job": "students/student-login/desktop/login",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('main').first() to be visible\n    122 × locator resolved to hidden <main class=\"min-h-[calc(100vh-56px)]\">…</main>\n"
+    }
+  ],
+  "startedAt": "2026-05-23T22:36:29.344Z",
+  "expectedJobs": 15,
+  "rawCount": 33,
+  "endedAt": "2026-05-23T22:41:26.572Z"
+}

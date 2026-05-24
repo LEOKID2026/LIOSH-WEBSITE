@@ -1,0 +1,155 @@
+{
+  "batch": "D",
+  "ok": 0,
+  "skipped": [],
+  "rejected": [
+    {
+      "job": "subjects/english/mobile/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/english/mobile/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/geometry/mobile/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/geometry/mobile/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/hebrew/mobile/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/hebrew/mobile/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/math/mobile/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/math/mobile/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/moledet-geography/mobile/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/moledet-geography/mobile/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/science/mobile/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/science/mobile/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/english/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/english/tablet/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/geometry/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/geometry/tablet/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/hebrew/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/hebrew/tablet/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/math/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/math/tablet/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/moledet-geography/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/moledet-geography/tablet/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/science/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/science/tablet/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/english/desktop/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/english/desktop/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/geometry/desktop/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/geometry/desktop/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/hebrew/desktop/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/hebrew/desktop/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/math/desktop/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/math/desktop/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/moledet-geography/desktop/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/moledet-geography/desktop/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    },
+    {
+      "job": "subjects/science/desktop/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/science/desktop/question",
+      "reason": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..')\n"
+    }
+  ],
+  "startedAt": "2026-05-23T23:05:10.256Z",
+  "expectedJobs": 36,
+  "rawCount": 57,
+  "endedAt": "2026-05-23T23:52:47.183Z"
+}

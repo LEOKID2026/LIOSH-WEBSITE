@@ -1,6 +1,22 @@
 {
-  "ok": 31,
+  "ok": 48,
   "skipped": [
+    {
+      "job": "parents/parent-copilot/mobile/copilot-panel",
+      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+    },
+    {
+      "job": "parent-report/challenges-section/mobile/challenges",
+      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+    },
+    {
+      "job": "parent-report/data-presence/mobile/low-data",
+      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+    },
+    {
+      "job": "parent-report/detailed-report/mobile/letter",
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent\nCall log:\n  - navigating to \"http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent\", waiting until \"domcontentloaded\"\n"
+    },
     {
       "job": "students/answering-questions/mobile/question",
       "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
@@ -82,26 +98,174 @@
       "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
     },
     {
+      "job": "parents/mobile-and-offline/tablet/offline-hub",
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/offline\nCall log:\n  - navigating to \"http://127.0.0.1:3001/offline\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+      "job": "parents/parent-copilot/tablet/copilot-panel",
+      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+    },
+    {
+      "job": "parent-report/challenges-section/tablet/challenges",
+      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+    },
+    {
+      "job": "parent-report/data-presence/tablet/low-data",
+      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+    },
+    {
       "job": "parent-report/detailed-report/tablet/letter",
-      "reason": "navigation/auth: locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('.pr-detailed-subject-letter, [class*=\\'pr-detailed\\']').first() to be visible\n"
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent\nCall log:\n  - navigating to \"http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent\", waiting until \"domcontentloaded\"\n"
     },
     {
-      "job": "parent-report/printing-and-pdf/tablet/pdf",
-      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+      "job": "students/answering-questions/tablet/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
     },
     {
-      "job": "parent-report/recommendations/tablet/recommendations",
-      "reason": "navigation/auth: locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /דוח להורים/u }).first() to be visible\n"
+      "job": "students/avatar-and-profile/tablet/avatar",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/choose-subject-and-grade/tablet/subjects",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/coins-and-arcade/tablet/arcade",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/daily-missions/tablet/missions",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/monthly-persistence/tablet/persistence",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/offline-games/tablet/offline",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/student-home-tour/tablet/home",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/english/tablet/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/english/tablet/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/geometry/tablet/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/geometry/tablet/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "parents/parent-copilot/desktop/copilot-panel",
+      "reason": "navigation/auth: page.goto: net::ERR_ABORTED at http://127.0.0.1:3001/learning/parent-report?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent\nCall log:\n  - navigating to \"http://127.0.0.1:3001/learning/parent-report?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+      "job": "students/answering-questions/desktop/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/avatar-and-profile/desktop/avatar",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/choose-subject-and-grade/desktop/subjects",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/coins-and-arcade/desktop/arcade",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/daily-missions/desktop/missions",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/monthly-persistence/desktop/persistence",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/offline-games/desktop/offline",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "students/student-home-tour/desktop/home",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/english/desktop/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/english/desktop/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/geometry/desktop/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/geometry/desktop/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/hebrew/desktop/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/hebrew/desktop/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/math/desktop/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/math/desktop/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/moledet-geography/desktop/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/moledet-geography/desktop/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/science/desktop/explanation",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
+    },
+    {
+      "job": "subjects/science/desktop/question",
+      "reason": "navigation/auth: Demo student session ok but child name \"ישראל\" not visible on student home"
     }
   ],
   "rejected": [
     {
-      "job": "parents/parent-dashboard-tour/mobile/dashboard",
-      "reason": "quality gate: height 8452 exceeds cap 1400; aspect ratio 23.61 too tall for mobile"
+      "job": "parents/mobile-and-offline/mobile/offline-hub",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('main, h1').first() to be visible\n"
     },
     {
-      "job": "parent-report/detailed-report/mobile/letter",
-      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('.pr-detailed-subject-letter').first() to be visible\n"
+      "job": "parents/welcome-and-overview/mobile/overview",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('main, #__next').first() to be visible\n"
+    },
+    {
+      "job": "students/student-login/mobile/login",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('main').first() to be visible\n"
+    },
+    {
+      "job": "parents/parent-dashboard-tour/mobile/dashboard",
+      "reason": "quality gate: height 8452 exceeds cap 1400; aspect ratio 23.61 too tall for mobile"
     },
     {
       "job": "parent-report/printing-and-pdf/mobile/pdf",
@@ -120,26 +284,76 @@
       "reason": "page.screenshot: Clipped area is either empty or outside the resulting image\nCall log:\n  - taking page screenshot\n    - disabled all CSS animations\n  - waiting for fonts to load...\n  - fonts loaded\n"
     },
     {
-      "job": "parents/parent-dashboard-tour/tablet/dashboard",
-      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('section:has(h2:has-text(\\'הילדים שלי\\'))').first() to be visible\n"
+      "job": "parents/install-as-app/tablet/install-prompt",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('main, body').first() to be visible\n    180 × locator resolved to hidden <body>…</body>\n"
     },
     {
-      "job": "parents/student-pin-and-credentials/tablet/pin-display",
-      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator(':text-matches(\\'פרטי כניסת תלמיד|PIN\\')').first().locator('..').locator('..') to be visible\n"
+      "job": "students/student-login/tablet/login",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('main').first() to be visible\n    181 × locator resolved to hidden <main class=\"min-h-[calc(100vh-56px)]\">…</main>\n"
+    },
+    {
+      "job": "parent-report/printing-and-pdf/tablet/pdf",
+      "reason": "quality gate: below min bytes (2768 < 4000); tiny dimensions 241x49"
     },
     {
       "job": "parent-report/report-overview/tablet/detailed-report",
-      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('a:has-text(\\'דוח מקיף לתקופה\\')').first() to be visible\n"
+      "reason": "quality gate: below min bytes (1905 < 4000); tiny dimensions 148x38"
     },
     {
-      "job": "parent-report/report-overview/tablet/short-report",
-      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('h1:has-text(\\'דוח להורים\\')').first().locator('..').locator('..') to be visible\n"
+      "job": "parent-report/trends-and-confidence/tablet/trend",
+      "reason": "page.screenshot: Clipped area is either empty or outside the resulting image\nCall log:\n  - taking page screenshot\n    - disabled all CSS animations\n  - waiting for fonts to load...\n  - fonts loaded\n"
+    },
+    {
+      "job": "subjects/hebrew/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/hebrew/tablet/question",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..') to be visible\n"
+    },
+    {
+      "job": "subjects/math/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/math/tablet/question",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..') to be visible\n"
+    },
+    {
+      "job": "subjects/moledet-geography/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/moledet-geography/tablet/question",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..') to be visible\n"
+    },
+    {
+      "job": "subjects/science/tablet/explanation",
+      "reason": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /הסבר מלא/u }).first() to be visible\n"
+    },
+    {
+      "job": "subjects/science/tablet/question",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('button:has-text(\"בדוק\")').first().locator('..').locator('..').locator('..').locator('..').locator('..') to be visible\n"
+    },
+    {
+      "job": "parents/monthly-rewards/desktop/rewards",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('main, h1, h2').first() to be visible\n    181 × locator resolved to hidden <main class=\"min-h-[calc(100vh-56px)]\">…</main>\n"
+    },
+    {
+      "job": "parent-report/detailed-report/desktop/letter",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('.pr-detailed-subject-letter').first() to be visible\n"
+    },
+    {
+      "job": "parent-report/printing-and-pdf/desktop/pdf",
+      "reason": "quality gate: below min bytes (2740 < 4000); tiny dimensions 241x49"
+    },
+    {
+      "job": "parent-report/report-overview/desktop/detailed-report",
+      "reason": "quality gate: below min bytes (1891 < 4000); tiny dimensions 148x38"
     }
   ],
-  "startedAt": "2026-05-23T21:54:55.170Z",
-  "stalled": true,
-  "rawCount": 31,
+  "startedAt": "2026-05-23T22:12:54.918Z",
+  "rawCount": 53,
   "expectedJobs": 135,
-  "message": "No new raw screenshots for 10 minutes — capture stopped",
-  "endedAt": "2026-05-23T22:12:00.630Z"
+  "endedAt": "2026-05-23T22:56:14.019Z"
 }

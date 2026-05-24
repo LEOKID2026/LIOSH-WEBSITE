@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * Help Center screenshot capture — element/section shots only (no URL-level reuse).
- * Demo student ADMIN / PIN 1234 · child ישראל ישראלי only.
+ * Help Center staged screenshot capture — element shots only, batches A–D.
  */
 import {
   mkdirSync,
@@ -11,6 +10,7 @@ import {
   readdirSync,
   statSync,
   rmSync,
+  readFileSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,7 +18,13 @@ import { chromium } from "playwright";
 import { resolveBaseUrl } from "../virtual-student-qa/lib/config.mjs";
 import { authenticateStudent } from "../virtual-student-qa/lib/student-auth.mjs";
 import { authenticateParent } from "../virtual-student-qa/lib/parent-auth.mjs";
-import { loadScreenshotJobs, routeForJob } from "./load-capture-jobs.mjs";
+import {
+  loadScreenshotJobs,
+  routeForJob,
+  filterJobsForBatch,
+  parseJobId,
+  jobMatchesParsed,
+} from "./load-capture-jobs.mjs";
 import {
   ensureParentPolicyAccepted,
   getParentAccessToken,
@@ -30,10 +36,18 @@ import {
   MAX_MOBILE_ELEMENT_HEIGHT,
   MAX_TABLET_ELEMENT_HEIGHT,
 } from "./capture-quality.mjs";
+import {
+  jobKey,
+  loadCaptureState,
+  saveCaptureState,
+  checkDuplicateHash,
+  recordCapture,
+} from "./capture-state.mjs";
 
 const DEMO_STUDENT = { label: "help-center-demo", username: "ADMIN", pin: "1234", code: "" };
 const EXPECTED_CHILD_NAME = "ישראל ישראלי";
 const STALL_MS = 10 * 60 * 1000;
+const SELECTOR_TIMEOUT_MS = 60_000;
 const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
   { name: "tablet", width: 820, height: 1180 },
@@ -63,15 +77,15 @@ function auditPath(section, slug, viewport, region) {
   );
 }
 
+function manifestPath() {
+  return join(repoRoot(), "data", "help-center", "screenshots-manifest.json");
+}
+
 function assertAllowedBaseUrl(baseUrl) {
   const u = new URL(baseUrl);
   const host = u.hostname.toLowerCase();
-  const isLocal = host === "localhost" || host === "127.0.0.1";
-  const isVercelPreview = host.endsWith(".vercel.app");
-  if (!isLocal && !isVercelPreview) {
-    throw new Error(
-      `Refusing capture: base URL must be localhost, 127.0.0.1, or *.vercel.app preview. Got: ${baseUrl}`
-    );
+  if (host !== "localhost" && host !== "127.0.0.1" && !host.endsWith(".vercel.app")) {
+    throw new Error(`Refusing capture: disallowed base URL ${baseUrl}`);
   }
 }
 
@@ -95,22 +109,39 @@ async function devHealthGate(baseUrl, log) {
       }
       if (attempt < 5) await new Promise((r) => setTimeout(r, 2000));
     }
-    if (!ok) {
-      failures.push({ path, error: lastErr });
-      log(`health FAIL ${path} → ${lastErr}`);
-    }
+    if (!ok) failures.push({ path, error: lastErr });
   }
   if (failures.length) {
-    const msg = failures.map((f) => `${f.path}:${f.status || f.error}`).join("; ");
-    throw new Error(`Dev server health gate failed — capture aborted (${msg})`);
+    throw new Error(
+      `Dev server health gate failed — ${failures.map((f) => `${f.path}:${f.error}`).join("; ")}`
+    );
   }
+}
+
+async function verifyDemoStudentLoginPayload(baseUrl) {
+  const res = await fetch(new URL("/api/student/login", baseUrl).toString(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: DEMO_STUDENT.username, pin: DEMO_STUDENT.pin }),
+    signal: AbortSignal.timeout(20_000),
+  });
+  if (res.status !== 200) {
+    throw new Error(`/api/student/login returned ${res.status}`);
+  }
+  const json = await res.json().catch(() => ({}));
+  const name = String(json?.student?.full_name || json?.full_name || "");
+  if (!name.includes("ישראל")) {
+    throw new Error(
+      `Demo student login ok but full_name missing "ישראל" (got: ${name || "(empty)"})`
+    );
+  }
+  return json;
 }
 
 async function findStudentIdOnParentDashboard(page, timeoutMs = 30_000) {
   const link = page.locator(`a[href*="parent-report"][href*="studentId"]`).first();
   await link.waitFor({ state: "visible", timeout: timeoutMs });
   const href = await link.getAttribute("href");
-  if (!href) throw new Error("report link missing href on parent dashboard");
   const u = new URL(href, page.url());
   const id = u.searchParams.get("studentId");
   if (!id) throw new Error("studentId not found in report link");
@@ -119,123 +150,69 @@ async function findStudentIdOnParentDashboard(page, timeoutMs = 30_000) {
 
 async function resolveDemoStudentIdForCapture({ page, baseUrl, parentAccount, log }) {
   const envId = String(process.env.HELP_DEMO_STUDENT_ID || "").trim();
-  if (envId) {
-    log("demo studentId from HELP_DEMO_STUDENT_ID");
-    return envId;
-  }
+  if (envId) return envId;
   try {
     return await findStudentIdOnParentDashboard(page, 8_000);
   } catch {
-    log("dashboard report link not visible; resolving via /api/parent/list-students");
+    log("resolving demo child via /api/parent/list-students");
   }
-  const supabaseUrl = String(process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL || "").trim();
-  const anonKey = String(process.env.NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY || "").trim();
-  if (!supabaseUrl || !anonKey) {
-    throw new Error("HELP_DEMO_STUDENT_ID unset and Supabase anon env missing for parent API fallback");
-  }
-  const { createClient } = await import("@supabase/supabase-js");
-  const node = createClient(supabaseUrl, anonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const { data, error } = await node.auth.signInWithPassword({
-    email: parentAccount.email,
-    password: parentAccount.password,
-  });
-  if (error || !data?.session?.access_token) {
-    throw new Error(`parent API fallback sign-in failed: ${error?.message || "no session"}`);
-  }
+  const token = await getParentAccessToken(parentAccount);
   const res = await fetch(new URL("/api/parent/list-students", baseUrl).toString(), {
-    headers: { Authorization: `Bearer ${data.session.access_token}` },
+    headers: { Authorization: `Bearer ${token}` },
   });
   const json = await res.json().catch(() => ({}));
   if (!res.ok || !json?.ok) {
-    throw new Error(`list-students failed (${res.status}): ${json?.error || "unknown"}`);
+    throw new Error(`list-students failed (${res.status})`);
   }
   const students = Array.isArray(json.students) ? json.students : [];
   const match =
     students.find((s) => s?.full_name === EXPECTED_CHILD_NAME) ||
     students.find((s) => String(s?.full_name || "").includes("ישראל"));
-  if (!match?.id) {
-    throw new Error(
-      `demo child "${EXPECTED_CHILD_NAME}" not found under parent account (${students.length} students)`
-    );
-  }
-  log(`demo studentId via API: ${match.id}`);
+  if (!match?.id) throw new Error(`demo child not found (${students.length} students)`);
+  log(`demo studentId: ${match.id}`);
   return match.id;
 }
 
-async function assertStudentLoginApiHealthy(baseUrl) {
-  const res = await fetch(new URL("/api/student/login", baseUrl).toString(), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: DEMO_STUDENT.username, pin: DEMO_STUDENT.pin }),
-    signal: AbortSignal.timeout(20_000),
-  });
-  if (res.status !== 200) {
-    throw new Error(
-      `/api/student/login returned ${res.status} — dev server unhealthy; stopping student captures`
-    );
-  }
-}
-
-async function ensureStudentSession(page, context, baseUrl, log) {
-  const studentAuthMode =
+async function ensureStudentSession(context, baseUrl, log) {
+  await verifyDemoStudentLoginPayload(baseUrl);
+  const mode =
     String(process.env.HELP_CAPTURE_STUDENT_AUTH || "api").toLowerCase() === "ui" ? "ui" : "api";
-
-  if (studentAuthMode === "ui") {
-    const loginRes = await fetch(new URL("/student/login", baseUrl).toString());
-    if (loginRes.status !== 200) {
-      throw new Error(
-        `/student/login returned ${loginRes.status} — dev server unhealthy; stopping (no API fallback on bad server)`
-      );
-    }
-  } else {
-    await assertStudentLoginApiHealthy(baseUrl);
-  }
-
+  const page = await context.newPage();
   await authenticateStudent({
     context,
     page,
     account: DEMO_STUDENT,
     baseUrl,
-    mode: studentAuthMode,
+    mode,
     log,
   });
-
-  await page.goto(new URL("/student/home", baseUrl).toString(), {
-    waitUntil: "domcontentloaded",
-    timeout: 60_000,
-  });
-  const bodyText = await page.locator("body").innerText();
-  if (!bodyText.includes("ישראל")) {
-    throw new Error(`Demo student session ok but child name "ישראל" not visible on student home`);
-  }
+  await page.close();
 }
 
 async function ensureParentSession(page, context, baseUrl, log) {
   const parent = selectHelpParentAccount();
   const token = await getParentAccessToken(parent);
   await ensureParentPolicyAccepted(baseUrl, token, log);
-
   const parentAuthMode =
     String(process.env.HELP_CAPTURE_PARENT_AUTH || "token").toLowerCase() === "ui"
       ? "ui"
       : "token";
-  await authenticateParent({
-    context,
-    page,
-    account: parent,
-    baseUrl,
-    mode: parentAuthMode,
-    log,
-  });
+  await authenticateParent({ context, page, account: parent, baseUrl, mode: parentAuthMode, log });
   await page.waitForURL((url) => url.pathname.includes("/parent/dashboard"), { timeout: 60_000 });
   await page
-    .locator("h2:has-text('הילדים שלי')")
+    .locator("section:has(h2:has-text('הילדים שלי'))")
     .first()
-    .waitFor({ state: "visible", timeout: 90_000 })
+    .waitFor({ state: "visible", timeout: SELECTOR_TIMEOUT_MS })
     .catch(() => {});
   return resolveDemoStudentIdForCapture({ page, baseUrl, parentAccount: parent, log });
+}
+
+function parentPathRank(path) {
+  if (path === "/parent/dashboard") return 0;
+  if (path === "/parent/rewards") return 1;
+  if (path === "__PARENT_REPORT__") return 2;
+  if (path === "__PARENT_REPORT_DETAILED__") return 3;
+  return 4;
 }
 
 function sortJobsForCapture(jobs) {
@@ -251,16 +228,16 @@ function sortJobsForCapture(jobs) {
     if (d !== 0) return d;
     const sd = (sectionRank[a.section] ?? 9) - (sectionRank[b.section] ?? 9);
     if (sd !== 0) return sd;
-    const ka = `${a.slug}/${a.region}`;
-    const kb = `${b.slug}/${b.region}`;
-    return ka.localeCompare(kb, "he");
+    const pr =
+      parentPathRank(routeForJob(a).path) - parentPathRank(routeForJob(b).path);
+    if (pr !== 0) return pr;
+    return `${a.slug}/${a.region}`.localeCompare(`${b.slug}/${b.region}`, "he");
   });
 }
 
 function resolveLocator(page, target) {
   let loc = page.locator(target.selector).first();
-  const levels = target.ancestorLevels || 0;
-  for (let i = 0; i < levels; i++) {
+  for (let i = 0; i < (target.ancestorLevels || 0); i++) {
     loc = loc.locator("xpath=..");
   }
   return loc;
@@ -272,10 +249,22 @@ async function waitForLoadingGone(page, selectors) {
   }
 }
 
-async function captureElementShot(page, target, viewport, outPath) {
+function assertNotErrorPage(page) {
+  const path = new URL(page.url()).pathname;
+  if (path.includes("/login") && !path.includes("/student/login") && !path.includes("/parent/login")) {
+    throw new Error(`unexpected login redirect: ${path}`);
+  }
+  if (path.includes("/error")) throw new Error(`landed on error page: ${path}`);
+}
+
+async function captureElementShot(page, target, viewport, outPath, captureState, stateKey, batch) {
   if (target.prepare) await target.prepare(page);
   const locator = resolveLocator(page, target);
-  await locator.waitFor({ state: "visible", timeout: 90_000 });
+  await locator.waitFor({ state: "attached", timeout: SELECTOR_TIMEOUT_MS });
+  const visible = await locator.isVisible().catch(() => false);
+  if (!visible) {
+    throw new Error("target selector attached but not visible");
+  }
 
   const text = (await locator.innerText().catch(() => "")).trim();
   if ((target.minTextLength || 0) > 0 && text.length < target.minTextLength) {
@@ -297,6 +286,7 @@ async function captureElementShot(page, target, viewport, outPath) {
   mkdirSync(dirname(outPath), { recursive: true });
   if (existsSync(outPath)) unlinkSync(outPath);
 
+  const useClip = viewport.name === "mobile" || viewport.name === "tablet";
   const maxHeight =
     viewport.name === "mobile"
       ? MAX_MOBILE_ELEMENT_HEIGHT
@@ -304,7 +294,8 @@ async function captureElementShot(page, target, viewport, outPath) {
         ? MAX_TABLET_ELEMENT_HEIGHT
         : Math.min(box.height, 12_000);
   const shotHeight = Math.min(box.height, maxHeight);
-  if (shotHeight < box.height) {
+
+  if (useClip) {
     await page.screenshot({
       path: outPath,
       animations: "disabled",
@@ -319,6 +310,14 @@ async function captureElementShot(page, target, viewport, outPath) {
     unlinkSync(outPath);
     throw new Error(`quality gate: ${quality.reasons.join("; ")}`);
   }
+
+  const dup = checkDuplicateHash(captureState, stateKey, quality.sha256);
+  if (dup) {
+    unlinkSync(outPath);
+    throw new Error(`duplicate content hash (same as ${dup})`);
+  }
+
+  recordCapture(captureState, stateKey, { sha256: quality.sha256, batch, filePath: outPath });
   return quality;
 }
 
@@ -330,73 +329,141 @@ function countRawPngs() {
     for (const ent of readdirSync(dir, { withFileTypes: true })) {
       const p = join(dir, ent.name);
       if (ent.isDirectory()) {
-        if (ent.name === "_cache") continue;
+        if (ent.name.startsWith("_")) continue;
         walk(p);
-      } else if (ent.name.endsWith(".png")) {
-        n++;
-      }
+      } else if (ent.name.endsWith(".png")) n++;
     }
   }
   walk(root);
   return n;
 }
 
-function writeProgressReport(payload) {
-  const out = join(repoRoot(), "docs", "help-center", "CAPTURE-PROGRESS-REPORT.json");
+function writeBatchProgress(batch, payload) {
+  const out = join(repoRoot(), "docs", "help-center", `CAPTURE-PROGRESS-${batch}.json`);
+  mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
-  console.log(`[help-capture] progress report → ${out}`);
+  console.log(`[help-capture] batch ${batch} report → ${out}`);
 }
 
-async function main() {
-  const args = process.argv.slice(2);
-  const baseUrl = resolveBaseUrl(args.find((a) => a.startsWith("--base-url="))?.slice(11));
-  assertAllowedBaseUrl(baseUrl);
+function loadOnlyFailedJobs(batch) {
+  const path = join(repoRoot(), "docs", "help-center", `CAPTURE-PROGRESS-${batch}.json`);
+  if (!existsSync(path)) return null;
+  const doc = JSON.parse(readFileSync(path, "utf8"));
+  const ids = new Set();
+  for (const e of [...(doc.skipped || []), ...(doc.rejected || [])]) {
+    if (e.job) ids.add(e.job);
+  }
+  return ids;
+}
 
-  const log = (line) => console.log(`[help-capture] ${line}`);
+function listManifestGaps() {
+  const manifest = JSON.parse(readFileSync(manifestPath(), "utf8"));
+  const missing = [];
+  for (const rel of manifest.publicPaths || []) {
+    const parts = rel.replace(/^help-center\/screenshots\//, "").split("/");
+    const disk = join(repoRoot(), "qa-evidence-audit", "help-center", ...parts);
+    if (!existsSync(disk)) {
+      missing.push({ rel, reason: "missing raw file" });
+      continue;
+    }
+    const vp = parts[parts.length - 2];
+    const q = evaluateScreenshotFile({ filePath: disk, viewport: vp });
+    if (!q.ok) missing.push({ rel, reason: q.reasons.join("; ") });
+  }
+  return { required: manifest.publicPaths.length, missing };
+}
+
+function writeBlockerReport(missing) {
+  const out = join(repoRoot(), "docs", "help-center", "CAPTURE-BLOCKER-REPORT.json");
+  const payload = {
+    blockedAt: new Date().toISOString(),
+    requiredCount: missing.required,
+    missingCount: missing.missing.length,
+    missing: missing.missing,
+    message:
+      "Automated capture incomplete. Do not publish. Manual evidence requires separate owner approval.",
+  };
+  writeFileSync(out, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  console.log(`[help-capture] blocker report → ${out}`);
+}
+
+function parseArgs(argv) {
+  const args = argv.slice(2);
+  const batchArg = args.find((a) => a.startsWith("--batch="));
+  const batch = batchArg ? batchArg.slice(8).toUpperCase() : null;
+  if (!batch || !["A", "B", "C", "D"].includes(batch)) {
+    throw new Error("Required: --batch=A|B|C|D");
+  }
+  return {
+    batch,
+    baseUrl: resolveBaseUrl(args.find((a) => a.startsWith("--base-url="))?.slice(11)),
+    reset: args.includes("--reset"),
+    onlyFailed: args.includes("--only-failed"),
+    headed: args.includes("--headed"),
+  };
+}
+
+async function runBatch({ batch, baseUrl, reset, onlyFailed, headed }) {
+  const log = (line) => console.log(`[help-capture:${batch}] ${line}`);
+  assertAllowedBaseUrl(baseUrl);
   await devHealthGate(baseUrl, log);
 
-  const resume = args.includes("--resume");
   const auditRoot = join(repoRoot(), "qa-evidence-audit", "help-center");
-  if (!resume && existsSync(auditRoot)) {
+  if (reset && existsSync(auditRoot)) {
     rmSync(auditRoot, { recursive: true, force: true });
-    log("cleared prior raw screenshots in qa-evidence-audit/help-center");
+    log("reset: cleared qa-evidence-audit/help-center");
   }
   mkdirSync(auditRoot, { recursive: true });
-  if (resume) log("resume mode: keeping existing raw PNGs where present");
 
-  const jobs = sortJobsForCapture(loadScreenshotJobs());
-  const browser = await chromium.launch({ headless: !args.includes("--headed") });
+  let jobs = sortJobsForCapture(filterJobsForBatch(loadScreenshotJobs(), batch));
+
+  if (onlyFailed) {
+    const failedIds = loadOnlyFailedJobs(batch);
+    if (!failedIds?.size) {
+      log("no failed jobs in prior batch report — nothing to retry");
+      return { ok: 0, expected: 0, exitCode: 0 };
+    }
+    const parsedList = [...failedIds].map(parseJobId).filter(Boolean);
+    jobs = jobs.filter((job) =>
+      parsedList.some((p) => jobMatchesParsed(job, p))
+    );
+    log(`only-failed: ${jobs.length} job(s) to retry`);
+  }
+
+  const expected = jobs.length * VIEWPORTS.length;
+  if (expected === 0) {
+    log("no jobs for this batch");
+    return { ok: 0, expected: 0, exitCode: 0 };
+  }
+
+  const captureState = loadCaptureState();
+  const browser = await chromium.launch({ headless: !headed });
   const context = await browser.newContext({ locale: "he-IL" });
   const page = await context.newPage();
 
   const stats = {
+    batch,
     ok: 0,
     skipped: [],
     rejected: [],
     startedAt: new Date().toISOString(),
+    expectedJobs: expected,
   };
 
   let studentReady = false;
   let parentReady = false;
   let studentId = null;
-  let lastRawCount = countRawPngs();
   let lastProgressAt = Date.now();
   const touchProgress = () => {
     lastProgressAt = Date.now();
-    const now = countRawPngs();
-    if (now > lastRawCount) lastRawCount = now;
   };
 
   const checkStall = () => {
     if (Date.now() - lastProgressAt >= STALL_MS) {
-      writeProgressReport({
-        ...stats,
-        stalled: true,
-        rawCount: now,
-        expectedJobs: jobs.length * VIEWPORTS.length,
-        message: "No new raw screenshots for 10 minutes — capture stopped",
-        endedAt: new Date().toISOString(),
-      });
+      stats.stalled = true;
+      stats.endedAt = new Date().toISOString();
+      stats.rawCount = countRawPngs();
+      writeBatchProgress(batch, stats);
       return true;
     }
     return false;
@@ -407,27 +474,55 @@ async function main() {
     parentReady = false;
     studentId = null;
     await page.setViewportSize({ width: vp.width, height: vp.height });
-
     let currentNavKey = null;
 
     for (const job of jobs) {
       touchProgress();
       if (checkStall()) {
         await browser.close();
-        process.exit(2);
+        saveCaptureState(captureState);
+        return { ok: stats.ok, expected, exitCode: 2 };
       }
 
       const id = `${job.section}/${job.slug}/${vp.name}/${job.region}`;
       const out = auditPath(job.section, job.slug, vp.name, job.region);
+      const stateKey = jobKey({ ...job, viewport: vp.name });
 
-      if (resume && existsSync(out)) {
+      if (existsSync(out)) {
         const existing = evaluateScreenshotFile({ filePath: out, viewport: vp.name });
         if (existing.ok) {
-          stats.ok++;
-          console.log(`SKIP-EXISTING ${id} (${existing.size} bytes)`);
-          continue;
+          const dup = checkDuplicateHash(captureState, stateKey, existing.sha256);
+          if (!dup) {
+            recordCapture(captureState, stateKey, {
+              sha256: existing.sha256,
+              batch,
+              filePath: out,
+            });
+            stats.ok++;
+            console.log(`SKIP-EXISTING ${id} (${existing.size} bytes)`);
+            continue;
+          }
+          unlinkSync(out);
+        } else if (existsSync(out)) {
+          unlinkSync(out);
         }
-        unlinkSync(out);
+      }
+
+      const route = routeForJob(job);
+      try {
+        if (route.auth === "student" && !studentReady) {
+          await ensureStudentSession(context, baseUrl, log);
+          studentReady = true;
+        }
+        if (route.auth === "parent" && !parentReady) {
+          studentId = await ensureParentSession(page, context, baseUrl, log);
+          parentReady = true;
+        }
+      } catch (err) {
+        stats.skipped.push({ job: id, reason: `navigation/auth: ${err.message}` });
+        touchProgress();
+        console.warn(`SKIP ${id}: ${err.message}`);
+        continue;
       }
 
       let jobTarget;
@@ -435,6 +530,7 @@ async function main() {
         jobTarget = resolveCaptureTarget(job, studentId);
       } catch (err) {
         stats.skipped.push({ job: id, reason: err.message });
+        touchProgress();
         console.warn(`SKIP ${id}: ${err.message}`);
         continue;
       }
@@ -443,30 +539,17 @@ async function main() {
 
       if (navKey !== currentNavKey) {
         try {
-          if (jobTarget.auth === "student" && !studentReady) {
-            try {
-              await ensureStudentSession(page, context, baseUrl, log);
-              studentReady = true;
-            } catch (err) {
-              log(`student session aborted: ${err.message}`);
-              throw err;
-            }
-          }
-          if (jobTarget.auth === "parent" && !parentReady) {
-            studentId = await ensureParentSession(page, context, baseUrl, log);
-            parentReady = true;
-          }
-          if (jobTarget.auth === "parent") {
-            jobTarget = resolveCaptureTarget(job, studentId);
-          }
-
-          const url = new URL(jobTarget.path, baseUrl).toString();
-          await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90_000 });
+          await page.goto(new URL(jobTarget.path, baseUrl).toString(), {
+            waitUntil: "domcontentloaded",
+            timeout: 90_000,
+          });
+          assertNotErrorPage(page);
           if (jobTarget.afterGoto) await jobTarget.afterGoto(page);
           await waitForLoadingGone(page, jobTarget.hideLoading);
-          currentNavKey = `${vp.name}|${jobTarget.auth}|${jobTarget.path}`;
+          currentNavKey = navKey;
         } catch (err) {
           stats.skipped.push({ job: id, reason: `navigation/auth: ${err.message}` });
+          touchProgress();
           console.warn(`SKIP ${id}: ${err.message}`);
           currentNavKey = null;
           continue;
@@ -474,7 +557,7 @@ async function main() {
       }
 
       try {
-        await captureElementShot(page, jobTarget, vp, out);
+        await captureElementShot(page, jobTarget, vp, out, captureState, stateKey, batch);
         stats.ok++;
         touchProgress();
         console.log(`OK ${id} (${statSync(out).size} bytes)`);
@@ -487,24 +570,42 @@ async function main() {
   }
 
   await browser.close();
+  saveCaptureState(captureState);
 
-  const rawCount = countRawPngs();
-  writeProgressReport({
-    ...stats,
-    rawCount,
-    expectedJobs: jobs.length * VIEWPORTS.length,
-    endedAt: new Date().toISOString(),
-  });
+  stats.rawCount = countRawPngs();
+  stats.endedAt = new Date().toISOString();
+  writeBatchProgress(batch, stats);
 
-  const expected = jobs.length * VIEWPORTS.length;
   console.log(
-    `\nCapture finished. OK=${stats.ok}/${expected} skipped=${stats.skipped.length} rejected=${stats.rejected.length} rawPngs=${rawCount}`
+    `\nBatch ${batch} finished. OK=${stats.ok}/${expected} skipped=${stats.skipped.length} rejected=${stats.rejected.length}`
   );
 
-  if (stats.ok === 0 || stats.ok < expected) process.exit(1);
+  const exitCode = stats.ok >= expected ? 0 : 1;
+  return { ok: stats.ok, expected, exitCode };
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+async function main() {
+  const opts = parseArgs(process.argv);
+  const result = await runBatch(opts);
+  if (result.exitCode !== 0) process.exit(result.exitCode);
+
+  const gaps = listManifestGaps();
+  if (gaps.missing.length > 0) {
+    console.log(
+      `[help-capture] manifest gaps: ${gaps.missing.length}/${gaps.required} (batch ${opts.batch} ok; run other batches or retry-failed)`
+    );
+  } else {
+    console.log(`[help-capture] all ${gaps.required} manifest raws present and pass inline quality`);
+  }
+}
+
+const isMain = process.argv.some((a) => a.startsWith("--batch="));
+
+if (isMain) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
+
+export { runBatch, listManifestGaps, writeBlockerReport };

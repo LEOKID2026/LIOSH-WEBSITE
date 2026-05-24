@@ -36,16 +36,17 @@ export function resolveCaptureTarget(job, studentId) {
     "parent-report/report-overview/short-report": {
       selector: "h1:has-text('דוח להורים')",
       ancestorLevels: 2,
-      minTextLength: 12,
-      mustIncludeText: "דוח להורים",
+      minTextLength: 8,
+      afterGoto: waitParentReportReady,
     },
     "parent-report/report-overview/detailed-report": {
-      selector: "a:has-text('דוח מקיף לתקופה')",
-      minTextLength: 8,
+      selector: "main, h1",
+      minTextLength: 24,
+      afterGoto: navigateToParentDetailedReportFromShort,
     },
     "parent-report/summary-card/summary": {
-      selector: ".grid.grid-cols-2.md\\:grid-cols-4:has(.parent-report-print-summary-card)",
-      minTextLength: 12,
+      selector: ".parent-report-print-summary-card >> nth=0",
+      minTextLength: 4,
       afterGoto: waitParentReportReady,
     },
     "parent-report/data-presence/low-data": {
@@ -94,9 +95,17 @@ export function resolveCaptureTarget(job, studentId) {
       afterGoto: waitParentReportDetailedReady,
     },
     "parent-report/printing-and-pdf/pdf": {
-      selector: "button:has-text('ייצא ל-PDF'), button:has-text('הדפס')",
-      minTextLength: 4,
+      selector:
+        "section:has(button:has-text('ייצא ל-PDF')), section:has(button:has-text('הדפס')), .parent-report-actions",
+      ancestorLevels: 1,
+      minTextLength: 12,
       afterGoto: waitParentReportReady,
+      prepare: async (page) => {
+        const btn = page
+          .locator("button:has-text('ייצא ל-PDF'), button:has-text('הדפס')")
+          .first();
+        await btn.scrollIntoViewIfNeeded().catch(() => {});
+      },
     },
     "parent-report/understanding-the-disclaimer/disclaimer": {
       selector: ".parent-report-important-disclaimer",
@@ -106,16 +115,17 @@ export function resolveCaptureTarget(job, studentId) {
 
     // —— parents ——
     "parents/welcome-and-overview/overview": {
-      selector: "main, #__next",
-      minTextLength: 30,
+      selector: "a[href*='/learning'], a[href*='/student']",
+      ancestorLevels: 3,
+      minTextLength: 20,
     },
     "parents/create-parent-account/login": {
-      selector: "form:has([type='password']), main",
+      selector: "form:has([type='password'])",
       minTextLength: 10,
       mustIncludeText: "כניסה",
     },
     "parents/parent-dashboard-tour/dashboard": {
-      selector: "section:has(h2:has-text('הילדים שלי'))",
+      selector: "section:has(h2:has-text('הילדים שלי')) .rounded.border",
       minTextLength: 8,
     },
     "parents/add-students/form": {
@@ -137,26 +147,39 @@ export function resolveCaptureTarget(job, studentId) {
       minTextLength: 4,
     },
     "parents/parent-copilot/copilot-panel": {
-      selector: ".parent-report-parent-ai-insight, .border-cyan-500\\/20",
+      selector: ".parent-report-parent-ai-insight",
       minTextLength: 10,
       afterGoto: waitParentReportReady,
+      prepare: async (page) => {
+        const panel = page.locator(".parent-report-parent-ai-insight").first();
+        if (!(await panel.isVisible().catch(() => false))) {
+          throw new Error("copilot panel not present on report — skip");
+        }
+      },
     },
     "parents/monthly-rewards/rewards": {
       selector: "main, h1, h2",
       minTextLength: 8,
     },
     "parents/install-as-app/install-prompt": {
-      selector: "main, body",
-      minTextLength: 20,
+      selector: ":text-matches('התקן|הוסף למסך|אפליקציה|PWA|install', 'i')",
+      ancestorLevels: 2,
+      minTextLength: 8,
+      prepare: async (page) => {
+        const el = page.locator(":text-matches('התקן|הוסף למסך', 'i')").first();
+        if (await el.isVisible().catch(() => false)) {
+          await el.scrollIntoViewIfNeeded();
+        }
+      },
     },
     "parents/mobile-and-offline/offline-hub": {
-      selector: "main, h1",
-      minTextLength: 8,
+      selector: "h1, [role='heading']",
+      minTextLength: 6,
     },
 
     // —— students ——
     "students/student-login/login": {
-      selector: "main",
+      selector: "form:has([placeholder='שם משתמש'])",
       minTextLength: 6,
     },
     "students/student-home-tour/home": {
@@ -168,8 +191,8 @@ export function resolveCaptureTarget(job, studentId) {
       minTextLength: 15,
     },
     "students/answering-questions/question": {
-      selector: 'button:has-text("בדוק")',
-      ancestorLevels: 5,
+      selector: '[data-testid$="-check-answer"], button:has-text("בדוק")',
+      ancestorLevels: 2,
       minTextLength: 4,
       afterGoto: waitLearningQuestionReady,
     },
@@ -177,11 +200,13 @@ export function resolveCaptureTarget(job, studentId) {
       selector: "#daily-missions-heading",
       ancestorLevels: 2,
       minTextLength: 8,
+      prepare: scrollHeadingIntoView("#daily-missions-heading"),
     },
     "students/monthly-persistence/persistence": {
       selector: "#monthly-persistence-heading",
       ancestorLevels: 2,
       minTextLength: 8,
+      prepare: scrollHeadingIntoView("#monthly-persistence-heading"),
     },
     "students/coins-and-arcade/arcade": {
       selector: "main, h1",
@@ -206,14 +231,14 @@ export function resolveCaptureTarget(job, studentId) {
 
     // —— subjects (question + explanation share master URL) ——
     "subjects/*/question": {
-      selector: 'button:has-text("בדוק")',
-      ancestorLevels: 5,
+      selector: '[data-testid$="-check-answer"], button:has-text("בדוק")',
+      ancestorLevels: 2,
       minTextLength: 4,
       afterGoto: waitLearningQuestionReady,
     },
     "subjects/*/explanation": {
-      selector: "h4",
-      ancestorLevels: 3,
+      selector: "[role='dialog'] h4, .fixed.inset-0 h4, h4",
+      ancestorLevels: 1,
       minTextLength: 8,
       afterGoto: waitLearningQuestionReady,
       prepare: openFullExplanationModal,
@@ -236,49 +261,111 @@ export function resolveCaptureTarget(job, studentId) {
 }
 
 function resolvePath(routePath, studentId) {
+  const period = "period=month";
   if (routePath === "__PARENT_REPORT__") {
     if (!studentId) throw new Error("parent report requires studentId");
-    return `/learning/parent-report?studentId=${encodeURIComponent(studentId)}&source=parent`;
+    return `/learning/parent-report?studentId=${encodeURIComponent(studentId)}&source=parent&${period}`;
   }
   if (routePath === "__PARENT_REPORT_DETAILED__") {
     if (!studentId) throw new Error("parent report detailed requires studentId");
-    return `/learning/parent-report-detailed?studentId=${encodeURIComponent(studentId)}&source=parent`;
+    return `/learning/parent-report-detailed?studentId=${encodeURIComponent(studentId)}&source=parent&${period}`;
   }
   return routePath;
 }
 
 async function waitParentReportReady(page) {
-  await page
-    .getByRole("heading", { name: /דוח להורים/u })
-    .first()
-    .waitFor({ state: "visible", timeout: 120_000 });
+  const path = new URL(page.url()).pathname;
+  if (!path.includes("parent-report")) {
+    throw new Error(`expected parent-report URL, got ${path}`);
+  }
   await page
     .locator(".parent-report-print-summary-card")
     .first()
-    .waitFor({ state: "visible", timeout: 60_000 })
-    .catch(() => {});
-  await page.waitForTimeout(600);
+    .waitFor({ state: "visible", timeout: 60_000 });
+  await page.waitForTimeout(400);
 }
 
 async function waitParentReportDetailedReady(page) {
   await page.waitForLoadState("domcontentloaded", { timeout: 60_000 }).catch(() => {});
   await page
-    .locator(".pr-detailed-subject-letter, [class*='pr-detailed']")
+    .locator(".pr-detailed-subject-letter")
     .first()
-    .waitFor({ state: "visible", timeout: 180_000 });
-  await page.waitForTimeout(800);
+    .waitFor({ state: "visible", timeout: 60_000 });
+  await page.waitForTimeout(400);
+}
+
+function scrollHeadingIntoView(selector) {
+  return async (page) => {
+    const el = page.locator(selector).first();
+    await el.waitFor({ state: "attached", timeout: 60_000 });
+    await el.scrollIntoViewIfNeeded().catch(() => {});
+    await el.waitFor({ state: "visible", timeout: 30_000 });
+    await page.waitForTimeout(300);
+  };
+}
+
+async function navigateToParentDetailedReportFromShort(page) {
+  await waitParentReportReady(page);
+  const link = page.getByRole("link", { name: /דוח מקיף/i }).first();
+  await link.waitFor({ state: "visible", timeout: 30_000 });
+  await link.click();
+  await page.waitForURL(/parent-report-detailed/, { timeout: 90_000 });
+  await page.waitForLoadState("domcontentloaded", { timeout: 60_000 }).catch(() => {});
+  await page.locator("h1, main").first().waitFor({ state: "visible", timeout: 60_000 });
+  await page.waitForTimeout(400);
 }
 
 async function waitLearningQuestionReady(page) {
-  const check = page.getByRole("button", { name: "בדוק" }).first();
-  await check.waitFor({ state: "visible", timeout: 90_000 }).catch(() => {});
-  await page.waitForTimeout(800);
+  await page.waitForLoadState("domcontentloaded", { timeout: 60_000 }).catch(() => {});
+
+  const playerName = page.locator('[data-testid$="-player-name"]').first();
+  if (await playerName.count()) {
+    await page
+      .waitForFunction(
+        () => {
+          const node = document.querySelector('[data-testid$="-player-name"]');
+          const text = node?.textContent?.trim() || "";
+          return Boolean(text) && text !== "שחקן";
+        },
+        null,
+        { timeout: 45_000 }
+      )
+      .catch(() => {});
+  }
+
+  const start = page.locator('[data-testid$="-start-game"]').first();
+  if (await start.isVisible().catch(() => false)) {
+    await start.click({ timeout: 15_000 }).catch(() => {});
+    await page.waitForTimeout(1500);
+  } else {
+    const legacyStart = page.getByRole("button", { name: /התחל|התחילו|start/i }).first();
+    if (await legacyStart.isVisible().catch(() => false)) {
+      await legacyStart.click().catch(() => {});
+      await page.waitForTimeout(1500);
+    }
+  }
+
+  const textAnswer = page.locator('[data-testid$="-text-answer"]').first();
+  if (await textAnswer.isVisible().catch(() => false)) {
+    await textAnswer.fill("1").catch(() => {});
+  }
+
+  const check = page.locator('[data-testid$="-check-answer"]').first();
+  if (await check.count()) {
+    await check.waitFor({ state: "visible", timeout: 60_000 });
+  } else {
+    await page.getByRole("button", { name: "בדוק" }).first().waitFor({ state: "visible", timeout: 60_000 });
+  }
+  await page.waitForTimeout(400);
 }
 
 async function openFullExplanationModal(page) {
   const btn = page.getByRole("button", { name: /הסבר מלא/u }).first();
-  await btn.waitFor({ state: "visible", timeout: 30_000 });
+  await btn.waitFor({ state: "visible", timeout: 45_000 });
   await btn.click();
-  await page.locator("h4").first().waitFor({ state: "visible", timeout: 20_000 });
+  await page
+    .locator("[role='dialog'] h4, .fixed.inset-0 h4, h4")
+    .first()
+    .waitFor({ state: "visible", timeout: 25_000 });
   await page.waitForTimeout(400);
 }

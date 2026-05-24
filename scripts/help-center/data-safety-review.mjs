@@ -7,6 +7,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { evaluateScreenshotFile, MIN_APPROVED_BYTES } from "./capture-quality.mjs";
+import { loadCaptureState } from "./capture-state.mjs";
 
 const FORBIDDEN_PATTERNS = [/@gmail\.com/i, /\b\d{3}-\d{7}\b/];
 
@@ -34,6 +35,12 @@ function main() {
   const rejected = [];
   /** @type {Map<string, string>} hash -> first rel */
   const hashOwners = new Map();
+  const captureState = loadCaptureState();
+  for (const [key, meta] of Object.entries(captureState.jobs || {})) {
+    if (!meta.sha256) continue;
+    const rel = `help-center/screenshots/${key}.png`;
+    if (!hashOwners.has(meta.sha256)) hashOwners.set(meta.sha256, rel);
+  }
 
   for (const rel of required) {
     const auditPath = relToAuditPath(rel);
