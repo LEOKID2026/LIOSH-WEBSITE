@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "demo_account_access",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    },
+    {
+      "id": "arcade_page",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "arcade_game_launch",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "slug": "games-arcade",
+  "viewport": "mobile",
+  "workflowId": "SL8",
+  "title": "משחקים ותרגול חווייתי",
+  "pilot": "student-video-games-arcade-mobile",
+  "at": "2026-05-24T18:15:40.072Z"
+}

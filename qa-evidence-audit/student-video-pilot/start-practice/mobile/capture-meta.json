@@ -1,0 +1,33 @@
+{
+  "title": "איך מתחילים תרגול במקצוע",
+  "workflowId": "SL2",
+  "slug": "start-practice",
+  "viewport": "mobile",
+  "capturedAt": "2026-05-24T19:00:30.530Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/start-practice/mobile/main.webm",
+  "fileSizeBytes": 740700,
+  "wallClockSec": 86.888,
+  "frameCount": 416,
+  "fps": 8,
+  "decodedDurationSec": 52,
+  "signals": {
+    "homePage": true,
+    "learningHub": true,
+    "mathMaster": true,
+    "mathFeedback": true
+  },
+  "endState": {
+    "finalCaption": "כך מתחילים תרגול בכל מקצוע."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 14
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

@@ -1,0 +1,808 @@
+{
+  "generatedAt": "2026-05-24T19:13:14.302Z",
+  "purpose": "Machine-readable summary for owner visual review of raw tutorial WebMs (audit only; not published).",
+  "checks": {
+    "publicHelpCenterVideosDirExists": false,
+    "manifestAssetKindCapturedCount": 0,
+    "allWebmsExist": true,
+    "noZeroByte": true,
+    "noDuplicates": true
+  },
+  "webms": [
+    {
+      "group": "parent",
+      "workflowId": "1",
+      "slug": "parent-report-ai",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/parent-report-ai/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1818807,
+      "frameCount": 528,
+      "durationSec": 66,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "1",
+      "slug": "parent-report-ai",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/parent-report-ai/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 1000585,
+      "frameCount": 568,
+      "durationSec": 71,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "3",
+      "slug": "add-students",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/add-students/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1597888,
+      "frameCount": 520,
+      "durationSec": 65,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "3",
+      "slug": "add-students",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/add-students/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 574440,
+      "frameCount": 520,
+      "durationSec": 65,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "4",
+      "slug": "student-login",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/student-login/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1178612,
+      "frameCount": 376,
+      "durationSec": 47,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "4",
+      "slug": "student-login",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/student-login/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 367521,
+      "frameCount": 376,
+      "durationSec": 47,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "5",
+      "slug": "how-to-read-report",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/how-to-read-report/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1834543,
+      "frameCount": 544,
+      "durationSec": 68,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "5",
+      "slug": "how-to-read-report",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/how-to-read-report/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 923445,
+      "frameCount": 576,
+      "durationSec": 72,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "6",
+      "slug": "parent-copilot",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/parent-copilot/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1349131,
+      "frameCount": 488,
+      "durationSec": 61,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "parent",
+      "workflowId": "6",
+      "slug": "parent-copilot",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/parent-video-pilot/parent-copilot/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 663738,
+      "frameCount": 536,
+      "durationSec": 67,
+      "fps": 8,
+      "technicalStatus": "approved",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL1",
+      "slug": "student-home-tour",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/student-home-tour/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1644105,
+      "frameCount": 508,
+      "durationSec": 63.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL1",
+      "slug": "student-home-tour",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/student-home-tour/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 637105,
+      "frameCount": 508,
+      "durationSec": 63.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL2",
+      "slug": "start-practice",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/start-practice/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1778284,
+      "frameCount": 416,
+      "durationSec": 52,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL2",
+      "slug": "start-practice",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/start-practice/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 740700,
+      "frameCount": 416,
+      "durationSec": 52,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL3",
+      "slug": "math-step-explanation",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/math-step-explanation/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 840169,
+      "frameCount": 464,
+      "durationSec": 58,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL3",
+      "slug": "math-step-explanation",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/math-step-explanation/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 404575,
+      "frameCount": 464,
+      "durationSec": 58,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL4",
+      "slug": "geometry-step-explanation",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/geometry-step-explanation/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1206742,
+      "frameCount": 464,
+      "durationSec": 58,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL4",
+      "slug": "geometry-step-explanation",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/geometry-step-explanation/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 600410,
+      "frameCount": 464,
+      "durationSec": 58,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL5",
+      "slug": "wrong-answer-help",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/wrong-answer-help/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1050794,
+      "frameCount": 340,
+      "durationSec": 42.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL5",
+      "slug": "wrong-answer-help",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/wrong-answer-help/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 446000,
+      "frameCount": 340,
+      "durationSec": 42.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL6",
+      "slug": "streak-and-progress",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/streak-and-progress/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 621893,
+      "frameCount": 312,
+      "durationSec": 39,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL6",
+      "slug": "streak-and-progress",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/streak-and-progress/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 262748,
+      "frameCount": 312,
+      "durationSec": 39,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL7",
+      "slug": "daily-missions-journey",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/daily-missions-journey/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1899812,
+      "frameCount": 356,
+      "durationSec": 44.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL7",
+      "slug": "daily-missions-journey",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/daily-missions-journey/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 710643,
+      "frameCount": 356,
+      "durationSec": 44.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL8",
+      "slug": "games-arcade",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/games-arcade/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 1402890,
+      "frameCount": 352,
+      "durationSec": 44,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL8",
+      "slug": "games-arcade",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/games-arcade/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 508193,
+      "frameCount": 352,
+      "durationSec": 44,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL9",
+      "slug": "subjects-overview",
+      "viewport": "desktop",
+      "webmPath": "qa-evidence-audit/student-video-pilot/subjects-overview/desktop/main.webm",
+      "exists": true,
+      "sizeBytes": 2244916,
+      "frameCount": 348,
+      "durationSec": 43.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    },
+    {
+      "group": "student",
+      "workflowId": "SL9",
+      "slug": "subjects-overview",
+      "viewport": "mobile",
+      "webmPath": "qa-evidence-audit/student-video-pilot/subjects-overview/mobile/main.webm",
+      "exists": true,
+      "sizeBytes": 865985,
+      "frameCount": 348,
+      "durationSec": 43.5,
+      "fps": 8,
+      "technicalStatus": "technical pass",
+      "verificationOk": true
+    }
+  ],
+  "workflows": [
+    {
+      "group": "parent",
+      "workflowId": "1",
+      "slug": "parent-report-ai",
+      "title": "מדריך להורה — כניסה לדוח ושימוש ב-AI",
+      "status": "approved",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/parent-report-ai/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1818807,
+        "frameCount": 528,
+        "durationSec": 66,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/parent-report-ai/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 1000585,
+        "frameCount": 568,
+        "durationSec": 71,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "parent",
+      "workflowId": "2",
+      "slug": "create-parent-account",
+      "title": "רישום הורה וכניסה ראשונה",
+      "status": "deferred",
+      "deferred": true,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/create-parent-account/desktop/main.webm",
+        "exists": false,
+        "note": "deferred — no WebM"
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/create-parent-account/mobile/main.webm",
+        "exists": false,
+        "note": "deferred — no WebM"
+      }
+    },
+    {
+      "group": "parent",
+      "workflowId": "3",
+      "slug": "add-students",
+      "title": "הוספת ילד וקבלת קוד תלמיד",
+      "status": "approved",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/add-students/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1597888,
+        "frameCount": 520,
+        "durationSec": 65,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/add-students/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 574440,
+        "frameCount": 520,
+        "durationSec": 65,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "parent",
+      "workflowId": "4",
+      "slug": "student-login",
+      "title": "כניסת תלמיד עם קוד ו-PIN",
+      "status": "approved",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/student-login/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1178612,
+        "frameCount": 376,
+        "durationSec": 47,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/student-login/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 367521,
+        "frameCount": 376,
+        "durationSec": 47,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "parent",
+      "workflowId": "5",
+      "slug": "how-to-read-report",
+      "title": "קריאת דוח הורים — דוח קצר מול דוח מקיף",
+      "status": "approved",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/how-to-read-report/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1834543,
+        "frameCount": 544,
+        "durationSec": 68,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/how-to-read-report/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 923445,
+        "frameCount": 576,
+        "durationSec": 72,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "parent",
+      "workflowId": "6",
+      "slug": "parent-copilot",
+      "title": "שימוש ב-Copilot לשאלות המשך",
+      "status": "approved",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/parent-copilot/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1349131,
+        "frameCount": 488,
+        "durationSec": 61,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/parent-video-pilot/parent-copilot/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 663738,
+        "frameCount": 536,
+        "durationSec": 67,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL1",
+      "slug": "student-home-tour",
+      "title": "כניסת תלמיד ועמוד הבית",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/student-home-tour/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1644105,
+        "frameCount": 508,
+        "durationSec": 63.5,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/student-home-tour/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 637105,
+        "frameCount": 508,
+        "durationSec": 63.5,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL2",
+      "slug": "start-practice",
+      "title": "איך מתחילים תרגול במקצוע",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/start-practice/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1778284,
+        "frameCount": 416,
+        "durationSec": 52,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/start-practice/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 740700,
+        "frameCount": 416,
+        "durationSec": 52,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL3",
+      "slug": "math-step-explanation",
+      "title": "תרגול בחשבון — שאלה, תשובה והסבר צעד־צעד",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/math-step-explanation/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 840169,
+        "frameCount": 464,
+        "durationSec": 58,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/math-step-explanation/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 404575,
+        "frameCount": 464,
+        "durationSec": 58,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL4",
+      "slug": "geometry-step-explanation",
+      "title": "תרגול בגאומטריה — שאלה חזותית והסבר צעד־צעד",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/geometry-step-explanation/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1206742,
+        "frameCount": 464,
+        "durationSec": 58,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/geometry-step-explanation/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 600410,
+        "frameCount": 464,
+        "durationSec": 58,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL5",
+      "slug": "wrong-answer-help",
+      "title": "מה קורה כשטועים בשאלה",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/wrong-answer-help/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1050794,
+        "frameCount": 340,
+        "durationSec": 42.5,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/wrong-answer-help/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 446000,
+        "frameCount": 340,
+        "durationSec": 42.5,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL6",
+      "slug": "streak-and-progress",
+      "title": "רצף, ניקוד והתקדמות",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/streak-and-progress/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 621893,
+        "frameCount": 312,
+        "durationSec": 39,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/streak-and-progress/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 262748,
+        "frameCount": 312,
+        "durationSec": 39,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL7",
+      "slug": "daily-missions-journey",
+      "title": "משימות יומיות / מסע התקדמות חודשי",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/daily-missions-journey/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1899812,
+        "frameCount": 356,
+        "durationSec": 44.5,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/daily-missions-journey/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 710643,
+        "frameCount": 356,
+        "durationSec": 44.5,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL8",
+      "slug": "games-arcade",
+      "title": "משחקים ותרגול חווייתי",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/games-arcade/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 1402890,
+        "frameCount": 352,
+        "durationSec": 44,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/games-arcade/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 508193,
+        "frameCount": 352,
+        "durationSec": 44,
+        "fps": 8,
+        "verificationOk": true
+      }
+    },
+    {
+      "group": "student",
+      "workflowId": "SL9",
+      "slug": "subjects-overview",
+      "title": "סקירת מקצועות באתר",
+      "status": "technical pass",
+      "deferred": false,
+      "desktop": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/subjects-overview/desktop/main.webm",
+        "exists": true,
+        "sizeBytes": 2244916,
+        "frameCount": 348,
+        "durationSec": 43.5,
+        "fps": 8,
+        "verificationOk": true
+      },
+      "mobile": {
+        "webmPath": "qa-evidence-audit/student-video-pilot/subjects-overview/mobile/main.webm",
+        "exists": true,
+        "sizeBytes": 865985,
+        "frameCount": 348,
+        "durationSec": 43.5,
+        "fps": 8,
+        "verificationOk": true
+      }
+    }
+  ],
+  "summary": {
+    "totalWebm": 28,
+    "parentWebm": 10,
+    "studentWebm": 18,
+    "expectedWebm": 28,
+    "deferredWorkflows": [
+      {
+        "id": "2",
+        "slug": "create-parent-account",
+        "title": "רישום הורה וכניסה ראשונה"
+      }
+    ],
+    "missing": [],
+    "missingCount": 0,
+    "zeroByte": [],
+    "zeroByteCount": 0,
+    "duplicatePaths": [],
+    "duplicateCount": 0
+  }
+}

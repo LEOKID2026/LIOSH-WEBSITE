@@ -388,8 +388,8 @@ Per-video schema: primary article, secondary link-only articles, placement, scre
 
 ---
 
-# Next decision points (before next capture)
+# Next decision points
 
-1. **Capture wave (2026-05-24):** Videos **5–6, 4, 3** captured (technical pass). Video **2 blocked** — signup preflight cannot reach dashboard. **Next:** owner visual review → approve mobile #5 → complete workflows → resolve Video #2 signup gate.
-2. **Video 3 isolated parent details:** confirm the chosen disposable parent email and its student-count baseline before any add-child capture.
-3. **Publish wave timing:** when (later) flipping any manifest entry to `captured`, decide whether to publish workflow-by-workflow or as a single wave once all six are approved.
+1. **Video #2 (deferred):** retry true parent signup when Supabase/dev gate is fixed — see [VIDEO_TUTORIALS_CURRENT_STATUS.md](./VIDEO_TUTORIALS_CURRENT_STATUS.md).
+2. **Student set:** optional owner visual review of 18 technical-pass WebMs under `qa-evidence-audit/student-video-pilot/`.
+3. **Publish wave timing:** when flipping manifest entries to `captured`, publish parent + student batches together or separately.

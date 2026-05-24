@@ -1,5 +1,5 @@
 {
-  "ok": false,
+  "ok": true,
   "checks": [
     {
       "id": "demo_account_access",
@@ -12,19 +12,17 @@
       "message": "ישראל ישראלי"
     },
     {
-      "id": "preflight_browser_flow",
-      "ok": false,
-      "message": "page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n"
+      "id": "explanation_modal",
+      "ok": true,
+      "message": "steps=22 nav=true"
     }
   ],
-  "blockers": [
-    "browser: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n"
-  ],
+  "blockers": [],
   "baseUrl": "http://127.0.0.1:3001",
   "slug": "math-step-explanation",
   "viewport": "desktop",
   "workflowId": "SL3",
   "title": "תרגול בחשבון — שאלה, תשובה והסבר צעד־צעד",
   "pilot": "student-video-math-step-explanation-desktop",
-  "at": "2026-05-24T17:34:14.589Z"
+  "at": "2026-05-24T18:04:01.300Z"
 }

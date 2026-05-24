@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "demo_account_access",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    },
+    {
+      "id": "streak_answers",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "slug": "streak-and-progress",
+  "viewport": "desktop",
+  "workflowId": "SL6",
+  "title": "רצף, ניקוד והתקדמות",
+  "pilot": "student-video-streak-and-progress-desktop",
+  "at": "2026-05-24T18:42:10.775Z"
+}

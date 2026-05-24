@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "demo_account_access",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    },
+    {
+      "id": "daily_missions",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "monthly_journey",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "slug": "daily-missions-journey",
+  "viewport": "desktop",
+  "workflowId": "SL7",
+  "title": "משימות יומיות / מסע התקדמות חודשי",
+  "pilot": "student-video-daily-missions-journey-desktop",
+  "at": "2026-05-24T18:47:38.110Z"
+}

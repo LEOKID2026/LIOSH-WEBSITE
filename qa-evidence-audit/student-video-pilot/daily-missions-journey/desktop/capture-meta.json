@@ -1,0 +1,32 @@
+{
+  "title": "משימות יומיות / מסע התקדמות חודשי",
+  "workflowId": "SL7",
+  "slug": "daily-missions-journey",
+  "viewport": "desktop",
+  "capturedAt": "2026-05-24T18:49:06.841Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/daily-missions-journey/desktop/main.webm",
+  "fileSizeBytes": 1899812,
+  "wallClockSec": 88.285,
+  "frameCount": 356,
+  "fps": 8,
+  "decodedDurationSec": 44.5,
+  "signals": {
+    "homePage": true,
+    "missionsVisible": true,
+    "journeyVisible": true
+  },
+  "endState": {
+    "finalCaption": "כך עוקבים אחרי התקדמות יומית וחודשית."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 8
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

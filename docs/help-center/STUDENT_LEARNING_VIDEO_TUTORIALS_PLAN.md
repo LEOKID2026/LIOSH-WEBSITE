@@ -320,15 +320,17 @@ When publishing later, proposed primary embed mapping:
 
 | ID | Title | Desktop | Mobile | Workflow complete |
 |----|-------|---------|--------|-------------------|
-| SL1 | כניסת תלמיד ועמוד הבית | planned | planned | no |
-| SL2 | איך מתחילים תרגול במקצוע | planned | planned | no |
-| SL3 | תרגול בחשבון — הסבר צעד־צעד | planned | planned | no |
-| SL4 | תרגול בגאומטריה — הסבר צעד־צעד | planned | planned | no |
-| SL5 | מה קורה כשטועים בשאלה | planned | planned | no |
-| SL6 | רצף, ניקוד והתקדמות | planned | planned | no |
-| SL7 | משימות יומיות / מסע חודשי | planned | planned | no |
-| SL8 | משחקים ותרגול חווייתי | planned | planned | no |
-| SL9 | סקירת מקצועות באתר | planned | planned | no |
+| SL1 | כניסת תלמיד ועמוד הבית | technical pass | technical pass | technical pass |
+| SL2 | איך מתחילים תרגול במקצוע | technical pass | technical pass | technical pass |
+| SL3 | תרגול בחשבון — הסבר צעד־צעד | technical pass | technical pass | technical pass |
+| SL4 | תרגול בגאומטריה — הסבר צעד־צעד | technical pass | technical pass | technical pass |
+| SL5 | מה קורה כשטועים בשאלה | technical pass | technical pass | technical pass |
+| SL6 | רצף, ניקוד והתקדמות | technical pass | technical pass | technical pass |
+| SL7 | משימות יומיות / מסע חודשי | technical pass | technical pass | technical pass |
+| SL8 | משחקים ותרגול חווייתי | technical pass | technical pass | technical pass |
+| SL9 | סקירת מקצועות באתר | technical pass | technical pass | technical pass |
+
+Outputs under `qa-evidence-audit/student-video-pilot/`. Not published.
 
 ---
 
@@ -355,7 +357,7 @@ When publishing later, proposed primary embed mapping:
 
 # Approval checklist
 
-- [ ] Owner approves this addendum plan  
-- [ ] Owner confirms SL2 vs SL9 primary embed choice  
-- [ ] Parent-video wave reported complete (see `VIDEO_TUTORIALS_MASTER_PLAN.md` status board)  
-- [ ] Only then: implement `scripts/student-video-pilot/**` and begin **SL1** preflight  
+- [x] Owner approves this addendum plan (2026-05-24)  
+- [x] SL2 primary embed on `students/choose-subject-and-grade`; SL9 link-only  
+- [x] Parent-video wave reported (Video #2 deferred)  
+- [x] `scripts/student-video-pilot/**` implemented; SL1–SL9 captured (technical pass)  

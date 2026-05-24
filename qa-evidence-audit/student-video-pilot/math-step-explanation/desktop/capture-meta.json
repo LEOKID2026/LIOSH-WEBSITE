@@ -1,0 +1,37 @@
+{
+  "title": "תרגול בחשבון — שאלה, תשובה והסבר צעד־צעד",
+  "workflowId": "SL3",
+  "slug": "math-step-explanation",
+  "viewport": "desktop",
+  "capturedAt": "2026-05-24T18:05:32.787Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/math-step-explanation/desktop/main.webm",
+  "fileSizeBytes": 840169,
+  "wallClockSec": 91.026,
+  "frameCount": 464,
+  "fps": 8,
+  "decodedDurationSec": 58,
+  "signals": {
+    "learningHub": true,
+    "mathMaster": true,
+    "mathFeedback": true,
+    "wrongFeedback": true,
+    "correctFeedback": true,
+    "explanationOpen": true,
+    "explanationSteps": true,
+    "explanationVisible": true
+  },
+  "endState": {
+    "finalCaption": "אפשר לעבור בין השלבים ולהבין את הפתרון."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 10
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

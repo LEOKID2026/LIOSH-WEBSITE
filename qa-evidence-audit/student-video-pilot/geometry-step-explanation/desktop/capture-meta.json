@@ -1,0 +1,36 @@
+{
+  "title": "תרגול בגאומטריה — שאלה חזותית והסבר צעד־צעד",
+  "workflowId": "SL4",
+  "slug": "geometry-step-explanation",
+  "viewport": "desktop",
+  "capturedAt": "2026-05-24T18:56:59.500Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/geometry-step-explanation/desktop/main.webm",
+  "fileSizeBytes": 1206742,
+  "wallClockSec": 89.437,
+  "frameCount": 464,
+  "fps": 8,
+  "decodedDurationSec": 58,
+  "signals": {
+    "learningHub": true,
+    "geometryMaster": true,
+    "geometryFeedback": true,
+    "explanationOpen": true,
+    "explanationDiagram": true,
+    "explanationSteps": true,
+    "explanationVisible": true
+  },
+  "endState": {
+    "finalCaption": "הדיאגרמה מלווה את כל שלבי הפתרון."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 9
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

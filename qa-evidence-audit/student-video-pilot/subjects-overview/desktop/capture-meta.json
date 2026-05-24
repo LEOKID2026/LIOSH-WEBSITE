@@ -1,0 +1,32 @@
+{
+  "title": "סקירת מקצועות באתר",
+  "workflowId": "SL9",
+  "slug": "subjects-overview",
+  "viewport": "desktop",
+  "capturedAt": "2026-05-24T19:02:19.272Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/subjects-overview/desktop/main.webm",
+  "fileSizeBytes": 2244916,
+  "wallClockSec": 90.814,
+  "frameCount": 348,
+  "fps": 8,
+  "decodedDurationSec": 43.5,
+  "signals": {
+    "homePage": true,
+    "learningHub": true,
+    "mathMaster": true
+  },
+  "endState": {
+    "finalCaption": "כך בוחרים מה ללמוד היום."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 11
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

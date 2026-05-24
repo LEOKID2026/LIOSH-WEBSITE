@@ -1,0 +1,36 @@
+{
+  "title": "מה קורה כשטועים בשאלה",
+  "workflowId": "SL5",
+  "slug": "wrong-answer-help",
+  "viewport": "mobile",
+  "capturedAt": "2026-05-24T18:41:25.713Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/wrong-answer-help/mobile/main.webm",
+  "fileSizeBytes": 446000,
+  "wallClockSec": 51.611,
+  "frameCount": 340,
+  "fps": 8,
+  "decodedDurationSec": 42.5,
+  "signals": {
+    "learningHub": true,
+    "mathMaster": true,
+    "wrongFeedback": true,
+    "explanationOpen": true,
+    "explanationSteps": true,
+    "explanationVisible": true,
+    "correctFeedback": true
+  },
+  "endState": {
+    "finalCaption": "כך לומדים מהטעות — בלי לייאוש."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 8
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

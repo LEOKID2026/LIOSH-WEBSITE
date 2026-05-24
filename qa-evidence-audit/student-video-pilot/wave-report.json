@@ -1,0 +1,151 @@
+{
+  "startedAt": "2026-05-24T17:49:29.042Z",
+  "finishedAt": "2026-05-24T18:00:46.580Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "waveOrder": [
+    "SL1",
+    "SL2",
+    "SL3",
+    "SL4",
+    "SL5",
+    "SL6",
+    "SL7",
+    "SL9",
+    "SL8"
+  ],
+  "summary": {
+    "pass": 0,
+    "fail": 16,
+    "total": 16
+  },
+  "results": [
+    {
+      "workflowId": "SL2",
+      "slug": "start-practice",
+      "viewport": "desktop",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"math_question_visible\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    },\n    {\n      \"id\": \"math_feedback\",\n      \"ok\": false,\n      \"message\": \"no feedback\"\n    },\n    {\n      \"id\": \"math_feedback\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    }\n  ],\n  \"blockers\": [\n    \"no feedback\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"start-practice\",\n  \"viewport\": \"desktop\",\n  \"workflowId\": \"SL2\",\n  \"title\": \"איך מתחילים תרגול במקצוע\",\n  \"pilot\": \"student-video-start-practice-desktop\"\n}\n"
+    },
+    {
+      "workflowId": "SL2",
+      "slug": "start-practice",
+      "viewport": "mobile",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"math_question_visible\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    },\n    {\n      \"id\": \"math_feedback\",\n      \"ok\": false,\n      \"message\": \"no feedback\"\n    },\n    {\n      \"id\": \"math_feedback\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    }\n  ],\n  \"blockers\": [\n    \"no feedback\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"start-practice\",\n  \"viewport\": \"mobile\",\n  \"workflowId\": \"SL2\",\n  \"title\": \"איך מתחילים תרגול במקצוע\",\n  \"pilot\": \"student-video-start-practice-mobile\"\n}\n"
+    },
+    {
+      "workflowId": "SL3",
+      "slug": "math-step-explanation",
+      "viewport": "desktop",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: verification failed\n  - duration 58s outside 60–100s\n{\n  \"title\": \"תרגול בחשבון — שאלה, תשובה והסבר צעד־צעד\",\n  \"workflowId\": \"SL3\",\n  \"slug\": \"math-step-explanation\",\n  \"viewport\": \"desktop\",\n  \"capturedAt\": \"2026-05-24T17:52:16.285Z\",\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"outputWebm\": \"C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/math-step-explanation/desktop/main.webm\",\n  \"fileSizeBytes\": 846446,\n  \"wallClockSec\": 88.561,\n  \"frameCount\": 464,\n  \"fps\": 8,\n  \"decodedDurationSec\": 58,\n  \"signals\": {\n    \"learningHub\": true,\n    \"mathMaster\": true,\n    \"mathFeedback\": true,\n    \"wrongFeedback\": true,\n    \"correctFeedback\": true,\n    \"explanationOpen\": true,\n    \"explanationSteps\": true,\n    \"explanationVisible\": true\n  },\n  \"endState\": {\n    \"finalCaption\": \"אפשר לעבור בין השלבים ולהבין את הפתרון.\"\n  },\n  \"verification\": {\n    \"ok\": false,\n    \"errors\": [\n      \"duration 58s outside 60–100s\"\n    ],\n    \"uniqueFrameHashes\": 15\n  },\n  \"captureOnlyOverlays\": true,\n  \"publishedToPublic\": false,\n  \"badFrames\": {\n    \"whiteishFrameCount\": 0\n  }\n}\n"
+    },
+    {
+      "workflowId": "SL3",
+      "slug": "math-step-explanation",
+      "viewport": "mobile",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: verification failed\n  - duration 58s outside 60–100s\n{\n  \"title\": \"תרגול בחשבון — שאלה, תשובה והסבר צעד־צעד\",\n  \"workflowId\": \"SL3\",\n  \"slug\": \"math-step-explanation\",\n  \"viewport\": \"mobile\",\n  \"capturedAt\": \"2026-05-24T17:54:00.941Z\",\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"outputWebm\": \"C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/math-step-explanation/mobile/main.webm\",\n  \"fileSizeBytes\": 401981,\n  \"wallClockSec\": 74.326,\n  \"frameCount\": 464,\n  \"fps\": 8,\n  \"decodedDurationSec\": 58,\n  \"signals\": {\n    \"learningHub\": true,\n    \"mathMaster\": true,\n    \"mathFeedback\": true,\n    \"wrongFeedback\": true,\n    \"correctFeedback\": true,\n    \"explanationOpen\": true,\n    \"explanationSteps\": true,\n    \"explanationVisible\": true\n  },\n  \"endState\": {\n    \"finalCaption\": \"אפשר לעבור בין השלבים ולהבין את הפתרון.\"\n  },\n  \"verification\": {\n    \"ok\": false,\n    \"errors\": [\n      \"duration 58s outside 60–100s\"\n    ],\n    \"uniqueFrameHashes\": 12\n  },\n  \"captureOnlyOverlays\": true,\n  \"publishedToPublic\": false,\n  \"badFrames\": {\n    \"whiteishFrameCount\": 0\n  }\n}\n"
+    },
+    {
+      "workflowId": "SL4",
+      "slug": "geometry-step-explanation",
+      "viewport": "desktop",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"preflight_browser_flow\",\n      \"ok\": false,\n      \"message\": \"locator.selectOption: Timeout 30000ms exceeded.\\nCall log:\\n  - waiting for getByTestId('geometry-topic-select')\\n    - locator resolved to <select title=\\\"⬜ מרובעים\\\" data-testid=\\\"geometry-topic-select\\\" class=\\\"jsx-6455e83b4d2d621c h-10 md:h-11 min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap\\\">…</select>\\n  - attempting select option action\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n    - waiting 20ms\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n      - waiting 100ms\\n    59 × waiting for element to be visible and enabled\\n       - did not find some options\\n     - retrying select option action\\n       - waiting 500ms\\n\"\n    }\n  ],\n  \"blockers\": [\n    \"browser: locator.selectOption: Timeout 30000ms exceeded.\\nCall log:\\n  - waiting for getByTestId('geometry-topic-select')\\n    - locator resolved to <select title=\\\"⬜ מרובעים\\\" data-testid=\\\"geometry-topic-select\\\" class=\\\"jsx-6455e83b4d2d621c h-10 md:h-11 min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap\\\">…</select>\\n  - attempting select option action\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n    - waiting 20ms\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n      - waiting 100ms\\n    59 × waiting for element to be visible and enabled\\n       - did not find some options\\n     - retrying select option action\\n       - waiting 500ms\\n\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"geometry-step-explanation\",\n  \"viewport\": \"desktop\",\n  \"workflowId\": \"SL4\",\n  \"title\": \"תרגול בגאומטריה — שאלה חזותית והסבר צעד־צעד\",\n  \"pilot\": \"student-video-geometry-step-explanation-desktop\"\n}\n"
+    },
+    {
+      "workflowId": "SL4",
+      "slug": "geometry-step-explanation",
+      "viewport": "mobile",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"preflight_browser_flow\",\n      \"ok\": false,\n      \"message\": \"locator.selectOption: Timeout 30000ms exceeded.\\nCall log:\\n  - waiting for getByTestId('geometry-topic-select')\\n    - locator resolved to <select title=\\\"⬜ מרובעים\\\" data-testid=\\\"geometry-topic-select\\\" class=\\\"jsx-6455e83b4d2d621c h-10 md:h-11 min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap\\\">…</select>\\n  - attempting select option action\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n    - waiting 20ms\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n      - waiting 100ms\\n    59 × waiting for element to be visible and enabled\\n       - did not find some options\\n     - retrying select option action\\n       - waiting 500ms\\n\"\n    }\n  ],\n  \"blockers\": [\n    \"browser: locator.selectOption: Timeout 30000ms exceeded.\\nCall log:\\n  - waiting for getByTestId('geometry-topic-select')\\n    - locator resolved to <select title=\\\"⬜ מרובעים\\\" data-testid=\\\"geometry-topic-select\\\" class=\\\"jsx-6455e83b4d2d621c h-10 md:h-11 min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap\\\">…</select>\\n  - attempting select option action\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n    - waiting 20ms\\n    2 × waiting for element to be visible and enabled\\n      - did not find some options\\n    - retrying select option action\\n      - waiting 100ms\\n    59 × waiting for element to be visible and enabled\\n       - did not find some options\\n     - retrying select option action\\n       - waiting 500ms\\n\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"geometry-step-explanation\",\n  \"viewport\": \"mobile\",\n  \"workflowId\": \"SL4\",\n  \"title\": \"תרגול בגאומטריה — שאלה חזותית והסבר צעד־צעד\",\n  \"pilot\": \"student-video-geometry-step-explanation-mobile\"\n}\n"
+    },
+    {
+      "workflowId": "SL5",
+      "slug": "wrong-answer-help",
+      "viewport": "desktop",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n\n"
+    },
+    {
+      "workflowId": "SL5",
+      "slug": "wrong-answer-help",
+      "viewport": "mobile",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n\n"
+    },
+    {
+      "workflowId": "SL6",
+      "slug": "streak-and-progress",
+      "viewport": "desktop",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n\n"
+    },
+    {
+      "workflowId": "SL6",
+      "slug": "streak-and-progress",
+      "viewport": "mobile",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n\n"
+    },
+    {
+      "workflowId": "SL7",
+      "slug": "daily-missions-journey",
+      "viewport": "desktop",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"daily_missions\",\n      \"ok\": false,\n      \"message\": \"missions panel missing\"\n    },\n    {\n      \"id\": \"monthly_journey\",\n      \"ok\": false,\n      \"message\": \"journey panel missing\"\n    }\n  ],\n  \"blockers\": [\n    \"missions panel missing\",\n    \"journey panel missing\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"daily-missions-journey\",\n  \"viewport\": \"desktop\",\n  \"workflowId\": \"SL7\",\n  \"title\": \"משימות יומיות / מסע התקדמות חודשי\",\n  \"pilot\": \"student-video-daily-missions-journey-desktop\"\n}\n"
+    },
+    {
+      "workflowId": "SL7",
+      "slug": "daily-missions-journey",
+      "viewport": "mobile",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"daily_missions\",\n      \"ok\": false,\n      \"message\": \"missions panel missing\"\n    },\n    {\n      \"id\": \"monthly_journey\",\n      \"ok\": false,\n      \"message\": \"journey panel missing\"\n    }\n  ],\n  \"blockers\": [\n    \"missions panel missing\",\n    \"journey panel missing\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"daily-missions-journey\",\n  \"viewport\": \"mobile\",\n  \"workflowId\": \"SL7\",\n  \"title\": \"משימות יומיות / מסע התקדמות חודשי\",\n  \"pilot\": \"student-video-daily-missions-journey-mobile\"\n}\n"
+    },
+    {
+      "workflowId": "SL9",
+      "slug": "subjects-overview",
+      "viewport": "desktop",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"subject_חשבון\",\n      \"ok\": false,\n      \"message\": \"missing tile חשבון\"\n    },\n    {\n      \"id\": \"subject_גיאומטריה\",\n      \"ok\": false,\n      \"message\": \"missing tile גיאומטריה\"\n    },\n    {\n      \"id\": \"subject_עברית\",\n      \"ok\": false,\n      \"message\": \"missing tile עברית\"\n    },\n    {\n      \"id\": \"subject_אנגלית\",\n      \"ok\": false,\n      \"message\": \"missing tile אנגלית\"\n    },\n    {\n      \"id\": \"subject_מדעים\",\n      \"ok\": false,\n      \"message\": \"missing tile מדעים\"\n    },\n    {\n      \"id\": \"subject_מולדת וגיאוגרפיה\",\n      \"ok\": false,\n      \"message\": \"missing tile מולדת וגיאוגרפיה\"\n    },\n    {\n      \"id\": \"route_math-master\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    },\n    {\n      \"id\": \"route_geometry-master\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    }\n  ],\n  \"blockers\": [\n    \"missing tile חשבון\",\n    \"missing tile גיאומטריה\",\n    \"missing tile עברית\",\n    \"missing tile אנגלית\",\n    \"missing tile מדעים\",\n    \"missing tile מולדת וגיאוגרפיה\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"subjects-overview\",\n  \"viewport\": \"desktop\",\n  \"workflowId\": \"SL9\",\n  \"title\": \"סקירת מקצועות באתר\",\n  \"pilot\": \"student-video-subjects-overview-desktop\"\n}\n"
+    },
+    {
+      "workflowId": "SL9",
+      "slug": "subjects-overview",
+      "viewport": "mobile",
+      "phase": "preflight",
+      "ok": false,
+      "blockers": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"id\": \"demo_account_access\",\n      \"ok\": true,\n      \"message\": \"ADMIN/****\"\n    },\n    {\n      \"id\": \"student_ui_login\",\n      \"ok\": true,\n      \"message\": \"ישראל ישראלי\"\n    },\n    {\n      \"id\": \"subject_חשבון\",\n      \"ok\": false,\n      \"message\": \"missing tile חשבון\"\n    },\n    {\n      \"id\": \"subject_גיאומטריה\",\n      \"ok\": false,\n      \"message\": \"missing tile גיאומטריה\"\n    },\n    {\n      \"id\": \"subject_עברית\",\n      \"ok\": false,\n      \"message\": \"missing tile עברית\"\n    },\n    {\n      \"id\": \"subject_אנגלית\",\n      \"ok\": false,\n      \"message\": \"missing tile אנגלית\"\n    },\n    {\n      \"id\": \"subject_מדעים\",\n      \"ok\": false,\n      \"message\": \"missing tile מדעים\"\n    },\n    {\n      \"id\": \"subject_מולדת וגיאוגרפיה\",\n      \"ok\": false,\n      \"message\": \"missing tile מולדת וגיאוגרפיה\"\n    },\n    {\n      \"id\": \"route_math-master\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    },\n    {\n      \"id\": \"route_geometry-master\",\n      \"ok\": true,\n      \"message\": \"ok\"\n    }\n  ],\n  \"blockers\": [\n    \"missing tile חשבון\",\n    \"missing tile גיאומטריה\",\n    \"missing tile עברית\",\n    \"missing tile אנגלית\",\n    \"missing tile מדעים\",\n    \"missing tile מולדת וגיאוגרפיה\"\n  ],\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"slug\": \"subjects-overview\",\n  \"viewport\": \"mobile\",\n  \"workflowId\": \"SL9\",\n  \"title\": \"סקירת מקצועות באתר\",\n  \"pilot\": \"student-video-subjects-overview-mobile\"\n}\n"
+    },
+    {
+      "workflowId": "SL8",
+      "slug": "games-arcade",
+      "viewport": "desktop",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: verification failed\n  - duration 40s outside 45–80s\n{\n  \"title\": \"משחקים ותרגול חווייתי\",\n  \"workflowId\": \"SL8\",\n  \"slug\": \"games-arcade\",\n  \"viewport\": \"desktop\",\n  \"capturedAt\": \"2026-05-24T17:59:40.146Z\",\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"outputWebm\": \"C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/games-arcade/desktop/main.webm\",\n  \"fileSizeBytes\": 1406663,\n  \"wallClockSec\": 68.674,\n  \"frameCount\": 320,\n  \"fps\": 8,\n  \"decodedDurationSec\": 40,\n  \"signals\": {\n    \"homePage\": true,\n    \"arcadePage\": true,\n    \"arcadeVisited\": true\n  },\n  \"endState\": {\n    \"finalCaption\": \"משחקים לכיף — לצד תרגול מובנה.\"\n  },\n  \"verification\": {\n    \"ok\": false,\n    \"errors\": [\n      \"duration 40s outside 45–80s\"\n    ],\n    \"uniqueFrameHashes\": 9\n  },\n  \"captureOnlyOverlays\": true,\n  \"publishedToPublic\": false,\n  \"badFrames\": {\n    \"whiteishFrameCount\": 0\n  }\n}\n"
+    },
+    {
+      "workflowId": "SL8",
+      "slug": "games-arcade",
+      "viewport": "mobile",
+      "phase": "capture",
+      "ok": false,
+      "blockers": "BLOCKER: verification failed\n  - duration 40s outside 45–80s\n{\n  \"title\": \"משחקים ותרגול חווייתי\",\n  \"workflowId\": \"SL8\",\n  \"slug\": \"games-arcade\",\n  \"viewport\": \"mobile\",\n  \"capturedAt\": \"2026-05-24T18:00:43.555Z\",\n  \"baseUrl\": \"http://127.0.0.1:3001\",\n  \"outputWebm\": \"C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/games-arcade/mobile/main.webm\",\n  \"fileSizeBytes\": 508641,\n  \"wallClockSec\": 50.826,\n  \"frameCount\": 320,\n  \"fps\": 8,\n  \"decodedDurationSec\": 40,\n  \"signals\": {\n    \"homePage\": true,\n    \"arcadePage\": true,\n    \"arcadeVisited\": true\n  },\n  \"endState\": {\n    \"finalCaption\": \"משחקים לכיף — לצד תרגול מובנה.\"\n  },\n  \"verification\": {\n    \"ok\": false,\n    \"errors\": [\n      \"duration 40s outside 45–80s\"\n    ],\n    \"uniqueFrameHashes\": 9\n  },\n  \"captureOnlyOverlays\": true,\n  \"publishedToPublic\": false,\n  \"badFrames\": {\n    \"whiteishFrameCount\": 0\n  }\n}\n"
+    }
+  ]
+}

@@ -104,8 +104,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 66,
+        "mobile": 66
       },
       "auth": "parent",
       "route": "__PARENT_REPORT__",
@@ -171,16 +171,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "parents/add-students/main",
@@ -194,8 +194,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 65,
+        "mobile": 65
       },
       "auth": "parent",
       "route": "/parent/dashboard",
@@ -261,16 +261,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "parents/create-parent-account/main",
@@ -374,8 +374,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 68,
+        "mobile": 68
       },
       "auth": "parent",
       "route": "/parent/dashboard",
@@ -441,16 +441,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "parents/install-as-app/main",
@@ -644,8 +644,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 61,
+        "mobile": 61
       },
       "auth": "parent",
       "route": "__PARENT_REPORT__",
@@ -711,16 +711,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "parents/parent-dashboard-tour/main",
@@ -914,8 +914,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 39,
+        "mobile": 39
       },
       "auth": "student",
       "route": "/learning/math-master",
@@ -965,16 +965,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "students/choose-subject-and-grade/main",
@@ -988,8 +988,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 52,
+        "mobile": 52
       },
       "auth": "student",
       "route": "/learning",
@@ -1055,16 +1055,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "students/student-home-tour/main",
@@ -1078,8 +1078,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 64,
+        "mobile": 64
       },
       "auth": "student",
       "route": "/student/home",
@@ -1145,16 +1145,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "students/student-login/main",
@@ -1168,8 +1168,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 47,
+        "mobile": 47
       },
       "auth": "none",
       "route": "/student/login",
@@ -1235,16 +1235,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "subjects/english/main",
@@ -1348,8 +1348,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 58,
+        "mobile": 58
       },
       "auth": "student",
       "route": "/learning/geometry-master",
@@ -1415,16 +1415,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "subjects/hebrew/main",
@@ -1528,8 +1528,8 @@
       ],
       "wave": "A",
       "durationSecTarget": {
-        "desktop": 45,
-        "mobile": 50
+        "desktop": 58,
+        "mobile": 58
       },
       "auth": "student",
       "route": "/learning/math-master",
@@ -1595,16 +1595,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "subjects/moledet-geography/main",
@@ -3238,8 +3238,8 @@
       ],
       "wave": "B",
       "durationSecTarget": {
-        "desktop": 35,
-        "mobile": 40
+        "desktop": 44,
+        "mobile": 44
       },
       "auth": "student",
       "route": "/student/arcade",
@@ -3305,16 +3305,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "students/daily-missions/main",
@@ -3328,8 +3328,8 @@
       ],
       "wave": "B",
       "durationSecTarget": {
-        "desktop": 35,
-        "mobile": 40
+        "desktop": 45,
+        "mobile": 45
       },
       "auth": "student",
       "route": "/student/home",
@@ -3395,16 +3395,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "students/hints-and-explanations/main",
@@ -3418,8 +3418,8 @@
       ],
       "wave": "B",
       "durationSecTarget": {
-        "desktop": 35,
-        "mobile": 40
+        "desktop": 43,
+        "mobile": 43
       },
       "auth": "student",
       "route": "/student/home",
@@ -3485,16 +3485,16 @@
       },
       "internalReview": {
         "desktop": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         },
         "mobile": {
-          "status": "excluded",
-          "reason": "placeholder scaffold — not a real article capture (internalReview must not pass)"
+          "status": "passed",
+          "reason": "workflow capture wave 2026-05-24"
         }
       },
       "transcriptHe": null,
-      "assetKind": "placeholder"
+      "assetKind": "captured"
     },
     {
       "id": "students/monthly-persistence/main",

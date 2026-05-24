@@ -4,10 +4,10 @@ overview: Create a single written master-plan markdown file at docs/help-center/
 todos:
   - id: create-plan-doc
     content: Create docs/help-center/VIDEO_TUTORIALS_MASTER_PLAN.md with Part A (6 workflow entries, desktop+mobile fields, statuses) and Part B (integration map using verified slugs, primary/secondary mapping, placement, public path conventions, prereqs).
-    status: pending
+    status: completed
   - id: return-summary
     content: After file creation, return path, Part A summary, Part B summary, confirmation of no missing slugs, and the three open decisions for user approval before any further capture.
-    status: pending
+    status: completed
 isProject: false
 ---
 

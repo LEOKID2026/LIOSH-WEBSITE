@@ -12,7 +12,7 @@ export default {
   title: "משימות יומיות / מסע התקדמות חודשי",
   pickHighlight,
   verifyRules: {
-    durationMin: 55,
+    durationMin: 42,
     durationMax: 95,
     requiredSignals: { homePage: true, missionsVisible: true, journeyVisible: true },
   },

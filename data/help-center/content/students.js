@@ -24,8 +24,8 @@ export const studentLogin = studentArticle({
   blocks: [
     heading(2, "steps", "שלבים"),
     list(["בקשו מההורה את שם המשתמש והקוד", "הקלידו בעמוד הכניסה", "לחצו התחבר"], true),
-    screenshotBlock(S, "student-login", "login", "מסך כניסת תלמיד"),
     videoBlock(S, "student-login"),
+    screenshotBlock(S, "student-login", "login", "מסך כניסת תלמיד"),
   ],
 });
 
@@ -38,8 +38,8 @@ export const studentHomeTour = studentArticle({
   blocks: [
     heading(2, "home", "עמוד הבית"),
     paragraph("כאן תראו את השם שלכם, כמה מטבעות יש לכם, ולאיזה מקצועים אפשר להיכנס."),
-    screenshotBlock(S, "student-home-tour", "home", "עמוד בית תלמיד עם כרטיסי מקצועות"),
     videoBlock(S, "student-home-tour"),
+    screenshotBlock(S, "student-home-tour", "home", "עמוד בית תלמיד עם כרטיסי מקצועות"),
   ],
 });
 
@@ -52,8 +52,8 @@ export const chooseSubjectAndGrade = studentArticle({
   blocks: [
     heading(2, "learning-hub", "אזור לימודים"),
     paragraph("בחרו מקצוע מהרשימה. המשחק יתאים לכיתה שלכם."),
-    screenshotBlock(S, "choose-subject-and-grade", "subjects", "רשימת מקצועות באזור לימודים"),
     videoBlock(S, "choose-subject-and-grade"),
+    screenshotBlock(S, "choose-subject-and-grade", "subjects", "רשימת מקצועות באזור לימודים"),
     relatedLinks([{ href: "/learning", label: "לאזור הלימודים" }]),
   ],
 });
@@ -71,8 +71,8 @@ export const answeringQuestions = studentArticle({
       "לפעמים מקלידים מספר או מילה",
       "אחרי התשובה תראו אם צדקתם",
     ]),
-    screenshotBlock(S, "answering-questions", "question", "שאלת תרגול על המסך"),
     videoBlock(S, "answering-questions"),
+    screenshotBlock(S, "answering-questions", "question", "שאלת תרגול על המסך"),
   ],
 });
 
@@ -99,8 +99,8 @@ export const dailyMissions = studentArticle({
   blocks: [
     heading(2, "missions", "משימות"),
     paragraph("בעמוד הבית תראו משימות יומיות. כשמסיימים אותן — מקבלים נקודות והתקדמות."),
-    screenshotBlock(S, "daily-missions", "missions", "פאנל משימות יומיות"),
     videoBlock(S, "daily-missions"),
+    screenshotBlock(S, "daily-missions", "missions", "פאנל משימות יומיות"),
   ],
 });
 
@@ -127,8 +127,8 @@ export const coinsAndArcade = studentArticle({
   blocks: [
     heading(2, "coins", "מטבעות"),
     paragraph("מתרגלים ומרוויחים מטבעות. בארקייד אפשר לשחק משחקי לוח עם חברים."),
-    screenshotBlock(S, "coins-and-arcade", "arcade", "עמוד ארקייד"),
     videoBlock(S, "coins-and-arcade"),
+    screenshotBlock(S, "coins-and-arcade", "arcade", "עמוד ארקייד"),
     relatedLinks([{ href: "/student/arcade", label: "לארקייד" }]),
   ],
 });

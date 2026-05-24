@@ -89,8 +89,8 @@ export const addStudents = baseArticle({
   blocks: [
     heading(2, "add-form", "טופס הוספה"),
     paragraph("הזינו שם לתלמיד ובחרו כיתה (א׳ עד ו׳). לאחר השמירה יוצגו פרטי כניסה לתלמיד."),
-    screenshotBlock(S, "add-students", "form", "טופס הוספת תלמיד עם בחירת כיתה"),
     videoBlock(S, "add-students"),
+    screenshotBlock(S, "add-students", "form", "טופס הוספת תלמיד עם בחירת כיתה"),
     list(["כיתה א׳ — grade_1", "כיתה ב׳ — grade_2", "ועד כיתה ו׳ — grade_6"], false),
   ],
 });
@@ -144,8 +144,8 @@ export const howToReadReport = baseArticle({
   blocks: [
     heading(2, "open-report", "פתיחת דוח"),
     paragraph("מעמוד ההורה בחרו ילד ולחצו על צפייה בדוח. תוכלו לעבור בין דוח מקוצר לדוח מפורט."),
-    screenshotBlock(S, "how-to-read-report", "report-link", "כפתור מעבר לדוח מהורה"),
     videoBlock(S, "how-to-read-report"),
+    screenshotBlock(S, "how-to-read-report", "report-link", "כפתור מעבר לדוח מהורה"),
     relatedLinks([
       { href: "/help/parent-report/report-overview", label: "סקירת הדוח" },
       { href: "/help/parent-report/summary-card", label: "כרטיס סיכום" },
@@ -166,8 +166,8 @@ export const parentCopilot = baseArticle({
   blocks: [
     heading(2, "how-to-ask", "איך שואלים?"),
     paragraph("בתוך הדוח פתחו את אזור «שאלו על הדוח» והקלידו שאלה בעברית על הביצועים, הנושאים או ההמלצות."),
-    screenshotBlock(S, "parent-copilot", "copilot-panel", "פאנל שאלות על הדוח"),
     videoBlock(S, "parent-copilot"),
+    screenshotBlock(S, "parent-copilot", "copilot-panel", "פאנל שאלות על הדוח"),
     heading(2, "limits", "מגבלות"),
     list([
       "התשובות מבוססות על נתוני התרגול באתר",

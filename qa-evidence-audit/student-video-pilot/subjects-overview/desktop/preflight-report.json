@@ -1,0 +1,63 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "demo_account_access",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    },
+    {
+      "id": "subject_חשבון",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "subject_גיאומטריה",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "subject_עברית",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "subject_אנגלית",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "subject_מדעים",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "subject_מולדת וגיאוגרפיה",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "route_math-master",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "route_geometry-master",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "slug": "subjects-overview",
+  "viewport": "desktop",
+  "workflowId": "SL9",
+  "title": "סקירת מקצועות באתר",
+  "pilot": "student-video-subjects-overview-desktop",
+  "at": "2026-05-24T19:00:48.452Z"
+}

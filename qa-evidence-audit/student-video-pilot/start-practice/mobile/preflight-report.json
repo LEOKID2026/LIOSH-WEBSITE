@@ -1,5 +1,5 @@
 {
-  "ok": false,
+  "ok": true,
   "checks": [
     {
       "id": "demo_account_access",
@@ -12,19 +12,22 @@
       "message": "ישראל ישראלי"
     },
     {
-      "id": "preflight_browser_flow",
-      "ok": false,
-      "message": "page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n"
+      "id": "math_question_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "math_feedback",
+      "ok": true,
+      "message": "answer attempted"
     }
   ],
-  "blockers": [
-    "browser: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/math-master\", waiting until \"domcontentloaded\"\n"
-  ],
+  "blockers": [],
   "baseUrl": "http://127.0.0.1:3001",
   "slug": "start-practice",
   "viewport": "mobile",
   "workflowId": "SL2",
   "title": "איך מתחילים תרגול במקצוע",
   "pilot": "student-video-start-practice-mobile",
-  "at": "2026-05-24T17:33:54.980Z"
+  "at": "2026-05-24T18:59:03.638Z"
 }

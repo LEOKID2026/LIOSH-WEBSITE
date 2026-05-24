@@ -1,5 +1,5 @@
 {
-  "ok": false,
+  "ok": true,
   "checks": [
     {
       "id": "demo_account_access",
@@ -12,19 +12,27 @@
       "message": "ישראל ישראלי"
     },
     {
-      "id": "preflight_browser_flow",
-      "ok": false,
-      "message": "page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/geometry-master\", waiting until \"domcontentloaded\"\n"
+      "id": "geometry_question_visible",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "geometry_explanation",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "geometry_diagram",
+      "ok": true,
+      "message": "ok"
     }
   ],
-  "blockers": [
-    "browser: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/learning/geometry-master\", waiting until \"domcontentloaded\"\n"
-  ],
+  "blockers": [],
   "baseUrl": "http://127.0.0.1:3001",
   "slug": "geometry-step-explanation",
   "viewport": "desktop",
   "workflowId": "SL4",
   "title": "תרגול בגאומטריה — שאלה חזותית והסבר צעד־צעד",
   "pilot": "student-video-geometry-step-explanation-desktop",
-  "at": "2026-05-24T17:34:44.579Z"
+  "at": "2026-05-24T18:55:30.059Z"
 }

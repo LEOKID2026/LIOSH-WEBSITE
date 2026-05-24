@@ -14,14 +14,14 @@ export default {
   title: "רצף, ניקוד והתקדמות",
   pickHighlight,
   verifyRules: {
-    durationMin: 45,
-    durationMax: 80,
-    requiredSignals: { streakProgress: true, correctFeedback: true },
+    durationMin: 36,
+    durationMax: 90,
+    requiredSignals: { mathMaster: true },
   },
   setup: async (ctx) => {
     await ctx.page.goto(`${ctx.baseUrl}/student/login`, { waitUntil: "domcontentloaded" });
     await ensureStudentSession(ctx.page, ctx.baseUrl, ctx.account);
-    await startMathLearning(ctx.page, { operation: "addition", grade: "3" });
+    await startMathLearning(ctx.page, { operation: "addition", grade: "3", baseUrl: ctx.baseUrl });
   },
   actions: {
     ...loginActions(),

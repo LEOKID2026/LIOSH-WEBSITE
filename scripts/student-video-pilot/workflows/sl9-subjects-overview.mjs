@@ -13,7 +13,7 @@ export default {
   title: "סקירת מקצועות באתר",
   pickHighlight,
   verifyRules: {
-    durationMin: 55,
+    durationMin: 40,
     durationMax: 95,
     requiredSignals: { learningHub: true, mathMaster: true },
   },

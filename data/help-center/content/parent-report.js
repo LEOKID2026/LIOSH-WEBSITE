@@ -25,8 +25,8 @@ export const reportOverview = baseArticle({
   blocks: [
     heading(2, "short", "דוח מקוצר"),
     paragraph("מציג תמונת מצב מהירה: ביצועים, מגמות והמלצות עיקריות."),
-    screenshotBlock(S, "report-overview", "short-report", "דף דוח הורים מקוצר"),
     videoBlock(S, "report-overview"),
+    screenshotBlock(S, "report-overview", "short-report", "דף דוח הורים מקוצר"),
     heading(2, "detailed", "דוח מפורט"),
     paragraph("כולל פירוט לפי מקצוע, נושאים, מכתב הורי והמלצות ממוקדות."),
     screenshotBlock(S, "report-overview", "detailed-report", "דף דוח מפורט"),

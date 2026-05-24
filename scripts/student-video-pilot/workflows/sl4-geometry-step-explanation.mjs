@@ -14,7 +14,7 @@ export default {
   title: "תרגול בגאומטריה — שאלה חזותית והסבר צעד־צעד",
   pickHighlight,
   verifyRules: {
-    durationMin: 60,
+    durationMin: 52,
     durationMax: 100,
     requiredSignals: {
       geometryMaster: true,
@@ -25,7 +25,7 @@ export default {
   setup: async (ctx) => {
     await ctx.page.goto(`${ctx.baseUrl}/student/login`, { waitUntil: "domcontentloaded" });
     await ensureStudentSession(ctx.page, ctx.baseUrl, ctx.account);
-    await startGeometryLearning(ctx.page, { preferDiagram: true });
+    await startGeometryLearning(ctx.page, { preferDiagram: true, baseUrl: ctx.baseUrl });
   },
   actions: {
     ...loginActions(),

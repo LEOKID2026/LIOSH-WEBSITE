@@ -27,12 +27,29 @@ function runStep(script, slug, viewport, baseUrl) {
 async function main() {
   const argv = process.argv.slice(2);
   const baseUrl = resolveBaseUrl(argv);
+  const fromArg = argv.find((a) => a.startsWith("--from="));
+  const fromId = fromArg ? fromArg.slice("--from=".length).toUpperCase() : null;
+  let workflows = WAVE_ORDER;
+  if (fromId) {
+    const idx = WAVE_ORDER.findIndex((w) => w.id === fromId);
+    if (idx < 0) throw new Error(`Unknown --from workflow id: ${fromId}`);
+    workflows = WAVE_ORDER.slice(idx);
+  }
   const startedAt = new Date().toISOString();
   const results = [];
   let passCount = 0;
   let failCount = 0;
 
-  for (const workflow of WAVE_ORDER) {
+  const warmup = spawnSync(
+    `node --env-file=.env.local scripts/help-center/provision-demo-account.mjs`,
+    { encoding: "utf8", cwd: root, shell: true }
+  );
+  if (warmup.status !== 0) {
+    console.warn("WARN: provision-demo warmup failed", warmup.stderr || warmup.stdout);
+  }
+  await new Promise((r) => setTimeout(r, 2000));
+
+  for (const workflow of workflows) {
     for (const viewport of VIEWPORTS) {
       const label = `${workflow.id} ${workflow.slug} (${viewport})`;
       console.log(`\n=== ${label} — preflight ===`);
@@ -75,6 +92,7 @@ async function main() {
         });
         console.error(`BLOCKER: capture failed for ${label}`);
       }
+      await new Promise((r) => setTimeout(r, 3000));
     }
   }
 

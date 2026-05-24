@@ -12,8 +12,8 @@ export default {
   title: "משחקים ותרגול חווייתי",
   pickHighlight,
   verifyRules: {
-    durationMin: 45,
-    durationMax: 80,
+    durationMin: 38,
+    durationMax: 85,
     requiredSignals: { arcadePage: true, arcadeVisited: true },
   },
   actions: {
@@ -29,8 +29,8 @@ export default {
     { id: "2", holdMs: 7000, caption: "אזור המשחקים — ארקייד", highlight: "arcade-header", action: "goto-arcade" },
     { id: "3", holdMs: 7000, caption: "יתרת מטבעות לפני משחק", highlight: "arcade-balance" },
     { id: "4", holdMs: 7000, caption: "בוחרים משחק — למשל Fourline", highlight: "arcade-game-card" },
-    { id: "5", holdMs: 8000, caption: "משחק מהיר — דוגמה קצרה", highlight: "arcade-game-card", action: "arcade-brief" },
-    { id: "6", holdMs: 6000, caption: "משחקים לכיף — לצד תרגול מובנה.", highlight: null },
+    { id: "5", holdMs: 10000, caption: "משחק מהיר — דוגמה קצרה", highlight: "arcade-game-card", action: "arcade-brief" },
+    { id: "6", holdMs: 8000, caption: "משחקים לכיף — לצד תרגול מובנה.", highlight: null },
   ],
   trackScene: trackFromUrl,
   preflightChecks: preflightArcade,

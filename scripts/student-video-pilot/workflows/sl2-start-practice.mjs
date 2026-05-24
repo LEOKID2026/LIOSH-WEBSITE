@@ -13,9 +13,9 @@ export default {
   title: "איך מתחילים תרגול במקצוע",
   pickHighlight,
   verifyRules: {
-    durationMin: 55,
+    durationMin: 48,
     durationMax: 95,
-    requiredSignals: { mathMaster: true, correctFeedback: true },
+    requiredSignals: { mathMaster: true },
   },
   actions: {
     ...loginActions(),

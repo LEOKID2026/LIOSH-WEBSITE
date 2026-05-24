@@ -29,6 +29,16 @@ export function provisionDemoIfNeeded() {
   return { ok: prov.status === 0, output: prov.stderr || prov.stdout || "" };
 }
 
+async function warmupStudentApi(baseUrl) {
+  await fetch(new URL("/student/login", baseUrl).toString(), {
+    method: "GET",
+    redirect: "manual",
+  }).catch(() => {});
+  await fetch(new URL("/api/student/login", baseUrl).toString(), {
+    method: "OPTIONS",
+  }).catch(() => {});
+}
+
 export async function ensureDemoStudentAccess(baseUrl) {
   const account = resolveStudentDemoAccount();
   let login = await tryStudentLoginApi(baseUrl, account);
@@ -38,7 +48,17 @@ export async function ensureDemoStudentAccess(baseUrl) {
   if (!prov.ok) {
     throw new Error(`provision-demo failed: ${prov.output}`);
   }
-  login = await tryStudentLoginApi(baseUrl, account);
+
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (attempt > 0) {
+      await warmupStudentApi(baseUrl);
+      await new Promise((r) => setTimeout(r, 1500 * attempt));
+    }
+    login = await tryStudentLoginApi(baseUrl, account);
+    if (login.ok) return { account, provisioned: true };
+    if (login.status !== 500) break;
+  }
+
   if (!login.ok) {
     throw new Error(`student login API failed after provision: ${login.json?.error || login.status}`);
   }
@@ -101,16 +121,35 @@ export async function loginStudentViaUI(page, baseUrl, account = resolveStudentD
 
 export async function ensureStudentSession(page, baseUrl, account = resolveStudentDemoAccount()) {
   await ensureDemoStudentAccess(baseUrl);
-  return loginStudentViaUI(page, baseUrl, account);
+  const demoName = expectedDemoStudentName();
+  await page.goto(`${baseUrl}/student/login`, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  await waitStudentLoginReady(page, 60_000);
+  await loginStudentViaApiInBrowser(page, baseUrl, account);
+  await page.goto(`${baseUrl}/student/home`, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  await page.waitForFunction(
+    (name) => {
+      const t = document.body?.innerText || "";
+      return t.includes(name) || (t.includes("שלום") && t.length > 200);
+    },
+    demoName,
+    { timeout: 120_000 }
+  );
+  return { alreadyLoggedIn: false };
 }
 
-export async function waitForStudentHomeReady(page) {
+export async function waitForStudentHomeReady(page, demoName = expectedDemoStudentName()) {
   await page.waitForFunction(
-    () => {
+    (name) => {
       const t = document.body?.innerText || "";
-      return t.includes("שלום") && (t.includes("התחל ללמוד") || t.includes("הנתונים שלי"));
+      if (!t.includes("שלום") && !t.includes(name)) return false;
+      return (
+        t.includes("התחל ללמוד") ||
+        t.includes("הנתונים שלי") ||
+        t.includes("הנושאים") ||
+        t.includes("המשימות")
+      );
     },
-    undefined,
-    { timeout: 90_000 }
+    demoName,
+    { timeout: 120_000 }
   );
 }

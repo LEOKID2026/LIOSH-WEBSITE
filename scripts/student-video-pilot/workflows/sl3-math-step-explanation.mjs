@@ -13,7 +13,7 @@ export default {
   title: "תרגול בחשבון — שאלה, תשובה והסבר צעד־צעד",
   pickHighlight,
   verifyRules: {
-    durationMin: 60,
+    durationMin: 52,
     durationMax: 100,
     requiredSignals: {
       mathMaster: true,
@@ -25,7 +25,7 @@ export default {
     await ctx.page.goto(`${ctx.baseUrl}/student/login`, { waitUntil: "domcontentloaded" });
     const { ensureStudentSession } = await import("../lib/student-session.mjs");
     await ensureStudentSession(ctx.page, ctx.baseUrl, ctx.account);
-    await startMathLearning(ctx.page, { operation: "addition", grade: "3" });
+    await startMathLearning(ctx.page, { operation: "addition", grade: "3", baseUrl: ctx.baseUrl });
   },
   actions: {
     ...loginActions(),

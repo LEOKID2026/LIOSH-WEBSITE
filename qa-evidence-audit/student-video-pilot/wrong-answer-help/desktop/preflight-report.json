@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "id": "demo_account_access",
+      "ok": true,
+      "message": "ADMIN/****"
+    },
+    {
+      "id": "student_ui_login",
+      "ok": true,
+      "message": "ישראל ישראלי"
+    },
+    {
+      "id": "wrong_feedback",
+      "ok": true,
+      "message": "ok"
+    },
+    {
+      "id": "wrong_explanation",
+      "ok": true,
+      "message": "ok"
+    }
+  ],
+  "blockers": [],
+  "baseUrl": "http://127.0.0.1:3001",
+  "slug": "wrong-answer-help",
+  "viewport": "desktop",
+  "workflowId": "SL5",
+  "title": "מה קורה כשטועים בשאלה",
+  "pilot": "student-video-wrong-answer-help-desktop",
+  "at": "2026-05-24T18:39:16.321Z"
+}

@@ -1,0 +1,32 @@
+{
+  "title": "משחקים ותרגול חווייתי",
+  "workflowId": "SL8",
+  "slug": "games-arcade",
+  "viewport": "desktop",
+  "capturedAt": "2026-05-24T18:15:29.179Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/games-arcade/desktop/main.webm",
+  "fileSizeBytes": 1402890,
+  "wallClockSec": 76.861,
+  "frameCount": 352,
+  "fps": 8,
+  "decodedDurationSec": 44,
+  "signals": {
+    "homePage": true,
+    "arcadePage": true,
+    "arcadeVisited": true
+  },
+  "endState": {
+    "finalCaption": "משחקים לכיף — לצד תרגול מובנה."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 9
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

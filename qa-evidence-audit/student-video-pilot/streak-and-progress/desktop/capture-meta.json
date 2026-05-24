@@ -1,0 +1,33 @@
+{
+  "title": "רצף, ניקוד והתקדמות",
+  "workflowId": "SL6",
+  "slug": "streak-and-progress",
+  "viewport": "desktop",
+  "capturedAt": "2026-05-24T18:44:28.020Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/streak-and-progress/desktop/main.webm",
+  "fileSizeBytes": 621893,
+  "wallClockSec": 136.8,
+  "frameCount": 312,
+  "fps": 8,
+  "decodedDurationSec": 39,
+  "signals": {
+    "learningHub": true,
+    "mathMaster": true,
+    "mathFeedback": true,
+    "streakProgress": true
+  },
+  "endState": {
+    "finalCaption": "כך צוברים ניקוד, רצף וכוכבים."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 8
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

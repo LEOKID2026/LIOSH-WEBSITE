@@ -1,0 +1,33 @@
+{
+  "title": "כניסת תלמיד ועמוד הבית",
+  "workflowId": "SL1",
+  "slug": "student-home-tour",
+  "viewport": "mobile",
+  "capturedAt": "2026-05-24T17:39:08.767Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "outputWebm": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/qa-evidence-audit/student-video-pilot/student-home-tour/mobile/main.webm",
+  "fileSizeBytes": 637105,
+  "wallClockSec": 74.361,
+  "frameCount": 508,
+  "fps": 8,
+  "decodedDurationSec": 63.5,
+  "signals": {
+    "loginPage": true,
+    "homePage": true,
+    "missionsVisible": true,
+    "journeyVisible": true
+  },
+  "endState": {
+    "finalCaption": "כך נראה עמוד הבית אחרי כניסה."
+  },
+  "verification": {
+    "ok": true,
+    "errors": [],
+    "uniqueFrameHashes": 21
+  },
+  "captureOnlyOverlays": true,
+  "publishedToPublic": false,
+  "badFrames": {
+    "whiteishFrameCount": 0
+  }
+}

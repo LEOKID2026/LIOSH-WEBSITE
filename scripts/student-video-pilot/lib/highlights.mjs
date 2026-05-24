@@ -65,7 +65,10 @@ export function pickHighlight(key, studentName = "ישראל ישראלי") {
     case "geometry-step-btn":
       return [...document.querySelectorAll("button")].find((b) => /צעד-צעד/.test(b.textContent || ""));
     case "streak-hud":
-      return [...document.querySelectorAll("span, div")].find((el) => /^🔥\d+/.test((el.textContent || "").trim()));
+      return (
+        [...document.querySelectorAll("span, div, p")].find((el) => /🔥|רצף|נקודות|score/i.test(el.textContent || "")) ||
+        document.querySelector('[data-testid="math-question-surface"]')
+      );
     case "arcade-header":
       return document.querySelector("h1");
     case "arcade-game-card":
