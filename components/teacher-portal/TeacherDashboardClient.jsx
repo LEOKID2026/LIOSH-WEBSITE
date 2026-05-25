@@ -16,6 +16,45 @@ const SORT_OPTIONS = [
   { key: "status", label: "מצב לימודי" },
 ];
 
+function formatCompactStudentStats(student) {
+  const sessions = Number(student.totalSessions) || 0;
+  const answers = Number(student.totalAnswers) || 0;
+  const acc =
+    student.accuracy != null && Number.isFinite(Number(student.accuracy))
+      ? `${Math.round(Number(student.accuracy))}%`
+      : "—";
+  return `מפגשים: ${sessions} · תשובות: ${answers} · הצלחה: ${acc}`;
+}
+
+function StudentDashboardCard({ student }) {
+  return (
+    <li className="rounded-lg border border-white/10 bg-black/30 p-2.5 sm:p-3 flex flex-col gap-1.5 min-w-0 h-full">
+      <p
+        className="font-semibold text-sm leading-tight truncate"
+        title={student.studentFullName}
+      >
+        {student.studentFullName}
+      </p>
+      <span
+        className={`self-start text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full border leading-none ${statusBadgeClass(
+          student.statusBadge
+        )}`}
+      >
+        {student.statusBadge}
+      </span>
+      <p className="text-[10px] sm:text-xs text-white/60 leading-snug break-words">
+        {formatCompactStudentStats(student)}
+      </p>
+      <Link
+        href={`/teacher/student/${student.studentId}`}
+        className="mt-auto w-full rounded border border-amber-400/40 text-amber-300 text-xs font-semibold px-2 py-1.5 hover:bg-amber-500/10 text-center"
+      >
+        צפייה בדוח
+      </Link>
+    </li>
+  );
+}
+
 function statusBadgeClass(badge) {
   switch (badge) {
     case "חזק":
@@ -515,34 +554,9 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
         {filteredStudents.length === 0 ? (
           <p className="text-white/60 text-sm">לא נמצאו תלמידים לפי הסינון.</p>
         ) : (
-          <ul className="space-y-3">
+          <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
             {filteredStudents.map((s) => (
-              <li
-                key={s.studentId}
-                className="rounded-xl border border-white/10 bg-black/30 p-4 flex flex-col gap-3"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-base leading-snug break-words">
-                      {s.studentFullName}
-                    </p>
-                    <span
-                      className={`inline-block mt-2 text-xs font-medium px-2.5 py-1 rounded-full border ${statusBadgeClass(
-                        s.statusBadge
-                      )}`}
-                    >
-                      {s.statusBadge}
-                    </span>
-                  </div>
-                  <Link
-                    href={`/teacher/student/${s.studentId}`}
-                    className="shrink-0 rounded border border-amber-400/40 text-amber-300 text-sm font-semibold px-3 py-2 hover:bg-amber-500/10 w-full sm:w-auto text-center"
-                  >
-                    צפייה בדוח
-                  </Link>
-                </div>
-                <p className="text-sm text-white/65 leading-relaxed">{s.activitySummary}</p>
-              </li>
+              <StudentDashboardCard key={s.studentId} student={s} />
             ))}
           </ul>
         )}
