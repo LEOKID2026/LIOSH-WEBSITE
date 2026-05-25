@@ -143,7 +143,7 @@ async function main() {
       createRes.body?.data?.accessId &&
       createRes.body?.data?.loginPinPlaintext &&
       /^\d{4}$/.test(createRes.body.data.loginPinPlaintext) &&
-      /^[a-z]{3}-\d{2,}$/.test(String(createRes.body?.data?.loginUsername || "")),
+      /^[a-z]{3}-p\d{2,}$/.test(String(createRes.body?.data?.loginUsername || "")),
     `status=${createRes.statusCode} username=${createRes.body?.data?.loginUsername || ""}`
   );
 
@@ -419,7 +419,7 @@ async function main() {
     "rotate username uses next prefixed sequence",
     rotateUsername.statusCode === 200 &&
       rotUserNew !== rotUser &&
-      /^[a-z]{3}-\d{2,}$/.test(String(rotUserNew || "")) &&
+      /^[a-z]{3}-p\d{2,}$/.test(String(rotUserNew || "")) &&
       loginOldUserAfterRotate.statusCode === 401 &&
       loginNewUserAfterRotate.statusCode === 200,
     `old=${rotUser} new=${rotUserNew}`

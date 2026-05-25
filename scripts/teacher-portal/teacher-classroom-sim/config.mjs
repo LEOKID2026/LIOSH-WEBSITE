@@ -123,9 +123,12 @@ export function dbGradeLevel(gradeKey) {
   return GRADE_DB_LEVEL[gradeKey] || `grade_${gradeNumber(gradeKey)}`;
 }
 
-export function studentUsername(gradeKey, slot) {
-  const g = gradeKey.replace(/^g/, "");
-  return `simg${g}-${String(slot).padStart(2, "0")}`;
+export function studentUsername(_gradeKey, slot) {
+  return `leo-s${String(slot).padStart(2, "0")}`;
+}
+
+export function parentAccessUsername(_gradeKey, slot) {
+  return `leo-p${String(slot).padStart(2, "0")}`;
 }
 
 export function studentFullName(slot) {

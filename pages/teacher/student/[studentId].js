@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
 import GuardianAccessPanel from "../../../components/teacher-portal/GuardianAccessPanel";
+import StudentLoginAccessPanel from "../../../components/teacher-portal/StudentLoginAccessPanel";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
 import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
 import {
@@ -255,7 +256,10 @@ export default function TeacherStudentReportPage({ studentId }) {
           </section>
 
           {accessToken ? (
-            <GuardianAccessPanel accessToken={accessToken} studentId={studentId} />
+            <>
+              <StudentLoginAccessPanel accessToken={accessToken} studentId={studentId} />
+              <GuardianAccessPanel accessToken={accessToken} studentId={studentId} />
+            </>
           ) : null}
         </TeacherPortalShell>
       </div>
