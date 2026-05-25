@@ -73,12 +73,11 @@ export default function TeacherLoginPage({ inviteOnly }) {
     };
   }, [clientReady, router]);
 
-  const signOutAndRedirectHome = async () => {
+  const signOutAndStayOnLogin = async () => {
     const supabase = supabaseRef.current;
     if (supabase) {
       await supabase.auth.signOut();
     }
-    router.replace("/");
   };
 
   const onSubmit = async (e) => {
@@ -97,7 +96,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
         setLoginError(
           "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
         );
-        await signOutAndRedirectHome();
+        await signOutAndStayOnLogin();
         return;
       }
 
@@ -106,7 +105,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
 
       if (me.status === 503 && me.body?.error?.code === "feature_disabled") {
         setLoginError("פורטל המורים אינו זמין כרגע.");
-        await signOutAndRedirectHome();
+        await signOutAndStayOnLogin();
         return;
       }
 
@@ -114,7 +113,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
         setLoginError(
           "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
         );
-        await signOutAndRedirectHome();
+        await signOutAndStayOnLogin();
         return;
       }
 
@@ -128,12 +127,12 @@ export default function TeacherLoginPage({ inviteOnly }) {
           setLoginError(
             "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
           );
-          await signOutAndRedirectHome();
+          await signOutAndStayOnLogin();
           return;
         }
         if (onboard.body?.error?.code === "db_schema_not_ready") {
           setLoginError("המערכת עדיין מתכוננת. נסה שנית בעוד מספר דקות.");
-          await signOutAndRedirectHome();
+          await signOutAndStayOnLogin();
           return;
         }
         me = await fetchTeacherMe(token);
@@ -147,7 +146,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
       setLoginError(
         "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
       );
-      await signOutAndRedirectHome();
+      await signOutAndStayOnLogin();
     } finally {
       setBusy(false);
     }

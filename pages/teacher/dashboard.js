@@ -114,14 +114,14 @@ export default function TeacherDashboardPage({ linkEnabled }) {
           return;
         } else {
           await supabase.auth.signOut();
-          router.replace("/");
+          router.replace("/teacher/login");
           return;
         }
       }
 
       if (me.status !== 200 || !me.body?.data) {
         await supabase.auth.signOut();
-        router.replace("/");
+        router.replace(me.status === 403 ? "/" : "/teacher/login");
         return;
       }
 
