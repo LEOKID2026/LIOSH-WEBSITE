@@ -1,9 +1,13 @@
 import { test, expect, type APIRequestContext } from "@playwright/test";
 
 const TEACHER_EMAIL = process.env.TEACHER_PORTAL_VERIFY_EMAIL || "teacher@leo.com";
-const TEACHER_PASSWORD = process.env.TEACHER_PORTAL_VERIFY_PASSWORD || "TeacherPortalVerify!2026";
-const STUDENT_USER = process.env.E2E_STUDENT_USERNAME || "simg3-01";
-const STUDENT_PIN = process.env.E2E_STUDENT_PIN || "1234";
+const TEACHER_PASSWORD = process.env.TEACHER_PORTAL_VERIFY_PASSWORD || "747975";
+const STUDENT_USER =
+  process.env.ACTIVITY_SIM_STUDENT_USER ||
+  process.env.E2E_STUDENT_USERNAME ||
+  "leo-s01";
+const STUDENT_PIN =
+  process.env.ACTIVITY_SIM_STUDENT_PIN || process.env.E2E_STUDENT_PIN || "1234";
 
 function sampleQuestions(n: number) {
   return Array.from({ length: n }, (_, i) => ({

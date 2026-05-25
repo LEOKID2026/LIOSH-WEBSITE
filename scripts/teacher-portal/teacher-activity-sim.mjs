@@ -1,52 +1,36 @@
 #!/usr/bin/env node
 /**
  * Classroom Activities API simulation (isolated from daily classroom sim).
- * Requires migration 024 applied and dev server optional (API handlers imported directly).
+ * Requires migration 024 applied and a running Next dev server (HTTP, like Playwright).
  *
- * node --env-file=.env.local --env-file=.env.e2e.local scripts/teacher-portal/teacher-activity-sim.mjs
+ *   npx next dev -H 127.0.0.1 -p 3001
+ *   npm run teacher:activity-sim
+ *
+ * Env (see .env.e2e.local):
+ *   ACTIVITY_SIM_BASE_URL — default http://127.0.0.1:3001
+ *   TEACHER_PORTAL_VERIFY_EMAIL / TEACHER_PORTAL_VERIFY_PASSWORD
+ *   E2E_STUDENT_USERNAME or ACTIVITY_SIM_STUDENT_USER
+ *   E2E_STUDENT_PIN or ACTIVITY_SIM_STUDENT_PIN
  */
-import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const root = path.join(__dirname, "../..");
-const u = (p) => pathToFileURL(path.join(root, p)).href;
+const BASE =
+  process.env.ACTIVITY_SIM_BASE_URL ||
+  process.env.PLAYWRIGHT_BASE_URL ||
+  "http://127.0.0.1:3001";
 
-const TEACHER_EMAIL =
-  process.env.TEACHER_PORTAL_VERIFY_EMAIL || "teacher@leo.com";
-const TEACHER_PASSWORD = process.env.TEACHER_PORTAL_VERIFY_PASSWORD || "TeacherPortalVerify!2026";
-const STUDENT_USER = process.env.ACTIVITY_SIM_STUDENT_USER || "simg3-01";
+const TEACHER_EMAIL = process.env.TEACHER_PORTAL_VERIFY_EMAIL || "teacher@leo.com";
+const TEACHER_PASSWORD = process.env.TEACHER_PORTAL_VERIFY_PASSWORD || "747975";
+/** Use ACTIVITY_SIM_* only so .env.local E2E_STUDENT_* (help/QA) does not override class member. */
+const STUDENT_USER = process.env.ACTIVITY_SIM_STUDENT_USER || "leo-s01";
 const STUDENT_PIN = process.env.ACTIVITY_SIM_STUDENT_PIN || "1234";
+
+const SERVER_READY_PATH = process.env.ACTIVITY_SIM_READY_PATH || "/parent/login";
+const SERVER_WAIT_MS = Number(process.env.ACTIVITY_SIM_SERVER_WAIT_MS || 120_000);
 
 const results = [];
 function record(name, pass, detail = "") {
   results.push({ name, pass, detail });
-}
-
-function mockRes() {
-  return {
-    statusCode: 200,
-    headers: {},
-    body: null,
-    status(c) {
-      this.statusCode = c;
-      return this;
-    },
-    json(b) {
-      this.body = b;
-      return this;
-    },
-    setHeader() {},
-    end() {},
-  };
-}
-
-async function runHandler(rel, req) {
-  const mod = await import(u(rel));
-  const res = mockRes();
-  await mod.default(req, res);
-  return res;
 }
 
 function requireEnv(name) {
@@ -55,8 +39,52 @@ function requireEnv(name) {
   return v;
 }
 
-async function signIn(anon, email, password) {
-  const { data, error } = await anon.auth.signInWithPassword({ email, password });
+async function waitForServer() {
+  const deadline = Date.now() + SERVER_WAIT_MS;
+  const url = `${BASE.replace(/\/$/, "")}${SERVER_READY_PATH}`;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(url, { method: "GET", redirect: "manual" });
+      if (res.status >= 200 && res.status < 500) return true;
+    } catch {
+      /* retry */
+    }
+    await new Promise((r) => setTimeout(r, 1500));
+  }
+  return false;
+}
+
+/**
+ * @param {string} path
+ * @param {{ method?: string, headers?: Record<string, string>, body?: unknown }} [opts]
+ */
+async function apiFetch(path, opts = {}) {
+  const method = opts.method || "GET";
+  const headers = { Accept: "application/json", ...opts.headers };
+  let body;
+  if (opts.body !== undefined) {
+    headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    body = JSON.stringify(opts.body);
+  }
+  const res = await fetch(`${BASE.replace(/\/$/, "")}${path}`, { method, headers, body });
+  const text = await res.text();
+  let json = {};
+  try {
+    json = text ? JSON.parse(text) : {};
+  } catch {
+    json = { _raw: text.slice(0, 300) };
+  }
+  return { status: res.status, headers: res.headers, body: json, text };
+}
+
+async function signInTeacher() {
+  const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
+  const anonKey = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY");
+  const anon = createClient(url, anonKey, { auth: { persistSession: false } });
+  const { data, error } = await anon.auth.signInWithPassword({
+    email: TEACHER_EMAIL,
+    password: TEACHER_PASSWORD,
+  });
   if (error || !data.session?.access_token) {
     throw new Error(error?.message || "teacher sign-in failed");
   }
@@ -64,9 +92,8 @@ async function signIn(anon, email, password) {
 }
 
 function parseStudentCookie(headers) {
-  const raw = headers["set-cookie"] || headers["Set-Cookie"] || "";
-  const line = Array.isArray(raw) ? raw[0] : String(raw);
-  const match = line.match(/liosh_student_session=([^;]+)/);
+  const raw = headers.get("set-cookie") || "";
+  const match = raw.match(/liosh_student_session=([^;]+)/);
   return match ? decodeURIComponent(match[1]) : "";
 }
 
@@ -86,15 +113,20 @@ function sampleQuestionSet(n) {
 }
 
 async function main() {
-  process.env.TEACHER_PORTAL_ENABLED = "true";
+  const ready = await waitForServer();
+  if (!ready) {
+    console.error(
+      `Dev server not reachable at ${BASE}${SERVER_READY_PATH} within ${SERVER_WAIT_MS}ms.\n` +
+        "Start: npx next dev -H 127.0.0.1 -p 3001"
+    );
+    process.exit(2);
+  }
+  record("dev_server_ready", true, BASE);
 
   const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
   const serviceKey = requireEnv("LEARNING_SUPABASE_SERVICE_ROLE_KEY");
-  const anonKey = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY");
 
   const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
-  const anon = createClient(url, anonKey, { auth: { persistSession: false } });
-
   const { data: schemaProbe, error: schemaErr } = await admin
     .from("classroom_activities")
     .select("id")
@@ -105,17 +137,18 @@ async function main() {
     process.exit(2);
   }
   void schemaProbe;
+  record("migration_024_schema", true, "classroom_activities");
 
-  const teacherToken = await signIn(anon, TEACHER_EMAIL, TEACHER_PASSWORD);
-  const teacherAuth = { authorization: `Bearer ${teacherToken}`, origin: "http://localhost:3001" };
+  const teacherToken = await signInTeacher();
+  const teacherAuth = {
+    Authorization: `Bearer ${teacherToken}`,
+    Origin: BASE,
+  };
 
-  const classesRes = await runHandler("pages/api/teacher/classes/index.js", {
-    method: "GET",
-    headers: teacherAuth,
-    query: {},
-  });
+  const classesRes = await apiFetch("/api/teacher/classes", { headers: teacherAuth });
   const classes = classesRes.body?.data?.classes || [];
-  const cls = classes.find((c) => (c.memberCount ?? c.activeMemberCount ?? 0) >= 1) || classes[0];
+  const cls =
+    classes.find((c) => (c.memberCount ?? c.activeMemberCount ?? 0) >= 1) || classes[0];
   if (!cls?.classId) {
     record("pick_class", false, "no class with members");
     printSummary();
@@ -124,9 +157,9 @@ async function main() {
   record("pick_class", true, cls.classId);
 
   const questionSet = sampleQuestionSet(5);
-  const createRes = await runHandler("pages/api/teacher/activities/index.js", {
+  const createRes = await apiFetch("/api/teacher/activities", {
     method: "POST",
-    headers: { ...teacherAuth, "content-type": "application/json" },
+    headers: teacherAuth,
     body: {
       classId: cls.classId,
       title: `Sim Activity ${new Date().toISOString().slice(0, 16)}`,
@@ -140,138 +173,139 @@ async function main() {
     },
   });
   const activityId = createRes.body?.data?.activityId;
-  record("create_activity", createRes.statusCode === 201 && !!activityId, String(createRes.statusCode));
+  record("create_activity", createRes.status === 201 && !!activityId, String(createRes.status));
 
   if (!activityId) {
     printSummary();
     process.exit(1);
   }
 
-  const activateRes = await runHandler(
-    `pages/api/teacher/activities/[activityId]/status.js`,
-    {
-      method: "PATCH",
-      headers: { ...teacherAuth, "content-type": "application/json" },
-      query: { activityId },
-      body: { action: "activate" },
-    }
-  );
-  record("activate", activateRes.statusCode === 200, activateRes.body?.data?.status);
+  const activateRes = await apiFetch(`/api/teacher/activities/${activityId}/status`, {
+    method: "PATCH",
+    headers: teacherAuth,
+    body: { action: "activate" },
+  });
+  record("activate", activateRes.status === 200, activateRes.body?.data?.status);
 
-  const loginRes = await runHandler("pages/api/student/login.js", {
+  const loginRes = await apiFetch("/api/student/login", {
     method: "POST",
-    headers: { "content-type": "application/json", origin: "http://localhost:3001" },
+    headers: { Origin: BASE },
     body: { username: STUDENT_USER, pin: STUDENT_PIN },
   });
   const studentCookie = parseStudentCookie(loginRes.headers);
-  record("student_login", loginRes.statusCode === 200 && !!studentCookie, String(loginRes.statusCode));
+  record(
+    "student_login",
+    loginRes.status === 200 && !!studentCookie,
+    `${loginRes.status} user=${STUDENT_USER}`
+  );
+
+  if (!studentCookie) {
+    printSummary();
+    process.exit(1);
+  }
 
   const studentHeaders = {
-    cookie: `liosh_student_session=${studentCookie}`,
-    "content-type": "application/json",
-    origin: "http://localhost:3001",
+    Cookie: `liosh_student_session=${studentCookie}`,
+    Origin: BASE,
   };
 
-  const startRes = await runHandler(
-    `pages/api/student/activities/[activityId]/start.js`,
-    {
-      method: "POST",
-      headers: studentHeaders,
-      query: { activityId },
-      body: {},
-    }
-  );
-  const stripped = JSON.stringify(startRes.body?.questionSet || []);
+  const startRes = await apiFetch(`/api/student/activities/${activityId}/start`, {
+    method: "POST",
+    headers: studentHeaders,
+    body: {},
+  });
+  const startText = startRes.text || "";
   record(
     "start_strips_answers",
-    !stripped.includes("correctAnswer") && !stripped.includes("correct_answer"),
-    stripped.slice(0, 80)
+    startRes.status === 200 &&
+      !startText.includes("correctAnswer") &&
+      !startText.includes("correct_answer"),
+    String(startRes.status)
+  );
+  record(
+    "start_in_progress",
+    startRes.body?.studentStatus === "in_progress",
+    startRes.body?.studentStatus || ""
   );
 
   for (let i = 0; i < 5; i += 1) {
-    const ansRes = await runHandler(
-      `pages/api/student/activities/[activityId]/answer.js`,
-      {
-        method: "POST",
-        headers: studentHeaders,
-        query: { activityId },
-        body: {
-          questionIndex: i,
-          selectedAnswer: String(questionSet[i].correctAnswer),
-          timeSpentMs: 1000,
-        },
-      }
-    );
+    const ansRes = await apiFetch(`/api/student/activities/${activityId}/answer`, {
+      method: "POST",
+      headers: studentHeaders,
+      body: {
+        questionIndex: i,
+        selectedAnswer: String(questionSet[i].correctAnswer),
+        timeSpentMs: 1000,
+      },
+    });
     if (i === 0) {
       record("answer_correct", ansRes.body?.isCorrect === true, String(ansRes.body?.isCorrect));
     }
   }
 
-  const tamperRes = await runHandler(
-    `pages/api/student/activities/[activityId]/answer.js`,
-    {
-      method: "POST",
-      headers: studentHeaders,
-      query: { activityId },
-      body: {
-        questionIndex: 0,
-        selectedAnswer: "wrong",
-        is_correct: true,
-        correct_answer: "wrong",
-      },
-    }
-  );
+  const tamperRes = await apiFetch(`/api/student/activities/${activityId}/answer`, {
+    method: "POST",
+    headers: studentHeaders,
+    body: {
+      questionIndex: 0,
+      selectedAnswer: "wrong",
+      is_correct: true,
+      correct_answer: "wrong",
+    },
+  });
   record(
     "tamper_ignored",
     tamperRes.body?.isCorrect === false,
     `isCorrect=${tamperRes.body?.isCorrect}`
   );
 
-  await runHandler(`pages/api/student/activities/[activityId]/submit.js`, {
+  const submitRes = await apiFetch(`/api/student/activities/${activityId}/submit`, {
     method: "POST",
     headers: studentHeaders,
-    query: { activityId },
     body: {},
   });
+  record("submit", submitRes.status === 200 && submitRes.body?.ok === true, String(submitRes.status));
 
-  const monitorRes = await runHandler(
-    `pages/api/teacher/activities/[activityId]/monitor.js`,
-    {
-      method: "GET",
-      headers: teacherAuth,
-      query: { activityId },
-    }
+  const restartRes = await apiFetch(`/api/student/activities/${activityId}/start`, {
+    method: "POST",
+    headers: studentHeaders,
+    body: {},
+  });
+  record(
+    "submitted_not_downgraded",
+    restartRes.status === 200 &&
+      restartRes.body?.alreadyCompleted === true &&
+      restartRes.body?.studentStatus === "submitted",
+    restartRes.body?.studentStatus || ""
   );
+
+  const monitorRes = await apiFetch(`/api/teacher/activities/${activityId}/monitor`, {
+    headers: teacherAuth,
+  });
   record(
     "monitor",
-    monitorRes.statusCode === 200 && monitorRes.body?.data?.students?.length >= 0,
+    monitorRes.status === 200 && Array.isArray(monitorRes.body?.data?.students),
     `students=${monitorRes.body?.data?.students?.length}`
   );
 
-  await runHandler(`pages/api/teacher/activities/[activityId]/status.js`, {
+  await apiFetch(`/api/teacher/activities/${activityId}/status`, {
     method: "PATCH",
-    headers: { ...teacherAuth, "content-type": "application/json" },
-    query: { activityId },
+    headers: teacherAuth,
     body: { action: "close" },
   });
 
-  const reportRes = await runHandler(
-    `pages/api/teacher/activities/[activityId]/report.js`,
-    {
-      method: "GET",
-      headers: teacherAuth,
-      query: { activityId },
-    }
-  );
+  const reportRes = await apiFetch(`/api/teacher/activities/${activityId}/report`, {
+    headers: teacherAuth,
+  });
   record(
     "report",
-    reportRes.statusCode === 200 && reportRes.body?.data?.perQuestion?.length === 5,
+    reportRes.status === 200 && reportRes.body?.data?.perQuestion?.length === 5,
     `pq=${reportRes.body?.data?.perQuestion?.length}`
   );
 
-  const variantsRes = await runHandler("pages/api/teacher/activities/index.js", {
+  const variantsRes = await apiFetch("/api/teacher/activities", {
     method: "POST",
-    headers: { ...teacherAuth, "content-type": "application/json" },
+    headers: teacherAuth,
     body: {
       classId: cls.classId,
       title: "Variants blocked",
@@ -283,7 +317,7 @@ async function main() {
       questionSet: sampleQuestionSet(3),
     },
   });
-  record("controlled_variants_501", variantsRes.statusCode === 501, String(variantsRes.statusCode));
+  record("controlled_variants_501", variantsRes.status === 501, String(variantsRes.status));
 
   printSummary();
   const failed = results.filter((r) => !r.pass).length;
