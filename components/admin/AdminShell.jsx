@@ -12,7 +12,7 @@ import {
 export const ADMIN_PAGE_CONTAINER =
   "max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-10";
 
-export default function AdminShell({ title, header, children }) {
+export default function AdminShell({ title, header, children, showLogout = false }) {
   const { logout, busy } = useAdminLogout();
 
   return (
@@ -39,14 +39,16 @@ export default function AdminShell({ title, header, children }) {
           <Link href="/teacher/dashboard" className="text-white/60 hover:underline px-1">
             {ADMIN_NAV_TEACHER_PORTAL}
           </Link>
-          <button
-            type="button"
-            onClick={() => void logout()}
-            disabled={busy}
-            className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 font-semibold text-white disabled:opacity-60 min-h-[2rem]"
-          >
-            {busy ? ADMIN_LOGOUT_BUSY : ADMIN_LOGOUT}
-          </button>
+          {showLogout ? (
+            <button
+              type="button"
+              onClick={() => void logout()}
+              disabled={busy}
+              className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 font-semibold text-white disabled:opacity-60 min-h-[2rem]"
+            >
+              {busy ? ADMIN_LOGOUT_BUSY : ADMIN_LOGOUT}
+            </button>
+          ) : null}
         </nav>
       </header>
       {children}

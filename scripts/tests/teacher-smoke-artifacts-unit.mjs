@@ -8,8 +8,11 @@ import { rosterFilterLabelHe, personalActivitiesSectionTitleHe } from "../../lib
 
 assert.equal(isSmokeClassName("Phase7B Smoke Class"), true);
 assert.equal(isSmokeClassName("My Real Class"), false);
+assert.equal(isSmokeClassName("כיתה א׳"), false);
+assert.equal(isSmokeClassName("Math Class 3"), false);
 assert.equal(isSmokeStudentName("Individual Smoke 123"), true);
 assert.equal(isSmokeStudentName("דני כהן"), false);
+assert.equal(isSmokeStudentName("נועה כהן"), false);
 
 const { visibleClasses, visibleStudents } = partitionSmokeDashboardRows(
   [

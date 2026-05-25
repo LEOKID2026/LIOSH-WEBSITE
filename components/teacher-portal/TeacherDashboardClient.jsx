@@ -1,8 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { filterStudentsByRosterKey } from "../../lib/teacher-portal/teacher-dashboard-roster.js";
-import { rosterFilterLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
-import { teacherAuthFetch } from "../../lib/teacher-portal/teacher-ui.he.js";
+import {
+  DASHBOARD_CREATE_CLASS_BUTTON,
+  DASHBOARD_CREATE_CLASS_LABEL,
+  DASHBOARD_CREATE_CLASS_PLACEHOLDER,
+  DASHBOARD_NO_CLASSES_HINT,
+  DASHBOARD_NO_CLASSES_TITLE,
+  rosterFilterLabelHe,
+  teacherAuthFetch,
+} from "../../lib/teacher-portal/teacher-ui.he.js";
 
 const FILTER_OPTIONS = [
   { key: "all", label: "הכל" },
@@ -423,6 +430,63 @@ function rosterFilterLabel(option) {
   return rosterFilterLabelHe(option) || "";
 }
 
+function ClassesEmptyState({ accessToken, onCreated }) {
+  const [className, setClassName] = useState("כיתה ג׳ - LEO");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const onCreateClass = async () => {
+    const name = className.trim();
+    if (!name) return;
+    setBusy(true);
+    setError("");
+    const res = await teacherAuthFetch(accessToken, "/api/teacher/classes", {
+      method: "POST",
+      body: JSON.stringify({ name, gradeLevel: "g3" }),
+    });
+    const body = await res.json().catch(() => ({}));
+    setBusy(false);
+    if (res.status !== 201) {
+      setError(body?.error?.message || "לא ניתן ליצור כיתה.");
+      return;
+    }
+    onCreated?.();
+  };
+
+  return (
+    <section
+      className="rounded-xl border border-dashed border-white/20 bg-black/20 p-4 sm:p-5"
+      data-testid="teacher-classes-empty-state"
+    >
+      <h2 className="text-lg font-semibold mb-2">כיתות</h2>
+      <p className="text-sm text-white/70 mb-1">{DASHBOARD_NO_CLASSES_TITLE}</p>
+      <p className="text-sm text-white/50 mb-4">{DASHBOARD_NO_CLASSES_HINT}</p>
+      <label className="block text-sm mb-3">
+        <span className="text-white/70">{DASHBOARD_CREATE_CLASS_LABEL}</span>
+        <input
+          className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 text-sm text-right"
+          value={className}
+          onChange={(e) => setClassName(e.target.value)}
+          placeholder={DASHBOARD_CREATE_CLASS_PLACEHOLDER}
+        />
+      </label>
+      <button
+        type="button"
+        disabled={busy || !className.trim()}
+        onClick={() => void onCreateClass()}
+        className="rounded-lg bg-amber-500 text-black text-sm font-semibold px-4 py-2 disabled:opacity-60"
+      >
+        {busy ? "יוצר…" : DASHBOARD_CREATE_CLASS_BUTTON}
+      </button>
+      {error ? (
+        <p className="text-red-300 text-sm mt-3" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
 export default function TeacherDashboardClient({ accessToken, dashboard, onLogout, onRefresh }) {
   const [search, setSearch] = useState("");
   const [rosterFilterKey, setRosterFilterKey] = useState(
@@ -512,7 +576,10 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
       </section>
 
       {(dashboard?.classes || []).length > 0 ? (
-        <section className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5">
+        <section
+          className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5"
+          data-testid="teacher-class-cards-section"
+        >
           <h2 className="text-lg font-semibold mb-3">כיתות</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {(dashboard.classes || []).map((c) => (
@@ -543,13 +610,22 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                   <Link
                     href={`/teacher/class/${c.classId}`}
                     className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
+                    data-testid={`teacher-class-report-${c.classId}`}
                   >
                     דוח כיתה
+                  </Link>
+                  <Link
+                    href={`/teacher/class/${c.classId}/activities`}
+                    className="text-xs rounded border border-amber-400/40 text-amber-200 px-3 py-1.5 hover:bg-amber-500/10"
+                    data-testid={`teacher-class-activities-${c.classId}`}
+                  >
+                    פעילויות
                   </Link>
                   <button
                     type="button"
                     onClick={() => setManageClass(c)}
                     className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
+                    data-testid={`teacher-class-manage-${c.classId}`}
                   >
                     ניהול כיתה
                   </button>
@@ -558,7 +634,9 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
             ))}
           </ul>
         </section>
-      ) : null}
+      ) : (
+        <ClassesEmptyState accessToken={accessToken} onCreated={onRefresh} />
+      )}
 
       {primaryClass ? (
         <section className="rounded-xl border border-amber-400/30 bg-amber-500/5 p-4 sm:p-5">
@@ -580,13 +658,22 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
               <Link
                 href={`/teacher/class/${primaryClass.classId}`}
                 className="text-center rounded bg-amber-500 text-black text-sm font-semibold px-4 py-2.5"
+                data-testid="teacher-primary-class-report"
               >
                 דוח כיתה
+              </Link>
+              <Link
+                href={`/teacher/class/${primaryClass.classId}/activities`}
+                className="text-center rounded border border-amber-400/40 text-amber-200 text-sm font-semibold px-4 py-2.5 hover:bg-amber-500/10"
+                data-testid="teacher-primary-class-activities"
+              >
+                פעילויות
               </Link>
               <button
                 type="button"
                 onClick={() => setManageClass(primaryClass)}
                 className="text-center rounded border border-white/25 text-sm font-semibold px-4 py-2.5 hover:bg-white/10"
+                data-testid="teacher-primary-class-manage"
               >
                 ניהול כיתה
               </button>

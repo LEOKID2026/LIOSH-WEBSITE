@@ -29,7 +29,7 @@ export default function AdminTeachersIndexPage() {
 
   return (
     <Layout>
-      <AdminShell title={ADMIN_TEACHERS_TITLE}>
+      <AdminShell title={ADMIN_TEACHERS_TITLE} showLogout>
         {state === "loading" ? (
           <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>
         ) : loadError ? (
