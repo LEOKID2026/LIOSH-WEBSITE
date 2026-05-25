@@ -142,8 +142,9 @@ async function main() {
     createRes.statusCode === 201 &&
       createRes.body?.data?.accessId &&
       createRes.body?.data?.loginPinPlaintext &&
-      /^\d{4}$/.test(createRes.body.data.loginPinPlaintext),
-    `status=${createRes.statusCode}`
+      /^\d{4}$/.test(createRes.body.data.loginPinPlaintext) &&
+      /^[a-z]{3}-\d{2,}$/.test(String(createRes.body?.data?.loginUsername || "")),
+    `status=${createRes.statusCode} username=${createRes.body?.data?.loginUsername || ""}`
   );
 
   const accessId = createRes.body?.data?.accessId;
@@ -336,8 +337,8 @@ async function main() {
     });
     record(
       "expired access blocks login",
-      loginExpired.statusCode === 401 &&
-        loginExpired.body?.error?.code === "invalid_credentials",
+      loginExpired.statusCode === 403 &&
+        loginExpired.body?.error?.code === "access_expired",
       loginExpired.body?.error?.code
     );
   } else {
@@ -393,6 +394,35 @@ async function main() {
       (meAfterRotate.statusCode === 401 || meAfterRotate.body?.error?.code === "session_revoked") &&
       loginNewPin.statusCode === 200,
     `me=${meAfterRotate.statusCode} newLogin=${loginNewPin.statusCode}`
+  );
+
+  const rotateUsername = await run("./pages/api/teacher/student-access/[accessId]/rotate-username.js", {
+    method: "POST",
+    headers: teacherAuth,
+    query: { accessId: rotAccessId },
+  });
+  const rotUserNew = rotateUsername.body?.data?.loginUsername;
+
+  const loginOldUserAfterRotate = await run("./pages/api/guardian/login.js", {
+    method: "POST",
+    headers: { origin: "http://localhost:3001", "content-type": "application/json" },
+    body: { loginUsername: rotUser, pin: rotPinNew },
+  });
+
+  const loginNewUserAfterRotate = await run("./pages/api/guardian/login.js", {
+    method: "POST",
+    headers: { origin: "http://localhost:3001", "content-type": "application/json" },
+    body: { loginUsername: rotUserNew, pin: rotPinNew },
+  });
+
+  record(
+    "rotate username uses next prefixed sequence",
+    rotateUsername.statusCode === 200 &&
+      rotUserNew !== rotUser &&
+      /^[a-z]{3}-\d{2,}$/.test(String(rotUserNew || "")) &&
+      loginOldUserAfterRotate.statusCode === 401 &&
+      loginNewUserAfterRotate.statusCode === 200,
+    `old=${rotUser} new=${rotUserNew}`
   );
 
   const { data: audits } = await admin

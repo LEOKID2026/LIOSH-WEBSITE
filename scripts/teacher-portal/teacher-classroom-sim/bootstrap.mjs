@@ -75,7 +75,7 @@ async function ensureParentProfile(admin, parentId) {
 async function ensureTeacherProfile(admin, teacherId) {
   const { data: profile } = await admin
     .from("teacher_profiles")
-    .select("id")
+    .select("id, access_prefix")
     .eq("id", teacherId)
     .maybeSingle();
   if (!profile?.id) {
@@ -83,9 +83,18 @@ async function ensureTeacherProfile(admin, teacherId) {
       id: teacherId,
       display_name: SIM_TEACHER_DISPLAY_NAME,
       preferred_language: "he",
+      access_prefix: "leo",
     });
     if (error && error.code !== "23505") {
       throw new Error(`teacher_profiles insert failed: ${error.message}`);
+    }
+  } else if (!profile.access_prefix) {
+    const { error } = await admin
+      .from("teacher_profiles")
+      .update({ access_prefix: "leo" })
+      .eq("id", teacherId);
+    if (error) {
+      throw new Error(`teacher_profiles access_prefix update failed: ${error.message}`);
     }
   }
   const { data: limits } = await admin

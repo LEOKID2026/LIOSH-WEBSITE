@@ -3,6 +3,7 @@ import { rejectIfCrossOriginCookieMutation } from "../../../lib/security/same-or
 import { clientIpFromRequest, consumeRateLimit } from "../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../lib/security/production-guard.js";
 import { isDbSchemaNotReadyError, writeTeacherAuditRow } from "../../../lib/teacher-server/teacher-audit.server.js";
+import { ensureTeacherAccessPrefix } from "../../../lib/teacher-server/teacher-access-prefix.server.js";
 import {
   TEACHER_PORTAL_DEFAULT_PLAN_CODE,
   formatTeacherOnboardPayload,
@@ -190,6 +191,18 @@ export default async function handler(req, res) {
         result.status,
         result.code,
         result.code === "db_schema_not_ready"
+          ? "teacher_portal schema not yet applied"
+          : "Unexpected server error"
+      );
+    }
+
+    const prefixResult = await ensureTeacherAccessPrefix(serviceRole, auth.teacherUserId);
+    if (!prefixResult.ok) {
+      return sendTeacherApiError(
+        res,
+        prefixResult.status,
+        prefixResult.code,
+        prefixResult.code === "db_schema_not_ready"
           ? "teacher_portal schema not yet applied"
           : "Unexpected server error"
       );
