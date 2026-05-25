@@ -11,9 +11,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = resolve(__dirname, "../../..");
 
 export const SIM_PARENT_EMAIL = "parent-class-sim@liosh-dev.invalid";
-export const SIM_TEACHER_EMAIL = "teacher-class-sim@liosh-dev.invalid";
+export const SIM_TEACHER_EMAIL = "teacher@leo.com";
 export const SIM_STUDENT_NAME_PREFIX = "סימולציה תלמיד";
-export const SIM_TEACHER_DISPLAY_NAME = "מורה סימולציה";
+export const SIM_TEACHER_DISPLAY_NAME = "מורה LEO";
 export const SIM_PARENT_DISPLAY_NAME = "הורה סימולציה כיתה";
 export const TEACHER_PLAN_CODE = "teacher_basic_20";
 export const STUDENT_COUNT = 20;
@@ -168,7 +168,7 @@ export function parseConfig(argv = process.argv.slice(2)) {
     topicsPerDay: Math.max(2, Math.min(6, Number.parseInt(args["topics-per-day"] || "4", 10) || 4)),
     stateDir: resolveStateDir(),
     repoRoot: REPO_ROOT,
-    teacherPassword: resolvePassword("SIM_TEACHER_PASSWORD", "TeacherClassSim!2026"),
+    teacherPassword: resolvePassword("SIM_TEACHER_PASSWORD", "747975"),
     parentPassword: resolvePassword("SIM_TEACHER_PARENT_PASSWORD", "ParentClassSim!2026"),
     studentPin: String(process.env.SIM_TEACHER_STUDENT_PIN || "1234").replace(/\D/g, "").slice(0, 4) || "1234",
   };

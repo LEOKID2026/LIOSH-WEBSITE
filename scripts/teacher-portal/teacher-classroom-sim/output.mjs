@@ -108,7 +108,7 @@ export function passwordNoteFromConfig(config) {
   const teacherFromEnv = Boolean(String(process.env.SIM_TEACHER_PASSWORD || "").trim());
   const parentFromEnv = Boolean(String(process.env.SIM_TEACHER_PARENT_PASSWORD || "").trim());
   return {
-    teacher: teacherFromEnv ? "(from SIM_TEACHER_PASSWORD env)" : `${config.teacherPassword} (default dev password — set SIM_TEACHER_PASSWORD)`,
+    teacher: teacherFromEnv ? "(from SIM_TEACHER_PASSWORD env)" : `${config.teacherPassword} (default — set SIM_TEACHER_PASSWORD to override)`,
     parent: parentFromEnv ? "(from SIM_TEACHER_PARENT_PASSWORD env)" : `${config.parentPassword} (default dev password — set SIM_TEACHER_PARENT_PASSWORD)`,
   };
 }

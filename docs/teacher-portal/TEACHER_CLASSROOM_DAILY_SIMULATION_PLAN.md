@@ -11,7 +11,7 @@ Daily Playwright/UI-driven simulation maintaining one fixed QA teacher, one clas
 - **Mechanism:** Playwright + real `/api/learning/*` (reuse `scripts/virtual-student-qa/` read-only)
 - **NOT** direct Supabase row injection
 - **Dedicated parent:** `parent-class-sim@liosh-dev.invalid`
-- **Dedicated teacher:** `teacher-class-sim@liosh-dev.invalid`
+- **Dedicated teacher:** `teacher@leo.com` (password `747975`), `app_metadata.role="teacher"`, plan `teacher_basic_20`
 - **Default grade:** `g3`
 - **Isolation:** no changes to AAA nightly, admin@admin.com, AAA1–12, ADMIN demo
 

@@ -7,11 +7,11 @@ Isolated daily runner for one fixed QA teacher classroom (20 students).
 
 | Role | Email |
 |------|-------|
-| Teacher | `teacher-class-sim@liosh-dev.invalid` |
+| Teacher | `teacher@leo.com` |
 | Parent (owns 20 sim students) | `parent-class-sim@liosh-dev.invalid` |
 | Students | `simg3-01` … `simg3-20` (PIN default `1234`) |
 
-Env passwords (optional): `SIM_TEACHER_PASSWORD`, `SIM_TEACHER_PARENT_PASSWORD`, `SIM_TEACHER_STUDENT_PIN`.
+Env passwords (optional): `SIM_TEACHER_PASSWORD` (default `747975`), `SIM_TEACHER_PARENT_PASSWORD`, `SIM_TEACHER_STUDENT_PIN`.
 
 ## Commands
 
@@ -58,6 +58,6 @@ Idempotent per `(date, grade, subject)` unless `--force=true`.
 ## Visual verification
 
 1. Open `/teacher/login`
-2. Log in as `teacher-class-sim@liosh-dev.invalid`
+2. Log in as `teacher@leo.com` (password `747975`)
 3. Dashboard → one class `כיתת סימולציה - כיתה ג׳` + 20 students
 4. Open class report + 3 student reports (strong / weak / improving slots)

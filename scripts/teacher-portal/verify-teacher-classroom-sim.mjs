@@ -18,7 +18,7 @@ if (!manifest) {
 
 const url = process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY;
-const password = resolvePassword("SIM_TEACHER_PASSWORD", "TeacherClassSim!2026");
+const password = resolvePassword("SIM_TEACHER_PASSWORD", "747975");
 
 const anon = createClient(url, anonKey, { auth: { persistSession: false } });
 const admin = createAdminClient();
