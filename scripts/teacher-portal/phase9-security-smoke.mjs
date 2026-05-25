@@ -691,8 +691,12 @@ async function main() {
   const parentLogin = readFileSync(path.join(root, "pages/parent/login.js"), "utf8");
   record(
     "regression",
-    "/parent/login has no guardian link/toggle",
-    !parentLogin.includes("/guardian/login") && !parentLogin.includes("guardian"),
+    "/parent/login exposes teacher-code parent access (no visible guardian wording)",
+    parentLogin.includes("קיבלתי קוד מהמורה") &&
+      parentLogin.includes("כניסה לדוח הילד") &&
+      !parentLogin.includes("guardian") &&
+      !parentLogin.includes("אפוטרופוס") &&
+      !parentLogin.includes("/guardian/login"),
     "ok"
   );
 
