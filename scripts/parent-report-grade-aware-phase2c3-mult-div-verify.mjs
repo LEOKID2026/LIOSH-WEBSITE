@@ -158,6 +158,8 @@ const tMult = "multiplication\u0001learning\u0001g4\u0001easy";
   const mp3 = d3?.subjectProfiles?.find((p) => p.subject === "math");
   assertEq("M-10 division g4 action", mp3?.parentActionHe, M10.division.g3_g4.actionTextHe);
   assertNoBanned("M-10 division detailed", mp3?.parentActionHe);
+  assertNoBanned("M-10 division detailed full", d3);
+  assertNoBanned("M-10 division math profile", mp3);
   const sh3 = summarizeV2UnitsForSubjectForTests(baseM10Div.diagnosticEngineV2.units, {
     subjectReportQuestions: 12,
     subjectLabelHe: "מתמטיקה",
@@ -165,6 +167,7 @@ const tMult = "multiplication\u0001learning\u0001g4\u0001easy";
     reportTotalQuestions: 20,
   });
   assertEq("M-10 division short action", sh3.parentActionHe, M10.division.g3_g4.actionTextHe);
+  assertNoBanned("M-10 division short full", sh3);
 
   const tRat = "ratio\u0001learning\u0001g6\u0001easy";
   const baseM10Rat = {
@@ -181,6 +184,8 @@ const tMult = "multiplication\u0001learning\u0001g4\u0001easy";
   assertEq("M-10 ratio g6 action", mp4?.parentActionHe, M10.ratio.g5_g6.actionTextHe);
   assertEq("M-10 ratio g6 goal", mp4?.nextWeekGoalHe, M10.ratio.g5_g6.goalTextHe);
   assertNoBanned("M-10 ratio detailed action", mp4?.parentActionHe);
+  assertNoBanned("M-10 ratio detailed full", d4);
+  assertNoBanned("M-10 ratio math profile", mp4);
   const tp4 = buildTruthPacketV1(d4, { scopeType: "topic", scopeId: tRat, scopeLabel: "יחס" });
   assertNoBanned("truth M-10 ratio", JSON.stringify(tp4));
 

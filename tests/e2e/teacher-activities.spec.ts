@@ -1,4 +1,8 @@
+import { execFileSync } from "node:child_process";
+import path from "node:path";
 import { test, expect, type APIRequestContext } from "@playwright/test";
+
+const E2E_ROOT = process.cwd();
 
 const TEACHER_EMAIL = process.env.TEACHER_PORTAL_VERIFY_EMAIL || "teacher@leo.com";
 const TEACHER_PASSWORD = process.env.TEACHER_PORTAL_VERIFY_PASSWORD || "747975";
@@ -305,5 +309,543 @@ test.describe("classroom activities @teacher-activities", () => {
     const body = await res.json();
     expect(body.ok).toBe(true);
     expect(Array.isArray(body.activities)).toBe(true);
+  });
+});
+
+/** Phase B0 gate: Science adapter + full teacher→student API flow (Universal Gate item 11). */
+test.describe("classroom activities science B0 @science-b0", () => {
+  test.describe.configure({ mode: "serial" });
+
+  const SCIENCE_GRADE = "g3";
+  const SCIENCE_TOPIC = "body";
+  const SCIENCE_DIFFICULTY = "easy";
+  const SCIENCE_COUNT = 3;
+
+  let teacherBearer = "";
+  let classId = "";
+  let scienceActivityId = "";
+  let studentCookie = "";
+  let scienceQuestionSet: Array<{
+    question: string;
+    correctAnswer: string;
+    choices: string[];
+    subject: string;
+    topic: string;
+  }> = [];
+
+  test.beforeAll(async ({ request }) => {
+    const token = await teacherToken(request);
+    test.skip(!token, "Supabase teacher credentials unavailable");
+    teacherBearer = token!;
+
+    const classesRes = await request.get("/api/teacher/classes", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+    });
+    if (!classesRes.ok()) {
+      test.skip(true, "Teacher classes API unavailable (schema or auth)");
+    }
+    const classesBody = await classesRes.json();
+    const cls = classesBody?.data?.classes?.[0];
+    test.skip(!cls?.classId, "No teacher class for science activity tests");
+    classId = cls.classId;
+
+    const loginRes = await request.post("/api/student/login", {
+      data: { username: STUDENT_USER, pin: STUDENT_PIN },
+    });
+    if (loginRes.ok()) {
+      const setCookie = loginRes.headers()["set-cookie"] || "";
+      const m = setCookie.match(/liosh_student_session=([^;]+)/);
+      if (m) studentCookie = decodeURIComponent(m[1]);
+    }
+
+    const helper = path.join(E2E_ROOT, "tests/e2e/helpers/generate-science-activity-preview.mjs");
+    const json = execFileSync(process.execPath, [helper], {
+      cwd: E2E_ROOT,
+      encoding: "utf-8",
+      env: {
+        ...process.env,
+        E2E_SCIENCE_GRADE: SCIENCE_GRADE,
+        E2E_SCIENCE_TOPIC: SCIENCE_TOPIC,
+        E2E_SCIENCE_DIFFICULTY: SCIENCE_DIFFICULTY,
+        E2E_SCIENCE_COUNT: String(SCIENCE_COUNT),
+      },
+    });
+    scienceQuestionSet = JSON.parse(json);
+  });
+
+  test("[B0-SCI-01] science preview generates N real questions via fixed adapter", async () => {
+    expect(scienceQuestionSet.length).toBe(SCIENCE_COUNT);
+    for (const q of scienceQuestionSet) {
+      expect(q.subject).toBe("science");
+      expect(q.topic).toBe(SCIENCE_TOPIC);
+      expect(String(q.question).trim().length).toBeGreaterThan(0);
+      expect(String(q.correctAnswer).trim().length).toBeGreaterThan(0);
+      expect(Array.isArray(q.choices)).toBe(true);
+      expect(q.choices.length).toBeGreaterThan(1);
+      expect(q.choices).toContain(q.correctAnswer);
+    }
+    const fps = scienceQuestionSet.map((q) => `${q.question}|${q.correctAnswer}`);
+    expect(new Set(fps).size).toBe(fps.length);
+  });
+
+  test("[B0-SCI-02] save science draft returns activityId", async ({ request }) => {
+    test.skip(!classId || !scienceQuestionSet.length, "missing class or preview");
+    const res = await request.post("/api/teacher/activities", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: {
+        classId,
+        title: `E2E Science B0 ${Date.now()}`,
+        subject: "science",
+        topic: SCIENCE_TOPIC,
+        gradeLevel: SCIENCE_GRADE,
+        mode: "guided_practice",
+        questionSelection: "same_exact",
+        difficultyLevel: SCIENCE_DIFFICULTY,
+        questionCount: SCIENCE_COUNT,
+        questionSet: scienceQuestionSet,
+      },
+    });
+    expect(res.status()).toBe(201);
+    const body = await res.json();
+    scienceActivityId = body?.data?.activityId;
+    expect(scienceActivityId).toBeTruthy();
+  });
+
+  test("[B0-SCI-03] activate science activity", async ({ request }) => {
+    test.skip(!scienceActivityId, "no science activity from prior test");
+    const res = await request.patch(`/api/teacher/activities/${scienceActivityId}/status`, {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: { action: "activate" },
+    });
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+    expect(body?.data?.status).toBe("active");
+  });
+
+  test("[B0-SCI-04] student start strips correctAnswer", async ({ request }) => {
+    test.skip(!scienceActivityId || !studentCookie, "student session missing");
+    const res = await request.post(`/api/student/activities/${scienceActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(res.ok()).toBeTruthy();
+    const text = await res.text();
+    expect(text).not.toContain("correctAnswer");
+    expect(text).not.toContain("correct_answer");
+    const body = JSON.parse(text);
+    expect(body.ok).toBe(true);
+    expect(body.studentStatus).toBe("in_progress");
+    const qs = body.questionSet || [];
+    expect(qs.length).toBe(SCIENCE_COUNT);
+    for (const q of qs) {
+      expect(q.correctAnswer).toBeUndefined();
+      expect(q.correct_answer).toBeUndefined();
+    }
+  });
+
+  test("[B0-SCI-05] correct science answer scores isCorrect true", async ({ request }) => {
+    test.skip(!scienceActivityId || !studentCookie, "student session missing");
+    const correct = scienceQuestionSet[0].correctAnswer;
+    const res = await request.post(`/api/student/activities/${scienceActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 0, selectedAnswer: correct },
+    });
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(true);
+  });
+
+  test("[B0-SCI-06] wrong science answer scores isCorrect false", async ({ request }) => {
+    test.skip(!scienceActivityId || !studentCookie, "student session missing");
+    const correct = scienceQuestionSet[1].correctAnswer;
+    const wrong = scienceQuestionSet[1].choices.find((c) => c !== correct);
+    expect(wrong).toBeTruthy();
+    const res = await request.post(`/api/student/activities/${scienceActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 1, selectedAnswer: wrong },
+    });
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(false);
+  });
+
+  test("[B0-SCI-07] submit science activity completes without error", async ({ request }) => {
+    test.skip(!scienceActivityId || !studentCookie, "student session missing");
+    const submitRes = await request.post(`/api/student/activities/${scienceActivityId}/submit`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(submitRes.ok()).toBeTruthy();
+    const body = await submitRes.json();
+    expect(body.ok).toBe(true);
+    expect(typeof body.questionCount).toBe("number");
+
+    const startRes = await request.post(`/api/student/activities/${scienceActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(startRes.ok()).toBeTruthy();
+    const startBody = await startRes.json();
+    expect(startBody.alreadyCompleted).toBe(true);
+    expect(startBody.studentStatus).toBe("submitted");
+    expect(startBody.questionSet).toEqual([]);
+  });
+});
+
+/** Phase B1 gate: moledet_geography classroom activities (canonical subject key). */
+test.describe("classroom activities moledet B1 @moledet-b1", () => {
+  test.describe.configure({ mode: "serial" });
+
+  const MOLEDET_GRADE = "g4";
+  const MOLEDET_TOPIC = "homeland";
+  const MOLEDET_DIFFICULTY = "easy";
+  const MOLEDET_COUNT = 3;
+
+  let teacherBearer = "";
+  let classId = "";
+  let moledetActivityId = "";
+  let studentCookie = "";
+  let moledetQuestionSet: Array<{
+    question: string;
+    correctAnswer: string;
+    choices: string[];
+    subject: string;
+    topic: string;
+  }> = [];
+
+  test.beforeAll(async ({ request }) => {
+    const token = await teacherToken(request);
+    test.skip(!token, "Supabase teacher credentials unavailable");
+    teacherBearer = token!;
+
+    const classesRes = await request.get("/api/teacher/classes", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+    });
+    if (!classesRes.ok()) {
+      test.skip(true, "Teacher classes API unavailable (schema or auth)");
+    }
+    const classesBody = await classesRes.json();
+    const cls = classesBody?.data?.classes?.[0];
+    test.skip(!cls?.classId, "No teacher class for moledet activity tests");
+    classId = cls.classId;
+
+    const loginRes = await request.post("/api/student/login", {
+      data: { username: STUDENT_USER, pin: STUDENT_PIN },
+    });
+    if (loginRes.ok()) {
+      const setCookie = loginRes.headers()["set-cookie"] || "";
+      const m = setCookie.match(/liosh_student_session=([^;]+)/);
+      if (m) studentCookie = decodeURIComponent(m[1]);
+    }
+
+    const helper = path.join(E2E_ROOT, "tests/e2e/helpers/generate-moledet-geography-activity-preview.mjs");
+    const json = execFileSync(process.execPath, [helper], {
+      cwd: E2E_ROOT,
+      encoding: "utf-8",
+      env: {
+        ...process.env,
+        E2E_MOLEDET_GRADE: MOLEDET_GRADE,
+        E2E_MOLEDET_TOPIC: MOLEDET_TOPIC,
+        E2E_MOLEDET_DIFFICULTY: MOLEDET_DIFFICULTY,
+        E2E_MOLEDET_COUNT: String(MOLEDET_COUNT),
+      },
+    });
+    moledetQuestionSet = JSON.parse(json);
+  });
+
+  test("[B1-MOL-01] moledet preview generates N Hebrew MCQ items", async () => {
+    expect(moledetQuestionSet.length).toBe(MOLEDET_COUNT);
+    for (const q of moledetQuestionSet) {
+      expect(q.subject).toBe("moledet_geography");
+      expect(q.topic).toBe(MOLEDET_TOPIC);
+      expect(String(q.question).trim().length).toBeGreaterThan(0);
+      expect(Array.isArray(q.choices)).toBe(true);
+      expect(q.choices.length).toBe(4);
+      expect(q.choices).toContain(q.correctAnswer);
+    }
+  });
+
+  test("[B1-MOL-02] save moledet draft returns activityId", async ({ request }) => {
+    test.skip(!classId || !moledetQuestionSet.length, "missing class or preview");
+    const res = await request.post("/api/teacher/activities", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: {
+        classId,
+        title: `E2E Moledet B1 ${Date.now()}`,
+        subject: "moledet_geography",
+        topic: MOLEDET_TOPIC,
+        gradeLevel: MOLEDET_GRADE,
+        mode: "guided_practice",
+        questionSelection: "same_exact",
+        difficultyLevel: MOLEDET_DIFFICULTY,
+        questionCount: MOLEDET_COUNT,
+        questionSet: moledetQuestionSet,
+      },
+    });
+    expect(res.status()).toBe(201);
+    const body = await res.json();
+    moledetActivityId = body?.data?.activityId;
+    expect(moledetActivityId).toBeTruthy();
+  });
+
+  test("[B1-MOL-03] activate moledet activity", async ({ request }) => {
+    test.skip(!moledetActivityId, "no moledet activity");
+    const res = await request.patch(`/api/teacher/activities/${moledetActivityId}/status`, {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: { action: "activate" },
+    });
+    expect(res.ok()).toBeTruthy();
+    expect((await res.json())?.data?.status).toBe("active");
+  });
+
+  test("[B1-MOL-04] student start strips correctAnswer", async ({ request }) => {
+    test.skip(!moledetActivityId || !studentCookie, "student session missing");
+    const res = await request.post(`/api/student/activities/${moledetActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(res.ok()).toBeTruthy();
+    const text = await res.text();
+    expect(text).not.toContain("correctAnswer");
+    expect(text).not.toContain("correct_answer");
+    const body = JSON.parse(text);
+    expect(body.questionSet?.length).toBe(MOLEDET_COUNT);
+    for (const q of body.questionSet || []) {
+      expect(q.choices?.length).toBe(4);
+    }
+  });
+
+  test("[B1-MOL-05] correct moledet answer isCorrect true", async ({ request }) => {
+    test.skip(!moledetActivityId || !studentCookie, "student session missing");
+    const res = await request.post(`/api/student/activities/${moledetActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 0, selectedAnswer: moledetQuestionSet[0].correctAnswer },
+    });
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(true);
+  });
+
+  test("[B1-MOL-06] wrong moledet answer isCorrect false", async ({ request }) => {
+    test.skip(!moledetActivityId || !studentCookie, "student session missing");
+    const correct = moledetQuestionSet[1].correctAnswer;
+    const wrong = moledetQuestionSet[1].choices.find((c) => c !== correct);
+    expect(wrong).toBeTruthy();
+    const res = await request.post(`/api/student/activities/${moledetActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 1, selectedAnswer: wrong },
+    });
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(false);
+  });
+
+  test("[B1-MOL-07] submit moledet activity completes", async ({ request }) => {
+    test.skip(!moledetActivityId || !studentCookie, "student session missing");
+    const submitRes = await request.post(`/api/student/activities/${moledetActivityId}/submit`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(submitRes.ok()).toBeTruthy();
+    expect((await submitRes.json()).ok).toBe(true);
+
+    const startRes = await request.post(`/api/student/activities/${moledetActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect((await startRes.json()).alreadyCompleted).toBe(true);
+  });
+});
+
+test.describe("classroom activities geometry B2 @geometry-b2", () => {
+  test.describe.configure({ mode: "serial" });
+
+  const GEOMETRY_GRADE = "g3";
+  const GEOMETRY_TOPIC = "area";
+  const GEOMETRY_DIFFICULTY = "easy";
+  const GEOMETRY_COUNT = 3;
+
+  let teacherBearer = "";
+  let classId = "";
+  let geometryActivityId = "";
+  let studentCookie = "";
+  let geometryQuestionSet: Array<{
+    question: string;
+    correctAnswer: string;
+    choices: string[];
+    subject: string;
+    topic: string;
+    params?: { kind?: string };
+  }> = [];
+
+  test.beforeAll(async ({ request }) => {
+    const token = await teacherToken(request);
+    test.skip(!token, "Supabase teacher credentials unavailable");
+    teacherBearer = token!;
+
+    const classesRes = await request.get("/api/teacher/classes", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+    });
+    if (!classesRes.ok()) {
+      test.skip(true, "Teacher classes API unavailable (schema or auth)");
+    }
+    const classesBody = await classesRes.json();
+    const cls = classesBody?.data?.classes?.[0];
+    test.skip(!cls?.classId, "No teacher class for geometry activity tests");
+    classId = cls.classId;
+
+    const loginRes = await request.post("/api/student/login", {
+      data: { username: STUDENT_USER, pin: STUDENT_PIN },
+    });
+    if (loginRes.ok()) {
+      const setCookie = loginRes.headers()["set-cookie"] || "";
+      const m = setCookie.match(/liosh_student_session=([^;]+)/);
+      if (m) studentCookie = decodeURIComponent(m[1]);
+    }
+
+    const helper = path.join(E2E_ROOT, "tests/e2e/helpers/generate-geometry-activity-preview.mjs");
+    const json = execFileSync(process.execPath, [helper], {
+      cwd: E2E_ROOT,
+      encoding: "utf-8",
+      env: {
+        ...process.env,
+        E2E_GEOMETRY_GRADE: GEOMETRY_GRADE,
+        E2E_GEOMETRY_TOPIC: GEOMETRY_TOPIC,
+        E2E_GEOMETRY_DIFFICULTY: GEOMETRY_DIFFICULTY,
+        E2E_GEOMETRY_COUNT: String(GEOMETRY_COUNT),
+      },
+    });
+    geometryQuestionSet = JSON.parse(json);
+  });
+
+  test("[B2-GEO-01] geometry preview generates N real geometry items with diagram params", async () => {
+    expect(geometryQuestionSet.length).toBe(GEOMETRY_COUNT);
+    for (const q of geometryQuestionSet) {
+      expect(q.subject).toBe("geometry");
+      expect(q.topic).toBe(GEOMETRY_TOPIC);
+      expect(String(q.question).trim().length).toBeGreaterThan(0);
+      expect(q.params?.kind).toBeTruthy();
+      expect(Array.isArray(q.choices)).toBe(true);
+      expect(q.choices).toContain(q.correctAnswer);
+    }
+  });
+
+  test("[B2-GEO-02] save geometry draft returns activityId", async ({ request }) => {
+    test.skip(!classId || !geometryQuestionSet.length, "missing class or preview");
+    const res = await request.post("/api/teacher/activities", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: {
+        classId,
+        title: `E2E Geometry B2 ${Date.now()}`,
+        subject: "geometry",
+        topic: GEOMETRY_TOPIC,
+        gradeLevel: GEOMETRY_GRADE,
+        mode: "guided_practice",
+        questionSelection: "same_exact",
+        difficultyLevel: GEOMETRY_DIFFICULTY,
+        questionCount: GEOMETRY_COUNT,
+        questionSet: geometryQuestionSet,
+      },
+    });
+    const bodyText = await res.text();
+    if (res.status() !== 201) {
+      // eslint-disable-next-line no-console
+      console.error("[B2-GEO-02] create failed", res.status(), bodyText.slice(0, 2000));
+    }
+    expect(res.status(), bodyText).toBe(201);
+    const body = JSON.parse(bodyText);
+    geometryActivityId = body?.data?.activityId;
+    expect(geometryActivityId).toBeTruthy();
+  });
+
+  test("[B2-GEO-03] activate geometry activity", async ({ request }) => {
+    test.skip(!geometryActivityId, "no geometry activity");
+    const res = await request.patch(`/api/teacher/activities/${geometryActivityId}/status`, {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: { action: "activate" },
+    });
+    expect(res.ok()).toBeTruthy();
+    expect((await res.json())?.data?.status).toBe("active");
+  });
+
+  test("[B2-GEO-04] student start strips correctAnswer", async ({ request }) => {
+    test.skip(!geometryActivityId || !studentCookie, "student session missing");
+    const res = await request.post(`/api/student/activities/${geometryActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(res.ok()).toBeTruthy();
+    const text = await res.text();
+    expect(text).not.toContain("correctAnswer");
+    expect(text).not.toContain("correct_answer");
+    const body = JSON.parse(text);
+    expect(body.questionSet?.length).toBe(GEOMETRY_COUNT);
+    for (const q of body.questionSet || []) {
+      expect(q.params?.kind).toBeTruthy();
+    }
+  });
+
+  test("[B2-GEO-07] student page renders geometry diagram SVG without answer in diagram", async ({
+    page,
+  }) => {
+    test.skip(!geometryActivityId || !studentCookie, "student session missing");
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3002";
+    const host = new URL(base).hostname;
+    await page.context().addCookies([
+      {
+        name: "liosh_student_session",
+        value: studentCookie,
+        domain: host,
+        path: "/",
+      },
+    ]);
+    await page.goto(`${base}/student/activity/${geometryActivityId}`);
+    await expect(page.locator('[data-testid="classroom-geometry-diagram"]').first()).toBeVisible({
+      timeout: 30000,
+    });
+    const diagram = page.locator('[data-testid="classroom-geometry-diagram"] svg').first();
+    await expect(diagram).toBeVisible({ timeout: 10000 });
+    const secret = String(geometryQuestionSet[0].correctAnswer || "").trim();
+    if (secret.length >= 1) {
+      const svgTextNodes = await page
+        .locator('[data-testid="classroom-geometry-diagram"] svg text')
+        .allTextContents();
+      const visibleLabels = svgTextNodes.map((t) => String(t).trim()).filter(Boolean);
+      expect(visibleLabels.every((label) => label !== secret)).toBe(true);
+    }
+  });
+
+  test("[B2-GEO-05] correct geometry answer isCorrect true", async ({ request }) => {
+    test.skip(!geometryActivityId || !studentCookie, "student session missing");
+    const res = await request.post(`/api/student/activities/${geometryActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 0, selectedAnswer: geometryQuestionSet[0].correctAnswer },
+    });
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(true);
+  });
+
+  test("[B2-GEO-06] wrong geometry answer isCorrect false", async ({ request }) => {
+    test.skip(!geometryActivityId || !studentCookie, "student session missing");
+    const correct = geometryQuestionSet[1].correctAnswer;
+    const wrong = geometryQuestionSet[1].choices.find((c) => c !== correct);
+    expect(wrong).toBeTruthy();
+    const res = await request.post(`/api/student/activities/${geometryActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 1, selectedAnswer: wrong },
+    });
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(false);
+  });
+
+  test("[B2-GEO-08] submit geometry activity completes", async ({ request }) => {
+    test.skip(!geometryActivityId || !studentCookie, "student session missing");
+    const submitRes = await request.post(`/api/student/activities/${geometryActivityId}/submit`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(submitRes.ok()).toBeTruthy();
+    expect((await submitRes.json()).ok).toBe(true);
+
+    const startRes = await request.post(`/api/student/activities/${geometryActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect((await startRes.json()).alreadyCompleted).toBe(true);
   });
 });

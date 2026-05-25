@@ -10,6 +10,23 @@ import { REPORT_SUBJECTS, subjectLabelHe } from "../../../../../lib/teacher-port
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../../../../lib/classroom-activities/classroom-activities-preview.js";
 import { generateActivityQuestionSetClient } from "../../../../../lib/classroom-activities/generate-activity-questions-client.js";
 import { activityModeLabelHe } from "../../../../../lib/classroom-activities/classroom-activities-labels.client.js";
+import { TOPICS as MOLEDET_TOPICS } from "../../../../../utils/moledet-geography-constants.js";
+import {
+  GRADES as GEOMETRY_GRADES,
+  TOPICS as GEOMETRY_TOPICS,
+} from "../../../../../utils/geometry-constants.js";
+
+const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
+  key,
+  label: meta.name,
+}));
+
+function geometryTopicOptionsForGrade(gradeKey) {
+  const topics = GEOMETRY_GRADES[gradeKey]?.topics || [];
+  return topics
+    .filter((t) => t !== "mixed")
+    .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
+}
 
 export async function getServerSideProps(context) {
   const classId = String(context.params?.classId || "").trim();
@@ -67,8 +84,8 @@ export default function TeacherNewActivityPage({ classId }) {
     setError("");
     try {
       const supabase = getLearningSupabaseBrowserClient();
-      const token = await resolveTeacherAccessToken(supabase);
-      if (!token) {
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!session.ok) {
         router.replace("/teacher/login");
         return;
       }
@@ -93,7 +110,7 @@ export default function TeacherNewActivityPage({ classId }) {
         return;
       }
 
-      const res = await teacherAuthFetch(token, "/api/teacher/activities", {
+      const res = await teacherAuthFetch(session.token, "/api/teacher/activities", {
         method: "POST",
         body: JSON.stringify(body),
       });
@@ -155,7 +172,15 @@ export default function TeacherNewActivityPage({ classId }) {
             <select
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value;
+                setSubject(next);
+                if (next === "moledet_geography") setTopic("homeland");
+                if (next === "geometry") {
+                  const opts = geometryTopicOptionsForGrade(gradeLevel);
+                  if (opts.length) setTopic(opts[0].key);
+                }
+              }}
             >
               {REPORT_SUBJECTS.filter((s) => ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s)).map((s) => (
                 <option key={s} value={s}>
@@ -166,11 +191,37 @@ export default function TeacherNewActivityPage({ classId }) {
           </label>
           <label className="block text-sm">
             <span className="text-white/70">נושא</span>
-            <input
-              className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-            />
+            {subject === "moledet_geography" ? (
+              <select
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {MOLEDET_TOPIC_OPTIONS.map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            ) : subject === "geometry" ? (
+              <select
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {geometryTopicOptionsForGrade(gradeLevel).map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              />
+            )}
           </label>
           <label className="block text-sm">
             <span className="text-white/70">תת-נושא (אופציונלי)</span>

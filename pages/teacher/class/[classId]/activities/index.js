@@ -28,13 +28,13 @@ export default function TeacherClassActivitiesPage({ classId }) {
     setError("");
     try {
       const supabase = getLearningSupabaseBrowserClient();
-      const token = await resolveTeacherAccessToken(supabase);
-      if (!token) {
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!session.ok) {
         router.replace("/teacher/login");
         return;
       }
       const res = await teacherAuthFetch(
-        token,
+        session.token,
         `/api/teacher/activities?classId=${encodeURIComponent(classId)}`
       );
       const body = await res.json().catch(() => ({}));

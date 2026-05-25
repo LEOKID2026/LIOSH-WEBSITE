@@ -53,6 +53,8 @@ import {
   topicRecommendationV2CautionGatedHe,
   normalizeParentFacingHe,
   tierStableStrengthHe,
+  parentFacingPatternLabelHe,
+  sanitizeDiagnosticEngineV2ForParentFacing,
 } from "./parent-report-language/index.js";
 import { withholdSummaryCopyHe, withholdConfidenceSummaryFallbackHe } from "./parent-report-language/subject-withhold-summary-he.js";
 import {
@@ -173,22 +175,28 @@ function sanitizeDiagnosticEngineV2ForParentSnapshot(baseReport, diag) {
     const taxonomyId = String(
       u?.diagnosis?.taxonomyId || u?.intervention?.taxonomyId || u?.taxonomy?.id || ""
     ).trim();
+
+    let next = { ...u };
+    if (taxonomyId === "M-10") {
+      next = sanitizeDiagnosticEngineV2ForParentFacing({ units: [next] }).units[0];
+    }
+
     const hasTemplate =
       resolveGradeAwareParentRecommendationHe({
         subjectId,
         gradeKey: gk,
         taxonomyId,
-        bucketKey: u?.bucketKey,
+        bucketKey: next?.bucketKey,
         slot: "action",
       }) != null;
-    if (!hasTemplate) return u;
+    if (!hasTemplate) return next;
 
-    const pa = resolveUnitParentActionHe(u, gk);
-    const ng = resolveUnitNextGoalHe(u, gk);
-    const intr = u?.intervention && typeof u.intervention === "object" ? { ...u.intervention } : {};
+    const pa = resolveUnitParentActionHe(next, gk);
+    const ng = resolveUnitNextGoalHe(next, gk);
+    const intr = next?.intervention && typeof next.intervention === "object" ? { ...next.intervention } : {};
     if (pa) intr.immediateActionHe = pa;
     if (ng) intr.shortPracticeHe = ng;
-    return { ...u, intervention: intr };
+    return { ...next, intervention: intr };
   });
 
   return { ...diag, units };
@@ -2140,7 +2148,7 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       thinEvidenceDowngraded,
       hasSubskillMetadata,
       recommendedStepLabelHe: finalLabel,
-      diagnosticPatternHe: String(u?.taxonomy?.patternHe || "").trim() || null,
+      diagnosticPatternHe: parentFacingPatternLabelHe(u) || null,
     }),
     threshold_policy_used: `topic_recommendation_questions>=${TOPIC_REC_MIN_ACTIONABLE_QUESTIONS}`,
     contractsV1,
@@ -2455,14 +2463,14 @@ function buildSubjectProfilesFromV2(baseReport) {
     });
 
     const topWeaknesses = diagnosed
-      .filter((u) => String(u?.taxonomy?.patternHe || "").trim())
+      .filter((u) => parentFacingPatternLabelHe(u))
       .slice(0, 3)
       .map((u) => {
         const trk = String(u?.topicRowKey || "");
         const gk = gradeKeyForV2UnitFromReport(baseReport, u);
         const ge = buildGradeEvidenceFields(baseReport?.registeredGradeKey, gk);
         const topicLabel = parentFacingLabelForV2Unit(baseReport, u);
-        const patternHe = String(u?.taxonomy?.patternHe || "").trim();
+        const patternHe = parentFacingPatternLabelHe(u);
         return {
           topicRowKey: trk,
           subjectId: sid,
@@ -2504,11 +2512,11 @@ function buildSubjectProfilesFromV2(baseReport) {
 
     const summaryHe = (() => {
       if (p4UnitD) {
-        return `בנושא ${p4UnitD.displayName}: ${p4UnitD.taxonomy?.patternHe || "צריך בירור נוסף"}`;
+        return `בנושא ${p4UnitD.displayName}: ${parentFacingPatternLabelHe(p4UnitD) || "צריך בירור נוסף"}`;
       }
       if (strongPosD && leadPosD) {
         const base = `בנושא ${leadPosD.displayName}: ${tierStableStrengthHe()}`;
-        const pattern = String(diagnosticLeadSource?.taxonomy?.patternHe || "").trim();
+        const pattern = parentFacingPatternLabelHe(diagnosticLeadSource);
         if (additiveLeadD && pattern) {
           return `${base} · ${pattern}`;
         }
@@ -2521,7 +2529,7 @@ function buildSubjectProfilesFromV2(baseReport) {
         return `בנושא ${leadPosD.displayName}: ${tierStableStrengthHe()}`;
       }
       if (diagnosticLeadSource) {
-        return `בנושא ${diagnosticLeadSource.displayName}: ${diagnosticLeadSource.taxonomy?.patternHe || "צריך בירור נוסף"}`;
+        return `בנושא ${diagnosticLeadSource.displayName}: ${parentFacingPatternLabelHe(diagnosticLeadSource) || "צריך בירור נוסף"}`;
       }
       const sumQ = units.reduce((acc, u) => acc + (Number(u?.evidenceTrace?.[0]?.value?.questions) || 0), 0);
       const reportQ = subjectQuestionCountFromReportSummary(baseReport, sid);
@@ -2531,7 +2539,7 @@ function buildSubjectProfilesFromV2(baseReport) {
         sumUnitQuestions: sumQ,
         strengthUnitCount: strengthUnits.length,
         diagnosedCount: diagnosed.length,
-        weakPatternHe: String(diagnosticLeadSource?.taxonomy?.patternHe || "").trim(),
+        weakPatternHe: parentFacingPatternLabelHe(diagnosticLeadSource),
         units,
         subjectLabelHe: SUBJECT_LABEL_HE[sid],
         reportSubjectAccuracy: subjectAccuracyFromReportSummary(baseReport, sid),
@@ -2597,7 +2605,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       fragileSuccessRowCount: fragile,
       stableMasteryRowCount: stable,
       modeConcentrationNoteHe: null,
-      dominantLearningRiskLabelHe: subjectAnchorUnit?.taxonomy?.patternHe || null,
+      dominantLearningRiskLabelHe: parentFacingPatternLabelHe(subjectAnchorUnit) || null,
       dominantSuccessPatternLabelHe:
         stable > 0 ? normalizeParentFacingHe("התקדמות יציבה וטובה בחלק מהנושאים") : null,
       improvingButSupportedHe: null,
@@ -2618,7 +2626,7 @@ function buildSubjectProfilesFromV2(baseReport) {
       }),
       subjectInterventionPriorityHe: priorityLevelParentLabelHe(subjectAnchorUnit?.priority?.level),
       subjectPriorityLevel: highPriority > 0 ? "immediate" : "soon",
-      subjectPriorityReasonHe: subjectAnchorUnit?.taxonomy?.patternHe || null,
+      subjectPriorityReasonHe: parentFacingPatternLabelHe(subjectAnchorUnit) || null,
       subjectImmediateActionHe: resolveUnitParentActionHe(subjectAnchorUnit, anchorGradeKey),
       subjectDeferredActionHe:
         subjectAnchorUnit && isStrongPositiveUnitForParentGuidance(subjectAnchorUnit)
@@ -2665,11 +2673,11 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
   const rawMetricHeV2 = deriveRawMetricStrengthLinesHe(baseReport.summary);
   topStrengthsAcrossHe = mergeExecutiveStrengthLinesHe(rawMetricHeV2, topStrengthsAcrossHe, 5);
   const topFocusAreasHe = diagnosed
-    .filter((u) => u?.taxonomy?.patternHe)
+    .filter((u) => parentFacingPatternLabelHe(u))
     .slice(0, 3)
     .map((u) => {
       const topicLabel = executiveLineFromV2Unit(baseReport, u);
-      return `${u.taxonomy.patternHe} — ${topicLabel}`;
+      return `${parentFacingPatternLabelHe(u)} — ${topicLabel}`;
     });
   const gradeSplitTopicNoticesHe = detectGradeSplitContradictions(units, baseReport);
 
@@ -2693,7 +2701,7 @@ function buildExecutiveSummaryFromV2(baseReport, subjectCoverage) {
       || "כרגע אין המלצה ביתית אחת מרכזית, כי עדיין צריך עוד מידע.",
     cautionNoteHe: executiveV2CautionNoteHe({ p4Length: p4.length, uncertainLength: uncertain.length }),
     overallConfidenceHe: executiveV2OverallConfidenceHe(diagnosed.length, units.length, stable.length),
-    dominantCrossSubjectRiskLabelHe: diagnosed[0]?.taxonomy?.patternHe || "",
+    dominantCrossSubjectRiskLabelHe: parentFacingPatternLabelHe(diagnosed[0]) || "",
     dominantCrossSubjectSuccessPatternLabelHe: stable[0]?.taxonomy?.subskillHe
       ? normalizeParentFacingHe(`התקדמות יציבה וטובה ב${stable[0].taxonomy.subskillHe}`)
       : stable[0]

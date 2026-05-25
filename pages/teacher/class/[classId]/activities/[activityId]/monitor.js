@@ -31,13 +31,13 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
   const load = useCallback(async () => {
     try {
       const supabase = getLearningSupabaseBrowserClient();
-      const token = await resolveTeacherAccessToken(supabase);
-      if (!token) {
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!session.ok) {
         router.replace("/teacher/login");
         return;
       }
       const res = await teacherAuthFetch(
-        token,
+        session.token,
         `/api/teacher/activities/${encodeURIComponent(activityId)}/monitor`
       );
       const body = await res.json().catch(() => ({}));
@@ -63,9 +63,13 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
     setBusy(true);
     try {
       const supabase = getLearningSupabaseBrowserClient();
-      const token = await resolveTeacherAccessToken(supabase);
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!session.ok) {
+        router.replace("/teacher/login");
+        return;
+      }
       const res = await teacherAuthFetch(
-        token,
+        session.token,
         `/api/teacher/activities/${encodeURIComponent(activityId)}/status`,
         { method: "PATCH", body: JSON.stringify({ action }) }
       );
@@ -86,9 +90,13 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
     setBusy(true);
     try {
       const supabase = getLearningSupabaseBrowserClient();
-      const token = await resolveTeacherAccessToken(supabase);
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!session.ok) {
+        router.replace("/teacher/login");
+        return;
+      }
       await teacherAuthFetch(
-        token,
+        session.token,
         `/api/teacher/activities/${encodeURIComponent(activityId)}/question`,
         { method: "PATCH", body: JSON.stringify({ currentQuestionIdx: next }) }
       );

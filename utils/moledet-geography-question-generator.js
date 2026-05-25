@@ -22,7 +22,7 @@ import {
   G6_EASY_QUESTIONS,
   G6_MEDIUM_QUESTIONS,
   G6_HARD_QUESTIONS,
-} from '../data/geography-questions';
+} from "../data/geography-questions/index.js";
 
 const questionsMap = {
   G1_EASY_QUESTIONS,

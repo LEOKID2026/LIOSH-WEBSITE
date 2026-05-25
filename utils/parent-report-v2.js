@@ -75,6 +75,9 @@ import {
   v2SubjectMemoryPartialEvidenceHe,
   v2ShortOverviewCannotConcludeHe,
   topicRecommendationV2CautionGatedHe,
+  parentFacingPatternLabelHe,
+  parentFacingDiagnosisSnippetHe,
+  sanitizeDiagnosticEngineV2ForParentFacing,
 } from "./parent-report-language/index.js";
 import { withholdSummaryCopyHe } from "./parent-report-language/subject-withhold-summary-he.js";
 import { hardenBaseReportWithRowIdentity } from "./parent-report-output-integrity/harden-report-rows.js";
@@ -937,11 +940,11 @@ function diagnosticCardLabel(unit) {
 }
 
 function diagnosticCardLabelHe(unit) {
-  const tax = String(unit?.taxonomy?.patternHe || "").trim();
-  if (tax) return normalizeParentFacingHe(tax);
+  const mapped = parentFacingPatternLabelHe(unit);
+  if (mapped) return mapped;
   const line = String(unit?.diagnosis?.lineHe || "").trim();
   if (line) {
-    return normalizeParentFacingHe(shortReportDiagnosticsParentVisibleHe(line));
+    return normalizeParentFacingHe(shortReportDiagnosticsParentVisibleHe(parentFacingDiagnosisSnippetHe(unit, line)));
   }
   const name = String(unit?.displayName || unit?.bucketKey || "הנושא").trim();
   return normalizeParentFacingHe(`נושא: ${name}`);
@@ -1090,13 +1093,13 @@ function overviewShortLineWithSubject(subjectId, unit, kind) {
   const subj = V2_SUBJECT_LABEL_HE[subjectId] || "";
   const name = String(unit?.displayName || "").trim() || "נושא";
   const vol = unit?.evidenceTrace?.find((e) => e?.type === "volume")?.value;
-  const pat = String(unit?.taxonomy?.patternHe || "").trim();
+  const pat = parentFacingPatternLabelHe(unit);
   let core = "";
   if (kind === "attention") {
     if (pat) {
       core = `${name}: ${pat}`;
     } else if (unit?.diagnosis?.allowed && String(unit?.diagnosis?.lineHe || "").trim()) {
-      core = `${name}: ${shortReportDiagnosticsParentVisibleHe(String(unit.diagnosis.lineHe))}`;
+      core = `${name}: ${shortReportDiagnosticsParentVisibleHe(parentFacingDiagnosisSnippetHe(unit, unit.diagnosis.lineHe))}`;
     } else if (vol && safeNumber(vol.questions) > 0) {
       core = `${name}: כ-${Math.round(safeNumber(vol.questions))} שאלות, דיוק ${Math.round(safeNumber(vol.accuracy))}%`;
     } else {
@@ -1389,10 +1392,10 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
   const maintain = goodUnits.slice(0, 5).map((u) => mapStrengthRow(u, false));
 
   const topWeaknesses = diagnosed
-    .filter((u) => String(u?.taxonomy?.patternHe || "").trim())
+    .filter((u) => parentFacingPatternLabelHe(u))
     .slice(0, 3)
     .map((u) => ({
-      labelHe: normalizeParentFacingHe(String(u?.taxonomy?.patternHe || "")),
+      labelHe: parentFacingPatternLabelHe(u),
       mistakeCount: safeNumber(u?.recurrence?.wrongCountForRules),
       tierHe: safeNumber(u?.recurrence?.wrongCountForRules) >= 5 ? tierWeaknessRecurringHe() : tierWeaknessSupportHe(),
       topicStateId: cs(u)?.topicStateId || null,
@@ -1419,7 +1422,10 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
       type: "mistake",
       titleHe: normalizeParentFacingHe(String(u?.displayName || evidenceExampleTitleFallbackHe())),
       bodyHe: normalizeParentFacingHe(
-        String(u?.diagnosis?.lineHe || u?.taxonomy?.patternHe || evidenceExampleBodyFallbackHe())
+        parentFacingDiagnosisSnippetHe(
+          u,
+          String(u?.diagnosis?.lineHe || parentFacingPatternLabelHe(u) || evidenceExampleBodyFallbackHe()),
+        ),
       ),
       confidence,
     });
@@ -1450,7 +1456,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
     if (p4Unit) {
       return normalizeParentFacingHe(
         `בנושא ${String(p4Unit?.displayName || evidenceExampleTitleFallbackHe())}: ${String(
-          p4Unit?.taxonomy?.patternHe || "עדיף עוד קצת תרגול לפני שמקבעים מסקנה."
+          parentFacingPatternLabelHe(p4Unit) || "עדיף עוד קצת תרגול לפני שמקבעים מסקנה."
         )}`
       );
     }
@@ -1459,7 +1465,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
       const isStrongLead = leadLevel === "excellent" || leadLevel === "very_good";
       const name = String(leadPositive.displayName || evidenceExampleTitleFallbackHe());
       const base = `בנושא ${name}: ${tierStableStrengthHe()}`;
-      const pattern = String(topWeak?.taxonomy?.patternHe || "").trim();
+      const pattern = parentFacingPatternLabelHe(topWeak);
       if (isStrongLead && additiveOnLead && pattern) {
         return normalizeParentFacingHe(`${base} · ${pattern}`);
       }
@@ -1471,7 +1477,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
     if (topWeak) {
       return normalizeParentFacingHe(
         `בנושא ${String(topWeak?.displayName || evidenceExampleTitleFallbackHe())}: ${String(
-          topWeak?.taxonomy?.patternHe || "עדיף עוד קצת תרגול לפני שמקבעים מסקנה."
+          parentFacingPatternLabelHe(topWeak) || "עדיף עוד קצת תרגול לפני שמקבעים מסקנה."
         )}`
       );
     }
@@ -1492,7 +1498,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
           sumUnitQuestions,
           strengthUnitCount: strengthUnits.length,
           diagnosedCount: diagnosed.length,
-          weakPatternHe: String(topWeak?.taxonomy?.patternHe || "").trim(),
+          weakPatternHe: parentFacingPatternLabelHe(topWeak),
           units: list,
           subjectLabelHe,
           reportSubjectAccuracy,
@@ -1533,7 +1539,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
     parentActionHe: actionAnchor ? resolveUnitParentActionHe(actionAnchor, anchorGradeKey) : null,
     nextWeekGoalHe: actionAnchor ? resolveUnitNextGoalHe(actionAnchor, anchorGradeKey) : null,
     subjectPriorityReasonHe: (() => {
-      const t = String(topWeak?.taxonomy?.patternHe || "").trim();
+      const t = parentFacingPatternLabelHe(topWeak);
       return t ? normalizeParentFacingHe(t) : null;
     })(),
     subjectDoNowHe: actionAnchor ? resolveUnitParentActionHe(actionAnchor, anchorGradeKey) : null,
@@ -1542,7 +1548,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
       return t ? normalizeParentFacingHe(t) : null;
     })(),
     dominantMistakePatternLabelHe: (() => {
-      const t = String(topWeak?.taxonomy?.patternHe || "").trim();
+      const t = parentFacingPatternLabelHe(topWeak);
       return t ? normalizeParentFacingHe(t) : null;
     })(),
     recommendedHomeMethodHe: actionAnchor
@@ -2480,7 +2486,7 @@ export function generateParentReportV2(
     /** שלמות נתונים — לבדיקה; לא מוצג ב־UI בשלב 1 */
     dataIntegrityReport,
     /** מנוע אבחון V2 — פלט מובנה לפי stage1 blueprint (שכבות נפרדות, שערים, טקסונומיה) */
-    diagnosticEngineV2,
+    diagnosticEngineV2: sanitizeDiagnosticEngineV2ForParentFacing(diagnosticEngineV2),
     /** AI-hybrid layer (V2 remains hard authority; ranking/probe/explanation bounded). */
     hybridRuntime,
     /** Phase 1 additive trace metadata only (no decisioning/wording behavior change). */

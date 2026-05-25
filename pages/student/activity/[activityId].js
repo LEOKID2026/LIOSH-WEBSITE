@@ -6,6 +6,7 @@ import {
   activityModeLabelHe,
   isClassroomActivitiesEnabled,
 } from "../../../lib/classroom-activities/classroom-activities-labels.client.js";
+import ClassroomGeometryQuestionDiagram from "../../../components/student/ClassroomGeometryQuestionDiagram";
 
 export async function getServerSideProps(context) {
   if (process.env.NEXT_PUBLIC_ACTIVITIES_ENABLED === "false") {
@@ -243,6 +244,9 @@ export default function StudentActivityPage({ activityId }) {
           <p className="text-amber-200 text-center py-8">ממתינים למורה…</p>
         ) : currentQuestion ? (
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+            {currentQuestion.subject === "geometry" ? (
+              <ClassroomGeometryQuestionDiagram question={currentQuestion} />
+            ) : null}
             <p className="text-lg text-white mb-6 leading-relaxed" dir="auto">
               {currentQuestion.question}
             </p>

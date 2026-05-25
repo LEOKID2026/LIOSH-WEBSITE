@@ -1,4 +1,4 @@
-import { getDiagramEmphasisForStep } from "./geometry-diagram-spec";
+import { getDiagramEmphasisForStep } from "./geometry-diagram-spec.js";
 import {
   resultPhraseArea,
   resultPhraseLength,
@@ -6,7 +6,7 @@ import {
   resultPhraseVolumeRounded,
   geometryVolumeSuffix,
   geometryLengthSuffix,
-} from "./geometry-units";
+} from "./geometry-units.js";
 
 // פונקציות הסבר ורמזים לדף ההנדסה
 

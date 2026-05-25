@@ -5,6 +5,10 @@
 import { foldUtteranceForHeMatch, normalizeFreeformParentUtteranceHe } from "./utterance-normalize-he.js";
 import { tryComposeIntentAnswer } from "./intent-answer-composers.js";
 import { rewriteEngineTaxonomySnippetForParentHe } from "../diagnostic-labels-he.js";
+import {
+  parentFacingDiagnosisSnippetHe,
+  parentFacingPatternLabelHe,
+} from "../parent-report-language/parent-facing-pattern-label-he.js";
 
 const MISTAKE_QUESTION_RE =
   /טעויות|טעיות|טעות|איפה\s*(?:הוא|היא|הילד|הילדה)?\s*טעה|במה\s*(?:הוא|היא|הילד)?\s*טעה|מה\s*חוזר\s*בטעות|הטעויות\s*הבולטות|איפה\s*הילד\s*טעה|סוג\s*הטעות|דפוס\s*טעות/u;
@@ -22,9 +26,11 @@ export function isMistakePatternQuestion(utterance) {
 export function extractMistakePatternHeFromUnit(unit) {
   if (!unit || typeof unit !== "object") return "";
   const diagLine = String(unit?.diagnosis?.lineHe || "").trim();
-  if (diagLine && unit?.diagnosis?.allowed !== false) return rewriteEngineTaxonomySnippetForParentHe(diagLine);
-  const patternHe = String(unit?.taxonomy?.patternHe || "").trim();
-  if (patternHe) return rewriteEngineTaxonomySnippetForParentHe(patternHe);
+  if (diagLine && unit?.diagnosis?.allowed !== false) {
+    return parentFacingDiagnosisSnippetHe(unit, diagLine);
+  }
+  const mapped = parentFacingPatternLabelHe(unit);
+  if (mapped) return mapped;
   const subskill = String(unit?.taxonomy?.subskillHe || "").trim();
   if (subskill) return rewriteEngineTaxonomySnippetForParentHe(subskill);
   return "";

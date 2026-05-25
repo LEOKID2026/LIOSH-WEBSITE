@@ -1,421 +1,767 @@
 ---
-name: Classroom Activities All Subjects
-overview: Comprehensive audit and rollout plan for adding Geometry, Hebrew, English, and Moledet-Geography to classroom activities, plus fixing Science quality gaps. All findings are read-only; no files are modified.
+name: Classroom Activities All Subjects — Final Implementation Plan
+overview: Strict, phased plan for adding all remaining subjects to classroom activities. Hard decisions are locked in. No phase may begin until the prior phase passes all acceptance criteria.
 todos:
-  - id: audit-complete
-    content: Audit complete — read plan above; no files modified
+  - id: b0-science-fix
+    content: "Phase B0: Fix Science grade/difficulty filter, shuffle, dedup, topic normalization"
+    status: completed
+  - id: b0-gate
+    content: "Phase B0 go/no-go: GO — approved (unit + E2E science)"
+    status: completed
+  - id: b1-moledet
+    content: "Phase B1: moledet_geography adapter"
+    status: completed
+  - id: b1-gate
+    content: "Phase B1 go/no-go: GO — approved (unit + E2E moledet)"
+    status: completed
+  - id: b2-geometry
+    content: "Phase B2: Geometry adapter with diagram rendering in student player — complete"
+    status: completed
+  - id: b2-gate
+    content: "Phase B2 go/no-go: GO — approved (security 12/12, unit 8/8+25/25, E2E geometry 8/8, regression 14/14, build PASS)"
+    status: completed
+  - id: b3-copy-gate
+    content: "Phase B3 pre-gate: Hebrew topic dropdown copy approved by owner"
     status: pending
-  - id: blocker-science-grade
-    content: "Decide: fix Science grade/difficulty regression before or alongside Phase B1"
+  - id: b3-hebrew
+    content: "Phase B3: Hebrew adapter (MCQ-only; typing-mode excluded)"
     status: pending
-  - id: blocker-hebrew-typing
-    content: "Decide: exclude typing-mode items from Hebrew classroom activities, or add acceptedAnswers scoring"
+  - id: b3-gate
+    content: "Phase B3 go/no-go: all acceptance criteria pass before B4 starts"
     status: pending
-  - id: blocker-geometry-diagram
-    content: "Decide: render geometry diagrams in student activity player, or text-only for Phase B2"
+  - id: b4-english
+    content: "Phase B4: English generator extraction + adapter"
     status: pending
-  - id: blocker-hebrew-copy
-    content: Get Hebrew UI copy approval before enabling any new subject dropdown labels
-    status: pending
-  - id: phase-b1-moledet
-    content: "Implement Phase B1: Moledet-Geography adapter + Science grade fix"
-    status: pending
-  - id: phase-b2-geometry-science
-    content: "Implement Phase B2: Geometry adapter + remaining Science fixes"
-    status: pending
-  - id: phase-b3-hebrew
-    content: "Implement Phase B3: Hebrew adapter"
-    status: pending
-  - id: phase-b4-english
-    content: "Implement Phase B4: English generator extraction + adapter"
+  - id: b4-gate
+    content: "Phase B4 go/no-go: regression tests + all acceptance criteria pass"
     status: pending
 isProject: false
 ---
 
-# Classroom Activities — Full Subject Expansion Audit
+# All Subjects Classroom Activities — Final Implementation Plan
 
-## Architecture Recap (Phase A)
+## Hard Decisions (locked)
 
-The Phase A gate lives in exactly two files:
+These are not open questions. They define the rules for every phase below.
 
-- [`lib/classroom-activities/classroom-activities-preview.js`](lib/classroom-activities/classroom-activities-preview.js) — `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS = new Set(["math", "science"])`
-- [`lib/classroom-activities/generate-activity-questions-client.js`](lib/classroom-activities/generate-activity-questions-client.js) — subject switch; throws for unlisted subjects
+**D1 — Science is a B0 blocker.**
+No new subject may be enabled until Science grade filtering, difficulty filtering, topic normalization, shuffle, and dedup are fixed and tested. Science regressions in Phase A are production bugs, not future work.
 
-All create requests are also blocked server-side in [`lib/teacher-server/teacher-activities.server.js`](lib/teacher-server/teacher-activities.server.js) via `parseCreateActivityBody` → `subject_preview_not_supported`.
+**D2 — Canonical subject key for Moledet/Geography is `moledet_geography` (underscore).**
+Confirmed from `LEARNING_SUBJECT_ALLOWLIST` (`lib/learning-supabase/learning-activity.js`), `REPORT_SUBJECTS` and `SUBJECT_LABEL_HE` (`lib/teacher-portal/teacher-ui.he.js`). The hyphenated form `moledet-geography` is used only in URL slugs, npm script names, and file paths — never in subject keys passed through APIs or allowlists. All classroom activities code, adapter, tests, and UI gate must use `moledet_geography`.
 
-The teacher UI at [`pages/teacher/class/[classId]/activities/new.js`](pages/teacher/class/[classId]/activities/new.js) filters the subject dropdown with `REPORT_SUBJECTS.filter(s => ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s))`.
+**D3 — Strict sequential phases: B0 → B1 → B2 → B3 → B4.**
+No phase starts until the prior phase passes its full acceptance checklist and build.
 
----
+**D4 — Subject gate rule.**
+A subject key may be added to `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS` and the teacher dropdown only after all ten acceptance criteria in the gate checklist below pass. No exceptions.
 
-## 1. Current State Per Subject
+**D5 — Hebrew typing-mode items are excluded from Phase B3.**
+The safest default. Classroom activities for Hebrew will be MCQ-only in Phase B3. Items with `answerMode === "typing"` or `preferredAnswerMode === "typing"` are filtered out by the adapter before the question set is built. Typing-mode classroom activities are a separate future phase (B3+) requiring `acceptedAnswers` server-side scoring and student UI changes.
 
-### Math (Phase A — implemented, needs cleanup)
+**D6 — Geometry Phase B2 includes diagram rendering in the student activity player.**
+Geometry questions for topics such as `area`, `perimeter`, `circles`, `pythagoras`, and `triangles` reference shapes that are meaningless without a diagram. Shipping geometry classroom activities without diagrams would produce an incomplete, confusing student experience. Phase B2 must therefore include a geometry-aware render path in the student activity player. If diagram rendering cannot be completed safely within Phase B2 scope, geometry is deferred entirely to a later phase — there is no text-only geometry shortcut.
 
-- Generator: [`utils/math-question-generator.js`](utils/math-question-generator.js)
-- Grade filter: YES — `normalizeGradeKey` → g1–g6, passed to generator
-- Topic filter: WEAK — `mathOperationFromTopic(topic)` is a substring heuristic; does not use the full curriculum topic catalog
-- `correctAnswer`: YES (computed numeric string)
-- `choices`: NOT included in frozen set — student uses free-text input
-- `explanation` / `hint`: rarely populated by generator at top level
-- `skillKey`: available via `params.diagnosticSkillId` but not copied to frozen item
-- Diagrams: none
+**D7 — English is Phase B4, always separate.**
+The English generator lives inside `pages/learning/english-master.js`. Extraction to `utils/english-question-generator.js` is required before an adapter can be written. This extraction must include regression tests proving that `english-master.js` behavior is unchanged. English is the largest phase and must not be bundled with any other subject.
 
-### Science (Phase A — implemented, critical quality gaps)
+**D8 — No Hebrew UI copy changes without owner approval.**
+No Hebrew text for new subject labels, topic dropdown options, or error messages may be added or changed without explicit owner sign-off. A copy review is a hard pre-gate for Phase B3. This does not block B0, B1, or B2.
 
-- Bank: [`data/science-questions.js`](data/science-questions.js) (~945 items across 9 batch files)
-- Grade filter: **MISSING from classroom preview** — `generate-activity-questions-client.js` lines 110–115 filter only by topic substring; `gradeLevel` is accepted but unused
-- Topic filter: WEAK — substring match only; falls back to entire bank if pool too small
-- Selection: deterministic `source[i % source.length]` — no shuffle, no deduplication
-- `correctAnswer`: YES (via `correctIndex` → `options[i]`)
-- `choices`: YES (4-option MCQ)
-- `explanation`: YES on most items
-- Thin pool risk: 41 blocker cells (especially g1–g3 medium/hard life-science)
-- `skillKey`: available via `params.diagnosticSkillId` but not copied
+**D9 — No SQL unless explicitly required.**
+If a migration is needed, write the migration file and stop for owner approval. Do not execute SQL. Based on current analysis, no schema changes are required for any phase — `question_set jsonb` already supports all new subject formats.
 
-### Geometry (not yet supported)
-
-- Generator: [`utils/geometry-question-generator.js`](utils/geometry-question-generator.js) — procedural
-- Conceptual bank: [`utils/geometry-conceptual-bank.js`](utils/geometry-conceptual-bank.js) — 52 templates
-- Probe bank: [`utils/geometry-probe-bank.js`](utils/geometry-probe-bank.js)
-- Grade filter: STRONG — `geometry-grade-topic-policy.js`, grade-specific `TOPIC_SHAPES`
-- Topic filter: STRONG — 18 topic keys (`area`, `perimeter`, `circles`, `pythagoras`, etc.)
-- `correctAnswer`: computed (formulas) or static string — generally reliable; RISK: some items use Hebrew string labels or index strings ("1"…"6") that require stem alignment
-- `choices`: generator returns `answers[]` (shuffled MCQ) — **not copied to frozen set today** — needs adapter
-- `explanation`: NOT in generator output; lives separately in [`utils/geometry-explanations.js`](utils/geometry-explanations.js) keyed by `topic`/`kind`
-- `hint`: not present
-- `shape` and `params` needed for [`components/learning/geometry/GeometryExplanationDiagram.jsx`](components/learning/geometry/GeometryExplanationDiagram.jsx)
-- `skillKey`: `params.diagnosticSkillId` present
-
-### Hebrew (not yet supported)
-
-- Generator: [`utils/hebrew-question-generator.js`](utils/hebrew-question-generator.js) (~5,300 lines, standalone util)
-- Rich bank: [`utils/hebrew-rich-question-bank.js`](utils/hebrew-rich-question-bank.js) (54 items)
-- G3 reading bank: [`data/hebrew-g3-reading-bank.js`](data/hebrew-g3-reading-bank.js) (46 items)
-- Archive NOT live: `data/hebrew-questions/g1-g6.js` — explicitly excluded
-- Grade filter: YES — per-grade inline pools + `minGrade/maxGrade` on rich pool
-- Topic filter: YES — reading, comprehension, grammar, vocabulary, writing, speaking, mixed
-- `correctAnswer`: YES — generator resolves `answers[correct]` after shuffle
-- `choices`: YES — 4-option MCQ for most; some subtopics use typing mode (`answerMode: "typing"`)
-- `explanation`: NOT on bank rows
-- `hint`: NOT on bank rows
-- `skillKey`: `params.diagnosticSkillId` present
-- Complications: (a) niqqud/audio pipeline used at g1–g2 — classroom frozen items should store plain text stems; (b) reading passages are embedded in `question` text (no separate `passage` field); (c) typing mode items store `acceptedAnswers[]` — server `answersMatch` can handle this but `choices` would be empty
-
-### English (not yet supported)
-
-- Data pools: [`data/english-questions/grammar-pools.js`](data/english-questions/grammar-pools.js) (~617), [`data/english-questions/sentence-pools.js`](data/english-questions/sentence-pools.js) (~229), [`data/english-questions/translation-pools.js`](data/english-questions/translation-pools.js) (~172 phrase pairs), [`data/english-questions/word-lists.js`](data/english-questions/word-lists.js) (~722 entries)
-- Generator: **INSIDE `pages/learning/english-master.js`** — not a standalone util (critical coupling)
-- Grade filter: YES — `minGrade/maxGrade` per pool row; `englishPoolItemAllowedWithClassSplit`
-- Topic filter: YES — vocabulary, grammar, translation, sentences, writing
-- `correctAnswer`: YES for grammar/sentences (static); REQUIRES RUNTIME EXPANSION for translation (phrase pairs lack MCQ options) and vocabulary (random word list entry)
-- `choices`: YES for grammar/sentences (static options); runtime-assembled for translation/vocabulary (pool rows have no `options`)
-- `explanation`: YES on grammar/sentences; absent on translation/vocabulary
-- Complications: (a) generator is embedded in the page — must be extracted into `utils/english-question-generator.js`; (b) translation items need distractor expansion at preview time; (c) bilingual question direction (`en_to_he` / `he_to_en`) must be captured in `params`
-
-### Moledet-Geography (not yet supported)
-
-- Bank: [`data/geography-questions/g1.js`](data/geography-questions/g1.js) … `g6.js` (~3,506 total items; ~617 per grade)
-- Generator: [`utils/moledet-geography-question-generator.js`](utils/moledet-geography-question-generator.js)
-- Curriculum: [`data/moledet-geography-curriculum.js`](data/moledet-geography-curriculum.js)
-- Grade filter: STRONG — per-grade files, no silent cross-grade fallback; `listTopicQuestionsForGradeLevel` returns `emptyPool: true` if nothing found
-- Topic filter: STRONG — 6 topics: homeland, community, citizenship, geography, values, maps
-- `correctAnswer`: YES — 4-option MCQ, `correct` index → `answers[correct]`; generator resolves to string
-- `choices`: YES — 4-option MCQ (text)
-- `explanation`: NOT on bank rows
-- `hint`: NOT on bank rows
-- `skillKey`: `skillId` present on bank rows
-- Map/image data: NONE — all text-only questions
-- Quality risks: 725 duplicate `stemHash` values (pedagogical spiral is intentional but inflates uniqueness perception); some factual quality flags noted in `docs/product-quality-phase-23-homeland-geography-factual-review.md`
+**D10 — No placeholder questions, no fallback questions.**
+Every adapter must throw a clear, specific error if it cannot generate the requested number of real questions for the given grade/topic/difficulty. No silent fallback to the full bank, no cycling, no placeholders.
 
 ---
 
-## 2. Adapter Feasibility Per Subject
+## Universal Go/No-Go Gate Checklist
 
-| Subject | Adapter type needed | Key work |
-|---------|---------------------|----------|
-| **Math** | Cleanup only | Add `choices` (MCQ) or document free-text; fix topic mapping to use curriculum keys; copy `skillKey` |
-| **Science** | Generator cleanup | Add real grade+difficulty filter; add shuffle + dedup; fix cycling |
-| **Geometry** | Thin adapter + normalization | Snapshot `answers[]` as `choices`; pull explanation from `geometry-explanations.js`; normalize correctAnswer type; capture `shape` + `params` |
-| **Hebrew** | Thin adapter | Call `generateQuestion` from existing util; strip audio metadata; handle typing mode `acceptedAnswers`; no archive items |
-| **English** | Generator extraction + adapter | Extract generator from `english-master.js` → new `utils/english-question-generator.js`; pre-expand translation MCQ distractors |
-| **Moledet-Geography** | Thin adapter | Clone science pattern; add grade+level filter from `listTopicQuestionsForGradeLevel`; shuffle; copy `skillId` → `skillKey` |
+Every phase (B0 through B4) must pass all applicable items before the subject key is enabled in production:
+
+1. Adapter unit tests pass: generates exactly N items for valid grade+topic+difficulty
+2. Every generated item passes `validateSameExactQuestionSet` server-side
+3. Every generated item has a non-empty `question` string
+4. Every generated item has a non-null, non-empty `correctAnswer` string
+5. MCQ items: `choices` array contains `correctAnswer` as one of the options
+6. `stripQuestionSetForStudent` removes `correctAnswer` from student payload (confirmed by test)
+7. Quiz mode: `hint` and `explanation` absent from student start payload (confirmed by test)
+8. Tamper test: student submitting `correctAnswer` in request body is ignored by scoring route
+9. Server scores correct answer as `isCorrect: true`, wrong answer as `isCorrect: false`
+10. `npm run build` passes with no new errors or warnings
+11. E2E: teacher preview → save draft → student start → student answer → student submit flow completes
+12. No placeholder fallback path exists in the adapter (verified by code review)
 
 ---
 
-## 3. Required Unified Question Format
+## Phase B0 — Science Quality Fix (blocker for all other phases)
 
-Every adapter must output objects conforming to this schema before they are stored in `classroom_activities.question_set`:
+**Estimated complexity: Small**
+**Estimated time: 1 day**
+**SQL required: No**
 
-```json
-{
-  "question":      "(required) string — full question stem; passages embedded if needed",
-  "correctAnswer": "(required) string — authoritative answer stored server-side only",
-  "choices":       "(optional) string[] — MCQ options array; present for MCQ subjects",
-  "acceptedAnswers": "(optional) string[] — for typing-mode items with multiple valid answers",
-  "explanation":   "(optional) string — full explanation; omitted in quiz start payload",
-  "hint":          "(optional) string — hint text; omitted in quiz start payload",
-  "subject":       "(required) string — lowercase subject key",
-  "topic":         "(required) string — canonical topic key from curriculum definition",
-  "subtopic":      "(optional) string",
-  "gradeLevel":    "(optional) string — g1..g6",
-  "difficulty":    "(optional) string — easy | medium | hard | mixed",
-  "skillKey":      "(optional) string — diagnosticSkillId for adaptive planner",
-  "params":        "(optional) object — extra render data; see subject-specific notes below"
+### What is broken today
+
+The existing science adapter in `generate-activity-questions-client.js` (lines 106–153):
+- Ignores `gradeLevel` entirely — passes it through but never filters `q.grades`
+- Ignores `difficulty` — never checks `q.minLevel` / `q.maxLevel`
+- Uses `source[i % source.length]` — deterministic cycling, produces duplicates for small N
+- Topic filtering is a substring match with silent fallback to the full bank
+- Hebrew topic label strings from teacher UI do not map to bank `topic` keys (teacher types "גופנו" but bank key is `body`)
+
+### Files changed in B0
+
+- [`lib/classroom-activities/generate-activity-questions-client.js`](lib/classroom-activities/generate-activity-questions-client.js) — science branch rewrite
+- [`tests/classroom-activities/classroom-activities-shared.test.mjs`](tests/classroom-activities/classroom-activities-shared.test.mjs) — add Science-specific tests
+
+### Exact changes
+
+**1. Add grade filter:**
+```javascript
+const gradeKey = normalizeGradeKey(gradeLevel); // already exists for math
+const filtered = pool.filter((q) => {
+  if (!Array.isArray(q.grades) || !q.grades.includes(gradeKey)) return false;
+  // topic filter (see below)
+  // difficulty filter (see below)
+  return true;
+});
+```
+
+**2. Add difficulty filter** (mirror `levelAllowed` from `pages/learning/science-master.js`):
+```javascript
+const LEVEL_ORDER = { easy: 0, medium: 1, hard: 2 };
+function scienceLevelAllowed(q, levelKey) {
+  const min = LEVEL_ORDER[q.minLevel] ?? 0;
+  const max = LEVEL_ORDER[q.maxLevel] ?? 2;
+  const target = LEVEL_ORDER[String(levelKey || "medium")] ?? 1;
+  return target >= min && target <= max;
 }
 ```
 
-Subject-specific `params` extensions:
+**3. Add topic normalization map** (Hebrew UI label → bank `topic` key):
+```javascript
+const SCIENCE_TOPIC_MAP = {
+  "גוף": "body", "גופנו": "body",
+  "בעלי חיים": "animals", "חיות": "animals",
+  "צמחים": "plants",
+  "חומרים": "materials",
+  "ניסויים": "experiments",
+  "כדור הארץ": "earth_space", "חלל": "earth_space",
+  "סביבה": "environment",
+};
+function normalizeScienceTopic(raw) {
+  const t = String(raw || "").toLowerCase().trim();
+  return SCIENCE_TOPIC_MAP[t] || t; // pass through if already an English key
+}
+```
 
-- **Geometry**: `{ kind, shape, patternFamily, subtype, side, base, height, radius, ... }` — needed by `GeometryExplanationDiagram`
-- **Hebrew**: `{ gradeKey, levelKey, patternFamily, subtype, answerMode }` — `answerMode` tells student UI whether to show MCQ or text input
-- **English**: `{ topic, direction, patternFamily, grammarOptionSet, listKey }` — `direction` is `en_to_he` or `he_to_en`
-- **Moledet-Geography**: `{ skillId, subtype, difficulty, cognitiveLevel }` — mirrors bank row
+**4. Replace cycling with shuffle + dedup:**
+```javascript
+const shuffled = [...source].sort(() => Math.random() - 0.5);
+const seen = new Set();
+for (const q of shuffled) {
+  const key = `${q.stem || q.question}|${q.correctAnswer || q.options?.[q.correctIndex]}`;
+  if (seen.has(key)) continue;
+  seen.add(key);
+  questions.push({ /* frozen item */ });
+  if (questions.length >= n) break;
+}
+```
 
-The existing `validateSameExactQuestionSet` in [`lib/classroom-activities/classroom-activities-shared.server.js`](lib/classroom-activities/classroom-activities-shared.server.js) already accepts `correctAnswer` (no schema change needed at DB level). `stripQuestionSetForStudent` already removes all answer-revealing fields.
+**5. Throw on insufficient questions** (no fallback to full bank):
+```javascript
+if (questions.length < n) {
+  throw new Error(`אין מספיק שאלות מדע עבור כיתה ${gradeKey} נושא ${topic} רמה ${difficulty}`);
+}
+```
 
----
+### B0 Tests to add
 
-## 4. Subject-Specific Complications
+In `tests/classroom-activities/classroom-activities-shared.test.mjs`:
 
-### Geometry — Diagram Render Data
+- Science preview for g1 `body` `easy` returns only items where `q.grades.includes("g1")`
+- Science preview for g4 `animals` `hard` returns only items where `maxLevel >= hard`
+- Science preview topic `"גופנו"` normalizes to bank key `body`
+- Science preview for g1 `experiments` `hard` throws (thin pool — not enough items)
+- No two returned items have identical `question|correctAnswer` fingerprint
+- Each returned item: `choices` is an array, `choices.includes(correctAnswer)` is true
+- Each returned item passes `validateSameExactQuestionSet`
 
-Geometry questions that reference shapes (area, perimeter, circles, pythagoras) are currently rendered with SVG diagrams driven by `getGeometryDiagramSpec(params, shape, topic)`. A frozen classroom question must include the full `params` object and `shape` string so the student player can reconstruct the diagram. The adapter must snapshot these. The student player (`pages/student/activity/[activityId].js`) will need a small diagram-aware render path for geometry items (check `q.params.kind` and `q.subject === "geometry"`). This is a UI addition but does not affect scoring or security.
+### B0 Acceptance Criteria
 
-### Hebrew — Passages, Niqqud, Typing Mode
-
-Reading comprehension passages are embedded in `question` text (no separate field). This is acceptable for frozen sets. The adapter should:
-- Call `generateQuestion` from `hebrew-question-generator.js` (already a standalone util)
-- Store `answers[]` as `choices` and the resolved `correctAnswer` string (not the index)
-- Store `acceptedAnswers` for typing-mode items
-- Store `answerMode` in `params` so the student player can render correctly
-- OMIT audio/niqqud API calls — classroom frozen questions use plain text stems only; nakdan enrichment belongs to live learning only
-- Do NOT use archive bank (`data/hebrew-questions/`)
-
-### English — Generator Coupling and Translation Expansion
-
-The English generator (`generateQuestion` in `english-master.js`) is the only subject generator not extracted to a standalone util. Before an adapter can be written, this function (and its helpers: `resolveEnglishQType`, `buildEnglishMcqOptions`, etc.) must be moved to `utils/english-question-generator.js`. Translation pool rows have no `options` field; at preview time the adapter must build MCQ distractors from the word list pool (the same logic `english-master.js` uses today).
-
-### Moledet-Geography — Quality Pre-Screening
-
-The 725 duplicate `stemHash` values mean deduplication by `question|correctAnswer` fingerprint (as math does) is essential. The generator already shuffles `answers` and recomputes `correctIndex`. The adapter should use `listTopicQuestionsForGradeLevel(gradeKey, levelKey, topic)` to get the correct grade-level pool — do NOT import grade files directly. If the pool returns `emptyPool: true`, throw a clear error rather than falling back to another grade.
-
-### Science — Current Bugs to Fix Before Expansion
-
-These are regressions in the existing Phase A implementation:
-1. **Grade filter missing**: science preview ignores `gradeLevel` entirely — must add `q.grades.includes(gradeKey)` filter
-2. **Difficulty filter missing**: `minLevel`/`maxLevel` not applied — must add `levelAllowed(q, levelKey)` filter (already exists in `science-master.js`)
-3. **No shuffle**: `source[i % source.length]` cycling → replace with Fisher-Yates + dedup by `question|correctAnswer`
-4. **Topic mismatch for Hebrew topic strings**: teacher may type Hebrew topic labels — add a normalization map (Hebrew label → bank `topic` key) matching what science-master uses
-
----
-
-## 5. Security / Scoring Requirements
-
-All subjects share the same security model — no changes to the security layer are needed. Confirmed properties:
-
-- `stripQuestionSetForStudent` (lines 159–172 of `classroom-activities-shared.server.js`) removes `correctAnswer`, `correct_answer`, `expectedAnswer`, `answer` from every student payload
-- Quiz mode additionally removes `hint` and `explanation` (confirmed by tests in `classroom-activities-shared.test.mjs` lines 16–29)
-- `extractCorrectAnswerFromQuestion` supports `correctAnswer` or `correct_answer` alias — adapters should write `correctAnswer`
-- `answersMatch` uses numeric tolerance + case-insensitive string comparison — covers MCQ, free text, and Hebrew answers
-- `validateSameExactQuestionSet` (called at save time server-side) requires `question` and `correctAnswer` — all adapters must pass this
-- Student answer route (`pages/api/student/activities/[activityId]/answer.js`) reads `question_snapshot` from DB at score time — `correctAnswer` never sent to client
-
-The only new security consideration is geometry `params` — diagram render data exposed to students is non-sensitive (shape dimensions, not answers). The `correctAnswer` is still stripped normally.
-
-For typing-mode Hebrew items, `acceptedAnswers` contains correct alternatives. The adapter must store these in the frozen item and `answersMatch` on the server will need to iterate them — this may require a small extension to `answersMatch` or a separate `answersMatchList` helper.
+All 12 gate checklist items apply to Science. Additionally:
+- `npm run qa:science:runtime-gate` passes (existing script)
+- Grade-filtered test confirms no cross-grade leakage
 
 ---
 
-## 6. UI Impact
+## Phase B1 — Moledet-Geography
 
-### Current Teacher UI Gaps
+**Estimated complexity: Small**
+**Estimated time: 1–2 days**
+**SQL required: No**
+**Depends on: B0 complete**
 
-The topic field is a free-text `<input>` with no subject-aware validation. This means:
-- Math teachers type Hebrew operation names (`חיבור`) or English ones (`addition`) — accepted via heuristic
-- Science teachers must type an exact bank topic key (`body`, `animals`) or the preview falls back to the full bank
+### Subject key: `moledet_geography`
 
-### Required UI Changes (subject-aware topic dropdown)
+This is the only form used in `LEARNING_SUBJECT_ALLOWLIST`, `REPORT_SUBJECTS`, and `SUBJECT_LABEL_HE`. All new code must use `moledet_geography`. The adapter receives `sub === "moledet_geography"` and stores `subject: "moledet_geography"` in frozen items.
 
-When each new subject is added, the teacher UI must replace the free-text topic input with a subject-aware `<select>` that lists valid topics for the selected subject+grade combination. A shared helper like `getTopicsForSubjectAndGrade(subject, gradeKey)` should be created, driven by the existing curriculum constants:
+### Source
 
-| Subject | Curriculum source | Topics |
-|---------|-------------------|--------|
-| Math | `utils/math-constants.js` | operation names per grade |
-| Science | `data/science-curriculum.js` | `SCIENCE_GRADES[g].topics` |
-| Geometry | `utils/geometry-constants.js` | `GRADES[g].topics` |
-| Hebrew | `data/hebrew-curriculum.js` | fixed 6 topics (all grades) |
-| English | `data/english-curriculum.js` | `ENGLISH_GRADES[g].topics` |
-| Moledet-Geography | `utils/moledet-geography-constants.js` | `GRADES[g].topics` |
+- Bank: [`data/geography-questions/g1.js`](data/geography-questions/g1.js) … `g6.js` (~617 items per grade, 3,506 total)
+- Generator: [`utils/moledet-geography-question-generator.js`](utils/moledet-geography-question-generator.js) — exposes `listTopicQuestionsForGradeLevel(gradeKey, levelKey, topicKey)` which returns `{ items, emptyPool: boolean }`
+- Curriculum: [`data/moledet-geography-curriculum.js`](data/moledet-geography-curriculum.js)
+- Grade-topic policy: [`utils/moledet-geography-grade-topic-policy.js`](utils/moledet-geography-grade-topic-policy.js)
 
-The dropdown must not show topics that have zero questions for the selected grade+difficulty combination — the adapter should expose a `hasSufficientQuestions(subject, gradeKey, topic, difficulty, count)` check used in the UI before preview.
+### Topic keys (canonical, from `utils/moledet-geography-constants.js`)
 
-### Subject Enablement Order (UI)
+`homeland`, `community`, `citizenship`, `geography`, `values`, `maps`, `mixed`
 
-- No UI copy changes until Hebrew copy is reviewed by the product owner
-- The subject dropdown filter `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s)` is the single safe gate — only update this Set when an adapter is fully tested
-- Each new subject must go through preview → save → student-start → student-answer → submit flow before the subject appears in the dropdown
+### Adapter design
 
----
+```javascript
+if (sub === "moledet_geography") {
+  const { listTopicQuestionsForGradeLevel } = await import(
+    "../../utils/moledet-geography-question-generator.js"
+  );
+  const gradeKey = normalizeGradeKey(gradeLevel);
+  const levelKey = String(difficulty || "medium").toLowerCase();
+  const topicKey = normalizeMoledettGeographyTopic(topic); // Hebrew → key map
+  const result = listTopicQuestionsForGradeLevel(gradeKey, levelKey, topicKey);
+  if (result.emptyPool) {
+    throw new Error(`אין שאלות מולדת וגאוגרפיה עבור כיתה ${gradeKey} נושא ${topicKey} רמה ${levelKey}`);
+  }
+  const shuffled = [...result.items].sort(() => Math.random() - 0.5);
+  const seen = new Set();
+  const questions = [];
+  for (const q of shuffled) {
+    const answers = Array.isArray(q.answers) ? q.answers : [];
+    const correctAnswer = answers[q.correct] != null ? String(answers[q.correct]) : null;
+    if (!q.question || !correctAnswer) continue;
+    const key = `${q.question}|${correctAnswer}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    questions.push({
+      question: String(q.question),
+      correctAnswer,
+      choices: answers,
+      subject: "moledet_geography",
+      topic: topicKey,
+      gradeLevel: gradeKey,
+      difficulty: levelKey,
+      skillKey: q.skillId || undefined,
+      params: { subtype: q.subtype, cognitiveLevel: q.cognitiveLevel },
+    });
+    if (questions.length >= n) break;
+  }
+  if (questions.length < n) {
+    throw new Error(`אין מספיק שאלות מולדת וגאוגרפיה — נסו נושא, כיתה, או רמה אחרת`);
+  }
+  return questions;
+}
+```
 
-## 7. QA Plan
+Topic normalization map (Hebrew UI label → canonical key):
+```javascript
+const MOLEDET_TOPIC_MAP = {
+  "מולדת": "homeland",
+  "קהילה": "community",
+  "אזרחות": "citizenship",
+  "גאוגרפיה": "geography",
+  "ערכים": "values",
+  "מפות": "maps",
+  "ערבוב": "mixed",
+};
+```
 
-### Per Subject — Adapter Unit Tests
+### Teacher UI — topic dropdown for moledet_geography
 
-Each subject needs a test file at `tests/classroom-activities/generate-[subject]-activity-questions.test.mjs`:
+When subject === `moledet_geography`, replace the free-text topic input with a `<select>` populated from `MOLEDET_TOPIC_MAP` keys. The Hebrew label is already the map key. Do not add new Hebrew copy — these are existing labels from the curriculum.
 
-- Generates exactly `N` questions for valid grade+topic+difficulty combos
-- Each item passes `validateSameExactQuestionSet`
-- Each item has a non-empty `question` string
-- Each item has a non-null `correctAnswer` string
-- MCQ items have `choices` array with 2–6 elements containing `correctAnswer`
-- Throws (not falls back) for unsupported grade+topic combinations
-- Throws for empty pools (moledet-geography g1–g2 with thin topics)
-- Dedup: no two items have identical `question|correctAnswer` fingerprint (for N ≤ pool size)
+**Copy gate**: These topic labels come directly from `utils/moledet-geography-constants.js` and are not new text. No owner approval needed for B1. Owner approval is required only for B3 (Hebrew subject labels).
 
-### Scoring Tests (extend `classroom-activities-shared.test.mjs`)
+### Files changed in B1
 
-- `stripQuestionSetForStudent` removes `correctAnswer` for all new subject items
-- Quiz mode removes `hint`/`explanation` for all new subjects
-- `answersMatch` correctly scores MCQ answer (selected choice text == `correctAnswer`)
-- `answersMatch` correctly rejects wrong choice
-- Hebrew typing mode: `answersMatch` matches one of `acceptedAnswers`
-- Geometry numeric answer: `answersMatch` numeric tolerance works
+- [`lib/classroom-activities/classroom-activities-preview.js`](lib/classroom-activities/classroom-activities-preview.js) — add `"moledet_geography"` to `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS`
+- [`lib/classroom-activities/generate-activity-questions-client.js`](lib/classroom-activities/generate-activity-questions-client.js) — add `moledet_geography` adapter branch
+- [`pages/teacher/class/[classId]/activities/new.js`](pages/teacher/class/[classId]/activities/new.js) — subject-aware topic dropdown for `moledet_geography`
+- `tests/classroom-activities/generate-moledet-geography-activity-questions.test.mjs` — NEW
 
-### Generator/Bank Tests
+### B1 Tests
 
-- Geometry: `generateQuestion` returns `answers[]` (choices) for all grade/topic/difficulty combos
-- Science: after grade+difficulty fix, preview returns only questions where `q.grades.includes(gradeKey)`
-- Moledet-Geography: empty-pool branches throw; thin-pool branches warn
-- English: grammar/sentences pools return static MCQ; translation returns expanded MCQ
+**Adapter unit tests** (`generate-moledet-geography-activity-questions.test.mjs`):
+- Generates N=5 items for g3 `homeland` `easy` — all pass `validateSameExactQuestionSet`
+- Generates N=5 items for g5 `geography` `hard` — all have `choices` array
+- Each item: `choices.includes(correctAnswer)` is true
+- Each item: `subject === "moledet_geography"`
+- Empty pool: g1 `maps` `hard` (thin) throws with Hebrew error message (no fallback)
+- Dedup: N=10 items from g4 `citizenship` `medium` — no two share `question|correctAnswer`
+- Unsupported subject key `"moledet-geography"` is rejected by `isActivityPreviewSubjectSupported`
 
-### Teacher Preview Tests (extend `tests/e2e/teacher-activities.spec.ts`)
+**Scoring tests** (extend `classroom-activities-shared.test.mjs`):
+- `stripQuestionSetForStudent` removes `correctAnswer` from moledet item
+- Quiz mode removes `explanation` (absent in bank) and `hint` (absent) — no regression
+- `answersMatch` scores correct MCQ choice correctly for Hebrew string answer
+- `answersMatch` rejects wrong choice
 
-- Teacher can select new subject in dropdown (after it is enabled)
-- Topic dropdown lists only valid topics for selected subject+grade
-- Preview renders N questions; all have visible question text and choices (where applicable)
-- Preview cannot be saved without previewing first
-- Unsupported grade+topic combos show a clear Hebrew error (no placeholder questions)
+**E2E** (extend `tests/e2e/teacher-activities.spec.ts`):
+- Teacher selects `moledet_geography`, topic `homeland`, grade `g4`, difficulty `easy`
+- Preview renders 5 visible questions, each with Hebrew text and 4 choices
+- Save draft succeeds, returns `activityId`
+- Student start: `correctAnswer` absent from payload
+- Student answers correctly: `isCorrect: true`
+- Student answers incorrectly: `isCorrect: false`
 
-### Student Activity Tests
+### B1 Acceptance Criteria
 
-- Student start payload contains `choices` (not `correctAnswer`) for MCQ subjects
-- Quiz start payload omits `hint` and `explanation`
-- Student submits correct answer → `isCorrect: true` in response
-- Student submits wrong answer → `isCorrect: false` in response
-- Student cannot submit `correctAnswer` field in request body (server ignores it)
-
-### Regression Tests — Independent Learning
-
-- Each new subject adapter must not break the existing `pages/learning/[subject]-master.js` flow (adapters are new files; generators are called read-only)
-
----
-
-## 8. Recommended Rollout
-
-### Phase B1 — Moledet-Geography (SMALL, 1–2 days)
-
-Easiest subject to add. Pure static MCQ bank, strong per-grade per-level pools, standalone generator, no media, no typing mode. The adapter is a near-clone of the science pattern but correctly wires grade+level filtering. Can be done immediately after the simulation phase.
-
-Steps:
-1. Write `generateMoledettGeographyActivityQuestions` in `generate-activity-questions-client.js`
-2. Add `"moledet-geography"` to `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS`
-3. Add topic dropdown for moledet-geography to teacher UI
-4. Add adapter unit tests + scoring tests
-5. Run sim
-
-### Phase B2 — Science Fixes + Geometry (MEDIUM, 3–4 days)
-
-Science bug fixes are technically part of Phase A completion — they should be treated as high-priority regressions, not Phase B features. Fix simultaneously with Geometry because they follow the same pattern (bank sampling + grade filter).
-
-Science steps:
-1. Add grade+difficulty filter to science preview in `generate-activity-questions-client.js`
-2. Add shuffle + dedup
-3. Add Hebrew→bank topic normalization map
-4. Update `classroom-activities-shared.test.mjs` to assert grade filter works
-
-Geometry steps:
-1. Write `generateGeometryActivityQuestions` in `generate-activity-questions-client.js`
-2. Snapshot `answers[]` as `choices`, pull explanation from `geometry-explanations.js`
-3. Add `shape` and `params` to frozen item
-4. Confirm student player can render geometry diagram from `params` (minor UI addition)
-5. Add `"geometry"` to `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS`
-6. Adapter + scoring tests
-
-### Phase B3 — Hebrew (MEDIUM-LARGE, 3–5 days)
-
-Hebrew generator is large but well-organized as a standalone util. The main work is adapter design (typing mode, niqqud exclusion) and ensuring the generator is called with the right grade+topic params. No archive items.
-
-Steps:
-1. Write `generateHebrewActivityQuestions` in `generate-activity-questions-client.js`
-2. Filter out typing-mode items if classroom player does not yet support them, OR include them with `params.answerMode` and verify `answersMatch` handles `acceptedAnswers`
-3. Strip any audio/niqqud metadata from frozen items
-4. Add `"hebrew"` to `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS`
-5. Hebrew topic dropdown in teacher UI (6 topics, all grades)
-6. Add `answersMatchList` helper to `classroom-activities-shared.server.js` if needed for `acceptedAnswers`
-7. Full test suite
-
-### Phase B4 — English (LARGE, 5–7 days)
-
-Largest scope due to generator coupling. Must not be rushed.
-
-Steps:
-1. Extract `generateQuestion` and all helpers from `pages/learning/english-master.js` → new `utils/english-question-generator.js` (no behavior change; update import in master page)
-2. Write `generateEnglishActivityQuestions` in `generate-activity-questions-client.js`
-3. Pre-expand translation rows (build MCQ distractors at preview time using word list pools)
-4. Pre-expand vocabulary rows (select random word + distractors at preview time)
-5. Add `"english"` to `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS`
-6. English topic dropdown (vocab, grammar, translation, sentences) per grade
-7. Full test suite
-8. Regression test that `english-master.js` still works with extracted generator
+All 12 universal gate checklist items, plus:
+- Subject key `moledet_geography` (underscore) used consistently in frozen items, API, and tests
+- `npm run qa:moledet-geography:runtime-gate` passes (existing script)
+- Topic dropdown shows Hebrew labels from curriculum constants (no new copy invented)
 
 ---
 
-## 9. Deliverables Summary
+## Phase B2 — Geometry
 
-### Subject Readiness Table
+**Implementation status (2026-05-25):** **GO — owner approved.** Adapter + student diagram renderer + security same-origin Bearer gate. Verified: `tests/security/same-origin.test.mjs` 12/12; geometry unit 8/8; shared 25/25; Playwright `@geometry-b2` 8/8 (incl. SVG); `@science-b0|@moledet-b1` 14/14; `npm run build` PASS. Root cause of earlier E2E failure was `cross_origin` (not SQL/024); fixed in `lib/security/same-origin.js`. **Next phase (B3/B4): blocked until explicit owner approval.**
 
-| Subject | Bank/Generator | Grade Filter | Topic Filter | correctAnswer | choices | Complexity | Status |
-|---------|---------------|-------------|-------------|--------------|---------|------------|--------|
-| Math | Procedural generator | YES | WEAK | YES | NO | Small cleanup | Phase A (needs cleanup) |
-| Science | Static bank ~945 | MISSING | WEAK | YES | YES | Medium (2 bugs) | Phase A (regressed) |
-| Geometry | Procedural + 52-item bank | STRONG | STRONG | YES | YES (not snapshotted) | Medium | Phase B2 |
-| Hebrew | Hybrid generator ~843+ | STRONG | STRONG | YES | YES + typing | Medium-Large | Phase B3 |
-| English | Pool-based (generator in page) | STRONG | STRONG | YES (partial) | PARTIAL | Large | Phase B4 |
-| Moledet-Geography | Static bank ~3506 | STRONG | STRONG | YES | YES | Small | Phase B1 |
+**Estimated complexity: Medium**
+**Estimated time: 3–4 days**
+**SQL required: No**
+**Depends on: B1 complete**
 
-### Exact Files Likely to Change
+### Decision: Diagram rendering is included in B2
 
-Primary changes (adapters and gate):
-- [`lib/classroom-activities/classroom-activities-preview.js`](lib/classroom-activities/classroom-activities-preview.js) — add subjects to Set
-- [`lib/classroom-activities/generate-activity-questions-client.js`](lib/classroom-activities/generate-activity-questions-client.js) — add adapter per subject; fix science
-- [`lib/classroom-activities/classroom-activities-shared.server.js`](lib/classroom-activities/classroom-activities-shared.server.js) — possibly add `answersMatchList` for Hebrew typing
+Geometry is not enabled without diagram support in the student activity player. Questions referencing `area`, `perimeter`, `circles`, `triangles`, `pythagoras`, and similar topics are meaningless without the shape diagram. If diagram rendering cannot be completed safely within B2 scope, geometry is deferred — there is no partial or text-only geometry option.
 
-Teacher UI:
-- [`pages/teacher/class/[classId]/activities/new.js`](pages/teacher/class/[classId]/activities/new.js) — replace free-text topic with subject-aware dropdown
+### Source
 
-English extraction:
-- `utils/english-question-generator.js` — NEW file (extracted from english-master)
-- [`pages/learning/english-master.js`](pages/learning/english-master.js) — update import (no behavior change)
+- Procedural generator: [`utils/geometry-question-generator.js`](utils/geometry-question-generator.js) — `generateQuestion(levelConfig, topic, gradeKey, options)`
+- Conceptual bank: [`utils/geometry-conceptual-bank.js`](utils/geometry-conceptual-bank.js) — 52 templates
+- Constants: [`utils/geometry-constants.js`](utils/geometry-constants.js) — `GRADES`, `TOPICS`, `LEVELS`
+- Grade-topic policy: [`utils/geometry-grade-topic-policy.js`](utils/geometry-grade-topic-policy.js)
+- Explanations: [`utils/geometry-explanations.js`](utils/geometry-explanations.js) — keyed by `topic`/`kind`
+- Diagram spec: [`utils/geometry-diagram-spec.js`](utils/geometry-diagram-spec.js) — `getGeometryDiagramSpec(params, shape, topic)`
+- Diagram component: [`components/learning/geometry/GeometryExplanationDiagram.jsx`](components/learning/geometry/GeometryExplanationDiagram.jsx)
+- Student player: [`pages/student/activity/[activityId].js`](pages/student/activity/[activityId].js)
 
-Student player (geometry only):
+### Adapter design
+
+**correctAnswer normalization** — geometry has three answer types; all must be normalized to a string:
+- Numeric answers: `String(16)` → `"16"` (scored with numeric tolerance by `answersMatch`)
+- Hebrew label answers: `"שטח"`, `"היקף"` — already strings
+- Index-string answers `"1"`…`"6"` — these are rare conceptual items; the adapter should verify that the stem text defines the mapping; if not verifiable, skip the item and regenerate
+
+```javascript
+if (sub === "geometry") {
+  const { generateQuestion } = await import("../../utils/geometry-question-generator.js");
+  const { getExplanationForQuestion } = await import("../../utils/geometry-explanations.js");
+  const { GRADES, LEVELS, TOPICS } = await import("../../utils/geometry-constants.js");
+  const gradeKey = normalizeGradeKey(gradeLevel);
+  const topicKey = normalizeGeometryTopic(topic, gradeKey, GRADES, TOPICS);
+  const levelConfig = { ...LEVELS[String(difficulty || "medium")] };
+  const questions = [];
+  const seen = new Set();
+  let attempts = 0;
+  while (questions.length < n && attempts < n * 40) {
+    attempts++;
+    const q = generateQuestion(levelConfig, topicKey, gradeKey, {});
+    if (!q?.question || q.correctAnswer == null) continue;
+    if (q.noQuestion) continue; // topic not valid for grade
+    const correctAnswer = String(q.correctAnswer);
+    const key = `${q.question}|${correctAnswer}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const choices = Array.isArray(q.answers) ? q.answers.map(String) : undefined;
+    if (choices && !choices.includes(correctAnswer)) continue; // safety check
+    const explanation = getExplanationForQuestion(q) || undefined;
+    questions.push({
+      question: String(q.question),
+      correctAnswer,
+      choices,
+      explanation,
+      subject: "geometry",
+      topic: topicKey,
+      gradeLevel: gradeKey,
+      difficulty: String(difficulty || "medium"),
+      skillKey: q.params?.diagnosticSkillId || undefined,
+      params: {
+        kind: q.params?.kind,
+        shape: q.shape || undefined,
+        patternFamily: q.params?.patternFamily,
+        subtype: q.params?.subtype,
+        // numeric params for diagram reconstruction
+        side: q.params?.side,
+        base: q.params?.base,
+        height: q.params?.height,
+        radius: q.params?.radius,
+        a: q.a,
+        b: q.b,
+      },
+    });
+  }
+  if (questions.length < n) {
+    throw new Error(`אין מספיק שאלות גיאומטריה עבור כיתה ${gradeKey} נושא ${topicKey} רמה ${difficulty}`);
+  }
+  return questions;
+}
+```
+
+### Student player diagram render path
+
+In [`pages/student/activity/[activityId].js`](pages/student/activity/[activityId].js), add a geometry-aware question renderer:
+
+```jsx
+// If question.subject === "geometry" and question.params?.kind exists:
+// Render GeometryExplanationDiagram with q.params before the question text.
+// The diagram is part of the question display, not the explanation.
+// The explanation (if any) is shown post-submit and in guided_practice mode only —
+// this is already handled by stripQuestionSetForStudent and the existing quiz gate.
+```
+
+The `GeometryExplanationDiagram` component receives the frozen `params` object and `shape` string. It is a read-only SVG renderer; exposing it to students is safe (it does not reveal the answer).
+
+### Files changed in B2
+
+- [`lib/classroom-activities/classroom-activities-preview.js`](lib/classroom-activities/classroom-activities-preview.js) — add `"geometry"`
+- [`lib/classroom-activities/generate-activity-questions-client.js`](lib/classroom-activities/generate-activity-questions-client.js) — add `geometry` adapter branch
+- [`pages/teacher/class/[classId]/activities/new.js`](pages/teacher/class/[classId]/activities/new.js) — geometry topic dropdown from `GRADES[gradeKey].topics`
 - [`pages/student/activity/[activityId].js`](pages/student/activity/[activityId].js) — geometry diagram render path
+- `tests/classroom-activities/generate-geometry-activity-questions.test.mjs` — NEW
 
-Tests (new):
-- `tests/classroom-activities/generate-moledet-geography-activity-questions.test.mjs`
-- `tests/classroom-activities/generate-geometry-activity-questions.test.mjs`
-- `tests/classroom-activities/generate-hebrew-activity-questions.test.mjs`
-- `tests/classroom-activities/generate-english-activity-questions.test.mjs`
-- Extend [`tests/classroom-activities/classroom-activities-shared.test.mjs`](tests/classroom-activities/classroom-activities-shared.test.mjs) — scoring tests for all new subjects
+### B2 Tests
 
-### Blockers and Open Questions
+**Adapter unit tests**:
+- Generates N=5 for g3 `area` `easy` — all have `choices`, `choices.includes(correctAnswer)`
+- Generates N=5 for g6 `pythagoras` `hard` — all pass `validateSameExactQuestionSet`
+- Each item: `params.kind` is non-null
+- Each item: `subject === "geometry"`
+- Topic not valid for grade (e.g., g1 `pythagoras`) throws with clear error, no fallback
+- Dedup: N=10 for g4 `perimeter` `medium` — no two share `question|correctAnswer`
+- Index-string correctAnswer items (if any reach the frozen set) — verify `choices.includes(correctAnswer)` is true; otherwise they are filtered
 
-1. **Science grade filter** — must be fixed before Phase B work begins (it is a Phase A regression)
-2. **Hebrew typing mode** — decision needed: (a) exclude typing-mode items from classroom activities entirely (simplest), or (b) support typing mode with `acceptedAnswers` array scoring. If (b), `answersMatchList` helper must be added and tested
-3. **Geometry student player** — decision needed: does the activity player render geometry diagrams from `params`? If yes, the `GeometryExplanationDiagram` component must be importable in the student player without leaking explanation content before submit. If no, geometry classroom questions will appear without visual aids (acceptable for Phase B2 if diagrams are in explanations only)
-4. **Hebrew copy approval** — no Hebrew UI copy for new subjects may ship without product owner sign-off. The topic dropdown labels must be reviewed before enabling Hebrew or any new subject in the teacher UI
-5. **English generator extraction** — must be done cleanly with no regression in `english-master.js`; needs a unit test to verify the extracted util returns identical output
-6. **Moledet-Geography g1–g2 thin pools** — runtime coverage file flags some g1–g2 thin buckets as advisory. If teacher selects a thin g1 topic+difficulty combo, the adapter must throw clearly rather than cycling or returning duplicates
+**Diagram render test**:
+- Snapshot test (or Playwright): student activity player renders an SVG element for a geometry question with `params.kind` and `params.shape`
+- Diagram SVG does not contain the `correctAnswer` string
 
-### Final Recommendation
+**Scoring tests** (extend shared test file):
+- `stripQuestionSetForStudent` removes `correctAnswer` from geometry item
+- Quiz mode removes `explanation` (if present)
+- `answersMatch("16", "16")` is true (numeric string match)
+- `answersMatch("16.0", "16")` is true (numeric tolerance)
+- `answersMatch("שטח", "שטח")` is true (Hebrew string match)
+- `answersMatch("היקף", "שטח")` is false
 
-Start with **Phase B1 (Moledet-Geography)** immediately after the simulation phase — it is the lowest-risk addition and validates the adapter pattern cleanly. Fix **Science grade/difficulty regression** in the same PR. Then proceed to **Phase B2 (Geometry + Science fixes)**, **Phase B3 (Hebrew)**, and **Phase B4 (English)** in sequence. Do not enable any subject in the UI until its adapter test suite passes end-to-end, including the student quiz leak test.
+### B2 Acceptance Criteria
+
+All 12 universal gate items, plus:
+- Student activity player renders a geometry diagram for a frozen geometry question
+- Diagram does not appear in quiz mode until after submit (explanation gate applies)
+- `npm run build` with no new React import/component errors
+
+---
+
+## Phase B3 — Hebrew
+
+**Estimated complexity: Medium-Large**
+**Estimated time: 3–5 days**
+**SQL required: No**
+**Depends on: B2 complete**
+**Pre-gate: Hebrew UI copy review (owner approval)**
+
+### Pre-gate: Copy Review
+
+Before Phase B3 begins, the owner must approve the Hebrew-language labels for the Hebrew subject topic dropdown in the teacher UI. The six topic keys (`reading`, `comprehension`, `grammar`, `vocabulary`, `writing`, `speaking`) map to existing Hebrew labels in `data/hebrew-curriculum.js`. No new copy may be invented. The owner must confirm these labels are acceptable as displayed in the teacher dropdown.
+
+### Decision: Typing-mode items excluded
+
+Hebrew items with `answerMode === "typing"` or `preferredAnswerMode === "typing"` are filtered out by the adapter before building the question set. This applies to all typing-mode subtopics in g1–g2 (`g1.spell_word_choice`, `g2.sentence_wellformed`, `g2.punctuation_choice`, etc.) and any higher-grade typing variants. The classroom activity for Hebrew is MCQ-only in Phase B3. Typing-mode support is a future phase (B3+) that requires `acceptedAnswers` server-side scoring, student UI changes, and its own test suite.
+
+### Source
+
+- Generator (standalone util): [`utils/hebrew-question-generator.js`](utils/hebrew-question-generator.js) — `generateQuestion(gradeKey, levelKey, topic)` returns runtime question object
+- Rich bank: [`utils/hebrew-rich-question-bank.js`](utils/hebrew-rich-question-bank.js) (54 items, merged by generator)
+- G3 reading bank: [`data/hebrew-g3-reading-bank.js`](data/hebrew-g3-reading-bank.js) (46 items, merged by generator)
+- Archive NOT used: `data/hebrew-questions/g1-g6.js` — explicitly excluded; these files must not be imported by the adapter
+- Constants: [`utils/hebrew-constants.js`](utils/hebrew-constants.js)
+- Curriculum: [`data/hebrew-curriculum.js`](data/hebrew-curriculum.js)
+
+### Adapter design
+
+The generator already resolves `correct` index → `correctAnswer` string and `answers[]` as choices. The adapter calls it in a loop, filters out typing-mode outputs, deduplicates, and snapshots.
+
+```javascript
+if (sub === "hebrew") {
+  const { generateQuestion } = await import("../../utils/hebrew-question-generator.js");
+  const gradeKey = normalizeGradeKey(gradeLevel);
+  const levelKey = String(difficulty === "mixed" ? "medium" : (difficulty || "medium")).toLowerCase();
+  const topicKey = normalizeHebrewTopic(topic); // Hebrew label → key
+  const questions = [];
+  const seen = new Set();
+  let attempts = 0;
+  while (questions.length < n && attempts < n * 40) {
+    attempts++;
+    const q = generateQuestion(gradeKey, levelKey, topicKey);
+    if (!q?.question || !q.correctAnswer) continue;
+    // Exclude typing-mode items
+    if (q.answerMode === "typing" || q.params?.answerMode === "typing") continue;
+    const choices = Array.isArray(q.answers) ? q.answers : undefined;
+    if (!choices || !choices.includes(q.correctAnswer)) continue; // safety
+    const key = `${q.question}|${q.correctAnswer}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    questions.push({
+      question: String(q.question),
+      correctAnswer: String(q.correctAnswer),
+      choices,
+      subject: "hebrew",
+      topic: topicKey,
+      gradeLevel: gradeKey,
+      difficulty: levelKey,
+      skillKey: q.params?.diagnosticSkillId || undefined,
+      params: {
+        gradeKey,
+        levelKey,
+        patternFamily: q.params?.patternFamily,
+        subtype: q.params?.subtype,
+        answerMode: "choice", // always MCQ in Phase B3
+      },
+    });
+  }
+  if (questions.length < n) {
+    throw new Error(`אין מספיק שאלות עברית (MCQ) עבור כיתה ${gradeKey} נושא ${topicKey} רמה ${levelKey}`);
+  }
+  return questions;
+}
+```
+
+Topic normalization map (Hebrew UI label → generator key):
+```javascript
+const HEBREW_TOPIC_MAP = {
+  "קריאה": "reading",
+  "הבנת הנקרא": "comprehension",
+  "דקדוק": "grammar",
+  "אוצר מילים": "vocabulary",
+  "כתיבה": "writing",
+  "דיבור": "speaking",
+  "ערבוב": "mixed",
+};
+```
+
+### Teacher UI — topic dropdown for hebrew
+
+Subject-aware `<select>` for Hebrew with the 6 topics above. These labels are from `data/hebrew-curriculum.js` and are subject to the copy review pre-gate.
+
+### Files changed in B3
+
+- [`lib/classroom-activities/classroom-activities-preview.js`](lib/classroom-activities/classroom-activities-preview.js) — add `"hebrew"`
+- [`lib/classroom-activities/generate-activity-questions-client.js`](lib/classroom-activities/generate-activity-questions-client.js) — add `hebrew` adapter branch
+- [`pages/teacher/class/[classId]/activities/new.js`](pages/teacher/class/[classId]/activities/new.js) — Hebrew topic dropdown (requires copy approval)
+- `tests/classroom-activities/generate-hebrew-activity-questions.test.mjs` — NEW
+
+### B3 Tests
+
+**Adapter unit tests**:
+- Generates N=5 for g2 `vocabulary` `easy` — all MCQ (no typing-mode items in result)
+- Generates N=5 for g4 `reading` `medium` — all pass `validateSameExactQuestionSet`
+- Each item: `choices.includes(correctAnswer)` is true
+- Each item: `params.answerMode === "choice"`
+- Typing-mode filter: if generator returns a typing-mode item, it is excluded and regeneration continues
+- Empty pool (topic not active for grade) throws Hebrew error with no fallback
+- Dedup: N=10 for g5 `grammar` `hard` — no two items share `question|correctAnswer`
+- Archive bank: confirmed that `data/hebrew-questions/g1.js` is NOT imported anywhere in the adapter path
+
+**Scoring tests** (extend shared test file):
+- `stripQuestionSetForStudent` removes `correctAnswer` from Hebrew item
+- Quiz mode removes `explanation` (absent in Hebrew items — no regression)
+- `answersMatch("ילד", "ילד")` is true (Hebrew string, case-insensitive)
+- `answersMatch("ילדה", "ילד")` is false
+
+### B3 Acceptance Criteria
+
+All 12 universal gate items, plus:
+- Copy review sign-off obtained before topic dropdown ships
+- No typing-mode item survives to a frozen `question_set` (enforced by adapter filter + test)
+- Archive bank files not reachable from adapter (import graph verified)
+
+---
+
+## Phase B4 — English
+
+**Estimated complexity: Large**
+**Estimated time: 5–7 days**
+**SQL required: No**
+**Depends on: B3 complete**
+
+### Pre-work: Generator Extraction
+
+The English `generateQuestion` function and all its helpers (`resolveEnglishQType`, `buildEnglishMcqOptions`, `englishPoolItemAllowedWithClassSplit`, etc.) are currently embedded in [`pages/learning/english-master.js`](pages/learning/english-master.js). Before writing the adapter, these must be moved to a new file `utils/english-question-generator.js`. The extraction must:
+
+1. Move only the generator logic — no UI, no React hooks, no state
+2. Update `english-master.js` to import from the new file
+3. Add a unit test proving that the extracted generator returns identical output for the same seed inputs as the original (behavior parity test)
+4. `npm run build` must pass
+5. The existing `english-master.js` page must be regression-tested (Playwright or unit test)
+
+No adapter is written until the extraction is complete and tested.
+
+### Source (after extraction)
+
+- Generator: `utils/english-question-generator.js` (NEW — extracted)
+- Grammar pools: [`data/english-questions/grammar-pools.js`](data/english-questions/grammar-pools.js) (~617 items)
+- Sentence pools: [`data/english-questions/sentence-pools.js`](data/english-questions/sentence-pools.js) (~229 items)
+- Translation pools: [`data/english-questions/translation-pools.js`](data/english-questions/translation-pools.js) (~172 phrase pairs — no `options` field)
+- Word lists: [`data/english-questions/word-lists.js`](data/english-questions/word-lists.js) (~722 entries)
+- Curriculum: [`data/english-curriculum.js`](data/english-curriculum.js)
+- Grade-topic policy: [`utils/english-grade-topic-policy.js`](utils/english-grade-topic-policy.js)
+
+### Translation / vocabulary MCQ pre-expansion
+
+Translation pool rows have no `options` field — the generator builds MCQ distractors at runtime from word list pools. The adapter must pre-expand these at preview time, snapshotting the full question+choices into the frozen `question_set`. This is not a schema change — the frozen item stores `choices: [...]` exactly like grammar items. The distractor expansion logic is already in `english-master.js`; it moves to `english-question-generator.js` as part of the extraction.
+
+Vocabulary items are similar: a random word pair is selected and distractors are built from the same word list. The adapter snapshots the result.
+
+### Adapter design (after extraction)
+
+```javascript
+if (sub === "english") {
+  const { generateQuestion } = await import("../../utils/english-question-generator.js");
+  const gradeKey = normalizeGradeKey(gradeLevel);
+  const levelKey = String(difficulty || "medium").toLowerCase();
+  const topicKey = normalizeEnglishTopic(topic);
+  const questions = [];
+  const seen = new Set();
+  let attempts = 0;
+  while (questions.length < n && attempts < n * 40) {
+    attempts++;
+    const q = generateQuestion(gradeKey, levelKey, topicKey);
+    if (!q?.question || !q.correctAnswer) continue;
+    const choices = Array.isArray(q.answers) ? q.answers : undefined;
+    // All English classroom items must be MCQ (no typing/writing mode)
+    if (!choices || !choices.includes(q.correctAnswer)) continue;
+    const key = `${q.question}|${q.correctAnswer}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    questions.push({
+      question: String(q.question),
+      correctAnswer: String(q.correctAnswer),
+      choices,
+      explanation: q.explanation || undefined,
+      subject: "english",
+      topic: topicKey,
+      gradeLevel: gradeKey,
+      difficulty: levelKey,
+      skillKey: q.params?.diagnosticSkillId || undefined,
+      params: {
+        patternFamily: q.params?.patternFamily,
+        direction: q.params?.direction,
+        topicKey,
+        grammarOptionSet: q.params?.grammarOptionSet,
+        listKey: q.params?.listKey,
+      },
+    });
+  }
+  if (questions.length < n) {
+    throw new Error(`אין מספיק שאלות אנגלית עבור כיתה ${gradeKey} נושא ${topicKey} רמה ${levelKey}`);
+  }
+  return questions;
+}
+```
+
+### Files changed in B4
+
+- `utils/english-question-generator.js` — NEW (extracted from english-master)
+- [`pages/learning/english-master.js`](pages/learning/english-master.js) — update import (no behavior change)
+- [`lib/classroom-activities/classroom-activities-preview.js`](lib/classroom-activities/classroom-activities-preview.js) — add `"english"`
+- [`lib/classroom-activities/generate-activity-questions-client.js`](lib/classroom-activities/generate-activity-questions-client.js) — add `english` adapter branch
+- [`pages/teacher/class/[classId]/activities/new.js`](pages/teacher/class/[classId]/activities/new.js) — English topic dropdown
+- `tests/classroom-activities/generate-english-activity-questions.test.mjs` — NEW
+- `tests/learning/english-generator-extraction.test.mjs` — NEW (parity + regression)
+
+### B4 Tests
+
+**Extraction regression tests** (`english-generator-extraction.test.mjs`):
+- Extracted `generateQuestion` returns same fields as original for grammar/g2/easy
+- Extracted generator returns same fields for translation/g3/medium
+- `english-master.js` import resolves without errors (module load test)
+- Playwright: English learning page works end-to-end after extraction
+
+**Adapter unit tests**:
+- Generates N=5 for g2 `grammar` `easy` — all MCQ, all pass `validateSameExactQuestionSet`
+- Generates N=5 for g3 `translation` `medium` — all have `choices` (pre-expanded)
+- Each item: `choices.includes(correctAnswer)` is true
+- Writing-mode items (if any) are excluded by the MCQ filter
+- Dedup across N=10 for g4 `vocabulary` `medium` — no duplicates
+- Empty pool for g1 `grammar` `hard` (thin) throws, no fallback
+
+**Scoring tests** (extend shared test file):
+- `stripQuestionSetForStudent` removes `correctAnswer` from English item
+- Quiz mode removes `explanation` (present on grammar items)
+- `answersMatch("am", "am")` is true (English string, case-insensitive)
+- `answersMatch("is", "am")` is false
+- `answersMatch("כלב", "כלב")` is true (Hebrew answer in English question)
+
+### B4 Acceptance Criteria
+
+All 12 universal gate items, plus:
+- Generator extraction regression tests pass before adapter development begins
+- Translation items have pre-expanded `choices` in frozen set (no runtime pool access at answer time)
+- `english-master.js` Playwright test passes
+
+---
+
+## Architecture Diagram
+
+```mermaid
+flowchart TD
+    subgraph gate [Universal Gate — all 12 criteria]
+        G1[adapter unit tests pass]
+        G2[validateSameExactQuestionSet passes]
+        G3[stripQuestionSetForStudent confirmed]
+        G4[quiz mode strips hint+explanation]
+        G5[tamper test passes]
+        G6[scoring correct/incorrect]
+        G7[E2E passes]
+        G8[build passes]
+    end
+
+    B0[Phase B0: Science Fix] --> B0_gate{B0 go/no-go}
+    B0_gate -->|pass| B1[Phase B1: moledet_geography]
+    B1 --> B1_gate{B1 go/no-go}
+    B1_gate -->|pass| B2[Phase B2: Geometry + Diagrams]
+    B2 --> B2_gate{B2 go/no-go}
+    B2_gate -->|pass| copyReview[Hebrew Copy Review]
+    copyReview -->|owner approved| B3[Phase B3: Hebrew MCQ-only]
+    B3 --> B3_gate{B3 go/no-go}
+    B3_gate -->|pass| B4extract[B4 pre-work: Extract English Generator]
+    B4extract --> B4regression{Regression tests pass}
+    B4regression -->|pass| B4[Phase B4: English]
+    B4 --> B4_gate{B4 go/no-go}
+
+    gate -.->|applied at every gate| B0_gate
+    gate -.->|applied at every gate| B1_gate
+    gate -.->|applied at every gate| B2_gate
+    gate -.->|applied at every gate| B3_gate
+    gate -.->|applied at every gate| B4_gate
+```
+
+---
+
+## No SQL Confirmation
+
+Current schema (`supabase/migrations/024_classroom_activities.sql`) has `question_set jsonb NOT NULL DEFAULT '[]'`. This column accepts any JSON array. All new subject formats (moledet_geography, geometry, hebrew, english) store objects with the same field shape already validated by `validateSameExactQuestionSet`. No migration is required for any phase. If a future phase needs a schema change, the migration file will be written and presented for owner approval before execution.
+
+---
+
+## Final Recommendation
+
+**B0 and B1 are small enough to do now, immediately after Phase A simulation closure.**
+
+- Phase B0 (Science fix) is 1 day of targeted code changes in a single file. These are production regressions that should be fixed regardless of expansion plans.
+- Phase B1 (moledet_geography) is 1–2 days. The bank is large and well-structured, the generator is standalone, the adapter is a clean pattern, and no copy approval is needed. The subject key `moledet_geography` is already in `LEARNING_SUBJECT_ALLOWLIST` and `REPORT_SUBJECTS` — only the preview gate and adapter are missing.
+- Together, B0+B1 add one fully-tested subject, fix a production bug in Science, and establish the adapter pattern that B2–B4 will follow.
+
+**B2 (Geometry) should follow closely**, provided the diagram rendering decision does not require architectural changes to the student player beyond adding a subject-aware render branch.
+
+**B3 (Hebrew) and B4 (English) are the right scope for a second work cycle**, after B0–B2 are shipped and regression-stable.

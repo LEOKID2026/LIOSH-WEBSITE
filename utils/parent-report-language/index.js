@@ -58,6 +58,16 @@ export {
 export { GRADE_AWARE_RECOMMENDATION_TEMPLATES } from "./grade-aware-recommendation-templates.js";
 export { resolveGradeAwareParentRecommendationHe } from "./grade-aware-recommendation-resolver.js";
 export {
+  M10_ENGINE_PATTERN_HE,
+  M10_PARENT_PATTERN_LABELS,
+  isM10ThinOrUnclearEvidence,
+  parentFacingM10PatternLabelHe,
+  parentFacingPatternLabelHe,
+  parentFacingDiagnosisSnippetHe,
+  findM10EnginePatternLeaksInValue,
+  sanitizeDiagnosticEngineV2ForParentFacing,
+} from "./parent-facing-pattern-label-he.js";
+export {
   SUBJECT_VALID_MIN_QUESTIONS,
   SUBJECT_EVIDENCE_TIER,
   ZERO_EVIDENCE_FORBIDDEN_RE,

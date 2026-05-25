@@ -78,6 +78,8 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
   "קושי יסודי",
   "קפיצה לרמה גבוהה",
   "נקודות לשימת לב",
+  /* Engine-internal M-10 taxonomy — must not leak to parents */
+  "בחירת כפל לא מתאים לחילוק",
 ];
 
 export const FORBIDDEN_PARENT_REPORT_SUBSTRINGS = [

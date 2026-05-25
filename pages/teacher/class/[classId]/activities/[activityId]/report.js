@@ -50,13 +50,13 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
   const load = useCallback(async () => {
     try {
       const supabase = getLearningSupabaseBrowserClient();
-      const token = await resolveTeacherAccessToken(supabase);
-      if (!token) {
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!session.ok) {
         router.replace("/teacher/login");
         return;
       }
       const res = await teacherAuthFetch(
-        token,
+        session.token,
         `/api/teacher/activities/${encodeURIComponent(activityId)}/report`
       );
       const body = await res.json().catch(() => ({}));

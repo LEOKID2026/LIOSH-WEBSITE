@@ -47,6 +47,7 @@ export default defineConfig({
     stderr: "pipe",
     env: {
       ...process.env,
+      NEXT_PUBLIC_ACTIVITIES_ENABLED: "true",
       E2E_INSECURE_SESSION_COOKIES:
         useProductionServer || process.env.E2E_INSECURE_SESSION_COOKIES === "1" ? "1" : "0",
     },

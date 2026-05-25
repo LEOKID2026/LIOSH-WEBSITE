@@ -270,6 +270,10 @@ export function sessionRowLabelHe(subjectId, row) {
 /** כשלא מצליחים לנקות תווית מנוע — מחרוזת בטוחה להורה */
 export const PARENT_TOPIC_FALLBACK_HE = "נושא שכדאי לבדוק שוב";
 
+/** Last-resort scrub if M-10 engine label appears in a free-text snippet (no unit context). */
+const ENGINE_M10_PATTERN_LEAK_HE = "בחירת כפל לא מתאים לחילוק";
+const PARENT_M10_PATTERN_SAFETY_HE = "קושי בקישור בין כפל לחילוק";
+
 const TAXONOMY_PARENT_SNIPPET_PAIRS = [
   [/טעות\s+כשעובדה\s+לא\s+בסדר\s+קריאה/giu, "קריאת השאלה לא הייתה מסודרת"],
   [/עובדה\s+לא\s+בסדר\s+קריאה/giu, "קריאת השאלה לא הייתה מסודרת"],
@@ -290,6 +294,9 @@ export function rewriteTaxonomySubstringsOnlyHe(raw) {
   if (!t) return "";
   for (const [re, rep] of TAXONOMY_PARENT_SNIPPET_PAIRS) {
     t = t.replace(re, rep);
+  }
+  if (t.includes(ENGINE_M10_PATTERN_LEAK_HE)) {
+    t = t.split(ENGINE_M10_PATTERN_LEAK_HE).join(PARENT_M10_PATTERN_SAFETY_HE);
   }
   return t.trim();
 }

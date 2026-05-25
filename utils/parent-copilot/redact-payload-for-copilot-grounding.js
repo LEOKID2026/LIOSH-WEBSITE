@@ -5,6 +5,11 @@
  * Callers pass a **clone** path only — this function clones defensively before mutating.
  */
 
+import {
+  parentFacingDiagnosisSnippetHe,
+  parentFacingPatternLabelHe,
+} from "../parent-report-language/parent-facing-pattern-label-he.js";
+
 /**
  * @param {unknown} iv
  */
@@ -136,7 +141,7 @@ function sanitizeDiagnosticUnitForCopilotGrounding(u) {
   }
   const tax = u.taxonomy && typeof u.taxonomy === "object" ? u.taxonomy : null;
   if (tax) {
-    const patternHe = tax.patternHe != null ? String(tax.patternHe).trim() : "";
+    const patternHe = parentFacingPatternLabelHe(u);
     const subskillHe = tax.subskillHe != null ? String(tax.subskillHe).trim() : "";
     if (patternHe || subskillHe) {
       out.taxonomy = { ...(patternHe ? { patternHe } : {}), ...(subskillHe ? { subskillHe } : {}) };
@@ -144,7 +149,8 @@ function sanitizeDiagnosticUnitForCopilotGrounding(u) {
   }
   const diag = u.diagnosis && typeof u.diagnosis === "object" ? u.diagnosis : null;
   if (diag) {
-    const lineHe = diag.lineHe != null ? String(diag.lineHe).trim() : "";
+    const lineHe =
+      diag.lineHe != null ? parentFacingDiagnosisSnippetHe(u, String(diag.lineHe).trim()) : "";
     if (lineHe) {
       out.diagnosis = {
         lineHe,
