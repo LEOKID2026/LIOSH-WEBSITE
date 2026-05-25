@@ -1,6 +1,9 @@
 /**
  * Idempotent provisioning for teacher classroom simulation entities.
  * Uses service role only. Never touches admin@admin.com / AAA1-12 / ADMIN demo.
+ *
+ * Quota note: bootstrap inserts class members via service role (bypasses HTTP APIs).
+ * STUDENT_COUNT (20) per class stays under the production 40-per-class cap.
  */
 import crypto from "node:crypto";
 import { createClient } from "@supabase/supabase-js";

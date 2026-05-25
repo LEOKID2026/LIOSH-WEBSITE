@@ -10,6 +10,7 @@ import {
 } from "../../../../lib/teacher-server/teacher-activities.server.js";
 import {
   parseBooleanQuery,
+  rejectIfTeacherFeatureDisabled,
   requireTeacherApiContext,
   unknownQueryParams,
 } from "../../../../lib/teacher-server/teacher-request.server.js";
@@ -20,6 +21,7 @@ export default async function handler(req, res) {
   try {
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+    if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "classroom_activities")) return undefined;
 
     if (req.method === "GET") {
       const unknown = unknownQueryParams(req.query, new Set(["classId", "status", "includeArchived"]));

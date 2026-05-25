@@ -4,40 +4,40 @@ overview: "Design and implement a teacher permissions / quotas / admin-control s
 todos:
   - id: q0-audit
     content: "Q0: Codebase audit — complete (this plan)"
-    status: pending
+    status: completed
   - id: q1-migration
     content: "Q1: Write supabase/migrations/025_teacher_quotas_admin.sql — stop for owner SQL approval"
-    status: pending
+    status: completed
   - id: q1-session
     content: "Q1: Update resolveTeacherPlanLimits() to return maxStudentsPerClass; change total-student default to null"
-    status: pending
+    status: completed
   - id: q2-helper
     content: "Q2: Add assertTeacherCanAddStudentToClass() to teacher-classes.server.js"
-    status: pending
+    status: completed
   - id: q2-wire
     content: "Q2: Wire per-class check into addClassMember(), createTeacherManagedStudent(), and members.js route"
-    status: pending
+    status: completed
   - id: q2-ui
     content: "Q2: Add class_student_limit_reached inline error in TeacherDashboardClient"
-    status: pending
+    status: completed
   - id: q2-diagnostic
     content: "Q2: Provide diagnostic SQL to detect existing classes over 40 students"
-    status: pending
+    status: completed
   - id: q3-admin-lib
     content: "Q3: Create lib/admin-server/admin-request.server.js and admin-audit.server.js"
-    status: pending
+    status: completed
   - id: q3-admin-api
     content: "Q3: Create pages/api/admin/teachers/* routes (list, detail, quotas, features, status, audit-log)"
-    status: pending
+    status: completed
   - id: q3-admin-ui
     content: "Q3: Create pages/admin/teachers/* pages and admin UI components"
-    status: pending
+    status: completed
   - id: q4-feature-flags
     content: "Q4: Implement assertTeacherFeatureEnabled() and wire into activity/message/report routes"
-    status: pending
+    status: completed
   - id: q5-school-stub
     content: "Q5: Activate school_accounts schema for real use when school manager phase begins"
-    status: pending
+    status: completed
 isProject: false
 ---
 
@@ -96,7 +96,9 @@ admin override (teacher_limits.xxx_override)
 | Feature: live_audio | false | flag |
 
 ### "Unlimited" sentinel
-`null` in any limit column = unlimited (consistent with existing `teacher_school_unlimited` plan pattern).
+`null` in a limit column = unlimited. This applies **only** to `max_classes_per_teacher` and `max_total_students_per_teacher`.
+
+`max_students_per_class` is **never null at the plan level**. Every plan seeds the value 40. The only way a teacher can have a per-class limit other than 40 is via an explicit admin override in `teacher_limits.max_students_per_class_override`. Setting that override to `null` means the admin has explicitly granted unlimited-per-class to that specific teacher — it is not a default.
 
 ---
 
@@ -106,18 +108,24 @@ admin override (teacher_limits.xxx_override)
 
 > **Migration file only. Owner runs SQL manually. Agent must stop for approval.**
 
-### 3.1 Extend `teacher_plans`
+### 3.1 Extend `teacher_plans` and disable old total-student / class-count limits
 
 ```sql
 ALTER TABLE public.teacher_plans
   ADD COLUMN IF NOT EXISTS max_students_per_class integer null
     CHECK (max_students_per_class IS NULL OR max_students_per_class >= 1);
 
--- Update existing plan seeds
-UPDATE public.teacher_plans SET max_students_per_class = 40 WHERE code = 'teacher_basic_20';
-UPDATE public.teacher_plans SET max_students_per_class = 40 WHERE code = 'teacher_pro_50';
--- teacher_school_unlimited stays NULL (unlimited)
+-- Set max_students_per_class = 40 for ALL existing plans, including teacher_school_unlimited.
+-- Per-class limit of 40 applies universally. There is no "unlimited per class" at the plan level.
+UPDATE public.teacher_plans SET max_students_per_class = 40;
+
+-- Disable existing total-student and class-count limits for all current plans.
+-- Current business decision: unlimited number of classes and unlimited total students per teacher.
+-- The only active hard limit is max_students_per_class = 40.
+UPDATE public.teacher_plans SET student_limit = NULL, class_limit = NULL;
 ```
+
+> **Why this is needed:** `teacher_basic_20` currently has `student_limit=20, class_limit=5`. Without nulling these values, teachers would still be blocked at 20 total students and 5 classes even after the code constants are changed, because `resolveTeacherPlanLimits()` falls back to plan-row values before the hardcoded default.
 
 ### 3.2 Extend `teacher_limits`
 
@@ -200,10 +208,12 @@ ALTER TABLE public.teacher_profiles
 In [`lib/teacher-server/teacher-session.server.js`](lib/teacher-server/teacher-session.server.js):
 
 - Rename `SYSTEM_DEFAULT_STUDENT_LIMIT = 20` → split into two constants:
-  - `SYSTEM_DEFAULT_MAX_TOTAL_STUDENTS = null` (unlimited for now)
-  - `SYSTEM_DEFAULT_MAX_STUDENTS_PER_CLASS = 40`
-- Update `resolveTeacherPlanLimits()` to return a third field: `maxStudentsPerClass` using the same override → plan → default resolution chain.
-- Keep `studentLimit` (total) and `classLimit` resolving as before but update defaults to `null` (unlimited) for now.
+  - `SYSTEM_DEFAULT_MAX_TOTAL_STUDENTS = null` — hardcoded fallback for total students (unlimited)
+  - `SYSTEM_DEFAULT_MAX_CLASSES = null` — hardcoded fallback for class count (unlimited)
+  - `SYSTEM_DEFAULT_MAX_STUDENTS_PER_CLASS = 40` — hardcoded fallback for per-class limit
+- Update `resolveTeacherPlanLimits()` to return a third field: `maxStudentsPerClass` using the override → plan → default resolution chain.
+- For `studentLimit` (total) and `classLimit`: after migration 025 runs, plan rows will have `NULL` for both, so the resolver will fall through to the hardcoded fallback `null` = unlimited. The code change (setting the fallback constant to `null`) aligns the code with what the DB will contain after SQL is applied.
+- The existing checks in `createTeacherManagedStudent()` and `createTeacherClass()` use `if (count >= studentLimit)` / `if (count >= classLimit)`. When the resolved limit is `null`, these checks must be short-circuited (no block). Update the resolver or those functions to skip the check when the limit is `null`.
 
 ---
 
@@ -410,9 +420,15 @@ Quota resolution (future):
 - Identified gaps: no per-class limit, no admin UI, no feature flags.
 
 ### Q1 — DB Foundation
-- Write `supabase/migrations/025_teacher_quotas_admin.sql`.
-- Stop. Owner reviews and runs SQL manually.
-- After SQL confirmed: update `resolveTeacherPlanLimits()` to return `maxStudentsPerClass`, update `SYSTEM_DEFAULT_MAX_TOTAL_STUDENTS = null`.
+- Write `supabase/migrations/025_teacher_quotas_admin.sql` containing:
+  - `ALTER TABLE teacher_plans ADD COLUMN max_students_per_class integer`
+  - `UPDATE teacher_plans SET max_students_per_class = 40` (all plans, including school_unlimited)
+  - `UPDATE teacher_plans SET student_limit = NULL, class_limit = NULL` (disable old total limits)
+  - New columns on `teacher_limits`: `max_students_per_class_override`, `feature_flags`, `is_account_active`
+  - New `admin_audit_log` table
+  - Future-stub `school_accounts` and `school_teacher_memberships` tables
+- **Stop. Owner reviews and runs SQL manually. No SQL execution by agent.**
+- After owner confirms SQL applied: update `resolveTeacherPlanLimits()` to return `maxStudentsPerClass`; replace `SYSTEM_DEFAULT_STUDENT_LIMIT = 20` with the three new constants; ensure total-student and class-count checks are skipped when limit is `null`.
 
 ### Q2 — Enforce 40 Students Per Class
 - Add `assertTeacherCanAddStudentToClass()` to `teacher-classes.server.js`.
@@ -482,6 +498,6 @@ The feature is complete when:
 | 3 | **Removed students**: `teacher_class_students.removed_at IS NOT NULL` rows do NOT count toward the 40. Re-adding a removed student to the same class uses the same unique index (enforces re-add instead of duplicate). Confirm this is desired. | Owner confirms |
 | 4 | **Same student in two classes**: Each class is counted independently. Student in class A and class B counts as 1 in each, not 2 toward a single class cap. | By design — no action needed |
 | 5 | **Simulation accounts**: bootstrap.mjs bypasses APIs via service role. It is exempt from the 40-per-class limit by design. Confirm this is acceptable. | Owner confirms |
-| 6 | **Total-student default**: Changing `SYSTEM_DEFAULT_STUDENT_LIMIT` from 20 to `null` (unlimited) will affect any teacher whose `teacher_limits` row has `plan_code = teacher_basic_20` and both overrides are `null`. Before Q1 they were capped at 20 total students. After Q1 they are unlimited total (only 40-per-class applies). Confirm this intentional business decision. | Owner confirms |
+| 6 | **Total-student / class-count limits disabled**: Migration 025 sets `student_limit = NULL` and `class_limit = NULL` for all existing plans. This means any teacher who was previously capped at 20 total students or 5 classes will become unlimited after SQL is applied. The only remaining hard limit is 40 students per class. This is the confirmed business decision per the product brief. Owner must apply SQL deliberately with this understanding. | Confirmed by owner in product brief |
 | 7 | **Future paid plans**: Feature flags and quota overrides in `teacher_limits` are designed to support different paid tiers without a schema change. Tiers can be added as new rows in `teacher_plans`. | No action yet |
 | 8 | **Hebrew copy for admin screen**: Admin UI will use English keys in Q3. Owner must approve Hebrew copy before Q3 ships to production. | Owner provides copy |

@@ -1,7 +1,11 @@
 import { safeApiLog } from "../../../../../lib/security/safe-log.js";
 import { consumeRateLimit, clientIpFromRequest } from "../../../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../../../lib/security/production-guard.js";
-import { requireTeacherApiContext, unknownQueryParams } from "../../../../../lib/teacher-server/teacher-request.server.js";
+import {
+  rejectIfTeacherFeatureDisabled,
+  requireTeacherApiContext,
+  unknownQueryParams,
+} from "../../../../../lib/teacher-server/teacher-request.server.js";
 import {
   buildTeacherStudentReportPayload,
   parseTeacherReportStudentIdParam,
@@ -52,6 +56,7 @@ export default async function handler(req, res) {
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
     const tAuth = elapsedMs(t0);
     if (ctx.stopped) return undefined;
+    if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "ai_reports")) return undefined;
 
     if (isProductionRuntime()) {
       const ip = clientIpFromRequest(req);

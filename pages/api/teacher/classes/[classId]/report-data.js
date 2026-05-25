@@ -9,7 +9,11 @@ import {
   parseReportWindowDays,
   resolveTeacherReportDateRange,
 } from "../../../../../lib/teacher-server/teacher-report.server.js";
-import { requireTeacherApiContext, unknownQueryParams } from "../../../../../lib/teacher-server/teacher-request.server.js";
+import {
+  rejectIfTeacherFeatureDisabled,
+  requireTeacherApiContext,
+  unknownQueryParams,
+} from "../../../../../lib/teacher-server/teacher-request.server.js";
 import {
   rejectIfTeacherPortalDisabled,
   sendTeacherApiError,
@@ -54,6 +58,7 @@ export default async function handler(req, res) {
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
     const tAuth = elapsedMs(t0);
     if (ctx.stopped) return undefined;
+    if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "ai_reports")) return undefined;
 
     if (isProductionRuntime()) {
       const ip = clientIpFromRequest(req);

@@ -1,7 +1,10 @@
 import { safeApiLog } from "../../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../../lib/security/same-origin.js";
 import { setLiveLessonQuestionIndex } from "../../../../../lib/teacher-server/teacher-activities.server.js";
-import { requireTeacherApiContext } from "../../../../../lib/teacher-server/teacher-request.server.js";
+import {
+  rejectIfTeacherFeatureDisabled,
+  requireTeacherApiContext,
+} from "../../../../../lib/teacher-server/teacher-request.server.js";
 import { sendTeacherApiError } from "../../../../../lib/teacher-server/teacher-session.server.js";
 import { readJsonBody, normalizeOptionalInteger } from "../../../../../lib/learning-supabase/learning-activity.js";
 
@@ -17,6 +20,7 @@ export default async function handler(req, res) {
   try {
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+    if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "classroom_activities")) return undefined;
 
     const body = readJsonBody(req);
     const idx = normalizeOptionalInteger(body.currentQuestionIdx, 0, 49);

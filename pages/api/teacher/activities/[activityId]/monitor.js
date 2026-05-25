@@ -1,6 +1,9 @@
 import { safeApiLog } from "../../../../../lib/security/safe-log.js";
 import { buildActivityMonitorPayload } from "../../../../../lib/teacher-server/teacher-activities.server.js";
-import { requireTeacherApiContext } from "../../../../../lib/teacher-server/teacher-request.server.js";
+import {
+  rejectIfTeacherFeatureDisabled,
+  requireTeacherApiContext,
+} from "../../../../../lib/teacher-server/teacher-request.server.js";
 import { sendTeacherApiError } from "../../../../../lib/teacher-server/teacher-session.server.js";
 
 export default async function handler(req, res) {
@@ -13,6 +16,7 @@ export default async function handler(req, res) {
   try {
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+    if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "classroom_activities")) return undefined;
 
     const result = await buildActivityMonitorPayload(
       ctx.serviceRole,

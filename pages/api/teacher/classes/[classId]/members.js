@@ -52,7 +52,9 @@ export default async function handler(req, res) {
       return sendTeacherApiError(res, 400, "validation_failed", "Invalid studentId");
     }
 
-    const added = await addClassMember(ctx.serviceRole, ctx.teacherId, classId, studentId);
+    const added = await addClassMember(ctx.serviceRole, ctx.teacherId, classId, studentId, {
+      maxStudentsPerClass: ctx.limits.maxStudentsPerClass,
+    });
     if (!added.ok) {
       return sendTeacherApiError(res, added.status, added.code, added.code);
     }

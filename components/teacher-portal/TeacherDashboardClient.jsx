@@ -91,7 +91,15 @@ function Modal({ title, onClose, children }) {
   );
 }
 
-function ClassManagePanel({ accessToken, classInfo, allStudents, onClose, onRefresh }) {
+function classLimitErrorMessage(body) {
+  const code = body?.error?.code;
+  if (code === "class_student_limit_reached") {
+    return "הכיתה הגיעה למגבלת 40 תלמידים. לא ניתן להוסיף עוד תלמידים לכיתה זו.";
+  }
+  return null;
+}
+
+function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerClass, onClose, onRefresh }) {
   const [className, setClassName] = useState(classInfo?.name || "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -150,7 +158,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, onClose, onRefr
     const body = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.status !== 201) {
-      setError("לא ניתן להוסיף תלמיד.");
+      setError(classLimitErrorMessage(body) || "לא ניתן להוסיף תלמיד.");
       return;
     }
     setNewStudentName("");
@@ -172,14 +180,21 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, onClose, onRefr
         body: JSON.stringify({ studentId }),
       }
     );
+    const body = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.status !== 201) {
-      setError("לא ניתן להוסיף את התלמיד לכיתה.");
+      setError(classLimitErrorMessage(body) || "לא ניתן להוסיף את התלמיד לכיתה.");
       return;
     }
     await loadMembers();
     onRefresh();
   };
+
+  const perClassCap =
+    maxStudentsPerClass != null && Number.isFinite(maxStudentsPerClass)
+      ? maxStudentsPerClass
+      : null;
+  const atClassCap = perClassCap != null && members.length >= perClassCap;
 
   const onRemoveFromClass = async (membershipId) => {
     if (!window.confirm("להסיר את התלמיד מהכיתה?")) return;
@@ -264,7 +279,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, onClose, onRefr
             />
             <button
               type="button"
-              disabled={busy}
+              disabled={busy || atClassCap}
               onClick={onCreateAndAdd}
               className="shrink-0 rounded bg-emerald-600 text-white text-sm font-semibold px-3 py-2 disabled:opacity-60"
             >
@@ -279,9 +294,9 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, onClose, onRefr
                   <span className="truncate">{s.studentFullName}</span>
                   <button
                     type="button"
-                    disabled={busy}
+                    disabled={busy || atClassCap}
                     onClick={() => onAddExisting(s.studentId)}
-                    className="text-amber-300 text-xs font-semibold shrink-0"
+                    className="text-amber-300 text-xs font-semibold shrink-0 disabled:opacity-50"
                   >
                     הוסף לכיתה
                   </button>
@@ -292,7 +307,15 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, onClose, onRefr
         </section>
 
         <section>
-          <h4 className="text-sm font-semibold mb-2">תלמידים בכיתה ({members.length})</h4>
+          <h4 className="text-sm font-semibold mb-2">
+            תלמידים בכיתה ({members.length}
+            {perClassCap != null ? ` / ${perClassCap}` : ""})
+          </h4>
+          {atClassCap ? (
+            <p className="text-sm text-amber-200 mb-2">
+              הכיתה הגיעה למגבלת {perClassCap} תלמידים.
+            </p>
+          ) : null}
           {members.length === 0 ? (
             <p className="text-sm text-white/60">אין תלמידים בכיתה.</p>
           ) : (
@@ -567,6 +590,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           accessToken={accessToken}
           classInfo={manageClass}
           allStudents={dashboard?.students || []}
+          maxStudentsPerClass={dashboard?.limits?.maxStudentsPerClass ?? null}
           onClose={() => setManageClass(null)}
           onRefresh={onRefresh}
         />

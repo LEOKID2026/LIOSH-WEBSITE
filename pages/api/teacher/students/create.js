@@ -60,6 +60,7 @@ export default async function handler(req, res) {
       gradeLevel: body.gradeLevel,
       classId: body.classId,
       studentLimit: resolvedLimits.limits.studentLimit,
+      maxStudentsPerClass: resolvedLimits.limits.maxStudentsPerClass,
       accessSecret,
       defaultPin: body.pin || "1234",
     });

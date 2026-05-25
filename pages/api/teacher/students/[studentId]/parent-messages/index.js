@@ -2,7 +2,11 @@ import { safeApiLog } from "../../../../../../lib/security/safe-log.js";
 import { consumeRateLimit, clientIpFromRequest } from "../../../../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../../../../lib/security/production-guard.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../../../lib/security/same-origin.js";
-import { requireTeacherApiContext, unknownQueryParams } from "../../../../../../lib/teacher-server/teacher-request.server.js";
+import {
+  rejectIfTeacherFeatureDisabled,
+  requireTeacherApiContext,
+  unknownQueryParams,
+} from "../../../../../../lib/teacher-server/teacher-request.server.js";
 import {
   parseTeacherReportStudentIdParam,
   teacherHasReportAccessToStudent,
@@ -34,6 +38,7 @@ export default async function handler(req, res) {
 
   const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
   if (ctx.stopped) return undefined;
+  if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "parent_messaging")) return undefined;
 
   if (req.method === "GET") {
     try {
