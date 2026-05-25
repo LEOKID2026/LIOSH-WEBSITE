@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
+import { isAdminAppMetadataUser } from "../../lib/admin-portal/use-admin-session";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 
 export async function getServerSideProps() {
@@ -65,6 +66,11 @@ export default function TeacherLoginPage({ inviteOnly }) {
     supabase.auth.getSession().then(async () => {
       const session = await resolveTeacherAccessToken(supabase);
       if (!mounted || !session.ok) return;
+      const { data: userData } = await supabase.auth.getUser();
+      if (isAdminAppMetadataUser(userData?.user)) {
+        router.replace("/admin/teachers");
+        return;
+      }
       const me = await fetchTeacherMe(session.token);
       if (me.status === 200) {
         router.replace("/teacher/dashboard");
@@ -103,6 +109,12 @@ export default function TeacherLoginPage({ inviteOnly }) {
       }
 
       const token = data.session.access_token;
+
+      if (isAdminAppMetadataUser(data.session.user)) {
+        router.replace("/admin/teachers");
+        return;
+      }
+
       let me = await fetchTeacherMe(token);
 
       if (me.status === 503 && me.body?.error?.code === "feature_disabled") {

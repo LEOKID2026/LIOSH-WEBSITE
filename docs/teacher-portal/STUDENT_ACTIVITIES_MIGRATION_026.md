@@ -19,7 +19,7 @@ Adds `student_activities`, `student_activity_status`, and `student_activity_atte
 
 - Teacher APIs: `/api/teacher/student-activities/*`
 - Student play uses existing `/api/student/activities/*` with `scope: "student"` on list/start.
-- Feature flag: `individual_activities` (default on in app).
+- Feature flag: `individual_activities` (default **on** in app).
 
 ## Rollback
 

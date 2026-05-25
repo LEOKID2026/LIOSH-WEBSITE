@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { filterStudentsByRosterKey } from "../../lib/teacher-portal/teacher-dashboard-roster.js";
+import { rosterFilterLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { teacherAuthFetch } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 const FILTER_OPTIONS = [
@@ -419,11 +420,7 @@ function EditRow({ children }) {
 }
 
 function rosterFilterLabel(option) {
-  if (!option) return "";
-  if (option.type === "class" && option.className) {
-    return `${option.labelPlaceholder || option.className} (${option.studentCount ?? 0})`;
-  }
-  return `${option.labelPlaceholder || option.labelKey || option.key} (${option.studentCount ?? 0})`;
+  return rosterFilterLabelHe(option) || "";
 }
 
 export default function TeacherDashboardClient({ accessToken, dashboard, onLogout, onRefresh }) {
@@ -502,12 +499,6 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
             </p>
           </div>
         </div>
-        {(dashboard?.summary?.directStudentsCount ?? 0) > 0 ? (
-          <p className="text-sm text-white/65 mt-3" data-testid="teacher-direct-students-summary">
-            {dashboard.summary.directStudentsCount} direct students (no class) — use roster filter
-            below
-          </p>
-        ) : null}
         {primaryClass ? (
           <div className="mt-4 pt-4 border-t border-white/10">
             <Link
@@ -522,7 +513,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
 
       {(dashboard?.classes || []).length > 0 ? (
         <section className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold mb-3">Classes</h2>
+          <h2 className="text-lg font-semibold mb-3">כיתות</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {(dashboard.classes || []).map((c) => (
               <li
@@ -536,8 +527,8 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                 <div>
                   <p className="font-semibold break-words">{c.name}</p>
                   <p className="text-sm text-white/65 mt-1">
-                    {c.gradeLevelLabel || "Class"} · {c.rosterStudentCount ?? c.studentCount ?? 0}{" "}
-                    students
+                    {c.gradeLevelLabel || "כיתה"} · {c.rosterStudentCount ?? c.studentCount ?? 0}{" "}
+                    תלמידים
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -547,20 +538,20 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                     className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
                     data-testid={`teacher-roster-filter-class-${c.classId}`}
                   >
-                    Show class students
+                    הצגת תלמידי הכיתה
                   </button>
                   <Link
                     href={`/teacher/class/${c.classId}`}
                     className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
                   >
-                    Class report
+                    דוח כיתה
                   </Link>
                   <button
                     type="button"
                     onClick={() => setManageClass(c)}
                     className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
                   >
-                    Manage class
+                    ניהול כיתה
                   </button>
                 </div>
               </li>
@@ -605,10 +596,10 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
       ) : null}
 
       <section data-testid="teacher-student-roster-section">
-        <h2 className="text-lg font-semibold mb-1">Students</h2>
-        {activeRosterOption ? (
+        <h2 className="text-lg font-semibold mb-1">תלמידים</h2>
+        {activeRosterOption && rosterFilterLabel(activeRosterOption) ? (
           <p className="text-sm text-white/60 mb-3" data-testid="teacher-roster-active-label">
-            Showing: {rosterFilterLabel(activeRosterOption)}
+            מציג: {rosterFilterLabel(activeRosterOption)}
           </p>
         ) : null}
 
@@ -616,10 +607,13 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           <div
             className="flex flex-wrap gap-2 mb-4"
             role="tablist"
-            aria-label="Student roster filter"
+            aria-label="סינון רשימת תלמידים"
             data-testid="teacher-roster-filter-tabs"
           >
-            {rosterFilters.map((opt) => (
+            {rosterFilters.map((opt) => {
+              const tabLabel = rosterFilterLabel(opt);
+              if (!tabLabel) return null;
+              return (
               <button
                 key={opt.key}
                 type="button"
@@ -635,9 +629,10 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                 }`}
                 data-testid={`teacher-roster-tab-${opt.key}`}
               >
-                {rosterFilterLabel(opt)}
+                {tabLabel}
               </button>
-            ))}
+              );
+            })}
           </div>
         ) : null}
 
@@ -684,7 +679,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
 
         {filteredStudents.length === 0 ? (
           <p className="text-white/60 text-sm" data-testid="teacher-roster-empty">
-            No students match this roster filter.
+            אין תלמידים להצגה בסינון זה.
           </p>
         ) : (
           <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">

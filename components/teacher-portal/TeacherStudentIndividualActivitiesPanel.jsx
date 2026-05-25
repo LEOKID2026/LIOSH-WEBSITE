@@ -3,16 +3,13 @@ import { teacherAuthFetch } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { REPORT_SUBJECTS, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../lib/classroom-activities/classroom-activities-preview.js";
 import { generateActivityQuestionSetClient } from "../../lib/classroom-activities/generate-activity-questions-client.js";
-import { activityModeLabelHe } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
+import {
+  activityModeLabelHe,
+  activityStatusLabelHe,
+  studentActivityStatusLabelHe,
+} from "../../lib/classroom-activities/classroom-activities-labels.client.js";
 
 const MODES = ["guided_practice", "quiz", "homework"];
-
-const STATUS_LABEL = {
-  draft: "Draft",
-  active: "Active",
-  closed: "Closed",
-  archived: "Archived",
-};
 
 export default function TeacherStudentIndividualActivitiesPanel({ accessToken, studentId, gradeLevel }) {
   const [activities, setActivities] = useState([]);
@@ -64,7 +61,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
       });
       setPreview(qs);
     } catch (e) {
-      setError(e?.message || "Preview failed");
+      setError(e?.message || "יצירת תצוגה מקדימה נכשלה");
       setPreview([]);
     } finally {
       setBusy(false);
@@ -73,15 +70,15 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
 
   const createDraft = async () => {
     if (!title.trim()) {
-      setError("Title required");
+      setError("נא למלא כותרת");
       return;
     }
     if (!preview.length) {
-      setError("Generate question preview first");
+      setError("נא ליצור תצוגה מקדימה של שאלות לפני שמירה");
       return;
     }
     if (mode === "quiz" && !timeLimitSeconds) {
-      setError("Quiz mode requires time limit (seconds)");
+      setError("במצב בוחן יש להגדיר מגבלת זמן בשניות");
       return;
     }
     setBusy(true);
@@ -107,7 +104,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(json?.error?.message || json?.error?.code || "Create failed");
+        setError(json?.error?.message || json?.error?.code || "יצירת הפעילות נכשלה");
         return;
       }
       const activityId = json?.data?.activityId;
@@ -123,7 +120,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
       setPreview([]);
       await load();
     } catch {
-      setError("Network error");
+      setError("אירעה שגיאת רשת");
     } finally {
       setBusy(false);
     }
@@ -140,12 +137,12 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
       );
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(json?.error?.message || json?.error?.code || "Update failed");
+        setError(json?.error?.message || json?.error?.code || "עדכון הפעילות נכשל");
         return;
       }
       await load();
     } catch {
-      setError("Network error");
+      setError("אירעה שגיאת רשת");
     } finally {
       setBusy(false);
     }
@@ -159,13 +156,13 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
       data-testid="teacher-student-individual-activities"
     >
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h2 className="text-lg font-semibold">Individual activities for this student</h2>
+        <h2 className="text-lg font-semibold">פעילויות אישיות לתלמיד</h2>
         <button
           type="button"
           onClick={() => setShowForm((v) => !v)}
           className="rounded-lg bg-violet-500/90 hover:bg-violet-400 text-black text-sm font-bold px-4 py-2"
         >
-          {showForm ? "Cancel" : "Create activity for this student"}
+          {showForm ? "ביטול" : "יצירת פעילות אישית לתלמיד"}
         </button>
       </div>
 
@@ -178,7 +175,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
       {showForm ? (
         <div className="grid gap-3 md:grid-cols-2 mb-4 text-sm">
           <label className="block">
-            <span className="text-white/70">Title</span>
+            <span className="text-white/70">כותרת</span>
             <input
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={title}
@@ -187,7 +184,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
             />
           </label>
           <label className="block">
-            <span className="text-white/70">Subject</span>
+            <span className="text-white/70">מקצוע</span>
             <select
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={subject}
@@ -201,7 +198,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
             </select>
           </label>
           <label className="block">
-            <span className="text-white/70">Topic</span>
+            <span className="text-white/70">נושא</span>
             <input
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={topic}
@@ -209,7 +206,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
             />
           </label>
           <label className="block">
-            <span className="text-white/70">Mode</span>
+            <span className="text-white/70">סוג פעילות</span>
             <select
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={mode}
@@ -223,7 +220,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
             </select>
           </label>
           <label className="block">
-            <span className="text-white/70">Questions</span>
+            <span className="text-white/70">מספר שאלות</span>
             <input
               type="number"
               min={1}
@@ -234,7 +231,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
             />
           </label>
           <label className="block">
-            <span className="text-white/70">Time limit (sec, quiz)</span>
+            <span className="text-white/70">מגבלת זמן (שניות, לבוחן)</span>
             <input
               type="number"
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
@@ -249,7 +246,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
               onClick={() => void runPreview()}
               className="rounded-lg border border-white/25 px-4 py-2 hover:bg-white/10"
             >
-              Preview questions
+              {busy ? "מייצר…" : "תצוגה מקדימה של שאלות"}
             </button>
             <button
               type="button"
@@ -257,17 +254,19 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
               onClick={() => void createDraft()}
               className="rounded-lg bg-violet-500 text-black font-bold px-4 py-2"
             >
-              Save &amp; activate
+              שמירה והפעלה
             </button>
           </div>
           {preview.length > 0 ? (
-            <p className="md:col-span-2 text-white/60 text-xs">{preview.length} questions ready</p>
+            <p className="md:col-span-2 text-white/60 text-xs">
+              תצוגה מקדימה ({preview.length} שאלות)
+            </p>
           ) : null}
         </div>
       ) : null}
 
       {loaded && activities.length === 0 && !showForm ? (
-        <p className="text-white/60 text-sm">No individual activities yet.</p>
+        <p className="text-white/60 text-sm">אין עדיין פעילויות אישיות</p>
       ) : null}
 
       {activities.length > 0 ? (
@@ -281,11 +280,11 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
                 <span className="font-semibold">{a.title}</span>
                 <span className="text-white/50 mx-2">·</span>
                 <span className="text-white/70">
-                  {STATUS_LABEL[a.status] || a.status} · {activityModeLabelHe(a.mode)}
+                  {activityStatusLabelHe(a.status) || a.status} · {activityModeLabelHe(a.mode)}
                 </span>
                 {a.studentStatus ? (
                   <span className="text-white/50 block text-xs mt-0.5">
-                    Student: {a.studentStatus}
+                    {studentActivityStatusLabelHe(a.studentStatus) || a.studentStatus}
                     {a.scorePct != null ? ` · ${a.scorePct}%` : ""}
                   </span>
                 ) : null}
@@ -298,7 +297,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
                     className="text-xs text-violet-300 hover:underline"
                     onClick={() => void patchStatus(a.activityId, "activate")}
                   >
-                    Activate
+                    הפעלה
                   </button>
                 ) : null}
                 {a.status === "active" ? (
@@ -308,7 +307,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
                     className="text-xs text-amber-300 hover:underline"
                     onClick={() => void patchStatus(a.activityId, "close")}
                   >
-                    Close
+                    סגירה
                   </button>
                 ) : null}
               </div>

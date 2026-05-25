@@ -5,8 +5,12 @@ import {
   isClassroomActivitiesEnabled,
   studentActivityStatusLabelHe,
 } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
+import {
+  individualActivityBadgeHe,
+  personalActivitiesSectionTitleHe,
+} from "../../lib/teacher-portal/teacher-ui.he.js";
 
-function ActivityCard({ a }) {
+function ActivityCard({ a, showIndividualBadge = false }) {
   const href = `/student/activity/${encodeURIComponent(a.activityId)}`;
   const cta =
     a.studentStatus === "submitted"
@@ -17,15 +21,14 @@ function ActivityCard({ a }) {
 
   return (
     <div
-      key={a.activityId}
       className="rounded-2xl border border-white/10 bg-black/30 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-right"
     >
       <div>
         <div className="flex flex-wrap items-center gap-2 justify-end">
           <h3 className="font-bold text-white">{a.title}</h3>
-          {a.scope === "student" ? (
-            <span className="text-[10px] uppercase tracking-wide rounded px-1.5 py-0.5 bg-violet-500/30 text-violet-100 border border-violet-400/40">
-              Individual
+          {showIndividualBadge ? (
+            <span className="text-[10px] tracking-wide rounded px-1.5 py-0.5 bg-violet-500/30 text-violet-100 border border-violet-400/40">
+              {individualActivityBadgeHe()}
             </span>
           ) : null}
         </div>
@@ -77,6 +80,7 @@ export default function StudentClassroomActivitiesPanel() {
     return null;
   }
 
+  const personalSectionTitle = personalActivitiesSectionTitleHe();
   const classActivities = activities.filter((a) => a.scope !== "student");
   const personalActivities = activities.filter((a) => a.scope === "student");
 
@@ -101,11 +105,11 @@ export default function StudentClassroomActivitiesPanel() {
           data-testid="student-personal-activities"
         >
           <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">
-            Personal activities
+            {personalSectionTitle}
           </h2>
           <div className="grid gap-3">
             {personalActivities.map((a) => (
-              <ActivityCard key={a.activityId} a={a} />
+              <ActivityCard key={a.activityId} a={a} showIndividualBadge />
             ))}
           </div>
         </section>
