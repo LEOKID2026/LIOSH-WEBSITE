@@ -177,13 +177,6 @@ export default function ParentTeacherCodeReport({
         data-student-id={studentId || ""}
         data-report-ok="1"
       >
-        <div
-          className="bg-amber-500/15 border border-amber-500/40 text-amber-100 text-sm px-4 py-3 rounded-lg mb-6"
-          role="status"
-        >
-          אתם צופים בדוח מוגבל שהוגדר עבורכם על ידי המורה. גישה זו מוגבלת לילד אחד בלבד.
-        </div>
-
         <TeacherPortalShell title={`דוח הלמידה של ${studentName}`}>
           <div className="flex justify-end mb-4">
             <button

@@ -51,7 +51,7 @@ async function submitParentLogin(page: Page, identifier: string, secret: string)
   await page.getByPlaceholder("הקלידו אימייל או שם משתמש שקיבלתם מהמורה").fill(identifier);
   const secretField = page.getByPlaceholder("הקלידו סיסמה או קוד כניסה");
   await secretField.fill(secret);
-  await secretField.press("Enter");
+  await page.locator('form button[type="submit"]').click({ force: true });
 }
 
 async function openStudentLogin(page: Page) {
@@ -63,7 +63,7 @@ async function submitStudentLogin(page: Page, username: string, pin: string) {
   await page.getByPlaceholder("שם משתמש").fill(username);
   const pinField = page.getByPlaceholder("קוד כניסה");
   await pinField.fill(pin);
-  await pinField.press("Enter");
+  await page.getByRole("button", { name: "כניסה ללמידה" }).click({ force: true });
 }
 
 async function assertNo404(page: Page) {
@@ -95,7 +95,8 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
     await expect(page.getByText(/סיכום פעילות/u)).toBeVisible();
     await expect(page.getByText(/מה חשוב לדעת/u)).toBeVisible();
     await expect(page.getByText(/מה מומלץ לעשות בבית/u)).toBeVisible();
-    await expect(page.getByText(/אתם צופים בדוח מוגבל/u)).toBeVisible();
+    await expect(page.getByText(/הודעות מהמורה/u)).toBeVisible();
+    await expect(page.getByText(/נועה משתפרת יפה/u)).toBeVisible();
 
     const logs = api.snapshot();
     const me = logs.find((l) => l.url.includes("/api/guardian/me"));

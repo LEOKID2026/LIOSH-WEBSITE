@@ -5,6 +5,7 @@ import { rejectIfCrossOriginCookieMutation } from "../../../../../../lib/securit
 import { requireTeacherApiContext, unknownQueryParams } from "../../../../../../lib/teacher-server/teacher-request.server.js";
 import {
   parseTeacherReportStudentIdParam,
+  teacherHasReportAccessToStudent,
 } from "../../../../../../lib/teacher-server/teacher-report.server.js";
 import {
   createTeacherParentMessage,
@@ -48,6 +49,18 @@ export default async function handler(req, res) {
           if (rl.retryAfterSec) res.setHeader("Retry-After", String(rl.retryAfterSec));
           return sendTeacherApiError(res, 429, "rate_limited", "Too many requests");
         }
+      }
+
+      const access = await teacherHasReportAccessToStudent(
+        ctx.serviceRole,
+        ctx.teacherId,
+        parsedId.studentId
+      );
+      if (!access.ok) {
+        return sendTeacherApiError(res, access.status || 500, access.code || "internal_error", access.code);
+      }
+      if (!access.allowed) {
+        return sendTeacherApiError(res, 403, "student_not_linked", "student_not_linked");
       }
 
       const listed = await listTeacherParentMessages(ctx.serviceRole, parsedId.studentId, {

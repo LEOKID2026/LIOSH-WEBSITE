@@ -1,7 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = Number(process.env.PORT || 3001);
-const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://127.0.0.1:${PORT}`;
+const HOST = process.env.PLAYWRIGHT_HOST || "127.0.0.1";
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://${HOST}:${PORT}`;
+const useProductionServer =
+  process.env.PLAYWRIGHT_USE_START === "1" || process.env.PLAYWRIGHT_USE_START === "true";
+const readyPath = process.env.PLAYWRIGHT_READY_PATH || "/parent/login";
+const defaultServerCommand = useProductionServer
+  ? `npx next start -H ${HOST} -p ${PORT}`
+  : `npx next dev -H ${HOST} -p ${PORT}`;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -32,11 +39,16 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: process.env.PLAYWRIGHT_WEB_SERVER || "npm run dev",
-    url: baseURL,
+    command: process.env.PLAYWRIGHT_WEB_SERVER || defaultServerCommand,
+    url: `${baseURL}${readyPath}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
     stdout: "pipe",
     stderr: "pipe",
+    env: {
+      ...process.env,
+      E2E_INSECURE_SESSION_COOKIES:
+        useProductionServer || process.env.E2E_INSECURE_SESSION_COOKIES === "1" ? "1" : "0",
+    },
   },
 });
