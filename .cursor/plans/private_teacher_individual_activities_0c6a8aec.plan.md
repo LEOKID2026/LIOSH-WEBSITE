@@ -4,40 +4,40 @@ overview: "Extend the teacher portal to support private/individual teacher workf
 todos:
   - id: p0-audit
     content: "P0: Codebase audit complete (this plan)"
-    status: pending
+    status: completed
   - id: p1-direct-roster
     content: "P1: Classify direct vs class students in dashboard payload; add directStudentsCount label"
-    status: pending
+    status: completed
   - id: p2-migration
     content: "P2: Write migration 026_student_activities.sql — stop for owner approval"
-    status: pending
+    status: completed
   - id: p2-server-lib
     content: "P2: Create student-activity.server.js and student-activity-play.server.js"
-    status: pending
+    status: completed
   - id: p2-api-routes
     content: "P2: Create pages/api/teacher/student-activities/* routes"
-    status: pending
+    status: completed
   - id: p2-list-extend
     content: "P2: Extend listStudentActivities to merge class + individual with scope field"
-    status: pending
+    status: completed
   - id: p2-play-extend
     content: "P2: Extend student play APIs to be scope-aware (start/answer/submit)"
-    status: pending
+    status: completed
   - id: p2-feature-flag
     content: "P2: Add individual_activities feature flag"
-    status: pending
+    status: completed
   - id: p3-teacher-ui
     content: "P3: Add create-activity button + form + list section to teacher student report page"
-    status: pending
+    status: completed
   - id: p4-student-ui
     content: "P4: Extend StudentClassroomActivitiesPanel with personal activities section and scope badge"
-    status: pending
+    status: completed
   - id: p5-qa
     content: "P5: Unit, API, IDOR, regression and build tests"
-    status: pending
+    status: completed
   - id: p6-admin-ui
     content: "P6: Extend admin buildTeacherUsage with class/direct/individual counts"
-    status: pending
+    status: completed
 isProject: false
 ---
 

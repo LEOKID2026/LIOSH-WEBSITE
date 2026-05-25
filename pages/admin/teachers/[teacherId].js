@@ -71,6 +71,14 @@ export default function AdminTeacherDetailPage() {
                 <span className="text-white/50">Total students:</span>{" "}
                 {teacher.totalActiveStudents}
               </p>
+              <p>
+                <span className="text-white/50">In class:</span>{" "}
+                {teacher.classStudentCount ?? "—"} ·{" "}
+                <span className="text-white/50">Direct (no class):</span>{" "}
+                {teacher.directStudentCount ?? "—"} ·{" "}
+                <span className="text-white/50">Individual activities:</span>{" "}
+                {teacher.individualActivityCount ?? "—"}
+              </p>
               <ul className="mt-2 text-white/70 list-disc pl-5">
                 {(teacher.classes || []).map((c) => (
                   <li key={c.classId}>

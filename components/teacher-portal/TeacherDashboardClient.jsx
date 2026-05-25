@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { filterStudentsByRosterKey } from "../../lib/teacher-portal/teacher-dashboard-roster.js";
 import { teacherAuthFetch } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 const FILTER_OPTIONS = [
@@ -417,11 +418,24 @@ function EditRow({ children }) {
   return <div className="flex flex-wrap gap-2">{children}</div>;
 }
 
+function rosterFilterLabel(option) {
+  if (!option) return "";
+  if (option.type === "class" && option.className) {
+    return `${option.labelPlaceholder || option.className} (${option.studentCount ?? 0})`;
+  }
+  return `${option.labelPlaceholder || option.labelKey || option.key} (${option.studentCount ?? 0})`;
+}
+
 export default function TeacherDashboardClient({ accessToken, dashboard, onLogout, onRefresh }) {
   const [search, setSearch] = useState("");
+  const [rosterFilterKey, setRosterFilterKey] = useState(
+    () => dashboard?.defaultRosterFilterKey || "all"
+  );
   const [filterKey, setFilterKey] = useState("all");
   const [sortKey, setSortKey] = useState("name");
   const [manageClass, setManageClass] = useState(null);
+
+  const rosterFilters = dashboard?.rosterFilters || [];
 
   const primaryClass = useMemo(() => {
     const classes = dashboard?.classes || [];
@@ -429,7 +443,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
   }, [dashboard]);
 
   const filteredStudents = useMemo(() => {
-    let list = [...(dashboard?.students || [])];
+    let list = filterStudentsByRosterKey(dashboard?.students || [], rosterFilterKey);
     const q = search.trim().toLowerCase();
     if (q) {
       list = list.filter((s) => String(s.studentFullName || "").toLowerCase().includes(q));
@@ -450,7 +464,12 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
       return 0;
     });
     return list;
-  }, [dashboard?.students, search, filterKey, sortKey]);
+  }, [dashboard?.students, rosterFilterKey, search, filterKey, sortKey]);
+
+  const activeRosterOption = useMemo(
+    () => rosterFilters.find((o) => o.key === rosterFilterKey) || null,
+    [rosterFilters, rosterFilterKey]
+  );
 
   const displayName = dashboard?.teacher?.displayName;
 
@@ -483,6 +502,12 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
             </p>
           </div>
         </div>
+        {(dashboard?.summary?.directStudentsCount ?? 0) > 0 ? (
+          <p className="text-sm text-white/65 mt-3" data-testid="teacher-direct-students-summary">
+            {dashboard.summary.directStudentsCount} direct students (no class) — use roster filter
+            below
+          </p>
+        ) : null}
         {primaryClass ? (
           <div className="mt-4 pt-4 border-t border-white/10">
             <Link
@@ -494,6 +519,55 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           </div>
         ) : null}
       </section>
+
+      {(dashboard?.classes || []).length > 0 ? (
+        <section className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5">
+          <h2 className="text-lg font-semibold mb-3">Classes</h2>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {(dashboard.classes || []).map((c) => (
+              <li
+                key={c.classId}
+                className={`rounded-lg border p-3 flex flex-col gap-2 ${
+                  rosterFilterKey === c.classId
+                    ? "border-amber-400/50 bg-amber-500/10"
+                    : "border-white/10 bg-black/20"
+                }`}
+              >
+                <div>
+                  <p className="font-semibold break-words">{c.name}</p>
+                  <p className="text-sm text-white/65 mt-1">
+                    {c.gradeLevelLabel || "Class"} · {c.rosterStudentCount ?? c.studentCount ?? 0}{" "}
+                    students
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRosterFilterKey(c.classId)}
+                    className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
+                    data-testid={`teacher-roster-filter-class-${c.classId}`}
+                  >
+                    Show class students
+                  </button>
+                  <Link
+                    href={`/teacher/class/${c.classId}`}
+                    className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
+                  >
+                    Class report
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setManageClass(c)}
+                    className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
+                  >
+                    Manage class
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {primaryClass ? (
         <section className="rounded-xl border border-amber-400/30 bg-amber-500/5 p-4 sm:p-5">
@@ -530,8 +604,42 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
         </section>
       ) : null}
 
-      <section>
-        <h2 className="text-lg font-semibold mb-3">תלמידים</h2>
+      <section data-testid="teacher-student-roster-section">
+        <h2 className="text-lg font-semibold mb-1">Students</h2>
+        {activeRosterOption ? (
+          <p className="text-sm text-white/60 mb-3" data-testid="teacher-roster-active-label">
+            Showing: {rosterFilterLabel(activeRosterOption)}
+          </p>
+        ) : null}
+
+        {rosterFilters.length > 0 ? (
+          <div
+            className="flex flex-wrap gap-2 mb-4"
+            role="tablist"
+            aria-label="Student roster filter"
+            data-testid="teacher-roster-filter-tabs"
+          >
+            {rosterFilters.map((opt) => (
+              <button
+                key={opt.key}
+                type="button"
+                role="tab"
+                aria-selected={rosterFilterKey === opt.key}
+                onClick={() => setRosterFilterKey(opt.key)}
+                className={`text-xs sm:text-sm px-3 py-1.5 rounded-full border transition ${
+                  rosterFilterKey === opt.key
+                    ? opt.type === "direct"
+                      ? "bg-violet-500/25 border-violet-400/50 text-violet-100"
+                      : "bg-amber-500/20 border-amber-400/50 text-amber-100"
+                    : "border-white/15 text-white/70 hover:bg-white/5"
+                }`}
+                data-testid={`teacher-roster-tab-${opt.key}`}
+              >
+                {rosterFilterLabel(opt)}
+              </button>
+            ))}
+          </div>
+        ) : null}
 
         <div className="space-y-3 mb-4">
           <input
@@ -575,7 +683,9 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
         </div>
 
         {filteredStudents.length === 0 ? (
-          <p className="text-white/60 text-sm">לא נמצאו תלמידים לפי הסינון.</p>
+          <p className="text-white/60 text-sm" data-testid="teacher-roster-empty">
+            No students match this roster filter.
+          </p>
         ) : (
           <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
             {filteredStudents.map((s) => (

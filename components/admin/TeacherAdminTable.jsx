@@ -14,6 +14,8 @@ export default function TeacherAdminTable({ teachers }) {
             <th className="px-3 py-2">Name</th>
             <th className="px-3 py-2">Classes</th>
             <th className="px-3 py-2">Students</th>
+            <th className="px-3 py-2">Direct</th>
+            <th className="px-3 py-2">Indiv. acts</th>
             <th className="px-3 py-2">Per-class cap</th>
             <th className="px-3 py-2">Active</th>
             <th className="px-3 py-2" />
@@ -26,6 +28,8 @@ export default function TeacherAdminTable({ teachers }) {
               <td className="px-3 py-2">{t.displayName || "—"}</td>
               <td className="px-3 py-2">{t.classCount ?? 0}</td>
               <td className="px-3 py-2">{t.totalActiveStudents ?? 0}</td>
+              <td className="px-3 py-2">{t.directStudentCount ?? "—"}</td>
+              <td className="px-3 py-2">{t.individualActivityCount ?? "—"}</td>
               <td className="px-3 py-2">{t.quotas?.maxStudentsPerClass ?? "—"}</td>
               <td className="px-3 py-2">
                 {t.isAccountActive !== false && t.isActive ? "yes" : "no"}

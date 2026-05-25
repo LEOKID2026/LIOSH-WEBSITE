@@ -3,6 +3,7 @@ import { DEFAULT_TEACHER_FEATURE_FLAGS } from "../../lib/teacher-portal/teacher-
 
 const FEATURE_LABELS = {
   classroom_activities: "Classroom activities",
+  individual_activities: "Individual student activities",
   parent_messaging: "Parent messaging",
   ai_reports: "AI / reports",
   live_audio: "Live audio (future)",
