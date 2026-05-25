@@ -192,8 +192,6 @@ export default function ParentTeacherCodeReport({
             <p className="text-amber-200 text-sm mb-4">⚠ {expiryWarning}</p>
           ) : null}
 
-          <ParentReportParentSections report={report} compact />
-
           <section className="rounded-xl border border-white/15 bg-black/30 p-5 mb-6">
             <h2 className="text-lg font-semibold mb-3">סיכום פעילות</h2>
             <dl className="grid grid-cols-2 gap-3 text-sm">
@@ -208,10 +206,12 @@ export default function ParentTeacherCodeReport({
             </dl>
           </section>
 
-          <section>
+          <section className="mb-6">
             <h2 className="text-lg font-semibold mb-3">ביצועים לפי מקצוע</h2>
             <SubjectSummaryCards subjects={report?.subjects} />
           </section>
+
+          <ParentReportParentSections report={report} compact />
         </TeacherPortalShell>
       </div>
     </Layout>

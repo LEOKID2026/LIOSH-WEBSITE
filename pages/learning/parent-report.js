@@ -2051,19 +2051,6 @@ export default function ParentReport() {
             </div>
           ) : null}
 
-          <ParentReportParentSections report={report} />
-
-          <ParentReportInsight explanation={report.parentAiExplanation} />
-
-          {enableParentCopilotOnShortEffective && copilotDetailedPayload ? (
-            <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
-              <ParentCopilotShellLazy
-                payload={copilotDetailedPayload}
-                asyncTurnRunner={shortReportCopilotTurnRunner}
-              />
-            </div>
-          ) : null}
-
           {/* סיכום לפי מקצוע */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 mb-3 md:mb-6 avoid-break">
             <div className="parent-report-print-summary-card bg-blue-500/20 border border-blue-400/50 rounded-lg p-2 md:p-4 text-center">
@@ -2162,6 +2149,19 @@ export default function ParentReport() {
               </div>
             </div>
           </div>
+
+          <ParentReportParentSections report={report} />
+
+          <ParentReportInsight explanation={report.parentAiExplanation} />
+
+          {enableParentCopilotOnShortEffective && copilotDetailedPayload ? (
+            <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
+              <ParentCopilotShellLazy
+                payload={copilotDetailedPayload}
+                asyncTurnRunner={shortReportCopilotTurnRunner}
+              />
+            </div>
+          ) : null}
 
           {/* טבלת פעולות חשבון */}
           {Object.keys(report.mathOperations || {}).length > 0 && (

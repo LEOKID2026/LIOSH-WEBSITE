@@ -98,6 +98,14 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
     await expect(page.getByText(/הודעות מהמורה/u)).toBeVisible();
     await expect(page.getByText(/נועה משתפרת יפה/u)).toBeVisible();
 
+    const sectionTitles = await page.locator("h2").allTextContents();
+    const idx = (label) => sectionTitles.findIndex((t) => t.includes(label));
+    expect(idx("סיכום פעילות")).toBeGreaterThanOrEqual(0);
+    expect(idx("ביצועים לפי מקצוע")).toBeGreaterThan(idx("סיכום פעילות"));
+    expect(idx("הודעות מהמורה")).toBeGreaterThan(idx("ביצועים לפי מקצוע"));
+    expect(idx("מה חשוב לדעת")).toBeGreaterThan(idx("הודעות מהמורה"));
+    expect(idx("מה מומלץ לעשות בבית")).toBeGreaterThan(idx("מה חשוב לדעת"));
+
     const logs = api.snapshot();
     const me = logs.find((l) => l.url.includes("/api/guardian/me"));
     expect(me?.status, `guardian/me: ${JSON.stringify(logs)}`).toBe(200);
