@@ -1,10 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
 import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
-import { getLearningSupabaseBrowserClient } from "../../../lib/learning-supabase/client";
+import {
+  TeacherReportError,
+  TeacherReportForbidden,
+  TeacherReportLoading,
+} from "../../../components/teacher-portal/TeacherReportPageStates";
+import {
+  isTeacherClassReportResponse,
+  useTeacherPortalLoad,
+} from "../../../lib/teacher-portal/use-teacher-portal-session";
 import {
   attentionReasonHe,
   classHealthHe,
@@ -12,7 +19,6 @@ import {
   formatTopicLineHe,
   groupTierHe,
   subjectLabelHe,
-  teacherAuthFetch,
 } from "../../../lib/teacher-portal/teacher-ui.he.js";
 
 export async function getServerSideProps(context) {
@@ -21,105 +27,63 @@ export async function getServerSideProps(context) {
 }
 
 export default function TeacherClassReportPage({ classId }) {
-  const router = useRouter();
-  const supabaseRef = useRef(null);
-  const [state, setState] = useState("loading");
-  const [report, setReport] = useState(null);
+  const fetchPath = useMemo(() => {
+    if (!classId) return "";
+    return `/api/teacher/classes/${encodeURIComponent(classId)}/report-data`;
+  }, [classId]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!classId) {
-      setState("invalid_class");
-      return;
-    }
-    if (!supabaseRef.current) {
-      supabaseRef.current = getLearningSupabaseBrowserClient();
-    }
+  const { phase, loadingHint, errorMessage, data: report, reload } = useTeacherPortalLoad({
+    enabled: Boolean(classId),
+    fetchPath,
+    fetchTimeoutMs: 120_000,
+    isValidResponse: isTeacherClassReportResponse,
+  });
 
-    let mounted = true;
-
-    async function load() {
-      const supabase = supabaseRef.current;
-      const { data } = await supabase.auth.getSession();
-      const token = data?.session?.access_token;
-      if (!token) {
-        if (mounted) router.replace("/teacher/login");
-        return;
-      }
-
-      const res = await teacherAuthFetch(
-        token,
-        `/api/teacher/classes/${encodeURIComponent(classId)}/report-data?classId=${encodeURIComponent(classId)}`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (!mounted) return;
-
-      if (res.status === 401) {
-        await supabase.auth.signOut();
-        router.replace("/teacher/login");
-        return;
-      }
-      if (res.status === 403 || res.status === 404) {
-        setState("forbidden");
-        return;
-      }
-      if (res.status !== 200 || body?.ok !== true) {
-        setState("load_error");
-        return;
-      }
-
-      setReport(body);
-      setState("ready");
-    }
-
-    load();
-    return () => {
-      mounted = false;
-    };
-  }, [router, classId]);
-
-  if (state === "loading") {
+  if (!classId) {
     return (
       <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard" title="דוח כיתה">
-          <p className="text-white/60">טוען…</p>
-        </TeacherPortalShell>
+        <TeacherReportForbidden
+          backHref="/teacher/dashboard"
+          title="דוח כיתה"
+          message="מזהה כיתה שגוי."
+        />
       </Layout>
     );
   }
 
-  if (state === "invalid_class") {
+  if (phase === "loading") {
     return (
       <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard">
-          <p className="text-red-300" role="alert">
-            מזהה כיתה שגוי.
-          </p>
-        </TeacherPortalShell>
+        <TeacherReportLoading
+          backHref="/teacher/dashboard"
+          title="דוח כיתה"
+          hint={loadingHint}
+        />
       </Layout>
     );
   }
 
-  if (state === "forbidden") {
+  if (phase === "forbidden") {
     return (
       <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard">
-          <p className="text-red-300" role="alert">
-            אין לך הרשאה לצפות בדוח כיתה זו.
-          </p>
-        </TeacherPortalShell>
+        <TeacherReportForbidden
+          backHref="/teacher/dashboard"
+          title="דוח כיתה"
+          message="אין לך הרשאה לצפות בדוח כיתה זו."
+        />
       </Layout>
     );
   }
 
-  if (state === "load_error" || !report) {
+  if (phase === "error") {
     return (
       <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard">
-          <p className="text-red-300" role="alert">
-            אירעה שגיאה בטעינת הדוח. רענן ונסה שנית.
-          </p>
-        </TeacherPortalShell>
+        <TeacherReportError
+          backHref="/teacher/dashboard"
+          title="דוח כיתה"
+          message={errorMessage}
+          onRetry={reload}
+        />
       </Layout>
     );
   }
@@ -128,8 +92,7 @@ export default function TeacherClassReportPage({ classId }) {
   const cohort = report.cohortSummary || {};
   const guidance = report.teacherGuidanceBlock || {};
   const teacherSummary = guidance.teacherSummary || {};
-  const attentionList =
-    guidance.attentionStudents || report.attentionList || [];
+  const attentionList = guidance.attentionStudents || report.attentionList || [];
   const weaknessTopics = report.weaknessTopics || guidance.priorityTopics || [];
   const groups = guidance.suggestedGroups || {};
   const memberCount = report.roster?.activeMemberCount ?? 0;
@@ -243,9 +206,11 @@ export default function TeacherClassReportPage({ classId }) {
                     key={s.studentId}
                     className="flex flex-wrap justify-between gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm"
                   >
-                    <div>
-                      <span>{s.studentFullName || s.studentFullNameMasked}</span>
-                      <span className="text-white/50 mr-2">
+                    <div className="min-w-0">
+                      <span className="font-medium break-words">
+                        {s.studentFullName || s.studentFullNameMasked}
+                      </span>
+                      <span className="text-white/50 mr-2 block sm:inline">
                         {(s.reasons || [])
                           .map(attentionReasonHe)
                           .filter(Boolean)
@@ -254,9 +219,9 @@ export default function TeacherClassReportPage({ classId }) {
                     </div>
                     <Link
                       href={`/teacher/student/${s.studentId}`}
-                      className="text-amber-300 hover:underline"
+                      className="text-amber-300 hover:underline shrink-0"
                     >
-                      צפה בדוח
+                      צפייה בדוח
                     </Link>
                   </li>
                 ))}
@@ -278,7 +243,7 @@ export default function TeacherClassReportPage({ classId }) {
                   <span className="font-semibold text-amber-200">
                     {groupTierHe(tier)} ({list.length} תלמידים):
                   </span>{" "}
-                  <span className="text-white/70">
+                  <span className="text-white/70 break-words">
                     {list.map((x) => x.studentFullName || x.studentFullNameMasked).join("، ")}
                   </span>
                 </div>

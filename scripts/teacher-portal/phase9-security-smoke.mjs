@@ -118,8 +118,6 @@ async function expectClientWriteDenied(client, table, payload) {
 async function main() {
   process.env.TEACHER_PORTAL_ENABLED = "true";
   process.env.GUARDIAN_PORTAL_ENABLED = "true";
-  process.env.TEACHER_PORTAL_UI_COPY_ENABLED = "false";
-  process.env.GUARDIAN_PORTAL_UI_COPY_ENABLED = "false";
 
   const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
   const serviceKey = requireEnv("LEARNING_SUPABASE_SERVICE_ROLE_KEY");
@@ -202,9 +200,9 @@ async function main() {
   process.env.NODE_ENV = "production";
   record(
     "flags",
-    "UI copy flags default off in production env",
-    isTeacherPortalUiCopyEnabled() === false && isGuardianPortalUiCopyEnabled() === false,
-    "ok"
+    "Hebrew teacher/guardian UI enabled by default (no UI_COPY gate)",
+    isTeacherPortalUiCopyEnabled() === true && isGuardianPortalUiCopyEnabled() === true,
+    "visible by default"
   );
   process.env.NODE_ENV = prevNodeEnv;
 

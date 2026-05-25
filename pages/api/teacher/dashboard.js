@@ -4,6 +4,11 @@ import { isProductionRuntime } from "../../../lib/security/production-guard.js";
 import { buildTeacherDashboardPayload } from "../../../lib/teacher-server/teacher-dashboard.server.js";
 import { requireTeacherApiContext } from "../../../lib/teacher-server/teacher-request.server.js";
 import { sendTeacherApiError } from "../../../lib/teacher-server/teacher-session.server.js";
+import {
+  elapsedMs,
+  setTeacherApiServerTiming,
+  startTimer,
+} from "../../../lib/teacher-server/api-timing.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -12,7 +17,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    const t0 = startTimer();
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+    const tAuth = elapsedMs(t0);
     if (ctx.stopped) return undefined;
 
     if (isProductionRuntime()) {
@@ -29,10 +36,12 @@ export default async function handler(req, res) {
       }
     }
 
+    const tBuild0 = startTimer();
     const result = await buildTeacherDashboardPayload({
       serviceRole: ctx.serviceRole,
       teacherId: ctx.teacherId,
     });
+    const tBuild = elapsedMs(tBuild0);
 
     if (!result.ok) {
       return sendTeacherApiError(
@@ -44,6 +53,12 @@ export default async function handler(req, res) {
           : result.code || "Unexpected server error"
       );
     }
+
+    setTeacherApiServerTiming(res, {
+      auth: tAuth,
+      build: tBuild,
+      total: elapsedMs(t0),
+    });
 
     return res.status(200).json({ data: result.payload });
   } catch (_e) {

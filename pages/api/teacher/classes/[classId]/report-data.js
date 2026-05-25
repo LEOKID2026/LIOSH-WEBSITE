@@ -14,6 +14,11 @@ import {
   rejectIfTeacherPortalDisabled,
   sendTeacherApiError,
 } from "../../../../../lib/teacher-server/teacher-session.server.js";
+import {
+  elapsedMs,
+  setTeacherApiServerTiming,
+  startTimer,
+} from "../../../../../lib/teacher-server/api-timing.server.js";
 
 const ALLOWED_QUERY = new Set(["from", "to", "windowDays", "classId"]);
 
@@ -45,7 +50,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    const t0 = startTimer();
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+    const tAuth = elapsedMs(t0);
     if (ctx.stopped) return undefined;
 
     if (isProductionRuntime()) {
@@ -62,6 +69,7 @@ export default async function handler(req, res) {
       }
     }
 
+    const tBuild0 = startTimer();
     const built = await buildTeacherClassReportPayload({
       serviceRole: ctx.serviceRole,
       teacherId: ctx.teacherId,
@@ -69,10 +77,17 @@ export default async function handler(req, res) {
       fromDate: range.fromDate,
       toDate: range.toDate,
     });
+    const tBuild = elapsedMs(tBuild0);
 
     if (!built.ok) {
       return sendTeacherApiError(res, built.status, built.code, built.code);
     }
+
+    setTeacherApiServerTiming(res, {
+      auth: tAuth,
+      build: tBuild,
+      total: elapsedMs(t0),
+    });
 
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     res.setHeader("Pragma", "no-cache");

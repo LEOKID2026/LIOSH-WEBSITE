@@ -1,10 +1,17 @@
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
+import { useMemo } from "react";
 import Layout from "../../../components/Layout";
 import GuardianAccessPanel from "../../../components/teacher-portal/GuardianAccessPanel";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
 import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
-import { getLearningSupabaseBrowserClient } from "../../../lib/learning-supabase/client";
+import {
+  TeacherReportError,
+  TeacherReportForbidden,
+  TeacherReportLoading,
+} from "../../../components/teacher-portal/TeacherReportPageStates";
+import {
+  isTeacherStudentReportResponse,
+  useTeacherPortalLoad,
+} from "../../../lib/teacher-portal/use-teacher-portal-session";
 import {
   formatDateHe,
   formatPercent,
@@ -13,7 +20,6 @@ import {
   riskSignalHe,
   subjectLabelHe,
   supportSuggestionHe,
-  teacherAuthFetch,
 } from "../../../lib/teacher-portal/teacher-ui.he.js";
 
 export async function getServerSideProps(context) {
@@ -22,64 +28,67 @@ export async function getServerSideProps(context) {
 }
 
 export default function TeacherStudentReportPage({ studentId }) {
-  const router = useRouter();
-  const supabaseRef = useRef(null);
-  const [state, setState] = useState("loading");
-  const [report, setReport] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
+  const fetchPath = useMemo(() => {
+    if (!studentId) return "";
+    return `/api/teacher/students/${encodeURIComponent(studentId)}/report-data`;
+  }, [studentId]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!studentId) {
-      setState("invalid_student");
-      return;
-    }
-    if (!supabaseRef.current) {
-      supabaseRef.current = getLearningSupabaseBrowserClient();
-    }
+  const { phase, loadingHint, errorMessage, accessToken, data: report, reload } =
+    useTeacherPortalLoad({
+      enabled: Boolean(studentId),
+      fetchPath,
+      fetchTimeoutMs: 60_000,
+      isValidResponse: isTeacherStudentReportResponse,
+    });
 
-    let mounted = true;
+  if (!studentId) {
+    return (
+      <Layout>
+        <TeacherReportForbidden
+          backHref="/teacher/dashboard"
+          title="דוח תלמיד"
+          message="מזהה תלמיד שגוי."
+        />
+      </Layout>
+    );
+  }
 
-    async function load() {
-      const supabase = supabaseRef.current;
-      const { data } = await supabase.auth.getSession();
-      const token = data?.session?.access_token;
-      if (!token) {
-        if (mounted) router.replace("/teacher/login");
-        return;
-      }
+  if (phase === "loading") {
+    return (
+      <Layout>
+        <TeacherReportLoading
+          backHref="/teacher/dashboard"
+          title="דוח תלמיד"
+          hint={loadingHint}
+        />
+      </Layout>
+    );
+  }
 
-      const res = await teacherAuthFetch(
-        token,
-        `/api/teacher/students/${encodeURIComponent(studentId)}/report-data?studentId=${encodeURIComponent(studentId)}`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (!mounted) return;
+  if (phase === "forbidden") {
+    return (
+      <Layout>
+        <TeacherReportForbidden
+          backHref="/teacher/dashboard"
+          title="דוח תלמיד"
+          message="אין לך הרשאה לצפות בדוח תלמיד זה."
+        />
+      </Layout>
+    );
+  }
 
-      if (res.status === 401) {
-        await supabase.auth.signOut();
-        router.replace("/teacher/login");
-        return;
-      }
-      if (res.status === 403 || res.status === 404) {
-        setState("forbidden");
-        return;
-      }
-      if (res.status !== 200 || !body?.summary) {
-        setState("load_error");
-        return;
-      }
-
-      setAccessToken(token);
-      setReport(body);
-      setState("ready");
-    }
-
-    load();
-    return () => {
-      mounted = false;
-    };
-  }, [router, studentId]);
+  if (phase === "error" || !report) {
+    return (
+      <Layout>
+        <TeacherReportError
+          backHref="/teacher/dashboard"
+          title="דוח תלמיד"
+          message={errorMessage}
+          onRetry={reload}
+        />
+      </Layout>
+    );
+  }
 
   const studentName =
     report?.student?.full_name || report?.accountSnapshot?.displayName || "תלמיד";
@@ -88,67 +97,23 @@ export default function TeacherStudentReportPage({ studentId }) {
   const summary = report?.summary || {};
   const gas = report?.guardianAccessSummary || {};
 
-  if (state === "loading") {
-    return (
-      <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard" title="דוח תלמיד">
-          <p className="text-white/60">טוען…</p>
-        </TeacherPortalShell>
-      </Layout>
-    );
-  }
-
-  if (state === "invalid_student") {
-    return (
-      <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard">
-          <p className="text-red-300" role="alert">
-            מזהה תלמיד שגוי.
-          </p>
-        </TeacherPortalShell>
-      </Layout>
-    );
-  }
-
-  if (state === "forbidden") {
-    return (
-      <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard">
-          <p className="text-red-300" role="alert">
-            אין לך הרשאה לצפות בדוח תלמיד זה.
-          </p>
-        </TeacherPortalShell>
-      </Layout>
-    );
-  }
-
-  if (state === "load_error") {
-    return (
-      <Layout>
-        <TeacherPortalShell backHref="/teacher/dashboard">
-          <p className="text-red-300" role="alert">
-            אירעה שגיאה בטעינת הדוח. רענן ונסה שנית.
-          </p>
-        </TeacherPortalShell>
-      </Layout>
-    );
-  }
-
   const inactiveDays = tg.inactiveDays;
-  const riskSignals = (guidance.riskSignals || [])
-    .map(riskSignalHe)
+  const riskSignals = (guidance.riskSignals || []).map(riskSignalHe).filter(Boolean);
+  const strengths = (guidance.strengthsForTeacher || [])
+    .map((s) => {
+      const line = formatTopicLineHe(s.subject, s.topic);
+      return line ? `${line} — ${formatPercent(s.accuracy)} הצלחה` : null;
+    })
     .filter(Boolean);
-  const strengths = (guidance.strengthsForTeacher || []).map((s) => {
-    const line = formatTopicLineHe(s.subject, s.topic);
-    return line ? `${line} — ${formatPercent(s.accuracy)} הצלחה` : null;
-  }).filter(Boolean);
   const suggestions = (guidance.supportSuggestions || [])
     .map(supportSuggestionHe)
     .filter(Boolean);
-  const focusItems = (guidance.nextPracticeFocus || []).map((f) => {
-    const line = formatTopicLineHe(f.subject, f.topic);
-    return line || subjectLabelHe(f.subject);
-  }).filter(Boolean);
+  const focusItems = (guidance.nextPracticeFocus || [])
+    .map((f) => {
+      const line = formatTopicLineHe(f.subject, f.topic);
+      return line || subjectLabelHe(f.subject);
+    })
+    .filter(Boolean);
 
   return (
     <Layout>
@@ -158,10 +123,7 @@ export default function TeacherStudentReportPage({ studentId }) {
         data-student-id={studentId}
         data-report-ok="true"
       >
-        <TeacherPortalShell
-          backHref="/teacher/dashboard"
-          title={`דוח תלמיד: ${studentName}`}
-        >
+        <TeacherPortalShell backHref="/teacher/dashboard" title={`דוח תלמיד: ${studentName}`}>
           <p className="text-white/60 text-sm mb-6">נתונים מ-30 הימים האחרונים</p>
 
           <section className="rounded-xl border border-white/15 bg-black/30 p-5 mb-6">
@@ -209,7 +171,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                 ) : null}
                 {inactiveDays != null && inactiveDays >= 7 ? (
                   <p className="text-amber-200 text-sm mb-2">
-                    ⚠ התלמיד לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
+                    התלמיד לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
                   </p>
                 ) : null}
               </>
@@ -271,17 +233,13 @@ export default function TeacherStudentReportPage({ studentId }) {
           <section className="rounded-xl border border-white/15 bg-black/30 p-5 mb-6">
             <h2 className="text-lg font-semibold mb-2">גישת הורה — סיכום</h2>
             {gas.active > 0 ? (
-              <p className="text-emerald-300 text-sm">
-                גישה פעילה ({gas.active})
-              </p>
+              <p className="text-emerald-300 text-sm">גישה פעילה ({gas.active})</p>
             ) : gas.expired > 0 ? (
               <p className="text-amber-300 text-sm">גישה פגת תוקף</p>
             ) : gas.revoked > 0 ? (
               <p className="text-white/60 text-sm">גישה בוטלה</p>
             ) : (
-              <p className="text-white/70 text-sm">
-                לא הוגדרה גישת הורה לתלמיד זה.
-              </p>
+              <p className="text-white/70 text-sm">לא הוגדרה גישת הורה לתלמיד זה.</p>
             )}
           </section>
 

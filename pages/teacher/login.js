@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
+import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 
 export async function getServerSideProps() {
   const { isTeacherPortalInviteOnly } = await import(
@@ -61,9 +62,10 @@ export default function TeacherLoginPage({ inviteOnly }) {
     if (!clientReady || !supabaseRef.current) return;
     let mounted = true;
     const supabase = supabaseRef.current;
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!mounted || !data?.session?.access_token) return;
-      const me = await fetchTeacherMe(data.session.access_token);
+    supabase.auth.getSession().then(async () => {
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!mounted || !session.ok) return;
+      const me = await fetchTeacherMe(session.token);
       if (me.status === 200) {
         router.replace("/teacher/dashboard");
       }

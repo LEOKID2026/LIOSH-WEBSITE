@@ -4,6 +4,8 @@ import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import TeacherDashboardClient from "../../components/teacher-portal/TeacherDashboardClient";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
+import { withTimeout } from "../../lib/teacher-portal/async-utils.js";
+import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 import { teacherAuthFetch } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 export async function getServerSideProps() {
@@ -15,12 +17,6 @@ export async function getServerSideProps() {
       linkEnabled: linkEnabled(),
     },
   };
-}
-
-async function fetchTeacherDashboard(accessToken) {
-  const res = await teacherAuthFetch(accessToken, "/api/teacher/dashboard");
-  const body = await res.json().catch(() => ({}));
-  return { status: res.status, body };
 }
 
 async function postTeacherOnboard(accessToken) {
@@ -36,15 +32,26 @@ export default function TeacherDashboardPage({ linkEnabled }) {
   const router = useRouter();
   const supabaseRef = useRef(null);
   const [state, setState] = useState("loading");
+  const [loadingHint, setLoadingHint] = useState("מאמת חיבור…");
   const [dashboard, setDashboard] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
 
   const loadDashboard = useCallback(async (token) => {
-    const dash = await fetchTeacherDashboard(token);
-    if (dash.status === 200 && dash.body?.data) {
-      setDashboard(dash.body.data);
-      setState("ready");
-      return true;
+    setLoadingHint("טוען לוח בקרה — זה עשוי לקחת כמה שניות.");
+    try {
+      const res = await withTimeout(
+        teacherAuthFetch(token, "/api/teacher/dashboard"),
+        120_000,
+        "dashboard_fetch"
+      );
+      const body = await res.json().catch(() => ({}));
+      if (res.status === 200 && body?.data) {
+        setDashboard(body.data);
+        setState("ready");
+        return true;
+      }
+    } catch {
+      /* timeout or network */
     }
     setState("data_load_error");
     return false;
@@ -60,17 +67,36 @@ export default function TeacherDashboardPage({ linkEnabled }) {
 
     async function load() {
       const supabase = supabaseRef.current;
-      const { data } = await supabase.auth.getSession();
-      const token = data?.session?.access_token;
-      if (!token) {
-        if (mounted) {
-          setState("unauthenticated");
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!mounted) return;
+
+      if (!session.ok) {
+        if (session.code === "stale_session" || session.code === "session_timeout") {
           router.replace("/teacher/login");
+          return;
         }
+        setState("unauthenticated");
+        router.replace("/teacher/login");
         return;
       }
 
-      let dash = await fetchTeacherDashboard(token);
+      const token = session.token;
+      setAccessToken(token);
+      setLoadingHint("טוען לוח בקרה — זה עשוי לקחת כמה שניות.");
+
+      let dash;
+      try {
+        const res = await withTimeout(
+          teacherAuthFetch(token, "/api/teacher/dashboard"),
+          120_000,
+          "dashboard_fetch"
+        );
+        dash = { status: res.status, body: await res.json().catch(() => ({})) };
+      } catch {
+        if (mounted) setState("data_load_error");
+        return;
+      }
+
       if (!mounted) return;
 
       if (dash.status === 401 || dash.status === 403) {
@@ -83,15 +109,16 @@ export default function TeacherDashboardPage({ linkEnabled }) {
         const onboard = await postTeacherOnboard(token);
         if (!mounted) return;
         if (onboard.status === 200 || onboard.status === 201) {
-          dash = await fetchTeacherDashboard(token);
-        } else if (onboard.body?.error?.code === "db_schema_not_ready") {
-          setState("schema_not_ready");
-          return;
-        } else {
-          await supabase.auth.signOut();
-          router.replace("/teacher/login");
+          await loadDashboard(token);
           return;
         }
+        if (onboard.body?.error?.code === "db_schema_not_ready") {
+          setState("schema_not_ready");
+          return;
+        }
+        await supabase.auth.signOut();
+        router.replace("/teacher/login");
+        return;
       }
 
       if (dash.status !== 200 || !dash.body?.data) {
@@ -99,7 +126,6 @@ export default function TeacherDashboardPage({ linkEnabled }) {
         return;
       }
 
-      setAccessToken(token);
       setDashboard(dash.body.data);
       setState("ready");
     }
@@ -125,7 +151,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
       <Layout>
         <TeacherPortalShell>
           <p className="text-white/60" data-testid="teacher-dashboard-root" data-state={state}>
-            טוען…
+            {loadingHint}
           </p>
         </TeacherPortalShell>
       </Layout>

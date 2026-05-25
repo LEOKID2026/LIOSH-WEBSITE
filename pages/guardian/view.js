@@ -31,6 +31,7 @@ async function fetchGuardianReport(studentId) {
 export default function GuardianViewPage() {
   const router = useRouter();
   const [state, setState] = useState("loading");
+  const [loadingHint, setLoadingHint] = useState("מאמת חיבור…");
   const [studentId, setStudentId] = useState(null);
   const [report, setReport] = useState(null);
   const [expiresAt, setExpiresAt] = useState(null);
@@ -55,6 +56,7 @@ export default function GuardianViewPage() {
       const sid = me.body.data.studentId;
       setStudentId(sid);
       setExpiresAt(me.body.data.expiresAt || null);
+      setLoadingHint("הדוח נטען — זה עשוי לקחת כמה שניות.");
 
       const reportRes = await fetchGuardianReport(sid);
       if (!mounted) return;
@@ -103,7 +105,7 @@ export default function GuardianViewPage() {
     return (
       <Layout>
         <TeacherPortalShell title="דוח ילד">
-          <p className="text-white/60">טוען…</p>
+          <p className="text-white/60" role="status">{loadingHint}</p>
         </TeacherPortalShell>
       </Layout>
     );
@@ -138,7 +140,7 @@ export default function GuardianViewPage() {
       <Layout>
         <TeacherPortalShell>
           <p className="text-red-300" role="alert">
-            לא ניתן לטעון את הדוח כרגע. נסו שנית מאוחר יותר.
+            לא ניתן לטעון את הדוח כרגע. רעננו את הדף ונסו שוב.
           </p>
         </TeacherPortalShell>
       </Layout>
