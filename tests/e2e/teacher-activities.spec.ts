@@ -198,14 +198,14 @@ test.describe("classroom activities @teacher-activities", () => {
     expect(JSON.stringify(body)).not.toContain("e2e-secret-explanation");
   });
 
-  test("[SEC-11] unsupported subject rejected at create", async ({ request }) => {
+  test("[SEC-11] unsupported subject key rejected at create", async ({ request }) => {
     test.skip(!classId, "no class");
     const res = await request.post("/api/teacher/activities", {
       headers: { Authorization: `Bearer ${teacherBearer}` },
       data: {
         classId,
-        title: "Hebrew blocked",
-        subject: "hebrew",
+        title: "Invalid subject E2E",
+        subject: "history",
         topic: "reading",
         mode: "guided_practice",
         questionSelection: "same_exact",
@@ -215,7 +215,7 @@ test.describe("classroom activities @teacher-activities", () => {
     });
     expect(res.status()).toBe(400);
     const body = await res.json();
-    expect(body?.error?.code || body?.code).toBe("subject_preview_not_supported");
+    expect(body?.error?.code || body?.code).toBe("validation_failed");
   });
 
   test("[S-ACT-04] correct answer scored server-side", async ({ request }) => {
@@ -489,6 +489,7 @@ test.describe("classroom activities science B0 @science-b0", () => {
     expect(startBody.studentStatus).toBe("submitted");
     expect(startBody.questionSet).toEqual([]);
   });
+
 });
 
 /** Phase B1 gate: moledet_geography classroom activities (canonical subject key). */
@@ -1171,5 +1172,183 @@ test.describe("classroom activities english B4 @english-b4", () => {
       headers: { Cookie: `liosh_student_session=${studentCookie}` },
     });
     expect((await startRes.json()).alreadyCompleted).toBe(true);
+  });
+});
+
+/** Monitor: teacher inspects per-student answers (UI smoke). */
+test.describe("monitor student answers UI @monitor-student-answers", () => {
+  test.describe.configure({ mode: "serial" });
+
+  let classId = "";
+  let activityId = "";
+  let teacherBearer = "";
+  let studentCookie = "";
+  let questionSet: Array<{
+    question: string;
+    correctAnswer: string;
+    choices: string[];
+  }> = [];
+
+  test.beforeAll(async ({ request }) => {
+    const token = await teacherToken(request);
+    test.skip(!token, "Supabase teacher credentials unavailable");
+    teacherBearer = token!;
+
+    const classesRes = await request.get("/api/teacher/classes", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    test.skip(!classesRes.ok(), "Teacher classes API unavailable");
+    const cls = (await classesRes.json())?.data?.classes?.[0];
+    test.skip(!cls?.classId, "No teacher class");
+    classId = cls.classId;
+
+    const helper = path.join(E2E_ROOT, "tests/e2e/helpers/generate-science-activity-preview.mjs");
+    questionSet = JSON.parse(
+      execFileSync(process.execPath, [helper], {
+        cwd: E2E_ROOT,
+        encoding: "utf-8",
+        env: {
+          ...process.env,
+          E2E_SCIENCE_GRADE: "g3",
+          E2E_SCIENCE_TOPIC: "body",
+          E2E_SCIENCE_DIFFICULTY: "easy",
+          E2E_SCIENCE_COUNT: "2",
+        },
+      })
+    );
+
+    const createRes = await request.post("/api/teacher/activities", {
+      headers: { Authorization: `Bearer ${token}` },
+      data: {
+        classId,
+        title: `E2E Monitor UI ${Date.now()}`,
+        subject: "science",
+        topic: "body",
+        gradeLevel: "g3",
+        mode: "guided_practice",
+        questionSelection: "same_exact",
+        difficultyLevel: "easy",
+        questionCount: 2,
+        questionSet,
+      },
+    });
+    test.skip(!createRes.ok(), "create activity failed");
+    activityId = (await createRes.json())?.data?.activityId;
+    test.skip(!activityId, "no activityId");
+
+    await request.patch(`/api/teacher/activities/${activityId}/status`, {
+      headers: { Authorization: `Bearer ${token}` },
+      data: { action: "activate" },
+    });
+
+    const loginRes = await request.post("/api/student/login", {
+      data: { username: STUDENT_USER, pin: STUDENT_PIN },
+    });
+    test.skip(!loginRes.ok(), "student login failed");
+    const setCookie = loginRes.headers()["set-cookie"] || "";
+    const m = setCookie.match(/liosh_student_session=([^;]+)/);
+    test.skip(!m, "student cookie missing");
+    studentCookie = decodeURIComponent(m[1]);
+
+    await request.post(`/api/student/activities/${activityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    const correct = questionSet[0].correctAnswer;
+    const wrong = questionSet[1].choices.find((c) => c !== questionSet[1].correctAnswer);
+    await request.post(`/api/student/activities/${activityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 0, selectedAnswer: correct },
+    });
+    if (wrong) {
+      await request.post(`/api/student/activities/${activityId}/answer`, {
+        headers: { Cookie: `liosh_student_session=${studentCookie}` },
+        data: { questionIndex: 1, selectedAnswer: wrong },
+      });
+    }
+    await request.post(`/api/student/activities/${activityId}/submit`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+  });
+
+  test("[MON-01] teacher fetches student answer details with correctAnswer", async ({ request }) => {
+    test.skip(!activityId || !teacherBearer, "missing session");
+    const monitorRes = await request.get(`/api/teacher/activities/${activityId}/monitor`, {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+    });
+    expect(monitorRes.ok()).toBeTruthy();
+    const monitorBody = await monitorRes.json();
+    const studentId = monitorBody?.data?.students?.find(
+      (s: { answersCount: number }) => s.answersCount > 0
+    )?.studentId;
+    expect(studentId).toBeTruthy();
+
+    const res = await request.get(
+      `/api/teacher/activities/${activityId}/students/${studentId}/answers`,
+      { headers: { Authorization: `Bearer ${teacherBearer}` } }
+    );
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+    const q0 = (body?.data?.questions || []).find(
+      (q: { questionIndex: number }) => q.questionIndex === 0
+    );
+    expect(q0?.question).toBeTruthy();
+    expect(q0?.selectedAnswer).toBe(questionSet[0].correctAnswer);
+    expect(q0?.correctAnswer).toBe(questionSet[0].correctAnswer);
+    expect(q0?.isCorrect).toBe(true);
+    const q1 = (body?.data?.questions || []).find(
+      (q: { questionIndex: number }) => q.questionIndex === 1
+    );
+    if (q1?.selectedAnswer) expect(q1?.isCorrect).toBe(false);
+    expect(body?.data?.student?.status).toBe("submitted");
+  });
+
+  test("[MON-02] student cannot access teacher student-answers endpoint", async ({ request }) => {
+    test.skip(!activityId || !studentCookie, "missing session");
+    const monitorRes = await request.get(`/api/teacher/activities/${activityId}/monitor`, {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+    });
+    const studentId = (await monitorRes.json())?.data?.students?.[0]?.studentId;
+    test.skip(!studentId, "no student on roster");
+    const res = await request.get(
+      `/api/teacher/activities/${activityId}/students/${studentId}/answers`,
+      { headers: { Cookie: `liosh_student_session=${studentCookie}` } }
+    );
+    expect([401, 403]).toContain(res.status());
+  });
+
+  test("[MON-UI-01] monitor page opens student answers modal", async ({ page }) => {
+    test.skip(!classId || !activityId, "setup missing");
+    await page.goto("/teacher/login", { waitUntil: "domcontentloaded" });
+    await page.getByPlaceholder("המייל שלך").fill(TEACHER_EMAIL);
+    await page.locator('input[type="password"]').fill(TEACHER_PASSWORD);
+    await page.getByRole("button", { name: "כניסה" }).click();
+    await page.waitForURL(/\/teacher\/dashboard\/?/, { timeout: 45_000 });
+
+    await page.goto(
+      `/teacher/class/${encodeURIComponent(classId)}/activities/${encodeURIComponent(activityId)}/monitor`,
+      { waitUntil: "domcontentloaded" }
+    );
+    await expect(page.getByTestId("teacher-view-student-answers").first()).toBeVisible({
+      timeout: 20_000,
+    });
+    const answersResponse = page.waitForResponse(
+      (r) => r.url().includes("/answers") && r.request().method() === "GET" && r.ok(),
+      { timeout: 30_000 }
+    );
+    await page
+      .locator("tbody tr")
+      .filter({ hasText: "הוגש" })
+      .getByTestId("teacher-view-student-answers")
+      .click();
+    await expect(page.getByTestId("teacher-student-answers-modal")).toBeVisible({
+      timeout: 20_000,
+    });
+    await answersResponse;
+    await expect(page.getByTestId("teacher-student-answer-row-0")).toBeVisible({
+      timeout: 20_000,
+    });
+    await expect(page.getByTestId("student-selected-answer").first()).not.toHaveText("—");
+    await expect(page.getByTestId("student-correct-answer").first()).not.toHaveText("—");
+    await expect(page.getByText("נכון").first()).toBeVisible();
   });
 });

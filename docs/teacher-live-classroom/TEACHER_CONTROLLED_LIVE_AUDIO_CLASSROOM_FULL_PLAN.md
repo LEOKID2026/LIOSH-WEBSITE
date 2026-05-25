@@ -514,26 +514,48 @@ The following table evaluates the four primary candidates for the audio provider
 | Agora | ~$0.00099 per participant-minute | Usage-based | ~10,000 participant-minutes/month (verify) |
 | Daily.co | ~$0.00099 per participant-minute | Usage-based | ~10,000 participant-minutes/month (verify) |
 
-#### Example scenario
+#### Example scenario — official capacity target
 
-- **Class size:** 21 participants (20 students + 1 teacher)
+- **Class size:** 41 participants (40 students + 1 teacher) — official plan target
 - **Session length:** 45 minutes
-- **Participant-minutes per session:** 21 × 45 = **945 participant-minutes**
+- **Participant-minutes per session:** 41 × 45 = **1,845 participant-minutes**
+- **Safety margin for load testing:** 46 participants (45 students + 1 teacher)
 
-#### Corrected cost table (using unverified rate estimates — must verify before use)
+The old 20-student (21-participant) figure is retained below as a small-class comparison only. All load tests and QA targets use the 40-student (41-participant) baseline.
+
+#### Corrected cost table — 40-student class (using unverified rate estimates — must verify before use)
+
+| Scale | Sessions/month | Participant-minutes | LiveKit Cloud (at $0.002/pm est.) | Agora / Daily (at $0.00099/pm est.) |
+|-------|---------------|--------------------:|:---------------------------------:|:------------------------------------:|
+| Low | 10 | 18,450 | ~$36.90 | ~$8.37 (8,450 paid pm × $0.00099) |
+| Medium | 40 | 73,800 | ~$147.60 | ~$63.16 (63,800 paid pm × $0.00099) |
+| High | 100 | 184,500 | ~$369.00 | ~$172.76 (174,500 paid pm × $0.00099) |
+| Very High | 500 | 922,500 | ~$1,845.00 | ~$902.28 (912,500 paid pm × $0.00099) |
+
+#### Small-class comparison — 20-student class (reference only)
 
 | Scale | Sessions/month | Participant-minutes | LiveKit Cloud (at $0.002/pm est.) | Agora / Daily (at $0.00099/pm est.) |
 |-------|---------------|--------------------:|:---------------------------------:|:------------------------------------:|
 | Low | 10 | 9,450 | ~$18.90 | ~$0 (under free tier) |
-| Medium | 40 | 37,800 | ~$75.60 | ~$27.52 (27,800 pm × $0.00099) |
-| High | 100 | 94,500 | ~$189.00 | ~$83.66 (84,500 pm × $0.00099) |
-| Very High | 500 | 472,500 | ~$945.00 | ~$457.87 (462,500 pm × $0.00099) |
+| Medium | 40 | 37,800 | ~$75.60 | ~$27.52 |
+| High | 100 | 94,500 | ~$189.00 | ~$83.66 |
+
+#### LiveKit Ship plan estimate (per-session marginal cost, 40-student class)
+
+If using LiveKit's Ship plan or a similar plan with included monthly WebRTC minutes and an overage rate of approximately $0.0005 per WebRTC minute:
+
+```
+41 participants × 45 minutes = 1,845 WebRTC minutes per session
+1,845 × $0.0005 = ~$0.92 marginal usage cost per session after included quota
+```
+
+This estimate applies only to sessions that exceed the monthly included quota. The exact breakeven point (where the plan's included minutes are exhausted) depends on total monthly session volume. Verify current LiveKit plan pricing before using this figure.
 
 **"pm" = participant-minute.**
 
-Agora/Daily: the free 10,000 participant-minutes/month is deducted first. The remaining participant-minutes are billed at the stated rate. Verify the current free allowance on the provider's pricing page — it may have changed.
+Agora/Daily: the free 10,000 participant-minutes/month is deducted first. At 40 students, a single session (1,845 pm) uses roughly 18% of the free monthly allowance, so the free tier is exhausted after approximately 5–6 sessions per month. Beyond that, the paid rate applies.
 
-LiveKit Self-Host (alternative): fixed infrastructure cost of ~$5–20/month regardless of session volume. At medium to high scale (40–500 sessions/month), self-host becomes cheaper than LiveKit Cloud. At low scale (10 sessions/month), managed cloud is more economical.
+LiveKit Self-Host (alternative): fixed infrastructure cost of ~$5–20/month regardless of session volume. At 40-student scale and medium-to-high session frequency (40–500 sessions/month), self-host typically becomes cheaper than managed cloud. At low volume (≤10 sessions/month), managed cloud is more economical.
 
 **Important:** These are approximate estimates. Real costs depend on the provider's current pricing tier, regional pricing, minimum monthly fees, and support tier. **Always verify on the provider's pricing page before committing to a provider or setting a budget cap.**
 
@@ -551,7 +573,7 @@ A basic VPS (e.g., Hetzner CX21, 2 vCPU, 4 GB RAM) is sufficient for ~5 simultan
 
 The goal is to run POC B with zero or near-zero cost using a free sandbox account. Either of the following is suitable as the first POC provider:
 
-1. **Agora** — approximately 10,000 free participant-minutes/month (verify current allowance). No credit card required for trial. Console at console.agora.io. The POC scenario (21 participants × 45 minutes × 1 session = 945 participant-minutes) is well within any reasonable free tier.
+1. **Agora** — approximately 10,000 free participant-minutes/month (verify current allowance). No credit card required for trial. Console at console.agora.io. The POC scenario for a 40-student class (41 participants × 45 minutes × 1 session = 1,845 participant-minutes) remains well within any reasonable free tier; 5–6 such sessions exhaust the typical 10,000 pm/month free allowance, which is sufficient for POC purposes.
 2. **Daily.co** — similar free tier. Good documentation. Clean REST API. Also a valid first POC choice.
 
 **Important:** The POC provider is not the production provider. The free-tier POC is specifically for proving audio control mechanics (server-side mute enforcement, speaker token model, iOS Safari behavior) at zero cost and zero risk.
@@ -590,34 +612,42 @@ participant_minutes = participants × session_minutes × sessions_per_month
 estimated_cost      = participant_minutes × provider_rate_per_participant_minute
 ```
 
-**Billing unit:** one participant-minute = one participant connected for one minute. A 21-person session lasting 45 minutes = 21 × 45 = 945 participant-minutes. This is confirmed for Agora and Daily. LiveKit Cloud billing unit must be verified on their current pricing page.
+**Billing unit:** one participant-minute = one participant connected for one minute. A 41-person session (40 students + 1 teacher) lasting 45 minutes = 41 × 45 = 1,845 participant-minutes. This is confirmed for Agora and Daily. LiveKit Cloud billing unit must be verified on their current pricing page.
 
-**Reference scenario (21 participants, 45 min/session):**
+**Official capacity target:** 40 students + 1 teacher = **41 concurrent audio participants** per session. Load tests must target 40 students (41 participants). Safety-margin tests should target 45 students + 1 teacher = 46 participants.
+
+**Reference scenario (41 participants — 40 students + 1 teacher — 45 min/session):**
 ```
-low_volume   = 21 × 45 × 10  sessions =  9,450 participant-minutes/month
-mid_volume   = 21 × 45 × 40  sessions = 37,800 participant-minutes/month
-high_volume  = 21 × 45 × 100 sessions = 94,500 participant-minutes/month
+low_volume   = 41 × 45 × 10  sessions =  18,450 participant-minutes/month
+mid_volume   = 41 × 45 × 40  sessions =  73,800 participant-minutes/month
+high_volume  = 41 × 45 × 100 sessions = 184,500 participant-minutes/month
 ```
 
 **Estimated costs (unverified — must verify rates before setting budget cap):**
 
 At $0.002 per participant-minute (LiveKit Cloud mid-range estimate):
 ```
-low_volume  cost:  9,450 × $0.002 = ~$18.90/month
-mid_volume  cost: 37,800 × $0.002 = ~$75.60/month
-high_volume cost: 94,500 × $0.002 = ~$189.00/month
+low_volume  cost:  18,450 × $0.002 = ~$36.90/month
+mid_volume  cost:  73,800 × $0.002 = ~$147.60/month
+high_volume cost: 184,500 × $0.002 = ~$369.00/month
 ```
 
-At $0.00099 per participant-minute (Agora/Daily estimate, after free tier):
+At $0.0005 per WebRTC minute (LiveKit Ship plan overage estimate, after included quota):
 ```
-low_volume  cost:  9,450 participant-minutes → likely $0 (under free tier)
-mid_volume  cost: 27,800 paid pm × $0.00099 = ~$27.52/month
-high_volume cost: 84,500 paid pm × $0.00099 = ~$83.66/month
+per session marginal cost: 1,845 WebRTC minutes × $0.0005 = ~$0.92/session after quota
+(verify current plan pricing; exact breakeven depends on monthly volume)
 ```
 
-> **Warning:** The v2.0 draft of this plan contained a math error in these cost examples (values were off by a factor of 1,000, e.g., showing $0.019 instead of $18.90). The figures above are the corrected values. All cost figures remain unverified estimates that must be confirmed against current provider pricing pages before any budget cap is set.
+At $0.00099 per participant-minute (Agora/Daily estimate, after 10,000 pm/month free tier):
+```
+low_volume  cost:  8,450 paid pm × $0.00099 = ~$8.37/month   (10k free deducted)
+mid_volume  cost: 63,800 paid pm × $0.00099 = ~$63.16/month  (10k free deducted)
+high_volume cost: 174,500 paid pm × $0.00099 = ~$172.76/month (10k free deducted)
+```
 
-At current anticipated scale (10–40 sessions/month), audio cost is modest but not negligible for LiveKit Cloud at mid-range rates. The budget guard is a safeguard against unexpected usage spikes (e.g., a configuration error that starts audio for all students on all devices).
+> **Warning:** The v2.0 draft of this plan contained a math error in these cost examples (values were off by a factor of 1,000, e.g., showing $0.019 instead of $18.90). The figures above are the corrected values using the updated 40-student class size. All cost figures remain unverified estimates that must be confirmed against current provider pricing pages before any budget cap is set.
+
+At 40-student scale and 10–40 sessions/month, audio cost with Agora/Daily free tier is meaningful (free tier exhausted after ~5–6 sessions/month at this class size). LiveKit Cloud at mid-range rates is $36–148/month for low-to-medium volume. These costs require explicit owner budget approval before enabling audio. The budget guard (Section 7.3) is a safeguard against unexpected usage spikes.
 
 ### 7.2 Usage Tracking
 
@@ -1396,7 +1426,7 @@ All routes listed in Section 13. Phase 1 does not include `audio-token`, `audio-
 - Unit: activity close triggers session auto-end
 - API: full teacher discussion lifecycle
 - API: unauthorized student calling teacher routes → 403
-- API: 20 students raising hands simultaneously (concurrency)
+- API: 40 students raising hands simultaneously (concurrency)
 - E2E: full Phase 1 flow from teacher start to session end
 - E2E: page refresh mid-session restores state
 
@@ -1618,13 +1648,14 @@ Optional: `max_speakers` column on `classroom_discussion_sessions` (settable by 
 - 5 students approved simultaneously — all can speak.
 - Teacher "Mute All" — all 5 muted simultaneously.
 - Audio quality with 5 simultaneous speakers on typical school WiFi.
-- Provider handles 20-student room with 5 publishers without degradation.
+- Provider handles 40-student room (41 participants total) with up to 5 publishers without degradation.
 
 ### 20.6 Acceptance Criteria
 
 - Teacher can approve and mute multiple students.
 - "Mute All" stops all student audio.
-- System handles 20 students + 5 speakers without audio degradation.
+- System handles 40 students + 1 teacher (41 participants) with up to 5 simultaneous speakers without audio degradation.
+- Students are listeners by default. Only the teacher and up to 5 approved students may speak at the same time (soft limit; owner may change later). A 40-student class does not mean 40 open microphones.
 - Existing Phase 1–3 behaviors unchanged.
 
 ### 20.7 Risk Level
@@ -1785,6 +1816,20 @@ See Section 8.3. No student names, no rosters, no approval lists in anon-channel
 | `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` | 2–4 | Add audio controls to Discussion panel |
 | `pages/teacher/class/[classId]/activities/[activityId]/report.js` | 5–6 | Add Discussion Summary section |
 
+#### Teacher Monitor UI Requirements for 40-Student Classes
+
+The teacher monitor Discussion panel must be designed for up to 40 students. This is a planning requirement only — do not implement now.
+
+Required capabilities:
+- Hand-raise queue must support 40 simultaneous entries without visual overflow.
+- Approved speakers list must remain readable when multiple students are approved.
+- Student list must support a search or filter mechanism (e.g., filter by: raised hand / approved / muted / inactive) so the teacher is not forced to scroll through 40 rows unguided.
+- Compact display mode: each student row must be compact enough that a 40-student class fits in a scrollable panel without requiring horizontal scrolling.
+- Desktop-first: primary target is a teacher on a laptop or desktop monitor. Mobile teacher view is secondary for Phase 1.
+- No redesign of the existing monitor page layout is required now. The Discussion panel is a new collapsible section within the existing page.
+
+A 40-student class does not mean 40 open microphones. Students are listeners by default. Only the teacher and up to 5 approved students may speak simultaneously (soft limit). The monitor UI must make this constraint clear to the teacher.
+
 ### 25.2 Student Screens Affected
 
 | File | Phase | Change |
@@ -1821,7 +1866,7 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 - Unauthorized student calling teacher routes → 403.
 - Student raising hand while locked → 409.
 - Student raising hand after ended → 404.
-- 20 students raising hands simultaneously → all recorded.
+- 40 students raising hands simultaneously → all recorded.
 - Audio token for non-approved student → `canPublish: false`.
 - Audio token for approved, non-muted student → `canPublish: true`.
 - Audio token when budget cap reached → 402.
@@ -1871,10 +1916,13 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 
 ### 26.8 Load/Concurrency Tests
 
-- 20 students simultaneously raising hands → all recorded; no DB race condition.
-- 20 students connected to audio room → audio quality acceptable.
+- 40 students simultaneously raising hands → all recorded; no DB race condition.
+- 40 students connected to audio room (41 participants including teacher) → audio quality acceptable.
 - Teacher mutes all 5 approved speakers → all muted within 3 seconds.
-- Budget cap enforcement at exact threshold: 20 sessions × 21 participants × 45 min = 18,900 participant-minutes. Set cap to 18,900. Session 21 should be blocked.
+- Teacher monitor remains usable with 40 student rows displayed (compact list, no horizontal overflow, scrollable).
+- 40 students simultaneously polling live-state or discussion state → server handles without degradation.
+- Safety-margin test: 45 students + 1 teacher (46 participants) connected → no crash; graceful degradation at most.
+- Budget cap enforcement at exact threshold (40-student class): 10 sessions × 41 participants × 45 min = 18,450 participant-minutes. Set cap to 18,450. Session 11 should be denied an audio token.
 
 ### 26.9 Regression Tests
 
@@ -1947,7 +1995,7 @@ Students only see discussion UI when a session is actually active for their curr
 - Teacher smoke: go through all controls end-to-end.
 - Student smoke: raise hand, see approval, see muted state, see session end.
 - Regression smoke: existing classroom activity end-to-end.
-- Load smoke: 5 simulated students simultaneously.
+- Load smoke: at least 10 simulated students simultaneously (targeting 40 for full load smoke before production release).
 
 ### 27.6 Production Readiness Criteria (Per Phase)
 
@@ -2228,7 +2276,7 @@ All items below must be resolved before implementation of each phase begins. Ite
 | A1 | Is Phase 1 alone (no audio) approved as the first delivery? | Phase 1 start | Open |
 | A2 | Should discussion be limited to `live_lesson` mode only, or available for other activity modes? | Phase 1 design | Open |
 | A3 | Should a discussion session always be anchored to a `live_lesson` activity, or can it run standalone? | Phase 1 design | Open |
-| A4 | What is the maximum class size that must be supported for Phase 1? (Plan assumes 20–30 students) | Phase 1 capacity | Open |
+| A4 | **Resolved by plan update 2026-05-25:** Target support is up to 40 students per teacher class. Audio and session calculations assume 40 students + 1 teacher = 41 concurrent participants. Load tests target 40 students as baseline; safety-margin tests target 45 students + 1 teacher = 46 participants. Owner to confirm this capacity is correct for the product's expected class sizes. | Phase 1 capacity | Owner confirm |
 | A5 | Should the teacher's existing 5s monitor poll carry discussion state (polling fallback), or should Realtime be added in Phase 1? | Phase 1 sync model | Open |
 | A6 | Should discussion auto-end when the activity is paused, or only when it is closed? | Phase 1 state machine | Open |
 | A7 | What is the soft maximum number of simultaneous speakers? (Recommendation: 5) | Phase 4 design | Open |
@@ -2423,6 +2471,8 @@ The overnight implementation covers:
 10. Teacher report foundation.
 11. Feature flags and kill switches.
 12. Unit, API, E2E, security, and regression tests.
+
+**Capacity assumption for the implementation run:** All code, tests, and load simulations must use the updated target of **40 students + 1 teacher = 41 concurrent audio participants** per session. Load tests must target 40 students as the baseline. Safety-margin simulations should target 45 students + 1 teacher where practical. The teacher monitor Discussion panel must support compact display of up to 40 student rows. Speaker limit remains 5 simultaneous approved students.
 
 ### 35.7 Provider Decision for Development Run
 

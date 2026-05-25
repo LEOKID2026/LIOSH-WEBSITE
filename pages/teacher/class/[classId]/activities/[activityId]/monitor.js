@@ -12,6 +12,7 @@ import {
   activityStatusLabelHe,
   studentActivityStatusLabelHe,
 } from "../../../../../../lib/classroom-activities/classroom-activities-labels.client.js";
+import TeacherActivityStudentAnswersModal from "../../../../../../components/teacher-portal/TeacherActivityStudentAnswersModal.jsx";
 
 export async function getServerSideProps(context) {
   return {
@@ -27,6 +28,8 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
+  const [answersStudent, setAnswersStudent] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -36,6 +39,7 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
         router.replace("/teacher/login");
         return;
       }
+      setAccessToken(session.token);
       const res = await teacherAuthFetch(
         session.token,
         `/api/teacher/activities/${encodeURIComponent(activityId)}/monitor`
@@ -219,6 +223,7 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
                   <th className="px-3 py-2">סטטוס</th>
                   <th className="px-3 py-2">תשובות</th>
                   <th className="px-3 py-2">נכונות</th>
+                  <th className="px-3 py-2">פירוט</th>
                 </tr>
               </thead>
               <tbody>
@@ -234,12 +239,31 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
                         ? `${Math.round((s.correctCount / s.answersCount) * 100)}%`
                         : "—"}
                     </td>
+                    <td className="px-3 py-2">
+                      <button
+                        type="button"
+                        className="text-amber-200/90 hover:text-amber-100 text-sm underline-offset-2 hover:underline"
+                        data-testid="teacher-view-student-answers"
+                        onClick={() => setAnswersStudent(s)}
+                      >
+                        צפה בתשובות
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         ) : null}
+
+        <TeacherActivityStudentAnswersModal
+          open={Boolean(answersStudent)}
+          onClose={() => setAnswersStudent(null)}
+          accessToken={accessToken}
+          activityId={activityId}
+          student={answersStudent}
+          activityTitle={activity?.title}
+        />
 
         {data?.perQuestion?.length ? (
           <div className="space-y-3">

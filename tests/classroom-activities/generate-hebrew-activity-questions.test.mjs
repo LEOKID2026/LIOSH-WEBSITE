@@ -23,9 +23,10 @@ test("normalizeHebrewTopic maps labels from hebrew-constants TOPICS only", () =>
   assert.equal(normalizeHebrewTopic("reading", "g4"), "reading");
 });
 
-test("isActivityPreviewSubjectSupported includes hebrew, not english", () => {
+test("isActivityPreviewSubjectSupported includes hebrew and english (B3/B4)", () => {
   assert.equal(isActivityPreviewSubjectSupported("hebrew"), true);
-  assert.equal(isActivityPreviewSubjectSupported("english"), false);
+  assert.equal(isActivityPreviewSubjectSupported("english"), true);
+  assert.equal(isActivityPreviewSubjectSupported("history"), false);
 });
 
 test("adapter does not import archive hebrew-questions banks", () => {
