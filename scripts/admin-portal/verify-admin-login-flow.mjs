@@ -77,7 +77,15 @@ async function main() {
   }
   const count = adminList.body?.data?.teachers?.length ?? 0;
   console.log(`PASS admin/teachers list — status=200 teachers=${count}`);
-  console.log("\nBrowser: /teacher/login → /admin/teachers");
+
+  await anon.auth.signOut();
+  const { data: afterSignOut } = await anon.auth.getSession();
+  if (afterSignOut?.session?.access_token) {
+    throw new Error("session still present after signOut");
+  }
+  console.log("PASS signOut clears session");
+
+  console.log("\nBrowser: /teacher/login → /admin/teachers → יציאה → /teacher/login");
 }
 
 main().catch((e) => {

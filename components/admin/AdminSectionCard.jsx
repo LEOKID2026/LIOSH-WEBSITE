@@ -1,7 +1,8 @@
-export default function AdminSectionCard({ title, children, className = "" }) {
+export default function AdminSectionCard({ id, title, children, className = "" }) {
   return (
     <section
-      className={`rounded-xl border border-white/15 bg-black/30 p-4 md:p-5 text-right ${className}`}
+      id={id}
+      className={`rounded-xl border border-white/15 bg-black/30 p-4 md:p-5 text-right scroll-mt-24 ${className}`}
     >
       {title ? <h2 className="text-base font-semibold mb-4 text-white">{title}</h2> : null}
       {children}

@@ -12,8 +12,7 @@ import {
   ADMIN_SAVE_FEATURES,
   ADMIN_SAVE_QUOTAS,
   ADMIN_SAVE_STATUS,
-  ADMIN_SECTION_ACCOUNT,
-  ADMIN_SECTION_FEATURES,
+  ADMIN_SECTION_PERMISSIONS,
   ADMIN_SECTION_QUOTAS,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
@@ -133,31 +132,31 @@ export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
         </button>
       </AdminSectionCard>
 
-      <div className="grid gap-4">
-        <AdminSectionCard title={ADMIN_SECTION_FEATURES}>
-          <div className="space-y-2 mb-4">
-            {Object.keys(ADMIN_FEATURE_LABELS_HE).map((key) => (
-              <label key={key} className="flex items-center gap-2 text-sm justify-end flex-row-reverse">
-                <input
-                  type="checkbox"
-                  checked={Boolean(flags[key])}
-                  onChange={(e) => setFlags((f) => ({ ...f, [key]: e.target.checked }))}
-                />
-                {ADMIN_FEATURE_LABELS_HE[key]}
-              </label>
-            ))}
-          </div>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={saveFeatures}
-            className="rounded-lg bg-amber-500 text-black font-semibold px-4 py-2 text-sm disabled:opacity-60"
-          >
-            {ADMIN_SAVE_FEATURES}
-          </button>
-        </AdminSectionCard>
+      <AdminSectionCard title={ADMIN_SECTION_PERMISSIONS}>
+        <p className="text-xs text-white/45 mb-3">תכונות זמינות למורה</p>
+        <div className="space-y-2 mb-4">
+          {Object.keys(ADMIN_FEATURE_LABELS_HE).map((key) => (
+            <label key={key} className="flex items-center gap-2 text-sm justify-end flex-row-reverse">
+              <input
+                type="checkbox"
+                checked={Boolean(flags[key])}
+                onChange={(e) => setFlags((f) => ({ ...f, [key]: e.target.checked }))}
+              />
+              {ADMIN_FEATURE_LABELS_HE[key]}
+            </label>
+          ))}
+        </div>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={saveFeatures}
+          className="rounded-lg bg-amber-500 text-black font-semibold px-4 py-2 text-sm disabled:opacity-60 mb-5"
+        >
+          {ADMIN_SAVE_FEATURES}
+        </button>
 
-        <AdminSectionCard title={ADMIN_SECTION_ACCOUNT}>
+        <div className="border-t border-white/10 pt-4">
+          <p className="text-xs text-white/45 mb-3">גישה לחשבון</p>
           <label className="flex items-center gap-2 text-sm justify-end flex-row-reverse mb-4">
             <input
               type="checkbox"
@@ -174,8 +173,8 @@ export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
           >
             {ADMIN_SAVE_STATUS}
           </button>
-        </AdminSectionCard>
-      </div>
+        </div>
+      </AdminSectionCard>
 
       {error ? <p className="text-sm text-red-300 lg:col-span-2 text-right">{error}</p> : null}
     </div>

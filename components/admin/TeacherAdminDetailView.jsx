@@ -1,0 +1,260 @@
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import AdminSectionCard, { AdminFieldRow, AdminStatTile } from "./AdminSectionCard.jsx";
+import TeacherQuotaForm from "./TeacherQuotaForm.jsx";
+import { isSmokeClassName } from "../../lib/teacher-portal/teacher-smoke-artifacts.js";
+import {
+  ADMIN_BACK_TO_TEACHERS,
+  ADMIN_CLASS_COL_STUDENTS,
+  ADMIN_LABEL_CLASSES,
+  ADMIN_LABEL_CLASS_STUDENTS,
+  ADMIN_LABEL_CREATED,
+  ADMIN_LABEL_DIRECT_STUDENTS,
+  ADMIN_LABEL_INDIV_ACTIVITIES,
+  ADMIN_LABEL_PLAN,
+  ADMIN_LABEL_TOTAL_STUDENTS,
+  ADMIN_NO_AUDIT,
+  ADMIN_NO_CLASSES,
+  ADMIN_SECTION_AUDIT,
+  ADMIN_SECTION_CLASSES,
+  ADMIN_SECTION_IDENTITY,
+  ADMIN_SECTION_MANAGEMENT,
+  ADMIN_SECTION_USAGE,
+  ADMIN_SMOKE_CLASSES_TOGGLE,
+  ADMIN_TEACHER_DETAIL_NAV,
+  adminAccountStatusHe,
+  adminFormatDateHe,
+  adminGradeLabelHe,
+} from "../../lib/admin-portal/admin-ui.he.js";
+
+function StatusBadge({ teacher }) {
+  const active = teacher?.isAccountActive !== false && teacher?.isActive;
+  return (
+    <span
+      className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ${
+        active
+          ? "bg-emerald-500/20 text-emerald-200 border border-emerald-400/30"
+          : "bg-white/10 text-white/50 border border-white/15"
+      }`}
+    >
+      {adminAccountStatusHe(teacher)}
+    </span>
+  );
+}
+
+export function TeacherAdminDetailHeader({ teacher }) {
+  return (
+    <div className="min-w-0 flex-1 space-y-2">
+      <Link href="/admin/teachers" className="inline-block text-amber-300 text-sm hover:underline">
+        {ADMIN_BACK_TO_TEACHERS}
+      </Link>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl md:text-2xl font-bold text-right break-words">
+            {teacher.displayName || teacher.email || "—"}
+          </h1>
+          {teacher.displayName && teacher.email ? (
+            <p className="text-sm text-white/70 mt-1 break-all leading-relaxed">{teacher.email}</p>
+          ) : null}
+        </div>
+        <StatusBadge teacher={teacher} />
+      </div>
+    </div>
+  );
+}
+
+function SectionNav() {
+  const links = [
+    { href: "#admin-teacher-summary", label: ADMIN_SECTION_USAGE },
+    { href: "#admin-teacher-identity", label: ADMIN_SECTION_IDENTITY },
+    { href: "#admin-teacher-quotas", label: ADMIN_SECTION_MANAGEMENT },
+    { href: "#admin-teacher-classes", label: ADMIN_SECTION_CLASSES },
+    { href: "#admin-teacher-audit", label: ADMIN_SECTION_AUDIT },
+  ];
+
+  return (
+    <nav
+      className="hidden lg:flex flex-wrap gap-x-5 gap-y-2 text-sm border-b border-white/10 pb-3"
+      aria-label={ADMIN_TEACHER_DETAIL_NAV}
+    >
+      {links.map((item) => (
+        <a
+          key={item.href}
+          href={item.href}
+          className="text-white/60 hover:text-amber-300 transition-colors"
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+function UsageSummaryGrid({ teacher }) {
+  return (
+    <AdminSectionCard id="admin-teacher-summary" title={ADMIN_SECTION_USAGE}>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <AdminStatTile label={ADMIN_LABEL_CLASSES} value={teacher.classCount ?? 0} />
+        <AdminStatTile label={ADMIN_LABEL_TOTAL_STUDENTS} value={teacher.totalActiveStudents ?? 0} />
+        <AdminStatTile label={ADMIN_LABEL_CLASS_STUDENTS} value={teacher.classStudentCount ?? 0} />
+        <AdminStatTile label={ADMIN_LABEL_DIRECT_STUDENTS} value={teacher.directStudentCount ?? 0} />
+        <div className="col-span-2 sm:col-span-1">
+          <AdminStatTile
+            label={ADMIN_LABEL_INDIV_ACTIVITIES}
+            value={teacher.individualActivityCount ?? 0}
+          />
+        </div>
+      </div>
+    </AdminSectionCard>
+  );
+}
+
+function IdentitySection({ teacher }) {
+  return (
+    <AdminSectionCard id="admin-teacher-identity" title={ADMIN_SECTION_IDENTITY}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6">
+        <AdminFieldRow label={ADMIN_LABEL_PLAN} value={teacher.planCode || "—"} />
+        <AdminFieldRow label={ADMIN_LABEL_CREATED} value={adminFormatDateHe(teacher.createdAt)} />
+      </div>
+    </AdminSectionCard>
+  );
+}
+
+function ClassRowCard({ classItem: c }) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-black/20 p-3 text-right">
+      <p className="font-medium text-sm break-words">{c.name}</p>
+      {c.gradeLevel ? (
+        <p className="text-xs text-white/45 mt-0.5">{adminGradeLabelHe(c.gradeLevel)}</p>
+      ) : null}
+      <p className="text-sm text-white/70 mt-2">
+        {ADMIN_CLASS_COL_STUDENTS}:{" "}
+        <span className="font-semibold tabular-nums">{c.activeStudentCount ?? 0}</span>
+      </p>
+    </div>
+  );
+}
+
+function ClassesSection({ visibleClasses, hiddenSmokeClasses }) {
+  const [showSmoke, setShowSmoke] = useState(false);
+
+  return (
+    <AdminSectionCard id="admin-teacher-classes" title={ADMIN_SECTION_CLASSES}>
+      {visibleClasses.length === 0 && hiddenSmokeClasses.length === 0 ? (
+        <p className="text-white/60 text-sm">{ADMIN_NO_CLASSES}</p>
+      ) : (
+        <>
+          {visibleClasses.length === 0 ? (
+            <p className="text-white/60 text-sm mb-3">{ADMIN_NO_CLASSES}</p>
+          ) : (
+            <>
+              <div className="md:hidden space-y-2">
+                {visibleClasses.map((c) => (
+                  <ClassRowCard key={c.classId} classItem={c} />
+                ))}
+              </div>
+              <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-3">
+                {visibleClasses.map((c) => (
+                  <ClassRowCard key={c.classId} classItem={c} />
+                ))}
+              </div>
+            </>
+          )}
+
+          {hiddenSmokeClasses.length > 0 ? (
+            <div className="mt-4 pt-3 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => setShowSmoke((v) => !v)}
+                className="text-xs text-white/45 hover:text-white/70 underline underline-offset-2"
+              >
+                {ADMIN_SMOKE_CLASSES_TOGGLE(hiddenSmokeClasses.length, showSmoke)}
+              </button>
+              {showSmoke ? (
+                <div className="mt-3 space-y-2 opacity-60">
+                  {hiddenSmokeClasses.map((c) => (
+                    <ClassRowCard key={c.classId} classItem={c} />
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+        </>
+      )}
+    </AdminSectionCard>
+  );
+}
+
+function AuditSection({ audit }) {
+  return (
+    <AdminSectionCard
+      id="admin-teacher-audit"
+      title={ADMIN_SECTION_AUDIT}
+      className="border-white/10 bg-black/20"
+    >
+      {audit.length === 0 ? (
+        <p className="text-white/50 text-sm">{ADMIN_NO_AUDIT}</p>
+      ) : (
+        <ul className="text-xs space-y-2 max-h-48 overflow-y-auto text-white/70">
+          {audit.map((e) => (
+            <li
+              key={e.id}
+              className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/5 pb-2 last:border-0"
+            >
+              <span className="text-amber-200/80 font-medium">{e.action}</span>
+              <span className="text-white/40 tabular-nums">{adminFormatDateHe(e.created_at)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </AdminSectionCard>
+  );
+}
+
+export default function TeacherAdminDetailView({ teacher, audit, accessToken, onUpdated, onReload }) {
+  const { visibleClasses, hiddenSmokeClasses } = useMemo(() => {
+    const visible = [];
+    const hidden = [];
+    for (const c of teacher.classes || []) {
+      if (isSmokeClassName(c.name)) hidden.push(c);
+      else visible.push(c);
+    }
+    return { visibleClasses: visible, hiddenSmokeClasses: hidden };
+  }, [teacher.classes]);
+
+  return (
+    <div className="flex flex-col gap-5 lg:gap-6">
+      <SectionNav />
+
+      <div className="order-1 lg:order-2">
+        <IdentitySection teacher={teacher} />
+      </div>
+
+      <div className="order-2 lg:order-1">
+        <UsageSummaryGrid teacher={teacher} />
+      </div>
+
+      <div id="admin-teacher-quotas" className="order-3">
+        <TeacherQuotaForm
+          teacher={teacher}
+          accessToken={accessToken}
+          onUpdated={(updated) => {
+            onUpdated?.(updated);
+            onReload?.();
+          }}
+        />
+      </div>
+
+      <div className="order-4">
+        <ClassesSection
+          visibleClasses={visibleClasses}
+          hiddenSmokeClasses={hiddenSmokeClasses}
+        />
+      </div>
+
+      <div className="order-5">
+        <AuditSection audit={audit} />
+      </div>
+    </div>
+  );
+}
