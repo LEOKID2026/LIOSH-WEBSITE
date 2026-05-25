@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import Link from "next/link";
 import Layout from "../../../components/Layout";
 import GuardianAccessPanel from "../../../components/teacher-portal/GuardianAccessPanel";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
@@ -124,6 +125,16 @@ export default function TeacherStudentReportPage({ studentId }) {
         data-report-ok="true"
       >
         <TeacherPortalShell backHref="/teacher/dashboard" title={`דוח תלמיד: ${studentName}`}>
+          <div className="mb-4">
+            <Link
+              href={`/teacher/student/${encodeURIComponent(studentId)}/parent-report`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded border border-white/25 text-sm font-semibold px-4 py-2 hover:bg-white/10"
+            >
+              דוח להורים
+            </Link>
+          </div>
           <p className="text-white/60 text-sm mb-6">נתונים מ-30 הימים האחרונים</p>
 
           <section className="rounded-xl border border-white/15 bg-black/30 p-5 mb-6">

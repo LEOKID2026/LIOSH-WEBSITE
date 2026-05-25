@@ -49,6 +49,10 @@ import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
 } from "../../lib/learning-supabase/parent-dashboard-report-bridge.js";
+import {
+  parentReportRemoteDataUrl,
+  parseParentReportRemoteSource,
+} from "../../lib/teacher-portal/parent-report-remote-source.js";
 
 function parentReportChartLabelFromAllItemKey(key, data) {
   const labelFrom = (subjectId, bucketLike) => {
@@ -718,11 +722,27 @@ export default function ParentReport() {
   useIOSViewportFix();
   const router = useRouter();
   const handleBackToParentDashboard = useCallback(() => {
+    const remote = parseParentReportRemoteSource(router);
+    if (remote.isTeacher && remote.studentId) {
+      router.push(`/teacher/student/${remote.studentId}`);
+      return;
+    }
     navigateToParentDashboard(router);
   }, [router]);
   /** Phase D — staged Parent Copilot on short report (server-side turns). Default off. */
   const enableParentCopilotOnShort =
     typeof process !== "undefined" && process.env.NEXT_PUBLIC_ENABLE_PARENT_COPILOT_ON_SHORT === "true";
+
+  const remoteReportSource = useMemo(
+    () => parseParentReportRemoteSource(router),
+    [router.isReady, router.query.source, router.query.studentId]
+  );
+  const isParentSource = remoteReportSource.isParent;
+  const isTeacherSource = remoteReportSource.isTeacher;
+  const isRemoteReportSource = remoteReportSource.isRemote;
+  const remoteStudentId = remoteReportSource.studentId;
+  const enableParentCopilotOnShortEffective =
+    enableParentCopilotOnShort && !isTeacherSource;
 
   const [report, setReport] = useState(null);
   const [shortContractTop, setShortContractTop] = useState(null);
@@ -745,26 +765,19 @@ export default function ParentReport() {
   const [chartHostInnerWidthPx, setChartHostInnerWidthPx] = useState(0);
   const [parentReportError, setParentReportError] = useState("");
 
-  const isParentSource = useMemo(
-    () =>
-      router.isReady &&
-      router.query.source === "parent" &&
-      typeof router.query.studentId === "string" &&
-      router.query.studentId.trim().length > 0,
-    [router.isReady, router.query.source, router.query.studentId]
-  );
-  const parentStudentId = useMemo(
-    () => (isParentSource ? String(router.query.studentId).trim() : ""),
-    [isParentSource, router.query.studentId]
-  );
+  const parentStudentId = remoteStudentId;
 
   const detailedReportQuery = useMemo(() => {
     const base =
       customDates && appliedStartDate && appliedEndDate
         ? { period: "custom", start: appliedStartDate, end: appliedEndDate }
         : { period };
-    if (isParentSource && parentStudentId) {
-      return { ...base, studentId: parentStudentId, source: "parent" };
+    if (isRemoteReportSource && remoteStudentId) {
+      return {
+        ...base,
+        studentId: remoteStudentId,
+        source: isTeacherSource ? "teacher" : "parent",
+      };
     }
     return base;
   }, [
@@ -772,8 +785,9 @@ export default function ParentReport() {
     appliedStartDate,
     appliedEndDate,
     period,
-    isParentSource,
-    parentStudentId,
+    isRemoteReportSource,
+    isTeacherSource,
+    remoteStudentId,
   ]);
 
   // useEffect (לא useLayoutEffect) — נדרש ב-SSR של Next כדי למנוע אזהרת hydration / useLayoutEffect על השרת
@@ -838,11 +852,11 @@ export default function ParentReport() {
   /** Resolve student UUID for secured Copilot turns (parent dashboard query or cookie session). */
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
-    if (!enableParentCopilotOnShort) {
+    if (!enableParentCopilotOnShortEffective) {
       setCopilotStudentId(null);
       return undefined;
     }
-    if (isParentSource && parentStudentId) {
+    if (isRemoteReportSource && parentStudentId) {
       setCopilotStudentId(parentStudentId);
       return undefined;
     }
@@ -857,10 +871,10 @@ export default function ParentReport() {
     return () => {
       cancelled = true;
     };
-  }, [enableParentCopilotOnShort, isParentSource, parentStudentId]);
+  }, [enableParentCopilotOnShortEffective, isRemoteReportSource, parentStudentId]);
 
   const shortReportCopilotTurnRunner = useMemo(() => {
-    if (!enableParentCopilotOnShort) return null;
+    if (!enableParentCopilotOnShortEffective) return null;
     return async (input) => {
       const r = await fetch("/api/parent/copilot-turn", {
         method: "POST",
@@ -890,7 +904,7 @@ export default function ParentReport() {
       }
       return data.result;
     };
-  }, [enableParentCopilotOnShort, copilotStudentId, period, customDates, appliedStartDate, appliedEndDate]);
+  }, [enableParentCopilotOnShortEffective, copilotStudentId, period, customDates, appliedStartDate, appliedEndDate]);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -898,7 +912,9 @@ export default function ParentReport() {
 
     const qpStudent =
       typeof router.query.studentId === "string" ? router.query.studentId.trim() : "";
-    const fromParentDash = router.query.source === "parent" && qpStudent.length > 0;
+    const fromRemoteDash =
+      (router.query.source === "parent" || router.query.source === "teacher") &&
+      qpStudent.length > 0;
 
     const today = new Date();
     const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -935,7 +951,7 @@ export default function ParentReport() {
     setAppliedStartDate(appliedS);
     setAppliedEndDate(appliedE);
 
-    if (fromParentDash) {
+    if (fromRemoteDash) {
       setPlayerName("");
       setReport(null);
       setShortContractTop(null);
@@ -976,7 +992,7 @@ export default function ParentReport() {
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
-    if (!router.isReady || !isParentSource || !parentStudentId) return undefined;
+    if (!router.isReady || !isRemoteReportSource || !parentStudentId) return undefined;
 
     let cancelled = false;
     setLoading(true);
@@ -1012,7 +1028,11 @@ export default function ParentReport() {
       }
       if (!token) {
         if (!cancelled) {
-          setParentReportError("נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב.");
+          setParentReportError(
+            isTeacherSource
+              ? "נדרשת התחברות כמורה — התחברו מחדש ונסו שוב."
+              : "נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב."
+          );
           setReport(null);
           setCopilotDetailedPayload(null);
           setLoading(false);
@@ -1022,7 +1042,8 @@ export default function ParentReport() {
 
       try {
         const qs = new URLSearchParams({ from, to });
-        const url = `/api/parent/students/${encodeURIComponent(parentStudentId)}/report-data?${qs}`;
+        const remoteKind = isTeacherSource ? "teacher" : "parent";
+        const url = parentReportRemoteDataUrl(remoteKind, parentStudentId, qs);
         const res = await fetch(url, {
           credentials: "include",
           cache: "no-store",
@@ -1033,7 +1054,9 @@ export default function ParentReport() {
           if (!cancelled) {
             const msg =
               res.status === 401
-                ? "נדרשת התחברות מחדש כהורה."
+                ? isTeacherSource
+                  ? "נדרשת התחברות מחדש כמורה."
+                  : "נדרשת התחברות מחדש כהורה."
                 : res.status === 403 || res.status === 404
                   ? "אין גישה לדוח של תלמיד זה."
                   : typeof body?.error === "string"
@@ -1085,7 +1108,8 @@ export default function ParentReport() {
     };
   }, [
     router.isReady,
-    isParentSource,
+    isRemoteReportSource,
+    isTeacherSource,
     parentStudentId,
     period,
     customDates,
@@ -1103,7 +1127,7 @@ export default function ParentReport() {
   };
 
   useEffect(() => {
-    if (isParentSource) return undefined;
+    if (isRemoteReportSource) return undefined;
     if (typeof window !== "undefined" && playerName && !loading) {
       let data;
       if (customDates && appliedStartDate && appliedEndDate) {
@@ -1121,7 +1145,7 @@ export default function ParentReport() {
       }
     }
     return undefined;
-  }, [isParentSource, period, customDates, appliedStartDate, appliedEndDate, playerName, loading]);
+  }, [isRemoteReportSource, period, customDates, appliedStartDate, appliedEndDate, playerName, loading]);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -1200,7 +1224,7 @@ export default function ParentReport() {
     );
   }
 
-  if (isParentSource && parentReportError && !report) {
+  if (isRemoteReportSource && parentReportError && !report) {
     return (
       <Layout>
         <div
@@ -1209,15 +1233,34 @@ export default function ParentReport() {
         >
           <p className="text-center text-red-300 max-w-md">{parentReportError}</p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/parent/login"
-              className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
-            >
-              כניסת הורה
-            </Link>
-            <Link href="/parent/dashboard" className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white">
-              דשבורד הורים
-            </Link>
+            {isTeacherSource && parentStudentId ? (
+              <>
+                <Link
+                  href={`/teacher/student/${parentStudentId}`}
+                  className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
+                >
+                  חזרה לדוח מורה
+                </Link>
+                <Link
+                  href="/teacher/dashboard"
+                  className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white"
+                >
+                  לוח בקרה
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/parent/login"
+                  className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
+                >
+                  כניסת הורה
+                </Link>
+                <Link href="/parent/dashboard" className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white">
+                  דשבורד הורים
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </Layout>
@@ -2009,7 +2052,7 @@ export default function ParentReport() {
 
           <ParentReportInsight explanation={report.parentAiExplanation} />
 
-          {enableParentCopilotOnShort && copilotDetailedPayload ? (
+          {enableParentCopilotOnShortEffective && copilotDetailedPayload ? (
             <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
               <ParentCopilotShellLazy
                 payload={copilotDetailedPayload}

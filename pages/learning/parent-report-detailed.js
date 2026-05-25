@@ -34,6 +34,10 @@ import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
 } from "../../lib/learning-supabase/parent-dashboard-report-bridge.js";
+import {
+  parentReportRemoteDataUrl,
+  parseParentReportRemoteSource,
+} from "../../lib/teacher-portal/parent-report-remote-source.js";
 import { navigateToParentDashboard } from "../../lib/parent-report-navigation";
 
 /**
@@ -209,6 +213,7 @@ function buildDetailedReportQueryFromQueryObject(query, mode) {
   const sid = query?.studentId;
   if (typeof sid === "string" && sid.trim()) q.studentId = sid.trim();
   if (query?.source === "parent") q.source = "parent";
+  if (query?.source === "teacher") q.source = "teacher";
   return q;
 }
 
@@ -216,8 +221,23 @@ export default function ParentReportDetailedPage() {
   useIOSViewportFix();
   const router = useRouter();
   const handleBackToParentDashboard = useCallback(() => {
+    const remote = parseParentReportRemoteSource(router);
+    if (remote.isTeacher && remote.studentId) {
+      router.push(`/teacher/student/${remote.studentId}`);
+      return;
+    }
     navigateToParentDashboard(router);
   }, [router]);
+
+  const remoteReportSource = useMemo(
+    () => parseParentReportRemoteSource(router),
+    [router.isReady, router.query.source, router.query.studentId]
+  );
+  const isParentSource = remoteReportSource.isParent;
+  const isTeacherSource = remoteReportSource.isTeacher;
+  const isRemoteReportSource = remoteReportSource.isRemote;
+  const parentStudentId = remoteReportSource.studentId;
+
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [displayMode, setDisplayMode] = useState("full");
@@ -226,19 +246,6 @@ export default function ParentReportDetailedPage() {
   const [parentReportError, setParentReportError] = useState("");
   /** Student UUID for secured `/api/parent/copilot-turn` (parent dashboard or cookie session). */
   const [copilotStudentId, setCopilotStudentId] = useState(/** @type {string | null} */ (null));
-
-  const isParentSource = useMemo(
-    () =>
-      router.isReady &&
-      router.query.source === "parent" &&
-      typeof router.query.studentId === "string" &&
-      router.query.studentId.trim().length > 0,
-    [router.isReady, router.query.source, router.query.studentId]
-  );
-  const parentStudentId = useMemo(
-    () => (isParentSource ? String(router.query.studentId).trim() : ""),
-    [isParentSource, router.query.studentId]
-  );
 
   const queryPeriod = typeof router.query.period === "string" ? router.query.period : "week";
   const queryStart = typeof router.query.start === "string" ? router.query.start : null;
@@ -249,8 +256,12 @@ export default function ParentReportDetailedPage() {
 
   useEffect(() => {
     if (typeof window === "undefined" || !router.isReady) return undefined;
-    if (isParentSource && parentStudentId) {
+    if (isRemoteReportSource && parentStudentId && !isTeacherSource) {
       setCopilotStudentId(parentStudentId);
+      return undefined;
+    }
+    if (isTeacherSource) {
+      setCopilotStudentId(null);
       return undefined;
     }
     let cancelled = false;
@@ -264,10 +275,10 @@ export default function ParentReportDetailedPage() {
     return () => {
       cancelled = true;
     };
-  }, [router.isReady, isParentSource, parentStudentId]);
+  }, [router.isReady, isRemoteReportSource, isTeacherSource, parentStudentId]);
 
   const detailedCopilotTurnRunner = useMemo(() => {
-    if (!payload) return null;
+    if (!payload || isTeacherSource) return null;
     return async (input) => {
       const r = await fetch("/api/parent/copilot-turn", {
         method: "POST",
@@ -297,12 +308,12 @@ export default function ParentReportDetailedPage() {
       }
       return data.result;
     };
-  }, [payload, queryPeriod, customDatesForCopilot, queryStart, queryEnd, copilotStudentId]);
+  }, [payload, queryPeriod, customDatesForCopilot, queryStart, queryEnd, copilotStudentId, isTeacherSource]);
 
   useEffect(() => {
     if (!router.isReady || typeof window === "undefined") return undefined;
 
-    if (isParentSource && parentStudentId) {
+    if (isRemoteReportSource && parentStudentId) {
       let cancelled = false;
       setLoading(true);
       setParentReportError("");
@@ -339,7 +350,11 @@ export default function ParentReportDetailedPage() {
           }
           if (!token) {
             if (!cancelled) {
-              setParentReportError("נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב.");
+              setParentReportError(
+                isTeacherSource
+                  ? "נדרשת התחברות כמורה — התחברו מחדש ונסו שוב."
+                  : "נדרשת התחברות כהורה — השתמשו בכניסת הורה ונסו שוב."
+              );
               setPayload(null);
               setLoading(false);
             }
@@ -347,7 +362,8 @@ export default function ParentReportDetailedPage() {
           }
 
           const qs = new URLSearchParams({ from, to });
-          const url = `/api/parent/students/${encodeURIComponent(parentStudentId)}/report-data?${qs}`;
+          const remoteKind = isTeacherSource ? "teacher" : "parent";
+          const url = parentReportRemoteDataUrl(remoteKind, parentStudentId, qs);
           const res = await fetch(url, {
             credentials: "include",
             cache: "no-store",
@@ -358,7 +374,9 @@ export default function ParentReportDetailedPage() {
             if (!cancelled) {
               const msg =
                 res.status === 401
-                  ? "נדרשת התחברות מחדש כהורה."
+                  ? isTeacherSource
+                    ? "נדרשת התחברות מחדש כמורה."
+                    : "נדרשת התחברות מחדש כהורה."
                   : res.status === 403 || res.status === 404
                     ? "אין גישה לדוח של תלמיד זה."
                     : typeof body?.error === "string"
@@ -428,7 +446,7 @@ export default function ParentReportDetailedPage() {
     setPayload(data);
     setLoading(false);
     return undefined;
-  }, [router.isReady, queryPeriod, queryStart, queryEnd, isParentSource, parentStudentId]);
+  }, [router.isReady, queryPeriod, queryStart, queryEnd, isRemoteReportSource, isTeacherSource, parentStudentId]);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -534,7 +552,7 @@ export default function ParentReportDetailedPage() {
     );
   }
 
-  if (isParentSource && parentReportError && !payload) {
+  if (isRemoteReportSource && parentReportError && !payload) {
     return (
       <Layout>
         <div
@@ -543,18 +561,37 @@ export default function ParentReportDetailedPage() {
         >
           <p className="text-center text-red-300 max-w-md">{parentReportError}</p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/parent/login"
-              className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
-            >
-              כניסת הורה
-            </Link>
-            <Link
-              href="/parent/dashboard"
-              className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white"
-            >
-              דשבורד הורים
-            </Link>
+            {isTeacherSource && parentStudentId ? (
+              <>
+                <Link
+                  href={`/teacher/student/${parentStudentId}`}
+                  className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
+                >
+                  חזרה לדוח מורה
+                </Link>
+                <Link
+                  href="/teacher/dashboard"
+                  className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white"
+                >
+                  לוח בקרה
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/parent/login"
+                  className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
+                >
+                  כניסת הורה
+                </Link>
+                <Link
+                  href="/parent/dashboard"
+                  className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white"
+                >
+                  דשבורד הורים
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </Layout>
@@ -565,7 +602,7 @@ export default function ParentReportDetailedPage() {
   const noPlayer =
     typeof window !== "undefined" &&
     !loading &&
-    !(isParentSource && parentStudentId) &&
+    !(isRemoteReportSource && parentStudentId) &&
     !localStorage.getItem("mleo_player_name");
   const allSubjectProfiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
   const visibleSubjectProfiles = allSubjectProfiles.filter(
