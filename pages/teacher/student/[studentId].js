@@ -5,6 +5,7 @@ import GuardianAccessPanel from "../../../components/teacher-portal/GuardianAcce
 import StudentLoginAccessPanel from "../../../components/teacher-portal/StudentLoginAccessPanel";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
 import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
+import TeacherParentMessagePanel from "../../../components/teacher-portal/TeacherParentMessagePanel";
 import {
   TeacherReportError,
   TeacherReportForbidden,
@@ -257,6 +258,7 @@ export default function TeacherStudentReportPage({ studentId }) {
 
           {accessToken ? (
             <>
+              <TeacherParentMessagePanel accessToken={accessToken} studentId={studentId} />
               <StudentLoginAccessPanel accessToken={accessToken} studentId={studentId} />
               <GuardianAccessPanel accessToken={accessToken} studentId={studentId} />
             </>

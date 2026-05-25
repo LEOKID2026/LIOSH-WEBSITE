@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../Layout";
 import SubjectSummaryCards from "../teacher-portal/SubjectSummaryCards";
 import TeacherPortalShell from "../teacher-portal/TeacherPortalShell";
+import ParentReportParentSections from "./ParentReportParentSections";
 import { formatDateHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 async function fetchGuardianMe() {
@@ -197,6 +198,8 @@ export default function ParentTeacherCodeReport({
           {expiryWarning ? (
             <p className="text-amber-200 text-sm mb-4">⚠ {expiryWarning}</p>
           ) : null}
+
+          <ParentReportParentSections report={report} compact />
 
           <section className="rounded-xl border border-white/15 bg-black/30 p-5 mb-6">
             <h2 className="text-lg font-semibold mb-3">סיכום פעילות</h2>

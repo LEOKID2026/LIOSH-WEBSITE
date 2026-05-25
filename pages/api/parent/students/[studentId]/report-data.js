@@ -8,6 +8,7 @@ import {
   safeString,
 } from "../../../../../lib/parent-server/report-data-aggregate.server.js";
 import { attachStudentLearningAccountToParentReportPayload } from "../../../../../lib/parent-server/parent-report-account-attachment.server.js";
+import { enrichPayloadWithParentFacing } from "../../../../../lib/parent-server/parent-report-parent-facing.server.js";
 
 const DEFAULT_RANGE_DAYS = 30;
 
@@ -74,9 +75,10 @@ export default async function handler(req, res) {
     const serviceClient = getLearningSupabaseServiceRoleClient();
     const analytics = await aggregateParentReportPayload(serviceClient, student, fromDate, toDate);
     const payload = await attachStudentLearningAccountToParentReportPayload(serviceClient, student, analytics);
+    const enriched = await enrichPayloadWithParentFacing(serviceClient, payload, studentId);
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     res.setHeader("Pragma", "no-cache");
-    return res.status(200).json(payload);
+    return res.status(200).json(enriched);
   } catch {
     return res.status(500).json({ ok: false, error: "Unexpected server error" });
   }

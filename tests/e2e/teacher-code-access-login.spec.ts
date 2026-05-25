@@ -49,8 +49,9 @@ async function openParentLogin(page: Page) {
 
 async function submitParentLogin(page: Page, identifier: string, secret: string) {
   await page.getByPlaceholder("הקלידו אימייל או שם משתמש שקיבלתם מהמורה").fill(identifier);
-  await page.getByPlaceholder("הקלידו סיסמה או קוד כניסה").fill(secret);
-  await page.locator('form button[type="submit"]').click();
+  const secretField = page.getByPlaceholder("הקלידו סיסמה או קוד כניסה");
+  await secretField.fill(secret);
+  await secretField.press("Enter");
 }
 
 async function openStudentLogin(page: Page) {
@@ -60,8 +61,9 @@ async function openStudentLogin(page: Page) {
 
 async function submitStudentLogin(page: Page, username: string, pin: string) {
   await page.getByPlaceholder("שם משתמש").fill(username);
-  await page.getByPlaceholder("קוד כניסה").fill(pin);
-  await page.getByRole("button", { name: "כניסה ללמידה" }).click();
+  const pinField = page.getByPlaceholder("קוד כניסה");
+  await pinField.fill(pin);
+  await pinField.press("Enter");
 }
 
 async function assertNo404(page: Page) {
@@ -91,6 +93,8 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
     await expect(reportRoot).toBeVisible({ timeout: 60_000 });
     await expect(page.getByText(REPORT_LOAD_ERROR)).toHaveCount(0);
     await expect(page.getByText(/סיכום פעילות/u)).toBeVisible();
+    await expect(page.getByText(/מה חשוב לדעת/u)).toBeVisible();
+    await expect(page.getByText(/מה מומלץ לעשות בבית/u)).toBeVisible();
     await expect(page.getByText(/אתם צופים בדוח מוגבל/u)).toBeVisible();
 
     const logs = api.snapshot();

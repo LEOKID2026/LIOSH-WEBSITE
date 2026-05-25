@@ -11,6 +11,7 @@ import {
   getDeterministicParentAiExplanationFromParentReportV2,
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
+import ParentReportParentSections from "../../components/parent/ParentReportParentSections.jsx";
 
 const ParentCopilotShellLazy = dynamic(
   () => import("../../components/parent-copilot/parent-copilot-shell.jsx"),
@@ -2049,6 +2050,8 @@ export default function ParentReport() {
               ) : null}
             </div>
           ) : null}
+
+          <ParentReportParentSections report={report} />
 
           <ParentReportInsight explanation={report.parentAiExplanation} />
 

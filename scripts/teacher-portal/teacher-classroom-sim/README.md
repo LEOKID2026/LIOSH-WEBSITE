@@ -61,3 +61,13 @@ Idempotent per `(date, grade, subject)` unless `--force=true`.
 2. Log in as `teacher@leo.com` (password `747975`)
 3. Dashboard → one class `כיתת סימולציה - כיתה ג׳` + 20 students
 4. Open class report + 3 student reports (strong / weak / improving slots)
+5. On a student report: section **הודעה להורה** — compose and verify history
+6. Parent code login (`leo-p01` / `1234`) → child report shows **מה חשוב לדעת**, **מה מומלץ לעשות בבית**, and **הודעות מהמורה** (after seed below)
+
+### Sample teacher messages (after migration 023)
+
+Owner must apply `supabase/migrations/023_teacher_parent_messages.sql`, then:
+
+```bash
+node --env-file=.env.local scripts/teacher-portal/seed-simulation-parent-messages.mjs
+```
