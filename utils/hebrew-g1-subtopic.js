@@ -3,7 +3,7 @@ import {
   HEBREW_G1_CONTENT_MAP,
   pickG1SubtopicId,
   getG1SubtopicSpec,
-} from "../data/hebrew-g1-content-map";
+} from "../data/hebrew-g1-content-map.js";
 
 /** כיתה א׳–ב׳ קל: אם צמצום לתת־נושא משאיר בריכה קטנה מדי — מרחיבים לפי סדר תתי־נושאים או חוזרים למלא. */
 export const EARLY_G12_SUBTOPIC_POOL_MIN = 18;

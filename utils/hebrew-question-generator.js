@@ -1,25 +1,25 @@
-import { GRADES, BLANK, TOPICS, GRADE_LEVELS } from './hebrew-constants';
-import { filterRichHebrewPool } from './hebrew-rich-question-bank';
+import { GRADES, BLANK, TOPICS, GRADE_LEVELS } from './hebrew-constants.js';
+import { filterRichHebrewPool } from './hebrew-rich-question-bank.js';
 import {
   inferHebrewLegacyMeta,
   scopeHebrewStemForGrade,
   stripHebrewQuestionPedagogicalLeadIn,
-} from './hebrew-legacy-metadata';
+} from './hebrew-legacy-metadata.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
 import {
   withG1SubtopicPreference,
   attachG1SubtopicParams,
   resolveG1ItemSubtopicId,
-} from './hebrew-g1-subtopic';
+} from './hebrew-g1-subtopic.js';
 import {
   withG2SubtopicPreference,
   attachG2SubtopicParams,
   resolveG2ItemSubtopicId,
-} from './hebrew-g2-subtopic';
+} from './hebrew-g2-subtopic.js';
 import {
   withUpperGradeSubtopicPreference,
   attachUpperGradeSubtopicParams,
-} from './hebrew-g3456-subtopic';
+} from './hebrew-g3456-subtopic.js';
 import { pickDiagnosticContractFields } from './diagnostic-question-contract.js';
 import {
   dedupeMcqOptionsInPlace,

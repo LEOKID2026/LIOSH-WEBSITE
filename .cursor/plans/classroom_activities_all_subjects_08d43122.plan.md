@@ -22,12 +22,12 @@ todos:
     status: completed
   - id: b3-copy-gate
     content: "Phase B3 pre-gate: Hebrew topic dropdown copy approved by owner"
-    status: pending
+    status: completed
   - id: b3-hebrew
-    content: "Phase B3: Hebrew adapter (MCQ-only; typing-mode excluded)"
-    status: pending
+    content: "Phase B3: Hebrew adapter (MCQ-only; typing-mode excluded) — implemented"
+    status: completed
   - id: b3-gate
-    content: "Phase B3 go/no-go: all acceptance criteria pass before B4 starts"
+    content: "Phase B3 go/no-go: awaiting owner approval (unit 9/9 + shared 31/31 + E2E 7/7 + regression 22/22 + build PASS)"
     status: pending
   - id: b4-english
     content: "Phase B4: English generator extraction + adapter"

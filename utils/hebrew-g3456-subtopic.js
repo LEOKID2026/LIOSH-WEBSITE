@@ -1,7 +1,7 @@
-import { HEBREW_G3_CONTENT_MAP, G3_FLAGS_DEFAULT } from "../data/hebrew-g3-content-map";
-import { HEBREW_G4_CONTENT_MAP, G4_FLAGS_DEFAULT } from "../data/hebrew-g4-content-map";
-import { HEBREW_G5_CONTENT_MAP, G5_FLAGS_DEFAULT } from "../data/hebrew-g5-content-map";
-import { HEBREW_G6_CONTENT_MAP, G6_FLAGS_DEFAULT } from "../data/hebrew-g6-content-map";
+import { HEBREW_G3_CONTENT_MAP, G3_FLAGS_DEFAULT } from "../data/hebrew-g3-content-map.js";
+import { HEBREW_G4_CONTENT_MAP, G4_FLAGS_DEFAULT } from "../data/hebrew-g4-content-map.js";
+import { HEBREW_G5_CONTENT_MAP, G5_FLAGS_DEFAULT } from "../data/hebrew-g5-content-map.js";
+import { HEBREW_G6_CONTENT_MAP, G6_FLAGS_DEFAULT } from "../data/hebrew-g6-content-map.js";
 
 const ALL_MODES_FALLBACK = ["learning", "challenge", "speed", "marathon", "practice"];
 

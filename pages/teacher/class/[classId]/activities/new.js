@@ -15,6 +15,7 @@ import {
   GRADES as GEOMETRY_GRADES,
   TOPICS as GEOMETRY_TOPICS,
 } from "../../../../../utils/geometry-constants.js";
+import { GRADES as HEBREW_GRADES, TOPICS as HEBREW_TOPICS } from "../../../../../utils/hebrew-constants.js";
 
 const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
   key,
@@ -26,6 +27,11 @@ function geometryTopicOptionsForGrade(gradeKey) {
   return topics
     .filter((t) => t !== "mixed")
     .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
+}
+
+function hebrewTopicOptionsForGrade(gradeKey) {
+  const topics = HEBREW_GRADES[gradeKey]?.topics || [];
+  return topics.map((key) => ({ key, label: HEBREW_TOPICS[key]?.name || key }));
 }
 
 export async function getServerSideProps(context) {
@@ -180,6 +186,10 @@ export default function TeacherNewActivityPage({ classId }) {
                   const opts = geometryTopicOptionsForGrade(gradeLevel);
                   if (opts.length) setTopic(opts[0].key);
                 }
+                if (next === "hebrew") {
+                  const opts = hebrewTopicOptionsForGrade(gradeLevel);
+                  if (opts.length) setTopic(opts[0].key);
+                }
               }}
             >
               {REPORT_SUBJECTS.filter((s) => ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s)).map((s) => (
@@ -215,6 +225,18 @@ export default function TeacherNewActivityPage({ classId }) {
                   </option>
                 ))}
               </select>
+            ) : subject === "hebrew" ? (
+              <select
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {hebrewTopicOptionsForGrade(gradeLevel).map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             ) : (
               <input
                 className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
@@ -236,7 +258,18 @@ export default function TeacherNewActivityPage({ classId }) {
             <select
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={gradeLevel}
-              onChange={(e) => setGradeLevel(e.target.value)}
+              onChange={(e) => {
+                const g = e.target.value;
+                setGradeLevel(g);
+                if (subject === "geometry") {
+                  const opts = geometryTopicOptionsForGrade(g);
+                  if (opts.length) setTopic(opts[0].key);
+                }
+                if (subject === "hebrew") {
+                  const opts = hebrewTopicOptionsForGrade(g);
+                  if (opts.length) setTopic(opts[0].key);
+                }
+              }}
             >
               {["g1", "g2", "g3", "g4", "g5", "g6"].map((g) => (
                 <option key={g} value={g}>
