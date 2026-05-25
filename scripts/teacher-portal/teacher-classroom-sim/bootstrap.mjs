@@ -18,7 +18,7 @@ import {
   studentLabel,
   requireEnv,
 } from "./config.mjs";
-import { saveManifest } from "./state.mjs";
+import { saveManifest, loadManifest } from "./state.mjs";
 
 function hashStudentSecret(value, secret) {
   return crypto.createHmac("sha256", secret).update(String(value)).digest("hex");
@@ -104,6 +104,30 @@ async function ensureTeacherProfile(admin, teacherId) {
   }
 }
 
+async function findStudentById(admin, studentId) {
+  const { data, error } = await admin
+    .from("students")
+    .select("id, full_name, grade_level, parent_id, is_active")
+    .eq("id", studentId)
+    .maybeSingle();
+  if (error) throw new Error(`students lookup failed: ${error.message}`);
+  return data;
+}
+
+async function findStudentByUsername(admin, username) {
+  const loginUsername = normalizeUsername(username);
+  const { data: codeRow, error: codeErr } = await admin
+    .from("student_access_codes")
+    .select("student_id")
+    .eq("login_username", loginUsername)
+    .eq("is_active", true)
+    .is("revoked_at", null)
+    .maybeSingle();
+  if (codeErr) throw new Error(`student_access_codes lookup failed: ${codeErr.message}`);
+  if (!codeRow?.student_id) return null;
+  return findStudentById(admin, codeRow.student_id);
+}
+
 async function findStudentByNameAndParent(admin, parentId, fullName) {
   const { data, error } = await admin
     .from("students")
@@ -150,10 +174,26 @@ async function ensureStudentAccessCode(admin, { studentId, username, pin, access
   return null;
 }
 
-async function ensureStudent(admin, { parentId, gradeKey, slot, pin, accessSecret, stats }) {
+async function ensureStudent(admin, { parentId, gradeKey, slot, pin, accessSecret, stats, manifestStudentId }) {
   const fullName = studentFullName(slot);
   const username = studentUsername(gradeKey, slot);
-  let row = await findStudentByNameAndParent(admin, parentId, fullName);
+  let row = null;
+
+  if (manifestStudentId) {
+    row = await findStudentById(admin, manifestStudentId);
+    if (row?.id && row.parent_id !== parentId) {
+      throw new Error(`student ${manifestStudentId} is not owned by sim parent`);
+    }
+  }
+  if (!row?.id) {
+    row = await findStudentByUsername(admin, username);
+    if (row?.id && row.parent_id !== parentId) {
+      throw new Error(`student username ${username} is not owned by sim parent`);
+    }
+  }
+  if (!row?.id) {
+    row = await findStudentByNameAndParent(admin, parentId, fullName);
+  }
 
   if (!row?.id) {
     const { data, error } = await admin
@@ -293,8 +333,11 @@ export async function bootstrapSimulation({
   });
   await ensureTeacherProfile(admin, teacherId);
 
+  const existingManifest = stateDir ? loadManifest(stateDir) : null;
+
   const students = [];
   for (let slot = 1; slot <= STUDENT_COUNT; slot++) {
+    const manifestStudentId = existingManifest?.students?.find((s) => s.slot === slot)?.id || null;
     const entry = await ensureStudent(admin, {
       parentId,
       gradeKey: grade,
@@ -302,6 +345,7 @@ export async function bootstrapSimulation({
       pin: studentPin,
       accessSecret,
       stats,
+      manifestStudentId,
     });
     students.push(entry);
   }
@@ -353,9 +397,6 @@ export async function resetSimActivity(admin, manifest, log = console.log) {
     if (!row?.id) continue;
     if (row.parent_id !== manifest.parentId) {
       throw new Error(`reset blocked: student ${s.id} is not owned by sim parent`);
-    }
-    if (!String(row.full_name || "").startsWith(SIM_STUDENT_NAME_PREFIX)) {
-      throw new Error(`reset blocked: student ${s.id} name does not match sim prefix`);
     }
     studentIds.push(row.id);
   }

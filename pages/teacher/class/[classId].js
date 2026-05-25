@@ -244,7 +244,7 @@ export default function TeacherClassReportPage({ classId }) {
                     className="flex flex-wrap justify-between gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm"
                   >
                     <div>
-                      <span>{s.studentFullNameMasked}</span>
+                      <span>{s.studentFullName || s.studentFullNameMasked}</span>
                       <span className="text-white/50 mr-2">
                         {(s.reasons || [])
                           .map(attentionReasonHe)
@@ -279,7 +279,7 @@ export default function TeacherClassReportPage({ classId }) {
                     {groupTierHe(tier)} ({list.length} תלמידים):
                   </span>{" "}
                   <span className="text-white/70">
-                    {list.map((x) => x.studentFullNameMasked).join("، ")}
+                    {list.map((x) => x.studentFullName || x.studentFullNameMasked).join("، ")}
                   </span>
                 </div>
               );

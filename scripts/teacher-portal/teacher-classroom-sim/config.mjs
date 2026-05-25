@@ -12,7 +12,31 @@ export const REPO_ROOT = resolve(__dirname, "../../..");
 
 export const SIM_PARENT_EMAIL = "parent-class-sim@liosh-dev.invalid";
 export const SIM_TEACHER_EMAIL = "teacher@leo.com";
-export const SIM_STUDENT_NAME_PREFIX = "סימולציה תלמיד";
+export const SIM_STUDENT_NAME_PREFIX = "סימולציה תלמיד"; // legacy lookup only
+
+/** Default visible names for the 20 simulation students (slot 1..20). */
+export const SIM_STUDENT_NAMES = Object.freeze([
+  "נועה כהן",
+  "איתי לוי",
+  "מאיה אברהם",
+  "דניאל מזרחי",
+  "יעל פרץ",
+  "עומר ביטון",
+  "תמר דוד",
+  "רון ישראלי",
+  "שירה גולן",
+  "יונתן חן",
+  "אלה ברק",
+  "אדם מלכה",
+  "רוני שפירא",
+  "ליאם אזולאי",
+  "מיקה סבן",
+  "אורי קפלן",
+  "נעמה צור",
+  "עידו אלון",
+  "אביגיל דיין",
+  "גיא רוזן",
+]);
 export const SIM_TEACHER_DISPLAY_NAME = "מורה LEO";
 export const SIM_PARENT_DISPLAY_NAME = "הורה סימולציה כיתה";
 export const TEACHER_PLAN_CODE = "teacher_basic_20";
@@ -105,6 +129,10 @@ export function studentUsername(gradeKey, slot) {
 }
 
 export function studentFullName(slot) {
+  const idx = Number(slot) - 1;
+  if (idx >= 0 && idx < SIM_STUDENT_NAMES.length) {
+    return SIM_STUDENT_NAMES[idx];
+  }
   return `${SIM_STUDENT_NAME_PREFIX} ${String(slot).padStart(2, "0")}`;
 }
 
