@@ -157,32 +157,77 @@ alter table public.student_activities enable row level security;
 -- No authenticated policies; service-role only (same as classroom_activities)
 ```
 
+### New table: `student_activity_status`
+
+One row per activity tracks the student's progress state — mirroring `classroom_activity_student_status` in the existing classroom activities schema.
+
+```sql
+create table public.student_activity_status (
+  id              uuid         primary key default gen_random_uuid(),
+  activity_id     uuid         not null
+                               references public.student_activities(id) on delete cascade,
+  student_id      uuid         not null
+                               references public.students(id) on delete cascade,
+  status          text         not null default 'not_started'
+                               check(status in ('not_started','in_progress','submitted','timed_out')),
+  started_at      timestamptz  null,
+  submitted_at    timestamptz  null,
+  last_seen_at    timestamptz  null,
+  answers_count   integer      not null default 0 check(answers_count >= 0),
+  correct_count   integer      not null default 0 check(correct_count >= 0),
+  score_pct       numeric(5,2) null check(score_pct is null or (score_pct between 0 and 100)),
+  created_at      timestamptz  not null default now(),
+  updated_at      timestamptz  not null default now(),
+  constraint student_activity_status_unique unique(activity_id, student_id)
+);
+
+alter table public.student_activity_status enable row level security;
+-- No authenticated policies; service-role only.
+```
+
 ### New table: `student_activity_attempts`
+
+One row per question attempt — normalized, matching `classroom_activity_attempts` exactly. The `unique(activity_id, student_id, question_index)` constraint ensures idempotent upserts during answer recording.
 
 ```sql
 create table public.student_activity_attempts (
-  id                  uuid        primary key default gen_random_uuid(),
-  activity_id         uuid        not null references public.student_activities(id) on delete cascade,
-  student_id          uuid        not null references public.students(id) on delete cascade,
-  status              text        not null default 'not_started'
-                      check(status in ('not_started','in_progress','submitted','timed_out')),
-  started_at          timestamptz null,
-  submitted_at        timestamptz null,
-  last_seen_at        timestamptz null,
-  answers_count       integer     not null default 0,
-  correct_count       integer     not null default 0,
-  score_pct           numeric(5,2) null check(score_pct between 0 and 100),
-  answer_log          jsonb       not null default '[]',
-  -- JSON array of {questionIndex, selectedAnswer, isCorrect, timeSpentMs, answeredAt}
-  created_at          timestamptz not null default now(),
-  updated_at          timestamptz not null default now(),
-  unique(activity_id, student_id)
+  id                   uuid        primary key default gen_random_uuid(),
+  activity_id          uuid        not null
+                                   references public.student_activities(id) on delete cascade,
+  student_id           uuid        not null
+                                   references public.students(id) on delete cascade,
+  question_index       integer     not null check(question_index >= 0),
+  skill_key            text        null,
+  question_snapshot    jsonb       not null default '{}',
+  selected_answer      text        null,
+  correct_answer       text        null,
+  is_correct           boolean     null,
+  time_spent_ms        integer     null,
+  hints_used           integer     not null default 0,
+  explanation_viewed   boolean     not null default false,
+  answered_at          timestamptz null,
+  created_at           timestamptz not null default now(),
+  constraint student_activity_attempts_unique
+    unique(activity_id, student_id, question_index)
 );
 
 alter table public.student_activity_attempts enable row level security;
+-- No authenticated policies; service-role only.
 ```
 
-Note: attempts are consolidated into one row per (activity, student) with a JSON answer log instead of per-row attempts. This simplifies the schema for the single-student case and avoids the complexity of `question_index` uniqueness checks.
+### Alignment with existing classroom activities pattern
+
+| Table | Classroom equivalent | Purpose |
+|---|---|---|
+| `student_activities` | `classroom_activities` | Activity metadata, question set, status |
+| `student_activity_status` | `classroom_activity_student_status` | Per-student progress row (one per activity/student pair) |
+| `student_activity_attempts` | `classroom_activity_attempts` | Per-question answer rows, normalized |
+
+This alignment means:
+- Scoring logic is identical and reusable.
+- Reporting reads the same normalized columns (`is_correct`, `score_pct`, `answers_count`).
+- Future diagnostics, per-question analytics, and hint tracking work without schema changes.
+- QA smoke tests can follow the same patterns as classroom activity tests.
 
 ### No SQL in this plan phase
 
@@ -229,8 +274,8 @@ flowchart TD
   teacherReport -->|"Create individual activity"| createAPI["POST /api/teacher/student-activities"]
   createAPI -->|"teacher_students check"| student_activities
   student_activities -->|"status → active"| activateAPI["POST /api/teacher/student-activities/[id]/status"]
-  activateAPI -->|"inserts"| student_activity_attempts
-  student_activity_attempts -->|"student polls"| studentListAPI["GET /api/student/activities"]
+  activateAPI -->|"seeds status row"| student_activity_status
+  student_activity_status -->|"student polls"| studentListAPI["GET /api/student/activities"]
   studentListAPI --> studentHome["Student home individual section"]
   studentHome --> activityPlayer["/student/activity/[activityId]?scope=student"]
 ```
@@ -242,6 +287,17 @@ draft → active → closed → archived
 ```
 
 No `paused` state (no broadcast sequencing for one student).
+
+### Activation: seeding `student_activity_status`
+
+On `activate`, a `student_activity_status` row is upserted for `(activity_id, student_id)` with `status = 'not_started'`. This matches the classroom pattern where `seedStudentStatusRowsForClass` upserts `classroom_activity_student_status` rows for each class member. The single-student case simply seeds exactly one row.
+
+On each answer recorded:
+- Upsert `student_activity_attempts` row for `(activity_id, student_id, question_index)`.
+- Update `student_activity_status` counters (`answers_count`, `correct_count`) and `last_seen_at`.
+
+On submit/timeout:
+- Update `student_activity_status.status`, `submitted_at`, `score_pct`.
 
 ### Teacher ownership/access check for individual activities
 
@@ -362,7 +418,7 @@ Activity card: same component as class activities; add a small `scope` badge whe
 
 ### No data leakage
 
-`loadActivityForStudent` for individual scope verifies `student_activity_attempts.student_id === auth.studentId`. Students cannot access other students' individual activities.
+`loadActivityForStudent` for individual scope verifies `student_activity_status.student_id === auth.studentId`. Students cannot access other students' individual activities.
 
 ---
 
@@ -402,8 +458,9 @@ These are display metrics only; no new enforcement limits.
 
 Contents:
 - Create `student_activities` table
-- Create `student_activity_attempts` table
-- Enable RLS on both, no authenticated policies
+- Create `student_activity_status` table (one progress row per activity/student pair)
+- Create `student_activity_attempts` table (one row per question attempt; normalized)
+- Enable RLS on all three tables, no authenticated policies
 - Add `individual_activities` to `teacher_plans.supported_features` if feature-flag column exists, else handled at app layer
 
 **Migration file written at start of P2 only. Owner applies manually before any code referencing the new tables is activated.**
@@ -416,8 +473,8 @@ No changes to existing migrations 019–025.
 
 | File | Purpose |
 |---|---|
-| `lib/teacher-server/student-activity.server.js` | Create, list, detail, status transitions, report for individual activities |
-| `lib/teacher-server/student-activity-play.server.js` | Student start, answer, submit, list (individual scope) |
+| `lib/teacher-server/student-activity.server.js` | Create, list, detail, status transitions, report; reads all three tables (`student_activities`, `student_activity_status`, `student_activity_attempts`) |
+| `lib/teacher-server/student-activity-play.server.js` | Student start (seeds `student_activity_status` row), answer (upserts `student_activity_attempts` row + updates status counters), submit, list (individual scope) |
 
 Existing files modified:
 
