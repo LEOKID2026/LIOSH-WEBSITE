@@ -33,7 +33,6 @@ export function redirectAfterStudentLogin(router) {
 
 export default function StudentLoginPage() {
   const router = useRouter();
-  const [authView, setAuthView] = useState("default");
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [busy, setBusy] = useState(false);
@@ -89,11 +88,7 @@ export default function StudentLoginPage() {
       });
       const payload = await res.json();
       if (!res.ok) {
-        setMessage(
-          authView === "teacher_code"
-            ? "שם המשתמש או הקוד שגויים."
-            : payload.error || "כניסה נכשלה"
-        );
+        setMessage("שם המשתמש או הקוד שגויים.");
         return;
       }
 
@@ -111,104 +106,41 @@ export default function StudentLoginPage() {
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto px-4 py-10">
+      <div className="max-w-md mx-auto px-4 py-10" dir="rtl" lang="he">
         <h1 className="text-2xl font-bold mb-6">כניסת תלמיד</h1>
 
-        {authView === "default" ? (
-          <>
-            <form onSubmit={submitLogin} className="space-y-3">
-              <div>
-                <label className="text-sm text-white/80">שם משתמש</label>
-                <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="שם משתמש"
-                  required
-                  autoComplete="username"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-white/80">PIN</label>
-                <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  placeholder="PIN"
-                  required
-                  inputMode="numeric"
-                  autoComplete="current-password"
-                />
-              </div>
-              <button
-                className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
-                disabled={busy}
-                type="submit"
-              >
-                {busy ? "מבצע פעולה..." : "כניסה"}
-              </button>
-            </form>
-
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthView("teacher_code");
-                  setMessage("");
-                }}
-                className="w-full rounded border border-white/20 bg-white/5 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10"
-              >
-                קיבלתי קוד מהמורה
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={() => {
-                setAuthView("default");
-                setMessage("");
-              }}
-              className="mb-4 text-sm text-amber-300 hover:underline"
-            >
-              ← חזרה לכניסה רגילה
-            </button>
-
-            <form onSubmit={submitLogin} className="space-y-3 rounded-xl border border-white/15 bg-black/30 p-4">
-              <label className="block text-sm">
-                <span className="text-white/80">שם משתמש</span>
-                <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="שם המשתמש שקיבלתם מהמורה"
-                  required
-                  autoComplete="username"
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="text-white/80">קוד כניסה</span>
-                <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  placeholder="הקוד שקיבלתם מהמורה"
-                  required
-                  inputMode="numeric"
-                  autoComplete="current-password"
-                />
-              </label>
-              <button
-                className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
-                disabled={busy}
-                type="submit"
-              >
-                {busy ? "מתחבר…" : "כניסה ללמידה"}
-              </button>
-            </form>
-          </>
-        )}
+        <form onSubmit={submitLogin} className="space-y-3">
+          <label className="block text-sm">
+            <span className="text-white/80">שם משתמש</span>
+            <input
+              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="שם משתמש"
+              required
+              autoComplete="username"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="text-white/80">קוד כניסה</span>
+            <input
+              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              value={pin}
+              onChange={(e) => setPin(e.target.value)}
+              placeholder="קוד כניסה"
+              required
+              inputMode="numeric"
+              autoComplete="current-password"
+            />
+          </label>
+          <button
+            className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
+            disabled={busy}
+            type="submit"
+          >
+            {busy ? "מתחבר…" : "כניסה ללמידה"}
+          </button>
+        </form>
 
         {message ? (
           <p className="mt-3 text-sm text-red-300" role="alert">

@@ -39,28 +39,28 @@ function trackApi(page: Page, pattern: RegExp) {
   };
 }
 
-async function openParentTeacherCodeForm(page: Page) {
-  await page.goto("/parent/login", { waitUntil: "domcontentloaded" });
-  await page.getByRole("button", { name: "קיבלתי קוד מהמורה" }).click();
-  await expect(page.getByRole("button", { name: "כניסה לדוח הילד" })).toBeVisible();
+async function openParentLogin(page: Page) {
+  await page.goto("/parent/login", { waitUntil: "load" });
+  await page.waitForLoadState("domcontentloaded");
+  await expect(page.getByPlaceholder("הקלידו אימייל או שם משתמש שקיבלתם מהמורה")).toBeVisible({
+    timeout: 30_000,
+  });
 }
 
-async function submitParentTeacherCode(page: Page, username: string, pin: string) {
-  await page.getByPlaceholder("שם המשתמש שקיבלתם מהמורה").fill(username);
-  await page.getByPlaceholder("הקוד שקיבלתם מהמורה").fill(pin);
-  await page.getByRole("button", { name: "כניסה לדוח הילד" }).click();
+async function submitParentLogin(page: Page, identifier: string, secret: string) {
+  await page.getByPlaceholder("הקלידו אימייל או שם משתמש שקיבלתם מהמורה").fill(identifier);
+  await page.getByPlaceholder("הקלידו סיסמה או קוד כניסה").fill(secret);
+  await page.locator('form button[type="submit"]').click();
 }
 
-async function openStudentTeacherCodeForm(page: Page) {
+async function openStudentLogin(page: Page) {
   await page.goto("/student/login", { waitUntil: "domcontentloaded" });
   await expect(page.getByText("בודקים חיבור...")).toHaveCount(0, { timeout: 30_000 });
-  await page.getByRole("button", { name: "קיבלתי קוד מהמורה" }).click();
-  await expect(page.getByRole("button", { name: "כניסה ללמידה" })).toBeVisible();
 }
 
-async function submitStudentTeacherCode(page: Page, username: string, pin: string) {
-  await page.getByPlaceholder("שם המשתמש שקיבלתם מהמורה").fill(username);
-  await page.getByPlaceholder("הקוד שקיבלתם מהמורה").fill(pin);
+async function submitStudentLogin(page: Page, username: string, pin: string) {
+  await page.getByPlaceholder("שם משתמש").fill(username);
+  await page.getByPlaceholder("קוד כניסה").fill(pin);
   await page.getByRole("button", { name: "כניסה ללמידה" }).click();
 }
 
@@ -72,13 +72,17 @@ async function assertNo404(page: Page) {
 test.describe("teacher code access — full browser flows @teacher-code-access", () => {
   test.describe.configure({ mode: "serial" });
 
+  test.beforeEach(async ({ context }) => {
+    await context.clearCookies();
+  });
+
   test("1. parent code login → child report renders (desktop)", async ({ page }, testInfo) => {
     const api = trackApi(page, /\/api\/(guardian|parent)/);
     const pageErrors: string[] = [];
     page.on("pageerror", (e) => pageErrors.push(String(e)));
 
-    await openParentTeacherCodeForm(page);
-    await submitParentTeacherCode(page, PARENT_USER, PARENT_PIN);
+    await openParentLogin(page);
+    await submitParentLogin(page, PARENT_USER, PARENT_PIN);
 
     await page.waitForURL(/\/parent\/child-report\/?(\?.*)?$/, { timeout: 45_000 });
     await assertNo404(page);
@@ -108,11 +112,12 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
   });
 
   test("2. parent invalid old credentials leo-01", async ({ page }) => {
-    await openParentTeacherCodeForm(page);
-    await submitParentTeacherCode(page, OLD_PARENT_USER, PARENT_PIN);
+    await openParentLogin(page);
+    await submitParentLogin(page, OLD_PARENT_USER, PARENT_PIN);
 
     await expect(page).toHaveURL(/\/parent\/login/);
     await expect(page.getByText(/שם המשתמש או הקוד שגויים|פגה|בוטלה/u)).toBeVisible();
+    await expect(page.getByRole("button", { name: "קיבלתי קוד מהמורה" })).toHaveCount(0);
     await assertNo404(page);
   });
 
@@ -121,8 +126,8 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
     const pageErrors: string[] = [];
     page.on("pageerror", (e) => pageErrors.push(String(e)));
 
-    await openStudentTeacherCodeForm(page);
-    await submitStudentTeacherCode(page, STUDENT_USER, STUDENT_PIN);
+    await openStudentLogin(page);
+    await submitStudentLogin(page, STUDENT_USER, STUDENT_PIN);
 
     await page.waitForURL(/\/student\/home\/?(\?.*)?$/, { timeout: 45_000 });
     await assertNo404(page);
@@ -151,18 +156,19 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
   });
 
   test("4. student invalid old credentials simg3-01", async ({ page }) => {
-    await openStudentTeacherCodeForm(page);
-    await submitStudentTeacherCode(page, OLD_STUDENT_USER, STUDENT_PIN);
+    await openStudentLogin(page);
+    await submitStudentLogin(page, OLD_STUDENT_USER, STUDENT_PIN);
 
     await expect(page).toHaveURL(/\/student\/login/);
     await expect(page.getByText(/שם המשתמש או הקוד שגויים|שגויים/u)).toBeVisible();
+    await expect(page.getByRole("button", { name: "קיבלתי קוד מהמורה" })).toHaveCount(0);
     await assertNo404(page);
   });
 
   test("5a. mobile viewport — parent code login → child report", async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await openParentTeacherCodeForm(page);
-    await submitParentTeacherCode(page, PARENT_USER, PARENT_PIN);
+    await openParentLogin(page);
+    await submitParentLogin(page, PARENT_USER, PARENT_PIN);
 
     await page.waitForURL(/\/parent\/child-report/, { timeout: 45_000 });
     await assertNo404(page);
@@ -179,8 +185,8 @@ test.describe("teacher code access — full browser flows @teacher-code-access",
 
   test("5b. mobile viewport — student code login → student home", async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await openStudentTeacherCodeForm(page);
-    await submitStudentTeacherCode(page, STUDENT_USER, STUDENT_PIN);
+    await openStudentLogin(page);
+    await submitStudentLogin(page, STUDENT_USER, STUDENT_PIN);
 
     await page.waitForURL(/\/student\/home/, { timeout: 45_000 });
     await assertNo404(page);

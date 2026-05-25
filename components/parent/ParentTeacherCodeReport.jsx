@@ -48,7 +48,11 @@ export default function ParentTeacherCodeReport({
       if (!mounted) return;
 
       if (me.status === 401 || me.status === 503) {
-        router.replace(loginRedirectPath);
+        if (typeof window !== "undefined") {
+          window.location.assign(loginRedirectPath);
+        } else {
+          router.replace(loginRedirectPath);
+        }
         return;
       }
 
