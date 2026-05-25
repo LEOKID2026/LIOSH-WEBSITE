@@ -11,8 +11,8 @@ import { PRIVACY_VERSION, TERMS_VERSION } from "../../data/legal/sitePolicies.he
 import {
   fetchParentTeacherCodeSessionStatus,
   mapParentTeacherCodeLoginError,
-  parentTeacherCodeReportPath,
   postParentTeacherCodeLogin,
+  redirectAfterParentTeacherCodeLogin,
 } from "../../lib/parent-client/parent-teacher-code-access.js";
 
 async function storeSignupPolicyAcceptance(accessToken) {
@@ -75,7 +75,7 @@ export default function ParentLoginPage() {
     let mounted = true;
     fetchParentTeacherCodeSessionStatus().then((status) => {
       if (!mounted || status !== 200) return;
-      router.replace(parentTeacherCodeReportPath());
+      redirectAfterParentTeacherCodeLogin();
     });
     return () => {
       mounted = false;
@@ -89,7 +89,7 @@ export default function ParentLoginPage() {
     try {
       const result = await postParentTeacherCodeLogin(teacherUsername, teacherPin);
       if (result.status === 200) {
-        router.replace(parentTeacherCodeReportPath());
+        redirectAfterParentTeacherCodeLogin();
         return;
       }
       setTeacherCodeError(mapParentTeacherCodeLoginError(result.body));

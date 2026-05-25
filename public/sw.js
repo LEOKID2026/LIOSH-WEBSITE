@@ -82,6 +82,8 @@ const ESSENTIAL_PAGES = [
   '/learning/index',
   '/learning/parent-report',
   '/learning/parent-report-detailed',
+  '/parent/login',
+  '/parent/child-report',
   '/offline',
 ];
 
