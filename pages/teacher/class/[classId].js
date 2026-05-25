@@ -3,6 +3,7 @@ import Link from "next/link";
 import Layout from "../../../components/Layout";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
 import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
+import TeacherClassActivitiesNav from "../../../components/teacher-portal/TeacherClassActivitiesNav";
 import {
   TeacherReportError,
   TeacherReportForbidden,
@@ -124,6 +125,7 @@ export default function TeacherClassReportPage({ classId }) {
         data-member-count={String(memberCount)}
       >
         <TeacherPortalShell backHref="/teacher/dashboard" title={`דוח כיתה: ${className}`}>
+          <TeacherClassActivitiesNav classId={classId} />
           <p className="text-white/60 text-sm mb-2">
             {memberCount} תלמידים פעילים · נתונים מ-30 הימים האחרונים
           </p>

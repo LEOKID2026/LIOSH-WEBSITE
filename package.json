@@ -409,6 +409,8 @@
     "test:canonical-state-e2e": "tsx scripts/canonical-topic-state-e2e.mjs",
     "test:e2e": "playwright test tests/e2e",
     "test:e2e:teacher-code-access": "node scripts/teacher-portal/run-teacher-code-e2e.mjs",
+    "test:e2e:teacher-activities": "playwright test tests/e2e/teacher-activities.spec.ts",
+    "teacher:activity-sim": "node --env-file=.env.local --env-file=.env.e2e.local scripts/teacher-portal/teacher-activity-sim.mjs",
     "test:e2e:headed": "playwright test tests/e2e --headed",
     "test:e2e:ui": "playwright test tests/e2e --ui",
     "test:no-positive-conclusion-decisioning": "node -e \"const { execSync } = require('child_process'); const out = execSync('npx rg positiveConclusionAllowed --glob=*.js --glob=!*output-gating.js --glob=!*build-canonical-state.js --glob=!*node_modules* utils/', { encoding: 'utf8', stdio: ['pipe','pipe','pipe'] }).toString(); const lines = out.split('\\n').filter(l => /if\\s*\\(|\\?|&&|\\|\\|/.test(l) && !/deprecated|_deprecated/.test(l)); if(lines.length > 0) { console.error('FAIL: positiveConclusionAllowed used in decisioning:', lines); process.exit(1); } console.log('PASS: no decisioning usage of positiveConclusionAllowed found');\""

@@ -1,0 +1,337 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import Layout from "../../../components/Layout";
+import {
+  activityModeLabelHe,
+  isClassroomActivitiesEnabled,
+} from "../../../lib/classroom-activities/classroom-activities-labels.client.js";
+
+export async function getServerSideProps(context) {
+  if (process.env.NEXT_PUBLIC_ACTIVITIES_ENABLED === "false") {
+    return { redirect: { destination: "/student/home", permanent: false } };
+  }
+  return { props: { activityId: String(context.params?.activityId || "") } };
+}
+
+export default function StudentActivityPage({ activityId }) {
+  const router = useRouter();
+  const [phase, setPhase] = useState("loading");
+  const [activity, setActivity] = useState(null);
+  const [questionSet, setQuestionSet] = useState([]);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [answerInput, setAnswerInput] = useState("");
+  const [feedback, setFeedback] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [finished, setFinished] = useState(null);
+  const [liveIdx, setLiveIdx] = useState(null);
+  const [error, setError] = useState("");
+
+  const startSession = useCallback(async () => {
+    setPhase("loading");
+    setError("");
+    try {
+      const res = await fetch(`/api/student/activities/${encodeURIComponent(activityId)}/start`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        router.replace("/student/login");
+        return;
+      }
+      if (!res.ok || json?.ok !== true) {
+        setError(json?.error || json?.message || "לא ניתן להתחיל את הפעילות");
+        setPhase("error");
+        return;
+      }
+      setActivity(json.activity);
+      if (json.alreadyCompleted) {
+        setFinished({
+          scorePct: json.scorePct ?? null,
+          correctCount: json.correctCount ?? 0,
+          questionCount: json.activity?.questionCount ?? 0,
+          studentStatus: json.studentStatus,
+        });
+        setPhase("done");
+        return;
+      }
+      setQuestionSet(json.questionSet || []);
+      if (json.activity?.mode === "live_lesson") {
+        setCurrentIdx(json.activity?.currentQuestionIdx ?? 0);
+      }
+      setPhase("ready");
+    } catch {
+      setError("שגיאת רשת");
+      setPhase("error");
+    }
+  }, [activityId, router]);
+
+  useEffect(() => {
+    if (!isClassroomActivitiesEnabled()) {
+      router.replace("/student/home");
+      return;
+    }
+    void startSession();
+  }, [startSession, router]);
+
+  useEffect(() => {
+    if (!activity || activity.mode !== "live_lesson") return undefined;
+    const poll = async () => {
+      try {
+        const res = await fetch(
+          `/api/student/activities/${encodeURIComponent(activityId)}/live-state`,
+          { credentials: "include", cache: "no-store" }
+        );
+        const json = await res.json().catch(() => ({}));
+        if (json?.ok && json.currentQuestionIdx != null) {
+          setLiveIdx(json.currentQuestionIdx);
+          setCurrentIdx(json.currentQuestionIdx);
+        }
+        if (json?.activityStatus === "paused") {
+          setFeedback({ type: "wait", message: "המורה השהה את השיעור — המתינו" });
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+    poll();
+    const id = setInterval(poll, 3000);
+    return () => clearInterval(id);
+  }, [activity, activityId]);
+
+  const effectiveIdx = useMemo(() => {
+    if (activity?.mode === "live_lesson") {
+      return liveIdx != null ? liveIdx : currentIdx;
+    }
+    return currentIdx;
+  }, [activity, liveIdx, currentIdx]);
+
+  const currentQuestion = questionSet[effectiveIdx];
+
+  const submitAnswer = async () => {
+    if (!currentQuestion || busy) return;
+    setBusy(true);
+    setFeedback(null);
+    try {
+      const res = await fetch(`/api/student/activities/${encodeURIComponent(activityId)}/answer`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionIndex: effectiveIdx,
+          selectedAnswer: answerInput,
+          timeSpentMs: 5000,
+          hintsUsed: 0,
+          explanationViewed: false,
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json?.ok !== true) {
+        setFeedback({ type: "error", message: json?.error || "שמירת תשובה נכשלה" });
+        return;
+      }
+      const showExplanation =
+        activity?.mode === "guided_practice" || activity?.mode === "homework";
+      setFeedback({
+        type: json.isCorrect ? "correct" : "wrong",
+        message: json.isCorrect ? "נכון!" : "לא נכון",
+        explanation: showExplanation ? json.explanation : undefined,
+        correctAnswer: showExplanation ? json.correctAnswer : undefined,
+      });
+      if (activity?.mode !== "live_lesson" && effectiveIdx < questionSet.length - 1) {
+        setTimeout(() => {
+          setCurrentIdx((i) => i + 1);
+          setAnswerInput("");
+          setFeedback(null);
+        }, showExplanation ? 1500 : 600);
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const submitActivity = async () => {
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/student/activities/${encodeURIComponent(activityId)}/submit`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (json?.ok) {
+        setFinished({
+          scorePct: json.scorePct,
+          correctCount: json.correctCount,
+          questionCount: json.questionCount,
+        });
+        setPhase("done");
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (phase === "loading") {
+    return (
+      <Layout>
+        <div className="min-h-[50vh] flex items-center justify-center text-white/80">טוען פעילות…</div>
+      </Layout>
+    );
+  }
+
+  if (phase === "error") {
+    return (
+      <Layout>
+        <div className="max-w-lg mx-auto px-4 py-12 text-center" dir="rtl">
+          <p className="text-red-200 mb-4">{error}</p>
+          <Link href="/student/home" className="text-amber-300 underline">
+            חזרה לבית
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (phase === "done" && finished) {
+    return (
+      <Layout>
+        <div className="max-w-lg mx-auto px-4 py-12 text-center" dir="rtl">
+          <h1 className="text-2xl font-bold text-white mb-4">סיימת את הפעילות!</h1>
+          <p className="text-3xl font-bold text-emerald-300 tabular-nums mb-2">{finished.scorePct}%</p>
+          <p className="text-white/70 text-sm mb-6">
+            {finished.correctCount} נכונות מתוך {finished.questionCount}
+          </p>
+          <Link
+            href="/student/home"
+            className="inline-flex rounded-xl bg-emerald-500 text-black font-bold px-6 py-3"
+          >
+            חזרה לבית
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
+
+  const isQuiz = activity?.mode === "quiz";
+  const showHints = activity?.mode === "guided_practice" || activity?.mode === "homework";
+  const progressPct =
+    questionSet.length > 0 ? Math.round(((effectiveIdx + 1) / questionSet.length) * 100) : 0;
+
+  return (
+    <Layout>
+      <div className="max-w-2xl mx-auto px-4 py-8" dir="rtl" lang="he">
+        <Link href="/student/home" className="text-sm text-white/60 hover:text-white mb-4 inline-block">
+          ← חזרה לבית
+        </Link>
+
+        <h1 className="text-2xl font-bold text-white mb-1">{activity?.title}</h1>
+        <p className="text-white/60 text-sm mb-4">
+          {activityModeLabelHe(activity?.mode)} · שאלה {effectiveIdx + 1} מתוך {questionSet.length}
+        </p>
+
+        <div className="h-2 rounded-full bg-black/40 mb-6 overflow-hidden">
+          <div
+            className="h-full bg-cyan-500 transition-all"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+
+        {activity?.mode === "live_lesson" && activity?.activityStatus === "paused" ? (
+          <p className="text-amber-200 text-center py-8">ממתינים למורה…</p>
+        ) : currentQuestion ? (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+            <p className="text-lg text-white mb-6 leading-relaxed" dir="auto">
+              {currentQuestion.question}
+            </p>
+            {Array.isArray(currentQuestion.choices) && currentQuestion.choices.length ? (
+              <div className="space-y-2 mb-4">
+                {currentQuestion.choices.map((c, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setAnswerInput(String(c))}
+                    className={`w-full text-right px-4 py-3 rounded-xl border ${
+                      answerInput === String(c)
+                        ? "border-cyan-400 bg-cyan-500/20"
+                        : "border-white/15 hover:bg-white/5"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <input
+                className="w-full rounded-xl bg-black/30 border border-white/20 px-4 py-3 text-white mb-4"
+                value={answerInput}
+                onChange={(e) => setAnswerInput(e.target.value)}
+                placeholder="הקלידו תשובה"
+                dir="auto"
+              />
+            )}
+            {showHints && currentQuestion.hint ? (
+              <p className="text-xs text-white/50 mb-3">רמז: {currentQuestion.hint}</p>
+            ) : null}
+            {feedback?.type === "wait" ? (
+              <p className="text-amber-200 text-sm mb-3">{feedback.message}</p>
+            ) : null}
+            {feedback && feedback.type !== "wait" ? (
+              <div
+                className={`mb-4 text-sm rounded-lg px-3 py-2 ${
+                  feedback.type === "correct"
+                    ? "bg-emerald-500/20 text-emerald-100"
+                    : feedback.type === "error"
+                      ? "bg-red-500/20 text-red-100"
+                      : "bg-amber-500/20 text-amber-100"
+                }`}
+              >
+                <p>{feedback.message}</p>
+                {feedback.correctAnswer ? (
+                  <p className="mt-1">תשובה נכונה: {feedback.correctAnswer}</p>
+                ) : null}
+                {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
+              </div>
+            ) : null}
+            <button
+              type="button"
+              disabled={busy || !answerInput.trim()}
+              onClick={submitAnswer}
+              className="w-full rounded-xl bg-cyan-500 text-black font-bold py-3 disabled:opacity-50"
+            >
+              שליחת תשובה
+            </button>
+          </div>
+        ) : null}
+
+        {activity?.mode !== "live_lesson" ? (
+          <div className="mt-6 flex flex-wrap gap-2 justify-center">
+            {effectiveIdx < questionSet.length - 1 && !isQuiz ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
+                  setAnswerInput("");
+                  setFeedback(null);
+                }}
+                className="px-4 py-2 rounded-xl border border-white/20 text-sm"
+              >
+                שאלה הבאה
+              </button>
+            ) : null}
+            <button
+              type="button"
+              disabled={busy}
+              onClick={submitActivity}
+              className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold text-sm"
+            >
+              סיום והגשה
+            </button>
+          </div>
+        ) : null}
+      </div>
+    </Layout>
+  );
+}
