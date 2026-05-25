@@ -70,12 +70,21 @@ export default function ParentTeacherCodeReport({
         return;
       }
 
-      if (reportRes.status !== 200 || !reportRes.body?.summary) {
+      const envelope = reportRes.body || {};
+      const reportPayload =
+        envelope.report && typeof envelope.report === "object" ? envelope.report : envelope;
+
+      if (reportRes.status !== 200 || envelope.ok !== true) {
         setState("report_error");
         return;
       }
 
-      setReport(reportRes.body);
+      setReport({
+        ...reportPayload,
+        student: envelope.student || reportPayload.student || null,
+        range: envelope.range || reportPayload.range || null,
+        reportMeta: envelope.reportMeta || reportPayload.reportMeta || null,
+      });
       setState("ready");
     }
 
