@@ -54,8 +54,8 @@ test("classroom activity preview supported subjects", () => {
   assert.equal(isActivityPreviewSubjectSupported("moledet_geography"), true);
   assert.equal(isActivityPreviewSubjectSupported("geometry"), true);
   assert.equal(isActivityPreviewSubjectSupported("hebrew"), true);
+  assert.equal(isActivityPreviewSubjectSupported("english"), true);
   assert.equal(isActivityPreviewSubjectSupported("moledet-geography"), false);
-  assert.equal(isActivityPreviewSubjectSupported("english"), false);
 });
 
 test("normalizeScienceTopic maps Hebrew labels to bank keys", () => {
@@ -444,6 +444,84 @@ test("hebrew tamper: scoring uses server answer not body.correctAnswer", async (
     subject: "hebrew",
     gradeLevel: "g4",
     topic: "comprehension",
+    difficulty: "easy",
+    count: 1,
+  });
+  const serverCorrect = extractCorrectAnswerFromQuestion(qs[0]);
+  const wrongChoice = qs[0].choices.find((c) => c !== serverCorrect);
+  assert.equal(answersMatch(wrongChoice, serverCorrect), false);
+});
+
+test("stripQuestionSetForStudent removes correctAnswer from english item", async () => {
+  const qs = await generateActivityQuestionSetClient({
+    subject: "english",
+    gradeLevel: "g3",
+    topic: "grammar",
+    difficulty: "easy",
+    count: 1,
+  });
+  const out = stripQuestionSetForStudent(qs, "guided_practice");
+  assert.equal(out[0].correctAnswer, undefined);
+  assert.equal(out[0].params?.answerMode, "choice");
+  assert.ok(out[0].choices?.length >= 2);
+});
+
+test("quiz mode strips hint and explanation from english start payload", async () => {
+  const qs = await generateActivityQuestionSetClient({
+    subject: "english",
+    gradeLevel: "g3",
+    topic: "translation",
+    difficulty: "easy",
+    count: 1,
+  });
+  const withSecrets = qs.map((q) => ({
+    ...q,
+    hint: "secret",
+    explanation: "secret explanation",
+  }));
+  const out = stripQuestionSetForStudent(withSecrets, "quiz");
+  assert.equal(out[0].hint, undefined);
+  assert.equal(out[0].explanation, undefined);
+});
+
+test("english answersMatch case and semantics", () => {
+  assert.equal(answersMatch("am", "am"), true);
+  assert.equal(answersMatch("AM", "am"), true);
+  assert.equal(answersMatch("is", "am"), false);
+  assert.equal(answersMatch("כלב", "כלב"), true);
+});
+
+test("english correct MCQ scores via answersMatch", async () => {
+  const qs = await generateActivityQuestionSetClient({
+    subject: "english",
+    gradeLevel: "g3",
+    topic: "grammar",
+    difficulty: "easy",
+    count: 1,
+  });
+  const correct = extractCorrectAnswerFromQuestion(qs[0]);
+  assert.equal(answersMatch(correct, correct), true);
+});
+
+test("english wrong MCQ scores false via answersMatch", async () => {
+  const qs = await generateActivityQuestionSetClient({
+    subject: "english",
+    gradeLevel: "g3",
+    topic: "grammar",
+    difficulty: "easy",
+    count: 1,
+  });
+  const correct = extractCorrectAnswerFromQuestion(qs[0]);
+  const wrong = qs[0].choices.find((c) => c !== correct);
+  assert.ok(wrong);
+  assert.equal(answersMatch(wrong, correct), false);
+});
+
+test("english tamper: scoring uses server answer not body.correctAnswer", async () => {
+  const qs = await generateActivityQuestionSetClient({
+    subject: "english",
+    gradeLevel: "g3",
+    topic: "translation",
     difficulty: "easy",
     count: 1,
   });

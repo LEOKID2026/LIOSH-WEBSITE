@@ -1013,3 +1013,163 @@ test.describe("classroom activities hebrew B3 @hebrew-b3", () => {
     expect((await startRes.json()).alreadyCompleted).toBe(true);
   });
 });
+
+/** Phase B4 gate: English classroom activities (MCQ-only, pre-expanded choices). */
+test.describe("classroom activities english B4 @english-b4", () => {
+  test.describe.configure({ mode: "serial" });
+
+  const ENGLISH_GRADE = "g3";
+  const ENGLISH_TOPIC = "grammar";
+  const ENGLISH_DIFFICULTY = "easy";
+  const ENGLISH_COUNT = 3;
+
+  let teacherBearer = "";
+  let classId = "";
+  let englishActivityId = "";
+  let studentCookie = "";
+  let englishQuestionSet: Array<{
+    question: string;
+    correctAnswer: string;
+    choices: string[];
+    subject: string;
+    topic: string;
+    params?: { answerMode?: string };
+  }> = [];
+
+  test.beforeAll(async ({ request }) => {
+    const token = await teacherToken(request);
+    test.skip(!token, "Supabase teacher credentials unavailable");
+    teacherBearer = token!;
+
+    const classesRes = await request.get("/api/teacher/classes", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+    });
+    if (!classesRes.ok()) {
+      test.skip(true, "Teacher classes API unavailable (schema or auth)");
+    }
+    const classesBody = await classesRes.json();
+    const cls = classesBody?.data?.classes?.[0];
+    test.skip(!cls?.classId, "No teacher class for english activity tests");
+    classId = cls.classId;
+
+    const loginRes = await request.post("/api/student/login", {
+      data: { username: STUDENT_USER, pin: STUDENT_PIN },
+    });
+    if (loginRes.ok()) {
+      const setCookie = loginRes.headers()["set-cookie"] || "";
+      const m = setCookie.match(/liosh_student_session=([^;]+)/);
+      if (m) studentCookie = decodeURIComponent(m[1]);
+    }
+
+    const helper = path.join(E2E_ROOT, "tests/e2e/helpers/generate-english-activity-preview.mjs");
+    const json = execFileSync(process.execPath, [helper], {
+      cwd: E2E_ROOT,
+      encoding: "utf-8",
+      env: {
+        ...process.env,
+        E2E_ENGLISH_GRADE: ENGLISH_GRADE,
+        E2E_ENGLISH_TOPIC: ENGLISH_TOPIC,
+        E2E_ENGLISH_DIFFICULTY: ENGLISH_DIFFICULTY,
+        E2E_ENGLISH_COUNT: String(ENGLISH_COUNT),
+      },
+    });
+    englishQuestionSet = JSON.parse(json);
+  });
+
+  test("[B4-ENG-01] english preview generates N English MCQ items", async () => {
+    expect(englishQuestionSet.length).toBe(ENGLISH_COUNT);
+    for (const q of englishQuestionSet) {
+      expect(q.subject).toBe("english");
+      expect(q.topic).toBe(ENGLISH_TOPIC);
+      expect(Array.isArray(q.choices)).toBe(true);
+      expect(q.choices.length).toBeGreaterThanOrEqual(2);
+      expect(q.choices).toContain(q.correctAnswer);
+      expect(q.params?.answerMode).toBe("choice");
+    }
+  });
+
+  test("[B4-ENG-02] save english draft returns activityId", async ({ request }) => {
+    test.skip(!classId || !englishQuestionSet.length, "missing class or preview");
+    const res = await request.post("/api/teacher/activities", {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: {
+        classId,
+        title: `E2E English B4 ${Date.now()}`,
+        subject: "english",
+        topic: ENGLISH_TOPIC,
+        gradeLevel: ENGLISH_GRADE,
+        mode: "guided_practice",
+        questionSelection: "same_exact",
+        difficultyLevel: ENGLISH_DIFFICULTY,
+        questionCount: ENGLISH_COUNT,
+        questionSet: englishQuestionSet,
+      },
+    });
+    expect(res.status()).toBe(201);
+    const body = await res.json();
+    englishActivityId = body?.data?.activityId;
+    expect(englishActivityId).toBeTruthy();
+  });
+
+  test("[B4-ENG-03] activate english activity", async ({ request }) => {
+    test.skip(!englishActivityId, "no english activity");
+    const res = await request.patch(`/api/teacher/activities/${englishActivityId}/status`, {
+      headers: { Authorization: `Bearer ${teacherBearer}` },
+      data: { action: "activate" },
+    });
+    expect(res.ok()).toBeTruthy();
+    expect((await res.json())?.data?.status).toBe("active");
+  });
+
+  test("[B4-ENG-04] student start strips correctAnswer", async ({ request }) => {
+    test.skip(!englishActivityId || !studentCookie, "student session missing");
+    const res = await request.post(`/api/student/activities/${englishActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(res.ok()).toBeTruthy();
+    const text = await res.text();
+    expect(text).not.toContain("correctAnswer");
+    expect(text).not.toContain("correct_answer");
+    const body = JSON.parse(text);
+    expect(body.questionSet?.length).toBe(ENGLISH_COUNT);
+  });
+
+  test("[B4-ENG-05] correct english answer isCorrect true", async ({ request }) => {
+    test.skip(!englishActivityId || !studentCookie, "student session missing");
+    const res = await request.post(`/api/student/activities/${englishActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 0, selectedAnswer: englishQuestionSet[0].correctAnswer },
+    });
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(true);
+  });
+
+  test("[B4-ENG-06] wrong english answer isCorrect false", async ({ request }) => {
+    test.skip(!englishActivityId || !studentCookie, "student session missing");
+    const correct = englishQuestionSet[1].correctAnswer;
+    const wrong = englishQuestionSet[1].choices.find((c) => c !== correct);
+    expect(wrong).toBeTruthy();
+    const res = await request.post(`/api/student/activities/${englishActivityId}/answer`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+      data: { questionIndex: 1, selectedAnswer: wrong },
+    });
+    const body = await res.json();
+    expect(body.ok).toBe(true);
+    expect(body.isCorrect).toBe(false);
+  });
+
+  test("[B4-ENG-07] submit english activity completes", async ({ request }) => {
+    test.skip(!englishActivityId || !studentCookie, "student session missing");
+    const submitRes = await request.post(`/api/student/activities/${englishActivityId}/submit`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect(submitRes.ok()).toBeTruthy();
+    expect((await submitRes.json()).ok).toBe(true);
+
+    const startRes = await request.post(`/api/student/activities/${englishActivityId}/start`, {
+      headers: { Cookie: `liosh_student_session=${studentCookie}` },
+    });
+    expect((await startRes.json()).alreadyCompleted).toBe(true);
+  });
+});
