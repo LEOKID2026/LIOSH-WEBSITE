@@ -1,13 +1,21 @@
 import { useState } from "react";
 import { DEFAULT_TEACHER_FEATURE_FLAGS } from "../../lib/teacher-portal/teacher-feature-flags.js";
-
-const FEATURE_LABELS = {
-  classroom_activities: "Classroom activities",
-  individual_activities: "Individual student activities",
-  parent_messaging: "Parent messaging",
-  ai_reports: "AI / reports",
-  live_audio: "Live audio (future)",
-};
+import AdminSectionCard from "./AdminSectionCard.jsx";
+import {
+  ADMIN_ACCOUNT_ACTIVE_LABEL,
+  ADMIN_FEATURE_LABELS_HE,
+  ADMIN_LABEL_EFFECTIVE_CLASS_CAP,
+  ADMIN_LABEL_NOTES,
+  ADMIN_LABEL_OVERRIDE,
+  ADMIN_OVERRIDE_HINT,
+  ADMIN_PLACEHOLDER_OVERRIDE,
+  ADMIN_SAVE_FEATURES,
+  ADMIN_SAVE_QUOTAS,
+  ADMIN_SAVE_STATUS,
+  ADMIN_SECTION_ACCOUNT,
+  ADMIN_SECTION_FEATURES,
+  ADMIN_SECTION_QUOTAS,
+} from "../../lib/admin-portal/admin-ui.he.js";
 
 export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
   const [busy, setBusy] = useState(false);
@@ -33,9 +41,7 @@ export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
     const body = {
       notes: notes || null,
       maxStudentsPerClassOverride:
-        perClassOverride === "" || perClassOverride == null
-          ? null
-          : Number(perClassOverride),
+        perClassOverride === "" || perClassOverride == null ? null : Number(perClassOverride),
     };
     const res = await fetch(`/api/admin/teachers/${teacher.teacherId}/quotas`, {
       method: "PATCH",
@@ -46,7 +52,7 @@ export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
     const json = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.status !== 200) {
-      setError(json?.error?.message || "Failed to save quotas");
+      setError(json?.error?.message || "שמירת המכסות נכשלה");
       return;
     }
     onUpdated?.(json.data);
@@ -64,7 +70,7 @@ export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
     const json = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.status !== 200) {
-      setError(json?.error?.message || "Failed to save features");
+      setError(json?.error?.message || "שמירת ההרשאות נכשלה");
       return;
     }
     onUpdated?.(json.data);
@@ -82,35 +88,37 @@ export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
     const json = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.status !== 200) {
-      setError(json?.error?.message || "Failed to save status");
+      setError(json?.error?.message || "שמירת הסטטוס נכשלה");
       return;
     }
     onUpdated?.(json.data);
   };
 
+  const effectiveCap = teacher?.quotas?.maxStudentsPerClass ?? 40;
+
   return (
-    <div className="space-y-6">
-      <section className="rounded-lg border border-white/15 bg-black/30 p-4 space-y-3">
-        <h2 className="font-semibold">Quotas</h2>
-        <p className="text-sm text-white/60">
-          Effective per-class limit: {teacher?.quotas?.maxStudentsPerClass ?? 40} (plan default 40;
-          blank override uses plan)
+    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <AdminSectionCard title={ADMIN_SECTION_QUOTAS}>
+        <p className="text-sm text-white/60 mb-4">
+          {ADMIN_LABEL_EFFECTIVE_CLASS_CAP}:{" "}
+          <span className="text-white font-semibold tabular-nums">{effectiveCap}</span>
         </p>
-        <label className="block text-sm">
-          <span className="text-white/70">Max students per class override</span>
+        <p className="text-xs text-white/45 mb-4">{ADMIN_OVERRIDE_HINT}</p>
+        <label className="block text-sm mb-4">
+          <span className="text-white/70">{ADMIN_LABEL_OVERRIDE}</span>
           <input
             type="number"
             min={1}
-            className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-            placeholder="blank = plan default (40)"
+            className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 text-right"
+            placeholder={ADMIN_PLACEHOLDER_OVERRIDE}
             value={perClassOverride}
             onChange={(e) => setPerClassOverride(e.target.value)}
           />
         </label>
-        <label className="block text-sm">
-          <span className="text-white/70">Internal notes</span>
+        <label className="block text-sm mb-4">
+          <span className="text-white/70">{ADMIN_LABEL_NOTES}</span>
           <textarea
-            className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2 min-h-[80px]"
+            className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 min-h-[88px] text-right"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
@@ -119,55 +127,57 @@ export default function TeacherQuotaForm({ teacher, accessToken, onUpdated }) {
           type="button"
           disabled={busy}
           onClick={saveQuotas}
-          className="rounded bg-amber-500 text-black font-semibold px-4 py-2 disabled:opacity-60"
+          className="rounded-lg bg-amber-500 text-black font-semibold px-4 py-2 text-sm disabled:opacity-60"
         >
-          Save quotas
+          {ADMIN_SAVE_QUOTAS}
         </button>
-      </section>
+      </AdminSectionCard>
 
-      <section className="rounded-lg border border-white/15 bg-black/30 p-4 space-y-3">
-        <h2 className="font-semibold">Feature flags</h2>
-        {Object.keys(FEATURE_LABELS).map((key) => (
-          <label key={key} className="flex items-center gap-2 text-sm">
+      <div className="grid gap-4">
+        <AdminSectionCard title={ADMIN_SECTION_FEATURES}>
+          <div className="space-y-2 mb-4">
+            {Object.keys(ADMIN_FEATURE_LABELS_HE).map((key) => (
+              <label key={key} className="flex items-center gap-2 text-sm justify-end flex-row-reverse">
+                <input
+                  type="checkbox"
+                  checked={Boolean(flags[key])}
+                  onChange={(e) => setFlags((f) => ({ ...f, [key]: e.target.checked }))}
+                />
+                {ADMIN_FEATURE_LABELS_HE[key]}
+              </label>
+            ))}
+          </div>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={saveFeatures}
+            className="rounded-lg bg-amber-500 text-black font-semibold px-4 py-2 text-sm disabled:opacity-60"
+          >
+            {ADMIN_SAVE_FEATURES}
+          </button>
+        </AdminSectionCard>
+
+        <AdminSectionCard title={ADMIN_SECTION_ACCOUNT}>
+          <label className="flex items-center gap-2 text-sm justify-end flex-row-reverse mb-4">
             <input
               type="checkbox"
-              checked={Boolean(flags[key])}
-              onChange={(e) => setFlags((f) => ({ ...f, [key]: e.target.checked }))}
+              checked={accountActive}
+              onChange={(e) => setAccountActive(e.target.checked)}
             />
-            {FEATURE_LABELS[key]}
+            {ADMIN_ACCOUNT_ACTIVE_LABEL}
           </label>
-        ))}
-        <button
-          type="button"
-          disabled={busy}
-          onClick={saveFeatures}
-          className="rounded bg-amber-500 text-black font-semibold px-4 py-2 disabled:opacity-60"
-        >
-          Save features
-        </button>
-      </section>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={saveStatus}
+            className="rounded-lg bg-amber-500 text-black font-semibold px-4 py-2 text-sm disabled:opacity-60"
+          >
+            {ADMIN_SAVE_STATUS}
+          </button>
+        </AdminSectionCard>
+      </div>
 
-      <section className="rounded-lg border border-white/15 bg-black/30 p-4 space-y-3">
-        <h2 className="font-semibold">Account access</h2>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={accountActive}
-            onChange={(e) => setAccountActive(e.target.checked)}
-          />
-          Teacher account active (API access)
-        </label>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={saveStatus}
-          className="rounded bg-amber-500 text-black font-semibold px-4 py-2 disabled:opacity-60"
-        >
-          Save status
-        </button>
-      </section>
-
-      {error ? <p className="text-sm text-red-300">{error}</p> : null}
+      {error ? <p className="text-sm text-red-300 lg:col-span-2 text-right">{error}</p> : null}
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import Layout from "../../../components/Layout";
 import AdminShell from "../../../components/admin/AdminShell";
+import TeacherAdminSummaryBar from "../../../components/admin/TeacherAdminSummaryBar";
 import TeacherAdminTable from "../../../components/admin/TeacherAdminTable";
 import { adminAuthFetch, useAdminSession } from "../../../lib/admin-portal/use-admin-session";
+import { ADMIN_LOAD_ERROR, ADMIN_LOADING, ADMIN_TEACHERS_TITLE } from "../../../lib/admin-portal/admin-ui.he.js";
 
 export default function AdminTeachersIndexPage() {
   const { state, accessToken } = useAdminSession();
@@ -17,7 +19,7 @@ export default function AdminTeachersIndexPage() {
       setLoadError("");
       return;
     }
-    setLoadError(body?.error?.message || "Failed to load teachers");
+    setLoadError(body?.error?.message || ADMIN_LOAD_ERROR);
   }, []);
 
   useEffect(() => {
@@ -27,13 +29,16 @@ export default function AdminTeachersIndexPage() {
 
   return (
     <Layout>
-      <AdminShell title="Teachers">
+      <AdminShell title={ADMIN_TEACHERS_TITLE}>
         {state === "loading" ? (
-          <p className="text-white/60 text-sm">Loading…</p>
+          <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>
         ) : loadError ? (
-          <p className="text-red-300 text-sm">{loadError}</p>
+          <p className="text-red-300 text-sm text-right">{loadError}</p>
         ) : (
-          <TeacherAdminTable teachers={teachers} />
+          <>
+            <TeacherAdminSummaryBar teachers={teachers} />
+            <TeacherAdminTable teachers={teachers} />
+          </>
         )}
       </AdminShell>
     </Layout>
