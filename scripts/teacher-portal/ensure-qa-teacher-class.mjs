@@ -8,7 +8,11 @@
 import { createAdminClient } from "./teacher-classroom-sim/bootstrap.mjs";
 import { SIM_STUDENT_NAMES, SIM_TEACHER_EMAIL, parseConfig } from "./teacher-classroom-sim/config.mjs";
 import { loadManifest } from "./teacher-classroom-sim/state.mjs";
-import { isSmokeClassName, isSmokeStudentName } from "../../lib/teacher-portal/teacher-smoke-artifacts.js";
+import {
+  CANONICAL_LEO_QA_CLASS_ID,
+  isSmokeClassName,
+  isSmokeStudentName,
+} from "../../lib/teacher-portal/teacher-smoke-artifacts.js";
 import { buildTeacherDashboardPayload } from "../../lib/teacher-server/teacher-dashboard.server.js";
 
 export const QA_CLASS_NAME = "כיתה ג׳ - LEO";
@@ -49,6 +53,7 @@ async function findOrCreateQaClass(admin, teacherId) {
   if (error) throw new Error(`teacher_classes list failed: ${error.message}`);
 
   let target =
+    (rows || []).find((r) => r.id === CANONICAL_LEO_QA_CLASS_ID) ||
     (rows || []).find((r) => r.name === QA_CLASS_NAME) ||
     (rows || []).find((r) => !isSmokeClassName(r.name) && !r.is_archived && !r.archived_at);
 

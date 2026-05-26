@@ -498,11 +498,6 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
 
   const rosterFilters = dashboard?.rosterFilters || [];
 
-  const primaryClass = useMemo(() => {
-    const classes = dashboard?.classes || [];
-    return classes.find((c) => c.isPrimary) || classes[0] || null;
-  }, [dashboard]);
-
   const filteredStudents = useMemo(() => {
     let list = filterStudentsByRosterKey(dashboard?.students || [], rosterFilterKey);
     const q = search.trim().toLowerCase();
@@ -563,16 +558,6 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
             </p>
           </div>
         </div>
-        {primaryClass ? (
-          <div className="mt-4 pt-4 border-t border-white/10">
-            <Link
-              href={`/teacher/class/${primaryClass.classId}`}
-              className="inline-flex items-center justify-center rounded bg-amber-500 text-black text-sm font-semibold px-4 py-2 w-full sm:w-auto"
-            >
-              דוח כיתה
-            </Link>
-          </div>
-        ) : null}
       </section>
 
       {(dashboard?.classes || []).length > 0 ? (
@@ -580,7 +565,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5"
           data-testid="teacher-class-cards-section"
         >
-          <h2 className="text-lg font-semibold mb-3">כיתות</h2>
+          <h2 className="text-lg font-semibold mb-3">כיתות שלי</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {(dashboard.classes || []).map((c) => (
               <li
@@ -637,50 +622,6 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
       ) : (
         <ClassesEmptyState accessToken={accessToken} onCreated={onRefresh} />
       )}
-
-      {primaryClass ? (
-        <section className="rounded-xl border border-amber-400/30 bg-amber-500/5 p-4 sm:p-5">
-          <ClassCardRow>
-            <div className="min-w-0 flex-1">
-              <h2 className="text-lg font-semibold break-words">{primaryClass.name}</h2>
-              <p className="text-sm text-white/70 mt-1">
-                {primaryClass.gradeLevelLabel || "כיתה"}
-                {" · "}
-                {primaryClass.studentCount ?? 0} תלמידים
-              </p>
-              {primaryClass.latestSubjectLabel ? (
-                <p className="text-sm text-white/60 mt-2 break-words">
-                  מיקוד אחרון: {primaryClass.latestSubjectLabel}
-                </p>
-              ) : null}
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2 shrink-0 w-full sm:w-auto">
-              <Link
-                href={`/teacher/class/${primaryClass.classId}`}
-                className="text-center rounded bg-amber-500 text-black text-sm font-semibold px-4 py-2.5"
-                data-testid="teacher-primary-class-report"
-              >
-                דוח כיתה
-              </Link>
-              <Link
-                href={`/teacher/class/${primaryClass.classId}/activities`}
-                className="text-center rounded border border-amber-400/40 text-amber-200 text-sm font-semibold px-4 py-2.5 hover:bg-amber-500/10"
-                data-testid="teacher-primary-class-activities"
-              >
-                פעילויות
-              </Link>
-              <button
-                type="button"
-                onClick={() => setManageClass(primaryClass)}
-                className="text-center rounded border border-white/25 text-sm font-semibold px-4 py-2.5 hover:bg-white/10"
-                data-testid="teacher-primary-class-manage"
-              >
-                ניהול כיתה
-              </button>
-            </div>
-          </ClassCardRow>
-        </section>
-      ) : null}
 
       <section data-testid="teacher-student-roster-section">
         <h2 className="text-lg font-semibold mb-1">תלמידים</h2>
@@ -800,10 +741,3 @@ function SummaryStat({ label, value }) {
   );
 }
 
-function ClassCardRow({ children }) {
-  return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-      {children}
-    </div>
-  );
-}

@@ -3,10 +3,26 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
+import {
+  SchoolPageIntro,
+  SchoolPrimaryButton,
+  SchoolSection,
+  SchoolStatCard,
+  SchoolSubjectBadges,
+  SCHOOL_CARD,
+  SCHOOL_CARD_INNER,
+} from "../../../components/school-portal/SchoolPortalUi";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import {
   schoolAuthFetch,
+  schoolSubjectLabelHe,
+  SCHOOL_BACK_TEACHERS,
+  SCHOOL_COL_CLASSES,
+  SCHOOL_COL_STUDENTS,
   SCHOOL_LOADING,
+  SCHOOL_MANAGER_ALL_SUBJECTS,
+  SCHOOL_ROLE_MANAGER,
+  SCHOOL_ROLE_TEACHER,
   SCHOOL_SUBJECT_ADD,
   SCHOOL_SUBJECT_REMOVE,
   SCHOOL_SUBJECTS_TITLE,
@@ -65,31 +81,56 @@ export default function SchoolTeacherDetailPage() {
     await load();
   };
 
+  const isManager = detail?.role === "school_admin";
+  const displayTitle = detail?.displayName || SCHOOL_SUBJECTS_TITLE;
+
   return (
     <Layout>
       <SchoolPortalShell
-        title={detail?.displayName || SCHOOL_SUBJECTS_TITLE}
+        title={displayTitle}
         schoolName={me?.school?.name}
         showTeacherDashboardLink={me?.hasTeacherActivity}
       >
         {state === "loading" ? (
-          <p className="text-white/60 text-sm">{SCHOOL_LOADING}</p>
+          <p className="text-white/60 text-sm text-right">{SCHOOL_LOADING}</p>
         ) : (
-          <div className="space-y-6 text-right">
-            <Link href="/school/teachers" className="text-amber-300 text-sm hover:underline">
-              ← חזרה למורים
+          <div className="space-y-6">
+            <Link href="/school/teachers" className="text-amber-300 text-sm hover:underline inline-block">
+              {SCHOOL_BACK_TEACHERS}
             </Link>
-            {detail?.role !== "school_admin" ? (
-              <section className="rounded-xl border border-white/15 bg-black/25 p-4">
-                <h2 className="font-semibold mb-3">{SCHOOL_SUBJECTS_TITLE}</h2>
-                <ul className="space-y-2 mb-4">
+
+            <SchoolPageIntro
+              title={displayTitle}
+              subtitle={isManager ? SCHOOL_ROLE_MANAGER : SCHOOL_ROLE_TEACHER}
+            />
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-xl">
+              <SchoolStatCard label={SCHOOL_COL_CLASSES} value={detail?.activeClassCount ?? 0} accent="sky" />
+              <SchoolStatCard
+                label={SCHOOL_COL_STUDENTS}
+                value={detail?.activeStudentLinkCount ?? 0}
+                accent="emerald"
+              />
+            </div>
+
+            {isManager ? (
+              <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
+                <p className="text-white/70 text-sm">{SCHOOL_MANAGER_ALL_SUBJECTS}</p>
+              </div>
+            ) : (
+              <SchoolSection title={SCHOOL_SUBJECTS_TITLE}>
+                <div className="mb-4">
+                  <p className="text-sm text-white/55 mb-2">מקצועות מורשים:</p>
+                  <SchoolSubjectBadges subjects={subjects.map((s) => s.subject)} max={12} />
+                </div>
+                <ul className="space-y-2 mb-6">
                   {subjects.map((s) => (
                     <li
                       key={s.id}
-                      className="flex justify-between items-center gap-2 border-b border-white/10 pb-2"
+                      className="flex flex-wrap justify-between items-center gap-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2"
                     >
-                      <span>
-                        {s.subject}
+                      <span className="font-medium">
+                        {schoolSubjectLabelHe(s.subject)}
                         {s.gradeLevel ? ` (${s.gradeLevel})` : ""}
                       </span>
                       <button
@@ -102,26 +143,20 @@ export default function SchoolTeacherDetailPage() {
                     </li>
                   ))}
                 </ul>
-                <form onSubmit={grantSubject} className="flex flex-wrap gap-2 items-end">
-                  <label className="text-sm">
+                <form onSubmit={grantSubject} className="flex flex-wrap gap-3 items-end border-t border-white/10 pt-4">
+                  <label className="text-sm text-white/70">
                     מקצוע
                     <input
                       value={newSubject}
                       onChange={(e) => setNewSubject(e.target.value)}
-                      className="block mt-1 rounded bg-black/40 border border-white/20 px-3 py-2"
+                      className="block mt-1 rounded-lg bg-black/40 border border-white/20 px-3 py-2 min-w-[10rem]"
                     />
                   </label>
-                  <button
-                    type="submit"
-                    disabled={busy}
-                    className="rounded bg-amber-500 text-black font-semibold px-4 py-2 disabled:opacity-60"
-                  >
+                  <SchoolPrimaryButton disabled={busy} type="submit">
                     {busy ? "…" : SCHOOL_SUBJECT_ADD}
-                  </button>
+                  </SchoolPrimaryButton>
                 </form>
-              </section>
-            ) : (
-              <p className="text-white/60 text-sm">למנהל/ת בית הספר יש גישה לכל המקצועות.</p>
+              </SchoolSection>
             )}
           </div>
         )}
