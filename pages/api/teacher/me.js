@@ -1,6 +1,7 @@
 import { safeApiLog } from "../../../lib/security/safe-log.js";
 import { consumeRateLimit, clientIpFromRequest } from "../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../lib/security/production-guard.js";
+import { buildSchoolMembershipForMe } from "../../../lib/school-server/school-session.server.js";
 import {
   formatTeacherMePayload,
   getTeacherPortalServiceRole,
@@ -103,13 +104,28 @@ export default async function handler(req, res) {
       );
     }
 
-    return res.status(200).json({
-      data: formatTeacherMePayload(
-        profileResult.profile,
-        resolvedLimits.limits,
-        countersResult.counters
-      ),
-    });
+    const schoolMem = await buildSchoolMembershipForMe(serviceRole, auth.teacherUserId);
+    if (!schoolMem.ok) {
+      return sendTeacherApiError(
+        res,
+        schoolMem.status,
+        schoolMem.code,
+        schoolMem.code === "db_schema_not_ready"
+          ? "teacher_portal schema not yet applied"
+          : "Unexpected server error"
+      );
+    }
+
+    const mePayload = formatTeacherMePayload(
+      profileResult.profile,
+      resolvedLimits.limits,
+      countersResult.counters
+    );
+    if (schoolMem.schoolMembership) {
+      mePayload.schoolMembership = schoolMem.schoolMembership;
+    }
+
+    return res.status(200).json({ data: mePayload });
   } catch (_e) {
     safeApiLog("teacher_me_unexpected_error", { route: "me" });
     return sendTeacherApiError(res, 500, "internal_error", "Unexpected server error");

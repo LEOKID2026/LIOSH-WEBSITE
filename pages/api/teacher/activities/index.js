@@ -2,6 +2,7 @@ import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
 import { consumeRateLimit, clientIpFromRequest } from "../../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../../lib/security/production-guard.js";
+import { assertSchoolTeacherSubjectAllowed } from "../../../../lib/school-server/school-subjects.server.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import {
   createClassroomActivity,
@@ -70,7 +71,19 @@ export default async function handler(req, res) {
         return sendTeacherApiError(res, status, parsed.code, parsed.message || parsed.code);
       }
 
-      const created = await createClassroomActivity(ctx.serviceRole, ctx.teacherId, parsed);
+      const subjectGate = await assertSchoolTeacherSubjectAllowed(
+        ctx.serviceRole,
+        ctx.teacherId,
+        parsed.payload.subject,
+        null
+      );
+      if (!subjectGate.ok) {
+        return sendTeacherApiError(res, subjectGate.status, subjectGate.code, subjectGate.code);
+      }
+
+      const created = await createClassroomActivity(ctx.serviceRole, ctx.teacherId, parsed, {
+        schoolId: subjectGate.membership?.schoolId ?? null,
+      });
       if (!created.ok) {
         return sendTeacherApiError(res, created.status, created.code, created.code);
       }

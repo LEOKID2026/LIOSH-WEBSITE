@@ -9,6 +9,7 @@ import {
   ADMIN_COL_NAME,
   ADMIN_COL_PER_CLASS_CAP,
   ADMIN_COL_STUDENTS,
+  ADMIN_COL_SCHOOL,
   ADMIN_MANAGE,
   ADMIN_NO_TEACHERS,
   adminAccountStatusHe,
@@ -63,6 +64,10 @@ function TeacherAdminMobileCard({ teacher: t }) {
           <dd className="font-medium tabular-nums">{t.individualActivityCount ?? 0}</dd>
         </div>
         <div className="col-span-2">
+          <dt className="text-xs text-white/50 mb-0.5">{ADMIN_COL_SCHOOL}</dt>
+          <dd className="font-medium">{t.schoolName || "—"}</dd>
+        </div>
+        <div className="col-span-2">
           <dt className="text-xs text-white/50 mb-0.5">{ADMIN_COL_PER_CLASS_CAP}</dt>
           <dd className="font-medium tabular-nums">{t.quotas?.maxStudentsPerClass ?? "—"}</dd>
         </div>
@@ -92,12 +97,14 @@ function TeacherAdminDesktopTable({ teachers }) {
             <col className="w-[5rem]" />
             <col className="w-[5rem]" />
             <col className="w-[5.5rem]" />
+            <col className="w-[6rem]" />
             <col className="w-[5.5rem]" />
           </colgroup>
           <thead className="bg-black/40 text-white/70 text-xs">
             <tr>
               <th className="px-3 py-2.5 font-medium whitespace-nowrap">{ADMIN_COL_NAME}</th>
               <th className="px-3 py-2.5 font-medium">{ADMIN_COL_EMAIL}</th>
+              <th className="px-3 py-2.5 font-medium whitespace-nowrap">{ADMIN_COL_SCHOOL}</th>
               <th className="px-2 py-2.5 font-medium text-center whitespace-nowrap">
                 {ADMIN_COL_CLASSES}
               </th>
@@ -140,6 +147,9 @@ function TeacherAdminDesktopTable({ teachers }) {
                     >
                       {email}
                     </span>
+                  </td>
+                  <td className="px-3 py-2.5 text-white/70 truncate max-w-[8rem]" title={t.schoolName || undefined}>
+                    {t.schoolName || "—"}
                   </td>
                   <td className="px-2 py-2.5 text-center tabular-nums whitespace-nowrap">
                     {t.classCount ?? 0}

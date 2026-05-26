@@ -14,6 +14,7 @@ import {
   requireTeacherApiContext,
   unknownQueryParams,
 } from "../../../../../lib/teacher-server/teacher-request.server.js";
+import { assertTeacherClassReportSubjectAllowed } from "../../../../../lib/school-server/school-subjects.server.js";
 import {
   rejectIfTeacherPortalDisabled,
   sendTeacherApiError,
@@ -72,6 +73,15 @@ export default async function handler(req, res) {
         if (rl.retryAfterSec) res.setHeader("Retry-After", String(rl.retryAfterSec));
         return sendTeacherApiError(res, 429, "rate_limited", "Too many requests");
       }
+    }
+
+    const subjectGate = await assertTeacherClassReportSubjectAllowed(
+      ctx.serviceRole,
+      ctx.teacherId,
+      parsedId.classId
+    );
+    if (!subjectGate.ok) {
+      return sendTeacherApiError(res, subjectGate.status, subjectGate.code, subjectGate.code);
     }
 
     const tBuild0 = startTimer();

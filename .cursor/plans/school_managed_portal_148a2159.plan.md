@@ -4,28 +4,28 @@ overview: Design and document a school organization layer on top of the existing
 todos:
   - id: phase0-migration
     content: Owner reviews, approves, and manually applies migration 027_school_managed_portal.sql — then verifies backfill counts
-    status: pending
+    status: completed
   - id: phase1-admin
     content: "Phase 1: Owner admin school management — create school, view school, assign teacher, assign manager, remove teacher, audit log — with audit logging from day one"
-    status: pending
+    status: completed
   - id: phase2-auth
     content: "Phase 2: School manager auth — loadTeacherSchoolMembership, requireSchoolManagerApiContext, /api/school/me, /api/school/dashboard, school portal shell, login redirect, dual-role nav"
-    status: pending
+    status: completed
   - id: phase3-subjects
     content: "Phase 3: School teachers + subject permissions — list APIs, grant/revoke, subject check on activity creation AND all report endpoints (student report, class report, weak topics, recommendations, activity history, individual activity history, parent report preview)"
-    status: pending
+    status: completed
   - id: phase4-classes
     content: "Phase 4: School class list, class report via school manager context"
-    status: pending
+    status: completed
   - id: phase5-students
     content: "Phase 5: School student enrollment APIs, student report via school manager context"
-    status: pending
+    status: completed
   - id: phase6-activities
     content: "Phase 6: School-level activity view for school manager dashboard"
-    status: pending
+    status: completed
   - id: phase7-hardening
     content: "Phase 7: Full IDOR test matrix execution, regression tests, edge cases, load testing"
-    status: pending
+    status: completed
 isProject: false
 ---
 

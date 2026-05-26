@@ -2,7 +2,7 @@
  * Student authentication for the Virtual Student QA Runner.
  *
  * Default mode 'ui' — drives the real /student/login Hebrew form:
- *   fill שם משתמש + PIN → click כניסה → wait for /student/home.
+ *   fill שם משתמש + קוד כניסה → click כניסה ללמידה → wait for /student/home.
  *
  * Temporary opt-in mode 'api' (VIRTUAL_STUDENT_STUDENT_AUTH=api) — wraps the
  * existing API helper. Logged loudly as [TEMPORARY:api-shortcut] so this can
@@ -40,26 +40,37 @@ async function authenticateViaUi({ page, account, baseUrl, log }) {
     return { mode: "ui", path: STUDENT_HOME, alreadyAuthenticated: true };
   }
 
-  const usernameField = page.getByPlaceholder("שם משתמש");
-  const pinField = page.getByPlaceholder("PIN");
-  const submitButton = page.getByRole("button", { name: "כניסה" });
+  await page.getByText("בודקים חיבור...").waitFor({ state: "detached", timeout: 30_000 }).catch(() => {});
 
-  await usernameField.waitFor({ state: "visible", timeout: 30_000 });
-  await pinField.waitFor({ state: "visible", timeout: 30_000 });
+  const usernameField =
+    page.getByTestId("student-login-username").or(page.getByPlaceholder("שם משתמש")).or(
+      page.getByLabel("שם משתמש")
+    );
+  const pinField =
+    page.getByTestId("student-login-pin").or(page.getByPlaceholder("קוד כניסה")).or(
+      page.getByLabel("קוד כניסה")
+    );
+  const submitButton = page
+    .getByTestId("student-login-submit")
+    .or(page.getByRole("button", { name: /כניסה ללמידה/ }))
+    .or(page.getByRole("button", { name: "כניסה" }));
+
+  await usernameField.first().waitFor({ state: "visible", timeout: 30_000 });
+  await pinField.first().waitFor({ state: "visible", timeout: 30_000 });
 
   const identifier = account.username || account.code;
   if (!identifier) {
     throw new Error("student-auth(ui): account is missing both username and code");
   }
-  await usernameField.fill(identifier);
-  await pinField.fill(account.pin);
+  await usernameField.first().fill(identifier);
+  await pinField.first().fill(account.pin);
 
   log(`student-auth(ui): submitting login form for label=${account.label}`);
   const navigationPromise = page.waitForURL(
     (url) => new URL(url).pathname === STUDENT_HOME,
     { timeout: 30_000 }
   );
-  await submitButton.click();
+  await submitButton.first().click();
 
   try {
     await navigationPromise;

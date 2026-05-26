@@ -113,6 +113,7 @@ export default function StudentLoginPage() {
           <label className="block text-sm">
             <span className="text-white/80">שם משתמש</span>
             <input
+              data-testid="student-login-username"
               className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -124,6 +125,7 @@ export default function StudentLoginPage() {
           <label className="block text-sm">
             <span className="text-white/80">קוד כניסה</span>
             <input
+              data-testid="student-login-pin"
               className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
@@ -134,6 +136,7 @@ export default function StudentLoginPage() {
             />
           </label>
           <button
+            data-testid="student-login-submit"
             className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
             disabled={busy}
             type="submit"

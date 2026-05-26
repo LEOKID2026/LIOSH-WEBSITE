@@ -12,6 +12,7 @@ import {
   parseReportWindowDays,
   resolveTeacherReportDateRange,
 } from "../../../../../lib/teacher-server/teacher-report.server.js";
+import { applySchoolTeacherReportFilter } from "../../../../../lib/school-server/school-subjects.server.js";
 import {
   rejectIfTeacherPortalDisabled,
   sendTeacherApiError,
@@ -86,6 +87,15 @@ export default async function handler(req, res) {
       return sendTeacherApiError(res, built.status, built.code, built.code);
     }
 
+    const filtered = await applySchoolTeacherReportFilter(
+      ctx.serviceRole,
+      ctx.teacherId,
+      built.payload
+    );
+    if (!filtered.ok) {
+      return sendTeacherApiError(res, filtered.status, filtered.code, filtered.code);
+    }
+
     setTeacherApiServerTiming(res, {
       auth: tAuth,
       build: tBuild,
@@ -94,7 +104,7 @@ export default async function handler(req, res) {
 
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     res.setHeader("Pragma", "no-cache");
-    return res.status(200).json(built.payload);
+    return res.status(200).json(filtered.payload);
   } catch (_e) {
     safeApiLog("teacher_student_report_data_error", { route: "report-data" });
     return sendTeacherApiError(res, 500, "internal_error", "Unexpected server error");

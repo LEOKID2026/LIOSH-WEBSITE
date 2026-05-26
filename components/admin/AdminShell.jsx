@@ -3,6 +3,7 @@ import { useAdminLogout } from "../../lib/admin-portal/use-admin-session.js";
 import {
   ADMIN_LOGOUT,
   ADMIN_LOGOUT_BUSY,
+  ADMIN_NAV_SCHOOLS,
   ADMIN_NAV_TEACHERS,
   ADMIN_NAV_TEACHER_PORTAL,
   ADMIN_PLATFORM_LABEL,
@@ -35,6 +36,9 @@ export default function AdminShell({ title, header, children, showLogout = false
         >
           <Link href="/admin/teachers" className="text-amber-300 hover:underline font-medium px-1">
             {ADMIN_NAV_TEACHERS}
+          </Link>
+          <Link href="/admin/schools" className="text-white/70 hover:underline px-1">
+            {ADMIN_NAV_SCHOOLS}
           </Link>
           <Link href="/teacher/dashboard" className="text-white/60 hover:underline px-1">
             {ADMIN_NAV_TEACHER_PORTAL}

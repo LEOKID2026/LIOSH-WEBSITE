@@ -22,6 +22,11 @@ import {
   ADMIN_SECTION_USAGE,
   ADMIN_SMOKE_CLASSES_TOGGLE,
   ADMIN_TEACHER_DETAIL_NAV,
+  ADMIN_TEACHER_NO_SCHOOL,
+  ADMIN_TEACHER_SCHOOL_SECTION,
+  ADMIN_TEACHER_VIEW_SCHOOL,
+  ADMIN_SCHOOL_ROLE_MANAGER,
+  ADMIN_SCHOOL_ROLE_TEACHER,
   adminAccountStatusHe,
   adminFormatDateHe,
   adminGradeLabelHe,
@@ -105,6 +110,34 @@ function UsageSummaryGrid({ teacher }) {
           />
         </div>
       </div>
+    </AdminSectionCard>
+  );
+}
+
+function SchoolMembershipSection({ teacher }) {
+  const sm = teacher.schoolMembership;
+  return (
+    <AdminSectionCard id="admin-teacher-school" title={ADMIN_TEACHER_SCHOOL_SECTION}>
+      {!sm?.schoolId ? (
+        <p className="text-white/60 text-sm">{ADMIN_TEACHER_NO_SCHOOL}</p>
+      ) : (
+        <div className="space-y-2 text-sm">
+          <p>
+            <span className="text-white/50">בית ספר: </span>
+            <span className="font-medium">{sm.schoolName || sm.schoolId}</span>
+          </p>
+          <p>
+            <span className="text-white/50">תפקיד: </span>
+            {sm.schoolRole === "school_admin" ? ADMIN_SCHOOL_ROLE_MANAGER : ADMIN_SCHOOL_ROLE_TEACHER}
+          </p>
+          <Link
+            href={`/admin/schools/${sm.schoolId}`}
+            className="inline-block text-amber-300 hover:underline"
+          >
+            {ADMIN_TEACHER_VIEW_SCHOOL}
+          </Link>
+        </div>
+      )}
     </AdminSectionCard>
   );
 }
@@ -226,8 +259,9 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
     <div className="flex flex-col gap-5 lg:gap-6">
       <SectionNav />
 
-      <div className="order-1 lg:order-2">
+      <div className="order-1 lg:order-2 space-y-5">
         <IdentitySection teacher={teacher} />
+        <SchoolMembershipSection teacher={teacher} />
       </div>
 
       <div className="order-2 lg:order-1">

@@ -2,6 +2,7 @@ import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
 import { consumeRateLimit, clientIpFromRequest } from "../../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../../lib/security/production-guard.js";
+import { assertSchoolTeacherSubjectAllowed } from "../../../../lib/school-server/school-subjects.server.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import {
   createStudentActivity,
@@ -68,6 +69,16 @@ export default async function handler(req, res) {
       if (!parsed.ok) {
         const status = parsed.status || 400;
         return sendTeacherApiError(res, status, parsed.code, parsed.message || parsed.code);
+      }
+
+      const subjectGate = await assertSchoolTeacherSubjectAllowed(
+        ctx.serviceRole,
+        ctx.teacherId,
+        parsed.payload.subject,
+        null
+      );
+      if (!subjectGate.ok) {
+        return sendTeacherApiError(res, subjectGate.status, subjectGate.code, subjectGate.code);
       }
 
       const created = await createStudentActivity(ctx.serviceRole, ctx.teacherId, parsed);

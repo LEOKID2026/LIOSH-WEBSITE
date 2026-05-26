@@ -17,6 +17,13 @@ export async function getServerSideProps() {
   };
 }
 
+function teacherPostLoginPath(meBody) {
+  if (meBody?.data?.schoolMembership?.isSchoolManager) {
+    return "/school/dashboard";
+  }
+  return "/teacher/dashboard";
+}
+
 async function fetchTeacherMe(accessToken) {
   const res = await fetch("/api/teacher/me", {
     method: "GET",
@@ -73,7 +80,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
       }
       const me = await fetchTeacherMe(session.token);
       if (me.status === 200) {
-        router.replace("/teacher/dashboard");
+        router.replace(teacherPostLoginPath(me.body));
       }
     });
     return () => {
@@ -153,7 +160,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
       }
 
       if (me.status === 200) {
-        router.replace("/teacher/dashboard");
+        router.replace(teacherPostLoginPath(me.body));
         return;
       }
 

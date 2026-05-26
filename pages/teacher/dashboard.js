@@ -182,7 +182,10 @@ export default function TeacherDashboardPage({ linkEnabled }) {
         data-teacher-id={dashboard?.teacher?.teacherId || ""}
         data-link-enabled={linkEnabled ? "true" : "false"}
       >
-        <TeacherPortalShell title="לוח הבקרה שלי">
+        <TeacherPortalShell
+          title="לוח הבקרה שלי"
+          schoolMembership={dashboard?.schoolMembership}
+        >
           <TeacherDashboardClient
             accessToken={accessToken}
             dashboard={dashboard}
