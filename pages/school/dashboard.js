@@ -75,10 +75,10 @@ export default function SchoolDashboardPage() {
 
   const alerts = useMemo(() => {
     const items = [];
-    if (stats && (stats.enrolledStudentCount ?? 0) === 0) {
+    if (stats && (stats.studentCount ?? stats.enrolledStudentCount ?? 0) === 0) {
       items.push(SCHOOL_ALERT_NO_STUDENTS);
     }
-    if (stats && (stats.teacherCount ?? 0) <= 1) {
+    if (stats && (stats.teacherCount ?? 0) === 0) {
       items.push(SCHOOL_ALERT_FEW_TEACHERS);
     }
     if (stats && (stats.activeActivityCount ?? 0) > 0) {
@@ -109,7 +109,7 @@ export default function SchoolDashboardPage() {
               <SchoolStatCard label={SCHOOL_STAT_TEACHERS} value={stats?.teacherCount ?? 0} accent="amber" />
               <SchoolStatCard
                 label={SCHOOL_STAT_STUDENTS}
-                value={stats?.enrolledStudentCount ?? 0}
+                value={stats?.studentCount ?? stats?.enrolledStudentCount ?? 0}
                 accent="emerald"
               />
               <SchoolStatCard label={SCHOOL_STAT_CLASSES} value={stats?.activeClassCount ?? 0} accent="sky" />

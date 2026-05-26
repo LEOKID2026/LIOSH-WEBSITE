@@ -1,6 +1,9 @@
 import { safeApiLog } from "../../../../../lib/security/safe-log.js";
 import { buildTeacherStudentReportPayload } from "../../../../../lib/teacher-server/teacher-report.server.js";
-import { verifyStudentEnrolledInSchool } from "../../../../../lib/school-server/school-students.server.js";
+import {
+  resolveSchoolReportTeacherForStudent,
+  verifyStudentVisibleToSchool,
+} from "../../../../../lib/school-server/school-scope.server.js";
 import { writeSchoolStudentReportViewedAudit } from "../../../../../lib/school-server/school-reports.server.js";
 import {
   requireSchoolManagerApiContext,
@@ -26,13 +29,22 @@ export default async function handler(req, res) {
       return sendSchoolApiError(res, 400, studentParsed.code, studentParsed.code);
     }
 
-    const enrolled = await verifyStudentEnrolledInSchool(
+    const visible = await verifyStudentVisibleToSchool(
       ctx.serviceRole,
       ctx.schoolId,
       studentParsed.studentId
     );
-    if (!enrolled.ok) {
-      return sendSchoolApiError(res, enrolled.status, enrolled.code, enrolled.code);
+    if (!visible.ok) {
+      return sendSchoolApiError(res, visible.status, visible.code, visible.code);
+    }
+
+    const reportTeacher = await resolveSchoolReportTeacherForStudent(
+      ctx.serviceRole,
+      ctx.schoolId,
+      studentParsed.studentId
+    );
+    if (!reportTeacher.ok) {
+      return sendSchoolApiError(res, reportTeacher.status, reportTeacher.code, reportTeacher.code);
     }
 
     const range = resolveTeacherReportDateRange(req.query);
@@ -43,7 +55,7 @@ export default async function handler(req, res) {
     const report = await buildTeacherStudentReportPayload(
       {
         serviceRole: ctx.serviceRole,
-        teacherId: ctx.managerId,
+        teacherId: reportTeacher.teacherId,
         studentId: studentParsed.studentId,
         fromDate: range.fromDate,
         toDate: range.toDate,
