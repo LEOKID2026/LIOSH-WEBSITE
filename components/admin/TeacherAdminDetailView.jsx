@@ -117,7 +117,11 @@ function UsageSummaryGrid({ teacher }) {
 function SchoolMembershipSection({ teacher }) {
   const sm = teacher.schoolMembership;
   return (
-    <AdminSectionCard id="admin-teacher-school" title={ADMIN_TEACHER_SCHOOL_SECTION}>
+    <AdminSectionCard
+      id="admin-teacher-school"
+      title={ADMIN_TEACHER_SCHOOL_SECTION}
+      className="mt-5"
+    >
       {!sm?.schoolId ? (
         <p className="text-white/60 text-sm">{ADMIN_TEACHER_NO_SCHOOL}</p>
       ) : (
@@ -259,7 +263,7 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
     <div className="flex flex-col gap-5 lg:gap-6">
       <SectionNav />
 
-      <div className="order-1 lg:order-2 space-y-5">
+      <div className="order-1 lg:order-2">
         <IdentitySection teacher={teacher} />
         <SchoolMembershipSection teacher={teacher} />
       </div>
