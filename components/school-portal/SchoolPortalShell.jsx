@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client.js";
 import {
   SCHOOL_NAV_CLASSES,
@@ -50,10 +50,29 @@ export default function SchoolPortalShell({
 
   const path = router.pathname;
 
+  /**
+   * Site Layout HUD uses flex + justify-between; without document RTL (see Layout.js
+   * layoutRtlHebrew paths), /school/* renders logo left / menu right. Scope stays here
+   * so global Layout is unchanged.
+   */
+  useEffect(() => {
+    const html = document.documentElement;
+    const prevDir = html.getAttribute("dir");
+    const prevLang = html.getAttribute("lang");
+    html.setAttribute("dir", "rtl");
+    html.setAttribute("lang", "he");
+    return () => {
+      if (prevDir) html.setAttribute("dir", prevDir);
+      else html.removeAttribute("dir");
+      if (prevLang) html.setAttribute("lang", prevLang);
+      else html.removeAttribute("lang");
+    };
+  }, []);
+
   return (
     <div className={`${SCHOOL_PAGE_CONTAINER} text-white`} dir="rtl" lang="he">
       <header className="mb-6 lg:mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-white/15 pb-4">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 text-right">
           <p className="text-xs text-white/50 mb-1">{SCHOOL_PLATFORM_LABEL}</p>
           {schoolName ? (
             <p className="text-sm sm:text-base text-amber-200/95 font-medium mb-1">{schoolName}</p>
