@@ -102,17 +102,41 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
       await assertNo404(page);
     }
 
+    await page.goto("/school/classes", { waitUntil: "domcontentloaded" });
+    await expect(page.getByText("בחרו שכבה")).toBeVisible({ timeout: 30_000 });
+    await page.getByRole("button", { name: "כיתה ג׳" }).click();
+    await expect(page.getByText("בחרו כיתה")).toBeVisible({ timeout: 15_000 });
+    await page.getByRole("button", { name: /כיתה ג׳ 1/u }).click();
+    await expect(page.getByText("מקצועות הכיתה")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("מתמטיקה")).toBeVisible();
+    await expect(page.getByText("גיאומטריה")).toBeVisible();
+    await page.getByRole("button", { name: "דוח כיתה" }).first().click();
+    await expect(page.getByText("סיכום דוח")).toBeVisible({ timeout: 20_000 });
+
+    await page.goto("/school/students", { waitUntil: "domcontentloaded" });
+    await page.getByRole("button", { name: "כיתה ג׳" }).click();
+    await page.getByRole("button", { name: /כיתה ג׳ 1/u }).click();
+    await expect(page.getByRole("button", { name: "דוח תלמיד" }).first()).toBeVisible({
+      timeout: 15_000,
+    });
+
+    await page.goto("/school/teachers", { waitUntil: "domcontentloaded" });
+    await expect(page.getByText("דן כהן")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("מתמטיקה · גיאומטריה")).toBeVisible();
+
     const classesRes = await page.request.get("/api/school/classes", {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(classesRes.status()).toBe(200);
     const classes = (await classesRes.json())?.data?.classes || [];
     expect(classes.length).toBe(108);
+    const withMembers = classes.filter((c: { memberCount?: number }) => (c.memberCount ?? 0) > 0);
+    expect(withMembers.length, "classes with roster counts").toBeGreaterThan(0);
     const names = classes.map((c: { name?: string; subjectFocus?: string }) =>
       `${c.name} ${c.subjectFocus || ""}`.trim()
     );
-    expect(names.some((n: string) => /מתמטיקה|math/u.test(n))).toBeTruthy();
-    expect(names.some((n: string) => /גיאומטריה|geometry/u.test(n))).toBeTruthy();
+    expect(names.some((n: string) => /math/u.test(n))).toBeTruthy();
+    expect(names.some((n: string) => /geometry/u.test(n))).toBeTruthy();
 
     const studentsRes = await page.request.get("/api/school/students", {
       headers: { Authorization: `Bearer ${token}` },
@@ -120,6 +144,7 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     expect(studentsRes.status()).toBe(200);
     const students = (await studentsRes.json())?.data?.students || [];
     expect(students.length).toBe(398);
+    expect(students[0]?.physicalClassName, "physical class on student").toBeTruthy();
 
     const sampleClassId = classes[0]?.classId || classes[0]?.id;
     const sampleStudentId = students[0]?.studentId || students[0]?.id;
@@ -130,6 +155,8 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(classReport.status()).toBe(200);
+    const classReportBody = await classReport.json();
+    expect(classReportBody?.cohortSummary || classReportBody?.summary).toBeTruthy();
 
     const studentReport = await page.request.get(
       `/api/school/students/${sampleStudentId}/report-data`,

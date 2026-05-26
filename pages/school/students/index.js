@@ -3,33 +3,47 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
 import {
-  SchoolDataTable,
+  SchoolBackButton,
+  SchoolCardGrid,
+  SchoolDrillBreadcrumb,
+  SchoolErrorBlock,
+  SchoolLoadingBlock,
+  SchoolManagementCard,
+  SchoolStudentCard,
+} from "../../../components/school-portal/SchoolDrillDown";
+import {
   SchoolEmptyState,
   SchoolPrimaryButton,
   SchoolReportPreview,
-  SchoolSecondaryButton,
   SchoolSection,
-  SchoolTableCell,
-  SchoolTableRow,
   SCHOOL_CARD,
   SCHOOL_CARD_INNER,
 } from "../../../components/school-portal/SchoolPortalUi";
+import {
+  filterStudentsByPhysicalClass,
+  groupPhysicalClassesForStudents,
+  schoolGradeLabelHe,
+  SCHOOL_GRADE_OPTIONS,
+} from "../../../lib/school-portal/school-drilldown";
+import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import {
   schoolAuthFetch,
-  SCHOOL_COL_ACTIONS,
-  SCHOOL_COL_GRADE,
-  SCHOOL_COL_LINKED,
-  SCHOOL_COL_STUDENT,
+  schoolStudentReportSummaryFromBody,
+  SCHOOL_BACK_CLASSES,
+  SCHOOL_BACK_GRADES,
+  SCHOOL_CHOOSE_GRADE,
+  SCHOOL_CHOOSE_PHYSICAL_CLASS,
+  SCHOOL_CHOOSE_STUDENTS,
   SCHOOL_EMPTY_STUDENTS,
   SCHOOL_EMPTY_STUDENTS_HINT,
+  SCHOOL_ENROLL_SECTION,
   SCHOOL_ENROLL_STUDENT,
   SCHOOL_LOADING,
-  SCHOOL_NO_LINKED_TEACHERS,
   SCHOOL_REPORT_CLOSE,
   SCHOOL_REPORT_LOADING,
-  SCHOOL_REPORT_SUMMARY,
   SCHOOL_SEARCH_STUDENTS,
+  SCHOOL_SEARCH_STUDENTS_PLACEHOLDER,
   SCHOOL_STUDENT_ID,
   SCHOOL_STUDENTS_SUBTITLE,
   SCHOOL_STUDENTS_TITLE,
@@ -39,10 +53,12 @@ import {
 export default function SchoolStudentsPage() {
   const router = useRouter();
   const { state, accessToken, me } = useSchoolPortalLoad();
-  const [students, setStudents] = useState([]);
-  const [studentId, setStudentId] = useState("");
+  const [gradeLevel, setGradeLevel] = useState("");
+  const [physicalClassName, setPhysicalClassName] = useState("");
   const [search, setSearch] = useState("");
+  const [studentId, setStudentId] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showEnroll, setShowEnroll] = useState(false);
   const [reportStudentId, setReportStudentId] = useState(null);
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState("");
@@ -53,38 +69,43 @@ export default function SchoolStudentsPage() {
     if (state === "forbidden") router.replace("/teacher/dashboard");
   }, [state, router]);
 
-  const load = async () => {
-    if (!accessToken) return;
-    const res = await schoolAuthFetch(accessToken, "/api/school/students");
-    const body = await res.json().catch(() => ({}));
-    if (res.status === 200) setStudents(body.data?.students || []);
-  };
+  const parseStudents = useMemo(() => (body) => body?.data?.students || [], []);
 
-  useEffect(() => {
-    if (state === "ready") void load();
-  }, [state, accessToken]);
+  const { data: students, loading, error, reload } = useSchoolDataFetch(
+    accessToken,
+    "/api/school/students",
+    parseStudents,
+    state === "ready"
+  );
 
-  const filtered = useMemo(() => {
+  const physicalGroups = useMemo(
+    () => (gradeLevel ? groupPhysicalClassesForStudents(students || [], gradeLevel) : []),
+    [students, gradeLevel]
+  );
+
+  const visibleStudents = useMemo(() => {
+    let rows = students || [];
+    if (gradeLevel) {
+      rows = filterStudentsByPhysicalClass(rows, gradeLevel, physicalClassName || null);
+    }
     const q = search.trim().toLowerCase();
-    if (!q) return students;
-    return students.filter((s) => {
-      const name = String(s.displayName || "").toLowerCase();
-      const id = String(s.studentId || "").toLowerCase();
-      return name.includes(q) || id.includes(q);
-    });
-  }, [students, search]);
+    if (!q) return rows;
+    return rows.filter((s) => String(s.displayName || "").toLowerCase().includes(q));
+  }, [students, gradeLevel, physicalClassName, search]);
 
   const enroll = async (e) => {
     e.preventDefault();
     if (!accessToken) return;
     setBusy(true);
     try {
-      await schoolAuthFetch(accessToken, "/api/school/students", {
+      const res = await schoolAuthFetch(accessToken, "/api/school/students", {
         method: "POST",
         body: JSON.stringify({ studentId: studentId.trim() }),
       });
-      setStudentId("");
-      await load();
+      if (res.status === 201) {
+        setStudentId("");
+        await reload();
+      }
     } finally {
       setBusy(false);
     }
@@ -106,30 +127,26 @@ export default function SchoolStudentsPage() {
         setReportError(body?.error?.message || body?.error?.code || "שגיאה בטעינת דוח");
         return;
       }
-      const summary = body?.summary;
-      const accuracy = summary?.accuracy != null ? `${summary.accuracy}%` : "—";
       const name = student.displayName || student.studentId;
-      setReportSummary({
-        title: `${SCHOOL_REPORT_SUMMARY}: ${name}`,
-        line: `תשובות: ${summary?.totalAnswers ?? 0} · דיוק: ${accuracy} · שכבה: ${student.gradeLevel || "—"}`,
-      });
+      setReportSummary(
+        schoolStudentReportSummaryFromBody(body, name, student.physicalClassName || student.gradeLevel)
+      );
     } finally {
       setReportLoading(false);
     }
   };
 
-  const closeReport = () => {
-    setReportStudentId(null);
-    setReportSummary(null);
-    setReportError("");
-  };
-
-  const columns = [
-    { key: "student", label: SCHOOL_COL_STUDENT },
-    { key: "grade", label: SCHOOL_COL_GRADE, className: "text-center" },
-    { key: "linked", label: SCHOOL_COL_LINKED },
-    { key: "actions", label: SCHOOL_COL_ACTIONS, className: "text-center" },
-  ];
+  const breadcrumbSteps = [
+    { label: SCHOOL_CHOOSE_GRADE, onClick: gradeLevel ? () => { setGradeLevel(""); setPhysicalClassName(""); } : undefined, active: !gradeLevel },
+    gradeLevel
+      ? {
+          label: schoolGradeLabelHe(gradeLevel),
+          onClick: physicalClassName ? () => setPhysicalClassName("") : undefined,
+          active: gradeLevel && !physicalClassName,
+        }
+      : null,
+    physicalClassName ? { label: physicalClassName, active: true } : null,
+  ].filter(Boolean);
 
   return (
     <Layout>
@@ -140,83 +157,137 @@ export default function SchoolStudentsPage() {
         showTeacherDashboardLink={me?.hasTeacherActivity}
       >
         {state === "loading" ? (
-          <p className="text-white/60 text-sm text-right">{SCHOOL_LOADING}</p>
+          <SchoolLoadingBlock message={SCHOOL_LOADING} />
+        ) : loading ? (
+          <SchoolLoadingBlock />
+        ) : error ? (
+          <SchoolErrorBlock message={error} onRetry={() => void reload()} />
         ) : (
           <div className="space-y-6">
             <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
-              <h2 className="font-semibold text-base mb-3">{SCHOOL_ENROLL_STUDENT}</h2>
-              <form onSubmit={enroll} className="space-y-3 max-w-xl">
-                <label className="block text-sm text-white/70">
-                  {SCHOOL_STUDENT_ID}
-                  <input
-                    value={studentId}
-                    onChange={(e) => setStudentId(e.target.value)}
-                    required
-                    className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 font-mono text-sm"
-                  />
-                </label>
-                <SchoolPrimaryButton disabled={busy} type="submit">
-                  {busy ? "רושם…" : SCHOOL_ENROLL_STUDENT}
-                </SchoolPrimaryButton>
-              </form>
+              <button
+                type="button"
+                onClick={() => setShowEnroll((v) => !v)}
+                className="text-sm text-amber-300 hover:underline"
+              >
+                {showEnroll ? "הסתר רישום מתקדם" : SCHOOL_ENROLL_SECTION}
+              </button>
+              {showEnroll ? (
+                <form onSubmit={enroll} className="space-y-3 max-w-xl mt-3">
+                  <label className="block text-sm text-white/70">
+                    {SCHOOL_STUDENT_ID}
+                    <input
+                      value={studentId}
+                      onChange={(e) => setStudentId(e.target.value)}
+                      required
+                      className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 font-mono text-sm"
+                    />
+                  </label>
+                  <SchoolPrimaryButton disabled={busy} type="submit">
+                    {busy ? "רושם…" : SCHOOL_ENROLL_STUDENT}
+                  </SchoolPrimaryButton>
+                </form>
+              ) : null}
             </div>
 
-            <SchoolSection>
-              <div className="mb-4">
-                <label className="block text-sm text-white/70 text-right">
-                  {SCHOOL_SEARCH_STUDENTS}
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="mt-1 w-full max-w-md mr-0 ml-auto block rounded-lg bg-black/40 border border-white/20 px-3 py-2 text-sm"
-                    placeholder="שם או מזהה"
-                  />
-                </label>
-              </div>
+            <SchoolDrillBreadcrumb steps={breadcrumbSteps} />
 
-              {filtered.length ? (
-                <SchoolDataTable columns={columns} emptyMessage={SCHOOL_EMPTY_STUDENTS}>
-                  {filtered.map((s) => (
-                    <SchoolTableRow key={s.studentId}>
-                      <SchoolTableCell>
-                        <p className="font-medium">{s.displayName || "ללא שם"}</p>
-                        <p className="text-xs text-white/45 font-mono mt-0.5 break-all">{s.studentId}</p>
-                      </SchoolTableCell>
-                      <SchoolTableCell className="text-center text-white/75">
-                        {s.gradeLevel || "—"}
-                      </SchoolTableCell>
-                      <SchoolTableCell>
-                        {s.linkedTeachers?.length ? (
-                          <ul className="text-xs text-white/65 space-y-0.5">
-                            {s.linkedTeachers.map((t) => (
-                              <li key={t.teacherId}>{t.displayName || t.teacherId}</li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <span className="text-xs text-white/45">{SCHOOL_NO_LINKED_TEACHERS}</span>
-                        )}
-                      </SchoolTableCell>
-                      <SchoolTableCell className="text-center">
-                        <SchoolSecondaryButton onClick={() => void openStudentReport(s)}>
-                          {SCHOOL_VIEW_STUDENT_REPORT}
-                        </SchoolSecondaryButton>
-                      </SchoolTableCell>
-                    </SchoolTableRow>
-                  ))}
-                </SchoolDataTable>
-              ) : students.length ? (
-                <SchoolEmptyState title="לא נמצאו תלמידים בחיפוש." />
-              ) : (
-                <SchoolEmptyState title={SCHOOL_EMPTY_STUDENTS} hint={SCHOOL_EMPTY_STUDENTS_HINT} />
-              )}
-            </SchoolSection>
+            {!gradeLevel ? (
+              <SchoolSection title={SCHOOL_CHOOSE_GRADE}>
+                {!students?.length ? (
+                  <SchoolEmptyState title={SCHOOL_EMPTY_STUDENTS} hint={SCHOOL_EMPTY_STUDENTS_HINT} />
+                ) : (
+                  <SchoolCardGrid columns={3}>
+                    {SCHOOL_GRADE_OPTIONS.map((grade) => {
+                      const count = (students || []).filter(
+                        (s) => String(s.gradeLevel || "").trim() === grade.level
+                      ).length;
+                      return (
+                        <SchoolManagementCard
+                          key={grade.level}
+                          title={grade.label}
+                          subtitle={`${count} תלמידים`}
+                          onClick={() => setGradeLevel(grade.level)}
+                        />
+                      );
+                    })}
+                  </SchoolCardGrid>
+                )}
+              </SchoolSection>
+            ) : null}
+
+            {gradeLevel && !physicalClassName ? (
+              <>
+                <SchoolBackButton
+                  label={SCHOOL_BACK_GRADES}
+                  onClick={() => {
+                    setGradeLevel("");
+                    setPhysicalClassName("");
+                  }}
+                />
+                <SchoolSection title={`${SCHOOL_CHOOSE_PHYSICAL_CLASS} · ${schoolGradeLabelHe(gradeLevel)}`}>
+                  {physicalGroups.length ? (
+                    <SchoolCardGrid columns={2}>
+                      {physicalGroups.map((group) => (
+                        <SchoolManagementCard
+                          key={group.name}
+                          title={group.name}
+                          subtitle={`${group.studentCount} תלמידים`}
+                          onClick={() => setPhysicalClassName(group.name)}
+                        />
+                      ))}
+                    </SchoolCardGrid>
+                  ) : (
+                    <SchoolEmptyState title="אין תלמידים בשכבה זו." />
+                  )}
+                </SchoolSection>
+              </>
+            ) : null}
+
+            {gradeLevel && physicalClassName ? (
+              <>
+                <SchoolBackButton label={SCHOOL_BACK_CLASSES} onClick={() => setPhysicalClassName("")} />
+                <SchoolSection title={`${SCHOOL_CHOOSE_STUDENTS} · ${physicalClassName}`}>
+                  <div className="mb-4">
+                    <label className="block text-sm text-white/70 text-right">
+                      {SCHOOL_SEARCH_STUDENTS}
+                      <input
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="mt-1 w-full max-w-md mr-0 ml-auto block rounded-lg bg-black/40 border border-white/20 px-3 py-2 text-sm"
+                        placeholder={SCHOOL_SEARCH_STUDENTS_PLACEHOLDER}
+                      />
+                    </label>
+                  </div>
+                  {visibleStudents.length ? (
+                    <SchoolCardGrid columns={1}>
+                      {visibleStudents.map((s) => (
+                        <SchoolStudentCard
+                          key={s.studentId}
+                          student={s}
+                          gradeLabel={schoolGradeLabelHe(s.gradeLevel)}
+                          reportLabel={SCHOOL_VIEW_STUDENT_REPORT}
+                          onReport={() => void openStudentReport(s)}
+                        />
+                      ))}
+                    </SchoolCardGrid>
+                  ) : (
+                    <SchoolEmptyState title="לא נמצאו תלמידים בכיתה זו." />
+                  )}
+                </SchoolSection>
+              </>
+            ) : null}
 
             {reportStudentId ? (
               <SchoolReportPreview
                 loading={reportLoading ? SCHOOL_REPORT_LOADING : null}
                 error={reportError}
                 summary={reportSummary}
-                onClose={closeReport}
+                onClose={() => {
+                  setReportStudentId(null);
+                  setReportSummary(null);
+                  setReportError("");
+                }}
                 closeLabel={SCHOOL_REPORT_CLOSE}
               />
             ) : null}

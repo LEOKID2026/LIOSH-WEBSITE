@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  schoolActivityModeHe,
   schoolActivityStatusHe,
   schoolSubjectLabelHe,
 } from "../../lib/school-portal/school-ui.he.js";
@@ -92,12 +93,13 @@ export function SchoolAlertBanner({ children, tone = "amber" }) {
   );
 }
 
-export function SchoolSubjectBadges({ subjects, max = 4 }) {
+export function SchoolSubjectBadges({ subjects, max = 6 }) {
   if (!subjects?.length) {
     return <span className="text-white/45 text-xs">—</span>;
   }
-  const shown = subjects.slice(0, max);
-  const rest = subjects.length - shown.length;
+  const unique = [...new Set(subjects)];
+  const shown = unique.slice(0, max);
+  const rest = unique.length - shown.length;
   return (
     <div className="flex flex-wrap gap-1 justify-end">
       {shown.map((s) => (
@@ -139,31 +141,31 @@ export function SchoolActivityRow({ activity }) {
   const subject = schoolSubjectLabelHe(activity.subject);
   const teacher = activity.teacherName || "—";
   const className = activity.className || "—";
+  const mode = schoolActivityModeHe(activity.mode);
 
   return (
-    <li className="rounded-lg border border-white/10 bg-black/25 px-3 sm:px-4 py-3 hover:bg-white/[0.03] transition-colors">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
-        <div className="min-w-0 flex-1 text-right">
+    <li className="rounded-lg border border-white/10 bg-black/25 px-3 sm:px-4 py-3 hover:bg-white/[0.03] transition-colors min-w-0">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 flex-1 text-right space-y-2">
           <p className="font-semibold text-white break-words">{title}</p>
-          <p className="text-sm text-white/55 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 justify-end">
-            <span>{subject}</span>
-            <span className="text-white/30" aria-hidden>
-              ·
-            </span>
-            <span>{teacher}</span>
-            <span className="text-white/30" aria-hidden>
-              ·
-            </span>
-            <span>{className}</span>
-            {activity.mode ? (
-              <>
-                <span className="text-white/30" aria-hidden>
-                  ·
-                </span>
-                <span className="text-white/45">{activity.mode}</span>
-              </>
-            ) : null}
-          </p>
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
+            <div className="flex justify-between sm:block gap-2">
+              <dt className="text-white/45">מקצוע</dt>
+              <dd className="text-white/85">{subject}</dd>
+            </div>
+            <div className="flex justify-between sm:block gap-2">
+              <dt className="text-white/45">כיתה</dt>
+              <dd className="text-white/85 break-words">{className}</dd>
+            </div>
+            <div className="flex justify-between sm:block gap-2">
+              <dt className="text-white/45">מורה</dt>
+              <dd className="text-white/85">{teacher}</dd>
+            </div>
+            <div className="flex justify-between sm:block gap-2">
+              <dt className="text-white/45">סוג</dt>
+              <dd className="text-white/85">{mode}</dd>
+            </div>
+          </dl>
         </div>
         <SchoolActivityStatusBadge status={activity.status} />
       </div>

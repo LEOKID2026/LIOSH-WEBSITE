@@ -1,40 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
 import {
-  SchoolDataTable,
+  SchoolBackButton,
+  SchoolCardGrid,
+  SchoolDrillBreadcrumb,
+  SchoolErrorBlock,
+  SchoolLoadingBlock,
+  SchoolManagementCard,
+  SchoolSubjectClassCard,
+} from "../../../components/school-portal/SchoolDrillDown";
+import {
   SchoolEmptyState,
   SchoolReportPreview,
-  SchoolSecondaryButton,
   SchoolSection,
-  SchoolTableCell,
-  SchoolTableRow,
 } from "../../../components/school-portal/SchoolPortalUi";
+import {
+  groupPhysicalClassesForGrade,
+  physicalClassGroupKey,
+  physicalClassStudentCount,
+  schoolGradeLabelHe,
+  sortSubjectClasses,
+  SCHOOL_GRADE_OPTIONS,
+} from "../../../lib/school-portal/school-drilldown";
+import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import {
   schoolAuthFetch,
-  schoolSubjectLabelHe,
+  schoolClassReportSummaryFromBody,
+  SCHOOL_BACK_CLASSES,
+  SCHOOL_BACK_GRADES,
+  SCHOOL_CHOOSE_GRADE,
+  SCHOOL_CHOOSE_PHYSICAL_CLASS,
+  SCHOOL_CHOOSE_SUBJECT,
   SCHOOL_CLASSES_SUBTITLE,
   SCHOOL_CLASSES_TITLE,
-  SCHOOL_COL_ACTIONS,
-  SCHOOL_COL_CLASS,
-  SCHOOL_COL_GRADE,
-  SCHOOL_COL_MEMBERS,
-  SCHOOL_COL_SUBJECT_FOCUS,
-  SCHOOL_COL_TEACHER,
   SCHOOL_EMPTY_CLASSES,
   SCHOOL_LOADING,
   SCHOOL_REPORT_CLOSE,
   SCHOOL_REPORT_LOADING,
-  SCHOOL_REPORT_SUMMARY,
+  SCHOOL_STUDENTS_IN_CLASS,
   SCHOOL_VIEW_CLASS_REPORT,
 } from "../../../lib/school-portal/school-ui.he";
 
 export default function SchoolClassesPage() {
   const router = useRouter();
   const { state, accessToken, me } = useSchoolPortalLoad();
-  const [classes, setClasses] = useState([]);
+  const [gradeLevel, setGradeLevel] = useState("");
+  const [physicalKey, setPhysicalKey] = useState("");
   const [reportClassId, setReportClassId] = useState(null);
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState("");
@@ -45,13 +59,32 @@ export default function SchoolClassesPage() {
     if (state === "forbidden") router.replace("/teacher/dashboard");
   }, [state, router]);
 
-  useEffect(() => {
-    if (state !== "ready" || !accessToken) return;
-    schoolAuthFetch(accessToken, "/api/school/classes").then(async (res) => {
-      const body = await res.json().catch(() => ({}));
-      if (res.status === 200) setClasses(body.data?.classes || []);
-    });
-  }, [state, accessToken]);
+  const parseClasses = useMemo(
+    () => (body) => body?.data?.classes?.filter((c) => !c.isArchived) || [],
+    []
+  );
+
+  const { data: classes, loading, error, reload } = useSchoolDataFetch(
+    accessToken,
+    "/api/school/classes",
+    parseClasses,
+    state === "ready"
+  );
+
+  const physicalGroups = useMemo(
+    () => (gradeLevel ? groupPhysicalClassesForGrade(classes || [], gradeLevel) : []),
+    [classes, gradeLevel]
+  );
+
+  const selectedPhysical = useMemo(
+    () => physicalGroups.find((g) => physicalClassGroupKey(g.subjectClasses[0]) === physicalKey) || null,
+    [physicalGroups, physicalKey]
+  );
+
+  const subjectClasses = useMemo(
+    () => (selectedPhysical ? sortSubjectClasses(selectedPhysical.subjectClasses) : []),
+    [selectedPhysical]
+  );
 
   const openClassReport = async (cls) => {
     if (!accessToken) return;
@@ -69,25 +102,26 @@ export default function SchoolClassesPage() {
         setReportError(body?.error?.message || body?.error?.code || "שגיאה בטעינת דוח");
         return;
       }
-      const summary = body?.summary;
-      const accuracy = summary?.accuracy != null ? `${summary.accuracy}%` : "—";
-      setReportSummary({
-        title: `${SCHOOL_REPORT_SUMMARY}: ${cls.name}`,
-        line: `תשובות: ${summary?.totalAnswers ?? 0} · דיוק: ${accuracy} · מורים בכיתה: ${cls.teacherName || "—"}`,
-      });
+      const label = `${cls.name || "כיתה"} · ${schoolGradeLabelHe(cls.gradeLevel)}`;
+      setReportSummary(schoolClassReportSummaryFromBody(body, label));
     } finally {
       setReportLoading(false);
     }
   };
 
-  const columns = [
-    { key: "class", label: SCHOOL_COL_CLASS },
-    { key: "grade", label: SCHOOL_COL_GRADE, className: "text-center" },
-    { key: "subject", label: SCHOOL_COL_SUBJECT_FOCUS },
-    { key: "teacher", label: SCHOOL_COL_TEACHER },
-    { key: "members", label: SCHOOL_COL_MEMBERS, className: "text-center" },
-    { key: "actions", label: SCHOOL_COL_ACTIONS, className: "text-center" },
-  ];
+  const breadcrumbSteps = [
+    { label: SCHOOL_CHOOSE_GRADE, onClick: gradeLevel ? () => { setGradeLevel(""); setPhysicalKey(""); } : undefined, active: !gradeLevel },
+    gradeLevel
+      ? {
+          label: schoolGradeLabelHe(gradeLevel),
+          onClick: physicalKey ? () => setPhysicalKey("") : undefined,
+          active: gradeLevel && !physicalKey,
+        }
+      : null,
+    physicalKey && selectedPhysical
+      ? { label: selectedPhysical.name, active: true }
+      : null,
+  ].filter(Boolean);
 
   return (
     <Layout>
@@ -98,42 +132,79 @@ export default function SchoolClassesPage() {
         showTeacherDashboardLink={me?.hasTeacherActivity}
       >
         {state === "loading" ? (
-          <p className="text-white/60 text-sm text-right">{SCHOOL_LOADING}</p>
+          <SchoolLoadingBlock message={SCHOOL_LOADING} />
+        ) : loading ? (
+          <SchoolLoadingBlock />
+        ) : error ? (
+          <SchoolErrorBlock message={error} onRetry={() => void reload()} />
         ) : (
           <>
-            <SchoolSection>
-              {classes.length ? (
-                <SchoolDataTable columns={columns} emptyMessage={SCHOOL_EMPTY_CLASSES}>
-                  {classes.map((c) => (
-                    <SchoolTableRow key={c.classId}>
-                      <SchoolTableCell>
-                        <p className="font-medium">{c.name}</p>
-                        {c.isArchived ? (
-                          <p className="text-xs text-white/45 mt-0.5">בארכיון</p>
-                        ) : null}
-                      </SchoolTableCell>
-                      <SchoolTableCell className="text-center text-white/75">
-                        {c.gradeLevel || "—"}
-                      </SchoolTableCell>
-                      <SchoolTableCell>{schoolSubjectLabelHe(c.subjectFocus)}</SchoolTableCell>
-                      <SchoolTableCell>
-                        <p className="text-white/85">{c.teacherName || "—"}</p>
-                      </SchoolTableCell>
-                      <SchoolTableCell className="text-center tabular-nums">
-                        {c.memberCount ?? 0}
-                      </SchoolTableCell>
-                      <SchoolTableCell className="text-center">
-                        <SchoolSecondaryButton onClick={() => void openClassReport(c)}>
-                          {SCHOOL_VIEW_CLASS_REPORT}
-                        </SchoolSecondaryButton>
-                      </SchoolTableCell>
-                    </SchoolTableRow>
-                  ))}
-                </SchoolDataTable>
-              ) : (
-                <SchoolEmptyState title={SCHOOL_EMPTY_CLASSES} />
-              )}
-            </SchoolSection>
+            <SchoolDrillBreadcrumb steps={breadcrumbSteps} />
+
+            {!gradeLevel ? (
+              <SchoolSection title={SCHOOL_CHOOSE_GRADE}>
+                <SchoolCardGrid columns={3}>
+                  {SCHOOL_GRADE_OPTIONS.map((grade) => {
+                    const count = groupPhysicalClassesForGrade(classes || [], grade.level).length;
+                    return (
+                      <SchoolManagementCard
+                        key={grade.level}
+                        title={grade.label}
+                        subtitle={`${count} כיתות פיזיות`}
+                        onClick={() => setGradeLevel(grade.level)}
+                      />
+                    );
+                  })}
+                </SchoolCardGrid>
+                {!classes?.length ? <SchoolEmptyState title={SCHOOL_EMPTY_CLASSES} /> : null}
+              </SchoolSection>
+            ) : null}
+
+            {gradeLevel && !physicalKey ? (
+              <>
+                <SchoolBackButton
+                  label={SCHOOL_BACK_GRADES}
+                  onClick={() => {
+                    setGradeLevel("");
+                    setPhysicalKey("");
+                  }}
+                />
+                <SchoolSection title={`${SCHOOL_CHOOSE_PHYSICAL_CLASS} · ${schoolGradeLabelHe(gradeLevel)}`}>
+                  {physicalGroups.length ? (
+                    <SchoolCardGrid columns={2}>
+                      {physicalGroups.map((group) => (
+                        <SchoolManagementCard
+                          key={physicalClassGroupKey(group.subjectClasses[0])}
+                          title={group.name}
+                          subtitle={`${physicalClassStudentCount(group.subjectClasses)} ${SCHOOL_STUDENTS_IN_CLASS} · 6 מקצועות`}
+                          onClick={() => setPhysicalKey(physicalClassGroupKey(group.subjectClasses[0]))}
+                        />
+                      ))}
+                    </SchoolCardGrid>
+                  ) : (
+                    <SchoolEmptyState title="אין כיתות בשכבה זו." />
+                  )}
+                </SchoolSection>
+              </>
+            ) : null}
+
+            {gradeLevel && physicalKey && selectedPhysical ? (
+              <>
+                <SchoolBackButton label={SCHOOL_BACK_CLASSES} onClick={() => setPhysicalKey("")} />
+                <SchoolSection title={`${SCHOOL_CHOOSE_SUBJECT} · ${selectedPhysical.name}`}>
+                  <SchoolCardGrid columns={2}>
+                    {subjectClasses.map((cls) => (
+                      <SchoolSubjectClassCard
+                        key={cls.classId}
+                        cls={cls}
+                        reportLabel={SCHOOL_VIEW_CLASS_REPORT}
+                        onReport={() => void openClassReport(cls)}
+                      />
+                    ))}
+                  </SchoolCardGrid>
+                </SchoolSection>
+              </>
+            ) : null}
 
             {reportClassId ? (
               <SchoolReportPreview

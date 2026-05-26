@@ -10,6 +10,7 @@ import {
   SchoolSection,
   SchoolStatCard,
 } from "../../components/school-portal/SchoolPortalUi";
+import { SchoolErrorBlock, SchoolLoadingBlock } from "../../components/school-portal/SchoolDrillDown";
 import { useSchoolPortalLoad } from "../../lib/school-portal/use-school-portal-session";
 import {
   schoolAuthFetch,
@@ -98,11 +99,9 @@ export default function SchoolDashboardPage() {
         showTeacherDashboardLink={me?.hasTeacherActivity}
       >
         {state === "loading" || dataLoading ? (
-          <p className="text-white/60 text-sm text-right">{SCHOOL_LOADING}</p>
+          <SchoolLoadingBlock message={SCHOOL_LOADING} />
         ) : error ? (
-          <p className="text-red-300 text-sm text-right" role="alert">
-            {error || SCHOOL_LOAD_ERROR}
-          </p>
+          <SchoolErrorBlock message={error || SCHOOL_LOAD_ERROR} onRetry={() => void reload()} />
         ) : (
           <div className="space-y-6 lg:space-y-8">
             <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">

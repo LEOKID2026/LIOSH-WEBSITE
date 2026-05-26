@@ -107,7 +107,7 @@ export default function SchoolPortalShell({
             aria-label="ניווט בית ספר"
           >
             <p className="text-xs text-white/45 px-3 pt-1 pb-2 hidden lg:block">תפריט ניהול</p>
-            <div className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 -mx-1 px-1 lg:mx-0 lg:px-0">
+            <div className="flex flex-wrap lg:flex-col gap-1 pb-1 lg:pb-0">
               {NAV_ITEMS.map((item) => {
                 const active =
                   path === item.href || (item.href !== "/school/dashboard" && path.startsWith(item.href));
