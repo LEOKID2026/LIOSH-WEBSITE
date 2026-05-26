@@ -30,6 +30,9 @@ reports/virtual-student-longitudinal/
 # Production
 /build
 
+# Demo school simulation state (local only)
+scripts/school-portal/sim-state.json
+
 # Misc
 .DS_Store
 *.pem

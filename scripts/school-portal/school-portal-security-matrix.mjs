@@ -17,12 +17,28 @@ const root = path.join(__dirname, "../..");
 const u = (p) => pathToFileURL(path.join(root, p)).href;
 
 const PASSWORD_ENV = "SCHOOL_SECURITY_TEST_PASSWORD";
+/** Throwaway QA accounts only — never use demo school @leo-k.com identities. */
 const EMAILS = {
-  managerA: process.env.SCHOOL_QA_EMAIL || "school@leo.com",
+  managerA: "school-qa-a@leo.com",
   managerB: "school-b@leo.com",
   mathTeacher: "school-math-teacher@leo.com",
   privateTeacher: "school-private@leo.com",
 };
+const PROTECTED_DEMO_EMAILS = new Set([
+  "school@leo-k.com",
+  "dan@leo-k.com",
+  "vered@leo-k.com",
+  "noam@leo-k.com",
+  "sara@leo-k.com",
+  "michal@leo-k.com",
+  "alon@leo-k.com",
+  "rachel@leo-k.com",
+  "yael@leo-k.com",
+  "david@leo-k.com",
+  "liron@leo-k.com",
+  "tamar@leo-k.com",
+  "demofamily@leo-k.com",
+]);
 const SCHOOL_A_NAME = "בית ספר ניסיון LEO";
 const SCHOOL_B_NAME = "בית ספר QA B";
 
@@ -142,6 +158,14 @@ async function findOrCreateSchool(admin, name) {
 }
 
 async function provisionFixtures(admin, password) {
+  for (const email of Object.values(EMAILS)) {
+    if (PROTECTED_DEMO_EMAILS.has(String(email).toLowerCase())) {
+      throw new Error(
+        `Security matrix must not use demo account ${email}. Use throwaway school-qa-a@leo.com fixtures only.`
+      );
+    }
+  }
+
   const { assignSchoolManager, assignTeacherToSchool } = await import(
     u("lib/admin-server/admin-schools.server.js")
   );
