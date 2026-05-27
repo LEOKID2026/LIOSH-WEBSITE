@@ -13,6 +13,7 @@ import {
   SCHOOL_CARD_INNER,
 } from "../../../components/school-portal/SchoolPortalUi";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
+import { fetchSchoolJsonSWR, readSchoolCache, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
 import SchoolSubjectSelect from "../../../components/school-portal/SchoolSubjectSelect";
 import {
   schoolAuthFetch,
@@ -47,7 +48,7 @@ export default function SchoolTeacherDetailPage() {
     return null;
   }, [isReady, router.asPath, router.query?.teacherId]);
 
-  const { state, accessToken, me, error: portalError } = useSchoolPortalLoad();
+  const { state, accessToken, me, schoolId, error: portalError } = useSchoolPortalLoad();
   const [detail, setDetail] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [newSubject, setNewSubject] = useState("math");
@@ -60,26 +61,52 @@ export default function SchoolTeacherDetailPage() {
     if (state === "forbidden") router.replace("/teacher/dashboard");
   }, [state, router]);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async ({ force = false } = {}) => {
     if (!accessToken || typeof teacherIdResolved !== "string") return;
-    setDetailLoading(true);
+    const detailPath = `/api/school/teachers/${teacherIdResolved}`;
+    const subjectsPath = `/api/school/teachers/${teacherIdResolved}/subjects`;
+    const cachedDetail = schoolId ? readSchoolCache(schoolId, detailPath) : null;
+    const cachedSubjects = schoolId ? readSchoolCache(schoolId, subjectsPath) : null;
+    if (cachedDetail?.data?.data?.teacher) {
+      setDetail(cachedDetail.data.data.teacher);
+      setDetailLoading(false);
+    } else {
+      setDetailLoading(true);
+    }
+    if (cachedSubjects?.data?.data?.subjects) {
+      setSubjects(cachedSubjects.data.data.subjects);
+    }
     setDetailError("");
     try {
-      const [dRes, sRes] = await Promise.all([
-        schoolAuthFetch(accessToken, `/api/school/teachers/${teacherIdResolved}`),
-        schoolAuthFetch(accessToken, `/api/school/teachers/${teacherIdResolved}/subjects`),
+      const [dResult, sResult] = await Promise.all([
+        fetchSchoolJsonSWR({
+          accessToken,
+          schoolId,
+          path: detailPath,
+          ttlMs: SCHOOL_CACHE_TTL_MS.teacherDetail,
+          force,
+          fetchFn: schoolAuthFetch,
+        }),
+        fetchSchoolJsonSWR({
+          accessToken,
+          schoolId,
+          path: subjectsPath,
+          ttlMs: SCHOOL_CACHE_TTL_MS.teacherDetail,
+          force,
+          fetchFn: schoolAuthFetch,
+        }),
       ]);
-      const dBody = await dRes.json().catch(() => ({}));
-      const sBody = await sRes.json().catch(() => ({}));
-      if (dRes.status === 200) {
+      const dBody = dResult?.body || {};
+      const sBody = sResult?.body || {};
+      if (dResult?.status === 200) {
         setDetail(dBody.data?.teacher);
       } else {
         setDetail(null);
         setDetailError(dBody?.error?.message || "שגיאה בטעינת פרטי המורה");
       }
-      if (sRes.status === 200) {
+      if (sResult?.status === 200) {
         setSubjects(sBody.data?.subjects || []);
-      } else if (dRes.status === 200) {
+      } else if (dResult?.status === 200) {
         setSubjects([]);
       }
     } catch {
@@ -87,7 +114,7 @@ export default function SchoolTeacherDetailPage() {
     } finally {
       setDetailLoading(false);
     }
-  }, [accessToken, teacherIdResolved]);
+  }, [accessToken, schoolId, teacherIdResolved]);
 
   useEffect(() => {
     if (state !== "ready" || typeof teacherIdResolved !== "string") return;
@@ -103,7 +130,7 @@ export default function SchoolTeacherDetailPage() {
         method: "POST",
         body: JSON.stringify({ subject: newSubject }),
       });
-      await load();
+      await load({ force: true });
     } finally {
       setBusy(false);
     }

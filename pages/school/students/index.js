@@ -22,9 +22,11 @@ import {
 } from "../../../components/school-portal/SchoolPortalUi";
 import { schoolGradeLabelHe, SCHOOL_GRADE_OPTIONS } from "../../../lib/school-portal/school-drilldown";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
+import { fetchSchoolJsonSWR, invalidateSchoolCache, readSchoolCache, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
+import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
 import {
-  schoolAuthFetch,
   apiErrorMessageHe,
+  schoolAuthFetch,
   SCHOOL_BACK_CLASSES,
   SCHOOL_BACK_GRADES,
   SCHOOL_CHOOSE_GRADE,
@@ -56,7 +58,7 @@ function gradeCountMap(summary) {
 
 export default function SchoolStudentsPage() {
   const router = useRouter();
-  const { state, accessToken, me } = useSchoolPortalLoad();
+  const { state, accessToken, me, schoolId } = useSchoolPortalLoad();
   const [gradeLevel, setGradeLevel] = useState("");
   const [physicalClassName, setPhysicalClassName] = useState("");
   const [search, setSearch] = useState("");
@@ -83,52 +85,90 @@ export default function SchoolStudentsPage() {
     if (state === "forbidden") router.replace("/teacher/dashboard");
   }, [state, router]);
 
-  const loadBrowseSummary = useCallback(async () => {
+  const loadBrowseSummary = useCallback(async ({ force = false } = {}) => {
     if (!accessToken) return;
-    setSummaryLoading(true);
+    const path = "/api/school/students/browse-summary";
+    const cached = schoolId ? readSchoolCache(schoolId, path) : null;
+    if (cached?.data?.data?.summary) {
+      setBrowseSummary(cached.data.data.summary);
+      setSummaryLoading(false);
+    } else {
+      setSummaryLoading(true);
+    }
     setSummaryError("");
     try {
-      const res = await schoolAuthFetch(accessToken, "/api/school/students/browse-summary");
-      const body = await res.json().catch(() => ({}));
-      if (res.status !== 200) {
+      const result = await fetchSchoolJsonSWR({
+        accessToken,
+        schoolId,
+        path,
+        ttlMs: SCHOOL_CACHE_TTL_MS.browse,
+        force,
+        fetchFn: schoolAuthFetch,
+        onUpdate: (updated) => {
+          if (updated.status === 200) {
+            setBrowseSummary(updated.body?.data?.summary || null);
+          }
+        },
+      });
+      if (!result || result.status !== 200) {
+        const body = result?.body || {};
         setSummaryError(apiErrorMessageHe(body?.error, "שגיאה בטעינת נתונים"));
         return;
       }
-      setBrowseSummary(body.data?.summary || null);
+      setBrowseSummary(result.body?.data?.summary || null);
     } catch {
       setSummaryError("שגיאה בטעינת נתונים");
     } finally {
       setSummaryLoading(false);
     }
-  }, [accessToken]);
+  }, [accessToken, schoolId]);
 
   useEffect(() => {
     if (state === "ready") void loadBrowseSummary();
   }, [state, loadBrowseSummary]);
 
-  const loadClassStudents = useCallback(async () => {
+  const loadClassStudents = useCallback(async ({ force = false } = {}) => {
     if (!accessToken || !gradeLevel || !physicalClassName) return;
-    setClassStudentsLoading(true);
+    const q = new URLSearchParams({
+      gradeLevel,
+      physicalClassName,
+    });
+    const path = `/api/school/students?${q.toString()}`;
+    const cached = schoolId ? readSchoolCache(schoolId, path) : null;
+    if (cached?.data?.data?.students && !force) {
+      setClassStudents(cached.data.data.students);
+      setClassStudentsLoading(false);
+    } else {
+      setClassStudentsLoading(true);
+      setClassStudents([]);
+    }
     setClassStudentsError("");
-    setClassStudents([]);
     try {
-      const q = new URLSearchParams({
-        gradeLevel,
-        physicalClassName,
+      const result = await fetchSchoolJsonSWR({
+        accessToken,
+        schoolId,
+        path,
+        ttlMs: SCHOOL_CACHE_TTL_MS.browse,
+        force,
+        fetchFn: schoolAuthFetch,
+        onUpdate: (updated) => {
+          if (updated.status === 200) {
+            setClassStudents(updated.body?.data?.students || []);
+          }
+        },
       });
-      const res = await schoolAuthFetch(accessToken, `/api/school/students?${q.toString()}`);
-      const body = await res.json().catch(() => ({}));
-      if (res.status !== 200) {
+      if (!result || result.status !== 200) {
+        const body = result?.body || {};
         setClassStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת תלמידים"));
         return;
       }
-      setClassStudents(body.data?.students || []);
+      setClassStudents(result.body?.data?.students || []);
     } catch {
       setClassStudentsError("שגיאה בטעינת תלמידים");
     } finally {
       setClassStudentsLoading(false);
     }
-  }, [accessToken, gradeLevel, physicalClassName]);
+  }, [accessToken, schoolId, gradeLevel, physicalClassName]);
 
   useEffect(() => {
     if (gradeLevel && physicalClassName) void loadClassStudents();
@@ -165,22 +205,32 @@ export default function SchoolStudentsPage() {
     if (!accessToken) return;
     setReportStudent(student);
     setReportOpen(true);
-    setReportLoading(true);
     setReportError("");
     setReportViewModel(null);
+    const path = `/api/school/students/${student.studentId}/report-data?windowDays=30`;
+
+    const applyBody = (body) => {
+      setReportViewModel(parseStudentReportViewModel(body, student, { schoolName: me?.school?.name }));
+    };
+
+    setReportLoading(true);
     try {
-      const res = await schoolAuthFetch(
+      const result = await fetchSchoolReportCached({
         accessToken,
-        `/api/school/students/${student.studentId}/report-data?windowDays=30`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (res.status !== 200) {
-        setReportError(apiErrorMessageHe(body?.error, "שגיאה בטעינת דוח"));
+        schoolId,
+        path,
+        onCached: (body) => {
+          if (body) {
+            applyBody(body);
+            setReportLoading(false);
+          }
+        },
+      });
+      if (result?.status !== 200) {
+        setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
         return;
       }
-      setReportViewModel(
-        parseStudentReportViewModel(body, student, { schoolName: me?.school?.name })
-      );
+      applyBody(result.body);
     } finally {
       setReportLoading(false);
     }
@@ -197,8 +247,9 @@ export default function SchoolStudentsPage() {
       });
       if (res.status === 201) {
         setStudentId("");
-        await loadBrowseSummary();
-        if (gradeLevel && physicalClassName) await loadClassStudents();
+        if (schoolId) invalidateSchoolCache(schoolId);
+        await loadBrowseSummary({ force: true });
+        if (gradeLevel && physicalClassName) await loadClassStudents({ force: true });
       }
     } finally {
       setBusy(false);

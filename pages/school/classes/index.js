@@ -24,8 +24,8 @@ import {
 } from "../../../lib/school-portal/school-drilldown";
 import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
+import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
 import {
-  schoolAuthFetch,
   apiErrorMessageHe,
   SCHOOL_BACK_CLASSES,
   SCHOOL_BACK_GRADES,
@@ -45,7 +45,7 @@ import {
 
 export default function SchoolClassesPage() {
   const router = useRouter();
-  const { state, accessToken, me } = useSchoolPortalLoad();
+  const { state, accessToken, me, schoolId } = useSchoolPortalLoad();
   const [gradeLevel, setGradeLevel] = useState("");
   const [physicalKey, setPhysicalKey] = useState("");
 
@@ -69,9 +69,11 @@ export default function SchoolClassesPage() {
 
   const { data: classes, loading, error, reload } = useSchoolDataFetch(
     accessToken,
+    schoolId,
     "/api/school/classes",
     parseClasses,
-    state === "ready"
+    state === "ready",
+    { cacheKind: "list" }
   );
 
   useEffect(() => {
@@ -107,16 +109,11 @@ export default function SchoolClassesPage() {
 
   const openStudentReportFromClass = async (studentId, row) => {
     if (!accessToken || !studentId) return;
-    setStudentReportLoading(true);
-    try {
-      const params = new URLSearchParams({ windowDays: "30" });
-      if (reportClass?.classId) params.set("classId", String(reportClass.classId));
-      const res = await schoolAuthFetch(
-        accessToken,
-        `/api/school/students/${studentId}/report-data?${params.toString()}`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (res.status !== 200) return;
+    const params = new URLSearchParams({ windowDays: "30" });
+    if (reportClass?.classId) params.set("classId", String(reportClass.classId));
+    const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
+
+    const applyBody = (body) => {
       const displayName =
         row?.name ||
         body?.student?.full_name ||
@@ -137,6 +134,19 @@ export default function SchoolClassesPage() {
           }
         )
       );
+    };
+
+    setStudentReportLoading(true);
+    try {
+      const result = await fetchSchoolReportCached({
+        accessToken,
+        schoolId,
+        path,
+        onCached: (body) => {
+          if (body?.student) applyBody(body);
+        },
+      });
+      if (result?.status === 200) applyBody(result.body);
     } finally {
       setStudentReportLoading(false);
     }
@@ -146,22 +156,34 @@ export default function SchoolClassesPage() {
     if (!accessToken) return;
     setReportClass(cls);
     setReportOpen(true);
-    setReportLoading(true);
     setReportError("");
     setReportViewModel(null);
-    try {
-      const res = await schoolAuthFetch(
-        accessToken,
-        `/api/school/classes/${cls.classId}/report-data?windowDays=30`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (res.status !== 200) {
-        setReportError(apiErrorMessageHe(body?.error, "שגיאה בטעינת דוח"));
-        return;
-      }
+    const path = `/api/school/classes/${cls.classId}/report-data?windowDays=30`;
+
+    const applyBody = (body) => {
       setReportViewModel(
         parseClassReportViewModel(body, { ...cls, classId: cls.classId }, body.schoolManagerExtras || {})
       );
+    };
+
+    setReportLoading(true);
+    try {
+      const result = await fetchSchoolReportCached({
+        accessToken,
+        schoolId,
+        path,
+        onCached: (body) => {
+          if (body) {
+            applyBody(body);
+            setReportLoading(false);
+          }
+        },
+      });
+      if (result?.status !== 200) {
+        setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
+        return;
+      }
+      applyBody(result.body);
     } finally {
       setReportLoading(false);
     }

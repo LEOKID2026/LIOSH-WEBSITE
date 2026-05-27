@@ -13,6 +13,11 @@ import {
 import { SchoolErrorBlock, SchoolLoadingBlock } from "../../components/school-portal/SchoolDrillDown";
 import { useSchoolPortalLoad } from "../../lib/school-portal/use-school-portal-session";
 import {
+  fetchSchoolJsonSWR,
+  readSchoolCache,
+  SCHOOL_CACHE_TTL_MS,
+} from "../../lib/school-portal/school-portal-cache";
+import {
   schoolAuthFetch,
   SCHOOL_ALERT_ACTIVE_ACTIVITIES,
   SCHOOL_ALERT_FEW_TEACHERS,
@@ -43,10 +48,10 @@ import {
 
 export default function SchoolDashboardPage() {
   const router = useRouter();
-  const { state, accessToken, me, error, reload } = useSchoolPortalLoad();
-  const [stats, setStats] = useState(null);
+  const { state, accessToken, me, schoolId, error, reload } = useSchoolPortalLoad();
+  const [stats, setStats] = useState(me?.stats || null);
   const [activities, setActivities] = useState([]);
-  const [dataLoading, setDataLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(!me?.stats);
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -54,25 +59,48 @@ export default function SchoolDashboardPage() {
   }, [state, router]);
 
   useEffect(() => {
+    if (me?.stats) setStats(me.stats);
+  }, [me?.stats]);
+
+  useEffect(() => {
     if (state !== "ready" || !accessToken) return;
     let cancelled = false;
-    setDataLoading(true);
+
+    const actPath = "/api/school/activities?limit=12";
+    const actCached = schoolId ? readSchoolCache(schoolId, actPath) : null;
+    if (actCached?.data?.data?.activities) {
+      setActivities(actCached.data.data.activities);
+      setDataLoading(false);
+    } else if (!me?.stats) {
+      setDataLoading(true);
+    } else {
+      setDataLoading(false);
+    }
+
     (async () => {
-      const [dashRes, actRes] = await Promise.all([
-        schoolAuthFetch(accessToken, "/api/school/dashboard"),
-        schoolAuthFetch(accessToken, "/api/school/activities?limit=12"),
-      ]);
+      const actResult = await fetchSchoolJsonSWR({
+        accessToken,
+        schoolId,
+        path: actPath,
+        ttlMs: SCHOOL_CACHE_TTL_MS.activities,
+        fetchFn: schoolAuthFetch,
+        onUpdate: (updated) => {
+          if (!cancelled && updated.status === 200) {
+            setActivities(updated.body?.data?.activities || []);
+          }
+        },
+      });
       if (cancelled) return;
-      const dashBody = await dashRes.json().catch(() => ({}));
-      const actBody = await actRes.json().catch(() => ({}));
-      if (dashRes.status === 200) setStats(dashBody.data?.stats);
-      if (actRes.status === 200) setActivities(actBody.data?.activities || []);
+      if (actResult?.status === 200) {
+        setActivities(actResult.body?.data?.activities || []);
+      }
       setDataLoading(false);
     })();
+
     return () => {
       cancelled = true;
     };
-  }, [state, accessToken]);
+  }, [state, accessToken, schoolId, me?.stats]);
 
   const alerts = useMemo(() => {
     const items = [];

@@ -26,7 +26,7 @@ import {
 
 export default function SchoolTeachersPage() {
   const router = useRouter();
-  const { state, accessToken, me } = useSchoolPortalLoad();
+  const { state, accessToken, me, schoolId } = useSchoolPortalLoad();
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -37,9 +37,11 @@ export default function SchoolTeachersPage() {
 
   const { data: teachers, loading, error, reload } = useSchoolDataFetch(
     accessToken,
+    schoolId,
     "/api/school/teachers",
     parseTeachers,
-    state === "ready"
+    state === "ready",
+    { cacheKind: "list" }
   );
 
   return (
