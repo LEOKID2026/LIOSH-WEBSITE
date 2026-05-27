@@ -64,7 +64,7 @@ export default function SchoolManagerMessageDetailContent({
         </div>
       ) : null}
       {recipients.length ? (
-        <ul className="text-sm space-y-0 max-h-56 overflow-y-auto rounded-lg border border-white/10 bg-black/25 p-2">
+        <ul className="text-sm space-y-0 max-h-56 overflow-y-auto rounded-lg border border-white/10 bg-black/25 py-2 ps-2 pe-3">
           {recipients.map((r) => {
             const requiresConfirmation = detail.messageType === "requires_confirmation";
             const statusLabel = requiresConfirmation && r.isRead
@@ -72,18 +72,20 @@ export default function SchoolManagerMessageDetailContent({
               : r.isRead
                 ? SC_RECEIPTS_STATUS_READ
                 : SC_RECEIPTS_STATUS_UNREAD;
+            const statusColorClass =
+              statusLabel === SC_RECEIPTS_STATUS_UNREAD
+                ? "text-red-300"
+                : "text-emerald-300";
             return (
               <li
                 key={r.recipientId || `${r.recipientType}-${r.guardianAccessId || r.recipientUserId}`}
-                className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 border-b border-white/5 last:border-0 py-2"
+                className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 border-b border-white/5 last:border-0 py-2 px-1"
               >
                 <span className="min-w-0 break-words text-white/90">
                   {r.displayName || r.recipientId || "—"}
                 </span>
                 <span
-                  className={`shrink-0 whitespace-nowrap text-sm sm:text-left ${
-                    r.isRead ? "text-emerald-300" : "text-white/55"
-                  }`}
+                  className={`shrink-0 whitespace-nowrap text-sm sm:text-left ps-1 ${statusColorClass}`}
                 >
                   {statusLabel}
                 </span>
