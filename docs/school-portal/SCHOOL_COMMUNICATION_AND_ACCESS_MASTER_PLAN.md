@@ -1,9 +1,77 @@
 # School Communication and Account Management — Master Plan
 
 **Status:** PLANNING ONLY — No implementation code, no SQL executed, no commit, no push.
-**Date:** 2026-05-27
+**Date:** 2026-05-27 (revised 2026-05-27)
 **Author:** AI Planning Agent
 **Approval required before any implementation begins.**
+
+---
+
+> **APPROVED WORKFLOW**
+>
+> 1. Agent prepares the final full plan.
+> 2. Owner reviews the full plan (with ChatGPT if desired).
+> 3. Owner gives one explicit approval: **`START FULL SCHOOL PORTAL IMPLEMENTATION`**
+> 4. Agent implements the full approved school-portal scope from start to finish (Steps 1 → 2 → 3, no inter-step stops).
+> 5. Agent runs all planned tests and fixes issues found during implementation/testing.
+> 6. Agent sends one final completion report.
+> 7. Owner uploads the report and files to ChatGPT.
+> 8. Owner and ChatGPT review everything at the end.
+> 9. Owner performs manual UI/mobile/desktop checks.
+> 10. Owner decides whether the work is accepted.
+>
+> **Phases 1, 2, and 3 are internal execution milestones only. They are NOT stop points that require owner approval between them. The agent does not stop between phases unless there is a hard technical blocker (e.g., a migration must be manually applied before testing can proceed).**
+
+---
+
+## 0. Scope Boundary and Regression Protection
+
+### 0.1 What This Project Touches
+
+This project is scoped entirely to the **school portal context**. The allowed impact area is:
+
+- School manager portal (`/school/**`)
+- School-issued student and parent credentials
+- School-linked parent access (guardian session, `created_by_school_id`)
+- School parent inbox (`/parent/school-inbox`)
+- School manager messages to parents and teachers
+- Teacher inbox **only** for teachers who are members of a school (`/teacher/school-messages`)
+- Teacher-to-parent messages **only** when operating inside the school context and only where explicitly planned in migration 033
+- Parent mini-report **only** for school-linked children (new dashboard card on parent dashboard, additive only)
+
+### 0.2 What This Project Must Not Touch
+
+**Regular private teachers and regular non-school parents must remain completely unchanged.**
+
+**Implementation rule:** Any code path that could affect a regular private teacher or a regular non-school parent is a protected flow. If a change to a protected flow is technically unavoidable, it must be:
+- Additive only (a new column, a new condition, a new route — never a modification to existing logic).
+- Guarded by school context (`school_id IS NOT NULL`, `created_by_school_id IS NOT NULL`, membership check, or equivalent).
+- Explicitly listed in the final report under "Changes to protected flows" with justification.
+
+No code may be written, and no existing file may be modified, that changes behavior for:
+
+- Regular private teacher portal (`/teacher/**` outside `/teacher/school-messages`)
+- Regular private teacher dashboard
+- Regular teacher-created parent/student access flow (`/api/teacher/student-access/...`, `/api/teacher/student-login-access/...`)
+- Regular teacher parent-message panel (`TeacherParentMessagePanel`, `/api/teacher/students/[studentId]/parent-messages`) — the only permitted change is the silent backfill of `school_id` on new sends (migration 033), which is a null-safe additive column that does not change any existing behavior
+- Regular parent who registered normally to the site (Supabase Auth, `students.parent_id`)
+- Regular parent dashboard behavior outside the school context (no existing UI or API changed; new school inbox card is additive only)
+- Existing non-school parent report behavior (`/learning/parent-report`, existing `/api/parent/` routes)
+- Existing private teacher parent-message behavior except where migration 033 silently adds `school_id`
+
+### 0.3 Regression Proof Requirements
+
+The final completion report must include passing results for every item below. If any of these regressions fail, the project is not complete.
+
+- Existing teacher guardian access panel creates guardian access unchanged.
+- Existing teacher student login access panel creates student login unchanged.
+- Existing private teacher parent-message panel sends messages unchanged.
+- Existing parent dashboard functions unchanged for normal registered parents.
+- Existing parent report page (`/learning/parent-report`) loads with correct data unchanged.
+- School dashboard, teachers, classes, students pages all load unchanged.
+- School physical class report loads unchanged.
+- Demo school simulation smoke test (`tests/e2e/demo-school-simulation-smoke.spec.ts`) passes with no failures.
+- No route outside `/school/**`, `/teacher/school-messages`, and explicitly approved school-related parent routes has changed behavior.
 
 ---
 
@@ -13,12 +81,14 @@ The School Portal currently provides school managers with a learning-activity an
 
 This plan covers the full end-to-end implementation of:
 
-- **School communication center** — structured, role-scoped messaging from school manager and homeroom/subject teachers to parents and teachers. This is **not** free chat; it is structured, auditable, targeted school communication.
+- **School communication center** — structured, role-scoped messaging from school manager to parents **and teachers**, and from homeroom/subject teachers to parents in school context. This is **not** free chat; it is structured, auditable, targeted school communication.
 - **School-level student and parent account management** — creation, reset, block/unblock, and audit of student and parent portal access, anchored to a school code prefix.
 - **Parent portal in school context** — parent-facing inbox, mini-report per child, and child list in school branding.
+- **Teacher/staff inbox** — teachers receive school manager messages in a dedicated school messages section of the teacher portal.
+- **Mandatory first-login PIN change for parents** — school-issued parent credentials require a PIN change on first login. Student PIN remains simpler.
 - **Permissions** — clean matrix covering super admin, school manager, optional school secretary, homeroom teacher, subject teacher, parent, and student.
 
-The plan is structured in four implementation phases. Phase 1 is account management and the first messaging building block. Phase 2 is the parent portal and teacher messaging. Phase 3 is read receipts, advanced targeting, and dashboard counters. Phase 4 is optional future features (scheduled messages, segments, student messaging).
+The plan is structured in four implementation phases. Phase 1 is account management and the mandatory first-login foundation. Phase 2 is the messaging core (parent inbox, teacher inbox, school manager → all audiences). Phase 3 is read receipts dashboard, advanced targeting, and dashboard counters. Phase 4 is optional future features.
 
 ---
 
@@ -167,6 +237,7 @@ The plan is structured in four implementation phases. Phase 1 is account managem
 
 **No messaging APIs exist today in school portal.**
 **No account management APIs exist today in school portal.**
+**No teacher inbox exists today.**
 
 #### 2B.4 Server Libraries
 
@@ -196,6 +267,8 @@ The plan is structured in four implementation phases. Phase 1 is account managem
 - No school-scoped messaging tables.
 - No school-scoped parent/student account tracking.
 - No read receipt tables.
+- No teacher-directed school message delivery.
+- No `must_change_pin` flag for parent accounts.
 
 #### 2B.6 Components
 
@@ -231,13 +304,18 @@ No finer-grained school permissions exist. No secretary/staff role. No homeroom-
 | School-level student access | No school portal API or UI to create/view/reset student credentials |
 | School-level parent access | No school portal API or UI to create/view/reset parent credentials |
 | Account status visibility | School manager cannot see if a student/parent has an account or when they last logged in |
-| Messaging infrastructure | No school → parent or school → teacher messaging tables |
+| Mandatory first-login PIN change | No `must_change_pin` flag; school-issued parent credentials can stay on temporary PIN indefinitely |
+| School → parent messaging | No school → parent messaging tables, APIs, or UI |
+| School → teacher messaging | No school → teacher messaging; teachers have no school message inbox |
+| Teacher staff inbox | Teachers have no way to receive school manager messages |
+| Teacher read receipts | No read receipt system for any teacher-directed message |
 | Message types | No support for important/urgent/read-confirmation message types |
 | Teacher messaging in school context | Existing `teacher_parent_messages` is teacher-scope only, not school-aware |
 | Parent inbox (school context) | No parent-facing inbox for school messages |
 | Parent mini-report | No short summary report for parents in school context |
 | Read receipts | No recipient tracking on any message type |
-| Message targeting | No audience selection (all parents, by grade, by class, specific parent) |
+| Message targeting — parents | No audience selection (all parents, by grade, by class, specific parent) |
+| Message targeting — teachers | No teacher targeting (all teachers, by grade, by subject, by class team, specific teacher) |
 | School nav | No Messages or Accounts navigation item in school portal |
 | School secretary role | No role between school_admin and teacher for account-only staff |
 | Student portal (school context) | No student-facing school messages |
@@ -249,16 +327,17 @@ No finer-grained school permissions exist. No secretary/staff role. No homeroom-
 | Existing Piece | How to Reuse |
 |---|---|
 | `teacher-access-prefix.server.js` | Port `allocateTeacherAccessUsername` to school scope (swap teacher prefix for school code) |
-| `student_guardian_access` table | School-created parent access rows go in same table; add `created_by_school_id` column |
+| `student_guardian_access` table | School-created parent access rows go in same table; add `created_by_school_id` and `must_change_pin` columns |
 | `student_access_codes` table | School-created student access rows go in same table; add `created_by_school_id` column |
 | `guardian-crypto.server.js` | All PIN/hash logic is reusable with no changes |
 | `buildTeacherStudentReportPayload` | Already used by school portal; reuse for mini-report too |
 | `teacher_parent_messages` | Extend or parallel-use for teacher→parent in school context; teacher still creates messages |
 | `teacher_access_audit` | Extend action allowlist for school account management events |
-| `requireSchoolManagerApiContext` | Base auth gate for all new school APIs |
-| `SchoolPortalShell` nav | Add Messages and Accounts nav items |
-| `SchoolDrillDown` components | Add Access & Accounts section to existing student card |
-| `SchoolReportModal` | Reuse for parent mini-report rendering in school context |
+| `requireSchoolManagerApiContext` | Base auth gate for all new school manager APIs |
+| `requireTeacherApiContext` (teacher APIs) | Base auth gate for teacher inbox and teacher school message APIs |
+| `SchoolPortalShell` nav | Add Messages nav item |
+| `SchoolDrillDown` components | Add Access & Accounts tab to existing student modal |
+| `SchoolReportModal` | Extend to two-tab modal: Report + Access & Accounts |
 | `GuardianAccessPanel` / `StudentLoginAccessPanel` | Adapt for school portal (different API routes, same UX pattern) |
 | Parent report page `/learning/parent-report` | School context can link or embed this for parent mini-report |
 
@@ -266,11 +345,13 @@ No finer-grained school permissions exist. No secretary/staff role. No homeroom-
 
 | Area | Reason |
 |---|---|
-| School → parent/teacher messaging | Entirely new: audience targeting, message types, read receipts — teacher_parent_messages is per-student-per-teacher only |
-| Parent school inbox | New: parent currently sees only learning data and credentials; needs school message inbox |
+| School → parent messaging | Entirely new: audience targeting, message types, read receipts — teacher_parent_messages is per-student-per-teacher only |
+| School → teacher messaging | Entirely new: no teacher-directed school message exists anywhere in the system |
+| Teacher staff inbox | New UI section in teacher portal; teachers currently have no school message inbox |
+| Parent school inbox | New: parent currently sees only learning data and credentials |
 | Read receipt tracking | New tables required |
-| Message audience resolution | New: resolving "all parents of grade 3" requires joining school_student_enrollments + student_guardian_access |
-| School code allocation | Similar to teacher prefix logic, but on school_accounts |
+| Message audience resolution | New: resolving "all teachers of grade 3" or "all parents of class 3B" requires joining multiple tables |
+| School code allocation | Similar to teacher prefix logic, but on `school_accounts` |
 
 ---
 
@@ -280,8 +361,8 @@ No finer-grained school permissions exist. No secretary/staff role. No homeroom-
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        School Portal (school_admin)                 │
-│   Dashboard │ Teachers │ Classes │ Students │ Messages │ Accounts   │
+│                    School Portal (school_admin)                     │
+│   Dashboard │ Teachers │ Classes │ Students │ Messages              │
 └────────┬────────────────────────────────────────────────────────────┘
          │  school-scoped APIs (requireSchoolManagerApiContext)
          ▼
@@ -299,22 +380,22 @@ No finer-grained school permissions exist. No secretary/staff role. No homeroom-
 │  school_messages (NEW)                                           │
 │  school_message_recipients (NEW)                                 │
 │  school_message_read_receipts (NEW)                              │
-│  student_guardian_access (+ created_by_school_id)               │
+│  student_guardian_access (+ created_by_school_id, must_change_pin)│
 │  student_access_codes (+ created_by_school_id)                  │
 └──────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────┐
 │                     Parent Portal (Supabase Auth)                │
 │  /parent/dashboard (existing)                                    │
-│  /parent/school-inbox (NEW) — school messages                    │
+│  /parent/school-inbox (NEW) — school messages + read receipts   │
 │  /parent/mini-report (NEW or enhanced dashboard)                 │
 └──────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────┐
 │                  Teacher Portal (teacher JWT)                    │
 │  /teacher/* (existing — unchanged)                              │
-│  Teacher messaging in school context uses existing              │
-│  teacher_parent_messages, extended with school_id               │
+│  /teacher/school-messages (NEW) — teacher receives school msgs  │
+│  teacher_parent_messages: extended with school_id               │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -332,12 +413,12 @@ No finer-grained school permissions exist. No secretary/staff role. No homeroom-
 ### 4.3 Account Management Architecture
 
 Two existing tables are extended with `created_by_school_id`:
-- `student_guardian_access` — for school-issued parent access.
+- `student_guardian_access` — for school-issued parent access. Also receives `must_change_pin` boolean.
 - `student_access_codes` — for school-issued student access.
 
 This allows school manager to manage accounts for all enrolled students without conflicting with teacher-issued accounts.
 
-One parent may have accounts linked to multiple children (via `student_guardian_access` rows for each `student_id`). The parent's username can be reused across children if the same parent account covers multiple children — but the system must support one `student_guardian_access` row per student-parent pair.
+One parent may have accounts linked to multiple children (via `student_guardian_access` rows for each `student_id`). The parent's username can be reused across children — the system supports one `student_guardian_access` row per student-parent pair, with the same username.
 
 Account status is computed from: `is_active`, `revoked_at`, `expires_at`, and last session timestamp from `student_guardian_sessions`.
 
@@ -345,12 +426,12 @@ Account status is computed from: `is_active`, `revoked_at`, `expires_at`, and la
 
 School-level messaging uses new tables:
 - `school_messages` — the message record (author, type, content, audience_type, school_id).
-- `school_message_recipients` — fan-out: one row per resolved recipient (parent auth user ID or teacher auth user ID).
+- `school_message_recipients` — fan-out: one row per resolved recipient (parent Supabase Auth user ID **or** teacher Supabase Auth user ID). Both parents and teachers are Supabase Auth users; both can appear as recipients.
 - `school_message_read_receipts` — one row per recipient per message when read.
 
-Teacher-to-parent messaging in school context reuses the existing `teacher_parent_messages` table, extended with `school_id` (nullable, FK to `school_accounts`). This allows school manager to see teacher messages in school context, and allows school to filter teacher messages by class/grade.
+Teacher-to-parent messaging in school context reuses the existing `teacher_parent_messages` table, extended with `school_id` (nullable, FK to `school_accounts`).
 
-Message audience resolution happens at send time: the API resolves the audience (all parents of grade 3, all parents of class 3B, etc.) by querying `school_student_enrollments` + `teacher_class_students` + `student_guardian_access`, then fans out into `school_message_recipients`.
+Message audience resolution happens at send time: the API resolves the audience by querying `school_student_enrollments`, `teacher_class_students`, `student_guardian_access`, and `school_teacher_memberships`, then fans out into `school_message_recipients`.
 
 ---
 
@@ -387,12 +468,12 @@ COMMIT;
 
 **Rollback:** `ALTER TABLE school_accounts DROP COLUMN school_code;` (safe if no accounts yet use this column).
 
-### 5.2 Migration 031 — School-Created Credentials
+### 5.2 Migration 031 — School-Created Credentials + must_change_pin
 
 ```sql
 -- 031_school_account_management.sql
 -- Extend student_guardian_access and student_access_codes with school origin tracking.
--- Also adds account_status_hint for dashboard display (not authoritative).
+-- Adds must_change_pin for school-issued parent accounts (mandatory first-login change).
 
 BEGIN;
 
@@ -404,6 +485,15 @@ ALTER TABLE public.student_guardian_access
 CREATE INDEX IF NOT EXISTS student_guardian_access_school_idx
   ON public.student_guardian_access (created_by_school_id)
   WHERE created_by_school_id IS NOT NULL;
+
+-- Parent access: mandatory first-login PIN change flag
+-- true  = parent must change PIN on first login (set by school on create/reset)
+-- false = no forced change required (default, also set after parent completes change)
+ALTER TABLE public.student_guardian_access
+  ADD COLUMN IF NOT EXISTS must_change_pin boolean NOT NULL DEFAULT false;
+
+COMMENT ON COLUMN public.student_guardian_access.must_change_pin IS
+  'When true, parent is required to change their PIN on first login. Set to true by school account management create/reset APIs. Reset to false after parent completes change.';
 
 -- Student access: track school-created rows
 ALTER TABLE public.student_access_codes
@@ -437,22 +527,23 @@ COMMIT;
 **Rollback:**
 ```sql
 ALTER TABLE student_guardian_access DROP COLUMN created_by_school_id;
+ALTER TABLE student_guardian_access DROP COLUMN must_change_pin;
 ALTER TABLE student_access_codes DROP COLUMN created_by_school_id;
 DROP TABLE IF EXISTS school_credential_sequences;
 ```
 
-**Compatibility:** No existing rows are affected; columns are nullable. Existing teacher-created accounts remain unaffected.
+**Compatibility:** No existing rows are affected; columns are nullable or have defaults. Existing teacher-created accounts remain unaffected (their `must_change_pin` defaults to false).
 
 ### 5.3 Migration 032 — School Messaging Tables
 
 ```sql
 -- 032_school_messaging.sql
 -- School-level messaging system.
--- Append-only message history. Fan-out to recipients. Read receipts.
+-- Append-only message history. Fan-out to recipients (parents AND teachers).
+-- Read receipts for both recipient types.
 
 BEGIN;
 
--- Message type enum via CHECK
 CREATE TABLE IF NOT EXISTS public.school_messages (
   id              uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id       uuid        NOT NULL
@@ -462,15 +553,18 @@ CREATE TABLE IF NOT EXISTS public.school_messages (
   -- audience_type: who receives this message
   audience_type   text        NOT NULL
     CHECK (audience_type IN (
+      -- parent audiences
       'all_parents',
       'grade_parents',
       'class_parents',
       'specific_parent',
+      -- teacher audiences
       'all_teachers',
       'grade_teachers',
       'subject_teachers',
       'class_teachers',
       'specific_teacher',
+      -- homeroom-teacher-initiated (restricted scope, Phase 3)
       'homeroom_class_parents',
       'homeroom_student_parent'
     )),
@@ -506,13 +600,19 @@ CREATE INDEX IF NOT EXISTS school_messages_school_sent_idx
 CREATE INDEX IF NOT EXISTS school_messages_author_idx
   ON public.school_messages (author_id, sent_at DESC);
 
+-- Index for teacher-directed messages
+CREATE INDEX IF NOT EXISTS school_messages_teacher_audience_idx
+  ON public.school_messages (school_id, audience_type, sent_at DESC)
+  WHERE audience_type IN ('all_teachers','grade_teachers','subject_teachers','class_teachers','specific_teacher')
+    AND is_hidden = false;
+
 ALTER TABLE public.school_messages ENABLE ROW LEVEL SECURITY;
 -- No authenticated policies. Service role only.
 
 COMMENT ON TABLE public.school_messages IS
-  'Append-only school communication records. Mutations via service-role school and teacher APIs only. is_hidden = soft delete.';
+  'Append-only school communication records. Supports both parent and teacher audiences. Mutations via service-role APIs only. is_hidden = soft delete.';
 
--- Fan-out: one row per resolved recipient
+-- Fan-out: one row per resolved recipient (parent or teacher)
 CREATE TABLE IF NOT EXISTS public.school_message_recipients (
   id              uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   message_id      uuid        NOT NULL
@@ -538,10 +638,15 @@ CREATE INDEX IF NOT EXISTS school_message_recipients_user_msg_idx
 CREATE INDEX IF NOT EXISTS school_message_recipients_msg_idx
   ON public.school_message_recipients (message_id);
 
+-- Index for teacher recipients (teacher inbox queries)
+CREATE INDEX IF NOT EXISTS school_message_recipients_teacher_idx
+  ON public.school_message_recipients (recipient_user_id)
+  WHERE recipient_type = 'teacher';
+
 ALTER TABLE public.school_message_recipients ENABLE ROW LEVEL SECURITY;
 -- No authenticated policies. Service role only.
 
--- Read receipts
+-- Read receipts (shared for parent and teacher recipients)
 CREATE TABLE IF NOT EXISTS public.school_message_read_receipts (
   id              uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   message_id      uuid        NOT NULL
@@ -561,17 +666,17 @@ CREATE INDEX IF NOT EXISTS school_message_read_receipts_user_idx
 
 ALTER TABLE public.school_message_read_receipts ENABLE ROW LEVEL SECURITY;
 
--- Parents can INSERT their own read receipt (authenticated policy)
-DROP POLICY IF EXISTS school_message_read_receipts_parent_insert ON public.school_message_read_receipts;
-CREATE POLICY school_message_read_receipts_parent_insert
+-- Both parents AND teachers (authenticated Supabase users) can INSERT their own read receipt
+DROP POLICY IF EXISTS school_message_read_receipts_self_insert ON public.school_message_read_receipts;
+CREATE POLICY school_message_read_receipts_self_insert
   ON public.school_message_read_receipts
   FOR INSERT
   TO authenticated
   WITH CHECK (recipient_user_id = auth.uid());
 
--- Parents can SELECT their own read receipts
-DROP POLICY IF EXISTS school_message_read_receipts_parent_select ON public.school_message_read_receipts;
-CREATE POLICY school_message_read_receipts_parent_select
+-- Both parents AND teachers can SELECT their own read receipts
+DROP POLICY IF EXISTS school_message_read_receipts_self_select ON public.school_message_read_receipts;
+CREATE POLICY school_message_read_receipts_self_select
   ON public.school_message_read_receipts
   FOR SELECT
   TO authenticated
@@ -587,7 +692,7 @@ DROP TABLE IF EXISTS school_message_recipients;
 DROP TABLE IF EXISTS school_messages;
 ```
 
-**Migration order:** 032 requires 030 (school_code) and 031 (school credential columns) applied first.
+**Migration order:** 032 requires 030 and 031 applied first.
 
 ### 5.4 Migration 033 — Teacher Messages Extended with School Context
 
@@ -618,11 +723,11 @@ COMMIT;
 
 **Rollback:** `ALTER TABLE teacher_parent_messages DROP COLUMN school_id;`
 
-### 5.5 Migration 034 — Audit Actions for Account Management
+### 5.5 Migration 034 — Audit Actions for Account Management and Messaging
 
 ```sql
 -- 034_school_account_audit_actions.sql
--- Extend teacher_access_audit action CHECK for school account management events.
+-- Extend teacher_access_audit action CHECK for school account management and messaging events.
 -- Requires 028_school_operational_audit_actions.sql applied first.
 
 BEGIN;
@@ -651,7 +756,7 @@ ALTER TABLE public.teacher_access_audit
     'school_class_viewed', 'school_student_report_viewed',
     'school_student_class_transferred', 'school_class_teacher_reassigned',
     'school_class_archived',
-    -- new school account management actions --
+    -- school account management actions --
     'school_student_access_created',
     'school_student_access_revoked',
     'school_student_pin_rotated',
@@ -664,7 +769,8 @@ ALTER TABLE public.teacher_access_audit
     'school_parent_access_unblocked',
     'school_parent_linked_to_student',
     'school_parent_unlinked_from_student',
-    -- new school messaging actions --
+    'school_parent_pin_changed_by_parent',
+    -- school messaging actions --
     'school_message_sent',
     'school_message_hidden',
     'school_message_read'
@@ -682,10 +788,10 @@ COMMIT;
 | `school_teacher_subjects` | 027 | Subject assignments |
 | `school_student_enrollments` | 027 | Student ↔ school enrollment |
 | `school_credential_sequences` | **031** | Monotonic counters for school-issued credentials |
-| `school_messages` | **032** | School communication messages |
-| `school_message_recipients` | **032** | Fan-out recipient list |
-| `school_message_read_receipts` | **032** | Read receipt tracking |
-| `student_guardian_access` | 019 + **031** | Parent/guardian access + created_by_school_id |
+| `school_messages` | **032** | School communication messages (parents + teachers) |
+| `school_message_recipients` | **032** | Fan-out recipient list (parents + teachers) |
+| `school_message_read_receipts` | **032** | Read receipt tracking (parents + teachers) |
+| `student_guardian_access` | 019 + **031** | Parent/guardian access + created_by_school_id + must_change_pin |
 | `student_access_codes` | 001/015 + **031** | Student access codes + created_by_school_id |
 | `teacher_parent_messages` | 023 + **033** | Teacher→parent messages + school_id |
 | `teacher_access_audit` | 019 + 021 + 024 + 027 + 028 + **034** | Audit log |
@@ -696,16 +802,16 @@ COMMIT;
 |---|---|
 | `school_messages` | Service role only (no authenticated policies) |
 | `school_message_recipients` | Service role only |
-| `school_message_read_receipts` | Parent INSERT own; parent SELECT own; service role full |
+| `school_message_read_receipts` | Any authenticated user can INSERT/SELECT own row (covers both parents and teachers) |
 | `school_credential_sequences` | Service role only |
-| `student_guardian_access` (new column) | Inherits existing RLS (service role only) |
+| `student_guardian_access` (new columns) | Inherits existing RLS (service role only) |
 | `student_access_codes` (new column) | Inherits existing RLS (service role only) |
 
 ---
 
 ## 6. API Proposal
 
-All new school APIs follow the existing pattern: bearer JWT, `requireSchoolManagerApiContext()` for school manager APIs, and appropriate role checks for teacher APIs.
+All new school APIs follow the existing pattern: bearer JWT, `requireSchoolManagerApiContext()` for school manager APIs, and `requireTeacherApiContext()` for teacher-side APIs.
 
 ### 6.1 School Account Management APIs
 
@@ -716,25 +822,24 @@ GET  /api/school/students/[studentId]/accounts
 
 POST /api/school/students/[studentId]/accounts/student/create
      Create school-issued student login (auto-generates username + PIN).
-     Response: { loginUsername, loginPinOnce (shown once, not persisted in response) }
+     Response: { loginUsername, loginPinOnce }
 
 POST /api/school/students/[studentId]/accounts/student/reset-pin
      Reset student PIN. Returns new PIN once.
 
 POST /api/school/students/[studentId]/accounts/student/block
 POST /api/school/students/[studentId]/accounts/student/unblock
-     Block/unblock student access.
 
 POST /api/school/students/[studentId]/accounts/student/revoke
-     Revoke student access entirely.
 
 POST /api/school/students/[studentId]/accounts/parent/create
-     Create new school-issued parent access (auto-generates username + PIN).
+     Create new school-issued parent access (auto-generates username + 6-digit PIN).
      Body: { relation: 'father'|'mother'|'guardian'|'other', displayName?: string }
-     Response: { loginUsername, loginPinOnce }
+     Response: { loginUsername, loginPinOnce, mustChangePinOnFirstLogin: true }
 
 POST /api/school/students/[studentId]/accounts/parent/[accessId]/reset-pin
-     Reset parent PIN.
+     Reset parent PIN. Sets must_change_pin = true on the access row.
+     Response: { loginPinOnce, mustChangePinOnFirstLogin: true }
 
 POST /api/school/students/[studentId]/accounts/parent/[accessId]/block
 POST /api/school/students/[studentId]/accounts/parent/[accessId]/unblock
@@ -745,40 +850,40 @@ POST /api/school/students/[studentId]/accounts/parent/link
      Link an existing parent access (by username) to this student.
 
 POST /api/school/students/[studentId]/accounts/parent/[accessId]/unlink
-     Disconnect parent from this student only.
 ```
 
-### 6.2 School Messaging APIs (Manager)
+### 6.2 School Messaging APIs (Manager — to Parents and Teachers)
 
 ```
 GET  /api/school/messages
-     List sent messages (paginated, filtered by type/date).
+     List sent messages (paginated, filtered by type/date/audience).
      Response: { messages: [...], total, nextCursor }
 
 POST /api/school/messages
-     Send a new message.
+     Send a new message to parents or teachers.
      Body: { audienceType, audienceScope, messageType, subject, body, hasAttachment, attachmentUrl }
-     Response: { messageId, recipientCount }
+     Response: { messageId, recipientCount, recipientTypes: ['parent'|'teacher'] }
 
 GET  /api/school/messages/[messageId]
-     Get message detail + recipient list + read counts.
+     Get message detail + recipient list + read counts (broken down by parent/teacher).
 
 POST /api/school/messages/[messageId]/hide
-     Soft-delete (hide) a message.
 
 GET  /api/school/messages/[messageId]/recipients
-     List recipients with read status.
+     List all recipients with read status.
+     Query: recipientType (optional: 'parent'|'teacher')
 
 GET  /api/school/messages/[messageId]/unread-recipients
      List recipients who have NOT read the message.
+     Query: recipientType (optional filter)
 
 GET  /api/school/messages/audience-preview
      Resolve audience size/names before sending.
-     Query: audienceType, gradeLevel, physicalClassName, ...
-     Response: { recipientCount, preview: [...first 10...] }
+     Query: audienceType, gradeLevel, physicalClassName, subjectKey, teacherId, ...
+     Response: { recipientCount, recipientType, preview: [...first 10...] }
 ```
 
-### 6.3 Teacher Messaging APIs (School Context)
+### 6.3 Teacher Messaging APIs (School Context — to Parents)
 
 ```
 GET  /api/teacher/students/[studentId]/parent-messages
@@ -792,12 +897,32 @@ GET  /api/school/students/[studentId]/parent-messages
      Query: teacherId (optional filter), includeHidden
 ```
 
-### 6.4 Parent Inbox APIs (School Context)
+### 6.4 Teacher Staff Inbox APIs (Teacher Receives School Messages)
+
+```
+GET  /api/teacher/school-messages
+     List school messages addressed to this teacher (by auth.uid()).
+     Requires teacher JWT.
+     Response: { messages: [...], unreadCount }
+     -- Messages are fetched from school_message_recipients WHERE recipient_user_id = teacherId
+
+GET  /api/teacher/school-messages/[messageId]
+     Get full school message body for this teacher.
+
+POST /api/teacher/school-messages/[messageId]/read
+     Teacher marks message as read.
+     Inserts into school_message_read_receipts (idempotent).
+
+GET  /api/teacher/school-messages/unread-count
+     Returns { unreadCount } for badge in teacher portal header.
+```
+
+### 6.5 Parent Inbox APIs (School Context)
 
 ```
 GET  /api/parent/school-messages
      List school messages addressed to this parent (by auth.uid()).
-     Requires Supabase Auth session.
+     Requires Supabase Auth parent session.
      Response: { messages: [...], unreadCount }
 
 POST /api/parent/school-messages/[messageId]/read
@@ -807,16 +932,27 @@ GET  /api/parent/school-messages/[messageId]
      Get full message body.
 ```
 
-### 6.5 School Dashboard Stats API (Extended)
+### 6.6 Parent First-Login PIN Change API
+
+```
+POST /api/guardian/change-pin
+     Parent changes their temporary PIN to a new self-chosen PIN.
+     Requires guardian session (custom cookie). Validates old PIN (or must_change_pin=true bypass).
+     Body: { newPin }
+     On success: sets must_change_pin = false in student_guardian_access.
+```
+
+### 6.7 School Dashboard Stats API (Extended)
 
 ```
 GET  /api/school/me
      (existing — extend response to include):
-     stats.unreadMessageCount (messages to school staff without response)
-     stats.importantMessageCount
+     stats.unreadParentMessageCount
+     stats.unreadTeacherMessageCount
+     stats.importantActiveMessageCount
 ```
 
-### 6.6 School Audit Log
+### 6.8 School Audit Log
 
 ```
 GET  /api/school/audit-log
@@ -831,51 +967,70 @@ GET  /api/school/audit-log
 
 Current nav: Dashboard | Teachers | Classes | Students
 
-Proposed nav (Phase 1+): Dashboard | Teachers | Classes | Students | **Messages** | *(Accounts handled inside student card)*
+Proposed nav (Phase 1+): Dashboard | Teachers | Classes | Students | **Messages**
 
-### 7.2 Student Card — Access & Accounts Section (Phase 1)
+Account management is accessed from within the student card (not a top-level nav item).
 
-**Where:** Existing `SchoolReportModal` or a new `SchoolStudentDetailModal` which shows the report plus an "Access & Accounts" section.
+### 7.2 Student Card — Access & Accounts Design Decision
 
-**Sections inside student card:**
+**Design decision: Two-tab modal inside the existing SchoolReportModal.**
+
+The student report modal (`SchoolReportModal`) is extended with a second tab:
+- **Tab 1: דוח לימודי** (Learning Report) — existing content, unchanged.
+- **Tab 2: גישה וחשבונות** (Access & Accounts) — new content.
+
+**Rationale for this design:**
+- Avoids creating a new standalone student profile page (which would require separate routing and loading logic).
+- Keeps student data management coherent in one place (the manager is already looking at a specific student when they need to manage credentials).
+- Consistent with the existing modal pattern used for all student interactions in the school portal.
+- Avoids overloading the student list/card with extra actions; accounts are one click from any student.
+- Two tabs is a clean, non-confusing structure that users understand immediately.
+
+**Why NOT a separate page:** A dedicated `/school/students/[studentId]/accounts` page would add routing complexity, break the browse-select-manage flow, and fragment the student management UX across two surfaces.
+
+**Why NOT a section below the report:** Stacking accounts below report data in the same scrollable modal would make the modal too long and mix learning analytics with credential management.
+
+**Tab 2 — Access & Accounts content:**
 
 ```
 [Student Name / Class]
-[Learning Report Tab] [Access & Accounts Tab]
+[Tab: דוח לימודי] [Tab: גישה וחשבונות ← active]
 
---- Access & Accounts Tab ---
+─── חשבון תלמיד ────────────────────────────────
 
-Student Account:
-  Username: leo-s0014
-  Status: active | blocked | not created
-  Last Login: 3 days ago | Never
-  [Create Account] [Reset PIN] [Copy Credentials] [Block] [Unblock]
-  * PIN shown once after create/reset, then hidden *
+  שם משתמש: leo-s0014
+  סטטוס: פעיל | חסום | לא נוצר
+  כניסה אחרונה: לפני 3 ימים | מעולם לא
+  [צור חשבון] [איפוס PIN] [העתק פרטים] [חסום] [בטל חסימה]
+  * PIN מוצג פעם אחת לאחר יצירה/איפוס, לאחר מכן מוסתר *
 
-Parent Accounts:
-  [ + Add Parent Access ]
-  [ Link Existing Parent ]
+─── חשבונות הורים ──────────────────────────────
 
-  Parent 1:
-    Name: אמא שלי
-    Relation: mother
-    Username: leo-p0014
-    Status: active
-    Last Login: 1 day ago
-    [Reset PIN] [Copy] [Block] [Disconnect from student]
+  [ + הוסף גישת הורה ]   [ חבר הורה קיים ]
 
-  Parent 2:
-    Name: אבא שלי
-    Relation: father
-    Username: leo-p0015
-    Status: not created
-    [Create Account]
+  הורה 1:
+    שם: [שם הורה]
+    קשר: אמא
+    שם משתמש: leo-p0014
+    סטטוס: פעיל
+    כניסה אחרונה: לפני יום
+    שינוי PIN בכניסה ראשונה: הושלם
+    [איפוס PIN] [העתק] [חסום] [נתק מתלמיד]
+
+  הורה 2:
+    שם: [שם הורה]
+    קשר: אבא
+    שם משתמש: לא נוצר
+    [צור חשבון]
 ```
 
 **New components:**
-- `components/school-portal/SchoolStudentAccessPanel.jsx` — full Access & Accounts section.
-- `components/school-portal/SchoolStudentParentAccessRow.jsx` — one parent access row.
-- `components/school-portal/SchoolCredentialShownOnceBox.jsx` — reuse "shown once" pattern from teacher panels.
+- `components/school-portal/SchoolStudentAccessPanel.jsx` — full Access & Accounts tab content.
+- `components/school-portal/SchoolStudentParentAccessRow.jsx` — one parent access row with actions.
+- `components/school-portal/SchoolCredentialShownOnceBox.jsx` — shown-once credential display (reuses pattern from teacher panels).
+
+**Modification:**
+- `components/school-portal/SchoolReportModal.jsx` — add tab navigation at top; render either `SchoolReportModalBody` (existing) or `SchoolStudentAccessPanel` (new) based on active tab.
 
 ### 7.3 School Messages Page (Phase 2)
 
@@ -883,28 +1038,68 @@ Parent Accounts:
 
 **Sections:**
 - Compose button → opens compose modal/drawer.
-- Sent messages list (paginated, filterable by type, date, audience).
-- Message row: recipient count, type badge, subject, date, read count / total count.
-- Click message → open detail with recipient list and read status.
+- Sent messages list (paginated, filterable by type, date, audience type: parents/teachers).
+- Message row: audience type badge, recipient count, read count / total, type badge, subject, date.
+- Click message → open detail with recipient list and per-recipient read status.
 
-**New components:**
-- `components/school-portal/SchoolMessagesPage.jsx` — page shell.
-- `components/school-portal/SchoolComposeMessageModal.jsx` — compose form with audience picker, type selector, body, subject, optional attachment URL.
-- `components/school-portal/SchoolMessageRow.jsx` — list row.
-- `components/school-portal/SchoolMessageDetailModal.jsx` — detail + recipient list.
-- `components/school-portal/SchoolAudiencePicker.jsx` — audience selection UI (all parents / grade / class / specific).
-- `components/school-portal/SchoolMessageReadReceiptPanel.jsx` — who read / who did not.
+**Compose modal — audience picker flow:**
 
-**Audience picker flow:**
-1. Select audience type (all parents, grade parents, class parents, specific parent, all teachers, ...).
+For parent audiences:
+1. Select: All parents / By grade / By class / Specific parent.
 2. If grade: grade level picker.
 3. If class: grade + physical class picker (reuses `SchoolTeacherPhysicalClassPickerModal`).
 4. If specific parent: search by name/username.
-5. Preview count before sending.
 
-### 7.4 Parent Portal — School Inbox (Phase 2)
+For teacher audiences:
+1. Select: All teachers / By grade / By subject / Physical-class teaching team / Specific teacher.
+2. If grade: grade level picker.
+3. If subject: subject picker (reuses `SchoolSubjectSelect`).
+4. If class team: grade + physical class picker.
+5. If specific teacher: search by name from teacher list.
 
-**Route:** `/parent/school-inbox` (new page) or extended `/parent/dashboard`.
+Preview count before sending in both flows.
+
+**New components:**
+- `components/school-portal/SchoolMessagesPage.jsx` — page shell.
+- `components/school-portal/SchoolComposeMessageModal.jsx` — compose form.
+- `components/school-portal/SchoolAudiencePicker.jsx` — audience selection with parent/teacher switch.
+- `components/school-portal/SchoolMessageRow.jsx` — list row.
+- `components/school-portal/SchoolMessageDetailModal.jsx` — detail + recipient list.
+- `components/school-portal/SchoolMessageReadReceiptPanel.jsx` — who read / who did not (filterable by recipient type).
+
+### 7.4 Teacher Staff Inbox — School Messages (Phase 2)
+
+**Where:** New section inside the existing teacher portal, accessible from teacher dashboard or nav.
+
+**Route:** `/teacher/school-messages` (new page).
+
+**Entry point:** Unread count badge in teacher portal header/nav. Teachers who have school membership see this section; teachers without school membership do not.
+
+**Display logic:** Teacher sees all school messages where they are in `school_message_recipients`. This includes messages sent to `all_teachers`, `grade_teachers`, `subject_teachers`, `class_teachers`, or `specific_teacher`.
+
+**Sections:**
+- School messages inbox list (unread first, then by date).
+- Message type badge (regular, important, urgent, requires confirmation).
+- Click → full message body. Mark as read on open.
+- Requires-confirmation: teacher must tap "קיבלתי" (Received) button.
+
+**Teacher does NOT see:**
+- Messages sent to parents.
+- Messages from other schools.
+- Peer teacher messages (teachers do not message each other through this system).
+
+**New page/components:**
+- `pages/teacher/school-messages.js` — teacher school inbox page.
+- `components/teacher-portal/TeacherSchoolMessageList.jsx` — inbox list with type badges.
+- `components/teacher-portal/TeacherSchoolMessageDetail.jsx` — full message view with mark-as-read.
+- `components/teacher-portal/TeacherSchoolInboxBadge.jsx` — unread count badge for teacher nav.
+
+**Modification:**
+- `components/teacher-portal/TeacherPortalShell.jsx` — add school messages badge if teacher is a school member.
+
+### 7.5 Parent Portal — School Inbox (Phase 2)
+
+**Route:** `/parent/school-inbox` (new page).
 
 **Sections:**
 - School inbox: list of school messages (unread count badge).
@@ -923,9 +1118,14 @@ Parent Accounts:
 - `components/parent/ParentSchoolMessageDetail.jsx` — full message view.
 - `components/parent/ParentSchoolInboxBadge.jsx` — unread count badge.
 
-### 7.5 Parent Mini-Report in School Context (Phase 2)
+**First-login PIN change gate:**
+- When parent logs in and `must_change_pin = true`, they are shown a mandatory PIN change screen before accessing school inbox or any other parent content.
+- Component: `components/parent/ParentMustChangePinGate.jsx`.
+- On completion: calls `POST /api/guardian/change-pin`, sets `must_change_pin = false`.
 
-**Approach:** Reuse existing `buildTeacherStudentReportPayload` (same as school portal student report).
+### 7.6 Parent Mini-Report in School Context (Phase 2)
+
+**Approach:** Reuse `buildTeacherStudentReportPayload` (same as school portal student report).
 
 **Short version for parents:**
 - Child name + class.
@@ -939,22 +1139,17 @@ Parent Accounts:
 
 **Route:** `/parent/mini-report?studentId=...` (new) OR embedded in parent dashboard as an expandable card.
 
-**Component:** `components/parent/ParentMiniReportCard.jsx` — calls existing `/api/parent/student-report` (to be created) which wraps `buildTeacherStudentReportPayload`.
+**Component:** `components/parent/ParentMiniReportCard.jsx`.
 
-**API:** `GET /api/parent/mini-report?studentId=...` — returns the short report subset. Parent auth required. Parent must own student.
+**API:** `GET /api/parent/mini-report?studentId=...` — parent auth required; parent must own student.
 
-### 7.6 School Dashboard — Message Counters (Phase 3)
+### 7.7 School Dashboard — Message Counters (Phase 3)
 
 **Extend school dashboard stats card area:**
-- New stat card: Unread Messages (messages requiring response with no read receipt yet).
-- New stat card: Important/Urgent Active (unpinned important messages from last 7 days).
+- New stat card: Unread Parent Messages.
+- New stat card: Unread Teacher Messages.
+- New stat card: Important/Urgent Active.
 - Quick link: "Compose Message" button from dashboard.
-
-### 7.7 Teacher Messages in School Context (Phase 2)
-
-No new teacher portal page. Teachers continue using existing `/teacher/student/[studentId]` with `TeacherParentMessagePanel`. The extension (adding `school_id` to `teacher_parent_messages`) is transparent.
-
-School manager can view all teacher messages per student from school portal student card.
 
 ---
 
@@ -969,41 +1164,52 @@ School manager can view all teacher messages per student from school portal stud
 | School Secretary (future optional) | `school_teacher_memberships.role = 'school_secretary'` (new role value) |
 | Homeroom Teacher | `school_teacher_memberships.role = 'teacher'` AND is the primary teacher of a physical class |
 | Subject Teacher | `school_teacher_memberships.role = 'teacher'` AND has subject assignment but not primary class teacher |
-| Parent | Supabase Auth user with children linked via `student_guardian_access` or `students.parent_id` |
+| Parent | Supabase Auth user or guardian session with children linked to school-enrolled students |
 | Student | Custom PIN session via `student_access_codes` |
 
-### 8.2 Messaging Permissions
+### 8.2 Messaging Permissions — Sending
 
 | Action | Super Admin | School Manager | School Secretary | Homeroom Teacher | Subject Teacher | Parent | Student |
 |---|---|---|---|---|---|---|---|
 | Send to all parents | Yes | Yes | No | No | No | No | No |
 | Send to grade parents | Yes | Yes | No | No | No | No | No |
-| Send to class parents | Yes | Yes | No | Yes (own class only) | No | No | No |
-| Send to specific parent | Yes | Yes | No | Yes (own class only) | No | No | No |
+| Send to class parents | Yes | Yes | No | Yes (own class only, Phase 3) | No | No | No |
+| Send to specific parent | Yes | Yes | No | Yes (own class only, Phase 3) | No | No | No |
 | Send to all teachers | Yes | Yes | No | No | No | No | No |
-| Send to teacher group | Yes | Yes | No | No | No | No | No |
-| View sent messages | Yes | Yes | Yes | Own only | Own only | No | No |
-| View read receipts | Yes | Yes | Yes | Own only | Own only | No | No |
-| Hide/delete message | Yes | Yes | No | Own only | Own only | No | No |
-| Receive school messages | — | — | — | Yes | Yes | Yes | No |
-| Mark message as read | — | — | — | Yes | Yes | Yes | No |
+| Send to grade teachers | Yes | Yes | No | No | No | No | No |
+| Send to subject teachers | Yes | Yes | No | No | No | No | No |
+| Send to class teaching team | Yes | Yes | No | No | No | No | No |
+| Send to specific teacher | Yes | Yes | No | No | No | No | No |
 | Send teacher→parent message | Yes | Yes | No | Yes (own class students) | Yes (own students only) | No | No |
 
-### 8.3 Account Management Permissions
+### 8.3 Messaging Permissions — Receiving and Managing
 
 | Action | Super Admin | School Manager | School Secretary | Homeroom Teacher | Subject Teacher | Parent | Student |
 |---|---|---|---|---|---|---|---|
-| Create student account | Yes | Yes | Yes (proposed) | Maybe (Phase 2) | No | Yes (self) | No |
-| Reset student PIN | Yes | Yes | Yes (proposed) | Maybe (Phase 2) | No | Yes (own child) | No |
+| Receive school messages (as teacher) | — | Yes (school_admin is also a teacher) | — | Yes | Yes | — | — |
+| Receive school messages (as parent) | — | — | — | — | — | Yes | — |
+| Mark message as read | — | — | — | Yes | Yes | Yes | — |
+| View sent messages (school portal) | Yes | Yes | Yes | Own only | Own only | No | No |
+| View read receipts | Yes | Yes | Yes | Own only | Own only | No | No |
+| View who read / who did not | Yes | Yes | Yes | Own only | Own only | No | No |
+| Hide/soft-delete message | Yes | Yes | No | Own only | No | No | No |
+
+### 8.4 Account Management Permissions
+
+| Action | Super Admin | School Manager | School Secretary | Homeroom Teacher | Subject Teacher | Parent | Student |
+|---|---|---|---|---|---|---|---|
+| Create student account | Yes | Yes | Yes (proposed) | Phase 3 candidate | No | Yes (self) | No |
+| Reset student PIN | Yes | Yes | Yes (proposed) | Phase 3 candidate | No | Yes (own child) | No |
 | Block/unblock student account | Yes | Yes | Yes (proposed) | No | No | No | No |
 | Create parent account | Yes | Yes | Yes (proposed) | No | No | No | No |
 | Reset parent PIN | Yes | Yes | Yes (proposed) | No | No | No | No |
 | Block/unblock parent account | Yes | Yes | Yes (proposed) | No | No | No | No |
 | Link parent to student | Yes | Yes | Yes (proposed) | No | No | No | No |
 | Disconnect parent from student | Yes | Yes | Yes (proposed) | No | No | No | No |
+| Change own PIN (first-login mandatory) | — | — | — | — | — | Yes | — |
 | View own account | No | No | No | No | No | Yes | Yes |
 
-### 8.4 Report / Data Permissions
+### 8.5 Report / Data Permissions
 
 | Action | Super Admin | School Manager | School Secretary | Homeroom Teacher | Subject Teacher | Parent | Student |
 |---|---|---|---|---|---|---|---|
@@ -1011,9 +1217,8 @@ School manager can view all teacher messages per student from school portal stud
 | View school-wide stats | Yes | Yes | Partial | No | No | No | No |
 | View parent mini-report | Yes | Yes | No | No | No | Yes (own child) | No |
 
-### 8.5 School Secretary Role (Phase 2 Optional)
+### 8.6 School Secretary Role (Phase 2 Optional)
 
-To add without breaking existing model:
 - Add `'school_secretary'` to the `role` CHECK constraint in `school_teacher_memberships`.
 - Secretary can manage accounts but cannot view learning reports or send messages.
 - Requires new `requireSchoolStaffApiContext()` auth gate that allows both `school_admin` and `school_secretary`.
@@ -1027,7 +1232,7 @@ To add without breaking existing model:
 - **Format:** 3-4 lowercase English letters (e.g., `leo`, `talp`, `kfar`).
 - **Uniqueness:** Enforced by unique index on `school_accounts.school_code`.
 - **Assignment:** At school creation, by platform admin. Not self-assigned by school.
-- **Immutability:** Never changed after credentials exist. Special admin migration required if change is absolutely necessary (requires username rotation for all affected accounts).
+- **Immutability:** Never changed after credentials exist. Special admin migration required if absolutely necessary (requires username rotation for all affected accounts).
 - **Validation:** `^[a-z]{3,4}$`.
 
 ### 9.2 Student Username (School-Issued)
@@ -1036,35 +1241,43 @@ To add without breaking existing model:
 - **Sequence:** Zero-padded to 4 digits. Sourced from `school_credential_sequences.next_student_seq`.
 - **Allocation:** Atomic increment of `next_student_seq` at create time (service role only).
 - **Uniqueness:** Checked against `student_access_codes` (normalized username) before issuing.
-- **Same student:** If student already has an active username, the school portal shows existing username and offers reset-PIN only.
+- **Same student:** If student already has an active username, school portal shows existing username and offers reset-PIN only.
 
 ### 9.3 Parent Username (School-Issued)
 
 - **Format:** `{school_code}-p{sequence}` (e.g., `leo-p0152`).
 - **Sequence:** Sourced from `school_credential_sequences.next_parent_seq`.
-- **One parent, multiple children:** If a parent is linked to multiple students, their **one username** covers all children. The `student_guardian_access` row is per-student, but the same `login_username` can appear for the same parent across multiple student rows (the parent is identified by username; their children are found by joining on `student_id`).
-- **Existing parent account:** If a parent already has an account (teacher-issued), school manager sees the existing username and can reset PIN or link it to additional children without creating a new account.
+- **One parent, multiple children:** One username covers multiple children. Same `login_username` may appear in multiple `student_guardian_access` rows (one per child). Parent is identified by username; children are found by joining on `student_id`.
+- **Existing parent account:** If a parent already has an account (teacher-issued), school manager sees the existing username and can reset PIN or link to additional children.
 
 ### 9.4 PIN Policy
 
-| Credential | PIN Type | Length | Complexity |
+| Credential | PIN Type | Length | First-Login Change |
 |---|---|---|---|
-| Student account | Numeric | 4 digits | Simple (suitable for children) |
-| Parent account (school-issued) | Numeric (Phase 1) or alphanumeric (Phase 2) | 6 digits or temp password | Must change on first login (Phase 2) |
-| Teacher account | Supabase Auth password | N/A | Standard email/password |
+| Student account | Numeric | 4 digits | Not required — student PIN is simpler |
+| Parent account (school-issued) | Numeric | 6 digits | **Mandatory from Phase 1** — must_change_pin flag set on create/reset |
+| Teacher account | Supabase Auth password | N/A | Supabase Auth handles this |
+
+**Parent first-login PIN change — mandatory from Phase 1:**
+- When school manager creates or resets a parent account, `must_change_pin = true` is set in `student_guardian_access`.
+- On parent's next login, before accessing any portal content, they see a PIN-change screen (`ParentMustChangePinGate`).
+- The gate calls `POST /api/guardian/change-pin` and sets `must_change_pin = false` on success.
+- If the parent does not complete the change, they cannot access school inbox or mini-report.
+- The existing PIN is the school-issued temporary PIN; the new PIN is chosen by the parent.
+- The school manager does NOT know the parent's new PIN after the parent changes it.
 
 **Security rules:**
 - PIN is never stored in plaintext. Always hashed via `hashStudentSecret()`.
 - Existing PIN is never displayed after creation.
-- Temporary PIN is shown **once** immediately after creation or reset (shown-once box pattern, already implemented in `GuardianAccessPanel` and `StudentLoginAccessPanel`).
-- Forgotten PIN requires reset by school manager (or parent for student PIN).
-- "Force change on first login" for parent: Phase 2 feature. Requires adding a `must_change_pin` flag to `student_guardian_access`.
+- Temporary PIN is shown **once** immediately after creation or reset (shown-once box pattern).
+- Forgotten PIN requires reset by school manager.
 
 ### 9.5 What the Existing System Already Handles
 
-The crypto infrastructure in `lib/guardian-server/guardian-crypto.server.js` and the username allocation logic in `lib/teacher-server/teacher-access-prefix.server.js` are fully reusable. The school-scoped version only needs:
-- A new `allocateSchoolAccessUsername(serviceRole, schoolId, kind)` function (mirrors `allocateTeacherAccessUsername` but uses `school_accounts.school_code` and `school_credential_sequences` instead of `teacher_profiles.access_prefix`).
+The crypto infrastructure in `lib/guardian-server/guardian-crypto.server.js` and the username allocation logic in `lib/teacher-server/teacher-access-prefix.server.js` are fully reusable. The school-scoped version needs:
+- A new `allocateSchoolAccessUsername(serviceRole, schoolId, kind)` function (mirrors `allocateTeacherAccessUsername` but uses `school_accounts.school_code` and `school_credential_sequences`).
 - The crypto functions remain identical.
+- A new `generateSchoolParentPin()` function that generates 6 digits (extend or fork `generateStudentPin()`).
 
 ---
 
@@ -1073,56 +1286,172 @@ The crypto infrastructure in `lib/guardian-server/guardian-crypto.server.js` and
 ### 10.1 Message Lifecycle
 
 ```
-Compose → Audience Preview → Send → Fan-out (school_message_recipients)
+Compose → Select Audience → Preview Count → Send
        ↓
- [Recipient sees in inbox] → Opens message → Read receipt inserted
+  Fan-out to school_message_recipients (parent rows + teacher rows)
        ↓
- [Manager sees read counts in message detail]
+  [Parent sees in /parent/school-inbox]    [Teacher sees in /teacher/school-messages]
+       ↓                                           ↓
+  Opens message                             Opens message
+  POST /api/parent/school-messages/read     POST /api/teacher/school-messages/read
+       ↓                                           ↓
+  Read receipt inserted (school_message_read_receipts)
+       ↓
+  Manager sees read_count / total_recipient_count in message detail
+  Manager sees per-recipient-type breakdown (X/Y parents, A/B teachers)
 ```
 
 ### 10.2 Message Types and Phase
 
-| Type | Phase | Description |
-|---|---|---|
-| `regular` | Phase 2 | Standard informational message |
-| `important` | Phase 2 | Highlighted in yellow in parent inbox |
-| `urgent` | Phase 2 | Highlighted in red; may trigger notification (future) |
-| `requires_confirmation` | Phase 2 | Parent must tap "Received" button |
-| `requires_response` | Phase 3 | Parent must enter a response |
-| `pinned` | Phase 3 | Pinned to top of inbox |
-| `archived` | Phase 3 | Moved to archive folder |
+| Type | Phase | Applies To | Description |
+|---|---|---|---|
+| `regular` | Phase 2 | Parents + Teachers | Standard informational message |
+| `important` | Phase 2 | Parents + Teachers | Highlighted; shown prominently in inbox |
+| `urgent` | Phase 2 | Parents + Teachers | Highest priority; may trigger future notification |
+| `requires_confirmation` | Phase 2 | Parents + Teachers | Must tap "Received" to dismiss |
+| `requires_response` | Phase 3 | Parents | Parent must enter a text response |
+| `pinned` | Phase 3 | Parents + Teachers | Pinned to top of inbox |
+| `archived` | Phase 3 | Parents + Teachers | Moved to archive folder |
 
-### 10.3 Audience Types and Resolution
+### 10.3 Complete Final Target Model
 
-| Audience Type | Resolution Logic |
-|---|---|
-| `all_parents` | All `student_guardian_access` + `students.parent_id` for enrolled students in school |
-| `grade_parents` | Filter by `teacher_class_students.grade_level` or student grade |
-| `class_parents` | Filter by `physical_class_name` in `teacher_classes` |
-| `specific_parent` | Single `guardian_access_id` or Supabase Auth user ID |
-| `all_teachers` | All `school_teacher_memberships.teacher_id` for school |
-| `grade_teachers` | Teachers with subjects in that grade |
-| `subject_teachers` | Teachers with matching subject in `school_teacher_subjects` |
-| `class_teachers` | Teachers assigned to a specific physical class |
-| `specific_teacher` | Single `teacher_id` |
-| `homeroom_class_parents` | Teacher sends to parents of their physical class students |
-| `homeroom_student_parent` | Teacher sends to parents of a specific student they teach |
+This section defines the **complete intended final target model** (Phases 2 and 3 combined). Each audience type is marked with the phase in which it becomes available.
 
-**Important:** Subject teachers can only send in `homeroom_student_parent` or `homeroom_class_parents` scope if they are linked to those students via `teacher_students`. The API enforces this by checking the teacher's student scope.
+#### Parent Target Audiences
 
-### 10.4 Read Receipts
+| Audience Type | DB key | Phase | Resolution Logic |
+|---|---|---|---|
+| All school parents | `all_parents` | 2-initial | All active `student_guardian_access` rows + `students.parent_id` for school-enrolled students |
+| By grade/layer | `grade_parents` | 2 | Filter by `students.grade_level` for enrolled students |
+| By physical class | `class_parents` | 2 | Filter by `physical_class_name` in `teacher_classes` for enrolled students |
+| Individual parent | `specific_parent` | 2 | Single `guardian_access_id` or parent Supabase Auth user ID |
+| Future: dynamic groups | *(segment)* | Phase 4 | Parents of inactive students, learning support group, report-based filter |
+
+#### Teacher Target Audiences
+
+| Audience Type | DB key | Phase | Resolution Logic |
+|---|---|---|---|
+| All school teachers | `all_teachers` | 2 | All `school_teacher_memberships.teacher_id` for school |
+| By grade/layer | `grade_teachers` | 2 | Teachers with `school_teacher_subjects.grade_level` matching |
+| By subject | `subject_teachers` | 2 | Teachers with matching `subject` in `school_teacher_subjects` |
+| Physical-class teaching team | `class_teachers` | 2 | Teachers assigned to specific physical class (all teachers of that class across subjects) |
+| Individual teacher | `specific_teacher` | 2 | Single `teacher_id` in `school_teacher_memberships` |
+
+#### Homeroom-Teacher-Initiated Audiences (Phase 3)
+
+| Audience Type | DB key | Phase | Who Can Use | Resolution Logic |
+|---|---|---|---|---|
+| Homeroom class parents | `homeroom_class_parents` | 3 | Homeroom teacher of that class only | Parents of all students in teacher's physical class |
+| Individual student's parent | `homeroom_student_parent` | 3 | Any teacher linked to that student | Parents of a specific student the teacher teaches |
+
+**Phase 2 launch scope:** Start with `all_parents` and `all_teachers` only. Validate fan-out, delivery, and read receipt mechanics before expanding. Then add grade and class targeting. Teacher-initiated sending comes in Phase 3.
+
+### 10.4 School Manager → Teacher Messaging (Dedicated Plan)
+
+This section provides the full plan for the school manager messaging teachers.
+
+#### What Can Be Sent
+
+School manager can send the following to teacher audiences:
+- General school announcements (all teachers).
+- Grade/layer communications (teachers of grade 3, teachers of 4th grade, etc.).
+- Subject-specific communications (math teachers, English teachers, etc.).
+- Physical-class team communications (all teachers of class 3B).
+- Private message to a specific teacher.
+
+#### Teacher Recipient Model
+
+Teachers are Supabase Auth users. Their `auth.users` ID is their teacher profile ID (`teacher_profiles.id`).
+
+Fan-out uses the **same `school_message_recipients` table**, with `recipient_type = 'teacher'`. The `recipient_user_id` is the teacher's Supabase Auth user ID.
+
+**Teacher audience resolution:**
+
+- `all_teachers`: `SELECT teacher_id FROM school_teacher_memberships WHERE school_id = ? AND role IN ('teacher', 'school_admin')`
+- `grade_teachers`: `SELECT DISTINCT teacher_id FROM school_teacher_subjects WHERE school_id = ? AND grade_level = ?`
+- `subject_teachers`: `SELECT DISTINCT teacher_id FROM school_teacher_subjects WHERE school_id = ? AND subject = ?`
+- `class_teachers`: `SELECT DISTINCT teacher_id FROM teacher_classes WHERE school_id = ? AND grade_level = ? AND name = ?` (all teachers whose class matches the physical class)
+- `specific_teacher`: direct `teacher_id` from school membership
+
+#### Teacher Staff Inbox UI
+
+Located at: `/teacher/school-messages` (new page in teacher portal).
+
+**Entry point:** Unread count badge in teacher portal nav, visible only to teachers who are members of a school.
+
+**Inbox behavior:**
+- Messages are listed newest first; unread messages are highlighted.
+- Unread count badge clears as teacher opens messages.
+- Marking as read: automatic on message open (POST to read receipt API).
+- Requires-confirmation type: teacher must explicitly tap "קיבלתי" (Received).
+
+**Teacher does NOT see:**
+- Messages sent to parents.
+- Messages from other schools.
+- Messages from peer teachers (teachers do not message each other through this system).
+
+**Teacher can:**
+- View the full message.
+- Mark as read.
+- Tap confirmation for requires-confirmation type.
+- See which school/manager sent the message.
+
+**Teacher CANNOT:**
+- Reply (Phase 1-3).
+- Delete or hide messages.
+- See other teachers' read status.
+
+#### Read Receipts for Teacher Recipients
+
+Same `school_message_read_receipts` table used for both parents and teachers.
+
+School manager view of a message detail shows:
+- **Parent receipts:** X of Y parents read.
+- **Teacher receipts:** A of B teachers read.
+- Both broken out separately in the UI.
+- Manager can filter the recipient list by type (show only teachers / show only parents).
+
+**Teacher unread dashboard:**
+
+School manager dashboard (Phase 3) shows:
+- Number of teachers who have not read the latest message sent to all teachers.
+- Ability to see who specifically has not read (from message detail page).
+
+#### Teacher Read Receipt API
+
+```
+POST /api/teacher/school-messages/[messageId]/read
+     Teacher marks message as read.
+     Requires teacher JWT. Validates that teacher is a recipient of this message.
+     Inserts into school_message_read_receipts (idempotent).
+
+GET  /api/school/messages/[messageId]/recipients?recipientType=teacher
+     Manager views all teacher recipients with their read status.
+```
+
+### 10.5 Read Receipts (Parent and Teacher)
 
 - When parent opens a message: `POST /api/parent/school-messages/[messageId]/read`.
-- This inserts into `school_message_read_receipts` (upsert — idempotent).
-- Manager can see: `read_count / total_recipient_count`.
-- Manager can list unread recipients: join `school_message_recipients` LEFT JOIN `school_message_read_receipts` where `read_at IS NULL`.
+- When teacher opens a message: `POST /api/teacher/school-messages/[messageId]/read`.
+- Both insert into `school_message_read_receipts` (upsert — idempotent).
+- Manager can see: `read_count / total_recipient_count` broken down by parent/teacher.
+- Manager can list unread recipients: join `school_message_recipients` LEFT JOIN `school_message_read_receipts` WHERE `read_at IS NULL`.
 
-### 10.5 What This Is NOT
+### 10.6 What This Is NOT
 
-This is **not free chat**. There is no real-time chat, no reply threads (Phase 1/2), no parent-initiated messages, and no unsolicited teacher-parent DMs outside the school context. The communication flow is:
-- School → Parent (one-way broadcast or targeted).
-- School → Teacher (one-way broadcast or targeted).
-- Teacher → Parent (existing teacher_parent_messages, school-context aware).
+This is **not free chat**. Specifically:
+- No real-time chat.
+- No reply threads (Phase 1-3).
+- No parent-initiated messages.
+- No teacher-to-teacher messages.
+- No unsolicited teacher-parent DMs outside the school context.
+- No unmoderated message channels.
+
+Communication directions allowed:
+- School manager → Parents (broadcast, targeted, individual).
+- School manager → Teachers (broadcast, targeted, individual).
+- Teacher → Parent (existing `teacher_parent_messages`, school-context aware, per-student).
+- Homeroom teacher → Class parents (Phase 3, restricted scope).
 - Parent → School: Only via `requires_response` type (Phase 3), not open chat.
 
 ---
@@ -1131,15 +1460,13 @@ This is **not free chat**. There is no real-time chat, no reply threads (Phase 1
 
 ### 11.1 Approach
 
-Reuse `buildTeacherStudentReportPayload` already used by school portal. This function returns full report data including subject rollups, accuracy, sessions, and recommendations.
-
-Create a **subset view** for parent mini-report:
+Reuse `buildTeacherStudentReportPayload` already used by school portal. Create a **subset view** for parent mini-report:
 - Filter to last 30 days.
 - Show top 3-4 subjects with icons.
 - Show accuracy per subject as a simple percentage bar.
 - Show 2-3 strength highlights (from existing `recommendations` field).
 - Show 1-2 areas needing practice.
-- Show last 3 teacher messages from `teacher_parent_messages` (visible, not hidden, for teacher linked to this student at the school).
+- Show last 3 teacher messages from `teacher_parent_messages` (visible, not hidden).
 - Link to full report: `/learning/parent-report?studentId=...&source=parent`.
 
 ### 11.2 API
@@ -1152,7 +1479,7 @@ Create a **subset view** for parent mini-report:
 
 ### 11.3 Multi-Child Support
 
-Parent dashboard already handles multiple children (up to `studentLimit`). Mini-report must:
+Parent dashboard already handles multiple children. Mini-report must:
 - Render one card per child.
 - Each card fetches its own mini-report independently.
 - Children are identified by existing `students` rows linked to parent.
@@ -1161,26 +1488,61 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 
 ## 12. Implementation Phases
 
+### Internal Execution Order (Technical Sequencing Only — No Inter-Step Owner Approval Required)
+
+The implementation is divided into three internal execution steps for technical ordering. They are **not** owner approval gates. The agent proceeds from Step 1 through Step 3 without stopping for owner review between steps.
+
+**SQL is the only allowed mid-run pause:**
+
+- Agent prepares migration SQL files only. Agent never executes SQL.
+- Owner manually applies SQL in the Supabase SQL editor.
+- When a migration file is required before integration tests can pass against the real database, the agent pauses, clearly states: (a) the exact file name, (b) exactly why it is required at this point, and (c) that the agent will continue automatically once the owner confirms it has been applied.
+- This is a technical dependency, not an approval gate. Owner confirmation of SQL application is the only signal needed to resume.
+- No other pause is permitted.
+
+**These are NOT stop points:**
+- Completion of Step 1 account management work.
+- Completion of Step 2 messaging work.
+- Any internal milestone, feature, or component completion.
+- Discovering a test failure that the agent can fix without owner action.
+
+**At the end of the full implementation (all steps complete), the agent sends one final completion report** for owner + ChatGPT review. See Section 12.5 for the complete required report structure.
+
+**Constraints active throughout all steps:**
+- Agent never executes SQL.
+- Agent never commits.
+- Agent never pushes.
+- Owner applies all migrations manually in Supabase SQL editor only.
+- No Hebrew text created or changed without owner approval of the exact wording (see Section 16.2 for approved list).
+- No design changes to existing screens without owner approval.
+- Regular private teacher flow and regular non-school parent flow must remain unchanged (see Section 0).
+
+---
+
 ### Phase 1 — School Account Management Foundation
 
-**Goal:** School manager can create, view, reset, block, and disconnect student and parent accounts from the school portal student card.
+**Goal:** School manager can create, view, reset, block, and disconnect student and parent accounts from the school portal student card. Mandatory first-login PIN change is implemented for school-issued parent accounts from the start.
 
 **Duration estimate:** 2-3 sprints.
 
 **Files/areas affected:**
-- New migration: `supabase/migrations/030_school_code.sql`
-- New migration: `supabase/migrations/031_school_account_management.sql`
-- New migration: `supabase/migrations/034_school_account_audit_actions.sql`
+- New migration: `supabase/migrations/030_school_code.sql` (owner applies)
+- New migration: `supabase/migrations/031_school_account_management.sql` (owner applies — includes `must_change_pin`)
+- New migration: `supabase/migrations/034_school_account_audit_actions.sql` (owner applies)
 - New server lib: `lib/school-server/school-account-management.server.js`
 - New API routes: `pages/api/school/students/[studentId]/accounts/...`
+- New API route: `pages/api/guardian/change-pin.js`
 - New component: `components/school-portal/SchoolStudentAccessPanel.jsx`
 - New component: `components/school-portal/SchoolStudentParentAccessRow.jsx`
-- Modify component: `components/school-portal/SchoolReportModal.jsx` (add Access & Accounts tab)
-- `lib/school-server/school-request.server.js` (unchanged — existing auth gate works)
+- New component: `components/school-portal/SchoolCredentialShownOnceBox.jsx`
+- New component: `components/parent/ParentMustChangePinGate.jsx`
+- Modify component: `components/school-portal/SchoolReportModal.jsx` (add two-tab structure)
+- `lib/school-server/school-request.server.js` — unchanged
 
 **What is allowed:**
 - Create new API routes under `/api/school/students/[studentId]/accounts/`.
-- Extend `SchoolReportModal` with a second tab.
+- Create new `POST /api/guardian/change-pin` API.
+- Extend `SchoolReportModal` with tab navigation.
 - Add new server lib files.
 - Add new migrations (owner applies manually).
 
@@ -1190,55 +1552,74 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 - Changing existing PIN/crypto functions.
 - Displaying PIN anywhere except shown-once box.
 - Relying on username pattern for permissions.
+- Skipping `must_change_pin` on parent account create/reset.
 
 **Exit criteria:**
-- School manager can create a student account from school portal student card.
+- School manager can create a student account from school portal student card (Access & Accounts tab).
 - School manager can create a parent account from school portal student card.
 - Created credentials are shown once and then hidden.
+- `must_change_pin = true` is returned in parent account create/reset response.
 - School manager can reset PIN for student and parent.
 - School manager can block/unblock accounts.
 - School manager can disconnect parent from student.
+- When parent logs in with `must_change_pin = true`, PIN-change gate appears before any other content.
+- After PIN change, `must_change_pin = false` is set and parent can access content.
 - All actions are logged in `teacher_access_audit`.
 - Existing teacher flow is unaffected (regression test passes).
+- Two-tab modal works for both Learning Report and Access & Accounts.
 
 **Tests required:**
-- Unit test: `school-account-management.server.js` — create, reset PIN, block, link, unlink.
+- Unit test: `school-account-management.server.js` — create, reset PIN, block, link, unlink, `must_change_pin` flag behavior.
+- Unit test: `generateSchoolParentPin()` generates 6 digits.
 - API test: each new `/api/school/students/[studentId]/accounts/*` route.
+- API test: `POST /api/guardian/change-pin` — success, wrong old PIN, already-changed.
 - Permission test: teacher (non-admin) cannot access account management endpoints.
+- Permission test: parent cannot call `/api/guardian/change-pin` for another parent.
 - Playwright: school manager creates student account, credentials shown once, PIN hidden after dismiss.
-- Playwright: school manager resets parent PIN.
-- Regression: existing teacher flow creates guardian access unchanged.
+- Playwright: school manager resets parent PIN, `must_change_pin` shown in UI.
+- Playwright: parent logs in with school-issued credentials → PIN-change gate appears → completes change → accesses content.
+- Playwright: parent logs in again after change → no PIN-change gate.
+- Regression: existing teacher guardian access panel creates access unchanged.
+- Regression: existing parent dashboard credential creation unchanged.
 
-**Owner approval gate:** School code must be assigned to at least one test school before Phase 1 QA.
+**SQL dependency note:** Migrations 030, 031, and 034 must be manually applied by owner before integration tests that target the real DB can pass. Agent will prepare these files, state clearly when they are required, and then continue implementation. Owner applies them independently.
 
 ---
 
-### Phase 2 — Messaging Core + Parent Inbox + Teacher School Context
+### Phase 2 — Messaging Core + Parent Inbox + Teacher Inbox + Mini-Report
 
-**Goal:** School manager can send messages to parents and teachers. Parents receive messages in a school inbox. Teacher messages in school context are linked to the school.
+**Goal:** School manager can send messages to parents and to teachers. Parents receive messages in a school inbox. Teachers receive messages in a teacher school messages section. Teacher messages in school context are linked to the school. Parent mini-report is available.
 
 **Duration estimate:** 3-4 sprints.
 
 **Files/areas affected:**
-- New migration: `supabase/migrations/032_school_messaging.sql`
-- New migration: `supabase/migrations/033_teacher_parent_messages_school_context.sql`
+- New migration: `supabase/migrations/032_school_messaging.sql` (owner applies)
+- New migration: `supabase/migrations/033_teacher_parent_messages_school_context.sql` (owner applies)
 - New server lib: `lib/school-server/school-messaging.server.js`
 - New API routes: `pages/api/school/messages/...`
 - New API routes: `pages/api/parent/school-messages/...`
+- New API routes: `pages/api/teacher/school-messages/...`
 - New API route: `pages/api/parent/mini-report.js`
 - New page: `pages/school/messages.js`
 - New page: `pages/parent/school-inbox.js`
-- New components: `SchoolMessagesPage`, `SchoolComposeMessageModal`, `SchoolAudiencePicker`, `SchoolMessageRow`, `SchoolMessageDetailModal`.
-- New components: `ParentSchoolMessageList`, `ParentSchoolMessageDetail`.
+- New page: `pages/teacher/school-messages.js`
+- New components (school portal): `SchoolMessagesPage`, `SchoolComposeMessageModal`, `SchoolAudiencePicker`, `SchoolMessageRow`, `SchoolMessageDetailModal`.
+- New components (parent portal): `ParentSchoolMessageList`, `ParentSchoolMessageDetail`, `ParentSchoolInboxBadge`.
+- New components (teacher portal): `TeacherSchoolMessageList`, `TeacherSchoolMessageDetail`, `TeacherSchoolInboxBadge`.
 - New component: `ParentMiniReportCard`.
 - Modify: `SchoolPortalShell` nav (add Messages link).
+- Modify: `TeacherPortalShell` (add school messages badge for school-member teachers).
 - Modify: `/parent/dashboard` (add school inbox link/count, mini-report card).
 - Backfill migration: teacher messages get `school_id` populated.
+
+**Phase 2 initial launch scope:** `all_parents` and `all_teachers` audience types only. Grade and class targeting added within Phase 2 after initial validation.
 
 **What is allowed:**
 - New page at `/school/messages`.
 - New page at `/parent/school-inbox`.
+- New page at `/teacher/school-messages`.
 - Extend `SchoolPortalShell` nav.
+- Extend `TeacherPortalShell` with badge.
 - Add school inbox link to parent dashboard.
 
 **What is forbidden:**
@@ -1246,55 +1627,70 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 - Changing existing teacher message API behavior.
 - Adding real-time chat / free reply threads.
 - Allowing subject teachers to send to classes they are not linked to.
+- Displaying parent email in school portal messaging UI.
 
 **Exit criteria:**
 - School manager can compose and send a message to all parents.
+- School manager can compose and send a message to all teachers.
 - School manager can compose and send to grade or class parents.
+- School manager can compose and send to grade, subject, or class teaching team teachers.
 - Parent receives message in school inbox.
+- Teacher receives message in teacher school messages section.
 - Parent can view full message and it is marked as read.
+- Teacher can view full message and it is marked as read.
+- Teacher requires-confirmation messages require explicit "קיבלתי" tap.
+- School manager can see read count per message, broken down by parent/teacher.
 - Teacher parent message panel works unchanged.
 - Teacher messages in school context show `school_id`.
 - Parent mini-report shows subject summary for owned child.
 - Multiple children: each child's mini-report is separate.
-- Message type badges (regular, important, urgent) display correctly.
+- Message type badges (regular, important, urgent) display correctly in both parent and teacher inboxes.
 
 **Tests required:**
-- Unit test: `school-messaging.server.js` — audience resolution for each audience type.
+- Unit test: `school-messaging.server.js` — audience resolution for each audience type (parent + teacher).
 - Unit test: audience resolution does not cross-contaminate schools.
-- API test: `POST /api/school/messages` fan-out creates correct recipient rows.
+- Unit test: teacher audience resolution — all_teachers, grade, subject, class team, specific.
+- API test: `POST /api/school/messages` fan-out creates correct recipient rows (parent and teacher).
 - API test: `POST /api/parent/school-messages/[messageId]/read` inserts read receipt.
+- API test: `POST /api/teacher/school-messages/[messageId]/read` inserts read receipt.
+- Permission test: parent cannot access teacher school messages endpoint.
+- Permission test: teacher cannot access parent school messages endpoint.
 - Permission test: parent cannot access another parent's messages.
-- Permission test: teacher (non-admin) cannot send school-level messages.
-- Playwright: compose → send → parent inbox shows message.
-- Playwright: parent opens message → read receipt created → manager sees read count update.
+- Permission test: teacher (non-admin) cannot send school-level messages from school portal.
+- Playwright: compose → send to all parents → parent inbox shows message.
+- Playwright: compose → send to all teachers → teacher school messages shows message.
+- Playwright: parent opens message → read receipt created → manager sees count update.
+- Playwright: teacher opens message → read receipt created → manager sees teacher read count update.
 - Playwright: mini-report loads and shows subject summary.
 - Multi-child Playwright: parent with 2 children sees separate mini-report per child.
+- Playwright: audience preview shows correct count before sending.
 
-**Owner approval gate:** Hebrew UI copy for message compose, message type labels, and parent inbox must be approved before implementation.
+**SQL dependency note:** Migrations 032 and 033 must be manually applied by owner before messaging integration tests can pass. Agent will prepare these files and state when they are required.
 
 ---
 
-### Phase 3 — Read Receipts Dashboard, Advanced Targeting, Homeroom Teacher Messaging
+### Phase 3 — Read Receipts Dashboard, Advanced Targeting, Homeroom Teacher Messaging, Counters
 
-**Goal:** Read receipt dashboard for school manager. Homeroom teacher can send class messages. Segment targeting (grade filter). Dashboard counters for unread messages.
+**Goal:** Read receipt dashboard for school manager (parent + teacher breakdown). Homeroom teacher can send class messages. Advanced targeting (grade, subject, class team). Dashboard counters for unread messages.
 
 **Duration estimate:** 2-3 sprints.
 
 **Files/areas affected:**
-- Extend `/api/school/messages/[messageId]/recipients` with read status.
-- Extend `/api/school/messages/[messageId]/unread-recipients`.
-- Extend `/api/school/me` stats response with message counters.
-- New component: `SchoolMessageReadReceiptPanel`.
-- New component: school dashboard message counter stat card.
-- New API route: `POST /api/teacher/school-messages` (teacher sends in school context — homeroom class parents).
+- Extend `/api/school/messages/[messageId]/recipients` — add `recipientType` filter.
+- Extend `/api/school/messages/[messageId]/unread-recipients` — add `recipientType` filter.
+- Extend `/api/school/me` stats — add teacher/parent unread message counts.
+- New component: `SchoolMessageReadReceiptPanel` (with parent/teacher tabs).
+- New component: school dashboard message counter stat cards (parent unread, teacher unread, important active).
+- New API route: `POST /api/teacher/school-messages` (homeroom teacher sends to class parents).
 - Extend `SchoolPortalShell` nav badge (unread count).
-- Extend teacher portal student card with `homeroom_student_parent` send option (Phase 3+).
-- Add `school_secretary` role to `school_teacher_memberships` CHECK constraint.
+- Extend teacher portal student card with `homeroom_student_parent` send option.
+- Add `school_secretary` role to `school_teacher_memberships` CHECK constraint (no UI yet).
 
 **What is allowed:**
 - Homeroom teacher sending to their physical class parents.
-- School manager read receipt view.
+- School manager read receipt view (parent + teacher separated).
 - Dashboard counters.
+- Grade, subject, and class-team audience targeting for school manager.
 
 **What is forbidden:**
 - Subject teacher sending to classes they are not linked to.
@@ -1302,28 +1698,34 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 - Changing existing teacher_parent_messages behavior.
 
 **Exit criteria:**
-- School manager can see how many recipients read a message.
-- School manager can see list of who read and who did not read.
-- School manager can filter unread recipients by class.
-- Dashboard shows unread message count.
+- School manager can see how many parents read a message.
+- School manager can see how many teachers read a message.
+- School manager can see who specifically has and has not read (parent list + teacher list).
+- School manager can filter unread recipients by type (parent/teacher).
+- Dashboard shows unread parent message count and unread teacher message count as separate stat cards.
+- School manager can send to grade parents, class parents, grade teachers, subject teachers, class teaching team.
 - Homeroom teacher can send a message to their physical class parents.
 - Subject teacher cannot send school-level messages.
-- School secretary role added to membership table (no UI yet).
+- School secretary role added to membership table CHECK constraint.
 
 **Tests required:**
-- API test: read receipt count is accurate.
+- API test: read receipt count is accurate for both parent and teacher recipients.
+- API test: grade audience resolution returns correct teacher subset.
+- API test: subject audience resolution returns correct teacher subset.
+- API test: class-team audience resolution returns correct teacher subset.
 - Permission test: homeroom teacher can only send to their own class parents.
-- Permission test: subject teacher cannot access school messaging endpoints.
-- Playwright: manager views read receipt panel.
-- Playwright: dashboard counter increments after unread message.
+- Permission test: subject teacher cannot access school messaging compose endpoints.
+- Playwright: manager views read receipt panel with parent tab and teacher tab.
+- Playwright: dashboard counter shows separate parent and teacher unread counts.
+- Playwright: homeroom teacher sends message → class parents receive it → non-class parents do not.
 
-**Owner approval gate:** Homeroom teacher messaging scope — confirm which teachers qualify as "homeroom" (by physical class primary teacher assignment).
+**Note on homeroom teacher definition:** Per owner decision (Q4), if the current schema does not clearly define which teacher is the primary/homeroom teacher of a physical class, Phase 3 must first confirm the schema source of truth before enabling homeroom teacher sending. This is a code-level discovery, not an owner approval gate — agent resolves it from the existing codebase and documents the finding in the final report.
 
 ---
 
 ### Phase 4 — Future / Optional
 
-**Goal:** Advanced features, scheduled messages, parent reply, student account improvements, segment targeting.
+**Goal:** Advanced features, scheduled messages, parent reply, segment targeting.
 
 **Features (not scheduled):**
 - Scheduled message delivery.
@@ -1331,7 +1733,6 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 - Segment targeting: parents of inactive students, learning support groups, report-based filters.
 - Student-facing school messages (low priority per requirement).
 - Push/email notifications for important messages.
-- `must_change_pin` flag for parent first-login (force PIN change).
 - WhatsApp-style unread badge on parent login page.
 - School secretary UI (account management without report access).
 - Bulk print/export credentials for a class.
@@ -1345,43 +1746,179 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 
 ---
 
+### 12.5 Final Completion Report (Delivered Once, After Full Implementation)
+
+At the end of the full implementation (Phases 1, 2, and 3 complete), the agent sends one final report for owner + ChatGPT review. This report covers **all** of the following:
+
+**A. File List**
+- All new files created (full paths).
+- All existing files modified (full paths, nature of change).
+- Files intentionally NOT changed (confirm no accidental changes).
+
+**B. DB / Migration Status**
+- Which migrations have been applied (confirmation from owner).
+- Which migrations are pending.
+- Rollback commands for each migration.
+- Confirmation that no SQL was executed by agent at any time.
+
+**C. APIs Added or Modified**
+- Full list of new API routes.
+- Full list of modified API routes (what changed).
+- For each route: auth gate used, audience scope, mutations performed.
+
+**D. UI Added or Modified**
+- Full list of new pages.
+- Full list of new components.
+- Full list of modified components (what changed).
+- Confirmation that no Hebrew UI text was changed without approval.
+- Confirmation that no design/layout changes to existing screens were made without approval.
+
+**E. Tests Run**
+- Unit tests: list of test files run and results.
+- API/server tests: list of test files run and results.
+- Playwright E2E tests: list of specs run and results.
+- Permission/security tests: list run and results.
+- RLS tests: list run and results.
+
+**F. Tests Not Run (and why)**
+- List any planned tests that were not run.
+- Reason for each.
+
+**G. Manual QA Checklist (Owner to verify)**
+- [ ] School manager can create student account — credentials shown once.
+- [ ] School manager can reset student PIN — new PIN shown once.
+- [ ] School manager can block/unblock student account.
+- [ ] School manager can create parent account — credentials shown once.
+- [ ] School manager can reset parent PIN — `must_change_pin` shown.
+- [ ] Parent first-login PIN-change gate appears after school-issued credential login.
+- [ ] After PIN change, gate does not appear again.
+- [ ] School manager can send message to all parents.
+- [ ] School manager can send message to all teachers.
+- [ ] School manager can send message to grade parents.
+- [ ] School manager can send message to subject teachers.
+- [ ] School manager can send message to class teaching team.
+- [ ] School manager can send private message to one teacher.
+- [ ] Parent receives message in school inbox.
+- [ ] Teacher receives message in teacher school messages section.
+- [ ] Parent marks message as read — read receipt appears in manager view.
+- [ ] Teacher marks message as read — teacher read receipt appears in manager view.
+- [ ] Manager read receipt panel shows parent count and teacher count separately.
+- [ ] Parent mini-report shows correct subject summary for owned child.
+- [ ] Parent with 2 children sees separate mini-report cards.
+- [ ] School manager two-tab student modal: both tabs work correctly.
+- [ ] Existing teacher portal: guardian access panel unchanged.
+- [ ] Existing teacher portal: student login access panel unchanged.
+- [ ] Existing parent dashboard: student credential creation unchanged.
+- [ ] Existing parent report page loads unchanged.
+- [ ] Existing teacher parent message panel unchanged.
+- [ ] Demo school simulation smoke test passes.
+
+**H. Mobile / Desktop Visual Checks (Owner to verify)**
+- [ ] Student card Access & Accounts tab: mobile 375px.
+- [ ] Student card Access & Accounts tab: desktop 1280px.
+- [ ] School compose message modal: mobile.
+- [ ] School compose message modal: desktop.
+- [ ] Parent school inbox: mobile (RTL).
+- [ ] Parent school inbox: desktop (RTL).
+- [ ] Teacher school messages: mobile.
+- [ ] Teacher school messages: desktop.
+- [ ] Parent mini-report card: single child, mobile.
+- [ ] Parent mini-report card: two children, mobile.
+- [ ] Parent PIN-change gate: mobile.
+
+**I. Permission / Security Checks**
+- [ ] School manager cannot access another school's data (tested with two schools).
+- [ ] Regular teacher (non-admin) cannot access school account management endpoints (403).
+- [ ] Regular teacher cannot access school messaging compose endpoints (403).
+- [ ] Teacher can access their own school messages inbox (200).
+- [ ] Parent A cannot read messages of Parent B (403/empty).
+- [ ] Guardian session cannot access school inbox (401).
+- [ ] Subject teacher cannot send school messages (403).
+- [ ] Homeroom teacher can only send to their own class (not other classes).
+- [ ] No PIN is returned from any GET endpoint after creation.
+- [ ] `must_change_pin` is set on every school-issued parent create/reset.
+
+**J. Regression Checks (Existing Flows)**
+- [ ] Existing teacher guardian access panel: creates access unchanged.
+- [ ] Existing teacher student login access panel: creates student access unchanged.
+- [ ] Parent dashboard: create student access code unchanged.
+- [ ] Parent report page: loads unchanged with correct data.
+- [ ] Teacher parent message panel: sends messages unchanged.
+- [ ] School dashboard, teachers, classes, students pages: load unchanged.
+- [ ] School physical class report: loads unchanged.
+- [ ] Demo school simulation smoke test: passes unchanged.
+
+**K. Multi-Child and Limited-Scope Tests**
+- [ ] Parent multi-child: two children, each mini-report is separate and correct.
+- [ ] Parent multi-child: school inbox shows messages for correct child.
+- [ ] Homeroom teacher limited-scope: can only send to own class parents.
+- [ ] Subject teacher limited-scope: cannot access school messaging at all.
+- [ ] School manager full-scope: can see all students, all parents, all teachers in school.
+
+**L. Confirmation Statements**
+- [ ] Confirmed: no Hebrew wording changed on any existing screen without owner approval.
+- [ ] Confirmed: no design or layout changes to existing screens without owner approval.
+- [ ] Confirmed: no SQL executed by agent.
+- [ ] Confirmed: no commits made by agent.
+- [ ] Confirmed: no pushes made by agent.
+- [ ] Confirmed: all migrations are pending owner manual application.
+
+**M. Known Risks and Unresolved Issues**
+- Any issues encountered during implementation that were partially or fully unresolved.
+- Any tests that could not be run and why.
+- Any performance or edge-case concerns observed.
+
+**N. Changed-Files Package for Owner/ChatGPT Review**
+- A ZIP file containing all new and modified files (if ZIP generation is possible in this environment).
+- If ZIP creation is not possible: a complete list of every new and modified file path so the owner can retrieve and upload them individually to ChatGPT for review.
+- The list must distinguish between new files and modified existing files.
+
+---
+
 ## 13. Test and QA Plan
 
 ### 13.1 Unit Tests
 
-- `school-account-management.server.js`: create student account, create parent account, reset PIN, block, unblock, revoke, link parent, unlink parent.
-- `school-messaging.server.js`: audience resolution for each audience type; fan-out creates correct recipient rows; no cross-school contamination.
+- `school-account-management.server.js`: create student account, create parent account, reset PIN (student 4-digit, parent 6-digit), block, unblock, revoke, link parent, unlink parent, `must_change_pin` flag set on create/reset and cleared on change.
+- `school-messaging.server.js`: audience resolution for each audience type (parent + teacher); fan-out creates correct recipient rows; no cross-school contamination; teacher-directed messages resolved correctly.
 - `school-code` allocation: unique constraint prevents duplicate codes.
 - `school-credential-sequences`: atomic increment.
 - Username format: `{code}-s0152`, `{code}-p0152` format validation.
 - PIN generation: 4-digit student, 6-digit parent.
 - "Shown once" pattern: PIN not returned after creation if stored.
+- `generateSchoolParentPin()`: always 6 digits.
 
 ### 13.2 API / Server Tests
 
 - Each account management endpoint: create, reset PIN, block, unblock, revoke, link, unlink.
-- Each messaging endpoint: compose, send, list, hide, read receipt.
+- `POST /api/guardian/change-pin`: success flow, wrong PIN, already changed.
+- Each messaging endpoint: compose (parent audience), compose (teacher audience), list, hide, read receipt (parent), read receipt (teacher).
+- Teacher inbox: GET messages, mark as read, unread count.
 - Mini-report API: returns correct subset for parent.
-- Audience preview endpoint: correct count for each audience type.
+- Audience preview endpoint: correct count for each audience type (parent + teacher).
 - Backfill: `school_id` on teacher_parent_messages is set for school-associated teachers.
 
 ### 13.3 Permission / Security Tests
 
 - School manager can access all school account endpoints. ✓
-- Regular teacher (non-admin) receives 403 from school account endpoints. ✓
+- Regular teacher (non-admin) receives 403 from school account and school message endpoints. ✓
 - School manager cannot access another school's student accounts. ✓
 - Parent can only see messages addressed to them. ✓
 - Parent A cannot read messages of Parent B. ✓
-- Guardian session (custom, non-Supabase-Auth) cannot access school inbox (school inbox requires Supabase Auth parent session). ✓
+- Teacher can only see school messages addressed to them. ✓
+- Teacher A cannot read messages of Teacher B via teacher inbox API. ✓
+- Guardian session cannot access school inbox (requires parent Supabase Auth). ✓
 - Subject teacher cannot send school-level messages. ✓
 - Homeroom teacher can only send to their own class parents (not other classes). ✓
+- `must_change_pin` is set on every school-issued parent create/reset. ✓
+- Parent cannot complete PIN change with wrong old PIN. ✓
 
 ### 13.4 RLS Tests
 
 - `school_messages`: no row readable by authenticated user directly. Service role only.
 - `school_message_recipients`: no row readable by authenticated user directly.
-- `school_message_read_receipts`: parent can INSERT own row; parent cannot INSERT for another user.
-- `school_message_read_receipts`: parent can SELECT own rows; cannot SELECT another parent's rows.
+- `school_message_read_receipts`: authenticated user can INSERT own row (parent or teacher). Cannot INSERT for another user.
+- `school_message_read_receipts`: authenticated user can SELECT own rows only.
 - `school_credential_sequences`: no authenticated access.
 
 ### 13.5 Playwright E2E Tests
@@ -1389,20 +1926,28 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 - School manager creates student account → credentials shown once → dismissed → not shown again.
 - School manager resets student PIN → new PIN shown once.
 - School manager blocks student account → student login fails.
-- School manager creates parent account → parent can log in with new credentials.
+- School manager creates parent account → `must_change_pin` indicated in UI.
+- Parent logs in with school-issued credentials → PIN-change gate appears → completes change → accesses school inbox.
+- Parent logs in again → no PIN-change gate.
 - School manager sends message to all parents → each parent sees message in school inbox.
-- Parent opens message → read receipt created → manager sees count update.
+- School manager sends message to all teachers → each teacher sees message in teacher school messages.
+- School manager sends message to specific teacher → only that teacher receives it.
+- Parent opens message → read receipt created → manager sees parent count update.
+- Teacher opens message → read receipt created → manager sees teacher count update.
+- Manager read receipt panel → shows parent read count and teacher read count separately.
 - Parent with 2 children: each child's mini-report shows separately.
 - Homeroom teacher sends message to class parents → class parents receive message → non-class parents do not.
-- Subject teacher cannot see school messaging compose button.
-- School manager views read receipt panel → lists who read and who did not.
+- Subject teacher: school messages compose UI is not accessible.
+- School manager views audience preview before sending (correct count shown).
 
 ### 13.6 Mobile / Desktop Visual Checks
 
 - School portal student card Access & Accounts tab: mobile (375px) and desktop (1280px).
 - School compose message modal: mobile and desktop.
 - Parent school inbox: mobile and desktop (RTL layout).
+- Teacher school messages: mobile and desktop.
 - Parent mini-report card: mobile (single child), mobile (2 children).
+- Parent PIN-change gate: mobile.
 
 ### 13.7 Regression Checks
 
@@ -1422,22 +1967,26 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 - [ ] PIN never stored in plaintext. Only hash stored.
 - [ ] PIN never returned from API after creation (only the "once" response).
 - [ ] Temporary PIN shown in UI exactly once; dismissed → never shown again.
+- [ ] Parent first-login PIN change is mandatory — `must_change_pin` enforced in guardian session flow.
 - [ ] School manager cannot read another school's data (school_id boundary in all queries).
 - [ ] Parent A cannot see Parent B's messages (recipient_user_id = auth.uid() in all parent queries).
+- [ ] Teacher A cannot see Teacher B's school inbox messages (recipient_user_id = teacherId in all teacher queries).
 - [ ] Subject teacher cannot access student accounts they are not linked to.
 - [ ] `school_code` never used as a security boundary — all auth uses relational joins.
 - [ ] Username pattern not used for permissions — all authorization via DB relations.
 - [ ] `school_message_recipients` fan-out happens server-side only; client never resolves audience.
-- [ ] Audit log (teacher_access_audit) records all account management and messaging actions.
+- [ ] Teacher audience resolution is school-scoped — teacher_id must be in school_teacher_memberships for the correct school.
+- [ ] Audit log (`teacher_access_audit`) records all account management and messaging actions.
 - [ ] Hebrew text in UI: never invented without owner approval.
 - [ ] No PII (parent names, email) stored in audit log metadata (only user IDs and action codes).
-- [ ] Message attachments: URL only stored (Phase 1/2); file upload (if any) to approved storage only.
+- [ ] Message attachments: URL only stored (Phase 1/2); file upload to approved storage only if added later.
 - [ ] School messages never expose parent email to school manager UI (only username and display name).
-- [ ] Parent cannot send messages to school (Phase 1-3; Phase 4 may add requires_response reply).
+- [ ] Parent cannot send messages to school (Phase 1-3).
+- [ ] Teacher cannot send school messages to other teachers (school manager only).
 - [ ] Child data (mini-report) only visible to authenticated parent of that child.
-- [ ] Guardian session (non-Supabase-Auth custom session) does NOT have access to school inbox.
+- [ ] Guardian session does NOT have access to school inbox (school inbox requires Supabase Auth parent session or guardian session + school enrollment link).
 - [ ] RLS on all new tables; no anon access; no direct authenticated mutation where service role is required.
-- [ ] `school_credential_sequences` updated atomically (use Postgres advisory lock or FOR UPDATE in service role).
+- [ ] `school_credential_sequences` updated atomically (use Postgres FOR UPDATE or advisory lock in service role).
 
 ---
 
@@ -1449,31 +1998,34 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 |---|---|---|---|
 | Wrong parent sees wrong child's message | Medium | High | `recipient_user_id = auth.uid()` check on all parent queries; RLS enforced |
 | Teacher sees students from another class/school | Low | High | `verifyStudentVisibleToSchool()` check on all school APIs |
+| Teacher receives school messages from wrong school | Low | High | Audience resolution always scoped to `school_id`; `school_teacher_memberships` used as scope |
 | Duplicate parent accounts (teacher + school-issued) | High | Medium | UI warns if parent already has an active account; same username not issued twice |
 | Username collision between schools | Low | Medium | Global unique index on normalized username across `student_guardian_access` |
 | PIN exposed after creation | Low | High | Shown-once pattern enforced; no GET endpoint returns pin_hash or plaintext |
+| Parent stays on temporary PIN indefinitely | Medium | High | `must_change_pin` enforced from Phase 1; gate blocks access until changed |
 | School manager sees parent email | Medium | Medium | API returns display_name and username only, not email |
 
 ### 15.2 Technical Risks
 
 | Risk | Likelihood | Impact | Mitigation |
 |---|---|---|---|
-| Fan-out bottleneck for large schools (500+ parents) | Medium | Medium | Fan-out is async; use batched insert; add background job if needed |
-| Audience resolution joins are slow | Medium | Medium | Proper indexes on `school_student_enrollments`, `teacher_class_students` |
-| Breaking existing teacher portal | Medium | High | Strict separation of APIs; no changes to existing teacher routes; regression tests |
+| Fan-out bottleneck for large schools (500+ parents + teachers) | Medium | Medium | Fan-out is batched; add background job if needed in Phase 4 |
+| Audience resolution joins are slow for large schools | Medium | Medium | Proper indexes on `school_student_enrollments`, `teacher_class_students`, `school_teacher_subjects` |
+| Breaking existing teacher portal | Medium | High | Strict API separation; no changes to existing teacher routes; regression tests |
 | Breaking existing parent dashboard | Low | High | New APIs only; existing parent APIs unchanged |
 | school_id backfill on teacher_parent_messages fails | Low | Low | Backfill is best-effort UPDATE; NULL school_id is acceptable for old messages |
-| Hebrew UI text changed without approval | Low | High | Planning doc constraint; no Hebrew text invented in plan; all copy approved before implementation |
+| Hebrew UI text changed without approval | Low | High | Planning doc constraint; all copy approved before implementation |
+| Teacher inbox conflicts with teacher dashboard | Low | Medium | Teacher inbox is a separate page; no changes to teacher dashboard |
 
 ### 15.3 Product Risks
 
 | Risk | Description | Mitigation |
 |---|---|---|
-| Becoming uncontrolled WhatsApp | School messaging turns into free chat | Strict: no parent-initiated messages; no reply threads in Phase 1-3; all messages are from school/teacher only |
-| Over-engineering Phase 1 | Adding too many message types at once | Phase 1 = accounts only; Phase 2 = basic messaging; message types added incrementally |
+| Becoming uncontrolled WhatsApp | School messaging turns into free chat | Strict: no parent-initiated messages; no reply threads in Phase 1-3; all messages are from school/manager/teacher only |
+| Teacher inbox overloaded | Teachers ignore school messages if too many | Manager can see who has not read; Phase 3 counters show unread; structure limits volume |
+| Over-engineering Phase 1 | Adding too many message types at once | Phase 1 = accounts only; Phase 2 = basic messaging; types added incrementally |
 | Confusing parent UX | Parent sees school inbox and teacher messages as separate | Mini-report design must clearly separate school messages from teacher academic messages |
-| Teacher conflict | School manager sends messages that conflict with teacher's class messages | Teachers are notified of school messages to their class; read receipts visible to both manager and teacher (Phase 3) |
-| Username change needed after accounts exist | School code mistake | Policy: school code never changes; admin migration process documented before launch |
+| Username change needed after accounts exist | School code mistake | Policy: school code never changes; admin migration process documented |
 
 ---
 
@@ -1483,7 +2035,7 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 
 2. **Parent username scope:** Should one parent username cover multiple children (one credential, linked to multiple `student_guardian_access` rows), or should each child-parent relationship have a separate username? **Recommendation:** One parent credential, linked to multiple students.
 
-3. **Guardian session vs. Supabase Auth for parents:** Currently, `students.parent_id` links to Supabase Auth users (full parent accounts), while `student_guardian_access` uses a custom cookie session. Should school-issued parent access use Supabase Auth or the existing guardian session system? **Recommendation:** Use existing guardian session system for school-issued parent access (consistent with teacher-issued accounts; avoids Supabase Auth email requirement). School inbox requires either system.
+3. **Guardian session vs. Supabase Auth for parents:** Currently, `students.parent_id` links to Supabase Auth users (full parent accounts), while `student_guardian_access` uses a custom cookie session. Should school-issued parent access use Supabase Auth or the existing guardian session system? **Recommendation:** Use existing guardian session system for school-issued parent access. School inbox then requires either a Supabase Auth parent session or a guardian session + enrollment link.
 
 4. **Homeroom teacher definition:** What qualifies a teacher as a "homeroom teacher" for messaging? Is it being the primary teacher of a physical class? Does this need a flag in `school_teacher_memberships` or `teacher_classes`?
 
@@ -1495,7 +2047,7 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 
 8. **Parent mini-report:** Should the mini-report be a new page (`/parent/mini-report`) or an expandable card on the existing parent dashboard?
 
-9. **Force PIN change on first login:** Is this a Phase 1 requirement or Phase 2? What UI does the parent see when forced to change?
+9. **Force PIN change — Phase 1 scope:** The plan sets `must_change_pin` as mandatory from Phase 1. Confirm: is the PIN-change gate required for Phase 1, or is it acceptable to show the flag in UI but not enforce the gate until Phase 2?
 
 10. **Existing parent accounts:** Some parents already have Supabase Auth accounts (via `students.parent_id`). Should these parents receive school inbox messages using their Supabase Auth session? This would give them access without a guardian-style credential.
 
@@ -1503,23 +2055,352 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 
 12. **Hebrew UI copy approval:** Who approves Hebrew text for all new UI surfaces? All copy must be reviewed before implementation begins.
 
+13. **Teacher inbox placement:** Should teachers receive school manager messages in a **dedicated new page** (`/teacher/school-messages`) within the teacher portal, or as a **section on the existing teacher dashboard**? The plan proposes a dedicated page with a badge on the teacher nav. Confirm this is the preferred UX direction before Phase 2 implementation.
+
+---
+
+## 16.1 Owner Decisions — Recorded 2026-05-27
+
+All 13 open questions have been answered by the owner. These decisions are binding for all phases. No deviation is permitted without explicit owner re-approval in writing.
+
+| Q# | Question | Owner Decision |
+|---|---|---|
+| 1 | School code assignment | Manual/administrative only. No self-service UI in Phase 1. Each assignment must be documented and owner-approved before migration is applied. |
+| 2 | Parent credential model | One parent credential covers multiple children. Do not create one credential per child-parent pair. |
+| 3 | Guardian session vs. Supabase Auth | Use existing guardian/custom session pattern for school-issued parent access. Do not introduce or merge Supabase Auth parent behavior unless a separate audit proves it is safe and necessary. |
+| 4 | Homeroom teacher definition | Homeroom teacher = teacher explicitly linked as primary/homeroom teacher of a physical class. If the current schema does not define this clearly, Phase 3 must first add/confirm the source of truth before enabling homeroom teacher messaging. |
+| 5 | School secretary role | Not in Phase 1. Reserve for Phase 3/4 unless owner approves earlier in writing. |
+| 6 | Attachments | No file upload in initial messaging phase. URL-only if needed. Full attachment implementation requires a separate approved plan. |
+| 7 | Email/SMS/push notifications | Not in Phase 1 or initial Phase 2. Portal-only messaging only. External notifications planned separately. |
+| 8 | Mini-report placement | Parent dashboard card/section first, with a link to a detailed report. Do not build a heavy new report engine. |
+| 9 | First-login parent PIN change | Approved for Phase 1. All school-issued parent accounts must require changing the temporary PIN on first login. Student PIN does not require mandatory first-login change. |
+| 10 | Existing Supabase Auth parent accounts | Do not merge into Phase 1. Existing Supabase Auth parent behavior must not be changed without a separate audit and owner approval. |
+| 11 | Student messaging | Not in scope for Phase 1-3. Student account is for learning access only. Messaging remains future/optional. |
+| 12 | Hebrew UI copy | Do not invent final Hebrew copy. Before Phase 1 implementation begins, agent will prepare the exact list of all new UI labels/messages needed, and owner approves the Hebrew wording before any code is written. |
+| 13 | Teacher inbox placement | Approved as planned: dedicated page `/teacher/school-messages` with a navigation badge/indicator. |
+
+### Phase 1 Approved Scope (binding)
+
+**Included:**
+- School account management foundation.
+- School-issued student credentials (username + 4-digit PIN, shown once).
+- School-issued parent credentials (username + 6-digit PIN, shown once, `must_change_pin = true`).
+- Access & Accounts tab inside the existing `SchoolReportModal` two-tab modal.
+- Parent mandatory first-login PIN change gate (`ParentMustChangePinGate`).
+- PIN shown-once behavior for both student and parent accounts.
+- Account status display (active, blocked, not created, last login).
+- Reset PIN, block, unblock, revoke, link parent, unlink parent.
+- All actions logged in `teacher_access_audit`.
+- Required Phase 1 tests (unit, API, permission, Playwright, regression).
+- Hebrew copy list prepared by agent and approved by owner before implementation begins.
+
+**Explicitly excluded from Phase 1:**
+- Messaging implementation of any kind.
+- Teacher inbox implementation.
+- Parent school inbox implementation.
+- Read receipt dashboard.
+- Advanced audience targeting.
+- School secretary role UI.
+- File attachments.
+- Email/SMS/push notifications.
+- Changes to existing regular teacher flow unless explicitly required and documented.
+
+---
+
+## 16.2 Hebrew Copy Approval List — Required Before Full Implementation Start
+
+Every new Hebrew UI label, button, status word, heading, validation message, empty state, and confirmation message is listed below. **No Hebrew text may appear in any component unless it is in this list and marked as approved by owner.** Owner should correct any placeholder wording before the start command is given.
+
+Format: `KEY | PLACEHOLDER TEXT | OWNER APPROVED TEXT`
+
+Owner fills in the "Owner Approved Text" column. If blank, the placeholder is not approved and implementation must wait.
+
+---
+
+### A. Access & Accounts Tab (SchoolReportModal second tab)
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `tab_learning_report` | First tab title | `דוח לימודי` |
+| `tab_access_accounts` | Second tab title | `גישה וחשבונות` |
+
+---
+
+### B. Student Account Section
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `section_student_account` | Section heading | `חשבון תלמיד` |
+| `status_active` | Account status | `פעיל` |
+| `status_blocked` | Account status | `חסום` |
+| `status_not_created` | Account status | `לא נוצר` |
+| `last_login_never` | Last login fallback | `מעולם לא נכנס` |
+| `last_login_days_ago` | Last login relative (X = number) | `לפני X ימים` |
+| `last_login_today` | Last login if today | `היום` |
+| `btn_create_account` | Create student account | `צור חשבון` |
+| `btn_reset_pin` | Reset PIN | `איפוס PIN` |
+| `btn_copy_credentials` | Copy credentials to clipboard | `העתק פרטים` |
+| `btn_block` | Block account | `חסום` |
+| `btn_unblock` | Unblock account | `בטל חסימה` |
+| `btn_revoke` | Permanently revoke | `בטל גישה` |
+| `confirm_revoke_student` | Revoke confirmation prompt | `האם לבטל את גישת התלמיד לצמיתות?` |
+| `empty_student_account` | No account yet | `לא נוצר חשבון לתלמיד זה` |
+
+---
+
+### C. Parent Account Section
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `section_parent_accounts` | Section heading | `חשבונות הורים` |
+| `btn_add_parent` | Add new parent access | `הוסף גישת הורה` |
+| `btn_link_parent` | Link existing parent | `חבר הורה קיים` |
+| `label_relation` | Relation field label | `קשר לתלמיד` |
+| `relation_mother` | Relation type | `אמא` |
+| `relation_father` | Relation type | `אבא` |
+| `relation_guardian` | Relation type | `אפוטרופוס` |
+| `relation_other` | Relation type | `אחר` |
+| `label_display_name` | Parent display name field | `שם הורה` |
+| `btn_disconnect_parent` | Disconnect parent from this student | `נתק מתלמיד` |
+| `confirm_disconnect_parent` | Disconnect confirmation | `האם לנתק הורה זה מהתלמיד?` |
+| `confirm_revoke_parent` | Revoke parent confirmation | `האם לבטל את גישת ההורה לצמיתות?` |
+| `must_change_pin_pending` | Badge — PIN change not yet done | `שינוי PIN נדרש בכניסה הראשונה` |
+| `must_change_pin_done` | Badge — PIN change completed | `שינוי PIN הושלם` |
+| `empty_parent_accounts` | No parent accounts yet | `לא נוצרו חשבונות הורים לתלמיד זה` |
+
+---
+
+### D. Shown-Once Credential Box
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `credential_box_heading` | Box heading | `פרטי הגישה` |
+| `credential_box_warning` | Warning under heading | `שמור את הפרטים עכשיו. הם לא יוצגו שוב.` |
+| `credential_label_username` | Username field label | `שם משתמש` |
+| `credential_label_pin` | PIN field label | `קוד גישה` |
+| `credential_copied` | Toast after copy | `הועתק ללוח` |
+| `credential_btn_dismiss` | Dismiss button | `אישור, שמרתי` |
+
+---
+
+### E. Parent First-Login PIN Change Gate
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `pin_gate_heading` | Gate screen title | `שינוי קוד גישה` |
+| `pin_gate_explanation` | Instructional text | `קוד הגישה שקיבלת הוא זמני. יש לבחור קוד גישה חדש לפני הכניסה לפורטל.` |
+| `pin_gate_field_current` | Current/temporary PIN label | `קוד גישה זמני` |
+| `pin_gate_field_new` | New PIN label | `קוד גישה חדש` |
+| `pin_gate_field_confirm` | Confirm new PIN label | `אימות קוד גישה חדש` |
+| `pin_gate_btn_submit` | Submit button | `אשר שינוי` |
+| `pin_gate_success` | Success message | `קוד הגישה עודכן בהצלחה` |
+| `pin_gate_error_wrong_current` | Wrong current PIN error | `קוד הגישה הנוכחי שגוי` |
+| `pin_gate_error_mismatch` | PINs do not match | `קודי הגישה אינם תואמים` |
+| `pin_gate_error_too_short` | PIN too short (6 digits required) | `קוד הגישה חייב להכיל 6 ספרות` |
+| `pin_gate_error_digits_only` | Non-numeric input | `קוד הגישה חייב להכיל ספרות בלבד` |
+
+---
+
+### F. School Messages Page (Manager — `/school/messages`)
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `nav_messages` | Nav item label | `הודעות` |
+| `page_messages_title` | Page heading | `הודעות בית ספר` |
+| `btn_compose` | Compose new message | `הודעה חדשה` |
+| `messages_empty` | No messages sent yet | `לא נשלחו הודעות עדיין` |
+| `col_subject` | Table/list column | `נושא` |
+| `col_audience` | Table/list column | `נמענים` |
+| `col_date` | Table/list column | `תאריך` |
+| `col_read_count` | Table/list column | `קראו` |
+| `filter_all` | Filter tab | `הכל` |
+| `filter_parents` | Filter tab | `הורים` |
+| `filter_teachers` | Filter tab | `מורים` |
+| `badge_type_regular` | Message type badge | `רגיל` |
+| `badge_type_important` | Message type badge | `חשוב` |
+| `badge_type_urgent` | Message type badge | `דחוף` |
+| `badge_type_requires_confirmation` | Message type badge | `דורש אישור קבלה` |
+
+---
+
+### G. Compose Message Modal
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `compose_title` | Modal heading | `הודעה חדשה` |
+| `compose_field_subject` | Subject field label | `נושא (אופציונלי)` |
+| `compose_field_body` | Body field label | `תוכן ההודעה` |
+| `compose_field_type` | Message type label | `סוג הודעה` |
+| `compose_field_audience` | Audience label | `נמענים` |
+| `compose_btn_send` | Send button | `שלח הודעה` |
+| `compose_btn_cancel` | Cancel button | `ביטול` |
+| `compose_preview_count` | Audience preview (X = count) | `X נמענים ייקבלו הודעה זו` |
+| `compose_error_empty_body` | Validation | `יש להזין תוכן להודעה` |
+| `compose_error_body_too_long` | Validation | `תוכן ההודעה ארוך מדי (עד 4000 תווים)` |
+| `compose_success` | After send | `ההודעה נשלחה בהצלחה` |
+
+---
+
+### H. Audience Picker
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `audience_section_parents` | Section label | `הורים` |
+| `audience_section_teachers` | Section label | `מורים וצוות` |
+| `audience_all_parents` | Option | `כל הורי בית הספר` |
+| `audience_grade_parents` | Option | `הורי שכבה` |
+| `audience_class_parents` | Option | `הורי כיתה` |
+| `audience_specific_parent` | Option | `הורה ספציפי` |
+| `audience_all_teachers` | Option | `כל מורי בית הספר` |
+| `audience_grade_teachers` | Option | `מורי שכבה` |
+| `audience_subject_teachers` | Option | `מורי מקצוע` |
+| `audience_class_teachers` | Option | `צוות מורי כיתה` |
+| `audience_specific_teacher` | Option | `מורה ספציפי` |
+| `picker_select_grade` | Grade picker placeholder | `בחר שכבה` |
+| `picker_select_class` | Class picker placeholder | `בחר כיתה` |
+| `picker_select_subject` | Subject picker placeholder | `בחר מקצוע` |
+| `picker_search_parent` | Search placeholder | `חפש הורה לפי שם או שם משתמש` |
+| `picker_search_teacher` | Search placeholder | `חפש מורה לפי שם` |
+| `picker_no_results` | No search results | `לא נמצאו תוצאות` |
+
+---
+
+### I. Parent School Inbox (`/parent/school-inbox`)
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `nav_school_inbox` | Link on parent dashboard | `הודעות בית הספר` |
+| `inbox_title` | Page heading | `הודעות מבית הספר` |
+| `inbox_empty` | No messages | `אין הודעות מבית הספר` |
+| `inbox_unread_badge` | Badge (X = count) | `X הודעות חדשות` |
+| `inbox_unread_one` | Badge (singular) | `הודעה חדשה אחת` |
+| `msg_from` | Sender label | `מ:` |
+| `msg_date` | Date label (relative) | `לפני X ימים` |
+| `msg_unread_indicator` | Unread dot label (screen reader) | `לא נקראה` |
+| `msg_badge_important` | Important badge | `חשוב` |
+| `msg_badge_urgent` | Urgent badge | `דחוף` |
+| `msg_badge_requires_confirmation` | Requires confirmation badge | `דורש אישור קבלה` |
+| `btn_mark_received` | Confirm receipt button | `קיבלתי` |
+| `received_confirmed` | After confirmation | `אישרת קבלה` |
+| `for_child` | Child label in multi-child context | `עבור: [שם הילד]` |
+
+---
+
+### J. Teacher School Inbox (`/teacher/school-messages`)
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `nav_school_messages_teacher` | Badge/link in teacher nav | `הודעות בית הספר` |
+| `teacher_inbox_title` | Page heading | `הודעות מהנהלת בית הספר` |
+| `teacher_inbox_empty` | No messages | `אין הודעות מבית הספר` |
+| `teacher_inbox_unread_badge` | Badge (X = count) | `X הודעות חדשות` |
+| `teacher_msg_badge_important` | Important badge | `חשוב` |
+| `teacher_msg_badge_urgent` | Urgent badge | `דחוף` |
+| `teacher_msg_badge_requires_confirmation` | Requires confirmation | `דורש אישור קבלה` |
+| `teacher_btn_mark_received` | Confirm receipt | `קיבלתי` |
+| `teacher_received_confirmed` | After confirmation | `אישרת קבלה` |
+
+---
+
+### K. Read Receipt Dashboard (Manager View)
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `receipts_panel_title` | Panel heading | `מצב קריאה` |
+| `receipts_tab_parents` | Tab | `הורים` |
+| `receipts_tab_teachers` | Tab | `מורים` |
+| `receipts_read_count` | Summary (X of Y) | `קראו X מתוך Y` |
+| `receipts_column_name` | Column | `שם` |
+| `receipts_column_status` | Column | `סטטוס` |
+| `receipts_status_read` | Row status | `קרא` |
+| `receipts_status_unread` | Row status | `לא קרא` |
+| `receipts_status_confirmed` | Row status (confirmed receipt) | `אישר קבלה` |
+| `receipts_empty` | No recipients | `אין נמענים` |
+| `receipts_filter_unread_only` | Filter toggle | `הצג לא קראו בלבד` |
+
+---
+
+### L. Parent Mini-Report Card
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `mini_report_card_title` | Card heading | `דוח למידה קצר` |
+| `mini_report_child_label` | Child name label | `תלמיד/ה:` |
+| `mini_report_class_label` | Class label | `כיתה:` |
+| `mini_report_subjects_title` | Subjects section | `מקצועות` |
+| `mini_report_accuracy_label` | Accuracy label | `דיוק` |
+| `mini_report_strengths_title` | Strengths section | `נקודות חוזק` |
+| `mini_report_practice_title` | Practice areas section | `לחיזוק` |
+| `mini_report_last_teacher_msgs` | Teacher messages section | `הודעות אחרונות מהמורה` |
+| `mini_report_link_full` | Link to full report | `לדוח המלא` |
+| `mini_report_no_data` | No learning data yet | `אין נתוני למידה עדיין` |
+| `mini_report_last_updated` | Last update label | `עודכן:` |
+
+---
+
+### M. School Dashboard Message Counters
+
+| Key | Surface | Placeholder Text |
+|---|---|---|
+| `counter_unread_parents` | Stat card title | `הודעות לא נקראו — הורים` |
+| `counter_unread_teachers` | Stat card title | `הודעות לא נקראו — מורים` |
+| `counter_important_active` | Stat card title | `הודעות חשובות פעילות` |
+| `btn_compose_from_dashboard` | Quick action | `הודעה חדשה` |
+
+---
+
+**Total Hebrew strings in this list: 120**
+
+**Owner instruction:** Review each placeholder text above. Any string the owner corrects must be implemented with the corrected wording. Any string the owner does not correct is approved as-is and will be implemented with the placeholder text shown.
+
 ---
 
 ## 17. Final Recommendation
 
-### Recommended Implementation Order
+### Approved Workflow (Single-Approval, Full-Scope)
 
-1. **First: Apply migrations 030 and 031** (school code + credential tracking). These are additive, have no product impact, and unlock everything else.
+```
+Owner reviews full plan + Hebrew copy list (Section 16.2)
+       ↓
+Owner gives ONE explicit command:
+  START FULL SCHOOL PORTAL IMPLEMENTATION
+  (means: full scope Steps 1→2→3, no inter-step stops)
+       ↓
+Agent implements full scope in order, without stopping between steps
+  - SQL files prepared by agent; owner applies them manually when signalled
+  - Only allowed pause: owner manually applies a required migration file
+  - After owner confirms SQL applied, agent continues automatically
+       ↓
+Agent runs all planned tests; fixes issues discovered during implementation/testing
+       ↓
+Agent sends ONE final completion report (Section 12.5)
+       ↓
+Owner uploads report + changed-files package to ChatGPT
+       ↓
+Owner and ChatGPT review at the end
+       ↓
+Owner performs manual UI/mobile/desktop checks
+       ↓
+Owner decides whether work is accepted
+```
 
-2. **Second: Build school account management APIs and student card UI (Phase 1)**. This is the highest-value, lowest-risk change. School managers need this regardless of messaging.
+### Internal Execution Order (Technical, Not Owner Approval Gates)
 
-3. **Third: Apply migration 032 and build messaging core (Phase 2)**. Start with `all_parents` audience only. Prove the fan-out and read-receipt mechanics work before expanding audience types.
-
-4. **Fourth: Build parent school inbox and mini-report (Phase 2)**.
-
-5. **Fifth: Expand messaging audience types, homeroom teacher messaging, read receipt dashboard (Phase 3)**.
-
-6. **Later: Phase 4 optional features** based on product usage data.
+1. Write migration files 030, 031, 034. Signal owner to apply them.
+2. Build school account management server lib and all API routes (Phase 1).
+3. Build `SchoolReportModal` two-tab extension, `SchoolStudentAccessPanel`, and credential components (Phase 1).
+4. Build `ParentMustChangePinGate` and `POST /api/guardian/change-pin` (Phase 1).
+5. Run Phase 1 unit, API, permission, Playwright, and regression tests (Phase 1).
+6. Write migration files 032, 033. Signal owner to apply them.
+7. Build school messaging server lib and all school message API routes (Phase 2).
+8. Build teacher school inbox APIs (Phase 2).
+9. Build parent mini-report API (Phase 2).
+10. Build school messages page, parent school inbox page, teacher school messages page, and all related components (Phase 2).
+11. Run Phase 2 unit, API, permission, Playwright, and regression tests (Phase 2).
+12. Build read receipt dashboard, advanced targeting, homeroom teacher messaging, dashboard counters (Phase 3).
+13. Run Phase 3 tests (Phase 3).
+14. Run full regression suite (all phases).
+15. Send final completion report.
 
 ### Architecture Principles to Maintain
 
@@ -1527,18 +2408,32 @@ Parent dashboard already handles multiple children (up to `studentLimit`). Mini-
 - Authorization always via DB relations. Never via username pattern.
 - Append-only message history. Soft-delete only.
 - Shown-once PIN pattern enforced at all account creation/reset points.
-- Hebrew text: never change existing strings without approval. New strings: approve before code.
-- Regular teacher flow: never modify existing teacher portal APIs or behavior.
+- Mandatory first-login PIN change for all school-issued parent accounts.
+- Hebrew text: never change existing strings without approval. New strings require owner approval before any UI code touches them.
+- **Regular private teacher flow: never modify.** All existing teacher portal routes, APIs, and components remain unchanged.
+- **Regular non-school parent flow: never modify.** Existing parent dashboard, parent report, and parent API routes remain unchanged except for additive-only new items (school inbox card on dashboard, new `/parent/school-inbox` page, new `/api/parent/school-messages/` routes).
 - School scope: all school queries always filter by `school_id`. No data crosses school boundaries.
+- Teacher scope: teacher inbox queries always filter by `recipient_user_id = teacher's auth user ID`.
 - Audit trail: all account management and messaging actions logged in `teacher_access_audit`.
 
-### What the Owner Needs to Do Before Phase 1 Implementation
+### What the Owner Must Do Before Implementation Starts
 
-1. Assign school codes to existing school accounts in the DB (manually, post-migration-030).
-2. Approve Hebrew UI copy for the Access & Accounts section.
-3. Answer open questions 3, 4, and 5 (guardian session vs Supabase Auth; homeroom teacher definition; secretary role timing).
-4. Confirm PIN policy: 4-digit student, 6-digit parent in Phase 1; force-change in Phase 2.
+1. Review the full plan and the Hebrew copy list in Section 16.2. Approve the exact Hebrew wording for each item or provide corrections.
+2. Type the explicit command: **`START FULL SCHOOL PORTAL IMPLEMENTATION`** — this means implement the full approved scope from Step 1 through Step 3 in order, without stopping for product approvals between steps.
+3. When agent signals that migration files 030, 031, 034 are ready: apply them in Supabase SQL editor, then confirm so agent can continue.
+4. When agent signals that migration files 032, 033 are ready: apply them in Supabase SQL editor, then confirm so agent can continue.
+5. Assign a `school_code` value to at least one test school in the DB (post migration 030).
+
+### Workflow Constraints (Non-Negotiable, All Phases)
+
+- Agent never executes SQL.
+- Agent never commits.
+- Agent never pushes.
+- Owner applies all migrations manually in Supabase SQL editor only.
+- No Hebrew text created or changed without owner approval of the exact wording.
+- No design changes to existing screens without owner approval.
+- Regular private teacher flow and regular non-school parent flow must remain byte-for-byte unchanged in behavior.
 
 ---
 
-*This document is planning only. No implementation code has been written. No SQL has been executed. No commits or pushes have been made. All decisions in this document require owner review and approval before implementation begins.*
+*This document is planning only. No implementation code has been written. No SQL has been executed. No commits or pushes have been made. All decisions in this document require owner review and the explicit command `START FULL SCHOOL PORTAL IMPLEMENTATION` before any implementation begins.*

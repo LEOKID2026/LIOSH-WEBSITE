@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { filterStudentsByRosterKey } from "../../lib/teacher-portal/teacher-dashboard-roster.js";
 import { effectivePhysicalClassStudentCount } from "../../lib/teacher-portal/teacher-physical-class.js";
-import TeacherClassReportModal from "./TeacherClassReportModal.jsx";
-import { TeacherPhysicalClassActivitiesModal } from "./TeacherPhysicalClassModals.jsx";
 import {
   DASHBOARD_CREATE_CLASS_BUTTON,
   DASHBOARD_CREATE_CLASS_LABEL,
@@ -524,8 +522,6 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
   const [filterKey, setFilterKey] = useState("all");
   const [sortKey, setSortKey] = useState("name");
   const [manageClass, setManageClass] = useState(null);
-  const [reportClass, setReportClass] = useState(null);
-  const [activitiesClass, setActivitiesClass] = useState(null);
 
   const rosterFilters = dashboard?.rosterFilters || [];
 
@@ -608,6 +604,10 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           <ul className="grid gap-3 sm:grid-cols-2">
             {(dashboard.classes || []).map((c) => {
               const rosterKey = c.physicalGroupKey || c.classId;
+              const classRouteId = c.primaryClassId || c.classId;
+              const classBase = classRouteId
+                ? `/teacher/class/${encodeURIComponent(classRouteId)}`
+                : "";
               const studentCount = effectivePhysicalClassStudentCount(c);
               return (
               <li
@@ -637,22 +637,20 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                   >
                     הצגת תלמידי הכיתה
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setReportClass(c)}
+                  <Link
+                    href={classBase}
                     className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
                     data-testid={`teacher-class-report-${rosterKey}`}
                   >
                     דוח כיתה
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActivitiesClass(c)}
+                  </Link>
+                  <Link
+                    href={`${classBase}/activities`}
                     className="text-xs rounded border border-amber-400/40 text-amber-200 px-3 py-1.5 hover:bg-amber-500/10"
                     data-testid={`teacher-class-activities-${rosterKey}`}
                   >
                     פעילויות
-                  </button>
+                  </Link>
                   <button
                     type="button"
                     onClick={() => setManageClass(c)}
@@ -774,22 +772,6 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           maxStudentsPerClass={dashboard?.limits?.maxStudentsPerClass ?? null}
           onClose={() => setManageClass(null)}
           onRefresh={onRefresh}
-        />
-      ) : null}
-
-      {reportClass ? (
-        <TeacherClassReportModal
-          accessToken={accessToken}
-          classCard={reportClass}
-          onClose={() => setReportClass(null)}
-        />
-      ) : null}
-
-      {activitiesClass ? (
-        <TeacherPhysicalClassActivitiesModal
-          accessToken={accessToken}
-          classCard={activitiesClass}
-          onClose={() => setActivitiesClass(null)}
         />
       ) : null}
     </div>

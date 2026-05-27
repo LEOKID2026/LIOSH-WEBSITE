@@ -1,39 +1,27 @@
 ---
 name: School Communication Master Plan
-overview: A comprehensive end-to-end plan to transform the School Portal into a structured school communication and account management center, covering messaging, account management, parent inbox, read receipts, and permissions across 4 implementation phases.
+overview: A comprehensive end-to-end plan to transform the School Portal into a structured school communication and account management center, covering messaging to parents AND teachers, teacher staff inbox, mandatory first-login PIN change, account management, and read receipts. Workflow is single-approval then full implementation from start to finish, with one final report at the end.
 todos:
   - id: review-plan
-    content: Owner reviews SCHOOL_COMMUNICATION_AND_ACCESS_MASTER_PLAN.md and answers the 12 open questions
-    status: pending
+    content: Owner reviews SCHOOL_COMMUNICATION_AND_ACCESS_MASTER_PLAN.md and answers the 13 open questions (especially Q3, Q4, Q5, Q9, Q13)
+    status: completed
   - id: approve-school-code
     content: Assign school codes to existing schools in DB after migration 030 is applied
     status: pending
   - id: approve-hebrew-copy
-    content: Owner approves Hebrew UI copy for Access & Accounts section before Phase 1 implementation
+    content: Owner approves Hebrew UI copy list (all surfaces, all phases — see Section 16.2 of master plan) before implementation starts
     status: pending
-  - id: apply-030-031
-    content: Owner manually applies migrations 030 and 031 in Supabase SQL editor
+  - id: apply-030-031-034
+    content: Owner manually applies migrations 030, 031, and 034 in Supabase SQL editor when agent signals they are ready
     status: pending
-  - id: apply-034
-    content: Owner manually applies migration 034 (audit action allowlist extension)
-    status: pending
-  - id: phase1-impl
-    content: "Implement Phase 1: school account management APIs and student card UI"
-    status: pending
-  - id: phase1-tests
-    content: Run Phase 1 test suite (unit, API, permission, Playwright)
+  - id: full-implementation
+    content: "START FULL SCHOOL PORTAL IMPLEMENTATION — full scope Phases 1 through 3 in order, no inter-phase stops"
     status: pending
   - id: apply-032-033
-    content: Owner manually applies migrations 032 and 033 before Phase 2
+    content: Owner manually applies migrations 032 and 033 in Supabase SQL editor when agent signals they are required
     status: pending
-  - id: phase2-impl
-    content: "Implement Phase 2: messaging core, parent inbox, mini-report"
-    status: pending
-  - id: phase2-tests
-    content: Run Phase 2 test suite including multi-child and read-receipt tests
-    status: pending
-  - id: phase3-impl
-    content: "Implement Phase 3: read receipt dashboard, homeroom teacher messaging, counters"
+  - id: final-report
+    content: Agent sends ONE final completion report (files, APIs, migrations, tests, regression, manual QA checklist, changed-files package)
     status: pending
   - id: phase4-plan
     content: Plan Phase 4 optional features based on Phase 2-3 usage data
@@ -41,108 +29,108 @@ todos:
 isProject: false
 ---
 
-# School Communication and Account Management — Plan Summary
+# School Communication and Account Management — Plan Summary (Revised)
 
-## Document Created
+## Document
 [docs/school-portal/SCHOOL_COMMUNICATION_AND_ACCESS_MASTER_PLAN.md](docs/school-portal/SCHOOL_COMMUNICATION_AND_ACCESS_MASTER_PLAN.md)
 
-## Existing System — Key Findings
+## Revision Summary (2026-05-27)
 
-### Regular Teacher Flow (exists today)
-- Student login: `student_access_codes` table + 4-digit PIN (hashed)
-- Parent access: `student_guardian_access` table + PIN (hashed), custom guardian session
-- Username format already implemented: `{prefix}-{p|s}{sequence}` (e.g. `leo-p01`, `leo-s01`)
-- Teacher gets a unique 3-letter `access_prefix` in `teacher_profiles.access_prefix`
-- Crypto reusable: `lib/guardian-server/guardian-crypto.server.js`
-- Username allocation reusable: `lib/teacher-server/teacher-access-prefix.server.js`
-- PIN shown-once pattern implemented in `GuardianAccessPanel.jsx` / `StudentLoginAccessPanel.jsx`
-- Teacher→parent messages: `teacher_parent_messages` table (migration 023), per-student-per-teacher
-- Parent report: `buildTeacherStudentReportPayload` (shared, already used by school portal)
+Seven required changes have been incorporated:
 
-### School Portal (exists today)
-- Pages: Dashboard, Teachers, Classes, Students
-- Auth gate: `requireSchoolManagerApiContext()` — requires `school_admin` role in `school_teacher_memberships`
-- Student card: learning report modal only — no Access & Accounts section
-- No messaging capability
-- No school-level account management
-- No parent school inbox
-- No read receipts
+1. **School Manager → Teachers messaging** — dedicated plan added (Section 10.4): all-teachers, by grade, by subject, by class team, specific teacher; teacher staff inbox at `/teacher/school-messages`; read receipts for teachers; teacher unread dashboard.
+2. **Final target model expanded** — Section 10.3 now lists all parent and teacher audience types with phase labels.
+3. **Student card design clarified** — explicit decision: two-tab modal inside existing `SchoolReportModal` (Tab 1: Learning Report, Tab 2: Access & Accounts). Rationale documented. New dedicated page rejected with explanation.
+4. **Mandatory first-login PIN change** — moved from Phase 4 to Phase 1. `must_change_pin` column added to migration 031. Parent PIN-change gate (`ParentMustChangePinGate`) and `POST /api/guardian/change-pin` API added.
+5. **Open questions count fixed** — was 11 in plan summary, 12 in document body. Now 13 in both (added Q13 about teacher inbox placement). Count matches throughout.
+6. **Single-approval workflow** — phases are internal technical execution order only, not stop points. Agent proceeds from Step 1 through Step 3 without inter-step owner approval. Only allowed pause: owner manually applying a required migration file. One final report at the end.
+7. **Final QA closure requirements** — Section 12.5 added with 12 subsections: file list, DB/migration status, APIs, UI, tests run, tests not run, manual QA checklist, mobile/desktop checks, permission/security checks, regression checks, multi-child and limited-scope tests, and 6 confirmation statements.
 
-### Critical Gaps
-- `school_accounts` has no `school_code` column
-- No school-issued student/parent credential management
-- No school→parent or school→teacher messaging
-- No parent school inbox
-- No read receipts on any message
-- No homeroom teacher messaging scope
-- No mini-report for parents in school context
+## Key Technical Decisions
+
+- **Student card**: 2-tab modal inside `SchoolReportModal` (not a new page, not a section below report)
+- **Teacher inbox**: new page `/teacher/school-messages` with badge in teacher nav (Q13 confirmed by owner)
+- **Parent PIN**: 6 digits, mandatory change on first login from Phase 1 (`must_change_pin = true`)
+- **Student PIN**: 4 digits, no mandatory first-login change
+- **Messaging**: school manager → parents (Phase 2) + school manager → teachers (Phase 2); homeroom teacher → class parents (Phase 3)
+- **Fan-out table**: `school_message_recipients` handles both parent and teacher recipients via `recipient_type` column
 
 ## Proposed DB Additions (owner applies manually)
 
 - **Migration 030** — `school_accounts.school_code` (3-4 letters, unique, never changes)
-- **Migration 031** — `created_by_school_id` on `student_guardian_access` and `student_access_codes`; new `school_credential_sequences` table (atomic counters)
-- **Migration 032** — `school_messages`, `school_message_recipients`, `school_message_read_receipts` tables
+- **Migration 031** — `created_by_school_id` + `must_change_pin` on `student_guardian_access`; `created_by_school_id` on `student_access_codes`; new `school_credential_sequences` table
+- **Migration 032** — `school_messages`, `school_message_recipients`, `school_message_read_receipts` (supports parent + teacher recipients and read receipts)
 - **Migration 033** — `school_id` column on `teacher_parent_messages` (backfill existing rows)
-- **Migration 034** — Extend `teacher_access_audit` action allowlist for account + messaging events
-
-## Username Strategy
-- School-issued student: `{school_code}-s{sequence}` (e.g. `leo-s0152`)
-- School-issued parent: `{school_code}-p{sequence}` (e.g. `leo-p0152`)
-- School code: 3-4 lowercase letters, unique, assigned once, never changes
-- Permissions NEVER derived from username — all auth via DB relations
-- Reuses existing crypto and allocation logic (school-scoped variant)
-
-## Permission Matrix Summary
-- School manager (`school_admin`): full account management + all messaging
-- Homeroom teacher: send to own class parents only (Phase 3)
-- Subject teacher: send to own linked students' parents only (Phase 3)
-- Parent: read own school messages + own children's mini-report
-- Student: no messaging in Phase 1-3
+- **Migration 034** — Extend `teacher_access_audit` action allowlist for account + messaging events (including `school_parent_pin_changed_by_parent`)
 
 ## Implementation Phases
 
-### Phase 1 — School Account Management (Priority)
-- Goal: school manager creates/resets/blocks student and parent accounts from student card
-- New APIs: `/api/school/students/[studentId]/accounts/...`
-- New components: `SchoolStudentAccessPanel`, `SchoolStudentParentAccessRow`
-- Extend: `SchoolReportModal` with Access & Accounts tab
-- Migrations: 030, 031, 034
-- Forbidden: changing existing teacher/parent flow
+### Internal Execution Step 1 — School Account Management + Mandatory First-Login PIN Change
+- New APIs: `/api/school/students/[studentId]/accounts/...`, `POST /api/guardian/change-pin`
+- New components: `SchoolStudentAccessPanel`, `SchoolStudentParentAccessRow`, `SchoolCredentialShownOnceBox`, `ParentMustChangePinGate`
+- Extend: `SchoolReportModal` → two-tab modal (Learning Report + Access & Accounts)
+- SQL required: migrations 030, 031, 034 (owner applies when signalled — only allowed pause)
 
-### Phase 2 — Messaging Core + Parent Inbox + Mini-Report
-- Goal: school manager sends messages; parents receive in school inbox; teacher messages linked to school
-- New APIs: `/api/school/messages/...`, `/api/parent/school-messages/...`, `/api/parent/mini-report`
-- New pages: `/school/messages`, `/parent/school-inbox`
-- New components: compose modal, audience picker, parent inbox list/detail, mini-report card
-- Migrations: 032, 033
-- Start with `all_parents` audience only; expand later
+### Internal Execution Step 2 — Messaging Core: Parent Inbox + Teacher Inbox + Mini-Report
+- Initial scope: `all_parents` and `all_teachers` only; expand to grade/class/subject within this step
+- New APIs: `/api/school/messages/...`, `/api/parent/school-messages/...`, `/api/teacher/school-messages/...`, `/api/parent/mini-report`
+- New pages: `/school/messages`, `/parent/school-inbox`, `/teacher/school-messages`
+- New components: compose modal + audience picker (parent + teacher sides), parent inbox, teacher inbox, mini-report card
+- SQL required: migrations 032, 033 (owner applies when signalled — only allowed pause)
 
-### Phase 3 — Read Receipts, Advanced Targeting, Dashboard Counters
-- Read receipt dashboard (who read / who did not)
+### Internal Execution Step 3 — Read Receipt Dashboard + Advanced Targeting + Homeroom Teacher Messaging
+- Read receipt panel with parent/teacher tabs; manager sees counts broken out by type
+- Advanced audience targeting (grade, subject, class team for both parents and teachers)
 - Homeroom teacher → class parents messaging
-- Dashboard unread message counters
-- School secretary role DB addition
-- Segment targeting (grade filter)
+- Dashboard unread counters (separate parent/teacher stat cards)
+- School secretary role CHECK constraint added (no UI)
 
 ### Phase 4 — Future Optional
-- Scheduled messages, parent reply, student messaging, push/email notifications, bulk credential export
+- Scheduled messages, parent reply, push/email notifications, bulk credential export, school secretary UI
 
-## Risks
-- Wrong parent seeing wrong child's message — mitigated by `recipient_user_id = auth.uid()` checks and RLS
-- Duplicate parent accounts — UI warns if account already exists
-- Becoming uncontrolled WhatsApp — prevented: no parent-initiated messages, no reply threads in Phase 1-3
-- Breaking existing teacher flow — strict API separation, regression test suite
-- Hebrew text changed without approval — planning constraint enforced throughout
+## Scope Boundary (Non-Negotiable)
+- **Regular private teachers and regular non-school parents must remain completely unchanged.**
+- Allowed impact area: `/school/**`, `/teacher/school-messages`, additive-only changes to `/parent/dashboard`, new `/parent/school-inbox`, new `/api/parent/school-messages/`, new `/api/teacher/school-messages/`.
+- No changes to existing teacher portal routes or components outside school messaging.
+- No changes to existing parent dashboard behavior outside new school inbox card.
+- No changes to existing parent report or private teacher message panel.
 
-## Open Questions Requiring Owner Decision
-1. Who assigns school codes (admin UI or manual)?
-2. One parent credential for multiple children, or one per child? (Recommended: one credential)
-3. Guardian session vs. Supabase Auth for school-issued parent accounts?
-4. What defines a "homeroom teacher" for messaging eligibility?
-5. Is school secretary role needed in Phase 1?
-6. Attachment handling: URL-only or file upload?
-7. Notification delivery (email/SMS) for urgent messages — Phase 2 or later?
-8. Mini-report: new page or dashboard card?
-9. Force-change PIN on first parent login — Phase 1 or Phase 2?
-10. Existing Supabase Auth parent accounts — should they receive school inbox messages?
-11. Hebrew UI copy approval process and approver?
+## Approved Workflow
+1. Owner reviews final plan and Hebrew copy list, then gives explicit command: **`START FULL SCHOOL PORTAL IMPLEMENTATION`**
+2. Agent implements full scope (Steps 1 → 2 → 3) without stopping between steps.
+3. Agent pauses ONLY when a migration file must be manually applied by owner before DB integration tests can run. Agent states which file, owner applies it, agent continues automatically.
+4. Agent sends ONE final completion report at the end of all steps.
+5. Owner uploads report + changed-files package to ChatGPT.
+6. Owner and ChatGPT review at the end. Owner performs manual UI/QA checks.
+7. Owner decides acceptance.
+
+## Constraints (Non-Negotiable, All Phases)
+- Agent never executes SQL
+- Agent never commits
+- Agent never pushes
+- Owner manually applies all migrations in Supabase SQL editor
+- No Hebrew text created or changed without owner approval of exact wording
+- No design changes to existing screens without approval
+
+## Owner Decisions — All 13 Answered (2026-05-27)
+
+1. **School code assignment** — Manual/administrative only. No UI in Phase 1.
+2. **Parent credential model** — One credential per parent, linked to multiple children.
+3. **Guardian session vs. Auth** — Use existing guardian/custom session. No Supabase Auth merge.
+4. **Homeroom teacher definition** — Primary/homeroom teacher of a physical class. Phase 3 must confirm schema source of truth before enabling homeroom messaging.
+5. **School secretary role** — Phase 3/4 only. Not Phase 1.
+6. **Attachments** — No file upload in initial messaging phase. URL-only if needed later.
+7. **Email/SMS/push** — Not Phase 1 or initial Phase 2. Portal-only.
+8. **Mini-report** — Parent dashboard card/section with link to detailed report.
+9. **First-login parent PIN change** — Approved for Phase 1. Student PIN: no mandatory change.
+10. **Existing Supabase Auth parents** — Do not merge. No changes without separate audit.
+11. **Student messaging** — Not Phase 1-3. Future/optional only.
+12. **Hebrew copy** — Agent prepares exact list of new labels; owner approves before implementation.
+13. **Teacher inbox placement** — Dedicated page `/teacher/school-messages` with badge. Approved.
+
+## Approved Full Scope (Steps 1–3, all delivered before final report)
+- Step 1: school account management, student + parent credentials, two-tab modal, shown-once PIN, mandatory parent first-login PIN change, reset/block/unblock/revoke/link/unlink, audit log
+- Step 2: messaging core, school → parents, school → teachers, parent school inbox, teacher school inbox, mini-report card
+- Step 3: read receipt dashboard, advanced targeting, homeroom teacher messaging, dashboard counters
+- Hebrew copy: entire list approved before implementation starts (see Section 16.2 of master plan)
+- Excluded from all steps: messaging-free private teacher flow changes, regular parent dashboard changes, secretary role UI, file attachments, email/SMS/push notifications, student messaging
