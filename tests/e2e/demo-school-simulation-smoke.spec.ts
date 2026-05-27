@@ -204,7 +204,7 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     });
     await studentsModal.getByRole("button", { name: "סגירה", exact: false }).click();
     await expect(studentsModal).toHaveCount(0);
-    await picker.getByRole("button", { name: "✕" }).click();
+    await picker.getByTestId("report-modal-close").click();
     await expect(picker).toHaveCount(0);
 
     await expect(teacherReady.getByText(/מקצועות מורשים/u)).toBeVisible({ timeout: 15_000 });
