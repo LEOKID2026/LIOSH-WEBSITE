@@ -16,8 +16,15 @@ import {
   SC_BTN_COMPOSE,
   SC_COL_AUDIENCE,
   SC_COL_DATE,
+  SC_COL_ACTION,
   SC_COL_READ_COUNT,
   SC_COL_SUBJECT,
+  SC_FILTER_CUSTOM_RANGE,
+  SC_FILTER_LAST_7_DAYS,
+  SC_FILTER_LAST_30_DAYS,
+  SC_LABEL_DATE_FROM,
+  SC_LABEL_DATE_TO,
+  SC_BTN_OPEN,
   SC_COMPOSE_BTN_CANCEL,
   SC_COMPOSE_BTN_SEND,
   SC_COMPOSE_FIELD_AUDIENCE,
@@ -38,7 +45,9 @@ import {
   SC_RECEIPTS_TAB_PARENTS,
   SC_RECEIPTS_TAB_TEACHERS,
 } from "../../lib/school-portal/school-communication.he";
+import SchoolInboxMessageCard from "../../components/school-portal/SchoolInboxMessageCard";
 import {
+  buildSchoolMessagesListQuery,
   formatSchoolMessageAudienceLabel,
   formatSchoolMessageListReadCount,
   getSchoolMessageId,
@@ -65,6 +74,9 @@ export default function SchoolMessagesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("7");
+  const [customFrom, setCustomFrom] = useState("");
+  const [customTo, setCustomTo] = useState("");
   const [composeOpen, setComposeOpen] = useState(false);
   const [detailId, setDetailId] = useState(null);
   const [detail, setDetail] = useState(null);
@@ -91,7 +103,12 @@ export default function SchoolMessagesPage() {
     setLoading(true);
     setError("");
     try {
-      const q = filter !== "all" ? `?recipientType=${filter}` : "";
+      const q = buildSchoolMessagesListQuery({
+        recipientType: filter,
+        dateFilter,
+        customFrom,
+        customTo,
+      });
       const res = await schoolAuthFetch(accessToken, `/api/school/messages${q}`);
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -104,7 +121,7 @@ export default function SchoolMessagesPage() {
     } finally {
       setLoading(false);
     }
-  }, [accessToken, filter]);
+  }, [accessToken, filter, dateFilter, customFrom, customTo]);
 
   useEffect(() => {
     if (state === "ready") void loadMessages();
@@ -196,7 +213,7 @@ export default function SchoolMessagesPage() {
         ) : (
           <div className="space-y-6">
             <div className="flex flex-wrap justify-between gap-3">
-              <div className="flex gap-2 text-sm">
+              <div className="flex flex-wrap gap-2 text-sm">
                 {[SC_FILTER_ALL, SC_FILTER_PARENTS, SC_FILTER_TEACHERS].map((label, i) => {
                   const key = ["all", "parent", "teacher"][i];
                   return (
@@ -218,43 +235,111 @@ export default function SchoolMessagesPage() {
               <SchoolPrimaryButton onClick={() => setComposeOpen(true)}>{SC_BTN_COMPOSE}</SchoolPrimaryButton>
             </div>
 
+            <div className="flex flex-wrap gap-2 text-sm items-end">
+              {[
+                { key: "7", label: SC_FILTER_LAST_7_DAYS },
+                { key: "30", label: SC_FILTER_LAST_30_DAYS },
+                { key: "custom", label: SC_FILTER_CUSTOM_RANGE },
+              ].map(({ key, label }) => (
+                <button
+                  key={key}
+                  type="button"
+                  className={
+                    dateFilter === key
+                      ? "rounded-lg bg-amber-500/20 border border-amber-500/40 px-3 py-1"
+                      : "rounded-lg border border-white/15 px-3 py-1 text-white/70"
+                  }
+                  onClick={() => setDateFilter(key)}
+                >
+                  {label}
+                </button>
+              ))}
+              {dateFilter === "custom" ? (
+                <div className="flex flex-wrap gap-2 items-end w-full sm:w-auto">
+                  <label className="text-xs text-white/60">
+                    {SC_LABEL_DATE_FROM}
+                    <input
+                      type="date"
+                      value={customFrom}
+                      onChange={(e) => setCustomFrom(e.target.value)}
+                      className="mt-1 block rounded bg-black/40 border border-white/20 px-2 py-1 text-sm"
+                    />
+                  </label>
+                  <label className="text-xs text-white/60">
+                    {SC_LABEL_DATE_TO}
+                    <input
+                      type="date"
+                      value={customTo}
+                      onChange={(e) => setCustomTo(e.target.value)}
+                      className="mt-1 block rounded bg-black/40 border border-white/20 px-2 py-1 text-sm"
+                    />
+                  </label>
+                </div>
+              ) : null}
+            </div>
+
             {error ? <SchoolErrorBlock message={error} onRetry={() => void loadMessages()} /> : null}
             {loading ? (
               <SchoolLoadingBlock message="טוען…" />
             ) : messages.length ? (
-              <div className="overflow-x-auto rounded-xl border border-white/15">
-                <table className="w-full text-sm text-right">
-                  <thead className="text-white/50 border-b border-white/10">
-                    <tr>
-                      <th className="p-3">{SC_COL_SUBJECT}</th>
-                      <th className="p-3">{SC_COL_AUDIENCE}</th>
-                      <th className="p-3">{SC_COL_DATE}</th>
-                      <th className="p-3">{SC_COL_READ_COUNT}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {messages.map((m) => {
-                      const messageId = getSchoolMessageId(m);
-                      return (
-                        <tr
-                          key={messageId || m.subject}
-                          className="border-b border-white/5 hover:bg-white/5 cursor-pointer"
-                          onClick={() => messageId && void loadDetail(messageId)}
-                        >
-                          <td className="p-3">{m.subject || "—"}</td>
-                          <td className="p-3">
-                            {formatSchoolMessageAudienceLabel(m.audienceType, m.audienceScope)}
-                          </td>
-                          <td className="p-3">
-                            {m.sentAt ? new Date(m.sentAt).toLocaleDateString("he-IL") : "—"}
-                          </td>
-                          <td className="p-3">{formatSchoolMessageListReadCount(m)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              <>
+                <ul className="md:hidden space-y-3">
+                  {messages.map((m) => {
+                    const messageId = getSchoolMessageId(m);
+                    return (
+                      <li key={messageId || m.subject}>
+                        <SchoolInboxMessageCard
+                          message={m}
+                          messageId={messageId}
+                          onOpen={() => messageId && void loadDetail(messageId)}
+                          metaLine={formatSchoolMessageAudienceLabel(m.audienceType, m.audienceScope)}
+                          readCountLine={formatSchoolMessageListReadCount(m)}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+                <div className="hidden md:block overflow-x-auto rounded-xl border border-white/15">
+                  <table className="w-full text-sm text-right">
+                    <thead className="text-white/50 border-b border-white/10">
+                      <tr>
+                        <th className="p-3">{SC_COL_SUBJECT}</th>
+                        <th className="p-3">{SC_COL_AUDIENCE}</th>
+                        <th className="p-3">{SC_COL_DATE}</th>
+                        <th className="p-3">{SC_COL_READ_COUNT}</th>
+                        <th className="p-3">{SC_COL_ACTION}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {messages.map((m) => {
+                        const messageId = getSchoolMessageId(m);
+                        return (
+                          <tr key={messageId || m.subject} className="border-b border-white/5">
+                            <td className="p-3">{m.subject || "—"}</td>
+                            <td className="p-3">
+                              {formatSchoolMessageAudienceLabel(m.audienceType, m.audienceScope)}
+                            </td>
+                            <td className="p-3">
+                              {m.sentAt ? new Date(m.sentAt).toLocaleDateString("he-IL") : "—"}
+                            </td>
+                            <td className="p-3">{formatSchoolMessageListReadCount(m)}</td>
+                            <td className="p-3">
+                              <button
+                                type="button"
+                                disabled={!messageId}
+                                className="rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-100 disabled:opacity-50"
+                                onClick={() => messageId && void loadDetail(messageId)}
+                              >
+                                {SC_BTN_OPEN}
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             ) : (
               <p className="text-white/50 text-sm text-right">{SC_MESSAGES_EMPTY}</p>
             )}

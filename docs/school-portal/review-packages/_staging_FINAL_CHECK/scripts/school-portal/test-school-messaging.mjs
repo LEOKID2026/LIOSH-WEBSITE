@@ -4,6 +4,7 @@
  */
 import assert from "node:assert/strict";
 import {
+  buildSchoolMessagesListQuery,
   formatSchoolMessageAudienceLabel,
   formatSchoolMessageListReadCount,
   getSchoolMessageId,
@@ -82,5 +83,12 @@ assert.equal(
 
 assert.equal(schoolMessageHasTeacherRecipients({ teacherRecipientCount: 1 }), true);
 assert.equal(schoolMessageHasParentRecipients({ parentRecipientCount: 0 }), false);
+
+assert.match(buildSchoolMessagesListQuery({ dateFilter: "7" }), /days=7/);
+assert.match(buildSchoolMessagesListQuery({ dateFilter: "30" }), /days=30/);
+assert.match(
+  buildSchoolMessagesListQuery({ dateFilter: "custom", customFrom: "2026-01-01", customTo: "2026-01-31" }),
+  /sentAfter=/
+);
 
 console.log("school-messaging audience smoke: OK");

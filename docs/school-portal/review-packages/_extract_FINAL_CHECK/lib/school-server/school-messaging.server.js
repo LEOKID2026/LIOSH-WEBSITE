@@ -898,9 +898,36 @@ export async function sendSchoolMessage(input) {
 }
 
 /**
+ * @param {{ sentAfter?: string|null, sentBefore?: string|null, days?: number|string|null, allTime?: boolean }} filters
+ */
+function resolveMessageSentBounds(filters) {
+  let sentAfter = null;
+  let sentBefore = null;
+
+  if (filters.sentAfter) {
+    const d = new Date(filters.sentAfter);
+    if (!Number.isNaN(d.getTime())) sentAfter = d;
+  }
+  if (filters.sentBefore) {
+    const d = new Date(filters.sentBefore);
+    if (!Number.isNaN(d.getTime())) sentBefore = d;
+  }
+
+  const allTime = filters.allTime === true || filters.allTime === "true";
+  if (!allTime && !sentAfter && !sentBefore) {
+    const days = Math.max(1, Number(filters.days) || 7);
+    sentAfter = new Date();
+    sentAfter.setDate(sentAfter.getDate() - days);
+    sentAfter.setHours(0, 0, 0, 0);
+  }
+
+  return { sentAfter, sentBefore };
+}
+
+/**
  * @param {import('@supabase/supabase-js').SupabaseClient} serviceRole
  * @param {string} schoolId
- * @param {{ limit?: number, cursor?: string|null, audienceType?: string|null, messageType?: string|null, includeHidden?: boolean }} [filters]
+ * @param {{ limit?: number, cursor?: string|null, audienceType?: string|null, messageType?: string|null, includeHidden?: boolean, sentAfter?: string|null, sentBefore?: string|null, days?: number|string|null, allTime?: boolean }} [filters]
  */
 export async function listSchoolMessages(serviceRole, schoolId, filters = {}) {
   if (!isUuid(schoolId)) {
@@ -913,6 +940,7 @@ export async function listSchoolMessages(serviceRole, schoolId, filters = {}) {
     filters.cursor != null && Number.isFinite(Number(filters.cursor))
       ? Math.max(0, Number(filters.cursor))
       : Math.max(0, Number(filters.offset) || 0);
+  const { sentAfter, sentBefore } = resolveMessageSentBounds(filters);
 
   let query = serviceRole
     .from("school_messages")
@@ -927,6 +955,8 @@ export async function listSchoolMessages(serviceRole, schoolId, filters = {}) {
   if (!includeHidden) query = query.eq("is_hidden", false);
   if (filters.audienceType) query = query.eq("audience_type", String(filters.audienceType));
   if (filters.messageType) query = query.eq("message_type", String(filters.messageType));
+  if (sentAfter) query = query.gte("sent_at", sentAfter.toISOString());
+  if (sentBefore) query = query.lte("sent_at", sentBefore.toISOString());
 
   const { data, error } = await query;
   if (error) return dbError(error);
@@ -1162,7 +1192,7 @@ async function loadVisibleMessagesForRecipient(serviceRole, messageIds, opts = {
   const limit = Math.max(1, Math.min(MAX_LIST_LIMIT, Number(opts.limit) || DEFAULT_LIST_LIMIT));
   const ids = messageIds.slice(0, limit * 3);
 
-  const { data: messages, error: msgErr } = await serviceRole
+  let msgQuery = serviceRole
     .from("school_messages")
     .select(
       "id, school_id, author_id, audience_type, message_type, subject, body, has_attachment, attachment_url, is_hidden, sent_at"
@@ -1170,6 +1200,14 @@ async function loadVisibleMessagesForRecipient(serviceRole, messageIds, opts = {
     .in("id", ids)
     .eq("is_hidden", false)
     .order("sent_at", { ascending: false });
+
+  const inboxDays = Math.max(1, Number(opts.days) || 30);
+  const inboxCutoff = new Date();
+  inboxCutoff.setDate(inboxCutoff.getDate() - inboxDays);
+  inboxCutoff.setHours(0, 0, 0, 0);
+  msgQuery = msgQuery.gte("sent_at", inboxCutoff.toISOString());
+
+  const { data: messages, error: msgErr } = await msgQuery;
 
   if (msgErr) return dbError(msgErr);
 

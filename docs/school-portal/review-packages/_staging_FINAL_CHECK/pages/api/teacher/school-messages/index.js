@@ -15,6 +15,7 @@ export default async function handler(req, res) {
 
     const result = await listTeacherSchoolMessages(ctx.serviceRole, ctx.teacherId, {
       limit: req.query?.limit,
+      days: req.query?.days || 30,
     });
 
     if (!result.ok) {

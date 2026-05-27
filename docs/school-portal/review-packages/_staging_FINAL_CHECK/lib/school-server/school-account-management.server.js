@@ -61,6 +61,23 @@ function mapStudentAccessRow(row, lastLogin) {
   };
 }
 
+function isSchoolIssuedRow(row, schoolId) {
+  return Boolean(row?.created_by_school_id && row.created_by_school_id === schoolId);
+}
+
+function pickSchoolStudentAccessRow(studentCodes, schoolId) {
+  const schoolRows = (studentCodes || []).filter((row) => isSchoolIssuedRow(row, schoolId));
+  const active = schoolRows.find((row) => computeStudentLoginAccessState(row) === "active");
+  if (active) return active;
+  return schoolRows[0] || null;
+}
+
+function pickLegacyStudentAccessRow(studentCodes, schoolId) {
+  const legacyRows = (studentCodes || []).filter((row) => !isSchoolIssuedRow(row, schoolId));
+  const active = legacyRows.find((row) => computeStudentLoginAccessState(row) === "active");
+  return active || legacyRows[0] || null;
+}
+
 function mapParentAccessRow(row, lastLogin) {
   const state = computeGuardianAccessState(row);
   let status = "not_created";
@@ -105,10 +122,8 @@ export async function listSchoolStudentAccounts(serviceRole, schoolId, studentId
     return { ok: false, status: 500, code: "internal_error" };
   }
 
-  const activeStudent =
-    (studentCodes || []).find((r) => computeStudentLoginAccessState(r) === "active") ||
-    (studentCodes || [])[0] ||
-    null;
+  const schoolStudentRow = pickSchoolStudentAccessRow(studentCodes, schoolId);
+  const legacyStudentRow = pickLegacyStudentAccessRow(studentCodes, schoolId);
 
   const { data: parents, error: pErr } = await serviceRole
     .from("student_guardian_access")
@@ -126,17 +141,24 @@ export async function listSchoolStudentAccounts(serviceRole, schoolId, studentId
     return { ok: false, status: 500, code: "internal_error" };
   }
 
-  const parentRows = [];
+  const schoolParentRows = [];
+  const legacyParentRows = [];
   for (const row of parents || []) {
     const lastLogin = await lastGuardianLoginAt(serviceRole, row.id);
-    parentRows.push(mapParentAccessRow(row, lastLogin));
+    const mapped = mapParentAccessRow(row, lastLogin);
+    if (isSchoolIssuedRow(row, schoolId)) schoolParentRows.push(mapped);
+    else legacyParentRows.push({ ...mapped, isLegacy: true });
   }
 
   return {
     ok: true,
     data: {
-      studentAccess: mapStudentAccessRow(activeStudent, null),
-      parentAccesses: parentRows,
+      studentAccess: mapStudentAccessRow(schoolStudentRow, null),
+      legacyStudentAccess: legacyStudentRow
+        ? { ...mapStudentAccessRow(legacyStudentRow, null), isLegacy: true }
+        : null,
+      parentAccesses: schoolParentRows,
+      legacyParentAccesses: legacyParentRows,
     },
   };
 }
@@ -147,11 +169,12 @@ async function assertSchoolStudent(serviceRole, schoolId, studentId) {
   return { ok: true };
 }
 
-async function findActiveStudentCode(serviceRole, studentId) {
+async function findActiveSchoolStudentCode(serviceRole, schoolId, studentId) {
   const { data, error } = await serviceRole
     .from("student_access_codes")
     .select("id, login_username, is_active, revoked_at, expires_at, created_by_school_id")
     .eq("student_id", studentId)
+    .eq("created_by_school_id", schoolId)
     .eq("is_active", true)
     .is("revoked_at", null);
 
@@ -179,7 +202,7 @@ export async function createSchoolStudentAccess(input) {
   const check = await assertSchoolStudent(serviceRole, schoolId, studentId);
   if (!check.ok) return check;
 
-  const existing = await findActiveStudentCode(serviceRole, studentId);
+  const existing = await findActiveSchoolStudentCode(serviceRole, schoolId, studentId);
   if (!existing.ok) return existing;
   if (existing.row?.id) {
     return { ok: false, status: 409, code: "active_access_exists" };
@@ -263,6 +286,9 @@ async function loadSchoolStudentCode(serviceRole, schoolId, studentId, accessId)
   if (!data?.id) {
     return { ok: false, status: 404, code: "access_not_found" };
   }
+  if (!isSchoolIssuedRow(data, schoolId)) {
+    return { ok: false, status: 403, code: "not_school_issued_access" };
+  }
   return { ok: true, row: data };
 }
 
@@ -338,7 +364,7 @@ export async function revokeSchoolStudentAccess(input) {
   const { serviceRole, schoolId, managerId, studentId, accessId } = input;
   const loaded = await loadSchoolStudentCode(serviceRole, schoolId, studentId, accessId);
   if (!loaded.ok) return loaded;
-  if (loaded.row.revoked_at || loaded.row.is_active === false) {
+  if (loaded.row.revoked_at) {
     return { ok: false, status: 409, code: "already_revoked" };
   }
 
@@ -395,6 +421,9 @@ async function loadSchoolParentAccess(serviceRole, schoolId, studentId, accessId
   }
   if (!data?.id) {
     return { ok: false, status: 404, code: "access_not_found" };
+  }
+  if (!isSchoolIssuedRow(data, schoolId)) {
+    return { ok: false, status: 403, code: "not_school_issued_access" };
   }
   return { ok: true, row: data };
 }
@@ -561,7 +590,7 @@ export async function revokeSchoolParentAccess(input) {
   const { serviceRole, schoolId, managerId, studentId, accessId } = input;
   const loaded = await loadSchoolParentAccess(serviceRole, schoolId, studentId, accessId);
   if (!loaded.ok) return loaded;
-  if (loaded.row.revoked_at || loaded.row.is_active === false) {
+  if (loaded.row.revoked_at) {
     return { ok: false, status: 409, code: "already_revoked" };
   }
 

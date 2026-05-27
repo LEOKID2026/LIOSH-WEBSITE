@@ -4,11 +4,9 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import ParentMustChangePinGate from "../../components/parent/ParentMustChangePinGate";
-import {
-  SC_BTN_MARK_RECEIVED,
-  SC_INBOX_EMPTY,
-  SC_INBOX_TITLE_PARENT,
-} from "../../lib/school-portal/school-communication.he";
+import SchoolInboxMessageCard from "../../components/school-portal/SchoolInboxMessageCard";
+import SchoolMessageConfirmationActions from "../../components/school-portal/SchoolMessageConfirmationActions";
+import { SC_INBOX_EMPTY, SC_INBOX_TITLE_PARENT } from "../../lib/school-portal/school-communication.he";
 import { getSchoolMessageId } from "../../lib/school-portal/school-messaging-ui";
 
 export default function ParentSchoolInboxPage() {
@@ -18,6 +16,7 @@ export default function ParentSchoolInboxPage() {
   const [messages, setMessages] = useState([]);
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [markBusy, setMarkBusy] = useState(false);
 
   const loadInbox = async () => {
     setLoading(true);
@@ -61,14 +60,19 @@ export default function ParentSchoolInboxPage() {
   const markRead = async (message, requiresConfirmation) => {
     const id = getSchoolMessageId(message);
     if (!id) return;
-    await fetch(`/api/guardian/school-messages/${encodeURIComponent(id)}/read`, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ confirmed: Boolean(requiresConfirmation) }),
-    });
-    void loadInbox();
-    if (getSchoolMessageId(selected) === id) void openMessage({ messageId: id });
+    setMarkBusy(true);
+    try {
+      await fetch(`/api/guardian/school-messages/${encodeURIComponent(id)}/read`, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmed: Boolean(requiresConfirmation) }),
+      });
+      await loadInbox();
+      if (getSchoolMessageId(selected) === id) void openMessage({ messageId: id });
+    } finally {
+      setMarkBusy(false);
+    }
   };
 
   if (mustChangePin && !pinGateDone) {
@@ -92,23 +96,12 @@ export default function ParentSchoolInboxPage() {
         {loading ? (
           <p className="text-white/50 text-sm">טוען…</p>
         ) : messages.length ? (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {messages.map((m) => {
               const messageId = getSchoolMessageId(m);
               return (
                 <li key={messageId || m.subject}>
-                  <button
-                    type="button"
-                    className="w-full text-right rounded-lg border border-white/15 bg-white/5 p-3 hover:bg-white/10"
-                    disabled={!messageId}
-                    onClick={() => void openMessage(m)}
-                  >
-                    <p className="font-semibold">{m.subject || "הודעה מבית הספר"}</p>
-                    <p className="text-xs text-white/50">
-                      {m.sentAt ? new Date(m.sentAt).toLocaleString("he-IL") : ""}
-                      {!m.readAt && !m.isRead ? " · חדש" : ""}
-                    </p>
-                  </button>
+                  <SchoolInboxMessageCard message={m} messageId={messageId} onOpen={openMessage} />
                 </li>
               );
             })}
@@ -118,26 +111,14 @@ export default function ParentSchoolInboxPage() {
         )}
 
         {selected && getSchoolMessageId(selected) ? (
-          <div className="mt-6 rounded-xl border border-amber-500/30 bg-black/40 p-4 text-right">
+          <div className="mt-6 rounded-xl border border-amber-500/30 bg-black/40 p-4 text-right space-y-4">
             <h2 className="font-bold mb-2">{selected.subject || "הודעה"}</h2>
-            <p className="text-sm whitespace-pre-wrap mb-4">{selected.body}</p>
-            {!selected.readAt && selected.messageType === "requires_confirmation" ? (
-              <button
-                type="button"
-                className="rounded-lg bg-amber-500 text-black px-4 py-2 text-sm font-semibold"
-                onClick={() => void markRead(selected, true)}
-              >
-                {SC_BTN_MARK_RECEIVED}
-              </button>
-            ) : !selected.readAt && !selected.isRead ? (
-              <button
-                type="button"
-                className="text-sm text-amber-300 underline"
-                onClick={() => void markRead(selected, false)}
-              >
-                סמן כנקרא
-              </button>
-            ) : null}
+            <p className="text-sm whitespace-pre-wrap">{selected.body}</p>
+            <SchoolMessageConfirmationActions
+              message={selected}
+              busy={markBusy}
+              onMarkRead={markRead}
+            />
           </div>
         ) : null}
       </TeacherPortalShell>

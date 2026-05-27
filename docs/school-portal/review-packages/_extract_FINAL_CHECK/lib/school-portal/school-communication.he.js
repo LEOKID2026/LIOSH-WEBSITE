@@ -97,6 +97,22 @@ export const SC_NAV_SCHOOL_INBOX_PARENT = "הודעות בית הספר";
 export const SC_INBOX_TITLE_PARENT = "הודעות מבית הספר";
 export const SC_INBOX_EMPTY = "אין הודעות מבית הספר";
 export const SC_BTN_MARK_RECEIVED = "קיבלתי";
+export const SC_CONFIRMED_RECEIPT = "אישרת קבלה";
+export const SC_BTN_OPEN = "פתח";
+export const SC_BTN_MARK_READ = "סמן כנקרא";
+export const SC_COL_ACTION = "פעולה";
+
+export const SC_FILTER_LAST_7_DAYS = "7 ימים אחרונים";
+export const SC_FILTER_LAST_30_DAYS = "30 ימים אחרונים";
+export const SC_FILTER_CUSTOM_RANGE = "טווח תאריכים מותאם";
+export const SC_LABEL_DATE_FROM = "מתאריך";
+export const SC_LABEL_DATE_TO = "עד תאריך";
+
+export const SC_SECTION_LEGACY_ACCESS = "גישה קיימת שאינה בית ספרית";
+export const SC_LEGACY_ACCESS_HINT = "חשבון זה נוצר מחוץ למערכת בית הספר ואינו ניתן לניהול מכאן.";
+export const SC_BTN_CREATE_NEW_ACCOUNT = "צור חשבון חדש";
+export const SC_REVOKE_RECOVERY_HINT =
+  "הגישה הקודמת בוטלה. ניתן ליצור חשבון בית-ספרי חדש עם שם משתמש וקוד גישה חדשים.";
 
 export const SC_NAV_SCHOOL_MESSAGES_TEACHER = "הודעות בית הספר";
 export const SC_TEACHER_INBOX_TITLE = "הודעות מהנהלת בית הספר";

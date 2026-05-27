@@ -22,6 +22,7 @@ export default async function handler(req, res) {
 
     const result = await listGuardianSchoolMessages(ctx.serviceRole, ctx.guardianAccessId, {
       limit: req.query?.limit,
+      days: req.query?.days || 30,
     });
 
     if (!result.ok) {

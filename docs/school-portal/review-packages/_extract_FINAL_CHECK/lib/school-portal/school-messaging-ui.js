@@ -100,6 +100,42 @@ export function formatSchoolMessageListReadCount(message) {
  *   teacherRecipientCount?: number,
  * }|null|undefined} message
  */
+/**
+ * @param {{
+ *   dateFilter?: '7'|'30'|'custom',
+ *   customFrom?: string,
+ *   customTo?: string,
+ *   recipientType?: string,
+ * }} opts
+ */
+export function buildSchoolMessagesListQuery(opts = {}) {
+  const params = new URLSearchParams();
+  const recipientType = opts.recipientType;
+  if (recipientType && recipientType !== "all") {
+    params.set("recipientType", recipientType);
+  }
+
+  const dateFilter = opts.dateFilter || "7";
+  if (dateFilter === "30") {
+    params.set("days", "30");
+  } else if (dateFilter === "custom") {
+    if (opts.customFrom) {
+      const start = new Date(`${opts.customFrom}T00:00:00`);
+      if (!Number.isNaN(start.getTime())) params.set("sentAfter", start.toISOString());
+    }
+    if (opts.customTo) {
+      const end = new Date(`${opts.customTo}T23:59:59.999`);
+      if (!Number.isNaN(end.getTime())) params.set("sentBefore", end.toISOString());
+    }
+    if (!opts.customFrom && !opts.customTo) params.set("days", "7");
+  } else {
+    params.set("days", "7");
+  }
+
+  const q = params.toString();
+  return q ? `?${q}` : "";
+}
+
 export function schoolMessageReadCountForTab(tab, message) {
   if (tab === "parent") {
     return {

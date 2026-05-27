@@ -1,0 +1,36 @@
+﻿QA2-FIXED ZIP verification (extracted folder only - do not trust zip without this log)
+extract_path=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\school-portal\review-packages\_extract_QA2_FIXED
+zip_path=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\school-portal\review-packages\school-portal-implementation-review-QA2-FIXED.zip
+zip_size_bytes=128001
+zip_entry_count=83
+SchoolInboxMessageCard_in_zip=True
+SchoolMessageConfirmationActions_in_zip=True
+individual_folder=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\school-portal\review-packages\QA2-FIXED-individual
+repo_root=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY
+
+--- QA2 content checks (extracted) ---
+PASS: components\school-portal\SchoolInboxMessageCard.jsx
+PASS: components\school-portal\SchoolMessageConfirmationActions.jsx
+PASS: pages\teacher\school-messages.js
+PASS: pages\parent\school-inbox.js
+PASS: pages\school\messages.js
+PASS: components\school-portal\SchoolStudentAccessPanel.jsx
+PASS: lib\school-server\school-messaging.server.js
+PASS: lib\school-server\school-account-management.server.js
+PASS: lib\school-portal\school-messaging-ui.js
+PASS: lib\school-portal\school-communication.he.js
+PASS: pages\api\school\messages\index.js
+
+--- Hebrew strings in extracted school-communication.he.js ---
+SC_BTN_OPEN = פתח
+SC_BTN_MARK_RECEIVED = קיבלתי
+SC_CONFIRMED_RECEIPT = אישרת קבלה
+SC_FILTER_LAST_7_DAYS = 7 ימים אחרונים
+SC_SECTION_LEGACY_ACCESS = גישה קיימת שאינה בית ספרית
+SC_BTN_CREATE_NEW_ACCOUNT = צור חשבון חדש
+SC_BTN_UNBLOCK = בטל חסימה
+
+--- Why prior FINAL-CHECK.zip may have failed ChatGPT review ---
+Use school-portal-implementation-review-QA2-FIXED.zip only.
+Do NOT use school-portal-implementation-review.zip (legacy) or an old FINAL-CHECK upload.
+Individual QA2 files: docs/school-portal/review-packages/QA2-FIXED-individual/

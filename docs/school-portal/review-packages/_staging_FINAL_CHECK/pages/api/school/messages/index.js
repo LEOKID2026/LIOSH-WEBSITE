@@ -22,6 +22,10 @@ export default async function handler(req, res) {
         audienceType: req.query?.audienceType,
         messageType: req.query?.messageType,
         includeHidden: req.query?.includeHidden === "true",
+        days: req.query?.days,
+        sentAfter: req.query?.sentAfter,
+        sentBefore: req.query?.sentBefore,
+        allTime: req.query?.allTime === "true",
       });
 
       if (!result.ok) {

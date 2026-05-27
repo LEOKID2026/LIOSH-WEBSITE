@@ -1,0 +1,5 @@
+﻿build_script=build-qa2-fixed-zip.ps1
+build_utc=2026-05-28T00:57:56.3287504+03:00
+zip_name=school-portal-implementation-review-QA2-FIXED.zip
+qa2_file_count=14
+explicit_file_count=39

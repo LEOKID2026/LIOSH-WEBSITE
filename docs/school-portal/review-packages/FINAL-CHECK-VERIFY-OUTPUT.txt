@@ -1,8 +1,8 @@
 ﻿FINAL-CHECK ZIP verification (extracted folder only)
 extract_path=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\school-portal\review-packages\_extract_FINAL_CHECK
 zip_path=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\school-portal\review-packages\school-portal-implementation-review-FINAL-CHECK.zip
-zip_size_bytes=137944
-zip_entry_count=90
+zip_size_bytes=142170
+zip_entry_count=92
 repo_root=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY
 
 --- per-file checks ---
