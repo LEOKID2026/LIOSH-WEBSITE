@@ -20,6 +20,7 @@ export default function SchoolTeacherPhysicalClassPickerModal({
   onClose,
   onClassReport,
   onClassStudents,
+  zIndex = 100,
 }) {
   return (
     <ReportModalFrame
@@ -27,7 +28,7 @@ export default function SchoolTeacherPhysicalClassPickerModal({
       title={physicalClassName}
       onClose={onClose}
       testId="school-teacher-subject-picker-modal"
-      zIndex={100}
+      zIndex={zIndex}
     >
       <ul className="space-y-3">
         {subjectClasses.map((cls) => (

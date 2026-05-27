@@ -78,11 +78,12 @@ test.describe("School physical class report", () => {
       .getByRole("button", { name: "כרטיס מורה" })
       .first()
       .click();
-    const teacherCard = page.getByTestId("school-teacher-card-modal");
-    await expect(teacherCard).toBeVisible({ timeout: 15_000 });
-    await expect(teacherCard.getByTestId("school-teacher-card-ready")).toBeVisible({ timeout: 15_000 });
-    await teacherCard.getByTestId("report-modal-close").click();
-    await expect(teacherCard).toHaveCount(0);
+    const teacherModal = page.getByTestId("school-teacher-detail-modal");
+    await expect(teacherModal).toBeVisible({ timeout: 15_000 });
+    await expect(teacherModal.getByTestId("school-teacher-page-ready")).toBeVisible({ timeout: 30_000 });
+    await expect(teacherModal.getByRole("heading", { name: "כיתות של המורה" })).toBeVisible();
+    await teacherModal.getByTestId("report-modal-close").click();
+    await expect(teacherModal).toHaveCount(0);
 
     await physicalDialog.getByTestId("report-nav-activities").click();
     const actDetail = page.getByTestId("report-hub-detail");

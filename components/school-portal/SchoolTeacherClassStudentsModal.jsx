@@ -20,6 +20,7 @@ import { SchoolEmptyState } from "./SchoolPortalUi.jsx";
  *   gradeLevel: string,
  *   onClose: () => void,
  *   onStudentReport: (student: object) => void,
+ *   zIndex?: number,
  * }} props
  */
 export default function SchoolTeacherClassStudentsModal({
@@ -31,6 +32,7 @@ export default function SchoolTeacherClassStudentsModal({
   gradeLevel,
   onClose,
   onStudentReport,
+  zIndex = 110,
 }) {
   const gradeLabel = schoolGradeLabelHe(gradeLevel);
 
@@ -40,7 +42,7 @@ export default function SchoolTeacherClassStudentsModal({
       title={title}
       onClose={onClose}
       testId="school-teacher-class-students-modal"
-      zIndex={110}
+      zIndex={zIndex}
     >
       {loading ? <SchoolLoadingBlock /> : null}
       {error ? (
