@@ -69,18 +69,26 @@ assert.ok(
 );
 assert.ok(dashboardClientSrc.includes("כיתות שלי"), "class section title");
 assert.ok(dashboardClientSrc.includes("דוח כיתה"), "class report link required");
+assert.ok(
+  dashboardClientSrc.includes("מקצועות:"),
+  "physical class subjects line required"
+);
+assert.ok(
+  dashboardClientSrc.includes("teacher-physical-class-card"),
+  "physical class card test id required"
+);
 assert.ok(dashboardClientSrc.includes("ניהול כיתה"), "class manage action required");
 assert.ok(
-  dashboardClientSrc.includes("/activities"),
-  "class activities link required"
+  dashboardClientSrc.includes("teacher-class-activities-"),
+  "class activities action required"
 );
 assert.ok(
   dashboardClientSrc.includes('data-testid="teacher-classes-empty-state"'),
   "empty state section required when no classes"
 );
 assert.ok(
-  !dashboardClientSrc.includes("teacher-primary-class-report"),
-  "duplicate primary class block removed"
+  dashboardClientSrc.includes("effectivePhysicalClassStudentCount"),
+  "class card student count must not prefer zero rosterStudentCount"
 );
 
 console.log("teacher-dashboard-classes-unit: ok");

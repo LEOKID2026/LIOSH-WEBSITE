@@ -3,6 +3,7 @@ import {
   schoolActivityModeHe,
   schoolActivityStatusHe,
   schoolSubjectLabelHe,
+  sanitizeActivityTitleHe,
   SCHOOL_BACK,
 } from "../../lib/school-portal/school-ui.he.js";
 import { SCHOOL_CARD, SCHOOL_CARD_INNER } from "./SchoolPortalUi.jsx";
@@ -150,7 +151,7 @@ export function SchoolSubjectClassCard({ cls, onReport, reportLabel }) {
  * @param {{ activity: { id: string, title?: string, subject?: string, status?: string, teacherName?: string|null, className?: string|null, mode?: string } }} props
  */
 export function SchoolActivityCard({ activity }) {
-  const title = activity.title || "ללא כותרת";
+  const title = sanitizeActivityTitleHe(activity.title, activity.subject);
   const subject = schoolSubjectLabelHe(activity.subject);
   const teacher = activity.teacherName || "—";
   const className = activity.className || "—";

@@ -44,7 +44,29 @@ export default async function handler(req, res) {
 
     await writeSchoolClassViewedAudit(ctx.serviceRole, ctx.managerId, ctx.schoolId, String(classId));
 
-    return res.status(200).json(report.payload);
+    const classIdStr = String(classId);
+    const [{ count: classroomActivityCount }, { data: recentClassroomActivities }] = await Promise.all([
+      ctx.serviceRole
+        .from("classroom_activities")
+        .select("id", { count: "exact", head: true })
+        .eq("class_id", classIdStr)
+        .neq("status", "archived"),
+      ctx.serviceRole
+        .from("classroom_activities")
+        .select("id, title, subject, mode, status, created_at, activated_at, closed_at")
+        .eq("class_id", classIdStr)
+        .neq("status", "archived")
+        .order("created_at", { ascending: false })
+        .limit(8),
+    ]);
+
+    return res.status(200).json({
+      ...report.payload,
+      schoolManagerExtras: {
+        classroomActivityCount: classroomActivityCount ?? 0,
+        recentClassroomActivities: recentClassroomActivities || [],
+      },
+    });
   } catch (_e) {
     safeApiLog("school_class_report_error", { route: "school/classes/report-data" });
     return sendSchoolApiError(res, 500, "internal_error", "Unexpected server error");

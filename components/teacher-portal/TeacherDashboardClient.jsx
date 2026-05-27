@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { filterStudentsByRosterKey } from "../../lib/teacher-portal/teacher-dashboard-roster.js";
+import { effectivePhysicalClassStudentCount } from "../../lib/teacher-portal/teacher-physical-class.js";
+import TeacherClassReportModal from "./TeacherClassReportModal.jsx";
+import { TeacherPhysicalClassActivitiesModal } from "./TeacherPhysicalClassModals.jsx";
 import {
   DASHBOARD_CREATE_CLASS_BUTTON,
   DASHBOARD_CREATE_CLASS_LABEL,
@@ -108,7 +111,15 @@ function classLimitErrorMessage(body) {
   return null;
 }
 
+function resolveManageClassIds(classInfo) {
+  const fromGroup = (classInfo?.subjectClassIds || []).map((s) => s.classId).filter(Boolean);
+  if (fromGroup.length) return fromGroup;
+  return classInfo?.primaryClassId || classInfo?.classId ? [classInfo.primaryClassId || classInfo.classId] : [];
+}
+
 function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerClass, onClose, onRefresh }) {
+  const manageClassIds = useMemo(() => resolveManageClassIds(classInfo), [classInfo]);
+  const primaryClassId = classInfo?.primaryClassId || classInfo?.classId;
   const [className, setClassName] = useState(classInfo?.name || "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -118,20 +129,28 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
   const [editName, setEditName] = useState("");
 
   const loadMembers = async () => {
-    const res = await teacherAuthFetch(
-      accessToken,
-      `/api/teacher/classes/${classInfo.classId}`
-    );
-    const body = await res.json().catch(() => ({}));
-    if (res.status === 200) {
-      setMembers(body.data?.members || []);
+    /** @type {Map<string, Record<string, unknown>>} */
+    const merged = new Map();
+    for (const cid of manageClassIds) {
+      const res = await teacherAuthFetch(accessToken, `/api/teacher/classes/${cid}`);
+      const body = await res.json().catch(() => ({}));
+      if (res.status !== 200) continue;
+      for (const m of body.data?.members || []) {
+        if (!merged.has(m.studentId)) {
+          merged.set(m.studentId, { ...m, membershipIdsByClass: { [cid]: m.membershipId } });
+        } else {
+          const row = merged.get(m.studentId);
+          row.membershipIdsByClass = { ...row.membershipIdsByClass, [cid]: m.membershipId };
+        }
+      }
     }
+    setMembers([...merged.values()]);
   };
 
   useEffect(() => {
-    if (classInfo?.classId) loadMembers();
+    if (manageClassIds.length) loadMembers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classInfo?.classId]);
+  }, [manageClassIds.join(",")]);
 
   const memberIds = new Set(members.map((m) => m.studentId));
   const addableStudents = allStudents.filter((s) => !memberIds.has(s.studentId));
@@ -140,7 +159,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
     if (!className.trim()) return;
     setBusy(true);
     setError("");
-    const res = await teacherAuthFetch(accessToken, `/api/teacher/classes/${classInfo.classId}`, {
+    const res = await teacherAuthFetch(accessToken, `/api/teacher/classes/${primaryClassId}`, {
       method: "PATCH",
       body: JSON.stringify({ name: className.trim() }),
     });
@@ -161,7 +180,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
       body: JSON.stringify({
         fullName: newStudentName.trim(),
         gradeLevel: classInfo.gradeLevel,
-        classId: classInfo.classId,
+        classId: primaryClassId,
       }),
     });
     const body = await res.json().catch(() => ({}));
@@ -183,7 +202,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
     setError("");
     const res = await teacherAuthFetch(
       accessToken,
-      `/api/teacher/classes/${classInfo.classId}/members`,
+      `/api/teacher/classes/${primaryClassId}/members`,
       {
         method: "POST",
         body: JSON.stringify({ studentId }),
@@ -205,16 +224,26 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
       : null;
   const atClassCap = perClassCap != null && members.length >= perClassCap;
 
-  const onRemoveFromClass = async (membershipId) => {
+  const onRemoveFromClass = async (member) => {
     if (!window.confirm("להסיר את התלמיד מהכיתה?")) return;
     setBusy(true);
-    const res = await teacherAuthFetch(
-      accessToken,
-      `/api/teacher/classes/${classInfo.classId}/members/${membershipId}`,
-      { method: "DELETE" }
-    );
+    setError("");
+    const idsByClass = member.membershipIdsByClass || {};
+    const pairs = Object.entries(idsByClass);
+    if (!pairs.length && member.membershipId && primaryClassId) {
+      pairs.push([primaryClassId, member.membershipId]);
+    }
+    let failed = false;
+    for (const [cid, membershipId] of pairs) {
+      const res = await teacherAuthFetch(
+        accessToken,
+        `/api/teacher/classes/${cid}/members/${membershipId}`,
+        { method: "DELETE" }
+      );
+      if (res.status !== 200) failed = true;
+    }
     setBusy(false);
-    if (res.status !== 200) {
+    if (failed) {
       setError("לא ניתן להסיר מהכיתה.");
       return;
     }
@@ -331,7 +360,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
             <ul className="space-y-2 max-h-64 overflow-y-auto">
               {members.map((m) => (
                 <li
-                  key={m.membershipId}
+                  key={m.studentId}
                   className="rounded-lg border border-white/10 bg-black/30 p-3 space-y-2"
                 >
                   {editStudentId === m.studentId ? (
@@ -376,7 +405,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
                         <button
                           type="button"
                           className="text-xs text-white/60"
-                          onClick={() => onRemoveFromClass(m.membershipId)}
+                          onClick={() => onRemoveFromClass(m)}
                         >
                           הסר מהכיתה
                         </button>
@@ -495,11 +524,17 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
   const [filterKey, setFilterKey] = useState("all");
   const [sortKey, setSortKey] = useState("name");
   const [manageClass, setManageClass] = useState(null);
+  const [reportClass, setReportClass] = useState(null);
+  const [activitiesClass, setActivitiesClass] = useState(null);
 
   const rosterFilters = dashboard?.rosterFilters || [];
 
   const filteredStudents = useMemo(() => {
-    let list = filterStudentsByRosterKey(dashboard?.students || [], rosterFilterKey);
+    let list = filterStudentsByRosterKey(
+      dashboard?.students || [],
+      rosterFilterKey,
+      rosterFilters
+    );
     const q = search.trim().toLowerCase();
     if (q) {
       list = list.filter((s) => String(s.studentFullName || "").toLowerCase().includes(q));
@@ -520,7 +555,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
       return 0;
     });
     return list;
-  }, [dashboard?.students, rosterFilterKey, search, filterKey, sortKey]);
+  }, [dashboard?.students, rosterFilterKey, rosterFilters, search, filterKey, sortKey]);
 
   const activeRosterOption = useMemo(
     () => rosterFilters.find((o) => o.key === rosterFilterKey) || null,
@@ -549,7 +584,11 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
 
       <section className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <SummaryStat label="תלמידים" value={dashboard?.summary?.studentCount ?? 0} />
+          <SummaryStat
+            label="תלמידים"
+            value={dashboard?.summary?.studentCount ?? 0}
+            testId="teacher-dashboard-summary-students"
+          />
           <SummaryStat label="כיתות" value={dashboard?.summary?.classCount ?? 0} />
           <div className="col-span-2">
             <p className="text-xs text-white/50 mb-1">נושא/פעילות אחרונה</p>
@@ -567,56 +606,65 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
         >
           <h2 className="text-lg font-semibold mb-3">כיתות שלי</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
-            {(dashboard.classes || []).map((c) => (
+            {(dashboard.classes || []).map((c) => {
+              const rosterKey = c.physicalGroupKey || c.classId;
+              const studentCount = effectivePhysicalClassStudentCount(c);
+              return (
               <li
-                key={c.classId}
+                key={rosterKey}
                 className={`rounded-lg border p-3 flex flex-col gap-2 ${
-                  rosterFilterKey === c.classId
+                  rosterFilterKey === rosterKey
                     ? "border-amber-400/50 bg-amber-500/10"
                     : "border-white/10 bg-black/20"
                 }`}
+                data-testid={`teacher-physical-class-card-${rosterKey}`}
               >
                 <div>
                   <p className="font-semibold break-words">{c.name}</p>
                   <p className="text-sm text-white/65 mt-1">
-                    {c.gradeLevelLabel || "כיתה"} · {c.rosterStudentCount ?? c.studentCount ?? 0}{" "}
-                    תלמידים
+                    תלמידים: {studentCount}
                   </p>
+                  {c.subjectsLabel ? (
+                    <p className="text-sm text-white/55 mt-0.5">מקצועות: {c.subjectsLabel}</p>
+                  ) : null}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => setRosterFilterKey(c.classId)}
+                    onClick={() => setRosterFilterKey(rosterKey)}
                     className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
-                    data-testid={`teacher-roster-filter-class-${c.classId}`}
+                    data-testid={`teacher-roster-filter-class-${rosterKey}`}
                   >
                     הצגת תלמידי הכיתה
                   </button>
-                  <Link
-                    href={`/teacher/class/${c.classId}`}
+                  <button
+                    type="button"
+                    onClick={() => setReportClass(c)}
                     className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
-                    data-testid={`teacher-class-report-${c.classId}`}
+                    data-testid={`teacher-class-report-${rosterKey}`}
                   >
                     דוח כיתה
-                  </Link>
-                  <Link
-                    href={`/teacher/class/${c.classId}/activities`}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActivitiesClass(c)}
                     className="text-xs rounded border border-amber-400/40 text-amber-200 px-3 py-1.5 hover:bg-amber-500/10"
-                    data-testid={`teacher-class-activities-${c.classId}`}
+                    data-testid={`teacher-class-activities-${rosterKey}`}
                   >
                     פעילויות
-                  </Link>
+                  </button>
                   <button
                     type="button"
                     onClick={() => setManageClass(c)}
                     className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
-                    data-testid={`teacher-class-manage-${c.classId}`}
+                    data-testid={`teacher-class-manage-${rosterKey}`}
                   >
                     ניהול כיתה
                   </button>
                 </div>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </section>
       ) : (
@@ -728,13 +776,29 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           onRefresh={onRefresh}
         />
       ) : null}
+
+      {reportClass ? (
+        <TeacherClassReportModal
+          accessToken={accessToken}
+          classCard={reportClass}
+          onClose={() => setReportClass(null)}
+        />
+      ) : null}
+
+      {activitiesClass ? (
+        <TeacherPhysicalClassActivitiesModal
+          accessToken={accessToken}
+          classCard={activitiesClass}
+          onClose={() => setActivitiesClass(null)}
+        />
+      ) : null}
     </div>
   );
 }
 
-function SummaryStat({ label, value }) {
+function SummaryStat({ label, value, testId }) {
   return (
-    <div>
+    <div data-testid={testId}>
       <p className="text-xs text-white/50 mb-1">{label}</p>
       <p className="text-2xl font-bold">{value}</p>
     </div>

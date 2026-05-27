@@ -280,7 +280,7 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
                 <span className="font-semibold">{a.title}</span>
                 <span className="text-white/50 mx-2">·</span>
                 <span className="text-white/70">
-                  {activityStatusLabelHe(a.status) || a.status} · {activityModeLabelHe(a.mode)}
+                  {activityStatusLabelHe(a.status)} · {activityModeLabelHe(a.mode)}
                 </span>
                 {a.studentStatus ? (
                   <span className="text-white/50 block text-xs mt-0.5">

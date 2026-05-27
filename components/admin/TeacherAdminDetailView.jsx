@@ -27,6 +27,7 @@ import {
   ADMIN_TEACHER_VIEW_SCHOOL,
   ADMIN_SCHOOL_ROLE_MANAGER,
   ADMIN_SCHOOL_ROLE_TEACHER,
+  auditActionLabelHe,
   adminAccountStatusHe,
   adminFormatDateHe,
   adminGradeLabelHe,
@@ -238,7 +239,7 @@ function AuditSection({ audit }) {
               key={e.id}
               className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/5 pb-2 last:border-0"
             >
-              <span className="text-amber-200/80 font-medium">{e.action}</span>
+              <span className="text-amber-200/80 font-medium">{auditActionLabelHe(e.action)}</span>
               <span className="text-white/40 tabular-nums">{adminFormatDateHe(e.created_at)}</span>
             </li>
           ))}

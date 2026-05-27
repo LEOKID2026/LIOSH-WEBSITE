@@ -4,6 +4,7 @@ import {
   ADMIN_SCHOOL_ASSIGN_TEACHER,
   ADMIN_SCHOOL_FORCE_REASSIGN,
   ADMIN_SCHOOL_REMOVE_TEACHER,
+  apiErrorMessageHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
 export function SchoolCreateForm({ onCreate, busy }) {
@@ -113,7 +114,7 @@ export function SchoolTeacherAssignPanel({ accessToken, schoolId, onReload }) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data?.error?.message || data?.error?.code || "שגיאה");
+        setError(apiErrorMessageHe(data?.error, "שגיאה"));
         return;
       }
       onReload?.();
@@ -133,7 +134,7 @@ export function SchoolTeacherAssignPanel({ accessToken, schoolId, onReload }) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data?.error?.message || data?.error?.code || "שגיאה");
+        setError(apiErrorMessageHe(data?.error, "שגיאה"));
         return;
       }
       onReload?.();

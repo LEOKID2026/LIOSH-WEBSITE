@@ -4,6 +4,7 @@ import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-aud
 import {
   enrollStudentInSchool,
   listSchoolEnrolledStudents,
+  listSchoolStudentsInPhysicalClass,
 } from "../../../../lib/school-server/school-students.server.js";
 import {
   requireSchoolManagerApiContext,
@@ -16,6 +17,20 @@ export default async function handler(req, res) {
     if (ctx.stopped) return undefined;
 
     if (req.method === "GET") {
+      const gradeLevel = String(req.query?.gradeLevel || "").trim();
+      const physicalClassName = String(req.query?.physicalClassName || "").trim();
+
+      if (gradeLevel && physicalClassName) {
+        const listed = await listSchoolStudentsInPhysicalClass(ctx.serviceRole, ctx.schoolId, {
+          gradeLevel,
+          physicalClassName,
+        });
+        if (!listed.ok) {
+          return sendSchoolApiError(res, listed.status, listed.code, listed.code);
+        }
+        return res.status(200).json({ data: { students: listed.students } });
+      }
+
       const listed = await listSchoolEnrolledStudents(ctx.serviceRole, ctx.schoolId);
       if (!listed.ok) {
         return sendSchoolApiError(res, listed.status, listed.code, listed.code);

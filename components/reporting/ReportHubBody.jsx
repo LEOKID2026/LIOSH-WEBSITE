@@ -1,0 +1,140 @@
+import {
+  SchoolReportActivityList,
+  SchoolReportInsight,
+  SchoolReportLabelList,
+  SchoolReportSection,
+} from "../school-portal/SchoolReportModalBody.jsx";
+
+export function ReportSummaryHeader({ header }) {
+  if (!header) return null;
+  return (
+    <>
+      {header.subtitle ? <p className="text-sm text-white/60 mb-3">{header.subtitle}</p> : null}
+      {header.chips?.length ? (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {header.chips.map((c) => (
+            <span
+              key={c.label}
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 text-xs"
+            >
+              <span className="text-white/45">{c.label}</span>
+              <span className="font-semibold text-white">{c.value}</span>
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
+}
+
+export function ReportSummaryCards({ summaryCards }) {
+  if (!summaryCards?.length) return null;
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+      {summaryCards.map((row) => (
+        <div
+          key={row.label}
+          className="rounded-lg border border-white/15 bg-black/30 px-2.5 py-2.5 text-center min-w-0"
+        >
+          <p className="text-[11px] text-white/45 mb-0.5 leading-tight">{row.label}</p>
+          <p className="text-base font-bold tabular-nums text-amber-200 break-words">{row.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * @param {{ items: Array<{ id: string, label: string, badge?: string|number|null, disabled?: boolean }>, onSelect: (id: string) => void }} props
+ */
+export function ReportNavActionGrid({ items, onSelect }) {
+  if (!items?.length) return null;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+      {items.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          disabled={item.disabled}
+          onClick={() => onSelect(item.id)}
+          className="rounded-xl border border-amber-500/25 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-40 disabled:cursor-not-allowed px-4 py-3 text-right transition"
+          data-testid={`report-nav-${item.id}`}
+        >
+          <span className="font-semibold text-amber-100 text-sm block">{item.label}</span>
+          {item.badge != null && item.badge !== "" ? (
+            <span className="text-xs text-white/50 mt-1 block">{item.badge}</span>
+          ) : null}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * @param {{ section: { title?: string, empty?: string, items?: unknown[] }, variant?: string, studentActions?: (item: { studentId?: string }) => React.ReactNode }} props
+ */
+export function ReportDetailSectionView({ section, variant, studentActions }) {
+  if (!section) return <p className="text-sm text-white/50">אין נתונים להצגה.</p>;
+
+  if (variant === "activities") {
+    return (
+      <SchoolReportSection title={section.title} empty={section.empty}>
+        <SchoolReportActivityList items={section.items} />
+      </SchoolReportSection>
+    );
+  }
+
+  if (variant === "students") {
+    const items = section.items || [];
+    if (!items.length) {
+      return (
+        <p className="text-sm text-white/50 rounded-lg border border-dashed border-white/15 px-3 py-3">
+          {section.empty}
+        </p>
+      );
+    }
+    return (
+      <ul className="space-y-2">
+        {items.map((item) => (
+          <li
+            key={item.id || item.studentId}
+            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5 text-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+            data-testid={item.studentId ? `report-student-row-${item.studentId}` : undefined}
+          >
+            <div className="min-w-0">
+              <p className="font-medium text-white">{item.name || item.label}</p>
+              {item.detail ? <p className="text-xs text-white/55 mt-0.5">{item.detail}</p> : null}
+              {item.status ? (
+                <p className="text-xs text-white/45 mt-0.5">{item.status}</p>
+              ) : null}
+            </div>
+            {studentActions && item.studentId ? studentActions(item) : null}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  const listVariant =
+    variant === "distribution" ? "tier" : variant === "subjects" ? "subject" : "default";
+
+  return (
+    <SchoolReportSection title={section.title} empty={section.empty}>
+      <SchoolReportLabelList items={section.items} variant={listVariant} />
+    </SchoolReportSection>
+  );
+}
+
+/**
+ * Main report hub — summary + navigation only.
+ */
+export function ReportHubSummary({ viewModel, onNavigate }) {
+  return (
+    <div data-testid="report-hub-summary-ready">
+      <ReportSummaryHeader header={viewModel.header} />
+      <ReportSummaryCards summaryCards={viewModel.summaryCards} />
+      <SchoolReportInsight text={viewModel.insight} />
+      <ReportNavActionGrid items={viewModel.navigation || []} onSelect={onNavigate} />
+    </div>
+  );
+}

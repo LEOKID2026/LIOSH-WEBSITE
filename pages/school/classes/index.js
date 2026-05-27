@@ -11,11 +11,9 @@ import {
   SchoolManagementCard,
   SchoolSubjectClassCard,
 } from "../../../components/school-portal/SchoolDrillDown";
-import {
-  SchoolEmptyState,
-  SchoolReportPreview,
-  SchoolSection,
-} from "../../../components/school-portal/SchoolPortalUi";
+import SchoolReportModal from "../../../components/school-portal/SchoolReportModal";
+import { parseClassReportViewModel, parseStudentReportViewModel } from "../../../lib/school-portal/school-report-view-model";
+import { SchoolEmptyState, SchoolSection } from "../../../components/school-portal/SchoolPortalUi";
 import {
   groupPhysicalClassesForGrade,
   physicalClassGroupKey,
@@ -28,17 +26,18 @@ import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-f
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import {
   schoolAuthFetch,
-  schoolClassReportSummaryFromBody,
+  apiErrorMessageHe,
   SCHOOL_BACK_CLASSES,
   SCHOOL_BACK_GRADES,
   SCHOOL_CHOOSE_GRADE,
   SCHOOL_CHOOSE_PHYSICAL_CLASS,
   SCHOOL_CHOOSE_SUBJECT,
+  SCHOOL_CLASS_REPORT_TITLE,
   SCHOOL_CLASSES_SUBTITLE,
   SCHOOL_CLASSES_TITLE,
   SCHOOL_EMPTY_CLASSES,
   SCHOOL_LOADING,
-  SCHOOL_REPORT_CLOSE,
+  SCHOOL_LOADING_DATA,
   SCHOOL_REPORT_LOADING,
   SCHOOL_STUDENTS_IN_CLASS,
   SCHOOL_VIEW_CLASS_REPORT,
@@ -49,10 +48,14 @@ export default function SchoolClassesPage() {
   const { state, accessToken, me } = useSchoolPortalLoad();
   const [gradeLevel, setGradeLevel] = useState("");
   const [physicalKey, setPhysicalKey] = useState("");
-  const [reportClassId, setReportClassId] = useState(null);
+
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportClass, setReportClass] = useState(null);
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState("");
-  const [reportSummary, setReportSummary] = useState(null);
+  const [reportViewModel, setReportViewModel] = useState(null);
+  const [nestedStudentVm, setNestedStudentVm] = useState(null);
+  const [studentReportLoading, setStudentReportLoading] = useState(false);
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -71,8 +74,16 @@ export default function SchoolClassesPage() {
     state === "ready"
   );
 
+  useEffect(() => {
+    setReportOpen(false);
+    setReportClass(null);
+    setReportError("");
+    setReportViewModel(null);
+    setNestedStudentVm(null);
+  }, [gradeLevel, physicalKey]);
+
   const physicalGroups = useMemo(
-    () => (gradeLevel ? groupPhysicalClassesForGrade(classes || [], gradeLevel) : []),
+    () => (gradeLevel && classes ? groupPhysicalClassesForGrade(classes, gradeLevel) : []),
     [classes, gradeLevel]
   );
 
@@ -86,12 +97,48 @@ export default function SchoolClassesPage() {
     [selectedPhysical]
   );
 
+  const closeReport = () => {
+    setReportOpen(false);
+    setReportClass(null);
+    setReportError("");
+    setReportViewModel(null);
+    setNestedStudentVm(null);
+  };
+
+  const openStudentReportFromClass = async (studentId) => {
+    if (!accessToken || !studentId) return;
+    setStudentReportLoading(true);
+    try {
+      const res = await schoolAuthFetch(
+        accessToken,
+        `/api/school/students/${studentId}/report-data?windowDays=30`
+      );
+      const body = await res.json().catch(() => ({}));
+      if (res.status !== 200) return;
+      setNestedStudentVm(
+        parseStudentReportViewModel(
+          body,
+          {
+            studentId,
+            displayName: body?.student?.fullName || "תלמיד/ה",
+            physicalClassName: reportClass?.name,
+            gradeLevel: reportClass?.gradeLevel,
+          },
+          { schoolName: me?.school?.name }
+        )
+      );
+    } finally {
+      setStudentReportLoading(false);
+    }
+  };
+
   const openClassReport = async (cls) => {
     if (!accessToken) return;
-    setReportClassId(cls.classId);
+    setReportClass(cls);
+    setReportOpen(true);
     setReportLoading(true);
     setReportError("");
-    setReportSummary(null);
+    setReportViewModel(null);
     try {
       const res = await schoolAuthFetch(
         accessToken,
@@ -99,18 +146,23 @@ export default function SchoolClassesPage() {
       );
       const body = await res.json().catch(() => ({}));
       if (res.status !== 200) {
-        setReportError(body?.error?.message || body?.error?.code || "שגיאה בטעינת דוח");
+        setReportError(apiErrorMessageHe(body?.error, "שגיאה בטעינת דוח"));
         return;
       }
-      const label = `${cls.name || "כיתה"} · ${schoolGradeLabelHe(cls.gradeLevel)}`;
-      setReportSummary(schoolClassReportSummaryFromBody(body, label));
+      setReportViewModel(
+        parseClassReportViewModel(body, { ...cls, classId: cls.classId }, body.schoolManagerExtras || {})
+      );
     } finally {
       setReportLoading(false);
     }
   };
 
   const breadcrumbSteps = [
-    { label: SCHOOL_CHOOSE_GRADE, onClick: gradeLevel ? () => { setGradeLevel(""); setPhysicalKey(""); } : undefined, active: !gradeLevel },
+    {
+      label: SCHOOL_CHOOSE_GRADE,
+      onClick: gradeLevel ? () => { setGradeLevel(""); setPhysicalKey(""); } : undefined,
+      active: !gradeLevel,
+    },
     gradeLevel
       ? {
           label: schoolGradeLabelHe(gradeLevel),
@@ -118,9 +170,7 @@ export default function SchoolClassesPage() {
           active: gradeLevel && !physicalKey,
         }
       : null,
-    physicalKey && selectedPhysical
-      ? { label: selectedPhysical.name, active: true }
-      : null,
+    physicalKey && selectedPhysical ? { label: selectedPhysical.name, active: true } : null,
   ].filter(Boolean);
 
   return (
@@ -133,8 +183,6 @@ export default function SchoolClassesPage() {
       >
         {state === "loading" ? (
           <SchoolLoadingBlock message={SCHOOL_LOADING} />
-        ) : loading ? (
-          <SchoolLoadingBlock />
         ) : error ? (
           <SchoolErrorBlock message={error} onRetry={() => void reload()} />
         ) : (
@@ -143,20 +191,25 @@ export default function SchoolClassesPage() {
 
             {!gradeLevel ? (
               <SchoolSection title={SCHOOL_CHOOSE_GRADE}>
+                {loading ? <p className="text-xs text-white/45 mb-3 text-right">{SCHOOL_LOADING_DATA}</p> : null}
                 <SchoolCardGrid columns={3}>
                   {SCHOOL_GRADE_OPTIONS.map((grade) => {
-                    const count = groupPhysicalClassesForGrade(classes || [], grade.level).length;
+                    const count = classes
+                      ? groupPhysicalClassesForGrade(classes, grade.level).length
+                      : null;
                     return (
                       <SchoolManagementCard
                         key={grade.level}
                         title={grade.label}
-                        subtitle={`${count} כיתות פיזיות`}
+                        subtitle={
+                          count != null ? `${count} כיתות פיזיות` : loading ? "…" : "—"
+                        }
                         onClick={() => setGradeLevel(grade.level)}
                       />
                     );
                   })}
                 </SchoolCardGrid>
-                {!classes?.length ? <SchoolEmptyState title={SCHOOL_EMPTY_CLASSES} /> : null}
+                {!loading && !classes?.length ? <SchoolEmptyState title={SCHOOL_EMPTY_CLASSES} /> : null}
               </SchoolSection>
             ) : null}
 
@@ -170,7 +223,9 @@ export default function SchoolClassesPage() {
                   }}
                 />
                 <SchoolSection title={`${SCHOOL_CHOOSE_PHYSICAL_CLASS} · ${schoolGradeLabelHe(gradeLevel)}`}>
-                  {physicalGroups.length ? (
+                  {loading ? (
+                    <SchoolLoadingBlock message={SCHOOL_LOADING_DATA} />
+                  ) : physicalGroups.length ? (
                     <SchoolCardGrid columns={2}>
                       {physicalGroups.map((group) => (
                         <SchoolManagementCard
@@ -206,19 +261,19 @@ export default function SchoolClassesPage() {
               </>
             ) : null}
 
-            {reportClassId ? (
-              <SchoolReportPreview
-                loading={reportLoading ? SCHOOL_REPORT_LOADING : null}
-                error={reportError}
-                summary={reportSummary}
-                onClose={() => {
-                  setReportClassId(null);
-                  setReportSummary(null);
-                  setReportError("");
-                }}
-                closeLabel={SCHOOL_REPORT_CLOSE}
-              />
-            ) : null}
+            <SchoolReportModal
+              open={reportOpen}
+              title={SCHOOL_CLASS_REPORT_TITLE}
+              onClose={closeReport}
+              loading={reportLoading}
+              loadingLabel={SCHOOL_REPORT_LOADING}
+              error={reportError}
+              viewModel={reportViewModel}
+              onStudentReport={openStudentReportFromClass}
+              studentReportLoading={studentReportLoading}
+              nestedStudentViewModel={nestedStudentVm}
+              onCloseStudentReport={() => setNestedStudentVm(null)}
+            />
           </>
         )}
       </SchoolPortalShell>

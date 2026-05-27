@@ -97,7 +97,14 @@ export default function TeacherLoginPage({ inviteOnly }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!supabaseRef.current) return;
+    if (!supabaseRef.current) {
+      try {
+        supabaseRef.current = getLearningSupabaseBrowserClient();
+      } catch (err) {
+        setLoginError("שגיאת חיבור (תצורת לקוח חסרה). רענן את הדף או צור קשר עם התמיכה.");
+        return;
+      }
+    }
     setBusy(true);
     setLoginError("");
     const supabase = supabaseRef.current;
@@ -213,7 +220,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
             </label>
             <button
               type="submit"
-              disabled={busy || !clientReady}
+              disabled={busy}
               className="rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
             >
               {busy ? "מתחבר…" : "כניסה"}

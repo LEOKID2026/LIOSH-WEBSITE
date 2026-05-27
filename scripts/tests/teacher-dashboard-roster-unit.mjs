@@ -35,7 +35,24 @@ assert.equal(filterStudentsByRosterKey(students, ROSTER_FILTER_DIRECT)[0].studen
 assert.equal(filterStudentsByRosterKey(students, classA).length, 2);
 assert.equal(filterStudentsByRosterKey(students, classB).length, 1);
 
+const physicalKey = "g3::כיתה ג׳ 1";
 const options = buildRosterFilterOptions({
+  students,
+  classes: [
+    {
+      physicalGroupKey: physicalKey,
+      classId: classA,
+      name: "כיתה ג׳ 1",
+      subjectClassIds: [{ classId: classA }, { classId: classB }],
+    },
+    { classId: classB, name: "Class B" },
+  ],
+});
+
+const physicalFiltered = filterStudentsByRosterKey(students, physicalKey, options);
+assert.equal(physicalFiltered.length, 2, "physical class filter dedupes");
+
+const optionsLegacy = buildRosterFilterOptions({
   students,
   classes: [
     { classId: classA, name: "Class A" },
@@ -43,9 +60,9 @@ const options = buildRosterFilterOptions({
   ],
 });
 
-assert.equal(options.find((o) => o.key === ROSTER_FILTER_ALL)?.studentCount, 3);
-assert.equal(options.find((o) => o.key === ROSTER_FILTER_DIRECT)?.studentCount, 1);
-assert.equal(options.find((o) => o.key === classA)?.studentCount, 2);
-assert.equal(options.find((o) => o.key === classB)?.studentCount, 1);
+assert.equal(optionsLegacy.find((o) => o.key === ROSTER_FILTER_ALL)?.studentCount, 3);
+assert.equal(optionsLegacy.find((o) => o.key === ROSTER_FILTER_DIRECT)?.studentCount, 1);
+assert.equal(optionsLegacy.find((o) => o.key === classA)?.studentCount, 2);
+assert.equal(optionsLegacy.find((o) => o.key === classB)?.studentCount, 1);
 
 console.log("teacher-dashboard-roster-unit: ok");

@@ -8,6 +8,7 @@ import {
   ADMIN_LOAD_ERROR,
   ADMIN_LOADING,
   ADMIN_SCHOOLS_TITLE,
+  apiErrorMessageHe,
 } from "../../../lib/admin-portal/admin-ui.he.js";
 
 export default function AdminSchoolsIndexPage() {
@@ -24,7 +25,7 @@ export default function AdminSchoolsIndexPage() {
       setLoadError("");
       return;
     }
-    setLoadError(body?.error?.message || ADMIN_LOAD_ERROR);
+    setLoadError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
   }, []);
 
   useEffect(() => {

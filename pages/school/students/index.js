@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
@@ -11,25 +11,20 @@ import {
   SchoolManagementCard,
   SchoolStudentCard,
 } from "../../../components/school-portal/SchoolDrillDown";
+import SchoolReportModal from "../../../components/school-portal/SchoolReportModal";
+import { parseStudentReportViewModel } from "../../../lib/school-portal/school-report-view-model";
 import {
   SchoolEmptyState,
   SchoolPrimaryButton,
-  SchoolReportPreview,
   SchoolSection,
   SCHOOL_CARD,
   SCHOOL_CARD_INNER,
 } from "../../../components/school-portal/SchoolPortalUi";
-import {
-  filterStudentsByPhysicalClass,
-  groupPhysicalClassesForStudents,
-  schoolGradeLabelHe,
-  SCHOOL_GRADE_OPTIONS,
-} from "../../../lib/school-portal/school-drilldown";
-import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
+import { schoolGradeLabelHe, SCHOOL_GRADE_OPTIONS } from "../../../lib/school-portal/school-drilldown";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import {
   schoolAuthFetch,
-  schoolStudentReportSummaryFromBody,
+  apiErrorMessageHe,
   SCHOOL_BACK_CLASSES,
   SCHOOL_BACK_GRADES,
   SCHOOL_CHOOSE_GRADE,
@@ -40,15 +35,24 @@ import {
   SCHOOL_ENROLL_SECTION,
   SCHOOL_ENROLL_STUDENT,
   SCHOOL_LOADING,
-  SCHOOL_REPORT_CLOSE,
+  SCHOOL_LOADING_DATA,
   SCHOOL_REPORT_LOADING,
   SCHOOL_SEARCH_STUDENTS,
   SCHOOL_SEARCH_STUDENTS_PLACEHOLDER,
   SCHOOL_STUDENT_ID,
+  SCHOOL_STUDENT_REPORT_TITLE,
   SCHOOL_STUDENTS_SUBTITLE,
   SCHOOL_STUDENTS_TITLE,
   SCHOOL_VIEW_STUDENT_REPORT,
 } from "../../../lib/school-portal/school-ui.he";
+
+function gradeCountMap(summary) {
+  const map = new Map();
+  for (const row of summary?.grades || []) {
+    map.set(String(row.gradeLevel), row.studentCount);
+  }
+  return map;
+}
 
 export default function SchoolStudentsPage() {
   const router = useRouter();
@@ -59,39 +63,128 @@ export default function SchoolStudentsPage() {
   const [studentId, setStudentId] = useState("");
   const [busy, setBusy] = useState(false);
   const [showEnroll, setShowEnroll] = useState(false);
-  const [reportStudentId, setReportStudentId] = useState(null);
+
+  const [browseSummary, setBrowseSummary] = useState(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryError, setSummaryError] = useState("");
+
+  const [classStudents, setClassStudents] = useState([]);
+  const [classStudentsLoading, setClassStudentsLoading] = useState(false);
+  const [classStudentsError, setClassStudentsError] = useState("");
+
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportStudent, setReportStudent] = useState(null);
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState("");
-  const [reportSummary, setReportSummary] = useState(null);
+  const [reportViewModel, setReportViewModel] = useState(null);
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
   }, [state, router]);
 
-  const parseStudents = useMemo(() => (body) => body?.data?.students || [], []);
+  const loadBrowseSummary = useCallback(async () => {
+    if (!accessToken) return;
+    setSummaryLoading(true);
+    setSummaryError("");
+    try {
+      const res = await schoolAuthFetch(accessToken, "/api/school/students/browse-summary");
+      const body = await res.json().catch(() => ({}));
+      if (res.status !== 200) {
+        setSummaryError(apiErrorMessageHe(body?.error, "שגיאה בטעינת נתונים"));
+        return;
+      }
+      setBrowseSummary(body.data?.summary || null);
+    } catch {
+      setSummaryError("שגיאה בטעינת נתונים");
+    } finally {
+      setSummaryLoading(false);
+    }
+  }, [accessToken]);
 
-  const { data: students, loading, error, reload } = useSchoolDataFetch(
-    accessToken,
-    "/api/school/students",
-    parseStudents,
-    state === "ready"
-  );
+  useEffect(() => {
+    if (state === "ready") void loadBrowseSummary();
+  }, [state, loadBrowseSummary]);
 
-  const physicalGroups = useMemo(
-    () => (gradeLevel ? groupPhysicalClassesForStudents(students || [], gradeLevel) : []),
-    [students, gradeLevel]
-  );
+  const loadClassStudents = useCallback(async () => {
+    if (!accessToken || !gradeLevel || !physicalClassName) return;
+    setClassStudentsLoading(true);
+    setClassStudentsError("");
+    setClassStudents([]);
+    try {
+      const q = new URLSearchParams({
+        gradeLevel,
+        physicalClassName,
+      });
+      const res = await schoolAuthFetch(accessToken, `/api/school/students?${q.toString()}`);
+      const body = await res.json().catch(() => ({}));
+      if (res.status !== 200) {
+        setClassStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת תלמידים"));
+        return;
+      }
+      setClassStudents(body.data?.students || []);
+    } catch {
+      setClassStudentsError("שגיאה בטעינת תלמידים");
+    } finally {
+      setClassStudentsLoading(false);
+    }
+  }, [accessToken, gradeLevel, physicalClassName]);
+
+  useEffect(() => {
+    if (gradeLevel && physicalClassName) void loadClassStudents();
+  }, [gradeLevel, physicalClassName, loadClassStudents]);
+
+  useEffect(() => {
+    setReportOpen(false);
+    setReportStudent(null);
+    setReportError("");
+    setReportViewModel(null);
+  }, [gradeLevel, physicalClassName]);
+
+  const countsByGrade = useMemo(() => gradeCountMap(browseSummary), [browseSummary]);
+
+  const physicalGroups = useMemo(() => {
+    if (!gradeLevel || !browseSummary?.physicalClassesByGrade) return [];
+    return browseSummary.physicalClassesByGrade[gradeLevel] || [];
+  }, [browseSummary, gradeLevel]);
 
   const visibleStudents = useMemo(() => {
-    let rows = students || [];
-    if (gradeLevel) {
-      rows = filterStudentsByPhysicalClass(rows, gradeLevel, physicalClassName || null);
-    }
     const q = search.trim().toLowerCase();
-    if (!q) return rows;
-    return rows.filter((s) => String(s.displayName || "").toLowerCase().includes(q));
-  }, [students, gradeLevel, physicalClassName, search]);
+    if (!q) return classStudents;
+    return classStudents.filter((s) => String(s.displayName || "").toLowerCase().includes(q));
+  }, [classStudents, search]);
+
+  const closeReport = () => {
+    setReportOpen(false);
+    setReportStudent(null);
+    setReportError("");
+    setReportViewModel(null);
+  };
+
+  const openStudentReport = async (student) => {
+    if (!accessToken) return;
+    setReportStudent(student);
+    setReportOpen(true);
+    setReportLoading(true);
+    setReportError("");
+    setReportViewModel(null);
+    try {
+      const res = await schoolAuthFetch(
+        accessToken,
+        `/api/school/students/${student.studentId}/report-data?windowDays=30`
+      );
+      const body = await res.json().catch(() => ({}));
+      if (res.status !== 200) {
+        setReportError(apiErrorMessageHe(body?.error, "שגיאה בטעינת דוח"));
+        return;
+      }
+      setReportViewModel(
+        parseStudentReportViewModel(body, student, { schoolName: me?.school?.name })
+      );
+    } finally {
+      setReportLoading(false);
+    }
+  };
 
   const enroll = async (e) => {
     e.preventDefault();
@@ -104,40 +197,20 @@ export default function SchoolStudentsPage() {
       });
       if (res.status === 201) {
         setStudentId("");
-        await reload();
+        await loadBrowseSummary();
+        if (gradeLevel && physicalClassName) await loadClassStudents();
       }
     } finally {
       setBusy(false);
     }
   };
 
-  const openStudentReport = async (student) => {
-    if (!accessToken) return;
-    setReportStudentId(student.studentId);
-    setReportLoading(true);
-    setReportError("");
-    setReportSummary(null);
-    try {
-      const res = await schoolAuthFetch(
-        accessToken,
-        `/api/school/students/${student.studentId}/report-data?windowDays=30`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (res.status !== 200) {
-        setReportError(body?.error?.message || body?.error?.code || "שגיאה בטעינת דוח");
-        return;
-      }
-      const name = student.displayName || student.studentId;
-      setReportSummary(
-        schoolStudentReportSummaryFromBody(body, name, student.physicalClassName || student.gradeLevel)
-      );
-    } finally {
-      setReportLoading(false);
-    }
-  };
-
   const breadcrumbSteps = [
-    { label: SCHOOL_CHOOSE_GRADE, onClick: gradeLevel ? () => { setGradeLevel(""); setPhysicalClassName(""); } : undefined, active: !gradeLevel },
+    {
+      label: SCHOOL_CHOOSE_GRADE,
+      onClick: gradeLevel ? () => { setGradeLevel(""); setPhysicalClassName(""); } : undefined,
+      active: !gradeLevel,
+    },
     gradeLevel
       ? {
           label: schoolGradeLabelHe(gradeLevel),
@@ -158,10 +231,6 @@ export default function SchoolStudentsPage() {
       >
         {state === "loading" ? (
           <SchoolLoadingBlock message={SCHOOL_LOADING} />
-        ) : loading ? (
-          <SchoolLoadingBlock />
-        ) : error ? (
-          <SchoolErrorBlock message={error} onRetry={() => void reload()} />
         ) : (
           <div className="space-y-6">
             <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
@@ -194,24 +263,32 @@ export default function SchoolStudentsPage() {
 
             {!gradeLevel ? (
               <SchoolSection title={SCHOOL_CHOOSE_GRADE}>
-                {!students?.length ? (
-                  <SchoolEmptyState title={SCHOOL_EMPTY_STUDENTS} hint={SCHOOL_EMPTY_STUDENTS_HINT} />
+                {summaryError ? (
+                  <SchoolErrorBlock message={summaryError} onRetry={() => void loadBrowseSummary()} />
                 ) : (
-                  <SchoolCardGrid columns={3}>
-                    {SCHOOL_GRADE_OPTIONS.map((grade) => {
-                      const count = (students || []).filter(
-                        (s) => String(s.gradeLevel || "").trim() === grade.level
-                      ).length;
-                      return (
-                        <SchoolManagementCard
-                          key={grade.level}
-                          title={grade.label}
-                          subtitle={`${count} תלמידים`}
-                          onClick={() => setGradeLevel(grade.level)}
-                        />
-                      );
-                    })}
-                  </SchoolCardGrid>
+                  <>
+                    {summaryLoading ? (
+                      <p className="text-xs text-white/45 mb-3 text-right">{SCHOOL_LOADING_DATA}</p>
+                    ) : null}
+                    <SchoolCardGrid columns={3}>
+                      {SCHOOL_GRADE_OPTIONS.map((grade) => {
+                        const count = countsByGrade.get(grade.level);
+                        return (
+                          <SchoolManagementCard
+                            key={grade.level}
+                            title={grade.label}
+                            subtitle={
+                              count != null ? `${count} תלמידים` : summaryLoading ? "…" : "0 תלמידים"
+                            }
+                            onClick={() => setGradeLevel(grade.level)}
+                          />
+                        );
+                      })}
+                    </SchoolCardGrid>
+                    {!summaryLoading && browseSummary?.totalStudents === 0 ? (
+                      <SchoolEmptyState title={SCHOOL_EMPTY_STUDENTS} hint={SCHOOL_EMPTY_STUDENTS_HINT} />
+                    ) : null}
+                  </>
                 )}
               </SchoolSection>
             ) : null}
@@ -226,7 +303,9 @@ export default function SchoolStudentsPage() {
                   }}
                 />
                 <SchoolSection title={`${SCHOOL_CHOOSE_PHYSICAL_CLASS} · ${schoolGradeLabelHe(gradeLevel)}`}>
-                  {physicalGroups.length ? (
+                  {summaryLoading ? (
+                    <SchoolLoadingBlock message={SCHOOL_LOADING_DATA} />
+                  ) : physicalGroups.length ? (
                     <SchoolCardGrid columns={2}>
                       {physicalGroups.map((group) => (
                         <SchoolManagementCard
@@ -259,8 +338,12 @@ export default function SchoolStudentsPage() {
                       />
                     </label>
                   </div>
-                  {visibleStudents.length ? (
-                    <SchoolCardGrid columns={1}>
+                  {classStudentsLoading ? (
+                    <SchoolLoadingBlock message={SCHOOL_LOADING_DATA} />
+                  ) : classStudentsError ? (
+                    <SchoolErrorBlock message={classStudentsError} onRetry={() => void loadClassStudents()} />
+                  ) : visibleStudents.length ? (
+                    <SchoolCardGrid columns={2}>
                       {visibleStudents.map((s) => (
                         <SchoolStudentCard
                           key={s.studentId}
@@ -278,19 +361,15 @@ export default function SchoolStudentsPage() {
               </>
             ) : null}
 
-            {reportStudentId ? (
-              <SchoolReportPreview
-                loading={reportLoading ? SCHOOL_REPORT_LOADING : null}
-                error={reportError}
-                summary={reportSummary}
-                onClose={() => {
-                  setReportStudentId(null);
-                  setReportSummary(null);
-                  setReportError("");
-                }}
-                closeLabel={SCHOOL_REPORT_CLOSE}
-              />
-            ) : null}
+            <SchoolReportModal
+              open={reportOpen}
+              title={SCHOOL_STUDENT_REPORT_TITLE}
+              onClose={closeReport}
+              loading={reportLoading}
+              loadingLabel={SCHOOL_REPORT_LOADING}
+              error={reportError}
+              viewModel={reportViewModel}
+            />
           </div>
         )}
       </SchoolPortalShell>

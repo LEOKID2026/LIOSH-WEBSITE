@@ -14,6 +14,8 @@ import {
   ADMIN_SCHOOL_DETAIL_FALLBACK,
   ADMIN_SCHOOL_TEACHERS,
   ADMIN_SECTION_AUDIT,
+  auditActionLabelHe,
+  apiErrorMessageHe,
 } from "../../../lib/admin-portal/admin-ui.he.js";
 
 export default function AdminSchoolDetailPage() {
@@ -37,7 +39,7 @@ export default function AdminSchoolDetailPage() {
       setTeachers(detailBody.data.teachers || []);
       setLoadError("");
     } else {
-      setLoadError(detailBody?.error?.message || ADMIN_LOAD_ERROR);
+      setLoadError(apiErrorMessageHe(detailBody?.error, ADMIN_LOAD_ERROR));
     }
     if (auditRes.status === 200) {
       setAudit(auditBody?.data?.entries || []);
@@ -100,7 +102,7 @@ export default function AdminSchoolDetailPage() {
                 <ul className="space-y-2 text-sm text-white/70 max-h-64 overflow-y-auto">
                   {audit.map((e) => (
                     <li key={e.id} className="border-b border-white/10 pb-2">
-                      <span className="text-white/90">{e.action}</span>
+                      <span className="text-white/90">{auditActionLabelHe(e.action)}</span>
                       <span className="text-white/40 text-xs mr-2">{e.createdAt}</span>
                     </li>
                   ))}

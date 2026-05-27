@@ -25,17 +25,29 @@ export default async function handler(req, res) {
     if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "classroom_activities")) return undefined;
 
     if (req.method === "GET") {
-      const unknown = unknownQueryParams(req.query, new Set(["classId", "status", "includeArchived"]));
+      const unknown = unknownQueryParams(req.query, new Set(["classId", "classIds", "status", "includeArchived"]));
       if (unknown.length) {
         return sendTeacherApiError(res, 400, "validation_failed", "Unknown query parameters");
       }
 
       const classId = req.query?.classId != null ? String(req.query.classId).trim() : undefined;
+      const rawClassIds = req.query?.classIds;
+      /** @type {string[]} */
+      let classIds = [];
+      if (Array.isArray(rawClassIds)) {
+        classIds = rawClassIds.map((id) => String(id).trim()).filter(Boolean);
+      } else if (rawClassIds != null) {
+        classIds = String(rawClassIds)
+          .split(",")
+          .map((id) => id.trim())
+          .filter(Boolean);
+      }
       const status = req.query?.status != null ? String(req.query.status).trim() : undefined;
       const includeArchived = parseBooleanQuery(req.query?.includeArchived, false);
 
       const result = await listTeacherActivities(ctx.serviceRole, ctx.teacherId, {
         classId,
+        classIds: classIds.length ? classIds : undefined,
         status,
         includeArchived: includeArchived === true,
       });

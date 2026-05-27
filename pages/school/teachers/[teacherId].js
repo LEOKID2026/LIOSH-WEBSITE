@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
@@ -13,6 +13,7 @@ import {
   SCHOOL_CARD_INNER,
 } from "../../../components/school-portal/SchoolPortalUi";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
+import SchoolSubjectSelect from "../../../components/school-portal/SchoolSubjectSelect";
 import {
   schoolAuthFetch,
   schoolSubjectLabelHe,
@@ -20,6 +21,7 @@ import {
   SCHOOL_COL_CLASSES,
   SCHOOL_COL_STUDENTS,
   SCHOOL_LOADING,
+  SCHOOL_LOADING_DATA,
   SCHOOL_MANAGER_ALL_SUBJECTS,
   SCHOOL_ROLE_MANAGER,
   SCHOOL_ROLE_TEACHER,
@@ -30,40 +32,74 @@ import {
 
 export default function SchoolTeacherDetailPage() {
   const router = useRouter();
-  const { teacherId } = router.query;
-  const { state, accessToken, me } = useSchoolPortalLoad();
+  const { isReady } = router;
+
+  /** Prefer query; fallback to pathname so we are not blocked if isReady stalls on prerendered dynamic routes. */
+  const teacherIdResolved = useMemo(() => {
+    const rawQ = router.query?.teacherId;
+    if (typeof rawQ === "string" && rawQ.trim()) return rawQ.trim();
+    if (Array.isArray(rawQ) && typeof rawQ[0] === "string" && rawQ[0].trim()) return rawQ[0].trim();
+    const bare = router.asPath?.split("?")[0] || "";
+    const fromPathMatch = /^\/school\/teachers\/([^/]+)$/u.exec(bare);
+    const slug = fromPathMatch?.[1]?.trim();
+    if (slug && slug !== "[teacherId]" && !slug.startsWith("[")) return slug;
+    if (!isReady) return undefined;
+    return null;
+  }, [isReady, router.asPath, router.query?.teacherId]);
+
+  const { state, accessToken, me, error: portalError } = useSchoolPortalLoad();
   const [detail, setDetail] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [newSubject, setNewSubject] = useState("math");
   const [busy, setBusy] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState("");
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
   }, [state, router]);
 
-  const load = async () => {
-    if (!accessToken || typeof teacherId !== "string") return;
-    const [dRes, sRes] = await Promise.all([
-      schoolAuthFetch(accessToken, `/api/school/teachers/${teacherId}`),
-      schoolAuthFetch(accessToken, `/api/school/teachers/${teacherId}/subjects`),
-    ]);
-    const dBody = await dRes.json().catch(() => ({}));
-    const sBody = await sRes.json().catch(() => ({}));
-    if (dRes.status === 200) setDetail(dBody.data?.teacher);
-    if (sRes.status === 200) setSubjects(sBody.data?.subjects || []);
-  };
+  const load = useCallback(async () => {
+    if (!accessToken || typeof teacherIdResolved !== "string") return;
+    setDetailLoading(true);
+    setDetailError("");
+    try {
+      const [dRes, sRes] = await Promise.all([
+        schoolAuthFetch(accessToken, `/api/school/teachers/${teacherIdResolved}`),
+        schoolAuthFetch(accessToken, `/api/school/teachers/${teacherIdResolved}/subjects`),
+      ]);
+      const dBody = await dRes.json().catch(() => ({}));
+      const sBody = await sRes.json().catch(() => ({}));
+      if (dRes.status === 200) {
+        setDetail(dBody.data?.teacher);
+      } else {
+        setDetail(null);
+        setDetailError(dBody?.error?.message || "שגיאה בטעינת פרטי המורה");
+      }
+      if (sRes.status === 200) {
+        setSubjects(sBody.data?.subjects || []);
+      } else if (dRes.status === 200) {
+        setSubjects([]);
+      }
+    } catch {
+      setDetailError("שגיאת רשת בטעינת פרטי המורה");
+    } finally {
+      setDetailLoading(false);
+    }
+  }, [accessToken, teacherIdResolved]);
 
   useEffect(() => {
-    if (state === "ready") void load();
-  }, [state, accessToken, teacherId]);
+    if (state !== "ready" || typeof teacherIdResolved !== "string") return;
+    void load();
+  }, [state, accessToken, teacherIdResolved, load]);
 
   const grantSubject = async (e) => {
     e.preventDefault();
-    if (!accessToken || typeof teacherId !== "string") return;
+    if (!accessToken || typeof teacherIdResolved !== "string") return;
     setBusy(true);
     try {
-      await schoolAuthFetch(accessToken, `/api/school/teachers/${teacherId}/subjects`, {
+      await schoolAuthFetch(accessToken, `/api/school/teachers/${teacherIdResolved}/subjects`, {
         method: "POST",
         body: JSON.stringify({ subject: newSubject }),
       });
@@ -74,8 +110,8 @@ export default function SchoolTeacherDetailPage() {
   };
 
   const revoke = async (subjectId) => {
-    if (!accessToken || typeof teacherId !== "string") return;
-    await schoolAuthFetch(accessToken, `/api/school/teachers/${teacherId}/subjects/${subjectId}`, {
+    if (!accessToken || typeof teacherIdResolved !== "string") return;
+    await schoolAuthFetch(accessToken, `/api/school/teachers/${teacherIdResolved}/subjects/${subjectId}`, {
       method: "DELETE",
     });
     await load();
@@ -84,6 +120,16 @@ export default function SchoolTeacherDetailPage() {
   const isManager = detail?.role === "school_admin";
   const displayTitle = detail?.displayName || SCHOOL_SUBJECTS_TITLE;
 
+  const portalBlocking = state === "loading";
+  const hydrationWaiting = state === "ready" && !isReady;
+  const routeInvalid = state === "ready" && isReady && teacherIdResolved === null;
+  const detailBlocking =
+    state === "ready" &&
+    typeof teacherIdResolved === "string" &&
+    detailLoading &&
+    !detail &&
+    !detailError;
+
   return (
     <Layout>
       <SchoolPortalShell
@@ -91,13 +137,37 @@ export default function SchoolTeacherDetailPage() {
         schoolName={me?.school?.name}
         showTeacherDashboardLink={me?.hasTeacherActivity}
       >
-        {state === "loading" ? (
+        {state === "error" ? (
+          <p className="text-red-300 text-sm text-right" role="alert">
+            {portalError || "שגיאה בטעינת הפורטל"}
+          </p>
+        ) : null}
+        {state !== "error" && portalBlocking ? (
           <p className="text-white/60 text-sm text-right">{SCHOOL_LOADING}</p>
-        ) : (
-          <div className="space-y-6">
+        ) : null}
+        {state !== "error" && !portalBlocking && hydrationWaiting ? (
+          <p className="text-white/60 text-sm text-right">{SCHOOL_LOADING_DATA}</p>
+        ) : null}
+        {state !== "error" && !portalBlocking && !hydrationWaiting && routeInvalid ? (
+          <p className="text-white/60 text-sm text-right">לא נמצא מזהה מורה בכתובת.</p>
+        ) : null}
+        {state !== "error" && !portalBlocking && !hydrationWaiting && !routeInvalid && detailBlocking ? (
+          <p className="text-white/60 text-sm text-right">{SCHOOL_LOADING_DATA}</p>
+        ) : null}
+        {state !== "error" && !portalBlocking && !hydrationWaiting && !routeInvalid && !detailBlocking ? (
+          <div
+            className="space-y-6"
+            data-testid={detail && !detailError ? "school-teacher-page-ready" : undefined}
+          >
             <Link href="/school/teachers" className="text-amber-300 text-sm hover:underline inline-block">
               {SCHOOL_BACK_TEACHERS}
             </Link>
+
+            {detailError ? (
+              <p className="text-red-300 text-sm text-right" role="alert">
+                {detailError}
+              </p>
+            ) : null}
 
             <SchoolPageIntro
               title={displayTitle}
@@ -115,7 +185,7 @@ export default function SchoolTeacherDetailPage() {
 
             {isManager ? (
               <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
-                <p className="text-white/70 text-sm">{SCHOOL_MANAGER_ALL_SUBJECTS}</p>
+                <p className="text-sm text-white/70">{SCHOOL_MANAGER_ALL_SUBJECTS}</p>
               </div>
             ) : (
               <SchoolSection title={SCHOOL_SUBJECTS_TITLE}>
@@ -146,11 +216,7 @@ export default function SchoolTeacherDetailPage() {
                 <form onSubmit={grantSubject} className="flex flex-wrap gap-3 items-end border-t border-white/10 pt-4">
                   <label className="text-sm text-white/70">
                     מקצוע
-                    <input
-                      value={newSubject}
-                      onChange={(e) => setNewSubject(e.target.value)}
-                      className="block mt-1 rounded-lg bg-black/40 border border-white/20 px-3 py-2 min-w-[10rem]"
-                    />
+                    <SchoolSubjectSelect value={newSubject} onChange={setNewSubject} />
                   </label>
                   <SchoolPrimaryButton disabled={busy} type="submit">
                     {busy ? "…" : SCHOOL_SUBJECT_ADD}
@@ -159,7 +225,7 @@ export default function SchoolTeacherDetailPage() {
               </SchoolSection>
             )}
           </div>
-        )}
+        ) : null}
       </SchoolPortalShell>
     </Layout>
   );
