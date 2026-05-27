@@ -4,6 +4,7 @@ import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import SchoolInboxMessageCard from "../../components/school-portal/SchoolInboxMessageCard";
 import SchoolMessageConfirmationActions from "../../components/school-portal/SchoolMessageConfirmationActions";
+import SchoolMessageDetailCloseButton from "../../components/school-portal/SchoolMessageDetailCloseButton";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import {
   SC_TEACHER_INBOX_EMPTY,
@@ -127,6 +128,7 @@ export default function TeacherSchoolMessagesPage() {
 
         {selected && selectedId ? (
           <div className="mt-6 rounded-xl border border-amber-500/30 bg-black/40 p-4 text-right space-y-4">
+            <SchoolMessageDetailCloseButton onClose={() => setSelected(null)} />
             <h2 className="font-bold mb-2">{selected.subject || "הודעה"}</h2>
             <p className="text-sm whitespace-pre-wrap">{selected.body}</p>
             <SchoolMessageConfirmationActions
@@ -134,6 +136,7 @@ export default function TeacherSchoolMessagesPage() {
               busy={markBusy}
               onMarkRead={markRead}
             />
+            <SchoolMessageDetailCloseButton onClose={() => setSelected(null)} />
           </div>
         ) : null}
       </TeacherPortalShell>

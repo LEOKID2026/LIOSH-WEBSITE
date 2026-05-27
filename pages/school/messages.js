@@ -46,6 +46,7 @@ import {
   SC_RECEIPTS_TAB_TEACHERS,
 } from "../../lib/school-portal/school-communication.he";
 import SchoolInboxMessageCard from "../../components/school-portal/SchoolInboxMessageCard";
+import SchoolMessageDetailCloseButton from "../../components/school-portal/SchoolMessageDetailCloseButton";
 import {
   buildSchoolMessagesListQuery,
   formatSchoolMessageAudienceLabel,
@@ -149,6 +150,12 @@ export default function SchoolMessagesPage() {
     );
     const recJson = await recRes.json().catch(() => ({}));
     if (recRes.ok) setRecipients(recJson.data?.recipients || []);
+  };
+
+  const closeMessageDetail = () => {
+    setDetail(null);
+    setDetailId(null);
+    setRecipients([]);
   };
 
   useEffect(() => {
@@ -441,7 +448,10 @@ export default function SchoolMessagesPage() {
             ) : null}
 
             {detail ? (
-              <SchoolSection title={detail.subject || SC_RECEIPTS_PANEL_TITLE}>
+              <SchoolSection
+                title={detail.subject || SC_RECEIPTS_PANEL_TITLE}
+                action={<SchoolMessageDetailCloseButton onClose={closeMessageDetail} />}
+              >
                 <p className="text-xs text-white/50 mb-2">
                   {formatSchoolMessageAudienceLabel(detail.audienceType, detail.audienceScope)}
                   {detail.sentAt
@@ -491,17 +501,7 @@ export default function SchoolMessagesPage() {
                     </li>
                   ))}
                 </ul>
-                <button
-                  type="button"
-                  className="mt-3 text-sm text-white/60 underline"
-                  onClick={() => {
-                    setDetail(null);
-                    setDetailId(null);
-                    setRecipients([]);
-                  }}
-                >
-                  סגירה
-                </button>
+                <SchoolMessageDetailCloseButton onClose={closeMessageDetail} className="mt-4" />
               </SchoolSection>
             ) : null}
           </div>
