@@ -24,7 +24,7 @@ export function SchoolErrorBlock({ message, onRetry, retryLabel = "נסו שוב
         <button
           type="button"
           onClick={onRetry}
-          className="mt-3 rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-sm font-semibold"
+          className="mt-3 rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-sm font-semibold cursor-pointer"
         >
           {retryLabel}
         </button>

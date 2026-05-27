@@ -232,13 +232,16 @@ export function SchoolPageIntro({ title, subtitle }) {
   );
 }
 
-export function SchoolPrimaryButton({ children, disabled, type = "button", onClick }) {
+/** School-portal interactive controls: hand on hover, not-allowed when disabled. */
+export const SCHOOL_PORTAL_BTN_CURSOR = "cursor-pointer disabled:cursor-not-allowed";
+
+export function SchoolPrimaryButton({ children, disabled, type = "button", onClick, className = "" }) {
   return (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className="rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold px-4 py-2 disabled:opacity-60 min-h-[2.5rem] transition-colors"
+      className={`rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold px-4 py-2 disabled:opacity-60 min-h-[2.5rem] transition-colors ${SCHOOL_PORTAL_BTN_CURSOR} ${className}`}
     >
       {children}
     </button>
@@ -251,7 +254,7 @@ export function SchoolSecondaryButton({ children, disabled, type = "button", onC
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60 ${className}`}
+      className={`rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60 ${SCHOOL_PORTAL_BTN_CURSOR} ${className}`}
     >
       {children}
     </button>

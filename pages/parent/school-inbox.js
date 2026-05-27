@@ -96,7 +96,7 @@ export default function ParentSchoolInboxPage() {
     <Layout>
       <TeacherPortalShell title={SC_INBOX_TITLE_PARENT}>
         <div className="mb-4">
-          <Link href="/guardian/view" className="text-sm text-amber-300 hover:underline">
+          <Link href="/guardian/view" className="text-sm text-amber-300 hover:underline cursor-pointer">
             ← חזרה לדוח
           </Link>
         </div>

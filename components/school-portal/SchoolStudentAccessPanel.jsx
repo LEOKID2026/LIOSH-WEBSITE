@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import SchoolCredentialShownOnceBox from "./SchoolCredentialShownOnceBox";
 import SchoolStudentParentAccessRow from "./SchoolStudentParentAccessRow";
-import { SchoolPrimaryButton } from "./SchoolPortalUi";
+import { SchoolPrimaryButton, SCHOOL_PORTAL_BTN_CURSOR } from "./SchoolPortalUi";
 import { apiErrorMessageHe, schoolAuthFetch } from "../../lib/school-portal/school-ui.he";
 import {
   SC_BTN_ADD_PARENT,
@@ -64,13 +64,14 @@ function ActionGroup({ label, children }) {
 }
 
 function actionBtnClass(variant = "default") {
+  const cursor = SCHOOL_PORTAL_BTN_CURSOR;
   if (variant === "primary") {
-    return "rounded-lg bg-amber-500/15 border border-amber-500/35 text-amber-100 px-3 py-2 text-sm font-medium disabled:opacity-50";
+    return `rounded-lg bg-amber-500/15 border border-amber-500/35 text-amber-100 px-3 py-2 text-sm font-medium disabled:opacity-50 ${cursor}`;
   }
   if (variant === "danger") {
-    return "rounded-lg border border-red-500/50 bg-red-950/30 text-red-200 px-3 py-2 text-sm font-medium disabled:opacity-50";
+    return `rounded-lg border border-red-500/50 bg-red-950/30 text-red-200 px-3 py-2 text-sm font-medium disabled:opacity-50 ${cursor}`;
   }
-  return "rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-sm disabled:opacity-50";
+  return `rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-sm disabled:opacity-50 ${cursor}`;
 }
 
 export default function SchoolStudentAccessPanel({ accessToken, studentId, studentName }) {
@@ -278,7 +279,7 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
           <h3 className="font-semibold text-amber-200">{SC_SECTION_PARENT_ACCOUNTS}</h3>
           <button
             type="button"
-            className="rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-1.5 text-xs text-amber-100"
+            className={`rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-1.5 text-xs text-amber-100 ${SCHOOL_PORTAL_BTN_CURSOR}`}
             onClick={() => setShowAddParent((v) => !v)}
           >
             {SC_BTN_ADD_PARENT}

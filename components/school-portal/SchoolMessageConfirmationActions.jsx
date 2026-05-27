@@ -38,7 +38,7 @@ export default function SchoolMessageConfirmationActions({ message, busy = false
     <button
       type="button"
       disabled={busy}
-      className="w-full rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-100 px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
+      className="w-full rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-100 px-4 py-2.5 text-sm font-semibold cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
       onClick={() => onMarkRead(message, false)}
     >
       {SC_BTN_MARK_READ}

@@ -46,7 +46,9 @@ export default function SchoolManagerMessageDetailContent({
           {schoolMessageHasParentRecipients(detail) ? (
             <button
               type="button"
-              className={receiptTab === "parent" ? "text-amber-200 font-semibold" : "text-white/60"}
+              className={`cursor-pointer ${
+                receiptTab === "parent" ? "text-amber-200 font-semibold" : "text-white/60 hover:text-white/80"
+              }`}
               onClick={() => onReceiptTabChange("parent")}
             >
               {SC_RECEIPTS_TAB_PARENTS}
@@ -55,7 +57,9 @@ export default function SchoolManagerMessageDetailContent({
           {schoolMessageHasTeacherRecipients(detail) ? (
             <button
               type="button"
-              className={receiptTab === "teacher" ? "text-amber-200 font-semibold" : "text-white/60"}
+              className={`cursor-pointer ${
+                receiptTab === "teacher" ? "text-amber-200 font-semibold" : "text-white/60 hover:text-white/80"
+              }`}
               onClick={() => onReceiptTabChange("teacher")}
             >
               {SC_RECEIPTS_TAB_TEACHERS}

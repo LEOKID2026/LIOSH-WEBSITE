@@ -19,8 +19,8 @@ function TabBar({ activeTab, onTabChange }) {
         aria-selected={activeTab === "report"}
         className={
           activeTab === "report"
-            ? "flex-1 rounded-md bg-amber-500/25 text-amber-100 text-sm font-semibold py-2"
-            : "flex-1 rounded-md text-white/60 text-sm py-2 hover:text-white"
+            ? "flex-1 rounded-md bg-amber-500/25 text-amber-100 text-sm font-semibold py-2 cursor-pointer"
+            : "flex-1 rounded-md text-white/60 text-sm py-2 hover:text-white cursor-pointer"
         }
         onClick={() => onTabChange("report")}
       >
@@ -32,8 +32,8 @@ function TabBar({ activeTab, onTabChange }) {
         aria-selected={activeTab === "access"}
         className={
           activeTab === "access"
-            ? "flex-1 rounded-md bg-amber-500/25 text-amber-100 text-sm font-semibold py-2"
-            : "flex-1 rounded-md text-white/60 text-sm py-2 hover:text-white"
+            ? "flex-1 rounded-md bg-amber-500/25 text-amber-100 text-sm font-semibold py-2 cursor-pointer"
+            : "flex-1 rounded-md text-white/60 text-sm py-2 hover:text-white cursor-pointer"
         }
         onClick={() => onTabChange("access")}
       >

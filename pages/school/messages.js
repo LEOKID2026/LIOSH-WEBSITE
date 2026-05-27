@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import SchoolPortalShell from "../../components/school-portal/SchoolPortalShell";
 import { SchoolErrorBlock, SchoolLoadingBlock } from "../../components/school-portal/SchoolDrillDown";
-import { SchoolPrimaryButton } from "../../components/school-portal/SchoolPortalUi";
+import { SchoolPrimaryButton, SCHOOL_PORTAL_BTN_CURSOR } from "../../components/school-portal/SchoolPortalUi";
 import { useSchoolPortalLoad } from "../../lib/school-portal/use-school-portal-session";
 import {
   SC_AUDIENCE_ALL_PARENTS,
@@ -223,8 +223,8 @@ export default function SchoolMessagesPage() {
                       type="button"
                       className={
                         filter === key
-                          ? "rounded-lg bg-amber-500/20 border border-amber-500/40 px-3 py-1"
-                          : "rounded-lg border border-white/15 px-3 py-1 text-white/70"
+                          ? `rounded-lg bg-amber-500/20 border border-amber-500/40 px-3 py-1 ${SCHOOL_PORTAL_BTN_CURSOR}`
+                          : `rounded-lg border border-white/15 px-3 py-1 text-white/70 hover:text-white/90 ${SCHOOL_PORTAL_BTN_CURSOR}`
                       }
                       onClick={() => setFilter(key)}
                     >
@@ -247,8 +247,8 @@ export default function SchoolMessagesPage() {
                   type="button"
                   className={
                     dateFilter === key
-                      ? "rounded-lg bg-amber-500/20 border border-amber-500/40 px-3 py-1"
-                      : "rounded-lg border border-white/15 px-3 py-1 text-white/70"
+                      ? `rounded-lg bg-amber-500/20 border border-amber-500/40 px-3 py-1 ${SCHOOL_PORTAL_BTN_CURSOR}`
+                      : `rounded-lg border border-white/15 px-3 py-1 text-white/70 hover:text-white/90 ${SCHOOL_PORTAL_BTN_CURSOR}`
                   }
                   onClick={() => setDateFilter(key)}
                 >
@@ -328,7 +328,7 @@ export default function SchoolMessagesPage() {
                               <button
                                 type="button"
                                 disabled={!messageId}
-                                className="rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-100 disabled:opacity-50"
+                                className={`rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-100 disabled:opacity-50 ${SCHOOL_PORTAL_BTN_CURSOR}`}
                                 onClick={() => messageId && void loadDetail(messageId)}
                               >
                                 {SC_BTN_OPEN}
@@ -430,7 +430,11 @@ export default function SchoolMessagesPage() {
                     </label>
                   </div>
                   <div className="flex gap-2 justify-end mt-4">
-                    <button type="button" className="px-3 py-2 text-sm" onClick={() => setComposeOpen(false)}>
+                    <button
+                      type="button"
+                      className={`px-3 py-2 text-sm ${SCHOOL_PORTAL_BTN_CURSOR}`}
+                      onClick={() => setComposeOpen(false)}
+                    >
                       {SC_COMPOSE_BTN_CANCEL}
                     </button>
                     <SchoolPrimaryButton disabled={busy || !body.trim()} onClick={() => void sendMessage()}>

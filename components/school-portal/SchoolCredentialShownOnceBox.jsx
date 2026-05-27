@@ -8,6 +8,7 @@ import {
   SC_CREDENTIAL_LABEL_USERNAME,
   SC_BTN_COPY_CREDENTIALS,
 } from "../../lib/school-portal/school-communication.he";
+import { SCHOOL_PORTAL_BTN_CURSOR } from "./SchoolPortalUi";
 
 export default function SchoolCredentialShownOnceBox({ credentials, onDismiss }) {
   const [copied, setCopied] = useState(false);
@@ -45,14 +46,14 @@ export default function SchoolCredentialShownOnceBox({ credentials, onDismiss })
         <button
           type="button"
           onClick={() => void copyAll()}
-          className="rounded-lg border border-white/25 bg-white/10 px-3 py-1.5 text-sm font-semibold"
+          className={`rounded-lg border border-white/25 bg-white/10 px-3 py-1.5 text-sm font-semibold ${SCHOOL_PORTAL_BTN_CURSOR}`}
         >
           {copied ? SC_CREDENTIAL_COPIED : SC_BTN_COPY_CREDENTIALS}
         </button>
         <button
           type="button"
           onClick={onDismiss}
-          className="rounded-lg bg-amber-500 text-black px-3 py-1.5 text-sm font-semibold"
+          className={`rounded-lg bg-amber-500 text-black px-3 py-1.5 text-sm font-semibold ${SCHOOL_PORTAL_BTN_CURSOR}`}
         >
           {SC_CREDENTIAL_BTN_DISMISS}
         </button>

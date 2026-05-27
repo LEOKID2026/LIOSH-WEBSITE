@@ -16,6 +16,7 @@ import {
   SC_STATUS_BLOCKED,
   SC_STATUS_REVOKED,
 } from "../../lib/school-portal/school-communication.he";
+import { SCHOOL_PORTAL_BTN_CURSOR } from "./SchoolPortalUi";
 
 const RELATION_LABEL = {
   mother: SC_RELATION_MOTHER,
@@ -32,13 +33,14 @@ function statusLabel(status) {
 }
 
 function actionBtnClass(variant = "default") {
+  const cursor = SCHOOL_PORTAL_BTN_CURSOR;
   if (variant === "danger") {
-    return "rounded-lg border border-red-500/50 bg-red-950/30 text-red-200 px-3 py-2 text-sm font-medium disabled:opacity-50";
+    return `rounded-lg border border-red-500/50 bg-red-950/30 text-red-200 px-3 py-2 text-sm font-medium disabled:opacity-50 ${cursor}`;
   }
   if (variant === "warn") {
-    return "rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-100 px-3 py-2 text-sm font-medium disabled:opacity-50";
+    return `rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-100 px-3 py-2 text-sm font-medium disabled:opacity-50 ${cursor}`;
   }
-  return "rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-sm disabled:opacity-50";
+  return `rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-sm disabled:opacity-50 ${cursor}`;
 }
 
 export default function SchoolStudentParentAccessRow({
