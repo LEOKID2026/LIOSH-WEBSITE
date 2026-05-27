@@ -7,6 +7,7 @@ import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSumma
 import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
 import TeacherParentMessagePanel from "../../../components/teacher-portal/TeacherParentMessagePanel";
 import TeacherStudentIndividualActivitiesPanel from "../../../components/teacher-portal/TeacherStudentIndividualActivitiesPanel";
+import TeacherStudentWorksheetsPanel from "../../../components/teacher-portal/TeacherStudentWorksheetsPanel";
 import {
   TeacherReportError,
   TeacherReportForbidden,
@@ -264,6 +265,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                 studentId={studentId}
                 gradeLevel={report?.student?.grade_level || report?.student?.gradeLevel}
               />
+              <TeacherStudentWorksheetsPanel accessToken={accessToken} studentId={studentId} />
               <TeacherParentMessagePanel accessToken={accessToken} studentId={studentId} />
               <StudentLoginAccessPanel accessToken={accessToken} studentId={studentId} />
               <GuardianAccessPanel accessToken={accessToken} studentId={studentId} />

@@ -4,37 +4,37 @@ overview: Design and plan a new standalone "Worksheet PDF Activity" (דף עבו
 todos:
   - id: owner-review-plan
     content: Owner reviews and approves WORKSHEET_PDF_ACTIVITIES_PLAN.md before any coding
-    status: pending
+    status: completed
   - id: owner-approve-hebrew
     content: Owner approves proposed Hebrew UI copy list (Section 14 of plan)
-    status: pending
+    status: completed
   - id: owner-answer-oqs
     content: Owner answers 13 open questions in Section 16 of plan
-    status: pending
+    status: completed
   - id: create-migration-029
     content: Write supabase/migrations/029_worksheet_activities.sql (SQL text ready in plan, owner applies manually)
-    status: pending
+    status: completed
   - id: phase1-lib
     content: "Phase 1: implement lib/worksheet-activities/ server modules"
-    status: pending
+    status: completed
   - id: phase1-api
     content: "Phase 1: implement API routes (teacher create/upload/status/report, student open/mark-complete)"
-    status: pending
+    status: completed
   - id: phase1-ui
     content: "Phase 1: implement teacher worksheet pages and student worksheet page"
-    status: pending
+    status: completed
   - id: phase2-digital-answers
     content: "Phase 2: teacher question builder, student answer sheet, submit API"
-    status: pending
+    status: completed
   - id: phase3-manual-grading
     content: "Phase 3: teacher grading screen, per-question grade/comment, mark-checked"
-    status: pending
+    status: completed
   - id: phase4-autograde
     content: "Phase 4: answer key, auto-grading logic, teacher override, publish"
-    status: pending
+    status: completed
   - id: phase5-reports
     content: "Phase 5: student report integration, school manager summary"
-    status: pending
+    status: completed
 isProject: false
 ---
 

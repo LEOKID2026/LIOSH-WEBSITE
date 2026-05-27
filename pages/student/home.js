@@ -16,6 +16,7 @@ import StudentAvatarPickerModal from "../../components/student/StudentAvatarPick
 import StudentDailyMissionsPanel from "../../components/student/StudentDailyMissionsPanel";
 import StudentMonthlyPersistencePanel from "../../components/student/StudentMonthlyPersistencePanel";
 import StudentClassroomActivitiesPanel from "../../components/student/StudentClassroomActivitiesPanel";
+import StudentWorksheetsPanel from "../../components/worksheet-activities/StudentWorksheetsPanel";
 
 const HOME_PROFILE_PATH = "/api/student/home-profile";
 
@@ -450,6 +451,7 @@ export default function StudentHomePage() {
             </section>
 
             <StudentClassroomActivitiesPanel />
+            <StudentWorksheetsPanel />
 
             <section>
               <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">הנושאים שלי</h2>
