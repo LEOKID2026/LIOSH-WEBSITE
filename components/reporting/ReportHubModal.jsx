@@ -46,6 +46,7 @@ export default function ReportHubModal({
   nestedStudentViewModel = null,
   onCloseStudentReport,
   onRowAction,
+  stackZIndexBase = 0,
 }) {
   const [detailId, setDetailId] = useState(null);
   const [drilldownKey, setDrilldownKey] = useState(null);
@@ -89,6 +90,7 @@ export default function ReportHubModal({
   );
 
   const studentActions = studentReportButton(onStudentReport, studentReportLoading);
+  const z = Number(stackZIndexBase) || 0;
 
   const handleCloseAll = () => {
     setDetailId(null);
@@ -133,7 +135,7 @@ export default function ReportHubModal({
         subtitle={title}
         onClose={handleCloseAll}
         closeLabel="סגירה"
-        zIndex={100}
+        zIndex={100 + z}
         testId="report-hub-main"
       >
         {loading ? (
@@ -155,7 +157,7 @@ export default function ReportHubModal({
         subtitle={displayTitle}
         onClose={handleCloseAll}
         onBack={handleBackFromDetail}
-        zIndex={110}
+        zIndex={110 + z}
         testId="report-hub-detail"
       >
         <ReportDetailSectionView
@@ -175,7 +177,7 @@ export default function ReportHubModal({
         subtitle={detailTitle}
         onClose={handleCloseAll}
         onBack={handleBackFromDrilldown}
-        zIndex={115}
+        zIndex={115 + z}
         testId="report-hub-drilldown"
       >
         {drilldownSection?.subtitle ? (
@@ -201,7 +203,7 @@ export default function ReportHubModal({
         subtitle={displayTitle}
         onClose={handleCloseAll}
         onBack={handleBackFromStudentMain}
-        zIndex={120}
+        zIndex={120 + z}
         testId="report-hub-student-main"
       >
         {studentReportLoading ? (
@@ -220,7 +222,7 @@ export default function ReportHubModal({
         subtitle={nestedStudentViewModel?.header?.title || "דוח תלמיד"}
         onClose={handleCloseAll}
         onBack={handleBackFromStudentDetail}
-        zIndex={130}
+        zIndex={130 + z}
         testId="report-hub-student-detail"
       >
         <ReportDetailSectionView

@@ -53,11 +53,36 @@ test.describe("School physical class report", () => {
     await expect(physicalDialog.getByTestId("report-nav-students")).toBeVisible();
 
     await physicalDialog.getByTestId("report-nav-subjects").click();
-    const subjectDetail = page.getByTestId("report-hub-detail");
+    const subjectDetail = page.getByTestId("report-hub-detail").first();
     await expect(subjectDetail).toBeVisible({ timeout: 10_000 });
     await expect(subjectDetail.getByRole("button", { name: "דוח מקצוע" }).first()).toBeVisible();
     await expect(subjectDetail.getByRole("button", { name: "כרטיס מורה" }).first()).toBeVisible();
-    await subjectDetail.getByTestId("report-modal-back").click();
+
+    await subjectDetail.getByRole("button", { name: "דוח מקצוע" }).first().click();
+    const subjectDialog = page.getByTestId("report-hub-main").last();
+    await expect(subjectDialog).toBeVisible({ timeout: 20_000 });
+    await expect(subjectDialog.getByTestId("report-hub-summary-ready")).toBeVisible({ timeout: 90_000 });
+
+    const physicalDetailZ = await subjectDetail.evaluate((el) => Number(window.getComputedStyle(el).zIndex) || 0);
+    const subjectMainZ = await subjectDialog.evaluate((el) => Number(window.getComputedStyle(el).zIndex) || 0);
+    expect(subjectMainZ).toBeGreaterThan(physicalDetailZ);
+
+    await subjectDialog.getByTestId("report-modal-close").click();
+    await expect(page.getByTestId("report-hub-main")).toHaveCount(1);
+
+    await physicalDialog.getByTestId("report-nav-subjects").click();
+    await expect(page.getByTestId("report-hub-detail").first()).toBeVisible({ timeout: 10_000 });
+    await page
+      .getByTestId("report-hub-detail")
+      .first()
+      .getByRole("button", { name: "כרטיס מורה" })
+      .first()
+      .click();
+    const teacherCard = page.getByTestId("school-teacher-card-modal");
+    await expect(teacherCard).toBeVisible({ timeout: 15_000 });
+    await expect(teacherCard.getByTestId("school-teacher-card-ready")).toBeVisible({ timeout: 15_000 });
+    await teacherCard.getByTestId("report-modal-close").click();
+    await expect(teacherCard).toHaveCount(0);
 
     await physicalDialog.getByTestId("report-nav-activities").click();
     const actDetail = page.getByTestId("report-hub-detail");

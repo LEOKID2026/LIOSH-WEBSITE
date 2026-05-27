@@ -21,14 +21,24 @@ GET /api/school/classes/physical-report?gradeLevel=1&physicalClassName=כיתה 
 - School-manager auth only (`requireSchoolManagerApiContext`)
 - Does not replace `/api/school/classes/[classId]/report-data`
 
-## UI
+## UI & Report Hub drill-downs
 
 - Entry: **דוח כיתה כללי** button on physical class subject view (`pages/school/classes/index.js`)
 - View model: `parsePhysicalClassReportViewModel` (`kind: "physical_class"`)
 - **5 navigation sections:** פירוט לפי מקצוע, פעילויות אחרונות, תלמידים בכיתה, נושאים לחיזוק, תלמידים שדורשים תשומת לב
-- Action-first: every row has navigation (דוח מקצוע, כרטיס מורה, דוח תלמיד)
-- Layer-2 subject-class report modal stacked on physical report
-- Teacher card: `window.open` with `router.push` fallback
+- **Action-first:** every row has navigation (דוח מקצוע, כרטיס מורה, דוח תלמיד)
+
+### Modal stacking (QA-approved)
+
+All drill-downs stay inside the Report Hub — **no new browser tabs, no page navigation**.
+
+| Action | Behavior |
+|--------|----------|
+| **דוח מקצוע** | Opens subject-class report in a second `SchoolReportModal` with `stackZIndexBase={150}` so it renders **above** the physical report detail layer (z 110). Close returns to the physical report. |
+| **כרטיס מורה** | Opens internal `SchoolTeacherCardModal` (z 320) using existing `GET /api/school/teachers/[teacherId]`. Shows name, role, student/class counts, school subjects, subjects in this physical class. **No** `window.open`, **no** `router.push`. |
+| **דוח תלמיד** | Nested student report inside the same modal stack (existing Report Hub behavior). |
+
+The full teacher detail page (`/school/teachers/[teacherId]`) remains available elsewhere — not from this report flow.
 
 ## Student reports from physical context
 
@@ -44,31 +54,21 @@ GET /api/school/students/[studentId]/report-data?windowDays=30&gradeLevel=1&phys
 |------|------|
 | Unit (aggregation + view model) | `scripts/tests/school-physical-class-report-unit.mjs` |
 | API regression (demo school) | `scripts/tests/demo-school-physical-class-report-regression.mjs` |
-| E2E | `tests/e2e/school-physical-class-report.spec.ts` |
+| E2E (stacking + teacher card modal) | `tests/e2e/school-physical-class-report.spec.ts` |
 
 Demo school verification (כיתה א׳ 1): 24 students, 6 subjects, 20 recent activities.
 
-## Files changed
+## Files changed (UI flow fix)
 
-**New**
-- `lib/school-server/school-physical-class-report.server.js`
-- `pages/api/school/classes/physical-report.js`
-- `scripts/tests/school-physical-class-report-unit.mjs`
-- `scripts/tests/demo-school-physical-class-report-regression.mjs`
-- `tests/e2e/school-physical-class-report.spec.ts`
-
-**Modified**
-- `lib/school-server/school-operations.server.js` — export `loadSubjectClassesForPhysicalReport`
-- `lib/school-portal/school-report-view-model.js` — `parsePhysicalClassReportViewModel`
-- `lib/school-portal/school-ui.he.js` — Hebrew labels
-- `pages/school/classes/index.js` — UI + handlers
-- `components/reporting/ReportHubBody.jsx` — row actions
-- `components/reporting/ReportHubModal.jsx` — `onRowAction`
-- `components/school-portal/SchoolReportModal.jsx` — passthrough
+- `components/reporting/ReportHubModal.jsx` — `stackZIndexBase` prop for stacked modals
+- `components/school-portal/SchoolReportModal.jsx` — passthrough `stackZIndexBase`
+- `components/school-portal/SchoolTeacherCardModal.jsx` — **new** internal teacher card
+- `pages/school/classes/index.js` — z-index stacking, teacher card modal, removed tab/page navigation
 
 ## Non-goals (unchanged)
 
 - No DB schema changes
+- No aggregation/API changes for physical report data
 - No simulation work
 - Teacher detail physical-class cards (scope A)
 - Parent / private-teacher APIs untouched

@@ -16,6 +16,7 @@ export default function SchoolReportModal({
   nestedStudentViewModel = null,
   onCloseStudentReport,
   onRowAction,
+  stackZIndexBase = 0,
 }) {
   return (
     <ReportHubModal
@@ -31,6 +32,7 @@ export default function SchoolReportModal({
       nestedStudentViewModel={nestedStudentViewModel}
       onCloseStudentReport={onCloseStudentReport}
       onRowAction={onRowAction}
+      stackZIndexBase={stackZIndexBase}
     />
   );
 }

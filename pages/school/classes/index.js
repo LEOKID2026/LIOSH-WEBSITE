@@ -12,6 +12,7 @@ import {
   SchoolSubjectClassCard,
 } from "../../../components/school-portal/SchoolDrillDown";
 import SchoolReportModal from "../../../components/school-portal/SchoolReportModal";
+import SchoolTeacherCardModal from "../../../components/school-portal/SchoolTeacherCardModal";
 import { parseClassReportViewModel, parsePhysicalClassReportViewModel, parseStudentReportViewModel } from "../../../lib/school-portal/school-report-view-model";
 import { SchoolEmptyState, SchoolSection } from "../../../components/school-portal/SchoolPortalUi";
 import {
@@ -27,6 +28,7 @@ import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-porta
 import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
 import {
   apiErrorMessageHe,
+  schoolAuthFetch,
   SCHOOL_BACK_CLASSES,
   SCHOOL_BACK_GRADES,
   SCHOOL_CHOOSE_GRADE,
@@ -45,6 +47,11 @@ import {
   SCHOOL_PHYSICAL_CLASS_REPORT_TITLE,
   SCHOOL_VIEW_CLASS_REPORT,
 } from "../../../lib/school-portal/school-ui.he";
+
+/** Stacked subject-class report must sit above physical report detail (z 110). */
+const REPORT_STACK_SUBJECT_OVER_PHYSICAL = 150;
+/** Teacher card above stacked subject report (max z 150+130). */
+const REPORT_STACK_TEACHER_CARD = 320;
 
 export default function SchoolClassesPage() {
   const router = useRouter();
@@ -77,6 +84,12 @@ export default function SchoolClassesPage() {
   const [subjectFromPhysicalNestedStudentVm, setSubjectFromPhysicalNestedStudentVm] = useState(null);
   const [subjectFromPhysicalStudentLoading, setSubjectFromPhysicalStudentLoading] = useState(false);
   const subjectFromPhysicalClassRef = useRef(null);
+
+  const [teacherCardOpen, setTeacherCardOpen] = useState(false);
+  const [teacherCardLoading, setTeacherCardLoading] = useState(false);
+  const [teacherCardError, setTeacherCardError] = useState("");
+  const [teacherCardData, setTeacherCardData] = useState(null);
+  const [teacherCardSubjectsInClass, setTeacherCardSubjectsInClass] = useState([]);
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -115,6 +128,10 @@ export default function SchoolClassesPage() {
     setSubjectFromPhysicalClass(null);
     setSubjectFromPhysicalNestedStudentVm(null);
     subjectFromPhysicalClassRef.current = null;
+    setTeacherCardOpen(false);
+    setTeacherCardError("");
+    setTeacherCardData(null);
+    setTeacherCardSubjectsInClass([]);
   }, [gradeLevel, physicalKey]);
 
   const physicalGroups = useMemo(
@@ -156,6 +173,16 @@ export default function SchoolClassesPage() {
     setPhysicalReportVm(null);
     setPhysicalReportContext(null);
     setPhysicalNestedStudentVm(null);
+    closeSubjectFromPhysical();
+    closeTeacherCard();
+  };
+
+  const closeTeacherCard = () => {
+    setTeacherCardOpen(false);
+    setTeacherCardLoading(false);
+    setTeacherCardError("");
+    setTeacherCardData(null);
+    setTeacherCardSubjectsInClass([]);
   };
 
   const closeSubjectFromPhysical = () => {
@@ -167,17 +194,39 @@ export default function SchoolClassesPage() {
     setSubjectFromPhysicalNestedStudentVm(null);
   };
 
-  const openTeacherCardFromPhysical = (teacherId) => {
-    if (!teacherId) return;
-    const url = `/school/teachers/${teacherId}`;
-    const opened = window.open(url, "_blank");
-    if (!opened) {
-      void router.push(url);
+  const openTeacherCardFromPhysical = async (teacherId, item) => {
+    if (!accessToken || !teacherId) return;
+    closeSubjectFromPhysical();
+    setTeacherCardOpen(true);
+    setTeacherCardLoading(true);
+    setTeacherCardError("");
+    setTeacherCardData(null);
+
+    const subjectsInClass = (physicalReportVm?.sections?.subjects?.items || [])
+      .filter((row) => row.teacherId === teacherId)
+      .map((row) => row.label)
+      .filter(Boolean);
+    if (!subjectsInClass.length && item?.label) {
+      subjectsInClass.push(item.label);
+    }
+    setTeacherCardSubjectsInClass(subjectsInClass);
+
+    try {
+      const res = await schoolAuthFetch(accessToken, `/api/school/teachers/${teacherId}`);
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setTeacherCardError(apiErrorMessageHe(body?.error, "שגיאה בטעינת כרטיס מורה"));
+        return;
+      }
+      setTeacherCardData(body?.data?.teacher || null);
+    } finally {
+      setTeacherCardLoading(false);
     }
   };
 
-  const handlePhysicalRowAction = (action, _item) => {
+  const handlePhysicalRowAction = (action, item) => {
     if (action.id === "subject_report" || action.id === "open_subject_report") {
+      closeTeacherCard();
       const cls =
         subjectClasses.find((c) => c.classId === action.classId) ||
         (action.classId
@@ -191,7 +240,7 @@ export default function SchoolClassesPage() {
       return;
     }
     if (action.id === "teacher_card" && action.teacherId) {
-      openTeacherCardFromPhysical(action.teacherId);
+      void openTeacherCardFromPhysical(action.teacherId, item);
     }
   };
 
@@ -563,6 +612,22 @@ export default function SchoolClassesPage() {
               studentReportLoading={subjectFromPhysicalStudentLoading}
               nestedStudentViewModel={subjectFromPhysicalNestedStudentVm}
               onCloseStudentReport={() => setSubjectFromPhysicalNestedStudentVm(null)}
+              stackZIndexBase={REPORT_STACK_SUBJECT_OVER_PHYSICAL}
+            />
+
+            <SchoolTeacherCardModal
+              open={teacherCardOpen}
+              onClose={closeTeacherCard}
+              subtitle={
+                physicalReportContext?.name
+                  ? `${SCHOOL_PHYSICAL_CLASS_REPORT_TITLE} · ${physicalReportContext.name}`
+                  : SCHOOL_PHYSICAL_CLASS_REPORT_TITLE
+              }
+              loading={teacherCardLoading}
+              error={teacherCardError}
+              teacher={teacherCardData}
+              physicalClassSubjects={teacherCardSubjectsInClass}
+              zIndex={REPORT_STACK_TEACHER_CARD}
             />
           </>
         )}
