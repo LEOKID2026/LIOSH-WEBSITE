@@ -45,6 +45,7 @@ export default function ReportHubModal({
   studentReportLoading = false,
   nestedStudentViewModel = null,
   onCloseStudentReport,
+  onRowAction,
 }) {
   const [detailId, setDetailId] = useState(null);
   const [drilldownKey, setDrilldownKey] = useState(null);
@@ -162,6 +163,9 @@ export default function ReportHubModal({
           variant={detailVariant}
           studentActions={studentActions}
           onDrilldownSelect={handleDrilldownSelect}
+          onRowAction={onRowAction}
+          studentReportLoading={studentReportLoading}
+          onStudentReport={onStudentReport}
         />
       </ReportModalFrame>
 
@@ -185,6 +189,9 @@ export default function ReportHubModal({
           }}
           variant="students"
           studentActions={studentActions}
+          onRowAction={onRowAction}
+          studentReportLoading={studentReportLoading}
+          onStudentReport={onStudentReport}
         />
       </ReportModalFrame>
 

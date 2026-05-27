@@ -4,40 +4,40 @@ overview: Add a school-manager-only "דוח כיתה כללי" that aggregates a
 todos:
   - id: phase1-export
     content: Export loadSubjectClassIdsForPhysical from school-operations.server.js
-    status: pending
+    status: completed
   - id: phase1-builder
     content: Create lib/school-server/school-physical-class-report.server.js with buildSchoolPhysicalClassReportPayload
-    status: pending
+    status: completed
   - id: phase1-unit
     content: Write unit tests for aggregation logic in scripts/tests/school-physical-class-report-unit.mjs
-    status: pending
+    status: completed
   - id: phase2-api
     content: Create pages/api/school/classes/physical-report.js API endpoint
-    status: pending
+    status: completed
   - id: phase2-api-tests
     content: "API regression tests: demo school, cross-school guard, bad params"
-    status: pending
+    status: completed
   - id: phase3-viewmodel
     content: Add parsePhysicalClassReportViewModel to school-report-view-model.js
-    status: pending
+    status: completed
   - id: phase3-labels
     content: Add new Hebrew label constants to school-ui.he.js
-    status: pending
+    status: completed
   - id: phase3-vm-tests
     content: Unit tests for parsePhysicalClassReportViewModel
-    status: pending
+    status: completed
   - id: phase4-ui
     content: "Update pages/school/classes/index.js: physical report button, handler, student drill-down"
-    status: pending
+    status: completed
   - id: phase4-e2e
     content: Playwright E2E tests in tests/e2e/school-physical-class-report.spec.ts
-    status: pending
+    status: completed
   - id: phase5-regression
     content: "Regression sweep: subject-class, teacher, parent, private teacher reports + Hebrew audit + build check"
-    status: pending
+    status: completed
   - id: phase5-docs
     content: Write docs/school-portal/FULL_PHYSICAL_CLASS_REPORT_PLAN.md
-    status: pending
+    status: completed
 isProject: false
 ---
 
@@ -196,12 +196,14 @@ Shape mirrors `parseClassReportViewModel` for compatibility with `ReportHubModal
 - `header.chips` = school name, grade label, N students, N subjects.
 - `summaryCards`: total students (`"תלמידים"`), total answers (`"תשובות"`), overall accuracy (`"דיוק"`), students with activity (`"פעילים"`), last activity date (`"פעילות אחרונה"`).
 - `insight`: generated from `cohortSummary` (Hebrew narrative, same pattern as existing).
-- `navigation` sections (6 total):
-  - `subjects` → `"פירוט לפי מקצוע"` with badge = number of subjects
-  - `activities` → `"פעילויות אחרונות"` with badge = `recentActivities.length`
-  - `students` → `"תלמידים בכיתה"` with badge = roster count
-  - `focus` → `"נושאים לחיזוק"` with badge = `weaknessTopics.length`
-  - `attention` → `"תלמידים שדורשים תשומת לב"` with badge = `attentionList.length`
+- `navigation` sections (5 total — one per content section):
+  1. `subjects` → `"פירוט לפי מקצוע"` with badge = number of subjects
+  2. `activities` → `"פעילויות אחרונות"` with badge = `recentActivities.length`
+  3. `students` → `"תלמידים בכיתה"` with badge = roster count
+  4. `focus` → `"נושאים לחיזוק"` with badge = `weaknessTopics.length`
+  5. `attention` → `"תלמידים שדורשים תשומת לב"` with badge = `attentionList.length`
+
+There are exactly **5** navigation sections. Every reference to "6 sections" elsewhere in this plan is incorrect and superseded by this definition.
 
 ### Section item shapes (action-first)
 
@@ -238,7 +240,11 @@ Every item that represents an entity carries action slots. No item is render-onl
 }
 ```
 
-No standalone activity-detail modal in first implementation — clicking an activity opens the related subject-class report, which is already implemented. No dead end.
+**Activity detail behavior — v1 explicit rule:**
+- In v1, clicking an activity row opens the **related subject-class report** (the existing `SchoolReportModal` for that subject `classId`).
+- There is **no standalone activity-detail modal** in this phase.
+- A dedicated activity-detail modal (showing per-student submission status, individual answers, etc.) is a **future enhancement** and is explicitly out of scope for this implementation.
+- The activity row must never be a dead end: the `"דוח מקצוע"` action is always present and always resolvable to a valid `classId`.
 
 **`sections.students.items`** — one row per physical class student:
 
@@ -343,6 +349,14 @@ Back/close behavior:
 - `"סגירה"` on subject-class report modal → closes layer 2; physical class report remains open.
 - `"סגירה"` on physical class report modal → closes entirely; returns to `/school/classes` subject-cards view.
 - `"כרטיס מורה"` action → opens `/school/teachers/[teacherId]` in a **new browser tab** (`window.open(url, '_blank')`). Physical class report modal remains open in original tab. This avoids any navigation-away issue.
+
+  **Teacher card behavior — v1 explicit rule:**
+  - v1 implementation: `window.open('/school/teachers/' + teacherId, '_blank')` called synchronously inside the click handler (not inside a Promise or `setTimeout`) to avoid browser pop-up blocking.
+  - On desktop browsers this opens a new tab reliably.
+  - On mobile browsers `window.open(..., '_blank')` may be suppressed by the browser if not triggered by a direct user gesture. If suppressed, the fallback is to navigate the current tab to `/school/teachers/[teacherId]` using the router (`router.push`). The physical class report state is lost in this case — this is an accepted v1 limitation.
+  - The implementation must detect the suppression case: if `window.open` returns `null`, fall back to `router.push`.
+  - A future enhancement may replace this with an in-app teacher summary drawer/modal that preserves report context.
+  - **Test requirement:** E2E must assert the teacher page link/navigation on both desktop viewport (new tab expected) and mobile viewport (fallback navigation accepted). The test must not fail on mobile due to the tab-opening difference — use a conditional assertion per viewport.
 - `"דוח תלמיד"` from inside subject-class report (layer 2) — uses the **existing** nested student report mechanism already in `ReportHubModal`. Returns to subject-class report main on `"חזרה"`.
 - `"דוח תלמיד"` from physical class report (layer 1) — uses the same nested student mechanism in layer 1. Returns to physical class report main on `"חזרה"`.
 
@@ -530,7 +544,7 @@ Strategy:
 - `sections.attention.items[0].actions` includes `"דוח תלמיד"`; if single subject flagged, also includes subject report action
 - No item in any section has zero actions (no dead-end rows)
 - Navigation has `activities` entry with `"פעילויות אחרונות"` label
-- Navigation has 5 entries total: subjects, activities, students, focus, attention
+- Navigation has **5** entries total: subjects, activities, students, focus, attention (not 6)
 
 ### API regression — against demo school
 
@@ -560,12 +574,15 @@ Strategy:
 8. Each row has `"דוח מקצוע"` button and `"כרטיס מורה"` button
 9. Click `"דוח מקצוע"` for מתמטיקה → layer-2 subject-class report opens on top
 10. Layer-2 report has `"סגירה"` button; click it → physical class report still open, returns to subject section
-11. Click `"כרטיס מורה"` → new browser tab opens to `/school/teachers/[teacherId]`
+11. **Teacher card — desktop viewport:** Click `"כרטיס מורה"` → assert `window.open` was called with `/school/teachers/[teacherId]` and `'_blank'` (Playwright intercept or `page.waitForEvent('popup')`)
+12. **Teacher card — mobile viewport (375px):** Click `"כרטיס מורה"` → assert either a new tab opened OR the page navigated to `/school/teachers/[teacherId]` (conditional assertion; test must not fail if pop-up is suppressed and fallback navigation occurs)
 
-**Activities section (Amendment 2):**
-12. Navigate to `"פעילויות אחרונות"` section — at least 1 activity row visible
-13. Activity row shows subject in Hebrew and teacher name
-14. Activity row has `"דוח מקצוע"` action; click it → subject-class report opens (no dead end)
+**Activities section (Amendment 2 + explicit v1 rule):**
+13. Navigate to `"פעילויות אחרונות"` section — at least 1 activity row visible
+14. Activity row shows activity title, subject label in Hebrew, and teacher name
+15. Activity row has `"דוח מקצוע"` action button — no other action present
+16. Click `"דוח מקצוע"` on activity row → related subject-class report opens (layer-2 modal); no standalone activity-detail modal appears
+17. Verify: there is no activity-detail modal element in the DOM
 
 **Student drill-down:**
 15. Navigate to `"תלמידים בכיתה"` section — student rows visible
@@ -649,7 +666,7 @@ Strategy:
 | Student report from physical context shows zero activity if `gradeLevel`/`physicalClassName` filtering misses a subject class | Test with demo seed; confirm `loadSchoolScopedClassroomActivityRollupForStudentReport` resolves all 6 subject class IDs from `name` match |
 | Hebrew label overlap: `"דוח כיתה"` vs `"דוח כיתה כללי"` may be visually close | Use distinctly styled primary button (e.g. full-width, different variant) for physical report |
 | Layer-2 subject-class modal Z-index conflicts with physical class modal | Use existing `ReportModalFrame` z-index layering; test explicitly with both modals open |
-| `"כרטיס מורה"` opens new tab — browser may block pop-up if not from direct user gesture | Ensure `window.open` is called inside the click handler synchronously (not inside a Promise chain) |
+| `"כרטיס מורה"` opens new tab — browser may block pop-up if not from direct user gesture | Detect `window.open` returning `null`; fall back to `router.push` (v1 accepted limitation). Tested explicitly on mobile viewport with conditional E2E assertion. |
 | `recentActivities` enrichment: `classroom_activities` rows may not all have matching `class_id` in `subjectBreakdown` (e.g., archived subject class) | Filter activities to only those whose `class_id` is in the resolved subject class IDs; skip unenrichable rows |
 | Attention list subject labels: student flagged for `no_activity_in_range` has no specific subject | Show `"כל המקצועות"` as subject label for cross-subject flags; do not show subject report action in that case |
 
@@ -667,5 +684,5 @@ Strategy:
 - No coordinator or future-role permission design
 - No performance optimization beyond basic batching
 - No mobile-specific layout changes (existing `ReportHubModal` is already responsive)
-- No standalone activity-detail modal (first implementation uses subject-class report as activity drill-down)
+- No standalone activity-detail modal (v1: activity rows open the related subject-class report; a dedicated activity-detail modal is a future enhancement)
 - No new teacher-report system (reuses existing `/school/teachers/[teacherId]` page)

@@ -12,7 +12,7 @@ import {
   SchoolSubjectClassCard,
 } from "../../../components/school-portal/SchoolDrillDown";
 import SchoolReportModal from "../../../components/school-portal/SchoolReportModal";
-import { parseClassReportViewModel, parseStudentReportViewModel } from "../../../lib/school-portal/school-report-view-model";
+import { parseClassReportViewModel, parsePhysicalClassReportViewModel, parseStudentReportViewModel } from "../../../lib/school-portal/school-report-view-model";
 import { SchoolEmptyState, SchoolSection } from "../../../components/school-portal/SchoolPortalUi";
 import {
   groupPhysicalClassesForGrade,
@@ -40,6 +40,9 @@ import {
   SCHOOL_LOADING_DATA,
   SCHOOL_REPORT_LOADING,
   SCHOOL_STUDENTS_IN_CLASS,
+  SCHOOL_PHYSICAL_CLASS_LOADING,
+  SCHOOL_PHYSICAL_CLASS_REPORT_BUTTON,
+  SCHOOL_PHYSICAL_CLASS_REPORT_TITLE,
   SCHOOL_VIEW_CLASS_REPORT,
 } from "../../../lib/school-portal/school-ui.he";
 
@@ -57,6 +60,23 @@ export default function SchoolClassesPage() {
   const [nestedStudentVm, setNestedStudentVm] = useState(null);
   const [studentReportLoading, setStudentReportLoading] = useState(false);
   const reportClassRef = useRef(null);
+
+  const [physicalReportOpen, setPhysicalReportOpen] = useState(false);
+  const [physicalReportLoading, setPhysicalReportLoading] = useState(false);
+  const [physicalReportError, setPhysicalReportError] = useState("");
+  const [physicalReportVm, setPhysicalReportVm] = useState(null);
+  const [physicalReportContext, setPhysicalReportContext] = useState(null);
+  const [physicalNestedStudentVm, setPhysicalNestedStudentVm] = useState(null);
+  const [physicalStudentReportLoading, setPhysicalStudentReportLoading] = useState(false);
+
+  const [subjectFromPhysicalOpen, setSubjectFromPhysicalOpen] = useState(false);
+  const [subjectFromPhysicalLoading, setSubjectFromPhysicalLoading] = useState(false);
+  const [subjectFromPhysicalError, setSubjectFromPhysicalError] = useState("");
+  const [subjectFromPhysicalVm, setSubjectFromPhysicalVm] = useState(null);
+  const [subjectFromPhysicalClass, setSubjectFromPhysicalClass] = useState(null);
+  const [subjectFromPhysicalNestedStudentVm, setSubjectFromPhysicalNestedStudentVm] = useState(null);
+  const [subjectFromPhysicalStudentLoading, setSubjectFromPhysicalStudentLoading] = useState(false);
+  const subjectFromPhysicalClassRef = useRef(null);
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -84,6 +104,17 @@ export default function SchoolClassesPage() {
     setReportError("");
     setReportViewModel(null);
     setNestedStudentVm(null);
+    setPhysicalReportOpen(false);
+    setPhysicalReportError("");
+    setPhysicalReportVm(null);
+    setPhysicalReportContext(null);
+    setPhysicalNestedStudentVm(null);
+    setSubjectFromPhysicalOpen(false);
+    setSubjectFromPhysicalError("");
+    setSubjectFromPhysicalVm(null);
+    setSubjectFromPhysicalClass(null);
+    setSubjectFromPhysicalNestedStudentVm(null);
+    subjectFromPhysicalClassRef.current = null;
   }, [gradeLevel, physicalKey]);
 
   const physicalGroups = useMemo(
@@ -117,6 +148,191 @@ export default function SchoolClassesPage() {
     setReportError("");
     setReportViewModel(null);
     setNestedStudentVm(null);
+  };
+
+  const closePhysicalReport = () => {
+    setPhysicalReportOpen(false);
+    setPhysicalReportError("");
+    setPhysicalReportVm(null);
+    setPhysicalReportContext(null);
+    setPhysicalNestedStudentVm(null);
+  };
+
+  const closeSubjectFromPhysical = () => {
+    subjectFromPhysicalClassRef.current = null;
+    setSubjectFromPhysicalOpen(false);
+    setSubjectFromPhysicalError("");
+    setSubjectFromPhysicalVm(null);
+    setSubjectFromPhysicalClass(null);
+    setSubjectFromPhysicalNestedStudentVm(null);
+  };
+
+  const openTeacherCardFromPhysical = (teacherId) => {
+    if (!teacherId) return;
+    const url = `/school/teachers/${teacherId}`;
+    const opened = window.open(url, "_blank");
+    if (!opened) {
+      void router.push(url);
+    }
+  };
+
+  const handlePhysicalRowAction = (action, _item) => {
+    if (action.id === "subject_report" || action.id === "open_subject_report") {
+      const cls =
+        subjectClasses.find((c) => c.classId === action.classId) ||
+        (action.classId
+          ? {
+              classId: action.classId,
+              name: physicalReportContext?.name,
+              gradeLevel: physicalReportContext?.gradeLevel,
+            }
+          : null);
+      if (cls) void openSubjectReportFromPhysical(cls);
+      return;
+    }
+    if (action.id === "teacher_card" && action.teacherId) {
+      openTeacherCardFromPhysical(action.teacherId);
+    }
+  };
+
+  const openStudentReportFromPhysical = async (studentId, row) => {
+    if (!accessToken || !studentId || !physicalReportContext) return;
+    const params = new URLSearchParams({
+      windowDays: "30",
+      gradeLevel: String(physicalReportContext.gradeLevel),
+      physicalClassName: String(physicalReportContext.name),
+    });
+    const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
+
+    const applyBody = (body) => {
+      const displayName =
+        row?.name ||
+        body?.student?.full_name ||
+        physicalReportVm?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
+        "תלמיד/ה";
+      setPhysicalNestedStudentVm(
+        parseStudentReportViewModel(
+          body,
+          {
+            studentId,
+            displayName,
+            physicalClassName: physicalReportContext.name,
+            gradeLevel: physicalReportContext.gradeLevel,
+          },
+          { schoolName: me?.school?.name }
+        )
+      );
+    };
+
+    setPhysicalStudentReportLoading(true);
+    try {
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      if (result?.status === 200) applyBody(result.body);
+    } finally {
+      setPhysicalStudentReportLoading(false);
+    }
+  };
+
+  const openStudentReportFromSubjectPhysical = async (studentId, row) => {
+    if (!accessToken || !studentId) return;
+    const ctxClass = subjectFromPhysicalClassRef.current || subjectFromPhysicalClass;
+    const params = new URLSearchParams({ windowDays: "30" });
+    if (ctxClass?.classId) params.set("classId", String(ctxClass.classId));
+    const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
+
+    const applyBody = (body) => {
+      const displayName =
+        row?.name ||
+        body?.student?.full_name ||
+        subjectFromPhysicalVm?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
+        "תלמיד/ה";
+      setSubjectFromPhysicalNestedStudentVm(
+        parseStudentReportViewModel(
+          body,
+          {
+            studentId,
+            displayName,
+            physicalClassName: ctxClass?.name,
+            gradeLevel: ctxClass?.gradeLevel,
+          },
+          {
+            schoolName: me?.school?.name,
+            subjectFocus: ctxClass?.subjectFocus,
+          }
+        )
+      );
+    };
+
+    setSubjectFromPhysicalStudentLoading(true);
+    try {
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      if (result?.status === 200) applyBody(result.body);
+    } finally {
+      setSubjectFromPhysicalStudentLoading(false);
+    }
+  };
+
+  const openPhysicalClassReport = async (physicalGroup) => {
+    if (!accessToken || !physicalGroup) return;
+    setPhysicalReportContext({
+      name: physicalGroup.name,
+      gradeLevel,
+    });
+    setPhysicalReportOpen(true);
+    setPhysicalReportError("");
+    setPhysicalReportVm(null);
+    setPhysicalNestedStudentVm(null);
+    setPhysicalReportLoading(true);
+
+    const params = new URLSearchParams({
+      windowDays: "30",
+      gradeLevel: String(gradeLevel),
+      physicalClassName: physicalGroup.name,
+    });
+    const path = `/api/school/classes/physical-report?${params.toString()}`;
+
+    try {
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      if (result?.status !== 200) {
+        setPhysicalReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
+        return;
+      }
+      setPhysicalReportVm(
+        parsePhysicalClassReportViewModel(result.body, {
+          schoolName: me?.school?.name,
+          gradeLevel,
+          physicalClassName: physicalGroup.name,
+        })
+      );
+    } finally {
+      setPhysicalReportLoading(false);
+    }
+  };
+
+  const openSubjectReportFromPhysical = async (cls) => {
+    if (!accessToken || !cls?.classId) return;
+    subjectFromPhysicalClassRef.current = cls;
+    setSubjectFromPhysicalClass(cls);
+    setSubjectFromPhysicalOpen(true);
+    setSubjectFromPhysicalError("");
+    setSubjectFromPhysicalVm(null);
+    setSubjectFromPhysicalNestedStudentVm(null);
+    setSubjectFromPhysicalLoading(true);
+
+    const path = `/api/school/classes/${cls.classId}/report-data?windowDays=30`;
+
+    try {
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      if (result?.status !== 200) {
+        setSubjectFromPhysicalError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
+        return;
+      }
+      setSubjectFromPhysicalVm(
+        parseClassReportViewModel(result.body, { ...cls, classId: cls.classId }, result.body.schoolManagerExtras || {})
+      );
+    } finally {
+      setSubjectFromPhysicalLoading(false);
+    }
   };
 
   const openStudentReportFromClass = async (studentId, row) => {
@@ -282,6 +498,16 @@ export default function SchoolClassesPage() {
               <>
                 <SchoolBackButton label={SCHOOL_BACK_CLASSES} onClick={() => setPhysicalKey("")} />
                 <SchoolSection title={`${SCHOOL_CHOOSE_SUBJECT} · ${selectedPhysical.name}`}>
+                  <div className="mb-4">
+                    <button
+                      type="button"
+                      onClick={() => void openPhysicalClassReport(selectedPhysical)}
+                      className="w-full rounded-xl border border-amber-500/40 bg-amber-500/15 hover:bg-amber-500/25 px-4 py-3 text-right font-semibold text-amber-100 transition"
+                      data-testid="school-physical-class-report-button"
+                    >
+                      {SCHOOL_PHYSICAL_CLASS_REPORT_BUTTON}
+                    </button>
+                  </div>
                   <SchoolCardGrid columns={2}>
                     {subjectClasses.map((cls) => (
                       <SchoolSubjectClassCard
@@ -308,6 +534,35 @@ export default function SchoolClassesPage() {
               studentReportLoading={studentReportLoading}
               nestedStudentViewModel={nestedStudentVm}
               onCloseStudentReport={() => setNestedStudentVm(null)}
+            />
+
+            <SchoolReportModal
+              open={physicalReportOpen}
+              title={SCHOOL_PHYSICAL_CLASS_REPORT_TITLE}
+              onClose={closePhysicalReport}
+              loading={physicalReportLoading}
+              loadingLabel={SCHOOL_PHYSICAL_CLASS_LOADING}
+              error={physicalReportError}
+              viewModel={physicalReportVm}
+              onStudentReport={openStudentReportFromPhysical}
+              studentReportLoading={physicalStudentReportLoading}
+              nestedStudentViewModel={physicalNestedStudentVm}
+              onCloseStudentReport={() => setPhysicalNestedStudentVm(null)}
+              onRowAction={handlePhysicalRowAction}
+            />
+
+            <SchoolReportModal
+              open={subjectFromPhysicalOpen}
+              title={SCHOOL_CLASS_REPORT_TITLE}
+              onClose={closeSubjectFromPhysical}
+              loading={subjectFromPhysicalLoading}
+              loadingLabel={SCHOOL_REPORT_LOADING}
+              error={subjectFromPhysicalError}
+              viewModel={subjectFromPhysicalVm}
+              onStudentReport={openStudentReportFromSubjectPhysical}
+              studentReportLoading={subjectFromPhysicalStudentLoading}
+              nestedStudentViewModel={subjectFromPhysicalNestedStudentVm}
+              onCloseStudentReport={() => setSubjectFromPhysicalNestedStudentVm(null)}
             />
           </>
         )}

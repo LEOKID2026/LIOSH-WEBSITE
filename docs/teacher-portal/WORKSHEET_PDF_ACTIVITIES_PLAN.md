@@ -146,7 +146,7 @@ The following files will need **new additions only** (no behavior changes to exi
 | `pages/teacher/class/[classId]/activities/` | **No change** — worksheet gets its own `/worksheets/` sub-route |
 | `pages/student/activity/[activityId].js` | **No change** — worksheet student page is `/student/worksheet/[worksheetId].js` |
 | `pages/api/teacher/activities/` | **No change** — worksheet gets `/api/teacher/worksheet-activities/` |
-| `pages/api/school/activities/index.js` | **Possibly add** worksheet activities to the school-level listing query (read-only, additive) |
+| `pages/api/school/activities/index.js` | **No change.** Worksheet activities must NOT be added to this existing route. School manager worksheet visibility is served exclusively through the new dedicated routes: `/api/school/worksheet-activities` and `/api/school/worksheet-activities/[worksheetId]/report`. |
 | `teacher_access_audit` (migration 028) | **Extended** with worksheet audit actions in migration 029 |
 | `docs/teacher-portal/` | This plan document added |
 
