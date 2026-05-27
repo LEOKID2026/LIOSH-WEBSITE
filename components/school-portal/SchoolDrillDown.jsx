@@ -57,9 +57,18 @@ export function SchoolDrillBreadcrumb({ steps }) {
 }
 
 /**
- * @param {{ title: string, subtitle?: string|null, meta?: string|null, onClick?: () => void, href?: string, action?: import('react').ReactNode, selected?: boolean }} props
+ * @param {{ title: string, subtitle?: string|null, meta?: string|null, onClick?: () => void, href?: string, action?: import('react').ReactNode, selected?: boolean } & import('react').HTMLAttributes<HTMLElement>} props
  */
-export function SchoolManagementCard({ title, subtitle, meta, onClick, href, action, selected = false }) {
+export function SchoolManagementCard({
+  title,
+  subtitle,
+  meta,
+  onClick,
+  href,
+  action,
+  selected = false,
+  ...rest
+}) {
   const className = `${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right w-full min-w-0 transition-colors ${
     selected ? "border-amber-400/50 bg-amber-500/10" : "hover:border-amber-400/30 hover:bg-white/[0.03]"
   }`;
@@ -79,7 +88,7 @@ export function SchoolManagementCard({ title, subtitle, meta, onClick, href, act
 
   if (href) {
     return (
-      <Link href={href} className={`block ${className}`}>
+      <Link href={href} className={`block ${className}`} {...rest}>
         {inner}
       </Link>
     );
@@ -87,13 +96,17 @@ export function SchoolManagementCard({ title, subtitle, meta, onClick, href, act
 
   if (typeof onClick === "function") {
     return (
-      <button type="button" onClick={onClick} className={className}>
+      <button type="button" onClick={onClick} className={className} {...rest}>
         {inner}
       </button>
     );
   }
 
-  return <div className={className}>{inner}</div>;
+  return (
+    <div className={className} {...rest}>
+      {inner}
+    </div>
+  );
 }
 
 /**

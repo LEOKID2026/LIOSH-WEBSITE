@@ -159,6 +159,54 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     const teacherReady = page.getByTestId("school-teacher-page-ready");
     await expect(teacherReady.getByText("טוען…", { exact: true })).toHaveCount(0);
     await expect(teacherReady).not.toContainText(/guided_practice|school_admin|moledet_geography/u);
+
+    const classesHeading = teacherReady.getByRole("heading", { name: "כיתות של המורה" });
+    const permissionsHeading = teacherReady.getByRole("heading", { name: "הרשאות מקצועות" });
+    await expect(classesHeading).toBeVisible({ timeout: 15_000 });
+    await expect(permissionsHeading).toBeVisible({ timeout: 15_000 });
+    const classesBox = await classesHeading.boundingBox();
+    const permissionsBox = await permissionsHeading.boundingBox();
+    expect(classesBox && permissionsBox && classesBox.y < permissionsBox.y, "classes section above permissions").toBeTruthy();
+
+    const danClassesRes = await page.request.get(
+      `/api/school/classes?teacherId=${encodeURIComponent(danTeacher.teacherId)}&isArchived=false`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    expect(danClassesRes.status()).toBe(200);
+    const danSubjectClasses = (await danClassesRes.json())?.data?.classes || [];
+    expect(danSubjectClasses.length).toBe(12);
+
+    const physicalCards = teacherReady.locator('[data-testid^="school-teacher-physical-class-card-"]');
+    await expect(physicalCards).toHaveCount(6, { timeout: 15_000 });
+    await expect(physicalCards.first()).toContainText(/מקצועות:\s*מתמטיקה,\s*גיאומטריה/u);
+    await expect(physicalCards.first()).toContainText(/\d+\s+תלמידים/u);
+    await expect(teacherReady.getByText(/^math$/i)).toHaveCount(0);
+    await expect(teacherReady.getByText(/^geometry$/i)).toHaveCount(0);
+
+    await physicalCards.first().click();
+    const picker = page.getByTestId("school-teacher-subject-picker-modal");
+    await expect(picker).toBeVisible({ timeout: 10_000 });
+    await expect(picker.getByText("מתמטיקה")).toBeVisible();
+    await expect(picker.getByText("גיאומטריה")).toBeVisible();
+    await picker.getByRole("button", { name: "דוח כיתה" }).first().click();
+    await expect(page.getByTestId("report-hub-main")).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByTestId("report-hub-summary-ready")).toBeVisible({ timeout: 60_000 });
+    await page.getByTestId("report-hub-main").getByTestId("report-modal-close").click();
+    await expect(page.getByTestId("report-hub-main")).toHaveCount(0);
+
+    await physicalCards.first().click();
+    await expect(picker).toBeVisible({ timeout: 10_000 });
+    await picker.getByRole("button", { name: "תלמידים בכיתה" }).first().click();
+    const studentsModal = page.getByTestId("school-teacher-class-students-modal");
+    await expect(studentsModal).toBeVisible({ timeout: 15_000 });
+    await expect(studentsModal.getByRole("button", { name: "דוח תלמיד" }).first()).toBeVisible({
+      timeout: 15_000,
+    });
+    await studentsModal.getByRole("button", { name: "סגירה", exact: false }).click();
+    await expect(studentsModal).toHaveCount(0);
+    await picker.getByRole("button", { name: "✕" }).click();
+    await expect(picker).toHaveCount(0);
+
     await expect(teacherReady.getByText(/מקצועות מורשים/u)).toBeVisible({ timeout: 15_000 });
     await expect(teacherReady.getByTestId("school-subject-select-he")).toBeVisible({ timeout: 10_000 });
     const optionTexts = await teacherReady.getByTestId("school-subject-select-he").locator("option").allTextContents();

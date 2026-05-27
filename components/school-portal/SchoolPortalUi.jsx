@@ -57,9 +57,9 @@ export function SchoolQuickActionCard({ href, title, description, icon }) {
   );
 }
 
-export function SchoolSection({ title, description, children, action }) {
+export function SchoolSection({ title, description, children, action, ...rest }) {
   return (
-    <section className={`${SCHOOL_CARD} overflow-hidden`}>
+    <section className={`${SCHOOL_CARD} overflow-hidden`} {...rest}>
       <div className="border-b border-white/10 px-4 sm:px-5 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0 text-right">
           <h2 className={SCHOOL_SECTION_TITLE}>{title}</h2>

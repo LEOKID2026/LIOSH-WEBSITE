@@ -1,34 +1,59 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
+import {
+  SchoolCardGrid,
+  SchoolManagementCard,
+} from "../../../components/school-portal/SchoolDrillDown";
+import SchoolTeacherClassStudentsModal from "../../../components/school-portal/SchoolTeacherClassStudentsModal";
+import SchoolTeacherPhysicalClassPickerModal from "../../../components/school-portal/SchoolTeacherPhysicalClassPickerModal";
+import SchoolReportModal from "../../../components/school-portal/SchoolReportModal";
 import {
   SchoolPageIntro,
   SchoolPrimaryButton,
   SchoolSection,
   SchoolStatCard,
   SchoolSubjectBadges,
+  SchoolEmptyState,
   SCHOOL_CARD,
   SCHOOL_CARD_INNER,
 } from "../../../components/school-portal/SchoolPortalUi";
+import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import { fetchSchoolJsonSWR, readSchoolCache, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
+import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
+import {
+  groupPhysicalClassesForTeacher,
+  physicalClassGroupKey,
+  physicalClassStudentCount,
+  physicalClassSubjectLabelsHe,
+  sortSubjectClasses,
+} from "../../../lib/school-portal/school-drilldown";
+import { parseClassReportViewModel, parseStudentReportViewModel } from "../../../lib/school-portal/school-report-view-model";
 import SchoolSubjectSelect from "../../../components/school-portal/SchoolSubjectSelect";
 import {
+  apiErrorMessageHe,
   schoolAuthFetch,
   schoolSubjectLabelHe,
   SCHOOL_BACK_TEACHERS,
+  SCHOOL_CLASS_REPORT_TITLE,
   SCHOOL_COL_CLASSES,
   SCHOOL_COL_STUDENTS,
   SCHOOL_LOADING,
   SCHOOL_LOADING_DATA,
   SCHOOL_MANAGER_ALL_SUBJECTS,
+  SCHOOL_REPORT_LOADING,
   SCHOOL_ROLE_MANAGER,
   SCHOOL_ROLE_TEACHER,
+  SCHOOL_STUDENTS_IN_CLASS,
   SCHOOL_SUBJECT_ADD,
   SCHOOL_SUBJECT_REMOVE,
   SCHOOL_SUBJECTS_TITLE,
+  SCHOOL_TEACHER_CLASSES_TITLE,
+  SCHOOL_TEACHER_CLASS_SUBJECTS_PREFIX,
+  SCHOOL_TEACHER_EMPTY_CLASSES,
 } from "../../../lib/school-portal/school-ui.he";
 
 export default function SchoolTeacherDetailPage() {
@@ -56,10 +81,59 @@ export default function SchoolTeacherDetailPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState("");
 
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerGroup, setPickerGroup] = useState(null);
+
+  const [studentsOpen, setStudentsOpen] = useState(false);
+  const [studentsCtx, setStudentsCtx] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [studentsLoading, setStudentsLoading] = useState(false);
+  const [studentsError, setStudentsError] = useState("");
+
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportClass, setReportClass] = useState(null);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportError, setReportError] = useState("");
+  const [reportViewModel, setReportViewModel] = useState(null);
+  const [nestedStudentVm, setNestedStudentVm] = useState(null);
+  const [studentReportLoading, setStudentReportLoading] = useState(false);
+  const reportClassRef = useRef(null);
+
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
   }, [state, router]);
+
+  const parseClasses = useMemo(
+    () => (body) => body?.data?.classes?.filter((c) => !c.isArchived) || [],
+    []
+  );
+
+  const classesPath = useMemo(
+    () =>
+      teacherIdResolved
+        ? `/api/school/classes?teacherId=${encodeURIComponent(teacherIdResolved)}&isArchived=false`
+        : "",
+    [teacherIdResolved]
+  );
+
+  const {
+    data: teacherClasses,
+    loading: classesLoading,
+    error: classesError,
+  } = useSchoolDataFetch(
+    accessToken,
+    schoolId,
+    classesPath,
+    parseClasses,
+    state === "ready" && Boolean(classesPath),
+    { cacheKind: "list" }
+  );
+
+  const physicalGroups = useMemo(
+    () => (teacherClasses ? groupPhysicalClassesForTeacher(teacherClasses) : []),
+    [teacherClasses]
+  );
 
   const load = useCallback(async ({ force = false } = {}) => {
     if (!accessToken || typeof teacherIdResolved !== "string") return;
@@ -121,6 +195,135 @@ export default function SchoolTeacherDetailPage() {
     void load();
   }, [state, accessToken, teacherIdResolved, load]);
 
+  const closeReport = () => {
+    reportClassRef.current = null;
+    setReportOpen(false);
+    setReportClass(null);
+    setReportError("");
+    setReportViewModel(null);
+    setNestedStudentVm(null);
+  };
+
+  const openClassReport = async (cls) => {
+    if (!accessToken || !cls?.classId) return;
+    reportClassRef.current = cls;
+    setReportClass(cls);
+    setReportOpen(true);
+    setReportError("");
+    setReportViewModel(null);
+    setReportLoading(true);
+    setPickerOpen(false);
+
+    const path = `/api/school/classes/${cls.classId}/report-data?windowDays=30`;
+    try {
+      const result = await fetchSchoolReportCached({
+        accessToken,
+        schoolId,
+        path,
+      });
+      if (result?.status !== 200) {
+        setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
+        return;
+      }
+      setReportViewModel(
+        parseClassReportViewModel(
+          result.body,
+          { ...cls, classId: cls.classId },
+          result.body?.schoolManagerExtras || {}
+        )
+      );
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  const openStudentReport = async (studentId, row, ctxClass) => {
+    if (!accessToken || !studentId) return;
+    const ctx = ctxClass || reportClassRef.current || reportClass;
+    const params = new URLSearchParams({ windowDays: "30" });
+    if (ctx?.classId) params.set("classId", String(ctx.classId));
+    const ctxGrade = row?.gradeLevel || ctx?.gradeLevel;
+    const ctxPhysical = row?.physicalClassName || ctx?.name;
+    if (ctxGrade) params.set("gradeLevel", String(ctxGrade));
+    if (ctxPhysical) params.set("physicalClassName", String(ctxPhysical));
+    const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
+
+    setStudentReportLoading(true);
+    try {
+      const result = await fetchSchoolReportCached({
+        accessToken,
+        schoolId,
+        path,
+      });
+      if (result?.status !== 200) return;
+      const body = result.body;
+      const displayName =
+        row?.displayName ||
+        body?.student?.full_name ||
+        reportViewModel?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
+        "תלמיד/ה";
+      setNestedStudentVm(
+        parseStudentReportViewModel(
+          body,
+          {
+            studentId,
+            displayName,
+            physicalClassName: ctxPhysical,
+            gradeLevel: ctxGrade,
+          },
+          {
+            schoolName: me?.school?.name,
+            subjectFocus: ctx?.subjectFocus,
+          }
+        )
+      );
+    } finally {
+      setStudentReportLoading(false);
+    }
+  };
+
+  const openStudentReportFromClass = async (studentId, row) => {
+    await openStudentReport(studentId, row, reportClassRef.current || reportClass);
+  };
+
+  const openPhysicalClass = (group) => {
+    const sorted = sortSubjectClasses(group.subjectClasses);
+    if (sorted.length === 1) {
+      void openClassReport(sorted[0]);
+      return;
+    }
+    setPickerGroup({ ...group, subjectClasses: sorted });
+    setPickerOpen(true);
+  };
+
+  const openClassStudents = async (cls) => {
+    if (!accessToken || !cls) return;
+    setStudentsCtx(cls);
+    setStudentsOpen(true);
+    setStudents([]);
+    setStudentsError("");
+    setStudentsLoading(true);
+    setPickerOpen(false);
+
+    const q = new URLSearchParams({
+      gradeLevel: String(cls.gradeLevel || ""),
+      physicalClassName: String(cls.name || ""),
+    });
+    try {
+      const res = await schoolAuthFetch(accessToken, `/api/school/students?${q.toString()}`);
+      const body = await res.json().catch(() => ({}));
+      if (res.status !== 200) {
+        setStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת תלמידים"));
+        return;
+      }
+      setStudents(body?.data?.students || []);
+    } catch {
+      setStudentsError("שגיאה בטעינת תלמידים");
+    } finally {
+      setStudentsLoading(false);
+    }
+  };
+
   const grantSubject = async (e) => {
     e.preventDefault();
     if (!accessToken || typeof teacherIdResolved !== "string") return;
@@ -156,6 +359,10 @@ export default function SchoolTeacherDetailPage() {
     detailLoading &&
     !detail &&
     !detailError;
+
+  const studentsModalTitle = studentsCtx
+    ? `${studentsCtx.name} · ${schoolSubjectLabelHe(studentsCtx.subjectFocus)}`
+    : "";
 
   return (
     <Layout>
@@ -210,6 +417,41 @@ export default function SchoolTeacherDetailPage() {
               />
             </div>
 
+            {!isManager ? (
+              <SchoolSection title={SCHOOL_TEACHER_CLASSES_TITLE} data-testid="school-teacher-physical-classes">
+                {classesLoading ? (
+                  <p className="text-xs text-white/45 mb-3 text-right">{SCHOOL_LOADING_DATA}</p>
+                ) : null}
+                {classesError ? (
+                  <p className="text-red-300 text-sm text-right" role="alert">
+                    {classesError}
+                  </p>
+                ) : null}
+                {!classesLoading && !classesError && physicalGroups.length ? (
+                  <SchoolCardGrid columns={2}>
+                    {physicalGroups.map((group) => {
+                      const key = physicalClassGroupKey(group.subjectClasses[0]);
+                      const studentCount = physicalClassStudentCount(group.subjectClasses);
+                      const subjectLabels = physicalClassSubjectLabelsHe(group.subjectClasses);
+                      return (
+                        <SchoolManagementCard
+                          key={key}
+                          title={group.name}
+                          subtitle={`${studentCount} תלמידים`}
+                          meta={`${SCHOOL_TEACHER_CLASS_SUBJECTS_PREFIX}: ${subjectLabels.join(", ")}`}
+                          onClick={() => openPhysicalClass(group)}
+                          data-testid={`school-teacher-physical-class-card-${key}`}
+                        />
+                      );
+                    })}
+                  </SchoolCardGrid>
+                ) : null}
+                {!classesLoading && !classesError && !physicalGroups.length ? (
+                  <SchoolEmptyState title={SCHOOL_TEACHER_EMPTY_CLASSES} />
+                ) : null}
+              </SchoolSection>
+            ) : null}
+
             {isManager ? (
               <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
                 <p className="text-sm text-white/70">{SCHOOL_MANAGER_ALL_SUBJECTS}</p>
@@ -251,6 +493,50 @@ export default function SchoolTeacherDetailPage() {
                 </form>
               </SchoolSection>
             )}
+
+            <SchoolTeacherPhysicalClassPickerModal
+              open={pickerOpen}
+              physicalClassName={pickerGroup?.name || ""}
+              subjectClasses={pickerGroup?.subjectClasses || []}
+              onClose={() => {
+                setPickerOpen(false);
+                setPickerGroup(null);
+              }}
+              onClassReport={(cls) => void openClassReport(cls)}
+              onClassStudents={(cls) => void openClassStudents(cls)}
+            />
+
+            <SchoolTeacherClassStudentsModal
+              open={studentsOpen}
+              title={studentsModalTitle}
+              loading={studentsLoading}
+              error={studentsError}
+              students={students}
+              gradeLevel={studentsCtx?.gradeLevel || ""}
+              onClose={() => {
+                setStudentsOpen(false);
+                setStudentsCtx(null);
+                setStudents([]);
+                setStudentsError("");
+              }}
+              onStudentReport={(student) =>
+                void openStudentReport(student.studentId, student, studentsCtx)
+              }
+            />
+
+            <SchoolReportModal
+              open={reportOpen}
+              title={SCHOOL_CLASS_REPORT_TITLE}
+              onClose={closeReport}
+              loading={reportLoading}
+              loadingLabel={SCHOOL_REPORT_LOADING}
+              error={reportError}
+              viewModel={reportViewModel}
+              onStudentReport={openStudentReportFromClass}
+              studentReportLoading={studentReportLoading}
+              nestedStudentViewModel={nestedStudentVm}
+              onCloseStudentReport={() => setNestedStudentVm(null)}
+            />
           </div>
         ) : null}
       </SchoolPortalShell>
