@@ -2113,7 +2113,7 @@ Every new Hebrew UI label, button, status word, heading, validation message, emp
 
 Format: `KEY | PLACEHOLDER TEXT | OWNER APPROVED TEXT`
 
-Owner fills in the "Owner Approved Text" column. If blank, the placeholder is not approved and implementation must wait.
+Owner may provide corrections in the "Owner Approved Text" column before the start command.
 
 ---
 
