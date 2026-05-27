@@ -8,6 +8,7 @@ import {
   SC_TEACHER_INBOX_EMPTY,
   SC_TEACHER_INBOX_TITLE,
 } from "../../lib/school-portal/school-communication.he";
+import { getSchoolMessageId } from "../../lib/school-portal/school-messaging-ui";
 
 async function teacherFetch(path, accessToken, init = {}) {
   return fetch(path, {
@@ -66,23 +67,27 @@ export default function TeacherSchoolMessagesPage() {
     };
   }, [load, router]);
 
-  const openMessage = async (id) => {
-    if (!accessToken) return;
+  const openMessage = async (message) => {
+    const id = getSchoolMessageId(message);
+    if (!accessToken || !id) return;
     const res = await teacherFetch(`/api/teacher/school-messages/${encodeURIComponent(id)}`, accessToken);
     const body = await res.json().catch(() => ({}));
     if (res.ok) setSelected(body.data);
   };
 
-  const markRead = async (id, requiresConfirmation) => {
-    if (!accessToken) return;
+  const markRead = async (message, requiresConfirmation) => {
+    const id = getSchoolMessageId(message);
+    if (!accessToken || !id) return;
     await teacherFetch(`/api/teacher/school-messages/${encodeURIComponent(id)}/read`, accessToken, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ confirmed: Boolean(requiresConfirmation) }),
     });
     await load(accessToken);
-    void openMessage(id);
+    void openMessage({ messageId: id });
   };
+
+  const selectedId = getSchoolMessageId(selected);
 
   return (
     <Layout>
@@ -96,43 +101,47 @@ export default function TeacherSchoolMessagesPage() {
           <p className="text-white/50 text-sm">טוען…</p>
         ) : messages.length ? (
           <ul className="space-y-2">
-            {messages.map((m) => (
-              <li key={m.id}>
-                <button
-                  type="button"
-                  className="w-full text-right rounded-lg border border-white/15 bg-white/5 p-3 hover:bg-white/10"
-                  onClick={() => void openMessage(m.id)}
-                >
-                  <p className="font-semibold">{m.subject || "הודעה מבית הספר"}</p>
-                  <p className="text-xs text-white/50">
-                    {m.sentAt ? new Date(m.sentAt).toLocaleString("he-IL") : ""}
-                    {!m.readAt ? " · חדש" : ""}
-                  </p>
-                </button>
-              </li>
-            ))}
+            {messages.map((m) => {
+              const messageId = getSchoolMessageId(m);
+              return (
+                <li key={messageId || m.subject}>
+                  <button
+                    type="button"
+                    className="w-full text-right rounded-lg border border-white/15 bg-white/5 p-3 hover:bg-white/10"
+                    disabled={!messageId}
+                    onClick={() => void openMessage(m)}
+                  >
+                    <p className="font-semibold">{m.subject || "הודעה מבית הספר"}</p>
+                    <p className="text-xs text-white/50">
+                      {m.sentAt ? new Date(m.sentAt).toLocaleString("he-IL") : ""}
+                      {!m.readAt && !m.isRead ? " · חדש" : ""}
+                    </p>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <p className="text-white/50 text-sm">{SC_TEACHER_INBOX_EMPTY}</p>
         )}
 
-        {selected?.message ? (
+        {selected && selectedId ? (
           <div className="mt-6 rounded-xl border border-amber-500/30 bg-black/40 p-4 text-right">
-            <h2 className="font-bold mb-2">{selected.message.subject || "הודעה"}</h2>
-            <p className="text-sm whitespace-pre-wrap mb-4">{selected.message.body}</p>
-            {!selected.readAt && selected.message.messageType === "requires_confirmation" ? (
+            <h2 className="font-bold mb-2">{selected.subject || "הודעה"}</h2>
+            <p className="text-sm whitespace-pre-wrap mb-4">{selected.body}</p>
+            {!selected.readAt && selected.messageType === "requires_confirmation" ? (
               <button
                 type="button"
                 className="rounded-lg bg-amber-500 text-black px-4 py-2 text-sm font-semibold"
-                onClick={() => void markRead(selected.message.id, true)}
+                onClick={() => void markRead(selected, true)}
               >
                 {SC_BTN_MARK_RECEIVED}
               </button>
-            ) : !selected.readAt ? (
+            ) : !selected.readAt && !selected.isRead ? (
               <button
                 type="button"
                 className="text-sm text-amber-300 underline"
-                onClick={() => void markRead(selected.message.id, false)}
+                onClick={() => void markRead(selected, false)}
               >
                 סמן כנקרא
               </button>

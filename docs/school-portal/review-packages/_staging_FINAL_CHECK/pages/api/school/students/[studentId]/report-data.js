@@ -1,8 +1,4 @@
 import { safeApiLog } from "../../../../../lib/security/safe-log.js";
-import {
-  loadSchoolScopedClassroomActivityRollupForStudentReport,
-  mergeClassroomActivityRollupIntoReportPayload,
-} from "../../../../../lib/teacher-server/classroom-activity-class-report.server.js";
 import { buildTeacherStudentReportPayload } from "../../../../../lib/teacher-server/teacher-report.server.js";
 import {
   resolveSchoolReportTeacherForStudent,
@@ -78,46 +74,11 @@ export default async function handler(req, res) {
         fromDate: range.fromDate,
         toDate: range.toDate,
       },
-      { skipAudit: true, classId }
+      { skipAudit: true, classId, gradeLevel, physicalClassName }
     );
 
     if (!report.ok) {
       return sendSchoolApiError(res, report.status, report.code, report.code);
-    }
-
-    if (!classId) {
-      const schoolRollup = await loadSchoolScopedClassroomActivityRollupForStudentReport({
-        serviceRole: ctx.serviceRole,
-        schoolId: ctx.schoolId,
-        studentId: studentParsed.studentId,
-        fromDate: range.fromDate,
-        toDate: range.toDate,
-        gradeLevel,
-        physicalClassName,
-      });
-      if (!schoolRollup.ok) {
-        return sendSchoolApiError(res, schoolRollup.status, schoolRollup.code, schoolRollup.code);
-      }
-      if (schoolRollup.rollup?.answers) {
-        mergeClassroomActivityRollupIntoReportPayload(report.payload, schoolRollup.rollup);
-      }
-      if (process.env.SCHOOL_STUDENT_REPORT_DEBUG === "1") {
-        report.payload._schoolReportDebug = {
-          studentId: studentParsed.studentId,
-          schoolId: ctx.schoolId,
-          classId: null,
-          gradeLevel,
-          physicalClassName,
-          rollupClassIds: schoolRollup.classIds || [],
-          classroomActivityCount: schoolRollup.activityCount || 0,
-          classroomAnswers: Number(schoolRollup.rollup?.answers || 0),
-          summary: {
-            totalAnswers: report.payload.summary?.totalAnswers,
-            totalSessions: report.payload.summary?.totalSessions,
-            accuracy: report.payload.summary?.accuracy,
-          },
-        };
-      }
     }
 
     await writeSchoolStudentReportViewedAudit(

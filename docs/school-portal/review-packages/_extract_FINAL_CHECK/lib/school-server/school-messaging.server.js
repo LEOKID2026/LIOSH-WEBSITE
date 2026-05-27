@@ -694,6 +694,7 @@ async function insertMessageRecipients(serviceRole, messageId, recipients) {
 
 function mapMessageSummary(row, counts = {}) {
   return {
+    id: row.id,
     messageId: row.id,
     schoolId: row.school_id,
     authorId: row.author_id,
@@ -1117,6 +1118,7 @@ export async function listSchoolMessageUnreadRecipients(serviceRole, schoolId, m
 
 function mapInboxMessage(row, message, isRead) {
   return {
+    id: message.id,
     messageId: message.id,
     subject: message.subject,
     body: message.body,

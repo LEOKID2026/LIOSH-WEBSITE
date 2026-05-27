@@ -28,12 +28,15 @@ $packageFiles = @(
   "supabase\migrations\032_school_messaging.sql",
   "supabase\migrations\034_school_account_audit_actions.sql",
   "lib\school-portal\school-communication.he.js",
+  "lib\school-portal\school-messaging-ui.js",
   "lib\guardian-server\guardian-login.server.js",
   "lib\guardian-server\guardian-session.server.js",
   "lib\parent-client\parent-teacher-code-access.js",
   "components\parent\ParentMustChangePinGate.jsx",
   "components\school-portal\SchoolCredentialShownOnceBox.jsx",
   "components\school-portal\SchoolStudentAccessPanel.jsx",
+  "components\school-portal\SchoolReportModal.jsx",
+  "lib\school-portal\school-report-view-model.js",
   "components\school-portal\SchoolStudentParentAccessRow.jsx",
   "components\school-portal\SchoolPortalShell.jsx",
   "components\school-portal\SchoolReportModal.jsx",
@@ -50,7 +53,8 @@ $packageFiles = @(
   "docs\school-portal\SCHOOL_PORTAL_PHASE4_PLAN.md",
   "docs\school-portal\SCHOOL_PORTAL_SQL_REVIEW_PACKAGE.md",
   "docs\school-portal\BLOCKER_FIXES_CHANGELOG.md",
-  "scripts\school-portal\test-school-messaging.mjs"
+  "scripts\school-portal\test-school-messaging.mjs",
+  "scripts\school-portal\test-school-account-management.mjs"
 )
 
 function Copy-RepoFile([string]$rel) {

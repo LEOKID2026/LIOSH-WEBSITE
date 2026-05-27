@@ -90,9 +90,6 @@ function mapParentAccessRow(row, lastLogin) {
 export async function listSchoolStudentAccounts(serviceRole, schoolId, studentId) {
   const visible = await verifyStudentVisibleToSchool(serviceRole, schoolId, studentId);
   if (!visible.ok) return visible;
-  if (!visible.visible) {
-    return { ok: false, status: 404, code: "student_not_found" };
-  }
 
   const { data: studentCodes, error: scErr } = await serviceRole
     .from("student_access_codes")
@@ -147,9 +144,6 @@ export async function listSchoolStudentAccounts(serviceRole, schoolId, studentId
 async function assertSchoolStudent(serviceRole, schoolId, studentId) {
   const visible = await verifyStudentVisibleToSchool(serviceRole, schoolId, studentId);
   if (!visible.ok) return visible;
-  if (!visible.visible) {
-    return { ok: false, status: 404, code: "student_not_found" };
-  }
   return { ok: true };
 }
 

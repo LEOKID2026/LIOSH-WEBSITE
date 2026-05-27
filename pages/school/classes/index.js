@@ -552,6 +552,7 @@ export default function SchoolClassesPage() {
               studentReportLoading={studentReportLoading}
               nestedStudentViewModel={nestedStudentVm}
               onCloseStudentReport={() => setNestedStudentVm(null)}
+              accessToken={accessToken}
             />
 
             <SchoolReportModal
@@ -567,6 +568,7 @@ export default function SchoolClassesPage() {
               nestedStudentViewModel={physicalNestedStudentVm}
               onCloseStudentReport={() => setPhysicalNestedStudentVm(null)}
               onRowAction={handlePhysicalRowAction}
+              accessToken={accessToken}
             />
 
             <SchoolReportModal
@@ -582,6 +584,7 @@ export default function SchoolClassesPage() {
               nestedStudentViewModel={subjectFromPhysicalNestedStudentVm}
               onCloseStudentReport={() => setSubjectFromPhysicalNestedStudentVm(null)}
               stackZIndexBase={REPORT_STACK_SUBJECT_OVER_PHYSICAL}
+              accessToken={accessToken}
             />
 
             <SchoolTeacherDetailModal

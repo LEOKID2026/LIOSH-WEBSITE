@@ -33,9 +33,19 @@ import {
   SC_PAGE_MESSAGES_TITLE,
   SC_RECEIPTS_PANEL_TITLE,
   SC_RECEIPTS_READ_COUNT,
+  SC_RECEIPTS_STATUS_READ,
+  SC_RECEIPTS_STATUS_UNREAD,
   SC_RECEIPTS_TAB_PARENTS,
   SC_RECEIPTS_TAB_TEACHERS,
 } from "../../lib/school-portal/school-communication.he";
+import {
+  formatSchoolMessageAudienceLabel,
+  formatSchoolMessageListReadCount,
+  getSchoolMessageId,
+  schoolMessageHasParentRecipients,
+  schoolMessageHasTeacherRecipients,
+  schoolMessageReadCountForTab,
+} from "../../lib/school-portal/school-messaging-ui";
 import { apiErrorMessageHe, schoolAuthFetch } from "../../lib/school-portal/school-ui.he";
 
 const AUDIENCE_OPTIONS = [
@@ -100,22 +110,32 @@ export default function SchoolMessagesPage() {
     if (state === "ready") void loadMessages();
   }, [state, loadMessages]);
 
-  const loadDetail = async (messageId) => {
-    if (!accessToken) return;
+  const loadDetail = async (rawMessageId, preferredReceiptTab) => {
+    const messageId = getSchoolMessageId({ messageId: rawMessageId, id: rawMessageId });
+    if (!accessToken || !messageId) return;
     setDetailId(messageId);
     const res = await schoolAuthFetch(accessToken, `/api/school/messages/${messageId}`);
     const json = await res.json().catch(() => ({}));
-    if (res.ok) setDetail(json.data);
+    let tab = preferredReceiptTab || receiptTab;
+    if (res.ok) {
+      const data = json.data;
+      setDetail(data);
+      if (!preferredReceiptTab) {
+        if (schoolMessageHasParentRecipients(data)) tab = "parent";
+        else if (schoolMessageHasTeacherRecipients(data)) tab = "teacher";
+        setReceiptTab(tab);
+      }
+    }
     const recRes = await schoolAuthFetch(
       accessToken,
-      `/api/school/messages/${messageId}/recipients?recipientType=${receiptTab}`
+      `/api/school/messages/${messageId}/recipients?recipientType=${tab}`
     );
     const recJson = await recRes.json().catch(() => ({}));
     if (recRes.ok) setRecipients(recJson.data?.recipients || []);
   };
 
   useEffect(() => {
-    if (detailId) void loadDetail(detailId);
+    if (detailId) void loadDetail(detailId, receiptTab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailId, receiptTab]);
 
@@ -213,21 +233,25 @@ export default function SchoolMessagesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {messages.map((m) => (
-                      <tr
-                        key={m.id}
-                        className="border-b border-white/5 hover:bg-white/5 cursor-pointer"
-                        onClick={() => void loadDetail(m.id)}
-                      >
-                        <td className="p-3">{m.subject || "—"}</td>
-                        <td className="p-3">{m.audienceType}</td>
-                        <td className="p-3">{m.sentAt ? new Date(m.sentAt).toLocaleDateString("he-IL") : "—"}</td>
-                        <td className="p-3">
-                          {m.readCountParent ?? 0}/{m.recipientCountParent ?? 0} הורים ·{" "}
-                          {m.readCountTeacher ?? 0}/{m.recipientCountTeacher ?? 0} מורים
-                        </td>
-                      </tr>
-                    ))}
+                    {messages.map((m) => {
+                      const messageId = getSchoolMessageId(m);
+                      return (
+                        <tr
+                          key={messageId || m.subject}
+                          className="border-b border-white/5 hover:bg-white/5 cursor-pointer"
+                          onClick={() => messageId && void loadDetail(messageId)}
+                        >
+                          <td className="p-3">{m.subject || "—"}</td>
+                          <td className="p-3">
+                            {formatSchoolMessageAudienceLabel(m.audienceType, m.audienceScope)}
+                          </td>
+                          <td className="p-3">
+                            {m.sentAt ? new Date(m.sentAt).toLocaleDateString("he-IL") : "—"}
+                          </td>
+                          <td className="p-3">{formatSchoolMessageListReadCount(m)}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -332,38 +356,65 @@ export default function SchoolMessagesPage() {
             ) : null}
 
             {detail ? (
-              <SchoolSection title={SC_RECEIPTS_PANEL_TITLE}>
-                <p className="text-sm text-white/70 mb-2">{detail.message?.body}</p>
-                <p className="text-sm text-amber-200 mb-3">
-                  {SC_RECEIPTS_READ_COUNT(detail.readCount || 0, detail.recipientCount || 0)}
+              <SchoolSection title={detail.subject || SC_RECEIPTS_PANEL_TITLE}>
+                <p className="text-xs text-white/50 mb-2">
+                  {formatSchoolMessageAudienceLabel(detail.audienceType, detail.audienceScope)}
+                  {detail.sentAt
+                    ? ` · ${new Date(detail.sentAt).toLocaleString("he-IL")}`
+                    : ""}
                 </p>
-                <div className="flex gap-2 mb-3">
-                  <button
-                    type="button"
-                    className={receiptTab === "parent" ? "text-amber-200 font-semibold" : "text-white/60"}
-                    onClick={() => setReceiptTab("parent")}
-                  >
-                    {SC_RECEIPTS_TAB_PARENTS}
-                  </button>
-                  <button
-                    type="button"
-                    className={receiptTab === "teacher" ? "text-amber-200 font-semibold" : "text-white/60"}
-                    onClick={() => setReceiptTab("teacher")}
-                  >
-                    {SC_RECEIPTS_TAB_TEACHERS}
-                  </button>
-                </div>
+                <p className="text-sm text-white/85 whitespace-pre-wrap mb-3">{detail.body || "—"}</p>
+                <p className="text-sm text-amber-200 mb-3">
+                  {SC_RECEIPTS_READ_COUNT(
+                    schoolMessageReadCountForTab(receiptTab, detail).read,
+                    schoolMessageReadCountForTab(receiptTab, detail).total
+                  )}
+                  {detail.recipientCount != null ? ` · ${detail.recipientCount} נמענים` : ""}
+                </p>
+                {schoolMessageHasParentRecipients(detail) || schoolMessageHasTeacherRecipients(detail) ? (
+                  <div className="flex gap-2 mb-3">
+                    {schoolMessageHasParentRecipients(detail) ? (
+                      <button
+                        type="button"
+                        className={receiptTab === "parent" ? "text-amber-200 font-semibold" : "text-white/60"}
+                        onClick={() => setReceiptTab("parent")}
+                      >
+                        {SC_RECEIPTS_TAB_PARENTS}
+                      </button>
+                    ) : null}
+                    {schoolMessageHasTeacherRecipients(detail) ? (
+                      <button
+                        type="button"
+                        className={receiptTab === "teacher" ? "text-amber-200 font-semibold" : "text-white/60"}
+                        onClick={() => setReceiptTab("teacher")}
+                      >
+                        {SC_RECEIPTS_TAB_TEACHERS}
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
                 <ul className="text-sm space-y-1 max-h-48 overflow-y-auto">
                   {recipients.map((r) => (
-                    <li key={r.id} className="flex justify-between gap-2 border-b border-white/5 py-1">
-                      <span>{r.displayName || r.id}</span>
-                      <span className={r.readAt ? "text-emerald-300" : "text-white/45"}>
-                        {r.readAt ? "קרא" : "לא קרא"}
+                    <li
+                      key={r.recipientId || `${r.recipientType}-${r.guardianAccessId || r.recipientUserId}`}
+                      className="flex justify-between gap-2 border-b border-white/5 py-1"
+                    >
+                      <span>{r.displayName || r.recipientId || "—"}</span>
+                      <span className={r.isRead ? "text-emerald-300" : "text-white/45"}>
+                        {r.isRead ? SC_RECEIPTS_STATUS_READ : SC_RECEIPTS_STATUS_UNREAD}
                       </span>
                     </li>
                   ))}
                 </ul>
-                <button type="button" className="mt-3 text-sm text-white/60 underline" onClick={() => setDetail(null)}>
+                <button
+                  type="button"
+                  className="mt-3 text-sm text-white/60 underline"
+                  onClick={() => {
+                    setDetail(null);
+                    setDetailId(null);
+                    setRecipients([]);
+                  }}
+                >
                   סגירה
                 </button>
               </SchoolSection>

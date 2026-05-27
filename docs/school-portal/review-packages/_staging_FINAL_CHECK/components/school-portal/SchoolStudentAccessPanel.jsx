@@ -39,7 +39,8 @@ function studentStatusLabel(status) {
 
 export default function SchoolStudentAccessPanel({ accessToken, studentId, studentName }) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [busy, setBusy] = useState(false);
   const [data, setData] = useState(null);
   const [credentials, setCredentials] = useState(null);
@@ -50,19 +51,26 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
   const base = `/api/school/students/${encodeURIComponent(studentId)}/accounts`;
 
   const load = useCallback(async () => {
-    if (!accessToken || !studentId) return;
+    if (!accessToken || !studentId) {
+      setLoading(false);
+      setLoadError("");
+      setData(null);
+      return;
+    }
     setLoading(true);
-    setError("");
+    setLoadError("");
     try {
       const res = await schoolAuthFetch(accessToken, `${base}`, { method: "GET" });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(apiErrorMessageHe(body?.error, SC_ERROR_GENERIC));
+        setData(null);
+        setLoadError(apiErrorMessageHe(body?.error, SC_ERROR_GENERIC));
         return;
       }
-      setData(body.data || null);
+      setData(body.data || { studentAccess: null, parentAccesses: [] });
     } catch {
-      setError(SC_ERROR_GENERIC);
+      setData(null);
+      setLoadError(SC_ERROR_GENERIC);
     } finally {
       setLoading(false);
     }
@@ -73,8 +81,9 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
   }, [load]);
 
   const post = async (path, body = {}) => {
+    if (!accessToken || !studentId) return null;
     setBusy(true);
-    setError("");
+    setActionError("");
     try {
       const res = await schoolAuthFetch(accessToken, path, {
         method: "POST",
@@ -83,12 +92,12 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(apiErrorMessageHe(json?.error, SC_ERROR_GENERIC));
+        setActionError(apiErrorMessageHe(json?.error, SC_ERROR_GENERIC));
         return null;
       }
       return json.data;
     } catch {
-      setError(SC_ERROR_GENERIC);
+      setActionError(SC_ERROR_GENERIC);
       return null;
     } finally {
       setBusy(false);
@@ -107,7 +116,8 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
       {studentName ? (
         <p className="text-sm text-white/60">{studentName}</p>
       ) : null}
-      {error ? <p className="text-sm text-red-300">{error}</p> : null}
+      {loadError ? <p className="text-sm text-red-300">{loadError}</p> : null}
+      {actionError ? <p className="text-sm text-amber-200">{actionError}</p> : null}
       {credentials ? (
         <SchoolCredentialShownOnceBox credentials={credentials} onDismiss={() => setCredentials(null)} />
       ) : null}

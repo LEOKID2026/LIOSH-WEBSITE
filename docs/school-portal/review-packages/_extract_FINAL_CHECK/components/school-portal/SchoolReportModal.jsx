@@ -65,7 +65,13 @@ export default function SchoolReportModal({
   studentName = "",
 }) {
   const [activeTab, setActiveTab] = useState("report");
-  const showAccessTab = Boolean(accessToken && studentId);
+  const nestedStudentId = nestedStudentViewModel?.meta?.studentId || null;
+  const effectiveStudentId = studentId || nestedStudentId;
+  const effectiveStudentName =
+    studentName || nestedStudentViewModel?.meta?.displayName || nestedStudentViewModel?.header?.title || "";
+  const showAccessTab = Boolean(accessToken && effectiveStudentId);
+  const accessPanelOpen =
+    open && activeTab === "access" && (Boolean(studentId) || Boolean(nestedStudentViewModel));
   const z = Number(stackZIndexBase) || 0;
 
   useEffect(() => {
@@ -122,8 +128,8 @@ export default function SchoolReportModal({
       />
 
       <ReportModalFrame
-        open={open && activeTab === "access"}
-        title={title}
+        open={accessPanelOpen}
+        title={nestedStudentViewModel?.header?.title || title}
         subtitle={SC_TAB_ACCESS_ACCOUNTS}
         onClose={onClose}
         zIndex={100 + z}
@@ -131,8 +137,8 @@ export default function SchoolReportModal({
       >
         <SchoolStudentAccessPanel
           accessToken={accessToken}
-          studentId={studentId}
-          studentName={studentName}
+          studentId={effectiveStudentId}
+          studentName={effectiveStudentName}
         />
       </ReportModalFrame>
     </>
