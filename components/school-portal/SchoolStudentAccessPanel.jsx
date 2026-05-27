@@ -19,14 +19,12 @@ import {
   SC_ERROR_GENERIC,
   SC_LABEL_DISPLAY_NAME,
   SC_LABEL_RELATION,
-  SC_LEGACY_ACCESS_HINT,
   SC_LOADING,
   SC_RELATION_FATHER,
   SC_RELATION_GUARDIAN,
   SC_RELATION_MOTHER,
   SC_RELATION_OTHER,
   SC_REVOKE_RECOVERY_HINT,
-  SC_SECTION_LEGACY_ACCESS,
   SC_SECTION_PARENT_ACCOUNTS,
   SC_SECTION_STUDENT_ACCOUNT,
   SC_STATUS_ACTIVE,
@@ -45,11 +43,9 @@ function studentStatusLabel(status) {
 
 function AccessCard({ title, children, variant = "default" }) {
   const border =
-    variant === "legacy"
-      ? "border-white/10 bg-black/30"
-      : variant === "destructive"
-        ? "border-red-500/20 bg-red-950/20"
-        : "border-white/15 bg-white/5";
+    variant === "destructive"
+      ? "border-red-500/20 bg-red-950/20"
+      : "border-white/15 bg-white/5";
   return (
     <div className={`rounded-xl border p-4 text-sm space-y-3 ${border}`}>
       {title ? <h4 className="font-semibold text-amber-200/90 text-sm">{title}</h4> : null}
@@ -163,9 +159,7 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
   };
 
   const student = data?.studentAccess;
-  const legacyStudent = data?.legacyStudentAccess;
   const parents = data?.parentAccesses || [];
-  const legacyParents = data?.legacyParentAccesses || [];
 
   const hasSchoolStudent = Boolean(student?.accessId);
   const canCreateSchoolStudent = !hasSchoolStudent || student?.status === "revoked";
@@ -279,17 +273,6 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
         )}
       </section>
 
-      {legacyStudent?.accessId ? (
-        <section className="space-y-2">
-          <h3 className="font-semibold text-white/70 text-sm">{SC_SECTION_LEGACY_ACCESS}</h3>
-          <AccessCard variant="legacy">
-            <p className="font-mono text-white/70 break-all">{legacyStudent.loginUsername}</p>
-            <p className="text-white/50">{studentStatusLabel(legacyStudent.status)}</p>
-            <p className="text-xs text-white/45 leading-relaxed">{SC_LEGACY_ACCESS_HINT}</p>
-          </AccessCard>
-        </section>
-      ) : null}
-
       <section className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="font-semibold text-amber-200">{SC_SECTION_PARENT_ACCOUNTS}</h3>
@@ -386,15 +369,6 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
         ) : (
           <p className="text-sm text-white/50">{SC_EMPTY_PARENT_ACCOUNTS}</p>
         )}
-
-        {legacyParents.length ? (
-          <div className="space-y-2 pt-2">
-            <h4 className="text-sm text-white/60">{SC_SECTION_LEGACY_ACCESS}</h4>
-            {legacyParents.map((row) => (
-              <SchoolStudentParentAccessRow key={row.accessId} row={row} readOnly hint={SC_LEGACY_ACCESS_HINT} />
-            ))}
-          </div>
-        ) : null}
       </section>
     </div>
   );
