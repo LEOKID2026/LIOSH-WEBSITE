@@ -3,10 +3,11 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import SchoolInboxMessageCard from "../../components/school-portal/SchoolInboxMessageCard";
-import SchoolMessageConfirmationActions from "../../components/school-portal/SchoolMessageConfirmationActions";
-import SchoolMessageDetailCloseButton from "../../components/school-portal/SchoolMessageDetailCloseButton";
+import SchoolInboxMessageDetailContent from "../../components/school-portal/SchoolInboxMessageDetailContent";
+import SchoolMessageDetailModal from "../../components/school-portal/SchoolMessageDetailModal";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import {
+  SC_MESSAGE_FROM_SCHOOL_ADMIN,
   SC_TEACHER_INBOX_EMPTY,
   SC_TEACHER_INBOX_TITLE,
 } from "../../lib/school-portal/school-communication.he";
@@ -96,6 +97,9 @@ export default function TeacherSchoolMessagesPage() {
   };
 
   const selectedId = getSchoolMessageId(selected);
+  const senderLine =
+    schoolMembership?.schoolName?.trim() ||
+    SC_MESSAGE_FROM_SCHOOL_ADMIN;
 
   return (
     <Layout>
@@ -126,19 +130,14 @@ export default function TeacherSchoolMessagesPage() {
           <p className="text-white/50 text-sm">{SC_TEACHER_INBOX_EMPTY}</p>
         )}
 
-        {selected && selectedId ? (
-          <div className="mt-6 rounded-xl border border-amber-500/30 bg-black/40 p-4 text-right space-y-4">
-            <SchoolMessageDetailCloseButton onClose={() => setSelected(null)} />
-            <h2 className="font-bold mb-2">{selected.subject || "הודעה"}</h2>
-            <p className="text-sm whitespace-pre-wrap">{selected.body}</p>
-            <SchoolMessageConfirmationActions
-              message={selected}
-              busy={markBusy}
-              onMarkRead={markRead}
-            />
-            <SchoolMessageDetailCloseButton onClose={() => setSelected(null)} />
-          </div>
-        ) : null}
+        <SchoolMessageDetailModal open={Boolean(selected && selectedId)} onClose={() => setSelected(null)}>
+          <SchoolInboxMessageDetailContent
+            message={selected}
+            senderLine={senderLine}
+            markBusy={markBusy}
+            onMarkRead={markRead}
+          />
+        </SchoolMessageDetailModal>
       </TeacherPortalShell>
     </Layout>
   );

@@ -5,9 +5,13 @@ import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import ParentMustChangePinGate from "../../components/parent/ParentMustChangePinGate";
 import SchoolInboxMessageCard from "../../components/school-portal/SchoolInboxMessageCard";
-import SchoolMessageConfirmationActions from "../../components/school-portal/SchoolMessageConfirmationActions";
-import SchoolMessageDetailCloseButton from "../../components/school-portal/SchoolMessageDetailCloseButton";
-import { SC_INBOX_EMPTY, SC_INBOX_TITLE_PARENT } from "../../lib/school-portal/school-communication.he";
+import SchoolInboxMessageDetailContent from "../../components/school-portal/SchoolInboxMessageDetailContent";
+import SchoolMessageDetailModal from "../../components/school-portal/SchoolMessageDetailModal";
+import {
+  SC_INBOX_EMPTY,
+  SC_INBOX_TITLE_PARENT,
+  SC_MESSAGE_FROM_SCHOOL_PARENT,
+} from "../../lib/school-portal/school-communication.he";
 import { getSchoolMessageId } from "../../lib/school-portal/school-messaging-ui";
 
 export default function ParentSchoolInboxPage() {
@@ -86,6 +90,8 @@ export default function ParentSchoolInboxPage() {
     );
   }
 
+  const selectedId = getSchoolMessageId(selected);
+
   return (
     <Layout>
       <TeacherPortalShell title={SC_INBOX_TITLE_PARENT}>
@@ -111,19 +117,14 @@ export default function ParentSchoolInboxPage() {
           <p className="text-white/50 text-sm">{SC_INBOX_EMPTY}</p>
         )}
 
-        {selected && getSchoolMessageId(selected) ? (
-          <div className="mt-6 rounded-xl border border-amber-500/30 bg-black/40 p-4 text-right space-y-4">
-            <SchoolMessageDetailCloseButton onClose={() => setSelected(null)} />
-            <h2 className="font-bold mb-2">{selected.subject || "הודעה"}</h2>
-            <p className="text-sm whitespace-pre-wrap">{selected.body}</p>
-            <SchoolMessageConfirmationActions
-              message={selected}
-              busy={markBusy}
-              onMarkRead={markRead}
-            />
-            <SchoolMessageDetailCloseButton onClose={() => setSelected(null)} />
-          </div>
-        ) : null}
+        <SchoolMessageDetailModal open={Boolean(selected && selectedId)} onClose={() => setSelected(null)}>
+          <SchoolInboxMessageDetailContent
+            message={selected}
+            senderLine={SC_MESSAGE_FROM_SCHOOL_PARENT}
+            markBusy={markBusy}
+            onMarkRead={markRead}
+          />
+        </SchoolMessageDetailModal>
       </TeacherPortalShell>
     </Layout>
   );

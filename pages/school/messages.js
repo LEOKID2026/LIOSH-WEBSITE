@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import SchoolPortalShell from "../../components/school-portal/SchoolPortalShell";
 import { SchoolErrorBlock, SchoolLoadingBlock } from "../../components/school-portal/SchoolDrillDown";
-import { SchoolPrimaryButton, SchoolSection } from "../../components/school-portal/SchoolPortalUi";
+import { SchoolPrimaryButton } from "../../components/school-portal/SchoolPortalUi";
 import { useSchoolPortalLoad } from "../../lib/school-portal/use-school-portal-session";
 import {
   SC_AUDIENCE_ALL_PARENTS,
@@ -38,15 +38,10 @@ import {
   SC_FILTER_TEACHERS,
   SC_MESSAGES_EMPTY,
   SC_PAGE_MESSAGES_TITLE,
-  SC_RECEIPTS_PANEL_TITLE,
-  SC_RECEIPTS_READ_COUNT,
-  SC_RECEIPTS_STATUS_READ,
-  SC_RECEIPTS_STATUS_UNREAD,
-  SC_RECEIPTS_TAB_PARENTS,
-  SC_RECEIPTS_TAB_TEACHERS,
 } from "../../lib/school-portal/school-communication.he";
 import SchoolInboxMessageCard from "../../components/school-portal/SchoolInboxMessageCard";
-import SchoolMessageDetailCloseButton from "../../components/school-portal/SchoolMessageDetailCloseButton";
+import SchoolManagerMessageDetailContent from "../../components/school-portal/SchoolManagerMessageDetailContent";
+import SchoolMessageDetailModal from "../../components/school-portal/SchoolMessageDetailModal";
 import {
   buildSchoolMessagesListQuery,
   formatSchoolMessageAudienceLabel,
@@ -54,7 +49,6 @@ import {
   getSchoolMessageId,
   schoolMessageHasParentRecipients,
   schoolMessageHasTeacherRecipients,
-  schoolMessageReadCountForTab,
 } from "../../lib/school-portal/school-messaging-ui";
 import { apiErrorMessageHe, schoolAuthFetch } from "../../lib/school-portal/school-ui.he";
 
@@ -447,63 +441,14 @@ export default function SchoolMessagesPage() {
               </div>
             ) : null}
 
-            {detail ? (
-              <SchoolSection
-                title={detail.subject || SC_RECEIPTS_PANEL_TITLE}
-                action={<SchoolMessageDetailCloseButton onClose={closeMessageDetail} />}
-              >
-                <p className="text-xs text-white/50 mb-2">
-                  {formatSchoolMessageAudienceLabel(detail.audienceType, detail.audienceScope)}
-                  {detail.sentAt
-                    ? ` · ${new Date(detail.sentAt).toLocaleString("he-IL")}`
-                    : ""}
-                </p>
-                <p className="text-sm text-white/85 whitespace-pre-wrap mb-3">{detail.body || "—"}</p>
-                <p className="text-sm text-amber-200 mb-3">
-                  {SC_RECEIPTS_READ_COUNT(
-                    schoolMessageReadCountForTab(receiptTab, detail).read,
-                    schoolMessageReadCountForTab(receiptTab, detail).total
-                  )}
-                  {detail.recipientCount != null ? ` · ${detail.recipientCount} נמענים` : ""}
-                </p>
-                {schoolMessageHasParentRecipients(detail) || schoolMessageHasTeacherRecipients(detail) ? (
-                  <div className="flex gap-2 mb-3">
-                    {schoolMessageHasParentRecipients(detail) ? (
-                      <button
-                        type="button"
-                        className={receiptTab === "parent" ? "text-amber-200 font-semibold" : "text-white/60"}
-                        onClick={() => setReceiptTab("parent")}
-                      >
-                        {SC_RECEIPTS_TAB_PARENTS}
-                      </button>
-                    ) : null}
-                    {schoolMessageHasTeacherRecipients(detail) ? (
-                      <button
-                        type="button"
-                        className={receiptTab === "teacher" ? "text-amber-200 font-semibold" : "text-white/60"}
-                        onClick={() => setReceiptTab("teacher")}
-                      >
-                        {SC_RECEIPTS_TAB_TEACHERS}
-                      </button>
-                    ) : null}
-                  </div>
-                ) : null}
-                <ul className="text-sm space-y-1 max-h-48 overflow-y-auto">
-                  {recipients.map((r) => (
-                    <li
-                      key={r.recipientId || `${r.recipientType}-${r.guardianAccessId || r.recipientUserId}`}
-                      className="flex justify-between gap-2 border-b border-white/5 py-1"
-                    >
-                      <span>{r.displayName || r.recipientId || "—"}</span>
-                      <span className={r.isRead ? "text-emerald-300" : "text-white/45"}>
-                        {r.isRead ? SC_RECEIPTS_STATUS_READ : SC_RECEIPTS_STATUS_UNREAD}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <SchoolMessageDetailCloseButton onClose={closeMessageDetail} className="mt-4" />
-              </SchoolSection>
-            ) : null}
+            <SchoolMessageDetailModal open={Boolean(detail)} onClose={closeMessageDetail}>
+              <SchoolManagerMessageDetailContent
+                detail={detail}
+                recipients={recipients}
+                receiptTab={receiptTab}
+                onReceiptTabChange={setReceiptTab}
+              />
+            </SchoolMessageDetailModal>
           </div>
         )}
       </SchoolPortalShell>
