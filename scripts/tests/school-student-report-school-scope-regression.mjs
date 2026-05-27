@@ -4,9 +4,6 @@
  */
 import assert from "node:assert/strict";
 import { loadSchoolScopedClassroomActivityRollupForStudentReport } from "../../lib/teacher-server/classroom-activity-class-report.server.js";
-import {
-  mergeClassroomActivityRollupIntoReportPayload,
-} from "../../lib/teacher-server/classroom-activity-class-report.server.js";
 import { buildTeacherStudentReportPayload } from "../../lib/teacher-server/teacher-report.server.js";
 import { createServiceRole, findAuthUserByEmail } from "../school-portal/demo-school-lib.mjs";
 import { physicalClassName } from "../school-portal/demo-school-data.mjs";
@@ -64,11 +61,11 @@ async function main() {
     { skipAudit: true }
   );
   assert.ok(report.ok, report.code || "base report failed");
-  mergeClassroomActivityRollupIntoReportPayload(report.payload, schoolRollup.rollup);
 
   const summary = report.payload.summary || {};
   assert.ok(summary.totalAnswers > 0, "merged totalAnswers must be > 0");
   assert.ok(summary.totalSessions > 0, "merged totalSessions must be > 0");
+  assert.equal(summary.totalAnswers, Number(schoolRollup.rollup?.answers || 0), "answers must match school rollup");
 
   console.log(
     JSON.stringify(
