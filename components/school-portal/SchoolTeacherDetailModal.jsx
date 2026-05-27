@@ -1,4 +1,5 @@
 import { ReportModalFrame } from "../reporting/ReportModalFrame.jsx";
+import { SCHOOL_PORTAL_MODAL_SCROLL_CLASS } from "./SchoolPortalUi";
 import SchoolTeacherDetailContent from "./SchoolTeacherDetailContent.jsx";
 import { SCHOOL_TEACHER_CARD_ACTION } from "../../lib/school-portal/school-ui.he.js";
 
@@ -24,9 +25,12 @@ export default function SchoolTeacherDetailModal({
       onClose={onClose}
       closeLabel="סגירה"
       zIndex={zIndex}
+      scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
       testId="school-teacher-detail-modal"
     >
-      <div className="max-h-[min(70vh,640px)] overflow-y-auto pr-1">
+      <div
+        className={`max-h-[min(70vh,640px)] overflow-y-auto pr-1 ${SCHOOL_PORTAL_MODAL_SCROLL_CLASS}`}
+      >
         <SchoolTeacherDetailContent
           teacherId={teacherId}
           accessToken={accessToken}

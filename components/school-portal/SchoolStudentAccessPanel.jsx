@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import SchoolCredentialShownOnceBox from "./SchoolCredentialShownOnceBox";
 import SchoolStudentParentAccessRow from "./SchoolStudentParentAccessRow";
-import { SchoolPrimaryButton, SCHOOL_PORTAL_BTN_CURSOR } from "./SchoolPortalUi";
+import {
+  SchoolPrimaryButton,
+  SCHOOL_PORTAL_BTN_CURSOR,
+  SCHOOL_PORTAL_MODAL_SCROLL_CLASS,
+} from "./SchoolPortalUi";
 import { apiErrorMessageHe, schoolAuthFetch } from "../../lib/school-portal/school-ui.he";
 import {
   SC_BTN_ADD_PARENT,
@@ -171,7 +175,10 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
   }
 
   return (
-    <div className="space-y-6 text-right overflow-y-auto max-h-[min(70vh,520px)] px-1 pb-2" dir="rtl">
+    <div
+      className={`space-y-6 text-right overflow-y-auto max-h-[min(70vh,520px)] px-1 pb-2 ${SCHOOL_PORTAL_MODAL_SCROLL_CLASS}`}
+      dir="rtl"
+    >
       {studentName ? <p className="text-sm text-white/60">{studentName}</p> : null}
       {loadError ? <p className="text-sm text-red-300">{loadError}</p> : null}
       {actionError ? <p className="text-sm text-amber-200">{actionError}</p> : null}

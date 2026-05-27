@@ -12,6 +12,7 @@ export function ReportModalFrame({
   backLabel = "חזרה",
   closeLabel = "סגירה",
   zIndex = 100,
+  scrollAreaClassName = "",
   children,
   testId,
 }) {
@@ -84,7 +85,11 @@ export function ReportModalFrame({
               </button>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-4">{children}</div>
+          <div
+            className={`flex-1 overflow-y-auto px-4 sm:px-5 py-4 ${scrollAreaClassName}`.trim()}
+          >
+            {children}
+          </div>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ import {
 import { ReportModalFrame } from "../reporting/ReportModalFrame.jsx";
 import { schoolGradeLabelHe } from "../../lib/school-portal/school-drilldown.js";
 import { SCHOOL_VIEW_STUDENT_REPORT } from "../../lib/school-portal/school-ui.he.js";
-import { SchoolEmptyState } from "./SchoolPortalUi.jsx";
+import { SchoolEmptyState, SCHOOL_PORTAL_MODAL_SCROLL_CLASS } from "./SchoolPortalUi.jsx";
 
 /**
  * Roster for a subject class opened from teacher detail.
@@ -43,6 +43,7 @@ export default function SchoolTeacherClassStudentsModal({
       onClose={onClose}
       testId="school-teacher-class-students-modal"
       zIndex={zIndex}
+      scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
     >
       {loading ? <SchoolLoadingBlock /> : null}
       {error ? (

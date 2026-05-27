@@ -47,6 +47,7 @@ export default function ReportHubModal({
   onCloseStudentReport,
   onRowAction,
   stackZIndexBase = 0,
+  scrollAreaClassName = "",
 }) {
   const [detailId, setDetailId] = useState(null);
   const [drilldownKey, setDrilldownKey] = useState(null);
@@ -136,6 +137,7 @@ export default function ReportHubModal({
         onClose={handleCloseAll}
         closeLabel="סגירה"
         zIndex={100 + z}
+        scrollAreaClassName={scrollAreaClassName}
         testId="report-hub-main"
       >
         {loading ? (
@@ -158,6 +160,7 @@ export default function ReportHubModal({
         onClose={handleCloseAll}
         onBack={handleBackFromDetail}
         zIndex={110 + z}
+        scrollAreaClassName={scrollAreaClassName}
         testId="report-hub-detail"
       >
         <ReportDetailSectionView
@@ -178,6 +181,7 @@ export default function ReportHubModal({
         onClose={handleCloseAll}
         onBack={handleBackFromDrilldown}
         zIndex={115 + z}
+        scrollAreaClassName={scrollAreaClassName}
         testId="report-hub-drilldown"
       >
         {drilldownSection?.subtitle ? (
@@ -204,6 +208,7 @@ export default function ReportHubModal({
         onClose={handleCloseAll}
         onBack={handleBackFromStudentMain}
         zIndex={120 + z}
+        scrollAreaClassName={scrollAreaClassName}
         testId="report-hub-student-main"
       >
         {studentReportLoading ? (
@@ -223,6 +228,7 @@ export default function ReportHubModal({
         onClose={handleCloseAll}
         onBack={handleBackFromStudentDetail}
         zIndex={130 + z}
+        scrollAreaClassName={scrollAreaClassName}
         testId="report-hub-student-detail"
       >
         <ReportDetailSectionView

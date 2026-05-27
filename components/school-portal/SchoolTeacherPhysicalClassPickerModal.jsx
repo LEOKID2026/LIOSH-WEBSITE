@@ -1,4 +1,5 @@
 import { ReportModalFrame } from "../reporting/ReportModalFrame.jsx";
+import { SCHOOL_PORTAL_MODAL_SCROLL_CLASS } from "./SchoolPortalUi";
 import { schoolSubjectLabelHe, SCHOOL_VIEW_CLASS_REPORT, SCHOOL_STUDENTS_IN_CLASS } from "../../lib/school-portal/school-ui.he.js";
 
 /**
@@ -29,6 +30,7 @@ export default function SchoolTeacherPhysicalClassPickerModal({
       onClose={onClose}
       testId="school-teacher-subject-picker-modal"
       zIndex={zIndex}
+      scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
     >
       <ul className="space-y-3">
         {subjectClasses.map((cls) => (

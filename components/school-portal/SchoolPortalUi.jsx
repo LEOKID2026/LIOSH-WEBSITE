@@ -235,6 +235,9 @@ export function SchoolPageIntro({ title, subtitle }) {
 /** School-portal interactive controls: hand on hover, not-allowed when disabled. */
 export const SCHOOL_PORTAL_BTN_CURSOR = "cursor-pointer disabled:cursor-not-allowed";
 
+/** Refined thin scrollbar for modal/panel scroll areas (see globals.css). */
+export const SCHOOL_PORTAL_MODAL_SCROLL_CLASS = "school-portal-modal-scroll";
+
 export function SchoolPrimaryButton({ children, disabled, type = "button", onClick, className = "" }) {
   return (
     <button

@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import SchoolPortalShell from "../../components/school-portal/SchoolPortalShell";
 import { SchoolErrorBlock, SchoolLoadingBlock } from "../../components/school-portal/SchoolDrillDown";
-import { SchoolPrimaryButton, SCHOOL_PORTAL_BTN_CURSOR } from "../../components/school-portal/SchoolPortalUi";
+import {
+  SchoolPrimaryButton,
+  SCHOOL_PORTAL_BTN_CURSOR,
+  SCHOOL_PORTAL_MODAL_SCROLL_CLASS,
+} from "../../components/school-portal/SchoolPortalUi";
 import { useSchoolPortalLoad } from "../../lib/school-portal/use-school-portal-session";
 import {
   SC_AUDIENCE_ALL_PARENTS,
@@ -347,7 +351,9 @@ export default function SchoolMessagesPage() {
 
             {composeOpen ? (
               <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
-                <div className="w-full max-w-lg rounded-xl border border-amber-500/30 bg-[#1a1208] p-5 text-right max-h-[90vh] overflow-y-auto">
+                <div
+                  className={`w-full max-w-lg rounded-xl border border-amber-500/30 bg-[#1a1208] p-5 text-right max-h-[90vh] overflow-y-auto ${SCHOOL_PORTAL_MODAL_SCROLL_CLASS}`}
+                >
                   <h2 className="text-lg font-bold mb-4">{SC_COMPOSE_TITLE}</h2>
                   <div className="space-y-3 text-sm">
                     <label className="block">

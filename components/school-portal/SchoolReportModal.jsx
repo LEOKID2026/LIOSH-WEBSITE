@@ -6,6 +6,7 @@ import {
   SC_TAB_ACCESS_ACCOUNTS,
   SC_TAB_LEARNING_REPORT,
 } from "../../lib/school-portal/school-communication.he";
+import { SCHOOL_PORTAL_MODAL_SCROLL_CLASS } from "./SchoolPortalUi";
 
 function TabBar({ activeTab, onTabChange }) {
   return (
@@ -94,6 +95,7 @@ export default function SchoolReportModal({
         onCloseStudentReport={onCloseStudentReport}
         onRowAction={onRowAction}
         stackZIndexBase={stackZIndexBase}
+        scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
       />
     );
   }
@@ -125,6 +127,7 @@ export default function SchoolReportModal({
         onCloseStudentReport={onCloseStudentReport}
         onRowAction={onRowAction}
         stackZIndexBase={stackZIndexBase}
+        scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
       />
 
       <ReportModalFrame
@@ -133,6 +136,7 @@ export default function SchoolReportModal({
         subtitle={SC_TAB_ACCESS_ACCOUNTS}
         onClose={onClose}
         zIndex={100 + z}
+        scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
         testId="school-student-access-modal"
       >
         <SchoolStudentAccessPanel

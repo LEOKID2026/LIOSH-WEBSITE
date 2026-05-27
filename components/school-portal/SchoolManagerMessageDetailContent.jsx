@@ -13,6 +13,7 @@ import {
   schoolMessageHasTeacherRecipients,
   schoolMessageReadCountForTab,
 } from "../../lib/school-portal/school-messaging-ui";
+import { SCHOOL_PORTAL_MODAL_SCROLL_CLASS } from "./SchoolPortalUi";
 
 export default function SchoolManagerMessageDetailContent({
   detail,
@@ -68,7 +69,9 @@ export default function SchoolManagerMessageDetailContent({
         </div>
       ) : null}
       {recipients.length ? (
-        <ul className="text-sm space-y-0 max-h-56 overflow-y-auto rounded-lg border border-white/10 bg-black/25 py-2 ps-2 pe-3">
+        <ul
+          className={`text-sm space-y-0 max-h-56 overflow-y-auto rounded-lg border border-white/10 bg-black/25 py-2 ps-2 pe-3 ${SCHOOL_PORTAL_MODAL_SCROLL_CLASS}`}
+        >
           {recipients.map((r) => {
             const requiresConfirmation = detail.messageType === "requires_confirmation";
             const statusLabel = requiresConfirmation && r.isRead

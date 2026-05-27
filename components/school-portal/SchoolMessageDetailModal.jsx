@@ -1,4 +1,4 @@
-import { SchoolSecondaryButton } from "./SchoolPortalUi";
+import { SchoolSecondaryButton, SCHOOL_PORTAL_MODAL_SCROLL_CLASS } from "./SchoolPortalUi";
 import { SC_BTN_CLOSE_MESSAGE_DETAIL } from "../../lib/school-portal/school-communication.he";
 
 /**
@@ -27,7 +27,11 @@ export default function SchoolMessageDetailModal({ open, onClose, children }) {
             {SC_BTN_CLOSE_MESSAGE_DETAIL}
           </SchoolSecondaryButton>
         </div>
-        <div className="overflow-y-auto p-4 sm:p-5 space-y-4 flex-1 min-h-0">{children}</div>
+        <div
+          className={`overflow-y-auto p-4 sm:p-5 space-y-4 flex-1 min-h-0 ${SCHOOL_PORTAL_MODAL_SCROLL_CLASS}`}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
