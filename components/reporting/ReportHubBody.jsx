@@ -134,25 +134,44 @@ export function ReportDetailSectionView({ section, variant, studentActions, onDr
           const label = item.label || item.tier || item.name;
           const clickable = Boolean(item.drilldownKey && onDrilldownSelect);
           const Tag = clickable ? "button" : "div";
+          const countText =
+            item.count != null && item.count !== ""
+              ? `${item.count} תלמידים`
+              : null;
           return (
             <li key={`${label}-${i}`}>
               <Tag
                 type={clickable ? "button" : undefined}
                 onClick={clickable ? () => onDrilldownSelect(item.drilldownKey) : undefined}
-                className={`w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-right flex justify-between gap-2 items-start ${
-                  clickable ? "hover:bg-black/35 cursor-pointer transition" : ""
+                aria-label={clickable ? `${label}${countText ? `, ${countText}` : ""}, פתח רשימה` : undefined}
+                className={`w-full rounded-lg border bg-black/20 px-3 py-2.5 text-sm text-right ${
+                  clickable
+                    ? "border-amber-500/20 hover:bg-black/35 hover:border-amber-500/35 cursor-pointer transition"
+                    : "border-white/10"
                 }`}
                 data-testid={item.drilldownKey ? `report-drilldown-${item.drilldownKey}` : undefined}
               >
-                <div className="min-w-0">
-                  <span className="text-white/90">{label}</span>
+                <span className="inline text-white/90 leading-snug">
+                  {label}
                   {item.detail ? (
-                    <span className="text-xs text-white/50 block mt-0.5">{item.detail}</span>
+                    <>
+                      <span className="text-white/45"> · </span>
+                      <span className="text-white/65">{item.detail}</span>
+                    </>
                   ) : null}
-                </div>
-                {item.count != null ? (
-                  <span className="tabular-nums text-amber-200 font-semibold shrink-0">{item.count}</span>
-                ) : null}
+                  {countText ? (
+                    <>
+                      <span className="text-white/45"> · </span>
+                      <span className="tabular-nums font-semibold text-amber-200">{countText}</span>
+                    </>
+                  ) : null}
+                  {clickable ? (
+                    <>
+                      <span className="text-white/45"> · </span>
+                      <span className="font-medium text-amber-200/90">פתח</span>
+                    </>
+                  ) : null}
+                </span>
               </Tag>
             </li>
           );
