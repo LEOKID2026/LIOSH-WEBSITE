@@ -91,6 +91,15 @@ export default function SchoolClassesPage() {
     [classes, gradeLevel]
   );
 
+  const gradePhysicalCounts = useMemo(() => {
+    const map = new Map();
+    if (!classes) return map;
+    for (const grade of SCHOOL_GRADE_OPTIONS) {
+      map.set(grade.level, groupPhysicalClassesForGrade(classes, grade.level).length);
+    }
+    return map;
+  }, [classes]);
+
   const selectedPhysical = useMemo(
     () => physicalGroups.find((g) => physicalClassGroupKey(g.subjectClasses[0]) === physicalKey) || null,
     [physicalGroups, physicalKey]
@@ -222,9 +231,7 @@ export default function SchoolClassesPage() {
                 {loading ? <p className="text-xs text-white/45 mb-3 text-right">{SCHOOL_LOADING_DATA}</p> : null}
                 <SchoolCardGrid columns={3}>
                   {SCHOOL_GRADE_OPTIONS.map((grade) => {
-                    const count = classes
-                      ? groupPhysicalClassesForGrade(classes, grade.level).length
-                      : null;
+                    const count = classes ? gradePhysicalCounts.get(grade.level) ?? null : null;
                     return (
                       <SchoolManagementCard
                         key={grade.level}

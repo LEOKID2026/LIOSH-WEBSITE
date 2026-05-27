@@ -5,9 +5,15 @@
  */
 import { createServiceRole } from "./demo-school-lib.mjs";
 import { buildTeacherStudentReportPayload } from "../../lib/teacher-server/teacher-report.server.js";
+import {
+  loadSchoolScopedClassroomActivityRollupForStudentReport,
+  mergeClassroomActivityRollupIntoReportPayload,
+} from "../../lib/teacher-server/classroom-activity-class-report.server.js";
 import { aggregateParentReportPayload } from "../../lib/parent-server/report-data-aggregate.server.js";
 import { schoolCacheKey } from "../../lib/school-portal/school-portal-cache.js";
 import { physicalClassName } from "./demo-school-data.mjs";
+
+const DEMO_SCHOOL_ID = "bb4e5984-d95f-438f-a465-e1a8208ea7de";
 
 const arg1 = process.argv[2] || "";
 const arg2 = process.argv[3] || "";
@@ -94,7 +100,26 @@ async function main() {
 
   const classroomAnswers = cls?.id ? await countClassroomAnswers(admin, cls.id, student.id) : 0;
 
-  const schoolId = "bb4e5984-d95f-438f-a465-e1a8208ea7de";
+  const toDateNorm = new Date(toDate);
+  toDateNorm.setUTCHours(0, 0, 0, 0);
+  const fromDateNorm = new Date(toDateNorm);
+  fromDateNorm.setUTCDate(fromDateNorm.getUTCDate() - 29);
+
+  const schoolRollup = await loadSchoolScopedClassroomActivityRollupForStudentReport({
+    serviceRole: admin,
+    schoolId: DEMO_SCHOOL_ID,
+    studentId: student.id,
+    fromDate: fromDateNorm,
+    toDate: toDateNorm,
+  });
+
+  let schoolMerged = null;
+  if (withoutClassId.ok && schoolRollup.ok && schoolRollup.rollup?.answers) {
+    schoolMerged = structuredClone(withoutClassId.payload);
+    mergeClassroomActivityRollupIntoReportPayload(schoolMerged, schoolRollup.rollup);
+  }
+
+  const schoolId = DEMO_SCHOOL_ID;
   const pathWithClass = `/api/school/students/${student.id}/report-data?windowDays=30&classId=${cls?.id || ""}`;
   const pathWithoutClass = `/api/school/students/${student.id}/report-data?windowDays=30`;
 
@@ -132,13 +157,25 @@ async function main() {
             : withClassId
               ? { error: withClassId.code }
               : null,
+          schoolScopedMerge: schoolMerged
+            ? {
+                rollupClassIds: schoolRollup.classIds,
+                classroomAnswers: schoolRollup.rollup?.answers,
+                classroomActivityCount: schoolRollup.activityCount,
+                totalAnswers: schoolMerged.summary?.totalAnswers,
+                totalSessions: schoolMerged.summary?.totalSessions,
+                accuracy: schoolMerged.summary?.accuracy,
+              }
+            : null,
         },
         diagnosis:
           classroomAnswers > 0 && Number(withClassId?.payload?.summary?.totalAnswers || 0) === 0
             ? "BUG: classroom data exists but classId merge failed"
-            : classroomAnswers > 0 && Number(withoutClassId.payload?.summary?.totalAnswers || 0) === 0
-              ? "EXPECTED without classId: use classId in UI request"
-              : "OK",
+            : classroomAnswers > 0 && Number(schoolMerged?.summary?.totalAnswers || 0) > 0
+              ? "FIXED: school-scoped merge without classId works"
+              : classroomAnswers > 0 && Number(withoutClassId.payload?.summary?.totalAnswers || 0) === 0
+                ? "BUG: school-scoped merge still zero"
+                : "OK",
       },
       null,
       2

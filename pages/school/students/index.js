@@ -207,7 +207,12 @@ export default function SchoolStudentsPage() {
     setReportOpen(true);
     setReportError("");
     setReportViewModel(null);
-    const path = `/api/school/students/${student.studentId}/report-data?windowDays=30`;
+    const params = new URLSearchParams({ windowDays: "30" });
+    const ctxGrade = student?.gradeLevel || gradeLevel;
+    const ctxPhysical = student?.physicalClassName || physicalClassName;
+    if (ctxGrade) params.set("gradeLevel", String(ctxGrade));
+    if (ctxPhysical) params.set("physicalClassName", String(ctxPhysical));
+    const path = `/api/school/students/${student.studentId}/report-data?${params.toString()}`;
 
     const applyBody = (body) => {
       setReportViewModel(parseStudentReportViewModel(body, student, { schoolName: me?.school?.name }));
