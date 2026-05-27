@@ -1,0 +1,30 @@
+﻿FINAL-CHECK ZIP verification (extracted folder only)
+extract_path=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\school-portal\review-packages\_extract_FINAL_CHECK
+zip_path=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\school-portal\review-packages\school-portal-implementation-review-FINAL-CHECK.zip
+zip_size_bytes=129382
+zip_entry_count=87
+repo_root=C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY
+
+--- per-file checks ---
+PASS: supabase\migrations\033_teacher_parent_messages_school_context.sql
+PASS: docs\school-portal\SCHOOL_PORTAL_IMPLEMENTATION_COMPLETION_REPORT.md
+PASS: components\parent\ParentTeacherCodeReport.jsx
+PASS: pages\api\guardian\me.js
+PASS: pages\api\parent\mini-report.js
+PASS: lib\teacher-server\teacher-parent-messages.server.js
+PASS: lib\school-server\resolve-teacher-parent-message-school-id.server.js
+PASS: components\parent\GuardianChildSelectForm.jsx
+PASS: scripts\school-portal\sql-prechecks\034_teacher_access_audit_precheck.sql
+PASS: docs\school-portal\review-packages\ZIP_CONTENT_FINGERPRINT.txt
+
+--- source SHA256 (critical) ---
+components\parent\ParentTeacherCodeReport.jsx 82CB04A7C9F235B045B6987E08ADBDB4506F06F4CFBA69585231196A5DFA1305
+pages\api\guardian\me.js 0774E74C374CDA9B148CDC2EC51DF9EB8855AA9BD8B26838FC0DF0B4C48A4C11
+pages\api\parent\mini-report.js 1181C4512F7E772DC78BBA5CA9632B6E598AF0909F5D31DE20DA076359DA78A4
+lib\teacher-server\teacher-parent-messages.server.js CBBA708579EEBB49BC24069939DBE274361EF33EE4EB61E1C8A5608DF1F2B55A
+lib\school-server\resolve-teacher-parent-message-school-id.server.js 7755D5967792010F9E5D6FBAD6052F2DD577FD054E51CDF4642772EA1C0FF4B9
+components\parent\GuardianChildSelectForm.jsx 67D6EA5ACDC49697EA19DFFA204833AD1538AB3D314470A1DD887BCF201BA3D8
+supabase\migrations\033_teacher_parent_messages_school_context.sql E74EBB95BFCB5D3747C22F62233AD072BE0A061791B1AC420B804C20710419C1
+docs\school-portal\SCHOOL_PORTAL_IMPLEMENTATION_COMPLETION_REPORT.md F181C06B6CF209317976A68EF9F082AF777C76F6879031AC9DC5A6DB92B42A02
+docs\school-portal\REVIEW_PACKAGE_FILE_MANIFEST.md 135738B984329339E632530F030E35B9523A169047DCE21050D52328E54BCB80
+scripts\school-portal\sql-prechecks\034_teacher_access_audit_precheck.sql DB5DE085F5D14CFB3BEFDA9E468381477BE7C9EDC0A4F31043C2D96621EEED8F

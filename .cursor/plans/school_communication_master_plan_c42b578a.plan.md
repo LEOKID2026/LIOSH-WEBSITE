@@ -10,22 +10,22 @@ todos:
     status: pending
   - id: approve-hebrew-copy
     content: Owner approves Hebrew UI copy list (all surfaces, all phases — see Section 16.2 of master plan) before implementation starts
-    status: pending
+    status: completed
   - id: apply-030-031-034
     content: Owner manually applies migrations 030, 031, and 034 in Supabase SQL editor when agent signals they are ready
     status: pending
   - id: full-implementation
-    content: "START FULL SCHOOL PORTAL IMPLEMENTATION — full scope Phases 1 through 3 in order, no inter-phase stops"
-    status: pending
+    content: START FULL SCHOOL PORTAL IMPLEMENTATION — full scope Phases 1 through 3 in order, no inter-phase stops
+    status: completed
   - id: apply-032-033
     content: Owner manually applies migrations 032 and 033 in Supabase SQL editor when agent signals they are required
     status: pending
   - id: final-report
     content: Agent sends ONE final completion report (files, APIs, migrations, tests, regression, manual QA checklist, changed-files package)
-    status: pending
+    status: completed
   - id: phase4-plan
     content: Plan Phase 4 optional features based on Phase 2-3 usage data
-    status: pending
+    status: completed
 isProject: false
 ---
 
