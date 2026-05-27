@@ -219,12 +219,6 @@ export default function SchoolStudentsPage() {
         accessToken,
         schoolId,
         path,
-        onCached: (body) => {
-          if (body) {
-            applyBody(body);
-            setReportLoading(false);
-          }
-        },
       });
       if (result?.status !== 200) {
         setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));

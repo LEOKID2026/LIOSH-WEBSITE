@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
@@ -56,6 +56,7 @@ export default function SchoolClassesPage() {
   const [reportViewModel, setReportViewModel] = useState(null);
   const [nestedStudentVm, setNestedStudentVm] = useState(null);
   const [studentReportLoading, setStudentReportLoading] = useState(false);
+  const reportClassRef = useRef(null);
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -77,6 +78,7 @@ export default function SchoolClassesPage() {
   );
 
   useEffect(() => {
+    reportClassRef.current = null;
     setReportOpen(false);
     setReportClass(null);
     setReportError("");
@@ -100,6 +102,7 @@ export default function SchoolClassesPage() {
   );
 
   const closeReport = () => {
+    reportClassRef.current = null;
     setReportOpen(false);
     setReportClass(null);
     setReportError("");
@@ -109,8 +112,9 @@ export default function SchoolClassesPage() {
 
   const openStudentReportFromClass = async (studentId, row) => {
     if (!accessToken || !studentId) return;
+    const ctxClass = reportClassRef.current || reportClass;
     const params = new URLSearchParams({ windowDays: "30" });
-    if (reportClass?.classId) params.set("classId", String(reportClass.classId));
+    if (ctxClass?.classId) params.set("classId", String(ctxClass.classId));
     const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
 
     const applyBody = (body) => {
@@ -125,12 +129,12 @@ export default function SchoolClassesPage() {
           {
             studentId,
             displayName,
-            physicalClassName: reportClass?.name,
-            gradeLevel: reportClass?.gradeLevel,
+            physicalClassName: ctxClass?.name,
+            gradeLevel: ctxClass?.gradeLevel,
           },
           {
             schoolName: me?.school?.name,
-            subjectFocus: reportClass?.subjectFocus,
+            subjectFocus: ctxClass?.subjectFocus,
           }
         )
       );
@@ -142,9 +146,6 @@ export default function SchoolClassesPage() {
         accessToken,
         schoolId,
         path,
-        onCached: (body) => {
-          if (body?.student) applyBody(body);
-        },
       });
       if (result?.status === 200) applyBody(result.body);
     } finally {
@@ -154,10 +155,12 @@ export default function SchoolClassesPage() {
 
   const openClassReport = async (cls) => {
     if (!accessToken) return;
+    reportClassRef.current = cls;
     setReportClass(cls);
     setReportOpen(true);
     setReportError("");
     setReportViewModel(null);
+    setReportLoading(true);
     const path = `/api/school/classes/${cls.classId}/report-data?windowDays=30`;
 
     const applyBody = (body) => {
@@ -166,18 +169,11 @@ export default function SchoolClassesPage() {
       );
     };
 
-    setReportLoading(true);
     try {
       const result = await fetchSchoolReportCached({
         accessToken,
         schoolId,
         path,
-        onCached: (body) => {
-          if (body) {
-            applyBody(body);
-            setReportLoading(false);
-          }
-        },
       });
       if (result?.status !== 200) {
         setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
