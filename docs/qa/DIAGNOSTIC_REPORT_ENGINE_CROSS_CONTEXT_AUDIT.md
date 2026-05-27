@@ -320,6 +320,219 @@ Verified that `buildStudentTeacherGuidance` returns `insufficientData: true` ONL
 | Subject filtering does not leave stale recommendations from removed subjects | FAIL on R3/R6 | §E.2 stale `parentFacing.insights` / `parentFacing.homeRecommendations`. |
 | Daily activity respects subject filter on R3/R6 | FAIL — SOFT | §E.3. |
 
+---
+
+## 7. Section F — Parent report engine checks
+
+### F.1 Engine identity across normal parent and teacher QA preview
+
+`pages/learning/parent-report.js` is the single page that renders the original full parent report. It detects the source via `parseParentReportRemoteSource(router)` → `{ isParent, isTeacher, isRemote, studentId }`. It then calls `parentReportRemoteDataUrl(remoteKind, parentStudentId, qs)` → R1 for parent, R3 for teacher. In both cases the response is fed to `runParentReportGenerationFromApiBody(body, uiPeriod)`, which:
+
+1. Builds a normalized `dbInput` via `buildReportInputFromDbData(body, { period, timezone: "UTC" })`.
+2. Backs up the user's local-storage report keys.
+3. Seeds the same local-storage keys with `seedLocalStorageFromDbReportInput(seeded, dbInput)`.
+4. Calls the original `generateParentReportV2(playerName, "custom", from, to)` from `utils/parent-report-v2.js` — the unmodified parent-report engine.
+5. Applies `applyParentReportGamificationOverlay(base, reportApiBody)` and copies `body.parentFacing` to `base.parentFacing` so the UI can render insights/recommendations directly.
+6. Restores the user's previous local-storage keys.
+
+This means the EXACT same engine binary runs for normal parent and teacher QA preview. The only difference is the API body that feeds it. PASS.
+
+### F.2 School / classroom activity in the full parent report
+
+By design (referenced in `.cursor/plans/classroom_activities_feature_1a9dae77.plan.md` § 7 "Parent boundary"), the parent route R1 does NOT join classroom activity tables. Therefore for a school student:
+- R1 / R5 (the parent's own login) shows ONLY the student's individual home-practice activity. Classroom-only activity is invisible there. This is per design and is documented in the plan.
+- R3 / R6 (teacher QA preview) DOES include the classroom rollup, and feeds it through the same parent report engine. So the teacher preview shows the school + home merged truth as if it were a parent view.
+
+This matches the user's stated requirement:
+> Teacher QA parent-report preview must use the same original parent report engine, but with the correct school/classroom bridge for school students.
+
+PASS for the QA preview. The parent's own route intentionally remains "home practice only" until the design explicitly chooses to expose school activity to parents.
+
+### F.3 No fallback to "no data" when data exists
+
+`runParentReportGenerationFromApiBody` returns `{ ok: false, error: "no_base" }` only if `generateParentReportV2` itself returns null/undefined. Looking at `generateParentReportV2`, it returns null only when `typeof window === "undefined"` (server-side) — never on a real browser path. So the only way to reach a silent "no data" state is when the API body has empty subjects AND empty totals (legitimately thin data). PASS.
+
+The page-level fallback at `pages/learning/parent-report.js` line ~1077 sets `setParentReportError("לא ניתן לבנות את הדוח מהנתונים שהתקבלו מהשרת.")` when `out.ok === false`. This message is reachable only when the engine itself failed to build, not when totals are zero — a zero-totals payload still produces a valid `base` with all-empty subject sections. PASS.
+
+### F.4 Snapshot expectations
+
+There is no production snapshot save endpoint for parent reports. The strings `parent_report_snapshot`, `saveSnapshot`, `parent-report-snapshot-loader` appear ONLY inside `scripts/launch-readiness/*` and `scripts/virtual-student-qa/*`, which are offline test/QA tooling. No production page or API route writes a snapshot. PASS, with the explicit documentation that:
+- Parent normal route does NOT save a snapshot. Each visit regenerates from the live DB.
+- Teacher QA preview does NOT save a snapshot. Each visit regenerates from the live DB.
+- The offline scripts that capture snapshots do so for regression evidence and are not invoked from any browser flow.
+
+This matches the user's requirement to document snapshot behavior explicitly.
+
+### F.5 PASS/FAIL — Section F
+
+| Check | Status | Notes |
+|---|---|---|
+| Normal parent route still works | PASS (subject to §E.2 not affecting parent route since R1 has no subject filter) | §F.1 |
+| Teacher QA preview route works for school students | PASS for numeric layer; FAIL for stale parent-facing text under subject filter | §F.1, §E.2 |
+| School/classroom activity appears in the full parent report (QA preview) | PASS | §F.2 |
+| Generated parent report uses same payload as corrected teacher report scope | PASS for numeric layer | §F.1 |
+| Report generation does not silently fall back to "no data" | PASS | §F.3 |
+| Snapshots saved when expected; not saved when not expected | PASS — no production snapshot expected on either route | §F.4 |
+
+---
+
+## 8. Section G — Authorization and safety checks
+
+### G.1 Per-route auth surfaces
+
+| Route | Caller auth | Cross-tenant guard |
+|---|---|---|
+| R1 parent | Bearer Supabase session token; `getLearningSupabaseServerUserClient(authHeader)`; `students.parent_id === userData.user.id` filter on the parent-side client | `maybeSingle` returns null if the student's `parent_id` does not match the caller. RLS on `students` further enforces the same on the user-side client. |
+| R2 teacher report | `requireTeacherApiContext` extracts `teacherId` from the bearer token; teacher portal feature flag (`teacher_portal_enabled`) and per-teacher quota (`ai_reports`) checked; production rate-limit applied | `teacherHasReportAccessToStudent(serviceRole, teacherId, studentId)` checks `teacher_students` → `teacher_class_students` → `teacherHasSchoolContextReportAccess`. Returns `403 student_not_linked` otherwise. |
+| R3 teacher parent-preview | `requireTeacherApiContext`; same rate limit | Same `teacherHasReportAccessToStudent` check inside `buildTeacherParentReportPreviewPayload`. |
+| R4 school student report | `requireSchoolManagerApiContext` extracts schoolId + managerId | `verifyStudentVisibleToSchool(serviceRole, schoolId, studentId)` requires the student to be in the school's enrolled-or-class-member visibility set; `resolveSchoolReportTeacherForStudent` further requires at least one school teacher to have report access. |
+| R5/R6 (UI) | inherits from R1/R3 — UI cannot bypass server auth | inherits |
+
+### G.2 Subject-permission enforcement
+
+For school teachers (`role !== "school_admin"`) `loadTeacherPermittedSubjects` returns a non-null `Set<string>`. `applySchoolTeacherReportFilter` uses that Set in `filterReportByPermittedSubjects` to drop out-of-scope subjects from the response. For school admins it returns `permittedSubjects: null` → the filter is a no-op, and the admin sees all subjects (matching the documented expected scope difference).
+
+R4 (school API) does NOT call `applySchoolTeacherReportFilter`. Instead it hard-requires `requireSchoolManagerApiContext`, so only manager/admin role can hit it. Subject filter is intentionally skipped for managers.
+
+R2 and R3 DO call the filter and DO restrict subject teachers correctly. Numeric layer is correctly filtered. Text layer (`parentFacing`) leaks across subjects on R3 only (see §E.2).
+
+### G.3 Service role / browser leakage
+
+- Service role keys are loaded only inside server modules (`getLearningSupabaseServiceRoleClient`, `requireTeacherApiContext.serviceRole`, etc.). They are never returned in API bodies.
+- The teacher portal `teacherAuthFetch` and the school `schoolAuthFetch` always send the user's Supabase JWT via the Authorization header, never a service role key.
+- The QA preview link from `/teacher/student/[studentId]/parent-report` redirects to `/learning/parent-report?studentId=...&source=teacher&period=month`. The teacher's own session token is what authenticates the subsequent fetch to R3. There is no service-role bridging on the browser path.
+- No production code path sends `Authorization: ` headers built from `SUPABASE_SERVICE_ROLE_KEY` to a public endpoint.
+
+### G.4 No production auth weakening introduced by QA preview bridge
+
+Verified that:
+- `pages/teacher/student/[studentId]/parent-report.js` only redirects; it does not exchange tokens.
+- `parentReportRemoteDataUrl("teacher", ...)` calls a teacher-portal-protected route (R3) — same auth surface as R2.
+- `buildTeacherParentReportPreviewPayload` calls `teacherHasReportAccessToStudent` exactly like `buildTeacherStudentReportPayload`. There is no QA-only bypass.
+- The Playwright e2e short-circuit `window.__parentReportPlaywrightE2eSession` only takes effect when the user has an existing browser opt-in flag and provides a literal `playwright-e2e-parent-report` token, which is gated server-side to non-production environments. Production runs use the real Supabase session token.
+
+### G.5 PASS/FAIL — Section G
+
+| Check | Status | Notes |
+|---|---|---|
+| Parent cannot access another parent's child | PASS | §G.1 R1 row. |
+| Teacher cannot access unauthorized students | PASS | §G.1 R2/R3 rows. |
+| Subject teacher cannot see unauthorized subject NUMBERS | PASS | §G.2 numeric layer. |
+| Subject teacher cannot see unauthorized subject TEXT (parent-facing) | FAIL on R3/R6 | §E.2 stale `parentFacing.insights/homeRecommendations`. |
+| School admin can see full school-scoped data where intended | PASS | §G.1 R4 row, §G.2. |
+| Private teacher behavior remains unchanged | PASS | `permittedSubjects === null` for non-school teachers; filter is no-op. |
+| No service-role / browser leakage | PASS | §G.3. |
+| No production auth weakening introduced by QA preview bridge | PASS | §G.4. |
+
+---
+
+## 9. Section H — Browser verification (manual)
+
+This audit is static. The eight required manual flows are listed here so a reviewer can step through them in a browser session:
+
+1. **School admin → student report.** Sign in as `school@leo-k.com` (or the configured school manager). Navigate to `/school/students`, pick a grade and physical class, click a student, and confirm the report modal renders summary, subject cards, recent activity. Verify against R4 numeric truth.
+2. **School teacher dashboard → student card.** Sign in as a school subject teacher (`dan@leo-k.com` for the demo school). Navigate to `/teacher/dashboard`. For each student card, the totalAnswers/accuracy/lastActivity must match the visible R2 report for that student (open `/teacher/student/[id]`).
+3. **School teacher → student report.** From the dashboard click into a student. Confirm the report renders. Confirm `summary.totalAnswers === sum(subject card answers)` (this is the post-filter recomputed summary, §C.1 PASS-strong path).
+4. **School teacher → "דוח להורים" (QA preview).** From the student report click the "דוח להורים" button. The browser opens `/teacher/student/[id]/parent-report` which redirects to `/learning/parent-report?studentId=...&source=teacher&period=month`. Verify:
+   - Subject cards match the teacher's permitted subjects.
+   - `parentFacing.insights` (the Hebrew bullet list near the top) — verify whether any bullet mentions a subject the teacher is not permitted to see. Per §E.2 this is the failure to watch for.
+5. **Normal parent login → original parent report.** Sign in as a parent of a non-school student. Navigate to `/learning/parent-report?studentId=<their child>&source=parent&period=month`. Verify the report renders with the same subjects as R1's body and that `summary.totalAnswers === sum(subject answers)`.
+6. **Normal parent login of a school student.** Sign in as the parent of a school-context student (link configured by school). Navigate to the parent report page. Verify only home-practice activity appears (per §F.2 design). Compare totals to R4 — R1 totals should be ≤ R4 totals, with the delta exactly equal to the classroom rollup.
+7. **Private teacher → student report.** Sign in as a private (non-school) teacher with at least one linked student. Navigate to `/teacher/student/[id]`. Verify all 6 subject cards render unfiltered (no `permittedSubjects` restriction).
+8. **Cross-route same-student same-window check.** For one school student, run the existing diagnostic script `node --env-file=.env.local scripts/school-portal/diagnose-student-report-context.mjs <studentId>`. The script emits `withoutClassId.totalAnswers`, `withClassId.totalAnswers`, `schoolScopedMerge.totalAnswers`, `baseLearningAnswers`, `classroomAnswersInGeometryClass`. The "diagnosis" string at the bottom must be `OK` or `FIXED`, never `BUG`.
+
+For each manual flow above, the expected and actual numbers should be filled into a results table appended below — but only after running the live browser check.
+
+---
+
+## 10. Section I — Findings and proposed fixes
+
+### 10.1 Summary table — PASS/FAIL per route × per check
+
+| Route | Auth | Numeric reconciliation | Subject filter | Diagnostic engine output | Date range | Parent-facing text leak |
+|---|---|---|---|---|---|---|
+| R1 parent | PASS | PASS-with-note (sessions soft-mismatch only if rogue subject in DB) | N/A | PASS | PASS | N/A |
+| R2 teacher report | PASS | PASS (strong) for school teachers; PASS-with-note for private teacher / school admin | PASS | PASS | PASS | N/A (no parent-facing block on R2) |
+| R3 teacher parent-preview | PASS | PASS (strong) for school teachers | PASS for numeric layer | PASS for `teacherGuidanceBlock`; **FAIL for `parentFacing` after subject filter** | PASS for home; SOFT-FAIL for classroom date filter | **FAIL** §E.2 |
+| R4 school admin | PASS | PASS-with-note | N/A (admin bypass) | PASS | PASS | N/A |
+| R5 parent UI | PASS | inherits R1 | N/A | PASS | PASS | N/A |
+| R6 teacher QA UI | PASS | inherits R3 | inherits R3 | inherits R3 | inherits R3 | **FAIL** §E.2 |
+
+### 10.2 Findings list
+
+**FINDING 1 — Stale `parentFacing.insights` / `parentFacing.homeRecommendations` after subject filter (R3, R6).**
+- Severity: medium.
+- Status: FAIL.
+- Affected routes: R3 (`/api/teacher/students/[studentId]/parent-report-data`) and the UI it feeds (R6 `/learning/parent-report?source=teacher`).
+- Impact: A school teacher with restricted subject permissions can see Hebrew insights/home-recommendations text that names subjects they are not permitted to view. The numeric layer (subject cards, summary) is correctly filtered; only the text block leaks.
+- Root cause: `enrichPayloadWithParentFacing` runs inside `buildTeacherParentReportPreviewPayload` BEFORE `applySchoolTeacherReportFilter` runs. The filter rebuilds `summary` and `teacherGuidanceBlock`, but does not rebuild `parentFacing`.
+- Files involved: `lib/teacher-server/teacher-report.server.js` (`buildTeacherParentReportPreviewPayload` order of operations), `lib/school-server/school-subjects.server.js` (`filterReportByPermittedSubjects`).
+
+**FINDING 2 — `dailyActivity` is not subject-filtered for school teachers (R3, R6).**
+- Severity: low (cosmetic / soft-reconciliation only).
+- Status: SOFT-FAIL.
+- Affected routes: R3 / R6.
+- Impact: For school teachers with restricted subjects, `sum(dailyActivity[*].answers)` exceeds the post-filter `summary.totalAnswers` because daily rows are not subject-tagged.
+- Root cause: `dailyActivity` is computed without a subject dimension by `aggregateParentReportPayload` (and merged that way by the classroom-rollup merger). The filter cannot subset it without re-aggregating from raw rows.
+
+**FINDING 3 — Classroom activities are date-filtered by activity-lifecycle timestamp, not by student-submission timestamp (R2, R3, R4 — wherever classroom rollup runs).**
+- Severity: low (edge case).
+- Status: SOFT-FAIL.
+- Impact: Activities whose `closed_at`/`activated_at`/`created_at` falls outside the chosen date window are excluded from the rollup, even if the student's `classroom_activity_student_status.submitted_at` was inside the window.
+- Root cause: `isActivityInRange` in `lib/teacher-server/classroom-activity-class-report.server.js` uses `activityTimestampIso(row) = row.closed_at || row.activated_at || row.created_at`, not `submitted_at`.
+
+**FINDING 4 — Soft potential mismatch between `summary.totalSessions` and sum of subject sessions (R1, R4) when a `learning_sessions` row has a subject outside the allowlist.**
+- Severity: very low.
+- Status: SOFT-RISK.
+- Impact: In production this is gated by application-level write-time validation, but no DB constraint enforces it. If a stray row exists, `summary.totalSessions` would be one off from the visible subject sum.
+- Root cause: `summary.totalSessions = sessions.length` is set BEFORE the in-loop guard that skips unknown subjects. Per-subject `subjectAgg.sessions` is only incremented for known subjects.
+- Files: `lib/parent-server/report-data-aggregate.server.js`.
+
+### 10.3 Proposed fixes (NOT applied — audit-only run)
+
+- **Fix for Finding 1 (highest priority).** In `lib/school-server/school-subjects.server.js` `filterReportByPermittedSubjects`, after recomputing `summary` and rebuilding `teacherGuidanceBlock`, also rebuild `parentFacing.insights` and `parentFacing.homeRecommendations` against the filtered payload. Pseudocode (server-only, no UI/CSS/Hebrew/route change):
+  - Detect `out.parentFacing` presence (preserves `teacherMessages`).
+  - Import `buildParentFacingBlocks` from `lib/parent-server/parent-report-parent-facing.server.js`.
+  - `if (reportPayload?.parentFacing) { const blocks = buildParentFacingBlocks(reconciled); reconciled.parentFacing = { ...reportPayload.parentFacing, insights: blocks.insights, homeRecommendations: blocks.homeRecommendations }; }`
+  - This pattern follows the existing approved pattern of recomputing `teacherGuidanceBlock` after the filter — same shape, same place.
+
+- **Fix for Finding 2.** Two options:
+  - Option A (data-only): Extend `aggregateParentReportPayload` to optionally emit `dailyActivityBySubject` per day so the filter can recompute daily totals from the visible subjects. Schema-additive; no UI/CSS/Hebrew change. Requires a corresponding update in `mergeClassroomActivityRollupIntoReportPayload` to also break daily totals by subject.
+  - Option B (defer): Document the soft mismatch on R3/R6 and accept it. The user requirement implies Option A; recommend Option A but with an explicit owner sign-off given the schema-additive payload change.
+
+- **Fix for Finding 3.** Two options:
+  - Option A (preferred): Switch the in-range filter to include EITHER activity-level timestamps OR `classroom_activity_student_status.submitted_at`. Concretely: load all non-archived activities for the scope, then filter the JOINED `(activity, status)` pair by `submitted_at IN range OR activityTimestampIso(activity) IN range`. This is more permissive than today and may slightly inflate counts at edges; that is correct because the student really did submit in range.
+  - Option B (data-only minimal): Keep the activity filter but also include any activity that has at least one `classroom_activity_student_status.submitted_at` in range, by pre-querying status rows in range first and using their `activity_id` set as an additional whitelist. This preserves the activity-as-bucket model while honoring submission timestamps.
+
+- **Fix for Finding 4.** Inside `aggregateParentReportPayload`, change `summary.totalSessions = sessions.length` to `summary.totalSessions = sessions.filter(s => REPORT_AGG_SUBJECTS.includes(s.subject)).length` so the value matches the sum of subject sessions. This is a one-line server-only change and affects only the corner case of a rogue DB row.
+
+### 10.4 Files that would change if fixes are implemented (planning only — NOT applied here)
+
+- `lib/school-server/school-subjects.server.js` — Finding 1 fix.
+- `lib/parent-server/parent-report-parent-facing.server.js` — exported helper already exists; no change required.
+- `lib/parent-server/report-data-aggregate.server.js` — Finding 4 fix; optional Finding 2 Option A schema-additive change.
+- `lib/teacher-server/classroom-activity-class-report.server.js` — Finding 3 fix; optional Finding 2 Option A daily-by-subject change.
+- No UI files. No CSS files. No Hebrew copy files. No route files.
+
+### 10.5 Confirmation of audit constraints
+
+- UI files were not modified.
+- CSS files were not modified.
+- Hebrew text files were not modified.
+- Route files (`pages/api/...`, `pages/learning/...`, `pages/teacher/...`, `pages/school/...`) were not modified.
+- No git commit or push was performed.
+- The single created file is this audit document at `docs/qa/DIAGNOSTIC_REPORT_ENGINE_CROSS_CONTEXT_AUDIT.md`.
+
+### 10.6 Recommended next steps
+
+1. Owner approval on Finding 1 fix (server-side, no UI impact).
+2. Run §B.3 scripts against staging for the eight student categories and append the actual-vs-expected numeric table to this document.
+3. Run §H.1–§H.8 manually and append the browser verification matrix.
+4. Decide Option A vs Option B for Findings 2 and 3.
+5. Once approved, implement the fixes in a single PR limited to the four server files in §10.4 with no UI/CSS/Hebrew/route changes.
+
+
+
 
 
 

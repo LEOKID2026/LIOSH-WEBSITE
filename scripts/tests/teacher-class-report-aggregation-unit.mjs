@@ -65,6 +65,7 @@ assert.equal(rollups.get(studentA)?.correct, 15);
 assert.equal(rollups.get(studentB)?.answers, 10);
 
 const emptyLearningPayload = {
+  range: { from: "2026-05-01", to: "2026-05-18" },
   summary: {
     totalSessions: 0,
     totalAnswers: 0,
@@ -88,6 +89,11 @@ assert.equal(mergedPayload.summary.correctAnswers, 15);
 assert.equal(mergedPayload.summary.studentsWithActivity, undefined);
 assert.equal(mergedPayload.summary.accuracy, 75);
 assert.equal(mergedPayload.subjects.geometry.answers, 20);
+assert.equal(
+  mergedPayload.subjects.geometry.topics.shapes?.lastAnswerAt,
+  "2026-05-10T12:00:00.000Z",
+  "classroom merge stamps topic activity time for parent-report seed"
+);
 
 const studentPayloads = [
   {

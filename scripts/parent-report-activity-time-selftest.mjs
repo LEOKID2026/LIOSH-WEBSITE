@@ -184,6 +184,45 @@ const NEW_ISO = new Date(NEW_MS).toISOString();
   assert.equal(byGrade.g5, g5Ms);
 }
 
+// Classroom-only topic rows (answers, no activity timestamps) seed with range end so v2 counts them.
+{
+  const rangeTo = "2026-05-18";
+  const rangeEndMs = parseActivityTimestampMs(`${rangeTo}T23:59:59.999Z`);
+  const syntheticAgg = {
+    student: { id: "s-classroom", full_name: "ClassroomOnly", grade_level: "g4", is_active: true },
+    range: { from: "2026-05-01", to: rangeTo },
+    summary: { totalAnswers: 12, correctAnswers: 8, wrongAnswers: 4, registeredGradeLevel: "g4" },
+    subjects: {
+      math: {
+        answers: 12,
+        topics: {
+          fractions: {
+            answers: 12,
+            correct: 8,
+            wrong: 4,
+            latestActivitySource: "classroom_activity",
+          },
+        },
+      },
+    },
+  };
+  const dbInput = buildReportInputFromDbData(syntheticAgg);
+  const topic =
+    dbInput.subjects.math.topics[`fractions${REPORT_TOPIC_GRADE_SEP}g4`] ||
+    dbInput.subjects.math.topics.fractions;
+  assert.ok(topic, "adapter builds classroom topic row");
+  assert.equal(topic.total, 12);
+  assert.equal(parseActivityTimestampMs(topic.lastAnswerAt), null);
+
+  const store = new Map();
+  seedLocalStorageFromDbReportInput(store, dbInput);
+  const tracking = JSON.parse(store.get("mleo_time_tracking"));
+  const sessions = tracking.operations.fractions.sessions;
+  assert.equal(sessions.length, 1);
+  assert.equal(sessions[0].timestamp, rangeEndMs);
+  assert.equal(sessions[0].total, 12);
+}
+
 // Collapse merges mode variants but keeps max activity time.
 {
   const collapsed = collapseTopicRowsToCanonicalTopicEntityForTests("math", {
