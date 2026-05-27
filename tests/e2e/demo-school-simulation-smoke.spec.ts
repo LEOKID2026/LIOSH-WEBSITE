@@ -260,6 +260,28 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     expect(classReportBody?.cohortSummary || classReportBody?.summary).toBeTruthy();
     expect(classReportBody?.schoolManagerExtras?.recentClassroomActivities).toBeDefined();
 
+    const danGeoClass = classes.find(
+      (c: { name?: string; subjectFocus?: string; teacherName?: string }) =>
+        c.name === "כיתה א׳ 2" &&
+        c.subjectFocus === "geometry" &&
+        String(c.teacherName || "").includes("דן")
+    );
+    expect(danGeoClass, "Dan Cohen geometry class א׳ 2").toBeTruthy();
+    expect(danGeoClass?.memberCount).toBe(22);
+    expect(danGeoClass?.activityCount).toBe(8);
+
+    const danGeoReport = await page.request.get(
+      `/api/school/classes/${danGeoClass?.classId}/report-data`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    expect(danGeoReport.status()).toBe(200);
+    const danGeoBody = await danGeoReport.json();
+    expect(danGeoBody?.roster?.studentCount).toBe(22);
+    expect(danGeoBody?.schoolManagerExtras?.classroomActivityCount).toBe(8);
+    expect(danGeoBody?.cohortSummary?.studentsWithActivity).toBeGreaterThan(0);
+    expect(danGeoBody?.cohortSummary?.totalAnswers).toBeGreaterThan(0);
+    expect(danGeoBody?.cohortSummary?.accuracy).toBeGreaterThan(0);
+
     const studentReport = await page.request.get(
       `/api/school/students/${sampleStudentId}/report-data`,
       {
