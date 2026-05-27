@@ -282,6 +282,26 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     expect(danGeoBody?.cohortSummary?.totalAnswers).toBeGreaterThan(0);
     expect(danGeoBody?.cohortSummary?.accuracy).toBeGreaterThan(0);
 
+    const sampleStudentFromClass = danGeoBody?.students?.[0];
+    expect(sampleStudentFromClass?.studentId, "class report student row").toBeTruthy();
+    const nestedStudentReport = await page.request.get(
+      `/api/school/students/${sampleStudentFromClass.studentId}/report-data?classId=${danGeoClass?.classId}&windowDays=30`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    expect(nestedStudentReport.status()).toBe(200);
+    const nestedStudentBody = await nestedStudentReport.json();
+    expect(String(nestedStudentBody?.student?.full_name || "").trim().length).toBeGreaterThan(0);
+    expect(nestedStudentBody?.summary?.totalAnswers).toBeGreaterThan(0);
+    expect(nestedStudentBody?.summary?.accuracy).toBeGreaterThan(0);
+
+    expect(danTeacher?.teacherId).toBeTruthy();
+    const danDetail = await page.request.get(`/api/school/teachers/${danTeacher?.teacherId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(danDetail.status()).toBe(200);
+    const danDetailBody = await danDetail.json();
+    expect(danDetailBody?.data?.teacher?.activeStudentLinkCount).toBeGreaterThan(0);
+
     const studentReport = await page.request.get(
       `/api/school/students/${sampleStudentId}/report-data`,
       {

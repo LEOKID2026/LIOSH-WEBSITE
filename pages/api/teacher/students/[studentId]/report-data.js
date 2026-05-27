@@ -23,7 +23,7 @@ import {
   startTimer,
 } from "../../../../../lib/teacher-server/api-timing.server.js";
 
-const ALLOWED_QUERY = new Set(["from", "to", "windowDays", "studentId"]);
+const ALLOWED_QUERY = new Set(["from", "to", "windowDays", "studentId", "classId"]);
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -73,14 +73,21 @@ export default async function handler(req, res) {
       }
     }
 
+    const classIdRaw = req.query?.classId;
+    const classId =
+      typeof classIdRaw === "string" && classIdRaw.trim() ? classIdRaw.trim() : null;
+
     const tBuild0 = startTimer();
-    const built = await buildTeacherStudentReportPayload({
-      serviceRole: ctx.serviceRole,
-      teacherId: ctx.teacherId,
-      studentId: parsedId.studentId,
-      fromDate: range.fromDate,
-      toDate: range.toDate,
-    });
+    const built = await buildTeacherStudentReportPayload(
+      {
+        serviceRole: ctx.serviceRole,
+        teacherId: ctx.teacherId,
+        studentId: parsedId.studentId,
+        fromDate: range.fromDate,
+        toDate: range.toDate,
+      },
+      { classId }
+    );
     const tBuild = elapsedMs(tBuild0);
 
     if (!built.ok) {

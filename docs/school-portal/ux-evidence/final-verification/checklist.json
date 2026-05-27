@@ -1,0 +1,117 @@
+{
+  "base": "http://127.0.0.1:3005",
+  "checklist": [
+    {
+      "id": "1a",
+      "label": "Dan linked students not 0",
+      "pass": true,
+      "detail": "linked=134"
+    },
+    {
+      "id": "1b",
+      "label": "Dan linked students expected ~134",
+      "pass": true,
+      "detail": "linked=134"
+    },
+    {
+      "id": "1c",
+      "label": "Dan classes still 12",
+      "pass": true,
+      "detail": "classes=12"
+    },
+    {
+      "id": "2a",
+      "label": "Class report students with activity > 0",
+      "pass": true
+    },
+    {
+      "id": "2b",
+      "label": "Class report answers/submissions > 0",
+      "pass": true
+    },
+    {
+      "id": "2c",
+      "label": "Class report accuracy > 0%",
+      "pass": true
+    },
+    {
+      "id": "3a",
+      "label": "Attention: every row has דוח תלמיד",
+      "pass": true,
+      "detail": "rows=3 buttons=3"
+    },
+    {
+      "id": "3b",
+      "label": "Student title is real name not תלמיד/ה",
+      "pass": true,
+      "detail": "title=חן ל."
+    },
+    {
+      "id": "3c",
+      "label": "Student report answers > 0",
+      "pass": true
+    },
+    {
+      "id": "3d",
+      "label": "Student report not all zeros",
+      "pass": true
+    },
+    {
+      "id": "4a",
+      "label": "Distribution groups clickable",
+      "pass": true
+    },
+    {
+      "id": "4b",
+      "label": "Distribution drilldown: student list opens",
+      "pass": true,
+      "detail": "students=22"
+    },
+    {
+      "id": "4c",
+      "label": "Distribution drilldown: דוח תלמיד on each row",
+      "pass": true,
+      "detail": "buttons=22"
+    },
+    {
+      "id": "4d",
+      "label": "Distribution → student report opens",
+      "pass": true
+    },
+    {
+      "id": "5a",
+      "label": "Focus: no raw English keys",
+      "pass": true
+    },
+    {
+      "id": "5b",
+      "label": "Focus: no math — מתמטיקה pattern",
+      "pass": true
+    },
+    {
+      "id": "5c",
+      "label": "Focus topic opens affected students",
+      "pass": true,
+      "detail": "students=22"
+    },
+    {
+      "id": "5d",
+      "label": "Focus affected students have דוח תלמיד",
+      "pass": true,
+      "detail": "buttons=22"
+    },
+    {
+      "id": "env",
+      "label": "Verification base URL",
+      "pass": true,
+      "detail": "http://127.0.0.1:3005"
+    },
+    {
+      "id": "env",
+      "label": "Dan teacher id captured",
+      "pass": true,
+      "detail": "ef3ef431-2287-4a7f-b6fc-cf347eb308d6"
+    }
+  ],
+  "failed": 0
+}

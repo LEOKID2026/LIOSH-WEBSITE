@@ -105,26 +105,36 @@ export default function SchoolClassesPage() {
     setNestedStudentVm(null);
   };
 
-  const openStudentReportFromClass = async (studentId) => {
+  const openStudentReportFromClass = async (studentId, row) => {
     if (!accessToken || !studentId) return;
     setStudentReportLoading(true);
     try {
+      const params = new URLSearchParams({ windowDays: "30" });
+      if (reportClass?.classId) params.set("classId", String(reportClass.classId));
       const res = await schoolAuthFetch(
         accessToken,
-        `/api/school/students/${studentId}/report-data?windowDays=30`
+        `/api/school/students/${studentId}/report-data?${params.toString()}`
       );
       const body = await res.json().catch(() => ({}));
       if (res.status !== 200) return;
+      const displayName =
+        row?.name ||
+        body?.student?.full_name ||
+        reportViewModel?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
+        "תלמיד/ה";
       setNestedStudentVm(
         parseStudentReportViewModel(
           body,
           {
             studentId,
-            displayName: body?.student?.fullName || "תלמיד/ה",
+            displayName,
             physicalClassName: reportClass?.name,
             gradeLevel: reportClass?.gradeLevel,
           },
-          { schoolName: me?.school?.name }
+          {
+            schoolName: me?.school?.name,
+            subjectFocus: reportClass?.subjectFocus,
+          }
         )
       );
     } finally {

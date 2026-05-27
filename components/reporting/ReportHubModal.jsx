@@ -9,28 +9,29 @@ const DETAIL_VARIANT = {
   activities: "activities",
   students: "students",
   distribution: "distribution",
-  focus: "default",
-  attention: "default",
+  focus: "focus",
+  attention: "attention",
   subjects: "subjects",
   recommendations: "default",
 };
 
+function studentReportButton(onStudentReport, studentReportLoading) {
+  if (!onStudentReport) return undefined;
+  return (item) => (
+    <button
+      type="button"
+      disabled={studentReportLoading || !item.studentId}
+      onClick={() => onStudentReport(item.studentId, item)}
+      className="shrink-0 rounded-lg bg-amber-500 text-black text-xs font-semibold px-3 py-1.5 disabled:opacity-50"
+      data-testid={item.studentId ? `report-open-student-${item.studentId}` : undefined}
+    >
+      {studentReportLoading ? "טוען…" : "דוח תלמיד"}
+    </button>
+  );
+}
+
 /**
  * Layered report hub: summary first, details in stacked modals.
- *
- * @param {{
- *   open: boolean,
- *   title: string,
- *   onClose: () => void,
- *   loading?: boolean,
- *   loadingLabel?: string,
- *   error?: string,
- *   viewModel?: object|null,
- *   onStudentReport?: (studentId: string) => void|Promise<void>,
- *   studentReportLoading?: boolean,
- *   nestedStudentViewModel?: object|null,
- *   onCloseStudentReport?: () => void,
- * }} props
  */
 export default function ReportHubModal({
   open,
@@ -46,11 +47,13 @@ export default function ReportHubModal({
   onCloseStudentReport,
 }) {
   const [detailId, setDetailId] = useState(null);
+  const [drilldownKey, setDrilldownKey] = useState(null);
   const [studentDetailId, setStudentDetailId] = useState(null);
 
   useEffect(() => {
     if (!open) {
       setDetailId(null);
+      setDrilldownKey(null);
       setStudentDetailId(null);
     }
   }, [open]);
@@ -59,6 +62,13 @@ export default function ReportHubModal({
   const detailSection = detailId && viewModel?.sections?.[detailId];
   const detailNavItem = viewModel?.navigation?.find((n) => n.id === detailId);
   const detailTitle = detailSection?.title || detailNavItem?.label || "פירוט";
+
+  const drilldownSection = useMemo(() => {
+    if (!drilldownKey || !detailId || !viewModel?.drilldowns) return null;
+    const bucket = viewModel.drilldowns[detailId];
+    if (!bucket) return null;
+    return bucket[drilldownKey] || null;
+  }, [detailId, drilldownKey, viewModel]);
 
   const studentDetailSection =
     studentDetailId && nestedStudentViewModel?.sections?.[studentDetailId];
@@ -77,8 +87,11 @@ export default function ReportHubModal({
     [studentDetailId]
   );
 
+  const studentActions = studentReportButton(onStudentReport, studentReportLoading);
+
   const handleCloseAll = () => {
     setDetailId(null);
+    setDrilldownKey(null);
     setStudentDetailId(null);
     onCloseStudentReport?.();
     onClose();
@@ -86,6 +99,11 @@ export default function ReportHubModal({
 
   const handleBackFromDetail = () => {
     setDetailId(null);
+    setDrilldownKey(null);
+  };
+
+  const handleBackFromDrilldown = () => {
+    setDrilldownKey(null);
   };
 
   const handleBackFromStudentDetail = () => {
@@ -97,10 +115,19 @@ export default function ReportHubModal({
     onCloseStudentReport?.();
   };
 
+  const handleDrilldownSelect = (key) => {
+    setDrilldownKey(key);
+  };
+
+  const mainOpen = Boolean(open && !detailId && !nestedStudentViewModel);
+  const detailOpen = Boolean(open && detailId && detailSection && !drilldownKey && !nestedStudentViewModel);
+  const drilldownOpen = Boolean(open && detailId && drilldownSection && !nestedStudentViewModel);
+  const studentMainOpen = Boolean(open && nestedStudentViewModel);
+
   return (
     <>
       <ReportModalFrame
-        open={Boolean(open && !detailId && !nestedStudentViewModel)}
+        open={mainOpen}
         title={displayTitle}
         subtitle={title}
         onClose={handleCloseAll}
@@ -122,7 +149,7 @@ export default function ReportHubModal({
       </ReportModalFrame>
 
       <ReportModalFrame
-        open={Boolean(open && detailId && detailSection && !nestedStudentViewModel)}
+        open={detailOpen}
         title={detailTitle}
         subtitle={displayTitle}
         onClose={handleCloseAll}
@@ -133,30 +160,40 @@ export default function ReportHubModal({
         <ReportDetailSectionView
           section={detailSection}
           variant={detailVariant}
-          studentActions={
-            detailId === "students" && onStudentReport
-              ? (item) => (
-                  <button
-                    type="button"
-                    disabled={studentReportLoading || !item.studentId}
-                    onClick={() => onStudentReport(item.studentId)}
-                    className="shrink-0 rounded-lg bg-amber-500 text-black text-xs font-semibold px-3 py-1.5 disabled:opacity-50"
-                    data-testid={`report-open-student-${item.studentId}`}
-                  >
-                    {studentReportLoading ? "טוען…" : "דוח תלמיד"}
-                  </button>
-                )
-              : undefined
-          }
+          studentActions={studentActions}
+          onDrilldownSelect={handleDrilldownSelect}
         />
       </ReportModalFrame>
 
       <ReportModalFrame
-        open={Boolean(open && nestedStudentViewModel)}
-        title={nestedStudentViewModel?.header?.title || "דוח תלמיד"}
-        subtitle="דוח תלמיד"
+        open={drilldownOpen}
+        title={drilldownSection?.title || "פירוט"}
+        subtitle={detailTitle}
         onClose={handleCloseAll}
-        onBack={detailId === "students" ? handleBackFromStudentMain : undefined}
+        onBack={handleBackFromDrilldown}
+        zIndex={115}
+        testId="report-hub-drilldown"
+      >
+        {drilldownSection?.subtitle ? (
+          <p className="text-sm text-white/60 mb-3">{drilldownSection.subtitle}</p>
+        ) : null}
+        <ReportDetailSectionView
+          section={{
+            title: drilldownSection?.title,
+            empty: "אין תלמידים בקבוצה זו.",
+            items: drilldownSection?.items || [],
+          }}
+          variant="students"
+          studentActions={studentActions}
+        />
+      </ReportModalFrame>
+
+      <ReportModalFrame
+        open={studentMainOpen}
+        title={nestedStudentViewModel?.header?.title || "דוח תלמיד"}
+        subtitle={displayTitle}
+        onClose={handleCloseAll}
+        onBack={handleBackFromStudentMain}
         zIndex={120}
         testId="report-hub-student-main"
       >

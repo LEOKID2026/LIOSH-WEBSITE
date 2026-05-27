@@ -70,26 +70,34 @@ export default function TeacherClassReportModal({
     void loadClassReport();
   }, [loadClassReport]);
 
-  const openStudentReport = async (studentId) => {
+  const openStudentReport = async (studentId, row) => {
     if (!studentId || !accessToken) return;
     setStudentLoading(true);
     try {
+      const classId = activeClassId || subjects[0]?.classId;
+      const params = new URLSearchParams({ windowDays: "30" });
+      if (classId) params.set("classId", String(classId));
       const res = await teacherAuthFetch(
         accessToken,
-        `/api/teacher/students/${encodeURIComponent(studentId)}/report-data?windowDays=30`
+        `/api/teacher/students/${encodeURIComponent(studentId)}/report-data?${params.toString()}`
       );
       const body = await res.json().catch(() => ({}));
       if (res.status !== 200) return;
+      const displayName =
+        row?.name ||
+        body?.student?.full_name ||
+        viewModel?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
+        "תלמיד/ה";
       setNestedStudentVm(
         parseStudentReportViewModel(
           body,
           {
             studentId,
-            displayName: body?.student?.fullName || "תלמיד/ה",
+            displayName,
             physicalClassName: classCard?.name,
             gradeLevel: classCard?.gradeLevel,
           },
-          {}
+          { subjectFocus: activeSubject?.subjectFocus }
         )
       );
     } finally {

@@ -38,10 +38,15 @@ export default async function handler(req, res) {
       return sendSchoolApiError(res, visible.status, visible.code, visible.code);
     }
 
+    const classIdRaw = req.query?.classId;
+    const classId =
+      typeof classIdRaw === "string" && classIdRaw.trim() ? classIdRaw.trim() : null;
+
     const reportTeacher = await resolveSchoolReportTeacherForStudent(
       ctx.serviceRole,
       ctx.schoolId,
-      studentParsed.studentId
+      studentParsed.studentId,
+      { classId }
     );
     if (!reportTeacher.ok) {
       return sendSchoolApiError(res, reportTeacher.status, reportTeacher.code, reportTeacher.code);
@@ -60,7 +65,7 @@ export default async function handler(req, res) {
         fromDate: range.fromDate,
         toDate: range.toDate,
       },
-      { skipAudit: true }
+      { skipAudit: true, classId }
     );
 
     if (!report.ok) {

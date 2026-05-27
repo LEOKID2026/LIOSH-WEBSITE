@@ -70,10 +70,41 @@ export function ReportNavActionGrid({ items, onSelect }) {
   );
 }
 
+function StudentListSection({ section, studentActions }) {
+  const items = section.items || [];
+  if (!items.length) {
+    return (
+      <p className="text-sm text-white/50 rounded-lg border border-dashed border-white/15 px-3 py-3">
+        {section.empty}
+      </p>
+    );
+  }
+  return (
+    <ul className="space-y-2">
+      {items.map((item) => (
+        <li
+          key={item.id || item.studentId}
+          className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5 text-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+          data-testid={item.studentId ? `report-student-row-${item.studentId}` : undefined}
+        >
+          <div className="min-w-0">
+            <p className="font-medium text-white">{item.name || item.label}</p>
+            {item.detail ? <p className="text-xs text-white/55 mt-0.5">{item.detail}</p> : null}
+            {item.status ? (
+              <p className="text-xs text-white/45 mt-0.5">{item.status}</p>
+            ) : null}
+          </div>
+          {studentActions && item.studentId ? studentActions(item) : null}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /**
- * @param {{ section: { title?: string, empty?: string, items?: unknown[] }, variant?: string, studentActions?: (item: { studentId?: string }) => React.ReactNode }} props
+ * @param {{ section: { title?: string, empty?: string, items?: unknown[] }, variant?: string, studentActions?: (item: { studentId?: string }) => React.ReactNode, onDrilldownSelect?: (key: string) => void }} props
  */
-export function ReportDetailSectionView({ section, variant, studentActions }) {
+export function ReportDetailSectionView({ section, variant, studentActions, onDrilldownSelect }) {
   if (!section) return <p className="text-sm text-white/50">אין נתונים להצגה.</p>;
 
   if (variant === "activities") {
@@ -84,7 +115,11 @@ export function ReportDetailSectionView({ section, variant, studentActions }) {
     );
   }
 
-  if (variant === "students") {
+  if (variant === "students" || variant === "attention") {
+    return <StudentListSection section={section} studentActions={studentActions} />;
+  }
+
+  if (variant === "distribution" || variant === "focus") {
     const items = section.items || [];
     if (!items.length) {
       return (
@@ -95,28 +130,38 @@ export function ReportDetailSectionView({ section, variant, studentActions }) {
     }
     return (
       <ul className="space-y-2">
-        {items.map((item) => (
-          <li
-            key={item.id || item.studentId}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5 text-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-            data-testid={item.studentId ? `report-student-row-${item.studentId}` : undefined}
-          >
-            <div className="min-w-0">
-              <p className="font-medium text-white">{item.name || item.label}</p>
-              {item.detail ? <p className="text-xs text-white/55 mt-0.5">{item.detail}</p> : null}
-              {item.status ? (
-                <p className="text-xs text-white/45 mt-0.5">{item.status}</p>
-              ) : null}
-            </div>
-            {studentActions && item.studentId ? studentActions(item) : null}
-          </li>
-        ))}
+        {items.map((item, i) => {
+          const label = item.label || item.tier || item.name;
+          const clickable = Boolean(item.drilldownKey && onDrilldownSelect);
+          const Tag = clickable ? "button" : "div";
+          return (
+            <li key={`${label}-${i}`}>
+              <Tag
+                type={clickable ? "button" : undefined}
+                onClick={clickable ? () => onDrilldownSelect(item.drilldownKey) : undefined}
+                className={`w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-right flex justify-between gap-2 items-start ${
+                  clickable ? "hover:bg-black/35 cursor-pointer transition" : ""
+                }`}
+                data-testid={item.drilldownKey ? `report-drilldown-${item.drilldownKey}` : undefined}
+              >
+                <div className="min-w-0">
+                  <span className="text-white/90">{label}</span>
+                  {item.detail ? (
+                    <span className="text-xs text-white/50 block mt-0.5">{item.detail}</span>
+                  ) : null}
+                </div>
+                {item.count != null ? (
+                  <span className="tabular-nums text-amber-200 font-semibold shrink-0">{item.count}</span>
+                ) : null}
+              </Tag>
+            </li>
+          );
+        })}
       </ul>
     );
   }
 
-  const listVariant =
-    variant === "distribution" ? "tier" : variant === "subjects" ? "subject" : "default";
+  const listVariant = variant === "subjects" ? "subject" : "default";
 
   return (
     <SchoolReportSection title={section.title} empty={section.empty}>
