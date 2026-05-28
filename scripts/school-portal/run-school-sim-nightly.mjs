@@ -35,6 +35,7 @@ import {
   resolveScaffoldingParentPassword,
   resolveStaffPassword,
 } from "./sim/student-credentials.mjs";
+import { assertSchoolSimStateReady } from "./sim/sim-state-guards.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -193,7 +194,8 @@ async function main() {
   }
   if (!args.dryRun && !args.skipUiSample) {
     state = loadSchoolSimState();
-    log("school-sim-nightly: Phase 2 UI sample...");
+    assertSchoolSimStateReady(state, { phase: "Phase 2 UI sample" });
+    log(`school-sim-nightly: Phase 2 UI sample (${state.studentIds.length} students in state)...`);
     uiResult = await runUiSample(state, { baseUrl, artifactRoot, log });
     writeJson(artifactRoot, "ui-sample/sample-manifest.json", uiResult.manifest);
     writeJson(artifactRoot, "ui-sample/sample-results.json", uiResult.results);
@@ -202,7 +204,8 @@ async function main() {
   let reportResult = { status: "not_run" };
   if (!args.dryRun && !args.skipReports) {
     state = loadSchoolSimState();
-    log("school-sim-nightly: Phase 3 report validation...");
+    assertSchoolSimStateReady(state, { phase: "Phase 3 report validation" });
+    log(`school-sim-nightly: Phase 3 report validation (${state.studentIds.length} students in state)...`);
     const teacherPassword = resolveStaffPassword();
     const parentPassword = resolveScaffoldingParentPassword();
     reportResult = await runReportValidation({

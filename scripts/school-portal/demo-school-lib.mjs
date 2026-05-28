@@ -154,16 +154,81 @@ export function assertDemoSchoolSimState(state) {
   }
 }
 
-export function loadSimState() {
-  const resolved = resolveSimStatePath();
-  if (resolved.source === "missing") {
+function readJsonFile(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function loadFixtureSimState() {
+  if (!fs.existsSync(DEMO_SIM_STATE_FIXTURE_PATH)) return null;
+  const state = readJsonFile(DEMO_SIM_STATE_FIXTURE_PATH);
+  assertDemoSchoolSimState(state);
+  return state;
+}
+
+function loadLocalSimState() {
+  if (!fs.existsSync(SIM_STATE_PATH)) return null;
+  return readJsonFile(SIM_STATE_PATH);
+}
+
+/** Preserve fixture-backed identity when local sim-state is metadata-only. */
+function overlayLocalOntoFixture(fixture, local) {
+  const merged = { ...fixture, ...local };
+
+  if (!merged.schoolId) merged.schoolId = fixture.schoolId;
+  if (!merged.demoParentId) merged.demoParentId = fixture.demoParentId;
+  if (!merged.demoParentEmail) merged.demoParentEmail = fixture.demoParentEmail;
+  if (!merged.demoSchoolName) merged.demoSchoolName = fixture.demoSchoolName;
+
+  if (!Array.isArray(merged.studentIds) || merged.studentIds.length === 0) {
+    merged.studentIds = fixture.studentIds;
+  }
+  if (!merged.teacherIds || Object.keys(merged.teacherIds).length === 0) {
+    merged.teacherIds = fixture.teacherIds;
+  }
+  if (!merged.teacherEmails || Object.keys(merged.teacherEmails).length === 0) {
+    merged.teacherEmails = fixture.teacherEmails;
+  }
+  if (!merged.classIds || Object.keys(merged.classIds).length === 0) {
+    merged.classIds = fixture.classIds;
+  }
+  if (!merged.studentsByPhysical || Object.keys(merged.studentsByPhysical).length === 0) {
+    merged.studentsByPhysical = fixture.studentsByPhysical;
+  }
+  const profileCount = merged.studentProfiles ? Object.keys(merged.studentProfiles).length : 0;
+  const minProfiles = (fixture.studentIds?.length || 0) * 0.5;
+  if (!profileCount || profileCount < minProfiles) {
+    merged.studentProfiles = {
+      ...(fixture.studentProfiles || {}),
+      ...(merged.studentProfiles || {}),
+    };
+  }
+
+  return merged;
+}
+
+/**
+ * Resolved full demo school state: fixture backbone + local runtime overlay.
+ * Never returns metadata-only local state without fixture identity fields.
+ */
+export function resolveMergedSimState() {
+  const fixture = loadFixtureSimState();
+  const local = loadLocalSimState();
+
+  if (!fixture && !local) {
     throw new Error(
       `sim-state.json missing at ${SIM_STATE_PATH} ` +
         `(demo fixture also missing at ${DEMO_SIM_STATE_FIXTURE_PATH})`
     );
   }
-  const state = JSON.parse(fs.readFileSync(resolved.path, "utf8"));
-  if (resolved.source === "demo-fixture") {
+  if (fixture && local) {
+    return overlayLocalOntoFixture(fixture, local);
+  }
+  return fixture || local;
+}
+
+export function loadSimState() {
+  const state = resolveMergedSimState();
+  if (fs.existsSync(DEMO_SIM_STATE_FIXTURE_PATH)) {
     assertDemoSchoolSimState(state);
   }
   return state;
@@ -176,9 +241,7 @@ export function saveSimState(state) {
 }
 
 export function mergeSimState(patch) {
-  const current = fs.existsSync(SIM_STATE_PATH)
-    ? JSON.parse(fs.readFileSync(SIM_STATE_PATH, "utf8"))
-    : {};
+  const current = resolveMergedSimState();
   const next = { ...current, ...patch, updatedAt: new Date().toISOString() };
   saveSimState(next);
   return next;
