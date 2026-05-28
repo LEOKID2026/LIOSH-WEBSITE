@@ -1,40 +1,3 @@
----
-name: Activity Creation Fix Plan
-overview: Fix all P0/P1 issues found in the teacher activity creation audit, including multi-question discussion and explanation-only discussion mode. No core discussion behavior is deferred. SQL is prepared only and run manually by the owner.
-todos:
-  - id: write-plan-doc
-    content: Official implementation plan document created at docs/qa/TEACHER_ACTIVITY_CREATION_AUTHORIZATION_AND_TOPIC_FIX_PLAN.md
-    status: completed
-  - id: p1-grade-display
-    content: "Phase 1: fix raw grade key display in all 3 activity creation pages and generator errors"
-    status: completed
-  - id: p2-context-lock
-    content: "Phase 2: load class context on mount in activities/new.js, lock grade and subject for school teachers"
-    status: completed
-  - id: p3-server-auth
-    content: "Phase 3: harden POST /api/teacher/activities to load owned class and pass real grade to subject check"
-    status: completed
-  - id: p4-topic-dropdowns
-    content: "Phase 4: add science topic dropdown, fix empty topic guard, constrain subject list"
-    status: completed
-  - id: p5-geometry-fix
-    content: "Phase 5: add circles+shapes_basic diagram specs, add DIAGRAM_OPTIONAL_KINDS for rotation/transformations/solids"
-    status: completed
-  - id: p6-hebrew-errors
-    content: "Phase 6: translate all 16 English validation messages to Hebrew"
-    status: completed
-  - id: p7-private-separation
-    content: "Phase 7: remove g7–g9 from private teacher grade options, verify separation"
-    status: completed
-  - id: p8-discussion-full
-    content: "Phase 8: implement multi-question discussion + explanation-only mode (SQL prep + server + UI + student page)"
-    status: completed
-  - id: p9-qa-tests
-    content: "Phase 9: add geometry tests for 5 broken topics, authorization tests, grade display tests, discussion multi-question tests"
-    status: completed
-isProject: false
----
-
 # Teacher Activity Creation — Authorization & Topic Fix Plan
 
 **Source audit:** `docs/qa/TEACHER_ACTIVITY_CREATION_AUTHORIZATION_AND_TOPIC_AUDIT.md`  
@@ -362,7 +325,7 @@ Full translation table (replace English `message` field with Hebrew):
 | `"subject not supported for classroom activity preview"` | teacher-activities.server.js:160 | `"מקצוע זה אינו נתמך ליצירת פעילות כיתה"` |
 | `"invalid mode"` | teacher-activities.server.js:171 | `"סוג פעילות לא תקין"` |
 | `"invalid questionSelection"` | teacher-activities.server.js:176 | `"אופן בחירת השאלות לא תקין"` |
-| `"discussion mode requires questionCount 1"` | teacher-activities.server.js:224 | `"פעילות דיון מכילה שאלה אחת בלבד"` |
+| `"discussion mode requires questionCount 1"` | teacher-activities.server.js:224 | `"פעילות דיון חייבת להכיל 1 עד 5 שאלות"` (updated in Phase 8) |
 | `"invalid recipientScope"` | teacher-activities.server.js:235 | `"טווח נמענים לא תקין"` |
 | `"studentIds required for selected_students"` | teacher-activities.server.js:243 | `"יש לבחור לפחות תלמיד אחד"` |
 | `"invalid studentIds"` | teacher-activities.server.js:250 | `"מזהה תלמיד לא תקין"` |
@@ -717,9 +680,6 @@ All items below must be verified on both desktop browser and mobile browser (the
 - P1-3: Generator error messages expose raw `g3`/`shapes_basic`/`medium` (Phase 1, last item)
 - P1-4: Other geometry topics broken by diagram gate: `rotation`, `transformations`, `solids`, `circles` (Phase 5)
 - P1-5: Empty topic dropdown for geometry grade mismatch shows broken UI (Phase 4)
-
-### P1 (continued)
-
 - P1-6: Multi-question discussion — server allows 1–5 questions (Phase 8)
 - P1-7: Explanation-only / answer_required=false discussion mode (Phase 8)
 - P1-8: Student play page renders multi-question discussion and explanation-only correctly (Phase 8)
@@ -727,8 +687,8 @@ All items below must be verified on both desktop browser and mobile browser (the
 ### P2 — Deferred
 
 - P2-1: Geometry medium-difficulty shapes pool expansion
-- P2-4: Geometry conceptual topic coverage dashboard
-- P2-5: Typography fix: straight apostrophe `'` → geresh `׳` in geometry constants
+- P2-2: Geometry conceptual topic coverage dashboard
+- P2-3: Typography fix: straight apostrophe `'` → geresh `׳` in geometry constants
 
 ---
 

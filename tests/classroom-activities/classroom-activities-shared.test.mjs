@@ -140,8 +140,8 @@ test("Science preview throws for empty pool (g1 experiments hard)", async () => 
       }),
     (err) => {
       assert.match(String(err.message), /אין מספיק שאלות מדע/);
-      assert.match(String(err.message), /g1/);
-      assert.match(String(err.message), /experiments/);
+      assert.match(String(err.message), /כיתה א׳/);
+      assert.match(String(err.message), /ניסויים/);
       return true;
     }
   );

@@ -111,6 +111,14 @@ export default function StudentActivityPage({ activityId }) {
 
   const currentQuestion = questionSet[effectiveIdx];
 
+  const advanceToNextQuestion = useCallback(() => {
+    if (effectiveIdx < questionSet.length - 1) {
+      setCurrentIdx((i) => i + 1);
+      setAnswerInput("");
+      setFeedback(null);
+    }
+  }, [effectiveIdx, questionSet.length]);
+
   const submitAnswer = async () => {
     if (!currentQuestion || busy) return;
     setBusy(true);
@@ -207,11 +215,21 @@ export default function StudentActivityPage({ activityId }) {
 
   if (phase === "done" && finished) {
     const isDiscussionDone = activity?.mode === "discussion";
+    const isExplanationOnly =
+      isDiscussionDone && activity?.answerRequired === false;
+    const multiQuestionDiscussion =
+      isDiscussionDone && !isExplanationOnly && (finished.questionCount ?? questionSet.length) > 1;
     return (
       <Layout>
         <div className="max-w-lg mx-auto px-4 py-12 text-center" dir="rtl">
           <h1 className="text-2xl font-bold text-white mb-4">
-            {isDiscussionDone ? "התשובה נשלחה" : "סיימת את הפעילות!"}
+            {isExplanationOnly
+              ? "קראת את ההסבר"
+              : isDiscussionDone
+                ? multiQuestionDiscussion
+                  ? "סיימת את הדיון"
+                  : "התשובה נשלחה"
+                : "סיימת את הפעילות!"}
           </h1>
           {!isDiscussionDone ? (
             <>
@@ -220,6 +238,12 @@ export default function StudentActivityPage({ activityId }) {
                 {finished.correctCount} נכונות מתוך {finished.questionCount}
               </p>
             </>
+          ) : isExplanationOnly ? (
+            <p className="text-white/70 text-sm mb-6">קראת את ההסבר של המורה. תודה!</p>
+          ) : multiQuestionDiscussion ? (
+            <p className="text-white/70 text-sm mb-6">
+              סיימת {finished.questionCount ?? questionSet.length} שאלות דיון. תודה על המענה!
+            </p>
           ) : (
             <p className="text-white/70 text-sm mb-6">תודה על המענה. המורה יראה את התשובה בכיתה.</p>
           )}
@@ -235,6 +259,8 @@ export default function StudentActivityPage({ activityId }) {
   }
 
   const isDiscussion = activity?.mode === "discussion";
+  const isAnswerRequired = activity?.answerRequired !== false;
+  const isExplanationOnly = isDiscussion && !isAnswerRequired;
   const isQuiz = activity?.mode === "quiz";
   const showHints =
     !isDiscussion &&
@@ -271,7 +297,27 @@ export default function StudentActivityPage({ activityId }) {
             <p className="text-lg text-white mb-6 leading-relaxed" dir="auto">
               {currentQuestion.question}
             </p>
-            {Array.isArray(currentQuestion.choices) && currentQuestion.choices.length ? (
+            {isExplanationOnly ? (
+              <>
+                <p className="text-sm text-cyan-200/90 mb-4 rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-2">
+                  אין צורך להגיש תשובה — קרא/י את התוכן
+                </p>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => {
+                    if (effectiveIdx < questionSet.length - 1) {
+                      advanceToNextQuestion();
+                    } else {
+                      void submitActivity();
+                    }
+                  }}
+                  className="w-full rounded-xl bg-cyan-500 text-black font-bold py-3 disabled:opacity-50"
+                >
+                  {effectiveIdx < questionSet.length - 1 ? "קראתי — המשך" : "סיימתי לקרוא"}
+                </button>
+              </>
+            ) : Array.isArray(currentQuestion.choices) && currentQuestion.choices.length ? (
               <div className="space-y-2 mb-4">
                 {currentQuestion.choices.map((c, i) => (
                   <button
@@ -297,7 +343,7 @@ export default function StudentActivityPage({ activityId }) {
                 dir="auto"
               />
             )}
-            {showHints && currentQuestion.hint ? (
+            {!isExplanationOnly && showHints && currentQuestion.hint ? (
               <p className="text-xs text-white/50 mb-3">רמז: {currentQuestion.hint}</p>
             ) : null}
             {feedback?.type === "wait" ? (
@@ -322,6 +368,7 @@ export default function StudentActivityPage({ activityId }) {
                 {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
               </div>
             ) : null}
+            {!isExplanationOnly ? (
             <button
               type="button"
               disabled={busy || !answerInput.trim()}
@@ -330,12 +377,13 @@ export default function StudentActivityPage({ activityId }) {
             >
               שליחת תשובה
             </button>
+            ) : null}
           </div>
         ) : null}
 
-        {activity?.mode !== "live_lesson" ? (
+        {activity?.mode !== "live_lesson" && !isExplanationOnly ? (
           <div className="mt-6 flex flex-wrap gap-2 justify-center">
-            {effectiveIdx < questionSet.length - 1 && !isQuiz ? (
+            {effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion ? (
               <button
                 type="button"
                 onClick={() => {

@@ -110,6 +110,31 @@ export function getGeometryDiagramSpec(question) {
     };
   }
 
+  if (topic === "circles") {
+    const kind = p?.kind || "";
+    if ((kind === "circle_area" || kind === "story_circle_area") && typeof p.radius === "number") {
+      return { kind: "circle", mode: "area", radius: p.radius };
+    }
+    if (
+      (kind === "circle_perimeter" || kind === "story_circle_perimeter") &&
+      typeof p.radius === "number"
+    ) {
+      return { kind: "circle", mode: "perimeter", radius: p.radius };
+    }
+    return null;
+  }
+
+  if (topic === "shapes_basic") {
+    const kind = p?.kind || "";
+    if (kind === "shapes_basic_square" || kind === "shapes_basic_properties_square") {
+      return { kind: "square", mode: "identify" };
+    }
+    if (kind === "shapes_basic_rectangle" || kind === "shapes_basic_properties_rectangle") {
+      return { kind: "rectangle", mode: "identify" };
+    }
+    return null;
+  }
+
   return null;
 }
 

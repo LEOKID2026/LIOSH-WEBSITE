@@ -84,7 +84,7 @@ test("hebrew invalid topic for grade throws with no fallback", async () => {
       }),
     (err) => {
       assert.match(String(err.message), /אין מספיק שאלות עברית/);
-      assert.match(String(err.message), /g3/);
+      assert.match(String(err.message), /כיתה ג׳/);
       return true;
     }
   );

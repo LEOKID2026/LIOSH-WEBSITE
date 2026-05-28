@@ -122,3 +122,28 @@ test("geometry Hebrew label answers score via answersMatch when present", async 
     if (wrong) assert.equal(answersMatch(wrong, hebrew.correctAnswer), false);
   }
 });
+
+const BROKEN_GEOMETRY_CASES = [
+  { name: "g3 shapes_basic medium", gradeLevel: "g3", topic: "shapes_basic", difficulty: "medium" },
+  { name: "g3 rotation easy", gradeLevel: "g3", topic: "rotation", difficulty: "easy" },
+  { name: "g2 transformations easy", gradeLevel: "g2", topic: "transformations", difficulty: "easy" },
+  { name: "g5 solids easy", gradeLevel: "g5", topic: "solids", difficulty: "easy" },
+  { name: "g6 circles medium", gradeLevel: "g6", topic: "circles", difficulty: "medium" },
+];
+
+for (const tc of BROKEN_GEOMETRY_CASES) {
+  test(`geometry ${tc.name} generates N=5`, async () => {
+    const qs = await generateActivityQuestionSetClient({
+      subject: "geometry",
+      gradeLevel: tc.gradeLevel,
+      topic: tc.topic,
+      difficulty: tc.difficulty,
+      count: 5,
+    });
+    assert.equal(qs.length, 5);
+    for (const item of qs) {
+      assert.ok(Array.isArray(item.choices));
+      assert.ok(item.choices.includes(item.correctAnswer));
+    }
+  });
+}

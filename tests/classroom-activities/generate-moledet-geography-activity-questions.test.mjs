@@ -65,8 +65,8 @@ test("moledet_geography empty pool throws (g3 mixed — no bank rows for mixed)"
       }),
     (err) => {
       assert.match(String(err.message), /אין מספיק שאלות מולדת וגאוגרפיה/);
-      assert.match(String(err.message), /g3/);
-      assert.match(String(err.message), /mixed/);
+      assert.match(String(err.message), /כיתה ג׳/);
+      assert.match(String(err.message), /ערבוב/);
       return true;
     }
   );

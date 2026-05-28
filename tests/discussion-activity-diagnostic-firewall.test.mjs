@@ -81,3 +81,73 @@ test("mergeClassroomActivityRollupIntoReportPayload is unchanged when discussion
   assert.deepEqual(payload.summary, baseline.summary);
   assert.deepEqual(payload.subjects.math, baseline.subjects.math);
 });
+
+test("multi-question discussion (questionCount=3) does not appear in diagnostic rollup", () => {
+  const rollups = buildClassroomActivityRollupsByStudentId({
+    activities: [
+      {
+        id: HOMEWORK_ACTIVITY_ID,
+        subject: "math",
+        topic: "addition",
+        mode: "homework",
+        status: "closed",
+        created_at: "2026-01-15T10:00:00.000Z",
+      },
+    ],
+    statuses: [
+      {
+        activity_id: HOMEWORK_ACTIVITY_ID,
+        student_id: STUDENT_ID,
+        status: "submitted",
+        submitted_at: "2026-01-15T10:05:00.000Z",
+        answers_count: 5,
+        correct_count: 4,
+      },
+      {
+        activity_id: DISCUSSION_ACTIVITY_ID,
+        student_id: STUDENT_ID,
+        status: "submitted",
+        submitted_at: "2026-01-16T10:05:00.000Z",
+        answers_count: 3,
+        correct_count: 2,
+      },
+    ],
+    studentIds: [STUDENT_ID],
+  });
+  assert.equal(rollups.get(STUDENT_ID)?.answers, 5);
+});
+
+test("explanation-only discussion (answer_required=false) does not appear in diagnostic rollup", () => {
+  const rollups = buildClassroomActivityRollupsByStudentId({
+    activities: [
+      {
+        id: HOMEWORK_ACTIVITY_ID,
+        subject: "math",
+        topic: "addition",
+        mode: "homework",
+        status: "closed",
+        created_at: "2026-01-15T10:00:00.000Z",
+      },
+    ],
+    statuses: [
+      {
+        activity_id: HOMEWORK_ACTIVITY_ID,
+        student_id: STUDENT_ID,
+        status: "submitted",
+        submitted_at: "2026-01-15T10:05:00.000Z",
+        answers_count: 5,
+        correct_count: 4,
+      },
+      {
+        activity_id: DISCUSSION_ACTIVITY_ID,
+        student_id: STUDENT_ID,
+        status: "submitted",
+        submitted_at: "2026-01-17T10:05:00.000Z",
+        answers_count: 0,
+        correct_count: 0,
+      },
+    ],
+    studentIds: [STUDENT_ID],
+  });
+  assert.equal(rollups.get(STUDENT_ID)?.answers, 5);
+});

@@ -21,7 +21,25 @@ import {
   ENGLISH_TOPICS,
 } from "../../../../../utils/english-question-generator.js";
 import { GRADES as MATH_GRADES } from "../../../../../utils/math-constants.js";
-import { getMathReportBucketDisplayName } from "../../../../../utils/math-report-generator.js";
+import { formatGradeLevelHe } from "../../../../../lib/learning-student-defaults.js";
+import { SCIENCE_GRADES } from "../../../../../data/science-curriculum.js";
+
+const SCIENCE_TOPIC_LABELS = {
+  body: "גוף האדם",
+  animals: "בעלי חיים",
+  plants: "צמחים",
+  materials: "חומרים",
+  experiments: "ניסויים",
+  earth_space: "כדור הארץ וחלל",
+  environment: "סביבה",
+};
+
+function scienceTopicOptionsForGrade(gradeKey) {
+  return (SCIENCE_GRADES[gradeKey]?.topics ?? []).map((key) => ({
+    key,
+    label: SCIENCE_TOPIC_LABELS[key] ?? key,
+  }));
+}
 
 const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
   key,
@@ -72,6 +90,10 @@ function defaultTopicForSubject(subjectKey, gradeKey) {
     const opts = mathTopicOptionsForGrade(gradeKey);
     return opts[0]?.key || "addition";
   }
+  if (subjectKey === "science") {
+    const opts = scienceTopicOptionsForGrade(gradeKey);
+    return opts[0]?.key || "";
+  }
   return "";
 }
 
@@ -94,25 +116,98 @@ export default function TeacherNewActivityPage({ classId }) {
   const [timeLimitSeconds, setTimeLimitSeconds] = useState("");
   const [dueAt, setDueAt] = useState("");
   const [gradeLevel, setGradeLevel] = useState("g3");
+  const [classContext, setClassContext] = useState({
+    gradeLocked: false,
+    subjectLocked: false,
+    className: "",
+    loaded: false,
+  });
+  const [creationBlocked, setCreationBlocked] = useState(false);
+  const [contextError, setContextError] = useState("");
   const [preview, setPreview] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const opts =
-      subject === "math"
-        ? mathTopicOptionsForGrade(gradeLevel)
-        : subject === "geometry"
-          ? geometryTopicOptionsForGrade(gradeLevel)
-          : subject === "hebrew"
-            ? hebrewTopicOptionsForGrade(gradeLevel)
-            : subject === "english"
-              ? englishTopicOptionsForGrade(gradeLevel)
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = getLearningSupabaseBrowserClient();
+        const session = await resolveTeacherAccessToken(supabase);
+        if (!session.ok) {
+          router.replace("/teacher/login");
+          return;
+        }
+        const res = await teacherAuthFetch(
+          session.token,
+          `/api/teacher/classes/${encodeURIComponent(classId)}`
+        );
+        const json = await res.json().catch(() => ({}));
+        if (cancelled) return;
+        if (res.status === 403) {
+          setContextError("אין לך הרשאה ליצור פעילויות לכיתה זו. פנה למנהל בית הספר.");
+          setCreationBlocked(true);
+          setClassContext((prev) => ({ ...prev, loaded: true }));
+          return;
+        }
+        if (!res.ok) {
+          setContextError(json?.error?.message || "טעינת כיתה נכשלה");
+          setClassContext((prev) => ({ ...prev, loaded: true }));
+          return;
+        }
+        const cls = json?.data?.class;
+        if (!cls) {
+          setClassContext((prev) => ({ ...prev, loaded: true }));
+          return;
+        }
+        const nextGrade = cls.gradeLevel ? String(cls.gradeLevel) : "g3";
+        const nextSubject = cls.subjectFocus ? String(cls.subjectFocus) : subject;
+        setGradeLevel(nextGrade);
+        if (cls.subjectFocus) {
+          setSubject(nextSubject);
+          setTopic(defaultTopicForSubject(nextSubject, nextGrade));
+        } else {
+          setTopic(defaultTopicForSubject(subject, nextGrade));
+        }
+        setClassContext({
+          gradeLocked: Boolean(cls.gradeLevel),
+          subjectLocked: Boolean(cls.subjectFocus),
+          className: cls.name || "",
+          loaded: true,
+        });
+      } catch {
+        if (!cancelled) {
+          setContextError("שגיאת רשת");
+          setClassContext((prev) => ({ ...prev, loaded: true }));
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [classId, router]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const topicOpts =
+    subject === "math"
+      ? mathTopicOptionsForGrade(gradeLevel)
+      : subject === "geometry"
+        ? geometryTopicOptionsForGrade(gradeLevel)
+        : subject === "hebrew"
+          ? hebrewTopicOptionsForGrade(gradeLevel)
+          : subject === "english"
+            ? englishTopicOptionsForGrade(gradeLevel)
+            : subject === "science"
+              ? scienceTopicOptionsForGrade(gradeLevel)
               : [];
-    if (opts.length && !opts.some((o) => o.key === topic)) {
-      setTopic(opts[0].key);
+
+  useEffect(() => {
+    if (subject === "moledet_geography") return;
+    if (topicOpts.length && !topicOpts.some((o) => o.key === topic)) {
+      setTopic(topicOpts[0].key);
+    } else if (topicOpts.length === 0 && topic !== "") {
+      setTopic("");
     }
-  }, [subject, gradeLevel, topic]);
+  }, [subject, gradeLevel, topic, topicOpts]);
 
   const runPreview = useCallback(async () => {
     setBusy(true);
@@ -214,12 +309,14 @@ export default function TeacherNewActivityPage({ classId }) {
       <TeacherPortalShell title="פעילות חדשה" backHref={`/teacher/class/${classId}/activities`}>
         <TeacherClassActivitiesNav classId={classId} />
 
-        {error ? (
+        {error || contextError ? (
           <p className="mb-4 text-red-200 text-sm rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2">
-            {error}
+            {error || contextError}
           </p>
         ) : null}
 
+        {creationBlocked ? null : (
+        <>
         <div className="grid gap-4 md:grid-cols-2 mb-6">
           <label className="block text-sm">
             <span className="text-white/70">כותרת</span>
@@ -232,6 +329,14 @@ export default function TeacherNewActivityPage({ classId }) {
           </label>
           <label className="block text-sm">
             <span className="text-white/70">מקצוע</span>
+            {classContext.subjectLocked ? (
+              <input
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 opacity-70"
+                value={subjectLabelHe(subject)}
+                readOnly
+                disabled
+              />
+            ) : (
             <select
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={subject}
@@ -247,10 +352,19 @@ export default function TeacherNewActivityPage({ classId }) {
                 </option>
               ))}
             </select>
+            )}
           </label>
           <label className="block text-sm">
             <span className="text-white/70">נושא</span>
-            {subject === "moledet_geography" ? (
+            {subject === "science" && topicOpts.length === 0 ? (
+              <p className="mt-1 text-amber-200 text-sm rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2">
+                לא נמצאו נושאים זמינים לכיתה זו במקצוע מדעים.
+              </p>
+            ) : subject !== "science" && topicOpts.length === 0 && subject !== "moledet_geography" ? (
+              <p className="mt-1 text-amber-200 text-sm rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2">
+                לא נמצאו נושאים זמינים עבור מקצוע ורמת כיתה אלו.
+              </p>
+            ) : subject === "moledet_geography" ? (
               <select
                 className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
                 value={topic}
@@ -310,6 +424,18 @@ export default function TeacherNewActivityPage({ classId }) {
                   </option>
                 ))}
               </select>
+            ) : subject === "science" ? (
+              <select
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {scienceTopicOptionsForGrade(gradeLevel).map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             ) : (
               <input
                 className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
@@ -328,6 +454,14 @@ export default function TeacherNewActivityPage({ classId }) {
           </label>
           <label className="block text-sm">
             <span className="text-white/70">כיתה (ליצירת שאלות)</span>
+            {classContext.gradeLocked ? (
+              <input
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 opacity-70"
+                value={formatGradeLevelHe(gradeLevel)}
+                readOnly
+                disabled
+              />
+            ) : (
             <select
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
               value={gradeLevel}
@@ -339,10 +473,11 @@ export default function TeacherNewActivityPage({ classId }) {
             >
               {["g1", "g2", "g3", "g4", "g5", "g6"].map((g) => (
                 <option key={g} value={g}>
-                  {g}
+                  {formatGradeLevelHe(g)}
                 </option>
               ))}
             </select>
+            )}
           </label>
           <label className="block text-sm">
             <span className="text-white/70">מצב פעילות</span>
@@ -406,7 +541,7 @@ export default function TeacherNewActivityPage({ classId }) {
         <div className="flex flex-wrap gap-2 mb-6">
           <button
             type="button"
-            disabled={busy}
+            disabled={busy || !topic || creationBlocked}
             onClick={runPreview}
             className="px-4 py-2 rounded-xl border border-white/20 hover:bg-white/10 text-sm"
           >
@@ -414,7 +549,7 @@ export default function TeacherNewActivityPage({ classId }) {
           </button>
           <button
             type="button"
-            disabled={busy || !preview.length}
+            disabled={busy || !preview.length || creationBlocked}
             onClick={createDraft}
             className="px-4 py-2 rounded-xl bg-amber-500/90 text-black font-semibold text-sm disabled:opacity-50"
           >
@@ -435,6 +570,8 @@ export default function TeacherNewActivityPage({ classId }) {
             </ol>
           </div>
         ) : null}
+        </>
+        )}
       </TeacherPortalShell>
     </Layout>
   );

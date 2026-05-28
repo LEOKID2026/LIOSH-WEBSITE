@@ -114,6 +114,28 @@ export default function GeometryExplanationDiagram({
   if (!spec?.kind) return null;
 
   if (spec.kind === "square") {
+    if (spec.mode === "identify") {
+      const sz = 80;
+      const cx = 180;
+      const cy = 142;
+      const half = sz / 2;
+      return (
+        <DiagramFrame>
+          <svg viewBox={VB} className="block" aria-hidden>
+            <rect
+              x={cx - half}
+              y={cy - half}
+              width={sz}
+              height={sz}
+              fill={ST.fillShape}
+              stroke={ST.stroke}
+              strokeWidth={2.5}
+              rx="4"
+            />
+          </svg>
+        </DiagramFrame>
+      );
+    }
     const s = spec.side;
     const sz = scaleSquareSide(s);
     const cx = 180;
@@ -156,6 +178,30 @@ export default function GeometryExplanationDiagram({
   }
 
   if (spec.kind === "rectangle") {
+    if (spec.mode === "identify") {
+      const rw = 120;
+      const rh = 70;
+      const cx = 180;
+      const cy = 128;
+      const left = cx - rw / 2;
+      const top = cy - rh / 2;
+      return (
+        <DiagramFrame>
+          <svg viewBox={VB} className="block" aria-hidden>
+            <rect
+              x={left}
+              y={top}
+              width={rw}
+              height={rh}
+              fill={ST.fillShape}
+              stroke={ST.stroke}
+              strokeWidth={2.5}
+              rx="3"
+            />
+          </svg>
+        </DiagramFrame>
+      );
+    }
     const L = spec.length;
     const Wd = spec.width;
     const { w: rw, h: rh } = scaleLengthToWidth(L, Wd);

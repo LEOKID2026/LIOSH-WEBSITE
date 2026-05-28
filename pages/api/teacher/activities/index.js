@@ -76,7 +76,7 @@ export default async function handler(req, res) {
         });
         if (!rl.allowed) {
           if (rl.retryAfterSec) res.setHeader("Retry-After", String(rl.retryAfterSec));
-          return sendTeacherApiError(res, 429, "rate_limited", "Too many requests");
+          return sendTeacherApiError(res, 429, "rate_limited", "יותר מדי בקשות — המתן מעט ונסה שוב");
         }
       }
 
@@ -88,27 +88,51 @@ export default async function handler(req, res) {
       }
 
       let subjectGate;
-      if (parsed.payload.mode === "discussion") {
-        const owned = await loadTeacherClassOwned(
-          ctx.serviceRole,
-          ctx.teacherId,
-          parsed.payload.classId
-        );
-        if (!owned.ok) {
-          return sendTeacherApiError(res, owned.status, owned.code, owned.code);
+      const owned = await loadTeacherClassOwned(
+        ctx.serviceRole,
+        ctx.teacherId,
+        parsed.payload.classId
+      );
+      if (!owned.ok) {
+        return sendTeacherApiError(res, owned.status, owned.code, owned.code);
+      }
+
+      if (parsed.payload.mode !== "discussion") {
+        const bodyGradeLevel =
+          typeof body.gradeLevel === "string" ? body.gradeLevel.trim() : null;
+        if (!bodyGradeLevel || bodyGradeLevel !== owned.row.grade_level) {
+          return sendTeacherApiError(
+            res,
+            403,
+            "grade_mismatch",
+            "רמת הכיתה חסרה או אינה תואמת לכיתה המשויכת"
+          );
         }
+
+        if (owned.row.subject_focus && parsed.payload.subject !== owned.row.subject_focus) {
+          return sendTeacherApiError(
+            res,
+            403,
+            "subject_mismatch",
+            "המקצוע שנבחר אינו תואם לכיתה המשויכת"
+          );
+        }
+      }
+
+      const classGrade = owned.row.grade_level || null;
+      if (parsed.payload.mode === "discussion") {
         subjectGate = await assertDiscussionActivitySubjectAllowed(
           ctx.serviceRole,
           ctx.teacherId,
           parsed.payload.subject,
-          owned.row.grade_level
+          classGrade
         );
       } else {
         subjectGate = await assertSchoolTeacherSubjectAllowed(
           ctx.serviceRole,
           ctx.teacherId,
           parsed.payload.subject,
-          null
+          classGrade
         );
       }
       if (!subjectGate.ok) {
@@ -117,6 +141,7 @@ export default async function handler(req, res) {
 
       const created = await createClassroomActivity(ctx.serviceRole, ctx.teacherId, parsed, {
         schoolId: subjectGate.membership?.schoolId ?? null,
+        ownedRow: owned.row,
       });
       if (!created.ok) {
         return sendTeacherApiError(res, created.status, created.code, created.code);
@@ -141,9 +166,9 @@ export default async function handler(req, res) {
       });
     }
 
-    return sendTeacherApiError(res, 405, "method_not_allowed", "Method not allowed");
+    return sendTeacherApiError(res, 405, "method_not_allowed", "שיטת בקשה לא נתמכת");
   } catch (err) {
     safeApiLog("teacher/activities", err);
-    return sendTeacherApiError(res, 500, "internal_error", "Unexpected server error");
+    return sendTeacherApiError(res, 500, "internal_error", "שגיאת שרת — נסה שוב");
   }
 }

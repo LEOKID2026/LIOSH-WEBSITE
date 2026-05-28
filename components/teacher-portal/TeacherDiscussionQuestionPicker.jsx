@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { teacherAuthFetch, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../lib/classroom-activities/classroom-activities-preview.js";
+import { formatGradeLevelHe } from "../../lib/learning-student-defaults.js";
+import { SCIENCE_GRADES } from "../../data/science-curriculum.js";
 import { TOPICS as MOLEDET_TOPICS } from "../../utils/moledet-geography-constants.js";
 import {
   GRADES as GEOMETRY_GRADES,
@@ -14,6 +16,16 @@ import {
 } from "../../utils/english-question-generator.js";
 import { GRADES as MATH_GRADES } from "../../utils/math-constants.js";
 import { getMathReportBucketDisplayName } from "../../utils/math-report-generator.js";
+
+const SCIENCE_TOPIC_LABELS = {
+  body: "גוף האדם",
+  animals: "בעלי חיים",
+  plants: "צמחים",
+  materials: "חומרים",
+  experiments: "ניסויים",
+  earth_space: "כדור הארץ וחלל",
+  environment: "סביבה",
+};
 
 const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
   key,
@@ -44,6 +56,13 @@ function mathTopicOptionsForGrade(gradeKey) {
     .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
 }
 
+function scienceTopicOptionsForGrade(gradeKey) {
+  return (SCIENCE_GRADES[gradeKey]?.topics ?? []).map((key) => ({
+    key,
+    label: SCIENCE_TOPIC_LABELS[key] ?? key,
+  }));
+}
+
 function defaultTopicForSubject(subjectKey, gradeKey) {
   if (subjectKey === "moledet_geography") {
     return MOLEDET_TOPIC_OPTIONS[0]?.key || "homeland";
@@ -59,6 +78,9 @@ function defaultTopicForSubject(subjectKey, gradeKey) {
   }
   if (subjectKey === "math") {
     return mathTopicOptionsForGrade(gradeKey)[0]?.key || "addition";
+  }
+  if (subjectKey === "science") {
+    return scienceTopicOptionsForGrade(gradeKey)[0]?.key || "";
   }
   return "";
 }
@@ -111,7 +133,8 @@ export default function TeacherDiscussionQuestionPicker({
   const [topic, setTopic] = useState(() => defaultTopicForSubject("math", gradeLevel || "g3"));
   const [difficulty, setDifficulty] = useState("medium");
   const [preview, setPreview] = useState([]);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedIndices, setSelectedIndices] = useState(() => new Set());
+  const [answerRequired, setAnswerRequired] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [classMembers, setClassMembers] = useState([]);
@@ -195,7 +218,7 @@ export default function TeacherDiscussionQuestionPicker({
   const runPreview = useCallback(async () => {
     setBusy(true);
     setError("");
-    setSelectedIndex(null);
+    setSelectedIndices(new Set());
     try {
       const res = await teacherAuthFetch(accessToken, "/api/teacher/discussion/question-preview", {
         method: "POST",
@@ -223,8 +246,8 @@ export default function TeacherDiscussionQuestionPicker({
   }, [accessToken, subject, gradeKey, topic, difficulty]);
 
   const createDiscussion = useCallback(async () => {
-    if (selectedIndex == null || !preview[selectedIndex]) {
-      setError("נא לבחור שאלה אחת");
+    if (selectedIndices.size === 0) {
+      setError("נא לבחור לפחות שאלה אחת");
       return;
     }
     if (!title.trim()) {
@@ -238,7 +261,10 @@ export default function TeacherDiscussionQuestionPicker({
     setBusy(true);
     setError("");
     try {
-      const selected = preview[selectedIndex];
+      const selectedQuestions = [...selectedIndices]
+        .sort((a, b) => a - b)
+        .map((i) => preview[i])
+        .filter(Boolean);
       const body = {
         title: title.trim(),
         subject,
@@ -246,9 +272,10 @@ export default function TeacherDiscussionQuestionPicker({
         mode: "discussion",
         questionSelection: "same_exact",
         difficultyLevel: difficulty,
-        questionCount: 1,
-        questionSet: [selected],
+        questionCount: selectedQuestions.length,
+        questionSet: selectedQuestions,
         gradeLevel: gradeKey,
+        answerRequired,
       };
       if (classId) body.classId = classId;
       if (studentId) body.studentId = studentId;
@@ -292,7 +319,7 @@ export default function TeacherDiscussionQuestionPicker({
       setBusy(false);
     }
   }, [
-    selectedIndex,
+    selectedIndices,
     preview,
     title,
     subject,
@@ -307,7 +334,25 @@ export default function TeacherDiscussionQuestionPicker({
     isClassDiscussion,
     recipientScope,
     selectedStudentIds,
+    answerRequired,
   ]);
+
+  const toggleQuestionIndex = (index) => {
+    setSelectedIndices((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+        return next;
+      }
+      if (next.size >= 5) {
+        setError("ניתן לבחור עד 5 שאלות");
+        return prev;
+      }
+      next.add(index);
+      setError("");
+      return next;
+    });
+  };
 
   const toggleStudent = (studentId) => {
     setSelectedStudentIds((prev) => {
@@ -432,6 +477,24 @@ export default function TeacherDiscussionQuestionPicker({
                 </option>
               ))}
             </select>
+          ) : subject === "science" ? (
+            scienceTopicOptionsForGrade(gradeKey).length === 0 ? (
+              <p className="mt-1 text-amber-200 text-sm rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2">
+                לא נמצאו נושאים זמינים לכיתה זו במקצוע מדעים.
+              </p>
+            ) : (
+              <select
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {scienceTopicOptionsForGrade(gradeKey).map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            )
           ) : (
             <input
               className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
@@ -457,14 +520,14 @@ export default function TeacherDiscussionQuestionPicker({
           <span className="text-white/70">כיתה</span>
           <input
             className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 opacity-70"
-            value={gradeKey}
+            value={formatGradeLevelHe(gradeKey)}
             readOnly
             disabled
           />
         </label>
       </div>
 
-      {isClassDiscussion && selectedIndex != null ? (
+      {isClassDiscussion && selectedIndices.size > 0 ? (
         <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-3">
           <p className="text-sm font-medium text-white">נמענים</p>
           <div className="flex flex-wrap gap-4 text-sm">
@@ -531,6 +594,30 @@ export default function TeacherDiscussionQuestionPicker({
         </div>
       ) : null}
 
+      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-3">
+        <p className="text-sm font-medium text-white">סוג דיון</p>
+        <div className="flex flex-col gap-3 text-sm">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="answerRequiredMode"
+              checked={answerRequired}
+              onChange={() => setAnswerRequired(true)}
+            />
+            <span>דיון עם מענה (תלמידים מגישים תשובה)</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="answerRequiredMode"
+              checked={!answerRequired}
+              onChange={() => setAnswerRequired(false)}
+            />
+            <span>הסבר בלבד — ללא מענה נדרש</span>
+          </label>
+        </div>
+      </div>
+
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
@@ -542,7 +629,7 @@ export default function TeacherDiscussionQuestionPicker({
         </button>
         <button
           type="button"
-          disabled={busy || selectedIndex == null}
+          disabled={busy || selectedIndices.size === 0}
           onClick={createDiscussion}
           className="px-4 py-2 rounded-xl bg-cyan-500/90 text-black font-semibold text-sm disabled:opacity-50"
         >
@@ -551,11 +638,15 @@ export default function TeacherDiscussionQuestionPicker({
       </div>
 
       {preview.length > 0 ? (
+        <>
+          <p className="text-sm text-white/70">
+            נבחרו {selectedIndices.size} מתוך 5
+          </p>
         <div className="grid gap-3 md:grid-cols-2">
           {preview.map((q, i) => {
             const correct = correctAnswerText(q);
             const choices = questionChoices(q);
-            const selected = selectedIndex === i;
+            const selected = selectedIndices.has(i);
             return (
               <div
                 key={i}
@@ -594,18 +685,19 @@ export default function TeacherDiscussionQuestionPicker({
                   type="button"
                   className="text-xs px-3 py-1.5 rounded-lg border border-white/20 hover:bg-white/10"
                   onClick={() => {
-                    setSelectedIndex(i);
+                    toggleQuestionIndex(i);
                     if (!title.trim()) {
                       setTitle(`דיון — ${subjectLabelHe(subject)}`);
                     }
                   }}
                 >
-                  {selected ? "נבחרה" : "בחר שאלה זו"}
+                  {selected ? "נבחרה ✓" : "בחר שאלה"}
                 </button>
               </div>
             );
           })}
         </div>
+        </>
       ) : null}
     </div>
   );

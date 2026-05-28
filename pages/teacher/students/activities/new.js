@@ -14,11 +14,23 @@ import {
   GRADES as GEOMETRY_GRADES,
   TOPICS as GEOMETRY_TOPICS,
 } from "../../../../utils/geometry-constants.js";
+import { TOPICS as MOLEDET_TOPICS } from "../../../../utils/moledet-geography-constants.js";
 import { GRADES as HEBREW_GRADES, TOPICS as HEBREW_TOPICS } from "../../../../utils/hebrew-constants.js";
 import { ENGLISH_GRADES, ENGLISH_TOPICS } from "../../../../utils/english-question-generator.js";
-import { TOPICS as MOLEDET_TOPICS } from "../../../../utils/moledet-geography-constants.js";
+import { formatGradeLevelHe } from "../../../../lib/learning-student-defaults.js";
+import { SCIENCE_GRADES } from "../../../../data/science-curriculum.js";
 
 const MODES = ["guided_practice", "quiz", "homework", "discussion"];
+
+const SCIENCE_TOPIC_LABELS = {
+  body: "גוף האדם",
+  animals: "בעלי חיים",
+  plants: "צמחים",
+  materials: "חומרים",
+  experiments: "ניסויים",
+  earth_space: "כדור הארץ וחלל",
+  environment: "סביבה",
+};
 
 const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
   key,
@@ -49,6 +61,12 @@ function topicOptionsForSubject(subject, gradeKey) {
     }));
   }
   if (subject === "moledet_geography") return MOLEDET_TOPIC_OPTIONS;
+  if (subject === "science") {
+    return (SCIENCE_GRADES[gradeKey]?.topics ?? []).map((key) => ({
+      key,
+      label: SCIENCE_TOPIC_LABELS[key] ?? key,
+    }));
+  }
   return [];
 }
 
@@ -276,7 +294,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
             <h2 className="text-base font-semibold">בחר תלמידים פרטיים</h2>
             <span className="text-sm text-white/60">
               נבחרו: {selectedIds.size}
-              {lockedGrade ? ` (כיתה ${lockedGrade})` : ""}
+              {lockedGrade ? ` (${formatGradeLevelHe(lockedGrade)})` : ""}
             </span>
           </div>
 
@@ -284,7 +302,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
             <p className="text-amber-200/80 text-xs mb-3 rounded border border-amber-400/20 bg-amber-500/10 px-3 py-1.5">
               ⚠ יש לך תלמידים מכיתות שונות. ניתן לשלוח פעילות אחת רק לתלמידים מאותה כיתה.
               {lockedGrade
-                ? ` הפעילות נעולה לכיתה ${lockedGrade}.`
+                ? ` הפעילות נעולה ל-${formatGradeLevelHe(lockedGrade)}.`
                 : " בחר תלמיד ראשון לנעילת הכיתה."}
             </p>
           ) : null}
@@ -301,7 +319,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
                   className="underline text-white/60 hover:text-white"
                   onClick={selectAllSameGrade}
                 >
-                  {lockedGrade ? `בחר הכל (כיתה ${lockedGrade})` : "בחר הכל"}
+                  {lockedGrade ? `בחר הכל (${formatGradeLevelHe(lockedGrade)})` : "בחר הכל"}
                 </button>
                 <button
                   type="button"
@@ -402,15 +420,19 @@ export default function TeacherPrivateStudentsNewActivityPage() {
                   setPreview([]);
                 }}
               >
-                {["g1","g2","g3","g4","g5","g6","g7","g8","g9"].map((g) => (
-                  <option key={g} value={g}>{g}</option>
+                {["g1","g2","g3","g4","g5","g6"].map((g) => (
+                  <option key={g} value={g}>{formatGradeLevelHe(g)}</option>
                 ))}
               </select>
             </label>
 
             <label className="block text-sm">
               <span className="text-white/70">נושא</span>
-              {topicOpts.length > 0 ? (
+              {subject === "science" && topicOpts.length === 0 ? (
+                <p className="mt-1 text-amber-200 text-sm rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2">
+                  לא נמצאו נושאים זמינים לכיתה זו במקצוע מדעים.
+                </p>
+              ) : topicOpts.length > 0 ? (
                 <select
                   className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
                   value={topic}
