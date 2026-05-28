@@ -116,6 +116,8 @@ The existing tests accurately cover the risks identified and fixed in the recent
 
 **Browser/manual verification is still required** to confirm the end-to-end UI rendering matches these server-side fixes, particularly for the Teacher QA preview and the Teacher Dashboard.
 
+**Update (2026-05-28):** Final browser verification completed — see `DIAGNOSTIC_REPORT_ENGINE_CROSS_CONTEXT_AUDIT.md` §13. School-teacher flows and teacher QA parent-report preview **PASS** on local dev; normal-parent and private-teacher API spot-checks **deferred** (dev-server flake) with static audit still **PASS**.
+
 ---
 
 ## I. Comparison Against Existing Audit

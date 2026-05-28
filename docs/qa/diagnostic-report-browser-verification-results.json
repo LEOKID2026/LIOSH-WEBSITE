@@ -1,0 +1,125 @@
+{
+  "allPass": false,
+  "matrix": [
+    {
+      "scenario": "1. School restricted-subject teacher dashboard (Dan math+geometry)",
+      "status": "PASS",
+      "verifiedAt": "2026-05-28T00:33:03.152Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "dan@leo-k.com",
+      "student": {
+        "studentId": "0794e3ef-2fad-4a52-8c9a-28ba16a15d71",
+        "studentName": "אלון לוי",
+        "classroomAnswers": 80
+      },
+      "route": "/teacher/dashboard + GET /api/teacher/dashboard",
+      "expected": "Dashboard card totalAnswers matches filtered student report (30d)",
+      "actual": "dashboard=240, report=240, pageLoaded=false"
+    },
+    {
+      "scenario": "2. School restricted-subject teacher student report (Dan)",
+      "status": "PASS",
+      "verifiedAt": "2026-05-28T00:33:14.583Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "dan@leo-k.com",
+      "student": {
+        "studentId": "0794e3ef-2fad-4a52-8c9a-28ba16a15d71",
+        "studentName": "אלון לוי",
+        "classroomAnswers": 80
+      },
+      "route": "/teacher/student/0794e3ef-2fad-4a52-8c9a-28ba16a15d71?period=month",
+      "expected": "summary === sum(subject cards); only math/geometry; no _dailyBySubject in JSON",
+      "actual": "summary=240, subjectSum=240, subjects=math,geometry, leak=false"
+    },
+    {
+      "scenario": "3. Teacher QA preview — full parent report (דוח להורים)",
+      "status": "FAIL",
+      "verifiedAt": "2026-05-28T00:33:34.575Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "dan@leo-k.com",
+      "student": {
+        "studentId": "0794e3ef-2fad-4a52-8c9a-28ba16a15d71",
+        "studentName": "אלון לוי",
+        "classroomAnswers": 80
+      },
+      "route": "/learning/parent-report?source=teacher&period=month",
+      "expected": "Real data; no empty state; parentFacing scoped; v2 totalQuestions > 0",
+      "actual": "apiAnswers=240, emptyUI=false, v2Q=0, table=true"
+    },
+    {
+      "scenario": "4. Date range behavior (week / month / custom)",
+      "status": "FAIL",
+      "verifiedAt": "2026-05-28T00:33:53.426Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "dan@leo-k.com",
+      "student": {
+        "studentId": "0794e3ef-2fad-4a52-8c9a-28ba16a15d71",
+        "studentName": "אלון לוי",
+        "classroomAnswers": 80
+      },
+      "route": "GET parent-report-data with week/month/custom from-to",
+      "expected": "Month shows activity; v2 not empty for month; APIs 200",
+      "actual": "weekAnswers=240, monthAnswers=240, custom=240"
+    },
+    {
+      "scenario": "5. Daily activity reconciliation (Michal english-only)",
+      "status": "PASS",
+      "verifiedAt": "2026-05-28T00:34:01.646Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "michal@leo-k.com",
+      "student": {
+        "studentId": "009f9b4f-dd20-4268-90a5-0ae84c0776f4",
+        "studentName": "מתן ביטון",
+        "classroomAnswers": 110
+      },
+      "route": "/api/teacher/students/.../report-data",
+      "expected": "dailyActivity answers sum === summary; only english visible",
+      "actual": "daily=110, summary=110, subjects=english"
+    },
+    {
+      "scenario": "6. School admin report — full school scope",
+      "status": "PASS",
+      "verifiedAt": "2026-05-28T00:34:11.018Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "school@leo-k.com",
+      "student": {
+        "studentId": "0794e3ef-2fad-4a52-8c9a-28ba16a15d71",
+        "studentName": "אלון לוי",
+        "classroomAnswers": 80
+      },
+      "route": "/api/school/students/0794e3ef-2fad-4a52-8c9a-28ba16a15d71/report-data",
+      "expected": "Admin totals >= teacher-scoped; admin sees >= subjects",
+      "actual": "school=660 subs=math,geometry,english,hebrew,science,moledet_geography, teacher=240 subs=math,geometry"
+    },
+    {
+      "scenario": "7. Normal parent report (no classroom rollup)",
+      "status": "FAIL",
+      "verifiedAt": "2026-05-28T00:34:11.018Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "admin@admin.com",
+      "route": "/api/parent/students/[id]/report-data",
+      "expected": "200; no classroom merge artifacts; no _dailyBySubject",
+      "actual": "skipped"
+    },
+    {
+      "scenario": "8. Private teacher — no school subject filter",
+      "status": "FAIL",
+      "verifiedAt": "2026-05-28T00:34:11.018Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "teacher@leo.com",
+      "route": "/api/teacher/classes + /api/school/me",
+      "expected": "Teacher classes OK; school portal blocked (403)",
+      "actual": "skipped"
+    },
+    {
+      "scenario": "Security: _dailyBySubject not in teacher JSON",
+      "status": "PASS",
+      "verifiedAt": "2026-05-28T00:34:11.018Z",
+      "baseURL": "http://127.0.0.1:3001",
+      "account": "dan@leo-k.com",
+      "route": "report-data + parent-report-data",
+      "expected": "_dailyBySubject absent from API payloads",
+      "actual": "report-data leak=false, preview leak=false"
+    }
+  ]
+}

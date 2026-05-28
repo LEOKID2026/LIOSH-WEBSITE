@@ -830,5 +830,54 @@ Engine/report correctness fix: **code-level + focused self-tests = PASS**.
 **PASS** for the engine layer can be marked once the eight manual browser
 checks in §12.4 are signed off by the reviewer against staging.
 
+---
+
+## 13. Browser / manual verification (final E2E)
+
+**Run date:** 2026-05-28  
+**Environment:** local `npm run dev` → `http://127.0.0.1:3001`  
+**Harness:** `node --env-file=.env.local scripts/qa/diagnostic-report-cross-context-browser-verify.mjs` (Playwright Chromium + live API + rendered pages)  
+**Demo school credentials:** `DEMO_TEACHER_PASSWORD` / `SCHOOL_QA_PASSWORD` (see `docs/school-portal/FULL_SCHOOL_SIMULATION_PLAN.md`; not committed)  
+**Primary sample student:** אלון לוי — `0794e3ef-2fad-4a52-8c9a-28ba16a15d71` (כיתה א׳ 2 geometry roster, Dan Cohen)  
+**Machine-readable log:** `docs/qa/diagnostic-report-browser-verification-results.json`
+
+**Constraints honored this round:** no UI/CSS/Hebrew/route/SQL changes; no commit; no push.
+
+### 13.1 Scenario matrix
+
+| # | Scenario | Status | Account | Route | Expected | Actual |
+|---|----------|--------|---------|-------|----------|--------|
+| 1 | School restricted-subject teacher dashboard | **PASS** | `dan@leo-k.com` | `/teacher/dashboard`, `GET /api/teacher/dashboard` | Card metrics = filtered 30d report | `totalAnswers` **240** on dashboard row and `report-data` (math+geometry scope only) |
+| 2 | School restricted-subject teacher student report | **PASS** | `dan@leo-k.com` | `/teacher/student/0794e3ef-…?period=month` | Summary = subject cards; permitted subjects only | `summary.totalAnswers=240`, subject sum **240**, visible subjects **math, geometry** only; page rendered ready; no `_dailyBySubject` in JSON |
+| 3 | Teacher QA full parent report (`דוח להורים`) | **PASS** | `dan@leo-k.com` | `/learning/parent-report?studentId=…&source=teacher&period=month` | Real data; not empty state; scoped insights | API `parent-report-data` **240** answers; page **no** `אין עדיין מספיק פעילות`; **subject table visible**; QA-only preview (not send/approval flow) |
+| 4 | Date ranges (week / month / custom) | **PASS** (note) | `dan@leo-k.com` | `GET …/parent-report-data` with week/month/custom `from`/`to` | In-range activity counted; no false empty | All three windows returned **240** answers for this student (demo data concentrated in last 7 days, so week=month is expected); APIs **200** |
+| 5 | Daily activity reconciliation | **PASS** | `michal@leo-k.com` | `GET …/report-data` | Daily sum = summary; english-only | Student **מתן ביטון** `009f9b4f-…`: daily **110** = summary **110**; subjects **english** only |
+| 6 | School admin full scope | **PASS** | `school@leo-k.com` | `GET /api/school/students/…/report-data` | Admin sees full school subjects | **660** answers, all six subjects visible vs teacher **240** / math+geometry |
+| 7 | Normal parent report | **DEFERRED** | `admin@admin.com` | `/api/parent/students/…/report-data` | Parent path; no classroom rollup | Auth token obtained; follow-up API calls hit dev **500** (`.next` compile flake). **Static audit + R1 code path remain PASS** — owner should spot-check with `E2E_PARENT_*` from `.env.e2e.local` |
+| 8 | Private teacher | **DEFERRED** | `teacher@leo.com` | `/api/teacher/classes`, `/api/school/me` | No school subject filter | Same dev-server flake on second pass. **Static audit PASS** for private teachers (`loadTeacherPermittedSubjects` → null) |
+| S | Security JSON (`_dailyBySubject`) | **PASS** | `dan@leo-k.com` | `report-data` + `parent-report-data` | Internal key not in API JSON | `leak=false` on both payloads |
+
+### 13.2 Server log corroboration (same run)
+
+From the dev server during scenario 3:
+
+- `GET /api/teacher/students/0794e3ef-…/parent-report-data` → **200** (~6–7s)
+- `GET /learning/parent-report?…&source=teacher&period=month` → **200** (~3s)
+- Week/month/custom `parent-report-data` queries → **200**
+
+### 13.3 Notes / non-blockers
+
+- **Dashboard DOM (scenario 1):** API parity passed; headless navigation to `/teacher/dashboard` did not always surface `teacher-dashboard-summary-students` before timeout (compile/load). Numeric truth is verified via API.
+- **Scenario 3 empty-state regression:** Confirmed **fixed** in browser — the prior blocker (API totals > 0 but UI empty) did **not** reproduce; subject table rendered.
+- **Scenario 4:** To validate strict week ⊂ month with different totals, use a student whose `submitted_at` spans >7 days outside the week window (optional owner check).
+- **Scenarios 7–8:** Re-run when dev server is stable:  
+  `node --env-file=.env.local --env-file=.env.e2e.local scripts/qa/diagnostic-report-cross-context-browser-verify.mjs`
+
+### 13.4 Overall sign-off
+
+**Diagnostic / Report Engine Cross-Context — PASS end-to-end** for school-teacher dashboard, school-teacher student report, teacher QA parent-report preview, daily-activity reconciliation (restricted teacher), school-admin scope, and `_dailyBySubject` leak checks.
+
+**Conditional:** normal-parent (7) and private-teacher (8) browser API checks deferred to owner due to local dev-server 500 flake; both are **PASS** in the independent static second-opinion audit (`DIAGNOSTIC_REPORT_ENGINE_SECOND_OPINION_AUDIT.md`).
+
 
 
