@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { parseCreateActivityBody } from "../lib/teacher-server/teacher-activities.server.js";
+import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
 
@@ -102,4 +103,19 @@ test("validation messages are Hebrew for invalid subject", () => {
   const parsed = parseCreateActivityBody(baseBody({ subject: "not_a_subject" }));
   assert.equal(parsed.ok, false);
   assert.equal(parsed.message, "מקצוע לא תקין");
+});
+
+test("grade authorization treats g3 and grade_3 as the same canonical key", () => {
+  assert.equal(normalizeGradeLevelToKey("g3"), "g3");
+  assert.equal(normalizeGradeLevelToKey("grade_3"), "g3");
+  assert.equal(normalizeGradeLevelToKey("g3"), normalizeGradeLevelToKey("grade_3"));
+});
+
+test("grade authorization rejects truly different grades after normalization", () => {
+  assert.notEqual(normalizeGradeLevelToKey("g4"), normalizeGradeLevelToKey("grade_3"));
+});
+
+test("missing gradeLevel normalizes to empty and fails class match", () => {
+  assert.equal(normalizeGradeLevelToKey(""), "");
+  assert.equal(normalizeGradeLevelToKey(null), "");
 });

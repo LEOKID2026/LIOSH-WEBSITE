@@ -83,6 +83,15 @@ assert.ok(
   "class activities action required"
 );
 assert.ok(
+  dashboardClientSrc.includes("/activities/new"),
+  "multi-subject activity links must route to subject-class create page"
+);
+assert.ok(
+  dashboardClientSrc.includes("פעילות ${subjectLinkLabel(s)}"),
+  "multi-subject activity button label required"
+);
+assert.ok(dashboardClientSrc.includes("פעילויות"), "single-subject activities label preserved");
+assert.ok(
   dashboardClientSrc.includes('data-testid="teacher-classes-empty-state"'),
   "empty state section required when no classes"
 );

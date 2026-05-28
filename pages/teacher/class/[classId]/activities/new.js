@@ -10,99 +10,21 @@ import { REPORT_SUBJECTS, subjectLabelHe } from "../../../../../lib/teacher-port
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../../../../lib/classroom-activities/classroom-activities-preview.js";
 import { generateActivityQuestionSetClient } from "../../../../../lib/classroom-activities/generate-activity-questions-client.js";
 import { activityModeLabelHe } from "../../../../../lib/classroom-activities/classroom-activities-labels.client.js";
-import { TOPICS as MOLEDET_TOPICS } from "../../../../../utils/moledet-geography-constants.js";
 import {
-  GRADES as GEOMETRY_GRADES,
-  TOPICS as GEOMETRY_TOPICS,
-} from "../../../../../utils/geometry-constants.js";
-import { GRADES as HEBREW_GRADES, TOPICS as HEBREW_TOPICS } from "../../../../../utils/hebrew-constants.js";
+  formatGradeLevelHe,
+  loadClassActivityContextFromApiClass,
+  resolveCanonicalGradeKey,
+} from "../../../../../lib/teacher-portal/teacher-class-grade.js";
 import {
-  ENGLISH_GRADES,
-  ENGLISH_TOPICS,
-} from "../../../../../utils/english-question-generator.js";
-import { GRADES as MATH_GRADES } from "../../../../../utils/math-constants.js";
-import { getMathReportBucketDisplayName } from "../../../../../utils/math-report-generator.js";
-import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../../../../../lib/learning-student-defaults.js";
-import { normalizeSubject } from "../../../../../lib/learning-supabase/learning-activity.js";
-import { SCIENCE_GRADES } from "../../../../../data/science-curriculum.js";
-
-const SCIENCE_TOPIC_LABELS = {
-  body: "גוף האדם",
-  animals: "בעלי חיים",
-  plants: "צמחים",
-  materials: "חומרים",
-  experiments: "ניסויים",
-  earth_space: "כדור הארץ וחלל",
-  environment: "סביבה",
-};
-
-function scienceTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  return (SCIENCE_GRADES[canonical]?.topics ?? []).map((key) => ({
-    key,
-    label: SCIENCE_TOPIC_LABELS[key] ?? key,
-  }));
-}
-
-const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
-  key,
-  label: meta.name,
-}));
-
-function geometryTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const topics = GEOMETRY_GRADES[canonical]?.topics || [];
-  return topics
-    .filter((t) => t !== "mixed")
-    .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
-}
-
-function hebrewTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const topics = HEBREW_GRADES[canonical]?.topics || [];
-  return topics.map((key) => ({ key, label: HEBREW_TOPICS[key]?.name || key }));
-}
-
-function englishTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const topics = ENGLISH_GRADES[canonical]?.topics || [];
-  return topics.map((key) => ({ key, label: ENGLISH_TOPICS[key]?.name || key }));
-}
-
-function mathTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const operations = MATH_GRADES[canonical]?.operations || [];
-  return operations
-    .filter((op) => op !== "mixed")
-    .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
-}
-
-function defaultTopicForSubject(subjectKey, gradeKey) {
-  if (subjectKey === "moledet_geography") {
-    return MOLEDET_TOPIC_OPTIONS[0]?.key || "homeland";
-  }
-  if (subjectKey === "geometry") {
-    const opts = geometryTopicOptionsForGrade(gradeKey);
-    return opts[0]?.key || "";
-  }
-  if (subjectKey === "hebrew") {
-    const opts = hebrewTopicOptionsForGrade(gradeKey);
-    return opts[0]?.key || "";
-  }
-  if (subjectKey === "english") {
-    const opts = englishTopicOptionsForGrade(gradeKey);
-    return opts[0]?.key || "";
-  }
-  if (subjectKey === "math") {
-    const opts = mathTopicOptionsForGrade(gradeKey);
-    return opts[0]?.key || "addition";
-  }
-  if (subjectKey === "science") {
-    const opts = scienceTopicOptionsForGrade(gradeKey);
-    return opts[0]?.key || "";
-  }
-  return "";
-}
+  MOLEDET_TOPIC_OPTIONS,
+  defaultTopicForSubject,
+  englishTopicOptionsForGrade,
+  geometryTopicOptionsForGrade,
+  hebrewTopicOptionsForGrade,
+  mathTopicOptionsForGrade,
+  scienceTopicOptionsForGrade,
+  topicOptionsForSubject,
+} from "../../../../../lib/teacher-portal/teacher-class-topic-options.js";
 
 export async function getServerSideProps(context) {
   const classId = String(context.params?.classId || "").trim();
@@ -167,23 +89,21 @@ export default function TeacherNewActivityPage({ classId }) {
           setClassContext((prev) => ({ ...prev, loaded: true }));
           return;
         }
-        const nextGrade = normalizeGradeLevelToKey(cls.gradeLevel) || "g3";
-        const nextSubject = cls.subjectFocus
-          ? normalizeSubject(cls.subjectFocus) || String(cls.subjectFocus).trim().toLowerCase()
-          : subject;
-        setGradeLevel(nextGrade);
-        if (cls.subjectFocus) {
-          setSubject(nextSubject);
-          setTopic(defaultTopicForSubject(nextSubject, nextGrade));
+        const ctx = loadClassActivityContextFromApiClass(cls);
+        if (ctx.gradeLocked && !ctx.gradeKey) {
+          setContextError("רמת הכיתה של הכיתה אינה תקינה. פנה למנהל בית הספר.");
+          setClassContext({ ...ctx, loaded: true });
+          return;
+        }
+        const nextGrade = ctx.gradeKey || resolveCanonicalGradeKey(cls.gradeLevel) || "g3";
+        if (ctx.subjectFocus) {
+          setSubject(ctx.subjectFocus);
+          setTopic(defaultTopicForSubject(ctx.subjectFocus, nextGrade));
         } else {
           setTopic(defaultTopicForSubject(subject, nextGrade));
         }
-        setClassContext({
-          gradeLocked: Boolean(cls.gradeLevel),
-          subjectLocked: Boolean(cls.subjectFocus),
-          className: cls.name || "",
-          loaded: true,
-        });
+        setGradeLevel(nextGrade);
+        setClassContext({ ...ctx, loaded: true });
       } catch {
         if (!cancelled) {
           setContextError("שגיאת רשת");
@@ -196,18 +116,7 @@ export default function TeacherNewActivityPage({ classId }) {
     };
   }, [classId, router]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const topicOpts =
-    subject === "math"
-      ? mathTopicOptionsForGrade(gradeLevel)
-      : subject === "geometry"
-        ? geometryTopicOptionsForGrade(gradeLevel)
-        : subject === "hebrew"
-          ? hebrewTopicOptionsForGrade(gradeLevel)
-          : subject === "english"
-            ? englishTopicOptionsForGrade(gradeLevel)
-            : subject === "science"
-              ? scienceTopicOptionsForGrade(gradeLevel)
-              : [];
+  const topicOpts = topicOptionsForSubject(subject, gradeLevel);
 
   useEffect(() => {
     if (subject === "moledet_geography") return;
@@ -267,7 +176,7 @@ export default function TeacherNewActivityPage({ classId }) {
         difficultyLevel: difficulty,
         questionCount: Number(questionCount),
         questionSet: preview,
-        gradeLevel,
+        gradeLevel: resolveCanonicalGradeKey(gradeLevel) || gradeLevel,
       };
       if (timeLimitSeconds) body.timeLimitSeconds = Number(timeLimitSeconds);
       if (dueAt) body.dueAt = new Date(dueAt).toISOString();

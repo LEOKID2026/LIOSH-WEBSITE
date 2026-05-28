@@ -33,6 +33,18 @@ test("normalizeGradeLevelToKey maps grade_3 to g3 for topic banks", () => {
   assert.ok((GEOMETRY_GRADES.g3?.topics || []).includes("shapes_basic"));
 });
 
+test("normalizeGradeLevelToKey maps bare digit 3 to g3 (DB format)", () => {
+  assert.equal(normalizeGradeLevelToKey("3"), "g3");
+  assert.equal(normalizeGradeLevelToKey("3"), normalizeGradeLevelToKey("g3"));
+});
+
+test("server grade gate accepts g3 body against DB grade_level 3", () => {
+  const bodyGradeKey = normalizeGradeLevelToKey("g3");
+  const classGradeKey = normalizeGradeLevelToKey("3");
+  assert.equal(bodyGradeKey, "g3");
+  assert.equal(classGradeKey, "g3");
+});
+
 test("generator error messages do not contain raw grade keys", async () => {
   await assert.rejects(
     () =>

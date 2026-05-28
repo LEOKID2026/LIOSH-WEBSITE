@@ -7,6 +7,7 @@ import {
 } from "./geometry-conceptual-bank.js";
 import { gradeBandForKey } from "./grade-gating.js";
 import { enrichGeometryProceduralParams } from "./geometry-diagnostic-metadata-bridge.js";
+import { formatTriangleAnglesKnownTwoStem } from "./geometry-activity-question-stem.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 
 function shuffleMcqList(answers) {
@@ -1059,35 +1060,35 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
       {
         const baseMid = `במשולש, זווית אחת היא ${angle1}° וזווית שנייה היא ${angle2}°. מה הזווית השלישית?`;
         const baseMidB = `זוויות במשולש: ${angle1}° ו-${angle2}° כבר ידועות. מה נשאר לזווית השלישית?`;
-        const baseMidC = `סכום שתי זוויות ידועות הוא ${angle1}°+${angle2}° — השלימו לזווית השלישית במשולש.`;
-        const baseLate = `במשולש במישור, שתי זוויות פנימיות ידועות (${angle1}° ו-${angle2}°). מה גודל הזווית השלישית?`;
+        const baseMidC = `ידועות ${angle1}° ו-${angle2}° — השלימו את הזווית השלישית במשולש.`;
+        const baseLate = `במשולש, שתי זוויות ידועות (${angle1}° ו-${angle2}°). מה הזווית השלישית?`;
         const tw = Math.floor(Math.random() * 3);
         if (formulaBand === "mid") {
           if (levelKey === "easy") {
             question = [
-              `כלל בסיס: סכום זוויות פנימיות במשולש הוא 180°. ${baseMid}`,
+              `כלל בסיס: סכום זוויות במשולש הוא 180°. ${baseMid}`,
               `זכרו: במשולש סה״כ 180°. ${baseMidB}`,
               `משולש פשוט — ${baseMidC}`,
             ][tw];
           } else if (levelKey === "medium") {
             question = [
-              `חישוב זווית שלישית במשולש — ${baseMid}`,
-              `השלמת זווית במשולש: ${baseMidB}`,
-              `אלגברה של זוויות — ${baseMidC}`,
+              `חישוב זוויות במשולש — ${baseMid}`,
+              `מציאת זווית חסרה במשולש: ${baseMidB}`,
+              `חישוב זוויות במשולש — ${baseMidC}`,
             ][tw];
           } else {
             question = [
-              `ניתוח ללא ניסוח הכלל במפורש — מה הזווית החסרה אם ידועות ${angle1}° ו-${angle2}°?`,
-              `בלי לצטט את כלל 180° במפורש — מה נשאר מ-${angle1}° ו-${angle2}°?`,
-              `אתגר קצר: זווית שלישית כשידועות ${angle1}° ו-${angle2}° — מה התוצאה?`,
+              formatTriangleAnglesKnownTwoStem(angle1, angle2),
+              `חישוב זוויות במשולש — ידועות ${angle1}° ו-${angle2}°. מה נשאר?`,
+              `חישוב זוויות במשולש — ידועות ${angle1}° ו-${angle2}°. מה התוצאה?`,
             ][tw];
           }
         } else if (levelKey === "easy") {
-          question = `משוואת זוויות: ${angle1}° + ${angle2}° + ? = 180° — מה החסר?`;
+          question = formatTriangleAnglesKnownTwoStem(angle1, angle2);
         } else if (levelKey === "medium") {
           question = baseLate;
         } else {
-          question = `אתגר זוויות משולש — ${baseLate}`;
+          question = `חישוב זוויות במשולש — ${baseLate}`;
         }
       }
       break;

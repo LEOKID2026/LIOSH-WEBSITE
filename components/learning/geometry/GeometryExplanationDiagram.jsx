@@ -528,6 +528,9 @@ export default function GeometryExplanationDiagram({
     const a1 = spec.angle1;
     const a2 = spec.angle2;
     const a3 = spec.angle3;
+    const hideThird = spec.hideAngle3 === true;
+    const revealThird =
+      !hideThird || emphasis === "third_angle" || emphasis === "result";
     const g2 = emphasis === "given_two";
     const comp = emphasis === "angles_compute";
     const third = emphasis === "third_angle" || emphasis === "result";
@@ -538,8 +541,13 @@ export default function GeometryExplanationDiagram({
 
     const v1 = g2 ? "label" : "caption";
     const v2 = g2 ? "label" : "caption";
-    const v3 = third ? "label" : "caption";
-    const centerVar = sumRule || comp ? "label" : "caption";
+    const v3 = third || hideThird ? "label" : "caption";
+    const showInsideFormula = !hideThird && (sumRule || comp);
+
+    // Assessment: labels inside the triangle; explanation keeps step-driven emphasis.
+    const labelA1 = hideThird ? { x: 92, y: 218 } : { x: 108, y: 258 };
+    const labelA2 = hideThird ? { x: 268, y: 218 } : { x: 252, y: 258 };
+    const labelA3 = hideThird ? { x: 180, y: 72 } : { x: 180, y: 54 };
 
     return (
       <DiagramFrame>
@@ -550,21 +558,30 @@ export default function GeometryExplanationDiagram({
             stroke={triStroke}
             strokeWidth={triSw}
           />
-          <SvgText x="118" y="244" variant={v1}>
-            {String(a1)}°
+          <SvgText x={labelA1.x} y={labelA1.y} variant={v1}>
+            {`${a1}°`}
           </SvgText>
-          <SvgText x="248" y="244" variant={v2}>
-            {String(a2)}°
+          <SvgText x={labelA2.x} y={labelA2.y} variant={v2}>
+            {`${a2}°`}
           </SvgText>
-          <SvgText x="180" y="72" variant={v3}>
-            {String(a3)}°
+          <SvgText x={labelA3.x} y={labelA3.y} variant={v3}>
+            {revealThird ? `${a3}°` : "?"}
           </SvgText>
-          <SvgText x="180" y="138" variant={centerVar}>
-            סכום בפנים = 180°
-          </SvgText>
-          <SvgText x="180" y="20" variant="note">
-            מחפשים את הזווית שלא נתונה
-          </SvgText>
+          {showInsideFormula ? (
+            <SvgText x="180" y="138" variant="label">
+              סכום בפנים = 180°
+            </SvgText>
+          ) : null}
+          {!hideThird ? (
+            <SvgText x="180" y="22" variant="note">
+              מחפשים את הזווית שלא נתונה
+            </SvgText>
+          ) : null}
+          {!hideThird && sumRule ? (
+            <SvgText x="180" y="272" variant="note">
+              סכום זוויות במשולש = 180°
+            </SvgText>
+          ) : null}
         </svg>
       </DiagramFrame>
     );
@@ -628,6 +645,18 @@ export default function GeometryExplanationDiagram({
     const u = inferGeometryDiagramLengthUnit(question);
     const uStr = u ? ` ${u}` : "";
 
+    const revealSide = (key) =>
+      !spec.hideSide ||
+      spec.hideSide !== key ||
+      emphasis === "result" ||
+      emphasis === "hyp" ||
+      emphasis === "missing_leg";
+
+    const sideLabel = (key, val) => {
+      if (!revealSide(key)) return `${key} = ?`;
+      return `${key} = ${val}${uStr}`;
+    };
+
     return (
       <DiagramFrame>
         <svg viewBox={VB} className="block" aria-hidden>
@@ -668,13 +697,13 @@ export default function GeometryExplanationDiagram({
             strokeWidth="2.2"
           />
           <SvgText x={x0 - 8} y={(y0 + y2) / 2 + 5} variant="label" anchor="end">
-            {`a = ${a}${uStr}`}
+            {sideLabel("a", a)}
           </SvgText>
           <SvgText x={(x0 + x1) / 2} y={y0 + 22} variant="label">
-            {`b = ${b}${uStr}`}
+            {sideLabel("b", b)}
           </SvgText>
           <SvgText x={(x1 + x2) / 2 + 10} y={(y1 + y2) / 2 - 4} variant="label">
-            {`c = ${c}${uStr}`}
+            {sideLabel("c", c)}
           </SvgText>
           <SvgText x="180" y="20" variant="note">
             זווית ישרה — היתר נגדה הוא c

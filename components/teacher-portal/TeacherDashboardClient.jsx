@@ -676,25 +676,37 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                 ? `/teacher/class/${encodeURIComponent(classRouteId)}`
                 : "";
               const studentCount = effectivePhysicalClassStudentCount(c);
+              const subjectLinkLabel = (s) =>
+                s.subjectLabel || subjectLabelHe(s.subjectFocus) || "כיתה";
               const reportLinks =
                 subjectClasses.length > 1
-                  ? subjectClasses.map((s) => {
-                      const label =
-                        s.subjectLabel ||
-                        subjectLabelHe(s.subjectFocus) ||
-                        "כיתה";
-                      return {
-                        classId: s.classId,
-                        href: `/teacher/class/${encodeURIComponent(s.classId)}`,
-                        label: `דוח ${label}`,
-                      };
-                    })
+                  ? subjectClasses.map((s) => ({
+                      classId: s.classId,
+                      href: `/teacher/class/${encodeURIComponent(s.classId)}`,
+                      label: `דוח ${subjectLinkLabel(s)}`,
+                    }))
                   : classBase
                     ? [
                         {
                           classId: classRouteId,
                           href: classBase,
                           label: "דוח כיתה",
+                        },
+                      ]
+                    : [];
+              const activityLinks =
+                subjectClasses.length > 1
+                  ? subjectClasses.map((s) => ({
+                      classId: s.classId,
+                      href: `/teacher/class/${encodeURIComponent(s.classId)}/activities/new`,
+                      label: `פעילות ${subjectLinkLabel(s)}`,
+                    }))
+                  : classBase
+                    ? [
+                        {
+                          classId: classRouteId,
+                          href: `${classBase}/activities`,
+                          label: "פעילויות",
                         },
                       ]
                     : [];
@@ -736,13 +748,16 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                       {link.label}
                     </Link>
                   ))}
-                  <Link
-                    href={`${classBase}/activities`}
-                    className="text-xs rounded border border-amber-400/40 text-amber-200 px-3 py-1.5 hover:bg-amber-500/10"
-                    data-testid={`teacher-class-activities-${rosterKey}`}
-                  >
-                    פעילויות
-                  </Link>
+                  {activityLinks.map((link) => (
+                    <Link
+                      key={link.classId}
+                      href={link.href}
+                      className="text-xs rounded border border-amber-400/40 text-amber-200 px-3 py-1.5 hover:bg-amber-500/10"
+                      data-testid={`teacher-class-activities-${link.classId}`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
                   <button
                     type="button"
                     onClick={() => setManageClass(c)}

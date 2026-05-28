@@ -7,8 +7,7 @@ import TeacherDiscussionQuestionPicker from "../../../../../components/teacher-p
 import { getLearningSupabaseBrowserClient } from "../../../../../lib/learning-supabase/client";
 import { resolveTeacherAccessToken } from "../../../../../lib/teacher-portal/use-teacher-portal-session";
 import { teacherAuthFetch } from "../../../../../lib/teacher-portal/teacher-ui.he.js";
-import { normalizeGradeLevelToKey } from "../../../../../lib/learning-student-defaults.js";
-import { normalizeSubject } from "../../../../../lib/learning-supabase/learning-activity.js";
+import { loadClassActivityContextFromApiClass } from "../../../../../lib/teacher-portal/teacher-class-grade.js";
 
 export async function getServerSideProps(context) {
   const classId = String(context.params?.classId || "").trim();
@@ -47,13 +46,14 @@ export default function TeacherNewDiscussionPage({ classId }) {
           return;
         }
         const cls = json?.data?.class;
-        if (cls?.gradeLevel) {
-          setGradeLevel(normalizeGradeLevelToKey(cls.gradeLevel) || String(cls.gradeLevel));
+        const ctx = loadClassActivityContextFromApiClass(cls);
+        if (ctx.gradeKey) {
+          setGradeLevel(ctx.gradeKey);
+        } else if (ctx.gradeLocked) {
+          setError("רמת הכיתה של הכיתה אינה תקינה. פנה למנהל בית הספר.");
         }
-        if (cls?.subjectFocus) {
-          const subj =
-            normalizeSubject(cls.subjectFocus) || String(cls.subjectFocus).trim().toLowerCase();
-          setLockedSubject(subj);
+        if (ctx.subjectFocus) {
+          setLockedSubject(ctx.subjectFocus);
           setSubjectLocked(true);
         }
       } catch {

@@ -318,13 +318,20 @@ export default function StudentActivityPage({ activityId }) {
                 </button>
               </>
             ) : Array.isArray(currentQuestion.choices) && currentQuestion.choices.length ? (
-              <div className="space-y-2 mb-4">
+              <div
+                className={`mb-4 ${
+                  currentQuestion.choices.every((c) => String(c).length <= 16)
+                    ? "grid grid-cols-1 sm:grid-cols-2 gap-2"
+                    : "space-y-2"
+                }`}
+                data-testid="activity-answer-choices"
+              >
                 {currentQuestion.choices.map((c, i) => (
                   <button
                     key={i}
                     type="button"
                     onClick={() => setAnswerInput(String(c))}
-                    className={`w-full text-right px-4 py-3 rounded-xl border ${
+                    className={`w-full text-right px-4 py-3 rounded-xl border min-h-[44px] ${
                       answerInput === String(c)
                         ? "border-cyan-400 bg-cyan-500/20"
                         : "border-white/15 hover:bg-white/5"

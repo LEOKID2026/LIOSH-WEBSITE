@@ -3,8 +3,13 @@
  * No Math/Science imports.
  */
 
-export function getGeometryDiagramSpec(question) {
+/**
+ * @param {object} question
+ * @param {{ hideUnknownValues?: boolean }} [options]
+ */
+export function getGeometryDiagramSpec(question, options = {}) {
   if (!question?.params || !question.topic) return null;
+  const hideUnknownValues = options.hideUnknownValues === true;
   const { topic, shape, params: p } = question;
 
   if (topic === "area") {
@@ -87,6 +92,7 @@ export function getGeometryDiagramSpec(question) {
       angle1: p.angle1,
       angle2: p.angle2,
       angle3: a3,
+      hideAngle3: hideUnknownValues,
     };
   }
 
@@ -97,6 +103,13 @@ export function getGeometryDiagramSpec(question) {
     typeof p.b === "number" &&
     typeof p.c === "number"
   ) {
+    /** @type {"a"|"b"|"c"|null} */
+    let hideSide = null;
+    if (hideUnknownValues) {
+      if (p.kind === "pythagoras_hyp") hideSide = "c";
+      else if (p.which === "leg_a") hideSide = "a";
+      else if (p.which === "leg_b") hideSide = "b";
+    }
     return {
       kind: "pythagoras",
       mode: p.kind === "pythagoras_hyp" ? "hyp" : "leg",
@@ -107,6 +120,7 @@ export function getGeometryDiagramSpec(question) {
       a: p.a,
       b: p.b,
       c: p.c,
+      hideSide,
     };
   }
 
@@ -221,4 +235,52 @@ export function getDiagramEmphasisForStep(question, stepIndex, totalSteps) {
     default:
       return "neutral";
   }
+}
+
+/**
+ * Text values that would appear on an assessment diagram (before submit).
+ * Used by tests to ensure the correct answer is not leaked in the drawing.
+ * @param {ReturnType<typeof getGeometryDiagramSpec>} spec
+ */
+export function getAssessmentDiagramVisibleValues(spec) {
+  if (!spec?.kind) return [];
+
+  if (spec.kind === "triangle_angles") {
+    const labels = [`${spec.angle1}°`, `${spec.angle2}°`];
+    labels.push(spec.hideAngle3 ? "?" : `${spec.angle3}°`);
+    if (!spec.hideAngle3) {
+      labels.push("סכום זוויות במשולש = 180°");
+    }
+    return labels;
+  }
+
+  if (spec.kind === "pythagoras") {
+    const sideVal = (key) => {
+      const raw = spec[key];
+      if (spec.hideSide === key) return "?";
+      return raw != null ? String(raw) : "";
+    };
+    return [`a = ${sideVal("a")}`, `b = ${sideVal("b")}`, `c = ${sideVal("c")}`].filter(Boolean);
+  }
+
+  return [];
+}
+
+/**
+ * Numeric/string values that must not appear literally on assessment diagrams.
+ * @param {ReturnType<typeof getGeometryDiagramSpec>} spec
+ */
+export function getAssessmentDiagramHiddenAnswerValues(spec) {
+  if (!spec?.kind) return [];
+
+  if (spec.kind === "triangle_angles" && spec.hideAngle3) {
+    return [String(spec.angle3), `${spec.angle3}°`];
+  }
+
+  if (spec.kind === "pythagoras" && spec.hideSide) {
+    const val = spec[spec.hideSide];
+    return val != null ? [String(val)] : [];
+  }
+
+  return [];
 }

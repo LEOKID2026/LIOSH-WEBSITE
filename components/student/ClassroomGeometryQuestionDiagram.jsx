@@ -18,7 +18,10 @@ export default function ClassroomGeometryQuestionDiagram({ question }) {
   }, [question]);
 
   const spec = useMemo(
-    () => (diagramQuestion ? getGeometryDiagramSpec(diagramQuestion) : null),
+    () =>
+      diagramQuestion
+        ? getGeometryDiagramSpec(diagramQuestion, { hideUnknownValues: true })
+        : null,
     [diagramQuestion]
   );
 

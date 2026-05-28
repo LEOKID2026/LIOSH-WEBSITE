@@ -21,6 +21,10 @@ import {
 } from "../../../../lib/teacher-server/teacher-request.server.js";
 import { sendTeacherApiError } from "../../../../lib/teacher-server/teacher-session.server.js";
 import { readJsonBody } from "../../../../lib/learning-supabase/learning-activity.js";
+import {
+  classGradeKeysMatch,
+  resolveCanonicalGradeKey,
+} from "../../../../lib/teacher-portal/teacher-class-grade.js";
 
 export default async function handler(req, res) {
   try {
@@ -97,29 +101,27 @@ export default async function handler(req, res) {
         return sendTeacherApiError(res, owned.status, owned.code, owned.code);
       }
 
-      if (parsed.payload.mode !== "discussion") {
-        const bodyGradeLevel =
-          typeof body.gradeLevel === "string" ? body.gradeLevel.trim() : null;
-        if (!bodyGradeLevel || bodyGradeLevel !== owned.row.grade_level) {
-          return sendTeacherApiError(
-            res,
-            403,
-            "grade_mismatch",
-            "רמת הכיתה חסרה או אינה תואמת לכיתה המשויכת"
-          );
-        }
-
-        if (owned.row.subject_focus && parsed.payload.subject !== owned.row.subject_focus) {
-          return sendTeacherApiError(
-            res,
-            403,
-            "subject_mismatch",
-            "המקצוע שנבחר אינו תואם לכיתה המשויכת"
-          );
-        }
+      const bodyGradeKey = resolveCanonicalGradeKey(body.gradeLevel);
+      const classGradeKey = resolveCanonicalGradeKey(owned.row.grade_level);
+      if (!classGradeKeysMatch(body.gradeLevel, owned.row.grade_level)) {
+        return sendTeacherApiError(
+          res,
+          403,
+          "grade_mismatch",
+          "רמת הכיתה חסרה או אינה תואמת לכיתה המשויכת"
+        );
       }
 
-      const classGrade = owned.row.grade_level || null;
+      if (owned.row.subject_focus && parsed.payload.subject !== owned.row.subject_focus) {
+        return sendTeacherApiError(
+          res,
+          403,
+          "subject_mismatch",
+          "המקצוע שנבחר אינו תואם לכיתה המשויכת"
+        );
+      }
+
+      const classGrade = classGradeKey || null;
       if (parsed.payload.mode === "discussion") {
         subjectGate = await assertDiscussionActivitySubjectAllowed(
           ctx.serviceRole,

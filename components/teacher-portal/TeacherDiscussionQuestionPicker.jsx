@@ -2,93 +2,17 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { teacherAuthFetch, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../lib/classroom-activities/classroom-activities-preview.js";
-import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../../lib/learning-student-defaults.js";
-import { SCIENCE_GRADES } from "../../data/science-curriculum.js";
-import { TOPICS as MOLEDET_TOPICS } from "../../utils/moledet-geography-constants.js";
+import { formatGradeLevelHe, resolveCanonicalGradeKey } from "../../lib/teacher-portal/teacher-class-grade.js";
 import {
-  GRADES as GEOMETRY_GRADES,
-  TOPICS as GEOMETRY_TOPICS,
-} from "../../utils/geometry-constants.js";
-import { GRADES as HEBREW_GRADES, TOPICS as HEBREW_TOPICS } from "../../utils/hebrew-constants.js";
-import {
-  ENGLISH_GRADES,
-  ENGLISH_TOPICS,
-} from "../../utils/english-question-generator.js";
-import { GRADES as MATH_GRADES } from "../../utils/math-constants.js";
-import { getMathReportBucketDisplayName } from "../../utils/math-report-generator.js";
-
-const SCIENCE_TOPIC_LABELS = {
-  body: "גוף האדם",
-  animals: "בעלי חיים",
-  plants: "צמחים",
-  materials: "חומרים",
-  experiments: "ניסויים",
-  earth_space: "כדור הארץ וחלל",
-  environment: "סביבה",
-};
-
-const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
-  key,
-  label: meta.name,
-}));
-
-function geometryTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const topics = GEOMETRY_GRADES[canonical]?.topics || [];
-  return topics
-    .filter((t) => t !== "mixed")
-    .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
-}
-
-function hebrewTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const topics = HEBREW_GRADES[canonical]?.topics || [];
-  return topics.map((key) => ({ key, label: HEBREW_TOPICS[key]?.name || key }));
-}
-
-function englishTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const topics = ENGLISH_GRADES[canonical]?.topics || [];
-  return topics.map((key) => ({ key, label: ENGLISH_TOPICS[key]?.name || key }));
-}
-
-function mathTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  const operations = MATH_GRADES[canonical]?.operations || [];
-  return operations
-    .filter((op) => op !== "mixed")
-    .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
-}
-
-function scienceTopicOptionsForGrade(gradeKey) {
-  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
-  return (SCIENCE_GRADES[canonical]?.topics ?? []).map((key) => ({
-    key,
-    label: SCIENCE_TOPIC_LABELS[key] ?? key,
-  }));
-}
-
-function defaultTopicForSubject(subjectKey, gradeKey) {
-  if (subjectKey === "moledet_geography") {
-    return MOLEDET_TOPIC_OPTIONS[0]?.key || "homeland";
-  }
-  if (subjectKey === "geometry") {
-    return geometryTopicOptionsForGrade(gradeKey)[0]?.key || "";
-  }
-  if (subjectKey === "hebrew") {
-    return hebrewTopicOptionsForGrade(gradeKey)[0]?.key || "";
-  }
-  if (subjectKey === "english") {
-    return englishTopicOptionsForGrade(gradeKey)[0]?.key || "";
-  }
-  if (subjectKey === "math") {
-    return mathTopicOptionsForGrade(gradeKey)[0]?.key || "addition";
-  }
-  if (subjectKey === "science") {
-    return scienceTopicOptionsForGrade(gradeKey)[0]?.key || "";
-  }
-  return "";
-}
+  MOLEDET_TOPIC_OPTIONS,
+  defaultTopicForSubject,
+  englishTopicOptionsForGrade,
+  geometryTopicOptionsForGrade,
+  hebrewTopicOptionsForGrade,
+  mathTopicOptionsForGrade,
+  scienceTopicOptionsForGrade,
+  topicOptionsForSubject,
+} from "../../lib/teacher-portal/teacher-class-topic-options.js";
 
 function questionPrompt(q) {
   return String(q?.question || q?.prompt || q?.stem || "").trim();
@@ -150,7 +74,7 @@ export default function TeacherDiscussionQuestionPicker({
   const [recipientScope, setRecipientScope] = useState("whole_class");
   const [selectedStudentIds, setSelectedStudentIds] = useState(() => new Set());
 
-  const gradeKey = normalizeGradeLevelToKey(gradeLevel) || gradeLevel || "g3";
+  const gradeKey = resolveCanonicalGradeKey(gradeLevel) || "g3";
   const isClassDiscussion = Boolean(classId && !studentId);
 
   useEffect(() => {
