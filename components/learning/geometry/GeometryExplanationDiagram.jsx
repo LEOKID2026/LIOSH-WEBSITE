@@ -10,6 +10,10 @@ import {
   scalePythagorasLegs,
   triangleVerticesFromSides,
 } from "../../../utils/geometry-diagram-scale";
+import {
+  shapeTemplatePointsString,
+  triangleLayoutFromAngles,
+} from "../../../utils/geometry-diagram-layout";
 
 const ST = {
   stroke: "#6ee7b7",
@@ -113,24 +117,34 @@ export default function GeometryExplanationDiagram({
 }) {
   if (!spec?.kind) return null;
 
+  if (spec.kind === "shape_template") {
+    const points = shapeTemplatePointsString(spec.template);
+    if (!points) return null;
+    return (
+      <DiagramFrame>
+        <svg viewBox={VB} className="block" aria-hidden>
+          <polygon
+            points={points}
+            fill={ST.fillShape}
+            stroke={ST.stroke}
+            strokeWidth={2.5}
+          />
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
   if (spec.kind === "square") {
     if (spec.mode === "identify") {
-      const sz = 80;
-      const cx = 180;
-      const cy = 142;
-      const half = sz / 2;
+      const points = shapeTemplatePointsString("square", { x: 180, y: 142 });
       return (
         <DiagramFrame>
           <svg viewBox={VB} className="block" aria-hidden>
-            <rect
-              x={cx - half}
-              y={cy - half}
-              width={sz}
-              height={sz}
+            <polygon
+              points={points}
               fill={ST.fillShape}
               stroke={ST.stroke}
               strokeWidth={2.5}
-              rx="4"
             />
           </svg>
         </DiagramFrame>
@@ -179,24 +193,15 @@ export default function GeometryExplanationDiagram({
 
   if (spec.kind === "rectangle") {
     if (spec.mode === "identify") {
-      const rw = 120;
-      const rh = 70;
-      const cx = 180;
-      const cy = 128;
-      const left = cx - rw / 2;
-      const top = cy - rh / 2;
+      const points = shapeTemplatePointsString("rectangle", { x: 180, y: 128 });
       return (
         <DiagramFrame>
           <svg viewBox={VB} className="block" aria-hidden>
-            <rect
-              x={left}
-              y={top}
-              width={rw}
-              height={rh}
+            <polygon
+              points={points}
               fill={ST.fillShape}
               stroke={ST.stroke}
               strokeWidth={2.5}
-              rx="3"
             />
           </svg>
         </DiagramFrame>
@@ -544,16 +549,19 @@ export default function GeometryExplanationDiagram({
     const v3 = third || hideThird ? "label" : "caption";
     const showInsideFormula = !hideThird && (sumRule || comp);
 
-    // Assessment: labels inside the triangle; explanation keeps step-driven emphasis.
-    const labelA1 = hideThird ? { x: 92, y: 218 } : { x: 108, y: 258 };
-    const labelA2 = hideThird ? { x: 268, y: 218 } : { x: 252, y: 258 };
-    const labelA3 = hideThird ? { x: 180, y: 72 } : { x: 180, y: 54 };
+    const layout = triangleLayoutFromAngles(a1, a2, a3, {
+      centerY: hideThird ? 138 : 132,
+      labelInset: hideThird ? 44 : 38,
+    });
+    const labelA1 = layout.labels.angle1;
+    const labelA2 = layout.labels.angle2;
+    const labelA3 = layout.labels.angle3;
 
     return (
       <DiagramFrame>
         <svg viewBox={VB} className="block" aria-hidden>
           <polygon
-            points="180,40 64,236 296,236"
+            points={layout.pointsString}
             fill={third ? ST.fillHi : ST.fillShape}
             stroke={triStroke}
             strokeWidth={triSw}

@@ -102,3 +102,13 @@ test("student activity answer choices use compact responsive grid", () => {
   assert.ok(studentActivitySrc.includes('data-testid="activity-answer-choices"'));
   assert.ok(studentActivitySrc.includes("grid grid-cols-1 sm:grid-cols-2"));
 });
+
+test("triangle diagram layout is value-driven via geometry-diagram-layout", async () => {
+  const { triangleLayoutFromAngles, layoutFingerprint } = await import(
+    "../utils/geometry-diagram-layout.js"
+  );
+  const a = triangleLayoutFromAngles(57, 67, 56);
+  const b = triangleLayoutFromAngles(45, 45, 90);
+  assert.notEqual(layoutFingerprint(a.vertices), layoutFingerprint(b.vertices));
+  assert.match(a.pointsString, /^[\d.]+,\d+ [\d.]+,\d+ [\d.]+,\d+$/);
+});

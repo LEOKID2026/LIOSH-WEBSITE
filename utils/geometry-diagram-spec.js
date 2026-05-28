@@ -3,6 +3,11 @@
  * No Math/Science imports.
  */
 
+import {
+  resolveQuadrilateralTemplate,
+  resolveTriangleClassTemplate,
+} from "./geometry-diagram-layout.js";
+
 /**
  * @param {object} question
  * @param {{ hideUnknownValues?: boolean }} [options]
@@ -146,7 +151,27 @@ export function getGeometryDiagramSpec(question, options = {}) {
     if (kind === "shapes_basic_rectangle" || kind === "shapes_basic_properties_rectangle") {
       return { kind: "rectangle", mode: "identify" };
     }
+    if (kind === "shapes_basic_properties_angles") {
+      const template = p.shape === "מלבן" ? "rectangle" : "square";
+      return { kind: "shape_template", template, mode: "identify" };
+    }
     return null;
+  }
+
+  if (topic === "quadrilaterals" && p.kind === "quadrilaterals") {
+    return {
+      kind: "shape_template",
+      template: resolveQuadrilateralTemplate(p.type),
+      mode: "identify",
+    };
+  }
+
+  if (topic === "triangles" && p.kind === "triangles") {
+    return {
+      kind: "shape_template",
+      template: resolveTriangleClassTemplate(p.type),
+      mode: "identify",
+    };
   }
 
   return null;
