@@ -531,9 +531,304 @@ For each manual flow above, the expected and actual numbers should be filled int
 4. Decide Option A vs Option B for Findings 2 and 3.
 5. Once approved, implement the fixes in a single PR limited to the four server files in §10.4 with no UI/CSS/Hebrew/route changes.
 
+---
 
+## 11. Implementation — bundle applied 2026-05-28
 
+### Findings fixed
 
+- **Finding 1** — Stale `parentFacing` after subject filter (R3/R6).
+  `filterReportByPermittedSubjects` now rebuilds `parentFacing.insights` and
+  `parentFacing.homeRecommendations` via `buildParentFacingBlocks` after the
+  filter recomputes `summary` and `teacherGuidanceBlock`. `parentFacing.teacherMessages`
+  (and any other unrelated fields on `parentFacing`) are preserved via object
+  spread. The rebuild runs both for the restricted-permissions branch and for
+  the empty-permissions branch. The null-permission (admin/private teacher)
+  branch remains a no-op as before.
+
+- **Finding 2** — `dailyActivity` not subject-filtered (R3/R6).
+  Server-only `_dailyBySubject[dateKey][subjectKey] = { sessions, answers, correct, wrong, durationSeconds }`
+  is now emitted by `aggregateParentReportPayload` and additively merged by
+  `mergeClassroomActivityRollupIntoReportPayload`. After the subject filter runs,
+  `filterReportByPermittedSubjects` rebuilds the visible `dailyActivity` array
+  from the per-subject breakdown, skipping subjects the caller is not permitted
+  to see. Because `_dailyBySubject` is prefixed with `_` and the parent-report
+  adapter (`buildReportInputFromDbData`) ignores unknown fields, there is no
+  client-side impact.
+
+- **Finding 3** — Classroom activity date filter uses lifecycle timestamp.
+  `buildClassroomActivityRollupsByStudentId` now optionally accepts `fromIso`
+  and `toIsoExclusive`. When provided, each status row is included if its
+  `submitted_at` falls in `[fromIso, toIsoExclusive)`; if `submitted_at` is
+  null, it falls back to the activity's lifecycle timestamp
+  (`closed_at || activated_at || created_at`). The four loader functions
+  (`loadClassroomActivityRollupsForClassReport`,
+  `loadStudentClassroomRollupForMemberClassIds`,
+  `loadClassroomRollupsForMemberClassIdsBatch`, and indirectly
+  `loadSchoolScopedClassroomActivityRollupForStudentReport`) now pass ALL
+  non-archived activities for the scope to the builder along with the date
+  range, instead of pre-filtering activities by lifecycle timestamp. The
+  builder exposes `qualifyingActivityIds: Set<string>` as a property on the
+  returned Map, and each loader returns `activityCount = qualifyingActivityIds.size`
+  so the reported activity count now reflects activities that had at least one
+  qualifying in-range status row. `loadClassroomRollupsForMemberClassIdsBatch`
+  still computes `latestActivity` from lifecycle-in-range activities (used only
+  for diagnostic "latest classroom touch" hints, not for gating counts).
+
+- **Finding 4** — `summary.totalSessions` rogue-subject mismatch (R1/R4).
+  In `aggregateParentReportPayload`, `summary.totalSessions` now counts only
+  sessions whose subject is in `REPORT_AGG_SUBJECTS`, matching the per-subject
+  `sessions += 1` increment which is guarded by the same allowlist.
+
+### Changed files
+
+- `lib/parent-server/report-data-aggregate.server.js` — Finding 2 (emit
+  `_dailyBySubject`), Finding 4 (allowlist filter on `totalSessions`).
+- `lib/teacher-server/classroom-activity-class-report.server.js` — Finding 2
+  (`dailyBySubject` per-student rollup + per-subject merge into
+  `payload._dailyBySubject`), Finding 3 (submission-time date filter + four
+  call-site updates to pass all activities and the range; `activityCount`
+  derived from `qualifyingActivityIds`).
+- `lib/school-server/school-subjects.server.js` — Finding 1 (rebuild
+  `parentFacing.insights` / `parentFacing.homeRecommendations` from the
+  filtered payload while preserving `teacherMessages`), Finding 2 (rebuild
+  `dailyActivity` from `_dailyBySubject` after the subject filter, via the
+  new internal helper `applyDailyActivityFilterFromSubjectBreakdown`).
+- `docs/qa/DIAGNOSTIC_REPORT_ENGINE_CROSS_CONTEXT_AUDIT.md` — this section.
+- `scripts/tests/diagnostic-report-bundle-self-check.mjs` — new in-memory
+  self-check that exercises the four findings end to end without a database.
+
+### Unchanged
+
+- No UI files modified.
+- No CSS files modified.
+- No Hebrew text modified.
+- No route files modified (`pages/api/...`, `pages/learning/...`,
+  `pages/teacher/...`, `pages/school/...` untouched).
+- No SQL / migration changes.
+- No git commit or push performed.
+
+### Timestamp bridge fix status
+
+Preserved. Inspection of the current code confirms that an earlier fix is
+already in place and was not undone by this bundle:
+
+- `lib/teacher-server/classroom-activity-class-report.server.js`
+  `mergeClassroomActivityRollupIntoReportPayload` already stamps
+  `destTopic.lastAnswerAt`, `destTopic.latestActivityAt` and
+  `destTopic.latestActivitySource = "classroom_activity"` on classroom-merged
+  topics, with a fallback to `${payload.range.to}T12:00:00.000Z` when no
+  `srcTopic.lastActivityAt` is available. This ensures classroom-merged
+  topics carry a timestamp that the parent-report seed can use.
+- `lib/learning-supabase/seed-db-report-local-storage.js` already resolves
+  `activityMs` from `topic.latestActivityMs ?? topic.latestActivityAt ??
+  topic.lastAnswerAt`, with an additional fallback to `rangeEndMs` for any
+  topic that has activity (`total > 0`) but no parseable timestamp. The
+  emitted session object only sets `timestamp` when `activityMs` is finite,
+  matching the established contract.
+- `utils/parent-report-v2.js` `buildMapFromBucket` continues to filter
+  sessions via `sessionInRange`, which excludes sessions without a parseable
+  timestamp. The bridge above guarantees that classroom-merged sessions
+  always receive a timestamp, so they remain in range.
+
+No code in this bundle modifies any of the above; the bridge continues to
+work as designed.
+
+### Verification status
+
+Focused self-test results:
+
+- `node scripts/tests/diagnostic-report-bundle-self-check.mjs` — **PASS**.
+  Verifies (a) `qualifyingActivityIds` includes activities whose lifecycle
+  timestamp is outside the window but whose `submitted_at` is inside (Finding 3);
+  (b) activities with neither timestamp in range are excluded (Finding 3);
+  (c) `_dailyBySubject` is emitted and additively merged by the classroom
+  rollup merger (Finding 2); (d) `filterReportByPermittedSubjects` rebuilds
+  `dailyActivity` to reconcile with the visible subject totals while preserving
+  `parentFacing.teacherMessages` (Findings 1 + 2C); (e) null-permission path
+  is still a no-op.
+- `node scripts/tests/teacher-class-report-aggregation-unit.mjs` — **PASS**.
+  The existing classroom rollup unit test continues to pass; attaching
+  `qualifyingActivityIds` as a property of the returned Map preserved its
+  `.get()` API and therefore the test's existing assertions.
+- `npm run build` — **PASS** (Next.js production build exit code 0; all
+  routes compile; no TypeScript/JS errors in changed files).
+- Lint check on changed files — **PASS** (no linter errors).
+
+Broad browser verification (§H.1–§H.8) and live-DB cross-route reconciliation
+(§B.3) remain pending and should be performed against staging by the reviewer.
+
+---
+
+## 12. Final verification round — 2026-05-28
+
+### 12.1 Findings — final status
+
+| Finding | Code-level fix | Self-test | Build | Lint | Browser verification |
+| --- | --- | --- | --- | --- | --- |
+| 1 — stale `parentFacing` after subject filter | **FIXED** | PASS | PASS | clean | PENDING manual (§12.4) |
+| 2 — `dailyActivity` not subject-filtered | **FIXED** | PASS | PASS | clean | PENDING manual (§12.4) |
+| 3 — classroom date filter uses lifecycle timestamp | **FIXED** | PASS | PASS | clean | PENDING manual (§12.4) |
+| 4 — `summary.totalSessions` rogue-subject mismatch | **FIXED** | PASS | PASS | clean | PENDING manual (§12.4) |
+
+### 12.2 `_dailyBySubject` exposure review (server-only design)
+
+The reviewer asked whether `_dailyBySubject` is intended as an internal helper
+and, if it appears in the API JSON, whether it could expose anything outside
+the caller's permitted scope after filtering.
+
+Findings:
+
+- **UI consumers**: a workspace-wide search shows `_dailyBySubject` /
+  `dailyBySubject` is referenced only by (a) the aggregator that emits it,
+  (b) the classroom rollup that merges into it, (c) the school subject filter
+  that reads it, and (d) the in-memory self-check. **No UI / no client-side
+  bridge / no parent-report engine reads it.** UI rendering is unaffected
+  whether the field is present, absent, or filtered.
+- **Scope leak risk before fix**: `applyDailyActivityFilterFromSubjectBreakdown`
+  read `_dailyBySubject` to recompute `dailyActivity` but did not strip or
+  filter the breakdown itself. The API endpoint then JSON-stringified the
+  payload via `res.status(200).json(filtered.payload)`, which would have
+  exposed per-day per-subject counts for unauthorized subjects in the API
+  body of `GET /api/teacher/students/[studentId]/report-data` and
+  `GET /api/teacher/students/[studentId]/parent-report-data` even though the
+  visible `dailyActivity` array was correctly scoped.
+- **Fix applied**: `applyDailyActivityFilterFromSubjectBreakdown` now
+  unconditionally `delete payload._dailyBySubject` after recomputing
+  `dailyActivity`. This runs in both the empty-permissions branch and the
+  restricted-permissions branch of `filterReportByPermittedSubjects`, so the
+  field cannot reach the API JSON for any school-teacher caller.
+- **Routes that bypass the filter**: `GET /api/parent/students/[studentId]/report-data`
+  (parent owns the student → full scope) and `GET /api/school/students/[studentId]/report-data`
+  (school admin → full school scope) do not call `filterReportByPermittedSubjects`,
+  so `_dailyBySubject` is still serialized in their JSON. **This is not a
+  scope leak**: in both cases the breakdown contains only data within the
+  caller's allowed scope. It does add minor payload bloat that could be
+  stripped at those endpoints in a future cleanup if desired; it is not
+  required for the security/correctness criteria of this bundle.
+- **Tests**: `scripts/tests/diagnostic-report-bundle-self-check.mjs` was
+  extended with three new assertions:
+  1. `Object.prototype.hasOwnProperty.call(filteredForMath, "_dailyBySubject") === false`
+     after a restricted filter (math-only).
+  2. The same after the empty-permissions filter.
+  3. The original `homePayload._dailyBySubject` is still present after the
+     null-permission no-op call (admin/private teacher path), confirming
+     the filter does not mutate the input on the bypass branch.
+
+Conclusion: `_dailyBySubject` is intended to remain a server-only aggregation
+helper. After the fix, it does not reach the API JSON of any subject-filtered
+route and therefore cannot leak unauthorized subject scope.
+
+### 12.3 Changed files (this round + prior round, complete list)
+
+- `lib/parent-server/report-data-aggregate.server.js` — Findings 2, 4.
+- `lib/teacher-server/classroom-activity-class-report.server.js` — Findings 2, 3.
+- `lib/school-server/school-subjects.server.js` — Findings 1, 2C, plus the
+  scope-leak fix that strips `_dailyBySubject` from the filter output.
+- `scripts/tests/diagnostic-report-bundle-self-check.mjs` — new self-check
+  plus three new scope-leak assertions in this round.
+- `docs/qa/DIAGNOSTIC_REPORT_ENGINE_CROSS_CONTEXT_AUDIT.md` — §11, §12.
+
+No UI / CSS / Hebrew / route / SQL / migration changes. No commit. No push.
+
+### 12.4 Browser / manual verification — required steps for the reviewer
+
+These steps require a logged-in browser session with real test users and
+cannot be executed by the automated agent. The eight scenarios below match
+§H of this audit. Each step includes the data points that must be checked
+to confirm the bundle behaves correctly.
+
+1. **School restricted-subject teacher dashboard**
+   - URL: `/teacher/dashboard`
+   - Login as a teacher whose `teacher_subject_permissions` is restricted to
+     a strict subset (e.g. `{ math }`).
+   - Confirm the student card's `totalAnswers` / `totalSessions` /
+     `accuracy` reflect only the permitted subject(s).
+   - Cross-check: the same numbers must equal the filtered report's
+     `summary` in step 2 below.
+
+2. **School restricted-subject teacher — student report**
+   - URL: `/teacher/student/[studentId]?period=month`
+   - Confirm `summary.totalAnswers === sum(visible subject cards' answers)`.
+   - Confirm no subject outside the teacher's permitted set appears in the
+     subject cards, recent mistakes, probe evidence, or weak/strong areas.
+   - Confirm `parentFacing.insights` / `homeRecommendations` (if surfaced
+     by the UI) do not mention unauthorized subjects.
+
+3. **Teacher QA "דוח להורים" preview (R3)**
+   - From the student page above, click "דוח להורים".
+   - Confirm the full original parent-report engine renders with real data
+     (NOT the empty-state message). The classroom-merged-topic timestamp
+     bridge must still hold — see §11 "Timestamp bridge fix status".
+   - Confirm the in-page `parentFacing.insights` and `homeRecommendations`
+     do not mention any unauthorized subjects (Finding 1 fix).
+
+4. **Date ranges**
+   - In `/teacher/student/[studentId]`, switch between
+     `period=week`, `period=month`, and a custom `from`/`to` query.
+   - For each range, confirm classroom activity counts reflect activities
+     where the student's `submitted_at` falls inside the range. An
+     activity that was opened/closed inside the range but the student
+     submitted outside the range must NOT be counted (Finding 3 fix).
+   - For each range, the visible `dailyActivity` heatmap must aggregate
+     to the same `summary.totalAnswers` as the subject cards.
+
+5. **Daily activity reconciliation (school restricted-subject teacher)**
+   - In the same student report, sum the `answers` across all rows of
+     `dailyActivity`. The total must equal `summary.totalAnswers` and the
+     sum of the visible subject cards' `answers`. This must hold for week,
+     month and custom ranges (Finding 2 fix).
+
+6. **School admin (full school scope)**
+   - URL: `/school/students/[studentId]` for the same student.
+   - Confirm all subjects are visible. Confirm `summary` totals match the
+     sum of all visible subject cards. Confirm classroom rollup count is
+     consistent with submission-time gating.
+
+7. **Normal parent (R1)**
+   - Login as a parent who owns the student.
+   - URL: `/learning/parent-report` for that student.
+   - Confirm the original parent report renders correctly with real data
+     and is not affected by any school/classroom-bridge change. Numeric
+     totals must match prior behavior modulo Finding 4 (sessions for any
+     unknown rogue subject are no longer counted in `summary.totalSessions`).
+
+8. **Private teacher (if test data is available)**
+   - Login as a teacher whose `teacher_subject_permissions` is unrestricted
+     (or who is not part of a school).
+   - Confirm `summary` totals match the sum of all six subject cards;
+     `dailyActivity` reconciles; classroom rollup uses submission-time
+     gating; behavior is otherwise unchanged from before this bundle.
+
+### 12.5 What this round verified end-to-end (programmatically)
+
+- All four findings have a corresponding code-path-level fix in place.
+- `node scripts/tests/diagnostic-report-bundle-self-check.mjs` — **PASS**
+  (now includes scope-leak assertions for `_dailyBySubject`).
+- `node scripts/tests/teacher-class-report-aggregation-unit.mjs` — **PASS**
+  (existing classroom rollup unit test still passes; the
+  `qualifyingActivityIds` Set attached as a property of the returned Map
+  did not break the `.get()` consumer contract).
+- `npm run build` — **PASS** (Next.js production build, exit code 0,
+  warnings only, no errors).
+- Lint check on the four changed files — **PASS** (no linter errors).
+
+### 12.6 Constraints honored
+
+- No UI files modified.
+- No CSS files modified.
+- No Hebrew strings modified.
+- No route files (URL/method/file path) modified.
+- No SQL / DB migration changes.
+- No `git commit`. No `git push`.
+- The classroom parent-report timestamp bridge fix (existing) is preserved
+  and was re-verified by the self-check.
+
+### 12.7 Closing status
+
+Engine/report correctness fix: **code-level + focused self-tests = PASS**.
+**PASS** for the engine layer can be marked once the eight manual browser
+checks in §12.4 are signed off by the reviewer against staging.
 
 
 
