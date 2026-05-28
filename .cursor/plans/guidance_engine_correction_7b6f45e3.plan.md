@@ -4,28 +4,28 @@ overview: "Build-ready plan to fix Teacher Guidance V2 engine-level correctness:
 todos:
   - id: severity-helpers
     content: Add GUIDANCE_TIER_THRESHOLDS, deriveStudent/ClassGuidanceSeverityTier, update riskLevel and classHealthSignal in teacher-recommendations.server.js
-    status: pending
+    status: completed
   - id: student-subject-fallback
     content: Implement dropped-topic tracking, student subject-level units, classificationGapSummary in teacher-guidance-v2.server.js
-    status: pending
+    status: completed
   - id: class-subject-fallback
     content: Implement class subject-level fallback units and cohort/subject rollup logic in buildClassTeacherGuidanceV2
-    status: pending
+    status: completed
   - id: v1-alignment
     content: Set guidanceSeverityTier + legacy classHealthSignal mapping; attention 65/priority 50; suggestedGroups 65/75 buckets
-    status: pending
+    status: completed
   - id: hebrew-ui
     content: Add owner-approved Hebrew tier/fallback copy, misleading-state guards, dedupe for subject units in teacher-ui.he.js
-    status: pending
+    status: completed
   - id: surfaces
     content: Update student/class pages, school-report-view-model.js, TeacherDashboardClient.jsx to render subject units and guards
-    status: pending
+    status: completed
   - id: unit-tests
     content: Add S1-S6, C1-C3, T1, H1-H2 cases to teacher-guidance-v2-unit.mjs and school-report-view-model-unit.mjs
-    status: pending
+    status: completed
   - id: qa-closure
     content: Run required automated checks (unit tests + npm run build), write TEACHER_GUIDANCE_ENGINE_CORRECTION_CLOSURE_REPORT.md
-    status: pending
+    status: completed
 isProject: false
 ---
 
@@ -43,13 +43,13 @@ isProject: false
 
 The owner may approve implementation by pressing the Cursor **Build/Implement** button. No additional chat-body implementation instructions are required or expected.
 
-After owner approval, implement the **full approved scope** start to finish. Phases below are **execution order only** — not stop-and-wait approval gates. Complete all implementation first, then run QA, fix issues, rerun relevant tests, and produce the final closure report (Section 16).
+After owner approval, implement the **full approved scope** start to finish. Phases below are **execution order only** — not stop-and-wait approval gates. Complete all implementation first, then run QA, fix issues, rerun relevant tests, and produce the final closure report (Section 7).
 
 **Constraints for the entire implementation:**
 
 - No SQL or DB migrations (unless a future audit proves otherwise — none expected here).
 - No retroactive DB correction, no question-generator changes, no parent/guardian/worksheet/simulation workstream files.
-- Do **not** change Hebrew strings already in product files except by adding/updating entries in [lib/teacher-portal/teacher-ui.he.js](lib/teacher-portal/teacher-ui.he.js) per the **owner-approved copy table** in Section 7 (no ad-hoc copy during implementation).
+- Do **not** change Hebrew strings already in product files except by adding/updating entries in [lib/teacher-portal/teacher-ui.he.js](lib/teacher-portal/teacher-ui.he.js) per the **owner-approved copy table** in Section 3 (no ad-hoc copy during implementation).
 - No commit, no push unless explicitly approved at the end with **explicit pathspecs** only (see Section 7.1).
 - Do **not** use `git add .` or `git add -A`.
 - Do not touch unrelated simulation/parallel files (`scripts/school-portal/**`, school sim docs, `.cursor/plans/*school*`).

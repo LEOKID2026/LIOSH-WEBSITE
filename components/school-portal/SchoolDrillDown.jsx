@@ -5,6 +5,7 @@ import {
   schoolSubjectLabelHe,
   sanitizeActivityTitleHe,
   SCHOOL_BACK,
+  studentLearningStatusBadgeClass,
 } from "../../lib/school-portal/school-ui.he.js";
 import { SCHOOL_CARD, SCHOOL_CARD_INNER } from "./SchoolPortalUi.jsx";
 
@@ -59,10 +60,27 @@ export function SchoolDrillBreadcrumb({ steps }) {
 /**
  * @param {{ title: string, subtitle?: string|null, meta?: string|null, onClick?: () => void, href?: string, action?: import('react').ReactNode, selected?: boolean } & import('react').HTMLAttributes<HTMLElement>} props
  */
+function BrowseStatusBadge({ prefix, label }) {
+  if (!label) return null;
+  return (
+    <p className="text-xs mt-2">
+      <span
+        className={`inline-block font-medium px-2 py-0.5 rounded-full border leading-snug ${studentLearningStatusBadgeClass(
+          label
+        )}`}
+      >
+        {prefix}: {label}
+      </span>
+    </p>
+  );
+}
+
 export function SchoolManagementCard({
   title,
   subtitle,
   meta,
+  classStatusLabel = null,
+  gradeStatusLabel = null,
   onClick,
   href,
   action,
@@ -80,6 +98,11 @@ export function SchoolManagementCard({
           <p className="font-semibold text-white break-words">{title}</p>
           {subtitle ? <p className="text-sm text-white/55 mt-1">{subtitle}</p> : null}
           {meta ? <p className="text-xs text-white/45 mt-2">{meta}</p> : null}
+          {gradeStatusLabel ? (
+            <BrowseStatusBadge prefix="מצב שכבה" label={gradeStatusLabel} />
+          ) : classStatusLabel ? (
+            <BrowseStatusBadge prefix="מצב כיתה" label={classStatusLabel} />
+          ) : null}
         </div>
         {action ? <div className="shrink-0">{action}</div> : null}
       </div>
@@ -151,7 +174,7 @@ export function SchoolSubjectClassCard({ cls, onReport, reportLabel }) {
             e.stopPropagation();
             onReport();
           }}
-          className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-xs font-semibold whitespace-nowrap"
+          className="rounded-lg bg-amber-500/90 hover:bg-amber-400 text-black text-xs font-bold px-3 py-1.5 whitespace-nowrap"
         >
           {reportLabel}
         </button>
@@ -254,9 +277,15 @@ export function SchoolTeacherCard({
 }
 
 /**
- * @param {{ student: { studentId: string, displayName?: string|null, gradeLevel?: string|null, physicalClassName?: string|null }, gradeLabel: string, onReport: () => void, reportLabel: string }} props
+ * @param {{ student: { studentId: string, displayName?: string|null, gradeLevel?: string|null, physicalClassName?: string|null }, gradeLabel: string, onReport: () => void, reportLabel: string, learningStatusBadge?: string|null }} props
  */
-export function SchoolStudentCard({ student, gradeLabel, onReport, reportLabel }) {
+export function SchoolStudentCard({
+  student,
+  gradeLabel,
+  onReport,
+  reportLabel,
+  learningStatusBadge = null,
+}) {
   const name = student.displayName || "ללא שם";
   const classLabel = student.physicalClassName || "—";
   return (
@@ -264,13 +293,25 @@ export function SchoolStudentCard({ student, gradeLabel, onReport, reportLabel }
       title={name}
       subtitle={`${gradeLabel} · ${classLabel}`}
       action={
-        <button
-          type="button"
-          onClick={onReport}
-          className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-xs font-semibold whitespace-nowrap"
-        >
-          {reportLabel}
-        </button>
+        <div className="flex flex-col items-end gap-1.5">
+          {learningStatusBadge ? (
+            <span
+              className={`text-[10px] font-medium px-2 py-0.5 rounded-full border leading-none ${studentLearningStatusBadgeClass(
+                learningStatusBadge
+              )}`}
+              data-testid={`school-student-status-${student.studentId}`}
+            >
+              {learningStatusBadge}
+            </span>
+          ) : null}
+          <button
+            type="button"
+            onClick={onReport}
+            className="rounded-lg bg-amber-500/90 hover:bg-amber-400 text-black text-xs font-bold px-3 py-1.5 whitespace-nowrap"
+          >
+            {reportLabel}
+          </button>
+        </div>
       }
     />
   );

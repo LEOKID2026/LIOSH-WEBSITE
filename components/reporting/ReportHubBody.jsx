@@ -4,6 +4,7 @@ import {
   SchoolReportLabelList,
   SchoolReportSection,
 } from "../school-portal/SchoolReportModalBody.jsx";
+import { studentLearningStatusBadgeClass } from "../../lib/school-portal/school-ui.he.js";
 
 export function ReportSummaryHeader({ header }) {
   if (!header) return null;
@@ -70,6 +71,20 @@ export function ReportNavActionGrid({ items, onSelect }) {
   );
 }
 
+function LearningStatusBadge({ label }) {
+  if (!label) return null;
+  return (
+    <span
+      className={`inline-block text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full border leading-none ${studentLearningStatusBadgeClass(
+        label
+      )}`}
+      data-testid="report-student-learning-status"
+    >
+      {label}
+    </span>
+  );
+}
+
 function RowActionButtons({ actions, onRowAction, item, studentReportLoading, onStudentReport }) {
   if (!actions?.length) return null;
   return (
@@ -132,21 +147,28 @@ function StudentListSection({ section, studentActions, onRowAction, studentRepor
           <div className="min-w-0">
             <p className="font-medium text-white">{item.name || item.label}</p>
             {item.detail ? <p className="text-xs text-white/55 mt-0.5">{item.detail}</p> : null}
-            {item.status ? (
+            {item.status && !item.learningStatusBadge ? (
               <p className="text-xs text-white/45 mt-0.5">{item.status}</p>
             ) : null}
             {item.subjects?.length ? (
               <p className="text-xs text-white/45 mt-0.5">{item.subjects.join(" · ")}</p>
             ) : null}
           </div>
-          {item.actions?.length ? (
-            <RowActionButtons
-              actions={item.actions}
-              onRowAction={onRowAction}
-              item={item}
-              studentReportLoading={studentReportLoading}
-              onStudentReport={onStudentReport}
-            />
+          {item.actions?.length || item.learningStatusBadge ? (
+            <div className="flex flex-col items-stretch sm:items-end gap-1.5 shrink-0">
+              <LearningStatusBadge label={item.learningStatusBadge} />
+              {item.actions?.length ? (
+                <RowActionButtons
+                  actions={item.actions}
+                  onRowAction={onRowAction}
+                  item={item}
+                  studentReportLoading={studentReportLoading}
+                  onStudentReport={onStudentReport}
+                />
+              ) : studentActions && item.studentId ? (
+                studentActions(item)
+              ) : null}
+            </div>
           ) : studentActions && item.studentId ? (
             studentActions(item)
           ) : null}

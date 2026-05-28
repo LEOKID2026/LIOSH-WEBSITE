@@ -45,6 +45,7 @@ import {
   SCHOOL_PHYSICAL_CLASS_REPORT_BUTTON,
   SCHOOL_PHYSICAL_CLASS_REPORT_TITLE,
   SCHOOL_VIEW_CLASS_REPORT,
+  studentLearningStatusBadgeClass,
 } from "../../../lib/school-portal/school-ui.he";
 
 /** Stacked subject-class report must sit above physical report detail (z 110). */
@@ -104,6 +105,25 @@ export default function SchoolClassesPage() {
     "/api/school/classes",
     parseClasses,
     state === "ready",
+    { cacheKind: "list" }
+  );
+
+  const parseBrowseStatus = useMemo(
+    () => (body) =>
+      body?.data || {
+        physicalByKey: {},
+        gradeStatusByLevel: {},
+        gradeStatus: null,
+      },
+    []
+  );
+
+  const { data: browseStatus } = useSchoolDataFetch(
+    accessToken,
+    schoolId,
+    "/api/school/classes/browse-status",
+    parseBrowseStatus,
+    state === "ready" && Boolean(classes?.length),
     { cacheKind: "list" }
   );
 
@@ -473,6 +493,7 @@ export default function SchoolClassesPage() {
                         subtitle={
                           count != null ? `${count} כיתות פיזיות` : loading ? "…" : "—"
                         }
+                        gradeStatusLabel={browseStatus?.gradeStatusByLevel?.[grade.level] || null}
                         onClick={() => setGradeLevel(grade.level)}
                       />
                     );
@@ -496,14 +517,18 @@ export default function SchoolClassesPage() {
                     <SchoolLoadingBlock message={SCHOOL_LOADING_DATA} />
                   ) : physicalGroups.length ? (
                     <SchoolCardGrid columns={2}>
-                      {physicalGroups.map((group) => (
-                        <SchoolManagementCard
-                          key={physicalClassGroupKey(group.subjectClasses[0])}
-                          title={group.name}
-                          subtitle={`${physicalClassStudentCount(group.subjectClasses)} ${SCHOOL_STUDENTS_IN_CLASS} · 6 מקצועות`}
-                          onClick={() => setPhysicalKey(physicalClassGroupKey(group.subjectClasses[0]))}
-                        />
-                      ))}
+                      {physicalGroups.map((group) => {
+                        const physKey = physicalClassGroupKey(group.subjectClasses[0]);
+                        return (
+                          <SchoolManagementCard
+                            key={physKey}
+                            title={group.name}
+                            subtitle={`${physicalClassStudentCount(group.subjectClasses)} ${SCHOOL_STUDENTS_IN_CLASS} · 6 מקצועות`}
+                            classStatusLabel={browseStatus?.physicalByKey?.[physKey] || null}
+                            onClick={() => setPhysicalKey(physKey)}
+                          />
+                        );
+                      })}
                     </SchoolCardGrid>
                   ) : (
                     <SchoolEmptyState title="אין כיתות בשכבה זו." />
@@ -516,6 +541,24 @@ export default function SchoolClassesPage() {
               <>
                 <SchoolBackButton label={SCHOOL_BACK_CLASSES} onClick={() => setPhysicalKey("")} />
                 <SchoolSection title={`${SCHOOL_CHOOSE_SUBJECT} · ${selectedPhysical.name}`}>
+                  {(() => {
+                    const classStatus =
+                      browseStatus?.physicalByKey?.[
+                        physicalClassGroupKey(selectedPhysical.subjectClasses[0])
+                      ];
+                    if (!classStatus) return null;
+                    return (
+                      <p className="text-sm mb-3 text-right" data-testid="school-physical-class-browse-status">
+                        <span
+                          className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full border leading-snug ${studentLearningStatusBadgeClass(
+                            classStatus
+                          )}`}
+                        >
+                          מצב כיתה: {classStatus}
+                        </span>
+                      </p>
+                    );
+                  })()}
                   <div className="mb-4">
                     <button
                       type="button"

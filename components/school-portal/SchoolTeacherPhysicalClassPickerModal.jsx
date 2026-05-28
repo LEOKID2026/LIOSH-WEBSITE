@@ -47,7 +47,7 @@ export default function SchoolTeacherPhysicalClassPickerModal({
               <button
                 type="button"
                 onClick={() => onClassReport(cls)}
-                className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/20 px-3 py-1.5 text-sm font-semibold text-white"
+                className="rounded-lg bg-amber-500/90 hover:bg-amber-400 text-black text-sm font-bold px-3 py-1.5"
               >
                 {SCHOOL_VIEW_CLASS_REPORT}
               </button>

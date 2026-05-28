@@ -21,6 +21,7 @@ import {
   SCHOOL_CARD_INNER,
 } from "../../../components/school-portal/SchoolPortalUi";
 import { schoolGradeLabelHe, SCHOOL_GRADE_OPTIONS } from "../../../lib/school-portal/school-drilldown";
+import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import { fetchSchoolJsonSWR, invalidateSchoolCache, readSchoolCache, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
 import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
@@ -46,6 +47,7 @@ import {
   SCHOOL_STUDENTS_SUBTITLE,
   SCHOOL_STUDENTS_TITLE,
   SCHOOL_VIEW_STUDENT_REPORT,
+  studentLearningStatusBadgeClass,
 } from "../../../lib/school-portal/school-ui.he";
 
 function gradeCountMap(summary) {
@@ -127,6 +129,25 @@ export default function SchoolStudentsPage() {
     if (state === "ready") void loadBrowseSummary();
   }, [state, loadBrowseSummary]);
 
+  const parseBrowseStatus = useMemo(
+    () => (body) =>
+      body?.data || {
+        physicalByKey: {},
+        gradeStatusByLevel: {},
+        gradeStatus: null,
+      },
+    []
+  );
+
+  const { data: browseStatus } = useSchoolDataFetch(
+    accessToken,
+    schoolId,
+    "/api/school/classes/browse-status",
+    parseBrowseStatus,
+    state === "ready",
+    { cacheKind: "list" }
+  );
+
   const loadClassStudents = useCallback(async ({ force = false } = {}) => {
     if (!accessToken || !gradeLevel || !physicalClassName) return;
     const q = new URLSearchParams({
@@ -135,8 +156,14 @@ export default function SchoolStudentsPage() {
     });
     const path = `/api/school/students?${q.toString()}`;
     const cached = schoolId ? readSchoolCache(schoolId, path) : null;
-    if (cached?.data?.data?.students && !force) {
-      setClassStudents(cached.data.data.students);
+    const cachedStudents = cached?.data?.data?.students;
+    const cacheMissingStatusField =
+      Array.isArray(cachedStudents) &&
+      cachedStudents.length > 0 &&
+      !Object.prototype.hasOwnProperty.call(cachedStudents[0], "learningStatusBadge");
+    const useCache = cachedStudents && !force && !cacheMissingStatusField;
+    if (useCache) {
+      setClassStudents(cachedStudents);
       setClassStudentsLoading(false);
     } else {
       setClassStudentsLoading(true);
@@ -330,6 +357,7 @@ export default function SchoolStudentsPage() {
                             subtitle={
                               count != null ? `${count} תלמידים` : summaryLoading ? "…" : "0 תלמידים"
                             }
+                            gradeStatusLabel={browseStatus?.gradeStatusByLevel?.[grade.level] || null}
                             onClick={() => setGradeLevel(grade.level)}
                           />
                         );
@@ -357,14 +385,18 @@ export default function SchoolStudentsPage() {
                     <SchoolLoadingBlock message={SCHOOL_LOADING_DATA} />
                   ) : physicalGroups.length ? (
                     <SchoolCardGrid columns={2}>
-                      {physicalGroups.map((group) => (
-                        <SchoolManagementCard
-                          key={group.name}
-                          title={group.name}
-                          subtitle={`${group.studentCount} תלמידים`}
-                          onClick={() => setPhysicalClassName(group.name)}
-                        />
-                      ))}
+                      {physicalGroups.map((group) => {
+                        const physKey = `${gradeLevel}::${String(group.name || "").trim()}`;
+                        return (
+                          <SchoolManagementCard
+                            key={group.name}
+                            title={group.name}
+                            subtitle={`${group.studentCount} תלמידים`}
+                            classStatusLabel={browseStatus?.physicalByKey?.[physKey] || null}
+                            onClick={() => setPhysicalClassName(group.name)}
+                          />
+                        );
+                      })}
                     </SchoolCardGrid>
                   ) : (
                     <SchoolEmptyState title="אין תלמידים בשכבה זו." />
@@ -377,6 +409,21 @@ export default function SchoolStudentsPage() {
               <>
                 <SchoolBackButton label={SCHOOL_BACK_CLASSES} onClick={() => setPhysicalClassName("")} />
                 <SchoolSection title={`${SCHOOL_CHOOSE_STUDENTS} · ${physicalClassName}`}>
+                  {(() => {
+                    const classStatus = browseStatus?.physicalByKey?.[`${gradeLevel}::${physicalClassName}`];
+                    if (!classStatus) return null;
+                    return (
+                      <p className="text-sm mb-3 text-right" data-testid="school-students-class-browse-status">
+                        <span
+                          className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full border leading-snug ${studentLearningStatusBadgeClass(
+                            classStatus
+                          )}`}
+                        >
+                          מצב כיתה: {classStatus}
+                        </span>
+                      </p>
+                    );
+                  })()}
                   <div className="mb-4">
                     <label className="block text-sm text-white/70 text-right">
                       {SCHOOL_SEARCH_STUDENTS}
@@ -400,6 +447,7 @@ export default function SchoolStudentsPage() {
                           student={s}
                           gradeLabel={schoolGradeLabelHe(s.gradeLevel)}
                           reportLabel={SCHOOL_VIEW_STUDENT_REPORT}
+                          learningStatusBadge={s.learningStatusBadge || null}
                           onReport={() => void openStudentReport(s)}
                         />
                       ))}
