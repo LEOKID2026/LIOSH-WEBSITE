@@ -11,9 +11,54 @@ import { createServiceRole } from "../demo-school-lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-/** Same directory as sim-state.json — already gitignored. */
-export function credentialsArtifactPath() {
+const FIXTURES_DIR = path.join(__dirname, "..", "fixtures");
+
+/** Gitignored local override (written at seed/export time). */
+export function localCredentialsArtifactPath() {
   return path.join(__dirname, "..", ".local", "student-access-credentials.json");
+}
+
+/** Tracked QA fixture — read-only fallback for demo school sim only. */
+export function demoCredentialsFixturePath() {
+  return path.join(FIXTURES_DIR, "demo-student-access-credentials.json");
+}
+
+/** Write target — always the gitignored local file. */
+export function credentialsArtifactPath() {
+  return localCredentialsArtifactPath();
+}
+
+/**
+ * Resolve credentials path: local gitignored file first, then tracked demo fixture.
+ * Fixture fallback is allowed only for the leo-k demo school simulation scripts.
+ */
+export function resolveCredentialsArtifactPath() {
+  const local = localCredentialsArtifactPath();
+  if (fs.existsSync(local)) {
+    return { path: local, source: "local" };
+  }
+  const fixture = demoCredentialsFixturePath();
+  if (fs.existsSync(fixture)) {
+    return { path: fixture, source: "demo-fixture" };
+  }
+  return { path: local, source: "missing" };
+}
+
+function assertDemoSchoolCredentialsArtifact(artifact) {
+  const count = artifact?.students ? Object.keys(artifact.students).length : 0;
+  if (count < 12) {
+    throw new Error(`demo credentials fixture rejected: need >=12 student entries, got ${count}`);
+  }
+  const isDemoUsername = (username) =>
+    username.startsWith("demo-") || /^leok-s\d+$/i.test(username);
+  for (const row of Object.values(artifact.students || {})) {
+    const username = String(row?.username || "");
+    if (!isDemoUsername(username)) {
+      throw new Error(
+        `demo credentials fixture rejected: username must be demo-* or leok-s####, got ${username}`
+      );
+    }
+  }
 }
 
 /**
@@ -66,11 +111,15 @@ export function writeCredentialsArtifact(entries, meta = {}) {
 }
 
 export function loadCredentialsArtifact() {
-  const filePath = credentialsArtifactPath();
-  if (!fs.existsSync(filePath)) {
+  const resolved = resolveCredentialsArtifactPath();
+  if (resolved.source === "missing") {
     return null;
   }
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  const artifact = JSON.parse(fs.readFileSync(resolved.path, "utf8"));
+  if (resolved.source === "demo-fixture") {
+    assertDemoSchoolCredentialsArtifact(artifact);
+  }
+  return artifact;
 }
 
 /**

@@ -5,12 +5,22 @@ import { assertDemoSchoolBaseline, createServiceRole, requireEnv } from "../demo
 import { DEMO_STUDENT_COUNT } from "./school-sim-config.mjs";
 import { ensurePersonaMaps, loadSchoolSimState } from "./longitudinal-state.mjs";
 import {
-  credentialsArtifactPath,
+  demoCredentialsFixturePath,
   loadCredentialsArtifact,
+  localCredentialsArtifactPath,
+  resolveCredentialsArtifactPath,
   resolveStaffPassword,
 } from "./student-credentials.mjs";
+import { resolveSimStatePath } from "../demo-school-lib.mjs";
 
 export async function runPreflight({ baseUrl, log = console.log, requireUiCreds = true } = {}) {
+  const simResolved = resolveSimStatePath();
+  if (simResolved.source === "demo-fixture") {
+    log(`preflight: sim-state from demo fixture (${simResolved.path})`);
+  } else {
+    log(`preflight: sim-state from local file (${simResolved.path})`);
+  }
+
   const state = loadSchoolSimState();
   const serviceRole = createServiceRole();
 
@@ -51,14 +61,23 @@ export async function runPreflight({ baseUrl, log = console.log, requireUiCreds 
   let studentCredentialArtifact = null;
   let artCount = 0;
   if (requireUiCreds) {
+    const credResolved = resolveCredentialsArtifactPath();
     const art = loadCredentialsArtifact();
     artCount = art?.students ? Object.keys(art.students).length : 0;
     if (artCount >= 12) {
-      studentCredentialArtifact = { path: credentialsArtifactPath(), count: artCount, source: art.source };
-      log(`preflight: student credential artifact OK (${artCount} entries)`);
+      studentCredentialArtifact = {
+        path: credResolved.path,
+        count: artCount,
+        source: credResolved.source === "demo-fixture" ? "demo-fixture" : art.source,
+        resolvedFrom: credResolved.source,
+      };
+      log(
+        `preflight: student credential artifact OK (${artCount} entries, ${credResolved.source} at ${credResolved.path})`
+      );
     } else {
       log(
-        `preflight: student credential artifact missing or incomplete (${artCount} entries at ${credentialsArtifactPath()})`
+        `preflight: student credential artifact missing or incomplete (${artCount} entries; ` +
+          `local ${localCredentialsArtifactPath()} or fixture ${demoCredentialsFixturePath()})`
       );
     }
   }

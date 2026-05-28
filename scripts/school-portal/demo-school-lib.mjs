@@ -3,10 +3,18 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
+import { DEMO_PARENT_EMAIL } from "./demo-school-data.mjs";
+import { DEMO_STUDENT_COUNT, SCHOOL_MANAGER_EMAIL } from "./sim/school-sim-config.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.join(__dirname, "../..");
 export const SIM_STATE_PATH = path.join(__dirname, "sim-state.json");
+/** Tracked QA fixture — read-only fallback for demo school sim only. */
+export const DEMO_SIM_STATE_FIXTURE_PATH = path.join(
+  __dirname,
+  "fixtures",
+  "demo-school-sim-state.json"
+);
 
 export function requireEnv(name) {
   const v = String(process.env[name] || "").trim();
@@ -112,11 +120,53 @@ export function hashStudentSecret(value, secret) {
   return crypto.createHmac("sha256", secret).update(String(value)).digest("hex");
 }
 
-export function loadSimState() {
-  if (!fs.existsSync(SIM_STATE_PATH)) {
-    throw new Error(`sim-state.json missing at ${SIM_STATE_PATH}`);
+/**
+ * Resolve sim-state path: local gitignored file first, then tracked demo fixture.
+ * Fixture fallback is allowed only for the leo-k demo school simulation scripts.
+ */
+export function resolveSimStatePath() {
+  if (fs.existsSync(SIM_STATE_PATH)) {
+    return { path: SIM_STATE_PATH, source: "local" };
   }
-  return JSON.parse(fs.readFileSync(SIM_STATE_PATH, "utf8"));
+  if (fs.existsSync(DEMO_SIM_STATE_FIXTURE_PATH)) {
+    return { path: DEMO_SIM_STATE_FIXTURE_PATH, source: "demo-fixture" };
+  }
+  return { path: SIM_STATE_PATH, source: "missing" };
+}
+
+/** Guard fixture loads — never treat arbitrary sim-state as demo school. */
+export function assertDemoSchoolSimState(state) {
+  if (state.demoParentEmail !== DEMO_PARENT_EMAIL) {
+    throw new Error(
+      `demo sim-state fixture rejected: demoParentEmail must be ${DEMO_PARENT_EMAIL}`
+    );
+  }
+  if (state.teacherEmails?.manager !== SCHOOL_MANAGER_EMAIL) {
+    throw new Error(
+      `demo sim-state fixture rejected: manager email must be ${SCHOOL_MANAGER_EMAIL}`
+    );
+  }
+  const studentCount = (state.studentIds || []).length;
+  if (studentCount < DEMO_STUDENT_COUNT - 5) {
+    throw new Error(
+      `demo sim-state fixture rejected: expected ~${DEMO_STUDENT_COUNT} students, got ${studentCount}`
+    );
+  }
+}
+
+export function loadSimState() {
+  const resolved = resolveSimStatePath();
+  if (resolved.source === "missing") {
+    throw new Error(
+      `sim-state.json missing at ${SIM_STATE_PATH} ` +
+        `(demo fixture also missing at ${DEMO_SIM_STATE_FIXTURE_PATH})`
+    );
+  }
+  const state = JSON.parse(fs.readFileSync(resolved.path, "utf8"));
+  if (resolved.source === "demo-fixture") {
+    assertDemoSchoolSimState(state);
+  }
+  return state;
 }
 
 export function saveSimState(state) {
