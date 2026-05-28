@@ -1,0 +1,292 @@
+﻿node : (node:25432) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%
+20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/parent-server/report-data-aggregate.server.js is not specified and it doesn't 
+parse as CommonJS.
+At C:\Users\ERAN YOSEF\AppData\Local\Temp\ps-script-600c0b30-e9f0-4a6e-bb83-fee540e48b59.ps1:82 char:74
++ ... H-WEB-TRY"; node --env-file=.env.local --env-file=.env.e2e.local scri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:25432) [M...se as CommonJS.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\ERAN YOSEF\Desktop\final 
+projects\FINAL-WEB\LIOSH-WEB-TRY\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "measuredAt": "2026-05-28T19:21:32.060Z",
+  "tests": [
+    {
+      "name": "batch_single_aggregate_parity",
+      "pass": true,
+      "detail": "14475dbb-49fb-4d5c-9321-c4c5ea5ddaa2"
+    },
+    {
+      "name": "batch_single_aggregate_parity",
+      "pass": true,
+      "detail": "0794e3ef-2fad-4a52-8c9a-28ba16a15d71"
+    },
+    {
+      "name": "class_report_no_duplicate_students",
+      "pass": true,
+      "detail": "count=22"
+    },
+    {
+      "name": "class_report_roster_count_match",
+      "pass": true,
+      "detail": "22"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "class"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "range"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "roster"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "cohortSummary"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "subjects"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "weaknessTopics"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "attentionList"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "recentActivity"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "students"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "teacherGuidanceBlock"
+    },
+    {
+      "name": "class_report_shape",
+      "pass": true,
+      "detail": "reportMeta"
+    },
+    {
+      "name": "class_report_guidance_v2",
+      "pass": true,
+      "detail": "class_needs_reinforcement"
+    },
+    {
+      "name": "physical_subject_guidance_blocks",
+      "pass": true,
+      "detail": "count=6"
+    },
+    {
+      "name": "physical_report_meta_v2",
+      "pass": true,
+      "detail": "v2"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "16c7b27f-fca6-4ed7-b86a-ec238a924a4c=19"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "3b0a158e-fd50-4ac9-b0c7-bec4d8218be0=18"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "c1e024b4-04e0-47f7-8338-9d019c872f8a=18"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "16843e68-acba-4e9c-89a3-a06148f13bbe=19"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "48927e1b-b535-4dda-83ea-e25858c9c506=18"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "0db32f0f-ee7c-4647-a7d0-5cab87822608=20"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "1aa74c92-fc6d-4703-b1a1-39c3435bba19=16"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "4f9821cf-bd9c-4c7b-834e-0a823a86822a=20"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "f29f394d-c4dc-4291-8ff4-574fd070573d=21"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "493230d7-6c99-473e-a742-2ba054092aa2=19"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "17a7ada0-983a-48e3-9844-a0cf437d8066=22"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "83915bd3-2931-4606-9046-640ae618b848=19"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "52baecf4-35bc-4523-9495-94c81c435688=16"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "fd1c0fc2-4879-470a-91ee-3daa71ad103c=16"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "b06e3fc9-6485-4e57-94c3-b1fd4304bc4d=21"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "dbd6b5e8-c43d-4eae-a27e-4519f4792bb9=16"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "98f668d0-932b-4ac0-8d2e-5a0e24497fd0=15"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "871c414e-51bd-4a8a-8047-59bfa812745f=20"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "d2dd32d3-bf15-43b0-bb24-ed1b62118078=20"
+    },
+    {
+      "name": "physical_submit_count_parity",
+      "pass": true,
+      "detail": "bcbcc4e9-78bb-4b3c-ba5d-638bc76b0662=18"
+    },
+    {
+      "name": "parent_aggregateParentReportPayload",
+      "pass": true,
+      "detail": "answers=30"
+    },
+    {
+      "name": "parent_payload_meta",
+      "pass": true,
+      "detail": "supabase"
+    },
+    {
+      "name": "cache_warm_hit",
+      "pass": true,
+      "detail": "0794e3ef-2fad-4a52-8c9a-28ba16a15d71"
+    },
+    {
+      "name": "cache_date_isolation",
+      "pass": true,
+      "detail": "different date range misses"
+    },
+    {
+      "name": "cache_partial_roster_miss",
+      "pass": true,
+      "detail": "all-or-nothing subset read"
+    }
+  ],
+  "timings": {
+    "directBuild": [
+      {
+        "fn": "buildTeacherClassReportPayload",
+        "ms": 1498
+      },
+      {
+        "fn": "buildSchoolPhysicalClassReportPayload",
+        "ms": 3935
+      },
+      {
+        "fn": "buildTeacherDashboardPayload",
+        "ms": 11483
+      },
+      {
+        "fn": "buildTeacherStudentReportPayload",
+        "ms": 3662
+      },
+      {
+        "fn": "listSchoolStudentsInPhysicalClass",
+        "ms": 1197
+      },
+      {
+        "fn": "listSchoolStudentsInPhysicalClass (post browse-status)",
+        "ms": 888
+      }
+    ],
+    "http": [
+      {
+        "note": "skipped ΓÇö set DEMO_TEACHER_PASSWORD or SCHOOL_QA_PASSWORD for HTTP Server-Timing"
+      }
+    ]
+  },
+  "payloadSizes": {
+    "classReportBytes": 26989,
+    "physicalReportBytes": 43915
+  },
+  "regressions": [],
+  "cacheReview": {
+    "keyDimensions": [
+      "fromDate (iso)",
+      "toDate (iso)",
+      "studentId per slice",
+      "sorted roster id list for full roster key"
+    ],
+    "schoolIdInKey": false,
+    "note": "Process-local only; TTL 3min; student slices keyed per student+date window",
+    "crossSchoolRisk": "Low ΓÇö rollups are numeric aggregates keyed by student UUID; wrong-school mix requires same student id in two schools (same UUID)",
+    "teacherIdInKey": false,
+    "teacherIdScope": "buildLightweightStudentActivityMap receives teacherId but cache key omits it ΓÇö school browse always passes null"
+  },
+  "commitReady": true
+}
+
+p0-performance-verification: PASS (0 regressions)
