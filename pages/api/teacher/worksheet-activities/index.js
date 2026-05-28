@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       }
 
       const created = await createWorksheetActivity(ctx.serviceRole, ctx.teacherId, parsed.payload, {
-        schoolId: subjectGate.membership?.schoolId ?? null,
+        schoolId: parsed.scope === "class" ? subjectGate.membership?.schoolId ?? null : null,
       });
       if (!created.ok) {
         return sendTeacherApiError(res, created.status, created.code, created.code);
@@ -75,7 +75,12 @@ export default async function handler(req, res) {
         action: "worksheet_activity_created",
         actorRole: "teacher",
         actorId: ctx.teacherId,
-        metadata: { worksheetId: created.worksheetId, classId: parsed.payload.classId },
+        metadata: {
+          worksheetId: created.worksheetId,
+          classId: parsed.scope === "class" ? parsed.payload.classId : null,
+          assignmentScope: parsed.scope,
+          studentIds: parsed.scope === "selected_students" ? parsed.payload.studentIds : undefined,
+        },
       });
 
       return res.status(201).json({ data: { worksheetId: created.worksheetId } });

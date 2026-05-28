@@ -129,7 +129,7 @@ export default function TeacherStudentReportPage({ studentId }) {
         data-report-ok="true"
       >
         <TeacherPortalShell backHref="/teacher/dashboard" title={`דוח תלמיד: ${studentName}`}>
-          <div className="mb-4">
+          <div className="mb-4 flex flex-wrap gap-3">
             <Link
               href={`/teacher/student/${encodeURIComponent(studentId)}/parent-report`}
               target="_blank"
@@ -137,6 +137,13 @@ export default function TeacherStudentReportPage({ studentId }) {
               className="inline-flex rounded border border-white/25 text-sm font-semibold px-4 py-2 hover:bg-white/10"
             >
               דוח להורים
+            </Link>
+            <Link
+              href={`/teacher/worksheets/new?studentId=${encodeURIComponent(studentId)}`}
+              className="inline-flex rounded border border-violet-400/40 bg-violet-500/15 text-sm font-semibold px-4 py-2 text-violet-100 hover:bg-violet-500/25"
+              data-testid="teacher-student-new-worksheet-link"
+            >
+              דף עבודה חדש
             </Link>
           </div>
           <p className="text-white/60 text-sm mb-6">נתונים מ-30 הימים האחרונים</p>

@@ -4,43 +4,43 @@ overview: Final closed implementation plan to extend Worksheet PDF Activities fo
 todos:
   - id: approve-via-build
     content: Owner approval given — press Cursor Build/Implement to start full implementation
-    status: pending
+    status: completed
   - id: inspect-migrations
     content: Inspect supabase/migrations/ and choose next available migration number
-    status: pending
+    status: completed
   - id: prepare-sql
     content: Prepare SQL migration file only — do not run SQL (owner applies manually)
-    status: pending
+    status: completed
   - id: implement-backend
     content: Implement private selected-student worksheet assignment backend (worksheet-assignments.server.js, worksheet-teacher.server.js, worksheet-student.server.js, API routes)
-    status: pending
+    status: completed
   - id: implement-ui
     content: Implement teacher-level worksheet routes and pages (/teacher/worksheets/*)
-    status: pending
+    status: completed
   - id: implement-access
     content: Implement selected-student access, list union, report support, and student home listing
-    status: pending
+    status: completed
   - id: run-build
     content: Run npm run build — confirm no errors
-    status: pending
+    status: completed
   - id: run-qa
     content: Run full QA checklist (Section 15) — private teacher flow and class/school regression
-    status: pending
+    status: completed
   - id: fix-qa
     content: Fix any QA issues and rerun relevant tests
-    status: pending
+    status: completed
   - id: closure-report
     content: Produce final closure report (markdown, included in ZIP)
-    status: pending
+    status: completed
   - id: zip-package
     content: Prepare ZIP review package at docs/teacher-portal/review-packages/private-teacher-worksheet-pdf-review.zip
-    status: pending
+    status: completed
   - id: confirm-no-sql-run
     content: Confirm no SQL was run by Cursor — owner applies migration manually
-    status: pending
+    status: completed
   - id: confirm-no-commit-push
     content: Confirm no commit and no push were made — owner commits manually
-    status: pending
+    status: completed
 isProject: false
 ---
 

@@ -2,10 +2,12 @@ import Link from "next/link";
 import { worksheetGradingStatusLabelHe } from "../../lib/worksheet-activities/worksheet-labels.client.js";
 
 /**
- * @param {{ classId: string, worksheetId: string, report: Record<string, unknown> }} props
+ * @param {{ classId?: string, worksheetId: string, report: Record<string, unknown>, worksheetRouteBase?: string }} props
  */
-export default function TeacherWorksheetReport({ classId, worksheetId, report }) {
-  const base = `/teacher/class/${encodeURIComponent(classId)}/worksheets/${encodeURIComponent(worksheetId)}`;
+export default function TeacherWorksheetReport({ classId, worksheetId, report, worksheetRouteBase }) {
+  const base =
+    worksheetRouteBase ||
+    `/teacher/class/${encodeURIComponent(classId)}/worksheets/${encodeURIComponent(worksheetId)}`;
   const rows = Array.isArray(report.studentRows) ? report.studentRows : [];
 
   return (
