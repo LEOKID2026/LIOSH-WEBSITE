@@ -36,6 +36,7 @@ const OPERATION_NAMES = {
   place_value: "ערך מקום",
   comparison: "השוואה",
   patterns: "דפוסים וסדרות",
+  multiplication_advanced: "כפל מתקדם",
   mixed: "ערבוב"
 };
 
@@ -99,6 +100,7 @@ const ENGLISH_TOPIC_NAMES = {
   matching: "התאמה",
   inference: "הסקה",
   sentence_understanding: "הבנת משפט",
+  simple_sentences: "משפטים פשוטים",
   mixed: "תרגול משולב",
 };
 
@@ -116,6 +118,9 @@ const SCIENCE_TOPIC_NAMES = {
   experiments: "ניסויים ותהליכים",
   animals_plants: "בעלי חיים וצמחים",
   basic_experiments: "ניסויים בסיסיים",
+  living_things: "יצורים חיים",
+  matter: "חומרים",
+  forces: "כוחות",
   mixed: "ערבוב נושאים",
 };
 
@@ -136,6 +141,10 @@ const HEBREW_TOPIC_NAMES = {
   sequence: "רצף",
   inference: "הסקה",
   fact_vs_opinion: "עובדה מול דעה",
+  vowels_reading: "קריאה בניקוד",
+  plurals: "יחיד ורבים",
+  verb_forms: "צורות הפועל",
+  sentence_structure: "מבנה המשפט",
 };
 
 export function getHebrewTopicName(topic) {
@@ -153,6 +162,9 @@ const MOLEDET_GEOGRAPHY_TOPIC_NAMES = {
   map_reading: "קריאת מפה",
   directions: "הוראות",
   places: "מקומות",
+  maps_basic: "מפות בסיסיות",
+  regions: "אזורים",
+  history: "היסטוריה",
   mixed: "ערבוב",
 };
 

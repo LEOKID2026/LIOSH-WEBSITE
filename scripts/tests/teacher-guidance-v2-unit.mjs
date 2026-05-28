@@ -247,4 +247,69 @@ function mockStudentPayload() {
   assert.notEqual(unit.topicLabelHe, "fractions");
 }
 
+// 7 — new label-map expansion: all approved topic keys resolve to owner-approved Hebrew
+{
+  // Hebrew
+  assert.equal(resolveTopicLabelHe("hebrew", "vowels_reading"),    "קריאה בניקוד",    "vowels_reading label");
+  assert.equal(resolveTopicLabelHe("hebrew", "plurals"),           "יחיד ורבים",      "plurals label");
+  assert.equal(resolveTopicLabelHe("hebrew", "verb_forms"),        "צורות הפועל",     "verb_forms label");
+  assert.equal(resolveTopicLabelHe("hebrew", "sentence_structure"),"מבנה המשפט",      "sentence_structure label");
+
+  // English
+  assert.equal(resolveTopicLabelHe("english", "simple_sentences"), "משפטים פשוטים",   "simple_sentences label");
+
+  // Science
+  assert.equal(resolveTopicLabelHe("science", "living_things"),    "יצורים חיים",     "living_things label");
+  assert.equal(resolveTopicLabelHe("science", "matter"),           "חומרים",          "matter label");
+  assert.equal(resolveTopicLabelHe("science", "forces"),           "כוחות",           "forces label");
+
+  // Moledet / Geography
+  assert.equal(resolveTopicLabelHe("moledet_geography", "maps_basic"), "מפות בסיסיות", "maps_basic label");
+  assert.equal(resolveTopicLabelHe("moledet_geography", "regions"),    "אזורים",        "regions label");
+  assert.equal(resolveTopicLabelHe("moledet_geography", "history"),    "היסטוריה",      "history label");
+
+  // Math
+  assert.equal(resolveTopicLabelHe("math", "multiplication_advanced"), "כפל מתקדם",    "multiplication_advanced label");
+}
+
+// 8 — non-recommendable keys: general, empty, subject-name-as-topic, mixed
+{
+  assert.equal(resolveTopicLabelHe("hebrew", "general"),           null, "general → null");
+  assert.equal(resolveTopicLabelHe("math",   "general"),           null, "general math → null");
+  assert.equal(resolveTopicLabelHe("hebrew", ""),                  null, "empty → null");
+  assert.equal(resolveTopicLabelHe("hebrew", null),                null, "null → null");
+  assert.equal(resolveTopicLabelHe("hebrew", "hebrew"),            null, "subject-name-as-topic → null");
+  assert.equal(resolveTopicLabelHe("science", "science"),          null, "subject-name-as-topic science → null");
+  assert.equal(isTeacherRecommendableTopicKey("mixed"),            false,"mixed must not be recommendable");
+  assert.equal(resolveTopicLabelHe("hebrew", "mixed"),             null, "mixed → null (not a recommendation topic)");
+  assert.equal(resolveTopicLabelHe("math",   "mixed"),             null, "mixed math → null");
+
+  // Verify mixed excluded from V2 units even with enough data
+  const mixedBlock = buildStudentTeacherGuidanceV2({
+    summary: { totalSessions: 10, totalAnswers: 30, correctAnswers: 9, wrongAnswers: 21, accuracy: 30 },
+    subjects: {
+      hebrew: {
+        sessions: 10,
+        answers: 30,
+        correct: 9,
+        wrong: 21,
+        accuracy: 30,
+        topics: {
+          mixed:          { answers: 20, correct: 4,  wrong: 16, accuracy: 20 },
+          vowels_reading: { answers: 10, correct: 5,  wrong: 5,  accuracy: 50 },
+        },
+      },
+    },
+    recentMistakes: [],
+  });
+  assert.ok(
+    mixedBlock.recommendationUnits.every((u) => u.topic !== "mixed"),
+    "mixed must not appear in recommendation units"
+  );
+  assert.ok(
+    mixedBlock.recommendationUnits.every((u) => u.topicLabelHe !== "ערבוב"),
+    "ערבוב must not appear as recommendation label"
+  );
+}
+
 console.log("teacher-guidance-v2-unit: all assertions passed");
