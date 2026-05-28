@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { formatGradeLevelHe } from "../lib/learning-student-defaults.js";
+import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
+import { GRADES as MATH_GRADES } from "../utils/math-constants.js";
+import { GRADES as GEOMETRY_GRADES } from "../utils/geometry-constants.js";
 import { generateActivityQuestionSetClient } from "../lib/classroom-activities/generate-activity-questions-client.js";
 
 test("formatGradeLevelHe g3 returns כיתה ג׳", () => {
@@ -19,6 +21,16 @@ test("formatGradeLevelHe for all g1–g6 returns proper Hebrew letters", () => {
   for (const [key, label] of Object.entries(expected)) {
     assert.equal(formatGradeLevelHe(key), label);
   }
+});
+
+test("formatGradeLevelHe grade_3 returns כיתה ג׳", () => {
+  assert.equal(formatGradeLevelHe("grade_3"), "כיתה ג׳");
+});
+
+test("normalizeGradeLevelToKey maps grade_3 to g3 for topic banks", () => {
+  assert.equal(normalizeGradeLevelToKey("grade_3"), "g3");
+  assert.ok((MATH_GRADES.g3?.operations || []).length > 0);
+  assert.ok((GEOMETRY_GRADES.g3?.topics || []).includes("shapes_basic"));
 });
 
 test("generator error messages do not contain raw grade keys", async () => {

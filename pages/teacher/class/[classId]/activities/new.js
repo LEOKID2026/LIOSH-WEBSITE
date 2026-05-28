@@ -21,7 +21,9 @@ import {
   ENGLISH_TOPICS,
 } from "../../../../../utils/english-question-generator.js";
 import { GRADES as MATH_GRADES } from "../../../../../utils/math-constants.js";
-import { formatGradeLevelHe } from "../../../../../lib/learning-student-defaults.js";
+import { getMathReportBucketDisplayName } from "../../../../../utils/math-report-generator.js";
+import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../../../../../lib/learning-student-defaults.js";
+import { normalizeSubject } from "../../../../../lib/learning-supabase/learning-activity.js";
 import { SCIENCE_GRADES } from "../../../../../data/science-curriculum.js";
 
 const SCIENCE_TOPIC_LABELS = {
@@ -35,7 +37,8 @@ const SCIENCE_TOPIC_LABELS = {
 };
 
 function scienceTopicOptionsForGrade(gradeKey) {
-  return (SCIENCE_GRADES[gradeKey]?.topics ?? []).map((key) => ({
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  return (SCIENCE_GRADES[canonical]?.topics ?? []).map((key) => ({
     key,
     label: SCIENCE_TOPIC_LABELS[key] ?? key,
   }));
@@ -47,24 +50,28 @@ const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) =
 }));
 
 function geometryTopicOptionsForGrade(gradeKey) {
-  const topics = GEOMETRY_GRADES[gradeKey]?.topics || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const topics = GEOMETRY_GRADES[canonical]?.topics || [];
   return topics
     .filter((t) => t !== "mixed")
     .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
 }
 
 function hebrewTopicOptionsForGrade(gradeKey) {
-  const topics = HEBREW_GRADES[gradeKey]?.topics || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const topics = HEBREW_GRADES[canonical]?.topics || [];
   return topics.map((key) => ({ key, label: HEBREW_TOPICS[key]?.name || key }));
 }
 
 function englishTopicOptionsForGrade(gradeKey) {
-  const topics = ENGLISH_GRADES[gradeKey]?.topics || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const topics = ENGLISH_GRADES[canonical]?.topics || [];
   return topics.map((key) => ({ key, label: ENGLISH_TOPICS[key]?.name || key }));
 }
 
 function mathTopicOptionsForGrade(gradeKey) {
-  const operations = MATH_GRADES[gradeKey]?.operations || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const operations = MATH_GRADES[canonical]?.operations || [];
   return operations
     .filter((op) => op !== "mixed")
     .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
@@ -160,8 +167,10 @@ export default function TeacherNewActivityPage({ classId }) {
           setClassContext((prev) => ({ ...prev, loaded: true }));
           return;
         }
-        const nextGrade = cls.gradeLevel ? String(cls.gradeLevel) : "g3";
-        const nextSubject = cls.subjectFocus ? String(cls.subjectFocus) : subject;
+        const nextGrade = normalizeGradeLevelToKey(cls.gradeLevel) || "g3";
+        const nextSubject = cls.subjectFocus
+          ? normalizeSubject(cls.subjectFocus) || String(cls.subjectFocus).trim().toLowerCase()
+          : subject;
         setGradeLevel(nextGrade);
         if (cls.subjectFocus) {
           setSubject(nextSubject);

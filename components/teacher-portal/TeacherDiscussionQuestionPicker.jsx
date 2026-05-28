@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { teacherAuthFetch, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../lib/classroom-activities/classroom-activities-preview.js";
-import { formatGradeLevelHe } from "../../lib/learning-student-defaults.js";
+import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../../lib/learning-student-defaults.js";
 import { SCIENCE_GRADES } from "../../data/science-curriculum.js";
 import { TOPICS as MOLEDET_TOPICS } from "../../utils/moledet-geography-constants.js";
 import {
@@ -33,31 +33,36 @@ const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) =
 }));
 
 function geometryTopicOptionsForGrade(gradeKey) {
-  const topics = GEOMETRY_GRADES[gradeKey]?.topics || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const topics = GEOMETRY_GRADES[canonical]?.topics || [];
   return topics
     .filter((t) => t !== "mixed")
     .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
 }
 
 function hebrewTopicOptionsForGrade(gradeKey) {
-  const topics = HEBREW_GRADES[gradeKey]?.topics || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const topics = HEBREW_GRADES[canonical]?.topics || [];
   return topics.map((key) => ({ key, label: HEBREW_TOPICS[key]?.name || key }));
 }
 
 function englishTopicOptionsForGrade(gradeKey) {
-  const topics = ENGLISH_GRADES[gradeKey]?.topics || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const topics = ENGLISH_GRADES[canonical]?.topics || [];
   return topics.map((key) => ({ key, label: ENGLISH_TOPICS[key]?.name || key }));
 }
 
 function mathTopicOptionsForGrade(gradeKey) {
-  const operations = MATH_GRADES[gradeKey]?.operations || [];
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  const operations = MATH_GRADES[canonical]?.operations || [];
   return operations
     .filter((op) => op !== "mixed")
     .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
 }
 
 function scienceTopicOptionsForGrade(gradeKey) {
-  return (SCIENCE_GRADES[gradeKey]?.topics ?? []).map((key) => ({
+  const canonical = normalizeGradeLevelToKey(gradeKey) || gradeKey;
+  return (SCIENCE_GRADES[canonical]?.topics ?? []).map((key) => ({
     key,
     label: SCIENCE_TOPIC_LABELS[key] ?? key,
   }));
@@ -116,6 +121,8 @@ function correctAnswerText(q) {
  *   classId?: string,
  *   studentId?: string,
  *   monitorHref?: (activityId: string) => string,
+ *   lockedSubject?: string | null,
+ *   subjectLocked?: boolean,
  * }} props
  */
 export default function TeacherDiscussionQuestionPicker({
@@ -124,6 +131,8 @@ export default function TeacherDiscussionQuestionPicker({
   classId,
   studentId,
   monitorHref,
+  lockedSubject = null,
+  subjectLocked = false,
 }) {
   const router = useRouter();
   const [permittedSubjects, setPermittedSubjects] = useState([]);
@@ -141,8 +150,14 @@ export default function TeacherDiscussionQuestionPicker({
   const [recipientScope, setRecipientScope] = useState("whole_class");
   const [selectedStudentIds, setSelectedStudentIds] = useState(() => new Set());
 
-  const gradeKey = gradeLevel || "g3";
+  const gradeKey = normalizeGradeLevelToKey(gradeLevel) || gradeLevel || "g3";
   const isClassDiscussion = Boolean(classId && !studentId);
+
+  useEffect(() => {
+    if (!subjectLocked || !lockedSubject) return;
+    setSubject(lockedSubject);
+    setTopic(defaultTopicForSubject(lockedSubject, gradeKey));
+  }, [subjectLocked, lockedSubject, gradeKey]);
 
   const subjectOptions = useMemo(() => {
     const allowed = new Set(permittedSubjects);
@@ -161,7 +176,10 @@ export default function TeacherDiscussionQuestionPicker({
         const json = await res.json().catch(() => ({}));
         if (!cancelled && res.ok && json?.data?.subjects) {
           setPermittedSubjects(json.data.subjects);
-          if (json.data.subjects.length && !json.data.subjects.includes(subject)) {
+          if (subjectLocked && lockedSubject) {
+            setSubject(lockedSubject);
+            setTopic(defaultTopicForSubject(lockedSubject, gradeKey));
+          } else if (json.data.subjects.length && !json.data.subjects.includes(subject)) {
             setSubject(json.data.subjects[0]);
             setTopic(defaultTopicForSubject(json.data.subjects[0], gradeKey));
           }
@@ -175,7 +193,7 @@ export default function TeacherDiscussionQuestionPicker({
     return () => {
       cancelled = true;
     };
-  }, [accessToken, gradeKey]);
+  }, [accessToken, gradeKey, subjectLocked, lockedSubject]);
 
   useEffect(() => {
     if (!isClassDiscussion || !accessToken || !classId) return;
@@ -399,6 +417,14 @@ export default function TeacherDiscussionQuestionPicker({
         </label>
         <label className="block text-sm">
           <span className="text-white/70">מקצוע</span>
+          {subjectLocked && lockedSubject ? (
+            <input
+              className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 opacity-70"
+              value={subjectLabelHe(lockedSubject)}
+              readOnly
+              disabled
+            />
+          ) : (
           <select
             className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
             value={subject}
@@ -414,6 +440,7 @@ export default function TeacherDiscussionQuestionPicker({
               </option>
             ))}
           </select>
+          )}
         </label>
         <label className="block text-sm md:col-span-2">
           <span className="text-white/70">נושא</span>
