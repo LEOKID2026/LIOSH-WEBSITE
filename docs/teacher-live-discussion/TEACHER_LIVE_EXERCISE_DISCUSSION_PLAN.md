@@ -359,7 +359,7 @@ For school teachers (class-scoped discussion):
 3. Filter bar: subject (auto-filtered to class grade + teacher permissions), topic, subtopic, difficulty.
 4. Click "Generate questions" → calls `/api/teacher/discussion/question-preview` → ~5 question cards appear.
 5. Each card shows: question text, answer options, correct answer highlighted (teacher-only), topic/difficulty metadata.
-6. Teacher clicks "Use this question" → confirmation form: title (pre-populated), recipients = whole class (V1).
+6. Teacher clicks "Use this question" → confirmation form: title (pre-populated), recipients = whole class (default) or selected students from class roster.
 7. POST to `/api/teacher/activities` with `{ mode: 'discussion', question_count: 1, question_set: [selectedQuestion] }`.
 8. On success → redirect to monitoring page for that activity.
 
@@ -448,22 +448,24 @@ After implementation, the following check must be performed and documented befor
 
 ### 4.1 School teacher V1
 
-- Class-scoped only. The teacher sends the discussion to the whole class.
-- Recipient selection is implicit: all active class members receive a status row on activation (identical to existing classroom activity behavior).
-- Selected-student targeting within a class (like worksheet `assignment_scope='selected_students'`) is **deferred to a future phase**. It is not in V1.
+- Class-scoped only. The teacher chooses recipients on `/teacher/class/[classId]/discussion/new`:
+  - **Whole class** (default): all active class members receive a `classroom_activity_student_status` row on activate.
+  - **Selected students**: teacher picks a subset from the class roster (checkboxes); only those students receive status rows on activate.
+- API rejects student IDs not in the class roster (cross-class / cross-school IDs are rejected as `student_not_in_class`).
+- Unassigned students do not see the activity on student home and receive `403 not_assigned` if they open the URL.
 - Multi-class: a teacher with multiple classes must create a separate discussion per class. No cross-class broadcast in V1.
 - The teacher question picker is filtered to the class's grade level and the teacher's permitted subjects. The teacher cannot override the grade.
 
 ### 4.2 Private teacher V1
 
-- 1:1 only. One discussion activity is created per student, using `student_activities` with `mode='discussion'`.
-- If a private teacher wants to send the same discussion question to multiple students, they use the UI to create one activity per student. This may be done as a batch in the UI (one question pick → select multiple students → system creates N separate `student_activities` rows), but each row is independent.
-- Group-scoped discussion (sending one activity to a named private group) is **deferred to a future phase**.
-- The student's grade level (from `students.grade_level`) determines which grade's questions are available. The teacher cannot override it.
+- **Subject-only permissions** via `private_teacher_subjects` (platform admin grants subjects such as math, geometry — no grade or class scope).
+- **Assigned students only**: the teacher may create discussion activities only for students linked in `teacher_students`.
+- 1:1 only. One discussion activity per student using `student_activities` with `mode='discussion'`.
+- The target student's `grade_level` is used **only** to generate grade-appropriate questions; it is **not** part of the permission check.
+- Group-scoped discussion is **deferred to a future phase**.
 
 ### 4.3 What is explicitly deferred to future phases
 
-- Selected-student targeting within a class for school teacher discussions.
 - Group-scoped discussions for private teachers.
 - Teacher-controlled "reveal" of correct answer to students.
 - Real-time push/WebSocket updates on the monitoring page.
@@ -502,7 +504,7 @@ The following are not part of this feature and must not be built, implied, or ac
 - Admin opens `pages/admin/teachers/[teacherId].js`.
 - New "Discussion Activity Subjects" section added to `TeacherAdminDetailView.jsx`.
 - Section is shown only when the teacher has no `school_teacher_memberships` row (i.e., is a private teacher). For school teachers, the school manager handles permissions.
-- Admin can grant: subject (from the allowed subject list) + optionally a specific grade (or all grades if left blank).
+- Admin can grant: subject only (from the allowed subject list). No grade or class fields.
 - Admin can revoke any grant.
 - APIs: `GET/POST /api/admin/teachers/[teacherId]/discussion-subjects`, `DELETE /api/admin/teachers/[teacherId]/discussion-subjects/[grantId]`. All require platform admin auth context.
 
@@ -529,18 +531,17 @@ The following are not part of this feature and must not be built, implied, or ac
 ### 6.4 Grade/Class Restrictions
 
 - School teacher class discussion: grade is derived from `teacher_classes.grade_level` for the selected class. The teacher cannot pick a different grade. The permission check uses this grade automatically.
-- Private teacher 1:1 discussion: grade is derived from the target `students.grade_level`. The teacher cannot override it.
+- Private teacher 1:1 discussion: `students.grade_level` is passed to question preview/generation only.
 - Permission check logic:
-  - School teacher: `assertSchoolTeacherSubjectAllowed(teacherId, subject, derivedGrade)` — existing function.
-  - Private teacher: new `assertPrivateTeacherSubjectAllowed(teacherId, subject, derivedGrade)` — queries `private_teacher_subjects`.
-  - A `NULL grade_level` grant row means the teacher is permitted for all grades of that subject.
-  - An integer `grade_level` row means permitted for that specific grade only.
+  - School teacher: `assertSchoolTeacherSubjectAllowed(teacherId, subject, derivedGrade)` — subject + grade from class.
+  - Private teacher: `assertPrivateTeacherSubjectAllowed(teacherId, subject)` — subject-only row in `private_teacher_subjects`.
+  - Student assignment: `assertTeacherCanManageStudentAccess` / `teacher_students` link (unchanged).
 
 ### 6.5 Student Recipient Restrictions
 
-- Class discussion (V1): whole class only. Implicit assignment on activate — all active class members receive a status row.
+- Class discussion (V1): `recipient_scope` on `classroom_activities` (`whole_class` | `selected_students`) plus `assigned_student_ids` when selected. Status rows on activate are the assignment boundary; monitor and student home use status rows only.
 - Private teacher 1:1: target student must be in `teacher_students` for that teacher. The `student_activities` FK to `teacher_students` enforces this at the DB level.
-- Unauthorized student access: blocked by existing `loadActivityForStudent` scope check (class membership / student ownership). No new checks needed.
+- Unauthorized student access: class membership plus, for `mode=discussion`, an existing `classroom_activity_student_status` row (`403 not_assigned` otherwise).
 
 ---
 
@@ -857,7 +858,7 @@ No relaxation is needed. Discussion questions still have `correct_answer` stored
 
 **Selected students in V1**
 
-School teacher: whole-class only. Private teacher: 1:1 only (one `student_activities` row per student). Selected-student targeting is deferred to a future phase. This is stated explicitly in Section 4.
+School teacher: whole-class or selected students within one class. Private teacher: 1:1 only (one `student_activities` row per student). See Section 4.
 
 **Private teacher multiple students**
 
@@ -888,7 +889,7 @@ The owner should confirm each item before approving implementation:
 - [ ] Plan document reviewed in full and understood.
 - [ ] V1 scope boundaries confirmed (Section 4).
 - [ ] Non-goals confirmed (Section 5).
-- [ ] School teacher V1: whole-class only — confirmed acceptable.
+- [ ] School teacher V1: whole-class or selected-students within class — confirmed acceptable.
 - [ ] Private teacher V1: 1:1 only — confirmed acceptable.
 - [ ] Unresolved risk resolved: question bank stability for procedural subjects — owner decision made and recorded.
 - [ ] Permission defaults confirmed: private teachers have no access until admin grants.

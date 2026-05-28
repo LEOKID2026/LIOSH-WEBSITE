@@ -133,14 +133,23 @@ export default function StudentActivityPage({ activityId }) {
         setFeedback({ type: "error", message: json?.error || "שמירת תשובה נכשלה" });
         return;
       }
+      const isDiscussion = activity?.mode === "discussion";
       const showExplanation =
-        activity?.mode === "guided_practice" || activity?.mode === "homework";
-      setFeedback({
-        type: json.isCorrect ? "correct" : "wrong",
-        message: json.isCorrect ? "נכון!" : "לא נכון",
-        explanation: showExplanation ? json.explanation : undefined,
-        correctAnswer: showExplanation ? json.correctAnswer : undefined,
-      });
+        !isDiscussion &&
+        (activity?.mode === "guided_practice" || activity?.mode === "homework");
+      if (isDiscussion) {
+        setFeedback({
+          type: "submitted",
+          message: "התשובה נשלחה",
+        });
+      } else {
+        setFeedback({
+          type: json.isCorrect ? "correct" : "wrong",
+          message: json.isCorrect ? "נכון!" : "לא נכון",
+          explanation: showExplanation ? json.explanation : undefined,
+          correctAnswer: showExplanation ? json.correctAnswer : undefined,
+        });
+      }
       if (activity?.mode !== "live_lesson" && effectiveIdx < questionSet.length - 1) {
         setTimeout(() => {
           setCurrentIdx((i) => i + 1);
@@ -197,14 +206,23 @@ export default function StudentActivityPage({ activityId }) {
   }
 
   if (phase === "done" && finished) {
+    const isDiscussionDone = activity?.mode === "discussion";
     return (
       <Layout>
         <div className="max-w-lg mx-auto px-4 py-12 text-center" dir="rtl">
-          <h1 className="text-2xl font-bold text-white mb-4">סיימת את הפעילות!</h1>
-          <p className="text-3xl font-bold text-emerald-300 tabular-nums mb-2">{finished.scorePct}%</p>
-          <p className="text-white/70 text-sm mb-6">
-            {finished.correctCount} נכונות מתוך {finished.questionCount}
-          </p>
+          <h1 className="text-2xl font-bold text-white mb-4">
+            {isDiscussionDone ? "התשובה נשלחה" : "סיימת את הפעילות!"}
+          </h1>
+          {!isDiscussionDone ? (
+            <>
+              <p className="text-3xl font-bold text-emerald-300 tabular-nums mb-2">{finished.scorePct}%</p>
+              <p className="text-white/70 text-sm mb-6">
+                {finished.correctCount} נכונות מתוך {finished.questionCount}
+              </p>
+            </>
+          ) : (
+            <p className="text-white/70 text-sm mb-6">תודה על המענה. המורה יראה את התשובה בכיתה.</p>
+          )}
           <Link
             href="/student/home"
             className="inline-flex rounded-xl bg-emerald-500 text-black font-bold px-6 py-3"
@@ -216,8 +234,11 @@ export default function StudentActivityPage({ activityId }) {
     );
   }
 
+  const isDiscussion = activity?.mode === "discussion";
   const isQuiz = activity?.mode === "quiz";
-  const showHints = activity?.mode === "guided_practice" || activity?.mode === "homework";
+  const showHints =
+    !isDiscussion &&
+    (activity?.mode === "guided_practice" || activity?.mode === "homework");
   const progressPct =
     questionSet.length > 0 ? Math.round(((effectiveIdx + 1) / questionSet.length) * 100) : 0;
 
@@ -287,9 +308,11 @@ export default function StudentActivityPage({ activityId }) {
                 className={`mb-4 text-sm rounded-lg px-3 py-2 ${
                   feedback.type === "correct"
                     ? "bg-emerald-500/20 text-emerald-100"
-                    : feedback.type === "error"
-                      ? "bg-red-500/20 text-red-100"
-                      : "bg-amber-500/20 text-amber-100"
+                    : feedback.type === "submitted"
+                      ? "bg-white/10 text-white/90"
+                      : feedback.type === "error"
+                        ? "bg-red-500/20 text-red-100"
+                        : "bg-amber-500/20 text-amber-100"
                 }`}
               >
                 <p>{feedback.message}</p>

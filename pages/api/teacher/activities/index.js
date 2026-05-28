@@ -2,8 +2,12 @@ import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
 import { consumeRateLimit, clientIpFromRequest } from "../../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../../lib/security/production-guard.js";
-import { assertSchoolTeacherSubjectAllowed } from "../../../../lib/school-server/school-subjects.server.js";
+import {
+  assertDiscussionActivitySubjectAllowed,
+  assertSchoolTeacherSubjectAllowed,
+} from "../../../../lib/school-server/school-subjects.server.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
+import { loadTeacherClassOwned } from "../../../../lib/teacher-server/teacher-classes.server.js";
 import {
   createClassroomActivity,
   listTeacherActivities,
@@ -83,12 +87,30 @@ export default async function handler(req, res) {
         return sendTeacherApiError(res, status, parsed.code, parsed.message || parsed.code);
       }
 
-      const subjectGate = await assertSchoolTeacherSubjectAllowed(
-        ctx.serviceRole,
-        ctx.teacherId,
-        parsed.payload.subject,
-        null
-      );
+      let subjectGate;
+      if (parsed.payload.mode === "discussion") {
+        const owned = await loadTeacherClassOwned(
+          ctx.serviceRole,
+          ctx.teacherId,
+          parsed.payload.classId
+        );
+        if (!owned.ok) {
+          return sendTeacherApiError(res, owned.status, owned.code, owned.code);
+        }
+        subjectGate = await assertDiscussionActivitySubjectAllowed(
+          ctx.serviceRole,
+          ctx.teacherId,
+          parsed.payload.subject,
+          owned.row.grade_level
+        );
+      } else {
+        subjectGate = await assertSchoolTeacherSubjectAllowed(
+          ctx.serviceRole,
+          ctx.teacherId,
+          parsed.payload.subject,
+          null
+        );
+      }
       if (!subjectGate.ok) {
         return sendTeacherApiError(res, subjectGate.status, subjectGate.code, subjectGate.code);
       }

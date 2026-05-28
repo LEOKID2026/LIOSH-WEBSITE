@@ -2,10 +2,15 @@ import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
 import { consumeRateLimit, clientIpFromRequest } from "../../../../lib/security/in-memory-rate-limit.js";
 import { isProductionRuntime } from "../../../../lib/security/production-guard.js";
-import { assertSchoolTeacherSubjectAllowed } from "../../../../lib/school-server/school-subjects.server.js";
+import {
+  assertDiscussionActivitySubjectAllowed,
+  assertSchoolTeacherSubjectAllowed,
+} from "../../../../lib/school-server/school-subjects.server.js";
+import { isDbSchemaNotReadyError } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import {
   createStudentActivity,
+  createStudentActivityBatch,
   listTeacherStudentActivities,
   parseCreateStudentActivityBody,
 } from "../../../../lib/teacher-server/student-activity.server.js";
@@ -71,17 +76,51 @@ export default async function handler(req, res) {
         return sendTeacherApiError(res, status, parsed.code, parsed.message || parsed.code);
       }
 
-      const subjectGate = await assertSchoolTeacherSubjectAllowed(
-        ctx.serviceRole,
-        ctx.teacherId,
-        parsed.payload.subject,
-        null
-      );
+      let subjectGate;
+      if (parsed.payload.mode === "discussion") {
+        // For permission checks use the first student's grade_level (all students in a batch
+        // get grade-appropriate questions individually; the permission is subject-only for
+        // private teachers, so any assigned student's grade is acceptable here).
+        const { data: studentRow, error: studentErr } = await ctx.serviceRole
+          .from("students")
+          .select("grade_level")
+          .eq("id", parsed.payload.studentIds[0])
+          .maybeSingle();
+        if (studentErr) {
+          if (isDbSchemaNotReadyError(studentErr)) {
+            return sendTeacherApiError(res, 503, "db_schema_not_ready", "db_schema_not_ready");
+          }
+          return sendTeacherApiError(res, 500, "internal_error", "internal_error");
+        }
+        if (!studentRow) {
+          return sendTeacherApiError(res, 404, "student_not_found", "student_not_found");
+        }
+        subjectGate = await assertDiscussionActivitySubjectAllowed(
+          ctx.serviceRole,
+          ctx.teacherId,
+          parsed.payload.subject,
+          studentRow.grade_level
+        );
+      } else {
+        subjectGate = await assertSchoolTeacherSubjectAllowed(
+          ctx.serviceRole,
+          ctx.teacherId,
+          parsed.payload.subject,
+          null
+        );
+      }
       if (!subjectGate.ok) {
         return sendTeacherApiError(res, subjectGate.status, subjectGate.code, subjectGate.code);
       }
 
-      const created = await createStudentActivity(ctx.serviceRole, ctx.teacherId, parsed);
+      const isMulti = parsed.payload.studentIds.length > 1;
+
+      let created;
+      if (isMulti) {
+        created = await createStudentActivityBatch(ctx.serviceRole, ctx.teacherId, parsed);
+      } else {
+        created = await createStudentActivity(ctx.serviceRole, ctx.teacherId, parsed);
+      }
       if (!created.ok) {
         return sendTeacherApiError(res, created.status, created.code, created.code);
       }
@@ -93,13 +132,20 @@ export default async function handler(req, res) {
         actorRole: "teacher",
         actorId: ctx.teacherId,
         metadata: {
-          scope: "student",
-          activityId: created.activityId,
-          studentId: parsed.payload.studentId,
+          scope: isMulti ? "student_batch" : "student",
+          ...(isMulti
+            ? { batchId: created.batchId, studentCount: parsed.payload.studentIds.length }
+            : { activityId: created.activityId, studentId: parsed.payload.studentIds[0] }),
           mode: parsed.payload.mode,
           questionCount: parsed.payload.questionCount,
         },
       });
+
+      if (isMulti) {
+        return res.status(201).json({
+          data: { batchId: created.batchId, activityIds: created.activityIds },
+        });
+      }
 
       return res.status(201).json({
         data: { activityId: created.activityId },

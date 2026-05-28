@@ -603,6 +603,13 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
             >
               דפי עבודה →
             </Link>
+            <Link
+              href="/teacher/students/activities/new"
+              className="text-sm text-emerald-300 hover:underline font-medium w-fit"
+              data-testid="teacher-dashboard-private-students-activity-link"
+            >
+              שלח פעילות לתלמידים פרטיים →
+            </Link>
           </div>
         </div>
       </section>

@@ -4,40 +4,40 @@ overview: Add a "Teacher Live Exercise Discussion Activity" that lets teachers p
 todos:
   - id: migrations
     content: Write migration 036 (private_teacher_subjects) and 037 (mode CHECK extensions)
-    status: pending
+    status: completed
   - id: shared-constants
     content: Update ACTIVITY_MODES and validateSameExactQuestionSet in classroom-activities-shared.server.js
-    status: pending
+    status: completed
   - id: diagnostic-firewall
     content: Add .neq('mode','discussion') filters at 3 query sites in classroom-activity-class-report.server.js and teacher-dashboard-activity.server.js
-    status: pending
+    status: completed
   - id: permission-helper
     content: Add assertPrivateTeacherSubjectAllowed in school-subjects.server.js; wire into teacher-activities.server.js create path
-    status: pending
+    status: completed
   - id: question-preview-api
     content: New API route and server lib for /api/teacher/discussion/question-preview
-    status: pending
+    status: completed
   - id: admin-subjects-api
     content: New admin API routes and server lib for private_teacher_subjects CRUD
-    status: pending
+    status: completed
   - id: teacher-library-ui
     content: New page pages/teacher/class/[classId]/discussion/new.js + TeacherDiscussionQuestionPicker component
-    status: pending
+    status: completed
   - id: private-teacher-ui
     content: New TeacherStudentDiscussionPanel for private teacher 1:1 discussions
-    status: pending
+    status: completed
   - id: student-ui-patch
     content: Patch pages/student/activity/[activityId].js to suppress correctness feedback for mode='discussion'
-    status: pending
+    status: completed
   - id: nav-tab
     content: Add Discussion tab to TeacherClassActivitiesNav and Activities nav
-    status: pending
+    status: completed
   - id: admin-ui
     content: Extend TeacherAdminDetailView with Discussion Subjects section
-    status: pending
+    status: completed
   - id: tests
     content: Write unit tests for permission helper, diagnostic firewall, and discussion lifecycle
-    status: pending
+    status: completed
 isProject: false
 ---
 

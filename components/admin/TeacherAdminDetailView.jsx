@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import AdminSectionCard, { AdminFieldRow, AdminStatTile } from "./AdminSectionCard.jsx";
 import TeacherQuotaForm from "./TeacherQuotaForm.jsx";
+import TeacherDiscussionSubjectsSection from "./TeacherDiscussionSubjectsSection.jsx";
 import { isSmokeClassName } from "../../lib/teacher-portal/teacher-smoke-artifacts.js";
 import {
   ADMIN_BACK_TO_TEACHERS,
@@ -282,6 +283,7 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
             onReload?.();
           }}
         />
+        <TeacherDiscussionSubjectsSection teacher={teacher} accessToken={accessToken} />
       </div>
 
       <div className="order-4">
