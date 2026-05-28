@@ -16,7 +16,10 @@ import {
 import {
   actionTypeLabelHe,
   attentionReasonHe,
+  canShowClassCalmWeakTopicsMessage,
+  classGuidanceSeverityTierHe,
   classHealthHe,
+  CLASS_WEAK_TOPICS_FALLBACK_BANNER,
   formatPercent,
   formatTopicLineHe,
   groupTierHe,
@@ -100,8 +103,17 @@ export default function TeacherClassReportPage({ classId }) {
     ? guidance.classRecommendationUnits || []
     : [];
   const smallGroupClusters = isGuidanceV2 ? guidance.smallGroupClusters || [] : [];
+  const classTier =
+    guidance.guidanceSeverityTier ||
+    guidance.cohortStats?.guidanceSeverityTier ||
+    null;
+  const classTierHe =
+    (classTier && classGuidanceSeverityTierHe(classTier)) ||
+    classHealthHe(teacherSummary.classHealthSignal);
+  const showCalmWeakTopics = canShowClassCalmWeakTopicsMessage(guidance, report);
+
   const weaknessTopics = isGuidanceV2
-    ? classRecommendationUnits.filter((u) => u.topicLabelHe)
+    ? classRecommendationUnits.filter((u) => u.topicLabelHe || u.headlineHe)
     : (report.weaknessTopics || guidance.priorityTopics || []).filter((t) =>
         formatTopicLineHe(t.subject, t.topic)
       );
@@ -173,10 +185,8 @@ export default function TeacherClassReportPage({ classId }) {
                     <dd>{cohort.studentsWithActivity ?? 0}</dd>
                   </div>
                 </dl>
-                {classHealthHe(teacherSummary.classHealthSignal) ? (
-                  <p className="text-amber-200 text-sm">
-                    {classHealthHe(teacherSummary.classHealthSignal)}
-                  </p>
+                {classTierHe ? (
+                  <p className="text-amber-200 text-sm">{classTierHe}</p>
                 ) : null}
               </>
             )}
@@ -193,6 +203,20 @@ export default function TeacherClassReportPage({ classId }) {
               <ul className="text-sm text-white/80 space-y-2">
                 {weaknessTopics.slice(0, 10).map((t, i) => {
                   if (isGuidanceV2) {
+                    if (t.level === "subject" && t.headlineHe) {
+                      const action = actionTypeLabelHe(t.recommendedActionType);
+                      return (
+                        <li
+                          key={t.unitId || i}
+                          className="rounded border border-white/10 px-3 py-2"
+                        >
+                          <span className="font-medium">{t.headlineHe}</span>
+                          : {t.affectedStudentCount ?? 0}/{memberCount} תלמידים ·{" "}
+                          {formatPercent(t.cohortAccuracyPct)} הצלחה
+                          {t.actionHe ? ` · ${t.actionHe}` : action ? ` · ${action}` : ""}
+                        </li>
+                      );
+                    }
                     const subj = subjectLabelHe(t.subject);
                     const headline = t.subtopicLabelHe
                       ? `${t.topicLabelHe} — ${t.subtopicLabelHe}`
@@ -231,7 +255,11 @@ export default function TeacherClassReportPage({ classId }) {
                 }).filter(Boolean)}
               </ul>
             ) : (
-              <p className="text-white/60 text-sm">לא זוהו נושאים בעייתיים בתקופה זו.</p>
+              <p className="text-white/60 text-sm">
+                {showCalmWeakTopics
+                  ? "לא זוהו נושאים בעייתיים בתקופה זו."
+                  : CLASS_WEAK_TOPICS_FALLBACK_BANNER}
+              </p>
             )}
           </section>
 

@@ -20,11 +20,16 @@ import {
 import {
   actionTypeLabelHe,
   assignmentTypeLabelHe,
+  canShowStudentCalmFocusMessage,
   formatDateHe,
   formatPercent,
+  formatStudentSubjectFallbackEvidenceHe,
   formatTopicLineHe,
-  riskLevelHe,
+  hasActionableGuidanceV2,
   riskSignalHe,
+  studentGuidanceHeadlineHe,
+  STUDENT_FOCUS_CALM_MESSAGE,
+  STUDENT_FOCUS_FALLBACK_BANNER,
   subjectLabelHe,
   supportSuggestionHe,
 } from "../../../lib/teacher-portal/teacher-ui.he.js";
@@ -134,11 +139,22 @@ export default function TeacherStudentReportPage({ studentId }) {
         .filter(Boolean)
     : (guidance.supportSuggestions || []).map(supportSuggestionHe).filter(Boolean);
 
+  const tierHeadline = isGuidanceV2 ? studentGuidanceHeadlineHe(guidance) : null;
+  const showCalmFocus = canShowStudentCalmFocusMessage(guidance, report);
+
   const focusItems = isGuidanceV2
     ? recommendationUnits
-        .filter((u) => u.topicLabelHe)
+        .filter((u) => u.topicLabelHe || u.headlineHe)
         .slice(0, 5)
         .map((u) => {
+          if (u.level === "subject" && u.headlineHe) {
+            const ev = u.evidenceSummary || {};
+            const stats = formatStudentSubjectFallbackEvidenceHe(
+              ev.accuracyPct,
+              ev.totalAnswers
+            );
+            return `${u.headlineHe} · ${stats}`;
+          }
           const subj = subjectLabelHe(u.subject);
           const headline = u.subtopicLabelHe
             ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
@@ -219,10 +235,10 @@ export default function TeacherStudentReportPage({ studentId }) {
             <h2 className="text-lg font-semibold mb-3">המלצות לי כמורה</h2>
             {guidance.insufficientData ? (
               <p className="text-white/70 text-sm">אין מספיק נתונים לניתוח</p>
-            ) : isGuidanceV2 && recommendationUnits.length ? (
+            ) : isGuidanceV2 && (hasActionableGuidanceV2(guidance) || tierHeadline) ? (
               <div className="space-y-3">
-                {riskLevelHe(tg.riskLevel) ? (
-                  <p className="text-amber-200 mb-2">{riskLevelHe(tg.riskLevel)}</p>
+                {tierHeadline ? (
+                  <p className="text-amber-200 mb-2">{tierHeadline}</p>
                 ) : null}
                 {inactiveDays != null && inactiveDays >= 7 ? (
                   <p className="text-amber-200 text-sm mb-2">
@@ -231,10 +247,32 @@ export default function TeacherStudentReportPage({ studentId }) {
                 ) : null}
                 {recommendationUnits.slice(0, 5).map((u) => {
                   const subj = subjectLabelHe(u.subject);
+                  const ev = u.evidenceSummary || {};
+                  if (u.level === "subject" && u.headlineHe) {
+                    const action = actionTypeLabelHe(u.recommendedActionType);
+                    return (
+                      <div
+                        key={u.unitId}
+                        className="rounded-lg border border-white/10 bg-black/20 p-3 text-sm space-y-1"
+                      >
+                        <p className="font-semibold text-amber-100">{u.headlineHe}</p>
+                        <p className="text-white/75">
+                          {formatStudentSubjectFallbackEvidenceHe(
+                            ev.accuracyPct,
+                            ev.totalAnswers
+                          )}
+                        </p>
+                        {u.actionHe ? (
+                          <p className="text-emerald-200/90">{u.actionHe}</p>
+                        ) : action ? (
+                          <p className="text-emerald-200/90">{action}</p>
+                        ) : null}
+                      </div>
+                    );
+                  }
                   const headline = u.subtopicLabelHe
                     ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
                     : u.topicLabelHe;
-                  const ev = u.evidenceSummary || {};
                   let recurrenceLine = null;
                   if (ev.recurrenceSignal === "full" && ev.recurrenceDays) {
                     recurrenceLine = `חוזר ב-${ev.recurrenceDays} מפגשים`;
@@ -268,8 +306,8 @@ export default function TeacherStudentReportPage({ studentId }) {
               </div>
             ) : (
               <>
-                {riskLevelHe(tg.riskLevel) ? (
-                  <p className="text-amber-200 mb-2">{riskLevelHe(tg.riskLevel)}</p>
+                {tierHeadline ? (
+                  <p className="text-amber-200 mb-2">{tierHeadline}</p>
                 ) : null}
                 {inactiveDays != null && inactiveDays >= 7 ? (
                   <p className="text-amber-200 text-sm mb-2">
@@ -311,7 +349,9 @@ export default function TeacherStudentReportPage({ studentId }) {
                 ))}
               </ul>
             ) : (
-              <p className="text-white/60 text-sm">אין נושאים דחופים כרגע — המשך כרגיל.</p>
+              <p className="text-white/60 text-sm">
+                {showCalmFocus ? STUDENT_FOCUS_CALM_MESSAGE : STUDENT_FOCUS_FALLBACK_BANNER}
+              </p>
             )}
           </section>
 

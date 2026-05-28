@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../../../components/Layout";
 import TeacherPortalShell from "../../../../../components/teacher-portal/TeacherPortalShell";
@@ -20,6 +20,8 @@ import {
   ENGLISH_GRADES,
   ENGLISH_TOPICS,
 } from "../../../../../utils/english-question-generator.js";
+import { GRADES as MATH_GRADES } from "../../../../../utils/math-constants.js";
+import { getMathReportBucketDisplayName } from "../../../../../utils/math-report-generator.js";
 
 const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
   key,
@@ -43,6 +45,36 @@ function englishTopicOptionsForGrade(gradeKey) {
   return topics.map((key) => ({ key, label: ENGLISH_TOPICS[key]?.name || key }));
 }
 
+function mathTopicOptionsForGrade(gradeKey) {
+  const operations = MATH_GRADES[gradeKey]?.operations || [];
+  return operations
+    .filter((op) => op !== "mixed")
+    .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
+}
+
+function defaultTopicForSubject(subjectKey, gradeKey) {
+  if (subjectKey === "moledet_geography") {
+    return MOLEDET_TOPIC_OPTIONS[0]?.key || "homeland";
+  }
+  if (subjectKey === "geometry") {
+    const opts = geometryTopicOptionsForGrade(gradeKey);
+    return opts[0]?.key || "";
+  }
+  if (subjectKey === "hebrew") {
+    const opts = hebrewTopicOptionsForGrade(gradeKey);
+    return opts[0]?.key || "";
+  }
+  if (subjectKey === "english") {
+    const opts = englishTopicOptionsForGrade(gradeKey);
+    return opts[0]?.key || "";
+  }
+  if (subjectKey === "math") {
+    const opts = mathTopicOptionsForGrade(gradeKey);
+    return opts[0]?.key || "addition";
+  }
+  return "";
+}
+
 export async function getServerSideProps(context) {
   const classId = String(context.params?.classId || "").trim();
   return { props: { classId } };
@@ -54,7 +86,7 @@ export default function TeacherNewActivityPage({ classId }) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
-  const [topic, setTopic] = useState("חיבור");
+  const [topic, setTopic] = useState(() => defaultTopicForSubject("math", "g3"));
   const [subtopic, setSubtopic] = useState("");
   const [mode, setMode] = useState("guided_practice");
   const [difficulty, setDifficulty] = useState("medium");
@@ -65,6 +97,22 @@ export default function TeacherNewActivityPage({ classId }) {
   const [preview, setPreview] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const opts =
+      subject === "math"
+        ? mathTopicOptionsForGrade(gradeLevel)
+        : subject === "geometry"
+          ? geometryTopicOptionsForGrade(gradeLevel)
+          : subject === "hebrew"
+            ? hebrewTopicOptionsForGrade(gradeLevel)
+            : subject === "english"
+              ? englishTopicOptionsForGrade(gradeLevel)
+              : [];
+    if (opts.length && !opts.some((o) => o.key === topic)) {
+      setTopic(opts[0].key);
+    }
+  }, [subject, gradeLevel, topic]);
 
   const runPreview = useCallback(async () => {
     setBusy(true);
@@ -190,19 +238,7 @@ export default function TeacherNewActivityPage({ classId }) {
               onChange={(e) => {
                 const next = e.target.value;
                 setSubject(next);
-                if (next === "moledet_geography") setTopic("homeland");
-                if (next === "geometry") {
-                  const opts = geometryTopicOptionsForGrade(gradeLevel);
-                  if (opts.length) setTopic(opts[0].key);
-                }
-                if (next === "hebrew") {
-                  const opts = hebrewTopicOptionsForGrade(gradeLevel);
-                  if (opts.length) setTopic(opts[0].key);
-                }
-                if (next === "english") {
-                  const opts = englishTopicOptionsForGrade(gradeLevel);
-                  if (opts.length) setTopic(opts[0].key);
-                }
+                setTopic(defaultTopicForSubject(next, gradeLevel));
               }}
             >
               {REPORT_SUBJECTS.filter((s) => ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s)).map((s) => (
@@ -262,6 +298,18 @@ export default function TeacherNewActivityPage({ classId }) {
                   </option>
                 ))}
               </select>
+            ) : subject === "math" ? (
+              <select
+                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {mathTopicOptionsForGrade(gradeLevel).map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             ) : (
               <input
                 className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
@@ -286,18 +334,7 @@ export default function TeacherNewActivityPage({ classId }) {
               onChange={(e) => {
                 const g = e.target.value;
                 setGradeLevel(g);
-                if (subject === "geometry") {
-                  const opts = geometryTopicOptionsForGrade(g);
-                  if (opts.length) setTopic(opts[0].key);
-                }
-                if (subject === "hebrew") {
-                  const opts = hebrewTopicOptionsForGrade(g);
-                  if (opts.length) setTopic(opts[0].key);
-                }
-                if (subject === "english") {
-                  const opts = englishTopicOptionsForGrade(g);
-                  if (opts.length) setTopic(opts[0].key);
-                }
+                setTopic(defaultTopicForSubject(subject, g));
               }}
             >
               {["g1", "g2", "g3", "g4", "g5", "g6"].map((g) => (

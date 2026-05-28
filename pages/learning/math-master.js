@@ -96,6 +96,7 @@ import {
   saveLearningAnswer,
   finishLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
+import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -1646,7 +1647,7 @@ export default function MathMaster() {
     const plannerExtra = plannerNextSessionClientMetaRef.current;
     return {
       subject: "math",
-      topic: String(mathTrackingOperationKeyRef.current || operation || "math"),
+      topic: resolveMathSessionTopic(mathTrackingOperationKeyRef.current || operation),
       mode: reportModeFromGameState(mode, focusedPracticeMode),
       gradeLevel: String(grade || ""),
       level: String(level || ""),
@@ -2032,8 +2033,8 @@ export default function MathMaster() {
     }
 
     setSelectedAnswer(numericAnswer);
-    const resolvedTopic = String(
-      mathTrackingOperationKeyRef.current ?? currentQuestion.operation ?? operation ?? "math"
+    const resolvedTopic = resolveMathSessionTopic(
+      mathTrackingOperationKeyRef.current ?? currentQuestion.operation ?? operation
     );
     const questionFingerprint = mathQuestionFingerprint(currentQuestion) || null;
     const questionId = currentQuestion.id

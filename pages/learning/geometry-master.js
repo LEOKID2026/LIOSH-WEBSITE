@@ -112,6 +112,7 @@ import {
   saveLearningAnswer,
   startLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
+import { resolveGeometrySessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -1141,7 +1142,7 @@ useEffect(() => {
     const plannerExtra = plannerNextSessionClientMetaRef.current;
     return {
       subject: "geometry",
-      topic: String(currentQuestion?.topic || topic || "geometry"),
+      topic: resolveGeometrySessionTopic(currentQuestion?.topic || topic),
       mode: reportModeFromGameState(mode, focusedPracticeMode),
       gradeLevel: String(grade || ""),
       level: String(level || ""),
@@ -1192,7 +1193,7 @@ useEffect(() => {
         return saveLearningAnswer({
           learningSessionId,
           subject: "geometry",
-          topic: String(question?.topic || topic || "geometry"),
+          topic: resolveGeometrySessionTopic(question?.topic || topic),
           questionId,
           questionFingerprint,
           prompt: String(question?.question || ""),

@@ -4,7 +4,10 @@ import {
   formatTopicRecommendationLineHe,
   resolveTopicLabelHe,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
-import { parseClassReportViewModel } from "../../lib/school-portal/school-report-view-model.js";
+import {
+  parseClassReportViewModel,
+  parsePhysicalClassReportViewModel,
+} from "../../lib/school-portal/school-report-view-model.js";
 
 assert.equal(formatTopicLineHe("math", "math"), null);
 assert.equal(formatTopicLineHe("math", "geometry"), null);
@@ -65,5 +68,220 @@ assert.ok(!vm.sections.focus.items.some((f) => f.label.includes("math")));
 assert.ok(vm.sections.focus.items.some((f) => f.label.includes("שברים")));
 assert.ok(vm.drilldowns.distribution.struggling?.items?.length === 1);
 assert.ok(vm.sections.attention.items[0].detail.includes("קשיים"));
+
+// H1–H2 — class insight and subject focus at 61%
+{
+  const weakClassBody = {
+    cohortSummary: {
+      totalAnswers: 100,
+      studentsWithActivity: 10,
+      accuracy: 61,
+    },
+    roster: { studentCount: 10, activeMemberCount: 10 },
+    students: [],
+    weaknessTopics: [],
+    teacherGuidanceBlock: {
+      version: "v2",
+      guidanceSeverityTier: "class_needs_reinforcement",
+      teacherSummary: {
+        classHealthSignal: "needs_reinforcement",
+        cohortAccuracy: 61,
+      },
+      classRecommendationUnits: [
+        {
+          level: "subject",
+          subject: "hebrew",
+          headlineHe: "עברית — קושי ברמת מקצוע בכיתה",
+          affectedStudentCount: 10,
+          cohortAccuracyPct: 61,
+          topicLabelHe: null,
+        },
+      ],
+    },
+  };
+  const vmWeak = parseClassReportViewModel(weakClassBody, { name: "כיתה ב", memberCount: 10 });
+  assert.ok(!vmWeak.insight.includes("מתקדמת כסדרה"), "H1: no progressing insight at 61%");
+  assert.ok(
+    vmWeak.sections.focus.items.some((f) => f.label.includes("קושי ברמת מקצוע")),
+    "H2: subject headline in focus"
+  );
+}
+
+// PHYS-1 — physical V2 focus includes math/geometry guidance
+{
+  const physicalBody = {
+    reportMeta: { version: "v2" },
+    physicalClassGuidanceSeverityTier: "class_needs_reinforcement",
+    cohortSummary: { totalAnswers: 200, studentsWithActivity: 10, accuracy: 58 },
+    rosterSummary: { studentCount: 10 },
+    roster: [],
+    students: [],
+    subjectBreakdown: [
+      { classId: "c-math", subjectFocus: "math", subjectLabelHe: "מתמטיקה", teacherId: "t1" },
+      { classId: "c-geo", subjectFocus: "geometry", subjectLabelHe: "גיאומטריה", teacherId: "t2" },
+    ],
+    subjectGuidanceBlocks: [
+      {
+        subjectFocus: "math",
+        subjectLabelHe: "מתמטיקה",
+        guidanceSeverityTier: "class_needs_reinforcement",
+        classRecommendationUnits: [
+          {
+            level: "subject",
+            subject: "math",
+            headlineHe: "מתמטיקה — קושי ברמת מקצוע בכיתה",
+            topicLabelHe: "מתמטיקה — קושי ברמת מקצוע בכיתה",
+            cohortAccuracyPct: 55,
+            affectedStudentCount: 8,
+          },
+        ],
+      },
+      {
+        subjectFocus: "geometry",
+        subjectLabelHe: "גיאומטריה",
+        guidanceSeverityTier: "class_needs_reinforcement",
+        classRecommendationUnits: [
+          {
+            level: "subject",
+            subject: "geometry",
+            headlineHe: "גיאומטריה — קושי ברמת מקצוע בכיתה",
+            topicLabelHe: "גיאומטריה — קושי ברמת מקצוע בכיתה",
+            cohortAccuracyPct: 52,
+            affectedStudentCount: 7,
+          },
+        ],
+      },
+    ],
+    weaknessTopics: [],
+    attentionList: [],
+    recentActivities: [],
+  };
+  const vm = parsePhysicalClassReportViewModel(physicalBody, {
+    physicalClassName: "כיתה ג׳ 3",
+    gradeLevel: "g3",
+  });
+  assert.equal(vm.sections.focus.items.length, 2, "PHYS-1: math + geometry focus items");
+  const labels = vm.sections.focus.items.map((f) => f.label).join(" ");
+  assert.ok(labels.includes("מתמטיקה"), "PHYS-1: math visible");
+  assert.ok(labels.includes("גיאומטריה"), "PHYS-1: geometry visible");
+}
+
+// PHYS-2 — insight uses physicalClassGuidanceSeverityTier
+{
+  const physicalBody = {
+    reportMeta: { version: "v2" },
+    physicalClassGuidanceSeverityTier: "class_needs_reinforcement",
+    cohortSummary: { totalAnswers: 100, studentsWithActivity: 8, accuracy: 60 },
+    rosterSummary: { studentCount: 8 },
+    subjectGuidanceBlocks: [
+      {
+        subjectFocus: "math",
+        subjectLabelHe: "מתמטיקה",
+        guidanceSeverityTier: "class_needs_reinforcement",
+        classRecommendationUnits: [
+          {
+            level: "subject",
+            subject: "math",
+            headlineHe: "מתמטיקה — קושי ברמת מקצוע בכיתה",
+            topicLabelHe: "מתמטיקה — קושי ברמת מקצוע בכיתה",
+          },
+        ],
+      },
+    ],
+    roster: [],
+    students: [],
+    subjectBreakdown: [],
+    weaknessTopics: [],
+    attentionList: [],
+    recentActivities: [],
+  };
+  const vm = parsePhysicalClassReportViewModel(physicalBody);
+  assert.ok(!vm.insight.includes("תשובות/הגשות"), "PHYS-2: not generic activity summary");
+  assert.ok(vm.insight.includes("קושי"), "PHYS-2: tier-based insight");
+}
+
+// PHYS-3 — geometry tier consistency (fixture)
+{
+  const tier = "class_needs_reinforcement";
+  const physicalBody = {
+    reportMeta: { version: "v2" },
+    physicalClassGuidanceSeverityTier: tier,
+    subjectGuidanceBlocks: [
+      {
+        subjectFocus: "geometry",
+        subjectLabelHe: "גיאומטריה",
+        guidanceSeverityTier: tier,
+        classRecommendationUnits: [
+          {
+            level: "subject",
+            subject: "geometry",
+            headlineHe: "גיאומטריה — קושי ברמת מקצוע בכיתה",
+            topicLabelHe: "גיאומטריה — קושי ברמת מקצוע בכיתה",
+          },
+        ],
+      },
+    ],
+    cohortSummary: { totalAnswers: 50, studentsWithActivity: 5, accuracy: 58 },
+    rosterSummary: { studentCount: 5 },
+    roster: [],
+    students: [],
+    subjectBreakdown: [],
+    weaknessTopics: [],
+    attentionList: [],
+    recentActivities: [],
+  };
+  const vm = parsePhysicalClassReportViewModel(physicalBody);
+  assert.ok(vm.insight.includes("קושי"), "PHYS-3: geometry severity reflected");
+}
+
+// PHYS-4 — focus not only science when math/geometry fallbacks present
+{
+  const physicalBody = {
+    reportMeta: { version: "v2" },
+    physicalClassGuidanceSeverityTier: "class_monitor",
+    subjectGuidanceBlocks: [
+      {
+        subjectFocus: "science",
+        subjectLabelHe: "מדעים",
+        guidanceSeverityTier: "class_monitor",
+        classRecommendationUnits: [
+          {
+            level: "topic",
+            subject: "science",
+            topic: "animals",
+            topicLabelHe: "בעלי חיים",
+            cohortAccuracyPct: 65,
+            affectedStudentCount: 4,
+          },
+        ],
+      },
+      {
+        subjectFocus: "math",
+        subjectLabelHe: "מתמטיקה",
+        guidanceSeverityTier: "class_needs_reinforcement",
+        classRecommendationUnits: [
+          {
+            level: "subject",
+            subject: "math",
+            headlineHe: "מתמטיקה — קושי ברמת מקצוע בכיתה",
+            topicLabelHe: "מתמטיקה — קושי ברמת מקצוע בכיתה",
+          },
+        ],
+      },
+    ],
+    cohortSummary: { totalAnswers: 80, studentsWithActivity: 6, accuracy: 62 },
+    rosterSummary: { studentCount: 6 },
+    roster: [],
+    students: [],
+    subjectBreakdown: [],
+    weaknessTopics: [{ subject: "science", topic: "animals", wrong: 5, answers: 10 }],
+    attentionList: [],
+    recentActivities: [],
+  };
+  const vm = parsePhysicalClassReportViewModel(physicalBody);
+  const labels = vm.sections.focus.items.map((f) => f.label).join(" ");
+  assert.ok(labels.includes("מתמטיקה"), "PHYS-4: math fallback in focus");
+  assert.ok(labels.includes("בעלי חיים") || labels.includes("מדעים"), "PHYS-4: science topic present");
+}
 
 console.log("school-report-view-model-unit: ok");

@@ -10,12 +10,13 @@ import {
   DASHBOARD_NO_CLASSES_TITLE,
   formatTeacherAttentionStudentLineHe,
   rosterFilterLabelHe,
+  subjectLabelHe,
   teacherAuthFetch,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 const FILTER_OPTIONS = [
   { key: "all", label: "הכל" },
-  { key: "struggling", label: "צריכים חיזוק" },
+  { key: "struggling", label: "דורש התערבות / חיזוק" },
   { key: "low_activity", label: "פעילות נמוכה" },
   { key: "watch", label: "במעקב" },
   { key: "strong", label: "חזקים" },
@@ -76,7 +77,10 @@ function statusBadgeClass(badge) {
       return "bg-amber-500/20 text-amber-200 border-amber-400/40";
     case "צריך חיזוק":
       return "bg-orange-500/20 text-orange-200 border-orange-400/40";
+    case "דורש התערבות":
+      return "bg-red-500/20 text-red-200 border-red-400/40";
     case "פעילות נמוכה":
+    case "אין מספיק נתונים":
       return "bg-white/10 text-white/70 border-white/20";
     default:
       return "bg-white/10 text-white/70 border-white/20";
@@ -622,7 +626,13 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                   )}
                 </span>
                 <span className="text-xs text-amber-200">
-                  {s.riskLevel === "high" ? "דורש תשומת לב" : "כדאי לעקוב"}
+                  {s.guidanceSeverityTier === "critical"
+                    ? "דורש התערבות מיידית"
+                    : s.guidanceSeverityTier === "needs_reinforcement"
+                      ? "דורש חיזוק"
+                      : s.riskLevel === "high"
+                        ? "דורש התערבות מיידית"
+                        : "כדאי לעקוב"}
                 </span>
                 {s.topWeakTopicLabelHe ? (
                   <span className="text-white/70 text-xs">{s.topWeakTopicLabelHe}</span>
@@ -652,11 +662,35 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           <ul className="grid gap-3 sm:grid-cols-2">
             {(dashboard.classes || []).map((c) => {
               const rosterKey = c.physicalGroupKey || c.classId;
-              const classRouteId = c.primaryClassId || c.classId;
+              const subjectClasses = (c.subjectClassIds || []).filter((s) => s?.classId);
+              const classRouteId =
+                subjectClasses[0]?.classId || c.primaryClassId || c.classId;
               const classBase = classRouteId
                 ? `/teacher/class/${encodeURIComponent(classRouteId)}`
                 : "";
               const studentCount = effectivePhysicalClassStudentCount(c);
+              const reportLinks =
+                subjectClasses.length > 1
+                  ? subjectClasses.map((s) => {
+                      const label =
+                        s.subjectLabel ||
+                        subjectLabelHe(s.subjectFocus) ||
+                        "כיתה";
+                      return {
+                        classId: s.classId,
+                        href: `/teacher/class/${encodeURIComponent(s.classId)}`,
+                        label: `דוח ${label}`,
+                      };
+                    })
+                  : classBase
+                    ? [
+                        {
+                          classId: classRouteId,
+                          href: classBase,
+                          label: "דוח כיתה",
+                        },
+                      ]
+                    : [];
               return (
               <li
                 key={rosterKey}
@@ -685,13 +719,16 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                   >
                     הצגת תלמידי הכיתה
                   </button>
-                  <Link
-                    href={classBase}
-                    className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
-                    data-testid={`teacher-class-report-${rosterKey}`}
-                  >
-                    דוח כיתה
-                  </Link>
+                  {reportLinks.map((link) => (
+                    <Link
+                      key={link.classId}
+                      href={link.href}
+                      className="text-xs rounded bg-amber-500 text-black font-semibold px-3 py-1.5"
+                      data-testid={`teacher-class-report-${link.classId}`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
                   <Link
                     href={`${classBase}/activities`}
                     className="text-xs rounded border border-amber-400/40 text-amber-200 px-3 py-1.5 hover:bg-amber-500/10"
