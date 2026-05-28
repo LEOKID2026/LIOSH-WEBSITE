@@ -10,6 +10,11 @@ import {
   resolveTopicLabelHe,
   isTeacherRecommendableTopicKey,
 } from "../../lib/teacher-server/teacher-guidance-v2.server.js";
+import {
+  formatTeacherAttentionStudentLineHe,
+  formatTeacherClassSuffixHe,
+  topicLabelHe,
+} from "../../lib/teacher-portal/teacher-ui.he.js";
 import { aggregateClassReportFromStudentPayloads } from "../../lib/teacher-server/teacher-class-report.server.js";
 
 function mockStudentPayload() {
@@ -72,6 +77,14 @@ function mockStudentPayload() {
   assert.equal(resolveTopicLabelHe("math", "general"), null);
   assert.equal(resolveTopicLabelHe("hebrew", "fact_vs_opinion"), "עובדה מול דעה");
   assert.equal(isTeacherRecommendableTopicKey("general"), false);
+  assert.equal(topicLabelHe("math", "angles"), null);
+  assert.equal(topicLabelHe("geometry", "angles::grade:g3"), "זוויות");
+  assert.equal(formatTeacherClassSuffixHe("כיתה ג׳ 2"), "כיתה ג׳ 2");
+  assert.equal(formatTeacherClassSuffixHe("ג׳ 2"), "כיתה ג׳ 2");
+  assert.equal(
+    formatTeacherAttentionStudentLineHe("שחר", "כיתה ג׳ 2"),
+    "שחר · כיתה ג׳ 2"
+  );
 }
 
 // 2 — student V2 shape

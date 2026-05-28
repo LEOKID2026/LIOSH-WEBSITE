@@ -110,7 +110,7 @@ export default function TeacherStudentReportPage({ studentId }) {
   const topUnit = recommendationUnits[0] || null;
   const riskSignals = (guidance.riskSignals || []).map(riskSignalHe).filter(Boolean);
 
-  const strengths = isGuidanceV2 && (guidance.strengthUnits || []).length
+  const strengths = isGuidanceV2
     ? (guidance.strengthUnits || [])
         .filter((s) => s.topicLabelHe)
         .map((s) => {
@@ -124,7 +124,7 @@ export default function TeacherStudentReportPage({ studentId }) {
         })
         .filter(Boolean);
 
-  const suggestions = isGuidanceV2 && (guidance.supportSuggestionsV2 || []).length
+  const suggestions = isGuidanceV2
     ? (guidance.supportSuggestionsV2 || [])
         .filter((s) => s.topicLabelHe)
         .map((s) => {
@@ -134,7 +134,7 @@ export default function TeacherStudentReportPage({ studentId }) {
         .filter(Boolean)
     : (guidance.supportSuggestions || []).map(supportSuggestionHe).filter(Boolean);
 
-  const focusItems = isGuidanceV2 && recommendationUnits.length
+  const focusItems = isGuidanceV2
     ? recommendationUnits
         .filter((u) => u.topicLabelHe)
         .slice(0, 5)
@@ -149,7 +149,7 @@ export default function TeacherStudentReportPage({ studentId }) {
     : (guidance.nextPracticeFocus || [])
         .map((f) => {
           const line = formatTopicLineHe(f.subject, f.topic);
-          return line || subjectLabelHe(f.subject);
+          return line || null;
         })
         .filter(Boolean);
 

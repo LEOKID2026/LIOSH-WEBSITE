@@ -8,6 +8,7 @@ import {
   DASHBOARD_CREATE_CLASS_PLACEHOLDER,
   DASHBOARD_NO_CLASSES_HINT,
   DASHBOARD_NO_CLASSES_TITLE,
+  formatTeacherAttentionStudentLineHe,
   rosterFilterLabelHe,
   teacherAuthFetch,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
@@ -615,9 +616,10 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                 className="rounded-lg border border-white/10 bg-black/30 p-3 text-sm flex flex-col gap-1"
               >
                 <span className="font-semibold truncate">
-                  {s.classDisplayLabel
-                    ? `${s.studentFullNameMasked} · כיתה ${s.classDisplayLabel}`
-                    : s.studentFullNameMasked}
+                  {formatTeacherAttentionStudentLineHe(
+                    s.studentFullNameMasked,
+                    s.classDisplayLabel
+                  )}
                 </span>
                 <span className="text-xs text-amber-200">
                   {s.riskLevel === "high" ? "דורש תשומת לב" : "כדאי לעקוב"}
