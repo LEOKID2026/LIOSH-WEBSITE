@@ -4,43 +4,43 @@ overview: "Replace the 12-student AAA nightly with a hybrid 398-student full-sch
 todos:
   - id: disable-aaa-nightly
     content: "Disable old AAA Task Scheduler nightly (operator: schtasks /Change /Disable)"
-    status: completed
+    status: pending
   - id: write-plan-doc
     content: Write docs/qa/FULL_SCHOOL_ACTIVE_DAILY_SIMULATION_PLAN.md
-    status: completed
+    status: pending
   - id: build-sim-config
     content: Create scripts/school-portal/sim/school-sim-config.mjs (persona model, timetable, topic catalog)
-    status: completed
+    status: pending
   - id: build-persona-model
     content: Create scripts/school-portal/sim/persona-model.mjs (6-type profiles, attendance, weak-subject)
-    status: completed
+    status: pending
   - id: build-planner
     content: Create scripts/school-portal/sim/school-day-planner.mjs (class x subject x hour schedule)
-    status: completed
+    status: pending
   - id: build-topic-catalog
     content: Create scripts/school-portal/sim/topic-catalog.mjs (real topic keys per subject/grade)
-    status: completed
+    status: pending
   - id: build-db-sim
     content: Create scripts/school-portal/sim/db-simulator.mjs (realistic DB writes for all 398 students)
-    status: completed
+    status: pending
   - id: build-ui-sampler
     content: Create scripts/school-portal/sim/ui-sampler.mjs (Playwright for 12-15 sampled students)
-    status: completed
+    status: pending
   - id: build-report-validator
     content: Create scripts/school-portal/sim/report-validator.mjs (teacher/school/parent API validation)
-    status: completed
+    status: pending
   - id: build-orchestrator
     content: Create scripts/school-portal/run-school-sim-nightly.mjs (top-level nightly orchestrator)
-    status: completed
+    status: pending
   - id: wire-package-json
     content: Add npm run qa:school:daily and related commands to package.json
-    status: completed
+    status: pending
   - id: run-tests
     content: Execute T1-T14 test checklist (one continuous pass)
-    status: completed
+    status: pending
   - id: delivery-report
     content: Write docs/qa/FULL_SCHOOL_ACTIVE_DAILY_SIMULATION_DELIVERY_REPORT.md
-    status: completed
+    status: pending
 isProject: false
 ---
 

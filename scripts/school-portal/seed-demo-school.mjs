@@ -8,6 +8,7 @@
  *   node --env-file=.env.local scripts/school-portal/seed-demo-school.mjs --phase=students
  *
  * Env: DEMO_TEACHER_PASSWORD, DEMO_PARENT_PASSWORD (or SCHOOL_QA_PASSWORD for manager),
+ *       DEMO_STUDENT_PIN (students phase — written to gitignored .local/ artifact only),
  *       NEXT_PUBLIC_LEARNING_SUPABASE_URL, LEARNING_SUPABASE_SERVICE_ROLE_KEY,
  *       LEARNING_STUDENT_ACCESS_SECRET (students phase)
  */
@@ -365,7 +366,13 @@ async function phaseStudents(serviceRole) {
   }
 
   const accessSecret = requireEnv("LEARNING_STUDENT_ACCESS_SECRET");
-  const defaultPin = String(process.env.DEMO_STUDENT_PIN || "1234").trim();
+  const defaultPin = String(process.env.DEMO_STUDENT_PIN || "").trim();
+  if (!defaultPin) {
+    throw new Error(
+      "DEMO_STUDENT_PIN required for --phase=students (PIN used for all demo access codes at seed; " +
+        "written to gitignored .local/student-access-credentials.json — not recoverable from DB later)"
+    );
+  }
   const managerId = state.teacherIds.manager;
 
   const studentIds = [];
@@ -530,6 +537,17 @@ async function phaseStudents(serviceRole) {
     const classId = state.classIds[classRecordKey(pc.grade, pc.section, weak.subject)];
     if (classId) classWeakTopics[classId] = [weak.topic];
   }
+
+  const studentCredentials = {};
+  for (const row of accessCodeRows) {
+    studentCredentials[row.student_id] = {
+      username: row.login_username,
+      pin: defaultPin,
+    };
+  }
+  const { writeCredentialsArtifact } = await import("./sim/student-credentials.mjs");
+  const credPath = writeCredentialsArtifact(studentCredentials, { source: "seed-demo-school" });
+  console.log(`Wrote student credential artifact (gitignored): ${credPath}`);
 
   mergeSimState({
     studentIds,

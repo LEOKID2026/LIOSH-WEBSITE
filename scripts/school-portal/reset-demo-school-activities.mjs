@@ -5,7 +5,13 @@
  *   node --env-file=.env.local scripts/school-portal/reset-demo-school-activities.mjs --mode=activities
  *   node --env-file=.env.local scripts/school-portal/reset-demo-school-activities.mjs --mode=full
  */
-import { createServiceRole, loadSimState, mergeSimState, saveSimState } from "./demo-school-lib.mjs";
+import {
+  assertDemoSchoolBaseline,
+  createServiceRole,
+  loadSimState,
+  mergeSimState,
+} from "./demo-school-lib.mjs";
+import { MAX_ANSWERS_RESET, MAX_LEARNING_SESSIONS_RESET } from "./sim/school-sim-config.mjs";
 
 function parseMode(argv) {
   const idx = argv.indexOf("--mode");
@@ -14,7 +20,51 @@ function parseMode(argv) {
   return mode;
 }
 
-async function resetActivities(serviceRole, state) {
+async function resetLearningSessionsAndAnswers(serviceRole, studentIds) {
+  if (!studentIds.length) return { sessions: 0, answers: 0, sessionIds: [] };
+
+  const { data: sessions, error: sessErr } = await serviceRole
+    .from("learning_sessions")
+    .select("id")
+    .in("student_id", studentIds);
+  if (sessErr) throw sessErr;
+
+  const sessionIds = (sessions || []).map((r) => r.id);
+  if (sessionIds.length > MAX_LEARNING_SESSIONS_RESET) {
+    throw new Error(
+      `reset safety: learning_sessions count ${sessionIds.length} exceeds cap ${MAX_LEARNING_SESSIONS_RESET}`
+    );
+  }
+
+  let answersDeleted = 0;
+  if (sessionIds.length) {
+    const { count: ansCount, error: ansCountErr } = await serviceRole
+      .from("answers")
+      .select("id", { count: "exact", head: true })
+      .in("learning_session_id", sessionIds);
+    if (ansCountErr) throw ansCountErr;
+    if ((ansCount ?? 0) > MAX_ANSWERS_RESET) {
+      throw new Error(`reset safety: answers count ${ansCount} exceeds cap ${MAX_ANSWERS_RESET}`);
+    }
+
+    const { error: delAnsErr } = await serviceRole
+      .from("answers")
+      .delete()
+      .in("learning_session_id", sessionIds);
+    if (delAnsErr) throw delAnsErr;
+    answersDeleted = ansCount ?? 0;
+  }
+
+  const { error: delSessErr } = await serviceRole
+    .from("learning_sessions")
+    .delete()
+    .in("student_id", studentIds);
+  if (delSessErr) throw delSessErr;
+
+  return { sessions: sessionIds.length, answers: answersDeleted, sessionIds };
+}
+
+async function resetActivities(serviceRole, state, { preResetPath = null } = {}) {
   const schoolId = state.schoolId;
   const classIds = Object.values(state.classIds || {});
   const teacherIds = Object.values(state.teacherIds || {});
@@ -62,8 +112,55 @@ async function resetActivities(serviceRole, state) {
     }
   }
 
+  const studentIds = state.studentIds || [];
+  const preReset = {
+    classroom_activities: activityIds.length,
+    learning_sessions: 0,
+    answers: 0,
+  };
+  if (studentIds.length) {
+    const { count: lsCount } = await serviceRole
+      .from("learning_sessions")
+      .select("id", { count: "exact", head: true })
+      .in("student_id", studentIds);
+    preReset.learning_sessions = lsCount ?? 0;
+    const { data: sessRows } = await serviceRole
+      .from("learning_sessions")
+      .select("id")
+      .in("student_id", studentIds);
+    const sessionIds = (sessRows || []).map((r) => r.id);
+    if (sessionIds.length) {
+      const { count: ansCount } = await serviceRole
+        .from("answers")
+        .select("id", { count: "exact", head: true })
+        .in("learning_session_id", sessionIds);
+      preReset.answers = ansCount ?? 0;
+    }
+  }
+
+  if (preResetPath) {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    fs.mkdirSync(path.dirname(preResetPath), { recursive: true });
+    fs.writeFileSync(preResetPath, `${JSON.stringify(preReset, null, 2)}\n`, "utf8");
+  }
+
+  const learningReset = await resetLearningSessionsAndAnswers(serviceRole, studentIds);
+
   mergeSimState({ currentSchoolDay: 0, lastRunAt: null });
-  console.log(JSON.stringify({ mode: "activities", deletedActivities: activityIds.length }, null, 2));
+  console.log(
+    JSON.stringify(
+      {
+        mode: "activities",
+        deletedActivities: activityIds.length,
+        deletedLearningSessions: learningReset.sessions,
+        deletedAnswers: learningReset.answers,
+        preReset,
+      },
+      null,
+      2
+    )
+  );
 }
 
 async function resetFull(serviceRole, state) {
@@ -99,8 +196,16 @@ async function resetFull(serviceRole, state) {
   console.log(JSON.stringify({ mode: "full", schoolId, studentsRemoved: studentIds.length }, null, 2));
 }
 
+function parsePreResetPath(argv) {
+  const idx = argv.indexOf("--pre-reset-out");
+  if (idx >= 0 && argv[idx + 1]) return argv[idx + 1];
+  return null;
+}
+
 async function main() {
-  const mode = parseMode(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  const mode = parseMode(argv);
+  const preResetPath = parsePreResetPath(argv);
   const state = loadSimState();
   const serviceRole = createServiceRole();
 
@@ -108,7 +213,9 @@ async function main() {
     throw new Error("sim-state.json missing schoolId");
   }
 
-  if (mode === "activities") await resetActivities(serviceRole, state);
+  await assertDemoSchoolBaseline(serviceRole, state, { strict: true });
+
+  if (mode === "activities") await resetActivities(serviceRole, state, { preResetPath });
   else await resetFull(serviceRole, state);
 }
 
