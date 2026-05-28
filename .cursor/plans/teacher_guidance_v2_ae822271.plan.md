@@ -1,25 +1,25 @@
 ---
 name: Teacher Guidance V2
-overview: "Build-ready implementation plan for evidence-based teacher recommendations covering individual student and class reports across all teacher-facing surfaces. This document is the single source of truth for implementation."
+overview: Build-ready implementation plan for evidence-based teacher recommendations covering individual student and class reports across all teacher-facing surfaces. This document is the single source of truth for implementation.
 todos:
   - id: phase1-guidance-module
     content: Create lib/teacher-server/teacher-guidance-v2.server.js with buildStudentTeacherGuidanceV2 and buildClassTeacherGuidanceV2, importing diagnostic engine sub-utilities directly
-    status: pending
+    status: completed
   - id: phase2-class-scope
     content: "Fix class report subject scoping: add scopeSubjects param to aggregateClassReportFromStudentPayloads and derive from class.subject_focus in buildTeacherClassReportPayload"
-    status: pending
+    status: completed
   - id: phase3-student-wire
     content: Wire buildStudentTeacherGuidanceV2 into buildTeacherStudentReportPayload and filterReportByPermittedSubjects, threading permittedSubjects through
-    status: pending
+    status: completed
   - id: phase4-class-wire
     content: Wire buildClassTeacherGuidanceV2 into buildTeacherClassReportPayload
-    status: pending
+    status: completed
   - id: phase5-dashboard
     content: Add lightweight top-3 attention signals with subject+topic to teacher dashboard payload in teacher-dashboard.server.js
-    status: pending
+    status: completed
   - id: phase6-ui
     content: Update UI rendering in teacher student/class pages, school-report-view-model.js, and teacher-ui.he.js to consume V2 teacherGuidanceBlock shape with all specified fields
-    status: pending
+    status: completed
   - id: phase7-qa
     content: Run full QA checklist, fix issues, rerun relevant tests, produce final closure report and ZIP review package
     status: pending

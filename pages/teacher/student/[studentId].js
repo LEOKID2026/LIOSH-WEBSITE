@@ -18,6 +18,8 @@ import {
   useTeacherPortalLoad,
 } from "../../../lib/teacher-portal/use-teacher-portal-session";
 import {
+  actionTypeLabelHe,
+  assignmentTypeLabelHe,
   formatDateHe,
   formatPercent,
   formatTopicLineHe,
@@ -103,22 +105,47 @@ export default function TeacherStudentReportPage({ studentId }) {
   const gas = report?.guardianAccessSummary || {};
 
   const inactiveDays = tg.inactiveDays;
+  const isGuidanceV2 = guidance.version === "v2";
+  const recommendationUnits = isGuidanceV2 ? guidance.recommendationUnits || [] : [];
+  const topUnit = recommendationUnits[0] || null;
   const riskSignals = (guidance.riskSignals || []).map(riskSignalHe).filter(Boolean);
-  const strengths = (guidance.strengthsForTeacher || [])
-    .map((s) => {
-      const line = formatTopicLineHe(s.subject, s.topic);
-      return line ? `${line} — ${formatPercent(s.accuracy)} הצלחה` : null;
-    })
-    .filter(Boolean);
-  const suggestions = (guidance.supportSuggestions || [])
-    .map(supportSuggestionHe)
-    .filter(Boolean);
-  const focusItems = (guidance.nextPracticeFocus || [])
-    .map((f) => {
-      const line = formatTopicLineHe(f.subject, f.topic);
-      return line || subjectLabelHe(f.subject);
-    })
-    .filter(Boolean);
+
+  const strengths = isGuidanceV2 && (guidance.strengthUnits || []).length
+    ? (guidance.strengthUnits || []).map((s) => {
+        const subj = subjectLabelHe(s.subject);
+        const topic = s.topicLabelHe || "נושא לא מסווג";
+        return `${subj ? `${subj} — ` : ""}${topic} — ${formatPercent(s.accuracyPct)} הצלחה`;
+      })
+    : (guidance.strengthsForTeacher || [])
+        .map((s) => {
+          const line = formatTopicLineHe(s.subject, s.topic);
+          return line ? `${line} — ${formatPercent(s.accuracy)} הצלחה` : null;
+        })
+        .filter(Boolean);
+
+  const suggestions = isGuidanceV2 && (guidance.supportSuggestionsV2 || []).length
+    ? (guidance.supportSuggestionsV2 || []).map((s) => {
+        const action = actionTypeLabelHe(s.code);
+        const topic = s.topicLabelHe || "נושא לא מסווג";
+        return action ? `${action} ב${topic}` : null;
+      })
+    : (guidance.supportSuggestions || []).map(supportSuggestionHe).filter(Boolean);
+
+  const focusItems = isGuidanceV2 && recommendationUnits.length
+    ? recommendationUnits.slice(0, 5).map((u) => {
+        const subj = subjectLabelHe(u.subject);
+        const headline = u.subtopicLabelHe
+          ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
+          : u.topicLabelHe;
+        const stats = `${u.evidenceSummary?.wrongCount ?? 0} טעויות מ-${u.evidenceSummary?.totalAnswers ?? 0} תשובות · ${formatPercent(u.evidenceSummary?.accuracyPct)} הצלחה`;
+        return subj ? `${subj} — ${headline} · ${stats}` : `${headline} · ${stats}`;
+      })
+    : (guidance.nextPracticeFocus || [])
+        .map((f) => {
+          const line = formatTopicLineHe(f.subject, f.topic);
+          return line || subjectLabelHe(f.subject);
+        })
+        .filter(Boolean);
 
   return (
     <Layout>
@@ -186,6 +213,53 @@ export default function TeacherStudentReportPage({ studentId }) {
             <h2 className="text-lg font-semibold mb-3">המלצות לי כמורה</h2>
             {guidance.insufficientData ? (
               <p className="text-white/70 text-sm">אין מספיק נתונים לניתוח</p>
+            ) : isGuidanceV2 && recommendationUnits.length ? (
+              <div className="space-y-3">
+                {riskLevelHe(tg.riskLevel) ? (
+                  <p className="text-amber-200 mb-2">{riskLevelHe(tg.riskLevel)}</p>
+                ) : null}
+                {inactiveDays != null && inactiveDays >= 7 ? (
+                  <p className="text-amber-200 text-sm mb-2">
+                    התלמיד לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
+                  </p>
+                ) : null}
+                {recommendationUnits.slice(0, 5).map((u) => {
+                  const subj = subjectLabelHe(u.subject);
+                  const headline = u.subtopicLabelHe
+                    ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
+                    : u.topicLabelHe;
+                  const ev = u.evidenceSummary || {};
+                  let recurrenceLine = null;
+                  if (ev.recurrenceSignal === "full" && ev.recurrenceDays) {
+                    recurrenceLine = `חוזר ב-${ev.recurrenceDays} מפגשים`;
+                  } else if (ev.recurrenceSignal === "partial" && ev.recurrenceDays) {
+                    recurrenceLine = `נראה ב-${ev.recurrenceDays} מפגשים`;
+                  }
+                  const action = actionTypeLabelHe(u.recommendedActionType);
+                  const assignment = assignmentTypeLabelHe(u.suggestedAssignmentType);
+                  return (
+                    <div
+                      key={u.unitId}
+                      className="rounded-lg border border-white/10 bg-black/20 p-3 text-sm space-y-1"
+                    >
+                      <p className="font-semibold text-amber-100">
+                        {subj ? `${subj} — ${headline}` : headline}
+                      </p>
+                      <p className="text-white/75">
+                        {ev.wrongCount ?? 0} טעויות מ-{ev.totalAnswers ?? 0} תשובות ·{" "}
+                        {formatPercent(ev.accuracyPct)} הצלחה
+                      </p>
+                      {recurrenceLine ? (
+                        <p className="text-white/60">{recurrenceLine}</p>
+                      ) : null}
+                      {action ? <p className="text-emerald-200/90">{action}</p> : null}
+                      {assignment ? (
+                        <p className="text-white/50 text-xs">{assignment}</p>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
             ) : (
               <>
                 {riskLevelHe(tg.riskLevel) ? (
@@ -199,6 +273,28 @@ export default function TeacherStudentReportPage({ studentId }) {
               </>
             )}
           </section>
+
+          {isGuidanceV2 &&
+          topUnit?.recentMistakeExamples?.length > 0 &&
+          !guidance.insufficientData ? (
+            <section className="mb-6">
+              <h2 className="text-lg font-semibold mb-2">דוגמאות טעויות אחרונות</h2>
+              <ul className="text-sm text-white/80 space-y-2">
+                {topUnit.recentMistakeExamples.slice(0, 2).map((ex, i) => {
+                  const prompt =
+                    ex.prompt && ex.prompt.length > 80
+                      ? `${ex.prompt.slice(0, 80)}…`
+                      : ex.prompt || "—";
+                  return (
+                    <li key={i} className="rounded border border-white/10 px-3 py-2">
+                      {prompt} → {ex.userAnswer || "—"} (נכון: {ex.expectedAnswer || "—"})
+                      {ex.date ? ` · ${formatDateHe(ex.date)}` : ""}
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ) : null}
 
           <section className="mb-6">
             <h2 className="text-lg font-semibold mb-2">על מה להתמקד בתרגול הבא</h2>

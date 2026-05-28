@@ -2,6 +2,7 @@ import {
   REPORT_SUBJECTS,
   formatPercent,
   subjectLabelHe,
+  topicLabelHe,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 export default function SubjectSummaryCards({ subjects, showTopics = false }) {
@@ -33,7 +34,26 @@ export default function SubjectSummaryCards({ subjects, showTopics = false }) {
             <dd>{formatPercent(subj.accuracy)}</dd>
           </div>
         </dl>
-        {showTopics ? null : null}
+        {showTopics ? (
+          <ul className="mt-2 text-xs text-white/70 space-y-0.5 border-t border-white/10 pt-2">
+            {Object.entries(subj.topics || {})
+              .map(([topicKey, topicData]) => ({
+                topicKey,
+                answers: Number(topicData?.answers) || 0,
+                accuracy: Number(topicData?.accuracy) || 0,
+                wrong: Number(topicData?.wrong) || 0,
+              }))
+              .filter((t) => t.answers >= 3 && t.accuracy < 60)
+              .sort((a, b) => a.accuracy - b.accuracy || b.wrong - a.wrong)
+              .slice(0, 3)
+              .map((t) => (
+                <li key={t.topicKey} className="flex justify-between gap-2">
+                  <span>{topicLabelHe(sid, t.topicKey) || "נושא לא מסווג"}</span>
+                  <span>{formatPercent(t.accuracy)}</span>
+                </li>
+              ))}
+          </ul>
+        ) : null}
       </div>
     );
   }).filter(Boolean);

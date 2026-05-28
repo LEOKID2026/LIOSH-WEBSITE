@@ -14,6 +14,7 @@ import {
   useTeacherPortalLoad,
 } from "../../../lib/teacher-portal/use-teacher-portal-session";
 import {
+  actionTypeLabelHe,
   attentionReasonHe,
   classHealthHe,
   formatPercent,
@@ -94,7 +95,15 @@ export default function TeacherClassReportPage({ classId }) {
   const guidance = report.teacherGuidanceBlock || {};
   const teacherSummary = guidance.teacherSummary || {};
   const attentionList = guidance.attentionStudents || report.attentionList || [];
-  const weaknessTopics = report.weaknessTopics || guidance.priorityTopics || [];
+  const isGuidanceV2 = guidance.version === "v2";
+  const classRecommendationUnits = isGuidanceV2
+    ? guidance.classRecommendationUnits || []
+    : [];
+  const smallGroupClusters = isGuidanceV2 ? guidance.smallGroupClusters || [] : [];
+  const weaknessTopics =
+    isGuidanceV2 && classRecommendationUnits.length
+      ? classRecommendationUnits
+      : report.weaknessTopics || guidance.priorityTopics || [];
   const groups = guidance.suggestedGroups || {};
   const memberCount = report.roster?.activeMemberCount ?? 0;
 
@@ -173,7 +182,7 @@ export default function TeacherClassReportPage({ classId }) {
 
           <section className="mb-6">
             <h2 className="text-lg font-semibold mb-3">ביצועי הכיתה לפי מקצוע</h2>
-            <SubjectSummaryCards subjects={report.subjects} />
+            <SubjectSummaryCards subjects={report.subjects} showTopics />
           </section>
 
           <section className="mb-6">
@@ -181,6 +190,30 @@ export default function TeacherClassReportPage({ classId }) {
             {weaknessTopics.length ? (
               <ul className="text-sm text-white/80 space-y-2">
                 {weaknessTopics.slice(0, 10).map((t, i) => {
+                  if (isGuidanceV2 && t.topicLabelHe) {
+                    const subj = subjectLabelHe(t.subject);
+                    const headline = t.subtopicLabelHe
+                      ? `${t.topicLabelHe} — ${t.subtopicLabelHe}`
+                      : t.topicLabelHe;
+                    const errPct =
+                      t.cohortAccuracyPct != null
+                        ? formatPercent(100 - t.cohortAccuracyPct)
+                        : "—";
+                    const action = actionTypeLabelHe(t.recommendedActionType);
+                    return (
+                      <li
+                        key={t.unitId || i}
+                        className="rounded border border-white/10 px-3 py-2"
+                      >
+                        <span className="font-medium">
+                          {subj ? `${subj} — ${headline}` : headline}
+                        </span>
+                        : {t.affectedStudentCount ?? 0}/{memberCount} תלמידים ·{" "}
+                        {formatPercent(t.cohortAccuracyPct)} הצלחה · שיעור טעות {errPct}
+                        {action ? ` · ${action}` : ""}
+                      </li>
+                    );
+                  }
                   const line = formatTopicLineHe(t.subject, t.topic);
                   const acc =
                     t.answers > 0
@@ -198,6 +231,23 @@ export default function TeacherClassReportPage({ classId }) {
               <p className="text-white/60 text-sm">לא זוהו נושאים בעייתיים בתקופה זו.</p>
             )}
           </section>
+
+          {isGuidanceV2 && smallGroupClusters.length > 0 ? (
+            <section className="mb-6">
+              <h2 className="text-lg font-semibold mb-2">קבוצות תמיכה מוצעות</h2>
+              <ul className="text-sm text-white/80 space-y-2">
+                {smallGroupClusters.map((c, i) => (
+                  <li key={i} className="rounded border border-white/10 px-3 py-2">
+                    <span className="font-medium">{c.topicLabelHe || "נושא לא מסווג"}</span>
+                    : {(c.studentNamesMasked || []).join(", ")}
+                    {c.avgAccuracyPct != null
+                      ? ` · ממוצע ${formatPercent(c.avgAccuracyPct)}`
+                      : ""}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           <section className="mb-6">
             <h2 className="text-lg font-semibold mb-2">תלמידים שדורשים מעקב</h2>

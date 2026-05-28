@@ -602,6 +602,41 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
         </div>
       </section>
 
+      {(dashboard?.teacherAttentionSignals?.topAttentionStudents || []).length > 0 ? (
+        <section
+          className="rounded-xl border border-amber-400/25 bg-amber-500/5 p-4 sm:p-5"
+          data-testid="teacher-dashboard-attention-signals"
+        >
+          <h2 className="text-lg font-semibold mb-3">תלמידים הדורשים תשומת לב</h2>
+          <ul className="grid gap-2 sm:grid-cols-3">
+            {dashboard.teacherAttentionSignals.topAttentionStudents.map((s) => (
+              <li
+                key={s.studentId}
+                className="rounded-lg border border-white/10 bg-black/30 p-3 text-sm flex flex-col gap-1"
+              >
+                <span className="font-semibold truncate">{s.studentFullNameMasked}</span>
+                <span className="text-xs text-amber-200">
+                  {s.riskLevel === "high" ? "דורש תשומת לב" : "כדאי לעקוב"}
+                </span>
+                {s.topWeakTopicLabelHe ? (
+                  <span className="text-white/70 text-xs">{s.topWeakTopicLabelHe}</span>
+                ) : null}
+                <span className="text-white/50 text-xs">
+                  {s.accuracyPct != null ? `${Math.round(s.accuracyPct)}% הצלחה` : ""}
+                  {s.totalAnswers ? ` · ${s.totalAnswers} תשובות` : ""}
+                </span>
+                <Link
+                  href={`/teacher/student/${encodeURIComponent(s.studentId)}`}
+                  className="text-amber-300 text-xs hover:underline mt-1"
+                >
+                  צפייה בדוח
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {(dashboard?.classes || []).length > 0 ? (
         <section
           className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5"
