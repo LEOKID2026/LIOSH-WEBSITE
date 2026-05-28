@@ -43,12 +43,16 @@ export default function SubjectSummaryCards({ subjects, showTopics = false }) {
                 accuracy: Number(topicData?.accuracy) || 0,
                 wrong: Number(topicData?.wrong) || 0,
               }))
-              .filter((t) => t.answers >= 3 && t.accuracy < 60)
+              .filter((t) => {
+                const tk = String(t.topicKey || "").trim().toLowerCase();
+                if (!tk || tk === "general") return false;
+                return t.answers >= 3 && t.accuracy < 60 && topicLabelHe(sid, t.topicKey);
+              })
               .sort((a, b) => a.accuracy - b.accuracy || b.wrong - a.wrong)
               .slice(0, 3)
               .map((t) => (
                 <li key={t.topicKey} className="flex justify-between gap-2">
-                  <span>{topicLabelHe(sid, t.topicKey) || "נושא לא מסווג"}</span>
+                  <span>{topicLabelHe(sid, t.topicKey)}</span>
                   <span>{formatPercent(t.accuracy)}</span>
                 </li>
               ))}

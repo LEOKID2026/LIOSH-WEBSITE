@@ -614,7 +614,11 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
                 key={s.studentId}
                 className="rounded-lg border border-white/10 bg-black/30 p-3 text-sm flex flex-col gap-1"
               >
-                <span className="font-semibold truncate">{s.studentFullNameMasked}</span>
+                <span className="font-semibold truncate">
+                  {s.classDisplayLabel
+                    ? `${s.studentFullNameMasked} · כיתה ${s.classDisplayLabel}`
+                    : s.studentFullNameMasked}
+                </span>
                 <span className="text-xs text-amber-200">
                   {s.riskLevel === "high" ? "דורש תשומת לב" : "כדאי לעקוב"}
                 </span>

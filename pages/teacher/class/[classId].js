@@ -236,9 +236,11 @@ export default function TeacherClassReportPage({ classId }) {
             <section className="mb-6">
               <h2 className="text-lg font-semibold mb-2">קבוצות תמיכה מוצעות</h2>
               <ul className="text-sm text-white/80 space-y-2">
-                {smallGroupClusters.map((c, i) => (
+                {smallGroupClusters
+                  .filter((c) => c.topicLabelHe)
+                  .map((c, i) => (
                   <li key={i} className="rounded border border-white/10 px-3 py-2">
-                    <span className="font-medium">{c.topicLabelHe || "נושא לא מסווג"}</span>
+                    <span className="font-medium">{c.topicLabelHe}</span>
                     : {(c.studentNamesMasked || []).join(", ")}
                     {c.avgAccuracyPct != null
                       ? ` · ממוצע ${formatPercent(c.avgAccuracyPct)}`

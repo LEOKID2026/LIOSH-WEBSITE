@@ -111,11 +111,12 @@ export default function TeacherStudentReportPage({ studentId }) {
   const riskSignals = (guidance.riskSignals || []).map(riskSignalHe).filter(Boolean);
 
   const strengths = isGuidanceV2 && (guidance.strengthUnits || []).length
-    ? (guidance.strengthUnits || []).map((s) => {
-        const subj = subjectLabelHe(s.subject);
-        const topic = s.topicLabelHe || "נושא לא מסווג";
-        return `${subj ? `${subj} — ` : ""}${topic} — ${formatPercent(s.accuracyPct)} הצלחה`;
-      })
+    ? (guidance.strengthUnits || [])
+        .filter((s) => s.topicLabelHe)
+        .map((s) => {
+          const subj = subjectLabelHe(s.subject);
+          return `${subj ? `${subj} — ` : ""}${s.topicLabelHe} — ${formatPercent(s.accuracyPct)} הצלחה`;
+        })
     : (guidance.strengthsForTeacher || [])
         .map((s) => {
           const line = formatTopicLineHe(s.subject, s.topic);
@@ -124,22 +125,27 @@ export default function TeacherStudentReportPage({ studentId }) {
         .filter(Boolean);
 
   const suggestions = isGuidanceV2 && (guidance.supportSuggestionsV2 || []).length
-    ? (guidance.supportSuggestionsV2 || []).map((s) => {
-        const action = actionTypeLabelHe(s.code);
-        const topic = s.topicLabelHe || "נושא לא מסווג";
-        return action ? `${action} ב${topic}` : null;
-      })
+    ? (guidance.supportSuggestionsV2 || [])
+        .filter((s) => s.topicLabelHe)
+        .map((s) => {
+          const action = actionTypeLabelHe(s.code);
+          return action ? `${action} ב${s.topicLabelHe}` : null;
+        })
+        .filter(Boolean)
     : (guidance.supportSuggestions || []).map(supportSuggestionHe).filter(Boolean);
 
   const focusItems = isGuidanceV2 && recommendationUnits.length
-    ? recommendationUnits.slice(0, 5).map((u) => {
-        const subj = subjectLabelHe(u.subject);
-        const headline = u.subtopicLabelHe
-          ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
-          : u.topicLabelHe;
-        const stats = `${u.evidenceSummary?.wrongCount ?? 0} טעויות מ-${u.evidenceSummary?.totalAnswers ?? 0} תשובות · ${formatPercent(u.evidenceSummary?.accuracyPct)} הצלחה`;
-        return subj ? `${subj} — ${headline} · ${stats}` : `${headline} · ${stats}`;
-      })
+    ? recommendationUnits
+        .filter((u) => u.topicLabelHe)
+        .slice(0, 5)
+        .map((u) => {
+          const subj = subjectLabelHe(u.subject);
+          const headline = u.subtopicLabelHe
+            ? `${u.topicLabelHe} — ${u.subtopicLabelHe}`
+            : u.topicLabelHe;
+          const stats = `${u.evidenceSummary?.wrongCount ?? 0} טעויות מ-${u.evidenceSummary?.totalAnswers ?? 0} תשובות · ${formatPercent(u.evidenceSummary?.accuracyPct)} הצלחה`;
+          return subj ? `${subj} — ${headline} · ${stats}` : `${headline} · ${stats}`;
+        })
     : (guidance.nextPracticeFocus || [])
         .map((f) => {
           const line = formatTopicLineHe(f.subject, f.topic);

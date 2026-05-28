@@ -33,6 +33,9 @@ const OPERATION_NAMES = {
   number_sense: "חוש מספרים",
   factors_multiples: "גורמים וכפולות",
   word_problems: "בעיות מילוליות",
+  place_value: "ערך מקום",
+  comparison: "השוואה",
+  patterns: "דפוסים וסדרות",
   mixed: "ערבוב"
 };
 
@@ -95,6 +98,7 @@ const ENGLISH_TOPIC_NAMES = {
   reading_comprehension: "הבנת הנקרא",
   matching: "התאמה",
   inference: "הסקה",
+  sentence_understanding: "הבנת משפט",
   mixed: "תרגול משולב",
 };
 
@@ -110,6 +114,8 @@ const SCIENCE_TOPIC_NAMES = {
   earth_space: "כדור הארץ והחלל",
   environment: "סביבה ואקולוגיה",
   experiments: "ניסויים ותהליכים",
+  animals_plants: "בעלי חיים וצמחים",
+  basic_experiments: "ניסויים בסיסיים",
   mixed: "ערבוב נושאים",
 };
 
@@ -129,6 +135,7 @@ const HEBREW_TOPIC_NAMES = {
   main_idea: "רעיון מרכזי",
   sequence: "רצף",
   inference: "הסקה",
+  fact_vs_opinion: "עובדה מול דעה",
 };
 
 export function getHebrewTopicName(topic) {

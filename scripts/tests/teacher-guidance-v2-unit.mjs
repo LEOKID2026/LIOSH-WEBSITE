@@ -8,6 +8,7 @@ import {
   buildStudentTeacherGuidanceV2,
   buildClassTeacherGuidanceV2,
   resolveTopicLabelHe,
+  isTeacherRecommendableTopicKey,
 } from "../../lib/teacher-server/teacher-guidance-v2.server.js";
 import { aggregateClassReportFromStudentPayloads } from "../../lib/teacher-server/teacher-class-report.server.js";
 
@@ -67,7 +68,10 @@ function mockStudentPayload() {
 {
   const label = resolveTopicLabelHe("math", "fractions");
   assert.notEqual(label, "fractions", "raw topic key must not appear as label");
-  assert.ok(label.length > 0, "label must be non-empty Hebrew or fallback");
+  assert.ok(label && label.length > 0, "label must be non-empty Hebrew");
+  assert.equal(resolveTopicLabelHe("math", "general"), null);
+  assert.equal(resolveTopicLabelHe("hebrew", "fact_vs_opinion"), "עובדה מול דעה");
+  assert.equal(isTeacherRecommendableTopicKey("general"), false);
 }
 
 // 2 — student V2 shape
@@ -95,7 +99,36 @@ function mockStudentPayload() {
   }
   for (const s of block.supportSuggestionsV2 || []) {
     assert.ok(s.topicLabelHe !== "fractions");
+    assert.notEqual(s.topicLabelHe, "נושא לא מסווג");
   }
+}
+
+// 2b — general bucket excluded from recommendations
+{
+  const block = buildStudentTeacherGuidanceV2({
+    ...mockStudentPayload(),
+    subjects: {
+      math: {
+        sessions: 5,
+        answers: 12,
+        correct: 4,
+        wrong: 8,
+        accuracy: 33.3,
+        topics: {
+          general: { answers: 20, correct: 2, wrong: 18, accuracy: 10 },
+          fractions: { answers: 12, correct: 4, wrong: 8, accuracy: 33.3 },
+        },
+      },
+    },
+  });
+  assert.ok(
+    block.recommendationUnits.every((u) => u.topic !== "general"),
+    "general must not appear in recommendation units"
+  );
+  assert.ok(
+    block.recommendationUnits.some((u) => u.topic === "fractions"),
+    "labeled weak topic should still appear"
+  );
 }
 
 // 3 — insufficient data
