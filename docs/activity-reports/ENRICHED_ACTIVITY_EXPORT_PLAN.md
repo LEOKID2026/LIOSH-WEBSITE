@@ -1,11 +1,22 @@
 # Enriched Activity Report Export — Planning Document
 
-**Date:** 2026-05-29  
-**Status:** Phase 0 — Audit & Plan only. No implementation.  
+**Date:** 2026-05-29 (plan) · **Last updated:** 2026-05-29 (implementation signoff)  
+**Status:** Phases 1–3 complete — enriched Excel approved as infrastructure. PDF not started.  
 **Scope:** Classroom activity report at `/teacher/class/[classId]/activities/[activityId]/report`  
-**Target:** Enriched Excel export (Phase 1–2). Future PDF from same payload (Phase 4).  
+**Target:** Enriched Excel export (Phase 1–3). Future PDF from same payload (Phase 4).  
 **Constraint:** No Hebrew text, UI design, CSS, routes, or visible wording changed without explicit owner approval.  
-**Constraint:** No commit or push.
+**Constraint:** No commit or push unless owner performs manually.
+
+---
+
+## Implementation Status (Owner Signoff — 2026-05-29)
+
+| Area | Status | Notes |
+|---|---|---|
+| **Enriched Excel implementation** | **Complete** | 7-sheet workbook, dedicated `/report-export` API, report page wiring, 144 selftests passing, `npm run build` green. |
+| **Hebrew / title / filename cleanup** | **Complete** | Export-display sanitization only (DB title unchanged). `activityExportTitleHe()` strips `SIM`, ISO dates, internal suffixes; `buildEnrichedActivityReportDownloadStem()` for enriched Excel filename. CSV stem unchanged. Owner to re-download one SIM Excel to confirm Hebrew-only title/filename in practice. |
+| **Full question / options export** | **Pending real-activity validation** | Extractor + display code path covered by selftest (e.g. `45°`/`90°` options → `ב — 90°`). **SIM `question_set` stores placeholders only** (`שאלה 1`, `א/ב/ג/ד`) per `scripts/school-portal/sim/topic-catalog.mjs` — Excel correctly reflects stored data. Full product signoff requires one **real non-SIM closed activity** with real question text and options in `classroom_activities.question_set`. |
+| **PDF export** | **Future phase — not started** | Same enriched payload is the intended contract (Section D). No PDF library, route, or UI button implemented. Do not start until explicitly requested. |
 
 ---
 
@@ -636,11 +647,11 @@ If a student-facing summary PDF is ever needed (requires owner approval):
 
 ## F. Implementation Phases
 
-### Phase 0 — Audit Only (CURRENT)
+### Phase 0 — Audit Only ✅
 - Document current state. No code changes.
 - Output: this document.
 
-### Phase 1 — Create Enriched Shared Payload Builder
+### Phase 1 — Create Enriched Shared Payload Builder ✅
 
 **Files to create/modify:**
 - `lib/teacher-server/teacher-activities.server.js` — add `buildEnrichedActivityReportPayload`
@@ -663,7 +674,7 @@ If a student-facing summary PDF is ever needed (requires owner approval):
 
 **No new DB schema required for Phase 1.**
 
-### Phase 2 — Replace/Enrich Excel Export
+### Phase 2 — Replace/Enrich Excel Export ✅
 
 **Files to modify:**
 - `lib/teacher-portal/teacher-activity-report-export.js` — add new workbook builder using enriched payload
@@ -680,7 +691,7 @@ If a student-facing summary PDF is ever needed (requires owner approval):
 
 **No CSS/UI changes to the report page beyond updating the onClick handler to call the new function.**
 
-### Phase 3 — Tests / Verification
+### Phase 3 — Tests / Verification ✅ (with one open validation item)
 
 **Test targets:**
 - Unit test for `buildEnrichedActivityReportWorkbook` with mock payload
@@ -690,9 +701,11 @@ If a student-facing summary PDF is ever needed (requires owner approval):
 - Verify export still works when `classInfo` / `teacherInfo` are null
 - Verify existing `downloadActivityReportXlsx` (original 1-sheet version) still functions
 
-### Phase 4 — PDF Export
+**Open validation (not blocking infrastructure approval):** Export one enriched Excel from a **real non-SIM closed activity** whose `question_set` contains actual question stems and option text (not SIM placeholders). SIM activities cannot satisfy this check.
 
-**Prerequisites:** Phase 1 (shared payload) must be complete.
+### Phase 4 — PDF Export (NOT STARTED)
+
+**Prerequisites:** Phase 1 (shared payload) is complete. **Owner has not requested PDF work.**
 
 **Implementation:**
 - Install `@react-pdf/renderer` or `pdfmake` (owner approval for dependency)
@@ -744,7 +757,12 @@ If a student-facing summary PDF is ever needed (requires owner approval):
 | `pages/teacher/class/[classId]/activities/[activityId]/report.js` | Report page (client) |
 | `pages/api/teacher/activities/[activityId]/report.js` | Report API route |
 | `lib/teacher-server/teacher-activities.server.js` | `buildActivityReportPayload` + all server logic |
-| `lib/teacher-portal/teacher-activity-report-export.js` | Current CSV + 1-sheet Excel export |
+| `lib/teacher-portal/teacher-activity-report-export.js` | CSV + 1-sheet Excel + enriched 7-sheet Excel |
+| `lib/teacher-portal/teacher-activity-report-export-labels.js` | Export-only Hebrew labels, title/filename sanitization |
+| `lib/classroom-activities/frozen-activity-question.server.js` | Frozen `question_set` extraction (incl. `questionText` / `options`) |
+| `lib/teacher-server/teacher-activities-enriched.server.js` | `buildEnrichedActivityReportPayload` |
+| `pages/api/teacher/activities/[activityId]/report-export.js` | Enriched export API route |
+| `scripts/teacher-portal/activity-report-export-selftest.mjs` | `npm run test:activity-report-export` |
 | `lib/teacher-server/teacher-classes.server.js` | `loadTeacherClassOwned`, `loadClassMembers` |
 | `lib/teacher-server/teacher-session.server.js` | `loadTeacherProfileRow` |
 | `lib/classroom-activities/classroom-activities-shared.server.js` | `mapActivityRow`, `extractCorrectAnswerFromQuestion`, question set logic |

@@ -12,7 +12,7 @@ import {
 } from "../../../../../../lib/classroom-activities/classroom-activities-labels.client.js";
 import {
   downloadActivityReportCsv,
-  downloadActivityReportXlsx,
+  downloadEnrichedActivityReportXlsx,
 } from "../../../../../../lib/teacher-portal/teacher-activity-report-export.js";
 
 export async function getServerSideProps(context) {
@@ -28,6 +28,35 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
   const router = useRouter();
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
+  const [exportingXlsx, setExportingXlsx] = useState(false);
+
+  const handleExportXlsx = useCallback(async () => {
+    if (exportingXlsx) return;
+    setExportingXlsx(true);
+    setError("");
+    try {
+      const supabase = getLearningSupabaseBrowserClient();
+      const session = await resolveTeacherAccessToken(supabase);
+      if (!session.ok) {
+        router.replace("/teacher/login");
+        return;
+      }
+      const res = await teacherAuthFetch(
+        session.token,
+        `/api/teacher/activities/${encodeURIComponent(activityId)}/report-export`
+      );
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(body?.error?.message || body?.error?.code || "שגיאת ייצוא");
+        return;
+      }
+      downloadEnrichedActivityReportXlsx(body.data);
+    } catch {
+      setError("שגיאת ייצוא");
+    } finally {
+      setExportingXlsx(false);
+    }
+  }, [activityId, exportingXlsx, router]);
 
   const load = useCallback(async () => {
     try {
@@ -82,8 +111,9 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
             <div className="flex flex-wrap gap-2 mb-4">
               <button
                 type="button"
-                onClick={() => downloadActivityReportXlsx(data)}
-                className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10"
+                disabled={exportingXlsx}
+                onClick={handleExportXlsx}
+                className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10 disabled:opacity-50"
               >
                 ייצוא Excel
               </button>
