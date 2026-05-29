@@ -16,7 +16,7 @@
 | **Enriched Excel implementation** | **Complete** | 7-sheet workbook, dedicated `/report-export` API, report page wiring, 144 selftests passing, `npm run build` green. |
 | **Hebrew / title / filename cleanup** | **Complete** | Export-display sanitization only (DB title unchanged). `activityExportTitleHe()` strips `SIM`, ISO dates, internal suffixes; `buildEnrichedActivityReportDownloadStem()` for enriched Excel filename. CSV stem unchanged. Owner to re-download one SIM Excel to confirm Hebrew-only title/filename in practice. |
 | **Full question / options export** | **Pending real-activity validation** | Extractor + display code path covered by selftest (e.g. `45°`/`90°` options → `ב — 90°`). **SIM `question_set` stores placeholders only** (`שאלה 1`, `א/ב/ג/ד`) per `scripts/school-portal/sim/topic-catalog.mjs` — Excel correctly reflects stored data. Full product signoff requires one **real non-SIM closed activity** with real question text and options in `classroom_activities.question_set`. |
-| **PDF export** | **Future phase — not started** | Same enriched payload is the intended contract (Section D). No PDF library, route, or UI button implemented. Do not start until explicitly requested. |
+| **PDF export** | **Disabled — v2 planned** | v1 jsPDF Hebrew fixed but layout not product-ready. Button hidden (`TEACHER_ACTIVITY_PDF_EXPORT_ENABLED = false`). See [TEACHER_PDF_V2_REDESIGN_PLAN.md](./TEACHER_PDF_V2_REDESIGN_PLAN.md). Excel remains approved detailed export. |
 
 ---
 
@@ -703,19 +703,15 @@ If a student-facing summary PDF is ever needed (requires owner approval):
 
 **Open validation (not blocking infrastructure approval):** Export one enriched Excel from a **real non-SIM closed activity** whose `question_set` contains actual question stems and option text (not SIM placeholders). SIM activities cannot satisfy this check.
 
-### Phase 4 — PDF Export (NOT STARTED)
+### Phase 4 — PDF Export (v1 not approved — v2 planned)
 
-**Prerequisites:** Phase 1 (shared payload) is complete. **Owner has not requested PDF work.**
+**Status:** v1 jsPDF implementation **disabled** (`TEACHER_ACTIVITY_PDF_EXPORT_ENABLED = false`). Button hidden. Code retained for reference only.
 
-**Implementation:**
-- Install `@react-pdf/renderer` or `pdfmake` (owner approval for dependency)
-- Create `lib/teacher-portal/teacher-activity-report-pdf.js`
-- PDF generated client-side from same enriched payload
-- Hebrew font embedded (open license, e.g. Rubik from Google Fonts)
-- RTL layout throughout
-- Add "ייצוא PDF" button to report page (requires owner UI approval)
+**v1 outcome:** Hebrew rendering fixed (setR2L + Noto), but table-heavy layout not product-ready.
 
-**No server changes needed for Phase 4 beyond Phase 1.**
+**Next:** See [TEACHER_PDF_V2_REDESIGN_PLAN.md](./TEACHER_PDF_V2_REDESIGN_PLAN.md) — recommended **Option A: HTML print / save-to-PDF** summary layout. No implementation until owner approves.
+
+**Not in scope:** parent PDF, student PDF, AI recommendations, Excel replacement.
 
 ### Phase 5 — Optional UI Improvements
 
