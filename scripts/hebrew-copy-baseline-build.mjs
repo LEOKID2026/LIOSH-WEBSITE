@@ -11,6 +11,7 @@ import {
   INVENTORY_SOURCES,
   computeBaselineKey,
   computeTextHash,
+  decodeJsStringLiteral,
   mapBaselineStatus,
   writeJsonl,
 } from "./lib/hebrew-copy-scan-lib.mjs";
@@ -22,7 +23,7 @@ function parseArgs(argv) {
   const args = {
     dryRun: false,
     fromReports: true,
-    version: "v1.0.0",
+    version: "v1.0.1",
     allowPartial: false,
   };
   for (let i = 2; i < argv.length; i++) {
@@ -69,7 +70,7 @@ function ingestInventory(source, approvedIds) {
     const rows = XLSX.utils.sheet_to_json(sh, { defval: "" });
     sheetCounts[sheetCfg.name] = rows.length;
     for (const row of rows) {
-      const raw = pickText(row, sheetCfg.textFields);
+      const raw = decodeJsStringLiteral(pickText(row, sheetCfg.textFields));
       if (!raw || !/[\u0590-\u05FF]/.test(raw)) continue;
       const inventoryId = String(row.id || "").trim();
       const dedupe = `${source.domain}:${inventoryId}:${raw.slice(0, 80)}`;

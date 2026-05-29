@@ -7,6 +7,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  collectHybridScanFiles,
   collectScanFiles,
   computeDeltas,
   evaluateGate,
@@ -23,7 +24,11 @@ function parseArgs(argv) {
     warnOnly: false,
     strict: false,
     domain: null,
-    baselineVersion: "v1.0.0",
+    baselineVersion: "v1.0.1",
+    scanMode: "hybrid",
+    suppressMovedOnly: true,
+    suppressInternalOrphan: true,
+    suppressInventoryNoise: true,
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -32,6 +37,7 @@ function parseArgs(argv) {
     else if (a === "--strict") args.strict = true;
     else if (a === "--domain" && argv[i + 1]) args.domain = argv[++i];
     else if (a === "--baseline-version" && argv[i + 1]) args.baselineVersion = argv[++i];
+    else if (a === "--scan-mode" && argv[i + 1]) args.scanMode = argv[++i];
   }
   return args;
 }
@@ -42,7 +48,11 @@ export function runDeltaGate(options = {}) {
     warnOnly: false,
     strict: false,
     domain: null,
-    baselineVersion: "v1.0.0",
+    baselineVersion: "v1.0.1",
+    scanMode: "hybrid",
+    suppressMovedOnly: true,
+    suppressInternalOrphan: true,
+    suppressInventoryNoise: true,
     root: ROOT,
     ...options,
   };
@@ -55,11 +65,34 @@ export function runDeltaGate(options = {}) {
   const baseline = readJsonl(baselinePath);
   const filteredBaseline = args.domain ? baseline.filter((b) => b.domain === args.domain) : baseline;
 
-  const files = collectScanFiles(args.root, args.domain);
+  let files;
+  let newScanFiles = new Set();
+  let baselineFileCount = 0;
+
+  if (args.scanMode === "broad") {
+    files = collectScanFiles(args.root, args.domain);
+  } else if (args.scanMode === "baseline-only") {
+    const hybrid = collectHybridScanFiles(filteredBaseline, args.root, args.domain);
+    files = [...hybrid.baselineFiles].sort();
+    baselineFileCount = files.length;
+  } else {
+    const hybrid = collectHybridScanFiles(filteredBaseline, args.root, args.domain);
+    files = hybrid.files;
+    newScanFiles = hybrid.newFiles;
+    baselineFileCount = hybrid.baselineFiles.size;
+  }
+
   let current = scanWorkspace(args.root, files);
   if (args.domain) current = current.filter((c) => c.domain === args.domain);
 
-  const deltas = computeDeltas(filteredBaseline, current, { scannedFiles: files });
+  const deltas = computeDeltas(filteredBaseline, current, {
+    scannedFiles: files,
+    newScanFiles,
+    root: args.root,
+    suppressMovedOnly: args.suppressMovedOnly !== false,
+    suppressInternalOrphan: args.suppressInternalOrphan !== false,
+    suppressInventoryNoise: args.suppressInventoryNoise !== false,
+  });
   const gate = evaluateGate(deltas, { strict: args.strict, warnOnly: args.warnOnly || args.dryRun });
 
   const byType = {};
@@ -76,6 +109,9 @@ export function runDeltaGate(options = {}) {
     strict: args.strict,
     domain_filter: args.domain,
     baseline_version: args.baselineVersion,
+    scan_mode: args.scanMode,
+    baseline_files_scanned: baselineFileCount,
+    new_files_discovered: newScanFiles.size,
     baseline_records: filteredBaseline.length,
     files_scanned: files.length,
     current_strings: current.length,
@@ -107,6 +143,9 @@ Generated: ${summary.generated_at}
 | Metric | Value |
 |--------|------:|
 | Baseline version | ${summary.baseline_version} |
+| Scan mode | ${summary.scan_mode || "hybrid"} |
+| Baseline files scanned | ${summary.baseline_files_scanned ?? "n/a"} |
+| New files discovered | ${summary.new_files_discovered ?? 0} |
 | Baseline records | ${summary.baseline_records} |
 | Files scanned | ${summary.files_scanned} |
 | Current strings | ${summary.current_strings} |
@@ -163,6 +202,7 @@ function main() {
       strict: args.strict,
       domain: args.domain,
       baselineVersion: args.baselineVersion,
+      scanMode: args.scanMode,
     });
   } catch (e) {
     console.error(String(e.message || e));

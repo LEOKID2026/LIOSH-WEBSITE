@@ -1,0 +1,83 @@
+{
+  "version": "v1.0.1",
+  "built_at": "2026-05-29T20:10:05.362Z",
+  "dry_run": false,
+  "note": "Baseline is known-current-state only — not an approval ledger",
+  "inventory_sources": [
+    {
+      "domain": "parent_report",
+      "path": "reports/parent-report-hebrew-copy-inventory.xlsx",
+      "row_count": 2136,
+      "sheets": {
+        "Parent Visible Strings": 2110,
+        "Dynamic Templates": 268,
+        "Empty And Thin Data States": 88,
+        "Reco And Progression Copy": 533,
+        "Collapsed Details Copy": 68,
+        "AI Parent Report Copy": 20
+      }
+    },
+    {
+      "domain": "teacher_school_report",
+      "path": "reports/teacher-school-report-hebrew-copy-inventory.xlsx",
+      "row_count": 1825,
+      "sheets": {
+        "Teacher School Visible": 1813,
+        "Dynamic Templates": 142,
+        "Empty And Thin Data States": 0,
+        "Diagnostic Guidance Copy": 429,
+        "Professional Terms": 31,
+        "Export Copy": 467
+      }
+    },
+    {
+      "domain": "site_decision_ai",
+      "path": "reports/site-decision-hebrew-copy-inventory.xlsx",
+      "row_count": 2089,
+      "sheets": {
+        "Decision Visible Strings": 2026,
+        "AI Prompt Copy": 1088,
+        "Diagnostic Decision Labels": 201,
+        "Recommendation Progression": 243,
+        "Empty Thin Data Messages": 31,
+        "Permission Blocking Messages": 99,
+        "Student Learning Feedback": 210
+      }
+    },
+    {
+      "domain": "site_general",
+      "path": "reports/site-general-hebrew-copy-inventory.xlsx",
+      "row_count": 11116,
+      "sheets": {
+        "General Visible Strings": 11114,
+        "Help Onboarding Policy Copy": 1563,
+        "Navigation CTA Button Copy": 39,
+        "Empty Error Success Info": 592,
+        "General Learning UI Copy": 1644
+      }
+    },
+    {
+      "domain": "learning_content",
+      "path": "reports/learning-content-hebrew-inventory.xlsx",
+      "row_count": 60174,
+      "sheets": {
+        "Learning Content Strings": 60174
+      }
+    }
+  ],
+  "total_records": 77340,
+  "missing_inventories": [],
+  "by_domain": {
+    "parent_report": 2136,
+    "teacher_school_report": 1825,
+    "site_decision_ai": 2089,
+    "site_general": 11116,
+    "learning_content": 60174
+  },
+  "by_status": {
+    "pending_owner_review": 55400,
+    "looks_ok_pending": 42,
+    "internal_only": 6234,
+    "pending_expert_review": 15664
+  }
+}

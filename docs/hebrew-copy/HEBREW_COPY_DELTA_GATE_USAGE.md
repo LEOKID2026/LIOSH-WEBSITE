@@ -4,7 +4,7 @@ Planning reference: [`HEBREW_COPY_GOVERNANCE_AND_DELTA_GATE_PLAN.md`](./HEBREW_C
 
 ## What the baseline is
 
-The baseline (`data/hebrew-copy-baseline/v1.0.0/`) is a **known-current-state snapshot** of Hebrew copy already inventoried across five domains:
+The baseline (`data/hebrew-copy-baseline/v1.0.1/`) is a **known-current-state snapshot** of Hebrew copy already inventoried across five domains:
 
 - Parent reports
 - Teacher/school reports
@@ -43,7 +43,7 @@ node scripts/learning-content-hebrew-inventory-build.mjs
 ```bash
 npm run hebrew:baseline
 # or
-node scripts/hebrew-copy-baseline-build.mjs --from-reports --version v1.0.0
+node scripts/hebrew-copy-baseline-build.mjs --from-reports --version v1.0.1
 ```
 
 Dry-run (no files written):
@@ -54,11 +54,11 @@ node scripts/hebrew-copy-baseline-build.mjs --dry-run
 
 Outputs:
 
-- `data/hebrew-copy-baseline/v1.0.0/baseline.jsonl`
-- `data/hebrew-copy-baseline/v1.0.0/baseline-index.json`
-- `data/hebrew-copy-baseline/v1.0.0/file-index.json`
-- `data/hebrew-copy-baseline/v1.0.0/domain-summary.json`
-- `data/hebrew-copy-baseline/v1.0.0/MANIFEST.json`
+- `data/hebrew-copy-baseline/v1.0.1/baseline.jsonl`
+- `data/hebrew-copy-baseline/v1.0.1/baseline-index.json`
+- `data/hebrew-copy-baseline/v1.0.1/file-index.json`
+- `data/hebrew-copy-baseline/v1.0.1/domain-summary.json`
+- `data/hebrew-copy-baseline/v1.0.1/MANIFEST.json`
 
 ---
 
@@ -77,7 +77,21 @@ Options:
 node scripts/hebrew-copy-delta-gate.mjs --warn-only
 node scripts/hebrew-copy-delta-gate.mjs --strict
 node scripts/hebrew-copy-delta-gate.mjs --domain learning_content
-node scripts/hebrew-copy-delta-gate.mjs --baseline-version v1.0.0
+node scripts/hebrew-copy-delta-gate.mjs --baseline-version v1.0.1
+```
+
+The default scan mode is **hybrid**:
+
+- **Baseline file-index files** — scanned with inventory-noise suppressions (moved-only, internal orphans, lexicon/replace-rule noise).
+- **New files under domain scan roots** (`pages/`, `components/`, `utils/`, `lib/`, `data/` where configured) — discovered automatically and scanned without inventory-noise suppression, so new Hebrew is reported as `new` without a baseline rebuild.
+- **Documented safe excludes** — paths excluded from inventories (help-center parent-report copy, student worksheet path, docs, review-packages) are not scanned.
+
+Override scan mode:
+
+```bash
+node scripts/hebrew-copy-delta-gate.mjs --scan-mode hybrid      # default
+node scripts/hebrew-copy-delta-gate.mjs --scan-mode baseline-only # baseline index only (debug)
+node scripts/hebrew-copy-delta-gate.mjs --scan-mode broad         # full roots (noisy; debug only)
 ```
 
 Outputs:
@@ -165,8 +179,20 @@ If no Hebrew files were modified: `Hebrew delta summary: not applicable — no H
 ## Smoke test
 
 ```bash
-node scripts/tests/hebrew-copy-delta-gate-smoke.mjs
+npm run hebrew:delta:smoke
+node scripts/tests/hebrew-copy-delta-gate-probe.mjs
+node scripts/tests/hebrew-copy-delta-gate-e2e.mjs
 ```
+
+## Noise analysis
+
+After tuning scanner alignment, compare legacy vs aligned delta counts:
+
+```bash
+node scripts/hebrew-copy-delta-noise-analysis.mjs
+```
+
+Outputs: `reports/hebrew-copy-delta-noise-analysis.md` and `.json`
 
 ---
 
@@ -176,9 +202,10 @@ node scripts/tests/hebrew-copy-delta-gate-smoke.mjs
 
 ---
 
-## Known limitations (v1)
+## Known limitations (v1.0.1)
 
-1. **Initial delta noise** — First delta run after baseline may report `new`/`moved` strings where live scan extraction differs slightly from inventory extraction (e.g. JSON escaping, multi-string lines). Use `--warn-only` until scan roots and normalization are tuned.
-2. **Scan roots vs inventory** — Baseline includes all inventoried rows; delta scan walks configured `DOMAIN_SCAN_ROOTS` only. Strings in files outside scan roots are baseline-known but not re-scanned.
-3. **Learning bank rows without source line** — Bank items with empty `source_line` in inventory are baseline-only; removed detection skips them.
-4. **No CI/hooks yet** — Manual/dry-run workflow only in this pass.
+1. **New files outside scan roots** — Hebrew in paths not covered by `DOMAIN_SCAN_ROOTS` is not auto-discovered until inventories/baseline are updated.
+2. **`pages/student/worksheet/`** — excluded from delta scan (matches site-general inventory exclude).
+3. **Inventory noise rules on baseline-known files** — classifier lexicon / rewrite-rule strings on existing files are suppressed at delta time; changes there need manual review or `--scan-mode broad`.
+4. **Learning bank rows without source_line** — removed detection skips empty-line inventory rows.
+5. **No CI/hooks** — Manual/dry-run/warn-only workflow only; no blocking enforcement in repo hooks.

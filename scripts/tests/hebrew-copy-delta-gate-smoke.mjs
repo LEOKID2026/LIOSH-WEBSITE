@@ -127,7 +127,10 @@ test("changed string detected", () => {
       is_template: false,
     },
   ];
-  const deltas = computeDeltas(baseline, current, { scannedFiles: ["fixture.js"] });
+  const deltas = computeDeltas(baseline, current, {
+    scannedFiles: ["fixture.js"],
+    suppressInventoryNoise: false,
+  });
   assert.ok(deltas.some((d) => d.detected_change_type === "changed"));
 });
 
@@ -158,9 +161,47 @@ test("moved unchanged string is not classified as new", () => {
       is_template: false,
     },
   ];
-  const deltas = computeDeltas(baseline, current, { scannedFiles: ["a.js", "b.js"] });
+  const deltas = computeDeltas(baseline, current, { scannedFiles: ["fixture.js"], suppressMovedOnly: false });
   assert.ok(deltas.some((d) => d.detected_change_type === "moved"));
   assert.ok(!deltas.some((d) => d.detected_change_type === "new"));
+});
+
+test("line shift only suppressed by default (hash match)", () => {
+  const text = "אותו טקסט";
+  const hash = computeTextHash(text);
+  const baseline = [
+    {
+      baseline_key: "b1",
+      text_hash: hash,
+      raw_text: text,
+      source_file: "a.js",
+      source_line: 1,
+      source_function: "",
+      domain: "site_general",
+      status: "pending_owner_review",
+    },
+  ];
+  const current = [
+    {
+      raw_text: text,
+      text_hash: hash,
+      source_file: "a.js",
+      source_line: 42,
+      source_function: "",
+      anchor_key: "a.js:42:" + hash,
+      domain: "site_general",
+      is_template: false,
+    },
+  ];
+  const deltas = computeDeltas(baseline, current, { scannedFiles: ["a.js"] });
+  assert.equal(deltas.length, 0);
+});
+
+test("decodeJsStringLiteral normalizes escaped newlines in hash", () => {
+  assert.equal(
+    normalizeTextForHash("שורה\\nשנייה"),
+    normalizeTextForHash("שורה\nשנייה")
+  );
 });
 
 test("critical parent/AI phrase classified critical", () => {

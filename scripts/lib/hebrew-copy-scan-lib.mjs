@@ -143,6 +143,47 @@ export const DOMAIN_SCAN_ROOTS = {
   ],
 };
 
+export const INTERNAL_ONLY_FILE_RE = [
+  /utils\/parent-report-language\/forbidden-terms\.js$/,
+  /parent-report-hebrew-copy-guard\.mjs$/,
+  /parent-report-hebrew-language-selftest\.mjs$/,
+  /scripts\/tests\//,
+  /selftest\.mjs$/,
+  /smoke\.mjs$/,
+];
+
+/** Paths scanned by delta gate but excluded from baseline inventories — do not scan in alignment mode. */
+export const DELTA_SCAN_EXCLUDE_RE = [
+  /data\/help-center\/content\/parent-report/i,
+  /^pages\/student\/worksheet\//,
+  /review-packages\//,
+  /\.cursor\//,
+  /docs\//,
+];
+
+/** @param {string} raw */
+export function decodeJsStringLiteral(raw) {
+  return String(raw || "")
+    .replace(/\\\\/g, "\u0000")
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "\r")
+    .replace(/\\t/g, "\t")
+    .replace(/\\"/g, '"')
+    .replace(/\\'/g, "'")
+    .replace(/\u0000/g, "\\");
+}
+
+/** @param {string} rel */
+export function isInternalOnlySourceFile(rel) {
+  const r = String(rel || "").replace(/\\/g, "/");
+  return INTERNAL_ONLY_FILE_RE.some((re) => re.test(r));
+}
+
+/** @param {string} rel */
+export function isDeltaScanExcludedFile(rel) {
+  const r = String(rel || "").replace(/\\/g, "/");
+  return DELTA_SCAN_EXCLUDE_RE.some((re) => re.test(r));
+}
 const CRITICAL_KEYWORDS =
   /מומלץ|קידום|העברה|אבחון|המלצ|RI\d|cannotConclude|progression|decision|diagnostic|parent.?report|copilot|next.?step|מגמת|פער ידע|שלב הבא|מעבר רמה/i;
 
@@ -154,7 +195,7 @@ const LEARNING_EXPERT_RE =
 
 /** @param {string} text */
 export function normalizeTextForHash(text) {
-  let t = String(text || "");
+  let t = decodeJsStringLiteral(String(text || ""));
   try {
     t = t.normalize("NFC");
   } catch {
@@ -188,6 +229,37 @@ export function computeBaselineKey(record) {
   return createHash("sha256").update(payload, "utf8").digest("hex").slice(0, 40);
 }
 
+/** @param {string} text */
+export function hebrewGraphemeCount(text) {
+  return [...String(text || "")].filter((c) => /\p{Script=Hebrew}/u.test(c)).length;
+}
+
+/** @param {string} line @param {string} text */
+export function shouldSkipExtractedHit(line, text) {
+  const t = String(line || "");
+  const raw = String(text || "");
+  if (isCommentOrJSDoc(t)) return true;
+  if (/\.replace\s*\(/.test(t)) return true;
+  if (/\.join\s*\(\s*["']/.test(t)) return true;
+  if (/\.includes\s*\(\s*["']/.test(t)) return true;
+  if (/(?:one|tok)\s*===\s*["']/.test(t)) return true;
+  if (/\$\d/.test(raw) && !/\$\{/.test(raw)) return true;
+  if (/^\s*["'][\u0590-\u05FF][^"']*["'],?\s*$/.test(t.trim())) return true;
+  const tmpl = detectTemplate(raw);
+  if (!tmpl.is_template && hebrewGraphemeCount(raw) < 4) {
+    if (
+      /^\s*["'`]/.test(t.trim()) ||
+      /,\s*["'`]/.test(t) ||
+      /\[\s*["'`]/.test(t) ||
+      /new Set\s*\(/.test(t) ||
+      /\w+\s*:\s*\[/.test(t)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /** @param {string} line */
 export function isCommentOrJSDoc(line) {
   const t = String(line || "").trim();
@@ -207,7 +279,10 @@ export function extractStringsFromLine(line) {
   for (const re of [/"([^"\\]*(?:\\.[^"\\]*)*)"/g, /'([^'\\]*(?:\\.[^'\\]*)*)'/g, /`([^`\\]*(?:\\.[^`\\]*)*)`/g]) {
     let m;
     while ((m = re.exec(line))) {
-      if (HEBREW_RE.test(m[1])) results.push({ text: m[1], col: m.index + 1 });
+      if (!HEBREW_RE.test(m[1])) continue;
+      const decoded = decodeJsStringLiteral(m[1]);
+      if (!HEBREW_RE.test(decoded)) continue;
+      results.push({ text: decoded, col: m.index + 1 });
     }
   }
   const jsxRe = />([^<>{}]*[\u0590-\u05FF][^<>{}]*)</g;
@@ -422,12 +497,42 @@ export function collectScanFiles(root, domainFilter = null) {
   const roots = domainFilter ? DOMAIN_SCAN_ROOTS[domainFilter] || [] : Object.values(DOMAIN_SCAN_ROOTS).flat();
   const files = [...new Set(roots.flatMap((r) => collectFiles(r, { root })))].sort();
   return files.filter((f) => {
+    if (isDeltaScanExcludedFile(f)) return false;
     try {
       return statSync(join(root, f)).isFile();
     } catch {
       return false;
     }
   });
+}
+
+/** @param {object[]} baseline @param {string} root */
+export function collectScanFilesFromBaseline(baseline, root) {
+  const files = new Set();
+  for (const b of baseline) {
+    const f = String(b.source_file || "").replace(/\\/g, "/");
+    if (!f || isDeltaScanExcludedFile(f)) continue;
+    try {
+      if (statSync(join(root, f)).isFile()) files.add(f);
+    } catch {
+      /* skip missing */
+    }
+  }
+  return [...files].sort();
+}
+
+/** @param {object[]} baseline @param {string} root @param {string|null} domainFilter */
+export function collectHybridScanFiles(baseline, root, domainFilter = null) {
+  const baselineFiles = collectScanFilesFromBaseline(baseline, root);
+  const baselineSet = new Set(baselineFiles);
+  const rootFiles = collectScanFiles(root, domainFilter);
+  const newFiles = rootFiles.filter((f) => !baselineSet.has(f));
+  const files = [...new Set([...baselineFiles, ...newFiles])].sort();
+  return {
+    files,
+    baselineFiles: baselineSet,
+    newFiles: new Set(newFiles),
+  };
 }
 
 /** @param {string} root @param {string[]} files */
@@ -469,9 +574,49 @@ export function scanWorkspace(root, files) {
   return snapshot;
 }
 
+/** @param {object} hit */
+export function isInventoryNoiseHit(hit) {
+  return shouldSkipExtractedHit(hit.line_text || "", hit.raw_text || "");
+}
+
+/** @param {object} baselineRow @param {Map<string, string>} lineCache */
+export function isBaselineInventoryNoise(baselineRow, lineCache) {
+  const file = String(baselineRow.source_file || "");
+  const lineNo = Number(baselineRow.source_line) || 0;
+  if (!file || !lineNo) return false;
+  const key = `${file}:${lineNo}`;
+  if (!lineCache.has(key)) return false;
+  return shouldSkipExtractedHit(lineCache.get(key), baselineRow.raw_text || "");
+}
+
+/** @param {string|null} root @param {object[]} baseline @param {object[]} current */
+export function buildLineTextCache(root, baseline, current) {
+  const cache = new Map();
+  if (!root) return cache;
+  const files = new Set([
+    ...baseline.map((b) => b.source_file).filter(Boolean),
+    ...current.map((c) => c.source_file).filter(Boolean),
+  ]);
+  for (const rel of files) {
+    let lines;
+    try {
+      lines = readFileSync(join(root, rel), "utf8").split("\n");
+    } catch {
+      continue;
+    }
+    for (let i = 0; i < lines.length; i++) {
+      cache.set(`${rel}:${i + 1}`, lines[i]);
+    }
+  }
+  return cache;
+}
+
 /** @param {object[]} baseline @param {object[]} current @param {object} opts */
 export function computeDeltas(baseline, current, opts = {}) {
+  const lineCache = opts.lineTextCache || buildLineTextCache(opts.root, baseline, current);
+  const suppressNoise = opts.suppressInventoryNoise !== false;
   const scannedFiles = opts.scannedFiles ? new Set(opts.scannedFiles) : null;
+  const newScanFiles = opts.newScanFiles || new Set();
   const baselineByHash = new Map();
   const baselineByExactAnchor = new Map();
   const baselineByFileLine = new Map();
@@ -506,7 +651,9 @@ export function computeDeltas(baseline, current, opts = {}) {
     if (hashHits.length > 0) {
       const ref = hashHits[0];
       matchedBaselineKeys.add(ref.baseline_key);
-      if (ref.source_file !== cur.source_file || Number(ref.source_line) !== Number(cur.source_line)) {
+      const locationDrift =
+        ref.source_file !== cur.source_file || Number(ref.source_line) !== Number(cur.source_line);
+      if (locationDrift && opts.suppressMovedOnly === false) {
         deltas.push(makeDeltaRow(++seq, "moved", ref, cur));
       }
       continue;
@@ -517,7 +664,18 @@ export function computeDeltas(baseline, current, opts = {}) {
     if (lineCandidates.length === 1 && lineCandidates[0].text_hash !== cur.text_hash) {
       const ref = lineCandidates[0];
       matchedBaselineKeys.add(ref.baseline_key);
-      deltas.push(makeDeltaRow(++seq, "changed", ref, cur));
+      if (!(suppressNoise && !newScanFiles.has(cur.source_file) && isInventoryNoiseHit(cur))) {
+        deltas.push(makeDeltaRow(++seq, "changed", ref, cur));
+      }
+      continue;
+    }
+
+    if (suppressNoise && !newScanFiles.has(cur.source_file) && isInventoryNoiseHit(cur)) continue;
+
+    if (
+      opts.suppressInternalOrphan !== false &&
+      (isInternalOnlySourceFile(cur.source_file) || cur.is_comment || cur.risk_level === "internal")
+    ) {
       continue;
     }
 
@@ -533,6 +691,10 @@ export function computeDeltas(baseline, current, opts = {}) {
     if (!b.source_file || !b.source_line) continue;
     if (scannedFiles && !scannedFiles.has(b.source_file)) continue;
     if (currentHashSet.has(b.text_hash)) {
+      matchedBaselineKeys.add(b.baseline_key);
+      continue;
+    }
+    if (suppressNoise && isBaselineInventoryNoise(b, lineCache)) {
       matchedBaselineKeys.add(b.baseline_key);
       continue;
     }
@@ -665,6 +827,43 @@ export function evaluateGate(deltas, opts = {}) {
     mediumNewChanged: mediumNewChanged.length,
     totalDeltas: deltas.length,
   };
+}
+
+export function classifyDeltaNoiseBucket(delta, baselineByHash, opts = {}) {
+  const text = delta.new_text || delta.old_text_if_changed || "";
+  const hash = computeTextHash(text, delta.is_template);
+  const type = delta.detected_change_type;
+
+  if (type === "moved") return "moved_only_line_shift";
+  if (baselineByHash.has(hash)) return "escaping_quote_normalization";
+
+  if (type === "new" && isDeltaScanExcludedFile(delta.source_file)) {
+    return "scan_root_mismatch";
+  }
+  if (type === "new" && isInternalOnlySourceFile(delta.source_file)) {
+    return "archive_internal_test_log";
+  }
+  if (delta.is_template || type === "new_template") return "template_skeleton_mismatch";
+
+  const baseHits = baselineByHash.get(hash) || [];
+  if (baseHits.length && type === "new") return "missing_source_line_anchor";
+
+  if (type === "changed") return "true_changed_hebrew";
+  if (type === "new" && /parent-copilot|learning-patterns|help-center/.test(delta.source_file || "")) {
+    return "scan_root_mismatch";
+  }
+  if (type === "new") return "true_new_hebrew";
+  if (type === "removed") return "unclear_needs_review";
+  return "unclear_needs_review";
+}
+
+export function buildBaselineHashIndex(baseline) {
+  const map = new Map();
+  for (const b of baseline) {
+    if (!map.has(b.text_hash)) map.set(b.text_hash, []);
+    map.get(b.text_hash).push(b);
+  }
+  return map;
 }
 
 export const INVENTORY_SOURCES = [
