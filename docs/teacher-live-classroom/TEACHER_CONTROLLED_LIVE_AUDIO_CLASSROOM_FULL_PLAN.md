@@ -1,8 +1,21 @@
 # Teacher-Controlled Live Audio Classroom — Full Project Plan
 
-**Status:** Final planning document. Includes approved future development-run instructions in Section 35. No implementation has started yet. No SQL may be executed. No commit, push, or deploy is approved.
+**Status:** Final planning and build-ready execution-control document. Implementation is not active by default. Implementation begins only after the owner manually approves the IDE/agent Build/Accept/Agent execution action for this plan after reviewing it. After that manual approval, the agent must begin code implementation or explicitly state it is still in plan/documentation mode and cannot edit code. No SQL execution, migration execution, commit, push, or deploy is approved.
 
-**Version:** 3.1 — Admin Entitlement / Permission Model added — 2026-05-29
+**Version:** 3.2 — Final Build-Ready Execution Protocol — 2026-05-29
+
+**Change summary (v3.2):**
+- Converted Section 35 from future-run language into a build-ready execution protocol.
+- Clarified that chat-body approval is never sufficient as an implementation trigger.
+- Clarified that manual IDE Build/Accept/Agent execution approval is the only implementation trigger after the plan is approved.
+- Closed all development-run decisions required to avoid implementation ambiguity.
+- Resolved D9 for development run as Option A: separate entitlement tables.
+- Resolved D10 for development run as central entitlement helper from Section 23.7.
+- Resolved Phase A/D technical defaults for the development run.
+- Defined valid and invalid first responses after manual build approval.
+- Defined exact implementation scope, order, restrictions, and final report.
+- All Group A, B, C, D, E decisions in Section 33 are now resolved for the development run (production blockers remain open for production only).
+- No code, no SQL execution, no commit, no push, no deploy in this documentation pass.
 
 **Change summary (v3.1):**
 - Added Section 23: Admin Entitlement and Permission Model for Live Discussion/Audio.
@@ -325,10 +338,13 @@ Note: `private_active` is not mutually exclusive with `teacher_broadcast_only` o
 
 ### 4.3 DB Layer
 
-Three new tables (do not create yet):
+Four new discussion tables (do not create yet):
 - `classroom_discussion_sessions` — one per teacher-initiated discussion, anchored to an activity.
-- `classroom_discussion_participants` — one row per student per session; tracks hand raise, approval, mute.
+- `classroom_discussion_participants` — one row per student per session; tracks hand raise, request type, audio scope, approval, mute.
 - `classroom_discussion_events` — append-only event log.
+- `classroom_private_audio_sessions` — one row per private teacher-student audio conversation (Phase E).
+
+Entitlement storage (Section 12.6, Section 23.6) is planned separately and is not part of these four tables.
 
 Full schema in Section 12.
 
@@ -1081,7 +1097,7 @@ The mechanism for this notification is an owner decision (Section 33).
 
 ### 12.1 Overview
 
-Three new tables. No changes to any existing table. Same RLS posture as all classroom tables: RLS enabled, no client policies, service-role-only via API.
+Four new discussion tables (Sections 12.2–12.5). Entitlement tables are planned separately in Section 12.6 (see Section 23.6). No changes to any existing table. Same RLS posture as all classroom tables: RLS enabled, no client policies, service-role-only via API.
 
 ### 12.2 `classroom_discussion_sessions`
 
@@ -2863,16 +2879,16 @@ All items below must be resolved before implementation of each phase begins. Ite
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| A1 | Is Phase A (audio foundation + schema plan) approved as the first delivery? Audio is mandatory for the MVP. A no-audio delivery is not a meaningful MVP. | Phase A start | Owner confirm |
-| A2 | Should discussion be limited to `live_lesson` mode only, or available for other activity modes? | Phase A design | Open |
-| A3 | Should a discussion session always be anchored to a `live_lesson` activity, or can it run standalone? | Phase A design | Open |
-| A4 | **Resolved 2026-05-25:** Target support is up to 40 students per teacher class. Audio and session calculations assume 40 students + 1 teacher = 41 concurrent participants. Load tests target 40 students as baseline; safety-margin tests target 45 students + 1 teacher = 46 participants. | Phase A capacity | Resolved |
-| A5 | Should the teacher's existing 5s monitor poll carry discussion state (polling fallback), or should Realtime be added in Phase A? | Phase A sync model | Open |
-| A6 | Should discussion auto-end when the activity is paused, or only when it is closed? | Phase A state machine | Open |
-| A7 | What is the soft maximum number of simultaneous speakers for group discussion? (Recommendation: 5) | Phase D design | Open |
+| A1 | Is Phase A (audio foundation + schema plan) approved as the first delivery? | Phase A start | **Resolved for dev run:** Full A–F development implementation package is approved only after manual IDE build approval. Phase A alone is infrastructure, not user-visible MVP. Phase A+B is the minimum meaningful MVP. |
+| A2 | Should discussion be limited to `live_lesson` mode only, or available for other activity modes? | Phase A design | **Resolved for dev run:** Discussion is limited to `live_lesson` mode only. |
+| A3 | Should a discussion session always be anchored to a `live_lesson` activity, or can it run standalone? | Phase A design | **Resolved for dev run:** Discussion must always be anchored to a `live_lesson` classroom activity. No standalone discussion sessions in this run. |
+| A4 | **Resolved 2026-05-25:** Target support is up to 40 students per teacher class. Audio and session calculations assume 40 students + 1 teacher = 41 concurrent participants. Load tests target 40 students as baseline; safety-margin tests target 45 students + 1 teacher = 46 participants. | Phase A capacity | **Resolved** |
+| A5 | Should the teacher's existing 5s monitor poll carry discussion state (polling fallback), or should Realtime be added in Phase A? | Phase A sync model | **Resolved for dev run:** Existing teacher/student polling carries discussion state first. Realtime is deferred and must not be required for Phase A. |
+| A6 | Should discussion auto-end when the activity is paused, or only when it is closed? | Phase A state machine | **Resolved for dev run:** Discussion does not auto-end when the activity is paused. Paused/locked activity state may block new requests as appropriate. Discussion auto-ends when the activity is closed or archived. |
+| A7 | What is the soft maximum number of simultaneous speakers for group discussion? | Phase D design | **Resolved for dev run:** Maximum simultaneous approved student speakers is 5. |
 | A8 | **Resolved 2026-05-29:** Should participation data be visible to parents/guardians in reports? **No. Discussion participation, hand-raise history, audio session metadata, and private conversation records are permanently out of scope for parent and guardian reports.** | All phases | **Resolved: No** |
-| A9 | What is the UI design for two student request types: two separate buttons ("Raise hand to speak" / "Request private help") or one button with a request-type selector? | Phase A student UI | Open |
-| A10 | When a student enters a private conversation, should they be muted in the main class room (SFU mute, simpler reconnect) or removed from the main room entirely and re-added when private ends (cleaner isolation, more complex)? Recommendation: muted in main room. | Phase E architecture | Open |
+| A9 | What is the UI design for two student request types: two separate buttons or one button with type selector? | Phase A student UI | **Resolved for dev run:** Student UI uses two separate request buttons: `speak_to_class` and `private_help`. Final Hebrew copy still requires owner approval before production, but implementation may use existing/placeholder labels only inside the scoped discussion UI. |
+| A10 | When a student enters a private conversation, how is class-room isolation handled? | Phase E architecture | **Resolved for dev run:** Student is isolated through a separate provider room. The student's class-room speaking/publish permission must be suspended/revoked while private is active. The main class room continues for the rest of the class. |
 | A11 | **Resolved 2026-05-29:** Is the main ADMIN entitlement model approved? The main platform ADMIN controls who can use live discussion/audio. No school, school teacher, or private teacher receives this capability automatically. | All phases | **Resolved: Yes** |
 | A12 | **Resolved 2026-05-29:** Should school managers be able to delegate live discussion/audio permission to individual school teachers after the school receives entitlement from the main ADMIN? | Phase A entitlement | **Resolved: Yes, after school has ADMIN entitlement** |
 | A13 | **Resolved 2026-05-29:** Should private teachers require direct main ADMIN entitlement plus subject grants from `private_teacher_subjects`? | Phase A entitlement | **Resolved: Yes** |
@@ -2881,52 +2897,52 @@ All items below must be resolved before implementation of each phase begins. Ite
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| B1 | What are the exact operating jurisdictions for this product? (Israel? EU? US? Other?) | All audio phases | Open |
-| B2 | Has Israeli privacy law review been initiated for real-time voice transmission to minors? | Audio Phase B | Open |
-| B3 | Is a parental notification mechanism required before audio is enabled for a student? If yes, what is the mechanism? | Audio Phase B | Open |
-| B4 | What is the data retention policy for `classroom_discussion_events` and participant records? | Phase A | Open |
-| B5 | Is the privacy policy update planned before audio phases ship? | Audio Phase B | Open |
-| B6 | Is the sub-processor list update planned (for new audio provider)? | Audio Phase B | Open |
-| B7 | Is a Supabase DPA already in place? | Phase A | Open |
-| B8 | **Is the data retention policy for Phase A discussion metadata (hand-raise events, request-type logs, approval logs, participant records for minors) approved before the first migration is executed?** | Phase A migration | Open |
+| B1 | What are the exact operating jurisdictions for this product? (Israel? EU? US? Other?) | All audio phases | **Open for production.** Does not block local/development implementation because no production launch, no SQL execution, no deploy, no real student data, no recording, no transcription, and no AI audio processing are approved. |
+| B2 | Has Israeli privacy law review been initiated for real-time voice transmission to minors? | Audio Phase B | **Open for production.** Does not block development implementation. |
+| B3 | Is a parental notification mechanism required before audio is enabled for a student? | Audio Phase B | **Open for production.** Does not block development implementation. |
+| B4 | What is the data retention policy for `classroom_discussion_events` and participant records? | Phase A | **Open for production.** Does not block development implementation. |
+| B5 | Is the privacy policy update planned before audio phases ship? | Audio Phase B | **Open for production.** Does not block development implementation. |
+| B6 | Is the sub-processor list update planned (for new audio provider)? | Audio Phase B | **Open for production.** Does not block development implementation. |
+| B7 | Is a Supabase DPA already in place? | Phase A | **Open for production.** Does not block development implementation. |
+| B8 | Data retention policy for Phase A discussion metadata approved before first migration is executed? | Phase A migration | **Resolved for dev run only:** Migration may include metadata tables and comments, but the migration must not be executed. Production data-retention policy remains open and must be resolved before migration execution or production enablement. |
 
 ### Group C — Provider and Cost Decisions
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| C1 | Is Phase A POC A approved on free/no-cost basis? | Phase A POC | Open |
-| C2 | **Is the first POC (POC B) allowed to use a free external provider account with test accounts only, with no production student data?** | Audio POC B | Open |
-| C3 | Which provider should be used for POC B? (Recommendation: Agora or LiveKit Cloud free tier) | Audio POC B | Open |
-| C4 | Which provider is approved for production? (Recommendation: LiveKit Cloud → self-host if volume justifies) | Audio Phase B production | Open |
-| C5 | What is the approved monthly budget cap for audio provider costs? | Audio Phase B | Open |
-| C6 | What is the `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` value at launch? | Audio Phase B | Open |
-| C7 | Has the provider DPA been reviewed and is it suitable for a children's product? | Audio Phase B | Open |
-| C8 | Who owns provider account management and monitors billing? | Audio Phase B | Open |
-| C9 | **Are the corrected cost assumptions (Section 7) accepted after the owner has verified them against the provider's current pricing page? No budget cap may be set until this decision is answered with verified numbers.** | Audio Phase B budget | Open |
+| C1 | Is Phase A POC A approved on free/no-cost basis? | Phase A POC | **Resolved for dev run:** POC A with mock provider is approved after manual build approval. |
+| C2 | Is the first POC (POC B) allowed to use a free external provider account with test accounts only, with no production student data? | Audio POC B | **Resolved for dev run:** External provider testing may use test accounts only if environment values are available. No production student data. |
+| C3 | Which provider should be used for POC B? | Audio POC B | **Resolved for dev run:** LiveKit Free is the first development/POC provider. Architecture must remain provider-neutral. |
+| C4 | Which provider is approved for production? | Audio Phase B production | **Open for production.** Development run may implement LiveKit provider behind adapter only. No production provider is selected. |
+| C5 | What is the approved monthly budget cap for audio provider costs? | Audio Phase B | **Open for production.** Development run must preserve budget cap default 0. |
+| C6 | What is the `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` value at launch? | Audio Phase B | **Resolved for dev run:** `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` default remains 0. No billing is enabled by default. |
+| C7 | Has the provider DPA been reviewed and is it suitable for a children's product? | Audio Phase B | **Open for production.** Does not block development implementation without production launch. |
+| C8 | Who owns provider account management and monitors billing? | Audio Phase B | **Open for production.** Does not block development implementation. |
+| C9 | Are the corrected cost assumptions (Section 7) accepted after the owner has verified them against the provider's current pricing page? | Audio Phase B budget | **Open for production.** Cost assumptions must be verified before production budget approval. Development run keeps audio disabled by default. |
 
 ### Group D — Technical Architecture Decisions
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| D1 | Is the proposed DB schema (Section 12) approved? Includes `request_type`, `audio_scope` columns and the `classroom_private_audio_sessions` table. | Phase A | Open |
-| D2 | Is the API route plan (Section 13) approved? Includes private conversation routes. | Phase A | Open |
-| D3 | Is the Realtime channel design (Section 14) approved? Includes private event payloads. | Phase A.1 (Realtime enhancement) | Open |
-| D4 | Is the `LiveAudioProvider` adapter interface (Section 5) approved? Includes the four new private-room functions (`createPrivateRoom`, `closePrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`). | Phase B | Open |
-| D5 | Is the Permissions-Policy scoping change (Section 10.4) approved? | Phase B | Open |
-| D6 | Should Phase A start with polling-only (no Realtime), or polling + Realtime from the start? | Phase A implementation | Open |
-| D7 | Should short-lived Realtime tokens be issued to students (full private channels) instead of anon-key broadcast? | Phase A security | Open |
-| D8 | Is the Phase E separate-provider-room architecture for private conversations approved? (Preferred over client-side muting per owner direction.) | Phase E | Open |
-| D9 | What DB structure will store school and private-teacher live discussion/audio entitlements? Option A (separate entitlement tables — recommended) or Option B (flag columns on existing tables)? See Section 23.6 for details. | Phase A migration | Open |
-| D10 | What is the server helper design for centralizing live discussion/audio entitlement checks? See Section 23.7 for planned `checkLiveDiscussionEntitlement` interface. | Phase A implementation | Open |
+| D1 | Is the proposed DB schema (Section 12) approved? Includes `request_type`, `audio_scope` columns and the `classroom_private_audio_sessions` table. | Phase A | **Resolved for dev run:** DB schema from Section 12 is approved to be written into a migration file only. SQL must not be executed. |
+| D2 | Is the API route plan (Section 13) approved? Includes private conversation routes. | Phase A | **Resolved for dev run:** API route plan from Section 13 is approved for implementation. |
+| D3 | Is the Realtime channel design (Section 14) approved? | Phase A.1 (Realtime enhancement) | **Resolved for dev run:** Realtime is deferred. Phase A starts polling-first. Realtime code may not be required for core Phase A acceptance. |
+| D4 | Is the `LiveAudioProvider` adapter interface (Section 5) approved? Includes the four new private-room functions (`createPrivateRoom`, `closePrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`). | Phase B | **Resolved for dev run:** `LiveAudioProvider` adapter interface from Section 5 is approved, including private-room functions. |
+| D5 | Is the Permissions-Policy scoping change (Section 10.4) approved? | Phase B | **Resolved for dev run:** Permissions-Policy may be scoped only for the teacher monitor route and student activity route if browser microphone implementation requires it. Camera remains blocked. No other route may receive microphone permission. |
+| D6 | Should Phase A start with polling-only (no Realtime), or polling + Realtime from the start? | Phase A implementation | **Resolved for dev run:** Polling-only first. No Realtime dependency for Phase A. |
+| D7 | Should short-lived Realtime tokens be issued to students instead of anon-key broadcast? | Phase A security | **Resolved for dev run:** No short-lived Realtime JWTs in this run. Use REST polling as source of truth. If Realtime is later added, server-broadcast-only and sanitized payload rules apply. |
+| D8 | Is the Phase E separate-provider-room architecture for private conversations approved? | Phase E | **Resolved for dev run:** Phase E must use separate provider room architecture, not client-side mute isolation. |
+| D9 | What DB structure will store school and private-teacher live discussion/audio entitlements? | Phase A migration | **Resolved for dev run:** Option A — separate entitlement tables. SQL may be written only inside the migration file. SQL must not be executed. |
+| D10 | What is the server helper design for centralizing live discussion/audio entitlement checks? | Phase A implementation | **Resolved for dev run:** Central helper from Section 23.7. Implement in `lib/teacher-server/live-discussion-entitlement.server.js` with `checkLiveDiscussionEntitlement`, `checkSchoolTeacherEntitlement`, `checkPrivateTeacherEntitlement`. |
 
 ### Group E — Rollout Decisions
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| E1 | Which classes/teachers will receive Phase A pilot? | Rollout | Open |
-| E2 | Who is authorized to toggle the feature flags in production? | Rollout | Open |
-| E3 | What is the smoke test procedure before each phase goes live? | Rollout | Open |
-| E4 | Is there a rollback procedure if Phase A causes issues in the existing monitor page? | Rollout | Open |
+| E1 | Which classes/teachers will receive Phase A pilot? | Rollout | **Resolved for dev run:** Test/demo accounts only. No production student data. |
+| E2 | Who is authorized to toggle the feature flags in production? | Rollout | **Resolved for dev run:** Owner/main ADMIN only may later enable feature flags. Implementation must keep safe defaults false/disabled. |
+| E3 | What is the smoke test procedure before each phase goes live? | Rollout | **Resolved for dev run:** Use QA plan from Section 26 and final report requirements from Section 35. |
+| E4 | Is there a rollback procedure if Phase A causes issues in the existing monitor page? | Rollout | **Resolved for dev run:** No commit/push/deploy. Rollback is by discarding working tree changes or using Git review before any commit. |
 
 ---
 
@@ -2971,157 +2987,235 @@ As of the time of writing, no implementation has started:
 
 ---
 
-## 35. Future Overnight Full Dev Implementation Run Instructions
+## 35. Build-Ready Full Development Implementation Protocol
 
 ### 35.1 Purpose
 
-**This section does not start implementation by itself. It only defines the allowed and forbidden actions for a future run after the owner gives a separate explicit execution instruction.**
+This section defines the exact implementation protocol that applies after the owner manually approves the IDE/agent Build/Accept/Agent execution action for this plan. Until that manual approval, this is documentation only. After that manual approval, the agent must start code implementation according to this section. The agent must not return another planning-only summary.
 
-This section defines the rules for an owner-approved future development-site implementation run. When the owner explicitly instructs an implementation agent to begin, the agent must follow the rules in this section exactly.
+### 35.2 Manual Build Approval Rule
 
-The owner has pre-approved the scope and boundaries of such a run. When triggered, the goal is to build as much of the complete implementation package as possible in the development environment, then review, test, keep, fix, or discard the work.
+Implementation starts only after the owner manually approves the IDE/agent Build/Accept/Agent execution action for this approved plan.
 
-This is not a production launch. This is not a Git push. This is not a deployment. This is not permission to execute SQL.
+Chat-body approval is not sufficient.
 
-The goal is to build as much of the complete implementation package as possible in the development environment, then review, test, keep, fix, or discard the work.
+A general message saying approved, go ahead, implement, continue, looks good, or any Hebrew approval phrase is not sufficient unless the owner also manually approves the IDE/agent Build/Accept/Agent execution action.
 
-### 35.2 Owner Implementation Decision
+After manual build approval, the agent must begin code implementation or explicitly state it is still in plan/documentation mode and cannot edit code.
 
-The owner approves a full development implementation run covering the complete project plan (Phases A through F).
+If the agent cannot edit `.js`, `.jsx`, API route, migration, or test files, it must stop and say exactly: **I am still in plan/documentation mode and cannot implement code.**
 
-The implementation agent may work normally on the development site and may build code, components, APIs, adapter layers, tests, audio provider integration, and reports according to this document.
+### 35.3 Valid First Response After Manual Build Approval
 
-The only absolute technical restriction is:
+The first response after manual build approval must not be a plan summary.
 
-**Do not execute SQL. Do not run migrations. Do not apply DB changes manually in Supabase.**
+It must be one of only two valid response types.
 
-### 35.3 Allowed During the Run
+**Valid response A — implementation starts:**
 
-The implementation agent may:
+The response must state that implementation is starting and must list at least four real non-doc implementation files being created or modified. Examples of valid implementation files:
 
-- Create files.
-- Modify existing files required by this plan.
-- Create a migration file (SQL written inside it, not executed).
-- Write SQL inside a migration file.
-- Create server modules.
-- Create API routes.
-- Create UI components.
-- Update feature flag handling.
-- Add or update tests.
-- Run unit tests.
-- Run API tests.
-- Run Playwright/E2E tests.
-- Run build.
-- Run lint.
-- Run the dev server.
-- Use LiveKit Free for development/POC if environment values are available.
-- Implement the provider-neutral `LiveAudioProvider` adapter.
-- Implement a mock provider.
-- Implement a LiveKit provider for development testing.
-- Update `.env.example` with variable names only.
-- Produce a detailed final implementation report.
+- `supabase/migrations/025_classroom_discussion.sql`
+- `lib/teacher-server/live-discussion-entitlement.server.js`
+- `lib/teacher-server/teacher-discussion.server.js`
+- `lib/live-audio/provider-adapter.js`
+- `lib/live-audio/providers/mock.js`
+- `lib/live-audio/providers/livekit.js`
+- `components/teacher-portal/TeacherDiscussionPanel.jsx`
+- `components/student/StudentDiscussionBar.jsx`
+- `pages/api/teacher/activities/[activityId]/discussion/start.js`
+- `pages/api/student/activities/[activityId]/discussion/index.js`
+- `tests/classroom-discussion/session-state-machine.test.mjs`
 
-### 35.4 Forbidden During the Run
+**Valid response B — cannot implement:**
 
-The implementation agent must not:
+`I am still in plan/documentation mode and cannot implement code.`
 
-- Execute SQL against Supabase.
-- Run Supabase migrations.
-- Apply DB changes manually.
-- Commit.
-- Push.
-- Deploy.
-- Use production student data.
-- Store real provider secrets in committed files.
-- Remove the provider-neutral adapter.
-- Hard-code the product directly to LiveKit outside the provider adapter.
-- Enable recording, transcription, or AI audio processing.
-- Expose discussion/audio data to parent or guardian reports.
-- Change unrelated Hebrew content or design.
-- Touch subject expansion work.
-- Touch unrelated learning, arcade, parent, or guardian flows except for regression tests.
+Any other response is invalid.
 
-### 35.5 SQL and Migration Rule
+### 35.4 Invalid Response After Manual Build Approval
 
-The implementation agent may create:
+After manual build approval, these responses are invalid:
 
-`supabase/migrations/025_classroom_discussion.sql`
+- Another markdown-only plan update.
+- Another plan summary.
+- Another stale-reference checklist.
+- Another "plan is ready" message.
+- Another explanation of Section 35.
+- Another request for implementation permission.
+- Editing only documentation files.
+- Reporting "No code, no SQL, no implementation" as if that is the final result.
 
-The migration may contain all tables, indexes, comments, RLS enablement, and schema needed for the feature. The migration must not be executed.
+If any of the above occurs, the implementation run is failed and should be stopped.
 
-Any test or feature that cannot complete because the DB schema does not exist yet must be marked clearly as:
+### 35.5 Implementation Scope
 
-`BLOCKED_BY_SQL_NOT_EXECUTED`
+The full A–F development package includes the following. All items are in scope after manual build approval.
 
-The final report must list exactly which tests are blocked only because the migration was not run.
+**1. Migration file**
 
-### 35.6 Implementation Scope
+- `supabase/migrations/025_classroom_discussion.sql`
+- Four core discussion tables.
+- Option A entitlement tables (separate tables per Section 23.6 and D9 resolution).
+- Indexes, comments, RLS enabled.
+- SQL written only — SQL must not be executed.
 
-The overnight implementation covers:
+**2. Admin entitlement model**
 
-1. **Admin Entitlement Model** — `lib/teacher-server/live-discussion-entitlement.server.js` with `checkLiveDiscussionEntitlement`, `checkSchoolTeacherEntitlement`, `checkPrivateTeacherEntitlement`. Entitlement storage tables (SQL written in migration file, not executed — pending D9 decision). All teacher discussion/audio API routes must call the entitlement helper before any other logic. Entitlement-based UI gating in `TeacherDiscussionPanel.jsx`. Unit tests for all gate scenarios.
-2. **Phase A** — audio foundation: all four discussion DB tables (migration file, not executed), LiveAudioProvider adapter and mock provider, all teacher and student discussion APIs including private conversation routes, teacher Discussion panel with request-type badges, student discussion bar with raise-hand and request-private buttons, feature flags.
-3. **Phase B** — LiveKit provider for development/POC; teacher audio broadcast; student listen-only mode.
-4. **Phase C** — approved student microphone for speak-to-class requests; mute and revoke enforcement through the adapter.
-5. **Phase D** — multiple approved speakers and mute-all.
-6. **Phase E** — private teacher-student audio conversation using a separate provider room; `createPrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`, `closePrivateRoom` adapter calls; private audio token APIs.
-7. **Phase F** — teacher-only participation summary (report endpoint). No parent or guardian data exposure.
-8. Unit, API, E2E, security/tamper, entitlement gate, and regression tests.
+- `lib/teacher-server/live-discussion-entitlement.server.js`
+- All required entitlement helper functions: `checkLiveDiscussionEntitlement`, `checkSchoolTeacherEntitlement`, `checkPrivateTeacherEntitlement`.
+- All teacher discussion/audio routes must call the entitlement helper before any other logic.
+- Entitlement-based UI gating in `TeacherDiscussionPanel.jsx`.
+- Unit tests for all gate scenarios including entitlement-denied cases.
 
-**Entitlement model is mandatory — it must not be bypassed during the implementation run.** Every teacher discussion/audio API route in the implementation must call `checkLiveDiscussionEntitlement`. The implementation agent must not create a shortcut that skips entitlement checks even in test mode. Test scenarios must include entitlement-denied cases.
+**3. Discussion server module**
 
-**Explicit prohibition for this run:** Do not include discussion, audio, or private conversation data in any parent or guardian API response. If `discussion/report` is implemented, it must be behind `requireTeacherApiContext` only.
+- `lib/teacher-server/teacher-discussion.server.js`
+- Session lifecycle: start, lock, end, auto-end on activity close/archive.
+- Participant lifecycle: raise hand, approve, revoke, mute, unmute, clear-all-hands, mute-all.
+- Request types: `speak_to_class`, `private_help`.
+- Private session lifecycle: start, end, auto-end.
+- Activity close auto-end hook.
 
-**Capacity assumption for the implementation run:** All code, tests, and load simulations must use the updated target of **40 students + 1 teacher = 41 concurrent audio participants** per session. Load tests must target 40 students as the baseline. Safety-margin simulations should target 45 students + 1 teacher where practical. The teacher monitor Discussion panel must support compact display of up to 40 student rows. Speaker limit remains 5 simultaneous approved students for group discussion.
+**4. LiveAudioProvider adapter**
 
-### 35.7 Provider Decision for Development Run
+- Provider-neutral adapter interface (`lib/live-audio/provider-adapter.js`).
+- Mock provider (`lib/live-audio/providers/mock.js`).
+- LiveKit development provider (`lib/live-audio/providers/livekit.js`).
+- No LiveKit-specific code outside the provider file.
 
-For this development run:
+**5. Teacher API routes (Section 13 scope)**
 
-- LiveKit Free is the first POC/development provider.
-- The architecture must remain provider-neutral.
-- Product code must call the internal `LiveAudioProvider` adapter only.
-- LiveKit-specific code must remain isolated under `lib/live-audio/providers/livekit.js`.
-- Future replacement with Agora, Daily, VideoSDK, 100ms, or another provider must remain possible via the adapter.
+- `start`, `index`, `lock`, `approve`, `revoke`, `mute`, `unmute`, `clear-hands`, `mute-all`, `end`.
+- `audio-start`, `audio-stop`, `audio-token`.
+- `approve-private`, `end-private`, `private-audio-token`.
+- `report` (teacher-only, no parent/guardian exposure).
 
-### 35.8 Feature Flag Safe Defaults
+**6. Student API routes (Section 13 scope)**
 
-The implementation must preserve safe defaults. Nothing is enabled without explicit environment variable overrides:
+- `index`, `raise-hand`, `request-private`, `lower-hand`, `heartbeat`.
+- `audio-token`, `private-audio-token`.
+
+**7. Teacher UI**
+
+- `components/teacher-portal/TeacherDiscussionPanel.jsx`.
+- Integration into teacher monitor page.
+- Entitlement-based visibility gating.
+- Compact display supporting up to 40 student rows.
+- Request-type badges for `speak_to_class` and `private_help`.
+- Audio controls, private conversation indicator.
+
+**8. Student UI**
+
+- `components/student/StudentDiscussionBar.jsx`.
+- Integration into student activity page.
+- `speak_to_class` request button.
+- `private_help` request button.
+- States: listen-only, approved-to-speak, muted, private conversation active.
+
+**9. Teacher-only discussion report**
+
+- Report endpoint behind `requireTeacherApiContext` only.
+- No parent or guardian API exposure.
+- Teacher-facing discussion summary.
+
+**10. Tests**
+
+- Unit tests.
+- API tests.
+- Entitlement gate tests (including denied cases).
+- Tamper/security tests.
+- Regression tests (prove no parent/guardian data exposure).
+- E2E where practical.
+- Tests blocked only by missing DB schema must be clearly marked `BLOCKED_BY_SQL_NOT_EXECUTED`.
+
+### 35.6 Required Implementation Order
+
+1. Migration file only (`supabase/migrations/025_classroom_discussion.sql`).
+2. Entitlement helper (`lib/teacher-server/live-discussion-entitlement.server.js`).
+3. LiveAudioProvider adapter + mock provider.
+4. Discussion server module (`lib/teacher-server/teacher-discussion.server.js`).
+5. Teacher API routes.
+6. Student API routes.
+7. Monitor/live-state payload integration.
+8. Teacher UI component (`TeacherDiscussionPanel.jsx`).
+9. Student UI component (`StudentDiscussionBar.jsx`).
+10. Audio provider implementation (LiveKit development provider).
+11. Private-room implementation (Phase E).
+12. Teacher-only discussion report (Phase F).
+13. Tests.
+14. Build/lint/test verification.
+15. Final implementation report.
+
+### 35.7 Absolute Restrictions
+
+These restrictions apply during the entire implementation run without exception:
+
+- Do not execute SQL.
+- Do not run migrations.
+- Do not apply DB changes manually in Supabase.
+- Do not commit.
+- Do not push.
+- Do not deploy.
+- Do not use production student data.
+- Do not store real provider secrets in committed files.
+- Do not enable recording.
+- Do not enable transcription.
+- Do not enable AI audio processing.
+- Do not expose discussion, audio, or private conversation data to parent or guardian reports.
+- Do not touch unrelated Hebrew content.
+- Do not touch unrelated design.
+- Do not touch learning, arcade, parent, guardian, or subject-expansion flows except for regression tests or explicit no-op guards required to prove no exposure.
+
+### 35.8 Safe Defaults
+
+The implementation must preserve these safe defaults. Nothing is enabled without explicit environment variable overrides.
 
 - `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=false`
 - `LIVE_DISCUSSION_AUDIO_ENABLED=false`
 - `LIVE_AUDIO_PROVIDER=mock`
 - `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP=0`
 
-### 35.9 Required Final Report
+No feature is enabled by default. No audio is enabled by default. No school, school teacher, or private teacher gets access automatically.
 
-At the end of the run, the implementation agent must return a detailed report covering:
+### 35.9 Required Final Implementation Report
+
+The final report after the implementation run must list actual implementation work, not plan status.
+
+It must include:
 
 - Files created.
 - Files modified.
-- Migration file created (SQL written, not executed).
+- Migration file created (confirm file path).
 - Confirmation SQL was not executed.
+- Confirmation migrations were not run.
+- Confirmation no commit.
+- Confirmation no push.
+- Confirmation no deploy.
 - Dependencies added, if any.
 - Environment variable names added or referenced.
 - APIs implemented.
 - UI implemented.
-- Audio provider and LiveKit status.
-- Feature flag status.
-- Tests run, passed, failed, and blocked by `BLOCKED_BY_SQL_NOT_EXECUTED`.
-- Build result and lint result.
-- Known issues and security/tamper test results.
-- What still needs owner action.
-- Whether the implementation is worth keeping, fixing, or discarding.
+- Audio provider status (mock/LiveKit).
+- LiveKit provider status.
+- Feature flag defaults (confirm all four remain at safe values).
+- Tests run.
+- Tests passed.
+- Tests failed.
+- Tests blocked by `BLOCKED_BY_SQL_NOT_EXECUTED`.
+- Build result.
+- Lint result.
+- Security/tamper test result.
+- Entitlement gate test result.
+- Parent/guardian exposure check result.
+- Known issues.
+- Owner actions still required before production.
+- Recommendation: keep / fix / discard.
 
-### 35.10 Review Rule
-
-No commit, push, deployment, or production enablement may happen before owner review.
-
-After the run, the owner will decide: keep and fix / partially keep and refactor / discard and restore from Git.
+A final report that lists only documentation changes is invalid.
 
 ---
 
 *End of plan document.*
-*Version 3.1 — 2026-05-29*
-*Owner product direction update applied: audio-first MVP, phases A–F, Phase E private teacher-student conversation, parent reports permanently out of scope, two student request types, updated data model and adapter. Admin Entitlement and Permission Model added (Section 23): main ADMIN controls all access; school manager delegates after school entitlement; private teacher requires direct ADMIN grant; nine-gate permission order; entitlement must not be bypassed.*
-*No code, no SQL execution, no commit, no push, no deploy.*
+*Version 3.2 — 2026-05-29*
+*Build-ready execution protocol. Section 35 rewritten as implementation protocol triggered only by manual IDE Build/Accept/Agent approval. All Section 33 Group A–E decisions resolved for development run. D9 resolved as Option A (separate entitlement tables). D10 resolved as central entitlement helper in lib/teacher-server/live-discussion-entitlement.server.js. Valid and invalid first responses defined. Full implementation scope, order, restrictions, and final report requirements defined. No code, no SQL execution, no commit, no push, no deploy.*

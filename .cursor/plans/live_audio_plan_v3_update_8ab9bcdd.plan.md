@@ -13,10 +13,10 @@ todos:
     status: completed
   - id: update-api-plan
     content: "Update Section 13 (API Plan): add private conversation routes for teacher and student; update raise-hand route to carry request_type"
-    status: pending
+    status: completed
   - id: update-realtime-plan
     content: "Update Section 14 (Realtime Plan): add private_help_requested, private_session_started, private_session_ended event payloads"
-    status: pending
+    status: completed
   - id: renumber-and-rewrite-phases
     content: "Rename and rewrite all phase sections 17-22 to A-F: Phase A (foundation), B (broadcast), C (speak-to-class), D (group discussion), E (private conversation — new), F (QA). Remove old Phase 1 as standalone MVP. Remove Phase 6 from parent-facing reports."
     status: completed
@@ -25,7 +25,7 @@ todos:
     status: completed
   - id: update-owner-checklist-final-sections
     content: "Update Sections 29 (go/no-go), 33 (owner decisions: A1 audio-first, A8 resolved no parent reports, A9-A10 new), 34 (final reminder), 35 (dev run scope)"
-    status: pending
+    status: completed
 isProject: false
 ---
 
