@@ -379,10 +379,11 @@ Full schema in Section 12.
 
 ### 4.6 Feature Flags and Entitlement Layering
 
-- `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` — client-side flag; gates all discussion UI globally.
+- `LIVE_DISCUSSION_ENABLED` — server-side runtime flag; authoritative kill switch for all live discussion server APIs and server-side gates. Setting this to `false` disables discussion at the API layer immediately, with no code deploy required.
+- `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` — client/UI hint only. May be inlined at build time and does not take effect without a rebuild and redeploy. Must never be treated as an authoritative runtime kill switch. Server APIs must remain blocked when `LIVE_DISCUSSION_ENABLED=false` even if the client bundle displays stale UI.
 - `LIVE_DISCUSSION_AUDIO_ENABLED` — server-side flag; gates audio token issuance globally.
-- Both start `false`. Never enabled without owner approval.
-- Kill switch: setting either flag to `false` immediately disables the feature with no code change.
+- All flags start `false`. Never enabled without owner approval.
+- Server-side kill switch: setting `LIVE_DISCUSSION_ENABLED=false` immediately disables all discussion APIs at runtime with no code deploy. Client UI may lag until next rebuild/redeploy if only `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` is changed.
 
 **The global feature flag is not sufficient on its own.** Enabling it does not grant access to any school, school teacher, or private teacher. See Section 23 for the full entitlement model that sits between the feature flag and actual API access.
 
@@ -1105,7 +1106,7 @@ Four new discussion tables (Sections 12.2–12.5). Entitlement tables are planne
 -- Do not create yet. Planning only.
 create table public.classroom_discussion_sessions (
   id                          uuid        primary key default gen_random_uuid(),
-  activity_id                 uuid        references public.classroom_activities(id) on delete cascade,
+  activity_id                 uuid        not null references public.classroom_activities(id) on delete cascade,
   class_id                    uuid        not null references public.teacher_classes(id) on delete cascade,
   teacher_id                  uuid        not null references public.teacher_profiles(teacher_id) on delete cascade,
   status                      text        not null default 'active'
@@ -1235,10 +1236,20 @@ create table public.classroom_private_audio_sessions (
                                   check (status in ('active', 'ended')),
   started_at          timestamptz not null default now(),
   ended_at            timestamptz,
-  created_at          timestamptz not null default now(),
-  -- Only one active private conversation per student per discussion session.
-  unique (session_id, student_id, status)
+  created_at          timestamptz not null default now()
+  -- No full unique constraint here; partial unique indexes below enforce active-session rules
+  -- while allowing multiple ended/historical rows.
 );
+
+-- Only one active private session per discussion session at a time.
+create unique index classroom_private_audio_sessions_one_active_per_session
+  on public.classroom_private_audio_sessions (session_id)
+  where status = 'active';
+
+-- Only one active private session per student per discussion session at a time.
+create unique index classroom_private_audio_sessions_one_active_per_student
+  on public.classroom_private_audio_sessions (session_id, student_id)
+  where status = 'active';
 
 create index on public.classroom_private_audio_sessions (session_id, status);
 create index on public.classroom_private_audio_sessions (session_id, student_id);
@@ -1252,7 +1263,7 @@ comment on table public.classroom_private_audio_sessions is
 ```
 
 **Design notes:**
-- The `UNIQUE (session_id, student_id, status)` constraint plus the `status` check ensures at most one active private session per student per discussion.
+- Two partial unique indexes enforce active-session rules: at most one active private session per discussion session (`session_id WHERE status='active'`), and at most one active private session per student per discussion session (`session_id, student_id WHERE status='active'`). Multiple ended/historical rows are allowed — a full unique constraint on `(session_id, student_id, status)` would incorrectly block them.
 - `private_room_name` is never exposed to any student other than the student in the private session.
 - On `ended`, the server must call `provider.closePrivateRoom(private_room_name)` before setting `status = 'ended'`.
 
@@ -1270,7 +1281,7 @@ These tables are separate from the four discussion tables above and must not be 
 ### 12.7 Relationship to Existing Tables
 
 - New tables do **not** modify `classroom_activities`, `classroom_activity_student_status`, or `classroom_activity_attempts`.
-- `activity_id` on `classroom_discussion_sessions` is nullable (for potential future standalone discussions).
+- `activity_id` on `classroom_discussion_sessions` is `NOT NULL` in this development run. Standalone discussion sessions are not supported and require a future explicit owner-approved redesign.
 - Class and teacher validation still goes through `teacher_classes`, `teacher_class_students`, `teacher_profiles`.
 - Entitlement checks cross-reference `schools`, `teacher_profiles`, and `private_teacher_subjects`; those tables are read but not modified by the discussion system.
 
@@ -1574,7 +1585,7 @@ See Section 12 for full schema. No changes to existing tables.
 - All student discussion API routes (Section 13.2) including `request-private`.
 - `components/teacher-portal/TeacherDiscussionPanel.jsx` — discussion controls (non-audio controls operational; audio controls shown as disabled pending Phase B).
 - `components/student/StudentDiscussionBar.jsx` — discussion status bar with raise-hand and request-private buttons.
-- Feature flag checks: `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED`, `LIVE_DISCUSSION_AUDIO_ENABLED`.
+- Feature flag checks: `LIVE_DISCUSSION_ENABLED` (server kill switch), `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` (client UI hint only), `LIVE_DISCUSSION_AUDIO_ENABLED` (audio gate).
 
 ### 16.5 Teacher UI Changes
 
@@ -2050,7 +2061,7 @@ The following are out of scope for all initial phases (A–F). Listed for comple
 
 ### 23.1 Overview
 
-The live discussion/audio system is not available by default to any school, school teacher, or private teacher. The **main platform ADMIN** is the sole authority who controls which entities may use live discussion/audio. Enabling the global feature flag does not grant access — it is only the top-level prerequisite. All entitlement decisions are made by the main ADMIN independently of flag state.
+The live discussion/audio system is not available by default to any school, school teacher, or private teacher. The **main platform ADMIN** is the sole authority who controls which entities may use live discussion/audio. Enabling `LIVE_DISCUSSION_ENABLED` does not grant access — it is only the top-level prerequisite. All entitlement decisions are made by the main ADMIN independently of flag state.
 
 **This section is planning-only. No code or SQL is written or executed here. Entitlement storage requirements are noted in Section 23.6.**
 
@@ -2069,7 +2080,7 @@ The live discussion/audio system is not available by default to any school, scho
 
 **Main ADMIN grants school entitlement:**
 - The main ADMIN adds a live-discussion entitlement record for a specific school.
-- Without this record, no teacher at that school can access live discussion/audio, regardless of the global feature flag.
+- Without this record, no teacher at that school can access live discussion/audio, regardless of `LIVE_DISCUSSION_ENABLED` state.
 - The main ADMIN can revoke school entitlement at any time; revocation immediately blocks all teachers at that school.
 
 **School manager delegates to teachers:**
@@ -2078,8 +2089,8 @@ The live discussion/audio system is not available by default to any school, scho
 - Removing the school's entitlement (by ADMIN) automatically invalidates all teacher-level grants at that school (no orphan permissions).
 
 **School teacher access requirements (all must pass):**
-1. Global feature flag `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED = true`.
-2. Global audio flag `LIVE_DISCUSSION_AUDIO_ENABLED = true` (for audio operations).
+1. Server-side feature flag `LIVE_DISCUSSION_ENABLED = true`. (`NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` is a UI hint only and is never trusted by the server.)
+2. Server-side audio flag `LIVE_DISCUSSION_AUDIO_ENABLED = true` (for audio operations).
 3. School has main ADMIN entitlement for live discussion/audio.
 4. School manager has granted this teacher permission to use live discussion/audio.
 5. Teacher owns or is assigned to the relevant classroom activity.
@@ -2095,8 +2106,8 @@ The live discussion/audio system is not available by default to any school, scho
 - The main ADMIN can revoke entitlement at any time.
 
 **Private teacher access requirements (all must pass):**
-1. Global feature flag `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED = true`.
-2. Global audio flag `LIVE_DISCUSSION_AUDIO_ENABLED = true` (for audio operations).
+1. Server-side feature flag `LIVE_DISCUSSION_ENABLED = true`. (`NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` is a UI hint only and is never trusted by the server.)
+2. Server-side audio flag `LIVE_DISCUSSION_AUDIO_ENABLED = true` (for audio operations).
 3. Main ADMIN has granted this private teacher live discussion/audio entitlement.
 4. Subject permission gate: private teacher must have the relevant subject explicitly listed in `private_teacher_subjects`. Private teachers must not receive all subjects by default.
 5. The students in the session must be explicitly linked to this private teacher.
@@ -2109,9 +2120,10 @@ The live discussion/audio system is not available by default to any school, scho
 Every teacher live discussion/audio API route must check gates in this order. The first failing gate rejects the request. Audio tokens are never issued unless all applicable gates pass.
 
 ```
-Gate 1: Global feature flag
-         NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED = true
-         (LIVE_DISCUSSION_AUDIO_ENABLED = true for audio operations)
+Gate 1: Server-side feature flag
+         LIVE_DISCUSSION_ENABLED = true
+         (LIVE_DISCUSSION_AUDIO_ENABLED = true additionally required for audio operations)
+         Note: NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED is a client/UI hint only; it is never checked here.
          ↓ pass
 Gate 2: Main ADMIN entitlement
          School or private teacher has been granted live discussion/audio by main ADMIN
@@ -2355,8 +2367,8 @@ The teacher monitor Discussion panel visibility must reflect the entitlement mod
 | Main ADMIN has not granted school entitlement | Discussion panel must not be visible or must be shown as unavailable with an appropriate message |
 | School has entitlement but this specific teacher has not been granted permission by school manager | Discussion panel must not be visible or must show a "contact your school admin" message |
 | Private teacher has no ADMIN-granted entitlement | Discussion panel must not be visible or must be shown as unavailable |
-| All entitlement checks pass, but global feature flag is off | Discussion panel not visible |
-| All entitlement checks pass, feature flag on, audio flag off | Non-audio discussion controls visible; audio controls hidden or disabled |
+| All entitlement checks pass, but `LIVE_DISCUSSION_ENABLED=false` | Discussion panel not visible (server blocks all APIs; client UI also hidden if `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=false`) |
+| All entitlement checks pass, `LIVE_DISCUSSION_ENABLED=true`, `LIVE_DISCUSSION_AUDIO_ENABLED=false` | Non-audio discussion controls visible; audio controls hidden or disabled |
 | All checks pass | Full discussion panel available |
 
 **Rules for disabled/unavailable states:**
@@ -2371,7 +2383,7 @@ All learning master pages, arcade/game pages, teacher dashboard, teacher class r
 
 ### 25.5 Hebrew Copy
 
-No existing Hebrew strings are changed. New Hebrew labels for discussion UI will be added to `lib/classroom-activities/classroom-activities-labels.client.js` and the relevant teacher UI labels file during implementation. Entitlement-denied messages require separate owner approval before Hebrew copy is written. This is not done yet.
+No existing Hebrew strings are changed. Do not modify `lib/classroom-activities/classroom-activities-labels.client.js` or any existing label/translation file in Waves 0–4. Use placeholder labels only inside new scoped discussion components (e.g. `[speak-to-class]`, `[private-help]`, `[discussion-start]`). Final Hebrew copy and centralized label integration require separate owner approval before any label file is modified.
 
 ---
 
@@ -2521,23 +2533,24 @@ npm run lint
 
 | Flag | Type | Default | Purpose |
 |------|------|---------|---------|
-| `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` | Client | `false` | Gates all discussion UI for both teacher and student |
-| `LIVE_DISCUSSION_AUDIO_ENABLED` | Server | `false` | Gates audio token issuance; false = non-audio mode even if UI enabled |
+| `LIVE_DISCUSSION_ENABLED` | Server | `false` | Authoritative runtime kill switch for all live discussion server APIs and server-side gates. Setting to `false` disables discussion immediately at the API layer with no code deploy. |
+| `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` | Client (UI hint only) | `false` | Client/UI display hint. May be inlined at build time — changing it without a rebuild/redeploy may not affect client UI. Never trusted by server APIs. |
+| `LIVE_DISCUSSION_AUDIO_ENABLED` | Server | `false` | Gates audio token issuance; `false` = non-audio mode even if discussion is enabled |
 | `LIVE_AUDIO_PROVIDER` | Server | `"mock"` | Selects provider adapter; `"mock"` is safe default |
 | `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` | Server | `0` | Budget cap; `0` = audio disabled regardless of other flags |
 
-Setting any of these to a restrictive value disables the feature instantly without code deployment.
+Only server-side flags can disable behavior immediately at runtime. Setting `LIVE_DISCUSSION_ENABLED=false` blocks all discussion APIs instantly without code deployment. `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` may require a rebuild and redeploy to take effect on the client because it can be inlined at build time. Server APIs must remain blocked when `LIVE_DISCUSSION_ENABLED=false` even if the client bundle still displays stale UI.
 
 ### 27.2 Dev-Only Mode
 
-Phase A: `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=true` + `LIVE_DISCUSSION_AUDIO_ENABLED=false` + `LIVE_AUDIO_PROVIDER=mock`. No provider needed. No cost.
+Phase A: `LIVE_DISCUSSION_ENABLED=true` + `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=true` (UI hint) + `LIVE_DISCUSSION_AUDIO_ENABLED=false` + `LIVE_AUDIO_PROVIDER=mock`. No provider needed. No cost.
 
 Phase B+: Use free tier of selected provider in staging.
 
 ### 27.3 Teacher-Only Hidden Pilot
 
 Before enabling for students:
-1. Enable `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=true` in staging.
+1. Enable `LIVE_DISCUSSION_ENABLED=true` and `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=true` in staging.
 2. Teacher uses test student accounts to simulate the full flow.
 3. Verify all state transitions, polling integration, and UI updates.
 4. Run POC A.
@@ -2741,7 +2754,8 @@ These criteria describe the complete working system through Phase F. All must be
 - Discussion UI controls are not shown to teachers who lack entitlement.
 
 **Kill switch:**
-- Setting `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=false` disables all discussion UI immediately.
+- `LIVE_DISCUSSION_ENABLED=false` is the authoritative server-side runtime kill switch. All server-side feature gates must check this variable. Setting it to `false` disables discussion immediately at the API layer without requiring a code deploy.
+- `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` is a client/UI hint only. It must not be described as a runtime kill switch because `NEXT_PUBLIC_` variables may be inlined at build time and do not take effect without a rebuild and redeploy.
 - Setting `LIVE_DISCUSSION_AUDIO_ENABLED=false` disables audio immediately while keeping discussion state functional.
 
 ---
@@ -2751,7 +2765,7 @@ These criteria describe the complete working system through Phase F. All must be
 ### 31.1 Phase A — Files Touched
 
 **New files to create:**
-- `supabase/migrations/025_classroom_discussion.sql` (when approved — not yet; all 4 tables)
+- `supabase/migrations/<next_unused_number>_classroom_discussion.sql` (when approved — not yet; all 4 tables; number determined by inspecting `supabase/migrations/` at implementation time)
 - `lib/teacher-server/teacher-discussion.server.js`
 - `lib/classroom-discussion/classroom-discussion-shared.server.js`
 - `lib/live-audio/provider-adapter.js` (adapter dispatch; Phase A wires mock)
@@ -2784,7 +2798,7 @@ These criteria describe the complete working system through Phase F. All must be
 - `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` — add Discussion panel with request-type badges
 - `pages/student/activity/[activityId].js` — add discussion status bar, raise-hand and request-private buttons
 - `lib/teacher-server/teacher-activities.server.js` — extend monitor payload with discussion state; add auto-end hook on activity close
-- `lib/classroom-activities/classroom-activities-labels.client.js` — new discussion labels
+- `lib/classroom-activities/classroom-activities-labels.client.js` — **do not modify in Waves 0–4**. Final Hebrew copy and label integration require separate owner approval. New discussion components use placeholder labels only.
 
 ### 31.2 Audio Phases — Additional Files Touched (Phases B–D)
 
@@ -2851,7 +2865,8 @@ Do not add or edit any environment file yet. This list is for planning only.
 
 | Variable | Location | Purpose | Safe Default |
 |----------|----------|---------|-------------|
-| `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` | All envs | Client-side feature flag | `false` |
+| `LIVE_DISCUSSION_ENABLED` | Server envs | Authoritative server-side runtime kill switch for all discussion APIs and gates | `false` |
+| `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` | All envs (client hint only) | Client/UI hint; may be inlined at build time; never trusted by server | `false` |
 | `LIVE_DISCUSSION_AUDIO_ENABLED` | Server envs | Gates audio token issuance | `false` |
 | `LIVE_AUDIO_PROVIDER` | Server envs | Provider adapter selector | `"mock"` |
 | `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` | Server envs | Budget hard cap | `0` (disabled) |
@@ -2993,7 +3008,32 @@ As of the time of writing, no implementation has started:
 
 This section defines the exact implementation protocol that applies after the owner manually approves the IDE/agent Build/Accept/Agent execution action for this plan. Until that manual approval, this is documentation only. After that manual approval, the agent must start code implementation according to this section. The agent must not return another planning-only summary.
 
-### 35.2 Manual Build Approval Rule
+Implementation is wave-gated. Manual build approval does not authorize the entire A–F package in one uninterrupted run. The owner may approve a specific wave or a specific wave range only. The agent must stop after each approved wave and return the wave report. No next wave may begin without the owner explicitly approving it.
+
+### 35.2 Controlled Wave Execution Rule
+
+Implementation is divided into waves. Each wave is a discrete, reviewable unit of work.
+
+**Wave structure:**
+- Wave 0 — Preflight repo inspection (no file creation)
+- Wave 1 — Isolated foundation (migration file, dependencies, env, entitlement helper, adapter)
+- Wave 2 — Backend APIs without UI
+- Wave 3 — Payload integration only
+- Wave 4 — UI components and integration, feature disabled by default
+- Wave 5 — LiveKit audio and private room
+- Wave 6 — Teacher-only report and final verification
+
+**Rules:**
+- Manual build approval for this plan authorizes only the wave or wave range the owner explicitly names.
+- The agent must stop after each wave and return the required wave report.
+- The agent must not start the next wave based on its own judgment.
+- A successful build or passing tests do not constitute approval to continue.
+- After each wave, run only the critical checks defined for that wave.
+- Full comprehensive QA runs in Wave 6 only.
+- If a critical check fails, stop and report. Do not continue to the next wave.
+- Non-critical QA items not run before Wave 6 must be marked deferred to Wave 6, not as blockers.
+
+### 35.3 Manual Build Approval Rule
 
 Implementation starts only after the owner manually approves the IDE/agent Build/Accept/Agent execution action for this approved plan.
 
@@ -3001,11 +3041,11 @@ Chat-body approval is not sufficient.
 
 A general message saying approved, go ahead, implement, continue, looks good, or any Hebrew approval phrase is not sufficient unless the owner also manually approves the IDE/agent Build/Accept/Agent execution action.
 
-After manual build approval, the agent must begin code implementation or explicitly state it is still in plan/documentation mode and cannot edit code.
+After manual build approval, the agent must begin code implementation for the approved wave only, or explicitly state it is still in plan/documentation mode and cannot edit code.
 
 If the agent cannot edit `.js`, `.jsx`, API route, migration, or test files, it must stop and say exactly: **I am still in plan/documentation mode and cannot implement code.**
 
-### 35.3 Valid First Response After Manual Build Approval
+### 35.4 Valid First Response After Manual Build Approval
 
 The first response after manual build approval must not be a plan summary.
 
@@ -3013,9 +3053,9 @@ It must be one of only two valid response types.
 
 **Valid response A — implementation starts:**
 
-The response must state that implementation is starting and must list at least four real non-doc implementation files being created or modified. Examples of valid implementation files:
+The response must state which wave is starting and must list at least four real non-doc implementation files being created or modified in that wave. Examples of valid Wave 1 implementation files:
 
-- `supabase/migrations/025_classroom_discussion.sql`
+- `supabase/migrations/<next_unused_number>_classroom_discussion.sql` (number determined from Wave 0 preflight)
 - `lib/teacher-server/live-discussion-entitlement.server.js`
 - `lib/teacher-server/teacher-discussion.server.js`
 - `lib/live-audio/provider-adapter.js`
@@ -3033,7 +3073,7 @@ The response must state that implementation is starting and must list at least f
 
 Any other response is invalid.
 
-### 35.4 Invalid Response After Manual Build Approval
+### 35.5 Invalid Response After Manual Build Approval
 
 After manual build approval, these responses are invalid:
 
@@ -3048,13 +3088,13 @@ After manual build approval, these responses are invalid:
 
 If any of the above occurs, the implementation run is failed and should be stopped.
 
-### 35.5 Implementation Scope
+### 35.6 Implementation Scope
 
 The full A–F development package includes the following. All items are in scope after manual build approval.
 
 **1. Migration file**
 
-- `supabase/migrations/025_classroom_discussion.sql`
+- `supabase/migrations/<next_unused_number>_classroom_discussion.sql` — number must be determined at implementation time by inspecting `supabase/migrations/`. Never hardcode a number.
 - Four core discussion tables.
 - Option A entitlement tables (separate tables per Section 23.6 and D9 resolution).
 - Indexes, comments, RLS enabled.
@@ -3129,9 +3169,9 @@ The full A–F development package includes the following. All items are in scop
 - E2E where practical.
 - Tests blocked only by missing DB schema must be clearly marked `BLOCKED_BY_SQL_NOT_EXECUTED`.
 
-### 35.6 Required Implementation Order
+### 35.7 Required Implementation Order
 
-1. Migration file only (`supabase/migrations/025_classroom_discussion.sql`).
+1. Migration file only (`supabase/migrations/<next_unused_number>_classroom_discussion.sql` — number determined by inspecting `supabase/migrations/` before any file is created).
 2. Entitlement helper (`lib/teacher-server/live-discussion-entitlement.server.js`).
 3. LiveAudioProvider adapter + mock provider.
 4. Discussion server module (`lib/teacher-server/teacher-discussion.server.js`).
@@ -3147,7 +3187,7 @@ The full A–F development package includes the following. All items are in scop
 14. Build/lint/test verification.
 15. Final implementation report.
 
-### 35.7 Absolute Restrictions
+### 35.8 Absolute Restrictions
 
 These restrictions apply during the entire implementation run without exception:
 
@@ -3167,18 +3207,19 @@ These restrictions apply during the entire implementation run without exception:
 - Do not touch unrelated design.
 - Do not touch learning, arcade, parent, guardian, or subject-expansion flows except for regression tests or explicit no-op guards required to prove no exposure.
 
-### 35.8 Safe Defaults
+### 35.9 Safe Defaults
 
 The implementation must preserve these safe defaults. Nothing is enabled without explicit environment variable overrides.
 
-- `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=false`
+- `LIVE_DISCUSSION_ENABLED=false` — server-side runtime kill switch; all discussion APIs blocked by default
+- `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=false` — client/UI hint; may be inlined at build time; never trusted by server
 - `LIVE_DISCUSSION_AUDIO_ENABLED=false`
 - `LIVE_AUDIO_PROVIDER=mock`
 - `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP=0`
 
 No feature is enabled by default. No audio is enabled by default. No school, school teacher, or private teacher gets access automatically.
 
-### 35.9 Required Final Implementation Report
+### 35.10 Required Final Implementation Report
 
 The final report after the implementation run must list actual implementation work, not plan status.
 
@@ -3198,7 +3239,7 @@ It must include:
 - UI implemented.
 - Audio provider status (mock/LiveKit).
 - LiveKit provider status.
-- Feature flag defaults (confirm all four remain at safe values).
+- Feature flag defaults (confirm all safe default values from Section 35.9 remain unchanged).
 - Tests run.
 - Tests passed.
 - Tests failed.

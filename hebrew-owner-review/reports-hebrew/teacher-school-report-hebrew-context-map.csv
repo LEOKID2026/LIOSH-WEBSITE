@@ -1,0 +1,1012 @@
+﻿row_number,id,audience,source_file,source_line,report_surface,report_section,subject_if_known,grade_if_known,class_or_student_context_if_known,data_state_if_known,engine_meaning_plain_he,before_in_report_context,suggested_replacement_placeholder,after_in_report_context_placeholder,context_confidence,notes
+1,TS-HE-00143,teacher,components/teacher-portal/TeacherDashboardClient.jsx,199,teacher_dashboard,student_summary,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בלוח בקרה של המורה | סיכום תלמיד
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: תלמיד נוסף. שם משתמש: … PIN: 1234",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+2,TS-HE-00260,teacher,components/teacher-portal/TeacherStudentWorksheetsPanel.jsx,42,report_general,export_labels,,ה׳,,normal_data,הטקסט מסביר למורה שדוח זה נפרד ממסלול האבחון האוטומטי — יש לנסח מחדש בלי אזכור 'מנוע'.,"בממשק המורה | תוויות ייצוא
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כותרת במסך: דפי עבודה (פעילות מורה)
+כפי שמופיע היום: לא משולב במנוע האבחון — דוח נפרד מפעילויות אוטומטיות.",,ימולא לאחר אישור נוסח,high,
+3,TS-HE-00806,school_manager,lib/school-portal/school-ui.he.js,64,activity_export,data_health,חשבון,ה׳,תלמיד בודד — [תלמיד],normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כותרת במסך: סקירה כללית, פעולות מהירות ומעקב אחרי פעילות בבית הספר
+כפי שמופיע היום: ניתן לרשום תלמיד לפי מזהה UUID בטופס למעלה.",,ימולא לאחר אישור נוסח,high,
+4,TS-HE-00873,school_manager,lib/school-portal/school-ui.he.js,137,activity_export,export_labels,חשבון,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כותרת במסך: הרשאות מקצועות
+כפי שמופיע היום: מזהה תלמיד (UUID)",,ימולא לאחר אישור נוסח,high,
+5,TS-HE-01731,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,136,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבודד משפטי שאלה קצרים עם do/does/is/are במקום הנכון.",,ימולא לאחר אישור נוסח,high,
+6,TS-HE-01737,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,151,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבחור -er/-est או more/most במשפט קצר.",,ימולא לאחר אישור נוסח,high,
+7,TS-HE-01739,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,156,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבחור בין will ל-going to בהקשר ברור.",,ימולא לאחר אישור נוסח,high,
+8,TS-HE-01741,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,161,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבדוק צורת perfect מול זמן פשוט באותו הקשר.",,ימולא לאחר אישור נוסח,high,
+9,TS-HE-01743,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,166,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבודד if/when עם צורת פועל מתאימה בגוף אחד.",,ימולא לאחר אישור נוסח,high,
+10,TS-HE-01757,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,208,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבודד משפטים עם I/he/they ולבחור צורת be מתאימה.",,ימולא לאחר אישור נוסח,high,
+11,TS-HE-01765,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,228,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבודד משפטי שאלה קצרים עם do/does/is/are במקום הנכון.",,ימולא לאחר אישור נוסח,high,
+12,TS-HE-01769,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,238,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: להבחין בין some/many/much במשפט קצר.",,ימולא לאחר אישור נוסח,high,
+13,TS-HE-01773,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,248,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבחור בין will ל-going to בהקשר ברור.",,ימולא לאחר אישור נוסח,high,
+14,TS-HE-01775,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,253,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבדוק perfect מול זמן פשוט באותו הקשר.",,ימולא לאחר אישור נוסח,high,
+15,TS-HE-01777,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,258,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: לבודד if/when עם צורת פועל מתאימה.",,ימולא לאחר אישור נוסח,high,
+16,TS-HE-01799,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,160,guidance_diagnostic,general,,ה׳,,weak_result,המערכת מדגישה טעויות חוזרות שדורשות תשומת לב.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: weak_result
+כפי שמופיע היום: ב… נראה דפוס עקבי (… טעויות בטווח; ריכוז דומה של סוג הקושי).",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+17,TS-HE-01800,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,165,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: השערה ראשונית ב…: חוזרות על אותו סוג טעות — כדאי לאמת בהמשך עם עוד דוגמאות.",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+18,TS-HE-01801,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,170,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מיועד למורה/מנהל אך מכיל מונח טכני באנגלית שעלול לבלבל.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: סימן ראשוני ב…",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+19,TS-HE-00099,teacher,components/teacher-portal/SubjectSummaryCards.jsx,10,subject_permission,data_health,חשבון (לדוגמה),ה׳,,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בהרשאות מקצוע / סינון מקצועות | מצב נתונים
+מקצוע לדוגמה: חשבון (לדוגמה)
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+20,TS-HE-00103,teacher,components/teacher-portal/SubjectSummaryCards.jsx,66,subject_permission,data_health,חשבון,ה׳,,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בהרשאות מקצוע / סינון מקצועות | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים לפי מקצוע",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+21,TS-HE-00139,teacher,components/teacher-portal/TeacherDashboardClient.jsx,83,teacher_dashboard,data_health,,ה׳,רשימת כיתות/תלמידים בלוח בקרה,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בלוח בקרה של המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: רשימת כיתות/תלמידים בלוח בקרה
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+22,TS-HE-00167,teacher,components/teacher-portal/TeacherDashboardClient.jsx,597,teacher_dashboard,data_health,,ה׳,רשימת כיתות/תלמידים בלוח בקרה,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בלוח בקרה של המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: רשימת כיתות/תלמידים בלוח בקרה
+מצב נתונים: thin_data
+כפי שמופיע היום: עדיין אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,
+23,TS-HE-00169,teacher,components/teacher-portal/TeacherDashboardClient.jsx,637,teacher_dashboard,general,,ה׳,רשימת כיתות/תלמידים בלוח בקרה,weak_result,המערכת מסמנת שיש צורך בפעולה מיידית של המורה.,"בלוח בקרה של המורה | אזור כללי
+שכבה לדוגמה: ה׳
+הקשר: רשימת כיתות/תלמידים בלוח בקרה
+מצב נתונים: weak_result
+כותרת במסך: תלמידים הדורשים תשומת לב
+כפי שמופיע היום: דורש התערבות מיידית",,ימולא לאחר אישור נוסח,high,
+24,TS-HE-00171,teacher,components/teacher-portal/TeacherDashboardClient.jsx,641,teacher_dashboard,general,,ה׳,רשימת כיתות/תלמידים בלוח בקרה,weak_result,המערכת מסמנת שיש צורך בפעולה מיידית של המורה.,"בלוח בקרה של המורה | אזור כללי
+שכבה לדוגמה: ה׳
+הקשר: רשימת כיתות/תלמידים בלוח בקרה
+מצב נתונים: weak_result
+כותרת במסך: תלמידים הדורשים תשומת לב
+כפי שמופיע היום: דורש התערבות מיידית",,ימולא לאחר אישור נוסח,high,
+25,TS-HE-00677,school_manager,lib/school-portal/school-report-view-model.js,585,school_admin_ui,data_health,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,
+26,TS-HE-00893,school_manager,lib/school-portal/school-ui.he.js,241,school_admin_ui,data_health,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,
+27,TS-HE-01104,teacher,lib/teacher-portal/teacher-ui.he.js,25,report_general,data_health,,ה׳,,thin_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: לא היו מפגשי תרגול בתקופה",,ימולא לאחר אישור נוסח,high,matched scenario: mixed_date_range
+28,TS-HE-01107,teacher,lib/teacher-portal/teacher-ui.he.js,28,report_general,activity,,ה׳,,no_data,המערכת מודיעה שאין מספיק נתוני תרגול בתקופה — לא ניתן להסיק מסקנה חזקה.,"בממשק המורה | פעילות
+שכבה לדוגמה: ה׳
+מצב נתונים: no_data
+כפי שמופיע היום: לא הייתה פעילות בתקופה",,ימולא לאחר אישור נוסח,high,
+29,TS-HE-01108,teacher,lib/teacher-portal/teacher-ui.he.js,29,report_general,data_health,,ה׳,,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים לניתוח",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+30,TS-HE-01115,teacher,lib/teacher-portal/teacher-ui.he.js,45,report_general,status_labels,,ה׳,,weak_result,המערכת מסמנת שיש צורך בפעולה מיידית של המורה.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: weak_result
+כפי שמופיע היום: דורש התערבות מיידית",,ימולא לאחר אישור נוסח,high,
+31,TS-HE-01119,teacher,lib/teacher-portal/teacher-ui.he.js,52,report_general,status_labels,,כיתה דורשת,כיתה — כיתה ה׳ (28 תלמידים),weak_result,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: כיתה דורשת
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: weak_result
+כפי שמופיע היום: הכיתה דורשת התערבות מיידית",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+32,TS-HE-01123,teacher,lib/teacher-portal/teacher-ui.he.js,59,report_general,data_health,,ה׳,,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+33,TS-HE-01124,teacher,lib/teacher-portal/teacher-ui.he.js,60,report_general,status_labels,,כיתה דורשת,כיתה — כיתה ה׳ (28 תלמידים),weak_result,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: כיתה דורשת
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: weak_result
+כפי שמופיע היום: הכיתה דורשת התערבות מיידית",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+34,TS-HE-01160,teacher,lib/teacher-portal/teacher-ui.he.js,372,report_general,general,,ה׳,,weak_result,המערכת מסמנת שיש צורך בפעולה מיידית של המורה.,"בממשק המורה | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: weak_result
+כפי שמופיע היום: דורש התערבות מיידית",,ימולא לאחר אישור נוסח,high,
+35,TS-HE-01269,teacher,pages/teacher/class/[classId].js,342,report_general,data_health,,ה׳,תלמיד בודד — [תלמיד],thin_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: thin_data
+כותרת במסך: קבוצות עבודה מוצעות
+כפי שמופיע היום: אין מספיק תלמידים עם נתונים להרכבת קבוצות.",,ימולא לאחר אישור נוסח,high,
+36,TS-HE-01270,teacher,pages/teacher/class/[classId].js,343,report_general,data_health,,ה׳,,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כותרת במסך: קבוצות עבודה מוצעות
+כפי שמופיע היום: אין מספיק נתונים להרכבת קבוצות.",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+37,TS-HE-01429,teacher,pages/teacher/student/[studentId].js,238,student_report,data_health,חשבון,ה׳,תלמיד בודד — [תלמיד],thin_data,אין מספיק נתונים לקביעת מסקנה.,"בדוח תלמיד | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: thin_data
+כותרת במסך: המלצות לי כמורה
+כפי שמופיע היום: אין מספיק נתונים לניתוח",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+38,TS-HE-01437,teacher,pages/teacher/student/[studentId].js,381,student_report,data_health,חשבון,ה׳,תלמיד בודד — [תלמיד],thin_data,אין מספיק נתונים לקביעת מסקנה.,"בדוח תלמיד | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: thin_data
+כותרת במסך: חוזקות
+כפי שמופיע היום: אין מספיק נתונים להצגת חוזקות.",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+39,TS-HE-01645,mixed_or_unclear,utils/diagnostic-labels-he.js,278,guidance_diagnostic,general,,ה׳,,thin_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: קריאת השאלה לא הייתה מסודרת",,ימולא לאחר אישור נוסח,high,
+40,TS-HE-01646,mixed_or_unclear,utils/diagnostic-labels-he.js,279,guidance_diagnostic,general,,ה׳,,thin_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: קריאת השאלה לא הייתה מסודרת",,ימולא לאחר אישור נוסח,high,
+41,TS-HE-01755,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,203,guidance_diagnostic,general,,ה׳,,thin_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: לבדוק קודם כל שלב מציאת מכנה משותף בלי לדלג ישר לתוצאה הסופית.",,ימולא לאחר אישור נוסח,high,
+42,TS-HE-00941,teacher,lib/teacher-portal/teacher-activity-report-export-labels.js,213,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,תווית בקובץ ייצוא שמורה/מנהל רואים.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: פעילות …",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+43,TS-HE-00946,teacher,lib/teacher-portal/teacher-activity-report-export-labels.js,266,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,תווית בקובץ ייצוא שמורה/מנהל רואים.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: פעילות …",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+44,TS-HE-00955,teacher,lib/teacher-portal/teacher-activity-report-export.js,111,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,תווית בקובץ ייצוא שמורה/מנהל רואים.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: דוח-פעילות-…",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+45,TS-HE-00956,teacher,lib/teacher-portal/teacher-activity-report-export.js,126,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,תווית בקובץ ייצוא שמורה/מנהל רואים.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: דוח-פעילות-…",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+46,TS-HE-00987,teacher,lib/teacher-portal/teacher-activity-report-export.js,337,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,תווית בקובץ ייצוא שמורה/מנהל רואים.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: אפשרות …",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+47,TS-HE-01038,teacher,lib/teacher-portal/teacher-activity-report-export.js,706,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: ניתוח שאלות",,ימולא לאחר אישור נוסח,high,
+48,TS-HE-01039,teacher,lib/teacher-portal/teacher-activity-report-export.js,713,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: ניתוח מיומנויות",,ימולא לאחר אישור נוסח,high,
+49,TS-HE-01049,teacher,lib/teacher-portal/teacher-activity-report-pdf.js,65,activity_report,activity,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בדוח פעילות כיתתית | פעילות
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: ניתוח שאלות",,ימולא לאחר אישור נוסח,high,
+50,TS-HE-01050,teacher,lib/teacher-portal/teacher-activity-report-pdf.js,66,activity_report,activity,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בדוח פעילות כיתתית | פעילות
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: ניתוח מיומנויות",,ימולא לאחר אישור נוסח,high,
+51,TS-HE-01088,teacher,lib/teacher-portal/teacher-activity-report-pdf.js,209,activity_report,activity,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בדוח פעילות כיתתית | פעילות
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: ניתוח שאלות",,ימולא לאחר אישור נוסח,high,
+52,TS-HE-01089,teacher,lib/teacher-portal/teacher-activity-report-pdf.js,215,activity_report,activity,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בדוח פעילות כיתתית | פעילות
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: ניתוח מיומנויות",,ימולא לאחר אישור נוסח,high,
+53,TS-HE-01121,teacher,lib/teacher-portal/teacher-ui.he.js,54,report_general,status_labels,,כיתה דורשת,כיתה — כיתה ה׳ (28 תלמידים),normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: כיתה דורשת
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: normal_data
+כפי שמופיע היום: הכיתה דורשת מעקב ותרגול ממוקד",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+54,TS-HE-01126,teacher,lib/teacher-portal/teacher-ui.he.js,62,report_general,status_labels,,כיתה דורשת,כיתה — כיתה ה׳ (28 תלמידים),normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: כיתה דורשת
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: normal_data
+כפי שמופיע היום: הכיתה דורשת מעקב ותרגול ממוקד",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+55,TS-HE-01131,teacher,lib/teacher-portal/teacher-ui.he.js,71,report_general,subject_scope,חשבון,ה׳,,weak_result,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בממשק המורה | היקף מקצועות
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+מצב נתונים: weak_result
+כפי שמופיע היום: יש קושי במקצוע — נדרש תרגול אבחוני לזיהוי נושא מדויק",,ימולא לאחר אישור נוסח,high,
+56,TS-HE-01132,teacher,lib/teacher-portal/teacher-ui.he.js,73,report_general,subject_scope,חשבון,כיתה מציגה,כיתה — כיתה ה׳ (28 תלמידים),weak_result,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בממשק המורה | היקף מקצועות
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: כיתה מציגה
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: weak_result
+כפי שמופיע היום: הכיתה מציגה קושי במקצוע — מומלץ חיזוק כיתתי אבחוני",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_class_report
+57,TS-HE-01154,teacher,lib/teacher-portal/teacher-ui.he.js,239,report_general,general,,ה׳,,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בממשק המורה | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: מומלץ לפתוח תרגול אבחוני קצר כדי לזהות את הנושא המדויק",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_student_thin
+58,TS-HE-01157,teacher,lib/teacher-portal/teacher-ui.he.js,248,report_general,activity,,ה׳,,normal_data,הדוח מנסה להסביר למורה את מקור הקושי או את כיוון הפעולה המקצועית.,"בממשק המורה | פעילות
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: מומלץ לפתוח פעילות אבחונית קצרה או חזרה כיתתית ממוקדת",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_student_thin
+59,TS-HE-00014,mixed_or_unclear,components/reporting/ReportHubModal.jsx,193,report_general,data_health,,ה׳,תלמיד בודד — [תלמיד],no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: no_data
+כפי שמופיע היום: אין תלמידים בקבוצה זו.",,ימולא לאחר אישור נוסח,high,
+60,TS-HE-00024,school_manager,components/school-portal/SchoolDrillDown.jsx,102,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: מצב שכבה",,ימולא לאחר אישור נוסח,high,
+61,TS-HE-00025,school_manager,components/school-portal/SchoolDrillDown.jsx,104,school_admin_ui,status_labels,,ה׳,כיתה — כיתה ה׳ (28 תלמידים),normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: normal_data
+כפי שמופיע היום: מצב כיתה",,ימולא לאחר אישור נוסח,high,
+62,TS-HE-00047,school_manager,components/school-portal/SchoolReportModalBody.jsx,77,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין עדיין נתונים",,ימולא לאחר אישור נוסח,high,
+63,TS-HE-00050,school_manager,components/school-portal/SchoolTeacherClassStudentsModal.jsx,68,school_admin_ui,data_health,,כיתה זו,תלמיד בודד — [תלמיד],no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: כיתה זו
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: no_data
+כפי שמופיע היום: אין תלמידים בכיתה זו.",,ימולא לאחר אישור נוסח,high,
+64,TS-HE-00131,teacher,components/teacher-portal/TeacherDashboardClient.jsx,28,teacher_dashboard,status_labels,,ה׳,רשימת כיתות/תלמידים בלוח בקרה,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בלוח בקרה של המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: רשימת כיתות/תלמידים בלוח בקרה
+מצב נתונים: normal_data
+כפי שמופיע היום: מצב לימודי",,ימולא לאחר אישור נוסח,high,
+65,TS-HE-00319,teacher,lib/classroom-activities/generate-activity-questions-client.js,97,subject_permission,data_health,חשבון,ה׳,,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בהרשאות מקצוע / סינון מקצועות | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: אין מספיק שאלות … עבור … — נושא: … — רמה: …",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+66,TS-HE-00434,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,89,report_general,status_labels,חשבון,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: עדכון סטטוס חשבון",,ימולא לאחר אישור נוסח,high,
+67,TS-HE-00472,school_manager,lib/school-portal/school-communication.he.js,21,activity_export,data_health,חשבון,ה׳,תלמיד בודד — [תלמיד],normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: לא נוצר חשבון לתלמיד זה",,ימולא לאחר אישור נוסח,high,
+68,TS-HE-00474,school_manager,lib/school-portal/school-communication.he.js,24,activity_export,export_labels,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,תווית/משפט במפתח sc btn add parent — מוצג למורה/מנהל בהקשר תוויות ייצוא.,"בייצוא דוח פעילות (Excel/PDF) | תוויות ייצוא
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: הוסף גישת הורה",,ימולא לאחר אישור נוסח,high,
+69,TS-HE-00487,school_manager,lib/school-portal/school-communication.he.js,37,activity_export,data_health,חשבון,ה׳,תלמיד בודד — [תלמיד],normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: לא נוצרו חשבונות הורים לתלמיד זה",,ימולא לאחר אישור נוסח,high,
+70,TS-HE-00508,school_manager,lib/school-portal/school-communication.he.js,62,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כותרת במסך: הודעות בית ספר
+כפי שמופיע היום: לא נשלחו הודעות עדיין",,ימולא לאחר אישור נוסח,high,
+71,TS-HE-00528,school_manager,lib/school-portal/school-communication.he.js,83,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כותרת במסך: הודעה חדשה
+כפי שמופיע היום: יש להזין תוכן להודעה",,ימולא לאחר אישור נוסח,high,
+72,TS-HE-00541,school_manager,lib/school-portal/school-communication.he.js,98,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כותרת במסך: הודעה חדשה
+כפי שמופיע היום: אין הודעות מבית הספר",,ימולא לאחר אישור נוסח,high,
+73,TS-HE-00561,school_manager,lib/school-portal/school-communication.he.js,122,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כותרת במסך: הודעות מהנהלת בית הספר
+כפי שמופיע היום: אין הודעות מבית הספר",,ימולא לאחר אישור נוסח,high,
+74,TS-HE-00571,school_manager,lib/school-portal/school-communication.he.js,134,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כותרת במסך: דוח למידה קצר
+כפי שמופיע היום: אין נתוני למידה עדיין",,ימולא לאחר אישור נוסח,high,
+75,TS-HE-00605,school_manager,lib/school-portal/school-report-view-model.js,254,school_admin_ui,subject_scope,חשבון,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | היקף מקצועות
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: …. נדרש מעקב נוסף במקצוע זה וחיזוק ממוקד.",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+76,TS-HE-00612,school_manager,lib/school-portal/school-report-view-model.js,301,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,partial_date_range,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: partial_date_range
+כפי שמופיע היום: …. דיוק כללי … בתקופה האחרונה.",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+77,TS-HE-00623,school_manager,lib/school-portal/school-report-view-model.js,369,school_admin_ui,status_labels,,ה׳,כיתה — כיתה ה׳ (28 תלמידים),normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: normal_data
+כפי שמופיע היום: מצב כיתה",,ימולא לאחר אישור נוסח,high,
+78,TS-HE-00632,school_manager,lib/school-portal/school-report-view-model.js,400,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: פעיל",,ימולא לאחר אישור נוסח,high,
+79,TS-HE-00633,school_manager,lib/school-portal/school-report-view-model.js,400,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: ללא נתונים",,ימולא לאחר אישור נוסח,high,
+80,TS-HE-00636,school_manager,lib/school-portal/school-report-view-model.js,419,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: קבוצת תמיכה",,ימולא לאחר אישור נוסח,high,
+81,TS-HE-00637,school_manager,lib/school-portal/school-report-view-model.js,423,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: קבוצת חיזוק",,ימולא לאחר אישור נוסח,high,
+82,TS-HE-00638,school_manager,lib/school-portal/school-report-view-model.js,427,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: קבוצת התקדמות",,ימולא לאחר אישור נוסח,high,
+83,TS-HE-00641,school_manager,lib/school-portal/school-report-view-model.js,453,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: קבוצת תמיכה",,ימולא לאחר אישור נוסח,high,
+84,TS-HE-00642,school_manager,lib/school-portal/school-report-view-model.js,454,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: קבוצת חיזוק",,ימולא לאחר אישור נוסח,high,
+85,TS-HE-00643,school_manager,lib/school-portal/school-report-view-model.js,455,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: קבוצת התקדמות",,ימולא לאחר אישור נוסח,high,
+86,TS-HE-00644,school_manager,lib/school-portal/school-report-view-model.js,462,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: הגישו / פעילים",,ימולא לאחר אישור נוסח,high,
+87,TS-HE-00645,school_manager,lib/school-portal/school-report-view-model.js,463,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,partial_date_range,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: partial_date_range
+כפי שמופיע היום: ללא נתונים בתקופה",,ימולא לאחר אישור נוסח,high,
+88,TS-HE-00647,school_manager,lib/school-portal/school-report-view-model.js,478,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין פעילויות",,ימולא לאחר אישור נוסח,high,
+89,TS-HE-00648,school_manager,lib/school-portal/school-report-view-model.js,478,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … פעילויות",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+90,TS-HE-00650,school_manager,lib/school-portal/school-report-view-model.js,483,school_admin_ui,status_labels,,ה׳,תלמיד בודד — [תלמיד],no_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: no_data
+כפי שמופיע היום: אין תלמידים",,ימולא לאחר אישור נוסח,high,
+91,TS-HE-00651,school_manager,lib/school-portal/school-report-view-model.js,483,school_admin_ui,status_labels,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: … תלמידים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+92,TS-HE-00653,school_manager,lib/school-portal/school-report-view-model.js,488,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין נושאים",,ימולא לאחר אישור נוסח,high,
+93,TS-HE-00654,school_manager,lib/school-portal/school-report-view-model.js,488,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … נושאים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+94,TS-HE-00656,school_manager,lib/school-portal/school-report-view-model.js,493,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+95,TS-HE-00657,school_manager,lib/school-portal/school-report-view-model.js,493,school_admin_ui,status_labels,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: … תלמידים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+96,TS-HE-00659,school_manager,lib/school-portal/school-report-view-model.js,498,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: פירוט",,ימולא לאחר אישור נוסח,high,matched scenario: school_class_report
+97,TS-HE-00660,school_manager,lib/school-portal/school-report-view-model.js,498,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין נתונים",,ימולא לאחר אישור נוסח,high,
+98,TS-HE-00662,school_manager,lib/school-portal/school-report-view-model.js,511,school_admin_ui,data_health,,כיתה להצגה,כיתה — כיתה ה׳ (28 תלמידים),partial_date_range,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: כיתה להצגה
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: partial_date_range
+כפי שמופיע היום: אין פעילויות כיתה להצגה בתקופה זו.",,ימולא לאחר אישור נוסח,high,
+99,TS-HE-00664,school_manager,lib/school-portal/school-report-view-model.js,516,school_admin_ui,data_health,,כיתה זו,תלמיד בודד — [תלמיד],no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: כיתה זו
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: no_data
+כפי שמופיע היום: אין תלמידים רשומים בכיתה זו.",,ימולא לאחר אישור נוסח,high,
+100,TS-HE-00666,school_manager,lib/school-portal/school-report-view-model.js,524,school_admin_ui,data_health,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים להתפלגות.",,ימולא לאחר אישור נוסח,high,
+101,TS-HE-00669,school_manager,lib/school-portal/school-report-view-model.js,536,school_admin_ui,data_health,,ה׳,תלמיד בודד — [תלמיד],normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: לא זוהו תלמידים בולטים לתשומת לב.",,ימולא לאחר אישור נוסח,high,
+102,TS-HE-00683,school_manager,lib/school-portal/school-report-view-model.js,604,subject_permission,status_labels,חשבון (לדוגמה),ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בהרשאות מקצוע / סינון מקצועות | תוויות סטטוס
+מקצוע לדוגמה: חשבון (לדוגמה)
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין עדיין נתונים",,ימולא לאחר אישור נוסח,high,
+103,TS-HE-00684,school_manager,lib/school-portal/school-report-view-model.js,608,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … מפגשים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+104,TS-HE-00688,school_manager,lib/school-portal/school-report-view-model.js,621,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: פעיל",,ימולא לאחר אישור נוסח,high,
+105,TS-HE-00689,school_manager,lib/school-portal/school-report-view-model.js,621,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: ללא נתונים",,ימולא לאחר אישור נוסח,high,
+106,TS-HE-00691,school_manager,lib/school-portal/school-report-view-model.js,628,guidance_diagnostic,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בבלוק הכוונה/אבחון | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: טעות בתרגול",,ימולא לאחר אישור נוסח,high,
+107,TS-HE-00693,school_manager,lib/school-portal/school-report-view-model.js,631,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: טעות",,ימולא לאחר אישור נוסח,high,
+108,TS-HE-00697,school_manager,lib/school-portal/school-report-view-model.js,695,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: המלצה …",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+109,TS-HE-00700,school_manager,lib/school-portal/school-report-view-model.js,708,subject_permission,status_labels,חשבון (לדוגמה),ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בהרשאות מקצוע / סינון מקצועות | תוויות סטטוס
+מקצוע לדוגמה: חשבון (לדוגמה)
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין עדיין נתונים",,ימולא לאחר אישור נוסח,high,
+110,TS-HE-00701,school_manager,lib/school-portal/school-report-view-model.js,708,subject_permission,status_labels,חשבון (לדוגמה),ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בהרשאות מקצוע / סינון מקצועות | תוויות סטטוס
+מקצוע לדוגמה: חשבון (לדוגמה)
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: יש נתונים",,ימולא לאחר אישור נוסח,high,
+111,TS-HE-00702,school_manager,lib/school-portal/school-report-view-model.js,708,subject_permission,status_labels,חשבון (לדוגמה),ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בהרשאות מקצוע / סינון מקצועות | תוויות סטטוס
+מקצוע לדוגמה: חשבון (לדוגמה)
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין נתונים",,ימולא לאחר אישור נוסח,high,
+112,TS-HE-00704,school_manager,lib/school-portal/school-report-view-model.js,713,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,no_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: no_data
+כפי שמופיע היום: אין פעילות",,ימולא לאחר אישור נוסח,high,
+113,TS-HE-00705,school_manager,lib/school-portal/school-report-view-model.js,713,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … רשומות",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+114,TS-HE-00707,school_manager,lib/school-portal/school-report-view-model.js,718,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+115,TS-HE-00708,school_manager,lib/school-portal/school-report-view-model.js,718,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … נושאים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+116,TS-HE-00709,school_manager,lib/school-portal/school-report-view-model.js,722,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: המלצות למעקב",,ימולא לאחר אישור נוסח,high,
+117,TS-HE-00710,school_manager,lib/school-portal/school-report-view-model.js,723,guidance_diagnostic,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בבלוק הכוונה/אבחון | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+118,TS-HE-00711,school_manager,lib/school-portal/school-report-view-model.js,723,guidance_diagnostic,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בבלוק הכוונה/אבחון | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … המלצות",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+119,TS-HE-00713,school_manager,lib/school-portal/school-report-view-model.js,740,school_admin_ui,data_health,חשבון,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין נתונים לפי מקצוע.",,ימולא לאחר אישור נוסח,high,
+120,TS-HE-00715,school_manager,lib/school-portal/school-report-view-model.js,749,school_admin_ui,data_health,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: no_data
+כפי שמופיע היום: אין פעילות למידה בתקופה האחרונה.",,ימולא לאחר אישור נוסח,high,
+121,TS-HE-00717,school_manager,lib/school-portal/school-report-view-model.js,760,school_admin_ui,guidance_recommendation,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק ניהול בית הספר | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: המלצות למעקב",,ימולא לאחר אישור נוסח,high,
+122,TS-HE-00718,school_manager,lib/school-portal/school-report-view-model.js,761,school_admin_ui,data_health,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין המלצות נוספות כרגע.",,ימולא לאחר אישור נוסח,high,
+123,TS-HE-00731,school_manager,lib/school-portal/school-report-view-model.js,858,school_admin_ui,status_labels,,ה׳,כיתה — כיתה ה׳ (28 תלמידים),normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: normal_data
+כפי שמופיע היום: מצב כיתה",,ימולא לאחר אישור נוסח,high,
+124,TS-HE-00748,school_manager,lib/school-portal/school-report-view-model.js,968,subject_permission,status_labels,חשבון (לדוגמה),ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בהרשאות מקצוע / סינון מקצועות | תוויות סטטוס
+מקצוע לדוגמה: חשבון (לדוגמה)
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+125,TS-HE-00749,school_manager,lib/school-portal/school-report-view-model.js,968,subject_permission,status_labels,חשבון,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בהרשאות מקצוע / סינון מקצועות | תוויות סטטוס
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … מקצועות",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+126,TS-HE-00751,school_manager,lib/school-portal/school-report-view-model.js,973,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+127,TS-HE-00752,school_manager,lib/school-portal/school-report-view-model.js,973,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … פעילויות",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+128,TS-HE-00754,school_manager,lib/school-portal/school-report-view-model.js,978,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+129,TS-HE-00755,school_manager,lib/school-portal/school-report-view-model.js,978,school_admin_ui,status_labels,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: … תלמידים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+130,TS-HE-00757,school_manager,lib/school-portal/school-report-view-model.js,983,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+131,TS-HE-00758,school_manager,lib/school-portal/school-report-view-model.js,983,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: … נושאים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+132,TS-HE-00760,school_manager,lib/school-portal/school-report-view-model.js,988,school_admin_ui,status_labels,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין",,ימולא לאחר אישור נוסח,high,
+133,TS-HE-00761,school_manager,lib/school-portal/school-report-view-model.js,988,school_admin_ui,status_labels,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק ניהול בית הספר | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: … תלמידים",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+134,TS-HE-00763,school_manager,lib/school-portal/school-report-view-model.js,1001,school_admin_ui,data_health,חשבון,ה׳,מנהל/ת בית ספר — סקירת בית ספר,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: normal_data
+כפי שמופיע היום: אין מקצועות להצגה.",,ימולא לאחר אישור נוסח,high,
+135,TS-HE-00765,school_manager,lib/school-portal/school-report-view-model.js,1006,school_admin_ui,data_health,,כיתה להצגה,כיתה — כיתה ה׳ (28 תלמידים),partial_date_range,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: כיתה להצגה
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: partial_date_range
+כפי שמופיע היום: אין פעילויות כיתה להצגה בתקופה זו.",,ימולא לאחר אישור נוסח,high,
+136,TS-HE-00767,school_manager,lib/school-portal/school-report-view-model.js,1011,school_admin_ui,data_health,,כיתה זו,תלמיד בודד — [תלמיד],no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: כיתה זו
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: no_data
+כפי שמופיע היום: אין תלמידים רשומים בכיתה זו.",,ימולא לאחר אישור נוסח,high,
+137,TS-HE-00770,school_manager,lib/school-portal/school-report-view-model.js,1034,school_admin_ui,data_health,,ה׳,תלמיד בודד — [תלמיד],normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק ניהול בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: לא זוהו תלמידים בולטים לתשומת לב.",,ימולא לאחר אישור נוסח,high,
+138,TS-HE-00801,school_manager,lib/school-portal/school-ui.he.js,59,activity_export,data_health,חשבון,כיתה להצגה,כיתה — כיתה ה׳ (28 תלמידים),normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: כיתה להצגה
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: normal_data
+כותרת במסך: סקירה כללית, פעולות מהירות ומעקב אחרי פעילות בבית הספר
+כפי שמופיע היום: אין פעילויות כיתה להצגה כרגע.",,ימולא לאחר אישור נוסח,high,
+139,TS-HE-00802,school_manager,lib/school-portal/school-ui.he.js,60,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כותרת במסך: סקירה כללית, פעולות מהירות ומעקב אחרי פעילות בבית הספר
+כפי שמופיע היום: כשמורים ייצרו פעילויות, הן יופיעו כאן.",,ימולא לאחר אישור נוסח,high,
+140,TS-HE-00803,school_manager,lib/school-portal/school-ui.he.js,61,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כותרת במסך: סקירה כללית, פעולות מהירות ומעקב אחרי פעילות בבית הספר
+כפי שמופיע היום: אין מורים משויכים מלבד מנהל/ת בית הספר.",,ימולא לאחר אישור נוסח,high,
+141,TS-HE-00804,school_manager,lib/school-portal/school-ui.he.js,62,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: no_data
+כותרת במסך: סקירה כללית, פעולות מהירות ומעקב אחרי פעילות בבית הספר
+כפי שמופיע היום: אין כיתות רשומות לבית הספר.",,ימולא לאחר אישור נוסח,high,
+142,TS-HE-00805,school_manager,lib/school-portal/school-ui.he.js,63,activity_export,data_health,חשבון,ה׳,תלמיד בודד — [תלמיד],no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: no_data
+כותרת במסך: סקירה כללית, פעולות מהירות ומעקב אחרי פעילות בבית הספר
+כפי שמופיע היום: אין תלמידים רשומים לבית הספר.",,ימולא לאחר אישור נוסח,high,
+143,TS-HE-00867,school_manager,lib/school-portal/school-ui.he.js,131,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: no_data
+כותרת במסך: כיתות של המורה
+כפי שמופיע היום: אין כיתות משויכות למורה/ה זו.",,ימולא לאחר אישור נוסח,high,
+144,TS-HE-00898,school_manager,lib/school-server/school-students.server.js,60,report_general,data_health,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,
+145,TS-HE-00899,teacher,lib/teacher-portal/student-learning-status.js,17,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: פעילות נמוכה",,ימולא לאחר אישור נוסח,high,
+146,TS-HE-00900,teacher,lib/teacher-portal/student-learning-status.js,21,report_general,status_labels,,ה׳,,weak_result,המערכת מסמנת שיש צורך בפעולה מיידית של המורה.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: weak_result
+כפי שמופיע היום: דורש התערבות",,ימולא לאחר אישור נוסח,high,
+147,TS-HE-00901,teacher,lib/teacher-portal/student-learning-status.js,24,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: צריך חיזוק",,ימולא לאחר אישור נוסח,high,
+148,TS-HE-00902,teacher,lib/teacher-portal/student-learning-status.js,27,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: במעקב",,ימולא לאחר אישור נוסח,high,
+149,TS-HE-00903,teacher,lib/teacher-portal/student-learning-status.js,31,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: חזק",,ימולא לאחר אישור נוסח,high,
+150,TS-HE-00904,teacher,lib/teacher-portal/student-learning-status.js,33,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: תקין",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+151,TS-HE-00905,teacher,lib/teacher-portal/student-learning-status.js,37,report_general,status_labels,,ה׳,,weak_result,המערכת מסמנת שיש צורך בפעולה מיידית של המורה.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: weak_result
+כפי שמופיע היום: דורש התערבות",,ימולא לאחר אישור נוסח,high,
+152,TS-HE-00906,teacher,lib/teacher-portal/student-learning-status.js,38,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: צריך חיזוק",,ימולא לאחר אישור נוסח,high,
+153,TS-HE-00907,teacher,lib/teacher-portal/student-learning-status.js,39,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: במעקב",,ימולא לאחר אישור נוסח,high,
+154,TS-HE-00908,teacher,lib/teacher-portal/student-learning-status.js,40,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: חזק",,ימולא לאחר אישור נוסח,high,
+155,TS-HE-00909,teacher,lib/teacher-portal/student-learning-status.js,41,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: תקין",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+156,TS-HE-00910,teacher,lib/teacher-portal/student-learning-status.js,46,report_general,data_health,,ה׳,,thin_data,אין מספיק נתונים לקביעת מסקנה.,"בממשק המורה | מצב נתונים
+שכבה לדוגמה: ה׳
+מצב נתונים: thin_data
+כפי שמופיע היום: אין מספיק נתונים",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+157,TS-HE-00911,teacher,lib/teacher-portal/student-learning-status.js,62,report_general,guidance_recommendation,,ה׳,,weak_result,המערכת מסמנת שיש צורך בפעולה מיידית של המורה.,"בממשק המורה | המלצות והכוונה
+שכבה לדוגמה: ה׳
+מצב נתונים: weak_result
+כפי שמופיע היום: דורש התערבות",,ימולא לאחר אישור נוסח,high,
+158,TS-HE-00912,teacher,lib/teacher-portal/student-learning-status.js,63,report_general,guidance_recommendation,,ה׳,,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק המורה | המלצות והכוונה
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: צריך חיזוק",,ימולא לאחר אישור נוסח,high,
+159,TS-HE-00913,teacher,lib/teacher-portal/student-learning-status.js,64,report_general,guidance_recommendation,,ה׳,,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בממשק המורה | המלצות והכוונה
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: במעקב",,ימולא לאחר אישור נוסח,high,
+160,TS-HE-00914,teacher,lib/teacher-portal/student-learning-status.js,66,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: חזק",,ימולא לאחר אישור נוסח,high,
+161,TS-HE-00915,teacher,lib/teacher-portal/student-learning-status.js,67,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: תקין",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+162,TS-HE-01040,teacher,lib/teacher-portal/teacher-activity-report-export.js,720,activity_export,guidance_recommendation,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בייצוא דוח פעילות (Excel/PDF) | המלצות והכוונה
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: המלצות ומעקב",,ימולא לאחר אישור נוסח,high,
+163,TS-HE-01044,teacher,lib/teacher-portal/teacher-activity-report-pdf.js,56,activity_report,guidance_recommendation,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בדוח פעילות כיתתית | המלצות והכוונה
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: normal_data
+כפי שמופיע היום: המלצות AI",,ימולא לאחר אישור נוסח,high,
+164,TS-HE-01117,teacher,lib/teacher-portal/teacher-ui.he.js,47,report_general,status_labels,,ה׳,,normal_data,המערכת מבקשת מעקב — עדיין אין צורך בהתערבות חזקה.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: כדאי לעקוב",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_student_normal
+165,TS-HE-01118,teacher,lib/teacher-portal/teacher-ui.he.js,48,report_general,status_labels,,ה׳,,normal_or_strong,המערכת מציגה שהכיתה/תלמיד בקצב תקין.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_or_strong
+כפי שמופיע היום: בקצב תקין",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+166,TS-HE-01122,teacher,lib/teacher-portal/teacher-ui.he.js,55,report_general,status_labels,,כיתה בקצב,כיתה — כיתה ה׳ (28 תלמידים),normal_or_strong,המערכת מציגה שהכיתה/תלמיד בקצב תקין.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: כיתה בקצב
+הקשר: כיתה — כיתה ה׳ (28 תלמידים)
+מצב נתונים: normal_or_strong
+כפי שמופיע היום: הכיתה בקצב תקין",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_active
+167,TS-HE-01134,teacher,lib/teacher-portal/teacher-ui.he.js,77,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: קבוצת חיזוק",,ימולא לאחר אישור נוסח,high,
+168,TS-HE-01165,teacher,lib/teacher-portal/teacher-ui.he.js,402,activity_export,data_health,חשבון,ה׳,פעילות כיתתית — תרגול מודרך בחשבון,no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בייצוא דוח פעילות (Excel/PDF) | מצב נתונים
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: פעילות כיתתית — תרגול מודרך בחשבון
+מצב נתונים: no_data
+כותרת במסך: אין כיתות פעילות
+כפי שמופיע היום: אין כיתות פעילות",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_no_data
+169,TS-HE-01166,teacher,lib/teacher-portal/teacher-ui.he.js,404,report_general,class_summary,,כיתה חדשה,תלמיד בודד — [תלמיד],normal_data,תווית/משפט במפתח dashboard no classes hint — מוצג למורה/מנהל בהקשר סיכום כיתה.,"בממשק המורה | סיכום כיתה
+שכבה לדוגמה: כיתה חדשה
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כותרת במסך: אין כיתות פעילות
+כפי שמופיע היום: צור כיתה חדשה למטה, ואז הוסף תלמידים דרך «ניהול כיתה» בכרטיס הכיתה.",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_no_data
+170,TS-HE-01181,teacher,lib/teacher-server/discussion-question-preview.server.js,95,report_general,status_labels,חשבון,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: מקצוע לא תקין",,ימולא לאחר אישור נוסח,high,
+171,TS-HE-01182,teacher,lib/teacher-server/discussion-question-preview.server.js,100,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: נושא הוא שדה חובה",,ימולא לאחר אישור נוסח,high,
+172,TS-HE-01206,teacher,lib/teacher-server/teacher-guidance-v2.server.js,685,guidance_diagnostic,guidance_recommendation,,ה׳,תלמיד בודד — [תלמיד],normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בבלוק הכוונה/אבחון | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: תלמיד",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_no_data
+173,TS-HE-01207,teacher,lib/teacher-server/teacher-guidance-v2.server.js,870,guidance_diagnostic,guidance_recommendation,,ה׳,תלמיד בודד — [תלמיד],normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בבלוק הכוונה/אבחון | המלצות והכוונה
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: תלמיד",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_no_data
+174,TS-HE-01209,mixed_or_unclear,pages/api/teacher/activities/[activityId]/status.js,45,api_layer,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בהודעת מערכת למורה/מנהל | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: יותר מדי בקשות — המתן מעט ונסה שוב",,ימולא לאחר אישור נוסח,high,
+175,TS-HE-01223,school_manager,pages/school/classes/index.js,534,report_general,data_health,,ה׳,מנהל/ת בית ספר — סקירת בית ספר,no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: מנהל/ת בית ספר — סקירת בית ספר
+מצב נתונים: no_data
+כפי שמופיע היום: אין כיתות בשכבה זו.",,ימולא לאחר אישור נוסח,high,
+176,TS-HE-01242,school_manager,pages/school/students/index.js,402,report_general,data_health,,ה׳,תלמיד בודד — [תלמיד],no_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק בית הספר | מצב נתונים
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: no_data
+כפי שמופיע היום: אין תלמידים בשכבה זו.",,ימולא לאחר אישור נוסח,high,
+177,TS-HE-01243,school_manager,pages/school/students/index.js,456,report_general,data_health,,כיתה זו,תלמיד בודד — [תלמיד],normal_data,הודעה על מצב נתונים דל או חסר בדוח.,"בממשק בית הספר | מצב נתונים
+שכבה לדוגמה: כיתה זו
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: לא נמצאו תלמידים בכיתה זו.",,ימולא לאחר אישור נוסח,high,
+178,TS-HE-01277,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,49,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: טעינה נכשלה",,ימולא לאחר אישור נוסח,high,
+179,TS-HE-01278,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,56,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: שגיאת רשת",,ימולא לאחר אישור נוסח,high,
+180,TS-HE-01279,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,119,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: מעקב פעילות",,ימולא לאחר אישור נוסח,high,
+181,TS-HE-01280,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,119,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: מעקב: …",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+182,TS-HE-01281,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,222,report_general,status_labels,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: תלמיד",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_no_data
+183,TS-HE-01282,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,223,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: סטטוס",,ימולא לאחר אישור נוסח,high,
+184,TS-HE-01283,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,224,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: תשובות",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_student_thin
+185,TS-HE-01284,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,225,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: נכונות",,ימולא לאחר אישור נוסח,high,
+186,TS-HE-01285,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,226,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: פירוט",,ימולא לאחר אישור נוסח,high,
+187,TS-HE-01286,teacher,pages/teacher/class/[classId]/activities/[activityId]/monitor.js,270,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כותרת במסך: לפי שאלה
+כפי שמופיע היום: לפי שאלה",,ימולא לאחר אישור נוסח,high,
+188,TS-HE-01312,teacher,pages/teacher/class/[classId]/activities/index.js,129,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: עריכה / הפעלה",,ימולא לאחר אישור נוסח,high,
+189,TS-HE-01313,teacher,pages/teacher/class/[classId]/activities/index.js,129,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: צפייה",,ימולא לאחר אישור נוסח,high,
+190,TS-HE-01428,teacher,pages/teacher/student/[studentId].js,236,student_report,guidance_recommendation,חשבון,ה׳,תלמיד בודד — [תלמיד],normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בדוח תלמיד | המלצות והכוונה
+מקצוע לדוגמה: חשבון
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כותרת במסך: המלצות לי כמורה
+כפי שמופיע היום: המלצות לי כמורה",,ימולא לאחר אישור נוסח,high,
+191,TS-HE-01445,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,37,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: טעינה נכשלה",,ימולא לאחר אישור נוסח,high,
+192,TS-HE-01446,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,43,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: שגיאת רשת",,ימולא לאחר אישור נוסח,high,
+193,TS-HE-01447,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,60,report_general,status_labels,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: מעקב פעילות — תלמידים פרטיים",,ימולא לאחר אישור נוסח,high,
+194,TS-HE-01448,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,60,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: מעקב: …",,ימולא לאחר אישור נוסח,medium,template placeholders substituted with examples
+195,TS-HE-01449,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,89,report_general,status_labels,,ה׳,תלמיד בודד — [תלמיד],normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+הקשר: תלמיד בודד — [תלמיד]
+מצב נתונים: normal_data
+כפי שמופיע היום: תלמיד",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_dashboard_no_data
+196,TS-HE-01450,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,90,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: סטטוס",,ימולא לאחר אישור נוסח,high,
+197,TS-HE-01451,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,91,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: תשובות",,ימולא לאחר אישור נוסח,high,matched scenario: teacher_student_thin
+198,TS-HE-01452,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,92,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: נכונות",,ימולא לאחר אישור נוסח,high,
+199,TS-HE-01453,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,93,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: דוח",,ימולא לאחר אישור נוסח,high,
+200,TS-HE-01454,teacher,pages/teacher/students/activities/batch/[batchId]/monitor.js,123,report_general,status_labels,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בממשק המורה | תוויות סטטוס
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: טוען…",,ימולא לאחר אישור נוסח,high,
+201,TS-HE-01647,mixed_or_unclear,utils/diagnostic-labels-he.js,280,guidance_diagnostic,guidance_recommendation,,ה׳,,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בבלוק הכוונה/אבחון | המלצות והכוונה
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: בלבול בכיוון העיגול",,ימולא לאחר אישור נוסח,high,
+202,TS-HE-01652,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,8,guidance_diagnostic,general,,ה׳,,normal_data,הטקסט מוצג למורה או למנהל/ת בית ספר כחלק מדוח או ממשק ניהול.,"בבלוק הכוונה/אבחון | אזור כללי
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: פער בהבנת המושג",,ימולא לאחר אישור נוסח,high,
+203,TS-HE-01797,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,310,guidance_diagnostic,guidance_recommendation,,ה׳,,normal_data,המלצת פעולה או כיוון תמיכה למורה.,"בבלוק הכוונה/אבחון | המלצות והכוונה
+שכבה לדוגמה: ה׳
+מצב נתונים: normal_data
+כפי שמופיע היום: שאלת מפה קצרה עם קנה מידה או כיוון ברור.",,ימולא לאחר אישור נוסח,high,

@@ -1,0 +1,24 @@
+Hebrew Copy Review — Suggestions Completion Report
+
+Total workbooks processed: 36
+Total missing suggestions filled: 641
+
+Files with suggestions filled:
+- 01_PARENT_REPORT/parent-report-hebrew-owner-review-09-rows-401-450.xlsx: 1/50
+- 01_PARENT_REPORT/parent-report-hebrew-owner-review-11-rows-501-550.xlsx: 1/50
+- 01_PARENT_REPORT/parent-report-hebrew-owner-review-12-rows-551-600.xlsx: 1/50
+- 02_TEACHER_SCHOOL/teacher-school-hebrew-owner-review-01-rows-001-050.xlsx: 18/50
+- 02_TEACHER_SCHOOL/teacher-school-hebrew-owner-review-02-rows-051-100.xlsx: 49/50
+- 02_TEACHER_SCHOOL/teacher-school-hebrew-owner-review-03-rows-101-150.xlsx: 49/50
+- 02_TEACHER_SCHOOL/teacher-school-hebrew-owner-review-04-rows-151-200.xlsx: 49/50
+- 02_TEACHER_SCHOOL/teacher-school-hebrew-owner-review-05-rows-201-203.xlsx: 3/3
+- 04_SITE_GENERAL/site-general-hebrew-owner-review-01-rows-001-050.xlsx: 50/50
+- 04_SITE_GENERAL/site-general-hebrew-owner-review-02-rows-051-100.xlsx: 50/50
+- 04_SITE_GENERAL/site-general-hebrew-owner-review-03-rows-101-150.xlsx: 50/50
+- 04_SITE_GENERAL/site-general-hebrew-owner-review-04-rows-151-200.xlsx: 50/50
+- 04_SITE_GENERAL/site-general-hebrew-owner-review-05-rows-201-250.xlsx: 50/50
+- 04_SITE_GENERAL/site-general-hebrew-owner-review-06-rows-251-300.xlsx: 50/50
+- 04_SITE_GENERAL/site-general-hebrew-owner-review-07-rows-301-350.xlsx: 50/50
+- 05_LEARNING_CONTENT/learning-content-hebrew-owner-review-01-rows-001-050.xlsx: 50/50
+- 05_LEARNING_CONTENT/learning-content-hebrew-owner-review-02-rows-051-100.xlsx: 50/50
+- 05_LEARNING_CONTENT/learning-content-hebrew-owner-review-03-rows-101-120.xlsx: 20/20

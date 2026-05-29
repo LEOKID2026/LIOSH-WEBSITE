@@ -1,0 +1,1416 @@
+﻿row_number,id,audience,source_file,source_line,surface,section,copy_type,meaning_plain_he,before_in_context,context_confidence,notes
+1,SG-HE-00614,mixed_or_unclear,data/legal/sitePolicies.he.js,66,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: ילדים נכנסים עם שם משתמש וקוד PIN שמסופק על ידי ההורה.",high,
+2,SG-HE-00618,mixed_or_unclear,data/legal/sitePolicies.he.js,75,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: פרטי תלמיד: שם, כיתה, פרטי כניסה (שם משתמש ו-PIN).",high,
+3,SG-HE-00308,mixed_or_unclear,data/help-center/content/parents.js,102,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: מה זה PIN, מתי הוא מוצג פעם אחת, ואיך מאפסים.",high,
+4,SG-HE-00388,mixed_or_unclear,data/help-center/content/parents.js,237,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: PIN שגוי, חשבון נעול וניקוי דפדפן.",high,
+5,SG-HE-00393,mixed_or_unclear,data/help-center/content/parents.js,243,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: PIN שגוי — בקשו מההורה קוד חדש",high,
+6,SG-HE-02133,parent,pages/parent/dashboard.js,255,dashboard,general,other,טקסט ממשק כללי שרואה המשתמש.,"בלוח בקרה
+אזור: general
+סוג: other
+כפי שמופיע: בלוח בקרה: יש להזין PIN חדש בארבע ספרות",high,
+7,SG-HE-00307,mixed_or_unclear,data/help-center/content/parents.js,101,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: קוד PIN ופרטי כניסה לתלמיד",high,
+8,SG-HE-00564,mixed_or_unclear,data/help-center/videos-manifest.json,820,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: קוד PIN ופרטי כניסה לתלמיד",high,
+9,SG-HE-02130,parent,pages/parent/dashboard.js,202,dashboard,general,other,טקסט ממשק כללי שרואה המשתמש.,"בלוח בקרה
+אזור: general
+סוג: other
+כפי שמופיע: בלוח בקרה: יש להזין שם משתמש ו-PIN",high,
+10,SG-HE-02152,parent,pages/parent/dashboard.js,558,dashboard,form,label,טקסט ממשק כללי שרואה המשתמש.,"בלוח בקרה
+אזור: form
+סוג: label
+כפי שמופיע: בלוח בקרה: PIN חדש (איפוס / שינוי)",high,
+11,SG-HE-01067,student,pages/api/student/login.js,22,login,error,error_message,הודעת שגיאה למשתמש.,"במסך כניסה
+אזור: error
+סוג: error_message
+כפי שמופיע: שם משתמש או PIN שגויים",high,
+12,SG-HE-00408,mixed_or_unclear,data/help-center/content/students.js,21,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: כניסה עם שם וקוד PIN.",high,
+13,SG-HE-00315,mixed_or_unclear,data/help-center/content/parents.js,111,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: הודעה עם קוד PIN חדש",high,
+14,SG-HE-02134,parent,pages/parent/dashboard.js,283,dashboard,error,error_message,הודעת שגיאה למשתמש.,"בלוח בקרה
+אזור: error
+סוג: error_message
+כפי שמופיע: בלוח בקרה: שינוי ה-PIN נכשל",high,
+15,SG-HE-00062,mixed_or_unclear,components/Layout.js,23,general_component,form,label,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: form
+סוג: label
+כפי שמופיע: סקירת מנוע",high,
+16,SG-HE-00311,mixed_or_unclear,data/help-center/content/parents.js,105,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: מה זה PIN?",high,
+17,SG-HE-00313,mixed_or_unclear,data/help-center/content/parents.js,109,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: מה זה PIN?",high,
+18,SG-HE-02159,parent,pages/parent/dashboard.js,615,dashboard,form,label,טקסט ממשק כללי שרואה המשתמש.,"בלוח בקרה
+אזור: form
+סוג: label
+כפי שמופיע: בלוח בקרה: PIN לתלמיד",high,
+19,SG-HE-00608,mixed_or_unclear,data/legal/sitePolicies.he.js,50,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: מדיניות זו מתארת בקצרה אילו נתונים נאספים באתר LEO KIDS, למה הם משמשים, ומהן זכויותיכם. האתר מופעל בהתאם לציפיות ישראליות ומוצג בעברית.",high,
+20,SG-HE-00673,mixed_or_unclear,data/legal/sitePolicies.he.js,197,policy,policy,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: policy
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: תנאים אלה מסדירים את השימוש באתר LEO KIDS. השירות הוא כלי לימודי ומעקב — לא תחליף לייעוץ חינוכי מקצועי.",high,
+21,SG-HE-00724,mixed_or_unclear,data/legal/sitePolicies.he.js,323,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: אנו שואפים לעמוד בדרישות נגישות רלוונטיות בישראל, ובין היתר בתקן ישראלי ת\""י 5568 המבוסס על WCAG 2.x.",high,
+22,SG-HE-00831,mixed_or_unclear,data/legal/termsPrivacyAcceptanceContent.js,36,policy,policy,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: policy
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: כדי להמשיך לשימוש באזור ההורים, יש לקרוא ולאשר את תנאי השימוש ואת מדיניות הפרטיות של LEO KIDS.",high,
+23,SG-HE-00777,mixed_or_unclear,data/legal/sitePolicies.he.js,460,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: «שאלו על הדוח» (Copilot) ותובנות AI בדוח — עשויים לסייע להסביר דוחות, מגמות והמלצות לימודיות.",high,
+24,SG-HE-00650,mixed_or_unclear,data/legal/sitePolicies.he.js,137,policy,help,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: help
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: האתר עשוי להשתמש ביכולות AI/Copilot להסבר דוחות והמלצות. פירוט מלא בעמוד גילוי שימוש ב-AI.",high,
+25,SG-HE-00143,mixed_or_unclear,components/dev-student-simulator/CustomBuilderPanel.jsx,44,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: לחצו לפתיחת הטבלה. עדכון (Apply) רק מסומני פעיל עם שאלות > 0 — לא מחייב בחירה בכל מקצוע.",high,
+26,SG-HE-00607,mixed_or_unclear,data/legal/sitePolicies.he.js,48,policy,policy,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: policy
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: מדיניות פרטיות בעברית לאתר LEO KIDS — נתוני תרגול, דוחות להורים, עוגיות ופרסום עתידי.",high,
+27,SG-HE-01284,mixed_or_unclear,pages/learning/english-master.js,268,learning_screen,warning,heading,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: warning
+סוג: heading
+כפי שמופיע: כתוב באנגלית את המילה ""…"". שים לב לאיות (spelling) של כל אות.",medium,placeholders substituted
+28,SG-HE-00642,mixed_or_unclear,data/legal/sitePolicies.he.js,119,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: היום — עוגיות/אחסון פונקציונלי: התחברות תלמיד (session), התחברות הורה (Supabase).",high,
+29,SG-HE-00717,mixed_or_unclear,data/legal/sitePolicies.he.js,306,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: הצהרת נגישות בעברית לאתר LEO KIDS — מחויבות נגישות, דיווח על בעיות ויצירת קשר.",high,
+30,SG-HE-00036,mixed_or_unclear,components/InstallAppPrompt.js,78,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: אנא השתמש בדפדפן Chrome או Edge להתקנה אוטומטית, או עקוב אחר ההוראות המוצגות.",high,
+31,SG-HE-01292,mixed_or_unclear,pages/learning/english-master.js,337,learning_screen,general,heading,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: heading
+כפי שמופיע: I (אני) = am, You/We/They (אתה/אנחנו/הם) = are, He/She/It (הוא/היא/זה) = is.",high,
+32,SG-HE-00672,mixed_or_unclear,data/legal/sitePolicies.he.js,195,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: תנאי שימוש בעברית לאתר LEO KIDS — חשבון הורה, תרגול, דוחות ומנויים עתידיים.",high,
+33,SG-HE-00610,mixed_or_unclear,data/legal/sitePolicies.he.js,56,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: LEO KIDS הוא אתר תרגול ולמידה לילדים, עם אזור הורים לניהול חשבון ודוחות.",high,
+34,SG-HE-00774,mixed_or_unclear,data/legal/sitePolicies.he.js,452,policy,help,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: help
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: גילוי שימוש ב-AI ו-Copilot — הסבר דוחות, מגבלות, ומה AI לא עושה.",high,
+35,SG-HE-00792,mixed_or_unclear,data/legal/sitePolicies.he.js,495,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: קטגוריות: נתוני דוח, ביצועים בתקופה, נושאים, המלצות — לפי השאלה.",high,
+36,SG-HE-01309,mixed_or_unclear,pages/learning/english-master.js,447,learning_screen,general,heading,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: heading
+כפי שמופיע: זכור: am משמש רק עם I (אני). He/She/It = is, You/We/They = are.",high,
+37,SG-HE-00030,mixed_or_unclear,components/InstallAppButton.js,167,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: בדפדפן Chrome/Edge: לחץ על אייקון ההתקנה בשורת הכתובת",high,
+38,SG-HE-00144,mixed_or_unclear,components/dev-student-simulator/CustomBuilderPanel.jsx,45,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: רק שורות נושא: פעיל + שאלות קובעות מה ייכלל ב־Apply.",high,
+39,SG-HE-00569,mixed_or_unclear,data/help-center/videos-manifest.json,1184,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: input[name=\""username\""], input[placeholder*=\""שם\""]",high,
+40,SG-HE-00570,mixed_or_unclear,data/help-center/videos-manifest.json,1206,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: input[name=\""username\""], input[placeholder*=\""שם\""]",high,
+41,SG-HE-00554,mixed_or_unclear,data/help-center/screenshots-manifest-approved.json,149,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: Demo account ADMIN / child ישראל ישראלי only.",high,
+42,SG-HE-01304,mixed_or_unclear,pages/learning/english-master.js,402,learning_screen,general,heading,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: heading
+כפי שמופיע: נכתוב אות-אחר-אות, ושמים לב לאיות (spelling).",high,
+43,SG-HE-00032,mixed_or_unclear,components/InstallAppButton.js,168,general_component,navigation,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: navigation
+סוג: other
+כפי שמופיע: בדפדפן Firefox: לחץ על תפריט (☰) ובחר ""התקן""",high,
+44,SG-HE-01281,mixed_or_unclear,pages/learning/english-master.js,257,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: זכור: I am, You/We/They are, He/She/It is",high,
+45,SG-HE-00130,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,241,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כותרת: סיכום Shadow (מקומי)
+כפי שמופיע: כל היחידות לפי severity (כולל none)",high,
+46,SG-HE-00131,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,249,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: רשומות shadow שנדגמו (session)",high,
+47,SG-HE-02273,student,pages/student/arcade.js,724,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כותרת: מצב פיתוח — הצטרפות לפי roomId
+כפי שמופיע: מצב פיתוח — הצטרפות לפי roomId",high,
+48,SG-HE-00123,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,192,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כותרת: ביקורת פנימית — hybridRuntime
+כפי שמופיע: ביקורת פנימית — hybridRuntime",high,
+49,SG-HE-00122,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,174,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כותרת: ביקורת פנימית — AI Hybrid
+כפי שמופיע: ביקורת פנימית — AI Hybrid",high,
+50,SG-HE-02193,parent,pages/parent/rewards.js,219,mixed_or_unclear,empty_state,empty_state,הודעה כשאין תוכן להצגה.,"בממשק כללי
+אזור: empty_state
+סוג: empty_state
+כותרת: חלוקה לפי מקצועות
+כפי שמופיע: אין נתונים בטווח שנבחר.",high,
+51,SG-HE-00343,mixed_or_unclear,data/help-center/content/parents.js,159,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: שאלו על הדוח (Copilot)",high,
+52,SG-HE-00562,mixed_or_unclear,data/help-center/videos-manifest.json,640,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: שאלו על הדוח (Copilot)",high,
+53,SG-HE-00125,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,202,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כותרת: ביקורת פנימית — hybridRuntime
+כפי שמופיע: הצג JSON גולמי (משני)",high,
+54,SG-HE-00306,mixed_or_unclear,data/help-center/content/parents.js,94,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: ועד כיתה ו׳ — grade_6",high,
+55,SG-HE-00126,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,207,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כותרת: סיכום Shadow (מקומי)
+כפי שמופיע: סיכום Shadow (מקומי)",high,
+56,SG-HE-01107,mixed_or_unclear,pages/help/index.js,20,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: מרכז עזרה · LEO KIDS",high,
+57,SG-HE-02190,parent,pages/parent/rewards.js,207,mixed_or_unclear,general,other,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: סה״כ תרגילים בטווח",high,
+58,SG-HE-00115,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,115,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כותרת: צעד בדיקה (probe)
+כפי שמופיע: צעד בדיקה (probe)",high,
+59,SG-HE-00120,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,135,general_component,general,heading,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: heading
+כותרת: אימות (validator)
+כפי שמופיע: אימות (validator)",high,
+60,SG-HE-00134,mixed_or_unclear,components/dev-student-simulator/CustomBuilderPanel.jsx,35,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: מצב יישום (Apply)",high,
+61,SG-HE-00304,mixed_or_unclear,data/help-center/content/parents.js,94,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: כיתה א׳ — grade_1",high,
+62,SG-HE-00305,mixed_or_unclear,data/help-center/content/parents.js,94,help_center,help,other,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: other
+כפי שמופיע: כיתה ב׳ — grade_2",high,
+63,SG-HE-00085,admin,components/admin/SchoolAssignForm.jsx,77,admin_ui,form,form_label,טקסט ממשק כללי שרואה המשתמש.,"בממשק ניהול
+אזור: form
+סוג: form_label
+כפי שמופיע: בממשק ניהול: מזהה מורה (UUID)",high,
+64,SG-HE-02158,parent,pages/parent/dashboard.js,610,dashboard,general,form_label,טקסט ממשק כללי שרואה המשתמש.,"בלוח בקרה
+אזור: general
+סוג: form_label
+כפי שמופיע: בלוח בקרה: לדוגמה: noam123",high,
+65,SG-HE-02189,parent,pages/parent/rewards.js,201,mixed_or_unclear,general,other,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: סה״כ דקות בטווח",high,
+66,SG-HE-00024,mixed_or_unclear,components/InstallAppButton.js,160,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: בתחתית Safari",high,
+67,SG-HE-00046,mixed_or_unclear,components/InstallAppPrompt.js,146,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כותרת: התקן את LEO K
+כפי שמופיע: בתחתית Safari",high,
+68,SG-HE-00063,mixed_or_unclear,components/Layout.js,86,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: לוגו LEO KIDS",high,
+69,SG-HE-00124,mixed_or_unclear,components/ai-hybrid-internal-reviewer-panel.jsx,202,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כותרת: ביקורת פנימית — hybridRuntime
+כפי שמופיע: הסתר JSON",high,
+70,SG-HE-00088,admin,components/admin/SchoolAssignForm.jsx,117,admin_ui,error,error_message,הודעת שגיאה למשתמש.,"בממשק ניהול
+אזור: error
+סוג: error_message
+כפי שמופיע: בממשק ניהול: שגיאה",high,
+71,SG-HE-00089,admin,components/admin/SchoolAssignForm.jsx,137,admin_ui,error,error_message,הודעת שגיאה למשתמש.,"בממשק ניהול
+אזור: error
+סוג: error_message
+כפי שמופיע: בממשק ניהול: שגיאה",high,
+72,SG-HE-00168,mixed_or_unclear,components/layout/DevCoinTopupNav.js,47,navigation,error,error_message,הודעת שגיאה למשתמש.,"בניווט
+אזור: error
+סוג: error_message
+כפי שמופיע: שגיאה",high,
+73,SG-HE-00206,student,components/student/StudentClassroomActivitiesPanel.jsx,19,general_component,general,other,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: other
+כפי שמופיע: המשך",high,
+74,SG-HE-01092,mixed_or_unclear,pages/gallery.js,148,homepage,form,tooltip,טקסט בדף הבית הציבורי.,"בדף הבית
+אזור: form
+סוג: tooltip
+כפי שמופיע: הבא",high,
+75,SG-HE-01072,guest,pages/contact.js,22,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: האתר כולל תרגול במקצועות כמו מתמטיקה, גיאומטריה, עברית, אנגלית, מדעים ומולדת/גאוגרפיה, בהתאם לשלבי הפיתוח והתוכן הזמין באתר.",high,
+76,SG-HE-00756,mixed_or_unclear,data/legal/sitePolicies.he.js,401,policy,success,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: success
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: סשנים, תשובות, דוחות, מטבעות ונתונים הקשורים לילד — בהתאם למה שנשמר במערכת.",high,
+77,SG-HE-01187,mixed_or_unclear,pages/learning/curriculum.js,489,learning_lobby,general,explanation,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: explanation
+כותרת: נושאים זמינים:
+כפי שמופיע: בלובי למידה: תחושת מספר (כולל השלמת מספר / איזון פשוט — לא משוואות אלגבריות כנושא נפרד)",high,
+78,SG-HE-00634,mixed_or_unclear,data/legal/sitePolicies.he.js,101,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: שותפי פרסום או אנליטיקה — רק אם/כאשר יופעלו, ובהתאם לעדכון מדיניות.",high,
+79,SG-HE-00725,mixed_or_unclear,data/legal/sitePolicies.he.js,324,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: רמת היעד: AA — במידת האפשר ובהתאם ליכולות המערכת.",high,
+80,SG-HE-00731,mixed_or_unclear,data/legal/sitePolicies.he.js,335,policy,general,other,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: other
+כפי שמופיע: במדיניות/הסכמה: ניגודיות צבעים — בהתאם לעיצוב הקיים.",high,
+81,SG-HE-02692,mixed_or_unclear,utils/curriculum-audit/math-official-source-map.js,77,learning_lobby,form,label,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: form
+סוג: label
+כפי שמופיע: בלובי למידה: דפוסים, סדרות, משוואות וביטויים",high,
+82,SG-HE-02823,mixed_or_unclear,utils/curriculum-audit/math-official-subsection-catalog.js,524,learning_lobby,form,label,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: form
+סוג: label
+כפי שמופיע: בלובי למידה: ביטויים ומשוואות — פישוט והצבה",high,
+83,SG-HE-02798,mixed_or_unclear,utils/curriculum-audit/math-official-subsection-catalog.js,392,learning_lobby,form,label,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: form
+סוג: label
+כפי שמופיע: בלובי למידה: משוואות וביטויים בכיתה ד׳",high,
+84,SG-HE-02812,mixed_or_unclear,utils/curriculum-audit/math-official-subsection-catalog.js,463,learning_lobby,form,label,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: form
+סוג: label
+כפי שמופיע: בלובי למידה: ביטויים אלגבריים ומשוואות",high,
+85,SG-HE-02404,mixed_or_unclear,utils/curriculum-audit/curriculum-topic-normalizer.js,113,learning_lobby,general,other,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: other
+כפי שמופיע: בלובי למידה: משוואות וביטויים",high,
+86,SG-HE-01349,mixed_or_unclear,pages/learning/english-master.js,2890,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: שיאים מקומיים",high,
+87,SG-HE-01458,mixed_or_unclear,pages/learning/geometry-master.js,3166,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: שיאים מקומיים",high,
+88,SG-HE-01625,mixed_or_unclear,pages/learning/hebrew-master.js,4125,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: שיאים מקומיים",high,
+89,SG-HE-01806,mixed_or_unclear,pages/learning/math-master.js,5830,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: שיאים מקומיים",high,
+90,SG-HE-01949,mixed_or_unclear,pages/learning/moledet-geography-master.js,3479,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: שיאים מקומיים",high,
+91,SG-HE-02085,mixed_or_unclear,pages/learning/science-master.js,3467,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: שיאים מקומיים",high,
+92,SG-HE-01205,mixed_or_unclear,pages/learning/curriculum.js,524,learning_lobby,general,other,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: other
+כותרת: נושאים זמינים:
+כפי שמופיע: בלובי למידה: משוואות",high,
+93,SG-HE-01224,mixed_or_unclear,pages/learning/curriculum.js,558,learning_lobby,general,other,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: other
+כותרת: נושאים זמינים:
+כפי שמופיע: בלובי למידה: משוואות",high,
+94,SG-HE-01244,mixed_or_unclear,pages/learning/curriculum.js,594,learning_lobby,general,other,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: other
+כותרת: נושאים זמינים:
+כפי שמופיע: בלובי למידה: משוואות",high,
+95,SG-HE-01720,mixed_or_unclear,pages/learning/math-master.js,2628,learning_screen,general,other,טקסט בממשק הלמידה.,"במסך תרגול
+אזור: general
+סוג: other
+כפי שמופיע: משוואות",high,
+96,SG-HE-02755,mixed_or_unclear,utils/curriculum-audit/math-official-subsection-catalog.js,214,learning_lobby,form,label,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: form
+סוג: label
+כפי שמופיע: בלובי למידה: השוואות",high,
+97,SG-HE-03048,mixed_or_unclear,utils/dev-student-simulator/ui-display-labels.js,47,mixed_or_unclear,form,other,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: form
+סוג: other
+כפי שמופיע: משוואות",high,
+98,SG-HE-11115,mixed_or_unclear,utils/student-question-stem-sanitizer.js,121,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: \\(…(?:כיתה…[^)·•—]+|נושא…[^)·•—]+|……[^)·•—]+|תחום…[^)·•—]+)(?:…[·•—]…(?:כיתה…[^)·•—]+|נושא…[^)·•—]+|……[^)·•—]+|תחום…[^)·•—]+))*…\\)…",medium,placeholders substituted
+99,SG-HE-10308,mixed_or_unclear,utils/math-explanations.js,511,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: 2. לדוגמה … = …… …… …….",medium,placeholders substituted
+100,SG-HE-11116,mixed_or_unclear,utils/student-question-stem-sanitizer.js,130,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ^(?:…(?:כיתה…[אבגדהו]['׳]?|נושא…\\S+|תחום…\\S+|……(?:easy|medium|hard|קלה|בינונית|קשה|מאתגרת)|מושגים…\\([^)]+\\)))…(?::|[·•—|]…|…[-—]…)",medium,placeholders substituted
+101,SG-HE-09652,mixed_or_unclear,utils/math-animations.js,1529,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: כדי שיהיה קל לחשב בעמודות, מדמיינים שמזיזים את הנקודה … מקומות ימינה (כופלים ב-…). מחשבים עם מספרים שלמים, ובסוף מחזירים את הנקודה … מקומות שמאלה.",medium,placeholders substituted
+102,SG-HE-00758,mixed_or_unclear,data/legal/sitePolicies.he.js,408,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: לאחר מחיקה, עותקי גיבוי או שחזור טכניים עשויים להישמר עד … ימי עסקים — לצורכי שחזור אחר תקלה, בטיחות טכנית או חובה משפטית/אבטחתית בלבד.",medium,placeholders substituted
+103,SG-HE-09459,mixed_or_unclear,utils/math-animations.js,290,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: מחברים את ספרת ה…: … + …… = …. כותבים … בעמודת ה…….",medium,placeholders substituted
+104,SG-HE-00253,mixed_or_unclear,data/help-center/articleHelpers.js,83,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: הם נועדו לשמש כלי עזר לימודי להורה ולתלמיד, ואינם מהווים אבחון חינוכי, דידקטי או מקצועי, ואינם מחליפים שיקול דעת של מורה, יועץ, איש חינוך או בעל מקצוע מוסמך.",high,
+105,SG-HE-10404,mixed_or_unclear,utils/math-explanations.js,977,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: …. בעמודת ה… … קטן מ-…, לכן לוקחים ""השאלה"" מהעמודה הבאה (מוסיפים 10 לספרה הזו ומפחיתים 1 בעמודה הבאה).",medium,placeholders substituted
+106,SG-HE-02735,mixed_or_unclear,utils/curriculum-audit/math-official-subsection-catalog.js,152,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: לא ממפים כאן math.divisibility_factors — סימני התחלקות פורמליים בקטלוג נפרד לכיתה ג׳ (g3_divisibility_intro); הגנרטור משחרר התחלקות מכיתה ג׳ בלבד.",high,
+107,SG-HE-02835,mixed_or_unclear,utils/curriculum-audit/math-official-subsection-catalog.js,580,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: לא ממפים math.word_problems כאן — שאלות מילוליות ואחוזים/יחס מקבלות מקטע ייעודי g6_percent_ratio_problems בלבד; מונע חפיפת מועמדים בביקורת קטלוג.",high,
+108,SG-HE-09517,mixed_or_unclear,utils/math-animations.js,679,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: שימו לב: לפי השלבים יצא … אבל התשובה השמורה לשאלה היא …. אם זה קורה, כנראה שיש פרמטרים מיוחדים בשאלה (למשל מספרים עם סימן/המרה).",medium,placeholders substituted
+109,SG-HE-10365,mixed_or_unclear,utils/math-explanations.js,776,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: 💡 נסה לחשוב על זה כך: יש לך … עיגולים, ואתה מוסיף … עיגולים נוספים. כמה עיגולים יש לך עכשיו? נסה לספור: ${LTR(",medium,placeholders substituted
+110,SG-HE-03530,mixed_or_unclear,utils/geometry-explanations.js,91,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: במשולש ישר־זווית: …. זהה מי היתר (הצלע מול הזווית הישרה) ומה מבקשים — ניצב או יתר — ואז פעולה הפוכה (שורש או הפרש ריבועים).",medium,placeholders substituted
+111,SG-HE-02478,mixed_or_unclear,utils/curriculum-audit/english-official-subsection-catalog.js,119,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: המפה השמרנית ב-israeli-primary-curriculum-map עדיין לא מציבה strand נפרד להבנת הנקרא פורמלית לכיתה ג׳ — לא למפות מפתח זה כאן עד עדכון המפה.",high,
+112,SG-HE-09655,mixed_or_unclear,utils/math-animations.js,1555,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מחברים בעמודת ה…: … + …… = …. כותבים ……",medium,placeholders substituted
+113,SG-HE-10374,mixed_or_unclear,utils/math-explanations.js,782,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: )} זה כמו לקחת … עיגולים ולחלק אותם ל-… קבוצות שוות. כמה עיגולים בכל קבוצה? …!",medium,placeholders substituted
+114,SG-HE-02369,mixed_or_unclear,utils/audio-playback-core.js,236,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: לא זוהתה השמעה. אם אתם בכרום: ודאו שמותקנת חבילת עברית; אם ב־Safari ב־iOS: נסו שוב מיד אחרי טעינת הדף. אפשר גם להשתמש בטקסט שמוצג למעלה.",high,
+115,SG-HE-10367,mixed_or_unclear,utils/math-explanations.js,778,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: 💡 נסה לחשוב על זה כך: יש לך … עיגולים, ואתה לוקח … עיגולים. כמה עיגולים נשארו? נסה לספור לאחור: ${LTR(",medium,placeholders substituted
+116,SG-HE-04179,mixed_or_unclear,utils/geometry-question-generator.js,1226,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח תיאור — מרובע עם זוגות צלעות נגדיות שווים אך לא כל ארבע השוות; אורך …, רוחב …. מה סוג הצורה? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+117,SG-HE-09502,mixed_or_unclear,utils/math-animations.js,610,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: קיבלנו …. כי כפלנו בספרת מקום גבוה (×…), מוסיפים … אפסים בסוף ⇒ ….",medium,placeholders substituted
+118,SG-HE-10421,mixed_or_unclear,utils/math-explanations.js,1242,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: …. בעמודת ה… … קטן מ-…, לכן לוקחים ""השאלה"" מהעמודה הבאה (מוסיפים 10 לספרה הזו ומפחיתים 1 בעמודה הבאה).",medium,placeholders substituted
+119,SG-HE-04110,mixed_or_unclear,utils/geometry-question-generator.js,895,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ליאו אורז צעצועים בקופסת קרטון בצורת תיבה באורך … ס""מ, רוחב … ס""מ וגובה … ס""מ. מה נפח הקופסה בס""מ מעוקב?",medium,placeholders substituted
+120,SG-HE-09524,mixed_or_unclear,utils/math-animations.js,826,mixed_or_unclear,empty_state,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: empty_state
+סוג: heading
+כפי שמופיע: מכפילים: … × … = …. מחסרים: … - … = …. ${remainder === 0 ? 'אין שארית.' :",medium,placeholders substituted
+121,SG-HE-03513,mixed_or_unclear,utils/geometry-explanations.js,34,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: שטח מעגל = … (כאן …). קודם רדיוס בריבוע, ואז הכפלה ב‑π — לא לבלבל עם … שהוא היקף.",medium,placeholders substituted
+122,SG-HE-10427,mixed_or_unclear,utils/math-explanations.js,1368,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: …. … נכנס ב-… בדיוק … פעמים. כותבים … במנה מעל הספרה ….",medium,placeholders substituted
+123,SG-HE-03882,mixed_or_unclear,utils/geometry-explanations.js,1066,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: זווית הריצוף היא הזווית הפנימית של צורת האריח (ריבוע …, משולש שווה־צלעות …, משושה …).",medium,placeholders substituted
+124,SG-HE-04333,mixed_or_unclear,utils/geometry-question-generator.js,1531,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה מדויקת: ""…"" = משולש המוגדר לפי תכונות הצלעות שלו כ — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+125,SG-HE-04339,mixed_or_unclear,utils/geometry-question-generator.js,1537,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניסוח מתמטי: ""…"" מתייחס למשולש בעל תכונות גיאומטריות של — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+126,SG-HE-04296,mixed_or_unclear,utils/geometry-question-generator.js,1482,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח תכונות מתמטיות: השם ""…"" מרמז על מאפייני הצלעות — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+127,SG-HE-09471,mixed_or_unclear,utils/math-animations.js,386,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: בעמודת ה… … קטן מ-…, לכן לוקחים ""השאלה"" מהעמודה הבאה (מוסיפים 10 לספרה הזו ומפחיתים 1 בעמודה הבאה).",medium,placeholders substituted
+128,SG-HE-10705,mixed_or_unclear,utils/math-question-generator.js,3133,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: לתקציב פעילות יש …₪. נרכשו … מחברות ו-… מארזי צבעים, וכל פריט עולה …₪. כמה יתרה תישאר אחרי הרכישה?",medium,placeholders substituted
+129,SG-HE-09541,mixed_or_unclear,utils/math-animations.js,992,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: אם המונה גדול מהמכנה, אפשר לכתוב כמספר מעורב: … ÷ … = … ושארית ….",medium,placeholders substituted
+130,SG-HE-04287,mixed_or_unclear,utils/geometry-question-generator.js,1471,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי לפי הגדרה: ""…"" = משולש עם תכונות ייחודיות של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+131,SG-HE-04335,mixed_or_unclear,utils/geometry-question-generator.js,1533,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמה מדויקת: ""…"" מתאר משולש עם תכונות ייחודיות של — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+132,SG-HE-04337,mixed_or_unclear,utils/geometry-question-generator.js,1535,mixed_or_unclear,policy,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: policy
+סוג: explanation
+כפי שמופיע: זיהוי מדויק: ""…"" = משולש המקיים תנאים ספציפיים של — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+133,SG-HE-04393,mixed_or_unclear,utils/geometry-question-generator.js,1624,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה מדויקת: … = מרובע המוגדר לפי תכונות הצלעות שלו כ — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+134,SG-HE-10675,mixed_or_unclear,utils/math-question-generator.js,2921,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בספרייה היו … ספרים. הוסיפו … ספרים חדשים, והוצאו להשאלה … ספרים. כמה ספרים נשארו בספרייה עכשיו?",medium,placeholders substituted
+135,SG-HE-04293,mixed_or_unclear,utils/geometry-question-generator.js,1479,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח מעמיק: ""…"" — מהי הגדרתו המדויקת של משולש זה? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+136,SG-HE-04399,mixed_or_unclear,utils/geometry-question-generator.js,1630,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניסוח מתמטי: … מתייחס למרובע בעל תכונות גיאומטריות של — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+137,SG-HE-00696,mixed_or_unclear,data/legal/sitePolicies.he.js,249,policy,empty_state,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: empty_state
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: תוכן האתר — שאלות, משחקים, עיצוב, טקסטים ודוחות — שייך לבעלי האתר או לרישיונותיהם. אין להעתיק או להפיץ ללא אישור.",high,
+138,SG-HE-03853,mixed_or_unclear,utils/geometry-explanations.js,995,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: המספר בשאלה חייב להתאים לשם המשפחה: ….",medium,placeholders substituted
+139,SG-HE-10188,mixed_or_unclear,utils/math-explanations.js,37,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: אחוזים הם חלק מ-…. … זה עשירית, … זה רבע, … זה חצי. נסה לתרגם לחלק פשוט.",medium,placeholders substituted
+140,SG-HE-00688,mixed_or_unclear,data/legal/sitePolicies.he.js,231,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: הדוחות והתובנות אינם מהווים אבחון חינוכי, דידקטי או מקצועי, ואינם מחליפים שיקול דעת של מורה, יועץ או איש מקצוע.",high,
+141,SG-HE-04323,mixed_or_unclear,utils/geometry-question-generator.js,1519,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הבנת מונח: ""…"" מתייחס למשולש עם מאפייני צלעות — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+142,SG-HE-04372,mixed_or_unclear,utils/geometry-question-generator.js,1593,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח תכונות מתמטיות: השם … מרמז על מאפייני הצלעות — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+143,SG-HE-02776,mixed_or_unclear,utils/curriculum-audit/math-official-subsection-catalog.js,294,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: מיפוי ראשון ל־math.divisibility_factors; מיושר עם שחרור הגנרטור (סימני התחלקות) מכיתה ג׳ — לאמת מול kita3.pdf.",high,
+144,SG-HE-04285,mixed_or_unclear,utils/geometry-question-generator.js,1469,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרת סוג משולש: ""…"" מתאר משולש עם תכונות של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+145,SG-HE-04336,mixed_or_unclear,utils/geometry-question-generator.js,1534,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ביטוי מתמטי: ""…"" הוא מונח המתייחס למשולש שבו — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+146,SG-HE-03529,mixed_or_unclear,utils/geometry-explanations.js,88,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: בכל משולש סכום זוויות פנימיות = …. חברי את שתי הזוויות הנתונות, ואז הפחיתי מהתוצאה מ‑….",medium,placeholders substituted
+147,SG-HE-03536,mixed_or_unclear,utils/geometry-explanations.js,109,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מקבילים: לא נפגשים ומרחק קבוע ביניהם. מאונחים: נפגשים בזווית ישרה (…). איזה תיאור מתאים לשם שבשאלה?",medium,placeholders substituted
+148,SG-HE-04295,mixed_or_unclear,utils/geometry-question-generator.js,1481,mixed_or_unclear,policy,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: policy
+סוג: explanation
+כפי שמופיע: אתגר הגדרות: ""…"" מתאר משולש המקיים תנאים של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+149,SG-HE-04334,mixed_or_unclear,utils/geometry-question-generator.js,1532,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח מונחי: השם ""…"" מגדיר משולש שמתאפיין ב — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+150,SG-HE-04363,mixed_or_unclear,utils/geometry-question-generator.js,1582,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי לפי הגדרה: … = מרובע עם תכונות ייחודיות של — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+151,SG-HE-04395,mixed_or_unclear,utils/geometry-question-generator.js,1626,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמה מדויקת: … מתאר מרובע עם תכונות ייחודיות של — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+152,SG-HE-09890,mixed_or_unclear,utils/math-animations.js,2901,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: יש … תלמידים והם מתחלקים לקבוצות של … תלמידים בכל קבוצה. כמה תלמידים יישארו בלי קבוצה מלאה?",medium,placeholders substituted
+153,SG-HE-09956,mixed_or_unclear,utils/math-animations.js,3228,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: לליאו יש …₪. הוא קונה … עטים ו-… עפרונות, וכל פריט עולה …₪. כמה כסף יישאר לו אחרי הקנייה?",medium,placeholders substituted
+154,SG-HE-10460,mixed_or_unclear,utils/math-question-generator.js,71,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: יחס מפה–מציאות: … ס""מ על הנייר מתאימים ל-… ס""מ בפועל. מצאו את n בביטוי 1:n (כתבו n) = ……",medium,placeholders substituted
+155,SG-HE-10706,mixed_or_unclear,utils/math-question-generator.js,3134,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: לליאו יש …₪. הוא קונה … עטים ו-… עפרונות, וכל פריט עולה …₪. כמה כסף יישאר לו אחרי הקנייה?",medium,placeholders substituted
+156,SG-HE-10707,mixed_or_unclear,utils/math-question-generator.js,3153,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: לליאו יש …₪. הוא קונה … עטים ו-… עפרונות, וכל פריט עולה …₪. כמה כסף יישאר לו אחרי הקנייה?",medium,placeholders substituted
+157,SG-HE-04338,mixed_or_unclear,utils/geometry-question-generator.js,1536,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה מתקדמת: ""…"" מוגדר כמשולש שכל צלעותיו — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+158,SG-HE-04397,mixed_or_unclear,utils/geometry-question-generator.js,1628,mixed_or_unclear,policy,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: policy
+סוג: explanation
+כפי שמופיע: זיהוי מדויק: … = מרובע המקיים תנאים ספציפיים של — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+159,SG-HE-10674,mixed_or_unclear,utils/math-question-generator.js,2920,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: במחסן היו … קרטונים. הוסיפו … קרטונים חדשים, ונשלחו … לסניף אחר. כמה קרטונים נשארו במחסן?",medium,placeholders substituted
+160,SG-HE-02620,mixed_or_unclear,utils/curriculum-audit/israeli-primary-curriculum-map.js,165,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: כיתה … — מתמטיקה: מיפוי לפי מיתרים (מספרים, פעולות, מילולי, שברים וכו׳). יש לאמת מול תוכנית האח״ח.",medium,placeholders substituted
+161,SG-HE-02877,mixed_or_unclear,utils/curriculum-audit/official-curriculum-source-registry.js,183,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: בדיקת רצף פדגוגי מול מסמך כיתה (PDF) ומיפוי מילולי לפני תיקוני תוכן — ראו דוח math-bank-vs-official-source.",high,
+162,SG-HE-04294,mixed_or_unclear,utils/geometry-question-generator.js,1480,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הוכחת זיהוי: מדוע ""…"" שייך לקטגוריה מסוימת? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+163,SG-HE-04369,mixed_or_unclear,utils/geometry-question-generator.js,1590,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח מעמיק: … — מהי הגדרתו המדויקת של מרובע זה? (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+164,SG-HE-04572,mixed_or_unclear,utils/geometry-question-generator.js,2057,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: גוף תלת־ממדי עם …. מה שמו? (1 = קובייה, 2 = תיבה, 3 = גליל, 4 = פירמידה, 5 = חרוט, 6 = כדור)",medium,placeholders substituted
+165,SG-HE-09816,mixed_or_unclear,utils/math-animations.js,2473,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: נחלק את … ב-…: … ÷ … = …. זה מספר שלם, לכן … הוא גורם של …",medium,placeholders substituted
+166,SG-HE-09822,mixed_or_unclear,utils/math-animations.js,2508,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: כפולה מתקבלת כשמכפילים את המספר במספר שלם. כפולות של … הן: … × 1, … × 2, … × 3, ...",medium,placeholders substituted
+167,SG-HE-10180,mixed_or_unclear,utils/math-explanations.js,19,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: אם יש לך __ + b = c, אז המספר החסר הוא …. אם יש לך a + __ = c, אז המספר החסר הוא ….",medium,placeholders substituted
+168,SG-HE-10182,mixed_or_unclear,utils/math-explanations.js,24,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: אם יש לך __ - b = c, אז המספר החסר הוא …. אם יש לך a - __ = c, אז המספר החסר הוא ….",medium,placeholders substituted
+169,SG-HE-03556,mixed_or_unclear,utils/geometry-explanations.js,148,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בריצוף סביב נקודה סכום הזוויות החוצות חייב להסתדר ל‑…. מה הזווית הפנימית הבולטת של הצורה בשאלה?",medium,placeholders substituted
+170,SG-HE-04317,mixed_or_unclear,utils/geometry-question-generator.js,1513,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מונח מתמטי: ""…"" מגדיר משולש עם תכונות של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+171,SG-HE-09521,mixed_or_unclear,utils/math-animations.js,805,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: … נכנס ב-… בדיוק … פעמים. כותבים … במנה מעל הספרה ….",medium,placeholders substituted
+172,SG-HE-04278,mixed_or_unclear,utils/geometry-question-generator.js,1459,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בחרו את הסוג הנכון: ""…"" מתאר משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+173,SG-HE-04298,mixed_or_unclear,utils/geometry-question-generator.js,1484,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הבנת מונחים: ""…"" מתייחס למשולש עם תכונת — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+174,SG-HE-04299,mixed_or_unclear,utils/geometry-question-generator.js,1485,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: אתגר הגדרה: מהו ""…"" במונחי סיווג משולשים? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+175,SG-HE-00969,mixed_or_unclear,lib/learning-client/subjectMonthlyPersistenceView.js,98,general_component,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגעת ל-… דקות — פרס … מטבעות ממתין",medium,placeholders substituted
+176,SG-HE-04288,mixed_or_unclear,utils/geometry-question-generator.js,1472,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמת תיאור: ""…"" מתאים לסוג משולש מספר — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+177,SG-HE-04290,mixed_or_unclear,utils/geometry-question-generator.js,1474,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי סוג: השם ""…"" מצביע על משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+178,SG-HE-04318,mixed_or_unclear,utils/geometry-question-generator.js,1514,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה וסיווג: ""…"" מתייחס למשולש המקיים — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+179,SG-HE-04391,mixed_or_unclear,utils/geometry-question-generator.js,1620,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הבנת מונח: … מתייחס למרובע עם מאפייני צלעות — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+180,SG-HE-08075,mixed_or_unclear,utils/hebrew-question-generator.js,3557,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: כיתה ד׳ — הכתבה ושגיאת כתיב (2): בהכתבה נכתב 'יבש' במקום 'יָבֵשׁ' (במובן opposite of wet). מה סוג הטעות?",high,
+181,SG-HE-10432,mixed_or_unclear,utils/math-explanations.js,1383,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: …. מורידים את הספרה הבאה (…). המספר החדש לחלוקה הוא ….",medium,placeholders substituted
+182,SG-HE-11113,mixed_or_unclear,utils/student-question-stem-sanitizer.js,92,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ^בכיתה\\s+…\\s*[—–-]\\s*…\\s*(?:קלה|בינונית|קשה|מאתגרת|easy|medium|hard)\\s*:\\s*",medium,placeholders substituted
+183,SG-HE-00254,mixed_or_unclear,data/help-center/articleHelpers.js,84,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: במקרה של קושי מתמשך, פער לימודי משמעותי או צורך בהכוונה אישית, מומלץ להיוועץ במורה או באיש מקצוע מתאים.",high,
+184,SG-HE-00263,mixed_or_unclear,data/help-center/content/parents.js,27,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: ליאו הוא מרחב לימודי בעברית לתלמידי כיתות א׳–ו׳, עם תרגול במקצועות שונים, משחקים ודוחות התקדמות להורים.",high,
+185,SG-HE-03554,mixed_or_unclear,utils/geometry-explanations.js,143,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: בטרפז קודם …, אחר כך קשרו לשטח וחלקו — גובה = ….",medium,placeholders substituted
+186,SG-HE-04289,mixed_or_unclear,utils/geometry-question-generator.js,1473,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח תכונות: משולש ""…"" שייך לקטגוריה — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+187,SG-HE-04321,mixed_or_unclear,utils/geometry-question-generator.js,1517,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מונח גיאומטרי: ""…"" הוא משולש המוגדר כ — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+188,SG-HE-04322,mixed_or_unclear,utils/geometry-question-generator.js,1518,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג לפי שם: ""…"" מצביע על משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+189,SG-HE-04361,mixed_or_unclear,utils/geometry-question-generator.js,1580,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרת סוג מרובע: … מתאר מרובע עם תכונות של — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+190,SG-HE-04396,mixed_or_unclear,utils/geometry-question-generator.js,1627,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ביטוי מתמטי: … הוא מונח המתייחס למרובע שבו — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+191,SG-HE-09539,mixed_or_unclear,utils/math-animations.js,974,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: אפשר לפשט כי גם … וגם … מתחלקים ב-…. נחלק את המונה והמכנה ב-….",medium,placeholders substituted
+192,SG-HE-00699,mixed_or_unclear,data/legal/sitePolicies.he.js,257,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: אי-חידוש מנוי, כשל בתשלום או ביטול תשלום — לא יגרמו למחיקה אוטומטית של נתוני ילדים או היסטוריית למידה.",high,
+193,SG-HE-00803,mixed_or_unclear,data/legal/sitePolicies.he.js,526,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: עמוד זה מסביר בקצרה כיצד אנו מגנים על נתוני הורים ותלמידים. זהו מידע כללי להורים — לא מסמך טכני פנימי.",high,
+194,SG-HE-02355,mixed_or_unclear,utils/ai-hybrid-diagnostic/hybrid-review-record.js,121,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התנגשות: V2 בחר … לעומת Hybrid top … (חומרה: …)",medium,placeholders substituted
+195,SG-HE-04057,mixed_or_unclear,utils/geometry-question-generator.js,715,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ליאו רוצה לשים גדר מסביב לגינה בצורת ריבוע, אורך כל צלע הוא … מטר. מה אורך הגדר הכולל שהוא צריך?",medium,placeholders substituted
+196,SG-HE-04176,mixed_or_unclear,utils/geometry-question-generator.js,1221,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: השוו בין ריבוע למלבן: אורך … ורוחב … (לא כל הצלעות שוות). מה מתאים? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+197,SG-HE-04291,mixed_or_unclear,utils/geometry-question-generator.js,1475,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה מתמטית: ""…"" הוא משולש המוגדר כ — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+198,SG-HE-04297,mixed_or_unclear,utils/geometry-question-generator.js,1483,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג מתקדם: ""…"" = משולש שכל צלעותיו — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+199,SG-HE-04320,mixed_or_unclear,utils/geometry-question-generator.js,1516,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמת הגדרה: ""…"" מתאר משולש שצלעותיו — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+200,SG-HE-04371,mixed_or_unclear,utils/geometry-question-generator.js,1592,mixed_or_unclear,policy,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: policy
+סוג: explanation
+כפי שמופיע: אתגר הגדרות: … מתאר מרובע המקיים תנאים של — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+201,SG-HE-04394,mixed_or_unclear,utils/geometry-question-generator.js,1625,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח מונחי: השם … מגדיר מרובע שמתאפיין ב — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+202,SG-HE-00218,mixed_or_unclear,data/hebrew-g12-closure-queue.json,3,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: תור סגירה g1/g2 — סגור; כל הפריטים הועברו ל־completed_in_this_pass אחרי סנכרון מטריצה ובנק (2026-04).",high,
+203,SG-HE-00718,mixed_or_unclear,data/legal/sitePolicies.he.js,308,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: אנו מחויבים להנגיש את האתר לקהל רחב בישראל, בעברית ומימין לשמאל (RTL). דיווח על בעיות נגישות — בברכה.",high,
+204,SG-HE-04398,mixed_or_unclear,utils/geometry-question-generator.js,1629,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה מתקדמת: … מוגדר כמרובע שכל צלעותיו — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+205,SG-HE-10462,mixed_or_unclear,utils/math-question-generator.js,73,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: שני אורכים נתונים — מפה … ס""מ מול … ס""מ במציאות. אותו יחס נכתב 1:__; מה __? = ……",medium,placeholders substituted
+206,SG-HE-03828,mixed_or_unclear,utils/geometry-explanations.js,923,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: נפח תיבה/מנסרה: שלושה ממדים בכפל. פירמידה/חרוט: … (ועם … בחרוט).",medium,placeholders substituted
+207,SG-HE-04174,mixed_or_unclear,utils/geometry-question-generator.js,1216,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: צורה עם זוגות נגדיים שווים: … מול …, … מול …. מה זה? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+208,SG-HE-04370,mixed_or_unclear,utils/geometry-question-generator.js,1591,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הוכחת זיהוי: מדוע … שייך לקטגוריה מסוימת? (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+209,SG-HE-10191,mixed_or_unclear,utils/math-explanations.js,43,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: חפש את הספרה שמקיפים (עשרות/מאות) והסתכל על הספרה שאחריה: … עיגול למטה, … למעלה.",medium,placeholders substituted
+210,SG-HE-10458,mixed_or_unclear,utils/math-question-generator.js,68,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: במפה מופיע קטע של … ס""מ, ובשטח האמיתי הוא … ס""מ. השלימו את קנה המידה בצורה 1:……",medium,placeholders substituted
+211,SG-HE-00372,mixed_or_unclear,data/help-center/content/parents.js,205,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: בדף הבית או בדפדפן תופיע אפשרות «התקן כאפליקציה» — לחצו ואשרו. כך תוכלו לפתוח את ליאו כמו אפליקציה.",high,
+212,SG-HE-00970,mixed_or_unclear,lib/learning-client/subjectMonthlyPersistenceView.js,100,general_component,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"ברכיב ממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: נותרו עוד … דק׳ (~… ש׳)",medium,placeholders substituted
+213,SG-HE-04319,mixed_or_unclear,utils/geometry-question-generator.js,1515,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי מונח: ""…"" = משולש בעל צלעות — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+214,SG-HE-04385,mixed_or_unclear,utils/geometry-question-generator.js,1614,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מונח מתמטי: … מגדיר מרובע עם תכונות של — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+215,SG-HE-04306,mixed_or_unclear,utils/geometry-question-generator.js,1499,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בחירת סוג: ""…"" מתאים למשולש מספר — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+216,SG-HE-04307,mixed_or_unclear,utils/geometry-question-generator.js,1500,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה: ""…"" מתאר משולש עם מאפייני — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+217,SG-HE-04332,mixed_or_unclear,utils/geometry-question-generator.js,1530,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניסוח מדויק: ""…"" מתאר משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+218,SG-HE-04354,mixed_or_unclear,utils/geometry-question-generator.js,1570,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בחרו את הסוג הנכון: … מתאר מרובע מספר — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+219,SG-HE-04374,mixed_or_unclear,utils/geometry-question-generator.js,1595,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הבנת מונחים: … מתייחס למרובע עם תכונת — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+220,SG-HE-04375,mixed_or_unclear,utils/geometry-question-generator.js,1596,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: אתגר הגדרה: מהו … במונחי סיווג מרובעים? (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+221,SG-HE-10019,mixed_or_unclear,utils/math-animations.js,3474,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: … … ב-… ⇒ התשובה: ….",medium,placeholders substituted
+222,SG-HE-10571,mixed_or_unclear,utils/math-question-generator.js,806,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בשברים עם מכנה זהה …: מה צריך לעשות כדי לחבר את המונים (למשל 2/…+1/…)? = בחרו תשובה",medium,placeholders substituted
+223,SG-HE-00761,mixed_or_unclear,data/legal/sitePolicies.he.js,416,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: לבקשה למחיקת חשבון הורה שלם — פנו בדוא\""ל. נטפל בבקשה עד … ימי עסקים.",medium,placeholders substituted
+224,SG-HE-04169,mixed_or_unclear,utils/geometry-question-generator.js,1192,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח תיאור — מרובע עם ארבע צלעות שוות … וזוויות ישרות. מה סוג הצורה? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+225,SG-HE-04286,mixed_or_unclear,utils/geometry-question-generator.js,1470,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חקר תכונות: למשולש ""…"" יש צלעות — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+226,SG-HE-04305,mixed_or_unclear,utils/geometry-question-generator.js,1498,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי בסיסי: משולש ""…"" הוא מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+227,SG-HE-04316,mixed_or_unclear,utils/geometry-question-generator.js,1512,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמת מונח: ""…"" = איזה סוג משולש? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+228,SG-HE-04346,mixed_or_unclear,utils/geometry-question-generator.js,1544,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח מדויק: ""…"" קטגוריית משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+229,SG-HE-04364,mixed_or_unclear,utils/geometry-question-generator.js,1583,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמת תיאור: … מתאים לסוג מרובע מספר — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+230,SG-HE-04366,mixed_or_unclear,utils/geometry-question-generator.js,1585,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי סוג: השם … מצביע על מרובע מסוג — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+231,SG-HE-04386,mixed_or_unclear,utils/geometry-question-generator.js,1615,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה וסיווג: … מתייחס למרובע המקיים — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+232,SG-HE-04571,mixed_or_unclear,utils/geometry-question-generator.js,2056,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בחרו שם לגוף: …. (1 = קובייה, 2 = תיבה, 3 = גליל, 4 = פירמידה, 5 = חרוט, 6 = כדור)",medium,placeholders substituted
+233,SG-HE-09824,mixed_or_unclear,utils/math-animations.js,2519,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: נבדוק: … ÷ … = …. זה מספר שלם, לכן … הוא כפולה של …",medium,placeholders substituted
+234,SG-HE-04303,mixed_or_unclear,utils/geometry-question-generator.js,1496,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמה: השם ""…"" מתאר משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+235,SG-HE-04324,mixed_or_unclear,utils/geometry-question-generator.js,1520,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח: ""…"" מתאר משולש עם צלעות — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+236,SG-HE-04365,mixed_or_unclear,utils/geometry-question-generator.js,1584,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח תכונות: מרובע … שייך לקטגוריה — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+237,SG-HE-04389,mixed_or_unclear,utils/geometry-question-generator.js,1618,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מונח גיאומטרי: … הוא מרובע המוגדר כ — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+238,SG-HE-04390,mixed_or_unclear,utils/geometry-question-generator.js,1619,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג לפי שם: … מצביע על מרובע מסוג — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+239,SG-HE-10703,mixed_or_unclear,utils/math-question-generator.js,3114,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בפרויקט קבוצתי ניתנו ציונים …, … ו-… לשלושה שלבים. מה ממוצע הציון (מעוגל למספר שלם)?",medium,placeholders substituted
+240,SG-HE-02671,mixed_or_unclear,utils/curriculum-audit/israeli-primary-curriculum-map.js,372,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: כיתה … — אנגלית: מופרד חשיפה / אוצר מילים / דקדוק / משפטים. גלי גיל—לא להניח ליבה זהה.",medium,placeholders substituted
+241,SG-HE-04075,mixed_or_unclear,utils/geometry-question-generator.js,766,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: גינה מלבנית מוקפת בגדר. האורך … מטר והרוחב … מטר. כמה מטרים של גדר צריך בסך הכל?",medium,placeholders substituted
+242,SG-HE-04304,mixed_or_unclear,utils/geometry-question-generator.js,1497,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג פשוט: ""…"" שייך לקטגוריה — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+243,SG-HE-04345,mixed_or_unclear,utils/geometry-question-generator.js,1543,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חקר תכונות: ""…"" מאפייני צלעות — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+244,SG-HE-04367,mixed_or_unclear,utils/geometry-question-generator.js,1586,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה מתמטית: … הוא מרובע המוגדר כ — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+245,SG-HE-04373,mixed_or_unclear,utils/geometry-question-generator.js,1594,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג מתקדם: … = מרובע שכל צלעותיו — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+246,SG-HE-04388,mixed_or_unclear,utils/geometry-question-generator.js,1617,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמת הגדרה: … מתאר מרובע שצלעותיו — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+247,SG-HE-00643,mixed_or_unclear,data/legal/sitePolicies.he.js,120,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: עתיד — עשויים להופיע עוגיות או פיקסלים לפרסום, אנליטיקה או שיווק. לפני הפעלה נעדכן מדיניות זו.",high,
+248,SG-HE-03143,mixed_or_unclear,utils/geometry-activity-question-stem.js,16,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: חישוב זוויות במשולש: ידועות 2 זוויות במשולש …° ו-…°. השלימו את הזווית השלישית.",medium,placeholders substituted
+249,SG-HE-03861,mixed_or_unclear,utils/geometry-explanations.js,1020,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: ריבוע …, מלבן (לא ריבוע) …, משולש שווה־צלעות … — לפי צורת השאלה.",medium,placeholders substituted
+250,SG-HE-04009,mixed_or_unclear,utils/geometry-question-generator.js,553,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: רצפת חדר של ליאו היא מלבן באורך … מטר וברוחב … מטר. מה שטח הרצפה במטרים רבועים?",medium,placeholders substituted
+251,SG-HE-04276,mixed_or_unclear,utils/geometry-question-generator.js,1457,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: לפי השם ""…"" — איזה מספר מתאים? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+252,SG-HE-04281,mixed_or_unclear,utils/geometry-question-generator.js,1462,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג: ""…"" מתאים למשולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+253,SG-HE-04292,mixed_or_unclear,utils/geometry-question-generator.js,1478,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: אתגר סיווג: ""…"" כשם סוג משולש. (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+254,SG-HE-04342,mixed_or_unclear,utils/geometry-question-generator.js,1540,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניתוח מתקדם: ""…"" = סוג משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+255,SG-HE-02558,mixed_or_unclear,utils/curriculum-audit/geometry-sequencing-heuristics.js,63,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: מפתח מנורמל … לא תואם נושאים זמינים ב-… — ייתכן מאגר/מטא-דאטה ישן או כיתה שגויה.",medium,placeholders substituted
+256,SG-HE-03541,mixed_or_unclear,utils/geometry-explanations.js,121,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: סיבוב נמדד במעלות סביב נקודה. חשבו אם מדובר ברבע, חצי או שלושת רבעי סיבוב מלא (…).",medium,placeholders substituted
+257,SG-HE-03838,mixed_or_unclear,utils/geometry-explanations.js,957,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: תשובה גדולה מדי: אולי שכפת ריבוע במקום שורש, או חיברת … במקום ….",medium,placeholders substituted
+258,SG-HE-03858,mixed_or_unclear,utils/geometry-explanations.js,1011,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: בדקו אם נדרש רבע סיבוב (…), חצי (…) או שלושת רבעים (…).",medium,placeholders substituted
+259,SG-HE-04090,mixed_or_unclear,utils/geometry-question-generator.js,793,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מלבן שאורכו … יחידות ורוחבו … יחידות. היקף = 2 × (אורך + רוחב). מה היקף המלבן?",medium,placeholders substituted
+260,SG-HE-04280,mixed_or_unclear,utils/geometry-question-generator.js,1461,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חברו בין השם ""…"" לסוג המשולש. (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+261,SG-HE-04301,mixed_or_unclear,utils/geometry-question-generator.js,1494,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי: ""…"" מתאים לסוג משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+262,SG-HE-04308,mixed_or_unclear,utils/geometry-question-generator.js,1501,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי לפי שם: ""…"" הוא משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+263,SG-HE-04313,mixed_or_unclear,utils/geometry-question-generator.js,1506,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי קל: ""…"" הוא סוג משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+264,SG-HE-04331,mixed_or_unclear,utils/geometry-question-generator.js,1527,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מיון משולשים: ""…"" = קטגוריה — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+265,SG-HE-04344,mixed_or_unclear,utils/geometry-question-generator.js,1542,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: אתגר הגדרות: ""…"" משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+266,SG-HE-09488,mixed_or_unclear,utils/math-animations.js,552,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: שורה …: כופלים ב-……",medium,placeholders substituted
+267,SG-HE-09659,mixed_or_unclear,utils/math-animations.js,1591,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: בעמודת ה… … קטן מ-…, לכן מוסיפים 10 לעמודה הזו ולוקחים 1 מהעמודה הבאה (השאלה).",medium,placeholders substituted
+268,SG-HE-09786,mixed_or_unclear,utils/math-animations.js,2303,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: מסתכלים על ספרת היחידות של …. אם הספרה היא 0,2,4,6,8 – המספר זוגי. אם 1,3,5,7,9 – אי-זוגי.",medium,placeholders substituted
+269,SG-HE-00314,mixed_or_unclear,data/help-center/content/parents.js,110,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: התלמיד נכנס עם שם משתמש וקוד בן 4 ספרות. לאחר יצירה או איפוס, הקוד מוצג פעם אחת — שמרו אותו.",high,
+270,SG-HE-02683,mixed_or_unclear,utils/curriculum-audit/israeli-primary-curriculum-map.js,443,learning_lobby,general,heading,טקסט בממשק הלמידה.,"בלובי למידה
+אזור: general
+סוג: heading
+כפי שמופיע: בלובי למידה: כיתה … — מולדת/גיאוגרפיה: המיפוי השלבי נשאר ברמת אמון נמוכה עד סימון פדגוגי ייעודי.",medium,placeholders substituted
+271,SG-HE-04180,mixed_or_unclear,utils/geometry-question-generator.js,1227,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי לפי תכונות: שני אורכי צלע שונים (…, …). מה המשמעות? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+272,SG-HE-04277,mixed_or_unclear,utils/geometry-question-generator.js,1458,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי משולש: ""…"" = איזה סוג? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+273,SG-HE-04302,mixed_or_unclear,utils/geometry-question-generator.js,1495,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מהו הסוג: ""…"" = משולש מספר — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+274,SG-HE-04325,mixed_or_unclear,utils/geometry-question-generator.js,1521,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי סוג: ""…"" = סוג משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+275,SG-HE-04328,mixed_or_unclear,utils/geometry-question-generator.js,1524,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מאפייני צלעות: ""…"" = משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+276,SG-HE-04329,mixed_or_unclear,utils/geometry-question-generator.js,1525,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חקר משולשים: ""…"" שייך לסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+277,SG-HE-04347,mixed_or_unclear,utils/geometry-question-generator.js,1545,mixed_or_unclear,help,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: help
+סוג: explanation
+כפי שמופיע: הסבר מילולי: ""…"" סוג משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+278,SG-HE-04387,mixed_or_unclear,utils/geometry-question-generator.js,1616,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי מונח: … = מרובע בעל צלעות — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+279,SG-HE-09526,mixed_or_unclear,utils/math-animations.js,850,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: מורידים את הספרה הבאה (…). המספר החדש לחלוקה הוא ….",medium,placeholders substituted
+280,SG-HE-10138,mixed_or_unclear,utils/math-animations.js,3851,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: בקנה מידה 1:… – כל 1 ס״מ במפה מייצג … ס״מ במציאות.",medium,placeholders substituted
+281,SG-HE-00404,mixed_or_unclear,data/help-center/content/parents.js,263,help_center,empty_state,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: empty_state
+סוג: heading
+כפי שמופיע: המערכת שומרת נתוני תרגול כדי להציג התקדמות ודוחות. אין לשתף קודי כניסה של תלמידים עם אחרים.",high,
+282,SG-HE-04166,mixed_or_unclear,utils/geometry-question-generator.js,1187,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: השוו בין ריבוע למלבן: היקף בסיסי עם צלע … לכל הצלעות. מה מתאים? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+283,SG-HE-04283,mixed_or_unclear,utils/geometry-question-generator.js,1464,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מה הסוג של משולש שנקרא ""…""? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+284,SG-HE-04284,mixed_or_unclear,utils/geometry-question-generator.js,1468,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג משולש לפי תיאור: ""…"". (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+285,SG-HE-04312,mixed_or_unclear,utils/geometry-question-generator.js,1505,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חברו שם לסוג: ""…"" = משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+286,SG-HE-04314,mixed_or_unclear,utils/geometry-question-generator.js,1507,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סימון סוג: ""…"" משולש מספר — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+287,SG-HE-04330,mixed_or_unclear,utils/geometry-question-generator.js,1526,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בדיקת הבנה: ""…"" סוג משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+288,SG-HE-04341,mixed_or_unclear,utils/geometry-question-generator.js,1539,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חקר מעמיק: ""…"" מתאר משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+289,SG-HE-04382,mixed_or_unclear,utils/geometry-question-generator.js,1608,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בחירת סוג: … מתאים למרובע מספר — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+290,SG-HE-04383,mixed_or_unclear,utils/geometry-question-generator.js,1609,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה: … מתאר מרובע עם מאפייני — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+291,SG-HE-04392,mixed_or_unclear,utils/geometry-question-generator.js,1623,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: ניסוח מדויק: … מתאר מרובע מסוג — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+292,SG-HE-10634,mixed_or_unclear,utils/math-question-generator.js,2183,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: איזה מספר גדול יותר — … או …? רשמו את הגדול: …",medium,placeholders substituted
+293,SG-HE-00350,mixed_or_unclear,data/help-center/content/parents.js,168,help_center,help,heading,טקסט במרכז העזרה.,"במרכז העזרה
+אזור: help
+סוג: heading
+כפי שמופיע: בתוך הדוח פתחו את אזור «שאלו על הדוח» והקלידו שאלה בעברית על הביצועים, הנושאים או ההמלצות.",high,
+294,SG-HE-00638,mixed_or_unclear,data/legal/sitePolicies.he.js,110,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: בקשות מחיקה נוספות — נטפל בהן עד … ימי עסקים ממועד קבלת הבקשה.",medium,placeholders substituted
+295,SG-HE-04115,mixed_or_unclear,utils/geometry-question-generator.js,906,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: כיתה ד׳ (קל): תיבה …×…×… ס""מ — נפח = אורך×רוחב×גובה. כמה ס""מ מעוקב?",medium,placeholders substituted
+296,SG-HE-04340,mixed_or_unclear,utils/geometry-question-generator.js,1538,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: אתגר: ""…"" הוא משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+297,SG-HE-04343,mixed_or_unclear,utils/geometry-question-generator.js,1541,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הוכחה: ""…"" שייך לקטגוריה — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+298,SG-HE-04362,mixed_or_unclear,utils/geometry-question-generator.js,1581,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חקר תכונות: למרובע … יש צלעות — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+299,SG-HE-04381,mixed_or_unclear,utils/geometry-question-generator.js,1607,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי בסיסי: מרובע … הוא מסוג — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+300,SG-HE-04384,mixed_or_unclear,utils/geometry-question-generator.js,1613,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמת מונח: … = איזה סוג מרובע? (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+301,SG-HE-10415,mixed_or_unclear,utils/math-explanations.js,1192,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: …. בסוף החיבור נשאר לנו 1 נוסף, כותבים אותו משמאל כמספר חדש בעמודת המאות/אלפים.",medium,placeholders substituted
+302,SG-HE-10735,mixed_or_unclear,utils/math-question-generator.js,3501,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: אורך של … ס""מ במפה שווה ל-… ס""מ במציאות. מה קנה המידה? (1:…)",medium,placeholders substituted
+303,SG-HE-00775,mixed_or_unclear,data/legal/sitePolicies.he.js,454,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: מסמך זה מסביר כיצד האתר עשוי להשתמש בבינה מלאכותית (AI) לסיוע להורים — כמידע חינוכי בלבד.",high,
+304,SG-HE-02325,mixed_or_unclear,utils/ai-hybrid-diagnostic/explanation-layer.js,59,mixed_or_unclear,empty_state,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: empty_state
+סוג: heading
+כפי שמופיע: שער פלט: cannot-conclude. אין להסיק אבחנה חדה; להשתמש ב־probe ובמעקב חוזר לפי מדיניות V2.",high,
+305,SG-HE-04130,mixed_or_unclear,utils/geometry-question-generator.js,999,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מה הנפח של מנסרה עם בסיס משולש (בסיס …, גובה …) וגובה המנסרה …?",medium,placeholders substituted
+306,SG-HE-04164,mixed_or_unclear,utils/geometry-question-generator.js,1182,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בוחנים צורה סגורה: ארבע צלעות שוות (…) וזוויות ישרות. מה היא? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+307,SG-HE-04269,mixed_or_unclear,utils/geometry-question-generator.js,1427,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: : """"}הגדרה ""…"" — איזה יחס בין שני ישרים במישור? (1 = מקבילות, 2 = מאונכות)",medium,placeholders substituted
+308,SG-HE-04309,mixed_or_unclear,utils/geometry-question-generator.js,1502,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג: ""…"" = משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+309,SG-HE-04326,mixed_or_unclear,utils/geometry-question-generator.js,1522,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: הגדרה: ""…"" מתאים למשולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+310,SG-HE-04379,mixed_or_unclear,utils/geometry-question-generator.js,1605,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: התאמה: השם … מתאר מרובע מסוג — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+311,SG-HE-03559,mixed_or_unclear,utils/geometry-explanations.js,152,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: שואלים שטח: …. שואלים היקף: …. בדקו מה המילה בשאלה.",medium,placeholders substituted
+312,SG-HE-03804,mixed_or_unclear,utils/geometry-explanations.js,853,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: במקבילית שטח הבסיס הוא … — בלי חלוקה ב־… (זה נוהג במשולש).",medium,placeholders substituted
+313,SG-HE-04173,mixed_or_unclear,utils/geometry-question-generator.js,1215,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: שאלת זיהוי קצרה — מלבן: אורך …, רוחב …. מה סוג הצורה? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+314,SG-HE-04300,mixed_or_unclear,utils/geometry-question-generator.js,1493,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בחרו סוג למשולש בשם ""…"": (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+315,SG-HE-04380,mixed_or_unclear,utils/geometry-question-generator.js,1606,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג פשוט: … שייך לקטגוריה — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+316,SG-HE-09552,mixed_or_unclear,utils/math-animations.js,1075,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: עכשיו שהמכנים זהים – עובדים רק על המונים: … … … = …",medium,placeholders substituted
+317,SG-HE-10184,mixed_or_unclear,utils/math-explanations.js,28,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: מחשבים כפל כמו חיבור חוזר: … זה כמו לחבר את … לעצמו … פעמים.",medium,placeholders substituted
+318,SG-HE-10673,mixed_or_unclear,utils/math-question-generator.js,2906,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בכיתה … תלמידים. … מהם בחוג כדורגל והשאר בחוג שחמט. כמה תלמידים בחוג שחמט?",medium,placeholders substituted
+319,SG-HE-03833,mixed_or_unclear,utils/geometry-explanations.js,940,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: במשולש סכום זוויות = …. הזווית החסרה = ….",medium,placeholders substituted
+320,SG-HE-04310,mixed_or_unclear,utils/geometry-question-generator.js,1503,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: תיאור: ""…"" מתאר משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+321,SG-HE-04315,mixed_or_unclear,utils/geometry-question-generator.js,1508,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: בדיקה: ""…"" מתאים לסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+322,SG-HE-04357,mixed_or_unclear,utils/geometry-question-generator.js,1573,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג: … מתאים למרובע מסוג — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+323,SG-HE-04368,mixed_or_unclear,utils/geometry-question-generator.js,1589,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: אתגר סיווג: … כשם סוג מרובע. (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+324,SG-HE-09882,mixed_or_unclear,utils/math-animations.js,2861,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: יש … תפוחים. מחלקים אותם לקבוצות של … תפוחים בכל קבוצה. כמה קבוצות יש?",medium,placeholders substituted
+325,SG-HE-10194,mixed_or_unclear,utils/math-explanations.js,50,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: פרק את המספר לעשרות/מאות/יחידות: למשל … זה … עשרות ו-… יחידות.",medium,placeholders substituted
+326,SG-HE-10577,mixed_or_unclear,utils/math-question-generator.js,932,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: יש … קבוצות ו-… פריטים בכל קבוצה. מה הפעולה המתאימה כדי לקבל את הסך הכול?",medium,placeholders substituted
+327,SG-HE-10617,mixed_or_unclear,utils/math-question-generator.js,1869,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: …איזה שבר גדול יותר — …/… או …/…? רשמו את השבר הגדול: …",medium,placeholders substituted
+328,SG-HE-10693,mixed_or_unclear,utils/math-question-generator.js,2991,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: יש … תפוחים. מחלקים אותם לקבוצות של … תפוחים בכל קבוצה. כמה קבוצות יש?",medium,placeholders substituted
+329,SG-HE-00957,mixed_or_unclear,lib/learning-client/studentHomeDashboardClient.js,242,dashboard,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בלוח בקרה
+אזור: general
+סוג: explanation
+כפי שמופיע: בלוח בקרה: עוד … דקות לפרס הבא",medium,placeholders substituted
+330,SG-HE-04327,mixed_or_unclear,utils/geometry-question-generator.js,1523,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: סיווג משולש: ""…"" הוא — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)",medium,placeholders substituted
+331,SG-HE-04353,mixed_or_unclear,utils/geometry-question-generator.js,1569,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי מרובע: … = איזה מספר? (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+332,SG-HE-04356,mixed_or_unclear,utils/geometry-question-generator.js,1572,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: חברו בין השם … לסוג המרובע. (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+333,SG-HE-04377,mixed_or_unclear,utils/geometry-question-generator.js,1603,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי: … מתאים לסוג מרובע — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+334,SG-HE-09537,mixed_or_unclear,utils/math-animations.js,957,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: … את המונים: … … … = …",medium,placeholders substituted
+335,SG-HE-09899,mixed_or_unclear,utils/math-animations.js,2941,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: לליאו יש … מטבעות של שקל ו-… מטבעות של 2 שקלים. כמה כסף יש לו בסך הכל?",medium,placeholders substituted
+336,SG-HE-10025,mixed_or_unclear,utils/math-animations.js,3491,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: ספרת היחידות היא … ⇒ ….",medium,placeholders substituted
+337,SG-HE-10691,mixed_or_unclear,utils/math-question-generator.js,2964,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: לליאו יש … מטבעות של שקל ו-… מטבעות של 2 שקלים. כמה כסף יש לו בסך הכל?",medium,placeholders substituted
+338,SG-HE-00749,mixed_or_unclear,data/legal/sitePolicies.he.js,385,policy,general,heading,טקסט מדיניות/הסכמה משפטי.,"במדיניות/הסכמה
+אזור: general
+סוג: heading
+כפי שמופיע: במדיניות/הסכמה: מסמך זה מסביר איך ניתן למחוק נתונים, מה קורה לאחר מחיקה, ומה לא גורם למחיקה אוטומטית.",high,
+339,SG-HE-04126,mixed_or_unclear,utils/geometry-question-generator.js,968,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: פירמידה: בסיס מלבני …×…, גובה …. חשבו נפח (⅓×בסיס×גובה).",medium,placeholders substituted
+340,SG-HE-04131,mixed_or_unclear,utils/geometry-question-generator.js,1006,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מה הנפח של מנסרה עם בסיס מלבני (… × …) וגובה המנסרה …?",medium,placeholders substituted
+341,SG-HE-04163,mixed_or_unclear,utils/geometry-question-generator.js,1181,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: שאלת זיהוי קצרה — ריבוע: כל הצלעות באורך …. מה סוג הצורה? (1 = ריבוע, 2 = מלבן)",medium,placeholders substituted
+342,SG-HE-04183,mixed_or_unclear,utils/geometry-question-generator.js,1249,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: זיהוי: ארבע צלעות שוות (…), ארבע זוויות ישרות. ריבוע או מלבן? (1=ריבוע, 2=מלבן)",medium,placeholders substituted
+343,SG-HE-04378,mixed_or_unclear,utils/geometry-question-generator.js,1604,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: מהו הסוג: … = מרובע מספר — (1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז)",medium,placeholders substituted
+344,SG-HE-10029,mixed_or_unclear,utils/math-animations.js,3499,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: סכום הספרות הוא … ⇒ ….",medium,placeholders substituted
+345,SG-HE-10078,mixed_or_unclear,utils/math-animations.js,3728,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: היחס הוא …:…. המספר השני הוא …. מה המספר הראשון?",medium,placeholders substituted
+346,SG-HE-10378,mixed_or_unclear,utils/math-explanations.js,800,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: 💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ….",medium,placeholders substituted
+347,SG-HE-10381,mixed_or_unclear,utils/math-explanations.js,807,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: 💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ….",medium,placeholders substituted
+348,SG-HE-10382,mixed_or_unclear,utils/math-explanations.js,809,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: 💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ….",medium,placeholders substituted
+349,SG-HE-10733,mixed_or_unclear,utils/math-question-generator.js,3491,mixed_or_unclear,general,explanation,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: explanation
+כפי שמופיע: במפה בקנה מידה 1:…, אורך של … ס""מ במציאות שווה ל-… ס""מ במפה",medium,placeholders substituted
+350,SG-HE-03670,mixed_or_unclear,utils/geometry-explanations.js,547,mixed_or_unclear,general,heading,טקסט ממשק כללי שרואה המשתמש.,"בממשק כללי
+אזור: general
+סוג: heading
+כפי שמופיע: 3. מספר הצלעות השוות הוא … — בוחרים את ערך התשובה הזה מבין האפשרויות.",medium,placeholders substituted

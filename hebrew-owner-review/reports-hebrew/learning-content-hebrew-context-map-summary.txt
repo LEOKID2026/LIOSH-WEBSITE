@@ -1,0 +1,45 @@
+Learning Content Hebrew Context Map Summary
+Generated: 2026-05-29T15:56:05.144Z
+
+Source inventory: C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\reports\learning-content-hebrew-inventory.xlsx
+Output CSV: C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\reports\learning-content-hebrew-context-map.csv
+
+Total context rows: 60174
+Context confidence:
+  high: 46104
+  medium: 4354
+  low: 9716
+
+Content types:
+  other: 36530
+  question_stem: 11811
+  answer_option: 7229
+  explanation: 2647
+  generator_template: 1373
+  topic_label: 165
+  hint: 86
+  full_solution: 68
+  worked_example: 64
+  level_label: 60
+  feedback_wrong: 58
+  feedback_correct: 36
+  activity_instruction: 21
+  fallback_question: 20
+  skill_label: 6
+
+Subjects:
+  moledet-geography: 21492
+  science: 15729
+  hebrew: 12533
+  geometry: 4797
+  math: 2845
+  english: 2086
+  unknown: 435
+  cross-subject: 143
+  classroom-activity: 114
+
+Notes:
+- No product code changed.
+- suggested_replacement left empty in inventory; context map is read-only.
+- Owner Review Candidates prioritized for context rows.
+- Correct answers in scenario notes marked internal review only.

@@ -1,0 +1,32 @@
+Generated: 2026-05-29T14:57:36.210Z
+CSV: reports/teacher-school-report-hebrew-context-map.csv
+Rows processed: 203
+Confidence high: 175
+Confidence medium: 28
+Confidence low: 0
+Needs full report (צריך לבדוק בדוח מלא): 0
+
+Top unclear / medium-confidence rows:
+- row 1 TS-HE-00143 [medium]: «תלמיד נוסף. שם משתמש: danileo PIN: 1234» (template placeholders substituted with examples)
+- row 16 TS-HE-01799 [medium]: «בשברים נראה דפוס עקבי (5 טעויות בטווח; ריכוז דומה של סוג הקו» (template placeholders substituted with examples)
+- row 17 TS-HE-01800 [medium]: «השערה ראשונית בשברים: חוזרות על אותו סוג טעות — כדאי לאמת בה» (template placeholders substituted with examples)
+- row 18 TS-HE-01801 [medium]: «סימן ראשוני בשברים» (template placeholders substituted with examples)
+- row 42 TS-HE-00941 [medium]: «פעילות חשבון» (template placeholders substituted with examples)
+- row 43 TS-HE-00946 [medium]: «פעילות חשבון» (template placeholders substituted with examples)
+- row 44 TS-HE-00955 [medium]: «דוח-פעילות-[ערך]» (template placeholders substituted with examples)
+- row 45 TS-HE-00956 [medium]: «דוח-פעילות-[ערך]» (template placeholders substituted with examples)
+- row 46 TS-HE-00987 [medium]: «אפשרות [ערך]» (template placeholders substituted with examples)
+- row 65 TS-HE-00319 [medium]: «אין מספיק שאלות [ערך] עבור [ערך] — נושא: [ערך] — רמה: [ערך]» (template placeholders substituted with examples)
+- row 75 TS-HE-00605 [medium]: «[ערך]. נדרש מעקב נוסף במקצוע זה וחיזוק ממוקד.» (template placeholders substituted with examples)
+- row 76 TS-HE-00612 [medium]: «[ערך]. דיוק כללי [ערך] בתקופה האחרונה.» (template placeholders substituted with examples)
+- row 89 TS-HE-00648 [medium]: «[ערך] פעילויות» (template placeholders substituted with examples)
+- row 91 TS-HE-00651 [medium]: «[ערך] תלמידים» (template placeholders substituted with examples)
+- row 93 TS-HE-00654 [medium]: «[ערך] נושאים» (template placeholders substituted with examples)
+- row 95 TS-HE-00657 [medium]: «[ערך] תלמידים» (template placeholders substituted with examples)
+- row 103 TS-HE-00684 [medium]: «12 מפגשים» (template placeholders substituted with examples)
+- row 108 TS-HE-00697 [medium]: «המלצה [ערך]» (template placeholders substituted with examples)
+- row 113 TS-HE-00705 [medium]: «[ערך] רשומות» (template placeholders substituted with examples)
+- row 115 TS-HE-00708 [medium]: «[ערך] נושאים» (template placeholders substituted with examples)
+
+No product source code changed.
+No commit, push, or deploy.

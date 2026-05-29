@@ -1,0 +1,1583 @@
+﻿row_number,id,audience,source_file,source_line,surface,section,decision_type,engine_meaning_plain_he,before_in_context,context_confidence,notes
+1,SD-HE-00076,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,85,decision_general,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"בממשק החלטות
+אזור: general
+סוג החלטה: other
+כפי שמופיע: החלפת קוד PIN",high,
+2,SD-HE-00101,parent,pages/api/parent/create-student-access-code.js,38,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: PIN לא תקין",high,
+3,SD-HE-00897,parent,utils/parent-copilot/contract-reader.js,269,parent_copilot,data_sufficiency,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: data_sufficiency
+סוג החלטה: ai_answer
+כפי שמופיע: עדיין אין מספיק נתונים כדי להסיק מסקנה חזקה. כדאי לבדוק שוב אחרי עוד תרגול.",high,
+4,SD-HE-01079,parent,utils/parent-copilot/direct-answer-openers.js,54,parent_copilot,progression,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: progression
+סוג החלטה: ai_answer
+כפי שמופיע: עצירת קידום ברמה קשורה בדרך כלל לניסוח שעדיין לא נסגר בדוח — לא בהכרח כישלון.",high,
+5,SD-HE-01090,parent,utils/parent-copilot/evidence-polarity.js,48,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: ב… יש … שאלות בלבד — עדיין מוקדם לסגור מסקנה חזקה.",medium,placeholders substituted
+6,SD-HE-01113,parent,utils/parent-copilot/index.js,163,parent_copilot,data_sufficiency,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: data_sufficiency
+סוג החלטה: ai_answer
+כפי שמופיע: יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע למסקנה חזקה.",high,
+7,SD-HE-01148,parent,utils/parent-copilot/intent-answer-composers.js,377,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: ב… יש עדיין מעט תרגול (… שאלות) — מוקדם לסגור מסקנה חדה.",medium,placeholders substituted
+8,SD-HE-01340,parent,utils/parent-copilot/parent-coaching-packs.js,126,parent_copilot,progression,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: progression
+סוג החלטה: ai_answer
+כפי שמופיע: החלטה של קידום מול המתנה טובה כשהיא נשענת על אותם אותות שבדוח, לא על תחושת בטן בלבד.",high,
+9,SD-HE-01447,parent,utils/parent-copilot/question-classifier.js,121,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: ירידה",high,
+10,SD-HE-01621,parent,utils/parent-copilot/scope-resolver.js,468,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: בדוח אין כרגע מספיק שאלות מעוגנות כדי לענות בצורה מדויקת — הנתונים עדיין מצומצמים ומוקדם למסקנה חזקה. כדאי לצבור עוד קצת תרגול בטווח התאריכים (למשל 5–8 שאלות ממוקדות בשבוע), ואז לנסות שוב.",high,
+11,SD-HE-01785,parent,utils/parent-copilot/truth-packet-v1.js,589,parent_copilot,progression,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: progression
+סוג החלטה: ai_answer
+כפי שמופיע: בדוח יש נושאים שעדיין בלי בסיס מספיק להחלטת קידום, בהם: ….",medium,placeholders substituted
+12,SD-HE-01786,parent,utils/parent-copilot/truth-packet-v1.js,590,parent_copilot,progression,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: progression
+סוג החלטה: ai_answer
+כפי שמופיע: לפי הניסוחים המעוגנים, לא נחשפה עכשיו חסימת קידום חדה אצל כל הנקודות המדודות — עדיין חשוב לעקוב לפני שינוי רמה.",high,
+13,SD-HE-01787,parent,utils/parent-copilot/truth-packet-v1.js,595,parent_copilot,progression,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: progression
+סוג החלטה: ai_answer
+כפי שמופיע: כשמסלול הקידום לא מתעדכן, זה בדרך כלל משקף שחלק מהניסוחים עדיין לא סוגרים מספיק — במיוחד סביב: ….",medium,placeholders substituted
+14,SD-HE-01816,parent,utils/parent-copilot/truth-packet-v1.js,749,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: יש כרגע מעט נתוני תרגול, כלומר נפח הנתונים עדיין מצומצם ואין עדיין מספיק מידע למסקנה חזקה.",high,
+15,SD-HE-01824,parent,utils/parent-copilot/truth-packet-v1.js,796,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: יש כרגע מעט נתוני תרגול בדוח — נפח הנתונים עדיין קטן יחסית, ולכן התמונה כללית עדיין חלקית; כדאי לצבור עוד קצת תרגול לפני מסקנה חדה.",high,
+16,SD-HE-02039,mixed_or_unclear,utils/topic-next-step-phase2.js,683,recommendation_engine,recommendation,next_step,הכוונה לצעד הבא בתרגול או בנושא.,"בהמלצות מערכת
+אזור: recommendation
+סוג החלטה: next_step
+כפי שמופיע: בהמלצת מערכת: תרגול קצר וחוזר — בלי ציפייה להעברה מהירה.",high,
+17,SD-HE-02075,mixed_or_unclear,utils/topic-next-step-phase2.js,1194,recommendation_engine,recommendation,next_step,הכוונה לצעד הבא בתרגול או בנושא.,"בהמלצות מערכת
+אזור: recommendation
+סוג החלטה: next_step
+כפי שמופיע: בהמלצת מערכת: חשש מקידום מוקדם",high,
+18,SD-HE-00115,mixed_or_unclear,pages/learning/curriculum.js,64,decision_general,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"בממשק החלטות
+אזור: general
+סוג החלטה: other
+כפי שמופיע: מיפוי לפי מבנה דף האנגלית באתר ומול מסגרת POP של אנגלית יסודי, עם הצלבה לעותק התוכנית (Curriculum2020.pdf) בתיקיית חומרי הלימוד. חתימת בעלים או ביקורת ידנית סופית מול כל פרק בתוכנית עדיין לא הושלמה — אין טענה לאישור משרד מלא או לכיסוי שורה־שורה של כל פרק.",high,
+19,SD-HE-00178,student,pages/learning/english-master.js,265,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: בדוק מה מתאים: I/You/We/They = are, He/She/It = is",high,
+20,SD-HE-00187,student,pages/learning/english-master.js,381,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: נבדוק מה מתאים לפי כללי הדקדוק: I/You/We/They = are, He/She/It = is.",high,
+21,SD-HE-00188,student,pages/learning/english-master.js,415,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: נפרק את המשפט לחלקים ונחשוב איך אומרים כל חלק באנגלית.",high,
+22,SD-HE-00192,student,pages/learning/english-master.js,449,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: בדוק שוב את כללי הדקדוק: I am, You/We/They are, He/She/It is.",high,
+23,SD-HE-00194,student,pages/learning/english-master.js,455,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: בדוק שוב: האם המילה שבחרת מתאימה לנושא המשפט? זכור: I/You/We/They = are, He/She/It = is.",high,
+24,SD-HE-00195,student,pages/learning/english-master.js,458,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: כנראה שטעית באיות (spelling). בדוק שוב אות-אחר-אות, שים לב ל־th / sh / ch ולסיום המילה (s / ed / ing).",high,
+25,SD-HE-00212,student,pages/learning/english-master.js,3612,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: לחץ על 💡 Hint כדי לקבל רמז, ועל ""📘 הסבר מלא"" כדי לראות פתרון צעד־אחר־צעד.",high,
+26,SD-HE-00213,student,pages/learning/english-master.js,3613,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.",high,
+27,SD-HE-00239,student,pages/learning/geometry-master.js,3782,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.",high,
+28,SD-HE-00262,student,pages/learning/hebrew-master.js,4386,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: לחץ על 💡 Hint כדי לקבל רמז, ועל ""📘 הסבר מלא"" כדי לראות פתרון צעד־אחר־צעד.",high,
+29,SD-HE-00263,student,pages/learning/hebrew-master.js,4387,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.",high,
+30,SD-HE-00304,student,pages/learning/math-master.js,6095,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.",high,
+31,SD-HE-00328,student,pages/learning/moledet-geography-master.js,3740,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: לחץ על 💡 Hint כדי לקבל רמז, ועל ""📘 הסבר מלא"" כדי לראות פתרון צעד־אחר־צעד.",high,
+32,SD-HE-00329,student,pages/learning/moledet-geography-master.js,3741,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.",high,
+33,SD-HE-00345,student,pages/learning/science-master.js,642,student_learning,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: other
+כפי שמופיע: זכור את חלקי הצמח ותפקידם: שורש, גבעול, עלים, פרחים.",high,
+34,SD-HE-00412,teacher,pages/teacher/class/[classId].js,342,decision_general,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בממשק החלטות
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כותרת: קבוצות עבודה מוצעות
+כפי שמופיע: אין מספיק תלמידים עם נתונים להרכבת קבוצות.",high,
+35,SD-HE-00413,teacher,pages/teacher/class/[classId].js,343,decision_general,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בממשק החלטות
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כותרת: קבוצות עבודה מוצעות
+כפי שמופיע: אין מספיק נתונים להרכבת קבוצות.",high,
+36,SD-HE-00587,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,136,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבודד משפטי שאלה קצרים עם do/does/is/are במקום הנכון.",high,
+37,SD-HE-00593,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,151,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבחור -er/-est או more/most במשפט קצר.",high,
+38,SD-HE-00595,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,156,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבחור בין will ל-going to בהקשר ברור.",high,
+39,SD-HE-00597,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,161,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבדוק צורת perfect מול זמן פשוט באותו הקשר.",high,
+40,SD-HE-00599,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,166,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבודד if/when עם צורת פועל מתאימה בגוף אחד.",high,
+41,SD-HE-00613,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,208,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבודד משפטים עם I/he/they ולבחור צורת be מתאימה.",high,
+42,SD-HE-00621,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,228,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבודד משפטי שאלה קצרים עם do/does/is/are במקום הנכון.",high,
+43,SD-HE-00625,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,238,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: להבחין בין some/many/much במשפט קצר.",high,
+44,SD-HE-00629,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,248,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבחור בין will ל-going to בהקשר ברור.",high,
+45,SD-HE-00631,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,253,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבדוק perfect מול זמן פשוט באותו הקשר.",high,
+46,SD-HE-00633,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,258,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: לבודד if/when עם צורת פועל מתאימה.",high,
+47,SD-HE-00655,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,160,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: ב… נראה דפוס עקבי (… טעויות בטווח; ריכוז דומה של סוג הקושי). ${tagLab ?",medium,placeholders substituted
+48,SD-HE-00656,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,165,diagnostic_engine,student_feedback,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"במנוע אבחון/ניתוח
+אזור: student_feedback
+סוג החלטה: recommendation
+כפי שמופיע: באבחון/ניתוח: השערה ראשונית ב…: חוזרות על אותו סוג טעות — כדאי לאמת בהמשך עם עוד דוגמאות. ${tagLab ?",medium,placeholders substituted
+49,SD-HE-00657,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,170,diagnostic_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: באבחון/ניתוח: סימן ראשוני ב…${tagLab ?",medium,placeholders substituted
+50,SD-HE-00729,mixed_or_unclear,utils/learning-patterns-analysis.js,841,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: נתונים חלקיים לדפוס מסוים.",high,
+51,SD-HE-00730,mixed_or_unclear,utils/learning-patterns-analysis.js,845,recommendation_engine,general,diagnostic_status,תווית סטטוס/אבחון שמסבירה מצב תלמיד/נושא.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: diagnostic_status
+כפי שמופיע: בהמלצת מערכת: יש עוד אזורים עם טעויות מפוזרות שלא הגיעו לסף דפוס שחוזר מספיק — האבחון בהם נשאר חלקי.",high,
+52,SD-HE-00731,mixed_or_unclear,utils/learning-patterns-analysis.js,917,recommendation_engine,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: other
+כפי שמופיע: בהמלצת מערכת: ב… המידע עדיין חלקי — עדיף תרגול קל ובדיקה חוזרת, לא שינוי גדול מדי.",medium,placeholders substituted
+53,SD-HE-00735,mixed_or_unclear,utils/learning-patterns-analysis.js,933,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: ב… נראה שיש קושי בחלקים פשוטים יותר של הנושא — מומלץ להתחיל בתרגול קצר וממוקד.",medium,placeholders substituted
+54,SD-HE-00752,mixed_or_unclear,utils/learning-patterns-analysis.js,1015,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות מגמה ברורה במקצוע זה.",high,
+55,SD-HE-00753,mixed_or_unclear,utils/learning-patterns-analysis.js,1016,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי לדעת עד כמה הכיוון ברור במקצוע הזה.",high,
+56,SD-HE-00756,mixed_or_unclear,utils/learning-patterns-analysis.js,1038,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי לקבוע מה חשוב לתרגל קודם.",high,
+57,SD-HE-00758,mixed_or_unclear,utils/learning-patterns-analysis.js,1051,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות טעות שחוזרת או שינוי לאורך זמן.",high,
+58,SD-HE-00759,mixed_or_unclear,utils/learning-patterns-analysis.js,1061,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי לדעת אם העזרה שניתנה באמת עזרה.",high,
+59,SD-HE-00760,mixed_or_unclear,utils/learning-patterns-analysis.js,1070,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי להחליט מה הצעד הבא בתרגול.",high,
+60,SD-HE-00761,mixed_or_unclear,utils/learning-patterns-analysis.js,1079,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי לדעת אם מה שניסינו לאחרונה עזר.",high,
+61,SD-HE-00762,mixed_or_unclear,utils/learning-patterns-analysis.js,1087,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי לקבל החלטה בטוחה.",high,
+62,SD-HE-00763,mixed_or_unclear,utils/learning-patterns-analysis.js,1094,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי להבין מאיפה מתחיל הקושי.",high,
+63,SD-HE-00770,mixed_or_unclear,utils/learning-patterns-analysis.js,1462,recommendation_engine,general,other,טקסט שעשוי להשפיע על החלטת משתמש במערכת.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: other
+כפי שמופיע: בהמלצת מערכת: לפי הנתונים שנאספו: … שורות נותנות כיוון ברור, … שורות נותנות כיוון חלקי, ו־… שורות עדיין עם מעט מידע; … נתונים ברורים יותר מתוך ….",medium,placeholders substituted
+64,SD-HE-00954,parent,utils/parent-copilot/conversational-reply-class-he.js,146,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: לא בטוח",high,
+65,SD-HE-01133,parent,utils/parent-copilot/intent-answer-composers.js,274,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: בטווח התקופה יש עדיין מעט מאוד תרגול — התמונה כללית עדיין חלקית.",high,
+66,SD-HE-01134,parent,utils/parent-copilot/intent-answer-composers.js,280,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: מה שעובד יחסית טוב: ${strong.map((m) =>",high,
+67,SD-HE-01136,parent,utils/parent-copilot/intent-answer-composers.js,287,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: מקומות שדורשים חיזוק: ${weak.map((m) =>",high,
+68,SD-HE-01170,parent,utils/parent-copilot/intent-answer-composers.js,582,parent_copilot,data_sufficiency,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: data_sufficiency
+סוג החלטה: ai_answer
+כפי שמופיע: בטווח התקופה תורגל רק … (… שאלות) — אין מספיק נתונים להשוואה בין מקצועות.",medium,placeholders substituted
+69,SD-HE-01176,parent,utils/parent-copilot/intent-answer-composers.js,623,parent_copilot,data_sufficiency,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: data_sufficiency
+סוג החלטה: ai_answer
+כפי שמופיע: בטווח התקופה תורגל רק … — אין מספיק נתונים להשוואה בין מקצועות.",medium,placeholders substituted
+70,SD-HE-01187,parent,utils/parent-copilot/llm-orchestrator.js,137,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation: התחל במשפט כמו 'המקצוע שבו נראו התוצאות הטובות ביותר הוא [שם המקצוע בעברית]', ואז במידת הצורך 'ובעיקר בנושא [שם הנושא]' — רק מה שמופיע ב-FACTS_JSON.observation.",high,
+71,SD-HE-01193,parent,utils/parent-copilot/llm-orchestrator.js,141,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning: הסבר בקצרה למה זה חיובי לפי FACTS_JSON.interpretation. אפשר להזכיר אחוז דיוק אחד.",high,
+72,SD-HE-01198,parent,utils/parent-copilot/llm-orchestrator.js,147,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation: התחל בניסוח כמו 'הנושא שבו נראו התוצאות הטובות ביותר הוא...' או 'ב... נראו תוצאות טובות יחסית' — ציין 1–2 תחומים ספציפיים מה-FACTS_JSON.observation בלבד.",high,
+73,SD-HE-01201,parent,utils/parent-copilot/llm-orchestrator.js,148,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning: הסבר בקצרה למה זה חיובי, ע\""פ ה-FACTS_JSON.interpretation. אפשר להזכיר אחוז דיוק אחד.",high,
+74,SD-HE-01206,parent,utils/parent-copilot/llm-orchestrator.js,155,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation: התחל בניסוח ישיר כמו 'התחום שדורש חיזוק כרגע הוא...' או 'התחומים שדורשים חיזוק הם...' — ציין 1–2 תחומים ספציפיים מה-FACTS_JSON.observation.",high,
+75,SD-HE-01209,parent,utils/parent-copilot/llm-orchestrator.js,156,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning: הסבר בשפה רגועה, ללא מילים מפחידות, ע\""פ ה-FACTS_JSON.interpretation.",high,
+76,SD-HE-01212,parent,utils/parent-copilot/llm-orchestrator.js,161,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השאלה היא על מה הכי חשוב לתרגל השבוע. חובה למלא את המבנה הבא (ניסוח טבעי, שמות נושאים מלאים מ-FACTS_JSON.observation בלבד):",high,
+77,SD-HE-01214,parent,utils/parent-copilot/llm-orchestrator.js,162,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation — משפט פתיחה ישיר במבנה: ""השבוע כדאי להתמקד בעיקר ב-[שם נושא מלא] וב-[שם נושא מלא נוסף כשיש].""",high,
+78,SD-HE-01215,parent,utils/parent-copilot/llm-orchestrator.js,163,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning — משפט קצר אחד להסבר למה חשוב להתמקד בכל תחום שציינת (אם יש שני תחומים — שני משפטים קצרים).",high,
+79,SD-HE-01217,parent,utils/parent-copilot/llm-orchestrator.js,164,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: חובה לכלול משפט פעולה ביתית מעשית (בתוך meaning, או משפט נוסף באותו בלוק): ""מומלץ לתרגל בערך 10 דקות, 3 פעמים בשבוע, עם 5–8 שאלות קצרות בכל פעם.""",high,
+80,SD-HE-01218,parent,utils/parent-copilot/llm-orchestrator.js,165,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אם FACTS_JSON מאפשר בלוק next_step — אפשר לשים שם את משפט הפעולה; אם לא — עדיין חובה את אותו משפט (או ניסוח קרוב עם 10 דקות, 3 פעמים, 5–8 שאלות, תרגול קצר, בכל פעם) בתוך הטקסט.",high,
+81,SD-HE-01224,parent,utils/parent-copilot/llm-orchestrator.js,173,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation: התחל ב'בבית כדאי לתרגל...' — ציין נושא ספציפי מה-FACTS_JSON.observation.",high,
+82,SD-HE-01226,parent,utils/parent-copilot/llm-orchestrator.js,174,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning: תוכנית מעשית קצרה: 5–10 דקות ביום, איזה נושא, סוג התרגול.",high,
+83,SD-HE-01227,parent,utils/parent-copilot/llm-orchestrator.js,176,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק next_step: צעד ספציפי אחד פשוט לביצוע (לפי FACTS_JSON.action).",high,
+84,SD-HE-01228,parent,utils/parent-copilot/llm-orchestrator.js,177,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אסור לכלול בלוק next_step.",high,
+85,SD-HE-01233,parent,utils/parent-copilot/llm-orchestrator.js,183,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation: התחל ב'בשלב הזה...' — סקירה רגועה של מצב הדוח לפי FACTS_JSON.observation.",high,
+86,SD-HE-01235,parent,utils/parent-copilot/llm-orchestrator.js,184,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning: הסבר מה המצב ומה הצעד הבא המומלץ, לפי FACTS_JSON.interpretation.",high,
+87,SD-HE-01237,parent,utils/parent-copilot/llm-orchestrator.js,186,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אם cannotConcludeYet=false — הדגש שאין סיבה לדאגה גדולה.",high,
+88,SD-HE-01239,parent,utils/parent-copilot/llm-orchestrator.js,192,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation: ציין רק מה שמופיע על הנושא הספציפי ב-FACTS_JSON.observation.",high,
+89,SD-HE-01240,parent,utils/parent-copilot/llm-orchestrator.js,193,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning: הסבר מה המשמעות; כל הצעה מעשית קצרה מותרת כאן או במשפט נוסף באותו בלוק — לפי FACTS_JSON.interpretation/action רק אם מופיעים שם.",high,
+90,SD-HE-01242,parent,utils/parent-copilot/llm-orchestrator.js,196,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אופציונלי: בלוק next_step — צעד ביתי קצר אחד לפי FACTS_JSON.action בלבד.",high,
+91,SD-HE-01243,parent,utils/parent-copilot/llm-orchestrator.js,197,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אסור לכלול בלוק next_step — המלצות מעשיות רק בתוך בלוק meaning (FACTS_JSON מאשר המלצות רק כש-recommendationEligible=true ו-cap לא RI0).",high,
+92,SD-HE-01245,parent,utils/parent-copilot/llm-orchestrator.js,202,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק observation: תשובה ישירה קצרה, מבוססת על FACTS_JSON.observation.",high,
+93,SD-HE-01246,parent,utils/parent-copilot/llm-orchestrator.js,203,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בלוק meaning: נקודה מעשית אחת מ-FACTS_JSON.interpretation.",high,
+94,SD-HE-01249,parent,utils/parent-copilot/llm-orchestrator.js,216,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השתמש רק בעובדות מה-FACTS_JSON. אסור להמציא עובדות שאינן בו.",high,
+95,SD-HE-01265,parent,utils/parent-copilot/llm-orchestrator.js,221,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תשתמש במילים 'ביטחון', 'בטחון' או confidence לגבי הילד; אל תניח מצב רגשי.",high,
+96,SD-HE-01268,parent,utils/parent-copilot/llm-orchestrator.js,222,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אסור לאבחן: לעולם אל תאמר שיש לילד דיסלקציה, ADHD, לקות למידה או כל אבחון. הדוח הוא נתוני תרגול בלבד.",high,
+97,SD-HE-01270,parent,utils/parent-copilot/llm-orchestrator.js,223,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אין מספיק נתונים",high,
+98,SD-HE-01274,parent,utils/parent-copilot/llm-orchestrator.js,223,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: כלל נפח: אם reportQuestionTotalGlobal >= 100, אסור לכתוב ברמת כלל התקופה: 'מוקדם לקבוע', 'אין מספיק נתונים', 'נתונים מועטים', 'כיוון ראשוני בלבד', 'עדיין לא ניתן להסיק'. מותר רק אם מסוגל לנושא/מקצוע ספציפי עם מעט שאלות.",high,
+99,SD-HE-01275,parent,utils/parent-copilot/llm-orchestrator.js,225,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: SYSTEM RULE — אי-אפשר לעקוף: אם השאלה אינה על הדוח, על הילד, על למידה, על תרגול, או על התקדמות הלמידה — החזר בדיוק: {\""answerBlocks\"":[{\""type\"":\""observation\"",\""textHe\"":\""אפשר לשאול כאן שאלות על הדוח והתקדמות הלמידה שמופיעה בו.\"",\""source\"":\""composed\""},{\""type\"":\""meaning\"",\""textHe\"":\""למשל: מה כדאי לתרגל השבוע? או איפה נראו תוצאות טובות יחסית?\"",\""source\"":\""composed\""}]}. ללא עוד תוכן. ללא נתוני דוח. ללא סיכום ילד.",high,
+100,SD-HE-01276,parent,utils/parent-copilot/llm-orchestrator.js,226,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: הנחיות ספציפיות לכוונת ההורה (parentIntent=…): …",medium,placeholders substituted
+101,SD-HE-01277,parent,utils/parent-copilot/llm-orchestrator.js,227,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: החזר JSON בלבד בפורמט {""answerBlocks"":[{""type"":""observation|meaning|next_step|caution"",""textHe"":""..."",""source"":""composed""}]}",high,
+102,SD-HE-01349,parent,utils/parent-copilot/parent-coaching-packs.js,139,parent_copilot,recommendation,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: recommendation
+סוג החלטה: ai_answer
+כפי שמופיע: אפשר לסדר מראש מה רוצים לשמוע בתשובה (מדד, דוגמה, המלצה הבאה).",high,
+103,SD-HE-01394,parent,utils/parent-copilot/question-classifier-llm.js,75,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אתה מסווג שאלות הורים על דוח למידה. תחזיר JSON בלבד.",high,
+104,SD-HE-01396,parent,utils/parent-copilot/question-classifier-llm.js,77,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: report_related — שאלה על הילד, על הלמידה שלו, על התקדמות, על תרגול, או על נושא/מקצוע מהדוח.",high,
+105,SD-HE-01397,parent,utils/parent-copilot/question-classifier-llm.js,78,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: off_topic — שאלה כללית שאינה על הדוח/הילד/הלמידה (מזג אויר, מתכון, ידע כללי, חדשות וכד').",high,
+106,SD-HE-01398,parent,utils/parent-copilot/question-classifier-llm.js,79,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: diagnostic_sensitive — שאלה שמבקשת אבחנה קלינית (ADHD, דיסלקציה, לקות למידה, מצב רגשי).",high,
+107,SD-HE-01399,parent,utils/parent-copilot/question-classifier-llm.js,80,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ambiguous_or_unclear — שאלה קצרה מדי, סתומה, או שלא ברור על מה היא.",high,
+108,SD-HE-01401,parent,utils/parent-copilot/question-classifier-llm.js,82,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ידע כללי על נושא לימודי (\""מה זה X\"") הוא off_topic, גם אם X מופיע בדוח.",high,
+109,SD-HE-01402,parent,utils/parent-copilot/question-classifier-llm.js,83,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: שאלה על הילד בנושא מהדוח (\""הוא מתקשה ב־X\"", \""מה עם X בדוח\"") היא report_related.",high,
+110,SD-HE-01403,parent,utils/parent-copilot/question-classifier-llm.js,84,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: שאלה רגשית/קלינית היא diagnostic_sensitive גם אם בדוח יש נתוני תרגול.",high,
+111,SD-HE-01409,parent,utils/parent-copilot/question-classifier-llm.js,88,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: החזר JSON בלבד בפורמט {""bucket"":""report_related|off_topic|diagnostic_sensitive|ambiguous_or_unclear"",""confidence"":0..1}.",high,
+112,SD-HE-01614,parent,utils/parent-copilot/scope-resolver.js,326,parent_copilot,data_sufficiency,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: data_sufficiency
+סוג החלטה: ai_answer
+כפי שמופיע: בנושא הזה עדיין אין מספיק תרגול שמופיע בדוח — כדאי לבחור נושא שכבר יש בו תרגול.",high,
+113,SD-HE-01713,parent,utils/parent-copilot/semantic-aggregate-answers.js,698,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: המדד משקף ממוצע על כל שורות הנושא עם תרגול תחת …, לא ניסוח של נושא בודד.",medium,placeholders substituted
+114,SD-HE-01760,parent,utils/parent-copilot/truth-packet-v1.js,431,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: בדוח יש כרגע מידע חלקי; ככל שיצטבר תרגול נוסף, התמונה תתבהר.",high,
+115,SD-HE-01780,parent,utils/parent-copilot/truth-packet-v1.js,565,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: לפי הדוח, הנקודה הבולטת ביותר במדדים היא ….",medium,placeholders substituted
+116,SD-HE-01834,parent,utils/parent-copilot/truth-packet-v1.js,825,parent_copilot,general,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: general
+סוג החלטה: ai_answer
+כפי שמופיע: הדוח עדיין מסכם תקופה חלקית: ככל שיופיעו ניסוחים נוספים, אפשר יהיה לרכז תמונה עשירה יותר — בלי להסיק מעבר לנתוני התצוגה.",high,
+117,SD-HE-01844,parent,utils/parent-copilot/truth-packet-v1.js,883,parent_copilot,data_sufficiency,ai_answer,תשובת AI/עוזר שמנחה את ההורה מה לעשות או איך להבין את הנתונים.,"בעוזר ההורים (Copilot)
+אזור: data_sufficiency
+סוג החלטה: ai_answer
+כפי שמופיע: כרגע אין מספיק נתוני תרגול מעוגנים בדוח כדי לקבוע חולשה מובהקת במקצוע מסוים, ולכן אי אפשר לבנות כאן תמונת קושי קונקרטית בוודאות.",high,
+118,SD-HE-01955,mixed_or_unclear,utils/topic-next-step-engine.js,203,recommendation_engine,recommendation,next_step,הכוונה לצעד הבא בתרגול או בנושא.,"בהמלצות מערכת
+אזור: recommendation
+סוג החלטה: next_step
+כפי שמופיע: בהמלצת מערכת: ב«…» יש … שאלות ודיוק של כ-…%…. עדיין לא בטוחים מספיק לקפיצה קדימה או אחורה — כדאי להמשיך באותה כיתה ורמת קושי ולחזק עקביות.",medium,placeholders substituted
+119,SD-HE-02046,mixed_or_unclear,utils/topic-next-step-phase2.js,755,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: עדיין אין מספיק בסיס לדעת אם התמיכה מחזיקה את ההתקדמות — לא לסגור מוקדם מדי.",high,
+120,SD-HE-02079,mixed_or_unclear,utils/topic-next-step-phase2.js,1198,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: מידע חלקי בלבד",high,
+121,SD-HE-00510,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,10,diagnostic_engine,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"במנוע אבחון/ניתוח
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: באבחון/ניתוח: קריאה לא מדויקת של הניסוח",high,
+122,SD-HE-01186,parent,utils/parent-copilot/llm-orchestrator.js,136,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השאלה מתייחסת למקצוע (רמת מקצוע), לא רק לנושא בודד.",high,
+123,SD-HE-01188,parent,utils/parent-copilot/llm-orchestrator.js,137,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: המקצוע שבו נראו התוצאות הטובות ביותר הוא [שם המקצוע בעברית]",high,
+124,SD-HE-01189,parent,utils/parent-copilot/llm-orchestrator.js,137,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ובעיקר בנושא [שם הנושא]",high,
+125,SD-HE-01190,parent,utils/parent-copilot/llm-orchestrator.js,138,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: חובה: אל תשתמש במילה «התחום» בבלוקים — במקום זה «המקצוע» או פתיחה ישירה בשם המקצוע (למשל «באנגלית נראו התוצאות הטובות ביותר בתקופה הזו…»).",medium,placeholders substituted
+126,SD-HE-01191,parent,utils/parent-copilot/llm-orchestrator.js,139,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אסור במפורש ניסוחים כמו «התחום שבו נראים המספרים…» — זה לא מתאים כשההורה שאל על מקצוע.",medium,placeholders substituted
+127,SD-HE-01192,parent,utils/parent-copilot/llm-orchestrator.js,140,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תפתח בניסוח שמתחיל רק מנושא ספציפי (למשל «בנושא אוצר מילים...») כשהשאלה על מקצוע — קודם שם המקצוע, ואז הנושא הבולט בתוך המקצוע.",high,
+128,SD-HE-01194,parent,utils/parent-copilot/llm-orchestrator.js,142,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תרשום רשימה של כל המקצועות. אל תכתוב 'לפי הדוח, מופיעים:' או 'המקצועות שמופיעים'. אל תציג תחום כבעל תוצאות טובות יחסית אם הוא גם מופיע כמוקד לחיזוק בדוח.",high,
+129,SD-HE-01195,parent,utils/parent-copilot/llm-orchestrator.js,142,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: לפי הדוח, מופיעים:",high,
+130,SD-HE-01196,parent,utils/parent-copilot/llm-orchestrator.js,142,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: המקצועות שמופיעים",high,
+131,SD-HE-01197,parent,utils/parent-copilot/llm-orchestrator.js,146,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השאלה היא על איפה נראית התקדמות יחסית. המבנה הנדרש:",high,
+132,SD-HE-01199,parent,utils/parent-copilot/llm-orchestrator.js,147,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: הנושא שבו נראו התוצאות הטובות ביותר הוא...",high,
+133,SD-HE-01200,parent,utils/parent-copilot/llm-orchestrator.js,147,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ב... נראו תוצאות טובות יחסית",high,
+134,SD-HE-01202,parent,utils/parent-copilot/llm-orchestrator.js,149,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תרשום רשימה של כל המקצועות. אל תכתוב 'לפי הדוח, מופיעים:' או 'המקצועות שמופיעים'. אל תציג תחום כבעל תוצאות טובות יחסית אם הוא גם מופיע כמוקד לחיזוק בדוח.",high,
+135,SD-HE-01203,parent,utils/parent-copilot/llm-orchestrator.js,149,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: לפי הדוח, מופיעים:",high,
+136,SD-HE-01204,parent,utils/parent-copilot/llm-orchestrator.js,149,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: המקצועות שמופיעים",high,
+137,SD-HE-01205,parent,utils/parent-copilot/llm-orchestrator.js,154,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השאלה היא על תחומי קושי. המבנה הנדרש:",high,
+138,SD-HE-01207,parent,utils/parent-copilot/llm-orchestrator.js,155,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: התחום שדורש חיזוק כרגע הוא...",high,
+139,SD-HE-01208,parent,utils/parent-copilot/llm-orchestrator.js,155,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: התחומים שדורשים חיזוק הם...",high,
+140,SD-HE-01210,parent,utils/parent-copilot/llm-orchestrator.js,157,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תאבחן. אל תגיד 'בעיה חמורה'. השתמש בטון רגוע ומעשי.",high,
+141,SD-HE-01211,parent,utils/parent-copilot/llm-orchestrator.js,157,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בעיה חמורה",high,
+142,SD-HE-01213,parent,utils/parent-copilot/llm-orchestrator.js,162,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השבוע כדאי להתמקד בעיקר ב-[שם נושא מלא] וב-[שם נושא מלא נוסף כשיש].",high,
+143,SD-HE-01216,parent,utils/parent-copilot/llm-orchestrator.js,164,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: מומלץ לתרגל בערך 10 דקות, 3 פעמים בשבוע, עם 5–8 שאלות קצרות בכל פעם.",high,
+144,SD-HE-01219,parent,utils/parent-copilot/llm-orchestrator.js,166,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אסור נקודה או פיסוק מיד אחרי מילת יחס (ב, על, עם, של, ל) לפני שם הנושא — אסור \""ב.\"", \""ב .\"", \""ב־.\"", \""ב-.\"", \""ב:.\"". המשך מיד אחרי \""ב\"" עם שם הנושא המלא.",high,
+145,SD-HE-01220,parent,utils/parent-copilot/llm-orchestrator.js,167,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תפתח ב\""נראה שכדאי להתמקד ב\"" ואז נקודה או מקף לפני הנושא. אל תכתוב 'אפשר לסדר מה חשוב קודם' או 'זה מה שהדוח נותן כרגע'.",high,
+146,SD-HE-01221,parent,utils/parent-copilot/llm-orchestrator.js,167,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אפשר לסדר מה חשוב קודם",high,
+147,SD-HE-01222,parent,utils/parent-copilot/llm-orchestrator.js,167,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: זה מה שהדוח נותן כרגע",high,
+148,SD-HE-01223,parent,utils/parent-copilot/llm-orchestrator.js,172,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השאלה היא על מה לעשות בבית. המבנה הנדרש:",high,
+149,SD-HE-01225,parent,utils/parent-copilot/llm-orchestrator.js,173,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בבית כדאי לתרגל...",high,
+150,SD-HE-01229,parent,utils/parent-copilot/llm-orchestrator.js,178,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תכתוב 'אפשר לסדר' או 'זה מה שהדוח נותן'.",high,
+151,SD-HE-01230,parent,utils/parent-copilot/llm-orchestrator.js,178,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אפשר לסדר",high,
+152,SD-HE-01231,parent,utils/parent-copilot/llm-orchestrator.js,178,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: זה מה שהדוח נותן",high,
+153,SD-HE-01232,parent,utils/parent-copilot/llm-orchestrator.js,182,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השאלה היא אם יש סיבה לדאגה. המבנה הנדרש:",high,
+154,SD-HE-01234,parent,utils/parent-copilot/llm-orchestrator.js,183,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בשלב הזה...",high,
+155,SD-HE-01236,parent,utils/parent-copilot/llm-orchestrator.js,185,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תאבחן. אל תגרום לפאניקה. השתמש בטון רגוע ומעשי.",high,
+156,SD-HE-01238,parent,utils/parent-copilot/llm-orchestrator.js,191,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השאלה היא על מקצוע או נושא ספציפי. המבנה הנדרש:",high,
+157,SD-HE-01241,parent,utils/parent-copilot/llm-orchestrator.js,194,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אם לנושא הספציפי יש מעט שאלות — אפשר לציין זאת בזהירות רק לנושא הזה.",high,
+158,SD-HE-01244,parent,utils/parent-copilot/llm-orchestrator.js,201,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ענה ישירות על שאלת ההורה. המבנה הנדרש:",high,
+159,SD-HE-01247,parent,utils/parent-copilot/llm-orchestrator.js,211,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: חוק סגנון לשאלה זו: ההורה שואל על מקצוע (חזק / הכי טוב). אסור להשתמש במילה «התחום» בתשובה — השתמש ב«המקצוע» או פתח ישירות בשם המקצוע. דוגמאות לפתיחה תקינה: «המקצוע שבו נראו התוצאות הטובות ביותר הוא אנגלית, ובעיקר בנושא אוצר מילים» או «באנגלית נראו התוצאות הטובות ביותר בתקופה הזו, בעיקר בנושא אוצר מילים». אסור: «התחום שבו נראים המספרים…».",medium,placeholders substituted
+160,SD-HE-01248,parent,utils/parent-copilot/llm-orchestrator.js,215,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אתה עוזר הורים מקצועי. תענה בעברית בלבד.",high,
+161,SD-HE-01250,parent,utils/parent-copilot/llm-orchestrator.js,217,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: כתוב בשפה פשוטה, ישירה, וידידותית להורה — לא בשפת מערכת.",high,
+162,SD-HE-01251,parent,utils/parent-copilot/llm-orchestrator.js,218,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אל תשתמש בביטויים: 'לפי הדוח, מופיעים:', 'המקצועות שמופיעים:', 'מוקדים עם ניסוח', 'זה מה שהדוח נותן כרגע', 'אפשר לסדר מה חשוב קודם'.",high,
+163,SD-HE-01252,parent,utils/parent-copilot/llm-orchestrator.js,218,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: לפי הדוח, מופיעים:",high,
+164,SD-HE-01253,parent,utils/parent-copilot/llm-orchestrator.js,218,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: המקצועות שמופיעים:",high,
+165,SD-HE-01254,parent,utils/parent-copilot/llm-orchestrator.js,218,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: מוקדים עם ניסוח",high,
+166,SD-HE-01255,parent,utils/parent-copilot/llm-orchestrator.js,218,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: זה מה שהדוח נותן כרגע",high,
+167,SD-HE-01256,parent,utils/parent-copilot/llm-orchestrator.js,218,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אפשר לסדר מה חשוב קודם",high,
+168,SD-HE-01257,parent,utils/parent-copilot/llm-orchestrator.js,219,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ניסוח טבעי לדוגמה: 'השבוע כדאי להתמקד בעיקר ב...', 'ב... נראו תוצאות טובות יחסית', 'התחום שדורש חיזוק כרגע הוא...', 'בבית כדאי לתרגל...', 'בשלב הזה מומלץ...', 'הנתונים מצביעים על...'.",high,
+169,SD-HE-01258,parent,utils/parent-copilot/llm-orchestrator.js,219,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: השבוע כדאי להתמקד בעיקר ב...",high,
+170,SD-HE-01259,parent,utils/parent-copilot/llm-orchestrator.js,219,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ב... נראו תוצאות טובות יחסית",high,
+171,SD-HE-01260,parent,utils/parent-copilot/llm-orchestrator.js,219,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: התחום שדורש חיזוק כרגע הוא...",high,
+172,SD-HE-01261,parent,utils/parent-copilot/llm-orchestrator.js,219,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בבית כדאי לתרגל...",high,
+173,SD-HE-01262,parent,utils/parent-copilot/llm-orchestrator.js,219,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בשלב הזה מומלץ...",high,
+174,SD-HE-01263,parent,utils/parent-copilot/llm-orchestrator.js,219,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: הנתונים מצביעים על...",high,
+175,SD-HE-01264,parent,utils/parent-copilot/llm-orchestrator.js,220,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אסור לכתוב נקודה, נקודתיים או מקף מיד אחרי מילת יחס (ב, על, עם, של, ל) לפני שם הנושא — תמיד המשך מיד עם שם הנושא המלא. דוגמה אסורה: \""להתמקד ב. חשבון\""; נכון: \""להתמקד בחשבון\"" או \""להתמקד בחשבון —\"".",high,
+176,SD-HE-01266,parent,utils/parent-copilot/llm-orchestrator.js,221,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ביטחון",high,
+177,SD-HE-01267,parent,utils/parent-copilot/llm-orchestrator.js,221,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: בטחון",high,
+178,SD-HE-01269,parent,utils/parent-copilot/llm-orchestrator.js,223,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: מוקדם לקבוע",high,
+179,SD-HE-01271,parent,utils/parent-copilot/llm-orchestrator.js,223,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: נתונים מועטים",high,
+180,SD-HE-01272,parent,utils/parent-copilot/llm-orchestrator.js,223,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: כיוון ראשוני בלבד",high,
+181,SD-HE-01273,parent,utils/parent-copilot/llm-orchestrator.js,223,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: עדיין לא ניתן להסיק",high,
+182,SD-HE-01278,parent,utils/parent-copilot/llm-orchestrator.js,228,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: שאלת הורה: …",medium,placeholders substituted
+183,SD-HE-01388,parent,utils/parent-copilot/question-classifier-llm.js,32,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: חשבון",high,
+184,SD-HE-01389,parent,utils/parent-copilot/question-classifier-llm.js,33,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: גאומטריה",high,
+185,SD-HE-01390,parent,utils/parent-copilot/question-classifier-llm.js,34,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: אנגלית",high,
+186,SD-HE-01391,parent,utils/parent-copilot/question-classifier-llm.js,35,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: מדעים",high,
+187,SD-HE-01392,parent,utils/parent-copilot/question-classifier-llm.js,36,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: עברית",high,
+188,SD-HE-01393,parent,utils/parent-copilot/question-classifier-llm.js,37,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: מולדת",high,
+189,SD-HE-01395,parent,utils/parent-copilot/question-classifier-llm.js,76,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: ארבע קטגוריות:",high,
+190,SD-HE-01400,parent,utils/parent-copilot/question-classifier-llm.js,81,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: כללי הכרעה:",high,
+191,SD-HE-01404,parent,utils/parent-copilot/question-classifier-llm.js,85,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: (אין)",high,
+192,SD-HE-01405,parent,utils/parent-copilot/question-classifier-llm.js,85,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: מקצועות בדוח: ….",medium,placeholders substituted
+193,SD-HE-01406,parent,utils/parent-copilot/question-classifier-llm.js,86,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: (אין)",high,
+194,SD-HE-01407,parent,utils/parent-copilot/question-classifier-llm.js,86,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: נושאים נבחרים בדוח: ….",medium,placeholders substituted
+195,SD-HE-01408,parent,utils/parent-copilot/question-classifier-llm.js,87,parent_copilot,ai_prompt,ai_prompt,הנחיית מערכת ל-AI — משפיעה על סוג התשובה (לא תמיד גלוי למשתמש).,"בעוזר ההורים (Copilot)
+אזור: ai_prompt
+סוג החלטה: ai_prompt
+כפי שמופיע: שאלת ההורה: …",medium,placeholders substituted
+196,SD-HE-00015,mixed_or_unclear,components/teacher-portal/TeacherDiscussionQuestionPicker.jsx,192,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: נא לבחור לפחות שאלה אחת",high,
+197,SD-HE-00020,mixed_or_unclear,components/teacher-portal/TeacherStudentIndividualActivitiesPanel.jsx,107,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: יצירת הפעילות נכשלה",high,
+198,SD-HE-00021,mixed_or_unclear,components/teacher-portal/TeacherStudentIndividualActivitiesPanel.jsx,140,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: עדכון הפעילות נכשל",high,
+199,SD-HE-00026,teacher,lib/classroom-activities/generate-activity-questions-client.js,97,classroom_activity,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בפעילות כיתתית
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בפעילות כיתתית: אין מספיק שאלות … עבור … — נושא: … — רמה: …",medium,placeholders substituted
+200,SD-HE-00030,student,lib/classroom-activities/student-activity-error-labels.client.js,8,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: הפעילות אינה זמינה כרגע",high,
+201,SD-HE-00031,student,lib/classroom-activities/student-activity-error-labels.client.js,9,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא נמצאה פעילות כזו",high,
+202,SD-HE-00032,student,lib/classroom-activities/student-activity-error-labels.client.js,10,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: הפעילות עדיין לא התחילה",high,
+203,SD-HE-00033,student,lib/classroom-activities/student-activity-error-labels.client.js,11,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא ניתן לשלוח תשובות לפעילות זו כרגע",high,
+204,SD-HE-00034,student,lib/classroom-activities/student-activity-error-labels.client.js,12,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: הפעילות נסגרה",high,
+205,SD-HE-00035,student,lib/classroom-activities/student-activity-error-labels.client.js,13,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: הזמן לפעילות הסתיים",high,
+206,SD-HE-00036,student,lib/classroom-activities/student-activity-error-labels.client.js,14,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא ניתן לפתוח את הפעילות כרגע",high,
+207,SD-HE-00037,student,lib/classroom-activities/student-activity-error-labels.client.js,15,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא נמצא",high,
+208,SD-HE-00038,student,lib/classroom-activities/student-activity-error-labels.client.js,16,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: נדרשת התחברות",high,
+209,SD-HE-00039,student,lib/classroom-activities/student-activity-error-labels.client.js,17,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: נדרשת התחברות",high,
+210,SD-HE-00040,student,lib/classroom-activities/student-activity-error-labels.client.js,18,classroom_activity,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בפעילות כיתתית
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: בפעילות כיתתית: אין הרשאה לפתוח את הפעילות",high,
+211,SD-HE-00041,student,lib/classroom-activities/student-activity-error-labels.client.js,19,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: הפעילות לא משויכת אליך",high,
+212,SD-HE-00042,student,lib/classroom-activities/student-activity-error-labels.client.js,20,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: הפעילות לא משויכת אליך",high,
+213,SD-HE-00043,student,lib/classroom-activities/student-activity-error-labels.client.js,21,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: הפעילות לא משויכת אליך",high,
+214,SD-HE-00044,student,lib/classroom-activities/student-activity-error-labels.client.js,22,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא ניתן לזהות את החשבון",high,
+215,SD-HE-00045,student,lib/classroom-activities/student-activity-error-labels.client.js,23,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא ניתן לבצע את הפעולה כרגע",high,
+216,SD-HE-00046,student,lib/classroom-activities/student-activity-error-labels.client.js,24,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: כבר הגשת את הפעילות",high,
+217,SD-HE-00047,student,lib/classroom-activities/student-activity-error-labels.client.js,25,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: ממתינים למורה…",medium,placeholders substituted
+218,SD-HE-00048,student,lib/classroom-activities/student-activity-error-labels.client.js,26,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: אין צורך להגיש תשובה",high,
+219,SD-HE-00049,student,lib/classroom-activities/student-activity-error-labels.client.js,27,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: המערכת מתעדכנת — נסו שוב מאוחר יותר",high,
+220,SD-HE-00050,student,lib/classroom-activities/student-activity-error-labels.client.js,28,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שגיאה — נסו שוב",high,
+221,SD-HE-00051,student,lib/classroom-activities/student-activity-error-labels.client.js,29,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שגיאה — נסו שוב",high,
+222,SD-HE-00052,student,lib/classroom-activities/student-activity-error-labels.client.js,30,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שגיאת שרת — נסו שוב",high,
+223,SD-HE-00053,student,lib/classroom-activities/student-activity-error-labels.client.js,31,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: פעולה לא נתמכת",high,
+224,SD-HE-00054,student,lib/classroom-activities/student-activity-error-labels.client.js,32,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא ניתן לטעון את השאלה כרגע",high,
+225,SD-HE-00055,student,lib/classroom-activities/student-activity-error-labels.client.js,33,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא ניתן לשלוח תשובה כרגע",high,
+226,SD-HE-00056,student,lib/classroom-activities/student-activity-error-labels.client.js,38,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: נדרשת התחברות",high,
+227,SD-HE-00057,student,lib/classroom-activities/student-activity-error-labels.client.js,39,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שגיאת שרת — נסו שוב",high,
+228,SD-HE-00058,student,lib/classroom-activities/student-activity-error-labels.client.js,40,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: פעולה לא נתמכת",high,
+229,SD-HE-00059,student,lib/classroom-activities/student-activity-error-labels.client.js,41,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: לא ניתן לשלוח תשובה כרגע",high,
+230,SD-HE-00069,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,50,decision_general,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בממשק החלטות
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בתהליך",high,
+231,SD-HE-00070,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,65,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: מתן הרשאת מקצוע",high,
+232,SD-HE-00071,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,66,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: הסרת הרשאת מקצוע",high,
+233,SD-HE-00072,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,77,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: מתן הרשאה",high,
+234,SD-HE-00073,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,78,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: הסרת הרשאה",high,
+235,SD-HE-00074,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,82,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: יצירת הרשאת גישה",high,
+236,SD-HE-00075,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,83,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: ביטול הרשאת גישה",high,
+237,SD-HE-00077,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,88,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: עדכון הרשאות תכונות",high,
+238,SD-HE-00078,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,94,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: אין הרשאת מנהל/ת בית ספר",high,
+239,SD-HE-00079,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,98,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: אין הרשאה",high,
+240,SD-HE-00080,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,99,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: נתונים לא תקינים",high,
+241,SD-HE-00081,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,101,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאת שרת — נסו שוב",high,
+242,SD-HE-00083,mixed_or_unclear,lib/platform-ui/hebrew-display-labels.js,104,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: למורה אין הרשאה במקצוע זה",high,
+243,SD-HE-00090,teacher,lib/teacher-server/teacher-activities.server.js,145,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: יש להזין כותרת (עד 120 תווים)",high,
+244,SD-HE-00091,teacher,lib/teacher-server/teacher-activities.server.js,150,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: מזהה הכיתה אינו תקין",high,
+245,SD-HE-00092,teacher,lib/teacher-server/teacher-activities.server.js,155,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: מקצוע לא תקין",high,
+246,SD-HE-00094,teacher,lib/teacher-server/teacher-activities.server.js,168,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: יש להזין נושא (עד 120 תווים)",high,
+247,SD-HE-00095,teacher,lib/teacher-server/teacher-activities.server.js,173,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: סוג פעילות לא תקין",high,
+248,SD-HE-00096,teacher,lib/teacher-server/teacher-activities.server.js,178,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: אופן בחירת השאלות לא תקין",high,
+249,SD-HE-00098,teacher,lib/teacher-server/teacher-activities.server.js,242,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: טווח נמענים לא תקין",high,
+250,SD-HE-00099,teacher,lib/teacher-server/teacher-activities.server.js,257,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: מזהה תלמיד לא תקין",high,
+251,SD-HE-00100,parent,pages/api/parent/create-student-access-code.js,34,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: שם משתמש לא תקין",high,
+252,SD-HE-00102,parent,pages/api/parent/create-student-access-code.js,59,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: התלמיד אינו פעיל",high,
+253,SD-HE-00103,parent,pages/api/parent/create-student-access-code.js,75,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: בדיקת שם משתמש נכשלה",high,
+254,SD-HE-00104,parent,pages/api/parent/create-student-access-code.js,78,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: שם המשתמש כבר תפוס",high,
+255,SD-HE-00105,parent,pages/api/parent/create-student.js,50,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: לא ניתן לבדוק את מספר הילדים",high,
+256,SD-HE-00106,parent,pages/api/parent/create-student.js,56,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: ניתן להוסיף עד 3 ילדים בלבד לחשבון הורה",high,
+257,SD-HE-00107,parent,pages/api/parent/delete-student.js,36,api_layer,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בהודעת API למשתמש
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: בהודעת מערכת: לא ניתן למחוק את התלמיד או שאין הרשאה",high,
+258,SD-HE-00108,parent,pages/api/parent/delete-student.js,38,api_layer,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בהודעת API למשתמש
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בהודעת מערכת: מחיקת התלמיד נכשלה",high,
+259,SD-HE-00109,mixed_or_unclear,pages/api/teacher/activities/[activityId]/report-export.js,33,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: יותר מדי בקשות — המתן מעט ונסה שוב",high,
+260,SD-HE-00110,mixed_or_unclear,pages/api/teacher/activities/[activityId]/status.js,45,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: יותר מדי בקשות — המתן מעט ונסה שוב",high,
+261,SD-HE-00111,mixed_or_unclear,pages/api/teacher/activities/index.js,83,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: יותר מדי בקשות — המתן מעט ונסה שוב",high,
+262,SD-HE-00113,mixed_or_unclear,pages/api/teacher/activities/index.js,171,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שיטת בקשה לא נתמכת",high,
+263,SD-HE-00114,mixed_or_unclear,pages/api/teacher/activities/index.js,174,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שגיאת שרת — נסה שוב",high,
+264,SD-HE-00162,mixed_or_unclear,pages/learning/curriculum.js,574,decision_general,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בממשק החלטות
+אזור: progression
+סוג החלטה: progression
+כותרת: רמות קושי:
+כפי שמופיע: הערות:",high,
+265,SD-HE-00163,mixed_or_unclear,pages/learning/curriculum.js,593,decision_general,general,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בממשק החלטות
+אזור: general
+סוג החלטה: data_sufficiency
+כותרת: נושאים זמינים:
+כפי שמופיע: קנה מידה - במפות ובמודלים",high,
+266,SD-HE-00169,mixed_or_unclear,pages/learning/curriculum.js,610,decision_general,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בממשק החלטות
+אזור: progression
+סוג החלטה: progression
+כותרת: רמות קושי:
+כפי שמופיע: הערות:",high,
+267,SD-HE-00198,student,pages/learning/english-master.js,2491,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: עלית רמה!",high,
+268,SD-HE-00203,student,pages/learning/english-master.js,3273,student_learning,general,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: data_sufficiency
+כותרת: 🎛️ הגדרות תרגול חכם
+כפי שמופיע: ברירת מחדל",high,
+269,SD-HE-00215,student,pages/learning/geometry-master.js,985,student_learning,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במסך תרגול תלמיד
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה ביצירת שאלה. אנא נסה שוב או בחר נושא אחר.",high,
+270,SD-HE-00219,student,pages/learning/geometry-master.js,2471,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: עלית רמה!",high,
+271,SD-HE-00227,student,pages/learning/geometry-master.js,3181,student_learning,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במסך תרגול תלמיד
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה בטעינת לוח התוצאות:",high,
+272,SD-HE-00248,student,pages/learning/hebrew-master.js,3023,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: עלית רמה!",high,
+273,SD-HE-00259,student,pages/learning/hebrew-master.js,4144,student_learning,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במסך תרגול תלמיד
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה בטעינת לוח התוצאות:",high,
+274,SD-HE-00285,student,pages/learning/math-master.js,3140,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: עלית רמה!",high,
+275,SD-HE-00300,student,pages/learning/math-master.js,5849,student_learning,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במסך תרגול תלמיד
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה בטעינת לוח התוצאות:",high,
+276,SD-HE-00314,student,pages/learning/moledet-geography-master.js,2438,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: עלית רמה!",high,
+277,SD-HE-00325,student,pages/learning/moledet-geography-master.js,3498,student_learning,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במסך תרגול תלמיד
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה בטעינת לוח התוצאות:",high,
+278,SD-HE-00342,student,pages/learning/science-master.js,553,student_learning,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"במסך תרגול תלמיד
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: מגמת הדיוק ברצף האחרון יורדת — כדאי לחזור על החומר.",high,
+279,SD-HE-00361,student,pages/learning/science-master.js,2794,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: שחקן",high,
+280,SD-HE-00362,student,pages/learning/science-master.js,2982,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: עלית רמה במדעים!",high,
+281,SD-HE-00369,student,pages/learning/science-master.js,3638,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כותרת: 🎯 חזרה על שגיאות
+כפי שמופיע: כיתה",high,
+282,SD-HE-00379,student,pages/learning/science-master.js,4026,student_learning,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במסך תרגול תלמיד
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בחר כיתה, רמה ונושא (לדוגמה: גוף האדם, צמחים, בעלי חיים ועוד).",high,
+283,SD-HE-00383,student,pages/student/activity/[activityId].js,49,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: לא ניתן להתחיל את הפעילות",high,
+284,SD-HE-00395,student,pages/student/home.js,379,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה בעיבוד הנתונים",high,
+285,SD-HE-00401,student,pages/student/worksheet/[worksheetId].js,29,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה",high,
+286,SD-HE-00402,student,pages/student/worksheet/[worksheetId].js,56,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: לא ניתן לפתוח",high,
+287,SD-HE-00403,student,pages/student/worksheet/[worksheetId].js,74,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה",high,
+288,SD-HE-00404,student,pages/student/worksheet/[worksheetId].js,107,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה",high,
+289,SD-HE-00405,teacher,pages/teacher/class/[classId].js,77,decision_general,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בממשק החלטות
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: אין לך הרשאה לצפות בדוח כיתה זו.",high,
+290,SD-HE-00406,teacher,pages/teacher/class/[classId].js,128,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: מומלץ לחזק: …",medium,placeholders substituted
+291,SD-HE-00423,teacher,pages/teacher/class/[classId]/activities/index.js,46,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שגיאה בטעינה",high,
+292,SD-HE-00424,teacher,pages/teacher/class/[classId]/activities/index.js,93,classroom_activity,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בפעילות כיתתית
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: בפעילות כיתתית: אין הרשאה לצפות בפעילויות כיתה זו.",high,
+293,SD-HE-00426,teacher,pages/teacher/class/[classId]/activities/new.js,77,classroom_activity,permission_scope,permission_scope,הודעה על מגבלת הרשאה או היקף מקצועות.,"בפעילות כיתתית
+אזור: permission_scope
+סוג החלטה: permission_scope
+כפי שמופיע: בפעילות כיתתית: אין לך הרשאה ליצור פעילויות לכיתה זו. פנה למנהל בית הספר.",high,
+294,SD-HE-00430,teacher,pages/teacher/class/[classId]/worksheets/[worksheetId]/grade/[studentId].js,43,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה",high,
+295,SD-HE-00431,teacher,pages/teacher/class/[classId]/worksheets/[worksheetId]/grade/[studentId].js,77,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה",high,
+296,SD-HE-00432,teacher,pages/teacher/class/[classId]/worksheets/[worksheetId]/index.js,48,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה",high,
+297,SD-HE-00433,teacher,pages/teacher/class/[classId]/worksheets/[worksheetId]/report.js,39,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה",high,
+298,SD-HE-00434,teacher,pages/teacher/class/[classId]/worksheets/index.js,46,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה בטעינה",high,
+299,SD-HE-00435,teacher,pages/teacher/class/[classId]/worksheets/new.js,111,decision_general,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בממשק החלטות
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: שגיאה בשמירה",high,
+300,SD-HE-00441,teacher,pages/teacher/students/activities/new.js,157,classroom_activity,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בפעילות כיתתית
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בפעילות כיתתית: תלמיד זה בכיתה ….",medium,placeholders substituted
+301,SD-HE-00442,teacher,pages/teacher/students/activities/new.js,211,classroom_activity,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"בפעילות כיתתית
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: בפעילות כיתתית: שאלון דורש הגבלת זמן",high,
+302,SD-HE-00444,teacher,pages/teacher/students/activities/new.js,305,classroom_activity,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בפעילות כיתתית
+אזור: progression
+סוג החלטה: progression
+כותרת: בחר תלמידים פרטיים
+כפי שמופיע: בפעילות כיתתית: הפעילות נעולה ל-….",medium,placeholders substituted
+303,SD-HE-00445,teacher,pages/teacher/students/activities/new.js,322,classroom_activity,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בפעילות כיתתית
+אזור: progression
+סוג החלטה: progression
+כותרת: בחר תלמידים פרטיים
+כפי שמופיע: בפעילות כיתתית: בחר הכל",high,
+304,SD-HE-00446,teacher,pages/teacher/students/activities/new.js,322,classroom_activity,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בפעילות כיתתית
+אזור: progression
+סוג החלטה: progression
+כותרת: בחר תלמידים פרטיים
+כפי שמופיע: בפעילות כיתתית: בחר הכל (…)",medium,placeholders substituted
+305,SD-HE-00451,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,26,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: נכון לעכשיו",high,
+306,SD-HE-00452,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,26,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: כדאי להמשיך לעקוב",high,
+307,SD-HE-00460,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,169,decision_general,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בממשק החלטות
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: עדיין אין מספיק נתונים לקבוע כיוון ברור — נמשיך לאט ובזהירות.",high,
+308,SD-HE-00462,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,178,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: נאספו מספיק שאלות לתמונה ראשונית, אך התוצאות עדיין מצביעות על קושי — כדאי חיזוק ממוקד לפני שמסמנים את הנושא כיציב.",high,
+309,SD-HE-00466,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,191,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: הדוח נראה מתקדם לטובה, וכדאי לוודא שזה לא מקרה חד־פעמי.",high,
+310,SD-HE-00473,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,213,decision_general,progression,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: progression
+סוג החלטה: recommendation
+כפי שמופיע: כדאי תרגול קצר וממוקד באותה רמה, ואז לבדוק אם באמת כדאי לשנות משהו.",high,
+311,SD-HE-00474,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,214,decision_general,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בממשק החלטות
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: נעשה עוד חזרה קצרה וברורה ברמה הנוכחית, לפני שמנסים קפיצה קטנה קדימה.",high,
+312,SD-HE-00475,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,215,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: כדאי להמשיך לתרגל באותה רמת קושי, ואז לבדוק שוב אם מתאים להתקדם.",high,
+313,SD-HE-00476,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,220,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: כדאי חיזוק ממוקד, ואז ניסיון קצר בלי הכוונה באמצע, לפני שמעלים רמת קושי.",high,
+314,SD-HE-00480,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,236,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: עדיין מוקדם לקבוע כיוון — כדאי לאסוף עוד נתוני תרגול ואז לבדוק שוב.",high,
+315,SD-HE-00482,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,242,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: נכון לעכשיו כדאי להמשיך לתרגל ולשים לב, ולבדוק שוב אחרי עוד קצת.",high,
+316,SD-HE-00483,mixed_or_unclear,utils/contracts/narrative-contract-v1.js,243,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: כדאי לבדוק שוב אחרי עוד תרגול קצר, כדי לוודא שהכיוון נשמר לפני שמחמירים בקביעת כיוון.",high,
+317,SD-HE-00488,mixed_or_unclear,utils/diagnostic-labels-he.js,19,diagnostic_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: באבחון/ניתוח: קושי שכדאי לשים אליו לב",high,
+318,SD-HE-00489,mixed_or_unclear,utils/diagnostic-labels-he.js,20,diagnostic_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: באבחון/ניתוח: כדאי לחזק את הנושא הזה עוד קצת",high,
+319,SD-HE-00495,mixed_or_unclear,utils/diagnostic-labels-he.js,93,diagnostic_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במנוע אבחון/ניתוח
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: באבחון/ניתוח: רמה בסיסית",high,
+320,SD-HE-00496,mixed_or_unclear,utils/diagnostic-labels-he.js,94,diagnostic_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במנוע אבחון/ניתוח
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: באבחון/ניתוח: רמה בינונית",high,
+321,SD-HE-00497,mixed_or_unclear,utils/diagnostic-labels-he.js,95,diagnostic_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"במנוע אבחון/ניתוח
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: באבחון/ניתוח: רמה מתקדמת",high,
+322,SD-HE-00505,mixed_or_unclear,utils/diagnostic-labels-he.js,281,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: שגיאה בחיבור בעמודות עשרות",high,
+323,SD-HE-00509,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,9,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: בחירת דרך פתרון לא מתאימה",high,
+324,SD-HE-00517,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,17,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: פיענוח אותיות/צלילים",high,
+325,SD-HE-00519,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,19,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: שליפת פרטים מהטקסט",high,
+326,SD-HE-00520,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,20,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: הסקה מהטקסט",high,
+327,SD-HE-00522,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,22,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: סדר צעדים או מידע",high,
+328,SD-HE-00523,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,23,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: דפוס דקדוקי",high,
+329,SD-HE-00526,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,26,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: דפוס כתיב",high,
+330,SD-HE-00529,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,29,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: סיווג",high,
+331,SD-HE-00535,mixed_or_unclear,utils/fast-diagnostic-engine/parent-copy-he.js,35,diagnostic_engine,validation_error,validation_error,הודעת חסימה/שגיאה שמונעת פעולה.,"במנוע אבחון/ניתוח
+אזור: validation_error
+סוג החלטה: validation_error
+כפי שמופיע: באבחון/ניתוח: ערך מקום",high,
+332,SD-HE-00611,mixed_or_unclear,utils/fast-diagnostic-engine/probe-map-he.js,203,diagnostic_engine,general,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: data_sufficiency
+כפי שמופיע: באבחון/ניתוח: לבדוק קודם כל שלב מציאת מכנה משותף בלי לדלג ישר לתוצאה הסופית.",high,
+333,SD-HE-00669,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,274,diagnostic_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: באבחון/ניתוח: זוהי השערת עבודה — כדאי לאמת בתרגול המשך.",high,
+334,SD-HE-00670,mixed_or_unclear,utils/fast-diagnostic-engine/run-fast-diagnosis-for-unit.js,276,diagnostic_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"במנוע אבחון/ניתוח
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: באבחון/ניתוח: הדפוס נראה יציב יחסית לטווח הזה — עדיין כדאי לעקוב גם בהמשך.",high,
+335,SD-HE-00675,mixed_or_unclear,utils/learning-patterns-analysis.js,114,recommendation_engine,student_feedback,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: student_feedback
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כשיש טעות, לפעמים חוזר אותו דפוס (… מקרים דומים בתקופה שנבחרה) — כדאי לעצור רגע על דוגמה אחת ביחד.",medium,placeholders substituted
+336,SD-HE-00676,mixed_or_unclear,utils/learning-patterns-analysis.js,115,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: מה כדאי לעשות בבית: לבחור תרגיל אחד קצר, לעבור עליו בקול צעד אחר צעד, ואז לתת לילד לנסות שוב בעצמו.",high,
+337,SD-HE-00703,mixed_or_unclear,utils/learning-patterns-analysis.js,581,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: שמירה על רמה טובה",high,
+338,SD-HE-00707,mixed_or_unclear,utils/learning-patterns-analysis.js,650,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: … יש כאן כמה טעויות בלי דפוס חוזר ברור — עדיף לא למהר למסקנות; כדאי להמשיך בתרגול רגוע ולצבור עוד דוגמאות.",medium,placeholders substituted
+339,SD-HE-00711,mixed_or_unclear,utils/learning-patterns-analysis.js,676,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: רואים שמירה טובה על הרמה ב־….",medium,placeholders substituted
+340,SD-HE-00712,mixed_or_unclear,utils/learning-patterns-analysis.js,680,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: רואים גם שמירה טובה על הרמה ב־….",medium,placeholders substituted
+341,SD-HE-00713,mixed_or_unclear,utils/learning-patterns-analysis.js,690,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: יש גם כמה תחומים שכדאי לחזק: ….",medium,placeholders substituted
+342,SD-HE-00717,mixed_or_unclear,utils/learning-patterns-analysis.js,732,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי פעמיים בשבוע, כרבע שעה ב… … — לקרוא יחד את הניסוח, לפרק למשפטים קצרים, ורק אז לנסח תשובה.",medium,placeholders substituted
+343,SD-HE-00721,mixed_or_unclear,utils/learning-patterns-analysis.js,764,recommendation_engine,student_feedback,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: student_feedback
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: מומלץ לבחור כמה דוגמאות לעבור ביחד עם הילד צעד־צעד, ולנסות השבוע להעלות את אחוזי ההצלחה — מספיק אפילו שיפור קטן באחוזי ההצלחה.",high,
+344,SD-HE-00724,mixed_or_unclear,utils/learning-patterns-analysis.js,778,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: להמשיך בשבוע הבא באותו קצב סביב … — לשמור על הרמה הטובה.",medium,placeholders substituted
+345,SD-HE-00727,mixed_or_unclear,utils/learning-patterns-analysis.js,824,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: … — דיוק …% (… שאלות; מומלץ לשמר קצב)",medium,placeholders substituted
+346,SD-HE-00732,mixed_or_unclear,utils/learning-patterns-analysis.js,919,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: ב…: לדחות שינוי רמה/כיתה ותוכנית ארוכה עד שיתייצב נתון.",medium,placeholders substituted
+347,SD-HE-00736,mixed_or_unclear,utils/learning-patterns-analysis.js,934,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: ב…: משימה אחת קצרה עם חזרה על טעות טיפוסית באותה רמה.",medium,placeholders substituted
+348,SD-HE-00738,mixed_or_unclear,utils/learning-patterns-analysis.js,937,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: חיזוק ממוקד באותה רמה; פחות נושאים במקביל.",high,
+349,SD-HE-00739,mixed_or_unclear,utils/learning-patterns-analysis.js,938,recommendation_engine,progression,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: לא לדחוף עלייה מהירה מדי ברמה בבית; לא לדלג על טעויות חוזרות.",high,
+350,SD-HE-00740,mixed_or_unclear,utils/learning-patterns-analysis.js,949,recommendation_engine,student_feedback,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: student_feedback
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: ב… יש הצלחה עם הילד עדיין נעזר ברמזים — כדאי לעבוד עכשיו על מעבר הדרגתי לעצמאות.",medium,placeholders substituted
+351,SD-HE-00741,mixed_or_unclear,utils/learning-patterns-analysis.js,951,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: ב…: לדחות עלייה מהירה מדי ברמה עד שיורדת התלות מעט.",medium,placeholders substituted
+352,SD-HE-00743,mixed_or_unclear,utils/learning-patterns-analysis.js,966,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: ב… נראה שהרמה נשמרת טוב יחסית — להישאר על שגרה רגועה.",medium,placeholders substituted
+353,SD-HE-00746,mixed_or_unclear,utils/learning-patterns-analysis.js,982,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לעקוב אחרי דיוק באותה רמה לפני שמוסיפים משתנים.",high,
+354,SD-HE-00749,mixed_or_unclear,utils/learning-patterns-analysis.js,990,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: ב…: שני מפגשים קצרים בשבוע באותה רמה.",medium,placeholders substituted
+355,SD-HE-00751,mixed_or_unclear,utils/learning-patterns-analysis.js,994,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לא להחמיר רמה בלי שני מפגשים טובים ברצף.",high,
+356,SD-HE-00755,mixed_or_unclear,utils/learning-patterns-analysis.js,1034,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: בתקופה שנבחרה עדיין אין מספיק תרגול כדי להבין איפה מתחיל הקושי או להמליץ על שינוי גדול.",high,
+357,SD-HE-00764,mixed_or_unclear,utils/learning-patterns-analysis.js,1095,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי לאסוף עוד תרגול לפני שמחליטים מה כדאי לחזק קודם.",high,
+358,SD-HE-00768,mixed_or_unclear,utils/learning-patterns-analysis.js,1453,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: יש נתוני מגמה בשורות, אך אין עדיין סיפור מגמה אחיד ברמת המקצוע — כדאי לאסוף עוד תרגול.",high,
+359,SD-HE-00769,mixed_or_unclear,utils/learning-patterns-analysis.js,1454,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: עדיין אין מספיק מידע על שינוי לאורך זמן.",high,
+360,SD-HE-00780,mixed_or_unclear,utils/learning-patterns-analysis.js,1492,recommendation_engine,recommendation,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: recommendation
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: מה לעשות בבית: חזרה איטית על הבסיס ב… — משימה קצרה, בדיקה מול הפתרון, בלי עלייה מהירה מדי ברמה.",medium,placeholders substituted
+361,SD-HE-00781,mixed_or_unclear,utils/learning-patterns-analysis.js,1495,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: מה לעשות בבית: לפרק את הלחץ למהירות — תרגול באותה רמת קושי עם דגש על דיוק לפני מהירות, בלי להוריד רמה לכל המקצוע.",high,
+362,SD-HE-00784,mixed_or_unclear,utils/learning-patterns-analysis.js,1504,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: מה לעשות בבית: לבנות עצמאות בהדרגה — תרגול קצר עם פחות עזרה אחרי שההבנה ברורה, בלי לדחוף עלייה מהירה מדי ברמה.",high,
+363,SD-HE-00785,mixed_or_unclear,utils/learning-patterns-analysis.js,1508,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: מה לעשות בבית: לשמור על תרגול קצר וקבוע, ולבדוק שהרמה נשמרת לפני שינוי הגדרות.",high,
+364,SD-HE-00787,mixed_or_unclear,utils/learning-patterns-analysis.js,1514,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לא לדחוף עלייה מהירה מדי ברמה או כיתה בבית בלי הצלחה שחוזרת ובלי ירידה בהילד עדיין נעזר ברמזים.",high,
+365,SD-HE-00788,mixed_or_unclear,utils/learning-patterns-analysis.js,1517,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לא להפוך קושי במצב מהירות לירידת רמה בכל המקצוע.",high,
+366,SD-HE-00789,mixed_or_unclear,utils/learning-patterns-analysis.js,1520,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לא לרדת מיד לרמה קלה בלי לנסות קודם חיזוק ממוקד באותה רמה.",high,
+367,SD-HE-00791,mixed_or_unclear,utils/learning-patterns-analysis.js,1526,recommendation_engine,general,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לא לפרש ירידה קצרה ככישלון קבוע — עדיף זהירות ובדיקה חוזרת.",high,
+368,SD-HE-00794,mixed_or_unclear,utils/learning-patterns-analysis.js,1571,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: יש מידע מסוים, אבל גם נתונים שדורשים זהירות — כדאי לעקוב ולא למהר לקבוע כיוון חזק מדי.",high,
+369,SD-HE-00796,mixed_or_unclear,utils/learning-patterns-analysis.js,1575,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: התמונה במקצוע עדיין מעורבת — כדאי לעבור על הנושאים בנפרד.",high,
+370,SD-HE-00798,mixed_or_unclear,utils/learning-patterns-analysis.js,1646,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי לעקוב לפני שינוי מהותי.",high,
+371,SD-HE-00799,mixed_or_unclear,utils/learning-patterns-analysis.js,1653,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לעצור לרגע לפני קידום: לחזור על אותה רמה עם מפגשים קצרים עד שמתייצב דיוק.",high,
+372,SD-HE-00800,mixed_or_unclear,utils/learning-patterns-analysis.js,1657,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: לוודא חזרה על טעויות דומות באותה רמה לפני פתיחת נושא חדש.",high,
+373,SD-HE-00802,mixed_or_unclear,utils/learning-patterns-analysis.js,1765,recommendation_engine,recommendation,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: recommendation
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: ב…: … ·",medium,placeholders substituted
+374,SD-HE-00803,mixed_or_unclear,utils/learning-patterns-analysis.js,1895,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי לפתוח קודם ייצוב בסיס קצר במקצוע הזה — ורק אז להרחיב.",high,
+375,SD-HE-00805,mixed_or_unclear,utils/learning-patterns-analysis.js,2100,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי לתרגל עוד קצת … — נרשמו … טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",medium,placeholders substituted
+376,SD-HE-00806,mixed_or_unclear,utils/learning-patterns-analysis.js,2112,recommendation_engine,student_feedback,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: student_feedback
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: חוזרת אותה טעות — …. זה לא חירום, אבל שווה לטפל. מומלץ לשבת יחד על דוגמה אחת ולעבור עליה בקול צעד אחר צעד.",medium,placeholders substituted
+377,SD-HE-00808,mixed_or_unclear,utils/learning-patterns-analysis.js,2127,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: להמשיך לתרגל בנוחות בנושא … — הרמה שם נשמרת (דיוק כ־…%).",medium,placeholders substituted
+378,SD-HE-00809,mixed_or_unclear,utils/learning-patterns-analysis.js,2132,recommendation_engine,student_feedback,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: student_feedback
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: מומלץ לעודד על ההתמדה בנושא … — רואים הצלחה חוזרת; שימור הרגל חיובי חשוב לא פחות מתיקון טעויות.",medium,placeholders substituted
+379,SD-HE-00819,mixed_or_unclear,utils/learning-patterns-analysis.js,2352,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי לתרגל עוד קצת בנושא: בהשוואת כמויות או מספרים — נרשמו 7 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",high,
+380,SD-HE-00820,mixed_or_unclear,utils/learning-patterns-analysis.js,2360,recommendation_engine,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בהמלצות מערכת
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: בהמלצת מערכת: להמשיך לתרגל בנוחות בנושא חיבור — הרמה שם נשמרת (דיוק כ־93%).",high,
+381,SD-HE-00822,mixed_or_unclear,utils/learning-patterns-analysis.js,2376,recommendation_engine,student_feedback,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: student_feedback
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: מומלץ לעודד על ההתמדה בנושא חיבור — רואים הצלחה חוזרת; שימור הרגל חיובי חשוב לא פחות מתיקון טעויות.",high,
+382,SD-HE-00830,mixed_or_unclear,utils/learning-patterns-analysis.js,2451,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי לתרגל עוד קצת בנושא: בלבול חוזר בין היקף לשטח — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",high,
+383,SD-HE-00837,mixed_or_unclear,utils/learning-patterns-analysis.js,2580,recommendation_engine,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בהמלצות מערכת
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: בהמלצת מערכת: כדאי לתרגל עוד קצת בנושא: במילות יחס ובמבנה משפט — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",high,
+384,SD-HE-01901,mixed_or_unclear,utils/parent-report-language/forbidden-terms.js,17,decision_general,general,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בממשק החלטות
+אזור: general
+סוג החלטה: data_sufficiency
+כפי שמופיע: דל נתון",high,
+385,SD-HE-01905,mixed_or_unclear,utils/parent-report-language/forbidden-terms.js,41,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: מומלץ מעקב",high,
+386,SD-HE-01907,mixed_or_unclear,utils/parent-report-language/forbidden-terms.js,50,decision_general,general,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בממשק החלטות
+אזור: general
+סוג החלטה: data_sufficiency
+כפי שמופיע: דלות נתונים",high,
+387,SD-HE-01915,mixed_or_unclear,utils/parent-report-language/forbidden-terms.js,76,decision_general,general,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: general
+סוג החלטה: recommendation
+כפי שמופיע: מה כדאי לחזק קודם",high,
+388,SD-HE-01917,mixed_or_unclear,utils/parent-report-language/forbidden-terms.js,79,decision_general,progression,progression,ניסוח שמציע שינוי רמה או המשך התקדמות.,"בממשק החלטות
+אזור: progression
+סוג החלטה: progression
+כפי שמופיע: קפיצה לרמה גבוהה",high,
+389,SD-HE-01925,mixed_or_unclear,utils/parent-report-language/forbidden-terms.js,104,decision_general,recommendation,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: recommendation
+סוג החלטה: recommendation
+כפי שמופיע: זיכרון המלצה",high,
+390,SD-HE-01938,mixed_or_unclear,utils/parent-report-language/forbidden-terms.js,169,decision_general,recommendation,recommendation,המלצת פעולה על בסיס ניתוח למידה.,"בממשק החלטות
+אזור: recommendation
+סוג החלטה: recommendation
+כפי שמופיע: זיכרון המלצה",high,
+391,SD-HE-01985,mixed_or_unclear,utils/topic-next-step-engine.js,1332,recommendation_engine,recommendation,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: recommendation
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: מידע מצומצם",high,
+392,SD-HE-02001,mixed_or_unclear,utils/topic-next-step-phase2.js,362,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: אין מספיק מידע לשינוי גדול עכשיו.",high,
+393,SD-HE-02004,mixed_or_unclear,utils/topic-next-step-phase2.js,456,recommendation_engine,data_sufficiency,data_sufficiency,הודעה שהנתונים אינם מספיקים לקבלת החלטה.,"בהמלצות מערכת
+אזור: data_sufficiency
+סוג החלטה: data_sufficiency
+כפי שמופיע: בהמלצת מערכת: לא מורידים רמה או כיתה כשעדיין אין מספיק מידע — ממשיכים בחיזוק באותה רמה.",high,

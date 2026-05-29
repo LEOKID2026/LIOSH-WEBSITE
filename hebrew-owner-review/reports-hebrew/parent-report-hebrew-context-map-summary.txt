@@ -1,0 +1,18 @@
+Generated: 2026-05-29T14:22:00.000Z
+CSV: reports/parent-report-hebrew-context-map.csv
+Rows processed: 617
+Confidence high: 288
+Confidence medium: 329
+Confidence low: 0
+Needs full report (צריך לבדוק בדוח מלא): 0
+Misfit candidates: 4
+
+Top misfit rows (suggested replacement may not fit original phrase slot):
+- row 2 PR-HE-00193: «בירידה» → «יש פחות הצלחות לאחרונה»
+- row 3 PR-HE-00197: «ירידה מבוססת» → «נראית ירידה שחוזרת ביותר מתרגול אחד»
+- row 4 PR-HE-01693: «מגמת הדיוק» → «שינוי בדיוק לאורך זמן»
+- row 7 PR-HE-01863: «בירידה» → «יש פחות הצלחות לאחרונה»
+
+Generator: scripts/parent-report-hebrew-context-map-build.mjs
+No product source code changed.
+No commit, push, or deploy.
