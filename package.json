@@ -138,6 +138,8 @@
     "qa:master-closure-plan": "node scripts/build-master-closure-plan.mjs",
     "qa:question-selector-consistency": "node scripts/qa-question-selector-consistency.mjs",
     "qa:question-selector-consistency:strict": "node scripts/qa-question-selector-consistency.mjs --strict",
+    "qa:clickable-cursor": "node scripts/qa/scan-clickable-cursor.mjs --warn-only",
+    "qa:clickable-cursor:strict": "node scripts/qa/scan-clickable-cursor.mjs",
     "qa:questions:release": "tsx scripts/qa-questions-release.mjs",
     "test:e2e:stem-metadata": "playwright test tests/e2e/student-question-stem-metadata.spec.ts --project=chromium",
     "test:e2e:question-display": "playwright test tests/e2e/student-question-display.spec.ts tests/e2e/student-question-display-closure.spec.ts --project=chromium",

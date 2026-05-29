@@ -45,7 +45,7 @@ export function SchoolDrillBreadcrumb({ steps }) {
         <span key={`${step.label}-${index}`} className="inline-flex items-center gap-2">
           {index > 0 ? <span aria-hidden className="text-white/25">/</span> : null}
           {typeof step.onClick === "function" && !step.active ? (
-            <button type="button" onClick={step.onClick} className="text-amber-300 hover:underline">
+            <button type="button" onClick={step.onClick} className="text-amber-300 hover:underline cursor-pointer">
               {step.label}
             </button>
           ) : (
@@ -150,7 +150,7 @@ export function SchoolBackButton({ onClick, label = SCHOOL_BACK }) {
     <button
       type="button"
       onClick={onClick}
-      className="mb-4 text-sm text-amber-300 hover:underline text-right"
+      className="mb-4 text-sm text-amber-300 hover:underline text-right cursor-pointer"
     >
       {label}
     </button>

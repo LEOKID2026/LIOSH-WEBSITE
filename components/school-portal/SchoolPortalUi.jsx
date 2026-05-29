@@ -279,7 +279,7 @@ export function SchoolReportPreview({ loading, error, summary, onClose, closeLab
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="font-semibold">{summary.title}</p>
             {typeof onClose === "function" ? (
-              <button type="button" onClick={onClose} className="text-xs text-amber-300 hover:underline">
+              <button type="button" onClick={onClose} className="text-xs text-amber-300 hover:underline cursor-pointer">
                 {closeLabel}
               </button>
             ) : null}

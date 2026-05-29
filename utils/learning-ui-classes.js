@@ -13,7 +13,7 @@ export const learningModalHeader =
   "flex items-center justify-between gap-3 p-4 pb-3 flex-shrink-0 border-b border-emerald-400/10";
 
 export const learningModalCloseBtn =
-  "shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-emerald-200 hover:text-white hover:bg-emerald-800/45 transition-colors text-xl leading-none";
+  "shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-emerald-200 hover:text-white hover:bg-emerald-800/45 transition-colors text-xl leading-none cursor-pointer disabled:cursor-not-allowed";
 
 export const learningModalTitle =
   "text-lg font-bold text-emerald-100 tracking-tight text-center flex-1 min-w-0";
@@ -24,10 +24,10 @@ export const learningModalFooter =
 export const learningStepNavRow = "flex gap-2 sm:gap-3 justify-center items-center flex-wrap";
 
 export const learningStepNavBtn =
-  "inline-flex items-center justify-center min-h-10 min-w-[5.25rem] px-4 rounded-lg text-sm font-bold transition-colors bg-emerald-600/80 hover:bg-emerald-600 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100";
+  "inline-flex items-center justify-center min-h-10 min-w-[5.25rem] px-4 rounded-lg text-sm font-bold transition-colors bg-emerald-600/80 hover:bg-emerald-600 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100";
 
 export const learningStepNavBtnPlay =
-  "inline-flex items-center justify-center min-h-10 min-w-[5.25rem] px-4 rounded-lg text-sm font-bold transition-colors bg-emerald-600/80 hover:bg-emerald-600 active:scale-[0.98]";
+  "inline-flex items-center justify-center min-h-10 min-w-[5.25rem] px-4 rounded-lg text-sm font-bold transition-colors bg-emerald-600/80 hover:bg-emerald-600 active:scale-[0.98] cursor-pointer";
 
 export const learningStepCounter =
   "text-center text-xs text-emerald-300/95 tabular-nums";
@@ -45,11 +45,11 @@ export const learningExplBody =
   "text-[0.9375rem] leading-relaxed text-emerald-50/95";
 
 export const learningPrimaryCloseBtn =
-  "inline-flex items-center justify-center min-h-10 px-6 rounded-lg text-sm font-bold transition-colors bg-emerald-600/80 hover:bg-emerald-600 active:scale-[0.98]";
+  "inline-flex items-center justify-center min-h-10 px-6 rounded-lg text-sm font-bold transition-colors bg-emerald-600/80 hover:bg-emerald-600 active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed";
 
 /** Hint / “הסבר מלא” triggers on game screens */
 export const learningHintTriggerBtn =
-  "inline-flex items-center justify-center min-h-10 px-4 rounded-lg text-sm font-bold text-white transition-colors active:scale-[0.98] bg-blue-500/80 hover:bg-blue-500";
+  "inline-flex items-center justify-center min-h-10 px-4 rounded-lg text-sm font-bold text-white transition-colors active:scale-[0.98] bg-blue-500/80 hover:bg-blue-500 cursor-pointer disabled:cursor-not-allowed";
 
 export const learningExplainOpenBtn =
-  "inline-flex items-center justify-center min-h-10 px-4 rounded-lg text-sm font-bold text-white transition-colors active:scale-[0.98] bg-emerald-500/80 hover:bg-emerald-500";
+  "inline-flex items-center justify-center min-h-10 px-4 rounded-lg text-sm font-bold text-white transition-colors active:scale-[0.98] bg-emerald-500/80 hover:bg-emerald-500 cursor-pointer disabled:cursor-not-allowed";
