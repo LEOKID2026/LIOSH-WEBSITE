@@ -24,6 +24,10 @@ import {
   topicLabelHe,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { aggregateClassReportFromStudentPayloads } from "../../lib/teacher-server/teacher-class-report.server.js";
+import {
+  deriveClassGuidanceSeverityTier,
+  mapClassHealthSignalFromTier,
+} from "../../lib/teacher-server/teacher-recommendations.server.js";
 
 function mockStudentPayload() {
   return {
@@ -926,6 +930,37 @@ function mockStudentPayload() {
   }
   assert.ok(resolveTopicLabelHe("math", "multiplication"));
   assert.equal(resolveTopicLabelHe("math", "חיבור"), null);
+}
+
+// Class tier no-data guard (MEDIUM #4)
+{
+  assert.equal(deriveClassGuidanceSeverityTier(null, { hasData: false }), null);
+  assert.equal(deriveClassGuidanceSeverityTier(NaN, { hasData: false }), null);
+  assert.notEqual(
+    deriveClassGuidanceSeverityTier(null, { hasData: false }),
+    "class_monitor",
+    "no-data cohort must not default to class_monitor"
+  );
+  assert.equal(deriveClassGuidanceSeverityTier(70, { hasData: true }), "class_monitor");
+  assert.equal(mapClassHealthSignalFromTier(null), "no_data");
+
+  const emptyClass = buildClassTeacherGuidanceV2(
+    {
+      cohortSummary: { totalAnswers: 0, studentsWithActivity: 1, accuracy: 0 },
+      roster: { activeMemberCount: 5, studentCount: 5 },
+      subjects: {},
+      weaknessTopics: [],
+      attentionList: [],
+      students: [],
+    },
+    { studentPayloads: [] }
+  );
+  assert.notEqual(
+    emptyClass.guidanceSeverityTier,
+    "class_monitor",
+    "empty cohort guidance must not be class_monitor"
+  );
+  assert.equal(emptyClass.cohortStats?.classHealthSignal, "no_data");
 }
 
 console.log("teacher-guidance-v2-unit: all assertions passed");

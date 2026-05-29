@@ -46,7 +46,7 @@ async function countLearningSessionAnswers(admin, studentId, fromDate, toDate) {
   const { count } = await admin
     .from("answers")
     .select("id", { count: "exact", head: true })
-    .in("session_id", sessionIds);
+    .in("learning_session_id", sessionIds);
 
   return { sessions: sessionIds.length, answers: count ?? 0 };
 }
@@ -251,14 +251,65 @@ async function verifySchoolManagedFlow(admin, fromDate, toDate) {
   assert.ok(report.ok, report.code || "school student report failed");
 
   const reportSummary = summaryOf(report.payload);
+  const ls = await countLearningSessionAnswers(admin, studentId, fromDate, toDate);
   const classroom = await countClassroomAnswers(admin, cls.id, studentId, fromDate, toDate);
+  const learningAnswers = ls.answers;
+  const classroomAnswers = classroom.answers;
+  const sourceActivityInRange = learningAnswers > 0 || classroomAnswers > 0;
 
-  assert.ok(reportSummary.totalAnswers > 0, "school report must be non-zero when classroom data exists");
-  assert.ok(
-    reportSummary.totalAnswers >= classroom.answers,
-    "school report must include classroom activity answers"
-  );
   assert.ok(reportSummary.studentName, "school report must include student name");
+
+  if (sourceActivityInRange) {
+    assert.ok(
+      reportSummary.totalAnswers > 0,
+      "school report must be non-zero when source activity exists in range"
+    );
+    assert.ok(
+      reportSummary.totalAnswers >= baseAnswers,
+      "school report must be at least parent baseline learning answers"
+    );
+    assert.ok(
+      reportSummary.totalAnswers >= learningAnswers,
+      "school report must include learning-session answers when present"
+    );
+    if (classroomAnswers > 0) {
+      assert.ok(
+        reportSummary.totalAnswers >= classroomAnswers,
+        "school report must include classroom activity answers when present"
+      );
+      assert.ok(
+        reportSummary.totalAnswers >= baseAnswers + classroomAnswers,
+        "school report with classId must merge classroom answers additively"
+      );
+    } else {
+      assert.equal(
+        reportSummary.totalAnswers,
+        baseAnswers,
+        "school report without classroom data in range must match parent baseline"
+      );
+    }
+  } else {
+    assert.equal(
+      reportSummary.totalAnswers,
+      0,
+      "school report must be zero when no learning or classroom activity in range"
+    );
+    assert.equal(
+      baseAnswers,
+      0,
+      "fixture sanity: parent baseline also zero in empty range"
+    );
+    assert.equal(
+      learningAnswers,
+      0,
+      "fixture sanity: learning-session oracle also zero in empty range"
+    );
+    assert.equal(
+      classroomAnswers,
+      0,
+      "fixture sanity: classroom oracle also zero in empty range"
+    );
+  }
 
   return {
     flow: "school_managed",
@@ -270,11 +321,14 @@ async function verifySchoolManagedFlow(admin, fromDate, toDate) {
       studentId,
       studentName: reportSummary.studentName,
       baseLearningAnswers: baseAnswers,
-      classroomAnswers: classroom.answers,
+      learningSessionAnswers: learningAnswers,
+      classroomAnswers,
+      sourceActivityInRange,
+      zeroDataFixture: !sourceActivityInRange,
       reportTotalAnswers: reportSummary.totalAnswers,
       reportTotalSessions: reportSummary.totalSessions,
       classIdRequired: true,
-      classroomMerge: true,
+      classroomMerge: classroomAnswers > 0,
       dataSource: "learning_sessions/answers + classroom_activity_*",
     },
   };

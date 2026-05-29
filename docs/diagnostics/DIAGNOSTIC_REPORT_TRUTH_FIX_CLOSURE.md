@@ -61,7 +61,7 @@ No code change. Optional regression test added proving `scopeSubjects = new Set(
 | Teacher Guidance V2 unit | `node scripts/tests/teacher-guidance-v2-unit.mjs` | **PASS** |
 | Diagnostic truth fix unit | `node scripts/tests/diagnostic-report-truth-fix-unit.mjs` | **PASS** |
 | Teacher parent preview integration (focused) | `node --env-file=.env.local -e "…"` (Dan Cohen school student) | **PASS** — preview totals matched parent totals |
-| Student report flow regression (full file) | `node --env-file=.env.local scripts/tests/student-report-flow-regression.mjs` | **FAIL** — pre-existing `verifyParentFlow` demo-data mismatch (`8 !== 0` learning-session answer count vs parent aggregate); unrelated to this fix |
+| Student report flow regression (full file) | `node --env-file=.env.local scripts/tests/student-report-flow-regression.mjs` | **PASS** (after test-only oracle fixes — see below) |
 | Production build | `npm run build` | **PASS** (pre-existing warnings only) |
 
 ### Test coverage added
@@ -99,3 +99,22 @@ No code change. Optional regression test added proving `scopeSubjects = new Set(
 ## Product Boundary Preserved
 
 The regular parent report remains intentionally separate from teacher/school reports. Classroom activity is still included in teacher student reports where expected. Only the teacher **parent preview** was aligned to the actual parent report truth source.
+
+---
+
+## Regression Test Follow-up (2026-05-29 — test-only)
+
+After the product fixes above, two brittle assertions in `scripts/tests/student-report-flow-regression.mjs` were corrected (test-only):
+
+| Issue | Fix |
+|-------|-----|
+| Parent-flow oracle used wrong column `session_id` | Changed to `learning_session_id` |
+| School-managed flow unconditionally required non-zero totals | Made data-driven: strong checks when source activity exists; zero-data assertions otherwise |
+
+**Final regression status (all PASS):**
+
+- `node --env-file=.env.local scripts/tests/student-report-flow-regression.mjs`
+- `node scripts/tests/teacher-guidance-v2-unit.mjs`
+- `node scripts/tests/diagnostic-report-truth-fix-unit.mjs`
+
+**Confirmations:** Parent aggregation remains correct. No product code, UI, Hebrew, or SQL changes. No commit / push.

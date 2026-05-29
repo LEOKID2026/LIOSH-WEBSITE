@@ -284,4 +284,35 @@ assert.ok(vm.sections.attention.items[0].detail.includes("קשיים"));
   assert.ok(labels.includes("בעלי חיים") || labels.includes("מדעים"), "PHYS-4: science topic present");
 }
 
+// CLASS-NODATA — no-data cohort must not show misleading monitor status
+{
+  const vm = parseClassReportViewModel(
+    {
+      cohortSummary: { totalAnswers: 0, studentsWithActivity: 0, accuracy: null },
+      roster: { activeMemberCount: 5, studentCount: 5 },
+      teacherGuidanceBlock: {
+        guidanceSeverityTier: null,
+        cohortStats: { classHealthSignal: "no_data", guidanceSeverityTier: null },
+      },
+    },
+    { name: "כיתה א׳", subjectFocus: "math" }
+  );
+  const statusChip = vm.header.chips.find((c) => c.label === "מצב כיתה");
+  assert.equal(statusChip, undefined, "no-data class report must omit monitor status chip");
+
+  const physicalVm = parsePhysicalClassReportViewModel({
+    cohortSummary: { totalAnswers: 0, studentsWithActivity: 0, accuracy: null },
+    physicalClassGuidanceSeverityTier: "class_monitor",
+    rosterSummary: { studentCount: 5 },
+    subjectBreakdown: [],
+    roster: [],
+  });
+  const physicalStatusChip = physicalVm.header.chips.find((c) => c.label === "מצב כיתה");
+  assert.notEqual(
+    physicalStatusChip?.value,
+    "במעקב",
+    "no-data physical class must not display monitor label"
+  );
+}
+
 console.log("school-report-view-model-unit: ok");
