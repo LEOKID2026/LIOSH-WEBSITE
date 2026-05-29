@@ -110,8 +110,8 @@ function buildStrengthWithCautionLines(row, mistakeCount) {
   const q = Number(row?.questions) || 0;
   const n = Number(mistakeCount) || 0;
   return [
-    `ב${label} נראית שליטה טובה בתקופה הזו: כ־${acc}% נכון מתוך ${q} שאלות.`,
-    `כשיש טעות, לפעמים חוזר אותו דפוס (${n} מקרים דומים בטווח) — כדאי לעצור רגע על דוגמה אחת ביחד.`,
+    `ב${label} נראית שליטה טובה בתקופה שנבחרה: כ־${acc}% נכון מתוך ${q} שאלות.`,
+    `כשיש טעות, לפעמים חוזר אותו דפוס (${n} מקרים דומים בתקופה שנבחרה) — כדאי לעצור רגע על דוגמה אחת ביחד.`,
     `מה כדאי לעשות בבית: לבחור תרגיל אחד קצר, לעבור עליו בקול צעד אחר צעד, ואז לתת לילד לנסות שוב בעצמו.`,
   ];
 }
@@ -619,7 +619,7 @@ function buildEvidenceSuccessFromPick(pick) {
     pick.confidence === "high" || pick.questions >= 20 ? "high" : "moderate";
   return {
     titleHe: "מה שהילד עושה טוב בתרגול",
-    bodyHe: `בנושא ${pick.labelHe} יש הצלחה טובה בתקופה: כ־${pick.accuracy}% נכון מתוך ${pick.questions} שאלות.`,
+    bodyHe: `בנושא ${pick.labelHe} יש הצלחה טובה בתקופה שנבחרה: כ־${pick.accuracy}% נכון מתוך ${pick.questions} שאלות.`,
     confidence: conf,
   };
 }
@@ -650,7 +650,7 @@ function buildSummaryHe(
       return `${opening} יש כאן כמה טעויות בלי דפוס חוזר ברור — עדיף לא למהר למסקנות; כדאי להמשיך בתרגול רגוע ולצבור עוד דוגמאות.`;
     }
     if (mistakeEventCount >= 0 && mistakeEventCount < 5) {
-      return `${opening} עדיין מעט נתון בתקופה — אחרי עוד קצת תרגול אפשר יהיה לנסח תמונה מלאה יותר.`;
+      return `${opening} עדיין מעט מידע בתקופה שנבחרה — אחרי עוד קצת תרגול אפשר יהיה לנסח תמונה מלאה יותר.`;
     }
     return null;
   }
@@ -771,7 +771,7 @@ function buildNextWeekGoalHe(subjectLabelHe, topWeaknesses, improving, topStreng
   } else if (improving?.[0]) {
     const i0 = improving[0];
     goals.push(
-      `שבועיים קצרים סביב ${i0.labelHe} — ${successRateImprovementGoalHe(i0.labelHe)} — שני מפגשים קטנים, לא מרתון.`
+      `שבועיים קצרים סביב ${i0.labelHe} — ${successRateImprovementGoalHe(i0.labelHe)} — שני מפגשים קטנים, לא תרגול ארוך.`
     );
   }
   if (preserveLabel) {
@@ -831,7 +831,7 @@ function buildDiagnosticSectionsHe({
 
   const urgentAttentionHe = topWeaknesses.map((w) =>
     `${w.labelHe}${
-      typeof w.mistakeCount === "number" ? ` — כ־${w.mistakeCount} אירועי טעות דומים בטווח` : ""
+      typeof w.mistakeCount === "number" ? ` — כ־${w.mistakeCount} טעויות דומות בתקופה שנבחרה` : ""
     }`
   );
 
@@ -862,7 +862,7 @@ function buildSubSkillInsightsHe(topWeaknesses) {
     lineHe: w.labelHe,
     evidenceNoteHe:
       typeof w.mistakeCount === "number" && w.mistakeCount >= MIN_MISTAKES_FOR_STRONG_RECOMMENDATION
-        ? "דפוס חוזר חזק בטווח התאריכים."
+        ? "דפוס שחוזר בתקופה שנבחרה."
         : typeof w.mistakeCount === "number" && w.mistakeCount >= MIN_PATTERN_FAMILY_FOR_DIAGNOSIS
           ? "דפוס חוזר בינוני — שווה לשים לב."
           : "סימן ראשוני בלבד — עדיין מוקדם לסיכום חד־משמעי.",
@@ -930,7 +930,7 @@ function computeSubjectPriorityFieldsPhase8(subjectId, args) {
   ) {
     return {
       subjectPriorityLevel: "immediate",
-      subjectPriorityReasonHe: `ב${lab} יש פער בסיס עם ראיות סבירות — מומלץ מיקוד מוקדם וצר.`,
+      subjectPriorityReasonHe: `ב${lab} נראה שיש קושי בחלקים פשוטים יותר של הנושא — מומלץ להתחיל בתרגול קצר וממוקד.`,
       subjectImmediateActionHe: home || `ב${lab}: משימה אחת קצרה עם חזרה על טעות טיפוסית באותה רמה.`,
       subjectDeferredActionHe: `ב${lab}: להמתין עם הרחבת נושאים עד שייצבו הצלחות קטנות חוזרות.`,
       subjectMonitoringOnly: false,
@@ -946,7 +946,7 @@ function computeSubjectPriorityFieldsPhase8(subjectId, args) {
   ) {
     return {
       subjectPriorityLevel: "immediate",
-      subjectPriorityReasonHe: `ב${lab} יש הצלחה עם תלות ברמזים — כדאי לעבוד עכשיו על מעבר הדרגתי לעצמאות.`,
+      subjectPriorityReasonHe: `ב${lab} יש הצלחה עם הילד עדיין נעזר ברמזים — כדאי לעבוד עכשיו על מעבר הדרגתי לעצמאות.`,
       subjectImmediateActionHe: home || `ב${lab}: משימה קצרה — ניסיון עצמאי קטן ואז בדיקה יחד.`,
       subjectDeferredActionHe: `ב${lab}: לדחות עלייה מהירה מדי ברמה עד שיורדת התלות מעט.`,
       subjectMonitoringOnly: false,
@@ -964,11 +964,11 @@ function computeSubjectPriorityFieldsPhase8(subjectId, args) {
     return {
       subjectPriorityLevel: "maintain",
       subjectPriorityReasonHe: `ב${lab} נראה שהרמה נשמרת טוב יחסית — להישאר על שגרה רגועה.`,
-      subjectImmediateActionHe: home || `ב${lab}: לשמר שני מפגשים קצרים בשבוע סביב הנושאים שבהם נראות תוצאות טובות יחסית.`,
+      subjectImmediateActionHe: home || `ב${lab}: להמשיך עם שני תרגולים קצרים בשבוע סביב הנושאים שבהם נראות תוצאות טובות יחסית.`,
       subjectDeferredActionHe: `ב${lab}: לדחות הרחבות או הקשחה לפני צורך ברור.`,
       subjectMonitoringOnly: false,
       subjectDoNowHe: "להמשיך קצב קבוע; לשבח התמדה קטנה.",
-      subjectAvoidNowHe: "לא להוסיף עומס ביתי כשאין אות מפורש לכך.",
+      subjectAvoidNowHe: "לא להוסיף עומס בבית כשאין לכך סימן ברור.",
     };
   }
 
@@ -1012,10 +1012,10 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
     return {
       dominantLearningRisk: "none_sparse",
       dominantSuccessPattern: "none_sparse",
-      trendNarrativeHe: "אין מספיק שורות דוח בטווח כדי לסכם מגמה במקצוע זה.",
-      confidenceSummaryHe: "נתון דל — לא מסכמים ביטחון סטטיסטי ברמת המקצוע.",
+      trendNarrativeHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות מגמה ברורה במקצוע זה.",
+      confidenceSummaryHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי לדעת עד כמה הכיוון ברור במקצוע הזה.",
       recommendedHomeMethodHe: null,
-      whatNotToDoHe: "לא לבנות תוכנית ארוכה לפני שיש עוד תרגול בטווח.",
+      whatNotToDoHe: "לא לבנות תוכנית ארוכה לפני שיש עוד תרגול בתקופה שנבחרה.",
       majorRiskFlagsAcrossRows: emptyRiskOr(),
       dominantBehaviorProfileAcrossRows: "undetermined",
       strongestPositiveTrendRowHe: null,
@@ -1031,11 +1031,11 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       secondaryRootCause: null,
       rootCauseDistribution: {},
       subjectDiagnosticRestraintHe:
-        "אין מספיק שורות דוח בטווח — לא מסיקים שורש קושי חוצה־נושאים ולא ממליצים על שינוי אגרסיבי.",
+        "בתקופה שנבחרה עדיין אין מספיק תרגול כדי להבין איפה מתחיל הקושי או להמליץ על שינוי גדול.",
       subjectConclusionReadiness: "not_ready",
       subjectInterventionPriorityHe: INTERVENTION_TYPE_LABEL_HE.monitor_before_escalation,
       subjectPriorityLevel: "monitor",
-      subjectPriorityReasonHe: "אין שורות דוח בטווח — לא מדרגים עדיפות.",
+      subjectPriorityReasonHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי לקבוע מה חשוב לתרגל קודם.",
       subjectImmediateActionHe: null,
       subjectDeferredActionHe: null,
       subjectMonitoringOnly: true,
@@ -1048,7 +1048,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       subjectLearningStageLabelHe: LEARNING_STAGE_LABEL_HE.insufficient_longitudinal_evidence,
       subjectRetentionRisk: "unknown",
       subjectTransferReadiness: "not_ready",
-      subjectMemoryNarrativeHe: "אין שורות דוח בטווח — לא מסכמים סוג טעות חוזר או מגמה לאורך זמן.",
+      subjectMemoryNarrativeHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי לזהות טעות שחוזרת או שינוי לאורך זמן.",
       subjectReviewBeforeAdvanceHe: null,
       subjectResponseToIntervention: "not_enough_evidence",
       subjectResponseToInterventionLabelHe: RESPONSE_TO_INTERVENTION_LABEL_HE.not_enough_evidence,
@@ -1058,7 +1058,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       subjectConclusionFreshness: "low",
       subjectRecalibrationNeed: "do_not_rely_yet",
       subjectRecalibrationNeedHe: RECALIBRATION_NEED_LABEL_HE.do_not_rely_yet,
-      subjectEffectivenessNarrativeHe: "אין שורות דוח בטווח — לא מעריכים תגובה לתמיכה.",
+      subjectEffectivenessNarrativeHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי לדעת אם העזרה שניתנה באמת עזרה.",
       subjectSupportSequenceState: "insufficient_sequence_evidence",
       subjectSupportSequenceStateLabelHe: SUPPORT_SEQUENCE_STATE_LABEL_HE.insufficient_sequence_evidence,
       subjectStrategyRepetitionRisk: "unknown",
@@ -1067,7 +1067,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       subjectNextBestSequenceStepHe: NEXT_BEST_SEQUENCE_STEP_LABEL_HE.observe_before_next_cycle,
       subjectAdviceNovelty: "unknown",
       subjectRecommendationRotationNeed: "do_not_repeat_yet",
-      subjectSequenceNarrativeHe: "אין שורות דוח בטווח — לא מסכמים רצף תמיכה.",
+      subjectSequenceNarrativeHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי להחליט מה הצעד הבא בתרגול.",
       subjectRecommendationMemoryState: "no_memory",
       subjectPriorRecommendationSignature: "unknown",
       subjectSupportHistoryDepth: "unknown",
@@ -1076,7 +1076,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       subjectFollowThroughSignal: "not_inferable",
       subjectContinuationDecision: "continue_but_refine",
       subjectContinuationDecisionHe: RECOMMENDATION_CONTINUATION_DECISION_LABEL_HE.continue_but_refine,
-      subjectOutcomeNarrativeHe: "אין שורות דוח בטווח — לא מסכמים זיכרון המלצה או תוצאה.",
+      subjectOutcomeNarrativeHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי לדעת אם מה שניסינו לאחרונה עזר.",
       subjectGateState: "gates_not_ready",
       subjectGateStateLabelHe: GATE_STATE_LABEL_HE.gates_not_ready,
       subjectGateReadiness: "insufficient",
@@ -1084,15 +1084,15 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       subjectNextCycleDecisionFocusHe: NEXT_CYCLE_DECISION_FOCUS_LABEL_HE.prove_current_direction,
       subjectEvidenceTargetType: "fresh_data_needed",
       subjectTargetObservationWindow: "unknown",
-      subjectGateNarrativeHe: "אין שורות דוח בטווח — עדיין מוקדם להחלטה בטוחה.",
+      subjectGateNarrativeHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי לקבל החלטה בטוחה.",
       subjectDependencyState: "insufficient_dependency_evidence",
       subjectDependencyStateLabelHe: DEPENDENCY_STATE_LABEL_HE.insufficient_dependency_evidence,
       subjectLikelyFoundationalBlocker: "unknown",
       subjectLikelyFoundationalBlockerLabelHe: FOUNDATIONAL_BLOCKER_LABEL_HE.unknown,
       subjectDownstreamSymptomRisk: "unknown",
       subjectFoundationFirstPriority: false,
-      subjectFoundationFirstPriorityHe: "אין שורות דוח — לא מדרגים יסוד מול מקומי.",
-      subjectDependencyNarrativeHe: "אין שורות דוח בטווח — לא מסכמים תלות יסוד.",
+      subjectFoundationFirstPriorityHe: "בתקופה שנבחרה עדיין אין מספיק תרגול כדי להבין מאיפה מתחיל הקושי.",
+      subjectDependencyNarrativeHe: "כדאי לאסוף עוד תרגול לפני שמחליטים מה כדאי לחזק קודם.",
     };
   }
 
@@ -1288,7 +1288,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       !improvingButSupportedHe
     ) {
       const subLab = SUBJECT_LABEL_HE[subjectId] || "המקצוע";
-      improvingButSupportedHe = `ב${subLab} מופיעה לפחות שורה (${labelHe}) שבה הדיוק עולה אך העצמאות יורדת — ההתקדמות עדיין מבוססת ליווי; לא מאסטרי מלא.`;
+      improvingButSupportedHe = `ב${subLab} מופיעה לפחות שורה (${labelHe}) שבה הדיוק עולה אך העצמאות יורדת — ההתקדמות עדיין דורשת ליווי; עדיין לא שליטה עצמאית מלאה.`;
     }
 
     const dmp = String(sig?.dominantMistakePattern || "").trim();
@@ -1433,7 +1433,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   const modeTop = Object.entries(modeDist).sort((a, b) => b[1] - a[1])[0];
   let modeConcentrationNoteHe = null;
   if (modeTop && modeKeys.length >= 4 && modeTop[1] / modeKeys.length >= 0.62) {
-    modeConcentrationNoteHe = `רוב התרגול בטווח במצב «${modeTop[0]}» — לא מכלילים אוטומטית לכל המקצוע.`;
+    modeConcentrationNoteHe = `רוב התרגול בתקופה שנבחרה במצב «${modeTop[0]}» — לא מכלילים אוטומטית לכל המקצוע.`;
   }
 
   const strongRows = rows.filter((r) => r.row.dataSufficiencyLevel === "strong" && r.row.evidenceStrength === "strong");
@@ -1451,7 +1451,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
     trendNarrativeHe =
       rows.some((r) => r.row.trend)
         ? "יש נתוני מגמה בשורות, אך אין עדיין סיפור מגמה אחיד ברמת המקצוע — כדאי לאסוף עוד תרגול."
-        : "אין עדיין אובייקטי מגמה משויכים לשורות — לא מסכמים מגמה כללית.";
+        : "עדיין אין מספיק מידע על שינוי לאורך זמן.";
   }
   trendNarrativeHe = normalizeParentFacingHe(trendNarrativeHe);
 
@@ -1459,20 +1459,20 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   const suffMed = rows.filter((r) => r.row.dataSufficiencyLevel === "medium").length;
   const suffLow = rows.filter((r) => r.row.dataSufficiencyLevel === "low" || !r.row.dataSufficiencyLevel).length;
   const hiConf = rows.filter((r) => (Number(r.row.confidenceScore) || 0) >= 72).length;
-  let confidenceSummaryHe = `בשורות הדוח: ${suffStrong} עם מה שרואים בשורה בצורה חזקה, ${suffMed} ברמת ביניים, ${suffLow} עם מעט נתון; ${hiConf} שורות שנראות ברורות יותר מתוך ${rows.length}.`;
+  let confidenceSummaryHe = `לפי הנתונים שנאספו: ${suffStrong} שורות נותנות כיוון ברור, ${suffMed} שורות נותנות כיוון חלקי, ו־${suffLow} שורות עדיין עם מעט מידע; ${hiConf} נתונים ברורים יותר מתוך ${rows.length}.`;
   if (suffLow >= rows.length * 0.55) {
     confidenceSummaryHe += " התמונה במקצוע עדיין חלקית — נשארים בזהירות.";
   }
   if (anyHighRisk && strongRows.length >= 2) {
-    confidenceSummaryHe += " למרות שורות עם תוצאות טובות יחסית, מופיעות גם נקודות לתשומת לב — לא לפרש הכל כהצלחה מלאה.";
+    confidenceSummaryHe += " למרות נתונים עם תוצאות טובות יחסית, מופיעות גם נקודות לתשומת לב — לא לסמן עדיין את הכול כיציב.";
   }
 
   const riskLabelHe = {
-    knowledge_gap: "פער ידע / חוסר בסיס",
+    knowledge_gap: "קושי בבסיס / חוסר בסיס",
     speed_pressure: "לחץ מהירות במצב תרגול עם זמן",
-    instruction_friction: "משימה לא תמיד ברורה או תלות ברמזים",
+    instruction_friction: "משימה לא תמיד ברורה או הילד עדיין נעזר ברמזים",
     careless_pattern: "חוסר תשומת לב שחוזר בתשובות",
-    fragile_success: "הצלחה שבירה (תלות בעזרה / עצמאות נמוכה)",
+    fragile_success: "הצלחה שעדיין דורשת עזרה",
     mixed: "תערובת קשיים",
     mixed_low_signal: "תערובת חלקית — מעט סימנים מהתנהגות בפתרון",
     none_sparse: "מעט מדי תרגול בשורות",
@@ -1495,10 +1495,10 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
       "מה לעשות בבית: לפרק את הלחץ למהירות — תרגול באותה רמת קושי עם דגש על דיוק לפני מהירות, בלי להוריד רמה לכל המקצוע.";
   } else if (dominantLearningRisk === "instruction_friction") {
     recommendedHomeMethodHe =
-      "מה לעשות בבית: קריאת משימה משותפת, זיהוי מה נשאל, ורק אז תשובה — לצמצם תלות ברמזים צעד אחר צעד.";
+      "מה לעשות בבית: קריאת משימה משותפת, זיהוי מה נשאל, ורק אז תשובה — לצמצם הילד עדיין נעזר ברמזים צעד אחר צעד.";
   } else if (dominantLearningRisk === "careless_pattern") {
     recommendedHomeMethodHe =
-      "מה לעשות בבית: עצירה קצרה לפני שליחה, בדיקה מול הניסוח — לא מניחים מיד שזה פער ידע עמוק.";
+      "מה לעשות בבית: עצירה קצרה לפני שליחה, בדיקה מול הניסוח — לא מניחים מיד שזה קושי עמוק בבסיס.";
   } else if (dominantLearningRisk === "fragile_success") {
     recommendedHomeMethodHe =
       "מה לעשות בבית: לבנות עצמאות בהדרגה — תרגול קצר עם פחות עזרה אחרי שההבנה ברורה, בלי לדחוף עלייה מהירה מדי ברמה.";
@@ -1511,7 +1511,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
 
   const avoid = [];
   if (riskOr.falsePromotionRisk || dominantLearningRisk === "fragile_success") {
-    avoid.push("לא לדחוף עלייה מהירה מדי ברמה או כיתה בבית בלי הצלחה שחוזרת ובלי ירידה בתלות ברמזים.");
+    avoid.push("לא לדחוף עלייה מהירה מדי ברמה או כיתה בבית בלי הצלחה שחוזרת ובלי ירידה בהילד עדיין נעזר ברמזים.");
   }
   if (riskOr.speedOnlyRisk || dominantLearningRisk === "speed_pressure") {
     avoid.push("לא להפוך קושי במצב מהירות לירידת רמה בכל המקצוע.");
@@ -1525,7 +1525,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   if (worstCaution && worstCaution.score >= 3) {
     avoid.push("לא לפרש ירידה קצרה ככישלון קבוע — עדיף זהירות ובדיקה חוזרת.");
   }
-  const whatNotToDoHe = avoid.length ? avoid.join(" ") : "לא לקבוע שינוי דרמטי בלי עוד תרגול בטווח.";
+  const whatNotToDoHe = avoid.length ? avoid.join(" ") : "לא לקבוע שינוי דרמטי בלי עוד תרגול בתקופה שנבחרה.";
 
   const rootEntries = Object.entries(rootCauseRowCounts)
     .filter(([, n]) => n > 0)
@@ -1565,14 +1565,14 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   let subjectDiagnosticRestraintHe = "";
   if (subjectConclusionReadiness === "not_ready") {
     subjectDiagnosticRestraintHe =
-      "רוב השורות במקצוע עדיין עם ראיות דלה או מסקנה מושהית — לא לנעול הסבר חד־משמעי.";
+      "ברוב נתוני המקצוע עדיין יש מעט מידע או מוקדם לקבוע — לא קובעים עדיין הסבר חד־משמעי.";
   } else if (subjectConclusionReadiness === "partial") {
     subjectDiagnosticRestraintHe =
-      "יש בסיס אבל גם שורות עם מסקנה זהירה — כדאי לעקוב ולא לדרוס בהנחות חזקות.";
+      "יש מידע מסוים, אבל גם נתונים שדורשים זהירות — כדאי לעקוב ולא למהר לקבוע כיוון חזק מדי.";
   } else if (moderateOrStrongRows >= Math.ceil(nR * 0.55)) {
-    subjectDiagnosticRestraintHe = "יש כמה שורות עם ראיות שחוזרות בצורה דומה — אפשר לסמוך יותר על הסיכום בתוך המקצוע.";
+    subjectDiagnosticRestraintHe = "יש כמה נתונים שמראים כיוון דומה — אפשר לסמוך יותר על הסיכום בתוך המקצוע.";
   } else {
-    subjectDiagnosticRestraintHe = "התמונה המקצועית מעורבת מעט — קריאה שורה־שורה עדיין חשובה.";
+    subjectDiagnosticRestraintHe = "התמונה במקצוע עדיין מעורבת — כדאי לעבור על הנושאים בנפרד.";
   }
 
   const intv = pickRecommendedInterventionType(dominantRootCause, "maintain_and_strengthen");
@@ -1893,7 +1893,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
     (subjectDependencyState === "mixed_dependency_signal" && foundationHeavyRows >= 1);
   const subjectFoundationFirstPriorityHe = subjectFoundationFirstPriority
     ? "כדאי לפתוח קודם ייצוב בסיס קצר במקצוע הזה — ורק אז להרחיב."
-    : "אפשר להישאר עם מיקוד מקומי או קל במקביל — בלי להרחיב לסיפור רחב מיותר.";
+    : "אפשר להישאר עם תרגול ממוקד או קל במקביל — בלי להרחיב לסיפור רחב מיותר.";
 
   const subjectDependencyStateLabelHe =
     DEPENDENCY_STATE_LABEL_HE[subjectDependencyState] || DEPENDENCY_STATE_LABEL_HE.insufficient_dependency_evidence;
@@ -2097,7 +2097,7 @@ export function analyzeLearningPatterns(report, rawMistakesBySubject = {}) {
       const rs = recStrength(w.mistakeCount);
       studentRecommendationsImprove.push({
         id: `stu-imp:${w.id}`,
-        textHe: `כדאי לתרגל עוד קצת ${parentCopyTopicPhraseForFocusHe(w.labelHe)} — נרשמו ${w.mistakeCount} טעויות דומות בטווח. נשארים עם תרגול ממוקד ולא עם «לתקן הכל בבת אחת».`,
+        textHe: `כדאי לתרגל עוד קצת ${parentCopyTopicPhraseForFocusHe(w.labelHe)} — נרשמו ${w.mistakeCount} טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».`,
         strength: rs,
       });
     }
@@ -2328,7 +2328,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
           type: "success",
           titleHe: "מה שהילד עושה טוב בתרגול",
           bodyHe:
-            "בנושא חיבור יש הצלחה טובה בתקופה: כ־93% נכון מתוך 42 שאלות.",
+            "בנושא חיבור יש הצלחה טובה בתקופה שנבחרה: כ־93% נכון מתוך 42 שאלות.",
           confidence: "high",
         },
       ],
@@ -2349,7 +2349,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         {
           id: "stu-imp:math:w:0",
           textHe:
-            "כדאי לתרגל עוד קצת בנושא: בהשוואת כמויות או מספרים — נרשמו 7 טעויות דומות בטווח. נשארים עם תרגול ממוקד ולא עם «לתקן הכל בבת אחת».",
+            "כדאי לתרגל עוד קצת בנושא: בהשוואת כמויות או מספרים — נרשמו 7 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",
           strength: "moderate",
         },
       ],
@@ -2387,7 +2387,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
       evidenceSuccess: {
         titleHe: "מה שהילד עושה טוב בתרגול",
         bodyHe:
-          "בנושא חיבור יש הצלחה טובה בתקופה: כ־93% נכון מתוך 42 שאלות.",
+          "בנושא חיבור יש הצלחה טובה בתקופה שנבחרה: כ־93% נכון מתוך 42 שאלות.",
         confidence: "high",
       },
       insufficientData: [
@@ -2448,7 +2448,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         {
           id: "stu-imp:geometry:w:0",
           textHe:
-            "כדאי לתרגל עוד קצת בנושא: בלבול חוזר בין היקף לשטח — נרשמו 6 טעויות דומות בטווח. נשארים עם תרגול ממוקד ולא עם «לתקן הכל בבת אחת».",
+            "כדאי לתרגל עוד קצת בנושא: בלבול חוזר בין היקף לשטח — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",
           strength: "moderate",
         },
       ],
@@ -2577,7 +2577,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         {
           id: "stu-imp:hebrew:w:0",
           textHe:
-            "כדאי לתרגל עוד קצת בנושא: במילות יחס ובמבנה משפט — נרשמו 6 טעויות דומות בטווח. נשארים עם תרגול ממוקד ולא עם «לתקן הכל בבת אחת».",
+            "כדאי לתרגל עוד קצת בנושא: במילות יחס ובמבנה משפט — נרשמו 6 טעויות דומות בתקופה שנבחרה. נשארים עם תרגול ממוקד ולא עם «לנסות לתקן הכול בבת אחת».",
           strength: "moderate",
         },
       ],

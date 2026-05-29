@@ -1,0 +1,1192 @@
+﻿diff --git a/components/parent-report-detailed-surface.jsx b/components/parent-report-detailed-surface.jsx
+index 2730c166..404bc0a4 100644
+--- a/components/parent-report-detailed-surface.jsx
++++ b/components/parent-report-detailed-surface.jsx
+@@ -350,7 +350,7 @@ export function ExecutiveSummarySection({ es, compact }) {
+             ) : null}
+             {String(es.crossSubjectExpectedVsObservedMatchHe || "").trim() ? (
+               <p className="m-0">
+-                <span className="text-white/45 font-bold">╫ö╫¬╫É╫₧╫ö ╫ª╫ñ╫Ö╓╛╫₧╫ò╫£╓╛╫á╫ª╫ñ╫ö: </span>
++                <span className="text-white/45 font-bold">╫ö╫É╫¥ ╫û╫ö ╫₧╫¬╫É╫Ö╫¥ ╫£╫₧╫ö ╫⌐╫ª╫Ö╫ñ╫Ö╫á╫ò: </span>
+                 {truncateHe(pr1ParentVisibleTextHe(String(es.crossSubjectExpectedVsObservedMatchHe)), 220)}
+               </p>
+             ) : null}
+diff --git a/pages/learning/parent-report-detailed.js b/pages/learning/parent-report-detailed.js
+index f418eee3..3bb3d3cb 100644
+--- a/pages/learning/parent-report-detailed.js
++++ b/pages/learning/parent-report-detailed.js
+@@ -1622,7 +1622,7 @@ export default function ParentReportDetailedPage() {
+                 <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm">
+                   <div>
+                     <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
+-                      ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫⌐╫£╫É ╫á╫ô╫Æ╫₧╫ò ΓÇö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥
++                      ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫⌐╫£╫É ╫¬╫ò╫¿╫Æ╫£╫ò ╫æ╫¬╫º╫ò╫ñ╫ö
+                     </p>
+                     <Bullets
+                       items={payload.overallSnapshot.lowExposureSubjectsHe}
+@@ -1714,7 +1714,7 @@ export default function ParentReportDetailedPage() {
+                         </div>
+                       ))}
+                       {!visibleSubjectProfiles.length ? (
+-                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫á╫ñ╫ù ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫û╫ö.</p>
++                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.</p>
+                       ) : null}
+                     </div>
+                   </section>
+@@ -1804,7 +1804,7 @@ export default function ParentReportDetailedPage() {
+ 
+                             {sp.topicRecommendations?.length ? (
+                               <div className="pr-detailed-topic-rec-block">
+-                                <p className="pr-detailed-topic-rec-head">╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫ô╫ò╫¿╫⌐╫Ö╫¥ ╫£╫Ö╫ò╫ò╫Ö ╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö</p>
++                                <p className="pr-detailed-topic-rec-head">╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫ô╫ò╫¿╫⌐╫Ö╫¥ ╫£╫Ö╫ò╫ò╫Ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö</p>
+                                 <div className="space-y-2.5">
+                                   {sp.topicRecommendations.map((tr, idx) => {
+                                     const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
+@@ -1864,7 +1864,7 @@ export default function ParentReportDetailedPage() {
+                         </div>
+                       ))}
+                       {!visibleSubjectProfiles.length ? (
+-                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫á╫ñ╫ù ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫û╫ö.</p>
++                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.</p>
+                       ) : null}
+                     </div>
+                   </section>
+diff --git a/pages/learning/parent-report-detailed.renderable.jsx b/pages/learning/parent-report-detailed.renderable.jsx
+index 56a8f6b8..73212311 100644
+--- a/pages/learning/parent-report-detailed.renderable.jsx
++++ b/pages/learning/parent-report-detailed.renderable.jsx
+@@ -1224,7 +1224,7 @@ export default function ParentReportDetailedPage() {
+                 <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm">
+                   <div>
+                     <p className="pr-detailed-mini-heading font-semibold text-white/82 mb-1">
+-                      ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫⌐╫£╫É ╫á╫ô╫Æ╫₧╫ò ΓÇö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥
++                      ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫⌐╫£╫É ╫¬╫ò╫¿╫Æ╫£╫ò ╫æ╫¬╫º╫ò╫ñ╫ö
+                     </p>
+                     <Bullets
+                       items={payload.overallSnapshot.lowExposureSubjectsHe}
+@@ -1258,7 +1258,7 @@ export default function ParentReportDetailedPage() {
+                         <SubjectSummaryBlock key={sp.subject} sp={sp} />
+                       ))}
+                       {!visibleSubjectProfiles.length ? (
+-                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫á╫ñ╫ù ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫û╫ö.</p>
++                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.</p>
+                       ) : null}
+                     </div>
+                   </section>
+@@ -1333,7 +1333,7 @@ export default function ParentReportDetailedPage() {
+ 
+                             {sp.topicRecommendations?.length ? (
+                               <div className="pr-detailed-topic-rec-block">
+-                                <p className="pr-detailed-topic-rec-head">╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫ô╫ò╫¿╫⌐╫Ö╫¥ ╫£╫Ö╫ò╫ò╫Ö ╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö</p>
++                                <p className="pr-detailed-topic-rec-head">╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫ô╫ò╫¿╫⌐╫Ö╫¥ ╫£╫Ö╫ò╫ò╫Ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö</p>
+                                 <div className="space-y-2.5">
+                                   {sp.topicRecommendations.map((tr, idx) => {
+                                     const tv = topicNextStepVisualVariant(tr.recommendedNextStep);
+@@ -1380,7 +1380,7 @@ export default function ParentReportDetailedPage() {
+                         </div>
+                       ))}
+                       {!visibleSubjectProfiles.length ? (
+-                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫á╫ñ╫ù ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫û╫ö.</p>
++                        <p className="pr-detailed-muted text-sm">╫É╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫ª╫Æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.</p>
+                       ) : null}
+                     </div>
+                   </section>
+diff --git a/pages/learning/parent-report.js b/pages/learning/parent-report.js
+index 0943fbfe..d2bd69ff 100644
+--- a/pages/learning/parent-report.js
++++ b/pages/learning/parent-report.js
+@@ -713,7 +713,7 @@ const PARENT_REPORT_THIN_VOLUME_QUESTIONS_MAX = 14;
+ 
+ function subjectPracticeSecondaryLineHe(questions, correct, accuracy) {
+   const q = Number(questions) || 0;
+-  if (q <= 0) return "╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö ΓÇö ╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬";
++  if (q <= 0) return "╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö";
+   return `${Number(correct) || 0} ╫á╫¢╫ò╫ƒ ΓÇó ${Number(accuracy) || 0}% ╫ô╫Ö╫ò╫º`;
+ }
+ 
+@@ -2014,7 +2014,7 @@ export default function ParentReport() {
+ 
+           {report.summary?.diagnosticOverviewHe ? (
+             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-amber-400/25 bg-amber-950/15 p-3 md:p-4 text-sm text-white/90 space-y-2">
+-              <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">╫₧╫ö ╫ö╫¢╫Ö ╫æ╫ò╫£╫ÿ ╫ó╫¢╫⌐╫Ö╫ò (╫£╫ñ╫Ö ╫₧╫ö ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö)</p>
++              <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">╫₧╫ö ╫ö╫¢╫Ö ╫æ╫ò╫£╫ÿ ╫ó╫¢╫⌐╫Ö╫ò (╫£╫ñ╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö)</p>
+               {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe ? (
+                 <p className="m-0 leading-relaxed text-white/70 text-xs md:text-sm">
+                   {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe}
+@@ -2029,8 +2029,8 @@ export default function ParentReport() {
+                 <p className="m-0 text-white/55 text-xs">
+                   {Number(report.summary?.totalQuestions) > 0 &&
+                   diagnosticsView?.presence?.state === "hasVolumeNoPattern"
+-                    ? "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù, ╫É╫Ü ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫¬╫₧╫ò╫á╫ö ╫Ö╫ª╫Ö╫æ╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫⌐╫₧╫ª╫æ╫Ö╫ó╫ö ╫ó╫£ ╫á╫ò╫⌐╫É ╫ô╫ù╫ò╫ú ╫É╫ù╫ô ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ."
+-                    : "╫É╫Ö╫ƒ ╫ó╫ô╫Ö╫Ö╫ƒ ╫¬╫ù╫ò╫¥ ╫⌐╫û╫ò╫ö╫ö ╫¢╫ô╫ò╫¿╫⌐ ╫¬╫⌐╫ò╫₧╫¬ ╫£╫æ ╫₧╫Ö╫Ö╫ô╫Ö╫¬ ╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö."}
++                    ? "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫É╫Ü ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫æ╫í╫Ö╫í ╫æ╫¿╫ò╫¿ ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫¢╫ô╫Ö ╫£╫û╫ö╫ò╫¬ ╫á╫ò╫⌐╫É ╫ô╫ù╫ò╫ú ╫É╫ù╫ô ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ."
++                    : "╫É╫Ö╫ƒ ╫ó╫ô╫Ö╫Ö╫ƒ ╫¬╫ù╫ò╫¥ ╫⌐╫û╫ò╫ö╫ö ╫¢╫ô╫ò╫¿╫⌐ ╫¬╫⌐╫ò╫₧╫¬ ╫£╫æ ╫₧╫Ö╫Ö╫ô╫Ö╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö."}
+                 </p>
+               ) : null}
+               {report.summary.diagnosticOverviewHe.strongestAreaLineHe ? (
+@@ -2058,7 +2058,7 @@ export default function ParentReport() {
+ 
+           {(report.rawMetricStrengthsHe?.length || report.summary?.rawMetricStrengthsHe?.length) ? (
+             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-emerald-400/25 bg-emerald-950/15 p-3 md:p-4 text-sm text-white/90 space-y-1">
+-              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">╫É╫Ö╫ñ╫ö ╫á╫¿╫É╫ò ╫¬╫ò╫ª╫É╫ò╫¬ ╫ÿ╫ò╫æ╫ò╫¬ ╫£╫ñ╫Ö ╫á╫¬╫ò╫á╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù</p>
++              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">╫É╫Ö╫ñ╫ö ╫á╫¿╫É╫ò ╫¬╫ò╫ª╫É╫ò╫¬ ╫ÿ╫ò╫æ╫ò╫¬ ╫£╫ñ╫Ö ╫á╫¬╫ò╫á╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö</p>
+               <ul className="m-0 pr-4 list-disc text-xs md:text-sm text-white/85 space-y-1">
+                 {(report.rawMetricStrengthsHe || report.summary?.rawMetricStrengthsHe || []).map((line, i) => (
+                   <li key={`rms-${i}`} className="leading-relaxed">
+@@ -3101,7 +3101,7 @@ export default function ParentReport() {
+                   <p className="parent-report-print-muted-text text-center text-sm md:text-base text-white/75 px-2 py-3">
+                     {diagnosticsView.presence?.recommendationsExplainerHe ||
+                       (Number(report.summary?.totalQuestions) > 0
+-                        ? "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫¬╫₧╫ò╫á╫ö ╫Ö╫ª╫Ö╫æ╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫æ╫¿╫₧╫¬ ╫ö╫ö╫₧╫£╫ª╫ò╫¬ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ."
++                        ? "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫æ╫í╫Ö╫í ╫æ╫¿╫ò╫¿ ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫æ╫¿╫₧╫¬ ╫ö╫ö╫₧╫£╫ª╫ò╫¬ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ."
+                         : "╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫¬╫₧╫ò╫á╫ö ╫æ╫¿╫ò╫¿╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥")}
+                   </p>
+                 )}
+@@ -3575,11 +3575,11 @@ export default function ParentReport() {
+             {suppressChartsForThinEvidenceWindow ? (
+               <div className="parent-report-chart-card bg-amber-950/25 border border-amber-400/35 rounded-xl p-4 md:p-6 avoid-break text-center space-y-2">
+                 <h2 className="parent-report-print-chart-title text-base md:text-lg font-bold text-amber-100/95">
+-                  ╫á╫ñ╫ù ╫¿╫É╫Ö╫ò╫¬ ╫º╫ÿ╫ƒ ╫æ╫ÿ╫ò╫ò╫ù ╫⌐╫á╫æ╫ù╫¿
++                  ╫₧╫ó╫ÿ ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö
+                 </h2>
+                 <p className="text-xs md:text-sm text-white/80 leading-relaxed m-0">
+-                  ╫₧╫í╫ñ╫¿ ╫ö╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ╫á╫₧╫ò╫Ü ╫₧╫ô╫Ö ╫¢╫ô╫Ö ╫£╫ö╫ª╫Ö╫Æ ╫¢╫É╫ƒ ╫Æ╫¿╫ñ╫Ö╫¥ ╫É╫ò ╫ÿ╫æ╫£╫É╫ò╫¬ ╫æ╫ó╫£╫Ö ╫₧╫⌐╫₧╫ó╫ò╫¬ ╫í╫ÿ╫ÿ╫Ö╫í╫ÿ╫Ö╫¬ ╫æ╫¿╫ò╫¿╫ö.
+-                  ╫₧╫ò╫₧╫£╫Ñ ╫£╫ö╫í╫¬╫₧╫Ü ╫ó╫£ ╫ö╫í╫Ö╫¢╫ò╫¥ ╫ò╫ö╫ö╫í╫æ╫¿╫Ö╫¥ ╫£╫₧╫ó╫£╫ö, ╫ò╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫ª╫æ╫ò╫¿ ╫¬╫₧╫ò╫á╫ö ╫Ö╫ª╫Ö╫æ╫ö ╫Ö╫ò╫¬╫¿.
++                  ╫₧╫í╫ñ╫¿ ╫ö╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫á╫₧╫ò╫Ü ╫₧╫ô╫Ö ╫¢╫ô╫Ö ╫£╫ö╫ª╫Ö╫Æ ╫¢╫É╫ƒ ╫Æ╫¿╫ñ╫Ö╫¥ ╫É╫ò ╫ÿ╫æ╫£╫É╫ò╫¬ ╫æ╫ó╫£╫Ö ╫₧╫⌐╫₧╫ó╫ò╫¬ ╫æ╫¿╫ò╫¿╫ö.
++                  ╫₧╫ò╫₧╫£╫Ñ ╫£╫ö╫í╫¬╫₧╫Ü ╫ó╫£ ╫ö╫í╫Ö╫¢╫ò╫¥ ╫ò╫ö╫ö╫í╫æ╫¿╫Ö╫¥ ╫£╫₧╫ó╫£╫ö, ╫ò╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫ª╫æ╫ò╫¿ ╫¬╫₧╫ò╫á╫ö ╫æ╫¿╫ò╫¿╫ö ╫Ö╫ò╫¬╫¿.
+                 </p>
+               </div>
+             ) : (
+@@ -3901,7 +3901,7 @@ export default function ParentReport() {
+                                   if (!p) return ["", ""];
+                                   const q = Number(p.questions) || 0;
+                                   if (q <= 0) {
+-                                    return ["╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫₧╫º╫ª╫ò╫ó ╫û╫ö ╫æ╫ÿ╫ò╫ò╫ù ╫⌐╫á╫æ╫ù╫¿", ""];
++                                    return ["╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫₧╫º╫ª╫ò╫ó ╫û╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö", ""];
+                                   }
+                                   return [
+                                     `${p.minutes} ╫ô╫º╫│ ╫¬╫¿╫Æ╫ò╫£ ┬╖ ${q} ╫⌐╫É╫£╫ò╫¬ ┬╖ ╫ô╫Ö╫ò╫º ${p.accuracy}%`,
+@@ -4042,7 +4042,7 @@ export default function ParentReport() {
+                                 if (!p) return ["", ""];
+                                 const q = Number(p.questions) || 0;
+                                 if (q <= 0) {
+-                                  return ["╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫á╫ò╫⌐╫É ╫û╫ö ╫æ╫ÿ╫ò╫ò╫ù ╫⌐╫á╫æ╫ù╫¿", ""];
++                                  return ["╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫á╫ò╫⌐╫É ╫û╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö", ""];
+                                 }
+                                 return [
+                                   `╫ô╫Ö╫ò╫º ${p.accuracy}% ┬╖ ${q} ╫⌐╫É╫£╫ò╫¬ ┬╖ ${p.timeMinutes} ╫ô╫º╫│`,
+diff --git a/scripts/parent-report-hebrew-language-selftest.mjs b/scripts/parent-report-hebrew-language-selftest.mjs
+index ccf6d9a6..cbabd512 100644
+--- a/scripts/parent-report-hebrew-language-selftest.mjs
++++ b/scripts/parent-report-hebrew-language-selftest.mjs
+@@ -8,6 +8,7 @@
+ import assert from "node:assert/strict";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath, pathToFileURL } from "node:url";
++import { spawnSync } from "node:child_process";
+ 
+ const __dirname = dirname(fileURLToPath(import.meta.url));
+ const ROOT = join(__dirname, "..");
+@@ -184,3 +185,13 @@ assertNoForbidden("phase2.unknown_intervention_label", unknownInterventionLabel)
+ assertNoReadabilityLeaks("phase2.unknown_intervention_label", unknownInterventionLabel);
+ 
+ console.log("parent-report-hebrew-language-selftest: OK", samples.length, "samples scanned");
++
++const guard = spawnSync(process.execPath, [join(__dirname, "parent-report-hebrew-copy-guard.mjs")], {
++  cwd: ROOT,
++  encoding: "utf8",
++});
++if (guard.status !== 0) {
++  console.error(guard.stdout || guard.stderr);
++  process.exit(guard.status || 1);
++}
++console.log(String(guard.stdout || "").trim());
+diff --git a/utils/contracts/narrative-contract-v1.js b/utils/contracts/narrative-contract-v1.js
+index dc12da9f..cbaba5d0 100644
+--- a/utils/contracts/narrative-contract-v1.js
++++ b/utils/contracts/narrative-contract-v1.js
+@@ -149,24 +149,24 @@ function deriveEnvelope(input) {
+ function buildObservationSlot(displayName, q, acc, seed) {
+   if (q <= 0) {
+     return pickVariant(seed, [
+-      `╫æ${displayName} ╫Ö╫⌐ ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫₧╫ô╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫ö╫û╫ò ╫¢╫ô╫Ö ╫£╫í╫ñ╫¿ ╫æ╫⌐╫º╫ÿ ╫ó╫£ ╫É╫Ö╫Ü ╫û╫ö ╫æ╫É╫₧╫¬ ╫ö╫ò╫£╫Ü.`,
++      `╫æ${displayName} ╫Ö╫⌐ ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫₧╫ô╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫¢╫ô╫Ö ╫£╫ô╫ó╫¬ ╫É╫Ö╫Ü ╫û╫ö ╫æ╫É╫₧╫¬ ╫ö╫ò╫£╫Ü.`,
+       `╫æ${displayName} ╫¿╫ò╫É╫Ö╫¥ ╫æ╫Ö╫á╫¬╫Ö╫Ö╫¥ ╫¿╫º ╫₧╫ó╫ÿ ╫á╫Ö╫í╫Ö╫ò╫á╫ò╫¬ ΓÇö ╫û╫ö ╫æ╫í╫ô╫¿; ╫á╫ò╫í╫Ö╫ú ╫ó╫ò╫ô ╫º╫ª╫¬ ╫ò╫á╫ù╫û╫ò╫¿ ╫£╫û╫ö.`,
+-      `╫æ${displayName} ╫á╫ñ╫ù ╫ö╫¬╫¿╫Æ╫ò╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫º╫ÿ╫ƒ, ╫ò╫£╫¢╫ƒ ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫á╫Ö╫í╫ò╫ù ╫û╫ö╫Ö╫¿.`,
++      `╫æ${displayName} ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫ò╫£╫¢╫ƒ ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫á╫Ö╫í╫ò╫ù ╫û╫ö╫Ö╫¿.`,
+     ]);
+   }
+   return pickVariant(seed, [
+-    `╫æ${displayName} ╫æ╫¬╫º╫ò╫ñ╫ö ╫ö╫û╫ò ╫Ö╫⌐ ${q} ╫⌐╫É╫£╫ò╫¬, ╫ó╫¥ ╫ô╫Ö╫ò╫º ╫⌐╫£ ╫¢╓╛${acc}%.`,
+-    `╫æ${displayName} ╫á╫¿╫⌐╫₧╫ò ${q} ╫⌐╫É╫£╫ò╫¬, ╫ò╫¿╫₧╫¬ ╫ö╫ô╫Ö╫ò╫º ╫í╫æ╫Ö╫æ ${acc}%.`,
+-    `╫æ${displayName} ╫Ö╫⌐ ${q} ╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫⌐╫ó╫£╫ò ╫£╫ô╫ò╫ù, ╫ó╫¥ ╫ô╫Ö╫ò╫º ╫₧╫₧╫ò╫ª╫ó ╫⌐╫£ ╫¢╓╛${acc}%.`,
++    `╫æ${displayName} ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫Ö╫⌐ ${q} ╫⌐╫É╫£╫ò╫¬, ╫ó╫¥ ╫ô╫Ö╫ò╫º ╫⌐╫£ ╫¢╓╛${acc}%.`,
++    `╫æ${displayName} ╫á╫É╫í╫ñ╫ò ${q} ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö, ╫ò╫¿╫₧╫¬ ╫ö╫ô╫Ö╫ò╫º ╫í╫æ╫Ö╫æ ${acc}%.`,
++    `╫æ${displayName} ╫á╫É╫í╫ñ╫ò ${q} ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö, ╫ó╫¥ ╫ô╫Ö╫ò╫º ╫₧╫₧╫ò╫ª╫ó ╫⌐╫£ ╫¢╓╛${acc}%.`,
+   ]);
+ }
+ 
+ function buildInterpretationSlot(envelope, cannotConcludeYet, seed, q = 0, acc = 0) {
+   if (cannotConcludeYet || envelope === "WE0") {
+     return pickVariant(seed, [
+-      "╫ó╫ô╫Ö╫Ö╫ƒ ╫£╫É ╫ª╫¿╫Ö╫Ü ╫£╫í╫Æ╫ò╫¿ ╫¢╫É╫ƒ ╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö ΓÇö ╫á╫⌐╫É╫¿╫Ö╫¥ ╫æ╫⌐╫ñ╫ö ╫û╫ö╫Ö╫¿╫ö ╫ò╫á╫₧╫⌐╫Ö╫Ü ╫£╫ó╫º╫ò╫æ.",
++      "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫¢╫É╫ƒ ╫₧╫í╫º╫á╫ö ╫æ╫¿╫ò╫¿╫ö ΓÇö ╫á╫₧╫⌐╫Ö╫Ü ╫£╫ó╫º╫ò╫æ ╫É╫ù╫¿╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£.",
+       "╫û╫ö ╫₧╫ò╫º╫ô╫¥ ╫£╫á╫í╫ù ╫í╫Ö╫¢╫ò╫¥ ╫í╫ò╫ñ╫Ö; ╫á╫ò╫í╫Ö╫ú ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫ò╫á╫¿╫É╫ö ╫É╫Ö╫Ü ╫û╫ö ╫á╫⌐╫₧╫¿.",
+-      "╫ö╫æ╫í╫Ö╫í ╫ó╫ô╫Ö╫Ö╫ƒ ╫ª╫¿ ╫₧╫ô╫Ö ╫¢╫ô╫Ö ╫£╫ù╫ô╫ô ╫₧╫í╫º╫á╫ö ΓÇö ╫á╫₧╫⌐╫Ö╫Ü ╫£╫É╫ÿ ╫ò╫æ╫û╫ö╫Ö╫¿╫ò╫¬.",
++      "╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫º╫æ╫ò╫ó ╫¢╫Ö╫ò╫ò╫ƒ ╫æ╫¿╫ò╫¿ ΓÇö ╫á╫₧╫⌐╫Ö╫Ü ╫£╫É╫ÿ ╫ò╫æ╫û╫ö╫Ö╫¿╫ò╫¬.",
+     ]);
+   }
+   if (envelope === "WE1") {
+@@ -174,22 +174,22 @@ function buildInterpretationSlot(envelope, cannotConcludeYet, seed, q = 0, acc =
+     const accWeak = Math.max(0, Math.min(100, Math.round(Number(acc) || 0)));
+     if (qWeak >= 8 && accWeak <= 54) {
+       return pickVariant(seed, [
+-        "╫Ö╫⌐ ╫¢╫É╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫¿╫É╫ò╫¬ ╫ô╫ñ╫ò╫í, ╫É╫æ╫£ ╫ö╫ô╫Ö╫ò╫º ╫ó╫ô╫Ö╫Ö╫ƒ ╫á╫₧╫ò╫Ü ╫Ö╫ù╫í╫Ö╫¬ ΓÇö ╫û╫ö ╫₧╫ª╫æ ╫⌐╫ô╫ò╫¿╫⌐ ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô, ╫£╫É ╫Ö╫ª╫Ö╫æ╫ò╫¬ ╫ù╫û╫º╫ö.",
+-        "╫á╫¿╫⌐╫₧╫ò ╫₧╫í╫ñ╫Ö╫º ╫⌐╫É╫£╫ò╫¬ ╫£╫¬╫₧╫ò╫á╫ö ╫¿╫É╫⌐╫ò╫á╫Ö╫¬, ╫É╫Ü ╫ö╫¬╫ò╫ª╫É╫ò╫¬ ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ª╫æ╫Ö╫ó╫ò╫¬ ╫ó╫£ ╫º╫ò╫⌐╫Ö ΓÇö ╫¢╫ô╫É╫Ö ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô ╫£╫ñ╫á╫Ö ╫₧╫í╫º╫á╫ö ╫ù╫Ö╫ò╫æ╫Ö╫¬.",
++        "╫Ö╫⌐ ╫¢╫É╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫¿╫É╫ò╫¬ ╫ô╫ñ╫ò╫í, ╫É╫æ╫£ ╫ö╫ô╫Ö╫ò╫º ╫ó╫ô╫Ö╫Ö╫ƒ ╫á╫₧╫ò╫Ü ╫Ö╫ù╫í╫Ö╫¬ ΓÇö ╫û╫ö ╫₧╫ª╫æ ╫⌐╫ô╫ò╫¿╫⌐ ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô.",
++        "╫á╫É╫í╫ñ╫ò ╫₧╫í╫ñ╫Ö╫º ╫⌐╫É╫£╫ò╫¬ ╫£╫¬╫₧╫ò╫á╫ö ╫¿╫É╫⌐╫ò╫á╫Ö╫¬, ╫É╫Ü ╫ö╫¬╫ò╫ª╫É╫ò╫¬ ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ª╫æ╫Ö╫ó╫ò╫¬ ╫ó╫£ ╫º╫ò╫⌐╫Ö ΓÇö ╫¢╫ô╫É╫Ö ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô ╫£╫ñ╫á╫Ö ╫⌐╫₧╫í╫₧╫á╫Ö╫¥ ╫É╫¬ ╫ö╫á╫ò╫⌐╫É ╫¢╫Ö╫ª╫Ö╫æ.",
+         "╫ö╫á╫¬╫ò╫ƒ ╫₧╫¿╫É╫ö ╫ñ╫ó╫Ö╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö, ╫É╫æ╫£ ╫ö╫ô╫Ö╫ò╫º ╫á╫₧╫ò╫Ü ╫Ö╫ù╫í╫Ö╫¬ ΓÇö ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫á╫Ö╫í╫ò╫ù ╫û╫ö╫Ö╫¿ ╫ò╫¬╫¿╫Æ╫ò╫£ ╫₧╫₧╫ò╫º╫ô.",
+       ]);
+     }
+     return pickVariant(seed, [
+       "╫₧╫¬╫ù╫Ö╫£╫Ö╫¥ ╫£╫¿╫É╫ò╫¬ ╫í╫Ö╫₧╫á╫Ö╫¥ ╫¿╫É╫⌐╫ò╫á╫Ö╫¥ ╫£╫¢╫Ö╫ò╫ò╫ƒ, ╫ò╫ó╫ô╫Ö╫Ö╫ƒ ╫ª╫¿╫Ö╫Ü ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫£╫ñ╫á╫Ö ╫⌐╫á╫á╫ó╫£ ╫ó╫£ ╫₧╫⌐╫ñ╫ÿ ╫É╫ù╫ô.",
+-      "╫á╫⌐╫₧╫ó ╫⌐╫Ö╫⌐ ╫¢╫É╫ƒ ╫ö╫¬╫ù╫£╫ö ╫ÿ╫ò╫æ╫ö, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫ó╫ô╫Ö╫ú ╫£╫ù╫û╫º ╫ó╫ò╫ô ╫º╫ª╫¬ ╫£╫ñ╫á╫Ö ╫₧╫í╫º╫á╫ö ╫ù╫ô╫ö.",
++      "╫á╫⌐╫₧╫ó ╫⌐╫Ö╫⌐ ╫¢╫É╫ƒ ╫ö╫¬╫ù╫£╫ö ╫ÿ╫ò╫æ╫ö, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫ó╫ô╫Ö╫ú ╫£╫ù╫û╫º ╫ó╫ò╫ô ╫º╫ª╫¬ ╫£╫ñ╫á╫Ö ╫⌐╫º╫ò╫æ╫ó╫Ö╫¥ ╫¢╫Ö╫ò╫ò╫ƒ ╫æ╫¿╫ò╫¿.",
+       "╫¿╫ò╫É╫Ö╫¥ ╫¢╫Ö╫ò╫ò╫ƒ ╫¿╫É╫⌐╫ò╫á╫Ö ╫á╫ó╫Ö╫¥, ╫ò╫ó╫ô╫Ö╫Ö╫ƒ ╫£╫É ╫æ╫⌐╫£╫ö ╫₧╫í╫ñ╫Ö╫º ╫£╫í╫Ö╫¢╫ò╫¥ ╫ù╫ô.",
+     ]);
+   }
+   if (envelope === "WE2") {
+     return pickVariant(seed, [
+-      "╫Ö╫⌐ ╫¢╫É╫ƒ ╫¢╫Ö╫ò╫ò╫ƒ ╫ó╫æ╫ò╫ô╫ö ╫ö╫Æ╫Ö╫ò╫á╫Ö, ╫ò╫á╫ó╫ô╫Ö╫ú ╫£╫¿╫É╫ò╫¬ ╫É╫¬ ╫û╫ö ╫ù╫ò╫û╫¿ ╫ó╫ò╫ô ╫ñ╫ó╫¥ ╫£╫ñ╫á╫Ö ╫⌐╫₧╫ù╫₧╫Ö╫¿╫Ö╫¥ ╫æ╫₧╫í╫º╫á╫ö.",
++      "╫Ö╫⌐ ╫¢╫É╫ƒ ╫¢╫Ö╫ò╫ò╫ƒ ╫ó╫æ╫ò╫ô╫ö ╫ö╫Æ╫Ö╫ò╫á╫Ö, ╫ò╫á╫ó╫ô╫Ö╫ú ╫£╫¿╫É╫ò╫¬ ╫É╫¬ ╫û╫ö ╫ù╫ò╫û╫¿ ╫ó╫ò╫ô ╫ñ╫ó╫¥ ╫£╫ñ╫á╫Ö ╫⌐╫₧╫ù╫₧╫Ö╫¿╫Ö╫¥ ╫æ╫º╫æ╫Ö╫ó╫¬ ╫¢╫Ö╫ò╫ò╫ƒ.",
+       "╫ö╫ô╫ò╫ù ╫á╫¿╫É╫ö ╫₧╫¬╫º╫ô╫¥ ╫£╫ÿ╫ò╫æ╫ö, ╫ò╫¢╫ô╫É╫Ö ╫£╫ò╫ò╫ô╫É ╫⌐╫û╫ö ╫£╫É ╫₧╫º╫¿╫ö ╫ù╫ô╓╛╫ñ╫ó╫₧╫Ö.",
+-      "╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫ù╫Ö╫ò╫æ╫Ö ╫Ö╫ù╫í╫Ö╫¬; ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫ù╫Ö╫û╫ò╫º ╫º╫ª╫¿ ╫ò╫æ╫¿╫ò╫¿ ╫£╫ñ╫á╫Ö ╫⌐╫á╫£╫ù╫Ñ ╫ó╫£ ╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö.",
++      "╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫ù╫Ö╫ò╫æ╫Ö ╫Ö╫ù╫í╫Ö╫¬; ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫ù╫Ö╫û╫ò╫º ╫º╫ª╫¿ ╫ò╫æ╫¿╫ò╫¿ ╫£╫ñ╫á╫Ö ╫⌐╫º╫ò╫æ╫ó╫Ö╫¥ ╫⌐╫ö╫á╫ò╫⌐╫É ╫Ö╫ª╫Ö╫æ.",
+     ]);
+   }
+   if (envelope === "WE3") {
+@@ -212,12 +212,12 @@ function buildActionSlot(capIntensity, eligible, seed) {
+     return pickVariant(seed, [
+       "╫¢╫ô╫É╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫ò╫₧╫₧╫ò╫º╫ô ╫æ╫É╫ò╫¬╫ö ╫¿╫₧╫ö, ╫ò╫É╫û ╫£╫æ╫ô╫ò╫º ╫É╫¥ ╫æ╫É╫₧╫¬ ╫¢╫ô╫É╫Ö ╫£╫⌐╫á╫ò╫¬ ╫₧╫⌐╫ö╫ò.",
+       "╫á╫ó╫⌐╫ö ╫ó╫ò╫ô ╫ù╫û╫¿╫ö ╫º╫ª╫¿╫ö ╫ò╫æ╫¿╫ò╫¿╫ö ╫æ╫¿╫₧╫ö ╫ö╫á╫ò╫¢╫ù╫Ö╫¬, ╫£╫ñ╫á╫Ö ╫⌐╫₧╫á╫í╫Ö╫¥ ╫º╫ñ╫Ö╫ª╫ö ╫º╫ÿ╫á╫ö ╫º╫ô╫Ö╫₧╫ö.",
+-      "╫¢╫ô╫É╫Ö ╫£╫ù╫û╫º ╫ó╫ò╫ô ╫º╫ª╫¬ ╫æ╫É╫ò╫¬╫ö ╫¿╫₧╫ö, ╫ò╫¿╫º ╫É╫ù╫¿╫Ö ╫û╫ö ╫£╫¿╫É╫ò╫¬ ╫É╫¥ ╫₧╫ó╫æ╫Ö╫¿╫Ö╫¥ ╫⌐╫£╫æ.",
++      "╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫£╫¬╫¿╫Æ╫£ ╫æ╫É╫ò╫¬╫ö ╫¿╫₧╫¬ ╫º╫ò╫⌐╫Ö, ╫ò╫É╫û ╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ ╫É╫¥ ╫₧╫¬╫É╫Ö╫¥ ╫£╫ö╫¬╫º╫ô╫¥.",
+     ]);
+   }
+   if (capIntensity === "RI2") {
+     return pickVariant(seed, [
+-      "╫¢╫ô╫É╫Ö ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô, ╫ò╫É╫û ╫á╫Ö╫í╫Ö╫ò╫ƒ ╫º╫ª╫¿ ╫æ╫£╫Ö ╫ö╫¢╫ò╫ò╫á╫ö ╫æ╫É╫₧╫ª╫ó, ╫£╫ñ╫á╫Ö ╫º╫Ö╫ô╫ò╫¥.",
++      "╫¢╫ô╫É╫Ö ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô, ╫ò╫É╫û ╫á╫Ö╫í╫Ö╫ò╫ƒ ╫º╫ª╫¿ ╫æ╫£╫Ö ╫ö╫¢╫ò╫ò╫á╫ö ╫æ╫É╫₧╫ª╫ó, ╫£╫ñ╫á╫Ö ╫⌐╫₧╫ó╫£╫Ö╫¥ ╫¿╫₧╫¬ ╫º╫ò╫⌐╫Ö.",
+       "╫æ╫ò╫É╫ò ╫á╫¬╫¿╫Æ╫£ ╫₧╫₧╫ò╫º╫ô ╫ò╫É╫û ╫á╫æ╫ô╫ò╫º ╫¢╫₧╫ö ╫⌐╫É╫£╫ò╫¬ ╫º╫ª╫¿╫ò╫¬ ╫æ╫ó╫ª╫₧╫É╫ò╫¬, ╫£╫ñ╫á╫Ö ╫⌐╫₧╫º╫ô╫₧╫Ö╫¥.",
+       "╫₧╫ò╫í╫Ö╫ñ╫Ö╫¥ ╫ù╫Ö╫û╫ò╫º ╫º╫ª╫¿, ╫ò╫æ╫ò╫ô╫º╫Ö╫¥ ╫ó╫ª╫₧╫É╫ò╫¬ ╫º╫ª╫¿╫ö, ╫ò╫¿╫º ╫É╫û ╫æ╫ò╫ô╫º╫Ö╫¥ ╫ö╫¬╫º╫ô╫₧╫ò╫¬.",
+     ]);
+@@ -233,14 +233,14 @@ function buildUncertaintySlot(hedgeLevel, seed) {
+   if (hedgeLevel === "mandatory") {
+     return pickVariant(seed, [
+       "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫¢╫É╫ƒ ╫ô╫æ╫¿ ╫í╫ò╫ñ╫Ö; ╫₧╫₧╫⌐╫Ö╫¢╫Ö╫¥ ╫ó╫¥ ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫ò╫¿╫Æ╫Ö╫£ ╫ò╫æ╫ò╫ô╫º╫Ö╫¥ ╫⌐╫ò╫æ ╫æ╫ö╫₧╫⌐╫Ü.",
+-      "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫í╫Æ╫ò╫¿ ╫₧╫í╫º╫á╫ö ΓÇö ╫¢╫ô╫É╫Ö ╫£╫É╫í╫ò╫ú ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫ò╫É╫û ╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ.",
+-      "╫æ╫⌐╫£╫æ ╫ö╫û╫ö ╫£╫É ╫í╫ò╫Æ╫¿╫Ö╫¥ ╫₧╫í╫º╫á╫ö ╫í╫ò╫ñ╫Ö╫¬; ╫û╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥, ╫ò╫£╫¢╫ƒ ╫á╫₧╫⌐╫Ö╫Ü ╫£╫É╫í╫ò╫ú ╫ó╫ò╫ô ╫º╫ª╫¬ ╫ù╫ò╫ò╫Ö╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£.",
++      "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö ΓÇö ╫¢╫ô╫É╫Ö ╫£╫É╫í╫ò╫ú ╫ó╫ò╫ô ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫ò╫É╫û ╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ.",
++      "╫æ╫⌐╫£╫æ ╫ö╫û╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö ╫í╫ò╫ñ╫Ö╫¬; ╫á╫₧╫⌐╫Ö╫Ü ╫£╫É╫í╫ò╫ú ╫ó╫ò╫ô ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫£╫ñ╫á╫Ö ╫⌐╫₧╫í╫Ö╫º╫Ö╫¥ ╫₧╫í╫º╫á╫ö.",
+     ]);
+   }
+   if (hedgeLevel === "light") {
+     return pickVariant(seed, [
+       "╫á╫¢╫ò╫ƒ ╫£╫ó╫¢╫⌐╫Ö╫ò ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫£╫¬╫¿╫Æ╫£ ╫ò╫£╫⌐╫Ö╫¥ ╫£╫æ, ╫ò╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫º╫ª╫¬.",
+-      "╫¢╫ô╫É╫Ö ╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿, ╫¢╫ô╫Ö ╫£╫ò╫ò╫ô╫É ╫⌐╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫á╫⌐╫₧╫¿ ╫£╫ñ╫á╫Ö ╫⌐╫₧╫ù╫₧╫Ö╫¿╫Ö╫¥ ╫æ╫₧╫í╫º╫á╫ö.",
++      "╫¢╫ô╫É╫Ö ╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿, ╫¢╫ô╫Ö ╫£╫ò╫ò╫ô╫É ╫⌐╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫á╫⌐╫₧╫¿ ╫£╫ñ╫á╫Ö ╫⌐╫₧╫ù╫₧╫Ö╫¿╫Ö╫¥ ╫æ╫º╫æ╫Ö╫ó╫¬ ╫¢╫Ö╫ò╫ò╫ƒ.",
+       "╫á╫ó╫⌐╫ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫ò╫É╫û ╫á╫ù╫û╫ò╫¿ ╫£╫û╫ö ΓÇö ╫æ╫ó╫Ö╫á╫Ö╫Ö╫¥ ╫ñ╫¬╫ò╫ù╫ò╫¬ ╫ò╫æ╫£╫Ö ╫£╫₧╫ö╫¿.",
+     ]);
+   }
+diff --git a/utils/detailed-parent-report.js b/utils/detailed-parent-report.js
+index 57d18164..c612282f 100644
+--- a/utils/detailed-parent-report.js
++++ b/utils/detailed-parent-report.js
+@@ -330,7 +330,7 @@ function collectMaintainRows(subjects) {
+ }
+ 
+ const CROSS_RISK_LABEL_HE = {
+-  knowledge_gap: "╫ñ╫ó╫¿ ╫Ö╫ô╫ó ╫É╫ò ╫æ╫í╫Ö╫í ╫⌐╫£╫É ╫ö╫ò╫í╫ô╫¿ ╫₧╫í╫ñ╫Ö╫º",
++  knowledge_gap: "╫º╫ò╫⌐╫Ö ╫æ╫æ╫í╫Ö╫í ╫É╫ò ╫æ╫ù╫ò╫₧╫¿ ╫⌐╫£╫É ╫ö╫ò╫í╫ô╫¿ ╫₧╫í╫ñ╫Ö╫º",
+   speed_pressure: "╫£╫ù╫Ñ ╫₧╫ö╫Ö╫¿╫ò╫¬ ╫æ╫₧╫⌐╫Ö╫₧╫ò╫¬",
+   instruction_friction: "╫ó╫ò╫₧╫í ╫æ╫ö╫ò╫¿╫É╫ö ╫É╫ò ╫¬╫£╫ò╫¬ ╫æ╫¿╫₧╫û╫Ö╫¥",
+   careless_pattern: "╫¿╫⌐╫£╫á╫ò╫¬ ╫º╫ÿ╫á╫ö ╫É╫ò ╫É╫Ö╓╛╫Ö╫ª╫Ö╫æ╫ò╫¬ ╫æ╫¬╫⌐╫ò╫æ╫ò╫¬",
+@@ -455,10 +455,10 @@ function buildMajorTrendsHe(subjects, subjectCoverage) {
+     if (out.length >= 2) break;
+   }
+   if (!out.length) {
+-    out.push("╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫⌐╫¬╫Ö ╫₧╫Æ╫₧╫ò╫¬ ╫ù╫ò╫ª╫ò╫¬╓╛╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫æ╫¿╫ò╫¿╫ò╫¬ ΓÇö ╫ö╫¬╫₧╫ò╫á╫ö ╫¬╫¬╫Ö╫Ö╫ª╫æ ╫¢╫⌐╫Ö╫¬╫ò╫ò╫í╫ú ╫á╫ñ╫ù ╫æ╫ÿ╫ò╫ò╫ù.");
++    out.push("╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫⌐╫¬╫Ö ╫₧╫Æ╫₧╫ò╫¬ ╫ù╫ò╫ª╫ò╫¬╓╛╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫æ╫¿╫ò╫¿╫ò╫¬ ΓÇö ╫ö╫¬╫₧╫ò╫á╫ö ╫¬╫¬╫æ╫ö╫¿ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö.");
+   }
+   if (out.length === 1) {
+-    out.push("╫₧╫Æ╫₧╫ö ╫⌐╫á╫Ö╫Ö╫ö ╫¬╫¬╫æ╫ö╫¿ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫á╫ñ╫ù ╫á╫₧╫ò╫Ü.");
++    out.push("╫₧╫Æ╫₧╫ö ╫⌐╫á╫Ö╫Ö╫ö ╫¬╫¬╫æ╫ö╫¿ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫₧╫ó╫ÿ ╫⌐╫É╫£╫ò╫¬.");
+   }
+   return out.slice(0, 2);
+ }
+@@ -499,7 +499,7 @@ function pickMainHomeRecommendationHe(subjects, subjectCoverage, summary, topFoc
+       220
+     );
+   }
+-  return "╫⌐╫á╫Ö ╫₧╫ñ╫Æ╫⌐╫Ö╫¥ ╫º╫ª╫¿╫Ö╫¥ ╫æ╫⌐╫æ╫ò╫ó, ╫ô╫Æ╫⌐ ╫ó╫£ ╫º╫¿╫Ö╫É╫¬ ╫ö╫₧╫⌐╫Ö╫₧╫ö ╫£╫ñ╫á╫Ö ╫¬╫⌐╫ò╫æ╫ö ΓÇö ╫ó╫ô ╫⌐╫Ö╫¬╫Ö╫Ö╫ª╫æ ╫á╫ñ╫ù ╫æ╫ÿ╫ò╫ò╫ù.";
++  return "╫⌐╫á╫Ö ╫₧╫ñ╫Æ╫⌐╫Ö╫¥ ╫º╫ª╫¿╫Ö╫¥ ╫æ╫⌐╫æ╫ò╫ó, ╫ô╫Æ╫⌐ ╫ó╫£ ╫º╫¿╫Ö╫É╫¬ ╫ö╫₧╫⌐╫Ö╫₧╫ö ╫£╫ñ╫á╫Ö ╫¬╫⌐╫ò╫æ╫ö ΓÇö ╫ó╫ô ╫⌐╫Ö╫¬╫º╫æ╫£ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö.";
+ }
+ 
+ function buildCautionNoteHe(crossRisks, subjects, dominantRiskId) {
+@@ -507,12 +507,12 @@ function buildCautionNoteHe(crossRisks, subjects, dominantRiskId) {
+   if (crossRisks.hintDependenceRisk) parts.push("╫¬╫£╫ò╫¬ ╫æ╫¿╫₧╫û╫Ö╫¥ ╫ù╫ò╫ª╫ö ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ΓÇö ╫£╫É ╫£╫ô╫ù╫ò╫ú ╫º╫Ö╫ô╫ò╫¥ ╫₧╫ö╫Ö╫¿.");
+   if (crossRisks.falsePromotionRisk) parts.push("╫í╫Ö╫¢╫ò╫ƒ ╫£╫º╫Ö╫ô╫ò╫¥ ╫⌐╫ò╫ò╫É ΓÇö ╫£╫É ╫£╫ñ╫¿╫⌐ ╫ö╫ª╫£╫ù╫ö ╫ù╫£╫º╫Ö╫¬ ╫¢╫₧╫ò╫¢╫á╫ò╫¬ ╫£╫ó╫£╫Ö╫Ö╫ö ╫₧╫ö╫Ö╫¿╫ö ╫₧╫ô╫Ö ╫æ╫¿╫₧╫ö.");
+   if (crossRisks.recentTransitionRisk) parts.push("╫₧╫Æ╫₧╫ò╫¬ ╫É╫ù╫¿╫ò╫á╫ò╫¬ ╫₧╫ª╫æ╫Ö╫ó╫ò╫¬ ╫ó╫£ ╫û╫ö╫Ö╫¿╫ò╫¬ ΓÇö ╫£╫É ╫£╫¿╫ô╫¬ ╫₧╫ô╫¿╫Æ╫ö ╫æ╫¢╫£ ╫ö╫₧╫º╫ª╫ò╫ó ╫æ╫æ╫¬ ╫É╫ù╫¬.");
+-  if (crossRisks.speedOnlyRisk) parts.push("╫₧╫ò╫ñ╫Ö╫ó╫ö ╫ù╫ò╫£╫⌐╫ö ╫ö╫º╫⌐╫ò╫¿╫ö ╫£╫₧╫ö╫Ö╫¿╫ò╫¬ ΓÇö ╫£╫É ╫£╫ö╫¢╫£╫Ö╫£ ╫£╫ñ╫ó╫¿ ╫Ö╫ô╫ó ╫æ╫¢╫£ ╫ö╫¬╫¿╫Æ╫ò╫£.");
++  if (crossRisks.speedOnlyRisk) parts.push("╫₧╫ò╫ñ╫Ö╫ó╫ö ╫ù╫ò╫£╫⌐╫ö ╫ö╫º╫⌐╫ò╫¿╫ö ╫£╫₧╫ö╫Ö╫¿╫ò╫¬ ΓÇö ╫£╫É ╫£╫ö╫¢╫£╫Ö╫£ ╫£╫º╫ò╫⌐╫Ö ╫æ╫æ╫í╫Ö╫í ╫æ╫¢╫£ ╫ö╫¬╫¿╫Æ╫ò╫£.");
+   if (parts.length) return shortenHe(parts.join(" "), 220);
+   const wnts = SUBJECT_IDS.map((sid) => String(subjects?.[sid]?.whatNotToDoHe || "").trim()).filter(Boolean);
+   if (wnts.length) return shortenHe(wnts.sort((a, b) => b.length - a.length)[0], 220);
+   if (dominantRiskId === "none_sparse" || dominantRiskId === "none_observed") {
+-    return "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ΓÇö ╫£╫É ╫£╫º╫æ╫ò╫ó ╫⌐╫Ö╫á╫ò╫Ö ╫ô╫¿╫₧╫ÿ╫Ö ╫æ╫æ╫Ö╫¬ ╫£╫ñ╫á╫Ö ╫⌐╫₧╫¬╫Ö╫Ö╫ª╫æ ╫á╫ñ╫ù.";
++    return "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ΓÇö ╫£╫É ╫£╫º╫æ╫ò╫ó ╫⌐╫Ö╫á╫ò╫Ö ╫ô╫¿╫₧╫ÿ╫Ö ╫æ╫æ╫Ö╫¬ ╫£╫ñ╫á╫Ö ╫⌐╫Ö╫¬╫º╫æ╫£ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£.";
+   }
+   return "╫£╫ó╫º╫ò╫æ ╫É╫ù╫¿╫Ö ╫ö╫ô╫ñ╫ò╫í╫Ö╫¥ ╫æ╫⌐╫ò╫¿╫ò╫¬ ╫£╫ñ╫á╫Ö ╫⌐╫Ö╫á╫ò╫Ö ╫ö╫Æ╫ô╫¿╫ò╫¬ ╫ù╫ô.";
+ }
+@@ -525,7 +525,7 @@ function buildOverallConfidenceHe(subjectCoverage, crossRisks) {
+     active >= 2 &&
+     cov.reduce((m, c) => Math.max(m, c.questionCount || 0), 0) >
+       2 * (cov.reduce((s, c) => s + (c.questionCount || 0), 0) / Math.max(active, 1));
+-  let t = `╫æ╫ÿ╫ò╫ò╫ù: ${active} ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫ñ╫ó╫Ö╫£╫ò╫¬; ${low} ╫ó╫¥ ╫á╫ñ╫ù ╫á╫₧╫ò╫Ü ╫Ö╫ù╫í╫Ö╫¬ ΓÇö ╫ö╫æ╫Ö╫ÿ╫ù╫ò╫ƒ ╫æ╫Ö╫ƒ ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫£╫É ╫É╫ù╫Ö╫ô.`;
++  let t = `╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ${active} ╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫ó╫¥ ╫ñ╫ó╫Ö╫£╫ò╫¬; ${low} ╫ó╫¥ ╫₧╫ó╫ÿ ╫⌐╫É╫£╫ò╫¬ ╫Ö╫ù╫í╫Ö╫¬ ΓÇö ╫ö╫æ╫Ö╫ÿ╫ù╫ò╫ƒ ╫æ╫Ö╫ƒ ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫£╫É ╫É╫ù╫Ö╫ô.`;
+   if (crossRisks.insufficientEvidenceRisk) t += " ╫ù╫£╫º ╫₧╫ö╫⌐╫ò╫¿╫ò╫¬ ╫ó╫¥ ╫₧╫ö ╫⌐╫¿╫ò╫É╫Ö╫¥ ╫æ╫ö╫ƒ ╫¿╫º ╫ù╫£╫º╫Ö╫¬.";
+   if (uneven) t += " ╫¿╫ò╫æ ╫ö╫á╫¬╫ò╫á╫Ö╫¥ ╫₧╫Æ╫Ö╫ó╫Ö╫¥ ╫₧╫₧╫º╫ª╫ò╫ó ╫É╫ù╫ô ╫æ╫ò╫£╫ÿ ΓÇö ╫£╫É ╫₧╫á╫Ö╫ù╫Ö╫¥ ╫ö╫¬╫ñ╫£╫Æ╫ò╫¬ ╫⌐╫ò╫ò╫ö.";
+   return shortenHe(t, 280);
+@@ -537,7 +537,7 @@ function buildReportReadinessHe(dataIntegrityReport, summary) {
+   const q = Number(summary?.totalQuestions) || 0;
+   if (n === 0 && q >= 24) return "╫ö╫ô╫ò╫ù ╫æ╫⌐╫£ ╫£╫º╫¿╫Ö╫É╫ö ╫ö╫ò╫¿╫Ö╫¬ ΓÇö ╫á╫ñ╫ù ╫í╫æ╫Ö╫¿ ╫ò╫£╫£╫É ╫æ╫ó╫Ö╫ò╫¬ ╫⌐╫£╫₧╫ò╫¬ ╫º╫¿╫Ö╫ÿ╫Ö╫ò╫¬.";
+   if (n > 0 && q >= 18) return `╫ö╫ô╫ò╫ù ╫º╫¿╫Ö╫É, ╫É╫Ü ╫Ö╫⌐ ${n} ╫ö╫ó╫¿╫ò╫¬ ╫⌐╫£╫₧╫ò╫¬ ╫á╫¬╫ò╫á╫Ö╫¥ ΓÇö ╫£╫º╫¿╫ò╫É ╫₧╫í╫º╫á╫ò╫¬ ╫æ╫ó╫ô╫Ö╫á╫ò╫¬.`;
+-  if (q < 18) return "╫ö╫ô╫ò╫ù ╫ù╫£╫º╫Ö ΓÇö ╫₧╫ò╫₧╫£╫Ñ ╫£╫ö╫⌐╫£╫Ö╫¥ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù ╫£╫ñ╫á╫Ö ╫ö╫ù╫£╫ÿ╫ò╫¬ ╫Æ╫ô╫ò╫£╫ò╫¬.";
++  if (q < 18) return "╫ö╫ô╫ò╫ù ╫ù╫£╫º╫Ö ΓÇö ╫₧╫ò╫₧╫£╫Ñ ╫£╫ö╫⌐╫£╫Ö╫¥ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫£╫ñ╫á╫Ö ╫ö╫ù╫£╫ÿ╫ò╫¬ ╫Æ╫ô╫ò╫£╫ò╫¬.";
+   return "╫ö╫ô╫ò╫ù ╫æ╫⌐╫£╫ò╫¬ ╫æ╫Ö╫á╫ò╫á╫Ö╫¬ ΓÇö ╫£╫⌐╫£╫æ ╫₧╫í╫º╫á╫ò╫¬ ╫ó╫¥ ╫¬╫ª╫ñ╫Ö╫¬ ╫ö╫ò╫¿╫Ö╫¬ ╫Ö╫ò╫₧╫Ö╫ò╫₧╫Ö╫¬.";
+ }
+ 
+@@ -1469,7 +1469,7 @@ function buildHomeFocusHe(subjects, topStrengthsAcrossHe, topFocusAreasHe, summa
+     return `╫¢╫ô╫É╫Ö ╫£╫⌐╫₧╫ò╫¿ ╫Æ╫¥ ╫ó╫£ ╫¬╫¿╫Æ╫ò╫£ ╫¿╫Æ╫ò╫ó ╫í╫æ╫Ö╫æ ${preservePhrase} ΓÇö ╫⌐╫¥ ╫¢╫æ╫¿ ╫Ö╫⌐ ╫æ╫í╫Ö╫í ╫ÿ╫ò╫æ.`;
+   }
+   if (q < 18) {
+-    return "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫ù╫ò╫₧╫¿ ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫⌐╫á╫Ö ╫₧╫ñ╫Æ╫⌐╫Ö╫¥ ╫º╫ª╫¿╫Ö╫¥ ╫æ╫⌐╫æ╫ò╫ó ╫Ö╫ó╫û╫¿╫ò ╫£╫ù╫ô╫ô ╫É╫¬ ╫ö╫¬╫₧╫ò╫á╫ö ╫æ╫ñ╫ó╫¥ ╫ö╫æ╫É╫ö.";
++    return "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫ù╫ò╫₧╫¿ ╫æ╫¬╫º╫ò╫ñ╫ö ΓÇö ╫⌐╫á╫Ö ╫₧╫ñ╫Æ╫⌐╫Ö╫¥ ╫º╫ª╫¿╫Ö╫¥ ╫æ╫⌐╫æ╫ò╫ó ╫Ö╫ó╫û╫¿╫ò ╫£╫ù╫ô╫ô ╫É╫¬ ╫ö╫¬╫₧╫ò╫á╫ö ╫æ╫ñ╫ó╫¥ ╫ö╫æ╫É╫ö.";
+   }
+   if (acc >= 78 && q >= 35) {
+     return "╫ö╫º╫ª╫æ ╫ö╫á╫ò╫¢╫ù╫Ö ╫á╫¿╫É╫ö ╫₧╫É╫ò╫û╫ƒ ΓÇö ╫É╫ñ╫⌐╫¿ ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫¢╫Ü ╫ò╫£╫ö╫ó╫₧╫Ö╫º ╫¿╫º ╫æ╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫₧╫ò╫ñ╫Ö╫ó╫Ö╫¥ ╫£╫₧╫ó╫£╫ö ╫æ╫¿╫⌐╫Ö╫₧╫¬ ╫ö╫₧╫Ö╫º╫ò╫ô.";
+@@ -1589,7 +1589,7 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
+   const notableSubjectsHe = [];
+   for (const row of subjectCoverage) {
+     if (row.questionCount === 0) {
+-      lowExposureSubjectsHe.push(`${row.subjectLabelHe} ΓÇö ╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù`);
++      lowExposureSubjectsHe.push(`${row.subjectLabelHe} ΓÇö ╫£╫É ╫á╫É╫í╫ñ╫ò ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö`);
+     } else if (row.questionCount < 15) {
+       lowExposureSubjectsHe.push(
+         `${row.subjectLabelHe} ΓÇö ╫₧╫í╫ñ╫¿ ╫⌐╫É╫£╫ò╫¬ ╫á╫₧╫ò╫Ü (${row.questionCount} ╫⌐╫É╫£╫ò╫¬)`
+@@ -1599,12 +1599,12 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
+     const isMediumVolumeStrong = row.questionCount >= 18 && row.accuracy >= 88;
+     if (isHighVolumeStrong || isMediumVolumeStrong) {
+       notableSubjectsHe.push(
+-        `${row.subjectLabelHe} ΓÇö ╫á╫ñ╫ù ╫Æ╫æ╫ò╫ö ╫ò╫ô╫Ö╫ò╫º ╫ÿ╫ò╫æ (${row.accuracy}%, ${row.questionCount} ╫⌐╫É╫£╫ò╫¬)`
++        `${row.subjectLabelHe} ΓÇö ╫á╫É╫í╫ñ╫ò ${row.questionCount} ╫⌐╫É╫£╫ò╫¬ ╫ó╫¥ ╫ô╫Ö╫ò╫º ╫ÿ╫ò╫æ (${row.accuracy}%)`
+       );
+     }
+   }
+   if (!notableSubjectsHe.length) {
+-    notableSubjectsHe.push("╫É╫Ö╫ƒ ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó ╫æ╫ò╫£╫ÿ ╫£╫ñ╫Ö ╫í╫ú ╫ö╫á╫ñ╫ù/╫ô╫Ö╫ò╫º ΓÇö ╫ö╫₧╫⌐╫Ü ╫¬╫¿╫Æ╫ò╫£ ╫Ö╫ó╫⌐╫ö ╫É╫¬ ╫ö╫ö╫æ╫ô╫£.");
++    notableSubjectsHe.push("╫É╫Ö╫ƒ ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫º╫ª╫ò╫ó ╫æ╫ò╫£╫ÿ ╫£╫ñ╫Ö ╫¢╫₧╫ò╫¬ ╫ö╫⌐╫É╫£╫ò╫¬ ╫ò╫ö╫ô╫Ö╫ò╫º ΓÇö ╫ö╫₧╫⌐╫Ü ╫¬╫¿╫Æ╫ò╫£ ╫Ö╫ó╫⌐╫ö ╫É╫¬ ╫ö╫ö╫æ╫ô╫£.");
+   }
+   return {
+     /** ╫í╫ö╫┤╫¢ ╫û╫₧╫ƒ ╫£╫₧╫Ö╫ô╫ö ╫æ╫ô╫º╫ò╫¬ (╫¢╫₧╫ò ╫æ╓╛V2 summary.totalTimeMinutes) */
+@@ -1627,7 +1627,7 @@ function buildCrossSubjectInsights(baseReport, subjects) {
+   const sparse = coverage.filter((c) => c.questionCount > 0 && c.questionCount < 10);
+   if (sparse.length) {
+     bulletsHe.push(
+-      `╫æ${sparse.map((s) => s.subjectLabelHe).join(", ")} ╫ó╫ô╫Ö╫Ö╫ƒ ╫Ö╫⌐ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ΓÇö ╫ö╫¬╫₧╫ò╫á╫ö ╫¬╫¬╫æ╫ö╫¿ ╫¢╫⌐╫Ö╫Ö╫₧╫£╫É ╫á╫ñ╫ù ╫ö╫¬╫¿╫Æ╫ò╫£.`
++      `╫æ${sparse.map((s) => s.subjectLabelHe).join(", ")} ╫ó╫ô╫Ö╫Ö╫ƒ ╫Ö╫⌐ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ΓÇö ╫ö╫¬╫₧╫ò╫á╫ö ╫¬╫¬╫æ╫ö╫¿ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£.`
+     );
+   }
+   const wRows = collectWeaknessRows(subjects);
+@@ -1644,7 +1644,7 @@ function buildCrossSubjectInsights(baseReport, subjects) {
+     bulletsHe,
+     dataQualityNoteHe:
+       (baseReport?.summary?.totalQuestions || 0) < 30
+-        ? "╫₧╫í╫ñ╫¿ ╫ö╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ╫á╫₧╫ò╫Ü ΓÇö ╫Ö╫⌐ ╫£╫º╫¿╫ò╫É ╫É╫¬ ╫ö╫₧╫í╫º╫á╫ò╫¬ ╫ö╫¢╫£╫£╫Ö╫ò╫¬ ╫æ╫ó╫ô╫Ö╫á╫ò╫¬."
++        ? "╫₧╫í╫ñ╫¿ ╫ö╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫á╫₧╫ò╫Ü ΓÇö ╫Ö╫⌐ ╫£╫º╫¿╫ò╫É ╫É╫¬ ╫ö╫₧╫í╫º╫á╫ò╫¬ ╫ö╫¢╫£╫£╫Ö╫ò╫¬ ╫æ╫ó╫ô╫Ö╫á╫ò╫¬."
+         : null,
+   };
+ }
+@@ -1678,7 +1678,7 @@ function buildNextPeriodGoals(subjects) {
+     if (itemsHe.length >= 6) break;
+   }
+   if (!itemsHe.length) {
+-    itemsHe.push("╫¢╫⌐╫Ö╫Ö╫₧╫£╫É ╫á╫¬╫ò╫ƒ ╫æ╫ÿ╫ò╫ò╫ù, ╫Ö╫¬╫ò╫ò╫í╫ú ╫¢╫É╫ƒ ╫¢╫Ö╫ò╫ò╫ƒ ╫º╫ò╫á╫º╫¿╫ÿ╫Ö ΓÇö ╫ó╫ô ╫É╫û ╫ó╫ô╫Ö╫ú ╫£╫É ╫£╫ó╫₧╫Ö╫í ╫Ö╫ó╫ô╫Ö╫¥ ╫₧╫£╫É╫¢╫ò╫¬╫Ö╫Ö╫¥.");
++    itemsHe.push("╫¢╫⌐╫Ö╫¬╫º╫æ╫£ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö, ╫Ö╫¬╫ò╫ò╫í╫ú ╫¢╫É╫ƒ ╫¢╫Ö╫ò╫ò╫ƒ ╫º╫ò╫á╫º╫¿╫ÿ╫Ö ΓÇö ╫ó╫ô ╫É╫û ╫ó╫ô╫Ö╫ú ╫£╫É ╫£╫ó╫₧╫Ö╫í ╫Ö╫ó╫ô╫Ö╫¥ ╫₧╫£╫É╫¢╫ò╫¬╫Ö╫Ö╫¥.");
+   }
+   return { itemsHe };
+ }
+@@ -2263,7 +2263,7 @@ function pickClearWeakestSubjectFromSummaryAggregates(summary) {
+ }
+ 
+ function crossSubjectWeakFocusLineHe(worst) {
+-  return `╫£╫ñ╫Ö ╫í╫Ö╫¢╫ò╫¥ ╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù ╫⌐╫á╫æ╫ù╫¿, ╫ö╫ô╫Ö╫ò╫º ╫ö╫á╫₧╫ò╫Ü ╫æ╫Ö╫ò╫¬╫¿ (╫¢╓╛${worst.acc}% ╫ó╫£ ${worst.q} ╫¬╫⌐╫ò╫æ╫ò╫¬) ╫₧╫ò╫ñ╫Ö╫ó ╫¢╫¿╫Æ╫ó ╫æ${worst.labelHe} ΓÇö ╫¢╫ô╫É╫Ö ╫£╫¬╫¬ ╫⌐╫¥ ╫ô╫Æ╫⌐ ╫₧╫₧╫ò╫º╫ô ╫ö╫⌐╫æ╫ò╫ó.`;
++  return `╫£╫ñ╫Ö ╫í╫Ö╫¢╫ò╫¥ ╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫ö╫ô╫Ö╫ò╫º ╫ö╫á╫₧╫ò╫Ü ╫æ╫Ö╫ò╫¬╫¿ (╫¢╓╛${worst.acc}% ╫ó╫£ ${worst.q} ╫¬╫⌐╫ò╫æ╫ò╫¬) ╫₧╫ò╫ñ╫Ö╫ó ╫¢╫¿╫Æ╫ó ╫æ${worst.labelHe} ΓÇö ╫¢╫ô╫É╫Ö ╫£╫¬╫¬ ╫⌐╫¥ ╫ô╫Æ╫⌐ ╫₧╫₧╫ò╫º╫ô ╫ö╫⌐╫æ╫ò╫ó.`;
+ }
+ 
+ /**
+@@ -2322,7 +2322,7 @@ function buildSubjectProfilesFromV2(baseReport) {
+       const subjQ = subjectQuestionCountFromReportSummary(baseReport, sid);
+       const summaryHeEmpty =
+         subjQ > 0
+-          ? "╫Ö╫⌐ ╫ñ╫ó╫Ö╫£╫ò╫¬ ╫æ╫á╫ò╫⌐╫É ╫æ╫ÿ╫ò╫ò╫ù, ╫É╫Ü ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫¬╫₧╫ò╫á╫ö ╫₧╫í╫ò╫ô╫¿╫¬ ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫ó╫£ ╫ö╫á╫ò╫⌐╫É ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£."
++          ? "╫Ö╫⌐ ╫ñ╫ó╫Ö╫£╫ò╫¬ ╫æ╫á╫ò╫⌐╫É ╫æ╫¬╫º╫ò╫ñ╫ö, ╫É╫Ü ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫¬╫₧╫ò╫á╫ö ╫₧╫í╫ò╫ô╫¿╫¬ ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫ó╫£ ╫ö╫á╫ò╫⌐╫É ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£."
+           : "╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫æ╫¬╫º╫ò╫ñ╫ö ╫ö╫á╫æ╫ù╫á╫¬.";
+       out.push({
+         subject: sid,
+@@ -2775,7 +2775,7 @@ function buildHomePlanFromV2(baseReport) {
+   for (const u of maintainUnits.slice(0, 3)) {
+     const action =
+       resolveUnitParentActionHe(u, gradeKeyForV2UnitFromReport(baseReport, u)) ||
+-      "╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫É╫ò╫¬╫ò ╫º╫ª╫æ ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫ö╫₧╫ª╫æ ╫Ö╫ª╫Ö╫æ ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫û╫ö.";
++      "╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫É╫ò╫¬╫ò ╫º╫ª╫æ ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫ö╫₧╫ª╫æ ╫á╫¿╫É╫ö ╫Ö╫ª╫Ö╫æ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.";
+     itemsHe.push(
+       homePlanLineFromV2Unit(baseReport, u, rewriteParentRecommendationForDetailedHe(String(action))),
+     );
+diff --git a/utils/detailed-report-parent-letter-he.js b/utils/detailed-report-parent-letter-he.js
+index d06cb96e..3f551f7c 100644
+--- a/utils/detailed-report-parent-letter-he.js
++++ b/utils/detailed-report-parent-letter-he.js
+@@ -54,7 +54,7 @@ export function rewriteParentRecommendationForDetailedHe(raw) {
+   let s = stripGuillemetsHe(String(raw || ""));
+   if (!s) return "";
+   s = s.replace(/\s+/g, " ").trim();
+-  s = s.replace(/^╫ó╫£ ([^,]+), ╫É╫ù╫¿╫Ö ╫₧╫ö ╫⌐╫á╫É╫í╫ú ╫æ╫ÿ╫ò╫ò╫ù:\s*/u, "╫æ$1: ");
++  s = s.replace(/^╫ó╫£ ([^,]+), (?:╫É╫ù╫¿╫Ö ╫₧╫ö ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö(?: ╫⌐╫á╫æ╫ù╫¿╫ö)?|╫£╫ñ╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö):\s*/u, "╫æ$1: ");
+   s = s.replace(/╫æ╫₧╫⌐╫ù╫º/g, "╫æ╫¬╫¿╫Æ╫ò╫£");
+   s = s.replace(/╫É╫¥ ╫æ╫₧╫⌐╫ù╫º ╫Ö╫⌐ ╫æ╫ù╫Ö╫¿╫¬ ╫¢╫Ö╫¬╫ö ╫£╫ñ╫Ö ╫á╫ò╫⌐╫É ΓÇö/g, "╫É╫¥ ╫á╫Ö╫¬╫ƒ ╫£╫ö╫ñ╫¿╫Ö╫ô ╫¿╫₧╫¬ ╫º╫ò╫⌐╫Ö ╫£╫ñ╫Ö ╫á╫ò╫⌐╫É ΓÇö");
+   s = s.replace(/╫É╫¥ ╫É╫ñ╫⌐╫¿ ╫£╫æ╫ù╫ò╫¿ ╫¢╫Ö╫¬╫ö ╫á╫ñ╫¿╫ô╫¬ ╫£╫ñ╫Ö ╫á╫ò╫⌐╫É ΓÇö/g, "╫É╫¥ ╫á╫Ö╫¬╫ƒ ╫£╫ö╫¬╫É╫Ö╫¥ ╫¿╫₧╫¬ ╫º╫ò╫⌐╫Ö ╫á╫ñ╫¿╫ô╫¬ ╫£╫ñ╫Ö ╫á╫ò╫⌐╫É ΓÇö");
+@@ -154,8 +154,8 @@ function buildSubjectOpeningLineHe(sp, lab) {
+ 
+   if (readiness === "not_ready" && domRc) {
+     const templates = [
+-      `╫æ${lab} ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫₧╫ô╫Ö ╫£╫í╫Æ╫ò╫¿ ╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫₧╫ö ╫⌐╫¢╫ƒ ╫æ╫ò╫£╫ÿ: ${domRc}. ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫ó╫¥ ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫£╫ñ╫á╫Ö ╫⌐╫Ö╫á╫ò╫Ö ╫₧╫ö╫ò╫¬╫Ö.`,
+-      `╫æ${lab} ╫₧╫ö ╫⌐╫á╫É╫í╫ú ╫æ╫ÿ╫ò╫ò╫ù ╫ó╫ô╫Ö╫Ö╫ƒ ╫ù╫£╫º╫Ö; ╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫ö╫í╫æ╫Ö╫¿ ╫æ╫Ö╫ò╫¬╫¿ ╫¢╫¿╫Æ╫ó ╫ö╫ò╫É ${domRc} ΓÇö ╫æ╫£╫Ö ╫£╫á╫ó╫ò╫£ ╫¬╫ò╫¢╫á╫Ö╫¬ ╫É╫¿╫ò╫¢╫ö.`,
++      `╫æ${lab} ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫₧╫ô╫Ö ╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö ╫æ╫¿╫ò╫¿╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫₧╫ö ╫⌐╫¢╫ƒ ╫æ╫ò╫£╫ÿ: ${domRc}. ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫ó╫¥ ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫£╫ñ╫á╫Ö ╫⌐╫Ö╫á╫ò╫Ö ╫₧╫ö╫ò╫¬╫Ö.`,
++      `╫æ${lab} ╫ö╫₧╫Ö╫ô╫ó ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫ù╫£╫º╫Ö; ╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫ö╫í╫æ╫Ö╫¿ ╫æ╫Ö╫ò╫¬╫¿ ╫¢╫¿╫Æ╫ó ╫ö╫ò╫É ${domRc} ΓÇö ╫æ╫£╫Ö ╫£╫á╫ó╫ò╫£ ╫¬╫ò╫¢╫á╫Ö╫¬ ╫É╫¿╫ò╫¢╫ö.`,
+     ];
+     return stripGuillemetsHe(templates[Math.abs((lab + domRc).length) % templates.length]);
+   }
+@@ -203,7 +203,7 @@ function buildSubjectOpeningLineHe(sp, lab) {
+     const pre = sparse ? "╫á╫¿╫É╫ö ╫⌐" : "";
+     return stripGuillemetsHe(`${pre}╫æ${lab} ╫Ö╫⌐ ╫ö╫¬╫º╫ô╫₧╫ò╫¬ ╫ù╫£╫º╫Ö╫¬ ╫æ╓╛${displayTopicPhraseHe(imp0.labelHe)} (╫ô╫Ö╫ò╫º ╫¢╓╛${acc}%).`);
+   }
+-  return stripGuillemetsHe(`╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫í╫¢╫¥ ╫£╫Æ╫æ╫Ö ${lab} ΓÇö ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ╫æ╫ÿ╫ò╫ò╫ù ╫⌐╫á╫æ╫ù╫¿.`);
++  return stripGuillemetsHe(`╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫í╫¢╫¥ ╫£╫Æ╫æ╫Ö ${lab} ΓÇö ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.`);
+ }
+ 
+ /** ╫₧╫⌐╫ñ╫ÿ ╫É╫æ╫ù╫á╫ö ╫É╫ù╫ô ΓÇö ╫₧╫₧╫û╫Æ ╫ù╫ò╫û╫º/╫ù╫ò╫£╫⌐╫ö ╫æ╫£╫Ö ╫æ╫£╫ò╫º╫Ö╫¥ ╫á╫ñ╫¿╫ô╫Ö╫¥ */
+@@ -237,7 +237,7 @@ function buildSubjectDiagnosisLineHe(sp, lab) {
+     const base = stripGuillemetsHe(`${domRisk} ΓÇö ${trendLine}`);
+     if (w0 && s0) {
+       return stripGuillemetsHe(
+-        `${base} ╫æ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö: ${displayTopicPhraseHe(s0.labelHe)} ╫Ö╫⌐ ╫æ╫í╫Ö╫í ╫ÿ╫ò╫æ; ╫£╫ó╫ò╫₧╫¬ ╫û╫É╫¬ ${displayTopicPhraseHe(w0.labelHe)} ╫¢╫ô╫É╫Ö ╫£╫¬╫¬ ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô.`
++        `${base} ╫£╫ñ╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ${displayTopicPhraseHe(s0.labelHe)} ╫Ö╫⌐ ╫æ╫í╫Ö╫í ╫ÿ╫ò╫æ; ╫£╫ó╫ò╫₧╫¬ ╫û╫É╫¬ ${displayTopicPhraseHe(w0.labelHe)} ╫¢╫ô╫É╫Ö ╫£╫¬╫¬ ╫ù╫Ö╫û╫ò╫º ╫₧╫₧╫ò╫º╫ô.`
+       );
+     }
+     if (w0) {
+@@ -256,7 +256,7 @@ function buildSubjectDiagnosisLineHe(sp, lab) {
+       ? "╫⌐╫ò╫ò╫ö ╫£╫ù╫û╫º; ╫ö╫ô╫ñ╫ò╫í ╫ù╫ò╫û╫¿ ╫æ╫ó╫º╫æ╫Ö╫ò╫¬."
+       : "╫⌐╫ò╫ò╫ö ╫£╫ù╫û╫º ΓÇö ╫ò╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫£╫ó╫º╫ò╫æ ╫æ╫£╫Ö ╫£╫₧╫ö╫¿ ╫£╫₧╫í╫º╫á╫ö.";
+     return stripGuillemetsHe(
+-      `╫æ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö: ${displayTopicPhraseHe(s0.labelHe)} ╫Ö╫⌐ ╫æ╫í╫Ö╫í ╫ÿ╫ò╫æ; ╫£╫ó╫ò╫₧╫¬ ╫û╫É╫¬ ${displayTopicPhraseHe(w0.labelHe)} ${tail}`
++      `╫£╫ñ╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ${displayTopicPhraseHe(s0.labelHe)} ╫Ö╫⌐ ╫æ╫í╫Ö╫í ╫ÿ╫ò╫æ; ╫£╫ó╫ò╫₧╫¬ ╫û╫É╫¬ ${displayTopicPhraseHe(w0.labelHe)} ${tail}`
+     );
+   }
+   if (w0) {
+@@ -404,7 +404,7 @@ export function buildTopicRecommendationNarrative(tr) {
+   const statsLine =
+     q > 0
+       ? `╫ö╫Ö╫ò ${q} ╫⌐╫É╫£╫ò╫¬, ╫ó╫¥ ╫ô╫Ö╫ò╫º ╫⌐╫£ ╫¢╓╛${acc}%${m > 0 ? ` ╫ò╓╛${m} ╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫₧╫ª╫ÿ╫æ╫¿╫ò╫¬` : ""}.`
+-      : "╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ╫¢╫ô╫Ö ╫£╫í╫¢╫¥ ╫₧╫Æ╫₧╫ö ╫É╫₧╫Ö╫á╫ö.";
++      : "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫⌐╫É╫£╫ò╫¬ ╫¢╫ô╫Ö ╫£╫¿╫É╫ò╫¬ ╫É╫¥ ╫Ö╫⌐ ╫₧╫Æ╫₧╫ö ╫æ╫¿╫ò╫¿╫ö.";
+   let snap = q > 0 ? `╫æ${core} ${statsLine}` : `╫æ${core} ${statsLine}`;
+   if (q > 0) {
+     const stepOpeners =
+diff --git a/utils/learning-patterns-analysis.js b/utils/learning-patterns-analysis.js
+index 18c8d41f..40fd65ae 100644
+--- a/utils/learning-patterns-analysis.js
++++ b/utils/learning-patterns-analysis.js
+@@ -110,7 +110,7 @@ function buildStrengthWithCautionLines(row, mistakeCount) {
+   const q = Number(row?.questions) || 0;
+   const n = Number(mistakeCount) || 0;
+   return [
+-    `╫æ${label} ╫á╫¿╫É╫Ö╫¬ ╫⌐╫£╫Ö╫ÿ╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫ö╫û╫ò: ╫¢╓╛${acc}% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü ${q} ╫⌐╫É╫£╫ò╫¬.`,
++    `╫æ${label} ╫á╫¿╫É╫Ö╫¬ ╫⌐╫£╫Ö╫ÿ╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ╫¢╓╛${acc}% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü ${q} ╫⌐╫É╫£╫ò╫¬.`,
+     `╫¢╫⌐╫Ö╫⌐ ╫ÿ╫ó╫ò╫¬, ╫£╫ñ╫ó╫₧╫Ö╫¥ ╫ù╫ò╫û╫¿ ╫É╫ò╫¬╫ò ╫ô╫ñ╫ò╫í (${n} ╫₧╫º╫¿╫Ö╫¥ ╫ô╫ò╫₧╫Ö╫¥ ╫æ╫ÿ╫ò╫ò╫ù) ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ó╫ª╫ò╫¿ ╫¿╫Æ╫ó ╫ó╫£ ╫ô╫ò╫Æ╫₧╫ö ╫É╫ù╫¬ ╫æ╫Ö╫ù╫ô.`,
+     `╫₧╫ö ╫¢╫ô╫É╫Ö ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬: ╫£╫æ╫ù╫ò╫¿ ╫¬╫¿╫Æ╫Ö╫£ ╫É╫ù╫ô ╫º╫ª╫¿, ╫£╫ó╫æ╫ò╫¿ ╫ó╫£╫Ö╫ò ╫æ╫º╫ò╫£ ╫ª╫ó╫ô ╫É╫ù╫¿ ╫ª╫ó╫ô, ╫ò╫É╫û ╫£╫¬╫¬ ╫£╫Ö╫£╫ô ╫£╫á╫í╫ò╫¬ ╫⌐╫ò╫æ ╫æ╫ó╫ª╫₧╫ò.`,
+   ];
+@@ -619,7 +619,7 @@ function buildEvidenceSuccessFromPick(pick) {
+     pick.confidence === "high" || pick.questions >= 20 ? "high" : "moderate";
+   return {
+     titleHe: "╫₧╫ö ╫⌐╫ö╫Ö╫£╫ô ╫ó╫ò╫⌐╫ö ╫ÿ╫ò╫æ ╫æ╫¬╫¿╫Æ╫ò╫£",
+-    bodyHe: `╫æ╫á╫ò╫⌐╫É ${pick.labelHe} ╫Ö╫⌐ ╫ö╫ª╫£╫ù╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö: ╫¢╓╛${pick.accuracy}% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü ${pick.questions} ╫⌐╫É╫£╫ò╫¬.`,
++    bodyHe: `╫æ╫á╫ò╫⌐╫É ${pick.labelHe} ╫Ö╫⌐ ╫ö╫ª╫£╫ù╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ╫¢╓╛${pick.accuracy}% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü ${pick.questions} ╫⌐╫É╫£╫ò╫¬.`,
+     confidence: conf,
+   };
+ }
+@@ -650,7 +650,7 @@ function buildSummaryHe(
+       return `${opening} ╫Ö╫⌐ ╫¢╫É╫ƒ ╫¢╫₧╫ö ╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫æ╫£╫Ö ╫ô╫ñ╫ò╫í ╫ù╫ò╫û╫¿ ╫æ╫¿╫ò╫¿ ΓÇö ╫ó╫ô╫Ö╫ú ╫£╫É ╫£╫₧╫ö╫¿ ╫£╫₧╫í╫º╫á╫ò╫¬; ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫¿╫Æ╫ò╫ó ╫ò╫£╫ª╫æ╫ò╫¿ ╫ó╫ò╫ô ╫ô╫ò╫Æ╫₧╫É╫ò╫¬.`;
+     }
+     if (mistakeEventCount >= 0 && mistakeEventCount < 5) {
+-      return `${opening} ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ╫æ╫¬╫º╫ò╫ñ╫ö ΓÇö ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫É╫ñ╫⌐╫¿ ╫Ö╫ö╫Ö╫ö ╫£╫á╫í╫ù ╫¬╫₧╫ò╫á╫ö ╫₧╫£╫É╫ö ╫Ö╫ò╫¬╫¿.`;
++      return `${opening} ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ΓÇö ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫É╫ñ╫⌐╫¿ ╫Ö╫ö╫Ö╫ö ╫£╫á╫í╫ù ╫¬╫₧╫ò╫á╫ö ╫₧╫£╫É╫ö ╫Ö╫ò╫¬╫¿.`;
+     }
+     return null;
+   }
+@@ -1012,10 +1012,10 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+     return {
+       dominantLearningRisk: "none_sparse",
+       dominantSuccessPattern: "none_sparse",
+-      trendNarrativeHe: "╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ╫¢╫ô╫Ö ╫£╫í╫¢╫¥ ╫₧╫Æ╫₧╫ö ╫æ╫₧╫º╫ª╫ò╫ó ╫û╫ö.",
++      trendNarrativeHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫û╫ö╫ò╫¬ ╫₧╫Æ╫₧╫ö ╫æ╫¿╫ò╫¿╫ö ╫æ╫₧╫º╫ª╫ò╫ó ╫û╫ö.",
+       confidenceSummaryHe: "╫á╫¬╫ò╫ƒ ╫ô╫£ ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫æ╫Ö╫ÿ╫ù╫ò╫ƒ ╫í╫ÿ╫ÿ╫Ö╫í╫ÿ╫Ö ╫æ╫¿╫₧╫¬ ╫ö╫₧╫º╫ª╫ò╫ó.",
+       recommendedHomeMethodHe: null,
+-      whatNotToDoHe: "╫£╫É ╫£╫æ╫á╫ò╫¬ ╫¬╫ò╫¢╫á╫Ö╫¬ ╫É╫¿╫ò╫¢╫ö ╫£╫ñ╫á╫Ö ╫⌐╫Ö╫⌐ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù.",
++      whatNotToDoHe: "╫£╫É ╫£╫æ╫á╫ò╫¬ ╫¬╫ò╫¢╫á╫Ö╫¬ ╫É╫¿╫ò╫¢╫ö ╫£╫ñ╫á╫Ö ╫⌐╫Ö╫⌐ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.",
+       majorRiskFlagsAcrossRows: emptyRiskOr(),
+       dominantBehaviorProfileAcrossRows: "undetermined",
+       strongestPositiveTrendRowHe: null,
+@@ -1031,11 +1031,11 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+       secondaryRootCause: null,
+       rootCauseDistribution: {},
+       subjectDiagnosticRestraintHe:
+-        "╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫£╫É ╫₧╫í╫Ö╫º╫Ö╫¥ ╫⌐╫ò╫¿╫⌐ ╫º╫ò╫⌐╫Ö ╫ù╫ò╫ª╫ö╓╛╫á╫ò╫⌐╫É╫Ö╫¥ ╫ò╫£╫É ╫₧╫₧╫£╫Ö╫ª╫Ö╫¥ ╫ó╫£ ╫⌐╫Ö╫á╫ò╫Ö ╫É╫Æ╫¿╫í╫Ö╫æ╫Ö.",
++        "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫í╫Ö╫º╫Ö╫¥ ╫⌐╫ò╫¿╫⌐ ╫º╫ò╫⌐╫Ö ╫ù╫ò╫ª╫ö╓╛╫á╫ò╫⌐╫É╫Ö╫¥ ╫ò╫£╫É ╫₧╫₧╫£╫Ö╫ª╫Ö╫¥ ╫ó╫£ ╫⌐╫Ö╫á╫ò╫Ö ╫É╫Æ╫¿╫í╫Ö╫æ╫Ö.",
+       subjectConclusionReadiness: "not_ready",
+       subjectInterventionPriorityHe: INTERVENTION_TYPE_LABEL_HE.monitor_before_escalation,
+       subjectPriorityLevel: "monitor",
+-      subjectPriorityReasonHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫£╫É ╫₧╫ô╫¿╫Æ╫Ö╫¥ ╫ó╫ô╫Ö╫ñ╫ò╫¬.",
++      subjectPriorityReasonHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫ô╫¿╫Æ╫Ö╫¥ ╫ó╫ô╫Ö╫ñ╫ò╫¬.",
+       subjectImmediateActionHe: null,
+       subjectDeferredActionHe: null,
+       subjectMonitoringOnly: true,
+@@ -1048,7 +1048,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+       subjectLearningStageLabelHe: LEARNING_STAGE_LABEL_HE.insufficient_longitudinal_evidence,
+       subjectRetentionRisk: "unknown",
+       subjectTransferReadiness: "not_ready",
+-      subjectMemoryNarrativeHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫í╫ò╫Æ ╫ÿ╫ó╫ò╫¬ ╫ù╫ò╫û╫¿ ╫É╫ò ╫₧╫Æ╫₧╫ö ╫£╫É╫ò╫¿╫Ü ╫û╫₧╫ƒ.",
++      subjectMemoryNarrativeHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫í╫ò╫Æ ╫ÿ╫ó╫ò╫¬ ╫ù╫ò╫û╫¿ ╫É╫ò ╫₧╫Æ╫₧╫ö ╫£╫É╫ò╫¿╫Ü ╫û╫₧╫ƒ.",
+       subjectReviewBeforeAdvanceHe: null,
+       subjectResponseToIntervention: "not_enough_evidence",
+       subjectResponseToInterventionLabelHe: RESPONSE_TO_INTERVENTION_LABEL_HE.not_enough_evidence,
+@@ -1058,7 +1058,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+       subjectConclusionFreshness: "low",
+       subjectRecalibrationNeed: "do_not_rely_yet",
+       subjectRecalibrationNeedHe: RECALIBRATION_NEED_LABEL_HE.do_not_rely_yet,
+-      subjectEffectivenessNarrativeHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫£╫É ╫₧╫ó╫¿╫Ö╫¢╫Ö╫¥ ╫¬╫Æ╫ò╫æ╫ö ╫£╫¬╫₧╫Ö╫¢╫ö.",
++      subjectEffectivenessNarrativeHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫ó╫¿╫Ö╫¢╫Ö╫¥ ╫¬╫Æ╫ò╫æ╫ö ╫£╫¬╫₧╫Ö╫¢╫ö.",
+       subjectSupportSequenceState: "insufficient_sequence_evidence",
+       subjectSupportSequenceStateLabelHe: SUPPORT_SEQUENCE_STATE_LABEL_HE.insufficient_sequence_evidence,
+       subjectStrategyRepetitionRisk: "unknown",
+@@ -1067,7 +1067,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+       subjectNextBestSequenceStepHe: NEXT_BEST_SEQUENCE_STEP_LABEL_HE.observe_before_next_cycle,
+       subjectAdviceNovelty: "unknown",
+       subjectRecommendationRotationNeed: "do_not_repeat_yet",
+-      subjectSequenceNarrativeHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫¿╫ª╫ú ╫¬╫₧╫Ö╫¢╫ö.",
++      subjectSequenceNarrativeHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫¿╫ª╫ú ╫¬╫₧╫Ö╫¢╫ö.",
+       subjectRecommendationMemoryState: "no_memory",
+       subjectPriorRecommendationSignature: "unknown",
+       subjectSupportHistoryDepth: "unknown",
+@@ -1076,7 +1076,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+       subjectFollowThroughSignal: "not_inferable",
+       subjectContinuationDecision: "continue_but_refine",
+       subjectContinuationDecisionHe: RECOMMENDATION_CONTINUATION_DECISION_LABEL_HE.continue_but_refine,
+-      subjectOutcomeNarrativeHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫û╫Ö╫¢╫¿╫ò╫ƒ ╫ö╫₧╫£╫ª╫ö ╫É╫ò ╫¬╫ò╫ª╫É╫ö.",
++      subjectOutcomeNarrativeHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫û╫Ö╫¢╫¿╫ò╫ƒ ╫ö╫₧╫£╫ª╫ö ╫É╫ò ╫¬╫ò╫ª╫É╫ö.",
+       subjectGateState: "gates_not_ready",
+       subjectGateStateLabelHe: GATE_STATE_LABEL_HE.gates_not_ready,
+       subjectGateReadiness: "insufficient",
+@@ -1084,15 +1084,15 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+       subjectNextCycleDecisionFocusHe: NEXT_CYCLE_DECISION_FOCUS_LABEL_HE.prove_current_direction,
+       subjectEvidenceTargetType: "fresh_data_needed",
+       subjectTargetObservationWindow: "unknown",
+-      subjectGateNarrativeHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫ö╫ù╫£╫ÿ╫ö ╫æ╫ÿ╫ò╫ù╫ö.",
++      subjectGateNarrativeHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫ö╫ù╫£╫ÿ╫ö ╫æ╫ÿ╫ò╫ù╫ö.",
+       subjectDependencyState: "insufficient_dependency_evidence",
+       subjectDependencyStateLabelHe: DEPENDENCY_STATE_LABEL_HE.insufficient_dependency_evidence,
+       subjectLikelyFoundationalBlocker: "unknown",
+       subjectLikelyFoundationalBlockerLabelHe: FOUNDATIONAL_BLOCKER_LABEL_HE.unknown,
+       subjectDownstreamSymptomRisk: "unknown",
+       subjectFoundationFirstPriority: false,
+-      subjectFoundationFirstPriorityHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ΓÇö ╫£╫É ╫₧╫ô╫¿╫Æ╫Ö╫¥ ╫Ö╫í╫ò╫ô ╫₧╫ò╫£ ╫₧╫º╫ò╫₧╫Ö.",
+-      subjectDependencyNarrativeHe: "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫¬╫£╫ò╫¬ ╫Ö╫í╫ò╫ô.",
++      subjectFoundationFirstPriorityHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫ô╫¿╫Æ╫Ö╫¥ ╫Ö╫í╫ò╫ô ╫₧╫ò╫£ ╫₧╫º╫ò╫₧╫Ö.",
++      subjectDependencyNarrativeHe: "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ΓÇö ╫£╫É ╫₧╫í╫¢╫₧╫Ö╫¥ ╫¬╫£╫ò╫¬ ╫Ö╫í╫ò╫ô.",
+     };
+   }
+ 
+@@ -1468,7 +1468,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+   }
+ 
+   const riskLabelHe = {
+-    knowledge_gap: "╫ñ╫ó╫¿ ╫Ö╫ô╫ó / ╫ù╫ò╫í╫¿ ╫æ╫í╫Ö╫í",
++    knowledge_gap: "╫º╫ò╫⌐╫Ö ╫æ╫æ╫í╫Ö╫í / ╫ù╫ò╫í╫¿ ╫æ╫í╫Ö╫í",
+     speed_pressure: "╫£╫ù╫Ñ ╫₧╫ö╫Ö╫¿╫ò╫¬ ╫æ╫₧╫ª╫æ ╫¬╫¿╫Æ╫ò╫£ ╫ó╫¥ ╫û╫₧╫ƒ",
+     instruction_friction: "╫₧╫⌐╫Ö╫₧╫ö ╫£╫É ╫¬╫₧╫Ö╫ô ╫æ╫¿╫ò╫¿╫ö ╫É╫ò ╫¬╫£╫ò╫¬ ╫æ╫¿╫₧╫û╫Ö╫¥",
+     careless_pattern: "╫ù╫ò╫í╫¿ ╫¬╫⌐╫ò╫₧╫¬ ╫£╫æ ╫⌐╫ù╫ò╫û╫¿ ╫æ╫¬╫⌐╫ò╫æ╫ò╫¬",
+@@ -1498,7 +1498,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+       "╫₧╫ö ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬: ╫º╫¿╫Ö╫É╫¬ ╫₧╫⌐╫Ö╫₧╫ö ╫₧╫⌐╫ò╫¬╫ñ╫¬, ╫û╫Ö╫ö╫ò╫Ö ╫₧╫ö ╫á╫⌐╫É╫£, ╫ò╫¿╫º ╫É╫û ╫¬╫⌐╫ò╫æ╫ö ΓÇö ╫£╫ª╫₧╫ª╫¥ ╫¬╫£╫ò╫¬ ╫æ╫¿╫₧╫û╫Ö╫¥ ╫ª╫ó╫ô ╫É╫ù╫¿ ╫ª╫ó╫ô.";
+   } else if (dominantLearningRisk === "careless_pattern") {
+     recommendedHomeMethodHe =
+-      "╫₧╫ö ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬: ╫ó╫ª╫Ö╫¿╫ö ╫º╫ª╫¿╫ö ╫£╫ñ╫á╫Ö ╫⌐╫£╫Ö╫ù╫ö, ╫æ╫ô╫Ö╫º╫ö ╫₧╫ò╫£ ╫ö╫á╫Ö╫í╫ò╫ù ΓÇö ╫£╫É ╫₧╫á╫Ö╫ù╫Ö╫¥ ╫₧╫Ö╫ô ╫⌐╫û╫ö ╫ñ╫ó╫¿ ╫Ö╫ô╫ó ╫ó╫₧╫ò╫º.";
++      "╫₧╫ö ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬: ╫ó╫ª╫Ö╫¿╫ö ╫º╫ª╫¿╫ö ╫£╫ñ╫á╫Ö ╫⌐╫£╫Ö╫ù╫ö, ╫æ╫ô╫Ö╫º╫ö ╫₧╫ò╫£ ╫ö╫á╫Ö╫í╫ò╫ù ΓÇö ╫£╫É ╫₧╫á╫Ö╫ù╫Ö╫¥ ╫₧╫Ö╫ô ╫⌐╫û╫ö ╫º╫ò╫⌐╫Ö ╫ó╫₧╫ò╫º ╫æ╫æ╫í╫Ö╫í.";
+   } else if (dominantLearningRisk === "fragile_success") {
+     recommendedHomeMethodHe =
+       "╫₧╫ö ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬: ╫£╫æ╫á╫ò╫¬ ╫ó╫ª╫₧╫É╫ò╫¬ ╫æ╫ö╫ô╫¿╫Æ╫ö ΓÇö ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫ó╫¥ ╫ñ╫ù╫ò╫¬ ╫ó╫û╫¿╫ö ╫É╫ù╫¿╫Ö ╫⌐╫ö╫ö╫æ╫á╫ö ╫æ╫¿╫ò╫¿╫ö, ╫æ╫£╫Ö ╫£╫ô╫ù╫ò╫ú ╫ó╫£╫Ö╫Ö╫ö ╫₧╫ö╫Ö╫¿╫ö ╫₧╫ô╫Ö ╫æ╫¿╫₧╫ö.";
+@@ -1525,7 +1525,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
+   if (worstCaution && worstCaution.score >= 3) {
+     avoid.push("╫£╫É ╫£╫ñ╫¿╫⌐ ╫Ö╫¿╫Ö╫ô╫ö ╫º╫ª╫¿╫ö ╫¢╫¢╫Ö╫⌐╫£╫ò╫ƒ ╫º╫æ╫ò╫ó ΓÇö ╫ó╫ô╫Ö╫ú ╫û╫ö╫Ö╫¿╫ò╫¬ ╫ò╫æ╫ô╫Ö╫º╫ö ╫ù╫ò╫û╫¿╫¬.");
+   }
+-  const whatNotToDoHe = avoid.length ? avoid.join(" ") : "╫£╫É ╫£╫º╫æ╫ò╫ó ╫⌐╫Ö╫á╫ò╫Ö ╫ô╫¿╫₧╫ÿ╫Ö ╫æ╫£╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù.";
++  const whatNotToDoHe = avoid.length ? avoid.join(" ") : "╫£╫É ╫£╫º╫æ╫ò╫ó ╫⌐╫Ö╫á╫ò╫Ö ╫ô╫¿╫₧╫ÿ╫Ö ╫æ╫£╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.";
+ 
+   const rootEntries = Object.entries(rootCauseRowCounts)
+     .filter(([, n]) => n > 0)
+@@ -2328,7 +2328,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
+           type: "success",
+           titleHe: "╫₧╫ö ╫⌐╫ö╫Ö╫£╫ô ╫ó╫ò╫⌐╫ö ╫ÿ╫ò╫æ ╫æ╫¬╫¿╫Æ╫ò╫£",
+           bodyHe:
+-            "╫æ╫á╫ò╫⌐╫É ╫ù╫Ö╫æ╫ò╫¿ ╫Ö╫⌐ ╫ö╫ª╫£╫ù╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö: ╫¢╓╛93% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü 42 ╫⌐╫É╫£╫ò╫¬.",
++            "╫æ╫á╫ò╫⌐╫É ╫ù╫Ö╫æ╫ò╫¿ ╫Ö╫⌐ ╫ö╫ª╫£╫ù╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ╫¢╓╛93% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü 42 ╫⌐╫É╫£╫ò╫¬.",
+           confidence: "high",
+         },
+       ],
+@@ -2387,7 +2387,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
+       evidenceSuccess: {
+         titleHe: "╫₧╫ö ╫⌐╫ö╫Ö╫£╫ô ╫ó╫ò╫⌐╫ö ╫ÿ╫ò╫æ ╫æ╫¬╫¿╫Æ╫ò╫£",
+         bodyHe:
+-          "╫æ╫á╫ò╫⌐╫É ╫ù╫Ö╫æ╫ò╫¿ ╫Ö╫⌐ ╫ö╫ª╫£╫ù╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö: ╫¢╓╛93% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü 42 ╫⌐╫É╫£╫ò╫¬.",
++          "╫æ╫á╫ò╫⌐╫É ╫ù╫Ö╫æ╫ò╫¿ ╫Ö╫⌐ ╫ö╫ª╫£╫ù╫ö ╫ÿ╫ò╫æ╫ö ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ╫¢╓╛93% ╫á╫¢╫ò╫ƒ ╫₧╫¬╫ò╫Ü 42 ╫⌐╫É╫£╫ò╫¬.",
+         confidence: "high",
+       },
+       insufficientData: [
+diff --git a/utils/parent-data-presence.js b/utils/parent-data-presence.js
+index dbd3628f..bd0189e4 100644
+--- a/utils/parent-data-presence.js
++++ b/utils/parent-data-presence.js
+@@ -55,7 +55,7 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
+   if (totalQ <= 0) {
+     return {
+       state: ParentDataPresence.noData,
+-      recommendationsExplainerHe: "╫É╫Ö╫ƒ ╫ó╫ô╫Ö╫Ö╫ƒ ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù ╫⌐╫á╫æ╫ù╫¿.",
++      recommendationsExplainerHe: "╫É╫Ö╫ƒ ╫ó╫ô╫Ö╫Ö╫ƒ ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.",
+       lowConfidenceExplainerHe: null,
+     };
+   }
+@@ -88,7 +88,7 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
+       return {
+         state: ParentDataPresence.hasEvidenceLowConfidence,
+         recommendationsExplainerHe:
+-          "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù, ╫É╫Ü ╫ó╫ô╫Ö╫Ö╫ƒ ╫£╫É ╫á╫Ö╫¬╫ƒ ╫£╫í╫Æ╫ò╫¿ ╫¬╫₧╫ò╫á╫ö ╫æ╫¿╫ò╫¿╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ.",
++          "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫É╫Ü ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫æ╫í╫Ö╫í ╫æ╫¿╫ò╫¿ ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ.",
+         lowConfidenceExplainerHe:
+           "╫º╫Ö╫Ö╫₧╫Ö╫¥ ╫á╫¬╫ò╫á╫Ö╫¥, ╫É╫Ü ╫ô╫¿╫ò╫⌐ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫ù╫û╫º ╫É╫¬ ╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫⌐╫á╫¿╫É╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥.",
+       };
+@@ -99,7 +99,7 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
+     return {
+       state: ParentDataPresence.hasVolumeNoPattern,
+       recommendationsExplainerHe:
+-        "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫¬╫₧╫ò╫á╫ö ╫Ö╫ª╫Ö╫æ╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫ó╫£ ╫ñ╫á╫Ö ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ.",
++        "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫æ╫í╫Ö╫í ╫æ╫¿╫ò╫¿ ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫ó╫£ ╫ñ╫á╫Ö ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ.",
+       lowConfidenceExplainerHe: null,
+     };
+   }
+@@ -116,7 +116,7 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
+   return {
+     state: ParentDataPresence.hasVolumeNoPattern,
+     recommendationsExplainerHe:
+-      "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫¬╫₧╫ò╫á╫ö ╫Ö╫ª╫Ö╫æ╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫ó╫£ ╫ñ╫á╫Ö ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ.",
++      "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫É╫æ╫£ ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫æ╫í╫Ö╫í ╫æ╫¿╫ò╫¿ ╫₧╫ö╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫ó╫£ ╫ñ╫á╫Ö ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫ò╫£╫ó╫º╫ò╫æ ╫⌐╫ò╫æ ╫£╫É╫ù╫¿ ╫₧╫¢╫ƒ.",
+     lowConfidenceExplainerHe: null,
+   };
+ }
+@@ -189,7 +189,7 @@ export const PARENT_REPORT_STANDALONE_ZERO_LEAK_RE = /(?<![#0-9])00000(?![0-9])/
+  * do not tell parents ΓÇ£╫É╫Ö╫ƒ ╫á╫¬╫ò╫á╫Ö╫¥ΓÇ¥ (contradicts tables).
+  */
+ export const PARENT_BULLETS_EMPTY_WITH_VOLUME_HE =
+-  "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù, ╫É╫Ü ╫¢╫¿╫Æ╫ó ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫º╫ò╫ô╫ò╫¬ ╫æ╫¿╫ò╫¿╫ò╫¬ ╫£╫ö╫ª╫Æ╫ö ΓÇö ╫ö╫₧╫⌐╫Ü ╫ö╫¬╫¿╫Æ╫ò╫£ ╫Ö╫ó╫û╫ò╫¿ ╫£╫ö╫æ╫ö╫Ö╫¿ ╫É╫¬ ╫ö╫¬╫₧╫ò╫á╫ö.";
++  "╫Ö╫⌐ ╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫É╫Ü ╫¢╫¿╫Æ╫ó ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫º╫ò╫ô╫ò╫¬ ╫æ╫¿╫ò╫¿╫ò╫¬ ╫£╫ö╫ª╫Æ╫ö ΓÇö ╫ö╫₧╫⌐╫Ü ╫ö╫¬╫¿╫Æ╫ò╫£ ╫Ö╫ó╫û╫ò╫¿ ╫£╫ö╫æ╫ö╫Ö╫¿ ╫É╫¬ ╫ö╫¬╫₧╫ò╫á╫ö.";
+ 
+ /**
+  * Remove known internal/demo leakage from a string (defense in depth).
+diff --git a/utils/parent-report-ai/parent-report-ai-explainer.js b/utils/parent-report-ai/parent-report-ai-explainer.js
+index 01c3c6ce..9343e79b 100644
+--- a/utils/parent-report-ai/parent-report-ai-explainer.js
++++ b/utils/parent-report-ai/parent-report-ai-explainer.js
+@@ -87,7 +87,7 @@ export function getDeterministicParentReportExplanation(input) {
+     );
+   } else if (dc === "low") {
+     parts.push(
+-      `╫£╫Æ╫æ╫Ö ${subjectHe}: ╫ö╫á╫¬╫ò╫á╫Ö╫¥ ╫æ╫ÿ╫ò╫ò╫ù ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ª╫ò╫₧╫ª╫₧╫Ö╫¥ ΓÇö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£ ╫⌐╫á╫É╫í╫ú ╫É╫ñ╫⌐╫¿ ╫£╫º╫æ╫£ ╫¢╫Ö╫ò╫ò╫ƒ ╫¿╫É╫⌐╫ò╫á╫Ö ╫æ╫£╫æ╫ô.`
++      `╫£╫Æ╫æ╫Ö ${subjectHe}: ╫ö╫á╫¬╫ò╫á╫Ö╫¥ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ª╫ò╫₧╫ª╫₧╫Ö╫¥ ΓÇö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£ ╫⌐╫á╫É╫í╫ú ╫É╫ñ╫⌐╫¿ ╫£╫º╫æ╫£ ╫¢╫Ö╫ò╫ò╫ƒ ╫¿╫É╫⌐╫ò╫á╫Ö ╫æ╫£╫æ╫ô.`
+     );
+   } else if (accBand === "low" || accBand === "mixed") {
+     parts.push(
+diff --git a/utils/parent-report-language/confidence-parent-he.js b/utils/parent-report-language/confidence-parent-he.js
+index 8d163310..c86ec54a 100644
+--- a/utils/parent-report-language/confidence-parent-he.js
++++ b/utils/parent-report-language/confidence-parent-he.js
+@@ -15,7 +15,7 @@ export function confidenceLevelParentSummaryHe(level) {
+     case "early_signal_only":
+       return "╫û╫ö ╫í╫Ö╫₧╫ƒ ╫¿╫É╫⌐╫ò╫á╫Ö ╫æ╫£╫æ╫ô, ╫ò╫£╫¢╫ƒ ╫ó╫ô╫Ö╫Ö╫ƒ ╫£╫É ╫º╫ò╫æ╫ó╫Ö╫¥ ╫₧╫í╫º╫á╫ö ╫æ╫á╫ò╫⌐╫É ╫ö╫û╫ö.";
+     case "insufficient_data":
+-      return "╫æ╫ÿ╫ò╫ò╫ù ╫ö╫û╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫ù╫ò╫₧╫¿ ╫£╫á╫ò╫⌐╫É ΓÇö ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫Ö╫Ö╫ª╫¿ ╫¬╫₧╫ò╫á╫ö ╫æ╫¿╫ò╫¿╫ö ╫Ö╫ò╫¬╫¿.";
++      return "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫ù╫ò╫₧╫¿ ╫£╫á╫ò╫⌐╫É ΓÇö ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫Ö╫Ö╫ª╫¿ ╫¬╫₧╫ò╫á╫ö ╫æ╫¿╫ò╫¿╫ö ╫Ö╫ò╫¬╫¿.";
+     case "contradictory":
+       return "╫¢╫¿╫Æ╫ó ╫ö╫¬╫ò╫ª╫É╫ò╫¬ ╫æ╫á╫ò╫⌐╫É ╫ö╫û╫ö ╫£╫É ╫É╫ù╫Ö╫ô╫ò╫¬, ╫ò╫£╫¢╫ƒ ╫ó╫ò╫ô ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö.";
+     default:
+diff --git a/utils/parent-report-language/forbidden-terms.js b/utils/parent-report-language/forbidden-terms.js
+index 3bc90a8b..9747a172 100644
+--- a/utils/parent-report-language/forbidden-terms.js
++++ b/utils/parent-report-language/forbidden-terms.js
+@@ -80,8 +80,57 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
+   "╫á╫º╫ò╫ô╫ò╫¬ ╫£╫⌐╫Ö╫₧╫¬ ╫£╫æ",
+   /* Engine-internal M-10 taxonomy ΓÇö must not leak to parents */
+   "╫æ╫ù╫Ö╫¿╫¬ ╫¢╫ñ╫£ ╫£╫É ╫₧╫¬╫É╫Ö╫¥ ╫£╫ù╫Ö╫£╫ò╫º",
++  /* Parent copy guard ΓÇö diagnostic-engine jargon in default-visible report text */
++  "╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù",
++  "╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö ΓÇö ╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬",
++  "╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫ÿ╫ò╫ò╫ù",
++  "╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫⌐╫£╫É ╫á╫ô╫Æ╫₧╫ò",
++  "╫í╫ú ╫á╫ñ╫ù",
++  "╫á╫ñ╫ù/╫ô╫Ö╫ò╫º",
++  "╫₧╫ó╫æ╫Ö╫¿╫Ö╫¥ ╫⌐╫£╫æ",
++  "╫₧╫í╫º╫á╫ö ╫ù╫Ö╫ò╫æ╫Ö╫¬",
++  "╫ù╫ò╫ò╫Ö╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£",
++  "╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫⌐╫ó╫£╫ò ╫£╫ô╫ò╫ù",
++  "╫É╫Ö╫¿╫ò╫ó╫Ö ╫ÿ╫ó╫ò╫¬ ╫¿╫£╫ò╫ò╫á╫ÿ╫Ö╫Ö╫¥",
++  "╫₧╫Æ╫₧╫¬ ╫ô╫Ö╫ò╫º",
++  "╫ö╫¬╫É╫₧╫ö ╫ª╫ñ╫Ö",
++  "╫ñ╫ó╫¿ ╫Ö╫ô╫ó",
++  "╫£╫É ╫í╫ò╫Æ╫¿╫Ö╫¥ ╫₧╫í╫º╫á╫ö",
++  "╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö",
+ ];
+ 
++/** Forbidden fragments in parent-report Hebrew copy sources (denylist for copy guard). */
++export const PARENT_COPY_FORBIDDEN_FRAGMENTS = Object.freeze([
++  "╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù",
++  "╫æ╫ÿ╫ò╫ò╫ù ╫û╫ö ΓÇö ╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬",
++  "╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫ÿ╫ò╫ò╫ù",
++  "╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫⌐╫£╫É ╫á╫ô╫Æ╫₧╫ò",
++  "╫í╫ú ╫á╫ñ╫ù",
++  "╫á╫ñ╫ù/╫ô╫Ö╫ò╫º",
++  "╫₧╫ó╫æ╫Ö╫¿╫Ö╫¥ ╫⌐╫£╫æ",
++  "╫₧╫í╫º╫á╫ö ╫ù╫Ö╫ò╫æ╫Ö╫¬",
++  "╫ù╫ò╫ò╫Ö╫ö ╫₧╫ö╫¬╫¿╫Æ╫ò╫£",
++  "╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫⌐╫ó╫£╫ò ╫£╫ô╫ò╫ù",
++  "╫É╫Ö╫¿╫ò╫ó╫Ö ╫ÿ╫ó╫ò╫¬ ╫¿╫£╫ò╫ò╫á╫ÿ╫Ö╫Ö╫¥",
++  "╫₧╫Æ╫₧╫¬ ╫ô╫Ö╫ò╫º",
++  "╫ö╫¬╫É╫₧╫ö ╫ª╫ñ╫Ö",
++  "╫ñ╫ó╫¿ ╫Ö╫ô╫ó",
++  "╫£╫É ╫í╫ò╫Æ╫¿╫Ö╫¥ ╫₧╫í╫º╫á╫ö",
++  "╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö",
++  /* Awkward bare "╫æ╫¬╫º╫ò╫ñ╫ö" / engineer empty-state wording */
++  "╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ╫æ╫¬╫º╫ò╫ñ╫ö",
++  "╫É╫Ö╫ƒ ╫⌐╫ò╫¿╫ò╫¬ ╫ô╫ò╫ù ΓÇö",
++  "╫æ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö",
++  "╫₧╫ö ╫⌐╫á╫É╫í╫ú ╫æ╫¬╫º╫ò╫ñ╫ö",
++  "╫æ╫¬╫º╫ò╫ñ╫ö ╫¢╫ô╫Ö ╫£╫í╫¢╫¥",
++  "╫á╫ò╫⌐╫É ╫Ö╫ù╫Ö╫ô ╫æ╫¬╫º╫ò╫ñ╫ö",
++  "╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫¢╫ô╫Ö",
++  "╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫ó╫ô╫Ö╫Ö╫ƒ",
++  "╫ö╫á╫¬╫ò╫á╫Ö╫¥ ╫æ╫¬╫º╫ò╫ñ╫ö ╫ó╫ô╫Ö╫Ö╫ƒ",
++  "╫ó╫ò╫ô ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö,",
++  "╫á╫¿╫⌐╫₧╫ò ╫æ╫¬╫º╫ò╫ñ╫ö ",
++]);
++
+ export const FORBIDDEN_PARENT_REPORT_SUBSTRINGS = [
+   "insufficient_data",
+   "early_signal_only",
+@@ -105,6 +154,19 @@ export const FORBIDDEN_PARENT_REPORT_SUBSTRINGS = [
+   " p1",
+ ];
+ 
++/**
++ * @param {string} s
++ * @returns {string[]}
++ */
++export function findParentCopyForbiddenFragmentsInString(s) {
++  const t = String(s || "");
++  const hits = [];
++  for (const frag of PARENT_COPY_FORBIDDEN_FRAGMENTS) {
++    if (t.includes(frag)) hits.push(frag);
++  }
++  return hits;
++}
++
+ /**
+  * @param {string} s
+  * @returns {string[]} list of matched forbidden fragments (lowercase scan)
+diff --git a/utils/parent-report-language/parent-facing-normalize-he.js b/utils/parent-report-language/parent-facing-normalize-he.js
+index 821a5507..cc020f6d 100644
+--- a/utils/parent-report-language/parent-facing-normalize-he.js
++++ b/utils/parent-report-language/parent-facing-normalize-he.js
+@@ -154,6 +154,43 @@ export function normalizeParentFacingHe(raw) {
+     [/╫ô╫ñ╫ò╫í\s+╫º╫ò╫⌐╫Ö\b/giu, "╫₧╫ö ╫⌐╫ô╫ò╫¿╫⌐ ╫ù╫Ö╫û╫ò╫º"],
+     [/╫₧╫ò╫º╫ô╫Ö╫¥\s+╫ö╫₧╫ó╫ò╫Æ╫á╫Ö╫¥/giu, "╫ö╫á╫ò╫⌐╫É╫Ö╫¥ ╫ö╫₧╫¿╫¢╫û╫Ö╫Ö╫¥"],
+     [/╫ó╫ò╫Æ╫ƒ\s+╫₧╫í╫ñ╫¿╫Ö/giu, "╫á╫¬╫ò╫ƒ ╫₧╫í╫ñ╫¿╫Ö"],
++    [/╫£╫É\s+╫¬╫ò╫¿╫Æ╫£\s+╫æ╫ÿ╫ò╫ò╫ù/giu, "╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫É╫Ö╫ƒ\s+╫⌐╫É╫£╫ò╫¬\s+╫æ╫ÿ╫ò╫ò╫ù/giu, "╫£╫É ╫á╫É╫í╫ñ╫ò ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫æ╫ÿ╫ò╫ò╫ù\s+╫û╫ö\s+ΓÇö\s+╫É╫Ö╫ƒ\s+╫⌐╫É╫£╫ò╫¬/giu, "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫æ╫ÿ╫ò╫ò╫ù\s+╫ö╫¬╫º╫ò╫ñ╫ö/giu, "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫æ╫ÿ╫ò╫ò╫ù\s+╫ö╫û╫ö/giu, "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫æ╫ÿ╫ò╫ò╫ù\s+╫û╫ö/giu, "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫æ╫ÿ╫ò╫ò╫ù\s+╫⌐╫á╫æ╫ù╫¿/giu, "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫æ╫ÿ╫ò╫ò╫ù\s+╫ö╫á╫æ╫ù╫¿/giu, "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫æ╫ÿ╫ò╫ò╫ù(?=\s|:|,|\.)/giu, "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö"],
++    [/╫₧╫º╫ª╫ò╫ó╫ò╫¬\s+╫⌐╫£╫É\s+╫á╫ô╫Æ╫₧╫ò/giu, "╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫⌐╫£╫É ╫¬╫ò╫¿╫Æ╫£╫ò"],
++    [/╫¬╫¿╫Æ╫ò╫£╫Ö╫¥\s+╫⌐╫ó╫£╫ò\s+╫£╫ô╫ò╫ù/giu, "╫⌐╫É╫£╫ò╫¬ ╫⌐╫á╫É╫í╫ñ╫ò ╫æ╫¬╫º╫ò╫ñ╫ö"],
++    [/╫₧╫ó╫æ╫Ö╫¿╫Ö╫¥\s+╫⌐╫£╫æ/giu, "╫₧╫¬╫É╫Ö╫¥ ╫£╫ö╫¬╫º╫ô╫¥"],
++    [/╫£╫ñ╫á╫Ö\s+╫₧╫í╫º╫á╫ö\s+╫ù╫Ö╫ò╫æ╫Ö╫¬/giu, "╫£╫ñ╫á╫Ö ╫⌐╫₧╫í╫₧╫á╫Ö╫¥ ╫É╫¬ ╫ö╫á╫ò╫⌐╫É ╫¢╫Ö╫ª╫Ö╫æ"],
++    [/╫₧╫í╫º╫á╫ö\s+╫ù╫Ö╫ò╫æ╫Ö╫¬/giu, "╫ö╫á╫ò╫⌐╫É ╫Ö╫ª╫Ö╫æ"],
++    [/╫£╫É\s+╫í╫ò╫Æ╫¿╫Ö╫¥\s+╫₧╫í╫º╫á╫ö\s+╫ù╫û╫º╫ö/giu, "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö ╫æ╫¿╫ò╫¿╫ö"],
++    [/╫₧╫í╫º╫á╫ö\s+╫ù╫û╫º╫ö/giu, "╫₧╫í╫º╫á╫ö ╫æ╫¿╫ò╫¿╫ö"],
++    [/╫í╫ú\s+╫á╫ñ╫ù/giu, "╫¢╫₧╫ò╫¬ ╫⌐╫É╫£╫ò╫¬"],
++    [/╫á╫ñ╫ù\/╫ô╫Ö╫ò╫º/giu, "╫¢╫₧╫ò╫¬ ╫⌐╫É╫£╫ò╫¬ ╫ò╫ô╫Ö╫ò╫º"],
++    [/╫É╫Ö╫¿╫ò╫ó╫Ö\s+╫ÿ╫ó╫ò╫¬\s+╫¿╫£╫ò╫ò╫á╫ÿ╫Ö╫Ö╫¥/giu, "╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫¿╫£╫ò╫ò╫á╫ÿ╫Ö╫ò╫¬"],
++    [/╫₧╫Æ╫₧╫¬\s+╫ô╫Ö╫ò╫º/giu, "╫₧╫Æ╫₧╫¬ ╫ö╫ô╫Ö╫ò╫º"],
++    [/╫ö╫¬╫É╫₧╫ö\s+╫ª╫ñ╫Ö/giu, "╫ö╫É╫¥ ╫û╫ö ╫₧╫¬╫É╫Ö╫¥ ╫£╫₧╫ö ╫⌐╫ª╫Ö╫ñ╫Ö╫á╫ò"],
++    [/╫ñ╫ó╫¿\s+╫Ö╫ô╫ó/giu, "╫º╫ò╫⌐╫Ö ╫æ╫æ╫í╫Ö╫í"],
++    [/╫ù╫ò╫ò╫Ö╫ö\s+╫₧╫ö╫¬╫¿╫Æ╫ò╫£/giu, "╫á╫¬╫ò╫á╫Ö ╫¬╫¿╫Æ╫ò╫£"],
++    [/╫¬╫₧╫ò╫á╫ö\s+╫Ö╫ª╫Ö╫æ╫ö/giu, "╫¬╫₧╫ò╫á╫ö ╫æ╫¿╫ò╫¿╫ö"],
++    [/╫á╫ô╫Æ╫₧╫ò/giu, "╫¬╫ò╫¿╫Æ╫£╫ò"],
++    [/╫á╫ñ╫ù\s+╫á╫¬╫ò╫á╫Ö╫¥/giu, "╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥"],
++    [/╫á╫ñ╫ù\s+╫¿╫É╫Ö╫ò╫¬/giu, "╫₧╫ó╫ÿ ╫⌐╫É╫£╫ò╫¬"],
++    [/╫á╫ñ╫ù\s+╫¬╫¿╫Æ╫ò╫£/giu, "╫¢╫₧╫ò╫¬ ╫¬╫¿╫Æ╫ò╫£"],
++    [/╫á╫ñ╫ù\s+╫á╫₧╫ò╫Ü/giu, "╫₧╫ó╫ÿ ╫⌐╫É╫£╫ò╫¬"],
++    [/╫á╫ñ╫ù\s+╫Æ╫æ╫ò╫ö/giu, "╫á╫É╫í╫ñ╫ò ╫ö╫¿╫æ╫ö ╫⌐╫É╫£╫ò╫¬"],
++    [/╫á╫ñ╫ù\s+╫æ╫Ö╫á╫ò╫á╫Ö/giu, "╫¢╫₧╫ò╫¬ ╫æ╫Ö╫á╫ò╫á╫Ö╫¬ ╫⌐╫£ ╫⌐╫É╫£╫ò╫¬"],
++    [/╫á╫ñ╫ù\s+╫æ╫ÿ╫ò╫ò╫ù/giu, "╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö"],
++    [/╫₧╫¬╫Ö╫Ö╫ª╫æ\s+╫á╫ñ╫ù/giu, "╫Ö╫¬╫º╫æ╫£ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£"],
++    [/╫Ö╫Ö╫₧╫£╫É\s+╫á╫ñ╫ù/giu, "╫Ö╫¬╫º╫æ╫£ ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£"],
++    [/╫í╫ò╫Æ╫¿\s+╫₧╫í╫º╫á╫ö/giu, "╫º╫ò╫æ╫ó ╫₧╫í╫º╫á╫ö"],
++    [/╫£╫í╫Æ╫ò╫¿\s+╫₧╫í╫º╫á╫ö/giu, "╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö"],
++    [/╫í╫ò╫Æ╫¿╫Ö╫¥\s+╫₧╫í╫º╫á╫ö/giu, "╫º╫ò╫æ╫ó╫Ö╫¥ ╫₧╫í╫º╫á╫ö"],
+     [/╫₧╫⌐╫ò╫º╫£╫£/giu, "╫¢╫ò╫£╫£"],
+   ];
+   for (const [re, rep] of phrasePairs) {
+diff --git a/utils/parent-report-language/short-report-v2-copy.js b/utils/parent-report-language/short-report-v2-copy.js
+index f9710b7e..21ba57d0 100644
+--- a/utils/parent-report-language/short-report-v2-copy.js
++++ b/utils/parent-report-language/short-report-v2-copy.js
+@@ -33,7 +33,7 @@ export function v2SubjectMemoryPartialEvidenceHe() {
+ }
+ 
+ export function v2SubjectDiagnosticRestraintHe() {
+-  return "╫£╫É ╫í╫ò╫Æ╫¿╫Ö╫¥ ╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö ╫ó╫£ ╫¢╫£ ╫ö╫á╫ò╫⌐╫É╫Ö╫¥ ╫æ╫æ╫¬ ╫É╫ù╫¬ ΓÇö ╫ó╫ô╫Ö╫ú ╫£╫¬╫¬ ╫£╫¬╫¿╫Æ╫ò╫£ ╫ó╫º╫æ╫Ö ╫ó╫ò╫ô ╫û╫₧╫ƒ.";
++  return "╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö ╫ó╫£ ╫¢╫£ ╫ö╫á╫ò╫⌐╫É╫Ö╫¥ ╫æ╫æ╫¬ ╫É╫ù╫¬ ΓÇö ╫ó╫ô╫Ö╫ú ╫£╫¬╫¬ ╫£╫¬╫¿╫Æ╫ò╫£ ╫ó╫º╫æ╫Ö ╫ó╫ò╫ô ╫û╫₧╫ƒ.";
+ }
+ 
+ /** Short overview when topic engine cannot conclude (2ΓÇô3 questions, withhold). */
+diff --git a/utils/parent-report-language/subject-evidence-policy.js b/utils/parent-report-language/subject-evidence-policy.js
+index 8e0fb197..5e6930e6 100644
+--- a/utils/parent-report-language/subject-evidence-policy.js
++++ b/utils/parent-report-language/subject-evidence-policy.js
+@@ -32,7 +32,7 @@ export function classifySubjectEvidenceTier(questionCount) {
+  * @param {string} subjectLabel
+  */
+ export function zeroEvidenceSubjectLineHe(subjectLabel) {
+-  return `${subjectLabel}: ╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫û╫ò ΓÇö ╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫¬╫º╫ò╫ñ╫ö`;
++  return `${subjectLabel}: ╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö`;
+ }
+ 
+ /**
+@@ -41,7 +41,7 @@ export function zeroEvidenceSubjectLineHe(subjectLabel) {
+  */
+ export function thinEvidenceSubjectLineHe(subjectLabel, q) {
+   const n = Math.max(0, Math.floor(Number(q) || 0));
+-  return `${subjectLabel}: ${n} ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫¬╫º╫ò╫ñ╫ö ΓÇö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ; ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫ö╫í╫Ö╫º ╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö`;
++  return `${subjectLabel}: ${n} ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ΓÇö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫ƒ; ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫£╫¬╫¿╫Æ╫£ ╫ò╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ`;
+ }
+ 
+ /**
+diff --git a/utils/parent-report-language/v2-parent-copy.js b/utils/parent-report-language/v2-parent-copy.js
+index 8127fddc..2e22271d 100644
+--- a/utils/parent-report-language/v2-parent-copy.js
++++ b/utils/parent-report-language/v2-parent-copy.js
+@@ -28,13 +28,13 @@ export function executiveV2MajorTrendsLinesHe(p) {
+   const actionable = Math.max(diagnosed, stable);
+   if (units === 0) {
+     return [
+-      "╫æ╫ÿ╫ò╫ò╫ù ╫ö╫¬╫º╫ò╫ñ╫ö ╫ÿ╫¿╫¥ ╫á╫É╫í╫ñ╫ò ╫₧╫í╫ñ╫Ö╫º ╫á╫ò╫⌐╫É╫Ö╫¥ ╫¢╫ô╫Ö ╫£╫ö╫⌐╫ò╫ò╫¬ ╫æ╫Ö╫á╫Ö╫ö╫¥.",
++      "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫ÿ╫¿╫¥ ╫á╫É╫í╫ñ╫ò ╫₧╫í╫ñ╫Ö╫º ╫á╫ò╫⌐╫É╫Ö╫¥ ╫¢╫ô╫Ö ╫£╫ö╫⌐╫ò╫ò╫¬ ╫æ╫Ö╫á╫Ö╫ö╫¥.",
+       "╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫ò╫ó╫º╫æ╫Ö ╫Ö╫ò╫í╫Ö╫ú ╫¬╫₧╫ò╫á╫ö ╫⌐╫É╫ñ╫⌐╫¿ ╫£╫í╫₧╫ò╫Ü ╫ó╫£╫Ö╫ö.",
+     ];
+   }
+   if (units === 1 && stable > 0 && diagnosed === 0) {
+     return [
+-      "╫æ╫ÿ╫ò╫ò╫ù ╫ö╫¬╫º╫ò╫ñ╫ö ╫á╫æ╫ô╫º ╫á╫ò╫⌐╫É ╫É╫ù╫ô.",
++      "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫á╫æ╫ô╫º ╫á╫ò╫⌐╫É ╫É╫ù╫ô.",
+       "╫ö╫¢╫Ö╫ò╫ò╫ƒ ╫⌐╫¥ ╫ù╫Ö╫ò╫æ╫Ö ╫ò╫ó╫º╫æ╫Ö; ╫£╫ñ╫á╫Ö ╫ö╫¿╫ù╫æ╫ö ╫£╫á╫ò╫⌐╫É╫Ö╫¥ ╫á╫ò╫í╫ñ╫Ö╫¥ ╫ó╫ô╫Ö╫ú ╫£╫Ö╫Ö╫ª╫æ ╫ó╫ò╫ô ╫º╫ª╫¬ ╫¬╫¿╫Æ╫ò╫£ ╫æ╫É╫ò╫¬╫ò ╫á╫ò╫⌐╫É.",
+     ];
+   }
+@@ -42,7 +42,7 @@ export function executiveV2MajorTrendsLinesHe(p) {
+     stable === 0 && units >= 4
+       ? `╫¢╫⌐╫á╫æ╫ô╫º╫Ö╫¥ ╫Ö╫ù╫í╫Ö╫¬ ╫ö╫¿╫æ╫ö ╫á╫ò╫⌐╫É╫Ö╫¥ ╫æ╫₧╫º╫æ╫Ö╫£, ╫£╫É ╫¬╫₧╫Ö╫ô ╫á╫¿╫É╫Ö╫¬ ╫₧╫Ö╫ô ┬½╫Ö╫ª╫Ö╫æ╫ò╫¬ ╫ù╫û╫º╫ö┬╗ ╫æ╫É╫ò╫¬╫ö ╫₧╫⌐╫₧╫ó╫ò╫¬ ╫æ╫¢╫ò╫£╫¥ ΓÇö ╫û╫ö ╫á╫ò╫¿╫₧╫£╫Ö; ╫¢╫ô╫É╫Ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫Ö╫Ö╫ª╫æ ╫₧╫ö ╫⌐╫á╫¿╫É╫ö ╫ù╫ò╫û╫¿.`
+       : `╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫á╫⌐╫₧╫¿╫Ö╫¥ ╫ÿ╫ò╫æ: ${stable} ╫₧╫¬╫ò╫Ü ╫₧╫ö ╫⌐╫á╫æ╫ô╫º. ╫æ╓╛${actionable} ╫á╫ò╫⌐╫É╫Ö╫¥ ╫Ö╫⌐ ╫æ╫í╫Ö╫í ╫£╫⌐╫Ö╫ù╫ö ╫₧╫₧╫ò╫º╫ô╫¬ ╫æ╫æ╫Ö╫¬. ╫æ╓╛${uncertain} ╫á╫ò╫⌐╫É╫Ö╫¥ ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫¬╫₧╫ò╫á╫ö ╫æ╫¿╫ò╫¿╫ö.`;
+-  return [`╫æ╫ÿ╫ò╫ò╫ù ╫ö╫¬╫º╫ò╫ñ╫ö ╫á╫æ╫ô╫º╫ò ${units} ╫á╫ò╫⌐╫É╫Ö╫¥.`, line2];
++  return [`╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫á╫æ╫ô╫º╫ò ${units} ╫á╫ò╫⌐╫É╫Ö╫¥.`, line2];
+ }
+ 
+ /** @param {boolean} hasUncertain */
+@@ -62,10 +62,10 @@ export function executiveV2OverallConfidenceHe(diagnosed, units, stable = 0) {
+   const s = Math.max(0, Number(stable) || 0);
+   const actionable = Math.max(d, s);
+   if (u === 0) {
+-    return "╫₧╫æ╫ÿ ╫¢╫ò╫£╫£: ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫ò╫⌐╫É╫Ö╫¥ ╫æ╫ÿ╫ò╫ò╫ù ╫¢╫ô╫Ö ╫£╫æ╫á╫ò╫¬ ╫¬╫₧╫ò╫á╫ö ╫æ╫Ö╫¬╫Ö╫¬ ╫Ö╫ª╫Ö╫æ╫ö.";
++    return "╫₧╫æ╫ÿ ╫¢╫ò╫£╫£: ╫ó╫ô╫Ö╫Ö╫ƒ ╫É╫Ö╫ƒ ╫₧╫í╫ñ╫Ö╫º ╫á╫ò╫⌐╫É╫Ö╫¥ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫¢╫ô╫Ö ╫£╫æ╫á╫ò╫¬ ╫¬╫₧╫ò╫á╫ö ╫æ╫Ö╫¬╫Ö╫¬ ╫æ╫¿╫ò╫¿╫ö.";
+   }
+   if (u === 1 && actionable === 0) {
+-    return "╫₧╫æ╫ÿ ╫¢╫ò╫£╫£: ╫Ö╫⌐ ╫¢╫¿╫Æ╫ó ╫á╫ò╫⌐╫É ╫Ö╫ù╫Ö╫ô ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫₧╫í╫º╫á╫ö ╫û╫ö╫Ö╫¿╫ö ╫ò╫₧╫₧╫⌐╫Ö╫¢╫Ö╫¥ ╫£╫É╫í╫ò╫ú ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£.";
++    return "╫₧╫æ╫ÿ ╫¢╫ò╫£╫£: ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫á╫æ╫ô╫º ╫¢╫¿╫Æ╫ó ╫á╫ò╫⌐╫É ╫É╫ù╫ô ╫æ╫£╫æ╫ô ΓÇö ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫á╫Ö╫í╫ò╫ù ╫û╫ö╫Ö╫¿ ╫ò╫₧╫₧╫⌐╫Ö╫¢╫Ö╫¥ ╫£╫É╫í╫ò╫ú ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£.";
+   }
+   return `╫₧╫æ╫ÿ ╫¢╫ò╫£╫£: ╫æ╓╛${actionable} ╫₧╫¬╫ò╫Ü ${u} ╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫á╫æ╫ô╫º╫ò ╫Ö╫⌐ ╫æ╫í╫Ö╫í ╫¿╫É╫⌐╫ò╫á╫Ö ╫£╫⌐╫Ö╫ù╫ö ╫æ╫æ╫Ö╫¬ ╫ó╫£ ╫¢╫Ö╫ò╫ò╫ƒ ╫₧╫₧╫ò╫º╫ô.`;
+ }
+@@ -96,8 +96,8 @@ export function executiveV2CautionNoteHe(p) {
+ export function executiveV2ReportReadinessHe(unitsLength) {
+   const n = Math.max(0, Number(unitsLength) || 0);
+   return n >= 8
+-    ? "╫Ö╫⌐ ╫₧╫í╫ñ╫Ö╫º ╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫¢╫ô╫Ö ╫£╫ô╫æ╫¿ ╫ó╫£ ╫₧╫Æ╫₧╫ò╫¬ ╫æ╫æ╫Ö╫¬."
+-    : "╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ª╫ò╫₧╫ª╫¥ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫º╫¿╫ò╫É ╫É╫¬ ╫ö╫í╫Ö╫¢╫ò╫¥ ╫æ╫ó╫Ö╫ò╫ƒ ╫ò╫£╫ö╫₧╫⌐╫Ö╫Ü ╫£╫É╫í╫ò╫ú ╫¬╫¿╫Æ╫ò╫£.";
++    ? "╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫Ö╫⌐ ╫₧╫í╫ñ╫Ö╫º ╫¬╫¿╫Æ╫ò╫£ ╫¢╫ô╫Ö ╫£╫ô╫æ╫¿ ╫æ╫û╫ö╫Ö╫¿╫ò╫¬ ╫ó╫£ ╫¢╫Ö╫ò╫ò╫ƒ ╫¢╫£╫£╫Ö ╫æ╫æ╫Ö╫¬."
++    : "╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ª╫ò╫₧╫ª╫¥ ΓÇö ╫¢╫ô╫É╫Ö ╫£╫º╫¿╫ò╫É ╫É╫¬ ╫ö╫í╫Ö╫¢╫ò╫¥ ╫æ╫ó╫Ö╫ò╫ƒ ╫ò╫£╫ö╫₧╫⌐╫Ö╫Ü ╫£╫É╫í╫ò╫ú ╫¬╫¿╫Æ╫ò╫£.";
+ }
+ 
+ export function homePlanV2EmptyFallbackHe() {
+@@ -117,7 +117,7 @@ export function crossSubjectV2BulletsHe(p) {
+   const hi = Math.max(0, Number(p.highPriorityCount) || 0);
+   const c = Math.max(0, Number(p.contradictoryCount) || 0);
+   const bullets = [
+-    `╫æ╫₧╫æ╫ÿ ╫ó╫£ ╫¢╫£ ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫Ö╫ù╫ô: ${units} ╫á╫ò╫⌐╫É╫Ö╫¥ ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫¬╫º╫ò╫ñ╫ö.`,
++    `╫æ╫₧╫æ╫ÿ ╫ó╫£ ╫¢╫£ ╫ö╫₧╫º╫ª╫ò╫ó╫ò╫¬ ╫Ö╫ù╫ô: ${units} ╫á╫ò╫⌐╫É╫Ö╫¥ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.`,
+     `${hi} ╫á╫ò╫⌐╫É╫Ö╫¥ ╫⌐╫¢╫ô╫É╫Ö ╫£╫ó╫º╫ò╫æ ╫É╫ù╫¿╫Ö╫ö╫¥ ╫ö╫⌐╫æ╫ò╫ó ╫₧╫º╫¿╫ò╫æ.`,
+   ];
+   if (c > 0) {
+@@ -138,7 +138,7 @@ export function subjectV2TrendNarrativeHighPriorityHe() {
+ }
+ 
+ export function subjectV2TrendNarrativeStableHe() {
+-  return "╫ö╫ô╫ñ╫ò╫í╫Ö╫¥ ╫æ╫ÿ╫ò╫ò╫ù ╫ö╫û╫ö ╫á╫⌐╫₧╫¿╫Ö╫¥ ╫Ö╫ù╫í╫Ö╫¬ ╫£╫É╫ò╫¿╫Ü ╫û╫₧╫ƒ.";
++  return "╫ö╫ô╫ñ╫ò╫í╫Ö╫¥ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫á╫⌐╫₧╫¿╫Ö╫¥ ╫Ö╫ù╫í╫Ö╫¬ ╫£╫É╫ò╫¿╫Ü ╫û╫₧╫ƒ.";
+ }
+ 
+ export function subjectV2RecalibrationNeedYesHe() {
+diff --git a/utils/parent-report-output-integrity/zero-evidence-policy-tests.js b/utils/parent-report-output-integrity/zero-evidence-policy-tests.js
+index f914555b..a85c13d0 100644
+--- a/utils/parent-report-output-integrity/zero-evidence-policy-tests.js
++++ b/utils/parent-report-output-integrity/zero-evidence-policy-tests.js
+@@ -98,7 +98,7 @@ export function assertZeroEvidencePolicyOnReports(baseReport, detailedReport) {
+   }
+   const insightWithPerSubjectZero = (ov.notPracticedSubjectsHe || [])
+     .concat(ov.thinEvidenceSubjectsHe || [], ov.insufficientDataSubjectsHe || [])
+-    .filter((l) => /╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫¬╫º╫ò╫ñ╫ö ╫û╫ò/u.test(String(l)));
++    .filter((l) => /╫£╫É ╫¬╫ò╫¿╫Æ╫£ ╫æ╫¬╫º╫ò╫ñ╫ö/u.test(String(l)));
+   if (insightWithPerSubjectZero.length > 0) {
+     failures.push("per-subject ╫£╫É ╫¬╫ò╫¿╫Æ╫£ lines must not appear in diagnostic overview arrays");
+   }
+diff --git a/utils/parent-report-row-diagnostics.js b/utils/parent-report-row-diagnostics.js
+index a4ceb08c..4ccb78b0 100644
+--- a/utils/parent-report-row-diagnostics.js
++++ b/utils/parent-report-row-diagnostics.js
+@@ -259,21 +259,21 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
+   if (q <= 0) {
+     return {
+       level: "low",
+-      labelHe: "╫É╫Ö╫ƒ ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫É╫Ö╫ƒ ╫æ╫í╫Ö╫í ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫⌐╫ò╫¿╫ö ╫û╫ò.",
++      labelHe: "╫£╫É ╫á╫É╫í╫ñ╫ò ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ΓÇö ╫É╫Ö╫ƒ ╫æ╫í╫Ö╫í ╫á╫¬╫ò╫á╫Ö╫¥ ╫£╫⌐╫ò╫¿╫ö ╫û╫ò.",
+       suppressAggressiveStep: true,
+     };
+   }
+   if (q < 4) {
+     return {
+       level: "low",
+-      labelHe: "╫₧╫ó╫ÿ ╫₧╫ô╫Ö ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫ö╫ö╫í╫º╫ò╫¬ ╫£╫⌐╫ò╫¿╫ö ╫û╫ò ╫ù╫£╫º╫Ö╫ò╫¬ ╫₧╫É╫ò╫ô.",
++      labelHe: "╫₧╫ó╫ÿ ╫₧╫ô╫Ö ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ΓÇö ╫ö╫ö╫í╫º╫ò╫¬ ╫£╫⌐╫ò╫¿╫ö ╫û╫ò ╫ù╫£╫º╫Ö╫ò╫¬ ╫₧╫É╫ò╫ô.",
+       suppressAggressiveStep: true,
+     };
+   }
+   if (q >= 40) {
+     return {
+       level: "strong",
+-      labelHe: "╫á╫ñ╫ù ╫Æ╫æ╫ò╫ö ΓÇö ╫É╫ñ╫⌐╫¿ ╫£╫í╫₧╫ò╫Ü ╫ó╫£ ╫₧╫í╫º╫á╫¬ ╫á╫ò╫⌐╫É ╫æ╫¿╫₧╫¬ ╫ö╫¢╫Ö╫¬╫ö/╫ö╫¬╫ò╫¢╫ƒ ╫⌐╫£ ╫ö╫⌐╫ò╫¿╫ö.",
++      labelHe: "╫á╫É╫í╫ñ╫ò ╫ö╫¿╫æ╫ö ╫⌐╫É╫£╫ò╫¬ ΓÇö ╫É╫ñ╫⌐╫¿ ╫£╫í╫₧╫ò╫Ü ╫Ö╫ò╫¬╫¿ ╫ó╫£ ╫₧╫ö ╫⌐╫¿╫ò╫É╫Ö╫¥ ╫æ╫á╫ò╫⌐╫É ╫ö╫û╫ö.",
+       suppressAggressiveStep: false,
+     };
+   }
+@@ -282,22 +282,22 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
+       level: evidenceStrength === "strong" ? "strong" : "medium",
+       labelHe:
+         evidenceStrength === "strong"
+-          ? "╫á╫ñ╫ù ╫ò╫É╫ò╫¬╫ò╫¬ ╫₧╫í╫ñ╫º╫Ö╫¥ ΓÇö ╫É╫ñ╫⌐╫¿ ╫£╫í╫₧╫ò╫Ü ╫Ö╫ò╫¬╫¿ ╫ó╫£ ╫₧╫ö ╫⌐╫¿╫ò╫É╫Ö╫¥ ╫æ╫⌐╫ò╫¿╫ö ╫ö╫û╫ò."
+-          : "╫á╫ñ╫ù ╫₧╫í╫ñ╫Ö╫º ╫£╫₧╫í╫º╫á╫¬ ╫á╫ò╫⌐╫É ΓÇö ╫⌐╫Ö╫á╫ò╫Ö╫Ö╫¥ ╫û╫ö╫Ö╫¿╫Ö╫¥ ╫æ╫¬╫¬╓╛╫₧╫Ö╫ò╫₧╫á╫ò╫¬ ╫æ╫£╫æ╫ô.",
++          ? "╫Ö╫⌐ ╫₧╫í╫ñ╫Ö╫º ╫⌐╫É╫£╫ò╫¬ ΓÇö ╫É╫ñ╫⌐╫¿ ╫£╫í╫₧╫ò╫Ü ╫Ö╫ò╫¬╫¿ ╫ó╫£ ╫₧╫ö ╫⌐╫¿╫ò╫É╫Ö╫¥ ╫æ╫á╫ò╫⌐╫É ╫ö╫û╫ö."
++          : "╫Ö╫⌐ ╫₧╫í╫ñ╫Ö╫º ╫⌐╫É╫£╫ò╫¬ ╫£╫á╫ò╫⌐╫É ╫ö╫û╫ö ΓÇö ╫⌐╫Ö╫á╫ò╫Ö╫Ö╫¥ ╫û╫ö╫Ö╫¿╫Ö╫¥ ╫æ╫¬╫¬╓╛╫₧╫Ö╫ò╫₧╫á╫ò╫¬ ╫æ╫£╫æ╫ô.",
+       suppressAggressiveStep: false,
+     };
+   }
+   if (q < 8 || evidenceStrength === "low" || (confidence01 ?? 0) < 0.22) {
+     return {
+       level: "medium",
+-      labelHe: "╫á╫ñ╫ù ╫æ╫Ö╫á╫ò╫á╫Ö ╫É╫ò ╫É╫ò╫¬ ╫ù╫£╫⌐ ΓÇö ╫£╫É ╫₧╫⌐╫á╫Ö╫¥ ╫¢╫Ö╫¬╫ö/╫¿╫₧╫ö ╫É╫Æ╫¿╫í╫Ö╫æ╫Ö╫¬ ╫£╫ñ╫Ö ╫⌐╫ò╫¿╫ö ╫û╫ò ╫æ╫£╫æ╫ô.",
++      labelHe: "╫ó╫ô╫Ö╫Ö╫ƒ ╫æ╫Ö╫á╫ò╫á╫Ö ΓÇö ╫£╫É ╫₧╫⌐╫á╫Ö╫¥ ╫¢╫Ö╫¬╫ö ╫É╫ò ╫¿╫₧╫ö ╫æ╫ª╫ò╫¿╫ö ╫É╫Æ╫¿╫í╫Ö╫æ╫Ö╫¬ ╫£╫ñ╫Ö ╫⌐╫ò╫¿╫ö ╫û╫ò ╫æ╫£╫æ╫ô.",
+       suppressAggressiveStep: true,
+     };
+   }
+   if (evidenceStrength === "strong" && q >= 12) {
+     return {
+       level: "strong",
+-      labelHe: "╫á╫ñ╫ù ╫ò╫É╫ò╫¬╫ò╫¬ ╫₧╫í╫ñ╫º╫Ö╫¥ ΓÇö ╫É╫ñ╫⌐╫¿ ╫£╫í╫₧╫ò╫Ü ╫Ö╫ò╫¬╫¿ ╫ó╫£ ╫₧╫ö ╫⌐╫¿╫ò╫É╫Ö╫¥ ╫æ╫⌐╫ò╫¿╫ö ╫ö╫û╫ò.",
++      labelHe: "╫Ö╫⌐ ╫₧╫í╫ñ╫Ö╫º ╫⌐╫É╫£╫ò╫¬ ΓÇö ╫É╫ñ╫⌐╫¿ ╫£╫í╫₧╫ò╫Ü ╫Ö╫ò╫¬╫¿ ╫ó╫£ ╫₧╫ö ╫⌐╫¿╫ò╫É╫Ö╫¥ ╫æ╫á╫ò╫⌐╫É ╫ö╫û╫ö.",
+       suppressAggressiveStep: false,
+     };
+   }
+@@ -455,7 +455,7 @@ export function computeRowDiagnosticSignals(subjectId, topicRowKey, row, mistake
+     isEarlySignalOnly,
+     recommendationContextHe: isEarlySignalOnly
+       ? "╫ö╫ö╫₧╫£╫ª╫ö ╫₧╫æ╫ò╫í╫í╫¬ ╫ó╫£ ╫á╫¬╫ò╫á╫Ö╫¥ ╫ù╫£╫º╫Ö╫Ö╫¥; ╫ó╫ô╫Ö╫ú ╫£╫É ╫£╫ó╫⌐╫ò╫¬ ╫⌐╫Ö╫á╫ò╫Ö ╫ô╫¿╫₧╫ÿ╫Ö ╫æ╫£╫Ö ╫£╫æ╫ô╫ò╫º ╫⌐╫ò╫æ ╫É╫ù╫¿╫Ö ╫ó╫ò╫ô ╫¬╫¿╫Æ╫ò╫£."
+-      : "╫ö╫ö╫₧╫£╫ª╫ö ╫₧╫æ╫ò╫í╫í╫¬ ╫ó╫£ ╫⌐╫Ö╫£╫ò╫æ ╫ô╫Ö╫ò╫º, ╫á╫ñ╫ù, ╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫ò╫ó╫ô╫¢╫á╫Ö╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù.",
++      : "╫ö╫ö╫₧╫£╫ª╫ö ╫₧╫æ╫ò╫í╫í╫¬ ╫ó╫£ ╫⌐╫Ö╫£╫ò╫æ ╫ô╫Ö╫ò╫º, ╫¢╫₧╫ò╫¬ ╫⌐╫É╫£╫ò╫¬, ╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫ò╫ó╫ô╫¢╫á╫Ö╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö.",
+     decisionTrace,
+   };
+ }
+diff --git a/utils/parent-report-ui-explain-he.js b/utils/parent-report-ui-explain-he.js
+index d7350f6a..0ad2f07b 100644
+--- a/utils/parent-report-ui-explain-he.js
++++ b/utils/parent-report-ui-explain-he.js
+@@ -9,7 +9,7 @@ import { narrativeSectionTextHe } from "./contracts/narrative-contract-v1.js";
+ import { stripKnownParentReportLeakageHe } from "./parent-data-presence.js";
+ 
+ const BEHAVIOR_OR_DIAGNOSTIC_HE = {
+-  knowledge_gap: "╫ñ╫ó╫¿ ╫Ö╫ô╫ó",
++  knowledge_gap: "╫º╫ò╫⌐╫Ö ╫æ╫æ╫í╫Ö╫í",
+   speed_pressure: "╫£╫ù╫Ñ ╫₧╫ö╫Ö╫¿╫ò╫¬",
+   instruction_friction: "╫ó╫ò╫û╫¿ ╫£╫ò ╫Ö╫ò╫¬╫¿ ╫¢╫⌐╫Ö╫⌐ ╫£╫Ö╫ò╫ò╫Ö ╫É╫ò ╫ö╫í╫æ╫¿ ╫£╫Ö╫ô",
+   careless_pattern: "╫¿╫Æ╫ó╫Ö╫¥ ╫⌐╫£ ╫ù╫ò╫í╫¿ ╫¿╫Ö╫¢╫ò╫û ╫⌐╫ù╫ò╫û╫¿╫Ö╫¥",
+@@ -195,7 +195,7 @@ export function subjectMajorRiskLabelsHe(majorRiskFlagsAcrossRows, maxLabels = 5
+ 
+ /** ╫⌐╫ò╫¿╫⌐ ╫º╫ò╫⌐╫Ö Phase 7 ΓÇö ╫₧╫û╫ö╫Ö╫¥ ╫£╫ó╫ò╫₧╫¬ ╫¬╫ò╫ò╫Ö╫ò╫¬ UI */
+ export const ROOT_CAUSE_LABEL_HE = {
+-  knowledge_gap: "╫ñ╫ó╫¿ ╫Ö╫ô╫ó ╫⌐╫₧╫ò╫¿╫Æ╫⌐ ╫æ╫⌐╫É╫£╫ò╫¬",
++  knowledge_gap: "╫º╫ò╫⌐╫Ö ╫æ╫æ╫í╫Ö╫í ╫⌐╫₧╫ò╫¿╫Æ╫⌐ ╫æ╫⌐╫É╫£╫ò╫¬",
+   instruction_friction: "╫ö╫₧╫⌐╫Ö╫₧╫ö ╫£╫É ╫¬╫₧╫Ö╫ô ╫æ╫¿╫ò╫¿╫ö, ╫É╫ò ╫⌐╫Ö╫⌐ ╫¬╫£╫ò╫¬ ╫æ╫ö╫¢╫ò╫ò╫á╫ö",
+   speed_pressure: "╫£╫ù╫Ñ ╫₧╫ö╫Ö╫¿╫ò╫¬ ╫É╫ò ╫¬╫ù╫¿╫ò╫¬╫Ö╫ò╫¬",
+   careless_execution: "╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫₧╫Ö╫ö╫¿╫ò╫¬ ╫£╫₧╫¿╫ò╫¬ ╫⌐╫ö╫ù╫ò╫₧╫¿ ╫₧╫ò╫¢╫¿",
+diff --git a/utils/parent-report-v2.js b/utils/parent-report-v2.js
+index fcb376d7..105aefdd 100644
+--- a/utils/parent-report-v2.js
++++ b/utils/parent-report-v2.js
+@@ -872,14 +872,14 @@ function collectDiagnosticEvidenceLinesHe(unit, row) {
+   const vol = ev.find((e) => e?.type === "volume")?.value;
+   if (vol && safeNumber(vol.questions) > 0) {
+     push(
+-      `╫æ╫ÿ╫ò╫ò╫ù ╫ö╫á╫æ╫ù╫¿: ${Math.round(safeNumber(vol.questions))} ╫⌐╫É╫£╫ò╫¬, ╫ô╫Ö╫ò╫º ╫¢-${Math.round(safeNumber(vol.accuracy))}%.`
++      `╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö: ${Math.round(safeNumber(vol.questions))} ╫⌐╫É╫£╫ò╫¬, ╫ô╫Ö╫ò╫º ╫¢-${Math.round(safeNumber(vol.accuracy))}%.`
+     );
+   }
+ 
+   const mist = ev.find((e) => e?.type === "mistake_events")?.value;
+   if (mist && safeNumber(mist.wrong) > 0) {
+     push(
+-      `╫É╫Ö╫¿╫ò╫ó╫Ö ╫ÿ╫ó╫ò╫¬ ╫¿╫£╫ò╫ò╫á╫ÿ╫Ö╫Ö╫¥: ${Math.round(safeNumber(mist.wrong))} (╫₧╫¬╫ò╫Ü ${Math.round(safeNumber(mist.total))} ╫É╫Ö╫¿╫ò╫ó╫Ö╫¥).`
++      `╫á╫¿╫⌐╫₧╫ò ${Math.round(safeNumber(mist.wrong))} ╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫¿╫£╫ò╫ò╫á╫ÿ╫Ö╫ò╫¬ (╫₧╫¬╫ò╫Ü ${Math.round(safeNumber(mist.total))} ╫á╫Ö╫í╫Ö╫ò╫á╫ò╫¬).`
+     );
+   }
+ 
+@@ -899,9 +899,9 @@ function collectDiagnosticEvidenceLinesHe(unit, row) {
+     push(`╫ó╫ô ╫¢╫₧╫ö ╫ö╫á╫¬╫ò╫á╫Ö╫¥ ╫₧╫æ╫ò╫í╫í╫Ö╫¥ ╫¢╫¿╫Æ╫ó: ${EVIDENCE_STRENGTH_HE[ec.evidenceStrength]}.`);
+   }
+ 
+-  if (r._feedback === "improved") push("╫₧╫Æ╫₧╫¬ ╫ô╫Ö╫ò╫º: ╫⌐╫Ö╫ñ╫ò╫¿ ╫£╫ó╫ò╫₧╫¬ ╫ù╫£╫ò╫ƒ ╫º╫ò╫ô╫¥.");
+-  else if (r._feedback === "worsened") push("╫₧╫Æ╫₧╫¬ ╫ô╫Ö╫ò╫º: ╫Ö╫¿╫Ö╫ô╫ö ╫£╫ó╫ò╫₧╫¬ ╫ù╫£╫ò╫ƒ ╫º╫ò╫ô╫¥.");
+-  else if (r._feedback === "no_change") push("╫₧╫Æ╫₧╫¬ ╫ô╫Ö╫ò╫º: ╫ô╫ò╫₧╫ö ╫£╫ù╫£╫ò╫ƒ ╫º╫ò╫ô╫¥.");
++  if (r._feedback === "improved") push("╫ö╫ô╫Ö╫ò╫º ╫ö╫⌐╫¬╫ñ╫¿ ╫£╫ó╫ò╫₧╫¬ ╫ö╫¬╫º╫ò╫ñ╫ö ╫ö╫º╫ò╫ô╫₧╫¬.");
++  else if (r._feedback === "worsened") push("╫ö╫ô╫Ö╫ò╫º ╫Ö╫¿╫ô ╫£╫ó╫ò╫₧╫¬ ╫ö╫¬╫º╫ò╫ñ╫ö ╫ö╫º╫ò╫ô╫₧╫¬.");
++  else if (r._feedback === "no_change") push("╫ö╫ô╫Ö╫ò╫º ╫ô╫ò╫₧╫ö ╫£╫¬╫º╫ò╫ñ╫ö ╫ö╫º╫ò╫ô╫₧╫¬.");
+ 
+   if (r._timeAdjusted === "declining_block") {
+     push("╫æ╫Æ╫£╫£ ╫₧╫Æ╫₧╫¬ ╫Ö╫¿╫Ö╫ô╫ö ╫æ╫ô╫Ö╫ò╫º, ╫ö╫ö╫₧╫£╫ª╫ö ╫¢╫¿╫Æ╫ó ╫û╫ö╫Ö╫¿╫ö ╫Ö╫ò╫¬╫¿.");
+diff --git a/utils/topic-next-step-engine.js b/utils/topic-next-step-engine.js
+index 13e471dd..cdfa6d7a 100644
+--- a/utils/topic-next-step-engine.js
++++ b/utils/topic-next-step-engine.js
+@@ -184,7 +184,7 @@ function buildHebrewCopy(step, ctx, cfg) {
+ 
+   const mPart =
+     mC >= cfg.copyMentionMistakesMin
+-      ? ` ╫á╫¿╫⌐╫₧╫ò ╫æ╫ÿ╫ò╫ò╫ù ${mC} ╫É╫Ö╫¿╫ò╫ó╫Ö ╫ÿ╫ó╫ò╫¬ ╫æ╫á╫ò╫⌐╫É ╫ö╫û╫ö ΓÇö ╫£╫º╫¿╫ò╫É ╫É╫¬ ╫ö╫₧╫⌐╫Ö╫₧╫ö ╫£╫É╫ÿ ╫£╫ñ╫á╫Ö ╫₧╫ó╫á╫ö.`
++      ? ` ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫á╫¿╫⌐╫₧╫ò ${mC} ╫ÿ╫ó╫ò╫Ö╫ò╫¬ ╫æ╫á╫ò╫⌐╫É ╫ö╫û╫ö ΓÇö ╫£╫º╫¿╫ò╫É ╫É╫¬ ╫ö╫₧╫⌐╫Ö╫₧╫ö ╫£╫É╫ÿ ╫£╫ñ╫á╫Ö ╫₧╫ó╫á╫ö.`
+       : "";
+ 
+   /** @type {Record<RecommendedNextStep, { reasonHe: string, parentHe: string, studentHe: string }>} */
+@@ -345,7 +345,7 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
+         currentMastery: acc,
+         stability,
+         confidence,
+-        reasonHe: `╫Ö╫⌐ ╫¿╫º ${q} ╫⌐╫É╫£╫ò╫¬ ╫æ┬½${displayName}┬╗ ╫æ╫ÿ╫ò╫ò╫ù ΓÇö ╫₧╫ò╫º╫ô╫¥ ╫₧╫ô╫Ö ╫£╫⌐╫á╫ò╫¬ ╫¢╫Ö╫¬╫ö ╫É╫ò ╫¿╫₧╫¬ ╫º╫ò╫⌐╫Ö. ╫ó╫ô╫Ö╫ú ╫ó╫ò╫ô ╫₧╫ñ╫Æ╫⌐╫Ö╫¥ ╫º╫ª╫¿╫Ö╫¥ ╫æ╫É╫ò╫¬╫ö ╫ö╫Æ╫ô╫¿╫ö ╫ò╫É╫û ╫á╫æ╫ù╫ƒ ╫₧╫ù╫ô╫⌐.`,
++        reasonHe: `╫Ö╫⌐ ╫¿╫º ${q} ╫⌐╫É╫£╫ò╫¬ ╫æ┬½${displayName}┬╗ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ΓÇö ╫₧╫ò╫º╫ô╫¥ ╫₧╫ô╫Ö ╫£╫⌐╫á╫ò╫¬ ╫¢╫Ö╫¬╫ö ╫É╫ò ╫¿╫₧╫¬ ╫º╫ò╫⌐╫Ö. ╫ó╫ô╫Ö╫ú ╫ó╫ò╫ô ╫₧╫ñ╫Æ╫⌐╫Ö╫¥ ╫º╫ª╫¿╫Ö╫¥ ╫æ╫É╫ò╫¬╫ö ╫ö╫Æ╫ô╫¿╫ö ╫ò╫É╫û ╫á╫æ╫ù╫ƒ ╫₧╫ù╫ô╫⌐.`,
+         parentHe: `╫æ┬½${displayName}┬╗ ╫Ö╫⌐ ╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ó╫ÿ ╫á╫¬╫ò╫á╫Ö╫¥ (${q} ╫⌐╫É╫£╫ò╫¬). ╫ö╫₧╫£╫ª╫ö ╫£╫ö╫₧╫⌐╫Ö╫Ü ╫æ╫É╫ò╫¬╫ö ╫¿╫₧╫¬ ╫º╫ò╫⌐╫Ö, ╫£╫ö╫ò╫í╫Ö╫ú ╫⌐╫á╫Ö╫Ö╫¥╓╛╫⌐╫£╫ò╫⌐╫ö ╫¬╫¿╫Æ╫ò╫£╫Ö╫¥ ╫º╫ª╫¿╫Ö╫¥ ╫¢╫ô╫Ö ╫⌐╫ö╫ö╫₧╫£╫ª╫ö ╫ö╫æ╫É╫ö ╫¬╫ö╫Ö╫ö ╫₧╫ô╫ò╫Ö╫º╫¬ ╫Ö╫ò╫¬╫¿.`,
+         studentHe: `╫á╫₧╫⌐╫Ö╫Ü ╫ó╫ò╫ô ╫º╫ª╫¬ ╫æ╫É╫ò╫¬╫ö ╫¿╫₧╫ö ╫æ┬½${displayName}┬╗ ΓÇö ╫ò╫É╫û ╫á╫ô╫ó ╫ÿ╫ò╫æ ╫Ö╫ò╫¬╫¿ ╫₧╫ö ╫ö╫£╫É╫ö.`,
+         recommendationDecisionTrace: trace,
+@@ -1024,7 +1024,7 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
+   const dc = String(restraintPayload.diagnosticCautionHe || "").trim();
+   if (dc) whyThisRecommendationHe += ` ${dc}`;
+   if (phase10Aging.confidenceDecayApplied) {
+-    whyThisRecommendationHe += " ╫ö╫¿╫É╫Ö╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù ╫₧╫¬╫ù╫Ö╫£╫ò╫¬ ╫£╫ö╫¬╫Ö╫Ö╫⌐╫ƒ ΓÇö ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫á╫Ö╫í╫ò╫ù ╫û╫ö╫Ö╫¿ ╫Ö╫ù╫í╫Ö╫¬.";
++    whyThisRecommendationHe += " ╫ö╫á╫¬╫ò╫á╫Ö╫¥ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö ╫₧╫¬╫ù╫Ö╫£╫Ö╫¥ ╫£╫ö╫¬╫Ö╫Ö╫⌐╫ƒ ΓÇö ╫á╫⌐╫É╫¿╫Ö╫¥ ╫ó╫¥ ╫á╫Ö╫í╫ò╫ù ╫û╫ö╫Ö╫¿ ╫Ö╫ù╫í╫Ö╫¬.";
+   }
+   if (phase11Drift.repeatAdviceWarning && phase11Overlay.whyWeShouldNotRepeatSameSupportHe) {
+     whyThisRecommendationHe += ` ${phase11Overlay.whyWeShouldNotRepeatSameSupportHe}`;
+diff --git a/utils/topic-next-step-phase2.js b/utils/topic-next-step-phase2.js
+index 1aed9866..cbbcc36f 100644
+--- a/utils/topic-next-step-phase2.js
++++ b/utils/topic-next-step-phase2.js
+@@ -479,7 +479,7 @@ export function applyPhase7RestraintGuards(step, ctx) {
+ }
+ 
+ /**
+- * ╫¿╫Ö╫¢╫ò╫Ü ╫á╫Ö╫í╫ò╫ù ╫ö╫ò╫¿╫ö ╫¢╫⌐╫ö╫₧╫á╫ò╫ó ╫₧╫¿╫í╫ƒ ╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö.
++ * ╫¿╫Ö╫¢╫ò╫Ü ╫á╫Ö╫í╫ò╫ù ╫ö╫ò╫¿╫ö ╫¢╫⌐╫ö╫₧╫á╫ò╫ó ╫₧╫¿╫í╫ƒ ╫₧╫í╫º╫á╫ö ╫æ╫¿╫ò╫¿╫ö.
+  * @param {{ reasonHe?: string, parentHe?: string, studentHe?: string }} copy
+  */
+ export function mergePhase7SoftHebrewCopy(copy, restraint, rootCause) {
+@@ -488,7 +488,7 @@ export function mergePhase7SoftHebrewCopy(copy, restraint, rootCause) {
+   const cs = String(restraint?.conclusionStrength || "");
+   const level = String(restraint?.diagnosticRestraint?.level || "");
+   if (cs === "withheld" || level === "insufficient") {
+-    addParent.push("╫É╫á╫ù╫á╫ò ╫ó╫ô╫Ö╫Ö╫ƒ ╫£╫É ╫æ╫⌐╫£╫Ö╫¥ ╫£╫₧╫í╫º╫á╫ö ╫ù╫û╫º╫ö ΓÇö ╫ó╫ô╫Ö╫ú ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫ò╫⌐╫Æ╫¿╫¬╫Ö ╫æ╫É╫ò╫¬╫ö ╫¿╫₧╫ö.");
++    addParent.push("╫ó╫ô╫Ö╫Ö╫ƒ ╫₧╫ò╫º╫ô╫¥ ╫£╫º╫æ╫ò╫ó ╫₧╫í╫º╫á╫ö ╫æ╫¿╫ò╫¿╫ö ΓÇö ╫ó╫ô╫Ö╫ú ╫¬╫¿╫Æ╫ò╫£ ╫º╫ª╫¿ ╫ò╫⌐╫Æ╫¿╫¬╫Ö ╫æ╫É╫ò╫¬╫ö ╫¿╫₧╫ö.");
+   } else if (cs === "tentative" || restraint?.shouldAvoidStrongConclusion) {
+     addParent.push("╫₧╫í╫¢╫₧╫Ö╫¥ ╫æ╫û╫ö╫Ö╫¿╫ò╫¬: ╫ª╫ó╫ô╫Ö╫¥ ╫º╫ÿ╫á╫Ö╫¥ ╫ò╫æ╫¿╫ò╫¿╫Ö╫¥, ╫æ╫£╫Ö ╫º╫ñ╫Ö╫ª╫ò╫¬.");
+   }
+@@ -590,7 +590,7 @@ export function buildPhase7RecommendationFields(p) {
+   const whatWouldIncreaseConfidenceHe =
+     alt.length > 0
+       ? alt.join(" ")
+-      : "╫ó╫ò╫ô ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù, ╫₧╫Æ╫₧╫¬ ╫ô╫Ö╫ò╫º ╫æ╫¿╫ò╫¿╫ö ╫Ö╫ò╫¬╫¿, ╫ò╫ñ╫ù╫ò╫¬ ╫¬╫£╫ò╫¬ ╫æ╫¿╫₧╫û╫Ö╫¥ ΓÇö ╫Ö╫Æ╫æ╫Ö╫¿╫ò ╫É╫¬ ╫ö╫æ╫Ö╫ÿ╫ù╫ò╫ƒ ╫æ╫₧╫í╫º╫á╫ö.";
++      : "╫ó╫ò╫ô ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö, ╫¢╫Ö╫ò╫ò╫ƒ ╫ô╫Ö╫ò╫º ╫æ╫¿╫ò╫¿ ╫Ö╫ò╫¬╫¿, ╫ò╫ñ╫ù╫ò╫¬ ╫¬╫£╫ò╫¬ ╫æ╫¿╫₧╫û╫Ö╫¥ ΓÇö ╫Ö╫Æ╫æ╫Ö╫¿╫ò ╫É╫¬ ╫ö╫æ╫Ö╫ÿ╫ù╫ò╫ƒ ╫æ╫₧╫í╫º╫á╫ö.";
+ 
+   const whyNot =
+     String(restraint?.diagnosticCautionHe || "").trim() ||
+@@ -1207,9 +1207,9 @@ export function buildWhyThisRecommendationHe(p) {
+ export function buildWhatCouldChangeThisHe(p) {
+   const { q, behaviorType } = p;
+   const parts = [];
+-  parts.push(`╫É╫Ö╫í╫ò╫ú ╫Ö╫ò╫¬╫¿ ╫₧╓╛${Math.max(12, Number(q) || 0)} ╫⌐╫É╫£╫ò╫¬ ╫æ╫ÿ╫ò╫ò╫ù,`);
++  parts.push(`╫É╫Ö╫í╫ò╫ú ╫Ö╫ò╫¬╫¿ ╫₧╓╛${Math.max(12, Number(q) || 0)} ╫⌐╫É╫£╫ò╫¬ ╫æ╫¬╫º╫ò╫ñ╫ö ╫⌐╫á╫æ╫ù╫¿╫ö,`);
+   parts.push("╫ó╫ò╫ô ╫ñ╫¿╫ÿ╫Ö╫¥ ╫ó╫£ ╫ÿ╫ó╫ò╫Ö╫ò╫¬ (╫û╫₧╫ƒ ╫¬╫Æ╫ò╫æ╫ö, ╫á╫Ö╫í╫Ö╫ò╫á╫ò╫¬ ╫ù╫ò╫û╫¿╫Ö╫¥, ╫⌐╫Ö╫₧╫ò╫⌐ ╫æ╫¿╫₧╫û╫Ö╫¥) ╫¢╫ô╫Ö ╫£╫ù╫ô╫ô ╫É╫¬ ╫ö╫¬╫₧╫ò╫á╫ö,");
+-  parts.push("╫ò╫₧╫Æ╫₧╫¬ ╫ô╫Ö╫ò╫º ╫æ╫¿╫ò╫¿╫ö ╫æ╫Ö╫ƒ ╫¬╫º╫ò╫ñ╫ö ╫á╫ò╫¢╫ù╫Ö╫¬ ╫£╫º╫ò╫ô╫₧╫¬ ΓÇö ╫Ö╫¢╫ò╫£╫Ö╫¥ ╫£╫⌐╫á╫ò╫¬ ╫É╫¬ ╫ö╫ª╫ó╫ô.");
++  parts.push("╫ò╫¢╫Ö╫ò╫ò╫ƒ ╫ô╫Ö╫ò╫º ╫æ╫¿╫ò╫¿ ╫æ╫Ö╫ƒ ╫ö╫¬╫º╫ò╫ñ╫ö ╫ö╫á╫ò╫¢╫ù╫Ö╫¬ ╫£╫º╫ò╫ô╫₧╫¬ ΓÇö ╫Ö╫¢╫ò╫£╫Ö╫¥ ╫£╫⌐╫á╫ò╫¬ ╫É╫¬ ╫ö╫ª╫ó╫ô.");
+   if (behaviorType === "undetermined") parts.push("╫ô╫ñ╫ò╫í ╫ö╫ö╫¬╫á╫ö╫Æ╫ò╫¬ ╫ó╫ô╫Ö╫Ö╫ƒ ╫£╫É ╫₧╫í╫ñ╫Ö╫º ╫æ╫¿╫ò╫¿ ΓÇö ╫á╫¬╫ò╫á╫Ö╫¥ ╫á╫ò╫í╫ñ╫Ö╫¥ ╫Ö╫ª╫₧╫ª╫₧╫ò ╫É╫Ö╓╛╫ò╫ô╫É╫ò╫¬.");
+   return parts.join(" ");
+ }

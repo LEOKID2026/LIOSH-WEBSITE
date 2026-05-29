@@ -101,7 +101,7 @@ const MODE_LABELS = {
   practice: "תרגול",
   challenge: "אתגר",
   speed: "מהירות",
-  marathon: "מרתון",
+  marathon: "תרגול ארוך",
   graded: "מדורג",
   normal: "רגיל",
   mistakes: "טעויות",
@@ -812,14 +812,14 @@ function safeNumber(n) {
 const EVIDENCE_STRENGTH_HE = { low: "מוגבלת", medium: "בינונית", strong: "טובה" };
 
 const INSUFFICIENT_EVIDENCE_LINE_HE =
-  "מידע מועט בנושא — כדאי להמשיך בתרגול לפני מסקנה חד-משמעית.";
+  "מידע מועט בנושא — כדאי להמשיך בתרגול לפני שקובעים כיוון חד־משמעי.";
 
 /** Strip internal engine identifiers from diagnostic trace lines shown to parents. */
 function sanitizeDecisionTraceDetailHeForParents(raw) {
   const s = String(raw || "").trim();
   if (!s) return "";
   if (/suppressAggressiveStep/i.test(s)) {
-    return "רמת הוודאות של הנתונים עוזרת לקבוע עד כמה להתקדם בצעד הבא.";
+    return "כמות המידע עוזרת להחליט כמה בזהירות להתקדם בצעד הבא.";
   }
   return s;
 }
@@ -872,14 +872,14 @@ function collectDiagnosticEvidenceLinesHe(unit, row) {
   const vol = ev.find((e) => e?.type === "volume")?.value;
   if (vol && safeNumber(vol.questions) > 0) {
     push(
-      `בטווח הנבחר: ${Math.round(safeNumber(vol.questions))} שאלות, דיוק כ-${Math.round(safeNumber(vol.accuracy))}%.`
+      `בתקופה שנבחרה: ${Math.round(safeNumber(vol.questions))} שאלות, דיוק כ-${Math.round(safeNumber(vol.accuracy))}%.`
     );
   }
 
   const mist = ev.find((e) => e?.type === "mistake_events")?.value;
   if (mist && safeNumber(mist.wrong) > 0) {
     push(
-      `אירועי טעות רלוונטיים: ${Math.round(safeNumber(mist.wrong))} (מתוך ${Math.round(safeNumber(mist.total))} אירועים).`
+      `נרשמו ${Math.round(safeNumber(mist.wrong))} טעויות רלוונטיות (מתוך ${Math.round(safeNumber(mist.total))} ניסיונות).`
     );
   }
 
@@ -899,9 +899,9 @@ function collectDiagnosticEvidenceLinesHe(unit, row) {
     push(`עד כמה הנתונים מבוססים כרגע: ${EVIDENCE_STRENGTH_HE[ec.evidenceStrength]}.`);
   }
 
-  if (r._feedback === "improved") push("מגמת דיוק: שיפור לעומת חלון קודם.");
-  else if (r._feedback === "worsened") push("מגמת דיוק: ירידה לעומת חלון קודם.");
-  else if (r._feedback === "no_change") push("מגמת דיוק: דומה לחלון קודם.");
+  if (r._feedback === "improved") push("הדיוק השתפר לעומת התקופה הקודמת.");
+  else if (r._feedback === "worsened") push("הדיוק ירד לעומת התקופה הקודמת.");
+  else if (r._feedback === "no_change") push("הדיוק דומה לתקופה הקודמת.");
 
   if (r._timeAdjusted === "declining_block") {
     push("בגלל מגמת ירידה בדיוק, ההמלצה כרגע זהירה יותר.");
@@ -1456,7 +1456,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
     if (p4Unit) {
       return normalizeParentFacingHe(
         `בנושא ${String(p4Unit?.displayName || evidenceExampleTitleFallbackHe())}: ${String(
-          parentFacingPatternLabelHe(p4Unit) || "עדיף עוד קצת תרגול לפני שמקבעים מסקנה."
+          parentFacingPatternLabelHe(p4Unit) || "עדיף עוד קצת תרגול לפני שקובעים כיוון סופי."
         )}`
       );
     }
@@ -1477,7 +1477,7 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
     if (topWeak) {
       return normalizeParentFacingHe(
         `בנושא ${String(topWeak?.displayName || evidenceExampleTitleFallbackHe())}: ${String(
-          parentFacingPatternLabelHe(topWeak) || "עדיף עוד קצת תרגול לפני שמקבעים מסקנה."
+          parentFacingPatternLabelHe(topWeak) || "עדיף עוד קצת תרגול לפני שקובעים כיוון סופי."
         )}`
       );
     }
@@ -1509,10 +1509,10 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
       return normalizeParentFacingHe(`בנושא ${name}: עדיין אין מספיק מה שרואים בשורות כדי לסגור תמונה ברורה.`);
     }
     if (act === "probe_only") {
-      return normalizeParentFacingHe(`בנושא ${name}: עדיף עוד קצת תרגול לפני שמקבעים מסקנה.`);
+      return normalizeParentFacingHe(`בנושא ${name}: עדיף עוד קצת תרגול לפני שקובעים כיוון סופי.`);
     }
     return normalizeParentFacingHe(
-      `בנושא ${name}: עדיף עוד קצת תרגול לפני שמקבעים מסקנה.`
+      `בנושא ${name}: עדיף עוד קצת תרגול לפני שקובעים כיוון סופי.`
     );
   })();
 

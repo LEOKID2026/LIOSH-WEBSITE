@@ -24,7 +24,7 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
   "חוזקה עקבית",
   "איכות הנתון",
   "נפח תרגול",
-  "מגמה אחרונה עדינה",
+  "שינוי עדין לאחרונה",
   "זיהוי ראשוני",
   "מעקב קל",
   "מעקב רגיל",
@@ -48,7 +48,7 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
   "נדרש מיקוד",
   "נדרש בסיס",
   "דלות נתונים",
-  "ראיות השורה",
+  "מה שרואים בנתונים",
   "אותות מוקדמים",
   "אות עצמאות",
   "אינדיקציה ראשונית",
@@ -69,18 +69,129 @@ export const PARENT_READABILITY_LEAK_SUBSTRINGS = [
   "בטחון בנתונים",
   "ביטחון בנתונים",
   "מקום לשיפור ממוקד",
-  "המסקנה המקצועית",
+  "מה שנראה מהתרגולים",
   "כיוון המקצועי",
   "מוקד חירום",
   "סולם עדיפות",
-  "עדיפות יסוד",
+  "מה כדאי לחזק קודם",
   "מוכנות להעברה",
-  "קושי יסודי",
+  "קושי בחלקים פשוטים יותר",
   "קפיצה לרמה גבוהה",
   "נקודות לשימת לב",
   /* Engine-internal M-10 taxonomy — must not leak to parents */
   "בחירת כפל לא מתאים לחילוק",
+  /* Parent copy guard — diagnostic-engine jargon in default-visible report text */
+  "אין שאלות בטווח",
+  "בטווח זה — אין שאלות",
+  "לא תורגל בטווח",
+  "מקצועות שלא נדגמו",
+  "סף נפח",
+  "נפח/דיוק",
+  "מעבירים שלב",
+  "מסקנה חיובית",
+  "חוויה מהתרגול",
+  "תרגולים שעלו לדוח",
+  "אירועי טעות רלוונטיים",
+  "מגמת דיוק",
+  "התאמה צפי",
+  "פער ידע",
+  "לא סוגרים מסקנה",
+  "מסקנה חזקה",
+  "לא מסכמים",
+  "לא מדרגים",
+  "רצף תמיכה",
+  "זיכרון תומך",
+  "זיכרון המלצה",
+  "תלות יסוד",
+  "יסוד מול",
+  "יסוד קודם",
+  "מקומי בטוח",
+  "מוכנות לשחרור",
+  "שחרור זהיר",
+  "תסמין משנה",
+  "מסלול קודם",
+  "ביטחון סטטיסטי",
+  "מגמה אמינה",
+  "שורות דוח",
+  "מעט חומר בתקופה",
+  "לעמיס",
+  "חוויה מוצלחת",
+  "מרתון ארוך",
+  "שלב 7",
+  "אגרסיבית",
+  "חיכוך הוראה/רמזים",
+  "ראיות לא מספקות",
+  "ראיות חזקות",
+  "נפח סביר",
+  /* Duplicate phrase guard — patch typo must not recur */
+  "בתקופה שנבחרה שנבחרה",
+  "שנבחרה שנבחרה",
 ];
+
+/** Adjacent duplicate word pairs that must not appear in parent-facing copy. */
+export const PARENT_COPY_DUPLICATE_WORD_PAIRS = Object.freeze([
+  "שנבחרה שנבחרה",
+  "בתקופה שנבחרה שנבחרה",
+]);
+
+/** Forbidden fragments in parent-report Hebrew copy sources (denylist for copy guard). */
+export const PARENT_COPY_FORBIDDEN_FRAGMENTS = Object.freeze([
+  "אין שאלות בטווח",
+  "בטווח זה — אין שאלות",
+  "לא תורגל בטווח",
+  "מקצועות שלא נדגמו",
+  "סף נפח",
+  "נפח/דיוק",
+  "מעבירים שלב",
+  "מסקנה חיובית",
+  "חוויה מהתרגול",
+  "תרגולים שעלו לדוח",
+  "אירועי טעות רלוונטיים",
+  "מגמת דיוק",
+  "התאמה צפי",
+  "פער ידע",
+  "לא סוגרים מסקנה",
+  "מסקנה חזקה",
+  /* Awkward bare "בתקופה" / engineer empty-state wording */
+  "שורות דוח בתקופה",
+  "אין שורות דוח —",
+  "בתרגול בתקופה שנבחרה",
+  "מה שנאסף בתקופה",
+  "בתקופה כדי לסכם",
+  "נושא יחיד בתקופה",
+  "הנתונים בתקופה עדיין",
+  "עוד שאלות בתקופה,",
+  "נרשמו בתקופה ",
+  "לא מסכמים",
+  "לא מדרגים",
+  "רצף תמיכה",
+  "זיכרון תומך",
+  "זיכרון המלצה",
+  "תלות יסוד",
+  "יסוד מול",
+  "יסוד קודם",
+  "מקומי בטוח",
+  "מוכנות לשחרור",
+  "שחרור זהיר",
+  "תסמין משנה",
+  "מסלול קודם",
+  "ביטחון סטטיסטי",
+  "מגמה אמינה",
+  "שורות דוח",
+  "מעט חומר בתקופה",
+  "לעמיס",
+  "חוויה מוצלחת",
+  "מרתון ארוך",
+  "שלב 7",
+  "אגרסיבית",
+  "חיכוך הוראה/רמזים",
+  "ראיות לא מספקות",
+  "ראיות חזקות",
+  "נפח סביר",
+  /* Duplicate phrase guard — patch typo must not recur */
+  "בתקופה שנבחרה שנבחרה",
+  "שנבחרה שנבחרה",
+]);
 
 export const FORBIDDEN_PARENT_REPORT_SUBSTRINGS = [
   "insufficient_data",
@@ -104,6 +215,32 @@ export const FORBIDDEN_PARENT_REPORT_SUBSTRINGS = [
   "(p1",
   " p1",
 ];
+
+/**
+ * @param {string} s
+ * @returns {string[]}
+ */
+export function findParentCopyForbiddenFragmentsInString(s) {
+  const t = String(s || "");
+  const hits = [];
+  for (const frag of PARENT_COPY_FORBIDDEN_FRAGMENTS) {
+    if (t.includes(frag)) hits.push(frag);
+  }
+  return hits;
+}
+
+/**
+ * @param {string} s
+ * @returns {string[]}
+ */
+export function findDuplicateWordPairsInString(s) {
+  const t = String(s || "");
+  const hits = [];
+  for (const pair of PARENT_COPY_DUPLICATE_WORD_PAIRS) {
+    if (t.includes(pair)) hits.push(pair);
+  }
+  return hits;
+}
 
 /**
  * @param {string} s

@@ -253,7 +253,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
   if (hintDependenceRiskActive(riskFlags) && isAdvance) {
     apply(
       "hint_dependence_block_advance",
-      "תלות ברמזים גבוהה — לא מקדמים רמה/כיתה אוטומטית.",
+      "הילד עדיין נעזר ברמזים גבוהה — לא מקדמים רמה/כיתה אוטומטית.",
       "maintain_and_strengthen"
     );
   }
@@ -262,7 +262,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
     if (!trendDer.progressSupportsAdvance || hintDependenceRiskActive(riskFlags) || !sufficiencyStrong) {
       apply(
         "fragile_success_block_advance",
-        "הצלחה שלא תמיד נשמרת לבד — לא מקדמים מהר בלי עצמאות, מגמה תומכת וראיות חזקות.",
+        "ההצלחה עדיין לא תמיד נשמרת לבד — לא מתקדמים מהר לפני שרואים יותר עצמאות וחזרה עקבית של ההצלחה.",
         "maintain_and_strengthen"
       );
     }
@@ -279,7 +279,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
   }
 
   if (riskFlags.falsePromotionRisk && isAggressiveStep(step)) {
-    apply("false_promotion_guard", "סיכון לקידום שווא — לא מקדמים.", "maintain_and_strengthen");
+    apply("false_promotion_guard", "יש חשש שהתקדמות תהיה מוקדמת מדי — לא מקדמים עכשיו.", "maintain_and_strengthen");
   }
 
   if (trendDer.unclearTrend && isAggressiveStep(step)) {
@@ -296,7 +296,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
     if (!strongPerformanceNoTrend) {
       apply(
         "unclear_trend_cap_aggressive",
-        "מגמת דיוק לא ברורה או ביטחון מגמה נמוך — לא פועלים אגרסיבית.",
+        "עדיין לא ברור אם הדיוק משתפר לאורך זמן — לא עושים שינוי גדול עכשיו.",
         "maintain_and_strengthen"
       );
     }
@@ -305,7 +305,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
   if (trendDer.fragileProgressPattern && isAdvance) {
     apply(
       "accuracy_up_independence_down",
-      "דיוק עולה אך עצמאות יורדת — שביר, לא קידום מהיר.",
+      "הדיוק עולה, אבל הילד עדיין צריך יותר עזרה — לא מתקדמים מהר מדי.",
       "maintain_and_strengthen"
     );
   }
@@ -317,7 +317,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
   if (behaviorType === "instruction_friction" && isDropStep(step) && !strongKnowledgeGapEvidence) {
     apply(
       "instruction_friction_soften_drop",
-      "חיכוך הוראה/רמזים — לא יורדים אגרסיבית בלי פער ידע מתועד.",
+      "ייתכן שהקושי קשור להבנת המשימה או לצורך ברמזים — לא מורידים רמה בלי מספיק תרגול שמראה שזה באמת נחוץ.",
       "remediate_same_level"
     );
   }
@@ -330,7 +330,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
     if (trendDer.positiveAccuracy && !trendDer.negativeTrendAfterRecentDifficultyIncrease) {
       apply(
         "knowledge_gap_respect_positive_trend",
-        "פער ידע אך מגמת דיוק חיובית — מרככים לחיזוק לפני ירידה.",
+        "יש סימן לקושי, אבל הדיוק משתפר — עדיף לחזק באותה רמה לפני שמורידים רמה.",
         "remediate_same_level"
       );
     }
@@ -338,14 +338,14 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
 
   if (riskFlags.falseRemediationRisk && isDropStep(step)) {
     if (riskFlags.speedOnlyRisk || (trendDer.positiveAccuracy && behaviorType !== "knowledge_gap")) {
-      apply("false_remediation_guard", "סיכון לטיפול יתר — מרככים לחיזוק.", "remediate_same_level");
+      apply("false_remediation_guard", "יש חשש לתרגול כבד מדי — עדיף חיזוק קצר וממוקד.", "remediate_same_level");
     }
   }
 
   if (trendDer.negativeTrendAfterRecentDifficultyIncrease && step === "drop_one_grade_topic_only") {
     apply(
       "recent_transition_caution",
-      "מגמה שלילית אחרי קושי אחרון — זהירות במקום ירידת כיתה מיידית.",
+      "אחרי קושי אחרון נראית ירידה — כדאי לבדוק בזהירות לפני שמורידים כיתה.",
       "remediate_same_level"
     );
   }
@@ -353,13 +353,13 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
   if (trendDer.fluencySupportWithoutAccuracyDrop && riskFlags.speedOnlyRisk && step === "drop_one_level_topic_only") {
     apply(
       "fluency_positive_speed_context",
-      "שיפור זרימה ללא ירידת דיוק — הקשר מהירות; לא יורדים רמה.",
+      "יש שיפור בקצב בלי ירידה בדיוק — לא מורידים רמה רק בגלל מהירות.",
       "maintain_and_strengthen"
     );
   }
 
   if (riskFlags.insufficientEvidenceRisk && isAggressiveStep(step)) {
-    apply("insufficient_evidence_cap_phase2", "ראיות לא מספקות לשינוי אגרסיבי בשלב 2.", "maintain_and_strengthen");
+    apply("insufficient_evidence_cap_phase2", "אין מספיק מידע לשינוי גדול עכשיו.", "maintain_and_strengthen");
   }
 
   const qR = Number(row?.questions) || 0;
@@ -409,7 +409,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
 }
 
 /**
- * Phase 7 — ריסון אבחוני: לא מקדמים/מורידים אגרסיבית כשהמסקנה חלקית או דלה.
+ * Phase 7 — ריסון אבחוני: לא משנים רמה בצורה חדה כשהמידע חלקי או מצומצם.
  * @param {string} step
  * @param {{ restraint?: Record<string, unknown>, rootCause?: Record<string, unknown> }} ctx
  */
@@ -446,14 +446,14 @@ export function applyPhase7RestraintGuards(step, ctx) {
     if (isAdvanceOnlyStep(out)) {
       apply(
         "phase7_restraint_cap_advance",
-        "שלב 7: הנתונים עדיין חלקיים או סותרים — לא מקדמים כיתה/רמת קושי כרגע.",
+        "הנתונים עדיין חלקיים או לא אחידים — לא מקדמים כיתה או רמת קושי כרגע.",
         "maintain_and_strengthen"
       );
     }
     if (isDropStep(out)) {
       apply(
         "phase7_restraint_soften_drop",
-        "שלב 7: לא יורדים רמה/כיתה כשהמסקנה אינה בשלה — מעבירים לחיזוק באותה רמה.",
+        "לא מורידים רמה או כיתה כשעדיין אין מספיק מידע — ממשיכים בחיזוק באותה רמה.",
         "remediate_same_level"
       );
     }
@@ -462,7 +462,7 @@ export function applyPhase7RestraintGuards(step, ctx) {
   if (rc === "insufficient_evidence" && isDropStep(out)) {
     apply(
       "phase7_insufficient_evidence_drop",
-      "שלב 7: אין די ראיות לשורש קושי — לא מורידים רמה; חיזוק מבוקר.",
+      "אין עדיין מספיק מידע כדי להבין מאיפה הקושי מתחיל — לא מורידים רמה; ממשיכים בחיזוק מבוקר.",
       "remediate_same_level"
     );
   }
@@ -470,7 +470,7 @@ export function applyPhase7RestraintGuards(step, ctx) {
   if (rc === "early_stage_instability" && isDropStep(out) && restraint.conclusionStrength !== "strong") {
     apply(
       "phase7_early_stage_soften_drop",
-      "שלב 7: שלב מוקדם — חיזוק לפני ירידת רמה.",
+      "עדיין מוקדם להוריד רמה — קודם מנסים חיזוק קצר.",
       "remediate_same_level"
     );
   }
@@ -479,7 +479,7 @@ export function applyPhase7RestraintGuards(step, ctx) {
 }
 
 /**
- * ריכוך ניסוח הורה כשהמנוע מרסן מסקנה חזקה.
+ * ריכוך ניסוח הורה כשהמנוע מרסן כיוון ברור.
  * @param {{ reasonHe?: string, parentHe?: string, studentHe?: string }} copy
  */
 export function mergePhase7SoftHebrewCopy(copy, restraint, rootCause) {
@@ -488,7 +488,7 @@ export function mergePhase7SoftHebrewCopy(copy, restraint, rootCause) {
   const cs = String(restraint?.conclusionStrength || "");
   const level = String(restraint?.diagnosticRestraint?.level || "");
   if (cs === "withheld" || level === "insufficient") {
-    addParent.push("אנחנו עדיין לא בשלים למסקנה חזקה — עדיף תרגול קצר ושגרתי באותה רמה.");
+    addParent.push("עדיין מוקדם לקבוע כיוון ברור — עדיף תרגול קצר ושגרתי באותה רמה.");
   } else if (cs === "tentative" || restraint?.shouldAvoidStrongConclusion) {
     addParent.push("מסכמים בזהירות: צעדים קטנים וברורים, בלי קפיצות.");
   }
@@ -530,7 +530,7 @@ export function pickRecommendedInterventionType(rootCauseId, finalStep) {
   return map[rc] || "monitor_before_escalation";
 }
 
-/** פעולת ראיות מומלצת (מזהה) — לצרכני API */
+/** פעולת בדיקה מומלצת (מזהה) — לצרכני API */
 export function pickRecommendedEvidenceAction(rootCauseId, conclusionStrength) {
   const rc = String(rootCauseId || "");
   const cs = String(conclusionStrength || "");
@@ -581,7 +581,7 @@ export function buildPhase7RecommendationFields(p) {
   reasoningParts.push(`מה מומלץ לעשות עכשיו: ${interventionLabelHe}.`);
   if (legacyRuleId) reasoningParts.push("נשמרו גם שיקולי זהירות.");
   if (riskFlags?.speedOnlyRisk) reasoningParts.push("הופעל הקשר מהירות.");
-  if (trendDer?.fragileProgressPattern) reasoningParts.push("מגמה שבירה (דיוק מול עצמאות).");
+  if (trendDer?.fragileProgressPattern) reasoningParts.push("ההצלחה עדיין לא יציבה לגמרי.");
   if (behaviorType && behaviorType !== "undetermined") {
     reasoningParts.push(`הדפוס הנראה בביצוע: ${diagnosticTypeLabelHe(behaviorType)}.`);
   }
@@ -590,12 +590,12 @@ export function buildPhase7RecommendationFields(p) {
   const whatWouldIncreaseConfidenceHe =
     alt.length > 0
       ? alt.join(" ")
-      : "עוד שאלות בטווח, מגמת דיוק ברורה יותר, ופחות תלות ברמזים — יגבירו את הביטחון במסקנה.";
+      : "עוד שאלות בתקופה שנבחרה, כיוון ברור יותר בדיוק, ופחות צורך ברמזים — יעזרו להבין את התמונה טוב יותר.";
 
   const whyNot =
     String(restraint?.diagnosticCautionHe || "").trim() ||
     (restraint?.conclusionStrength === "strong"
-      ? "אין חסימת ביטחון מיוחדת בשלב זה."
+      ? "אין סימן מיוחד שמחייב לעצור בשלב זה."
       : "כרגע שומרים על ניסוח זהיר בגלל היקף התרגול והמגמה.");
 
   return {
@@ -660,7 +660,7 @@ export function buildPhase9RecommendationOverlay(p) {
   } else if ((mp === "concept_confusion" || mp === "procedure_break") && tr !== "ready") {
     reviewBeforeAdvanceHe = "לסגור מעגל טעויות דומות באותה רמה לפני קפיצה קדימה.";
   } else if (hint && tr !== "ready") {
-    reviewBeforeAdvanceHe = "לצמצם תלות ברמזים לפני שמנסים רמה קשה יותר.";
+    reviewBeforeAdvanceHe = "לצמצם הילד עדיין נעזר ברמזים לפני שמנסים רמה קשה יותר.";
   }
 
   let mistakeFocusedActionHe = "";
@@ -705,7 +705,7 @@ export function buildPhase9RecommendationOverlay(p) {
 }
 
 /**
- * Phase 10 — כיוון התאמת תמיכה (טקסט + מזהה) לפי תגובה להתערבות וריענון ראיות.
+ * Phase 10 — כיוון התאמת תמיכה (טקסט + מזהה) לפי תגובה להתערבות ובדיקה מחדש של הנתונים.
  * @param {object} p
  */
 export function buildPhase10RecommendationOverlay(p) {
@@ -770,7 +770,7 @@ export function buildPhase10RecommendationOverlay(p) {
   }
   if (staleish || rec === "structured_recheck" || rec === "light_review") {
     recheckBeforeEscalationHe =
-      "המידע פחות עדכני — לא להסתמך עליו לבד לפני העלאת קושי או החמרה.";
+      "המידע פחות עדכני — לא להסתמך עליו לבד לפני שמעלים קושי או משנים כיוון.";
   }
   if (rti === "mixed_response") {
     changeBecauseHe = "תגובה מעורבת לתמיכה — חלק מתקדם, חלק עדיין תלוי; לדייק מבנה קצר.";
@@ -842,7 +842,7 @@ export function buildPhase11SequenceOverlay(p) {
   }
   if (seq === "sequence_ready_for_release" && rti !== "independence_growing") {
     whatMustHappenBeforeReleaseHe =
-      "לפני הפחתת תמיכה מלאה: שני מפגשים קצרים עם הצלחה קטנה בלי הכוונה באמצע, ואז בדיקה קצרה בסוף.";
+      "לפני הפחתת עזרה מלאה: שני מפגשים קצרים עם הצלחה קטנה בלי הכוונה באמצע, ואז בדיקה קצרה בסוף.";
   }
   if (seq === "continuing_sequence" || seq === "early_sequence") {
     whatSignalsSequenceSuccessHe =
@@ -850,7 +850,7 @@ export function buildPhase11SequenceOverlay(p) {
   }
   if (seq === "sequence_ready_for_release") {
     whatSignalsSequenceSuccessHe =
-      "סימן שאפשר לשחרר מעט תמיכה: עצמאות קצת עולה או הצלחה קצרה בלי עזרה באמצע — עדיין לא לבד לגמרי, אבל בכיוון טוב.";
+      "סימן שאפשר להפחית מעט עזרה: העצמאות קצת עולה או שיש הצלחה קצרה בלי עזרה באמצע — עדיין לא לבד לגמרי, אבל בכיוון טוב.";
   }
 
   return {
@@ -864,7 +864,7 @@ export function buildPhase11SequenceOverlay(p) {
 }
 
 /**
- * Phase 12 — החלטת המשך לפי זיכרון המלצה ומעקב תוצאות.
+ * Phase 12 — החלטת המשך לפי מה נוסה לאחרונה ומעקב תוצאות.
  * @param {object} p
  */
 export function buildPhase12ContinuationOverlay(p) {
@@ -881,7 +881,7 @@ export function buildPhase12ContinuationOverlay(p) {
   const rep = String(p?.strategyRepetitionRisk || "");
   const fs = String(p?.freshnessState || "");
   const cf = String(p?.conclusionFreshness || "");
-  /** QA: כיוון קודם חזק לא מצדיק pivot אגרסיבי כשהראיה הנוכחית לא מספיק עדכנית */
+  /** QA: כיוון קודם חזק לא מצדיק pivot אגרסיבי כשהמידע הנוכחי לא מספיק עדכני */
   const evidenceStale = fs === "stale" || cf === "expired" || cf === "low";
 
   let recommendationContinuationDecision = "continue_but_refine";
@@ -1020,13 +1020,13 @@ export function buildPhase13NextCycleOverlay(p) {
     NEXT_CYCLE_DECISION_FOCUS_LABEL_HE.prove_current_direction;
 
   const whatWouldJustifyReleaseHe =
-    "לפני שמפחיתים תמיכה: שני מפגשים קצרים עם הצלחה בסוף בלי הכוונה באמצע — עדיין לא עצמאות מלאה.";
+    "לפני שמפחיתים עזרה: שני מפגשים קצרים עם הצלחה בסוף בלי הכוונה באמצע — עדיין לא עצמאות מלאה.";
   const whatWouldJustifyAdvanceHe =
     "לפני קפיצת רמה: הצלחה שחוזרת באותה רמת קושי, סיכון שימור לא גבוה, ונתון עדכני.";
   const whatWouldTriggerPivotHe =
     "אם גם בסבב הבא אותו דפוס בלי שיפור — לעבור לכיוון מעט שונה, לא עוד אותה חזרה.";
   const whatWouldTriggerRecheckHe =
-    "כשהמידע חלקי או מתיישן — סבב בדיקה קצר לפני החמרה או מסקנה חזקה.";
+    "כשהמידע חלקי או ישן — כדאי לעשות בדיקה קצרה לפני שמחליטים לשנות כיוון.";
   const whatEvidenceWeStillNeedHe = String(p?.targetSuccessSignalHe || "").trim()
     ? `${String(p?.targetSuccessSignalHe || "").trim()} · ${String(p?.targetObservationWindowLabelHe || "").trim()}.`
     : "מפגש קצר עם רישום קטן בסוף — מה הצליח בפועל.";
@@ -1194,23 +1194,23 @@ export function buildWhyThisRecommendationHe(p) {
   if (riskFlags.falsePromotionRisk) rf.push("חשש מקידום מוקדם");
   if (riskFlags.falseRemediationRisk) rf.push("חשש מטיפול יתר");
   if (riskFlags.speedOnlyRisk) rf.push("נטייה למהירות");
-  if (riskFlags.hintDependenceRisk) rf.push("תלות ברמזים");
+  if (riskFlags.hintDependenceRisk) rf.push("הילד עדיין נעזר ברמזים");
   if (riskFlags.insufficientEvidenceRisk) rf.push("מידע חלקי בלבד");
-  if (riskFlags.recentTransitionRisk) rf.push("מגמה אחרונה עדינה");
+  if (riskFlags.recentTransitionRisk) rf.push("שינוי עדין לאחרונה");
   if (rf.length) parts.push(`נקודות לתשומת לב: ${rf.join(", ")}.`);
-  if (trendDer.unclearTrend) parts.push("מגמת הדיוק לא חדה — נשמרת זהירות.");
-  if (trendDer.fragileProgressPattern) parts.push("דיוק עולה אך עצמאות יורדת — נחשב שביר, לא קידום מהיר.");
-  if (trendDer.progressSupportsAdvance) parts.push("מגמה ועצמאות תומכות בקידום זהיר כשיש מספיק בסיס.");
+  if (trendDer.unclearTrend) parts.push("עדיין לא ברור אם הדיוק משתפר לאורך זמן — נשארים זהירים.");
+  if (trendDer.fragileProgressPattern) parts.push("הדיוק עולה, אבל הילד עדיין צריך יותר עזרה — לא מתקדמים מהר מדי.");
+  if (trendDer.progressSupportsAdvance) parts.push("אם ההצלחה והעצמאות חוזרות יחד, אפשר לשקול התקדמות זהירה.");
   return parts.join(" ");
 }
 
 export function buildWhatCouldChangeThisHe(p) {
   const { q, behaviorType } = p;
   const parts = [];
-  parts.push(`איסוף יותר מ־${Math.max(12, Number(q) || 0)} שאלות בטווח,`);
-  parts.push("עוד פרטים על טעויות (זמן תגובה, ניסיונות חוזרים, שימוש ברמזים) כדי לחדד את התמונה,");
-  parts.push("ומגמת דיוק ברורה בין תקופה נוכחית לקודמת — יכולים לשנות את הצעד.");
-  if (behaviorType === "undetermined") parts.push("דפוס ההתנהגות עדיין לא מספיק ברור — נתונים נוספים יצמצמו אי־ודאות.");
+  parts.push(`לאסוף יותר מ־${Math.max(12, Number(q) || 0)} שאלות בתקופה שנבחרה,`);
+  parts.push("עוד פרטים על טעויות, כמו זמן תגובה וניסיונות חוזרים, כדי לחדד את התמונה,");
+  parts.push("וכיוון דיוק ברור בין התקופה הנוכחית לקודמת — יכולים לשנות את הצעד.");
+  if (behaviorType === "undetermined") parts.push("הדפוס עדיין לא מספיק ברור — נתונים נוספים יעזרו להבין אותו טוב יותר.");
   return parts.join(" ");
 }
 

@@ -184,18 +184,18 @@ function buildHebrewCopy(step, ctx, cfg) {
 
   const mPart =
     mC >= cfg.copyMentionMistakesMin
-      ? ` נרשמו בטווח ${mC} אירועי טעות בנושא הזה — לקרוא את המשימה לאט לפני מענה.`
+      ? ` בתקופה שנבחרה נרשמו ${mC} טעויות בנושא הזה — לקרוא את המשימה לאט לפני מענה.`
       : "";
 
   /** @type {Record<RecommendedNextStep, { reasonHe: string, parentHe: string, studentHe: string }>} */
   const table = {
     advance_level: {
       reasonHe: `ב«${displayName}» הופיעו ${q} שאלות עם דיוק של כ-${acc}%${mPart}. התמונה מספיק יציבה כדי לנסות דרגת קושי גבוהה יותר — רק בנושא הזה, בלי לשנות את שאר המקצוע.`,
-      parentHe: `הנושא «${displayName}» נראה מבוסס: ${q} שאלות ודיוק ${acc}%. מומלץ לעלות רמת קושי אחת רק בנושא הזה בתרגול, ולוודא שזה נשאר חוויה מוצלחת (שאלה–שאלה, לא מרתון ארוך).`,
+      parentHe: `הנושא «${displayName}» נראה מבוסס: ${q} שאלות ודיוק ${acc}%. מומלץ לעלות רמת קושי אחת רק בנושא הזה בתרגול, ולבדוק שההצלחה נשמרת גם בכמה שאלות קצרות נוספות, בלי להפוך את התרגול לארוך מדי.`,
       studentHe: `אתה מוכן לאתגר הבא ב«${displayName}» — ננסה רמה אחת מעלה רק שם.`,
     },
     advance_grade_topic_only: {
-      reasonHe: `ב«${displayName}» כבר עובדים ברמה קשה יחסית (${levelLabel}) עם דיוק טוב (${acc}%) ונפח סביר (${q} שאלות). אפשר לנסות כיתה גבוהה יותר דווקא בנושא הזה — לא לכל המקצוע.`,
+      reasonHe: `ב«${displayName}» כבר עובדים ברמה קשה יחסית (${levelLabel}) עם דיוק טוב (${acc}%) וכמות שאלות מספיקה (${q} שאלות). אפשר לנסות כיתה גבוהה יותר דווקא בנושא הזה — לא לכל המקצוע.`,
       parentHe: `אם ניתן לבחור כיתה לפי נושא — ב«${displayName}» אפשר לנסות כיתה אחת מעלה. זה רק לנושא הזה; בשאר הנושאים נשארים כרגיל עד שיהיו נתונים דומים.`,
       studentHe: `ב«${displayName}» אפשר לנסות כיתה קצת יותר גבוהה — רק שם, צעד אחר צעד.`,
     },
@@ -345,7 +345,7 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
         currentMastery: acc,
         stability,
         confidence,
-        reasonHe: `יש רק ${q} שאלות ב«${displayName}» בטווח — מוקדם מדי לשנות כיתה או רמת קושי. עדיף עוד מפגשים קצרים באותה הגדרה ואז נבחן מחדש.`,
+        reasonHe: `יש רק ${q} שאלות ב«${displayName}» בתקופה שנבחרה — מוקדם מדי לשנות כיתה או רמת קושי. עדיף עוד מפגשים קצרים באותה הגדרה ואז נבחן מחדש.`,
         parentHe: `ב«${displayName}» יש עדיין מעט נתונים (${q} שאלות). המלצה להמשיך באותה רמת קושי, להוסיף שניים־שלושה תרגולים קצרים כדי שההמלצה הבאה תהיה מדויקת יותר.`,
         studentHe: `נמשיך עוד קצת באותה רמה ב«${displayName}» — ואז נדע טוב יותר מה הלאה.`,
         recommendationDecisionTrace: trace,
@@ -1018,13 +1018,13 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     legacyRuleId,
   });
   if (capped.postCapApplied) {
-    whyThisRecommendationHe += " הוחל כיסוי ראיות בסיס — לא מבצעים צעד אגרסיבי כשהנתונים חלקיים.";
+    whyThisRecommendationHe += " נשמר כלל זהירות — לא עושים שינוי גדול כשהמידע עדיין חלקי.";
   }
   whyThisRecommendationHe += ` נקודה שכדאי לשים עליה לב: ${rootCausePayload.rootCauseLabelHe || rootCausePayload.rootCause}.`;
   const dc = String(restraintPayload.diagnosticCautionHe || "").trim();
   if (dc) whyThisRecommendationHe += ` ${dc}`;
   if (phase10Aging.confidenceDecayApplied) {
-    whyThisRecommendationHe += " הראיות בטווח מתחילות להתיישן — נשארים עם ניסוח זהיר יחסית.";
+    whyThisRecommendationHe += " הנתונים בתקופה שנבחרה מתחילים להתיישן — נשארים עם ניסוח זהיר יחסית.";
   }
   if (phase11Drift.repeatAdviceWarning && phase11Overlay.whyWeShouldNotRepeatSameSupportHe) {
     whyThisRecommendationHe += ` ${phase11Overlay.whyWeShouldNotRepeatSameSupportHe}`;
@@ -1079,7 +1079,7 @@ export function decideTopicNextStep(row, mistakeEventCount, cfg = DEFAULT_TOPIC_
     (phase13Gates.releaseGate === "forming" || phase13Gates.advanceGate === "forming") &&
     !whyThisRecommendationHe.includes("לא מרחיבים שחרור")
   ) {
-    whyThisRecommendationHe += " כל עוד יש חשד לפער יסוד — לא מרחיבים שחרור או קידום בלי יותר יציבות בסיס.";
+    whyThisRecommendationHe += " כל עוד לא ברור מאיפה מתחיל הקושי — לא מפחיתים עזרה ולא מקדמים מהר מדי.";
   }
 
   return {
@@ -1326,10 +1326,10 @@ export function buildTopicRecommendationRecord(
     recommendedStudentActionHe,
     recommendedEvidenceLevelHe:
       signals.evidenceStrength === "strong"
-        ? "איכות ראיות גבוהה"
+        ? "מידע ברור יחסית"
         : signals.evidenceStrength === "medium"
-          ? "איכות ראיות בינונית"
-          : "איכות ראיות נמוכה",
+          ? "מידע חלקי אך שימושי"
+          : "מידע מצומצם",
     recommendedWhyNowHe: signals.recommendationContextHe,
     recommendationStabilityNoteHe: signals.patternStabilityHe,
     isEarlySignalOnly: !!signals.isEarlySignalOnly,

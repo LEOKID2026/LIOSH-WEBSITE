@@ -266,7 +266,7 @@ export function ExecutiveSummarySection({ es, compact }) {
             {es.crossSubjectRecalibrationNeedHe &&
             es.crossSubjectRecalibrationNeedHe !== SUBJECT_V2_RECALIBRATION_NEED_NO_HE ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">האם כדאי לשנות כיוון? </span>
+                <span className="text-white/45 font-bold">האם כדאי לבדוק כיוון אחר? </span>
                 {pr1ParentVisibleTextHe(es.crossSubjectRecalibrationNeedHe)}
               </p>
             ) : null}
@@ -313,7 +313,7 @@ export function ExecutiveSummarySection({ es, compact }) {
             ) : null}
             {es.subjectsReadyForReleaseHe?.length ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">מוכנות לשחרור זהיר: </span>
+                <span className="text-white/45 font-bold">אפשר לנסות פחות עזרה בזהירות: </span>
                 {truncateHe(es.subjectsReadyForReleaseHe.map(pr1ParentVisibleTextHe).join(" · "), 260)}
               </p>
             ) : null}
@@ -341,7 +341,7 @@ export function ExecutiveSummarySection({ es, compact }) {
           <div className="space-y-1 text-[11px] md:text-sm text-white/[0.86] leading-snug">
             {String(es.crossSubjectRecommendationMemoryStateLabelHe || "").trim() ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">זיכרון תומך: </span>
+                <span className="text-white/45 font-bold">מה ניסינו לאחרונה: </span>
                 {truncateHe(pr1ParentVisibleTextHe(String(es.crossSubjectRecommendationMemoryStateLabelHe)), 220)}
                 {String(es.crossSubjectSupportHistoryDepthLabelHe || "").trim()
                   ? ` · ${truncateHe(pr1ParentVisibleTextHe(String(es.crossSubjectSupportHistoryDepthLabelHe)), 120)}`
@@ -350,7 +350,7 @@ export function ExecutiveSummarySection({ es, compact }) {
             ) : null}
             {String(es.crossSubjectExpectedVsObservedMatchHe || "").trim() ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">התאמה צפי־מול־נצפה: </span>
+                <span className="text-white/45 font-bold">האם זה מתאים למה שציפינו: </span>
                 {truncateHe(pr1ParentVisibleTextHe(String(es.crossSubjectExpectedVsObservedMatchHe)), 220)}
               </p>
             ) : null}
@@ -374,7 +374,7 @@ export function ExecutiveSummarySection({ es, compact }) {
             ) : null}
             {es.subjectsWherePriorPathSeemsMisalignedHe?.length ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">מסלול קודם לא מתיישר: </span>
+                <span className="text-white/45 font-bold">הכיוון הקודם לא מתאים מספיק: </span>
                 {truncateHe(es.subjectsWherePriorPathSeemsMisalignedHe.map(pr1ParentVisibleTextHe).join(" · "), 260)}
               </p>
             ) : null}
@@ -418,7 +418,7 @@ export function ExecutiveSummarySection({ es, compact }) {
             )}
             {es.subjectsNearReleaseButNotThereHe?.length ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">קרובים לשחרור — עדיין לא: </span>
+                <span className="text-white/45 font-bold">עדיין לא להפחית עזרה: </span>
                 {truncateHe(es.subjectsNearReleaseButNotThereHe.map(pr1ParentVisibleTextHe).join(" · "), 260)}
               </p>
             ) : null}
@@ -462,19 +462,19 @@ export function ExecutiveSummarySection({ es, compact }) {
             ) : null}
             {es.subjectsLikelyShowingDownstreamSymptomsHe?.length ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">אולי תסמין משנה: </span>
+                <span className="text-white/45 font-bold">ייתכן שהקושי מתחיל במקום אחר: </span>
                 {truncateHe(es.subjectsLikelyShowingDownstreamSymptomsHe.map(pr1ParentVisibleTextHe).join(" · "), 260)}
               </p>
             ) : null}
             {es.subjectsNeedingFoundationFirstHe?.length ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">יסוד קודם: </span>
+                <span className="text-white/45 font-bold">איפה מתחיל הקושי: </span>
                 {truncateHe(es.subjectsNeedingFoundationFirstHe.map(pr1ParentVisibleTextHe).join(" · "), 260)}
               </p>
             ) : null}
             {es.subjectsSafeForLocalInterventionHe?.length ? (
               <p className="m-0">
-                <span className="text-white/45 font-bold">מקומי בטוח יותר: </span>
+                <span className="text-white/45 font-bold">נראה ממוקד בנושא הזה: </span>
                 {truncateHe(es.subjectsSafeForLocalInterventionHe.map(pr1ParentVisibleTextHe).join(" · "), 260)}
               </p>
             ) : null}
@@ -514,7 +514,7 @@ export function ExecutiveSummarySection({ es, compact }) {
           ) : null}
           {es.evidenceBalanceHe ? (
             <p className="m-0 leading-relaxed">
-              <span className="text-white/45 font-bold block text-[11px] mb-0.5">מה מחזק את התמונה ומה עדיין לא ברור</span>
+              <span className="text-white/45 font-bold block text-[11px] mb-0.5">מה ברור יותר ומה עדיין צריך לבדוק</span>
               {pr1ParentVisibleTextHe(es.evidenceBalanceHe)}
             </p>
           ) : null}
@@ -568,7 +568,7 @@ export function SubjectPhase3Insights({ sp, compact }) {
   const conf = String(sp?.confidenceSummaryHe || "").trim();
   if (conf)
     rows.push({
-      k: "עד כמה המסקנה הזו מבוססת",
+      k: "עד כמה המידע מספיק ברור",
       v: truncateHe(pr1ParentVisibleTextHe(conf), compact ? 100 : 200),
     });
   const beh = sp?.dominantBehaviorProfileAcrossRows;
@@ -671,7 +671,7 @@ export function SubjectPhase3Insights({ sp, compact }) {
   const sRec = String(sp?.subjectRecalibrationNeedHe || "").trim();
   if (sRec && sRec !== SUBJECT_V2_RECALIBRATION_NEED_NO_HE && (!effN || !effN.includes(sRec.slice(0, 10)))) {
     rows.push({
-      k: "האם כדאי לשנות כיוון",
+      k: "האם כדאי לבדוק כיוון אחר",
       v: truncateHe(pr1ParentVisibleTextHe(sRec), compact ? 100 : 200),
     });
   }
@@ -692,14 +692,14 @@ export function SubjectPhase3Insights({ sp, compact }) {
   const gateN = String(sp?.subjectGateNarrativeHe || "").trim();
   if (gateN && (!outN || !outN.includes(gateN.slice(0, 14)))) {
     rows.push({
-      k: "מה צריך לראות לפני ההחלטה הבאה",
+      k: "מה צריך לבדוק בהמשך",
       v: truncateHe(pr1ParentVisibleTextHe(gateN), compact ? 130 : 240),
     });
   }
   const depSub = String(sp?.subjectDependencyNarrativeHe || "").trim();
   if (depSub && (!gateN || !gateN.includes(depSub.slice(0, 14)))) {
     rows.push({
-      k: "יסוד קודם או קושי מקומי?",
+      k: "איפה מתחיל הקושי?",
       v: truncateHe(pr1ParentVisibleTextHe(depSub), compact ? 130 : 240),
     });
   }

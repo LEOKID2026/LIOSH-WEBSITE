@@ -2,12 +2,26 @@
 
 **Status:** Final planning document. Includes approved future development-run instructions in Section 35. No implementation has started yet. No SQL may be executed. No commit, push, or deploy is approved.
 
-**Version:** 3.0 — owner product direction update applied — 2026-05-29
+**Version:** 3.1 — Admin Entitlement / Permission Model added — 2026-05-29
+
+**Change summary (v3.1):**
+- Added Section 23: Admin Entitlement and Permission Model for Live Discussion/Audio.
+- Main ADMIN controls all live discussion/audio access. No automatic access for any school, teacher, or private teacher.
+- School entitlement: ADMIN grants school; school manager delegates to individual teachers.
+- Private teacher entitlement: ADMIN grants directly; subject grants still apply.
+- Nine-gate permission order documented (Section 23.5).
+- DB planning notes for entitlement tables added (Section 23.6 and Section 12.6).
+- Server helper planning added (Section 23.7).
+- All teacher discussion/audio API routes must call entitlement check before any logic.
+- Section 13 (API), Section 24 (Security), Section 25 (UI), Section 26 (QA), Section 30 (Acceptance), Section 33 (Decisions), Section 35 (Dev run) all updated.
+- New resolved owner decisions: A11, A12, A13 (entitlement model approved).
+- New open owner decisions: D9 (entitlement DB structure), D10 (entitlement helper design).
+- No code, no SQL execution, no commit, no push, no deploy.
 
 **Change summary (v3.0):**
 - Product goal updated: primary use case is **remote learning**, not only in-class hand raising.
 - **Audio is mandatory for the MVP.** A no-audio hand-raise-only phase is not a meaningful product MVP.
-- Phase structure renumbered **A–F** (audio-first). Old Phase 1 (no-audio only) removed as a standalone MVP.
+- Phase structure renumbered **A–F** (audio-first). The previous no-audio-only phase is removed as a standalone MVP; audio is mandatory from the start.
 - Added **Phase E**: private teacher-student audio conversation using a separate provider room.
 - **Parent reports confirmed fully out of scope.** Discussion/live-audio participation must never appear in any parent or guardian report. Owner decision A8 resolved.
 - Two student request types defined: `speak_to_class` and `private_help`.
@@ -43,6 +57,7 @@
 20. [Phase E — Private Teacher-Student Audio Conversation](#20-phase-e--private-teacher-student-audio-conversation)
 21. [Phase F — Mobile / Security / Load QA](#21-phase-f--mobile--security--load-qa)
 22. [Future Extensions (Deferred)](#22-future-extensions-deferred)
+23. [Admin Entitlement and Permission Model for Live Discussion/Audio](#23-admin-entitlement-and-permission-model-for-live-discussionaudio)
 24. [Security and Privacy Model](#24-security-and-privacy-model)
 25. [UI Impact](#25-ui-impact)
 26. [QA Plan](#26-qa-plan)
@@ -286,9 +301,13 @@ Note: `private_active` is not mutually exclusive with `teacher_broadcast_only` o
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  Teacher UI (monitor.js)   Student UI (activity page)   │
+│  [controls hidden if teacher has no entitlement]        │
 ├─────────────────────────────────────────────────────────┤
 │  Discussion REST APIs       Discussion REST APIs         │
 │  /api/teacher/…/discussion  /api/student/…/discussion    │
+├─────────────────────────────────────────────────────────┤
+│  Admin Entitlement Gate     (see Section 23)             │
+│  Global flag → ADMIN grant → School/Teacher grant        │
 ├─────────────────────────────────────────────────────────┤
 │  Discussion Server Module   (lib/teacher-server/         │
 │  teacher-discussion.server.js)                          │
@@ -296,10 +315,10 @@ Note: `private_active` is not mutually exclusive with `teacher_broadcast_only` o
 │  Supabase DB (service role)  Supabase Realtime Broadcast │
 │  classroom_discussion_*      discussion:{sessionId}      │
 ├─────────────────────────────────────────────────────────┤
-│  LiveAudioProvider Adapter   (Phase 2+)                  │
+│  LiveAudioProvider Adapter   (Phase B+)                  │
 │  lib/live-audio/provider-adapter.js                     │
 ├─────────────────────────────────────────────────────────┤
-│  Concrete Provider          (Phase 2+)                   │
+│  Concrete Provider          (Phase B+)                   │
 │  lib/live-audio/providers/livekit.js  (or agora.js etc.) │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -342,12 +361,14 @@ Full schema in Section 12.
 - The teacher joins two rooms simultaneously during a private conversation: the main class room (as publisher) and the private room (as publisher). The private room audio is entirely separate from the main room.
 - The student in the private conversation joins the private room only. Their main room subscription is suspended while the private conversation is active.
 
-### 4.6 Feature Flags
+### 4.6 Feature Flags and Entitlement Layering
 
-- `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` — client-side flag; gates all discussion UI.
-- `LIVE_DISCUSSION_AUDIO_ENABLED` — server-side flag; gates audio token issuance.
+- `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` — client-side flag; gates all discussion UI globally.
+- `LIVE_DISCUSSION_AUDIO_ENABLED` — server-side flag; gates audio token issuance globally.
 - Both start `false`. Never enabled without owner approval.
 - Kill switch: setting either flag to `false` immediately disables the feature with no code change.
+
+**The global feature flag is not sufficient on its own.** Enabling it does not grant access to any school, school teacher, or private teacher. See Section 23 for the full entitlement model that sits between the feature flag and actual API access.
 
 ---
 
@@ -382,7 +403,7 @@ The following functions form the internal interface. All provider implementation
  * @param {object} opts
  * @param {string} opts.roomName   - derived from sessionId, e.g. "discussion-{sessionId}"
  * @param {number} opts.maxParticipants
- * @param {boolean} opts.recordingEnabled  - always false in Phase 2–4
+ * @param {boolean} opts.recordingEnabled  - always false in Phases B–E
  * @returns {Promise<{ roomId: string, roomName: string }>}
  */
 async function createRoom(opts) {}
@@ -745,7 +766,7 @@ Each discussion session that uses audio must log:
 - `participant_count_peak`
 - `estimated_participant_minutes` (computed on session end)
 
-This data is stored in `classroom_discussion_sessions` (columns added in Phase 2+) and can be queried by an admin API.
+This data is stored in `classroom_discussion_sessions` (columns added in Phase B) and can be queried by an admin API.
 
 ### 7.3 Budget Guard Plan
 
@@ -753,9 +774,9 @@ This data is stored in `classroom_discussion_sessions` (columns added in Phase 2
 |-----------|--------|
 | Monthly usage reaches 70% of cap | Log warning event; optionally email admin |
 | Monthly usage reaches 90% of cap | Log critical warning; display alert in teacher dashboard (admin-configurable) |
-| Monthly usage reaches 100% of cap | Disable audio token issuance server-side; discussion continues in Phase 1 mode (hand raise only) |
+| Monthly usage reaches 100% of cap | Disable audio token issuance server-side; discussion continues without audio (listen-only / hand-raise state preserved) |
 | `LIVE_DISCUSSION_AUDIO_ENABLED=false` | Instant kill switch; audio disabled immediately, no code deploy needed |
-| Provider API returns billing error | Log error; disable audio for the session; continue in Phase 1 mode |
+| Provider API returns billing error | Log error; disable audio for the session; discussion state preserved without audio |
 | Provider outage | Log outage event; discussion continues without audio; banner shown to teacher |
 
 ### 7.4 No-Surprise Billing Rules
@@ -768,7 +789,7 @@ This data is stored in `classroom_discussion_sessions` (columns added in Phase 2
 
 ### 7.5 Admin Usage Summary
 
-Phase 5/6 adds an admin API:
+Phase F adds an admin API:
 ```
 GET /api/admin/discussion/usage?month=2026-05
 → { totalParticipantMinutes, sessionCount, estimatedCostCents }
@@ -831,8 +852,8 @@ Supabase Realtime supports private channels that require a JWT to subscribe. How
 - Students do not have Supabase JWTs (they use cookie sessions).
 - Giving students Supabase JWTs would require a significant auth model change.
 - Short-lived signed Realtime tokens (as supported by Supabase `REALTIME_JWT_SECRET`) could be issued server-side, but this adds complexity.
-- **For Phase 1, anon channel with payload sanitization is the recommended approach.** The risk is low given UUID channel names and read-only student access.
-- **For a future security hardening phase, server-issued short-lived Realtime JWTs can be implemented if required.** This is listed as a future option, not a Phase 1 requirement.
+- **For Phase A, anon channel with payload sanitization is the recommended approach.** The risk is low given UUID channel names and read-only student access.
+- **For a future security hardening phase, server-issued short-lived Realtime JWTs can be implemented if required.** This is listed as a future option, not a Phase A requirement.
 
 ### 8.6 What Students Can See vs. Cannot See
 
@@ -908,7 +929,7 @@ Realtime events received before the REST fetch completes are queued and applied 
 
 A Realtime event should never be the only basis for a security decision. For example:
 - A `speak_approved` Realtime event is used to update the student UI optimistically.
-- But when the student requests an audio token (Phase 2+), the server re-checks `approved_to_speak` in the DB. The token is not issued based on the Realtime event alone.
+- But when the student requests an audio token (Phase B+), the server re-checks `audio_scope` and `is_muted` in the DB. The token is not issued based on the Realtime event alone.
 
 ---
 
@@ -928,12 +949,12 @@ The approach:
 
 ### 10.3 Which Routes Need Microphone Access
 
-Only audio phases (Phase 2+) require microphone access. Only on specific pages:
+Only audio phases (Phase B+) require microphone access. Only on specific pages:
 
 | Route | Needs Microphone | Role |
 |-------|:---------------:|------|
-| `/teacher/class/[classId]/activities/[activityId]/monitor` | Yes (Phase 2+) | Teacher broadcasts audio |
-| `/student/activity/[activityId]` | Yes (Phase 2+, approved students) | Student speaks |
+| `/teacher/class/[classId]/activities/[activityId]/monitor` | Yes (Phase B+) | Teacher broadcasts audio |
+| `/student/activity/[activityId]` | Yes (Phase B+, approved students) | Student speaks |
 | All other routes | **No** | Microphone stays blocked |
 
 ### 10.4 Recommended `next.config.js` Headers Configuration (Phase B+ Only)
@@ -977,7 +998,7 @@ Only audio phases (Phase 2+) require microphone access. Only on specific pages:
 
 ### 10.6 Required Tests After Permissions-Policy Change
 
-Before shipping audio phases:
+Before shipping Phase B (first audio phase):
 - Verify that `/teacher/dashboard` cannot access the microphone (browser console logs permission denied).
 - Verify that `/student/home` cannot access the microphone.
 - Verify that `/learning/math-master` cannot access the microphone.
@@ -1018,20 +1039,20 @@ Voice/audio data transmitted in real time is personal data under Israeli law and
 
 | Item | Status | Required Before |
 |------|--------|----------------|
-| Children's privacy review under Israeli law | Not started | Audio Phase 2 |
-| Children's privacy review for other jurisdictions in scope | Not started | Audio Phase 2 |
-| Voice transmission disclosure in privacy policy | Not done | Audio Phase 2 |
-| Parental notification mechanism | Not defined | Audio Phase 2 |
-| Parental consent requirement (if legally required) | Not determined | Audio Phase 2 |
-| Data retention policy for discussion event logs | Not defined | Phase 1 |
-| Data retention policy for participant metadata | Not defined | Phase 1 |
-| DPA with audio provider | Not signed | Audio Phase 2 |
-| Privacy policy update (add: real-time audio transmission) | Not done | Audio Phase 2 |
-| No recording by default — documented and verified | Planned | Audio Phase 2 |
-| No transcription by default — documented and verified | Planned | Audio Phase 2 |
-| No AI processing of audio by default — documented and verified | Planned | Audio Phase 2 |
-| Sub-processor list updated (new audio provider) | Not done | Audio Phase 2 |
-| DPA with Supabase (if not already signed) | Unknown | Phase 1 |
+| Children's privacy review under Israeli law | Not started | Audio Phase B |
+| Children's privacy review for other jurisdictions in scope | Not started | Audio Phase B |
+| Voice transmission disclosure in privacy policy | Not done | Audio Phase B |
+| Parental notification mechanism | Not defined | Audio Phase B |
+| Parental consent requirement (if legally required) | Not determined | Audio Phase B |
+| Data retention policy for discussion event logs | Not defined | Phase A |
+| Data retention policy for participant metadata | Not defined | Phase A |
+| DPA with audio provider | Not signed | Audio Phase B |
+| Privacy policy update (add: real-time audio transmission) | Not done | Audio Phase B |
+| No recording by default — documented and verified | Planned | Audio Phase B |
+| No transcription by default — documented and verified | Planned | Audio Phase B |
+| No AI processing of audio by default — documented and verified | Planned | Audio Phase B |
+| Sub-processor list updated (new audio provider) | Not done | Audio Phase B |
+| DPA with Supabase (if not already signed) | Unknown | Phase A |
 
 ### 11.5 Privacy-Safe Design Principles
 
@@ -1219,11 +1240,23 @@ comment on table public.classroom_private_audio_sessions is
 - `private_room_name` is never exposed to any student other than the student in the private session.
 - On `ended`, the server must call `provider.closePrivateRoom(private_room_name)` before setting `status = 'ended'`.
 
-### 12.6 Relationship to Existing Tables
+### 12.6 Entitlement Tables (Planning Note — See Section 23.6)
+
+Implementation of the Admin Entitlement model (Section 23) will require additional tables. Candidate structures are documented in Section 23.6. The exact design is an open owner decision (D9). No migration for entitlement tables is created until D9 is resolved.
+
+Candidate new tables (planning names only):
+- `school_live_discussion_entitlements` — ADMIN-granted school entitlement.
+- `school_teacher_live_discussion_permissions` — school-manager-granted teacher permission.
+- `private_teacher_live_discussion_entitlements` — ADMIN-granted private teacher entitlement.
+
+These tables are separate from the four discussion tables above and must not be confused with them.
+
+### 12.7 Relationship to Existing Tables
 
 - New tables do **not** modify `classroom_activities`, `classroom_activity_student_status`, or `classroom_activity_attempts`.
 - `activity_id` on `classroom_discussion_sessions` is nullable (for potential future standalone discussions).
 - Class and teacher validation still goes through `teacher_classes`, `teacher_class_students`, `teacher_profiles`.
+- Entitlement checks cross-reference `schools`, `teacher_profiles`, and `private_teacher_subjects`; those tables are read but not modified by the discussion system.
 
 ### 12.8 Data Retention
 
@@ -1246,6 +1279,15 @@ These are suggestions, not implemented policies.
 All routes under `pages/api/teacher/activities/[activityId]/discussion/`.
 
 All routes: validate `Authorization: Bearer` → JWT → `role === 'teacher'` → `classroom_activities.teacher_id = auth.uid()`.
+
+**Entitlement gate (required before any route logic executes):** After JWT validation, every teacher discussion API route must call `checkLiveDiscussionEntitlement({ teacherId, activityId })` (Section 23.7). If the result is `{ allowed: false }`, the route returns `403 Forbidden`. This gate runs before any discussion state is read or written. It covers all nine gates defined in Section 23.5.
+
+The following routes additionally enforce entitlement sub-gates listed in parentheses:
+- `start` — all gates 1–8.
+- `audio-start`, `audio-token` — gates 1–9 (full audio issuance path).
+- `approve`, `approve-private` — gates 1–8.
+- `private-audio-token` — gates 1–9.
+- `report` — gates 1–7 (teacher-only; no audio token issued).
 
 | Route | Method | Body | Response | Key Error Codes |
 |-------|--------|------|---------|----------------|
@@ -1325,6 +1367,9 @@ Notes:
 - Private room tokens are scoped to `private_room_name`. A student's private token cannot be used in the main class room.
 - The `private_room_name` is never included in any Realtime broadcast or student-facing API response for other students. Only the teacher and the specific student in the private conversation receive it.
 - Student `private-audio-token` server verifies `classroom_private_audio_sessions.status = 'active'` AND `student_id` matches session user before issuing token. No other student can receive a private room token.
+- **Entitlement bypass prevention:** A teacher cannot access discussion APIs by manipulating the activity ID or teacher ID. The entitlement check always uses the `teacher_id` from the validated JWT and the school/private-teacher context derived from the DB — never from the request body.
+- A school teacher cannot gain private-teacher entitlement and vice versa. The entitlement check determines teacher type from the DB, not from a client-supplied parameter.
+- A school manager cannot grant teacher permission if the school's own entitlement has been revoked. The gate order enforces this: school-level entitlement (Gate 3) is checked before teacher-level permission (Gate 4).
 
 ---
 
@@ -1422,7 +1467,7 @@ On any disconnect or page reload:
 
 **Cost:** $0.
 
-**Estimated duration:** 2–3 days to run after Phase 1 implementation is complete.
+**Estimated duration:** 2–3 days to run after Phase A implementation is complete.
 
 ### 15.2 POC B — Audio Provider Sandbox
 
@@ -1457,7 +1502,7 @@ On any disconnect or page reload:
 
 **Cost:** Within free tier. $0.
 
-**Estimated duration:** 3–5 days to run after Phase 2 implementation is complete.
+**Estimated duration:** 3–5 days to run after Phase B implementation is complete.
 
 ### 15.3 POC C — Provider Comparison
 
@@ -1985,6 +2030,190 @@ The following are out of scope for all initial phases (A–F). Listed for comple
 
 ---
 
+## 23. Admin Entitlement and Permission Model for Live Discussion/Audio
+
+### 23.1 Overview
+
+The live discussion/audio system is not available by default to any school, school teacher, or private teacher. The **main platform ADMIN** is the sole authority who controls which entities may use live discussion/audio. Enabling the global feature flag does not grant access — it is only the top-level prerequisite. All entitlement decisions are made by the main ADMIN independently of flag state.
+
+**This section is planning-only. No code or SQL is written or executed here. Entitlement storage requirements are noted in Section 23.6.**
+
+### 23.2 Entitlement Actors
+
+| Actor | Receives access from | Scope of access |
+|-------|---------------------|----------------|
+| Main ADMIN | Built-in platform role | Can grant/revoke all schools and private teachers |
+| School (school manager/admin) | Main ADMIN grants school-level entitlement | Can delegate to individual school teachers after receiving school entitlement |
+| School teacher | School manager grants teacher-level permission (after school has entitlement from ADMIN) | Can use live discussion/audio for their own classes and granted subjects |
+| Private teacher | Main ADMIN grants direct entitlement | Can use live discussion/audio for own students and granted subjects only |
+
+> **Hard rule:** A school manager cannot grant live discussion/audio permission to any teacher if the main ADMIN has not first granted the school-level entitlement. The delegation chain cannot skip the ADMIN grant step.
+
+### 23.3 School Entitlement and Manager Delegation
+
+**Main ADMIN grants school entitlement:**
+- The main ADMIN adds a live-discussion entitlement record for a specific school.
+- Without this record, no teacher at that school can access live discussion/audio, regardless of the global feature flag.
+- The main ADMIN can revoke school entitlement at any time; revocation immediately blocks all teachers at that school.
+
+**School manager delegates to teachers:**
+- After the school has ADMIN-granted entitlement, the school manager may grant individual school teachers permission to use live discussion/audio.
+- School teachers do not receive this permission automatically from the school's entitlement — each teacher requires an explicit grant from the school manager.
+- Removing the school's entitlement (by ADMIN) automatically invalidates all teacher-level grants at that school (no orphan permissions).
+
+**School teacher access requirements (all must pass):**
+1. Global feature flag `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED = true`.
+2. Global audio flag `LIVE_DISCUSSION_AUDIO_ENABLED = true` (for audio operations).
+3. School has main ADMIN entitlement for live discussion/audio.
+4. School manager has granted this teacher permission to use live discussion/audio.
+5. Teacher owns or is assigned to the relevant classroom activity.
+6. Subject permission gate (if subject-level permissions apply to this school context).
+7. Session/activity state is valid (live_lesson active).
+8. Audio token issuance gate (all prior checks passed; budget cap not exceeded).
+
+### 23.4 Private Teacher Entitlement
+
+**Main ADMIN grants private teacher entitlement directly:**
+- The main ADMIN adds a live-discussion entitlement record for a specific private teacher.
+- There is no intermediate delegation layer for private teachers — ADMIN grants directly, and the private teacher is either entitled or not.
+- The main ADMIN can revoke entitlement at any time.
+
+**Private teacher access requirements (all must pass):**
+1. Global feature flag `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED = true`.
+2. Global audio flag `LIVE_DISCUSSION_AUDIO_ENABLED = true` (for audio operations).
+3. Main ADMIN has granted this private teacher live discussion/audio entitlement.
+4. Subject permission gate: private teacher must have the relevant subject explicitly listed in `private_teacher_subjects`. Private teachers must not receive all subjects by default.
+5. The students in the session must be explicitly linked to this private teacher.
+6. Private teacher must not access school rosters or school classes unless explicitly part of a school context.
+7. Session/activity state is valid.
+8. Audio token issuance gate.
+
+### 23.5 Permission Gate Order
+
+Every teacher live discussion/audio API route must check gates in this order. The first failing gate rejects the request. Audio tokens are never issued unless all applicable gates pass.
+
+```
+Gate 1: Global feature flag
+         NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED = true
+         (LIVE_DISCUSSION_AUDIO_ENABLED = true for audio operations)
+         ↓ pass
+Gate 2: Main ADMIN entitlement
+         School or private teacher has been granted live discussion/audio by main ADMIN
+         ↓ pass
+Gate 3: School-level entitlement (school context only)
+         The teacher's school has active ADMIN-granted entitlement
+         ↓ pass (or skip if private teacher context)
+Gate 4: School manager teacher-level grant (school context only)
+         The school manager has granted this specific teacher permission
+         ↓ pass (or skip if private teacher context)
+Gate 5: Private teacher direct entitlement (private teacher context only)
+         Main ADMIN has granted this private teacher entitlement directly
+         ↓ pass (or skip if school teacher context)
+Gate 6: Subject permission gate
+         Teacher is allowed for the subject of the relevant activity.
+         For private teachers: subject must be in private_teacher_subjects.
+         ↓ pass
+Gate 7: Class/student ownership or membership gate
+         Teacher owns the classroom or the students are linked to this teacher.
+         ↓ pass
+Gate 8: Session/activity state gate
+         Activity is in valid state (live_lesson, active/not-closed).
+         Discussion session exists and is active.
+         ↓ pass
+Gate 9: Audio token issuance gate
+         LIVE_DISCUSSION_AUDIO_ENABLED = true.
+         Budget cap not exceeded.
+         For student speaker token: audio_scope = 'class' and not muted.
+         For private room token: active classroom_private_audio_sessions row for this student.
+         ↓ token issued
+```
+
+**Any gate failure returns an appropriate HTTP error code** (403 for entitlement/permission failures, 402 for budget cap, 409 for state failures). The error response must not reveal which specific gate failed beyond what is needed for the client to handle gracefully.
+
+### 23.6 Database Planning: Entitlement Storage
+
+> **Planning only. No SQL is executed. No migration is created until this section is explicitly approved and a separate implementation instruction is given.**
+
+Implementation of the entitlement model will require one or more of the following structures. The exact table/column design is an owner decision (D9):
+
+**Option A — Separate entitlement tables (recommended):**
+
+```sql
+-- Planning only. Do not create yet.
+
+-- Grants live discussion/audio to a school (by main ADMIN).
+-- school_live_discussion_entitlements
+--   id, school_id (FK to schools), granted_by (admin user id),
+--   granted_at, revoked_at (null = active), notes
+
+-- Grants live discussion/audio to an individual school teacher
+-- (by school manager, after school has entitlement).
+-- school_teacher_live_discussion_permissions
+--   id, teacher_id, school_id, granted_by (school manager id),
+--   granted_at, revoked_at (null = active)
+
+-- Grants live discussion/audio to a private teacher (by main ADMIN).
+-- private_teacher_live_discussion_entitlements
+--   id, private_teacher_id (FK to teachers or private_teacher_profiles),
+--   granted_by (admin user id), granted_at, revoked_at (null = active)
+```
+
+**Option B — Flag columns on existing teacher/school tables:**
+Add `live_discussion_enabled` boolean columns to the existing `schools` or `teacher_profiles` tables. Simpler but less auditable.
+
+**Recommended approach:** Option A (separate tables) for auditability — revocation history is preserved, granting actor is recorded, and no existing tables are modified. Decision D9 must be resolved before implementation.
+
+**All existing table RLS rules remain unchanged.** Entitlement tables follow the same pattern: RLS enabled, no client policies, service-role-only access via API.
+
+### 23.7 Server Helper Planning
+
+Implementation will require a central server-side entitlement check helper. Decision D10 covers this.
+
+Planned helper location: `lib/teacher-server/live-discussion-entitlement.server.js`
+
+Planned functions (do not implement yet):
+
+```javascript
+// Planning only. Do not implement yet.
+
+/**
+ * Check if a school teacher is entitled to use live discussion/audio.
+ * Runs all gates 1–4 + 6 relevant to school teachers.
+ * Returns { allowed: boolean, reason: string | null }.
+ */
+async function checkSchoolTeacherEntitlement({ teacherId, schoolId, activityId, subjectId }) {}
+
+/**
+ * Check if a private teacher is entitled to use live discussion/audio.
+ * Runs all gates 1–3 (private path) + 5 + 6 relevant to private teachers.
+ * Returns { allowed: boolean, reason: string | null }.
+ */
+async function checkPrivateTeacherEntitlement({ teacherId, activityId, subjectId }) {}
+
+/**
+ * Unified entitlement check called from all teacher discussion/audio API routes.
+ * Determines teacher type (school vs. private) and delegates to the appropriate checker.
+ * Returns { allowed: boolean, reason: string | null }.
+ */
+async function checkLiveDiscussionEntitlement({ teacherId, activityId }) {}
+```
+
+All teacher discussion API routes must call `checkLiveDiscussionEntitlement` after validating the teacher JWT and before executing any discussion or audio logic.
+
+### 23.8 Resolved Owner Decisions
+
+The following entitlement decisions are **already resolved** by owner direction:
+
+| Decision | Resolution |
+|----------|-----------|
+| Does main ADMIN control school/private-teacher live discussion entitlement? | **Yes.** No school or private teacher receives access automatically. |
+| Can school managers delegate live discussion permission to individual teachers? | **Yes, but only after the school has ADMIN-granted entitlement.** |
+| Do private teachers require direct ADMIN entitlement? | **Yes.** No intermediate delegation. |
+| Do subject grants still apply to private teachers? | **Yes.** Subject must be in `private_teacher_subjects`. |
+| Can private teachers access school rosters/classes by default? | **No.** Only if explicitly part of a school context. |
+
+---
+
 ## 24. Security and Privacy Model
 
 ### 24.1 Teacher-Only Control
@@ -2030,7 +2259,15 @@ No recording is initiated server-side. Provider recording is disabled by default
 
 See Section 8.3. No student names, no rosters, no approval lists in anon-channel broadcast payloads. Private room names and tokens are never put in any Realtime broadcast payload.
 
-### 24.8 Private Conversation Room Isolation
+### 24.8 Admin Entitlement as a Security Layer
+
+The entitlement model (Section 23) is a security control, not just a product feature. It ensures that:
+- Teachers without ADMIN-granted entitlement cannot create discussion sessions, issue audio tokens, or access private rooms — even if they somehow know valid session IDs or room names.
+- The entitlement check runs server-side against DB-stored records, not against client-supplied parameters.
+- Revoking entitlement (ADMIN revokes school or private teacher) immediately blocks all subsequent API calls, regardless of any active session state. Active sessions should be closed as part of revocation (implementation detail for D10).
+- The entitlement gate cannot be bypassed by feature flag manipulation alone.
+
+### 24.9 Private Conversation Room Isolation
 
 Private teacher-student audio uses a **separate provider room** — not a client-side mute of the main class room.
 
@@ -2093,13 +2330,32 @@ A 40-student class does not mean 40 open microphones. Students are listeners by 
 - **Session locked:** Raise hand and request-private buttons disabled. Status: "Discussion is paused."
 - **Session ended:** All discussion UI hidden or shows "Discussion has ended."
 
-### 25.3 Screens That Must Remain Unchanged
+### 25.3 Entitlement-Based UI Gating
+
+The teacher monitor Discussion panel visibility must reflect the entitlement model:
+
+| Teacher situation | Discussion panel state |
+|------------------|----------------------|
+| Main ADMIN has not granted school entitlement | Discussion panel must not be visible or must be shown as unavailable with an appropriate message |
+| School has entitlement but this specific teacher has not been granted permission by school manager | Discussion panel must not be visible or must show a "contact your school admin" message |
+| Private teacher has no ADMIN-granted entitlement | Discussion panel must not be visible or must be shown as unavailable |
+| All entitlement checks pass, but global feature flag is off | Discussion panel not visible |
+| All entitlement checks pass, feature flag on, audio flag off | Non-audio discussion controls visible; audio controls hidden or disabled |
+| All checks pass | Full discussion panel available |
+
+**Rules for disabled/unavailable states:**
+- A teacher who lacks entitlement must not see an actionable "Start Discussion" button.
+- The exact Hebrew copy for entitlement-denied messages is not yet approved. The copy must be owner-approved before implementation. Placeholder: `[ADMIN_ENTITLEMENT_DENIED_MESSAGE]`.
+- The client-side entitlement state is populated from a server-side check at page load (via the teacher monitor API poll response). The server never trusts the client to self-report entitlement.
+- The UI check is a display convenience only; the server enforces entitlement on every API call regardless of UI state.
+
+### 25.4 Screens That Must Remain Unchanged
 
 All learning master pages, arcade/game pages, teacher dashboard, teacher class report, student login, teacher login, all guardian/parent pages, all existing classroom activity create/list flows.
 
-### 25.4 Hebrew Copy
+### 25.5 Hebrew Copy
 
-No existing Hebrew strings are changed. New Hebrew labels for discussion UI will be added to `lib/classroom-activities/classroom-activities-labels.client.js` and the relevant teacher UI labels file during implementation. This is not done yet.
+No existing Hebrew strings are changed. New Hebrew labels for discussion UI will be added to `lib/classroom-activities/classroom-activities-labels.client.js` and the relevant teacher UI labels file during implementation. Entitlement-denied messages require separate owner approval before Hebrew copy is written. This is not done yet.
 
 ---
 
@@ -2116,6 +2372,14 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 - Only one active private session per discussion session at a time (uniqueness constraint enforced).
 - `request_type` correctly set on raise-hand vs request-private routes.
 - Ending session closes all active private rooms before setting status `'ended'`.
+- **Entitlement unit tests:**
+  - School teacher with no school entitlement → `checkLiveDiscussionEntitlement` returns `{ allowed: false }`.
+  - School has entitlement but teacher has no school manager grant → `{ allowed: false }`.
+  - School teacher with full entitlement chain → `{ allowed: true }`.
+  - Private teacher with no ADMIN entitlement → `{ allowed: false }`.
+  - Private teacher with ADMIN entitlement but wrong subject → `{ allowed: false }` (subject gate).
+  - Private teacher with full entitlement + correct subject → `{ allowed: true }`.
+  - Revoking school entitlement invalidates teacher-level permissions (cascade check).
 
 ### 26.2 API Tests
 
@@ -2142,10 +2406,10 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 
 ### 26.4 Mobile Smoke Tests
 
-- Phase 1: raise hand and approval flow on iOS Safari, Android Chrome.
-- Phase 2+: microphone permission request on iOS Safari.
-- Phase 2+: audio autoplay unlock (user gesture) on iOS Safari.
-- Phase 2+: microphone capture for approved student on iOS Safari.
+- Phase A: raise hand and request-private flow on iOS Safari, Android Chrome.
+- Phase B+: microphone permission request on iOS Safari.
+- Phase B+: audio autoplay unlock (user gesture) on iOS Safari.
+- Phase B+: microphone capture for approved student on iOS Safari.
 - Touch target size for raise-hand button: minimum 44×44px.
 
 ### 26.5 Audio Permission Tests (Phase B+)
@@ -2167,6 +2431,14 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 
 ### 26.7 Security/Tamper Tests
 
+- **Entitlement tamper tests:**
+  - School teacher without school entitlement calls `start` → 403.
+  - School teacher without school manager grant calls `audio-start` → 403.
+  - Private teacher without ADMIN entitlement calls `start` → 403.
+  - Private teacher with entitlement but wrong subject calls `start` → 403.
+  - Teacher attempts to supply `schoolId` or `entitlementId` in request body to bypass entitlement check → ignored; entitlement determined from DB only.
+  - ADMIN revokes school entitlement mid-session: subsequent `audio-token` call → 403.
+  - School teacher entitlement check uses teacher's own `teacher_id` from JWT, not a body parameter.
 - Student calls teacher `approve` route → 403.
 - Student sends `{ approved_to_speak: true, audio_scope: 'class' }` in raise-hand body → fields ignored; student remains unapproved.
 - Student from class B attempts to join class A session → 403.
@@ -2212,8 +2484,8 @@ node --experimental-vm-modules node_modules/.bin/jest tests/classroom-discussion
 # All tests
 node --experimental-vm-modules node_modules/.bin/jest
 
-# E2E - Phase 1
-npx playwright test tests/e2e/classroom-discussion/phase1/
+# E2E - Phase A
+npx playwright test tests/e2e/classroom-discussion/phaseA/
 
 # E2E - full regression
 npx playwright test tests/e2e/
@@ -2234,7 +2506,7 @@ npm run lint
 | Flag | Type | Default | Purpose |
 |------|------|---------|---------|
 | `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED` | Client | `false` | Gates all discussion UI for both teacher and student |
-| `LIVE_DISCUSSION_AUDIO_ENABLED` | Server | `false` | Gates audio token issuance; false = Phase 1 only even if UI enabled |
+| `LIVE_DISCUSSION_AUDIO_ENABLED` | Server | `false` | Gates audio token issuance; false = non-audio mode even if UI enabled |
 | `LIVE_AUDIO_PROVIDER` | Server | `"mock"` | Selects provider adapter; `"mock"` is safe default |
 | `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` | Server | `0` | Budget cap; `0` = audio disabled regardless of other flags |
 
@@ -2242,9 +2514,9 @@ Setting any of these to a restrictive value disables the feature instantly witho
 
 ### 27.2 Dev-Only Mode
 
-Phase 1: `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=true` + `LIVE_DISCUSSION_AUDIO_ENABLED=false` + `LIVE_AUDIO_PROVIDER=mock`. No provider needed. No cost.
+Phase A: `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=true` + `LIVE_DISCUSSION_AUDIO_ENABLED=false` + `LIVE_AUDIO_PROVIDER=mock`. No provider needed. No cost.
 
-Phase 2+: Use free tier of selected provider in staging.
+Phase B+: Use free tier of selected provider in staging.
 
 ### 27.3 Teacher-Only Hidden Pilot
 
@@ -2270,9 +2542,9 @@ Students only see discussion UI when a session is actually active for their curr
 - All acceptance criteria for the phase are met.
 - All regression tests pass.
 - POC for the phase is complete and documented.
-- Audio provider DPA signed (Phase 2+).
-- Privacy policy updated (Phase 2+).
-- Permissions-Policy change approved and tested (Phase 2+).
+- Audio provider DPA signed (Phase B+).
+- Privacy policy updated (Phase B+).
+- Permissions-Policy change approved and tested (Phase B+).
 - Budget cap configured.
 - Owner written sign-off on the phase.
 
@@ -2444,9 +2716,17 @@ These criteria describe the complete working system through Phase F. All must be
 - Existing parent/guardian login and reports unchanged.
 - Existing student login and arcade unchanged.
 
+**Admin Entitlement:**
+- Teacher without main ADMIN entitlement (or without school manager grant for school teachers) cannot start a session, issue audio tokens, or open private rooms — 403 returned at every route.
+- Revoking school entitlement blocks all teachers at that school from further discussion/audio API calls.
+- Revoking private teacher entitlement blocks that teacher from further calls.
+- Private teacher cannot use live discussion/audio for subjects not in `private_teacher_subjects`.
+- School teacher cannot gain access through a private teacher entitlement path and vice versa.
+- Discussion UI controls are not shown to teachers who lack entitlement.
+
 **Kill switch:**
 - Setting `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED=false` disables all discussion UI immediately.
-- Setting `LIVE_DISCUSSION_AUDIO_ENABLED=false` disables audio immediately while keeping hand-raise state functional.
+- Setting `LIVE_DISCUSSION_AUDIO_ENABLED=false` disables audio immediately while keeping discussion state functional.
 
 ---
 
@@ -2551,7 +2831,7 @@ When the owner approves the feature flags and provider configuration, the `.env.
 
 Do not add or edit any environment file yet. This list is for planning only.
 
-### Phase 1 Variables
+### Phase A Variables (required from the start)
 
 | Variable | Location | Purpose | Safe Default |
 |----------|----------|---------|-------------|
@@ -2560,7 +2840,7 @@ Do not add or edit any environment file yet. This list is for planning only.
 | `LIVE_AUDIO_PROVIDER` | Server envs | Provider adapter selector | `"mock"` |
 | `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` | Server envs | Budget hard cap | `0` (disabled) |
 
-### Audio Phase Variables (Phase 2+)
+### Audio Phase Variables (Phase B+)
 
 | Variable | Location | Purpose | Notes |
 |----------|----------|---------|-------|
@@ -2593,33 +2873,36 @@ All items below must be resolved before implementation of each phase begins. Ite
 | A8 | **Resolved 2026-05-29:** Should participation data be visible to parents/guardians in reports? **No. Discussion participation, hand-raise history, audio session metadata, and private conversation records are permanently out of scope for parent and guardian reports.** | All phases | **Resolved: No** |
 | A9 | What is the UI design for two student request types: two separate buttons ("Raise hand to speak" / "Request private help") or one button with a request-type selector? | Phase A student UI | Open |
 | A10 | When a student enters a private conversation, should they be muted in the main class room (SFU mute, simpler reconnect) or removed from the main room entirely and re-added when private ends (cleaner isolation, more complex)? Recommendation: muted in main room. | Phase E architecture | Open |
+| A11 | **Resolved 2026-05-29:** Is the main ADMIN entitlement model approved? The main platform ADMIN controls who can use live discussion/audio. No school, school teacher, or private teacher receives this capability automatically. | All phases | **Resolved: Yes** |
+| A12 | **Resolved 2026-05-29:** Should school managers be able to delegate live discussion/audio permission to individual school teachers after the school receives entitlement from the main ADMIN? | Phase A entitlement | **Resolved: Yes, after school has ADMIN entitlement** |
+| A13 | **Resolved 2026-05-29:** Should private teachers require direct main ADMIN entitlement plus subject grants from `private_teacher_subjects`? | Phase A entitlement | **Resolved: Yes** |
 
 ### Group B — Privacy and Legal Decisions
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
 | B1 | What are the exact operating jurisdictions for this product? (Israel? EU? US? Other?) | All audio phases | Open |
-| B2 | Has Israeli privacy law review been initiated for real-time voice transmission to minors? | Audio Phase 2 | Open |
-| B3 | Is a parental notification mechanism required before audio is enabled for a student? If yes, what is the mechanism? | Audio Phase 2 | Open |
-| B4 | What is the data retention policy for `classroom_discussion_events` and participant records? | Phase 1 | Open |
-| B5 | Is the privacy policy update planned before audio phases ship? | Audio Phase 2 | Open |
-| B6 | Is the sub-processor list update planned (for new audio provider)? | Audio Phase 2 | Open |
-| B7 | Is a Supabase DPA already in place? | Phase 1 | Open |
-| B8 | **Is the data retention policy for Phase 1 discussion metadata (hand-raise events, approval logs, participant records for minors) approved before the first migration is executed?** | Phase 1 migration | Open |
+| B2 | Has Israeli privacy law review been initiated for real-time voice transmission to minors? | Audio Phase B | Open |
+| B3 | Is a parental notification mechanism required before audio is enabled for a student? If yes, what is the mechanism? | Audio Phase B | Open |
+| B4 | What is the data retention policy for `classroom_discussion_events` and participant records? | Phase A | Open |
+| B5 | Is the privacy policy update planned before audio phases ship? | Audio Phase B | Open |
+| B6 | Is the sub-processor list update planned (for new audio provider)? | Audio Phase B | Open |
+| B7 | Is a Supabase DPA already in place? | Phase A | Open |
+| B8 | **Is the data retention policy for Phase A discussion metadata (hand-raise events, request-type logs, approval logs, participant records for minors) approved before the first migration is executed?** | Phase A migration | Open |
 
 ### Group C — Provider and Cost Decisions
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| C1 | Is Phase 1 POC A approved on free/no-cost basis? | Phase 1 POC | Open |
+| C1 | Is Phase A POC A approved on free/no-cost basis? | Phase A POC | Open |
 | C2 | **Is the first POC (POC B) allowed to use a free external provider account with test accounts only, with no production student data?** | Audio POC B | Open |
 | C3 | Which provider should be used for POC B? (Recommendation: Agora or LiveKit Cloud free tier) | Audio POC B | Open |
-| C4 | Which provider is approved for production? (Recommendation: LiveKit Cloud → self-host if volume justifies) | Audio Phase 2 production | Open |
-| C5 | What is the approved monthly budget cap for audio provider costs? | Audio Phase 2 | Open |
-| C6 | What is the `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` value at launch? | Audio Phase 2 | Open |
-| C7 | Has the provider DPA been reviewed and is it suitable for a children's product? | Audio Phase 2 | Open |
-| C8 | Who owns provider account management and monitors billing? | Audio Phase 2 | Open |
-| C9 | **Are the corrected cost assumptions (Section 7) accepted after the owner has verified them against the provider's current pricing page? No budget cap may be set until this decision is answered with verified numbers.** | Audio Phase 2 budget | Open |
+| C4 | Which provider is approved for production? (Recommendation: LiveKit Cloud → self-host if volume justifies) | Audio Phase B production | Open |
+| C5 | What is the approved monthly budget cap for audio provider costs? | Audio Phase B | Open |
+| C6 | What is the `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` value at launch? | Audio Phase B | Open |
+| C7 | Has the provider DPA been reviewed and is it suitable for a children's product? | Audio Phase B | Open |
+| C8 | Who owns provider account management and monitors billing? | Audio Phase B | Open |
+| C9 | **Are the corrected cost assumptions (Section 7) accepted after the owner has verified them against the provider's current pricing page? No budget cap may be set until this decision is answered with verified numbers.** | Audio Phase B budget | Open |
 
 ### Group D — Technical Architecture Decisions
 
@@ -2633,15 +2916,17 @@ All items below must be resolved before implementation of each phase begins. Ite
 | D6 | Should Phase A start with polling-only (no Realtime), or polling + Realtime from the start? | Phase A implementation | Open |
 | D7 | Should short-lived Realtime tokens be issued to students (full private channels) instead of anon-key broadcast? | Phase A security | Open |
 | D8 | Is the Phase E separate-provider-room architecture for private conversations approved? (Preferred over client-side muting per owner direction.) | Phase E | Open |
+| D9 | What DB structure will store school and private-teacher live discussion/audio entitlements? Option A (separate entitlement tables — recommended) or Option B (flag columns on existing tables)? See Section 23.6 for details. | Phase A migration | Open |
+| D10 | What is the server helper design for centralizing live discussion/audio entitlement checks? See Section 23.7 for planned `checkLiveDiscussionEntitlement` interface. | Phase A implementation | Open |
 
 ### Group E — Rollout Decisions
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| E1 | Which classes/teachers will receive Phase 1 pilot? | Rollout | Open |
+| E1 | Which classes/teachers will receive Phase A pilot? | Rollout | Open |
 | E2 | Who is authorized to toggle the feature flags in production? | Rollout | Open |
 | E3 | What is the smoke test procedure before each phase goes live? | Rollout | Open |
-| E4 | Is there a rollback procedure if Phase 1 causes issues in the existing monitor page? | Rollout | Open |
+| E4 | Is there a rollback procedure if Phase A causes issues in the existing monitor page? | Rollout | Open |
 
 ---
 
@@ -2702,7 +2987,7 @@ The goal is to build as much of the complete implementation package as possible 
 
 ### 35.2 Owner Implementation Decision
 
-The owner approves a full development implementation run covering the complete project plan, not only Phase 1.
+The owner approves a full development implementation run covering the complete project plan (Phases A through F).
 
 The implementation agent may work normally on the development site and may build code, components, APIs, adapter layers, tests, audio provider integration, and reports according to this document.
 
@@ -2774,13 +3059,16 @@ The final report must list exactly which tests are blocked only because the migr
 
 The overnight implementation covers:
 
-1. **Phase A** — audio foundation: all four DB tables (migration file, not executed), LiveAudioProvider adapter and mock provider, all teacher and student discussion APIs including private conversation routes, teacher Discussion panel with request-type badges, student discussion bar with raise-hand and request-private buttons, feature flags.
-2. **Phase B** — LiveKit provider for development/POC; teacher audio broadcast; student listen-only mode.
-3. **Phase C** — approved student microphone for speak-to-class requests; mute and revoke enforcement through the adapter.
-4. **Phase D** — multiple approved speakers and mute-all.
-5. **Phase E** — private teacher-student audio conversation using a separate provider room; `createPrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`, `closePrivateRoom` adapter calls; private audio token APIs.
-6. Phase F — teacher-only participation summary (report endpoint). No parent or guardian data exposure.
-7. Unit, API, E2E, security/tamper, and regression tests.
+1. **Admin Entitlement Model** — `lib/teacher-server/live-discussion-entitlement.server.js` with `checkLiveDiscussionEntitlement`, `checkSchoolTeacherEntitlement`, `checkPrivateTeacherEntitlement`. Entitlement storage tables (SQL written in migration file, not executed — pending D9 decision). All teacher discussion/audio API routes must call the entitlement helper before any other logic. Entitlement-based UI gating in `TeacherDiscussionPanel.jsx`. Unit tests for all gate scenarios.
+2. **Phase A** — audio foundation: all four discussion DB tables (migration file, not executed), LiveAudioProvider adapter and mock provider, all teacher and student discussion APIs including private conversation routes, teacher Discussion panel with request-type badges, student discussion bar with raise-hand and request-private buttons, feature flags.
+3. **Phase B** — LiveKit provider for development/POC; teacher audio broadcast; student listen-only mode.
+4. **Phase C** — approved student microphone for speak-to-class requests; mute and revoke enforcement through the adapter.
+5. **Phase D** — multiple approved speakers and mute-all.
+6. **Phase E** — private teacher-student audio conversation using a separate provider room; `createPrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`, `closePrivateRoom` adapter calls; private audio token APIs.
+7. **Phase F** — teacher-only participation summary (report endpoint). No parent or guardian data exposure.
+8. Unit, API, E2E, security/tamper, entitlement gate, and regression tests.
+
+**Entitlement model is mandatory — it must not be bypassed during the implementation run.** Every teacher discussion/audio API route in the implementation must call `checkLiveDiscussionEntitlement`. The implementation agent must not create a shortcut that skips entitlement checks even in test mode. Test scenarios must include entitlement-denied cases.
 
 **Explicit prohibition for this run:** Do not include discussion, audio, or private conversation data in any parent or guardian API response. If `discussion/report` is implemented, it must be behind `requireTeacherApiContext` only.
 
@@ -2834,6 +3122,6 @@ After the run, the owner will decide: keep and fix / partially keep and refactor
 ---
 
 *End of plan document.*
-*Version 3.0 — 2026-05-29*
-*Owner product direction update applied: audio-first MVP, phases A–F, Phase E private teacher-student conversation, parent reports permanently out of scope, two student request types, updated data model and adapter.*
+*Version 3.1 — 2026-05-29*
+*Owner product direction update applied: audio-first MVP, phases A–F, Phase E private teacher-student conversation, parent reports permanently out of scope, two student request types, updated data model and adapter. Admin Entitlement and Permission Model added (Section 23): main ADMIN controls all access; school manager delegates after school entitlement; private teacher requires direct ADMIN grant; nine-gate permission order; entitlement must not be bypassed.*
 *No code, no SQL execution, no commit, no push, no deploy.*

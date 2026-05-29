@@ -1,0 +1,24 @@
+﻿ components/parent-report-detailed-surface.jsx      |  2 +-
+ pages/learning/parent-report-detailed.js           |  8 +--
+ .../learning/parent-report-detailed.renderable.jsx |  8 +--
+ pages/learning/parent-report.js                    | 22 ++++----
+ scripts/parent-report-hebrew-language-selftest.mjs | 11 ++++
+ utils/contracts/narrative-contract-v1.js           | 34 ++++++------
+ utils/detailed-parent-report.js                    | 36 ++++++-------
+ utils/detailed-report-parent-letter-he.js          | 14 ++---
+ utils/learning-patterns-analysis.js                | 38 ++++++-------
+ utils/parent-data-presence.js                      | 10 ++--
+ .../parent-report-ai/parent-report-ai-explainer.js |  2 +-
+ .../parent-report-language/confidence-parent-he.js |  2 +-
+ utils/parent-report-language/forbidden-terms.js    | 62 ++++++++++++++++++++++
+ .../parent-facing-normalize-he.js                  | 37 +++++++++++++
+ .../parent-report-language/short-report-v2-copy.js |  2 +-
+ .../subject-evidence-policy.js                     |  4 +-
+ utils/parent-report-language/v2-parent-copy.js     | 18 +++----
+ .../zero-evidence-policy-tests.js                  |  2 +-
+ utils/parent-report-row-diagnostics.js             | 16 +++---
+ utils/parent-report-ui-explain-he.js               |  4 +-
+ utils/parent-report-v2.js                          | 10 ++--
+ utils/topic-next-step-engine.js                    |  6 +--
+ utils/topic-next-step-phase2.js                    | 10 ++--
+ 23 files changed, 234 insertions(+), 124 deletions(-)

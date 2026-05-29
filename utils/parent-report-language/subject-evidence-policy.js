@@ -32,7 +32,7 @@ export function classifySubjectEvidenceTier(questionCount) {
  * @param {string} subjectLabel
  */
 export function zeroEvidenceSubjectLineHe(subjectLabel) {
-  return `${subjectLabel}: לא תורגל בתקופה זו — אין שאלות בטווח התקופה`;
+  return `${subjectLabel}: לא תורגל בתקופה שנבחרה`;
 }
 
 /**
@@ -41,7 +41,7 @@ export function zeroEvidenceSubjectLineHe(subjectLabel) {
  */
 export function thinEvidenceSubjectLineHe(subjectLabel, q) {
   const n = Math.max(0, Math.floor(Number(q) || 0));
-  return `${subjectLabel}: ${n} שאלות בטווח התקופה — עדיין מעט נתון; אין מספיק נתונים להסיק מסקנה חזקה`;
+  return `${subjectLabel}: ${n} שאלות בתקופה שנבחרה — עדיין מעט מידע; כדאי להמשיך לתרגל ולבדוק שוב`;
 }
 
 /**
@@ -124,7 +124,7 @@ export function notPracticedSubjectsSummaryLineHe(subjectQuestionCounts, subject
  * @param {string} subjectLabel
  */
 export function zeroEvidenceSubjectCopilotHe(subjectLabel) {
-  return `בתקופה הזו אין נתוני תרגול ב${subjectLabel}, לכן אי אפשר להסיק מסקנה מהדוח הנוכחי.`;
+  return `בתקופה שנבחרה לא נאספו נתוני תרגול ב${subjectLabel}, ולכן אי אפשר לקבוע כיוון לפי הדוח הנוכחי.`;
 }
 
 /**

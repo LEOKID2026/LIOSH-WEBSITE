@@ -194,7 +194,7 @@ function diagnosticCardConfidenceLabelHe(raw) {
   const x = String(raw || "").trim().toLowerCase();
   if (x === "moderate") return confidenceBadgeLabelHe("medium");
   if (x === "medium" || x === "high" || x === "low") return confidenceBadgeLabelHe(x);
-  if (x === "contradictory") return "לקרוא בזהירות — אותות מנוגדים";
+  if (x === "contradictory") return "לקרוא בזהירות — הסימנים לא אחידים";
   return diagnosticParentVisibleTextHe(raw || "");
 }
 
@@ -315,7 +315,7 @@ function weaknessTierHeDisplay(tierHe) {
   return tierHe === "קושי חוזר / קושי עקבי" ? "קושי חוזר" : tierHe;
 }
 
-/** תאימות ל-tierHe ישן בשורות שימור */
+/** תאימות ל-tierHe ישן בנתונים שימור */
 function maintainTierHeDisplay(tierHe) {
   return tierHe === "תחום לשימור" ? "עקביות" : tierHe;
 }
@@ -713,7 +713,7 @@ const PARENT_REPORT_THIN_VOLUME_QUESTIONS_MAX = 14;
 
 function subjectPracticeSecondaryLineHe(questions, correct, accuracy) {
   const q = Number(questions) || 0;
-  if (q <= 0) return "לא תורגל בטווח זה — אין שאלות";
+  if (q <= 0) return "לא תורגל בתקופה שנבחרה";
   return `${Number(correct) || 0} נכון • ${Number(accuracy) || 0}% דיוק`;
 }
 
@@ -730,7 +730,7 @@ function sanitizeDiagnosticsFootnoteDetailHe(raw) {
   const s = String(raw || "").trim();
   if (!s) return "";
   if (/suppressAggressiveStep/i.test(s)) {
-    return "רמת הוודאות של הנתונים עוזרת לקבוע עד כמה להתקדם בצעד הבא.";
+    return "כמות המידע עוזרת להחליט כמה בזהירות להתקדם בצעד הבא.";
   }
   return s;
 }
@@ -841,7 +841,7 @@ export default function ParentReport() {
   const formatMode = (mode) => {
     if (!mode) return "לא זמין";
     if (typeof mode !== "string") return mode;
-    return mode.toLowerCase() === "marathon" ? "מרתון" : mode;
+    return mode.toLowerCase() === "marathon" ? "תרגול ארוך" : mode;
   };
 
   // בדיקת גודל מסך
@@ -2014,7 +2014,7 @@ export default function ParentReport() {
 
           {report.summary?.diagnosticOverviewHe ? (
             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-amber-400/25 bg-amber-950/15 p-3 md:p-4 text-sm text-white/90 space-y-2">
-              <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">מה הכי בולט עכשיו (לפי מה שנאסף בתקופה)</p>
+              <p className="font-bold text-amber-100/95 m-0 text-sm md:text-base">מה הכי בולט עכשיו (לפי התרגול שנאסף בתקופה שנבחרה)</p>
               {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe ? (
                 <p className="m-0 leading-relaxed text-white/70 text-xs md:text-sm">
                   {report.summary.diagnosticOverviewHe.practicedSubjectsSummaryHe}
@@ -2029,8 +2029,8 @@ export default function ParentReport() {
                 <p className="m-0 text-white/55 text-xs">
                   {Number(report.summary?.totalQuestions) > 0 &&
                   diagnosticsView?.presence?.state === "hasVolumeNoPattern"
-                    ? "יש נתוני תרגול בטווח, אך עדיין אין תמונה יציבה מהתרגולים שמצביעה על נושא דחוף אחד — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
-                    : "אין עדיין תחום שזוהה כדורש תשומת לב מיידית בטווח זה."}
+                    ? "יש נתוני תרגול בתקופה שנבחרה, אך עדיין אין מספיק בסיס ברור מהתרגולים כדי לזהות נושא דחוף אחד — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
+                    : "אין עדיין תחום שזוהה כדורש תשומת לב מיידית בתקופה שנבחרה."}
                 </p>
               ) : null}
               {report.summary.diagnosticOverviewHe.strongestAreaLineHe ? (
@@ -2058,7 +2058,7 @@ export default function ParentReport() {
 
           {(report.rawMetricStrengthsHe?.length || report.summary?.rawMetricStrengthsHe?.length) ? (
             <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-emerald-400/25 bg-emerald-950/15 p-3 md:p-4 text-sm text-white/90 space-y-1">
-              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">איפה נראו תוצאות טובות לפי נתוני התרגול בטווח</p>
+              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">איפה נראו תוצאות טובות לפי התרגול שנאסף בתקופה שנבחרה</p>
               <ul className="m-0 pr-4 list-disc text-xs md:text-sm text-white/85 space-y-1">
                 {(report.rawMetricStrengthsHe || report.summary?.rawMetricStrengthsHe || []).map((line, i) => (
                   <li key={`rms-${i}`} className="leading-relaxed">
@@ -3101,7 +3101,7 @@ export default function ParentReport() {
                   <p className="parent-report-print-muted-text text-center text-sm md:text-base text-white/75 px-2 py-3">
                     {diagnosticsView.presence?.recommendationsExplainerHe ||
                       (Number(report.summary?.totalQuestions) > 0
-                        ? "יש נתוני תרגול בטווח, אבל עדיין אין תמונה יציבה מהתרגולים ברמת ההמלצות — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
+                        ? "יש נתוני תרגול בתקופה שנבחרה, אבל עדיין אין מספיק בסיס ברור מהתרגולים ברמת ההמלצות — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן."
                         : "עדיין אין מספיק נתונים לתמונה ברורה מהתרגולים")}
                   </p>
                 )}
@@ -3575,11 +3575,11 @@ export default function ParentReport() {
             {suppressChartsForThinEvidenceWindow ? (
               <div className="parent-report-chart-card bg-amber-950/25 border border-amber-400/35 rounded-xl p-4 md:p-6 avoid-break text-center space-y-2">
                 <h2 className="parent-report-print-chart-title text-base md:text-lg font-bold text-amber-100/95">
-                  נפח ראיות קטן בטווח שנבחר
+                  מעט שאלות בתקופה שנבחרה
                 </h2>
                 <p className="text-xs md:text-sm text-white/80 leading-relaxed m-0">
-                  מספר השאלות בטווח נמוך מדי כדי להציג כאן גרפים או טבלאות בעלי משמעות סטטיסטית ברורה.
-                  מומלץ להסתמך על הסיכום וההסברים למעלה, ולהמשיך בתרגול כדי לצבור תמונה יציבה יותר.
+                  מספר השאלות בתקופה שנבחרה נמוך מדי כדי להציג כאן גרפים או טבלאות בעלי משמעות ברורה.
+                  מומלץ להסתמך על הסיכום וההסברים למעלה, ולהמשיך בתרגול כדי לצבור תמונה ברורה יותר.
                 </p>
               </div>
             ) : (
@@ -3901,7 +3901,7 @@ export default function ParentReport() {
                                   if (!p) return ["", ""];
                                   const q = Number(p.questions) || 0;
                                   if (q <= 0) {
-                                    return ["לא תורגל במקצוע זה בטווח שנבחר", ""];
+                                    return ["לא תורגל במקצוע זה בתקופה שנבחרה", ""];
                                   }
                                   return [
                                     `${p.minutes} דק׳ תרגול · ${q} שאלות · דיוק ${p.accuracy}%`,
@@ -4042,7 +4042,7 @@ export default function ParentReport() {
                                 if (!p) return ["", ""];
                                 const q = Number(p.questions) || 0;
                                 if (q <= 0) {
-                                  return ["לא תורגל בנושא זה בטווח שנבחר", ""];
+                                  return ["לא תורגל בנושא זה בתקופה שנבחרה", ""];
                                 }
                                 return [
                                   `דיוק ${p.accuracy}% · ${q} שאלות · ${p.timeMinutes} דק׳`,

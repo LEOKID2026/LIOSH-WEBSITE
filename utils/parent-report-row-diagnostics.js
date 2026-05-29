@@ -259,21 +259,21 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
   if (q <= 0) {
     return {
       level: "low",
-      labelHe: "אין שאלות בטווח — אין בסיס נתונים לשורה זו.",
+      labelHe: "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
       suppressAggressiveStep: true,
     };
   }
   if (q < 4) {
     return {
       level: "low",
-      labelHe: "מעט מדי שאלות בטווח — ההסקות לשורה זו חלקיות מאוד.",
+      labelHe: "מעט מדי שאלות בתקופה — ההסקות לשורה זו חלקיות מאוד.",
       suppressAggressiveStep: true,
     };
   }
   if (q >= 40) {
     return {
       level: "strong",
-      labelHe: "נפח גבוה — אפשר לסמוך על מסקנת נושא ברמת הכיתה/התוכן של השורה.",
+      labelHe: "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
       suppressAggressiveStep: false,
     };
   }
@@ -282,22 +282,22 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
       level: evidenceStrength === "strong" ? "strong" : "medium",
       labelHe:
         evidenceStrength === "strong"
-          ? "נפח ואותות מספקים — אפשר לסמוך יותר על מה שרואים בשורה הזו."
-          : "נפח מספיק למסקנת נושא — שינויים זהירים בתת־מיומנות בלבד.",
+          ? "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
       suppressAggressiveStep: false,
     };
   }
   if (q < 8 || evidenceStrength === "low" || (confidence01 ?? 0) < 0.22) {
     return {
       level: "medium",
-      labelHe: "נפח בינוני או אות חלש — לא משנים כיתה/רמה אגרסיבית לפי שורה זו בלבד.",
+      labelHe: "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
       suppressAggressiveStep: true,
     };
   }
   if (evidenceStrength === "strong" && q >= 12) {
     return {
       level: "strong",
-      labelHe: "נפח ואותות מספקים — אפשר לסמוך יותר על מה שרואים בשורה הזו.",
+      labelHe: "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
       suppressAggressiveStep: false,
     };
   }
@@ -372,7 +372,7 @@ export function buildDiagnosticsDecisionTrace(ctx) {
     }),
     data({
       phase: "data_sufficiency",
-      detailHe: "מסקנת רמת הראיות משפיעה על עוצמת ההמלצה הבאה.",
+      detailHe: "כמות המידע משפיעה על מידת הזהירות בהמלצה הבאה.",
       data: {
         dataSufficiencyLevel,
         suppressAggressiveStep,
@@ -413,7 +413,7 @@ export function computeRowDiagnosticSignals(subjectId, topicRowKey, row, mistake
   if (isStablePattern) {
     patternStabilityHe = "זה חוזר בכמה תרגולים — התמונה משקפת מגמה ולא רק מפגש בודד.";
   } else if (sufficiency.level === "medium") {
-    patternStabilityHe = "אות בינוני — כדאי לאסוף עוד תרגול לפני לומר משהו חד משמעי.";
+    patternStabilityHe = "יש כיוון חלקי — כדאי לאסוף עוד תרגול לפני שאומרים משהו חד־משמעי.";
   }
 
   const decisionTrace = buildDiagnosticsDecisionTrace({
@@ -455,7 +455,7 @@ export function computeRowDiagnosticSignals(subjectId, topicRowKey, row, mistake
     isEarlySignalOnly,
     recommendationContextHe: isEarlySignalOnly
       ? "ההמלצה מבוססת על נתונים חלקיים; עדיף לא לעשות שינוי דרמטי בלי לבדוק שוב אחרי עוד תרגול."
-      : "ההמלצה מבוססת על שילוב דיוק, נפח, טעויות ועדכניות בטווח.",
+      : "ההמלצה מבוססת על שילוב דיוק, כמות שאלות, טעויות ועדכניות בתקופה שנבחרה.",
     decisionTrace,
   };
 }
