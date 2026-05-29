@@ -551,7 +551,7 @@ export default function GeometryExplanationDiagram({
 
     const layout = triangleLayoutFromAngles(a1, a2, a3, {
       centerY: hideThird ? 138 : 132,
-      labelInset: hideThird ? 44 : 38,
+      hiddenAngle: hideThird ? "angle3" : null,
     });
     const labelA1 = layout.labels.angle1;
     const labelA2 = layout.labels.angle2;

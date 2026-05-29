@@ -13,13 +13,58 @@ function toPointsString(points) {
   return points.map((p) => `${p.x},${p.y}`).join(" ");
 }
 
-function inwardLabel(vertex, centroid, distance) {
-  const dx = centroid.x - vertex.x;
-  const dy = centroid.y - vertex.y;
-  const len = Math.hypot(dx, dy) || 1;
+/** @param {{ x: number, y: number }} a @param {{ x: number, y: number }} b */
+export function distance2d(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+/**
+ * Place a label inside the triangle by interpolating vertex → centroid.
+ * @param {{ x: number, y: number }} vertex
+ * @param {{ x: number, y: number }} centroid
+ * @param {number} insetFactor 0 = at vertex, 1 = at centroid
+ * @param {{ x?: number, y?: number }} [nudge] SVG text baseline tweak
+ */
+export function labelFromVertexTowardCentroid(vertex, centroid, insetFactor, nudge = {}) {
+  const f = clamp(insetFactor, 0.2, 0.58);
   return {
-    x: vertex.x + (dx / len) * distance,
-    y: vertex.y + (dy / len) * distance,
+    x: vertex.x + (centroid.x - vertex.x) * f + (nudge.x ?? 0),
+    y: vertex.y + (centroid.y - vertex.y) * f + (nudge.y ?? 0),
+  };
+}
+
+/**
+ * @param {{ x: number, y: number, role?: string }[]} vertices
+ * @param {{ x: number, y: number }} centroid
+ * @param {{ hiddenAngle?: 'angle1'|'angle2'|'angle3' }} [options]
+ */
+export function computeTriangleAngleLabels(vertices, centroid, options = {}) {
+  const [left, right, apex] = vertices;
+  const distLeft = distance2d(left, centroid) || 1;
+  const distRight = distance2d(right, centroid) || 1;
+  const distApex = distance2d(apex, centroid) || 1;
+
+  // Target ~30–38px inset from each corner; factor scales with triangle size.
+  const targetPx = { base: 36, apex: 32 };
+  const factors = {
+    angle1: clamp(targetPx.base / distLeft, 0.26, 0.5),
+    angle2: clamp(targetPx.base / distRight, 0.26, 0.5),
+    angle3: clamp(targetPx.apex / distApex, 0.3, 0.54),
+  };
+
+  const labels = {
+    angle1: labelFromVertexTowardCentroid(left, centroid, factors.angle1, { x: 4, y: -5 }),
+    angle2: labelFromVertexTowardCentroid(right, centroid, factors.angle2, { x: -4, y: -5 }),
+    angle3: labelFromVertexTowardCentroid(apex, centroid, factors.angle3, { x: 0, y: 8 }),
+  };
+
+  const hiddenAngle = options.hiddenAngle ?? null;
+  return {
+    labels,
+    factors,
+    hiddenAngle,
+    hiddenLabel: hiddenAngle ? labels[hiddenAngle] : null,
+    verticesByAngle: { angle1: left, angle2: right, angle3: apex },
   };
 }
 
@@ -28,7 +73,7 @@ function inwardLabel(vertex, centroid, distance) {
  * @param {number} angle1
  * @param {number} angle2
  * @param {number} [angle3]
- * @param {{ centerX?: number, centerY?: number, maxW?: number, maxH?: number, minH?: number, labelInset?: number }} [options]
+ * @param {{ centerX?: number, centerY?: number, maxW?: number, maxH?: number, minH?: number, hiddenAngle?: 'angle1'|'angle2'|'angle3' }} [options]
  */
 export function triangleLayoutFromAngles(angle1, angle2, angle3, options = {}) {
   const a1 = clamp(Number(angle1) || 60, 14, 152);
@@ -96,19 +141,21 @@ export function triangleLayoutFromAngles(angle1, angle2, angle3, options = {}) {
     x: (vertices[0].x + vertices[1].x + vertices[2].x) / 3,
     y: (vertices[0].y + vertices[1].y + vertices[2].y) / 3,
   };
-  const inset = options.labelInset ?? 42;
+  const labelMeta = computeTriangleAngleLabels(vertices, centroid, {
+    hiddenAngle: options.hiddenAngle ?? null,
+  });
 
   return {
     angle1: a1,
     angle2: a2,
     angle3: a3,
     vertices,
+    centroid,
     pointsString: toPointsString(vertices),
-    labels: {
-      angle1: inwardLabel(vertices[0], centroid, inset),
-      angle2: inwardLabel(vertices[1], centroid, inset),
-      angle3: inwardLabel(vertices[2], centroid, inset + 4),
-    },
+    labels: labelMeta.labels,
+    labelFactors: labelMeta.factors,
+    hiddenAngle: labelMeta.hiddenAngle,
+    verticesByAngle: labelMeta.verticesByAngle,
   };
 }
 

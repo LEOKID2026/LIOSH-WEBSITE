@@ -10,6 +10,10 @@ import {
   activityModeLabelHe,
   studentActivityStatusLabelHe,
 } from "../../../../../../lib/classroom-activities/classroom-activities-labels.client.js";
+import {
+  downloadActivityReportCsv,
+  downloadActivityReportXlsx,
+} from "../../../../../../lib/teacher-portal/teacher-activity-report-export.js";
 
 export async function getServerSideProps(context) {
   return {
@@ -18,28 +22,6 @@ export async function getServerSideProps(context) {
       activityId: String(context.params?.activityId || ""),
     },
   };
-}
-
-function exportReportCsv(data) {
-  const lines = ["student,status,answers,correct,score_pct"];
-  for (const s of data?.students || []) {
-    lines.push(
-      [
-        s.studentFullNameMasked,
-        s.status,
-        s.answersCount,
-        s.correctCount,
-        s.scorePct ?? "",
-      ].join(",")
-    );
-  }
-  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `activity-report-${data?.activity?.activityId || "export"}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 export default function TeacherActivityReportPage({ classId, activityId }) {
@@ -97,13 +79,22 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
                 </>
               ) : null}
             </div>
-            <button
-              type="button"
-              onClick={() => exportReportCsv(data)}
-              className="mb-4 px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10"
-            >
-              ייצוא CSV
-            </button>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <button
+                type="button"
+                onClick={() => downloadActivityReportXlsx(data)}
+                className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10"
+              >
+                ייצוא Excel
+              </button>
+              <button
+                type="button"
+                onClick={() => downloadActivityReportCsv(data)}
+                className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10"
+              >
+                ייצוא CSV
+              </button>
+            </div>
           </>
         ) : null}
 
@@ -113,7 +104,7 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
             <ul className="text-sm space-y-1">
               {data.weakSkills.map((w) => (
                 <li key={w.skillKey}>
-                  {w.skillKey}: {w.accuracyPct}% ({w.correct}/{w.answers})
+                  {w.skillLabelHe || "מיומנות לתרגול"}: {w.accuracyPct}% ({w.correct}/{w.answers})
                 </li>
               ))}
             </ul>
