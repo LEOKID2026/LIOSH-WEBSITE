@@ -24,6 +24,7 @@ import {
   buildEnrichedActivityReportWorkbook,
   buildEnrichedActivityReportDownloadStem,
   buildActivityReportDownloadStem,
+  ACTIVITY_EXPORT_CORRECTNESS_RATIO_HEADER_HE,
   // Header constants (for column count verification)
   ENRICHED_STUDENT_SUMMARY_HEADERS_HE,
   ENRICHED_STUDENT_ANSWERS_HEADERS_HE,
@@ -45,6 +46,15 @@ import {
   formatActivityExportDateTimeHe,
   looksLikeRawExportKey,
 } from "../../lib/teacher-portal/teacher-activity-report-export-labels.js";
+import {
+  buildTeacherActivityReportPdfSections,
+  collectTeacherActivityReportPdfVisibleText,
+  teacherActivityReportPdfContainsAiPhrase,
+  teacherActivityReportPdfContainsRawExportKey,
+  teacherActivityReportPdfContainsReversedHebrewMarkers,
+  TEACHER_PDF_DOCUMENT_TITLE_HE,
+  TEACHER_PDF_REQUIRED_SECTION_TITLES_HE,
+} from "../../lib/teacher-portal/teacher-activity-report-pdf.js";
 
 // ─── Test infrastructure ────────────────────────────────────────────────────
 
@@ -532,9 +542,10 @@ console.log("\n── Sheet 5: ניתוח שאלות ──");
   assert(rows[2][0] === 3, "question analytics: third row is Q3");
 
   const colHeaders = ENRICHED_QUESTION_ANALYTICS_HEADERS_HE;
-  const xnColIdx = colHeaders.indexOf("דיוק X/N");
+  const xnColIdx = colHeaders.indexOf(ACTIVITY_EXPORT_CORRECTNESS_RATIO_HEADER_HE);
   const pctColIdx = colHeaders.indexOf("דיוק (%)");
-  assert(xnColIdx >= 0, "question analytics: דיוק X/N column present");
+  assert(xnColIdx >= 0, "question analytics: נכונות מתוך כלל התשובות column present");
+  assert(!colHeaders.includes("דיוק X/N"), "question analytics: no legacy דיוק X/N header");
   assert(pctColIdx >= 0, "question analytics: דיוק (%) column present");
 
   // Q1: 1 correct of 2 total → "1/2"
@@ -560,9 +571,10 @@ console.log("\n── Sheet 6: ניתוח מיומנויות ──");
   const colHeaders = ENRICHED_SKILL_ANALYTICS_HEADERS_HE;
   assert(!colHeaders.includes("מיומנות (מפתח)"), "skill analytics: no internal skill key column");
   assert(colHeaders.length === 6, "skill analytics: 6 columns after removing internal key", `got ${colHeaders.length}`);
-  const xnColIdx = colHeaders.indexOf("דיוק X/N");
+  const xnColIdx = colHeaders.indexOf(ACTIVITY_EXPORT_CORRECTNESS_RATIO_HEADER_HE);
   const weakColIdx = colHeaders.indexOf("חלשה?");
-  assert(xnColIdx >= 0, "skill analytics: דיוק X/N column present");
+  assert(xnColIdx >= 0, "skill analytics: נכונות מתוך כלל התשובות column present");
+  assert(!colHeaders.includes("דיוק X/N"), "skill analytics: no legacy דיוק X/N header");
   assert(weakColIdx >= 0, "skill analytics: חלשה? column present");
 
   const addRow = rows.find((r) => r[0] === "חיבור");
@@ -856,6 +868,71 @@ console.log("\n── SIM stub question_set (DB parity) ──");
     { closedAt: "2026-04-07T10:51:00+00:00" }
   );
   assert(exportTitle === "יום 157 שעה 2 — גאומטריה — 07/04/2026", "export title: full SIM title sanitized", `got "${exportTitle}"`);
+}
+
+// ─── Section 15: Teacher PDF v1 content builders ─────────────────────────────
+
+console.log("\n── Teacher PDF v1 content ──");
+
+{
+  const pdfSections = buildTeacherActivityReportPdfSections(MOCK_PAYLOAD);
+  assert(Array.isArray(pdfSections.sections), "PDF: sections array returned");
+  assert(pdfSections.sections.length === 7, "PDF: 7 sections", `got ${pdfSections.sections.length}`);
+  assert(
+    pdfSections.sections.some((s) => s.id === "students" && s.title === "סיכום תלמידים"),
+    "PDF: student summary section present"
+  );
+  assert(
+    !pdfSections.sections.some((s) => s.id === "studentAnswers"),
+    "PDF: no per-student-per-question audit trail section"
+  );
+
+  const visible = collectTeacherActivityReportPdfVisibleText(MOCK_PAYLOAD);
+  assert(visible.includes("מתמטיקה"), "PDF: Hebrew subject label used");
+  assert(!visible.includes("geometry"), "PDF: no raw geometry key");
+  assert(!visible.includes("guided_practice"), "PDF: no raw mode key");
+  assert(!visible.includes("SIM"), "PDF: no SIM marker");
+  assert(!teacherActivityReportPdfContainsRawExportKey(visible), "PDF: no raw export keys in visible text");
+  assert(!teacherActivityReportPdfContainsAiPhrase(visible), "PDF: no AI recommendation phrases");
+
+  assert(!teacherActivityReportPdfContainsReversedHebrewMarkers(visible), "PDF: no character-reversed Hebrew markers in logical text");
+
+  for (const title of TEACHER_PDF_REQUIRED_SECTION_TITLES_HE) {
+    assert(visible.includes(title), `PDF section title present: ${title}`);
+  }
+  assert(visible.includes(TEACHER_PDF_DOCUMENT_TITLE_HE), "PDF document title in visible text");
+
+  const studentSection = pdfSections.sections.find((s) => s.id === "students");
+  const correctnessCol = ENRICHED_STUDENT_SUMMARY_HEADERS_HE.indexOf("נכונות");
+  assert(correctnessCol >= 0, "PDF student table: נכונות column exists");
+  assert(studentSection?.rows?.[0]?.[correctnessCol] === "2/3", "PDF student table: X/N correctness primary");
+
+  const followUp = pdfSections.sections.find((s) => s.id === "followUp");
+  const actionRow = followUp?.kv?.find((r) => r[0] === "הצעות לפעולה");
+  assert(actionRow && actionRow[1] === "", "PDF follow-up: blank teacher action field");
+
+  const qaHeaders = pdfSections.sections.find((s) => s.id === "questionAnalytics")?.headers || [];
+  assert(
+    qaHeaders.includes(ACTIVITY_EXPORT_CORRECTNESS_RATIO_HEADER_HE),
+    "PDF question analytics: fully Hebrew X/N header"
+  );
+  assert(!qaHeaders.includes("דיוק X/N"), "PDF question analytics: no legacy דיוק X/N");
+
+  let emptyOk = true;
+  try {
+    buildTeacherActivityReportPdfSections({
+      activity: {},
+      summary: {},
+      students: [],
+      questions: [],
+      responses: [],
+      perQuestion: [],
+      allSkills: [],
+    });
+  } catch {
+    emptyOk = false;
+  }
+  assert(emptyOk, "PDF: empty/minimal payload does not crash section builder");
 }
 
 // ─── Summary ────────────────────────────────────────────────────────────────

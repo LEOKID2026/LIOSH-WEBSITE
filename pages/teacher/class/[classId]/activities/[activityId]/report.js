@@ -14,6 +14,7 @@ import {
   downloadActivityReportCsv,
   downloadEnrichedActivityReportXlsx,
 } from "../../../../../../lib/teacher-portal/teacher-activity-report-export.js";
+import { downloadTeacherActivityReportPdf, TEACHER_ACTIVITY_PDF_EXPORT_ENABLED } from "../../../../../../lib/teacher-portal/teacher-activity-report-pdf.js";
 
 export async function getServerSideProps(context) {
   return {
@@ -29,34 +30,54 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [exportingXlsx, setExportingXlsx] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
+
+  const fetchEnrichedExportPayload = useCallback(async () => {
+    const supabase = getLearningSupabaseBrowserClient();
+    const session = await resolveTeacherAccessToken(supabase);
+    if (!session.ok) {
+      router.replace("/teacher/login");
+      return null;
+    }
+    const res = await teacherAuthFetch(
+      session.token,
+      `/api/teacher/activities/${encodeURIComponent(activityId)}/report-export`
+    );
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setError(body?.error?.message || body?.error?.code || "שגיאת ייצוא");
+      return null;
+    }
+    return body.data;
+  }, [activityId, router]);
 
   const handleExportXlsx = useCallback(async () => {
     if (exportingXlsx) return;
     setExportingXlsx(true);
     setError("");
     try {
-      const supabase = getLearningSupabaseBrowserClient();
-      const session = await resolveTeacherAccessToken(supabase);
-      if (!session.ok) {
-        router.replace("/teacher/login");
-        return;
-      }
-      const res = await teacherAuthFetch(
-        session.token,
-        `/api/teacher/activities/${encodeURIComponent(activityId)}/report-export`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(body?.error?.message || body?.error?.code || "שגיאת ייצוא");
-        return;
-      }
-      downloadEnrichedActivityReportXlsx(body.data);
+      const data = await fetchEnrichedExportPayload();
+      if (data) downloadEnrichedActivityReportXlsx(data);
     } catch {
       setError("שגיאת ייצוא");
     } finally {
       setExportingXlsx(false);
     }
-  }, [activityId, exportingXlsx, router]);
+  }, [exportingXlsx, fetchEnrichedExportPayload]);
+
+  const handleExportPdf = useCallback(async () => {
+    if (exportingPdf) return;
+    setExportingPdf(true);
+    setError("");
+    try {
+      const data = await fetchEnrichedExportPayload();
+      if (data) await downloadTeacherActivityReportPdf(data);
+    } catch {
+      setError("שגיאת ייצוא");
+    } finally {
+      setExportingPdf(false);
+    }
+  }, [exportingPdf, fetchEnrichedExportPayload]);
 
   const load = useCallback(async () => {
     try {
@@ -117,6 +138,16 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
               >
                 ייצוא Excel
               </button>
+              {TEACHER_ACTIVITY_PDF_EXPORT_ENABLED ? (
+                <button
+                  type="button"
+                  disabled={exportingPdf}
+                  onClick={handleExportPdf}
+                  className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10 disabled:opacity-50"
+                >
+                  ייצוא PDF
+                </button>
+              ) : null}
               <button
                 type="button"
                 onClick={() => downloadActivityReportCsv(data)}
