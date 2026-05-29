@@ -2,7 +2,18 @@
 
 **Status:** Final planning document. Includes approved future development-run instructions in Section 35. No implementation has started yet. No SQL may be executed. No commit, push, or deploy is approved.
 
-**Version:** 2.2 — added Section 35 future overnight development-run instructions — 2026-05-25
+**Version:** 3.0 — owner product direction update applied — 2026-05-29
+
+**Change summary (v3.0):**
+- Product goal updated: primary use case is **remote learning**, not only in-class hand raising.
+- **Audio is mandatory for the MVP.** A no-audio hand-raise-only phase is not a meaningful product MVP.
+- Phase structure renumbered **A–F** (audio-first). Old Phase 1 (no-audio only) removed as a standalone MVP.
+- Added **Phase E**: private teacher-student audio conversation using a separate provider room.
+- **Parent reports confirmed fully out of scope.** Discussion/live-audio participation must never appear in any parent or guardian report. Owner decision A8 resolved.
+- Two student request types defined: `speak_to_class` and `private_help`.
+- Data model extended: `request_type` and `audio_scope` columns; new `classroom_private_audio_sessions` table.
+- `LiveAudioProvider` adapter extended with four private-room functions.
+- No code, no SQL execution, no commit, no push, no deploy.
 
 **Prepared for:** Owner review and go/no-go decision
 
@@ -25,14 +36,13 @@
 13. [API Plan](#13-api-plan)
 14. [Realtime Plan](#14-realtime-plan)
 15. [POC Plan](#15-poc-plan)
-16. [Phase 0 — Architecture Mapping and Go/No-Go](#16-phase-0--architecture-mapping-and-gono-go)
-17. [Phase 1 — Realtime Hand Raise / Approval State (No Audio)](#17-phase-1--realtime-hand-raise--approval-state-no-audio)
-18. [Phase 2 — Teacher Audio Broadcast Only](#18-phase-2--teacher-audio-broadcast-only)
-19. [Phase 3 — Teacher-Approved Student Microphone](#19-phase-3--teacher-approved-student-microphone)
-20. [Phase 4 — Multiple Approved Speakers / Managed Discussion Mode](#20-phase-4--multiple-approved-speakers--managed-discussion-mode)
-21. [Phase 5 — Attendance and Participation Logs](#21-phase-5--attendance-and-participation-logs)
-22. [Phase 6 — Reports and Teacher Summary Integration](#22-phase-6--reports-and-teacher-summary-integration)
-23. [Phase 7 — Future Extensions (Deferred)](#23-phase-7--future-extensions-deferred)
+16. [Phase A — Audio Foundation + Schema Plan](#16-phase-a--audio-foundation--schema-plan)
+17. [Phase B — Teacher Broadcast + Student Listen-Only](#17-phase-b--teacher-broadcast--student-listen-only)
+18. [Phase C — Speak-to-Class Hand Raise + Approved Student Mic](#18-phase-c--speak-to-class-hand-raise--approved-student-mic)
+19. [Phase D — Group Discussion Up to 5 Students](#19-phase-d--group-discussion-up-to-5-students)
+20. [Phase E — Private Teacher-Student Audio Conversation](#20-phase-e--private-teacher-student-audio-conversation)
+21. [Phase F — Mobile / Security / Load QA](#21-phase-f--mobile--security--load-qa)
+22. [Future Extensions (Deferred)](#22-future-extensions-deferred)
 24. [Security and Privacy Model](#24-security-and-privacy-model)
 25. [UI Impact](#25-ui-impact)
 26. [QA Plan](#26-qa-plan)
@@ -52,36 +62,33 @@
 
 This document is the full project plan for a **Teacher-Controlled Live Audio Classroom** feature. It is an execution-ready planning artifact. No implementation has been done. The plan covers all phases from architecture decisions through production delivery.
 
-The feature allows a teacher to run a teacher-mediated classroom discussion alongside a `live_lesson` classroom activity. The teacher broadcasts audio to all students. Students can raise their hand to request speaking rights. The teacher approves or revokes speaking rights. Only approved students may broadcast audio. The teacher maintains full control at all times. This is not Zoom, not video, not student-to-student communication.
+**Product goal: remote learning.** The primary use case is a teacher-led remote learning session where teacher and students are in different physical locations. This is not an in-class hand-raise helper. Audio is the core delivery mechanism for this product.
+
+The feature enables a teacher to run a teacher-mediated live audio session alongside a `live_lesson` classroom activity. The teacher broadcasts audio to all students. Students are listen-only by default. Students can raise their hand to request speaking to the whole class, or request private help from the teacher. The teacher approves, revokes, and controls all audio at all times. The teacher can approve a managed group discussion with up to 5 simultaneous student speakers. The teacher can open a private audio channel with one student that the rest of the class cannot hear. This is not Zoom, not video, not student-to-student communication.
+
+**Audio is mandatory for the MVP.** A no-audio hand-raise-only phase is not a meaningful product MVP and is not a deliverable on its own.
+
+**Parent reports are out of scope.** Discussion participation, hand-raise history, audio session metadata, and private conversation records are never added to any parent or guardian report. This is a permanent product decision.
 
 ### Phase Summary
 
 | Phase | Description | Complexity | Effort | Risk |
 |-------|-------------|-----------|--------|------|
-| 0 | Architecture decisions + owner approvals | Small | 1–2 days | Low |
-| 1 | Hand raise / approval state (no audio) | Medium | 1–2 weeks | Medium |
-| 2 | Teacher audio broadcast only | Large | 2–4 weeks | Large |
-| 3 | Approved student microphone | Large | 2–3 weeks | Large |
-| 4 | Multi-speaker managed discussion | Medium | 2–3 weeks | Medium |
-| 5 | Attendance and participation logs | Small | 3–5 days | Low |
-| 6 | Report integration | Medium | 1 week | Low |
-| 7 | Future extensions (recording, AI, breakout) | Very Large | Deferred | Very Large |
+| A | Audio foundation + schema plan | Medium | 1–2 weeks | Medium |
+| B | Teacher broadcast + student listen-only | Large | 2–3 weeks | Large |
+| C | Speak-to-class hand raise + approved student mic | Large | 2–3 weeks | Large |
+| D | Group discussion — up to 5 students | Medium | 1–2 weeks | Medium |
+| E | Private teacher-student audio conversation | Large | 2–3 weeks | Large |
+| F | Mobile / security / load QA | Medium | 1 week | Medium |
+| — | Future extensions (recording, AI, breakout) | Very Large | Deferred | Very Large |
 
-**Total estimated effort to Phase 4:** 8–14 weeks, one or two senior engineers, tested audio provider.
+**Total estimated effort Phase A–F:** 9–14 weeks, one or two senior engineers, tested audio provider.
 
-**Recommended starting point:** Phase 1 alone (hand raise, no audio) has standalone product value. It introduces no audio infrastructure, no provider cost, and no Permissions-Policy change. Phase 1 has no audio or voice-data exposure and therefore much lower privacy risk than audio phases, but it still requires an owner-approved retention policy for discussion metadata (hand-raise events, approval timestamps, mute state, participation event logs for minors). It should be built first, regardless of whether audio phases are approved.
-
----
-
-> **Hard rule — audio phases must not start before Phase 1 is proven (production rule).**
->
-> Audio phases (2–4) must not be implemented before: (a) Phase 1 is implemented and stable in a test environment, (b) POC A passes all acceptance criteria, and (c) Phase 1 has demonstrated product value. POC B and POC C may be researched concurrently with Phase 1 development, but no audio production implementation begins before Phase 1 is validated. This rule is not negotiable for production, deployment, commit, push, or live use.
->
-> **Development prototype exception (Section 35 only):** A future owner-approved development run (as defined in Section 35) may prepare audio code and LiveKit integration for local testing and prototype review only. That does not mean audio is approved for production, deployment, commit, push, or live use with real students. Audio remains blocked for production until Phase 1 is proven and all provider, legal, and cost decisions are resolved.
+**Recommended starting point:** Phase A (audio foundation + schema plan). Phase A establishes all DB tables, the state machine, the server module, the provider adapter, and the mock provider. No browser audio is active in Phase A — it is infrastructure only. Phase B is the first user-visible audio delivery. Phases A and B together constitute the minimum meaningful MVP.
 
 ---
 
-**Audio phases are additionally blocked until:**
+**Audio phases (B–E) are blocked until:**
 - Owner selects audio provider after reviewing POC B/C results.
 - Legal/privacy review is complete for all operating jurisdictions including Israel.
 - Audio provider DPA is signed.
@@ -95,6 +102,8 @@ The feature allows a teacher to run a teacher-mediated classroom discussion alon
 ### 2.1 This Feature Is Not a Standalone Tool
 
 The Teacher-Controlled Live Audio Classroom is one layer of a larger **Active Digital Classroom** system. It must remain connected to learning activity data and teacher control. It must not become a generic audio conferencing tool that operates independently of classroom context.
+
+**Primary use case: remote learning.** Teacher and students may be in different physical locations. Audio is the primary delivery channel for the learning session. The feature must function fully over the internet without requiring physical co-location.
 
 The Active Digital Classroom vision:
 
@@ -128,8 +137,10 @@ The Active Digital Classroom vision:
 - Not a student-to-student communication channel.
 - Not an open classroom chat.
 - Not a standalone audio session that runs without a live_lesson activity.
-- Not a recording product (in initial versions).
-- Not an AI transcript product (in initial versions).
+- Not a recording product (in initial versions — recording is explicitly out of scope for the MVP).
+- Not an AI transcript product — no transcription, no speech-to-text, no AI audio processing.
+- Not a video product — video is out of scope.
+- Not an in-class-only tool — remote learning is the primary use case.
 
 ---
 
@@ -243,11 +254,32 @@ idle → active → locked → ended
               ↘ ended
 ```
 
-**Student discussion state per session:**
+**Student discussion state per session — two request paths:**
 ```
-listening → hand_raised → approved_to_speak ⇆ muted
-          ↗ (cleared by teacher)           ↘ speaking (audio phases)
+                        ┌─ approved_to_speak (class) ⇆ muted
+listening → hand_raised─┤  (request_type = 'speak_to_class', audio_scope = 'class')
+              │         └─ (cleared by teacher or session end)
+              │
+              ├─ hand_raised_private ─→ in_private_conversation ─→ listening
+              │  (request_type = 'private_help', audio_scope = 'private')
+              │  (teacher opens separate private room)
+              │
+              └─ (cleared by teacher)
 ```
+
+**Audio scope values (stored in `audio_scope` column):**
+- `null` — student is listening only; no active audio permission.
+- `'class'` — student is approved to speak; whole class hears them.
+- `'private'` — student is in a private conversation with the teacher only.
+
+**Session-level audio mode (tracked via `classroom_discussion_sessions` flags):**
+```
+teacher_broadcast_only  → main class room active; teacher publishes; all students subscribe
+group_discussion        → up to 5 student speakers; whole class hears all approved speakers
+private_active          → one student is in private room with teacher; main room continues
+```
+
+Note: `private_active` is not mutually exclusive with `teacher_broadcast_only` or `group_discussion`. A private conversation may run in parallel with the main class room.
 
 ### 4.2 Layers
 
@@ -290,14 +322,25 @@ Full schema in Section 12.
 - Full security analysis in Section 8.
 - Full sync model definition in Section 9.
 
-### 4.5 Audio Layer (Phases 2–4)
+### 4.5 Audio Layer (Phases B–E)
 
 - Isolated behind a provider-neutral `LiveAudioProvider` adapter (Section 5).
 - Provider selected by owner from comparison in Section 6.
+
+**Main class room (Phases B–D):**
 - Teacher audio token: `canPublish: true`, `canSubscribe: true`.
-- Student listener token: `canPublish: false`, `canSubscribe: true`.
-- Student speaker token: issued only after server verifies `approved_to_speak = true AND is_muted = false`.
+- Student listener token: `canPublish: false`, `canSubscribe: true`. Default for all students.
+- Student speaker token: issued only after server verifies `audio_scope = 'class'` and `is_muted = false`.
 - Mute enforced server-side via provider API, not client-only.
+
+**Private room (Phase E):**
+- A second, separate provider room is created for each private teacher-student conversation.
+- Room name: `"private-{sessionId}-{studentId}"`.
+- Teacher private token: `canPublish: true`, `canSubscribe: true`, scoped to the private room only.
+- Student private token: `canPublish: true`, `canSubscribe: true`, scoped to the private room only. Issued only after server verifies `audio_scope = 'private'` for that student.
+- **The private room is a provider-level isolation, not a client-side mute.** The rest of the class has no token for the private room and cannot access it regardless of client behavior.
+- The teacher joins two rooms simultaneously during a private conversation: the main class room (as publisher) and the private room (as publisher). The private room audio is entirely separate from the main room.
+- The student in the private conversation joins the private room only. Their main room subscription is suspended while the private conversation is active.
 
 ### 4.6 Feature Flags
 
@@ -432,6 +475,49 @@ async function getParticipantState(roomName, participantIdentity) {}
  * @returns {Promise<{ participantMinutes: number, participantCount: number } | null>}
  */
 async function getUsageStats(roomName) {}
+
+// ── Private teacher-student conversation (Phase E) ──────────────────────────
+
+/**
+ * Create a private two-participant room for a teacher-student private conversation.
+ * Max participants: 2 (teacher + one student). Recording always disabled.
+ * @param {object} opts
+ * @param {string} opts.roomName   - e.g. "private-{sessionId}-{studentId}"
+ * @param {boolean} opts.recordingEnabled  - always false
+ * @returns {Promise<{ roomId: string, roomName: string }>}
+ */
+async function createPrivateRoom(opts) {}
+
+/**
+ * Close a private room. Disconnects teacher and student.
+ * @param {string} roomName
+ * @returns {Promise<void>}
+ */
+async function closePrivateRoom(roomName) {}
+
+/**
+ * Generate a teacher token for the private room (can publish + subscribe).
+ * Scoped to the private room name — cannot be used in the main class room.
+ * @param {object} opts
+ * @param {string} opts.roomName
+ * @param {string} opts.teacherId
+ * @param {number} opts.ttlSeconds  - max 3600
+ * @returns {Promise<{ token: string, serverUrl: string }>}
+ */
+async function createTeacherPrivateToken(opts) {}
+
+/**
+ * Generate a student token for the private room (can publish + subscribe).
+ * Called only after server verifies classroom_private_audio_sessions.status = 'active'
+ * for this student in this session.
+ * Scoped to the private room name — cannot be used in the main class room.
+ * @param {object} opts
+ * @param {string} opts.roomName
+ * @param {string} opts.studentId
+ * @param {number} opts.ttlSeconds
+ * @returns {Promise<{ token: string, serverUrl: string }>}
+ */
+async function createStudentPrivateToken(opts) {}
 ```
 
 ### 5.4 Provider Dispatch
@@ -455,12 +541,12 @@ When switching from LiveKit to another provider:
 3. No product code changes.
 4. Run the POC B test scenario against the new provider before switching production.
 
-### 5.6 Mock Provider for Phase 1 and Testing
+### 5.6 Mock Provider for Phase A and Testing
 
-`lib/live-audio/providers/mock.js` implements the full interface but does nothing — all functions return immediately with success. Used in:
-- Phase 1 (no audio, mock is the active provider).
+`lib/live-audio/providers/mock.js` implements the full interface but does nothing — all functions return immediately with success. This includes all four new private-room functions (`createPrivateRoom`, `closePrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`). Used in:
+- Phase A (audio infrastructure, mock is the active provider — no real audio connection).
 - Unit tests for discussion session logic.
-- POC A (no-audio discussion state test).
+- POC A (state machine and API validation with no real provider).
 
 ---
 
@@ -761,15 +847,15 @@ Supabase Realtime supports private channels that require a JWT to subscribe. How
 | Number of students in session | **No** | Not needed for student UI |
 | Teacher's audio state | Yes (simple flag) | Needed to start audio playback |
 
-### 8.7 Should Phase 1 Start With Polling Only?
+### 8.7 Should Phase A Start With Polling Only?
 
-**Yes. Phase 1 should implement polling first, Realtime second.**
+**Yes. Phase A should implement polling first, Realtime second.**
 
 Rationale:
 - The existing codebase is 100% polling-based. Adding polling support for discussion state follows the existing pattern exactly.
 - Realtime is an optimization for lower latency (sub-second vs. 3–5 second updates).
-- Polling-only Phase 1 is lower risk, easier to debug, and delivers the product value.
-- Realtime can be added in a Phase 1.5 or Phase 2 hardening step once the core state machine is proven.
+- Polling-only Phase A is lower risk, easier to debug, and delivers the product value.
+- Realtime can be added in a Phase A.1 hardening step once the core state machine is proven.
 - If Realtime is added, polling must remain as the fallback.
 
 ---
@@ -800,7 +886,7 @@ DB (authoritative state)
 - No new polling interval is added.
 - Student always has correct state within 3s, even without Realtime.
 
-### 9.3 Realtime as Optimization (Phase 1.5+)
+### 9.3 Realtime as Optimization (Phase A.1+)
 
 When Realtime is added:
 - Teacher UI subscribes to `discussion:{sessionId}` to receive instant updates (< 1s).
@@ -850,7 +936,7 @@ Only audio phases (Phase 2+) require microphone access. Only on specific pages:
 | `/student/activity/[activityId]` | Yes (Phase 2+, approved students) | Student speaks |
 | All other routes | **No** | Microphone stays blocked |
 
-### 10.4 Recommended `next.config.js` Headers Configuration (Phase 2+ Only)
+### 10.4 Recommended `next.config.js` Headers Configuration (Phase B+ Only)
 
 ```javascript
 // Do not implement yet. For planning only.
@@ -885,9 +971,9 @@ Only audio phases (Phase 2+) require microphone access. Only on specific pages:
 
 `microphone=(self)` means microphone access is allowed from the same origin only. No third-party iframes can access the microphone.
 
-### 10.5 Phase 1 Impact
+### 10.5 Phase A Impact
 
-**Phase 1 (no audio) requires no Permissions-Policy change.** The existing `microphone=()` header remains unchanged.
+**Phase A (no live audio) requires no Permissions-Policy change.** The existing `microphone=()` header remains unchanged. The Permissions-Policy change is only needed for Phase B when live audio is introduced.
 
 ### 10.6 Required Tests After Permissions-Policy Change
 
@@ -1019,8 +1105,16 @@ create table public.classroom_discussion_participants (
   student_id            uuid        not null references public.students(id) on delete cascade,
   hand_raised           boolean     not null default false,
   hand_raised_at        timestamptz,
+  -- request_type: set when hand is raised; null when hand is not raised.
+  -- 'speak_to_class' = student wants to address the whole class.
+  -- 'private_help'   = student wants a private conversation with the teacher.
+  request_type          text        check (request_type in ('speak_to_class', 'private_help')),
   approved_to_speak     boolean     not null default false,
   approved_at           timestamptz,
+  -- audio_scope: set when audio permission is granted; null when listen-only.
+  -- 'class'   = student is approved to speak to the whole class.
+  -- 'private' = student is in an active private conversation with the teacher.
+  audio_scope           text        check (audio_scope in ('class', 'private')),
   is_muted              boolean     not null default false,
   muted_at              timestamptz,
   speaking_duration_s   integer     not null default 0,
@@ -1033,10 +1127,13 @@ create table public.classroom_discussion_participants (
 create index on public.classroom_discussion_participants (session_id);
 create index on public.classroom_discussion_participants (session_id, hand_raised) where hand_raised = true;
 create index on public.classroom_discussion_participants (session_id, approved_to_speak) where approved_to_speak = true;
+create index on public.classroom_discussion_participants (session_id, request_type);
+create index on public.classroom_discussion_participants (session_id, audio_scope);
 
 alter table public.classroom_discussion_participants enable row level security;
 comment on table public.classroom_discussion_participants is
-  'RLS enabled; no client policies. All access via service role.';
+  'RLS enabled; no client policies. All access via service role. '
+  'request_type: speak_to_class | private_help. audio_scope: class | private.';
 ```
 
 ### 12.4 `classroom_discussion_events`
@@ -1062,7 +1159,12 @@ create table public.classroom_discussion_events (
                                       'student_unmuted',
                                       'mute_all',
                                       'audio_started',
-                                      'audio_stopped'
+                                      'audio_stopped',
+                                      -- Phase E: private conversation events
+                                      'private_help_requested',
+                                      'private_help_request_cleared',
+                                      'private_session_started',
+                                      'private_session_ended'
                                     )),
   actor_id              uuid        not null,
   actor_role            text        not null check (actor_role in ('teacher', 'student')),
@@ -1079,20 +1181,61 @@ comment on table public.classroom_discussion_events is
   'RLS enabled; no client policies. Append-only event log. No audio content ever stored.';
 ```
 
-### 12.5 Relationship to Existing Tables
+### 12.5 `classroom_private_audio_sessions` (Phase E)
+
+A fourth new table. Tracks each private teacher-student audio conversation with its own provider room.
+
+```sql
+-- Do not create yet. Planning only.
+create table public.classroom_private_audio_sessions (
+  id                  uuid        primary key default gen_random_uuid(),
+  session_id          uuid        not null references public.classroom_discussion_sessions(id) on delete cascade,
+  student_id          uuid        not null references public.students(id) on delete cascade,
+  teacher_id          uuid        not null references public.teacher_profiles(teacher_id) on delete cascade,
+  private_room_id     text,       -- external room identifier from the provider
+  private_room_name   text,       -- e.g. "private-{sessionId}-{studentId}"
+  status              text        not null default 'active'
+                                  check (status in ('active', 'ended')),
+  started_at          timestamptz not null default now(),
+  ended_at            timestamptz,
+  created_at          timestamptz not null default now(),
+  -- Only one active private conversation per student per discussion session.
+  unique (session_id, student_id, status)
+);
+
+create index on public.classroom_private_audio_sessions (session_id, status);
+create index on public.classroom_private_audio_sessions (session_id, student_id);
+
+alter table public.classroom_private_audio_sessions enable row level security;
+comment on table public.classroom_private_audio_sessions is
+  'RLS enabled; no client policies. All access via service role. '
+  'One row per private teacher-student audio conversation. '
+  'private_room_name is a separate provider room, not a muted channel. '
+  'No audio content ever stored here.';
+```
+
+**Design notes:**
+- The `UNIQUE (session_id, student_id, status)` constraint plus the `status` check ensures at most one active private session per student per discussion.
+- `private_room_name` is never exposed to any student other than the student in the private session.
+- On `ended`, the server must call `provider.closePrivateRoom(private_room_name)` before setting `status = 'ended'`.
+
+### 12.6 Relationship to Existing Tables
 
 - New tables do **not** modify `classroom_activities`, `classroom_activity_student_status`, or `classroom_activity_attempts`.
 - `activity_id` on `classroom_discussion_sessions` is nullable (for potential future standalone discussions).
 - Class and teacher validation still goes through `teacher_classes`, `teacher_class_students`, `teacher_profiles`.
 
-### 12.6 Data Retention
+### 12.8 Data Retention
 
 Owner must define a retention policy. Suggested defaults:
 - `classroom_discussion_events`: retain for 90 days, then archive or delete.
 - `classroom_discussion_participants`: retain for 90 days.
 - `classroom_discussion_sessions`: retain indefinitely (summary metadata only).
+- `classroom_private_audio_sessions`: retain for 90 days (metadata only — no audio content is stored).
 
 These are suggestions, not implemented policies.
+
+> **Private conversation metadata:** The fact that a private conversation occurred (teacher + student, timestamp, duration) is stored in `classroom_private_audio_sessions`. This is metadata only. No audio content, no transcript, no recording is ever stored. This metadata is visible only to the class teacher. It is never exposed to parent or guardian APIs.
 
 ---
 
@@ -1109,17 +1252,20 @@ All routes: validate `Authorization: Bearer` → JWT → `role === 'teacher'` �
 | `start` | POST | `{}` | `{ sessionId, status }` | `404` activity; `403` not owner; `409` session_already_active |
 | `index` | GET | — | `{ session, participants[] }` | `404` no session; `403` |
 | `lock` | PATCH | `{ locked: bool }` | `{ status }` | `409` session_ended |
-| `approve` | POST | `{ studentId }` | `{ ok }` | `404` student; `409` session_locked |
+| `approve` | POST | `{ studentId }` | `{ ok }` | `404` student; `409` session_locked — approves speak_to_class request; sets `audio_scope='class'` |
 | `revoke` | POST | `{ studentId }` | `{ ok }` | `404`; `403` |
 | `mute` | POST | `{ studentId }` | `{ ok }` | `404`; `403` |
 | `unmute` | POST | `{ studentId }` | `{ ok }` | `404`; `403` |
 | `clear-hands` | POST | `{}` | `{ count }` | `403` |
 | `mute-all` | POST | `{}` | `{ count }` | `403` |
-| `end` | POST | `{}` | `{ ok }` | `409` already_ended |
+| `end` | POST | `{}` | `{ ok }` | `409` already_ended — also closes any active private room |
 | `audio-token` | POST | `{}` | `{ token, roomId, serverUrl }` | `503` provider_error; `402` budget_cap_reached |
 | `audio-start` | POST | `{}` | `{ ok }` | `503` |
 | `audio-stop` | POST | `{}` | `{ ok }` | |
-| `report` | GET | — | `{ participants[] }` | `404` |
+| `report` | GET | — | `{ participants[] }` | `404` — teacher-only; never exposed to parent/guardian APIs |
+| `approve-private` | POST | `{ studentId }` | `{ ok, privateRoomName }` | `404`; `409` private_already_active — creates private room; sets `audio_scope='private'` |
+| `end-private` | POST | `{ studentId }` | `{ ok }` | `404`; `409` no_active_private — closes private room; resets `audio_scope` |
+| `private-audio-token` | POST | `{ studentId }` | `{ token, privateRoomName, serverUrl }` | `403`; `503` — teacher token for private room |
 
 ### 13.2 Student Discussion APIs
 
@@ -1131,13 +1277,19 @@ All routes: validate `liosh_student_session` cookie → `student_sessions` → a
 
 | Route | Method | Body | Response | Key Error Codes |
 |-------|--------|------|---------|----------------|
-| `index` | GET | — | `{ session: { status, audioEnabled }, self: { handRaised, approved, muted } }` | `404` no session |
-| `raise-hand` | POST | `{}` | `{ ok }` | `409` already_raised; `409` session_locked; `404` |
-| `lower-hand` | POST | `{}` | `{ ok }` | `409` hand_not_raised |
+| `index` | GET | — | `{ session: { status, audioEnabled }, self: { handRaised, requestType, approved, audioScope, muted, inPrivate } }` | `404` no session |
+| `raise-hand` | POST | `{ requestType: 'speak_to_class' }` | `{ ok }` | `409` already_raised; `409` session_locked; `404` |
+| `request-private` | POST | `{}` | `{ ok }` | `409` already_requested; `409` session_locked; `404` — sets `request_type='private_help'` |
+| `lower-hand` | POST | `{}` | `{ ok }` | `409` hand_not_raised — clears both raise-hand and request-private |
 | `heartbeat` | POST | `{}` | `{ ok }` | `404` |
-| `audio-token` | POST | `{}` | `{ token, serverUrl, canPublish }` | `403`; `503`; `404` |
+| `audio-token` | POST | `{}` | `{ token, serverUrl, canPublish }` | `403`; `503`; `404` — main class room; `canPublish: true` only if `audio_scope='class'` and not muted |
+| `private-audio-token` | POST | `{}` | `{ token, privateRoomName, serverUrl }` | `403`; `503` — student token for private room; only if `audio_scope='private'` |
 
-Note: student `audio-token` returns `canPublish: false` by default. Returns `canPublish: true` only if `approved_to_speak = true AND is_muted = false` in DB, and `LIVE_DISCUSSION_AUDIO_ENABLED = true`.
+Notes:
+- Student `audio-token` returns `canPublish: false` (listen-only) by default. Returns `canPublish: true` only if `audio_scope = 'class'` and `is_muted = false` in DB, and `LIVE_DISCUSSION_AUDIO_ENABLED = true`.
+- Student `private-audio-token` is only issued if `classroom_private_audio_sessions.status = 'active'` for this student in this session.
+- `raise-hand` now requires `requestType` in the body. Invalid or missing `requestType` returns `400`. Only `'speak_to_class'` is valid on this route; use `request-private` for private help.
+- `studentId` is always taken from the validated session cookie, never from request body on any route.
 
 ### 13.3 Role Guard Summary
 
@@ -1146,25 +1298,33 @@ Note: student `audio-token` returns `canPublish: false` by default. Returns `can
 | Start session | Yes | No |
 | End session | Yes | No |
 | Lock/unlock | Yes | No |
-| Approve student | Yes | No |
+| Approve student (speak to class) | Yes | No |
 | Revoke student | Yes | No |
 | Mute student | Yes | No |
 | Mute all | Yes | No |
 | Clear hands | Yes | No |
-| Raise own hand | No | Yes |
-| Lower own hand | No | Yes |
+| Approve private conversation | Yes | No |
+| End private conversation | Yes | No |
+| Teacher private-audio-token | Yes | No |
+| Raise own hand (speak_to_class) | No | Yes |
+| Request private help | No | Yes |
+| Lower own hand / cancel request | No | Yes |
 | Get own state | No | Yes |
-| Get full session state | Yes | No |
-| Audio token (publish) | Yes | Only if approved |
-| Audio token (listen) | No | Yes |
+| Get full session state (all students) | Yes | No |
+| Audio token — class room publish | Yes | Only if `audio_scope='class'` |
+| Audio token — class room listen | No | Yes (default) |
+| Audio token — private room | Yes (teacher) | Only if `audio_scope='private'` |
 
 ### 13.4 Tamper Prevention Rules
 
 - `studentId` in student routes always taken from session, not body. Any `studentId` in body is ignored.
-- `approved_to_speak`, `is_muted` are never writable from student routes.
+- `approved_to_speak`, `is_muted`, `audio_scope`, `request_type` are never writable from student routes.
 - Teacher routes reject if `teacher_id !== classroom_activities.teacher_id`.
 - Student routes reject if student is not in `teacher_class_students` for the activity's class.
 - Audio tokens include `roomName` derived from `sessionId`. A token for session A cannot be used in session B.
+- Private room tokens are scoped to `private_room_name`. A student's private token cannot be used in the main class room.
+- The `private_room_name` is never included in any Realtime broadcast or student-facing API response for other students. Only the teacher and the specific student in the private conversation receive it.
+- Student `private-audio-token` server verifies `classroom_private_audio_sessions.status = 'active'` AND `student_id` matches session user before issuing token. No other student can receive a private room token.
 
 ---
 
@@ -1190,19 +1350,28 @@ The UUID is not guessable. It is not exposed in any public URL or page HTML. It 
 All events are minimal. No student names. No rosters. Student-targeted events include only the `studentId` so the target student's client can identify relevant events.
 
 ```json
-{ "event": "session_started",  "sessionId": "..." }
-{ "event": "session_locked",   "sessionId": "..." }
-{ "event": "session_unlocked", "sessionId": "..." }
-{ "event": "session_ended",    "sessionId": "..." }
-{ "event": "hands_cleared",    "sessionId": "..." }
-{ "event": "audio_started",    "sessionId": "..." }
-{ "event": "audio_stopped",    "sessionId": "..." }
-{ "event": "hand_raised",      "sessionId": "...", "targetStudentId": "..." }
-{ "event": "speak_approved",   "sessionId": "...", "targetStudentId": "..." }
-{ "event": "speak_revoked",    "sessionId": "...", "targetStudentId": "..." }
-{ "event": "student_muted",    "sessionId": "...", "targetStudentId": "..." }
-{ "event": "student_unmuted",  "sessionId": "...", "targetStudentId": "..." }
+{ "event": "session_started",           "sessionId": "..." }
+{ "event": "session_locked",            "sessionId": "..." }
+{ "event": "session_unlocked",          "sessionId": "..." }
+{ "event": "session_ended",             "sessionId": "..." }
+{ "event": "hands_cleared",             "sessionId": "..." }
+{ "event": "audio_started",             "sessionId": "..." }
+{ "event": "audio_stopped",             "sessionId": "..." }
+{ "event": "hand_raised",               "sessionId": "...", "targetStudentId": "..." }
+{ "event": "speak_approved",            "sessionId": "...", "targetStudentId": "..." }
+{ "event": "speak_revoked",             "sessionId": "...", "targetStudentId": "..." }
+{ "event": "student_muted",             "sessionId": "...", "targetStudentId": "..." }
+{ "event": "student_unmuted",           "sessionId": "...", "targetStudentId": "..." }
+{ "event": "private_help_requested",    "sessionId": "...", "targetStudentId": "..." }
+{ "event": "private_session_started",   "sessionId": "...", "targetStudentId": "..." }
+{ "event": "private_session_ended",     "sessionId": "...", "targetStudentId": "..." }
 ```
+
+**Private event payload security rules:**
+- `private_help_requested` — only the `targetStudentId` is included; no private room name, no token.
+- `private_session_started` — signals to the target student only that their private session is ready. The student must call `GET .../discussion` (REST) to get the `privateRoomName` needed to request their private token. The `privateRoomName` is never put in the Realtime broadcast payload.
+- `private_session_ended` — signals to the target student that the private session is over; they return to listen-only in the main room.
+- Other students receiving a `private_session_started` event for a different `targetStudentId` ignore it (same as all targeted events).
 
 The teacher monitor does **not** use these payloads to render the full hand-raise queue. It uses the REST API poll for that. Realtime events are used only to trigger a faster re-fetch.
 
@@ -1308,187 +1477,148 @@ On any disconnect or page reload:
 
 ---
 
-## 16. Phase 0 — Architecture Mapping and Go/No-Go
+## 16. Phase A — Audio Foundation + Schema Plan
 
 ### 16.1 Goal
 
-Resolve all owner decisions before implementation begins. Produce written owner approvals.
+Establish all DB tables, state machine, server modules, `LiveAudioProvider` adapter, mock provider, and feature flags. Deliver all APIs and UI shells. No live audio connection is active in Phase A — the mock provider handles all adapter calls with no-ops. Phase A is infrastructure only, not a user-visible audio feature.
 
-### 16.2 Tasks
+Audio must be designed in from the start. Phase A is not a no-audio MVP; it is the foundation that Phases B–E are built on.
 
-- Owner reviews and approves DB schema (Section 12).
-- Owner reviews and approves API routes (Section 13).
-- Owner reviews and approves Realtime plan (Section 14).
-- Owner selects whether Phase 1 alone is the first delivery.
-- Owner decides on audio provider (or defers audio entirely).
-- Owner approves feature flag strategy.
-- Owner decides on budget cap (`LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP`).
-- Owner confirms legal review is planned for audio phases.
-- Owner signs off on privacy design principles (Section 11.5).
-- Owner defines and approves data retention policy for Phase 1 discussion metadata (required before the Phase 1 migration is executed — see decision B8).
-- Owner confirms that verified provider pricing will be reviewed before any budget cap is configured (decision C9).
+### 16.2 Owner Decisions Required Before Phase A Starts
 
-### 16.3 Acceptance Criteria
+- DB schema approved (Section 12).
+- API routes approved (Section 13).
+- Feature flag strategy approved.
+- Data retention policy for discussion metadata approved (decision B8).
+- Realtime plan approved (Section 14).
 
-- All Section 33 owner decisions answered.
-- Audio provider selected (or audio deferred).
-- Written approval exists for Phase 1 to begin.
+### 16.3 DB Changes
 
-### 16.4 Risk
+Four new tables (migration file written; not executed until separately approved):
+- `classroom_discussion_sessions`
+- `classroom_discussion_participants` (with `request_type` and `audio_scope` columns)
+- `classroom_discussion_events`
+- `classroom_private_audio_sessions`
 
-Low (planning only).
+See Section 12 for full schema. No changes to existing tables.
 
-### 16.5 Estimated Effort
+### 16.4 New Code
 
-1–2 days.
+- `lib/live-audio/provider-adapter.js` — adapter dispatch; default provider: `mock`.
+- `lib/live-audio/providers/mock.js` — all adapter functions return success, no real provider.
+- `lib/live-audio/types.js` — JSDoc type definitions.
+- `lib/teacher-server/teacher-discussion.server.js` — server module for all discussion logic.
+- All teacher discussion API routes (Section 13.1) including private routes.
+- All student discussion API routes (Section 13.2) including `request-private`.
+- `components/teacher-portal/TeacherDiscussionPanel.jsx` — discussion controls (non-audio controls operational; audio controls shown as disabled pending Phase B).
+- `components/student/StudentDiscussionBar.jsx` — discussion status bar with raise-hand and request-private buttons.
+- Feature flag checks: `NEXT_PUBLIC_LIVE_DISCUSSION_ENABLED`, `LIVE_DISCUSSION_AUDIO_ENABLED`.
 
----
-
-## 17. Phase 1 — Realtime Hand Raise / Approval State (No Audio)
-
-### 17.1 Goal
-
-Ship a real-time hand-raise and teacher-approval system with zero audio. Standalone product value.
-
-### 17.2 Product Behavior
-
-- Teacher opens monitor page during active `live_lesson`.
-- New "Discussion" panel with "Start Discussion" button.
-- On click: session created in DB; student UI updates within 3s (polling) or ~1s (Realtime).
-- Students see "Raise Hand" button.
-- Student raises hand → teacher sees the student in queue within 3s.
-- Teacher approves → student UI shows "approved" state.
-- Teacher can clear individual hands, clear all hands, lock discussion, mute (state only), revoke approval, end session.
-- All state restores correctly on page refresh.
-- Activity pause/close auto-ends the discussion session.
-
-### 17.3 Implementation Approach (Polling First)
-
-Phase 1 initial implementation uses **polling only** (no Realtime):
-- Discussion state appended to existing teacher monitor poll response.
-- Discussion state appended to existing student live-state poll response.
-- No Supabase Realtime code in Phase 1.0.
-
-Phase 1.1 (optional enhancement): add Supabase Realtime broadcast for lower-latency updates. Polling remains as fallback.
-
-### 17.4 DB Changes
-
-Three new tables: `classroom_discussion_sessions`, `classroom_discussion_participants`, `classroom_discussion_events` (see Section 12). No changes to existing tables.
-
-### 17.5 New APIs
-
-All routes listed in Section 13. Phase 1 does not include `audio-token`, `audio-start`, `audio-stop` routes.
-
-### 17.6 Teacher UI Changes
+### 16.5 Teacher UI Changes
 
 `pages/teacher/class/[classId]/activities/[activityId]/monitor.js`:
 - New "Discussion" collapsible panel.
 - "Start Discussion" button (visible when `mode === 'live_lesson'` and `status === 'active'`).
-- Hand-raise queue: student list with "Approve" and "Clear" buttons.
-- Approved list: students with "Mute" (state only, no audio) and "Revoke" buttons.
+- Hand-raise queue: shows each student's `request_type` badge ("Speak to class" / "Private help").
+- Action buttons: "Approve for class" (for `speak_to_class` requests); "Open private channel" (for `private_help` requests — disabled until Phase E).
+- Approved list: students with "Mute" and "Revoke" buttons.
 - "Lock Discussion", "Clear All Hands", "End Discussion" controls.
+- Audio controls visible but disabled until `LIVE_DISCUSSION_AUDIO_ENABLED=true`.
 - Session status badge.
 
-### 17.7 Student UI Changes
+### 16.6 Student UI Changes
 
 `pages/student/activity/[activityId].js`:
-- Discussion status bar (fixed bottom or inline, only when session active).
-- "Raise Hand" / "Lower Hand" button.
-- "Awaiting approval" state.
-- "Approved to speak" badge.
+- Discussion status bar (only when session active).
+- Two request buttons: "Raise hand to speak" (sets `request_type='speak_to_class'`) and "Request private help" (sets `request_type='private_help'`).
+- "Awaiting approval" state (shows request type).
+- "You are approved to speak to the class" badge (Phase C).
+- "You are in a private conversation with your teacher" badge (Phase E).
 - "Muted" badge.
 - Session locked / ended messages.
 
-### 17.8 Security
+### 16.7 Implementation Approach (Polling First)
+
+Phase A initial implementation uses **polling only** (no Realtime):
+- Discussion state appended to existing teacher monitor poll response.
+- Discussion state appended to existing student live-state poll response.
+- No Supabase Realtime code in Phase A.0.
+
+Phase A.1 (optional enhancement): add Supabase Realtime broadcast for lower-latency updates. Polling remains as fallback.
+
+### 16.8 Security
 
 - Teacher ownership validated on all teacher routes.
 - Class membership validated on all student routes.
 - `studentId` always from session cookie, never from request body.
-- `approved_to_speak` and `is_muted` never writable from student routes.
-- Rate limit: max 10 raise-hand requests per student per minute per session.
+- `approved_to_speak`, `is_muted`, `audio_scope`, `request_type` never writable from student routes.
+- Rate limit: max 10 raise-hand / request-private calls per student per minute per session.
 
-### 17.9 Failure Cases
+### 16.9 Failure Cases
 
 | Failure | Behavior |
 |---------|---------|
 | Student raises hand when session is locked | API returns 409 `discussion_locked`; UI shows message |
 | Student raises hand after session ended | API returns 404 `session_not_found`; UI shows "session ended" |
-| Teacher closes activity while discussion active | Server auto-ends discussion session |
+| Teacher closes activity while discussion active | Server auto-ends discussion session; any active private room is closed |
 | Teacher refreshes page | Discussion state restored from REST poll within 5s |
 | Student refreshes page | Discussion state restored from REST poll within 3s |
 | DB write fails on approve | API returns 500; client shows error; state consistent in DB |
 
-### 17.10 QA Tests
+### 16.10 QA Tests (Phase A)
 
-- Unit: session state machine (all transitions)
-- Unit: student cannot approve self (studentId from session only)
-- Unit: locked session rejects hand raise
-- Unit: activity close triggers session auto-end
-- API: full teacher discussion lifecycle
-- API: unauthorized student calling teacher routes → 403
-- API: 40 students raising hands simultaneously (concurrency)
-- E2E: full Phase 1 flow from teacher start to session end
-- E2E: page refresh mid-session restores state
+- Unit: session state machine (all transitions).
+- Unit: student cannot approve self (studentId from session only).
+- Unit: locked session rejects hand raise and request-private.
+- Unit: activity close triggers session auto-end.
+- Unit: `request_type` set correctly for raise-hand vs request-private.
+- API: full teacher discussion lifecycle (start → approve → mute → clear → end).
+- API: unauthorized student calling teacher routes → 403.
+- API: 40 students raising hands simultaneously (concurrency, no DB race condition).
+- E2E: full Phase A flow from teacher start to session end.
+- E2E: page refresh mid-session restores state.
+- POC A: verify all of the above with mock provider at zero audio cost.
 
-### 17.11 Build/Test Commands
-
-```bash
-# Regression: existing classroom activities
-node --experimental-vm-modules node_modules/.bin/jest tests/classroom-activities/
-
-# New: discussion unit tests
-node --experimental-vm-modules node_modules/.bin/jest tests/classroom-discussion/
-
-# E2E
-npx playwright test tests/e2e/classroom-discussion/phase1/
-
-# Dev server
-npm run dev
-
-# Lint
-npm run lint
-```
-
-### 17.12 Acceptance Criteria
+### 16.11 Acceptance Criteria
 
 - Teacher can start a discussion on an active live_lesson.
-- Students see raise-hand button within 3s of session start.
-- Teacher sees student's hand within 3s of raise.
-- Teacher can approve, mute (state), revoke, lock, clear all, end.
+- Students see raise-hand and request-private buttons within 3s of session start.
+- Teacher sees student's request (with type badge) within 3s of submission.
+- Teacher can approve (speak-to-class), clear, lock, clear all, end.
 - Page refresh by either party restores correct state.
 - No existing classroom activity, login, or parent functionality is affected.
-- All Phase 1 API tests pass.
-- POC A passes.
+- All Phase A API tests pass. POC A passes.
 
-### 17.13 Risk Level
+### 16.12 Risk Level
 
-Medium (first Supabase Realtime use; new DB tables; new API surface).
+Medium (first Supabase Realtime use; new DB tables; new API surface; four new tables including private sessions table).
 
-### 17.14 Estimated Effort
+### 16.13 Estimated Effort
 
 1–2 weeks.
 
 ---
 
-## 18. Phase 2 — Teacher Audio Broadcast Only
+## 17. Phase B — Teacher Broadcast + Student Listen-Only
 
-### 18.1 Goal
+### 17.1 Goal
 
-Teacher can broadcast live audio to all students. Students hear teacher. Students cannot publish. One-to-many audio.
+Teacher can broadcast live audio to all students. Students hear teacher. Students cannot publish. One-to-many remote learning audio.
 
-### 18.2 Product Behavior
+### 17.2 Product Behavior
 
-- All Phase 1 behaviors unchanged.
-- Teacher sees "Start Speaking" button in discussion panel (only when session active and `LIVE_DISCUSSION_AUDIO_ENABLED=true`).
-- Teacher clicks "Start Speaking" → browser requests microphone permission → teacher audio is broadcast.
+- All Phase A behaviors unchanged.
+- Teacher sees "Start Broadcasting" button in discussion panel (only when session active and `LIVE_DISCUSSION_AUDIO_ENABLED=true`).
+- Teacher clicks "Start Broadcasting" → browser requests microphone permission → teacher audio is broadcast to all students.
 - Students automatically join audio room as listeners when session has active audio.
 - Students must tap "Tap to Hear Teacher" due to browser autoplay policy. After one tap, audio plays.
-- Teacher clicks "Stop Speaking" → audio stops.
-- Students cannot publish audio.
+- Teacher clicks "Stop Broadcasting" → audio stops for all students.
+- Students remain listen-only. `canPublish: false` enforced at SFU level.
 
-### 18.3 DB Changes
+### 17.3 DB Changes
 
-Additional columns on `classroom_discussion_sessions`:
+Additional columns on `classroom_discussion_sessions` (added in Phase B migration, not Phase A):
 - `audio_enabled` (boolean, default false)
 - `audio_provider` (text)
 - `audio_room_id` (text)
@@ -1496,271 +1626,362 @@ Additional columns on `classroom_discussion_sessions`:
 - `participant_count_peak` (integer)
 - `estimated_participant_min` (numeric)
 
-New event types in `classroom_discussion_events`: `audio_started`, `audio_stopped`.
+New event types used: `audio_started`, `audio_stopped` (already in schema from Phase A).
 
-### 18.4 New APIs
+### 17.4 New APIs
 
-- `POST .../discussion/audio-token` (teacher) — returns publish-capable token.
-- `POST .../discussion/audio-token` (student) — returns subscribe-only token.
-- `POST .../discussion/audio-start` — creates provider room, marks session audio_enabled.
+- `POST .../discussion/audio-token` (teacher) — returns publish-capable token for main class room.
+- `POST .../discussion/audio-token` (student) — returns subscribe-only token for main class room.
+- `POST .../discussion/audio-start` — creates provider room, marks session `audio_enabled = true`.
 - `POST .../discussion/audio-stop` — stops audio, marks session.
 
-### 18.5 Realtime Events (additional)
+### 17.5 Realtime Events (additional)
 
 ```json
 { "event": "audio_started", "sessionId": "..." }
 { "event": "audio_stopped", "sessionId": "..." }
 ```
 
-### 18.6 Provider Adapter
+### 17.6 Provider Adapter Calls
 
-`provider.createRoom()` is called on `audio-start`.
-`provider.createTeacherToken()` is called when teacher requests audio token.
-`provider.createStudentListenerToken()` is called when student requests audio token.
-`provider.closeRoom()` is called on session end.
+- `provider.createRoom()` on `audio-start`.
+- `provider.createTeacherToken()` when teacher requests audio token.
+- `provider.createStudentListenerToken()` when student requests audio token.
+- `provider.closeRoom()` on session end.
 
-### 18.7 Permissions-Policy Change
+### 17.7 Permissions-Policy Change
 
 `next.config.js` updated to allow `microphone=(self)` only on monitor and student activity routes (see Section 10.4). **Owner approval required before this change.**
 
-### 18.8 Security
+### 17.8 Security
 
 - Student audio token: `canPublish: false` always. Enforced at SFU level.
-- Teacher token includes provider room name derived from `sessionId`.
+- Teacher token scoped to room derived from `sessionId`.
 - Budget cap checked before any token is issued.
 
-### 18.9 Failure Cases
+### 17.9 Failure Cases
 
 | Failure | Behavior |
 |---------|---------|
-| Teacher mic permission denied | Error shown; session continues in Phase 1 mode |
-| Provider API outage | Error logged; session continues in Phase 1 mode; banner shown |
+| Teacher mic permission denied | Error shown; session continues without audio; hand-raise still works |
+| Provider API outage | Error logged; session continues without audio; banner shown to teacher |
 | Budget cap reached | Audio token denied with 402; teacher sees "monthly audio limit reached" |
 | Student autoplay blocked | "Tap to Hear Teacher" CTA shown |
-| Teacher navigates away | Audio stops; session stays in Phase 1 mode |
+| Teacher navigates away | Audio stops; session state preserved |
+| Student on mobile (iOS Safari) | Autoplay unlock required; tested in Phase F |
 
-### 18.10 Acceptance Criteria
+### 17.10 Acceptance Criteria
 
 - Teacher audio reaches all connected students.
 - Students cannot publish audio (verified at provider dashboard, not only client UI).
 - No audio is recorded (verified in provider dashboard settings).
 - Permissions-Policy change confirmed: microphone blocked on all other pages.
 - Budget cap enforced: token denied when cap reached.
-- Phase 1 hand-raise still works during audio broadcast.
+- Phase A hand-raise still works during audio broadcast.
+- POC B passes.
 
-### 18.11 Risk Level
+### 17.11 Risk Level
 
 Large.
 
-### 18.12 Estimated Effort
+### 17.12 Estimated Effort
 
-2–4 weeks.
+2–3 weeks.
 
 ---
 
-## 19. Phase 3 — Teacher-Approved Student Microphone
+## 18. Phase C — Speak-to-Class Hand Raise + Approved Student Mic
 
-### 19.1 Goal
+### 18.1 Goal
 
-Approved student can publish audio. Mute is server-side enforced. Teacher retains full control.
+Students can raise their hand to speak to the whole class. Teacher approves one student. That student can publish audio. Whole class hears. Teacher retains full control (mute, revoke, end). The private-help request type is present in the UI but private audio is not active until Phase E.
 
-### 19.2 Product Behavior
+### 18.2 Product Behavior
 
-- All Phase 2 behaviors unchanged.
-- Teacher approves a student (Phase 1 action).
-- Server immediately calls `provider.grantStudentSpeak(roomName, studentId)`.
-- Student's UI shows "You may speak" + "Speak" toggle.
-- Student taps "Speak" → browser requests mic permission → student broadcasts audio.
-- Teacher taps "Mute" next to student → `provider.muteStudent(roomName, studentId)` called server-side.
-- Student's audio stops immediately at SFU level. Client cannot bypass.
-- Teacher taps "Revoke" → `provider.revokeStudentSpeak(roomName, studentId)` → student loses publish rights.
+- All Phase B behaviors unchanged.
+- Student raises hand with `request_type = 'speak_to_class'`.
+- Teacher sees the request in queue with "Speak to class" badge.
+- Teacher clicks "Approve for class" → server sets `audio_scope = 'class'` on participant; calls `provider.grantStudentSpeak(roomName, studentId)`.
+- Approved student's UI shows "You are approved to speak to the class" + microphone toggle.
+- Student taps microphone → browser requests mic permission → student publishes audio.
+- Whole class hears the approved student.
+- Teacher clicks "Mute" → `provider.muteStudent(roomName, studentId)` — SFU-enforced, client cannot bypass.
+- Teacher clicks "Revoke" → `provider.revokeStudentSpeak(roomName, studentId)` → `audio_scope` cleared.
+- Private-help requests: student can submit `request_type = 'private_help'` via "Request private help" button. Teacher sees the request with "Private help" badge. "Open private channel" button is visible but inactive until Phase E.
 
-### 19.3 DB Changes
+### 18.3 DB Changes
 
-No new tables. Optional new columns on `classroom_discussion_participants`:
+No new tables beyond Phase A. Optional new columns on `classroom_discussion_participants`:
 - `audio_token_issued_at` — for token rotation tracking.
 - `speaking_started_at` — for participation log.
 
-### 19.4 New API Changes
+### 18.4 API Changes
 
-- Teacher `approve` route now calls `provider.grantStudentSpeak()` after DB update.
-- Teacher `mute` route now calls `provider.muteStudent()` after DB update.
-- Teacher `revoke` route now calls `provider.revokeStudentSpeak()` after DB update.
-- Student `audio-token` route: returns speaker token only if `approved_to_speak=true AND is_muted=false`.
+- Teacher `approve` route: also calls `provider.grantStudentSpeak()` after DB update; sets `audio_scope = 'class'`.
+- Teacher `mute` route: also calls `provider.muteStudent()` after DB update.
+- Teacher `revoke` route: also calls `provider.revokeStudentSpeak()` after DB update; clears `audio_scope`.
+- Student `audio-token` route: returns speaker token (`canPublish: true`) only if `audio_scope = 'class'` and `is_muted = false`.
 
-### 19.5 Security
+### 18.5 Security
 
-- Student cannot request speaker token without server-side approval check.
+- Student cannot request speaker token without server-side `audio_scope = 'class'` check.
 - Muted student's token request returns listener-only token.
-- Server-side mute is enforced by the SFU, not by client code.
+- Server-side mute enforced by the SFU, not client code.
 
-### 19.6 Failure Cases
+### 18.6 Failure Cases
 
 | Failure | Behavior |
 |---------|---------|
 | Student mic permission denied | Error shown; hand-raise still works; state consistent |
-| Provider grant API fails | DB updated; retry logged; partial failure banner shown to teacher |
+| Provider grant API fails | DB updated; retry logged; banner shown to teacher |
 | Student connection drops while speaking | SFU removes tracks; student must re-request token on reconnect |
-| Teacher revokes during student speech | Audio stops within 3s; student UI updates |
+| Teacher revokes during student speech | Audio stops within 3s at SFU level; student UI updates |
 
-### 19.7 Acceptance Criteria
+### 18.7 Acceptance Criteria
 
-- Only teacher-approved students can publish audio (verified at SFU).
+- Only teacher-approved students can publish audio (verified at SFU, not client-only).
 - Teacher mute stops student audio within 3s, enforced at provider level.
-- Muted student cannot unmute without teacher re-approval.
+- Muted student cannot unmute themselves.
+- Non-approved student cannot publish audio regardless of client behavior.
+- Private-help requests are accepted and displayed in teacher queue with correct badge.
 - POC B passes.
 
-### 19.8 Risk Level
+### 18.8 Risk Level
 
 Large.
 
-### 19.9 Estimated Effort
+### 18.9 Estimated Effort
 
 2–3 weeks.
 
 ---
 
-## 20. Phase 4 — Multiple Approved Speakers / Managed Discussion Mode
+## 19. Phase D — Group Discussion Up to 5 Students
 
-### 20.1 Goal
+### 19.1 Goal
 
-Teacher can approve multiple students simultaneously. Teacher can mute all. Full classroom discussion mode.
+Teacher can approve up to 5 students simultaneously to speak to the whole class. Teacher can mute all. Full managed classroom discussion mode.
 
-### 20.2 Product Behavior
+### 19.2 Product Behavior
 
-- All Phase 3 behaviors unchanged.
-- Teacher can approve multiple students (up to `max_speakers` soft limit, recommended: 5).
-- All approved students can speak simultaneously.
+- All Phase C behaviors unchanged.
+- Teacher can approve multiple students (up to `max_speakers` soft limit, default: 5).
+- All approved students can speak simultaneously. Whole class hears all approved speakers.
 - "Mute All Students" button mutes all approved speakers in one action.
 - Visual indicator shows who is currently transmitting audio (if provider supports active-speaker detection).
+- A 40-student class does not mean 40 open microphones. Students are listen-only by default. Only the teacher and up to 5 approved students may speak simultaneously.
 
-### 20.3 DB Changes
+### 19.3 DB Changes
 
-Optional: `max_speakers` column on `classroom_discussion_sessions` (settable by teacher at session start).
+Optional: `max_speakers` column on `classroom_discussion_sessions` (settable by teacher at session start; default 5; maximum 5).
 
-### 20.4 New APIs
+### 19.4 New APIs
 
 - `POST .../discussion/mute-all` — calls `provider.muteAll(roomName, teacherIdentity)`.
 - `POST .../discussion/approve-multiple` — body: `{ studentIds: [] }` — approves multiple in one call.
 
-### 20.5 QA Tests
+### 19.5 QA Tests
 
-- 5 students approved simultaneously — all can speak.
-- Teacher "Mute All" — all 5 muted simultaneously.
-- Audio quality with 5 simultaneous speakers on typical school WiFi.
-- Provider handles 40-student room (41 participants total) with up to 5 publishers without degradation.
+- 5 students approved simultaneously — all can speak; whole class hears all 5.
+- Teacher "Mute All" — all 5 muted simultaneously at SFU level.
+- Audio quality with 5 simultaneous speakers on typical WiFi / mobile connection.
+- Provider handles 40-student room (41 participants total) with up to 5 publishers without audio degradation.
 
-### 20.6 Acceptance Criteria
+### 19.6 Acceptance Criteria
 
-- Teacher can approve and mute multiple students.
-- "Mute All" stops all student audio.
-- System handles 40 students + 1 teacher (41 participants) with up to 5 simultaneous speakers without audio degradation.
-- Students are listeners by default. Only the teacher and up to 5 approved students may speak at the same time (soft limit; owner may change later). A 40-student class does not mean 40 open microphones.
-- Existing Phase 1–3 behaviors unchanged.
+- Teacher can approve and mute multiple students (up to 5 simultaneously).
+- "Mute All" stops all student audio at SFU level.
+- System handles 40 students + 1 teacher (41 participants) with up to 5 simultaneous speakers without degradation.
+- Existing Phase A–C behaviors unchanged.
 
-### 20.7 Risk Level
+### 19.7 Risk Level
 
 Medium.
 
-### 20.8 Estimated Effort
+### 19.8 Estimated Effort
+
+1–2 weeks.
+
+---
+
+## 20. Phase E — Private Teacher-Student Audio Conversation
+
+### 20.1 Goal
+
+Teacher can open a private audio channel with one student. Only the teacher and that student can hear the private conversation. The rest of the class cannot access or hear it. Main class room audio continues independently.
+
+### 20.2 Architecture Requirement
+
+**The private conversation must use a separate provider room — not client-side muting of the main room.** Client-side muting can be bypassed. A separate provider room means the rest of the class has no token for the private room and cannot join it at the SFU level regardless of any client-side behavior.
+
+### 20.3 Product Behavior
+
+- Student clicks "Request private help" → API sets `request_type = 'private_help'` on their participant row.
+- Teacher sees the request in the hand-raise queue with a distinct "Private help" badge.
+- Teacher clicks "Open private channel" for that student:
+  - Server creates a new provider room: `"private-{sessionId}-{studentId}"`.
+  - `classroom_private_audio_sessions` row is created with `status = 'active'`.
+  - Participant `audio_scope` set to `'private'`.
+  - Realtime event `private_session_started` broadcast to the target student only.
+- Teacher requests `private-audio-token` → server issues token scoped to the private room.
+- Student requests `private-audio-token` → server verifies `audio_scope = 'private'` and active private session; issues student token.
+- Teacher and student join the private room. Both can hear each other. No one else can hear this.
+- Main class room continues: other students still hear teacher's main room audio (or are in listen-only mode).
+- Only one private conversation can be active at a time per discussion session.
+- Teacher ends private conversation: server calls `provider.closePrivateRoom(privateRoomName)`; sets `classroom_private_audio_sessions.status = 'ended'`; clears `audio_scope`; broadcasts `private_session_ended` to student.
+- Student returns to listen-only in main class room.
+
+### 20.4 DB Changes
+
+- `classroom_private_audio_sessions` table (already planned in Phase A migration).
+- No additional columns needed beyond what Phase A defined.
+
+### 20.5 New APIs
+
+- `POST .../discussion/approve-private` — teacher action; creates private room; sets `audio_scope = 'private'`.
+- `POST .../discussion/end-private` — teacher action; closes private room; resets `audio_scope`.
+- `POST .../discussion/private-audio-token` (teacher) — teacher token for private room.
+- `POST .../discussion/private-audio-token` (student) — student token for private room (only if `audio_scope = 'private'`).
+
+### 20.6 Provider Adapter Calls
+
+- `provider.createPrivateRoom(opts)` on `approve-private`.
+- `provider.createTeacherPrivateToken(opts)` when teacher requests private token.
+- `provider.createStudentPrivateToken(opts)` when approved student requests private token.
+- `provider.closePrivateRoom(roomName)` on `end-private` or session end.
+
+### 20.7 Security
+
+- Private room name is never included in any Realtime broadcast or in any student API response for other students.
+- Student can only obtain a private token if `classroom_private_audio_sessions.status = 'active'` and their `student_id` matches the session.
+- Private tokens are scoped to `private_room_name` — they cannot be used in the main class room.
+- On session end, all active private rooms are closed before the session status is set to `'ended'`.
+- No other student can join the private room (they have no token and no room name).
+
+### 20.8 Failure Cases
+
+| Failure | Behavior |
+|---------|---------|
+| Teacher mic permission for private room | Uses same microphone already in use for main room; no second permission needed |
+| Provider fails to create private room | Error logged; teacher shown error; private conversation not started; student's request remains in queue |
+| Private room drops mid-conversation | Teacher and student notified; server marks `private_session` ended; student returns to main room |
+| Teacher ends main session while private active | Server closes private room first, then ends main session |
+| Student disconnects mid-private | Private session remains active; student can reconnect and request private token again (server re-validates) |
+
+### 20.9 Acceptance Criteria
+
+- Teacher can open a private conversation with any student who has `request_type = 'private_help'` in the queue.
+- Only the teacher and that student can hear the private conversation (verified at provider level — separate room, not client mute).
+- Rest of class cannot hear the private conversation.
+- Main class audio continues independently during private conversation.
+- Only one private conversation active at a time per session.
+- Teacher can end private conversation; student returns to listen-only in main room.
+- No private room name, token, or metadata is accessible to any student other than the one in the private conversation.
+- POC B (or a dedicated Phase E POC run) passes the private room test.
+
+### 20.10 Risk Level
+
+Large.
+
+### 20.11 Estimated Effort
 
 2–3 weeks.
 
 ---
 
-## 21. Phase 5 — Attendance and Participation Logs
+## 21. Phase F — Mobile / Security / Load QA
 
 ### 21.1 Goal
 
-Record discussion participation metadata for teacher review. No audio content stored.
+Full QA pass across all phases before production readiness sign-off. Includes iOS Safari audio validation, load testing, security/tamper testing, and the teacher-only participation summary.
 
-### 21.2 Product Behavior
+### 21.2 Mobile Smoke Tests
 
-- After session ends, teacher can view a participation summary on the activity report page.
-- Summary: which students were present, who raised hand, who was approved, who spoke.
+- Phase B+: microphone permission request on iOS Safari.
+- Phase B+: audio autoplay unlock (one user gesture) on iOS Safari.
+- Phase C+: approved student microphone capture on iOS Safari.
+- Phase E: private room audio on iOS Safari.
+- Touch target size for all discussion buttons: minimum 44×44px.
+- All discussion UI usable on Android Chrome (student side).
+
+### 21.3 Load / Concurrency Tests
+
+- 40 students simultaneously raising hands → all recorded; no DB race condition.
+- 40 students connected to audio room (41 participants including teacher) → audio quality acceptable.
+- Teacher mutes all 5 approved speakers → all muted within 3 seconds at SFU.
+- Teacher monitor remains usable with 40 student rows displayed (compact list, scrollable).
+- 40 students simultaneously polling live-state → server handles without degradation.
+- Safety-margin test: 45 students + 1 teacher (46 participants) → no crash; graceful degradation at most.
+- Budget cap enforcement at exact threshold: set cap to 18,450 participant-minutes (10 × 41 × 45); session 11 audio token denied.
+
+### 21.4 Security / Tamper Tests
+
+- Student calls teacher `approve` route → 403.
+- Student sends `{ approved_to_speak: true, audio_scope: 'class' }` in raise-hand body → fields ignored.
+- Student from class B attempts to join class A session → 403.
+- Student with listener token attempts to publish track → SFU rejects.
+- Muted student requests new audio token → listener token returned.
+- Token from session A used in session B → rejected by provider.
+- Student calls `private-audio-token` without active private session → 403.
+- Student attempts to construct private room name and join directly → no token issued; SFU rejects.
+- Two students cannot both have active private sessions simultaneously.
+- Ending private session immediately closes provider room (not just DB flag).
+
+### 21.5 Teacher-Only Participation Summary
+
+After session ends, teacher can view a participation summary on the activity report page.
+
+- Summary data: which students were present, who raised hand, request type for each raise, who was approved, speaking duration, whether a private conversation occurred.
 - No audio content. No transcript. Metadata only.
+- **This data is visible to the class teacher only.** It is never included in any parent-facing or guardian-facing API.
 
-### 21.3 DB Changes
+New API: `GET /api/teacher/activities/[id]/discussion/report` → returns teacher-only participation summary.
 
-`speaking_duration_s` column on `classroom_discussion_participants` (already included in schema above).
+New UI: "Discussion Summary" section on `pages/teacher/class/[classId]/activities/[activityId]/report.js`.
 
-### 21.4 New APIs
+Per-student row: attended (yes/no), raised hand (and request type), approved to speak, speaking duration, private conversation (yes/no).
 
-`GET /api/teacher/activities/[id]/discussion/report` → returns participation summary.
+### 21.6 Regression Tests
 
-### 21.5 Teacher UI Changes
+- All existing classroom activity tests pass.
+- Teacher dashboard loads correctly.
+- Student home page and activities panel unchanged.
+- Parent/guardian login and report pages unaffected.
+- Arcade sessions unaffected.
 
-New "Discussion Summary" section on `pages/teacher/class/[classId]/activities/[activityId]/report.js`.
+### 21.7 Acceptance Criteria
 
-Per-student row: attended (yes/no), raised hand, approved to speak, speaking duration.
+- All Phase A–E acceptance criteria pass.
+- iOS Safari audio playback and microphone work with one user gesture.
+- 40-student load test passes without audio degradation.
+- All security/tamper tests pass.
+- Teacher-only participation summary visible; parent APIs unaffected.
+- Build passes. Lint passes. All tests pass (minus any blocked by migration not yet executed).
 
-### 21.6 Acceptance Criteria
+### 21.8 Risk Level
 
-- Teacher sees participation table after session ends.
-- No audio content in any log or report.
-- Parent/guardian APIs do not include discussion data.
+Medium.
 
-### 21.7 Risk Level
-
-Low.
-
-### 21.8 Estimated Effort
-
-3–5 days.
-
----
-
-## 22. Phase 6 — Reports and Teacher Summary Integration
-
-### 22.1 Goal
-
-Discussion participation appears in class and student reports, alongside existing activity data.
-
-### 22.2 Product Behavior
-
-- Class report: discussion session count, participation rate, engagement trend.
-- Student report: per-session discussion participation history.
-- No audio content. No transcript.
-
-### 22.3 DB Changes
-
-No new tables. Aggregation queries over existing tables.
-
-### 22.4 New APIs
-
-- Extend `GET /api/teacher/classes/[classId]/report-data` to include discussion aggregate.
-- Extend `GET /api/teacher/students/[studentId]` to include discussion participation.
-
-### 22.5 Acceptance Criteria
-
-- Class report includes discussion participation metrics.
-- Student report includes per-session discussion participation.
-- No existing report data is changed or removed.
-- Parent/guardian APIs remain unchanged.
-
-### 22.6 Risk Level
-
-Low.
-
-### 22.7 Estimated Effort
+### 21.9 Estimated Effort
 
 1 week.
 
 ---
 
-## 23. Phase 7 — Future Extensions (Deferred)
+## 22. Future Extensions (Deferred)
 
-The following are out of scope for all initial phases. Listed for completeness only.
+The following are out of scope for all initial phases (A–F). Listed for completeness only.
 
-- **Recording:** Server-side audio recording. Requires parental consent workflow, data retention policy, GDPR compliance, provider storage configuration. **Not in scope.**
+- **Recording:** Server-side audio recording. Requires parental consent workflow, data retention policy, GDPR compliance, provider storage configuration. **Not in scope for any current phase.**
 - **Transcription:** Speech-to-text. Requires recording. **Not in scope.**
 - **AI session summary:** LLM summary from transcript. Requires transcription. **Not in scope.**
+- **Video:** Explicitly excluded by product definition. **Not in scope for any phase.**
 - **Breakout groups:** Teacher splits class into audio sub-rooms. Requires complex multi-room permission model. **Deferred.**
 - **Push notifications:** "Discussion starting soon" pushed to student devices. Service worker stub exists in `public/sw.js`. **Deferred.**
 - **Parent live observation:** Read-only audio listener for parents. Requires parental auth, consent, complex privacy analysis. **Deferred.**
 - **AI moderation:** Automatic detection of inappropriate content. Requires audio processing, privacy review, consent. **Not in scope.**
 - **Student-to-student private messages:** Explicitly excluded by product definition.
-- **Video:** Explicitly excluded by product definition.
+- **Discussion data in parent reports:** Confirmed permanently out of scope. Discussion participation, hand-raise history, and private conversation metadata are not added to parent or guardian reports in any current or planned phase.
 
 ---
 
@@ -1778,23 +1999,28 @@ Every student API call validates:
 3. Discussion session belongs to this activity.
 4. Student is not from another class.
 
-### 24.3 No Parent Access to Discussion APIs
+### 24.3 No Parent Access to Discussion APIs — Permanent Rule
 
-- Discussion APIs are teacher or student routes only.
-- Guardian and parent report APIs do not include discussion data.
-- Phase 6 report extensions do not expose discussion data to parent-facing APIs.
+Discussion participation data is **permanently out of scope** for parent and guardian reports. This is an explicit owner decision, not a phase-specific constraint.
+
+- Discussion APIs are teacher-only or student-only routes.
+- Guardian and parent report APIs must never include discussion data of any kind: hand-raise history, approval state, speaking duration, session metadata, or private conversation records.
+- The teacher-only participation summary (Phase F) is accessible via `GET .../discussion/report` — a teacher-authenticated route only. It is not piped into any parent-facing API.
+- Any future report feature that touches discussion or audio data must re-confirm this rule before implementation.
 
 ### 24.4 Student Cannot Approve Self
 
-- No student API route writes `approved_to_speak`.
+- No student API route writes `approved_to_speak`, `audio_scope`, or `request_type` directly.
 - `studentId` in student routes always from session, never body.
-- Even if a student sends `{ approved_to_speak: true }` in a body, the server ignores the field.
+- Even if a student sends `{ approved_to_speak: true, audio_scope: 'class' }` in a body, the server ignores these fields.
+- Students cannot set their own `audio_scope` to `'class'` or `'private'` through any student route.
 
 ### 24.5 Server-Side Audio Enforcement
 
 - Mute, revoke, and room close are enforced at the provider SFU level.
 - Tokens with `canPublish: false` are rejected by the SFU regardless of client-side code.
-- A student cannot publish audio unless: (1) server has verified `approved_to_speak = true AND is_muted = false`, AND (2) server has called `provider.grantStudentSpeak()`, AND (3) server has issued a `canPublish: true` token.
+- A student cannot publish audio to the class room unless: (1) server has verified `audio_scope = 'class'` and `is_muted = false`, AND (2) server has called `provider.grantStudentSpeak()`, AND (3) server has issued a `canPublish: true` token.
+- A student cannot publish audio in the private room unless: (1) server has verified `classroom_private_audio_sessions.status = 'active'` for that student in that session, AND (2) server has issued a private room token via `provider.createStudentPrivateToken()`.
 
 ### 24.6 No Recording
 
@@ -1802,7 +2028,17 @@ No recording is initiated server-side. Provider recording is disabled by default
 
 ### 24.7 Data Minimization in Realtime
 
-See Section 8.3. No student names, no rosters, no approval lists in anon-channel broadcast payloads.
+See Section 8.3. No student names, no rosters, no approval lists in anon-channel broadcast payloads. Private room names and tokens are never put in any Realtime broadcast payload.
+
+### 24.8 Private Conversation Room Isolation
+
+Private teacher-student audio uses a **separate provider room** — not a client-side mute of the main class room.
+
+- **Why:** Client-side muting can be bypassed by a modified client or a browser extension. A separate SFU room means the rest of the class has no token for the private room and cannot join it at the infrastructure level.
+- **Token scoping:** The teacher's private room token and the student's private room token are scoped to the private room name. They cannot be used in the main class room.
+- **Room name confidentiality:** `private_room_name` is known only to the server, the teacher, and the specific student in the private session. It is never broadcast on the Realtime channel and never returned to any other student via the REST API.
+- **Maximum isolation:** Even if an attacker knows the session UUID, they cannot derive the private room name because it includes the student UUID: `"private-{sessionId}-{studentId}"`. Both UUIDs are required, and no student receives another student's UUID.
+- **Teacher dual connection:** The teacher may simultaneously hold connections to both the main class room and the private room. The two connections are completely independent; audio in one does not leak into the other.
 
 ---
 
@@ -1812,9 +2048,10 @@ See Section 8.3. No student names, no rosters, no approval lists in anon-channel
 
 | File | Phase | Change |
 |------|-------|-------|
-| `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` | 1 | Add Discussion panel: start, hand queue, approved list, controls |
-| `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` | 2–4 | Add audio controls to Discussion panel |
-| `pages/teacher/class/[classId]/activities/[activityId]/report.js` | 5–6 | Add Discussion Summary section |
+| `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` | A | Add Discussion panel: start, hand queue with request-type badges, approved list, controls |
+| `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` | B–D | Add audio controls to Discussion panel |
+| `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` | E | Add private conversation controls and active-private indicator |
+| `pages/teacher/class/[classId]/activities/[activityId]/report.js` | F | Add teacher-only Discussion Summary section (not exposed to parent APIs) |
 
 #### Teacher Monitor UI Requirements for 40-Student Classes
 
@@ -1822,22 +2059,39 @@ The teacher monitor Discussion panel must be designed for up to 40 students. Thi
 
 Required capabilities:
 - Hand-raise queue must support 40 simultaneous entries without visual overflow.
+- Each entry in the queue displays a **request-type badge**: "Speak to class" (for `request_type = 'speak_to_class'`) and "Private help" (for `request_type = 'private_help'`). These must be visually distinct (e.g., different colors or icons).
+- Per-entry action buttons: "Approve for class" (speak_to_class only) and "Open private channel" (private_help only). Both disabled during Phase A; private channel button disabled until Phase E.
 - Approved speakers list must remain readable when multiple students are approved.
-- Student list must support a search or filter mechanism (e.g., filter by: raised hand / approved / muted / inactive) so the teacher is not forced to scroll through 40 rows unguided.
-- Compact display mode: each student row must be compact enough that a 40-student class fits in a scrollable panel without requiring horizontal scrolling.
-- Desktop-first: primary target is a teacher on a laptop or desktop monitor. Mobile teacher view is secondary for Phase 1.
-- No redesign of the existing monitor page layout is required now. The Discussion panel is a new collapsible section within the existing page.
+- Student list must support a search or filter mechanism (filter by: raised hand / approved / muted / inactive / private).
+- Compact display mode: each student row compact enough for a 40-student scrollable panel.
+- Desktop-first: primary target is a teacher on a laptop or desktop monitor.
+- No redesign of the existing monitor page layout is required. The Discussion panel is a new collapsible section within the existing page.
 
-A 40-student class does not mean 40 open microphones. Students are listeners by default. Only the teacher and up to 5 approved students may speak simultaneously (soft limit). The monitor UI must make this constraint clear to the teacher.
+**Private conversation indicator (Phase E):**
+- When a private conversation is active, a distinct panel section shows: "Private conversation active — [student name]" with an "End private conversation" button and a duration timer.
+- The teacher's dual-room connection state (main room + private room) must be clearly communicated in the UI so the teacher knows their main room audio is still active.
+
+A 40-student class does not mean 40 open microphones. Students are listeners by default. Only the teacher and up to 5 approved students may speak to the class simultaneously. The monitor UI must make this constraint clear to the teacher.
 
 ### 25.2 Student Screens Affected
 
 | File | Phase | Change |
 |------|-------|-------|
-| `pages/student/activity/[activityId].js` | 1 | Add discussion status bar, raise/lower hand buttons |
-| `pages/student/activity/[activityId].js` | 2 | Add audio playback, "Tap to Hear" CTA |
-| `pages/student/activity/[activityId].js` | 3–4 | Add microphone controls for approved students |
-| `pages/student/home.js` | 1 (optional) | Activity card badge if discussion active |
+| `pages/student/activity/[activityId].js` | A | Add discussion status bar; "Raise hand to speak" button; "Request private help" button |
+| `pages/student/activity/[activityId].js` | B | Add audio playback, "Tap to Hear Teacher" CTA for listen-only mode |
+| `pages/student/activity/[activityId].js` | C | Add microphone toggle for approved-to-speak-to-class state |
+| `pages/student/activity/[activityId].js` | E | Add "In private conversation with teacher" state and private room connection |
+| `pages/student/home.js` | A (optional) | Activity card badge if discussion session is active |
+
+**Student UI state descriptions:**
+- **Default / listen-only:** Discussion status bar visible. Two buttons: "Raise hand to speak to the class" and "Request private help from teacher."
+- **Hand raised (speak_to_class):** "Raise hand to speak" button changes to "Lower hand." Status: "Awaiting approval to speak."
+- **Private help requested:** "Request private help" button changes to "Cancel request." Status: "Waiting for teacher."
+- **Approved to speak to class (`audio_scope = 'class'`):** Status: "You are approved to speak to the class." Microphone toggle appears. Whole class will hear the student when toggle is on.
+- **In private conversation (`audio_scope = 'private'`):** Status: "You are in a private conversation with your teacher." Private microphone toggle. Main class audio suspended for this student.
+- **Muted:** Microphone toggle disabled. Status: "Your microphone has been muted by the teacher."
+- **Session locked:** Raise hand and request-private buttons disabled. Status: "Discussion is paused."
+- **Session ended:** All discussion UI hidden or shows "Discussion has ended."
 
 ### 25.3 Screens That Must Remain Unchanged
 
@@ -1853,11 +2107,15 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 
 ### 26.1 Unit Tests
 
-- Session state machine: all valid and invalid transitions.
-- Participant state transitions: hand raise → approved → muted → unmuted.
+- Session state machine: all valid and invalid transitions (including private session states).
+- Participant state transitions: hand raise → approved → muted → unmuted; hand raise → private request → in private → return to listen-only.
 - Auth validation: teacher ownership, student class membership.
-- Token issuance logic: approved + not muted → speaker token; otherwise → listener token.
+- Token issuance logic: `audio_scope = 'class'` + not muted → speaker token; otherwise → listener token.
+- Private token issuance: active private session + matching student → private token; otherwise → 403.
 - Budget cap: usage at 99% → token allowed; usage at 100% → token denied.
+- Only one active private session per discussion session at a time (uniqueness constraint enforced).
+- `request_type` correctly set on raise-hand vs request-private routes.
+- Ending session closes all active private rooms before setting status `'ended'`.
 
 ### 26.2 API Tests
 
@@ -1873,12 +2131,14 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 
 ### 26.3 E2E Tests
 
-- Phase 1 full flow: start → raise → approve → mute → end.
-- Page refresh mid-session: state restored.
-- Activity close while discussion active: discussion auto-ended.
-- Phase 2: teacher audio reaches students.
-- Phase 3: approved student speaks; muted student's audio stops.
-- Phase 4: multiple speakers; mute all.
+- Phase A full flow: start → raise (speak_to_class) → approve → mute → end; request-private submitted.
+- Page refresh mid-session: state restored (both teacher and student).
+- Activity close while discussion active: discussion auto-ended; any active private room closed.
+- Phase B: teacher audio reaches all students; student hears after one tap (autoplay).
+- Phase C: approved student speaks to class; muted student's audio stops at SFU level.
+- Phase D: multiple speakers (up to 5); mute all; whole class hears all speakers.
+- Phase E: teacher opens private channel with student; main class audio continues; student 2 (listening to class) cannot hear private conversation (verified at provider); teacher ends private; student returns to listen-only.
+- Phase E: page refresh during active private conversation — teacher and student reconnect to private room using REST state + new token request.
 
 ### 26.4 Mobile Smoke Tests
 
@@ -1888,7 +2148,7 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 - Phase 2+: microphone capture for approved student on iOS Safari.
 - Touch target size for raise-hand button: minimum 44×44px.
 
-### 26.5 Audio Permission Tests (Phase 2+)
+### 26.5 Audio Permission Tests (Phase B+)
 
 - Mic denied → teacher: error shown, session continues without audio.
 - Mic denied → student: raise-hand still works; audio error shown separately.
@@ -1896,7 +2156,7 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 - School MDM blocks mic: graceful error, no crash.
 - Multiple tabs: conflict warning shown.
 
-### 26.6 Permissions-Policy Tests (Phase 2+)
+### 26.6 Permissions-Policy Tests (Phase B+)
 
 - `/teacher/dashboard` cannot access microphone (verified in browser devtools).
 - `/student/home` cannot access microphone.
@@ -1907,22 +2167,30 @@ No existing Hebrew strings are changed. New Hebrew labels for discussion UI will
 
 ### 26.7 Security/Tamper Tests
 
-- Student calls teacher approve route → 403.
-- Student sends `{ approved_to_speak: true }` in raise-hand body → field ignored; student remains unapproved.
+- Student calls teacher `approve` route → 403.
+- Student sends `{ approved_to_speak: true, audio_scope: 'class' }` in raise-hand body → fields ignored; student remains unapproved.
 - Student from class B attempts to join class A session → 403.
-- Student with listener token attempts to publish track → SFU rejects.
+- Student with listener token attempts to publish track in main room → SFU rejects.
 - Muted student requests new audio token → listener token returned.
 - Token from session A used in session B → rejected by provider.
+- Student calls `private-audio-token` with no active private session → 403.
+- Student calls `approve-private` (teacher-only route) → 403.
+- Student attempts to join private room using guessed private room name → no token issued; SFU rejects.
+- Two students submit `request-private` simultaneously → only one private session can be approved and active at a time; second attempt returns 409 `private_already_active`.
+- Ending private session at provider (closePrivateRoom) happens before DB status is set to `'ended'` — verified by checking provider dashboard.
+- Other students receive `private_session_started` event for different `targetStudentId` → client ignores it; no `private_room_name` in payload.
+- Participant-count verification: private room has exactly 2 participants (teacher + student) at provider level.
 
 ### 26.8 Load/Concurrency Tests
 
-- 40 students simultaneously raising hands → all recorded; no DB race condition.
+- 40 students simultaneously raising hands (mix of `speak_to_class` and `private_help`) → all recorded; no DB race condition.
 - 40 students connected to audio room (41 participants including teacher) → audio quality acceptable.
-- Teacher mutes all 5 approved speakers → all muted within 3 seconds.
+- Teacher mutes all 5 approved speakers → all muted within 3 seconds at SFU level.
 - Teacher monitor remains usable with 40 student rows displayed (compact list, no horizontal overflow, scrollable).
 - 40 students simultaneously polling live-state or discussion state → server handles without degradation.
 - Safety-margin test: 45 students + 1 teacher (46 participants) connected → no crash; graceful degradation at most.
 - Budget cap enforcement at exact threshold (40-student class): 10 sessions × 41 participants × 45 min = 18,450 participant-minutes. Set cap to 18,450. Session 11 should be denied an audio token.
+- Phase E concurrent load: main room (40 students + teacher) active while 1 private room (teacher + student) also active → teacher has 2 provider connections simultaneously → audio quality in main room is not degraded by the private room connection.
 
 ### 26.9 Regression Tests
 
@@ -2014,18 +2282,17 @@ Students only see discussion UI when a session is actually active for their curr
 
 | Phase | Description | Complexity | Effort | Risk |
 |-------|-------------|-----------|--------|------|
-| 0 | Architecture decisions | Small | 1–2 days | Low |
-| 1 | Hand raise / approval (no audio) | Medium | 1–2 weeks | Medium |
-| 2 | Teacher audio broadcast | Large | 2–4 weeks | Large |
-| 3 | Approved student mic | Large | 2–3 weeks | Large |
-| 4 | Multi-speaker discussion | Medium | 2–3 weeks | Medium |
-| 5 | Participation logs | Small | 3–5 days | Low |
-| 6 | Report integration | Medium | 1 week | Low |
-| 7 | Future extensions | Very Large | Deferred | Very Large |
+| A | Audio foundation + schema plan | Medium | 1–2 weeks | Medium |
+| B | Teacher broadcast + student listen-only | Large | 2–3 weeks | Large |
+| C | Speak-to-class hand raise + approved student mic | Large | 2–3 weeks | Large |
+| D | Group discussion up to 5 students | Medium | 1–2 weeks | Medium |
+| E | Private teacher-student audio conversation | Large | 2–3 weeks | Large |
+| F | Mobile / security / load QA | Medium | 1 week | Medium |
+| — | Future extensions | Very Large | Deferred | Very Large |
 
-**Total Phase 0–6:** ~10–16 weeks focused senior development.
+**Total Phase A–F:** ~9–14 weeks focused senior development.
 
-**Phase 1 alone:** 1–2 weeks. Standalone product value. Lowest risk start.
+**Minimum meaningful MVP:** Phase A + Phase B (audio foundation + teacher broadcast). Phase A alone (no live audio) is infrastructure, not a user-visible MVP.
 
 ### What Makes This Large
 
@@ -2034,98 +2301,130 @@ Students only see discussion UI when a session is actually active for their curr
 - **iOS Safari:** Strictest audio environment. Must be first-class test target.
 - **Server-side mute enforcement:** Must be verified at provider level, not just client UI.
 - **First Supabase Realtime use:** New infrastructure pattern for this codebase.
+- **Phase E private rooms:** Teacher dual-connection (main room + private room) adds provider and client complexity. Separate room architecture requires additional adapter functions and token management.
 
-### What Makes Phase 1 Manageable
+### What Makes Phase A Manageable
 
-- No audio at all.
-- No provider account needed.
-- No Permissions-Policy change.
-- No audio or voice-data exposure. Phase 1 has much lower privacy risk than audio phases, but still stores discussion metadata for minors (hand-raise events, approval timestamps, participation logs) and requires an owner-approved retention policy before the migration runs.
+- No live audio connection in Phase A. Mock provider is active.
+- No provider account needed for Phase A.
+- No Permissions-Policy change needed for Phase A.
+- Stores discussion metadata for minors (hand-raise events, approval timestamps, participation logs) — owner-approved retention policy required before the migration runs.
 - Builds on existing polling infrastructure.
-- New tables + ~15 API routes + 2 pages extended.
-- `@supabase/realtime-js` already available as transitive dep (for future Phase 1.1).
+- Four new tables + ~20 API routes + 2 pages extended.
+- `@supabase/realtime-js` already available as transitive dep (for Phase A.1 Realtime enhancement).
 
 ---
 
 ## 29. Go/No-Go Decision Points
 
-### 29.1 Go/No-Go: Phase 1
+### 29.1 Go/No-Go: Phase A (Audio Foundation)
 
 **Go if:**
 - DB schema approved (Section 12).
 - API routes approved (Section 13).
 - Feature flag strategy approved.
 - Polling-first sync model approved.
+- Data retention policy for discussion metadata approved (decision B8).
 
 **No-go if:**
-- Phase 1 alone (no audio) has insufficient product value to justify 1–2 week investment.
+- Owner has not approved the DB schema or API routes.
 
-**Recommendation: Go.** Phase 1 delivers real teacher control value at low risk.
+**Recommendation: Go.** Phase A is the essential foundation for all audio phases. Building Phase A without committing to any specific audio provider is low risk.
 
-### 29.2 Go/No-Go: Phase 2–4 (Audio)
+### 29.2 Go/No-Go: Phase B (First Audio — Teacher Broadcast)
 
 **Go if:**
-- Phase 1 is stable in production.
-- Audio provider selected and POC B complete.
-- Provider DPA signed.
-- Legal review complete for all operating jurisdictions including Israel.
+- Phase A is complete and POC A passed.
+- Audio provider selected (at minimum a free-tier POC provider for Phase B testing).
+- Legal review initiated for audio transmission to minors.
 - Permissions-Policy change approved by owner.
-- Budget cap configured and budget guard implemented.
+- Budget cap configured.
 - `LIVE_AUDIO_MONTHLY_PARTICIPANT_MINUTE_CAP` set to a non-zero owner-approved value.
 
 **No-go if:**
 - Legal review finds audio is not permissible without additional consent mechanisms not yet built.
-- POC B fails on mobile Safari for student audio.
+- No provider available for testing.
 - Provider cost exceeds owner-approved budget.
 
-**Recommendation: Defer audio until Phase 1 is proven.**
+**Recommendation: Go to Phase B immediately after Phase A is complete.** The product MVP requires audio. Phase A + Phase B together constitute the minimum meaningful product.
 
-### 29.3 Go/No-Go: Phase 5–6
+### 29.3 Go/No-Go: Phase C–D (Student Mic + Group Discussion)
 
-**Go if:** Phase 1 is complete. No additional blockers.
+**Go if:**
+- Phase B is stable and POC B passed.
+- Provider DPA signed.
+- Legal review complete.
+
+**No-go if:** POC B fails on mobile Safari for student audio.
+
+### 29.4 Go/No-Go: Phase E (Private Conversation)
+
+**Go if:**
+- Phase C is stable.
+- Provider supports separate room creation and per-participant scoped tokens (verified in POC B or a dedicated Phase E POC).
+- Owner approves the dual-connection architecture (teacher in main room + private room simultaneously).
+
+**No-go if:**
+- Provider does not support separate room scoping cleanly.
+- Owner decides private conversations are lower priority than other features.
+
+### 29.5 Go/No-Go: Phase F (QA)
+
+**Go if:** Phases A–E are substantially complete. No additional blockers.
 
 ---
 
 ## 30. Final End-to-End Acceptance Criteria
 
-These criteria describe the complete working system from Phase 0 through Phase 4. All must be met before the feature is considered production-ready.
+These criteria describe the complete working system through Phase F. All must be met before the feature is considered production-ready.
 
 **State machine:**
 - Teacher can start a live_lesson.
 - Teacher can start a managed discussion while the live_lesson is active.
 - Students see the discussion state within 3 seconds of session start.
 - All state restores correctly after any page refresh.
-- Discussion session auto-ends when the activity is closed.
+- Discussion session auto-ends when the activity is closed; any active private rooms are closed first.
 
-**Hand raise and approval:**
-- Student can raise hand.
-- Teacher sees the raised hand within 3 seconds.
-- Teacher can approve one student.
-- Teacher can approve multiple students simultaneously.
-- Teacher can revoke any student's approval.
-- Teacher can clear individual hands.
+**Hand raise — two request types:**
+- Student can raise hand with `request_type = 'speak_to_class'`.
+- Student can submit `request_type = 'private_help'` via the request-private action.
+- Teacher sees each request in the queue with the correct type badge ("Speak to class" / "Private help").
+- Teacher can clear individual requests.
 - Teacher can clear all hands.
-- Teacher can lock discussion — no new hand raises accepted while locked.
+- Teacher can lock discussion — no new requests accepted while locked.
 - Teacher can unlock discussion.
 
-**Teacher audio (Phase 2+):**
+**Teacher audio broadcast (Phase B+):**
 - Teacher can broadcast audio to all students.
 - All connected students hear teacher audio.
 - Teacher can stop broadcasting.
 - Student audio playback begins with one user gesture on iOS Safari.
 
-**Student audio (Phase 3+):**
-- Only approved students can publish audio.
+**Approved student — speak to class (Phase C+):**
+- Only students with `audio_scope = 'class'` and `is_muted = false` can publish audio to the class room.
 - Non-approved students cannot publish audio (enforced at SFU, not just client).
-- Teacher can mute any approved student.
-- Muted student's audio stops within 3 seconds of teacher action.
+- Teacher can mute any approved student. Muted student's audio stops within 3 seconds at SFU level.
 - Muted student cannot unmute themselves.
 - Teacher can unmute a muted student.
-- Teacher can mute all students simultaneously.
+- Teacher can revoke any student's approval.
+
+**Group discussion (Phase D+):**
+- Teacher can approve and mute multiple students simultaneously (up to 5).
+- "Mute All" stops all approved student audio at SFU level.
+
+**Private teacher-student conversation (Phase E+):**
+- Teacher can approve a private conversation with a student who has `request_type = 'private_help'`.
+- Only the teacher and that student can hear the private conversation (verified at provider level — separate room).
+- Rest of class cannot hear the private conversation.
+- Main class audio continues during private conversation.
+- Only one private conversation active per session at a time.
+- Teacher can end private conversation; student returns to listen-only.
+- No private room name or token is accessible to any student other than the one in the private session.
 
 **Security:**
-- Student cannot approve themselves.
+- Student cannot approve themselves or set their own `audio_scope`.
 - Student cannot grant themselves an audio token with publish rights.
+- Student cannot obtain a private room token without an active private session.
 - Student cannot join a session for a class they are not a member of.
 - Student cannot call teacher API routes.
 - Muted student's SFU-level mute cannot be bypassed from client code.
@@ -2136,6 +2435,7 @@ These criteria describe the complete working system from Phase 0 through Phase 4
 - No audio content appears in any log, event, or database field.
 - Discussion cost per session is logged.
 - Budget cap enforcement: sessions denied when cap reached.
+- Discussion/audio participation data is never included in any parent or guardian API response.
 
 **Regression:**
 - Existing classroom activity question-answer scoring is unaffected.
@@ -2152,14 +2452,14 @@ These criteria describe the complete working system from Phase 0 through Phase 4
 
 ## 31. Files by Phase — Refined List
 
-### 31.1 Phase 1 — Files Touched
+### 31.1 Phase A — Files Touched
 
 **New files to create:**
-- `supabase/migrations/025_classroom_discussion.sql` (when approved — not yet)
+- `supabase/migrations/025_classroom_discussion.sql` (when approved — not yet; all 4 tables)
 - `lib/teacher-server/teacher-discussion.server.js`
 - `lib/classroom-discussion/classroom-discussion-shared.server.js`
-- `lib/live-audio/provider-adapter.js` (adapter dispatch, Phase 1 wires mock)
-- `lib/live-audio/providers/mock.js` (no-op mock for Phase 1 and tests)
+- `lib/live-audio/provider-adapter.js` (adapter dispatch; Phase A wires mock)
+- `lib/live-audio/providers/mock.js` (no-op mock for Phase A and tests)
 - `lib/live-audio/types.js` (JSDoc type definitions)
 - `pages/api/teacher/activities/[activityId]/discussion/start.js`
 - `pages/api/teacher/activities/[activityId]/discussion/index.js`
@@ -2170,8 +2470,11 @@ These criteria describe the complete working system from Phase 0 through Phase 4
 - `pages/api/teacher/activities/[activityId]/discussion/unmute.js`
 - `pages/api/teacher/activities/[activityId]/discussion/clear-hands.js`
 - `pages/api/teacher/activities/[activityId]/discussion/end.js`
+- `pages/api/teacher/activities/[activityId]/discussion/approve-private.js`
+- `pages/api/teacher/activities/[activityId]/discussion/end-private.js`
 - `pages/api/student/activities/[activityId]/discussion/index.js`
 - `pages/api/student/activities/[activityId]/discussion/raise-hand.js`
+- `pages/api/student/activities/[activityId]/discussion/request-private.js`
 - `pages/api/student/activities/[activityId]/discussion/lower-hand.js`
 - `pages/api/student/activities/[activityId]/discussion/heartbeat.js`
 - `components/teacher-portal/TeacherDiscussionPanel.jsx`
@@ -2179,15 +2482,15 @@ These criteria describe the complete working system from Phase 0 through Phase 4
 - `tests/classroom-discussion/session-state-machine.test.mjs`
 - `tests/classroom-discussion/participant-state.test.mjs`
 - `tests/classroom-discussion/auth-validation.test.mjs`
-- `tests/e2e/classroom-discussion/phase1-flow.spec.js`
+- `tests/e2e/classroom-discussion/phaseA-flow.spec.js`
 
-**Existing files to modify (Phase 1):**
-- `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` — add Discussion panel
-- `pages/student/activity/[activityId].js` — add discussion status bar
+**Existing files to modify (Phase A):**
+- `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` — add Discussion panel with request-type badges
+- `pages/student/activity/[activityId].js` — add discussion status bar, raise-hand and request-private buttons
 - `lib/teacher-server/teacher-activities.server.js` — extend monitor payload with discussion state; add auto-end hook on activity close
 - `lib/classroom-activities/classroom-activities-labels.client.js` — new discussion labels
 
-### 31.2 Audio Phases — Additional Files Touched (Phase 2–4 Only)
+### 31.2 Audio Phases — Additional Files Touched (Phases B–D)
 
 **New files:**
 - `lib/live-audio/providers/livekit.js` (or selected provider)
@@ -2197,23 +2500,30 @@ These criteria describe the complete working system from Phase 0 through Phase 4
 - `pages/api/teacher/activities/[activityId]/discussion/audio-start.js`
 - `pages/api/teacher/activities/[activityId]/discussion/audio-stop.js`
 - `pages/api/teacher/activities/[activityId]/discussion/mute-all.js`
-- `pages/api/teacher/activities/[activityId]/discussion/approve-multiple.js` (Phase 4)
+- `pages/api/teacher/activities/[activityId]/discussion/approve-multiple.js` (Phase D)
 - `pages/api/student/activities/[activityId]/discussion/audio-token.js`
-- `tests/e2e/classroom-discussion/phase2-audio.spec.js`
-- `tests/e2e/classroom-discussion/phase3-student-mic.spec.js`
-- `tests/e2e/classroom-discussion/phase4-multi-speaker.spec.js`
+- `tests/e2e/classroom-discussion/phaseB-audio.spec.js`
+- `tests/e2e/classroom-discussion/phaseC-student-mic.spec.js`
+- `tests/e2e/classroom-discussion/phaseD-multi-speaker.spec.js`
 
 **Existing files modified (audio phases only):**
 - `next.config.js` — Permissions-Policy scoping (owner approval required)
 
-### 31.3 Reports Phase — Additional Files Touched (Phase 5–6 Only)
+### 31.3 Phase E — Additional Files Touched (Private Conversation)
 
 **New files:**
-- `pages/api/teacher/activities/[activityId]/discussion/report.js`
+- `pages/api/teacher/activities/[activityId]/discussion/private-audio-token.js` (teacher)
+- `pages/api/student/activities/[activityId]/discussion/private-audio-token.js` (student)
+- `tests/e2e/classroom-discussion/phaseE-private-conversation.spec.js`
+
+### 31.4 Phase F — Additional Files Touched (QA + Teacher Summary)
+
+**New files:**
+- `pages/api/teacher/activities/[activityId]/discussion/report.js` (teacher-only)
 - `pages/api/admin/discussion/usage.js` (optional admin usage API)
 
-**Existing files modified (Phase 5–6 only):**
-- `pages/teacher/class/[classId]/activities/[activityId]/report.js` — Discussion Summary section
+**Existing files modified (Phase F only):**
+- `pages/teacher/class/[classId]/activities/[activityId]/report.js` — teacher-only Discussion Summary section
 
 ### 31.4 Files That Must Remain Untouched
 
@@ -2273,14 +2583,16 @@ All items below must be resolved before implementation of each phase begins. Ite
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| A1 | Is Phase 1 alone (no audio) approved as the first delivery? | Phase 1 start | Open |
-| A2 | Should discussion be limited to `live_lesson` mode only, or available for other activity modes? | Phase 1 design | Open |
-| A3 | Should a discussion session always be anchored to a `live_lesson` activity, or can it run standalone? | Phase 1 design | Open |
-| A4 | **Resolved by plan update 2026-05-25:** Target support is up to 40 students per teacher class. Audio and session calculations assume 40 students + 1 teacher = 41 concurrent participants. Load tests target 40 students as baseline; safety-margin tests target 45 students + 1 teacher = 46 participants. Owner to confirm this capacity is correct for the product's expected class sizes. | Phase 1 capacity | Owner confirm |
-| A5 | Should the teacher's existing 5s monitor poll carry discussion state (polling fallback), or should Realtime be added in Phase 1? | Phase 1 sync model | Open |
-| A6 | Should discussion auto-end when the activity is paused, or only when it is closed? | Phase 1 state machine | Open |
-| A7 | What is the soft maximum number of simultaneous speakers? (Recommendation: 5) | Phase 4 design | Open |
-| A8 | Should participation data (who attended, who spoke) be visible to parents/guardians in reports? (Recommendation: no) | Phase 5–6 design | Open |
+| A1 | Is Phase A (audio foundation + schema plan) approved as the first delivery? Audio is mandatory for the MVP. A no-audio delivery is not a meaningful MVP. | Phase A start | Owner confirm |
+| A2 | Should discussion be limited to `live_lesson` mode only, or available for other activity modes? | Phase A design | Open |
+| A3 | Should a discussion session always be anchored to a `live_lesson` activity, or can it run standalone? | Phase A design | Open |
+| A4 | **Resolved 2026-05-25:** Target support is up to 40 students per teacher class. Audio and session calculations assume 40 students + 1 teacher = 41 concurrent participants. Load tests target 40 students as baseline; safety-margin tests target 45 students + 1 teacher = 46 participants. | Phase A capacity | Resolved |
+| A5 | Should the teacher's existing 5s monitor poll carry discussion state (polling fallback), or should Realtime be added in Phase A? | Phase A sync model | Open |
+| A6 | Should discussion auto-end when the activity is paused, or only when it is closed? | Phase A state machine | Open |
+| A7 | What is the soft maximum number of simultaneous speakers for group discussion? (Recommendation: 5) | Phase D design | Open |
+| A8 | **Resolved 2026-05-29:** Should participation data be visible to parents/guardians in reports? **No. Discussion participation, hand-raise history, audio session metadata, and private conversation records are permanently out of scope for parent and guardian reports.** | All phases | **Resolved: No** |
+| A9 | What is the UI design for two student request types: two separate buttons ("Raise hand to speak" / "Request private help") or one button with a request-type selector? | Phase A student UI | Open |
+| A10 | When a student enters a private conversation, should they be muted in the main class room (SFU mute, simpler reconnect) or removed from the main room entirely and re-added when private ends (cleaner isolation, more complex)? Recommendation: muted in main room. | Phase E architecture | Open |
 
 ### Group B — Privacy and Legal Decisions
 
@@ -2313,13 +2625,14 @@ All items below must be resolved before implementation of each phase begins. Ite
 
 | # | Decision | Blocks | Status |
 |---|---------|--------|--------|
-| D1 | Is the proposed DB schema (Section 12) approved? | Phase 1 | Open |
-| D2 | Is the API route plan (Section 13) approved? | Phase 1 | Open |
-| D3 | Is the Realtime channel design (Section 14) approved? | Phase 1.1 (Realtime enhancement) | Open |
-| D4 | Is the `LiveAudioProvider` adapter interface (Section 5) approved? | Audio Phase 2 | Open |
-| D5 | Is the Permissions-Policy scoping change (Section 10.4) approved? | Audio Phase 2 | Open |
-| D6 | Should Phase 1 start with polling-only (no Realtime), or polling + Realtime from the start? | Phase 1 implementation | Open |
-| D7 | Should short-lived Realtime tokens be issued to students (full private channels) instead of anon-key broadcast? | Phase 1 security | Open |
+| D1 | Is the proposed DB schema (Section 12) approved? Includes `request_type`, `audio_scope` columns and the `classroom_private_audio_sessions` table. | Phase A | Open |
+| D2 | Is the API route plan (Section 13) approved? Includes private conversation routes. | Phase A | Open |
+| D3 | Is the Realtime channel design (Section 14) approved? Includes private event payloads. | Phase A.1 (Realtime enhancement) | Open |
+| D4 | Is the `LiveAudioProvider` adapter interface (Section 5) approved? Includes the four new private-room functions (`createPrivateRoom`, `closePrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`). | Phase B | Open |
+| D5 | Is the Permissions-Policy scoping change (Section 10.4) approved? | Phase B | Open |
+| D6 | Should Phase A start with polling-only (no Realtime), or polling + Realtime from the start? | Phase A implementation | Open |
+| D7 | Should short-lived Realtime tokens be issued to students (full private channels) instead of anon-key broadcast? | Phase A security | Open |
+| D8 | Is the Phase E separate-provider-room architecture for private conversations approved? (Preferred over client-side muting per owner direction.) | Phase E | Open |
 
 ### Group E — Rollout Decisions
 
@@ -2357,15 +2670,17 @@ As of the time of writing, no implementation has started:
 3. For audio phases: legal review is complete and DPA is signed (applies to production launch, not a development prototype run under Section 35).
 
 **Recommended production path:**
-- Resolve Phase 0 (Section 33 decisions for Phase 1).
-- Implement and ship Phase 1 (hand raise, no audio, ~1–2 weeks).
-- Run POC A to validate Phase 1.
-- Evaluate whether audio phases are worth the additional investment.
-- If audio approved: resolve Group B, C, D decisions for audio.
-- Run POC B and C on free provider tiers.
-- Then implement Phase 2.
+- Resolve Section 33 Group A+D decisions for Phase A.
+- Implement Phase A (audio foundation, schema, all APIs, mock provider, ~1–2 weeks).
+- Run POC A to validate state machine, APIs, page refresh, and request-type routing with mock provider.
+- Resolve Group B, C decisions for Phase B (legal, provider, budget, Permissions-Policy).
+- Run POC B on free provider tier (Phase B delivers the minimum meaningful MVP with audio).
+- Implement Phase B (teacher broadcast, ~2–3 weeks).
+- Continue with Phase C → D → E → F.
 
-**Audio phases (2–4) must not be deployed or committed until Phase 1 is stable in production and all privacy/legal reviews are complete for the product's operating jurisdictions. A development prototype under Section 35 is exempt from this production rule, but is not exempt from the no-commit, no-push, no-deploy rules stated there.**
+**Audio phases (B–E) must not be deployed or committed until Phase A is stable in production and all privacy/legal reviews are complete for the product's operating jurisdictions. A development prototype under Section 35 is exempt from this production rule, but is not exempt from the no-commit, no-push, no-deploy rules stated there.**
+
+**Parent/guardian report rule is permanent and does not require per-phase re-confirmation. No discussion or audio participation data is ever added to parent or guardian reports.**
 
 ---
 
@@ -2459,20 +2774,17 @@ The final report must list exactly which tests are blocked only because the migr
 
 The overnight implementation covers:
 
-1. Phase 1 — managed discussion state without audio.
-2. Audio foundation — LiveAudioProvider adapter and mock provider.
-3. LiveKit provider for development/POC.
-4. Teacher audio broadcast.
-5. Student listener mode.
-6. Approved student microphone.
-7. Mute and revoke enforcement through the adapter.
-8. Multiple approved speakers and mute-all.
-9. Participation and event logging.
-10. Teacher report foundation.
-11. Feature flags and kill switches.
-12. Unit, API, E2E, security, and regression tests.
+1. **Phase A** — audio foundation: all four DB tables (migration file, not executed), LiveAudioProvider adapter and mock provider, all teacher and student discussion APIs including private conversation routes, teacher Discussion panel with request-type badges, student discussion bar with raise-hand and request-private buttons, feature flags.
+2. **Phase B** — LiveKit provider for development/POC; teacher audio broadcast; student listen-only mode.
+3. **Phase C** — approved student microphone for speak-to-class requests; mute and revoke enforcement through the adapter.
+4. **Phase D** — multiple approved speakers and mute-all.
+5. **Phase E** — private teacher-student audio conversation using a separate provider room; `createPrivateRoom`, `createTeacherPrivateToken`, `createStudentPrivateToken`, `closePrivateRoom` adapter calls; private audio token APIs.
+6. Phase F — teacher-only participation summary (report endpoint). No parent or guardian data exposure.
+7. Unit, API, E2E, security/tamper, and regression tests.
 
-**Capacity assumption for the implementation run:** All code, tests, and load simulations must use the updated target of **40 students + 1 teacher = 41 concurrent audio participants** per session. Load tests must target 40 students as the baseline. Safety-margin simulations should target 45 students + 1 teacher where practical. The teacher monitor Discussion panel must support compact display of up to 40 student rows. Speaker limit remains 5 simultaneous approved students.
+**Explicit prohibition for this run:** Do not include discussion, audio, or private conversation data in any parent or guardian API response. If `discussion/report` is implemented, it must be behind `requireTeacherApiContext` only.
+
+**Capacity assumption for the implementation run:** All code, tests, and load simulations must use the updated target of **40 students + 1 teacher = 41 concurrent audio participants** per session. Load tests must target 40 students as the baseline. Safety-margin simulations should target 45 students + 1 teacher where practical. The teacher monitor Discussion panel must support compact display of up to 40 student rows. Speaker limit remains 5 simultaneous approved students for group discussion.
 
 ### 35.7 Provider Decision for Development Run
 
@@ -2522,5 +2834,6 @@ After the run, the owner will decide: keep and fix / partially keep and refactor
 ---
 
 *End of plan document.*
-*Version 2.2 — 2026-05-25*
-*Section 35 added: Future overnight development-run instructions (owner-approved scope and rules). No implementation has started.*
+*Version 3.0 — 2026-05-29*
+*Owner product direction update applied: audio-first MVP, phases A–F, Phase E private teacher-student conversation, parent reports permanently out of scope, two student request types, updated data model and adapter.*
+*No code, no SQL execution, no commit, no push, no deploy.*

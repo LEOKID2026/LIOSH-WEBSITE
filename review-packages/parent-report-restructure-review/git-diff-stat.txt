@@ -1,0 +1,8 @@
+﻿ components/parent-report-detailed-surface.jsx    |  34 ++--
+ components/parent/ParentReportParentSections.jsx | 143 ++++++++------
+ pages/learning/parent-report-detailed.js         | 230 ++++++++++++++++-------
+ pages/learning/parent-report.js                  |  57 +++---
+ 4 files changed, 289 insertions(+), 175 deletions(-)
+--- ParentReportDataHealthNote.jsx (new file, untracked) ---
+ components/parent/ParentReportDataHealthNote.jsx | 52 +++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)

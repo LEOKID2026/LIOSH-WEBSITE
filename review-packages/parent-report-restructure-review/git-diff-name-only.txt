@@ -1,0 +1,5 @@
+﻿components/parent-report-detailed-surface.jsx
+components/parent/ParentReportParentSections.jsx
+pages/learning/parent-report-detailed.js
+pages/learning/parent-report.js
+components/parent/ParentReportDataHealthNote.jsx

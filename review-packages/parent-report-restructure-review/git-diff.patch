@@ -1,0 +1,719 @@
+﻿diff --git a/components/parent-report-detailed-surface.jsx b/components/parent-report-detailed-surface.jsx
+index 5b679a03..2730c166 100644
+--- a/components/parent-report-detailed-surface.jsx
++++ b/components/parent-report-detailed-surface.jsx
+@@ -714,16 +714,21 @@ export function SubjectPhase3Insights({ sp, compact }) {
+   if (!rows.length) return null;
+ 
+   return (
+-    <div className="pr-detailed-phase3-dl space-y-2 m-0 mb-2">
+-      {rows.map(({ k, v }) => (
+-        <div key={k} className="min-w-0">
+-          <div className="text-white/50 font-bold text-[11px] md:text-xs m-0 mb-0.5">{k}</div>
+-          <div className="m-0 text-white/[0.88] leading-relaxed text-[11px] md:text-sm">
+-            {pr1ParentVisibleTextHe(String(v))}
++    <details className="pr-detailed-phase3-details m-0 mb-2 rounded-lg border border-white/10 bg-black/10 px-2 py-2">
++      <summary className="cursor-pointer text-white/70 font-semibold text-xs md:text-sm mb-1 select-none">
++        ╫ñ╫Ö╫¿╫ò╫ÿ ╫₧╫º╫ª╫ò╫ó╫Ö ╫á╫ò╫í╫ú
++      </summary>
++      <div className="pr-detailed-phase3-dl space-y-2 m-0 mt-2">
++        {rows.map(({ k, v }) => (
++          <div key={k} className="min-w-0">
++            <div className="text-white/50 font-bold text-[11px] md:text-xs m-0 mb-0.5">{k}</div>
++            <div className="m-0 text-white/[0.88] leading-relaxed text-[11px] md:text-sm">
++              {pr1ParentVisibleTextHe(String(v))}
++            </div>
+           </div>
+-        </div>
+-      ))}
+-    </div>
++        ))}
++      </div>
++    </details>
+   );
+ }
+ 
+@@ -750,9 +755,14 @@ export function SubjectSummaryBlock({ sp }) {
+           <p className="pr-detailed-body-text text-sm leading-relaxed m-0 text-white/[0.86]">{L.middle}</p>
+         ) : null}
+         {L.homeAction ? (
+-          <p className="pr-detailed-body-text text-sm leading-relaxed m-0 rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
+-            {L.homeAction}
+-          </p>
++          <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
++            <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
++              ╫ñ╫Ö╫¿╫ò╫ÿ ╫₧╫º╫ª╫ò╫ó╫Ö ╫á╫ò╫í╫ú
++            </summary>
++            <p className="pr-detailed-body-text text-sm leading-relaxed m-0 mt-2 rounded-lg border border-amber-400/28 bg-amber-950/14 px-3 py-2.5">
++              {L.homeAction}
++            </p>
++          </details>
+         ) : null}
+         {riskChips.length ? (
+           <div className="flex flex-wrap gap-1">
+diff --git a/components/parent/ParentReportParentSections.jsx b/components/parent/ParentReportParentSections.jsx
+index 8a74bd71..637d4ed7 100644
+--- a/components/parent/ParentReportParentSections.jsx
++++ b/components/parent/ParentReportParentSections.jsx
+@@ -15,7 +15,7 @@ function formatMessageDate(iso) {
+   }
+ }
+ 
+-function normalizeParentFacing(report) {
++export function normalizeParentFacing(report) {
+   const block = report?.parentFacing;
+   if (!block || typeof block !== "object") {
+     return { insights: [], homeRecommendations: [], teacherMessages: [] };
+@@ -40,11 +40,21 @@ function SectionCard({ title, children, className = "" }) {
+   );
+ }
+ 
++const DEFAULT_VISIBLE_SECTIONS = ["insights", "teacher", "home"];
++
+ /**
+  * Parent-facing insights, home tips, and teacher messages.
+- * @param {{ report?: Record<string, unknown>, compact?: boolean }} props
++ * @param {{
++ *   report?: Record<string, unknown>,
++ *   compact?: boolean,
++ *   visibleSections?: ("insights"|"teacher"|"home")[],
++ * }} props
+  */
+-export default function ParentReportParentSections({ report, compact = false }) {
++export default function ParentReportParentSections({
++  report,
++  compact = false,
++  visibleSections = DEFAULT_VISIBLE_SECTIONS,
++}) {
+   const { insights, homeRecommendations, teacherMessages } = useMemo(
+     () => normalizeParentFacing(report),
+     [report]
+@@ -63,67 +73,78 @@ export default function ParentReportParentSections({ report, compact = false })
+     ? "space-y-2 text-sm text-white/90 leading-relaxed list-disc pr-5"
+     : "space-y-2.5 text-sm md:text-base text-white/90 leading-relaxed list-disc pr-5";
+ 
+-  return (
+-    <div className="space-y-0" dir="rtl" lang="he" data-testid="parent-report-parent-sections">
+-      {activeMessages.length > 0 ? (
+-        <SectionCard title="╫ö╫ò╫ô╫ó╫ò╫¬ ╫₧╫ö╫₧╫ò╫¿╫ö">
+-          <ul className="space-y-3 m-0 p-0 list-none">
+-            {visibleMessages.map((msg) => (
+-              <li
+-                key={msg.id}
+-                className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5"
+-              >
+-                <p className="text-xs text-white/50 mb-1">{formatMessageDate(msg.createdAt)}</p>
+-                <p className="text-sm text-white/90 leading-relaxed whitespace-pre-wrap break-words m-0">
+-                  {msg.message}
+-                </p>
+-              </li>
+-            ))}
+-          </ul>
+-          {!showAllMessages && activeMessages.length > 3 ? (
+-            <button
+-              type="button"
+-              onClick={() => setShowAllMessages(true)}
+-              className="mt-3 text-sm text-amber-300 underline hover:text-amber-200"
+-            >
+-              ╫ö╫ª╫Æ ╫ö╫ò╫ô╫ó╫ò╫¬ ╫á╫ò╫í╫ñ╫ò╫¬
+-            </button>
+-          ) : null}
+-          {showAllMessages && activeMessages.length > 3 ? (
+-            <button
+-              type="button"
+-              onClick={() => setShowAllMessages(false)}
+-              className="mt-3 text-sm text-white/60 underline hover:text-white/80"
++  const showInsights = visibleSections.includes("insights");
++  const showTeacher = visibleSections.includes("teacher");
++  const showHome = visibleSections.includes("home");
++
++  const teacherSection =
++    showTeacher && activeMessages.length > 0 ? (
++      <SectionCard title="╫ö╫ò╫ô╫ó╫ò╫¬ ╫₧╫ö╫₧╫ò╫¿╫ö">
++        <ul className="space-y-3 m-0 p-0 list-none">
++          {visibleMessages.map((msg) => (
++            <li
++              key={msg.id}
++              className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5"
+             >
+-              ╫ö╫ª╫Æ ╫ñ╫ù╫ò╫¬
+-            </button>
+-          ) : null}
+-        </SectionCard>
+-      ) : null}
++              <p className="text-xs text-white/50 mb-1">{formatMessageDate(msg.createdAt)}</p>
++              <p className="text-sm text-white/90 leading-relaxed whitespace-pre-wrap break-words m-0">
++                {msg.message}
++              </p>
++            </li>
++          ))}
++        </ul>
++        {!showAllMessages && activeMessages.length > 3 ? (
++          <button
++            type="button"
++            onClick={() => setShowAllMessages(true)}
++            className="mt-3 text-sm text-amber-300 underline hover:text-amber-200"
++          >
++            ╫ö╫ª╫Æ ╫ö╫ò╫ô╫ó╫ò╫¬ ╫á╫ò╫í╫ñ╫ò╫¬
++          </button>
++        ) : null}
++        {showAllMessages && activeMessages.length > 3 ? (
++          <button
++            type="button"
++            onClick={() => setShowAllMessages(false)}
++            className="mt-3 text-sm text-white/60 underline hover:text-white/80"
++          >
++            ╫ö╫ª╫Æ ╫ñ╫ù╫ò╫¬
++          </button>
++        ) : null}
++      </SectionCard>
++    ) : null;
++
++  const insightsSection =
++    showInsights && insights.length > 0 ? (
++      <SectionCard title="╫₧╫ö ╫ù╫⌐╫ò╫æ ╫£╫ô╫ó╫¬">
++        <ul className={listClass}>
++          {insights.map((line, i) => (
++            <li key={`ins-${i}`} className="break-words">
++              {line}
++            </li>
++          ))}
++        </ul>
++      </SectionCard>
++    ) : null;
+ 
+-      {insights.length > 0 ? (
+-        <SectionCard title="╫₧╫ö ╫ù╫⌐╫ò╫æ ╫£╫ô╫ó╫¬">
+-          <ul className={listClass}>
+-            {insights.map((line, i) => (
+-              <li key={`ins-${i}`} className="break-words">
+-                {line}
+-              </li>
+-            ))}
+-          </ul>
+-        </SectionCard>
+-      ) : null}
++  const homeSection =
++    showHome && homeRecommendations.length > 0 ? (
++      <SectionCard title="╫₧╫ö ╫₧╫ò╫₧╫£╫Ñ ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬">
++        <ul className={listClass}>
++          {homeRecommendations.map((line, i) => (
++            <li key={`rec-${i}`} className="break-words">
++              {line}
++            </li>
++          ))}
++        </ul>
++      </SectionCard>
++    ) : null;
+ 
+-      {homeRecommendations.length > 0 ? (
+-        <SectionCard title="╫₧╫ö ╫₧╫ò╫₧╫£╫Ñ ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬">
+-          <ul className={listClass}>
+-            {homeRecommendations.map((line, i) => (
+-              <li key={`rec-${i}`} className="break-words">
+-                {line}
+-              </li>
+-            ))}
+-          </ul>
+-        </SectionCard>
+-      ) : null}
++  return (
++    <div className="space-y-0" dir="rtl" lang="he" data-testid="parent-report-parent-sections">
++      {insightsSection}
++      {teacherSection}
++      {homeSection}
+     </div>
+   );
+ }
+diff --git a/pages/learning/parent-report-detailed.js b/pages/learning/parent-report-detailed.js
+index 937b9115..f418eee3 100644
+--- a/pages/learning/parent-report-detailed.js
++++ b/pages/learning/parent-report-detailed.js
+@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
+ import Layout from "../../components/Layout";
+ import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
+ import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
+-import { generateDetailedParentReport } from "../../utils/detailed-parent-report";
++import { buildDetailedParentReportFromBaseReport } from "../../utils/detailed-parent-report";
++import { generateParentReportV2 } from "../../utils/parent-report-v2";
+ import {
+   buildSubjectParentLetter,
+   buildTopicRecommendationNarrative,
+@@ -18,9 +19,10 @@ import {
+   TopicRecommendationExplainStrip,
+ } from "../../components/parent-report-detailed-surface.jsx";
+ import {
+-  ParentTopContractSummaryBlock,
+   ParentSubjectContractSummaryBlock,
+ } from "../../components/parent-report-contract-ui-blocks.jsx";
++import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
++import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
+ import { normalizeExecutiveSummary } from "../../utils/parent-report-payload-normalize";
+ import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
+ import ParentCopilotShell from "../../components/parent-copilot/parent-copilot-shell.jsx";
+@@ -139,9 +141,14 @@ function SubjectParentLetter({ sp }) {
+         </p>
+       ) : null}
+       {letter.homeAction ? (
+-        <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
+-          {letter.homeAction}
+-        </p>
++        <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
++          <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
++            ╫ñ╫Ö╫¿╫ò╫ÿ ╫₧╫º╫ª╫ò╫ó╫Ö ╫á╫ò╫í╫ú
++          </summary>
++          <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 mt-2 text-white/[0.91]">
++            {letter.homeAction}
++          </p>
++        </details>
+       ) : null}
+       {letter.closing ? (
+         <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
+@@ -199,6 +206,17 @@ function dedupeParentVisibleLines(lines, options = {}) {
+   return out;
+ }
+ 
++function enrichDetailedPayloadWithUiAuthority(detailed, baseReport) {
++  if (!detailed || typeof detailed !== "object") return detailed;
++  return {
++    ...detailed,
++    _parentReportUi: {
++      parentFacing: baseReport?.parentFacing ?? null,
++      diagnosticOverviewHe: baseReport?.summary?.diagnosticOverviewHe ?? null,
++    },
++  };
++}
++
+ /** query ╫á╫º╫Ö ╫£╫⌐╫Ö╫¬╫ò╫ú/╫ö╫ô╫ñ╫í╫ö ΓÇö ╫¿╫º ╫ñ╫¿╫₧╫ÿ╫¿╫Ö╫¥ ╫⌐╫₧╫ò╫¢╫¿╫Ö╫¥ ╫£╫ô╫ú ╫ö╫₧╫º╫Ö╫ú */
+ function buildDetailedReportQueryFromQueryObject(query, mode) {
+   const next = normalizeDisplayMode(mode);
+@@ -400,7 +418,7 @@ export default function ParentReportDetailedPage() {
+             return;
+           }
+           if (!cancelled) {
+-            setPayload(out.detailed);
++            setPayload(enrichDetailedPayloadWithUiAuthority(out.detailed, out.base));
+             setParentReportError("");
+             setLoading(false);
+           }
+@@ -442,8 +460,9 @@ export default function ParentReportDetailedPage() {
+       cs = null;
+       ce = null;
+     }
+-    const data = generateDetailedParentReport(name, p, cs, ce);
+-    setPayload(data);
++    const base = generateParentReportV2(name, p, cs, ce);
++    const data = buildDetailedParentReportFromBaseReport(base, { playerName: name, period: p });
++    setPayload(enrichDetailedPayloadWithUiAuthority(data, base));
+     setLoading(false);
+     return undefined;
+   }, [router.isReady, queryPeriod, queryStart, queryEnd, isRemoteReportSource, isTeacherSource, parentStudentId]);
+@@ -677,6 +696,20 @@ export default function ParentReportDetailedPage() {
+   const nextGoalsItemsForUi = dedupeParentVisibleLines(payload?.nextPeriodGoals?.itemsHe, {
+     keep: [...topKeepLines, ...homePlanItemsForUi],
+   });
++  const uiAuthority = payload?._parentReportUi ?? {};
++  const { insights: parentFacingInsights, homeRecommendations: parentFacingHomeRecs, teacherMessages } =
++    normalizeParentFacing({ parentFacing: uiAuthority.parentFacing });
++  const hasServerHomeRecommendations = parentFacingHomeRecs.length > 0;
++  const whatToNoticeItems = dedupeParentVisibleLines(
++    [...parentFacingInsights, ...crossSubjectBulletsForUi],
++    { keep: topKeepLines }
++  );
++  const defaultHomeItems = hasServerHomeRecommendations ? parentFacingHomeRecs : homePlanItemsForUi;
++  const activeTeacherMessages = [...teacherMessages]
++    .filter((m) => !m.isHidden)
++    .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
++  const showCollapsedHomePlan = hasServerHomeRecommendations && homePlanItemsForUi.length > 0;
++  const showCollapsedNextGoals = nextGoalsItemsForUi.length > 0;
+ 
+   return (
+     <Layout>
+@@ -1464,6 +1497,15 @@ export default function ParentReportDetailedPage() {
+               color: #0f172a !important;
+             }
+ 
++            #parent-report-detailed-print details,
++            #parent-report-detailed-print .pr-detailed-technical-details,
++            #parent-report-detailed-print .pr-detailed-phase3-details {
++              display: block !important;
++            }
++            #parent-report-detailed-print details > summary {
++              display: none !important;
++            }
++
+           }
+         `}</style>
+       </Head>
+@@ -1532,22 +1574,7 @@ export default function ParentReportDetailedPage() {
+ 
+                 <ParentReportInsight explanation={parentAiExplanation} />
+ 
+-                {/* B ΓÇö ╫í╫Ö╫¢╫ò╫¥ ╫£╫ö╫ò╫¿╫ö ╫£╫ñ╫Ö ╫ù╫ò╫û╫ö ╫₧╫ò╫ª╫¿ (╫ó╫¥ fallback ╫£╫û╫¿╫Ö╫₧╫ö ╫º╫Ö╫Ö╫₧╫¬) */}
+-                {hasTopContract ? (
+-                  <SectionCard title="╫í╫Ö╫¢╫ò╫¥ ╫£╫ö╫ò╫¿╫ö" compact={displayMode === "summary"}>
+-                    <ParentTopContractSummaryBlock top={topContract} />
+-                  </SectionCard>
+-                ) : null}
+-
+-                {/* B ΓÇö ╫í╫Ö╫¢╫ò╫¥ ╫£╫¬╫º╫ò╫ñ╫ö (╫û╫¿╫Ö╫₧╫ö ╫º╫Ö╫Ö╫₧╫¬; ╫£╫£╫É ╫ö╫¬╫á╫Æ╫⌐╫ò╫¬ ╫ó╫ô╫Ö╫ñ╫ò╫¬ ╫¿╫É╫⌐╫Ö╫¬ ╫¢╫⌐╫ù╫ò╫û╫ö ╫ñ╫ó╫Ö╫£) */}
+-                <SectionCard title="╫í╫Ö╫¢╫ò╫¥ ╫£╫¬╫º╫ò╫ñ╫ö" compact={displayMode === "summary"}>
+-                  <ExecutiveSummarySection
+-                    es={executiveForUiDedupe}
+-                    compact={displayMode === "summary"}
+-                  />
+-                </SectionCard>
+-
+-                {/* C */}
++                {/* C ΓÇö ╫₧╫ö ╫ó╫⌐╫Ö╫á╫ò ╫æ╫¬╫º╫ò╫ñ╫ö ╫ö╫û╫É╫¬ */}
+                 <SectionCard title="╫₧╫ö ╫ó╫⌐╫Ö╫á╫ò ╫æ╫¬╫º╫ò╫ñ╫ö ╫ö╫û╫É╫¬" compact={displayMode === "summary"}>
+                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                   <div className="rounded-lg bg-white/5 border border-white/10 p-3 text-center">
+@@ -1612,6 +1639,49 @@ export default function ParentReportDetailedPage() {
+                 </div>
+                 </SectionCard>
+ 
++                <ParentReportDataHealthNote
++                  className="pr-detailed-data-health"
++                  diagnosticOverviewHe={uiAuthority.diagnosticOverviewHe}
++                  dataQualityNoteHe={payload?.crossSubjectInsights?.dataQualityNoteHe}
++                  mixedGradePracticeNoteHe={payload?.gradePracticeMeta?.mixedGradePracticeNoteHe}
++                />
++
++                {whatToNoticeItems.length > 0 ? (
++                  <SectionCard title="╫₧╫ö ╫ù╫⌐╫ò╫æ ╫£╫ô╫ó╫¬" compact={displayMode === "summary"}>
++                    <Bullets
++                      items={whatToNoticeItems}
++                      volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
++                    />
++                  </SectionCard>
++                ) : null}
++
++                {activeTeacherMessages.length > 0 ? (
++                  <SectionCard title="╫ö╫ò╫ô╫ó╫ò╫¬ ╫₧╫ö╫₧╫ò╫¿╫ö" compact={displayMode === "summary"}>
++                    <ul className="space-y-3 m-0 p-0 list-none">
++                      {activeTeacherMessages.map((msg) => (
++                        <li
++                          key={msg.id}
++                          className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5"
++                        >
++                          <p className="text-xs text-white/50 mb-1">{msg.createdAt || ""}</p>
++                          <p className="text-sm text-white/90 leading-relaxed whitespace-pre-wrap break-words m-0">
++                            {msg.message}
++                          </p>
++                        </li>
++                      ))}
++                    </ul>
++                  </SectionCard>
++                ) : null}
++
++                {defaultHomeItems.length > 0 ? (
++                  <SectionCard title="╫₧╫ö ╫₧╫ò╫₧╫£╫Ñ ╫£╫ó╫⌐╫ò╫¬ ╫æ╫æ╫Ö╫¬" compact={displayMode === "summary"}>
++                    <PlanItemCards
++                      items={defaultHomeItems}
++                      windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
++                    />
++                  </SectionCard>
++                ) : null}
++
+                 {/* D ΓÇö ╫É╫ò╫¬╫ò payload; ╫₧╫£╫É/╫₧╫º╫ò╫ª╫¿; ╫¢╫ò╫¬╫¿╫¬ ╫É╫û╫ò╫¿ + ╫£╫¢╫£ ╫₧╫º╫ª╫ò╫ó ╫¢╫ò╫¬╫¿╫¬ + ╫¢╫¿╫ÿ╫Ö╫í╫Ö╫¥ ╫ñ╫á╫Ö╫₧╫Ö╫Ö╫¥ ╫æ╫£╫æ╫ô */}
+                 {displayMode === "summary" ? (
+                   <section
+@@ -1628,12 +1698,19 @@ export default function ParentReportDetailedPage() {
+                       {visibleSubjectProfiles.map((sp) => (
+                         <div key={sp.subject} className="space-y-2">
+                           <SubjectSummaryBlock sp={sp} />
+-                          <ParentSubjectContractSummaryBlock
+-                            contractRow={subjectContracts?.[String(sp?.subject || "")] || null}
+-                            compact
+-                            topMainPriority={topContract?.mainPriorityHe || ""}
+-                            topDoNow={topContract?.doNowHe || ""}
+-                          />
++                          <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
++                            <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
++                              ╫ñ╫Ö╫¿╫ò╫ÿ ╫₧╫º╫ª╫ò╫ó╫Ö ╫á╫ò╫í╫ú
++                            </summary>
++                            <div className="mt-2">
++                              <ParentSubjectContractSummaryBlock
++                                contractRow={subjectContracts?.[String(sp?.subject || "")] || null}
++                                compact
++                                topMainPriority={topContract?.mainPriorityHe || ""}
++                                topDoNow={topContract?.doNowHe || ""}
++                              />
++                            </div>
++                          </details>
+                         </div>
+                       ))}
+                       {!visibleSubjectProfiles.length ? (
+@@ -1666,11 +1743,18 @@ export default function ParentReportDetailedPage() {
+                           <div className="pr-detailed-subject-inner space-y-4 pt-3">
+                             <SubjectPhase3Insights sp={sp} compact={false} />
+                             {subjectContracts?.[String(sp?.subject || "")] ? (
+-                              <ParentSubjectContractSummaryBlock
+-                                contractRow={subjectContracts[String(sp?.subject || "")]}
+-                                topMainPriority={topContract?.mainPriorityHe || ""}
+-                                topDoNow={topContract?.doNowHe || ""}
+-                              />
++                              <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
++                                <summary className="cursor-pointer text-sm text-white/75 font-semibold select-none">
++                                  ╫ñ╫Ö╫¿╫ò╫ÿ ╫₧╫º╫ª╫ò╫ó╫Ö ╫á╫ò╫í╫ú
++                                </summary>
++                                <div className="mt-2">
++                                  <ParentSubjectContractSummaryBlock
++                                    contractRow={subjectContracts[String(sp?.subject || "")]}
++                                    topMainPriority={topContract?.mainPriorityHe || ""}
++                                    topDoNow={topContract?.doNowHe || ""}
++                                  />
++                                </div>
++                              </details>
+                             ) : (
+                               <SubjectParentLetter sp={sp} />
+                             )}
+@@ -1758,10 +1842,17 @@ export default function ParentReportDetailedPage() {
+                                               {nar.homeLine}
+                                             </p>
+                                           ) : null}
+-                                          <TopicRecommendationExplainStrip
+-                                            tr={tr}
+-                                            suppressedLines={[nar.snapshot, showHomeLine ? nar.homeLine : ""]}
+-                                          />
++                                          <details className="mt-2 rounded-lg border border-white/10 bg-black/10 px-2 py-2">
++                                            <summary className="cursor-pointer text-xs text-white/60 font-semibold select-none">
++                                              ╫ñ╫Ö╫¿╫ò╫ÿ ╫₧╫º╫ª╫ò╫ó╫Ö ╫á╫ò╫í╫ú
++                                            </summary>
++                                            <div className="mt-2">
++                                              <TopicRecommendationExplainStrip
++                                                tr={tr}
++                                                suppressedLines={[nar.snapshot, showHomeLine ? nar.homeLine : ""]}
++                                              />
++                                            </div>
++                                          </details>
+                                         </div>
+                                       </div>
+                                     );
+@@ -1779,38 +1870,35 @@ export default function ParentReportDetailedPage() {
+                   </section>
+                 )}
+ 
+-                {/* cross insights ΓÇö part of structure; placed after subjects for flow */}
+-                <SectionCard title="╫₧╫ö ╫⌐╫ù╫ò╫û╫¿ ╫æ╫¢╫₧╫ö ╫₧╫º╫ª╫ò╫ó╫ò╫¬" compact={displayMode === "summary"}>
+-                <Bullets
+-                  items={crossSubjectBulletsForUi}
+-                  volumeQuestionsTotal={Number(payload.overallSnapshot?.totalQuestions) || 0}
+-                />
+-                {payload.crossSubjectInsights.dataQualityNoteHe ? (
+-                  <p className="text-sm text-amber-200/90 mt-2">{payload.crossSubjectInsights.dataQualityNoteHe}</p>
+-                ) : null}
+-                </SectionCard>
+-
+-                {/* E */}
+-                <SectionCard title="╫¿╫ó╫Ö╫ò╫á╫ò╫¬ ╫º╫ª╫¿╫Ö╫¥ ╫£╫æ╫Ö╫¬" compact={displayMode === "summary"}>
+-                  <PlanItemCards
+-                    items={homePlanItemsForUi}
+-                    windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
+-                  />
+-                </SectionCard>
+-
+-                {/* F */}
+-                <SectionCard title="╫¢╫Ö╫ò╫ò╫ƒ ╫£╫Ö╫₧╫Ö╫¥ ╫ö╫æ╫É╫Ö╫¥" compact={displayMode === "summary"}>
+-                  <GoalItemCards
+-                    items={nextGoalsItemsForUi}
+-                    windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
+-                  />
+-                </SectionCard>
+-
+-                {payload?.gradePracticeMeta?.mixedGradePracticeNoteHe ? (
+-                  <p className="text-center text-sm text-amber-100/95 bg-amber-500/15 border border-amber-400/40 rounded-lg px-3 py-2 mb-3">
+-                    {payload.gradePracticeMeta.mixedGradePracticeNoteHe}
+-                  </p>
+-                ) : null}
++                <details className="pr-detailed-technical-details mb-5 md:mb-6 rounded-xl border border-white/12 bg-white/[0.03] overflow-hidden">
++                  <summary className="cursor-pointer px-3 md:px-4 py-3 md:py-3.5 text-base md:text-lg font-extrabold tracking-tight text-white select-none border-b border-white/10 bg-white/[0.035]">
++                    ╫ñ╫Ö╫¿╫ò╫ÿ ╫á╫ò╫í╫ú ╫£╫₧╫Ö ╫⌐╫¿╫ò╫ª╫ö ╫£╫ö╫ó╫₧╫Ö╫º
++                  </summary>
++                  <div className="px-0 py-0">
++                    <SectionCard title="╫í╫Ö╫¢╫ò╫¥ ╫£╫¬╫º╫ò╫ñ╫ö" compact={displayMode === "summary"} className="border-0 rounded-none mb-0">
++                      <ExecutiveSummarySection
++                        es={executiveForUiDedupe}
++                        compact={displayMode === "summary"}
++                      />
++                    </SectionCard>
++                    {showCollapsedHomePlan ? (
++                      <SectionCard title="╫¿╫ó╫Ö╫ò╫á╫ò╫¬ ╫º╫ª╫¿╫Ö╫¥ ╫£╫æ╫Ö╫¬" compact={displayMode === "summary"} className="border-0 rounded-none mb-0">
++                        <PlanItemCards
++                          items={homePlanItemsForUi}
++                          windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
++                        />
++                      </SectionCard>
++                    ) : null}
++                    {showCollapsedNextGoals ? (
++                      <SectionCard title="╫¢╫Ö╫ò╫ò╫ƒ ╫£╫Ö╫₧╫Ö╫¥ ╫ö╫æ╫É╫Ö╫¥" compact={displayMode === "summary"} className="border-0 rounded-none mb-0">
++                        <GoalItemCards
++                          items={nextGoalsItemsForUi}
++                          windowTotalQuestions={Number(payload.overallSnapshot?.totalQuestions) || 0}
++                        />
++                      </SectionCard>
++                    ) : null}
++                  </div>
++                </details>
+ 
+                 <ParentReportImportantDisclaimer />
+               </div>
+diff --git a/pages/learning/parent-report.js b/pages/learning/parent-report.js
+index ed42ccec..0943fbfe 100644
+--- a/pages/learning/parent-report.js
++++ b/pages/learning/parent-report.js
+@@ -12,6 +12,7 @@ import {
+ } from "../../utils/parent-report-ai/parent-report-ai-adapter";
+ import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
+ import ParentReportParentSections from "../../components/parent/ParentReportParentSections.jsx";
++import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
+ 
+ const ParentCopilotShellLazy = dynamic(
+   () => import("../../components/parent-copilot/parent-copilot-shell.jsx"),
+@@ -1217,6 +1218,10 @@ export default function ParentReport() {
+     () => (report ? buildParentReportDiagnosticsView(report) : null),
+     [report]
+   );
++  const hasServerHomeRecommendations = useMemo(() => {
++    const recs = report?.parentFacing?.homeRecommendations;
++    return Array.isArray(recs) && recs.filter(Boolean).length > 0;
++  }, [report]);
+   const suppressChartsForThinEvidenceWindow = useMemo(() => {
+     if (!report?.summary) return false;
+     const q = Number(report.summary.totalQuestions) || 0;
+@@ -1998,19 +2003,13 @@ export default function ParentReport() {
+             </div>
+           </div>
+ 
+-          <ParentReportShortContractPreview top={shortContractTop} />
++          <ParentReportDataHealthNote
++            diagnosticOverviewHe={report.summary?.diagnosticOverviewHe}
++            mixedGradePracticeNoteHe={report?.gradePracticeMeta?.mixedGradePracticeNoteHe}
++          />
+ 
+-          {(report.rawMetricStrengthsHe?.length || report.summary?.rawMetricStrengthsHe?.length) ? (
+-            <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-emerald-400/25 bg-emerald-950/15 p-3 md:p-4 text-sm text-white/90 space-y-1">
+-              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">╫É╫Ö╫ñ╫ö ╫á╫¿╫É╫ò ╫¬╫ò╫ª╫É╫ò╫¬ ╫ÿ╫ò╫æ╫ò╫¬ ╫£╫ñ╫Ö ╫á╫¬╫ò╫á╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù</p>
+-              <ul className="m-0 pr-4 list-disc text-xs md:text-sm text-white/85 space-y-1">
+-                {(report.rawMetricStrengthsHe || report.summary?.rawMetricStrengthsHe || []).map((line, i) => (
+-                  <li key={`rms-${i}`} className="leading-relaxed">
+-                    {line}
+-                  </li>
+-                ))}
+-              </ul>
+-            </div>
++          {!hasServerHomeRecommendations ? (
++            <ParentReportShortContractPreview top={shortContractTop} />
+           ) : null}
+ 
+           {report.summary?.diagnosticOverviewHe ? (
+@@ -2052,17 +2051,21 @@ export default function ParentReport() {
+                   {report.summary.diagnosticOverviewHe.requiresAttentionPreviewHe.join(" ┬╖ ")}
+                 </p>
+               ) : null}
+-              {report.summary.diagnosticOverviewHe.notPracticedSubjectsSummaryHe ? (
+-                <p className="m-0 leading-relaxed text-white/50 text-xs">
+-                  {report.summary.diagnosticOverviewHe.notPracticedSubjectsSummaryHe}
+-                </p>
+-              ) : null}
+-              {report.summary.diagnosticOverviewHe.thinEvidenceSubjectsHe?.length ? (
+-                <p className="m-0 leading-relaxed text-white/50 text-xs">
+-                  ╫á╫¬╫ò╫á╫Ö╫¥ ╫₧╫ª╫ò╫₧╫ª╫₧╫Ö╫¥ ╫æ╫₧╫º╫ª╫ò╫ó╫ò╫¬:{" "}
+-                  {report.summary.diagnosticOverviewHe.thinEvidenceSubjectsHe.join(" ┬╖ ")}
+-                </p>
+-              ) : null}
++            </div>
++          ) : null}
++
++          <ParentReportParentSections report={report} />
++
++          {(report.rawMetricStrengthsHe?.length || report.summary?.rawMetricStrengthsHe?.length) ? (
++            <div className="mb-3 md:mb-5 avoid-break rounded-lg border border-emerald-400/25 bg-emerald-950/15 p-3 md:p-4 text-sm text-white/90 space-y-1">
++              <p className="font-bold text-emerald-100/95 m-0 text-sm md:text-base">╫É╫Ö╫ñ╫ö ╫á╫¿╫É╫ò ╫¬╫ò╫ª╫É╫ò╫¬ ╫ÿ╫ò╫æ╫ò╫¬ ╫£╫ñ╫Ö ╫á╫¬╫ò╫á╫Ö ╫ö╫¬╫¿╫Æ╫ò╫£ ╫æ╫ÿ╫ò╫ò╫ù</p>
++              <ul className="m-0 pr-4 list-disc text-xs md:text-sm text-white/85 space-y-1">
++                {(report.rawMetricStrengthsHe || report.summary?.rawMetricStrengthsHe || []).map((line, i) => (
++                  <li key={`rms-${i}`} className="leading-relaxed">
++                    {line}
++                  </li>
++                ))}
++              </ul>
+             </div>
+           ) : null}
+ 
+@@ -2165,8 +2168,6 @@ export default function ParentReport() {
+             </div>
+           </div>
+ 
+-          <ParentReportParentSections report={report} />
+-
+           <ParentReportInsight explanation={report.parentAiExplanation} />
+ 
+           {enableParentCopilotOnShortEffective && copilotDetailedPayload ? (
+@@ -4116,12 +4117,6 @@ export default function ParentReport() {
+             </div>
+           )}
+ 
+-          {report?.gradePracticeMeta?.mixedGradePracticeNoteHe ? (
+-            <p className="text-center text-sm md:text-base text-amber-100/95 bg-amber-500/15 border border-amber-400/40 rounded-lg px-3 py-2 mb-3 md:mb-4 max-w-3xl mx-auto">
+-              {report.gradePracticeMeta.mixedGradePracticeNoteHe}
+-            </p>
+-          ) : null}
+-
+           <ParentReportImportantDisclaimer />
+ 
+           {/* ╫¢╫ñ╫¬╫ò╫¿╫Ö╫¥ */}
+--- components/parent/ParentReportDataHealthNote.jsx (new file)
+
++/**
++ * Consolidated thin-data / data-quality messaging for parent reports.
++ * @param {{
++ *   diagnosticOverviewHe?: { thinEvidenceSubjectsHe?: string[], notPracticedSubjectsSummaryHe?: string | null } | null,
++ *   dataQualityNoteHe?: string | null,
++ *   mixedGradePracticeNoteHe?: string | null,
++ *   className?: string,
++ * }} props
++ */
++export default function ParentReportDataHealthNote({
++  diagnosticOverviewHe = null,
++  dataQualityNoteHe = null,
++  mixedGradePracticeNoteHe = null,
++  className = "",
++}) {
++  const thinEvidenceSubjectsHe = Array.isArray(diagnosticOverviewHe?.thinEvidenceSubjectsHe)
++    ? diagnosticOverviewHe.thinEvidenceSubjectsHe.filter(Boolean)
++    : [];
++  const notPracticedSubjectsSummaryHe = diagnosticOverviewHe?.notPracticedSubjectsSummaryHe || null;
++  const hasContent =
++    thinEvidenceSubjectsHe.length > 0 ||
++    !!notPracticedSubjectsSummaryHe ||
++    !!dataQualityNoteHe ||
++    !!mixedGradePracticeNoteHe;
++
++  if (!hasContent) return null;
++
++  return (
++    <div
++      className={`mb-3 md:mb-5 avoid-break rounded-lg border border-sky-400/25 bg-sky-950/15 p-3 md:p-4 text-sm text-white/90 space-y-2 ${className}`}
++      data-testid="parent-report-data-health-note"
++      dir="rtl"
++      lang="he"
++    >
++      <p className="font-bold text-sky-100/95 m-0 text-sm md:text-base">×ž×¦×‘ ×”× ×ª×•× ×™× ×‘×“×•×—</p>
++      {notPracticedSubjectsSummaryHe ? (
++        <p className="m-0 leading-relaxed text-white/50 text-xs md:text-sm">{notPracticedSubjectsSummaryHe}</p>
++      ) : null}
++      {thinEvidenceSubjectsHe.length > 0 ? (
++        <p className="m-0 leading-relaxed text-white/50 text-xs md:text-sm">
++          × ×ª×•× ×™× ×ž×¦×•×ž×¦×ž×™× ×‘×ž×§×¦×•×¢×•×ª: {thinEvidenceSubjectsHe.join(" Â· ")}
++        </p>
++      ) : null}
++      {dataQualityNoteHe ? (
++        <p className="m-0 leading-relaxed text-amber-200/90 text-xs md:text-sm">{dataQualityNoteHe}</p>
++      ) : null}
++      {mixedGradePracticeNoteHe ? (
++        <p className="m-0 leading-relaxed text-amber-100/95 text-xs md:text-sm">{mixedGradePracticeNoteHe}</p>
++      ) : null}
++    </div>
++  );
++}
