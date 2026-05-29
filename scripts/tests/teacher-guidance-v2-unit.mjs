@@ -162,6 +162,93 @@ function mockStudentPayload() {
   assert.deepEqual(block.recommendationUnits, []);
 }
 
+// 3b — thin total answers with multiple sessions must not produce recommendationUnits
+{
+  const block = buildStudentTeacherGuidanceV2({
+    summary: {
+      totalSessions: 2,
+      totalAnswers: 4,
+      correctAnswers: 2,
+      wrongAnswers: 2,
+      accuracy: 50,
+    },
+    subjects: {
+      math: {
+        sessions: 2,
+        answers: 3,
+        correct: 1,
+        wrong: 2,
+        accuracy: 33.3,
+        topics: {
+          fractions: { answers: 3, correct: 1, wrong: 2, accuracy: 33.3 },
+        },
+      },
+    },
+    recentMistakes: [],
+    dailyActivity: [{ date: "2026-05-20", sessions: 1, answers: 2 }],
+  });
+  assert.equal(block.insufficientData, true);
+  assert.deepEqual(block.recommendationUnits, []);
+  assert.deepEqual(block.strengthUnits, []);
+}
+
+// 3c — enough total answers with one session still produces recommendationUnits
+{
+  const block = buildStudentTeacherGuidanceV2({
+    summary: {
+      totalSessions: 1,
+      totalAnswers: 6,
+      correctAnswers: 2,
+      wrongAnswers: 4,
+      accuracy: 33.3,
+    },
+    subjects: {
+      math: {
+        sessions: 1,
+        answers: 6,
+        correct: 2,
+        wrong: 4,
+        accuracy: 33.3,
+        topics: {
+          fractions: { answers: 6, correct: 2, wrong: 4, accuracy: 33.3 },
+        },
+      },
+    },
+    recentMistakes: [
+      {
+        subject: "math",
+        topic: "fractions",
+        prompt: "1/2 + 1/3",
+        userAnswer: "2/5",
+        expectedAnswer: "5/6",
+        answeredAt: "2026-05-20T10:00:00.000Z",
+      },
+      {
+        subject: "math",
+        topic: "fractions",
+        prompt: "2/3 + 1/4",
+        userAnswer: "3/7",
+        expectedAnswer: "11/12",
+        answeredAt: "2026-05-19T10:00:00.000Z",
+      },
+      {
+        subject: "math",
+        topic: "fractions",
+        prompt: "1/4 + 1/4",
+        userAnswer: "1/8",
+        expectedAnswer: "1/2",
+        answeredAt: "2026-05-18T10:00:00.000Z",
+      },
+    ],
+    dailyActivity: [{ date: "2026-05-20", sessions: 1, answers: 6 }],
+  });
+  assert.equal(block.insufficientData, false);
+  assert.ok(
+    block.recommendationUnits.length > 0,
+    "6 answers with weak topic should still produce recommendationUnits"
+  );
+}
+
 // 4 — subject filter
 {
   const permitted = new Set(["math"]);

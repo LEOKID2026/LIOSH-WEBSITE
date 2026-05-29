@@ -8,7 +8,10 @@
  */
 import assert from "node:assert/strict";
 import { aggregateParentReportPayload } from "../../lib/parent-server/report-data-aggregate.server.js";
-import { buildTeacherStudentReportPayload } from "../../lib/teacher-server/teacher-report.server.js";
+import {
+  buildTeacherStudentReportPayload,
+  buildTeacherParentReportPreviewPayload,
+} from "../../lib/teacher-server/teacher-report.server.js";
 import { createServiceRole, findAuthUserByEmail } from "../school-portal/demo-school-lib.mjs";
 import { DEMO_PARENT_EMAIL, physicalClassName } from "../school-portal/demo-school-data.mjs";
 
@@ -336,6 +339,88 @@ async function verifyCrossScopeGuard(admin, fromDate, toDate, schoolEvidence) {
   };
 }
 
+async function verifyTeacherParentPreviewParity(admin, fromDate, toDate, schoolEvidence) {
+  const teacher = await findAuthUserByEmail(admin, "dan@leo-k.com");
+  assert.ok(teacher?.id, "Dan Cohen auth user for parent preview parity");
+
+  const { data: studentRow } = await admin
+    .from("students")
+    .select("id, full_name, grade_level, is_active")
+    .eq("id", schoolEvidence.studentId)
+    .maybeSingle();
+  assert.ok(studentRow?.id, "student row for parent preview parity");
+
+  const parentAgg = await aggregateParentReportPayload(admin, studentRow, fromDate, toDate);
+  const parentSummary = summaryOf({ summary: parentAgg.summary, student: studentRow });
+
+  const preview = await buildTeacherParentReportPreviewPayload({
+    serviceRole: admin,
+    teacherId: teacher.id,
+    studentId: schoolEvidence.studentId,
+    fromDate,
+    toDate,
+  });
+  assert.ok(preview.ok, preview.code || "teacher parent preview failed");
+  const previewSummary = summaryOf(preview.payload);
+
+  assert.equal(
+    previewSummary.totalAnswers,
+    parentSummary.totalAnswers,
+    "teacher parent preview must match regular parent report totalAnswers"
+  );
+  assert.equal(
+    previewSummary.totalSessions,
+    parentSummary.totalSessions,
+    "teacher parent preview must match regular parent report totalSessions"
+  );
+
+  const teacherReport = await buildTeacherStudentReportPayload(
+    {
+      serviceRole: admin,
+      teacherId: teacher.id,
+      studentId: schoolEvidence.studentId,
+      fromDate,
+      toDate,
+    },
+    { skipAudit: true, classId: schoolEvidence.classId }
+  );
+  assert.ok(teacherReport.ok, teacherReport.code || "teacher student report failed");
+  const teacherSummary = summaryOf(teacherReport.payload);
+  const classroom = await countClassroomAnswers(
+    admin,
+    schoolEvidence.classId,
+    schoolEvidence.studentId,
+    fromDate,
+    toDate
+  );
+
+  if (classroom.answers > 0) {
+    assert.ok(
+      teacherSummary.totalAnswers >= previewSummary.totalAnswers,
+      "teacher student report must include classroom activity when present"
+    );
+    assert.ok(
+      teacherSummary.totalAnswers >= classroom.answers,
+      "teacher student report must reflect classroom answers"
+    );
+  }
+
+  return {
+    flow: "teacher_parent_preview_parity",
+    pass: true,
+    evidence: {
+      studentId: schoolEvidence.studentId,
+      parentTotalAnswers: parentSummary.totalAnswers,
+      previewTotalAnswers: previewSummary.totalAnswers,
+      teacherTotalAnswers: teacherSummary.totalAnswers,
+      classroomAnswers: classroom.answers,
+      previewMatchesParent: previewSummary.totalAnswers === parentSummary.totalAnswers,
+      teacherIncludesClassroom:
+        classroom.answers > 0 ? teacherSummary.totalAnswers >= classroom.answers : null,
+    },
+  };
+}
+
 async function main() {
   const admin = createServiceRole();
   const toDate = new Date();
@@ -348,6 +433,7 @@ async function main() {
   results.push(await verifyPrivateTeacherFlow(admin, fromDate, toDate));
   const school = await verifySchoolManagedFlow(admin, fromDate, toDate);
   results.push(school);
+  results.push(await verifyTeacherParentPreviewParity(admin, fromDate, toDate, school.evidence));
   results.push(await verifyCrossScopeGuard(admin, fromDate, toDate, school.evidence));
 
   const allPass = results.every((r) => r.pass);
