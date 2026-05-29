@@ -1,0 +1,13 @@
+﻿ M hebrew-owner-review/hebrew_copy_review_master_package_WITH_SUGGESTIONS_FIXED/01_PARENT_REPORT/parent-report-hebrew-owner-review-01-rows-001-050.xlsx
+ M package.json
+?? .tmp/next-start.log
+?? data/hebrew-copy-baseline/
+?? docs/hebrew-copy/
+?? review-packages/hebrew-copy-delta-gate-review-followup/
+?? review-packages/hebrew-copy-delta-gate-review.zip
+?? review-packages/hebrew-copy-delta-gate-review/
+?? scripts/hebrew-copy-baseline-build.mjs
+?? scripts/hebrew-copy-delta-gate.mjs
+?? scripts/hebrew-copy-delta-review-pack-build.mjs
+?? scripts/lib/hebrew-copy-scan-lib.mjs
+?? scripts/tests/hebrew-copy-delta-gate-smoke.mjs

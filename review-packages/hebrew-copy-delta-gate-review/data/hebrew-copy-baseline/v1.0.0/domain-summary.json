@@ -1,0 +1,15 @@
+{
+  "byDomain": {
+    "parent_report": 2136,
+    "teacher_school_report": 1825,
+    "site_decision_ai": 2089,
+    "site_general": 11116,
+    "learning_content": 60174
+  },
+  "byStatus": {
+    "pending_owner_review": 55400,
+    "looks_ok_pending": 42,
+    "internal_only": 6234,
+    "pending_expert_review": 15664
+  }
+}

@@ -1,0 +1,9 @@
+﻿git : warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+At C:\Users\ERAN YOSEF\AppData\Local\Temp\ps-script-4cb05294-f9a0-476e-8edf-d4cf7a9a67dc.ps1:99 char:1
++ git -C $root diff --stat -- scripts/lib/hebrew-copy-scan-lib.mjs scri ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ package.json | 5 +++++
+ 1 file changed, 5 insertions(+)

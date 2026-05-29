@@ -1,0 +1,10 @@
+
+> leo-k-kids-site@1.0.0 start
+> next start -p 3011
+
+   ▲ Next.js 15.5.18
+   - Local:        http://localhost:3011
+   - Network:      http://192.168.7.7:3011
+
+ ✓ Starting...
+ ✓ Ready in 527ms
