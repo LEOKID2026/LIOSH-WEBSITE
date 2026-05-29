@@ -6,6 +6,8 @@ import {
   activityModeLabelHe,
   isClassroomActivitiesEnabled,
 } from "../../../lib/classroom-activities/classroom-activities-labels.client.js";
+import { formatStudentActivityCompletionSummaryHe } from "../../../lib/classroom-activities/student-activity-result-labels.client.js";
+import { resolveStudentActivityApiErrorHe } from "../../../lib/classroom-activities/student-activity-error-labels.client.js";
 import ClassroomGeometryQuestionDiagram from "../../../components/student/ClassroomGeometryQuestionDiagram";
 
 export async function getServerSideProps(context) {
@@ -43,7 +45,9 @@ export default function StudentActivityPage({ activityId }) {
         return;
       }
       if (!res.ok || json?.ok !== true) {
-        setError(json?.error || json?.message || "לא ניתן להתחיל את הפעילות");
+        setError(
+          resolveStudentActivityApiErrorHe(json, "לא ניתן להתחיל את הפעילות")
+        );
         setPhase("error");
         return;
       }
@@ -138,7 +142,10 @@ export default function StudentActivityPage({ activityId }) {
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json?.ok !== true) {
-        setFeedback({ type: "error", message: json?.error || "שמירת תשובה נכשלה" });
+        setFeedback({
+          type: "error",
+          message: resolveStudentActivityApiErrorHe(json, "שמירת תשובה נכשלה"),
+        });
         return;
       }
       const isDiscussion = activity?.mode === "discussion";
@@ -232,12 +239,12 @@ export default function StudentActivityPage({ activityId }) {
                 : "סיימת את הפעילות!"}
           </h1>
           {!isDiscussionDone ? (
-            <>
-              <p className="text-3xl font-bold text-emerald-300 tabular-nums mb-2">{finished.scorePct}%</p>
-              <p className="text-white/70 text-sm mb-6">
-                {finished.correctCount} נכונות מתוך {finished.questionCount}
-              </p>
-            </>
+            <p className="text-xl font-bold text-emerald-300 mb-6">
+              {formatStudentActivityCompletionSummaryHe(
+                finished.correctCount,
+                finished.questionCount
+              )}
+            </p>
           ) : isExplanationOnly ? (
             <p className="text-white/70 text-sm mb-6">קראת את ההסבר של המורה. תודה!</p>
           ) : multiQuestionDiscussion ? (
