@@ -13,6 +13,7 @@ import {
   buildActivityReportStudentRows,
   buildActivityReportCsvContent,
   buildActivityReportWorkbook,
+  csvEscapeCell,
   // Enriched row builders (pure, testable without DOM)
   buildEnrichedSummaryKV,
   buildEnrichedQuestionsTable,
@@ -313,6 +314,25 @@ const MOCK_PAYLOAD = {
 // ─── Section 1: Legacy backward compat ──────────────────────────────────────
 
 console.log("\n── Legacy backward compatibility ──");
+
+assert(csvEscapeCell("=1+1").startsWith("'"), "CSV: formula prefix neutralized with apostrophe");
+assert(csvEscapeCell("+cmd").startsWith("'"), "CSV: plus prefix neutralized");
+assert(csvEscapeCell("-10").startsWith("'"), "CSV: minus prefix neutralized");
+assert(csvEscapeCell("@SUM(A1)").startsWith("'"), "CSV: at prefix neutralized");
+assert(csvEscapeCell("תשובה רגילה") === "תשובה רגילה", "CSV: Hebrew text unchanged");
+const csvMalicious = buildActivityReportCsvContent({
+  activity: { title: "t", questionCount: 1 },
+  students: [
+    {
+      studentFullNameMasked: "=1+1",
+      status: "submitted",
+      answersCount: 1,
+      correctCount: 1,
+      scorePct: 100,
+    },
+  ],
+});
+assert(csvMalicious.includes("'=1+1"), "CSV export neutralizes formula in student name cell");
 
 {
   const rows = buildActivityReportStudentRows(MOCK_PAYLOAD);

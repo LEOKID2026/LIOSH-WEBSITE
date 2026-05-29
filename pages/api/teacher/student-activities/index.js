@@ -4,7 +4,7 @@ import { consumeRateLimit, clientIpFromRequest } from "../../../../lib/security/
 import { isProductionRuntime } from "../../../../lib/security/production-guard.js";
 import {
   assertDiscussionActivitySubjectAllowed,
-  assertSchoolTeacherSubjectAllowed,
+  assertActivitySubjectAllowed,
 } from "../../../../lib/school-server/school-subjects.server.js";
 import { isDbSchemaNotReadyError } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
@@ -102,7 +102,7 @@ export default async function handler(req, res) {
           studentRow.grade_level
         );
       } else {
-        subjectGate = await assertSchoolTeacherSubjectAllowed(
+        subjectGate = await assertActivitySubjectAllowed(
           ctx.serviceRole,
           ctx.teacherId,
           parsed.payload.subject,

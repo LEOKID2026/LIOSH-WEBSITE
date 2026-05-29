@@ -12,6 +12,11 @@ import {
   mergeClassroomActivityRollupIntoReportPayload,
 } from "../../lib/teacher-server/classroom-activity-class-report.server.js";
 import { buildClassTeacherGuidanceV2 } from "../../lib/teacher-server/teacher-guidance-v2.server.js";
+import {
+  applyServerParentFacingAuthorityToClientReport,
+  isServerThinDataReportPayload,
+} from "../../lib/parent-server/parent-facing-report-authority.js";
+import { stripInternalReportPayloadFields } from "../../lib/parent-server/report-data-aggregate.server.js";
 
 function mockMathPayload(answers = 20, correct = 14) {
   return {
@@ -220,5 +225,35 @@ function mockSciencePayload(answers = 10, correct = 5) {
     "class guidance units must respect math-only scope"
   );
 }
+
+assert.equal(isServerThinDataReportPayload({ summary: { totalAnswers: 3, totalSessions: 1 } }), true);
+assert.equal(isServerThinDataReportPayload({ summary: { totalAnswers: 20, totalSessions: 4 } }), false);
+
+const clientBase = {
+  analysis: { recommendations: [{ text: "client rec" }] },
+  patternDiagnostics: {
+    subjects: {
+      math: {
+        parentRecommendationsImprove: ["do more"],
+        studentRecommendationsImprove: ["practice"],
+      },
+    },
+  },
+};
+const apiThin = {
+  summary: { totalAnswers: 2, totalSessions: 1 },
+  parentFacing: {
+    insights: ["יש עדיין מעט נתוני תרגול"],
+    homeRecommendations: ["תרגול קצר"],
+  },
+};
+applyServerParentFacingAuthorityToClientReport(clientBase, apiThin);
+assert.equal(clientBase._parentFacingAuthority, "server");
+assert.equal(clientBase.parentFacing.insights[0], apiThin.parentFacing.insights[0]);
+assert.equal(clientBase.analysis.recommendations.length, 0);
+assert.equal(Object.keys(clientBase.patternDiagnostics?.subjects || {}).length, 0);
+
+const stripped = stripInternalReportPayloadFields({ summary: {}, _dailyBySubject: { "2026-01-01": {} } });
+assert.equal(Object.prototype.hasOwnProperty.call(stripped, "_dailyBySubject"), false);
 
 console.log("diagnostic-report-truth-fix-unit: ok");

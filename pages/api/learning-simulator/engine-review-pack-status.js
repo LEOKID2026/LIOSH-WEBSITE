@@ -1,6 +1,6 @@
 /**
- * Internal-only: read expert-review / engine gate JSON artifacts from disk (no token).
- * Gate: NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN=true only.
+ * Internal-only: read expert-review / engine gate JSON artifacts from disk.
+ * Gate: NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN=true and ENGINE_REVIEW_ADMIN_TOKEN header.
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -34,11 +34,9 @@ export default async function handler(req, res) {
     return res.status(403).json({ code: "admin_disabled", error: "NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN is not true" });
   }
 
-  if (isProductionRuntime()) {
-    const auth = validateEngineReviewAdminToken(req, ["x-engine-review-token", "x-admin-token"]);
-    if (!auth.ok) {
-      return res.status(auth.status).json({ code: auth.code, error: auth.error });
-    }
+  const auth = validateEngineReviewAdminToken(req, ["x-engine-review-token", "x-admin-token"]);
+  if (!auth.ok) {
+    return res.status(auth.status).json({ code: auth.code, error: auth.error });
   }
 
   const maskInternals = isProductionRuntime();

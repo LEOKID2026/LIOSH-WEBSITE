@@ -6,6 +6,7 @@ import {
   aggregateParentReportPayload,
   parseIsoDateParam,
   safeString,
+  stripInternalReportPayloadFields,
 } from "../../../../../lib/parent-server/report-data-aggregate.server.js";
 import { attachStudentLearningAccountToParentReportPayload } from "../../../../../lib/parent-server/parent-report-account-attachment.server.js";
 import { enrichPayloadWithParentFacing } from "../../../../../lib/parent-server/parent-report-parent-facing.server.js";
@@ -78,7 +79,7 @@ export default async function handler(req, res) {
     const enriched = await enrichPayloadWithParentFacing(serviceClient, payload, studentId);
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     res.setHeader("Pragma", "no-cache");
-    return res.status(200).json(enriched);
+    return res.status(200).json(stripInternalReportPayloadFields(enriched));
   } catch {
     return res.status(500).json({ ok: false, error: "Unexpected server error" });
   }

@@ -223,13 +223,14 @@ assert.equal(
 
 const unfiltered = filterReportByPermittedSubjects(homePayload, null);
 assert.equal(
-  unfiltered,
-  homePayload,
-  "null permission is a no-op (admin / private teacher bypass)"
+  unfiltered.subjects.math.answers,
+  homePayload.subjects.math.answers,
+  "null permission is a no-op for subject filtering (admin / private teacher bypass)"
 );
-assert.ok(
-  Object.prototype.hasOwnProperty.call(homePayload, "_dailyBySubject"),
-  "_dailyBySubject is preserved on the original payload when filter is bypassed (admin/private teacher path)"
+assert.equal(
+  Object.prototype.hasOwnProperty.call(unfiltered, "_dailyBySubject"),
+  false,
+  "_dailyBySubject is stripped from unrestricted payload before client response"
 );
 
 console.log("diagnostic-report-bundle-self-check: ok");

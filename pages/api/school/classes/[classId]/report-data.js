@@ -1,4 +1,6 @@
 import { safeApiLog } from "../../../../../lib/security/safe-log.js";
+import { consumeRateLimit, clientIpFromRequest } from "../../../../../lib/security/in-memory-rate-limit.js";
+import { isProductionRuntime } from "../../../../../lib/security/production-guard.js";
 import { buildTeacherClassReportPayload } from "../../../../../lib/teacher-server/teacher-class-report.server.js";
 import { loadSchoolClassInScope } from "../../../../../lib/school-server/school-classes.server.js";
 import { writeSchoolClassViewedAudit } from "../../../../../lib/school-server/school-reports.server.js";
@@ -7,6 +9,7 @@ import {
   sendSchoolApiError,
 } from "../../../../../lib/school-server/school-request.server.js";
 import { resolveTeacherReportDateRange } from "../../../../../lib/teacher-server/teacher-report.server.js";
+import { stripInternalReportPayloadFields } from "../../../../../lib/parent-server/report-data-aggregate.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -19,6 +22,20 @@ export default async function handler(req, res) {
   try {
     const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+
+    if (isProductionRuntime()) {
+      const ip = clientIpFromRequest(req);
+      const rl = consumeRateLimit({
+        namespace: "school_class_report_data",
+        keys: [`ip:${ip}`, `manager:${ctx.managerId}`],
+        maxAttempts: 30,
+        windowMs: 60_000,
+      });
+      if (!rl.allowed) {
+        if (rl.retryAfterSec) res.setHeader("Retry-After", String(rl.retryAfterSec));
+        return sendSchoolApiError(res, 429, "rate_limited", "Too many requests");
+      }
+    }
 
     const inScope = await loadSchoolClassInScope(ctx.serviceRole, ctx.schoolId, String(classId));
     if (!inScope.ok) {
@@ -61,7 +78,7 @@ export default async function handler(req, res) {
     ]);
 
     return res.status(200).json({
-      ...report.payload,
+      ...stripInternalReportPayloadFields(report.payload),
       schoolManagerExtras: {
         classroomActivityCount: classroomActivityCount ?? 0,
         recentClassroomActivities: recentClassroomActivities || [],

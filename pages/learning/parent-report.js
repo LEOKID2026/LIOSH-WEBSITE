@@ -431,6 +431,21 @@ function migrateDiagnosticSubjectV1ToRow(sub, subjectId) {
  * @returns {{ mode: "new"|"insufficient"|"legacy", rows: object[], legacyRecommendations: object[], presence: object }}
  */
 function buildParentReportDiagnosticsView(report) {
+  if (report?._parentFacingAuthority === "server") {
+    const legacyRecommendations = [];
+    const mode = "insufficient";
+    return {
+      mode,
+      rows: [],
+      legacyRecommendations,
+      presence: deriveParentDataPresenceForDiagnosticsView(report, {
+        mode,
+        rows: [],
+        legacyRecommendations,
+      }),
+    };
+  }
+
   const legacy = Array.isArray(report?.analysis?.recommendations)
     ? report.analysis.recommendations
     : [];
