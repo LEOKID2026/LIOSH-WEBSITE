@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   try {
     if (rejectIfTeacherPortalDisabled(res)) return undefined;
 
-    const auth = await resolveAuthenticatedTeacherUserId(req.headers.authorization || "");
+    const auth = await resolveAuthenticatedTeacherUserId(req.headers.authorization || "", req);
     if (!auth.ok) {
       return sendSchoolApiError(res, auth.status, auth.code, auth.message);
     }
@@ -51,11 +51,7 @@ export default async function handler(req, res) {
       return sendSchoolApiError(res, 403, "not_authorized", "not_authorized");
     }
 
-    const ctx = await requireSchoolDataViewerContext(
-      res,
-      req.headers.authorization || "",
-      membershipResult.membership.schoolId
-    );
+    const ctx = await requireSchoolDataViewerContext(res, req, membershipResult.membership.schoolId);
     if (ctx.stopped) return undefined;
 
     const viewerId = ctx.actorUserId || ctx.managerId;

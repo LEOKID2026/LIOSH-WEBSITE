@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const teacherId = req.query?.teacherId;
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolManagerApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const detail = await getSchoolTeacherDetail(ctx.serviceRole, ctx.schoolId, String(teacherId));

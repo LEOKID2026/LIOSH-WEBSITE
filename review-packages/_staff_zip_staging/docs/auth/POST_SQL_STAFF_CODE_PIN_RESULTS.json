@@ -1,0 +1,285 @@
+{
+  "baseUrl": "http://localhost:3001",
+  "passed": 45,
+  "failed": 0,
+  "skipped": 0,
+  "total": 45,
+  "provisioned": {
+    "teacherUserId": "0ddc5e15-f116-41f4-9619-0f4cf3173e90",
+    "operatorUserId": "a44cc47d-1192-48b5-9dde-faa2bbf1e18d",
+    "teacherCode": "leok-t0013",
+    "operatorCode": "leok-o0008"
+  },
+  "results": [
+    {
+      "id": "manager_provision_teacher",
+      "ok": true,
+      "detail": "status=201 code=leok-t0013 pin=****",
+      "skipped": false
+    },
+    {
+      "id": "teacher_must_change_pin_on_provision",
+      "ok": true,
+      "detail": "must_change_pin=true",
+      "skipped": false
+    },
+    {
+      "id": "manager_provision_operator",
+      "ok": true,
+      "detail": "status=201 code=leok-o0008",
+      "skipped": false
+    },
+    {
+      "id": "teacher_staff_login",
+      "ok": true,
+      "detail": "status=200 redirect=/school/staff/change-pin",
+      "skipped": false
+    },
+    {
+      "id": "teacher_login_redirect_change_pin",
+      "ok": true,
+      "detail": "redirectPath=/school/staff/change-pin",
+      "skipped": false
+    },
+    {
+      "id": "teacher_login_must_change_pin_flag",
+      "ok": true,
+      "detail": "mustChangePin=true",
+      "skipped": false
+    },
+    {
+      "id": "teacher_me_blocked_until_pin_change",
+      "ok": true,
+      "detail": "status=403 code=pin_change_required",
+      "skipped": false
+    },
+    {
+      "id": "teacher_dashboard_blocked_until_pin_change",
+      "ok": true,
+      "detail": "status=403 code=pin_change_required",
+      "skipped": false
+    },
+    {
+      "id": "teacher_change_pin_success",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "teacher_me_via_staff_cookie",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "teacher_dashboard_via_staff_cookie",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "old_generated_pin_rejected_after_change",
+      "ok": true,
+      "detail": "status=401 code=invalid_credentials",
+      "skipped": false
+    },
+    {
+      "id": "onboard_rejects_staff_cookie",
+      "ok": true,
+      "detail": "status=403 code=jwt_required",
+      "skipped": false
+    },
+    {
+      "id": "operator_staff_login",
+      "ok": true,
+      "detail": "status=200 redirect=/school/staff/change-pin",
+      "skipped": false
+    },
+    {
+      "id": "operator_login_redirect_change_pin",
+      "ok": true,
+      "detail": "redirectPath=/school/staff/change-pin",
+      "skipped": false
+    },
+    {
+      "id": "operator_me_blocked_until_pin_change",
+      "ok": true,
+      "detail": "status=403 code=pin_change_required",
+      "skipped": false
+    },
+    {
+      "id": "operator_change_pin_success",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "operator_me_portal_role",
+      "ok": true,
+      "detail": "status=200 portalRole=school_operator",
+      "skipped": false
+    },
+    {
+      "id": "operator_login_redirect_path_after_pin_change",
+      "ok": true,
+      "detail": "redirectPath=/school/operator/dashboard",
+      "skipped": false
+    },
+    {
+      "id": "operator_blocked_manager_teachers_list",
+      "ok": true,
+      "detail": "status=403 code=not_a_school_manager",
+      "skipped": false
+    },
+    {
+      "id": "operator_blocked_manager_dashboard",
+      "ok": true,
+      "detail": "status=403 code=not_a_school_manager",
+      "skipped": false
+    },
+    {
+      "id": "operator_not_teacher_worksheet_api",
+      "ok": true,
+      "detail": "status=403 code=not_a_school_teacher",
+      "skipped": false
+    },
+    {
+      "id": "operator_no_grants_blocked",
+      "ok": true,
+      "detail": "status=403 code=operator_grant_required",
+      "skipped": false
+    },
+    {
+      "id": "operator_access_admin_grant",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "operator_data_viewer_grant",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "operator_both_grants",
+      "ok": true,
+      "detail": "accounts=200 report=200",
+      "skipped": false
+    },
+    {
+      "id": "manager_pin_reset",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "old_pin_rejected_after_reset",
+      "ok": true,
+      "detail": "status=401 code=invalid_credentials",
+      "skipped": false
+    },
+    {
+      "id": "new_pin_works_after_reset",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "must_change_pin_after_reset",
+      "ok": true,
+      "detail": "must_change_pin=true",
+      "skipped": false
+    },
+    {
+      "id": "manager_suspend_operator",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "suspended_staff_cannot_login",
+      "ok": true,
+      "detail": "status=401 code=invalid_credentials",
+      "skipped": false
+    },
+    {
+      "id": "manager_reactivate_operator",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "reactivated_staff_can_login",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "manager_code_regenerate",
+      "ok": true,
+      "detail": "old=leok-t0013 new=leok-t0014",
+      "skipped": false
+    },
+    {
+      "id": "old_code_rejected_after_regenerate",
+      "ok": true,
+      "detail": "status=401",
+      "skipped": false
+    },
+    {
+      "id": "new_code_works_after_regenerate",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "sessions_revoked_after_regenerate",
+      "ok": true,
+      "detail": "pre_sessions=1 post_login=1 stale_me=401",
+      "skipped": false
+    },
+    {
+      "id": "school_manager_jwt_login",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "private_teacher_jwt_login",
+      "ok": true,
+      "detail": "status=200 email=teacher@leo.com",
+      "skipped": false
+    },
+    {
+      "id": "platform_admin_jwt_login",
+      "ok": true,
+      "detail": "email=office@leo.com status=200",
+      "skipped": false
+    },
+    {
+      "id": "parent_jwt_login",
+      "ok": true,
+      "detail": "status=200",
+      "skipped": false
+    },
+    {
+      "id": "guardian_login_endpoint_alive",
+      "ok": true,
+      "detail": "status=401",
+      "skipped": false
+    },
+    {
+      "id": "student_login_endpoint_alive",
+      "ok": true,
+      "detail": "status=401",
+      "skipped": false
+    },
+    {
+      "id": "admin_rejects_staff_cookie",
+      "ok": true,
+      "detail": "status=401 code=not_authenticated",
+      "skipped": false
+    }
+  ]
+}

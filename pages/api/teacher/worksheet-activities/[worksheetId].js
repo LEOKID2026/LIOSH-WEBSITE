@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const worksheetId = String(req.query?.worksheetId || "").trim();
 
   try {
-    const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+    const ctx = await requireTeacherApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     if (req.method === "GET") {

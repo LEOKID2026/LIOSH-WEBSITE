@@ -56,7 +56,7 @@ export default async function handler(req, res) {
 
   try {
     const t0 = startTimer();
-    const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+    const ctx = await requireTeacherApiContext(res, req);
     const tAuth = elapsedMs(t0);
     if (ctx.stopped) return undefined;
     if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "ai_reports")) return undefined;

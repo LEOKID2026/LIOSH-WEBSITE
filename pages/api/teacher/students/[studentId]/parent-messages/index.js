@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     return sendTeacherApiError(res, 400, parsedId.code, `Invalid ${parsedId.field}`);
   }
 
-  const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+  const ctx = await requireTeacherApiContext(res, req);
   if (ctx.stopped) return undefined;
   if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "parent_messaging")) return undefined;
 

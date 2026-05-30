@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+    const ctx = await requireTeacherApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const result = await getStudentWorksheetAnswersForTeacher(

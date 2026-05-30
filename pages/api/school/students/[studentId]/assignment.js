@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const studentId = req.query?.studentId;
 
   try {
-    const ctx = await requireSchoolClassAdminApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolClassAdminApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const actorId = ctx.actorUserId || ctx.managerId;

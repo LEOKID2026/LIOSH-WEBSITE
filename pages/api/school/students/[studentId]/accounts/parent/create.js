@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   const body = req.body && typeof req.body === "object" ? req.body : {};
 
   try {
-    const ctx = await requireSchoolCredentialAdminApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolCredentialAdminApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const actorId = ctx.actorUserId || ctx.managerId;

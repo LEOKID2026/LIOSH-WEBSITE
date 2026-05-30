@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   const classId = req.query?.classId;
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolManagerApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     if (isProductionRuntime()) {

@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+    const ctx = await requireTeacherApiContext(res, req);
     if (ctx.stopped) return undefined;
     if (rejectIfTeacherFeatureDisabled(res, ctx.limits, "classroom_activities")) return undefined;
 

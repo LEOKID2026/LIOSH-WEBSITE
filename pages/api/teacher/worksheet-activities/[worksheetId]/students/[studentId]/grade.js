@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
 
   try {
-    const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+    const ctx = await requireTeacherApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const body = readJsonBody(req);

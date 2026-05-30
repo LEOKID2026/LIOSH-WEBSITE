@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolManagerApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const result = await getSchoolWorksheetReport(ctx.serviceRole, ctx.schoolId, worksheetId);

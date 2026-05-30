@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireSchoolCredentialAdminApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolCredentialAdminApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const actorId = ctx.actorUserId || ctx.managerId;

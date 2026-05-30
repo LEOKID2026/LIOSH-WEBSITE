@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   try {
     if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
 
-    const ctx = await requireSchoolClassAdminApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolClassAdminApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const actorId = ctx.actorUserId || ctx.managerId;

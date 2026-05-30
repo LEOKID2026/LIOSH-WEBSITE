@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   if (rejectIfTeacherPortalDisabled(res)) return undefined;
   if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
 
-  const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
+  const ctx = await requireTeacherApiContext(res, req);
   if (ctx.stopped) return undefined;
 
   try {
