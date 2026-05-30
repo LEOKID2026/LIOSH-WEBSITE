@@ -80,8 +80,8 @@ export default function TeacherRegistrationRequestForm() {
         </p>
       ) : (
         <form onSubmit={(e) => void onSubmit(e)} className="space-y-1.5 md:space-y-3">
-          <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 md:gap-x-4 md:gap-y-3">
-            <label className="block text-sm min-w-0 col-span-1 order-1">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 md:flex md:flex-row md:gap-x-4 md:gap-y-0">
+            <label className="block text-sm min-w-0 col-span-1 order-1 md:flex-1">
               <span className="text-white/80">{REG_TEACHER_NAME_LABEL}</span>
               <input
                 type="text"
@@ -93,7 +93,7 @@ export default function TeacherRegistrationRequestForm() {
                 data-testid="teacher-reg-full-name"
               />
             </label>
-            <label className="block text-sm min-w-0 col-span-1 order-2 md:order-3 md:max-w-md">
+            <label className="block text-sm min-w-0 col-span-1 order-2 md:flex-1">
               <span className="text-white/80">{REG_TEACHER_INTENT_LABEL}</span>
               <select
                 value={requestIntent}
@@ -109,7 +109,7 @@ export default function TeacherRegistrationRequestForm() {
                 ))}
               </select>
             </label>
-            <label className="block text-sm col-span-2 md:col-span-1 order-3 md:order-2">
+            <label className="block text-sm col-span-2 order-3 md:order-3 md:flex-none md:w-full md:max-w-md md:shrink-0">
               <span className="text-white/80">{REG_TEACHER_EMAIL_LABEL}</span>
               <input
                 type="email"

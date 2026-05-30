@@ -21,15 +21,50 @@ import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-
 const PORTAL_AUX_BTN_CLASS =
   "flex-1 min-w-0 rounded px-2 py-2 text-xs sm:text-sm font-semibold text-center bg-white/10 text-white/80 hover:bg-white/15 transition";
 
-function TeacherPortalAuxButtons() {
+const PORTAL_TAB_BTN_CLASS = (active) =>
+  `flex-1 min-w-0 rounded px-3 py-2 text-sm font-semibold text-center ${
+    active ? "bg-amber-500 text-black" : "bg-white/10 text-white/80 hover:bg-white/15"
+  } transition`;
+
+function TeacherPortalAuxButtons({ className = "" }) {
   return (
-    <div className="grid grid-cols-2 md:flex md:flex-row gap-2 mb-1.5 md:mb-3">
+    <div className={`grid grid-cols-2 gap-2 w-full md:contents ${className}`}>
       <Link href="/school/staff/login" className={PORTAL_AUX_BTN_CLASS}>
         מורה בית ספר / צוות בית ספר
       </Link>
       <Link href="/school/register" className={PORTAL_AUX_BTN_CLASS}>
         רישום בית ספר
       </Link>
+    </div>
+  );
+}
+
+function TeacherPortalTopActions({ mode, setMode }) {
+  return (
+    <div className="flex flex-col md:flex-row gap-2 mb-1.5 md:mb-3">
+      <div
+        className={`flex gap-2 w-full md:contents ${
+          mode === "request" ? "max-w-md md:max-w-none" : ""
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => setMode("login")}
+          className={PORTAL_TAB_BTN_CLASS(mode === "login")}
+          data-testid="teacher-login-tab"
+        >
+          {REG_TEACHER_LOGIN_TAB}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode("request")}
+          className={PORTAL_TAB_BTN_CLASS(mode === "request")}
+          data-testid="teacher-request-tab"
+        >
+          {REG_TEACHER_TAB}
+        </button>
+      </div>
+      <TeacherPortalAuxButtons />
     </div>
   );
 }
@@ -229,30 +264,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
           data-testid="teacher-login-root"
           data-invite-only={inviteOnly ? "true" : "false"}
         >
-          <div className={`flex gap-2 mb-1.5 md:mb-3 ${mode === "request" ? "max-w-md" : ""}`}>
-            <button
-              type="button"
-              onClick={() => setMode("login")}
-              className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
-                mode === "login" ? "bg-amber-500 text-black" : "bg-white/10 text-white/80"
-              }`}
-              data-testid="teacher-login-tab"
-            >
-              {REG_TEACHER_LOGIN_TAB}
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("request")}
-              className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
-                mode === "request" ? "bg-amber-500 text-black" : "bg-white/10 text-white/80"
-              }`}
-              data-testid="teacher-request-tab"
-            >
-              {REG_TEACHER_TAB}
-            </button>
-          </div>
-
-          <TeacherPortalAuxButtons />
+          <TeacherPortalTopActions mode={mode} setMode={setMode} />
 
           {mode === "request" ? (
             <TeacherRegistrationRequestForm />

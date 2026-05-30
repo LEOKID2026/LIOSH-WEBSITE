@@ -62,9 +62,9 @@ export default function StudentLoginPage() {
   if (sessionCheck === "pending") {
     return (
       <Layout>
-        <div className="max-w-md mx-auto px-4 py-10" dir="rtl" lang="he">
+        <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
           <PortalLoginHeading title="כניסת תלמיד" />
-          <div className="min-h-[30vh] flex flex-col items-center justify-center">
+          <div className="py-8 md:py-12 flex flex-col items-center justify-center">
             <div className="h-10 w-10 rounded-full border-2 border-emerald-400/30 border-t-emerald-400 animate-spin mb-3" aria-hidden />
             <p className="text-white/85">בודקים חיבור...</p>
           </div>
@@ -109,7 +109,7 @@ export default function StudentLoginPage() {
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto px-4 py-10" dir="rtl" lang="he">
+      <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
         <PortalLoginHeading title="כניסת תלמיד" />
 
         <form onSubmit={submitLogin} className="space-y-3">

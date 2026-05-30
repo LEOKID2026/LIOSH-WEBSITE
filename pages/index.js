@@ -63,7 +63,7 @@ export default function HomePage() {
     <Layout homepage>
       <InstallAppPrompt />
       <div
-        className="max-w-5xl mx-auto px-3 pt-3.5 pb-3 md:px-4 md:py-6 flex flex-col flex-1 w-full min-h-[calc(100dvh-8.25rem)] justify-between md:min-h-[calc(100vh-9.5rem)] md:justify-center md:flex-initial gap-5 md:gap-7"
+        className="max-w-5xl mx-auto px-3 pt-3.5 pb-3 md:px-4 md:py-6 flex flex-col flex-1 min-h-0 w-full justify-between md:min-h-[calc(100vh-9.5rem)] md:justify-center md:flex-initial gap-5 md:gap-7"
         dir="rtl"
       >
         <section className="text-center space-y-2.5 md:space-y-4 mt-1.5 mb-0.5 md:mt-0 md:mb-0">

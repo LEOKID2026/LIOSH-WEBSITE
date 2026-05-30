@@ -8,7 +8,7 @@ export default function SchoolRegisterPage() {
   return (
     <Layout>
       <div
-        className="max-w-4xl mx-auto px-3 md:px-4 py-4 md:py-8"
+        className="max-w-4xl mx-auto px-3 md:px-4 py-3 md:py-8"
         data-testid="school-register-page"
         dir="rtl"
         lang="he"

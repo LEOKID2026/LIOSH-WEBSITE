@@ -55,7 +55,7 @@ export default function Layout({ children, homepage = false }) {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white flex flex-col"
+      className="min-h-[100svh] md:min-h-screen bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white flex flex-col"
       dir={layoutRtlHebrew ? "rtl" : undefined}
     >
       <header className="w-full border-b border-white/10 bg-black/40 backdrop-blur sticky top-0 z-30 shrink-0">
@@ -128,13 +128,7 @@ export default function Layout({ children, homepage = false }) {
         </div>
       )}
 
-      <main
-        className={
-          homepage
-            ? "flex-1 flex flex-col"
-            : "flex-1 min-h-0"
-        }
-      >
+      <main className="flex-1 min-h-0 flex flex-col">
         {children}
       </main>
       <footer

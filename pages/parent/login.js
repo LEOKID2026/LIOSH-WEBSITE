@@ -215,7 +215,7 @@ export default function ParentLoginPage() {
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto px-4 py-10" dir="rtl" lang="he">
+      <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
         <PortalLoginHeading
           title="כניסת הורים"
           subtitle="כניסה והרשמה מהירה להורים."
