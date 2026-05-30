@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
-import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
+import PortalLoginHeading from "../../../components/auth/PortalLoginHeading";
 import {
   SCHOOL_STAFF_CODE_LABEL,
   SCHOOL_STAFF_LOGIN_BUSY,
@@ -78,30 +78,34 @@ export default function SchoolStaffLoginPage() {
 
   return (
     <Layout>
-      <TeacherPortalShell title={SCHOOL_STAFF_LOGIN_TITLE}>
-        <div data-testid="school-staff-login-root" dir="rtl" lang="he">
-          <p className="text-white/70 text-sm mb-6">{SCHOOL_STAFF_LOGIN_SUBTITLE}</p>
-          <form onSubmit={(e) => void onSubmit(e)} className="max-w-md space-y-4">
+      <div className="max-w-md mx-auto px-3 md:px-4 py-3 md:py-8" dir="rtl" lang="he">
+        <PortalLoginHeading
+          title={SCHOOL_STAFF_LOGIN_TITLE}
+          subtitle={SCHOOL_STAFF_LOGIN_SUBTITLE}
+          className="!mb-3 md:!mb-4"
+        />
+        <div data-testid="school-staff-login-root">
+          <form onSubmit={(e) => void onSubmit(e)} className="space-y-3">
             <label className="block text-sm">
-              <span className="text-white/60 block mb-1">{SCHOOL_STAFF_CODE_LABEL}</span>
+              <span className="text-white/80">{SCHOOL_STAFF_CODE_LABEL}</span>
               <input
                 type="text"
                 value={staffCode}
                 onChange={(e) => setStaffCode(e.target.value)}
-                className="w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 font-mono"
+                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2 font-mono"
                 dir="ltr"
                 autoComplete="off"
                 required
               />
             </label>
             <label className="block text-sm">
-              <span className="text-white/60 block mb-1">{SCHOOL_STAFF_PIN_LABEL}</span>
+              <span className="text-white/80">{SCHOOL_STAFF_PIN_LABEL}</span>
               <input
                 type="password"
                 inputMode="numeric"
                 value={pin}
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                className="w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 font-mono"
+                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2 font-mono"
                 dir="ltr"
                 autoComplete="off"
                 maxLength={4}
@@ -116,13 +120,13 @@ export default function SchoolStaffLoginPage() {
             <button
               type="submit"
               disabled={busy}
-              className="w-full rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-bold py-2.5 disabled:opacity-60"
+              className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
             >
               {busy ? SCHOOL_STAFF_LOGIN_BUSY : SCHOOL_STAFF_LOGIN_SUBMIT}
             </button>
           </form>
         </div>
-      </TeacherPortalShell>
+      </div>
     </Layout>
   );
 }

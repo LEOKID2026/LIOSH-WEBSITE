@@ -12,12 +12,27 @@ import {
 } from "../../lib/auth/auth-post-reset-redirect";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import {
-  REG_SCHOOL_LINK,
   REG_TEACHER_INVITE_ONLY_LOGIN_NOTE,
   REG_TEACHER_LOGIN_TAB,
   REG_TEACHER_TAB,
 } from "../../lib/auth/auth-registration.he";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
+
+const PORTAL_AUX_BTN_CLASS =
+  "flex-1 min-w-0 rounded px-2 py-2 text-xs sm:text-sm font-semibold text-center bg-white/10 text-white/80 hover:bg-white/15 transition";
+
+function TeacherPortalAuxButtons() {
+  return (
+    <div className="grid grid-cols-2 md:flex md:flex-row gap-2 mb-1.5 md:mb-3">
+      <Link href="/school/staff/login" className={PORTAL_AUX_BTN_CLASS}>
+        מורה בית ספר / צוות בית ספר
+      </Link>
+      <Link href="/school/register" className={PORTAL_AUX_BTN_CLASS}>
+        רישום בית ספר
+      </Link>
+    </div>
+  );
+}
 
 export async function getServerSideProps() {
   const { isTeacherPortalInviteOnly } = await import(
@@ -202,19 +217,19 @@ export default function TeacherLoginPage({ inviteOnly }) {
   return (
     <Layout>
       <div
-        className={`mx-auto px-4 py-6 md:py-8 ${
+        className={`mx-auto px-3 md:px-4 py-3 md:py-8 ${
           mode === "request" ? "max-w-4xl" : "max-w-md"
         }`}
         dir="rtl"
         lang="he"
       >
-        <PortalLoginHeading title="כניסה למורים" className="!mb-4" />
+        <PortalLoginHeading title="כניסה למורים" className="!mb-2 md:!mb-4" />
 
         <div
           data-testid="teacher-login-root"
           data-invite-only={inviteOnly ? "true" : "false"}
         >
-          <div className={`flex gap-2 mb-3 ${mode === "request" ? "max-w-md" : ""}`}>
+          <div className={`flex gap-2 mb-1.5 md:mb-3 ${mode === "request" ? "max-w-md" : ""}`}>
             <button
               type="button"
               onClick={() => setMode("login")}
@@ -236,6 +251,8 @@ export default function TeacherLoginPage({ inviteOnly }) {
               {REG_TEACHER_TAB}
             </button>
           </div>
+
+          <TeacherPortalAuxButtons />
 
           {mode === "request" ? (
             <TeacherRegistrationRequestForm />
@@ -294,19 +311,6 @@ export default function TeacherLoginPage({ inviteOnly }) {
               ) : null}
             </>
           )}
-
-          <p className="mt-3 text-xs text-white/60 leading-relaxed max-w-md">
-            בית ספר מעוניין להצטרף?{" "}
-            <Link href="/school/register" className="text-amber-300 underline">
-              {REG_SCHOOL_LINK}
-            </Link>
-          </p>
-          <p className="mt-2 text-xs text-white/60 leading-relaxed">
-            צוות בית ספר (מורה / מזכירות)?{" "}
-            <Link href="/school/staff/login" className="text-amber-300 underline">
-              כניסה בקוד צוות + PIN
-            </Link>
-          </p>
         </div>
       </div>
     </Layout>

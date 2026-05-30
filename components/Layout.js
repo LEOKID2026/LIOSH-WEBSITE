@@ -32,6 +32,7 @@ export default function Layout({ children, homepage = false }) {
     pathname === "/" ||
     pathname.startsWith("/parent") ||
     pathname.startsWith("/teacher") ||
+    pathname.startsWith("/school") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/guardian") ||
     pathname === "/student/login" ||

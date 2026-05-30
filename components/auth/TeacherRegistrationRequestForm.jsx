@@ -73,15 +73,15 @@ export default function TeacherRegistrationRequestForm() {
 
   return (
     <div data-testid="teacher-registration-request-form" dir="rtl" lang="he">
-      <h2 className="text-lg md:text-xl font-bold mb-2">{REG_TEACHER_TITLE}</h2>
+      <h2 className="text-base md:text-xl font-bold mb-1">{REG_TEACHER_TITLE}</h2>
       {message ? (
-        <p className="text-emerald-300 text-sm mb-2" role="status">
+        <p className="text-emerald-300 text-sm mb-1" role="status">
           {message}
         </p>
       ) : (
-        <form onSubmit={(e) => void onSubmit(e)} className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
-            <label className="block text-sm">
+        <form onSubmit={(e) => void onSubmit(e)} className="space-y-1.5 md:space-y-3">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 md:gap-x-4 md:gap-y-3">
+            <label className="block text-sm min-w-0 col-span-1 order-1">
               <span className="text-white/80">{REG_TEACHER_NAME_LABEL}</span>
               <input
                 type="text"
@@ -93,18 +93,7 @@ export default function TeacherRegistrationRequestForm() {
                 data-testid="teacher-reg-full-name"
               />
             </label>
-            <label className="block text-sm">
-              <span className="text-white/80">{REG_TEACHER_EMAIL_LABEL}</span>
-              <input
-                type="email"
-                value={email}
-                onChange={(ev) => setEmail(ev.target.value)}
-                required
-                className={INPUT_CLASS}
-                data-testid="teacher-reg-email"
-              />
-            </label>
-            <label className="block text-sm md:max-w-md">
+            <label className="block text-sm min-w-0 col-span-1 order-2 md:order-3 md:max-w-md">
               <span className="text-white/80">{REG_TEACHER_INTENT_LABEL}</span>
               <select
                 value={requestIntent}
@@ -120,11 +109,22 @@ export default function TeacherRegistrationRequestForm() {
                 ))}
               </select>
             </label>
+            <label className="block text-sm col-span-2 md:col-span-1 order-3 md:order-2">
+              <span className="text-white/80">{REG_TEACHER_EMAIL_LABEL}</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(ev) => setEmail(ev.target.value)}
+                required
+                className={INPUT_CLASS}
+                data-testid="teacher-reg-email"
+              />
+            </label>
           </div>
 
           <label className="block text-sm">
             <span className="text-white/80">{REG_TEACHER_EXPLANATION_LABEL}</span>
-            <span className="block text-xs text-white/50 mt-0.5">
+            <span className="block text-xs text-white/50 leading-snug">
               {REG_TEACHER_EXPLANATION_HINT}
             </span>
             <textarea
@@ -134,18 +134,18 @@ export default function TeacherRegistrationRequestForm() {
               minLength={10}
               maxLength={1000}
               rows={3}
-              className={`${INPUT_CLASS} mt-1 resize-y min-h-[4.5rem] max-h-32`}
+              className={`${INPUT_CLASS} mt-0.5 resize-y min-h-[3.75rem] md:min-h-[4.5rem] max-h-28`}
               data-testid="teacher-reg-description"
             />
           </label>
 
-          <fieldset className="text-sm">
-            <legend className="text-white/80 mb-1.5">{REG_TEACHER_SUBJECTS_LABEL}</legend>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5">
+          <fieldset className="text-sm pt-0">
+            <legend className="text-white/80 mb-1">{REG_TEACHER_SUBJECTS_LABEL}</legend>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1 md:gap-1.5">
               {[...LEARNING_SUBJECT_ALLOWLIST].map((key) => (
                 <label
                   key={key}
-                  className="inline-flex items-center gap-1 rounded border border-white/20 px-2 py-1 cursor-pointer text-xs leading-tight"
+                  className="inline-flex items-center gap-1 rounded border border-white/20 px-1.5 py-0.5 md:px-2 md:py-1 cursor-pointer text-[11px] md:text-xs leading-tight"
                 >
                   <input
                     type="checkbox"
@@ -163,7 +163,7 @@ export default function TeacherRegistrationRequestForm() {
           <button
             type="submit"
             disabled={busy || !explanationReady}
-            className="w-full md:w-auto rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
+            className="w-full md:w-auto rounded bg-amber-500 text-black font-semibold px-6 py-1.5 md:py-2 disabled:opacity-60"
             data-testid="teacher-reg-submit"
           >
             {busy ? "שולח…" : REG_TEACHER_SUBMIT}
@@ -171,7 +171,7 @@ export default function TeacherRegistrationRequestForm() {
         </form>
       )}
       {error ? (
-        <p className="mt-2 text-sm text-red-300" role="alert">
+        <p className="mt-1.5 text-sm text-red-300" role="alert">
           {error}
         </p>
       ) : null}

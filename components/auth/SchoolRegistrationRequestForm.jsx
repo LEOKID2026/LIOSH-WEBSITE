@@ -71,8 +71,8 @@ export default function SchoolRegistrationRequestForm() {
           {success}
         </p>
       ) : (
-        <form onSubmit={(e) => void onSubmit(e)} className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+        <form onSubmit={(e) => void onSubmit(e)} className="space-y-2 md:space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 md:gap-y-3">
             <label className="block text-sm">
               <span className="text-white/80">{REG_SCHOOL_NAME_LABEL}</span>
               <input
@@ -120,6 +120,9 @@ export default function SchoolRegistrationRequestForm() {
                 data-testid="school-reg-contact-email"
               />
             </label>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-x-3 md:gap-x-4 gap-y-2 md:gap-y-3">
             <label className="block text-sm">
               <span className="text-white/80">{REG_SCHOOL_APPROX_TEACHERS_LABEL}</span>
               <input
@@ -151,7 +154,7 @@ export default function SchoolRegistrationRequestForm() {
               onChange={(ev) => setMessage(ev.target.value)}
               maxLength={1000}
               rows={2}
-              className={`${INPUT_CLASS} mt-1 resize-y min-h-[3.5rem] max-h-28`}
+              className={`${INPUT_CLASS} mt-1 resize-y min-h-[3rem] md:min-h-[3.5rem] max-h-28`}
               data-testid="school-reg-message"
             />
           </label>
@@ -159,7 +162,7 @@ export default function SchoolRegistrationRequestForm() {
           <button
             type="submit"
             disabled={busy}
-            className="w-full md:w-auto rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
+            className="w-full md:w-auto rounded bg-amber-500 text-black font-semibold px-6 py-1.5 md:py-2 disabled:opacity-60"
             data-testid="school-reg-submit"
           >
             {busy ? "שולח…" : REG_SCHOOL_SUBMIT}
@@ -167,7 +170,7 @@ export default function SchoolRegistrationRequestForm() {
         </form>
       )}
       {error ? (
-        <p className="mt-2 text-sm text-red-300" role="alert">
+        <p className="mt-1.5 md:mt-2 text-sm text-red-300" role="alert">
           {error}
         </p>
       ) : null}
