@@ -63,28 +63,28 @@ export default function HomePage() {
     <Layout homepage>
       <InstallAppPrompt />
       <div
-        className="max-w-5xl mx-auto px-3 pt-1 pb-2 md:px-4 md:py-6 flex flex-col justify-start md:justify-center gap-2 md:gap-7 md:min-h-[calc(100vh-9.5rem)]"
+        className="max-w-5xl mx-auto px-3 pt-3.5 pb-3 md:px-4 md:py-6 flex flex-col flex-1 w-full min-h-[calc(100dvh-8.25rem)] justify-between md:min-h-[calc(100vh-9.5rem)] md:justify-center md:flex-initial gap-5 md:gap-7"
         dir="rtl"
       >
-        <section className="text-center space-y-1 md:space-y-4">
-          <p className="inline-flex items-center gap-2 px-3 py-0.5 md:py-1.5 rounded-full bg-white/10 text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.25em] uppercase text-amber-300 font-semibold">
+        <section className="text-center space-y-2.5 md:space-y-4 mt-1.5 mb-0.5 md:mt-0 md:mb-0">
+          <p className="inline-flex items-center gap-2 px-3 py-1 md:py-1.5 rounded-full bg-white/10 text-xs md:text-xs tracking-[0.2em] md:tracking-[0.25em] uppercase text-amber-300 font-semibold">
             כיף · בטוח · חינוכי
           </p>
-          <h1 className="text-xl md:text-4xl lg:text-5xl font-black leading-tight">
+          <h1 className="text-[1.75rem] md:text-4xl lg:text-5xl font-black leading-tight">
             ברוכים הבאים ל־<span className="text-amber-300">LEO KIDS</span>
           </h1>
-          <p className="text-[11px] md:text-base lg:text-lg text-white/70 max-w-2xl mx-auto leading-snug md:leading-normal px-1">
+          <p className="text-sm md:text-base lg:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed md:leading-normal px-1">
             עולם קטן של מיני־משחקים ופעילויות לימוד לילדים: ריצה, טיסה, חידות
             ותרגול במתמטיקה, גיאומטריה ואנגלית — הכול במקום אחד.
           </p>
         </section>
 
-        <section className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5">
+        <section className="grid grid-cols-2 lg:grid-cols-3 gap-x-2.5 gap-y-3.5 md:gap-5">
           {PORTAL_CARDS.map((card) => {
             const inner = (
-              <div className="h-full rounded-2xl bg-black/60 flex flex-col items-center justify-center text-center p-3 md:p-5 min-h-[104px] md:min-h-[152px]">
-                <div className="text-2xl md:text-4xl mb-1 md:mb-3">{card.emoji}</div>
-                <h2 className="text-sm md:text-xl font-bold leading-tight">{card.title}</h2>
+              <div className="h-full rounded-2xl bg-black/60 flex flex-col items-center justify-center text-center p-4 md:p-5 min-h-[118px] md:min-h-[152px]">
+                <div className="text-3xl md:text-4xl mb-2 md:mb-3">{card.emoji}</div>
+                <h2 className="text-lg md:text-xl font-bold leading-snug">{card.title}</h2>
                 {card.authAware && studentPortalBusy ? (
                   <span className="mt-1 text-xs text-white/60">טוען...</span>
                 ) : null}
@@ -115,7 +115,7 @@ export default function HomePage() {
           })}
         </section>
 
-        <div className="flex justify-center shrink-0 pt-0.5">
+        <div className="flex justify-center shrink-0 pt-1 md:pt-0">
           <InstallAppButton className="" />
         </div>
       </div>
