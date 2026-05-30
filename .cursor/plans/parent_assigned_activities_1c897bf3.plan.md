@@ -4,34 +4,34 @@ overview: Add the ability for a parent to assign a normal learning activity to t
 todos:
   - id: sql-migration
     content: "Prepare supabase/migrations/051_parent_assigned_activities.sql (3 new tables: parent_assigned_activities, parent_activity_status, parent_activity_attempts) — send to owner for manual apply"
-    status: pending
+    status: completed
   - id: server-lib
     content: Implement lib/parent-server/parent-activity.server.js (parse/validate, create, list, load, start, answer writes to parent_activity_attempts only, submit)
-    status: pending
+    status: completed
   - id: new-api
     content: Implement pages/api/parent/activities/index.js (GET list, POST create) with requireParentApiContext and student ownership check
-    status: pending
+    status: completed
   - id: extend-report-aggregate
     content: "Edit lib/parent-server/report-data-aggregate.server.js: add options.includeParentActivities flag, fetchParentActivityAttemptsInRange, accumulator helper; update pages/api/parent/students/[studentId]/report-data.js to pass the flag"
     status: pending
   - id: extend-student-apis
     content: "Extend teacher-activities.server.js: listStudentActivities, loadActivityForStudent, startStudentActivity, recordStudentActivityAnswer, submitStudentActivity — add scope:'parent' branches"
-    status: pending
+    status: completed
   - id: modal-component
     content: Implement components/parent/AssignActivityModal.js — mirrors teacher student-activities/new.js form, simplified for parent (guided_practice + homework modes, grade locked, questionCount 1-30)
-    status: pending
+    status: completed
   - id: dashboard-edit
     content: Edit pages/parent/dashboard.js — add activityModalStudent state, one 'שלח פעילות' button per child card, render AssignActivityModal
-    status: pending
+    status: completed
   - id: hebrew-copy
     content: List all proposed Hebrew copy strings for owner approval (Section 9 of plan) — do not apply until approved
-    status: pending
+    status: completed
   - id: tests
     content: Write unit tests for parent-activity.server.js, API handler tests, integration tests for student execution flow, parent report inclusion, and teacher/school isolation
-    status: pending
+    status: completed
   - id: zip-package
     content: "After all tests pass: prepare ZIP review package with all changed/new files, SQL file, test results, QA notes, and remaining risks"
-    status: pending
+    status: completed
 isProject: false
 ---
 
