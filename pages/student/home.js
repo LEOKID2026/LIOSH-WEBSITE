@@ -73,7 +73,9 @@ function DashboardTile({ emoji, title, subtitle, onClick }) {
       </span>
       <div className="min-w-0">
         <p className="text-sm md:text-base font-bold text-white leading-snug">{title}</p>
-        {subtitle ? <p className="text-[11px] md:text-xs text-white/55 mt-0.5 leading-snug">{subtitle}</p> : null}
+        <p className="text-[11px] md:text-xs text-white/55 mt-0.5 leading-snug tabular-nums">
+          {subtitle ?? "0"}
+        </p>
       </div>
     </button>
   );
@@ -417,23 +419,23 @@ export default function StudentHomePage() {
   const dashboardSubtitles = useMemo(() => {
     if (!dashboardView) return {};
     const missions = dashboardView.dailyMissions;
-    const missionSub =
-      missions?.missions?.length > 0
-        ? `${missions.totalCompleted}/${missions.missions.length} הושלמו`
-        : null;
+    const missionTotal = missions?.missions?.length ?? 0;
+    const missionCompleted = missions?.totalCompleted ?? 0;
+    const progressMinutes =
+      dashboardView.monthlyPersistence?.currentMinutes != null
+        ? dashboardView.monthlyPersistence.currentMinutes
+        : dashboardView.monthlyJourney.minutesThisMonth;
+
     return {
       stats: `רמה ${dashboardView.accountStats.summaryLevel}`,
-      progress:
-        dashboardView.monthlyPersistence?.currentMinutes != null
-          ? `${dashboardView.monthlyPersistence.currentMinutes} דק׳ החודש`
-          : `${dashboardView.monthlyJourney.minutesThisMonth} דק׳`,
-      missions: missionSub,
+      progress: `${progressMinutes} דק׳ החודש`,
+      missions:
+        missionTotal > 0 ? `${missionCompleted}/${missionTotal} הושלמו` : "0/0 הושלמו",
+      classroom: "0 פעילויות",
+      worksheets: "0 דפי עבודה",
       subjects: `${dashboardView.subjects.length} נושאים`,
-      badges: dashboardView.badges.length > 0 ? `${dashboardView.badges.length} תגים` : null,
-      recommendations:
-        dashboardView.recommendations.length > 0
-          ? `${dashboardView.recommendations.length} המלצות`
-          : null,
+      badges: `${dashboardView.badges.length} תגים`,
+      recommendations: `${dashboardView.recommendations.length} המלצות`,
     };
   }, [dashboardView]);
 
