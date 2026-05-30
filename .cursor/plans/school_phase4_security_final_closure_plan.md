@@ -4,7 +4,7 @@ overview: Comprehensive written plan for Phase 4 — School Portal Security & Sc
 todos:
   - id: create-plan-file
     content: Write the plan to .cursor/plans/school_phase4_security_final_closure_plan.md
-    status: completed
+    status: in_progress
 isProject: false
 ---
 

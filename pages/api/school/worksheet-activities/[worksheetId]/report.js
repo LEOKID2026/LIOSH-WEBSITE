@@ -4,6 +4,7 @@ import {
   requireSchoolManagerApiContext,
   sendSchoolApiError,
 } from "../../../../../lib/school-server/school-request.server.js";
+import { setSensitiveReportNoStoreHeaders } from "../../../../../lib/security/sensitive-report-response.server.js";
 
 export default async function handler(req, res) {
   const worksheetId = String(req.query?.worksheetId || "").trim();
@@ -22,6 +23,7 @@ export default async function handler(req, res) {
       return sendSchoolApiError(res, result.status, result.code, result.code);
     }
 
+    setSensitiveReportNoStoreHeaders(res);
     return res.status(200).json({ data: { summary: result.summary } });
   } catch (_e) {
     safeApiLog("school_worksheet_report_error", { route: "school/worksheet-activities/report" });

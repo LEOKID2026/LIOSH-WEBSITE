@@ -1,4 +1,5 @@
 import { safeApiLog } from "../../../../lib/security/safe-log.js";
+import { setSensitiveReportNoStoreHeaders } from "../../../../lib/security/sensitive-report-response.server.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
 import {
   clearStaffSessionCookie,
@@ -17,6 +18,7 @@ export default async function handler(req, res) {
   try {
     await staffLogout(req);
     clearStaffSessionCookie(res);
+    setSensitiveReportNoStoreHeaders(res);
     return res.status(200).json({ data: { loggedOut: true } });
   } catch (_e) {
     safeApiLog("school_staff_logout_error", {});

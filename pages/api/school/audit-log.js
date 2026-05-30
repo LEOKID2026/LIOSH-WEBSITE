@@ -1,4 +1,5 @@
 import { safeApiLog } from "../../../lib/security/safe-log.js";
+import { setSensitiveReportNoStoreHeaders } from "../../../lib/security/sensitive-report-response.server.js";
 import { listSchoolAuditLog } from "../../../lib/school-server/school-operations.server.js";
 import {
   requireSchoolManagerApiContext,
@@ -30,6 +31,7 @@ export default async function handler(req, res) {
       return sendSchoolApiError(res, result.status, result.code, result.code);
     }
 
+    setSensitiveReportNoStoreHeaders(res);
     return res.status(200).json({
       data: {
         entries: result.entries,

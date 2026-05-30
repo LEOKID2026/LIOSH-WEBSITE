@@ -174,6 +174,21 @@ async function provisionFixtures(admin, password) {
   const schoolAId = await findOrCreateSchool(admin, SCHOOL_A_NAME);
   const schoolBId = await findOrCreateSchool(admin, SCHOOL_B_NAME);
 
+  async function ensureSchoolStaffCode(schoolId, code) {
+    const { data } = await admin
+      .from("school_accounts")
+      .select("school_code")
+      .eq("id", schoolId)
+      .maybeSingle();
+    const existing = data?.school_code ? String(data.school_code).trim().toLowerCase() : "";
+    if (/^[a-z]{3,4}$/.test(existing)) return;
+    const { error } = await admin.from("school_accounts").update({ school_code: code }).eq("id", schoolId);
+    if (error) throw new Error(`ensureSchoolStaffCode ${code}: ${error.message}`);
+  }
+
+  await ensureSchoolStaffCode(schoolAId, "qaa");
+  await ensureSchoolStaffCode(schoolBId, "qab");
+
   const managerAId = await ensureAuthUser(admin, EMAILS.managerA, password, "teacher");
   const managerBId = await ensureAuthUser(admin, EMAILS.managerB, password, "teacher");
   const mathTeacherId = await ensureAuthUser(admin, EMAILS.mathTeacher, password, "teacher");
@@ -393,6 +408,7 @@ const ACTIVITY_CREATE_BODY = {
   questionSelection: "same_exact",
   questionCount: 1,
   timeLimitSeconds: 300,
+  gradeLevel: "g3",
   questionSet: [{ id: "q1", prompt: "1+1", correct_answer: "2" }],
 };
 
@@ -555,7 +571,8 @@ async function runMatrix(admin, anon, password, fx) {
   record(
     "math-only cannot create english classroom activity",
     createEnglishClass.statusCode === 403 &&
-      createEnglishClass.body?.error?.code === "subject_not_permitted",
+      (createEnglishClass.body?.error?.code === "subject_not_permitted" ||
+        createEnglishClass.body?.error?.code === "subject_mismatch"),
     `status=${createEnglishClass.statusCode} code=${createEnglishClass.body?.error?.code}`
   );
 

@@ -22,6 +22,7 @@ import {
   resolveTeacherReportDateRange,
 } from "../../../../../lib/teacher-server/teacher-report.server.js";
 import { stripInternalReportPayloadFields } from "../../../../../lib/parent-server/report-data-aggregate.server.js";
+import { setSensitiveReportNoStoreHeaders } from "../../../../../lib/security/sensitive-report-response.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -134,6 +135,7 @@ export default async function handler(req, res) {
       studentParsed.studentId
     );
 
+    setSensitiveReportNoStoreHeaders(res);
     return res.status(200).json(stripInternalReportPayloadFields(report.payload));
   } catch (_e) {
     safeApiLog("school_student_report_error", { route: "school/students/report-data" });

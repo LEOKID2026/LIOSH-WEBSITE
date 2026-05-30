@@ -6,6 +6,8 @@ import {
 } from "../../../../lib/school-server/school-request.server.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import { resolveTeacherReportDateRange } from "../../../../lib/teacher-server/teacher-report.server.js";
+import { stripInternalReportPayloadFields } from "../../../../lib/parent-server/report-data-aggregate.server.js";
+import { setSensitiveReportNoStoreHeaders } from "../../../../lib/security/sensitive-report-response.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -59,7 +61,8 @@ export default async function handler(req, res) {
       },
     });
 
-    return res.status(200).json(report.payload);
+    setSensitiveReportNoStoreHeaders(res);
+    return res.status(200).json(stripInternalReportPayloadFields(report.payload));
   } catch (_e) {
     safeApiLog("school_physical_class_report_error", { route: "school/classes/physical-report" });
     return sendSchoolApiError(res, 500, "internal_error", "Unexpected server error");

@@ -10,6 +10,7 @@ import {
 } from "../../../../../lib/school-server/school-request.server.js";
 import { resolveTeacherReportDateRange } from "../../../../../lib/teacher-server/teacher-report.server.js";
 import { stripInternalReportPayloadFields } from "../../../../../lib/parent-server/report-data-aggregate.server.js";
+import { setSensitiveReportNoStoreHeaders } from "../../../../../lib/security/sensitive-report-response.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -77,6 +78,7 @@ export default async function handler(req, res) {
         .limit(8),
     ]);
 
+    setSensitiveReportNoStoreHeaders(res);
     return res.status(200).json({
       ...stripInternalReportPayloadFields(report.payload),
       schoolManagerExtras: {
