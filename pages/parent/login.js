@@ -15,6 +15,7 @@ import {
   postParentTeacherCodeLogin,
   redirectAfterParentTeacherCodeLogin,
 } from "../../lib/parent-client/parent-teacher-code-access.js";
+import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 
 async function storeSignupPolicyAcceptance(accessToken) {
   return postPolicyAcceptance(accessToken, {
@@ -301,6 +302,17 @@ export default function ParentLoginPage() {
           >
             {busy ? "מבצע פעולה..." : mode === "signup" ? "יצירת חשבון הורה" : "כניסה"}
           </button>
+          {mode === "login" ? (
+            <p className="text-sm text-center">
+              <Link
+                href="/auth/forgot-password?portal=parent"
+                className="text-amber-300 underline"
+                data-testid="parent-forgot-password-link"
+              >
+                {AUTH_FORGOT_PASSWORD_LINK}
+              </Link>
+            </p>
+          ) : null}
         </form>
 
         {multiStudents?.length ? (

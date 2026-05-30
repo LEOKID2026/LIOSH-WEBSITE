@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { isAdminAppMetadataUser } from "../../lib/admin-portal/use-admin-session";
+import {
+  fetchTeacherMe,
+  teacherPostLoginPath,
+} from "../../lib/auth/auth-post-reset-redirect";
+import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 
 export async function getServerSideProps() {
@@ -15,28 +21,6 @@ export async function getServerSideProps() {
       inviteOnly: isTeacherPortalInviteOnly(),
     },
   };
-}
-
-function teacherPostLoginPath(meBody) {
-  const schoolRole = meBody?.data?.schoolMembership?.schoolRole;
-  if (schoolRole === "school_operator") {
-    return "/school/operator/dashboard";
-  }
-  if (meBody?.data?.schoolMembership?.isSchoolManager) {
-    return "/school/dashboard";
-  }
-  return "/teacher/dashboard";
-}
-
-async function fetchTeacherMe(accessToken) {
-  const res = await fetch("/api/teacher/me", {
-    method: "GET",
-    headers: { Authorization: `Bearer ${accessToken}` },
-    credentials: "same-origin",
-    cache: "no-store",
-  });
-  const body = await res.json().catch(() => ({}));
-  return { status: res.status, body };
 }
 
 async function postTeacherOnboard(accessToken, payload) {
@@ -229,6 +213,15 @@ export default function TeacherLoginPage({ inviteOnly }) {
             >
               {busy ? "מתחבר…" : "כניסה"}
             </button>
+            <p className="text-sm">
+              <Link
+                href="/auth/forgot-password?portal=teacher"
+                className="text-amber-300 hover:underline"
+                data-testid="teacher-forgot-password-link"
+              >
+                {AUTH_FORGOT_PASSWORD_LINK}
+              </Link>
+            </p>
           </form>
           {loginError ? (
             <p className="mt-4 text-sm text-red-300" role="alert">

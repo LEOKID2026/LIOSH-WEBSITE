@@ -1,5 +1,5 @@
 # Delivery ZIP manifest — full workspace-relative paths
-# Generated: 2026-05-30T01:41:52.227Z
+# Generated: 2026-05-30T12:14:27.823Z
 # Total files: 104
 
 components/admin/AdminSchoolLifecyclePanel.jsx

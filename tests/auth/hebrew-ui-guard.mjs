@@ -38,6 +38,10 @@ const LIFECYCLE_UI_FILES = [
   "pages/school/staff/change-pin.js",
   "components/school-portal/SchoolReportModal.jsx",
   "components/platform-ui/PortalDarkSelect.jsx",
+  "pages/auth/forgot-password.js",
+  "pages/auth/reset-password.js",
+  "pages/parent/login.js",
+  "pages/teacher/login.js",
 ];
 
 const STAFF_LIFECYCLE_FILES = [
@@ -282,6 +286,23 @@ async function main() {
       classMgmt?.includes("PortalDarkSelect") &&
       assignPanel?.includes("SCHOOL_ASSIGN_UPDATE"),
     "class/assignment Hebrew + dark select"
+  );
+
+  const authResetHe = await readFile("lib/auth/auth-reset.he.js");
+  record(
+    "auth_reset_hebrew_constants",
+    authResetHe?.includes("AUTH_FORGOT_PASSWORD_TITLE") &&
+      authResetHe?.includes("AUTH_RESET_PASSWORD_TITLE") &&
+      authResetHe?.includes("AUTH_FORGOT_PASSWORD_LINK"),
+    "password reset Hebrew constants"
+  );
+
+  const forgotPage = await readFile("pages/auth/forgot-password.js");
+  const resetPage = await readFile("pages/auth/reset-password.js");
+  record(
+    "auth_reset_pages_use_hebrew_module",
+    forgotPage?.includes("auth-reset.he") && resetPage?.includes("auth-reset.he"),
+    "auth-reset.he imports"
   );
 
   const failed = results.filter((r) => !r.ok).length;
