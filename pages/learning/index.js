@@ -90,69 +90,58 @@ export default function LearningHub({ showDevStudentSimulator }) {
 
   return (
     <Layout>
-      <main className="min-h-screen bg-gradient-to-b from-[#120b1f] to-[#1b1430] text-white px-4 py-10" dir="rtl">
-        <div className="max-w-5xl mx-auto space-y-6">
-          <div className="flex flex-wrap justify-between items-center gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <Link
-                href="/"
-                className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-semibold tracking-widest"
-              >
-                בית ←
-              </Link>
-            </div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/60">
-              אזור לימודים
-            </p>
-          </div>
-
-          <header className="text-center space-y-3">
-            <p className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-sm tracking-wider uppercase text-amber-300 font-semibold">
-              📚 תרגול · חזרה · שיפור
-            </p>
-            <h1 className="text-3xl md:text-4xl font-black">מרכז משחקי הלימוד</h1>
-            <p className="text-sm md:text-base text-white/70 max-w-2xl mx-auto">
-              בחרו מקצוע והתחילו לשחק — לכל משחק התאמה לכיתות שונות, ציונים,
-              רמות והסברים לשאלות.
-            </p>
-          </header>
-
-          <section className="grid sm:grid-cols-3 gap-4 md:gap-6">
-            {LEARNING_GAMES.map((g) => (
-              <Link
-                key={g.slug}
-                href={`/learning/${g.slug}`}
-                className="group rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition p-4 flex flex-col justify-between"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="text-3xl">{g.emoji}</div>
-                  <div>
-                    <h2 className="font-bold text-lg">{g.title}</h2>
-                    <p className="text-xs text-white/60">{g.grades}</p>
-                  </div>
-                </div>
-                <p className="text-sm text-white/70 flex-1">{g.blurb}</p>
-                <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-amber-200">
-                  <span>←</span>
-                  התחל ללמוד
-                </span>
-              </Link>
-            ))}
-          </section>
-
-          {showDevStudentSimulator ? (
-            <section>
-              <Link
-                href="/learning/dev-student-simulator"
-                className="block rounded-2xl border border-indigo-300/40 bg-indigo-500/10 hover:bg-indigo-500/20 transition p-4 text-center"
-              >
-                <h2 className="font-bold text-lg">סימולטור תלמידים (פיתוח)</h2>
-                <p className="text-sm text-white/70">סימולטור תלמידים לפיתוח</p>
-              </Link>
-            </section>
-          ) : null}
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-3 md:py-6 pb-4 overflow-x-hidden" dir="rtl">
+        <div className="mb-3 md:mb-4">
+          <Link
+            href="/student/home"
+            className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white/85 hover:bg-white/10 hover:text-white transition"
+          >
+            חזרה לפורטל תלמיד
+          </Link>
         </div>
-      </main>
+
+        <header className="text-center space-y-1.5 md:space-y-2 mb-3 md:mb-5">
+          <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs tracking-wider uppercase text-amber-300 font-semibold">
+            📚 תרגול · חזרה · שיפור
+          </p>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-black leading-tight">מרכז משחקי הלימוד</h1>
+          <p className="text-xs md:text-sm text-white/70 max-w-2xl mx-auto leading-relaxed line-clamp-2 md:line-clamp-none">
+            בחרו מקצוע והתחילו לשחק — לכל משחק התאמה לכיתות שונות, ציונים, רמות והסברים לשאלות.
+          </p>
+        </header>
+
+        <section className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4" aria-label="בחירת מקצוע">
+          {LEARNING_GAMES.map((g) => (
+            <Link
+              key={g.slug}
+              href={`/learning/${g.slug}`}
+              className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] hover:border-emerald-400/35 hover:from-emerald-950/25 hover:to-white/[0.05] transition p-3 md:p-4 flex flex-col text-right min-h-[7.5rem] md:min-h-[8.5rem]"
+            >
+              <span className="text-2xl md:text-3xl leading-none mb-2" aria-hidden>
+                {g.emoji}
+              </span>
+              <h2 className="font-bold text-sm md:text-base leading-snug text-white">{g.title}</h2>
+              <p className="text-[11px] md:text-xs text-white/55 mt-0.5">{g.grades}</p>
+              <p className="text-[11px] md:text-xs text-white/60 mt-1.5 leading-snug line-clamp-2 flex-1">
+                {g.blurb}
+              </p>
+            </Link>
+          ))}
+        </section>
+
+        {/* Dev simulator — kept for development; hidden from visible UI for now */}
+        {false && showDevStudentSimulator ? (
+          <section className="mt-4">
+            <Link
+              href="/learning/dev-student-simulator"
+              className="block rounded-2xl border border-indigo-300/40 bg-indigo-500/10 hover:bg-indigo-500/20 transition p-4 text-center"
+            >
+              <h2 className="font-bold text-lg">סימולטור תלמידים (פיתוח)</h2>
+              <p className="text-sm text-white/70">סימולטור תלמידים לפיתוח</p>
+            </Link>
+          </section>
+        ) : null}
+      </div>
     </Layout>
   );
 }

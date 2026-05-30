@@ -93,4 +93,41 @@ test("student activity page supports layout toggle and numeric input", () => {
   );
   assert.match(ui, /inputMode: "decimal"/);
   assert.match(ui, /buildVerticalOperation/);
+
+  const surface = readFileSync(
+    path.join(repoRoot, "components/student/StudentActivityQuestionSurface.jsx"),
+    "utf8"
+  );
+  assert.match(surface, /↕️ מאונך/);
+  assert.match(surface, /↔️ מאוזן/);
+  assert.match(surface, /activity-math-layout-toggle/);
+});
+
+test("assigned activity math layout: params.a/b enables vertical toggle", async () => {
+  const {
+    canStudentActivityQuestionDisplayVertically,
+    getStudentActivityVerticalExerciseText,
+    parseHorizontalArithmeticExercise,
+    normalizeStudentActivityMathLayoutQuestion,
+  } = await import("../../lib/classroom-activities/student-activity-question-ui.client.js");
+
+  const activityQuestion = {
+    subject: "math",
+    topic: "addition",
+    question: "3 + 13 = __",
+    params: { kind: "add_basic", a: 3, b: 13, op: "add", exerciseText: "3 + 13 = __" },
+  };
+
+  assert.equal(parseHorizontalArithmeticExercise("3 + 13 = __")?.a, 3);
+  assert.equal(parseHorizontalArithmeticExercise("3 + 13 = __")?.b, 13);
+
+  const normalized = normalizeStudentActivityMathLayoutQuestion(activityQuestion);
+  assert.equal(normalized.a, 3);
+  assert.equal(normalized.b, 13);
+  assert.equal(normalized.operation, "addition");
+
+  assert.equal(canStudentActivityQuestionDisplayVertically(activityQuestion), true);
+  const vertical = getStudentActivityVerticalExerciseText(activityQuestion);
+  assert.match(vertical, /3/);
+  assert.match(vertical, /13/);
 });
