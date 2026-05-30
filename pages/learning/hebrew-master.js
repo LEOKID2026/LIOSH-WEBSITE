@@ -130,6 +130,7 @@ import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthly
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
+import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 
 const AVATAR_OPTIONS = [
   "👤",
@@ -2461,11 +2462,7 @@ export default function HebrewMaster() {
   }
 
   const backSafe = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      window.history.back();
-    } else {
-      router.push("/learning");
-    }
+    navigateToStudentHome(router);
   };
 
   const getOperationName = (op) => {

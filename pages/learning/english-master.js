@@ -106,6 +106,7 @@ import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthly
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
+import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 
 /** Grades 1–2: hard band excluded from default practice UI (owner policy). */
 function englishLevelKeysForGradeKey(gradeKey) {
@@ -2109,11 +2110,7 @@ export default function EnglishMaster() {
   }
 
   const backSafe = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      window.history.back();
-    } else {
-      router.push("/learning");
-    }
+    navigateToStudentHome(router);
   };
 
   const getTopicName = (t) => {

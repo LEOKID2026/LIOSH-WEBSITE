@@ -154,6 +154,7 @@ import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthly
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
+import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 
 /** Passed into compareGeometryLearnerAnswer — not defaulted inside answer-compare. */
 const GEOMETRY_NUMERIC_SCALE_FLOOR = 1e-6;
@@ -2004,11 +2005,7 @@ useEffect(() => {
   }
 
   const backSafe = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      window.history.back();
-    } else {
-      router.push("/learning");
-    }
+    navigateToStudentHome(router);
   };
 
   const getTopicName = (t) => {

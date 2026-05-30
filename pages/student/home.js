@@ -13,6 +13,7 @@ import {
 } from "../../lib/learning-client/studentLearningProfileClient";
 import { formatGradeLevelHe } from "../../lib/learning-student-defaults";
 import StudentAvatarPickerModal from "../../components/student/StudentAvatarPickerModal";
+import StudentHomeModal from "../../components/student/StudentHomeModal";
 import StudentDailyMissionsPanel from "../../components/student/StudentDailyMissionsPanel";
 import StudentMonthlyPersistencePanel from "../../components/student/StudentMonthlyPersistencePanel";
 import StudentClassroomActivitiesPanel from "../../components/student/StudentClassroomActivitiesPanel";
@@ -49,6 +50,170 @@ function StatCard({ label, value, sub }) {
   );
 }
 
+const HOME_PANELS = {
+  stats: { title: "הנתונים שלי", emoji: "📊", size: "6xl" },
+  missions: { title: "המשימות שלי", emoji: "✅", size: "2xl" },
+  monthly: { title: "המסע החודשי", emoji: "🗓️", size: "2xl" },
+  classroom: { title: "פעילויות מהמורה", emoji: "🏫", size: "4xl" },
+  worksheets: { title: "דפי עבודה", emoji: "📄", size: "4xl" },
+  subjects: { title: "הנושאים שלי", emoji: "📚", size: "6xl" },
+  badges: { title: "תגים והישגים", emoji: "🏅", size: "2xl" },
+  recommendations: { title: "המלצות להמשך", emoji: "💡", size: "4xl" },
+};
+
+function DashboardTile({ emoji, title, subtitle, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3 md:p-4 text-right shadow-lg shadow-black/20 hover:border-emerald-400/35 hover:from-emerald-950/30 hover:to-white/[0.04] transition min-h-[5.5rem] md:min-h-[6.25rem] flex flex-col justify-between gap-1.5"
+    >
+      <span className="text-2xl md:text-3xl leading-none" aria-hidden>
+        {emoji}
+      </span>
+      <div className="min-w-0">
+        <p className="text-sm md:text-base font-bold text-white leading-snug">{title}</p>
+        {subtitle ? <p className="text-[11px] md:text-xs text-white/55 mt-0.5 leading-snug">{subtitle}</p> : null}
+      </div>
+    </button>
+  );
+}
+
+function StatsSection({ dashboardView, accLabel }) {
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-3">
+      <StatCard label="מטבעות" value={dashboardView.identity.coinBalance} />
+      <StatCard label="רמה" value={dashboardView.accountStats.summaryLevel} />
+      <StatCard label="כוכבים (סה״כ)" value={dashboardView.accountStats.summaryStars} />
+      <StatCard label="ניקוד שיא" value={dashboardView.accountStats.bestScoreOverall} />
+      <StatCard label="שיא רצף" value={dashboardView.accountStats.bestStreakOverall} />
+      <StatCard label="דיוק כללי" value={accLabel(dashboardView.accountStats.overallAccuracyPct)} />
+      <StatCard label="שאלות שנענו" value={dashboardView.accountStats.questionsAnswered} />
+      <StatCard label="תשובות נכונות" value={dashboardView.accountStats.correctAnswers} />
+      <StatCard
+        label="דקות למידה החודש"
+        value={dashboardView.accountStats.learningMinutesThisMonth}
+        sub={`יעד חודשי: ${dashboardView.accountStats.monthlyGoalMinutes} דק׳`}
+      />
+      <StatCard
+        label="דקות למידה מצטברות"
+        value={dashboardView.accountStats.learningMinutesLifetimeRounded}
+        sub="מפי סיכומי פגישות"
+      />
+    </div>
+  );
+}
+
+function MonthlyJourneySection({ monthlyJourney, className = "" }) {
+  return (
+    <section className={`rounded-3xl border border-white/10 bg-white/[0.03] p-4 md:p-5 ${className}`}>
+      <h3 className="text-base md:text-lg font-bold text-white mb-3 text-right">מסע חודשי</h3>
+      <div className="space-y-3 text-right">
+        <p className="text-white/90">
+          דקות החודש:{" "}
+          <span className="font-bold text-emerald-300 tabular-nums">{monthlyJourney.minutesThisMonth}</span> /{" "}
+          <span className="tabular-nums">{monthlyJourney.goalMinutes}</span>
+        </p>
+        <div className="h-3 rounded-full bg-black/40 overflow-hidden border border-white/10">
+          <div
+            className="h-full rounded-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-500"
+            style={{ width: `${monthlyJourney.progressPct}%` }}
+          />
+        </div>
+        <p className="text-sm text-white/75">{monthlyJourney.encouragementHe}</p>
+        {monthlyJourney.selectedRewardLabel ? (
+          <p className="text-sm text-amber-200/95">
+            פרס שנבחר לחודש: <span className="font-semibold">{monthlyJourney.selectedRewardLabel}</span>
+          </p>
+        ) : (
+          <p className="text-sm text-white/55">
+            עדיין לא נבחר פרס לחודש — אפשר לבחור מעמוד הנושא אחרי התקדמות.
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function SubjectsSection({ subjects }) {
+  return (
+    <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
+      {subjects.map((s) => (
+        <div
+          key={s.key}
+          className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-4 flex flex-col text-right shadow-lg"
+        >
+          <h3 className="text-lg font-bold text-white mb-2">{s.labelHe}</h3>
+          <div className="text-sm text-white/70 space-y-1 mb-3 flex-1">
+            <p>דיוק: {s.accuracyPct != null ? `${s.accuracyPct}%` : "עדיין אין נתונים"}</p>
+            <p>
+              שאלות / נכונות: {s.answersTotal} / {s.correctTotal}
+            </p>
+            <p>
+              רמה {s.level} · כוכבים {s.stars}
+            </p>
+            <p className="text-xs text-white/55">דקות למידה (הערכה): {s.sessionMinutesRounded}</p>
+          </div>
+          <div className="h-1.5 rounded-full bg-black/40 mb-3 overflow-hidden">
+            <div className="h-full bg-sky-500/80 rounded-full" style={{ width: `${s.progressIndicatorPct}%` }} />
+          </div>
+          <Link
+            href={s.href}
+            className="mt-auto inline-flex justify-center rounded-xl bg-sky-500/90 hover:bg-sky-400 text-black font-bold py-2.5 text-sm transition"
+          >
+            כניסה לנושא
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BadgesSection({ badges }) {
+  if (badges.length === 0) {
+    return (
+      <p className="text-white/70 text-right leading-relaxed">
+        עדיין אין תגים — אפשר להתחיל ללמוד ולצבור הישגים בכל נושא.
+      </p>
+    );
+  }
+  return (
+    <ul className="flex flex-wrap gap-2 justify-end">
+      {badges.map((b, i) => (
+        <li
+          key={`${b.label}-${i}`}
+          className="rounded-full border border-amber-400/35 bg-amber-500/10 px-3 py-1.5 text-sm text-amber-50"
+        >
+          {b.label}
+          <span className="text-white/45 text-xs mr-1">({b.subjectLabelHe})</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function RecommendationsSection({ recommendations }) {
+  return (
+    <div className="grid md:grid-cols-2 gap-3 md:gap-4">
+      {recommendations.map((r) => (
+        <div
+          key={r.id}
+          className="rounded-2xl border border-violet-500/25 bg-violet-950/20 p-4 md:p-5 text-right flex flex-col"
+        >
+          <h3 className="font-bold text-violet-100 mb-2">{r.titleHe}</h3>
+          <p className="text-sm text-white/75 flex-1 mb-4">{r.descriptionHe}</p>
+          <Link
+            href={r.href}
+            className="inline-flex justify-center rounded-xl bg-violet-500 hover:bg-violet-400 text-white font-bold py-2.5 text-sm transition"
+          >
+            {r.ctaHe}
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function StudentHomePage() {
   const router = useRouter();
   const [authPhase, setAuthPhase] = useState("checking");
@@ -59,6 +224,7 @@ export default function StudentHomePage() {
   const [logoutMessage, setLogoutMessage] = useState("");
   const [logoutBusy, setLogoutBusy] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [activePanel, setActivePanel] = useState(null);
   const [heroAvatarImage, setHeroAvatarImage] = useState(null);
   const [heroAvatarEmoji, setHeroAvatarEmoji] = useState("👤");
 
@@ -246,6 +412,30 @@ export default function StudentHomePage() {
   const profilePending = profilePhase === "idle" || profilePhase === "loading";
   const buildFailed = profilePhase === "ok" && !dashboardView;
 
+  const accLabel = (pct) => (pct == null ? "עדיין אין נתונים" : `${pct}%`);
+
+  const dashboardSubtitles = useMemo(() => {
+    if (!dashboardView) return {};
+    const missions = dashboardView.dailyMissions;
+    const missionSub =
+      missions?.missions?.length > 0
+        ? `${missions.totalCompleted}/${missions.missions.length} הושלמו`
+        : null;
+    return {
+      stats: `רמה ${dashboardView.accountStats.summaryLevel}`,
+      missions: missionSub,
+      monthly: `${dashboardView.monthlyJourney.minutesThisMonth}/${dashboardView.monthlyJourney.goalMinutes} דק׳`,
+      subjects: `${dashboardView.subjects.length} נושאים`,
+      badges: dashboardView.badges.length > 0 ? `${dashboardView.badges.length} תגים` : null,
+      recommendations:
+        dashboardView.recommendations.length > 0
+          ? `${dashboardView.recommendations.length} המלצות`
+          : null,
+    };
+  }, [dashboardView]);
+
+  const closeHomePanel = useCallback(() => setActivePanel(null), []);
+
   const onLogout = async () => {
     setLogoutMessage("");
     const sid = student?.id;
@@ -281,11 +471,47 @@ export default function StudentHomePage() {
   const heroTagline =
     dashboardView?.identity?.friendlyLineHe ?? "כאן מוצגים הנתונים מהשרת אחרי התחברות.";
 
-  const accLabel = (pct) => (pct == null ? "עדיין אין נתונים" : `${pct}%`);
+  const renderActivePanelContent = () => {
+    if (!dashboardView || !activePanel) return null;
+    switch (activePanel) {
+      case "stats":
+        return <StatsSection dashboardView={dashboardView} accLabel={accLabel} />;
+      case "missions":
+        return dashboardView.dailyMissions?.missions?.length ? (
+          <StudentDailyMissionsPanel dailyMissions={dashboardView.dailyMissions} />
+        ) : (
+          <p className="text-white/70 text-right leading-relaxed">עדיין אין נתונים</p>
+        );
+      case "monthly":
+        return (
+          <>
+            {dashboardView.monthlyPersistence?.tiers?.length ? (
+              <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />
+            ) : null}
+            <MonthlyJourneySection
+              monthlyJourney={dashboardView.monthlyJourney}
+              className={dashboardView.monthlyPersistence?.tiers?.length ? "mt-4" : ""}
+            />
+          </>
+        );
+      case "classroom":
+        return <StudentClassroomActivitiesPanel />;
+      case "worksheets":
+        return <StudentWorksheetsPanel />;
+      case "subjects":
+        return <SubjectsSection subjects={dashboardView.subjects} />;
+      case "badges":
+        return <BadgesSection badges={dashboardView.badges} />;
+      case "recommendations":
+        return <RecommendationsSection recommendations={dashboardView.recommendations} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <Layout>
-      <div key={student.id} className="max-w-6xl mx-auto px-3 sm:px-4 py-6 md:py-10 pb-16 space-y-6 md:space-y-8 overflow-x-hidden">
+      <div key={student.id} className="max-w-6xl mx-auto px-3 sm:px-4 py-4 md:py-8 pb-6 overflow-x-hidden">
         <section className="rounded-3xl border border-emerald-500/25 bg-gradient-to-br from-emerald-950/50 via-[#0c1224] to-indigo-950/40 p-5 md:p-8 shadow-xl shadow-black/40">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
             <div className="flex items-start gap-4">
@@ -344,20 +570,15 @@ export default function StudentHomePage() {
         </section>
 
         {profilePending ? (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8 animate-pulse space-y-4">
-            <div className="h-4 bg-white/10 rounded w-1/3 mr-auto" />
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-3">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-                <div key={i} className="h-20 md:h-[4.25rem] rounded-xl bg-white/5" />
-              ))}
-            </div>
-            <div className="h-36 rounded-2xl bg-white/5" />
-            <div className="h-48 rounded-2xl bg-white/5" />
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 animate-pulse">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="h-[5.5rem] md:h-[6.25rem] rounded-2xl bg-white/5" />
+            ))}
           </div>
         ) : null}
 
         {profilePhase === "error" && !profilePending ? (
-          <div className="rounded-2xl border border-amber-500/30 bg-amber-950/25 p-5 text-right space-y-3">
+          <div className="mt-4 rounded-2xl border border-amber-500/30 bg-amber-950/25 p-5 text-right space-y-3">
             <p className="text-amber-100 font-semibold">לא הצלחנו לטעון את נתוני ההתקדמות מהשרת</p>
             <p className="text-white/80 text-sm leading-relaxed">
               פרטי החשבון (שם, כיתה, מטבעות) עדיין מההתחברות. נתוני רמה, כוכבים, שאלות ודקות למידה לא הוצגו כדי
@@ -375,7 +596,7 @@ export default function StudentHomePage() {
         ) : null}
 
         {buildFailed ? (
-          <div className="rounded-2xl border border-rose-500/30 bg-rose-950/20 p-5 text-right">
+          <div className="mt-4 rounded-2xl border border-rose-500/30 bg-rose-950/20 p-5 text-right">
             <p className="text-rose-100 font-semibold mb-2">שגיאה בעיבוד הנתונים</p>
             <p className="text-white/75 text-sm mb-4">השרת החזיר תשובה תקינה אבל לא ניתן היה לבנות את לוח הבקרה.</p>
             <button
@@ -389,147 +610,29 @@ export default function StudentHomePage() {
         ) : null}
 
         {dashboardView ? (
-          <>
-            <section>
-              <h2 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 text-right">הנתונים שלי</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-3">
-                <StatCard label="מטבעות" value={dashboardView.identity.coinBalance} />
-                <StatCard label="רמה" value={dashboardView.accountStats.summaryLevel} />
-                <StatCard label="כוכבים (סה״כ)" value={dashboardView.accountStats.summaryStars} />
-                <StatCard label="ניקוד שיא" value={dashboardView.accountStats.bestScoreOverall} />
-                <StatCard label="שיא רצף" value={dashboardView.accountStats.bestStreakOverall} />
-                <StatCard label="דיוק כללי" value={accLabel(dashboardView.accountStats.overallAccuracyPct)} />
-                <StatCard label="שאלות שנענו" value={dashboardView.accountStats.questionsAnswered} />
-                <StatCard label="תשובות נכונות" value={dashboardView.accountStats.correctAnswers} />
-                <StatCard
-                  label="דקות למידה החודש"
-                  value={dashboardView.accountStats.learningMinutesThisMonth}
-                  sub={`יעד חודשי: ${dashboardView.accountStats.monthlyGoalMinutes} דק׳`}
+          <section className="mt-4 md:mt-5" aria-label="לוח בקרה">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+              {Object.entries(HOME_PANELS).map(([id, panel]) => (
+                <DashboardTile
+                  key={id}
+                  emoji={panel.emoji}
+                  title={panel.title}
+                  subtitle={dashboardSubtitles[id] || null}
+                  onClick={() => setActivePanel(id)}
                 />
-                <StatCard
-                  label="דקות למידה מצטברות"
-                  value={dashboardView.accountStats.learningMinutesLifetimeRounded}
-                  sub="מפי סיכומי פגישות"
-                />
-              </div>
-            </section>
-
-            <StudentDailyMissionsPanel dailyMissions={dashboardView.dailyMissions} />
-
-            <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />
-
-            <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 md:p-7">
-              <h2 className="text-lg md:text-xl font-bold text-white mb-4 text-right">מסע חודשי</h2>
-              <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
-                <div className="flex-1 space-y-3 text-right">
-                  <p className="text-white/90">
-                    דקות החודש:{" "}
-                    <span className="font-bold text-emerald-300 tabular-nums">
-                      {dashboardView.monthlyJourney.minutesThisMonth}
-                    </span>{" "}
-                    / <span className="tabular-nums">{dashboardView.monthlyJourney.goalMinutes}</span>
-                  </p>
-                  <div className="h-3 rounded-full bg-black/40 overflow-hidden border border-white/10">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-500"
-                      style={{ width: `${dashboardView.monthlyJourney.progressPct}%` }}
-                    />
-                  </div>
-                  <p className="text-sm text-white/75">{dashboardView.monthlyJourney.encouragementHe}</p>
-                  {dashboardView.monthlyJourney.selectedRewardLabel ? (
-                    <p className="text-sm text-amber-200/95">
-                      פרס שנבחר לחודש:{" "}
-                      <span className="font-semibold">{dashboardView.monthlyJourney.selectedRewardLabel}</span>
-                    </p>
-                  ) : (
-                    <p className="text-sm text-white/55">
-                      עדיין לא נבחר פרס לחודש — אפשר לבחור מעמוד הנושא אחרי התקדמות.
-                    </p>
-                  )}
-                </div>
-              </div>
-            </section>
-
-            <StudentClassroomActivitiesPanel />
-            <StudentWorksheetsPanel />
-
-            <section>
-              <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">הנושאים שלי</h2>
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
-                {dashboardView.subjects.map((s) => (
-                  <div
-                    key={s.key}
-                    className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-4 flex flex-col text-right shadow-lg"
-                  >
-                    <h3 className="text-lg font-bold text-white mb-2">{s.labelHe}</h3>
-                    <div className="text-sm text-white/70 space-y-1 mb-3 flex-1">
-                      <p>דיוק: {s.accuracyPct != null ? `${s.accuracyPct}%` : "עדיין אין נתונים"}</p>
-                      <p>
-                        שאלות / נכונות: {s.answersTotal} / {s.correctTotal}
-                      </p>
-                      <p>
-                        רמה {s.level} · כוכבים {s.stars}
-                      </p>
-                      <p className="text-xs text-white/55">דקות למידה (הערכה): {s.sessionMinutesRounded}</p>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-black/40 mb-3 overflow-hidden">
-                      <div className="h-full bg-sky-500/80 rounded-full" style={{ width: `${s.progressIndicatorPct}%` }} />
-                    </div>
-                    <Link
-                      href={s.href}
-                      className="mt-auto inline-flex justify-center rounded-xl bg-sky-500/90 hover:bg-sky-400 text-black font-bold py-2.5 text-sm transition"
-                    >
-                      כניסה לנושא
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 md:p-7">
-              <h2 className="text-lg md:text-xl font-bold text-white mb-4 text-right">תגים והישגים</h2>
-              {dashboardView.badges.length === 0 ? (
-                <p className="text-white/70 text-right leading-relaxed">
-                  עדיין אין תגים — אפשר להתחיל ללמוד ולצבור הישגים בכל נושא.
-                </p>
-              ) : (
-                <ul className="flex flex-wrap gap-2 justify-end">
-                  {dashboardView.badges.map((b, i) => (
-                    <li
-                      key={`${b.label}-${i}`}
-                      className="rounded-full border border-amber-400/35 bg-amber-500/10 px-3 py-1.5 text-sm text-amber-50"
-                    >
-                      {b.label}
-                      <span className="text-white/45 text-xs mr-1">({b.subjectLabelHe})</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-
-            <section>
-              <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">המשך ללמוד</h2>
-              <div className="grid md:grid-cols-2 gap-3 md:gap-4">
-                {dashboardView.recommendations.map((r) => (
-                  <div
-                    key={r.id}
-                    className="rounded-2xl border border-violet-500/25 bg-violet-950/20 p-4 md:p-5 text-right flex flex-col"
-                  >
-                    <h3 className="font-bold text-violet-100 mb-2">{r.titleHe}</h3>
-                    <p className="text-sm text-white/75 flex-1 mb-4">{r.descriptionHe}</p>
-                    <Link
-                      href={r.href}
-                      className="inline-flex justify-center rounded-xl bg-violet-500 hover:bg-violet-400 text-white font-bold py-2.5 text-sm transition"
-                    >
-                      {r.ctaHe}
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </>
+              ))}
+            </div>
+          </section>
         ) : null}
       </div>
+      <StudentHomeModal
+        open={Boolean(activePanel && dashboardView)}
+        title={activePanel ? HOME_PANELS[activePanel]?.title ?? "" : ""}
+        size={activePanel ? HOME_PANELS[activePanel]?.size ?? "2xl" : "2xl"}
+        onClose={closeHomePanel}
+      >
+        {renderActivePanelContent()}
+      </StudentHomeModal>
       <StudentAvatarPickerModal
         open={showAvatarModal}
         onClose={() => setShowAvatarModal(false)}
