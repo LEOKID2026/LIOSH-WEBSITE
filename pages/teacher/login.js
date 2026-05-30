@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
+import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import TeacherRegistrationRequestForm from "../../components/auth/TeacherRegistrationRequestForm";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { isAdminAppMetadataUser } from "../../lib/admin-portal/use-admin-session";
@@ -201,19 +201,25 @@ export default function TeacherLoginPage({ inviteOnly }) {
 
   return (
     <Layout>
-      <TeacherPortalShell title="כניסה למורים">
+      <div
+        className={`mx-auto px-4 py-6 md:py-8 ${
+          mode === "request" ? "max-w-4xl" : "max-w-md"
+        }`}
+        dir="rtl"
+        lang="he"
+      >
+        <PortalLoginHeading title="כניסה למורים" className="!mb-4" />
+
         <div
           data-testid="teacher-login-root"
           data-invite-only={inviteOnly ? "true" : "false"}
         >
-          <div className="flex gap-2 mb-6 border-b border-white/10 pb-2">
+          <div className={`flex gap-2 mb-3 ${mode === "request" ? "max-w-md" : ""}`}>
             <button
               type="button"
               onClick={() => setMode("login")}
-              className={`px-4 py-2 text-sm rounded-t ${
-                mode === "login"
-                  ? "bg-amber-500/20 text-amber-200 border-b-2 border-amber-400"
-                  : "text-white/60 hover:text-white/80"
+              className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
+                mode === "login" ? "bg-amber-500 text-black" : "bg-white/10 text-white/80"
               }`}
               data-testid="teacher-login-tab"
             >
@@ -222,87 +228,87 @@ export default function TeacherLoginPage({ inviteOnly }) {
             <button
               type="button"
               onClick={() => setMode("request")}
-              className={`px-4 py-2 text-sm rounded-t ${
-                mode === "request"
-                  ? "bg-amber-500/20 text-amber-200 border-b-2 border-amber-400"
-                  : "text-white/60 hover:text-white/80"
+              className={`flex-1 rounded px-3 py-2 text-sm font-semibold ${
+                mode === "request" ? "bg-amber-500 text-black" : "bg-white/10 text-white/80"
               }`}
               data-testid="teacher-request-tab"
             >
               {REG_TEACHER_TAB}
             </button>
           </div>
+
           {mode === "request" ? (
             <TeacherRegistrationRequestForm />
           ) : (
             <>
-          {inviteOnly ? (
-            <p className="text-white/70 text-sm mb-6">{REG_TEACHER_INVITE_ONLY_LOGIN_NOTE}</p>
-          ) : null}
-          <form onSubmit={onSubmit} className="space-y-4 max-w-md" autoComplete="on" noValidate>
-            <label className="block text-sm">
-              <span className="text-white/80">כתובת דוא״ל</span>
-              <input
-                type="email"
-                name="email"
-                value={email}
-                onChange={(ev) => setEmail(ev.target.value)}
-                required
-                autoComplete="username"
-                placeholder="המייל שלך"
-                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="text-white/80">סיסמה</span>
-              <input
-                type="password"
-                name="password"
-                value={password}
-                onChange={(ev) => setPassword(ev.target.value)}
-                required
-                autoComplete="current-password"
-                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={busy}
-              className="rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
-            >
-              {busy ? "מתחבר…" : "כניסה"}
-            </button>
-            <p className="text-sm">
-              <Link
-                href="/auth/forgot-password?portal=teacher"
-                className="text-amber-300 hover:underline"
-                data-testid="teacher-forgot-password-link"
-              >
-                {AUTH_FORGOT_PASSWORD_LINK}
-              </Link>
-            </p>
-          </form>
-          {loginError ? (
-            <p className="mt-4 text-sm text-red-300" role="alert">
-              {loginError}
-            </p>
-          ) : null}
+              {inviteOnly ? (
+                <p className="text-white/70 text-sm mb-3">{REG_TEACHER_INVITE_ONLY_LOGIN_NOTE}</p>
+              ) : null}
+              <form onSubmit={onSubmit} className="space-y-3" autoComplete="on" noValidate>
+                <label className="block text-sm">
+                  <span className="text-white/80">כתובת דוא״ל</span>
+                  <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
+                    required
+                    autoComplete="username"
+                    placeholder="המייל שלך"
+                    className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  />
+                </label>
+                <label className="block text-sm">
+                  <span className="text-white/80">סיסמה</span>
+                  <input
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={(ev) => setPassword(ev.target.value)}
+                    required
+                    autoComplete="current-password"
+                    className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  disabled={busy}
+                  className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
+                >
+                  {busy ? "מתחבר…" : "כניסה"}
+                </button>
+                <p className="text-sm text-center">
+                  <Link
+                    href="/auth/forgot-password?portal=teacher"
+                    className="text-amber-300 underline"
+                    data-testid="teacher-forgot-password-link"
+                  >
+                    {AUTH_FORGOT_PASSWORD_LINK}
+                  </Link>
+                </p>
+              </form>
+              {loginError ? (
+                <p className="mt-3 text-sm text-red-300" role="alert">
+                  {loginError}
+                </p>
+              ) : null}
             </>
           )}
-          <p className="mt-6 text-sm text-white/50">
+
+          <p className="mt-3 text-xs text-white/60 leading-relaxed max-w-md">
             בית ספר מעוניין להצטרף?{" "}
-            <Link href="/school/register" className="text-amber-300 hover:underline">
+            <Link href="/school/register" className="text-amber-300 underline">
               {REG_SCHOOL_LINK}
             </Link>
           </p>
-          <p className="mt-2 text-sm text-white/50">
+          <p className="mt-2 text-xs text-white/60 leading-relaxed">
             צוות בית ספר (מורה / מזכירות)?{" "}
-            <a href="/school/staff/login" className="text-amber-300 hover:underline">
+            <Link href="/school/staff/login" className="text-amber-300 underline">
               כניסה בקוד צוות + PIN
-            </a>
+            </Link>
           </p>
         </div>
-      </TeacherPortalShell>
+      </div>
     </Layout>
   );
 }

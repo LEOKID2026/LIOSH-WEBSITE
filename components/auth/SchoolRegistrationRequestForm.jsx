@@ -9,9 +9,11 @@ import {
   REG_SCHOOL_NAME_LABEL,
   REG_SCHOOL_SUBMIT,
   REG_SCHOOL_SUCCESS,
-  REG_SCHOOL_TITLE,
   REG_TEACHER_ALREADY_PENDING,
 } from "../../lib/auth/auth-registration.he.js";
+
+const INPUT_CLASS =
+  "mt-0.5 w-full rounded bg-black/40 border border-white/20 px-3 py-1.5 text-sm";
 
 export default function SchoolRegistrationRequestForm() {
   const [schoolName, setSchoolName] = useState("");
@@ -64,97 +66,100 @@ export default function SchoolRegistrationRequestForm() {
 
   return (
     <div data-testid="school-registration-request-form" dir="rtl" lang="he">
-      <h1 className="text-2xl font-bold mb-4">{REG_SCHOOL_TITLE}</h1>
       {success ? (
         <p className="text-emerald-300 text-sm" role="status">
           {success}
         </p>
       ) : (
-        <form onSubmit={(e) => void onSubmit(e)} className="space-y-4 max-w-md">
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_SCHOOL_NAME_LABEL}</span>
-            <input
-              type="text"
-              value={schoolName}
-              onChange={(ev) => setSchoolName(ev.target.value)}
-              required
-              maxLength={120}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="school-reg-name"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_SCHOOL_CITY_LABEL}</span>
-            <input
-              type="text"
-              value={city}
-              onChange={(ev) => setCity(ev.target.value)}
-              required
-              maxLength={100}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="school-reg-city"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_SCHOOL_CONTACT_NAME_LABEL}</span>
-            <input
-              type="text"
-              value={contactName}
-              onChange={(ev) => setContactName(ev.target.value)}
-              required
-              maxLength={120}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="school-reg-contact-name"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_SCHOOL_CONTACT_EMAIL_LABEL}</span>
-            <input
-              type="email"
-              value={contactEmail}
-              onChange={(ev) => setContactEmail(ev.target.value)}
-              required
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="school-reg-contact-email"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_SCHOOL_APPROX_TEACHERS_LABEL}</span>
-            <input
-              type="number"
-              min={1}
-              value={approxTeachers}
-              onChange={(ev) => setApproxTeachers(ev.target.value)}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="school-reg-approx-teachers"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_SCHOOL_APPROX_STUDENTS_LABEL}</span>
-            <input
-              type="number"
-              min={1}
-              value={approxStudents}
-              onChange={(ev) => setApproxStudents(ev.target.value)}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="school-reg-approx-students"
-            />
-          </label>
+        <form onSubmit={(e) => void onSubmit(e)} className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_SCHOOL_NAME_LABEL}</span>
+              <input
+                type="text"
+                value={schoolName}
+                onChange={(ev) => setSchoolName(ev.target.value)}
+                required
+                maxLength={120}
+                className={INPUT_CLASS}
+                data-testid="school-reg-name"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_SCHOOL_CITY_LABEL}</span>
+              <input
+                type="text"
+                value={city}
+                onChange={(ev) => setCity(ev.target.value)}
+                required
+                maxLength={100}
+                className={INPUT_CLASS}
+                data-testid="school-reg-city"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_SCHOOL_CONTACT_NAME_LABEL}</span>
+              <input
+                type="text"
+                value={contactName}
+                onChange={(ev) => setContactName(ev.target.value)}
+                required
+                maxLength={120}
+                className={INPUT_CLASS}
+                data-testid="school-reg-contact-name"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_SCHOOL_CONTACT_EMAIL_LABEL}</span>
+              <input
+                type="email"
+                value={contactEmail}
+                onChange={(ev) => setContactEmail(ev.target.value)}
+                required
+                className={INPUT_CLASS}
+                data-testid="school-reg-contact-email"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_SCHOOL_APPROX_TEACHERS_LABEL}</span>
+              <input
+                type="number"
+                min={1}
+                value={approxTeachers}
+                onChange={(ev) => setApproxTeachers(ev.target.value)}
+                className={INPUT_CLASS}
+                data-testid="school-reg-approx-teachers"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_SCHOOL_APPROX_STUDENTS_LABEL}</span>
+              <input
+                type="number"
+                min={1}
+                value={approxStudents}
+                onChange={(ev) => setApproxStudents(ev.target.value)}
+                className={INPUT_CLASS}
+                data-testid="school-reg-approx-students"
+              />
+            </label>
+          </div>
+
           <label className="block text-sm">
             <span className="text-white/80">{REG_SCHOOL_MESSAGE_LABEL}</span>
             <textarea
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
               maxLength={1000}
-              rows={3}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              rows={2}
+              className={`${INPUT_CLASS} mt-1 resize-y min-h-[3.5rem] max-h-28`}
               data-testid="school-reg-message"
             />
           </label>
+
           <button
             type="submit"
             disabled={busy}
-            className="rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
+            className="w-full md:w-auto rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
             data-testid="school-reg-submit"
           >
             {busy ? "שולח…" : REG_SCHOOL_SUBMIT}
@@ -162,7 +167,7 @@ export default function SchoolRegistrationRequestForm() {
         </form>
       )}
       {error ? (
-        <p className="mt-3 text-sm text-red-300" role="alert">
+        <p className="mt-2 text-sm text-red-300" role="alert">
           {error}
         </p>
       ) : null}

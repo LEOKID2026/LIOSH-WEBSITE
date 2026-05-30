@@ -15,6 +15,9 @@ import {
   SUBJECT_LABELS_HE,
 } from "../../lib/auth/auth-registration.he.js";
 
+const INPUT_CLASS =
+  "mt-0.5 w-full rounded bg-black/40 border border-white/20 px-3 py-1.5 text-sm";
+
 export default function TeacherRegistrationRequestForm() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -70,55 +73,58 @@ export default function TeacherRegistrationRequestForm() {
 
   return (
     <div data-testid="teacher-registration-request-form" dir="rtl" lang="he">
-      <h2 className="text-xl font-bold mb-4">{REG_TEACHER_TITLE}</h2>
+      <h2 className="text-lg md:text-xl font-bold mb-2">{REG_TEACHER_TITLE}</h2>
       {message ? (
-        <p className="text-emerald-300 text-sm mb-4" role="status">
+        <p className="text-emerald-300 text-sm mb-2" role="status">
           {message}
         </p>
       ) : (
-        <form onSubmit={(e) => void onSubmit(e)} className="space-y-4 max-w-md">
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_TEACHER_NAME_LABEL}</span>
-            <input
-              type="text"
-              value={fullName}
-              onChange={(ev) => setFullName(ev.target.value)}
-              required
-              maxLength={120}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="teacher-reg-full-name"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_TEACHER_EMAIL_LABEL}</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(ev) => setEmail(ev.target.value)}
-              required
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="teacher-reg-email"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-white/80">{REG_TEACHER_INTENT_LABEL}</span>
-            <select
-              value={requestIntent}
-              onChange={(ev) => setRequestIntent(ev.target.value)}
-              required
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              data-testid="teacher-reg-intent"
-            >
-              {REG_REQUEST_INTENT_OPTIONS.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
+        <form onSubmit={(e) => void onSubmit(e)} className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_TEACHER_NAME_LABEL}</span>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(ev) => setFullName(ev.target.value)}
+                required
+                maxLength={120}
+                className={INPUT_CLASS}
+                data-testid="teacher-reg-full-name"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-white/80">{REG_TEACHER_EMAIL_LABEL}</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(ev) => setEmail(ev.target.value)}
+                required
+                className={INPUT_CLASS}
+                data-testid="teacher-reg-email"
+              />
+            </label>
+            <label className="block text-sm md:max-w-md">
+              <span className="text-white/80">{REG_TEACHER_INTENT_LABEL}</span>
+              <select
+                value={requestIntent}
+                onChange={(ev) => setRequestIntent(ev.target.value)}
+                required
+                className={INPUT_CLASS}
+                data-testid="teacher-reg-intent"
+              >
+                {REG_REQUEST_INTENT_OPTIONS.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
           <label className="block text-sm">
             <span className="text-white/80">{REG_TEACHER_EXPLANATION_LABEL}</span>
-            <span className="block text-xs text-white/50 mt-0.5 mb-1">
+            <span className="block text-xs text-white/50 mt-0.5">
               {REG_TEACHER_EXPLANATION_HINT}
             </span>
             <textarea
@@ -127,34 +133,37 @@ export default function TeacherRegistrationRequestForm() {
               required
               minLength={10}
               maxLength={1000}
-              rows={4}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              rows={3}
+              className={`${INPUT_CLASS} mt-1 resize-y min-h-[4.5rem] max-h-32`}
               data-testid="teacher-reg-description"
             />
           </label>
+
           <fieldset className="text-sm">
-            <legend className="text-white/80 mb-2">{REG_TEACHER_SUBJECTS_LABEL}</legend>
-            <div className="flex flex-wrap gap-2">
+            <legend className="text-white/80 mb-1.5">{REG_TEACHER_SUBJECTS_LABEL}</legend>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5">
               {[...LEARNING_SUBJECT_ALLOWLIST].map((key) => (
                 <label
                   key={key}
-                  className="inline-flex items-center gap-1 rounded border border-white/20 px-2 py-1 cursor-pointer"
+                  className="inline-flex items-center gap-1 rounded border border-white/20 px-2 py-1 cursor-pointer text-xs leading-tight"
                 >
                   <input
                     type="checkbox"
                     checked={subjects.includes(key)}
                     onChange={() => toggleSubject(key)}
                     data-testid={`teacher-reg-subject-${key}`}
+                    className="shrink-0"
                   />
                   <span>{SUBJECT_LABELS_HE[key] || key}</span>
                 </label>
               ))}
             </div>
           </fieldset>
+
           <button
             type="submit"
             disabled={busy || !explanationReady}
-            className="rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
+            className="w-full md:w-auto rounded bg-amber-500 text-black font-semibold px-6 py-2 disabled:opacity-60"
             data-testid="teacher-reg-submit"
           >
             {busy ? "שולח…" : REG_TEACHER_SUBMIT}
@@ -162,7 +171,7 @@ export default function TeacherRegistrationRequestForm() {
         </form>
       )}
       {error ? (
-        <p className="mt-3 text-sm text-red-300" role="alert">
+        <p className="mt-2 text-sm text-red-300" role="alert">
           {error}
         </p>
       ) : null}

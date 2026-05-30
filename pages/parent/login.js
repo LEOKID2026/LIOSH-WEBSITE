@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import PortalLoginHeading, { PortalHomeBackLink } from "../../components/auth/PortalLoginHeading";
 import FullPolicyAcceptancePanel from "../../components/parent/FullPolicyAcceptancePanel";
 import PolicyAcceptanceDeclinedBlock from "../../components/parent/PolicyAcceptanceDeclinedBlock";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
@@ -172,6 +173,11 @@ export default function ParentLoginPage() {
     return (
       <Layout>
         <div className="max-w-4xl mx-auto px-4 py-8" dir="rtl" lang="he">
+          <div className="max-w-md mx-auto">
+            <div className="flex justify-end mb-4">
+              <PortalHomeBackLink />
+            </div>
+          </div>
           {signupPolicyDeclined ? (
             <PolicyAcceptanceDeclinedBlock
               returnLabel="חזרה למסך הכניסה"
@@ -210,8 +216,10 @@ export default function ParentLoginPage() {
   return (
     <Layout>
       <div className="max-w-md mx-auto px-4 py-10" dir="rtl" lang="he">
-        <h1 className="text-2xl font-bold mb-2">כניסת הורים</h1>
-        <p className="text-white/70 mb-6">כניסה והרשמה מהירה להורים.</p>
+        <PortalLoginHeading
+          title="כניסת הורים"
+          subtitle="כניסה והרשמה מהירה להורים."
+        />
 
         <div className="flex gap-2 mb-4">
           <button
@@ -347,12 +355,6 @@ export default function ParentLoginPage() {
             .
           </p>
         ) : null}
-
-        <p className="mt-6 text-sm text-white/70">
-          <Link href="/learning" className="text-amber-300 underline">
-            חזרה לאתר הלימודים
-          </Link>
-        </p>
       </div>
     </Layout>
   );

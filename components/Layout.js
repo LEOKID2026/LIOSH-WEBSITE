@@ -3,29 +3,9 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
 import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
+import { getContextNav } from "../lib/site-nav";
 
-const menuLinksBase = [
-  { href: "/", label: "בית" },
-  { href: "/parent/login", label: "עמוד הורים" },
-  { href: "/teacher/login", label: "כניסת מורים" },
-  { href: "/student/home", label: "עמוד תלמיד" },
-  { href: "/game", label: "משחקים" },
-  { href: "/offline", label: "לא מקוון" },
-  { href: "/learning", label: "לימודים" },
-  { href: "/about", label: "אודות" },
-  { href: "/gallery", label: "גלריה" },
-  { href: "/contact", label: "צור קשר" },
-  { href: "/help", label: "מרכז עזרה" },
-];
-
-const engineReviewNav =
-  process.env.NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN === "true"
-    ? [{ href: "/learning/dev/engine-review", label: "סקירת מנוע" }]
-    : [];
-
-const menuLinks = [...menuLinksBase, ...engineReviewNav];
-
-export default function Layout({ children }) {
+export default function Layout({ children, homepage = false }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -45,6 +25,8 @@ export default function Layout({ children }) {
   const closeMenu = () => setMenuOpen(false);
 
   const pathname = router.pathname || "";
+  const { links: menuLinks, showDevCoinTopup } = getContextNav(pathname);
+
   /** RTL for Hebrew-primary flows — keeps header/logo order stable (same as parent/student hubs). */
   const layoutRtlHebrew =
     pathname === "/" ||
@@ -72,14 +54,14 @@ export default function Layout({ children }) {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white"
+      className="min-h-screen bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white flex flex-col"
       dir={layoutRtlHebrew ? "rtl" : undefined}
     >
-      <header className="w-full border-b border-white/10 bg-black/40 backdrop-blur sticky top-0 z-30">
-        <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <header className="w-full border-b border-white/10 bg-black/40 backdrop-blur sticky top-0 z-30 shrink-0">
+        <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 md:gap-3">
           <Link
             href="/"
-            className="flex items-center gap-2 font-extrabold tracking-widest text-lg"
+            className="flex items-center gap-2 font-extrabold tracking-widest text-lg shrink-0"
           >
             <img
               src="/images/coin.png"
@@ -90,28 +72,27 @@ export default function Layout({ children }) {
             <span>LEO KIDS</span>
           </Link>
 
-          <div className="hidden md:flex flex-wrap items-center justify-end gap-2 text-sm font-semibold">
+          <div className="hidden md:flex flex-1 flex-wrap items-center gap-1 text-sm font-semibold min-w-0">
             {menuLinks.map((link) => (
               <Link
-                key={link.href}
+                key={link.href + link.label}
                 href={link.href}
-                className="px-3 py-1.5 rounded-full hover:bg-white/10 transition"
+                className="px-2 py-1.5 rounded-full hover:bg-white/10 transition whitespace-nowrap"
               >
                 {link.label}
               </Link>
             ))}
-            <DevCoinTopupNav variant="desktop" />
+            {showDevCoinTopup ? <DevCoinTopupNav variant="desktop" /> : null}
           </div>
 
           <button
-            className="md:hidden px-3 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition"
+            className="md:hidden ms-auto px-3 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition"
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label="פתיחת תפריט"
           >
             ☰
           </button>
         </nav>
-
       </header>
 
       {menuOpen && (
@@ -132,7 +113,7 @@ export default function Layout({ children }) {
             <div className="flex flex-col gap-2 text-base font-semibold">
               {menuLinks.map((link) => (
                 <Link
-                  key={link.href}
+                  key={link.href + link.label}
                   href={link.href}
                   className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
                   onClick={closeMenu}
@@ -141,13 +122,25 @@ export default function Layout({ children }) {
                 </Link>
               ))}
             </div>
-            <DevCoinTopupNav variant="mobile" />
+            {showDevCoinTopup ? <DevCoinTopupNav variant="mobile" /> : null}
           </div>
         </div>
       )}
 
-      <main className="min-h-[calc(100vh-56px)]">{children}</main>
-      <footer className="border-t border-white/10 bg-black/40 mt-10">
+      <main
+        className={
+          homepage
+            ? "flex-1 flex flex-col"
+            : "flex-1 min-h-0"
+        }
+      >
+        {children}
+      </main>
+      <footer
+        className={`border-t border-white/10 bg-black/40 shrink-0 ${
+          homepage ? "" : "mt-10"
+        }`}
+      >
         <div className="max-w-6xl mx-auto px-4 py-4 text-xs text-white/60 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-between items-start sm:items-center">
           <span>
             © {new Date().getFullYear()} LEO K · משחקים ולמידה לילדים

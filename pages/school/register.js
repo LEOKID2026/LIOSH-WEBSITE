@@ -1,22 +1,25 @@
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import SchoolRegistrationRequestForm from "../../components/auth/SchoolRegistrationRequestForm";
-import { REG_SCHOOL_LINK } from "../../lib/auth/auth-registration.he.js";
+import { REG_SCHOOL_TITLE } from "../../lib/auth/auth-registration.he.js";
 
 export default function SchoolRegisterPage() {
   return (
     <Layout>
       <div
-        className="min-h-[60vh] flex flex-col items-center justify-center px-4 py-12"
+        className="max-w-4xl mx-auto px-4 py-6 md:py-8"
         data-testid="school-register-page"
         dir="rtl"
         lang="he"
       >
-        <div className="w-full max-w-lg rounded-2xl border border-white/15 bg-black/40 p-6 shadow-xl">
+        <PortalLoginHeading title={REG_SCHOOL_TITLE} className="!mb-4" />
+
+        <div className="rounded-2xl border border-white/15 bg-black/40 p-4 md:p-5">
           <SchoolRegistrationRequestForm />
-          <p className="mt-6 text-sm text-white/50">
+          <p className="mt-4 text-xs text-white/60">
             כבר יש לך חשבון?{" "}
-            <Link href="/teacher/login" className="text-amber-300 hover:underline">
+            <Link href="/teacher/login" className="text-amber-300 underline">
               כניסה למורים
             </Link>
           </p>

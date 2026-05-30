@@ -18,7 +18,7 @@ todos:
     content: "Extend teacher-activities.server.js: listStudentActivities, loadActivityForStudent, startStudentActivity, recordStudentActivityAnswer, submitStudentActivity — add scope:'parent' branches"
     status: pending
   - id: modal-component
-    content: Implement components/parent/AssignActivityModal.js — mirrors teacher student-activities/new.js form, simplified for parent (guided_practice + homework modes, grade locked, questionCount 1-20)
+    content: Implement components/parent/AssignActivityModal.js — mirrors teacher student-activities/new.js form, simplified for parent (guided_practice + homework modes, grade locked, questionCount 1-30)
     status: pending
   - id: dashboard-edit
     content: Edit pages/parent/dashboard.js — add activityModalStudent state, one 'שלח פעילות' button per child card, render AssignActivityModal
@@ -97,6 +97,8 @@ A child linked to a parent account and a student that belongs to a teacher/schoo
 
 **Why not reuse `student_activities`?** That table has `teacher_id NOT NULL` and is already scoped to teacher reports. Adding a nullable `parent_id` column risks cross-contamination and violates the clean separation. A dedicated table is the safe choice.
 
+---
+
 ```mermaid
 flowchart TD
     subgraph parentPortal [Parent Portal]
@@ -130,10 +132,6 @@ flowchart TD
     SSubmit --> PAS
     PAAt --> RPTEXT --> RPT
 ```
-
-**Why not reuse `student_activities`?** That table has `teacher_id NOT NULL` and is already scoped to teacher reports. Adding a `parent_id` nullable column risks cross-contamination of report queries and violates the clean separation. A dedicated table is the safe choice.
-
-**Why not write to `answers`?** The `answers` table is read by both the parent report and the teacher student report (which calls `aggregateParentReportPayload` as its base layer). Writing parent-assigned activity answers there would expose them in teacher views — breaking full isolation. Instead, `aggregateParentReportPayload` is extended with a targeted new query for `parent_activity_attempts`.
 
 ---
 
@@ -279,6 +277,8 @@ ALTER TABLE public.parent_activity_attempts ENABLE ROW LEVEL SECURITY;
 Key exported functions:
 
 - **`parseCreateParentActivityBody(body)`** — validates title (required, 1-120 chars), subject (must be in `ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS`), topic (required), mode (`guided_practice` or `homework` only), questionCount (1-30), questionSet (same validation as `validateSameExactQuestionSet`), optional subtopic/skillKey/difficultyLevel/dueAt. Returns `{ ok, payload }`.
+
+  > **Question count cap:** The server and SQL enforce 1-30. The parent modal UI also uses 1-30. This is a deliberate, documented parent-specific cap (modestly lower than the teacher's max of 50). The cap is consistent across SQL, server, and UI. If the product rule changes, update all three places together.
 
 - **`createParentActivity(serviceRole, parentId, studentId, parsed)`** — verifies `student.parent_id = parentId`; inserts into `parent_assigned_activities` with `status: 'active'`; seeds `parent_activity_status` row with `status: 'not_started'`; returns `{ ok, activityId }`.
 
@@ -458,7 +458,7 @@ Form fields (mirrors `pages/teacher/students/activities/new.js`, simplified):
 - **Subject** — dropdown, same options as teacher form (`ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS`)
 - **Topic** — dropdown populated by `topicOptionsForSubject(subject, gradeKey)` (reuse existing util)
 - **Grade** — read-only display of student's `grade_level` (locked, not editable in modal)
-- **Question count** — number input, 1-20 (reduced cap vs teacher's 50)
+- **Question count** — number input, 1-30 (consistent with server/SQL cap; teacher uses up to 50)
 - **Mode** — radio: `guided_practice` only (for V1; `homework` can be enabled after owner approves Hebrew copy for the label)
 - **Difficulty** — radio: easy / medium / hard
 - **Preview button** — calls `generateActivityQuestionSetClient({ subject, gradeLevel, topic, difficulty, count })` client-side; shows preview cards
@@ -540,7 +540,7 @@ The only minor change: in `startStudentActivity`, the returned `activity` object
 1. **`parent-activity.server.test.js`**
    - `parseCreateParentActivityBody`: title required; mode must be `guided_practice`/`homework` only; `quiz` rejected; questionCount 1-30; subject must be in supported list
    - `createParentActivity`: inserts activity + seeds status row; rejects if `student.parent_id ≠ parentId`
-   - `recordParentActivityAnswer`: writes `parent_activity_attempts`; writes bridge row to `answers` with correct payload fields; score calculation
+   - `recordParentActivityAnswer`: upserts to `parent_activity_attempts`; updates `parent_activity_status` counters; does **not** write any row to `answers`; score calculation correct
    - `submitParentActivity`: sets `status = 'submitted'`, `score_pct` correct
 
 2. **`/api/parent/activities` handler tests**
@@ -556,17 +556,24 @@ The only minor change: in `startStudentActivity`, the returned `activity` object
    - Student can list their parent-assigned activity via `GET /api/student/activities`
    - Student can start, answer (correct + incorrect), and submit a parent activity
    - After submission, `parent_activity_status.status = 'submitted'`
-   - After submission, `answers` table contains one row per question answered
+   - After submission, `parent_activity_attempts` contains one row per answered question
+   - After submission, the `answers` table contains zero rows created by the parent activity flow (verify by querying `answers` filtered to the student in the test window before and after)
 
 4. **Parent report inclusion**
-   - After student completes parent activity, `aggregateParentReportPayload` includes the bridge answers in subject/topic accuracy stats
-   - `summary.totalAnswers` increases by `question_count`
+   - After student completes parent activity, call `aggregateParentReportPayload(..., { includeParentActivities: true })` — verify parent activity attempts are included in subject/topic accuracy stats
+   - `summary.totalAnswers` increases by the number of questions answered
+   - Call `aggregateParentReportPayload(..., {})` (no flag) — verify the same parent activity attempts are **not** present in the returned payload
 
-5. **Teacher/school isolation**
+5. **Isolation regression test**
+   - Call `aggregateParentReportPayload` without the flag (as teacher/school paths do) — confirm `summary.totalAnswers` does not include parent-assigned activity attempts
+   - Verify that all teacher/school report build functions (`buildTeacherStudentReportPayload`, `buildTeacherClassReportPayload`, `loadSchoolScopedClassroomActivityRollupForStudentReport`) call `aggregateParentReportPayload` without `includeParentActivities` (static check or grep test)
+   - Verify that no teacher or school API file imports from `parent-activity.server.js` or queries `parent_assigned_activities`, `parent_activity_status`, or `parent_activity_attempts`
+
+6. **Teacher/school isolation**
    - `listTeacherActivities` does not return parent-assigned activities
    - `listTeacherStudentActivities` does not return parent-assigned activities
 
-6. **Permission fence**
+7. **Permission fence**
    - Parent A cannot create activity for Parent B's child (403)
    - Student A cannot load `activityId` belonging to Student B (404)
 
@@ -596,15 +603,15 @@ The only minor change: in `startStudentActivity`, the returned `activity` object
 2. **Owner reviews SQL** (with ChatGPT/owner review step)
 3. **Owner applies SQL manually** in Supabase dashboard
 4. **Cursor implements server lib** — `lib/parent-server/parent-activity.server.js`
-4. **Cursor extends report aggregation** — edit `lib/parent-server/report-data-aggregate.server.js`: add `options.includeParentActivities` flag, `fetchParentActivityAttemptsInRange`, accumulator helper; update parent report API to pass the flag
-5. **Cursor implements new API** — `pages/api/parent/activities/index.js`
-6. **Cursor extends student activity APIs** — edit `teacher-activities.server.js` (4 functions)
-7. **Cursor implements modal** — `components/parent/AssignActivityModal.js`
-8. **Cursor edits parent dashboard** — `pages/parent/dashboard.js` (button + modal state)
-9. **Owner approves Hebrew copy** (can be done in parallel with steps 4-8)
-10. **Cursor applies approved Hebrew copy** to modal and dashboard
-11. **Cursor runs tests** — unit + integration; fix any failures
-12. **Cursor prepares ZIP review package**
+5. **Cursor extends report aggregation** — edit `lib/parent-server/report-data-aggregate.server.js`: add `options.includeParentActivities` flag, `fetchParentActivityAttemptsInRange`, accumulator helper; update parent report API to pass the flag
+6. **Cursor implements new API** — `pages/api/parent/activities/index.js`
+7. **Cursor extends student activity APIs** — edit `teacher-activities.server.js` (4 functions)
+8. **Cursor implements modal** — `components/parent/AssignActivityModal.js`
+9. **Cursor edits parent dashboard** — `pages/parent/dashboard.js` (button + modal state)
+10. **Owner approves Hebrew copy** (can be done in parallel with steps 4-9)
+11. **Cursor applies approved Hebrew copy** to modal and dashboard
+12. **Cursor runs tests** — unit + integration; fix any failures
+13. **Cursor prepares ZIP review package**
 
 ---
 

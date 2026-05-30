@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function InstallAppButton() {
+export default function InstallAppButton({ className = "" }) {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -61,7 +61,7 @@ export default function InstallAppButton() {
   }
 
   return (
-    <div className="mt-6">
+    <div className={className || "mt-6"}>
       <button
         onClick={handleInstallClick}
         type="button"

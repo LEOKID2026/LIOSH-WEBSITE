@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import Layout from "../../components/Layout";
+import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 
@@ -62,9 +62,12 @@ export default function StudentLoginPage() {
   if (sessionCheck === "pending") {
     return (
       <Layout>
-        <div className="min-h-[50vh] flex flex-col items-center justify-center px-4">
-          <div className="h-10 w-10 rounded-full border-2 border-emerald-400/30 border-t-emerald-400 animate-spin mb-3" aria-hidden />
-          <p className="text-white/85">בודקים חיבור...</p>
+        <div className="max-w-md mx-auto px-4 py-10" dir="rtl" lang="he">
+          <PortalLoginHeading title="כניסת תלמיד" />
+          <div className="min-h-[30vh] flex flex-col items-center justify-center">
+            <div className="h-10 w-10 rounded-full border-2 border-emerald-400/30 border-t-emerald-400 animate-spin mb-3" aria-hidden />
+            <p className="text-white/85">בודקים חיבור...</p>
+          </div>
         </div>
       </Layout>
     );
@@ -107,7 +110,7 @@ export default function StudentLoginPage() {
   return (
     <Layout>
       <div className="max-w-md mx-auto px-4 py-10" dir="rtl" lang="he">
-        <h1 className="text-2xl font-bold mb-6">כניסת תלמיד</h1>
+        <PortalLoginHeading title="כניסת תלמיד" />
 
         <form onSubmit={submitLogin} className="space-y-3">
           <label className="block text-sm">
@@ -150,12 +153,6 @@ export default function StudentLoginPage() {
             {message}
           </p>
         ) : null}
-
-        <p className="mt-6 text-sm text-white/70">
-          <Link href="/learning" className="underline text-amber-300">
-            חזרה ללמידה
-          </Link>
-        </p>
       </div>
     </Layout>
   );
