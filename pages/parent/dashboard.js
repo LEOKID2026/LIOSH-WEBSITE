@@ -4,6 +4,7 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcceptanceGate";
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
+import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ParentSentActivitiesPanel from "../../components/parent/ParentSentActivitiesPanel";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 
@@ -19,6 +20,14 @@ const GRADE_OPTIONS = [
 function gradeLabelFromValue(value) {
   return GRADE_OPTIONS.find((g) => g.value === value)?.label || value || "—";
 }
+
+/** Neutral action buttons on child cards — responsive sizing, no per-action colors */
+const CHILD_CARD_ACTION_CLASS =
+  "flex-1 min-w-0 inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] " +
+  "px-2 py-2 text-xs font-medium text-white/85 text-center " +
+  "sm:text-sm sm:py-2.5 " +
+  "md:px-3 md:py-2.5 md:min-h-[42px] md:text-sm " +
+  "hover:bg-white/[0.07] hover:border-white/25 transition disabled:opacity-60 leading-snug";
 
 function normalizeBalance(student) {
   const rel = student?.student_coin_balances;
@@ -56,6 +65,8 @@ export default function ParentDashboardPage() {
   const [deleteModalStudent, setDeleteModalStudent] = useState(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
   const [activityModalStudent, setActivityModalStudent] = useState(null);
+  const [addChildModalOpen, setAddChildModalOpen] = useState(false);
+  const [detailsModalStudent, setDetailsModalStudent] = useState(null);
   const [sentActivitiesRefresh, setSentActivitiesRefresh] = useState(0);
 
   useEffect(() => {
@@ -163,6 +174,7 @@ export default function ParentDashboardPage() {
     } else {
       setNewName("");
       setNewGrade("");
+      setAddChildModalOpen(false);
       await fetchStudents(session);
       setMessage("Student created.");
     }
@@ -329,6 +341,9 @@ export default function ParentDashboardPage() {
       } else {
         setDeleteModalStudent(null);
         setDeleteConfirmName("");
+        if (detailsModalStudent?.id === deletedId) {
+          setDetailsModalStudent(null);
+        }
         setCredentialConfirmation((prev) => (prev?.studentId === deletedId ? null : prev));
         setEditById((prev) => {
           const next = { ...prev };
@@ -368,13 +383,295 @@ export default function ParentDashboardPage() {
     router.push("/parent/login");
   };
 
+  const openDetailsModal = (student) => {
+    setDetailsModalStudent(student);
+    setEditById((prev) => {
+      if (prev[student.id]) return prev;
+      return {
+        ...prev,
+        [student.id]: {
+          fullName: student.full_name || "",
+          gradeLevel: student.grade_level || "",
+          isActive: Boolean(student.is_active),
+        },
+      };
+    });
+  };
+
+  const renderAddChildForm = () => (
+    <form
+      onSubmit={createStudent}
+      className={`space-y-2 ${students.length >= studentLimit ? "opacity-60" : ""}`}
+    >
+      <p className="text-sm text-white/75">
+        ילדים בחשבון: {students.length} / {studentLimit}
+      </p>
+      {students.length >= studentLimit ? (
+        <p className="text-sm text-amber-200">{`הגעת למגבלת ${studentLimit} ילדים לחשבון`}</p>
+      ) : null}
+      <input
+        className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
+        value={newName}
+        onChange={(e) => setNewName(e.target.value)}
+        placeholder="שם הילד"
+        required
+        disabled={busy || students.length >= studentLimit}
+      />
+      <select
+        className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
+        value={newGrade}
+        onChange={(e) => setNewGrade(e.target.value)}
+        required
+        disabled={busy || students.length >= studentLimit}
+      >
+        <option value="">בחר כיתה</option>
+        {GRADE_OPTIONS.map((g) => (
+          <option key={g.value} value={g.value}>
+            {g.label}
+          </option>
+        ))}
+      </select>
+      <button
+        className="w-full rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"
+        disabled={busy || students.length >= studentLimit}
+      >
+        הוסף ילד
+      </button>
+    </form>
+  );
+
+  const renderChildDetailsContent = (student) => {
+    const edit = editById[student.id] || {
+      fullName: student.full_name || "",
+      gradeLevel: student.grade_level || "",
+      isActive: Boolean(student.is_active),
+    };
+    const balance = normalizeBalance(student);
+    const loginUsername = student.login_username || null;
+    const showConfirmationHere =
+      credentialConfirmation && credentialConfirmation.studentId === student.id;
+
+    return (
+      <div className="space-y-3">
+        <input
+          className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+          value={edit.fullName}
+          onChange={(e) =>
+            setEditById((prev) => ({
+              ...prev,
+              [student.id]: { ...edit, fullName: e.target.value },
+            }))
+          }
+        />
+        <select
+          className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+          value={edit.gradeLevel}
+          onChange={(e) =>
+            setEditById((prev) => ({
+              ...prev,
+              [student.id]: { ...edit, gradeLevel: e.target.value },
+            }))
+          }
+        >
+          <option value="">בחר כיתה</option>
+          {GRADE_OPTIONS.map((g) => (
+            <option key={g.value} value={g.value}>
+              {g.label}
+            </option>
+          ))}
+        </select>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={edit.isActive}
+            onChange={(e) =>
+              setEditById((prev) => ({
+                ...prev,
+                [student.id]: { ...edit, isActive: e.target.checked },
+              }))
+            }
+          />
+          פעיל
+        </label>
+        <div className="text-sm text-white/80">יתרת מטבעות: {balance ? balance.balance : 0}</div>
+        <div className="flex flex-wrap gap-2 items-center">
+          <button
+            className="rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"
+            disabled={busy}
+            onClick={() => saveStudent(student.id)}
+            type="button"
+          >
+            שמור
+          </button>
+          <button
+            type="button"
+            className="rounded border border-red-500/60 text-red-300 px-3 py-2 text-sm disabled:opacity-60 hover:bg-red-950/40"
+            disabled={busy}
+            onClick={() => {
+              setDeleteConfirmName("");
+              setDeleteModalStudent({
+                id: student.id,
+                full_name: student.full_name || "",
+              });
+            }}
+          >
+            מחיקת ילד
+          </button>
+        </div>
+
+        <div className="rounded border border-white/15 p-3 bg-black/30 space-y-3">
+          <div className="font-semibold">פרטי כניסת תלמיד</div>
+
+          {showConfirmationHere ? (
+            <div className="rounded border border-emerald-500/40 bg-emerald-950/40 p-3 space-y-2 text-sm">
+              <div className="font-semibold text-emerald-200">
+                חשוב לשמור את הפרטים — ה-PIN לא יוצג שוב.
+              </div>
+              <div>
+                שם משתמש: <strong className="text-white">{credentialConfirmation.username}</strong>
+              </div>
+              <div>
+                PIN חדש: <strong className="text-white">{credentialConfirmation.pin}</strong>
+              </div>
+              <button
+                type="button"
+                className="rounded bg-white/15 px-3 py-1 text-xs"
+                onClick={() => setCredentialConfirmation(null)}
+              >
+                סגירה
+              </button>
+            </div>
+          ) : null}
+
+          {loginUsername ? (
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span>
+                  שם משתמש: <strong className="text-white">{loginUsername}</strong>
+                </span>
+                <button
+                  type="button"
+                  className="rounded bg-white/10 px-2 py-1 text-xs"
+                  onClick={() => copyUsername(loginUsername)}
+                >
+                  העתק שם משתמש
+                </button>
+              </div>
+              <div className="text-sm">
+                PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
+              </div>
+              <div>
+                <label className="text-sm text-white/80">PIN חדש (איפוס / שינוי)</label>
+                <input
+                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  value={credentialsByStudentId[student.id]?.pin || ""}
+                  onChange={(e) =>
+                    setCredentialsByStudentId((prev) => ({
+                      ...prev,
+                      [student.id]: {
+                        ...(prev[student.id] || {}),
+                        pin: e.target.value.replace(/\D/g, "").slice(0, 4),
+                      },
+                    }))
+                  }
+                  placeholder="4 ספרות"
+                  inputMode="numeric"
+                  type="password"
+                  autoComplete="new-password"
+                  maxLength={4}
+                />
+              </div>
+              <button
+                className="rounded bg-sky-400 text-black px-3 py-2 font-semibold disabled:opacity-60"
+                disabled={busy}
+                onClick={() => savePinReset(student.id, loginUsername, student.full_name)}
+                type="button"
+              >
+                איפוס PIN / שינוי PIN
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="text-sm text-amber-200/95">שם משתמש: טרם נקבע שם משתמש</div>
+              <div className="text-sm">
+                PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
+              </div>
+              <p className="text-xs text-white/60">
+                יש להגדיר שם משתמש ו-PIN לכניסת התלמיד. אם כבר קיימת כניסה ישנה, הגדרה זו תחליף אותה.
+              </p>
+              <div>
+                <label className="text-sm text-white/80">שם משתמש לתלמיד</label>
+                <input
+                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  value={credentialsByStudentId[student.id]?.username || ""}
+                  onChange={(e) =>
+                    setCredentialsByStudentId((prev) => ({
+                      ...prev,
+                      [student.id]: {
+                        ...(prev[student.id] || {}),
+                        username: e.target.value,
+                      },
+                    }))
+                  }
+                  placeholder="לדוגמה: noam123"
+                  autoComplete="off"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-white/80">PIN לתלמיד</label>
+                <input
+                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+                  value={credentialsByStudentId[student.id]?.pin || ""}
+                  onChange={(e) =>
+                    setCredentialsByStudentId((prev) => ({
+                      ...prev,
+                      [student.id]: {
+                        ...(prev[student.id] || {}),
+                        pin: e.target.value.replace(/\D/g, "").slice(0, 4),
+                      },
+                    }))
+                  }
+                  placeholder="4 ספרות"
+                  inputMode="numeric"
+                  type="password"
+                  autoComplete="new-password"
+                  maxLength={4}
+                />
+              </div>
+              <button
+                className="rounded bg-sky-400 text-black px-3 py-2 font-semibold disabled:opacity-60"
+                disabled={busy}
+                onClick={() => saveStudentCredentials(student.id, student.full_name)}
+                type="button"
+              >
+                קביעת שם משתמש ו-PIN
+              </button>
+            </div>
+          )}
+        </div>
+
+        {session?.access_token ? (
+          <ParentSentActivitiesPanel
+            studentId={student.id}
+            accessToken={session.access_token}
+            refreshKey={sentActivitiesRefresh}
+          />
+        ) : null}
+      </div>
+    );
+  };
+
   if (!session) {
     return (
       <Layout>
-        <div className="max-w-3xl mx-auto px-4 py-10">בודק התחברות הורה...</div>
+        <div className="max-w-6xl mx-auto px-3 py-4 text-sm text-white/70">בודק התחברות הורה...</div>
       </Layout>
     );
   }
+
+  const detailsStudent = detailsModalStudent
+    ? students.find((s) => s.id === detailsModalStudent.id) || detailsModalStudent
+    : null;
 
   return (
     <Layout>
@@ -383,327 +680,108 @@ export default function ParentDashboardPage() {
         onLogout={logout}
         onReady={() => fetchStudents(session)}
       >
-      <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold">דשבורד הורים</h1>
-            <p className="text-white/70 text-sm">{session.user?.email}</p>
+      <div className="max-w-6xl mx-auto w-full px-3 py-3 md:px-8 md:py-8 space-y-4 md:space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 md:gap-y-3">
+          <div className="min-w-0">
+            <h1 className="text-xl md:text-2xl font-bold leading-tight">דשבורד הורים</h1>
+            <p className="text-white/60 text-sm truncate mt-1">{session.user?.email}</p>
           </div>
-          <button onClick={logout} className="rounded bg-white/10 px-3 py-2">
-            יציאה
-          </button>
+          <div className="flex gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setAddChildModalOpen(true)}
+              className="rounded-lg bg-amber-500 text-black px-3 py-2 md:px-4 md:py-2.5 text-sm font-semibold hover:bg-amber-400 transition"
+            >
+              הוספת ילד
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 md:px-4 md:py-2.5 text-sm text-white/80 hover:bg-white/[0.07] hover:border-white/25 transition"
+            >
+              יציאה
+            </button>
+          </div>
         </div>
 
-        <form
-          onSubmit={createStudent}
-          className={`space-y-2 rounded border border-white/15 p-4 bg-black/30 ${students.length >= studentLimit ? "opacity-60" : ""}`}
-        >
-          <h2 className="font-semibold">הוספת ילד</h2>
-          <p className="text-sm text-white/75">
-            ילדים בחשבון: {students.length} / {studentLimit}
-          </p>
-          {students.length >= studentLimit ? (
-            <p className="text-sm text-amber-200">{`הגעת למגבלת ${studentLimit} ילדים לחשבון`}</p>
-          ) : null}
-          <input
-            className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            placeholder="שם הילד"
-            required
-            disabled={busy || students.length >= studentLimit}
-          />
-          <select
-            className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 disabled:opacity-50"
-            value={newGrade}
-            onChange={(e) => setNewGrade(e.target.value)}
-            required
-            disabled={busy || students.length >= studentLimit}
-          >
-            <option value="">בחר כיתה</option>
-            {GRADE_OPTIONS.map((g) => (
-              <option key={g.value} value={g.value}>
-                {g.label}
-              </option>
-            ))}
-          </select>
-          <button
-            className="rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"
-            disabled={busy || students.length >= studentLimit}
-          >
-            הוסף ילד
-          </button>
-        </form>
+        {message ? <p className="text-sm text-white/75 leading-relaxed">{message}</p> : null}
 
-        <section className="space-y-3">
-          <h2 className="font-semibold">הילדים שלי ({students.length})</h2>
-          {students.length === 0 ? <p className="text-white/70">עדיין לא נוספו ילדים</p> : null}
-          {students.map((student) => {
-            const edit = editById[student.id] || {
-              fullName: student.full_name || "",
-              gradeLevel: student.grade_level || "",
-              isActive: Boolean(student.is_active),
-            };
-            const balance = normalizeBalance(student);
-            const loginUsername = student.login_username || null;
-            const showConfirmationHere =
-              credentialConfirmation && credentialConfirmation.studentId === student.id;
-            return (
-              <div key={student.id} className="rounded border border-white/15 p-4 bg-black/30 space-y-2">
-                <div className="space-y-1">
-                  <div className="font-semibold text-white">
-                    {edit.fullName || student.full_name || "ילד"}
-                  </div>
-                  <div className="text-sm text-white/75">
-                    כיתה: {gradeLabelFromValue(edit.gradeLevel || student.grade_level)}
-                  </div>
-                </div>
-                <input
-                  className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  value={edit.fullName}
-                  onChange={(e) =>
-                    setEditById((prev) => ({
-                      ...prev,
-                      [student.id]: { ...edit, fullName: e.target.value },
-                    }))
-                  }
-                />
-                <select
-                  className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  value={edit.gradeLevel}
-                  onChange={(e) =>
-                    setEditById((prev) => ({
-                      ...prev,
-                      [student.id]: { ...edit, gradeLevel: e.target.value },
-                    }))
-                  }
-                >
-                  <option value="">בחר כיתה</option>
-                  {GRADE_OPTIONS.map((g) => (
-                    <option key={g.value} value={g.value}>
-                      {g.label}
-                    </option>
-                  ))}
-                </select>
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={edit.isActive}
-                    onChange={(e) =>
-                      setEditById((prev) => ({
-                        ...prev,
-                        [student.id]: { ...edit, isActive: e.target.checked },
-                      }))
-                    }
-                  />
-                  פעיל
-                </label>
-                <div className="text-sm text-white/80">
-                  יתרת מטבעות: {balance ? balance.balance : 0}
-                </div>
-                <div className="flex flex-wrap gap-2 items-center">
-                  <button
-                    className="rounded bg-amber-500 text-black px-3 py-2 font-semibold disabled:opacity-60"
-                    disabled={busy}
-                    onClick={() => saveStudent(student.id)}
-                    type="button"
-                  >
-                    שמור
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded border border-red-500/60 text-red-300 px-3 py-2 text-sm disabled:opacity-60 hover:bg-red-950/40"
-                    disabled={busy}
-                    onClick={() => {
-                      setDeleteConfirmName("");
-                      setDeleteModalStudent({
-                        id: student.id,
-                        full_name: student.full_name || "",
-                      });
-                    }}
-                  >
-                    מחיקת ילד
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded bg-emerald-600 text-white px-3 py-2 text-sm font-semibold disabled:opacity-60 hover:bg-emerald-500"
-                    disabled={busy}
-                    onClick={() =>
-                      setActivityModalStudent({
-                        id: student.id,
-                        full_name: student.full_name,
-                        grade_level: student.grade_level,
-                      })
-                    }
-                  >
-                    שלח פעילות
-                  </button>
-                  {session?.access_token ? (
-                    <ParentSentActivitiesPanel
-                      studentId={student.id}
-                      accessToken={session.access_token}
-                      refreshKey={sentActivitiesRefresh}
-                    />
-                  ) : null}
-                </div>
+        <section>
+          {students.length === 0 ? (
+            <p className="text-sm text-white/60">עדיין לא נוספו ילדים</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 md:gap-5">
+              {students.map((student) => {
+                const displayName = student.full_name || "ילד";
+                const gradeLabel = gradeLabelFromValue(student.grade_level);
+                const reportHref = `/learning/parent-report?studentId=${encodeURIComponent(student.id)}&source=parent`;
 
-                <div className="mt-2 rounded border border-white/15 p-3 bg-black/30 space-y-3">
-                  <div className="font-semibold">פרטי כניסת תלמיד</div>
-
-                  {showConfirmationHere ? (
-                    <div className="rounded border border-emerald-500/40 bg-emerald-950/40 p-3 space-y-2 text-sm">
-                      <div className="font-semibold text-emerald-200">
-                        חשוב לשמור את הפרטים — ה-PIN לא יוצג שוב.
-                      </div>
-                      <div>
-                        שם משתמש: <strong className="text-white">{credentialConfirmation.username}</strong>
-                      </div>
-                      <div>
-                        PIN חדש: <strong className="text-white">{credentialConfirmation.pin}</strong>
-                      </div>
+                return (
+                  <div
+                    key={student.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.04] p-3.5 md:p-5 md:min-h-[168px] flex flex-col justify-between gap-3 md:gap-4"
+                  >
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-base md:text-lg text-white truncate">
+                        {displayName}
+                      </h3>
+                      <p className="text-sm text-white/55 mt-1">{gradeLabel}</p>
+                    </div>
+                    <div className="flex gap-2 md:gap-2.5">
+                      <Link
+                        href={reportHref}
+                        prefetch={false}
+                        className={CHILD_CARD_ACTION_CLASS}
+                      >
+                        דוח הורים
+                      </Link>
                       <button
                         type="button"
-                        className="rounded bg-white/15 px-3 py-1 text-xs"
-                        onClick={() => setCredentialConfirmation(null)}
-                      >
-                        סגירה
-                      </button>
-                    </div>
-                  ) : null}
-
-                  {loginUsername ? (
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center gap-2 text-sm">
-                        <span>
-                          שם משתמש: <strong className="text-white">{loginUsername}</strong>
-                        </span>
-                        <button
-                          type="button"
-                          className="rounded bg-white/10 px-2 py-1 text-xs"
-                          onClick={() => copyUsername(loginUsername)}
-                        >
-                          העתק שם משתמש
-                        </button>
-                      </div>
-                      <div className="text-sm">
-                        PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
-                      </div>
-                      <div>
-                        <label className="text-sm text-white/80">PIN חדש (איפוס / שינוי)</label>
-                        <input
-                          className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                          value={credentialsByStudentId[student.id]?.pin || ""}
-                          onChange={(e) =>
-                            setCredentialsByStudentId((prev) => ({
-                              ...prev,
-                              [student.id]: {
-                                ...(prev[student.id] || {}),
-                                pin: e.target.value.replace(/\D/g, "").slice(0, 4),
-                              },
-                            }))
-                          }
-                          placeholder="4 ספרות"
-                          inputMode="numeric"
-                          type="password"
-                          autoComplete="new-password"
-                          maxLength={4}
-                        />
-                      </div>
-                      <button
-                        className="rounded bg-sky-400 text-black px-3 py-2 font-semibold disabled:opacity-60"
+                        className={CHILD_CARD_ACTION_CLASS}
                         disabled={busy}
-                        onClick={() => savePinReset(student.id, loginUsername, student.full_name)}
-                        type="button"
+                        onClick={() =>
+                          setActivityModalStudent({
+                            id: student.id,
+                            full_name: student.full_name,
+                            grade_level: student.grade_level,
+                          })
+                        }
                       >
-                        איפוס PIN / שינוי PIN
+                        פעילות
                       </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="text-sm text-amber-200/95">שם משתמש: טרם נקבע שם משתמש</div>
-                      <div className="text-sm">
-                        PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
-                      </div>
-                      <p className="text-xs text-white/60">
-                        יש להגדיר שם משתמש ו-PIN לכניסת התלמיד. אם כבר קיימת כניסה ישנה, הגדרה זו תחליף אותה.
-                      </p>
-                      <div>
-                        <label className="text-sm text-white/80">שם משתמש לתלמיד</label>
-                        <input
-                          className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                          value={credentialsByStudentId[student.id]?.username || ""}
-                          onChange={(e) =>
-                            setCredentialsByStudentId((prev) => ({
-                              ...prev,
-                              [student.id]: {
-                                ...(prev[student.id] || {}),
-                                username: e.target.value,
-                              },
-                            }))
-                          }
-                          placeholder="לדוגמה: noam123"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm text-white/80">PIN לתלמיד</label>
-                        <input
-                          className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                          value={credentialsByStudentId[student.id]?.pin || ""}
-                          onChange={(e) =>
-                            setCredentialsByStudentId((prev) => ({
-                              ...prev,
-                              [student.id]: {
-                                ...(prev[student.id] || {}),
-                                pin: e.target.value.replace(/\D/g, "").slice(0, 4),
-                              },
-                            }))
-                          }
-                          placeholder="4 ספרות"
-                          inputMode="numeric"
-                          type="password"
-                          autoComplete="new-password"
-                          maxLength={4}
-                        />
-                      </div>
                       <button
-                        className="rounded bg-sky-400 text-black px-3 py-2 font-semibold disabled:opacity-60"
-                        disabled={busy}
-                        onClick={() => saveStudentCredentials(student.id, student.full_name)}
                         type="button"
+                        className={CHILD_CARD_ACTION_CLASS}
+                        disabled={busy}
+                        onClick={() => openDetailsModal(student)}
                       >
-                        קביעת שם משתמש ו-PIN
+                        פרטים
                       </button>
                     </div>
-                  )}
-
-                  <div className="pt-2 border-t border-white/10">
-                    <Link
-                      href={`/learning/parent-report?studentId=${encodeURIComponent(student.id)}&source=parent`}
-                      prefetch={false}
-                      className="inline-flex rounded bg-violet-500/90 text-white px-3 py-2 text-sm font-semibold hover:bg-violet-500"
-                    >
-                      דוח הורים
-                    </Link>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          )}
         </section>
 
-        {message ? <p className="text-sm text-white/85">{message}</p> : null}
+        <ParentDashboardModal
+          open={addChildModalOpen}
+          title="הוספת ילד"
+          onClose={() => setAddChildModalOpen(false)}
+          size="md"
+        >
+          {renderAddChildForm()}
+        </ParentDashboardModal>
 
-        <p className="text-sm text-white/70">
-          כניסת תלמיד זמינה עכשיו.{" "}
-          <Link href="/student/login" className="underline text-amber-300 ml-1">
-            מעבר לכניסת תלמיד
-          </Link>{" "}
-          ·{" "}
-          <Link href="/learning" className="underline text-amber-300">
-            חזרה ללמידה
-          </Link>
-        </p>
+        <ParentDashboardModal
+          open={Boolean(detailsStudent)}
+          title={detailsStudent ? `פרטים — ${detailsStudent.full_name || "ילד"}` : "פרטים"}
+          onClose={() => setDetailsModalStudent(null)}
+          size="2xl"
+        >
+          {detailsStudent ? renderChildDetailsContent(detailsStudent) : null}
+        </ParentDashboardModal>
 
         {activityModalStudent && session?.access_token ? (
           <AssignActivityModal
@@ -720,12 +798,12 @@ export default function ParentDashboardPage() {
 
         {deleteModalStudent ? (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4"
+            className="fixed inset-0 z-[160] flex items-center justify-center bg-black/75 p-4"
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-child-title"
           >
-            <div className="max-w-md w-full rounded-lg border border-red-500/35 bg-[#0f1629] p-4 space-y-3 shadow-xl">
+            <div className="max-w-md w-full rounded-lg border border-red-500/35 bg-[#0f1629] p-4 space-y-3 shadow-xl" dir="rtl">
               <h3 id="delete-child-title" className="text-lg font-bold text-white">
                 מחיקת ילד לצמיתות
               </h3>
