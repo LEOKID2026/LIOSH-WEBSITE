@@ -52,8 +52,8 @@ function StatCard({ label, value, sub }) {
 
 const HOME_PANELS = {
   stats: { title: "הנתונים שלי", emoji: "📊", size: "6xl" },
+  progress: { title: "ההתקדמות שלי", emoji: "📈", size: "2xl" },
   missions: { title: "המשימות שלי", emoji: "✅", size: "2xl" },
-  monthly: { title: "המסע החודשי", emoji: "🗓️", size: "2xl" },
   classroom: { title: "פעילויות מהמורה", emoji: "🏫", size: "4xl" },
   worksheets: { title: "דפי עבודה", emoji: "📄", size: "4xl" },
   subjects: { title: "הנושאים שלי", emoji: "📚", size: "6xl" },
@@ -423,8 +423,11 @@ export default function StudentHomePage() {
         : null;
     return {
       stats: `רמה ${dashboardView.accountStats.summaryLevel}`,
+      progress:
+        dashboardView.monthlyPersistence?.currentMinutes != null
+          ? `${dashboardView.monthlyPersistence.currentMinutes} דק׳ החודש`
+          : `${dashboardView.monthlyJourney.minutesThisMonth} דק׳`,
       missions: missionSub,
-      monthly: `${dashboardView.monthlyJourney.minutesThisMonth}/${dashboardView.monthlyJourney.goalMinutes} דק׳`,
       subjects: `${dashboardView.subjects.length} נושאים`,
       badges: dashboardView.badges.length > 0 ? `${dashboardView.badges.length} תגים` : null,
       recommendations:
@@ -482,17 +485,11 @@ export default function StudentHomePage() {
         ) : (
           <p className="text-white/70 text-right leading-relaxed">עדיין אין נתונים</p>
         );
-      case "monthly":
-        return (
-          <>
-            {dashboardView.monthlyPersistence?.tiers?.length ? (
-              <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />
-            ) : null}
-            <MonthlyJourneySection
-              monthlyJourney={dashboardView.monthlyJourney}
-              className={dashboardView.monthlyPersistence?.tiers?.length ? "mt-4" : ""}
-            />
-          </>
+      case "progress":
+        return dashboardView.monthlyPersistence?.tiers?.length ? (
+          <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />
+        ) : (
+          <p className="text-white/70 text-right leading-relaxed">עדיין אין נתונים</p>
         );
       case "classroom":
         return <StudentClassroomActivitiesPanel />;
