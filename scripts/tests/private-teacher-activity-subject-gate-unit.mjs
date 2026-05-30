@@ -10,6 +10,7 @@ import {
 } from "../../lib/school-server/school-subjects.server.js";
 import { buildActivityReportPayload } from "../../lib/teacher-server/teacher-activities.server.js";
 import { buildStudentActivityReportPayload } from "../../lib/teacher-server/student-activity.server.js";
+import { loadStudentActivityBatchMonitor } from "../../lib/teacher-server/student-activity.server.js";
 
 const PRIVATE_TEACHER = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const SCHOOL_TEACHER = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
@@ -24,6 +25,7 @@ const STUDENT_ACTIVITY_ID = "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee";
  *   schoolSubjects?: Array<{ subject: string, grade_level?: string|null }>,
  *   classroomActivity?: object|null,
  *   studentActivity?: object|null,
+ *   batchActivities?: object[]|null,
  * }} config
  */
 function createMockServiceRole(config) {
@@ -33,6 +35,7 @@ function createMockServiceRole(config) {
     schoolSubjects = [],
     classroomActivity = null,
     studentActivity = null,
+    batchActivities = null,
   } = config;
 
   return {
@@ -50,6 +53,9 @@ function createMockServiceRole(config) {
           return chain;
         },
         limit() {
+          return chain;
+        },
+        in() {
           return chain;
         },
         maybeSingle() {
@@ -75,6 +81,18 @@ function createMockServiceRole(config) {
         then(resolve) {
           if (table === "school_teacher_subjects") {
             return resolve({ data: schoolSubjects, error: null });
+          }
+          if (table === "student_activities" && batchActivities) {
+            return resolve({ data: batchActivities, error: null });
+          }
+          if (table === "student_activity_status") {
+            return resolve({ data: [], error: null });
+          }
+          if (table === "students") {
+            return resolve({
+              data: [{ id: "11111111-1111-4111-8111-111111111111", full_name: "Test Student" }],
+              error: null,
+            });
           }
           return resolve({ data: null, error: null });
         },
@@ -233,6 +251,53 @@ async function testStudentActivityReportReadGate() {
   assert.equal(allowedGate.ok, true);
 }
 
+async function testBatchMonitorSubjectGate() {
+  const BATCH_ID = "ffffffff-ffff-4fff-8fff-ffffffffffff";
+  const sbDenied = createMockServiceRole({
+    membership: null,
+    privateSubjects: ["math"],
+    batchActivities: [
+      {
+        id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaa01",
+        student_id: "11111111-1111-4111-8111-111111111111",
+        title: "Batch English",
+        subject: "english",
+        topic: "t",
+        mode: "quiz",
+        question_count: 5,
+        status: "active",
+        activated_at: "2026-01-01T00:00:00.000Z",
+        closed_at: null,
+      },
+    ],
+  });
+  const denied = await loadStudentActivityBatchMonitor(sbDenied, PRIVATE_TEACHER, BATCH_ID);
+  assert.equal(denied.ok, false);
+  assert.equal(denied.code, "subject_not_permitted");
+
+  const sbAllowed = createMockServiceRole({
+    membership: null,
+    privateSubjects: ["math"],
+    batchActivities: [
+      {
+        id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaa02",
+        student_id: "11111111-1111-4111-8111-111111111111",
+        title: "Batch Math",
+        subject: "math",
+        topic: "t",
+        mode: "quiz",
+        question_count: 5,
+        status: "active",
+        activated_at: "2026-01-01T00:00:00.000Z",
+        closed_at: null,
+      },
+    ],
+  });
+  const allowed = await loadStudentActivityBatchMonitor(sbAllowed, PRIVATE_TEACHER, BATCH_ID);
+  assert.equal(allowed.ok, true);
+  assert.equal(allowed.roster?.length, 1);
+}
+
 await testPrivateTeacherMathGranted();
 await testPrivateTeacherEnglishDenied();
 await testDiscussionMatchesActivityGate();
@@ -240,5 +305,6 @@ await testSchoolTeacherSubjectGrant();
 await testSchoolAdminBypass();
 await testClassReportReadExportGate();
 await testStudentActivityReportReadGate();
+await testBatchMonitorSubjectGate();
 
 console.log("private-teacher-activity-subject-gate-unit: ok");

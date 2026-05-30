@@ -47,7 +47,8 @@ export const STATIC_OWNERSHIP_CASES = [
     audit() {
       const src = readSource("pages/api/parent/students/[studentId]/report-data.js");
       const pass =
-        src.includes('.eq("parent_id", userData.user.id)') &&
+        (src.includes('.eq("parent_id", ctx.parentUserId)') ||
+          src.includes('requireParentApiContext')) &&
         src.includes("404") &&
         src.includes("Student not found for this parent");
       return {
@@ -66,7 +67,7 @@ export const STATIC_OWNERSHIP_CASES = [
     audit() {
       const src = readSource("pages/api/parent/copilot-turn.js");
       const pass =
-        src.includes('.eq("parent_id", userData.user.id)') &&
+        src.includes('.eq("parent_id", ctx.parentUserId)') &&
         src.includes("Student not found for this parent");
       return { pass, detail: pass ? "handler ownership before turn" : "missing parent bearer ownership" };
     },
@@ -115,8 +116,8 @@ export const STATIC_OWNERSHIP_CASES = [
       const create = readSource("pages/api/parent/create-student.js");
       const pass =
         limit.includes("DEFAULT_PARENT_STUDENT_LIMIT = 3") &&
-        create.includes("resolveParentStudentLimit") &&
-        create.includes('.eq("parent_id", userData.user.id)');
+        create.includes("resolveParentMaxChildren") &&
+        create.includes('.eq("parent_id", ctx.parentUserId)');
       return { pass, detail: pass ? "cap=3 + parent-scoped count" : "cap enforcement missing" };
     },
   },
@@ -146,7 +147,7 @@ export const STATIC_OWNERSHIP_CASES = [
     audit() {
       const src = readSource("pages/api/parent/students/[studentId]/report-data.js");
       const handler = src.slice(src.indexOf("export default"));
-      const parentFilterIdx = handler.indexOf('.eq("parent_id", userData.user.id)');
+      const parentFilterIdx = handler.indexOf('.eq("parent_id", ctx.parentUserId)');
       const srIdx = handler.indexOf("getLearningSupabaseServiceRoleClient()");
       const pass =
         parentFilterIdx > -1 &&

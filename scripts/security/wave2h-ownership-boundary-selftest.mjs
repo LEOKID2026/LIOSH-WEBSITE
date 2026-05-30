@@ -36,8 +36,9 @@ function testParentStudentCapRules() {
   assert.equal(DEFAULT_PARENT_STUDENT_LIMIT, 3);
 
   const createStudent = read("pages/api/parent/create-student.js");
-  assert.match(createStudent, /resolveParentStudentLimit/);
-  assert.match(createStudent, /\.eq\("parent_id", userData\.user\.id\)/);
+  assert.match(createStudent, /resolveParentMaxChildren/);
+  assert.match(createStudent, /requireParentApiContext/);
+  assert.match(createStudent, /\.eq\("parent_id", ctx\.parentUserId\)/);
 
   const limitModule = read("lib/parent-server/parent-student-limit.server.js");
   assert.match(limitModule, /admin@admin\.com/);
@@ -47,11 +48,12 @@ function testParentStudentCapRules() {
 
 function testCriticalRoutePatterns() {
   const reportData = read("pages/api/parent/students/[studentId]/report-data.js");
-  assert.match(reportData, /\.eq\("parent_id", userData\.user\.id\)/);
+  assert.match(reportData, /requireParentApiContext/);
+  assert.match(reportData, /\.eq\("parent_id", ctx\.parentUserId\)/);
   assert.match(reportData, /404.*Student not found for this parent/s);
 
   const copilot = read("pages/api/parent/copilot-turn.js");
-  assert.match(copilot, /\.eq\("parent_id", userData\.user\.id\)/);
+  assert.match(copilot, /\.eq\("parent_id", ctx\.parentUserId\)/);
   assert.match(copilot, /Student not found for this parent/);
 
   const payload = read("lib/parent-copilot/copilot-turn-payload.server.js");

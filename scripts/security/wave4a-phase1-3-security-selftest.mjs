@@ -110,6 +110,7 @@ function testP3_2StudentSessionLifecycle() {
   const schoolAcct = read("lib/school-server/school-account-management.server.js");
   const studentAuth = read("lib/learning-supabase/student-auth.js");
   const teacherAccess = read("lib/teacher-server/teacher-student-login-access.server.js");
+  const studentActivity = read("lib/teacher-server/student-activity.server.js");
 
   const exported = /export\s+async\s+function\s+endLiveStudentSessions/.test(teacherAccess);
   record("P3-2 endLiveStudentSessions exported", exported);
@@ -127,13 +128,33 @@ function testP3_2StudentSessionLifecycle() {
     /rotateSchoolStudentPin[\s\S]*endLiveStudentSessions/.test(schoolAcct);
   record("P3-2 rotateSchoolStudentPin ends sessions", rotateCalls);
 
+  const nullAccessCodeRejected =
+    /export\s+function\s+isStudentSessionAccessCodeBindingValid/.test(
+      read("lib/learning-supabase/student-session-access-code.server.js")
+    ) &&
+    /if\s*\(\s*!sessionRow\.access_code_id\s*\)[\s\S]*return\s+null/.test(studentAuth) &&
+    /isStudentSessionAccessCodeBindingValid/.test(studentAuth);
+  record(
+    "P3-2 null/missing access_code_id sessions rejected fail-closed",
+    nullAccessCodeRejected,
+    "requires access_code_id + active code row"
+  );
+
   const accessCodeRevalidation =
-    /getAuthenticatedStudentSession[\s\S]*access_code_id[\s\S]*student_access_codes[\s\S]*is_active/.test(
+    /getAuthenticatedStudentSession[\s\S]*student_access_codes[\s\S]*is_active/.test(
       studentAuth
     ) && /revoked_at/.test(studentAuth);
   record(
     "P3-2 getAuthenticatedStudentSession re-validates access_code_id",
     accessCodeRevalidation
+  );
+
+  const batchMonitorSubjectGate =
+    /loadStudentActivityBatchMonitor[\s\S]*assertActivitySubjectAllowed/.test(studentActivity);
+  record(
+    "P2-4 loadStudentActivityBatchMonitor re-checks subject grant",
+    batchMonitorSubjectGate,
+    "assertActivitySubjectAllowed on batch subject"
   );
 }
 
