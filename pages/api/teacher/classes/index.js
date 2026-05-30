@@ -14,6 +14,7 @@ import {
   unknownQueryParams,
 } from "../../../../lib/teacher-server/teacher-request.server.js";
 import { sendTeacherApiError } from "../../../../lib/teacher-server/teacher-session.server.js";
+import { rejectIfSchoolTeacher } from "../../../../lib/teacher-server/private-teacher-guard.server.js";
 
 async function handleGet(req, res, ctx) {
   const unknown = unknownQueryParams(req.query, new Set(["includeArchived"]));
@@ -62,6 +63,9 @@ async function handleGet(req, res, ctx) {
 
 async function handlePost(req, res, ctx) {
   if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
+
+  const schoolBlock = await rejectIfSchoolTeacher(res, ctx.serviceRole, ctx.teacherId);
+  if (schoolBlock.blocked) return undefined;
 
   if (isProductionRuntime()) {
     const ip = clientIpFromRequest(req);

@@ -1,6 +1,6 @@
 import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
-import { assertSchoolTeacherSubjectAllowed } from "../../../../lib/school-server/school-subjects.server.js";
+import { assertActivitySubjectAllowed } from "../../../../lib/school-server/school-subjects.server.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import { readJsonBody } from "../../../../lib/learning-supabase/learning-activity.js";
 import {
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
         return sendTeacherApiError(res, parsed.status || 400, parsed.code, parsed.message || parsed.code);
       }
 
-      const subjectGate = await assertSchoolTeacherSubjectAllowed(
+      const subjectGate = await assertActivitySubjectAllowed(
         ctx.serviceRole,
         ctx.teacherId,
         parsed.payload.subject,

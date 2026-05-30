@@ -1,33 +1,21 @@
-import {
-  getLearningSupabaseServerUserClient,
-  getLearningSupabaseServiceRoleClient,
-} from "../../../lib/learning-supabase/server";
-import {
-  DEFAULT_PARENT_STUDENT_LIMIT,
-  resolveParentStudentLimit,
-} from "../../../lib/parent-server/parent-student-limit.server";
+import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
+import { requireParentApiContext } from "../../../lib/auth/persona-guard.server.js";
+import { resolveParentMaxChildren } from "../../../lib/parent-server/parent-entitlement-provision.server.js";
+import { DEFAULT_PARENT_STUDENT_LIMIT } from "../../../lib/parent-server/parent-student-limit.server";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
-  const authHeader = req.headers.authorization || "";
-  if (!authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ ok: false, error: "Missing bearer token" });
-  }
-
   try {
-    const supabase = getLearningSupabaseServerUserClient(authHeader);
-    const { data: userData, error: userErr } = await supabase.auth.getUser();
-    if (userErr || !userData?.user?.id) {
-      return res.status(401).json({ ok: false, error: "Invalid session" });
-    }
+    const ctx = await requireParentApiContext(res, req.headers.authorization || "");
+    if (ctx.stopped) return undefined;
 
-    const { data, error } = await supabase
+    const { data, error } = await ctx.bearerSupabase
       .from("students")
       .select("id,full_name,grade_level,is_active,created_at,student_coin_balances(balance,lifetime_earned,lifetime_spent)")
-      .eq("parent_id", userData.user.id)
+      .eq("parent_id", ctx.parentUserId)
       .order("created_at", { ascending: true });
 
     if (error) {
@@ -94,7 +82,12 @@ export default async function handler(req, res) {
     // can render and gate the Add form against the same number the API
     // will accept. The QA allowlist itself is never sent — only the
     // integer the server has already decided to permit for this caller.
-    const studentLimit = resolveParentStudentLimit(userData.user.email);
+    const limitResult = await resolveParentMaxChildren(
+      ctx.serviceRole,
+      ctx.parentUserId,
+      ctx.user?.email
+    );
+    const studentLimit = limitResult.ok ? limitResult.maxChildren : DEFAULT_PARENT_STUDENT_LIMIT;
 
     return res.status(200).json({
       ok: true,

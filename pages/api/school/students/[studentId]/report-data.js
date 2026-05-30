@@ -8,7 +8,13 @@ import {
 } from "../../../../../lib/school-server/school-scope.server.js";
 import { writeSchoolStudentReportViewedAudit } from "../../../../../lib/school-server/school-reports.server.js";
 import {
-  requireSchoolManagerApiContext,
+  getTeacherPortalServiceRole,
+  rejectIfTeacherPortalDisabled,
+  resolveAuthenticatedTeacherUserId,
+} from "../../../../../lib/teacher-server/teacher-session.server.js";
+import { loadTeacherSchoolMembership } from "../../../../../lib/school-server/school-membership.server.js";
+import {
+  requireSchoolDataViewerContext,
   sendSchoolApiError,
 } from "../../../../../lib/school-server/school-request.server.js";
 import {
@@ -24,14 +30,41 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    if (rejectIfTeacherPortalDisabled(res)) return undefined;
+
+    const auth = await resolveAuthenticatedTeacherUserId(req.headers.authorization || "");
+    if (!auth.ok) {
+      return sendSchoolApiError(res, auth.status, auth.code, auth.message);
+    }
+
+    const serviceRole = getTeacherPortalServiceRole();
+    const membershipResult = await loadTeacherSchoolMembership(serviceRole, auth.teacherUserId);
+    if (!membershipResult.ok) {
+      return sendSchoolApiError(
+        res,
+        membershipResult.status,
+        membershipResult.code,
+        membershipResult.code
+      );
+    }
+    if (!membershipResult.membership?.schoolId) {
+      return sendSchoolApiError(res, 403, "not_authorized", "not_authorized");
+    }
+
+    const ctx = await requireSchoolDataViewerContext(
+      res,
+      req.headers.authorization || "",
+      membershipResult.membership.schoolId
+    );
     if (ctx.stopped) return undefined;
+
+    const viewerId = ctx.actorUserId || ctx.managerId;
 
     if (isProductionRuntime()) {
       const ip = clientIpFromRequest(req);
       const rl = consumeRateLimit({
         namespace: "school_student_report_data",
-        keys: [`ip:${ip}`, `manager:${ctx.managerId}`],
+        keys: [`ip:${ip}`, `viewer:${viewerId}`],
         maxAttempts: 30,
         windowMs: 60_000,
       });
@@ -100,7 +133,7 @@ export default async function handler(req, res) {
 
     await writeSchoolStudentReportViewedAudit(
       ctx.serviceRole,
-      ctx.managerId,
+      viewerId,
       ctx.schoolId,
       studentParsed.studentId
     );

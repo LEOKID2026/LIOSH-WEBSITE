@@ -10,6 +10,7 @@ import {
   sendAdminApiError,
 } from "../../../../../lib/admin-server/admin-request.server.js";
 import { loadTeacherLimitsRow } from "../../../../../lib/teacher-server/teacher-session.server.js";
+import { assertAdminPrivateTeacherScope } from "../../../../../lib/admin-server/admin-private-teacher-scope.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "PATCH") {
@@ -24,6 +25,11 @@ export default async function handler(req, res) {
 
     const ctx = await requireAdminApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+
+    const scope = await assertAdminPrivateTeacherScope(ctx.serviceRole, String(teacherId));
+    if (!scope.ok) {
+      return sendAdminApiError(res, scope.status, scope.code, scope.code);
+    }
 
     const parsed = parseAdminFeaturesPatchBody(req.body);
     if (!parsed.ok) {

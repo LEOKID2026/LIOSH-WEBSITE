@@ -9,6 +9,7 @@ import {
 } from "../../../../../lib/teacher-server/teacher-classes.server.js";
 import { isUuid, requireTeacherApiContext } from "../../../../../lib/teacher-server/teacher-request.server.js";
 import { sendTeacherApiError } from "../../../../../lib/teacher-server/teacher-session.server.js";
+import { rejectIfSchoolTeacher } from "../../../../../lib/teacher-server/private-teacher-guard.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -23,6 +24,9 @@ export default async function handler(req, res) {
 
     const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+
+    const schoolBlock = await rejectIfSchoolTeacher(res, ctx.serviceRole, ctx.teacherId);
+    if (schoolBlock.blocked) return undefined;
 
     if (isProductionRuntime()) {
       const ip = clientIpFromRequest(req);

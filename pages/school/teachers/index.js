@@ -11,10 +11,14 @@ import {
 import { SchoolEmptyState, SchoolSection } from "../../../components/school-portal/SchoolPortalUi";
 import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
+import SchoolStaffEmailInviteForm from "../../../components/school-portal/SchoolStaffEmailInviteForm";
 import {
   SCHOOL_ALL_SUBJECTS,
   SCHOOL_EMPTY_TEACHERS,
   SCHOOL_INACTIVE,
+  SCHOOL_INVITE_TEACHER_SECTION,
+  SCHOOL_INVITE_TEACHER_SUBMIT,
+  SCHOOL_INVITE_TEACHER_HELP,
   SCHOOL_LOADING,
   SCHOOL_MANAGE_SUBJECTS,
   SCHOOL_ROLE_MANAGER,
@@ -31,7 +35,10 @@ export default function SchoolTeachersPage() {
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
-  }, [state, router]);
+    if (state === "ready" && me?.portalRole === "school_operator") {
+      router.replace("/school/operator/dashboard");
+    }
+  }, [state, me, router]);
 
   const parseTeachers = useMemo(() => (body) => body?.data?.teachers || [], []);
 
@@ -51,6 +58,7 @@ export default function SchoolTeachersPage() {
         subtitle={SCHOOL_TEACHERS_SUBTITLE}
         schoolName={me?.school?.name}
         showTeacherDashboardLink={me?.hasTeacherActivity}
+        portalRole={me?.portalRole || "school_manager"}
       >
         {state === "loading" ? (
           <SchoolLoadingBlock message={SCHOOL_LOADING} />
@@ -59,7 +67,17 @@ export default function SchoolTeachersPage() {
         ) : error ? (
           <SchoolErrorBlock message={error} onRetry={() => void reload()} />
         ) : (
-          <SchoolSection>
+          <>
+            <SchoolStaffEmailInviteForm
+              accessToken={accessToken}
+              apiPath="/api/school/teachers"
+              userIdBodyKey="teacherUserId"
+              sectionTitle={SCHOOL_INVITE_TEACHER_SECTION}
+              submitLabel={SCHOOL_INVITE_TEACHER_SUBMIT}
+              helpText={SCHOOL_INVITE_TEACHER_HELP}
+              onSuccess={() => void reload()}
+            />
+            <SchoolSection>
             {teachers?.length ? (
               <SchoolCardGrid columns={2}>
                 {teachers.map((t) => {
@@ -81,6 +99,7 @@ export default function SchoolTeachersPage() {
               <SchoolEmptyState title={SCHOOL_EMPTY_TEACHERS} />
             )}
           </SchoolSection>
+          </>
         )}
       </SchoolPortalShell>
     </Layout>

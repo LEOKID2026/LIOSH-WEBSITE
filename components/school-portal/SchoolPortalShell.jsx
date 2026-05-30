@@ -8,6 +8,7 @@ import {
   SCHOOL_NAV_MY_TEACHER,
   SCHOOL_NAV_STUDENTS,
   SCHOOL_NAV_TEACHERS,
+  SCHOOL_NAV_OPERATORS,
   SCHOOL_PLATFORM_LABEL,
 } from "../../lib/school-portal/school-ui.he.js";
 import { SC_NAV_MESSAGES } from "../../lib/school-portal/school-communication.he";
@@ -15,9 +16,10 @@ import { SC_NAV_MESSAGES } from "../../lib/school-portal/school-communication.he
 export const SCHOOL_PAGE_CONTAINER =
   "max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 md:py-10";
 
-const NAV_ITEMS = [
+const NAV_ITEMS_MANAGER = [
   { href: "/school/dashboard", label: SCHOOL_NAV_DASHBOARD },
   { href: "/school/teachers", label: SCHOOL_NAV_TEACHERS },
+  { href: "/school/operators", label: SCHOOL_NAV_OPERATORS },
   { href: "/school/classes", label: SCHOOL_NAV_CLASSES },
   { href: "/school/students", label: SCHOOL_NAV_STUDENTS },
   { href: "/school/messages", label: SC_NAV_MESSAGES },
@@ -34,10 +36,12 @@ export default function SchoolPortalShell({
   subtitle,
   schoolName,
   showTeacherDashboardLink = false,
+  portalRole = "school_manager",
   children,
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const navItems = portalRole === "school_manager" ? NAV_ITEMS_MANAGER : [];
 
   const logout = async () => {
     setBusy(true);
@@ -110,7 +114,7 @@ export default function SchoolPortalShell({
           >
             <p className="text-xs text-white/45 px-3 pt-1 pb-2 hidden lg:block">תפריט ניהול</p>
             <div className="flex flex-wrap lg:flex-col gap-1 pb-1 lg:pb-0">
-              {NAV_ITEMS.map((item) => {
+              {navItems.map((item) => {
                 const active =
                   path === item.href || (item.href !== "/school/dashboard" && path.startsWith(item.href));
                 return (

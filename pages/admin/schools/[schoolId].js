@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
 import AdminShell from "../../../components/admin/AdminShell";
+import AdminSchoolLifecyclePanel from "../../../components/admin/AdminSchoolLifecyclePanel";
 import {
   SchoolTeacherAssignPanel,
   SchoolTeachersList,
@@ -77,14 +78,19 @@ export default function AdminSchoolDetailPage() {
               </p>
             </div>
 
+            <AdminSchoolLifecyclePanel
+              accessToken={accessToken}
+              school={school}
+              onChanged={() => load(accessToken, school.schoolId)}
+            />
+
             <section className="rounded-xl border border-white/15 bg-black/25 p-4">
               <h2 className="font-semibold mb-3">{ADMIN_SCHOOL_TEACHERS}</h2>
               <SchoolTeachersList
-                teachers={teachers}
-                schoolId={school.schoolId}
-                accessToken={accessToken}
-                onReload={() => load(accessToken, school.schoolId)}
-              />
+              teachers={teachers}
+              accessToken={accessToken}
+              onReload={() => load(accessToken, school.schoolId)}
+            />
             </section>
 
             <section className="rounded-xl border border-white/15 bg-black/25 p-4">

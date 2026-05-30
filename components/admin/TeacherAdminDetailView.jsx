@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import AdminSectionCard, { AdminFieldRow, AdminStatTile } from "./AdminSectionCard.jsx";
+import AdminUserLifecyclePanel from "./AdminUserLifecyclePanel.jsx";
 import TeacherQuotaForm from "./TeacherQuotaForm.jsx";
 import TeacherDiscussionSubjectsSection from "./TeacherDiscussionSubjectsSection.jsx";
 import { isSmokeClassName } from "../../lib/teacher-portal/teacher-smoke-artifacts.js";
@@ -25,6 +26,7 @@ import {
   ADMIN_TEACHER_DETAIL_NAV,
   ADMIN_TEACHER_NO_SCHOOL,
   ADMIN_TEACHER_SCHOOL_SECTION,
+  ADMIN_TEACHER_SCHOOL_STAFF_READONLY,
   ADMIN_TEACHER_VIEW_SCHOOL,
   ADMIN_SCHOOL_ROLE_MANAGER,
   ADMIN_SCHOOL_ROLE_TEACHER,
@@ -32,6 +34,7 @@ import {
   adminAccountStatusHe,
   adminFormatDateHe,
   adminGradeLabelHe,
+  planCodeLabelHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
 function StatusBadge({ teacher }) {
@@ -152,7 +155,7 @@ function IdentitySection({ teacher }) {
   return (
     <AdminSectionCard id="admin-teacher-identity" title={ADMIN_SECTION_IDENTITY}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6">
-        <AdminFieldRow label={ADMIN_LABEL_PLAN} value={teacher.planCode || "—"} />
+        <AdminFieldRow label={ADMIN_LABEL_PLAN} value={planCodeLabelHe(teacher.planCode)} />
         <AdminFieldRow label={ADMIN_LABEL_CREATED} value={adminFormatDateHe(teacher.createdAt)} />
       </div>
     </AdminSectionCard>
@@ -251,6 +254,7 @@ function AuditSection({ audit }) {
 }
 
 export default function TeacherAdminDetailView({ teacher, audit, accessToken, onUpdated, onReload }) {
+  const isPrivateTeacher = !teacher?.schoolMembership?.schoolId;
   const { visibleClasses, hiddenSmokeClasses } = useMemo(() => {
     const visible = [];
     const hidden = [];
@@ -265,6 +269,18 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
     <div className="flex flex-col gap-5 lg:gap-6">
       <SectionNav />
 
+      {isPrivateTeacher && accessToken ? (
+        <AdminUserLifecyclePanel
+          accessToken={accessToken}
+          userId={teacher.teacherId}
+          persona="private_teacher"
+          onChanged={() => {
+            onUpdated?.(teacher);
+            onReload?.();
+          }}
+        />
+      ) : null}
+
       <div className="order-1 lg:order-2">
         <IdentitySection teacher={teacher} />
         <SchoolMembershipSection teacher={teacher} />
@@ -275,15 +291,29 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
       </div>
 
       <div id="admin-teacher-quotas" className="order-3">
-        <TeacherQuotaForm
-          teacher={teacher}
-          accessToken={accessToken}
-          onUpdated={(updated) => {
-            onUpdated?.(updated);
-            onReload?.();
-          }}
-        />
-        <TeacherDiscussionSubjectsSection teacher={teacher} accessToken={accessToken} />
+        {isPrivateTeacher ? (
+          <>
+            <TeacherQuotaForm
+              teacher={teacher}
+              accessToken={accessToken}
+              onUpdated={(updated) => {
+                onUpdated?.(updated);
+                onReload?.();
+              }}
+            />
+            <TeacherDiscussionSubjectsSection teacher={teacher} accessToken={accessToken} />
+          </>
+        ) : (
+          <AdminSectionCard id="admin-teacher-quotas" title={ADMIN_SECTION_MANAGEMENT}>
+            <p className="text-white/70 text-sm mb-3">{ADMIN_TEACHER_SCHOOL_STAFF_READONLY}</p>
+            <Link
+              href={`/admin/schools/${teacher.schoolMembership.schoolId}`}
+              className="inline-block text-amber-300 hover:underline text-sm"
+            >
+              {ADMIN_TEACHER_VIEW_SCHOOL}
+            </Link>
+          </AdminSectionCard>
+        )}
       </div>
 
       <div className="order-4">

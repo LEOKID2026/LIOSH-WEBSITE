@@ -2,6 +2,7 @@ import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import {
+  createSchoolManagedStudent,
   enrollStudentInSchool,
   listSchoolEnrolledStudents,
   listSchoolStudentsInPhysicalClass,
@@ -42,28 +43,62 @@ export default async function handler(req, res) {
       if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
 
       const body = req.body && typeof req.body === "object" ? req.body : {};
-      const enrolled = await enrollStudentInSchool(ctx.serviceRole, {
+      const studentId = typeof body.studentId === "string" ? body.studentId.trim() : "";
+
+      if (studentId) {
+        const enrolled = await enrollStudentInSchool(ctx.serviceRole, {
+          schoolId: ctx.schoolId,
+          studentId,
+          enrolledBy: ctx.managerId,
+          notes: body.notes,
+        });
+
+        if (!enrolled.ok) {
+          return sendSchoolApiError(res, enrolled.status, enrolled.code, enrolled.code);
+        }
+
+        await writeTeacherAuditRow({
+          serviceRole: ctx.serviceRole,
+          teacherId: ctx.managerId,
+          studentId,
+          action: "school_student_enrolled",
+          actorRole: "teacher",
+          actorId: ctx.managerId,
+          metadata: { school_id: ctx.schoolId, enrollment_id: enrolled.enrollment.id },
+        });
+
+        return res.status(201).json({ data: { enrollment: enrolled.enrollment } });
+      }
+
+      const created = await createSchoolManagedStudent(ctx.serviceRole, {
         schoolId: ctx.schoolId,
-        studentId: body.studentId,
-        enrolledBy: ctx.managerId,
+        managerId: ctx.managerId,
+        fullName: body.fullName,
+        gradeLevel: body.gradeLevel,
+        physicalClassName: body.physicalClassName,
         notes: body.notes,
+        createLoginAccess: body.createLoginAccess !== false,
       });
 
-      if (!enrolled.ok) {
-        return sendSchoolApiError(res, enrolled.status, enrolled.code, enrolled.code);
+      if (!created.ok) {
+        return sendSchoolApiError(res, created.status, created.code, created.code);
       }
 
       await writeTeacherAuditRow({
         serviceRole: ctx.serviceRole,
         teacherId: ctx.managerId,
-        studentId: body.studentId,
+        studentId: created.studentId,
         action: "school_student_enrolled",
         actorRole: "teacher",
         actorId: ctx.managerId,
-        metadata: { school_id: ctx.schoolId, enrollment_id: enrolled.enrollment.id },
+        metadata: {
+          school_id: ctx.schoolId,
+          enrollment_id: created.enrollmentId,
+          created_by_manager: true,
+        },
       });
 
-      return res.status(201).json({ data: { enrollment: enrolled.enrollment } });
+      return res.status(201).json({ data: { student: created } });
     }
 
     res.setHeader("Allow", "GET, POST");

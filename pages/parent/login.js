@@ -58,6 +58,12 @@ export default function ParentLoginPage() {
     const supabase = supabaseRef.current;
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted || !data?.session) return;
+      const meta = data.session.user?.app_metadata;
+      const role =
+        meta && typeof meta === "object" && typeof meta.role === "string"
+          ? meta.role.trim().toLowerCase()
+          : "";
+      if (role === "teacher" || role === "admin") return;
       router.replace("/parent/dashboard");
     });
     return () => {

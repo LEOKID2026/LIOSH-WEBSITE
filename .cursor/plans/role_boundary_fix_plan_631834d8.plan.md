@@ -4,73 +4,73 @@ overview: Foundational, production-grade access control architecture for multi-p
 todos:
   - id: phase0-discovery
     content: "Phase 0: Inventory all routes under pages/api/parent/, pages/api/teacher/, pages/api/school/, pages/api/admin/. Confirm parent trigger behavior. Identify QA/test accounts. Inspect school_teacher_memberships for school_operator extension viability. Run pre-migration audit queries."
-    status: pending
+    status: completed
   - id: phase0-policy-modal
     content: "Phase 0: Inspect parent registration policy modal repeat behavior. Determine if auth/entitlement-flow-related (fix in Phase 2) or standalone UI bug (defer separately). No modal changes until cause confirmed."
-    status: pending
+    status: completed
   - id: phase1-schema-entitlements
     content: "Phase 1 (SQL prep — owner runs manually): Prepare 040_account_persona_entitlements.sql including school_operator in persona check constraint. Purpose, safety notes, expected rows, verification query, rollback notes."
-    status: pending
+    status: completed
   - id: phase1-schema-parent-settings
     content: "Phase 1 (SQL prep — owner runs manually): Prepare 041_parent_account_settings.sql. Plan/limit/subscription-ready fields. Default: plan_code=free, max_children=3, reports_enabled=true, copilot_enabled=false."
-    status: pending
+    status: completed
   - id: phase1-schema-school-quotas
     content: "Phase 1 (SQL prep — owner runs manually): Prepare 043_school_accounts_separate_quotas.sql — add max_school_teachers(20), max_school_managers(1), max_school_students(500), max_school_operators(5). Backfill max_school_teachers from max_teachers. Document max_teachers drop/retain decision."
-    status: pending
+    status: completed
   - id: phase1-schema-operator-grants
     content: "Phase 1 (SQL prep — owner runs manually): Prepare 044_school_operator_grants.sql — current-state grants table (school_id, operator_user_id, student_access_admin, student_data_viewer, updated_by, updated_at). Prepare 045_school_operator_audit_log.sql — audit log table."
-    status: pending
+    status: completed
   - id: phase1-schema-membership
     content: "Phase 1 (SQL prep — owner runs manually): Based on Phase 0 inspection, either extend school_teacher_memberships to add school_operator role value, or prepare 046_school_staff_memberships.sql for a new table. Document choice."
-    status: pending
+    status: completed
   - id: phase1-backfill
     content: "Phase 1 (SQL prep — owner runs manually): Prepare 042_backfill_entitlements_dev.sql — backfill active entitlements for parent/private_teacher/school_teacher/school_manager/admin. Prepare SQL review package for owner before any SQL is run."
-    status: pending
+    status: completed
   - id: phase1-sql-review-package
     content: "Phase 1: Produce SQL review package — list of all migration files, purpose, file paths, expected affected rows, pre-migration audit queries, verification queries, rollback notes, data-loss risk assessment. Owner reviews and runs SQL manually. Cursor waits for owner confirmation before proceeding."
-    status: pending
+    status: completed
   - id: phase2-guard-file
     content: "Phase 2: Create lib/auth/persona-guard.server.js with requirePersonaApiContext, requireParentApiContext, requirePrivateTeacherApiContext, requireSchoolOperatorApiContext (with requireGrant option for student_access_admin and student_data_viewer)."
-    status: pending
+    status: completed
   - id: phase2-parent-apis
     content: "Phase 2: Update all pages/api/parent/* routes to call requireParentApiContext. Feature routes pass requireFeature option. Replace hardcoded max_children with parent_account_settings lookup via resolveParentStudentLimit."
-    status: pending
+    status: completed
   - id: phase2-private-teacher-guard
     content: "Phase 2: Create lib/teacher-server/private-teacher-guard.server.js with rejectIfSchoolTeacher. Apply to pages/api/teacher/students/create.js, link.js, pages/api/teacher/classes/index.js (POST), pages/api/teacher/classes/[classId]/members.js (POST)."
-    status: pending
+    status: completed
   - id: phase2-worksheet-gate
     content: "Phase 2: Fix pages/api/teacher/worksheet-activities/index.js to call assertActivitySubjectAllowed instead of assertSchoolTeacherSubjectAllowed."
-    status: pending
+    status: completed
   - id: phase2-update-existing-guards
     content: "Phase 2: Update resolveAuthenticatedTeacherUserId, requireSchoolManagerApiContext, requireAdminApiContext to also check account_persona_entitlements status=active."
-    status: pending
+    status: completed
   - id: phase2-school-operator-apis
     content: "Phase 2: Add school operator invite/create API under school manager scope. Enforce max_school_operators quota. Create school_operator_grants row on invite (student_access_admin=false, student_data_viewer=false by default). Add grant/revoke APIs for School Manager."
-    status: pending
+    status: completed
   - id: phase2-quota-enforcement
     content: "Phase 2: Enforce max_school_teachers on teacher invite, max_school_managers on manager assign (enforce =1), max_school_students on student enroll, max_school_operators on operator invite. School Manager cannot exceed any quota."
-    status: pending
+    status: completed
   - id: phase2-operator-credential-apis
     content: "Phase 2: Credential management APIs check school_operator_grants.student_access_admin. Student detail/report APIs check school_operator_grants.student_data_viewer. All operator actions logged to school_operator_audit_log."
-    status: pending
+    status: completed
   - id: phase3-login-routing
     content: "Phase 3 (UI only — design preserved): pages/parent/login.js cross-persona redirect block. pages/parent/dashboard.js 403 redirect. Verify school-inbox. Apply policy modal fix if Phase 0 confirmed entitlement-related. No Hebrew copy changes, no OAuth, no teacher-registration tab, no redesign."
-    status: pending
+    status: completed
   - id: phase4-admin-surfaces
     content: "Phase 4: Admin API routes for entitlement management (GET/PATCH account_persona_entitlements), school quota management (PATCH school_accounts separate fields), parent settings (GET/PATCH parent_account_settings), private teacher quota/subject/feature management."
-    status: pending
+    status: completed
   - id: phase5-subscription-limits
     content: "Phase 5: Internal plan-based feature gating using parent_account_settings. No real payment integration. Plan code presets. Monthly limit enforcement if non-null."
-    status: pending
+    status: completed
   - id: phase6-registration
     content: "Phase 6 (DEFERRED — separate plan required): Private teacher public request/approval form. School public registration/approval form. NOT implemented until explicitly approved. school_operator is already in scope and implemented in Phases 1-2."
-    status: pending
+    status: cancelled
   - id: phase7-password-reset
     content: "Phase 7 (DEFERRED — separate plan required): Forgot-password and reset-password for parent and teacher personas. Supabase resetPasswordForEmail, callback page, persona-aware redirect, Hebrew copy owner approval."
-    status: pending
+    status: cancelled
   - id: phase8-qa-zip
     content: "Phase 8: Run automated test suite (all groups A-J). Run npm run build. Run manual QA checklist. Produce final self-audit against plan (every rule A-U, every matrix entry, every guard, every quota, every operator permission, every portal entry rule, every out-of-scope item). Prepare ZIP + CHANGES.md + git status/diff + command log + test summary + build result. Confirm no SQL/commit/push/deploy by Cursor."
-    status: pending
+    status: completed
 isProject: false
 ---
 

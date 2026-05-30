@@ -4,6 +4,7 @@ import { consumeRateLimit, clientIpFromRequest } from "../../../../lib/security/
 import { isProductionRuntime } from "../../../../lib/security/production-guard.js";
 import { writeTeacherAuditRow } from "../../../../lib/teacher-server/teacher-audit.server.js";
 import { isUuid, requireTeacherApiContext } from "../../../../lib/teacher-server/teacher-request.server.js";
+import { rejectIfSchoolTeacher } from "../../../../lib/teacher-server/private-teacher-guard.server.js";
 import {
   linkTeacherStudentWithConsent,
   parseTeacherLinkBody,
@@ -25,6 +26,9 @@ export default async function handler(req, res) {
 
   const ctx = await requireTeacherApiContext(res, req.headers.authorization || "");
   if (ctx.stopped) return undefined;
+
+  const schoolBlock = await rejectIfSchoolTeacher(res, ctx.serviceRole, ctx.teacherId);
+  if (schoolBlock.blocked) return undefined;
 
   if (!isTeacherPortalLinkEnabled()) {
     return sendTeacherApiError(res, 503, "link_unavailable", "Student linking is not available yet");

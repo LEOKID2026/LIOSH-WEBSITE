@@ -74,6 +74,11 @@ export default function ParentDashboardPage() {
       });
       const payload = await res.json();
       if (!res.ok) {
+        const code = payload?.error || payload?.errorCode;
+        if (res.status === 403 && code === "not_a_parent") {
+          router.replace("/parent/login");
+          return;
+        }
         setMessage(payload.error || "Failed to load students");
         return;
       }
@@ -92,7 +97,7 @@ export default function ParentDashboardPage() {
     } catch (_err) {
       setMessage("Network error while loading students");
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (!clientReady || !supabaseRef.current) return;

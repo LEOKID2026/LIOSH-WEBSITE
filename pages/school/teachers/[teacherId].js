@@ -8,6 +8,7 @@ import {
   SCHOOL_LOADING,
   SCHOOL_LOADING_DATA,
   SCHOOL_SUBJECTS_TITLE,
+  schoolAuthFetch,
 } from "../../../lib/school-portal/school-ui.he";
 
 export default function SchoolTeacherDetailPage() {
@@ -32,7 +33,25 @@ export default function SchoolTeacherDetailPage() {
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
-  }, [state, router]);
+    if (state === "ready" && me?.portalRole === "school_operator") {
+      router.replace("/school/operator/dashboard");
+    }
+  }, [state, me, router]);
+
+  useEffect(() => {
+    if (state !== "ready" || !accessToken || typeof teacherIdResolved !== "string") return;
+    (async () => {
+      const res = await schoolAuthFetch(accessToken, "/api/school/operators");
+      if (res.status !== 200) return;
+      const json = await res.json().catch(() => ({}));
+      const isOperator = (json?.data?.operators || []).some(
+        (o) => o.operatorUserId === teacherIdResolved
+      );
+      if (isOperator) {
+        router.replace(`/school/operators/${teacherIdResolved}`);
+      }
+    })();
+  }, [state, accessToken, teacherIdResolved, router]);
 
   const portalBlocking = state === "loading";
   const hydrationWaiting = state === "ready" && !isReady;

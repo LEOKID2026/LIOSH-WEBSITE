@@ -1,5 +1,5 @@
-import { getLearningSupabaseServerUserClient } from "../../../lib/learning-supabase/server";
-import { resolveParentStudentLimit } from "../../../lib/parent-server/parent-student-limit.server";
+import { requireParentApiContext } from "../../../lib/auth/persona-guard.server.js";
+import { resolveParentMaxChildren } from "../../../lib/parent-server/parent-entitlement-provision.server.js";
 import {
   MAX_PARENT_GRADE_LEVEL_LEN,
   MAX_PARENT_STUDENT_NAME_LEN,
@@ -10,11 +10,6 @@ import {
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
-  }
-
-  const authHeader = req.headers.authorization || "";
-  if (!authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ ok: false, error: "Missing bearer token" });
   }
 
   const fullNameParsed = parseBoundedTrimmedString(req.body?.fullName, MAX_PARENT_STUDENT_NAME_LEN);
@@ -35,22 +30,27 @@ export default async function handler(req, res) {
   const gradeLevel = trimString(req.body?.gradeLevel);
 
   try {
-    const supabase = getLearningSupabaseServerUserClient(authHeader);
-    const { data: userData, error: userErr } = await supabase.auth.getUser();
-    if (userErr || !userData?.user?.id) {
-      return res.status(401).json({ ok: false, error: "Invalid session" });
+    const ctx = await requireParentApiContext(res, req.headers.authorization || "");
+    if (ctx.stopped) return undefined;
+
+    const limitResult = await resolveParentMaxChildren(
+      ctx.serviceRole,
+      ctx.parentUserId,
+      ctx.user?.email
+    );
+    if (!limitResult.ok) {
+      return res.status(limitResult.status).json({ ok: false, error: limitResult.code });
     }
 
-    const { count: existingCount, error: countErr } = await supabase
+    const { count: existingCount, error: countErr } = await ctx.bearerSupabase
       .from("students")
       .select("*", { count: "exact", head: true })
-      .eq("parent_id", userData.user.id);
+      .eq("parent_id", ctx.parentUserId);
 
     if (countErr) {
       return res.status(403).json({ ok: false, error: "לא ניתן לבדוק את מספר הילדים" });
     }
-    const studentLimit = resolveParentStudentLimit(userData.user.email);
-    if ((existingCount ?? 0) >= studentLimit) {
+    if ((existingCount ?? 0) >= limitResult.maxChildren) {
       return res.status(400).json({
         ok: false,
         error: "ניתן להוסיף עד 3 ילדים בלבד לחשבון הורה",
@@ -58,14 +58,14 @@ export default async function handler(req, res) {
     }
 
     const payload = {
-      parent_id: userData.user.id,
+      parent_id: ctx.parentUserId,
       full_name: fullName,
     };
     if (gradeLevel) {
       payload.grade_level = gradeLevel;
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await ctx.bearerSupabase
       .from("students")
       .insert(payload)
       .select("id,full_name,grade_level,is_active,created_at")

@@ -1,9 +1,9 @@
 import { useState } from "react";
+import AdminSchoolStaffLifecycleCompact from "./AdminSchoolStaffLifecycleCompact.jsx";
 import {
   ADMIN_SCHOOL_ASSIGN_MANAGER,
   ADMIN_SCHOOL_ASSIGN_TEACHER,
   ADMIN_SCHOOL_FORCE_REASSIGN,
-  ADMIN_SCHOOL_REMOVE_TEACHER,
   apiErrorMessageHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
@@ -123,26 +123,6 @@ export function SchoolTeacherAssignPanel({ accessToken, schoolId, onReload }) {
     }
   };
 
-  const remove = async (teacherId) => {
-    setError("");
-    setBusy("remove");
-    try {
-      const res = await fetch(`/api/admin/schools/${schoolId}/teachers/${teacherId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` },
-        credentials: "same-origin",
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(apiErrorMessageHe(data?.error, "שגיאה"));
-        return;
-      }
-      onReload?.();
-    } finally {
-      setBusy("");
-    }
-  };
-
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <SchoolTeacherAssignForm
@@ -165,30 +145,11 @@ export function SchoolTeacherAssignPanel({ accessToken, schoolId, onReload }) {
           {error}
         </p>
       ) : null}
-      <p className="md:col-span-2 text-xs text-white/50">
-        {ADMIN_SCHOOL_REMOVE_TEACHER}: הסרה מדף פרטי בית הספר (ליד כל מורה).
-      </p>
     </div>
   );
 }
 
-export function SchoolTeachersList({ teachers, schoolId, accessToken, onReload }) {
-  const [busyId, setBusyId] = useState("");
-
-  const remove = async (teacherId) => {
-    setBusyId(teacherId);
-    try {
-      const res = await fetch(`/api/admin/schools/${schoolId}/teachers/${teacherId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` },
-        credentials: "same-origin",
-      });
-      if (res.ok) onReload?.();
-    } finally {
-      setBusyId("");
-    }
-  };
-
+export function SchoolTeachersList({ teachers, accessToken, onReload }) {
   if (!teachers?.length) {
     return <p className="text-white/60 text-sm">אין מורים משויכים.</p>;
   }
@@ -200,20 +161,24 @@ export function SchoolTeachersList({ teachers, schoolId, accessToken, onReload }
           key={t.membershipId}
           className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2"
         >
-          <div className="text-right min-w-0">
+          <div className="text-right min-w-0 flex-1">
             <p className="font-medium">{t.displayName || t.teacherId}</p>
             <p className="text-xs text-white/50">
-              {t.role === "school_admin" ? "מנהל/ת" : "מורה"} · {t.teacherId}
+              {t.role === "school_admin"
+                ? "מנהל/ת"
+                : t.role === "school_operator"
+                  ? "מזכיר/ות"
+                  : "מורה"}
             </p>
+            {accessToken ? (
+              <AdminSchoolStaffLifecycleCompact
+                accessToken={accessToken}
+                teacherId={t.teacherId}
+                role={t.role}
+                onChanged={onReload}
+              />
+            ) : null}
           </div>
-          <button
-            type="button"
-            disabled={busyId === t.teacherId}
-            onClick={() => void remove(t.teacherId)}
-            className="text-xs text-red-300 hover:underline disabled:opacity-50"
-          >
-            {busyId === t.teacherId ? "מסיר…" : "הסרה"}
-          </button>
         </li>
       ))}
     </ul>

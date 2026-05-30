@@ -1,7 +1,8 @@
 import { safeApiLog } from "../../../../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../../../../lib/security/same-origin.js";
+import { maybeWriteOperatorCredentialAudit } from "../../../../../../../lib/school-server/school-operator.server.js";
 import {
-  requireSchoolManagerApiContext,
+  requireSchoolCredentialAdminApiContext,
   sendSchoolApiError,
 } from "../../../../../../../lib/school-server/school-request.server.js";
 import { revokeSchoolParentAccess } from "../../../../../../../lib/school-server/school-account-management.server.js";
@@ -18,17 +19,24 @@ export default async function handler(req, res) {
   if (!accessId) return sendSchoolApiError(res, 400, "validation_failed", "accessId required");
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolCredentialAdminApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
 
+    const actorId = ctx.actorUserId || ctx.managerId;
     const result = await revokeSchoolParentAccess({
       serviceRole: ctx.serviceRole,
       schoolId: ctx.schoolId,
-      managerId: ctx.managerId,
+      managerId: actorId,
       studentId: String(studentId),
       accessId: String(accessId),
     });
     if (!result.ok) return sendSchoolApiError(res, result.status, result.code, result.code);
+
+    await maybeWriteOperatorCredentialAudit(ctx, {
+      studentId: String(studentId),
+      actionType: "credential_revoke_parent",
+    });
+
     return res.status(200).json({ data: result.data });
   } catch (_e) {
     safeApiLog("school_parent_revoke_error", {});

@@ -1,7 +1,5 @@
-import {
-  getLearningSupabaseServerUserClient,
-  getLearningSupabaseServiceRoleClient,
-} from "../../../../../lib/learning-supabase/server";
+import { getLearningSupabaseServiceRoleClient } from "../../../../../lib/learning-supabase/server";
+import { requireParentApiContext } from "../../../../../lib/auth/persona-guard.server.js";
 import {
   aggregateParentReportPayload,
   parseIsoDateParam,
@@ -30,9 +28,6 @@ export default async function handler(req, res) {
   }
 
   const authHeader = req.headers.authorization || "";
-  if (!authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ ok: false, error: "Missing bearer token" });
-  }
 
   const studentId = safeString(req.query?.studentId, 64);
   if (!studentId) {
@@ -53,17 +48,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const parentClient = getLearningSupabaseServerUserClient(authHeader);
-    const { data: userData, error: userErr } = await parentClient.auth.getUser();
-    if (userErr || !userData?.user?.id) {
-      return res.status(401).json({ ok: false, error: "Invalid session" });
-    }
+    const ctx = await requireParentApiContext(res, authHeader, { requireFeature: "reports_enabled" });
+    if (ctx.stopped) return undefined;
 
-    const { data: student, error: studentErr } = await parentClient
+    const { data: student, error: studentErr } = await ctx.bearerSupabase
       .from("students")
       .select("id,full_name,grade_level,is_active,parent_id")
       .eq("id", studentId)
-      .eq("parent_id", userData.user.id)
+      .eq("parent_id", ctx.parentUserId)
       .maybeSingle();
 
     if (studentErr) {

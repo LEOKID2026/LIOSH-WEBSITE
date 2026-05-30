@@ -4,21 +4,14 @@ import {
   normalizeStudentPin,
 } from "../../../lib/learning-supabase/student-auth";
 import { isStudentIdentityDebugEnabled } from "../../../lib/student-identity-debug-flag";
-import {
-  getLearningSupabaseServerUserClient,
-  getLearningSupabaseServiceRoleClient,
-} from "../../../lib/learning-supabase/server";
+import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
+import { requireParentApiContext } from "../../../lib/auth/persona-guard.server.js";
 import { safeApiLog } from "../../../lib/security/safe-log.js";
 import { safeUuid } from "../../../lib/security/api-input.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
-  }
-
-  const authHeader = req.headers.authorization || "";
-  if (!authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ ok: false, error: "Missing bearer token" });
   }
 
   const studentId = safeUuid(req.body?.studentId);
@@ -38,19 +31,17 @@ export default async function handler(req, res) {
       return res.status(400).json({ ok: false, error: "PIN לא תקין" });
     }
 
-    const supabase = getLearningSupabaseServerUserClient(authHeader);
+    const ctx = await requireParentApiContext(res, req.headers.authorization || "");
+    if (ctx.stopped) return undefined;
+
     const serviceRole = getLearningSupabaseServiceRoleClient();
-    const { data: userData, error: userErr } = await supabase.auth.getUser();
-    if (userErr || !userData?.user?.id) {
-      return res.status(401).json({ ok: false, error: "Invalid session" });
-    }
 
     // Ownership verification first (RLS + explicit parent_id check).
-    const { data: student, error: studentErr } = await supabase
+    const { data: student, error: studentErr } = await ctx.bearerSupabase
       .from("students")
       .select("id,parent_id,is_active")
       .eq("id", studentId)
-      .eq("parent_id", userData.user.id)
+      .eq("parent_id", ctx.parentUserId)
       .maybeSingle();
     if (studentErr || !student?.id) {
       return res.status(403).json({ ok: false, error: "Student not found for this parent" });

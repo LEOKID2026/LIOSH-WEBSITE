@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import SchoolPortalShell from "../../components/school-portal/SchoolPortalShell";
+import SchoolClassManagementPanel from "../../components/school-portal/SchoolClassManagementPanel";
 import {
   SchoolActivityRow,
   SchoolAlertBanner,
@@ -61,7 +62,10 @@ export default function SchoolDashboardPage() {
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
-  }, [state, router]);
+    if (state === "ready" && me?.portalRole === "school_operator") {
+      router.replace("/school/operator/dashboard");
+    }
+  }, [state, me, router]);
 
   useEffect(() => {
     if (me?.stats) setStats(me.stats);
@@ -207,6 +211,10 @@ export default function SchoolDashboardPage() {
                 />
               </div>
             </SchoolSection>
+
+            {me?.portalRole === "school_manager" && accessToken ? (
+              <SchoolClassManagementPanel accessToken={accessToken} />
+            ) : null}
 
             <div id="activities">
               <SchoolSection

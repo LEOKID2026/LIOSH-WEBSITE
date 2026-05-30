@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useAdminLogout } from "../../lib/admin-portal/use-admin-session.js";
 import {
   ADMIN_LOGOUT,
   ADMIN_LOGOUT_BUSY,
+  ADMIN_NAV_PARENTS,
   ADMIN_NAV_SCHOOLS,
   ADMIN_NAV_TEACHERS,
   ADMIN_NAV_TEACHER_PORTAL,
@@ -13,8 +15,22 @@ import {
 export const ADMIN_PAGE_CONTAINER =
   "max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-10";
 
+const NAV_ITEMS = [
+  { href: "/admin/teachers", label: ADMIN_NAV_TEACHERS },
+  { href: "/admin/schools", label: ADMIN_NAV_SCHOOLS },
+  { href: "/admin/parents", label: ADMIN_NAV_PARENTS },
+];
+
+function navLinkClass(active) {
+  return active
+    ? "rounded-lg bg-amber-500/20 border border-amber-400/40 text-amber-200 font-semibold px-3 py-1.5"
+    : "rounded-lg border border-transparent text-white/70 hover:text-white hover:bg-white/5 px-3 py-1.5";
+}
+
 export default function AdminShell({ title, header, children, showLogout = false }) {
   const { logout, busy } = useAdminLogout();
+  const router = useRouter();
+  const path = router.pathname || "";
 
   return (
     <div className={`${ADMIN_PAGE_CONTAINER} text-white`} dir="rtl" lang="he">
@@ -31,16 +47,18 @@ export default function AdminShell({ title, header, children, showLogout = false
           </div>
         )}
         <nav
-          className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm shrink-0 w-full sm:w-auto justify-end"
-          aria-label="ניווט מנהל"
+          className="flex flex-wrap items-center gap-1 sm:gap-2 text-sm shrink-0 w-full sm:w-auto justify-end"
+          aria-label="ניווט מנהל מערכת"
         >
-          <Link href="/admin/teachers" className="text-amber-300 hover:underline font-medium px-1">
-            {ADMIN_NAV_TEACHERS}
-          </Link>
-          <Link href="/admin/schools" className="text-white/70 hover:underline px-1">
-            {ADMIN_NAV_SCHOOLS}
-          </Link>
-          <Link href="/teacher/dashboard" className="text-white/60 hover:underline px-1">
+          {NAV_ITEMS.map((item) => {
+            const active = path === item.href || path.startsWith(`${item.href}/`);
+            return (
+              <Link key={item.href} href={item.href} className={navLinkClass(active)}>
+                {item.label}
+              </Link>
+            );
+          })}
+          <Link href="/teacher/dashboard" className="text-white/50 hover:underline px-2 py-1.5 text-xs">
             {ADMIN_NAV_TEACHER_PORTAL}
           </Link>
           {showLogout ? (

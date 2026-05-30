@@ -77,6 +77,9 @@ export default function SchoolClassesPage() {
   const [physicalNestedStudentVm, setPhysicalNestedStudentVm] = useState(null);
   const [physicalStudentReportLoading, setPhysicalStudentReportLoading] = useState(false);
 
+  const canManageAssignment =
+    me?.portalRole === "school_manager" || me?.grants?.studentAccessAdmin === true;
+
   const [subjectFromPhysicalOpen, setSubjectFromPhysicalOpen] = useState(false);
   const [subjectFromPhysicalLoading, setSubjectFromPhysicalLoading] = useState(false);
   const [subjectFromPhysicalError, setSubjectFromPhysicalError] = useState("");
@@ -596,6 +599,7 @@ export default function SchoolClassesPage() {
               nestedStudentViewModel={nestedStudentVm}
               onCloseStudentReport={() => setNestedStudentVm(null)}
               accessToken={accessToken}
+              canManageAssignment={canManageAssignment}
             />
 
             <SchoolReportModal
@@ -612,6 +616,7 @@ export default function SchoolClassesPage() {
               onCloseStudentReport={() => setPhysicalNestedStudentVm(null)}
               onRowAction={handlePhysicalRowAction}
               accessToken={accessToken}
+              canManageAssignment={canManageAssignment}
             />
 
             <SchoolReportModal
@@ -628,6 +633,7 @@ export default function SchoolClassesPage() {
               onCloseStudentReport={() => setSubjectFromPhysicalNestedStudentVm(null)}
               stackZIndexBase={REPORT_STACK_SUBJECT_OVER_PHYSICAL}
               accessToken={accessToken}
+              canManageAssignment={canManageAssignment}
             />
 
             <SchoolTeacherDetailModal

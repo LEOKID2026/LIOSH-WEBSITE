@@ -4,6 +4,8 @@ import {
   recordParentPolicyAcceptance,
   resolveAuthenticatedParentUserId,
 } from "../../../../lib/parent-server/policy-acceptance.server.js";
+import { provisionParentEntitlementOnAccept } from "../../../../lib/parent-server/parent-entitlement-provision.server.js";
+import { getLearningSupabaseServerUserClient } from "../../../../lib/learning-supabase/server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -26,6 +28,24 @@ export default async function handler(req, res) {
 
     if (!result.ok) {
       return res.status(result.status).json({ ok: false, error: result.error });
+    }
+
+    let userEmail = null;
+    try {
+      const supabase = getLearningSupabaseServerUserClient(req.headers.authorization || "");
+      const { data: userData } = await supabase.auth.getUser();
+      userEmail = userData?.user?.email || null;
+    } catch {
+      userEmail = null;
+    }
+
+    const provision = await provisionParentEntitlementOnAccept(
+      getPolicyAcceptanceServiceRole(),
+      auth.parentUserId,
+      userEmail
+    );
+    if (!provision.ok) {
+      safeApiLog("parent_entitlement_provision_failed", { parentUserId: auth.parentUserId });
     }
 
     safeApiLog("parent_policy_acceptance_recorded", {

@@ -12,6 +12,7 @@ import {
   SchoolStudentCard,
 } from "../../../components/school-portal/SchoolDrillDown";
 import SchoolReportModal from "../../../components/school-portal/SchoolReportModal";
+import SchoolStudentCreateForm from "../../../components/school-portal/SchoolStudentCreateForm";
 import { parseStudentReportViewModel } from "../../../lib/school-portal/school-report-view-model";
 import {
   SchoolEmptyState,
@@ -81,6 +82,9 @@ export default function SchoolStudentsPage() {
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState("");
   const [reportViewModel, setReportViewModel] = useState(null);
+
+  const canManageAssignment =
+    me?.portalRole === "school_manager" || me?.grants?.studentAccessAdmin === true;
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -310,6 +314,16 @@ export default function SchoolStudentsPage() {
           <SchoolLoadingBlock message={SCHOOL_LOADING} />
         ) : (
           <div className="space-y-6">
+            <SchoolStudentCreateForm
+              accessToken={accessToken}
+              browseSummary={browseSummary}
+              onSuccess={() => {
+                if (schoolId) invalidateSchoolCache(schoolId);
+                void loadBrowseSummary({ force: true });
+                if (gradeLevel && physicalClassName) void loadClassStudents({ force: true });
+              }}
+            />
+
             <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
               <button
                 type="button"
@@ -470,6 +484,8 @@ export default function SchoolStudentsPage() {
               accessToken={accessToken}
               studentId={reportStudent?.studentId}
               studentName={reportStudent?.displayName}
+              canManageAssignment={canManageAssignment}
+              onAssignmentUpdated={() => void loadBrowseSummary({ force: true })}
             />
           </div>
         )}

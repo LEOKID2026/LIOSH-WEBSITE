@@ -1,7 +1,8 @@
 import { safeApiLog } from "../../../../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../../../../lib/security/same-origin.js";
+import { maybeWriteOperatorCredentialAudit } from "../../../../../../../lib/school-server/school-operator.server.js";
 import {
-  requireSchoolManagerApiContext,
+  requireSchoolCredentialAdminApiContext,
   sendSchoolApiError,
 } from "../../../../../../../lib/school-server/school-request.server.js";
 import { linkSchoolParentByUsername } from "../../../../../../../lib/school-server/school-account-management.server.js";
@@ -20,19 +21,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolCredentialAdminApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
 
+    const actorId = ctx.actorUserId || ctx.managerId;
     const result = await linkSchoolParentByUsername({
       serviceRole: ctx.serviceRole,
       schoolId: ctx.schoolId,
-      managerId: ctx.managerId,
+      managerId: actorId,
       studentId: String(studentId),
       loginUsername: String(body.loginUsername).trim(),
       guardianRelation: body.guardianRelation,
       guardianDisplayLabel: body.guardianDisplayLabel,
     });
     if (!result.ok) return sendSchoolApiError(res, result.status, result.code, result.code);
+
+    await maybeWriteOperatorCredentialAudit(ctx, {
+      studentId: String(studentId),
+      actionType: "parent_link",
+    });
+
     return res.status(200).json({ data: result.data });
   } catch (_e) {
     safeApiLog("school_parent_link_error", {});

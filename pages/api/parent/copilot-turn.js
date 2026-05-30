@@ -20,7 +20,11 @@
  */
 
 import { runParentCopilotTurnAsync } from "../../../utils/parent-copilot/index.js";
-import { getLearningSupabaseServerUserClient } from "../../../lib/learning-supabase/server";
+import { requireParentApiContext, sendPersonaApiError } from "../../../lib/auth/persona-guard.server.js";
+import {
+  assertParentCopilotMonthlyLimit,
+  recordParentCopilotUsage,
+} from "../../../lib/parent-server/parent-copilot-limit.server.js";
 import { getAuthenticatedStudentSession } from "../../../lib/learning-supabase/student-auth";
 import { resolveCopilotTurnPayloadForApi } from "../../../lib/parent-copilot/copilot-turn-payload.server.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
@@ -74,16 +78,33 @@ async function authorizeRequest(req, res, studentIdFromBody) {
       return { ok: false, error: "studentId is required when using parent authorization", status: 400 };
     }
     try {
-      const parentClient = getLearningSupabaseServerUserClient(authHeader);
-      const { data: userData, error: userErr } = await parentClient.auth.getUser();
-      if (userErr || !userData?.user?.id) {
-        return { ok: false, error: "Invalid session", status: 401 };
+      const ctx = await requireParentApiContext(res, authHeader, { requireFeature: "copilot_enabled" });
+      if (ctx.stopped) {
+        return { ok: false, stopped: true };
       }
-      const { data: row, error: rowErr } = await parentClient
+
+      const limitCheck = await assertParentCopilotMonthlyLimit(
+        ctx.serviceRole,
+        ctx.parentUserId,
+        ctx.settings?.monthly_ai_limit
+      );
+      if (!limitCheck.ok) {
+        if (limitCheck.code === "monthly_ai_limit_exceeded") {
+          sendPersonaApiError(res, limitCheck.status, limitCheck.code, limitCheck.code);
+        }
+        return {
+          ok: false,
+          stopped: limitCheck.code === "monthly_ai_limit_exceeded",
+          error: limitCheck.code,
+          status: limitCheck.status,
+        };
+      }
+
+      const { data: row, error: rowErr } = await ctx.bearerSupabase
         .from("students")
         .select("id")
         .eq("id", studentId)
-        .eq("parent_id", userData.user.id)
+        .eq("parent_id", ctx.parentUserId)
         .maybeSingle();
       if (rowErr) {
         return { ok: false, error: "Could not verify student ownership", status: 403 };
@@ -95,7 +116,8 @@ async function authorizeRequest(req, res, studentIdFromBody) {
       return {
         ok: true,
         mode: "parent_bearer",
-        parentUserId: userData.user.id,
+        parentUserId: ctx.parentUserId,
+        serviceRole: ctx.serviceRole,
       };
     } catch {
       return { ok: false, error: "Authorization failed", status: 401 };
@@ -149,6 +171,7 @@ export default async function handler(req, res) {
 
     const auth = await authorizeRequest(req, res, body.studentId);
     if (!auth.ok) {
+      if (auth.stopped) return undefined;
       return res.status(auth.status || 401).json({ ok: false, error: auth.error || "Unauthorized" });
     }
 
@@ -193,6 +216,10 @@ export default async function handler(req, res) {
       selectedContextRef,
       clickedFollowupFamily,
     });
+
+    if (auth.mode === "parent_bearer" && auth.parentUserId && auth.serviceRole) {
+      await recordParentCopilotUsage(auth.serviceRole, auth.parentUserId);
+    }
 
     return res.status(200).json({ ok: true, result, authMode: auth.mode });
   } catch (_e) {

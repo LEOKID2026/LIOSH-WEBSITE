@@ -1,10 +1,10 @@
 import { safeApiLog } from "../../../lib/security/safe-log.js";
 import { buildSchoolDashboardStats } from "../../../lib/school-server/school-session.server.js";
+import { teacherHasActiveAssignments } from "../../../lib/school-server/school-membership.server.js";
 import {
-  requireSchoolManagerApiContext,
+  requireSchoolPortalMeContext,
   sendSchoolApiError,
 } from "../../../lib/school-server/school-request.server.js";
-import { teacherHasActiveAssignments } from "../../../lib/school-server/school-membership.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -13,8 +13,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolPortalMeContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+
+    if (ctx.portalRole === "school_operator") {
+      return res.status(200).json({
+        data: {
+          portalRole: "school_operator",
+          school: {
+            schoolId: ctx.school.id,
+            name: ctx.school.name,
+            city: ctx.school.city,
+            contactEmail: ctx.school.contact_email,
+            isActive: ctx.school.is_active !== false,
+          },
+          operator: {
+            operatorUserId: ctx.operatorUserId,
+            grants: {
+              studentAccessAdmin: ctx.grants?.student_access_admin === true,
+              studentDataViewer: ctx.grants?.student_data_viewer === true,
+            },
+          },
+          hasTeacherActivity: false,
+        },
+      });
+    }
 
     const stats = await buildSchoolDashboardStats(ctx.serviceRole, ctx.schoolId);
     if (!stats.ok) {
@@ -25,6 +48,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       data: {
+        portalRole: "school_manager",
         school: {
           schoolId: ctx.school.id,
           name: ctx.school.name,

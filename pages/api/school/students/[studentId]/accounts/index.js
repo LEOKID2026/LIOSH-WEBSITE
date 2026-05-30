@@ -1,6 +1,6 @@
 import { safeApiLog } from "../../../../../../lib/security/safe-log.js";
 import {
-  requireSchoolManagerApiContext,
+  requireSchoolCredentialAdminApiContext,
   sendSchoolApiError,
 } from "../../../../../../lib/school-server/school-request.server.js";
 import { listSchoolStudentAccounts } from "../../../../../../lib/school-server/school-account-management.server.js";
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const studentId = req.query?.studentId;
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolCredentialAdminApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
 
     const result = await listSchoolStudentAccounts(ctx.serviceRole, ctx.schoolId, String(studentId));

@@ -1,4 +1,4 @@
-import { getLearningSupabaseServerUserClient } from "../../../lib/learning-supabase/server";
+import { requireParentApiContext } from "../../../lib/auth/persona-guard.server.js";
 import {
   MAX_PARENT_GRADE_LEVEL_LEN,
   MAX_PARENT_STUDENT_NAME_LEN,
@@ -10,11 +10,6 @@ import {
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
-  }
-
-  const authHeader = req.headers.authorization || "";
-  if (!authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ ok: false, error: "Missing bearer token" });
   }
 
   const studentId = safeUuid(req.body?.studentId);
@@ -46,17 +41,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const supabase = getLearningSupabaseServerUserClient(authHeader);
-    const { data: userData, error: userErr } = await supabase.auth.getUser();
-    if (userErr || !userData?.user?.id) {
-      return res.status(401).json({ ok: false, error: "Invalid session" });
-    }
+    const ctx = await requireParentApiContext(res, req.headers.authorization || "");
+    if (ctx.stopped) return undefined;
 
-    const { data, error } = await supabase
+    const { data, error } = await ctx.bearerSupabase
       .from("students")
       .update(patch)
       .eq("id", studentId)
-      .eq("parent_id", userData.user.id)
+      .eq("parent_id", ctx.parentUserId)
       .select("id,full_name,grade_level,is_active,created_at")
       .single();
 

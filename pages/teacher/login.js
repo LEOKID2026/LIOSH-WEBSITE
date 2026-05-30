@@ -18,6 +18,10 @@ export async function getServerSideProps() {
 }
 
 function teacherPostLoginPath(meBody) {
+  const schoolRole = meBody?.data?.schoolMembership?.schoolRole;
+  if (schoolRole === "school_operator") {
+    return "/school/operator/dashboard";
+  }
   if (meBody?.data?.schoolMembership?.isSchoolManager) {
     return "/school/dashboard";
   }

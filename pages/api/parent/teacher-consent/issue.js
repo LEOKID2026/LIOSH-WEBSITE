@@ -1,6 +1,6 @@
 import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../lib/security/same-origin.js";
-import { resolveAuthenticatedParentUserId } from "../../../../lib/parent-server/policy-acceptance.server.js";
+import { requireParentApiContext } from "../../../../lib/auth/persona-guard.server.js";
 import {
   getParentConsentServiceRole,
   issueTeacherStudentConsentToken,
@@ -16,10 +16,8 @@ export default async function handler(req, res) {
   if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
 
   try {
-    const auth = await resolveAuthenticatedParentUserId(req.headers.authorization || "");
-    if (!auth.ok) {
-      return res.status(auth.status).json({ ok: false, error: auth.error });
-    }
+    const ctx = await requireParentApiContext(res, req.headers.authorization || "");
+    if (ctx.stopped) return undefined;
 
     const parsed = parseParentConsentIssueBody(req.body);
     if (!parsed.ok) {
@@ -28,7 +26,7 @@ export default async function handler(req, res) {
 
     const serviceRole = getParentConsentServiceRole();
     const issued = await issueTeacherStudentConsentToken(serviceRole, {
-      parentUserId: auth.parentUserId,
+      parentUserId: ctx.parentUserId,
       teacherId: parsed.teacherId,
       studentId: parsed.studentId,
     });

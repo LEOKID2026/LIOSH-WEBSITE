@@ -2,7 +2,7 @@ import { safeApiLog } from "../../../../../lib/security/safe-log.js";
 import { rejectIfCrossOriginCookieMutation } from "../../../../../lib/security/same-origin.js";
 import { transferStudentBetweenSections } from "../../../../../lib/school-server/school-operations.server.js";
 import {
-  requireSchoolManagerApiContext,
+  requireSchoolClassAdminApiContext,
   sendSchoolApiError,
 } from "../../../../../lib/school-server/school-request.server.js";
 
@@ -17,8 +17,10 @@ export default async function handler(req, res) {
   try {
     if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;
 
-    const ctx = await requireSchoolManagerApiContext(res, req.headers.authorization || "");
+    const ctx = await requireSchoolClassAdminApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
+
+    const actorId = ctx.actorUserId || ctx.managerId;
 
     const body = req.body && typeof req.body === "object" ? req.body : {};
     const fromPhysicalClass =
@@ -37,7 +39,7 @@ export default async function handler(req, res) {
       fromPhysicalClass,
       toPhysicalClass,
       gradeLevel,
-      managerId: ctx.managerId,
+      managerId: actorId,
     });
 
     if (!result.ok) {
