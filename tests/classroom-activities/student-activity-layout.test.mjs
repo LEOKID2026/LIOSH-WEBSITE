@@ -27,6 +27,17 @@ test("STUDENT_ACTIVITY_LAYOUT: card has no inner scroll", () => {
   assert.match(STUDENT_ACTIVITY_LAYOUT.card, /overflow-visible/);
   assert.match(STUDENT_ACTIVITY_LAYOUT.questionStage, /overflow-visible/);
   assert.doesNotMatch(STUDENT_ACTIVITY_LAYOUT.card, /overflow-y-auto/);
+  assert.doesNotMatch(STUDENT_ACTIVITY_LAYOUT.questionStage, /lg:min-h-\[17rem\]/);
+  assert.doesNotMatch(STUDENT_ACTIVITY_LAYOUT.cardGrid, /lg:grid-cols-2/);
+});
+
+test("StudentQuestionDisplay: question body must not use overflow-x-hidden (creates inner scroll)", () => {
+  const src = readFileSync(
+    path.join(repoRoot, "components/learning/StudentQuestionDisplay.jsx"),
+    "utf8"
+  );
+  assert.doesNotMatch(src, /student-question-body[\s\S]*overflow-x-hidden/);
+  assert.match(src, /overflow-visible/);
 });
 
 test("student activity page uses unified shell components", () => {
@@ -40,7 +51,7 @@ test("student activity page uses unified shell components", () => {
   assert.doesNotMatch(src, /ClassroomGeometryQuestionDiagram/);
 });
 
-test("StudentAssignedActivityShell provides consistent header and lg grid", () => {
+test("StudentAssignedActivityShell provides consistent header and full-width stack", () => {
   const shell = readFileSync(
     path.join(repoRoot, "components/student/StudentAssignedActivityShell.jsx"),
     "utf8"
@@ -54,7 +65,7 @@ test("StudentAssignedActivityShell provides consistent header and lg grid", () =
   assert.match(shell, /activity-question-stage/);
   assert.match(shell, /activity-actions-panel/);
   assert.match(layout, /max-w-6xl/);
-  assert.match(layout, /lg:grid-cols-2/);
+  assert.match(layout, /flex flex-col/);
 });
 
 test("StudentActivityQuestionSurface uses shared layout typography", () => {
@@ -64,7 +75,9 @@ test("StudentActivityQuestionSurface uses shared layout typography", () => {
   );
   assert.match(src, /STUDENT_ACTIVITY_LAYOUT/);
   assert.match(src, /overflow-visible/);
+  assert.match(src, /getStudentActivityQuestionFontStyle/);
   assert.doesNotMatch(src, /min-h-\[230px\]/);
+  assert.doesNotMatch(src, /flex-1 flex flex-col/);
 });
 
 test("Geometry diagram supports embedded mode without svh scroll frame", () => {

@@ -3,19 +3,13 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
 import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
-import { getContextNav } from "../lib/site-nav";
+import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl } from "../lib/site-nav";
 
 export default function Layout({ children, homepage = false }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Game / immersive learning UIs: no site header. Dev admin under /learning/dev/* keeps the sticky nav (incl. mobile menu).
-  const isLearningDev = router.pathname.startsWith("/learning/dev");
-  const isGamePage =
-    !isLearningDev &&
-    (router.pathname.includes("/learning/") ||
-      router.pathname.includes("/offline/") ||
-      router.pathname.includes("/mleo-"));
+  const isGamePage = isImmersiveGameLayoutPath(router.pathname);
 
   if (isGamePage) {
     // For game pages, return only the children without header/footer
@@ -25,38 +19,18 @@ export default function Layout({ children, homepage = false }) {
   const closeMenu = () => setMenuOpen(false);
 
   const pathname = router.pathname || "";
-  const { links: menuLinks, showDevCoinTopup } = getContextNav(pathname);
-
-  /** RTL for Hebrew-primary flows — keeps header/logo order stable (same as parent/student hubs). */
-  const layoutRtlHebrew =
-    pathname === "/" ||
-    pathname.startsWith("/parent") ||
-    pathname.startsWith("/teacher") ||
-    pathname.startsWith("/school") ||
-    pathname.startsWith("/admin") ||
-    pathname.startsWith("/guardian") ||
-    pathname === "/student/login" ||
-    pathname.startsWith("/student/home") ||
-    pathname.startsWith("/student/arcade") ||
-    pathname === "/learning" ||
-    pathname.startsWith("/learning/dev") ||
-    pathname === "/game" ||
-    pathname.startsWith("/offline") ||
-    pathname.startsWith("/gallery") ||
-    pathname.startsWith("/contact") ||
-    pathname.startsWith("/about") ||
-    pathname.startsWith("/help") ||
-    pathname === "/privacy" ||
-    pathname === "/terms" ||
-    pathname === "/accessibility" ||
-    pathname === "/data-deletion" ||
-    pathname === "/ai-disclosure" ||
-    pathname === "/security";
+  const authPortal =
+    pathname.startsWith("/auth/") && typeof router.query?.portal === "string"
+      ? router.query.portal
+      : undefined;
+  const { links: menuLinks, showDevCoinTopup } = getContextNav(pathname, { authPortal });
+  const layoutRtlHebrew = shouldLayoutUseRtl(pathname);
 
   return (
     <div
       className="min-h-[100svh] md:min-h-screen bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white flex flex-col"
       dir={layoutRtlHebrew ? "rtl" : undefined}
+      lang={layoutRtlHebrew ? "he" : undefined}
     >
       <header className="w-full border-b border-white/10 bg-black/40 backdrop-blur sticky top-0 z-30 shrink-0">
         <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 md:gap-3">

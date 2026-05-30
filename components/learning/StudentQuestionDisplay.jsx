@@ -66,8 +66,8 @@ export default function StudentQuestionDisplay({
       {parts.bodyText ? (
         <div
           data-testid="student-question-body"
-          className={`w-full max-w-full flex justify-center overflow-x-hidden ${
-            isEquation ? formulaClassName : `${bodyClassName} break-words overflow-wrap-anywhere`
+          className={`w-full max-w-full flex justify-center overflow-visible ${
+            isEquation ? formulaClassName : `${bodyClassName} break-words`
           }`}
           dir={isEquation ? "ltr" : "auto"}
           style={{

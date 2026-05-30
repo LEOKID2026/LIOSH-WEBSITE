@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import StudentQuestionDisplay from "../learning/StudentQuestionDisplay.jsx";
 import {
   canStudentActivityQuestionDisplayVertically,
+  getStudentActivityEquationFontStyle,
+  getStudentActivityQuestionFontStyle,
   getStudentActivityVerticalExerciseText,
   normalizeStudentActivityMathLayoutQuestion,
 } from "../../lib/classroom-activities/student-activity-question-ui.client.js";
 import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-activity-layout.client.js";
-import { getQuestionFontStyle } from "../../utils/learning-question-font";
 
 /**
  * Question text inside the unified activity question stage — stable footprint for math toggle.
@@ -39,7 +40,7 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
   if (!layoutQuestion) return null;
 
   return (
-    <div className="relative w-full flex-1 flex flex-col items-center justify-center overflow-visible min-h-[7rem] lg:min-h-[9rem]">
+    <div className="relative w-full flex flex-col items-center justify-center overflow-visible">
       {canDisplayVertically ? (
         <button
           type="button"
@@ -63,7 +64,7 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
                 style={{
                   direction: "rtl",
                   unicodeBidi: "plaintext",
-                  ...getQuestionFontStyle({
+                  ...getStudentActivityQuestionFontStyle({
                     text: layoutQuestion.questionLabel,
                     kind: "label",
                   }),
@@ -82,7 +83,7 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
                 style={{
                   direction: "ltr",
                   unicodeBidi: "isolate",
-                  ...getQuestionFontStyle({ text: verticalText }),
+                  ...getStudentActivityQuestionFontStyle({ text: verticalText }),
                 }}
               >
                 {verticalText}
@@ -94,7 +95,8 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
             question={layoutQuestion.question}
             questionLabel={layoutQuestion.questionLabel}
             exerciseText={layoutQuestion.exerciseText || layoutQuestion.question}
-            getQuestionFontStyle={getQuestionFontStyle}
+            getQuestionFontStyle={getStudentActivityQuestionFontStyle}
+            getEquationFontStyle={getStudentActivityEquationFontStyle}
             leadClassName={L.questionLead}
             bodyClassName={L.questionBody}
             formulaClassName={L.questionFormula}
