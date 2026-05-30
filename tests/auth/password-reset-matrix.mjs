@@ -105,6 +105,36 @@ async function main() {
   );
 
   record(
+    "reset_password_uses_exchangeCodeForSession",
+    Boolean(resetSrc?.includes("establishRecoverySession")),
+    "establishRecoverySession"
+  );
+
+  record(
+    "reset_password_uses_error_mapper",
+    Boolean(resetSrc?.includes("mapSupabasePasswordUpdateErrorHe")),
+    "Hebrew error mapper"
+  );
+
+  record(
+    "reset_password_uses_password_field",
+    Boolean(resetSrc?.includes("PasswordField")),
+    "PasswordField toggle"
+  );
+
+  record(
+    "parent_login_uses_password_field",
+    Boolean(parentLogin?.includes("PasswordField")),
+    "parent login PasswordField"
+  );
+
+  record(
+    "teacher_login_uses_password_field",
+    Boolean(teacherLogin?.includes("PasswordField")),
+    "teacher login PasswordField"
+  );
+
+  record(
     "reset_password_uses_persona_redirect",
     Boolean(resetSrc?.includes("resolvePostPasswordResetPath")),
     "persona-aware redirect"

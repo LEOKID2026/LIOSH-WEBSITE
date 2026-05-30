@@ -2,13 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
+import PasswordField from "../../components/auth/PasswordField";
 import { resolvePostPasswordResetPath } from "../../lib/auth/auth-post-reset-redirect";
+import {
+  clearRecoveryActive,
+  establishRecoverySession,
+} from "../../lib/auth/auth-recovery-session.client";
+import {
+  mapRecoveryEstablishErrorHe,
+  mapSupabasePasswordUpdateErrorHe,
+  sanitizeAuthErrorForLog,
+} from "../../lib/auth/auth-reset-errors";
 import {
   AUTH_RESET_MIN_PASSWORD_LENGTH,
   AUTH_RESET_PASSWORD_CONFIRM_LABEL,
   AUTH_RESET_PASSWORD_ERROR_EXPIRED,
   AUTH_RESET_PASSWORD_ERROR_GENERIC,
   AUTH_RESET_PASSWORD_ERROR_MISMATCH,
+  AUTH_RESET_PASSWORD_ERROR_NO_SESSION,
   AUTH_RESET_PASSWORD_ERROR_WEAK,
   AUTH_RESET_PASSWORD_NEW_LABEL,
   AUTH_RESET_PASSWORD_REQUEST_NEW,
@@ -18,19 +29,14 @@ import {
 } from "../../lib/auth/auth-reset.he";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 
-function isRecoveryContext() {
-  if (typeof window === "undefined") return false;
-  const hash = window.location.hash || "";
-  const search = window.location.search || "";
-  return hash.includes("type=recovery") || hash.includes("access_token") || search.includes("code=");
-}
-
 export default function ResetPasswordPage() {
   const router = useRouter();
   const supabaseRef = useRef(null);
+  const recoverySessionRef = useRef(false);
   const [clientReady, setClientReady] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
   const [sessionInvalid, setSessionInvalid] = useState(false);
+  const [establishError, setEstablishError] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -51,56 +57,41 @@ export default function ResetPasswordPage() {
     let cancelled = false;
     const supabase = supabaseRef.current;
 
-    const finishInvalid = () => {
-      if (!cancelled) {
-        setSessionInvalid(true);
-        setSessionReady(false);
-      }
-    };
-
-    const finishReady = () => {
-      if (!cancelled) {
-        setSessionReady(true);
-        setSessionInvalid(false);
-      }
-    };
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "PASSWORD_RECOVERY" && session) {
-        finishReady();
-      }
-    });
-
     (async () => {
-      await new Promise((r) => setTimeout(r, 150));
+      const result = await establishRecoverySession(supabase, router);
       if (cancelled) return;
 
-      const { data, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) {
-        finishInvalid();
+      recoverySessionRef.current = Boolean(result.recoverySession && result.ok);
+
+      if (result.error) {
+        console.error("[auth-reset-password] recovery establish failed", sanitizeAuthErrorForLog(result.error), {
+          reason: result.reason,
+          recoverySession: recoverySessionRef.current,
+        });
+      } else if (result.ok) {
+        console.info("[auth-reset-password] recovery session ready", {
+          reason: result.reason,
+          recoverySession: recoverySessionRef.current,
+          hasSession: Boolean(result.session),
+        });
+      }
+
+      if (result.ok && result.session) {
+        setSessionReady(true);
+        setSessionInvalid(false);
+        setEstablishError("");
         return;
       }
-      if (data?.session) {
-        finishReady();
-        return;
-      }
-      if (isRecoveryContext()) {
-        await new Promise((r) => setTimeout(r, 400));
-        if (cancelled) return;
-        const retry = await supabase.auth.getSession();
-        if (retry.data?.session) {
-          finishReady();
-          return;
-        }
-      }
-      finishInvalid();
+
+      setSessionInvalid(true);
+      setSessionReady(false);
+      setEstablishError(mapRecoveryEstablishErrorHe(result.error));
     })();
 
     return () => {
       cancelled = true;
-      subscription.unsubscribe();
     };
-  }, [clientReady]);
+  }, [clientReady, router]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -121,27 +112,55 @@ export default function ResetPasswordPage() {
 
     setBusy(true);
     try {
+      const { data: preSubmit, error: preSubmitError } = await supabaseRef.current.auth.getSession();
+      const hasSession = Boolean(preSubmit?.session);
+      const recoverySession = recoverySessionRef.current;
+
+      console.info("[auth-reset-password] before password update", {
+        hasSession,
+        recoverySession,
+        sessionKind: recoverySession ? "recovery" : hasSession ? "normal" : "none",
+        preSubmitError: sanitizeAuthErrorForLog(preSubmitError),
+      });
+
+      if (!hasSession) {
+        setError(AUTH_RESET_PASSWORD_ERROR_NO_SESSION);
+        return;
+      }
+      if (!recoverySession) {
+        setError(AUTH_RESET_PASSWORD_ERROR_NO_SESSION);
+        return;
+      }
+
       const { error: updateError } = await supabaseRef.current.auth.updateUser({
         password: newPassword,
       });
       if (updateError) {
-        const msg = String(updateError.message || "").toLowerCase();
-        if (msg.includes("session") || msg.includes("token") || msg.includes("expired")) {
-          setError(AUTH_RESET_PASSWORD_ERROR_EXPIRED);
-        } else if (msg.includes("password") && msg.includes("short")) {
-          setError(AUTH_RESET_PASSWORD_ERROR_WEAK);
-        } else {
-          setError(AUTH_RESET_PASSWORD_ERROR_GENERIC);
-        }
+        console.error("[auth-reset-password] password update failed", sanitizeAuthErrorForLog(updateError), {
+          hasSession,
+          recoverySession,
+          sessionKind: recoverySession ? "recovery" : "normal",
+        });
+        setError(
+          mapSupabasePasswordUpdateErrorHe(updateError, {
+            hasRecoverySession: recoverySession,
+          })
+        );
         return;
       }
 
+      clearRecoveryActive();
       setSuccess(true);
       const destination = await resolvePostPasswordResetPath(supabaseRef.current);
       await new Promise((r) => setTimeout(r, 800));
       router.replace(destination);
-    } catch {
-      setError(AUTH_RESET_PASSWORD_ERROR_GENERIC);
+    } catch (caught) {
+      console.error("[auth-reset-password] password update threw", sanitizeAuthErrorForLog(caught));
+      setError(
+        mapSupabasePasswordUpdateErrorHe(caught, {
+          hasRecoverySession: recoverySessionRef.current,
+        })
+      );
     } finally {
       setBusy(false);
     }
@@ -168,7 +187,7 @@ export default function ResetPasswordPage() {
         >
           <h1 className="text-2xl font-bold mb-4">{AUTH_RESET_PASSWORD_TITLE}</h1>
           <p className="text-red-300 text-sm mb-6" role="alert">
-            {AUTH_RESET_PASSWORD_ERROR_EXPIRED}
+            {establishError || AUTH_RESET_PASSWORD_ERROR_EXPIRED}
           </p>
           <Link
             href={`/auth/forgot-password?portal=${portal}`}
@@ -208,32 +227,24 @@ export default function ResetPasswordPage() {
           </p>
         ) : (
           <form onSubmit={(e) => void onSubmit(e)} className="space-y-4">
-            <label className="block text-sm">
-              <span className="text-white/80">{AUTH_RESET_PASSWORD_NEW_LABEL}</span>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(ev) => setNewPassword(ev.target.value)}
-                required
-                minLength={AUTH_RESET_MIN_PASSWORD_LENGTH}
-                autoComplete="new-password"
-                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                data-testid="auth-reset-password-new"
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="text-white/80">{AUTH_RESET_PASSWORD_CONFIRM_LABEL}</span>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(ev) => setConfirmPassword(ev.target.value)}
-                required
-                minLength={AUTH_RESET_MIN_PASSWORD_LENGTH}
-                autoComplete="new-password"
-                className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                data-testid="auth-reset-password-confirm"
-              />
-            </label>
+            <PasswordField
+              label={AUTH_RESET_PASSWORD_NEW_LABEL}
+              value={newPassword}
+              onChange={(ev) => setNewPassword(ev.target.value)}
+              required
+              minLength={AUTH_RESET_MIN_PASSWORD_LENGTH}
+              autoComplete="new-password"
+              testId="auth-reset-password-new"
+            />
+            <PasswordField
+              label={AUTH_RESET_PASSWORD_CONFIRM_LABEL}
+              value={confirmPassword}
+              onChange={(ev) => setConfirmPassword(ev.target.value)}
+              required
+              minLength={AUTH_RESET_MIN_PASSWORD_LENGTH}
+              autoComplete="new-password"
+              testId="auth-reset-password-confirm"
+            />
             {error ? (
               <p className="text-red-300 text-sm" role="alert">
                 {error}

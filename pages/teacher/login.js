@@ -10,6 +10,7 @@ import {
   fetchTeacherMe,
   teacherPostLoginPath,
 } from "../../lib/auth/auth-post-reset-redirect";
+import PasswordField from "../../components/auth/PasswordField";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 import {
   REG_TEACHER_INVITE_ONLY_LOGIN_NOTE,
@@ -287,18 +288,15 @@ export default function TeacherLoginPage({ inviteOnly }) {
                     className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
                   />
                 </label>
-                <label className="block text-sm">
-                  <span className="text-white/80">סיסמה</span>
-                  <input
-                    type="password"
-                    name="password"
-                    value={password}
-                    onChange={(ev) => setPassword(ev.target.value)}
-                    required
-                    autoComplete="current-password"
-                    className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  />
-                </label>
+                <PasswordField
+                  label="סיסמה"
+                  name="password"
+                  value={password}
+                  onChange={(ev) => setPassword(ev.target.value)}
+                  required
+                  autoComplete="current-password"
+                  testId="teacher-login-password"
+                />
                 <button
                   type="submit"
                   disabled={busy}

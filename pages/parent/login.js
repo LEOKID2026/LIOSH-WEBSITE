@@ -16,6 +16,7 @@ import {
   postParentTeacherCodeLogin,
   redirectAfterParentTeacherCodeLogin,
 } from "../../lib/parent-client/parent-teacher-code-access.js";
+import PasswordField from "../../components/auth/PasswordField";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
 
 async function storeSignupPolicyAcceptance(accessToken) {
@@ -263,18 +264,15 @@ export default function ParentLoginPage() {
                   autoComplete="username"
                 />
               </label>
-              <label className="block text-sm">
-                <span className="text-white/80">סיסמה או קוד כניסה</span>
-                <input
-                  className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                  type="password"
-                  value={secret}
-                  onChange={(e) => setSecret(e.target.value)}
-                  placeholder="הקלידו סיסמה או קוד כניסה"
-                  required
-                  autoComplete="current-password"
-                />
-              </label>
+              <PasswordField
+                label="סיסמה או קוד כניסה"
+                value={secret}
+                onChange={(e) => setSecret(e.target.value)}
+                placeholder="הקלידו סיסמה או קוד כניסה"
+                required
+                autoComplete="current-password"
+                testId="parent-login-secret"
+              />
             </>
           ) : (
             <>
@@ -286,14 +284,16 @@ export default function ParentLoginPage() {
                 placeholder="אימייל הורה"
                 required
               />
-              <input
-                className="w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-                type="password"
+              <PasswordField
+                bare
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
                 placeholder="סיסמה"
                 required
                 minLength={6}
+                autoComplete="new-password"
+                testId="parent-signup-password"
+                inputClassName="w-full rounded bg-black/40 border border-white/20 px-3 py-2 pe-10"
               />
               {preSignupPolicyCompleted ? (
                 <p className="text-xs text-emerald-300/90">
