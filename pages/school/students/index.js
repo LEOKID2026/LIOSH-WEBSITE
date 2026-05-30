@@ -31,7 +31,7 @@ import {
   isSchoolManagerPortal,
   operatorHasAnyGrant,
 } from "../../../lib/school-portal/operator-grants";
-import { fetchSchoolJsonSWR, invalidateSchoolCache, readSchoolCache, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
+import { fetchSchoolJsonSWR, invalidateSchoolCache, readSchoolCache, deleteSchoolCacheEntry, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
 import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
 import {
   apiErrorMessageHe,
@@ -109,16 +109,27 @@ export default function SchoolStudentsPage() {
   }, [state, router, isOperator, me]);
 
   const loadBrowseSummary = useCallback(async ({ force = false } = {}) => {
-    if (!accessToken) return;
+    if (!accessToken && authMethod !== "staff_cookie") return;
     const path = "/api/school/students/browse-summary";
     const cached = schoolId ? readSchoolCache(schoolId, path) : null;
-    if (cached?.data?.data?.summary) {
+    if (cached?.data?.data?.summary && !force) {
       setBrowseSummary(cached.data.data.summary);
       setSummaryLoading(false);
-    } else {
+    } else if (!force) {
       setSummaryLoading(true);
     }
     setSummaryError("");
+    const applyBrowseResult = (result) => {
+      if (!result || result.status !== 200) {
+        const body = result?.body || {};
+        setBrowseSummary(null);
+        if (schoolId) deleteSchoolCacheEntry(schoolId, path);
+        setSummaryError(apiErrorMessageHe(body?.error, "שגיאה בטעינת נתונים"));
+        return;
+      }
+      setSummaryError("");
+      setBrowseSummary(result.body?.data?.summary || null);
+    };
     try {
       const result = await fetchSchoolJsonSWR({
         accessToken,
@@ -128,23 +139,19 @@ export default function SchoolStudentsPage() {
         force,
         fetchFn: schoolAuthFetch,
         onUpdate: (updated) => {
-          if (updated.status === 200) {
-            setBrowseSummary(updated.body?.data?.summary || null);
-          }
+          applyBrowseResult(updated);
+          setSummaryLoading(false);
         },
       });
-      if (!result || result.status !== 200) {
-        const body = result?.body || {};
-        setSummaryError(apiErrorMessageHe(body?.error, "שגיאה בטעינת נתונים"));
-        return;
-      }
-      setBrowseSummary(result.body?.data?.summary || null);
+      applyBrowseResult(result);
     } catch {
+      setBrowseSummary(null);
+      if (schoolId) deleteSchoolCacheEntry(schoolId, path);
       setSummaryError("שגיאה בטעינת נתונים");
     } finally {
       setSummaryLoading(false);
     }
-  }, [accessToken, schoolId]);
+  }, [accessToken, authMethod, schoolId]);
 
   useEffect(() => {
     if (state === "ready") void loadBrowseSummary();

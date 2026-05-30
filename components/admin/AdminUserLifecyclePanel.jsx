@@ -55,6 +55,7 @@ export default function AdminUserLifecyclePanel({
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const load = useCallback(async () => {
     if (!accessToken || !userId) return;
@@ -90,6 +91,7 @@ export default function AdminUserLifecyclePanel({
 
     setBusy(action);
     setError("");
+    setMessage("");
     try {
       const res = await adminAuthFetch(
         accessToken,
@@ -106,6 +108,9 @@ export default function AdminUserLifecyclePanel({
       }
       if (json?.data?.entitlement) setEntitlement(json.data.entitlement);
       if (json?.data?.isAccountActive != null) setTeacherActive(json.data.isAccountActive);
+      if (json?.data?.passwordSetup?.ok) {
+        setMessage("הבקשה אושרה · קישור להגדרת סיסמה נשלח");
+      }
       onChanged?.();
       await load();
     } catch {
@@ -226,6 +231,7 @@ export default function AdminUserLifecyclePanel({
               </button>
             ) : null}
           </div>
+          {message ? <p className="text-emerald-300 text-sm mt-3">{message}</p> : null}
           {error ? <p className="text-red-300 text-sm mt-3">{error}</p> : null}
         </>
       )}

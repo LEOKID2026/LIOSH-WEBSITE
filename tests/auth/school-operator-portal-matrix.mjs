@@ -86,6 +86,34 @@ async function main() {
     "students GET allows operator browse"
   );
 
+  const studentsServer = await read("lib/school-server/school-students.server.js");
+  const schoolRequest = await read("lib/school-server/school-request.server.js");
+  const drilldown = await read("lib/school-portal/school-drilldown.js");
+
+  record(
+    "browse_summary_visible_student_scope",
+    studentsServer.includes("loadSchoolVisibleStudentIds"),
+    "browse summary uses full school-visible student scope"
+  );
+
+  record(
+    "school_portal_grade_normalization",
+    drilldown.includes("schoolPortalGradeLevel"),
+    "portal grade normalization helper"
+  );
+
+  record(
+    "staff_session_preferred_school_membership",
+    schoolRequest.includes("schoolMembershipLookupOptions"),
+    "staff cookie prefers session school_id"
+  );
+
+  record(
+    "browse_cache_error_invalidation",
+    students.includes("deleteSchoolCacheEntry") && students.includes('authMethod !== "staff_cookie"'),
+    "browse errors clear stale cache"
+  );
+
   record(
     "operator_grants_helpers",
     grants.includes("canManageStudentAccess") && grants.includes("canViewStudentData"),

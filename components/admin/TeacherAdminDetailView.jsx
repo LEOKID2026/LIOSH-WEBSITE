@@ -43,7 +43,13 @@ import {
   planCodeLabelHe,
   entitlementStatusLabelHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
-import { SUBJECT_LABELS_HE } from "../../lib/auth/auth-registration.he.js";
+import {
+  SUBJECT_LABELS_HE,
+  regRequestIntentLabelHe as regIntentLabelHe,
+  ADMIN_REG_REQUEST_INTENT,
+  ADMIN_REG_REQUEST_PHONE,
+} from "../../lib/auth/auth-registration.he.js";
+import AdminPasswordSetupPanel from "./AdminPasswordSetupPanel.jsx";
 
 function StatusBadge({ teacher }) {
   const active = teacher?.isAccountActive !== false && teacher?.isActive;
@@ -127,7 +133,7 @@ function UsageSummaryGrid({ teacher }) {
   );
 }
 
-function RegistrationRequestSection({ teacher }) {
+function TeacherRegSubmissionSection({ teacher, accessToken, onChanged }) {
   const req = teacher.registrationRequest;
   if (!req) return null;
 
@@ -135,35 +141,50 @@ function RegistrationRequestSection({ teacher }) {
     .map((key) => SUBJECT_LABELS_HE[key] || null)
     .filter(Boolean);
 
+  const intentLabel = req.requestIntent ? regIntentLabelHe(req.requestIntent) : null;
+
   return (
-    <AdminSectionCard
-      id="admin-teacher-registration-request"
-      title={ADMIN_REG_REQUEST_SECTION}
-      className="mt-5 border-amber-400/20 bg-amber-500/5"
-    >
-      <div className="space-y-3 text-sm">
-        <AdminFieldRow
-          label={ADMIN_REG_REQUEST_STATUS}
-          value={entitlementStatusLabelHe(req.status)}
-        />
-        <AdminFieldRow
-          label={ADMIN_REG_REQUEST_SUBMITTED}
-          value={adminFormatDateHe(req.createdAt)}
-        />
-        <div>
-          <p className="text-white/50 text-xs mb-1">{ADMIN_REG_REQUEST_DETAILS}</p>
-          <p className="text-white/85 whitespace-pre-wrap break-words leading-relaxed">
-            {req.description || "—"}
-          </p>
+    <>
+      <AdminSectionCard
+        id="admin-teacher-registration-request"
+        title={ADMIN_REG_REQUEST_SECTION}
+        className="mt-5 border-amber-400/20 bg-amber-500/5"
+      >
+        <div className="space-y-3 text-sm">
+          <AdminFieldRow
+            label={ADMIN_REG_REQUEST_STATUS}
+            value={entitlementStatusLabelHe(req.status)}
+          />
+          <AdminFieldRow
+            label={ADMIN_REG_REQUEST_SUBMITTED}
+            value={adminFormatDateHe(req.createdAt)}
+          />
+          {req.phone ? <AdminFieldRow label={ADMIN_REG_REQUEST_PHONE} value={req.phone} /> : null}
+          {intentLabel ? (
+            <AdminFieldRow label={ADMIN_REG_REQUEST_INTENT} value={intentLabel} />
+          ) : null}
+          <div>
+            <p className="text-white/50 text-xs mb-1">{ADMIN_REG_REQUEST_DETAILS}</p>
+            <p className="text-white/85 whitespace-pre-wrap break-words leading-relaxed">
+              {req.description || "—"}
+            </p>
+          </div>
+          <div>
+            <p className="text-white/50 text-xs mb-1">{ADMIN_REG_REQUEST_SUBJECTS}</p>
+            <p className="text-white/85">
+              {subjectLabels.length ? subjectLabels.join(" · ") : ADMIN_REG_REQUEST_NO_SUBJECTS}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-white/50 text-xs mb-1">{ADMIN_REG_REQUEST_SUBJECTS}</p>
-          <p className="text-white/85">
-            {subjectLabels.length ? subjectLabels.join(" · ") : ADMIN_REG_REQUEST_NO_SUBJECTS}
-          </p>
-        </div>
-      </div>
-    </AdminSectionCard>
+      </AdminSectionCard>
+      <AdminPasswordSetupPanel
+        accessToken={accessToken}
+        userId={teacher.teacherId}
+        passwordSetupSentAt={req.passwordSetupSentAt}
+        passwordSetupLastError={req.passwordSetupLastError}
+        onChanged={onChanged}
+      />
+    </>
   );
 }
 
@@ -331,7 +352,14 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
 
       <div className="order-1 lg:order-2">
         <IdentitySection teacher={teacher} />
-        <RegistrationRequestSection teacher={teacher} />
+        <TeacherRegSubmissionSection
+          teacher={teacher}
+          accessToken={accessToken}
+          onChanged={() => {
+            onUpdated?.(teacher);
+            onReload?.();
+          }}
+        />
         <SchoolMembershipSection teacher={teacher} />
       </div>
 

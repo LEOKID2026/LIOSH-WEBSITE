@@ -26,6 +26,7 @@ export default function AdminSchoolDetailPage() {
   const { state, accessToken } = useAdminSession();
   const [school, setSchool] = useState(null);
   const [teachers, setTeachers] = useState([]);
+  const [registrationRequest, setRegistrationRequest] = useState(null);
   const [audit, setAudit] = useState([]);
   const [loadError, setLoadError] = useState("");
 
@@ -39,6 +40,7 @@ export default function AdminSchoolDetailPage() {
     if (detailRes.status === 200 && detailBody?.data?.school) {
       setSchool(detailBody.data.school);
       setTeachers(detailBody.data.teachers || []);
+      setRegistrationRequest(detailBody.data.registrationRequest || null);
       setLoadError("");
     } else {
       setLoadError(apiErrorMessageHe(detailBody?.error, ADMIN_LOAD_ERROR));
@@ -82,6 +84,7 @@ export default function AdminSchoolDetailPage() {
             <AdminSchoolRegistrationPanel
               accessToken={accessToken}
               school={school}
+              registrationRequest={registrationRequest}
               onChanged={() => load(accessToken, school.schoolId)}
             />
 

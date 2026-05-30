@@ -81,6 +81,7 @@ async function main() {
   const teacherPayload = {
     fullName: "מורה בדיקה",
     email: teacherEmail,
+    phone: "0501234567",
     requestIntent: "private_teacher",
     description: "בקשה לחשבון מורה פרטי לצורכי בדיקה",
     requestedSubjects: ["math"],
@@ -124,6 +125,7 @@ async function main() {
   const noSubjectsReq = await api("POST", "/api/auth/teacher-request", null, {
     fullName: "מורה ללא מקצועות",
     email: noSubjectsEmail,
+    phone: "0527654321",
     requestIntent: "school_representative",
     description: "אני נציג בית ספר ומבקש גישה לניהול בית הספר שלנו",
     requestedSubjects: [],
@@ -189,6 +191,7 @@ async function main() {
   const rejectPayload = {
     fullName: "מורה נדחה",
     email: rejectTeacherEmail,
+    phone: "0541112233",
     requestIntent: "general_access",
     description: "בקשת גישה כללית לצורכי בדיקת דחייה",
     requestedSubjects: ["hebrew"],

@@ -8,6 +8,7 @@ import {
   REG_TEACHER_EXPLANATION_LABEL,
   REG_TEACHER_INTENT_LABEL,
   REG_TEACHER_NAME_LABEL,
+  REG_TEACHER_PHONE_LABEL,
   REG_TEACHER_SUBJECTS_LABEL,
   REG_TEACHER_SUBMIT,
   REG_TEACHER_SUCCESS,
@@ -21,6 +22,7 @@ const INPUT_CLASS =
 export default function TeacherRegistrationRequestForm() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [requestIntent, setRequestIntent] = useState(REG_REQUEST_INTENT_OPTIONS[0].id);
   const [description, setDescription] = useState("");
   const [subjects, setSubjects] = useState([]);
@@ -49,6 +51,7 @@ export default function TeacherRegistrationRequestForm() {
         body: JSON.stringify({
           fullName: fullName.trim(),
           email: email.trim(),
+          phone: phone.trim(),
           requestIntent,
           description: description.trim(),
           requestedSubjects: subjects,
@@ -118,6 +121,20 @@ export default function TeacherRegistrationRequestForm() {
                 required
                 className={INPUT_CLASS}
                 data-testid="teacher-reg-email"
+              />
+            </label>
+            <label className="block text-sm col-span-2 order-4 md:order-4 md:flex-none md:w-full md:max-w-md md:shrink-0">
+              <span className="text-white/80">{REG_TEACHER_PHONE_LABEL}</span>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(ev) => setPhone(ev.target.value)}
+                required
+                inputMode="tel"
+                autoComplete="tel"
+                maxLength={30}
+                className={INPUT_CLASS}
+                data-testid="teacher-reg-phone"
               />
             </label>
           </div>
