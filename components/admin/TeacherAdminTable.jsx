@@ -13,9 +13,17 @@ import {
   ADMIN_MANAGE,
   ADMIN_NO_TEACHERS,
   adminAccountStatusHe,
+  entitlementStatusLabelHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
-function StatusBadge({ active }) {
+function StatusBadge({ active, entitlementStatus }) {
+  if (entitlementStatus === "pending") {
+    return (
+      <span className="inline-block rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap bg-sky-500/20 text-sky-200 border border-sky-400/30">
+        {entitlementStatusLabelHe("pending")}
+      </span>
+    );
+  }
   return (
     <span
       className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ${
@@ -38,7 +46,7 @@ function TeacherAdminMobileCard({ teacher: t }) {
         <h3 className="font-semibold text-base text-white min-w-0 break-words">
           {t.displayName || "—"}
         </h3>
-        <StatusBadge active={active} />
+        <StatusBadge active={active} entitlementStatus={t.entitlementStatus} />
       </div>
 
       <div>
@@ -167,7 +175,7 @@ function TeacherAdminDesktopTable({ teachers }) {
                     {t.quotas?.maxStudentsPerClass ?? "—"}
                   </td>
                   <td className="px-2 py-2.5 text-center">
-                    <StatusBadge active={active} />
+                    <StatusBadge active={active} entitlementStatus={t.entitlementStatus} />
                   </td>
                   <td className="px-3 py-2.5 whitespace-nowrap">
                     <Link

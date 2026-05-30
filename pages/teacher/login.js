@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import TeacherPortalShell from "../../components/teacher-portal/TeacherPortalShell";
+import TeacherRegistrationRequestForm from "../../components/auth/TeacherRegistrationRequestForm";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { isAdminAppMetadataUser } from "../../lib/admin-portal/use-admin-session";
 import {
@@ -10,6 +11,12 @@ import {
   teacherPostLoginPath,
 } from "../../lib/auth/auth-post-reset-redirect";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
+import {
+  REG_SCHOOL_LINK,
+  REG_TEACHER_INVITE_ONLY_LOGIN_NOTE,
+  REG_TEACHER_LOGIN_TAB,
+  REG_TEACHER_TAB,
+} from "../../lib/auth/auth-registration.he";
 import { resolveTeacherAccessToken } from "../../lib/teacher-portal/use-teacher-portal-session";
 
 export async function getServerSideProps() {
@@ -45,6 +52,7 @@ export default function TeacherLoginPage({ inviteOnly }) {
   const [busy, setBusy] = useState(false);
   const [clientReady, setClientReady] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [mode, setMode] = useState("login");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -69,6 +77,13 @@ export default function TeacherLoginPage({ inviteOnly }) {
       const me = await fetchTeacherMe(session.token);
       if (me.status === 200) {
         router.replace(teacherPostLoginPath(me.body));
+        return;
+      }
+      if (me.status === 403) {
+        const code = me.body?.error?.code;
+        if (code === "entitlement_pending" || code === "entitlement_rejected") {
+          router.replace("/teacher/pending");
+        }
       }
     });
     return () => {
@@ -125,6 +140,14 @@ export default function TeacherLoginPage({ inviteOnly }) {
         return;
       }
 
+      if (me.status === 403) {
+        const code = me.body?.error?.code;
+        if (code === "entitlement_pending" || code === "entitlement_rejected") {
+          router.replace("/teacher/pending");
+          return;
+        }
+      }
+
       if (me.status === 403 || me.body?.error?.code === "not_a_teacher") {
         setLoginError(
           "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
@@ -159,6 +182,14 @@ export default function TeacherLoginPage({ inviteOnly }) {
         return;
       }
 
+      if (me.status === 403) {
+        const code = me.body?.error?.code;
+        if (code === "entitlement_pending" || code === "entitlement_rejected") {
+          router.replace("/teacher/pending");
+          return;
+        }
+      }
+
       setLoginError(
         "כתובת הדוא״ל או הסיסמה שגויים. אם אתה מורה רשום — נסה שנית."
       );
@@ -175,10 +206,38 @@ export default function TeacherLoginPage({ inviteOnly }) {
           data-testid="teacher-login-root"
           data-invite-only={inviteOnly ? "true" : "false"}
         >
+          <div className="flex gap-2 mb-6 border-b border-white/10 pb-2">
+            <button
+              type="button"
+              onClick={() => setMode("login")}
+              className={`px-4 py-2 text-sm rounded-t ${
+                mode === "login"
+                  ? "bg-amber-500/20 text-amber-200 border-b-2 border-amber-400"
+                  : "text-white/60 hover:text-white/80"
+              }`}
+              data-testid="teacher-login-tab"
+            >
+              {REG_TEACHER_LOGIN_TAB}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("request")}
+              className={`px-4 py-2 text-sm rounded-t ${
+                mode === "request"
+                  ? "bg-amber-500/20 text-amber-200 border-b-2 border-amber-400"
+                  : "text-white/60 hover:text-white/80"
+              }`}
+              data-testid="teacher-request-tab"
+            >
+              {REG_TEACHER_TAB}
+            </button>
+          </div>
+          {mode === "request" ? (
+            <TeacherRegistrationRequestForm />
+          ) : (
+            <>
           {inviteOnly ? (
-            <p className="text-white/70 text-sm mb-6">
-              הכניסה מיועדת למורים שהתווספו על ידי צוות לִישׁ.
-            </p>
+            <p className="text-white/70 text-sm mb-6">{REG_TEACHER_INVITE_ONLY_LOGIN_NOTE}</p>
           ) : null}
           <form onSubmit={onSubmit} className="space-y-4 max-w-md" autoComplete="on" noValidate>
             <label className="block text-sm">
@@ -228,7 +287,15 @@ export default function TeacherLoginPage({ inviteOnly }) {
               {loginError}
             </p>
           ) : null}
+            </>
+          )}
           <p className="mt-6 text-sm text-white/50">
+            בית ספר מעוניין להצטרף?{" "}
+            <Link href="/school/register" className="text-amber-300 hover:underline">
+              {REG_SCHOOL_LINK}
+            </Link>
+          </p>
+          <p className="mt-2 text-sm text-white/50">
             צוות בית ספר (מורה / מזכירות)?{" "}
             <a href="/school/staff/login" className="text-amber-300 hover:underline">
               כניסה בקוד צוות + PIN

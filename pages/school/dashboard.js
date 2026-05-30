@@ -62,6 +62,7 @@ export default function SchoolDashboardPage() {
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
+    if (state === "pending") router.replace("/school/pending");
     if (state === "ready" && me?.portalRole === "school_operator") {
       router.replace("/school/operator/dashboard");
     }

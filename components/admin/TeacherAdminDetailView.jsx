@@ -30,12 +30,20 @@ import {
   ADMIN_TEACHER_VIEW_SCHOOL,
   ADMIN_SCHOOL_ROLE_MANAGER,
   ADMIN_SCHOOL_ROLE_TEACHER,
+  ADMIN_REG_REQUEST_SECTION,
+  ADMIN_REG_REQUEST_DETAILS,
+  ADMIN_REG_REQUEST_SUBJECTS,
+  ADMIN_REG_REQUEST_STATUS,
+  ADMIN_REG_REQUEST_SUBMITTED,
+  ADMIN_REG_REQUEST_NO_SUBJECTS,
   auditActionLabelHe,
   adminAccountStatusHe,
   adminFormatDateHe,
   adminGradeLabelHe,
   planCodeLabelHe,
+  entitlementStatusLabelHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
+import { SUBJECT_LABELS_HE } from "../../lib/auth/auth-registration.he.js";
 
 function StatusBadge({ teacher }) {
   const active = teacher?.isAccountActive !== false && teacher?.isActive;
@@ -113,6 +121,46 @@ function UsageSummaryGrid({ teacher }) {
             label={ADMIN_LABEL_INDIV_ACTIVITIES}
             value={teacher.individualActivityCount ?? 0}
           />
+        </div>
+      </div>
+    </AdminSectionCard>
+  );
+}
+
+function RegistrationRequestSection({ teacher }) {
+  const req = teacher.registrationRequest;
+  if (!req) return null;
+
+  const subjectLabels = (req.requestedSubjects || [])
+    .map((key) => SUBJECT_LABELS_HE[key] || null)
+    .filter(Boolean);
+
+  return (
+    <AdminSectionCard
+      id="admin-teacher-registration-request"
+      title={ADMIN_REG_REQUEST_SECTION}
+      className="mt-5 border-amber-400/20 bg-amber-500/5"
+    >
+      <div className="space-y-3 text-sm">
+        <AdminFieldRow
+          label={ADMIN_REG_REQUEST_STATUS}
+          value={entitlementStatusLabelHe(req.status)}
+        />
+        <AdminFieldRow
+          label={ADMIN_REG_REQUEST_SUBMITTED}
+          value={adminFormatDateHe(req.createdAt)}
+        />
+        <div>
+          <p className="text-white/50 text-xs mb-1">{ADMIN_REG_REQUEST_DETAILS}</p>
+          <p className="text-white/85 whitespace-pre-wrap break-words leading-relaxed">
+            {req.description || "—"}
+          </p>
+        </div>
+        <div>
+          <p className="text-white/50 text-xs mb-1">{ADMIN_REG_REQUEST_SUBJECTS}</p>
+          <p className="text-white/85">
+            {subjectLabels.length ? subjectLabels.join(" · ") : ADMIN_REG_REQUEST_NO_SUBJECTS}
+          </p>
         </div>
       </div>
     </AdminSectionCard>
@@ -283,6 +331,7 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
 
       <div className="order-1 lg:order-2">
         <IdentitySection teacher={teacher} />
+        <RegistrationRequestSection teacher={teacher} />
         <SchoolMembershipSection teacher={teacher} />
       </div>
 

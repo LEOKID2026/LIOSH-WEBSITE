@@ -4,6 +4,7 @@ import Link from "next/link";
 import Layout from "../../../components/Layout";
 import AdminShell from "../../../components/admin/AdminShell";
 import AdminSchoolLifecyclePanel from "../../../components/admin/AdminSchoolLifecyclePanel";
+import AdminSchoolRegistrationPanel from "../../../components/admin/AdminSchoolRegistrationPanel";
 import {
   SchoolTeacherAssignPanel,
   SchoolTeachersList,
@@ -77,6 +78,12 @@ export default function AdminSchoolDetailPage() {
                 מורים: {school.teacherCount} · תלמידים רשומים: {school.enrolledStudentCount}
               </p>
             </div>
+
+            <AdminSchoolRegistrationPanel
+              accessToken={accessToken}
+              school={school}
+              onChanged={() => load(accessToken, school.schoolId)}
+            />
 
             <AdminSchoolLifecyclePanel
               accessToken={accessToken}

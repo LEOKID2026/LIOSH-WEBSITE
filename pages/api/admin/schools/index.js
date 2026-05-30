@@ -17,7 +17,10 @@ export default async function handler(req, res) {
     if (ctx.stopped) return undefined;
 
     if (req.method === "GET") {
-      const listed = await listAdminSchools(ctx.serviceRole);
+      const statusFilter =
+        typeof req.query?.status === "string" ? req.query.status.trim().toLowerCase() : null;
+
+      const listed = await listAdminSchools(ctx.serviceRole, { statusFilter });
       if (!listed.ok) {
         return sendAdminApiError(res, listed.status, listed.code, listed.code);
       }

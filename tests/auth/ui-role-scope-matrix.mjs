@@ -258,6 +258,53 @@ async function main() {
     planCodeLabelHe("teacher_basic_20")
   );
 
+  const pendingTeachers = await api("GET", "/api/admin/teachers?status=pending", adminToken);
+  record(
+    "admin_can_see_pending_teachers_filter",
+    pendingTeachers.status === 200 && Array.isArray(pendingTeachers.json?.data?.teachers),
+    `status=${pendingTeachers.status}`
+  );
+
+  const pendingSchools = await api("GET", "/api/admin/schools?status=pending", adminToken);
+  record(
+    "admin_can_see_pending_schools_filter",
+    pendingSchools.status === 200 && Array.isArray(pendingSchools.json?.data?.schools),
+    `status=${pendingSchools.status}`
+  );
+
+  const teacherLoginSource = await import("fs/promises").then((fs) =>
+    fs.readFile("pages/teacher/login.js", "utf8")
+  );
+  record(
+    "teacher_login_has_registration_request_tab",
+    teacherLoginSource.includes("teacher-request-tab") &&
+      teacherLoginSource.includes("TeacherRegistrationRequestForm") &&
+      !teacherLoginSource.includes('mode === "request" && !inviteOnly'),
+    "request tab on teacher login (always visible)"
+  );
+
+  const schoolRegisterSource = await import("fs/promises").then((fs) =>
+    fs.readFile("pages/school/register.js", "utf8")
+  );
+  record(
+    "school_register_page_exists",
+    schoolRegisterSource.includes("school-register-page") &&
+      schoolRegisterSource.includes("SchoolRegistrationRequestForm"),
+    "/school/register"
+  );
+
+  const privateTeacherToken = await getBearer("teacher@leo.com", password);
+  const parentTeachersPending = await api(
+    "GET",
+    "/api/admin/teachers?status=pending",
+    privateTeacherToken
+  );
+  record(
+    "parent_cannot_see_admin_pending_teachers",
+    parentTeachersPending.status === 403,
+    `status=${parentTeachersPending.status} code=${parentTeachersPending.code}`
+  );
+
   void DEMO_SCHOOL_ID;
 
   const failed = results.filter((r) => !r.ok).length;

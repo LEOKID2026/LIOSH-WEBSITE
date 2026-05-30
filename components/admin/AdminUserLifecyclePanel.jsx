@@ -18,10 +18,16 @@ import {
   apiErrorMessageHe,
   entitlementStatusLabelHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
+import {
+  ADMIN_APPROVE_ACTION,
+  ADMIN_REJECT_ACTION,
+} from "../../lib/auth/auth-registration.he.js";
 
 function statusBadgeClass(status) {
   if (status === "active") return "bg-emerald-500/20 text-emerald-200 border-emerald-400/30";
   if (status === "suspended") return "bg-amber-500/20 text-amber-200 border-amber-400/30";
+  if (status === "pending") return "bg-sky-500/20 text-sky-200 border-sky-400/30";
+  if (status === "rejected") return "bg-red-500/20 text-red-200 border-red-400/30";
   if (status === "revoked" || status === "cancelled") {
     return "bg-red-500/20 text-red-200 border-red-400/30";
   }
@@ -111,6 +117,8 @@ export default function AdminUserLifecyclePanel({
 
   const entStatus = entitlement?.status || "none";
   const canSuspend = entStatus === "active";
+  const canApprovePending = entStatus === "pending";
+  const canRejectPending = entStatus === "pending";
   const canReactivate =
     entStatus === "suspended" || entStatus === "revoked" || entStatus === "rejected";
   const canRevoke = entStatus === "active" || entStatus === "suspended";
@@ -162,6 +170,28 @@ export default function AdminUserLifecyclePanel({
           </div>
 
           <div className="flex flex-wrap gap-2 justify-end">
+            {canApprovePending ? (
+              <button
+                type="button"
+                disabled={!!busy}
+                onClick={() => void runAction("reactivate")}
+                className="rounded-lg border border-emerald-400/40 bg-emerald-500/15 hover:bg-emerald-500/25 px-3 py-1.5 text-sm disabled:opacity-50"
+                data-testid="lifecycle-approve"
+              >
+                {busy === "reactivate" ? ADMIN_LIFECYCLE_BUSY : ADMIN_APPROVE_ACTION}
+              </button>
+            ) : null}
+            {canRejectPending ? (
+              <button
+                type="button"
+                disabled={!!busy}
+                onClick={() => void runAction("reject")}
+                className="rounded-lg border border-red-400/40 bg-red-500/15 hover:bg-red-500/25 px-3 py-1.5 text-sm disabled:opacity-50"
+                data-testid="lifecycle-reject"
+              >
+                {busy === "reject" ? ADMIN_LIFECYCLE_BUSY : ADMIN_REJECT_ACTION}
+              </button>
+            ) : null}
             {canSuspend ? (
               <button
                 type="button"

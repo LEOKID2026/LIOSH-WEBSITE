@@ -42,6 +42,15 @@ const LIFECYCLE_UI_FILES = [
   "pages/auth/reset-password.js",
   "pages/parent/login.js",
   "pages/teacher/login.js",
+  "pages/school/register.js",
+  "pages/teacher/pending.js",
+  "pages/school/pending.js",
+  "components/auth/TeacherRegistrationRequestForm.jsx",
+  "components/auth/SchoolRegistrationRequestForm.jsx",
+  "components/auth/RegistrationPendingPanel.jsx",
+  "components/admin/AdminSchoolRegistrationPanel.jsx",
+  "pages/admin/teachers/index.js",
+  "pages/admin/schools/index.js",
 ];
 
 const STAFF_LIFECYCLE_FILES = [
@@ -68,6 +77,13 @@ const FORBIDDEN_QUOTED_ENGLISH = [
   "Copilot",
   "Advanced diagnostics",
   "Export",
+  "Pending",
+  "Approve",
+  "Reject",
+  "Submit",
+  "Request",
+  "Register",
+  "School registration",
 ];
 
 const FORBIDDEN_RAW_KEYS = [
@@ -78,6 +94,7 @@ const FORBIDDEN_RAW_KEYS = [
   "student_access_admin",
   "student_data_viewer",
   "teacher_basic_20",
+  "self_signup",
 ];
 
 const MISLEADING_DELETE = ["הסרה", "מחיקה"];

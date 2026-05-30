@@ -15,7 +15,10 @@ export default async function handler(req, res) {
     const ctx = await requireAdminApiContext(res, req.headers.authorization || "");
     if (ctx.stopped) return undefined;
 
-    const listed = await listAdminTeachers(ctx.serviceRole);
+    const statusFilter =
+      typeof req.query?.status === "string" ? req.query.status.trim().toLowerCase() : null;
+
+    const listed = await listAdminTeachers(ctx.serviceRole, { statusFilter });
     if (!listed.ok) {
       return sendAdminApiError(res, listed.status, listed.code, listed.code);
     }

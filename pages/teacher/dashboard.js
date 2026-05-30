@@ -99,9 +99,20 @@ export default function TeacherDashboardPage({ linkEnabled }) {
 
       if (!mounted) return;
 
-      if (dash.status === 401 || dash.status === 403) {
+      if (dash.status === 403) {
+        const code = dash.body?.error?.code;
+        if (code === "entitlement_pending" || code === "entitlement_rejected") {
+          router.replace("/teacher/pending");
+          return;
+        }
         if (!isStaffCookie) await supabase.auth.signOut();
-        router.replace(dash.status === 403 ? "/" : isStaffCookie ? "/school/staff/login" : "/teacher/login");
+        router.replace(isStaffCookie ? "/school/staff/login" : "/teacher/login");
+        return;
+      }
+
+      if (dash.status === 401) {
+        if (!isStaffCookie) await supabase.auth.signOut();
+        router.replace(isStaffCookie ? "/school/staff/login" : "/teacher/login");
         return;
       }
 

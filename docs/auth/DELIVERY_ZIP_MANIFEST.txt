@@ -1,13 +1,17 @@
 # Delivery ZIP manifest — full workspace-relative paths
-# Generated: 2026-05-30T12:14:27.823Z
-# Total files: 104
+# Generated: 2026-05-30T13:29:23.742Z
+# Total files: 127
 
 components/admin/AdminSchoolLifecyclePanel.jsx
+components/admin/AdminSchoolRegistrationPanel.jsx
 components/admin/AdminSchoolStaffLifecycleCompact.jsx
 components/admin/AdminUserLifecyclePanel.jsx
 components/admin/ParentAdminSettingsForm.jsx
 components/admin/ParentAdminTable.jsx
 components/admin/SchoolAssignForm.jsx
+components/auth/RegistrationPendingPanel.jsx
+components/auth/SchoolRegistrationRequestForm.jsx
+components/auth/TeacherRegistrationRequestForm.jsx
 components/platform-ui/PortalDarkSelect.jsx
 components/school-portal/SchoolOperatorGrantPanel.jsx
 components/school-portal/SchoolOperatorsManager.jsx
@@ -35,6 +39,8 @@ lib/admin-server/admin-parent-settings.server.js
 lib/admin-server/admin-private-teacher-scope.server.js
 lib/admin-server/admin-request.server.js
 lib/admin-server/admin-schools.server.js
+lib/auth/auth-registration-request.server.js
+lib/auth/auth-registration.he.js
 lib/auth/persona-entitlement.server.js
 lib/auth/persona-guard.server.js
 lib/parent-server/parent-copilot-limit.server.js
@@ -42,6 +48,7 @@ lib/parent-server/parent-entitlement-provision.server.js
 lib/parent-server/parent-signup-mode.server.js
 lib/school-portal/operator-grant-labels.js
 lib/school-portal/school-ui.he.js
+lib/school-portal/use-school-portal-session.js
 lib/school-server/school-membership.server.js
 lib/school-server/school-operator.server.js
 lib/school-server/school-quota.server.js
@@ -51,11 +58,18 @@ lib/teacher-server/private-teacher-guard.server.js
 lib/teacher-server/teacher-session.server.js
 pages/admin/parents/[userId].js
 pages/admin/parents/index.js
+pages/admin/schools/[schoolId].js
+pages/admin/schools/index.js
+pages/admin/teachers/index.js
 pages/api/admin/entitlements/[entitlementId].js
 pages/api/admin/entitlements/index.js
 pages/api/admin/parents/[userId]/settings.js
 pages/api/admin/parents/index.js
+pages/api/admin/schools/[schoolId]/approve.js
+pages/api/admin/schools/[schoolId]/reject.js
 pages/api/admin/users/[userId]/lifecycle.js
+pages/api/auth/school-request.js
+pages/api/auth/teacher-request.js
 pages/api/parent/copilot-turn.js
 pages/api/parent/create-student-access-code.js
 pages/api/parent/create-student.js
@@ -89,9 +103,15 @@ pages/api/teacher/students/link.js
 pages/api/teacher/worksheet-activities/index.js
 pages/parent/dashboard.js
 pages/parent/login.js
+pages/school/dashboard.js
 pages/school/operator/dashboard.js
 pages/school/operators/[operatorId].js
 pages/school/operators/index.js
+pages/school/pending.js
+pages/school/register.js
+pages/teacher/dashboard.js
+pages/teacher/login.js
+pages/teacher/pending.js
 supabase/migrations/040_account_persona_entitlements.sql
 supabase/migrations/041_parent_account_settings.sql
 supabase/migrations/042_backfill_entitlements_dev.sql
@@ -100,9 +120,12 @@ supabase/migrations/044_school_operator_grants.sql
 supabase/migrations/045_school_operator_audit_log.sql
 supabase/migrations/046_school_teacher_memberships_school_operator_role.sql
 supabase/migrations/047_parent_copilot_usage_log.sql
+supabase/migrations/049_teacher_registration_requests.sql
+supabase/migrations/050_school_registration_requests.sql
 tests/auth/admin-lifecycle-matrix.mjs
 tests/auth/hebrew-ui-guard.mjs
 tests/auth/persona-entitlement-foundation.test.mjs
+tests/auth/registration-request-matrix.mjs
 tests/auth/role-boundary-integration-matrix.mjs
 tests/auth/role-boundary-operator-verification.mjs
 tests/auth/ui-role-scope-matrix.mjs
