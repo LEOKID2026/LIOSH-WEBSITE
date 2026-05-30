@@ -80,7 +80,7 @@ export default function ParentDashboardPage() {
       if (!res.ok) {
         const code = payload?.error || payload?.errorCode;
         if (res.status === 403 && code === "not_a_parent") {
-          router.replace("/parent/login");
+          // Session is valid; policy gate / entitlement heal handles provisioning.
           return;
         }
         setMessage(payload.error || "Failed to load students");
@@ -378,7 +378,11 @@ export default function ParentDashboardPage() {
 
   return (
     <Layout>
-      <ParentPolicyAcceptanceGate accessToken={session.access_token} onLogout={logout}>
+      <ParentPolicyAcceptanceGate
+        accessToken={session.access_token}
+        onLogout={logout}
+        onReady={() => fetchStudents(session)}
+      >
       <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">
         <div className="flex items-center justify-between gap-3">
           <div>

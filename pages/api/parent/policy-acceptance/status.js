@@ -4,6 +4,8 @@ import {
   resolveAuthenticatedParentUserId,
   resolveParentPolicyAcceptanceStatus,
 } from "../../../../lib/parent-server/policy-acceptance.server.js";
+import { ensureParentEntitlementIfPolicyAccepted } from "../../../../lib/parent-server/parent-entitlement-provision.server.js";
+import { getLearningSupabaseServerUserClient } from "../../../../lib/learning-supabase/server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -18,6 +20,18 @@ export default async function handler(req, res) {
 
     const serviceRole = getPolicyAcceptanceServiceRole();
     const status = await resolveParentPolicyAcceptanceStatus(serviceRole, auth.parentUserId);
+
+    if (status.accepted) {
+      let userEmail = null;
+      try {
+        const supabase = getLearningSupabaseServerUserClient(req.headers.authorization || "");
+        const { data: userData } = await supabase.auth.getUser();
+        userEmail = userData?.user?.email || null;
+      } catch {
+        userEmail = null;
+      }
+      await ensureParentEntitlementIfPolicyAccepted(serviceRole, auth.parentUserId, userEmail);
+    }
 
     return res.status(200).json({ ok: true, ...status });
   } catch (_e) {

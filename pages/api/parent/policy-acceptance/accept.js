@@ -44,8 +44,15 @@ export default async function handler(req, res) {
       auth.parentUserId,
       userEmail
     );
-    if (!provision.ok) {
-      safeApiLog("parent_entitlement_provision_failed", { parentUserId: auth.parentUserId });
+    if (!provision.ok && !provision.skipped) {
+      safeApiLog("parent_entitlement_provision_failed", {
+        parentUserId: auth.parentUserId,
+        code: provision.code || "internal_error",
+      });
+      return res.status(provision.status || 503).json({
+        ok: false,
+        error: provision.code || "entitlement_provision_failed",
+      });
     }
 
     safeApiLog("parent_policy_acceptance_recorded", {

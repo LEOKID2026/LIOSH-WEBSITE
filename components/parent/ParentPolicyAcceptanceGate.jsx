@@ -13,10 +13,11 @@ import PolicyAcceptanceDeclinedBlock from "./PolicyAcceptanceDeclinedBlock";
  * @param {{
  *   accessToken: string;
  *   onLogout: () => void | Promise<void>;
+ *   onReady?: () => void | Promise<void>;
  *   children: import("react").ReactNode;
  * }} props
  */
-export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, children }) {
+export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, onReady, children }) {
   const [loading, setLoading] = useState(true);
   const [statusChecked, setStatusChecked] = useState(false);
   const [accepted, setAccepted] = useState(false);
@@ -76,6 +77,11 @@ export default function ParentPolicyAcceptanceGate({ accessToken, onLogout, chil
   useEffect(() => {
     loadStatus();
   }, [loadStatus]);
+
+  useEffect(() => {
+    if (!accepted || typeof onReady !== "function") return;
+    void onReady();
+  }, [accepted, onReady]);
 
   if (loading) {
     return (
