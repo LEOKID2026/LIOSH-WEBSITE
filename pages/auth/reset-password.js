@@ -67,12 +67,19 @@ export default function ResetPasswordPage() {
         console.error("[auth-reset-password] recovery establish failed", sanitizeAuthErrorForLog(result.error), {
           reason: result.reason,
           recoverySession: recoverySessionRef.current,
+          urlInfo: result.urlInfo ?? null,
         });
       } else if (result.ok) {
         console.info("[auth-reset-password] recovery session ready", {
           reason: result.reason,
           recoverySession: recoverySessionRef.current,
           hasSession: Boolean(result.session),
+          urlInfo: result.urlInfo ?? null,
+        });
+      } else {
+        console.warn("[auth-reset-password] recovery establish incomplete", {
+          reason: result.reason,
+          urlInfo: result.urlInfo ?? null,
         });
       }
 
