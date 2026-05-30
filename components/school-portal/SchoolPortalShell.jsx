@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client.js";
 import {
   SCHOOL_NAV_CLASSES,
   SCHOOL_NAV_DASHBOARD,
   SCHOOL_NAV_MY_TEACHER,
+  SCHOOL_NAV_OPERATOR_DASHBOARD,
   SCHOOL_NAV_STUDENTS,
   SCHOOL_NAV_TEACHERS,
   SCHOOL_NAV_OPERATORS,
@@ -25,6 +26,14 @@ const NAV_ITEMS_MANAGER = [
   { href: "/school/messages", label: SC_NAV_MESSAGES },
 ];
 
+function buildOperatorNavItems(operatorGrants = {}) {
+  const items = [{ href: "/school/operator/dashboard", label: SCHOOL_NAV_OPERATOR_DASHBOARD }];
+  if (operatorGrants.studentAccessAdmin || operatorGrants.studentDataViewer) {
+    items.push({ href: "/school/students", label: SCHOOL_NAV_STUDENTS });
+  }
+  return items;
+}
+
 function navLinkClass(active) {
   return active
     ? "block rounded-lg bg-amber-500/20 border border-amber-500/35 text-amber-200 font-semibold px-3 py-2.5 text-sm"
@@ -37,15 +46,29 @@ export default function SchoolPortalShell({
   schoolName,
   showTeacherDashboardLink = false,
   portalRole = "school_manager",
+  authMethod = "supabase_jwt",
+  operatorGrants = null,
   children,
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
-  const navItems = portalRole === "school_manager" ? NAV_ITEMS_MANAGER : [];
+  const navItems = useMemo(() => {
+    if (portalRole === "school_manager") return NAV_ITEMS_MANAGER;
+    if (portalRole === "school_operator") return buildOperatorNavItems(operatorGrants || {});
+    return [];
+  }, [portalRole, operatorGrants]);
 
   const logout = async () => {
     setBusy(true);
     try {
+      if (authMethod === "staff_cookie") {
+        await fetch("/api/school/staff/logout", {
+          method: "POST",
+          credentials: "same-origin",
+        });
+        router.replace("/school/staff/login");
+        return;
+      }
       const supabase = getLearningSupabaseBrowserClient();
       await supabase.auth.signOut();
       router.replace("/teacher/login");
@@ -55,6 +78,7 @@ export default function SchoolPortalShell({
   };
 
   const path = router.pathname;
+  const navLabel = portalRole === "school_operator" ? "תפריט תפעול" : "תפריט ניהול";
 
   /**
    * Site Layout HUD uses flex + justify-between; without document RTL (see Layout.js
@@ -112,7 +136,7 @@ export default function SchoolPortalShell({
             className="rounded-xl border border-white/15 bg-black/25 p-2 space-y-1"
             aria-label="ניווט בית ספר"
           >
-            <p className="text-xs text-white/45 px-3 pt-1 pb-2 hidden lg:block">תפריט ניהול</p>
+            <p className="text-xs text-white/45 px-3 pt-1 pb-2 hidden lg:block">{navLabel}</p>
             <div className="flex flex-wrap lg:flex-col gap-1 pb-1 lg:pb-0">
               {navItems.map((item) => {
                 const active =

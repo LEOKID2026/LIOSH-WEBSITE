@@ -1,7 +1,7 @@
 import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { getSchoolStudentBrowseSummary } from "../../../../lib/school-server/school-students.server.js";
 import {
-  requireSchoolManagerApiContext,
+  requireSchoolStudentBrowseApiContext,
   sendSchoolApiError,
 } from "../../../../lib/school-server/school-request.server.js";
 
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req);
+    const ctx = await requireSchoolStudentBrowseApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const summary = await getSchoolStudentBrowseSummary(ctx.serviceRole, ctx.schoolId);

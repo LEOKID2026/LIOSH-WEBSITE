@@ -1,0 +1,103 @@
+#!/usr/bin/env node
+/**
+ * Static checks for school operator portal wiring.
+ */
+import fs from "node:fs/promises";
+
+const results = [];
+
+function record(id, ok, detail) {
+  results.push({ id, ok, detail });
+  console.log(`[${ok ? "PASS" : "FAIL"}] ${id}: ${detail}`);
+}
+
+async function read(rel) {
+  try {
+    return await fs.readFile(rel, "utf8");
+  } catch {
+    return "";
+  }
+}
+
+async function main() {
+  const dashboard = await read("pages/school/operator/dashboard.js");
+  const shell = await read("components/school-portal/SchoolPortalShell.jsx");
+  const students = await read("pages/school/students/index.js");
+  const browseSummary = await read("pages/api/school/students/browse-summary.js");
+  const studentsApi = await read("pages/api/school/students/index.js");
+  const grants = await read("lib/school-portal/operator-grants.js");
+
+  record(
+    "operator_dashboard_uses_portal_shell",
+    dashboard.includes("SchoolPortalShell") && dashboard.includes('portalRole="school_operator"'),
+    "operator dashboard uses SchoolPortalShell"
+  );
+
+  record(
+    "operator_dashboard_access_admin_workspace",
+    dashboard.includes("school-operator-access-admin-workspace") &&
+      dashboard.includes("SCHOOL_OPERATOR_ACCESS_ADMIN_SECTION"),
+    "access-admin workspace card"
+  );
+
+  record(
+    "operator_dashboard_no_permissions_state",
+    dashboard.includes("school-operator-no-permissions") &&
+      dashboard.includes("SCHOOL_OPERATOR_NO_PERMISSIONS_DETAIL"),
+    "no-permissions Hebrew state"
+  );
+
+  record(
+    "operator_shell_grant_nav",
+    shell.includes("buildOperatorNavItems") && shell.includes("SCHOOL_NAV_OPERATOR_DASHBOARD"),
+    "operator nav items"
+  );
+
+  record(
+    "students_page_operator_grants_helper",
+    students.includes("getOperatorGrants") && students.includes("me?.operator?.grants") === false,
+    "students page uses operator grant helper"
+  );
+
+  record(
+    "students_page_grant_gated_actions",
+    students.includes("canManageAccess") &&
+      students.includes("canViewReports") &&
+      students.includes("canManageAccess ? () => openStudentAccess"),
+    "grant-gated student actions"
+  );
+
+  record(
+    "students_page_manager_only_enroll",
+    students.includes("isManager ? (") && students.includes("SchoolStudentCreateForm"),
+    "create/enroll manager-only"
+  );
+
+  record(
+    "browse_summary_operator_context",
+    browseSummary.includes("requireSchoolStudentBrowseApiContext"),
+    "browse-summary allows operator browse"
+  );
+
+  record(
+    "students_get_operator_context",
+    studentsApi.includes("requireSchoolStudentBrowseApiContext") &&
+      studentsApi.includes('req.method === "GET"'),
+    "students GET allows operator browse"
+  );
+
+  record(
+    "operator_grants_helpers",
+    grants.includes("canManageStudentAccess") && grants.includes("canViewStudentData"),
+    "shared grant helpers"
+  );
+
+  const failed = results.filter((r) => !r.ok).length;
+  console.log(`\nSchool operator portal matrix: ${results.length - failed}/${results.length} pass`);
+  if (failed) process.exit(1);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

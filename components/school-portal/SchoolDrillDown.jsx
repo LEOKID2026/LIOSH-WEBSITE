@@ -292,6 +292,8 @@ export function SchoolStudentCard({
   gradeLabel,
   onReport,
   reportLabel,
+  onAccess,
+  accessLabel,
   learningStatusBadge = null,
 }) {
   const name = student.displayName || "ללא שם";
@@ -312,13 +314,26 @@ export function SchoolStudentCard({
               {learningStatusBadge}
             </span>
           ) : null}
-          <button
-            type="button"
-            onClick={onReport}
-            className="rounded-lg bg-amber-500/90 hover:bg-amber-400 text-black text-xs font-bold px-3 py-1.5 whitespace-nowrap"
-          >
-            {reportLabel}
-          </button>
+          {onAccess ? (
+            <button
+              type="button"
+              onClick={onAccess}
+              className="rounded-lg border border-amber-400/50 bg-amber-500/15 hover:bg-amber-500/25 text-amber-100 text-xs font-bold px-3 py-1.5 whitespace-nowrap"
+              data-testid={`school-student-access-${student.studentId}`}
+            >
+              {accessLabel}
+            </button>
+          ) : null}
+          {onReport ? (
+            <button
+              type="button"
+              onClick={onReport}
+              className="rounded-lg bg-amber-500/90 hover:bg-amber-400 text-black text-xs font-bold px-3 py-1.5 whitespace-nowrap"
+              data-testid={`school-student-report-${student.studentId}`}
+            >
+              {reportLabel}
+            </button>
+          ) : null}
         </div>
       }
     />

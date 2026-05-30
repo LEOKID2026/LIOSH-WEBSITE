@@ -24,6 +24,13 @@ import {
 import { schoolGradeLabelHe, SCHOOL_GRADE_OPTIONS } from "../../../lib/school-portal/school-drilldown";
 import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
+import {
+  canManageStudentAccess,
+  canViewStudentData,
+  getOperatorGrants,
+  isSchoolManagerPortal,
+  operatorHasAnyGrant,
+} from "../../../lib/school-portal/operator-grants";
 import { fetchSchoolJsonSWR, invalidateSchoolCache, readSchoolCache, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
 import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
 import {
@@ -45,6 +52,8 @@ import {
   SCHOOL_SEARCH_STUDENTS_PLACEHOLDER,
   SCHOOL_STUDENT_ID,
   SCHOOL_STUDENT_REPORT_TITLE,
+  SCHOOL_OPERATOR_MANAGE_ACCESS,
+  SCHOOL_OPERATOR_VIEW_REPORT,
   SCHOOL_STUDENTS_SUBTITLE,
   SCHOOL_STUDENTS_TITLE,
   SCHOOL_VIEW_STUDENT_REPORT,
@@ -61,7 +70,7 @@ function gradeCountMap(summary) {
 
 export default function SchoolStudentsPage() {
   const router = useRouter();
-  const { state, accessToken, me, schoolId } = useSchoolPortalLoad();
+  const { state, accessToken, authMethod, me, schoolId } = useSchoolPortalLoad();
   const [gradeLevel, setGradeLevel] = useState("");
   const [physicalClassName, setPhysicalClassName] = useState("");
   const [search, setSearch] = useState("");
@@ -82,14 +91,22 @@ export default function SchoolStudentsPage() {
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState("");
   const [reportViewModel, setReportViewModel] = useState(null);
+  const [modalInitialTab, setModalInitialTab] = useState("report");
 
-  const canManageAssignment =
-    me?.portalRole === "school_manager" || me?.grants?.studentAccessAdmin === true;
+  const operatorGrants = getOperatorGrants(me);
+  const isManager = isSchoolManagerPortal(me);
+  const isOperator = me?.portalRole === "school_operator";
+  const canManageAccess = canManageStudentAccess(me);
+  const canViewReports = canViewStudentData(me);
+  const canManageAssignment = canManageAccess;
 
   useEffect(() => {
-    if (state === "unauthenticated") router.replace("/teacher/login");
+    if (state === "unauthenticated") router.replace(isOperator ? "/school/staff/login" : "/teacher/login");
     if (state === "forbidden") router.replace("/teacher/dashboard");
-  }, [state, router]);
+    if (state === "ready" && isOperator && !operatorHasAnyGrant(me)) {
+      router.replace("/school/operator/dashboard");
+    }
+  }, [state, router, isOperator, me]);
 
   const loadBrowseSummary = useCallback(async ({ force = false } = {}) => {
     if (!accessToken) return;
@@ -233,7 +250,8 @@ export default function SchoolStudentsPage() {
   };
 
   const openStudentReport = async (student) => {
-    if (!accessToken) return;
+    if (!accessToken || !canViewReports) return;
+    setModalInitialTab("report");
     setReportStudent(student);
     setReportOpen(true);
     setReportError("");
@@ -264,6 +282,15 @@ export default function SchoolStudentsPage() {
     } finally {
       setReportLoading(false);
     }
+  };
+
+  const openStudentAccess = (student) => {
+    if (!canManageAccess) return;
+    setModalInitialTab("access");
+    setReportStudent(student);
+    setReportOpen(true);
+    setReportError("");
+    setReportViewModel(null);
   };
 
   const enroll = async (e) => {
@@ -309,46 +336,53 @@ export default function SchoolStudentsPage() {
         subtitle={SCHOOL_STUDENTS_SUBTITLE}
         schoolName={me?.school?.name}
         showTeacherDashboardLink={me?.hasTeacherActivity}
+        portalRole={me?.portalRole || "school_manager"}
+        authMethod={authMethod}
+        operatorGrants={operatorGrants}
       >
         {state === "loading" ? (
           <SchoolLoadingBlock message={SCHOOL_LOADING} />
         ) : (
           <div className="space-y-6">
-            <SchoolStudentCreateForm
-              accessToken={accessToken}
-              browseSummary={browseSummary}
-              onSuccess={() => {
-                if (schoolId) invalidateSchoolCache(schoolId);
-                void loadBrowseSummary({ force: true });
-                if (gradeLevel && physicalClassName) void loadClassStudents({ force: true });
-              }}
-            />
+            {isManager ? (
+              <SchoolStudentCreateForm
+                accessToken={accessToken}
+                browseSummary={browseSummary}
+                onSuccess={() => {
+                  if (schoolId) invalidateSchoolCache(schoolId);
+                  void loadBrowseSummary({ force: true });
+                  if (gradeLevel && physicalClassName) void loadClassStudents({ force: true });
+                }}
+              />
+            ) : null}
 
-            <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
-              <button
-                type="button"
-                onClick={() => setShowEnroll((v) => !v)}
-                className="text-sm text-amber-300 hover:underline"
-              >
-                {showEnroll ? "הסתר רישום מתקדם" : SCHOOL_ENROLL_SECTION}
-              </button>
-              {showEnroll ? (
-                <form onSubmit={enroll} className="space-y-3 max-w-xl mt-3">
-                  <label className="block text-sm text-white/70">
-                    {SCHOOL_STUDENT_ID}
-                    <input
-                      value={studentId}
-                      onChange={(e) => setStudentId(e.target.value)}
-                      required
-                      className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 font-mono text-sm"
-                    />
-                  </label>
-                  <SchoolPrimaryButton disabled={busy} type="submit">
-                    {busy ? "רושם…" : SCHOOL_ENROLL_STUDENT}
-                  </SchoolPrimaryButton>
-                </form>
-              ) : null}
-            </div>
+            {isManager ? (
+              <div className={`${SCHOOL_CARD} ${SCHOOL_CARD_INNER} text-right`}>
+                <button
+                  type="button"
+                  onClick={() => setShowEnroll((v) => !v)}
+                  className="text-sm text-amber-300 hover:underline"
+                >
+                  {showEnroll ? "הסתר רישום מתקדם" : SCHOOL_ENROLL_SECTION}
+                </button>
+                {showEnroll ? (
+                  <form onSubmit={enroll} className="space-y-3 max-w-xl mt-3">
+                    <label className="block text-sm text-white/70">
+                      {SCHOOL_STUDENT_ID}
+                      <input
+                        value={studentId}
+                        onChange={(e) => setStudentId(e.target.value)}
+                        required
+                        className="mt-1 w-full rounded-lg bg-black/40 border border-white/20 px-3 py-2 font-mono text-sm"
+                      />
+                    </label>
+                    <SchoolPrimaryButton disabled={busy} type="submit">
+                      {busy ? "רושם…" : SCHOOL_ENROLL_STUDENT}
+                    </SchoolPrimaryButton>
+                  </form>
+                ) : null}
+              </div>
+            ) : null}
 
             <SchoolDrillBreadcrumb steps={breadcrumbSteps} />
 
@@ -371,7 +405,9 @@ export default function SchoolStudentsPage() {
                             subtitle={
                               count != null ? `${count} תלמידים` : summaryLoading ? "…" : "0 תלמידים"
                             }
-                            gradeStatusLabel={browseStatus?.gradeStatusByLevel?.[grade.level] || null}
+                            gradeStatusLabel={
+                              canViewReports ? browseStatus?.gradeStatusByLevel?.[grade.level] || null : null
+                            }
                             onClick={() => setGradeLevel(grade.level)}
                           />
                         );
@@ -406,7 +442,9 @@ export default function SchoolStudentsPage() {
                             key={group.name}
                             title={group.name}
                             subtitle={`${group.studentCount} תלמידים`}
-                            classStatusLabel={browseStatus?.physicalByKey?.[physKey] || null}
+                            classStatusLabel={
+                              canViewReports ? browseStatus?.physicalByKey?.[physKey] || null : null
+                            }
                             onClick={() => setPhysicalClassName(group.name)}
                           />
                         );
@@ -424,6 +462,7 @@ export default function SchoolStudentsPage() {
                 <SchoolBackButton label={SCHOOL_BACK_CLASSES} onClick={() => setPhysicalClassName("")} />
                 <SchoolSection title={`${SCHOOL_CHOOSE_STUDENTS} · ${physicalClassName}`}>
                   {(() => {
+                    if (!canViewReports) return null;
                     const classStatus = browseStatus?.physicalByKey?.[`${gradeLevel}::${physicalClassName}`];
                     if (!classStatus) return null;
                     return (
@@ -461,8 +500,10 @@ export default function SchoolStudentsPage() {
                           student={s}
                           gradeLabel={schoolGradeLabelHe(s.gradeLevel)}
                           reportLabel={SCHOOL_VIEW_STUDENT_REPORT}
-                          learningStatusBadge={s.learningStatusBadge || null}
-                          onReport={() => void openStudentReport(s)}
+                          accessLabel={SCHOOL_OPERATOR_MANAGE_ACCESS}
+                          learningStatusBadge={canViewReports ? s.learningStatusBadge || null : null}
+                          onReport={canViewReports ? () => void openStudentReport(s) : undefined}
+                          onAccess={canManageAccess ? () => openStudentAccess(s) : undefined}
                         />
                       ))}
                     </SchoolCardGrid>
@@ -485,6 +526,9 @@ export default function SchoolStudentsPage() {
               studentId={reportStudent?.studentId}
               studentName={reportStudent?.displayName}
               canManageAssignment={canManageAssignment}
+              canManageAccess={canManageAccess}
+              canViewReport={canViewReports}
+              initialTab={modalInitialTab}
               onAssignmentUpdated={() => void loadBrowseSummary({ force: true })}
             />
           </div>

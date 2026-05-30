@@ -16,21 +16,23 @@ function tabClass(active) {
     : "flex-1 rounded-md text-white/60 text-sm py-2 hover:text-white cursor-pointer";
 }
 
-function TabBar({ activeTab, onTabChange, showAccessTab, showAssignmentTab }) {
+function TabBar({ activeTab, onTabChange, showReportTab, showAccessTab, showAssignmentTab }) {
   return (
     <div
       className="flex gap-2 rounded-lg border border-white/15 bg-[#1a1208]/95 p-1 mb-3"
       role="tablist"
     >
-      <button
-        type="button"
-        role="tab"
-        aria-selected={activeTab === "report"}
-        className={tabClass(activeTab === "report")}
-        onClick={() => onTabChange("report")}
-      >
-        {SC_TAB_LEARNING_REPORT}
-      </button>
+      {showReportTab ? (
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "report"}
+          className={tabClass(activeTab === "report")}
+          onClick={() => onTabChange("report")}
+        >
+          {SC_TAB_LEARNING_REPORT}
+        </button>
+      ) : null}
       {showAssignmentTab ? (
         <button
           type="button"
@@ -50,6 +52,7 @@ function TabBar({ activeTab, onTabChange, showAccessTab, showAssignmentTab }) {
           aria-selected={activeTab === "access"}
           className={tabClass(activeTab === "access")}
           onClick={() => onTabChange("access")}
+          data-testid="school-report-tab-access"
         >
           {SC_TAB_ACCESS_ACCOUNTS}
         </button>
@@ -79,16 +82,20 @@ export default function SchoolReportModal({
   studentId = null,
   studentName = "",
   canManageAssignment = false,
+  canManageAccess = false,
+  canViewReport = true,
+  initialTab = "report",
   onAssignmentUpdated,
 }) {
-  const [activeTab, setActiveTab] = useState("report");
+  const [activeTab, setActiveTab] = useState(initialTab);
   const nestedStudentId = nestedStudentViewModel?.meta?.studentId || null;
   const effectiveStudentId = studentId || nestedStudentId;
   const effectiveStudentName =
     studentName || nestedStudentViewModel?.meta?.displayName || nestedStudentViewModel?.header?.title || "";
-  const showAccessTab = Boolean(accessToken && effectiveStudentId);
+  const showAccessTab = Boolean(canManageAccess && accessToken && effectiveStudentId);
   const showAssignmentTab = Boolean(canManageAssignment && accessToken && effectiveStudentId);
-  const showExtraTabs = showAccessTab || showAssignmentTab;
+  const showReportTab = Boolean(canViewReport);
+  const showExtraTabs = showAccessTab || showAssignmentTab || (showReportTab && (showAccessTab || showAssignmentTab));
   const accessPanelOpen =
     open && activeTab === "access" && (Boolean(studentId) || Boolean(nestedStudentViewModel));
   const assignmentPanelOpen =
@@ -96,10 +103,34 @@ export default function SchoolReportModal({
   const z = Number(stackZIndexBase) || 0;
 
   useEffect(() => {
-    if (!open) setActiveTab("report");
-  }, [open]);
+    if (!open) {
+      setActiveTab("report");
+      return;
+    }
+    setActiveTab(initialTab || "report");
+  }, [open, initialTab]);
 
   if (!showExtraTabs) {
+    if (showAccessTab && !showReportTab) {
+      return (
+        <ReportModalFrame
+          open={open}
+          title={title}
+          subtitle={SC_TAB_ACCESS_ACCOUNTS}
+          onClose={onClose}
+          zIndex={100 + z}
+          scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
+          testId="school-student-access-modal"
+        >
+          <SchoolStudentAccessPanel
+            accessToken={accessToken}
+            studentId={effectiveStudentId}
+            studentName={effectiveStudentName}
+          />
+        </ReportModalFrame>
+      );
+    }
+
     return (
       <ReportHubModal
         open={open}
@@ -131,6 +162,7 @@ export default function SchoolReportModal({
             <TabBar
               activeTab={activeTab}
               onTabChange={setActiveTab}
+              showReportTab={showReportTab}
               showAccessTab={showAccessTab}
               showAssignmentTab={showAssignmentTab}
             />

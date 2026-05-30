@@ -9,15 +9,16 @@ import {
 } from "../../../../lib/school-server/school-students.server.js";
 import {
   requireSchoolManagerApiContext,
+  requireSchoolStudentBrowseApiContext,
   sendSchoolApiError,
 } from "../../../../lib/school-server/school-request.server.js";
 
 export default async function handler(req, res) {
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req);
-    if (ctx.stopped) return undefined;
-
     if (req.method === "GET") {
+      const ctx = await requireSchoolStudentBrowseApiContext(res, req);
+      if (ctx.stopped) return undefined;
+
       const gradeLevel = String(req.query?.gradeLevel || "").trim();
       const physicalClassName = String(req.query?.physicalClassName || "").trim();
 
@@ -38,6 +39,9 @@ export default async function handler(req, res) {
       }
       return res.status(200).json({ data: { students: listed.students } });
     }
+
+    const ctx = await requireSchoolManagerApiContext(res, req);
+    if (ctx.stopped) return undefined;
 
     if (req.method === "POST") {
       if (rejectIfCrossOriginCookieMutation(req, res)) return undefined;

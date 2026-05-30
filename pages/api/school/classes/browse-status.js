@@ -1,7 +1,7 @@
 import { safeApiLog } from "../../../../lib/security/safe-log.js";
 import { buildSchoolBrowseStatusMaps } from "../../../../lib/school-server/school-browse-status.server.js";
 import {
-  requireSchoolManagerApiContext,
+  requireSchoolStudentBrowseApiContext,
   sendSchoolApiError,
 } from "../../../../lib/school-server/school-request.server.js";
 import { unknownQueryParams } from "../../../../lib/teacher-server/teacher-request.server.js";
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ctx = await requireSchoolManagerApiContext(res, req);
+    const ctx = await requireSchoolStudentBrowseApiContext(res, req);
     if (ctx.stopped) return undefined;
 
     const unknown = unknownQueryParams(req.query, new Set(["gradeLevel"]));
