@@ -1,0 +1,230 @@
+import { useCallback, useEffect, useState } from "react";
+import { subjectLabelHe } from "../../lib/platform-ui/hebrew-display-labels.js";
+import {
+  parentSentActivitiesSectionTitleHe,
+  parentSentActivityStatusLabelHe,
+  parentViewActivityResultsLabelHe,
+} from "../../lib/parent-server/parent-activity-labels.client.js";
+
+const POLL_MS = 8000;
+
+function formatWhen(iso) {
+  if (!iso) return "—";
+  try {
+    return new Date(iso).toLocaleString("he-IL", {
+      dateStyle: "short",
+      timeStyle: "short",
+    });
+  } catch {
+    return "—";
+  }
+}
+
+function formatScore(scorePct) {
+  if (scorePct == null || Number.isNaN(Number(scorePct))) return "—";
+  return `${Number(scorePct).toFixed(0)}%`;
+}
+
+function ParentActivityResultsModal({ activityId, accessToken, onClose }) {
+  const [detail, setDetail] = useState(null);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(true);
+
+  const load = useCallback(async () => {
+    if (!activityId || !accessToken) return;
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch(
+        `/api/parent/activities/${encodeURIComponent(activityId)}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          cache: "no-store",
+        }
+      );
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json?.ok !== true) {
+        setError(json?.message || json?.error || "לא ניתן לטעון תוצאות");
+        setDetail(null);
+        return;
+      }
+      setDetail(json);
+    } catch {
+      setError("שגיאת רשת");
+      setDetail(null);
+    } finally {
+      setBusy(false);
+    }
+  }, [activityId, accessToken]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const activity = detail?.activity;
+  const attempts = Array.isArray(detail?.attempts) ? detail.attempts : [];
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="parent-activity-results-title"
+    >
+      <div className="max-w-lg w-full max-h-[85vh] overflow-y-auto rounded-lg border border-white/20 bg-[#0f1629] p-4 space-y-3 shadow-xl text-right">
+        <div className="flex items-start justify-between gap-3">
+          <h3 id="parent-activity-results-title" className="text-lg font-bold text-white">
+            {activity?.title || "תוצאות פעילות"}
+          </h3>
+          <button
+            type="button"
+            className="rounded bg-white/10 px-2 py-1 text-xs shrink-0"
+            onClick={onClose}
+          >
+            סגירה
+          </button>
+        </div>
+
+        {busy ? <p className="text-sm text-white/70">טוען…</p> : null}
+        {error ? <p className="text-sm text-red-300">{error}</p> : null}
+
+        {activity ? (
+          <div className="text-sm text-white/80 space-y-1">
+            <div>
+              מקצוע: {subjectLabelHe(activity.subject)} · נושא: {activity.topic}
+            </div>
+            <div>
+              סטטוס: {parentSentActivityStatusLabelHe(activity.studentStatus)}
+            </div>
+            <div>
+              תשובות: {activity.answersCount ?? 0} · נכונות: {activity.correctCount ?? 0} ·
+              ציון: {formatScore(activity.scorePct)}
+            </div>
+            <div>התחלה: {formatWhen(activity.startedAt)}</div>
+            <div>סיום: {formatWhen(activity.submittedAt)}</div>
+          </div>
+        ) : null}
+
+        {attempts.length > 0 ? (
+          <div className="space-y-2 pt-2 border-t border-white/10">
+            <div className="font-semibold text-white text-sm">פירוט תשובות</div>
+            {attempts.map((attempt) => (
+              <div
+                key={attempt.questionIndex}
+                className="rounded border border-white/10 bg-black/30 p-2 text-sm"
+              >
+                <div className="font-medium text-white">
+                  שאלה {Number(attempt.questionIndex) + 1}:{" "}
+                  {attempt.isCorrect === true
+                    ? "נכון"
+                    : attempt.isCorrect === false
+                      ? "לא נכון"
+                      : "—"}
+                </div>
+                <div className="text-white/70 mt-1">
+                  תשובה: {attempt.selectedAnswer || "—"}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * @param {{ studentId: string, accessToken: string, refreshKey?: number }} props
+ */
+export default function ParentSentActivitiesPanel({ studentId, accessToken, refreshKey = 0 }) {
+  const [activities, setActivities] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [resultsActivityId, setResultsActivityId] = useState(null);
+
+  const load = useCallback(async () => {
+    if (!studentId || !accessToken) return;
+    try {
+      const res = await fetch(
+        `/api/parent/activities?studentId=${encodeURIComponent(studentId)}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          cache: "no-store",
+        }
+      );
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && json?.ok === true) {
+        setActivities(Array.isArray(json.activities) ? json.activities : []);
+      }
+    } catch {
+      /* non-blocking */
+    } finally {
+      setLoaded(true);
+    }
+  }, [studentId, accessToken]);
+
+  useEffect(() => {
+    setLoaded(false);
+    void load();
+  }, [load, refreshKey]);
+
+  useEffect(() => {
+    if (!studentId || !accessToken) return undefined;
+    const timer = setInterval(() => {
+      void load();
+    }, POLL_MS);
+    return () => clearInterval(timer);
+  }, [studentId, accessToken, load]);
+
+  if (!accessToken) return null;
+
+  return (
+    <div className="mt-3 rounded border border-emerald-500/25 bg-emerald-950/20 p-3 space-y-2">
+      <div className="font-semibold text-emerald-100">{parentSentActivitiesSectionTitleHe()}</div>
+
+      {!loaded ? <p className="text-sm text-white/60">טוען…</p> : null}
+
+      {loaded && activities.length === 0 ? (
+        <p className="text-sm text-white/60">עדיין לא נשלחו פעילויות</p>
+      ) : null}
+
+      {activities.length > 0 ? (
+        <div className="space-y-2">
+          {activities.map((activity) => (
+            <div
+              key={activity.activityId}
+              className="rounded border border-white/10 bg-black/30 p-3 text-sm space-y-1"
+            >
+              <div className="font-semibold text-white">{activity.title}</div>
+              <div className="text-white/75">
+                {subjectLabelHe(activity.subject)} · {activity.topic}
+              </div>
+              <div className="text-white/75">
+                {parentSentActivityStatusLabelHe(activity.studentStatus)} · תשובות:{" "}
+                {activity.answersCount ?? 0} · נכונות: {activity.correctCount ?? 0} · ציון:{" "}
+                {formatScore(activity.scorePct)}
+              </div>
+              <div className="text-white/60 text-xs">
+                התחלה: {formatWhen(activity.startedAt)} · סיום: {formatWhen(activity.submittedAt)}
+              </div>
+              <button
+                type="button"
+                className="mt-1 rounded bg-white/10 hover:bg-white/15 px-2 py-1 text-xs text-white"
+                onClick={() => setResultsActivityId(activity.activityId)}
+              >
+                {parentViewActivityResultsLabelHe()}
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {resultsActivityId ? (
+        <ParentActivityResultsModal
+          activityId={resultsActivityId}
+          accessToken={accessToken}
+          onClose={() => setResultsActivityId(null)}
+        />
+      ) : null}
+    </div>
+  );
+}

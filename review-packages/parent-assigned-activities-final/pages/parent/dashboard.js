@@ -4,7 +4,6 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcceptanceGate";
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
-import ParentSentActivitiesPanel from "../../components/parent/ParentSentActivitiesPanel";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 
 const GRADE_OPTIONS = [
@@ -56,7 +55,6 @@ export default function ParentDashboardPage() {
   const [deleteModalStudent, setDeleteModalStudent] = useState(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
   const [activityModalStudent, setActivityModalStudent] = useState(null);
-  const [sentActivitiesRefresh, setSentActivitiesRefresh] = useState(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -536,14 +534,6 @@ export default function ParentDashboardPage() {
                   </button>
                 </div>
 
-                {session?.access_token ? (
-                  <ParentSentActivitiesPanel
-                    studentId={student.id}
-                    accessToken={session.access_token}
-                    refreshKey={sentActivitiesRefresh}
-                  />
-                ) : null}
-
                 <div className="mt-2 rounded border border-white/15 p-3 bg-black/30 space-y-3">
                   <div className="font-semibold">פרטי כניסת תלמיד</div>
 
@@ -710,7 +700,6 @@ export default function ParentDashboardPage() {
             onSuccess={() => {
               setActivityModalStudent(null);
               setMessage("הפעילות נשלחה בהצלחה!");
-              setSentActivitiesRefresh((n) => n + 1);
             }}
           />
         ) : null}

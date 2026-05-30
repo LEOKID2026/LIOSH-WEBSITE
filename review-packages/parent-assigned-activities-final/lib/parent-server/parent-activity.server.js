@@ -257,9 +257,7 @@ export async function listParentActivitiesForParent(serviceRole, parentId, stude
   if (activityIds.length) {
     const { data: statusRows } = await serviceRole
       .from("parent_activity_status")
-      .select(
-        "activity_id, status, answers_count, correct_count, score_pct, started_at, submitted_at"
-      )
+      .select("activity_id, status, answers_count, correct_count, score_pct, submitted_at")
       .eq("student_id", studentId)
       .in("activity_id", activityIds);
 
@@ -278,97 +276,9 @@ export async function listParentActivitiesForParent(serviceRole, parentId, stude
         answersCount: st?.answers_count ?? 0,
         correctCount: st?.correct_count ?? 0,
         scorePct: st?.score_pct != null ? Number(st.score_pct) : null,
-        startedAt: st?.started_at ?? null,
         submittedAt: st?.submitted_at ?? null,
       };
     }),
-  };
-}
-
-/**
- * @param {import('@supabase/supabase-js').SupabaseClient} serviceRole
- * @param {string} parentId
- * @param {string} activityId
- */
-export async function getParentActivityDetailForParent(serviceRole, parentId, activityId) {
-  if (!isUuid(activityId)) {
-    return { ok: false, status: 400, code: "validation_failed", message: "invalid activityId" };
-  }
-
-  const { data: row, error } = await serviceRole
-    .from("parent_assigned_activities")
-    .select("*")
-    .eq("id", activityId)
-    .eq("parent_id", parentId)
-    .maybeSingle();
-
-  if (error) {
-    if (isDbSchemaNotReadyError(error)) {
-      return { ok: false, status: 503, code: "db_schema_not_ready" };
-    }
-    return { ok: false, status: 500, code: "internal_error" };
-  }
-
-  if (!row?.id) {
-    return { ok: false, status: 404, code: "activity_not_found" };
-  }
-
-  const owned = await verifyParentOwnsStudent(serviceRole, parentId, row.student_id);
-  if (!owned.ok) return owned;
-
-  const { data: statusRow, error: statusErr } = await serviceRole
-    .from("parent_activity_status")
-    .select(
-      "status, answers_count, correct_count, score_pct, started_at, submitted_at, last_seen_at"
-    )
-    .eq("activity_id", activityId)
-    .eq("student_id", row.student_id)
-    .maybeSingle();
-
-  if (statusErr) {
-    if (isDbSchemaNotReadyError(statusErr)) {
-      return { ok: false, status: 503, code: "db_schema_not_ready" };
-    }
-    return { ok: false, status: 500, code: "internal_error" };
-  }
-
-  const { data: attempts, error: attemptsErr } = await serviceRole
-    .from("parent_activity_attempts")
-    .select(
-      "question_index, is_correct, selected_answer, correct_answer, answered_at, time_spent_ms, hints_used"
-    )
-    .eq("activity_id", activityId)
-    .eq("student_id", row.student_id)
-    .order("question_index", { ascending: true });
-
-  if (attemptsErr) {
-    if (isDbSchemaNotReadyError(attemptsErr)) {
-      return { ok: false, status: 503, code: "db_schema_not_ready" };
-    }
-    return { ok: false, status: 500, code: "internal_error" };
-  }
-
-  return {
-    ok: true,
-    activity: {
-      ...mapParentActivityRow(row),
-      studentStatus: statusRow?.status || "not_started",
-      answersCount: statusRow?.answers_count ?? 0,
-      correctCount: statusRow?.correct_count ?? 0,
-      scorePct: statusRow?.score_pct != null ? Number(statusRow.score_pct) : null,
-      startedAt: statusRow?.started_at ?? null,
-      submittedAt: statusRow?.submitted_at ?? null,
-      lastSeenAt: statusRow?.last_seen_at ?? null,
-    },
-    attempts: (attempts || []).map((attempt) => ({
-      questionIndex: attempt.question_index,
-      isCorrect: attempt.is_correct,
-      selectedAnswer: attempt.selected_answer,
-      correctAnswer: attempt.correct_answer,
-      answeredAt: attempt.answered_at,
-      timeSpentMs: attempt.time_spent_ms,
-      hintsUsed: attempt.hints_used ?? 0,
-    })),
   };
 }
 
