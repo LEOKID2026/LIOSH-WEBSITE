@@ -1,37 +1,36 @@
 ---
-name: "Phase 1-3 Security Closure"
+name: Phase 1-3 Security Closure
 overview: "Implementation plan for confirmed Phase 1-3 security failures: parent policy persona bypass, deactivated teacher on me/onboard, and student session survival after school block/revoke. Phase 4 (school portal) is explicitly excluded."
 todos:
   - id: fix-p1-4
     content: "Fix policy acceptance safely: prevent teacher/admin/non-parent personas from provisioning parent entitlement in lib/parent-server/policy-acceptance.server.js / resolveAuthenticatedParentUserId. Do not rely only on app_metadata.role unless code inspection proves it covers all teacher/admin accounts; otherwise use persona/entitlement checks. Document the evidence either way in the final summary."
-    status: pending
+    status: completed
   - id: fix-p2-8-me
     content: "Fix deactivated teacher on me.js: add is_account_active === false check after limitsRow is loaded in pages/api/teacher/me.js"
-    status: pending
+    status: completed
   - id: fix-p2-8-onboard
     content: "Fix deactivated teacher on onboard.js: load and check teacher_limits.is_account_active before allowing onboard in pages/api/teacher/onboard.js"
-    status: pending
+    status: completed
   - id: fix-p3-2-export
-    content: "Export endLiveStudentSessions from lib/teacher-server/teacher-student-login-access.server.js (remove module-private)"
-    status: pending
+    content: Export endLiveStudentSessions from lib/teacher-server/teacher-student-login-access.server.js (remove module-private)
+    status: completed
   - id: fix-p3-2-sessions
-    content: "Call endLiveStudentSessions in setSchoolStudentBlocked, revokeSchoolStudentAccess, and rotateSchoolStudentPin inside lib/school-server/school-account-management.server.js"
-    status: pending
+    content: Call endLiveStudentSessions in setSchoolStudentBlocked, revokeSchoolStudentAccess, and rotateSchoolStudentPin inside lib/school-server/school-account-management.server.js
+    status: completed
   - id: fix-p3-2-auth
     content: "Defense-in-depth: re-validate access_code_id in getAuthenticatedStudentSession inside lib/learning-supabase/student-auth.js"
-    status: pending
+    status: completed
   - id: write-selftest
-    content: "Write scripts/security/wave4a-phase1-3-security-selftest.mjs covering all 3 confirmed FAIL cases"
-    status: pending
+    content: Write scripts/security/wave4a-phase1-3-security-selftest.mjs covering all 3 confirmed FAIL cases
+    status: completed
   - id: run-build-and-selftests
-    content: "Run npm run build + wave1/2a/2b/2h selftests + new wave4a selftest; record results"
-    status: pending
+    content: Run npm run build + wave1/2a/2b/2h selftests + new wave4a selftest; record results
+    status: completed
   - id: create-zip
-    content: "Create ZIP deliverable with changed files, new test, plan, summary, test results, and not-included section"
-    status: pending
+    content: Create ZIP deliverable with changed files, new test, plan, summary, test results, and not-included section
+    status: completed
 isProject: false
 ---
-
 
 # Phase 1–3 Security Closure — Implementation Plan
 
@@ -136,7 +135,7 @@ This means a teacher account gains a **valid parent persona entitlement** and ca
 4. Call `GET /api/parent/students/list-students` with teacher token — 200 (empty, because teacher has no children)
 5. Call `POST /api/parent/create-student` with teacher token — 200, student created with `parent_id = teacher.userId`
 
-**Recommended fix (do not implement):** Replace `resolveAuthenticatedParentUserId` in `accept.js` and `status.js` with `requireParentApiContext` (or a lighter version that at minimum blocks `app_metadata.role === "teacher"` and `"admin"`).
+_Historical recommended fix from prior read-only verification. Superseded by Section A of the Implementation Plan below._
 
 ---
 
@@ -226,7 +225,7 @@ Confirmed by P2-1 logic. A private teacher with no school membership cannot ente
 2. Teacher calls `GET /api/teacher/me` with their JWT → **200** (expected: 403)
 3. Teacher calls any other route (e.g., `/api/teacher/classes`) → **403** (correct)
 
-**Recommended fix (do not implement):** Add `requireTeacherApiContext` (or at minimum the `isAccountActive` check) to `me.js` and `onboard.js`.
+_Historical recommended fix from prior read-only verification. Superseded by Section B of the Implementation Plan below._
 
 ---
 
@@ -267,7 +266,7 @@ Confirmed by P2-1 logic. A private teacher with no school membership cannot ente
 3. Student's cookie still valid → `GET /api/student/me` returns 200 with student data
 4. Student can start and submit activities normally until session expires
 
-**Recommended fix (do not implement):** Import and call `endLiveStudentSessions(serviceRole, studentId)` (from `lib/teacher-server/teacher-student-login-access.server.js`) inside `setSchoolStudentBlocked`, `revokeSchoolStudentAccess`, and `rotateSchoolStudentPin`. Additionally, add an `access_code_id` re-validation step inside `getAuthenticatedStudentSession` as defense-in-depth.
+_Historical recommended fix from prior read-only verification. Superseded by Section C of the Implementation Plan below._
 
 ---
 
@@ -508,7 +507,7 @@ If `access_code_id` is null (older sessions without an access code link — back
 
 | File | Change |
 |------|--------|
-| `lib/parent-server/policy-acceptance.server.js` | Add role check in `resolveAuthenticatedParentUserId` |
+| `lib/parent-server/policy-acceptance.server.js` | Add reliable server-side teacher/admin/non-parent persona block in `resolveAuthenticatedParentUserId`, using proven `app_metadata.role` coverage or persona/entitlement checks as defined in Section A |
 | `pages/api/teacher/me.js` | Add `is_account_active === false` check after `limitsRow` is loaded |
 | `pages/api/teacher/onboard.js` | Load limits early and block if deactivated |
 | `lib/teacher-server/teacher-student-login-access.server.js` | Export `endLiveStudentSessions` |

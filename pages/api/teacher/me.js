@@ -80,6 +80,10 @@ export default async function handler(req, res) {
       return sendTeacherApiError(res, 404, "teacher_profile_missing", "Teacher limits not provisioned");
     }
 
+    if (limitsRow.limits.is_account_active === false) {
+      return sendTeacherApiError(res, 403, "account_deactivated", "Teacher account is deactivated");
+    }
+
     const resolvedLimits = await resolveTeacherPlanLimits(serviceRole, limitsRow.limits);
     if (!resolvedLimits.ok) {
       return sendTeacherApiError(

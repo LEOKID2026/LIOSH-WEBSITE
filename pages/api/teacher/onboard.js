@@ -175,12 +175,17 @@ export default async function handler(req, res) {
       return sendTeacherApiError(res, 403, "jwt_required", "Onboard requires Supabase email login");
     }
 
+    const serviceRole = getTeacherPortalServiceRole();
+    const limitsCheck = await loadTeacherLimitsRow(serviceRole, auth.teacherUserId);
+    if (limitsCheck.ok && limitsCheck.limits && limitsCheck.limits.is_account_active === false) {
+      return sendTeacherApiError(res, 403, "account_deactivated", "Teacher account is deactivated");
+    }
+
     const parsed = parseTeacherOnboardBody(req);
     if (!parsed.ok) {
       return sendTeacherApiError(res, 400, parsed.code, `Invalid ${parsed.field}`);
     }
 
-    const serviceRole = getTeacherPortalServiceRole();
     const result = await provisionTeacherRows(
       serviceRole,
       auth.teacherUserId,
