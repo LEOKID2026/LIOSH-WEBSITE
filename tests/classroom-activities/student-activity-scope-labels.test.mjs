@@ -84,7 +84,8 @@ test("student activity page supports layout toggle and numeric input", () => {
     path.join(repoRoot, "pages/student/activity/[activityId].js"),
     "utf8"
   );
-  assert.match(activityPage, /StudentActivityQuestionSurface/);
+  assert.match(activityPage, /StudentAssignedActivityShell/);
+  assert.match(activityPage, /StudentAssignedActivityQuestionStage/);
   assert.match(activityPage, /resolveStudentActivityAnswerInputProps/);
 
   const ui = readFileSync(

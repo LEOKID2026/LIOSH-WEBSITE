@@ -5,15 +5,17 @@ import {
   getStudentActivityVerticalExerciseText,
   normalizeStudentActivityMathLayoutQuestion,
 } from "../../lib/classroom-activities/student-activity-question-ui.client.js";
+import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-activity-layout.client.js";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 
 /**
- * Question surface for assigned activities — same vertical/horizontal toggle as math-master.
+ * Question text inside the unified activity question stage — stable footprint for math toggle.
  *
  * @param {{ question: Record<string, unknown>|null|undefined, questionIndex: number }} props
  */
 export default function StudentActivityQuestionSurface({ question, questionIndex }) {
   const [isVerticalDisplay, setIsVerticalDisplay] = useState(false);
+  const L = STUDENT_ACTIVITY_LAYOUT;
 
   const layoutQuestion = useMemo(
     () => normalizeStudentActivityMathLayoutQuestion(question),
@@ -37,12 +39,12 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
   if (!layoutQuestion) return null;
 
   return (
-    <div className="relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2 mb-6">
+    <div className="relative w-full flex-1 flex flex-col items-center justify-center overflow-visible min-h-[7rem] lg:min-h-[9rem]">
       {canDisplayVertically ? (
         <button
           type="button"
           onClick={() => setIsVerticalDisplay((prev) => !prev)}
-          className="absolute top-2 left-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all pointer-events-auto shadow-lg"
+          className={L.mathToggle}
           title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
           data-testid="activity-math-layout-toggle"
         >
@@ -50,54 +52,56 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
         </button>
       ) : null}
 
-      {isVerticalDisplay && canDisplayVertically && verticalText ? (
-        <div className="relative w-full pr-2 pl-2 pt-0">
-          {layoutQuestion.questionLabel ? (
-            <p
-              className="text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full px-2"
-              dir="rtl"
-              data-testid="student-question-lead"
-              style={{
-                direction: "rtl",
-                unicodeBidi: "plaintext",
-                ...getQuestionFontStyle({
-                  text: layoutQuestion.questionLabel,
-                  kind: "label",
-                }),
-              }}
+      <div className="w-full flex flex-col items-center justify-center overflow-visible px-1">
+        {isVerticalDisplay && canDisplayVertically && verticalText ? (
+          <>
+            {layoutQuestion.questionLabel ? (
+              <p
+                className={L.questionLead}
+                dir="rtl"
+                data-testid="student-question-lead"
+                style={{
+                  direction: "rtl",
+                  unicodeBidi: "plaintext",
+                  ...getQuestionFontStyle({
+                    text: layoutQuestion.questionLabel,
+                    kind: "label",
+                  }),
+                }}
+              >
+                {layoutQuestion.questionLabel}
+              </p>
+            ) : null}
+            <div
+              className="flex justify-center w-full overflow-visible"
+              data-testid="student-question-body"
+              dir="ltr"
             >
-              {layoutQuestion.questionLabel}
-            </p>
-          ) : null}
-          <div
-            className="flex justify-center w-full max-w-full px-2 overflow-x-hidden"
-            data-testid="student-question-body"
-            dir="ltr"
-          >
-            <pre
-              className="text-3xl text-center text-white font-bold font-mono whitespace-pre"
-              style={{
-                direction: "ltr",
-                unicodeBidi: "isolate",
-                ...getQuestionFontStyle({ text: verticalText }),
-              }}
-            >
-              {verticalText}
-            </pre>
-          </div>
-        </div>
-      ) : (
-        <div className="relative w-full pr-2 pl-2 pt-0">
+              <pre
+                className={`${L.questionFormula} whitespace-pre overflow-visible`}
+                style={{
+                  direction: "ltr",
+                  unicodeBidi: "isolate",
+                  ...getQuestionFontStyle({ text: verticalText }),
+                }}
+              >
+                {verticalText}
+              </pre>
+            </div>
+          </>
+        ) : (
           <StudentQuestionDisplay
             question={layoutQuestion.question}
             questionLabel={layoutQuestion.questionLabel}
             exerciseText={layoutQuestion.exerciseText || layoutQuestion.question}
             getQuestionFontStyle={getQuestionFontStyle}
-            wrapperClassName="relative w-full pr-2 pl-2 pt-0 w-full flex flex-col items-center justify-center gap-1"
-            bodyClassName="text-4xl text-center text-white font-bold max-w-full px-2"
+            leadClassName={L.questionLead}
+            bodyClassName={L.questionBody}
+            formulaClassName={L.questionFormula}
+            wrapperClassName="w-full flex flex-col items-center justify-center gap-1 overflow-visible"
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

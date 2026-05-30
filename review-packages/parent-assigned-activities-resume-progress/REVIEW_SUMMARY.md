@@ -1,176 +1,105 @@
-# Assigned Activities — Resume/Progress Fix Review Package
+# Assigned Activities — Review Package (Resume + Layout UX)
 
-Generated **2026-05-30**. Fixes student-side progress loss on refresh/reopen for all assigned activity scopes. Includes the math layout toggle fix on the same play page (prior follow-up). No SQL. No commit / push / deploy.
+Generated **2026-05-30**. Student assigned activity play page fixes for all scopes (`parent`, `student`, `class`). No SQL. No commit / push / deploy.
 
-## Problem
+## Packages in this review
 
-Manual QA confirmed: parent-assigned (and other) activity **answers persist on the server**, but the student play page **always restarted at question 1** after refresh, browser close, or navigating away and back.
+1. **Resume/progress** — restore saved attempts on refresh/reopen
+2. **Math layout toggle** — ↕️ מאונך / ↔️ מאוזן for arithmetic
+3. **Layout UX** — compact page, header row, 2×2 MCQ grid, geometry diagram labels
 
-Root cause: `POST /api/student/activities/[activityId]/start` did not return saved attempts; `pages/student/activity/[activityId].js` always initialized `currentIdx = 0`.
+---
 
-## Fix summary
+## Layout UX fixes (latest)
 
-### Server — resume payload on start (all scopes)
+| Issue | Fix |
+|-------|-----|
+| Excessive scrolling | Reduced padding, smaller question min-heights, desktop 2-column split (question \| answers) |
+| Back button wastes row | `חזרה לבית` on same row as title (physical left via `dir="ltr"` header) |
+| 4 short MCQ = 4 rows | `grid-cols-2` on mobile for choices ≤16 chars; long text stays single column |
+| Geometry label placement | Reuses `GeometryExplanationDiagram` with `compact` variant; improved hidden-angle label inset in `triangleLayoutFromAngles` |
 
-| Scope | Start handler | Attempt table |
-|-------|---------------|---------------|
-| `parent` | `startParentActivity` | `parent_activity_attempts` |
-| `student` | `startIndividualStudentActivity` | `student_activity_attempts` |
-| `class` | `startStudentActivity` (class branch) | `classroom_activity_attempts` |
+## Resume/progress fixes
 
-In-progress start responses now include:
-
-```js
-{
-  attempts: [{ questionIndex, selectedAnswer, isCorrect }, ...],
-  resumeQuestionIndex: number,  // first unanswered, or last if all answered
-  questionSet,
-  studentStatus,
-  ...
-}
-```
-
-Submitted activities still return `alreadyCompleted: true` (unchanged).
-
-### Server — anti-exploit duplicate guard
-
-`record*ActivityAnswer` handlers reject re-answering an already-saved question with `question_already_answered` (409). Prevents refresh/reopen from overwriting wrong answers.
-
-### Client — restore progress on load
-
-`pages/student/activity/[activityId].js`:
-
-- Builds `savedAttempts` map from start response
-- Sets `currentIdx` from `resumeQuestionIndex` (live_lesson still uses teacher broadcast index)
-- Restores answer text + feedback for saved questions
-- Disables resubmit on answered questions (`התשובה נשמרה`)
-- Restores numeric zero answers via nullish check (`selectedAnswer != null`, not truthy)
-- Locks free-text input (`readOnly`/`disabled`) and choice buttons when question already answered
-
-### Math layout toggle (same play page, prior fix)
-
-- `StudentActivityQuestionSurface` + `student-activity-question-ui.client.js`
-- Reads operands from `params.a/b` and parses horizontal text (`3 + 13 = __`)
-- Same ↕️ מאונך / ↔️ מאוזן toggle as regular math practice
+- Start response includes `attempts` + `resumeQuestionIndex` (all scopes)
+- Client restores saved answers/feedback; blocks resubmit + read-only answered UI
+- Numeric `0` restores via `selectedAnswer != null` check
+- Server rejects duplicate answers (`question_already_answered`)
 
 ## Files in this package
 
 | Path | Change |
 |------|--------|
-| `lib/classroom-activities/student-activity-resume.shared.js` | **New** — pure resume index helpers |
+| `pages/student/activity/[activityId].js` | Compact layout, header row, 2-col grid, resume wiring |
+| `components/student/StudentActivityQuestionSurface.jsx` | Compact question area + math toggle |
+| `components/student/ClassroomGeometryQuestionDiagram.jsx` | `compact` diagram variant |
+| `components/learning/geometry/GeometryExplanationDiagram.jsx` | `compact` DiagramFrame prop |
+| `lib/classroom-activities/student-activity-choice-layout.client.js` | **New** — 2×2 vs 1-col choice logic |
+| `lib/classroom-activities/student-activity-resume.shared.js` | **New** — resume index helpers |
 | `lib/classroom-activities/student-activity-resume.server.js` | **New** — load attempts + duplicate guard |
-| `lib/classroom-activities/student-activity-error-labels.client.js` | `question_already_answered` Hebrew label |
-| `lib/classroom-activities/student-activity-question-ui.client.js` | Math layout normalization (params.a/b) |
+| `lib/classroom-activities/student-activity-question-ui.client.js` | Math layout normalization |
+| `lib/classroom-activities/student-activity-error-labels.client.js` | Hebrew error labels |
+| `utils/geometry-diagram-layout.js` | Hidden-angle label positioning |
 | `lib/parent-server/parent-activity.server.js` | Resume payload + duplicate guard |
-| `lib/teacher-server/student-activity-play.server.js` | Resume payload + duplicate guard (scope `student`) |
-| `lib/teacher-server/teacher-activities.server.js` | Resume payload + duplicate guard (scope `class`) |
-| `pages/student/activity/[activityId].js` | Restore progress + layout surface |
-| `components/student/StudentActivityQuestionSurface.jsx` | Math layout toggle UI |
-| `tests/classroom-activities/student-activity-resume.test.mjs` | **New** — resume regression tests |
-| `tests/classroom-activities/student-activity-scope-labels.test.mjs` | Layout toggle + scope tests |
-| `tests/parent-server/parent-assigned-activities.test.mjs` | Parent activity server/API tests |
+| `lib/teacher-server/student-activity-play.server.js` | Resume (scope `student`) |
+| `lib/teacher-server/teacher-activities.server.js` | Resume (scope `class`) |
+| `tests/classroom-activities/student-activity-layout.test.mjs` | **New** |
+| `tests/classroom-activities/student-activity-resume.test.mjs` | Resume regression |
+| `tests/classroom-activities/student-activity-scope-labels.test.mjs` | Scope + math toggle |
+| `tests/parent-server/parent-assigned-activities.test.mjs` | Parent activity server |
 
 ## Verification commands
 
 ```bash
-node --test tests/parent-server/parent-assigned-activities.test.mjs tests/classroom-activities/student-activity-scope-labels.test.mjs tests/classroom-activities/student-activity-resume.test.mjs
+node --test tests/parent-server/parent-assigned-activities.test.mjs tests/classroom-activities/student-activity-scope-labels.test.mjs tests/classroom-activities/student-activity-resume.test.mjs tests/classroom-activities/student-activity-layout.test.mjs tests/geometry-diagram-layout.test.mjs
 npm run build
 ```
 
-### Automated results (2026-05-30, final)
+### Automated results (2026-05-30)
 
 ```
-node --test tests/parent-server/parent-assigned-activities.test.mjs tests/classroom-activities/student-activity-scope-labels.test.mjs tests/classroom-activities/student-activity-resume.test.mjs
-# tests 35
-# pass 35
-# fail 0
-# duration_ms ~217
+node --test (5 test files above)
+# tests 52 | pass 52 | fail 0
 
 npm run build
 # exit code 0
-# Next.js 15.5.18 — lint OK, compile OK, 122 static pages generated
-# (pre-existing warning: question-metadata-scanner critical dependency expression)
 ```
-
-### Final UI polish (same package)
-
-- **Numeric zero:** `savedAnswerDisplayText()` uses `selectedAnswer != null` so math answer `0` restores correctly
-- **Read-only answered UI:** free-text input and choice buttons disabled when question already saved; feedback remains visible
 
 ## Manual browser QA checklist
 
-**Required before closure.** Repeat scenarios A–E for **each scope**: parent-assigned, teacher individual (`scope: student`), classroom/school (`scope: class`).
+Repeat for **parent**, **teacher individual**, and **classroom** scopes.
 
-### Scenario A — refresh during activity
+### Layout
 
-| Step | Action | Expected |
-|------|--------|----------|
-| A1 | Start activity | Status `in_progress` |
-| A2 | Answer question 1 | Answer saved, advance to Q2 |
-| A3 | Refresh page (F5) | Page reloads, no error |
-| A4 | Same activity reopens | Q1 answer still saved (visible if navigated back) |
-| A5 | Current position | Student on **first unanswered** (Q2 if Q1 answered) |
-| A6 | Status | Remains `in_progress` |
+| # | Check | Expected |
+|---|-------|----------|
+| L1 | Mobile page top | Less empty space; title + back on one row |
+| L2 | Back link position | `← חזרה לבית` on left, title on right |
+| L3 | 4 short MCQ | 2×2 grid on mobile |
+| L4 | Long MCQ text | Single column |
+| L5 | Desktop | Question/diagram left, answers/actions right; minimal scroll |
+| L6 | Geometry diagram | Angle numbers + `?` near correct vertices |
 
-### Scenario B — leave and return
+### Resume (unchanged — re-verify)
 
-| Step | Action | Expected |
-|------|--------|----------|
-| B1 | Start activity, answer ≥1 question | Progress saved |
-| B2 | Navigate to student home | — |
-| B3 | Reopen same activity from list | Progress restored to first unanswered |
-| B4 | Previously answered questions | Not shown as fresh/unanswered |
+| # | Check | Expected |
+|---|-------|----------|
+| R1 | Answer Q1 → refresh | Continues at first unanswered |
+| R2 | Wrong answer → refresh | Answer locked, cannot edit |
+| R3 | Submit → reopen | Completed screen |
+| R4 | Math toggle | ↕️/↔️ still works after layout change |
 
-### Scenario C — incorrect answer anti-exploit
+### Parent monitoring (parent scope)
 
-| Step | Action | Expected |
-|------|--------|----------|
-| C1 | Answer incorrectly | Wrong feedback shown |
-| C2 | Refresh or leave/reopen | Wrong answer still saved |
-| C3 | Try to answer same question again | Cannot resubmit (`התשובה נשמרה` or server rejects) |
-| C4 | Press start again (re-enter activity) | Does not erase prior attempts |
-
-### Scenario D — submitted activity
-
-| Step | Action | Expected |
-|------|--------|----------|
-| D1 | Complete and submit | Completion screen |
-| D2 | Reopen activity | Shows completed/result state |
-| D3 | Does not restart | No fresh attempt, no Q1 reset |
-
-### Scenario E — parent monitoring (parent scope only)
-
-| Step | Action | Expected |
-|------|--------|----------|
-| E1 | Student starts parent activity | Parent sees **בתהליך** |
-| E2 | Student answers, then refreshes | Parent answer count unchanged / consistent |
-| E3 | Student submits | Parent sees **הושלם** with correct counts |
-
-### Scope-specific entry points
-
-| Scope | How to open activity | Parent/teacher monitor |
-|-------|---------------------|------------------------|
-| **parent** | Student home → **פעילויות אישית** → parent activity | Parent dashboard → **פעילויות שנשלחו** |
-| **student** | Student home → **פעילויות אישית** → teacher individual | Teacher student page / individual activity monitor |
-| **class** | Student home → **פעילויות כיתה** | Teacher class activity monitor |
-
-### Math layout (all scopes with math arithmetic)
-
-| Step | Expected |
-|------|----------|
-| Open math assigned activity | ↕️ מאונך toggle visible near question |
-| Toggle | Vertical/horizontal layout changes for e.g. `3 + 13 = __` |
-| After refresh | Layout toggle still works; progress resume still works |
+| # | Check | Expected |
+|---|-------|----------|
+| P1 | Student in progress | Parent sees **בתהליך** |
+| P2 | After refresh | Counts unchanged |
+| P3 | After submit | **הושלם** |
 
 ## Unchanged by design
 
 - No SQL / schema changes
-- Parent answers stay in `parent_activity_attempts` only (never `answers` table)
-- Parent report architecture (`includeParentActivities` opt-in only)
+- Parent answers in `parent_activity_attempts` only
 - Teacher/school reports unchanged
-- Teacher/classroom activity creation and assignment flows unchanged
-- No UI redesign beyond progress restore + existing layout toggle
-
-## No commit / push / deploy
-
-Per owner instructions.
+- No backend report or save/resume architecture changes in layout pass
