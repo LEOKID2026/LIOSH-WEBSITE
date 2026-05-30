@@ -115,6 +115,14 @@ async function main() {
   );
 
   record(
+    "class_roster_staff_cookie_load",
+    students.includes("loadClassStudents") &&
+      students.includes("authMethod !== \"staff_cookie\"") &&
+      students.match(/loadClassStudents[\s\S]*applyRosterResult/),
+    "class roster fetch works with staff cookie"
+  );
+
+  record(
     "operator_grants_helpers",
     grants.includes("canManageStudentAccess") && grants.includes("canViewStudentData"),
     "shared grant helpers"

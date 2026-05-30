@@ -177,7 +177,7 @@ export default function SchoolStudentsPage() {
   );
 
   const loadClassStudents = useCallback(async ({ force = false } = {}) => {
-    if (!accessToken || !gradeLevel || !physicalClassName) return;
+    if ((!accessToken && authMethod !== "staff_cookie") || !gradeLevel || !physicalClassName) return;
     const q = new URLSearchParams({
       gradeLevel,
       physicalClassName,
@@ -193,11 +193,22 @@ export default function SchoolStudentsPage() {
     if (useCache) {
       setClassStudents(cachedStudents);
       setClassStudentsLoading(false);
-    } else {
+    } else if (!force) {
       setClassStudentsLoading(true);
       setClassStudents([]);
     }
     setClassStudentsError("");
+    const applyRosterResult = (result) => {
+      if (!result || result.status !== 200) {
+        const body = result?.body || {};
+        setClassStudents([]);
+        if (schoolId) deleteSchoolCacheEntry(schoolId, path);
+        setClassStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת תלמידים"));
+        return;
+      }
+      setClassStudentsError("");
+      setClassStudents(result.body?.data?.students || []);
+    };
     try {
       const result = await fetchSchoolJsonSWR({
         accessToken,
@@ -207,23 +218,19 @@ export default function SchoolStudentsPage() {
         force,
         fetchFn: schoolAuthFetch,
         onUpdate: (updated) => {
-          if (updated.status === 200) {
-            setClassStudents(updated.body?.data?.students || []);
-          }
+          applyRosterResult(updated);
+          setClassStudentsLoading(false);
         },
       });
-      if (!result || result.status !== 200) {
-        const body = result?.body || {};
-        setClassStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת תלמידים"));
-        return;
-      }
-      setClassStudents(result.body?.data?.students || []);
+      applyRosterResult(result);
     } catch {
+      setClassStudents([]);
+      if (schoolId) deleteSchoolCacheEntry(schoolId, path);
       setClassStudentsError("שגיאה בטעינת תלמידים");
     } finally {
       setClassStudentsLoading(false);
     }
-  }, [accessToken, schoolId, gradeLevel, physicalClassName]);
+  }, [accessToken, authMethod, schoolId, gradeLevel, physicalClassName]);
 
   useEffect(() => {
     if (gradeLevel && physicalClassName) void loadClassStudents();
