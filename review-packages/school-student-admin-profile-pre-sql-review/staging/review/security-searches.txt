@@ -1,0 +1,23 @@
+Security searches — v4 (2026-05-31)
+
+1) School-portal GET admin-profile
+   pages/api/school/students/[studentId]/admin-profile.js → requireSchoolStudentBrowseContext (OK)
+
+2) POST /api/school/students create auth
+   pages/api/school/students/index.js → POST uses requireSchoolCredentialAdminApiContext (manager OR student_access_admin)
+   No requireSchoolManagerApiContext on POST (OK)
+
+3) Create form visibility
+   pages/school/students/index.js → canCreateStudent / canManageStudentAccess (not isManager-only)
+
+4) Staff-cookie create submit
+   SchoolStudentCreateForm.jsx → hasSchoolPortalSession(accessToken, authMethod) before submit
+
+5) National IDs in teacher client UI
+   pages/teacher/** — no matches (OK)
+
+6) profile_hidden_fields
+   migration 053 — not present (OK)
+
+7) Unrelated git item
+   review-packages/parent-assigned-activities-resume-progress-review.zip — restored via git restore (was accidental working-tree deletion, not part of feature scope)

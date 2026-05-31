@@ -8,7 +8,7 @@
 /** @typedef {{ href: string; label: string }} PolicyLink */
 /** @typedef {{ id: string; title: string; paragraphs?: string[]; bullets?: string[]; links?: PolicyLink[] }} PolicySection */
 
-export const CONTACT_EMAIL = "18eran@gmail.com";
+export const CONTACT_EMAIL = "leokid2026@gmail.com";
 
 /** ISO date shown on all policy pages (update when content materially changes). */
 export const POLICY_LAST_UPDATED = "2026-05-24";

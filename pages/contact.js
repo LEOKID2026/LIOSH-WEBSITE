@@ -3,7 +3,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-const CONTACT_EMAIL = "18eran@gmail.com";
+const CONTACT_EMAIL = "leokid2026@gmail.com";
 const INSTAGRAM_URL = "https://www.instagram.com/leotheshiba21";
 /** כשיש קישור — ממלאים כאן */
 const FACEBOOK_URL = "";
