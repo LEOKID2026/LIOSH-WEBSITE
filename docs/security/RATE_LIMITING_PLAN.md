@@ -38,7 +38,7 @@ Prevent brute-force, abuse, and runaway cost on the public-facing API surface.
 | `/contact` (page → API TBD) | B-CONTACT | captcha optional |
 | `/api/learning-simulator/*` | B-ADMIN | admin-token-keyed |
 | `/api/admin/monthly-persistence-award` | B-ADMIN | admin-token-keyed |
-| `/api/learning-supabase/health` | B-ADMIN | admin-token-keyed |
+| ~~`/api/learning-supabase/health`~~ | — | *(route removed)* |
 
 ## Implementation options (next fix pass picks one)
 

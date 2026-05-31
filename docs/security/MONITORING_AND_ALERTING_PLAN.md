@@ -23,7 +23,7 @@
 | Vercel function logs | Manual review | Alerts on 5xx rate | No (Vercel UI) |
 | In-memory rate limits | Active in code | Log 429 counts | No |
 | CSP report endpoint | `POST /api/security/csp-report` → 204 | Aggregate violation counts | No |
-| Health route | `GET /api/learning-supabase/health` | Uptime check | No |
+| Site uptime | Synthetic `GET /` (home page) | HTTP 2xx/3xx | No |
 | External APM (Sentry/Datadog) | **Not configured** | Error tracking + PII scrub | **Yes — DSN** |
 | Durable rate-limit counters | In-memory only | KV/Upstash | **Yes — D-RATE-1** |
 
@@ -56,7 +56,7 @@
 |--------|--------|-------|
 | 5xx rate all routes | Vercel | > 1% over 5 min | RB-8 |
 | 5xx on `/api/learning/*` | Vercel | Any sustained | RB-8 |
-| Health check fail | Synthetic `GET /api/learning-supabase/health` | 2 consecutive failures | RB-8 |
+| Site unreachable | Synthetic `GET /` | 2 consecutive failures (non-2xx/3xx) | RB-8 |
 | Build/deploy failure | CI | Any on main | RB-4 |
 
 ### Copilot / AI

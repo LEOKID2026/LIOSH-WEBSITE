@@ -37,7 +37,7 @@ Routes enumerated from `pages/api/**` (52 routes; see [site-map-and-protection-a
 | `/api/learning/planner-recommendation` | STU | own student | R-OWN-02 | same |
 | `/api/learning-simulator/engine-review-pack-status` | **ADMIN** | engine artifacts | **R-AUTH-02/03** | replace `NEXT_PUBLIC_*` gate with server token; timing-safe compare |
 | `/api/learning-simulator/generate-expert-review-pack` | **ADMIN** | engine artifacts | R-AUTH-03 | same as above |
-| `/api/learning-supabase/health` | **ADMIN or DEV-ONLY** | health/debug | R-DBG-01 | confirm what is exposed; gate behind admin token or remove from prod |
+| ~~`/api/learning-supabase/health`~~ | *(removed 2026-05)* | — | R-DBG-01 | **Removed** — use `GET /` for uptime only; no DB readiness probe route |
 | `/api/dev-student-simulator/login` | **DEV-ONLY** | dev student session | **R-DEV-02** | gate by `NODE_ENV` |
 | `/api/dev-student-simulator/logout` | **DEV-ONLY** | dev student session | R-DEV-02 | same |
 | `/api/arcade/balance` | STU | own student | R-OWN-02 | confirm session-scoped |

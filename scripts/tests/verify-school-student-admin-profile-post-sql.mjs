@@ -338,8 +338,13 @@ async function main() {
   const db = createServiceRole();
   await verifySchema(db);
 
-  const health = await fetch(`${BASE_URL}/api/learning-supabase/health`);
-  record("Preflight", "dev_server_reachable", health.ok, `HTTP ${health.status}`);
+  const root = await fetch(`${BASE_URL}/`, { redirect: "manual" });
+  record(
+    "Preflight",
+    "dev_server_reachable",
+    root.status >= 200 && root.status < 500,
+    `GET / HTTP ${root.status}`
+  );
 
   let quotaRestore = null;
   const adminToken = await authPlatformAdmin(db, pwd);

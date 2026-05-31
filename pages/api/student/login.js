@@ -11,6 +11,7 @@ import {
   sessionExpiryIsoFromNow,
   setStudentSessionCookie,
 } from "../../../lib/learning-supabase/student-auth";
+import { validateStudentLoginUsername } from "../../../lib/learning-supabase/student-login-username.server.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import {
   checkLoginRateLimit,
@@ -81,8 +82,11 @@ export default async function handler(req, res) {
       }
     }
 
-    const storedUsername = normalizeStudentUsername(accessCode.login_username || "");
-    if (usernameNormalized && storedUsername && storedUsername !== usernameNormalized) {
+    const usernameCheck = validateStudentLoginUsername({
+      usernameNormalized,
+      storedLoginUsernameRaw: accessCode.login_username,
+    });
+    if (!usernameCheck.ok) {
       recordLoginFailure(req, credential);
       clearStudentSessionCookie(res);
       return res.status(401).json(GENERIC_LOGIN_FAILURE);

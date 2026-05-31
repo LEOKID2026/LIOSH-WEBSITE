@@ -227,7 +227,7 @@ Treatment going forward:
 - Parent rollup API: [`pages/api/parent/students/[studentId]/report-data.js`](../../pages/api/parent/students/%5BstudentId%5D/report-data.js).
 - Adapter from Supabase rollup to parent-report input: [`lib/learning-supabase/report-data-adapter.js`](../../lib/learning-supabase/report-data-adapter.js) (`buildReportInputFromDbData`).
 - Auth helpers: [`lib/learning-supabase/student-auth.js`](../../lib/learning-supabase/student-auth.js); body normalizers: [`lib/learning-supabase/learning-activity.js`](../../lib/learning-supabase/learning-activity.js).
-- Health: [`pages/api/learning-supabase/health.js`](../../pages/api/learning-supabase/health.js).
+- Learning Supabase env verification: `npm run verify:learning-supabase-env` (no dedicated health API route).
 - Parent management APIs: [`pages/api/parent/create-student.js`](../../pages/api/parent/create-student.js), [`create-student-access-code.js`](../../pages/api/parent/create-student-access-code.js), [`list-students.js`](../../pages/api/parent/list-students.js), [`update-student.js`](../../pages/api/parent/update-student.js).
 - Treat as **leave-alone** plumbing. Phase D may add a new parent-side API route for the copilot turn (separate file), but no semantics change to the existing routes.
 

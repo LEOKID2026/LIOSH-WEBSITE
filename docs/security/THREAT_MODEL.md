@@ -89,13 +89,13 @@ STRIDE-lite per surface. Severity-bearing rows live only in the [register](./SEC
 | DoS / cost | unauth call flood | **R-RATE-01 (P1)** |
 | Information disclosure | server logs include user-typed text → PII risk | R-LOG-02 |
 
-### S9. Dev / admin (`/learning/dev-*`, `/api/dev-*`, `/api/learning-simulator/*`, `/api/student/dev-add-coins`, `/api/learning-supabase/health`)
+### S9. Dev / admin (`/learning/dev-*`, `/api/dev-*`, `/api/learning-simulator/*`, `/api/student/dev-add-coins`)
 
 | Threat | Vector | Risk row |
 |--------|--------|----------|
 | Elevation | reachable in production due to public-flag misuse | **R-AUTH-02, R-DEV-01, R-DEV-02 (P0/P1)** |
 | Spoofing | non-timing-safe token compare | R-AUTH-03 |
-| Information disclosure | `/api/learning-supabase/health` leaks internals | R-DBG-01 |
+| Information disclosure | ~~`/api/learning-supabase/health`~~ *(removed)* | R-DBG-01 closed |
 
 ### S10. Storage layer (Supabase)
 

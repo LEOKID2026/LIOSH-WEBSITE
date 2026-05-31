@@ -600,18 +600,22 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
                   {snapshotDuplicateCount === 1 ? "y" : "ies"} from the API response before rendering.
                 </p>
               ) : null}
-              <style
-                dangerouslySetInnerHTML={{
-                  __html: `
-                  .engine-review-snapshot-desktop { display: none; }
-                  .engine-review-snapshot-mobile { display: block; }
-                  @media (min-width: 768px) {
-                    .engine-review-snapshot-desktop { display: block; }
-                    .engine-review-snapshot-mobile { display: none; }
+              <style jsx>{`
+                .engine-review-snapshot-desktop {
+                  display: none;
+                }
+                .engine-review-snapshot-mobile {
+                  display: block;
+                }
+                @media (min-width: 768px) {
+                  .engine-review-snapshot-desktop {
+                    display: block;
                   }
-                `,
-                }}
-              />
+                  .engine-review-snapshot-mobile {
+                    display: none;
+                  }
+                }
+              `}</style>
               {/* Desktop: full table (no horizontal scroll trap on narrow viewports). */}
               <div className="engine-review-snapshot-desktop">
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(0.9rem, 2vw, 1rem)", tableLayout: "fixed" }}>

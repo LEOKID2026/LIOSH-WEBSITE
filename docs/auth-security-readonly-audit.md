@@ -163,7 +163,7 @@ Scope: parent auth, student auth, username/PIN login, session handling, logout, 
 - `/api/parent/copilot-turn`
 - `/api/parent/students/[studentId]/report-data`
 - `/api/hebrew-nakdan`
-- `/api/learning-supabase/health`
+- ~~`/api/learning-supabase/health`~~ *(removed)*
 
 ## Important
 - No fixes implemented in this phase.

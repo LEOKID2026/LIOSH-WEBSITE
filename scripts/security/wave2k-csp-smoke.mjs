@@ -84,8 +84,8 @@ async function main() {
   });
   assert.ok(copilotRes.status >= 400 && copilotRes.status < 500, `copilot should reject unauth, got ${copilotRes.status}`);
 
-  const { res: healthRes } = await fetchJson("/api/learning-supabase/health");
-  assert.ok(healthRes.status >= 200 && healthRes.status < 600);
+  const { res: rootRes } = await fetch(`${BASE}/`, { redirect: "manual" });
+  assert.ok(rootRes.status >= 200 && rootRes.status < 500, `GET / unexpected ${rootRes.status}`);
 
   const { res: cspReportRes } = await fetchJson("/api/security/csp-report", {
     method: "POST",

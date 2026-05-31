@@ -300,7 +300,7 @@ Per [docs/DO_NOT_REOPEN_WITHOUT_REGRESSION.md](../DO_NOT_REOPEN_WITHOUT_REGRESSI
 | **R-IR-01** | incident response | No documented IR runbooks (credential leak, data leak, abuse traffic, dependency CVE, rollback). | partially-fixed | accept-risk-with-mitigation | [INCIDENT_RESPONSE_RUNBOOK.md](./INCIDENT_RESPONSE_RUNBOOK.md); **table-top rehearsed 2026-05-23** ([wave-3d](../../reports/security/wave-3d-ir-tabletop-and-pending-evidence-pack.md)); live alerting cadence pending |
 | **R-MON-01** | monitoring | No documented alerting on auth failures, rate-limit hits, 5xx spikes, or anomalous Copilot traffic. | partially-fixed | accept-risk-with-mitigation | [MONITORING_AND_ALERTING_PLAN.md](./MONITORING_AND_ALERTING_PLAN.md); live alerts deferred (D-MON-1 / Final ENV) |
 | **R-AUTH-04** | session | Session expiry / revocation behavior not documented; long-lived student session may persist across device handoff. | partially-fixed | accept-risk-with-mitigation | [COOKIE_CSRF_SESSION_POSTURE.md](./COOKIE_CSRF_SESSION_POSTURE.md) — remote revoke UX gap |
-| **R-DBG-01** | debug surfaces | `/api/learning-supabase/health` may expose internal details if not secured. | known-gap | accept-risk-with-mitigation | [site-map-and-protection-audit.md](../site-map-and-protection-audit.md) |
+| **R-DBG-01** | debug surfaces | ~~`/api/learning-supabase/health`~~ **removed** (2026-05) — no DB readiness probe route; uptime via `GET /` only. | closed | fixed | [site-map-and-protection-audit.md](../site-map-and-protection-audit.md) |
 
 ## P3 — cosmetic / track only
 

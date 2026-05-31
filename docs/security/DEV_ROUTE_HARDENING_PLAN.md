@@ -40,7 +40,7 @@ Every dev / admin / simulator surface must be one of:
 | `/api/learning-simulator/engine-review-pack-status` | `Authorization: Bearer ${ENGINE_REVIEW_ADMIN_TOKEN}` | R-AUTH-02/03 |
 | `/api/learning-simulator/generate-expert-review-pack` | same | R-AUTH-03 |
 | `/api/admin/monthly-persistence-award` | server-only admin token | R-AUTH-03 |
-| `/api/learning-supabase/health` | admin token (or remove from prod) | R-DBG-01 |
+| ~~`/api/learning-supabase/health`~~ | *(removed)* | R-DBG-01 closed — no dedicated health route |
 
 ## Hardening pattern (target — applied in next fix pass, not now)
 

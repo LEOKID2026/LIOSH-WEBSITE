@@ -103,12 +103,12 @@ No code changes performed.
 - `/learning/dev-student-simulator`
 - `/learning/dev/engine-review`
 - `/learning/dev-db-report-preview`
-- `/api/learning-supabase/health` unless explicitly secured
+- ~~`/api/learning-supabase/health`~~ *(removed — use `GET /` for reachability checks only)*
 
 ## Risky Or Unclear Routes
 - `/api/student/dev-add-coins`: dev capability with sensitive effect; must be disabled or strictly protected in production.
 - `/api/learning-simulator/engine-review-pack-status`: appears gated by public feature flag, no token in current implementation path.
-- `/api/learning-supabase/health`: health/debug data surface that may expose internal details.
+- ~~`/api/learning-supabase/health`~~: removed; no dedicated Supabase table health API.
 - `/api/hebrew-nakdan`, `/api/hebrew-audio-*`: unauthenticated utility surface may create abuse/cost/PII risk.
 - `/api/parent/copilot-turn`: multi-mode auth behavior increases configuration risk if non-production flags leak.
 - `/learning/parent-report-detailed.renderable`: render-specific page requires clear production exposure policy.

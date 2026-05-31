@@ -21,8 +21,6 @@ import {
   QA_SIMULATION_PARENT_STUDENT_LIMIT,
   DEFAULT_PARENT_STUDENT_LIMIT,
 } from "../../lib/parent-server/parent-student-limit.server.js";
-import { buildLearningSupabaseHealthBody } from "../../lib/security/learning-supabase-health-response.js";
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "../..");
 
@@ -113,31 +111,6 @@ function testOwnershipMatrixPending() {
   }
 }
 
-function testHealthProductionMasking() {
-  const tableChecks = [
-    { table: "students", ok: true, errorCode: null },
-    { table: "answers", ok: false, errorCode: "PGRST116" },
-  ];
-  const prodBody = buildLearningSupabaseHealthBody(tableChecks, {
-    maskInternals: true,
-    projectHost: "example.supabase.co",
-    checkedAt: "2026-05-23T00:00:00.000Z",
-  });
-  assert.equal(prodBody.ok, false);
-  assert.equal(prodBody.projectHost, null);
-  assert.deepEqual(prodBody.checksSummary, { total: 2, okCount: 1, failedCount: 1 });
-  assert.equal(prodBody.checks, undefined);
-
-  const devBody = buildLearningSupabaseHealthBody(tableChecks, {
-    maskInternals: false,
-    projectHost: "example.supabase.co",
-    checkedAt: "2026-05-23T00:00:00.000Z",
-  });
-  assert.equal(devBody.checks.length, 2);
-  assert.equal(devBody.checks[0].table, "students");
-  assert.equal(devBody.checksSummary, undefined);
-}
-
 function testParentCapRules() {
   assert.equal(resolveParentStudentLimit("ADMIN@ADMIN.COM"), QA_SIMULATION_PARENT_STUDENT_LIMIT);
   assert.equal(resolveParentStudentLimit("user@test.com"), DEFAULT_PARENT_STUDENT_LIMIT);
@@ -168,7 +141,6 @@ function testOwnershipCasesIncludeRequired() {
 async function main() {
   await testCopilotRebuildOwnership();
   testOwnershipMatrixPending();
-  testHealthProductionMasking();
   testParentCapRules();
   testReportsExist();
   testOwnershipCasesIncludeRequired();
