@@ -1,17 +1,17 @@
 import crypto from "node:crypto";
-import { guardDevOnlyApiRoute } from "../../../lib/security/api-guards.js";
+import {
+  getDevTopupSecretCode,
+  rejectIfDevTopupDisabled,
+} from "../../../lib/security/dev-topup.server.js";
 import { timingSafeCompareStrings } from "../../../lib/security/timing-safe-equal.js";
 import { getAuthenticatedStudentSession } from "../../../lib/learning-supabase/student-auth";
 import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
 import { applyArcadeCoinMove } from "../../../lib/arcade/server/arcade-coins";
 
-/** Temporary development unlock — TODO: remove before production launch */
-const DEV_TOPUP_SECRET_CODE = "7479";
-
 const TOPUP_AMOUNT = 1000;
 
 export default async function handler(req, res) {
-  if (guardDevOnlyApiRoute(req, res)) return;
+  if (rejectIfDevTopupDisabled(res)) return;
 
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
@@ -28,8 +28,9 @@ export default async function handler(req, res) {
 
   const body = typeof req.body === "object" && req.body ? req.body : {};
   const code = String(body.code ?? "").trim();
+  const expectedCode = getDevTopupSecretCode();
 
-  if (!timingSafeCompareStrings(code, DEV_TOPUP_SECRET_CODE)) {
+  if (!expectedCode || !timingSafeCompareStrings(code, expectedCode)) {
     return res.status(403).json({
       ok: false,
       error: "קוד שגוי",
@@ -44,11 +45,11 @@ export default async function handler(req, res) {
     studentId: session.studentId,
     direction: "earn",
     amount: TOPUP_AMOUNT,
-    idempotencyKey,
     sourceType: "dev_coin_topup",
     sourceId: null,
     metadata: { tool: "learning_dev_button", amount: TOPUP_AMOUNT },
     reason: "dev_coin_topup",
+    idempotencyKey,
   });
 
   if (!result.ok) {

@@ -37,10 +37,6 @@ function dedupeScenariosById(scenarios) {
 }
 
 export async function getServerSideProps() {
-  if (process.env.NODE_ENV === "production") {
-    return { notFound: true };
-  }
-
   if (process.env.NEXT_PUBLIC_ENABLE_ENGINE_REVIEW_ADMIN !== "true") {
     return { notFound: true };
   }
@@ -353,7 +349,7 @@ export default function EngineExpertReviewAdminPage({ packMeta: initialPack, eng
             id="engine-review-admin-token"
             type="password"
             autoComplete="off"
-            placeholder="Enter token, e.g. 7479"
+            placeholder="Enter ENGINE_REVIEW_ADMIN_TOKEN value"
             value={token}
             onChange={(e) => setToken(e.target.value)}
             disabled={busy}
