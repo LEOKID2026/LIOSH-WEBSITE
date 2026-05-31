@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
+import ReportDateRangeControl from "../../../components/reporting/ReportDateRangeControl.jsx";
 import {
   SchoolBackButton,
   SchoolCardGrid,
@@ -26,6 +27,8 @@ import {
 import { useSchoolDataFetch } from "../../../lib/school-portal/use-school-data-fetch";
 import { useSchoolPortalLoad } from "../../../lib/school-portal/use-school-portal-session";
 import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
+import { useReportDateRange } from "../../../hooks/useReportDateRange";
+import { appendReportRangeToSearchParams } from "../../../lib/reporting/report-date-range.js";
 import {
   apiErrorMessageHe,
   SCHOOL_BACK_CLASSES,
@@ -91,6 +94,47 @@ export default function SchoolClassesPage() {
 
   const [teacherDetailOpen, setTeacherDetailOpen] = useState(false);
   const [teacherDetailId, setTeacherDetailId] = useState(null);
+
+  const reportRange = useReportDateRange();
+  /** @type {React.MutableRefObject<((range: { from: string, to: string } | null) => void) | null>} */
+  const activeRangeRefetchRef = useRef(null);
+
+  const refetchActiveReportForRange = useCallback((range = null) => {
+    activeRangeRefetchRef.current?.(range);
+  }, []);
+
+  const reportRangeControl = (
+    <ReportDateRangeControl
+      presetDays={reportRange.presetDays}
+      customDates={reportRange.customDates}
+      startDate={reportRange.startDate}
+      endDate={reportRange.endDate}
+      onStartDateChange={reportRange.setStartDate}
+      onEndDateChange={reportRange.setEndDate}
+      rangeLabel={reportRange.rangeLabel}
+      disabled={
+        reportLoading ||
+        physicalReportLoading ||
+        subjectFromPhysicalLoading ||
+        studentReportLoading ||
+        physicalStudentReportLoading ||
+        subjectFromPhysicalStudentLoading
+      }
+      onPreset={(days) => {
+        const nextRange = reportRange.applyPreset(days);
+        refetchActiveReportForRange(nextRange);
+      }}
+      onEnableCustom={() => reportRange.setCustomDates(true)}
+      onApplyCustom={() => {
+        const result = reportRange.applyCustom();
+        if (!result.ok) {
+          alert("אנא בחר תאריכים תקינים");
+          return;
+        }
+        refetchActiveReportForRange({ from: result.from, to: result.to });
+      }}
+    />
+  );
 
   useEffect(() => {
     if (state === "unauthenticated") router.replace("/teacher/login");
@@ -236,14 +280,31 @@ export default function SchoolClassesPage() {
     }
   };
 
-  const openStudentReportFromPhysical = async (studentId, row) => {
+  const buildRangeParams = useCallback(
+    (range = null, extra = {}) => {
+      const params =
+        range != null
+          ? appendReportRangeToSearchParams(new URLSearchParams(), range)
+          : reportRange.buildSearchParams();
+      for (const [key, value] of Object.entries(extra)) {
+        if (value != null && String(value).trim()) params.set(key, String(value));
+      }
+      return params;
+    },
+    [reportRange]
+  );
+
+  const openStudentReportFromPhysical = async (studentId, row, { force = false, range = null } = {}) => {
     if (!accessToken || !studentId || !physicalReportContext) return;
-    const params = new URLSearchParams({
-      windowDays: "30",
+    const params = buildRangeParams(range, {
       gradeLevel: String(physicalReportContext.gradeLevel),
       physicalClassName: String(physicalReportContext.name),
     });
     const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
+
+    activeRangeRefetchRef.current = (r) => {
+      void openStudentReportFromPhysical(studentId, row, { force: true, range: r });
+    };
 
     const applyBody = (body) => {
       const displayName =
@@ -267,19 +328,24 @@ export default function SchoolClassesPage() {
 
     setPhysicalStudentReportLoading(true);
     try {
-      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path, force });
       if (result?.status === 200) applyBody(result.body);
     } finally {
       setPhysicalStudentReportLoading(false);
     }
   };
 
-  const openStudentReportFromSubjectPhysical = async (studentId, row) => {
+  const openStudentReportFromSubjectPhysical = async (studentId, row, { force = false, range = null } = {}) => {
     if (!accessToken || !studentId) return;
     const ctxClass = subjectFromPhysicalClassRef.current || subjectFromPhysicalClass;
-    const params = new URLSearchParams({ windowDays: "30" });
-    if (ctxClass?.classId) params.set("classId", String(ctxClass.classId));
+    const extra = {};
+    if (ctxClass?.classId) extra.classId = String(ctxClass.classId);
+    const params = buildRangeParams(range, extra);
     const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
+
+    activeRangeRefetchRef.current = (r) => {
+      void openStudentReportFromSubjectPhysical(studentId, row, { force: true, range: r });
+    };
 
     const applyBody = (body) => {
       const displayName =
@@ -306,14 +372,14 @@ export default function SchoolClassesPage() {
 
     setSubjectFromPhysicalStudentLoading(true);
     try {
-      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path, force });
       if (result?.status === 200) applyBody(result.body);
     } finally {
       setSubjectFromPhysicalStudentLoading(false);
     }
   };
 
-  const openPhysicalClassReport = async (physicalGroup) => {
+  const openPhysicalClassReport = async (physicalGroup, { force = false, range = null } = {}) => {
     if (!accessToken || !physicalGroup) return;
     setPhysicalReportContext({
       name: physicalGroup.name,
@@ -325,15 +391,18 @@ export default function SchoolClassesPage() {
     setPhysicalNestedStudentVm(null);
     setPhysicalReportLoading(true);
 
-    const params = new URLSearchParams({
-      windowDays: "30",
+    activeRangeRefetchRef.current = (r) => {
+      void openPhysicalClassReport(physicalGroup, { force: true, range: r });
+    };
+
+    const params = buildRangeParams(range, {
       gradeLevel: String(gradeLevel),
       physicalClassName: physicalGroup.name,
     });
     const path = `/api/school/classes/physical-report?${params.toString()}`;
 
     try {
-      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path, force });
       if (result?.status !== 200) {
         setPhysicalReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
         return;
@@ -350,7 +419,7 @@ export default function SchoolClassesPage() {
     }
   };
 
-  const openSubjectReportFromPhysical = async (cls) => {
+  const openSubjectReportFromPhysical = async (cls, { force = false, range = null } = {}) => {
     if (!accessToken || !cls?.classId) return;
     subjectFromPhysicalClassRef.current = cls;
     setSubjectFromPhysicalClass(cls);
@@ -360,10 +429,15 @@ export default function SchoolClassesPage() {
     setSubjectFromPhysicalNestedStudentVm(null);
     setSubjectFromPhysicalLoading(true);
 
-    const path = `/api/school/classes/${cls.classId}/report-data?windowDays=30`;
+    activeRangeRefetchRef.current = (r) => {
+      void openSubjectReportFromPhysical(cls, { force: true, range: r });
+    };
+
+    const params = buildRangeParams(range);
+    const path = `/api/school/classes/${cls.classId}/report-data?${params.toString()}`;
 
     try {
-      const result = await fetchSchoolReportCached({ accessToken, schoolId, path });
+      const result = await fetchSchoolReportCached({ accessToken, schoolId, path, force });
       if (result?.status !== 200) {
         setSubjectFromPhysicalError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
         return;
@@ -376,12 +450,17 @@ export default function SchoolClassesPage() {
     }
   };
 
-  const openStudentReportFromClass = async (studentId, row) => {
+  const openStudentReportFromClass = async (studentId, row, { force = false, range = null } = {}) => {
     if (!accessToken || !studentId) return;
     const ctxClass = reportClassRef.current || reportClass;
-    const params = new URLSearchParams({ windowDays: "30" });
-    if (ctxClass?.classId) params.set("classId", String(ctxClass.classId));
+    const extra = {};
+    if (ctxClass?.classId) extra.classId = String(ctxClass.classId);
+    const params = buildRangeParams(range, extra);
     const path = `/api/school/students/${studentId}/report-data?${params.toString()}`;
+
+    activeRangeRefetchRef.current = (r) => {
+      void openStudentReportFromClass(studentId, row, { force: true, range: r });
+    };
 
     const applyBody = (body) => {
       const displayName =
@@ -412,6 +491,7 @@ export default function SchoolClassesPage() {
         accessToken,
         schoolId,
         path,
+        force,
       });
       if (result?.status === 200) applyBody(result.body);
     } finally {
@@ -419,7 +499,7 @@ export default function SchoolClassesPage() {
     }
   };
 
-  const openClassReport = async (cls) => {
+  const openClassReport = async (cls, { force = false, range = null } = {}) => {
     if (!accessToken) return;
     reportClassRef.current = cls;
     setReportClass(cls);
@@ -427,7 +507,13 @@ export default function SchoolClassesPage() {
     setReportError("");
     setReportViewModel(null);
     setReportLoading(true);
-    const path = `/api/school/classes/${cls.classId}/report-data?windowDays=30`;
+
+    activeRangeRefetchRef.current = (r) => {
+      void openClassReport(cls, { force: true, range: r });
+    };
+
+    const params = buildRangeParams(range);
+    const path = `/api/school/classes/${cls.classId}/report-data?${params.toString()}`;
 
     const applyBody = (body) => {
       setReportViewModel(
@@ -440,6 +526,7 @@ export default function SchoolClassesPage() {
         accessToken,
         schoolId,
         path,
+        force,
       });
       if (result?.status !== 200) {
         setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
@@ -597,9 +684,17 @@ export default function SchoolClassesPage() {
               onStudentReport={openStudentReportFromClass}
               studentReportLoading={studentReportLoading}
               nestedStudentViewModel={nestedStudentVm}
-              onCloseStudentReport={() => setNestedStudentVm(null)}
+              onCloseStudentReport={() => {
+                setNestedStudentVm(null);
+                if (reportClassRef.current) {
+                  activeRangeRefetchRef.current = (r) => {
+                    void openClassReport(reportClassRef.current, { force: true, range: r });
+                  };
+                }
+              }}
               accessToken={accessToken}
               canManageAssignment={canManageAssignment}
+              rangeControl={reportRangeControl}
             />
 
             <SchoolReportModal
@@ -613,10 +708,21 @@ export default function SchoolClassesPage() {
               onStudentReport={openStudentReportFromPhysical}
               studentReportLoading={physicalStudentReportLoading}
               nestedStudentViewModel={physicalNestedStudentVm}
-              onCloseStudentReport={() => setPhysicalNestedStudentVm(null)}
+              onCloseStudentReport={() => {
+                setPhysicalNestedStudentVm(null);
+                if (physicalReportContext) {
+                  activeRangeRefetchRef.current = (r) => {
+                    void openPhysicalClassReport(
+                      { name: physicalReportContext.name },
+                      { force: true, range: r }
+                    );
+                  };
+                }
+              }}
               onRowAction={handlePhysicalRowAction}
               accessToken={accessToken}
               canManageAssignment={canManageAssignment}
+              rangeControl={reportRangeControl}
             />
 
             <SchoolReportModal
@@ -630,10 +736,19 @@ export default function SchoolClassesPage() {
               onStudentReport={openStudentReportFromSubjectPhysical}
               studentReportLoading={subjectFromPhysicalStudentLoading}
               nestedStudentViewModel={subjectFromPhysicalNestedStudentVm}
-              onCloseStudentReport={() => setSubjectFromPhysicalNestedStudentVm(null)}
+              onCloseStudentReport={() => {
+                setSubjectFromPhysicalNestedStudentVm(null);
+                const cls = subjectFromPhysicalClassRef.current || subjectFromPhysicalClass;
+                if (cls) {
+                  activeRangeRefetchRef.current = (r) => {
+                    void openSubjectReportFromPhysical(cls, { force: true, range: r });
+                  };
+                }
+              }}
               stackZIndexBase={REPORT_STACK_SUBJECT_OVER_PHYSICAL}
               accessToken={accessToken}
               canManageAssignment={canManageAssignment}
+              rangeControl={reportRangeControl}
             />
 
             <SchoolTeacherDetailModal

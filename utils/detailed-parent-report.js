@@ -55,6 +55,7 @@ import {
   tierStableStrengthHe,
   parentFacingPatternLabelHe,
   sanitizeDiagnosticEngineV2ForParentFacing,
+  buildParentDiagnosticExplanationV1FromV2Unit,
 } from "./parent-report-language/index.js";
 import { withholdSummaryCopyHe, withholdConfidenceSummaryFallbackHe } from "./parent-report-language/subject-withhold-summary-he.js";
 import {
@@ -2480,6 +2481,8 @@ function buildSubjectProfilesFromV2(baseReport) {
           questions: Number(u?.evidenceTrace?.[0]?.value?.questions) || 0,
           accuracy: Number(u?.evidenceTrace?.[0]?.value?.accuracy) || 0,
           timeMinutes: Number(topicMapForSid[trk]?.timeMinutes) || 0,
+          taxonomyId: String(u?.taxonomy?.id || u?.diagnosis?.taxonomyId || "").trim() || null,
+          parentDiagnosticExplanationV1: buildParentDiagnosticExplanationV1FromV2Unit(u),
           rowIdentityV1: buildRowIdentityV1({
             subjectId: sid,
             topicRowKey: trk,

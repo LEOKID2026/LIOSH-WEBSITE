@@ -48,6 +48,7 @@ export default function ReportHubModal({
   onRowAction,
   stackZIndexBase = 0,
   scrollAreaClassName = "",
+  rangeControl = null,
 }) {
   const [detailId, setDetailId] = useState(null);
   const [drilldownKey, setDrilldownKey] = useState(null);
@@ -148,6 +149,7 @@ export default function ReportHubModal({
             {error}
           </p>
         ) : null}
+        {rangeControl}
         {!loading && !error && viewModel ? (
           <ReportHubSummary viewModel={viewModel} onNavigate={setDetailId} />
         ) : null}
@@ -211,6 +213,7 @@ export default function ReportHubModal({
         scrollAreaClassName={scrollAreaClassName}
         testId="report-hub-student-main"
       >
+        {rangeControl}
         {studentReportLoading ? (
           <p className="text-white/60 text-sm py-6 text-center">טוען דוח תלמיד…</p>
         ) : (

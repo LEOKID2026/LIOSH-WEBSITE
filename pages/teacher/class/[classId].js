@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
+import ReportDateRangeControl from "../../../components/reporting/ReportDateRangeControl.jsx";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
 import TeacherPortalShell from "../../../components/teacher-portal/TeacherPortalShell";
 import TeacherClassActivitiesNav from "../../../components/teacher-portal/TeacherClassActivitiesNav";
@@ -13,6 +14,7 @@ import {
   isTeacherClassReportResponse,
   useTeacherPortalLoad,
 } from "../../../lib/teacher-portal/use-teacher-portal-session";
+import { useReportDateRange } from "../../../hooks/useReportDateRange.js";
 import {
   actionTypeLabelHe,
   attentionReasonHe,
@@ -32,10 +34,13 @@ export async function getServerSideProps(context) {
 }
 
 export default function TeacherClassReportPage({ classId }) {
+  const reportRange = useReportDateRange();
+
   const fetchPath = useMemo(() => {
     if (!classId) return "";
-    return `/api/teacher/classes/${encodeURIComponent(classId)}/report-data`;
-  }, [classId]);
+    const params = reportRange.buildSearchParams();
+    return `/api/teacher/classes/${encodeURIComponent(classId)}/report-data?${params.toString()}`;
+  }, [classId, reportRange.appliedRange.from, reportRange.appliedRange.to, reportRange.buildSearchParams]);
 
   const { phase, loadingHint, errorMessage, data: report, reload } = useTeacherPortalLoad({
     enabled: Boolean(classId),
@@ -149,8 +154,25 @@ export default function TeacherClassReportPage({ classId }) {
       >
         <TeacherPortalShell backHref="/teacher/dashboard" title={`דוח כיתה: ${className}`}>
           <TeacherClassActivitiesNav classId={classId} />
+          <ReportDateRangeControl
+            presetDays={reportRange.presetDays}
+            customDates={reportRange.customDates}
+            startDate={reportRange.startDate}
+            endDate={reportRange.endDate}
+            onStartDateChange={reportRange.setStartDate}
+            onEndDateChange={reportRange.setEndDate}
+            rangeLabel={reportRange.rangeLabel}
+            disabled={phase === "loading"}
+            onPreset={(days) => reportRange.applyPreset(days)}
+            onEnableCustom={() => reportRange.setCustomDates(true)}
+            onApplyCustom={() => {
+              const result = reportRange.applyCustom();
+              if (!result.ok) alert("אנא בחר תאריכים תקינים");
+            }}
+            className="mb-4"
+          />
           <p className="text-white/60 text-sm mb-2">
-            {memberCount} תלמידים פעילים · נתונים מ-30 הימים האחרונים
+            {memberCount} תלמידים פעילים
           </p>
 
           {memberCount === 0 ? (

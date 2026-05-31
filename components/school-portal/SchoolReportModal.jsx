@@ -88,6 +88,7 @@ export default function SchoolReportModal({
   canViewReport = true,
   initialTab = "report",
   onAssignmentUpdated,
+  rangeControl = null,
 }) {
   const [activeTab, setActiveTab] = useState(initialTab);
   const nestedStudentId = nestedStudentViewModel?.meta?.studentId || null;
@@ -151,6 +152,7 @@ export default function SchoolReportModal({
         onRowAction={onRowAction}
         stackZIndexBase={stackZIndexBase}
         scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
+        rangeControl={rangeControl}
       />
     );
   }
@@ -189,6 +191,7 @@ export default function SchoolReportModal({
         onRowAction={onRowAction}
         stackZIndexBase={stackZIndexBase}
         scrollAreaClassName={SCHOOL_PORTAL_MODAL_SCROLL_CLASS}
+        rangeControl={rangeControl}
       />
 
       <ReportModalFrame

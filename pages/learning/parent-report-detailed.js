@@ -22,6 +22,7 @@ import {
   ParentSubjectContractSummaryBlock,
 } from "../../components/parent-report-contract-ui-blocks.jsx";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
+import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import { normalizeParentFacing } from "../../components/parent/ParentReportParentSections.jsx";
 import { normalizeExecutiveSummary } from "../../utils/parent-report-payload-normalize";
 import { PARENT_BULLETS_EMPTY_WITH_VOLUME_HE } from "../../utils/parent-data-presence.js";
@@ -128,6 +129,7 @@ function GoalItemCards({ items, windowTotalQuestions = 0 }) {
 /** מכתב מקצועי להורה — מפרש את אותו payload בלי כותרות מערכת */
 function SubjectParentLetter({ sp }) {
   const letter = useMemo(() => buildSubjectParentLetter(sp), [sp]);
+  const primaryWeaknessExplanation = sp?.topWeaknesses?.[0]?.parentDiagnosticExplanationV1 || null;
   return (
     <div className="pr-detailed-subject-letter space-y-3 rounded-xl border border-white/12 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-3 md:p-4">
       {letter.opening ? (
@@ -136,9 +138,15 @@ function SubjectParentLetter({ sp }) {
         </p>
       ) : null}
       {letter.diagnosisHe ? (
-        <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
-          {letter.diagnosisHe}
-        </p>
+        <div className="space-y-0">
+          <p className="pr-detailed-body-text text-sm md:text-[0.95rem] leading-relaxed m-0 text-white/[0.91]">
+            {letter.diagnosisHe}
+          </p>
+          <ParentDiagnosticExplanationBlock
+            explanationV1={primaryWeaknessExplanation}
+            className="pr-detailed-diagnostic-explanation"
+          />
+        </div>
       ) : null}
       {letter.homeAction ? (
         <details className="rounded-lg border border-white/12 bg-white/[0.03] px-3 py-2.5">
@@ -1173,6 +1181,10 @@ export default function ParentReportDetailedPage() {
               background: #ffffff !important;
               border: 1px solid #d6d3d1 !important;
               color: #1c1917 !important;
+            }
+            #parent-report-detailed-print .parent-diagnostic-explanation-example-ltr {
+              direction: ltr !important;
+              unicode-bidi: isolate !important;
             }
 
             #parent-report-detailed-print .pr-detailed-tier-excellence {

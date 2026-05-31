@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
+import ReportDateRangeControl from "../../../components/reporting/ReportDateRangeControl.jsx";
 import GuardianAccessPanel from "../../../components/teacher-portal/GuardianAccessPanel";
 import StudentLoginAccessPanel from "../../../components/teacher-portal/StudentLoginAccessPanel";
 import SubjectSummaryCards from "../../../components/teacher-portal/SubjectSummaryCards";
@@ -20,6 +21,7 @@ import {
   isTeacherStudentReportResponse,
   useTeacherPortalLoad,
 } from "../../../lib/teacher-portal/use-teacher-portal-session";
+import { useReportDateRange } from "../../../hooks/useReportDateRange.js";
 import {
   actionTypeLabelHe,
   assignmentTypeLabelHe,
@@ -49,11 +51,13 @@ export async function getServerSideProps(context) {
 
 export default function TeacherStudentReportPage({ studentId }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const reportRange = useReportDateRange();
 
   const fetchPath = useMemo(() => {
     if (!studentId) return "";
-    return `/api/teacher/students/${encodeURIComponent(studentId)}/report-data`;
-  }, [studentId]);
+    const params = reportRange.buildSearchParams();
+    return `/api/teacher/students/${encodeURIComponent(studentId)}/report-data?${params.toString()}`;
+  }, [studentId, reportRange.appliedRange.from, reportRange.appliedRange.to, reportRange.buildSearchParams]);
 
   const { phase, loadingHint, errorMessage, accessToken, data: report, reload } =
     useTeacherPortalLoad({
@@ -213,7 +217,23 @@ export default function TeacherStudentReportPage({ studentId }) {
               {SC_BTN_STUDENT_DETAILS}
             </button>
           </div>
-          <p className="text-white/60 text-sm mb-6">נתונים מ-30 הימים האחרונים</p>
+          <ReportDateRangeControl
+            presetDays={reportRange.presetDays}
+            customDates={reportRange.customDates}
+            startDate={reportRange.startDate}
+            endDate={reportRange.endDate}
+            onStartDateChange={reportRange.setStartDate}
+            onEndDateChange={reportRange.setEndDate}
+            rangeLabel={reportRange.rangeLabel}
+            disabled={phase === "loading"}
+            onPreset={(days) => reportRange.applyPreset(days)}
+            onEnableCustom={() => reportRange.setCustomDates(true)}
+            onApplyCustom={() => {
+              const result = reportRange.applyCustom();
+              if (!result.ok) alert("אנא בחר תאריכים תקינים");
+            }}
+            className="mb-6"
+          />
 
           <section className="rounded-xl border border-white/15 bg-black/30 p-5 mb-6">
             <h2 className="text-lg font-semibold mb-3">סיכום</h2>

@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReportHubModal from "../reporting/ReportHubModal.jsx";
+import ReportDateRangeControl from "../reporting/ReportDateRangeControl.jsx";
 import { parseClassReportViewModel } from "../../lib/school-portal/school-report-view-model.js";
 import { parseStudentReportViewModel } from "../../lib/school-portal/school-report-view-model.js";
 import { teacherAuthFetch } from "../../lib/teacher-portal/teacher-ui.he.js";
+import { useReportDateRange } from "../../hooks/useReportDateRange.js";
+import { appendReportRangeToSearchParams } from "../../lib/reporting/report-date-range.js";
 
 /**
  * In-dashboard class report hub (summary-first, same UX as school manager).
@@ -20,47 +23,70 @@ export default function TeacherClassReportModal({
   const [nestedStudentVm, setNestedStudentVm] = useState(null);
   const [studentLoading, setStudentLoading] = useState(false);
 
+  const reportRange = useReportDateRange();
+  const activeClassIdRef = useRef(activeClassId);
+  const nestedStudentContextRef = useRef(null);
+  activeClassIdRef.current = activeClassId;
+
   const activeSubject = subjects.find((s) => s.classId === activeClassId) || subjects[0];
 
-  const loadClassReport = useCallback(async () => {
-    const classId = activeClassId || subjects[0]?.classId;
-    if (!classId || !accessToken) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError("");
-    setViewModel(null);
-    try {
-      const res = await teacherAuthFetch(
-        accessToken,
-        `/api/teacher/classes/${encodeURIComponent(classId)}/report-data?windowDays=30`
-      );
-      const body = await res.json().catch(() => ({}));
-      if (res.status !== 200) {
-        setError(body?.error?.message || "שגיאה בטעינת דוח");
+  const buildRangeParams = useCallback(
+    (range = null, extra = {}) => {
+      const params =
+        range != null
+          ? appendReportRangeToSearchParams(new URLSearchParams(), range)
+          : reportRange.buildSearchParams();
+      for (const [key, value] of Object.entries(extra)) {
+        if (value != null && String(value).trim()) params.set(key, String(value));
+      }
+      return params;
+    },
+    [reportRange]
+  );
+
+  const loadClassReport = useCallback(
+    async ({ forceRange = null } = {}) => {
+      const classId = activeClassIdRef.current || subjects[0]?.classId;
+      if (!classId || !accessToken) {
+        setLoading(false);
         return;
       }
-      const cls = body?.class || {};
-      setViewModel(
-        parseClassReportViewModel(
-          body,
-          {
-            classId,
-            name: classCard?.name || cls.name,
-            gradeLevel: classCard?.gradeLevel || cls.gradeLevel,
-            subjectFocus: activeSubject?.subjectFocus || cls.subjectFocus,
-            teacherName: null,
-            memberCount: classCard?.studentCount,
-            activityCount: classCard?.activityCount,
-          },
-          {}
-        )
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [accessToken, activeClassId, activeSubject, classCard, subjects]);
+      setLoading(true);
+      setError("");
+      setViewModel(null);
+      try {
+        const params = buildRangeParams(forceRange);
+        const res = await teacherAuthFetch(
+          accessToken,
+          `/api/teacher/classes/${encodeURIComponent(classId)}/report-data?${params.toString()}`
+        );
+        const body = await res.json().catch(() => ({}));
+        if (res.status !== 200) {
+          setError(body?.error?.message || "שגיאה בטעינת דוח");
+          return;
+        }
+        const cls = body?.class || {};
+        setViewModel(
+          parseClassReportViewModel(
+            body,
+            {
+              classId,
+              name: classCard?.name || cls.name,
+              gradeLevel: classCard?.gradeLevel || cls.gradeLevel,
+              subjectFocus: activeSubject?.subjectFocus || cls.subjectFocus,
+              teacherName: null,
+              memberCount: classCard?.studentCount,
+              activityCount: classCard?.activityCount,
+            },
+            {}
+          )
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [accessToken, activeSubject, buildRangeParams, classCard, subjects]
+  );
 
   useEffect(() => {
     setActiveClassId(subjects[0]?.classId || "");
@@ -70,13 +96,13 @@ export default function TeacherClassReportModal({
     void loadClassReport();
   }, [loadClassReport]);
 
-  const openStudentReport = async (studentId, row) => {
+  const openStudentReport = async (studentId, row, { range = null } = {}) => {
     if (!studentId || !accessToken) return;
+    nestedStudentContextRef.current = { studentId, row };
     setStudentLoading(true);
     try {
-      const classId = activeClassId || subjects[0]?.classId;
-      const params = new URLSearchParams({ windowDays: "30" });
-      if (classId) params.set("classId", String(classId));
+      const classId = activeClassIdRef.current || subjects[0]?.classId;
+      const params = buildRangeParams(range, classId ? { classId: String(classId) } : {});
       const res = await teacherAuthFetch(
         accessToken,
         `/api/teacher/students/${encodeURIComponent(studentId)}/report-data?${params.toString()}`
@@ -105,12 +131,46 @@ export default function TeacherClassReportModal({
     }
   };
 
-  const subtitle =
-    subjects.length > 1 && activeSubject?.subjectLabel
-      ? `${classCard?.name || "דוח כיתה"} · ${activeSubject.subjectLabel}`
-      : classCard?.name || "דוח כיתה";
+  const refetchForRange = useCallback(
+    (range) => {
+      if (nestedStudentVm && nestedStudentContextRef.current) {
+        const { studentId, row } = nestedStudentContextRef.current;
+        void openStudentReport(studentId, row, { range });
+        return;
+      }
+      void loadClassReport({ forceRange: range });
+    },
+    [loadClassReport, nestedStudentVm]
+  );
 
-  void subtitle;
+  const rangeControl = useMemo(
+    () => (
+      <ReportDateRangeControl
+        presetDays={reportRange.presetDays}
+        customDates={reportRange.customDates}
+        startDate={reportRange.startDate}
+        endDate={reportRange.endDate}
+        onStartDateChange={reportRange.setStartDate}
+        onEndDateChange={reportRange.setEndDate}
+        rangeLabel={reportRange.rangeLabel}
+        disabled={loading || studentLoading}
+        onPreset={(days) => {
+          const nextRange = reportRange.applyPreset(days);
+          refetchForRange(nextRange);
+        }}
+        onEnableCustom={() => reportRange.setCustomDates(true)}
+        onApplyCustom={() => {
+          const result = reportRange.applyCustom();
+          if (!result.ok) {
+            alert("אנא בחר תאריכים תקינים");
+            return;
+          }
+          refetchForRange({ from: result.from, to: result.to });
+        }}
+      />
+    ),
+    [loading, refetchForRange, reportRange, studentLoading]
+  );
 
   return (
     <>
@@ -147,7 +207,11 @@ export default function TeacherClassReportModal({
         onStudentReport={openStudentReport}
         studentReportLoading={studentLoading}
         nestedStudentViewModel={nestedStudentVm}
-        onCloseStudentReport={() => setNestedStudentVm(null)}
+        onCloseStudentReport={() => {
+          setNestedStudentVm(null);
+          nestedStudentContextRef.current = null;
+        }}
+        rangeControl={rangeControl}
       />
     </>
   );

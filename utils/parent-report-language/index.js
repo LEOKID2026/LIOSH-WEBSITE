@@ -58,6 +58,21 @@ export {
 export { GRADE_AWARE_RECOMMENDATION_TEMPLATES } from "./grade-aware-recommendation-templates.js";
 export { resolveGradeAwareParentRecommendationHe } from "./grade-aware-recommendation-resolver.js";
 export {
+  taxonomyDiagnosticExplanationLookupKey,
+  v2UnitTaxonomyId,
+  resolveLookupKeyFromV2Unit,
+  getParentDiagnosticExplanationEntry,
+  resolveApprovedParentDiagnosticExplanationV1,
+  buildParentDiagnosticExplanationV1FromV2Unit,
+  parentDiagnosticExplanationCatalogForTests,
+  mathTaxonomyExplanationIdsForTests,
+  geometryTaxonomyExplanationIdsForTests,
+  hebrewSubjectTaxonomyExplanationIdsForTests,
+  englishSubjectTaxonomyExplanationIdsForTests,
+  scienceSubjectTaxonomyExplanationIdsForTests,
+  moledetGeographyTaxonomyExplanationIdsForTests,
+} from "./parent-diagnostic-explanations-he.js";
+export {
   M10_ENGINE_PATTERN_HE,
   M10_PARENT_PATTERN_LABELS,
   isM10ThinOrUnclearEvidence,

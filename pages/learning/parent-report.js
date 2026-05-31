@@ -11,6 +11,7 @@ import {
   getDeterministicParentAiExplanationFromParentReportV2,
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
 import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
+import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import ParentReportParentSections from "../../components/parent/ParentReportParentSections.jsx";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
 
@@ -1566,6 +1567,15 @@ export default function ParentReport() {
             #parent-report-pdf .parent-report-topic-explain-block .border-white\\/15,
             #parent-report-pdf .parent-report-topic-explain-block .border-white\\/10 {
               border-color: #cbd5e1 !important;
+            }
+            #parent-report-pdf .parent-diagnostic-explanation-block {
+              break-inside: avoid !important;
+              page-break-inside: avoid !important;
+              color: #334155 !important;
+            }
+            #parent-report-pdf .parent-diagnostic-explanation-example-ltr {
+              direction: ltr !important;
+              unicode-bidi: isolate !important;
             }
             /* נושאים: בהדפסה תמיד פריסת שולחן עבודה; כרטיסי מובייל מוסתרים */
             #parent-report-pdf .parent-report-desktop-only {
@@ -3381,6 +3391,10 @@ export default function ParentReport() {
                                         ? ` (${w.mistakeCount} טעויות דומות)`
                                         : ""}
                                     </div>
+                                    <ParentDiagnosticExplanationBlock
+                                      explanationV1={w.parentDiagnosticExplanationV1}
+                                      className="parent-report-print-muted-text"
+                                    />
                                   </div>
                                 </div>
                               </div>

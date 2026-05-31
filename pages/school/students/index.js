@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import SchoolPortalShell from "../../../components/school-portal/SchoolPortalShell";
+import ReportDateRangeControl from "../../../components/reporting/ReportDateRangeControl.jsx";
 import {
   SchoolBackButton,
   SchoolCardGrid,
@@ -37,6 +38,8 @@ import {
 import { SC_BTN_STUDENT_DETAILS } from "../../../lib/school-portal/school-communication.he";
 import { fetchSchoolJsonSWR, invalidateSchoolCache, readSchoolCache, deleteSchoolCacheEntry, SCHOOL_CACHE_TTL_MS } from "../../../lib/school-portal/school-portal-cache";
 import { fetchSchoolReportCached } from "../../../lib/school-portal/fetch-school-report";
+import { useReportDateRange } from "../../../hooks/useReportDateRange";
+import { appendReportRangeToSearchParams } from "../../../lib/reporting/report-date-range.js";
 import {
   apiErrorMessageHe,
   schoolAuthFetch,
@@ -272,39 +275,103 @@ export default function SchoolStudentsPage() {
     setReportViewModel(null);
   };
 
+  const reportRange = useReportDateRange();
+  const reportStudentRef = useRef(null);
+
+  const fetchStudentReport = useCallback(
+    async (student, { force = false, range = null } = {}) => {
+      if (!hasSchoolPortalSession(accessToken, authMethod) || !canViewReports || !student?.studentId) {
+        return;
+      }
+      reportStudentRef.current = student;
+      const params =
+        range != null
+          ? appendReportRangeToSearchParams(new URLSearchParams(), range)
+          : reportRange.buildSearchParams();
+      const ctxGrade = student?.gradeLevel || gradeLevel;
+      const ctxPhysical = student?.physicalClassName || physicalClassName;
+      if (ctxGrade) params.set("gradeLevel", String(ctxGrade));
+      if (ctxPhysical) params.set("physicalClassName", String(ctxPhysical));
+      const path = `/api/school/students/${student.studentId}/report-data?${params.toString()}`;
+
+      setReportLoading(true);
+      setReportError("");
+      try {
+        const result = await fetchSchoolReportCached({
+          accessToken,
+          schoolId,
+          path,
+          force,
+        });
+        if (result?.status !== 200) {
+          setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
+          setReportViewModel(null);
+          return;
+        }
+        setReportViewModel(
+          parseStudentReportViewModel(result.body, student, { schoolName: me?.school?.name })
+        );
+      } finally {
+        setReportLoading(false);
+      }
+    },
+    [
+      accessToken,
+      authMethod,
+      canViewReports,
+      gradeLevel,
+      physicalClassName,
+      me?.school?.name,
+      reportRange,
+      schoolId,
+    ]
+  );
+
+  const refetchStudentReportForRange = useCallback(
+    (range = null) => {
+      const student = reportStudentRef.current;
+      if (student && reportOpen) {
+        void fetchStudentReport(student, { force: true, range });
+      }
+    },
+    [fetchStudentReport, reportOpen]
+  );
+
+  const reportRangeControl = (
+    <ReportDateRangeControl
+      presetDays={reportRange.presetDays}
+      customDates={reportRange.customDates}
+      startDate={reportRange.startDate}
+      endDate={reportRange.endDate}
+      onStartDateChange={reportRange.setStartDate}
+      onEndDateChange={reportRange.setEndDate}
+      rangeLabel={reportRange.rangeLabel}
+      disabled={reportLoading}
+      onPreset={(days) => {
+        const range = reportRange.applyPreset(days);
+        refetchStudentReportForRange(range);
+      }}
+      onEnableCustom={() => reportRange.setCustomDates(true)}
+      onApplyCustom={() => {
+        const result = reportRange.applyCustom();
+        if (!result.ok) {
+          alert("אנא בחר תאריכים תקינים");
+          return;
+        }
+        refetchStudentReportForRange({ from: result.from, to: result.to });
+      }}
+    />
+  );
+
   const openStudentReport = async (student) => {
     if (!hasSchoolPortalSession(accessToken, authMethod) || !canViewReports) return;
     setModalInitialTab("report");
     setReportStudent(student);
+    reportStudentRef.current = student;
     setReportOpen(true);
     setReportError("");
     setReportViewModel(null);
-    const params = new URLSearchParams({ windowDays: "30" });
-    const ctxGrade = student?.gradeLevel || gradeLevel;
-    const ctxPhysical = student?.physicalClassName || physicalClassName;
-    if (ctxGrade) params.set("gradeLevel", String(ctxGrade));
-    if (ctxPhysical) params.set("physicalClassName", String(ctxPhysical));
-    const path = `/api/school/students/${student.studentId}/report-data?${params.toString()}`;
-
-    const applyBody = (body) => {
-      setReportViewModel(parseStudentReportViewModel(body, student, { schoolName: me?.school?.name }));
-    };
-
-    setReportLoading(true);
-    try {
-      const result = await fetchSchoolReportCached({
-        accessToken,
-        schoolId,
-        path,
-      });
-      if (result?.status !== 200) {
-        setReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
-        return;
-      }
-      applyBody(result.body);
-    } finally {
-      setReportLoading(false);
-    }
+    await fetchStudentReport(student);
   };
 
   const openStudentAccess = (student) => {
@@ -588,6 +655,7 @@ export default function SchoolStudentsPage() {
               canViewReport={canViewReports}
               initialTab={modalInitialTab}
               onAssignmentUpdated={() => void loadBrowseSummary({ force: true })}
+              rangeControl={reportRangeControl}
             />
 
             <SchoolStudentDetailsModal

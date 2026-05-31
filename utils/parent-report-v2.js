@@ -78,6 +78,7 @@ import {
   parentFacingPatternLabelHe,
   parentFacingDiagnosisSnippetHe,
   sanitizeDiagnosticEngineV2ForParentFacing,
+  buildParentDiagnosticExplanationV1FromV2Unit,
 } from "./parent-report-language/index.js";
 import { withholdSummaryCopyHe } from "./parent-report-language/subject-withhold-summary-he.js";
 import { hardenBaseReportWithRowIdentity } from "./parent-report-output-integrity/harden-report-rows.js";
@@ -1394,13 +1395,19 @@ function summarizeV2UnitsForSubject(units, opts = {}) {
   const topWeaknesses = diagnosed
     .filter((u) => parentFacingPatternLabelHe(u))
     .slice(0, 3)
-    .map((u) => ({
-      labelHe: parentFacingPatternLabelHe(u),
-      mistakeCount: safeNumber(u?.recurrence?.wrongCountForRules),
-      tierHe: safeNumber(u?.recurrence?.wrongCountForRules) >= 5 ? tierWeaknessRecurringHe() : tierWeaknessSupportHe(),
-      topicStateId: cs(u)?.topicStateId || null,
-      stateHash: cs(u)?.stateHash || null,
-    }));
+    .map((u) => {
+      const taxonomyId = String(u?.taxonomy?.id || u?.diagnosis?.taxonomyId || "").trim();
+      return {
+        labelHe: parentFacingPatternLabelHe(u),
+        mistakeCount: safeNumber(u?.recurrence?.wrongCountForRules),
+        tierHe:
+          safeNumber(u?.recurrence?.wrongCountForRules) >= 5 ? tierWeaknessRecurringHe() : tierWeaknessSupportHe(),
+        topicStateId: cs(u)?.topicStateId || null,
+        stateHash: cs(u)?.stateHash || null,
+        taxonomyId: taxonomyId || null,
+        parentDiagnosticExplanationV1: buildParentDiagnosticExplanationV1FromV2Unit(u),
+      };
+    });
 
   const rankedForEvidence = [...strengthUnits].sort(rankPositive);
   const evidenceExamples = [];
