@@ -4,6 +4,14 @@ import {
   ADMIN_LIFECYCLE_ACCOUNT_STATUS,
   ADMIN_LIFECYCLE_BUSY,
   ADMIN_LIFECYCLE_CONFIRM_REVOKE,
+  ADMIN_LIFECYCLE_DELETE,
+  ADMIN_LIFECYCLE_DELETE_BLOCKED,
+  ADMIN_LIFECYCLE_DELETE_BUSY,
+  ADMIN_LIFECYCLE_DELETE_CANCEL,
+  ADMIN_LIFECYCLE_DELETE_CONFIRM_LABEL,
+  ADMIN_LIFECYCLE_DELETE_PROTECTED,
+  ADMIN_LIFECYCLE_DELETE_SUBMIT,
+  ADMIN_LIFECYCLE_DELETE_SUCCESS,
   ADMIN_LIFECYCLE_ENTITLEMENT_STATUS,
   ADMIN_LIFECYCLE_LOADING,
   ADMIN_LIFECYCLE_NETWORK_ERROR,
@@ -40,7 +48,9 @@ function statusBadgeClass(status) {
  *   userId: string,
  *   persona: string,
  *   accountStatus?: string|null,
+ *   targetEmail?: string|null,
  *   onChanged?: () => void,
+ *   onDeleted?: () => void,
  * }} props
  */
 export default function AdminUserLifecyclePanel({
@@ -48,7 +58,9 @@ export default function AdminUserLifecyclePanel({
   userId,
   persona,
   accountStatus = null,
+  targetEmail = null,
   onChanged,
+  onDeleted,
 }) {
   const [entitlement, setEntitlement] = useState(null);
   const [teacherActive, setTeacherActive] = useState(null);
@@ -56,24 +68,39 @@ export default function AdminUserLifecyclePanel({
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [deletePreview, setDeletePreview] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [deleteConfirmEmail, setDeleteConfirmEmail] = useState("");
 
   const load = useCallback(async () => {
     if (!accessToken || !userId) return;
     setLoading(true);
     setError("");
     try {
-      const res = await adminAuthFetch(
-        accessToken,
-        `/api/admin/users/${encodeURIComponent(userId)}/lifecycle`
-      );
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(apiErrorMessageHe(json?.error, "שגיאה בטעינה"));
+      const [lifecycleRes, previewRes] = await Promise.all([
+        adminAuthFetch(accessToken, `/api/admin/users/${encodeURIComponent(userId)}/lifecycle`),
+        adminAuthFetch(
+          accessToken,
+          `/api/admin/users/${encodeURIComponent(userId)}/delete-preview`
+        ),
+      ]);
+      const lifecycleJson = await lifecycleRes.json().catch(() => ({}));
+      const previewJson = await previewRes.json().catch(() => ({}));
+
+      if (!lifecycleRes.ok) {
+        setError(apiErrorMessageHe(lifecycleJson?.error, "שגיאה בטעינה"));
         return;
       }
-      const ents = json?.data?.entitlements || [];
+
+      const ents = lifecycleJson?.data?.entitlements || [];
       setEntitlement(ents.find((e) => e.persona === persona) || null);
-      setTeacherActive(json?.data?.teacherIsAccountActive);
+      setTeacherActive(lifecycleJson?.data?.teacherIsAccountActive);
+
+      if (previewRes.ok && previewJson?.data) {
+        setDeletePreview(previewJson.data);
+      } else {
+        setDeletePreview(null);
+      }
     } catch {
       setError(ADMIN_LIFECYCLE_NETWORK_ERROR);
     } finally {
@@ -120,6 +147,46 @@ export default function AdminUserLifecyclePanel({
     }
   };
 
+  const runDelete = async () => {
+    if (!accessToken || !deleteConfirmEmail.trim()) return;
+
+    setBusy("delete");
+    setError("");
+    setMessage("");
+    try {
+      const res = await adminAuthFetch(
+        accessToken,
+        `/api/admin/users/${encodeURIComponent(userId)}/delete`,
+        {
+          method: "POST",
+          body: JSON.stringify({ confirmEmail: deleteConfirmEmail.trim() }),
+        }
+      );
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const blockers = json?.error?.blockers;
+        if (Array.isArray(blockers) && blockers.length) {
+          setError(
+            `${apiErrorMessageHe(json?.error, ADMIN_LIFECYCLE_DELETE_BLOCKED)} (${blockers
+              .map((b) => `${b.table}${b.count != null ? `: ${b.count}` : ""}`)
+              .join(", ")})`
+          );
+        } else {
+          setError(apiErrorMessageHe(json?.error, ADMIN_LIFECYCLE_DELETE_BLOCKED));
+        }
+        return;
+      }
+      setMessage(ADMIN_LIFECYCLE_DELETE_SUCCESS);
+      setDeleteConfirmOpen(false);
+      setDeleteConfirmEmail("");
+      onDeleted?.();
+    } catch {
+      setError(ADMIN_LIFECYCLE_NETWORK_ERROR);
+    } finally {
+      setBusy("");
+    }
+  };
+
   const entStatus = entitlement?.status || "none";
   const canSuspend = entStatus === "active";
   const canApprovePending = entStatus === "pending";
@@ -127,6 +194,17 @@ export default function AdminUserLifecyclePanel({
   const canReactivate =
     entStatus === "suspended" || entStatus === "revoked" || entStatus === "rejected";
   const canRevoke = entStatus === "active" || entStatus === "suspended";
+
+  const expectedDeleteEmail = String(targetEmail || deletePreview?.email || "")
+    .trim()
+    .toLowerCase();
+  const deleteEmailMatches =
+    expectedDeleteEmail.length > 0 &&
+    deleteConfirmEmail.trim().toLowerCase() === expectedDeleteEmail;
+  const showDeleteButton =
+    deletePreview?.actorIsMainAdmin && deletePreview?.deletable && !deleteConfirmOpen;
+  const showDeleteProtectedNote =
+    deletePreview?.actorIsMainAdmin && !deletePreview?.deletable && deletePreview?.protectionCode;
 
   return (
     <section
@@ -230,7 +308,81 @@ export default function AdminUserLifecyclePanel({
                 {busy === "revoke" ? ADMIN_LIFECYCLE_BUSY : ADMIN_LIFECYCLE_REVOKE}
               </button>
             ) : null}
+            {showDeleteButton ? (
+              <button
+                type="button"
+                disabled={!!busy}
+                onClick={() => {
+                  setDeleteConfirmOpen(true);
+                  setDeleteConfirmEmail("");
+                  setError("");
+                }}
+                className="rounded-lg border border-red-500/50 bg-red-600/20 hover:bg-red-600/30 px-3 py-1.5 text-sm disabled:opacity-50"
+                data-testid="lifecycle-delete"
+              >
+                {ADMIN_LIFECYCLE_DELETE}
+              </button>
+            ) : null}
           </div>
+
+          {deleteConfirmOpen ? (
+            <div
+              className="mt-4 rounded-lg border border-red-400/30 bg-red-950/20 p-4 space-y-3"
+              data-testid="lifecycle-delete-confirm"
+            >
+              <p className="text-sm text-white/80">{ADMIN_LIFECYCLE_DELETE_CONFIRM_LABEL}</p>
+              <input
+                type="email"
+                value={deleteConfirmEmail}
+                onChange={(e) => setDeleteConfirmEmail(e.target.value)}
+                placeholder={targetEmail || deletePreview?.email || ""}
+                dir="ltr"
+                className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 text-sm"
+                data-testid="lifecycle-delete-confirm-email"
+                autoComplete="off"
+              />
+              {Array.isArray(deletePreview?.blockers) && deletePreview.blockers.length > 0 ? (
+                <ul className="text-xs text-amber-200/90 list-disc list-inside">
+                  {deletePreview.blockers.map((b) => (
+                    <li key={b.table}>
+                      {b.table}
+                      {b.count != null ? `: ${b.count}` : ""}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <div className="flex flex-wrap gap-2 justify-end">
+                <button
+                  type="button"
+                  disabled={!!busy}
+                  onClick={() => {
+                    setDeleteConfirmOpen(false);
+                    setDeleteConfirmEmail("");
+                  }}
+                  className="rounded-lg border border-white/20 px-3 py-1.5 text-sm"
+                  data-testid="lifecycle-delete-cancel"
+                >
+                  {ADMIN_LIFECYCLE_DELETE_CANCEL}
+                </button>
+                <button
+                  type="button"
+                  disabled={!!busy || !deleteEmailMatches}
+                  onClick={() => void runDelete()}
+                  className="rounded-lg border border-red-500/50 bg-red-600/30 hover:bg-red-600/40 px-3 py-1.5 text-sm disabled:opacity-50"
+                  data-testid="lifecycle-delete-submit"
+                >
+                  {busy === "delete" ? ADMIN_LIFECYCLE_DELETE_BUSY : ADMIN_LIFECYCLE_DELETE_SUBMIT}
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          {showDeleteProtectedNote ? (
+            <p className="text-white/50 text-xs mt-3" data-testid="lifecycle-delete-protected">
+              {ADMIN_LIFECYCLE_DELETE_PROTECTED}
+            </p>
+          ) : null}
+
           {message ? <p className="text-emerald-300 text-sm mt-3">{message}</p> : null}
           {error ? <p className="text-red-300 text-sm mt-3">{error}</p> : null}
         </>

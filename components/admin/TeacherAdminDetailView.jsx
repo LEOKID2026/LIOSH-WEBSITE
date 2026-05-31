@@ -343,9 +343,15 @@ export default function TeacherAdminDetailView({ teacher, audit, accessToken, on
           accessToken={accessToken}
           userId={teacher.teacherId}
           persona="private_teacher"
+          targetEmail={teacher.email}
           onChanged={() => {
             onUpdated?.(teacher);
             onReload?.();
+          }}
+          onDeleted={() => {
+            if (typeof window !== "undefined") {
+              window.location.href = "/admin/teachers";
+            }
           }}
         />
       ) : null}

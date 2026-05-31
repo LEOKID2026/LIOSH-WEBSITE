@@ -1,5 +1,7 @@
 # Resend Setup Checklist
 
+> **Note:** Resend remains the **long-term recommended provider** after a custom domain is purchased. Until then, use [`BREVO_TEMPORARY_SMTP_SETUP.md`](./BREVO_TEMPORARY_SMTP_SETUP.md) for the temporary launch path (Brevo Free via Supabase Custom SMTP).
+
 **Project:** Hebrew learning site — External Email Delivery  
 **Provider:** Resend (free tier) via Supabase Custom SMTP  
 **Audience:** Owner only — all steps below require owner action in external dashboards

@@ -1,12 +1,57 @@
 # Supabase Custom SMTP Configuration
 
 **Project:** Hebrew learning site — External Email Delivery  
-**Provider:** Resend via Supabase Custom SMTP  
+**Providers:** Brevo Free (temporary launch) · Resend (long-term, after custom domain)  
 **Audience:** Owner only — all configuration steps require Supabase Dashboard access
 
 ---
 
-## Prerequisites
+## Temporary Launch Path — Brevo Free
+
+Use this path **now** for launch while no custom domain exists. Brevo Free allows transactional SMTP without purchasing a domain first.
+
+### Why Brevo temporarily
+
+- Supabase default SMTP: ~**2 emails/hour** — too low for launch
+- Brevo Free: **300 emails/day**
+- No app code changes — Supabase Auth still triggers all emails
+- SMTP2GO was not usable (Gmail signup blocked; private-domain email required)
+
+Full setup guide: [`BREVO_TEMPORARY_SMTP_SETUP.md`](./BREVO_TEMPORARY_SMTP_SETUP.md)
+
+### Brevo SMTP fields (Supabase Dashboard)
+
+**Path:** Supabase Dashboard → Authentication → Emails → SMTP Settings / Custom SMTP
+
+| Field | Value | Notes |
+|-------|-------|-------|
+| **Enable Custom SMTP** | On | Replaces Supabase default sender |
+| **Host** | `smtp-relay.brevo.com` | Brevo SMTP relay |
+| **Port** | `587` | STARTTLS |
+| **Username** | `ad17b3001@smtp-brevo.com` | Brevo-assigned SMTP login |
+| **Password** | `[OWNER ENTERS BREVO SMTP KEY HERE — NOT IN DOCS]` | Brevo SMTP key — enter only in Dashboard |
+| **Sender name** | `Leo Kid` or `ליאו קיד` | Owner choice |
+| **Sender email** | Owner-selected / Brevo-verified sender | Must match Brevo sender configuration |
+
+### Owner checklist — Brevo SMTP
+
+- [ ] **[OWNER ACTION REQUIRED]** Enable Custom SMTP in Supabase Dashboard
+- [ ] **[OWNER ACTION REQUIRED]** Enter Brevo host, port, username, and SMTP key (password)
+- [ ] **[OWNER ACTION REQUIRED]** Set sender name and sender email
+- [ ] **[OWNER ACTION REQUIRED]** Save settings
+- [ ] **[OWNER ACTION REQUIRED]** Run smoke tests in [`BREVO_TEMPORARY_SMTP_SETUP.md`](./BREVO_TEMPORARY_SMTP_SETUP.md)
+
+**Clarifications:**
+
+- No application code changes are needed.
+- This is a **temporary launch setup**.
+- Resend remains the preferred **long-term** setup after a custom domain is purchased (see below).
+
+---
+
+## Long-Term Path — Resend (After Custom Domain)
+
+### Prerequisites
 
 Complete [`RESEND_SETUP_CHECKLIST.md`](./RESEND_SETUP_CHECKLIST.md) first:
 
@@ -24,9 +69,9 @@ Complete [`RESEND_SETUP_CHECKLIST.md`](./RESEND_SETUP_CHECKLIST.md) first:
 
 ---
 
-## Custom SMTP Fields
+## Resend Custom SMTP Fields
 
-Enable **Custom SMTP** and enter the following values.
+Enable **Custom SMTP** and enter the following values when migrating from Brevo to Resend.
 
 | Field | Value | Notes |
 |-------|-------|-------|
@@ -36,9 +81,9 @@ Enable **Custom SMTP** and enter the following values.
 | **Username** | `resend` | Fixed value per Resend docs |
 | **Password** | `[OWNER ENTERS RESEND API KEY HERE — NOT IN DOCS]` | Resend API key with sending access — enter only in Dashboard |
 | **Sender name** | Owner decides | e.g. `Liosh Learning` / `ליאוש לימוד` |
-| **Sender email** | Owner decides | Must use verified Resend domain, e.g. `noreply@your-verified-domain.com` |
+| **Sender email** | Owner decides | Must use verified Resend domain, e.g. `noreply@mail.yourdomain.com` |
 
-### Owner checklist — SMTP
+### Owner checklist — Resend SMTP
 
 - [ ] **[OWNER ACTION REQUIRED]** Enable Custom SMTP in Supabase Dashboard
 - [ ] **[OWNER ACTION REQUIRED]** Enter host: `smtp.resend.com`
@@ -101,7 +146,7 @@ Supabase Auth applies rate limits on email sends (e.g. recovery requests per add
 
 - [ ] **[OWNER ACTION REQUIRED]** Review Auth email rate limit settings
 - [ ] **[OWNER ACTION REQUIRED]** Confirm limits are appropriate for launch (avoid overly permissive settings)
-- [ ] **[OWNER ACTION REQUIRED]** Note: Resend free tier also has its own sending limits — monitor in Resend Dashboard
+- [ ] **[OWNER ACTION REQUIRED]** Note: Brevo Free tier allows **300 emails/day**; Resend free tier has its own limits — monitor in provider Dashboard
 
 ---
 
@@ -148,15 +193,17 @@ Auth email bodies (recovery, confirmation, invite, magic link) are managed in Su
 
 ## Post-Configuration Smoke Test
 
-After SMTP and URL allowlist are configured:
+After Brevo (temporary) or Resend (long-term) SMTP and URL allowlist are configured:
 
 - [ ] **[OWNER ACTION REQUIRED]** Go to `/auth/forgot-password?portal=parent` on production
 - [ ] **[OWNER ACTION REQUIRED]** Enter a test email address you control
-- [ ] **[OWNER ACTION REQUIRED]** Confirm email arrives from your Resend verified domain (not Supabase default)
+- [ ] **[OWNER ACTION REQUIRED]** Confirm email arrives from your Brevo or Resend configured sender (not Supabase default)
 - [ ] **[OWNER ACTION REQUIRED]** Click the link — confirm redirect to `/auth/reset-password?portal=parent`
 - [ ] **[OWNER ACTION REQUIRED]** Complete password reset
 - [ ] **[OWNER ACTION REQUIRED]** Repeat for `portal=teacher` if applicable
 - [ ] **[OWNER ACTION REQUIRED]** Record results in [`EMAIL_DELIVERY_QA_REPORT.md`](./EMAIL_DELIVERY_QA_REPORT.md)
+
+See [`BREVO_TEMPORARY_SMTP_SETUP.md`](./BREVO_TEMPORARY_SMTP_SETUP.md) for full Brevo smoke test list (L-BREVO-01 through L-BREVO-08).
 
 ---
 
@@ -171,7 +218,8 @@ After SMTP and URL allowlist are configured:
 
 ## Related Documents
 
-- [`RESEND_SETUP_CHECKLIST.md`](./RESEND_SETUP_CHECKLIST.md) — Resend account and domain setup (prerequisite)
+- [`BREVO_TEMPORARY_SMTP_SETUP.md`](./BREVO_TEMPORARY_SMTP_SETUP.md) — temporary launch path (current)
+- [`RESEND_SETUP_CHECKLIST.md`](./RESEND_SETUP_CHECKLIST.md) — long-term Resend setup after custom domain
 - [`EMAIL_DELIVERY_AUDIT.md`](./EMAIL_DELIVERY_AUDIT.md) — flow inventory
 - [`EMAIL_DELIVERY_QA_REPORT.md`](./EMAIL_DELIVERY_QA_REPORT.md) — test matrix
 - [`EMAIL_DELIVERY_SECURITY_REVIEW.md`](./EMAIL_DELIVERY_SECURITY_REVIEW.md) — security posture

@@ -79,7 +79,9 @@ export default function AdminParentDetailPage() {
               userId={String(userId)}
               persona="parent"
               accountStatus={settings.accountStatus}
+              targetEmail={email}
               onChanged={() => load(accessToken, String(userId))}
+              onDeleted={() => router.push("/admin/parents")}
             />
             <ParentAdminSettingsForm
               accessToken={accessToken}

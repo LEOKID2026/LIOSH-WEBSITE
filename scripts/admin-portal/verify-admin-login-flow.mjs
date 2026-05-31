@@ -11,8 +11,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "../..");
 const u = (p) => pathToFileURL(path.join(root, p)).href;
 
-const EMAIL = String(process.env.ADMIN_TEST_EMAIL || "office@leo.com").trim().toLowerCase();
-const PASSWORD = String(process.env.ADMIN_TEST_PASSWORD || "leo7479");
+const EMAIL = String(process.env.MAIN_ADMIN_EMAIL || process.env.ADMIN_TEST_EMAIL || "leokid2026@gmail.com").trim().toLowerCase();
+const PASSWORD = String(process.env.ADMIN_TEST_PASSWORD || "").trim();
 
 function requireEnv(name) {
   const v = String(process.env[name] || "").trim();
@@ -44,6 +44,9 @@ async function runHandler(rel, req) {
 }
 
 async function main() {
+  if (!PASSWORD) {
+    throw new Error("Set ADMIN_TEST_PASSWORD in env to run login verification (not stored in repo).");
+  }
   const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
   const anonKey = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_ANON_KEY");
 

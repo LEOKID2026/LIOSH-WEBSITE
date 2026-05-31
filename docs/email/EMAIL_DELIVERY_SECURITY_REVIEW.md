@@ -1,7 +1,7 @@
 # Email Delivery Security Review
 
-**Date:** 2026-05-31  
-**Project:** Hebrew learning site — External Email Delivery (Resend via Supabase Custom SMTP)  
+**Date:** 2026-05-31 (updated — Brevo temporary launch path)  
+**Project:** Hebrew learning site — External Email Delivery (Brevo temporary · Resend long-term)  
 **Mode:** Read-only security review — no code, SQL, dashboard, or env changes
 
 ---
@@ -14,14 +14,46 @@
 | App env exposure | **Clean** — no SMTP keys in `.env.example` or app env pattern |
 | Email transport attack surface | **Low** — all delivery delegated to Supabase Auth; no custom mailer |
 | Redirect URL handling | **Review required (owner)** — allowlist must match production origins |
-| New risks from Resend migration | **None from code changes** — configuration-only change |
+| New risks from SMTP provider change | **None from code changes** — configuration-only change |
+| Brevo temporary path | **Acceptable for small launch** — see §1b below |
 | SQL / migrations required | **None** |
 
-**Overall:** Safe to proceed with owner-only Dashboard configuration. No application code changes required.
+**Overall:** Safe to proceed with owner-only Dashboard configuration (Brevo temporary, then Resend long-term). No application code changes required.
 
 ---
 
-## 1. SMTP Credential Handling
+## 1b. Brevo Temporary Launch Path — Security Notes
+
+### Credential handling
+
+Brevo SMTP key must exist **only** in:
+
+- Brevo Dashboard (SMTP key management)
+- Supabase Dashboard (Custom SMTP password field)
+- Owner's secure password manager
+
+Do **not** store Brevo SMTP credentials in env files, `.env.example`, documentation (beyond placeholders), repository, logs, screenshots, or chat.
+
+The Brevo SMTP **login** (`ad17b3001@smtp-brevo.com`) is a Brevo-assigned identifier and may appear in setup docs. The **SMTP key (password)** is a secret and must never be documented or transmitted outside Dashboard/password manager.
+
+### Temporary vs long-term posture
+
+| Aspect | Brevo temporary (now) | Resend + custom domain (long-term) |
+|--------|-------------------------|-------------------------------------|
+| Gmail-based Brevo signup | Acceptable for small launch volume | N/A |
+| SPF/DKIM/DMARC on owned domain | Limited until custom domain | **Recommended** — full DNS authentication |
+| Daily send limit | 300 emails/day (Brevo Free) | Resend free tier limits apply |
+| App attack surface | **Unchanged** — Supabase Auth still triggers all emails; no custom mailer in app | Same |
+
+### No new app attack surface
+
+Switching Supabase Custom SMTP from default → Brevo does not add application code, new API routes, or client-side email logic. All Auth emails still flow: App → Supabase Auth → Brevo SMTP relay.
+
+See [`BREVO_TEMPORARY_SMTP_SETUP.md`](./BREVO_TEMPORARY_SMTP_SETUP.md).
+
+---
+
+## 1. SMTP Credential Handling (Resend — Long-Term)
 
 ### Requirement
 
@@ -35,6 +67,7 @@ Resend API key (used as SMTP password) must exist **only** in:
 
 | Check | Result |
 |-------|--------|
+| `BREVO_*` keys in `.env.example` | **Not present** |
 | `RESEND_*` keys in `.env.example` | **Not present** |
 | `SMTP_*` keys in `.env.example` | **Not present** |
 | Resend/nodemailer/sendgrid in production JS | **Not present** (repo grep) |
@@ -109,7 +142,8 @@ Additional in-memory rate limits exist on login and registration API routes (`li
 ### Owner action required
 
 - [ ] **[OWNER ACTION REQUIRED]** Review Supabase Auth rate limit settings after enabling Custom SMTP
-- [ ] **[OWNER ACTION REQUIRED]** Monitor Resend Dashboard for bounce/complaint rates on free tier
+- [ ] **[OWNER ACTION REQUIRED]** Monitor Brevo Dashboard for bounces/complaints (300 emails/day free tier)
+- [ ] **[OWNER ACTION REQUIRED]** Monitor Resend Dashboard after long-term migration
 
 ---
 
@@ -209,15 +243,25 @@ The following were not modified and remain governed by existing security posture
 
 ## Recommendations for Owner (Post-Config)
 
-1. Rotate Resend API key if it was ever exposed outside Dashboard/password manager
-2. Use a dedicated subdomain for transactional mail (e.g. `mail.yourdomain.com`)
-3. Enable DKIM + SPF verification before production traffic
-4. Run live smoke tests per [`EMAIL_DELIVERY_QA_REPORT.md`](./EMAIL_DELIVERY_QA_REPORT.md) after SMTP config
-5. Monitor Resend Dashboard for delivery failures and bounces
+### Brevo temporary launch
+
+1. Enter Brevo SMTP only in Supabase Dashboard — never in repo or chat
+2. Rotate Brevo SMTP key if ever exposed outside Dashboard/password manager
+3. Monitor Brevo daily quota (300 emails/day)
+4. Run L-BREVO smoke tests per [`EMAIL_DELIVERY_QA_REPORT.md`](./EMAIL_DELIVERY_QA_REPORT.md)
+
+### Long-term (after custom domain)
+
+1. Migrate to Resend with verified domain SPF/DKIM/DMARC
+2. Rotate Resend API key if ever exposed
+3. Use dedicated subdomain for transactional mail (e.g. `mail.yourdomain.com`)
+4. Run L-01–L-08 on Resend track
 
 ---
 
 ## Related Documents
+
+- [`BREVO_TEMPORARY_SMTP_SETUP.md`](./BREVO_TEMPORARY_SMTP_SETUP.md)
 
 - [`EMAIL_DELIVERY_AUDIT.md`](./EMAIL_DELIVERY_AUDIT.md)
 - [`RESEND_SETUP_CHECKLIST.md`](./RESEND_SETUP_CHECKLIST.md)
