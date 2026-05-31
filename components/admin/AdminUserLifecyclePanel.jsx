@@ -70,7 +70,7 @@ export default function AdminUserLifecyclePanel({
   const [message, setMessage] = useState("");
   const [deletePreview, setDeletePreview] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [deleteConfirmEmail, setDeleteConfirmEmail] = useState("");
+  const [deleteConfirmCode, setDeleteConfirmCode] = useState("");
 
   const load = useCallback(async () => {
     if (!accessToken || !userId) return;
@@ -148,7 +148,7 @@ export default function AdminUserLifecyclePanel({
   };
 
   const runDelete = async () => {
-    if (!accessToken || !deleteConfirmEmail.trim()) return;
+    if (!accessToken || !deleteConfirmCode.trim()) return;
 
     setBusy("delete");
     setError("");
@@ -159,7 +159,7 @@ export default function AdminUserLifecyclePanel({
         `/api/admin/users/${encodeURIComponent(userId)}/delete`,
         {
           method: "POST",
-          body: JSON.stringify({ confirmEmail: deleteConfirmEmail.trim() }),
+          body: JSON.stringify({ confirmCode: deleteConfirmCode.trim() }),
         }
       );
       const json = await res.json().catch(() => ({}));
@@ -178,7 +178,7 @@ export default function AdminUserLifecyclePanel({
       }
       setMessage(ADMIN_LIFECYCLE_DELETE_SUCCESS);
       setDeleteConfirmOpen(false);
-      setDeleteConfirmEmail("");
+      setDeleteConfirmCode("");
       onDeleted?.();
     } catch {
       setError(ADMIN_LIFECYCLE_NETWORK_ERROR);
@@ -195,14 +195,8 @@ export default function AdminUserLifecyclePanel({
     entStatus === "suspended" || entStatus === "revoked" || entStatus === "rejected";
   const canRevoke = entStatus === "active" || entStatus === "suspended";
 
-  const expectedDeleteEmail = String(targetEmail || deletePreview?.email || "")
-    .trim()
-    .toLowerCase();
-  const deleteEmailMatches =
-    expectedDeleteEmail.length > 0 &&
-    deleteConfirmEmail.trim().toLowerCase() === expectedDeleteEmail;
   const showDeleteButton =
-    deletePreview?.actorIsMainAdmin && deletePreview?.deletable && !deleteConfirmOpen;
+    deletePreview?.fullDeleteReady && !deleteConfirmOpen;
   const showDeleteProtectedNote =
     deletePreview?.actorIsMainAdmin && !deletePreview?.deletable && deletePreview?.protectionCode;
 
@@ -314,7 +308,7 @@ export default function AdminUserLifecyclePanel({
                 disabled={!!busy}
                 onClick={() => {
                   setDeleteConfirmOpen(true);
-                  setDeleteConfirmEmail("");
+                  setDeleteConfirmCode("");
                   setError("");
                 }}
                 className="rounded-lg border border-red-500/50 bg-red-600/20 hover:bg-red-600/30 px-3 py-1.5 text-sm disabled:opacity-50"
@@ -331,14 +325,18 @@ export default function AdminUserLifecyclePanel({
               data-testid="lifecycle-delete-confirm"
             >
               <p className="text-sm text-white/80">{ADMIN_LIFECYCLE_DELETE_CONFIRM_LABEL}</p>
+              {targetEmail || deletePreview?.email ? (
+                <p className="text-xs text-white/50" dir="ltr">
+                  {targetEmail || deletePreview?.email}
+                </p>
+              ) : null}
               <input
-                type="email"
-                value={deleteConfirmEmail}
-                onChange={(e) => setDeleteConfirmEmail(e.target.value)}
-                placeholder={targetEmail || deletePreview?.email || ""}
+                type="password"
+                value={deleteConfirmCode}
+                onChange={(e) => setDeleteConfirmCode(e.target.value)}
                 dir="ltr"
                 className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 text-sm"
-                data-testid="lifecycle-delete-confirm-email"
+                data-testid="lifecycle-delete-confirm-code"
                 autoComplete="off"
               />
               {Array.isArray(deletePreview?.blockers) && deletePreview.blockers.length > 0 ? (
@@ -357,7 +355,7 @@ export default function AdminUserLifecyclePanel({
                   disabled={!!busy}
                   onClick={() => {
                     setDeleteConfirmOpen(false);
-                    setDeleteConfirmEmail("");
+                    setDeleteConfirmCode("");
                   }}
                   className="rounded-lg border border-white/20 px-3 py-1.5 text-sm"
                   data-testid="lifecycle-delete-cancel"
@@ -366,7 +364,7 @@ export default function AdminUserLifecyclePanel({
                 </button>
                 <button
                   type="button"
-                  disabled={!!busy || !deleteEmailMatches}
+                  disabled={!!busy || !deleteConfirmCode.trim()}
                   onClick={() => void runDelete()}
                   className="rounded-lg border border-red-500/50 bg-red-600/30 hover:bg-red-600/40 px-3 py-1.5 text-sm disabled:opacity-50"
                   data-testid="lifecycle-delete-submit"

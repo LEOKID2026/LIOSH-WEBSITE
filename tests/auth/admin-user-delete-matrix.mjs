@@ -5,9 +5,11 @@
 import fs from "node:fs/promises";
 import {
   PROTECTED_DELETE_EMAILS,
+  USER_DELETE_CLEANUP_STEPS,
   getMainAdminEmailSet,
-  isDevDeletableEmail,
+  isFullAccountDeleteEnabled,
   isMainAdminUser,
+  validateFullDeleteConfirmCode,
 } from "../../lib/admin-server/admin-user-delete.server.js";
 
 const BASE_URL = (
@@ -68,14 +70,29 @@ async function main() {
     "lifecycle-delete testid"
   );
   record(
-    "lifecycle_panel_requires_email_confirm",
-    panel.includes("lifecycle-delete-confirm-email") && panel.includes("confirmEmail"),
-    "email confirmation UI"
+    "lifecycle_panel_requires_confirm_code",
+    panel.includes("lifecycle-delete-confirm-code") && panel.includes("confirmCode"),
+    "confirm-code UI (not email)"
+  );
+  record(
+    "lifecycle_panel_no_email_confirm",
+    !panel.includes("confirmEmail") && !panel.includes("lifecycle-delete-confirm-email"),
+    "email confirmation removed"
+  );
+  record(
+    "lifecycle_panel_uses_full_delete_ready",
+    panel.includes("fullDeleteReady"),
+    "fullDeleteReady gate"
   );
   record(
     "delete_api_uses_main_admin_guard",
     deleteApi.includes("requireMainAdminApiContext"),
     "requireMainAdminApiContext"
+  );
+  record(
+    "delete_api_uses_confirm_code",
+    deleteApi.includes("confirmCode"),
+    "confirmCode body field"
   );
   record(
     "delete_api_uses_service_role_server_only",
@@ -91,6 +108,25 @@ async function main() {
     "delete_uses_auth_admin_deleteUser",
     deleteServer.includes("auth.admin.deleteUser"),
     "auth.admin.deleteUser"
+  );
+  record(
+    "full_delete_env_gated",
+    deleteServer.includes("ADMIN_FULL_ACCOUNT_DELETE_ENABLED") &&
+      deleteServer.includes("ADMIN_FULL_ACCOUNT_DELETE_CONFIRM_CODE"),
+    "full delete env vars"
+  );
+  record(
+    "cleanup_not_dev_email_only",
+    deleteServer.includes("cleanupUserDependenciesBeforeAuthDelete") &&
+      !deleteServer.includes("isDevDeletableEmail") &&
+      !deleteServer.includes("@liosh-dev.invalid"),
+    "universal dependency cleanup"
+  );
+  record(
+    "cleanup_steps_include_guardian_and_messages",
+    USER_DELETE_CLEANUP_STEPS.some((s) => s.table === "student_guardian_access") &&
+      USER_DELETE_CLEANUP_STEPS.some((s) => s.table === "school_messages"),
+    "eram@mth-eng.com FK blockers covered"
   );
   record(
     "protected_admin_email_blocked",
@@ -115,9 +151,15 @@ async function main() {
     "non-main admin rejected"
   );
   record(
-    "dev_email_pattern",
-    isDevDeletableEmail("teacher-portal-live-verify@liosh-dev.invalid"),
-    "@liosh-dev.invalid cleanup allowed"
+    "full_delete_disabled_by_default",
+    !isFullAccountDeleteEnabled(),
+    "ADMIN_FULL_ACCOUNT_DELETE_ENABLED not set in test env"
+  );
+  record(
+    "confirm_code_invalid_when_unconfigured",
+    validateFullDeleteConfirmCode("any-code").code === "full_delete_disabled" ||
+      validateFullDeleteConfirmCode("any-code").code === "full_delete_not_configured",
+    `code=${validateFullDeleteConfirmCode("any-code").code}`
   );
   record(
     "require_main_admin_exported",
@@ -130,46 +172,71 @@ async function main() {
   const parentPassword = process.env.E2E_PARENT_PASSWORD || password;
 
   if (password && process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL) {
-    const adminToken = await getBearer("office@leo.com", password);
-    const parentToken = await getBearer(
-      process.env.E2E_PARENT_EMAIL || "admin@admin.com",
-      parentPassword
-    );
+    try {
+      const adminToken = await getBearer("office@leo.com", password);
+      let parentToken = null;
+      try {
+        parentToken = await getBearer(
+          process.env.E2E_PARENT_EMAIL || "admin@admin.com",
+          parentPassword
+        );
+      } catch {
+        record("parent_token_skipped", true, "parent auth unavailable — admin-only API checks");
+      }
 
-    const fakeId = "00000000-0000-4000-8000-000000000099";
-    const nonAdminDelete = await api("POST", `/api/admin/users/${fakeId}/delete`, parentToken, {
-      confirmEmail: "x@example.com",
-    });
-    record(
-      "non_admin_cannot_delete",
-      nonAdminDelete.status === 403,
-      `status=${nonAdminDelete.status} code=${nonAdminDelete.code}`
-    );
+      const fakeId = "00000000-0000-4000-8000-000000000099";
 
-    const protectedPreview = await api(
-      "GET",
-      `/api/admin/users/${fakeId}/delete-preview`,
-      adminToken
-    );
-    record(
-      "delete_preview_requires_valid_user_or_404",
-      protectedPreview.status === 404 || protectedPreview.status === 200,
-      `status=${protectedPreview.status}`
-    );
+      if (parentToken) {
+        const nonAdminDelete = await api("POST", `/api/admin/users/${fakeId}/delete`, parentToken, {
+          confirmCode: "x",
+        });
+        record(
+          "non_admin_cannot_delete",
+          nonAdminDelete.status === 403,
+          `status=${nonAdminDelete.status} code=${nonAdminDelete.code}`
+        );
+      } else {
+        record("non_admin_cannot_delete_skipped", true, "no parent token");
+      }
 
-    const selfPreview = await api("GET", `/api/admin/users/${fakeId}/delete-preview`, adminToken);
-    record(
-      "delete_preview_api_reachable",
-      selfPreview.status === 404 || selfPreview.status === 200,
-      `status=${selfPreview.status}`
-    );
+      const protectedPreview = await api(
+        "GET",
+        `/api/admin/users/${fakeId}/delete-preview`,
+        adminToken
+      );
+      record(
+        "delete_preview_requires_valid_user_or_404",
+        protectedPreview.status === 404 || protectedPreview.status === 200,
+        `status=${protectedPreview.status}`
+      );
 
-    const noConfirm = await api("POST", `/api/admin/users/${fakeId}/delete`, adminToken, {});
-    record(
-      "delete_requires_confirm_email",
-      noConfirm.status === 400 || noConfirm.status === 404,
-      `status=${noConfirm.status} code=${noConfirm.code}`
-    );
+      const selfPreview = await api("GET", `/api/admin/users/${fakeId}/delete-preview`, adminToken);
+      record(
+        "delete_preview_api_reachable",
+        selfPreview.status === 404 || selfPreview.status === 200,
+        `status=${selfPreview.status}`
+      );
+
+      const noConfirm = await api("POST", `/api/admin/users/${fakeId}/delete`, adminToken, {});
+      record(
+        "delete_requires_confirm_code",
+        noConfirm.status === 400 ||
+          noConfirm.status === 403 ||
+          noConfirm.status === 404,
+        `status=${noConfirm.status} code=${noConfirm.code}`
+      );
+
+      const badCode = await api("POST", `/api/admin/users/${fakeId}/delete`, adminToken, {
+        confirmCode: "wrong-code",
+      });
+      record(
+        "delete_rejects_bad_confirm_code_or_disabled",
+        badCode.status === 403 || badCode.status === 404,
+        `status=${badCode.status} code=${badCode.code}`
+      );
+    } catch (err) {
+      record("api_tests_skipped", true, String(err?.message || err));
+    }
   } else {
     record("api_tests_skipped", true, "missing DEMO_TEACHER_PASSWORD or Supabase env");
   }

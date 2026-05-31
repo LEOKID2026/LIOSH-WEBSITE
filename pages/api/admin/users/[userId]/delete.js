@@ -26,14 +26,14 @@ export default async function handler(req, res) {
       return sendAdminApiError(res, 400, "validation_failed", "userId must be a UUID");
     }
 
-    const confirmEmail =
-      typeof req.body?.confirmEmail === "string" ? req.body.confirmEmail : "";
+    const confirmCode =
+      typeof req.body?.confirmCode === "string" ? req.body.confirmCode : "";
 
     const result = await deleteAdminUserAccount(
       ctx.serviceRole,
       ctx.adminUserId,
       String(userId),
-      { confirmEmail }
+      { confirmCode }
     );
 
     if (!result.ok) {
