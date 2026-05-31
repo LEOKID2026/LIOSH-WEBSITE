@@ -18,11 +18,12 @@ export default function AdminParentsIndexPage() {
   const loadParents = useCallback(async (token) => {
     const res = await adminAuthFetch(token, "/api/admin/parents");
     const body = await res.json().catch(() => ({}));
-    if (res.status === 200 && body?.data?.parents) {
+    if (res.status === 200 && Array.isArray(body?.data?.parents)) {
       setParents(body.data.parents);
       setLoadError("");
       return;
     }
+    setParents([]);
     setLoadError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
   }, []);
 

@@ -5,6 +5,8 @@ import AdminShell from "../../../components/admin/AdminShell";
 import AllAccountsAdminTable from "../../../components/admin/AllAccountsAdminTable";
 import { adminAuthFetch, useAdminSession } from "../../../lib/admin-portal/use-admin-session";
 import {
+  ADMIN_ALL_ACCOUNTS_LIST_DEGRADED,
+  ADMIN_ALL_ACCOUNTS_LOGGED_IN_AS,
   ADMIN_ALL_ACCOUNTS_MAIN_ADMIN_ONLY,
   ADMIN_ALL_ACCOUNTS_SCHOOLS_LINK,
   ADMIN_ALL_ACCOUNTS_TITLE,
@@ -20,23 +22,44 @@ export default function AdminAllAccountsPage() {
   const [fullDeleteConfigured, setFullDeleteConfigured] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [forbidden, setForbidden] = useState(false);
+  const [listNotice, setListNotice] = useState("");
+  const [actorEmail, setActorEmail] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   const load = useCallback(async (token) => {
+    setLoadError("");
+    setForbidden(false);
+    setListNotice("");
+    setLoaded(false);
+
     const res = await adminAuthFetch(token, "/api/admin/accounts");
     const body = await res.json().catch(() => ({}));
-    if (res.status === 403 && body?.error?.code === "main_admin_required") {
-      setForbidden(true);
-      setLoadError(ADMIN_ALL_ACCOUNTS_MAIN_ADMIN_ONLY);
+    const code = body?.error?.code;
+
+    if (!res.ok) {
+      setAccounts([]);
+      if (res.status === 403 && code === "main_admin_required") {
+        setForbidden(true);
+      }
+      setLoadError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
+      setLoaded(true);
       return;
     }
-    if (res.status === 200 && body?.data?.accounts) {
-      setAccounts(body.data.accounts);
-      setFullDeleteConfigured(body.data.fullDeleteConfigured === true);
-      setForbidden(false);
-      setLoadError("");
+
+    if (!body?.data || !Array.isArray(body.data.accounts)) {
+      setAccounts([]);
+      setLoadError(ADMIN_LOAD_ERROR);
+      setLoaded(true);
       return;
     }
-    setLoadError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
+
+    setAccounts(body.data.accounts);
+    setFullDeleteConfigured(body.data.fullDeleteConfigured === true);
+    setActorEmail(body.data.actorEmail || "");
+    if (body.data.listMeta?.source === "db_fallback") {
+      setListNotice(ADMIN_ALL_ACCOUNTS_LIST_DEGRADED);
+    }
+    setLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -44,18 +67,28 @@ export default function AdminAllAccountsPage() {
     void load(accessToken);
   }, [state, accessToken, load]);
 
+  const showEmpty = loaded && !loadError && !forbidden && accounts.length === 0;
+
   return (
     <Layout>
       <AdminShell title={ADMIN_ALL_ACCOUNTS_TITLE} showLogout>
         <div className="flex flex-wrap gap-3 justify-between items-center mb-4">
-          <p className="text-white/60 text-sm">
-            תצוגה מאוחדת לכל משתמשי Auth · שורה אחת לכל חשבון
-          </p>
+          <div className="text-sm text-white/60 space-y-1">
+            <p>תצוגה מאוחדת לכל משתמשי Auth · שורה אחת לכל חשבון</p>
+            {actorEmail ? (
+              <p className="text-xs text-white/45" data-testid="all-accounts-actor-email">
+                {ADMIN_ALL_ACCOUNTS_LOGGED_IN_AS}{" "}
+                <span dir="ltr" className="text-white/70">
+                  {actorEmail}
+                </span>
+              </p>
+            ) : null}
+          </div>
           <Link href="/admin/schools" className="text-amber-300 text-sm hover:underline">
             {ADMIN_ALL_ACCOUNTS_SCHOOLS_LINK}
           </Link>
         </div>
-        {state === "loading" ? (
+        {state === "loading" || !loaded ? (
           <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>
         ) : loadError ? (
           <p className="text-red-300 text-sm text-right" data-testid="all-accounts-error">
@@ -65,15 +98,24 @@ export default function AdminAllAccountsPage() {
           <p className="text-amber-200 text-sm text-right" data-testid="all-accounts-forbidden">
             {ADMIN_ALL_ACCOUNTS_MAIN_ADMIN_ONLY}
           </p>
-        ) : accounts.length === 0 ? (
-          <p className="text-white/60 text-sm text-right">{ADMIN_NO_ALL_ACCOUNTS}</p>
+        ) : showEmpty ? (
+          <p className="text-white/60 text-sm text-right" data-testid="all-accounts-empty">
+            {ADMIN_NO_ALL_ACCOUNTS}
+          </p>
         ) : (
-          <AllAccountsAdminTable
-            accounts={accounts}
-            accessToken={accessToken}
-            fullDeleteConfigured={fullDeleteConfigured}
-            onDeleted={() => load(accessToken)}
-          />
+          <>
+            {listNotice ? (
+              <p className="text-amber-200/90 text-xs text-right mb-3" data-testid="all-accounts-degraded">
+                {listNotice}
+              </p>
+            ) : null}
+            <AllAccountsAdminTable
+              accounts={accounts}
+              accessToken={accessToken}
+              fullDeleteConfigured={fullDeleteConfigured}
+              onDeleted={() => load(accessToken)}
+            />
+          </>
         )}
       </AdminShell>
     </Layout>

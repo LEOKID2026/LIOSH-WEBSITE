@@ -17,7 +17,14 @@ export default async function handler(req, res) {
 
     const listed = await listAllAdminAccounts(ctx.serviceRole, ctx.adminUserId, ctx.user);
     if (!listed.ok) {
-      return sendAdminApiError(res, listed.status, listed.code, listed.code);
+      return res.status(listed.status || 503).json({
+        error: {
+          code: listed.code,
+          message: listed.code,
+          authListError: listed.authListError || null,
+          dbUserIdCount: listed.dbUserIdCount ?? null,
+        },
+      });
     }
 
     return res.status(200).json({
@@ -25,11 +32,16 @@ export default async function handler(req, res) {
         accounts: listed.accounts,
         total: listed.total,
         actorIsMainAdmin: listed.actorIsMainAdmin,
+        actorEmail: listed.actorEmail || null,
         fullDeleteConfigured: listed.fullDeleteConfigured,
+        listMeta: listed.listMeta || null,
       },
     });
-  } catch (_e) {
-    safeApiLog("admin_all_accounts_list_error", { route: "admin/accounts" });
+  } catch (e) {
+    safeApiLog("admin_all_accounts_list_error", {
+      route: "admin/accounts",
+      detail: String(e?.message || "unknown").slice(0, 120),
+    });
     return sendAdminApiError(res, 500, "internal_error", "Unexpected server error");
   }
 }

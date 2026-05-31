@@ -90,6 +90,38 @@ async function main() {
     "single row per auth user"
   );
   record(
+    "server_auth_fallback",
+    server.includes("loadAuthUsersForAdminList") && server.includes("discoverUserIdsFromDb"),
+    "auth list + DB fallback"
+  );
+  record(
+    "server_batch_delete_protection",
+    server.includes("assessDeleteProtectionSync") && server.includes("loadActiveAdminEntitlementUserIds"),
+    "no per-row delete protection DB"
+  );
+  record(
+    "server_no_silent_empty_on_db_users",
+    server.includes("accounts.length === 0") && server.includes("auth_list_failed"),
+    "empty list with DB users is error"
+  );
+  record(
+    "accounts_page_no_silent_api_failure",
+    page.includes("Array.isArray(body.data.accounts)") &&
+      page.includes("all-accounts-error") &&
+      !page.includes("body?.data?.accounts) {"),
+    "invalid/missing accounts array shows error"
+  );
+  record(
+    "accounts_page_shows_actor_email",
+    page.includes("all-accounts-actor-email") && page.includes("actorEmail"),
+    "logged-in actor email shown"
+  );
+  record(
+    "api_returns_actor_email",
+    apiRoute.includes("actorEmail") && apiRoute.includes("listMeta"),
+    "API diagnostic fields"
+  );
+  record(
     "qa_email_detection",
     isQaTestAccountEmail("teacher@liosh-dev.invalid") &&
       isQaTestAccountEmail("qa-school-operator@leo-k.com"),
@@ -196,8 +228,10 @@ async function main() {
           const ok = await api("GET", "/api/admin/accounts", mainToken);
           record(
             "main_admin_api_access",
-            ok.status === 200 && Array.isArray(ok.json?.data?.accounts),
-            `status=${ok.status} count=${ok.json?.data?.accounts?.length ?? 0}`
+            ok.status === 200 &&
+              Array.isArray(ok.json?.data?.accounts) &&
+              (ok.json?.data?.accounts?.length ?? 0) > 0,
+            `status=${ok.status} count=${ok.json?.data?.accounts?.length ?? 0} actor=${ok.json?.data?.actorEmail || "?"}`
           );
         } else {
           record("main_admin_api_access_skipped", true, "leokid2026 password unavailable");

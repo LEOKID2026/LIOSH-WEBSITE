@@ -4,7 +4,12 @@ import AdminShell from "../../../components/admin/AdminShell";
 import TeacherAdminSummaryBar from "../../../components/admin/TeacherAdminSummaryBar";
 import TeacherAdminTable from "../../../components/admin/TeacherAdminTable";
 import { adminAuthFetch, useAdminSession } from "../../../lib/admin-portal/use-admin-session";
-import { ADMIN_LOAD_ERROR, ADMIN_LOADING, ADMIN_TEACHERS_TITLE } from "../../../lib/admin-portal/admin-ui.he.js";
+import {
+  ADMIN_LOAD_ERROR,
+  ADMIN_LOADING,
+  ADMIN_TEACHERS_TITLE,
+  apiErrorMessageHe,
+} from "../../../lib/admin-portal/admin-ui.he.js";
 import { ADMIN_PENDING_REQUESTS_TAB } from "../../../lib/auth/auth-registration.he.js";
 
 export default function AdminTeachersIndexPage() {
@@ -17,12 +22,13 @@ export default function AdminTeachersIndexPage() {
     const qs = filter === "pending" ? "?status=pending" : "";
     const res = await adminAuthFetch(token, `/api/admin/teachers${qs}`);
     const body = await res.json().catch(() => ({}));
-    if (res.status === 200 && body?.data?.teachers) {
+    if (res.status === 200 && Array.isArray(body?.data?.teachers)) {
       setTeachers(body.data.teachers);
       setLoadError("");
       return;
     }
-    setLoadError(body?.error?.message || ADMIN_LOAD_ERROR);
+    setTeachers([]);
+    setLoadError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
   }, []);
 
   useEffect(() => {
