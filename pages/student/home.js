@@ -582,7 +582,7 @@ export default function StudentHomePage() {
                 התחל ללמוד
               </Link>
               <Link
-                href="/student/arcade"
+                href="/games"
                 className="inline-flex justify-center items-center rounded-xl border border-amber-400/40 bg-amber-500/15 px-5 py-3 text-sm md:text-base font-semibold text-amber-100 hover:bg-amber-500/25 transition"
               >
                 משחקים
