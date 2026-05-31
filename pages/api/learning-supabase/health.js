@@ -46,7 +46,8 @@ const REQUIRED_TABLES = [
 
 const DEV_PROJECT_HOST = "ajxwmlwbzxwffrtlfuoe.supabase.co";
 
-
+/** Temporary deployment trigger probe — remove after Vercel webhook confirmation. */
+const DEPLOYMENT_PROBE = "vercel-trigger-test-2026-05-31";
 
 export default async function handler(req, res) {
 
@@ -102,13 +103,13 @@ export default async function handler(req, res) {
 
 
 
-    return res.status(body.ok ? 200 : 503).json(body);
+    return res.status(body.ok ? 200 : 503).json({ ...body, deploymentProbe: DEPLOYMENT_PROBE });
 
   } catch (_error) {
 
-    return res.status(503).json(
+    return res.status(503).json({
 
-      buildLearningSupabaseHealthErrorBody({
+      ...buildLearningSupabaseHealthErrorBody({
 
         maskInternals,
 
@@ -116,9 +117,11 @@ export default async function handler(req, res) {
 
         checkedAt,
 
-      })
+      }),
 
-    );
+      deploymentProbe: DEPLOYMENT_PROBE,
+
+    });
 
   }
 
