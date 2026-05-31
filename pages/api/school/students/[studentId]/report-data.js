@@ -39,7 +39,11 @@ export default async function handler(req, res) {
     }
 
     const serviceRole = getTeacherPortalServiceRole();
-    const membershipResult = await loadTeacherSchoolMembership(serviceRole, auth.teacherUserId);
+    const membershipResult = await loadTeacherSchoolMembership(serviceRole, auth.teacherUserId, {
+      ...(auth.authMethod === "staff_cookie" && auth.schoolId
+        ? { preferredSchoolId: auth.schoolId }
+        : {}),
+    });
     if (!membershipResult.ok) {
       return sendSchoolApiError(
         res,

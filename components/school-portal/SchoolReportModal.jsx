@@ -9,6 +9,7 @@ import {
   SC_TAB_STUDENT_ASSIGNMENT,
 } from "../../lib/school-portal/school-communication.he";
 import { SCHOOL_PORTAL_MODAL_SCROLL_CLASS } from "./SchoolPortalUi";
+import { hasSchoolPortalSession } from "../../lib/school-portal/operator-grants.js";
 
 function tabClass(active) {
   return active
@@ -79,6 +80,7 @@ export default function SchoolReportModal({
   onRowAction,
   stackZIndexBase = 0,
   accessToken = null,
+  authMethod = "supabase_jwt",
   studentId = null,
   studentName = "",
   canManageAssignment = false,
@@ -92,9 +94,10 @@ export default function SchoolReportModal({
   const effectiveStudentId = studentId || nestedStudentId;
   const effectiveStudentName =
     studentName || nestedStudentViewModel?.meta?.displayName || nestedStudentViewModel?.header?.title || "";
-  const showAccessTab = Boolean(canManageAccess && accessToken && effectiveStudentId);
-  const showAssignmentTab = Boolean(canManageAssignment && accessToken && effectiveStudentId);
-  const showReportTab = Boolean(canViewReport);
+  const sessionReady = hasSchoolPortalSession(accessToken, authMethod);
+  const showAccessTab = Boolean(canManageAccess && sessionReady && effectiveStudentId);
+  const showAssignmentTab = Boolean(canManageAssignment && sessionReady && effectiveStudentId);
+  const showReportTab = Boolean(canViewReport && sessionReady);
   const showExtraTabs = showAccessTab || showAssignmentTab || (showReportTab && (showAccessTab || showAssignmentTab));
   const accessPanelOpen =
     open && activeTab === "access" && (Boolean(studentId) || Boolean(nestedStudentViewModel));
@@ -124,6 +127,7 @@ export default function SchoolReportModal({
         >
           <SchoolStudentAccessPanel
             accessToken={accessToken}
+            authMethod={authMethod}
             studentId={effectiveStudentId}
             studentName={effectiveStudentName}
           />
@@ -214,10 +218,11 @@ export default function SchoolReportModal({
         testId="school-student-access-modal"
       >
         <SchoolStudentAccessPanel
-          accessToken={accessToken}
-          studentId={effectiveStudentId}
-          studentName={effectiveStudentName}
-        />
+            accessToken={accessToken}
+            authMethod={authMethod}
+            studentId={effectiveStudentId}
+            studentName={effectiveStudentName}
+          />
       </ReportModalFrame>
     </>
   );

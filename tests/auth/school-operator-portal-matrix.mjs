@@ -63,7 +63,8 @@ async function main() {
     "students_page_grant_gated_actions",
     students.includes("canManageAccess") &&
       students.includes("canViewReports") &&
-      students.includes("canManageAccess ? () => openStudentAccess"),
+      students.includes("hasSchoolPortalSession") &&
+      students.includes("openStudentAccess"),
     "grant-gated student actions"
   );
 
@@ -120,6 +121,20 @@ async function main() {
       students.includes("authMethod !== \"staff_cookie\"") &&
       students.match(/loadClassStudents[\s\S]*applyRosterResult/),
     "class roster fetch works with staff cookie"
+  );
+
+  record(
+    "operator_report_staff_cookie",
+    students.includes("hasSchoolPortalSession") &&
+      students.match(/openStudentReport[\s\S]*hasSchoolPortalSession/),
+    "student report opens with staff cookie"
+  );
+
+  record(
+    "operator_access_panel_staff_cookie",
+    (await read("components/school-portal/SchoolReportModal.jsx")).includes("hasSchoolPortalSession") &&
+      (await read("components/school-portal/SchoolStudentAccessPanel.jsx")).includes("hasSchoolPortalSession"),
+    "access/report modals work with staff cookie"
   );
 
   record(

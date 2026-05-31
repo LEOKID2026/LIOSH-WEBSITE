@@ -28,6 +28,7 @@ import {
   canManageStudentAccess,
   canViewStudentData,
   getOperatorGrants,
+  hasSchoolPortalSession,
   isSchoolManagerPortal,
   operatorHasAnyGrant,
 } from "../../../lib/school-portal/operator-grants";
@@ -264,7 +265,7 @@ export default function SchoolStudentsPage() {
   };
 
   const openStudentReport = async (student) => {
-    if (!accessToken || !canViewReports) return;
+    if (!hasSchoolPortalSession(accessToken, authMethod) || !canViewReports) return;
     setModalInitialTab("report");
     setReportStudent(student);
     setReportOpen(true);
@@ -299,7 +300,7 @@ export default function SchoolStudentsPage() {
   };
 
   const openStudentAccess = (student) => {
-    if (!canManageAccess) return;
+    if (!canManageAccess || !hasSchoolPortalSession(accessToken, authMethod)) return;
     setModalInitialTab("access");
     setReportStudent(student);
     setReportOpen(true);
@@ -516,8 +517,16 @@ export default function SchoolStudentsPage() {
                           reportLabel={SCHOOL_VIEW_STUDENT_REPORT}
                           accessLabel={SCHOOL_OPERATOR_MANAGE_ACCESS}
                           learningStatusBadge={canViewReports ? s.learningStatusBadge || null : null}
-                          onReport={canViewReports ? () => void openStudentReport(s) : undefined}
-                          onAccess={canManageAccess ? () => openStudentAccess(s) : undefined}
+                          onReport={
+                            canViewReports && hasSchoolPortalSession(accessToken, authMethod)
+                              ? () => void openStudentReport(s)
+                              : undefined
+                          }
+                          onAccess={
+                            canManageAccess && hasSchoolPortalSession(accessToken, authMethod)
+                              ? () => openStudentAccess(s)
+                              : undefined
+                          }
                         />
                       ))}
                     </SchoolCardGrid>
@@ -537,6 +546,7 @@ export default function SchoolStudentsPage() {
               error={reportError}
               viewModel={reportViewModel}
               accessToken={accessToken}
+              authMethod={authMethod}
               studentId={reportStudent?.studentId}
               studentName={reportStudent?.displayName}
               canManageAssignment={canManageAssignment}

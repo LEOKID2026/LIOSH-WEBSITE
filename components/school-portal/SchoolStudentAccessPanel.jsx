@@ -7,6 +7,7 @@ import {
   SCHOOL_PORTAL_MODAL_SCROLL_CLASS,
 } from "./SchoolPortalUi";
 import { apiErrorMessageHe, schoolAuthFetch } from "../../lib/school-portal/school-ui.he";
+import { hasSchoolPortalSession } from "../../lib/school-portal/operator-grants.js";
 import {
   SC_BTN_ADD_PARENT,
   SC_BTN_BLOCK,
@@ -78,7 +79,7 @@ function actionBtnClass(variant = "default") {
   return `rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-sm disabled:opacity-50 ${cursor}`;
 }
 
-export default function SchoolStudentAccessPanel({ accessToken, studentId, studentName }) {
+export default function SchoolStudentAccessPanel({ accessToken, authMethod = "supabase_jwt", studentId, studentName }) {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
@@ -92,7 +93,7 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
   const base = `/api/school/students/${encodeURIComponent(studentId)}/accounts`;
 
   const load = useCallback(async () => {
-    if (!accessToken || !studentId) {
+    if (!hasSchoolPortalSession(accessToken, authMethod) || !studentId) {
       setLoading(false);
       setLoadError("");
       setData(null);
@@ -122,14 +123,14 @@ export default function SchoolStudentAccessPanel({ accessToken, studentId, stude
     } finally {
       setLoading(false);
     }
-  }, [accessToken, studentId, base]);
+  }, [accessToken, authMethod, studentId, base]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
   const post = async (path, body = {}) => {
-    if (!accessToken || !studentId) return null;
+    if (!hasSchoolPortalSession(accessToken, authMethod) || !studentId) return null;
     setBusy(true);
     setActionError("");
     try {
