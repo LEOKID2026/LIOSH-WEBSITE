@@ -1,98 +1,87 @@
 import { useEffect, useState } from "react";
+import {
+  getDeferredInstallPrompt,
+  isCapacitorNative,
+  isPwaInstalledStandalone,
+  subscribePwaInstallPrompt,
+  usePwaInstallPromptAvailable,
+  usePromptPwaInstall,
+} from "../lib/pwa/pwa-install-prompt";
 
 export default function InstallAppPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const hasNativePrompt = usePwaInstallPromptAvailable();
+  const promptInstall = usePromptPwaInstall();
   const [showPrompt, setShowPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // בדיקה אם זה iOS
+    if (isCapacitorNative()) return undefined;
+
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     setIsIOS(iOS);
+    setIsInstalled(isPwaInstalledStandalone());
 
-    // בדיקה אם האפליקציה כבר מותקנת (standalone mode)
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
-                         window.navigator.standalone ||
-                         document.referrer.includes("android-app://");
-    setIsInstalled(isStandalone);
-
-    // אם כבר מותקן, לא להציג את ההודעה
-    if (isStandalone) {
-      return;
+    if (isPwaInstalledStandalone()) {
+      return undefined;
     }
 
-    // טיפול ב-beforeinstallprompt (אנדרואיד/Chrome)
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      // בדיקה אם יש localStorage flag שמציין שהמשתמש דחה את ההודעה
-      const dismissed = localStorage.getItem("app-install-dismissed");
-      if (!dismissed) {
+    const dismissed = localStorage.getItem("app-install-dismissed");
+
+    const maybeShowPrompt = () => {
+      if (localStorage.getItem("app-install-dismissed")) return;
+      if (getDeferredInstallPrompt()) {
         setShowPrompt(true);
       }
     };
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    maybeShowPrompt();
 
-    // בדיקה אם יש localStorage flag שמציין שהמשתמש דחה את ההודעה
-    const dismissed = localStorage.getItem("app-install-dismissed");
+    const unsubscribe = subscribePwaInstallPrompt(maybeShowPrompt);
+
+    let timer;
     if (!dismissed && iOS) {
-      // הצג את ההודעה אחרי 3 שניות עבור iOS
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setShowPrompt(true);
       }, 3000);
-      return () => {
-        clearTimeout(timer);
-        window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-      };
     }
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      unsubscribe();
+      if (timer) clearTimeout(timer);
     };
   }, []);
 
   const handleInstallClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    try {
-      if (deferredPrompt) {
-        // אנדרואיד/Chrome - התקנה אוטומטית
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        
+
+    if (hasNativePrompt) {
+      try {
+        const { outcome } = await promptInstall();
         if (outcome === "accepted") {
           setShowPrompt(false);
-          setDeferredPrompt(null);
-          // אפשר להוסיף הודעה של הצלחה
-        } else {
-          // המשתמש ביטל - אפשר להשאיר את החלון פתוח
         }
-      } else if (isIOS) {
-        // iOS - ההוראות כבר מוצגות, אפשר להוסיף הודעה
-        // ההוראות כבר מוצגות בחלון
-      } else {
-        // דפדפן שלא תומך - הצג הוראות
-        alert("אנא השתמש בדפדפן Chrome או Edge להתקנה אוטומטית, או עקוב אחר ההוראות המוצגות.");
+      } catch (error) {
+        console.error("Error installing app:", error);
       }
-    } catch (error) {
-      console.error("Error installing app:", error);
-      alert("אירעה שגיאה בהתקנה. אנא נסה שוב או עקוב אחר ההוראות המוצגות.");
+      return;
+    }
+
+    if (!isIOS) {
+      console.info("[PWA] התקנה זמינה דרך תפריט הדפדפן");
     }
   };
 
   const handleDismiss = () => {
     setShowPrompt(false);
     localStorage.setItem("app-install-dismissed", "true");
-    // הסתר למשך 7 ימים
     setTimeout(() => {
       localStorage.removeItem("app-install-dismissed");
     }, 7 * 24 * 60 * 60 * 1000);
   };
 
-  if (isInstalled || !showPrompt) {
+  if (isCapacitorNative() || isInstalled || !showPrompt) {
     return null;
   }
 
@@ -101,11 +90,11 @@ export default function InstallAppPrompt() {
       <div className="bg-gradient-to-br from-amber-500/90 to-orange-600/90 backdrop-blur-sm rounded-2xl p-5 shadow-2xl border border-white/20">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-12 w-12 text-white" 
-              fill="none" 
-              viewBox="0 0 24 24" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-12 w-12 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
             >
@@ -119,24 +108,23 @@ export default function InstallAppPrompt() {
                 ? "הוסף את האפליקציה למסך הבית לחוויה טובה יותר"
                 : "התקן את האפליקציה לגישה מהירה ונוחה יותר"}
             </p>
-            
-            {/* כפתור הורדה ראשי - תמיד מוצג */}
+
             <button
               onClick={handleInstallClick}
               type="button"
               className="w-full mb-3 px-5 py-3 bg-white text-amber-600 font-bold rounded-xl hover:bg-amber-50 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-lg"
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-5 w-5" 
-                fill="none" 
-                viewBox="0 0 24 24" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2.5}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              {deferredPrompt ? "הורד והתקן עכשיו" : isIOS ? "הצג הוראות הורדה" : "התקן אפליקציה"}
+              {hasNativePrompt ? "הורד והתקן עכשיו" : isIOS ? "הצג הוראות הורדה" : "התקן אפליקציה"}
             </button>
 
             {isIOS && (
@@ -165,4 +153,3 @@ export default function InstallAppPrompt() {
     </div>
   );
 }
-

@@ -6,6 +6,11 @@ import OfflineIndicator from "../components/OfflineIndicator";
 import StudentAccessGate from "../components/student/StudentAccessGate";
 import DevServiceWorkerCleanup from "../components/dev/DevServiceWorkerCleanup";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
+import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
+
+if (typeof window !== "undefined") {
+  initPwaInstallPromptCapture();
+}
 
 const STUDENT_PROTECTED_ROUTES = new Set([
   "/student/arcade",
@@ -31,6 +36,11 @@ const STUDENT_PROTECTED_ROUTES = new Set([
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
   useIOSViewportFix();
+
+  useEffect(() => {
+    initPwaInstallPromptCapture();
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
       return undefined;
