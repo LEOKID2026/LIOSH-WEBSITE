@@ -41,6 +41,33 @@ export default function MyApp({ Component, pageProps }) {
       return undefined;
     }
 
+    const isCapacitorNative =
+      typeof window !== "undefined" &&
+      window.Capacitor?.isNativePlatform?.();
+
+    // Capacitor APK WebView: skip SW so deploys load fresh /_next/static (no cache-first).
+    // Browser/PWA keep normal offline SW registration below.
+    if (isCapacitorNative) {
+      let cancelled = false;
+
+      (async () => {
+        try {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map((r) => r.unregister()));
+
+          if (cancelled || !("caches" in window)) return;
+          const keys = await caches.keys();
+          await Promise.all(keys.map((key) => caches.delete(key)));
+        } catch (e) {
+          console.warn("[SW] Capacitor native cleanup:", e);
+        }
+      })();
+
+      return () => {
+        cancelled = true;
+      };
+    }
+
     const registerSW = () => {
         navigator.serviceWorker
           .register("/sw.js", { scope: "/" })
