@@ -6,13 +6,12 @@ import {
   ADMIN_COL_PLAN,
   ADMIN_MANAGE,
   ADMIN_NO_PARENTS,
-  accountStatusLabelHe,
-  entitlementStatusLabelHe,
+  parentListStatusLabelHe,
   planCodeLabelHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
 /**
- * @param {{ parents: Array<{ parentUserId: string, email?: string|null, settings?: object|null }> }} props
+ * @param {{ parents: Array<{ parentUserId: string, email?: string|null, settings?: object|null, isOrphanUnlinked?: boolean }> }} props
  */
 export default function ParentAdminTable({ parents }) {
   if (!parents?.length) {
@@ -33,12 +32,18 @@ export default function ParentAdminTable({ parents }) {
           </thead>
           <tbody>
             {parents.map((p) => (
-              <tr key={p.parentUserId} className="border-t border-white/10 hover:bg-white/5">
+              <tr
+                key={p.parentUserId}
+                className="border-t border-white/10 hover:bg-white/5"
+                data-testid={p.isOrphanUnlinked ? "parent-row-unlinked" : "parent-row"}
+              >
                 <td className="px-4 py-3 break-all" dir="ltr">
                   {p.email || "—"}
                 </td>
-                <td className="px-4 py-3">{planCodeLabelHe(p.settings?.planCode)}</td>
-                <td className="px-4 py-3">{accountStatusLabelHe(p.settings?.accountStatus)}</td>
+                <td className="px-4 py-3">
+                  {p.isOrphanUnlinked ? "—" : planCodeLabelHe(p.settings?.planCode)}
+                </td>
+                <td className="px-4 py-3">{parentListStatusLabelHe(p)}</td>
                 <td className="px-4 py-3">
                   <Link
                     href={`/admin/parents/${p.parentUserId}`}
@@ -55,17 +60,19 @@ export default function ParentAdminTable({ parents }) {
 
       <div className="md:hidden space-y-3">
         {parents.map((p) => (
-          <article key={p.parentUserId} className="rounded-xl border border-white/15 bg-black/25 p-4">
+          <article
+            key={p.parentUserId}
+            className="rounded-xl border border-white/15 bg-black/25 p-4"
+            data-testid={p.isOrphanUnlinked ? "parent-row-unlinked" : "parent-row"}
+          >
             <p className="text-xs text-white/50 mb-1">{ADMIN_COL_EMAIL}</p>
             <p className="text-sm break-all mb-2" dir="ltr">
               {p.email || "—"}
             </p>
             <p className="text-sm text-white/70 mb-3">
-              {ADMIN_COL_PLAN}: {planCodeLabelHe(p.settings?.planCode)} · {ADMIN_COL_ACCOUNT_STATUS}:{" "}
-              {accountStatusLabelHe(p.settings?.accountStatus)}
-              {p.entitlementStatus
-                ? ` · ${entitlementStatusLabelHe(p.entitlementStatus)}`
-                : ""}
+              {ADMIN_COL_PLAN}:{" "}
+              {p.isOrphanUnlinked ? "—" : planCodeLabelHe(p.settings?.planCode)} · {ADMIN_COL_ACCOUNT_STATUS}:{" "}
+              {parentListStatusLabelHe(p)}
             </p>
             <Link
               href={`/admin/parents/${p.parentUserId}`}

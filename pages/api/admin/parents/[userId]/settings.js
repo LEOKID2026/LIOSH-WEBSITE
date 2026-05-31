@@ -29,7 +29,16 @@ export default async function handler(req, res) {
       if (!loaded.ok) {
         return sendAdminApiError(res, loaded.status, loaded.code, loaded.code);
       }
-      return res.status(200).json({ data: { settings: loaded.settings } });
+      return res.status(200).json({
+        data: {
+          settings: loaded.settings,
+          email: loaded.email,
+          isOrphanUnlinked: loaded.isOrphanUnlinked === true,
+          hasParentProfile: loaded.hasParentProfile === true,
+          entitlementStatus: loaded.entitlementStatus,
+          profileCreatedAt: loaded.profileCreatedAt,
+        },
+      });
     }
 
     if (req.method === "PATCH") {

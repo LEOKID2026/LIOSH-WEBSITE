@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../lib/admin-portal/use-admin-session";
 import { schoolMembershipRoleToPersona } from "../../lib/admin-portal/admin-lifecycle-ui.js";
+import AdminUserDeleteSection from "./AdminUserDeleteSection.jsx";
 import {
   ADMIN_LIFECYCLE_BUSY,
   ADMIN_LIFECYCLE_CONFIRM_REVOKE,
@@ -14,9 +15,23 @@ import {
 } from "../../lib/admin-portal/admin-ui.he.js";
 
 /**
- * @param {{ accessToken: string, teacherId: string, role: string, onChanged?: () => void }} props
+ * @param {{
+ *   accessToken: string,
+ *   teacherId: string,
+ *   role: string,
+ *   targetEmail?: string|null,
+ *   onChanged?: () => void,
+ *   onDeleted?: () => void,
+ * }} props
  */
-export default function AdminSchoolStaffLifecycleCompact({ accessToken, teacherId, role, onChanged }) {
+export default function AdminSchoolStaffLifecycleCompact({
+  accessToken,
+  teacherId,
+  role,
+  targetEmail = null,
+  onChanged,
+  onDeleted,
+}) {
   const persona = schoolMembershipRoleToPersona(role);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState(null);
@@ -105,6 +120,17 @@ export default function AdminSchoolStaffLifecycleCompact({ accessToken, teacherI
           </button>
         ) : null}
       </div>
+      <AdminUserDeleteSection
+        accessToken={accessToken}
+        userId={teacherId}
+        targetEmail={targetEmail}
+        variant="compact"
+        disabled={busy}
+        onDeleted={() => {
+          onDeleted?.();
+          onChanged?.();
+        }}
+      />
       {error ? <span className="text-red-300 block">{error}</span> : null}
     </div>
   );

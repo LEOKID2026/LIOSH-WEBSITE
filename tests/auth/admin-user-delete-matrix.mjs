@@ -59,6 +59,7 @@ async function api(method, path, token, body) {
 
 async function main() {
   const panel = await read("components/admin/AdminUserLifecyclePanel.jsx");
+  const deleteSection = await read("components/admin/AdminUserDeleteSection.jsx");
   const deleteServer = await read("lib/admin-server/admin-user-delete.server.js");
   const deleteApi = await read("pages/api/admin/users/[userId]/delete.js");
   const previewApi = await read("pages/api/admin/users/[userId]/delete-preview.js");
@@ -66,23 +67,27 @@ async function main() {
 
   record(
     "lifecycle_panel_has_delete_button",
-    panel.includes('data-testid="lifecycle-delete"'),
-    "lifecycle-delete testid"
+    deleteSection.includes('data-testid="lifecycle-delete"') &&
+      panel.includes("AdminUserDeleteSection"),
+    "lifecycle-delete via AdminUserDeleteSection"
   );
   record(
     "lifecycle_panel_requires_confirm_code",
-    panel.includes("lifecycle-delete-confirm-code") && panel.includes("confirmCode"),
+    deleteSection.includes("lifecycle-delete-confirm-code") &&
+      deleteSection.includes("confirmCode"),
     "confirm-code UI (not email)"
   );
   record(
     "lifecycle_panel_no_email_confirm",
-    !panel.includes("confirmEmail") && !panel.includes("lifecycle-delete-confirm-email"),
+    !panel.includes("confirmEmail") &&
+      !deleteSection.includes("confirmEmail") &&
+      !deleteSection.includes("lifecycle-delete-confirm-email"),
     "email confirmation removed"
   );
   record(
     "lifecycle_panel_uses_full_delete_ready",
-    panel.includes("fullDeleteReady"),
-    "fullDeleteReady gate"
+    deleteSection.includes("fullDeleteReady") && panel.includes("AdminUserDeleteSection"),
+    "AdminUserDeleteSection in lifecycle panel"
   );
   record(
     "delete_api_uses_main_admin_guard",
