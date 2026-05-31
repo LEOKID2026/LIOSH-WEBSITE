@@ -5,9 +5,11 @@ import {
   resolveTopicLabelHe,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
 import {
+  mergeSubjectGuidanceReinforcementUnits,
   parseClassReportViewModel,
   parsePhysicalClassReportViewModel,
 } from "../../lib/school-portal/school-report-view-model.js";
+import { CLASS_WEAK_TOPICS_FALLBACK_BANNER } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 assert.equal(formatTopicLineHe("math", "math"), null);
 assert.equal(formatTopicLineHe("math", "geometry"), null);
@@ -282,6 +284,94 @@ assert.ok(vm.sections.attention.items[0].detail.includes("קשיים"));
   const labels = vm.sections.focus.items.map((f) => f.label).join(" ");
   assert.ok(labels.includes("מתמטיקה"), "PHYS-4: math fallback in focus");
   assert.ok(labels.includes("בעלי חיים") || labels.includes("מדעים"), "PHYS-4: science topic present");
+}
+
+// PHYS-MERGE — aggregate topic units from all subjects (not capped at 2 per subject)
+{
+  const blocks = [
+    {
+      subjectFocus: "math",
+      classRecommendationUnits: [
+        {
+          level: "topic",
+          subject: "math",
+          topic: "addition",
+          topicLabelHe: "חיבור",
+          subtopicLabelHe: "נשיאה",
+          cohortAccuracyPct: 58,
+          affectedStudentCount: 22,
+          affectedStudentIds: ["s1"],
+        },
+        {
+          level: "topic",
+          subject: "math",
+          topic: "subtraction",
+          topicLabelHe: "חיסור",
+          subtopicLabelHe: "השלמה לעשר",
+          cohortAccuracyPct: 57,
+          affectedStudentCount: 22,
+          affectedStudentIds: ["s1"],
+        },
+        {
+          level: "topic",
+          subject: "math",
+          topic: "multiplication",
+          topicLabelHe: "כפל",
+          cohortAccuracyPct: 60,
+          affectedStudentCount: 20,
+          affectedStudentIds: ["s1"],
+        },
+      ],
+    },
+    {
+      subjectFocus: "hebrew",
+      classRecommendationUnits: [
+        {
+          level: "topic",
+          subject: "hebrew",
+          topic: "reading",
+          topicLabelHe: "קריאה",
+          cohortAccuracyPct: 55,
+          affectedStudentCount: 18,
+          affectedStudentIds: ["s2"],
+        },
+      ],
+    },
+  ];
+  const merged = mergeSubjectGuidanceReinforcementUnits(blocks, 24);
+  assert.equal(merged.length, 4, "PHYS-MERGE: all subject topic units included");
+
+  const physicalBody = {
+    reportMeta: { version: "v2" },
+    physicalClassGuidanceSeverityTier: "class_needs_reinforcement",
+    cohortSummary: { totalAnswers: 200, studentsWithActivity: 22, accuracy: 58 },
+    rosterSummary: { studentCount: 22 },
+    roster: [],
+    students: [
+      {
+        studentId: "s1",
+        studentFullNameMasked: "ת***",
+        summary: { totalAnswers: 80, accuracy: 55 },
+      },
+    ],
+    subjectBreakdown: [],
+    subjectGuidanceBlocks: blocks,
+    weaknessTopics: [],
+    attentionList: [],
+    recentActivities: [],
+  };
+  const vm = parsePhysicalClassReportViewModel(physicalBody);
+  assert.equal(vm.sections.focus.items.length, 4, "PHYS-MERGE: physical focus lists merged topics");
+  assert.equal(
+    vm.sections.focus.preamble,
+    CLASS_WEAK_TOPICS_FALLBACK_BANNER,
+    "PHYS-MERGE: generic banner shown with concrete topics"
+  );
+  assert.equal(vm.navigation.find((n) => n.id === "focus")?.badge, "4 נושאים");
+  const labels = vm.sections.focus.items.map((f) => f.label).join(" ");
+  assert.ok(labels.includes("חיבור"), "PHYS-MERGE: math addition visible");
+  assert.ok(labels.includes("חיסור"), "PHYS-MERGE: math subtraction visible");
+  assert.ok(labels.includes("קריאה"), "PHYS-MERGE: hebrew topic visible");
 }
 
 // CLASS-NODATA — no-data cohort must not show misleading monitor status

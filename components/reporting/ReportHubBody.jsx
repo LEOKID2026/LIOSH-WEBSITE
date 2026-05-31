@@ -301,7 +301,8 @@ export function ReportDetailSectionView({
 
   if (variant === "distribution" || variant === "focus") {
     const items = section.items || [];
-    if (!items.length) {
+    const preamble = section.preamble;
+    if (!items.length && !preamble) {
       return (
         <p className="text-sm text-white/50 rounded-lg border border-dashed border-white/15 px-3 py-3">
           {section.empty}
@@ -309,6 +310,13 @@ export function ReportDetailSectionView({
       );
     }
     return (
+      <>
+        {preamble ? (
+          <p className="text-sm text-white/70 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-3 mb-3">
+            {preamble}
+          </p>
+        ) : null}
+        {!items.length ? null : (
       <ul className="space-y-2">
         {items.map((item, i) => {
           const label = item.label || item.tier || item.name;
@@ -357,6 +365,8 @@ export function ReportDetailSectionView({
           );
         })}
       </ul>
+        )}
+      </>
     );
   }
 
