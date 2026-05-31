@@ -4,43 +4,43 @@ overview: Wrap the existing Hebrew learning site in a Capacitor Android shell us
 todos:
   - id: owner-decisions
     content: Owner decisions required — confirm production URL, package ID, app name, icon source, and target phase (internal APK vs Play Store) before any execution
-    status: pending
+    status: completed
   - id: approach-review
     content: Phase 0 — Confirm production suitability decision (internal APK / Play Store / TWA alternative) and document in ANDROID_APP_READINESS_AUDIT.md
-    status: pending
+    status: completed
   - id: audit
     content: Write docs/android/ANDROID_APP_READINESS_AUDIT.md — PWA, viewport, cookie/CSP/SW WebView compatibility, Play policy review
-    status: pending
+    status: completed
   - id: install-cap
     content: Install @capacitor/core, @capacitor/cli, @capacitor/android; add cap scripts to package.json
-    status: pending
+    status: completed
   - id: config
     content: Create capacitor.config.ts with remote URL, appId, appName, allowNavigation
-    status: pending
+    status: completed
   - id: add-android
     content: Run npx cap add android to generate the android/ project
-    status: pending
+    status: completed
   - id: configure-android
     content: Edit AndroidManifest.xml (INTERNET only), strings.xml (app name), variables.gradle (SDK versions)
-    status: pending
+    status: completed
   - id: icons
     content: Copy Leo K icons into android mipmap folders; configure adaptive icon background color
-    status: pending
+    status: completed
   - id: gitignore
     content: Add keystore/signing file patterns to .gitignore
-    status: pending
+    status: completed
   - id: cap-report
     content: Write docs/android/CAPACITOR_SETUP_REPORT.md
-    status: pending
+    status: completed
   - id: build-debug
     content: Run ./gradlew assembleDebug; write docs/android/ANDROID_BUILD_AND_SIGNING_REPORT.md with result
-    status: pending
+    status: completed
   - id: qa-report
     content: Write docs/android/ANDROID_QA_REPORT.md with full test matrix and results
-    status: pending
+    status: completed
   - id: play-checklist
     content: Write docs/android/GOOGLE_PLAY_READINESS_CHECKLIST.md including Families policy and 12-tester requirement
-    status: pending
+    status: completed
 isProject: false
 ---
 

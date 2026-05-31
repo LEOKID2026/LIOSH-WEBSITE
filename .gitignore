@@ -65,6 +65,11 @@ gradle-wrapper.jar
 
 # Android
 .android/
+android/app/build/
+*.jks
+*.keystore
+keystore.properties
+signing.properties
 
 # Hebrew audio dev store (API)
 data/_audio_store/

@@ -122,6 +122,9 @@
     "qa:learning-simulator:release": "tsx scripts/learning-simulator/run-orchestrator.mjs full",
     "qa:learning-simulator": "tsx scripts/learning-simulator/run-orchestrator.mjs full",
     "start": "next start",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:build:debug": "cd android && gradlew.bat assembleDebug",
     "verify:learning-supabase-env": "node scripts/verify-learning-supabase-env.mjs",
     "verify:learning-rls": "node scripts/verify-learning-rls.mjs",
     "verify:student-account-sync": "node scripts/verify-student-account-sync.mjs",
@@ -445,6 +448,9 @@
     "xlsx-js-style": "^1.2.0"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.3.4",
+    "@capacitor/cli": "^8.3.4",
+    "@capacitor/core": "^8.3.4",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.1.17",
     "autoprefixer": "^10.4.22",
