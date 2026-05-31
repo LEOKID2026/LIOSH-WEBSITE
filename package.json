@@ -432,19 +432,19 @@
     "test:no-positive-conclusion-decisioning": "node -e \"const { execSync } = require('child_process'); const out = execSync('npx rg positiveConclusionAllowed --glob=*.js --glob=!*output-gating.js --glob=!*build-canonical-state.js --glob=!*node_modules* utils/', { encoding: 'utf8', stdio: ['pipe','pipe','pipe'] }).toString(); const lines = out.split('\\n').filter(l => /if\\s*\\(|\\?|&&|\\|\\|/.test(l) && !/deprecated|_deprecated/.test(l)); if(lines.length > 0) { console.error('FAIL: positiveConclusionAllowed used in decisioning:', lines); process.exit(1); } console.log('PASS: no decisioning usage of positiveConclusionAllowed found');\""
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.105.1",
+    "@supabase/supabase-js": "^2.106.2",
     "canvas-confetti": "^1.9.2",
     "chess.js": "^1.4.0",
-    "framer-motion": "^10.18.0",
+    "framer-motion": "^12.40.0",
     "html2pdf.js": "0.14.0",
     "js-sha256": "^0.11.1",
     "jspdf": "4.2.1",
     "jspdf-autotable": "5.0.8",
     "next": "15.5.18",
     "node-edge-tts": "^1.2.10",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "recharts": "^3.5.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "recharts": "^3.8.1",
     "xlsx-js-style": "^1.2.0"
   },
   "devDependencies": {
