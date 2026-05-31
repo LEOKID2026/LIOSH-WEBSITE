@@ -55,8 +55,29 @@ Installed via: `npm install --save-dev @capacitor/core @capacitor/cli @capacitor
 | `android.allowMixedContent` | `false` | No HTTP mixed content |
 | `android.captureInput` | `true` | Ensures keyboard/input works in WebView |
 | `android.webContentsDebuggingEnabled` | `false` | Disabled for security; enable locally only during debug sessions |
+| `plugins.SystemBars.insetsHandling` | `disable` | Native inset padding applied in `MainActivity` instead of CSS injection |
+| `plugins.SystemBars.style` | `DARK` | Light icons on dark `#050816` status/navigation bars |
 
 Synced copy written to: `android/app/src/main/assets/capacitor.config.json`
+
+---
+
+## Safe-Area / System Bar Handling (Shell Fix)
+
+**Problem:** Production site uses `viewport-fit=cover`. Capacitor 8 passed display insets into the WebView without website CSS using `--safe-area-inset-*`, so header/footer drew under Android status and navigation bars.
+
+**Fix (Android shell only — no website changes):**
+
+| Component | Change |
+|-----------|--------|
+| `MainActivity.java` | Applies `WindowInsets` padding to WebView container; hides native ActionBar; sets status/navigation bar colors to `#050816` |
+| `res/values/colors.xml` | App background `#050816` |
+| `res/values/styles.xml` | Status/navigation bar colors; `windowOptOutEdgeToEdgeEnforcement` for API 35+ |
+| `capacitor.config.ts` | `SystemBars.insetsHandling: 'disable'` — shell owns inset padding |
+
+**Verified on emulator (API 36):** WebView bounds `[0,63][1080,2337]` — 63px top/bottom inset, no native ActionBar overlap.
+
+Evidence: `reports/android-device-qa/09-safe-area-home-fixed.png`, `10-safe-area-login-fixed.png`
 
 ---
 
@@ -170,6 +191,9 @@ npx cap sync android
 | `out/index.html` | Created (Capacitor webDir placeholder) |
 | `android/` | Created by `npx cap add android` |
 | `android/app/src/main/AndroidManifest.xml` | Added `usesCleartextTraffic="false"` |
+| `android/app/src/main/java/com/leok/kids/MainActivity.java` | Safe-area inset padding + system bar colors |
+| `android/app/src/main/res/values/colors.xml` | App background `#050816` |
+| `android/app/src/main/res/values/styles.xml` | Status/nav bar colors; edge-to-edge opt-out |
 | `android/variables.gradle` | Set `minSdkVersion = 26` |
 | `android/app/src/main/res/values/ic_launcher_background.xml` | Background `#050816` |
 | `android/app/src/main/res/mipmap-*/` | Leo K icons copied |

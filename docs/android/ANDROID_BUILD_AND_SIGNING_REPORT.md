@@ -16,6 +16,8 @@
 | APK size | **4.34 MB** (4,547,919 bytes) |
 | Signing | Android debug keystore (auto-generated, not committed) |
 | Release keystore | **Not created** (per plan) |
+| Safe-area rebuild | **SUCCESS** (2026-05-31) — after `MainActivity` inset padding fix |
+| Back-button rebuild | **SUCCESS** (2026-05-31) — after `OnBackPressedCallback` in `MainActivity` |
 
 ---
 
@@ -183,3 +185,44 @@ android/app/build/outputs/bundle/release/app-release.aab
 - No APK/AAB upload to Google Play
 - No release signing keystore
 - No secrets in repo
+
+---
+
+## Safe-Area Fix Rebuild (2026-05-31)
+
+After shell inset padding fix, rebuild and reinstall:
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
+$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
+npx cap sync android
+cd android
+.\gradlew.bat assembleDebug
+cd ..
+adb install -r android\app\build\outputs\apk\debug\app-debug.apk
+```
+
+**Result:** BUILD SUCCESSFUL. WebView inset verified: top 63px, bottom 63px on API 36 emulator.
+
+Screenshots: `reports/android-device-qa/09-safe-area-home-fixed.png`, `10-safe-area-login-fixed.png`
+
+---
+
+## Back-Button Fix Rebuild (2026-05-31)
+
+After `OnBackPressedCallback` in `MainActivity.java`:
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
+$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
+cd android
+.\gradlew.bat assembleDebug
+cd ..
+adb install -r android\app\build\outputs\apk\debug\app-debug.apk
+```
+
+**Result:** BUILD SUCCESSFUL. QA-001 verified on emulator: back from student login returns to homepage; back from homepage exits to launcher.
+
+Evidence: `reports/android-device-qa/13-qa001-after-back-from-login.png`
+
+---

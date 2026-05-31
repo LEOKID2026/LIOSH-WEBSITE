@@ -14,6 +14,14 @@ const config: CapacitorConfig = {
     captureInput: true,
     webContentsDebuggingEnabled: false,
   },
+  plugins: {
+    SystemBars: {
+      // Shell applies native inset padding in MainActivity; do not rely on CSS injection.
+      insetsHandling: 'disable',
+      style: 'DARK',
+      hidden: false,
+    },
+  },
 };
 
 export default config;
