@@ -43,9 +43,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Local env files
-.env*.local
-.env
+# ENV files — keep local, never commit real values
+.env*
+!.env.example
+
+# Vercel env dumps
+.env.vercel*
+!.env.vercel*.example
 
 # Vercel
 .vercel
