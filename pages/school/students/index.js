@@ -347,8 +347,13 @@ export default function SchoolStudentsPage() {
       onEndDateChange={reportRange.setEndDate}
       rangeLabel={reportRange.rangeLabel}
       disabled={reportLoading}
+      showSchoolYearPreset
       onPreset={(days) => {
         const range = reportRange.applyPreset(days);
+        refetchStudentReportForRange(range);
+      }}
+      onSchoolYearPreset={() => {
+        const range = reportRange.applySchoolYearPreset();
         refetchStudentReportForRange(range);
       }}
       onEnableCustom={() => reportRange.setCustomDates(true)}

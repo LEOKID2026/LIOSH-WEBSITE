@@ -120,8 +120,13 @@ export default function SchoolClassesPage() {
         physicalStudentReportLoading ||
         subjectFromPhysicalStudentLoading
       }
+      showSchoolYearPreset
       onPreset={(days) => {
         const nextRange = reportRange.applyPreset(days);
+        refetchActiveReportForRange(nextRange);
+      }}
+      onSchoolYearPreset={() => {
+        const nextRange = reportRange.applySchoolYearPreset();
         refetchActiveReportForRange(nextRange);
       }}
       onEnableCustom={() => reportRange.setCustomDates(true)}

@@ -11,10 +11,12 @@ export default function ReportDateRangeControl({
   onStartDateChange,
   onEndDateChange,
   onPreset,
+  onSchoolYearPreset,
   onApplyCustom,
   onEnableCustom,
   rangeLabel = "",
   disabled = false,
+  showSchoolYearPreset = false,
   className = "",
 }) {
   const today = new Date().toISOString().split("T")[0];
@@ -57,6 +59,21 @@ export default function ReportDateRangeControl({
         >
           חודש
         </button>
+        {showSchoolYearPreset ? (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => onSchoolYearPreset?.()}
+            className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 ${
+              !customDates && presetDays === "schoolYear"
+                ? "bg-blue-500/80 text-white"
+                : "bg-white/10 text-white/70 hover:bg-white/20"
+            }`}
+            data-testid="report-range-preset-school-year"
+          >
+            שנה
+          </button>
+        ) : null}
         <button
           type="button"
           disabled={disabled}

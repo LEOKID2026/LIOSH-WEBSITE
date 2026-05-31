@@ -3,6 +3,7 @@ import {
   appendReportRangeToSearchParams,
   computeDefaultReportRange,
   computeReportRangeForDays,
+  computeSchoolYearToDateRange,
   formatReportRangeDisplayHe,
   MAX_REPORT_RANGE_DAYS,
   validateCustomReportRange,
@@ -16,6 +17,40 @@ assert.ok(defaultRange.from <= defaultRange.to);
 const thirty = computeReportRangeForDays(30);
 const seven = computeReportRangeForDays(7);
 assert.ok(seven.from > thirty.from || seven.from === thirty.from);
+
+// School year to date (1/9 → selected report date)
+assert.deepEqual(computeSchoolYearToDateRange("2026-05-31"), {
+  from: "2025-09-01",
+  to: "2026-05-31",
+});
+assert.deepEqual(computeSchoolYearToDateRange("2025-10-20"), {
+  from: "2025-09-01",
+  to: "2025-10-20",
+});
+assert.deepEqual(computeSchoolYearToDateRange("2026-07-15"), {
+  from: "2025-09-01",
+  to: "2026-07-15",
+});
+assert.deepEqual(computeSchoolYearToDateRange("2026-09-10"), {
+  from: "2026-09-01",
+  to: "2026-09-10",
+});
+assert.deepEqual(computeSchoolYearToDateRange("2026-09-01"), {
+  from: "2026-09-01",
+  to: "2026-09-01",
+});
+assert.deepEqual(computeSchoolYearToDateRange("2026-08-31"), {
+  from: "2025-09-01",
+  to: "2026-08-31",
+});
+
+const schoolYearParams = appendReportRangeToSearchParams(new URLSearchParams(), {
+  from: "2025-09-01",
+  to: "2026-05-31",
+});
+assert.equal(schoolYearParams.get("from"), "2025-09-01");
+assert.equal(schoolYearParams.get("to"), "2026-05-31");
+assert.equal(schoolYearParams.get("windowDays"), null);
 
 const params = appendReportRangeToSearchParams(new URLSearchParams({ windowDays: "30" }), {
   from: "2026-05-01",

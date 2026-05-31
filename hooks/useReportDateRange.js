@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import {
   computeDefaultReportRange,
   computeReportRangeForDays,
+  computeSchoolYearToDateRange,
   formatReportRangeDisplayHe,
   validateCustomReportRange,
   appendReportRangeToSearchParams,
@@ -15,7 +16,7 @@ export function useReportDateRange() {
   const [customDates, setCustomDates] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  /** @type {7 | 30 | null} */
+  /** @type {7 | 30 | 'schoolYear' | null} */
   const [presetDays, setPresetDays] = useState(30);
 
   const rangeLabel = useMemo(
@@ -26,8 +27,17 @@ export function useReportDateRange() {
   const applyPreset = useCallback((days) => {
     setCustomDates(false);
     setPresetDays(days === 7 ? 7 : 30);
-    setAppliedRange(computeReportRangeForDays(days));
-    return computeReportRangeForDays(days);
+    const next = computeReportRangeForDays(days);
+    setAppliedRange(next);
+    return next;
+  }, []);
+
+  const applySchoolYearPreset = useCallback(() => {
+    setCustomDates(false);
+    setPresetDays("schoolYear");
+    const next = computeSchoolYearToDateRange();
+    setAppliedRange(next);
+    return next;
   }, []);
 
   const applyCustom = useCallback(() => {
@@ -58,6 +68,7 @@ export function useReportDateRange() {
     setEndDate,
     presetDays,
     applyPreset,
+    applySchoolYearPreset,
     applyCustom,
     buildSearchParams,
   };
