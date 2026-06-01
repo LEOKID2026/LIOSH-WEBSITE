@@ -1,6 +1,6 @@
 # Math Learning Book — Implementation Notes
 
-**Status:** Documentation only. No code implemented. No SQL executed. No commits made.
+**Status:** Partial implementation (G1 + G2 Math books live in dev). Documentation below includes future-phase notes.
 **Date:** June 2026
 **Purpose:** Technical considerations for a future implementation phase.
             Nothing in this document modifies any existing app code, database, or feature.
@@ -11,14 +11,15 @@
 ## Table of Contents
 
 1. [How Learning Page Resolution Should Work](#1-how-learning-page-resolution-should-work)
-2. [The No-Fallback Policy — Why and How](#2-the-no-fallback-policy--why-and-how)
-3. [Modal vs. Full Page](#3-modal-vs-full-page)
-4. [Approval Status Lifecycle](#4-approval-status-lifecycle)
-5. [Relationship to Parent Report and Teacher Report](#5-relationship-to-parent-report-and-teacher-report)
-6. [Relationship to AI Tutor / Parent Copilot](#6-relationship-to-ai-tutor--parent-copilot)
-7. [Relationship to the Subtopic Diagnostic Layer](#7-relationship-to-the-subtopic-diagnostic-layer)
-8. [Possible Content Storage Approaches](#8-possible-content-storage-approaches)
-9. [Risks and Open Questions](#9-risks-and-open-questions)
+2. [Grade-Based Book Color Themes](#2-grade-based-book-color-themes)
+3. [The No-Fallback Policy — Why and How](#3-the-no-fallback-policy--why-and-how)
+3. [Modal vs. Full Page](#4-modal-vs-full-page)
+4. [Approval Status Lifecycle](#5-approval-status-lifecycle)
+5. [Relationship to Parent Report and Teacher Report](#6-relationship-to-parent-report-and-teacher-report)
+6. [Relationship to AI Tutor / Parent Copilot](#7-relationship-to-ai-tutor--parent-copilot)
+7. [Relationship to the Subtopic Diagnostic Layer](#8-relationship-to-the-subtopic-diagnostic-layer)
+8. [Possible Content Storage Approaches](#9-possible-content-storage-approaches)
+9. [Risks and Open Questions](#10-risks-and-open-questions)
 
 ---
 
@@ -67,7 +68,28 @@ No decision is made here. The important constraint is that only pages with
 
 ---
 
-## 2. The No-Fallback Policy — Why and How
+## 2. Grade-Based Book Color Themes
+
+Each grade gets **one** consistent reader color theme across all subjects (Math, הנדסה, etc.).
+
+| Grade | Theme |
+|-------|--------|
+| **Grade 1 (`g1`)** | Purple/violet page gradient, violet nav accents, emerald progress/headings |
+| **Grade 2 (`g2`)** | Deep navy → blue/cyan/teal gradient, cyan/teal accents |
+| **Future grades** | Add entries to `lib/learning-book/book-grade-themes.js` |
+
+Implementation:
+
+- Central config: `lib/learning-book/book-grade-themes.js` (`getBookGradeTheme(grade)`)
+- React context: `components/learning-book/BookGradeThemeContext.js`
+- Shell wraps reader with `BookGradeThemeProvider grade="g1"|"g2"`
+- Shared components (`LearningPageBody`, `BookTocModal`, `BookDiagram`, index tiles) consume `useBookGradeTheme()`
+
+Do **not** assign subject-specific random colors when cloning books to new subjects — pass the student's grade key instead.
+
+---
+
+## 3. The No-Fallback Policy — Why and How
 
 ### The Rule
 
@@ -120,7 +142,7 @@ that never had a learning book feature. The gap is invisible to the student.
 
 ---
 
-## 3. Modal vs. Full Page
+## 4. Modal vs. Full Page
 
 The learning page could be rendered in two ways. Both are valid. The choice should be
 made when the UI is designed, not in this document. Notes for consideration:
@@ -163,7 +185,7 @@ can be introduced in Phase 5 when the teacher portal can assign learning pages d
 
 ---
 
-## 4. Approval Status Lifecycle
+## 5. Approval Status Lifecycle
 
 Each learning page moves through the following states. Only `active` pages are shown
 to students.
@@ -198,7 +220,7 @@ be a real date.
 
 ---
 
-## 5. Relationship to Parent Report and Teacher Report
+## 6. Relationship to Parent Report and Teacher Report
 
 The learning book is a student-facing feature at its core, but it can integrate with
 parent and teacher surfaces in the future.
@@ -224,7 +246,7 @@ They require the core learning page system (Phase 5) to be built first.
 
 ---
 
-## 6. Relationship to AI Tutor / Parent Copilot
+## 7. Relationship to AI Tutor / Parent Copilot
 
 The current system includes a Parent Copilot (AI-powered) that answers parent questions
 about their child's progress. The learning book is intentionally separate from this AI layer.
@@ -248,7 +270,7 @@ presentation but cannot introduce content that contradicts or extends beyond the
 
 ---
 
-## 7. Relationship to the Subtopic Diagnostic Layer
+## 8. Relationship to the Subtopic Diagnostic Layer
 
 The Subtopic Diagnostic Layer plan (`docs/subtopics/SUBTOPIC_DIAGNOSTIC_LAYER_MASTER_PLAN.md`,
 May 2026) introduced a concept of subtopic-level diagnostic conclusions — knowing not just
@@ -278,7 +300,7 @@ by the formula: `skill_id = "math:kind:" + subtopic`.
 
 ---
 
-## 8. Possible Content Storage Approaches
+## 9. Possible Content Storage Approaches
 
 Three approaches for where learning page content lives. No decision is made in this document.
 
@@ -309,7 +331,7 @@ approval gate; the file provides the content.
 
 ---
 
-## 9. Risks and Open Questions
+## 10. Risks and Open Questions
 
 | # | Risk / Question | Priority | Notes |
 |---|-----------------|----------|-------|

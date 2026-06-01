@@ -19,6 +19,7 @@ import {
 } from "../../lib/learning-book/math-g2-book-nav";
 import { resolveMathG1PracticeTarget } from "../../lib/learning-book/resolve-math-g1-practice-target";
 import { resolveMathG2PracticeTarget } from "../../lib/learning-book/resolve-math-g2-practice-target";
+import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 const G1_BOOK_UI = {
   bookMeta: MATH_G1_BOOK_META,
@@ -47,6 +48,7 @@ export default function LearningPageBody({
   const bookUi = bookGrade === "g2" ? G2_BOOK_UI : G1_BOOK_UI;
   const { bookMeta, getReturnQuerySuffix, resolvePracticeTarget, getPracticePath, savePracticePreset } =
     bookUi;
+  const { classes: theme } = useBookGradeTheme();
   const router = useRouter();
   const returnQuerySuffix = getReturnQuerySuffix(router.query);
   const [sectionIndex, setSectionIndex] = useState(0);
@@ -125,7 +127,7 @@ export default function LearningPageBody({
           animation: bookSectionIn 0.28s ease-out;
         }
         .book-dot-active {
-          box-shadow: 0 0 10px rgba(52, 211, 153, 0.55);
+          box-shadow: 0 0 10px var(--book-dot-glow);
         }
       `}</style>
 
@@ -140,7 +142,7 @@ export default function LearningPageBody({
       >
         <article
           key={sectionIndex}
-          className={`book-section-animate rounded-3xl border border-violet-300/25 bg-gradient-to-b from-violet-950/35 via-[#1a1430]/90 to-[#120b1f]/95 px-5 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.28)] sm:px-8 sm:py-8`}
+          className={`book-section-animate rounded-3xl border px-5 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.28)] sm:px-8 sm:py-8 ${theme.cardArticle}`}
           aria-live="polite"
         >
           <header className="mb-4 shrink-0 text-center">
@@ -155,14 +157,14 @@ export default function LearningPageBody({
                   onClick={() => jumpToSection(i)}
                   className={`h-2.5 rounded-full transition-all duration-300 ${
                     i === sectionIndex
-                      ? "book-dot-active w-7 bg-emerald-400"
+                      ? `book-dot-active w-7 ${theme.dotActive}`
                       : "w-2.5 bg-white/25 hover:bg-white/40"
                   }`}
                   aria-label={`עמוד ${i + 1}`}
                 />
               ))}
             </div>
-            <h2 className="mt-4 text-2xl font-bold text-emerald-100 sm:text-3xl">
+            <h2 className={`mt-4 text-2xl font-bold sm:text-3xl ${theme.sectionHeading}`}>
               {displayTitle}
             </h2>
           </header>
@@ -179,10 +181,10 @@ export default function LearningPageBody({
               <Link
                 href={practicePath}
                 onClick={handlePracticeClick}
-                className="mx-auto block w-full max-w-md rounded-2xl border border-sky-300/40 bg-gradient-to-b from-sky-500/35 to-cyan-600/30 px-5 py-4 text-sky-50 shadow-[0_8px_24px_rgba(14,165,233,0.18)] transition hover:from-sky-500/45 hover:to-cyan-600/40 hover:border-sky-200/50 sm:inline-block sm:w-auto sm:min-w-[16rem]"
+                className={`mx-auto block w-full max-w-md rounded-2xl border px-5 py-4 transition sm:inline-block sm:w-auto sm:min-w-[16rem] ${theme.practiceCta}`}
               >
                 <span className="block text-lg font-bold sm:text-xl">בואו נתרגל עכשיו</span>
-                <span className="mt-1 block text-sm font-medium text-sky-100/85">
+                <span className={`mt-1 block text-sm font-medium ${theme.practiceCtaSub}`}>
                   נעבור לתרגול של הנושא הזה בחשבון
                 </span>
               </Link>
@@ -193,7 +195,7 @@ export default function LearningPageBody({
 
       {/* Bottom HUD — fixed, always visible */}
       <footer
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/15 bg-[#120b1f]/96 backdrop-blur-md"
+        className={`fixed bottom-0 left-0 right-0 z-40 border-t border-white/15 backdrop-blur-md ${theme.footerBg}`}
         dir="rtl"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
@@ -210,7 +212,7 @@ export default function LearningPageBody({
               type="button"
               disabled={atFirst}
               onClick={goPrev}
-              className="min-h-[48px] flex-1 rounded-2xl border border-violet-400/35 bg-violet-500/25 px-4 py-3 text-base font-bold text-violet-50 transition hover:bg-violet-500/35 disabled:cursor-not-allowed disabled:opacity-35"
+              className={`min-h-[48px] flex-1 rounded-2xl border px-4 py-3 text-base font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${theme.navPrevButton}`}
             >
               עמוד קודם
             </button>
@@ -218,7 +220,7 @@ export default function LearningPageBody({
               type="button"
               disabled={atLast}
               onClick={goNext}
-              className="min-h-[48px] flex-1 rounded-2xl border border-emerald-400/35 bg-emerald-500/30 px-4 py-3 text-base font-bold text-emerald-50 transition hover:bg-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-35"
+              className={`min-h-[48px] flex-1 rounded-2xl border px-4 py-3 text-base font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${theme.navNextButton}`}
             >
               עמוד הבא
             </button>
@@ -235,9 +237,9 @@ export default function LearningPageBody({
                     `${bookMeta.routeBase}/${prevPageId}`,
                     returnQuerySuffix
                   )}
-                  className="min-h-[52px] rounded-xl border border-violet-300/25 bg-gradient-to-l from-violet-950/50 to-violet-500/10 px-3 py-2.5 text-right text-xs text-violet-100/90 shadow-sm transition hover:border-violet-300/40 hover:from-violet-900/55 hover:to-violet-500/15"
+                  className={`min-h-[52px] rounded-xl border px-3 py-2.5 text-right text-xs shadow-sm transition ${theme.topicPrevLink}`}
                 >
-                  <span className="block text-[10px] text-violet-200/65">נושא קודם</span>
+                  <span className={`block text-[10px] ${theme.topicPrevLabel}`}>נושא קודם</span>
                   <span className="block truncate text-sm font-medium">{prevTitle}</span>
                 </Link>
               ) : (
@@ -249,9 +251,9 @@ export default function LearningPageBody({
                     `${bookMeta.routeBase}/${nextPageId}`,
                     returnQuerySuffix
                   )}
-                  className="min-h-[52px] rounded-xl border border-emerald-400/25 bg-gradient-to-l from-emerald-950/45 to-emerald-500/10 px-3 py-2.5 text-right text-xs text-emerald-100/90 shadow-sm transition hover:border-emerald-400/40 hover:from-emerald-900/50 hover:to-emerald-500/15"
+                  className={`min-h-[52px] rounded-xl border px-3 py-2.5 text-right text-xs shadow-sm transition ${theme.topicNextLink}`}
                 >
-                  <span className="block text-[10px] text-emerald-200/65">נושא הבא</span>
+                  <span className={`block text-[10px] ${theme.topicNextLabel}`}>נושא הבא</span>
                   <span className="block truncate text-sm font-medium">{nextTitle}</span>
                 </Link>
               ) : (

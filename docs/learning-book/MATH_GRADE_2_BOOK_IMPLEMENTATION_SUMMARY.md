@@ -97,6 +97,22 @@
 
 ---
 
+---
+
+## Grade-based color themes
+
+Book reader colors are **grade-based**, not subject-based. Config: `lib/learning-book/book-grade-themes.js`.
+
+| Grade | Theme | Notes |
+|-------|--------|--------|
+| **g1** | Purple/violet + emerald accents | Unchanged from original reader |
+| **g2** | Deep navy → blue/cyan/teal | Applied via `BookGradeThemeProvider` in `MathG2BookShell` |
+| **g3+** | TBD | Add a new entry in `BOOK_GRADE_THEMES` when cloning infrastructure |
+
+Future books (הנדסה, etc.) should reuse the same grade key — e.g. `g2` geometry book gets the G2 blue/cyan theme, not a one-off palette.
+
+---
+
 ## Verification
 
 ```bash
@@ -116,7 +132,8 @@ npm run build
 - [ ] Section 7 CTA → Math Master learning mode with correct topic
 - [ ] Math Master g2: book tile, `הסבר בספר`, in-learning `📖 הסבר` (learning only)
 - [ ] `סגור` returns to active learning session
-- [ ] Grade 1 book + buttons unchanged
+- [ ] Grade 1 book + buttons unchanged (still purple/violet)
+- [ ] Grade 2 book uses blue/cyan/teal theme (same layout as G1)
 
 ---
 

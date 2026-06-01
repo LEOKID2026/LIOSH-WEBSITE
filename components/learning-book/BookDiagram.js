@@ -14,8 +14,10 @@ import {
   parsePlaceValueDiagram,
 } from "../../lib/learning-book/diagram-detect";
 import { stripStrayMarkdown } from "../../lib/learning-book/parse-inline-markdown";
+import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 function Dot({ kind = "dot" }) {
+  const theme = useBookGradeTheme().classes;
   if (kind === "cross") {
     return (
       <span
@@ -35,7 +37,7 @@ function Dot({ kind = "dot" }) {
   }
   return (
     <span
-      className="inline-block h-3.5 w-3.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.45)] sm:h-4 sm:w-4"
+      className={`inline-block h-3.5 w-3.5 rounded-full sm:h-4 sm:w-4 ${theme.diagramDot}`}
       aria-hidden="true"
     />
   );
@@ -55,6 +57,7 @@ function isJumpAnnotation(line) {
 }
 
 function NumberLineJump({ line }) {
+  const theme = useBookGradeTheme().classes;
   const cleaned = line.replace(/^[\s_↑↓←→]+/, "").trim();
   const arrow = line.includes("←")
     ? "←"
@@ -70,7 +73,7 @@ function NumberLineJump({ line }) {
       dir="rtl"
     >
       <span
-        className="text-2xl font-bold text-emerald-300/90 sm:text-3xl"
+        className={`text-2xl font-bold sm:text-3xl ${theme.diagramAccentStrong}`}
         dir="ltr"
         style={bookMathIsolateStyle}
         aria-hidden="true"
@@ -78,7 +81,7 @@ function NumberLineJump({ line }) {
         {arrow}
       </span>
       {cleaned ? (
-        <p className="text-sm text-emerald-100/85 sm:text-base">
+        <p className={`text-sm sm:text-base ${theme.diagramAccentMuted}`}>
           <MixedHebrewMathText text={cleaned.replace(/^[↑↓←→]\s*/, "")} />
         </p>
       ) : null}
@@ -128,6 +131,7 @@ function NumberLineDiagram({ lines }) {
 }
 
 function NumberLineRow({ line }) {
+  const theme = useBookGradeTheme().classes;
   const tokens = parseNumberLineTokens(line);
   return (
     <div
@@ -144,8 +148,8 @@ function NumberLineRow({ line }) {
             <span
               className={`min-w-[1.25rem] rounded-lg px-1 py-0.5 text-center text-sm font-bold tabular-nums sm:min-w-[1.5rem] sm:text-base ${
                 tok.highlight
-                  ? "bg-emerald-500/35 text-emerald-50 ring-1 ring-emerald-400/40"
-                  : "text-violet-50"
+                  ? theme.diagramHighlightCell
+                  : theme.diagramSecondary
               }`}
             >
               {tok.value}
@@ -162,9 +166,10 @@ function NumberLineRow({ line }) {
 }
 
 function DiagramEquationLine({ equation }) {
+  const theme = useBookGradeTheme().classes;
   if (!equation) return null;
   return (
-    <p className="mt-1 text-center text-base font-bold text-emerald-100 sm:text-lg">
+    <p className={`mt-1 text-center text-base font-bold sm:text-lg ${theme.diagramAccent}`}>
       <MixedHebrewMathText text={equation} />
     </p>
   );
@@ -209,6 +214,7 @@ function DiagramNumberRow({ numbers, equation }) {
 }
 
 function ObjectDiagram({ lines }) {
+  const theme = useBookGradeTheme().classes;
   /** @type {string|null} */
   let lastVisualLine = null;
 
@@ -239,7 +245,7 @@ function ObjectDiagram({ lines }) {
           return (
             <p
               key={li}
-              className="text-center text-sm text-emerald-200/80 sm:text-base"
+              className={`text-center text-sm sm:text-base ${theme.diagramAccentSoft}`}
             >
               <MixedHebrewMathText text={line.replace(/^[\s↑↓←→_]+/, "↑ ")} />
             </p>
@@ -328,6 +334,7 @@ function ObjectDiagram({ lines }) {
 }
 
 function CardsDiagram({ lines }) {
+  const theme = useBookGradeTheme().classes;
   return (
     <div className="space-y-3" dir="rtl">
       {lines.map((line, i) => (
@@ -345,7 +352,7 @@ function CardsDiagram({ lines }) {
                 key={pi}
                 className={`rounded-xl border px-2 py-1.5 text-xs font-semibold sm:px-3 sm:py-2 sm:text-sm ${
                   active
-                    ? "border-emerald-400/45 bg-emerald-500/25 text-emerald-50"
+                    ? theme.diagramHighlightBorder
                     : "border-white/15 bg-white/8 text-white/85"
                 }`}
               >
@@ -409,6 +416,7 @@ function FrameTextDiagram({ lines }) {
 }
 
 function PlaceValueDiagram({ parsed }) {
+  const theme = useBookGradeTheme().classes;
   const { columns, equation } = parsed;
 
   return (
@@ -421,11 +429,11 @@ function PlaceValueDiagram({ parsed }) {
         {columns.map((col, i) => (
           <div
             key={`${col.label}-${i}`}
-            className="flex min-w-[4.5rem] flex-col items-center justify-center gap-2 rounded-xl border border-emerald-300/30 bg-emerald-950/20 px-3 py-3 sm:min-w-[5.5rem] sm:px-4 sm:py-4"
+            className={`flex min-w-[4.5rem] flex-col items-center justify-center gap-2 rounded-xl border px-3 py-3 sm:min-w-[5.5rem] sm:px-4 sm:py-4 ${theme.diagramColumn}`}
             role="cell"
           >
             <span
-              className="text-center text-sm font-semibold leading-snug text-emerald-100 sm:text-base"
+              className={`text-center text-sm font-semibold leading-snug sm:text-base ${theme.diagramColumnLabel}`}
               dir="rtl"
             >
               {col.label}
@@ -437,7 +445,7 @@ function PlaceValueDiagram({ parsed }) {
         ))}
       </div>
       {equation ? (
-        <p className="text-center text-base font-bold text-emerald-100 sm:text-lg">
+        <p className={`text-center text-base font-bold sm:text-lg ${theme.diagramAccent}`}>
           = {equation}
         </p>
       ) : null}
@@ -446,11 +454,12 @@ function PlaceValueDiagram({ parsed }) {
 }
 
 function FrameDiagram({ lines }) {
+  const theme = useBookGradeTheme().classes;
   const sizeClass = diagramTextSizeClass(lines.join("\n"));
   const cleaned = lines.map((line) => stripStrayMarkdown(line)).join("\n");
   return (
     <pre
-      className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium text-violet-50/95 ${sizeClass}`}
+      className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium ${theme.diagramSecondaryMuted} ${sizeClass}`}
       style={bookMathIsolateStyle}
       dir="ltr"
     >
@@ -472,6 +481,7 @@ function isPureMathDiagramLine(line) {
 }
 
 function MixedDiagramLine({ line }) {
+  const theme = useBookGradeTheme().classes;
   const trimmed = String(line || "").trim();
   if (!trimmed) return null;
 
@@ -486,7 +496,7 @@ function MixedDiagramLine({ line }) {
   if (isPureMathDiagramLine(trimmed)) {
     return (
       <p
-        className="text-center text-base font-semibold tabular-nums text-violet-50/95 sm:text-lg"
+        className={`text-center text-base font-semibold tabular-nums sm:text-lg ${theme.diagramSecondaryMuted}`}
         dir="ltr"
         style={bookMathIsolateStyle}
       >
@@ -496,13 +506,14 @@ function MixedDiagramLine({ line }) {
   }
 
   return (
-    <p className="text-center text-base text-violet-50/95 sm:text-lg" dir="rtl">
+    <p className={`text-center text-base sm:text-lg ${theme.diagramSecondaryMuted}`} dir="rtl">
       <MixedHebrewMathText text={trimmed} />
     </p>
   );
 }
 
 function GenericDiagram({ content }) {
+  const theme = useBookGradeTheme().classes;
   const lines = String(content || "")
     .split("\n")
     .map((l) => l.trim())
@@ -524,7 +535,7 @@ function GenericDiagram({ content }) {
   const cleaned = stripStrayMarkdown(String(content || ""));
   return (
     <pre
-      className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium text-violet-50/95 ${sizeClass}`}
+      className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium ${theme.diagramSecondaryMuted} ${sizeClass}`}
       style={bookMathIsolateStyle}
       dir="ltr"
     >
@@ -534,6 +545,7 @@ function GenericDiagram({ content }) {
 }
 
 export default function BookDiagram({ content }) {
+  const theme = useBookGradeTheme().classes;
   const lines = String(content || "")
     .split("\n")
     .map((l) => stripStrayMarkdown(l.trim()))
@@ -543,7 +555,7 @@ export default function BookDiagram({ content }) {
 
   return (
     <div
-      className="my-4 rounded-2xl border border-emerald-300/20 bg-gradient-to-b from-emerald-950/30 via-violet-950/25 to-[#1a1430]/80 px-3 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:px-6 sm:py-6"
+      className={`my-4 rounded-2xl border px-3 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:px-6 sm:py-6 ${theme.diagramPanel}`}
       role="img"
       aria-label="דוגמה"
     >

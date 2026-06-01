@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import { appendReturnQueryToHref } from "../../lib/learning-book/math-g1-book-nav";
+import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 export default function BookTocModal({
   open,
@@ -10,6 +11,8 @@ export default function BookTocModal({
   returnQuerySuffix = "",
   routeBase = MATH_G1_BOOK_META.routeBase,
 }) {
+  const { classes: theme } = useBookGradeTheme();
+
   if (!open) return null;
 
   return (
@@ -26,7 +29,7 @@ export default function BookTocModal({
         onClick={onClose}
       />
       <div
-        className="relative z-10 flex max-h-[min(92vh,40rem)] w-full max-w-lg flex-col rounded-t-3xl sm:rounded-3xl border border-white/15 bg-gradient-to-b from-[#1a1230] to-[#120b1f] shadow-2xl"
+        className={`relative z-10 flex max-h-[min(92vh,40rem)] w-full max-w-lg flex-col rounded-t-3xl sm:rounded-3xl border shadow-2xl ${theme.tocModalPanel}`}
         dir="rtl"
       >
         <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
@@ -45,7 +48,7 @@ export default function BookTocModal({
           <nav className="space-y-5" aria-label="תוכן העניינים">
             {batches.map((batch) => (
               <div key={batch.id}>
-                <h3 className="mb-2 text-sm font-bold text-emerald-300/90">
+                <h3 className={`mb-2 text-sm font-bold ${theme.tocBatchHeading}`}>
                   {batch.titleHe}
                 </h3>
                 <ul className="space-y-1.5">
@@ -61,7 +64,7 @@ export default function BookTocModal({
                           onClick={onClose}
                           className={`block rounded-xl px-4 py-2.5 text-right text-sm transition ${
                             isActive
-                              ? "bg-emerald-500/30 border border-emerald-400/40 text-emerald-50 font-semibold"
+                              ? theme.tocActiveItem
                               : "bg-white/5 text-white/85 hover:bg-white/10"
                           }`}
                         >
@@ -79,7 +82,7 @@ export default function BookTocModal({
           <Link
             href={appendReturnQueryToHref(routeBase, returnQuerySuffix)}
             onClick={onClose}
-            className="block text-center text-sm font-semibold text-emerald-300 hover:text-emerald-200"
+            className={`block text-center text-sm font-semibold ${theme.tocFooterLink}`}
           >
             ← חזרה לדף הראשי של הספר
           </Link>

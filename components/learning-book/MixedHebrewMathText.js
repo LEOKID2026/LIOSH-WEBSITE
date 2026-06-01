@@ -11,6 +11,7 @@ import {
   parseInlineMarkdown,
   stripStrayMarkdown,
 } from "../../lib/learning-book/parse-inline-markdown";
+import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 const HEBREW_CHAR = /[\u0590-\u05FF]/;
 
@@ -29,6 +30,7 @@ function needsSpaceAfter(text, index) {
 }
 
 function MathSpan({ value, sourceText, start, end }) {
+  const { classes: theme } = useBookGradeTheme();
   const display = stripStrayMarkdown(value).trim();
   const padBefore = needsSpaceBefore(sourceText, start);
   const padAfter = needsSpaceAfter(sourceText, end - 1);
@@ -39,7 +41,7 @@ function MathSpan({ value, sourceText, start, end }) {
       <bdi
         dir="ltr"
         style={bookMathIsolateStyle}
-        className="book-math-isolate font-semibold tabular-nums text-emerald-50"
+        className={`book-math-isolate font-semibold tabular-nums ${theme.mathText}`}
       >
         {display}
       </bdi>
@@ -103,6 +105,7 @@ function renderContentRuns(text, sourceText, sourceOffset = 0) {
 }
 
 function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
+  const { classes: theme } = useBookGradeTheme();
   const cleaned = stripStrayMarkdown(value);
   const content = renderContentRuns(value, sourceText, sourceOffset);
   const mathOnly =
@@ -131,7 +134,7 @@ function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
   if (type === "code") {
     return (
       <code
-        className="rounded-md bg-violet-900/40 px-1.5 py-0.5 text-[0.95em] font-semibold text-emerald-100"
+        className={`rounded-md px-1.5 py-0.5 text-[0.95em] font-semibold ${theme.inlineCodeBg} ${theme.inlineCodeText}`}
         style={bookMathIsolateStyle}
         dir="ltr"
       >
