@@ -1,5 +1,20 @@
 import MixedHebrewMathText from "./MixedHebrewMathText";
 import BookDiagram from "./BookDiagram";
+import { splitBookMarkdownBlocks } from "../../lib/learning-book/book-markdown-blocks";
+
+function BookProseBlock({ lines }) {
+  if (!lines?.length) return null;
+
+  return (
+    <div className="my-4 space-y-2.5 text-right leading-relaxed" dir="rtl">
+      {lines.map((line, i) => (
+        <div key={i}>
+          <MixedHebrewMathText text={line} />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function MarkdownBlock({ block }) {
   if (block.type === "code") {
@@ -12,10 +27,14 @@ function MarkdownBlock({ block }) {
 
   if (block.type === "ul") {
     return (
-      <ul className="my-3 list-disc space-y-2.5 pr-6 text-right">
-        {block.items.map((item, i) => (
-          <li key={i}>
-            <MixedHebrewMathText text={item} />
+      <ul className="my-3 list-disc space-y-3 pr-6 text-right">
+        {block.items.map((itemLines, i) => (
+          <li key={i} className="space-y-2">
+            {itemLines.map((line, j) => (
+              <div key={j}>
+                <MixedHebrewMathText text={line} />
+              </div>
+            ))}
           </li>
         ))}
       </ul>
@@ -24,79 +43,29 @@ function MarkdownBlock({ block }) {
 
   if (block.type === "ol") {
     return (
-      <ol className="my-3 list-decimal space-y-2.5 pr-6 text-right">
-        {block.items.map((item, i) => (
-          <li key={i}>
-            <MixedHebrewMathText text={item} />
+      <ol className="my-3 list-decimal space-y-3 pr-6 text-right">
+        {block.items.map((itemLines, i) => (
+          <li key={i} className="space-y-2">
+            {itemLines.map((line, j) => (
+              <div key={j}>
+                <MixedHebrewMathText text={line} />
+              </div>
+            ))}
           </li>
         ))}
       </ol>
     );
   }
 
-  if (block.type === "p") {
-    return (
-      <p className="my-4 text-right leading-relaxed" dir="rtl">
-        <MixedHebrewMathText text={block.content} />
-      </p>
-    );
+  if (block.type === "prose") {
+    return <BookProseBlock lines={block.lines} />;
   }
 
   return null;
 }
 
-function splitMarkdownBlocks(body) {
-  if (!body?.trim()) return [];
-
-  /** @type {{ type: string, content?: string, items?: string[] }[]} */
-  const blocks = [];
-  const segments = body.split(/(```[\s\S]*?```)/g);
-
-  for (const segment of segments) {
-    if (!segment.trim()) continue;
-
-    if (segment.startsWith("```") && segment.endsWith("```")) {
-      const content = segment.slice(3, -3).replace(/^\n/, "").replace(/\n$/, "");
-      blocks.push({ type: "code", content });
-      continue;
-    }
-
-    const chunks = segment.split(/\n\n+/);
-    for (const chunk of chunks) {
-      const trimmed = chunk.trim();
-      if (!trimmed) continue;
-
-      if (/^---+$/.test(trimmed)) {
-        blocks.push({ type: "hr" });
-        continue;
-      }
-
-      const listLines = trimmed.split("\n");
-      if (listLines.every((line) => /^[-*]\s+/.test(line))) {
-        blocks.push({
-          type: "ul",
-          items: listLines.map((line) => line.replace(/^[-*]\s+/, "")),
-        });
-        continue;
-      }
-
-      if (listLines.every((line) => /^\d+\.\s+/.test(line))) {
-        blocks.push({
-          type: "ol",
-          items: listLines.map((line) => line.replace(/^\d+\.\s+/, "")),
-        });
-        continue;
-      }
-
-      blocks.push({ type: "p", content: trimmed.replace(/\n/g, " ") });
-    }
-  }
-
-  return blocks;
-}
-
 export default function LearningMarkdown({ content }) {
-  const blocks = splitMarkdownBlocks(content);
+  const blocks = splitBookMarkdownBlocks(content);
   if (!blocks.length) return null;
 
   return (

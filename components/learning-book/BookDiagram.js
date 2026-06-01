@@ -5,9 +5,13 @@ import {
 } from "../../lib/learning-book/book-math-display";
 import {
   detectDiagramType,
+  inferDiagramEquation,
+  inferEquationFromObjectVisual,
+  parseDiagramNumberRow,
   parseNumberLineTokens,
   parseObjectDiagramGroups,
 } from "../../lib/learning-book/diagram-detect";
+import { stripStrayMarkdown } from "../../lib/learning-book/parse-inline-markdown";
 
 function Dot({ kind = "dot" }) {
   if (kind === "cross") {
@@ -155,10 +159,80 @@ function NumberLineRow({ line }) {
   );
 }
 
+function DiagramEquationLine({ equation }) {
+  if (!equation) return null;
+  return (
+    <p className="mt-1 text-center text-base font-bold text-emerald-100 sm:text-lg">
+      <MixedHebrewMathText text={equation} />
+    </p>
+  );
+}
+
+function DiagramNumberRow({ numbers, equation }) {
+  if (equation) {
+    return <DiagramEquationLine equation={equation} />;
+  }
+
+  const columns = numbers.length;
+  const gapClass =
+    columns >= 3
+      ? "gap-x-10 sm:gap-x-14"
+      : columns === 2
+        ? "gap-x-16 sm:gap-x-20"
+        : "gap-x-8";
+
+  return (
+    <div className="space-y-2 text-center">
+      <div
+        className={`flex flex-wrap items-center justify-center ${gapClass}`}
+        dir="ltr"
+        style={bookMathIsolateStyle}
+      >
+        {numbers.map((n, i) => (
+          <bdi
+            key={i}
+            className="inline-block min-w-[2rem] text-center text-base font-bold tabular-nums text-white/90 sm:min-w-[2.5rem] sm:text-lg"
+          >
+            {n}
+          </bdi>
+        ))}
+      </div>
+      {equation ? (
+        <p className="text-sm font-semibold text-emerald-100/90 sm:text-base">
+          <MixedHebrewMathText text={equation} />
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function ObjectDiagram({ lines }) {
+  /** @type {string|null} */
+  let lastVisualLine = null;
+
   return (
     <div className="space-y-4" dir="ltr" style={bookMathIsolateStyle}>
       {lines.map((line, li) => {
+        const numberRow = parseDiagramNumberRow(line);
+        if (numberRow) {
+          if (inferEquationFromObjectVisual(lastVisualLine)) {
+            return null;
+          }
+          const equation =
+            inferDiagramEquation(lastVisualLine, numberRow) ||
+            inferEquationFromObjectVisual(lastVisualLine);
+          if (equation) {
+            return <DiagramEquationLine key={li} equation={equation} />;
+          }
+          return (
+            <DiagramNumberRow
+              key={li}
+              numbers={numberRow}
+              equation={null}
+            />
+          );
+        }
+
         if (/^[↑↓←→]/.test(line) || /^_/.test(line) || /↑/.test(line)) {
           return (
             <p
@@ -173,17 +247,6 @@ function ObjectDiagram({ lines }) {
         const groups = parseObjectDiagramGroups(line);
         const hasDots = groups.some((g) => g.type === "dots" || g.type === "cross");
 
-        if (!hasDots && /^\d+$/.test(line.trim())) {
-          return (
-            <p
-              key={li}
-              className="text-center text-base font-bold tabular-nums text-white/80 sm:text-lg"
-            >
-              {line.trim()}
-            </p>
-          );
-        }
-
         if (!hasDots) {
           return (
             <p key={li} className="text-center text-sm text-white/75 sm:text-base">
@@ -192,10 +255,12 @@ function ObjectDiagram({ lines }) {
           );
         }
 
+        lastVisualLine = line;
         const labelParts = line.split(/\s+←\s*/);
         const mainLine = labelParts[0];
         const tailLabel = labelParts.length > 1 ? `← ${labelParts.slice(1).join(" ← ")}` : null;
         const mainGroups = parseObjectDiagramGroups(mainLine);
+        const equation = inferEquationFromObjectVisual(mainLine);
 
         return (
           <div key={li} className="space-y-2">
@@ -252,6 +317,7 @@ function ObjectDiagram({ lines }) {
                 <MixedHebrewMathText text={tailLabel} />
               </p>
             ) : null}
+            <DiagramEquationLine equation={equation} />
           </div>
         );
       })}
@@ -292,16 +358,38 @@ function CardsDiagram({ lines }) {
 }
 
 function CoinsDiagram({ lines }) {
+  /** @type {string|null} */
+  let lastVisualLine = null;
+
   return (
     <div className="space-y-3" dir="ltr" style={bookMathIsolateStyle}>
-      {lines.map((line, i) => (
-        <div
-          key={i}
-          className="flex flex-wrap items-center justify-center gap-2 text-base font-semibold sm:text-lg"
-        >
-          <MixedHebrewMathText text={line} />
-        </div>
-      ))}
+      {lines.map((line, i) => {
+        const numberRow = parseDiagramNumberRow(line);
+        if (numberRow) {
+          if (inferEquationFromObjectVisual(lastVisualLine)) {
+            return null;
+          }
+          const equation =
+            inferDiagramEquation(lastVisualLine, numberRow) ||
+            inferEquationFromObjectVisual(lastVisualLine);
+          if (equation) {
+            return <DiagramEquationLine key={i} equation={equation} />;
+          }
+          return (
+            <DiagramNumberRow key={i} numbers={numberRow} equation={null} />
+          );
+        }
+
+        lastVisualLine = line;
+        return (
+          <div
+            key={i}
+            className="flex flex-wrap items-center justify-center gap-2 text-base font-semibold sm:text-lg"
+          >
+            <MixedHebrewMathText text={line} />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -320,26 +408,28 @@ function FrameTextDiagram({ lines }) {
 
 function FrameDiagram({ lines }) {
   const sizeClass = diagramTextSizeClass(lines.join("\n"));
+  const cleaned = lines.map((line) => stripStrayMarkdown(line)).join("\n");
   return (
     <pre
       className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium text-violet-50/95 ${sizeClass}`}
       style={bookMathIsolateStyle}
       dir="ltr"
     >
-      {lines.join("\n")}
+      {cleaned}
     </pre>
   );
 }
 
 function GenericDiagram({ content }) {
   const sizeClass = diagramTextSizeClass(content);
+  const cleaned = stripStrayMarkdown(String(content || ""));
   return (
     <pre
       className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium text-violet-50/95 ${sizeClass}`}
       style={bookMathIsolateStyle}
       dir="ltr"
     >
-      {content}
+      {cleaned}
     </pre>
   );
 }
@@ -347,7 +437,7 @@ function GenericDiagram({ content }) {
 export default function BookDiagram({ content }) {
   const lines = String(content || "")
     .split("\n")
-    .map((l) => l.trim())
+    .map((l) => stripStrayMarkdown(l.trim()))
     .filter(Boolean);
   const kind = detectDiagramType(content);
 
