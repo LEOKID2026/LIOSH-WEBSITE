@@ -23,35 +23,47 @@ export default function MathG1BookShell({
         style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="mx-auto max-w-4xl space-y-2 px-4 py-3 sm:py-3.5">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <button
-              type="button"
-              onClick={() => router.push("/learning/math-master")}
-              className="rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-sm font-semibold hover:bg-white/20 transition"
-            >
-              ← חזרה לחשבון
-            </button>
-
-            {!isIndex ? (
-              <div className="flex flex-wrap items-center justify-end gap-2">
-                <Link
-                  href={MATH_G1_BOOK_META.routeBase}
-                  className="rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-sm font-semibold hover:bg-white/20 transition"
+          {!isIndex ? (
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-2">
+              <div className="min-w-0 justify-self-start">
+                <button
+                  type="button"
+                  onClick={() => router.push("/learning/math-master")}
+                  className="max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
                 >
-                  ← חזרה לספר
-                </Link>
+                  חזרה לחשבון
+                </button>
+              </div>
+              <div className="justify-self-center shrink-0">
                 <button
                   type="button"
                   onClick={() => setTocOpen(true)}
-                  className="rounded-full border border-violet-300/35 bg-violet-500/25 px-3.5 py-2 text-sm font-semibold text-violet-50 hover:bg-violet-500/35 transition"
+                  className="whitespace-nowrap rounded-full border border-violet-300/35 bg-violet-500/25 px-3 py-2 text-xs font-semibold text-violet-50 hover:bg-violet-500/35 transition sm:px-3.5 sm:text-sm"
                 >
                   📑 תוכן עניינים
                 </button>
               </div>
-            ) : (
+              <div className="min-w-0 justify-self-end">
+                <Link
+                  href={MATH_G1_BOOK_META.routeBase}
+                  className="inline-block max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
+                >
+                  חזרה לספר
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => router.push("/learning/math-master")}
+                className="rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-sm font-semibold hover:bg-white/20 transition"
+              >
+                חזרה לחשבון
+              </button>
               <div className="text-xs text-white/45">כיתה א׳</div>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="text-center pb-0.5">
             <p className="text-[11px] tracking-[0.15em] text-white/45">ספר לימוד</p>
@@ -80,7 +92,7 @@ export default function MathG1BookShell({
               onClick={() => router.push("/learning/math-master")}
               className="text-sm text-emerald-300/80 hover:text-emerald-200 hover:underline"
             >
-              ← חזרה לחשבון
+              חזרה לחשבון
             </button>
           </footer>
         ) : null}

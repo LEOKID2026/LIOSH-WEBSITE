@@ -124,10 +124,6 @@ export default function LearningPageBody({
           >
             <LearningMarkdown content={section.body} />
           </div>
-
-          <p className="mt-4 shrink-0 text-center text-xs text-white/40 sm:hidden">
-            החליקו ימינה או שמאלה לעמוד הבא/קודם
-          </p>
         </article>
       </div>
 
@@ -150,9 +146,9 @@ export default function LearningPageBody({
               type="button"
               disabled={atFirst}
               onClick={goPrev}
-              className="min-h-[48px] flex-1 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-base font-bold text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-35"
+              className="min-h-[48px] flex-1 rounded-2xl border border-violet-400/35 bg-violet-500/25 px-4 py-3 text-base font-bold text-violet-50 transition hover:bg-violet-500/35 disabled:cursor-not-allowed disabled:opacity-35"
             >
-              ← עמוד קודם
+              עמוד קודם
             </button>
             <button
               type="button"
@@ -160,7 +156,7 @@ export default function LearningPageBody({
               onClick={goNext}
               className="min-h-[48px] flex-1 rounded-2xl border border-emerald-400/35 bg-emerald-500/30 px-4 py-3 text-base font-bold text-emerald-50 transition hover:bg-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-35"
             >
-              עמוד הבא →
+              עמוד הבא
             </button>
           </nav>
 
@@ -172,9 +168,9 @@ export default function LearningPageBody({
               {prevPageId ? (
                 <Link
                   href={`${MATH_G1_BOOK_META.routeBase}/${prevPageId}`}
-                  className="min-h-[52px] rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 text-right text-xs text-white/75 hover:bg-white/5"
+                  className="min-h-[52px] rounded-xl border border-violet-300/25 bg-gradient-to-l from-violet-950/50 to-violet-500/10 px-3 py-2.5 text-right text-xs text-violet-100/90 shadow-sm transition hover:border-violet-300/40 hover:from-violet-900/55 hover:to-violet-500/15"
                 >
-                  <span className="block text-[10px] text-white/45">← נושא קודם</span>
+                  <span className="block text-[10px] text-violet-200/65">נושא קודם</span>
                   <span className="block truncate text-sm font-medium">{prevTitle}</span>
                 </Link>
               ) : (
@@ -183,9 +179,9 @@ export default function LearningPageBody({
               {nextPageId ? (
                 <Link
                   href={`${MATH_G1_BOOK_META.routeBase}/${nextPageId}`}
-                  className="min-h-[52px] rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 text-right text-xs text-white/75 hover:bg-white/5"
+                  className="min-h-[52px] rounded-xl border border-emerald-400/25 bg-gradient-to-l from-emerald-950/45 to-emerald-500/10 px-3 py-2.5 text-right text-xs text-emerald-100/90 shadow-sm transition hover:border-emerald-400/40 hover:from-emerald-900/50 hover:to-emerald-500/15"
                 >
-                  <span className="block text-[10px] text-white/45">נושא הבא →</span>
+                  <span className="block text-[10px] text-emerald-200/65">נושא הבא</span>
                   <span className="block truncate text-sm font-medium">{nextTitle}</span>
                 </Link>
               ) : (
