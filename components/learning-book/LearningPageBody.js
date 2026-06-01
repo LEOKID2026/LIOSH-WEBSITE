@@ -19,6 +19,8 @@ import {
 } from "../../lib/learning-book/math-g2-book-nav";
 import { resolveMathG1PracticeTarget } from "../../lib/learning-book/resolve-math-g1-practice-target";
 import { resolveMathG2PracticeTarget } from "../../lib/learning-book/resolve-math-g2-practice-target";
+import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
+import { getLearningBookClientMeta } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 const G1_BOOK_UI = {
@@ -43,9 +45,37 @@ export default function LearningPageBody({
   nextPageId = null,
   prevTitle = null,
   nextTitle = null,
+  bookSubject = "math",
   bookGrade = "g1",
 }) {
-  const bookUi = bookGrade === "g2" ? G2_BOOK_UI : G1_BOOK_UI;
+  const clientMeta = getLearningBookClientMeta(bookSubject, bookGrade);
+  const bookNav = useMemo(
+    () =>
+      createLearningBookNav(
+        bookSubject,
+        bookGrade,
+        bookSubject === "geometry"
+          ? "/learning/geometry-master"
+          : "/learning/math-master"
+      ),
+    [bookSubject, bookGrade]
+  );
+
+  const bookUi = useMemo(() => {
+    if (bookSubject === "math" && bookGrade === "g2") return G2_BOOK_UI;
+    if (bookSubject === "math" && bookGrade === "g1") return G1_BOOK_UI;
+    if (clientMeta) {
+      return {
+        bookMeta: clientMeta.meta,
+        getReturnQuerySuffix: bookNav.getReturnQuerySuffix,
+        resolvePracticeTarget: () => null,
+        getPracticePath: () => null,
+        savePracticePreset: () => {},
+      };
+    }
+    return G1_BOOK_UI;
+  }, [bookSubject, bookGrade, clientMeta, bookNav]);
+
   const { bookMeta, getReturnQuerySuffix, resolvePracticeTarget, getPracticePath, savePracticePreset } =
     bookUi;
   const { classes: theme } = useBookGradeTheme();

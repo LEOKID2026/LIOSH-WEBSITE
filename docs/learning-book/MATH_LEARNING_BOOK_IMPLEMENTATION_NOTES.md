@@ -76,14 +76,20 @@ Each grade gets **one** consistent reader color theme across all subjects (Math,
 |-------|--------|
 | **Grade 1 (`g1`)** | Purple/violet page gradient, violet nav accents, emerald progress/headings |
 | **Grade 2 (`g2`)** | Deep navy → blue/cyan/teal gradient, cyan/teal accents |
+| **Grade 3 (`g3`)** | Calm green/emerald |
+| **Grade 4 (`g4`)** | Amber/gold |
+| **Grade 5 (`g5`)** | Rose/pink |
+| **Grade 6 (`g6`)** | Indigo/slate |
 | **Future grades** | Add entries to `lib/learning-book/book-grade-themes.js` |
 
 Implementation:
 
-- Central config: `lib/learning-book/book-grade-themes.js` (`getBookGradeTheme(grade)`)
+- Central config: `lib/learning-book/book-grade-themes.js` (`getBookGradeTheme(grade)`) — grades **g1–g6**
+- Client catalog: `lib/learning-book/learning-book-catalog-meta.js`
+- Server catalog: `lib/learning-book/learning-book-catalog.js`
 - React context: `components/learning-book/BookGradeThemeContext.js`
-- Shell wraps reader with `BookGradeThemeProvider grade="g1"|"g2"`
-- Shared components (`LearningPageBody`, `BookTocModal`, `BookDiagram`, index tiles) consume `useBookGradeTheme()`
+
+**Full structure (June 2026):** Math G1–G6 and הנדסה G1–G6 shells prepared; placeholder books allowed in dev. See `LEARNING_BOOK_FULL_STRUCTURE_EXPANSION.md`.
 
 Do **not** assign subject-specific random colors when cloning books to new subjects — pass the student's grade key instead.
 

@@ -99,6 +99,8 @@ import {
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
 import { getMathG2BookHref } from "../../lib/learning-book/resolve-math-g2-book-page";
+import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
+import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import { MATH_G2_BOOK_META } from "../../lib/learning-book/math-g2-registry";
 import {
@@ -255,12 +257,7 @@ export default function MathMaster() {
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
-  const bookIndexHref =
-    grade === "g1"
-      ? MATH_G1_BOOK_META.routeBase
-      : grade === "g2"
-        ? MATH_G2_BOOK_META.routeBase
-        : null;
+  const bookIndexHref = getLearningBookIndexHref("math", grade);
   const bookTopicHref = useMemo(() => {
     if (grade === "g1") {
       return getMathG1BookHref({ grade, operation, kind: null });
@@ -3651,39 +3648,12 @@ export default function MathMaster() {
           {!gameActive ? (
             <div className="relative flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
               {bookIndexHref ? (
-                <div
-                  className="pointer-events-none absolute z-30 bottom-[9.25rem] left-1/2 -translate-x-1/2 md:bottom-auto md:left-0 md:top-[0.35rem] md:translate-x-0 md:-translate-y-10 lg:top-[0.5rem] lg:-translate-y-12"
-                  aria-hidden={false}
-                >
-                  <button
-                    type="button"
-                    data-testid={
-                      grade === "g2" ? "math-g2-book-index-button" : "math-g1-book-index-button"
-                    }
-                    onClick={() => router.push(bookIndexHref)}
-                    title={
-                      grade === "g2"
-                        ? "ספר חשבון כיתה ב׳"
-                        : "ספר חשבון כיתה א׳"
-                    }
-                    aria-label={
-                      grade === "g2"
-                        ? "ספר חשבון כיתה ב׳"
-                        : "ספר חשבון כיתה א׳"
-                    }
-                    className="pointer-events-auto flex flex-col items-center justify-center rounded-xl border border-amber-600/45 bg-gradient-to-b from-amber-700/92 to-amber-950/88 shadow-md shadow-amber-950/50 hover:from-amber-600/92 hover:to-amber-900/88 active:scale-[0.98] transition-transform w-[clamp(3.3rem,21.5vw,5.48rem)] h-[clamp(3.75rem,24.5vw,6.23rem)] md:w-[4.35rem] md:h-[4.85rem] px-[clamp(0.25rem,1.2vw,0.375rem)] py-[clamp(0.25rem,1.2vw,0.375rem)] md:px-1 md:py-1"
-                  >
-                    <span className="text-[clamp(1.125rem,5.2vw,1.5rem)] md:text-lg leading-none" aria-hidden="true">
-                      📖
-                    </span>
-                    <span className="mt-0.5 text-[clamp(0.5625rem,2.95vw,0.75rem)] md:text-[9px] font-bold text-amber-50 leading-tight text-center">
-                      ספר חשבון
-                    </span>
-                    <span className="text-[clamp(0.5625rem,2.95vw,0.75rem)] md:text-[9px] font-semibold text-amber-100/85 leading-tight">
-                      {grade === "g2" ? "כיתה ב׳" : "כיתה א׳"}
-                    </span>
-                  </button>
-                </div>
+                <LearningBookIndexTile
+                  subject="math"
+                  grade={grade}
+                  testId={`math-${grade}-book-index-button`}
+                  onClick={() => router.push(bookIndexHref)}
+                />
               ) : null}
               <div className="w-full flex justify-center mb-3 md:mb-4 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] px-0.5">
                 <div
