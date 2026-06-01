@@ -1,27 +1,9 @@
 import MixedHebrewMathText from "./MixedHebrewMathText";
-import {
-  bookMathIsolateStyle,
-  diagramTextSizeClass,
-} from "../../lib/learning-book/book-math-display";
+import BookDiagram from "./BookDiagram";
 
 function MarkdownBlock({ block }) {
   if (block.type === "code") {
-    const sizeClass = diagramTextSizeClass(block.content);
-    return (
-      <div
-        className="my-4 rounded-2xl border border-violet-200/25 bg-violet-950/25 px-3 py-4 sm:px-5 sm:py-5"
-        role="img"
-        aria-label="דוגמה"
-      >
-        <pre
-          className={`learning-book-diagram m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium text-violet-50/95 ${sizeClass}`}
-          style={bookMathIsolateStyle}
-          dir="ltr"
-        >
-          {block.content}
-        </pre>
-      </div>
-    );
+    return <BookDiagram content={block.content} />;
   }
 
   if (block.type === "hr") {

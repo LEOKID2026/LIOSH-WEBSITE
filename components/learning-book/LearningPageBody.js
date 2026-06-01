@@ -13,18 +13,29 @@ export default function LearningPageBody({
   nextTitle = null,
 }) {
   const [sectionIndex, setSectionIndex] = useState(0);
+  const [slideDir, setSlideDir] = useState(0);
 
   useEffect(() => {
     setSectionIndex(0);
+    setSlideDir(0);
   }, [page?.pageId]);
 
   const goPrev = useCallback(() => {
+    setSlideDir(-1);
     setSectionIndex((i) => Math.max(0, i - 1));
   }, []);
 
   const goNext = useCallback(() => {
+    setSlideDir(1);
     setSectionIndex((i) => Math.min((page?.sections?.length ?? 1) - 1, i + 1));
   }, [page?.sections?.length]);
+
+  const jumpToSection = useCallback((target) => {
+    setSectionIndex((current) => {
+      setSlideDir(target > current ? 1 : target < current ? -1 : 0);
+      return target;
+    });
+  }, []);
 
   const swipeHandlers = useBookSectionSwipe({
     onPrev: goPrev,
@@ -46,18 +57,41 @@ export default function LearningPageBody({
   const pageNumber = sectionIndex + 1;
   const atFirst = sectionIndex <= 0;
   const atLast = sectionIndex >= totalSections - 1;
+  const hasLessonNav = Boolean(prevPageId || nextPageId);
 
   return (
     <>
-      {/* Book page — swipe target */}
+      <style jsx global>{`
+        @keyframes bookSectionIn {
+          from {
+            opacity: 0;
+            transform: translateX(${slideDir >= 0 ? "12px" : "-12px"});
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        .book-section-animate {
+          animation: bookSectionIn 0.28s ease-out;
+        }
+        .book-dot-active {
+          box-shadow: 0 0 10px rgba(52, 211, 153, 0.55);
+        }
+      `}</style>
+
+      {/* Book page — swipe target; spacer clears fixed footer */}
       <div
-        className="mx-auto w-full max-w-3xl pb-44"
+        className={`mx-auto w-full max-w-3xl ${
+          hasLessonNav ? "pb-[15.5rem] sm:pb-[13.5rem]" : "pb-[11.5rem] sm:pb-[10.5rem]"
+        }`}
         dir="rtl"
         onTouchStart={swipeHandlers.onTouchStart}
         onTouchEnd={swipeHandlers.onTouchEnd}
       >
         <article
-          className="flex min-h-[min(58vh,32rem)] flex-col rounded-3xl border border-violet-300/25 bg-gradient-to-b from-violet-950/35 via-[#1a1430]/90 to-[#120b1f]/95 px-5 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.28)] sm:px-8 sm:py-8"
+          key={sectionIndex}
+          className={`book-section-animate rounded-3xl border border-violet-300/25 bg-gradient-to-b from-violet-950/35 via-[#1a1430]/90 to-[#120b1f]/95 px-5 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.28)] sm:px-8 sm:py-8`}
           aria-live="polite"
         >
           <header className="mb-4 shrink-0 text-center">
@@ -69,10 +103,10 @@ export default function LearningPageBody({
                 <button
                   key={s.number}
                   type="button"
-                  onClick={() => setSectionIndex(i)}
-                  className={`h-2.5 rounded-full transition-all ${
+                  onClick={() => jumpToSection(i)}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
                     i === sectionIndex
-                      ? "w-6 bg-emerald-400"
+                      ? "book-dot-active w-7 bg-emerald-400"
                       : "w-2.5 bg-white/25 hover:bg-white/40"
                   }`}
                   aria-label={`עמוד ${i + 1}`}
@@ -86,18 +120,18 @@ export default function LearningPageBody({
 
           <div
             data-book-scroll
-            className="flex-1 overflow-y-auto overscroll-contain px-0.5 pb-1 text-lg leading-[1.85] sm:text-xl sm:leading-[1.9]"
+            className="px-0.5 pb-2 text-lg leading-[1.85] sm:text-xl sm:leading-[1.9]"
           >
             <LearningMarkdown content={section.body} />
           </div>
 
-          <p className="mt-3 shrink-0 text-center text-xs text-white/40 sm:hidden">
+          <p className="mt-4 shrink-0 text-center text-xs text-white/40 sm:hidden">
             החליקו ימינה או שמאלה לעמוד הבא/קודם
           </p>
         </article>
       </div>
 
-      {/* Bottom HUD — fixed */}
+      {/* Bottom HUD — fixed, always visible */}
       <footer
         className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/15 bg-[#120b1f]/96 backdrop-blur-md"
         dir="rtl"
@@ -130,33 +164,35 @@ export default function LearningPageBody({
             </button>
           </nav>
 
-          {(prevPageId || nextPageId) && (
+          {hasLessonNav ? (
             <nav
-              className="grid gap-2 border-t border-white/10 pt-3 sm:grid-cols-2"
+              className="grid grid-cols-2 gap-2 border-t border-white/10 pt-3"
               aria-label="ניווט בין נושאים"
             >
               {prevPageId ? (
                 <Link
                   href={`${MATH_G1_BOOK_META.routeBase}/${prevPageId}`}
-                  className="rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-right text-xs text-white/70 hover:bg-white/5"
+                  className="min-h-[52px] rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 text-right text-xs text-white/75 hover:bg-white/5"
                 >
-                  <span className="block text-[10px] text-white/40">← נושא קודם</span>
-                  <span className="block truncate">{prevTitle}</span>
+                  <span className="block text-[10px] text-white/45">← נושא קודם</span>
+                  <span className="block truncate text-sm font-medium">{prevTitle}</span>
                 </Link>
               ) : (
-                <div />
+                <div aria-hidden="true" />
               )}
               {nextPageId ? (
                 <Link
                   href={`${MATH_G1_BOOK_META.routeBase}/${nextPageId}`}
-                  className="rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-right text-xs text-white/70 hover:bg-white/5"
+                  className="min-h-[52px] rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 text-right text-xs text-white/75 hover:bg-white/5"
                 >
-                  <span className="block text-[10px] text-white/40">נושא הבא →</span>
-                  <span className="block truncate">{nextTitle}</span>
+                  <span className="block text-[10px] text-white/45">נושא הבא →</span>
+                  <span className="block truncate text-sm font-medium">{nextTitle}</span>
                 </Link>
-              ) : null}
+              ) : (
+                <div aria-hidden="true" />
+              )}
             </nav>
-          )}
+          ) : null}
         </div>
       </footer>
     </>
