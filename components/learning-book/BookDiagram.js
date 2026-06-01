@@ -2,6 +2,7 @@ import MixedHebrewMathText from "./MixedHebrewMathText";
 import {
   bookMathIsolateStyle,
   diagramTextSizeClass,
+  isMathLikeText,
 } from "../../lib/learning-book/book-math-display";
 import {
   detectDiagramType,
@@ -458,7 +459,67 @@ function FrameDiagram({ lines }) {
   );
 }
 
+function isMixedHebrewMathLine(line) {
+  const text = stripStrayMarkdown(String(line || "").trim());
+  return /[\u0590-\u05FF]/.test(text) && /\d/.test(text);
+}
+
+function isPureMathDiagramLine(line) {
+  const text = stripStrayMarkdown(String(line || "").trim());
+  if (!text) return false;
+  if (/[\u0590-\u05FF]/.test(text)) return false;
+  return isMathLikeText(text) || /^=?\s*\d/.test(text);
+}
+
+function MixedDiagramLine({ line }) {
+  const trimmed = String(line || "").trim();
+  if (!trimmed) return null;
+
+  if (isMixedHebrewMathLine(trimmed)) {
+    return (
+      <p className="text-center text-base sm:text-lg" dir="rtl">
+        <MixedHebrewMathText text={trimmed} />
+      </p>
+    );
+  }
+
+  if (isPureMathDiagramLine(trimmed)) {
+    return (
+      <p
+        className="text-center text-base font-semibold tabular-nums text-violet-50/95 sm:text-lg"
+        dir="ltr"
+        style={bookMathIsolateStyle}
+      >
+        {stripStrayMarkdown(trimmed)}
+      </p>
+    );
+  }
+
+  return (
+    <p className="text-center text-base text-violet-50/95 sm:text-lg" dir="rtl">
+      <MixedHebrewMathText text={trimmed} />
+    </p>
+  );
+}
+
 function GenericDiagram({ content }) {
+  const lines = String(content || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  const hasMixed = lines.some((line) => isMixedHebrewMathLine(line));
+
+  if (hasMixed) {
+    return (
+      <div className="space-y-2">
+        {lines.map((line, i) => (
+          <MixedDiagramLine key={i} line={line} />
+        ))}
+      </div>
+    );
+  }
+
   const sizeClass = diagramTextSizeClass(content);
   const cleaned = stripStrayMarkdown(String(content || ""));
   return (

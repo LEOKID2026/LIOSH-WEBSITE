@@ -1,10 +1,12 @@
 import { Fragment } from "react";
 import {
+  bookLabelIsolateStyle,
   bookMathIsolateStyle,
   isMathLikeText,
   splitHebrewMathRuns,
   splitTextAndMathRuns,
 } from "../../lib/learning-book/book-math-display";
+import { parseBookLineStructure, splitMixedBodyClauses } from "../../lib/learning-book/book-line-structure";
 import {
   parseInlineMarkdown,
   stripStrayMarkdown,
@@ -103,27 +105,23 @@ function renderContentRuns(text, sourceText, sourceOffset = 0) {
 function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
   const cleaned = stripStrayMarkdown(value);
   const content = renderContentRuns(value, sourceText, sourceOffset);
+  const mathOnly =
+    isMathLikeText(cleaned) && !HEBREW_CHAR.test(cleaned.replace(/\*\*/g, ""));
 
   if (type === "bold") {
-    const wrapLtr =
-      isMathLikeText(cleaned) ||
-      (/[+\-−=×÷?_]/.test(cleaned) && /\d/.test(cleaned));
-
-    if (wrapLtr) {
+    if (mathOnly) {
       return (
-        <strong
-          className="font-bold text-white"
-          dir="ltr"
-          style={bookMathIsolateStyle}
-        >
-          {cleaned}
+        <strong className="font-bold text-white">
+          <MathSpan
+            value={value}
+            sourceText={sourceText}
+            start={sourceOffset}
+            end={sourceOffset + value.length}
+          />
         </strong>
       );
     }
-
-    return (
-      <strong className="font-bold text-white">{content}</strong>
-    );
+    return <strong className="font-bold text-white">{content}</strong>;
   }
 
   if (type === "italic") {
@@ -159,37 +157,100 @@ function renderProseSegment(text, sourceText, keyPrefix) {
   });
 }
 
+function renderMixedBodyInner(text) {
+  const input = String(text || "");
+  const segments = splitTextAndMathRuns(input);
+
+  return segments.map((segment, i) => {
+    if (segment.type === "math") {
+      return (
+        <MathSpan
+          key={i}
+          value={segment.value}
+          sourceText={input}
+          start={segment.start}
+          end={segment.end}
+        />
+      );
+    }
+    return (
+      <Fragment key={i}>
+        {renderProseSegment(segment.value, input, String(i))}
+      </Fragment>
+    );
+  });
+}
+
+function renderMixedClause(clause, keyPrefix) {
+  const structure = parseBookLineStructure(clause);
+  if (structure?.body) {
+    return (
+      <>
+        <BookLineLabel label={structure.label} />
+        {" "}
+        <span className="book-line-body inline">
+          {renderMixedBodyInner(structure.body)}
+        </span>
+      </>
+    );
+  }
+  return renderMixedBodyInner(clause);
+}
+
+function renderMixedBody(text) {
+  const clauses = splitMixedBodyClauses(text);
+  return clauses.map((clause, i) => (
+    <Fragment key={i}>
+      {i > 0 ? " " : null}
+      {renderMixedClause(clause, String(i))}
+    </Fragment>
+  ));
+}
+
+function BookLineLabel({ label }) {
+  const cleaned = stripStrayMarkdown(String(label || ""));
+  if (!cleaned) return null;
+
+  return (
+    <span
+      className="book-line-label inline font-bold text-white"
+      style={bookLabelIsolateStyle}
+    >
+      {cleaned}
+    </span>
+  );
+}
+
 /**
  * Render Hebrew text with math isolated first, then markdown in prose segments.
  */
 export default function MixedHebrewMathText({ text, className = "" }) {
   const input = String(text || "");
-  const segments = splitTextAndMathRuns(input);
+  const structure = parseBookLineStructure(input);
+
+  if (structure) {
+    return (
+      <span
+        className={`book-mixed-hebrew-math book-structured-line inline ${className}`.trim()}
+        dir="rtl"
+      >
+        <BookLineLabel label={structure.label} />
+        {structure.body ? (
+          <>
+            {" "}
+            <span className="book-line-body inline">{renderMixedBody(structure.body)}</span>
+          </>
+        ) : null}
+      </span>
+    );
+  }
 
   return (
     <span
       dir="rtl"
-      className={`book-mixed-hebrew-math ${className}`.trim()}
-      style={{ unicodeBidi: "plaintext" }}
+      className={`book-mixed-hebrew-math inline ${className}`.trim()}
     >
-      {segments.map((segment, i) => {
-        if (segment.type === "math") {
-          return (
-            <MathSpan
-              key={i}
-              value={segment.value}
-              sourceText={input}
-              start={segment.start}
-              end={segment.end}
-            />
-          );
-        }
-        return (
-          <Fragment key={i}>
-            {renderProseSegment(segment.value, input, String(i))}
-          </Fragment>
-        );
-      })}
+      {renderMixedBody(input)}
     </span>
   );
 }
