@@ -2,6 +2,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
+import {
+  appendReturnQueryToHref,
+  getMathG1BookReturnQuerySuffix,
+  handleMathG1BookClose,
+  isMathG1BookLearningReturn,
+} from "../../lib/learning-book/math-g1-book-nav";
 import BookTocModal from "./BookTocModal";
 
 export default function MathG1BookShell({
@@ -13,6 +19,17 @@ export default function MathG1BookShell({
   const router = useRouter();
   const [tocOpen, setTocOpen] = useState(false);
   const isIndex = activePageId === null;
+  const fromLearning = isMathG1BookLearningReturn(router.query);
+  const returnQuerySuffix = getMathG1BookReturnQuerySuffix(router.query);
+  const returnLabel = fromLearning ? "סגור" : "חזרה לחשבון";
+
+  const handleReturnClick = () => {
+    if (fromLearning) {
+      handleMathG1BookClose(router);
+      return;
+    }
+    router.push("/learning/math-master");
+  };
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#120b1f] via-[#161028] to-[#1b1430] text-white">
@@ -28,10 +45,10 @@ export default function MathG1BookShell({
               <div className="min-w-0 justify-self-start">
                 <button
                   type="button"
-                  onClick={() => router.push("/learning/math-master")}
+                  onClick={handleReturnClick}
                   className="max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
                 >
-                  חזרה לחשבון
+                  {returnLabel}
                 </button>
               </div>
               <div className="justify-self-center shrink-0">
@@ -45,7 +62,10 @@ export default function MathG1BookShell({
               </div>
               <div className="min-w-0 justify-self-end">
                 <Link
-                  href={MATH_G1_BOOK_META.routeBase}
+                  href={appendReturnQueryToHref(
+                    MATH_G1_BOOK_META.routeBase,
+                    returnQuerySuffix
+                  )}
                   className="inline-block max-w-full truncate rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold hover:bg-white/20 transition sm:px-3.5 sm:text-sm"
                 >
                   חזרה לספר
@@ -56,10 +76,10 @@ export default function MathG1BookShell({
             <div className="flex items-center justify-between gap-2">
               <button
                 type="button"
-                onClick={() => router.push("/learning/math-master")}
+                onClick={handleReturnClick}
                 className="rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-sm font-semibold hover:bg-white/20 transition"
               >
-                חזרה לחשבון
+                {returnLabel}
               </button>
               <div className="text-xs text-white/45">כיתה א׳</div>
             </div>
@@ -89,10 +109,10 @@ export default function MathG1BookShell({
           <footer className="mt-8 pb-6 text-center" dir="rtl">
             <button
               type="button"
-              onClick={() => router.push("/learning/math-master")}
+              onClick={handleReturnClick}
               className="text-sm text-emerald-300/80 hover:text-emerald-200 hover:underline"
             >
-              חזרה לחשבון
+              {returnLabel}
             </button>
           </footer>
         ) : null}
@@ -104,6 +124,7 @@ export default function MathG1BookShell({
           onClose={() => setTocOpen(false)}
           batches={batches}
           activePageId={activePageId}
+          returnQuerySuffix={returnQuerySuffix}
         />
       ) : null}
     </main>

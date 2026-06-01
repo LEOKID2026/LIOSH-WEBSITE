@@ -99,6 +99,11 @@ import {
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
+import {
+  consumeMathG1BookLearningSnapshot,
+  saveMathG1BookLearningSnapshot,
+  withMathG1BookLearningReturn,
+} from "../../lib/learning-book/math-g1-book-nav";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -278,6 +283,49 @@ export default function MathMaster() {
 
   /** תצוגת תרגיל: מאוזן (ברירת מחדל) / מאונך — רק לסשן הפעיל; לא נשמר בשרת או ב-localStorage קבוע. מתאפס ב־startGame / stopGame / hardResetGame. */
   const [isVerticalDisplay, setIsVerticalDisplay] = useState(false);
+
+  const openG1BookFromLearning = useCallback(
+    (href) => {
+      if (!href) return;
+      saveMathG1BookLearningSnapshot({
+        gameActive: true,
+        mode,
+        grade,
+        gradeNumber,
+        level,
+        operation,
+        currentQuestion,
+        score,
+        streak,
+        correct,
+        wrong,
+        selectedAnswer,
+        textAnswer,
+        feedback,
+        isVerticalDisplay,
+        questionStartTime,
+      });
+      router.push(withMathG1BookLearningReturn(href));
+    },
+    [
+      mode,
+      grade,
+      gradeNumber,
+      level,
+      operation,
+      currentQuestion,
+      score,
+      streak,
+      correct,
+      wrong,
+      selectedAnswer,
+      textAnswer,
+      feedback,
+      isVerticalDisplay,
+      questionStartTime,
+      router,
+    ]
+  );
 
   // מערכת כוכבים ותגים
   const [stars, setStars] = useState(0);
@@ -747,6 +795,32 @@ export default function MathMaster() {
     }
     return "";
   });
+
+  useEffect(() => {
+    const snap = consumeMathG1BookLearningSnapshot();
+    if (!snap || snap.gameActive !== true) return;
+    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    if (typeof snap.grade === "string") setGrade(snap.grade);
+    if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
+    if (typeof snap.level === "string") setLevel(snap.level);
+    if (typeof snap.operation === "string") setOperation(snap.operation);
+    setGameActive(true);
+    if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
+    setScore(typeof snap.score === "number" ? snap.score : 0);
+    setStreak(typeof snap.streak === "number" ? snap.streak : 0);
+    setCorrect(typeof snap.correct === "number" ? snap.correct : 0);
+    setWrong(typeof snap.wrong === "number" ? snap.wrong : 0);
+    setSelectedAnswer(snap.selectedAnswer ?? null);
+    setTextAnswer(typeof snap.textAnswer === "string" ? snap.textAnswer : "");
+    setFeedback(snap.feedback ?? null);
+    setIsVerticalDisplay(Boolean(snap.isVerticalDisplay));
+    setQuestionStartTime(
+      typeof snap.questionStartTime === "number"
+        ? snap.questionStartTime
+        : Date.now()
+    );
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
@@ -3656,16 +3730,18 @@ export default function MathMaster() {
               
               <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
-              <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
+              <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2.5 md:gap-3">
               {g1BookIndexHref ? (
-                <button
-                  type="button"
-                  data-testid="math-g1-book-index-button"
-                  onClick={() => router.push(g1BookIndexHref)}
-                  className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-4 py-2.5 md:py-3 rounded-lg bg-violet-500/80 hover:bg-violet-500 text-xs md:text-sm font-bold text-white shadow-sm"
-                >
-                  📖 ספר חשבון כיתה א׳
-                </button>
+                <div className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-1 md:px-2">
+                  <button
+                    type="button"
+                    data-testid="math-g1-book-index-button"
+                    onClick={() => router.push(g1BookIndexHref)}
+                    className="w-full rounded-lg border border-amber-500/35 bg-amber-800/75 hover:bg-amber-700/85 px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-amber-50 shadow-sm transition"
+                  >
+                    📖 ספר חשבון כיתה א׳
+                  </button>
+                </div>
               ) : null}
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
                 <button
@@ -3689,16 +3765,6 @@ export default function MathMaster() {
                 >
                   🏆 לוח תוצאות
                 </button>
-                {g1BookTopicHref ? (
-                  <button
-                    type="button"
-                    data-testid="math-g1-book-topic-button"
-                    onClick={() => router.push(g1BookTopicHref)}
-                    className="h-9 md:h-10 px-3 md:px-4 rounded-lg bg-violet-500/70 hover:bg-violet-500 font-bold text-xs md:text-sm text-white shadow-sm shrink-0"
-                  >
-                    📖 הסבר בספר
-                  </button>
-                ) : null}
               </div>
 
               {/* כפתורים עזרה ותרגול ממוקד */}
@@ -3715,6 +3781,16 @@ export default function MathMaster() {
                 >
                   📚 לוח עזרה
                 </button>
+                {g1BookTopicHref ? (
+                  <button
+                    type="button"
+                    data-testid="math-g1-book-topic-button"
+                    onClick={() => router.push(g1BookTopicHref)}
+                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                  >
+                    📖 הסבר בספר
+                  </button>
+                ) : null}
                 <div
                   className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
                   title="מטבעות משחק"
@@ -3841,8 +3917,8 @@ export default function MathMaster() {
                     <button
                       type="button"
                       data-testid="math-g1-book-question-button"
-                      onClick={() => router.push(g1QuestionBookHref)}
-                      className="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold bg-violet-500/80 hover:bg-violet-500 text-white transition-all pointer-events-auto shadow-lg"
+                      onClick={() => openG1BookFromLearning(g1QuestionBookHref)}
+                      className="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 transition-all pointer-events-auto shadow-lg"
                       title="הסבר בספר לנושא הנוכחי"
                     >
                       📖 הסבר

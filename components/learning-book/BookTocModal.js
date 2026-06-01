@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
+import { appendReturnQueryToHref } from "../../lib/learning-book/math-g1-book-nav";
 
-export default function BookTocModal({ open, onClose, batches, activePageId }) {
+export default function BookTocModal({
+  open,
+  onClose,
+  batches,
+  activePageId,
+  returnQuerySuffix = "",
+}) {
   if (!open) return null;
 
   return (
@@ -46,7 +53,10 @@ export default function BookTocModal({ open, onClose, batches, activePageId }) {
                     return (
                       <li key={entry.pageId}>
                         <Link
-                          href={`${MATH_G1_BOOK_META.routeBase}/${entry.pageId}`}
+                          href={appendReturnQueryToHref(
+                            `${MATH_G1_BOOK_META.routeBase}/${entry.pageId}`,
+                            returnQuerySuffix
+                          )}
                           onClick={onClose}
                           className={`block rounded-xl px-4 py-2.5 text-right text-sm transition ${
                             isActive
@@ -66,7 +76,10 @@ export default function BookTocModal({ open, onClose, batches, activePageId }) {
         </div>
         <div className="border-t border-white/10 px-5 py-3">
           <Link
-            href={MATH_G1_BOOK_META.routeBase}
+            href={appendReturnQueryToHref(
+              MATH_G1_BOOK_META.routeBase,
+              returnQuerySuffix
+            )}
             onClick={onClose}
             className="block text-center text-sm font-semibold text-emerald-300 hover:text-emerald-200"
           >

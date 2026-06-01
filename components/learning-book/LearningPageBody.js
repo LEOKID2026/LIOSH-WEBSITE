@@ -1,9 +1,14 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import LearningMarkdown from "./LearningMarkdown";
 import { getSectionDisplayTitle } from "../../lib/learning-book/section-display-labels";
 import { useBookSectionSwipe } from "../../hooks/useBookSectionSwipe";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
+import {
+  appendReturnQueryToHref,
+  getMathG1BookReturnQuerySuffix,
+} from "../../lib/learning-book/math-g1-book-nav";
 
 export default function LearningPageBody({
   page,
@@ -12,6 +17,8 @@ export default function LearningPageBody({
   prevTitle = null,
   nextTitle = null,
 }) {
+  const router = useRouter();
+  const returnQuerySuffix = getMathG1BookReturnQuerySuffix(router.query);
   const [sectionIndex, setSectionIndex] = useState(0);
   const [slideDir, setSlideDir] = useState(0);
 
@@ -167,7 +174,10 @@ export default function LearningPageBody({
             >
               {prevPageId ? (
                 <Link
-                  href={`${MATH_G1_BOOK_META.routeBase}/${prevPageId}`}
+                  href={appendReturnQueryToHref(
+                    `${MATH_G1_BOOK_META.routeBase}/${prevPageId}`,
+                    returnQuerySuffix
+                  )}
                   className="min-h-[52px] rounded-xl border border-violet-300/25 bg-gradient-to-l from-violet-950/50 to-violet-500/10 px-3 py-2.5 text-right text-xs text-violet-100/90 shadow-sm transition hover:border-violet-300/40 hover:from-violet-900/55 hover:to-violet-500/15"
                 >
                   <span className="block text-[10px] text-violet-200/65">נושא קודם</span>
@@ -178,7 +188,10 @@ export default function LearningPageBody({
               )}
               {nextPageId ? (
                 <Link
-                  href={`${MATH_G1_BOOK_META.routeBase}/${nextPageId}`}
+                  href={appendReturnQueryToHref(
+                    `${MATH_G1_BOOK_META.routeBase}/${nextPageId}`,
+                    returnQuerySuffix
+                  )}
                   className="min-h-[52px] rounded-xl border border-emerald-400/25 bg-gradient-to-l from-emerald-950/45 to-emerald-500/10 px-3 py-2.5 text-right text-xs text-emerald-100/90 shadow-sm transition hover:border-emerald-400/40 hover:from-emerald-900/50 hover:to-emerald-500/15"
                 >
                   <span className="block text-[10px] text-emerald-200/65">נושא הבא</span>
