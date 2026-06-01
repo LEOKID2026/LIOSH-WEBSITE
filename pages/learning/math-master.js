@@ -98,6 +98,7 @@ import {
 } from "../../lib/learning-client/learningActivityClient";
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
+import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -236,13 +237,23 @@ export default function MathMaster() {
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
-  const g1BookHref = useMemo(
+  const g1BookIndexHref = grade === "g1" ? MATH_G1_BOOK_META.routeBase : null;
+  const g1BookTopicHref = useMemo(
     () => getMathG1BookHref({ grade, operation, kind: null }),
     [grade, operation]
   );
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const g1QuestionBookHref = useMemo(() => {
+    if (grade !== "g1" || mode !== "learning" || !currentQuestion) return null;
+    const params = currentQuestion.params || {};
+    return getMathG1BookHref({
+      grade,
+      operation: currentQuestion.operation || operation,
+      kind: params.kind ?? null,
+    });
+  }, [grade, mode, currentQuestion, operation]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -3646,10 +3657,11 @@ export default function MathMaster() {
               <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
-              {g1BookHref ? (
+              {g1BookIndexHref ? (
                 <button
                   type="button"
-                  onClick={() => router.push(g1BookHref)}
+                  data-testid="math-g1-book-index-button"
+                  onClick={() => router.push(g1BookIndexHref)}
                   className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-4 py-2.5 md:py-3 rounded-lg bg-violet-500/80 hover:bg-violet-500 text-xs md:text-sm font-bold text-white shadow-sm"
                 >
                   📖 ספר חשבון כיתה א׳
@@ -3677,6 +3689,16 @@ export default function MathMaster() {
                 >
                   🏆 לוח תוצאות
                 </button>
+                {g1BookTopicHref ? (
+                  <button
+                    type="button"
+                    data-testid="math-g1-book-topic-button"
+                    onClick={() => router.push(g1BookTopicHref)}
+                    className="h-9 md:h-10 px-3 md:px-4 rounded-lg bg-violet-500/70 hover:bg-violet-500 font-bold text-xs md:text-sm text-white shadow-sm shrink-0"
+                  >
+                    📖 הסבר בספר
+                  </button>
+                ) : null}
               </div>
 
               {/* כפתורים עזרה ותרגול ממוקד */}
@@ -3814,6 +3836,18 @@ export default function MathMaster() {
                       {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
                     </button>
                   )}
+
+                  {g1QuestionBookHref ? (
+                    <button
+                      type="button"
+                      data-testid="math-g1-book-question-button"
+                      onClick={() => router.push(g1QuestionBookHref)}
+                      className="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold bg-violet-500/80 hover:bg-violet-500 text-white transition-all pointer-events-auto shadow-lg"
+                      title="הסבר בספר לנושא הנוכחי"
+                    >
+                      📖 הסבר
+                    </button>
+                  ) : null}
 
                   {/* אזור שאלה יציב למניעת קפיצות בפריסת התשובות */}
                   <div
