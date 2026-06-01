@@ -3594,15 +3594,15 @@ export default function MathMaster() {
                     onClick={() => router.push(g1BookIndexHref)}
                     title="ספר חשבון כיתה א׳"
                     aria-label="ספר חשבון כיתה א׳"
-                    className="pointer-events-auto flex flex-col items-center justify-center rounded-xl border border-amber-600/45 bg-gradient-to-b from-amber-700/92 to-amber-950/88 shadow-md shadow-amber-950/50 hover:from-amber-600/92 hover:to-amber-900/88 active:scale-[0.98] transition-transform w-[5.48rem] h-[6.23rem] md:w-[4.35rem] md:h-[4.85rem] px-1.5 py-1.5 md:px-1 md:py-1"
+                    className="pointer-events-auto flex flex-col items-center justify-center rounded-xl border border-amber-600/45 bg-gradient-to-b from-amber-700/92 to-amber-950/88 shadow-md shadow-amber-950/50 hover:from-amber-600/92 hover:to-amber-900/88 active:scale-[0.98] transition-transform w-[clamp(3.3rem,21.5vw,5.48rem)] h-[clamp(3.75rem,24.5vw,6.23rem)] md:w-[4.35rem] md:h-[4.85rem] px-[clamp(0.25rem,1.2vw,0.375rem)] py-[clamp(0.25rem,1.2vw,0.375rem)] md:px-1 md:py-1"
                   >
-                    <span className="text-2xl md:text-lg leading-none" aria-hidden="true">
+                    <span className="text-[clamp(1.125rem,5.2vw,1.5rem)] md:text-lg leading-none" aria-hidden="true">
                       📖
                     </span>
-                    <span className="mt-0.5 text-[12px] md:text-[9px] font-bold text-amber-50 leading-tight text-center">
+                    <span className="mt-0.5 text-[clamp(0.5625rem,2.95vw,0.75rem)] md:text-[9px] font-bold text-amber-50 leading-tight text-center">
                       ספר חשבון
                     </span>
-                    <span className="text-[12px] md:text-[9px] font-semibold text-amber-100/85 leading-tight">
+                    <span className="text-[clamp(0.5625rem,2.95vw,0.75rem)] md:text-[9px] font-semibold text-amber-100/85 leading-tight">
                       כיתה א׳
                     </span>
                   </button>
