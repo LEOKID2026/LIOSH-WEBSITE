@@ -143,6 +143,7 @@ export function SchoolActivityRow({ activity }) {
   const teacher = activity.teacherName || "—";
   const className = activity.className || "—";
   const mode = schoolActivityModeHe(activity.mode);
+  const showReview = activity.status && activity.status !== "draft";
 
   return (
     <li className="rounded-lg border border-white/10 bg-black/25 px-3 sm:px-4 py-3 hover:bg-white/[0.03] transition-colors min-w-0">
@@ -167,6 +168,15 @@ export function SchoolActivityRow({ activity }) {
               <dd className="text-white/85">{mode}</dd>
             </div>
           </dl>
+          {showReview ? (
+            <Link
+              href={`/school/activities/${encodeURIComponent(activity.id)}/monitor`}
+              className="inline-flex text-sm text-amber-300 hover:underline"
+              data-testid="school-activity-review-link"
+            >
+              צפה בתשובות
+            </Link>
+          ) : null}
         </div>
         <SchoolActivityStatusBadge status={activity.status} />
       </div>

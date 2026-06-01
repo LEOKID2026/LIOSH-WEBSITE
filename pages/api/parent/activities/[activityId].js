@@ -36,6 +36,7 @@ export default async function handler(req, res) {
       ok: true,
       activity: result.activity,
       attempts: result.attempts,
+      questions: result.questions,
     });
   } catch (err) {
     safeApiLog("parent/activities/[activityId]", err);

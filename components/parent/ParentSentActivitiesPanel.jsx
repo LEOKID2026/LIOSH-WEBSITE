@@ -64,6 +64,7 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose }) {
 
   const activity = detail?.activity;
   const attempts = Array.isArray(detail?.attempts) ? detail.attempts : [];
+  const questions = Array.isArray(detail?.questions) ? detail.questions : [];
 
   return (
     <div
@@ -107,7 +108,48 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose }) {
           </div>
         ) : null}
 
-        {attempts.length > 0 ? (
+        {questions.length > 0 ? (
+          <div className="space-y-2 pt-2 border-t border-white/10">
+            <div className="font-semibold text-white text-sm">פירוט תשובות</div>
+            {questions.map((q) => (
+              <div
+                key={q.questionIndex}
+                className="rounded border border-white/10 bg-black/30 p-2 text-sm"
+                data-testid={`parent-activity-question-${q.questionIndex}`}
+              >
+                <div className="font-medium text-white">
+                  שאלה {Number(q.questionIndex) + 1}:{" "}
+                  {q.isCorrect === true
+                    ? "נכון"
+                    : q.isCorrect === false
+                      ? "לא נכון"
+                      : "—"}
+                </div>
+                {q.question ? (
+                  <div className="text-white/85 mt-1 whitespace-pre-wrap" dir="auto">
+                    {q.question}
+                  </div>
+                ) : null}
+                {Array.isArray(q.choices) && q.choices.length > 0 ? (
+                  <div className="text-white/60 text-xs mt-1" dir="auto">
+                    אפשרויות: {q.choices.join(" · ")}
+                  </div>
+                ) : null}
+                <div className="text-white/70 mt-1">
+                  תשובה: {q.selectedAnswer || "—"}
+                </div>
+                <div className="text-white/70">
+                  תשובה נכונה: {q.correctAnswer || "—"}
+                </div>
+                {q.legacyFallback ? (
+                  <div className="text-white/45 text-xs mt-1" data-testid="legacy-fallback-indicator">
+                    —
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        ) : attempts.length > 0 ? (
           <div className="space-y-2 pt-2 border-t border-white/10">
             <div className="font-semibold text-white text-sm">פירוט תשובות</div>
             {attempts.map((attempt) => (

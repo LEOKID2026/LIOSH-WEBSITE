@@ -1,25 +1,28 @@
 ---
 name: Assigned Activity Question Snapshot
-overview: Formalize the existing de-facto question freeze in assigned activities by adding stable per-question keys, a snapshot_status marker, canonical field shapes, and a worksheet answer snapshot — without touching free-practice flows, reports, UI, Hebrew copy, or any account relationships.
+overview: Formalize the existing de-facto question freeze in assigned activities by adding stable per-question keys, a snapshot_status marker, canonical field shapes, and a worksheet answer snapshot; and ensure authorized teacher, school admin, and parent users have a review modal/detail view to reconstruct activity data — without touching free-practice flows, report redesign, Hebrew copy unless approved, or any account relationships.
 todos:
   - id: phase1
     content: "Phase 1: Owner reviews SQL plan (Section 7) and approves; owner runs migration on staging"
-    status: pending
+    status: completed
   - id: phase2
     content: "Phase 2: Teacher assigned activity snapshot write path (classroom + individual)"
-    status: pending
+    status: completed
   - id: phase3
     content: "Phase 3: Parent assigned activity snapshot write path (separate from teacher)"
-    status: pending
+    status: completed
   - id: phase4
     content: "Phase 4: Answer submission question_key reference validation"
-    status: pending
+    status: completed
   - id: phase5
-    content: "Phase 5: Review/export reconstruction read path + worksheet_student_answers snapshot"
-    status: pending
+    content: "Phase 5: Reconstruction read path + worksheet snapshot + Section 1.9 review modal discovery addendum"
+    status: completed
+  - id: phase5b
+    content: "Phase 5b: Review modal/button additions per context (requires owner approval of discovery addendum)"
+    status: completed
   - id: phase6
-    content: "Phase 6: Full regression tests and owner sign-off"
-    status: pending
+    content: "Phase 6: Full regression tests, acceptance criteria verification, owner sign-off"
+    status: completed
 isProject: false
 ---
 
@@ -33,9 +36,10 @@ The following are explicitly excluded from this plan and must not be touched dur
 
 - Free student learning flows (`public.answers`, `POST /api/learning/answer`, learning sessions)
 - Per-session snapshots for non-assigned practice
-- Report UI redesign or any new report behavior
-- Hebrew copy changes
-- UI/design changes
+- Report UI redesign or any new aggregate report behavior
+- Hebrew copy — must not be changed unless exact wording is approved by the owner
+- UI/design redesign — the review modal work in Section 11 targets minimum required additions only, not a UI redesign
+- Student-facing review UI (no new student UI unless it already exists and is needed for consistency)
 - Private parent account ↔ school-provided parent access relationships — these are separate contexts and must remain completely separate
 - Any shared write path, shared table, or cross-account logic between teacher and parent account contexts
 - Migration creation or SQL execution — SQL provided in Section 7 is for owner review and manual application only
@@ -53,6 +57,25 @@ After implementation, for every **new** teacher-assigned or parent-assigned acti
 - correctness result
 - question order
 - stable `question_key` for each question
+
+### Positive acceptance criterion — review modal
+
+After implementation, an authorized teacher, school manager/admin, or parent must be able to open a review modal or detail view for a completed assigned activity and reconstruct the activity from stored data only:
+
+- question text
+- answer options
+- correct answer
+- each student's selected answer
+- correctness per question
+- success percentage per student
+- overall activity success percentage where relevant
+- unanswered / incomplete questions where relevant
+- legacy fallback state indicator if the old activity has no reliable question snapshot
+
+Each context sees only its own authorized activities:
+- Teacher / private teacher: only their own assigned activities
+- School manager / admin: only school-context activities they are authorized to see
+- Parent: only activities assigned in that parent account/context
 
 ### Negative acceptance criterion
 
@@ -143,7 +166,23 @@ These paths currently read from `question_set` and/or `question_snapshot`. This 
 | `GET /api/parent/activities/[activityId]` | `parent_activity_attempts` |
 | Worksheet grade/review | `worksheet_student_answers` + `worksheet_questions` JOIN |
 
-### 1.9 Key structural gaps identified
+### 1.9 Review modal / view button — discovery required before implementation
+
+Before Phase 5 / Section 11 work begins, the following must be inspected and documented as a discovery sub-task:
+
+- Which teacher activity windows (classroom monitor, individual student activity list) already have a "view answers" or "review" button/action.
+- Which components and routes implement that button: exact file paths, component names, and API endpoints called.
+- What data those APIs currently return — whether it includes question text, options, correct answer, and student answer, or only aggregate scores.
+- Whether school manager / admin currently has an equivalent path to reach activity review data — or whether school manager pages exist at all that expose activity details.
+- Whether the school manager's access is routed through the same teacher-portal APIs with an authorization check, or through separate school-admin endpoints.
+- Whether the parent-assigned activity detail view (`GET /api/parent/activities/[activityId]`, `ParentSentActivitiesPanel`) currently reconstructs per-question data (question text + student answer + correctness), or only shows aggregate scores.
+- Which API endpoints each authorized context uses for per-question review data today.
+- Whether those APIs depend on `question_index` alone, or whether they are already structured to accept a `question_key` lookup once the snapshot work is complete.
+- Whether any existing review component uses `mergeFrozenQuestionSources` / `frozen-activity-question.server.js` to resolve questions, or reads raw fields directly.
+
+This discovery must be completed before planning any component changes in Section 11. The output of the discovery is a short addendum listing existing vs missing, per context, that the owner can review before approving Section 11 implementation.
+
+### 1.10 Key structural gaps identified (snapshot layer)
 
 1. **No "snapshot locked" marker.** `question_set` defaults to `'[]'::jsonb`. There is no `snapshot_frozen_at` timestamp or `snapshot_status` field to distinguish "questions were saved and locked" from "old activity created before validation existed."
 2. **No stable per-question key.** Each question in `question_set` is referenced only by its array position (`question_index`). If the array order were ever corrupted there is no recovery path.
@@ -523,29 +562,149 @@ Discovery and file/table mapping is complete (this document). Implementation beg
 - Log warning (non-fatal) when `question_key` cannot be resolved (e.g. during legacy fallback).
 - Write test from Section 8, item 4 (old activity still works).
 
-**Phase 5 — Reconstruction read path and worksheet snapshot gap**
-- Scope: storage and data reconstruction only. Do not redesign report UI, report logic, or any reporting behavior.
-- Update teacher answer detail API and teacher export to use `question_key` when available, falling back to positional index for legacy rows. The existing `mergeFrozenQuestionSources` in `frozen-activity-question.server.js` is the correct base for this.
+**Phase 5 — Reconstruction read path, worksheet snapshot gap, and review modal discovery**
+- Scope: storage and data reconstruction only on the write/API side. Do not redesign report UI or aggregate report logic.
+- Update teacher answer detail API and teacher export to use `question_key` when available, falling back to positional index for legacy rows. The existing `mergeFrozenQuestionSources` in `frozen-activity-question.server.js` is the correct base for this. Add `questionKey` and `snapshotStatus` to `mapFrozenQuestionDetail` output (see Section 11.6).
 - Update worksheet submit handler in `lib/worksheet-activities/worksheet-student.server.js` to write `question_snapshot` (copy of the `worksheet_questions` row at submit time) to `worksheet_student_answers`.
+- Complete the discovery described in Section 1.9: inspect all three contexts (teacher, school admin, parent) and produce the discovery addendum documenting existing vs missing review button/modal coverage.
 - Write tests from Section 8, items 7, 8.
+- **Gate:** submit the Section 1.9 discovery addendum to the owner before beginning any component changes in Phase 5b.
+
+**Phase 5b — Review modal / view button additions** (requires owner approval of Section 1.9 discovery addendum)
+- Implement minimum required additions for each context as determined by the Section 1.9 discovery:
+  - Teacher classroom: verify or add a per-student review action on the monitor page.
+  - Teacher individual student: verify or add a review action on the individual activity detail.
+  - School manager / admin: verify or add an activity review path within existing school authorization rules.
+  - Parent: verify or add per-question data display in `ParentSentActivitiesPanel` / parent activity detail.
+- All contexts use separate components and separate API calls. No cross-context sharing.
+- Do not change Hebrew copy without owner approval of exact wording.
+- Write tests from Section 8, items 4, 7 (updated to cover legacy modal fallback).
 
 **Phase 6 — Regression tests and final verification**
 - Full regression run: all existing teacher portal, parent portal, and student activity tests.
-- Verify the positive acceptance criterion: for every new assigned activity, all seven data points (question text, options, correct answer, student answer, correctness, order, `question_key`) are reconstructable from the DB without calling any question generator or bank.
+- Verify the positive acceptance criterion (snapshot): for every new assigned activity, all seven data points (question text, options, correct answer, student answer, correctness, order, `question_key`) are reconstructable from the DB without calling any question generator or bank.
+- Verify the positive acceptance criterion (review modal): an authorized teacher, school manager/admin, and parent can each open a review modal/detail for a completed activity and see question text, options, correct answer, student answer, correctness, success percentage, and legacy fallback state.
 - Verify the negative acceptance criterion: free-practice path (`POST /api/learning/answer` → `public.answers`) is completely untouched; no snapshot logic runs in that path.
-- Verify isolation: teacher tables and parent tables contain no cross-account data.
-- Performance check: no new N+1 queries introduced by snapshot reads.
+- Verify isolation: teacher, school admin, and parent contexts show only their own authorized activities; no cross-context data.
+- Performance check: no new N+1 queries introduced by snapshot reads or review API calls.
 - Owner sign-off before merge.
 
 ---
 
-## Key files to change in Phases 2–5
+## 11. Assigned Activity Review Modal / View Button Coverage
+
+This section is a planning stub only. Implementation requires the discovery output from Section 1.9 to be completed and approved by the owner first. No UI must be changed without that discovery step.
+
+### 11.1 Scope and constraints
+
+- This is not a UI redesign. The requirement is a minimum addition: a clear button or action in each authorized context that opens a modal or detail view showing completed activity data reconstructed from the frozen snapshot.
+- Hebrew copy must not be changed without owner approval of exact wording.
+- Each context is isolated. No shared component, shared API call, or cross-context data flow between teacher, school admin, and parent contexts.
+- Student-facing review UI is out of scope unless already present and needed for consistency.
+
+### 11.2 Data the modal must be able to show
+
+For each activity reviewed:
+
+- Exact question text (from `question_set` if `snapshot_status = 'frozen'`; fallback to per-attempt `question_snapshot` if `snapshot_status = 'legacy_missing'`)
+- Answer options (`choices` array)
+- Correct answer
+- Each student's selected answer
+- Correctness per question (per student)
+- Success percentage per student (`correct_count / answers_count * 100`)
+- Overall activity success percentage (average across students, where relevant)
+- Unanswered / incomplete questions (where a student has no attempt row for a question index)
+- Legacy fallback state: if the activity has `snapshot_status = 'legacy_missing'` and a question cannot be reconstructed, the modal must display a defined placeholder rather than crash or silently omit the question
+
+### 11.3 Context 1 — Teacher / private teacher
+
+**Classroom activities:**
+- The monitor page (`pages/teacher/class/[classId]/activities/[activityId]/monitor.js`) and the teacher answer detail route (`GET /api/teacher/activities/[activityId]/students/[studentId]/answers`) already exist.
+- Discovery (Section 1.9) must confirm: does the monitor page already have a per-student "view answers" action that opens a modal? Does the returned data include question text, options, correct answer, and per-student selected answer?
+- If yes and complete: document it; no change needed.
+- If yes but incomplete (e.g., only scores, no question text): plan a minimal API response extension to include the frozen snapshot fields.
+- If missing: plan the minimum addition — a button on the student row in the monitor UI that calls the existing answers API and renders question+answer pairs in a modal.
+
+**Individual student activities:**
+- The individual activity report route (`GET /api/teacher/student-activities/[activityId]/report`) exists.
+- Discovery must confirm: is there a UI button to open per-question review from the individual student activity list?
+- Apply the same "existing / incomplete / missing" decision as above.
+
+**After snapshot work (Phases 2–4):** the review API should be updated to use `question_key` lookup when available, and to surface `snapshot_status` so the modal can show the legacy indicator. This is the Phase 5 read-path change.
+
+### 11.4 Context 2 — School manager / admin
+
+- Discovery (Section 1.9) must establish: do school manager/admin pages exist that list assigned activities? If so, which routes and components.
+- If school manager access to activity data is already routed through the same teacher-portal APIs with an authorization scope check (e.g., `school_id` gate), then the review modal change may simply be ensuring those APIs return sufficient snapshot data and that the school-manager UI surface has an equivalent "review" button.
+- If school manager has no path to activity review at all, plan the minimum required addition: a detail view reachable from the school admin panel that calls the authorized activity detail API and renders the same modal content as the teacher context.
+- Must not create new cross-account relationships. School manager sees only activities belonging to teachers in their school, governed by existing `school_id` authorization rules.
+- Must not connect school parent access with private parent accounts.
+
+### 11.5 Context 3 — Parent / private parent
+
+- The `GET /api/parent/activities/[activityId]` route and `ParentSentActivitiesPanel` component already exist.
+- Discovery (Section 1.9) must confirm: does `ParentSentActivitiesPanel` currently show per-question data (question text + student answer + correctness) when a completed activity is opened? Or does it show only aggregate scores?
+- If per-question data is already shown: document the component and API; confirm it uses `mergeFrozenQuestionSources` or equivalent for question text resolution.
+- If only aggregate scores are shown: plan the minimum addition — expand the `GET /api/parent/activities/[activityId]` response to include per-question attempt data (already in `parent_activity_attempts`) and render it in the existing panel or a modal inside `ParentSentActivitiesPanel`.
+- This context is isolated to that parent's account. No connection to school parent access.
+
+### 11.6 API readiness check
+
+After the snapshot write path (Phases 2–3) and answer reference work (Phase 4) are complete, each review API endpoint must be able to return:
+
+| Field | Source |
+|---|---|
+| `questionText` | `question_set[i].question` (canonical) or `question_snapshot.question` (fallback) |
+| `choices` | `question_set[i].choices` or `question_snapshot.choices` |
+| `correctAnswer` | `question_set[i].correct_answer` (server-only; stripped from student view) |
+| `selectedAnswer` | attempt row `selected_answer` |
+| `isCorrect` | attempt row `is_correct` |
+| `questionKey` | `question_set[i].qk` (nullable for legacy) |
+| `questionIndex` | attempt row `question_index` |
+| `snapshotStatus` | activity row `snapshot_status` |
+
+The `mapFrozenQuestionDetail` function in [`lib/classroom-activities/frozen-activity-question.server.js`](lib/classroom-activities/frozen-activity-question.server.js) already handles most of this. Phase 5 adds `questionKey` and `snapshotStatus` to its output.
+
+### 11.7 Legacy fallback in the modal
+
+For activities with `snapshot_status = 'legacy_missing'`:
+- The modal must still render. It falls back to per-attempt `question_snapshot` for answered questions.
+- For unanswered questions where no attempt row exists and `question_set` is empty, the modal must show a defined placeholder per question slot (exact placeholder wording is subject to owner approval; no Hebrew copy must be changed here without that approval).
+- The modal must not silently omit questions or crash on a missing snapshot.
+
+### 11.8 What does NOT change
+
+- No new student-facing review screens.
+- No new aggregate report pages.
+- No changes to the data model for this section (data model changes are in Sections 3–7).
+- No cross-context components (teacher modal ≠ parent modal ≠ school admin modal; they may share internal utility functions but must not share context or auth scope).
+
+---
+
+## Key files to change in Phases 2–5b
+
+### Snapshot write path (Phases 2–4)
 
 - [`lib/classroom-activities/classroom-activities-shared.server.js`](lib/classroom-activities/classroom-activities-shared.server.js) — add `normalizeAndFreezeQuestionSet`
 - [`lib/teacher-server/teacher-activities.server.js`](lib/teacher-server/teacher-activities.server.js) — classroom create + answer write
 - [`lib/teacher-server/student-activity.server.js`](lib/teacher-server/student-activity.server.js) — individual create
 - [`lib/teacher-server/student-activity-play.server.js`](lib/teacher-server/student-activity-play.server.js) — individual answer write
 - [`lib/parent-server/parent-activity.server.js`](lib/parent-server/parent-activity.server.js) — parent create + answer write (separate from teacher)
-- [`lib/classroom-activities/frozen-activity-question.server.js`](lib/classroom-activities/frozen-activity-question.server.js) — add `question_key` to `mapFrozenQuestionDetail` output (read path only)
-- [`lib/worksheet-activities/worksheet-student.server.js`](lib/worksheet-activities/worksheet-student.server.js) — add `question_snapshot` write on submit
 - New migration file (owner applies): columns per Section 7
+
+### Reconstruction read path and worksheet (Phase 5)
+
+- [`lib/classroom-activities/frozen-activity-question.server.js`](lib/classroom-activities/frozen-activity-question.server.js) — add `questionKey` and `snapshotStatus` to `mapFrozenQuestionDetail` output
+- [`lib/worksheet-activities/worksheet-student.server.js`](lib/worksheet-activities/worksheet-student.server.js) — add `question_snapshot` write on submit
+
+### Review modal / view button additions (Phase 5b — after discovery)
+
+The exact files for Phase 5b are determined by the Section 1.9 discovery addendum. Candidates based on current codebase:
+
+- `pages/teacher/class/[classId]/activities/[activityId]/monitor.js` — teacher classroom review (verify existing or add button)
+- `components/teacher-portal/TeacherActivityStudentAnswersModal.jsx` — modal component for teacher classroom answers (verify data completeness or extend)
+- `pages/api/teacher/activities/[activityId]/students/[studentId]/answers.js` — confirm returns question text + `snapshotStatus`
+- `pages/api/teacher/student-activities/[activityId]/report.js` — confirm returns per-question data including question text
+- `components/parent/ParentSentActivitiesPanel.jsx` — parent review panel (verify per-question data or extend)
+- `pages/api/parent/activities/[activityId].js` — confirm returns per-question attempt data including question text
+- School manager/admin pages — file paths to be identified during Section 1.9 discovery

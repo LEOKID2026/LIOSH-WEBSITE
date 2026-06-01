@@ -17,6 +17,8 @@ function answerStatusLabel(isCorrect) {
  *   activityId: string;
  *   student: { studentId: string; studentFullNameMasked: string; status: string; answersCount?: number; correctCount?: number } | null;
  *   activityTitle?: string;
+ *   answersApiPath?: string;
+ *   authFetch?: (token: string, path: string, init?: RequestInit) => Promise<Response>;
  * }} props
  */
 export default function TeacherActivityStudentAnswersModal({
@@ -26,6 +28,8 @@ export default function TeacherActivityStudentAnswersModal({
   activityId,
   student,
   activityTitle,
+  answersApiPath,
+  authFetch,
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,10 +40,11 @@ export default function TeacherActivityStudentAnswersModal({
     setLoading(true);
     setError("");
     try {
-      const res = await teacherAuthFetch(
-        accessToken,
-        `/api/teacher/activities/${encodeURIComponent(activityId)}/students/${encodeURIComponent(student.studentId)}/answers`
-      );
+      const fetchAnswers = authFetch || teacherAuthFetch;
+      const path =
+        answersApiPath ||
+        `/api/teacher/activities/${encodeURIComponent(activityId)}/students/${encodeURIComponent(student.studentId)}/answers`;
+      const res = await fetchAnswers(accessToken, path);
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
         setDetail(null);
@@ -53,7 +58,7 @@ export default function TeacherActivityStudentAnswersModal({
     } finally {
       setLoading(false);
     }
-  }, [open, accessToken, activityId, student?.studentId]);
+  }, [open, accessToken, activityId, student?.studentId, answersApiPath, authFetch]);
 
   useEffect(() => {
     if (open) load();
@@ -171,6 +176,11 @@ export default function TeacherActivityStudentAnswersModal({
                           {q.correctAnswer ?? "—"}
                         </dd>
                       </div>
+                      {q.legacyFallback ? (
+                        <p className="text-white/45 text-xs" data-testid="legacy-fallback-indicator">
+                          —
+                        </p>
+                      ) : null}
                     </dl>
                   </li>
                 );
