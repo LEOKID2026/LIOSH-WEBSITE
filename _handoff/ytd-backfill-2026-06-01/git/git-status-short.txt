@@ -1,0 +1,23 @@
+﻿AM .local/backfill-state/2025-09-01__2026-05-28.json
+ M lib/teacher-server/classroom-activity-class-report.server.js
+ M lib/teacher-server/teacher-report.server.js
+A  scripts/school-portal/rerun-backfill-checkpoints.mjs
+ M scripts/school-portal/reset-demo-school-activities.mjs
+A  scripts/school-portal/run-school-sim-backfill.mjs
+A  scripts/school-portal/sim/backfill-adopt-state.mjs
+A  scripts/school-portal/sim/backfill-artifacts.mjs
+A  scripts/school-portal/sim/backfill-checkpoint.mjs
+A  scripts/school-portal/sim/backfill-date-engine.mjs
+A  scripts/school-portal/sim/backfill-state.mjs
+ M scripts/school-portal/sim/db-simulator.mjs
+A  scripts/school-portal/sim/home-practice-simulator.mjs
+ M scripts/school-portal/sim/r3-bridge-browser.mjs
+ M scripts/school-portal/sim/report-validator.mjs
+A  scripts/school-portal/sim/supabase-chunk.mjs
+?? .local/backfill-state/2025-09-01__2026-05-28.lock
+?? .local/backfill-state/2025-09-01__2026-06-01.json
+?? .local/backfill-state/2025-09-01__2026-06-01.lock
+?? _handoff/
+?? scripts/tests/report-explicit-may-range-regression.mjs
+?? scripts/tests/triage-week-20260517.mjs
+?? scripts/tests/verify-prod-may-ranges.mjs

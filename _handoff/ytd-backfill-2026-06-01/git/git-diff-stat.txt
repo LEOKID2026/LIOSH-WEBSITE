@@ -1,0 +1,17 @@
+﻿ .local/backfill-state/2025-09-01__2026-05-28.json  | 32576 +++++++++++++++++++
+ .../classroom-activity-class-report.server.js      |   287 +-
+ lib/teacher-server/teacher-report.server.js        |     2 +-
+ .../school-portal/rerun-backfill-checkpoints.mjs   |   184 +
+ .../school-portal/reset-demo-school-activities.mjs |   208 +-
+ scripts/school-portal/run-school-sim-backfill.mjs  |   483 +
+ scripts/school-portal/sim/backfill-adopt-state.mjs |    24 +
+ scripts/school-portal/sim/backfill-artifacts.mjs   |   104 +
+ scripts/school-portal/sim/backfill-checkpoint.mjs  |   188 +
+ scripts/school-portal/sim/backfill-date-engine.mjs |   101 +
+ scripts/school-portal/sim/backfill-state.mjs       |    80 +
+ scripts/school-portal/sim/db-simulator.mjs         |    90 +-
+ .../school-portal/sim/home-practice-simulator.mjs  |   393 +
+ scripts/school-portal/sim/r3-bridge-browser.mjs    |   385 +-
+ scripts/school-portal/sim/report-validator.mjs     |   272 +-
+ scripts/school-portal/sim/supabase-chunk.mjs       |    26 +
+ 16 files changed, 35087 insertions(+), 316 deletions(-)

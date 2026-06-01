@@ -1,0 +1,533 @@
+﻿diff --git a/lib/teacher-server/classroom-activity-class-report.server.js b/lib/teacher-server/classroom-activity-class-report.server.js
+index 0a0d4fbe..af703e76 100644
+--- a/lib/teacher-server/classroom-activity-class-report.server.js
++++ b/lib/teacher-server/classroom-activity-class-report.server.js
+@@ -16,15 +16,108 @@ import { chunkIds } from "../school-server/school-query-chunks.server.js";
+ import { isDbSchemaNotReadyError } from "./teacher-audit.server.js";
+ 
+ const BATCH_PAGE = 1000;
++/** Keep `.in("activity_id", Γאª)` chunks small Γאפ large UUID lists overflow fetch headers. */
++const ACTIVITY_ID_IN_CHUNK = 80;
+ 
+ function activityTimestampIso(row) {
+   return row?.closed_at || row?.activated_at || row?.created_at || null;
+ }
+ 
++function timestampMsForRangeCompare(iso) {
++  if (iso == null || iso === "") return null;
++  const ms = Date.parse(String(iso));
++  return Number.isNaN(ms) ? null : ms;
++}
++
++function isTimestampInRange(iso, fromIso, toIsoExclusive) {
++  const refMs = timestampMsForRangeCompare(iso);
++  const fromMs = timestampMsForRangeCompare(fromIso);
++  const toMs = timestampMsForRangeCompare(toIsoExclusive);
++  if (refMs == null || fromMs == null || toMs == null) return false;
++  return refMs >= fromMs && refMs < toMs;
++}
++
+ function isActivityInRange(row, fromIso, toIsoExclusive) {
+-  const at = activityTimestampIso(row);
+-  if (!at) return false;
+-  return at >= fromIso && at < toIsoExclusive;
++  return isTimestampInRange(activityTimestampIso(row), fromIso, toIsoExclusive);
++}
++
++/**
++ * Paginated status fetch with chunked activity_id IN lists (avoids HeadersOverflow / fetch failed).
++ * @param {import('@supabase/supabase-js').SupabaseClient} serviceRole
++ * @param {string[]} activityIds
++ * @param {(query: import('@supabase/supabase-js').PostgrestFilterBuilder) => import('@supabase/supabase-js').PostgrestFilterBuilder} applyStudentScope
++ */
++async function fetchClassroomStatusRowsForActivities(serviceRole, activityIds, applyStudentScope) {
++  const statuses = [];
++  if (!activityIds.length) return { ok: true, statuses };
++
++  for (const idChunk of chunkIds(activityIds, ACTIVITY_ID_IN_CHUNK)) {
++    for (let offset = 0; ; offset += BATCH_PAGE) {
++      let query = serviceRole
++        .from("classroom_activity_student_status")
++        .select("activity_id, student_id, status, submitted_at, answers_count, correct_count")
++        .in("activity_id", idChunk);
++      query = applyStudentScope(query);
++      const { data, error } = await query.range(offset, offset + BATCH_PAGE - 1);
++
++      if (error) {
++        if (isDbSchemaNotReadyError(error)) {
++          return { ok: false, status: 503, code: "db_schema_not_ready" };
++        }
++        return { ok: false, status: 500, code: "internal_error" };
++      }
++
++      const rows = data || [];
++      statuses.push(...rows);
++      if (rows.length < BATCH_PAGE) break;
++    }
++  }
++
++  return { ok: true, statuses };
++}
++
++const CLASSROOM_ACTIVITY_SELECT =
++  "id, subject, topic, closed_at, activated_at, created_at, status, class_id";
++
++/**
++ * Paginated classroom_activities fetch (PostgREST default row cap is 1000).
++ * @param {import('@supabase/supabase-js').SupabaseClient} serviceRole
++ * @param {string[]} classIds
++ * @param {string} [selectCols]
++ */
++async function fetchScopedClassroomActivitiesForClassIds(
++  serviceRole,
++  classIds,
++  selectCols = CLASSROOM_ACTIVITY_SELECT
++) {
++  const scopedActivities = [];
++  if (!classIds.length) return { ok: true, activities: scopedActivities };
++
++  for (const classIdChunk of chunkIds(classIds, 40)) {
++    for (let offset = 0; ; offset += BATCH_PAGE) {
++      const { data: activities, error: actErr } = await serviceRole
++        .from("classroom_activities")
++        .select(selectCols)
++        .in("class_id", classIdChunk)
++        .neq("status", "archived")
++        .neq("mode", "discussion")
++        .order("id", { ascending: true })
++        .range(offset, offset + BATCH_PAGE - 1);
++
++      if (actErr) {
++        if (isDbSchemaNotReadyError(actErr)) {
++          return { ok: false, status: 503, code: "db_schema_not_ready" };
++        }
++        return { ok: false, status: 500, code: "internal_error" };
++      }
++
++      const rows = activities || [];
++      scopedActivities.push(...rows);
++      if (rows.length < BATCH_PAGE) break;
++    }
++  }
++
++  return { ok: true, activities: scopedActivities };
+ }
+ 
+ function toDateKey(iso) {
+@@ -234,8 +327,7 @@ export function buildClassroomActivityRollupsByStudentId(input) {
+           ? statusRow.submitted_at
+           : null;
+       const referenceIso = submittedAtIso || activityTimestampIso(activity);
+-      if (!referenceIso) continue;
+-      if (!(referenceIso >= fromIso && referenceIso < toIsoExclusive)) continue;
++      if (!isTimestampInRange(referenceIso, fromIso, toIsoExclusive)) continue;
+     }
+ 
+     const answers = Number(statusRow.answers_count) || 0;
+@@ -337,51 +429,29 @@ export async function loadClassroomActivityRollupsForClassReport(input) {
+   const toIsoExclusive = `${isoDateOnly(toExclusive)}T00:00:00.000Z`;
+ 
+   try {
+-    const { data: activities, error: actErr } = await serviceRole
+-      .from("classroom_activities")
+-      .select("id, subject, topic, closed_at, activated_at, created_at, status")
+-      .eq("class_id", classId)
+-      .neq("status", "archived")
+-      .neq("mode", "discussion");
+-
+-    if (actErr) {
+-      if (isDbSchemaNotReadyError(actErr)) {
+-        return { ok: false, status: 503, code: "db_schema_not_ready" };
+-      }
+-      return { ok: false, status: 500, code: "internal_error" };
+-    }
++    const activityFetch = await fetchScopedClassroomActivitiesForClassIds(
++      serviceRole,
++      [classId],
++      "id, subject, topic, closed_at, activated_at, created_at, status"
++    );
++    if (!activityFetch.ok) return activityFetch;
+ 
+-    const scopedActivities = activities || [];
++    const scopedActivities = activityFetch.activities;
+     if (!scopedActivities.length) {
+       return { ok: true, byStudentId, activityCount: 0 };
+     }
+ 
+     const activityIds = scopedActivities.map((row) => row.id);
+-    const statuses = [];
+-
+-    for (let offset = 0; ; offset += BATCH_PAGE) {
+-      const { data, error } = await serviceRole
+-        .from("classroom_activity_student_status")
+-        .select("activity_id, student_id, status, submitted_at, answers_count, correct_count")
+-        .in("activity_id", activityIds)
+-        .in("student_id", studentIds)
+-        .range(offset, offset + BATCH_PAGE - 1);
+-
+-      if (error) {
+-        if (isDbSchemaNotReadyError(error)) {
+-          return { ok: false, status: 503, code: "db_schema_not_ready" };
+-        }
+-        return { ok: false, status: 500, code: "internal_error" };
+-      }
+-
+-      const rows = data || [];
+-      statuses.push(...rows);
+-      if (rows.length < BATCH_PAGE) break;
+-    }
++    const statusFetch = await fetchClassroomStatusRowsForActivities(
++      serviceRole,
++      activityIds,
++      (query) => query.in("student_id", studentIds)
++    );
++    if (!statusFetch.ok) return statusFetch;
+ 
+     const merged = buildClassroomActivityRollupsByStudentId({
+       activities: scopedActivities,
+-      statuses,
++      statuses: statusFetch.statuses,
+       studentIds,
+       fromIso,
+       toIsoExclusive,
+@@ -433,23 +503,13 @@ export async function loadClassroomActivityRollupsForMultipleClassReports(input)
+   const toIsoExclusive = `${isoDateOnly(toExclusive)}T00:00:00.000Z`;
+ 
+   try {
+-    const scopedActivities = [];
+-    for (const classIdChunk of chunkIds(classIds, 40)) {
+-      const { data: activities, error: actErr } = await serviceRole
+-        .from("classroom_activities")
+-        .select("id, class_id, subject, topic, closed_at, activated_at, created_at, status")
+-        .in("class_id", classIdChunk)
+-        .neq("status", "archived")
+-        .neq("mode", "discussion");
+-
+-      if (actErr) {
+-        if (isDbSchemaNotReadyError(actErr)) {
+-          return { ok: false, status: 503, code: "db_schema_not_ready" };
+-        }
+-        return { ok: false, status: 500, code: "internal_error" };
+-      }
+-      scopedActivities.push(...(activities || []));
+-    }
++    const activityFetch = await fetchScopedClassroomActivitiesForClassIds(
++      serviceRole,
++      classIds,
++      "id, class_id, subject, topic, closed_at, activated_at, created_at, status"
++    );
++    if (!activityFetch.ok) return activityFetch;
++    const scopedActivities = activityFetch.activities;
+ 
+     if (!scopedActivities.length) {
+       return { ok: true, byClassId };
+@@ -458,24 +518,26 @@ export async function loadClassroomActivityRollupsForMultipleClassReports(input)
+     const activityIds = scopedActivities.map((row) => row.id);
+     const statuses = [];
+ 
+-    for (let offset = 0; ; offset += BATCH_PAGE) {
+-      const { data, error } = await serviceRole
+-        .from("classroom_activity_student_status")
+-        .select("activity_id, student_id, status, submitted_at, answers_count, correct_count")
+-        .in("activity_id", activityIds)
+-        .in("student_id", studentIds)
+-        .range(offset, offset + BATCH_PAGE - 1);
+-
+-      if (error) {
+-        if (isDbSchemaNotReadyError(error)) {
+-          return { ok: false, status: 503, code: "db_schema_not_ready" };
++    for (const idChunk of chunkIds(activityIds, ACTIVITY_ID_IN_CHUNK)) {
++      for (let offset = 0; ; offset += BATCH_PAGE) {
++        const { data, error } = await serviceRole
++          .from("classroom_activity_student_status")
++          .select("activity_id, student_id, status, submitted_at, answers_count, correct_count")
++          .in("activity_id", idChunk)
++          .in("student_id", studentIds)
++          .range(offset, offset + BATCH_PAGE - 1);
++
++        if (error) {
++          if (isDbSchemaNotReadyError(error)) {
++            return { ok: false, status: 503, code: "db_schema_not_ready" };
++          }
++          return { ok: false, status: 500, code: "internal_error" };
+         }
+-        return { ok: false, status: 500, code: "internal_error" };
+-      }
+ 
+-      const rows = data || [];
+-      statuses.push(...rows);
+-      if (rows.length < BATCH_PAGE) break;
++        const rows = data || [];
++        statuses.push(...rows);
++        if (rows.length < BATCH_PAGE) break;
++      }
+     }
+ 
+     const activitiesByClassId = new Map();
+@@ -572,57 +634,25 @@ async function loadStudentClassroomRollupForMemberClassIds(
+   toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+   const toIsoExclusive = `${isoDateOnly(toExclusive)}T00:00:00.000Z`;
+ 
+-  const scopedActivities = [];
+-  for (const classIdChunk of chunkIds(memberClassIds, 40)) {
+-    const { data: activities, error: actErr } = await serviceRole
+-      .from("classroom_activities")
+-      .select("id, subject, topic, closed_at, activated_at, created_at, status, class_id")
+-      .in("class_id", classIdChunk)
+-      .neq("status", "archived")
+-      .neq("mode", "discussion");
+-
+-    if (actErr) {
+-      if (isDbSchemaNotReadyError(actErr)) {
+-        return { ok: false, status: 503, code: "db_schema_not_ready" };
+-      }
+-      return { ok: false, status: 500, code: "internal_error" };
+-    }
+-
+-    for (const row of activities || []) {
+-      scopedActivities.push(row);
+-    }
+-  }
++  const activityFetch = await fetchScopedClassroomActivitiesForClassIds(serviceRole, memberClassIds);
++  if (!activityFetch.ok) return activityFetch;
++  const scopedActivities = activityFetch.activities;
+ 
+   if (!scopedActivities.length) {
+     return { ok: true, rollup: emptyStudentRollup(), activityCount: 0 };
+   }
+ 
+   const activityIds = scopedActivities.map((row) => row.id);
+-  const statuses = [];
+-
+-  for (let offset = 0; ; offset += BATCH_PAGE) {
+-    const { data, error } = await serviceRole
+-      .from("classroom_activity_student_status")
+-      .select("activity_id, student_id, status, submitted_at, answers_count, correct_count")
+-      .in("activity_id", activityIds)
+-      .eq("student_id", studentId)
+-      .range(offset, offset + BATCH_PAGE - 1);
+-
+-    if (error) {
+-      if (isDbSchemaNotReadyError(error)) {
+-        return { ok: false, status: 503, code: "db_schema_not_ready" };
+-      }
+-      return { ok: false, status: 500, code: "internal_error" };
+-    }
+-
+-    const rows = data || [];
+-    statuses.push(...rows);
+-    if (rows.length < BATCH_PAGE) break;
+-  }
++  const statusFetch = await fetchClassroomStatusRowsForActivities(
++    serviceRole,
++    activityIds,
++    (query) => query.eq("student_id", studentId)
++  );
++  if (!statusFetch.ok) return statusFetch;
+ 
+   const byStudentId = buildClassroomActivityRollupsByStudentId({
+     activities: scopedActivities,
+-    statuses,
++    statuses: statusFetch.statuses,
+     studentIds: [studentId],
+     fromIso,
+     toIsoExclusive,
+@@ -667,26 +697,9 @@ async function loadClassroomRollupsForMemberClassIdsBatch(
+   toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+   const toIsoExclusive = `${isoDateOnly(toExclusive)}T00:00:00.000Z`;
+ 
+-  const scopedActivities = [];
+-  for (const classIdChunk of chunkIds(memberClassIds, 40)) {
+-    const { data: activities, error: actErr } = await serviceRole
+-      .from("classroom_activities")
+-      .select("id, subject, topic, closed_at, activated_at, created_at, status, class_id")
+-      .in("class_id", classIdChunk)
+-      .neq("status", "archived")
+-      .neq("mode", "discussion");
+-
+-    if (actErr) {
+-      if (isDbSchemaNotReadyError(actErr)) {
+-        return { ok: false, status: 503, code: "db_schema_not_ready" };
+-      }
+-      return { ok: false, status: 500, code: "internal_error" };
+-    }
+-
+-    for (const row of activities || []) {
+-      scopedActivities.push(row);
+-    }
+-  }
++  const activityFetch = await fetchScopedClassroomActivitiesForClassIds(serviceRole, memberClassIds);
++  if (!activityFetch.ok) return activityFetch;
++  const scopedActivities = activityFetch.activities;
+ 
+   if (!scopedActivities.length) {
+     return { ok: true, byStudentId, activityCount: 0, latestActivity: null };
+@@ -708,7 +721,7 @@ async function loadClassroomRollupsForMemberClassIdsBatch(
+   const statuses = [];
+   const allowedStudents = new Set(studentIds);
+ 
+-  for (const idChunk of chunkIds(activityIds, 80)) {
++  for (const idChunk of chunkIds(activityIds, ACTIVITY_ID_IN_CHUNK)) {
+     for (let offset = 0; ; offset += BATCH_PAGE) {
+       const { data, error } = await serviceRole
+         .from("classroom_activity_student_status")
+diff --git a/lib/teacher-server/teacher-report.server.js b/lib/teacher-server/teacher-report.server.js
+index 9373522e..f73ffd63 100644
+--- a/lib/teacher-server/teacher-report.server.js
++++ b/lib/teacher-server/teacher-report.server.js
+@@ -450,7 +450,7 @@ export async function buildTeacherStudentReportPayload(input, options = {}) {
+     toDate,
+     classId,
+     {
+-      gradeLevel: options.gradeLevel ?? null,
++      gradeLevel: options.gradeLevel ?? loaded.student?.grade_level ?? null,
+       physicalClassName: options.physicalClassName ?? null,
+     }
+   );
+d i f f   - - g i t   a / s c r i p t s / t e s t s / r e p o r t - e x p l i c i t - m a y - r a n g e - r e g r e s s i o n . m j s   b / s c r i p t s / t e s t s / r e p o r t - e x p l i c i t - m a y - r a n g e - r e g r e s s i o n . m j s  
+ n e w   f i l e   m o d e   1 0 0 6 4 4  
+ i n d e x   0 0 0 0 0 0 0 0 . . 4 e 5 8 c 6 1 3  
+ - - -   / d e v / n u l l  
+ + + +   b / s c r i p t s / t e s t s / r e p o r t - e x p l i c i t - m a y - r a n g e - r e g r e s s i o n . m j s  
+ @ @   - 0 , 0   + 1 , 1 4 0   @ @  
+ + # ! / u s r / b i n / e n v   n o d e  
+ + / * *  
+ +   *   R e g r e s s i o n :   e x p l i c i t   M a y   2 0 2 6   c a l e n d a r   r a n g e s   m u s t   i n c l u d e   c l a s s r o o m   a c t i v i t y   i n   R 2 / R 3 / R 4   b u i l d s .  
+ +   *   R u n :   n o d e   - - e n v - f i l e = . e n v . l o c a l   s c r i p t s / t e s t s / r e p o r t - e x p l i c i t - m a y - r a n g e - r e g r e s s i o n . m j s  
+ +   * /  
+ + i m p o r t   a s s e r t   f r o m   " n o d e : a s s e r t / s t r i c t " ;  
+ + i m p o r t   {   c r e a t e S e r v i c e R o l e ,   f i n d A u t h U s e r B y E m a i l   }   f r o m   " . . / s c h o o l - p o r t a l / d e m o - s c h o o l - l i b . m j s " ;  
+ + i m p o r t   {  
+ +     b u i l d T e a c h e r S t u d e n t R e p o r t P a y l o a d ,  
+ +     b u i l d T e a c h e r P a r e n t R e p o r t P r e v i e w P a y l o a d ,  
+ +     r e s o l v e T e a c h e r R e p o r t D a t e R a n g e ,  
+ + }   f r o m   " . . / . . / l i b / t e a c h e r - s e r v e r / t e a c h e r - r e p o r t . s e r v e r . j s " ;  
+ + i m p o r t   {   l o a d S c h o o l S c o p e d C l a s s r o o m A c t i v i t y R o l l u p F o r S t u d e n t R e p o r t   }   f r o m   " . . / . . / l i b / t e a c h e r - s e r v e r / c l a s s r o o m - a c t i v i t y - c l a s s - r e p o r t . s e r v e r . j s " ;  
+ + i m p o r t   {   a p p l y S c h o o l T e a c h e r R e p o r t F i l t e r   }   f r o m   " . . / . . / l i b / s c h o o l - s e r v e r / s c h o o l - s u b j e c t s . s e r v e r . j s " ;  
+ + i m p o r t   {   l o a d T e a c h e r S c h o o l M e m b e r s h i p   }   f r o m   " . . / . . / l i b / s c h o o l - s e r v e r / s c h o o l - m e m b e r s h i p . s e r v e r . j s " ;  
+ + i m p o r t   {   r e s o l v e S c h o o l R e p o r t T e a c h e r F o r S t u d e n t   }   f r o m   " . . / . . / l i b / s c h o o l - s e r v e r / s c h o o l - s c o p e . s e r v e r . j s " ;  
+ +  
+ + c o n s t   D E M O _ S C H O O L _ I D   =   " b b 4 e 5 9 8 4 - d 9 5 f - 4 3 8 f - a 4 6 5 - e 1 a 8 2 0 8 e a 7 d e " ;  
+ + c o n s t   S T U D E N T _ I D   =   " f 1 e e 3 d 3 d - 7 7 b 5 - 4 8 c d - 9 6 d 2 - f 4 2 e b 6 0 a 3 b e a " ;  
+ +  
+ + c o n s t   R A N G E S   =   [  
+ +     {   l a b e l :   " c u r r e n t _ m o n t h " ,   f r o m :   " 2 0 2 6 - 0 5 - 0 1 " ,   t o :   " 2 0 2 6 - 0 5 - 1 4 " ,   m i n T o t a l :   1 6 0   } ,  
+ +     {   l a b e l :   " c u r r e n t _ w e e k " ,   f r o m :   " 2 0 2 6 - 0 5 - 1 0 " ,   t o :   " 2 0 2 6 - 0 5 - 1 4 " ,   m i n T o t a l :   1   } ,  
+ +     {   l a b e l :   " f u l l _ r a n g e " ,   f r o m :   " 2 0 2 5 - 0 9 - 0 1 " ,   t o :   " 2 0 2 6 - 0 5 - 1 4 " ,   m i n T o t a l :   2 4 0 0   } ,  
+ + ] ;  
+ +  
+ + f u n c t i o n   t o t a l A n s w e r s ( p a y l o a d )   {  
+ +     r e t u r n   N u m b e r ( p a y l o a d ? . s u m m a r y ? . t o t a l A n s w e r s   ? ?   0 )   | |   0 ;  
+ + }  
+ +  
+ + a s y n c   f u n c t i o n   m a i n ( )   {  
+ +     c o n s t   a d m i n   =   c r e a t e S e r v i c e R o l e ( ) ;  
+ +     c o n s t   d a n   =   a w a i t   f i n d A u t h U s e r B y E m a i l ( a d m i n ,   " d a n @ l e o - k . c o m " ) ;  
+ +     a s s e r t . o k ( d a n ? . i d ,   " d a n   t e a c h e r   a u t h   u s e r " ) ;  
+ +  
+ +     c o n s t   s c h o o l M e m   =   a w a i t   l o a d T e a c h e r S c h o o l M e m b e r s h i p ( a d m i n ,   d a n . i d ) ;  
+ +     a s s e r t . o k ( s c h o o l M e m . o k   & &   s c h o o l M e m . m e m b e r s h i p ? . s c h o o l I d ,   " d a n   s c h o o l   m e m b e r s h i p " ) ;  
+ +  
+ +     f o r   ( c o n s t   r a n g e S p e c   o f   R A N G E S )   {  
+ +         c o n s t   r e s o l v e d   =   r e s o l v e T e a c h e r R e p o r t D a t e R a n g e ( {   f r o m :   r a n g e S p e c . f r o m ,   t o :   r a n g e S p e c . t o   } ) ;  
+ +         a s s e r t . o k ( r e s o l v e d . o k ,   ` i n v a l i d   r a n g e   $ { r a n g e S p e c . l a b e l } ` ) ;  
+ +         c o n s t   {   f r o m D a t e ,   t o D a t e   }   =   r e s o l v e d ;  
+ +  
+ +         c o n s t   s c h o o l R o l l u p   =   a w a i t   l o a d S c h o o l S c o p e d C l a s s r o o m A c t i v i t y R o l l u p F o r S t u d e n t R e p o r t ( {  
+ +             s e r v i c e R o l e :   a d m i n ,  
+ +             s c h o o l I d :   D E M O _ S C H O O L _ I D ,  
+ +             s t u d e n t I d :   S T U D E N T _ I D ,  
+ +             f r o m D a t e ,  
+ +             t o D a t e ,  
+ +             g r a d e L e v e l :   " 1 " ,  
+ +             p h y s i c a l C l a s s N a m e :   n u l l ,  
+ +         } ) ;  
+ +         a s s e r t . o k ( s c h o o l R o l l u p . o k ,   ` $ { r a n g e S p e c . l a b e l }   s c h o o l   r o l l u p :   $ { s c h o o l R o l l u p . c o d e   | |   " f a i l e d " } ` ) ;  
+ +         a s s e r t . o k (  
+ +             N u m b e r ( s c h o o l R o l l u p . r o l l u p ? . a n s w e r s   | |   0 )   >   0 ,  
+ +             ` $ { r a n g e S p e c . l a b e l }   s c h o o l   r o l l u p   a n s w e r s   m u s t   b e   >   0 `  
+ +         ) ;  
+ +  
+ +         c o n s t   r 2 B u i l t   =   a w a i t   b u i l d T e a c h e r S t u d e n t R e p o r t P a y l o a d (  
+ +             {  
+ +                 s e r v i c e R o l e :   a d m i n ,  
+ +                 t e a c h e r I d :   d a n . i d ,  
+ +                 s t u d e n t I d :   S T U D E N T _ I D ,  
+ +                 f r o m D a t e ,  
+ +                 t o D a t e ,  
+ +             } ,  
+ +             {   s k i p A u d i t :   t r u e   }  
+ +         ) ;  
+ +         a s s e r t . o k ( r 2 B u i l t . o k ,   ` $ { r a n g e S p e c . l a b e l }   R 2   b u i l d :   $ { r 2 B u i l t . c o d e   | |   " f a i l e d " } ` ) ;  
+ +         c o n s t   r 2 F i l t e r e d   =   a w a i t   a p p l y S c h o o l T e a c h e r R e p o r t F i l t e r ( a d m i n ,   d a n . i d ,   r 2 B u i l t . p a y l o a d ) ;  
+ +         a s s e r t . o k ( r 2 F i l t e r e d . o k ,   ` $ { r a n g e S p e c . l a b e l }   R 2   f i l t e r :   $ { r 2 F i l t e r e d . c o d e   | |   " f a i l e d " } ` ) ;  
+ +         a s s e r t . o k (  
+ +             t o t a l A n s w e r s ( r 2 F i l t e r e d . p a y l o a d )   > =   r a n g e S p e c . m i n T o t a l ,  
+ +             ` $ { r a n g e S p e c . l a b e l }   R 2   t o t a l   $ { t o t a l A n s w e r s ( r 2 F i l t e r e d . p a y l o a d ) }   e x p e c t e d   > =   $ { r a n g e S p e c . m i n T o t a l } `  
+ +         ) ;  
+ +  
+ +         c o n s t   r 3 B u i l t   =   a w a i t   b u i l d T e a c h e r P a r e n t R e p o r t P r e v i e w P a y l o a d ( {  
+ +             s e r v i c e R o l e :   a d m i n ,  
+ +             t e a c h e r I d :   d a n . i d ,  
+ +             s t u d e n t I d :   S T U D E N T _ I D ,  
+ +             f r o m D a t e ,  
+ +             t o D a t e ,  
+ +         } ) ;  
+ +         a s s e r t . o k ( r 3 B u i l t . o k ,   ` $ { r a n g e S p e c . l a b e l }   R 3   b u i l d :   $ { r 3 B u i l t . c o d e   | |   " f a i l e d " } ` ) ;  
+ +         c o n s t   r 3 F i l t e r e d   =   a w a i t   a p p l y S c h o o l T e a c h e r R e p o r t F i l t e r ( a d m i n ,   d a n . i d ,   r 3 B u i l t . p a y l o a d ) ;  
+ +         a s s e r t . o k ( r 3 F i l t e r e d . o k ,   ` $ { r a n g e S p e c . l a b e l }   R 3   f i l t e r :   $ { r 3 F i l t e r e d . c o d e   | |   " f a i l e d " } ` ) ;  
+ +         a s s e r t . o k (  
+ +             t o t a l A n s w e r s ( r 3 F i l t e r e d . p a y l o a d )   > =   r a n g e S p e c . m i n T o t a l ,  
+ +             ` $ { r a n g e S p e c . l a b e l }   R 3   t o t a l   $ { t o t a l A n s w e r s ( r 3 F i l t e r e d . p a y l o a d ) }   e x p e c t e d   > =   $ { r a n g e S p e c . m i n T o t a l } `  
+ +         ) ;  
+ +  
+ +         c o n s t   r e p o r t T e a c h e r   =   a w a i t   r e s o l v e S c h o o l R e p o r t T e a c h e r F o r S t u d e n t (  
+ +             a d m i n ,  
+ +             D E M O _ S C H O O L _ I D ,  
+ +             S T U D E N T _ I D ,  
+ +             { }  
+ +         ) ;  
+ +         a s s e r t . o k ( r e p o r t T e a c h e r . o k ,   ` $ { r a n g e S p e c . l a b e l }   R 4   t e a c h e r   r e s o l v e ` ) ;  
+ +  
+ +         c o n s t   r 4 B u i l t   =   a w a i t   b u i l d T e a c h e r S t u d e n t R e p o r t P a y l o a d (  
+ +             {  
+ +                 s e r v i c e R o l e :   a d m i n ,  
+ +                 t e a c h e r I d :   r e p o r t T e a c h e r . t e a c h e r I d ,  
+ +                 s t u d e n t I d :   S T U D E N T _ I D ,  
+ +                 f r o m D a t e ,  
+ +                 t o D a t e ,  
+ +             } ,  
+ +             {   s k i p A u d i t :   t r u e ,   g r a d e L e v e l :   " 1 "   }  
+ +         ) ;  
+ +         a s s e r t . o k ( r 4 B u i l t . o k ,   ` $ { r a n g e S p e c . l a b e l }   R 4   b u i l d :   $ { r 4 B u i l t . c o d e   | |   " f a i l e d " } ` ) ;  
+ +         a s s e r t . o k (  
+ +             t o t a l A n s w e r s ( r 4 B u i l t . p a y l o a d )   > =   r a n g e S p e c . m i n T o t a l ,  
+ +             ` $ { r a n g e S p e c . l a b e l }   R 4   t o t a l   $ { t o t a l A n s w e r s ( r 4 B u i l t . p a y l o a d ) }   e x p e c t e d   > =   $ { r a n g e S p e c . m i n T o t a l } `  
+ +         ) ;  
+ +  
+ +         a s s e r t . e q u a l (  
+ +             t o t a l A n s w e r s ( r 2 F i l t e r e d . p a y l o a d ) ,  
+ +             t o t a l A n s w e r s ( r 3 F i l t e r e d . p a y l o a d ) ,  
+ +             ` $ { r a n g e S p e c . l a b e l }   R 2   a n d   R 3   t o t a l s   m u s t   m a t c h   a f t e r   s u b j e c t   f i l t e r `  
+ +         ) ;  
+ +     }  
+ +  
+ +     c o n s o l e . l o g (  
+ +         J S O N . s t r i n g i f y (  
+ +             {  
+ +                 s t u d e n t I d :   S T U D E N T _ I D ,  
+ +                 r a n g e s :   R A N G E S . m a p ( ( r )   = >   r . l a b e l ) ,  
+ +                 s t a t u s :   " P A S S " ,  
+ +             } ,  
+ +             n u l l ,  
+ +             2  
+ +         )  
+ +     ) ;  
+ +     c o n s o l e . l o g ( " \ n r e p o r t - e x p l i c i t - m a y - r a n g e - r e g r e s s i o n :   P A S S " ) ;  
+ + }  
+ +  
+ + m a i n ( ) . c a t c h ( ( e )   = >   {  
+ +     c o n s o l e . e r r o r ( " r e p o r t - e x p l i c i t - m a y - r a n g e - r e g r e s s i o n :   F A I L " ,   e ? . m e s s a g e   | |   e ) ;  
+ +     p r o c e s s . e x i t ( 1 ) ;  
+ + } ) ;  
+ 
