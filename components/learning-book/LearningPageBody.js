@@ -148,7 +148,7 @@ export default function LearningPageBody({
           </div>
 
           {isFinalPracticeSection && practicePath && practiceTarget ? (
-            <div className="mt-6 border-t border-white/10 pt-5 text-center">
+            <div className="mt-6 pt-2 text-center">
               <Link
                 href={practicePath}
                 onClick={handlePracticeClick}
