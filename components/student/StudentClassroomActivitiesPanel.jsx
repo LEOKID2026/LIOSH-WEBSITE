@@ -48,9 +48,21 @@ function ActivityCard({ a, scopeBadge = null }) {
   );
 }
 
-export default function StudentClassroomActivitiesPanel() {
-  const [activities, setActivities] = useState([]);
-  const [loaded, setLoaded] = useState(false);
+/**
+ * @param {{ activities?: Array<Record<string, unknown>>|null, activitiesLoaded?: boolean }} props
+ * When `activities` is passed from student home, the panel reuses that fetch (avoids duplicate/empty modal).
+ */
+export default function StudentClassroomActivitiesPanel({
+  activities: activitiesProp = null,
+  activitiesLoaded: activitiesLoadedProp = false,
+}) {
+  const useParentActivities = activitiesProp != null;
+  const [activities, setActivities] = useState(() =>
+    useParentActivities ? activitiesProp : []
+  );
+  const [loaded, setLoaded] = useState(
+    useParentActivities ? Boolean(activitiesLoadedProp) : false
+  );
 
   const load = useCallback(async () => {
     if (!isClassroomActivitiesEnabled()) {
@@ -61,6 +73,7 @@ export default function StudentClassroomActivitiesPanel() {
       const res = await fetch("/api/student/activities", {
         credentials: "include",
         cache: "no-store",
+        headers: { Accept: "application/json" },
       });
       const json = await res.json().catch(() => ({}));
       if (res.ok && json?.ok === true) {
@@ -74,10 +87,24 @@ export default function StudentClassroomActivitiesPanel() {
   }, []);
 
   useEffect(() => {
+    if (useParentActivities) {
+      setActivities(activitiesProp);
+      setLoaded(Boolean(activitiesLoadedProp));
+      return undefined;
+    }
     void load();
-  }, [load]);
+    return undefined;
+  }, [activitiesProp, activitiesLoadedProp, useParentActivities, load]);
 
-  if (!isClassroomActivitiesEnabled() || !loaded || activities.length === 0) {
+  if (!isClassroomActivitiesEnabled()) {
+    return null;
+  }
+
+  if (!loaded) {
+    return null;
+  }
+
+  if (activities.length === 0) {
     return null;
   }
 

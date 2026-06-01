@@ -230,6 +230,8 @@ export default function StudentHomePage() {
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [activePanel, setActivePanel] = useState(null);
   const [personalActivityCount, setPersonalActivityCount] = useState(0);
+  const [personalActivities, setPersonalActivities] = useState([]);
+  const [personalActivitiesPhase, setPersonalActivitiesPhase] = useState("idle");
   const [heroAvatarImage, setHeroAvatarImage] = useState(null);
   const [heroAvatarEmoji, setHeroAvatarEmoji] = useState("👤");
 
@@ -297,6 +299,9 @@ export default function StudentHomePage() {
     setHomePayload(null);
     setProfilePhase("idle");
     setProfileError("");
+    setPersonalActivities([]);
+    setPersonalActivityCount(0);
+    setPersonalActivitiesPhase("idle");
 
     fetch("/api/student/me", { credentials: "include", cache: "no-store", headers: { Accept: "application/json" } })
       .then(async (res) => {
@@ -325,7 +330,7 @@ export default function StudentHomePage() {
     return () => {
       mounted = false;
     };
-  }, [router.isReady, router, loadHomeDashboard]);
+  }, [router.isReady, loadHomeDashboard]);
 
   const dashboardView = useMemo(() => {
     if (!student?.id || profilePhase !== "ok" || !homePayload) return null;
@@ -349,33 +354,57 @@ export default function StudentHomePage() {
   }, [student, homePayload, profilePhase]);
 
   useEffect(() => {
-    if (!student?.id || !isClassroomActivitiesEnabled()) {
+    if (authPhase !== "authed" || !student?.id) {
+      setPersonalActivities([]);
       setPersonalActivityCount(0);
+      setPersonalActivitiesPhase("idle");
       return undefined;
     }
+    if (!isClassroomActivitiesEnabled()) {
+      setPersonalActivities([]);
+      setPersonalActivityCount(0);
+      setPersonalActivitiesPhase("idle");
+      return undefined;
+    }
+
     let cancelled = false;
+    setPersonalActivitiesPhase("loading");
+
     (async () => {
       try {
         const res = await fetch("/api/student/activities", {
           credentials: "include",
           cache: "no-store",
+          headers: { Accept: "application/json" },
         });
         const json = await res.json().catch(() => ({}));
-        if (cancelled || !res.ok || json?.ok !== true) return;
+        if (cancelled) return;
+        if (!res.ok || json?.ok !== true) {
+          setPersonalActivities([]);
+          setPersonalActivityCount(0);
+          setPersonalActivitiesPhase("error");
+          return;
+        }
         const activities = Array.isArray(json.activities) ? json.activities : [];
         const count = activities.filter((a) => {
           const scope = normalizeStudentActivityScope(a.scope);
           return scope === "student" || scope === "parent";
         }).length;
+        setPersonalActivities(activities);
         setPersonalActivityCount(count);
+        setPersonalActivitiesPhase("ok");
       } catch {
-        if (!cancelled) setPersonalActivityCount(0);
+        if (cancelled) return;
+        setPersonalActivities([]);
+        setPersonalActivityCount(0);
+        setPersonalActivitiesPhase("error");
       }
     })();
+
     return () => {
       cancelled = true;
     };
-  }, [student?.id]);
+  }, [authPhase, student?.id]);
 
   const refreshHeroAvatarFromBrowser = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -526,7 +555,12 @@ export default function StudentHomePage() {
           <p className="text-white/70 text-right leading-relaxed">עדיין אין נתונים</p>
         );
       case "classroom":
-        return <StudentClassroomActivitiesPanel />;
+        return (
+          <StudentClassroomActivitiesPanel
+            activities={personalActivities}
+            activitiesLoaded={personalActivitiesPhase === "ok" || personalActivitiesPhase === "error"}
+          />
+        );
       case "worksheets":
         return <StudentWorksheetsPanel />;
       case "subjects":
