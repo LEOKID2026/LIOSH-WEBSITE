@@ -201,7 +201,7 @@ async function main() {
   for (const sectionTitle of TEACHER_PDF_REQUIRED_SECTION_TITLES_HE) {
     assert(text.includes(sectionTitle), `section: "${sectionTitle}"`);
   }
-  assert(text.includes("גאומטריה"), "export subject label גאומטריה");
+  assert(text.includes("הנדסה"), "export subject label הנדסה");
   assert(text.includes("בוחן"), "export mode label בוחן");
   assert(!text.includes("geometry"), "no raw geometry key");
   assert(!text.includes("SIM"), "no SIM marker");

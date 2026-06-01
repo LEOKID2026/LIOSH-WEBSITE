@@ -8,6 +8,7 @@ export default function BookTocModal({
   batches,
   activePageId,
   returnQuerySuffix = "",
+  routeBase = MATH_G1_BOOK_META.routeBase,
 }) {
   if (!open) return null;
 
@@ -54,7 +55,7 @@ export default function BookTocModal({
                       <li key={entry.pageId}>
                         <Link
                           href={appendReturnQueryToHref(
-                            `${MATH_G1_BOOK_META.routeBase}/${entry.pageId}`,
+                            `${routeBase}/${entry.pageId}`,
                             returnQuerySuffix
                           )}
                           onClick={onClose}
@@ -76,10 +77,7 @@ export default function BookTocModal({
         </div>
         <div className="border-t border-white/10 px-5 py-3">
           <Link
-            href={appendReturnQueryToHref(
-              MATH_G1_BOOK_META.routeBase,
-              returnQuerySuffix
-            )}
+            href={appendReturnQueryToHref(routeBase, returnQuerySuffix)}
             onClick={onClose}
             className="block text-center text-sm font-semibold text-emerald-300 hover:text-emerald-200"
           >

@@ -18,7 +18,7 @@ const SUBJECT_LABEL_HE = {
   math: "חשבון",
   hebrew: "עברית",
   science: "מדעים",
-  geometry: "גיאומטריה",
+  geometry: "הנדסה",
   english: "אנגלית",
   "moledet-geography": "גיאוגרפיה",
 };

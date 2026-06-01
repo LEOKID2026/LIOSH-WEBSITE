@@ -149,7 +149,7 @@ function subjectsMentionedInUtterance(utterance, payload) {
     ["hebrew", "עברית"],
     ["english", "אנגלית"],
     ["science", "מדעים"],
-    ["geometry", "גאומטריה"],
+    ["geometry", "הנדסה"],
     ["moledet-geography", "מולדת וגאוגרפיה"],
     ["moledet-geography", "מולדת"],
     ["math", "חשבון"],

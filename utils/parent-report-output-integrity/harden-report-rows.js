@@ -187,7 +187,7 @@ export function detectGradeSplitContradictions(units, baseReport) {
     if (!hasStrong || !hasWeak) continue;
     const displayName = String(group[0]?.displayName || "נושא");
     const subjectLabel =
-      { math: "חשבון", geometry: "גאומטריה", english: "אנגלית", science: "מדעים", hebrew: "עברית", "moledet-geography": "מולדת" }[
+      { math: "חשבון", geometry: "הנדסה", english: "אנגלית", science: "מדעים", hebrew: "עברית", "moledet-geography": "מולדת" }[
         String(group[0]?.subjectId || "")
       ] || String(group[0]?.subjectId || "");
     const parts = group
@@ -213,7 +213,7 @@ export function executiveLineFromV2Unit(baseReport, unit) {
   const label = parentFacingLabelForV2Unit(baseReport, unit);
   const sid = String(unit?.subjectId || "");
   const subjectLabel =
-    { math: "חשבון", geometry: "גאומטריה", english: "אנגלית", science: "מדעים", hebrew: "עברית", "moledet-geography": "מולדת" }[
+    { math: "חשבון", geometry: "הנדסה", english: "אנגלית", science: "מדעים", hebrew: "עברית", "moledet-geography": "מולדת" }[
       sid
     ] || sid;
   return `${label} (${subjectLabel})`;
@@ -227,7 +227,7 @@ export function homePlanLineFromV2Unit(baseReport, unit, actionHe) {
   const label = parentFacingLabelForV2Unit(baseReport, unit);
   const sid = String(unit?.subjectId || "");
   const subjectLabel =
-    { math: "חשבון", geometry: "גאומטריה", english: "אנגלית", science: "מדעים", hebrew: "עברית", "moledet-geography": "מולדת" }[
+    { math: "חשבון", geometry: "הנדסה", english: "אנגלית", science: "מדעים", hebrew: "עברית", "moledet-geography": "מולדת" }[
       sid
     ] || sid;
   return `${label} (${subjectLabel}): ${String(actionHe || "").trim()}`;

@@ -54,7 +54,7 @@ export const math = subjectArticle(
 
 export const geometry = subjectArticle(
   "geometry",
-  "גיאומטריה",
+  "הנדסה",
   "📐",
   ["שטחים והיקפים", "זוויות וצורות", "פיתגורס (בכיתות מתקדמות)"],
   "/learning/geometry-master"

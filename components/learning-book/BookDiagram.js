@@ -10,6 +10,7 @@ import {
   parseDiagramNumberRow,
   parseNumberLineTokens,
   parseObjectDiagramGroups,
+  parsePlaceValueDiagram,
 } from "../../lib/learning-book/diagram-detect";
 import { stripStrayMarkdown } from "../../lib/learning-book/parse-inline-markdown";
 
@@ -406,6 +407,43 @@ function FrameTextDiagram({ lines }) {
   );
 }
 
+function PlaceValueDiagram({ parsed }) {
+  const { columns, equation } = parsed;
+
+  return (
+    <div className="space-y-3" dir="ltr" style={bookMathIsolateStyle}>
+      <div
+        className="mx-auto flex w-fit max-w-full flex-row items-stretch justify-center gap-2 sm:gap-3"
+        role="table"
+        aria-label="טבלת ערך מקום"
+      >
+        {columns.map((col, i) => (
+          <div
+            key={`${col.label}-${i}`}
+            className="flex min-w-[4.5rem] flex-col items-center justify-center gap-2 rounded-xl border border-emerald-300/30 bg-emerald-950/20 px-3 py-3 sm:min-w-[5.5rem] sm:px-4 sm:py-4"
+            role="cell"
+          >
+            <span
+              className="text-center text-sm font-semibold leading-snug text-emerald-100 sm:text-base"
+              dir="rtl"
+            >
+              {col.label}
+            </span>
+            <span className="text-center text-2xl font-bold tabular-nums text-white sm:text-3xl">
+              {col.digit}
+            </span>
+          </div>
+        ))}
+      </div>
+      {equation ? (
+        <p className="text-center text-base font-bold text-emerald-100 sm:text-lg">
+          = {equation}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function FrameDiagram({ lines }) {
   const sizeClass = diagramTextSizeClass(lines.join("\n"));
   const cleaned = lines.map((line) => stripStrayMarkdown(line)).join("\n");
@@ -440,6 +478,7 @@ export default function BookDiagram({ content }) {
     .map((l) => stripStrayMarkdown(l.trim()))
     .filter(Boolean);
   const kind = detectDiagramType(content);
+  const placeValue = kind === "place_value" ? parsePlaceValueDiagram(content) : null;
 
   return (
     <div
@@ -452,6 +491,7 @@ export default function BookDiagram({ content }) {
       {kind === "cards" && <CardsDiagram lines={lines} />}
       {kind === "coins" && <CoinsDiagram lines={lines} />}
       {kind === "frame_text" && <FrameTextDiagram lines={lines} />}
+      {kind === "place_value" && placeValue && <PlaceValueDiagram parsed={placeValue} />}
       {kind === "frame" && <FrameDiagram lines={lines} />}
       {kind === "generic" && <GenericDiagram content={content} />}
     </div>

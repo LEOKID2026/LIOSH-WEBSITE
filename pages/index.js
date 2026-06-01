@@ -75,7 +75,7 @@ export default function HomePage() {
           </h1>
           <p className="text-sm md:text-base lg:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed md:leading-normal px-1">
             עולם קטן של מיני־משחקים ופעילויות לימוד לילדים: ריצה, טיסה, חידות
-            ותרגול במתמטיקה, גיאומטריה ואנגלית — הכול במקום אחד.
+            ותרגול במתמטיקה, הנדסה ואנגלית — הכול במקום אחד.
           </p>
         </section>
 

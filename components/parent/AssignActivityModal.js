@@ -34,7 +34,7 @@ const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) =
 
 const SUBJECT_LABELS_HE = {
   math: "מתמטיקה",
-  geometry: "גאומטריה",
+  geometry: "הנדסה",
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",

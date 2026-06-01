@@ -34,7 +34,7 @@ const TEACHER_DASHBOARD_PHYSICAL = [
     physicalClasses: 6,
     minStudents: 20,
     maxStudents: 24,
-    subjects: ["מתמטיקה", "גיאומטריה"],
+    subjects: ["מתמטיקה", "הנדסה"],
   },
   {
     email: "michal@leo-k.com",
@@ -134,7 +134,7 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     await expect(page.getByText(/^math$/i)).toHaveCount(0);
     await expect(page.getByText(/^geometry$/i)).toHaveCount(0);
     await expect(page.getByText(/guided_practice|school_admin|moledet_geography/u)).toHaveCount(0);
-    await expect(page.getByText(/מתמטיקה · גיאומטריה/u).first()).toBeVisible();
+    await expect(page.getByText(/מתמטיקה · הנדסה/u).first()).toBeVisible();
 
     const teachersListRes = await page.request.get("/api/school/teachers", {
       headers: { Authorization: `Bearer ${token}` },
@@ -178,7 +178,7 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
 
     const physicalCards = teacherReady.locator('[data-testid^="school-teacher-physical-class-card-"]');
     await expect(physicalCards).toHaveCount(6, { timeout: 15_000 });
-    await expect(physicalCards.first()).toContainText(/מקצועות:\s*מתמטיקה,\s*גיאומטריה/u);
+    await expect(physicalCards.first()).toContainText(/מקצועות:\s*מתמטיקה,\s*הנדסה/u);
     await expect(physicalCards.first()).toContainText(/\d+\s+תלמידים/u);
     await expect(teacherReady.getByText(/^math$/i)).toHaveCount(0);
     await expect(teacherReady.getByText(/^geometry$/i)).toHaveCount(0);
@@ -187,7 +187,7 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     const picker = page.getByTestId("school-teacher-subject-picker-modal");
     await expect(picker).toBeVisible({ timeout: 10_000 });
     await expect(picker.getByText("מתמטיקה")).toBeVisible();
-    await expect(picker.getByText("גיאומטריה")).toBeVisible();
+    await expect(picker.getByText("הנדסה")).toBeVisible();
     await picker.getByRole("button", { name: "דוח כיתה" }).first().click();
     await expect(page.getByTestId("report-hub-main")).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId("report-hub-summary-ready")).toBeVisible({ timeout: 60_000 });
@@ -219,7 +219,7 @@ test.describe("demo school simulation browser smoke @demo-school", () => {
     await page.getByRole("button", { name: /כיתה ג׳ 1/u }).click();
     await expect(page.getByRole("heading", { name: /מקצועות הכיתה/u })).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText("מתמטיקה")).toBeVisible();
-    await expect(page.getByText("גיאומטריה")).toBeVisible();
+    await expect(page.getByText("הנדסה")).toBeVisible();
     await page.getByRole("button", { name: "דוח כיתה" }).first().click();
     await expect(page.getByTestId("report-hub-main")).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId("report-hub-summary-ready")).toBeVisible({ timeout: 60_000 });

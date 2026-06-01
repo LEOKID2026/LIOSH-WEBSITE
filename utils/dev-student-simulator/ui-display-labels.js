@@ -17,7 +17,7 @@ export const CUSTOM_BUILDER_UI_SUBJECT_ORDER = Object.freeze([
 
 export const SUBJECT_DISPLAY_HE = Object.freeze({
   math: "חשבון",
-  geometry: "גיאומטריה",
+  geometry: "הנדסה",
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",

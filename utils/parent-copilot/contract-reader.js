@@ -134,7 +134,7 @@ export function findTopicRowByKey(payload, topicRowKey, subjectIdHint = "") {
 
 const SUBJECT_LABEL_HE = {
   math: "חשבון",
-  geometry: "גאומטריה",
+  geometry: "הנדסה",
   english: "אנגלית",
   science: "מדעים",
   hebrew: "עברית",

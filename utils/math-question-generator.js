@@ -1160,8 +1160,15 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       useTensOnly = false;
       useSecondDecade = false;
     }
+    const forceVerticalAdd =
+      mathForce === "add_vertical" && gradeKey === "g2";
     // כיתה ב' - חיבור במאונך (אם מוגדר)
-    const useVertical = (gradeKey === "g2" && levelConfig.addition?.vertical && Math.random() < 0.4);
+    const useVertical =
+      forceVerticalAdd ||
+      (gradeKey === "g2" &&
+        levelConfig.addition?.vertical &&
+        mathForce !== "add_two" &&
+        Math.random() < 0.4);
     // האם להשתמש בתרגיל 3 מספרים - רק מכיתה ג' ומעלה
     const useThreeTerms = !isLowGrade && allowTwoStep && Math.random() < 0.3;
 
@@ -1275,8 +1282,15 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       useTensOnly = false;
       useSecondDecade = false;
     }
+    const forceVerticalSub =
+      mathForce === "sub_vertical" && gradeKey === "g2";
     // כיתה ב' - חיסור במאונך (אם מוגדר)
-    const useVertical = (gradeKey === "g2" && levelConfig.subtraction?.vertical && Math.random() < 0.4);
+    const useVertical =
+      forceVerticalSub ||
+      (gradeKey === "g2" &&
+        levelConfig.subtraction?.vertical &&
+        mathForce !== "sub_two" &&
+        Math.random() < 0.4);
 
     let a;
     let b;
@@ -1460,7 +1474,27 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     const maxD = levelConfig.division.max || 100;
     const maxDivisor = levelConfig.division.maxDivisor || 12;
 
-    if (mathForce === "div_two_digit" && gradeKey === "g5" && levelConfig.division?.twoDigit) {
+    if (
+      mathForce === "div" &&
+      gradeKey !== "g4" &&
+      gradeKey !== "g5"
+    ) {
+      const divisor = randInt(2, maxDivisor);
+      const quotient = randInt(2, Math.max(2, Math.floor(maxD / divisor)));
+      const dividend = divisor * quotient;
+      correctAnswer = round(quotient);
+      const exerciseText = `${dividend} ÷ ${divisor} = ${BLANK}`;
+      question = exerciseText;
+      params = {
+        kind: "div",
+        dividend,
+        divisor,
+        exerciseText,
+        presentationVariant: randInt(0, 3),
+      };
+      operandA = dividend;
+      operandB = divisor;
+    } else if (mathForce === "div_two_digit" && gradeKey === "g5" && levelConfig.division?.twoDigit) {
       const divisor = randInt(11, 99);
       const quotient = randInt(2, Math.max(2, Math.floor(maxD / divisor)));
       const dividend = divisor * quotient;
@@ -2629,6 +2663,36 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         b: null,
         isStory: false,
       });
+    } else if (mathForce === "divisibility" && gradeKey === "g2") {
+      const divisors = [2, 5, 10];
+      const divisor = divisors[Math.floor(Math.random() * divisors.length)];
+      const maxNum = levelConfig.compare?.max || 100;
+      const num = randInt(10, maxNum);
+      const isDivisible = num % divisor === 0;
+      correctAnswer = isDivisible ? "כן" : "לא";
+      question = `האם המספר ${num} מתחלק ב-${divisor}?`;
+      params = {
+        kind: "divisibility",
+        num,
+        divisor,
+        isDivisible,
+        presentationVariant: randInt(0, 3),
+      };
+      const wrongAnswer = isDivisible ? "לא" : "כן";
+      const answers = [correctAnswer, wrongAnswer];
+      if (Math.random() < 0.5) {
+        answers.reverse();
+      }
+      return finalizeMathQuestionOutput({
+        question,
+        correctAnswer,
+        answers,
+        operation: selectedOp,
+        params,
+        a: num,
+        b: divisor,
+        isStory: false,
+      });
     } else {
     const types =
       gradeKey === "g1"
@@ -2942,6 +3006,12 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     }
     if (mathForce === "wp_coins" || mathForce === "wp_coins_spent") {
       t = "coins";
+    }
+    if (mathForce === "wp_groups_g2" && gradeKey === "g2") {
+      t = "groups_g2";
+    }
+    if (mathForce === "wp_division_simple" && gradeKey === "g2") {
+      t = "division_simple";
     }
     if (mathForce === "wp_time_days" || mathForce === "wp_time_date") {
       t = "time_days";

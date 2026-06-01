@@ -42,7 +42,7 @@ assert.ok(g31);
 assert.equal(g31.studentCount, 2, "unique students not doubled");
 assert.equal(g31.subjectClassIds.length, 2);
 assert.ok(g31.subjectsLabel.includes("מתמטיקה"));
-assert.ok(g31.subjectsLabel.includes("גיאומטריה"));
+assert.ok(g31.subjectsLabel.includes("הנדסה"));
 assert.equal(g31.isGrouped, true);
 
 const unique = uniqueStudentIdsForClassIds(membershipRows, [mathId, geoId]);

@@ -5,13 +5,36 @@ import LearningMarkdown from "./LearningMarkdown";
 import { getSectionDisplayTitle } from "../../lib/learning-book/section-display-labels";
 import { useBookSectionSwipe } from "../../hooks/useBookSectionSwipe";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
+import { MATH_G2_BOOK_META } from "../../lib/learning-book/math-g2-registry";
 import {
   appendReturnQueryToHref,
   getMathG1BookReturnQuerySuffix,
   getMathG1PracticePath,
   saveMathG1BookPracticePreset,
 } from "../../lib/learning-book/math-g1-book-nav";
+import {
+  getMathG2BookReturnQuerySuffix,
+  getMathG2PracticePath,
+  saveMathG2BookPracticePreset,
+} from "../../lib/learning-book/math-g2-book-nav";
 import { resolveMathG1PracticeTarget } from "../../lib/learning-book/resolve-math-g1-practice-target";
+import { resolveMathG2PracticeTarget } from "../../lib/learning-book/resolve-math-g2-practice-target";
+
+const G1_BOOK_UI = {
+  bookMeta: MATH_G1_BOOK_META,
+  getReturnQuerySuffix: getMathG1BookReturnQuerySuffix,
+  resolvePracticeTarget: resolveMathG1PracticeTarget,
+  getPracticePath: getMathG1PracticePath,
+  savePracticePreset: saveMathG1BookPracticePreset,
+};
+
+const G2_BOOK_UI = {
+  bookMeta: MATH_G2_BOOK_META,
+  getReturnQuerySuffix: getMathG2BookReturnQuerySuffix,
+  resolvePracticeTarget: resolveMathG2PracticeTarget,
+  getPracticePath: getMathG2PracticePath,
+  savePracticePreset: saveMathG2BookPracticePreset,
+};
 
 export default function LearningPageBody({
   page,
@@ -19,9 +42,13 @@ export default function LearningPageBody({
   nextPageId = null,
   prevTitle = null,
   nextTitle = null,
+  bookGrade = "g1",
 }) {
+  const bookUi = bookGrade === "g2" ? G2_BOOK_UI : G1_BOOK_UI;
+  const { bookMeta, getReturnQuerySuffix, resolvePracticeTarget, getPracticePath, savePracticePreset } =
+    bookUi;
   const router = useRouter();
-  const returnQuerySuffix = getMathG1BookReturnQuerySuffix(router.query);
+  const returnQuerySuffix = getReturnQuerySuffix(router.query);
   const [sectionIndex, setSectionIndex] = useState(0);
   const [slideDir, setSlideDir] = useState(0);
 
@@ -54,15 +81,15 @@ export default function LearningPageBody({
   });
 
   const practiceTarget = useMemo(
-    () => (page?.pageId ? resolveMathG1PracticeTarget(page.pageId) : null),
-    [page?.pageId]
+    () => (page?.pageId ? resolvePracticeTarget(page.pageId) : null),
+    [page?.pageId, resolvePracticeTarget]
   );
-  const practicePath = practiceTarget ? getMathG1PracticePath() : null;
+  const practicePath = practiceTarget ? getPracticePath() : null;
   const handlePracticeClick = useCallback(() => {
     if (practiceTarget) {
-      saveMathG1BookPracticePreset(practiceTarget);
+      savePracticePreset(practiceTarget);
     }
-  }, [practiceTarget]);
+  }, [practiceTarget, savePracticePreset]);
 
   if (!page?.sections?.length) {
     return (
@@ -205,7 +232,7 @@ export default function LearningPageBody({
               {prevPageId ? (
                 <Link
                   href={appendReturnQueryToHref(
-                    `${MATH_G1_BOOK_META.routeBase}/${prevPageId}`,
+                    `${bookMeta.routeBase}/${prevPageId}`,
                     returnQuerySuffix
                   )}
                   className="min-h-[52px] rounded-xl border border-violet-300/25 bg-gradient-to-l from-violet-950/50 to-violet-500/10 px-3 py-2.5 text-right text-xs text-violet-100/90 shadow-sm transition hover:border-violet-300/40 hover:from-violet-900/55 hover:to-violet-500/15"
@@ -219,7 +246,7 @@ export default function LearningPageBody({
               {nextPageId ? (
                 <Link
                   href={appendReturnQueryToHref(
-                    `${MATH_G1_BOOK_META.routeBase}/${nextPageId}`,
+                    `${bookMeta.routeBase}/${nextPageId}`,
                     returnQuerySuffix
                   )}
                   className="min-h-[52px] rounded-xl border border-emerald-400/25 bg-gradient-to-l from-emerald-950/45 to-emerald-500/10 px-3 py-2.5 text-right text-xs text-emerald-100/90 shadow-sm transition hover:border-emerald-400/40 hover:from-emerald-900/50 hover:to-emerald-500/15"

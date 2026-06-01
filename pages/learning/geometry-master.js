@@ -2259,7 +2259,7 @@ useEffect(() => {
           <div className="text-center mb-3">
             <div className="flex items-center justify-center gap-2 mb-0.5">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white">
-                📐 גיאומטריה
+                📐 הנדסה
               </h1>
               <button
                 onClick={() => {
@@ -2674,7 +2674,7 @@ useEffect(() => {
                   onClick={() => setShowHowTo(true)}
                   className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg bg-cyan-500/80 hover:bg-cyan-500 text-xs md:text-sm font-bold text-white shadow-sm"
                 >
-                  ❓ איך לומדים גאומטריה כאן?
+                  ❓ איך לומדים הנדסה כאן?
                 </button>
                 <button
                   onClick={() => setShowReferenceModal(true)}
@@ -3764,11 +3764,11 @@ useEffect(() => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-xl font-extrabold mb-2 text-center">
-                  📘 איך לומדים גאומטריה כאן?
+                  📘 איך לומדים הנדסה כאן?
                 </h2>
 
                 <p className="text-white/80 text-xs mb-3 text-center">
-                  המטרה היא לתרגל גאומטריה בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי.
+                  המטרה היא לתרגל הנדסה בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי.
                 </p>
 
                 <ul className="list-disc pr-4 space-y-1 text-[13px] text-white/90">

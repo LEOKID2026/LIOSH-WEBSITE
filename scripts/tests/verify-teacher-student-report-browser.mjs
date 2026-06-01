@@ -232,7 +232,7 @@ async function main() {
 
     const hasSubjectSection =
       !pageText.includes("אין מספיק נתונים לפי מקצוע") ||
-      pageText.includes("גיאומטריה") ||
+      pageText.includes("הנדסה") ||
       pageText.includes("מתמטיקה");
     record(
       "5. Teacher browser page — subject performance visible",

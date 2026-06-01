@@ -59,7 +59,7 @@ test("unknown geo_ keys fall back to safe Hebrew, not raw English", () => {
     subject: "geometry",
   });
   assert.ok(!looksLikeRawInternalSkillKey(label));
-  assert.equal(label, "מיומנות בגאומטריה");
+  assert.equal(label, "מיומנות בהנדסה");
 });
 
 test("teacher activity report page renders skillLabelHe, not raw skillKey", () => {

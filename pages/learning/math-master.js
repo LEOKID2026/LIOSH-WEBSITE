@@ -98,7 +98,9 @@ import {
 } from "../../lib/learning-client/learningActivityClient";
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
+import { getMathG2BookHref } from "../../lib/learning-book/resolve-math-g2-book-page";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
+import { MATH_G2_BOOK_META } from "../../lib/learning-book/math-g2-registry";
 import {
   consumeMathG1BookLearningSnapshot,
   consumeMathG1BookPracticePreset,
@@ -106,6 +108,13 @@ import {
   saveMathG1BookLearningSnapshot,
   withMathG1BookLearningReturn,
 } from "../../lib/learning-book/math-g1-book-nav";
+import {
+  consumeMathG2BookLearningSnapshot,
+  consumeMathG2BookPracticePreset,
+  isMathG2BookPracticeEntry,
+  saveMathG2BookLearningSnapshot,
+  withMathG2BookLearningReturn,
+} from "../../lib/learning-book/math-g2-book-nav";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -246,22 +255,35 @@ export default function MathMaster() {
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
-  const g1BookIndexHref = grade === "g1" ? MATH_G1_BOOK_META.routeBase : null;
-  const g1BookTopicHref = useMemo(
-    () => getMathG1BookHref({ grade, operation, kind: null }),
-    [grade, operation]
-  );
+  const bookIndexHref =
+    grade === "g1"
+      ? MATH_G1_BOOK_META.routeBase
+      : grade === "g2"
+        ? MATH_G2_BOOK_META.routeBase
+        : null;
+  const bookTopicHref = useMemo(() => {
+    if (grade === "g1") {
+      return getMathG1BookHref({ grade, operation, kind: null });
+    }
+    if (grade === "g2") {
+      return getMathG2BookHref({ grade, operation, kind: null });
+    }
+    return null;
+  }, [grade, operation]);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const g1QuestionBookHref = useMemo(() => {
-    if (grade !== "g1" || mode !== "learning" || !currentQuestion) return null;
+  const questionBookHref = useMemo(() => {
+    if (mode !== "learning" || !currentQuestion) return null;
+    if (grade !== "g1" && grade !== "g2") return null;
     const params = currentQuestion.params || {};
-    return getMathG1BookHref({
+    const ctx = {
       grade,
       operation: currentQuestion.operation || operation,
       kind: params.kind ?? null,
-    });
+    };
+    if (grade === "g2") return getMathG2BookHref(ctx);
+    return getMathG1BookHref(ctx);
   }, [grade, mode, currentQuestion, operation]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -288,10 +310,10 @@ export default function MathMaster() {
   /** תצוגת תרגיל: מאוזן (ברירת מחדל) / מאונך — רק לסשן הפעיל; לא נשמר בשרת או ב-localStorage קבוע. מתאפס ב־startGame / stopGame / hardResetGame. */
   const [isVerticalDisplay, setIsVerticalDisplay] = useState(false);
 
-  const openG1BookFromLearning = useCallback(
+  const openBookFromLearning = useCallback(
     (href) => {
       if (!href) return;
-      saveMathG1BookLearningSnapshot({
+      const snapshot = {
         gameActive: true,
         mode,
         grade,
@@ -308,7 +330,13 @@ export default function MathMaster() {
         feedback,
         isVerticalDisplay,
         questionStartTime,
-      });
+      };
+      if (grade === "g2") {
+        saveMathG2BookLearningSnapshot(snapshot);
+        router.push(withMathG2BookLearningReturn(href));
+        return;
+      }
+      saveMathG1BookLearningSnapshot(snapshot);
       router.push(withMathG1BookLearningReturn(href));
     },
     [
@@ -751,11 +779,13 @@ export default function MathMaster() {
   const [storyOnly, setStoryOnly] = useState(false); // שאלות מילוליות בלבד
 
   const applyBookPracticePreset = useCallback((preset) => {
-    if (!preset || preset.grade !== "g1" || preset.mode !== "learning") return;
-    if (!GRADES.g1.operations.includes(preset.operation)) return;
+    if (!preset || preset.mode !== "learning") return;
+    const presetGrade = preset.grade;
+    if (presetGrade !== "g1" && presetGrade !== "g2") return;
+    if (!GRADES[presetGrade]?.operations?.includes(preset.operation)) return;
     bookPracticePresetRef.current = preset;
-    setGrade("g1");
-    setGradeNumber(1);
+    setGrade(presetGrade);
+    setGradeNumber(presetGrade === "g1" ? 1 : 2);
     setMode("learning");
     setOperation(preset.operation);
     practiceForceKindRef.current = preset.forceKind || null;
@@ -814,7 +844,8 @@ export default function MathMaster() {
   });
 
   useEffect(() => {
-    const snap = consumeMathG1BookLearningSnapshot();
+    const snap =
+      consumeMathG1BookLearningSnapshot() || consumeMathG2BookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
     setMode(typeof snap.mode === "string" ? snap.mode : "learning");
     if (typeof snap.grade === "string") setGrade(snap.grade);
@@ -840,8 +871,14 @@ export default function MathMaster() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (!isMathG1BookPracticeEntry(router.query)) return;
-    const preset = consumeMathG1BookPracticePreset();
+    if (
+      !isMathG1BookPracticeEntry(router.query) &&
+      !isMathG2BookPracticeEntry(router.query)
+    ) {
+      return;
+    }
+    const preset =
+      consumeMathG2BookPracticePreset() || consumeMathG1BookPracticePreset();
     if (preset) {
       applyBookPracticePreset(preset);
     }
@@ -3613,17 +3650,27 @@ export default function MathMaster() {
 
           {!gameActive ? (
             <div className="relative flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
-              {g1BookIndexHref ? (
+              {bookIndexHref ? (
                 <div
                   className="pointer-events-none absolute z-30 bottom-[9.25rem] left-1/2 -translate-x-1/2 md:bottom-auto md:left-0 md:top-[0.35rem] md:translate-x-0 md:-translate-y-10 lg:top-[0.5rem] lg:-translate-y-12"
                   aria-hidden={false}
                 >
                   <button
                     type="button"
-                    data-testid="math-g1-book-index-button"
-                    onClick={() => router.push(g1BookIndexHref)}
-                    title="ספר חשבון כיתה א׳"
-                    aria-label="ספר חשבון כיתה א׳"
+                    data-testid={
+                      grade === "g2" ? "math-g2-book-index-button" : "math-g1-book-index-button"
+                    }
+                    onClick={() => router.push(bookIndexHref)}
+                    title={
+                      grade === "g2"
+                        ? "ספר חשבון כיתה ב׳"
+                        : "ספר חשבון כיתה א׳"
+                    }
+                    aria-label={
+                      grade === "g2"
+                        ? "ספר חשבון כיתה ב׳"
+                        : "ספר חשבון כיתה א׳"
+                    }
                     className="pointer-events-auto flex flex-col items-center justify-center rounded-xl border border-amber-600/45 bg-gradient-to-b from-amber-700/92 to-amber-950/88 shadow-md shadow-amber-950/50 hover:from-amber-600/92 hover:to-amber-900/88 active:scale-[0.98] transition-transform w-[clamp(3.3rem,21.5vw,5.48rem)] h-[clamp(3.75rem,24.5vw,6.23rem)] md:w-[4.35rem] md:h-[4.85rem] px-[clamp(0.25rem,1.2vw,0.375rem)] py-[clamp(0.25rem,1.2vw,0.375rem)] md:px-1 md:py-1"
                   >
                     <span className="text-[clamp(1.125rem,5.2vw,1.5rem)] md:text-lg leading-none" aria-hidden="true">
@@ -3633,7 +3680,7 @@ export default function MathMaster() {
                       ספר חשבון
                     </span>
                     <span className="text-[clamp(0.5625rem,2.95vw,0.75rem)] md:text-[9px] font-semibold text-amber-100/85 leading-tight">
-                      כיתה א׳
+                      {grade === "g2" ? "כיתה ב׳" : "כיתה א׳"}
                     </span>
                   </button>
                 </div>
@@ -3824,11 +3871,13 @@ export default function MathMaster() {
                 >
                   📚 לוח עזרה
                 </button>
-                {g1BookTopicHref ? (
+                {bookTopicHref ? (
                   <button
                     type="button"
-                    data-testid="math-g1-book-topic-button"
-                    onClick={() => router.push(g1BookTopicHref)}
+                    data-testid={
+                      grade === "g2" ? "math-g2-book-topic-button" : "math-g1-book-topic-button"
+                    }
+                    onClick={() => router.push(bookTopicHref)}
                     className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
                   >
                     📖 הסבר בספר
@@ -3956,11 +4005,15 @@ export default function MathMaster() {
                     </button>
                   )}
 
-                  {g1QuestionBookHref ? (
+                  {questionBookHref ? (
                     <button
                       type="button"
-                      data-testid="math-g1-book-question-button"
-                      onClick={() => openG1BookFromLearning(g1QuestionBookHref)}
+                      data-testid={
+                        grade === "g2"
+                          ? "math-g2-book-question-button"
+                          : "math-g1-book-question-button"
+                      }
+                      onClick={() => openBookFromLearning(questionBookHref)}
                       className="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 transition-all pointer-events-auto shadow-lg"
                       title="הסבר בספר לנושא הנוכחי"
                     >

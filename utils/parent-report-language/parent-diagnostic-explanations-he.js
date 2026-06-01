@@ -129,7 +129,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
   {
     lookupKey: "finding:taxonomy:G-03",
     explanationHe:
-      "המערכת זיהתה קושי בזיהוי הגובה המתאים לחישוב שטח. בגיאומטריה גובה הוא קו שניצב לבסיס, ולא תמיד הצלע שנראית הכי ארוכה או אלכסונית.",
+      "המערכת זיהתה קושי בזיהוי הגובה המתאים לחישוב שטח. בהנדסה גובה הוא קו שניצב לבסיס, ולא תמיד הצלע שנראית הכי ארוכה או אלכסונית.",
     exampleHe: "גובה ⟂ בסיס",
     status: "approved",
     approvalSource: "owner_geometry_batch_approved",

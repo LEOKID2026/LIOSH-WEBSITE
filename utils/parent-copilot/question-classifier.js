@@ -399,7 +399,7 @@ function subjectLabelLocalHe(subjectId) {
   const sid = normalizeSubjectId(subjectId);
   switch (sid) {
     case "math": return "חשבון";
-    case "geometry": return "גאומטריה";
+    case "geometry": return "הנדסה";
     case "english": return "אנגלית";
     case "science": return "מדעים";
     case "hebrew": return "עברית";
@@ -686,7 +686,7 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
 
   // 2. Subject/status inquiry framed as child + report scope ("מה מצב הילד … בנושא X") —
   // must beat hobbies/off-topic lexicon hits (e.g. שחמט/מוזיקה in OFF_TOPIC_CATEGORIES).
-  if (/מה\s*מצב\s*הילד\s*שלי\s*ב/u.test(t) || /^מה\s*מצב.*ב(?:מדעים|עברית|חשבון|אנגלית|גאומטריה|מולדת|שחמט|מוזיקה)/u.test(t)) {
+  if (/מה\s*מצב\s*הילד\s*שלי\s*ב/u.test(t) || /^מה\s*מצב.*ב(?:מדעים|עברית|חשבון|אנגלית|הנדסה|גאומטריה|מולדת|שחמט|מוזיקה)/u.test(t)) {
     return {
       bucket: "report_related",
       confidence: 0.86,

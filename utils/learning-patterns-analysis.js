@@ -332,7 +332,7 @@ const REPORT_ROWS_KEY = {
 
 const SUBJECT_LABEL_HE = {
   math: "חשבון",
-  geometry: "גאומטריה",
+  geometry: "הנדסה",
   english: "אנגלית",
   science: "מדעים",
   hebrew: "עברית",
@@ -2400,12 +2400,12 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
     },
     geometry: {
       subject: "geometry",
-      subjectLabelHe: "גאומטריה",
+      subjectLabelHe: "הנדסה",
       mistakeEventCount: 9,
       wrongCount: 9,
       hasAnySignal: true,
       summaryHe:
-        "תמונת המקצוע בגאומטריה: יש גם מקום לחיזוק בנושא בלבול חוזר בין היקף לשטח.",
+        "תמונת המקצוע בהנדסה: יש גם מקום לחיזוק בנושא בלבול חוזר בין היקף לשטח.",
       topStrengths: [],
       stableExcellence: [],
       topWeaknesses: [
@@ -2418,7 +2418,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         },
       ],
       parentActionHe:
-        "שלוש פעמים בשבוע, 15–20 דק׳ בכל מפגש: לבחור משימה אחת בגאומטריה בנושא בלבול חוזר בין היקף לשטח — לקרוא יחד את הניסוח, לנסח בקול מה נתון ומה מבקשים, לבצע צעד ראשון על דף טיוטה ורק אז לכתוב תשובה סופית ולבדוק מול הפתרון.",
+        "שלוש פעמים בשבוע, 15–20 דק׳ בכל מפגש: לבחור משימה אחת בהנדסה בנושא בלבול חוזר בין היקף לשטח — לקרוא יחד את הניסוח, לנסח בקול מה נתון ומה מבקשים, לבצע צעד ראשון על דף טיוטה ורק אז לכתוב תשובה סופית ולבדוק מול הפתרון.",
       nextWeekGoalHe:
         "יעד לחיזוק: להעלות את אחוזי ההצלחה בלבול חוזר בין היקף לשטח (לפחות ניסיון אחד מוצלח יותר מהשבוע שעבר).",
       evidenceExamples: [
