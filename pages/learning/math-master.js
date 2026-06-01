@@ -101,6 +101,8 @@ import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import {
   consumeMathG1BookLearningSnapshot,
+  consumeMathG1BookPracticePreset,
+  isMathG1BookPracticeEntry,
   saveMathG1BookLearningSnapshot,
   withMathG1BookLearningReturn,
 } from "../../lib/learning-book/math-g1-book-nav";
@@ -226,6 +228,8 @@ export default function MathMaster() {
   const plannerNextSessionClientMetaRef = useRef(null);
   const mathPendingDiagnosticProbeRef = useRef(null);
   const mathHypothesisLedgerRef = useRef(null);
+  const bookPracticePresetRef = useRef(null);
+  const practiceForceKindRef = useRef(null);
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
@@ -746,6 +750,19 @@ export default function MathMaster() {
   const [useStoryQuestions, setUseStoryQuestions] = useState(false);
   const [storyOnly, setStoryOnly] = useState(false); // שאלות מילוליות בלבד
 
+  const applyBookPracticePreset = useCallback((preset) => {
+    if (!preset || preset.grade !== "g1" || preset.mode !== "learning") return;
+    if (!GRADES.g1.operations.includes(preset.operation)) return;
+    bookPracticePresetRef.current = preset;
+    setGrade("g1");
+    setGradeNumber(1);
+    setMode("learning");
+    setOperation(preset.operation);
+    practiceForceKindRef.current = preset.forceKind || null;
+    setUseStoryQuestions(false);
+    setStoryOnly(false);
+  }, []);
+
   // מעקב אחר עיגולים שעברו (רק לכיתה א')
   const [movedCirclesA, setMovedCirclesA] = useState(0); // כמה עיגולים עברו מ-a
   const [movedCirclesB, setMovedCirclesB] = useState(0); // כמה עיגולים עברו מ-b
@@ -822,6 +839,15 @@ export default function MathMaster() {
   }, []);
 
   useEffect(() => {
+    if (!router.isReady) return;
+    if (!isMathG1BookPracticeEntry(router.query)) return;
+    const preset = consumeMathG1BookPracticePreset();
+    if (preset) {
+      applyBookPracticePreset(preset);
+    }
+  }, [router.isReady, router.query, applyBookPracticePreset]);
+
+  useEffect(() => {
     let mounted = true;
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
       .then((res) => res.json().catch(() => ({})))
@@ -841,12 +867,15 @@ export default function MathMaster() {
           } catch {}
         }
         const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey) {
+        if (gradeKey && !bookPracticePresetRef.current) {
           setGrade(gradeKey);
           const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
           if (gradeNumberFromDb) {
             setGradeNumber(gradeNumberFromDb);
           }
+        }
+        if (bookPracticePresetRef.current) {
+          applyBookPracticePreset(bookPracticePresetRef.current);
         }
         if (isStudentIdentityDiagnosticsEnabled()) {
           console.log("[math-master] GET /api/student/me", {
@@ -1489,6 +1518,7 @@ export default function MathMaster() {
         {
           pendingProbe: probeAtStart,
           probeMetaHolder,
+          forceKind: practiceForceKindRef.current,
         }
       );
       attempts++;

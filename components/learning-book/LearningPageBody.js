@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import LearningMarkdown from "./LearningMarkdown";
 import { getSectionDisplayTitle } from "../../lib/learning-book/section-display-labels";
 import { useBookSectionSwipe } from "../../hooks/useBookSectionSwipe";
@@ -8,7 +8,10 @@ import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import {
   appendReturnQueryToHref,
   getMathG1BookReturnQuerySuffix,
+  getMathG1PracticePath,
+  saveMathG1BookPracticePreset,
 } from "../../lib/learning-book/math-g1-book-nav";
+import { resolveMathG1PracticeTarget } from "../../lib/learning-book/resolve-math-g1-practice-target";
 
 export default function LearningPageBody({
   page,
@@ -50,6 +53,17 @@ export default function LearningPageBody({
     enabled: Boolean(page?.sections?.length),
   });
 
+  const practiceTarget = useMemo(
+    () => (page?.pageId ? resolveMathG1PracticeTarget(page.pageId) : null),
+    [page?.pageId]
+  );
+  const practicePath = practiceTarget ? getMathG1PracticePath() : null;
+  const handlePracticeClick = useCallback(() => {
+    if (practiceTarget) {
+      saveMathG1BookPracticePreset(practiceTarget);
+    }
+  }, [practiceTarget]);
+
   if (!page?.sections?.length) {
     return (
       <p className="text-center text-white/60" dir="rtl">
@@ -65,6 +79,7 @@ export default function LearningPageBody({
   const atFirst = sectionIndex <= 0;
   const atLast = sectionIndex >= totalSections - 1;
   const hasLessonNav = Boolean(prevPageId || nextPageId);
+  const isFinalPracticeSection = atLast && section?.number === 7;
 
   return (
     <>
@@ -131,6 +146,21 @@ export default function LearningPageBody({
           >
             <LearningMarkdown content={section.body} />
           </div>
+
+          {isFinalPracticeSection && practicePath && practiceTarget ? (
+            <div className="mt-6 border-t border-white/10 pt-5 text-center">
+              <Link
+                href={practicePath}
+                onClick={handlePracticeClick}
+                className="mx-auto block w-full max-w-md rounded-2xl border border-sky-300/40 bg-gradient-to-b from-sky-500/35 to-cyan-600/30 px-5 py-4 text-sky-50 shadow-[0_8px_24px_rgba(14,165,233,0.18)] transition hover:from-sky-500/45 hover:to-cyan-600/40 hover:border-sky-200/50 sm:inline-block sm:w-auto sm:min-w-[16rem]"
+              >
+                <span className="block text-lg font-bold sm:text-xl">בואו נתרגל עכשיו</span>
+                <span className="mt-1 block text-sm font-medium text-sky-100/85">
+                  נעבור לתרגול של הנושא הזה בחשבון
+                </span>
+              </Link>
+            </div>
+          ) : null}
         </article>
       </div>
 

@@ -3,6 +3,7 @@ import {
   bookMathIsolateStyle,
   isMathLikeText,
   splitHebrewMathRuns,
+  splitTextAndMathRuns,
 } from "../../lib/learning-book/book-math-display";
 import {
   parseInlineMarkdown,
@@ -25,43 +26,50 @@ function needsSpaceAfter(text, index) {
   return HEBREW_CHAR.test(next) || /[([״"']/.test(next);
 }
 
-function MathSpan({ value, padBefore = false, padAfter = false }) {
+function MathSpan({ value, sourceText, start, end }) {
+  const display = stripStrayMarkdown(value).trim();
+  const padBefore = needsSpaceBefore(sourceText, start);
+  const padAfter = needsSpaceAfter(sourceText, end - 1);
+
   return (
     <>
-      {padBefore ? "\u2009" : null}
-      <span
+      {padBefore ? " " : null}
+      <bdi
         dir="ltr"
         style={bookMathIsolateStyle}
         className="book-math-isolate font-semibold tabular-nums text-emerald-50"
       >
-        {value}
-      </span>
-      {padAfter ? "\u2009" : null}
+        {display}
+      </bdi>
+      {padAfter ? " " : null}
     </>
   );
 }
 
-function DigitSpan({ value, padBefore = false, padAfter = false }) {
+function DigitSpan({ value, sourceText, start, end }) {
+  const padBefore = needsSpaceBefore(sourceText, start);
+  const padAfter = needsSpaceAfter(sourceText, end - 1);
+
   return (
     <>
-      {padBefore ? "\u2009" : null}
-      <span
+      {padBefore ? " " : null}
+      <bdi
         dir="ltr"
         style={bookMathIsolateStyle}
         className="book-digit-isolate tabular-nums"
       >
         {value}
-      </span>
-      {padAfter ? "\u2009" : null}
+      </bdi>
+      {padAfter ? " " : null}
     </>
   );
 }
 
-function renderContentRuns(text) {
+function renderContentRuns(text, sourceText, sourceOffset = 0) {
   const runs = splitHebrewMathRuns(text);
 
   return runs.map((run, i) => {
-    const start = run.start ?? 0;
+    const start = run.start ?? sourceOffset;
     const end = run.end ?? start + run.value.length;
 
     if (run.type === "math") {
@@ -69,8 +77,9 @@ function renderContentRuns(text) {
         <MathSpan
           key={i}
           value={run.value}
-          padBefore={needsSpaceBefore(text, start)}
-          padAfter={needsSpaceAfter(text, end - 1)}
+          sourceText={sourceText}
+          start={start}
+          end={end}
         />
       );
     }
@@ -79,8 +88,9 @@ function renderContentRuns(text) {
         <DigitSpan
           key={i}
           value={run.value}
-          padBefore={needsSpaceBefore(text, start)}
-          padAfter={needsSpaceAfter(text, end - 1)}
+          sourceText={sourceText}
+          start={start}
+          end={end}
         />
       );
     }
@@ -90,14 +100,14 @@ function renderContentRuns(text) {
   });
 }
 
-function renderFormattedSegment(type, value) {
+function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
   const cleaned = stripStrayMarkdown(value);
-  const content = renderContentRuns(value);
+  const content = renderContentRuns(value, sourceText, sourceOffset);
 
   if (type === "bold") {
     const wrapLtr =
       isMathLikeText(cleaned) ||
-      (/[+\-−=×÷?]/.test(cleaned) && /\d/.test(cleaned));
+      (/[+\-−=×÷?_]/.test(cleaned) && /\d/.test(cleaned));
 
     if (wrapLtr) {
       return (
@@ -135,19 +145,51 @@ function renderFormattedSegment(type, value) {
   return <>{content}</>;
 }
 
-/**
- * Render Hebrew text with markdown parsed first, then LTR math isolation.
- */
-export default function MixedHebrewMathText({ text, className = "" }) {
+function renderProseSegment(text, sourceText, keyPrefix) {
   const tokens = parseInlineMarkdown(text);
 
+  return tokens.map((token, i) => {
+    const tokenStart = sourceText.indexOf(token.value);
+    const offset = tokenStart >= 0 ? tokenStart : 0;
+    return (
+      <Fragment key={`${keyPrefix}-${i}`}>
+        {renderFormattedSegment(token.type, token.value, sourceText, offset)}
+      </Fragment>
+    );
+  });
+}
+
+/**
+ * Render Hebrew text with math isolated first, then markdown in prose segments.
+ */
+export default function MixedHebrewMathText({ text, className = "" }) {
+  const input = String(text || "");
+  const segments = splitTextAndMathRuns(input);
+
   return (
-    <span className={`book-mixed-hebrew-math ${className}`.trim()}>
-      {tokens.map((token, i) => (
-        <Fragment key={i}>
-          {renderFormattedSegment(token.type, token.value)}
-        </Fragment>
-      ))}
+    <span
+      dir="rtl"
+      className={`book-mixed-hebrew-math ${className}`.trim()}
+      style={{ unicodeBidi: "plaintext" }}
+    >
+      {segments.map((segment, i) => {
+        if (segment.type === "math") {
+          return (
+            <MathSpan
+              key={i}
+              value={segment.value}
+              sourceText={input}
+              start={segment.start}
+              end={segment.end}
+            />
+          );
+        }
+        return (
+          <Fragment key={i}>
+            {renderProseSegment(segment.value, input, String(i))}
+          </Fragment>
+        );
+      })}
     </span>
   );
 }

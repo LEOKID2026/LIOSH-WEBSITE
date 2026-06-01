@@ -1026,10 +1026,13 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     gNumForScope >= 1 && gNumForScope <= 6
       ? ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳"][gNumForScope - 1]
       : "";
+  const mathForceFromOpts =
+    probeOpts?.forceKind != null ? String(probeOpts.forceKind) : "";
   const mathForce =
-    typeof globalThis !== "undefined" && globalThis.__LIOSH_MATH_FORCE
+    mathForceFromOpts ||
+    (typeof globalThis !== "undefined" && globalThis.__LIOSH_MATH_FORCE
       ? String(globalThis.__LIOSH_MATH_FORCE)
-      : "";
+      : "");
 
   const finalizeMathQuestionOutput = (out) =>
     sanitizeQuestionForStudentDisplay(
@@ -1090,15 +1093,73 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     });
   }
 
+  if (gradeKey === "g1" && mathForce === "eq_add_simple") {
+    const a = randInt(1, 9);
+    const c = randInt(a + 1, 10);
+    const b = c - a;
+    correctAnswer = b;
+    const exerciseText = `${a} + ${BLANK} = ${c}`;
+    question = exerciseText;
+    params = { kind: "eq_add_simple", a, b, c, exerciseText };
+    operandA = a;
+    operandB = b;
+    question = applyMathLevelPresentation(question, { selectedOp: "addition", params, mathLevelKey, gradeKey });
+    return finalizeMathQuestionOutput({
+      question,
+      exerciseText,
+      correctAnswer,
+      answers: buildMathMcqAnswerList(correctAnswer, "addition", params, randInt, round),
+      operation: "addition",
+      params,
+      a,
+      b,
+      isStory: false,
+    });
+  }
+
+  if (gradeKey === "g1" && mathForce === "eq_sub_simple") {
+    const c = randInt(1, 9);
+    const a = randInt(c + 1, 10);
+    const b = a - c;
+    correctAnswer = b;
+    const exerciseText = `${a} - ${BLANK} = ${c}`;
+    question = exerciseText;
+    params = { kind: "eq_sub_simple", a, b, c, exerciseText };
+    operandA = a;
+    operandB = b;
+    question = applyMathLevelPresentation(question, { selectedOp: "subtraction", params, mathLevelKey, gradeKey });
+    return finalizeMathQuestionOutput({
+      question,
+      exerciseText,
+      correctAnswer,
+      answers: buildMathMcqAnswerList(correctAnswer, "subtraction", params, randInt, round),
+      operation: "subtraction",
+      params,
+      a,
+      b,
+      isStory: false,
+    });
+  }
+
   // ===== חיבור =====
   if (selectedOp === "addition") {
     const maxA = levelConfig.addition.max || 20;
     const isLowGrade = gradeKey === "g1" || gradeKey === "g2"; // כיתות א' וב'
 
     // כיתה א' - חיבור בעשרות שלמות (30+40=70)
-    const useTensOnly = gradeKey === "g1" && Math.random() < 0.2;
+    let useTensOnly = gradeKey === "g1" && Math.random() < 0.2;
     // כיתה א' - חיבור בעשרת השנייה (13+4, 17-4)
-    const useSecondDecade = gradeKey === "g1" && Math.random() < 0.2;
+    let useSecondDecade = gradeKey === "g1" && Math.random() < 0.2;
+    if (mathForce === "add_tens_only") {
+      useTensOnly = true;
+      useSecondDecade = false;
+    } else if (mathForce === "add_second_decade") {
+      useSecondDecade = true;
+      useTensOnly = false;
+    } else if (mathForce === "add_two") {
+      useTensOnly = false;
+      useSecondDecade = false;
+    }
     // כיתה ב' - חיבור במאונך (אם מוגדר)
     const useVertical = (gradeKey === "g2" && levelConfig.addition?.vertical && Math.random() < 0.4);
     // האם להשתמש בתרגיל 3 מספרים - רק מכיתה ג' ומעלה
@@ -1207,9 +1268,13 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     const isLowGrade = gradeKey === "g1" || gradeKey === "g2"; // כיתות א' וב'
 
     // כיתה א' - חיסור בעשרות שלמות
-    const useTensOnly = gradeKey === "g1" && Math.random() < 0.2;
+    let useTensOnly = gradeKey === "g1" && Math.random() < 0.2;
     // כיתה א' - חיסור בעשרת השנייה
-    const useSecondDecade = gradeKey === "g1" && Math.random() < 0.2;
+    let useSecondDecade = gradeKey === "g1" && Math.random() < 0.2;
+    if (mathForce === "sub_two") {
+      useTensOnly = false;
+      useSecondDecade = false;
+    }
     // כיתה ב' - חיסור במאונך (אם מוגדר)
     const useVertical = (gradeKey === "g2" && levelConfig.subtraction?.vertical && Math.random() < 0.4);
 
@@ -1276,7 +1341,23 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     // שימוש ב-levelConfig.multiplication.max ישירות מ-GRADE_LEVELS
     const maxM = levelConfig.multiplication?.max || 10;
 
-    if (
+    if (mathForce === "mul") {
+      const a = randInt(1, maxM);
+      const b = randInt(1, maxM);
+      const c = a * b;
+      correctAnswer = round(c);
+      const exerciseText = `${a} × ${b} = ${BLANK}`;
+      question = exerciseText;
+      params = {
+        kind: "mul",
+        a,
+        b,
+        exerciseText,
+        presentationVariant: randInt(0, 3),
+      };
+      operandA = a;
+      operandB = b;
+    } else if (
       mathForce === "mul_tens" &&
       gradeKey === "g3" &&
       levelConfig.multiplication?.tensHundreds
@@ -2476,11 +2557,78 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
 
   // ===== Number Sense – שכנים, עשרות/יחידות, זוגי/אי-זוגי, השלמה, ישר המספרים, מנייה =====
   } else if (selectedOp === "number_sense") {
-    if (mathForce === "ns_counting_backward") {
+    const maxNumberSense = levelConfig.number_sense?.max || levelConfig.addition?.max || 999;
+
+    if (mathForce === "ns_counting_forward") {
+      const start = randInt(1, 20);
+      correctAnswer = start + 1;
+      question = `ספור קדימה: ${start}, ${BLANK}`;
+      params = { kind: "ns_counting_forward", start, next: start + 1 };
+    } else if (mathForce === "ns_counting_backward") {
       const start = randInt(2, 20);
       correctAnswer = start - 1;
       question = `ספור אחורה: ${start}, ${BLANK}`;
       params = { kind: "ns_counting_backward", start, prev: start - 1 };
+    } else if (mathForce === "ns_number_line") {
+      const start = randInt(0, 15);
+      const end = start + 5;
+      const missing = randInt(start + 1, end - 1);
+      const numbers = [];
+      for (let i = start; i <= end; i++) {
+        numbers.push(i === missing ? BLANK : i);
+      }
+      correctAnswer = missing;
+      question = `השלם את המספר החסר על ישר המספרים: ${numbers.join(" - ")}`;
+      params = { kind: "ns_number_line", start, end, missing, numbers };
+    } else if (mathForce === "ns_neighbors") {
+      const n = randInt(1, Math.min(999, maxNumberSense));
+      const dir = Math.random() < 0.5 ? "after" : "before";
+      if (dir === "after") {
+        correctAnswer = n + 1;
+        question = `מה המספר שבא אחרי ${n}? = ${BLANK}`;
+      } else {
+        correctAnswer = n - 1;
+        question = `מה המספר שבא לפני ${n}? = ${BLANK}`;
+      }
+      params = { kind: "ns_neighbors", n, dir };
+    } else if (mathForce === "ns_place_tens_units") {
+      const n = randInt(10, 99);
+      const askTens = Math.random() < 0.5;
+      const tens = Math.floor(n / 10);
+      const units = n % 10;
+      correctAnswer = askTens ? tens : units;
+      question = askTens
+        ? `מהי ספרת העשרות במספר ${n}? = ${BLANK}`
+        : `מהי ספרת היחידות במספר ${n}? = ${BLANK}`;
+      params = { kind: "ns_place_tens_units", n, askTens, tens, units };
+    } else if (mathForce === "ns_complement10") {
+      const b = randInt(1, 9);
+      const c = 10;
+      const a = c - b;
+      correctAnswer = a;
+      question = `${BLANK} + ${b} = ${c}`;
+      params = { kind: "ns_complement10", a, b, c };
+    } else if (mathForce === "ns_even_odd") {
+      const n = randInt(0, Math.min(200, maxNumberSense));
+      const isEven = n % 2 === 0;
+      correctAnswer = isEven ? "זוגי" : "אי-זוגי";
+      question = `האם המספר ${n} הוא זוגי או אי-זוגי?`;
+      params = { kind: "ns_even_odd", n, isEven };
+      let answers = ["זוגי", "אי-זוגי"];
+      for (let i = answers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [answers[i], answers[j]] = [answers[j], answers[i]];
+      }
+      return finalizeMathQuestionOutput({
+        question,
+        correctAnswer,
+        answers,
+        operation: selectedOp,
+        params,
+        a: n,
+        b: null,
+        isStory: false,
+      });
     } else {
     const types =
       gradeKey === "g1"
@@ -2492,8 +2640,6 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         : ["neighbors", "place_hundreds", "complement10", "complement100", "even_odd"];
     const t = types[Math.floor(Math.random() * types.length)];
 
-    const maxNumberSense = levelConfig.number_sense?.max || levelConfig.addition?.max || 999;
-    
     if (t === "neighbors") {
       const n = randInt(1, Math.min(999, maxNumberSense));
       const dir = Math.random() < 0.5 ? "after" : "before";
@@ -2794,6 +2940,12 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     if (mathForce === "wp_comparison_more" && templates.includes("comparison_more")) {
       t = "comparison_more";
     }
+    if (mathForce === "wp_coins" || mathForce === "wp_coins_spent") {
+      t = "coins";
+    }
+    if (mathForce === "wp_time_days" || mathForce === "wp_time_date") {
+      t = "time_days";
+    }
     if (
       mathForce === "wp_unit_cm_to_m" &&
       (gradeKey === "g5" || gradeKey === "g6") &&
@@ -2928,7 +3080,9 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       };
     } else if (t === "time_days") {
       // שאלות זמן - ימים בשבוע (כיתות א'-ב')
-      const variant = Math.random();
+      let variant = Math.random();
+      if (mathForce === "wp_time_days") variant = 0.1;
+      else if (mathForce === "wp_time_date") variant = 0.9;
       if (variant < 0.5) {
         const days = randInt(1, 6);
         const startDay = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי"][randInt(0, 5)];
@@ -2954,7 +3108,9 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       }
     } else if (t === "coins") {
       // שאלות כסף - מטבעות (כיתות א'-ב')
-      const variant = Math.random();
+      let variant = Math.random();
+      if (mathForce === "wp_coins") variant = 0.1;
+      else if (mathForce === "wp_coins_spent") variant = 0.9;
       if (variant < 0.5) {
         const coins1 = randInt(1, 5);
         const coins2 = randInt(1, 5);
