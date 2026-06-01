@@ -47,15 +47,48 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import ParentReportShortContractPreview from "../../components/parent-report-short-contract-preview.jsx";
+import ReportDateRangeControl from "../../components/reporting/ReportDateRangeControl.jsx";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
+  resolveParentReportGenerationArgs,
 } from "../../lib/learning-supabase/parent-dashboard-report-bridge.js";
 import {
   parentReportRemoteDataUrl,
   parseParentReportRemoteSource,
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
+
+function parentReportPresetDays(period, customDates) {
+  if (customDates) return null;
+  if (period === "day") return "day";
+  if (period === "schoolYear") return "schoolYear";
+  if (period === "month") return 30;
+  return 7;
+}
+
+function buildLocalParentReports(playerName, period, customDates, appliedStartDate, appliedEndDate) {
+  const args = resolveParentReportGenerationArgs(
+    period,
+    customDates,
+    appliedStartDate,
+    appliedEndDate
+  );
+  return {
+    data: generateParentReportV2(
+      playerName,
+      args.period,
+      args.customStartDate,
+      args.customEndDate
+    ),
+    detailed: generateDetailedParentReport(
+      playerName,
+      args.period,
+      args.customStartDate,
+      args.customEndDate
+    ),
+  };
+}
 
 function parentReportChartLabelFromAllItemKey(key, data) {
   const labelFrom = (subjectId, bucketLike) => {
@@ -786,10 +819,16 @@ export default function ParentReport() {
   const parentStudentId = remoteStudentId;
 
   const detailedReportQuery = useMemo(() => {
+    const args = resolveParentReportGenerationArgs(
+      period,
+      customDates,
+      appliedStartDate,
+      appliedEndDate
+    );
     const base =
-      customDates && appliedStartDate && appliedEndDate
-        ? { period: "custom", start: appliedStartDate, end: appliedEndDate }
-        : { period };
+      args.period === "custom" && args.customStartDate && args.customEndDate
+        ? { period: "custom", start: args.customStartDate, end: args.customEndDate }
+        : { period: args.period };
     if (isRemoteReportSource && remoteStudentId) {
       return {
         ...base,
@@ -957,6 +996,12 @@ export default function ParentReport() {
     } else if (qp === "month") {
       nextPeriod = "month";
       nextCustomDates = false;
+    } else if (qp === "day") {
+      nextPeriod = "day";
+      nextCustomDates = false;
+    } else if (qp === "schoolYear") {
+      nextPeriod = "schoolYear";
+      nextCustomDates = false;
     } else if (qp === "week") {
       nextPeriod = "week";
       nextCustomDates = false;
@@ -982,15 +1027,13 @@ export default function ParentReport() {
     setPlayerName(name);
 
     if (name) {
-      let data;
-      let detailed;
-      if (nextCustomDates) {
-        data = generateParentReportV2(name, "custom", appliedS, appliedE);
-        detailed = generateDetailedParentReport(name, "custom", appliedS, appliedE);
-      } else {
-        data = generateParentReportV2(name, nextPeriod);
-        detailed = generateDetailedParentReport(name, nextPeriod);
-      }
+      const { data, detailed } = buildLocalParentReports(
+        name,
+        nextPeriod,
+        nextCustomDates,
+        appliedS,
+        appliedE
+      );
       setReport(data);
       setShortContractTop(detailed?.parentProductContractV1?.top || null);
       setCopilotDetailedPayload(detailed && typeof detailed === "object" ? detailed : null);
@@ -1088,7 +1131,8 @@ export default function ParentReport() {
           return;
         }
 
-        const uiPeriod = customDates ? "custom" : period;
+        const uiPeriod =
+          customDates || period === "day" || period === "schoolYear" ? "custom" : period;
         const out = runParentReportGenerationFromApiBody(body, uiPeriod);
         if (!out.ok || !out.base) {
           if (!cancelled) {
@@ -1144,20 +1188,51 @@ export default function ParentReport() {
     }
   };
 
+  const applyParentReportPeriod = useCallback((nextPeriod) => {
+    setCustomDates(false);
+    setPeriod(nextPeriod);
+    setAppliedStartDate("");
+    setAppliedEndDate("");
+  }, []);
+
+  const enableParentReportCustom = useCallback(() => {
+    setCustomDates(true);
+    setPeriod("custom");
+  }, []);
+
+  const parentReportDatePresets = (
+    <ReportDateRangeControl
+      showDayPreset
+      showSchoolYearPreset
+      customRangeLabel="בחירה"
+      compactPresets
+      className="!border-0 !bg-transparent !p-0 !mb-0 no-pdf"
+      presetDays={parentReportPresetDays(period, customDates)}
+      customDates={customDates}
+      startDate={startDate}
+      endDate={endDate}
+      onStartDateChange={setStartDate}
+      onEndDateChange={setEndDate}
+      onPreset={(days) => applyParentReportPeriod(days === 7 ? "week" : "month")}
+      onDayPreset={() => applyParentReportPeriod("day")}
+      onSchoolYearPreset={() => applyParentReportPeriod("schoolYear")}
+      onEnableCustom={enableParentReportCustom}
+      onApplyCustom={handleShowReport}
+    />
+  );
+
   useEffect(() => {
     if (isRemoteReportSource) return undefined;
     if (typeof window !== "undefined" && playerName && !loading) {
-      let data;
-      if (customDates && appliedStartDate && appliedEndDate) {
-        data = generateParentReportV2(playerName, 'custom', appliedStartDate, appliedEndDate);
-      } else if (!customDates) {
-        data = generateParentReportV2(playerName, period);
-      }
+      const { data, detailed } = buildLocalParentReports(
+        playerName,
+        period,
+        customDates,
+        appliedStartDate,
+        appliedEndDate
+      );
       if (data) {
         setReport(data);
-        const detailed = customDates && appliedStartDate && appliedEndDate
-          ? generateDetailedParentReport(playerName, "custom", appliedStartDate, appliedEndDate)
-          : generateDetailedParentReport(playerName, period);
         setShortContractTop(detailed?.parentProductContractV1?.top || null);
         setCopilotDetailedPayload(detailed && typeof detailed === "object" ? detailed : null);
       }
@@ -1316,91 +1391,7 @@ export default function ParentReport() {
             {/* בחירת תקופה גם במסך "אין נתונים" */}
             <div className="mb-4 space-y-2">
               <div className="text-sm text-white/60 mb-2">בחר תקופה:</div>
-              <div className="flex flex-wrap gap-2 justify-center">
-                <button
-                  onClick={() => {
-                    setCustomDates(false);
-                    setPeriod('week');
-                    setAppliedStartDate("");
-                    setAppliedEndDate("");
-                  }}
-                  className={`px-3 py-2 rounded-lg font-bold text-xs transition-all ${
-                    !customDates && period === 'week'
-                      ? "bg-blue-500/80 text-white"
-                      : "bg-white/10 text-white/70 hover:bg-white/20"
-                  }`}
-                >
-                  שבוע
-                </button>
-                <button
-                  onClick={() => {
-                    setCustomDates(false);
-                    setPeriod('month');
-                    setAppliedStartDate("");
-                    setAppliedEndDate("");
-                  }}
-                  className={`px-3 py-2 rounded-lg font-bold text-xs transition-all ${
-                    !customDates && period === 'month'
-                      ? "bg-blue-500/80 text-white"
-                      : "bg-white/10 text-white/70 hover:bg-white/20"
-                  }`}
-                >
-                  חודש
-                </button>
-                <button
-                  onClick={() => {
-                    setCustomDates(true);
-                    setPeriod('custom');
-                  }}
-                  className={`px-3 py-2 rounded-lg font-bold text-xs transition-all ${
-                    customDates
-                      ? "bg-blue-500/80 text-white"
-                      : "bg-white/10 text-white/70 hover:bg-white/20"
-                  }`}
-                >
-                  תאריכים מותאמים
-                </button>
-              </div>
-              
-              {/* בחירת תאריכים מותאמת אישית */}
-              {customDates && (
-                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-3 mb-3 p-3 bg-black/20 rounded-lg">
-                  <div className="flex flex-col sm:flex-row items-center gap-2">
-                    <label className="text-xs md:text-sm text-white/70 whitespace-nowrap">מתאריך:</label>
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      max={endDate || new Date().toISOString().split('T')[0]}
-                      dir="ltr"
-                      className="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="flex flex-col sm:flex-row items-center gap-2">
-                    <label className="text-xs md:text-sm text-white/70 whitespace-nowrap">עד תאריך:</label>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      min={startDate}
-                      max={new Date().toISOString().split('T')[0]}
-                      dir="ltr"
-                      className="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleShowReport();
-                    }}
-                    disabled={!startDate || !endDate || startDate > endDate}
-                    className="px-4 md:px-6 py-2 rounded-lg bg-blue-500/80 hover:bg-blue-500 active:bg-blue-600 font-bold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap cursor-pointer"
-                  >
-                    הצג
-                  </button>
-                </div>
-              )}
+              {parentReportDatePresets}
             </div>
             
             <div className="space-y-3">
@@ -1865,46 +1856,8 @@ export default function ParentReport() {
             <p className="text-white/70 text-sm md:text-base">{report.playerName}</p>
             
             {/* בחירת תקופה (לא נכנס ל-PDF) */}
-            <div className="flex flex-wrap gap-2 justify-center mt-1 md:mt-2 mb-1 md:mb-2 no-pdf">
-              <button
-                onClick={() => {
-                  setCustomDates(false);
-                  setPeriod('week');
-                }}
-                className={`px-3 md:px-4 py-2 rounded-lg font-bold text-xs md:text-sm transition-all ${
-                  !customDates && period === 'week'
-                    ? "bg-blue-500/80 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
-              >
-                שבוע
-              </button>
-              <button
-                onClick={() => {
-                  setCustomDates(false);
-                  setPeriod('month');
-                }}
-                className={`px-3 md:px-4 py-2 rounded-lg font-bold text-xs md:text-sm transition-all ${
-                  !customDates && period === 'month'
-                    ? "bg-blue-500/80 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
-              >
-                חודש
-              </button>
-              <button
-                onClick={() => {
-                  setCustomDates(true);
-                  setPeriod('custom');
-                }}
-                className={`px-3 md:px-4 py-2 rounded-lg font-bold text-xs md:text-sm transition-all ${
-                  customDates
-                    ? "bg-blue-500/80 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
-              >
-                תאריכים מותאמים
-              </button>
+            <div className="mt-1 md:mt-2 mb-1 md:mb-2 no-pdf">
+              {parentReportDatePresets}
             </div>
 
             <div className="flex justify-center mt-2 no-pdf">
@@ -1920,45 +1873,7 @@ export default function ParentReport() {
               </Link>
             </div>
 
-            {/* בחירת תאריכים מותאמת אישית (לא נכנס ל-PDF) */}
-            {customDates && (
-              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mt-3 mb-3 p-3 bg-black/20 rounded-lg no-pdf">
-                <div className="flex flex-col sm:flex-row items-center gap-2">
-                  <label className="text-xs md:text-sm text-white/70 whitespace-nowrap">מתאריך:</label>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    max={endDate || new Date().toISOString().split('T')[0]}
-                    dir="ltr"
-                    className="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="flex flex-col sm:flex-row items-center gap-2">
-                  <label className="text-xs md:text-sm text-white/70 whitespace-nowrap">עד תאריך:</label>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    min={startDate}
-                    max={new Date().toISOString().split('T')[0]}
-                    dir="ltr"
-                    className="px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleShowReport();
-                  }}
-                  disabled={!startDate || !endDate || startDate > endDate}
-                  className="px-4 md:px-6 py-2 rounded-lg bg-blue-500/80 hover:bg-blue-500 active:bg-blue-600 font-bold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap cursor-pointer"
-                >
-                  הצג
-                </button>
-              </div>
-            )}
+            {/* בחירת תאריכים מותאמת אישית (לא נכנס ל-PDF) — rendered inside ReportDateRangeControl */}
             
             <p className="text-xs md:text-sm text-white/60 mt-1 text-center" dir="ltr" style={{ direction: 'ltr', textAlign: 'center' }}>
               {formatDate(report.startDate)} - {formatDate(report.endDate)}

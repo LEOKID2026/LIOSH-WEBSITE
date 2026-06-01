@@ -1,4 +1,4 @@
-import { MAX_REPORT_RANGE_DAYS } from "../../lib/reporting/report-date-range.js";
+import { isoDateLocal, MAX_REPORT_RANGE_DAYS } from "../../lib/reporting/report-date-range.js";
 
 /**
  * Date-range picker for school/teacher report modals and pages (mirrors parent-report presets).
@@ -11,15 +11,20 @@ export default function ReportDateRangeControl({
   onStartDateChange,
   onEndDateChange,
   onPreset,
+  onDayPreset,
   onSchoolYearPreset,
   onApplyCustom,
   onEnableCustom,
   rangeLabel = "",
   disabled = false,
+  showDayPreset = false,
   showSchoolYearPreset = false,
+  customRangeLabel = "תאריכים מותאמים",
+  compactPresets = false,
+  presetRowClassName = "",
   className = "",
 }) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = isoDateLocal();
 
   const handleApplyCustom = (e) => {
     e?.preventDefault?.();
@@ -27,20 +32,40 @@ export default function ReportDateRangeControl({
     onApplyCustom?.();
   };
 
+  const btnSize = compactPresets
+    ? "px-1.5 py-1 text-[10px] sm:text-xs leading-tight"
+    : "px-3 py-1.5 text-xs";
+  const activeClass = "bg-blue-500/80 text-white";
+  const idleClass = "bg-white/10 text-white/70 hover:bg-white/20";
+
   return (
     <div
       className={`rounded-lg border border-white/10 bg-black/20 p-3 mb-3 ${className}`.trim()}
       data-testid="report-date-range-control"
     >
-      <div className="flex flex-wrap gap-2 justify-center mb-2">
+      <div
+        className={`flex flex-nowrap gap-1 sm:gap-2 justify-center mb-2 min-w-0 max-w-full overflow-x-hidden ${presetRowClassName}`.trim()}
+        data-testid="report-date-range-preset-row"
+      >
+        {showDayPreset ? (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => onDayPreset?.()}
+            className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
+              !customDates && presetDays === "day" ? activeClass : idleClass
+            }`}
+            data-testid="report-range-preset-day"
+          >
+            יום
+          </button>
+        ) : null}
         <button
           type="button"
           disabled={disabled}
           onClick={() => onPreset?.(7)}
-          className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 ${
-            !customDates && presetDays === 7
-              ? "bg-blue-500/80 text-white"
-              : "bg-white/10 text-white/70 hover:bg-white/20"
+          className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
+            !customDates && presetDays === 7 ? activeClass : idleClass
           }`}
           data-testid="report-range-preset-week"
         >
@@ -50,10 +75,8 @@ export default function ReportDateRangeControl({
           type="button"
           disabled={disabled}
           onClick={() => onPreset?.(30)}
-          className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 ${
-            !customDates && presetDays === 30
-              ? "bg-blue-500/80 text-white"
-              : "bg-white/10 text-white/70 hover:bg-white/20"
+          className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
+            !customDates && presetDays === 30 ? activeClass : idleClass
           }`}
           data-testid="report-range-preset-month"
         >
@@ -64,10 +87,8 @@ export default function ReportDateRangeControl({
             type="button"
             disabled={disabled}
             onClick={() => onSchoolYearPreset?.()}
-            className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 ${
-              !customDates && presetDays === "schoolYear"
-                ? "bg-blue-500/80 text-white"
-                : "bg-white/10 text-white/70 hover:bg-white/20"
+            className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
+              !customDates && presetDays === "schoolYear" ? activeClass : idleClass
             }`}
             data-testid="report-range-preset-school-year"
           >
@@ -78,14 +99,12 @@ export default function ReportDateRangeControl({
           type="button"
           disabled={disabled}
           onClick={() => onEnableCustom?.()}
-          className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 ${
-            customDates
-              ? "bg-blue-500/80 text-white"
-              : "bg-white/10 text-white/70 hover:bg-white/20"
+          className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
+            customDates ? activeClass : idleClass
           }`}
           data-testid="report-range-preset-custom"
         >
-          תאריכים מותאמים
+          {customRangeLabel}
         </button>
       </div>
 

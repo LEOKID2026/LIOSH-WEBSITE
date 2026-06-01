@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import {
   appendReportRangeToSearchParams,
+  computeDayPresetRange,
   computeDefaultReportRange,
   computeReportRangeForDays,
   computeSchoolYearToDateRange,
+  computeSchoolYearToDateRangeLocal,
   formatReportRangeDisplayHe,
   MAX_REPORT_RANGE_DAYS,
   validateCustomReportRange,
@@ -42,6 +44,24 @@ assert.deepEqual(computeSchoolYearToDateRange("2026-09-01"), {
 assert.deepEqual(computeSchoolYearToDateRange("2026-08-31"), {
   from: "2025-09-01",
   to: "2026-08-31",
+});
+
+assert.deepEqual(computeDayPresetRange(new Date(2026, 5, 1)), {
+  from: "2026-06-01",
+  to: "2026-06-01",
+});
+
+assert.deepEqual(computeSchoolYearToDateRangeLocal(new Date(2026, 5, 1)), {
+  from: "2025-09-01",
+  to: "2026-06-01",
+});
+assert.deepEqual(computeSchoolYearToDateRangeLocal(new Date(2026, 8, 10)), {
+  from: "2026-09-01",
+  to: "2026-09-10",
+});
+assert.deepEqual(computeSchoolYearToDateRangeLocal(new Date(2026, 0, 15)), {
+  from: "2025-09-01",
+  to: "2026-01-15",
 });
 
 const schoolYearParams = appendReportRangeToSearchParams(new URLSearchParams(), {
