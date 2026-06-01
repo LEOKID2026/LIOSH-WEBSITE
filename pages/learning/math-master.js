@@ -97,6 +97,7 @@ import {
   finishLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
+import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -235,6 +236,10 @@ export default function MathMaster() {
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
+  const g1BookHref = useMemo(
+    () => getMathG1BookHref({ grade, operation, kind: null }),
+    [grade, operation]
+  );
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -3641,6 +3646,15 @@ export default function MathMaster() {
               <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
+              {g1BookHref ? (
+                <button
+                  type="button"
+                  onClick={() => router.push(g1BookHref)}
+                  className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-4 py-2.5 md:py-3 rounded-lg bg-violet-500/80 hover:bg-violet-500 text-xs md:text-sm font-bold text-white shadow-sm"
+                >
+                  📖 ספר חשבון כיתה א׳
+                </button>
+              ) : null}
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
                 <button
                   type="button"

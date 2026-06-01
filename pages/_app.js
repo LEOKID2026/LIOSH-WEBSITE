@@ -30,6 +30,8 @@ const STUDENT_PROTECTED_ROUTES = new Set([
   "/learning/moledet-geography-master",
   "/learning/curriculum",
   "/learning/geometry-curriculum",
+  "/learning/book/math/g1",
+  "/learning/book/math/g1/[pageId]",
   "/learning/dev-student-simulator",
 ]);
 
