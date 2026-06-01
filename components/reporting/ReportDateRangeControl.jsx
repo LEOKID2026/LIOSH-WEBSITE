@@ -32,29 +32,36 @@ export default function ReportDateRangeControl({
     onApplyCustom?.();
   };
 
-  const btnSize = compactPresets
-    ? "px-1.5 py-1 text-[10px] sm:text-xs leading-tight"
-    : "px-3 py-1.5 text-xs";
   const activeClass = "bg-blue-500/80 text-white";
   const idleClass = "bg-white/10 text-white/70 hover:bg-white/20";
 
+  const presetRowClass = compactPresets
+    ? `grid grid-cols-5 gap-2 w-full mb-2 min-w-0 ${presetRowClassName}`.trim()
+    : `flex flex-wrap gap-2 justify-center mb-2 ${presetRowClassName}`.trim();
+
+  const btnClass = (active) =>
+    compactPresets
+      ? `w-full min-h-[40px] px-2 sm:px-4 py-2 text-sm sm:text-base font-semibold rounded-xl transition-all disabled:opacity-50 ${
+          active ? activeClass : idleClass
+        }`
+      : `px-3 py-1.5 rounded-lg font-bold text-xs transition-all disabled:opacity-50 shrink-0 ${
+          active ? activeClass : idleClass
+        }`;
+
   return (
     <div
-      className={`rounded-lg border border-white/10 bg-black/20 p-3 mb-3 ${className}`.trim()}
+      className={`rounded-lg border border-white/10 bg-black/20 p-3 mb-3 ${
+        compactPresets ? "w-full max-w-sm sm:max-w-md mx-auto" : ""
+      } ${className}`.trim()}
       data-testid="report-date-range-control"
     >
-      <div
-        className={`flex flex-nowrap gap-1 sm:gap-2 justify-center mb-2 min-w-0 max-w-full overflow-x-hidden ${presetRowClassName}`.trim()}
-        data-testid="report-date-range-preset-row"
-      >
+      <div className={presetRowClass} data-testid="report-date-range-preset-row">
         {showDayPreset ? (
           <button
             type="button"
             disabled={disabled}
             onClick={() => onDayPreset?.()}
-            className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
-              !customDates && presetDays === "day" ? activeClass : idleClass
-            }`}
+            className={btnClass(!customDates && presetDays === "day")}
             data-testid="report-range-preset-day"
           >
             יום
@@ -64,9 +71,7 @@ export default function ReportDateRangeControl({
           type="button"
           disabled={disabled}
           onClick={() => onPreset?.(7)}
-          className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
-            !customDates && presetDays === 7 ? activeClass : idleClass
-          }`}
+          className={btnClass(!customDates && presetDays === 7)}
           data-testid="report-range-preset-week"
         >
           שבוע
@@ -75,9 +80,7 @@ export default function ReportDateRangeControl({
           type="button"
           disabled={disabled}
           onClick={() => onPreset?.(30)}
-          className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
-            !customDates && presetDays === 30 ? activeClass : idleClass
-          }`}
+          className={btnClass(!customDates && presetDays === 30)}
           data-testid="report-range-preset-month"
         >
           חודש
@@ -87,9 +90,7 @@ export default function ReportDateRangeControl({
             type="button"
             disabled={disabled}
             onClick={() => onSchoolYearPreset?.()}
-            className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
-              !customDates && presetDays === "schoolYear" ? activeClass : idleClass
-            }`}
+            className={btnClass(!customDates && presetDays === "schoolYear")}
             data-testid="report-range-preset-school-year"
           >
             שנה
@@ -99,9 +100,7 @@ export default function ReportDateRangeControl({
           type="button"
           disabled={disabled}
           onClick={() => onEnableCustom?.()}
-          className={`${btnSize} rounded-lg font-bold transition-all disabled:opacity-50 shrink-0 ${
-            customDates ? activeClass : idleClass
-          }`}
+          className={btnClass(customDates)}
           data-testid="report-range-preset-custom"
         >
           {customRangeLabel}

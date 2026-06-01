@@ -3,6 +3,7 @@ import {
   guardianAccessStateHe,
   teacherAuthFetch,
 } from "../../lib/teacher-portal/teacher-ui.he.js";
+import { shouldDisplayStudentAccessCode } from "../../lib/teacher-portal/student-access-display.js";
 
 function ShownOnceBox({ credentials, onDismiss }) {
   if (!credentials) return null;
@@ -193,13 +194,23 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
       ) : null}
 
       <ul className="space-y-3 mb-4">
-        {accesses.map((row) => (
+        {accesses.map((row) => {
+          const visibleUsername = shouldDisplayStudentAccessCode(row.loginUsername)
+            ? row.loginUsername
+            : null;
+          return (
           <li
             key={row.accessId}
             className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm"
           >
             <div>
-              <span className="text-white/80">כניסה: {row.loginUsername}</span>
+              {visibleUsername ? (
+                <span className="text-white/80">כניסה: {visibleUsername}</span>
+              ) : (
+                <span className="text-white/80">
+                  {row.state === "active" ? "כניסה פעילה" : "כניסה"}
+                </span>
+              )}
               <span className="mx-2 text-white/40">·</span>
               <span
                 className={
@@ -242,7 +253,8 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
               </div>
             ) : null}
           </li>
-        ))}
+          );
+        })}
       </ul>
 
       {confirmRevoke ? (

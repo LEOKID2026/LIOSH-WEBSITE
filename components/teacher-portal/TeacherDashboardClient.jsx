@@ -28,7 +28,10 @@ const SORT_OPTIONS = [
   { key: "status", label: "מצב לימודי" },
 ];
 
-function formatCompactStudentStats(student) {
+function formatCompactStudentStats(student, { activityLoading = false } = {}) {
+  if (student.activityPending || activityLoading) {
+    return "טוען נתוני פעילות…";
+  }
   const sessions = Number(student.totalSessions) || 0;
   const answers = Number(student.totalAnswers) || 0;
   const acc =
@@ -38,7 +41,10 @@ function formatCompactStudentStats(student) {
   return `מפגשים: ${sessions} · תשובות: ${answers} · הצלחה: ${acc}`;
 }
 
-function StudentDashboardCard({ student }) {
+function StudentDashboardCard({ student, activityLoading = false }) {
+  const pending = Boolean(student.activityPending || activityLoading);
+  const badgeLabel = pending ? "טוען…" : student.statusBadge || "—";
+
   return (
     <li className="rounded-lg border border-white/10 bg-black/30 p-2.5 sm:p-3 flex flex-col gap-1.5 min-w-0 h-full">
       <p
@@ -49,13 +55,13 @@ function StudentDashboardCard({ student }) {
       </p>
       <span
         className={`self-start text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full border leading-none ${statusBadgeClass(
-          student.statusBadge
+          pending ? null : student.statusBadge
         )}`}
       >
-        {student.statusBadge}
+        {badgeLabel}
       </span>
       <p className="text-[10px] sm:text-xs text-white/60 leading-snug break-words">
-        {formatCompactStudentStats(student)}
+        {formatCompactStudentStats(student, { activityLoading })}
       </p>
       <Link
         href={`/teacher/student/${student.studentId}`}
@@ -548,6 +554,9 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
         return String(a.studentFullName || "").localeCompare(String(b.studentFullName || ""), "he");
       }
       if (sortKey === "activity") {
+        const pendingA = a.activityPending ? 1 : 0;
+        const pendingB = b.activityPending ? 1 : 0;
+        if (pendingA !== pendingB) return pendingA - pendingB;
         return (Number(b.totalAnswers) || 0) - (Number(a.totalAnswers) || 0);
       }
       if (sortKey === "status") {
@@ -870,7 +879,11 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
         ) : (
           <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
             {filteredStudents.map((s) => (
-              <StudentDashboardCard key={s.studentId} student={s} />
+              <StudentDashboardCard
+                key={s.studentId}
+                student={s}
+                activityLoading={activityLoading && !dashboard?.activityLoaded}
+              />
             ))}
           </ul>
         )}

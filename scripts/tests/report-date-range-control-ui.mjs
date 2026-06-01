@@ -11,7 +11,8 @@ const controlSrc = readFileSync(
 const parentSrc = readFileSync(path.join(root, "pages/learning/parent-report.js"), "utf8");
 
 assert.match(controlSrc, /customRangeLabel = "תאריכים מותאמים"/);
-assert.match(controlSrc, /flex flex-nowrap/);
+assert.match(controlSrc, /grid grid-cols-5/);
+assert.match(controlSrc, /min-h-\[40px\]/);
 assert.match(controlSrc, /data-testid="report-date-range-preset-row"/);
 assert.match(controlSrc, /showDayPreset/);
 assert.match(controlSrc, /data-testid="report-range-preset-day"/);

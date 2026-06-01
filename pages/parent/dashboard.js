@@ -7,6 +7,7 @@ import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import ParentSentActivitiesPanel from "../../components/parent/ParentSentActivitiesPanel";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
+import { shouldDisplayStudentAccessCode } from "../../lib/teacher-portal/student-access-display.js";
 
 const GRADE_OPTIONS = [
   { value: "grade_1", label: "כיתה א׳" },
@@ -448,6 +449,10 @@ export default function ParentDashboardPage() {
     };
     const balance = normalizeBalance(student);
     const loginUsername = student.login_username || null;
+    const visibleLoginUsername = shouldDisplayStudentAccessCode(loginUsername)
+      ? loginUsername
+      : null;
+    const hasHiddenDemoAccess = Boolean(loginUsername && !visibleLoginUsername);
     const showConfirmationHere =
       credentialConfirmation && credentialConfirmation.studentId === student.id;
 
@@ -543,16 +548,16 @@ export default function ParentDashboardPage() {
             </div>
           ) : null}
 
-          {loginUsername ? (
+          {visibleLoginUsername ? (
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span>
-                  שם משתמש: <strong className="text-white">{loginUsername}</strong>
+                  שם משתמש: <strong className="text-white">{visibleLoginUsername}</strong>
                 </span>
                 <button
                   type="button"
                   className="rounded bg-white/10 px-2 py-1 text-xs"
-                  onClick={() => copyUsername(loginUsername)}
+                  onClick={() => copyUsername(visibleLoginUsername)}
                 >
                   העתק שם משתמש
                 </button>
@@ -584,11 +589,18 @@ export default function ParentDashboardPage() {
               <button
                 className="rounded bg-sky-400 text-black px-3 py-2 font-semibold disabled:opacity-60"
                 disabled={busy}
-                onClick={() => savePinReset(student.id, loginUsername, student.full_name)}
+                onClick={() => savePinReset(student.id, visibleLoginUsername, student.full_name)}
                 type="button"
               >
                 איפוס PIN / שינוי PIN
               </button>
+            </div>
+          ) : hasHiddenDemoAccess ? (
+            <div className="space-y-2">
+              <div className="text-sm text-white/80">כניסת תלמיד פעילה</div>
+              <div className="text-sm">
+                PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
+              </div>
             </div>
           ) : (
             <div className="space-y-2">
