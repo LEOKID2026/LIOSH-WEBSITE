@@ -3582,7 +3582,32 @@ export default function MathMaster() {
           )}
 
           {!gameActive ? (
-            <div className="flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+            <div className="relative flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+              {g1BookIndexHref ? (
+                <div
+                  className="pointer-events-none absolute z-30 bottom-[9.25rem] left-1/2 -translate-x-1/2 md:bottom-auto md:left-0 md:top-[0.35rem] md:translate-x-0 md:-translate-y-10 lg:top-[0.5rem] lg:-translate-y-12"
+                  aria-hidden={false}
+                >
+                  <button
+                    type="button"
+                    data-testid="math-g1-book-index-button"
+                    onClick={() => router.push(g1BookIndexHref)}
+                    title="ספר חשבון כיתה א׳"
+                    aria-label="ספר חשבון כיתה א׳"
+                    className="pointer-events-auto flex flex-col items-center justify-center rounded-xl border border-amber-600/45 bg-gradient-to-b from-amber-700/92 to-amber-950/88 shadow-md shadow-amber-950/50 hover:from-amber-600/92 hover:to-amber-900/88 active:scale-[0.98] transition-transform w-[5.48rem] h-[6.23rem] md:w-[4.35rem] md:h-[4.85rem] px-1.5 py-1.5 md:px-1 md:py-1"
+                  >
+                    <span className="text-2xl md:text-lg leading-none" aria-hidden="true">
+                      📖
+                    </span>
+                    <span className="mt-0.5 text-[12px] md:text-[9px] font-bold text-amber-50 leading-tight text-center">
+                      ספר חשבון
+                    </span>
+                    <span className="text-[12px] md:text-[9px] font-semibold text-amber-100/85 leading-tight">
+                      כיתה א׳
+                    </span>
+                  </button>
+                </div>
+              ) : null}
               <div className="w-full flex justify-center mb-3 md:mb-4 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] px-0.5">
                 <div
                   className="inline-flex flex-nowrap items-center justify-center gap-2 md:gap-2.5 lg:gap-3 w-max max-w-full min-w-0"
@@ -3731,18 +3756,6 @@ export default function MathMaster() {
               <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2.5 md:gap-3">
-              {g1BookIndexHref ? (
-                <div className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-1 md:px-2">
-                  <button
-                    type="button"
-                    data-testid="math-g1-book-index-button"
-                    onClick={() => router.push(g1BookIndexHref)}
-                    className="w-full rounded-lg border border-amber-500/35 bg-amber-800/75 hover:bg-amber-700/85 px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-amber-50 shadow-sm transition"
-                  >
-                    📖 ספר חשבון כיתה א׳
-                  </button>
-                </div>
-              ) : null}
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
                 <button
                   type="button"
