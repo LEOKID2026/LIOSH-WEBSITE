@@ -35,6 +35,92 @@ function Dot({ kind = "dot" }) {
   );
 }
 
+function isNumberLineRow(line) {
+  return /\d+\s*[—–\-]\s*\d+/.test(line) || /^…/.test(line);
+}
+
+function isJumpAnnotation(line) {
+  if (isNumberLineRow(line)) return false;
+  return (
+    /^[↑↓←→_]/.test(line) ||
+    /(?:^|\s)[↑↓←→]/.test(line) ||
+    /_{2,}/.test(line)
+  );
+}
+
+function NumberLineJump({ line }) {
+  const cleaned = line.replace(/^[\s_↑↓←→]+/, "").trim();
+  const arrow = line.includes("←")
+    ? "←"
+    : line.includes("↓")
+      ? "↓"
+      : line.includes("↑")
+        ? "↑"
+        : "→";
+
+  return (
+    <div
+      className="mx-auto mt-2 flex max-w-full flex-col items-center gap-1 text-center"
+      dir="rtl"
+    >
+      <span
+        className="text-2xl font-bold text-emerald-300/90 sm:text-3xl"
+        dir="ltr"
+        style={bookMathIsolateStyle}
+        aria-hidden="true"
+      >
+        {arrow}
+      </span>
+      {cleaned ? (
+        <p className="text-sm text-emerald-100/85 sm:text-base">
+          <MixedHebrewMathText text={cleaned.replace(/^[↑↓←→]\s*/, "")} />
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function NumberLineDiagram({ lines }) {
+  /** @type {{ row: string, jump?: string }[]} */
+  const groups = [];
+  let current = null;
+
+  for (const line of lines) {
+    if (isNumberLineRow(line)) {
+      current = { row: line };
+      groups.push(current);
+      continue;
+    }
+    if (isJumpAnnotation(line) && current) {
+      current.jump = line;
+      current = null;
+      continue;
+    }
+    if (isJumpAnnotation(line)) {
+      groups.push({ row: "", jump: line });
+    }
+  }
+
+  if (!groups.length) {
+    return lines.map((line, i) =>
+      isNumberLineRow(line) ? (
+        <NumberLineRow key={i} line={line} />
+      ) : null
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      {groups.map((g, i) => (
+        <div key={i} className="space-y-1">
+          {g.row ? <NumberLineRow line={g.row} /> : null}
+          {g.jump ? <NumberLineJump line={g.jump} /> : null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function NumberLineRow({ line }) {
   const tokens = parseNumberLineTokens(line);
   return (
@@ -271,24 +357,7 @@ export default function BookDiagram({ content }) {
       role="img"
       aria-label="דוגמה"
     >
-      {kind === "number_line" && (
-        <div className="space-y-3">
-          {lines.map((line, i) =>
-            /\d+\s*[—–\-]\s*\d+/.test(line) || /^…/.test(line) ? (
-              <NumberLineRow key={i} line={line} />
-            ) : (
-              <p
-                key={i}
-                className="text-center text-sm text-emerald-200/85 sm:text-base"
-                dir="ltr"
-                style={bookMathIsolateStyle}
-              >
-                {line}
-              </p>
-            )
-          )}
-        </div>
-      )}
+      {kind === "number_line" && <NumberLineDiagram lines={lines} />}
       {kind === "objects" && <ObjectDiagram lines={lines} />}
       {kind === "cards" && <CardsDiagram lines={lines} />}
       {kind === "coins" && <CoinsDiagram lines={lines} />}
