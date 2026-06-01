@@ -36,6 +36,7 @@ export default async function handler(req, res) {
         physicalByKey: built.physicalByKey,
         gradeStatusByLevel: built.gradeStatusByLevel,
         gradeStatus: built.gradeStatus,
+        studentLearningStatusBadges: built.studentLearningStatusBadges || {},
       },
     });
   } catch (_e) {

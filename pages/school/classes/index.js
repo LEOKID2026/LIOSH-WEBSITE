@@ -400,25 +400,49 @@ export default function SchoolClassesPage() {
       void openPhysicalClassReport(physicalGroup, { force: true, range: r });
     };
 
-    const params = buildRangeParams(range, {
+    const baseParams = buildRangeParams(range, {
       gradeLevel: String(gradeLevel),
       physicalClassName: physicalGroup.name,
     });
-    const path = `/api/school/classes/physical-report?${params.toString()}`;
+
+    const parseCtx = {
+      schoolName: me?.school?.name,
+      gradeLevel,
+      physicalClassName: physicalGroup.name,
+    };
+
+    const summaryParams = new URLSearchParams(baseParams);
+    summaryParams.set("loadPhase", "summary");
+    const summaryPath = `/api/school/classes/physical-report?${summaryParams.toString()}`;
 
     try {
-      const result = await fetchSchoolReportCached({ accessToken, schoolId, path, force });
-      if (result?.status !== 200) {
-        setPhysicalReportError(apiErrorMessageHe(result?.body?.error, "שגיאה בטעינת דוח"));
+      const summaryResult = await fetchSchoolReportCached({
+        accessToken,
+        schoolId,
+        path: summaryPath,
+        force,
+      });
+      if (summaryResult?.status !== 200) {
+        setPhysicalReportError(apiErrorMessageHe(summaryResult?.body?.error, "שגיאה בטעינת דוח"));
         return;
       }
-      setPhysicalReportVm(
-        parsePhysicalClassReportViewModel(result.body, {
-          schoolName: me?.school?.name,
-          gradeLevel,
-          physicalClassName: physicalGroup.name,
-        })
-      );
+      setPhysicalReportVm(parsePhysicalClassReportViewModel(summaryResult.body, parseCtx));
+      setPhysicalReportLoading(false);
+
+      const fullParams = new URLSearchParams(baseParams);
+      fullParams.set("loadPhase", "full");
+      const fullPath = `/api/school/classes/physical-report?${fullParams.toString()}`;
+      const fullResult = await fetchSchoolReportCached({
+        accessToken,
+        schoolId,
+        path: fullPath,
+        force,
+      });
+      if (fullResult?.status === 200) {
+        setPhysicalReportVm(parsePhysicalClassReportViewModel(fullResult.body, parseCtx));
+      }
+    } catch {
+      setPhysicalReportError("שגיאה בטעינת דוח");
     } finally {
       setPhysicalReportLoading(false);
     }

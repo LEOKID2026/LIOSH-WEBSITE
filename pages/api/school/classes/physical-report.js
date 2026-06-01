@@ -34,6 +34,8 @@ export default async function handler(req, res) {
       return sendSchoolApiError(res, 400, range.code, range.code);
     }
 
+    const loadPhase = req.query?.loadPhase === "summary" ? "summary" : "full";
+
     const report = await buildSchoolPhysicalClassReportPayload({
       serviceRole: ctx.serviceRole,
       schoolId: ctx.schoolId,
@@ -41,25 +43,28 @@ export default async function handler(req, res) {
       physicalClassName: decodeURIComponent(String(physicalClassName).trim()),
       fromDate: range.fromDate,
       toDate: range.toDate,
+      loadPhase,
     });
 
     if (!report.ok) {
       return sendSchoolApiError(res, report.status, report.code, report.code);
     }
 
-    await writeTeacherAuditRow({
-      serviceRole: ctx.serviceRole,
-      teacherId: ctx.managerId,
-      action: "school_class_viewed",
-      actorRole: "teacher",
-      actorId: ctx.managerId,
-      metadata: {
-        school_id: ctx.schoolId,
-        source: "physical_class_report",
-        grade_level: String(gradeLevel).trim(),
-        physical_class_name: decodeURIComponent(String(physicalClassName).trim()),
-      },
-    });
+    if (loadPhase === "full") {
+      await writeTeacherAuditRow({
+        serviceRole: ctx.serviceRole,
+        teacherId: ctx.managerId,
+        action: "school_class_viewed",
+        actorRole: "teacher",
+        actorId: ctx.managerId,
+        metadata: {
+          school_id: ctx.schoolId,
+          source: "physical_class_report",
+          grade_level: String(gradeLevel).trim(),
+          physical_class_name: decodeURIComponent(String(physicalClassName).trim()),
+        },
+      });
+    }
 
     setSensitiveReportNoStoreHeaders(res);
     return res.status(200).json(stripInternalReportPayloadFields(report.payload));

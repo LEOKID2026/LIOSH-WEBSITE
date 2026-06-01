@@ -36,7 +36,7 @@ function parseST(header) {
   return out;
 }
 
-async function measure(path, token, timeoutMs) {
+async function measure(path, token, timeoutMs, label) {
   const t0 = performance.now();
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), timeoutMs);
@@ -49,6 +49,7 @@ async function measure(path, token, timeoutMs) {
     const text = await res.text();
     return {
       path,
+      label: label || path,
       status: res.status,
       wallMs,
       serverTiming: parseST(res.headers.get("server-timing")),
@@ -87,7 +88,19 @@ async function main() {
   const schoolToken = await signIn("school@leo-k.com", pw);
 
   const routes = [
-    { path: "/api/teacher/dashboard", token: danToken, timeout: 180_000 },
+    { path: "/api/teacher/dashboard", label: "teacher_dashboard_shell", token: danToken, timeout: 60_000 },
+    {
+      path: "/api/teacher/dashboard/activity",
+      label: "teacher_dashboard_activity",
+      token: danToken,
+      timeout: 180_000,
+    },
+    {
+      path: "/api/teacher/dashboard?phase=full",
+      label: "teacher_dashboard_full",
+      token: danToken,
+      timeout: 180_000,
+    },
     {
       path: `/api/teacher/classes/${cls.id}/report-data?windowDays=30`,
       token: danToken,
@@ -114,7 +127,7 @@ async function main() {
   for (const r of routes) {
     process.stderr.write(`measuring ${r.path} ...\n`);
     try {
-      results.push(await measure(r.path, r.token, r.timeout));
+      results.push(await measure(r.path, r.token, r.timeout, r.label));
     } catch (e) {
       results.push({ path: r.path, error: e.message });
     }

@@ -445,7 +445,7 @@ export default function TeacherStudentReportPage({ studentId }) {
             )}
           </section>
 
-          {accessToken ? (
+          {phase === "ready" && accessToken ? (
             <>
               <TeacherStudentIndividualActivitiesPanel
                 accessToken={accessToken}

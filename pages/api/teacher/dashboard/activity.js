@@ -1,14 +1,14 @@
-import { safeApiLog } from "../../../lib/security/safe-log.js";
-import { consumeRateLimit, clientIpFromRequest } from "../../../lib/security/in-memory-rate-limit.js";
-import { isProductionRuntime } from "../../../lib/security/production-guard.js";
-import { buildTeacherDashboardShellPayload, buildTeacherDashboardPayload } from "../../../lib/teacher-server/teacher-dashboard.server.js";
-import { requireTeacherApiContext, unknownQueryParams } from "../../../lib/teacher-server/teacher-request.server.js";
-import { sendTeacherApiError } from "../../../lib/teacher-server/teacher-session.server.js";
+import { safeApiLog } from "../../../../lib/security/safe-log.js";
+import { consumeRateLimit, clientIpFromRequest } from "../../../../lib/security/in-memory-rate-limit.js";
+import { isProductionRuntime } from "../../../../lib/security/production-guard.js";
+import { buildTeacherDashboardActivityPayload } from "../../../../lib/teacher-server/teacher-dashboard.server.js";
+import { requireTeacherApiContext } from "../../../../lib/teacher-server/teacher-request.server.js";
+import { sendTeacherApiError } from "../../../../lib/teacher-server/teacher-session.server.js";
 import {
   elapsedMs,
   setTeacherApiServerTiming,
   startTimer,
-} from "../../../lib/teacher-server/api-timing.server.js";
+} from "../../../../lib/teacher-server/api-timing.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -22,18 +22,10 @@ export default async function handler(req, res) {
     const tAuth = elapsedMs(t0);
     if (ctx.stopped) return undefined;
 
-    const unknown = unknownQueryParams(req.query, new Set(["phase"]));
-    if (unknown.length) {
-      return sendTeacherApiError(res, 400, "validation_failed", "Unknown query parameters");
-    }
-
-    const phaseRaw = typeof req.query?.phase === "string" ? req.query.phase.trim().toLowerCase() : "shell";
-    const wantFull = phaseRaw === "full";
-
     if (isProductionRuntime()) {
       const ip = clientIpFromRequest(req);
       const rl = consumeRateLimit({
-        namespace: "teacher_dashboard",
+        namespace: "teacher_dashboard_activity",
         keys: [`ip:${ip}`, `teacher:${ctx.teacherId}`],
         maxAttempts: 30,
         windowMs: 60_000,
@@ -45,15 +37,10 @@ export default async function handler(req, res) {
     }
 
     const tBuild0 = startTimer();
-    const result = wantFull
-      ? await buildTeacherDashboardPayload({
-          serviceRole: ctx.serviceRole,
-          teacherId: ctx.teacherId,
-        })
-      : await buildTeacherDashboardShellPayload({
-          serviceRole: ctx.serviceRole,
-          teacherId: ctx.teacherId,
-        });
+    const result = await buildTeacherDashboardActivityPayload({
+      serviceRole: ctx.serviceRole,
+      teacherId: ctx.teacherId,
+    });
     const tBuild = elapsedMs(tBuild0);
 
     if (!result.ok) {
@@ -75,7 +62,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ data: result.payload });
   } catch (_e) {
-    safeApiLog("teacher_dashboard_error", { route: "dashboard" });
+    safeApiLog("teacher_dashboard_activity_error", { route: "dashboard/activity" });
     return sendTeacherApiError(res, 500, "internal_error", "Unexpected server error");
   }
 }

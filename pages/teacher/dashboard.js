@@ -31,23 +31,54 @@ async function postTeacherOnboard(accessToken) {
 export default function TeacherDashboardPage({ linkEnabled }) {
   const router = useRouter();
   const supabaseRef = useRef(null);
+  const activityRequestRef = useRef(0);
   const [state, setState] = useState("loading");
   const [loadingHint, setLoadingHint] = useState("מאמת חיבור…");
   const [dashboard, setDashboard] = useState(null);
+  const [activityLoading, setActivityLoading] = useState(false);
   const [accessToken, setAccessToken] = useState(null);
 
-  const loadDashboard = useCallback(async (token) => {
-    setLoadingHint("טוען לוח בקרה — זה עשוי לקחת כמה שניות.");
+  const loadDashboardActivity = useCallback(async (token) => {
+    const requestId = activityRequestRef.current + 1;
+    activityRequestRef.current = requestId;
+    setActivityLoading(true);
+    try {
+      const res = await withTimeout(
+        teacherAuthFetch(token, "/api/teacher/dashboard/activity"),
+        180_000,
+        "dashboard_activity_fetch"
+      );
+      const body = await res.json().catch(() => ({}));
+      if (activityRequestRef.current !== requestId) return false;
+      if (res.status === 200 && body?.data) {
+        setDashboard(body.data);
+        return true;
+      }
+    } catch {
+      /* timeout or network — shell remains usable */
+    } finally {
+      if (activityRequestRef.current === requestId) {
+        setActivityLoading(false);
+      }
+    }
+    return false;
+  }, []);
+
+  const loadDashboardShell = useCallback(async (token, { backgroundActivity = true } = {}) => {
+    setLoadingHint("טוען לוח בקרה…");
     try {
       const res = await withTimeout(
         teacherAuthFetch(token, "/api/teacher/dashboard"),
-        120_000,
-        "dashboard_fetch"
+        30_000,
+        "dashboard_shell_fetch"
       );
       const body = await res.json().catch(() => ({}));
       if (res.status === 200 && body?.data) {
         setDashboard(body.data);
         setState("ready");
+        if (backgroundActivity) {
+          void loadDashboardActivity(token);
+        }
         return true;
       }
     } catch {
@@ -55,7 +86,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
     }
     setState("data_load_error");
     return false;
-  }, []);
+  }, [loadDashboardActivity]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -82,14 +113,14 @@ export default function TeacherDashboardPage({ linkEnabled }) {
       const token = session.token;
       const isStaffCookie = session.authMethod === "staff_cookie";
       setAccessToken(token);
-      setLoadingHint("טוען לוח בקרה — זה עשוי לקחת כמה שניות.");
+      setLoadingHint("טוען לוח בקרה…");
 
       let dash;
       try {
         const res = await withTimeout(
           teacherAuthFetch(token, "/api/teacher/dashboard"),
-          120_000,
-          "dashboard_fetch"
+          30_000,
+          "dashboard_shell_fetch"
         );
         dash = { status: res.status, body: await res.json().catch(() => ({})) };
       } catch {
@@ -120,7 +151,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
         const onboard = await postTeacherOnboard(token);
         if (!mounted) return;
         if (onboard.status === 200 || onboard.status === 201) {
-          await loadDashboard(token);
+          await loadDashboardShell(token);
           return;
         }
         if (onboard.body?.error?.code === "db_schema_not_ready") {
@@ -144,13 +175,15 @@ export default function TeacherDashboardPage({ linkEnabled }) {
 
       setDashboard(dash.body.data);
       setState("ready");
+      void loadDashboardActivity(token);
     }
 
     load();
     return () => {
       mounted = false;
+      activityRequestRef.current += 1;
     };
-  }, [router]);
+  }, [router, loadDashboardShell, loadDashboardActivity]);
 
   const onLogout = async () => {
     const supabase = supabaseRef.current;
@@ -159,8 +192,8 @@ export default function TeacherDashboardPage({ linkEnabled }) {
   };
 
   const onRefresh = useCallback(async () => {
-    if (accessToken) await loadDashboard(accessToken);
-  }, [accessToken, loadDashboard]);
+    if (accessToken) await loadDashboardShell(accessToken);
+  }, [accessToken, loadDashboardShell]);
 
   if (state === "loading" || state === "unauthenticated") {
     return (
@@ -195,6 +228,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
       <div
         data-testid="teacher-dashboard-root"
         data-state="ready"
+        data-activity-loading={activityLoading ? "true" : "false"}
         data-teacher-id={dashboard?.teacher?.teacherId || ""}
         data-link-enabled={linkEnabled ? "true" : "false"}
       >
@@ -205,6 +239,7 @@ export default function TeacherDashboardPage({ linkEnabled }) {
           <TeacherDashboardClient
             accessToken={accessToken}
             dashboard={dashboard}
+            activityLoading={activityLoading}
             onLogout={onLogout}
             onRefresh={onRefresh}
           />

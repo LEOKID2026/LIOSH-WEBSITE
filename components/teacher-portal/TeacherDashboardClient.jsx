@@ -519,7 +519,7 @@ function ClassesEmptyState({ accessToken, onCreated }) {
   );
 }
 
-export default function TeacherDashboardClient({ accessToken, dashboard, onLogout, onRefresh }) {
+export default function TeacherDashboardClient({ accessToken, dashboard, activityLoading = false, onLogout, onRefresh }) {
   const [search, setSearch] = useState("");
   const [rosterFilterKey, setRosterFilterKey] = useState(
     () => dashboard?.defaultRosterFilterKey || "all"
@@ -593,8 +593,13 @@ export default function TeacherDashboardClient({ accessToken, dashboard, onLogou
           <SummaryStat label="כיתות" value={dashboard?.summary?.classCount ?? 0} />
           <div className="col-span-2 flex flex-col justify-center gap-2">
             <p className="text-xs text-white/50 mb-1">נושא/פעילות אחרונה</p>
-            <p className="text-sm font-medium leading-snug">
-              {dashboard?.summary?.latestSubjectLabel || "עדיין אין מספיק נתונים"}
+            <p
+              className="text-sm font-medium leading-snug"
+              data-testid="teacher-dashboard-latest-subject"
+            >
+              {activityLoading
+                ? "טוען נתוני פעילות…"
+                : dashboard?.summary?.latestSubjectLabel || "עדיין אין מספיק נתונים"}
             </p>
             <Link
               href="/teacher/worksheets"
