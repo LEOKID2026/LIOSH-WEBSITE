@@ -33,7 +33,7 @@
 
 ## Naming
 
-- Book title: **ספר גאומטריה — כיתה ד׳** (not **הנדסה**).
+- Book title: **ספר הנדסה — כיתה ד׳** (not **הנדסה**).
 - IDs: `geometry:g4:{pageId}`, `age_band: grades_3_4`.
 
 ---

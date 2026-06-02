@@ -32,6 +32,10 @@
 
 ## 2. הסבר
 
+:::geometry-diagram
+type: rectangle_diagonal
+:::
+
 נוסחה:
 אלכסון = **√(אורך² + רוחב²)**
 

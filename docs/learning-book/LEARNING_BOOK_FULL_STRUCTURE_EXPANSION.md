@@ -15,14 +15,14 @@
 | Math | g4 | `/learning/book/math/g4` | ספר חשבון — כיתה ד׳ | Placeholder |
 | Math | g5 | `/learning/book/math/g5` | ספר חשבון — כיתה ה׳ | Placeholder |
 | Math | g6 | `/learning/book/math/g6` | ספר חשבון — כיתה ו׳ | Placeholder |
-| גאומטריה | g1 | `/learning/book/geometry/g1` | ספר גאומטריה — כיתה א׳ | **Authored** (3 pages) |
-| גאומטריה | g2 | `/learning/book/geometry/g2` | ספר גאומטריה — כיתה ב׳ | Placeholder |
-| גאומטריה | g3 | `/learning/book/geometry/g3` | ספר גאומטריה — כיתה ג׳ | **Authored** (9 pages) |
-| גאומטריה | g4 | `/learning/book/geometry/g4` | ספר גאומטריה — כיתה ד׳ | Placeholder |
-| גאומטריה | g5 | `/learning/book/geometry/g5` | ספר גאומטריה — כיתה ה׳ | Placeholder |
-| גאומטריה | g6 | `/learning/book/geometry/g6` | ספר גאומטריה — כיתה ו׳ | Placeholder |
+| הנדסה | g1 | `/learning/book/geometry/g1` | ספר הנדסה — כיתה א׳ | **Authored** (3 pages) |
+| הנדסה | g2 | `/learning/book/geometry/g2` | ספר הנדסה — כיתה ב׳ | **Authored** (3 pages) |
+| הנדסה | g3 | `/learning/book/geometry/g3` | ספר הנדסה — כיתה ג׳ | **Authored** (9 pages) |
+| הנדסה | g4 | `/learning/book/geometry/g4` | ספר הנדסה — כיתה ד׳ | **Authored** (14 pages) |
+| הנדסה | g5 | `/learning/book/geometry/g5` | ספר הנדסה — כיתה ה׳ | **Authored** (17 pages) |
+| הנדסה | g6 | `/learning/book/geometry/g6` | ספר הנדסה — כיתה ו׳ | **Authored** (19 pages) |
 
-**Terminology:** Child-facing UI uses **גאומטריה** (not הנדסה). Internal IDs remain `geometry`.
+**Terminology:** Child-facing UI uses **הנדסה** (not גאומטריה). Internal IDs remain `geometry`.
 
 **Routing:** Math G1/G2 keep explicit routes. All other books use dynamic routes:
 
@@ -37,8 +37,8 @@ Config: `lib/learning-book/book-grade-themes.js`
 
 | Grade | Theme | Applies to |
 |-------|--------|------------|
-| g1 | Purple/violet + emerald accents | Math G1, גאומטריה G1, … |
-| g2 | Blue/cyan/teal | Math G2, גאומטריה G2, … |
+| g1 | Purple/violet + emerald accents | Math G1, הנדסה G1, … |
+| g2 | Blue/cyan/teal | Math G2, הנדסה G2, … |
 | g3 | Green/emerald | All G3 books |
 | g4 | Amber/gold | All G4 books |
 | g5 | Rose/pink | All G5 books |
@@ -61,7 +61,18 @@ Same grade → same theme across subjects.
 | `components/learning-book/LearningBookShell.js` | Shared reader shell |
 | `components/learning-book/LearningBookIndexTile.js` | Master page book tile |
 
+| `components/learning-book/GeometryDiagram.js` | SVG diagrams for הנדסה pages |
+| `lib/learning-book/geometry-diagram-registry.js` | Diagram types + markdown directive parser |
+
 Math G1/G2 keep dedicated registries, loaders, nav, and shells (unchanged behavior).
+
+---
+
+## Geometry visual diagrams
+
+Geometry / **הנדסה** pages must **not** be text-only. Relevant drafts should include `:::geometry-diagram` blocks (see `docs/learning-book/GEOMETRY_VISUAL_DIAGRAM_SYSTEM.md`).
+
+Placeholder geometry pages include a sample diagram in §3.
 
 ---
 
@@ -99,8 +110,8 @@ To replace a placeholder book: expand registry batches/page order and add draft 
 ### Book index tile (📖)
 
 - **Math Master:** visible for **all grades g1–g6** when grade is selected.
-- **Geometry Master (גאומטריה):** visible for **all grades g1–g6**.
-- Label: `ספר חשבון` / `ספר גאומטריה` + `כיתה X`.
+- **Geometry Master (הנדסה):** visible for **all grades g1–g6**.
+- Label: `ספר חשבון` / `ספר הנדסה` + `כיתה X`.
 
 ### Topic `📖 הסבר בספר`
 
@@ -122,6 +133,7 @@ To replace a placeholder book: expand registry batches/page order and add draft 
 ## Verification
 
 ```bash
+node scripts/verify-learning-book-geometry-diagrams.mjs
 node scripts/verify-learning-book-structure.mjs
 node scripts/verify-math-g1-book.mjs
 node scripts/verify-math-g2-book.mjs
@@ -136,8 +148,8 @@ npm run build
 - [ ] Math G1 book unchanged (content, theme, practice, הסבר)
 - [ ] Math G2 book unchanged
 - [ ] `/learning/book/math/g3` … `/learning/book/math/g6` open placeholder
-- [ ] `/learning/book/geometry/g1` … `/learning/book/geometry/g6` open placeholder
-- [ ] Grade theme changes by grade; same grade matches across Math/Hנדסה
+- [ ] `/learning/book/geometry/g1` … `/learning/book/geometry/g6` — title **ספר הנדסה**, diagrams on relevant pages
+- [ ] Grade theme changes by grade; same grade matches across Math/הנדסה
 - [ ] No visible **גאומטריה** on book UI
 - [ ] No visible `[DRAFT]`
 - [ ] Math Master / Geometry Master tiles — no layout shift

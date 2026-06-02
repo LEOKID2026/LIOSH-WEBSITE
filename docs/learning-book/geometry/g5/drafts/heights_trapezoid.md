@@ -32,6 +32,10 @@
 
 ## 2. הסבר
 
+:::geometry-diagram
+type: trapezoid_height
+:::
+
 מבודדים גובה:
 גובה = (שטח × 2) ÷ (בסיס1 + בסיס2)
 

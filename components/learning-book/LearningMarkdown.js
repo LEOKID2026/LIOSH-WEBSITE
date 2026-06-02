@@ -1,5 +1,6 @@
 import MixedHebrewMathText from "./MixedHebrewMathText";
 import BookDiagram from "./BookDiagram";
+import GeometryDiagram from "./GeometryDiagram";
 import { splitBookMarkdownBlocks } from "../../lib/learning-book/book-markdown-blocks";
 
 function BookProseBlock({ lines }) {
@@ -17,6 +18,12 @@ function BookProseBlock({ lines }) {
 }
 
 function MarkdownBlock({ block }) {
+  if (block.type === "geometry_diagram") {
+    return (
+      <GeometryDiagram type={block.diagramType} options={block.options || {}} />
+    );
+  }
+
   if (block.type === "code") {
     return <BookDiagram content={block.content} />;
   }

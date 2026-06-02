@@ -34,6 +34,10 @@
 
 ## 2. הסבר
 
+:::geometry-diagram
+type: square_area_grid
+:::
+
 בריבוע עם צלע a:
 שטח = a × a
 

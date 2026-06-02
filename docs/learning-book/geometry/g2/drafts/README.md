@@ -21,7 +21,7 @@
 
 ## Naming
 
-- Child-facing book content uses **גאומטריה**, not **הנדסה**.
+- Child-facing book content uses **הנדסה**, not **הנדסה**.
 - Internal IDs: `geometry:g2:{pageId}`, `subject: geometry`.
 
 ---

@@ -3,7 +3,7 @@
 **Status:** All batches authored — **17 / 17** draft pages complete (Batches A–G). Owner review pending.  
 **Date:** June 2026  
 **Folder:** `docs/learning-book/geometry/g5/drafts/`  
-**Book title (child-facing):** ספר גאומטריה — כיתה ה׳
+**Book title (child-facing):** ספר הנדסה — כיתה ה׳
 
 ---
 
@@ -77,7 +77,7 @@
 ## Notes
 
 - All pages: `age_band: grades_5_6`, `approval_status: draft`, `grade: g5`.
-- Child-facing copy uses **גאומטריה**, not **הנדסה**.
+- Child-facing copy uses **הנדסה**, not **הנדסה**.
 - Section 7: draft invitation only — **no practice routing**.
 - `book_placeholder.md` — infrastructure placeholder; **not** part of the 17-page book.
 

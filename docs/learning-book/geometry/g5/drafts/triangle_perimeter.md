@@ -32,6 +32,10 @@
 
 ## 2. הסבר
 
+:::geometry-diagram
+type: triangle_perimeter
+:::
+
 מחברים את **שלוש** הצלעות:
 
 היקף = צלע1 + צלע2 + צלע3

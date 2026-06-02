@@ -32,6 +32,10 @@
 
 ## 2. הסבר
 
+:::geometry-diagram
+type: square_perimeter
+:::
+
 בריבוע כל 4 הצלעות **שוות**.
 
 היקף = 4 × (אורך צלע)

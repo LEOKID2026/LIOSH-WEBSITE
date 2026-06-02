@@ -89,10 +89,14 @@ for (const pageId of GEOMETRY_G4_PAGE_ORDER) {
   }
 
   const childFacing = page.sections.map((s) => s.body).join("\n");
-  if (childFacing.includes("הנדסה")) {
-    errors.push(`${pageId}: child-facing body contains forbidden הנדסה`);
+  const childFacingNoDiagramDirectives = childFacing.replace(
+    /:::geometry-diagram[\s\S]*?:::/g,
+    ""
+  );
+  if (childFacing.includes("גאומטריה")) {
+    errors.push(`${pageId}: child-facing body must use הנדסה, not גאומטריה`);
   }
-  if (/\bgeometry\b/i.test(childFacing)) {
+  if (/\bgeometry\b/i.test(childFacingNoDiagramDirectives)) {
     errors.push(`${pageId}: child-facing body contains English geometry`);
   }
   if (VISIBLE_DRAFT_RE.test(childFacing)) {
@@ -153,7 +157,7 @@ if (errors.length) {
 console.log(`G4 Geometry content verification PASSED: ${GEOMETRY_G4_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g4:{pageId} ids");
-console.log("- גאומטריה wording; no הנדסה / English geometry");
+console.log("- הנדסה wording; no גאומטריה / English geometry");
 console.log("- Section 5/6 alignment anchors present");
 console.log("- no fake practice routing in §7");
 if (notationNotes.length) {

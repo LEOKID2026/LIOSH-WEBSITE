@@ -32,6 +32,10 @@
 
 ## 2. הסבר
 
+:::geometry-diagram
+type: parallelogram_height
+:::
+
 במקבילית **אין** חלוקה ב-2 בשטח.
 
 גובה = שטח ÷ בסיס

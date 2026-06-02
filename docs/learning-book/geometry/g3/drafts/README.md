@@ -35,7 +35,7 @@
 
 ## Naming
 
-- Child-facing: **גאומטריה** (not הנדסה).
+- Child-facing: **הנדסה** (not הנדסה).
 - IDs: `geometry:g3:{pageId}`, `age_band: grades_3_4`.
 
 ---

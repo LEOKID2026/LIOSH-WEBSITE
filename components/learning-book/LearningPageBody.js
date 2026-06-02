@@ -242,7 +242,7 @@ export default function LearningPageBody({
   const isFinalPracticeSection = atLast && section?.number === 7;
   const practiceCtaSubtext =
     bookSubject === "geometry"
-      ? "נעבור לתרגול של הנושא הזה בגאומטריה"
+      ? "נעבור לתרגול של הנושא הזה בהנדסה"
       : "נעבור לתרגול של הנושא הזה בחשבון";
 
   return (
