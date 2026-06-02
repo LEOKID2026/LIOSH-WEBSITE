@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { ENGLISH_GRADES } from "../data/english-curriculum.js";
 import { getLearningBookEntry } from "../lib/learning-book/learning-book-catalog.js";
-import { hasLearningBook } from "../lib/learning-book/learning-book-catalog-meta.js";
+import { hasLearningBook, getLearningBookIndexHref, getVisibleLearningBooks, getDynamicRouteBookMetaList } from "../lib/learning-book/learning-book-catalog-meta.js";
 import { englishTopicOptionsForGrade } from "../lib/teacher-portal/teacher-class-topic-options.js";
 import { resolveClassroomSkillLabelHe } from "../lib/classroom-activities/classroom-skill-labels-he.js";
 import { generateActivityQuestionSetClient } from "../lib/classroom-activities/generate-activity-questions-client.js";
@@ -290,7 +290,7 @@ function gradeStatus(gradeKey, gradeFailures) {
   }
   const has = (p) => gradeFailures.some((f) => f.startsWith(p));
   return {
-    learningBook: has("book.") ? "FAIL" : "PASS",
+    learningBook: has("book.") || has("book.ui") ? "FAIL" : "PASS",
     practice: has("practice.") ? "FAIL" : "PASS",
     studentLearning: has("runtime.") || has("activity.") || has("spine.") ? "FAIL" : "PASS",
     teacherAssignment: has("assignment.") ? "FAIL" : "PASS",
@@ -298,6 +298,54 @@ function gradeStatus(gradeKey, gradeFailures) {
     reportsDiagnostics: has("diagnostic.") ? "FAIL" : "PASS",
     status: "FAIL",
   };
+}
+
+function checkEnglishBookUiVisibility() {
+  const masterPath = path.join(ROOT, "pages/learning/english-master.js");
+  if (!fs.existsSync(masterPath)) {
+    fail("book.ui", "missing pages/learning/english-master.js");
+    return;
+  }
+  const masterSrc = fs.readFileSync(masterPath, "utf8");
+  if (!masterSrc.includes("LearningBookIndexTile")) {
+    fail("book.ui", "english-master.js must render LearningBookIndexTile");
+  }
+  if (!masterSrc.includes('getLearningBookIndexHref("english"')) {
+    fail("book.ui", 'english-master.js must call getLearningBookIndexHref("english", grade)');
+  }
+  if (!masterSrc.includes('subject="english"')) {
+    fail("book.ui", 'english-master.js LearningBookIndexTile must use subject="english"');
+  }
+  if (!masterSrc.includes("bookIndexHref")) {
+    fail("book.ui", "english-master.js must gate tile on bookIndexHref");
+  }
+
+  const visible = getVisibleLearningBooks("english");
+  if (visible.length !== GRADE_KEYS.length) {
+    fail(
+      "book.ui",
+      `expected ${GRADE_KEYS.length} visible English books, got ${visible.length}`
+    );
+  }
+
+  const dynamicEnglish = getDynamicRouteBookMetaList().filter((b) => b.subject === "english");
+  if (dynamicEnglish.length !== GRADE_KEYS.length) {
+    fail(
+      "book.ui",
+      `expected ${GRADE_KEYS.length} English books in dynamic route meta, got ${dynamicEnglish.length}`
+    );
+  }
+
+  for (const gk of GRADE_KEYS) {
+    const expected = `/learning/book/english/${gk}`;
+    const href = getLearningBookIndexHref("english", gk);
+    if (href !== expected) {
+      fail("book.ui", `english ${gk} tile href ${href} != ${expected}`);
+    }
+    if (!hasLearningBook("english", gk)) {
+      fail("book.ui", `english ${gk} not visible via hasLearningBook`);
+    }
+  }
 }
 
 /** @type {Record<string, string[]>} */
@@ -320,6 +368,8 @@ for (const err of assertEnglishMasterPath()) fail("book.catalog", err);
 for (const err of checkEnglishLearningPageIdCollisions(BOOK_SPECS)) {
   fail("book.collision", err);
 }
+
+checkEnglishBookUiVisibility();
 
 for (const spec of BOOK_SPECS) {
   const bucket = `english:${spec.grade}`;

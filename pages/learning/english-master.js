@@ -2690,7 +2690,7 @@ export default function EnglishMaster() {
           )}
 
                     {!gameActive ? (
-            <div className="relative flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+            <div className="relative flex flex-col flex-1 min-h-0 min-w-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
               {bookIndexHref ? (
                 <LearningBookIndexTile
                   subject="english"
