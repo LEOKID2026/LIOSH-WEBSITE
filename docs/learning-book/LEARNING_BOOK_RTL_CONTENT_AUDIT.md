@@ -7,7 +7,7 @@ Generated: 2026-06-02
 | Metric | Count |
 |--------|------:|
 | Files scanned | 274 |
-| Total lines scanned | 25789 |
+| Total lines scanned | 25793 |
 | Risky lines (before) | 7 |
 | Files with auto-fixes | 0 |
 | Auto-fix operations | 0 |
@@ -34,7 +34,7 @@ _None._
 
 ## Remaining risky lines (manual review)
 
-- `docs/learning-book/math/g4/drafts/divisibility.md:66` [chained_comma_equation] — **תשובה:** ÷2, ÷3, ÷6, ÷9 — **כולם כן**.
+- `docs/learning-book/math/g4/drafts/divisibility.md:64` [chained_comma_equation] — **תשובה:** ÷2, ÷3, ÷6, ÷9 — **כולם כן**.
 - `docs/learning-book/math/g4/drafts/mul_vertical.md:38` [chained_comma_equation] — 3. **עשרות:** 2 × 4 = 8, + 1 נשיאה = **9**
 - `docs/learning-book/math/g4/drafts/mul_vertical.md:43` [chained_comma_equation] — - עשרות: 3 × 5 = 15, + 2 = 17
 - `docs/learning-book/math/g4/drafts/mul_vertical.md:57` [chained_comma_equation] — - עשרות: 4 × 3 = 12, + 1 = **13**

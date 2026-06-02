@@ -13,6 +13,7 @@ import {
   parseInlineMarkdown,
   stripStrayMarkdown,
 } from "../../lib/learning-book/parse-inline-markdown";
+import { interRunGapText } from "../../lib/learning-book/book-visible-text-render";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 const HEBREW_CHAR = /[\u0590-\u05FF]/;
@@ -75,35 +76,50 @@ function DigitSpan({ value, sourceText, start, end }) {
 
 function renderContentRuns(text, sourceText, sourceOffset = 0) {
   const runs = splitHebrewMathRuns(text);
+  const scopedSource = sourceText || text;
 
   return runs.map((run, i) => {
-    const start = run.start ?? sourceOffset;
-    const end = run.end ?? start + run.value.length;
+    const relStart = run.start ?? 0;
+    const relEnd = run.end ?? relStart + run.value.length;
+    const start = sourceOffset + relStart;
+    const end = sourceOffset + relEnd;
+    const gap =
+      i > 0
+        ? interRunGapText(
+            scopedSource,
+            sourceOffset +
+              (runs[i - 1].end ??
+                (runs[i - 1].start ?? 0) + runs[i - 1].value.length),
+            start
+          )
+        : "";
 
-    if (run.type === "math") {
-      return (
+    const runNode =
+      run.type === "math" ? (
         <MathSpan
           key={i}
           value={run.value}
-          sourceText={sourceText}
+          sourceText={scopedSource}
           start={start}
           end={end}
         />
-      );
-    }
-    if (run.type === "digit") {
-      return (
+      ) : run.type === "digit" ? (
         <DigitSpan
           key={i}
           value={run.value}
-          sourceText={sourceText}
+          sourceText={scopedSource}
           start={start}
           end={end}
         />
+      ) : (
+        stripStrayMarkdown(run.value)
       );
-    }
+
     return (
-      <Fragment key={i}>{stripStrayMarkdown(run.value)}</Fragment>
+      <Fragment key={i}>
+        {gap || null}
+        {runNode}
+      </Fragment>
     );
   });
 }
@@ -167,6 +183,9 @@ function renderProseSegment(text, sourceText, keyPrefix) {
 function renderFormulaBody(text) {
   const tokens = splitFormulaTokens(text);
   return tokens.map((token, i) => {
+    if (token.type === "space") {
+      return token.value;
+    }
     if (token.type === "op") {
       return (
         <bdi
@@ -197,8 +216,11 @@ function renderMixedBodyInner(text) {
   const segments = splitTextAndMathRuns(input);
 
   return segments.map((segment, i) => {
-    if (segment.type === "math") {
-      return (
+    const gap =
+      i > 0 ? interRunGapText(input, segments[i - 1].end, segment.start) : "";
+
+    const segmentNode =
+      segment.type === "math" ? (
         <MathSpan
           key={i}
           value={segment.value}
@@ -206,11 +228,14 @@ function renderMixedBodyInner(text) {
           start={segment.start}
           end={segment.end}
         />
+      ) : (
+        renderProseSegment(segment.value, input, String(i))
       );
-    }
+
     return (
       <Fragment key={i}>
-        {renderProseSegment(segment.value, input, String(i))}
+        {gap || null}
+        {segmentNode}
       </Fragment>
     );
   });
