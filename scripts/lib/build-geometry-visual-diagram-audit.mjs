@@ -80,8 +80,8 @@ for (const [grade, order, meta] of BOOKS) {
       action = "no safe diagram yet";
     }
 
-    if (raw.includes("גאומטריה")) {
-      problem = problem === "—" ? "visible גאומטריה" : `${problem}; גאומטריה`;
+    if (raw.includes("הנדסה")) {
+      problem = problem === "—" ? "visible הנדסה" : `${problem}; הנדסה`;
       action = "replace wording";
     }
 
@@ -100,11 +100,11 @@ for (const [grade, order, meta] of BOOKS) {
   void meta;
 }
 
-const body = `# Geometry / הנדסה — Visual Diagram Audit
+const body = `# Geometry / גאומטריה — Visual Diagram Audit
 
 **Date:** June 2026  
 **Status:** Generated from \`geometry-diagram-page-map.js\` + draft scan  
-**Book title (UI):** ${GEOMETRY_G1_BOOK_META.bookTitleHe.replace("א׳", "X")} — all grades use **הנדסה**
+**Book title (UI):** ${GEOMETRY_G1_BOOK_META.bookTitleHe.replace("א׳", "X")} — all grades use **גאומטריה**
 
 ---
 

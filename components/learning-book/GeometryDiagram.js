@@ -533,7 +533,7 @@ export default function GeometryDiagram({ type, options = {} }) {
           className={`my-4 rounded-xl border border-dashed px-4 py-3 text-center text-sm ${theme.diagramPanel}`}
           data-geometry-diagram-unknown={diagramType || "empty"}
         >
-          [פיתוח] דיאגרמת הנדסה לא מוכרת: {diagramType || "(ריק)"}
+          [פיתוח] דיאגרמת גאומטריה לא מוכרת: {diagramType || "(ריק)"}
         </div>
       );
     }

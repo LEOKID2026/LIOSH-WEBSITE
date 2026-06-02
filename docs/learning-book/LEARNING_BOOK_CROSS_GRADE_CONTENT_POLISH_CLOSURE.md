@@ -1,7 +1,7 @@
 # Learning Book Cross-Grade Content Polish — Closure
 
 **Date:** 2026-06-02  
-**Scope:** Math (חשבון) + Geometry (הנדסה), G1–G6 draft markdown only.
+**Scope:** Math (חשבון) + Geometry (גאומטריה), G1–G6 draft markdown only.
 
 ## Outcome
 

@@ -58,11 +58,11 @@ for (const target of GEOMETRY_LIVE_QA_PAGES) {
     continue;
   }
 
-  if (entry.meta.bookTitleHe?.includes("גאומטריה")) {
-    fail(`${grade}/${pageId}: book title uses גאומטריה`);
+  if (entry.meta.bookTitleHe?.includes("הנדסה")) {
+    fail(`${grade}/${pageId}: book title uses הנדסה`);
   }
-  if (!entry.meta.bookTitleHe?.includes("הנדסה")) {
-    fail(`${grade}/${pageId}: book title missing הנדסה`);
+  if (!entry.meta.bookTitleHe?.includes("גאומטריה")) {
+    fail(`${grade}/${pageId}: book title missing גאומטריה`);
   }
   if (page.displayTitle?.includes("[DRAFT")) {
     fail(`${grade}/${pageId}: DRAFT in displayTitle`);
@@ -164,8 +164,8 @@ if (baseUrl) {
         continue;
       }
       const visible = visibleHtml(data);
-      if (visible.includes("גאומטריה")) {
-        fail(`HTTP visible HTML contains גאומטריה: ${url}`);
+      if (visible.includes("הנדסה")) {
+        fail(`HTTP visible HTML contains הנדסה: ${url}`);
       }
       if (visible.includes("[DRAFT")) {
         fail(`HTTP visible HTML contains [DRAFT]: ${url}`);
@@ -173,8 +173,8 @@ if (baseUrl) {
       if (visible.includes(":::geometry-diagram")) {
         fail(`HTTP visible HTML contains raw diagram marker: ${url}`);
       }
-      if (!data.includes("הנדסה") && !data.includes("\\u05d4\\u05e0\\u05d3\\u05e1\\u05d4")) {
-        fail(`HTTP page missing הנדסה in payload/shell: ${url}`);
+      if (!data.includes("גאומטריה")) {
+        fail(`HTTP page missing גאומטריה in payload/shell: ${url}`);
       }
       notes.push(`HTTP OK ${url}`);
     } catch (e) {

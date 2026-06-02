@@ -392,7 +392,7 @@ function generateReport(data) {
   lines.push("");
   lines.push(`Generated: ${new Date().toISOString().slice(0, 10)}`);
   lines.push("");
-  lines.push("Scope: Math (חשבון) + Geometry (הנדסה), grades G1–G6 draft markdown.");
+  lines.push("Scope: Math (חשבון) + Geometry (גאומטריה), grades G1–G6 draft markdown.");
   lines.push("Audit-only — no content was modified.");
   lines.push("");
 
@@ -426,7 +426,7 @@ function generateReport(data) {
   }
   lines.push("");
 
-  lines.push("## C. Geometry / הנדסה findings");
+  lines.push("## C. Geometry / גאומטריה findings");
   lines.push("");
   lines.push(
     "| Topic family | Grades | Files | Similarity / duplication signal | Age-fit verdict | Notes | Recommended action |"

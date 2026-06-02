@@ -29,7 +29,7 @@ const ROOT = path.join(__dirname, "..");
 
 const SUBJECT_LABEL = {
   math: "Math / חשבון",
-  geometry: "Geometry / הנדסה",
+  geometry: "Geometry / גאומטריה",
 };
 
 /** @type {{ subject: string, grade: string, order: string[] }[]} */

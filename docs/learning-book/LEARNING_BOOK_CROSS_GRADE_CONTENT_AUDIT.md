@@ -2,7 +2,7 @@
 
 Generated: 2026-06-02
 
-Scope: Math (חשבון) + Geometry (הנדסה), grades G1–G6 draft markdown.
+Scope: Math (חשבון) + Geometry (גאומטריה), grades G1–G6 draft markdown.
 
 **Latest audit run:** after Resolution pass (2026-06-02). See [Resolution pass](#resolution-pass-2026-06-02) below.
 
@@ -68,7 +68,7 @@ Scope: Math (חשבון) + Geometry (הנדסה), grades G1–G6 draft markdown.
 | est_quantity | g4, g5 | g4/est_quantity; g5/est_quantity | core≈14%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 1900→12000 | No action |
 | book_placeholder | g3, g4, g5, g6 | g3/book_placeholder; g4/book_placeholder; g5/book_placeholder; g6/book_placeholder | — | — | All pages in family are placeholders or stub content. | Defer until real content writing |
 
-## C. Geometry / הנדסה findings
+## C. Geometry / גאומטריה findings
 
 | Topic family | Grades | Files | Similarity / duplication signal | Age-fit verdict | Notes | Recommended action |
 |---|---|---|---|---|---|---|
@@ -688,7 +688,7 @@ These families repeat core ideas across grades but show acceptable recap or clea
 
 ## Resolution pass (2026-06-02)
 
-Controlled content polish for Math / חשבון and Geometry / הנדסה. **Content/docs only** — no UI, runtime, routes, registry, manifests, SQL, commit, or deploy.
+Controlled content polish for Math / חשבון and Geometry / גאומטריה. **Content/docs only** — no UI, runtime, routes, registry, manifests, SQL, commit, or deploy.
 
 ### Verdict count — before → after
 

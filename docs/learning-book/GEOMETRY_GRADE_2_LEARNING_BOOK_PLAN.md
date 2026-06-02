@@ -20,7 +20,7 @@
 | `utils/geometry-question-generator.js` | G2 scope hints (solid names; square area; הזזה/שיקוף) |
 
 **Math books:** Out of scope.  
-**Subject naming:** Child-facing copy uses **גאומטריה**, not **גאומטריה**. No English “geometry” in child-facing bodies.
+**Subject naming:** Child-facing copy uses **גאומטריה**, not **הנדסה**. No English “geometry” in child-facing bodies.
 
 ---
 
@@ -132,7 +132,7 @@ All pages: `age_band: grades_1_2`, `approval_status: draft`.
 ## 8. Owner-Review Questions Before Implementation
 
 1. Approve **3 pages** as full G2 geometry book for current spine.
-2. Confirm **גאומטריה** (not גאומטריה) at runtime for book title and tiles.
+2. Confirm **גאומטריה** (not הנדסה) at runtime for book title and tiles.
 3. Confirm G2 `square_area` uses **צלע × צלע** with small whole numbers only.
 4. Confirm G2 `solids` introduces all six bodies without volume.
 5. Practice CTA — separate task after approval.

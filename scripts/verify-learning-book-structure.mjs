@@ -1,5 +1,5 @@
 /**
- * Verify full learning book structure (Math G1–G6, הנדסה G1–G6).
+ * Verify full learning book structure (Math G1–G6, גאומטריה G1–G6).
  * Run: node scripts/verify-learning-book-structure.mjs
  */
 import fs from "fs";
@@ -61,11 +61,11 @@ for (const book of LEARNING_BOOK_CATALOG_LIST) {
   }
   routeBases.add(base);
 
-  if (book.subject === "geometry" && !book.meta.bookTitleHe?.includes("הנדסה")) {
-    fail(`geometry book missing הנדסה in title: ${book.meta.bookTitleHe}`);
+  if (book.subject === "geometry" && !book.meta.bookTitleHe?.includes("גאומטריה")) {
+    fail(`geometry book missing גאומטריה in title: ${book.meta.bookTitleHe}`);
   }
-  if (book.subject === "geometry" && book.meta.bookTitleHe?.includes("גאומטריה")) {
-    fail(`geometry book must not use גאומטריה in title: ${book.meta.bookTitleHe}`);
+  if (book.subject === "geometry" && book.meta.bookTitleHe?.includes("הנדסה")) {
+    fail(`geometry book must not use הנדסה in title: ${book.meta.bookTitleHe}`);
   }
   if (book.subject === "math" && !book.meta.bookTitleHe?.includes("חשבון")) {
     fail(`math book missing חשבון in title: ${book.meta.bookTitleHe}`);
@@ -166,11 +166,11 @@ if (geometryG2Entry.registry.pageOrder.length !== 3) {
   fail(`geometry/g2 expected 3 pages, got ${geometryG2Entry.registry.pageOrder.length}`);
 }
 requireBookPracticeFeatures(geometryG2Entry, "geometry/g2");
-if (!geometryG2Entry.meta.bookTitleHe?.includes("הנדסה")) {
-  fail("geometry/g2 book title must use הנדסה");
+if (!geometryG2Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g2 book title must use גאומטריה");
 }
-if (geometryG2Entry.meta.bookTitleHe?.includes("גאומטריה")) {
-  fail("geometry/g2 book title must not use גאומטריה");
+if (geometryG2Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g2 book title must not use הנדסה");
 }
 
 const geometryG3Index = path.join(ROOT, "pages/learning/book/geometry/g3/index.js");
@@ -190,11 +190,11 @@ if (geometryG3Entry.registry.pageOrder.length !== 9) {
   fail(`geometry/g3 expected 9 pages, got ${geometryG3Entry.registry.pageOrder.length}`);
 }
 requireBookPracticeFeatures(geometryG3Entry, "geometry/g3");
-if (!geometryG3Entry.meta.bookTitleHe?.includes("הנדסה")) {
-  fail("geometry/g3 book title must use הנדסה");
+if (!geometryG3Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g3 book title must use גאומטריה");
 }
-if (geometryG3Entry.meta.bookTitleHe?.includes("גאומטריה")) {
-  fail("geometry/g3 book title must not use גאומטריה");
+if (geometryG3Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g3 book title must not use הנדסה");
 }
 
 const geometryG4Index = path.join(ROOT, "pages/learning/book/geometry/g4/index.js");
@@ -216,11 +216,11 @@ if (geometryG4Entry.registry.pageOrder.length !== 14) {
   );
 }
 requireBookPracticeFeatures(geometryG4Entry, "geometry/g4");
-if (!geometryG4Entry.meta.bookTitleHe?.includes("הנדסה")) {
-  fail("geometry/g4 book title must use הנדסה");
+if (!geometryG4Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g4 book title must use גאומטריה");
 }
-if (geometryG4Entry.meta.bookTitleHe?.includes("גאומטריה")) {
-  fail("geometry/g4 book title must not use גאומטריה");
+if (geometryG4Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g4 book title must not use הנדסה");
 }
 
 const geometryG5Index = path.join(ROOT, "pages/learning/book/geometry/g5/index.js");
@@ -242,11 +242,11 @@ if (geometryG5Entry.registry.pageOrder.length !== 17) {
   );
 }
 requireBookPracticeFeatures(geometryG5Entry, "geometry/g5");
-if (!geometryG5Entry.meta.bookTitleHe?.includes("הנדסה")) {
-  fail("geometry/g5 book title must use הנדסה");
+if (!geometryG5Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g5 book title must use גאומטריה");
 }
-if (geometryG5Entry.meta.bookTitleHe?.includes("גאומטריה")) {
-  fail("geometry/g5 book title must not use גאומטריה");
+if (geometryG5Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g5 book title must not use הנדסה");
 }
 
 const geometryG6Index = path.join(ROOT, "pages/learning/book/geometry/g6/index.js");
@@ -268,11 +268,11 @@ if (geometryG6Entry.registry.pageOrder.length !== 19) {
   );
 }
 requireBookPracticeFeatures(geometryG6Entry, "geometry/g6");
-if (!geometryG6Entry.meta.bookTitleHe?.includes("הנדסה")) {
-  fail("geometry/g6 book title must use הנדסה");
+if (!geometryG6Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g6 book title must use גאומטריה");
 }
-if (geometryG6Entry.meta.bookTitleHe?.includes("גאומטריה")) {
-  fail("geometry/g6 book title must not use גאומטריה");
+if (geometryG6Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g6 book title must not use הנדסה");
 }
 
 const scienceG1Entry = getLearningBookEntry("science", "g1");

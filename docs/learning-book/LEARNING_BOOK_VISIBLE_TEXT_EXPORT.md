@@ -10675,20 +10675,20 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 ---
 
-## Geometry / הנדסה — G1
+## Geometry / גאומטריה — G1
 
 ### shapes_basic_square
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g1 |
 | Page ID | `geometry:g1:shapes_basic_square` |
 | Page title | shapes_basic_square |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה להכיר את הריבוע.
+- היום נלמד בגאומטריה להכיר את הריבוע.
 - ריבוע הוא צורה שאנחנו רואים בכל מקום — אריחים, חלונות ומשחקים.
 
 #### Section 2: הסבר
@@ -10734,7 +10734,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים את הריבוע בהנדסה.
+- עכשיו אתם מכירים את הריבוע בגאומטריה.
 - בתרגול תמצאו שאלות על זיהוי ריבוע.
 - בדקו שכל הצלעות שוות!
 
@@ -10742,14 +10742,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g1 |
 | Page ID | `geometry:g1:shapes_basic_rectangle` |
 | Page title | shapes_basic_rectangle |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה להכיר את המלבן.
+- היום נלמד בגאומטריה להכיר את המלבן.
 - מלבן דומה לריבוע — אבל לרוב יש לו אורך ורוחב שונים.
 
 #### Section 2: הסבר
@@ -10794,7 +10794,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים את המלבן בהנדסה.
+- עכשיו אתם מכירים את המלבן בגאומטריה.
 - בתרגול תמצאו שאלות על זיהוי מלבן.
 - בדקו אורך ורוחב!
 
@@ -10802,14 +10802,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g1 |
 | Page ID | `geometry:g1:transformations` |
 | Page title | transformations |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה על שני סוגי תנועה של צורה:
+- היום נלמד בגאומטריה על שני סוגי תנועה של צורה:
 - הזזה — מעבירים את הצורה ממקום למקום.
 - שיקוף — עושים ממנה מראה, כמו במראה.
 
@@ -10855,26 +10855,26 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים הזזה ושיקוף בהנדסה.
+- עכשיו אתם מכירים הזזה ושיקוף בגאומטריה.
 - בתרגול תמצאו שאלות:
 - האם הצורה עברה מקום או נראית במראה?
 
 ---
 
-## Geometry / הנדסה — G2
+## Geometry / גאומטריה — G2
 
 ### solids
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g2 |
 | Page ID | `geometry:g2:solids` |
 | Page title | solids |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה על גופים תלת־ממדיים — צורות שיש להן אורך, רוחב וגובה.
+- היום נלמד בגאומטריה על גופים תלת־ממדיים — צורות שיש להן אורך, רוחב וגובה.
 - נכיר שמות:
 - קובייה, תיבה, גליל, פירמידה, חרוט וכדור.
 
@@ -10927,21 +10927,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים שמות של גופים בהנדסה.
+- עכשיו אתם מכירים שמות של גופים בגאומטריה.
 - בתרגול תמצאו תיאור של גוף — חפשו כמה פאות ואיזה צורה לכל פאה!
 
 ### square_area
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g2 |
 | Page ID | `geometry:g2:square_area` |
 | Page title | square_area |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה מהו שטח של ריבוע — כמה מקום תופס הריבוע על המשטח.
+- היום נלמד בגאומטריה מהו שטח של ריבוע — כמה מקום תופס הריבוע על המשטח.
 - נמלא את הריבוע בריבועים קטנים ונספור.
 
 #### Section 2: הסבר
@@ -10988,14 +10988,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g2 |
 | Page ID | `geometry:g2:transformations` |
 | Page title | transformations |
 
 #### Section 1: מה לומדים?
 
-- היום נחזק בהנדסה את ההבדל בין הזזה לשיקוף.
+- היום נחזק בגאומטריה את ההבדל בין הזזה לשיקוף.
 - בכיתה ב׳ בודקים יותר בקפידה:
 - האם הצורה רק עברה מקום, או שהפכה כמו במראה?
 
@@ -11043,26 +11043,26 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מבחינים טוב יותר בין הזזה לשיקוף בהנדסה.
+- עכשיו אתם מבחינים טוב יותר בין הזזה לשיקוף בגאומטריה.
 - בתרגול תמצאו:
 - האם הצורה רק עברה מקום, או נראית במראה?
 
 ---
 
-## Geometry / הנדסה — G3
+## Geometry / גאומטריה — G3
 
 ### triangles
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:triangles` |
 | Page title | triangles |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה לסווג משולשים לפי אורך הצלעות.
+- היום נלמד בגאומטריה לסווג משולשים לפי אורך הצלעות.
 - נכיר שלושה סוגים:
 - משולש שווה צלעות, משולש שווה שוקיים ומשולש שונה צלעות.
 
@@ -11107,21 +11107,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים לזהות סוגי משולשים בהנדסה.
+- עכשיו אתם יודעים לזהות סוגי משולשים בגאומטריה.
 - בתרגול תמצאו משולש ותבדקו כמה צלעות שוות — כך תדעו אם הוא שווה צלעות, שווה שוקיים או שונה צלעות.
 
 ### quadrilaterals
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:quadrilaterals` |
 | Page title | quadrilaterals |
 
 #### Section 1: מה לומדים?
 
-- היום נכיר בהנדסה שמות של מרובעים נפוצים.
+- היום נכיר בגאומטריה שמות של מרובעים נפוצים.
 - נזהה ריבוע, מלבן, מקבילית וטרפז — לפי תיאור קצר.
 
 #### Section 2: הסבר
@@ -11162,7 +11162,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים שמות מרובעים בהנדסה.
+- עכשיו אתם מכירים שמות מרובעים בגאומטריה.
 - בתרגול תמצאו תיאור — בחרו:
 - ריבוע, מלבן, מקבילית או טרפז!
 
@@ -11170,14 +11170,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:parallel_perpendicular` |
 | Page title | parallel_perpendicular |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה על קווים מקבילים וקווים מאונכים.
+- היום נלמד בגאומטריה על קווים מקבילים וקווים מאונכים.
 - נראה דוגמה מהחיים: מסילת רכבת — קווים מקבילים.
 
 #### Section 2: הסבר
@@ -11225,14 +11225,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:square_area` |
 | Page title | square_area |
 
 #### Section 1: מה לומדים?
 
-- היום נחזק בהנדסה שטח ריבוע — עם רשת ומספרים גדולים יותר.
+- היום נחזק בגאומטריה שטח ריבוע — עם רשת ומספרים גדולים יותר.
 - נמלא ריבוע צלע 5 ב25 יחידות ריבוע.
 
 #### Section 2: הסבר
@@ -11278,14 +11278,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:square_perimeter` |
 | Page title | square_perimeter |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה למצוא היקף של ריבוע — אורך כל הגבול.
+- היום נלמד בגאומטריה למצוא היקף של ריבוע — אורך כל הגבול.
 - נתחיל בספירה: נעבור על כל ארבע הצלעות ונחבר.
 
 #### Section 2: הסבר
@@ -11333,14 +11333,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:triangle_perimeter` |
 | Page title | triangle_perimeter |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה היקף משולש — סכום שלוש הצלעות.
+- היום נלמד בגאומטריה היקף משולש — סכום שלוש הצלעות.
 - נתחיל עם צלעות קטנות: 3, 4 ו-5 ס״מ.
 
 #### Section 2: הסבר
@@ -11385,14 +11385,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:triangle_angles` |
 | Page title | triangle_angles |
 
 #### Section 1: מה לומדים?
 
-- היום נכיר בהנדסה את הזוויות במשולש.
+- היום נכיר בגאומטריה את הזוויות במשולש.
 - בכל משולש יש שלוש זוויות — אחת בכל קודקוד.
 - נלמד לקרוא מעלות ולהשוות:
 - איזו זווית גדולה יותר ואיזו קטנה יותר.
@@ -11436,21 +11436,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מזהים זוויות במשולש ומשווים ביניהן בהנדסה.
+- עכשיו אתם מזהים זוויות במשולש ומשווים ביניהן בגאומטריה.
 - בתרגול תמצאו מעלות — בדקו איזו זווית גדולה, קטנה או בינונית!
 
 ### rotation
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:rotation` |
 | Page title | rotation |
 
 #### Section 1: מה לומדים?
 
-- היום נכיר בהנדסה סיבוב במישור.
+- היום נכיר בגאומטריה סיבוב במישור.
 - נלמד מהו רבע סיבוב — סיבוב של 90° — כמו כשמסובבים חץ רבע מסביב.
 
 #### Section 2: הסבר
@@ -11491,21 +11491,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים רבע סיבוב בהנדסה.
+- עכשיו אתם מכירים רבע סיבוב בגאומטריה.
 - בתרגול תמצאו שאלות על סיבוב — בדקו אם מדובר ברבע (90°) או בחלק אחר מהמסלול!
 
 ### solids
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g3 |
 | Page ID | `geometry:g3:solids` |
 | Page title | solids |
 
 #### Section 1: מה לומדים?
 
-- היום נעמיק בהנדסה בקובייה — גוף שכבר הכרנו בכיתות קודמות.
+- היום נעמיק בגאומטריה בקובייה — גוף שכבר הכרנו בכיתות קודמות.
 - נלמד לספור פאות, קדקודים ומקצועות בקובייה.
 
 #### Section 2: הסבר
@@ -11553,25 +11553,25 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים לספור חלקים בקובייה בהנדסה.
+- עכשיו אתם יודעים לספור חלקים בקובייה בגאומטריה.
 - בתרגול תמצאו שאלות על קובייה — בדקו אם שואלים על פאות, קדקודים או מקצועות!
 
 ---
 
-## Geometry / הנדסה — G4
+## Geometry / גאומטריה — G4
 
 ### shapes_basic_properties_square
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:shapes_basic_properties_square` |
 | Page title | shapes_basic_properties_square |
 
 #### Section 1: מה לומדים?
 
-- היום נעמיק בהנדסה בתכונות הריבוע.
+- היום נעמיק בגאומטריה בתכונות הריבוע.
 - נלמד שבריבוע יש 4 צלעות — וכולן באותו אורך.
 
 #### Section 2: הסבר
@@ -11614,21 +11614,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים לזהות את תכונת הצלעות בריבוע בהנדסה.
+- עכשיו אתם יודעים לזהות את תכונת הצלעות בריבוע בגאומטריה.
 - בתרגול תמצאו ריבוע — בדקו שיש 4 צלעות שוות!
 
 ### shapes_basic_properties_rectangle
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:shapes_basic_properties_rectangle` |
 | Page title | shapes_basic_properties_rectangle |
 
 #### Section 1: מה לומדים?
 
-- היום נעמיק בהנדסה בתכונות המלבן.
+- היום נעמיק בגאומטריה בתכונות המלבן.
 - נלמד שבמלבן יש 2 זוגות של צלעות שוות — לא בהכרח כל ארבע הצלעות שוות.
 
 #### Section 2: הסבר
@@ -11672,21 +11672,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים לזהות זוגות צלעות במלבן בהנדסה.
+- עכשיו אתם יודעים לזהות זוגות צלעות במלבן בגאומטריה.
 - בתרגול תמצאו מלבן — חפשו 2 זוגות של צלעות שוות!
 
 ### shapes_basic_properties_angles
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:shapes_basic_properties_angles` |
 | Page title | shapes_basic_properties_angles |
 
 #### Section 1: מה לומדים?
 
-- היום נעמיק בהנדסה בזוויות בריבוע.
+- היום נעמיק בגאומטריה בזוויות בריבוע.
 - נלמד שבריבוע יש 4 זוויות ישרות — כל אחת 90°.
 
 #### Section 2: הסבר
@@ -11729,21 +11729,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים לזהות זוויות ישרות בריבוע בהנדסה.
+- עכשיו אתם יודעים לזהות זוויות ישרות בריבוע בגאומטריה.
 - בתרגול תמצאו ריבוע — ספרו 4 זוויות של 90°!
 
 ### symmetry
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:symmetry` |
 | Page title | symmetry |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה על סימטרייה במישור.
+- היום נלמד בגאומטריה על סימטרייה במישור.
 - נבין מהו ציר סימטרייה — ונראה שלריבוע יש 4 צירי סימטרייה.
 
 #### Section 2: הסבר
@@ -11787,21 +11787,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים סימטרייה וצירי סימטרייה בהנדסה.
+- עכשיו אתם מכירים סימטרייה וצירי סימטרייה בגאומטריה.
 - בתרגול תמצאו ריבוע — חפשו את כל 4 צירי הסימטרייה!
 
 ### quadrilaterals
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:quadrilaterals` |
 | Page title | quadrilaterals |
 
 #### Section 1: מה לומדים?
 
-- היום נעמיק בהנדסה בסיווג מרובעים — לפי תכונות מדויקות.
+- היום נעמיק בגאומטריה בסיווג מרובעים — לפי תכונות מדויקות.
 - נבין: ריבוע ⊂ מלבן — ריבוע הוא מלבן מיוחד.
 
 #### Section 2: הסבר
@@ -11839,7 +11839,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מסווגים מרובעים לפי תכונות בהנדסה.
+- עכשיו אתם מסווגים מרובעים לפי תכונות בגאומטריה.
 - בתרגול בדקו: 90°?
 - צלעות שוות?
 - כמה זוגות מקבילים?
@@ -11848,7 +11848,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:parallel_perpendicular` |
 | Page title | parallel_perpendicular |
@@ -11902,7 +11902,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:square_perimeter` |
 | Page title | square_perimeter |
@@ -11954,7 +11954,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:square_area` |
 | Page title | square_area |
@@ -12007,7 +12007,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:triangle_perimeter` |
 | Page title | triangle_perimeter |
@@ -12058,14 +12058,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:triangle_angles` |
 | Page title | triangle_angles |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה כלל חשוב: סכום זוויות במשולש = 180°.
+- היום נלמד בגאומטריה כלל חשוב: סכום זוויות במשולש = 180°.
 - אם יודעים שתי זוויות — אפשר למצוא את השלישית, החסרה.
 
 #### Section 2: הסבר
@@ -12107,21 +12107,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים למצוא זווית חסרה במשולש בכיתה ד׳ בהנדסה.
+- עכשיו אתם יודעים למצוא זווית חסרה במשולש בכיתה ד׳ בגאומטריה.
 - בתרגול תמצאו שתי זוויות ידועות — חברו אותן וחסרו מ-180°!
 
 ### diagonal_square
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:diagonal_square` |
 | Page title | diagonal_square |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה על אלכסון בריבוע.
+- היום נלמד בגאומטריה על אלכסון בריבוע.
 - אלכסון = קו ישר מפינה לפינה נגדית — והוא ארוך יותר מצלע הריבוע.
 
 #### Section 2: הסבר
@@ -12161,21 +12161,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מכירים אלכסון בריבוע בהנדסה.
+- עכשיו אתם מכירים אלכסון בריבוע בגאומטריה.
 - בתרגול תמצאו ריבוע — השוו את האלכסון לאורך הצלע!
 
 ### diagonal_rectangle
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:diagonal_rectangle` |
 | Page title | diagonal_rectangle |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה על אלכסון במלבן.
+- היום נלמד בגאומטריה על אלכסון במלבן.
 - נראה שבמלבן 3 על 4 — האלכסון מאפינה לפינה הוא 5.
 
 #### Section 2: הסבר
@@ -12215,21 +12215,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים למצוא אלכסון במלבן בהנדסה.
+- עכשיו אתם יודעים למצוא אלכסון במלבן בגאומטריה.
 - בתרגול תמצאו מלבן 3 על 4 — חפשו את האלכסון 5!
 
 ### solids
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:solids` |
 | Page title | solids |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה על תיבה — גוף תלת-ממדי.
+- היום נלמד בגאומטריה על תיבה — גוף תלת-ממדי.
 - נראה שלתיבה יש 6 פאות — וכל פאה היא מלבן (או ריבוע).
 
 #### Section 2: הסבר
@@ -12271,21 +12271,21 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם מזהים פאות של תיבה בהנדסה.
+- עכשיו אתם מזהים פאות של תיבה בגאומטריה.
 - בתרגול תמצאו תיבה — ספרו 6 פאות מלבניות!
 
 ### rectangular_prism_volume
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g4 |
 | Page ID | `geometry:g4:rectangular_prism_volume` |
 | Page title | rectangular_prism_volume |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד בהנדסה לחשב נפח של תיבה — קופסה, ארגז או מחסן קטן.
+- היום נלמד בגאומטריה לחשב נפח של תיבה — קופסה, ארגז או מחסן קטן.
 - נפח = כמה מקום יש בתוך הגוף — מחשבים: אורך × רוחב × גובה.
 
 #### Section 2: הסבר
@@ -12327,18 +12327,18 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 #### Section 7: בואו נתרגל!
 
-- עכשיו אתם יודעים לחשב נפח תיבה בהנדסה.
+- עכשיו אתם יודעים לחשב נפח תיבה בגאומטריה.
 - בתרגול תמצאו אורך, רוחב וגובה — כפלו את שלושתם!
 
 ---
 
-## Geometry / הנדסה — G5
+## Geometry / גאומטריה — G5
 
 ### parallel_perpendicular
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:parallel_perpendicular` |
 | Page title | parallel_perpendicular |
@@ -12392,7 +12392,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:quadrilaterals` |
 | Page title | quadrilaterals |
@@ -12444,7 +12444,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:triangle_angles` |
 | Page title | triangle_angles |
@@ -12498,7 +12498,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:square_perimeter` |
 | Page title | square_perimeter |
@@ -12553,7 +12553,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:triangle_perimeter` |
 | Page title | triangle_perimeter |
@@ -12604,7 +12604,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:square_area` |
 | Page title | square_area |
@@ -12653,7 +12653,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:parallelogram_area` |
 | Page title | parallelogram_area |
@@ -12704,7 +12704,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:trapezoid_area` |
 | Page title | trapezoid_area |
@@ -12761,7 +12761,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:heights_triangle` |
 | Page title | heights_triangle |
@@ -12813,7 +12813,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:heights_parallelogram` |
 | Page title | heights_parallelogram |
@@ -12860,7 +12860,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:heights_trapezoid` |
 | Page title | heights_trapezoid |
@@ -12909,7 +12909,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:diagonal_square` |
 | Page title | diagonal_square |
@@ -12961,7 +12961,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:diagonal_rectangle` |
 | Page title | diagonal_rectangle |
@@ -13010,14 +13010,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:diagonal_parallelogram` |
 | Page title | diagonal_parallelogram |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד אלכסון במקבילית בהנדסה — רעיונות, לא נוסחת אחת לכל מקרה.
+- היום נלמד אלכסון במקבילית בגאומטריה — רעיונות, לא נוסחת אחת לכל מקרה.
 - אלכסון — קטע שמחבר שתי קדקודים מנוגדים.
 
 #### Section 2: הסבר
@@ -13060,14 +13060,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:solids` |
 | Page title | solids |
 
 #### Section 1: מה לומדים?
 
-- היום נחזק גופים תלת-ממדיים בהנדסה.
+- היום נחזק גופים תלת-ממדיים בגאומטריה.
 - גוף — צורה עם אורך, רוחב וגובה (לא רק שטח!).
 
 #### Section 2: הסבר
@@ -13108,7 +13108,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:rectangular_prism_volume` |
 | Page title | rectangular_prism_volume |
@@ -13161,7 +13161,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g5 |
 | Page ID | `geometry:g5:tiling` |
 | Page title | tiling |
@@ -13207,13 +13207,13 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 ---
 
-## Geometry / הנדסה — G6
+## Geometry / גאומטריה — G6
 
 ### square_perimeter
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:square_perimeter` |
 | Page title | square_perimeter |
@@ -13268,7 +13268,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:triangle_perimeter` |
 | Page title | triangle_perimeter |
@@ -13319,7 +13319,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:square_area` |
 | Page title | square_area |
@@ -13370,7 +13370,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:parallelogram_area` |
 | Page title | parallelogram_area |
@@ -13423,7 +13423,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:trapezoid_area` |
 | Page title | trapezoid_area |
@@ -13478,7 +13478,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:triangle_angles` |
 | Page title | triangle_angles |
@@ -13541,14 +13541,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:circle_perimeter` |
 | Page title | circle_perimeter |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד היקף מעגל בהנדסה — נושא חדש לכיתה ו׳.
+- היום נלמד היקף מעגל בגאומטריה — נושא חדש לכיתה ו׳.
 - היקף = 2 × π × רדיוס.
 - בשיעור: π ≈ 3.14.
 
@@ -13592,14 +13592,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:circle_area` |
 | Page title | circle_area |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד שטח עיגול בהנדסה.
+- היום נלמד שטח עיגול בגאומטריה.
 - שטח = π × רדיוס².
 - בשיעור: π ≈ 3.14.
 - יחידה: סמ״ר.
@@ -13646,14 +13646,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:pythagoras_hyp` |
 | Page title | pythagoras_hyp |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד משפט פיתגורס בהנדסה — מציאת היתר.
+- היום נלמד משפט פיתגורס בגאומטריה — מציאת היתר.
 - במשולש ישר-זווית: a² + b² = c².
 - c — היתר (הצלע הארוכה, נגד הזווית הישרה).
 
@@ -13698,7 +13698,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:pythagoras_leg` |
 | Page title | pythagoras_leg |
@@ -13751,14 +13751,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:solids` |
 | Page title | solids |
 
 #### Section 1: מה לומדים?
 
-- היום נרחיב גופים תלת-ממדיים בהנדסה — כיתה ו׳.
+- היום נרחיב גופים תלת-ממדיים בגאומטריה — כיתה ו׳.
 - מלבד קובייה ותיבה — נכיר גליל, פירמידה, חרוט וכדור.
 
 #### Section 2: הסבר
@@ -13802,7 +13802,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:rectangular_prism_volume` |
 | Page title | rectangular_prism_volume |
@@ -13855,7 +13855,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:prism_volume_rectangular` |
 | Page title | prism_volume_rectangular |
@@ -13907,7 +13907,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:prism_volume_triangle` |
 | Page title | prism_volume_triangle |
@@ -13962,7 +13962,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:pyramid_volume_square` |
 | Page title | pyramid_volume_square |
@@ -14015,7 +14015,7 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:pyramid_volume_rectangular` |
 | Page title | pyramid_volume_rectangular |
@@ -14067,14 +14067,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:cylinder_volume` |
 | Page title | cylinder_volume |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד נפח גליל בהנדסה.
+- היום נלמד נפח גליל בגאומטריה.
 - נפח = π × r² × h.
 - בשיעור: π ≈ 3.14.
 
@@ -14119,14 +14119,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:cone_volume` |
 | Page title | cone_volume |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד נפח חרוט בהנדסה.
+- היום נלמד נפח חרוט בגאומטריה.
 - נפח = (1/3) × π × r² × h.
 - חרוט — כמו גליל אבל עם קדקוד.
 
@@ -14172,14 +14172,14 @@ Each section lists **source-normalized** text (markdown stripped) and **renderer
 
 | Field | Value |
 |-------|-------|
-| Subject | Geometry / הנדסה |
+| Subject | Geometry / גאומטריה |
 | Grade | g6 |
 | Page ID | `geometry:g6:sphere_volume` |
 | Page title | sphere_volume |
 
 #### Section 1: מה לומדים?
 
-- היום נלמד נפח כדור בהנדסה.
+- היום נלמד נפח כדור בגאומטריה.
 - נפח = (4/3) × π × r³.
 - r³ = רדיוס × רדיוס × רדיוס.
 

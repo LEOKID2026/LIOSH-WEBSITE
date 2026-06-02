@@ -29,7 +29,7 @@ export default function LearningBookShell({
   const returnLabel = fromLearning
     ? "סגור"
     : subject === "geometry"
-      ? "חזרה להנדסה"
+      ? "חזרה לגאומטריה"
       : subject === "science"
         ? "חזרה למדעים"
         : subject === "hebrew"

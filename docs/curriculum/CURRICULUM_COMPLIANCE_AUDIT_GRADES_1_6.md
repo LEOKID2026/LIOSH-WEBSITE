@@ -19,7 +19,7 @@
 | Subject | Risk | Rationale (summary) |
 |---------|------|---------------------|
 | **Math** | **YELLOW** | Strong per-grade anchors (`kita1–6.pdf` URLs + `mavo1.txt`); subsection catalogs exist but are manually encoded; spine follows generator branches, not PDF subsections |
-| **Geometry / הנדסה** | **RED** | Same official thread as math PDFs; product teaches `triangle_area` from G3 without spine skill or learning-book page; G6 `prism_volume_triangle` depends on untaught formula page |
+| **Geometry / גאומטריה** | **RED** | Same official thread as math PDFs; product teaches `triangle_area` from G3 without spine skill or learning-book page; G6 `prism_volume_triangle` depends on untaught formula page |
 | **Hebrew** | **YELLOW** | `hebrew-1-6.pdf` + `hebrew-official-alignment-matrix.json` are strong; POP lacks per-grade pages for ב׳–ו׳; spine = content maps (derived) |
 | **English** | **YELLOW** | `english Curriculum2020.pdf` + TXT grades א–ג; grades ד–ו TXT files unverified/mislabeled in catalog |
 | **Science** | **RED** | DOCX + POP only; spine has **7 coarse topic rows** (grades 1–6 spans), not official per-grade outcome grid |

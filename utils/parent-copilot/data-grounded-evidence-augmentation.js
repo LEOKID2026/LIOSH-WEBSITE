@@ -8,7 +8,7 @@ import { maxGlobalReportQuestionCount } from "./report-volume-context.js";
 
 /** Mirrors mass QUALITY + copilot harness expectations for grounded parent-facing Hebrew. */
 export const DATA_GROUNDED_PARENT_SURFACE_SIGNALS_RE =
-  /(עברית|חשבון|מתמטיקה|חישוב|אנגלית|מדעים|גאומטריה|גיאומטריה|הנדסה|מולדת|גאוגרפיה|הבנת\s*הנקרא|קריאה(?!\s+באנגלית)|אוצר\s*מילים|\d+%|\d+\s*שאלות|שאלות\s+בתרגול|לפי\s*הדוח|ממוצע|דיוק)/u;
+  /(עברית|חשבון|מתמטיקה|חישוב|אנגלית|מדעים|גאומטריה|גיאומטריה|מולדת|גאוגרפיה|הבנת\s*הנקרא|קריאה(?!\s+באנגלית)|אוצר\s*מילים|\d+%|\d+\s*שאלות|שאלות\s+בתרגול|לפי\s*הדוח|ממוצע|דיוק)/u;
 
 /**
  * @param {string} text

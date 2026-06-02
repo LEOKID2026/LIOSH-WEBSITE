@@ -2,7 +2,7 @@
 
 > **Status:** Hebrew text reflects **owner-approved content** (June 2026). Per-file metadata in this pack may still show `approval_status: draft` and `[DRAFT — not owner-approved]` until a runtime insertion task updates drafts. See `GEOMETRY_GRADE_1_LEARNING_BOOK_SIGNOFF.md`. Not production-wired.
 >
-> **Book naming:** Child-facing copy uses **גאומטריה**, not **גאומטריה**.
+> **Book naming:** Child-facing copy uses **גאומטריה**, not **הנדסה**.
 >
 > **Draft coverage:** Grade 1 Geometry has **3 / 3** draft pages authored. Source: `docs/learning-book/geometry/g1/drafts/`.
 >

@@ -686,7 +686,7 @@ export function classifyParentQuestionDeterministic({ utterance, payload }) {
 
   // 2. Subject/status inquiry framed as child + report scope ("מה מצב הילד … בנושא X") —
   // must beat hobbies/off-topic lexicon hits (e.g. שחמט/מוזיקה in OFF_TOPIC_CATEGORIES).
-  if (/מה\s*מצב\s*הילד\s*שלי\s*ב/u.test(t) || /^מה\s*מצב.*ב(?:מדעים|עברית|חשבון|אנגלית|גאומטריה|גיאומטריה|הנדסה|מולדת|שחמט|מוזיקה)/u.test(t)) {
+  if (/מה\s*מצב\s*הילד\s*שלי\s*ב/u.test(t) || /^מה\s*מצב.*ב(?:מדעים|עברית|חשבון|אנגלית|גאומטריה|גיאומטריה|מולדת|שחמט|מוזיקה)/u.test(t)) {
     return {
       bucket: "report_related",
       confidence: 0.86,

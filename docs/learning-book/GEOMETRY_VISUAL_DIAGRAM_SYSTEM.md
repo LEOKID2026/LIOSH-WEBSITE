@@ -1,4 +1,4 @@
-# Geometry / הנדסה — Visual Diagram System
+# Geometry / גאומטריה — Visual Diagram System
 
 **Date:** June 2026  
 **Status:** Infrastructure ready for all Geometry learning books (grades 1–6).
@@ -9,7 +9,7 @@
 
 Math / חשבון pages can often work with text + equations + numeric examples.
 
-Geometry / **הנדסה** cannot be text-only. Children must **see** shapes, labels, sides, vertices, angles, perimeter paths, area grids, symmetry lines, and simple 3D forms. Without this layer, the book becomes “text about shapes” instead of a real learning book.
+Geometry / **גאומטריה** cannot be text-only. Children must **see** shapes, labels, sides, vertices, angles, perimeter paths, area grids, symmetry lines, and simple 3D forms. Without this layer, the book becomes “text about shapes” instead of a real learning book.
 
 This system adds **structured SVG diagrams** inside the existing locked book reader — no new layout, HUD, or navigation.
 
@@ -19,8 +19,8 @@ This system adds **structured SVG diagrams** inside the existing locked book rea
 
 | Context | Label |
 |---------|--------|
-| Child-facing UI | **הנדסה** |
-| Book titles | `ספר הנדסה — כיתה X` |
+| Child-facing UI | **גאומטריה** |
+| Book titles | `ספר גאומטריה — כיתה X` |
 | Internal IDs / routes | `geometry`, `/learning/book/geometry/...` |
 
 Do **not** show **גאומטריה** in child-facing UI.
@@ -214,7 +214,7 @@ Diagrams sit inside the same panel classes as Math diagrams (`theme.diagramPanel
 | g2 | Blue/cyan/teal |
 | g3–g6 | Each grade’s existing palette |
 
-Same grade → same diagram colors across Math and הנדסה.
+Same grade → same diagram colors across Math and גאומטריה.
 
 ---
 
@@ -256,7 +256,7 @@ Manual QA:
 
 - `/learning/book/geometry/g1` and a topic page (e.g. `shapes_basic_square`)
 - `/learning/book/geometry/g6` and a topic page (e.g. `square_area`)
-- Title: **ספר הנדסה**
+- Title: **ספר גאומטריה**
 - Diagram visible, Hebrew labels, fits mobile width, grade theme applied
 - No **גאומטריה**, no raw `:::geometry-diagram` in UI
 

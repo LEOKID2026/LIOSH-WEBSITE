@@ -94,8 +94,8 @@ for (const pageId of GEOMETRY_G5_PAGE_ORDER) {
     /:::geometry-diagram[\s\S]*?:::/g,
     ""
   );
-  if (childFacing.includes("גאומטריה")) {
-    errors.push(`${pageId}: child-facing body must use הנדסה, not גאומטריה`);
+  if (childFacing.includes("הנדסה")) {
+    errors.push(`${pageId}: child-facing body must use גאומטריה, not הנדסה`);
   }
   const cyrillicHits = childFacing.match(CYRILLIC_IN_CHILD_FACING_RE);
   if (cyrillicHits) {
@@ -160,7 +160,7 @@ if (errors.length) {
 console.log(`G5 geometry content verification PASSED: ${GEOMETRY_G5_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g5:{pageId} ids");
-console.log("- no גאומטריה / English geometry / Cyrillic in child-facing body");
+console.log("- no הנדסה / English geometry / Cyrillic in child-facing body");
 console.log("- Section 5/6 alignment anchors present");
 console.log("- no fake practice routing in §7");
 

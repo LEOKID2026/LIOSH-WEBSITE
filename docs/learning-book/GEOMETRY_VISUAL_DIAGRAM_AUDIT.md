@@ -1,8 +1,8 @@
-# Geometry / הנדסה — Visual Diagram Audit
+# Geometry / גאומטריה — Visual Diagram Audit
 
 **Date:** June 2026  
 **Status:** Generated from `geometry-diagram-page-map.js` + draft scan  
-**Book title (UI):** ספר הנדסה — כיתה X — all grades use **הנדסה**
+**Book title (UI):** ספר גאומטריה — כיתה X — all grades use **גאומטריה**
 
 ---
 

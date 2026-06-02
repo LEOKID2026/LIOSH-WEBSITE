@@ -60,7 +60,7 @@ The **Grade 1 Geometry Learning Book** Hebrew content package is **accepted** as
 | Question | Resolution |
 |----------|------------|
 | Approve 3 pages as full G1 book? | **Yes** |
-| גאומטריה vs הנדסה? | **גאומטריה** |
+| גאומטריה vs גאומטריה? | **גאומטריה** |
 | G1 transformations without rotation? | **Yes** |
 | זווית ישרה in G1? | **Yes**, simple explanation |
 | Visual diagrams? | **Later** — implementation |
