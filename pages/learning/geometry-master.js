@@ -30,6 +30,14 @@ import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
+import { getGeometryBookHref } from "../../lib/learning-book/resolve-geometry-book-page";
+import {
+  consumeAnyGeometryBookLearningSnapshot,
+  consumeAnyGeometryBookPracticePreset,
+  isGeometryBookPracticeEntry,
+  saveGeometryBookLearningSnapshot,
+  withGeometryBookLearningReturn,
+} from "../../lib/learning-book/geometry-book-nav";
 import {
   getHint,
   buildGeometryAnimationSteps,
@@ -184,6 +192,8 @@ const AVATAR_OPTIONS = [
   "💫",
 ];
 
+const GEOMETRY_BOOK_GRADES = new Set(["g1", "g2", "g3", "g4", "g5", "g6"]);
+
 export default function GeometryMaster() {
   useIOSViewportFix();
   const router = useRouter();
@@ -201,6 +211,8 @@ export default function GeometryMaster() {
   const learningSessionStartPromiseRef = useRef(null);
   const geometryPendingDiagnosticProbeRef = useRef(null);
   const geometryHypothesisLedgerRef = useRef(null);
+  const bookPracticePresetRef = useRef(null);
+  const practiceForceKindRef = useRef(null);
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
   const [serverAccountSubjectAccuracyPct, setServerAccountSubjectAccuracyPct] = useState(null);
@@ -222,9 +234,24 @@ export default function GeometryMaster() {
   const [mode, setMode] = useState("learning");
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("area");
+  const bookTopicHref = useMemo(() => {
+    if (!GEOMETRY_BOOK_GRADES.has(grade)) return null;
+    return getGeometryBookHref({ grade, topic, kind: null });
+  }, [grade, topic]);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const questionBookHref = useMemo(() => {
+    if (mode !== "learning" || !currentQuestion) return null;
+    if (!GEOMETRY_BOOK_GRADES.has(grade)) return null;
+    const params = currentQuestion.params || {};
+    const ctx = {
+      grade,
+      topic: currentQuestion.topic || topic,
+      kind: params.kind ?? null,
+    };
+    return getGeometryBookHref(ctx);
+  }, [grade, mode, currentQuestion, topic]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -326,56 +353,80 @@ export default function GeometryMaster() {
   // Daily Streak
   const [dailyStreak, setDailyStreak] = useState({ streak: 0, lastDate: null });
   const [showStreakReward, setShowStreakReward] = useState(null);
-  
-  // Sound system
-  const sound = useSound();
-  
-const [playerName, setPlayerName] = useState(() => {
-    if (typeof window !== "undefined") {
-      return safeGetItem("mleo_player_name") || "";
-    }
-    return "";
-  });
-useEffect(() => {
-  let mounted = true;
-  fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
-    .then((res) => res.json().catch(() => ({})))
-    .then((payload) => {
-      if (!mounted) return;
-      const rawBal = payload?.student?.coin_balance;
-      const bal =
-        typeof rawBal === "number" && !Number.isNaN(rawBal) ? rawBal : 0;
-      setChildCoinBalance(bal);
-      if (!payload?.ok || !payload?.student?.id) return;
-      const student = payload.student;
-      const fullName = String(student.full_name || "").trim();
-      if (fullName) {
-        setPlayerName(fullName);
-        try {
-          safeSetItem("mleo_player_name", fullName);
-        } catch {}
-      }
-      const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-      if (gradeKey) {
-        setGrade(gradeKey);
-        const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
-        if (gradeNumberFromDb) {
-          setGradeNumber(gradeNumberFromDb);
-        }
-      }
-    })
-    .catch(() => {
-      if (mounted) setChildCoinBalance(0);
-    });
-  return () => {
-    mounted = false;
-  };
-}, []);
   const [monthlyPersistenceView, setMonthlyPersistenceView] = useState(null);
   /** Display-only: `payload.student.coin_balance` from GET /api/student/me (same source as student defaults). */
   const [childCoinBalance, setChildCoinBalance] = useState(0);
   const [subjectDailyMissions, setSubjectDailyMissions] = useState(null);
   const [subjectDailyMissionsLoading, setSubjectDailyMissionsLoading] = useState(false);
+  
+  // Sound system
+  const sound = useSound();
+  
+  const [playerName, setPlayerName] = useState(() => {
+    if (typeof window !== "undefined") {
+      return safeGetItem("mleo_player_name") || "";
+    }
+    return "";
+  });
+
+  const openBookFromLearning = useCallback(
+    (href) => {
+      if (!href) return;
+      const snapshot = {
+        gameActive: true,
+        mode,
+        grade,
+        gradeNumber,
+        level,
+        topic,
+        currentQuestion,
+        score,
+        streak,
+        correct,
+        wrong,
+        selectedAnswer,
+        textAnswer,
+        feedback,
+        questionStartTime,
+      };
+      if (!GEOMETRY_BOOK_GRADES.has(grade)) return;
+      saveGeometryBookLearningSnapshot(grade, snapshot);
+      router.push(withGeometryBookLearningReturn(href));
+    },
+    [
+      mode,
+      grade,
+      gradeNumber,
+      level,
+      topic,
+      currentQuestion,
+      score,
+      streak,
+      correct,
+      wrong,
+      selectedAnswer,
+      textAnswer,
+      feedback,
+      questionStartTime,
+      router,
+    ]
+  );
+
+  const applyBookPracticePreset = useCallback((preset) => {
+    if (!preset || preset.mode !== "learning") return;
+    const presetGrade = preset.grade;
+    if (!GEOMETRY_BOOK_GRADES.has(presetGrade)) return;
+    if (!GRADES[presetGrade]?.topics?.includes(preset.topic)) return;
+    bookPracticePresetRef.current = preset;
+    setGrade(presetGrade);
+    const presetGradeNumber = gradeKeyToNumber(presetGrade);
+    if (presetGradeNumber) {
+      setGradeNumber(presetGradeNumber);
+    }
+    setMode("learning");
+    setTopic(preset.topic);
+    practiceForceKindRef.current = preset.forceKind || null;
+  }, []);
 
   const refreshMonthlyPersistenceView = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -386,6 +437,78 @@ useEffect(() => {
       // ignore
     }
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
+      .then((res) => res.json().catch(() => ({})))
+      .then((payload) => {
+        if (!mounted) return;
+        const rawBal = payload?.student?.coin_balance;
+        const bal =
+          typeof rawBal === "number" && !Number.isNaN(rawBal) ? rawBal : 0;
+        setChildCoinBalance(bal);
+        if (!payload?.ok || !payload?.student?.id) return;
+        const student = payload.student;
+        const fullName = String(student.full_name || "").trim();
+        if (fullName) {
+          setPlayerName(fullName);
+          try {
+            safeSetItem("mleo_player_name", fullName);
+          } catch {}
+        }
+        const gradeKey = normalizeGradeLevelToKey(student.grade_level);
+        if (gradeKey && !bookPracticePresetRef.current) {
+          setGrade(gradeKey);
+          const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
+          if (gradeNumberFromDb) {
+            setGradeNumber(gradeNumberFromDb);
+          }
+        }
+        if (bookPracticePresetRef.current) {
+          applyBookPracticePreset(bookPracticePresetRef.current);
+        }
+      })
+      .catch(() => {
+        if (mounted) setChildCoinBalance(0);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [applyBookPracticePreset]);
+
+  useEffect(() => {
+    const snap = consumeAnyGeometryBookLearningSnapshot();
+    if (!snap || snap.gameActive !== true) return;
+    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    if (typeof snap.grade === "string") setGrade(snap.grade);
+    if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
+    if (typeof snap.level === "string") setLevel(snap.level);
+    if (typeof snap.topic === "string") setTopic(snap.topic);
+    setGameActive(true);
+    if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
+    setScore(typeof snap.score === "number" ? snap.score : 0);
+    setStreak(typeof snap.streak === "number" ? snap.streak : 0);
+    setCorrect(typeof snap.correct === "number" ? snap.correct : 0);
+    setWrong(typeof snap.wrong === "number" ? snap.wrong : 0);
+    setSelectedAnswer(snap.selectedAnswer ?? null);
+    setTextAnswer(typeof snap.textAnswer === "string" ? snap.textAnswer : "");
+    setFeedback(snap.feedback ?? null);
+    setQuestionStartTime(
+      typeof snap.questionStartTime === "number"
+        ? snap.questionStartTime
+        : Date.now()
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (!isGeometryBookPracticeEntry(router.query)) return;
+    const preset = consumeAnyGeometryBookPracticePreset();
+    if (preset) {
+      applyBookPracticePreset(preset);
+    }
+  }, [router.isReady, router.query, applyBookPracticePreset]);
 
   useEffect(() => {
     let cancelled = false;
@@ -900,7 +1023,10 @@ useEffect(() => {
           levelConfig,
           currentTopic,
           grade,
-          validTopic === "mixed" ? mixedTopics : null
+          validTopic === "mixed" ? mixedTopics : null,
+          practiceForceKindRef.current
+            ? { topic: currentTopic, forceKind: practiceForceKindRef.current }
+            : null
         );
       }
       
@@ -924,7 +1050,16 @@ useEffect(() => {
       // בדיקה שהשאלה תקינה
       if (!question || !question.answers || question.answers.length === 0) {
         attempts++;
-        continue; // ננסה שוב
+        continue;
+      }
+
+      if (practiceForceKindRef.current) {
+        const want = practiceForceKindRef.current;
+        const got = String(question.params?.kind || "").replace(/^story_/, "");
+        if (got !== want) {
+          attempts++;
+          continue;
+        }
       }
       
       attempts++;
@@ -2694,6 +2829,16 @@ useEffect(() => {
                 >
                   📚 לוח עזרה
                 </button>
+                {bookTopicHref ? (
+                  <button
+                    type="button"
+                    data-testid={`geometry-${grade}-book-topic-button`}
+                    onClick={() => router.push(bookTopicHref)}
+                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                  >
+                    📖 הסבר בספר
+                  </button>
+                ) : null}
                 <div
                   className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
                   title="מטבעות משחק"
@@ -2804,6 +2949,18 @@ useEffect(() => {
                       🧠 מה חשוב לזכור?
                     </button>
                   )}
+
+                  {questionBookHref ? (
+                    <button
+                      type="button"
+                      data-testid={`geometry-${grade}-book-question-button`}
+                      onClick={() => openBookFromLearning(questionBookHref)}
+                      className="absolute top-2 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      title="הסבר בספר לנושא הנוכחי"
+                    >
+                      📖 הסבר
+                    </button>
+                  ) : null}
 
                   {/* בדיקה אם יש שאלה תקינה */}
                   {currentQuestion.params?.kind === "no_question" ? (

@@ -15,6 +15,7 @@
 | Review pack | ✅ `docs/learning-book/GEOMETRY_GRADE_4_HEBREW_REVIEW_PACK.md` (generated) |
 | Verifier | ✅ `scripts/verify-geometry-g4-book-content.mjs` |
 | Manifest | ✅ `scripts/lib/geometry-g4-draft-manifest.mjs` |
+| Runtime registry / routes | ✅ wired (`geometry-g4-registry`, `/learning/book/geometry/g4`) |
 
 ---
 
@@ -48,4 +49,4 @@ node scripts/verify-geometry-g4-book-content.mjs
 
 ## Stop rule
 
-No registry, routes, SQL, commit, push, or deploy until owner approves content.
+Content approved — runtime wired. No SQL, commit, push, or deploy without owner request.

@@ -17,7 +17,7 @@
 | Review pack | ✅ `docs/learning-book/GEOMETRY_GRADE_1_HEBREW_REVIEW_PACK.md` (generated) |
 | Content verification | ✅ `scripts/verify-geometry-g1-book-content.mjs` |
 | Draft manifest (scripts only) | ✅ `scripts/lib/geometry-g1-draft-manifest.mjs` |
-| Runtime registry / routes | ❌ **Next step** — separate task |
+| Runtime routes | ✅ `/learning/book/geometry/g1` + `[pageId]` (3 SSG pages) |
 | Practice CTA resolver | ❌ Not created — post-runtime task |
 
 ---

@@ -21,6 +21,8 @@ const FAKE_PRACTICE_RE =
   /forceKind|fromBook=|geometry-master\?|resolveGeometryG5|getGeometryG5Practice/i;
 const RAW_MD_RE = /```|^\|.+\|$/m;
 const VISIBLE_DRAFT_RE = /\[DRAFT/i;
+/** Cyrillic must not appear in child-facing Hebrew section bodies */
+const CYRILLIC_IN_CHILD_FACING_RE = /[\u0400-\u04FF]/;
 
 function readMetadataField(raw, field) {
   const re = new RegExp(`\\|\\s*\\*\\*${field}\\*\\*\\s*\\|\\s*(.+?)\\s*\\|`, "i");
@@ -88,8 +90,15 @@ for (const pageId of GEOMETRY_G5_PAGE_ORDER) {
   }
 
   const childFacing = page.sections.map((s) => s.body).join("\n");
-  if (childFacing.includes("גאומטריה")) {
-    errors.push(`${pageId}: child-facing body contains גאומטריה`);
+  if (childFacing.includes("הנדסה")) {
+    errors.push(`${pageId}: child-facing body contains forbidden הנדסה`);
+  }
+  const cyrillicHits = childFacing.match(CYRILLIC_IN_CHILD_FACING_RE);
+  if (cyrillicHits) {
+    const unique = [...new Set(cyrillicHits)];
+    errors.push(
+      `${pageId}: child-facing body contains foreign (Cyrillic) letters: ${unique.join(", ")}`
+    );
   }
   if (/\bgeometry\b/i.test(childFacing)) {
     errors.push(`${pageId}: child-facing body contains English geometry`);
@@ -147,7 +156,7 @@ if (errors.length) {
 console.log(`G5 geometry content verification PASSED: ${GEOMETRY_G5_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g5:{pageId} ids");
-console.log("- no גאומטריה / English geometry in body");
+console.log("- no הנדסה / English geometry / Cyrillic in child-facing body");
 console.log("- Section 5/6 alignment anchors present");
 console.log("- no fake practice routing in §7");
 

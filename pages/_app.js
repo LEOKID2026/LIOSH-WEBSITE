@@ -32,6 +32,10 @@ const STUDENT_PROTECTED_ROUTES = new Set([
   "/learning/geometry-curriculum",
   "/learning/book/math/g1",
   "/learning/book/math/g1/[pageId]",
+  "/learning/book/geometry/g1",
+  "/learning/book/geometry/g1/[pageId]",
+  "/learning/book/geometry/g3",
+  "/learning/book/geometry/g3/[pageId]",
   "/learning/dev-student-simulator",
 ]);
 

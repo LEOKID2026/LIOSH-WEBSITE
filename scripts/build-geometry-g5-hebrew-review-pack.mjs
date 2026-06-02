@@ -27,6 +27,8 @@ function readMetadataField(raw, field) {
   return m ? m[1].trim() : "";
 }
 
+const CYRILLIC_IN_CHILD_FACING_RE = /[\u0400-\u04FF]/;
+
 function validatePages() {
   const errors = [];
   for (const pageId of GEOMETRY_G5_PAGE_ORDER) {
@@ -55,8 +57,11 @@ function validatePages() {
       errors.push(`${pageId}.md: grade must be g5`);
     }
     const childFacing = page.sections.map((s) => s.body).join("\n");
-    if (childFacing.includes("גאומטריה")) {
-      errors.push(`${pageId}.md: contains forbidden גאומטריה in section body`);
+    if (childFacing.includes("הנדסה")) {
+      errors.push(`${pageId}.md: contains forbidden הנדסה in section body`);
+    }
+    if (CYRILLIC_IN_CHILD_FACING_RE.test(childFacing)) {
+      errors.push(`${pageId}.md: contains foreign (Cyrillic) letters in section body`);
     }
     if (/\bgeometry\b/i.test(childFacing)) {
       errors.push(`${pageId}.md: contains English geometry in section body`);
@@ -81,7 +86,7 @@ const header = `# Grade 5 Geometry Learning Book — Hebrew Review Pack
 >
 > **UI / runtime:** Not wired — documentation for owner and Hebrew review only.
 >
-> **Review focus:** Grade 5 suitability, **גאומטריה** wording (not **גאומטריה**), Section 5/6 alignment, notation/Bidi (ס״מ, סמ״ר, °, √, labels A/B/C/D).
+> **Review focus:** Grade 5 suitability, **גאומטריה** wording (not **הנדסה**), Section 5/6 alignment, notation/Bidi (ס״מ, סמ״ר, °, √, labels A/B/C/D).
 
 ---
 

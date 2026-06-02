@@ -66,6 +66,7 @@ export const TOPIC_DESCRIPTION_LOW_GRADES = {
     area: "שטח — מדידות והשוואה (עומק לפי רמה)",
     perimeter: "היקף — מדידה והיכרות במצולעים",
     rotation: "סיבוב במישור — היכרות בתוכנית היסודי",
+    solids: "גופים תלת־ממדיים — היכרות ושמות",
   },
 };
 
@@ -82,6 +83,7 @@ export const TOPIC_DESCRIPTION_MID_HIGH_GRADES = {
     area: "שטח — מדידות, השוואה וחישובים לפי רמה",
     perimeter: "היקף — מדידה וחישוב במצולעים",
     volume: "נפח תיבה — היכרות ומדידות בסיסיות",
+    solids: "גופים תלת־ממדיים — היכרות לפני נפח",
   },
   g5: {
     angles: "זוויות — יישום במצולעים",
@@ -133,8 +135,8 @@ export const GRADES = {
   },
   g3: {
     name: "כיתה ג'",
-    topics: ["shapes_basic", "angles", "parallel_perpendicular", "triangles", "quadrilaterals", "area", "perimeter", "rotation"], // היכרות צורות; מאונכות/מקבילות; משולשים/מרובעים; מדידות; סיבוב
-    shapes: ["triangle", "square", "rectangle"],
+    topics: ["shapes_basic", "angles", "parallel_perpendicular", "triangles", "quadrilaterals", "area", "perimeter", "rotation", "solids"], // היכרות צורות; מאונכות/מקבילות; משולשים/מרובעים; מדידות; סיבוב; גופים
+    shapes: ["triangle", "square", "rectangle", "cube", "rectangular_prism", "cylinder", "pyramid", "cone", "sphere"],
   },
   g4: {
     name: "כיתה ד'",
@@ -149,7 +151,8 @@ export const GRADES = {
       "area",
       "perimeter",
       "volume",
-    ], // מצולעים, זוויות, מקבילות/מאונכות, משולשים/מרובעים, אלכסון, סימטרייה, מדידות, נפח תיבה
+      "solids",
+    ], // מצולעים, זוויות, מקבילות/מאונכות, משולשים/מרובעים, אלכסון, סימטרייה, מדידות, נפח תיבה, גופים
     shapes: ["square", "rectangle", "triangle", "circle", "rectangular_prism", "cube"],
   },
   g5: {
@@ -233,6 +236,8 @@ export const TOPIC_SHAPES = {
   },
   solids: {
     g2: ["cube", "rectangular_prism", "cylinder", "pyramid", "cone", "sphere"], // גופים - כיתה ב'
+    g3: ["cube", "rectangular_prism", "cylinder", "pyramid", "cone", "sphere"],
+    g4: ["cube", "rectangular_prism", "cylinder", "pyramid", "cone", "sphere"],
     g5: ["cube", "rectangular_prism", "cylinder", "pyramid", "cone", "sphere"],
     g6: ["cube", "rectangular_prism", "cylinder", "pyramid", "cone", "sphere"], // גופים משוכללים - כיתה ו'
   },

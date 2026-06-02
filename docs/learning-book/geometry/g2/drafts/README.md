@@ -15,7 +15,7 @@
 | Review pack | ✅ `docs/learning-book/GEOMETRY_GRADE_2_HEBREW_REVIEW_PACK.md` (generated) |
 | Content verification | ✅ `scripts/verify-geometry-g2-book-content.mjs` |
 | Draft manifest (scripts only) | ✅ `scripts/lib/geometry-g2-draft-manifest.mjs` |
-| Runtime registry / routes | ❌ Not in scope — content-only task |
+| Runtime registry / routes | ✅ wired (`geometry-g2-registry`, `/learning/book/geometry/g2`) |
 
 ---
 

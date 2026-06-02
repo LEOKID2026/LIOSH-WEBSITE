@@ -73,8 +73,8 @@ for (const pageId of GEOMETRY_G1_PAGE_ORDER) {
   }
 
   const childFacing = page.sections.map((s) => s.body).join("\n");
-  if (childFacing.includes("גאומטריה")) {
-    errors.push(`${pageId}: child-facing body contains גאומטריה`);
+  if (childFacing.includes("הנדסה")) {
+    errors.push(`${pageId}: child-facing body contains forbidden הנדסה`);
   }
   if (/\bgeometry\b/i.test(childFacing)) {
     errors.push(`${pageId}: child-facing body contains English geometry`);
@@ -121,7 +121,7 @@ if (errors.length) {
 console.log(`G1 Geometry content verification PASSED: ${GEOMETRY_G1_PAGE_ORDER.length} pages.`);
 console.log("- 7 sections each");
 console.log("- draft metadata + geometry:g1:{pageId} ids");
-console.log("- גאומטריה naming; no גאומטריה / English geometry in body");
+console.log("- גאומטריה wording; no הנדסה / English geometry in body");
 console.log("- Section 5/6 alignment anchors present");
 console.log("- no fake practice routing in §7");
 if (markdownNotes.length) {

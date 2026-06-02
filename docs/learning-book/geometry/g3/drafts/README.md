@@ -1,6 +1,7 @@
 # Grade 3 Geometry Learning Book — Drafts
 
-**Status:** All batches authored — **9 / 9** draft pages complete. Owner review pending.  
+**Status:** **Owner-approved** — **9 / 9** pages; runtime wired.  
+**Signoff:** `docs/learning-book/GEOMETRY_GRADE_3_LEARNING_BOOK_SIGNOFF.md`  
 **Date:** June 2026  
 **Folder:** `docs/learning-book/geometry/g3/drafts/`
 
@@ -11,7 +12,9 @@
 | Item | Status |
 |------|--------|
 | Curriculum plan | ✅ `docs/learning-book/GEOMETRY_GRADE_3_LEARNING_BOOK_PLAN.md` |
+| Owner signoff | ✅ `docs/learning-book/GEOMETRY_GRADE_3_LEARNING_BOOK_SIGNOFF.md` |
 | Draft pages | ✅ **9 / 9** (Batches A–E) |
+| Runtime routes | ✅ `/learning/book/geometry/g3` + `[pageId]` |
 | Review pack | ✅ `docs/learning-book/GEOMETRY_GRADE_3_HEBREW_REVIEW_PACK.md` (generated) |
 | Verifier | ✅ `scripts/verify-geometry-g3-book-content.mjs` |
 | Manifest | ✅ `scripts/lib/geometry-g3-draft-manifest.mjs` |

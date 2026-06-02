@@ -11,6 +11,7 @@ import { MATH_G3_PAGE_ORDER } from "../../lib/learning-book/math-g3-registry.js"
 import { MATH_G4_PAGE_ORDER } from "../../lib/learning-book/math-g4-registry.js";
 import { MATH_G5_PAGE_ORDER } from "../../lib/learning-book/math-g5-registry.js";
 import { MATH_G6_PAGE_ORDER } from "../../lib/learning-book/math-g6-registry.js";
+import { GEOMETRY_G4_PAGE_ORDER } from "../../lib/learning-book/geometry-g4-registry.js";
 import {
   findInlineMathRuns,
   splitTextAndMathRuns,
@@ -429,11 +430,48 @@ for (const [order, grade] of [
   }
 }
 
+const GEOMETRY_G4_MANUAL_QA = [
+  "shapes_basic_properties_angles",
+  "parallel_perpendicular",
+  "square_perimeter",
+  "square_area",
+  "triangle_angles",
+  "diagonal_rectangle",
+  "rectangular_prism_volume",
+];
+
+for (const pageId of GEOMETRY_G4_MANUAL_QA) {
+  const raw = fs.readFileSync(
+    path.join(ROOT, `docs/learning-book/geometry/g4/drafts/${pageId}.md`),
+    "utf8"
+  );
+  const page = parseLearningPageMarkdown(raw, pageId);
+  for (const sectionNumber of [3, 4, 5, 6]) {
+    const section = page.sections.find((s) => s.number === sectionNumber);
+    if (!section) {
+      fail(`geometry/g4/${pageId}: missing section ${sectionNumber}`);
+      continue;
+    }
+    scanSectionBody(section.body, `geometry/g4/${pageId}`, sectionNumber);
+  }
+}
+
+for (const pageId of GEOMETRY_G4_PAGE_ORDER) {
+  const raw = fs.readFileSync(
+    path.join(ROOT, `docs/learning-book/geometry/g4/drafts/${pageId}.md`),
+    "utf8"
+  );
+  const page = parseLearningPageMarkdown(raw, pageId);
+  for (const section of page.sections) {
+    scanSectionBody(section.body, `geometry/g4/${pageId}`, section.number);
+  }
+}
+
 if (failures > 0) {
   console.error(`\n${failures} failure(s).`);
   process.exit(1);
 }
 
 console.log(
-  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + ${THOUSANDS_LINES.length} high-risk token checks + G1/G2/G3/G4/G5/G6 full scan + manual QA pages.`
+  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + ${THOUSANDS_LINES.length} high-risk token checks + math G1–G6 full scan + geometry G4 full scan + manual QA pages.`
 );

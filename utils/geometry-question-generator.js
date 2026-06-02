@@ -323,7 +323,12 @@ export function buildGeometryMcqAnswers({
   return shuffleMcqList(uniq.slice(0, 4));
 }
 
-export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
+export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeOpts = null) {
+  const geoForceKind =
+    probeOpts?.forceKind != null ? String(probeOpts.forceKind) : "";
+  const forcedTopic =
+    probeOpts?.topic != null ? String(probeOpts.topic) : "";
+
   // בדיקה שהכיתה קיימת
   if (!GRADES[gradeKey]) {
     return {
@@ -338,7 +343,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
   const allowedTopics = GRADES[gradeKey].topics || [];
   
   let selectedTopic;
-  if (isMixed) {
+  if (forcedTopic && allowedTopics.includes(forcedTopic)) {
+    selectedTopic = forcedTopic;
+  } else if (isMixed) {
     let availableTopics;
     if (mixedOps) {
       availableTopics = Object.entries(mixedOps)
@@ -400,6 +407,43 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
     availableShapes.length > 0
       ? availableShapes[Math.floor(Math.random() * availableShapes.length)]
       : null;
+
+  const SHAPE_FOR_KIND = {
+    shapes_basic_square: "square",
+    shapes_basic_rectangle: "rectangle",
+    shapes_basic_properties_square: "square",
+    shapes_basic_properties_rectangle: "rectangle",
+    shapes_basic_properties_angles: "square",
+    square_area: "square",
+    square_perimeter: "square",
+    triangle_perimeter: "triangle",
+    triangle_angles: "triangle",
+    parallelogram_area: "parallelogram",
+    trapezoid_area: "trapezoid",
+    diagonal_square: "square",
+    diagonal_rectangle: "rectangle",
+    diagonal_parallelogram: "parallelogram",
+    rectangular_prism_volume: "rectangular_prism",
+    cylinder_volume: "cylinder",
+    sphere_volume: "sphere",
+    cone_volume: "cone",
+    pyramid_volume_square: "pyramid",
+    pyramid_volume_rectangular: "pyramid",
+    prism_volume_rectangular: "prism",
+    prism_volume_triangle: "prism",
+    circle_area: "circle",
+    circle_perimeter: "circle",
+    pythagoras_hyp: "triangle",
+    pythagoras_leg: "triangle",
+  };
+  if (
+    geoForceKind &&
+    SHAPE_FOR_KIND[geoForceKind] &&
+    availableShapes.includes(SHAPE_FOR_KIND[geoForceKind])
+  ) {
+    shape = SHAPE_FOR_KIND[geoForceKind];
+  }
+
   if (geoForce?.shape && availableShapes.includes(geoForce.shape)) {
     shape = geoForce.shape;
   }
@@ -433,6 +477,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
 
   if (
     !skipConceptual &&
+    !geoForceKind &&
     selectedTopic !== "mixed" &&
     Math.random() < conceptualP
   ) {
@@ -471,7 +516,8 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
       switch (shape) {
         case "square": {
           const side = Math.floor(Math.random() * level.maxSide) + 1;
-          const useStory = allowStory && Math.random() < 0.4;
+          const useStory =
+            allowStory && !geoForceKind && Math.random() < 0.4;
 
           params = {
             side,
@@ -881,7 +927,8 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
             Math.floor(Math.random() * (level.maxSide / 2)) + 1;
           const height =
             Math.floor(Math.random() * level.maxSide) + 1;
-          const useStory = allowStory && Math.random() < 0.5;
+          const useStory =
+            allowStory && !geoForceKind && Math.random() < 0.5;
 
           params = {
             length,
@@ -1113,7 +1160,11 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
 
       // לפעמים שואלים על היתר (כמו קודם), לפעמים על אחד הניצבים
       const askLeg =
-        allowStory && Math.random() < 0.4; // "שאלה הפוכה" רק בכיתות גבוהות
+        geoForceKind === "pythagoras_leg"
+          ? true
+          : geoForceKind === "pythagoras_hyp"
+            ? false
+            : allowStory && Math.random() < 0.4;
       if (!askLeg) {
         params = { a, b, c, which: "hypotenuse", kind: "pythagoras_hyp" };
         correctAnswer = round(c);
@@ -1159,7 +1210,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null) {
       if (gradeKey === "g1") {
         // שאלות זיהוי בסיסיות - מה השם של הצורה?
         const side = Math.floor(Math.random() * level.maxSide) + 1;
-        const isSquare = Math.random() < 0.5;
+        const isSquare =
+          geoForceKind === "shapes_basic_square" ||
+          (geoForceKind !== "shapes_basic_rectangle" && Math.random() < 0.5);
         
         if (isSquare) {
           params = {

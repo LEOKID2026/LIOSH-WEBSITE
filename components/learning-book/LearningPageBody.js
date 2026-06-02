@@ -48,6 +48,18 @@ import { resolveMathG3PracticeTarget } from "../../lib/learning-book/resolve-mat
 import { resolveMathG4PracticeTarget } from "../../lib/learning-book/resolve-math-g4-practice-target";
 import { resolveMathG5PracticeTarget } from "../../lib/learning-book/resolve-math-g5-practice-target";
 import { resolveMathG6PracticeTarget } from "../../lib/learning-book/resolve-math-g6-practice-target";
+import { GEOMETRY_G1_BOOK_META } from "../../lib/learning-book/geometry-g1-registry";
+import { GEOMETRY_G2_BOOK_META } from "../../lib/learning-book/geometry-g2-registry";
+import { GEOMETRY_G3_BOOK_META } from "../../lib/learning-book/geometry-g3-registry";
+import { GEOMETRY_G4_BOOK_META } from "../../lib/learning-book/geometry-g4-registry";
+import { GEOMETRY_G5_BOOK_META } from "../../lib/learning-book/geometry-g5-registry";
+import { GEOMETRY_G6_BOOK_META } from "../../lib/learning-book/geometry-g6-registry";
+import {
+  getGeometryBookReturnQuerySuffix,
+  getGeometryBookPracticePath,
+  saveGeometryBookPracticePreset,
+} from "../../lib/learning-book/geometry-book-nav";
+import { resolveGeometryPracticeTarget } from "../../lib/learning-book/geometry-book-practice-map";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
@@ -100,6 +112,24 @@ const G6_BOOK_UI = {
   savePracticePreset: saveMathG6BookPracticePreset,
 };
 
+/** @param {string} grade @param {typeof GEOMETRY_G1_BOOK_META} bookMeta */
+function makeGeometryBookUi(grade, bookMeta) {
+  return {
+    bookMeta,
+    getReturnQuerySuffix: getGeometryBookReturnQuerySuffix,
+    resolvePracticeTarget: (pageId) => resolveGeometryPracticeTarget(grade, pageId),
+    getPracticePath: getGeometryBookPracticePath,
+    savePracticePreset: (preset) => saveGeometryBookPracticePreset(grade, preset),
+  };
+}
+
+const GEOMETRY_G1_BOOK_UI = makeGeometryBookUi("g1", GEOMETRY_G1_BOOK_META);
+const GEOMETRY_G2_BOOK_UI = makeGeometryBookUi("g2", GEOMETRY_G2_BOOK_META);
+const GEOMETRY_G3_BOOK_UI = makeGeometryBookUi("g3", GEOMETRY_G3_BOOK_META);
+const GEOMETRY_G4_BOOK_UI = makeGeometryBookUi("g4", GEOMETRY_G4_BOOK_META);
+const GEOMETRY_G5_BOOK_UI = makeGeometryBookUi("g5", GEOMETRY_G5_BOOK_META);
+const GEOMETRY_G6_BOOK_UI = makeGeometryBookUi("g6", GEOMETRY_G6_BOOK_META);
+
 export default function LearningPageBody({
   page,
   prevPageId = null,
@@ -123,6 +153,12 @@ export default function LearningPageBody({
   );
 
   const bookUi = useMemo(() => {
+    if (bookSubject === "geometry" && bookGrade === "g6") return GEOMETRY_G6_BOOK_UI;
+    if (bookSubject === "geometry" && bookGrade === "g5") return GEOMETRY_G5_BOOK_UI;
+    if (bookSubject === "geometry" && bookGrade === "g4") return GEOMETRY_G4_BOOK_UI;
+    if (bookSubject === "geometry" && bookGrade === "g3") return GEOMETRY_G3_BOOK_UI;
+    if (bookSubject === "geometry" && bookGrade === "g2") return GEOMETRY_G2_BOOK_UI;
+    if (bookSubject === "geometry" && bookGrade === "g1") return GEOMETRY_G1_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g6") return G6_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g5") return G5_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g4") return G4_BOOK_UI;
@@ -204,6 +240,10 @@ export default function LearningPageBody({
   const atLast = sectionIndex >= totalSections - 1;
   const hasLessonNav = Boolean(prevPageId || nextPageId);
   const isFinalPracticeSection = atLast && section?.number === 7;
+  const practiceCtaSubtext =
+    bookSubject === "geometry"
+      ? "נעבור לתרגול של הנושא הזה בגאומטריה"
+      : "נעבור לתרגול של הנושא הזה בחשבון";
 
   return (
     <>
@@ -280,7 +320,7 @@ export default function LearningPageBody({
               >
                 <span className="block text-lg font-bold sm:text-xl">בואו נתרגל עכשיו</span>
                 <span className={`mt-1 block text-sm font-medium ${theme.practiceCtaSub}`}>
-                  נעבור לתרגול של הנושא הזה בחשבון
+                  {practiceCtaSubtext}
                 </span>
               </Link>
             </div>

@@ -1,6 +1,6 @@
 # Grade 3 Geometry Learning Book — Hebrew Review Pack
 
-> **Status:** All content in this pack is **draft** (`approval_status: draft`). Nothing here is owner-approved or production-ready.
+> **Status:** Hebrew text reflects **owner-approved content** (June 2026). Per-file metadata may still show `draft` until a metadata pass. Runtime wired. See `GEOMETRY_GRADE_3_LEARNING_BOOK_SIGNOFF.md`.
 >
 > **Book naming:** Child-facing copy uses **גאומטריה**, not **הנדסה**.
 >

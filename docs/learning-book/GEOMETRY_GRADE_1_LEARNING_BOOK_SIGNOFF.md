@@ -17,7 +17,7 @@ The **Grade 1 Geometry Learning Book** Hebrew content package is **accepted** as
 | Spine alignment | Matches `subject: geometry`, `minGrade ≤ 1`, `maxGrade ≥ 1` (excluding `no_question`) |
 | `approval_status` on draft files | Still **`draft`** until a separate runtime/implementation task updates metadata |
 | Hebrew titles in draft files | Still carry **`[DRAFT — not owner-approved]`** marker until implementation pass |
-| Runtime registry / routes / UI | **Not started** — explicit separate task |
+| Runtime routes | ✅ Wired — `/learning/book/geometry/g1` (3 pages); practice CTA off |
 
 ---
 

@@ -58,7 +58,7 @@ export const GEOMETRY_G5_ALIGNMENT_ANCHORS = {
   heights_trapezoid: ["5 ס״מ", "9 ס״מ", "28 סמ״ר"],
   diagonal_square: ["6 ס״מ", "√2"],
   diagonal_rectangle: ["6 ס״מ", "8 ס״מ"],
-  diagonal_parallelogram: ["5 ס״מ", "12 ס״מ"],
+  diagonal_parallelogram: ["מקבילית", "מלבן"],
   solids: ["קובייה", "תיבה"],
   rectangular_prism_volume: ["4 ס״מ", "3 ס״מ", "5 ס״מ"],
   tiling: ["90°", "ריבוע"],
@@ -146,9 +146,9 @@ export const GEOMETRY_G5_PAGE_META = {
   },
   diagonal_parallelogram: {
     skillId: "geometry:kind:diagonal_parallelogram",
-    pageType: "step_by_step_procedure",
+    pageType: "concept_foundation",
     titleHe: "אלכסון במקבילית",
-    scope: "פיתגורס עם שתי צלעות סמוכות",
+    scope: "אלכסון מחלק לשני משולשים; לא √(a²+b²) לכל מקבילית",
   },
   solids: {
     skillId: "geometry:kind:solids",

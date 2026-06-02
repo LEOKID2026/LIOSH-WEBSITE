@@ -22,6 +22,18 @@ function fail(msg) {
   console.error("FAIL:", msg);
 }
 
+function requireBookPracticeFeatures(entry, label) {
+  if (!entry.features?.practice) {
+    fail(`${label} must enable practice feature`);
+  }
+  if (!entry.features?.topicResolve) {
+    fail(`${label} must enable topicResolve feature`);
+  }
+  if (!entry.features?.questionResolve) {
+    fail(`${label} must enable questionResolve feature`);
+  }
+}
+
 const EXPECTED_MATH = ["g1", "g2", "g3", "g4", "g5", "g6"];
 const EXPECTED_GEOMETRY = ["g1", "g2", "g3", "g4", "g5", "g6"];
 
@@ -108,6 +120,150 @@ for (const grade of ["g1", "g2", "g3", "g4", "g5", "g6"]) {
   if (!fs.existsSync(explicit)) {
     fail(`missing explicit math/${grade} route (must remain)`);
   }
+}
+
+const geometryG1Index = path.join(ROOT, "pages/learning/book/geometry/g1/index.js");
+const geometryG1Page = path.join(ROOT, "pages/learning/book/geometry/g1/[pageId].js");
+if (!fs.existsSync(geometryG1Index)) {
+  fail("missing explicit geometry/g1 index route");
+}
+if (!fs.existsSync(geometryG1Page)) {
+  fail("missing explicit geometry/g1 page route");
+}
+
+const geometryG1Entry = getLearningBookEntry("geometry", "g1");
+if (!geometryG1Entry || geometryG1Entry.status !== "authored") {
+  fail("geometry/g1 must be authored in catalog");
+}
+if (geometryG1Entry.registry.pageOrder.length !== 3) {
+  fail(`geometry/g1 expected 3 pages, got ${geometryG1Entry.registry.pageOrder.length}`);
+}
+requireBookPracticeFeatures(geometryG1Entry, "geometry/g1");
+
+const geometryG2Index = path.join(ROOT, "pages/learning/book/geometry/g2/index.js");
+const geometryG2Page = path.join(ROOT, "pages/learning/book/geometry/g2/[pageId].js");
+if (!fs.existsSync(geometryG2Index)) {
+  fail("missing explicit geometry/g2 index route");
+}
+if (!fs.existsSync(geometryG2Page)) {
+  fail("missing explicit geometry/g2 page route");
+}
+
+const geometryG2Entry = getLearningBookEntry("geometry", "g2");
+if (!geometryG2Entry || geometryG2Entry.status !== "authored") {
+  fail("geometry/g2 must be authored in catalog");
+}
+if (geometryG2Entry.registry.pageOrder.length !== 3) {
+  fail(`geometry/g2 expected 3 pages, got ${geometryG2Entry.registry.pageOrder.length}`);
+}
+requireBookPracticeFeatures(geometryG2Entry, "geometry/g2");
+if (!geometryG2Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g2 book title must use גאומטריה");
+}
+if (geometryG2Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g2 book title must not use הנדסה");
+}
+
+const geometryG3Index = path.join(ROOT, "pages/learning/book/geometry/g3/index.js");
+const geometryG3Page = path.join(ROOT, "pages/learning/book/geometry/g3/[pageId].js");
+if (!fs.existsSync(geometryG3Index)) {
+  fail("missing explicit geometry/g3 index route");
+}
+if (!fs.existsSync(geometryG3Page)) {
+  fail("missing explicit geometry/g3 page route");
+}
+
+const geometryG3Entry = getLearningBookEntry("geometry", "g3");
+if (!geometryG3Entry || geometryG3Entry.status !== "authored") {
+  fail("geometry/g3 must be authored in catalog");
+}
+if (geometryG3Entry.registry.pageOrder.length !== 9) {
+  fail(`geometry/g3 expected 9 pages, got ${geometryG3Entry.registry.pageOrder.length}`);
+}
+requireBookPracticeFeatures(geometryG3Entry, "geometry/g3");
+if (!geometryG3Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g3 book title must use גאומטריה");
+}
+if (geometryG3Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g3 book title must not use הנדסה");
+}
+
+const geometryG4Index = path.join(ROOT, "pages/learning/book/geometry/g4/index.js");
+const geometryG4Page = path.join(ROOT, "pages/learning/book/geometry/g4/[pageId].js");
+if (!fs.existsSync(geometryG4Index)) {
+  fail("missing explicit geometry/g4 index route");
+}
+if (!fs.existsSync(geometryG4Page)) {
+  fail("missing explicit geometry/g4 page route");
+}
+
+const geometryG4Entry = getLearningBookEntry("geometry", "g4");
+if (!geometryG4Entry || geometryG4Entry.status !== "authored") {
+  fail("geometry/g4 must be authored in catalog");
+}
+if (geometryG4Entry.registry.pageOrder.length !== 14) {
+  fail(
+    `geometry/g4 expected 14 pages, got ${geometryG4Entry.registry.pageOrder.length}`
+  );
+}
+requireBookPracticeFeatures(geometryG4Entry, "geometry/g4");
+if (!geometryG4Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g4 book title must use גאומטריה");
+}
+if (geometryG4Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g4 book title must not use הנדסה");
+}
+
+const geometryG5Index = path.join(ROOT, "pages/learning/book/geometry/g5/index.js");
+const geometryG5Page = path.join(ROOT, "pages/learning/book/geometry/g5/[pageId].js");
+if (!fs.existsSync(geometryG5Index)) {
+  fail("missing explicit geometry/g5 index route");
+}
+if (!fs.existsSync(geometryG5Page)) {
+  fail("missing explicit geometry/g5 page route");
+}
+
+const geometryG5Entry = getLearningBookEntry("geometry", "g5");
+if (!geometryG5Entry || geometryG5Entry.status !== "authored") {
+  fail("geometry/g5 must be authored in catalog");
+}
+if (geometryG5Entry.registry.pageOrder.length !== 17) {
+  fail(
+    `geometry/g5 expected 17 pages, got ${geometryG5Entry.registry.pageOrder.length}`
+  );
+}
+requireBookPracticeFeatures(geometryG5Entry, "geometry/g5");
+if (!geometryG5Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g5 book title must use גאומטריה");
+}
+if (geometryG5Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g5 book title must not use הנדסה");
+}
+
+const geometryG6Index = path.join(ROOT, "pages/learning/book/geometry/g6/index.js");
+const geometryG6Page = path.join(ROOT, "pages/learning/book/geometry/g6/[pageId].js");
+if (!fs.existsSync(geometryG6Index)) {
+  fail("missing explicit geometry/g6 index route");
+}
+if (!fs.existsSync(geometryG6Page)) {
+  fail("missing explicit geometry/g6 page route");
+}
+
+const geometryG6Entry = getLearningBookEntry("geometry", "g6");
+if (!geometryG6Entry || geometryG6Entry.status !== "authored") {
+  fail("geometry/g6 must be authored in catalog");
+}
+if (geometryG6Entry.registry.pageOrder.length !== 19) {
+  fail(
+    `geometry/g6 expected 19 pages, got ${geometryG6Entry.registry.pageOrder.length}`
+  );
+}
+requireBookPracticeFeatures(geometryG6Entry, "geometry/g6");
+if (!geometryG6Entry.meta.bookTitleHe?.includes("גאומטריה")) {
+  fail("geometry/g6 book title must use גאומטריה");
+}
+if (geometryG6Entry.meta.bookTitleHe?.includes("הנדסה")) {
+  fail("geometry/g6 book title must not use הנדסה");
 }
 
 if (failures > 0) {

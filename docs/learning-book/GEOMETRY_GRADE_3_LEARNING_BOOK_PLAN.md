@@ -1,6 +1,6 @@
 # Grade 3 Geometry Learning Book — Plan
 
-**Status:** Documentation / planning + draft content (content-only). No UI, routes, registry, SQL, commit, push, or deploy.  
+**Status:** **Owner-approved content** + runtime wired (June 2026). See `GEOMETRY_GRADE_3_LEARNING_BOOK_SIGNOFF.md`.  
 **Date:** June 2026  
 **Book title (child-facing):** ספר גאומטריה — כיתה ג׳
 

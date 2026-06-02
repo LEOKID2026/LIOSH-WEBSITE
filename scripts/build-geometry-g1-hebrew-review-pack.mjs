@@ -55,8 +55,8 @@ function validatePages() {
       errors.push(`${pageId}.md: age_band must be grades_1_2`);
     }
     const childFacing = page.sections.map((s) => s.body).join("\n");
-    if (childFacing.includes("גאומטריה")) {
-      errors.push(`${pageId}.md: contains forbidden גאומטריה in section body`);
+    if (childFacing.includes("הנדסה")) {
+      errors.push(`${pageId}.md: contains forbidden הנדסה in section body`);
     }
     if (/\bgeometry\b/i.test(childFacing)) {
       errors.push(`${pageId}.md: contains English geometry in section body`);
@@ -75,7 +75,7 @@ const header = `# Grade 1 Geometry Learning Book — Hebrew Review Pack
 
 > **Status:** All content in this pack is **draft** (\`approval_status: draft\`). Nothing here is owner-approved or production-ready.
 >
-> **Book naming:** Child-facing copy uses **גאומטריה**, not **גאומטריה**.
+> **Book naming:** Child-facing copy uses **גאומטריה**, not **הנדסה**.
 >
 > **Draft coverage:** Grade 1 Geometry has **${GEOMETRY_G1_PAGE_ORDER.length} / ${GEOMETRY_G1_PAGE_ORDER.length}** draft pages authored. Source: \`docs/learning-book/geometry/g1/drafts/\`.
 >

@@ -15,9 +15,9 @@
 | Math | g4 | `/learning/book/math/g4` | ספר חשבון — כיתה ד׳ | Placeholder |
 | Math | g5 | `/learning/book/math/g5` | ספר חשבון — כיתה ה׳ | Placeholder |
 | Math | g6 | `/learning/book/math/g6` | ספר חשבון — כיתה ו׳ | Placeholder |
-| גאומטריה | g1 | `/learning/book/geometry/g1` | ספר גאומטריה — כיתה א׳ | Placeholder |
+| גאומטריה | g1 | `/learning/book/geometry/g1` | ספר גאומטריה — כיתה א׳ | **Authored** (3 pages) |
 | גאומטריה | g2 | `/learning/book/geometry/g2` | ספר גאומטריה — כיתה ב׳ | Placeholder |
-| גאומטריה | g3 | `/learning/book/geometry/g3` | ספר גאומטריה — כיתה ג׳ | Placeholder |
+| גאומטריה | g3 | `/learning/book/geometry/g3` | ספר גאומטריה — כיתה ג׳ | **Authored** (9 pages) |
 | גאומטריה | g4 | `/learning/book/geometry/g4` | ספר גאומטריה — כיתה ד׳ | Placeholder |
 | גאומטריה | g5 | `/learning/book/geometry/g5` | ספר גאומטריה — כיתה ה׳ | Placeholder |
 | גאומטריה | g6 | `/learning/book/geometry/g6` | ספר גאומטריה — כיתה ו׳ | Placeholder |
