@@ -61,6 +61,18 @@ import {
   saveGeometryBookPracticePreset,
 } from "../../lib/learning-book/geometry-book-nav";
 import { resolveGeometryPracticeTarget } from "../../lib/learning-book/geometry-book-practice-map";
+import { SCIENCE_G1_BOOK_META } from "../../lib/learning-book/science-g1-registry";
+import { SCIENCE_G2_BOOK_META } from "../../lib/learning-book/science-g2-registry";
+import { SCIENCE_G3_BOOK_META } from "../../lib/learning-book/science-g3-registry";
+import { SCIENCE_G4_BOOK_META } from "../../lib/learning-book/science-g4-registry";
+import { SCIENCE_G5_BOOK_META } from "../../lib/learning-book/science-g5-registry";
+import { SCIENCE_G6_BOOK_META } from "../../lib/learning-book/science-g6-registry";
+import {
+  getScienceBookReturnQuerySuffix,
+  getScienceBookPracticePath,
+  saveScienceBookPracticePreset,
+} from "../../lib/learning-book/science-book-nav";
+import { resolveSciencePracticeTarget } from "../../lib/learning-book/science-book-practice-map";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta, getLearningBookMasterPath } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
@@ -131,6 +143,24 @@ const GEOMETRY_G4_BOOK_UI = makeGeometryBookUi("g4", GEOMETRY_G4_BOOK_META);
 const GEOMETRY_G5_BOOK_UI = makeGeometryBookUi("g5", GEOMETRY_G5_BOOK_META);
 const GEOMETRY_G6_BOOK_UI = makeGeometryBookUi("g6", GEOMETRY_G6_BOOK_META);
 
+/** @param {string} grade @param {typeof SCIENCE_G1_BOOK_META} bookMeta */
+function makeScienceBookUi(grade, bookMeta) {
+  return {
+    bookMeta,
+    getReturnQuerySuffix: getScienceBookReturnQuerySuffix,
+    resolvePracticeTarget: (pageId) => resolveSciencePracticeTarget(grade, pageId),
+    getPracticePath: getScienceBookPracticePath,
+    savePracticePreset: (preset) => saveScienceBookPracticePreset(grade, preset),
+  };
+}
+
+const SCIENCE_G1_BOOK_UI = makeScienceBookUi("g1", SCIENCE_G1_BOOK_META);
+const SCIENCE_G2_BOOK_UI = makeScienceBookUi("g2", SCIENCE_G2_BOOK_META);
+const SCIENCE_G3_BOOK_UI = makeScienceBookUi("g3", SCIENCE_G3_BOOK_META);
+const SCIENCE_G4_BOOK_UI = makeScienceBookUi("g4", SCIENCE_G4_BOOK_META);
+const SCIENCE_G5_BOOK_UI = makeScienceBookUi("g5", SCIENCE_G5_BOOK_META);
+const SCIENCE_G6_BOOK_UI = makeScienceBookUi("g6", SCIENCE_G6_BOOK_META);
+
 export default function LearningPageBody({
   page,
   prevPageId = null,
@@ -152,6 +182,12 @@ export default function LearningPageBody({
   );
 
   const bookUi = useMemo(() => {
+    if (bookSubject === "science" && bookGrade === "g6") return SCIENCE_G6_BOOK_UI;
+    if (bookSubject === "science" && bookGrade === "g5") return SCIENCE_G5_BOOK_UI;
+    if (bookSubject === "science" && bookGrade === "g4") return SCIENCE_G4_BOOK_UI;
+    if (bookSubject === "science" && bookGrade === "g3") return SCIENCE_G3_BOOK_UI;
+    if (bookSubject === "science" && bookGrade === "g2") return SCIENCE_G2_BOOK_UI;
+    if (bookSubject === "science" && bookGrade === "g1") return SCIENCE_G1_BOOK_UI;
     if (bookSubject === "geometry" && bookGrade === "g6") return GEOMETRY_G6_BOOK_UI;
     if (bookSubject === "geometry" && bookGrade === "g5") return GEOMETRY_G5_BOOK_UI;
     if (bookSubject === "geometry" && bookGrade === "g4") return GEOMETRY_G4_BOOK_UI;

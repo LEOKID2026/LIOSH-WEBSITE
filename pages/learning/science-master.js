@@ -114,6 +114,15 @@ import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learnin
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
+import { getScienceBookHref } from "../../lib/learning-book/resolve-science-book-page";
+import {
+  consumeAnyScienceBookLearningSnapshot,
+  consumeAnyScienceBookPracticePreset,
+  isScienceBookPracticeEntry,
+  saveScienceBookLearningSnapshot,
+  SCIENCE_BOOK_GRADES,
+  withScienceBookLearningReturn,
+} from "../../lib/learning-book/science-book-nav";
 
 // ================== CONFIG ==================
 
@@ -161,6 +170,7 @@ const MODES = {
 
 const GRADES = SCIENCE_GRADES;
 const GRADE_ORDER = SCIENCE_GRADE_ORDER;
+const SCIENCE_BOOK_GRADE_SET = new Set(SCIENCE_BOOK_GRADES);
 
 const TOPICS = {
   body: { name: "גוף האדם", icon: "🫀" },
@@ -706,9 +716,22 @@ export default function ScienceMaster() {
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("body");
   const bookIndexHref = getLearningBookIndexHref("science", grade);
+  const bookTopicHref = useMemo(() => {
+    if (!SCIENCE_BOOK_GRADE_SET.has(grade)) return null;
+    return getScienceBookHref({ grade, topic, kind: null });
+  }, [grade, topic]);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const questionBookHref = useMemo(() => {
+    if (mode !== "learning" || !currentQuestion) return null;
+    if (!SCIENCE_BOOK_GRADE_SET.has(grade)) return null;
+    return getScienceBookHref({
+      grade,
+      topic: currentQuestion.topic || topic,
+      kind: currentQuestion.pageId || null,
+    });
+  }, [grade, mode, currentQuestion, topic]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -767,6 +790,7 @@ export default function ScienceMaster() {
   const scienceHypothesisLedgerRef = useRef(null);
   /** Question pool topic id for the question currently being timed (matches localStorage bucket). */
   const scienceTrackingTopicKeyRef = useRef(null);
+  const bookPracticePresetRef = useRef(null);
 
   const learningProfileStudentIdRef = useRef(null);
   const learningProfileHydratedRef = useRef(false);
@@ -784,6 +808,56 @@ export default function ScienceMaster() {
       return "";
     }
   });
+  const openBookFromLearning = useCallback(
+    (href) => {
+      if (!href) return;
+      if (!SCIENCE_BOOK_GRADE_SET.has(grade)) return;
+      const snapshot = {
+        gameActive: true,
+        mode,
+        grade,
+        level,
+        topic,
+        currentQuestion,
+        score,
+        streak,
+        correct,
+        wrong,
+        selectedAnswer,
+        feedback,
+        questionStartTime,
+      };
+      saveScienceBookLearningSnapshot(grade, snapshot);
+      router.push(withScienceBookLearningReturn(href));
+    },
+    [
+      mode,
+      grade,
+      level,
+      topic,
+      currentQuestion,
+      score,
+      streak,
+      correct,
+      wrong,
+      selectedAnswer,
+      feedback,
+      questionStartTime,
+      router,
+    ]
+  );
+
+  const applyBookPracticePreset = useCallback((preset) => {
+    if (!preset || preset.mode !== "learning") return;
+    const presetGrade = preset.grade;
+    if (!SCIENCE_BOOK_GRADE_SET.has(presetGrade)) return;
+    if (!GRADES[presetGrade]?.topics?.includes(preset.topic)) return;
+    bookPracticePresetRef.current = preset;
+    setGrade(presetGrade);
+    setMode("learning");
+    setTopic(preset.topic);
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
@@ -804,8 +878,11 @@ export default function ScienceMaster() {
           } catch {}
         }
         const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey) {
+        if (gradeKey && !bookPracticePresetRef.current) {
           setGrade(gradeKey);
+        }
+        if (bookPracticePresetRef.current) {
+          applyBookPracticePreset(bookPracticePresetRef.current);
         }
       })
       .catch(() => {
@@ -814,7 +891,38 @@ export default function ScienceMaster() {
     return () => {
       mounted = false;
     };
+  }, [applyBookPracticePreset]);
+
+  useEffect(() => {
+    const snap = consumeAnyScienceBookLearningSnapshot();
+    if (!snap || snap.gameActive !== true) return;
+    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    if (typeof snap.grade === "string") setGrade(snap.grade);
+    if (typeof snap.level === "string") setLevel(snap.level);
+    if (typeof snap.topic === "string") setTopic(snap.topic);
+    setGameActive(true);
+    if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
+    setScore(typeof snap.score === "number" ? snap.score : 0);
+    setStreak(typeof snap.streak === "number" ? snap.streak : 0);
+    setCorrect(typeof snap.correct === "number" ? snap.correct : 0);
+    setWrong(typeof snap.wrong === "number" ? snap.wrong : 0);
+    setSelectedAnswer(snap.selectedAnswer ?? null);
+    setFeedback(snap.feedback ?? null);
+    setQuestionStartTime(
+      typeof snap.questionStartTime === "number"
+        ? snap.questionStartTime
+        : Date.now()
+    );
   }, []);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (!isScienceBookPracticeEntry(router.query)) return;
+    const preset = consumeAnyScienceBookPracticePreset();
+    if (preset) {
+      applyBookPracticePreset(preset);
+    }
+  }, [router.isReady, router.query, applyBookPracticePreset]);
 
   useEffect(() => {
     setLevel((prev) => {
@@ -3214,6 +3322,16 @@ function saveScienceAnswerInParallel({
                 >
                   📚 לוח עזרה
                 </button>
+                {bookTopicHref ? (
+                  <button
+                    type="button"
+                    data-testid={`science-${grade}-book-topic-button`}
+                    onClick={() => router.push(bookTopicHref)}
+                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                  >
+                    📖 הסבר בספר
+                  </button>
+                ) : null}
                 <div
                   className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
                   title="מטבעות משחק"
@@ -3299,6 +3417,17 @@ function saveScienceAnswerInParallel({
                         🧠 מה חשוב לזכור?
                       </button>
                     )}
+                  {questionBookHref ? (
+                    <button
+                      type="button"
+                      data-testid={`science-${grade}-book-question-button`}
+                      onClick={() => openBookFromLearning(questionBookHref)}
+                      className="absolute top-2 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      title="הסבר בספר לנושא הנוכחי"
+                    >
+                      📖 הסבר
+                    </button>
+                  ) : null}
                   <StudentQuestionDisplay
                     testId="science-question-stem"
                     question={

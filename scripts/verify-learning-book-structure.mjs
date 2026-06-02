@@ -281,14 +281,59 @@ if (scienceG1Entry.registry.pageOrder.length !== 6) {
     `science/g1 expected 6 pages, got ${scienceG1Entry.registry.pageOrder.length}`
   );
 }
-if (scienceG1Entry.features?.practice) {
-  fail("science/g1 must not enable practice feature (no real mappings yet)");
+if (scienceG1Entry.features?.practice !== true) {
+  fail("science/g1 must enable practice feature");
 }
 if (!scienceG1Entry.meta.bookTitleHe?.includes("מדעים")) {
   fail("science/g1 book title must use מדעים");
 }
 if (scienceG1Entry.meta.routeBase !== "/learning/book/science/g1") {
   fail(`science/g1 routeBase must be /learning/book/science/g1`);
+}
+if (scienceG1Entry.registry.pageOrder.includes("experiments")) {
+  fail("science/g1 must not include experiments page");
+}
+if (!scienceG1Entry.registry.pageOrder.includes("plants")) {
+  fail("science/g1 must include plants page");
+}
+
+const SCIENCE_GRADE_EXPECTATIONS = {
+  g2: { pages: 7, experiments: true, plants: true },
+  g3: { pages: 7, experiments: true, plants: true },
+  g4: { pages: 6, experiments: true, plants: false },
+  g5: { pages: 6, experiments: true, plants: false },
+  g6: { pages: 6, experiments: true, plants: false },
+};
+
+for (const [grade, exp] of Object.entries(SCIENCE_GRADE_EXPECTATIONS)) {
+  const entry = getLearningBookEntry("science", grade);
+  if (!entry || entry.status !== "authored") {
+    fail(`science/${grade} must be authored in catalog`);
+    continue;
+  }
+  if (entry.registry.pageOrder.length !== exp.pages) {
+    fail(`science/${grade} expected ${exp.pages} pages, got ${entry.registry.pageOrder.length}`);
+  }
+  if (entry.features?.practice !== true) {
+    fail(`science/${grade} must enable practice feature`);
+  }
+  if (!entry.meta.bookTitleHe?.includes("מדעים")) {
+    fail(`science/${grade} book title must use מדעים`);
+  }
+  if (entry.meta.routeBase !== `/learning/book/science/${grade}`) {
+    fail(`science/${grade} routeBase must be /learning/book/science/${grade}`);
+  }
+  const hasExperiments = entry.registry.pageOrder.includes("experiments");
+  if (exp.experiments && !hasExperiments) {
+    fail(`science/${grade} must include experiments page`);
+  }
+  const hasPlants = entry.registry.pageOrder.includes("plants");
+  if (exp.plants && !hasPlants) {
+    fail(`science/${grade} must include plants page`);
+  }
+  if (!exp.plants && hasPlants) {
+    fail(`science/${grade} must not include plants page`);
+  }
 }
 
 if (failures > 0) {

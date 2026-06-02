@@ -36,8 +36,8 @@ if (entry?.registry.pageOrder.length !== 6) {
 if (JSON.stringify(entry?.registry.pageOrder) !== JSON.stringify(SCIENCE_G1_PAGE_ORDER)) {
   fail("science/g1 page order mismatch vs registry");
 }
-if (entry?.features?.practice) {
-  fail("science/g1 must not enable practice feature (no real mappings yet)");
+if (entry?.features?.practice !== true) {
+  fail("science/g1 must enable practice feature");
 }
 if (getLearningBookIndexHref("science", "g1") !== SCIENCE_G1_BOOK_META.routeBase) {
   fail("science/g1 index href mismatch");
@@ -96,5 +96,5 @@ if (errors.length) {
 
 console.log("G1 Science runtime verification PASSED.");
 console.log("- catalog entry authored, 6 pages, dynamic route /learning/book/science/g1");
-console.log("- practice feature disabled (no mappings)");
+console.log("- practice feature enabled (topic mappings)");
 console.log("- all pages load with 7 sections; draft metadata preserved in source");
