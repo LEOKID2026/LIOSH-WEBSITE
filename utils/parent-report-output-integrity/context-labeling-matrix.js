@@ -24,7 +24,7 @@ const SUBJECT_MAP_KEYS = {
 
 const SUBJECT_LABEL_HE = {
   math: "חשבון",
-  geometry: "הנדסה",
+  geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
   hebrew: "עברית",

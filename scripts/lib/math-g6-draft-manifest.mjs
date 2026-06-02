@@ -1,81 +1,12 @@
 /**
  * Grade 6 Math learning book — draft-only manifest (scripts / docs).
- * No runtime registry in this task — manifest is the source of truth for scripts.
+ * Page order/batches re-exported from runtime registry (single source of truth).
  */
 
-/** @type {{ id: string, titleHe: string, pages: string[] }[]} */
-export const MATH_G6_BOOK_BATCHES = [
-  {
-    id: "a",
-    titleHe: "ערך מקום, השוואה, סדרות ועיגול",
-    pages: ["ns_place_hundreds", "ns_neighbors", "ns_complement100", "cmp", "sequence", "round"],
-  },
-  {
-    id: "b",
-    titleHe: "חיבור, חיסור, כפל וחילוק",
-    pages: ["add_two", "sub_two", "add_three", "mul", "div", "div_with_remainder"],
-  },
-  {
-    id: "c",
-    titleHe: "גורמים, כפולות ומ.א.ח",
-    pages: ["fm_factor", "fm_multiple", "fm_gcd"],
-  },
-  {
-    id: "d",
-    titleHe: "משוואות",
-    pages: ["eq_add", "eq_sub", "eq_mul", "eq_div"],
-  },
-  {
-    id: "e",
-    titleHe: "מספרים עשרוניים",
-    pages: [
-      "dec_add",
-      "dec_sub",
-      "dec_multiply",
-      "dec_multiply_10_100",
-      "dec_divide",
-      "dec_divide_10_100",
-      "dec_repeating",
-    ],
-  },
-  {
-    id: "f",
-    titleHe: "שברים — כפל, חילוק וחיבור לחילוק",
-    pages: ["frac_as_division", "frac_multiply", "frac_divide"],
-  },
-  {
-    id: "g",
-    titleHe: "יחס וקנה מידה",
-    pages: [
-      "ratio_first",
-      "ratio_second",
-      "ratio_find",
-      "scale_find",
-      "scale_map_to_real",
-      "scale_real_to_map",
-    ],
-  },
-  {
-    id: "h",
-    titleHe: "אחוזים",
-    pages: ["perc_part_of", "perc_discount"],
-  },
-  {
-    id: "i",
-    titleHe: "שאלות מילוליות",
-    pages: [
-      "wp_comparison_more",
-      "wp_leftover",
-      "wp_time_sum",
-      "wp_distance_time",
-      "wp_shop_discount",
-      "wp_unit_cm_to_m",
-      "wp_unit_g_to_kg",
-    ],
-  },
-];
-
-export const MATH_G6_PAGE_ORDER = MATH_G6_BOOK_BATCHES.flatMap((b) => b.pages);
+export {
+  MATH_G6_BOOK_BATCHES,
+  MATH_G6_PAGE_ORDER,
+} from "../../lib/learning-book/math-g6-registry.js";
 
 /** Section 5/6 alignment anchors — key numbers/context must appear in both sections */
 export const MATH_G6_ALIGNMENT_ANCHORS = {

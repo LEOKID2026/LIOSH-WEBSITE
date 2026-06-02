@@ -122,7 +122,7 @@ function normalizeMath(rawTopic, rawSubtopic) {
     mixed: { key: "math.mixed_operations", he: "תרגילים מעורבים" },
     geometry_basic: {
       key: "math.geometry_context",
-      he: "קשרים גיאומטריים בהקשר חישובי (לא הנדסה נפרדת)",
+      he: "קשרים גיאומטריים בהקשר חישובי (לא גאומטריה נפרדת)",
     },
     data: { key: "math.data_and_charts", he: "נתונים ותרשימים" },
   };
@@ -192,7 +192,7 @@ function normalizeGeometry(rawTopic, rawSubtopic) {
     heights: { key: "geometry.heights_area_links", he: "גבהים וקשר לשטח" },
     circles: { key: "geometry.circle_basic", he: "מעגל ועיגול" },
     pythagoras: { key: "geometry.pythagoras_right_triangles", he: "משפט פיתגורס" },
-    mixed: { key: "geometry.mixed_review", he: "ערבוב נושאי הנדסה" },
+    mixed: { key: "geometry.mixed_review", he: "ערבוב נושאי גאומטריה" },
   };
 
   const primarySeg = segments[0] || kind;
@@ -216,7 +216,7 @@ function normalizeGeometry(rawTopic, rawSubtopic) {
     rawTopic,
     rawSubtopic,
     normalizedTopicKey: `geometry.unmapped.${primarySeg || kind || "empty"}`,
-    normalizedTopicLabelHe: "הנדסה — נושא לא ממופה באודיט",
+    normalizedTopicLabelHe: "גאומטריה — נושא לא ממופה באודיט",
     normalizationConfidence: "low",
     normalizationNotes: "Expand geometry strand map for this topic/kind.",
     compositeSegments: segments.length ? segments : undefined,

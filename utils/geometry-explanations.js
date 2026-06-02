@@ -8,7 +8,7 @@ import {
   geometryLengthSuffix,
 } from "./geometry-units.js";
 
-// פונקציות הסבר ורמזים לדף ההנדסה
+// פונקציות הסבר ורמזים לדף הגאומטריה
 
 function toNum(x) {
   const n = Number(x);

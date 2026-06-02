@@ -492,7 +492,7 @@ function rowFor(unit) {
 }
 
 function subjectLabelHeForUnit(unit) {
-  if (unit.subjectId === "geometry") return "הנדסה";
+  if (unit.subjectId === "geometry") return "גאומטריה";
   if (unit.subjectId === "hebrew") return "עברית";
   if (unit.subjectId === "english") return "אנגלית";
   if (unit.subjectId === "science") return "מדעים";

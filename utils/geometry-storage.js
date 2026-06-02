@@ -1,4 +1,4 @@
-// פונקציות אחסון וניהול ניקוד לדף ההנדסה
+// פונקציות אחסון וניהול ניקוד לדף הגאומטריה
 
 import { LEVELS, TOPICS, GRADES } from "./geometry-constants";
 

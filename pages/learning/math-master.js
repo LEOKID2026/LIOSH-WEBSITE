@@ -100,6 +100,9 @@ import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helper
 import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
 import { getMathG2BookHref } from "../../lib/learning-book/resolve-math-g2-book-page";
 import { getMathG3BookHref } from "../../lib/learning-book/resolve-math-g3-book-page";
+import { getMathG4BookHref } from "../../lib/learning-book/resolve-math-g4-book-page";
+import { getMathG5BookHref } from "../../lib/learning-book/resolve-math-g5-book-page";
+import { getMathG6BookHref } from "../../lib/learning-book/resolve-math-g6-book-page";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
@@ -125,6 +128,27 @@ import {
   saveMathG3BookLearningSnapshot,
   withMathG3BookLearningReturn,
 } from "../../lib/learning-book/math-g3-book-nav";
+import {
+  consumeMathG4BookLearningSnapshot,
+  consumeMathG4BookPracticePreset,
+  isMathG4BookPracticeEntry,
+  saveMathG4BookLearningSnapshot,
+  withMathG4BookLearningReturn,
+} from "../../lib/learning-book/math-g4-book-nav";
+import {
+  consumeMathG5BookLearningSnapshot,
+  consumeMathG5BookPracticePreset,
+  isMathG5BookPracticeEntry,
+  saveMathG5BookLearningSnapshot,
+  withMathG5BookLearningReturn,
+} from "../../lib/learning-book/math-g5-book-nav";
+import {
+  consumeMathG6BookLearningSnapshot,
+  consumeMathG6BookPracticePreset,
+  isMathG6BookPracticeEntry,
+  saveMathG6BookLearningSnapshot,
+  withMathG6BookLearningReturn,
+} from "../../lib/learning-book/math-g6-book-nav";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -230,6 +254,99 @@ function normalizeMistakeQueue(raw) {
     .sort(() => Math.random() - 0.5);
 }
 
+const MATH_BOOK_GRADES = new Set(["g1", "g2", "g3", "g4", "g5", "g6"]);
+
+function getMathBookHref(gradeKey, ctx) {
+  switch (gradeKey) {
+    case "g1":
+      return getMathG1BookHref(ctx);
+    case "g2":
+      return getMathG2BookHref(ctx);
+    case "g3":
+      return getMathG3BookHref(ctx);
+    case "g4":
+      return getMathG4BookHref(ctx);
+    case "g5":
+      return getMathG5BookHref(ctx);
+    case "g6":
+      return getMathG6BookHref(ctx);
+    default:
+      return null;
+  }
+}
+
+function saveMathBookLearningSnapshot(gradeKey, snapshot) {
+  switch (gradeKey) {
+    case "g6":
+      saveMathG6BookLearningSnapshot(snapshot);
+      return;
+    case "g5":
+      saveMathG5BookLearningSnapshot(snapshot);
+      return;
+    case "g4":
+      saveMathG4BookLearningSnapshot(snapshot);
+      return;
+    case "g3":
+      saveMathG3BookLearningSnapshot(snapshot);
+      return;
+    case "g2":
+      saveMathG2BookLearningSnapshot(snapshot);
+      return;
+    default:
+      saveMathG1BookLearningSnapshot(snapshot);
+  }
+}
+
+function withMathBookLearningReturn(gradeKey, href) {
+  switch (gradeKey) {
+    case "g6":
+      return withMathG6BookLearningReturn(href);
+    case "g5":
+      return withMathG5BookLearningReturn(href);
+    case "g4":
+      return withMathG4BookLearningReturn(href);
+    case "g3":
+      return withMathG3BookLearningReturn(href);
+    case "g2":
+      return withMathG2BookLearningReturn(href);
+    default:
+      return withMathG1BookLearningReturn(href);
+  }
+}
+
+function consumeMathBookLearningSnapshot() {
+  return (
+    consumeMathG6BookLearningSnapshot() ||
+    consumeMathG5BookLearningSnapshot() ||
+    consumeMathG4BookLearningSnapshot() ||
+    consumeMathG3BookLearningSnapshot() ||
+    consumeMathG2BookLearningSnapshot() ||
+    consumeMathG1BookLearningSnapshot()
+  );
+}
+
+function isMathBookPracticeEntry(query) {
+  return (
+    isMathG6BookPracticeEntry(query) ||
+    isMathG5BookPracticeEntry(query) ||
+    isMathG4BookPracticeEntry(query) ||
+    isMathG3BookPracticeEntry(query) ||
+    isMathG2BookPracticeEntry(query) ||
+    isMathG1BookPracticeEntry(query)
+  );
+}
+
+function consumeMathBookPracticePreset() {
+  return (
+    consumeMathG6BookPracticePreset() ||
+    consumeMathG5BookPracticePreset() ||
+    consumeMathG4BookPracticePreset() ||
+    consumeMathG3BookPracticePreset() ||
+    consumeMathG2BookPracticePreset() ||
+    consumeMathG1BookPracticePreset()
+  );
+}
+
 export default function MathMaster() {
   useIOSViewportFix();
   const router = useRouter();
@@ -267,32 +384,22 @@ export default function MathMaster() {
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
   const bookIndexHref = getLearningBookIndexHref("math", grade);
   const bookTopicHref = useMemo(() => {
-    if (grade === "g1") {
-      return getMathG1BookHref({ grade, operation, kind: null });
-    }
-    if (grade === "g2") {
-      return getMathG2BookHref({ grade, operation, kind: null });
-    }
-    if (grade === "g3") {
-      return getMathG3BookHref({ grade, operation, kind: null });
-    }
-    return null;
+    if (!MATH_BOOK_GRADES.has(grade)) return null;
+    return getMathBookHref(grade, { grade, operation, kind: null });
   }, [grade, operation]);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const questionBookHref = useMemo(() => {
     if (mode !== "learning" || !currentQuestion) return null;
-    if (grade !== "g1" && grade !== "g2" && grade !== "g3") return null;
+    if (!MATH_BOOK_GRADES.has(grade)) return null;
     const params = currentQuestion.params || {};
     const ctx = {
       grade,
       operation: currentQuestion.operation || operation,
       kind: params.kind ?? null,
     };
-    if (grade === "g3") return getMathG3BookHref(ctx);
-    if (grade === "g2") return getMathG2BookHref(ctx);
-    return getMathG1BookHref(ctx);
+    return getMathBookHref(grade, ctx);
   }, [grade, mode, currentQuestion, operation]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -340,18 +447,9 @@ export default function MathMaster() {
         isVerticalDisplay,
         questionStartTime,
       };
-      if (grade === "g2") {
-        saveMathG2BookLearningSnapshot(snapshot);
-        router.push(withMathG2BookLearningReturn(href));
-        return;
-      }
-      if (grade === "g3") {
-        saveMathG3BookLearningSnapshot(snapshot);
-        router.push(withMathG3BookLearningReturn(href));
-        return;
-      }
-      saveMathG1BookLearningSnapshot(snapshot);
-      router.push(withMathG1BookLearningReturn(href));
+      if (!MATH_BOOK_GRADES.has(grade)) return;
+      saveMathBookLearningSnapshot(grade, snapshot);
+      router.push(withMathBookLearningReturn(grade, href));
     },
     [
       mode,
@@ -795,13 +893,14 @@ export default function MathMaster() {
   const applyBookPracticePreset = useCallback((preset) => {
     if (!preset || preset.mode !== "learning") return;
     const presetGrade = preset.grade;
-    if (presetGrade !== "g1" && presetGrade !== "g2" && presetGrade !== "g3") return;
+    if (!MATH_BOOK_GRADES.has(presetGrade)) return;
     if (!GRADES[presetGrade]?.operations?.includes(preset.operation)) return;
     bookPracticePresetRef.current = preset;
     setGrade(presetGrade);
-    setGradeNumber(
-      presetGrade === "g1" ? 1 : presetGrade === "g2" ? 2 : 3
-    );
+    const presetGradeNumber = gradeKeyToNumber(presetGrade);
+    if (presetGradeNumber) {
+      setGradeNumber(presetGradeNumber);
+    }
     setMode("learning");
     setOperation(preset.operation);
     practiceForceKindRef.current = preset.forceKind || null;
@@ -860,10 +959,7 @@ export default function MathMaster() {
   });
 
   useEffect(() => {
-    const snap =
-      consumeMathG1BookLearningSnapshot() ||
-      consumeMathG2BookLearningSnapshot() ||
-      consumeMathG3BookLearningSnapshot();
+    const snap = consumeMathBookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
     setMode(typeof snap.mode === "string" ? snap.mode : "learning");
     if (typeof snap.grade === "string") setGrade(snap.grade);
@@ -889,17 +985,10 @@ export default function MathMaster() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (
-      !isMathG1BookPracticeEntry(router.query) &&
-      !isMathG2BookPracticeEntry(router.query) &&
-      !isMathG3BookPracticeEntry(router.query)
-    ) {
+    if (!isMathBookPracticeEntry(router.query)) {
       return;
     }
-    const preset =
-      consumeMathG3BookPracticePreset() ||
-      consumeMathG2BookPracticePreset() ||
-      consumeMathG1BookPracticePreset();
+    const preset = consumeMathBookPracticePreset();
     if (preset) {
       applyBookPracticePreset(preset);
     }
@@ -3868,13 +3957,7 @@ export default function MathMaster() {
                 {bookTopicHref ? (
                   <button
                     type="button"
-                    data-testid={
-                      grade === "g3"
-                        ? "math-g3-book-topic-button"
-                        : grade === "g2"
-                          ? "math-g2-book-topic-button"
-                          : "math-g1-book-topic-button"
-                    }
+                    data-testid={`math-${grade}-book-topic-button`}
                     onClick={() => router.push(bookTopicHref)}
                     className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
                   >
@@ -4006,13 +4089,7 @@ export default function MathMaster() {
                   {questionBookHref ? (
                     <button
                       type="button"
-                      data-testid={
-                        grade === "g3"
-                          ? "math-g3-book-question-button"
-                          : grade === "g2"
-                            ? "math-g2-book-question-button"
-                            : "math-g1-book-question-button"
-                      }
+                      data-testid={`math-${grade}-book-question-button`}
                       onClick={() => openBookFromLearning(questionBookHref)}
                       className="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 transition-all pointer-events-auto shadow-lg"
                       title="הסבר בספר לנושא הנוכחי"

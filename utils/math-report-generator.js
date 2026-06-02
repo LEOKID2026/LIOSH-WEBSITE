@@ -975,7 +975,7 @@ export function generateParentReport(playerName, period = 'week', customStartDat
         .map(([op, _]) => `חשבון: ${getOperationName(op)}`),
       ...Object.entries(geometryTopicsSummary)
         .filter(([_, data]) => data.needsPractice)
-        .map(([topic, _]) => `הנדסה: ${getTopicName(topic)}`),
+        .map(([topic, _]) => `גאומטריה: ${getTopicName(topic)}`),
       ...Object.entries(englishTopicsSummary)
         .filter(([_, data]) => data.needsPractice)
         .map(([topic, _]) => `אנגלית: ${getEnglishTopicName(topic)}`),
@@ -997,7 +997,7 @@ export function generateParentReport(playerName, period = 'week', customStartDat
         .map(([op, _]) => `חשבון: ${getOperationName(op)}`),
       ...Object.entries(geometryTopicsSummary)
         .filter(([_, data]) => data.excellent && data.questions >= 10)
-        .map(([topic, _]) => `הנדסה: ${getTopicName(topic)}`),
+        .map(([topic, _]) => `גאומטריה: ${getTopicName(topic)}`),
       ...Object.entries(englishTopicsSummary)
         .filter(([_, data]) => data.excellent && data.questions >= 10)
         .map(([topic, _]) => `אנגלית: ${getEnglishTopicName(topic)}`),

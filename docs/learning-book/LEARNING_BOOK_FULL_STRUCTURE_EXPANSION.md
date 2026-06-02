@@ -15,14 +15,14 @@
 | Math | g4 | `/learning/book/math/g4` | ספר חשבון — כיתה ד׳ | Placeholder |
 | Math | g5 | `/learning/book/math/g5` | ספר חשבון — כיתה ה׳ | Placeholder |
 | Math | g6 | `/learning/book/math/g6` | ספר חשבון — כיתה ו׳ | Placeholder |
-| הנדסה | g1 | `/learning/book/geometry/g1` | ספר הנדסה — כיתה א׳ | Placeholder |
-| הנדסה | g2 | `/learning/book/geometry/g2` | ספר הנדסה — כיתה ב׳ | Placeholder |
-| הנדסה | g3 | `/learning/book/geometry/g3` | ספר הנדסה — כיתה ג׳ | Placeholder |
-| הנדסה | g4 | `/learning/book/geometry/g4` | ספר הנדסה — כיתה ד׳ | Placeholder |
-| הנדסה | g5 | `/learning/book/geometry/g5` | ספר הנדסה — כיתה ה׳ | Placeholder |
-| הנדסה | g6 | `/learning/book/geometry/g6` | ספר הנדסה — כיתה ו׳ | Placeholder |
+| גאומטריה | g1 | `/learning/book/geometry/g1` | ספר גאומטריה — כיתה א׳ | Placeholder |
+| גאומטריה | g2 | `/learning/book/geometry/g2` | ספר גאומטריה — כיתה ב׳ | Placeholder |
+| גאומטריה | g3 | `/learning/book/geometry/g3` | ספר גאומטריה — כיתה ג׳ | Placeholder |
+| גאומטריה | g4 | `/learning/book/geometry/g4` | ספר גאומטריה — כיתה ד׳ | Placeholder |
+| גאומטריה | g5 | `/learning/book/geometry/g5` | ספר גאומטריה — כיתה ה׳ | Placeholder |
+| גאומטריה | g6 | `/learning/book/geometry/g6` | ספר גאומטריה — כיתה ו׳ | Placeholder |
 
-**Terminology:** Child-facing UI uses **הנדסה** (not גאומטריה). Internal IDs remain `geometry`.
+**Terminology:** Child-facing UI uses **גאומטריה** (not הנדסה). Internal IDs remain `geometry`.
 
 **Routing:** Math G1/G2 keep explicit routes. All other books use dynamic routes:
 
@@ -37,8 +37,8 @@ Config: `lib/learning-book/book-grade-themes.js`
 
 | Grade | Theme | Applies to |
 |-------|--------|------------|
-| g1 | Purple/violet + emerald accents | Math G1, הנדסה G1, … |
-| g2 | Blue/cyan/teal | Math G2, הנדסה G2, … |
+| g1 | Purple/violet + emerald accents | Math G1, גאומטריה G1, … |
+| g2 | Blue/cyan/teal | Math G2, גאומטריה G2, … |
 | g3 | Green/emerald | All G3 books |
 | g4 | Amber/gold | All G4 books |
 | g5 | Rose/pink | All G5 books |
@@ -99,8 +99,8 @@ To replace a placeholder book: expand registry batches/page order and add draft 
 ### Book index tile (📖)
 
 - **Math Master:** visible for **all grades g1–g6** when grade is selected.
-- **Geometry Master (הנדסה):** visible for **all grades g1–g6**.
-- Label: `ספר חשבון` / `ספר הנדסה` + `כיתה X`.
+- **Geometry Master (גאומטריה):** visible for **all grades g1–g6**.
+- Label: `ספר חשבון` / `ספר גאומטריה` + `כיתה X`.
 
 ### Topic `📖 הסבר בספר`
 

@@ -1,5 +1,5 @@
 /**
- * Verify full learning book structure (Math G1–G6, הנדסה G1–G6).
+ * Verify full learning book structure (Math G1–G6, גאומטריה G1–G6).
  * Run: node scripts/verify-learning-book-structure.mjs
  */
 import fs from "fs";
@@ -49,14 +49,8 @@ for (const book of LEARNING_BOOK_CATALOG_LIST) {
   }
   routeBases.add(base);
 
-  if (base.includes("גאומטריה")) {
-    fail(`route uses forbidden label גאומטריה: ${base}`);
-  }
-  if (book.meta.bookTitleHe?.includes("גאומטריה")) {
-    fail(`bookTitleHe uses גאומטריה: ${book.meta.bookTitleHe}`);
-  }
-  if (book.subject === "geometry" && !book.meta.bookTitleHe?.includes("הנדסה")) {
-    fail(`geometry book missing הנדסה in title: ${book.meta.bookTitleHe}`);
+  if (book.subject === "geometry" && !book.meta.bookTitleHe?.includes("גאומטריה")) {
+    fail(`geometry book missing גאומטריה in title: ${book.meta.bookTitleHe}`);
   }
   if (book.subject === "math" && !book.meta.bookTitleHe?.includes("חשבון")) {
     fail(`math book missing חשבון in title: ${book.meta.bookTitleHe}`);
@@ -109,7 +103,7 @@ const dynamicPage = path.join(
 if (!fs.existsSync(dynamicIndex)) fail("missing dynamic book index route");
 if (!fs.existsSync(dynamicPage)) fail("missing dynamic book page route");
 
-for (const grade of ["g1", "g2", "g3", "g4"]) {
+for (const grade of ["g1", "g2", "g3", "g4", "g5", "g6"]) {
   const explicit = path.join(ROOT, `pages/learning/book/math/${grade}/index.js`);
   if (!fs.existsSync(explicit)) {
     fail(`missing explicit math/${grade} route (must remain)`);

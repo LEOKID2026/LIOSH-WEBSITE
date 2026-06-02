@@ -56,7 +56,7 @@ test("geometry invalid topic for grade throws (g1 pythagoras)", async () => {
         count: 5,
       }),
     (err) => {
-      assert.match(String(err.message), /אין מספיק שאלות הנדסה/);
+      assert.match(String(err.message), /אין מספיק שאלות גאומטריה/);
       return true;
     }
   );

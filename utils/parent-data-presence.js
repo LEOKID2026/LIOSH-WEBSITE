@@ -133,7 +133,7 @@ export function deriveRawMetricStrengthLinesHe(summary) {
     { label: "עברית", q: summary.hebrewQuestions, acc: summary.hebrewAccuracy },
     { label: "מדעים", q: summary.scienceQuestions, acc: summary.scienceAccuracy },
     { label: "חשבון", q: summary.mathQuestions, acc: summary.mathAccuracy },
-    { label: "הנדסה", q: summary.geometryQuestions, acc: summary.geometryAccuracy },
+    { label: "גאומטריה", q: summary.geometryQuestions, acc: summary.geometryAccuracy },
     {
       label: "מולדת וגאוגרפיה",
       q: summary.moledetGeographyQuestions,

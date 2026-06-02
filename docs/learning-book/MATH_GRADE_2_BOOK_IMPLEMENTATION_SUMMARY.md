@@ -109,7 +109,7 @@ Book reader colors are **grade-based**, not subject-based. Config: `lib/learning
 | **g2** | Deep navy → blue/cyan/teal | Applied via `BookGradeThemeProvider` in `MathG2BookShell` |
 | **g3+** | TBD | Add a new entry in `BOOK_GRADE_THEMES` when cloning infrastructure |
 
-Future books (הנדסה, etc.) should reuse the same grade key — e.g. `g2` geometry book gets the G2 blue/cyan theme, not a one-off palette.
+Future books (גאומטריה, etc.) should reuse the same grade key — e.g. `g2` geometry book gets the G2 blue/cyan theme, not a one-off palette.
 
 ---
 

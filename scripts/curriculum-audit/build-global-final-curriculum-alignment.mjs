@@ -25,7 +25,7 @@ const SUBJECTS = [
   },
   {
     id: "geometry",
-    titleHe: "הנדסה",
+    titleHe: "גאומטריה",
     inventorySubjects: ["geometry"],
     closureFile: "geometry-final-closure.json",
     sourceSupport:
@@ -212,7 +212,7 @@ async function main() {
 
   if (!curriculumScan.blocks.geometrySubjectParamSupported) {
     blockers.push(
-      "Curriculum page: `geometry` missing from `supportedSubjects` — transparency page cannot show הנדסה via query param."
+      "Curriculum page: `geometry` missing from `supportedSubjects` — transparency page cannot show גאומטריה via query param."
     );
   }
   if (curriculumScan.blocks.suspiciousScienceFullAlignmentPhrasing) {

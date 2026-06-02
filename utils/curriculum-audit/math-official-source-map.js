@@ -82,7 +82,7 @@ export const MATH_STRAND_ANCHOR_ROWS = [
   },
   {
     strandId: "geometry_strand",
-    labelHe: "גאומטריה ומדידות (מיתר במתמטיקה — לא מקצוע הנדסה נפרד)",
+    labelHe: "גאומטריה ומדידות (מיתר במתמטיקה — לא מקצוע גאומטריה נפרד)",
     auditTopicKeys: ["math.geometry_context"],
     primaryAnchorRole: "דף POP גאומטריה + מסמך כיתה",
     popUrl: "https://pop.education.gov.il/tchumey_daat/matmatika/yesodi/noseem_nilmadim/geometrya/",

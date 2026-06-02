@@ -30,7 +30,7 @@ function subjectLabelLocalHe(subjectId) {
   const sid = normalizeSubjectId(subjectId);
   switch (sid) {
     case "math": return "חשבון";
-    case "geometry": return "הנדסה";
+    case "geometry": return "גאומטריה";
     case "english": return "אנגלית";
     case "science": return "מדעים";
     case "hebrew": return "עברית";

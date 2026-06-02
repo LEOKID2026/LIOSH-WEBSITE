@@ -9,7 +9,7 @@
 
 const SUBJECT_LABEL_HE = Object.freeze({
   math: "חשבון",
-  geometry: "הנדסה",
+  geometry: "גאומטריה",
   english: "אנגלית",
   hebrew: "עברית",
   science: "מדעים",

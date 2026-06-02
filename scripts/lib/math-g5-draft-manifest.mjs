@@ -1,84 +1,12 @@
 /**
  * Grade 5 Math learning book — draft-only manifest (scripts / docs).
- * NOT runtime registry. Used by review-pack builder and content verifier.
+ * Page order/batches re-exported from runtime registry (single source of truth).
  */
 
-/** @typedef {{ id: string, titleHe: string, pages: string[] }} G5Batch */
-
-/** @type {G5Batch[]} */
-export const MATH_G5_BOOK_BATCHES = [
-  {
-    id: "a",
-    titleHe: "ערך מקום, השוואה, סדרות ועיגול",
-    pages: [
-      "ns_place_hundreds",
-      "ns_neighbors",
-      "ns_complement100",
-      "cmp",
-      "sequence",
-      "round",
-    ],
-  },
-  {
-    id: "b",
-    titleHe: "חיבור, חיסור וכפל",
-    pages: ["add_two", "sub_two", "add_three", "mul"],
-  },
-  {
-    id: "c",
-    titleHe: "חילוק",
-    pages: ["div", "div_with_remainder", "div_two_digit"],
-  },
-  {
-    id: "d",
-    titleHe: "שברים",
-    pages: [
-      "frac_reduce",
-      "frac_expand",
-      "frac_add_sub",
-      "mixed_to_frac",
-      "frac_to_mixed",
-    ],
-  },
-  {
-    id: "e",
-    titleHe: "עשרוניים ומשוואות",
-    pages: ["dec_add", "dec_sub", "eq_add", "eq_sub", "eq_mul", "eq_div"],
-  },
-  {
-    id: "f",
-    titleHe: "גורמים, כפולות, מ.א.ח ואומדן",
-    pages: [
-      "fm_factor",
-      "fm_multiple",
-      "fm_gcd",
-      "est_add",
-      "est_mul",
-      "est_quantity",
-    ],
-  },
-  {
-    id: "g",
-    titleHe: "אחוזים",
-    pages: ["perc_part_of", "perc_discount"],
-  },
-  {
-    id: "h",
-    titleHe: "שאלות מילוליות",
-    pages: [
-      "wp_comparison_more",
-      "wp_leftover",
-      "wp_time_sum",
-      "wp_multi_step",
-      "wp_distance_time",
-      "wp_shop_discount",
-      "wp_unit_cm_to_m",
-      "wp_unit_g_to_kg",
-    ],
-  },
-];
-
-export const MATH_G5_PAGE_ORDER = MATH_G5_BOOK_BATCHES.flatMap((b) => b.pages);
+export {
+  MATH_G5_BOOK_BATCHES,
+  MATH_G5_PAGE_ORDER,
+} from "../../lib/learning-book/math-g5-registry.js";
 
 /** Section 5/6 alignment anchors — key numbers must appear in both sections */
 export const MATH_G5_ALIGNMENT_ANCHORS = {
@@ -285,8 +213,8 @@ export const MATH_G5_PAGE_META = {
   fm_gcd: {
     skillId: "math:kind:fm_gcd",
     pageType: "practice_bridge",
-    titleHe: "מ.א.ח — המחלק המשותף הגדול ביותר",
-    scope: "מ.א.ח של שני מספרים",
+    titleHe: "המחלק המשותף הגדול ביותר (מ.א.ח)",
+    scope: "המחלק המשותף הגדול ביותר (מ.א.ח) של שני מספרים",
   },
   est_add: {
     skillId: "math:kind:est_add",

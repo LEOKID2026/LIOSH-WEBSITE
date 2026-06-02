@@ -420,6 +420,7 @@ export const GRADES = {
       "number_sense",
       "factors_multiples",
       "estimation",    // אומדן ופיתוח תובנה מספרית
+      "word_problems",
       "mixed",
     ],
     allowFractions: true,

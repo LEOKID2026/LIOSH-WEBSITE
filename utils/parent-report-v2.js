@@ -798,7 +798,7 @@ const V2_SUBJECT_ORDER = [
 
 const V2_SUBJECT_LABEL_HE = {
   math: "חשבון",
-  geometry: "הנדסה",
+  geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
   hebrew: "עברית",
@@ -2025,7 +2025,7 @@ export function generateParentReportV2(
       ),
     ...Object.entries(geometryTopics)
       .filter(([_, d]) => d.needsPractice)
-      .map(([_, d]) => `הנדסה: ${d.displayName || getTopicName(d.bucketKey)}`),
+      .map(([_, d]) => `גאומטריה: ${d.displayName || getTopicName(d.bucketKey)}`),
     ...Object.entries(englishTopics)
       .filter(([_, d]) => d.needsPractice)
       .map(([_, d]) => `אנגלית: ${d.displayName || getEnglishTopicName(d.bucketKey)}`),
@@ -2052,7 +2052,7 @@ export function generateParentReportV2(
       ),
     ...Object.entries(geometryTopics)
       .filter(([_, d]) => d.excellent && d.questions >= 10)
-      .map(([_, d]) => `הנדסה: ${d.displayName || getTopicName(d.bucketKey)}`),
+      .map(([_, d]) => `גאומטריה: ${d.displayName || getTopicName(d.bucketKey)}`),
     ...Object.entries(englishTopics)
       .filter(([_, d]) => d.excellent && d.questions >= 10)
       .map(([_, d]) => `אנגלית: ${d.displayName || getEnglishTopicName(d.bucketKey)}`),

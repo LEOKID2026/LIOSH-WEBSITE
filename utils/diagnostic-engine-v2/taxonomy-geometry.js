@@ -16,7 +16,7 @@ export const GEOMETRY_TAXONOMY_ROWS = [
     doesNotCountWhenHe: "רק שמות בלי דיאגרמה",
     rootsHe: ["הגדרות חופפות"],
     competitorsHe: ["זיכרון שם"],
-    doNotConcludeHe: ["אין הנדסה"],
+    doNotConcludeHe: ["אין גאומטריה"],
     probeHe: "עם סימון זווית/צלע",
     interventionHe: "כרטיסיות הגדרה",
     escalationHe: "כישלון בכל צורה",

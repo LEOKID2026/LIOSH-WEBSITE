@@ -101,7 +101,7 @@ export const PROBE_BY_ERROR_TAG = {
   },
   /** Geometry-only slip tag (infer-tags emits this instead of generic calculation_slip for geometry). */
   geometry_calculation_slip: {
-    skill: "בחירת נוסחה או שלב ראשון בהנדסה",
+    skill: "בחירת נוסחה או שלב ראשון בגאומטריה",
     suggestedQuestionType: "geometry_formula_choice",
     reasonHe: "לבחור נוסחה או צעד ראשון מתאים לפני חישוב מספרי.",
   },

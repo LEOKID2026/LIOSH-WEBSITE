@@ -235,7 +235,7 @@ Until owner approves content:
 
 ## 9. Confirmations
 
-- Geometry / הנדסה: **not in scope**
+- Geometry / גאומטריה: **not in scope**
 - Grade 1 and Grade 2 drafts: **read-only reference**
 - Design / UI / themes / reader shell: **not touched**
 - All 26 pages: `approval_status: draft`; `[DRAFT — not owner-approved]` in metadata title only

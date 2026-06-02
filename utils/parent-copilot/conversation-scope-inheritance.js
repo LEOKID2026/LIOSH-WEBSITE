@@ -9,7 +9,7 @@ import { interpretFreeformStageA } from "./stage-a-freeform-interpretation.js";
 import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 
 const NAMED_TOPIC_RE =
-  /שברים|חיסור|חיבור|כפל|חילוק|שבר|אנגלית|עברית|הנדסה|גאומטריה|מדעים|מולדת|גאוגרפיה|חשבון/u;
+  /שברים|חיסור|חיבור|כפל|חילוק|שבר|אנגלית|עברית|גאומטריה|גיאומטריה|הנדסה|מדעים|מולדת|גאוגרפיה|חשבון/u;
 
 export { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 

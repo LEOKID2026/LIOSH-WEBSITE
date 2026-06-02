@@ -42,7 +42,7 @@ assert.equal(a1.subjectClasses.length, 2);
 assert.equal(physicalClassStudentCount(a1.subjectClasses), 24);
 
 const labels = physicalClassSubjectLabelsHe(a1.subjectClasses);
-assert.deepEqual(labels, ["מתמטיקה", "הנדסה"], "Hebrew subjects only, demo order");
+assert.deepEqual(labels, ["מתמטיקה", "גאומטריה"], "Hebrew subjects only, demo order");
 assert.ok(!labels.some((l) => /math|geometry/i.test(l)), "no raw English keys");
 
 const sortedNames = groups.map((g) => g.name);

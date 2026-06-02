@@ -120,7 +120,7 @@ assert.ok(vm.sections.attention.items[0].detail.includes("קשיים"));
     students: [],
     subjectBreakdown: [
       { classId: "c-math", subjectFocus: "math", subjectLabelHe: "מתמטיקה", teacherId: "t1" },
-      { classId: "c-geo", subjectFocus: "geometry", subjectLabelHe: "הנדסה", teacherId: "t2" },
+      { classId: "c-geo", subjectFocus: "geometry", subjectLabelHe: "גאומטריה", teacherId: "t2" },
     ],
     subjectGuidanceBlocks: [
       {
@@ -140,14 +140,14 @@ assert.ok(vm.sections.attention.items[0].detail.includes("קשיים"));
       },
       {
         subjectFocus: "geometry",
-        subjectLabelHe: "הנדסה",
+        subjectLabelHe: "גאומטריה",
         guidanceSeverityTier: "class_needs_reinforcement",
         classRecommendationUnits: [
           {
             level: "subject",
             subject: "geometry",
-            headlineHe: "הנדסה — קושי ברמת מקצוע בכיתה",
-            topicLabelHe: "הנדסה — קושי ברמת מקצוע בכיתה",
+            headlineHe: "גאומטריה — קושי ברמת מקצוע בכיתה",
+            topicLabelHe: "גאומטריה — קושי ברמת מקצוע בכיתה",
             cohortAccuracyPct: 52,
             affectedStudentCount: 7,
           },
@@ -165,7 +165,7 @@ assert.ok(vm.sections.attention.items[0].detail.includes("קשיים"));
   assert.equal(vm.sections.focus.items.length, 2, "PHYS-1: math + geometry focus items");
   const labels = vm.sections.focus.items.map((f) => f.label).join(" ");
   assert.ok(labels.includes("מתמטיקה"), "PHYS-1: math visible");
-  assert.ok(labels.includes("הנדסה"), "PHYS-1: geometry visible");
+  assert.ok(labels.includes("גאומטריה"), "PHYS-1: geometry visible");
 }
 
 // PHYS-2 — insight uses physicalClassGuidanceSeverityTier
@@ -211,14 +211,14 @@ assert.ok(vm.sections.attention.items[0].detail.includes("קשיים"));
     subjectGuidanceBlocks: [
       {
         subjectFocus: "geometry",
-        subjectLabelHe: "הנדסה",
+        subjectLabelHe: "גאומטריה",
         guidanceSeverityTier: tier,
         classRecommendationUnits: [
           {
             level: "subject",
             subject: "geometry",
-            headlineHe: "הנדסה — קושי ברמת מקצוע בכיתה",
-            topicLabelHe: "הנדסה — קושי ברמת מקצוע בכיתה",
+            headlineHe: "גאומטריה — קושי ברמת מקצוע בכיתה",
+            topicLabelHe: "גאומטריה — קושי ברמת מקצוע בכיתה",
           },
         ],
       },

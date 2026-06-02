@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
@@ -3262,7 +3262,7 @@ export default function EnglishMaster() {
                   </button>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  כמו במשחקי החשבון וההנדסה, ניתן לבחור כאן מצב אימון מיוחד, חיבור לשגיאות אחרונות או מעבר מדורג בין רמות.
+                  כמו במשחקי החשבון והגאומטריה, ניתן לבחור כאן מצב אימון מיוחד, חיבור לשגיאות אחרונות או מעבר מדורג בין רמות.
                 </p>
                 <div className="space-y-2 mb-4">
                   <p className="text-xs text-white/60 font-semibold">מצב מיקוד</p>

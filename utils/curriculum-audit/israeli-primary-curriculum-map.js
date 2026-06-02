@@ -253,7 +253,7 @@ function geometryGrade(g) {
   const QUAD = td("geometry.polygons_quadrilaterals", "מרובעים ומצולעים", "allowed");
   const CIR = td("geometry.circle_basic", "מעגל ועיגול", "allowed");
   const PY = td("geometry.pythagoras_right_triangles", "משפט פיתגורס", "allowed");
-  const MIX = td("geometry.mixed_review", "ערבוב נושאי הנדסה", "allowed");
+  const MIX = td("geometry.mixed_review", "ערבוב נושאי גאומטריה", "allowed");
   const TIL = td("geometry.tiling_covering", "ריצוף וכיסוי", "enrichment");
   const DIAG = td("geometry.diagonals_properties", "אלכסונים ותכונות צורה", "allowed");
   const HEIGHT = td("geometry.heights_area_links", "גבהים וקשר לשטח", "allowed");
@@ -264,7 +264,7 @@ function geometryGrade(g) {
     allowedTopics: [],
     enrichmentTopics: [],
     notExpectedYet: [],
-    sourceNotes: `כיתה ${G_HE[g]} — הנדסה: נושאים מופרדים (צורות, זוויות, שטח...).`,
+    sourceNotes: `כיתה ${G_HE[g]} — גאומטריה: נושאים מופרדים (צורות, זוויות, שטח...).`,
     confidence: "medium",
   };
 

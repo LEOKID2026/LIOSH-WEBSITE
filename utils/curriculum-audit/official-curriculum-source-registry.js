@@ -161,8 +161,8 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded:
-      "תיקון תוכן נפרד בהנדסה במוצר — יושוו מול מיתר זה ובמסמכי כיתה; לא עומס גאומטריה נפרד כאן.",
-    notes: "מיתר גאומטריה במתמטיקה — ההפרדה למקצוע הנדסה במוצר היא נושא נפרד מהרחבה זו.",
+      "תיקון תוכן נפרד בגאומטריה במוצר — יושוו מול מיתר זה ובמסמכי כיתה; לא עומס גאומטריה נפרד כאן.",
+    notes: "מיתר גאומטריה במתמטיקה — ההפרדה למקצוע גאומטריה במוצר היא נושא נפרד מהרחבה זו.",
   },
   {
     subject: "math",
@@ -203,7 +203,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     needsHumanPedagogyReview: true,
     actionNeeded:
       "מקצוע בהפרדה טכנית במוצר — יש לאמת רצף עומק מול מיתר הגאומטריה בתוכנית המתמטיקה.",
-    notes: "עיגון רשמי זהה למיתר הגאומטריה במתמטיקה; לא תוכנית הנדסה נפרדת במשרד.",
+    notes: "עיגון רשמי זהה למיתר הגאומטריה במתמטיקה; לא תוכנית גאומטריה נפרדת במשרד.",
   },
   {
     subject: "geometry",
@@ -248,9 +248,9 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
       providesSkillOrDepthDetail: true,
       needsHumanPedagogyReview: true,
       actionNeeded:
-        "להצליב נושאי ההנדסה במוצר מול סעיפי הגאומטריה בתוך מסמך הכיתה (PDF).",
+        "להצליב נושאי הגאומטריה במוצר מול סעיפי הגאומטריה בתוך מסמך הכיתה (PDF).",
       notes:
-        "מסמך כיתה זהה למתמטיקה — עיגון כיתתי לביצוע ביקורת הנדסה ושורות מאגר.",
+        "מסמך כיתה זהה למתמטיקה — עיגון כיתתי לביצוע ביקורת גאומטריה ושורות מאגר.",
     };
   }),
 

@@ -85,7 +85,7 @@ export default function GeometryCurriculum() {
 
           <header className="text-center space-y-3">
             <h1 className="text-3xl md:text-4xl font-black" dir="rtl">
-              תוכנית הלימודים באתר - הנדסה
+              תוכנית הלימודים באתר - גאומטריה
             </h1>
             <p className="text-sm md:text-base text-white/70 max-w-2xl mx-auto" dir="rtl">
               סיכום של הנושאים, רמות הקושי והכיתות כפי שהוגדרו במערכת — לצורכי שקיפות בלבד
@@ -105,7 +105,7 @@ export default function GeometryCurriculum() {
                     {Object.keys(LEVELS).length} רמות קושי) לכל כיתה
                   </li>
                   <li>
-                    <strong>{topicCountLabel} נושאי הנדסה</strong> במפת הנושאים של המוצר (לא כולל &quot;ערבוב&quot; כנושא נפרד בספירה זו)
+                    <strong>{topicCountLabel} נושאי גאומטריה</strong> במפת הנושאים של המוצר (לא כולל &quot;ערבוב&quot; כנושא נפרד בספירה זו)
                   </li>
                 </ul>
                 <p className="text-sm text-white/75 mt-3">
@@ -160,7 +160,7 @@ export default function GeometryCurriculum() {
               <div className="bg-emerald-500/20 border-r-4 border-emerald-500 p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-3 text-center">סיכום כללי</h3>
                 <p className="text-center mb-3">
-                  במערכת מוצגים <strong>{topicCountLabel} נושאי הנדסה</strong> (בנוסף למצב ערבוב היכן שקיים), ב־
+                  במערכת מוצגים <strong>{topicCountLabel} נושאי גאומטריה</strong> (בנוסף למצב ערבוב היכן שקיים), ב־
                   <strong> שש כיתות</strong> ובשלוש רמות קושי — בהתאם להגדרות הקוד והתצורה בעמוד התרגול.
                 </p>
                 <p className="text-center text-sm text-white/80">

@@ -14,7 +14,7 @@ const ALL_SUBJECTS = ["math", "geometry", "english", "science", "hebrew", "moled
 
 const SUBJECT_LABEL_HE = {
   math: "חשבון",
-  geometry: "הנדסה",
+  geometry: "גאומטריה",
   english: "אנגלית",
   science: "מדעים",
   hebrew: "עברית",

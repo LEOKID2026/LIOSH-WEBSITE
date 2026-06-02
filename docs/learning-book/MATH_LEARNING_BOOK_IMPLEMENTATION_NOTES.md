@@ -70,7 +70,7 @@ No decision is made here. The important constraint is that only pages with
 
 ## 2. Grade-Based Book Color Themes
 
-Each grade gets **one** consistent reader color theme across all subjects (Math, הנדסה, etc.).
+Each grade gets **one** consistent reader color theme across all subjects (Math, גאומטריה, etc.).
 
 | Grade | Theme |
 |-------|--------|
@@ -89,7 +89,7 @@ Implementation:
 - Server catalog: `lib/learning-book/learning-book-catalog.js`
 - React context: `components/learning-book/BookGradeThemeContext.js`
 
-**Full structure (June 2026):** Math G1–G6 and הנדסה G1–G6 shells prepared; placeholder books allowed in dev. See `LEARNING_BOOK_FULL_STRUCTURE_EXPANSION.md`.
+**Full structure (June 2026):** Math G1–G6 and גאומטריה G1–G6 shells prepared; placeholder books allowed in dev. See `LEARNING_BOOK_FULL_STRUCTURE_EXPANSION.md`.
 
 Do **not** assign subject-specific random colors when cloning books to new subjects — pass the student's grade key instead.
 

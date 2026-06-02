@@ -148,7 +148,7 @@ All pages: `age_band: grades_5_6`, `approval_status: draft`.
 | E | 24 | `math:g5:eq_div` | `math:kind:eq_div` | `eq_div.md` | משוואת חילוק | מחלק חסר | Yes |
 | F | 25 | `math:g5:fm_factor` | `math:kind:fm_factor` | `fm_factor.md` | גורמים | גורמים של 36 | Yes |
 | F | 26 | `math:g5:fm_multiple` | `math:kind:fm_multiple` | `fm_multiple.md` | כפולות | כפולות של 7 | Yes |
-| F | 27 | `math:g5:fm_gcd` | `math:kind:fm_gcd` | `fm_gcd.md` | מ.א.ח | 30 ו-45 | Yes |
+| F | 27 | `math:g5:fm_gcd` | `math:kind:fm_gcd` | `fm_gcd.md` | המחלק המשותף הגדול ביותר (מ.א.ח) | 30 ו-45 | Yes |
 | F | 28 | `math:g5:est_add` | `math:kind:est_add` | `est_add.md` | אומדן חיבור | ≈; אחרון G5 | Yes |
 | F | 29 | `math:g5:est_mul` | `math:kind:est_mul` | `est_mul.md` | אומדן כפל | ≈ | Yes |
 | F | 30 | `math:g5:est_quantity` | `math:kind:est_quantity` | `est_quantity.md` | אומדן כמות | ~12,000 | Yes |
@@ -156,7 +156,7 @@ All pages: `age_band: grades_5_6`, `approval_status: draft`.
 | G | 32 | `math:g5:perc_discount` | `math:kind:perc_discount` | `perc_discount.md` | הנחה באחוזים | 20% מ-150 | Yes |
 | H | 33 | `math:g5:wp_comparison_more` | `math:kind:wp_comparison_more` | `wp_comparison_more.md` | כמה יותר? | הפרש | Yes |
 | H | 34 | `math:g5:wp_leftover` | `math:kind:wp_leftover` | `wp_leftover.md` | מה נשאר? | שארית | Yes |
-| H | 35 | `math:g5:wp_time_sum` | `math:kind:wp_time_sum` | `wp_time_sum.md` | סכום זמנים | 1:25 + 0:45 | Needs owner review |
+| H | 35 | `math:g5:wp_time_sum` | `math:kind:wp_time_sum` | `wp_time_sum.md` | סכום זמנים | 1:25 + 0:45 | Yes (hours:minutes approved) |
 | H | 36 | `math:g5:wp_multi_step` | `math:kind:wp_multi_step` | `wp_multi_step.md` | שאלה מרובת שלבים | 2+ שלבים | Yes |
 | H | 37 | `math:g5:wp_distance_time` | `math:kind:wp_distance_time` | `wp_distance_time.md` | מרחק וזמן | מהירות × זמן | Yes |
 | H | 38 | `math:g5:wp_shop_discount` | `math:kind:wp_shop_discount` | `wp_shop_discount.md` | קניות והנחה | 15% הנחה | Yes |
@@ -252,7 +252,7 @@ Every page keeps **the same numbers/story** in §5 (נסו בעצמכם) and §6
 
 | Topic | Status | Notes |
 |-------|--------|-------|
-| `wp_time_sum` time notation | Needs review | Draft uses `1:25` + `0:45` — confirm classroom format (דקות בלבד vs שעות:דקות) |
+| `wp_time_sum` time notation | **Owner approved** | Keep `1:25` + `0:45` (hours:minutes); verifier flags Bidi risk at runtime |
 | `sequence` types | Needs review | Spine spans g3–g6; G5 uses large arithmetic steps only |
 | `negatives` in G5 constants | Skipped | `allowNegatives: true` but no spine skill — no dedicated page |
 | `frac_add_sub` different denominators | Deferred | Expansion taught on `frac_expand`; add/sub drafts use common denominator |

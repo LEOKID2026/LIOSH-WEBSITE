@@ -9,6 +9,8 @@ import { MATH_G1_PAGE_ORDER } from "../../lib/learning-book/math-g1-registry.js"
 import { MATH_G2_PAGE_ORDER } from "../../lib/learning-book/math-g2-registry.js";
 import { MATH_G3_PAGE_ORDER } from "../../lib/learning-book/math-g3-registry.js";
 import { MATH_G4_PAGE_ORDER } from "../../lib/learning-book/math-g4-registry.js";
+import { MATH_G5_PAGE_ORDER } from "../../lib/learning-book/math-g5-registry.js";
+import { MATH_G6_PAGE_ORDER } from "../../lib/learning-book/math-g6-registry.js";
 import {
   findInlineMathRuns,
   splitTextAndMathRuns,
@@ -269,6 +271,10 @@ const THOUSANDS_LINES = [
   { line: "3,482", token: "3,482" },
   { line: "מספר **3,482**", token: "3,482" },
   { line: "עד **10,000**", token: "10,000" },
+  { line: "מספר **125,480**", token: "125,480" },
+  { line: "עד **200,000**", token: "200,000" },
+  { line: "מספר **48,726**", token: "48,726" },
+  { line: "עד **100,000**", token: "100,000" },
 ];
 
 for (const sample of THOUSANDS_LINES) {
@@ -358,6 +364,31 @@ const MANUAL_QA = {
     "power_base",
     "dec_add",
   ],
+  g5: [
+    "ns_place_hundreds",
+    "cmp",
+    "add_two",
+    "div_with_remainder",
+    "frac_reduce",
+    "dec_add",
+    "fm_gcd",
+    "fm_multiple",
+    "perc_part_of",
+    "wp_time_sum",
+  ],
+  g6: [
+    "ns_place_hundreds",
+    "round",
+    "add_two",
+    "sub_two",
+    "fm_gcd",
+    "dec_add",
+    "frac_multiply",
+    "ratio_first",
+    "scale_find",
+    "perc_part_of",
+    "wp_time_sum",
+  ],
 };
 
 for (const [grade, pageIds] of Object.entries(MANUAL_QA)) {
@@ -383,6 +414,8 @@ for (const [order, grade] of [
   [MATH_G2_PAGE_ORDER, "g2"],
   [MATH_G3_PAGE_ORDER, "g3"],
   [MATH_G4_PAGE_ORDER, "g4"],
+  [MATH_G5_PAGE_ORDER, "g5"],
+  [MATH_G6_PAGE_ORDER, "g6"],
 ]) {
   for (const pageId of order) {
     const raw = fs.readFileSync(
@@ -402,5 +435,5 @@ if (failures > 0) {
 }
 
 console.log(
-  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + ${THOUSANDS_LINES.length} thousands checks + G1/G2/G3/G4 full scan + manual QA pages.`
+  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + ${THOUSANDS_LINES.length} high-risk token checks + G1/G2/G3/G4/G5/G6 full scan + manual QA pages.`
 );

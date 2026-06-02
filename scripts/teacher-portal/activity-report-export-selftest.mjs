@@ -785,7 +785,7 @@ console.log("\n── Frozen question extractor (SIM shapes) ──");
 console.log("\n── Export label helpers ──");
 
 {
-  assert(activityExportSubjectLabelHe("geometry") === "הנדסה", "labels: geometry → הנדסה");
+  assert(activityExportSubjectLabelHe("geometry") === "גאומטריה", "labels: geometry → גאומטריה");
   assert(activityExportModeLabelHe("guided_practice") === "תרגול מודרך", "labels: guided_practice → תרגול מודרך");
   assert(activityExportModeLabelHe("quiz") === "בוחן", "labels: quiz → בוחן");
   assert(activityExportTopicLabelHe("geometry", "angles") !== "", "labels: angles topic has Hebrew label");
@@ -839,19 +839,19 @@ console.log("\n── SIM-shaped workbook integration ──");
 
   const kv = buildEnrichedSummaryKV(simPayload);
   const subjectRow = kv.find((r) => r[0] === "מקצוע");
-  assert(subjectRow?.[1] === "הנדסה", "SIM summary: geometry → הנדסה", `got "${subjectRow?.[1]}"`);
+  assert(subjectRow?.[1] === "גאומטריה", "SIM summary: geometry → גאומטריה", `got "${subjectRow?.[1]}"`);
   const topicRow = kv.find((r) => r[0] === "נושא");
   assert(topicRow && !looksLikeRawExportKey(topicRow[1]), "SIM summary: topic is Hebrew not raw key");
   const titleRow = kv.find((r) => r[0] === "שם פעילות");
   assert(titleRow && !String(titleRow[1]).includes("geometry"), "SIM summary: title sanitized from geometry key");
   assert(titleRow && !String(titleRow[1]).includes("SIM"), "SIM summary: title has no SIM marker");
-  assert(titleRow && String(titleRow[1]).includes("הנדסה"), "SIM summary: title uses export geometry spelling");
+  assert(titleRow && String(titleRow[1]).includes("גאומטריה"), "SIM summary: title uses export geometry spelling");
   assert(titleRow && String(titleRow[1]).includes("09/04/2026"), "SIM summary: title includes formatted date");
 
   const enrichedStem = buildEnrichedActivityReportDownloadStem(simPayload);
   assert(!enrichedStem.includes("geometry"), "enriched filename: no geometry key", `got "${enrichedStem}"`);
   assert(!enrichedStem.includes("SIM"), "enriched filename: no SIM marker", `got "${enrichedStem}"`);
-  assert(enrichedStem.includes("הנדסה"), "enriched filename: Hebrew subject", `got "${enrichedStem}"`);
+  assert(enrichedStem.includes("גאומטריה"), "enriched filename: Hebrew subject", `got "${enrichedStem}"`);
 
   const csvStem = buildActivityReportDownloadStem(simPayload);
   assert(csvStem.includes("geometry"), "CSV filename: still uses raw DB title (unchanged)");
@@ -887,7 +887,7 @@ console.log("\n── SIM stub question_set (DB parity) ──");
     "geometry",
     { closedAt: "2026-04-07T10:51:00+00:00" }
   );
-  assert(exportTitle === "יום 157 שעה 2 — הנדסה — 07/04/2026", "export title: full SIM title sanitized", `got "${exportTitle}"`);
+  assert(exportTitle === "יום 157 שעה 2 — גאומטריה — 07/04/2026", "export title: full SIM title sanitized", `got "${exportTitle}"`);
 }
 
 // ─── Section 15: Teacher PDF v1 content builders ─────────────────────────────

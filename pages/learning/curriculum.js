@@ -50,7 +50,7 @@ export default function Curriculum() {
   
   const subjectTitles = {
     math: "מתמטיקה",
-    geometry: "הנדסה",
+    geometry: "גאומטריה",
     english: "אנגלית",
     science: "מדעים",
     hebrew: "שפה עברית",
@@ -65,7 +65,7 @@ export default function Curriculum() {
     science:
       "מיפוי לפי מבנה דף המדעים באתר ומול מסגרת תוכנית מדע וטכנולוגיה (POP), עם בקרות אתר והצלבה למקורות. אין טענה לאישור משרד מלא או לכיסוי כל פרק — חתימת בעלים וביקורת ידנית עדיין נדרשות לטענה מלאה.",
     geometry:
-      "מיפוי לפי מבנה דף ההנדסה באתר ומול מסגרת תוכנית המתמטיקה (מדידות וגאומטריה) ובקרות האתר. אין טענה לאישור משרד מלא או לכיסוי PDF כיתתי שלם עד להשלמת ביקורת ידנית.",
+      "מיפוי לפי מבנה דף הגאומטריה באתר ומול מסגרת תוכנית המתמטיקה (מדידות וגאומטריה) ובקרות האתר. אין טענה לאישור משרד מלא או לכיסוי PDF כיתתי שלם עד להשלמת ביקורת ידנית.",
     hebrew:
       "מיפוי לפי מבנה דף השפה העברית באתר (נושאים וכיתות) — נבדק מול מסגרת POP של עברית חינוך לשוני ובקרות האתר. אין כאן טענה לאישור בעלים מלא או לכיסוי PDF כיתתי שלם עד להשלמת ביקורת ידנית.",
     "moledet-geography":
@@ -360,10 +360,10 @@ export default function Curriculum() {
           ) : isGeometry ? (
             <div className="bg-white/5 rounded-2xl border border-white/10 p-6" dir="rtl">
               <div className="bg-blue-500/20 border-r-4 border-blue-500 p-4 rounded-lg mb-6">
-                <h3 className="text-xl font-bold mb-2">מבנה הנדסה באתר</h3>
+                <h3 className="text-xl font-bold mb-2">מבנה גאומטריה באתר</h3>
                 <ul className="list-disc pr-6 space-y-2 text-sm text-white/85">
                   <li>
-                    <strong>6 כיתות</strong> (א׳–ו׳) — הרשימות למטה תואמות את בחירת הנושא בדף ההנדסה ואת מדיניות
+                    <strong>6 כיתות</strong> (א׳–ו׳) — הרשימות למטה תואמות את בחירת הנושא בדף הגאומטריה ואת מדיניות
                     הנושאים בגנרטור
                   </li>
                   <li>
@@ -383,7 +383,7 @@ export default function Curriculum() {
                     className="bg-blue-500/15 border-r-4 border-blue-400 p-4 rounded-lg mb-6"
                   >
                     <h2 className="text-2xl font-bold mb-3">{grade.name}</h2>
-                    <h3 className="text-lg font-semibold mb-2">נושאים זמינים בדף ההנדסה</h3>
+                    <h3 className="text-lg font-semibold mb-2">נושאים זמינים בדף הגאומטריה</h3>
                     <ul className="list-disc pr-6 space-y-2 text-sm text-white/85">
                       {topicKeys.map((topicKey) => (
                         <li key={`${gk}-${topicKey}`}>

@@ -9,6 +9,8 @@ import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import { MATH_G2_BOOK_META } from "../../lib/learning-book/math-g2-registry";
 import { MATH_G3_BOOK_META } from "../../lib/learning-book/math-g3-registry";
 import { MATH_G4_BOOK_META } from "../../lib/learning-book/math-g4-registry";
+import { MATH_G5_BOOK_META } from "../../lib/learning-book/math-g5-registry";
+import { MATH_G6_BOOK_META } from "../../lib/learning-book/math-g6-registry";
 import {
   appendReturnQueryToHref,
   getMathG1BookReturnQuerySuffix,
@@ -30,10 +32,22 @@ import {
   getMathG4PracticePath,
   saveMathG4BookPracticePreset,
 } from "../../lib/learning-book/math-g4-book-nav";
+import {
+  getMathG5BookReturnQuerySuffix,
+  getMathG5PracticePath,
+  saveMathG5BookPracticePreset,
+} from "../../lib/learning-book/math-g5-book-nav";
+import {
+  getMathG6BookReturnQuerySuffix,
+  getMathG6PracticePath,
+  saveMathG6BookPracticePreset,
+} from "../../lib/learning-book/math-g6-book-nav";
 import { resolveMathG1PracticeTarget } from "../../lib/learning-book/resolve-math-g1-practice-target";
 import { resolveMathG2PracticeTarget } from "../../lib/learning-book/resolve-math-g2-practice-target";
 import { resolveMathG3PracticeTarget } from "../../lib/learning-book/resolve-math-g3-practice-target";
 import { resolveMathG4PracticeTarget } from "../../lib/learning-book/resolve-math-g4-practice-target";
+import { resolveMathG5PracticeTarget } from "../../lib/learning-book/resolve-math-g5-practice-target";
+import { resolveMathG6PracticeTarget } from "../../lib/learning-book/resolve-math-g6-practice-target";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
@@ -70,6 +84,22 @@ const G4_BOOK_UI = {
   savePracticePreset: saveMathG4BookPracticePreset,
 };
 
+const G5_BOOK_UI = {
+  bookMeta: MATH_G5_BOOK_META,
+  getReturnQuerySuffix: getMathG5BookReturnQuerySuffix,
+  resolvePracticeTarget: resolveMathG5PracticeTarget,
+  getPracticePath: getMathG5PracticePath,
+  savePracticePreset: saveMathG5BookPracticePreset,
+};
+
+const G6_BOOK_UI = {
+  bookMeta: MATH_G6_BOOK_META,
+  getReturnQuerySuffix: getMathG6BookReturnQuerySuffix,
+  resolvePracticeTarget: resolveMathG6PracticeTarget,
+  getPracticePath: getMathG6PracticePath,
+  savePracticePreset: saveMathG6BookPracticePreset,
+};
+
 export default function LearningPageBody({
   page,
   prevPageId = null,
@@ -93,6 +123,8 @@ export default function LearningPageBody({
   );
 
   const bookUi = useMemo(() => {
+    if (bookSubject === "math" && bookGrade === "g6") return G6_BOOK_UI;
+    if (bookSubject === "math" && bookGrade === "g5") return G5_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g4") return G4_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g3") return G3_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g2") return G2_BOOK_UI;

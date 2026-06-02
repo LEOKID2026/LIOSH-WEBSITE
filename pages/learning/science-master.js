@@ -3562,7 +3562,7 @@ function saveScienceAnswerInParallel({
                   </button>
                 </div>
                 <p className="text-sm text-white/70 mb-3">
-                  בחר קטגוריה כדי לחזור במהירות על נקודות מפתח – כמו דפי העזר במשחקי החשבון וההנדסה.
+                  בחר קטגוריה כדי לחזור במהירות על נקודות מפתח – כמו דפי העזר במשחקי החשבון והגאומטריה.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {Object.entries(REFERENCE_SECTIONS).map(([key, section]) => (

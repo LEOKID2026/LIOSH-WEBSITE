@@ -11,7 +11,7 @@ import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
 /** @type {Record<string, string[]>} */
 export const SUBJECT_HE_ALIASES = Object.freeze({
   math: ["חשבון", "מתמטיקה"],
-  geometry: ["הנדסה", "גאומטריה", "גיאומטריה"],
+  geometry: ["גאומטריה", "גיאומטריה", "הנדסה"],
   english: ["אנגלית"],
   science: ["מדעים", "מדע"],
   hebrew: ["עברית", "שפה"],

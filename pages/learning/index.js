@@ -14,7 +14,7 @@ const LEARNING_GAMES = [
   },
   {
     slug: "geometry-master",
-    title: "הנדסה",
+    title: "גאומטריה",
     emoji: "📐",
     grades: "כיתות א׳–ו׳",
     blurb: "שטחים, היקפים, נפח, זוויות, פיתגורס וצורות — עם הסברים.",

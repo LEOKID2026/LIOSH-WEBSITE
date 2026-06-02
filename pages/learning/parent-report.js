@@ -246,7 +246,7 @@ function buildSubjectOverviewRows(report) {
     },
     {
       key: "geometry",
-      name: "הנדסה",
+      name: "גאומטריה",
       minutes: sumTopicMapMinutes(report.geometryTopics),
       questions: Number(s.geometryQuestions) || 0,
       accuracy: Math.round(Number(s.geometryAccuracy) || 0),
@@ -561,7 +561,7 @@ function buildParentReportDiagnosticsView(report) {
 /** הגדרות כרטיסי נושא — מקור אחד לרשימת המקצועות + איסוף תוויות גלובלי */
 const TOPIC_BAR_SUBJECT_CARDS = [
   { title: "חשבון — דיוק לפי נושא", mapKey: "mathOperations", prefix: "math_", border: "border-blue-400/25" },
-  { title: "הנדסה — דיוק לפי נושא", mapKey: "geometryTopics", prefix: "geometry_", border: "border-emerald-400/25" },
+  { title: "גאומטריה — דיוק לפי נושא", mapKey: "geometryTopics", prefix: "geometry_", border: "border-emerald-400/25" },
   { title: "אנגלית — דיוק לפי נושא", mapKey: "englishTopics", prefix: "english_", border: "border-purple-400/25" },
   { title: "מדעים — דיוק לפי נושא", mapKey: "scienceTopics", prefix: "science_", border: "border-green-400/25" },
   { title: "עברית — דיוק לפי נושא", mapKey: "hebrewTopics", prefix: "hebrew_", border: "border-orange-400/25" },
@@ -2014,7 +2014,7 @@ export default function ParentReport() {
             
             <div className="parent-report-print-summary-card bg-emerald-500/20 border border-emerald-400/50 rounded-lg p-2 md:p-4 text-center">
               <div className="parent-report-print-summary-label text-xs md:text-sm text-white/60 mb-1">
-                📐 הנדסה
+                📐 גאומטריה
               </div>
               <div className="parent-report-print-summary-stat text-base md:text-lg font-bold text-emerald-400">
                 {report.summary.geometryQuestions || 0} שאלות
@@ -2249,7 +2249,7 @@ export default function ParentReport() {
           {/* טבלת נושאים גאומטריה */}
           {Object.keys(report.geometryTopics || {}).length > 0 && (
             <div className="bg-black/30 border border-white/10 rounded-lg p-2 md:p-4 mb-3 md:mb-6 avoid-break">
-              <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">📐 התקדמות בהנדסה</h2>
+              <h2 className="text-base md:text-xl font-bold mb-2 md:mb-3 text-center">📐 התקדמות בגאומטריה</h2>
               <div className="parent-report-desktop-only hidden md:block mt-2">
                 <table className="w-full table-fixed text-sm parent-report-subject-table">
                   <colgroup>
@@ -3675,7 +3675,7 @@ export default function ParentReport() {
                         dataKey="geometryTopics"
                         stroke={SUBJECT_CHART_COLORS.geometry}
                         strokeWidth={1.8}
-                        name="הנדסה"
+                        name="גאומטריה"
                         dot={{ r: 2 }}
                         activeDot={{ r: 4 }}
                       />

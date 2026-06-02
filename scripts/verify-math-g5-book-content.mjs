@@ -18,6 +18,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DRAFTS_DIR = path.join(__dirname, "../docs/learning-book/math/g5/drafts");
 
 const THOUSANDS_RE = /\d{1,3}(?:,\d{3})+/g;
+/** hours:minutes — Bidi/visual review at runtime (e.g. 1:25, 0:45) */
+const TIME_COLON_RE = /\d{1,2}:\d{2}/g;
 const FAKE_PRACTICE_RE =
   /forceKind|fromBook=|math-master\?|resolveMathG5|getMathG5Practice/i;
 const RAW_MARKDOWN_RE = /\*\*[^*]+\*\*/;
@@ -37,6 +39,7 @@ function sectionBody(page, num) {
 
 const errors = [];
 const bidiNotes = [];
+const timeBidiNotes = [];
 const markdownNotes = [];
 
 for (const pageId of MATH_G5_PAGE_ORDER) {
@@ -106,6 +109,13 @@ for (const pageId of MATH_G5_PAGE_ORDER) {
     bidiNotes.push(`${pageId}: grouped thousands ${[...new Set(thousands)].join(", ")}`);
   }
 
+  const timeTokens = childFacing.match(TIME_COLON_RE) || [];
+  if (timeTokens.length) {
+    timeBidiNotes.push(
+      `${pageId}: hours:minutes tokens ${[...new Set(timeTokens)].join(", ")} (Bidi/browser visual review at runtime)`
+    );
+  }
+
   if (RAW_MARKDOWN_RE.test(childFacing)) {
     markdownNotes.push(`${pageId}: possible raw ** markdown in child-facing body`);
   }
@@ -132,6 +142,14 @@ if (bidiNotes.length) {
   }
 } else {
   console.log("\nBidi review notes: no grouped thousands detected in child-facing bodies.");
+}
+if (timeBidiNotes.length) {
+  console.log("\nBidi review notes (hours:minutes — verify renderer in UI later):");
+  for (const note of timeBidiNotes) {
+    console.log(`  - ${note}`);
+  }
+} else {
+  console.log("\nBidi review notes (hours:minutes): none detected.");
 }
 if (markdownNotes.length) {
   console.log("\nMarkdown / structure review notes:");
