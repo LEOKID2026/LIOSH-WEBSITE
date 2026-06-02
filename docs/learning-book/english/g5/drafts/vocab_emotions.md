@@ -1,0 +1,90 @@
+# רגשות — felt proud
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| **learning_page_id** | `english:g5:vocab_emotions` |
+| **skill_id** | `english:vocabulary:wordlist:emotions` |
+| **subject** | english |
+| **grade** | g5 |
+| **age_band** | grades_5_6 |
+| **page_type** | vocabulary_theme |
+| **approval_status** | draft |
+| **title_hebrew** | רגשות — felt proud `[DRAFT — not owner-approved]` |
+
+**Source references:**
+- `data/curriculum-spine/v1/skills.json`
+- `docs/learning-book/ENGLISH_LEARNING_BOOK_MASTER_SCOPE_PLAN.md`
+
+**Content scope:** She felt proud — רגשות בעבר
+
+---
+
+## 1. מה לומדים?
+
+היום נלמד רגשות עם Past Simple.
+She felt proud after the test — היא הרגישה גאה אחרי המבחן.
+
+---
+
+## 2. הסבר
+
+felt — הרגיש (עבר):
+
+She felt proud after the test.
+
+היא הרגישה גאה אחרי המבחן.
+
+He felt happy yesterday.
+
+הוא הרגיש שמח אתמול.
+
+---
+
+## 3. דוגמה
+
+ילדה אחרי מבחן.
+
+She felt proud after the test.
+
+היא הרגישה גאה אחרי המבחן.
+
+---
+
+## 4. בואו נפתור
+
+שאלה: איך אומרים "היא הרגישה גאה אחרי המבחן"?
+
+She felt proud after the test
+
+תשובה: She felt proud after the test
+
+---
+
+## 5. נסו בעצמכם
+
+מבחן בכיתה — אחרי הציון.
+
+She felt proud after the test
+
+(רמז: felt = הרגישה בעבר.)
+
+---
+
+## 6. שימו לב!
+
+She feel proud after the test — שגוי!
+
+❌ feel — Present Simple!
+
+✓ She felt proud after the test.
+
+felt = הרגישה (עבר).
+
+---
+
+## 7. בואו נתרגל!
+
+עכשיו אתם מתארים רגשות בעבר.
+בתרגול תמצאו She felt proud after the test.

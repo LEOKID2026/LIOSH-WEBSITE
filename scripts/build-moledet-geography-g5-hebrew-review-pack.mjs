@@ -12,6 +12,7 @@ import {
 import {
   MOLEDET_GEOGRAPHY_G5_PAGE_ORDER,
   MOLEDET_GEOGRAPHY_G5_BOOK_BATCHES,
+  MOLEDET_GEOGRAPHY_G5_VERIFY_INSTITUTIONS,
 } from "./lib/moledet-geography-g5-draft-manifest.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -68,15 +69,22 @@ const batchSummary = MOLEDET_GEOGRAPHY_G5_BOOK_BATCHES.map(
   (b) => `| **Batch ${b.id.toUpperCase()}** (${b.titleHe}) | ${b.pages.length} |`
 ).join("\n");
 
+const verifyNotes = MOLEDET_GEOGRAPHY_G5_VERIFY_INSTITUTIONS.map((n) => `- ${n}`).join("\n");
+
 const header = `# Grade 5 Moledet / Geography Learning Book — Hebrew Review Pack
 
-> **Status:** All content in this pack is **draft** (\`approval_status: draft\`).
+> **Status:** All content in this pack is **draft** (\`approval_status: draft\`). Nothing here is owner-approved or production-ready.
 >
 > **Book naming:** Child-facing copy uses **מולדת וגאוגרפיה**.
 >
-> **Draft coverage:** Grade 5 — **${MOLEDET_GEOGRAPHY_G5_PAGE_ORDER.length}** pages.
+> **Draft coverage:** Grade 5 Moledet/Geography has **${MOLEDET_GEOGRAPHY_G5_PAGE_ORDER.length} / ${MOLEDET_GEOGRAPHY_G5_PAGE_ORDER.length}** draft pages. Source: \`docs/learning-book/moledet-geography/g5/drafts/\`.
 >
-> **Review focus:** Awareness (not fear) for hazards; geography/civic framing for climate/resources; role-based institutions — no current office-holders.
+> **Tone:** Hazards = awareness not fear. Climate/resources = geography/civic framing. Institutions = roles only.
+>
+> **Owner verification flags:**
+${verifyNotes}
+>
+> **Pack version:** Initial full-book review pack (June 2026). Generated from current source markdown.
 
 ---
 
@@ -86,8 +94,13 @@ const header = `# Grade 5 Moledet / Geography Learning Book — Hebrew Review Pa
 |--------|-------|
 | **Total pages** | ${MOLEDET_GEOGRAPHY_G5_PAGE_ORDER.length} |
 ${batchSummary}
+| **All pages** | \`approval_status: draft\` |
 
-**Book:** ספר מולדת וגאוגרפיה — כיתה ה׳
+---
+
+**Book:** ספר מולדת וגאוגרפיה — כיתה ה׳  
+**Pages:** ${MOLEDET_GEOGRAPHY_G5_PAGE_ORDER.length}  
+**Sections per page:** 7  
 
 ---
 

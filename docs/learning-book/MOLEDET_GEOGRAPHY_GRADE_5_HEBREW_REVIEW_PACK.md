@@ -1,12 +1,18 @@
 # Grade 5 Moledet / Geography Learning Book — Hebrew Review Pack
 
-> **Status:** All content in this pack is **draft** (`approval_status: draft`).
+> **Status:** All content in this pack is **draft** (`approval_status: draft`). Nothing here is owner-approved or production-ready.
 >
 > **Book naming:** Child-facing copy uses **מולדת וגאוגרפיה**.
 >
-> **Draft coverage:** Grade 5 — **7** pages.
+> **Draft coverage:** Grade 5 Moledet/Geography has **7 / 7** draft pages. Source: `docs/learning-book/moledet-geography/g5/drafts/`.
 >
-> **Review focus:** Awareness (not fear) for hazards; geography/civic framing for climate/resources; role-based institutions — no current office-holders.
+> **Tone:** Hazards = awareness not fear. Climate/resources = geography/civic framing. Institutions = roles only.
+>
+> **Owner verification flags:**
+- mg_g5_government_institutions: generic roles only in draft; named bodies — [VERIFY]
+- mg_g5_law_society: law/society rules — neutral civic framing [VERIFY]
+>
+> **Pack version:** Initial full-book review pack (June 2026). Generated from current source markdown.
 
 ---
 
@@ -17,8 +23,13 @@
 | **Total pages** | 7 |
 | **Batch A** (מפות, אקלים וסביבה) | 4 |
 | **Batch B** (אזרחות וזהות) | 3 |
+| **All pages** | `approval_status: draft` |
 
-**Book:** ספר מולדת וגאוגרפיה — כיתה ה׳
+---
+
+**Book:** ספר מולדת וגאוגרפיה — כיתה ה׳  
+**Pages:** 7  
+**Sections per page:** 7  
 
 ---
 
@@ -273,7 +284,7 @@
 יושבים ליד שולחן, מכסים ראש — לזמן קצר.
 מורה מסבירה: כך מתכוננים לרעידה — בשקט.
 
-תרגול עוזר — לא מפחיד.
+תרגול עוזר — נותן ביטחון.
 
 ---
 

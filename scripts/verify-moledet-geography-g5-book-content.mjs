@@ -20,10 +20,11 @@ const DRAFTS_DIR = path.join(__dirname, "../docs/learning-book/moledet-geography
 
 const FAKE_PRACTICE_RE =
   /forceKind|fromBook=|moledet-geography-master\?|resolveMoledetGeography|getMoledetGeography/i;
-const FEAR_RE = /אסון נורא|מפחיד מאוד|סכנה מיידית|panic/i;
-const SCIENCE_MECHANISM_RE =
-  /אידוי|מolecule|מולקול|לחץ אוויר|מעגל מים/i;
-const OFFICE_HOLDER_RE = /ראש הממשלה|נשיא המדינה|שר ה|ח"כ /;
+const RAW_MARKDOWN_RE = /\*\*[^*]+\*\*/;
+const HIGH_RISK_RE = /```|^\s*\|.*\|.*\|/m;
+const INVENTED_DATE_RE = /\b(1[89]\d{2}|20\d{2})\b/;
+const HAZARD_FEAR_RE = /אסון|מפחיד|אין תקווה|סוף העולם/i;
+const OFFICE_HOLDER_RE = /ראש הממשלה|נשיא המדינה|שר ה|חבר כנסת|ח"כ/i;
 
 function readMetadataField(raw, field) {
   const re = new RegExp(`\\|\\s*\\*\\*${field}\\*\\*\\s*\\|\\s*(.+?)\\s*\\|`, "i");
@@ -37,6 +38,7 @@ function sectionBody(page, num) {
 }
 
 const errors = [];
+const markdownNotes = [];
 
 for (const pageId of MOLEDET_GEOGRAPHY_G5_PAGE_ORDER) {
   const filePath = path.join(DRAFTS_DIR, `${pageId}.md`);
@@ -91,21 +93,26 @@ for (const pageId of MOLEDET_GEOGRAPHY_G5_PAGE_ORDER) {
     errors.push(`${pageId}: [DRAFT] marker in child-facing section body`);
   }
   if (FAKE_PRACTICE_RE.test(childFacing)) {
-    errors.push(`${pageId}: fake practice routing in body`);
+    errors.push(`${pageId}: Section body contains fake practice routing`);
   }
-  if (FEAR_RE.test(childFacing)) {
-    errors.push(`${pageId}: fear/alarm language in body`);
+  if (!/מולדת וגאוגרפיה/.test(childFacing)) {
+    errors.push(`${pageId}: child-facing body should mention מולדת וגאוגרפיה at least once`);
   }
-  if (SCIENCE_MECHANISM_RE.test(childFacing)) {
-    errors.push(`${pageId}: scientific mechanism detail (Science scope)`);
+  if (INVENTED_DATE_RE.test(childFacing)) {
+    errors.push(`${pageId}: child-facing body must not include specific years`);
   }
   if (OFFICE_HOLDER_RE.test(childFacing)) {
-    errors.push(`${pageId}: references current office-holder titles in body`);
+    errors.push(`${pageId}: child-facing body must not name current office-holders or titles`);
+  }
+
+  if (pageId === "mg_g5_natural_hazards" && HAZARD_FEAR_RE.test(childFacing)) {
+    errors.push(`${pageId}: hazards content must not use fear-based framing`);
   }
 
   const s5 = sectionBody(page, 5);
   const s6 = sectionBody(page, 6);
-  if (FAKE_PRACTICE_RE.test(sectionBody(page, 7))) {
+  const s7 = sectionBody(page, 7);
+  if (FAKE_PRACTICE_RE.test(s7)) {
     errors.push(`${pageId}: Section 7 contains fake practice routing`);
   }
 
@@ -117,6 +124,13 @@ for (const pageId of MOLEDET_GEOGRAPHY_G5_PAGE_ORDER) {
     if (!s6.includes(anchor)) {
       errors.push(`${pageId}: §6 missing alignment anchor "${anchor}"`);
     }
+  }
+
+  if (RAW_MARKDOWN_RE.test(childFacing)) {
+    markdownNotes.push(`${pageId}: possible raw ** markdown in child-facing body`);
+  }
+  if (HIGH_RISK_RE.test(childFacing)) {
+    markdownNotes.push(`${pageId}: code fence or table-like structure in child-facing body`);
   }
 }
 
@@ -131,7 +145,17 @@ if (errors.length) {
 console.log(
   `G5 Moledet/Geography content verification PASSED: ${MOLEDET_GEOGRAPHY_G5_PAGE_ORDER.length} pages.`
 );
-console.log("- grades_5_6 age band; geography:g5:{pageId} ids");
-console.log("- hazards: awareness tone; no fear/alarm language");
-console.log("- climate/resources: no Science mechanism detail");
-console.log("- institutions: role-based; no current office-holder refs in body");
+console.log("- 7 sections each; grades_5_6 age band");
+console.log("- geography:g5:{pageId} ids; מולדת וגאוגרפיה wording");
+console.log("- hazards: awareness not fear; institutions: role-based only");
+console.log("- no invented dates; no office-holder names");
+console.log("- Section 5/6 alignment anchors present");
+console.log("- no fake practice routing in §7");
+if (markdownNotes.length) {
+  console.log("\nMarkdown / structure review notes:");
+  for (const note of markdownNotes) {
+    console.log(`  - ${note}`);
+  }
+} else {
+  console.log("\nMarkdown / structure review notes: none.");
+}

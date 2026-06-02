@@ -1,0 +1,90 @@
+# נסיעות — will travel
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| **learning_page_id** | `english:g5:vocab_travel` |
+| **skill_id** | `english:vocabulary:wordlist:travel` |
+| **subject** | english |
+| **grade** | g5 |
+| **age_band** | grades_5_6 |
+| **page_type** | vocabulary_theme |
+| **approval_status** | draft |
+| **title_hebrew** | נסיעות — will travel `[DRAFT — not owner-approved]` |
+
+**Source references:**
+- `data/curriculum-spine/v1/skills.json`
+- `docs/learning-book/ENGLISH_LEARNING_BOOK_MASTER_SCOPE_PLAN.md`
+
+**Content scope:** We will travel by train — קישור לעתיד
+
+---
+
+## 1. מה לומדים?
+
+היום נלמד נסיעות עם Future — will.
+We will travel by train — ננסע ברכבת (בעתיד).
+
+---
+
+## 2. הסבר
+
+will + פועל — עתיד:
+
+We will travel by train.
+
+ננסע ברכבת.
+
+They will visit Paris next month.
+
+הם יבקרו בפריז בחודש הבא.
+
+---
+
+## 3. דוגמה
+
+תוכנית לנסיעה — רכבת.
+
+We will travel by train.
+
+ננסע ברכבת.
+
+---
+
+## 4. בואו נפתור
+
+שאלה: איך אומרים "ננסע ברכבת"?
+
+We will travel by train
+
+תשובה: We will travel by train
+
+---
+
+## 5. נסו בעצמכם
+
+חופשה מתקרבת — בוחרים רכבת.
+
+We will travel by train
+
+(רמז: will travel = ננסע בעתיד.)
+
+---
+
+## 6. שימו לב!
+
+We travel by train tomorrow — שגוי!
+
+❌ travel — Present Simple, לא עתיד!
+
+✓ We will travel by train.
+
+will travel = ננסע (עתיד).
+
+---
+
+## 7. בואו נתרגל!
+
+עכשיו אתם מתארים נסיעות עתידיות.
+בתרגול תמצאו We will travel by train.

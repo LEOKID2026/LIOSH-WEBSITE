@@ -1,10 +1,14 @@
 # Grade 5 Moledet / Geography Learning Book — Drafts
 
-**Status:** Draft — **7 / 7** pages. Runtime not wired.  
-**Folder:** `docs/learning-book/moledet-geography/g5/drafts/`
+**Status:** Draft content — **7 / 7** pages. No runtime insertion.  
+**Plan:** `docs/learning-book/MOLEDET_GEOGRAPHY_GRADE_5_LEARNING_BOOK_PLAN.md`  
+**Book:** ספר מולדת וגאוגרפיה — כיתה ה׳  
+**Date:** June 2026
 
-| File | Title |
-|------|-------|
+## Pages
+
+| File | Title [DRAFT] |
+|------|---------------|
 | `mg_g5_coordinates.md` | קואורדינטות במפה |
 | `mg_g5_climate.md` | אקלים ישראל |
 | `mg_g5_natural_hazards.md` | סכנות טבע |
@@ -13,7 +17,14 @@
 | `mg_g5_law_society.md` | חוק וכללי חברה |
 | `mg_g5_identity.md` | זהות אישית וקהילתית |
 
-**Notes:** Hazards = awareness not fear. Climate/resources = geography/civic framing. Institutions = roles only — **[VERIFY]** names before publish.
+## Content notes
+
+- **Hazards:** awareness + safety — not fear-based.
+- **Climate / resources:** geography and civic framing — not Science mechanism detail.
+- **Institutions / law:** role-based, neutral — no current office-holders.
+- **Identity:** respectful, age-appropriate — owner [VERIFY] diversity wording.
+
+## Verify
 
 ```bash
 node scripts/build-moledet-geography-g5-hebrew-review-pack.mjs
