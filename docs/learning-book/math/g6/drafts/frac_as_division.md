@@ -1,0 +1,82 @@
+# שבר כחילוק
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| **learning_page_id** | `math:g6:frac_as_division` |
+| **skill_id** | `math:kind:frac_as_division` |
+| **subject** | math |
+| **grade** | g6 |
+| **age_band** | grades_5_6 |
+| **page_type** | concept_foundation |
+| **approval_status** | draft |
+| **title_hebrew** | שבר כחילוק `[DRAFT — not owner-approved]` |
+
+**Source references:**
+- `data/curriculum-spine/v1/skills.json`
+- `docs/learning-book/MATH_GRADE_6_LEARNING_BOOK_PLAN.md`
+- `docs/learning-book/MATH_LEARNING_PAGE_TEMPLATE.md`
+
+**Content scope:** a/b = a ÷ b
+
+---
+
+## 1. מה לומדים?
+
+היום נלמד: **שבר = חילוק**.
+
+**3/4** פירושו **3 ÷ 4**.
+
+---
+
+## 2. הסבר
+
+**a/b = a ÷ b**
+
+**3/4:** 3 ÷ 4 = **0.75**
+
+**5/8:** 5 ÷ 8 = **0.625**
+
+---
+
+## 3. דוגמה
+
+**1/2 = 1 ÷ 2 = 0.5**
+
+---
+
+## 4. בואו נפתור
+
+**שאלה:** מה ערך **3/4** כעשרוני?
+
+**שלב 1:** 3 ÷ 4 = 0.75.
+
+**תשובה:** **0.75** (או 3/4).
+
+---
+
+## 5. נסו בעצמכם
+
+חשבו: **3/4** = ? (כעשרוני)
+
+*(רמז: 3÷4.)*
+
+---
+
+## 6. שימו לב!
+
+ב-**3/4** לפעמים **מחלקים 4÷3**.
+
+❌ 4 ÷ 3 — סדר הפוך!
+
+✓ **3 ÷ 4 = 0.75**.
+
+**זכרו:** **מונה ÷ מכנה**.
+
+---
+
+## 7. בואו נתרגל!
+
+קשר שבר-חילוק הוא בסיס לכפל וחילוק שברים.
+בתרגול תמצאו שברים כחילוק — מונה חלקי מכנה!

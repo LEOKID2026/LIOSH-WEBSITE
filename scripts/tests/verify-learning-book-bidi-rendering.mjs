@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import { MATH_G1_PAGE_ORDER } from "../../lib/learning-book/math-g1-registry.js";
 import { MATH_G2_PAGE_ORDER } from "../../lib/learning-book/math-g2-registry.js";
 import { MATH_G3_PAGE_ORDER } from "../../lib/learning-book/math-g3-registry.js";
+import { MATH_G4_PAGE_ORDER } from "../../lib/learning-book/math-g4-registry.js";
 import {
   findInlineMathRuns,
   splitTextAndMathRuns,
@@ -265,6 +266,9 @@ const THOUSANDS_LINES = [
   { line: "עכשיו אתם יודעים לפרק מספר עד 1,000 למאות, עשרות ואחדות.", token: "1,000" },
   { line: "2,000", token: "2,000" },
   { line: "10,000", token: "10,000" },
+  { line: "3,482", token: "3,482" },
+  { line: "מספר **3,482**", token: "3,482" },
+  { line: "עד **10,000**", token: "10,000" },
 ];
 
 for (const sample of THOUSANDS_LINES) {
@@ -342,6 +346,18 @@ const MANUAL_QA = {
     "order_add_mul",
     "wp_leftover",
   ],
+  g4: [
+    "ns_place_hundreds",
+    "ns_neighbors",
+    "cmp",
+    "round",
+    "add_two",
+    "sub_two",
+    "divisibility",
+    "fm_gcd",
+    "power_base",
+    "dec_add",
+  ],
 };
 
 for (const [grade, pageIds] of Object.entries(MANUAL_QA)) {
@@ -366,6 +382,7 @@ for (const [order, grade] of [
   [MATH_G1_PAGE_ORDER, "g1"],
   [MATH_G2_PAGE_ORDER, "g2"],
   [MATH_G3_PAGE_ORDER, "g3"],
+  [MATH_G4_PAGE_ORDER, "g4"],
 ]) {
   for (const pageId of order) {
     const raw = fs.readFileSync(
@@ -385,5 +402,5 @@ if (failures > 0) {
 }
 
 console.log(
-  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + ${THOUSANDS_LINES.length} thousands checks + G1/G2/G3 full scan + manual QA pages.`
+  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + ${THOUSANDS_LINES.length} thousands checks + G1/G2/G3/G4 full scan + manual QA pages.`
 );

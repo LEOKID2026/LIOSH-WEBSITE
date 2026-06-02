@@ -1,76 +1,12 @@
 /**
  * Grade 4 Math learning book — draft-only manifest (scripts / docs).
- * NOT runtime registry. Used by review-pack builder and content verifier.
+ * Page order/batches re-exported from runtime registry (single source of truth).
  */
 
-/** @typedef {{ id: string, titleHe: string, pages: string[] }} G4Batch */
-
-/** @type {G4Batch[]} */
-export const MATH_G4_BOOK_BATCHES = [
-  {
-    id: "a",
-    titleHe: "ערך מקום, השוואה, סדרות ועיגול",
-    pages: [
-      "ns_place_hundreds",
-      "ns_neighbors",
-      "ns_complement100",
-      "ns_complement10",
-      "ns_even_odd",
-      "cmp",
-      "sequence",
-      "round",
-    ],
-  },
-  {
-    id: "b",
-    titleHe: "תכונות 0 ו-1",
-    pages: ["zero_add", "zero_sub", "zero_mul", "one_mul"],
-  },
-  {
-    id: "c",
-    titleHe: "חיבור, חיסור וכפל",
-    pages: ["add_two", "sub_two", "add_three", "mul", "mul_vertical"],
-  },
-  {
-    id: "d",
-    titleHe: "חילוק, התחלקות, ראשוניים, גורמים וכפולים",
-    pages: [
-      "div",
-      "div_with_remainder",
-      "div_long",
-      "divisibility",
-      "prime_composite",
-      "fm_factor",
-      "fm_multiple",
-      "fm_gcd",
-    ],
-  },
-  {
-    id: "e",
-    titleHe: "עשרוניים, משוואות ואומדן",
-    pages: [
-      "dec_add",
-      "dec_sub",
-      "eq_add",
-      "eq_sub",
-      "est_add",
-      "est_mul",
-      "est_quantity",
-    ],
-  },
-  {
-    id: "f",
-    titleHe: "חזקות",
-    pages: ["power_base", "power_calc"],
-  },
-  {
-    id: "g",
-    titleHe: "שאלות מילוליות",
-    pages: ["wp_comparison_more", "wp_leftover", "wp_time_sum"],
-  },
-];
-
-export const MATH_G4_PAGE_ORDER = MATH_G4_BOOK_BATCHES.flatMap((b) => b.pages);
+export {
+  MATH_G4_BOOK_BATCHES,
+  MATH_G4_PAGE_ORDER,
+} from "../../lib/learning-book/math-g4-registry.js";
 
 /** Section 5/6 alignment anchors — key numbers must appear in both sections */
 export const MATH_G4_ALIGNMENT_ANCHORS = {
@@ -262,7 +198,7 @@ export const MATH_G4_PAGE_META = {
   fm_gcd: {
     skillId: "math:kind:fm_gcd",
     pageType: "step_by_step_procedure",
-    titleHe: "מ.א.ח — המחלק המשותף הגדול ביותר",
+    titleHe: "המחלק המשותף הגדול ביותר (מ.א.ח)",
     scope: "מ.א.ח של שני מספרים קטנים-בינוניים",
   },
   dec_add: {

@@ -109,7 +109,7 @@ const dynamicPage = path.join(
 if (!fs.existsSync(dynamicIndex)) fail("missing dynamic book index route");
 if (!fs.existsSync(dynamicPage)) fail("missing dynamic book page route");
 
-for (const grade of ["g1", "g2", "g3"]) {
+for (const grade of ["g1", "g2", "g3", "g4"]) {
   const explicit = path.join(ROOT, `pages/learning/book/math/${grade}/index.js`);
   if (!fs.existsSync(explicit)) {
     fail(`missing explicit math/${grade} route (must remain)`);
