@@ -29,6 +29,13 @@ import {
   buildStepExplanation,
 } from "../../utils/moledet-geography-explanations";
 import { trackMoledetGeographyTopicTime } from "../../utils/moledet-geography-time-tracking";
+import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import {
+  beginMasterQuestionLedger,
+  finalizeMasterQuestionLedger,
+  isFairnessVisibilityLedgerActive,
+  resolveMasterSessionDurationSeconds,
+} from "../../utils/learning-time-credit";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
@@ -149,6 +156,7 @@ export default function MoledetGeographyMaster() {
   const operationSelectRef = useRef(null);
   const sessionStartRef = useRef(null);
   const sessionSecondsRef = useRef(0);
+  const questionTimeLedgerRef = useRef(null);
   const solvedCountRef = useRef(0);
   const learningSessionIdRef = useRef(null);
   const learningSessionStartPromiseRef = useRef(null);
@@ -196,12 +204,77 @@ export default function MoledetGeographyMaster() {
   const [avgTime, setAvgTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(null);
 
+  useLearningVisibilityClock({
+    enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
+    ledger: questionTimeLedgerRef.current,
+  });
+
+  const applyMoledetTopicCreditFromClosed = useCallback(
+    (closed, questionForTrack, metaHint) => {
+      if (!closed || closed.creditedSecForTopic <= 0) return;
+      const topic =
+        moledetTrackingTopicKeyRef.current ??
+        questionForTrack?.topic ??
+        questionForTrack?.operation ??
+        "mixed";
+      if (!topic) return;
+      trackMoledetGeographyTopicTime(
+        topic,
+        grade,
+        level,
+        closed.creditedSecForTopic,
+        metaHint ?? {
+          mode: reportModeFromGameState(mode, focusedPracticeMode),
+          total: 1,
+          correct: undefined,
+        }
+      );
+    },
+    [grade, level, mode, focusedPracticeMode]
+  );
+
+  const closeOpenQuestionLedger = useCallback(
+    (includeTopic) => {
+      const questionForTrack = currentQuestion;
+      finalizeMasterQuestionLedger(
+        questionTimeLedgerRef,
+        sessionSecondsRef,
+        includeTopic
+          ? (closed) => {
+              const meta = pendingMoledetGeographyTrackMetaRef.current;
+              pendingMoledetGeographyTrackMetaRef.current = null;
+              if (meta && meta.mode != null) {
+                applyMoledetTopicCreditFromClosed(closed, questionForTrack, {
+                  mode: meta.mode,
+                  correct: meta.correct,
+                  total: meta.total,
+                });
+              } else {
+                applyMoledetTopicCreditFromClosed(closed, questionForTrack);
+              }
+            }
+          : null
+      );
+      if (questionStartTime) setQuestionStartTime(null);
+    },
+    [currentQuestion, questionStartTime, applyMoledetTopicCreditFromClosed]
+  );
+
   const accumulateQuestionTime = useCallback(() => {
-    if (!questionStartTime) return;
-    const elapsed = Date.now() - questionStartTime;
-    if (elapsed <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsed, 120_000);
-  }, [questionStartTime]);
+    closeOpenQuestionLedger(false);
+  }, [closeOpenQuestionLedger]);
+
+  const beginMoledetQuestionLedger = useCallback(
+    (questionObj) => {
+      if (!questionObj) return;
+      beginMasterQuestionLedger(questionTimeLedgerRef, {
+        subjectId: "moledet_geography",
+        mode,
+        question: questionObj,
+      });
+    },
+    [mode]
+  );
 
   // מניעת שאלות חוזרות
   const [recentQuestions, setRecentQuestions] = useState(new Set());
@@ -929,6 +1002,7 @@ export default function MoledetGeographyMaster() {
 
   function hardResetGame() {
     accumulateQuestionTime();
+    questionTimeLedgerRef.current = null;
     setGameActive(false);
     moledetTrackingTopicKeyRef.current = null;
     setCurrentQuestion(null);
@@ -949,7 +1023,7 @@ export default function MoledetGeographyMaster() {
   }
 
   function generateNewQuestion() {
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     const levelConfig = getLevelConfig(gradeNumber, level);
     if (!levelConfig) {
       console.error("Invalid level config for grade", gradeNumber, "level", level);
@@ -1108,18 +1182,17 @@ export default function MoledetGeographyMaster() {
     }
     setRecentQuestions(localRecentQuestions.toSet());
 
-    // מעקב זמן - סיום שאלה קודמת (אם יש)
-    trackCurrentQuestionTime();
-
     if (currentQuestion) {
       setPreviousExplanationQuestion(currentQuestion);
     }
     moledetTrackingTopicKeyRef.current =
       question.topic || question.operation || "mixed";
-    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
+    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setFeedback(null);
     setQuestionStartTime(Date.now());
+    beginMoledetQuestionLedger(displayQuestion);
     setShowHint(false);
     setHintUsed(false);
     setShowSolution(false);
@@ -1139,25 +1212,26 @@ export default function MoledetGeographyMaster() {
     const wrongForFinish = wrong;
     const scoreForFinish = score;
     if (!sessionStartRef.current) return;
-    trackCurrentQuestionTime();
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     const elapsedMs = Date.now() - sessionStartRef.current;
     if (elapsedMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
-    const totalSeconds = sessionSecondsRef.current;
-    if (totalSeconds <= 0) {
+    const totalMs = sessionSecondsRef.current;
+    if (totalMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
     const answered = Math.max(solvedCountRef.current, totalQuestions);
-    const durationMinutes = Number((totalSeconds / 60000).toFixed(2));
-    const durationSeconds = Math.max(1, Math.round(totalSeconds / 1000));
+    const durationMinutes = Number((totalMs / 60000).toFixed(2));
+    const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
     addSessionProgress(
@@ -1341,6 +1415,7 @@ export default function MoledetGeographyMaster() {
     sessionStartRef.current = Date.now();
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     setRecentQuestions(new Set()); // איפוס ההיסטוריה
     setGameActive(true);
     setScore(0);
@@ -1494,42 +1569,9 @@ export default function MoledetGeographyMaster() {
     }
   };
 
-  // מעקב זמן לשאלה
   function trackCurrentQuestionTime() {
-    if (!questionStartTime) return;
-    const topic =
-      moledetTrackingTopicKeyRef.current ??
-      currentQuestion?.topic ??
-      currentQuestion?.operation ??
-      "mixed";
-    if (!topic) return;
-    const duration = (Date.now() - questionStartTime) / 1000;
-    if (duration > 0 && duration < 300) {
-      const qGrade =
-        currentQuestion?.gradeKey ||
-        currentQuestion?.params?.gradeKey ||
-        grade;
-      const qLevel =
-        currentQuestion?.params?.contentPoolLevel ??
-        currentQuestion?.params?.levelKey ??
-        currentQuestion?.levelKey ??
-        level;
-      const meta = pendingMoledetGeographyTrackMetaRef.current;
-      pendingMoledetGeographyTrackMetaRef.current = null;
-      trackMoledetGeographyTopicTime(
-        topic,
-        qGrade,
-        qLevel,
-        duration,
-        meta && meta.mode != null
-          ? { mode: meta.mode, correct: meta.correct, total: meta.total }
-          : {
-              mode: reportModeFromGameState(mode, focusedPracticeMode),
-              total: 1,
-              correct: undefined,
-            }
-      );
-    }
+    if (!questionStartTime && !questionTimeLedgerRef.current) return;
+    closeOpenQuestionLedger(true);
   }
 
   function handleAnswer(answer) {

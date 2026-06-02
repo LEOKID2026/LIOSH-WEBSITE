@@ -8,6 +8,13 @@ import {
   SCIENCE_GRADE_ORDER,
 } from "../../data/science-curriculum";
 import { trackScienceTopicTime } from "../../utils/science-time-tracking";
+import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import {
+  beginMasterQuestionLedger,
+  finalizeMasterQuestionLedger,
+  isFairnessVisibilityLedgerActive,
+  resolveMasterSessionDurationSeconds,
+} from "../../utils/learning-time-credit";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
@@ -713,6 +720,12 @@ export default function ScienceMaster() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [avgTime, setAvgTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(null);
+
+  useLearningVisibilityClock({
+    enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
+    ledger: questionTimeLedgerRef.current,
+  });
+
   const [showHint, setShowHint] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
@@ -738,6 +751,7 @@ export default function ScienceMaster() {
   const retryQueueRef = useRef([]);
   const sessionStartRef = useRef(null);
   const sessionSecondsRef = useRef(0);
+  const questionTimeLedgerRef = useRef(null);
   const solvedCountRef = useRef(0);
   const learningSessionIdRef = useRef(null);
   const plannerResponseSeqRef = useRef(0);
@@ -1459,43 +1473,65 @@ export default function ScienceMaster() {
     }
   }
 
-  function trackCurrentQuestionTime() {
-    if (!questionStartTime) return;
-    const elapsedMs = Date.now() - questionStartTime;
-    if (elapsedMs <= 0) return;
-    const cappedMs = Math.min(elapsedMs, 120_000);
-    sessionSecondsRef.current += cappedMs;
-    const duration = cappedMs / 1000;
-    if (duration > 0 && duration <= 300) {
+  const applyScienceTopicCreditFromClosed = useCallback(
+    (closed, questionForTrack, metaHint) => {
+      if (!closed || closed.creditedSecForTopic <= 0) return;
       const topicKey =
-        scienceTrackingTopicKeyRef.current ?? currentQuestion?.topic;
-      if (topicKey) {
-        const qGrade =
-          currentQuestion?.assignedGrade ||
-          currentQuestion?.gradeKey ||
-          grade;
-        const qLevel =
-          currentQuestion?.assignedLevel ||
-          currentQuestion?.levelKey ||
-          level;
-        const meta = pendingScienceTrackMetaRef.current;
-        pendingScienceTrackMetaRef.current = null;
-        trackScienceTopicTime(
-          topicKey,
-          qGrade,
-          qLevel,
-          duration,
-          meta && meta.mode != null
-            ? { mode: meta.mode, correct: meta.correct, total: meta.total }
-            : {
-                mode: reportModeFromGameState(mode, focusedPracticeMode),
-                total: 1,
-                correct: undefined,
+        scienceTrackingTopicKeyRef.current ?? questionForTrack?.topic;
+      if (!topicKey) return;
+      const qGrade =
+        questionForTrack?.assignedGrade ||
+        questionForTrack?.gradeKey ||
+        grade;
+      const qLevel =
+        questionForTrack?.assignedLevel ||
+        questionForTrack?.levelKey ||
+        level;
+      trackScienceTopicTime(
+        topicKey,
+        qGrade,
+        qLevel,
+        closed.creditedSecForTopic,
+        metaHint ?? {
+          mode: reportModeFromGameState(mode, focusedPracticeMode),
+          total: 1,
+          correct: undefined,
+        }
+      );
+    },
+    [grade, level, mode, focusedPracticeMode]
+  );
+
+  const closeOpenQuestionLedger = useCallback(
+    (includeTopic) => {
+      const questionForTrack = currentQuestion;
+      finalizeMasterQuestionLedger(
+        questionTimeLedgerRef,
+        sessionSecondsRef,
+        includeTopic
+          ? (closed) => {
+              const meta = pendingScienceTrackMetaRef.current;
+              pendingScienceTrackMetaRef.current = null;
+              if (meta && meta.mode != null) {
+                applyScienceTopicCreditFromClosed(closed, questionForTrack, {
+                  mode: meta.mode,
+                  correct: meta.correct,
+                  total: meta.total,
+                });
+              } else {
+                applyScienceTopicCreditFromClosed(closed, questionForTrack);
               }
-        );
-      }
-    }
-    setQuestionStartTime(null);
+            }
+          : null
+      );
+      if (questionStartTime) setQuestionStartTime(null);
+    },
+    [currentQuestion, questionStartTime, applyScienceTopicCreditFromClosed]
+  );
+
+  function trackCurrentQuestionTime() {
+    if (!questionStartTime && !questionTimeLedgerRef.current) return;
+    closeOpenQuestionLedger(true);
   }
 
 function recordSessionProgress(opts = {}) {
@@ -1512,18 +1548,20 @@ function recordSessionProgress(opts = {}) {
     sessionStartRef.current = null;
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     return;
   }
-  const totalSeconds = sessionSecondsRef.current;
-  if (totalSeconds <= 0) {
+  const totalMs = sessionSecondsRef.current;
+  if (totalMs <= 0) {
     sessionStartRef.current = null;
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     return;
   }
   const answered = Math.max(solvedCountRef.current, totalQuestions);
-  const durationMinutes = Number((totalSeconds / 60000).toFixed(2));
-  const durationSeconds = Math.max(1, Math.round(totalSeconds / 1000));
+  const durationMinutes = Number((totalMs / 60000).toFixed(2));
+  const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
   const accuracyForFinish =
     answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
   addSessionProgress(
@@ -1824,8 +1862,20 @@ function saveScienceAnswerInParallel({
     }, 200);
   }
 
+  const beginScienceQuestionLedger = useCallback(
+    (questionObj) => {
+      if (!questionObj) return;
+      beginMasterQuestionLedger(questionTimeLedgerRef, {
+        subjectId: "science",
+        mode,
+        question: questionObj,
+      });
+    },
+    [mode]
+  );
+
   function generateNewQuestion(resetPool = false) {
-    trackCurrentQuestionTime();
+    closeOpenQuestionLedger(true);
 
     if (resetPool) {
       askCounterRef.current = 0;
@@ -1948,7 +1998,8 @@ function saveScienceAnswerInParallel({
     if (probeAttachOpts && !usedRetryDequeue) {
       nextQuestionPayload = attachProbeMetaToQuestion(nextQuestionPayload, probeAttachOpts);
     }
-    setCurrentQuestion(sanitizeQuestionForStudentDisplay(nextQuestionPayload));
+    const displayQuestion = sanitizeQuestionForStudentDisplay(nextQuestionPayload);
+    setCurrentQuestion(displayQuestion);
     if (currentQuestion) {
       setPreviousExplanationQuestion(currentQuestion);
     }
@@ -1960,12 +2011,14 @@ function saveScienceAnswerInParallel({
     setShowTheoryHelp(false);
     setErrorExplanation("");
     setQuestionStartTime(Date.now());
+    beginScienceQuestionLedger(displayQuestion);
 
     decrementPendingProbeExpiry(pendingDiagnosticProbeRef);
   }
 
   function hardResetGame() {
-    trackCurrentQuestionTime();
+    closeOpenQuestionLedger(false);
+    questionTimeLedgerRef.current = null;
     // Stop background music when game resets
     sound.stopBackgroundMusic();
     setGameActive(false);
@@ -2064,6 +2117,7 @@ function saveScienceAnswerInParallel({
     sessionStartRef.current = Date.now();
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     adaptiveLevelRef.current = clampScienceLevelForGrade(
       grade,
       plannerResolvedLevel != null

@@ -44,6 +44,13 @@ import {
   learningHintTriggerBtn,
   learningExplainOpenBtn,
 } from "../../utils/learning-ui-classes";
+import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import {
+  beginMasterQuestionLedger,
+  finalizeMasterQuestionLedger,
+  isFairnessVisibilityLedgerActive,
+  resolveMasterSessionDurationSeconds,
+} from "../../utils/learning-time-credit";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import {
@@ -473,6 +480,7 @@ export default function EnglishMaster() {
   const topicSelectRef = useRef(null);
   const sessionStartRef = useRef(null);
   const sessionSecondsRef = useRef(0);
+  const questionTimeLedgerRef = useRef(null);
   const solvedCountRef = useRef(0);
   const learningSessionIdRef = useRef(null);
   const learningSessionStartPromiseRef = useRef(null);
@@ -519,6 +527,12 @@ export default function EnglishMaster() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [avgTime, setAvgTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(null);
+
+  useLearningVisibilityClock({
+    enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
+    ledger: questionTimeLedgerRef.current,
+  });
+
   const [recentQuestions, setRecentQuestions] = useState(new Set());
   const [stars, setStars] = useState(0);
   const [badges, setBadges] = useState([]);
@@ -949,31 +963,59 @@ export default function EnglishMaster() {
     } catch {}
   }
 
-  function trackCurrentQuestionTime() {
-    if (!questionStartTime) return;
-    const topicKey =
-      englishTrackingTopicKeyRef.current ?? currentQuestion?.topic;
-    if (!topicKey) return;
-    const duration = (Date.now() - questionStartTime) / 1000;
-    if (duration > 0 && duration < 300) {
-      const qGrade = currentQuestion?.gradeKey || grade;
-      const qLevel = currentQuestion?.levelKey || level;
-      const meta = pendingEnglishTrackMetaRef.current;
-      pendingEnglishTrackMetaRef.current = null;
+  const applyEnglishTopicCreditFromClosed = useCallback(
+    (closed, questionForTrack, metaHint) => {
+      if (!closed || closed.creditedSecForTopic <= 0) return;
+      const topicKey =
+        englishTrackingTopicKeyRef.current ?? questionForTrack?.topic;
+      if (!topicKey) return;
+      const qGrade = questionForTrack?.gradeKey || grade;
+      const qLevel = questionForTrack?.levelKey || level;
       trackEnglishTopicTime(
         topicKey,
         qGrade,
         qLevel,
-        duration,
-        meta && meta.mode != null
-          ? { mode: meta.mode, correct: meta.correct, total: meta.total }
-          : {
-              mode: reportModeFromGameState(mode, focusedPracticeMode),
-              total: 1,
-              correct: undefined,
-            }
+        closed.creditedSecForTopic,
+        metaHint ?? {
+          mode: reportModeFromGameState(mode, focusedPracticeMode),
+          total: 1,
+          correct: undefined,
+        }
       );
-    }
+    },
+    [grade, level, mode, focusedPracticeMode]
+  );
+
+  const closeOpenQuestionLedger = useCallback(
+    (includeTopic) => {
+      const questionForTrack = currentQuestion;
+      finalizeMasterQuestionLedger(
+        questionTimeLedgerRef,
+        sessionSecondsRef,
+        includeTopic
+          ? (closed) => {
+              const meta = pendingEnglishTrackMetaRef.current;
+              pendingEnglishTrackMetaRef.current = null;
+              if (meta && meta.mode != null) {
+                applyEnglishTopicCreditFromClosed(closed, questionForTrack, {
+                  mode: meta.mode,
+                  correct: meta.correct,
+                  total: meta.total,
+                });
+              } else {
+                applyEnglishTopicCreditFromClosed(closed, questionForTrack);
+              }
+            }
+          : null
+      );
+      if (questionStartTime) setQuestionStartTime(null);
+    },
+    [currentQuestion, questionStartTime, applyEnglishTopicCreditFromClosed]
+  );
+
+  function trackCurrentQuestionTime() {
+    if (!questionStartTime && !questionTimeLedgerRef.current) return;
+    closeOpenQuestionLedger(true);
   }
 
   function recordSessionProgress(opts = {}) {
@@ -984,25 +1026,26 @@ export default function EnglishMaster() {
     const wrongForFinish = wrong;
     const scoreForFinish = score;
     if (!sessionStartRef.current) return;
-    trackCurrentQuestionTime();
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     const elapsedMs = Date.now() - sessionStartRef.current;
     if (elapsedMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
-    const totalSeconds = sessionSecondsRef.current;
-    if (totalSeconds <= 0) {
+    const totalMs = sessionSecondsRef.current;
+    if (totalMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
     const answered = Math.max(solvedCountRef.current, totalQuestions);
-    const durationMinutes = Number((totalSeconds / 60000).toFixed(2));
-    const durationSeconds = Math.max(1, Math.round(totalSeconds / 1000));
+    const durationMinutes = Number((totalMs / 60000).toFixed(2));
+    const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
     addSessionProgress(
@@ -1359,6 +1402,7 @@ export default function EnglishMaster() {
 
   function hardResetGame() {
     accumulateQuestionTime();
+    questionTimeLedgerRef.current = null;
     // Stop background music when game resets
     sound.stopBackgroundMusic();
     clearActiveDiagnosticState(
@@ -1387,14 +1431,23 @@ export default function EnglishMaster() {
   }
 
   const accumulateQuestionTime = useCallback(() => {
-    if (!questionStartTime) return;
-    const elapsed = Date.now() - questionStartTime;
-    if (elapsed <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsed, 120_000);
-  }, [questionStartTime]);
+    closeOpenQuestionLedger(false);
+  }, [closeOpenQuestionLedger]);
+
+  const beginEnglishQuestionLedger = useCallback(
+    (questionObj) => {
+      if (!questionObj) return;
+      beginMasterQuestionLedger(questionTimeLedgerRef, {
+        subjectId: "english",
+        mode,
+        question: questionObj,
+      });
+    },
+    [mode]
+  );
 
   function generateNewQuestion() {
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     let gradeForQuestion = grade;
     let levelForQuestion = level;
     let topicForState = topic;
@@ -1450,7 +1503,6 @@ export default function EnglishMaster() {
     let question;
     let attempts = 0;
     const maxAttempts = 50;
-    trackCurrentQuestionTime();
     const localRecentQuestions = SessionAntiRepeatBuffer.fromIterable(recentQuestions);
     const probeAtStart = englishPendingDiagnosticProbeRef.current;
     const probeMetaHolder = { current: null };
@@ -1511,11 +1563,13 @@ export default function EnglishMaster() {
     if (currentQuestion) {
       setPreviousExplanationQuestion(currentQuestion);
     }
-    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
+    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTypedAnswer("");
     setFeedback(null);
     setQuestionStartTime(Date.now());
+    beginEnglishQuestionLedger(displayQuestion);
     setShowHint(false);
     setHintUsed(false);
     setShowSolution(false);
@@ -1537,6 +1591,7 @@ export default function EnglishMaster() {
     sessionStartRef.current = Date.now();
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     clearActiveDiagnosticState(
       englishPendingDiagnosticProbeRef,
       englishHypothesisLedgerRef

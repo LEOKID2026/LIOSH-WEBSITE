@@ -430,6 +430,40 @@ function CircleRadiusDiagram({ theme }) {
   );
 }
 
+function CirclePerimeterDiagram({ theme }) {
+  return (
+    <DiagramSvg label="היקף מעגל">
+      <circle cx="110" cy="92" r="52" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeWidth="2" className={theme.diagramSecondary} />
+      <circle
+        cx="110"
+        cy="92"
+        r="52"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeDasharray="7 5"
+        className={theme.diagramAccentStrong}
+      />
+      <line x1="110" y1="92" x2="152" y2="92" stroke="currentColor" strokeWidth="2" className={theme.diagramAccent} />
+      <VertexDot cx={110} cy={92} theme={theme} />
+      <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.perimeter} x={110} y={18} />
+      <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.radius} x={168} y={96} />
+    </DiagramSvg>
+  );
+}
+
+function CircleAreaDiagram({ theme }) {
+  return (
+    <DiagramSvg label="שטח עיגול">
+      <circle cx="110" cy="92" r="52" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeWidth="2.5" className={theme.diagramAccent} />
+      <line x1="110" y1="92" x2="162" y2="92" stroke="currentColor" strokeWidth="2.5" className={theme.diagramAccentStrong} />
+      <VertexDot cx={110} cy={92} theme={theme} />
+      <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.area} x={110} y={18} />
+      <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.radius} x={168} y={96} />
+    </DiagramSvg>
+  );
+}
+
 function CubeBasicDiagram({ theme }) {
   return (
     <DiagramSvg label="קובייה">
@@ -452,7 +486,7 @@ function BoxBasicDiagram({ theme }) {
       <polygon points="148,96 168,72 168,120 148,144" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeWidth="2" className={theme.diagramAccentSoft} />
       <line x1="52" y1="96" x2="72" y2="72" stroke="currentColor" strokeWidth="2" className={theme.diagramAccent} />
       <line x1="148" y1="96" x2="168" y2="72" stroke="currentColor" strokeWidth="2" className={theme.diagramAccent} />
-      <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.length} x={100} y="64" />
+      <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.length} x={100} y={64} />
       <HebrewLabel text={GEOMETRY_DIAGRAM_LABELS.width} x={182} y={108} />
     </DiagramSvg>
   );
@@ -480,6 +514,8 @@ const DIAGRAM_RENDERERS = Object.freeze({
   symmetry_line: SymmetryLineDiagram,
   parallel_lines: ParallelLinesDiagram,
   circle_radius: CircleRadiusDiagram,
+  circle_perimeter: CirclePerimeterDiagram,
+  circle_area: CircleAreaDiagram,
   cube_basic: CubeBasicDiagram,
   box_basic: BoxBasicDiagram,
   area_grid: SquareAreaGridDiagram,
@@ -508,6 +544,7 @@ export default function GeometryDiagram({ type, options = {} }) {
 
   return (
     <figure
+      data-geometry-diagram-type={diagramType}
       className={`my-4 w-full max-w-full overflow-hidden rounded-2xl border px-3 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:px-6 sm:py-6 ${theme.diagramPanel} ${theme.diagramAccent}`}
     >
       <Renderer theme={theme} />

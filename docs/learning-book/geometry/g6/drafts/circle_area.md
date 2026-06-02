@@ -37,7 +37,7 @@
 ## 2. הסבר
 
 :::geometry-diagram
-type: circle_radius
+type: circle_area
 :::
 
 שלבים:

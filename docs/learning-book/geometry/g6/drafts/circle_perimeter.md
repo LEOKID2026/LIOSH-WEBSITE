@@ -35,7 +35,7 @@
 ## 2. הסבר
 
 :::geometry-diagram
-type: circle_radius
+type: circle_perimeter
 :::
 
 ה**רדיוס** — המרחק ממרכז המעגל לכל נקודה על המעגל.

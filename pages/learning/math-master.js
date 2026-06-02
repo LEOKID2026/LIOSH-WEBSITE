@@ -97,6 +97,13 @@ import {
   finishLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
+import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import {
+  beginMasterQuestionLedger,
+  finalizeMasterQuestionLedger,
+  isFairnessVisibilityLedgerActive,
+  resolveMasterSessionDurationSeconds,
+} from "../../utils/learning-time-credit";
 import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
 import { getMathG2BookHref } from "../../lib/learning-book/resolve-math-g2-book-page";
 import { getMathG3BookHref } from "../../lib/learning-book/resolve-math-g3-book-page";
@@ -358,6 +365,7 @@ export default function MathMaster() {
   const sessionStartRef = useRef(null);
   const solvedCountRef = useRef(0);
   const sessionSecondsRef = useRef(0);
+  const questionTimeLedgerRef = useRef(null);
   const learningSessionIdRef = useRef(null);
   const learningSessionStartPromiseRef = useRef(null);
   const plannerResponseSeqRef = useRef(0);
@@ -419,6 +427,11 @@ export default function MathMaster() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [avgTime, setAvgTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(null);
+
+  useLearningVisibilityClock({
+    enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
+    ledger: questionTimeLedgerRef.current,
+  });
 
   // מניעת שאלות חוזרות
   const [recentQuestions, setRecentQuestions] = useState(new Set());
@@ -1459,6 +1472,7 @@ export default function MathMaster() {
 
   function hardResetGame() {
     accumulateQuestionTime();
+    questionTimeLedgerRef.current = null;
     // Stop background music when game ends
     sound.stopBackgroundMusic();
     setGameActive(false);
@@ -1495,15 +1509,83 @@ export default function MathMaster() {
     setShowPreviousSolution(true);
   }
 
+  const applyMathTopicCreditFromClosed = useCallback(
+    (closed, questionForTrack, metaHint) => {
+      if (!questionForTrack || !closed || closed.creditedSecForTopic <= 0) return;
+      const baseOp =
+        mathTrackingOperationKeyRef.current ?? questionForTrack?.operation;
+      const storageKey = buildMathReportStorageKey(baseOp, questionForTrack);
+      if (!storageKey) return;
+      trackOperationTime(
+        storageKey,
+        grade,
+        level,
+        closed.creditedSecForTopic,
+        metaHint ?? {
+          mode: reportModeFromGameState(mode, focusedPracticeMode),
+          total: 1,
+          correct: undefined,
+          baseOperation: baseOp,
+          kind: questionForTrack?.params?.kind,
+        }
+      );
+    },
+    [grade, level, mode, focusedPracticeMode]
+  );
+
+  const closeOpenQuestionLedger = useCallback(
+    (includeTopic) => {
+      const questionForTrack = currentQuestion;
+      finalizeMasterQuestionLedger(
+        questionTimeLedgerRef,
+        sessionSecondsRef,
+        includeTopic
+          ? (closed) => {
+              const meta = pendingTimeTrackMetaRef.current;
+              pendingTimeTrackMetaRef.current = null;
+              if (meta && meta.mode != null) {
+                applyMathTopicCreditFromClosed(closed, questionForTrack, {
+                  mode: meta.mode,
+                  correct: meta.correct,
+                  total: meta.total,
+                  baseOperation:
+                    mathTrackingOperationKeyRef.current ??
+                    questionForTrack?.operation,
+                  kind: questionForTrack?.params?.kind,
+                });
+              } else {
+                applyMathTopicCreditFromClosed(closed, questionForTrack);
+              }
+            }
+          : null
+      );
+      if (questionStartTime) setQuestionStartTime(null);
+    },
+    [
+      currentQuestion,
+      questionStartTime,
+      applyMathTopicCreditFromClosed,
+    ]
+  );
+
   const accumulateQuestionTime = useCallback(() => {
-    if (!questionStartTime) return;
-    const elapsed = Date.now() - questionStartTime;
-    if (elapsed <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsed, 120_000);
-  }, [questionStartTime]);
+    closeOpenQuestionLedger(false);
+  }, [closeOpenQuestionLedger]);
+
+  const beginMathQuestionLedger = useCallback(
+    (questionObj) => {
+      if (!questionObj) return;
+      beginMasterQuestionLedger(questionTimeLedgerRef, {
+        subjectId: "math",
+        mode,
+        question: questionObj,
+      });
+    },
+    [mode]
+  );
 
   function generateNewQuestion() {
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     const levelConfig = getLevelConfig(gradeNumber, level);
     if (!levelConfig) {
       console.error("Invalid level config for grade", gradeNumber, "level", level);
@@ -1566,30 +1648,6 @@ export default function MathMaster() {
           }
           setRecentQuestions(localRecent);
 
-          if (questionStartTime) {
-            const duration = (Date.now() - questionStartTime) / 1000;
-            if (duration > 0 && duration < 300) {
-              const baseOp =
-                mathTrackingOperationKeyRef.current ?? currentQuestion?.operation;
-              const storageKey = buildMathReportStorageKey(baseOp, currentQuestion);
-              if (storageKey) {
-                trackOperationTime(
-                  storageKey,
-                  grade,
-                  level,
-                  duration,
-                  {
-                    mode: "practice_mistakes",
-                    total: 1,
-                    correct: undefined,
-                    baseOperation: baseOp,
-                    kind: currentQuestion?.params?.kind,
-                  }
-                );
-              }
-            }
-          }
-
           mathTrackingOperationKeyRef.current = replay.operation;
           if (currentQuestion) setPreviousExplanationQuestion(currentQuestion);
           setCurrentQuestion(replay);
@@ -1597,6 +1655,7 @@ export default function MathMaster() {
           setTextAnswer("");
           setFeedback(null);
           setQuestionStartTime(Date.now());
+          beginMathQuestionLedger(replay);
           setShowHint(false);
           setHintUsed(false);
           closeExplanationModal();
@@ -1688,41 +1747,6 @@ export default function MathMaster() {
     }
     setRecentQuestions(localRecentQuestions.toSet());
 
-    // מעקב זמן - סיום שאלה קודמת (אם יש)
-    if (questionStartTime) {
-      const duration = (Date.now() - questionStartTime) / 1000; // שניות
-      if (duration > 0 && duration < 300) {
-        const meta = pendingTimeTrackMetaRef.current;
-        pendingTimeTrackMetaRef.current = null;
-        const baseOp =
-          mathTrackingOperationKeyRef.current ?? currentQuestion?.operation;
-        const storageKey = buildMathReportStorageKey(baseOp, currentQuestion);
-        if (storageKey) {
-          trackOperationTime(
-            storageKey,
-            grade,
-            level,
-            duration,
-            meta && meta.mode != null
-              ? {
-                  mode: meta.mode,
-                  correct: meta.correct,
-                  total: meta.total,
-                  baseOperation: baseOp,
-                  kind: currentQuestion?.params?.kind,
-                }
-              : {
-                  mode: reportModeFromGameState(mode, focusedPracticeMode),
-                  total: 1,
-                  correct: undefined,
-                  baseOperation: baseOp,
-                  kind: currentQuestion?.params?.kind,
-                }
-          );
-        }
-      }
-    }
-
     if (probeMetaHolder.current) {
       question = attachProbeMetaToQuestion(question, probeMetaHolder.current);
     }
@@ -1756,11 +1780,13 @@ export default function MathMaster() {
 
     mathTrackingOperationKeyRef.current = question.operation;
     if (currentQuestion) setPreviousExplanationQuestion(currentQuestion);
-    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
+    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTextAnswer("");
     setFeedback(null);
     setQuestionStartTime(Date.now());
+    beginMathQuestionLedger(displayQuestion);
     setShowHint(false);
     setHintUsed(false);
     closeExplanationModal();
@@ -1771,41 +1797,8 @@ export default function MathMaster() {
   }
 
   function trackCurrentQuestionTime() {
-    if (!questionStartTime) return;
-    const baseOp =
-      mathTrackingOperationKeyRef.current ?? currentQuestion?.operation;
-    const storageKey = buildMathReportStorageKey(baseOp, currentQuestion);
-    if (!storageKey) return;
-    const elapsedMs = Date.now() - questionStartTime;
-    if (elapsedMs <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsedMs, 120_000);
-    const duration = (Date.now() - questionStartTime) / 1000;
-    if (duration > 0 && duration < 300) {
-      const meta = pendingTimeTrackMetaRef.current;
-      pendingTimeTrackMetaRef.current = null;
-      trackOperationTime(
-        storageKey,
-        grade,
-        level,
-        duration,
-        meta && meta.mode != null
-          ? {
-              mode: meta.mode,
-              correct: meta.correct,
-              total: meta.total,
-              baseOperation: baseOp,
-              kind: currentQuestion?.params?.kind,
-            }
-          : {
-              mode: reportModeFromGameState(mode, focusedPracticeMode),
-              total: 1,
-              correct: undefined,
-              baseOperation: baseOp,
-              kind: currentQuestion?.params?.kind,
-            }
-      );
-    }
-    setQuestionStartTime(null);
+    if (!questionStartTime && !questionTimeLedgerRef.current) return;
+    closeOpenQuestionLedger(true);
   }
 
   function recordSessionProgress(opts = {}) {
@@ -1824,16 +1817,17 @@ export default function MathMaster() {
       sessionSecondsRef.current = 0;
       return;
     }
-    const totalSeconds = sessionSecondsRef.current;
-    if (totalSeconds <= 0) {
+    const totalMs = sessionSecondsRef.current;
+    if (totalMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
     const answered = Math.max(solvedCountRef.current, totalQuestions);
-    const totalMinutes = Number((totalSeconds / 60000).toFixed(2));
-    const durationSeconds = Math.max(1, Math.round(totalSeconds / 1000));
+    const totalMinutes = Number((totalMs / 60000).toFixed(2));
+    const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correct) / answered) * 100) : 0;
     addSessionProgress(
@@ -2010,6 +2004,7 @@ export default function MathMaster() {
     sessionStartRef.current = Date.now();
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     clearActiveDiagnosticState(
       mathPendingDiagnosticProbeRef,
       mathHypothesisLedgerRef

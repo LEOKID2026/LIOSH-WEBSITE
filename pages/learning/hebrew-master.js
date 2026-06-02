@@ -131,6 +131,13 @@ import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsV
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
+import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import {
+  beginMasterQuestionLedger,
+  finalizeMasterQuestionLedger,
+  isFairnessVisibilityLedgerActive,
+  resolveMasterSessionDurationSeconds,
+} from "../../utils/learning-time-credit";
 
 const AVATAR_OPTIONS = [
   "👤",
@@ -174,6 +181,7 @@ export default function HebrewMaster() {
   const operationSelectRef = useRef(null);
   const sessionStartRef = useRef(null);
   const sessionSecondsRef = useRef(0);
+  const questionTimeLedgerRef = useRef(null);
   const solvedCountRef = useRef(0);
   const learningSessionIdRef = useRef(null);
   const learningSessionStartPromiseRef = useRef(null);
@@ -243,6 +251,11 @@ export default function HebrewMaster() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [avgTime, setAvgTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(null);
+
+  useLearningVisibilityClock({
+    enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
+    ledger: questionTimeLedgerRef.current,
+  });
 
   // מניעת שאלות חוזרות
   const [recentQuestions, setRecentQuestions] = useState(new Set());
@@ -1101,6 +1114,7 @@ export default function HebrewMaster() {
 
   function hardResetGame() {
     accumulateQuestionTime();
+    questionTimeLedgerRef.current = null;
     // Stop background music when game resets
     sound.stopBackgroundMusic();
     clearActiveDiagnosticState(
@@ -1127,15 +1141,77 @@ export default function HebrewMaster() {
     setPreviousExplanationQuestion(null);
   }
 
+  const applyHebrewTopicCreditFromClosed = useCallback(
+    (closed, questionForTrack, metaHint) => {
+      if (!closed || closed.creditedSecForTopic <= 0) return;
+      const topic =
+        hebrewTrackingTopicKeyRef.current ??
+        questionForTrack?.topic ??
+        questionForTrack?.operation ??
+        "mixed";
+      if (!topic) return;
+      const qGrade = questionForTrack?.gradeKey || `g${grade}`;
+      const qLevel = questionForTrack?.levelKey || level;
+      trackHebrewTopicTime(
+        topic,
+        qGrade,
+        qLevel,
+        closed.creditedSecForTopic,
+        metaHint ?? {
+          mode: reportModeFromGameState(mode, focusedPracticeMode),
+          total: 1,
+          correct: undefined,
+        }
+      );
+    },
+    [grade, level, mode, focusedPracticeMode]
+  );
+
+  const closeOpenQuestionLedger = useCallback(
+    (includeTopic) => {
+      const questionForTrack = currentQuestion;
+      finalizeMasterQuestionLedger(
+        questionTimeLedgerRef,
+        sessionSecondsRef,
+        includeTopic
+          ? (closed) => {
+              const meta = pendingHebrewTrackMetaRef.current;
+              pendingHebrewTrackMetaRef.current = null;
+              if (meta && meta.mode != null) {
+                applyHebrewTopicCreditFromClosed(closed, questionForTrack, {
+                  mode: meta.mode,
+                  correct: meta.correct,
+                  total: meta.total,
+                });
+              } else {
+                applyHebrewTopicCreditFromClosed(closed, questionForTrack);
+              }
+            }
+          : null
+      );
+      if (questionStartTime) setQuestionStartTime(null);
+    },
+    [currentQuestion, questionStartTime, applyHebrewTopicCreditFromClosed]
+  );
+
   const accumulateQuestionTime = useCallback(() => {
-    if (!questionStartTime) return;
-    const elapsed = Date.now() - questionStartTime;
-    if (elapsed <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsed, 120_000);
-  }, [questionStartTime]);
+    closeOpenQuestionLedger(false);
+  }, [closeOpenQuestionLedger]);
+
+  const beginHebrewQuestionLedger = useCallback(
+    (questionObj) => {
+      if (!questionObj) return;
+      beginMasterQuestionLedger(questionTimeLedgerRef, {
+        subjectId: "hebrew",
+        mode,
+        question: questionObj,
+      });
+    },
+    [mode]
+  );
 
   function generateNewQuestion() {
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     const levelConfig = getLevelConfig(gradeNumber, level);
     if (!levelConfig) {
       console.error("Invalid level config for grade", gradeNumber, "level", level);
@@ -1327,9 +1403,6 @@ export default function HebrewMaster() {
     }
     setRecentQuestions(localRecentQuestions.toSet());
 
-    // מעקב זמן - סיום שאלה קודמת (אם יש)
-    trackCurrentQuestionTime();
-
     if (currentQuestion) {
       setPreviousExplanationQuestion(currentQuestion);
     }
@@ -1346,11 +1419,13 @@ export default function HebrewMaster() {
       topic: questionOut.topic || questionOut.operation || operationForState,
       sequenceIndex: audioBuild1CounterRef.current,
     });
-    setCurrentQuestion(sanitizeQuestionForStudentDisplay(questionOut));
+    const displayQuestion = sanitizeQuestionForStudentDisplay(questionOut);
+    setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTypedAnswer("");
     setFeedback(null);
     setQuestionStartTime(Date.now());
+    beginHebrewQuestionLedger(displayQuestion);
     setShowHint(false);
     setHintUsed(false);
     setShowSolution(false);
@@ -1370,25 +1445,26 @@ export default function HebrewMaster() {
     const wrongForFinish = wrong;
     const scoreForFinish = score;
     if (!sessionStartRef.current) return;
-    trackCurrentQuestionTime();
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     const elapsedMs = Date.now() - sessionStartRef.current;
     if (elapsedMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
-    const totalSeconds = sessionSecondsRef.current;
-    if (totalSeconds <= 0) {
+    const totalMs = sessionSecondsRef.current;
+    if (totalMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
     const answered = Math.max(solvedCountRef.current, totalQuestions);
-    const durationMinutes = Number((totalSeconds / 60000).toFixed(2));
-    const durationSeconds = Math.max(1, Math.round(totalSeconds / 1000));
+    const durationMinutes = Number((totalMs / 60000).toFixed(2));
+    const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
     addSessionProgress(
@@ -1578,6 +1654,7 @@ export default function HebrewMaster() {
     sessionStartRef.current = Date.now();
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     clearActiveDiagnosticState(
       hebrewPendingDiagnosticProbeRef,
       hebrewHypothesisLedgerRef
@@ -1745,35 +1822,9 @@ export default function HebrewMaster() {
     }
   };
 
-  // מעקב זמן לשאלה
   function trackCurrentQuestionTime() {
-    if (!questionStartTime) return;
-    const topic =
-      hebrewTrackingTopicKeyRef.current ??
-      currentQuestion?.topic ??
-      currentQuestion?.operation ??
-      "mixed";
-    if (!topic) return;
-    const duration = (Date.now() - questionStartTime) / 1000;
-    if (duration > 0 && duration < 300) {
-      const qGrade = currentQuestion?.gradeKey || `g${grade}`;
-      const qLevel = currentQuestion?.levelKey || level;
-      const meta = pendingHebrewTrackMetaRef.current;
-      pendingHebrewTrackMetaRef.current = null;
-      trackHebrewTopicTime(
-        topic,
-        qGrade,
-        qLevel,
-        duration,
-        meta && meta.mode != null
-          ? { mode: meta.mode, correct: meta.correct, total: meta.total }
-          : {
-              mode: reportModeFromGameState(mode, focusedPracticeMode),
-              total: 1,
-              correct: undefined,
-            }
-      );
-    }
+    if (!questionStartTime && !questionTimeLedgerRef.current) return;
+    closeOpenQuestionLedger(true);
   }
 
   /** הקלטה ידנית־ראשונה — ללא ציון אוטומטי; רק ספירת שאלה + מעבר הלאה */

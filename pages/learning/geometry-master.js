@@ -45,6 +45,13 @@ import {
   getTheorySummary,
 } from "../../utils/geometry-explanations";
 import { trackGeometryTopicTime } from "../../utils/math-time-tracking";
+import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import {
+  beginMasterQuestionLedger,
+  finalizeMasterQuestionLedger,
+  isFairnessVisibilityLedgerActive,
+  resolveMasterSessionDurationSeconds,
+} from "../../utils/learning-time-credit";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
@@ -204,6 +211,7 @@ export default function GeometryMaster() {
   const topicSelectRef = useRef(null);
   const sessionStartRef = useRef(null);
   const sessionSecondsRef = useRef(0);
+  const questionTimeLedgerRef = useRef(null);
   const solvedCountRef = useRef(0);
   const learningSessionIdRef = useRef(null);
   const plannerResponseSeqRef = useRef(0);
@@ -265,6 +273,12 @@ export default function GeometryMaster() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [avgTime, setAvgTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(null);
+
+  useLearningVisibilityClock({
+    enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
+    ledger: questionTimeLedgerRef.current,
+  });
+
   const [recentQuestions, setRecentQuestions] = useState(new Set());
   const [stars, setStars] = useState(0);
   const [badges, setBadges] = useState([]);
@@ -801,15 +815,76 @@ export default function GeometryMaster() {
     };
   }, []);
 
+  const applyGeometryTopicCreditFromClosed = useCallback(
+    (closed, questionForTrack, metaHint) => {
+      if (!questionForTrack?.topic || !closed || closed.creditedSecForTopic <= 0) {
+        return;
+      }
+      trackGeometryTopicTime(
+        questionForTrack.topic,
+        grade,
+        level,
+        closed.creditedSecForTopic,
+        metaHint ?? {
+          mode: reportModeFromGameState(mode, focusedPracticeMode),
+          total: 1,
+          correct: undefined,
+        }
+      );
+    },
+    [grade, level, mode, focusedPracticeMode]
+  );
+
+  const closeOpenQuestionLedger = useCallback(
+    (includeTopic) => {
+      const questionForTrack = currentQuestion;
+      finalizeMasterQuestionLedger(
+        questionTimeLedgerRef,
+        sessionSecondsRef,
+        includeTopic
+          ? (closed) => {
+              const meta = pendingGeometryTimeTrackMetaRef.current;
+              pendingGeometryTimeTrackMetaRef.current = null;
+              if (meta && meta.mode != null) {
+                applyGeometryTopicCreditFromClosed(closed, questionForTrack, {
+                  mode: meta.mode,
+                  correct: meta.correct,
+                  total: meta.total,
+                });
+              } else {
+                applyGeometryTopicCreditFromClosed(closed, questionForTrack);
+              }
+            }
+          : null
+      );
+      if (questionStartTime) setQuestionStartTime(null);
+    },
+    [currentQuestion, questionStartTime, applyGeometryTopicCreditFromClosed]
+  );
+
   const accumulateQuestionTime = useCallback(() => {
-    if (!questionStartTime) return;
-    const elapsed = Date.now() - questionStartTime;
-    if (elapsed <= 0) return;
-    sessionSecondsRef.current += Math.min(elapsed, 120_000);
-  }, [questionStartTime]);
+    closeOpenQuestionLedger(false);
+  }, [closeOpenQuestionLedger]);
+
+  const beginGeometryQuestionLedger = useCallback(
+    (questionObj) => {
+      if (!questionObj) return;
+      beginMasterQuestionLedger(questionTimeLedgerRef, {
+        subjectId: "geometry",
+        mode,
+        question: questionObj,
+      });
+    },
+    [mode]
+  );
+
+  function trackCurrentGeometryQuestionTime() {
+    if (!questionStartTime && !questionTimeLedgerRef.current) return;
+    closeOpenQuestionLedger(true);
+  }
 
   const generateNewQuestion = () => {
-    accumulateQuestionTime();
+    closeOpenQuestionLedger(true);
     // בדיקה שהכיתה קיימת
     if (!GRADES[grade]) {
       console.error("כיתה לא תקינה:", grade);
@@ -852,19 +927,6 @@ export default function GeometryMaster() {
         }
         setRecentQuestions(localRecent);
 
-        if (questionStartTime && currentQuestion) {
-          const duration = (Date.now() - questionStartTime) / 1000;
-          if (duration > 0 && duration < 300) {
-            trackGeometryTopicTime(
-              currentQuestion.topic,
-              grade,
-              level,
-              duration,
-              { mode: "practice_mistakes", total: 1, correct: undefined }
-            );
-          }
-        }
-
         if (currentQuestion && currentQuestion.params?.kind !== "no_question") {
           setPreviousExplanationQuestion(currentQuestion);
         }
@@ -873,6 +935,7 @@ export default function GeometryMaster() {
         setTextAnswer("");
         setFeedback(null);
         setQuestionStartTime(Date.now());
+        beginGeometryQuestionLedger(replayQ);
         setShowHint(false);
         setHintUsed(false);
         setShowSolution(false);
@@ -1128,43 +1191,19 @@ export default function GeometryMaster() {
       return;
     }
     
-    // מעקב זמן - סיום שאלה קודמת (אם יש)
-    if (questionStartTime && currentQuestion) {
-      const duration = (Date.now() - questionStartTime) / 1000; // שניות
-      if (duration > 0 && duration < 300) { // רק אם זמן סביר (פחות מ-5 דקות)
-        const meta = pendingGeometryTimeTrackMetaRef.current;
-        pendingGeometryTimeTrackMetaRef.current = null;
-        trackGeometryTopicTime(
-          currentQuestion.topic,
-          grade,
-          level,
-          duration,
-          meta && meta.mode != null
-            ? {
-                mode: meta.mode,
-                correct: meta.correct,
-                total: meta.total,
-              }
-            : {
-                mode: reportModeFromGameState(mode, focusedPracticeMode),
-                total: 1,
-                correct: undefined,
-              }
-        );
-      }
-    }
-    
     if (currentQuestion && currentQuestion.params?.kind !== "no_question") {
       setPreviousExplanationQuestion(currentQuestion);
     }
 
     decrementPendingProbeExpiry(geometryPendingDiagnosticProbeRef);
 
-    setCurrentQuestion(sanitizeQuestionForStudentDisplay(question));
+    const displayQuestion = sanitizeQuestionForStudentDisplay(question);
+    setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTextAnswer("");
     setFeedback(null);
     setQuestionStartTime(Date.now());
+    beginGeometryQuestionLedger(displayQuestion);
     setShowHint(false);
     setHintUsed(false);
     setShowSolution(false);
@@ -1181,7 +1220,7 @@ export default function GeometryMaster() {
     const wrongForFinish = wrong;
     const scoreForFinish = score;
     if (!sessionStartRef.current) return;
-    accumulateQuestionTime();
+    trackCurrentGeometryQuestionTime();
     const elapsedMs = Date.now() - sessionStartRef.current;
     if (elapsedMs <= 0) {
       sessionStartRef.current = null;
@@ -1189,16 +1228,17 @@ export default function GeometryMaster() {
       sessionSecondsRef.current = 0;
       return;
     }
-    const totalSeconds = sessionSecondsRef.current;
-    if (totalSeconds <= 0) {
+    const totalMs = sessionSecondsRef.current;
+    if (totalMs <= 0) {
       sessionStartRef.current = null;
       solvedCountRef.current = 0;
       sessionSecondsRef.current = 0;
+      questionTimeLedgerRef.current = null;
       return;
     }
     const answered = Math.max(solvedCountRef.current, totalQuestions);
-    const durationMinutes = Number((totalSeconds / 60000).toFixed(2));
-    const durationSeconds = Math.max(1, Math.round(totalSeconds / 1000));
+    const durationMinutes = Number((totalMs / 60000).toFixed(2));
+    const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
     addSessionProgress(
@@ -1970,6 +2010,7 @@ export default function GeometryMaster() {
 
   function hardResetGame() {
     accumulateQuestionTime();
+    questionTimeLedgerRef.current = null;
     clearActiveDiagnosticState(
       geometryPendingDiagnosticProbeRef,
       geometryHypothesisLedgerRef
@@ -2015,6 +2056,7 @@ export default function GeometryMaster() {
     sessionStartRef.current = Date.now();
     solvedCountRef.current = 0;
     sessionSecondsRef.current = 0;
+    questionTimeLedgerRef.current = null;
     setRecentQuestions(new Set());
     geometryConceptLineageTailRef.current = [];
     setGameActive(true);

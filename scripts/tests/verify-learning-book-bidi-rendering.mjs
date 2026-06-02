@@ -142,6 +142,32 @@ function assertLineRender(line, expected) {
     }
   }
 
+  if (/\d{1,3},\d{3}/.test(line) && /[÷×=+\-−]/.test(line)) {
+    if (
+      got.mathValues.length > 1 &&
+      /^\d{1,3},\d{3}$/.test(got.mathValues[0])
+    ) {
+      const bare = got.mathValues[0];
+      const start = line.indexOf(bare);
+      if (start >= 0) {
+        const afterBare = line.slice(start + bare.length);
+        if (/^\s*[÷×=+−\-]/.test(afterBare)) {
+          fail(
+            `fragmented comma-thousands expression in "${line}": ${JSON.stringify(got.mathValues)}`
+          );
+        }
+      }
+    }
+  }
+
+  if (/÷/.test(line) && got.mathValues.some((m) => /÷/.test(m))) {
+    for (const m of got.mathValues) {
+      if (/÷/.test(m) && !/^[\d_?]/.test(m.trim())) {
+        fail(`orphan division operator in math run "${m}" from "${line}"`);
+      }
+    }
+  }
+
   for (const seg of got.segments) {
     if (/\*\*/.test(seg.value) || /`/.test(seg.value)) {
       fail(`markdown artifact in segment for "${line}": ${JSON.stringify(seg)}`);
@@ -230,6 +256,54 @@ const CANONICAL_LINES = [
   {
     line: "כפל במאות (למשל 5 × 200)",
     expected: { math: ["5 × 200"] },
+  },
+  {
+    line: "1,247 ÷ 8:",
+    expected: { math: ["1,247 ÷ 8:"] },
+  },
+  {
+    line: "1,247 ÷ 8 = 155 שארית 7",
+    expected: { math: ["1,247 ÷ 8 = 155"] },
+  },
+  {
+    line: "משמעות: 8 × 155 = 1,240, ונשאר 7",
+    expected: { label: "משמעות:", math: ["8 × 155 = 1,240"] },
+  },
+  {
+    line: "נוסחה: מחולק = (מחלק × מנה) + שארית",
+    expected: { label: "נוסחה:" },
+  },
+  {
+    line: "8 × 155 + 7 = 1,247",
+    expected: { math: ["8 × 155 + 7 = 1,247"] },
+  },
+  {
+    line: "523 ÷ 6:",
+    expected: { math: ["523 ÷ 6:"] },
+  },
+  {
+    line: "523 ÷ 6 = 87 שארית 1",
+    expected: { math: ["523 ÷ 6 = 87"] },
+  },
+  {
+    line: "✓ 87 × 6 + 1 = 523",
+    expected: { label: "✓", math: ["87 × 6 + 1 = 523"] },
+  },
+  {
+    line: "שאלה: חשבו 1,247 ÷ 8 = ? (עם שארית)",
+    expected: { label: "שאלה:", math: ["1,247 ÷ 8 = ?"] },
+  },
+  {
+    line: "שלב 1: 8 × 155 = 1,240",
+    expected: { label: "שלב 1:", math: ["8 × 155 = 1,240"] },
+  },
+  {
+    line: "שלב 2: 1,247 − 1,240 = 7",
+    expected: { label: "שלב 2:", math: ["1,247 − 1,240 = 7"] },
+  },
+  {
+    line: "תשובה: 155 שארית 7",
+    expected: { label: "תשובה:" },
   },
 ];
 

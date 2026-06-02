@@ -2,7 +2,9 @@ import { Fragment } from "react";
 import {
   bookLabelIsolateStyle,
   bookMathIsolateStyle,
+  isFormulaLikeBody,
   isMathLikeText,
+  splitFormulaTokens,
   splitHebrewMathRuns,
   splitTextAndMathRuns,
 } from "../../lib/learning-book/book-math-display";
@@ -42,6 +44,7 @@ function MathSpan({ value, sourceText, start, end }) {
         dir="ltr"
         style={bookMathIsolateStyle}
         className={`book-math-isolate font-semibold tabular-nums ${theme.mathText}`}
+        data-book-math-run="true"
       >
         {display}
       </bdi>
@@ -61,6 +64,7 @@ function DigitSpan({ value, sourceText, start, end }) {
         dir="ltr"
         style={bookMathIsolateStyle}
         className="book-digit-isolate tabular-nums"
+        data-book-digit="true"
       >
         {value}
       </bdi>
@@ -160,8 +164,36 @@ function renderProseSegment(text, sourceText, keyPrefix) {
   });
 }
 
+function renderFormulaBody(text) {
+  const tokens = splitFormulaTokens(text);
+  return tokens.map((token, i) => {
+    if (token.type === "op") {
+      return (
+        <bdi
+          key={i}
+          dir="ltr"
+          style={bookMathIsolateStyle}
+          className="book-formula-op font-semibold tabular-nums"
+          data-book-formula-op="true"
+        >
+          {token.value}
+        </bdi>
+      );
+    }
+    return (
+      <span key={i} className="book-formula-term" data-book-formula-term="true">
+        {token.value}
+      </span>
+    );
+  });
+}
+
 function renderMixedBodyInner(text) {
   const input = String(text || "");
+  if (isFormulaLikeBody(input)) {
+    return renderFormulaBody(input);
+  }
+
   const segments = splitTextAndMathRuns(input);
 
   return segments.map((segment, i) => {
@@ -218,6 +250,7 @@ function BookLineLabel({ label }) {
     <span
       className="book-line-label inline font-bold text-white"
       style={bookLabelIsolateStyle}
+      data-book-label="true"
     >
       {cleaned}
     </span>
