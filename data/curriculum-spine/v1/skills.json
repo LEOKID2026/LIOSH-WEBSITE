@@ -3578,6 +3578,18 @@
     },
     {
       "schema_version": 1,
+      "skill_id": "geometry:kind:triangle_area",
+      "subject": "geometry",
+      "topic": "area_and_shapes",
+      "subtopic": "triangle_area",
+      "minGrade": 5,
+      "maxGrade": 6,
+      "cognitive_level": "application",
+      "description": "Geometry generator kind \"triangle_area\" (topic area). Grades 5–6 per kita5.pdf § ה. מדידות שטחים (pp. 114–115); formula gated below G5.",
+      "source": "kita5.pdf § ה. מדידות שטחים עמ׳ 114–115; utils/geometry-curriculum-gates.js; utils/geometry-question-generator.js"
+    },
+    {
+      "schema_version": 1,
       "skill_id": "geometry:kind:triangle_perimeter",
       "subject": "geometry",
       "topic": "area_and_shapes",
@@ -5013,128 +5025,8 @@
     },
     {
       "schema_version": 1,
-      "skill_id": "geography:g1:geography:geography_0_מפת_כיתה",
-      "subject": "geography",
-      "topic": "geography",
-      "subtopic": "geography_0_מפת_כיתה",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "מפת כיתה",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:geography:geography_1_מפת_בית_ספר",
-      "subject": "geography",
-      "topic": "geography",
-      "subtopic": "geography_1_מפת_בית_ספר",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "מפת בית ספר",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:geography:geography_2_כיוונים_בסיסיים",
-      "subject": "geography",
-      "topic": "geography",
-      "subtopic": "geography_2_כיוונים_בסיסיים",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "כיוונים בסיסיים",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:citizenship:citizenship_0_כללי_התנהגות",
-      "subject": "geography",
-      "topic": "citizenship",
-      "subtopic": "citizenship_0_כללי_התנהגות",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "כללי התנהגות",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:citizenship:citizenship_1_שיתוף_פעולה",
-      "subject": "geography",
-      "topic": "citizenship",
-      "subtopic": "citizenship_1_שיתוף_פעולה",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "שיתוף פעולה",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:citizenship:citizenship_2_השתייכות_לקהילה",
-      "subject": "geography",
-      "topic": "citizenship",
-      "subtopic": "citizenship_2_השתייכות_לקהילה",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "השתייכות לקהילה",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:skills:skills_0_הכרת_המשפחה_ותפקידיה",
-      "subject": "geography",
-      "topic": "skills",
-      "subtopic": "skills_0_הכרת_המשפחה_ותפקידיה",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "הכרת המשפחה ותפקידיה",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:skills:skills_1_הבנת_הקהילה_הקרובה",
-      "subject": "geography",
-      "topic": "skills",
-      "subtopic": "skills_1_הבנת_הקהילה_הקרובה",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "הבנת הקהילה הקרובה",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:skills:skills_2_היכרות_עם_מפות_בסיסיות",
-      "subject": "geography",
-      "topic": "skills",
-      "subtopic": "skills_2_היכרות_עם_מפות_בסיסיות",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "היכרות עם מפות בסיסיות",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
-      "skill_id": "geography:g1:skills:skills_3_הבנת_כללי_התנהגות_ושיתוף_פעולה",
-      "subject": "geography",
-      "topic": "skills",
-      "subtopic": "skills_3_הבנת_כללי_התנהגות_ושיתוף_פעולה",
-      "minGrade": 1,
-      "maxGrade": 1,
-      "cognitive_level": "recognition",
-      "description": "הבנת כללי התנהגות ושיתוף פעולה",
-      "source": "data/moledet-geography-curriculum.js"
-    },
-    {
-      "schema_version": 1,
       "skill_id": "geography:g2:geography:geography_0_מפת_שכונה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_0_מפת_שכונה",
       "minGrade": 2,
@@ -5146,7 +5038,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:geography:geography_1_מבנים_וסביבות",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_1_מבנים_וסביבות",
       "minGrade": 2,
@@ -5158,7 +5050,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:geography:geography_2_שירותים_בקהילה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_2_שירותים_בקהילה",
       "minGrade": 2,
@@ -5170,7 +5062,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:citizenship:citizenship_0_קבלת_החלטות_בקבוצה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_0_קבלת_החלטות_בקבוצה",
       "minGrade": 2,
@@ -5182,7 +5074,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:citizenship:citizenship_1_חברה_ואחריות",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_1_חברה_ואחריות",
       "minGrade": 2,
@@ -5194,7 +5086,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:citizenship:citizenship_2_השתתפות_בקהילה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_2_השתתפות_בקהילה",
       "minGrade": 2,
@@ -5206,7 +5098,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:skills:skills_0_הכרת_השכונה_ומבניה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_0_הכרת_השכונה_ומבניה",
       "minGrade": 2,
@@ -5218,7 +5110,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:skills:skills_1_הבנת_שירותים_בקהילה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_1_הבנת_שירותים_בקהילה",
       "minGrade": 2,
@@ -5230,7 +5122,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:skills:skills_2_קריאת_מפת_שכונה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_2_קריאת_מפת_שכונה",
       "minGrade": 2,
@@ -5242,7 +5134,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:skills:skills_3_הבנת_מושגים_בסיסיים_על_ארץ_ישראל",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_3_הבנת_מושגים_בסיסיים_על_ארץ_ישראל",
       "minGrade": 2,
@@ -5254,7 +5146,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g2:skills:skills_4_הבנת_קבלת_החלטות_בקבוצה",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_4_הבנת_קבלת_החלטות_בקבוצה",
       "minGrade": 2,
@@ -5266,7 +5158,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:geography:geography_0_מפת_ישראל",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_0_מפת_ישראל",
       "minGrade": 3,
@@ -5278,7 +5170,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:geography:geography_1_אזורים_וערים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_1_אזורים_וערים",
       "minGrade": 3,
@@ -5290,7 +5182,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:geography:geography_2_סוגי_נופים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_2_סוגי_נופים",
       "minGrade": 3,
@@ -5302,7 +5194,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:geography:geography_3_מקורות_מים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_3_מקורות_מים",
       "minGrade": 3,
@@ -5314,7 +5206,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:citizenship:citizenship_0_כללי_אזרחות_בסיסיים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_0_כללי_אזרחות_בסיסיים",
       "minGrade": 3,
@@ -5326,7 +5218,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:citizenship:citizenship_1_השתתפות_חברתית",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_1_השתתפות_חברתית",
       "minGrade": 3,
@@ -5338,7 +5230,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:citizenship:citizenship_2_זכויות_וחובות",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_2_זכויות_וחובות",
       "minGrade": 3,
@@ -5350,7 +5242,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:skills:skills_0_קריאת_מפת_ישראל",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_0_קריאת_מפת_ישראל",
       "minGrade": 3,
@@ -5362,7 +5254,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:skills:skills_1_זיהוי_אזורים_וערים_גדולות",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_1_זיהוי_אזורים_וערים_גדולות",
       "minGrade": 3,
@@ -5374,7 +5266,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:skills:skills_2_הכרת_סוגי_נופים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_2_הכרת_סוגי_נופים",
       "minGrade": 3,
@@ -5386,7 +5278,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:skills:skills_3_הבנת_מחוזות_וגבולות",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_3_הבנת_מחוזות_וגבולות",
       "minGrade": 3,
@@ -5398,7 +5290,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g3:skills:skills_4_הבנת_כללי_אזרחות_בסיסיים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_4_הבנת_כללי_אזרחות_בסיסיים",
       "minGrade": 3,
@@ -5410,7 +5302,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:geography:geography_0_סוגי_יישובים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_0_סוגי_יישובים",
       "minGrade": 4,
@@ -5422,7 +5314,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:geography:geography_1_מפות_קנה_מידה_סימנים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_1_מפות_קנה_מידה_סימנים",
       "minGrade": 4,
@@ -5434,7 +5326,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:geography:geography_2_משאבי_טבע",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "geography",
       "subtopic": "geography_2_משאבי_טבע",
       "minGrade": 4,
@@ -5446,7 +5338,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:citizenship:citizenship_0_מבנה_ממשל",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_0_מבנה_ממשל",
       "minGrade": 4,
@@ -5458,7 +5350,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:citizenship:citizenship_1_ארגונים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_1_ארגונים",
       "minGrade": 4,
@@ -5470,7 +5362,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:citizenship:citizenship_2_מוסדות_שלטון",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "citizenship",
       "subtopic": "citizenship_2_מוסדות_שלטון",
       "minGrade": 4,
@@ -5482,7 +5374,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:skills:skills_0_הכרת_סוגי_יישובים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_0_הכרת_סוגי_יישובים",
       "minGrade": 4,
@@ -5494,7 +5386,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:skills:skills_1_הבנת_התפתחות_היישובים",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_1_הבנת_התפתחות_היישובים",
       "minGrade": 4,
@@ -5506,7 +5398,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:skills:skills_2_קריאת_מפות_מתקדמות",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_2_קריאת_מפות_מתקדמות",
       "minGrade": 4,
@@ -5518,7 +5410,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:skills:skills_3_הבנת_משאבי_טבע",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_3_הבנת_משאבי_טבע",
       "minGrade": 4,
@@ -5530,7 +5422,7 @@
     {
       "schema_version": 1,
       "skill_id": "geography:g4:skills:skills_4_הבנת_מבנה_הממשל",
-      "subject": "geography",
+      "subject": "moledet",
       "topic": "skills",
       "subtopic": "skills_4_הבנת_מבנה_הממשל",
       "minGrade": 4,

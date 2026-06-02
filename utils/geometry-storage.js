@@ -1,6 +1,6 @@
 // פונקציות אחסון וניהול ניקוד לדף הגאומטריה
 
-import { LEVELS, TOPICS, GRADES } from "./geometry-constants";
+import { LEVELS, TOPICS, GRADES } from "./geometry-constants.js";
 
 export function getLevelForGrade(levelKey, gradeKey) {
   const base = LEVELS[levelKey];

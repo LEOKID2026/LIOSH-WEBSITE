@@ -12,7 +12,7 @@ import {
   writeJson,
 } from "./lib/ministry-oracle-shared.mjs";
 
-const PARTIALS = ["math-geometry", "hebrew", "english", "moledet-geography"];
+const PARTIALS = ["math-geometry", "hebrew", "english", "science", "moledet-geography"];
 
 function loadPartial(name) {
   const file = path.join(PARTIAL_DIR, `${name}.json`);

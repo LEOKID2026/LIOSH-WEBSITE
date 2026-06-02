@@ -4,7 +4,7 @@ import { teacherAuthFetch, subjectLabelHe } from "../../lib/teacher-portal/teach
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../lib/classroom-activities/classroom-activities-preview.js";
 import { formatGradeLevelHe, resolveCanonicalGradeKey } from "../../lib/teacher-portal/teacher-class-grade.js";
 import {
-  MOLEDET_TOPIC_OPTIONS,
+  moledetGeographyTopicOptionsForGrade,
   defaultTopicForSubject,
   englishTopicOptionsForGrade,
   geometryTopicOptionsForGrade,
@@ -374,7 +374,7 @@ export default function TeacherDiscussionQuestionPicker({
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
             >
-              {MOLEDET_TOPIC_OPTIONS.map(({ key, label }) => (
+              {moledetGeographyTopicOptionsForGrade(gradeKey).map(({ key, label }) => (
                 <option key={key} value={key}>
                   {label}
                 </option>

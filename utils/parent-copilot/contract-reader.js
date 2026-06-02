@@ -3,19 +3,24 @@
  * Not a TruthPacketV1 owner (see truth-packet-v1.js).
  */
 
+import {
+  MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
+  normalizeMoledetGeographyReportSubjectId,
+} from "../../lib/learning-shared/moledet-geography-subject-id.js";
+
 export const SUBJECT_ORDER = [
   "math",
   "geometry",
   "english",
   "science",
   "hebrew",
-  "moledet-geography",
+  MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
 ];
 
 export function normalizeSubjectId(subjectId) {
-  const sid = String(subjectId || "").trim();
-  if (sid === "moledet_geography") return "moledet-geography";
-  return sid;
+  const moledet = normalizeMoledetGeographyReportSubjectId(subjectId);
+  if (moledet) return moledet;
+  return String(subjectId || "").trim();
 }
 
 function shallowCopy(x) {

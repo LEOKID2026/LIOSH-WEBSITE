@@ -6,6 +6,7 @@
  */
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { TRIANGLE_AREA_FORMULA_MIN_GRADE } from "../utils/geometry-curriculum-gates.js";
 
 const __bindDir = path.dirname(fileURLToPath(import.meta.url));
 const _geoHref = pathToFileURL(path.join(__bindDir, "..", "utils", "geometry-constants.js")).href;
@@ -44,7 +45,7 @@ export function geometryKindGradeSpan(kind) {
     case "square_area":
       return geoTopicShapeSpan("area", "square");
     case "triangle_area":
-      return geoTopicShapeSpan("area", "triangle");
+      return { minGrade: TRIANGLE_AREA_FORMULA_MIN_GRADE, maxGrade: 6 };
     case "parallelogram_area":
       return geoTopicShapeSpan("area", "parallelogram");
     case "trapezoid_area":

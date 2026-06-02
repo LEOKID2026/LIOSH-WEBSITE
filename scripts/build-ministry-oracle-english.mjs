@@ -16,9 +16,9 @@ const GRADE_FILES = [
   { grade: 1, file: "כיתה א.txt", validated: true },
   { grade: 2, file: "כיתה ב.txt", validated: true },
   { grade: 3, file: "כיתה ג.txt", validated: true },
-  { grade: 4, file: "כיתה ד.txt", validated: false },
-  { grade: 5, file: "כיתה ה.txt", validated: false },
-  { grade: 6, file: "כיתה ו.txt", validated: false },
+  { grade: 4, file: "כיתה ד.txt", validated: true },
+  { grade: 5, file: "כיתה ה.txt", validated: true },
+  { grade: 6, file: "כיתה ו.txt", validated: true },
 ];
 
 const SECTION_ORDER = ["Focus", "Skills", "Grammar & Structures", "Vocabulary Themes", "Benchmark"];

@@ -1,5 +1,6 @@
 import { normalizeParentFacingHe } from "./parent-report-language/index.js";
 import { resolveGradeAwareParentRecommendationHe } from "./parent-report-language/grade-aware-recommendation-resolver.js";
+import { shouldOmitRawDiagnosticRecommendationFallback } from "./report-diagnostic-safety-guards.js";
 
 function canonicalState(unit) {
   return unit?.canonicalState || null;
@@ -75,13 +76,19 @@ function unitTaxonomyId(unit) {
   );
 }
 
+function omitRawFallbackForUnit(unit, opts = {}) {
+  if (opts && typeof opts === "object" && opts.omitRawDiagnosticFallback) return true;
+  const taxonomyId = unitTaxonomyId(unit);
+  return shouldOmitRawDiagnosticRecommendationFallback(unit?.subjectId, taxonomyId);
+}
+
 /**
  * @param {unknown} unit
  * @param {string|null|undefined} [gradeKey] from topic map row for this unit's topicRowKey
  * @param {{ omitRawDiagnosticFallback?: boolean }} [opts]
  */
 export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
-  const noRaw = !!(opts && typeof opts === "object" && opts.omitRawDiagnosticFallback);
+  const noRaw = omitRawFallbackForUnit(unit, opts);
   const cs = canonicalState(unit);
   const name = topicName(unit);
 
@@ -125,7 +132,7 @@ export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
  * @param {{ omitRawDiagnosticFallback?: boolean }} [opts]
  */
 export function resolveUnitNextGoalHe(unit, gradeKey, opts = {}) {
-  const noRaw = !!(opts && typeof opts === "object" && opts.omitRawDiagnosticFallback);
+  const noRaw = omitRawFallbackForUnit(unit, opts);
   const cs = canonicalState(unit);
   if (isStrengthAction(unit) && cs?.recommendation?.allowed) {
     const name = topicName(unit);
@@ -157,7 +164,7 @@ export function resolveUnitNextGoalHe(unit, gradeKey, opts = {}) {
  * @param {{ omitRawDiagnosticFallback?: boolean }} [opts]
  */
 export function resolveUnitHomeMethodHe(unit, gradeKey, opts = {}) {
-  const noRaw = !!(opts && typeof opts === "object" && opts.omitRawDiagnosticFallback);
+  const noRaw = omitRawFallbackForUnit(unit, opts);
   const cs = canonicalState(unit);
   if (isStrengthAction(unit) && cs?.recommendation?.allowed) {
     const name = topicName(unit);

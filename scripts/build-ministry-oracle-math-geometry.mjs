@@ -59,9 +59,9 @@ const MAVO_TABLE = [
     rows: [
       { domain: "מצולעים", topic: "מרובעים", subtopic: "תכונות, מיון, קשרי הכלה", group: "geometry_properties", index: 1, geometry_strand: true, resource_anchor: "כיתה ה׳ § ד. מצולעים עמ׳ 110–112" },
       { domain: "מצולעים", topic: "ריצוף", subtopic: "ריצוף במצולעים משוכללים חופפים", group: "tiling", index: 1, geometry_strand: true, resource_anchor: "כיתה ה׳ § ד.3 עמ׳ 112–113" },
-      { domain: "מצולעים", topic: "גבהים", subtopic: "גובה לשטח (משולש, מקבילית, טרפז)", group: "heights", index: 1, geometry_strand: true, row_id: "math.g5.geometry.heights", resource_anchor: "כיתה ה׳ § ד.4 גבהים עמ׳ 113", prerequisite_ids: ["math.g5.measurement.area_formulas.triangle_area"] },
-      { domain: "מדידות", topic: "מדידות שטחים", subtopic: "שטח מלבן (חזרה)", group: "area_formulas", index: 1, geometry_strand: true, row_id: "math.g5.measurement.area_formulas.rectangle_area", resource_anchor: "כיתה ה׳ § ה. מדידות שטחים עמ׳ 114–115", prerequisite_ids: ["math.g4.measurement.area_formulas.שטח_מלבן_היקף_מלבן"] },
-      { domain: "מדידות", topic: "מדידות שטחים", subtopic: "שטח משולש (בסיס × גובה ÷ 2)", group: "area_formulas", index: 2, geometry_strand: true, row_id: "math.g5.measurement.area_formulas.triangle_area", resource_anchor: "כיתה ה׳ § ה. מדידות שטחים עמ׳ 114–115", status: "required_pending_pdf_parse", prerequisite_ids: [], sequence_notes: "Prerequisites are rectangle area (G4) and triangle properties (G3–G4); exact prerequisite row_ids pending final oracle row-id generation." },
+      { domain: "מצולעים", topic: "גבהים", subtopic: "גובה לשטח (משולש, מקבילית, טרפז)", group: "heights", index: 1, geometry_strand: true, row_id: "math.g5.geometry.heights", resource_anchor: "kita5.pdf § ד.4 גבהים עמ׳ 113", prerequisite_ids: [], sequence_notes: "Official G5 order: § ד.4 גבהים before § ה. מדידות שטחים." },
+      { domain: "מדידות", topic: "מדידות שטחים", subtopic: "שטח מלבן (חזרה)", group: "area_formulas", index: 1, geometry_strand: true, row_id: "math.g5.measurement.area_formulas.rectangle_area", resource_anchor: "kita5.pdf § ה. מדידות שטחים עמ׳ 114–115", prerequisite_ids: ["math.g4.measurement.area_formulas.שטח_מלבן_היקף_מלבן"] },
+      { domain: "מדידות", topic: "מדידות שטחים", subtopic: "שטח משולש (בסיס × גובה ÷ 2)", group: "area_formulas", index: 2, geometry_strand: true, row_id: "math.g5.measurement.area_formulas.triangle_area", resource_anchor: "kita5.pdf § ה. מדידות שטחים עמ׳ 114–115", status: "required", confidence: "high", internal_candidate_skill_id: "geometry:kind:triangle_area", prerequisite_ids: ["math.g5.geometry.heights", "math.g4.measurement.area_formulas.שטח_מלבן_היקף_מלבן"], sequence_notes: "After § ד.4 גבהים; verified kita5.pdf § ה." },
       { domain: "מדידות", topic: "מדידות שטחים", subtopic: "שטח מקבילית וטרפז", group: "area_formulas", index: 3, geometry_strand: true, row_id: "math.g5.measurement.area_formulas.parallelogram_trapezoid", resource_anchor: "כיתה ה׳ § ה. מדידות שטחים עמ׳ 114–115", prerequisite_ids: ["math.g5.measurement.area_formulas.triangle_area", "math.g5.geometry.heights"] },
     ],
   },
@@ -105,12 +105,15 @@ function buildMavoRows() {
         source_anchor: item.resource_anchor ?? `mavo1.txt lines 603–659, grade-${grade} ${item.domain}`,
         corroborating_source: corroborating,
         status,
-        confidence: "medium",
+        confidence: item.confidence ?? "medium",
         geometry_strand: Boolean(item.geometry_strand),
-        internal_candidate_skill_id: null,
-        notes: status === "required_pending_pdf_parse"
-          ? "Strongly supported by mavo1.txt and/or resource_100673815.txt; not final until kita PDF parsed."
-          : null,
+        internal_candidate_skill_id: item.internal_candidate_skill_id ?? null,
+        notes:
+          status === "required"
+            ? item.sequence_notes ?? "Verified oracle row."
+            : status === "required_pending_pdf_parse"
+              ? "Strongly supported by mavo1.txt and/or resource_100673815.txt; not final until kita PDF parsed."
+              : null,
         blocker_reason:
           status === "required_pending_pdf_parse"
             ? `Primary grade-${grade} Ministry PDF (kita${grade}.pdf) not yet parsed or anchored; confidence capped at medium.`

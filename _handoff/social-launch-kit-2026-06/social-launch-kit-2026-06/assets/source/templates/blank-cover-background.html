@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1640px; height: 624px; overflow: hidden;
+      font-family: 'Segoe UI', 'Arial', 'David', 'Rubik', sans-serif;
+      direction: rtl;
+    }
+    body {
+      background: linear-gradient(145deg, #050816 0%, #0b1020 45%, #0f172a 100%);
+      color: #ffffff;
+      position: relative;
+    }
+    .glow {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; pointer-events: none;
+    }
+    .glow-a { width: 902px; height: 902px; background: #fbbf24; top: -75px; left: -131px; }
+    .glow-b { width: 738px; height: 738px; background: #fda4af; bottom: -50px; right: -82px; opacity: 0.22; }
+    .glow-c { width: 574px; height: 574px; background: #34d399; bottom: 94px; left: 82px; opacity: 0.18; }
+    .frame {
+      position: relative; z-index: 2; width: 100%; height: 100%;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 131px;
+    }
+    .brand-row {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 25px;
+    }
+    .brand-row.center { justify-content: center; }
+    .logo { width: 148px; height: 148px; object-fit: contain; }
+    .logo-lg { width: 262px; height: 262px; }
+    .brand-name { font-size: 74px; font-weight: 800; letter-spacing: 0.08em; color: #fcd34d; }
+    .pill {
+      display: inline-block; align-self: flex-start;
+      background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.35);
+      color: #fcd34d; border-radius: 999px;
+      padding: 8px 18px; font-size: 46px; font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .pill.center { align-self: center; }
+    h1 {
+      font-size: 112px; font-weight: 900; line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: 85px; font-weight: 800; line-height: 1.2;
+      margin-bottom: 11px;
+    }
+    p, li {
+      font-size: 62px; line-height: 1.45; color: rgba(255,255,255,0.72); font-weight: 500;
+    }
+    .lines { display: flex; flex-direction: column; gap: 11px; }
+    .line-strong { color: #ffffff; font-weight: 700; font-size: 72px; line-height: 1.35; }
+    .cta {
+      margin-top: auto; align-self: flex-start;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      color: #1a1200; font-weight: 800; font-size: 52px;
+      padding: 14px 28px; border-radius: 14px;
+    }
+    .cta.center { align-self: center; }
+    .steps { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+    .steps li {
+      display: flex; align-items: center; gap: 16px; color: #ffffff; font-weight: 600;
+      font-size: 69px;
+    }
+    .num {
+      width: 115px; height: 115px; border-radius: 50%;
+      background: rgba(251,191,36,0.2); border: 2px solid #fbbf24;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; color: #fcd34d; flex-shrink: 0;
+      font-size: 56px;
+    }
+    .shot-wrap {
+      margin-top: 19px; border-radius: 18px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+      max-height: 237px;
+    }
+    .shot-wrap img { width: 100%; height: auto; display: block; object-fit: cover; object-position: top; }
+    .shot-wrap.question-inset img { height: 340px; object-position: center 8%; }
+    .cover-safe {
+      position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-end; text-align: right;
+      padding: 48px 72px 48px 320px;
+    }
+    .cover-safe h1 { font-size: 52px; }
+    .cover-safe p { font-size: 28px; max-width: 900px; }
+    .cover-sub { color: #fcd34d; font-weight: 700; font-size: 30px; margin-top: 12px; }
+    .cover-tag { color: #34d399; font-weight: 700; font-size: 26px; margin-top: 16px; }
+    .blank-only .frame { opacity: 0; }
+  </style></head><body class="blank-only"><div class="glow glow-a"></div><div class="glow glow-b"></div><div class="glow glow-c"></div><div class="frame"></div></body></html>

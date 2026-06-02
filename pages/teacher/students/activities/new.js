@@ -4,76 +4,17 @@ import Layout from "../../../../components/Layout";
 import TeacherPortalShell from "../../../../components/teacher-portal/TeacherPortalShell";
 import { getLearningSupabaseBrowserClient } from "../../../../lib/learning-supabase/client";
 import { resolveTeacherAccessToken } from "../../../../lib/teacher-portal/use-teacher-portal-session";
-import { teacherAuthFetch, subjectLabelHe } from "../../../../lib/teacher-portal/teacher-ui.he.js";
+import { teacherAuthFetch, subjectLabelHe, activitySubjectsForGrade } from "../../../../lib/teacher-portal/teacher-ui.he.js";
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../../../lib/classroom-activities/classroom-activities-preview.js";
 import { generateActivityQuestionSetClient } from "../../../../lib/classroom-activities/generate-activity-questions-client.js";
 import { activityModeLabelHe } from "../../../../lib/classroom-activities/classroom-activities-labels.client.js";
-import { GRADES as MATH_GRADES } from "../../../../utils/math-constants.js";
-import { getMathReportBucketDisplayName } from "../../../../utils/math-report-generator.js";
 import {
-  GRADES as GEOMETRY_GRADES,
-  TOPICS as GEOMETRY_TOPICS,
-} from "../../../../utils/geometry-constants.js";
-import { TOPICS as MOLEDET_TOPICS } from "../../../../utils/moledet-geography-constants.js";
-import { GRADES as HEBREW_GRADES, TOPICS as HEBREW_TOPICS } from "../../../../utils/hebrew-constants.js";
-import { ENGLISH_GRADES, ENGLISH_TOPICS } from "../../../../utils/english-question-generator.js";
+  defaultTopicForSubject,
+  topicOptionsForSubject,
+} from "../../../../lib/teacher-portal/teacher-class-topic-options.js";
 import { formatGradeLevelHe } from "../../../../lib/learning-student-defaults.js";
-import { SCIENCE_GRADES } from "../../../../data/science-curriculum.js";
 
 const MODES = ["guided_practice", "quiz", "homework", "discussion"];
-
-const SCIENCE_TOPIC_LABELS = {
-  body: "גוף האדם",
-  animals: "בעלי חיים",
-  plants: "צמחים",
-  materials: "חומרים",
-  experiments: "ניסויים",
-  earth_space: "כדור הארץ וחלל",
-  environment: "סביבה",
-};
-
-const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
-  key,
-  label: meta.name,
-}));
-
-function topicOptionsForSubject(subject, gradeKey) {
-  if (subject === "math") {
-    return (MATH_GRADES[gradeKey]?.operations || [])
-      .filter((op) => op !== "mixed")
-      .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
-  }
-  if (subject === "geometry") {
-    return (GEOMETRY_GRADES[gradeKey]?.topics || [])
-      .filter((t) => t !== "mixed")
-      .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
-  }
-  if (subject === "hebrew") {
-    return (HEBREW_GRADES[gradeKey]?.topics || []).map((key) => ({
-      key,
-      label: HEBREW_TOPICS[key]?.name || key,
-    }));
-  }
-  if (subject === "english") {
-    return (ENGLISH_GRADES[gradeKey]?.topics || []).map((key) => ({
-      key,
-      label: ENGLISH_TOPICS[key]?.name || key,
-    }));
-  }
-  if (subject === "moledet_geography") return MOLEDET_TOPIC_OPTIONS;
-  if (subject === "science") {
-    return (SCIENCE_GRADES[gradeKey]?.topics ?? []).map((key) => ({
-      key,
-      label: SCIENCE_TOPIC_LABELS[key] ?? key,
-    }));
-  }
-  return [];
-}
-
-function defaultTopic(subject, gradeKey) {
-  const opts = topicOptionsForSubject(subject, gradeKey);
-  return opts[0]?.key || "";
-}
 
 export async function getServerSideProps() {
   return { props: {} };
@@ -89,7 +30,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
   const [gradeKey, setGradeKey] = useState("g3");
-  const [topic, setTopic] = useState(() => defaultTopic("math", "g3"));
+  const [topic, setTopic] = useState(() => defaultTopicForSubject("math", "g3"));
   const [mode, setMode] = useState("guided_practice");
   const [difficulty, setDifficulty] = useState("medium");
   const [questionCount, setQuestionCount] = useState(5);
@@ -114,7 +55,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   useEffect(() => {
     if (lockedGrade && lockedGrade !== gradeKey) {
       setGradeKey(lockedGrade);
-      setTopic(defaultTopic(subject, lockedGrade));
+      setTopic(defaultTopicForSubject(subject, lockedGrade));
       setPreview([]);
     }
   }, [lockedGrade]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -392,11 +333,11 @@ export default function TeacherPrivateStudentsNewActivityPage() {
                 onChange={(e) => {
                   const s = e.target.value;
                   setSubject(s);
-                  setTopic(defaultTopic(s, gradeKey));
+                  setTopic(defaultTopicForSubject(s, gradeKey));
                   setPreview([]);
                 }}
               >
-                {[...ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS].map((s) => (
+                {activitySubjectsForGrade(gradeKey, [...ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS]).map((s) => (
                   <option key={s} value={s}>{subjectLabelHe(s)}</option>
                 ))}
               </select>
@@ -416,7 +357,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
                 onChange={(e) => {
                   if (lockedGrade) return;
                   setGradeKey(e.target.value);
-                  setTopic(defaultTopic(subject, e.target.value));
+                  setTopic(defaultTopicForSubject(subject, e.target.value));
                   setPreview([]);
                 }}
               >

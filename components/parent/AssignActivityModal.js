@@ -3,85 +3,14 @@ import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../lib/classroom-activit
 import { generateActivityQuestionSetClient } from "../../lib/classroom-activities/generate-activity-questions-client.js";
 import { activityModeLabelHe } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../../lib/learning-student-defaults.js";
-import { GRADES as MATH_GRADES } from "../../utils/math-constants.js";
-import { getMathReportBucketDisplayName } from "../../utils/math-report-generator.js";
 import {
-  GRADES as GEOMETRY_GRADES,
-  TOPICS as GEOMETRY_TOPICS,
-} from "../../utils/geometry-constants.js";
-import { TOPICS as MOLEDET_TOPICS } from "../../utils/moledet-geography-constants.js";
-import { GRADES as HEBREW_GRADES, TOPICS as HEBREW_TOPICS } from "../../utils/hebrew-constants.js";
-import { ENGLISH_GRADES, ENGLISH_TOPICS } from "../../utils/english-question-generator.js";
-import { SCIENCE_GRADES } from "../../data/science-curriculum.js";
+  defaultTopicForSubject,
+  topicOptionsForSubject,
+} from "../../lib/teacher-portal/teacher-class-topic-options.js";
+import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 
 const PARENT_MODES = ["guided_practice"];
 const MAX_QUESTION_COUNT = 30;
-
-const SCIENCE_TOPIC_LABELS = {
-  body: "גוף האדם",
-  animals: "בעלי חיים",
-  plants: "צמחים",
-  materials: "חומרים",
-  experiments: "ניסויים",
-  earth_space: "כדור הארץ וחלל",
-  environment: "סביבה",
-};
-
-const MOLEDET_TOPIC_OPTIONS = Object.entries(MOLEDET_TOPICS).map(([key, meta]) => ({
-  key,
-  label: meta.name,
-}));
-
-const SUBJECT_LABELS_HE = {
-  math: "מתמטיקה",
-  geometry: "גאומטריה",
-  english: "אנגלית",
-  hebrew: "עברית",
-  science: "מדעים",
-  moledet_geography: "מולדת וגאוגרפיה",
-};
-
-function subjectLabelHe(subject) {
-  return SUBJECT_LABELS_HE[subject] || subject;
-}
-
-function topicOptionsForSubject(subject, gradeKey) {
-  if (subject === "math") {
-    return (MATH_GRADES[gradeKey]?.operations || [])
-      .filter((op) => op !== "mixed")
-      .map((key) => ({ key, label: getMathReportBucketDisplayName(key) || key }));
-  }
-  if (subject === "geometry") {
-    return (GEOMETRY_GRADES[gradeKey]?.topics || [])
-      .filter((t) => t !== "mixed")
-      .map((key) => ({ key, label: GEOMETRY_TOPICS[key]?.name || key }));
-  }
-  if (subject === "hebrew") {
-    return (HEBREW_GRADES[gradeKey]?.topics || []).map((key) => ({
-      key,
-      label: HEBREW_TOPICS[key]?.name || key,
-    }));
-  }
-  if (subject === "english") {
-    return (ENGLISH_GRADES[gradeKey]?.topics || []).map((key) => ({
-      key,
-      label: ENGLISH_TOPICS[key]?.name || key,
-    }));
-  }
-  if (subject === "moledet_geography") return MOLEDET_TOPIC_OPTIONS;
-  if (subject === "science") {
-    return (SCIENCE_GRADES[gradeKey]?.topics ?? []).map((key) => ({
-      key,
-      label: SCIENCE_TOPIC_LABELS[key] ?? key,
-    }));
-  }
-  return [];
-}
-
-function defaultTopic(subject, gradeKey) {
-  const opts = topicOptionsForSubject(subject, gradeKey);
-  return opts[0]?.key || "";
-}
 
 /**
  * @param {{ student: { id: string, full_name?: string, grade_level?: string|null }, accessToken: string, onClose: () => void, onSuccess: () => void }} props
@@ -94,7 +23,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
 
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
-  const [topic, setTopic] = useState(() => defaultTopic("math", gradeKey));
+  const [topic, setTopic] = useState(() => defaultTopicForSubject("math", gradeKey));
   const [mode] = useState("guided_practice");
   const [difficulty, setDifficulty] = useState("medium");
   const [questionCount, setQuestionCount] = useState(5);
@@ -103,7 +32,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setTopic(defaultTopic(subject, gradeKey));
+    setTopic(defaultTopicForSubject(subject, gradeKey));
     setPreview([]);
   }, [subject, gradeKey]);
 
@@ -235,7 +164,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
               onChange={(e) => setSubject(e.target.value)}
               disabled={busy}
             >
-              {[...ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS].map((s) => (
+              {activitySubjectsForGrade(gradeKey, [...ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS]).map((s) => (
                 <option key={s} value={s}>
                   {subjectLabelHe(s)}
                 </option>

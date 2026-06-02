@@ -40,6 +40,7 @@ import {
   practiceGradeRelation,
 } from "../lib/learning-supabase/practice-grade-resolution.js";
 import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
+import { isMoledetGeographyGradeAllowed } from "./moledet-geography-curriculum-gates.js";
 import { enrichTopicMapsWithRowTrends, filterMistakesForRow } from "./parent-report-row-trend.js";
 import { buildWeaknessConfidencePatternsV1 } from "./intelligence-layer-v1/weakness-confidence-patterns.js";
 import { enrichTopicMapsWithRowBehaviorProfiles } from "./parent-report-row-behavior.js";
@@ -662,6 +663,24 @@ function loadProgress(path) {
   } catch {
     return {};
   }
+}
+
+function resolveRegisteredGradeKeyFromTrackingBuckets() {
+  for (const def of SUBJECTS) {
+    const saved = loadTracking(def.trackingKey);
+    const bucket = saved[def.container] || {};
+    for (const topicVal of Object.values(bucket)) {
+      const sessions = topicVal?.sessions;
+      if (!Array.isArray(sessions)) continue;
+      for (const s of sessions) {
+        const g = normalizeGradeLevelToKey(
+          s?.registeredGradeKey || s?.registeredGrade || s?.grade
+        );
+        if (g) return g;
+      }
+    }
+  }
+  return null;
 }
 
 /**
@@ -1805,7 +1824,11 @@ export function generateParentReportV2(
   let moledetGeographyTotalQuestions = 0;
   let moledetGeographyTotalCorrect = 0;
 
+  const registeredGradeKeyEarly = resolveRegisteredGradeKeyFromTrackingBuckets();
+  const includeMoledetGeographyReport = isMoledetGeographyGradeAllowed(registeredGradeKeyEarly);
+
   SUBJECTS.forEach((def) => {
+    if (def.id === "moledet-geography" && !includeMoledetGeographyReport) return;
     const saved = loadTracking(def.trackingKey);
     const progress = loadProgress(def.progressStorage());
     const progressData = progress.progress || {};
@@ -1871,9 +1894,9 @@ export function generateParentReportV2(
   const englishProgress = loadProgress("mleo_english_master_progress");
   const scienceProgress = loadProgress("mleo_science_master_progress");
   const hebrewProgress = loadProgress("mleo_hebrew_master_progress");
-  const moledetGeographyProgress = loadProgress(
-    "mleo_moledet_geography_master_progress"
-  );
+  const moledetGeographyProgress = includeMoledetGeographyReport
+    ? loadProgress("mleo_moledet_geography_master_progress")
+    : {};
 
   const stars =
     (mathProgress.stars || 0) +
@@ -1918,9 +1941,9 @@ export function generateParentReportV2(
   const englishMistakesRaw = safeGetJsonArray("mleo_english_mistakes");
   const scienceMistakesRaw = safeGetJsonArray("mleo_science_mistakes");
   const hebrewMistakesRaw = safeGetJsonArray("mleo_hebrew_mistakes");
-  const moledetGeographyMistakesRaw = safeGetJsonArray(
-    "mleo_moledet_geography_mistakes"
-  );
+  const moledetGeographyMistakesRaw = includeMoledetGeographyReport
+    ? safeGetJsonArray("mleo_moledet_geography_mistakes")
+    : [];
 
   const mathMistakesByOperation = buildMathMistakesScopedCounts(mathMistakesRaw, startMs, endMs);
   const geometryMistakesByTopic = filterMistakes(

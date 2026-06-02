@@ -1,0 +1,103 @@
+{
+  "generatedAt": "2026-06-02T19:47:21.991Z",
+  "baseUrl": "https://liosh-website.vercel.app",
+  "captureLog": [
+    {
+      "name": "parent-login.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/parent/login",
+      "note": null
+    },
+    {
+      "name": "learning-hub.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/learning",
+      "note": "Unauthenticated /learning redirects to student login — not used in final marketing insets"
+    },
+    {
+      "name": "student-login.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/student/login",
+      "note": null
+    },
+    {
+      "name": "help-center-home.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/help",
+      "note": null
+    },
+    {
+      "name": "about-page-mobile.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/about",
+      "note": null
+    },
+    {
+      "name": "homepage-parent-student-crop.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/",
+      "note": "Cropped to parent+student portal cards only; teacher portal excluded"
+    },
+    {
+      "name": "parent-report-help.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/help-center/screenshots/parent-report/report-overview/mobile/short-report.png"
+    },
+    {
+      "name": "parent-report-summary-help.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/help-center/screenshots/parent-report/summary-card/mobile/summary.png"
+    },
+    {
+      "name": "student-question-help.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/help-center/screenshots/students/answering-questions/mobile/question.png"
+    },
+    {
+      "name": "learning-subjects-help.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/help-center/screenshots/students/choose-subject-and-grade/mobile/subjects.png"
+    },
+    {
+      "name": "logo-coin.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/images/coin.png"
+    },
+    {
+      "name": "logo-icon-512.png",
+      "status": "ok",
+      "source": "https://liosh-website.vercel.app/images/leo-icons/icon-512.png"
+    }
+  ],
+  "renderedAssets": [
+    "assets\\final\\fb-profile-1024.png",
+    "assets\\final\\fb-cover-summer-pilot.png",
+    "assets\\final\\fb-post-01-launch.png",
+    "assets\\final\\fb-post-02-how-it-works.png",
+    "assets\\final\\fb-post-03-parent-report.png",
+    "assets\\final\\fb-post-04-child-practice.png",
+    "assets\\final\\fb-post-05-free-summer.png",
+    "assets\\final\\fb-post-06-feedback.png",
+    "assets\\final\\fb-group-share-parent-pilot.png",
+    "assets\\final\\story-01-summer-learning.png",
+    "assets\\final\\story-02-10-minutes.png",
+    "assets\\final\\story-03-feedback.png",
+    "assets\\final\\blank-square-background.png",
+    "assets\\final\\blank-story-background.png",
+    "assets\\final\\blank-cover-background.png"
+  ],
+  "capturedSources": [
+    "parent-login.png",
+    "learning-hub.png",
+    "student-login.png",
+    "help-center-home.png",
+    "about-page-mobile.png",
+    "homepage-parent-student-crop.png",
+    "parent-report-help.png",
+    "parent-report-summary-help.png",
+    "student-question-help.png",
+    "learning-subjects-help.png",
+    "logo-coin.png",
+    "logo-icon-512.png"
+  ]
+}

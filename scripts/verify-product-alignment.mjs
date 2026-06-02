@@ -53,6 +53,8 @@ async function loadProductModules() {
     moledetCurriculum,
     scienceCurriculum,
     gradeAwareTemplates,
+    reportGuards,
+    moledetSubjectId,
   ] = await Promise.all([
     import(href("utils/geometry-constants.js")),
     import(href("scripts/curriculum-spine-grade-bindings.mjs")),
@@ -63,6 +65,8 @@ async function loadProductModules() {
     import(href("data/moledet-geography-curriculum.js")),
     import(href("data/science-curriculum.js")),
     import(href("utils/parent-report-language/grade-aware-recommendation-templates.js")),
+    import(href("utils/report-diagnostic-safety-guards.js")),
+    import(href("lib/learning-shared/moledet-geography-subject-id.js")),
   ]);
 
   return {
@@ -80,6 +84,11 @@ async function loadProductModules() {
     MOLEDET_GEOGRAPHY_GRADES: moledetCurriculum.MOLEDET_GEOGRAPHY_GRADES,
     SCIENCE_GRADES: scienceCurriculum.SCIENCE_GRADES,
     GRADE_AWARE_RECOMMENDATION_TEMPLATES: gradeAwareTemplates.GRADE_AWARE_RECOMMENDATION_TEMPLATES,
+    shouldOmitRawDiagnosticRecommendationFallback:
+      reportGuards.shouldOmitRawDiagnosticRecommendationFallback,
+    rectangleAreaBridgeUsesSafeFallbackForVerify:
+      geoDiagBridge.rectangleAreaBridgeUsesSafeFallbackForVerify,
+    moledetSubjectId,
   };
 }
 
@@ -171,9 +180,13 @@ function runChecks(ctx) {
     }
   }
 
-  // GEO-02 — triangle_area missing from spine
+  // GEO-02 — triangle_area missing from spine or wrong grade span
   const triangleSpine = skills.find((s) => s.skill_id === "geometry:kind:triangle_area");
-  if (!triangleSpine) {
+  if (
+    !triangleSpine ||
+    triangleSpine.minGrade > 5 ||
+    triangleSpine.maxGrade < 6
+  ) {
     findings.push(
       finding({
         finding_id: "GEO-02",
@@ -220,56 +233,48 @@ function runChecks(ctx) {
     );
   }
 
-  // GEO-04 — heights_triangle before triangle_area in book order
+  // GEO-04 — official G5 order: heights (§ ד.4) before area formulas (§ ה)
   const heightsIdx = g5Pages.indexOf("heights_triangle");
   const triangleAreaIdx = g5Pages.indexOf("triangle_area");
+  const areaFormulaPages = ["square_area", "triangle_area", "parallelogram_area", "trapezoid_area"];
   if (heightsIdx !== -1) {
-    if (triangleAreaIdx === -1) {
-      findings.push(
-        finding({
-          finding_id: "GEO-04",
-          subject: "geometry",
-          grade: 5,
-          topic: "heights_triangle",
-          product_surface: "learning_book",
-          file_path: "lib/learning-book/geometry-g5-registry.js",
-          current_behavior: `heights_triangle at book index ${heightsIdx} but triangle_area page absent; oracle requires triangle_area before heights (prerequisite_row_ids on math.g5.geometry.heights).`,
-          oracle_status: heightsOracle?.status,
-          evidence_from_code: `heights_triangle index=${heightsIdx}; triangle_area index=-1`,
-          evidence_from_oracle: `math.g5.geometry.heights prerequisite_row_ids includes math.g5.measurement.area_formulas.triangle_area`,
-          classification: "OUT_OF_SEQUENCE",
-          severity: "P1",
-          recommended_action: "Add triangle_area page before heights_triangle batch or reorder after page is authored.",
-          can_implement_immediately: false,
-          source_verification_required: true,
-        })
-      );
-    } else if (heightsIdx < triangleAreaIdx) {
-      findings.push(
-        finding({
-          finding_id: "GEO-04",
-          subject: "geometry",
-          grade: 5,
-          topic: "heights_triangle",
-          product_surface: "learning_book",
-          file_path: "lib/learning-book/geometry-g5-registry.js",
-          current_behavior: `heights_triangle (index ${heightsIdx}) appears before triangle_area (index ${triangleAreaIdx}).`,
-          oracle_status: heightsOracle?.status,
-          evidence_from_code: `GEOMETRY_G5_PAGE_ORDER indices heights=${heightsIdx} triangle_area=${triangleAreaIdx}`,
-          evidence_from_oracle: heightsOracle?.prerequisite_row_ids?.join(", "),
-          classification: "OUT_OF_SEQUENCE",
-          severity: "P1",
-          recommended_action: "Move triangle_area before heights_triangle in G5 book registry.",
-          can_implement_immediately: true,
-          source_verification_required: false,
-        })
-      );
+    for (const pageId of areaFormulaPages) {
+      const areaIdx = g5Pages.indexOf(pageId);
+      if (areaIdx !== -1 && areaIdx < heightsIdx) {
+        findings.push(
+          finding({
+            finding_id: "GEO-04",
+            subject: "geometry",
+            grade: 5,
+            topic: pageId,
+            product_surface: "learning_book",
+            file_path: "lib/learning-book/geometry-g5-registry.js",
+            current_behavior: `${pageId} (index ${areaIdx}) appears before heights_triangle (index ${heightsIdx}); kita5.pdf order is § ד.4 גבהים then § ה. מדידות שטחים.`,
+            oracle_status: heightsOracle?.status,
+            evidence_from_code: `GEOMETRY_G5_PAGE_ORDER indices ${pageId}=${areaIdx} heights_triangle=${heightsIdx}`,
+            evidence_from_oracle: "kita5.pdf § ד.4 before § ה",
+            classification: "OUT_OF_SEQUENCE",
+            severity: "P1",
+            recommended_action: "Move heights batch before area formula pages in G5 book registry.",
+            can_implement_immediately: true,
+            source_verification_required: false,
+          })
+        );
+        break;
+      }
     }
   }
 
-  // GEO-05 — G6 prism_volume_triangle without G5 triangle_area
+  // GEO-05 — G6 prism_volume_triangle without G5 triangle_area (unprotected exposure)
   const g6HasPrismTriangle = modules.GEOMETRY_G6_PAGE_ORDER.includes("prism_volume_triangle");
-  if (g6HasPrismTriangle && !hasG5TriangleArea) {
+  const gatesText = fs.readFileSync(
+    path.join(REPO_ROOT, "utils/geometry-curriculum-gates.js"),
+    "utf8"
+  );
+  const prismGated =
+    gatesText.includes("isPrismVolumeTriangleAllowed") &&
+    gatesText.includes("TRIANGLE_AREA_TEACH_PATH_READY = false");
+  if (g6HasPrismTriangle && !hasG5TriangleArea && !prismGated) {
     findings.push(
       finding({
         finding_id: "GEO-05",
@@ -298,58 +303,66 @@ function runChecks(ctx) {
     "utf8"
   );
   if (labels.geo_area_triangle_formula || labelsText.includes("geo_area_triangle_formula")) {
-    const hasGradeGate = /gradeGate|minGrade|maxGrade|gradeSpan/.test(labelsText);
-    findings.push(
-      finding({
-        finding_id: "GEO-06",
-        subject: "geometry",
-        grade: null,
-        topic: "triangle_area",
-        product_surface: "teacher_classroom_labels",
-        file_path: "lib/classroom-activities/classroom-skill-labels-he.js",
-        current_behavior: `geo_area_triangle_formula label present${hasGradeGate ? " with partial grade hints" : " with no grade gate in file"}.`,
-        oracle_status: triangleOracle?.status,
-        evidence_from_code: 'geo_area_triangle_formula: "שטח משולש"',
-        evidence_from_oracle: `${triangleOracle?.row_id} grade=${oracleTriangleGrade}`,
-        classification: "UNSUPPORTED_REPORT_LABEL",
-        severity: "P0",
-        recommended_action: "Suppress or grade-gate geo_area_triangle_formula for grades below G5.",
-        can_implement_immediately: true,
-        source_verification_required: false,
-      })
-    );
+    const hasGradeGate =
+      labelsText.includes("isTriangleAreaFormulaGradeAllowed") &&
+      labelsText.includes("gradeLevel");
+    if (!hasGradeGate) {
+      findings.push(
+        finding({
+          finding_id: "GEO-06",
+          subject: "geometry",
+          grade: null,
+          topic: "triangle_area",
+          product_surface: "teacher_classroom_labels",
+          file_path: "lib/classroom-activities/classroom-skill-labels-he.js",
+          current_behavior: `geo_area_triangle_formula label present without grade-aware gate via isTriangleAreaFormulaGradeAllowed.`,
+          oracle_status: triangleOracle?.status,
+          evidence_from_code: 'geo_area_triangle_formula: "שטח משולש"',
+          evidence_from_oracle: `${triangleOracle?.row_id} grade=${oracleTriangleGrade}`,
+          classification: "UNSUPPORTED_REPORT_LABEL",
+          severity: "P0",
+          recommended_action: "Suppress or grade-gate geo_area_triangle_formula for grades below G5.",
+          can_implement_immediately: true,
+          source_verification_required: false,
+        })
+      );
+    }
   }
 
-  // GEO-07 — diagnostic bridge triangle_area → geo_area_triangle_formula
+  // GEO-07 — diagnostic bridge triangle_area → geo_area_triangle_formula without grade guard
   if (modules.geoDiagBridgeText.includes("triangle_area:")) {
-    const bridgeHasGradeGate = /gradeGate|minGrade|maxGrade/.test(modules.geoDiagBridgeText);
-    findings.push(
-      finding({
-        finding_id: "GEO-07",
-        subject: "geometry",
-        grade: null,
-        topic: "triangle_area",
-        product_surface: "diagnostic_metadata_bridge",
-        file_path: "utils/geometry-diagnostic-metadata-bridge.js",
-        current_behavior: `BY_KIND.triangle_area maps to diagnosticSkillId geo_area_triangle_formula${bridgeHasGradeGate ? "" : " without grade gate"}.`,
-        oracle_status: triangleOracle?.status,
-        evidence_from_code: "BY_KIND.triangle_area.diagnosticSkillId = geo_area_triangle_formula",
-        evidence_from_oracle: triangleOracle?.row_id,
-        classification: "UNSUPPORTED_TEACHER_ASSIGNMENT",
-        severity: "P0",
-        recommended_action: "Add grade-aware guard in diagnostic bridge for triangle_area kinds below G5.",
-        can_implement_immediately: true,
-        source_verification_required: false,
-      })
+    const bridgeHasGradeGate = modules.geoDiagBridgeText.includes(
+      "isTriangleAreaFormulaGradeAllowed"
     );
+    if (!bridgeHasGradeGate) {
+      findings.push(
+        finding({
+          finding_id: "GEO-07",
+          subject: "geometry",
+          grade: null,
+          topic: "triangle_area",
+          product_surface: "diagnostic_metadata_bridge",
+          file_path: "utils/geometry-diagnostic-metadata-bridge.js",
+          current_behavior: `BY_KIND.triangle_area maps to diagnosticSkillId geo_area_triangle_formula without grade guard in enrichGeometryProceduralParams.`,
+          oracle_status: triangleOracle?.status,
+          evidence_from_code: "BY_KIND.triangle_area.diagnosticSkillId = geo_area_triangle_formula",
+          evidence_from_oracle: triangleOracle?.row_id,
+          classification: "UNSUPPORTED_TEACHER_ASSIGNMENT",
+          severity: "P0",
+          recommended_action: "Add grade-aware guard in diagnostic bridge for triangle_area kinds below G5.",
+          can_implement_immediately: true,
+          source_verification_required: false,
+        })
+      );
+    }
   }
 
-  // GEO-08 — G08 indicators include triangle_area for all grades
+  // GEO-08 — G08 indicators include triangle_area for all grades (no grade-aware filter)
   const g08Match = modules.geoTaxOrderText.match(/const G08_INDICATORS = \[([\s\S]*?)\];/);
   const g08Indicators = g08Match
     ? [...g08Match[1].matchAll(/"([^"]+)"/g)].map((m) => m[1])
     : [];
-  if (g08Indicators.includes("triangle_area")) {
+  if (g08Indicators.includes("triangle_area") && !modules.geoTaxOrderText.includes("g08IndicatorsForRow")) {
     findings.push(
       finding({
         finding_id: "GEO-08",
@@ -374,7 +387,15 @@ function runChecks(ctx) {
   // GEO-09 — rectangle_area in bridge but not spine / bindings
   const rectBinding = modules.geometryKindGradeSpan("rectangle_area");
   const rectSpine = skills.find((s) => s.skill_id?.includes("rectangle_area"));
-  if (modules.geoDiagBridgeText.includes("rectangle_area:") && !rectSpine && rectBinding === null) {
+  const rectBridgeGuarded =
+    typeof modules.rectangleAreaBridgeUsesSafeFallbackForVerify === "function" &&
+    modules.rectangleAreaBridgeUsesSafeFallbackForVerify();
+  if (
+    modules.geoDiagBridgeText.includes("rectangle_area:") &&
+    !rectSpine &&
+    rectBinding === null &&
+    !rectBridgeGuarded
+  ) {
     findings.push(
       finding({
         finding_id: "GEO-09",
@@ -487,7 +508,10 @@ function runChecks(ctx) {
   // SCI-03 — missing S-05, S-06, S-08 in grade-aware science templates
   const scienceTemplates = modules.GRADE_AWARE_RECOMMENDATION_TEMPLATES?.science ?? {};
   for (const taxId of ["S-05", "S-06", "S-08"]) {
-    if (!scienceTemplates[taxId]) {
+    const guardActive =
+      typeof modules.shouldOmitRawDiagnosticRecommendationFallback === "function" &&
+      modules.shouldOmitRawDiagnosticRecommendationFallback("science", taxId);
+    if (!scienceTemplates[taxId] && !guardActive) {
       findings.push(
         finding({
           finding_id: `SCI-03-${taxId}`,
@@ -560,8 +584,16 @@ function runChecks(ctx) {
     );
   }
 
-  // MOL-03 — spine subject geography vs oracle moledet/geography split
-  const geoSpineCount = skills.filter((s) => s.subject === "geography").length;
+  // MOL-03 — spine moledet/geography subject split vs oracle G2–4 / G5–6
+  const moledetSourceSkills = skills.filter((s) =>
+    String(s.source || "").includes("moledet-geography-curriculum.js")
+  );
+  const g234SpineMisaligned = moledetSourceSkills.filter(
+    (s) => s.minGrade >= 2 && s.maxGrade <= 4 && s.subject !== "moledet"
+  );
+  const g56SpineMisaligned = moledetSourceSkills.filter(
+    (s) => s.minGrade >= 5 && s.maxGrade <= 6 && s.subject !== "geography"
+  );
   const moledetOracleG234 = filterOracleRows(
     rows,
     (r) => r.subject === "moledet" && r.grade >= 2 && r.grade <= 4
@@ -570,7 +602,10 @@ function runChecks(ctx) {
     rows,
     (r) => r.subject === "geography" && r.grade >= 5 && r.grade <= 6
   );
-  if (geoSpineCount > 0 && (moledetOracleG234.length || geographyOracleG56.length)) {
+  if (
+    (g234SpineMisaligned.length > 0 && moledetOracleG234.length > 0) ||
+    (g56SpineMisaligned.length > 0 && geographyOracleG56.length > 0)
+  ) {
     findings.push(
       finding({
         finding_id: "MOL-03",
@@ -579,28 +614,35 @@ function runChecks(ctx) {
         topic: "subject_taxonomy",
         product_surface: "curriculum_spine",
         file_path: "data/curriculum-spine/v1/skills.json",
-        current_behavior: `All ${geoSpineCount} moledet-aligned skills use subject "geography"; oracle uses "moledet" G2–4 and "geography" G5–6.`,
+        current_behavior: `Moledet curriculum spine misaligned: G2–4 non-moledet=${g234SpineMisaligned.length}; G5–6 non-geography=${g56SpineMisaligned.length}.`,
         oracle_status: "split_subject_model",
-        evidence_from_code: 'skills.json subject="geography" for moledet content',
+        evidence_from_code: `g234 misaligned=${g234SpineMisaligned.length}; g56 misaligned=${g56SpineMisaligned.length}`,
         evidence_from_oracle: `moledet oracle rows G2-4=${moledetOracleG234.length}; geography oracle G5-6=${geographyOracleG56.length}`,
         classification: "NEEDS_OWNER_DECISION",
         severity: "P2",
-        recommended_action: "Owner decision: unify subject id (geography vs moledet) across spine, oracle, and reports.",
-        can_implement_immediately: false,
-        source_verification_required: true,
+        recommended_action: "Align spine subject moledet (G2–4) and geography (G5–6) with oracle bands.",
+        can_implement_immediately: true,
+        source_verification_required: false,
       })
     );
   }
 
-  // MOL-04 — moledet-geography vs moledet_geography ID split
-  const parentReportText = fs.readFileSync(path.join(REPO_ROOT, "pages/learning/parent-report.js"), "utf8");
-  const masterText = fs.readFileSync(
-    path.join(REPO_ROOT, "pages/learning/moledet-geography-master.js"),
-    "utf8"
-  );
-  const hyphenCount = (parentReportText.match(/moledet-geography/g) ?? []).length;
-  const underscoreCount = (masterText.match(/moledet_geography/g) ?? []).length;
-  if (hyphenCount > 0 && underscoreCount > 0) {
+  // MOL-04 — moledet-geography vs moledet_geography alias wiring
+  const {
+    assertMoledetGeographySubjectAliasesConfigured,
+    MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID,
+    MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
+  } = modules.moledetSubjectId;
+  const mol04WiringFiles = [
+    "pages/learning/parent-report.js",
+    "pages/learning/moledet-geography-master.js",
+    "lib/learning-supabase/learning-activity.js",
+  ];
+  const mol04Unwired = mol04WiringFiles.filter((rel) => {
+    const text = fs.readFileSync(path.join(REPO_ROOT, rel), "utf8");
+    return !text.includes("moledet-geography-subject-id");
+  });
+  if (!assertMoledetGeographySubjectAliasesConfigured() || mol04Unwired.length > 0) {
     findings.push(
       finding({
         finding_id: "MOL-04",
@@ -608,15 +650,15 @@ function runChecks(ctx) {
         grade: null,
         topic: "subject_id",
         product_surface: "reporting_and_runtime",
-        file_path: "pages/learning/parent-report.js",
-        current_behavior: `Parent/report surfaces use "moledet-geography" (${hyphenCount} refs); master/teacher flows use "moledet_geography" (${underscoreCount} refs).`,
+        file_path: "lib/learning-shared/moledet-geography-subject-id.js",
+        current_behavior: `Alias module ok=${assertMoledetGeographySubjectAliasesConfigured()}; unwired surfaces=${mol04Unwired.join(", ") || "none"}. Canonical activity=${MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID}; report=${MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID}.`,
         oracle_status: "moledet-geography partial uses hyphen",
-        evidence_from_code: "parent-report.js moledet-geography vs moledet-geography-master.js moledet_geography",
+        evidence_from_code: `unwired=${mol04Unwired.length}; aliasOk=${assertMoledetGeographySubjectAliasesConfigured()}`,
         evidence_from_oracle: "partial_sources partial=moledet-geography",
         classification: "NEEDS_OWNER_DECISION",
         severity: "P2",
         recommended_action: "Pick canonical subject id and alias across parent, teacher, school, and spine layers.",
-        can_implement_immediately: false,
+        can_implement_immediately: true,
         source_verification_required: false,
       })
     );

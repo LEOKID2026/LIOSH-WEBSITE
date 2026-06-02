@@ -6,7 +6,7 @@ import TeacherClassActivitiesNav from "../../../../../components/teacher-portal/
 import { getLearningSupabaseBrowserClient } from "../../../../../lib/learning-supabase/client";
 import { resolveTeacherAccessToken } from "../../../../../lib/teacher-portal/use-teacher-portal-session";
 import { teacherAuthFetch } from "../../../../../lib/teacher-portal/teacher-ui.he.js";
-import { REPORT_SUBJECTS, subjectLabelHe } from "../../../../../lib/teacher-portal/teacher-ui.he.js";
+import { REPORT_SUBJECTS, subjectLabelHe, activitySubjectsForGrade } from "../../../../../lib/teacher-portal/teacher-ui.he.js";
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../../../../lib/classroom-activities/classroom-activities-preview.js";
 import { generateActivityQuestionSetClient } from "../../../../../lib/classroom-activities/generate-activity-questions-client.js";
 import { activityModeLabelHe } from "../../../../../lib/classroom-activities/classroom-activities-labels.client.js";
@@ -16,12 +16,12 @@ import {
   resolveCanonicalGradeKey,
 } from "../../../../../lib/teacher-portal/teacher-class-grade.js";
 import {
-  MOLEDET_TOPIC_OPTIONS,
   defaultTopicForSubject,
   englishTopicOptionsForGrade,
   geometryTopicOptionsForGrade,
   hebrewTopicOptionsForGrade,
   mathTopicOptionsForGrade,
+  moledetGeographyTopicOptionsForGrade,
   scienceTopicOptionsForGrade,
   topicOptionsForSubject,
 } from "../../../../../lib/teacher-portal/teacher-class-topic-options.js";
@@ -126,6 +126,17 @@ export default function TeacherNewActivityPage({ classId }) {
       setTopic("");
     }
   }, [subject, gradeLevel, topic, topicOpts]);
+
+  useEffect(() => {
+    if (activitySubjectsForGrade(gradeLevel).includes(subject)) return;
+    const next = activitySubjectsForGrade(gradeLevel).find((s) =>
+      ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s)
+    );
+    if (next) {
+      setSubject(next);
+      setTopic(defaultTopicForSubject(next, gradeLevel));
+    }
+  }, [gradeLevel, subject]);
 
   const runPreview = useCallback(async () => {
     setBusy(true);
@@ -264,7 +275,9 @@ export default function TeacherNewActivityPage({ classId }) {
                 setTopic(defaultTopicForSubject(next, gradeLevel));
               }}
             >
-              {REPORT_SUBJECTS.filter((s) => ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s)).map((s) => (
+              {activitySubjectsForGrade(gradeLevel, REPORT_SUBJECTS)
+                .filter((s) => ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS.has(s))
+                .map((s) => (
                 <option key={s} value={s}>
                   {subjectLabelHe(s)}
                 </option>
@@ -278,22 +291,10 @@ export default function TeacherNewActivityPage({ classId }) {
               <p className="mt-1 text-amber-200 text-sm rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2">
                 לא נמצאו נושאים זמינים לכיתה זו במקצוע מדעים.
               </p>
-            ) : subject !== "science" && topicOpts.length === 0 && subject !== "moledet_geography" ? (
+            ) : subject !== "science" && topicOpts.length === 0 ? (
               <p className="mt-1 text-amber-200 text-sm rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2">
                 לא נמצאו נושאים זמינים עבור מקצוע ורמת כיתה אלו.
               </p>
-            ) : subject === "moledet_geography" ? (
-              <select
-                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-              >
-                {MOLEDET_TOPIC_OPTIONS.map(({ key, label }) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
             ) : subject === "geometry" ? (
               <select
                 className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"

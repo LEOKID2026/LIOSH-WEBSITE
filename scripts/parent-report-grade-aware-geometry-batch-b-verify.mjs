@@ -1,7 +1,25 @@
 /**
  * Phase 3-B2 — Geometry templates Batch B (G-01, G-03, G-08 bucketOverrides) + routing order smoke.
- *   npx tsx scripts/parent-report-grade-aware-geometry-batch-b-verify.mjs
+ * Run: node scripts/parent-report-grade-aware-geometry-batch-b-verify.mjs
+ *      npx tsx scripts/parent-report-grade-aware-geometry-batch-b-verify.mjs
  */
+import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+
+const __filename = fileURLToPath(import.meta.url);
+const ROOT = resolve(dirname(__filename), "..");
+
+if (process.env.LIOSH_TSX_RELAUNCH !== "1") {
+  const tsxCli = createRequire(import.meta.url).resolve("tsx/cli");
+  const r = spawnSync(process.execPath, [tsxCli, __filename, ...process.argv.slice(2)], {
+    stdio: "inherit",
+    cwd: ROOT,
+    env: { ...process.env, LIOSH_TSX_RELAUNCH: "1" },
+  });
+  process.exit(r.status ?? 1);
+}
 
 const [resolverMod, recMod, templatesMod, detailedMod, v2Mod, truthMod, geomOrderMod] = await Promise.all([
   import("../utils/parent-report-language/grade-aware-recommendation-resolver.js"),

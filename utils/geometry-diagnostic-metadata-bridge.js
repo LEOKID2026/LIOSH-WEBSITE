@@ -3,6 +3,12 @@
  * Enriches generator `params` only — no stem/answer changes.
  */
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
+import {
+  isTriangleAreaFormulaGradeAllowed,
+  isTriangleAreaFormulaKind,
+  isRectangleAreaDiagnosticKind,
+  isRectangleAreaSpineRegistered,
+} from "./geometry-curriculum-gates.js";
 
 /** @typedef {{ diagnosticSkillId: string, conceptTag: string, expectedErrorTags: string[], probePower?: string }} DiagnosticContract */
 
@@ -354,6 +360,32 @@ const BY_TOPIC_FALLBACK = {
   },
 };
 
+/** Generic area diagnostic when rectangle-specific spine skill is not registered. */
+const GENERIC_AREA_PROCEDURAL = {
+  diagnosticSkillId: "geo_area_procedural",
+  conceptTag: "area_procedural",
+  expectedErrorTags: ["area_procedural", "formula_selection_error", "measurement_error"],
+};
+
+/**
+ * @param {DiagnosticContract | null} contract
+ * @param {{ kind?: string, patternFamily?: string }} ctx
+ * @returns {DiagnosticContract | null}
+ */
+function suppressUnspinedRectangleAreaSkill(contract, ctx = {}) {
+  if (!contract || isRectangleAreaSpineRegistered()) return contract;
+  if (contract.diagnosticSkillId !== "geo_rect_area_plan") return contract;
+  const kind = String(ctx.kind || "");
+  const pf = String(ctx.patternFamily || "");
+  if (isRectangleAreaDiagnosticKind(kind) || pf.startsWith("area_rectangle")) {
+    return {
+      ...GENERIC_AREA_PROCEDURAL,
+      conceptTag: kind ? `${kind.replace(/^story_/, "")}_procedural` : "area_procedural",
+    };
+  }
+  return contract;
+}
+
 /**
  * @param {string} patternFamily
  * @param {string} kind
@@ -367,7 +399,10 @@ function resolveByPatternFamily(patternFamily, kind) {
     return BY_KIND.story_square_area || BY_KIND.square_area;
   }
   if (pf.startsWith("area_rectangle_story") || pf.startsWith("area_rectangle_")) {
-    return BY_KIND.story_rectangle_area || BY_KIND.rectangle_area;
+    return suppressUnspinedRectangleAreaSkill(
+      BY_KIND.story_rectangle_area || BY_KIND.rectangle_area,
+      { kind, patternFamily: pf }
+    );
   }
   if (pf.startsWith("area_")) {
     return BY_TOPIC_FALLBACK.area;
@@ -427,6 +462,25 @@ export function enrichGeometryProceduralParams(params, ctx = {}) {
     BY_TOPIC_FALLBACK[topic] ||
     null;
 
+  const gradeKey = ctx.gradeKey ?? null;
+  if (
+    contract &&
+    isTriangleAreaFormulaKind(kind) &&
+    !isTriangleAreaFormulaGradeAllowed(gradeKey)
+  ) {
+    contract = BY_TOPIC_FALLBACK[topic] || {
+      diagnosticSkillId: `geo_${topic || "general"}_procedural`,
+      conceptTag: kind || `${topic}_procedural`,
+      expectedErrorTags: [
+        kind || `${topic}_procedural`,
+        "formula_selection_error",
+        "measurement_error",
+      ],
+    };
+  }
+
+  contract = suppressUnspinedRectangleAreaSkill(contract, { kind, patternFamily });
+
   if (!contract) {
     contract = {
       diagnosticSkillId: `geo_${topic || "general"}_procedural`,
@@ -454,4 +508,13 @@ export function enrichGeometryProceduralParams(params, ctx = {}) {
     expectedErrorTypes,
     probePower: contract.probePower || "medium",
   });
+}
+
+/** Verify hook: rectangle_area enrich must not emit geo_rect_area_plan without spine. */
+export function rectangleAreaBridgeUsesSafeFallbackForVerify() {
+  const p = enrichGeometryProceduralParams(
+    { kind: "rectangle_area", length: 4, width: 3 },
+    { topic: "area", gradeKey: "g3", levelKey: "easy" }
+  );
+  return p.diagnosticSkillId === "geo_area_procedural";
 }

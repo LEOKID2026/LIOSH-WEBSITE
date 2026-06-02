@@ -14,6 +14,10 @@ import { ParentReportInsight } from "../../components/ParentReportInsight.jsx";
 import { ParentDiagnosticExplanationBlock } from "../../components/parent-diagnostic-explanation-block.jsx";
 import ParentReportParentSections from "../../components/parent/ParentReportParentSections.jsx";
 import ParentReportDataHealthNote from "../../components/parent/ParentReportDataHealthNote.jsx";
+import {
+  MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
+  moledetGeographyReportTopicKeyPrefix,
+} from "../../lib/learning-shared/moledet-geography-subject-id.js";
 
 const ParentCopilotShellLazy = dynamic(
   () => import("../../components/parent-copilot/parent-copilot-shell.jsx"),
@@ -104,7 +108,7 @@ function parentReportChartLabelFromAllItemKey(key, data) {
               ? getScienceTopicName(b)
               : subjectId === "hebrew"
                 ? getHebrewTopicName(b)
-                : subjectId === "moledet-geography"
+                : subjectId === MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID
                   ? getMoledetGeographyTopicName(b)
                   : b;
     return normalizeParentFacingHe(String(mapped || b || "").trim());
@@ -141,11 +145,12 @@ function parentReportChartLabelFromAllItemKey(key, data) {
     const fallbackBucket = sep === -1 ? rest : rest.slice(0, sep);
     return labelFrom("hebrew", bucketKey || displayName || fallbackBucket);
   }
-  if (key.startsWith("moledet-geography_")) {
-    const rest = key.slice("moledet-geography_".length);
+  const mgPrefix = moledetGeographyReportTopicKeyPrefix();
+  if (key.startsWith(mgPrefix)) {
+    const rest = key.slice(mgPrefix.length);
     const sep = rest.indexOf("\u0001");
     const fallbackBucket = sep === -1 ? rest : rest.slice(0, sep);
-    return labelFrom("moledet-geography", bucketKey || displayName || fallbackBucket);
+    return labelFrom(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, bucketKey || displayName || fallbackBucket);
   }
   if (displayName) return normalizeParentFacingHe(displayName);
   return normalizeParentFacingHe(key);
@@ -167,7 +172,7 @@ function subjectTopicLabelForParentHe(subjectId, data, fallbackTopic) {
             ? getScienceTopicName(bucket || displayName)
             : subjectId === "hebrew"
               ? getHebrewTopicName(bucket || displayName)
-              : subjectId === "moledet-geography"
+              : subjectId === MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID
                 ? getMoledetGeographyTopicName(bucket || displayName)
                 : displayName || bucket;
   return normalizeParentFacingHe(String(raw || displayName || bucket || "").trim());
@@ -293,7 +298,7 @@ function chartSubjectIdFromKeyPrefix(keyPrefix) {
   if (String(keyPrefix || "").startsWith("english_")) return "english";
   if (String(keyPrefix || "").startsWith("science_")) return "science";
   if (String(keyPrefix || "").startsWith("hebrew_")) return "hebrew";
-  if (String(keyPrefix || "").startsWith("moledet")) return "moledet-geography";
+  if (String(keyPrefix || "").startsWith("moledet")) return MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID;
   return "math";
 }
 
@@ -339,7 +344,7 @@ const PATTERN_DIAGNOSTIC_SUBJECT_ORDER = [
   "english",
   "science",
   "hebrew",
-  "moledet-geography",
+  MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID,
 ];
 
 const MAX_DIAGNOSTIC_EVIDENCE_CHARS = 200;
@@ -568,7 +573,7 @@ const TOPIC_BAR_SUBJECT_CARDS = [
   {
     title: "מולדת וגאוגרפיה — דיוק לפי נושא",
     mapKey: "moledetGeographyTopics",
-    prefix: "moledet-geography_",
+    prefix: moledetGeographyReportTopicKeyPrefix(),
     border: "border-cyan-400/25",
   },
 ];
@@ -2861,7 +2866,7 @@ export default function ParentReport() {
                         <tr key={topic} className="border-b border-white/10">
                           <td className="text-right align-top py-1.5 px-1 min-w-0">
                             <span className="text-right break-words">
-                              {subjectTopicLabelForParentHe("moledet-geography", data, topic)}
+                              {subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
@@ -2919,7 +2924,7 @@ export default function ParentReport() {
                   .sort(([_, a], [__, b]) => b.questions - a.questions)
                   .map(([topic, data]) => (
                     <div key={topic} className="bg-black/40 border border-white/20 rounded-lg p-3">
-                      <div className="font-semibold text-sm mb-2 text-cyan-400">{subjectTopicLabelForParentHe("moledet-geography", data, topic)}</div>
+                      <div className="font-semibold text-sm mb-2 text-cyan-400">{subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
                           <span className="text-white/60">רמה:</span> <span className="text-white/90">{data.level || "לא זמין"}</span>

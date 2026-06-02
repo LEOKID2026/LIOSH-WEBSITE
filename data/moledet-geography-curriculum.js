@@ -12,7 +12,7 @@ export const MOLEDET_GEOGRAPHY_GRADES = {
     key: "g1",
     name: "כיתה א׳",
     stage: "קהילה ומשפחה",
-    topics: ["homeland", "community", "citizenship", "geography", "values", "maps"],
+    topics: [], // G1 not in official MoE moledet/geography band (oracle not_in_grade); content files retained
     curriculum: {
       summary: "מהי משפחה? תפקידי המשפחה. הכיתה והבית ספר – קהילה קרובה. חגים ומועדים.",
       focus: [

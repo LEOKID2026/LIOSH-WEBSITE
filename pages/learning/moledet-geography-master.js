@@ -12,6 +12,14 @@ import {
   STORAGE_KEY,
 } from "../../utils/moledet-geography-constants";
 import {
+  clampMoledetGeographyGradeNumber,
+  isMoledetGeographyGradeAllowed,
+  MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE,
+} from "../../utils/moledet-geography-curriculum-gates.js";
+import { MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID } from "../../lib/learning-shared/moledet-geography-subject-id.js";
+
+const MG_SUBJECT = MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID;
+import {
   getLevelConfig,
   getLevelForGrade,
   buildTop10ByScore,
@@ -144,7 +152,7 @@ const REFERENCE_CATEGORIES = {
 const REFERENCE_CATEGORY_KEYS = Object.keys(REFERENCE_CATEGORIES);
 
 /** Matches `utils/math-report-generator.js` and parent-report mistake readers. */
-const MOLEDET_GEOGRAPHY_MISTAKES_KEY = "mleo_moledet_geography_mistakes";
+const MOLEDET_GEOGRAPHY_MISTAKES_KEY = `mleo_${MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID}_mistakes`;
 
 export default function MoledetGeographyMaster() {
   useIOSViewportFix();
@@ -268,7 +276,7 @@ export default function MoledetGeographyMaster() {
     (questionObj) => {
       if (!questionObj) return;
       beginMasterQuestionLedger(questionTimeLedgerRef, {
-        subjectId: "moledet_geography",
+        subjectId: MG_SUBJECT,
         mode,
         question: questionObj,
       });
@@ -593,11 +601,13 @@ export default function MoledetGeographyMaster() {
         }
         const gradeKey = normalizeGradeLevelToKey(student.grade_level);
         if (gradeKey) {
-          setGrade(gradeKey);
           const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
-          if (gradeNumberFromDb) {
-            setGradeNumber(gradeNumberFromDb);
-          }
+          const clampedNum =
+            gradeNumberFromDb != null
+              ? clampMoledetGeographyGradeNumber(gradeNumberFromDb)
+              : MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE;
+          setGrade(`g${clampedNum}`);
+          setGradeNumber(clampedNum);
         }
       })
       .catch(() => {
@@ -694,8 +704,8 @@ export default function MoledetGeographyMaster() {
           return;
         }
         learningProfileStudentIdRef.current = profile.studentId;
-        const acc = mapSubjectAccountViewFromStudentProfile(profile, "moledet_geography");
-        const sub = profile.row.subjects?.moledet_geography;
+        const acc = mapSubjectAccountViewFromStudentProfile(profile, MG_SUBJECT);
+        const sub = profile.row.subjects?.[MG_SUBJECT];
         if (sub && typeof sub === "object") {
           const ps = sub.progressStore;
           if (ps && typeof ps === "object") {
@@ -713,18 +723,18 @@ export default function MoledetGeographyMaster() {
           if (Array.isArray(sub.mistakes)) setMistakes(sub.mistakes);
         }
         const ch = profile.row.challenges;
-        const { daily: chDaily, weekly: chWeekly } = pickSubjectChallengeBlobs(ch, "moledet_geography");
+        const { daily: chDaily, weekly: chWeekly } = pickSubjectChallengeBlobs(ch, MG_SUBJECT);
         if (chDaily) setDailyChallenge(chDaily);
         if (chWeekly) setWeeklyChallenge(chWeekly);
         setServerAccountSubjectAccuracyPct(
-          accountAccuracyDisplayFromDerived(profile.derived, "moledet_geography")
+          accountAccuracyDisplayFromDerived(profile.derived, MG_SUBJECT)
         );
-        const st = profile.row.streaks?.moledet_geography;
+        const st = profile.row.streaks?.[MG_SUBJECT];
         if (st && typeof st === "object") setDailyStreak(st);
         applyLearningProfileAvatarRowToPlayerState(profile.row.profile, setPlayerAvatar, setPlayerAvatarImage);
         learningProfileHydratedRef.current = true;
         try {
-          const pr = profile.row.subjects?.moledet_geography?.progressStore?.progress;
+          const pr = profile.row.subjects?.[MG_SUBJECT]?.progressStore?.progress;
           progressStringRef.current = JSON.stringify(pr || {});
         } catch {
           progressStringRef.current = "";
@@ -752,15 +762,15 @@ export default function MoledetGeographyMaster() {
     debounceStudentLearningProfilePatch("moledet-geography-master-sync", () => {
       const base = {
         subjects: {
-          moledet_geography: {
+          [MG_SUBJECT]: {
             progressStore,
             scoresStore: scoresStoreRef.current,
             mistakes,
             intel: {},
           },
         },
-        challenges: subjectChallengePatch("moledet_geography", dailyChallenge, weeklyChallenge),
-        streaks: { moledet_geography: dailyStreak },
+        challenges: subjectChallengePatch(MG_SUBJECT, dailyChallenge, weeklyChallenge),
+        streaks: { [MG_SUBJECT]: dailyStreak },
       };
       if (!playerAvatarImage) {
         return patchStudentLearningProfile({
@@ -809,7 +819,7 @@ export default function MoledetGeographyMaster() {
       const { maxScore, maxStreak } = maxBestForPlayerInKey(saved, key, playerName);
       setBestScore(maxScore);
       setBestStreak(maxStreak);
-      logAccountTileSync("moledet_geography", {
+      logAccountTileSync(MG_SUBJECT, {
         tile: "personalBests",
         level,
         operation,
@@ -983,12 +993,12 @@ export default function MoledetGeographyMaster() {
       }
 
       if (learningProfileStudentIdRef.current && learningProfileHydratedRef.current) {
-        const patchBody = { subjects: { moledet_geography: { scoresStore: saved } } };
+        const patchBody = { subjects: { [MG_SUBJECT]: { scoresStore: saved } } };
         void patchStudentLearningProfile(patchBody)
           .then((json) => {
-            const acc = accountAccuracyDisplayFromDerived(json?.derived, "moledet_geography");
+            const acc = accountAccuracyDisplayFromDerived(json?.derived, MG_SUBJECT);
             if (acc != null) setServerAccountSubjectAccuracyPct(acc);
-            logAccountTileSync("moledet_geography", {
+            logAccountTileSync(MG_SUBJECT, {
               tile: "finishPatch",
               responseAccuracy: acc,
               displayedBestScore: maxScore,
@@ -1238,7 +1248,7 @@ export default function MoledetGeographyMaster() {
       durationMinutes,
       answered,
       {
-      subject: "moledet_geography",
+      subject: MG_SUBJECT,
       topic:
         moledetTrackingTopicKeyRef.current ??
         currentQuestion?.topic ??
@@ -1254,7 +1264,7 @@ export default function MoledetGeographyMaster() {
     void refreshStudentLearningProfileAfterSession().then((p) => {
       if (p?.ok) {
         refreshMonthlyPersistenceView();
-        const acc = accountAccuracyDisplayFromDerived(p.derived, "moledet_geography");
+        const acc = accountAccuracyDisplayFromDerived(p.derived, MG_SUBJECT);
         if (acc != null) setServerAccountSubjectAccuracyPct(acc);
       }
     });
@@ -1280,7 +1290,7 @@ export default function MoledetGeographyMaster() {
         scheduleAdaptivePlannerRecommendation(
           {
             learningSessionId: sessionIdForFinish,
-            subject: "moledet_geography",
+            subject: MG_SUBJECT,
             grade,
             topic:
               moledetTrackingTopicKeyRef.current ??
@@ -1320,7 +1330,7 @@ export default function MoledetGeographyMaster() {
     };
     const plannerExtra = plannerNextSessionClientMetaRef.current;
     return {
-      subject: "moledet_geography",
+      subject: MG_SUBJECT,
       topic: String(
         moledetTrackingTopicKeyRef.current ||
           currentQuestion?.topic ||
@@ -1378,7 +1388,7 @@ export default function MoledetGeographyMaster() {
         if (!learningSessionId) return;
         return saveLearningAnswer({
           learningSessionId,
-          subject: "moledet_geography",
+          subject: MG_SUBJECT,
           topic: String(question?.topic || question?.operation || operation || "homeland"),
           questionId,
           questionFingerprint,
@@ -2090,7 +2100,7 @@ export default function MoledetGeographyMaster() {
   const subjectView = useMemo(
     () =>
       buildStudentSubjectDashboardView({
-        subject: "moledet_geography",
+        subject: MG_SUBJECT,
         studentId: profileSnap?.studentId ?? "",
         profile: profileSnap,
         derived: profileSnap?.derived,
@@ -2144,7 +2154,7 @@ export default function MoledetGeographyMaster() {
   );
 
   useEffect(() => {
-    logStudentSubjectDashboardDiagnostics("moledet_geography", subjectView, {
+    logStudentSubjectDashboardDiagnostics(MG_SUBJECT, subjectView, {
       hydrationComplete: !!learningProfileHydratedRef.current,
     });
   }, [subjectView, learningProfileHydrationTick]);
@@ -2856,7 +2866,9 @@ export default function MoledetGeographyMaster() {
                     }}
                     className="h-10 md:h-11 shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap"
                   >
-                    {[1, 2, 3, 4, 5, 6].map((g) => (
+                    {[1, 2, 3, 4, 5, 6]
+                      .filter((g) => g >= MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE)
+                      .map((g) => (
                       <option key={g} value={g}>
                         {`כיתה ${["א","ב","ג","ד","ה","ו"][g - 1]}`}
                       </option>
@@ -2954,16 +2966,16 @@ export default function MoledetGeographyMaster() {
                             if (!p?.ok) return;
                             const { daily, weekly } = pickSubjectChallengeBlobs(
                               p.row.challenges,
-                              "moledet_geography"
+                              MG_SUBJECT
                             );
                             if (daily) setDailyChallenge(daily);
                             if (weekly) setWeeklyChallenge(weekly);
                             const acc = accountAccuracyDisplayFromDerived(
                               p.derived,
-                              "moledet_geography"
+                              MG_SUBJECT
                             );
                             if (acc != null) setServerAccountSubjectAccuracyPct(acc);
-                            logAccountTileSync("moledet_geography", { tile: "challengesPrefetch" });
+                            logAccountTileSync(MG_SUBJECT, { tile: "challengesPrefetch" });
                           })
                           .finally(() => setShowDailyChallenge(true));
                       }}

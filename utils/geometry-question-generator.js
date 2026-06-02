@@ -2,6 +2,10 @@
 
 import { GRADES, PI, getShapesForTopic } from "./geometry-constants.js";
 import {
+  isPrismVolumeTriangleAllowed,
+  isTriangleAreaFormulaGradeAllowed,
+} from "./geometry-curriculum-gates.js";
+import {
   pickGeometryConceptualQuestion,
   geometryConceptualProbability,
 } from "./geometry-conceptual-bank.js";
@@ -387,7 +391,13 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     }
   }
 
-  const availableShapes = getShapesForTopic(gradeKey, selectedTopic);
+  const availableShapesRaw = getShapesForTopic(gradeKey, selectedTopic);
+  const availableShapes = (availableShapesRaw || []).filter((shape) => {
+    if (selectedTopic === "area" && shape === "triangle") {
+      return isTriangleAreaFormulaGradeAllowed(gradeKey);
+    }
+    return true;
+  });
   
   // אם אין צורות זמינות, נחזיר שאלה ברירת מחדל
   if (!availableShapes || availableShapes.length === 0) {
@@ -1033,10 +1043,11 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
 
         case "prism": {
           // נפח מנסרה = שטח בסיס × גובה
-          // נשתמש במנסרה עם בסיס משולש או מלבני
-          const baseType = Math.random() < 0.5 ? "triangle" : "rectangle";
           const height = Math.floor(Math.random() * level.maxSide) + 1;
-          
+          const trianglePrismOk = isPrismVolumeTriangleAllowed();
+          const baseType =
+            trianglePrismOk && Math.random() < 0.5 ? "triangle" : "rectangle";
+
           if (baseType === "triangle") {
             const base = Math.floor(Math.random() * (level.maxSide / 2)) + 1;
             const baseHeight = Math.floor(Math.random() * (level.maxSide / 2)) + 1;

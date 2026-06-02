@@ -162,7 +162,7 @@ export const GRADES = {
   },
   g6: {
     name: "כיתה ו'",
-    topics: ["solids", "circles", "volume", "area", "perimeter", "angles", "triangles", "symmetry", "pythagoras", "mixed"], // גופים, מעגל ועיגול, חישובי נפחים, שטח, היקף, זוויות, משולשים, סימטרייה, פיתגורס, ערבוב
+    topics: ["solids", "circles", "volume", "area", "perimeter", "angles", "triangles", "pythagoras", "mixed"], // גופים, מעגל ועיגול, חישובי נפחים, שטח, היקף, זוויות, משולשים, פיתגורס, ערבוב (symmetry G4 per oracle)
     shapes: ["square", "rectangle", "triangle", "circle", "parallelogram", "trapezoid", "cylinder", "sphere", "cube", "rectangular_prism", "pyramid", "cone", "prism"],
   },
 };
@@ -177,8 +177,8 @@ export const TOPIC_SHAPES = {
   },
   area: {
     g2: ["square", "rectangle"],
-    g3: ["square", "rectangle", "triangle"], // כיתה ג' - מתווסף משולש
-    g4: ["square", "rectangle", "triangle"],
+    g3: ["square", "rectangle"], // triangle area formula gated to G5+ (geometry-curriculum-gates.js)
+    g4: ["square", "rectangle"],
     g5: ["square", "rectangle", "triangle", "parallelogram", "trapezoid"],
     g6: ["square", "rectangle", "triangle", "parallelogram", "trapezoid", "circle"],
   },

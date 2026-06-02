@@ -7,6 +7,10 @@
  * Row bucket/topic keys are excluded from the routing haystack so literal bucket names do not dominate.
  * Never removes candidates; only reorders when both conflict ids are present.
  */
+import {
+  parseGeometryGateGrade,
+  TRIANGLE_AREA_FORMULA_MIN_GRADE,
+} from "../geometry-curriculum-gates.js";
 
 /** Longer phrases first to reduce redundant double-counting on the same haystack. */
 const G01_INDICATORS = [
@@ -54,6 +58,32 @@ const G08_INDICATORS = [
   "formula",
   "leg",
 ];
+
+const G08_FORMULA_INDICATORS = new Set([
+  "formula_pipeline",
+  "substitute_formula",
+  "advanced_area",
+  "triangle_area",
+  "area_formula",
+  "formula",
+]);
+
+/**
+ * @param {unknown} row
+ * @returns {string[]}
+ */
+function g08IndicatorsForRow(row) {
+  const n = parseGeometryGateGrade(
+    row && typeof row === "object"
+      ? /** @type {Record<string, unknown>} */ (row).gradeKey ??
+          /** @type {Record<string, unknown>} */ (row).contentGradeKey
+      : null
+  );
+  if (n == null || n < TRIANGLE_AREA_FORMULA_MIN_GRADE) {
+    return G08_INDICATORS.filter((ind) => !G08_FORMULA_INDICATORS.has(ind));
+  }
+  return G08_INDICATORS;
+}
 
 /**
  * @param {unknown} ev
@@ -145,13 +175,14 @@ export function geometryQuadrilateralRoutingScores(wrongEvents, row) {
  */
 export function geometryAreaRoutingScores(wrongEvents, row) {
   const rowHay = rowGradeLevelHaystack(row);
+  const g08Indicators = g08IndicatorsForRow(row);
   let g03Score = 0;
   let g08Score = 0;
   const list = Array.isArray(wrongEvents) ? wrongEvents : [];
   for (const ev of list) {
     const wh = `${rowHay} ${haystackForWrong(ev)}`.trim().toLowerCase();
     g03Score += countIndicatorHits(wh, G03_INDICATORS);
-    g08Score += countIndicatorHits(wh, G08_INDICATORS);
+    g08Score += countIndicatorHits(wh, g08Indicators);
   }
   return { g03Score, g08Score };
 }

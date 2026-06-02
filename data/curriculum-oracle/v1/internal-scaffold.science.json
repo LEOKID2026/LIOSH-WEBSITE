@@ -1,6 +1,6 @@
 {
   "WARNING": "This file is NOT part of the Ministry oracle. It is a scaffold for reference until the DOCX is parsed.",
-  "generated_at": "2026-06-02T18:14:52.943Z",
+  "generated_at": "2026-06-02T21:04:40.800Z",
   "source_script": "scripts/build-ministry-oracle-science.mjs",
   "source_class": "internal_scaffold",
   "row_count": 38,
@@ -1519,5 +1519,6 @@
         ]
       }
     }
-  ]
+  ],
+  "note": "Official rows now live in partial/science.json; scaffold retained for product cross-reference only."
 }

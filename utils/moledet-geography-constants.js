@@ -203,15 +203,7 @@ export const GRADE_LEVELS = {
 export const GRADES = {
   g1: {
     name: "כיתה א׳",
-    topics: [
-      "homeland",
-      "community",
-      "citizenship",
-      "geography",
-      "values",
-      "maps",
-      "mixed",
-    ],
+    topics: [],
   },
   g2: {
     name: "כיתה ב׳",

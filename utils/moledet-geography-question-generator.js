@@ -1,4 +1,5 @@
 import { GRADES, TOPICS } from './moledet-geography-constants.js';
+import { isMoledetGeographyGradeAllowed } from './moledet-geography-curriculum-gates.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
 import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contract.js';
 import { moledetDiagnosticContractFromBankRow } from './moledet-geography-diagnostic-metadata-bridge.js';
@@ -148,13 +149,16 @@ function buildEmptyPoolResult(gradeKey, uiLevel) {
  * @returns {{ topicQuestions: object[], resolvedTopic: string, poolFallbackCode: string }}
  */
 export function resolveMoledetTopicPool(levelConfig, topic, gradeKey, mixedTopics = null) {
+  if (!isMoledetGeographyGradeAllowed(gradeKey)) {
+    return { topicQuestions: [], resolvedTopic: null, levelKey: null, poolFallbackCode: "grade_gated" };
+  }
   const gradeCfg = GRADES[gradeKey] || GRADES.g3;
   let allowedTopics = gradeCfg.topics.filter((t) => t !== "mixed");
   if (mixedTopics) {
     allowedTopics = allowedTopics.filter((t) => mixedTopics[t]);
   }
   if (allowedTopics.length === 0) {
-    allowedTopics = ["homeland", "community", "citizenship", "geography", "values", "maps"];
+    return { topicQuestions: [], resolvedTopic: null, levelKey: null, poolFallbackCode: "empty_topics" };
   }
   const isMixed = topic === "mixed";
   let selectedTopic = topic;
