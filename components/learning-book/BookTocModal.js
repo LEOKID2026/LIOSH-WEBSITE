@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import { appendReturnQueryToHref } from "../../lib/learning-book/math-g1-book-nav";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
+import MixedHebrewMathText from "./MixedHebrewMathText";
 
 export default function BookTocModal({
   open,
@@ -68,7 +69,7 @@ export default function BookTocModal({
                               : "bg-white/5 text-white/85 hover:bg-white/10"
                           }`}
                         >
-                          {entry.displayTitle}
+                          <MixedHebrewMathText text={entry.displayTitle} />
                         </Link>
                       </li>
                     );

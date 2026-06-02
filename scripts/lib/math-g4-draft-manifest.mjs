@@ -1,0 +1,340 @@
+/**
+ * Grade 4 Math learning book — draft-only manifest (scripts / docs).
+ * NOT runtime registry. Used by review-pack builder and content verifier.
+ */
+
+/** @typedef {{ id: string, titleHe: string, pages: string[] }} G4Batch */
+
+/** @type {G4Batch[]} */
+export const MATH_G4_BOOK_BATCHES = [
+  {
+    id: "a",
+    titleHe: "ערך מקום, השוואה, סדרות ועיגול",
+    pages: [
+      "ns_place_hundreds",
+      "ns_neighbors",
+      "ns_complement100",
+      "ns_complement10",
+      "ns_even_odd",
+      "cmp",
+      "sequence",
+      "round",
+    ],
+  },
+  {
+    id: "b",
+    titleHe: "תכונות 0 ו-1",
+    pages: ["zero_add", "zero_sub", "zero_mul", "one_mul"],
+  },
+  {
+    id: "c",
+    titleHe: "חיבור, חיסור וכפל",
+    pages: ["add_two", "sub_two", "add_three", "mul", "mul_vertical"],
+  },
+  {
+    id: "d",
+    titleHe: "חילוק, התחלקות, ראשוניים, גורמים וכפולים",
+    pages: [
+      "div",
+      "div_with_remainder",
+      "div_long",
+      "divisibility",
+      "prime_composite",
+      "fm_factor",
+      "fm_multiple",
+      "fm_gcd",
+    ],
+  },
+  {
+    id: "e",
+    titleHe: "עשרוניים, משוואות ואומדן",
+    pages: [
+      "dec_add",
+      "dec_sub",
+      "eq_add",
+      "eq_sub",
+      "est_add",
+      "est_mul",
+      "est_quantity",
+    ],
+  },
+  {
+    id: "f",
+    titleHe: "חזקות",
+    pages: ["power_base", "power_calc"],
+  },
+  {
+    id: "g",
+    titleHe: "שאלות מילוליות",
+    pages: ["wp_comparison_more", "wp_leftover", "wp_time_sum"],
+  },
+];
+
+export const MATH_G4_PAGE_ORDER = MATH_G4_BOOK_BATCHES.flatMap((b) => b.pages);
+
+/** Section 5/6 alignment anchors — key numbers must appear in both sections */
+export const MATH_G4_ALIGNMENT_ANCHORS = {
+  ns_place_hundreds: ["3,482"],
+  ns_neighbors: ["2,450"],
+  ns_complement100: ["37", "100"],
+  ns_complement10: ["8", "10"],
+  ns_even_odd: ["246"],
+  cmp: ["4,560", "4,650"],
+  sequence: ["100", "150", "200"],
+  round: ["1,247"],
+  zero_add: ["456", "0"],
+  zero_sub: ["789", "0"],
+  zero_mul: ["52", "0"],
+  one_mul: ["347", "1"],
+  add_two: ["1,240", "375"],
+  sub_two: ["2,503", "876"],
+  add_three: ["450", "120", "80"],
+  mul: ["12", "8"],
+  mul_vertical: ["23", "4"],
+  div: ["360", "9"],
+  div_with_remainder: ["47", "6"],
+  div_long: ["156", "6"],
+  divisibility: ["234"],
+  prime_composite: ["29"],
+  fm_factor: ["24"],
+  fm_multiple: ["5"],
+  fm_gcd: ["18", "24"],
+  dec_add: ["3.45", "2.30"],
+  dec_sub: ["5.80", "2.35"],
+  eq_add: ["125", "380"],
+  eq_sub: ["45", "120"],
+  est_add: ["487", "512"],
+  est_mul: ["48", "51"],
+  est_quantity: ["987"],
+  power_base: ["10³"],
+  power_calc: ["2⁵"],
+  wp_comparison_more: ["125", "89"],
+  wp_leftover: ["53", "8"],
+  wp_time_sum: ["45", "35"],
+};
+
+/** @type {Record<string, { skillId: string, pageType: string, titleHe: string, scope: string }>} */
+export const MATH_G4_PAGE_META = {
+  ns_place_hundreds: {
+    skillId: "math:kind:ns_place_hundreds",
+    pageType: "concept_foundation",
+    titleHe: "ערך המקום — אלפים ועד 10,000",
+    scope: "אלפים, מאות, עשרות, אחדות; מספרים עד 10,000",
+  },
+  ns_neighbors: {
+    skillId: "math:kind:ns_neighbors",
+    pageType: "practice_bridge",
+    titleHe: "שכנים של מספר — מספרים גדולים",
+    scope: "מספר שלפני ואחרי עד 10,000",
+  },
+  ns_complement100: {
+    skillId: "math:kind:ns_complement100",
+    pageType: "practice_bridge",
+    titleHe: "השלמה ל-100",
+    scope: "מה חסר כדי להגיע ל-100",
+  },
+  ns_complement10: {
+    skillId: "math:kind:ns_complement10",
+    pageType: "practice_bridge",
+    titleHe: "זוגות שמרכיבים 10 — חזרה",
+    scope: "חזרה קצרה; בסיס לחיבור מהיר",
+  },
+  ns_even_odd: {
+    skillId: "math:kind:ns_even_odd",
+    pageType: "practice_bridge",
+    titleHe: "זוגי ואי-זוגי — מספרים גדולים",
+    scope: "לפי ספרת האחדות; מספרים עד 1,000",
+  },
+  cmp: {
+    skillId: "math:kind:cmp",
+    pageType: "concept_foundation",
+    titleHe: "השוואת מספרים גדולים",
+    scope: "השוואה עד 10,000; >, <, =",
+  },
+  sequence: {
+    skillId: "math:kind:sequence",
+    pageType: "concept_foundation",
+    titleHe: "סדרות מספרים — קפיצות גדולות",
+    scope: "קפיצה קבועה; מספרים גדולים יותר",
+  },
+  round: {
+    skillId: "math:kind:round",
+    pageType: "step_by_step_procedure",
+    titleHe: "עיגול לעשרות, מאות ואלפים",
+    scope: "עיגול 1,247 ודומיו; לא עשרוניים",
+  },
+  zero_add: {
+    skillId: "math:kind:zero_add",
+    pageType: "concept_foundation",
+    titleHe: "חיבור עם 0",
+    scope: "n + 0 = n",
+  },
+  zero_sub: {
+    skillId: "math:kind:zero_sub",
+    pageType: "concept_foundation",
+    titleHe: "חיסור 0",
+    scope: "n − 0 = n",
+  },
+  zero_mul: {
+    skillId: "math:kind:zero_mul",
+    pageType: "concept_foundation",
+    titleHe: "כפל ב-0",
+    scope: "n × 0 = 0",
+  },
+  one_mul: {
+    skillId: "math:kind:one_mul",
+    pageType: "concept_foundation",
+    titleHe: "כפל ב-1",
+    scope: "n × 1 = n",
+  },
+  add_two: {
+    skillId: "math:kind:add_two",
+    pageType: "step_by_step_procedure",
+    titleHe: "חיבור שני מספרים — עד 10,000",
+    scope: "נשיאה; אלפים/מאות/עשרות/אחדות",
+  },
+  sub_two: {
+    skillId: "math:kind:sub_two",
+    pageType: "step_by_step_procedure",
+    titleHe: "חיסור שני מספרים — עד 10,000",
+    scope: "השאלה בין ספרות",
+  },
+  add_three: {
+    skillId: "math:kind:add_three",
+    pageType: "step_by_step_procedure",
+    titleHe: "חיבור שלושה מספרים",
+    scope: "שלושה מספרים; סכום עד ~10,000",
+  },
+  mul: {
+    skillId: "math:kind:mul",
+    pageType: "step_by_step_procedure",
+    titleHe: "כפל — לוח ואסטרטגיות",
+    scope: "לוח כפל; פירוק לכפל קטן יותר",
+  },
+  mul_vertical: {
+    skillId: "math:kind:mul_vertical",
+    pageType: "step_by_step_procedure",
+    titleHe: "כפל במאונך — דו-ספרתי",
+    scope: "23 × 4; לא כפל שלוש-ספרתי",
+  },
+  div: {
+    skillId: "math:kind:div",
+    pageType: "step_by_step_procedure",
+    titleHe: "חילוק — חלוקה שווה",
+    scope: "תוצאה שלמה; מספרים גדולים יותר",
+  },
+  div_with_remainder: {
+    skillId: "math:kind:div_with_remainder",
+    pageType: "concept_foundation",
+    titleHe: "חילוק עם שארית",
+    scope: "quotient + remainder",
+  },
+  div_long: {
+    skillId: "math:kind:div_long",
+    pageType: "step_by_step_procedure",
+    titleHe: "חילוק ארוך",
+    scope: "אלגוריתם חילוק ארוך; מחלק חד-ספרתי",
+  },
+  divisibility: {
+    skillId: "math:kind:divisibility",
+    pageType: "step_by_step_procedure",
+    titleHe: "סימני התחלקות — 2, 3, 5, 6, 9, 10",
+    scope: "כללי 2/5/10 + 3/9 + 6; לא חילוק בפועל",
+  },
+  prime_composite: {
+    skillId: "math:kind:prime_composite",
+    pageType: "concept_foundation",
+    titleHe: "מספרים ראשוניים ופריקים",
+    scope: "הגדרה; בדיקה לפי גורמים קטנים",
+  },
+  fm_factor: {
+    skillId: "math:kind:fm_factor",
+    pageType: "concept_foundation",
+    titleHe: "גורמים של מספר",
+    scope: "מציאת גורמים של n",
+  },
+  fm_multiple: {
+    skillId: "math:kind:fm_multiple",
+    pageType: "concept_foundation",
+    titleHe: "כפולות של מספר",
+    scope: "כפולות ראשונות של n",
+  },
+  fm_gcd: {
+    skillId: "math:kind:fm_gcd",
+    pageType: "step_by_step_procedure",
+    titleHe: "מ.א.ח — המחלק המשותף הגדול ביותר",
+    scope: "מ.א.ח של שני מספרים קטנים-בינוניים",
+  },
+  dec_add: {
+    skillId: "math:kind:dec_add",
+    pageType: "step_by_step_procedure",
+    titleHe: "חיבור מספרים עשרוניים",
+    scope: "שתי ספרות אחרי הנקודה; יישור",
+  },
+  dec_sub: {
+    skillId: "math:kind:dec_sub",
+    pageType: "step_by_step_procedure",
+    titleHe: "חיסור מספרים עשרוניים",
+    scope: "שתי ספרות אחרי הנקודה",
+  },
+  eq_add: {
+    skillId: "math:kind:eq_add",
+    pageType: "step_by_step_procedure",
+    titleHe: "משוואת חיבור — מספר חסר",
+    scope: "מקום ריק __; מספרים גדולים יותר",
+  },
+  eq_sub: {
+    skillId: "math:kind:eq_sub",
+    pageType: "step_by_step_procedure",
+    titleHe: "משוואת חיסור — מספר חסר",
+    scope: "מקום ריק __",
+  },
+  est_add: {
+    skillId: "math:kind:est_add",
+    pageType: "concept_foundation",
+    titleHe: "אומדן תוצאת חיבור",
+    scope: "עיגול לעשרות/מאות ואז חיבור",
+  },
+  est_mul: {
+    skillId: "math:kind:est_mul",
+    pageType: "concept_foundation",
+    titleHe: "אומדן תוצאת כפל",
+    scope: "עיגול גורמים",
+  },
+  est_quantity: {
+    skillId: "math:kind:est_quantity",
+    pageType: "concept_foundation",
+    titleHe: "אומדן כמות",
+    scope: "הערכת כמות בלי לספור בדיוק",
+  },
+  power_base: {
+    skillId: "math:kind:power_base",
+    pageType: "concept_foundation",
+    titleHe: "בסיס וחזקה — מה זה אומר?",
+    scope: "סימון aⁿ; 10³ כדוגמה",
+  },
+  power_calc: {
+    skillId: "math:kind:power_calc",
+    pageType: "step_by_step_procedure",
+    titleHe: "חישוב חזקות",
+    scope: "2⁵, 3⁴; חזקות קטנות",
+  },
+  wp_comparison_more: {
+    skillId: "math:kind:wp_comparison_more",
+    pageType: "word_problem_strategy",
+    titleHe: "שאלה מילולית — כמה יותר?",
+    scope: "הפרש בין שתי כמויות",
+  },
+  wp_leftover: {
+    skillId: "math:kind:wp_leftover",
+    pageType: "word_problem_strategy",
+    titleHe: "שאלה מילולית — מה נשאר?",
+    scope: "שארית בהקשר יומיומי",
+  },
+  wp_time_sum: {
+    skillId: "math:kind:wp_time_sum",
+    pageType: "word_problem_strategy",
+    titleHe: "שאלה מילולית — סכום זמנים",
+    scope: "חיבור דקות",
+  },
+};

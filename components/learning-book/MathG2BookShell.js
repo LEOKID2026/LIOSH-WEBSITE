@@ -11,6 +11,7 @@ import {
 } from "../../lib/learning-book/math-g2-book-nav";
 import { BookGradeThemeProvider } from "./BookGradeThemeContext";
 import BookTocModal from "./BookTocModal";
+import MixedHebrewMathText from "./MixedHebrewMathText";
 
 const GRADE = "g2";
 const theme = getBookGradeTheme(GRADE);
@@ -101,7 +102,7 @@ export default function MathG2BookShell({
                 <p
                   className={`mt-0.5 text-sm font-bold sm:text-base ${theme.classes.activePageTitle}`}
                 >
-                  {pageMeta.displayTitle}
+                  <MixedHebrewMathText text={pageMeta.displayTitle} />
                 </p>
               ) : isIndex ? (
                 <p className="mt-0.5 text-xs text-white/60">בחרו נושא וקראו עמוד אחר עמוד</p>

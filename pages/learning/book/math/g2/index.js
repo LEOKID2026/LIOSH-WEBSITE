@@ -5,6 +5,7 @@ import { useIOSViewportFix } from "../../../../../hooks/useIOSViewportFix";
 import { loadMathG2TocEntries } from "../../../../../lib/learning-book/load-math-g2-pages";
 import Link from "next/link";
 import { MATH_G2_BOOK_META } from "../../../../../lib/learning-book/math-g2-registry";
+import MixedHebrewMathText from "../../../../../components/learning-book/MixedHebrewMathText";
 
 function MathG2BookIndexContent({ batches }) {
   const { classes: theme } = useBookGradeTheme();
@@ -24,7 +25,7 @@ function MathG2BookIndexContent({ batches }) {
                   className={`flex min-h-[3.25rem] items-center justify-between gap-3 rounded-2xl border px-5 py-4 text-right shadow-sm transition ${theme.indexTopicTile}`}
                 >
                   <span className="text-base font-semibold text-white/95 sm:text-lg">
-                    {entry.displayTitle}
+                    <MixedHebrewMathText text={entry.displayTitle} />
                   </span>
                   <span
                     className={`shrink-0 text-lg ${theme.indexTopicIcon}`}

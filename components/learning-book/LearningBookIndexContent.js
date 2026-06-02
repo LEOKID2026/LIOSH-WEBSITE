@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
+import MixedHebrewMathText from "./MixedHebrewMathText";
 
 export default function LearningBookIndexContent({ batches, routeBase }) {
   const { classes: theme } = useBookGradeTheme();
@@ -21,7 +22,7 @@ export default function LearningBookIndexContent({ batches, routeBase }) {
                   className={`flex min-h-[3.25rem] items-center justify-between gap-3 rounded-2xl border px-5 py-4 text-right shadow-sm transition ${theme.indexTopicTile}`}
                 >
                   <span className="text-base font-semibold text-white/95 sm:text-lg">
-                    {entry.displayTitle}
+                    <MixedHebrewMathText text={entry.displayTitle} />
                   </span>
                   <span
                     className={`shrink-0 text-lg ${theme.indexTopicIcon}`}

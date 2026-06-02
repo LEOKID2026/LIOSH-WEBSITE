@@ -99,6 +99,7 @@ import {
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { getMathG1BookHref } from "../../lib/learning-book/resolve-math-g1-book-page";
 import { getMathG2BookHref } from "../../lib/learning-book/resolve-math-g2-book-page";
+import { getMathG3BookHref } from "../../lib/learning-book/resolve-math-g3-book-page";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
@@ -117,6 +118,13 @@ import {
   saveMathG2BookLearningSnapshot,
   withMathG2BookLearningReturn,
 } from "../../lib/learning-book/math-g2-book-nav";
+import {
+  consumeMathG3BookLearningSnapshot,
+  consumeMathG3BookPracticePreset,
+  isMathG3BookPracticeEntry,
+  saveMathG3BookLearningSnapshot,
+  withMathG3BookLearningReturn,
+} from "../../lib/learning-book/math-g3-book-nav";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -265,6 +273,9 @@ export default function MathMaster() {
     if (grade === "g2") {
       return getMathG2BookHref({ grade, operation, kind: null });
     }
+    if (grade === "g3") {
+      return getMathG3BookHref({ grade, operation, kind: null });
+    }
     return null;
   }, [grade, operation]);
   const [gameActive, setGameActive] = useState(false);
@@ -272,13 +283,14 @@ export default function MathMaster() {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const questionBookHref = useMemo(() => {
     if (mode !== "learning" || !currentQuestion) return null;
-    if (grade !== "g1" && grade !== "g2") return null;
+    if (grade !== "g1" && grade !== "g2" && grade !== "g3") return null;
     const params = currentQuestion.params || {};
     const ctx = {
       grade,
       operation: currentQuestion.operation || operation,
       kind: params.kind ?? null,
     };
+    if (grade === "g3") return getMathG3BookHref(ctx);
     if (grade === "g2") return getMathG2BookHref(ctx);
     return getMathG1BookHref(ctx);
   }, [grade, mode, currentQuestion, operation]);
@@ -331,6 +343,11 @@ export default function MathMaster() {
       if (grade === "g2") {
         saveMathG2BookLearningSnapshot(snapshot);
         router.push(withMathG2BookLearningReturn(href));
+        return;
+      }
+      if (grade === "g3") {
+        saveMathG3BookLearningSnapshot(snapshot);
+        router.push(withMathG3BookLearningReturn(href));
         return;
       }
       saveMathG1BookLearningSnapshot(snapshot);
@@ -778,11 +795,13 @@ export default function MathMaster() {
   const applyBookPracticePreset = useCallback((preset) => {
     if (!preset || preset.mode !== "learning") return;
     const presetGrade = preset.grade;
-    if (presetGrade !== "g1" && presetGrade !== "g2") return;
+    if (presetGrade !== "g1" && presetGrade !== "g2" && presetGrade !== "g3") return;
     if (!GRADES[presetGrade]?.operations?.includes(preset.operation)) return;
     bookPracticePresetRef.current = preset;
     setGrade(presetGrade);
-    setGradeNumber(presetGrade === "g1" ? 1 : 2);
+    setGradeNumber(
+      presetGrade === "g1" ? 1 : presetGrade === "g2" ? 2 : 3
+    );
     setMode("learning");
     setOperation(preset.operation);
     practiceForceKindRef.current = preset.forceKind || null;
@@ -842,7 +861,9 @@ export default function MathMaster() {
 
   useEffect(() => {
     const snap =
-      consumeMathG1BookLearningSnapshot() || consumeMathG2BookLearningSnapshot();
+      consumeMathG1BookLearningSnapshot() ||
+      consumeMathG2BookLearningSnapshot() ||
+      consumeMathG3BookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
     setMode(typeof snap.mode === "string" ? snap.mode : "learning");
     if (typeof snap.grade === "string") setGrade(snap.grade);
@@ -870,12 +891,15 @@ export default function MathMaster() {
     if (!router.isReady) return;
     if (
       !isMathG1BookPracticeEntry(router.query) &&
-      !isMathG2BookPracticeEntry(router.query)
+      !isMathG2BookPracticeEntry(router.query) &&
+      !isMathG3BookPracticeEntry(router.query)
     ) {
       return;
     }
     const preset =
-      consumeMathG2BookPracticePreset() || consumeMathG1BookPracticePreset();
+      consumeMathG3BookPracticePreset() ||
+      consumeMathG2BookPracticePreset() ||
+      consumeMathG1BookPracticePreset();
     if (preset) {
       applyBookPracticePreset(preset);
     }
@@ -3845,7 +3869,11 @@ export default function MathMaster() {
                   <button
                     type="button"
                     data-testid={
-                      grade === "g2" ? "math-g2-book-topic-button" : "math-g1-book-topic-button"
+                      grade === "g3"
+                        ? "math-g3-book-topic-button"
+                        : grade === "g2"
+                          ? "math-g2-book-topic-button"
+                          : "math-g1-book-topic-button"
                     }
                     onClick={() => router.push(bookTopicHref)}
                     className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
@@ -3979,9 +4007,11 @@ export default function MathMaster() {
                     <button
                       type="button"
                       data-testid={
-                        grade === "g2"
-                          ? "math-g2-book-question-button"
-                          : "math-g1-book-question-button"
+                        grade === "g3"
+                          ? "math-g3-book-question-button"
+                          : grade === "g2"
+                            ? "math-g2-book-question-button"
+                            : "math-g1-book-question-button"
                       }
                       onClick={() => openBookFromLearning(questionBookHref)}
                       className="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 transition-all pointer-events-auto shadow-lg"

@@ -1159,6 +1159,9 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     } else if (mathForce === "add_two") {
       useTensOnly = false;
       useSecondDecade = false;
+    } else if (mathForce === "add_three") {
+      useTensOnly = false;
+      useSecondDecade = false;
     }
     const forceVerticalAdd =
       mathForce === "add_vertical" && gradeKey === "g2";
@@ -1170,7 +1173,9 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         mathForce !== "add_two" &&
         Math.random() < 0.4);
     // האם להשתמש בתרגיל 3 מספרים - רק מכיתה ג' ומעלה
-    const useThreeTerms = !isLowGrade && allowTwoStep && Math.random() < 0.3;
+    const useThreeTerms =
+      mathForce === "add_three" ||
+      (!isLowGrade && allowTwoStep && Math.random() < 0.3);
 
     if (useTensOnly) {
       // כיתה א': חיבור בעשרות שלמות (30+40=70)
@@ -2284,6 +2289,37 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       }
     } else {
       // עשרוניים רגילים — השוואה / עיגול לשלם / חיבור וחיסור
+      if (mathForce === "dec_add" || mathForce === "dec_sub") {
+        const a = round(Math.random() * maxBase, places);
+        const b = round(Math.random() * maxBase, places);
+        if (mathForce === "dec_add") {
+          correctAnswer = round(a + b, places);
+          question = `${a.toFixed(places)} + ${b.toFixed(places)} = ${BLANK}`;
+          params = {
+            kind: "dec_add",
+            a,
+            b,
+            places,
+            presentationVariant: randInt(0, 3),
+          };
+          operandA = a;
+          operandB = b;
+        } else {
+          const big = Math.max(a, b);
+          const small = Math.min(a, b);
+          correctAnswer = round(big - small, places);
+          question = `${big.toFixed(places)} - ${small.toFixed(places)} = ${BLANK}`;
+          params = {
+            kind: "dec_sub",
+            a: big,
+            b: small,
+            places,
+            presentationVariant: randInt(0, 3),
+          };
+          operandA = big;
+          operandB = small;
+        }
+      } else {
       const roll = Math.random();
       const allowDecimalVariety = gradeKey !== "g1" && gradeKey !== "g2";
       if (allowDecimalVariety && roll < 0.22) {
@@ -2339,6 +2375,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           operandB = small;
         }
       }
+      }
     }
   // ===== עיגול =====
   } else if (selectedOp === "rounding") {
@@ -2382,6 +2419,71 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         operandA = a;
         operandB = b;
       }
+    } else if (mathForce === "eq_add" || mathForce === "eq_sub") {
+      const maxAdd = levelConfig.addition.max || 100;
+      const maxSub =
+        levelConfig.subtraction?.max != null
+          ? levelConfig.subtraction.max
+          : 100;
+      if (mathForce === "eq_add") {
+        const a = randInt(1, Math.floor(maxAdd / 2));
+        const b = randInt(1, Math.floor(maxAdd / 2));
+        const c = a + b;
+        const form = Math.random() < 0.5 ? "a_plus_x" : "x_plus_b";
+        let exerciseText;
+        if (form === "a_plus_x") {
+          correctAnswer = b;
+          exerciseText = `${a} + ${BLANK} = ${c}`;
+        } else {
+          correctAnswer = a;
+          exerciseText = `${BLANK} + ${b} = ${c}`;
+        }
+        question = exerciseText;
+        params = { kind: "eq_add", form, a, b, c, exerciseText };
+        operandA = a;
+        operandB = b;
+      } else {
+        const c = randInt(0, Math.floor(maxSub / 2));
+        const b = randInt(0, Math.floor(maxSub / 2));
+        const a = c + b;
+        const form = Math.random() < 0.5 ? "a_minus_x" : "x_minus_b";
+        let exerciseText;
+        if (form === "a_minus_x") {
+          correctAnswer = b;
+          exerciseText = `${a} - ${BLANK} = ${c}`;
+        } else {
+          correctAnswer = a;
+          exerciseText = `${BLANK} - ${b} = ${c}`;
+        }
+        question = exerciseText;
+        params = { kind: "eq_sub", form, a, b, c, exerciseText };
+        operandA = a;
+        operandB = b;
+      }
+    } else if (
+      mathForce === "order_add_mul" ||
+      mathForce === "order_mul_sub" ||
+      mathForce === "order_parentheses"
+    ) {
+      const maxVal = levelConfig.order_of_operations?.max || 200;
+      const a = randInt(1, Math.min(20, maxVal));
+      const b = randInt(1, Math.min(10, maxVal));
+      const c = randInt(1, Math.min(10, maxVal));
+      if (mathForce === "order_add_mul") {
+        correctAnswer = a + b * c;
+        question = `${a} + ${b} × ${c} = ${BLANK}`;
+        params = { kind: "order_add_mul", a, b, c };
+      } else if (mathForce === "order_mul_sub") {
+        correctAnswer = a * b - c;
+        question = `${a} × ${b} - ${c} = ${BLANK}`;
+        params = { kind: "order_mul_sub", a, b, c };
+      } else {
+        correctAnswer = (a + b) * c;
+        question = `(${a} + ${b}) × ${c} = ${BLANK}`;
+        params = { kind: "order_parentheses", a, b, c };
+      }
+      operandA = a;
+      operandB = b;
     } else if (gradeKey === "g3" && levelConfig.order_of_operations && selectedOp === "order_of_operations") {
       const maxVal = levelConfig.order_of_operations.max || 200;
       const a = randInt(1, Math.min(20, maxVal));
@@ -2642,6 +2744,32 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       correctAnswer = a;
       question = `${BLANK} + ${b} = ${c}`;
       params = { kind: "ns_complement10", a, b, c };
+    } else if (mathForce === "ns_place_hundreds") {
+      const n = randInt(100, 999);
+      const partType = ["hundreds", "tens", "units"][
+        Math.floor(Math.random() * 3)
+      ];
+      const hundreds = Math.floor(n / 100);
+      const tens = Math.floor((n % 100) / 10);
+      const units = n % 10;
+      if (partType === "hundreds") correctAnswer = hundreds;
+      else if (partType === "tens") correctAnswer = tens;
+      else correctAnswer = units;
+      const label =
+        partType === "hundreds"
+          ? "המאות"
+          : partType === "tens"
+          ? "העשרות"
+          : "היחידות";
+      question = `מהי ספרת ${label} במספר ${n}? = ${BLANK}`;
+      params = { kind: "ns_place_hundreds", n, partType, hundreds, tens, units };
+    } else if (mathForce === "ns_complement100") {
+      const b = randInt(1, 99);
+      const c = 100;
+      const a = c - b;
+      correctAnswer = a;
+      question = `${BLANK} + ${b} = ${c}`;
+      params = { kind: "ns_complement100", a, b, c };
     } else if (mathForce === "ns_even_odd") {
       const n = randInt(0, Math.min(200, maxNumberSense));
       const isEven = n % 2 === 0;
@@ -3003,6 +3131,12 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     let t = templates[Math.floor(Math.random() * templates.length)];
     if (mathForce === "wp_comparison_more" && templates.includes("comparison_more")) {
       t = "comparison_more";
+    }
+    if (mathForce === "wp_leftover" && templates.includes("leftover")) {
+      t = "leftover";
+    }
+    if (mathForce === "wp_time_sum" && templates.includes("time_sum")) {
+      t = "time_sum";
     }
     if (mathForce === "wp_coins" || mathForce === "wp_coins_spent") {
       t = "coins";

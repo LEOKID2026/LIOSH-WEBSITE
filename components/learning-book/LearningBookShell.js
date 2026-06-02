@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getBookGradeTheme } from "../../lib/learning-book/book-grade-themes";
 import { BookGradeThemeProvider } from "./BookGradeThemeContext";
 import BookTocModal from "./BookTocModal";
+import MixedHebrewMathText from "./MixedHebrewMathText";
 
 /**
  * Shared learning book shell for all subjects/grades.
@@ -104,7 +105,7 @@ export default function LearningBookShell({
                 <p
                   className={`mt-0.5 text-sm font-bold sm:text-base ${theme.classes.activePageTitle}`}
                 >
-                  {pageMeta.displayTitle}
+                  <MixedHebrewMathText text={pageMeta.displayTitle} />
                 </p>
               ) : isIndex ? (
                 <p className="mt-0.5 text-xs text-white/60">בחרו נושא וקראו עמוד אחר עמוד</p>

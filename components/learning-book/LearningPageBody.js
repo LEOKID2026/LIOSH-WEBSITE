@@ -2,10 +2,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LearningMarkdown from "./LearningMarkdown";
+import MixedHebrewMathText from "./MixedHebrewMathText";
 import { getSectionDisplayTitle } from "../../lib/learning-book/section-display-labels";
 import { useBookSectionSwipe } from "../../hooks/useBookSectionSwipe";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
 import { MATH_G2_BOOK_META } from "../../lib/learning-book/math-g2-registry";
+import { MATH_G3_BOOK_META } from "../../lib/learning-book/math-g3-registry";
 import {
   appendReturnQueryToHref,
   getMathG1BookReturnQuerySuffix,
@@ -17,8 +19,14 @@ import {
   getMathG2PracticePath,
   saveMathG2BookPracticePreset,
 } from "../../lib/learning-book/math-g2-book-nav";
+import {
+  getMathG3BookReturnQuerySuffix,
+  getMathG3PracticePath,
+  saveMathG3BookPracticePreset,
+} from "../../lib/learning-book/math-g3-book-nav";
 import { resolveMathG1PracticeTarget } from "../../lib/learning-book/resolve-math-g1-practice-target";
 import { resolveMathG2PracticeTarget } from "../../lib/learning-book/resolve-math-g2-practice-target";
+import { resolveMathG3PracticeTarget } from "../../lib/learning-book/resolve-math-g3-practice-target";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
@@ -37,6 +45,14 @@ const G2_BOOK_UI = {
   resolvePracticeTarget: resolveMathG2PracticeTarget,
   getPracticePath: getMathG2PracticePath,
   savePracticePreset: saveMathG2BookPracticePreset,
+};
+
+const G3_BOOK_UI = {
+  bookMeta: MATH_G3_BOOK_META,
+  getReturnQuerySuffix: getMathG3BookReturnQuerySuffix,
+  resolvePracticeTarget: resolveMathG3PracticeTarget,
+  getPracticePath: getMathG3PracticePath,
+  savePracticePreset: saveMathG3BookPracticePreset,
 };
 
 export default function LearningPageBody({
@@ -62,6 +78,7 @@ export default function LearningPageBody({
   );
 
   const bookUi = useMemo(() => {
+    if (bookSubject === "math" && bookGrade === "g3") return G3_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g2") return G2_BOOK_UI;
     if (bookSubject === "math" && bookGrade === "g1") return G1_BOOK_UI;
     if (clientMeta) {
@@ -270,7 +287,9 @@ export default function LearningPageBody({
                   className={`min-h-[52px] rounded-xl border px-3 py-2.5 text-right text-xs shadow-sm transition ${theme.topicPrevLink}`}
                 >
                   <span className={`block text-[10px] ${theme.topicPrevLabel}`}>נושא קודם</span>
-                  <span className="block truncate text-sm font-medium">{prevTitle}</span>
+                  <span className="block truncate text-sm font-medium">
+                    <MixedHebrewMathText text={prevTitle} />
+                  </span>
                 </Link>
               ) : (
                 <div aria-hidden="true" />
@@ -284,7 +303,9 @@ export default function LearningPageBody({
                   className={`min-h-[52px] rounded-xl border px-3 py-2.5 text-right text-xs shadow-sm transition ${theme.topicNextLink}`}
                 >
                   <span className={`block text-[10px] ${theme.topicNextLabel}`}>נושא הבא</span>
-                  <span className="block truncate text-sm font-medium">{nextTitle}</span>
+                  <span className="block truncate text-sm font-medium">
+                    <MixedHebrewMathText text={nextTitle} />
+                  </span>
                 </Link>
               ) : (
                 <div aria-hidden="true" />

@@ -7,6 +7,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { MATH_G1_PAGE_ORDER } from "../../lib/learning-book/math-g1-registry.js";
 import { MATH_G2_PAGE_ORDER } from "../../lib/learning-book/math-g2-registry.js";
+import { MATH_G3_PAGE_ORDER } from "../../lib/learning-book/math-g3-registry.js";
 import {
   findInlineMathRuns,
   splitTextAndMathRuns,
@@ -42,6 +43,7 @@ function normMath(value) {
 function lineNeedsMathIsolation(line) {
   const input = String(line || "");
   if (!/[\u0590-\u05FF]/.test(input) || !/\d/.test(input)) return false;
+  if (/\d{1,3}(?:,\d{3})+/.test(input)) return true;
   if (/\d\s*[=×÷]/.test(input)) return true;
   if (/__/.test(input)) return true;
   if (/\d\s*[+−\-]\s*\d/.test(input)) return true;
@@ -130,6 +132,12 @@ function assertLineRender(line, expected) {
     fail(`reversed addition in "${line}": ${JSON.stringify(got.mathValues)}`);
   }
 
+  for (const m of got.mathValues) {
+    if (/000,1/.test(m) || /000,10/.test(m)) {
+      fail(`reversed thousands separator in "${line}": ${JSON.stringify(got.mathValues)}`);
+    }
+  }
+
   for (const seg of got.segments) {
     if (/\*\*/.test(seg.value) || /`/.test(seg.value)) {
       fail(`markdown artifact in segment for "${line}": ${JSON.stringify(seg)}`);
@@ -195,10 +203,72 @@ const CANONICAL_LINES = [
       mathInOrder: ["12 − 7 = 5", "4 − 2 = 2"],
     },
   },
+  {
+    line: "היום נלמד לקרוא מספרים **עד 1,000** ולזהות",
+    expected: { math: ["1,000"] },
+  },
+  {
+    line: "עד 1,000",
+    expected: { math: ["1,000"] },
+  },
+  {
+    line: "מספרים עד 1,000",
+    expected: { math: ["1,000"] },
+  },
+  {
+    line: "מאות, עשרות ואחדות — עד 1,000",
+    expected: { math: ["1,000"] },
+  },
+  {
+    line: "לפני **1,000** אין שכן \"אחרי\" בתוך הטווח שלנו — רק עד 999.",
+    expected: { math: ["1,000"] },
+  },
+  {
+    line: "כפל במאות (למשל 5 × 200)",
+    expected: { math: ["5 × 200"] },
+  },
 ];
 
 for (const sample of CANONICAL_LINES) {
   assertLineRender(sample.line, sample.expected);
+}
+
+/** Fail if thousands-formatted numbers are split or reversed in Hebrew prose. */
+function assertThousandsGroupedInLine(line, expectedToken) {
+  const parts = splitTextAndMathRuns(line);
+  const mathParts = parts.filter((p) => p.type === "math");
+  const normalized = mathParts.map((p) => normMath(stripStrayMarkdown(p.value)));
+  const hasWholeToken = normalized.some(
+    (m) => m === expectedToken || m.includes(expectedToken)
+  );
+  if (!hasWholeToken) {
+    fail(
+      `thousands token "${expectedToken}" not isolated in "${line}"\n  math parts: ${JSON.stringify(normalized)}`
+    );
+  }
+  if (normalized.some((m) => /000,1/.test(m))) {
+    fail(`reversed thousands in "${line}": ${JSON.stringify(normalized)}`);
+  }
+  const bareDigitOnly = parts.some(
+    (p) => p.type === "text" && /(?<![\d,])000(?!\d)/.test(p.value)
+  );
+  if (bareDigitOnly && line.includes(expectedToken)) {
+    fail(`thousands tail "000" left in Hebrew text for "${line}"`);
+  }
+}
+
+const THOUSANDS_LINES = [
+  { line: "היום נלמד לקרוא מספרים **עד 1,000** ולזהות", token: "1,000" },
+  { line: "עד 1,000", token: "1,000" },
+  { line: "מספרים עד 1,000", token: "1,000" },
+  { line: "מאות, עשרות ואחדות — עד 1,000", token: "1,000" },
+  { line: "עכשיו אתם יודעים לפרק מספר עד 1,000 למאות, עשרות ואחדות.", token: "1,000" },
+  { line: "2,000", token: "2,000" },
+  { line: "10,000", token: "10,000" },
+];
+
+for (const sample of THOUSANDS_LINES) {
+  assertThousandsGroupedInLine(sample.line, sample.token);
 }
 
 /** @param {string} body */
@@ -264,6 +334,14 @@ const MANUAL_QA = {
     "wp_coins_spent",
     "wp_division_simple",
   ],
+  g3: [
+    "add_two",
+    "sub_two",
+    "add_three",
+    "dec_add",
+    "order_add_mul",
+    "wp_leftover",
+  ],
 };
 
 for (const [grade, pageIds] of Object.entries(MANUAL_QA)) {
@@ -287,6 +365,7 @@ for (const [grade, pageIds] of Object.entries(MANUAL_QA)) {
 for (const [order, grade] of [
   [MATH_G1_PAGE_ORDER, "g1"],
   [MATH_G2_PAGE_ORDER, "g2"],
+  [MATH_G3_PAGE_ORDER, "g3"],
 ]) {
   for (const pageId of order) {
     const raw = fs.readFileSync(
@@ -306,5 +385,5 @@ if (failures > 0) {
 }
 
 console.log(
-  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + G1/G2 full scan + manual QA pages.`
+  `OK: learning book bidi — ${CANONICAL_LINES.length} canonical lines + ${THOUSANDS_LINES.length} thousands checks + G1/G2/G3 full scan + manual QA pages.`
 );
