@@ -26,7 +26,7 @@
 ## 1. מה לומדים?
 
 היום נלמד Comparatives — השוואה.
-This book is more interesting than that one — הספר הזה מעניין יותר.
+This book is more interesting than that one — הספר הזה מעניין יותר מהספר ההוא.
 
 ---
 
@@ -37,7 +37,7 @@ This book is more interesting than that one — הספר הזה מעניין י�
 
 This book is more interesting than that one.
 
-הספר הזה מעניין יותר.
+הספר הזה מעניין יותר מהספר ההוא.
 
 He is taller than me.
 
@@ -51,13 +51,13 @@ He is taller than me.
 
 This book is more interesting than that one.
 
-הספר הזה מעניין יותר.
+הספר הזה מעניין יותר מהספר ההוא.
 
 ---
 
 ## 4. בואו נפתור
 
-שאלה: איך אומרים "הספר הזה מעניין יותר"?
+שאלה: איך אומרים "הספר הזה מעניין יותר מהספר ההוא"?
 
 This book is more interesting than that one
 

@@ -19,7 +19,7 @@
 - `docs/learning-book/HEBREW_GRADE_5_LEARNING_BOOK_PLAN.md`
 - `docs/learning-book/MATH_LEARNING_PAGE_TEMPLATE.md`
 
-**Content scope:** ניגוד בין שתי משפטים בטקסט
+**Content scope:** ניגוד בין שני משפטים בטקסט
 
 ---
 

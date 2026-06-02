@@ -74,7 +74,7 @@ We have visited three countries so far
 
 ## 6. שימו לב!
 
-We visited three countries so far — לא תמיד אותו משמעות!
+We visited three countries so far — לא תמיד אותה משמעות!
 
 ❌ visited לבד — Past Simple, דגש על מתי!
 

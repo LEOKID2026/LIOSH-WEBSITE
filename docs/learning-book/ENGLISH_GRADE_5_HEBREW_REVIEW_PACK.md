@@ -1461,7 +1461,7 @@ You must wear a helmet
 
 ### Section 5. נסו בעצמכם
 
-רiding a bike — בטיחות קודמת.
+רכיבה על אופניים — בטיחות קודמת.
 
 You must wear a helmet
 
@@ -1509,7 +1509,7 @@ must + פועל (בלי to).
 ### Section 1. מה לומדים?
 
 היום נלמד Comparatives — השוואה.
-This book is more interesting than that one — הספר הזה מעניין יותר.
+This book is more interesting than that one — הספר הזה מעניין יותר מהספר ההוא.
 
 ---
 
@@ -1524,7 +1524,7 @@ This book is more interesting than that one — הספר הזה מעניין י�
 
 This book is more interesting than that one.
 
-הספר הזה מעניין יותר.
+הספר הזה מעניין יותר מהספר ההוא.
 
 He is taller than me.
 
@@ -1542,7 +1542,7 @@ He is taller than me.
 
 This book is more interesting than that one.
 
-הספר הזה מעניין יותר.
+הספר הזה מעניין יותר מהספר ההוא.
 
 ---
 
@@ -1552,7 +1552,7 @@ This book is more interesting than that one.
 
 ### Section 4. בואו נפתור
 
-שאלה: איך אומרים "הספר הזה מעניין יותר"?
+שאלה: איך אומרים "הספר הזה מעניין יותר מהספר ההוא"?
 
 This book is more interesting than that one
 

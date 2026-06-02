@@ -270,7 +270,7 @@ They feel excited — הם/הן מרגישים/ות נרגשים/ות.
 
 They feel excited.
 
-הם/הן מרגשים/ות.
+הם/הן נרגשים/ות.
 
 They feel happy.
 

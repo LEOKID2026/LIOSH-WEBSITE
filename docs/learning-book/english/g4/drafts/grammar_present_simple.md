@@ -17,7 +17,7 @@
 - `data/curriculum-spine/v1/skills.json`
 - `docs/learning-book/ENGLISH_LEARNING_BOOK_MASTER_SCOPE_PLAN.md`
 
-**Content scope:** הabit, fact — He walks every day; לא Continuous
+**Content scope:** habit, fact — He walks every day; לא Continuous
 
 ---
 

@@ -19,6 +19,7 @@ import {
   splitMixedBodyClauses,
 } from "../lib/learning-book/book-line-structure.js";
 import { stripStrayMarkdown } from "../lib/learning-book/parse-inline-markdown.js";
+import { auditLineRisks } from "../lib/learning-book/book-rtl-content-normalize.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -162,6 +163,12 @@ function scanPageSections(subject, grade, pageId, sectionNumbers) {
 
       for (const line of lines) {
         assertLineStructure(line, `${subject}/${grade}/${pageId} §${sectionNumber}`);
+        const risks = auditLineRisks(line);
+        if (risks.includes("verbal_formula_label") || risks.includes("remainder_without_vav")) {
+          fail(
+            `${subject}/${grade}/${pageId} §${sectionNumber}: risky content "${line.trim()}" [${risks.join(", ")}]`
+          );
+        }
       }
     }
   }
@@ -181,13 +188,91 @@ for (const target of BIDI_LIVE_QA_PAGES) {
 const baseUrl = process.env.BIDI_QA_BASE_URL?.replace(/\/$/, "");
 
 async function navigateToSection(page, sectionNumber) {
+  for (let i = 0; i < 8; i += 1) {
+    const prev = page.getByRole("button", { name: "עמוד קודם" });
+    if (!(await prev.isEnabled())) break;
+    await prev.scrollIntoViewIfNeeded();
+    await prev.click();
+    await page.waitForTimeout(350);
+  }
+
   const targetIndex = Math.max(0, sectionNumber - 1);
   for (let i = 0; i < targetIndex; i += 1) {
     const next = page.getByRole("button", { name: "עמוד הבא" });
     if (!(await next.isEnabled())) break;
+    await next.scrollIntoViewIfNeeded();
     await next.click();
-    await page.waitForTimeout(350);
+    await page.waitForTimeout(600);
   }
+  await page.waitForTimeout(400);
+}
+
+const REQUIRED_G5_SCREENSHOTS = [
+  "g5-div_with_remainder-section2-mobile.png",
+  "g5-div_with_remainder-section3-mobile.png",
+  "g5-div_with_remainder-section4-mobile.png",
+  "g5-div_with_remainder-section6-mobile.png",
+  "g5-div_with_remainder-topic-cards-mobile.png",
+];
+
+async function waitForProductionHydration(page, url) {
+  /** @type {string[]} */
+  const consoleErrors = [];
+  page.on("console", (msg) => {
+    if (msg.type() === "error") {
+      consoleErrors.push(msg.text());
+    }
+  });
+
+  const response = await page.goto(url, { waitUntil: "load", timeout: 60000 });
+  if (!response || response.status() !== 200) {
+    return { ok: false, reason: `HTTP ${response?.status() ?? "?"}` };
+  }
+
+  await page.waitForSelector(".learning-book-markdown", {
+    timeout: 30000,
+    state: "attached",
+  });
+  await page.waitForFunction(
+    () => {
+      const scripts = [...document.querySelectorAll("script[src*='/_next/static/']")];
+      return scripts.some(
+        (s) =>
+          s.getAttribute("src")?.includes("framework-") ||
+          s.getAttribute("src")?.includes("webpack-")
+      );
+    },
+    { timeout: 30000 }
+  );
+
+  const chunk404 = consoleErrors.filter(
+    (e) =>
+      e.includes("_next/static") &&
+      (e.includes("404") || e.includes("MIME type") || e.includes("webpack.js"))
+  );
+  if (chunk404.length) {
+    return {
+      ok: false,
+      reason: `missing production chunks: ${chunk404[0]}`,
+    };
+  }
+
+  await page.waitForTimeout(1500);
+  const next = page.getByRole("button", { name: "עמוד הבא" });
+  if (!(await next.isEnabled())) {
+    return { ok: false, reason: "next button disabled" };
+  }
+
+  const h2Before = await page.locator("article h2").first().innerText();
+  await next.scrollIntoViewIfNeeded();
+  await next.click();
+  await page.waitForTimeout(1500);
+  const h2After = await page.locator("article h2").first().innerText();
+  if (h2Before === h2After) {
+    return { ok: false, reason: `section nav stuck on "${h2Before}"` };
+  }
+
+  return { ok: true, reason: null };
 }
 
 async function runPlaywrightDomChecks() {
@@ -205,15 +290,100 @@ async function runPlaywrightDomChecks() {
 
   /** @type {Record<string, string[]>} */
   const G5_REQUIRED_MATH = {
-    2: ["1,247 ÷ 8:", "1,247 ÷ 8 = 155", "8 × 155 = 1,240"],
-    3: ["523 ÷ 6:", "523 ÷ 6 = 87"],
+    2: ["1,247 ÷ 8:", "1,247 ÷ 8 = 155", "8 × 155 = 1,240", "8 × 155 + 7 = 1,247"],
+    3: ["523 ÷ 6:", "523 ÷ 6 = 87", "6 × 87 = 522", "522 + 1 = 523"],
     4: ["1,247 ÷ 8 = ?", "8 × 155 = 1,240", "1,247 − 1,240 = 7"],
     6: ["1,247 ÷ 8 = 155"],
   };
 
+  const G5_REQUIRED_TEXT = {
+    2: ["155 ושארית 7", "נשאר 7"],
+    4: [
+      "שלב 1: מחשבים כמה קרוב אפשר להגיע.",
+      "שלב 2: מחשבים מה נשאר.",
+      "תשובה: 155 ושארית 7",
+    ],
+  };
+
+  const screenshotDir = path.join(ROOT, "tmp/bidi-qa-screenshots");
+  fs.mkdirSync(screenshotDir, { recursive: true });
+  /** @type {string[]} */
+  const screenshotPaths = [];
+
   for (const target of BIDI_LIVE_QA_PAGES) {
     const url = `${baseUrl}/learning/book/${target.subject}/${target.grade}/${target.pageId}`;
+    const isG5Remainder =
+      target.subject === "math" &&
+      target.grade === "g5" &&
+      target.pageId === "div_with_remainder";
+
     try {
+      if (isG5Remainder) {
+        const hydration = await waitForProductionHydration(page, url);
+        if (!hydration.ok) {
+          fail(`G5 visual QA hydration failed for ${url}: ${hydration.reason}`);
+          continue;
+        }
+
+        for (let i = 0; i < 6; i += 1) {
+          const prev = page.getByRole("button", { name: "עמוד קודם" });
+          if (!(await prev.isEnabled())) break;
+          await prev.click();
+          await page.waitForTimeout(300);
+        }
+
+        for (const sectionNumber of target.sections) {
+          await navigateToSection(page, sectionNumber);
+          await assertDomSection(page, url, sectionNumber, target, G5_REQUIRED_MATH);
+
+          const bodyText = await page.locator(".learning-book-markdown").innerText();
+          if (bodyText.includes("[DRAFT") || bodyText.includes("**") || bodyText.includes(":::")) {
+            fail(`${url} §${sectionNumber}: raw markdown artifacts in visible text`);
+          }
+          if (/מחולק\s*=\s*\(מחלק/.test(bodyText)) {
+            fail(`${url} §${sectionNumber}: verbal formula still visible`);
+          }
+
+          const requiredText = G5_REQUIRED_TEXT[sectionNumber];
+          if (requiredText) {
+            for (const snippet of requiredText) {
+              if (!bodyText.includes(snippet)) {
+                fail(`${url} §${sectionNumber}: missing visible text "${snippet}"`);
+              }
+            }
+          }
+
+          const shotName = `g5-div_with_remainder-section${sectionNumber}-mobile.png`;
+          const shotPath = path.join(screenshotDir, shotName);
+          await page.screenshot({ path: shotPath, fullPage: true });
+          screenshotPaths.push(`tmp/bidi-qa-screenshots/${shotName}`);
+        }
+
+        await page.goto(url, { waitUntil: "load", timeout: 60000 });
+        await page.waitForSelector(".learning-book-markdown", { timeout: 30000 });
+        await navigateToSection(page, 2);
+        const topicShot = path.join(
+          screenshotDir,
+          "g5-div_with_remainder-topic-cards-mobile.png"
+        );
+        const footer = page.locator("footer").last();
+        await footer.scrollIntoViewIfNeeded();
+        await footer.screenshot({ path: topicShot });
+        screenshotPaths.push("tmp/bidi-qa-screenshots/g5-div_with_remainder-topic-cards-mobile.png");
+
+        const nextTitle = await page
+          .getByText("נושא הבא")
+          .locator("..")
+          .innerText();
+        if (/חילוקבמחלק|דו-ספרתינושא/.test(nextTitle)) {
+          fail(`${url}: topic card text appears glued: ${JSON.stringify(nextTitle)}`);
+        }
+        if (!nextTitle.includes("חילוק במחלק דו-ספרתי")) {
+          fail(`${url}: topic card missing spaced next title: ${JSON.stringify(nextTitle)}`);
+        }
+        continue;
+      }
+
       const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
       if (!response || response.status() !== 200) {
         fail(`HTTP ${response?.status() ?? "?"} for ${url}`);
@@ -227,85 +397,36 @@ async function runPlaywrightDomChecks() {
         continue;
       }
 
-      await page.waitForSelector(".learning-book-markdown", {
-        timeout: 30000,
-        state: "attached",
-      });
-
-      for (const sectionNumber of target.sections) {
-        await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
+      try {
         await page.waitForSelector(".learning-book-markdown", {
           timeout: 30000,
           state: "attached",
         });
-        await navigateToSection(page, sectionNumber);
-
-        const domReport = await page.evaluate(() => {
-          /** @type {string[]} */
-          const issues = [];
-          const mathRuns = document.querySelectorAll("[data-book-math-run]");
-          for (const el of mathRuns) {
-            if (el.getAttribute("dir") !== "ltr") {
-              issues.push(`math run missing dir=ltr: ${el.textContent}`);
-            }
-            if (el.closest(".book-line-label")) {
-              issues.push(`math run nested inside label: ${el.textContent}`);
-            }
-          }
-
-          const labels = document.querySelectorAll("[data-book-label]");
-          for (const el of labels) {
-            if (el.querySelector("[data-book-math-run]")) {
-              issues.push(`label contains math run: ${el.textContent}`);
-            }
-          }
-
-          return {
-            issues,
-            mathRunCount: mathRuns.length,
-            labelCount: labels.length,
-            mathTexts: [...mathRuns].map((el) => el.textContent?.trim() || ""),
-          };
-        });
-
-        if (domReport.issues.length) {
-          for (const issue of domReport.issues) {
-            fail(`${url} §${sectionNumber}: ${issue}`);
-          }
-        }
-
-        if (
-          target.pageId === "div_with_remainder" &&
-          G5_REQUIRED_MATH[sectionNumber]
-        ) {
-          for (const expected of G5_REQUIRED_MATH[sectionNumber]) {
-            const found = domReport.mathTexts.some(
-              (t) => t.includes(expected) || expected.includes(t)
-            );
-            if (!found) {
-              fail(
-                `${url} §${sectionNumber}: missing DOM math run containing "${expected}" (got ${JSON.stringify(domReport.mathTexts)})`
-              );
-            }
-          }
-        }
-
-        notes.push(
-          `DOM OK ${url} §${sectionNumber} — mathRuns=${domReport.mathRunCount} labels=${domReport.labelCount}`
-        );
+      } catch {
+        notes.push(`DOM skip ${url} — book markdown not rendered`);
+        continue;
       }
 
-      if (target.pageId === "div_with_remainder") {
-        await navigateToSection(page, 3);
-        const screenshotDir = path.join(ROOT, "tmp/bidi-qa-screenshots");
-        fs.mkdirSync(screenshotDir, { recursive: true });
-        await page.screenshot({
-          path: path.join(screenshotDir, "g5-div_with_remainder-section3-mobile.png"),
-          fullPage: true,
-        });
-        notes.push(
-          `screenshot saved tmp/bidi-qa-screenshots/g5-div_with_remainder-section3-mobile.png`
-        );
+      const hydrated = await waitForProductionHydration(page, url);
+      if (!hydrated.ok) {
+        notes.push(`DOM skip ${url} — ${hydrated.reason}`);
+        continue;
+      }
+
+      // Return to section 1 before iterating target sections
+      for (let i = 0; i < 6; i += 1) {
+        const prev = page.getByRole("button", { name: "עמוד קודם" });
+        if (!(await prev.isEnabled())) break;
+        await prev.click();
+        await page.waitForTimeout(300);
+      }
+
+      for (const sectionNumber of target.sections) {
+        await navigateToSection(page, sectionNumber);
+
+        await assertDomSection(page, url, sectionNumber, target, G5_REQUIRED_MATH);
+
+        notes.push(`DOM OK ${url} §${sectionNumber}`);
       }
     } catch (e) {
       fail(`Playwright failed ${url}: ${e.message}`);
@@ -313,6 +434,76 @@ async function runPlaywrightDomChecks() {
   }
 
   await browser.close();
+
+  for (const required of REQUIRED_G5_SCREENSHOTS) {
+    const full = path.join(screenshotDir, required);
+    if (!fs.existsSync(full)) {
+      fail(`required screenshot missing: tmp/bidi-qa-screenshots/${required}`);
+    }
+  }
+
+  if (screenshotPaths.length) {
+    notes.push("Screenshots:");
+    for (const p of screenshotPaths) {
+      notes.push(`  ${p}`);
+    }
+  }
+}
+
+async function assertDomSection(page, url, sectionNumber, target, g5RequiredMath) {
+  const domReport = await page.evaluate(() => {
+    /** @type {string[]} */
+    const issues = [];
+    const mathRuns = document.querySelectorAll("[data-book-math-run]");
+    for (const el of mathRuns) {
+      if (el.getAttribute("dir") !== "ltr") {
+        issues.push(`math run missing dir=ltr: ${el.textContent}`);
+      }
+      if (el.closest(".book-line-label")) {
+        issues.push(`math run nested inside label: ${el.textContent}`);
+      }
+    }
+
+    const labels = document.querySelectorAll("[data-book-label]");
+    for (const el of labels) {
+      if (el.querySelector("[data-book-math-run]")) {
+        issues.push(`label contains math run: ${el.textContent}`);
+      }
+    }
+
+    return {
+      issues,
+      mathRunCount: mathRuns.length,
+      labelCount: labels.length,
+      mathTexts: [...mathRuns].map((el) => el.textContent?.trim() || ""),
+    };
+  });
+
+  if (domReport.issues.length) {
+    for (const issue of domReport.issues) {
+      fail(`${url} §${sectionNumber}: ${issue}`);
+    }
+  }
+
+  if (
+    target.pageId === "div_with_remainder" &&
+    g5RequiredMath[sectionNumber]
+  ) {
+    for (const expected of g5RequiredMath[sectionNumber]) {
+      const found = domReport.mathTexts.some(
+        (t) => t.includes(expected) || expected.includes(t)
+      );
+      if (!found) {
+        fail(
+          `${url} §${sectionNumber}: missing DOM math run containing "${expected}" (got ${JSON.stringify(domReport.mathTexts)})`
+        );
+      }
+    }
+  }
+
+  notes.push(
+    `DOM OK ${url} §${sectionNumber} — mathRuns=${domReport.mathRunCount} labels=${domReport.labelCount}`
+  );
 }
 
 if (baseUrl) {

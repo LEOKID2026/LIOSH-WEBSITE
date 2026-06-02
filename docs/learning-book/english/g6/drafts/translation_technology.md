@@ -76,7 +76,7 @@ Scientists might discover new ways to save energy
 
 Scientists must discover new ways to save energy — חזק מדי!
 
-❌ must = חייב — לא אותו משמעות כמו might!
+❌ must = חייב — לא אותה משמעות כמו might!
 
 ✓ Scientists might discover new ways to save energy.
 

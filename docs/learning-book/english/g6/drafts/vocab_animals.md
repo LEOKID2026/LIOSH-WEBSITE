@@ -64,7 +64,7 @@ The whales were swimming when we saw them
 
 ## 5. נסו בעצמכם
 
-שמירת ימים — רואים דולפינים ולווייתנים.
+שייט בים — רואים דולפינים ולווייתנים.
 
 The whales were swimming when we saw them
 

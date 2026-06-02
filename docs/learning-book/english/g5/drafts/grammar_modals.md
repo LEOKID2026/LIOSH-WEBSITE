@@ -66,7 +66,7 @@ You must wear a helmet
 
 ## 5. נסו בעצמכם
 
-רiding a bike — בטיחות קודמת.
+רכיבה על אופניים — בטיחות קודמת.
 
 You must wear a helmet
 

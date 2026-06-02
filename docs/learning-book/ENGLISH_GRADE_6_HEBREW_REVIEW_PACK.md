@@ -104,7 +104,7 @@ The whales were swimming when we saw them
 
 ### Section 5. נסו בעצמכם
 
-שמירת ימים — רואים דולפינים ולווייתנים.
+שייט בים — רואים דולפינים ולווייתנים.
 
 The whales were swimming when we saw them
 
@@ -742,7 +742,7 @@ We have visited three countries so far
 
 ### Section 6. שימו לב!
 
-We visited three countries so far — לא תמיד אותו משמעות!
+We visited three countries so far — לא תמיד אותה משמעות!
 
 ❌ visited לבד — Past Simple, דגש על מתי!
 
@@ -1684,7 +1684,7 @@ Scientists might discover new ways to save energy
 
 Scientists must discover new ways to save energy — חזק מדי!
 
-❌ must = חייב — לא אותו משמעות כמו might!
+❌ must = חייב — לא אותה משמעות כמו might!
 
 ✓ Scientists might discover new ways to save energy.
 

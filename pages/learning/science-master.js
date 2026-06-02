@@ -112,6 +112,8 @@ import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsV
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
+import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
+import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 
 // ================== CONFIG ==================
 
@@ -703,6 +705,7 @@ export default function ScienceMaster() {
   const [mode, setMode] = useState("learning");
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("body");
+  const bookIndexHref = getLearningBookIndexHref("science", grade);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -3038,7 +3041,15 @@ function saveScienceAnswerInParallel({
 
           {/* SETUP / GAME */}
           {!gameActive ? (
-            <div className="flex flex-col flex-1 min-h-0 min-w-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+            <div className="relative flex flex-col flex-1 min-h-0 min-w-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+              {bookIndexHref ? (
+                <LearningBookIndexTile
+                  subject="science"
+                  grade={grade}
+                  testId={`science-${grade}-book-index-button`}
+                  onClick={() => router.push(bookIndexHref)}
+                />
+              ) : null}
               <div className="w-full flex justify-center mb-3 md:mb-4 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] px-0.5">
                 <div
                   className="inline-flex flex-nowrap items-center justify-center gap-2 md:gap-2.5 lg:gap-3 w-max max-w-full min-w-0"

@@ -70,6 +70,9 @@ for (const book of LEARNING_BOOK_CATALOG_LIST) {
   if (book.subject === "math" && !book.meta.bookTitleHe?.includes("חשבון")) {
     fail(`math book missing חשבון in title: ${book.meta.bookTitleHe}`);
   }
+  if (book.subject === "science" && !book.meta.bookTitleHe?.includes("מדעים")) {
+    fail(`science book missing מדעים in title: ${book.meta.bookTitleHe}`);
+  }
 
   const ids = book.registry.pageOrder;
   const unique = new Set(ids);
@@ -267,6 +270,25 @@ if (!geometryG6Entry.meta.bookTitleHe?.includes("הנדסה")) {
 }
 if (geometryG6Entry.meta.bookTitleHe?.includes("גאומטריה")) {
   fail("geometry/g6 book title must not use גאומטריה");
+}
+
+const scienceG1Entry = getLearningBookEntry("science", "g1");
+if (!scienceG1Entry || scienceG1Entry.status !== "authored") {
+  fail("science/g1 must be authored in catalog");
+}
+if (scienceG1Entry.registry.pageOrder.length !== 6) {
+  fail(
+    `science/g1 expected 6 pages, got ${scienceG1Entry.registry.pageOrder.length}`
+  );
+}
+if (scienceG1Entry.features?.practice) {
+  fail("science/g1 must not enable practice feature (no real mappings yet)");
+}
+if (!scienceG1Entry.meta.bookTitleHe?.includes("מדעים")) {
+  fail("science/g1 book title must use מדעים");
+}
+if (scienceG1Entry.meta.routeBase !== "/learning/book/science/g1") {
+  fail(`science/g1 routeBase must be /learning/book/science/g1`);
 }
 
 if (failures > 0) {

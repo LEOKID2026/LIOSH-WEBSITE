@@ -3,6 +3,7 @@ import LearningBookShell from "../../../../../components/learning-book/LearningB
 import LearningBookIndexContent from "../../../../../components/learning-book/LearningBookIndexContent";
 import { useIOSViewportFix } from "../../../../../hooks/useIOSViewportFix";
 import { createLearningBookNav } from "../../../../../lib/learning-book/learning-book-nav";
+import { getLearningBookMasterPath } from "../../../../../lib/learning-book/learning-book-catalog-meta";
 import { useMemo } from "react";
 
 export default function DynamicLearningBookIndex({
@@ -17,9 +18,7 @@ export default function DynamicLearningBookIndex({
       createLearningBookNav(
         subject,
         grade,
-        subject === "geometry"
-          ? "/learning/geometry-master"
-          : "/learning/math-master"
+        getLearningBookMasterPath(subject)
       ),
     [subject, grade]
   );

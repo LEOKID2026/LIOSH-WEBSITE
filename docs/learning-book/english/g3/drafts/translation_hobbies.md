@@ -38,7 +38,7 @@ I like to draw.
 
 She plays the piano.
 
-היא מנגנת בפiano.
+היא מנגנת בפסנתר.
 
 ---
 

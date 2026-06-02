@@ -1,0 +1,3102 @@
+{
+  "totals": {
+    "files": 262,
+    "mathPages": 192,
+    "geometryPages": 70,
+    "families": 126,
+    "repeatedFamilies": 52
+  },
+  "counts": {
+    "PASS": 18,
+    "REVIEW_OK": 0,
+    "NEEDS_POLISH": 17,
+    "FAIL_DUPLICATE": 12,
+    "FAIL_AGE_FIT": 6,
+    "PLACEHOLDER_ONLY": 2
+  },
+  "mathRows": [
+    {
+      "family": "division_core",
+      "familyKey": "math:division_core",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder",
+      "similarity": "core≈100%; dup§=3; sharedMath=3",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "sequence",
+      "familyKey": "math:sequence",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/sequence; g4/sequence; g5/sequence; g6/sequence",
+      "similarity": "core≈100%; dup§=3; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "ns_even_odd",
+      "familyKey": "math:ns_even_odd",
+      "grades": "g1, g2, g3, g4",
+      "files": "g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd",
+      "similarity": "core≈99%; dup§=8; sharedMath=3",
+      "ageFit": "OK",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9910714285714286
+    },
+    {
+      "family": "ns_complement100",
+      "familyKey": "math:ns_complement100",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/ns_complement100; g4/ns_complement100; g5/ns_complement100; g6/ns_complement100",
+      "similarity": "core≈98%; dup§=7; sharedMath=15",
+      "ageFit": "No numeric progression",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9758064516129032
+    },
+    {
+      "family": "wp_time_sum",
+      "familyKey": "math:wp_time_sum",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum",
+      "similarity": "core≈98%; dup§=8; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.975
+    },
+    {
+      "family": "ns_neighbors",
+      "familyKey": "math:ns_neighbors",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors",
+      "similarity": "core≈95%; dup§=3; sharedMath=3",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9545454545454546
+    },
+    {
+      "family": "ns_complement10",
+      "familyKey": "math:ns_complement10",
+      "grades": "g1, g2, g3, g4",
+      "files": "g1/ns_complement10; g2/ns_complement10; g3/ns_complement10; g4/ns_complement10",
+      "similarity": "core≈95%; dup§=5; sharedMath=10",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9464285714285714
+    },
+    {
+      "family": "wp_leftover",
+      "familyKey": "math:wp_leftover",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover",
+      "similarity": "core≈93%; dup§=7; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9268421052631579
+    },
+    {
+      "family": "add_three",
+      "familyKey": "math:add_three",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/add_three; g4/add_three; g5/add_three; g6/add_three",
+      "similarity": "core≈91%; dup§=2; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 2000 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.907051282051282
+    },
+    {
+      "family": "eq_sub",
+      "familyKey": "math:eq_sub",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/eq_sub; g4/eq_sub; g5/eq_sub; g6/eq_sub",
+      "similarity": "core≈78%; dup§=0; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 5000 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.78
+    },
+    {
+      "family": "wp_comparison_more",
+      "familyKey": "math:wp_comparison_more",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_comparison_more; g4/wp_comparison_more; g5/wp_comparison_more; g6/wp_comparison_more",
+      "similarity": "core≈77%; dup§=5; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 12450 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.7651002506265664
+    },
+    {
+      "family": "eq_add",
+      "familyKey": "math:eq_add",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/eq_add; g4/eq_add; g5/eq_add; g6/eq_add",
+      "similarity": "core≈72%; dup§=0; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 4030 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.7237179487179488
+    },
+    {
+      "family": "cmp",
+      "familyKey": "math:cmp",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp",
+      "similarity": "core≈85%; dup§=1; sharedMath=2",
+      "ageFit": "OK",
+      "notes": "Strong structural overlap; shared math line(s).",
+      "action": "Polish — stronger grade-specific numbers/methods",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.8543040293040294
+    },
+    {
+      "family": "add_two",
+      "familyKey": "math:add_two",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/add_two; g2/add_two; g3/add_two; g4/add_two; g5/add_two; g6/add_two",
+      "similarity": "core≈81%; dup§=3; sharedMath=1",
+      "ageFit": "Too simple for top grade",
+      "notes": "Strong structural overlap; shared math line(s).",
+      "action": "Polish — stronger grade-specific numbers/methods",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.8125
+    },
+    {
+      "family": "ns_place_hundreds",
+      "familyKey": "math:ns_place_hundreds",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/ns_place_hundreds; g4/ns_place_hundreds; g5/ns_place_hundreds; g6/ns_place_hundreds",
+      "similarity": "core≈76%; dup§=0; sharedMath=3",
+      "ageFit": "OK",
+      "notes": "Moderate overlap; verify method depth differs by grade.",
+      "action": "Polish — tighten grade-specific strategy",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.7573820915926179
+    },
+    {
+      "family": "fm_factor",
+      "familyKey": "math:fm_factor",
+      "grades": "g4, g5, g6",
+      "files": "g4/fm_factor; g5/fm_factor; g6/fm_factor",
+      "similarity": "core≈59%; dup§=0; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 36 (expected nearer 1000000).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.5914835164835165
+    },
+    {
+      "family": "dec_sub",
+      "familyKey": "math:dec_sub",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/dec_sub; g4/dec_sub; g5/dec_sub; g6/dec_sub",
+      "similarity": "core≈59%; dup§=1; sharedMath=1",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 80 (expected nearer 1000000).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.5871212121212122
+    },
+    {
+      "family": "wp_unit_g_to_kg",
+      "familyKey": "math:wp_unit_g_to_kg",
+      "grades": "g5, g6",
+      "files": "g5/wp_unit_g_to_kg; g6/wp_unit_g_to_kg",
+      "similarity": "core≈50%; dup§=0; sharedMath=1",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (3500 → 3000).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.49503205128205124
+    },
+    {
+      "family": "est_mul",
+      "familyKey": "math:est_mul",
+      "grades": "g4, g5",
+      "files": "g4/est_mul; g5/est_mul",
+      "similarity": "core≈37%; dup§=0; sharedMath=1",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (2500 → 2500).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.37445887445887444
+    },
+    {
+      "family": "eq_div",
+      "familyKey": "math:eq_div",
+      "grades": "g5, g6",
+      "files": "g5/eq_div; g6/eq_div",
+      "similarity": "core≈36%; dup§=0; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (3600 → 768).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.35833333333333334
+    },
+    {
+      "family": "perc_discount",
+      "familyKey": "math:perc_discount",
+      "grades": "g5, g6",
+      "files": "g5/perc_discount; g6/perc_discount",
+      "similarity": "core≈35%; dup§=0; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (200 → 200).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.3492063492063492
+    },
+    {
+      "family": "wp_time_date",
+      "familyKey": "math:wp_time_date",
+      "grades": "g1, g2",
+      "files": "g1/wp_time_date; g2/wp_time_date",
+      "similarity": "core≈32%; dup§=3; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (3 → 3).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.3221273291925466
+    },
+    {
+      "family": "wp_shop_discount",
+      "familyKey": "math:wp_shop_discount",
+      "grades": "g5, g6",
+      "files": "g5/wp_shop_discount; g6/wp_shop_discount",
+      "similarity": "core≈24%; dup§=0; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (350 → 150).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.23869047619047618
+    },
+    {
+      "family": "wp_distance_time",
+      "familyKey": "math:wp_distance_time",
+      "grades": "g5, g6",
+      "files": "g5/wp_distance_time; g6/wp_distance_time",
+      "similarity": "core≈21%; dup§=0; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (180 → 120).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.2062908496732026
+    },
+    {
+      "family": "sub_two",
+      "familyKey": "math:sub_two",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/sub_two; g2/sub_two; g3/sub_two; g4/sub_two; g5/sub_two; g6/sub_two",
+      "similarity": "core≈69%; dup§=1; sharedMath=3",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 10→75; g2→g3 max# 75→620; g3→g4 max# 620→5412; g4→g5 max# 5412→50000; g5→g6 max# 50000→100000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.6888888888888888
+    },
+    {
+      "family": "fm_multiple",
+      "familyKey": "math:fm_multiple",
+      "grades": "g4, g5, g6",
+      "files": "g4/fm_multiple; g5/fm_multiple; g6/fm_multiple",
+      "similarity": "core≈54%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 35→60; g5→g6 max# 60→40",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5411324786324786
+    },
+    {
+      "family": "round",
+      "familyKey": "math:round",
+      "grades": "g4, g5, g6",
+      "files": "g4/round; g5/round; g6/round",
+      "similarity": "core≈52%; dup§=4; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 4582→40000; g5→g6 max# 40000→48000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5245098039215687
+    },
+    {
+      "family": "eq_mul",
+      "familyKey": "math:eq_mul",
+      "grades": "g5, g6",
+      "files": "g5/eq_mul; g6/eq_mul",
+      "similarity": "core≈52%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 480→576",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5178571428571429
+    },
+    {
+      "family": "dec_add",
+      "familyKey": "math:dec_add",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/dec_add; g4/dec_add; g5/dec_add; g6/dec_add",
+      "similarity": "core≈47%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 37→575; g4→g5 max# 575→1605; g5→g6 max# 1605→85",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.47381175734834274
+    },
+    {
+      "family": "perc_part_of",
+      "familyKey": "math:perc_part_of",
+      "grades": "g5, g6",
+      "files": "g5/perc_part_of; g6/perc_part_of",
+      "similarity": "core≈47%; dup§=0; sharedMath=1",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 100→10000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4716880341880342
+    },
+    {
+      "family": "fm_gcd",
+      "familyKey": "math:fm_gcd",
+      "grades": "g4, g5, g6",
+      "files": "g4/fm_gcd; g5/fm_gcd; g6/fm_gcd",
+      "similarity": "core≈46%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 25→45; g5→g6 max# 45→12356101530",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4553571428571429
+    },
+    {
+      "family": "wp_time_days",
+      "familyKey": "math:wp_time_days",
+      "grades": "g1, g2",
+      "files": "g1/wp_time_days; g2/wp_time_days",
+      "similarity": "core≈44%; dup§=2; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 3→4",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4372844504423452
+    },
+    {
+      "family": "mul",
+      "familyKey": "math:mul",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/mul; g2/mul; g3/mul; g4/mul; g5/mul; g6/mul",
+      "similarity": "core≈43%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 20→24; g2→g3 max# 24→56; g3→g4 max# 56→96; g4→g5 max# 96→4800; g5→g6 max# 4800→420",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4278499278499278
+    },
+    {
+      "family": "wp_unit_cm_to_m",
+      "familyKey": "math:wp_unit_cm_to_m",
+      "grades": "g5, g6",
+      "files": "g5/wp_unit_cm_to_m; g6/wp_unit_cm_to_m",
+      "similarity": "core≈38%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 350→35000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.3826923076923077
+    },
+    {
+      "family": "wp_coins",
+      "familyKey": "math:wp_coins",
+      "grades": "g1, g2",
+      "files": "g1/wp_coins; g2/wp_coins",
+      "similarity": "core≈38%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 14→30",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.38085140306122445
+    },
+    {
+      "family": "est_add",
+      "familyKey": "math:est_add",
+      "grades": "g4, g5",
+      "files": "g4/est_add; g5/est_add",
+      "similarity": "core≈31%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 1000→6000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.3088714833759591
+    },
+    {
+      "family": "ns_place_tens_units",
+      "familyKey": "math:ns_place_tens_units",
+      "grades": "g1, g2",
+      "files": "g1/ns_place_tens_units; g2/ns_place_tens_units",
+      "similarity": "core≈30%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 23→1000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.29762398393307854
+    },
+    {
+      "family": "wp_coins_spent",
+      "familyKey": "math:wp_coins_spent",
+      "grades": "g1, g2",
+      "files": "g1/wp_coins_spent; g2/wp_coins_spent",
+      "similarity": "core≈23%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 17→50",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.22747562421475465
+    },
+    {
+      "family": "division_word_problems",
+      "familyKey": "math:division_word_problems",
+      "grades": "g2",
+      "files": "g2/wp_division_simple; g2/wp_groups_g2",
+      "similarity": "core≈23%; dup§=3; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range.",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.2254516317016317
+    },
+    {
+      "family": "est_quantity",
+      "familyKey": "math:est_quantity",
+      "grades": "g4, g5",
+      "files": "g4/est_quantity; g5/est_quantity",
+      "similarity": "core≈14%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 1900→12000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.13840752517223104
+    },
+    {
+      "family": "book_placeholder",
+      "familyKey": "math:book_placeholder",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/book_placeholder; g4/book_placeholder; g5/book_placeholder; g6/book_placeholder",
+      "similarity": "—",
+      "ageFit": "—",
+      "notes": "All pages in family are placeholders or stub content.",
+      "action": "Defer until real content writing",
+      "verdict": "PLACEHOLDER_ONLY",
+      "maxCoreSim": 0
+    }
+  ],
+  "geometryRows": [
+    {
+      "family": "triangle_angles",
+      "familyKey": "geometry:triangle_angles",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles",
+      "similarity": "core≈100%; dup§=2; sharedMath=2",
+      "ageFit": "No numeric progression",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "trapezoid_area",
+      "familyKey": "geometry:trapezoid_area",
+      "grades": "g5, g6",
+      "files": "g5/trapezoid_area; g6/trapezoid_area",
+      "similarity": "core≈96%; dup§=4; sharedMath=4",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9583333333333334
+    },
+    {
+      "family": "prism_volume",
+      "familyKey": "geometry:prism_volume",
+      "grades": "g4, g5, g6",
+      "files": "g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume",
+      "similarity": "core≈94%; dup§=3; sharedMath=1",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9423076923076923
+    },
+    {
+      "family": "square_perimeter",
+      "familyKey": "geometry:square_perimeter",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter",
+      "similarity": "core≈93%; dup§=2; sharedMath=5",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9333333333333333
+    },
+    {
+      "family": "square_area",
+      "familyKey": "geometry:square_area",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area",
+      "similarity": "core≈100%; dup§=1; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 81 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "parallelogram_area",
+      "familyKey": "geometry:parallelogram_area",
+      "grades": "g5, g6",
+      "files": "g5/parallelogram_area; g6/parallelogram_area",
+      "similarity": "core≈95%; dup§=2; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 80 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.95
+    },
+    {
+      "family": "triangle_perimeter",
+      "familyKey": "geometry:triangle_perimeter",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/triangle_perimeter; g4/triangle_perimeter; g5/triangle_perimeter; g6/triangle_perimeter",
+      "similarity": "core≈95%; dup§=2; sharedMath=1",
+      "ageFit": "Too simple for top grade",
+      "notes": "Strong structural overlap; shared math line(s).",
+      "action": "Polish — stronger grade-specific numbers/methods",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.9464285714285714
+    },
+    {
+      "family": "quadrilaterals",
+      "familyKey": "geometry:quadrilaterals",
+      "grades": "g3, g4, g5",
+      "files": "g3/quadrilaterals; g4/quadrilaterals; g5/quadrilaterals",
+      "similarity": "core≈35%; dup§=1; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (2 → 1).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.3527550852245974
+    },
+    {
+      "family": "transformations",
+      "familyKey": "geometry:transformations",
+      "grades": "g1, g2",
+      "files": "g1/transformations; g2/transformations",
+      "similarity": "core≈25%; dup§=2; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (2 → 2).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.254712656529517
+    },
+    {
+      "family": "solids",
+      "familyKey": "geometry:solids",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/solids; g3/solids; g4/solids; g5/solids; g6/solids",
+      "similarity": "core≈15%; dup§=0; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (6 → 6).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.1474982160872026
+    },
+    {
+      "family": "parallel_perpendicular",
+      "familyKey": "geometry:parallel_perpendicular",
+      "grades": "g3, g4, g5",
+      "files": "g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular",
+      "similarity": "core≈12%; dup§=1; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (90 → 90).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.12256121071910545
+    },
+    {
+      "family": "diagonal_square",
+      "familyKey": "geometry:diagonal_square",
+      "grades": "g4, g5",
+      "files": "g4/diagonal_square; g5/diagonal_square",
+      "similarity": "core≈14%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 9→72",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.14444388897776356
+    },
+    {
+      "family": "diagonal_rectangle",
+      "familyKey": "geometry:diagonal_rectangle",
+      "grades": "g4, g5",
+      "files": "g4/diagonal_rectangle; g5/diagonal_rectangle",
+      "similarity": "core≈13%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 7→100",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.1320824316348613
+    },
+    {
+      "family": "book_placeholder",
+      "familyKey": "geometry:book_placeholder",
+      "grades": "g1, g2, g3, g5, g6",
+      "files": "g1/book_placeholder; g2/book_placeholder; g3/book_placeholder; g5/book_placeholder; g6/book_placeholder",
+      "similarity": "—",
+      "ageFit": "—",
+      "notes": "All pages in family are placeholders or stub content.",
+      "action": "Defer until real content writing",
+      "verdict": "PLACEHOLDER_ONLY",
+      "maxCoreSim": 0
+    }
+  ],
+  "priority": [
+    {
+      "family": "division_core",
+      "familyKey": "math:division_core",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder",
+      "similarity": "core≈100%; dup§=3; sharedMath=3",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "sequence",
+      "familyKey": "math:sequence",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/sequence; g4/sequence; g5/sequence; g6/sequence",
+      "similarity": "core≈100%; dup§=3; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "ns_even_odd",
+      "familyKey": "math:ns_even_odd",
+      "grades": "g1, g2, g3, g4",
+      "files": "g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd",
+      "similarity": "core≈99%; dup§=8; sharedMath=3",
+      "ageFit": "OK",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9910714285714286
+    },
+    {
+      "family": "ns_complement100",
+      "familyKey": "math:ns_complement100",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/ns_complement100; g4/ns_complement100; g5/ns_complement100; g6/ns_complement100",
+      "similarity": "core≈98%; dup§=7; sharedMath=15",
+      "ageFit": "No numeric progression",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9758064516129032
+    },
+    {
+      "family": "wp_time_sum",
+      "familyKey": "math:wp_time_sum",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum",
+      "similarity": "core≈98%; dup§=8; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.975
+    },
+    {
+      "family": "ns_neighbors",
+      "familyKey": "math:ns_neighbors",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors",
+      "similarity": "core≈95%; dup§=3; sharedMath=3",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9545454545454546
+    },
+    {
+      "family": "ns_complement10",
+      "familyKey": "math:ns_complement10",
+      "grades": "g1, g2, g3, g4",
+      "files": "g1/ns_complement10; g2/ns_complement10; g3/ns_complement10; g4/ns_complement10",
+      "similarity": "core≈95%; dup§=5; sharedMath=10",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9464285714285714
+    },
+    {
+      "family": "wp_leftover",
+      "familyKey": "math:wp_leftover",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover",
+      "similarity": "core≈93%; dup§=7; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9268421052631579
+    },
+    {
+      "family": "add_three",
+      "familyKey": "math:add_three",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/add_three; g4/add_three; g5/add_three; g6/add_three",
+      "similarity": "core≈91%; dup§=2; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 2000 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.907051282051282
+    },
+    {
+      "family": "eq_sub",
+      "familyKey": "math:eq_sub",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/eq_sub; g4/eq_sub; g5/eq_sub; g6/eq_sub",
+      "similarity": "core≈78%; dup§=0; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 5000 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.78
+    },
+    {
+      "family": "wp_comparison_more",
+      "familyKey": "math:wp_comparison_more",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_comparison_more; g4/wp_comparison_more; g5/wp_comparison_more; g6/wp_comparison_more",
+      "similarity": "core≈77%; dup§=5; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 12450 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.7651002506265664
+    },
+    {
+      "family": "eq_add",
+      "familyKey": "math:eq_add",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/eq_add; g4/eq_add; g5/eq_add; g6/eq_add",
+      "similarity": "core≈72%; dup§=0; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 4030 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.7237179487179488
+    },
+    {
+      "family": "triangle_angles",
+      "familyKey": "geometry:triangle_angles",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles",
+      "similarity": "core≈100%; dup§=2; sharedMath=2",
+      "ageFit": "No numeric progression",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "trapezoid_area",
+      "familyKey": "geometry:trapezoid_area",
+      "grades": "g5, g6",
+      "files": "g5/trapezoid_area; g6/trapezoid_area",
+      "similarity": "core≈96%; dup§=4; sharedMath=4",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9583333333333334
+    },
+    {
+      "family": "prism_volume",
+      "familyKey": "geometry:prism_volume",
+      "grades": "g4, g5, g6",
+      "files": "g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume",
+      "similarity": "core≈94%; dup§=3; sharedMath=1",
+      "ageFit": "Too simple for top grade",
+      "notes": "Multiple exact duplicated sentences across grades.",
+      "action": "Fix now — differentiate wording and examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9423076923076923
+    },
+    {
+      "family": "square_perimeter",
+      "familyKey": "geometry:square_perimeter",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter",
+      "similarity": "core≈93%; dup§=2; sharedMath=5",
+      "ageFit": "Too simple for top grade",
+      "notes": "Very high section similarity with repeated worked examples.",
+      "action": "Fix now — rewrite higher-grade explanations/examples",
+      "verdict": "FAIL_DUPLICATE",
+      "maxCoreSim": 0.9333333333333333
+    },
+    {
+      "family": "square_area",
+      "familyKey": "geometry:square_area",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area",
+      "similarity": "core≈100%; dup§=1; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 81 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 1
+    },
+    {
+      "family": "parallelogram_area",
+      "familyKey": "geometry:parallelogram_area",
+      "grades": "g5, g6",
+      "files": "g5/parallelogram_area; g6/parallelogram_area",
+      "similarity": "core≈95%; dup§=2; sharedMath=0",
+      "ageFit": "Too simple for top grade",
+      "notes": "g6 core examples top at 80 (expected nearer 1000000).",
+      "action": "Fix now — advance examples for upper grades",
+      "verdict": "FAIL_AGE_FIT",
+      "maxCoreSim": 0.95
+    }
+  ],
+  "reviewOk": [],
+  "acceptableReview": [
+    {
+      "family": "cmp",
+      "familyKey": "math:cmp",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp",
+      "similarity": "core≈85%; dup§=1; sharedMath=2",
+      "ageFit": "OK",
+      "notes": "Strong structural overlap; shared math line(s).",
+      "action": "Polish — stronger grade-specific numbers/methods",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.8543040293040294
+    },
+    {
+      "family": "sub_two",
+      "familyKey": "math:sub_two",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/sub_two; g2/sub_two; g3/sub_two; g4/sub_two; g5/sub_two; g6/sub_two",
+      "similarity": "core≈69%; dup§=1; sharedMath=3",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 10→75; g2→g3 max# 75→620; g3→g4 max# 620→5412; g4→g5 max# 5412→50000; g5→g6 max# 50000→100000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.6888888888888888
+    },
+    {
+      "family": "fm_multiple",
+      "familyKey": "math:fm_multiple",
+      "grades": "g4, g5, g6",
+      "files": "g4/fm_multiple; g5/fm_multiple; g6/fm_multiple",
+      "similarity": "core≈54%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 35→60; g5→g6 max# 60→40",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5411324786324786
+    },
+    {
+      "family": "round",
+      "familyKey": "math:round",
+      "grades": "g4, g5, g6",
+      "files": "g4/round; g5/round; g6/round",
+      "similarity": "core≈52%; dup§=4; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 4582→40000; g5→g6 max# 40000→48000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5245098039215687
+    },
+    {
+      "family": "eq_mul",
+      "familyKey": "math:eq_mul",
+      "grades": "g5, g6",
+      "files": "g5/eq_mul; g6/eq_mul",
+      "similarity": "core≈52%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 480→576",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5178571428571429
+    },
+    {
+      "family": "dec_add",
+      "familyKey": "math:dec_add",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/dec_add; g4/dec_add; g5/dec_add; g6/dec_add",
+      "similarity": "core≈47%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 37→575; g4→g5 max# 575→1605; g5→g6 max# 1605→85",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.47381175734834274
+    },
+    {
+      "family": "perc_part_of",
+      "familyKey": "math:perc_part_of",
+      "grades": "g5, g6",
+      "files": "g5/perc_part_of; g6/perc_part_of",
+      "similarity": "core≈47%; dup§=0; sharedMath=1",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 100→10000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4716880341880342
+    },
+    {
+      "family": "fm_gcd",
+      "familyKey": "math:fm_gcd",
+      "grades": "g4, g5, g6",
+      "files": "g4/fm_gcd; g5/fm_gcd; g6/fm_gcd",
+      "similarity": "core≈46%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 25→45; g5→g6 max# 45→12356101530",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4553571428571429
+    },
+    {
+      "family": "wp_time_days",
+      "familyKey": "math:wp_time_days",
+      "grades": "g1, g2",
+      "files": "g1/wp_time_days; g2/wp_time_days",
+      "similarity": "core≈44%; dup§=2; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 3→4",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4372844504423452
+    },
+    {
+      "family": "mul",
+      "familyKey": "math:mul",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/mul; g2/mul; g3/mul; g4/mul; g5/mul; g6/mul",
+      "similarity": "core≈43%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 20→24; g2→g3 max# 24→56; g3→g4 max# 56→96; g4→g5 max# 96→4800; g5→g6 max# 4800→420",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4278499278499278
+    },
+    {
+      "family": "wp_unit_cm_to_m",
+      "familyKey": "math:wp_unit_cm_to_m",
+      "grades": "g5, g6",
+      "files": "g5/wp_unit_cm_to_m; g6/wp_unit_cm_to_m",
+      "similarity": "core≈38%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 350→35000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.3826923076923077
+    },
+    {
+      "family": "wp_coins",
+      "familyKey": "math:wp_coins",
+      "grades": "g1, g2",
+      "files": "g1/wp_coins; g2/wp_coins",
+      "similarity": "core≈38%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 14→30",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.38085140306122445
+    },
+    {
+      "family": "est_add",
+      "familyKey": "math:est_add",
+      "grades": "g4, g5",
+      "files": "g4/est_add; g5/est_add",
+      "similarity": "core≈31%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 1000→6000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.3088714833759591
+    },
+    {
+      "family": "ns_place_tens_units",
+      "familyKey": "math:ns_place_tens_units",
+      "grades": "g1, g2",
+      "files": "g1/ns_place_tens_units; g2/ns_place_tens_units",
+      "similarity": "core≈30%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 23→1000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.29762398393307854
+    },
+    {
+      "family": "wp_coins_spent",
+      "familyKey": "math:wp_coins_spent",
+      "grades": "g1, g2",
+      "files": "g1/wp_coins_spent; g2/wp_coins_spent",
+      "similarity": "core≈23%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 17→50",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.22747562421475465
+    },
+    {
+      "family": "division_word_problems",
+      "familyKey": "math:division_word_problems",
+      "grades": "g2",
+      "files": "g2/wp_division_simple; g2/wp_groups_g2",
+      "similarity": "core≈23%; dup§=3; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range.",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.2254516317016317
+    },
+    {
+      "family": "est_quantity",
+      "familyKey": "math:est_quantity",
+      "grades": "g4, g5",
+      "files": "g4/est_quantity; g5/est_quantity",
+      "similarity": "core≈14%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 1900→12000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.13840752517223104
+    },
+    {
+      "family": "triangle_perimeter",
+      "familyKey": "geometry:triangle_perimeter",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/triangle_perimeter; g4/triangle_perimeter; g5/triangle_perimeter; g6/triangle_perimeter",
+      "similarity": "core≈95%; dup§=2; sharedMath=1",
+      "ageFit": "Too simple for top grade",
+      "notes": "Strong structural overlap; shared math line(s).",
+      "action": "Polish — stronger grade-specific numbers/methods",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.9464285714285714
+    },
+    {
+      "family": "quadrilaterals",
+      "familyKey": "geometry:quadrilaterals",
+      "grades": "g3, g4, g5",
+      "files": "g3/quadrilaterals; g4/quadrilaterals; g5/quadrilaterals",
+      "similarity": "core≈35%; dup§=1; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (2 → 1).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.3527550852245974
+    },
+    {
+      "family": "parallel_perpendicular",
+      "familyKey": "geometry:parallel_perpendicular",
+      "grades": "g3, g4, g5",
+      "files": "g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular",
+      "similarity": "core≈12%; dup§=1; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (90 → 90).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.12256121071910545
+    },
+    {
+      "family": "diagonal_square",
+      "familyKey": "geometry:diagonal_square",
+      "grades": "g4, g5",
+      "files": "g4/diagonal_square; g5/diagonal_square",
+      "similarity": "core≈14%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 9→72",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.14444388897776356
+    },
+    {
+      "family": "diagonal_rectangle",
+      "familyKey": "geometry:diagonal_rectangle",
+      "grades": "g4, g5",
+      "files": "g4/diagonal_rectangle; g5/diagonal_rectangle",
+      "similarity": "core≈13%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 7→100",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.1320824316348613
+    }
+  ],
+  "placeholderBooks": [
+    "geometry/g1/book_placeholder",
+    "geometry/g2/book_placeholder",
+    "math/g3/book_placeholder",
+    "geometry/g3/book_placeholder",
+    "math/g4/book_placeholder",
+    "math/g5/book_placeholder",
+    "geometry/g5/book_placeholder",
+    "math/g6/book_placeholder",
+    "geometry/g6/book_placeholder"
+  ],
+  "placeholderFamilies": [
+    {
+      "family": "math:book_placeholder",
+      "grades": "g3, g4, g5, g6"
+    },
+    {
+      "family": "geometry:book_placeholder",
+      "grades": "g1, g2, g3, g5, g6"
+    }
+  ],
+  "mathGradeCoverage": [
+    {
+      "grade": "g1",
+      "total": 19,
+      "placeholder": 0,
+      "real": 19
+    },
+    {
+      "grade": "g2",
+      "total": 22,
+      "placeholder": 0,
+      "real": 22
+    },
+    {
+      "grade": "g3",
+      "total": 27,
+      "placeholder": 1,
+      "real": 26
+    },
+    {
+      "grade": "g4",
+      "total": 38,
+      "placeholder": 1,
+      "real": 37
+    },
+    {
+      "grade": "g5",
+      "total": 41,
+      "placeholder": 1,
+      "real": 40
+    },
+    {
+      "grade": "g6",
+      "total": 45,
+      "placeholder": 1,
+      "real": 44
+    }
+  ],
+  "geometryGradeCoverage": [
+    {
+      "grade": "g1",
+      "total": 4,
+      "placeholder": 1,
+      "real": 3
+    },
+    {
+      "grade": "g2",
+      "total": 4,
+      "placeholder": 1,
+      "real": 3
+    },
+    {
+      "grade": "g3",
+      "total": 10,
+      "placeholder": 1,
+      "real": 9
+    },
+    {
+      "grade": "g4",
+      "total": 14,
+      "placeholder": 0,
+      "real": 14
+    },
+    {
+      "grade": "g5",
+      "total": 18,
+      "placeholder": 1,
+      "real": 17
+    },
+    {
+      "grade": "g6",
+      "total": 20,
+      "placeholder": 1,
+      "real": 19
+    }
+  ],
+  "actions": {
+    "fixNow": [
+      "math:division_core: Fix now — rewrite higher-grade explanations/examples",
+      "math:sequence: Fix now — differentiate wording and examples",
+      "math:ns_even_odd: Fix now — rewrite higher-grade explanations/examples",
+      "math:ns_complement100: Fix now — rewrite higher-grade explanations/examples",
+      "math:wp_time_sum: Fix now — differentiate wording and examples",
+      "math:ns_neighbors: Fix now — rewrite higher-grade explanations/examples",
+      "math:ns_complement10: Fix now — rewrite higher-grade explanations/examples",
+      "math:wp_leftover: Fix now — differentiate wording and examples",
+      "math:add_three: Fix now — advance examples for upper grades",
+      "math:eq_sub: Fix now — advance examples for upper grades",
+      "math:wp_comparison_more: Fix now — advance examples for upper grades",
+      "math:eq_add: Fix now — advance examples for upper grades",
+      "geometry:triangle_angles: Fix now — rewrite higher-grade explanations/examples",
+      "geometry:trapezoid_area: Fix now — rewrite higher-grade explanations/examples",
+      "geometry:prism_volume: Fix now — differentiate wording and examples",
+      "geometry:square_perimeter: Fix now — rewrite higher-grade explanations/examples",
+      "geometry:square_area: Fix now — advance examples for upper grades",
+      "geometry:parallelogram_area: Fix now — advance examples for upper grades"
+    ],
+    "defer": [
+      "Write real content for geometry/g1/book_placeholder",
+      "Write real content for geometry/g2/book_placeholder",
+      "Write real content for math/g3/book_placeholder",
+      "Write real content for geometry/g3/book_placeholder",
+      "Write real content for math/g4/book_placeholder",
+      "Write real content for math/g5/book_placeholder",
+      "Write real content for geometry/g5/book_placeholder",
+      "Write real content for math/g6/book_placeholder",
+      "Write real content for geometry/g6/book_placeholder",
+      "Author math:book_placeholder when curriculum page exists",
+      "Author geometry:book_placeholder when curriculum page exists"
+    ],
+    "noAction": [
+      "math:sub_two (g1, g2, g3, g4, g5, g6)",
+      "math:fm_multiple (g4, g5, g6)",
+      "math:round (g4, g5, g6)",
+      "math:eq_mul (g5, g6)",
+      "math:dec_add (g3, g4, g5, g6)",
+      "math:perc_part_of (g5, g6)",
+      "math:fm_gcd (g4, g5, g6)",
+      "math:wp_time_days (g1, g2)",
+      "math:mul (g1, g2, g3, g4, g5, g6)",
+      "math:wp_unit_cm_to_m (g5, g6)",
+      "math:wp_coins (g1, g2)",
+      "math:est_add (g4, g5)",
+      "math:ns_place_tens_units (g1, g2)",
+      "math:wp_coins_spent (g1, g2)",
+      "math:division_word_problems (g2)",
+      "math:est_quantity (g4, g5)",
+      "geometry:diagonal_square (g4, g5)",
+      "geometry:diagonal_rectangle (g4, g5)"
+    ]
+  },
+  "topicMap": [
+    {
+      "family": "math:add_three",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "add_three",
+          "skillId": "math:kind:add_three",
+          "title": "חיבור שלושה מספרים",
+          "file": "docs/learning-book/math/g3/drafts/add_three.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "add_three",
+          "skillId": "math:kind:add_three",
+          "title": "חיבור שלושה מספרים",
+          "file": "docs/learning-book/math/g4/drafts/add_three.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "add_three",
+          "skillId": "math:kind:add_three",
+          "title": "חיבור שלושה מספרים",
+          "file": "docs/learning-book/math/g5/drafts/add_three.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "add_three",
+          "skillId": "math:kind:add_three",
+          "title": "חיבור שלושה מספרים",
+          "file": "docs/learning-book/math/g6/drafts/add_three.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:add_two",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "add_two",
+          "skillId": "math:kind:add_two",
+          "title": "חיבור של שני מספרים",
+          "file": "docs/learning-book/math/g1/drafts/add_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "add_two",
+          "skillId": "math:kind:add_two",
+          "title": "חיבור של שני מספרים — עד 100",
+          "file": "docs/learning-book/math/g2/drafts/add_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "add_two",
+          "skillId": "math:kind:add_two",
+          "title": "חיבור שני מספרים — עד 1,000",
+          "file": "docs/learning-book/math/g3/drafts/add_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "add_two",
+          "skillId": "math:kind:add_two",
+          "title": "חיבור שני מספרים — עד 10,000",
+          "file": "docs/learning-book/math/g4/drafts/add_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "add_two",
+          "skillId": "math:kind:add_two",
+          "title": "חיבור שני מספרים — עד 100,000",
+          "file": "docs/learning-book/math/g5/drafts/add_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "add_two",
+          "skillId": "math:kind:add_two",
+          "title": "חיבור שני מספרים — עד 200,000",
+          "file": "docs/learning-book/math/g6/drafts/add_two.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:book_placeholder",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "book_placeholder",
+          "skillId": "math:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/math/g3/drafts/book_placeholder.md",
+          "placeholder": true
+        },
+        {
+          "grade": "g4",
+          "pageId": "book_placeholder",
+          "skillId": "math:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/math/g4/drafts/book_placeholder.md",
+          "placeholder": true
+        },
+        {
+          "grade": "g5",
+          "pageId": "book_placeholder",
+          "skillId": "math:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/math/g5/drafts/book_placeholder.md",
+          "placeholder": true
+        },
+        {
+          "grade": "g6",
+          "pageId": "book_placeholder",
+          "skillId": "math:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/math/g6/drafts/book_placeholder.md",
+          "placeholder": true
+        }
+      ]
+    },
+    {
+      "family": "math:cmp",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "cmp",
+          "skillId": "math:kind:cmp",
+          "title": "השוואת מספרים",
+          "file": "docs/learning-book/math/g1/drafts/cmp.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "cmp",
+          "skillId": "math:kind:cmp",
+          "title": "השוואת מספרים עד 1,000",
+          "file": "docs/learning-book/math/g2/drafts/cmp.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "cmp",
+          "skillId": "math:kind:cmp",
+          "title": "השוואת מספרים עד 1,000",
+          "file": "docs/learning-book/math/g3/drafts/cmp.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "cmp",
+          "skillId": "math:kind:cmp",
+          "title": "השוואת מספרים גדולים",
+          "file": "docs/learning-book/math/g4/drafts/cmp.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "cmp",
+          "skillId": "math:kind:cmp",
+          "title": "השוואת מספרים — עד 100,000",
+          "file": "docs/learning-book/math/g5/drafts/cmp.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "cmp",
+          "skillId": "math:kind:cmp",
+          "title": "השוואת מספרים גדולים",
+          "file": "docs/learning-book/math/g6/drafts/cmp.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:dec_add",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "dec_add",
+          "skillId": "math:kind:dec_add",
+          "title": "חיבור עשרוניים",
+          "file": "docs/learning-book/math/g3/drafts/dec_add.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "dec_add",
+          "skillId": "math:kind:dec_add",
+          "title": "חיבור עשרוניים — שתי ספרות אחרי הנקודה",
+          "file": "docs/learning-book/math/g4/drafts/dec_add.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "dec_add",
+          "skillId": "math:kind:dec_add",
+          "title": "חיבור עשרוניים",
+          "file": "docs/learning-book/math/g5/drafts/dec_add.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "dec_add",
+          "skillId": "math:kind:dec_add",
+          "title": "חיבור מספרים עשרוניים",
+          "file": "docs/learning-book/math/g6/drafts/dec_add.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:dec_sub",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "dec_sub",
+          "skillId": "math:kind:dec_sub",
+          "title": "חיסור עשרוניים",
+          "file": "docs/learning-book/math/g3/drafts/dec_sub.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "dec_sub",
+          "skillId": "math:kind:dec_sub",
+          "title": "חיסור עשרוניים — שתי ספרות אחרי הנקודה",
+          "file": "docs/learning-book/math/g4/drafts/dec_sub.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "dec_sub",
+          "skillId": "math:kind:dec_sub",
+          "title": "חיסור עשרוניים",
+          "file": "docs/learning-book/math/g5/drafts/dec_sub.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "dec_sub",
+          "skillId": "math:kind:dec_sub",
+          "title": "חיסור מספרים עשרוניים",
+          "file": "docs/learning-book/math/g6/drafts/dec_sub.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:division_core",
+      "pages": [
+        {
+          "grade": "g2",
+          "pageId": "div",
+          "skillId": "math:kind:div",
+          "title": "חילוק — חלוקה שווה",
+          "file": "docs/learning-book/math/g2/drafts/div.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "divisibility",
+          "skillId": "math:kind:divisibility",
+          "title": "מתי מספר מתחלק ב־2, ב־5 וב־10?",
+          "file": "docs/learning-book/math/g2/drafts/divisibility.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "div",
+          "skillId": "math:kind:div",
+          "title": "חילוק — חלוקה שווה",
+          "file": "docs/learning-book/math/g3/drafts/div.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "divisibility",
+          "skillId": "math:kind:divisibility",
+          "title": "התחלקות ב-2, ב-5 וב-10",
+          "file": "docs/learning-book/math/g3/drafts/divisibility.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "div_with_remainder",
+          "skillId": "math:kind:div_with_remainder",
+          "title": "חילוק עם שארית",
+          "file": "docs/learning-book/math/g3/drafts/div_with_remainder.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "div",
+          "skillId": "math:kind:div",
+          "title": "חילוק — חלוקה שווה",
+          "file": "docs/learning-book/math/g4/drafts/div.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "divisibility",
+          "skillId": "math:kind:divisibility",
+          "title": "התחלקות — כללי 2, 3, 5, 6, 9 ו-10",
+          "file": "docs/learning-book/math/g4/drafts/divisibility.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "div_with_remainder",
+          "skillId": "math:kind:div_with_remainder",
+          "title": "חילוק עם שארית",
+          "file": "docs/learning-book/math/g4/drafts/div_with_remainder.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "div",
+          "skillId": "math:kind:div",
+          "title": "חילוק — חלוקה שווה",
+          "file": "docs/learning-book/math/g5/drafts/div.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "div_with_remainder",
+          "skillId": "math:kind:div_with_remainder",
+          "title": "חילוק עם שארית — מספרים גדולים",
+          "file": "docs/learning-book/math/g5/drafts/div_with_remainder.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "div",
+          "skillId": "math:kind:div",
+          "title": "חילוק — חלוקה שווה",
+          "file": "docs/learning-book/math/g6/drafts/div.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "div_with_remainder",
+          "skillId": "math:kind:div_with_remainder",
+          "title": "חילוק עם שארית",
+          "file": "docs/learning-book/math/g6/drafts/div_with_remainder.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:eq_add",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "eq_add",
+          "skillId": "math:kind:eq_add",
+          "title": "משוואת חיבור — מספר חסר",
+          "file": "docs/learning-book/math/g3/drafts/eq_add.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "eq_add",
+          "skillId": "math:kind:eq_add",
+          "title": "משוואת חיבור — מספר חסר (מאות)",
+          "file": "docs/learning-book/math/g4/drafts/eq_add.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "eq_add",
+          "skillId": "math:kind:eq_add",
+          "title": "משוואת חיבור",
+          "file": "docs/learning-book/math/g5/drafts/eq_add.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "eq_add",
+          "skillId": "math:kind:eq_add",
+          "title": "משוואת חיבור — מספר חסר",
+          "file": "docs/learning-book/math/g6/drafts/eq_add.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:eq_div",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "eq_div",
+          "skillId": "math:kind:eq_div",
+          "title": "משוואת חילוק",
+          "file": "docs/learning-book/math/g5/drafts/eq_div.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "eq_div",
+          "skillId": "math:kind:eq_div",
+          "title": "משוואת חילוק — מספר חסר",
+          "file": "docs/learning-book/math/g6/drafts/eq_div.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:eq_mul",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "eq_mul",
+          "skillId": "math:kind:eq_mul",
+          "title": "משוואת כפל",
+          "file": "docs/learning-book/math/g5/drafts/eq_mul.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "eq_mul",
+          "skillId": "math:kind:eq_mul",
+          "title": "משוואת כפל — מספר חסר",
+          "file": "docs/learning-book/math/g6/drafts/eq_mul.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:eq_sub",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "eq_sub",
+          "skillId": "math:kind:eq_sub",
+          "title": "משוואת חיסור — מספר חסר",
+          "file": "docs/learning-book/math/g3/drafts/eq_sub.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "eq_sub",
+          "skillId": "math:kind:eq_sub",
+          "title": "משוואת חיסור — מספר חסר (מאות)",
+          "file": "docs/learning-book/math/g4/drafts/eq_sub.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "eq_sub",
+          "skillId": "math:kind:eq_sub",
+          "title": "משוואת חיסור",
+          "file": "docs/learning-book/math/g5/drafts/eq_sub.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "eq_sub",
+          "skillId": "math:kind:eq_sub",
+          "title": "משוואת חיסור — מספר חסר",
+          "file": "docs/learning-book/math/g6/drafts/eq_sub.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:est_add",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "est_add",
+          "skillId": "math:kind:est_add",
+          "title": "הערכת תוצאה — חיבור",
+          "file": "docs/learning-book/math/g4/drafts/est_add.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "est_add",
+          "skillId": "math:kind:est_add",
+          "title": "אומדן חיבור — כיתה ה׳",
+          "file": "docs/learning-book/math/g5/drafts/est_add.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:est_mul",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "est_mul",
+          "skillId": "math:kind:est_mul",
+          "title": "הערכת תוצאה — כפל",
+          "file": "docs/learning-book/math/g4/drafts/est_mul.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "est_mul",
+          "skillId": "math:kind:est_mul",
+          "title": "אומדן כפל",
+          "file": "docs/learning-book/math/g5/drafts/est_mul.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:est_quantity",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "est_quantity",
+          "skillId": "math:kind:est_quantity",
+          "title": "הערכת כמות",
+          "file": "docs/learning-book/math/g4/drafts/est_quantity.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "est_quantity",
+          "skillId": "math:kind:est_quantity",
+          "title": "אומדן כמות",
+          "file": "docs/learning-book/math/g5/drafts/est_quantity.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:fm_factor",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "fm_factor",
+          "skillId": "math:kind:fm_factor",
+          "title": "גורמים של מספר",
+          "file": "docs/learning-book/math/g4/drafts/fm_factor.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "fm_factor",
+          "skillId": "math:kind:fm_factor",
+          "title": "גורמים של מספר",
+          "file": "docs/learning-book/math/g5/drafts/fm_factor.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "fm_factor",
+          "skillId": "math:kind:fm_factor",
+          "title": "גורמים של מספר",
+          "file": "docs/learning-book/math/g6/drafts/fm_factor.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:fm_gcd",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "fm_gcd",
+          "skillId": "math:kind:fm_gcd",
+          "title": "המחלק המשותף הגדול ביותר (מ.א.ח)",
+          "file": "docs/learning-book/math/g4/drafts/fm_gcd.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "fm_gcd",
+          "skillId": "math:kind:fm_gcd",
+          "title": "המחלק המשותף הגדול ביותר (מ.א.ח)",
+          "file": "docs/learning-book/math/g5/drafts/fm_gcd.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "fm_gcd",
+          "skillId": "math:kind:fm_gcd",
+          "title": "המחלק המשותף הגדול ביותר (מ.א.ח)",
+          "file": "docs/learning-book/math/g6/drafts/fm_gcd.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:fm_multiple",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "fm_multiple",
+          "skillId": "math:kind:fm_multiple",
+          "title": "כפולות של מספר",
+          "file": "docs/learning-book/math/g4/drafts/fm_multiple.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "fm_multiple",
+          "skillId": "math:kind:fm_multiple",
+          "title": "כפולות של מספר",
+          "file": "docs/learning-book/math/g5/drafts/fm_multiple.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "fm_multiple",
+          "skillId": "math:kind:fm_multiple",
+          "title": "כפולות של מספר",
+          "file": "docs/learning-book/math/g6/drafts/fm_multiple.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:mul",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "mul",
+          "skillId": "math:kind:mul",
+          "title": "כפל — חיבור חוזר",
+          "file": "docs/learning-book/math/g1/drafts/mul.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "mul",
+          "skillId": "math:kind:mul",
+          "title": "לוח הכפל — קבוצות שוות",
+          "file": "docs/learning-book/math/g2/drafts/mul.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "mul",
+          "skillId": "math:kind:mul",
+          "title": "כפל — לוח הכפל",
+          "file": "docs/learning-book/math/g3/drafts/mul.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "mul",
+          "skillId": "math:kind:mul",
+          "title": "כפל — לוח הכפל ואסטרטגיות",
+          "file": "docs/learning-book/math/g4/drafts/mul.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "mul",
+          "skillId": "math:kind:mul",
+          "title": "כפל — אסטרטגיות ומספרים גדולים",
+          "file": "docs/learning-book/math/g5/drafts/mul.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "mul",
+          "skillId": "math:kind:mul",
+          "title": "כפל — אסטרטגיות ומספרים גדולים",
+          "file": "docs/learning-book/math/g6/drafts/mul.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:ns_complement10",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "ns_complement10",
+          "skillId": "math:kind:ns_complement10",
+          "title": "זוגות שמרכיבים 10",
+          "file": "docs/learning-book/math/g1/drafts/ns_complement10.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "ns_complement10",
+          "skillId": "math:kind:ns_complement10",
+          "title": "זוגות שמרכיבים 10 — עזר לחיבור",
+          "file": "docs/learning-book/math/g2/drafts/ns_complement10.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "ns_complement10",
+          "skillId": "math:kind:ns_complement10",
+          "title": "זוגות שמרכיבים 10 — חזרה",
+          "file": "docs/learning-book/math/g3/drafts/ns_complement10.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "ns_complement10",
+          "skillId": "math:kind:ns_complement10",
+          "title": "זוגות ל-10 — חזרה",
+          "file": "docs/learning-book/math/g4/drafts/ns_complement10.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:ns_complement100",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "ns_complement100",
+          "skillId": "math:kind:ns_complement100",
+          "title": "זוגות שמרכיבים 100",
+          "file": "docs/learning-book/math/g3/drafts/ns_complement100.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "ns_complement100",
+          "skillId": "math:kind:ns_complement100",
+          "title": "השלמה ל-100",
+          "file": "docs/learning-book/math/g4/drafts/ns_complement100.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "ns_complement100",
+          "skillId": "math:kind:ns_complement100",
+          "title": "השלמה ל-100",
+          "file": "docs/learning-book/math/g5/drafts/ns_complement100.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "ns_complement100",
+          "skillId": "math:kind:ns_complement100",
+          "title": "השלמה ל-100",
+          "file": "docs/learning-book/math/g6/drafts/ns_complement100.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:ns_even_odd",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "ns_even_odd",
+          "skillId": "math:kind:ns_even_odd",
+          "title": "זוגי ואי-זוגי",
+          "file": "docs/learning-book/math/g1/drafts/ns_even_odd.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "ns_even_odd",
+          "skillId": "math:kind:ns_even_odd",
+          "title": "זוגי ואי-זוגי — חזרה ותרגול",
+          "file": "docs/learning-book/math/g2/drafts/ns_even_odd.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "ns_even_odd",
+          "skillId": "math:kind:ns_even_odd",
+          "title": "זוגי ואי-זוגי — מספרים גדולים",
+          "file": "docs/learning-book/math/g3/drafts/ns_even_odd.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "ns_even_odd",
+          "skillId": "math:kind:ns_even_odd",
+          "title": "זוגי/אי-זוגי — מספרים גדולים",
+          "file": "docs/learning-book/math/g4/drafts/ns_even_odd.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:ns_neighbors",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "ns_neighbors",
+          "skillId": "math:kind:ns_neighbors",
+          "title": "שכנים של מספר",
+          "file": "docs/learning-book/math/g1/drafts/ns_neighbors.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "ns_neighbors",
+          "skillId": "math:kind:ns_neighbors",
+          "title": "שכנים של מספר — מספרים גדולים יותר",
+          "file": "docs/learning-book/math/g2/drafts/ns_neighbors.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "ns_neighbors",
+          "skillId": "math:kind:ns_neighbors",
+          "title": "שכנים של מספר — עד 1,000",
+          "file": "docs/learning-book/math/g3/drafts/ns_neighbors.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "ns_neighbors",
+          "skillId": "math:kind:ns_neighbors",
+          "title": "שכנים — מספרים גדולים",
+          "file": "docs/learning-book/math/g4/drafts/ns_neighbors.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "ns_neighbors",
+          "skillId": "math:kind:ns_neighbors",
+          "title": "שכנים של מספר — עד 100,000",
+          "file": "docs/learning-book/math/g5/drafts/ns_neighbors.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "ns_neighbors",
+          "skillId": "math:kind:ns_neighbors",
+          "title": "שכנים — מספרים גדולים",
+          "file": "docs/learning-book/math/g6/drafts/ns_neighbors.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:ns_place_hundreds",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "ns_place_hundreds",
+          "skillId": "math:kind:ns_place_hundreds",
+          "title": "מאות, עשרות ואחדות — עד 1,000",
+          "file": "docs/learning-book/math/g3/drafts/ns_place_hundreds.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "ns_place_hundreds",
+          "skillId": "math:kind:ns_place_hundreds",
+          "title": "ערך המקום — אלפים ועד 10,000",
+          "file": "docs/learning-book/math/g4/drafts/ns_place_hundreds.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "ns_place_hundreds",
+          "skillId": "math:kind:ns_place_hundreds",
+          "title": "ערך המקום — עד 100,000",
+          "file": "docs/learning-book/math/g5/drafts/ns_place_hundreds.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "ns_place_hundreds",
+          "skillId": "math:kind:ns_place_hundreds",
+          "title": "ערך המקום — עד 200,000",
+          "file": "docs/learning-book/math/g6/drafts/ns_place_hundreds.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:ns_place_tens_units",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "ns_place_tens_units",
+          "skillId": "math:kind:ns_place_tens_units",
+          "title": "עשרות ואחדות",
+          "file": "docs/learning-book/math/g1/drafts/ns_place_tens_units.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "ns_place_tens_units",
+          "skillId": "math:kind:ns_place_tens_units",
+          "title": "מאות, עשרות ואחדות — עד 1,000",
+          "file": "docs/learning-book/math/g2/drafts/ns_place_tens_units.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:perc_discount",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "perc_discount",
+          "skillId": "math:kind:perc_discount",
+          "title": "הנחה באחוזים",
+          "file": "docs/learning-book/math/g5/drafts/perc_discount.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "perc_discount",
+          "skillId": "math:kind:perc_discount",
+          "title": "הנחה באחוזים",
+          "file": "docs/learning-book/math/g6/drafts/perc_discount.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:perc_part_of",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "perc_part_of",
+          "skillId": "math:kind:perc_part_of",
+          "title": "אחוז מכמות",
+          "file": "docs/learning-book/math/g5/drafts/perc_part_of.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "perc_part_of",
+          "skillId": "math:kind:perc_part_of",
+          "title": "אחוז מכמות",
+          "file": "docs/learning-book/math/g6/drafts/perc_part_of.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:round",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "round",
+          "skillId": "math:kind:round",
+          "title": "עיגול לעשרות/מאות/אלפים",
+          "file": "docs/learning-book/math/g4/drafts/round.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "round",
+          "skillId": "math:kind:round",
+          "title": "עיגול — עשרות, מאות, אלפים ועשרות אלפים",
+          "file": "docs/learning-book/math/g5/drafts/round.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "round",
+          "skillId": "math:kind:round",
+          "title": "עיגול — עשרות, מאות, אלפים",
+          "file": "docs/learning-book/math/g6/drafts/round.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:sequence",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "sequence",
+          "skillId": "math:kind:sequence",
+          "title": "סדרות מספרים",
+          "file": "docs/learning-book/math/g3/drafts/sequence.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "sequence",
+          "skillId": "math:kind:sequence",
+          "title": "סדרות — קפיצות גדולות",
+          "file": "docs/learning-book/math/g4/drafts/sequence.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "sequence",
+          "skillId": "math:kind:sequence",
+          "title": "סדרות מספרים — קפיצות גדולות",
+          "file": "docs/learning-book/math/g5/drafts/sequence.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "sequence",
+          "skillId": "math:kind:sequence",
+          "title": "סדרות מספרים — קפיצות גדולות",
+          "file": "docs/learning-book/math/g6/drafts/sequence.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:sub_two",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "sub_two",
+          "skillId": "math:kind:sub_two",
+          "title": "חיסור של שני מספרים",
+          "file": "docs/learning-book/math/g1/drafts/sub_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "sub_two",
+          "skillId": "math:kind:sub_two",
+          "title": "חיסור של שני מספרים — עד 100",
+          "file": "docs/learning-book/math/g2/drafts/sub_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "sub_two",
+          "skillId": "math:kind:sub_two",
+          "title": "חיסור שני מספרים — עד 1,000",
+          "file": "docs/learning-book/math/g3/drafts/sub_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "sub_two",
+          "skillId": "math:kind:sub_two",
+          "title": "חיסור שני מספרים — עד 10,000",
+          "file": "docs/learning-book/math/g4/drafts/sub_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "sub_two",
+          "skillId": "math:kind:sub_two",
+          "title": "חיסור שני מספרים — עד 100,000",
+          "file": "docs/learning-book/math/g5/drafts/sub_two.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "sub_two",
+          "skillId": "math:kind:sub_two",
+          "title": "חיסור שני מספרים — עד 200,000",
+          "file": "docs/learning-book/math/g6/drafts/sub_two.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_coins",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "wp_coins",
+          "skillId": "math:kind:wp_coins",
+          "title": "שאלות מילוליות — ערך מטבעות",
+          "file": "docs/learning-book/math/g1/drafts/wp_coins.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "wp_coins",
+          "skillId": "math:kind:wp_coins",
+          "title": "שאלות מילוליות — מטבעות",
+          "file": "docs/learning-book/math/g2/drafts/wp_coins.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_coins_spent",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "wp_coins_spent",
+          "skillId": "math:kind:wp_coins_spent",
+          "title": "שאלות מילוליות — כמה נשאר?",
+          "file": "docs/learning-book/math/g1/drafts/wp_coins_spent.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "wp_coins_spent",
+          "skillId": "math:kind:wp_coins_spent",
+          "title": "שאלות מילוליות — קניות ועודף",
+          "file": "docs/learning-book/math/g2/drafts/wp_coins_spent.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_comparison_more",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "wp_comparison_more",
+          "skillId": "math:kind:wp_comparison_more",
+          "title": "שאלה מילולית — כמה יותר?",
+          "file": "docs/learning-book/math/g3/drafts/wp_comparison_more.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "wp_comparison_more",
+          "skillId": "math:kind:wp_comparison_more",
+          "title": "שאלה מילולית — כמה יותר?",
+          "file": "docs/learning-book/math/g4/drafts/wp_comparison_more.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "wp_comparison_more",
+          "skillId": "math:kind:wp_comparison_more",
+          "title": "שאלה מילולית — כמה יותר?",
+          "file": "docs/learning-book/math/g5/drafts/wp_comparison_more.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "wp_comparison_more",
+          "skillId": "math:kind:wp_comparison_more",
+          "title": "שאלה מילולית — כמה יותר?",
+          "file": "docs/learning-book/math/g6/drafts/wp_comparison_more.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_distance_time",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "wp_distance_time",
+          "skillId": "math:kind:wp_distance_time",
+          "title": "מרחק, זמן ומהירות",
+          "file": "docs/learning-book/math/g5/drafts/wp_distance_time.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "wp_distance_time",
+          "skillId": "math:kind:wp_distance_time",
+          "title": "מרחק, זמן ומהירות",
+          "file": "docs/learning-book/math/g6/drafts/wp_distance_time.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_leftover",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "wp_leftover",
+          "skillId": "math:kind:wp_leftover",
+          "title": "שאלה מילולית — מה נשאר?",
+          "file": "docs/learning-book/math/g3/drafts/wp_leftover.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "wp_leftover",
+          "skillId": "math:kind:wp_leftover",
+          "title": "שאלה מילולית — מה נשאר?",
+          "file": "docs/learning-book/math/g4/drafts/wp_leftover.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "wp_leftover",
+          "skillId": "math:kind:wp_leftover",
+          "title": "שאלה מילולית — מה נשאר?",
+          "file": "docs/learning-book/math/g5/drafts/wp_leftover.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "wp_leftover",
+          "skillId": "math:kind:wp_leftover",
+          "title": "שאלה מילולית — מה נשאר?",
+          "file": "docs/learning-book/math/g6/drafts/wp_leftover.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_shop_discount",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "wp_shop_discount",
+          "skillId": "math:kind:wp_shop_discount",
+          "title": "קניות והנחה",
+          "file": "docs/learning-book/math/g5/drafts/wp_shop_discount.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "wp_shop_discount",
+          "skillId": "math:kind:wp_shop_discount",
+          "title": "שאלה מילולית — מבצע בחנות",
+          "file": "docs/learning-book/math/g6/drafts/wp_shop_discount.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_time_date",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "wp_time_date",
+          "skillId": "math:kind:wp_time_date",
+          "title": "שאלות מילוליות — ימי השבוע",
+          "file": "docs/learning-book/math/g1/drafts/wp_time_date.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "wp_time_date",
+          "skillId": "math:kind:wp_time_date",
+          "title": "שאלות מילוליות — ימי השבוע",
+          "file": "docs/learning-book/math/g2/drafts/wp_time_date.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_time_days",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "wp_time_days",
+          "skillId": "math:kind:wp_time_days",
+          "title": "שאלות מילוליות — כמה ימים בין יום ליום",
+          "file": "docs/learning-book/math/g1/drafts/wp_time_days.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "wp_time_days",
+          "skillId": "math:kind:wp_time_days",
+          "title": "שאלות מילוליות — כמה ימים בין יום ליום",
+          "file": "docs/learning-book/math/g2/drafts/wp_time_days.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_time_sum",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "wp_time_sum",
+          "skillId": "math:kind:wp_time_sum",
+          "title": "שאלה מילולית — סכום זמנים",
+          "file": "docs/learning-book/math/g3/drafts/wp_time_sum.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "wp_time_sum",
+          "skillId": "math:kind:wp_time_sum",
+          "title": "שאלה מילולית — סכום זמנים",
+          "file": "docs/learning-book/math/g4/drafts/wp_time_sum.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "wp_time_sum",
+          "skillId": "math:kind:wp_time_sum",
+          "title": "שאלה מילולית — סכום זמנים",
+          "file": "docs/learning-book/math/g5/drafts/wp_time_sum.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "wp_time_sum",
+          "skillId": "math:kind:wp_time_sum",
+          "title": "שאלה מילולית — סכום זמנים",
+          "file": "docs/learning-book/math/g6/drafts/wp_time_sum.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_unit_cm_to_m",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "wp_unit_cm_to_m",
+          "skillId": "math:kind:wp_unit_cm_to_m",
+          "title": "המרת יחידות — ס״מ ומטר",
+          "file": "docs/learning-book/math/g5/drafts/wp_unit_cm_to_m.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "wp_unit_cm_to_m",
+          "skillId": "math:kind:wp_unit_cm_to_m",
+          "title": "המרת יחידות — ס״מ ומטר",
+          "file": "docs/learning-book/math/g6/drafts/wp_unit_cm_to_m.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "math:wp_unit_g_to_kg",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "wp_unit_g_to_kg",
+          "skillId": "math:kind:wp_unit_g_to_kg",
+          "title": "המרת יחידות — גרם וקילוגרם",
+          "file": "docs/learning-book/math/g5/drafts/wp_unit_g_to_kg.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "wp_unit_g_to_kg",
+          "skillId": "math:kind:wp_unit_g_to_kg",
+          "title": "המרת יחידות — גרם וקילוגרם",
+          "file": "docs/learning-book/math/g6/drafts/wp_unit_g_to_kg.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:book_placeholder",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "book_placeholder",
+          "skillId": "geometry:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/geometry/g1/drafts/book_placeholder.md",
+          "placeholder": true
+        },
+        {
+          "grade": "g2",
+          "pageId": "book_placeholder",
+          "skillId": "geometry:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/geometry/g2/drafts/book_placeholder.md",
+          "placeholder": true
+        },
+        {
+          "grade": "g3",
+          "pageId": "book_placeholder",
+          "skillId": "geometry:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/geometry/g3/drafts/book_placeholder.md",
+          "placeholder": true
+        },
+        {
+          "grade": "g5",
+          "pageId": "book_placeholder",
+          "skillId": "geometry:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/geometry/g5/drafts/book_placeholder.md",
+          "placeholder": true
+        },
+        {
+          "grade": "g6",
+          "pageId": "book_placeholder",
+          "skillId": "geometry:kind:book_placeholder",
+          "title": "ספר בהכנה",
+          "file": "docs/learning-book/geometry/g6/drafts/book_placeholder.md",
+          "placeholder": true
+        }
+      ]
+    },
+    {
+      "family": "geometry:diagonal_rectangle",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "diagonal_rectangle",
+          "skillId": "geometry:kind:diagonal_rectangle",
+          "title": "אלכסון במלבן",
+          "file": "docs/learning-book/geometry/g4/drafts/diagonal_rectangle.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "diagonal_rectangle",
+          "skillId": "geometry:kind:diagonal_rectangle",
+          "title": "אלכסון במלבן",
+          "file": "docs/learning-book/geometry/g5/drafts/diagonal_rectangle.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:diagonal_square",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "diagonal_square",
+          "skillId": "geometry:kind:diagonal_square",
+          "title": "אלכסון בריבוע",
+          "file": "docs/learning-book/geometry/g4/drafts/diagonal_square.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "diagonal_square",
+          "skillId": "geometry:kind:diagonal_square",
+          "title": "אלכסון בריבוע",
+          "file": "docs/learning-book/geometry/g5/drafts/diagonal_square.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:parallel_perpendicular",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "parallel_perpendicular",
+          "skillId": "geometry:kind:parallel_perpendicular",
+          "title": "מקבילות ומאונכות",
+          "file": "docs/learning-book/geometry/g3/drafts/parallel_perpendicular.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "parallel_perpendicular",
+          "skillId": "geometry:kind:parallel_perpendicular",
+          "title": "מקבילות ומאונכות — במצולעים",
+          "file": "docs/learning-book/geometry/g4/drafts/parallel_perpendicular.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "parallel_perpendicular",
+          "skillId": "geometry:kind:parallel_perpendicular",
+          "title": "קווים מקבילים ומאונכים",
+          "file": "docs/learning-book/geometry/g5/drafts/parallel_perpendicular.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:parallelogram_area",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "parallelogram_area",
+          "skillId": "geometry:kind:parallelogram_area",
+          "title": "שטח מקבילית",
+          "file": "docs/learning-book/geometry/g5/drafts/parallelogram_area.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "parallelogram_area",
+          "skillId": "geometry:kind:parallelogram_area",
+          "title": "שטח מקבילית — כיתה ו׳",
+          "file": "docs/learning-book/geometry/g6/drafts/parallelogram_area.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:prism_volume",
+      "pages": [
+        {
+          "grade": "g4",
+          "pageId": "rectangular_prism_volume",
+          "skillId": "geometry:kind:rectangular_prism_volume",
+          "title": "נפח תיבה",
+          "file": "docs/learning-book/geometry/g4/drafts/rectangular_prism_volume.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "rectangular_prism_volume",
+          "skillId": "geometry:kind:rectangular_prism_volume",
+          "title": "נפח תיבה",
+          "file": "docs/learning-book/geometry/g5/drafts/rectangular_prism_volume.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "prism_volume_rectangular",
+          "skillId": "geometry:kind:prism_volume_rectangular",
+          "title": "נפח מנסרה — בסיס מלבן",
+          "file": "docs/learning-book/geometry/g6/drafts/prism_volume_rectangular.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "rectangular_prism_volume",
+          "skillId": "geometry:kind:rectangular_prism_volume",
+          "title": "נפח תיבה — כיתה ו׳",
+          "file": "docs/learning-book/geometry/g6/drafts/rectangular_prism_volume.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:quadrilaterals",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "quadrilaterals",
+          "skillId": "geometry:kind:quadrilaterals",
+          "title": "סוגי מרובעים",
+          "file": "docs/learning-book/geometry/g3/drafts/quadrilaterals.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "quadrilaterals",
+          "skillId": "geometry:kind:quadrilaterals",
+          "title": "מרובעים — תכונות וסיווג",
+          "file": "docs/learning-book/geometry/g4/drafts/quadrilaterals.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "quadrilaterals",
+          "skillId": "geometry:kind:quadrilaterals",
+          "title": "סיווג מרובעים — כיתה ה׳",
+          "file": "docs/learning-book/geometry/g5/drafts/quadrilaterals.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:solids",
+      "pages": [
+        {
+          "grade": "g2",
+          "pageId": "solids",
+          "skillId": "geometry:kind:solids",
+          "title": "גופים תלת־ממדיים — שמות והיכרות",
+          "file": "docs/learning-book/geometry/g2/drafts/solids.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "solids",
+          "skillId": "geometry:kind:solids",
+          "title": "גופים — פאות, קדקודים ומקצועות",
+          "file": "docs/learning-book/geometry/g3/drafts/solids.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "solids",
+          "skillId": "geometry:kind:solids",
+          "title": "גופים — פאות במישור",
+          "file": "docs/learning-book/geometry/g4/drafts/solids.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "solids",
+          "skillId": "geometry:kind:solids",
+          "title": "גופים תלת-ממדיים — חזרה",
+          "file": "docs/learning-book/geometry/g5/drafts/solids.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "solids",
+          "skillId": "geometry:kind:solids",
+          "title": "גופים — גליל, פירמידה, חרוט, כדור",
+          "file": "docs/learning-book/geometry/g6/drafts/solids.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:square_area",
+      "pages": [
+        {
+          "grade": "g2",
+          "pageId": "square_area",
+          "skillId": "geometry:kind:square_area",
+          "title": "שטח של ריבוע",
+          "file": "docs/learning-book/geometry/g2/drafts/square_area.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g3",
+          "pageId": "square_area",
+          "skillId": "geometry:kind:square_area",
+          "title": "שטח ריבוע — כיתה ג׳",
+          "file": "docs/learning-book/geometry/g3/drafts/square_area.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "square_area",
+          "skillId": "geometry:kind:square_area",
+          "title": "שטח ריבוע — כיתה ד׳",
+          "file": "docs/learning-book/geometry/g4/drafts/square_area.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "square_area",
+          "skillId": "geometry:kind:square_area",
+          "title": "שטח ריבוע",
+          "file": "docs/learning-book/geometry/g5/drafts/square_area.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "square_area",
+          "skillId": "geometry:kind:square_area",
+          "title": "שטח ריבוע — כיתה ו׳",
+          "file": "docs/learning-book/geometry/g6/drafts/square_area.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:square_perimeter",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "square_perimeter",
+          "skillId": "geometry:kind:square_perimeter",
+          "title": "היקף ריבוע",
+          "file": "docs/learning-book/geometry/g3/drafts/square_perimeter.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "square_perimeter",
+          "skillId": "geometry:kind:square_perimeter",
+          "title": "היקף ריבוע — כיתה ד׳",
+          "file": "docs/learning-book/geometry/g4/drafts/square_perimeter.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "square_perimeter",
+          "skillId": "geometry:kind:square_perimeter",
+          "title": "היקף ריבוע",
+          "file": "docs/learning-book/geometry/g5/drafts/square_perimeter.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "square_perimeter",
+          "skillId": "geometry:kind:square_perimeter",
+          "title": "היקף ריבוע — כיתה ו׳",
+          "file": "docs/learning-book/geometry/g6/drafts/square_perimeter.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:transformations",
+      "pages": [
+        {
+          "grade": "g1",
+          "pageId": "transformations",
+          "skillId": "geometry:kind:transformations",
+          "title": "הזזה ושיקוף — היכרות",
+          "file": "docs/learning-book/geometry/g1/drafts/transformations.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g2",
+          "pageId": "transformations",
+          "skillId": "geometry:kind:transformations",
+          "title": "הזזה ושיקוף — המשך",
+          "file": "docs/learning-book/geometry/g2/drafts/transformations.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:trapezoid_area",
+      "pages": [
+        {
+          "grade": "g5",
+          "pageId": "trapezoid_area",
+          "skillId": "geometry:kind:trapezoid_area",
+          "title": "שטח טרפז",
+          "file": "docs/learning-book/geometry/g5/drafts/trapezoid_area.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "trapezoid_area",
+          "skillId": "geometry:kind:trapezoid_area",
+          "title": "שטח טרפז — כיתה ו׳",
+          "file": "docs/learning-book/geometry/g6/drafts/trapezoid_area.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:triangle_angles",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "triangle_angles",
+          "skillId": "geometry:kind:triangle_angles",
+          "title": "זוויות במשולש",
+          "file": "docs/learning-book/geometry/g3/drafts/triangle_angles.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "triangle_angles",
+          "skillId": "geometry:kind:triangle_angles",
+          "title": "זוויות במשולש — כיתה ד׳",
+          "file": "docs/learning-book/geometry/g4/drafts/triangle_angles.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "triangle_angles",
+          "skillId": "geometry:kind:triangle_angles",
+          "title": "זוויות במשולש",
+          "file": "docs/learning-book/geometry/g5/drafts/triangle_angles.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "triangle_angles",
+          "skillId": "geometry:kind:triangle_angles",
+          "title": "זוויות במשולש — כיתה ו׳",
+          "file": "docs/learning-book/geometry/g6/drafts/triangle_angles.md",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "family": "geometry:triangle_perimeter",
+      "pages": [
+        {
+          "grade": "g3",
+          "pageId": "triangle_perimeter",
+          "skillId": "geometry:kind:triangle_perimeter",
+          "title": "היקף משולש",
+          "file": "docs/learning-book/geometry/g3/drafts/triangle_perimeter.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g4",
+          "pageId": "triangle_perimeter",
+          "skillId": "geometry:kind:triangle_perimeter",
+          "title": "היקף משולש — כיתה ד׳",
+          "file": "docs/learning-book/geometry/g4/drafts/triangle_perimeter.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g5",
+          "pageId": "triangle_perimeter",
+          "skillId": "geometry:kind:triangle_perimeter",
+          "title": "היקף משולש",
+          "file": "docs/learning-book/geometry/g5/drafts/triangle_perimeter.md",
+          "placeholder": false
+        },
+        {
+          "grade": "g6",
+          "pageId": "triangle_perimeter",
+          "skillId": "geometry:kind:triangle_perimeter",
+          "title": "היקף משולש — כיתה ו׳",
+          "file": "docs/learning-book/geometry/g6/drafts/triangle_perimeter.md",
+          "placeholder": false
+        }
+      ]
+    }
+  ]
+}

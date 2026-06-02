@@ -777,7 +777,7 @@
 | **skill_id** | `hebrew:rich:comprehension:compare_statements:contrast` |
 | **title_hebrew** | השוואה בין קביעות `[DRAFT — not owner-approved]` |
 | **approval_status** | `draft` |
-| **Scope** | ניגוד בין שתי משפטים בטקסט |
+| **Scope** | ניגוד בין שני משפטים בטקסט |
 
 ### Section 1. מה לומדים?
 

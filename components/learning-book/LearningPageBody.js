@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LearningMarkdown from "./LearningMarkdown";
 import MixedHebrewMathText from "./MixedHebrewMathText";
+import BookTopicCardTitle from "./BookTopicCardTitle";
 import { getSectionDisplayTitle } from "../../lib/learning-book/section-display-labels";
 import { useBookSectionSwipe } from "../../hooks/useBookSectionSwipe";
 import { MATH_G1_BOOK_META } from "../../lib/learning-book/math-g1-registry";
@@ -61,7 +62,7 @@ import {
 } from "../../lib/learning-book/geometry-book-nav";
 import { resolveGeometryPracticeTarget } from "../../lib/learning-book/geometry-book-practice-map";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
-import { getLearningBookClientMeta } from "../../lib/learning-book/learning-book-catalog-meta";
+import { getLearningBookClientMeta, getLearningBookMasterPath } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 const G1_BOOK_UI = {
@@ -145,9 +146,7 @@ export default function LearningPageBody({
       createLearningBookNav(
         bookSubject,
         bookGrade,
-        bookSubject === "geometry"
-          ? "/learning/geometry-master"
-          : "/learning/math-master"
+        getLearningBookMasterPath(bookSubject)
       ),
     [bookSubject, bookGrade]
   );
@@ -243,7 +242,9 @@ export default function LearningPageBody({
   const practiceCtaSubtext =
     bookSubject === "geometry"
       ? "נעבור לתרגול של הנושא הזה בהנדסה"
-      : "נעבור לתרגול של הנושא הזה בחשבון";
+      : bookSubject === "science"
+        ? "נעבור לתרגול של הנושא הזה במדעים"
+        : "נעבור לתרגול של הנושא הזה בחשבון";
 
   return (
     <>
@@ -375,9 +376,7 @@ export default function LearningPageBody({
                   className={`min-h-[52px] rounded-xl border px-3 py-2.5 text-right text-xs shadow-sm transition ${theme.topicPrevLink}`}
                 >
                   <span className={`block text-[10px] ${theme.topicPrevLabel}`}>נושא קודם</span>
-                  <span className="block truncate text-sm font-medium">
-                    <MixedHebrewMathText text={prevTitle} />
-                  </span>
+                  <BookTopicCardTitle text={prevTitle} />
                 </Link>
               ) : (
                 <div aria-hidden="true" />
@@ -391,9 +390,7 @@ export default function LearningPageBody({
                   className={`min-h-[52px] rounded-xl border px-3 py-2.5 text-right text-xs shadow-sm transition ${theme.topicNextLink}`}
                 >
                   <span className={`block text-[10px] ${theme.topicNextLabel}`}>נושא הבא</span>
-                  <span className="block truncate text-sm font-medium">
-                    <MixedHebrewMathText text={nextTitle} />
-                  </span>
+                  <BookTopicCardTitle text={nextTitle} />
                 </Link>
               ) : (
                 <div aria-hidden="true" />
