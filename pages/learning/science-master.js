@@ -723,6 +723,7 @@ export default function ScienceMaster() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [avgTime, setAvgTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(null);
+  const questionTimeLedgerRef = useRef(null);
 
   useLearningVisibilityClock({
     enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
@@ -754,7 +755,6 @@ export default function ScienceMaster() {
   const retryQueueRef = useRef([]);
   const sessionStartRef = useRef(null);
   const sessionSecondsRef = useRef(0);
-  const questionTimeLedgerRef = useRef(null);
   const solvedCountRef = useRef(0);
   const learningSessionIdRef = useRef(null);
   const plannerResponseSeqRef = useRef(0);

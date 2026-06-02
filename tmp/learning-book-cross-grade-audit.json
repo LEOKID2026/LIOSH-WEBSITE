@@ -7,121 +7,49 @@
     "repeatedFamilies": 52
   },
   "counts": {
-    "PASS": 18,
-    "REVIEW_OK": 0,
-    "NEEDS_POLISH": 17,
-    "FAIL_DUPLICATE": 12,
-    "FAIL_AGE_FIT": 6,
+    "PASS": 29,
+    "REVIEW_OK": 2,
+    "NEEDS_POLISH": 22,
+    "FAIL_DUPLICATE": 0,
+    "FAIL_AGE_FIT": 0,
     "PLACEHOLDER_ONLY": 2
   },
   "mathRows": [
     {
-      "family": "division_core",
-      "familyKey": "math:division_core",
-      "grades": "g2, g3, g4, g5, g6",
-      "files": "g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder",
-      "similarity": "core≈100%; dup§=3; sharedMath=3",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 1
+      "family": "add_three",
+      "familyKey": "math:add_three",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/add_three; g4/add_three; g5/add_three; g6/add_three",
+      "similarity": "core≈99%; dup§=2; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Moderate overlap; verify method depth differs by grade.",
+      "action": "Polish — tighten grade-specific strategy",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.9903846153846154
     },
     {
       "family": "sequence",
       "familyKey": "math:sequence",
       "grades": "g3, g4, g5, g6",
       "files": "g3/sequence; g4/sequence; g5/sequence; g6/sequence",
-      "similarity": "core≈100%; dup§=3; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 1
-    },
-    {
-      "family": "ns_even_odd",
-      "familyKey": "math:ns_even_odd",
-      "grades": "g1, g2, g3, g4",
-      "files": "g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd",
-      "similarity": "core≈99%; dup§=8; sharedMath=3",
+      "similarity": "core≈92%; dup§=2; sharedMath=0",
       "ageFit": "OK",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9910714285714286
+      "notes": "Moderate overlap; verify method depth differs by grade.",
+      "action": "Polish — tighten grade-specific strategy",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.9196428571428572
     },
     {
-      "family": "ns_complement100",
-      "familyKey": "math:ns_complement100",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/ns_complement100; g4/ns_complement100; g5/ns_complement100; g6/ns_complement100",
-      "similarity": "core≈98%; dup§=7; sharedMath=15",
-      "ageFit": "No numeric progression",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9758064516129032
-    },
-    {
-      "family": "wp_time_sum",
-      "familyKey": "math:wp_time_sum",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum",
-      "similarity": "core≈98%; dup§=8; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.975
-    },
-    {
-      "family": "ns_neighbors",
-      "familyKey": "math:ns_neighbors",
+      "family": "add_two",
+      "familyKey": "math:add_two",
       "grades": "g1, g2, g3, g4, g5, g6",
-      "files": "g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors",
-      "similarity": "core≈95%; dup§=3; sharedMath=3",
+      "files": "g1/add_two; g2/add_two; g3/add_two; g4/add_two; g5/add_two; g6/add_two",
+      "similarity": "core≈81%; dup§=4; sharedMath=2",
       "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9545454545454546
-    },
-    {
-      "family": "ns_complement10",
-      "familyKey": "math:ns_complement10",
-      "grades": "g1, g2, g3, g4",
-      "files": "g1/ns_complement10; g2/ns_complement10; g3/ns_complement10; g4/ns_complement10",
-      "similarity": "core≈95%; dup§=5; sharedMath=10",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9464285714285714
-    },
-    {
-      "family": "wp_leftover",
-      "familyKey": "math:wp_leftover",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover",
-      "similarity": "core≈93%; dup§=7; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9268421052631579
-    },
-    {
-      "family": "add_three",
-      "familyKey": "math:add_three",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/add_three; g4/add_three; g5/add_three; g6/add_three",
-      "similarity": "core≈91%; dup§=2; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 2000 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.907051282051282
+      "notes": "Strong structural overlap; shared math line(s).",
+      "action": "Polish — stronger grade-specific numbers/methods",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.8125
     },
     {
       "family": "eq_sub",
@@ -129,10 +57,10 @@
       "grades": "g3, g4, g5, g6",
       "files": "g3/eq_sub; g4/eq_sub; g5/eq_sub; g6/eq_sub",
       "similarity": "core≈78%; dup§=0; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 5000 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
+      "ageFit": "OK",
+      "notes": "Moderate overlap; verify method depth differs by grade.",
+      "action": "Polish — tighten grade-specific strategy",
+      "verdict": "NEEDS_POLISH",
       "maxCoreSim": 0.78
     },
     {
@@ -141,47 +69,11 @@
       "grades": "g3, g4, g5, g6",
       "files": "g3/wp_comparison_more; g4/wp_comparison_more; g5/wp_comparison_more; g6/wp_comparison_more",
       "similarity": "core≈77%; dup§=5; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 12450 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.7651002506265664
-    },
-    {
-      "family": "eq_add",
-      "familyKey": "math:eq_add",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/eq_add; g4/eq_add; g5/eq_add; g6/eq_add",
-      "similarity": "core≈72%; dup§=0; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 4030 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.7237179487179488
-    },
-    {
-      "family": "cmp",
-      "familyKey": "math:cmp",
-      "grades": "g1, g2, g3, g4, g5, g6",
-      "files": "g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp",
-      "similarity": "core≈85%; dup§=1; sharedMath=2",
       "ageFit": "OK",
-      "notes": "Strong structural overlap; shared math line(s).",
-      "action": "Polish — stronger grade-specific numbers/methods",
+      "notes": "Moderate overlap; verify method depth differs by grade.",
+      "action": "Polish — tighten grade-specific strategy",
       "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.8543040293040294
-    },
-    {
-      "family": "add_two",
-      "familyKey": "math:add_two",
-      "grades": "g1, g2, g3, g4, g5, g6",
-      "files": "g1/add_two; g2/add_two; g3/add_two; g4/add_two; g5/add_two; g6/add_two",
-      "similarity": "core≈81%; dup§=3; sharedMath=1",
-      "ageFit": "Too simple for top grade",
-      "notes": "Strong structural overlap; shared math line(s).",
-      "action": "Polish — stronger grade-specific numbers/methods",
-      "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.8125
+      "maxCoreSim": 0.7651002506265664
     },
     {
       "family": "ns_place_hundreds",
@@ -194,6 +86,30 @@
       "action": "Polish — tighten grade-specific strategy",
       "verdict": "NEEDS_POLISH",
       "maxCoreSim": 0.7573820915926179
+    },
+    {
+      "family": "eq_add",
+      "familyKey": "math:eq_add",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/eq_add; g4/eq_add; g5/eq_add; g6/eq_add",
+      "similarity": "core≈72%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Moderate overlap; verify method depth differs by grade.",
+      "action": "Polish — tighten grade-specific strategy",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.7237179487179488
+    },
+    {
+      "family": "ns_complement10",
+      "familyKey": "math:ns_complement10",
+      "grades": "g1, g2, g3, g4",
+      "files": "g1/ns_complement10; g2/ns_complement10; g3/ns_complement10; g4/ns_complement10",
+      "similarity": "core≈63%; dup§=2; sharedMath=2",
+      "ageFit": "Too simple for top grade",
+      "notes": "g4 core examples top at 75 (expected nearer 10000).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.6278754578754578
     },
     {
       "family": "fm_factor",
@@ -268,6 +184,18 @@
       "maxCoreSim": 0.3492063492063492
     },
     {
+      "family": "ns_complement100",
+      "familyKey": "math:ns_complement100",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/ns_complement100; g4/ns_complement100; g5/ns_complement100; g6/ns_complement100",
+      "similarity": "core≈33%; dup§=4; sharedMath=3",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (126 → 110).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.3328057762330354
+    },
+    {
       "family": "wp_time_date",
       "familyKey": "math:wp_time_date",
       "grades": "g1, g2",
@@ -304,6 +232,30 @@
       "maxCoreSim": 0.2062908496732026
     },
     {
+      "family": "cmp",
+      "familyKey": "math:cmp",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp",
+      "similarity": "core≈80%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Similar framing but acceptable review topic; check examples still scale.",
+      "action": "Review — confirm numbers/methods progress",
+      "verdict": "REVIEW_OK",
+      "maxCoreSim": 0.8043040293040293
+    },
+    {
+      "family": "ns_neighbors",
+      "familyKey": "math:ns_neighbors",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors",
+      "similarity": "core≈55%; dup§=0; sharedMath=2",
+      "ageFit": "OK",
+      "notes": "Concept recap across grades with distinct enough body text.",
+      "action": "No action unless owner wants richer upper-grade examples",
+      "verdict": "REVIEW_OK",
+      "maxCoreSim": 0.55
+    },
+    {
       "family": "sub_two",
       "familyKey": "math:sub_two",
       "grades": "g1, g2, g3, g4, g5, g6",
@@ -314,6 +266,18 @@
       "action": "No action",
       "verdict": "PASS",
       "maxCoreSim": 0.6888888888888888
+    },
+    {
+      "family": "division_core",
+      "familyKey": "math:division_core",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder",
+      "similarity": "core≈66%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g2→g3 max# 20→96; g3→g4 max# 96→720; g4→g5 max# 720→8400; g5→g6 max# 8400→360000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.6638795986622074
     },
     {
       "family": "fm_multiple",
@@ -350,6 +314,18 @@
       "action": "No action",
       "verdict": "PASS",
       "maxCoreSim": 0.5178571428571429
+    },
+    {
+      "family": "ns_even_odd",
+      "familyKey": "math:ns_even_odd",
+      "grades": "g1, g2, g3, g4",
+      "files": "g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd",
+      "similarity": "core≈49%; dup§=2; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 11→35; g2→g3 max# 35→905; g3→g4 max# 905→8731",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.49000149342891275
     },
     {
       "family": "dec_add",
@@ -412,6 +388,18 @@
       "maxCoreSim": 0.4278499278499278
     },
     {
+      "family": "wp_leftover",
+      "familyKey": "math:wp_leftover",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover",
+      "similarity": "core≈42%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 47→72; g4→g5 max# 72→340; g5→g6 max# 340→850",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4165980456741326
+    },
+    {
       "family": "wp_unit_cm_to_m",
       "familyKey": "math:wp_unit_cm_to_m",
       "grades": "g5, g6",
@@ -458,6 +446,18 @@
       "action": "No action",
       "verdict": "PASS",
       "maxCoreSim": 0.29762398393307854
+    },
+    {
+      "family": "wp_time_sum",
+      "familyKey": "math:wp_time_sum",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum",
+      "similarity": "core≈29%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 60→120; g4→g5 max# 120→75; g5→g6 max# 75→85",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.29093167701863354
     },
     {
       "family": "wp_coins_spent",
@@ -510,100 +510,16 @@
   ],
   "geometryRows": [
     {
-      "family": "triangle_angles",
-      "familyKey": "geometry:triangle_angles",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles",
-      "similarity": "core≈100%; dup§=2; sharedMath=2",
-      "ageFit": "No numeric progression",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 1
-    },
-    {
       "family": "trapezoid_area",
       "familyKey": "geometry:trapezoid_area",
       "grades": "g5, g6",
       "files": "g5/trapezoid_area; g6/trapezoid_area",
-      "similarity": "core≈96%; dup§=4; sharedMath=4",
+      "similarity": "core≈59%; dup§=0; sharedMath=0",
       "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9583333333333334
-    },
-    {
-      "family": "prism_volume",
-      "familyKey": "geometry:prism_volume",
-      "grades": "g4, g5, g6",
-      "files": "g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume",
-      "similarity": "core≈94%; dup§=3; sharedMath=1",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9423076923076923
-    },
-    {
-      "family": "square_perimeter",
-      "familyKey": "geometry:square_perimeter",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter",
-      "similarity": "core≈93%; dup§=2; sharedMath=5",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9333333333333333
-    },
-    {
-      "family": "square_area",
-      "familyKey": "geometry:square_area",
-      "grades": "g2, g3, g4, g5, g6",
-      "files": "g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area",
-      "similarity": "core≈100%; dup§=1; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 81 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 1
-    },
-    {
-      "family": "parallelogram_area",
-      "familyKey": "geometry:parallelogram_area",
-      "grades": "g5, g6",
-      "files": "g5/parallelogram_area; g6/parallelogram_area",
-      "similarity": "core≈95%; dup§=2; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 80 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.95
-    },
-    {
-      "family": "triangle_perimeter",
-      "familyKey": "geometry:triangle_perimeter",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/triangle_perimeter; g4/triangle_perimeter; g5/triangle_perimeter; g6/triangle_perimeter",
-      "similarity": "core≈95%; dup§=2; sharedMath=1",
-      "ageFit": "Too simple for top grade",
-      "notes": "Strong structural overlap; shared math line(s).",
-      "action": "Polish — stronger grade-specific numbers/methods",
-      "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.9464285714285714
-    },
-    {
-      "family": "quadrilaterals",
-      "familyKey": "geometry:quadrilaterals",
-      "grades": "g3, g4, g5",
-      "files": "g3/quadrilaterals; g4/quadrilaterals; g5/quadrilaterals",
-      "similarity": "core≈35%; dup§=1; sharedMath=0",
-      "ageFit": "No numeric progression",
-      "notes": "Max example number does not increase (2 → 1).",
+      "notes": "g6 core examples top at 100 (expected nearer 1000000).",
       "action": "Polish — update magnitudes/method depth",
       "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.3527550852245974
+      "maxCoreSim": 0.5863154960981047
     },
     {
       "family": "transformations",
@@ -618,6 +534,18 @@
       "maxCoreSim": 0.254712656529517
     },
     {
+      "family": "parallel_perpendicular",
+      "familyKey": "geometry:parallel_perpendicular",
+      "grades": "g3, g4, g5",
+      "files": "g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular",
+      "similarity": "core≈15%; dup§=0; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (90 → 90).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.14832093863574294
+    },
+    {
       "family": "solids",
       "familyKey": "geometry:solids",
       "grades": "g2, g3, g4, g5, g6",
@@ -630,16 +558,88 @@
       "maxCoreSim": 0.1474982160872026
     },
     {
-      "family": "parallel_perpendicular",
-      "familyKey": "geometry:parallel_perpendicular",
+      "family": "square_area",
+      "familyKey": "geometry:square_area",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area",
+      "similarity": "core≈53%; dup§=1; sharedMath=1",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g2→g3 max# 16→25; g3→g4 max# 25→49; g4→g5 max# 49→49; g5→g6 max# 49→400",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5261904761904762
+    },
+    {
+      "family": "triangle_perimeter",
+      "familyKey": "geometry:triangle_perimeter",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/triangle_perimeter; g4/triangle_perimeter; g5/triangle_perimeter; g6/triangle_perimeter",
+      "similarity": "core≈49%; dup§=2; sharedMath=2",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 12→18; g4→g5 max# 18→21; g5→g6 max# 21→27",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.49360060229625446
+    },
+    {
+      "family": "square_perimeter",
+      "familyKey": "geometry:square_perimeter",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter",
+      "similarity": "core≈46%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 36→64; g4→g5 max# 64→81; g5→g6 max# 81→144",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.45683077578857634
+    },
+    {
+      "family": "parallelogram_area",
+      "familyKey": "geometry:parallelogram_area",
+      "grades": "g5, g6",
+      "files": "g5/parallelogram_area; g6/parallelogram_area",
+      "similarity": "core≈44%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 48→90",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.44310054939850335
+    },
+    {
+      "family": "prism_volume",
+      "familyKey": "geometry:prism_volume",
+      "grades": "g4, g5, g6",
+      "files": "g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume",
+      "similarity": "core≈39%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 60→60; g5→g6 max# 60→240",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.3947916666666667
+    },
+    {
+      "family": "quadrilaterals",
+      "familyKey": "geometry:quadrilaterals",
       "grades": "g3, g4, g5",
-      "files": "g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular",
-      "similarity": "core≈12%; dup§=1; sharedMath=0",
-      "ageFit": "No numeric progression",
-      "notes": "Max example number does not increase (90 → 90).",
-      "action": "Polish — update magnitudes/method depth",
-      "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.12256121071910545
+      "files": "g3/quadrilaterals; g4/quadrilaterals; g5/quadrilaterals",
+      "similarity": "core≈29%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 4→90; g4→g5 max# 90→90",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.28798330898055524
+    },
+    {
+      "family": "triangle_angles",
+      "familyKey": "geometry:triangle_angles",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles",
+      "similarity": "core≈25%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 70→180; g4→g5 max# 180→180; g5→g6 max# 180→180",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.24860042735042734
     },
     {
       "family": "diagonal_square",
@@ -678,237 +678,57 @@
       "maxCoreSim": 0
     }
   ],
-  "priority": [
+  "priority": [],
+  "reviewOk": [
     {
-      "family": "division_core",
-      "familyKey": "math:division_core",
-      "grades": "g2, g3, g4, g5, g6",
-      "files": "g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder",
-      "similarity": "core≈100%; dup§=3; sharedMath=3",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 1
-    },
-    {
-      "family": "sequence",
-      "familyKey": "math:sequence",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/sequence; g4/sequence; g5/sequence; g6/sequence",
-      "similarity": "core≈100%; dup§=3; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 1
-    },
-    {
-      "family": "ns_even_odd",
-      "familyKey": "math:ns_even_odd",
-      "grades": "g1, g2, g3, g4",
-      "files": "g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd",
-      "similarity": "core≈99%; dup§=8; sharedMath=3",
+      "family": "cmp",
+      "familyKey": "math:cmp",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp",
+      "similarity": "core≈80%; dup§=1; sharedMath=0",
       "ageFit": "OK",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9910714285714286
-    },
-    {
-      "family": "ns_complement100",
-      "familyKey": "math:ns_complement100",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/ns_complement100; g4/ns_complement100; g5/ns_complement100; g6/ns_complement100",
-      "similarity": "core≈98%; dup§=7; sharedMath=15",
-      "ageFit": "No numeric progression",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9758064516129032
-    },
-    {
-      "family": "wp_time_sum",
-      "familyKey": "math:wp_time_sum",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum",
-      "similarity": "core≈98%; dup§=8; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.975
+      "notes": "Similar framing but acceptable review topic; check examples still scale.",
+      "action": "Review — confirm numbers/methods progress",
+      "verdict": "REVIEW_OK",
+      "maxCoreSim": 0.8043040293040293
     },
     {
       "family": "ns_neighbors",
       "familyKey": "math:ns_neighbors",
       "grades": "g1, g2, g3, g4, g5, g6",
       "files": "g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors",
-      "similarity": "core≈95%; dup§=3; sharedMath=3",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9545454545454546
-    },
-    {
-      "family": "ns_complement10",
-      "familyKey": "math:ns_complement10",
-      "grades": "g1, g2, g3, g4",
-      "files": "g1/ns_complement10; g2/ns_complement10; g3/ns_complement10; g4/ns_complement10",
-      "similarity": "core≈95%; dup§=5; sharedMath=10",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9464285714285714
-    },
-    {
-      "family": "wp_leftover",
-      "familyKey": "math:wp_leftover",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover",
-      "similarity": "core≈93%; dup§=7; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9268421052631579
-    },
-    {
-      "family": "add_three",
-      "familyKey": "math:add_three",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/add_three; g4/add_three; g5/add_three; g6/add_three",
-      "similarity": "core≈91%; dup§=2; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 2000 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.907051282051282
-    },
-    {
-      "family": "eq_sub",
-      "familyKey": "math:eq_sub",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/eq_sub; g4/eq_sub; g5/eq_sub; g6/eq_sub",
-      "similarity": "core≈78%; dup§=0; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 5000 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.78
-    },
-    {
-      "family": "wp_comparison_more",
-      "familyKey": "math:wp_comparison_more",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/wp_comparison_more; g4/wp_comparison_more; g5/wp_comparison_more; g6/wp_comparison_more",
-      "similarity": "core≈77%; dup§=5; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 12450 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.7651002506265664
-    },
-    {
-      "family": "eq_add",
-      "familyKey": "math:eq_add",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/eq_add; g4/eq_add; g5/eq_add; g6/eq_add",
-      "similarity": "core≈72%; dup§=0; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 4030 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.7237179487179488
-    },
-    {
-      "family": "triangle_angles",
-      "familyKey": "geometry:triangle_angles",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles",
-      "similarity": "core≈100%; dup§=2; sharedMath=2",
-      "ageFit": "No numeric progression",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 1
-    },
-    {
-      "family": "trapezoid_area",
-      "familyKey": "geometry:trapezoid_area",
-      "grades": "g5, g6",
-      "files": "g5/trapezoid_area; g6/trapezoid_area",
-      "similarity": "core≈96%; dup§=4; sharedMath=4",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9583333333333334
-    },
-    {
-      "family": "prism_volume",
-      "familyKey": "geometry:prism_volume",
-      "grades": "g4, g5, g6",
-      "files": "g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume",
-      "similarity": "core≈94%; dup§=3; sharedMath=1",
-      "ageFit": "Too simple for top grade",
-      "notes": "Multiple exact duplicated sentences across grades.",
-      "action": "Fix now — differentiate wording and examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9423076923076923
-    },
-    {
-      "family": "square_perimeter",
-      "familyKey": "geometry:square_perimeter",
-      "grades": "g3, g4, g5, g6",
-      "files": "g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter",
-      "similarity": "core≈93%; dup§=2; sharedMath=5",
-      "ageFit": "Too simple for top grade",
-      "notes": "Very high section similarity with repeated worked examples.",
-      "action": "Fix now — rewrite higher-grade explanations/examples",
-      "verdict": "FAIL_DUPLICATE",
-      "maxCoreSim": 0.9333333333333333
-    },
-    {
-      "family": "square_area",
-      "familyKey": "geometry:square_area",
-      "grades": "g2, g3, g4, g5, g6",
-      "files": "g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area",
-      "similarity": "core≈100%; dup§=1; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 81 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 1
-    },
-    {
-      "family": "parallelogram_area",
-      "familyKey": "geometry:parallelogram_area",
-      "grades": "g5, g6",
-      "files": "g5/parallelogram_area; g6/parallelogram_area",
-      "similarity": "core≈95%; dup§=2; sharedMath=0",
-      "ageFit": "Too simple for top grade",
-      "notes": "g6 core examples top at 80 (expected nearer 1000000).",
-      "action": "Fix now — advance examples for upper grades",
-      "verdict": "FAIL_AGE_FIT",
-      "maxCoreSim": 0.95
+      "similarity": "core≈55%; dup§=0; sharedMath=2",
+      "ageFit": "OK",
+      "notes": "Concept recap across grades with distinct enough body text.",
+      "action": "No action unless owner wants richer upper-grade examples",
+      "verdict": "REVIEW_OK",
+      "maxCoreSim": 0.55
     }
   ],
-  "reviewOk": [],
   "acceptableReview": [
     {
       "family": "cmp",
       "familyKey": "math:cmp",
       "grades": "g1, g2, g3, g4, g5, g6",
       "files": "g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp",
-      "similarity": "core≈85%; dup§=1; sharedMath=2",
+      "similarity": "core≈80%; dup§=1; sharedMath=0",
       "ageFit": "OK",
-      "notes": "Strong structural overlap; shared math line(s).",
-      "action": "Polish — stronger grade-specific numbers/methods",
-      "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.8543040293040294
+      "notes": "Similar framing but acceptable review topic; check examples still scale.",
+      "action": "Review — confirm numbers/methods progress",
+      "verdict": "REVIEW_OK",
+      "maxCoreSim": 0.8043040293040293
+    },
+    {
+      "family": "ns_neighbors",
+      "familyKey": "math:ns_neighbors",
+      "grades": "g1, g2, g3, g4, g5, g6",
+      "files": "g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors",
+      "similarity": "core≈55%; dup§=0; sharedMath=2",
+      "ageFit": "OK",
+      "notes": "Concept recap across grades with distinct enough body text.",
+      "action": "No action unless owner wants richer upper-grade examples",
+      "verdict": "REVIEW_OK",
+      "maxCoreSim": 0.55
     },
     {
       "family": "sub_two",
@@ -921,6 +741,18 @@
       "action": "No action",
       "verdict": "PASS",
       "maxCoreSim": 0.6888888888888888
+    },
+    {
+      "family": "division_core",
+      "familyKey": "math:division_core",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder",
+      "similarity": "core≈66%; dup§=1; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g2→g3 max# 20→96; g3→g4 max# 96→720; g4→g5 max# 720→8400; g5→g6 max# 8400→360000",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.6638795986622074
     },
     {
       "family": "fm_multiple",
@@ -957,6 +789,18 @@
       "action": "No action",
       "verdict": "PASS",
       "maxCoreSim": 0.5178571428571429
+    },
+    {
+      "family": "ns_even_odd",
+      "familyKey": "math:ns_even_odd",
+      "grades": "g1, g2, g3, g4",
+      "files": "g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd",
+      "similarity": "core≈49%; dup§=2; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g1→g2 max# 11→35; g2→g3 max# 35→905; g3→g4 max# 905→8731",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.49000149342891275
     },
     {
       "family": "dec_add",
@@ -1019,6 +863,18 @@
       "maxCoreSim": 0.4278499278499278
     },
     {
+      "family": "wp_leftover",
+      "familyKey": "math:wp_leftover",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover",
+      "similarity": "core≈42%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 47→72; g4→g5 max# 72→340; g5→g6 max# 340→850",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.4165980456741326
+    },
+    {
       "family": "wp_unit_cm_to_m",
       "familyKey": "math:wp_unit_cm_to_m",
       "grades": "g5, g6",
@@ -1067,6 +923,18 @@
       "maxCoreSim": 0.29762398393307854
     },
     {
+      "family": "wp_time_sum",
+      "familyKey": "math:wp_time_sum",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum",
+      "similarity": "core≈29%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 60→120; g4→g5 max# 120→75; g5→g6 max# 75→85",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.29093167701863354
+    },
+    {
       "family": "wp_coins_spent",
       "familyKey": "math:wp_coins_spent",
       "grades": "g1, g2",
@@ -1103,40 +971,100 @@
       "maxCoreSim": 0.13840752517223104
     },
     {
+      "family": "parallel_perpendicular",
+      "familyKey": "geometry:parallel_perpendicular",
+      "grades": "g3, g4, g5",
+      "files": "g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular",
+      "similarity": "core≈15%; dup§=0; sharedMath=0",
+      "ageFit": "No numeric progression",
+      "notes": "Max example number does not increase (90 → 90).",
+      "action": "Polish — update magnitudes/method depth",
+      "verdict": "NEEDS_POLISH",
+      "maxCoreSim": 0.14832093863574294
+    },
+    {
+      "family": "square_area",
+      "familyKey": "geometry:square_area",
+      "grades": "g2, g3, g4, g5, g6",
+      "files": "g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area",
+      "similarity": "core≈53%; dup§=1; sharedMath=1",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g2→g3 max# 16→25; g3→g4 max# 25→49; g4→g5 max# 49→49; g5→g6 max# 49→400",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.5261904761904762
+    },
+    {
       "family": "triangle_perimeter",
       "familyKey": "geometry:triangle_perimeter",
       "grades": "g3, g4, g5, g6",
       "files": "g3/triangle_perimeter; g4/triangle_perimeter; g5/triangle_perimeter; g6/triangle_perimeter",
-      "similarity": "core≈95%; dup§=2; sharedMath=1",
-      "ageFit": "Too simple for top grade",
-      "notes": "Strong structural overlap; shared math line(s).",
-      "action": "Polish — stronger grade-specific numbers/methods",
-      "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.9464285714285714
+      "similarity": "core≈49%; dup§=2; sharedMath=2",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 12→18; g4→g5 max# 18→21; g5→g6 max# 21→27",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.49360060229625446
+    },
+    {
+      "family": "square_perimeter",
+      "familyKey": "geometry:square_perimeter",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter",
+      "similarity": "core≈46%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 36→64; g4→g5 max# 64→81; g5→g6 max# 81→144",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.45683077578857634
+    },
+    {
+      "family": "parallelogram_area",
+      "familyKey": "geometry:parallelogram_area",
+      "grades": "g5, g6",
+      "files": "g5/parallelogram_area; g6/parallelogram_area",
+      "similarity": "core≈44%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g5→g6 max# 48→90",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.44310054939850335
+    },
+    {
+      "family": "prism_volume",
+      "familyKey": "geometry:prism_volume",
+      "grades": "g4, g5, g6",
+      "files": "g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume",
+      "similarity": "core≈39%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g4→g5 max# 60→60; g5→g6 max# 60→240",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.3947916666666667
     },
     {
       "family": "quadrilaterals",
       "familyKey": "geometry:quadrilaterals",
       "grades": "g3, g4, g5",
       "files": "g3/quadrilaterals; g4/quadrilaterals; g5/quadrilaterals",
-      "similarity": "core≈35%; dup§=1; sharedMath=0",
-      "ageFit": "No numeric progression",
-      "notes": "Max example number does not increase (2 → 1).",
-      "action": "Polish — update magnitudes/method depth",
-      "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.3527550852245974
+      "similarity": "core≈29%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 4→90; g4→g5 max# 90→90",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.28798330898055524
     },
     {
-      "family": "parallel_perpendicular",
-      "familyKey": "geometry:parallel_perpendicular",
-      "grades": "g3, g4, g5",
-      "files": "g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular",
-      "similarity": "core≈12%; dup§=1; sharedMath=0",
-      "ageFit": "No numeric progression",
-      "notes": "Max example number does not increase (90 → 90).",
-      "action": "Polish — update magnitudes/method depth",
-      "verdict": "NEEDS_POLISH",
-      "maxCoreSim": 0.12256121071910545
+      "family": "triangle_angles",
+      "familyKey": "geometry:triangle_angles",
+      "grades": "g3, g4, g5, g6",
+      "files": "g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles",
+      "similarity": "core≈25%; dup§=0; sharedMath=0",
+      "ageFit": "OK",
+      "notes": "Grade progression visible in wording and/or number range. g3→g4 max# 70→180; g4→g5 max# 180→180; g5→g6 max# 180→180",
+      "action": "No action",
+      "verdict": "PASS",
+      "maxCoreSim": 0.24860042735042734
     },
     {
       "family": "diagonal_square",
@@ -1261,26 +1189,7 @@
     }
   ],
   "actions": {
-    "fixNow": [
-      "math:division_core: Fix now — rewrite higher-grade explanations/examples",
-      "math:sequence: Fix now — differentiate wording and examples",
-      "math:ns_even_odd: Fix now — rewrite higher-grade explanations/examples",
-      "math:ns_complement100: Fix now — rewrite higher-grade explanations/examples",
-      "math:wp_time_sum: Fix now — differentiate wording and examples",
-      "math:ns_neighbors: Fix now — rewrite higher-grade explanations/examples",
-      "math:ns_complement10: Fix now — rewrite higher-grade explanations/examples",
-      "math:wp_leftover: Fix now — differentiate wording and examples",
-      "math:add_three: Fix now — advance examples for upper grades",
-      "math:eq_sub: Fix now — advance examples for upper grades",
-      "math:wp_comparison_more: Fix now — advance examples for upper grades",
-      "math:eq_add: Fix now — advance examples for upper grades",
-      "geometry:triangle_angles: Fix now — rewrite higher-grade explanations/examples",
-      "geometry:trapezoid_area: Fix now — rewrite higher-grade explanations/examples",
-      "geometry:prism_volume: Fix now — differentiate wording and examples",
-      "geometry:square_perimeter: Fix now — rewrite higher-grade explanations/examples",
-      "geometry:square_area: Fix now — advance examples for upper grades",
-      "geometry:parallelogram_area: Fix now — advance examples for upper grades"
-    ],
+    "fixNow": [],
     "defer": [
       "Write real content for geometry/g1/book_placeholder",
       "Write real content for geometry/g2/book_placeholder",
@@ -1296,21 +1205,32 @@
     ],
     "noAction": [
       "math:sub_two (g1, g2, g3, g4, g5, g6)",
+      "math:division_core (g2, g3, g4, g5, g6)",
       "math:fm_multiple (g4, g5, g6)",
       "math:round (g4, g5, g6)",
       "math:eq_mul (g5, g6)",
+      "math:ns_even_odd (g1, g2, g3, g4)",
       "math:dec_add (g3, g4, g5, g6)",
       "math:perc_part_of (g5, g6)",
       "math:fm_gcd (g4, g5, g6)",
       "math:wp_time_days (g1, g2)",
       "math:mul (g1, g2, g3, g4, g5, g6)",
+      "math:wp_leftover (g3, g4, g5, g6)",
       "math:wp_unit_cm_to_m (g5, g6)",
       "math:wp_coins (g1, g2)",
       "math:est_add (g4, g5)",
       "math:ns_place_tens_units (g1, g2)",
+      "math:wp_time_sum (g3, g4, g5, g6)",
       "math:wp_coins_spent (g1, g2)",
       "math:division_word_problems (g2)",
       "math:est_quantity (g4, g5)",
+      "geometry:square_area (g2, g3, g4, g5, g6)",
+      "geometry:triangle_perimeter (g3, g4, g5, g6)",
+      "geometry:square_perimeter (g3, g4, g5, g6)",
+      "geometry:parallelogram_area (g5, g6)",
+      "geometry:prism_volume (g4, g5, g6)",
+      "geometry:quadrilaterals (g3, g4, g5)",
+      "geometry:triangle_angles (g3, g4, g5, g6)",
       "geometry:diagonal_square (g4, g5)",
       "geometry:diagonal_rectangle (g4, g5)"
     ]

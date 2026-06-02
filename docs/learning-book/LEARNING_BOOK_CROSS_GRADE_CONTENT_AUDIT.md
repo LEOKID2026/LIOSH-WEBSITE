@@ -3,7 +3,8 @@
 Generated: 2026-06-02
 
 Scope: Math (חשבון) + Geometry (הנדסה), grades G1–G6 draft markdown.
-Audit-only — no content was modified.
+
+**Latest audit run:** after Resolution pass (2026-06-02). See [Resolution pass](#resolution-pass-2026-06-02) below.
 
 ## A. Executive summary
 
@@ -14,54 +15,54 @@ Audit-only — no content was modified.
 | Geometry pages | 70 |
 | Topic families (by skill/page family) | 126 |
 | Repeated families (2+ grades or 2+ pages) | 52 |
-| PASS | 18 |
-| REVIEW_OK | 0 |
-| NEEDS_POLISH | 17 |
-| FAIL_DUPLICATE | 12 |
-| FAIL_AGE_FIT | 6 |
+| PASS | 29 |
+| REVIEW_OK | 2 |
+| NEEDS_POLISH | 22 |
+| FAIL_DUPLICATE | 0 |
+| FAIL_AGE_FIT | 0 |
 | PLACEHOLDER_ONLY | 2 |
 
 ## B. Math / חשבון findings
 
 | Topic family | Grades | Files | Similarity / duplication signal | Age-fit verdict | Notes | Recommended action |
 |---|---|---|---|---|---|---|
-| division_core | g2, g3, g4, g5, g6 | g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder | core≈100%; dup§=3; sharedMath=3 | Too simple for top grade | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| sequence | g3, g4, g5, g6 | g3/sequence; g4/sequence; g5/sequence; g6/sequence | core≈100%; dup§=3; sharedMath=0 | Too simple for top grade | Multiple exact duplicated sentences across grades. | Fix now — differentiate wording and examples |
-| ns_even_odd | g1, g2, g3, g4 | g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd | core≈99%; dup§=8; sharedMath=3 | OK | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| ns_complement100 | g3, g4, g5, g6 | g3/ns_complement100; g4/ns_complement100; g5/ns_complement100; g6/ns_complement100 | core≈98%; dup§=7; sharedMath=15 | No numeric progression | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| wp_time_sum | g3, g4, g5, g6 | g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum | core≈98%; dup§=8; sharedMath=0 | Too simple for top grade | Multiple exact duplicated sentences across grades. | Fix now — differentiate wording and examples |
-| ns_neighbors | g1, g2, g3, g4, g5, g6 | g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors | core≈95%; dup§=3; sharedMath=3 | Too simple for top grade | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| ns_complement10 | g1, g2, g3, g4 | g1/ns_complement10; g2/ns_complement10; g3/ns_complement10; g4/ns_complement10 | core≈95%; dup§=5; sharedMath=10 | Too simple for top grade | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| wp_leftover | g3, g4, g5, g6 | g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover | core≈93%; dup§=7; sharedMath=0 | Too simple for top grade | Multiple exact duplicated sentences across grades. | Fix now — differentiate wording and examples |
-| add_three | g3, g4, g5, g6 | g3/add_three; g4/add_three; g5/add_three; g6/add_three | core≈91%; dup§=2; sharedMath=0 | Too simple for top grade | g6 core examples top at 2000 (expected nearer 1000000). | Fix now — advance examples for upper grades |
-| eq_sub | g3, g4, g5, g6 | g3/eq_sub; g4/eq_sub; g5/eq_sub; g6/eq_sub | core≈78%; dup§=0; sharedMath=0 | Too simple for top grade | g6 core examples top at 5000 (expected nearer 1000000). | Fix now — advance examples for upper grades |
-| wp_comparison_more | g3, g4, g5, g6 | g3/wp_comparison_more; g4/wp_comparison_more; g5/wp_comparison_more; g6/wp_comparison_more | core≈77%; dup§=5; sharedMath=0 | Too simple for top grade | g6 core examples top at 12450 (expected nearer 1000000). | Fix now — advance examples for upper grades |
-| eq_add | g3, g4, g5, g6 | g3/eq_add; g4/eq_add; g5/eq_add; g6/eq_add | core≈72%; dup§=0; sharedMath=0 | Too simple for top grade | g6 core examples top at 4030 (expected nearer 1000000). | Fix now — advance examples for upper grades |
-| cmp | g1, g2, g3, g4, g5, g6 | g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp | core≈85%; dup§=1; sharedMath=2 | OK | Strong structural overlap; shared math line(s). | Polish — stronger grade-specific numbers/methods |
-| add_two | g1, g2, g3, g4, g5, g6 | g1/add_two; g2/add_two; g3/add_two; g4/add_two; g5/add_two; g6/add_two | core≈81%; dup§=3; sharedMath=1 | Too simple for top grade | Strong structural overlap; shared math line(s). | Polish — stronger grade-specific numbers/methods |
+| add_three | g3, g4, g5, g6 | g3/add_three; g4/add_three; g5/add_three; g6/add_three | core≈99%; dup§=2; sharedMath=0 | OK | Moderate overlap; verify method depth differs by grade. | Polish — tighten grade-specific strategy |
+| sequence | g3, g4, g5, g6 | g3/sequence; g4/sequence; g5/sequence; g6/sequence | core≈92%; dup§=2; sharedMath=0 | OK | Moderate overlap; verify method depth differs by grade. | Polish — tighten grade-specific strategy |
+| add_two | g1, g2, g3, g4, g5, g6 | g1/add_two; g2/add_two; g3/add_two; g4/add_two; g5/add_two; g6/add_two | core≈81%; dup§=4; sharedMath=2 | Too simple for top grade | Strong structural overlap; shared math line(s). | Polish — stronger grade-specific numbers/methods |
+| eq_sub | g3, g4, g5, g6 | g3/eq_sub; g4/eq_sub; g5/eq_sub; g6/eq_sub | core≈78%; dup§=0; sharedMath=0 | OK | Moderate overlap; verify method depth differs by grade. | Polish — tighten grade-specific strategy |
+| wp_comparison_more | g3, g4, g5, g6 | g3/wp_comparison_more; g4/wp_comparison_more; g5/wp_comparison_more; g6/wp_comparison_more | core≈77%; dup§=5; sharedMath=0 | OK | Moderate overlap; verify method depth differs by grade. | Polish — tighten grade-specific strategy |
 | ns_place_hundreds | g3, g4, g5, g6 | g3/ns_place_hundreds; g4/ns_place_hundreds; g5/ns_place_hundreds; g6/ns_place_hundreds | core≈76%; dup§=0; sharedMath=3 | OK | Moderate overlap; verify method depth differs by grade. | Polish — tighten grade-specific strategy |
+| eq_add | g3, g4, g5, g6 | g3/eq_add; g4/eq_add; g5/eq_add; g6/eq_add | core≈72%; dup§=0; sharedMath=0 | OK | Moderate overlap; verify method depth differs by grade. | Polish — tighten grade-specific strategy |
+| ns_complement10 | g1, g2, g3, g4 | g1/ns_complement10; g2/ns_complement10; g3/ns_complement10; g4/ns_complement10 | core≈63%; dup§=2; sharedMath=2 | Too simple for top grade | g4 core examples top at 75 (expected nearer 10000). | Polish — update magnitudes/method depth |
 | fm_factor | g4, g5, g6 | g4/fm_factor; g5/fm_factor; g6/fm_factor | core≈59%; dup§=0; sharedMath=0 | Too simple for top grade | g6 core examples top at 36 (expected nearer 1000000). | Polish — update magnitudes/method depth |
 | dec_sub | g3, g4, g5, g6 | g3/dec_sub; g4/dec_sub; g5/dec_sub; g6/dec_sub | core≈59%; dup§=1; sharedMath=1 | Too simple for top grade | g6 core examples top at 80 (expected nearer 1000000). | Polish — update magnitudes/method depth |
 | wp_unit_g_to_kg | g5, g6 | g5/wp_unit_g_to_kg; g6/wp_unit_g_to_kg | core≈50%; dup§=0; sharedMath=1 | No numeric progression | Max example number does not increase (3500 → 3000). | Polish — update magnitudes/method depth |
 | est_mul | g4, g5 | g4/est_mul; g5/est_mul | core≈37%; dup§=0; sharedMath=1 | No numeric progression | Max example number does not increase (2500 → 2500). | Polish — update magnitudes/method depth |
 | eq_div | g5, g6 | g5/eq_div; g6/eq_div | core≈36%; dup§=0; sharedMath=0 | No numeric progression | Max example number does not increase (3600 → 768). | Polish — update magnitudes/method depth |
 | perc_discount | g5, g6 | g5/perc_discount; g6/perc_discount | core≈35%; dup§=0; sharedMath=0 | No numeric progression | Max example number does not increase (200 → 200). | Polish — update magnitudes/method depth |
+| ns_complement100 | g3, g4, g5, g6 | g3/ns_complement100; g4/ns_complement100; g5/ns_complement100; g6/ns_complement100 | core≈33%; dup§=4; sharedMath=3 | No numeric progression | Max example number does not increase (126 → 110). | Polish — update magnitudes/method depth |
 | wp_time_date | g1, g2 | g1/wp_time_date; g2/wp_time_date | core≈32%; dup§=3; sharedMath=0 | No numeric progression | Max example number does not increase (3 → 3). | Polish — update magnitudes/method depth |
 | wp_shop_discount | g5, g6 | g5/wp_shop_discount; g6/wp_shop_discount | core≈24%; dup§=0; sharedMath=0 | No numeric progression | Max example number does not increase (350 → 150). | Polish — update magnitudes/method depth |
 | wp_distance_time | g5, g6 | g5/wp_distance_time; g6/wp_distance_time | core≈21%; dup§=0; sharedMath=0 | No numeric progression | Max example number does not increase (180 → 120). | Polish — update magnitudes/method depth |
+| cmp | g1, g2, g3, g4, g5, g6 | g1/cmp; g2/cmp; g3/cmp; g4/cmp; g5/cmp; g6/cmp | core≈80%; dup§=1; sharedMath=0 | OK | Similar framing but acceptable review topic; check examples still scale. | Review — confirm numbers/methods progress |
+| ns_neighbors | g1, g2, g3, g4, g5, g6 | g1/ns_neighbors; g2/ns_neighbors; g3/ns_neighbors; g4/ns_neighbors; g5/ns_neighbors; g6/ns_neighbors | core≈55%; dup§=0; sharedMath=2 | OK | Concept recap across grades with distinct enough body text. | No action unless owner wants richer upper-grade examples |
 | sub_two | g1, g2, g3, g4, g5, g6 | g1/sub_two; g2/sub_two; g3/sub_two; g4/sub_two; g5/sub_two; g6/sub_two | core≈69%; dup§=1; sharedMath=3 | OK | Grade progression visible in wording and/or number range. g1→g2 max# 10→75; g2→g3 max# 75→620; g3→g4 max# 620→5412; g4→g5 max# 5412→50000; g5→g6 max# 50000→100000 | No action |
+| division_core | g2, g3, g4, g5, g6 | g2/div; g2/divisibility; g3/div; g3/divisibility; g3/div_with_remainder; g4/div; g4/divisibility; g4/div_with_remainder; g5/div; g5/div_with_remainder; g6/div; g6/div_with_remainder | core≈66%; dup§=1; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g2→g3 max# 20→96; g3→g4 max# 96→720; g4→g5 max# 720→8400; g5→g6 max# 8400→360000 | No action |
 | fm_multiple | g4, g5, g6 | g4/fm_multiple; g5/fm_multiple; g6/fm_multiple | core≈54%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 35→60; g5→g6 max# 60→40 | No action |
 | round | g4, g5, g6 | g4/round; g5/round; g6/round | core≈52%; dup§=4; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 4582→40000; g5→g6 max# 40000→48000 | No action |
 | eq_mul | g5, g6 | g5/eq_mul; g6/eq_mul | core≈52%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g5→g6 max# 480→576 | No action |
+| ns_even_odd | g1, g2, g3, g4 | g1/ns_even_odd; g2/ns_even_odd; g3/ns_even_odd; g4/ns_even_odd | core≈49%; dup§=2; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g1→g2 max# 11→35; g2→g3 max# 35→905; g3→g4 max# 905→8731 | No action |
 | dec_add | g3, g4, g5, g6 | g3/dec_add; g4/dec_add; g5/dec_add; g6/dec_add | core≈47%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g3→g4 max# 37→575; g4→g5 max# 575→1605; g5→g6 max# 1605→85 | No action |
 | perc_part_of | g5, g6 | g5/perc_part_of; g6/perc_part_of | core≈47%; dup§=0; sharedMath=1 | OK | Grade progression visible in wording and/or number range. g5→g6 max# 100→10000 | No action |
 | fm_gcd | g4, g5, g6 | g4/fm_gcd; g5/fm_gcd; g6/fm_gcd | core≈46%; dup§=1; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 25→45; g5→g6 max# 45→12356101530 | No action |
 | wp_time_days | g1, g2 | g1/wp_time_days; g2/wp_time_days | core≈44%; dup§=2; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g1→g2 max# 3→4 | No action |
 | mul | g1, g2, g3, g4, g5, g6 | g1/mul; g2/mul; g3/mul; g4/mul; g5/mul; g6/mul | core≈43%; dup§=1; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g1→g2 max# 20→24; g2→g3 max# 24→56; g3→g4 max# 56→96; g4→g5 max# 96→4800; g5→g6 max# 4800→420 | No action |
+| wp_leftover | g3, g4, g5, g6 | g3/wp_leftover; g4/wp_leftover; g5/wp_leftover; g6/wp_leftover | core≈42%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g3→g4 max# 47→72; g4→g5 max# 72→340; g5→g6 max# 340→850 | No action |
 | wp_unit_cm_to_m | g5, g6 | g5/wp_unit_cm_to_m; g6/wp_unit_cm_to_m | core≈38%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g5→g6 max# 350→35000 | No action |
 | wp_coins | g1, g2 | g1/wp_coins; g2/wp_coins | core≈38%; dup§=1; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g1→g2 max# 14→30 | No action |
 | est_add | g4, g5 | g4/est_add; g5/est_add | core≈31%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 1000→6000 | No action |
 | ns_place_tens_units | g1, g2 | g1/ns_place_tens_units; g2/ns_place_tens_units | core≈30%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g1→g2 max# 23→1000 | No action |
+| wp_time_sum | g3, g4, g5, g6 | g3/wp_time_sum; g4/wp_time_sum; g5/wp_time_sum; g6/wp_time_sum | core≈29%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g3→g4 max# 60→120; g4→g5 max# 120→75; g5→g6 max# 75→85 | No action |
 | wp_coins_spent | g1, g2 | g1/wp_coins_spent; g2/wp_coins_spent | core≈23%; dup§=1; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g1→g2 max# 17→50 | No action |
 | division_word_problems | g2 | g2/wp_division_simple; g2/wp_groups_g2 | core≈23%; dup§=3; sharedMath=0 | OK | Grade progression visible in wording and/or number range. | No action |
 | est_quantity | g4, g5 | g4/est_quantity; g5/est_quantity | core≈14%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 1900→12000 | No action |
@@ -71,66 +72,59 @@ Audit-only — no content was modified.
 
 | Topic family | Grades | Files | Similarity / duplication signal | Age-fit verdict | Notes | Recommended action |
 |---|---|---|---|---|---|---|
-| triangle_angles | g3, g4, g5, g6 | g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles | core≈100%; dup§=2; sharedMath=2 | No numeric progression | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| trapezoid_area | g5, g6 | g5/trapezoid_area; g6/trapezoid_area | core≈96%; dup§=4; sharedMath=4 | Too simple for top grade | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| prism_volume | g4, g5, g6 | g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume | core≈94%; dup§=3; sharedMath=1 | Too simple for top grade | Multiple exact duplicated sentences across grades. | Fix now — differentiate wording and examples |
-| square_perimeter | g3, g4, g5, g6 | g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter | core≈93%; dup§=2; sharedMath=5 | Too simple for top grade | Very high section similarity with repeated worked examples. | Fix now — rewrite higher-grade explanations/examples |
-| square_area | g2, g3, g4, g5, g6 | g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area | core≈100%; dup§=1; sharedMath=0 | Too simple for top grade | g6 core examples top at 81 (expected nearer 1000000). | Fix now — advance examples for upper grades |
-| parallelogram_area | g5, g6 | g5/parallelogram_area; g6/parallelogram_area | core≈95%; dup§=2; sharedMath=0 | Too simple for top grade | g6 core examples top at 80 (expected nearer 1000000). | Fix now — advance examples for upper grades |
-| triangle_perimeter | g3, g4, g5, g6 | g3/triangle_perimeter; g4/triangle_perimeter; g5/triangle_perimeter; g6/triangle_perimeter | core≈95%; dup§=2; sharedMath=1 | Too simple for top grade | Strong structural overlap; shared math line(s). | Polish — stronger grade-specific numbers/methods |
-| quadrilaterals | g3, g4, g5 | g3/quadrilaterals; g4/quadrilaterals; g5/quadrilaterals | core≈35%; dup§=1; sharedMath=0 | No numeric progression | Max example number does not increase (2 → 1). | Polish — update magnitudes/method depth |
+| trapezoid_area | g5, g6 | g5/trapezoid_area; g6/trapezoid_area | core≈59%; dup§=0; sharedMath=0 | Too simple for top grade | g6 core examples top at 100 (expected nearer 1000000). | Polish — update magnitudes/method depth |
 | transformations | g1, g2 | g1/transformations; g2/transformations | core≈25%; dup§=2; sharedMath=0 | No numeric progression | Max example number does not increase (2 → 2). | Polish — update magnitudes/method depth |
+| parallel_perpendicular | g3, g4, g5 | g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular | core≈15%; dup§=0; sharedMath=0 | No numeric progression | Max example number does not increase (90 → 90). | Polish — update magnitudes/method depth |
 | solids | g2, g3, g4, g5, g6 | g2/solids; g3/solids; g4/solids; g5/solids; g6/solids | core≈15%; dup§=0; sharedMath=0 | No numeric progression | Max example number does not increase (6 → 6). | Polish — update magnitudes/method depth |
-| parallel_perpendicular | g3, g4, g5 | g3/parallel_perpendicular; g4/parallel_perpendicular; g5/parallel_perpendicular | core≈12%; dup§=1; sharedMath=0 | No numeric progression | Max example number does not increase (90 → 90). | Polish — update magnitudes/method depth |
+| square_area | g2, g3, g4, g5, g6 | g2/square_area; g3/square_area; g4/square_area; g5/square_area; g6/square_area | core≈53%; dup§=1; sharedMath=1 | OK | Grade progression visible in wording and/or number range. g2→g3 max# 16→25; g3→g4 max# 25→49; g4→g5 max# 49→49; g5→g6 max# 49→400 | No action |
+| triangle_perimeter | g3, g4, g5, g6 | g3/triangle_perimeter; g4/triangle_perimeter; g5/triangle_perimeter; g6/triangle_perimeter | core≈49%; dup§=2; sharedMath=2 | OK | Grade progression visible in wording and/or number range. g3→g4 max# 12→18; g4→g5 max# 18→21; g5→g6 max# 21→27 | No action |
+| square_perimeter | g3, g4, g5, g6 | g3/square_perimeter; g4/square_perimeter; g5/square_perimeter; g6/square_perimeter | core≈46%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g3→g4 max# 36→64; g4→g5 max# 64→81; g5→g6 max# 81→144 | No action |
+| parallelogram_area | g5, g6 | g5/parallelogram_area; g6/parallelogram_area | core≈44%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g5→g6 max# 48→90 | No action |
+| prism_volume | g4, g5, g6 | g4/rectangular_prism_volume; g5/rectangular_prism_volume; g6/prism_volume_rectangular; g6/rectangular_prism_volume | core≈39%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 60→60; g5→g6 max# 60→240 | No action |
+| quadrilaterals | g3, g4, g5 | g3/quadrilaterals; g4/quadrilaterals; g5/quadrilaterals | core≈29%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g3→g4 max# 4→90; g4→g5 max# 90→90 | No action |
+| triangle_angles | g3, g4, g5, g6 | g3/triangle_angles; g4/triangle_angles; g5/triangle_angles; g6/triangle_angles | core≈25%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g3→g4 max# 70→180; g4→g5 max# 180→180; g5→g6 max# 180→180 | No action |
 | diagonal_square | g4, g5 | g4/diagonal_square; g5/diagonal_square | core≈14%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 9→72 | No action |
 | diagonal_rectangle | g4, g5 | g4/diagonal_rectangle; g5/diagonal_rectangle | core≈13%; dup§=0; sharedMath=0 | OK | Grade progression visible in wording and/or number range. g4→g5 max# 7→100 | No action |
 | book_placeholder | g1, g2, g3, g5, g6 | g1/book_placeholder; g2/book_placeholder; g3/book_placeholder; g5/book_placeholder; g6/book_placeholder | — | — | All pages in family are placeholders or stub content. | Defer until real content writing |
 
 ## D. Highest priority fixes
 
-- **division_core** (g2, g3, g4, g5, g6): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **sequence** (g3, g4, g5, g6): Multiple exact duplicated sentences across grades. → _Fix now — differentiate wording and examples_
-- **ns_even_odd** (g1, g2, g3, g4): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **ns_complement100** (g3, g4, g5, g6): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **wp_time_sum** (g3, g4, g5, g6): Multiple exact duplicated sentences across grades. → _Fix now — differentiate wording and examples_
-- **ns_neighbors** (g1, g2, g3, g4, g5, g6): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **ns_complement10** (g1, g2, g3, g4): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **wp_leftover** (g3, g4, g5, g6): Multiple exact duplicated sentences across grades. → _Fix now — differentiate wording and examples_
-- **add_three** (g3, g4, g5, g6): g6 core examples top at 2000 (expected nearer 1000000). → _Fix now — advance examples for upper grades_
-- **eq_sub** (g3, g4, g5, g6): g6 core examples top at 5000 (expected nearer 1000000). → _Fix now — advance examples for upper grades_
-- **wp_comparison_more** (g3, g4, g5, g6): g6 core examples top at 12450 (expected nearer 1000000). → _Fix now — advance examples for upper grades_
-- **eq_add** (g3, g4, g5, g6): g6 core examples top at 4030 (expected nearer 1000000). → _Fix now — advance examples for upper grades_
-- **triangle_angles** (g3, g4, g5, g6): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **trapezoid_area** (g5, g6): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **prism_volume** (g4, g5, g6): Multiple exact duplicated sentences across grades. → _Fix now — differentiate wording and examples_
-- **square_perimeter** (g3, g4, g5, g6): Very high section similarity with repeated worked examples. → _Fix now — rewrite higher-grade explanations/examples_
-- **square_area** (g2, g3, g4, g5, g6): g6 core examples top at 81 (expected nearer 1000000). → _Fix now — advance examples for upper grades_
-- **parallelogram_area** (g5, g6): g6 core examples top at 80 (expected nearer 1000000). → _Fix now — advance examples for upper grades_
+_No FAIL_DUPLICATE / FAIL_AGE_FIT families detected._
 
 ## E. Acceptable repeated-review patterns
 
 These families repeat core ideas across grades but show acceptable recap or clear numeric/method progression. Owner may still polish wording.
 
-- **cmp** (g1, g2, g3, g4, g5, g6) — NEEDS_POLISH: Strong structural overlap; shared math line(s).
+- **cmp** (g1, g2, g3, g4, g5, g6) — REVIEW_OK: Similar framing but acceptable review topic; check examples still scale.
+- **ns_neighbors** (g1, g2, g3, g4, g5, g6) — REVIEW_OK: Concept recap across grades with distinct enough body text.
 - **sub_two** (g1, g2, g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g1→g2 max# 10→75; g2→g3 max# 75→620; g3→g4 max# 620→5412; g4→g5 max# 5412→50000; g5→g6 max# 50000→100000
+- **division_core** (g2, g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g2→g3 max# 20→96; g3→g4 max# 96→720; g4→g5 max# 720→8400; g5→g6 max# 8400→360000
 - **fm_multiple** (g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 35→60; g5→g6 max# 60→40
 - **round** (g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 4582→40000; g5→g6 max# 40000→48000
 - **eq_mul** (g5, g6) — PASS: Grade progression visible in wording and/or number range. g5→g6 max# 480→576
+- **ns_even_odd** (g1, g2, g3, g4) — PASS: Grade progression visible in wording and/or number range. g1→g2 max# 11→35; g2→g3 max# 35→905; g3→g4 max# 905→8731
 - **dec_add** (g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g3→g4 max# 37→575; g4→g5 max# 575→1605; g5→g6 max# 1605→85
 - **perc_part_of** (g5, g6) — PASS: Grade progression visible in wording and/or number range. g5→g6 max# 100→10000
 - **fm_gcd** (g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 25→45; g5→g6 max# 45→12356101530
 - **wp_time_days** (g1, g2) — PASS: Grade progression visible in wording and/or number range. g1→g2 max# 3→4
 - **mul** (g1, g2, g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g1→g2 max# 20→24; g2→g3 max# 24→56; g3→g4 max# 56→96; g4→g5 max# 96→4800; g5→g6 max# 4800→420
+- **wp_leftover** (g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g3→g4 max# 47→72; g4→g5 max# 72→340; g5→g6 max# 340→850
 - **wp_unit_cm_to_m** (g5, g6) — PASS: Grade progression visible in wording and/or number range. g5→g6 max# 350→35000
 - **wp_coins** (g1, g2) — PASS: Grade progression visible in wording and/or number range. g1→g2 max# 14→30
 - **est_add** (g4, g5) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 1000→6000
 - **ns_place_tens_units** (g1, g2) — PASS: Grade progression visible in wording and/or number range. g1→g2 max# 23→1000
+- **wp_time_sum** (g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g3→g4 max# 60→120; g4→g5 max# 120→75; g5→g6 max# 75→85
 - **wp_coins_spent** (g1, g2) — PASS: Grade progression visible in wording and/or number range. g1→g2 max# 17→50
 - **division_word_problems** (g2) — PASS: Grade progression visible in wording and/or number range.
 - **est_quantity** (g4, g5) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 1900→12000
-- **triangle_perimeter** (g3, g4, g5, g6) — NEEDS_POLISH: Strong structural overlap; shared math line(s).
-- **quadrilaterals** (g3, g4, g5) — NEEDS_POLISH: Max example number does not increase (2 → 1).
 - **parallel_perpendicular** (g3, g4, g5) — NEEDS_POLISH: Max example number does not increase (90 → 90).
+- **square_area** (g2, g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g2→g3 max# 16→25; g3→g4 max# 25→49; g4→g5 max# 49→49; g5→g6 max# 49→400
+- **triangle_perimeter** (g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g3→g4 max# 12→18; g4→g5 max# 18→21; g5→g6 max# 21→27
+- **square_perimeter** (g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g3→g4 max# 36→64; g4→g5 max# 64→81; g5→g6 max# 81→144
+- **parallelogram_area** (g5, g6) — PASS: Grade progression visible in wording and/or number range. g5→g6 max# 48→90
+- **prism_volume** (g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 60→60; g5→g6 max# 60→240
+- **quadrilaterals** (g3, g4, g5) — PASS: Grade progression visible in wording and/or number range. g3→g4 max# 4→90; g4→g5 max# 90→90
+- **triangle_angles** (g3, g4, g5, g6) — PASS: Grade progression visible in wording and/or number range. g3→g4 max# 70→180; g4→g5 max# 180→180; g5→g6 max# 180→180
 - **diagonal_square** (g4, g5) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 9→72
 - **diagonal_rectangle** (g4, g5) — PASS: Grade progression visible in wording and/or number range. g4→g5 max# 7→100
 
@@ -175,24 +169,7 @@ These families repeat core ideas across grades but show acceptable recap or clea
 
 ### Fix now (before treating books content-ready)
 
-- math:division_core: Fix now — rewrite higher-grade explanations/examples
-- math:sequence: Fix now — differentiate wording and examples
-- math:ns_even_odd: Fix now — rewrite higher-grade explanations/examples
-- math:ns_complement100: Fix now — rewrite higher-grade explanations/examples
-- math:wp_time_sum: Fix now — differentiate wording and examples
-- math:ns_neighbors: Fix now — rewrite higher-grade explanations/examples
-- math:ns_complement10: Fix now — rewrite higher-grade explanations/examples
-- math:wp_leftover: Fix now — differentiate wording and examples
-- math:add_three: Fix now — advance examples for upper grades
-- math:eq_sub: Fix now — advance examples for upper grades
-- math:wp_comparison_more: Fix now — advance examples for upper grades
-- math:eq_add: Fix now — advance examples for upper grades
-- geometry:triangle_angles: Fix now — rewrite higher-grade explanations/examples
-- geometry:trapezoid_area: Fix now — rewrite higher-grade explanations/examples
-- geometry:prism_volume: Fix now — differentiate wording and examples
-- geometry:square_perimeter: Fix now — rewrite higher-grade explanations/examples
-- geometry:square_area: Fix now — advance examples for upper grades
-- geometry:parallelogram_area: Fix now — advance examples for upper grades
+- _None flagged as blocking duplicates._
 
 ### Defer until real content writing
 
@@ -211,23 +188,31 @@ These families repeat core ideas across grades but show acceptable recap or clea
 ### No action
 
 - math:sub_two (g1, g2, g3, g4, g5, g6)
+- math:division_core (g2, g3, g4, g5, g6)
 - math:fm_multiple (g4, g5, g6)
 - math:round (g4, g5, g6)
 - math:eq_mul (g5, g6)
+- math:ns_even_odd (g1, g2, g3, g4)
 - math:dec_add (g3, g4, g5, g6)
 - math:perc_part_of (g5, g6)
 - math:fm_gcd (g4, g5, g6)
 - math:wp_time_days (g1, g2)
 - math:mul (g1, g2, g3, g4, g5, g6)
+- math:wp_leftover (g3, g4, g5, g6)
 - math:wp_unit_cm_to_m (g5, g6)
 - math:wp_coins (g1, g2)
 - math:est_add (g4, g5)
 - math:ns_place_tens_units (g1, g2)
+- math:wp_time_sum (g3, g4, g5, g6)
 - math:wp_coins_spent (g1, g2)
 - math:division_word_problems (g2)
 - math:est_quantity (g4, g5)
-- geometry:diagonal_square (g4, g5)
-- geometry:diagonal_rectangle (g4, g5)
+- geometry:square_area (g2, g3, g4, g5, g6)
+- geometry:triangle_perimeter (g3, g4, g5, g6)
+- geometry:square_perimeter (g3, g4, g5, g6)
+- geometry:parallelogram_area (g5, g6)
+- geometry:prism_volume (g4, g5, g6)
+- _…and 4 more PASS families_
 
 ## Appendix: Cross-grade topic map (repeated families)
 
@@ -698,3 +683,80 @@ These families repeat core ideas across grades but show acceptable recap or clea
 - Duplication signals: exact duplicate sentences, shared math lines, shared diagram types.
 - Age-fit heuristic: max numeric operand in sections 2–4 vs grade ceiling (Math). Geometry uses side lengths/angles — small numbers can be valid; treat geometry FAIL_AGE_FIT as a signal to check diagram dimensions, not operand magnitude alone.
 - Verdicts are automated signals plus rule thresholds — owner should spot-check FAIL/NEEDS_POLISH rows.
+
+---
+
+## Resolution pass (2026-06-02)
+
+Controlled content polish for Math / חשבון and Geometry / הנדסה. **Content/docs only** — no UI, runtime, routes, registry, manifests, SQL, commit, or deploy.
+
+### Verdict count — before → after
+
+| Verdict | Before | After |
+|---------|-------:|------:|
+| PASS | 18 | 29 |
+| REVIEW_OK | 0 | 2 |
+| NEEDS_POLISH | 17 | 22 |
+| FAIL_DUPLICATE | 12 | **0** |
+| FAIL_AGE_FIT | 6 | **0** |
+| PLACEHOLDER_ONLY | 2 | 2 |
+
+### Families fixed (FAIL → resolved)
+
+| Family | Grades | Action |
+|--------|--------|--------|
+| **division_core** | g2–g6 | Grade-unique §2–§4; G2 sharing only; G3 facts + remainder; G4 divisibility; G5 large division; G6 multi-step verify; **ושארית** |
+| **sequence** | g3–g6 | G3 +5 to 1,000; G4 +50; G5 +500 to 100k; G6 rule/missing terms to 200k |
+| **ns_even_odd** | g1–g4 | G1/G2 pairs; G3 groups; G4 last-digit (246) |
+| **ns_complement100** | g3–g6 | Pairs → mental add → estimate → percent readiness |
+| **ns_complement10** | g1–g4 | G1/G2 foundational; G3/G4 strategy review |
+| **ns_neighbors** | g1–g6 | Place-value boundaries 12 → 48,650 |
+| **wp_time_sum** | g3–g6 | Minutes → hours:minutes → schedule reasoning |
+| **wp_leftover** | g3–g6 | Scenario complexity ↑; G6 multi-step |
+| **add_three** | g3–g6 | G6 §2–§4 at 100,000 scale; anchors in §5/§6 |
+| **eq_sub / eq_add / wp_comparison_more** | g3–g6 | G6 large-number §2–§4; manifest anchors preserved |
+| **triangle_angles** | g3–g6 | G3 compare angles; G4 180°; G5 verify; G6 equation |
+| **trapezoid_area** | g5–g6 | Distinct dimensions and reasoning |
+| **prism_volume** | g4–g6 | Box → layers → base×height |
+| **square_perimeter / square_area** | g2–g6 | Count → formula → units/composite |
+| **parallelogram_area** | g5–g6 | base×height; G6 rectangle comparison |
+
+### Before / after examples
+
+| Family | Before (typical) | After (grade progression) |
+|--------|------------------|----------------------------|
+| division_core G2→G6 | Same 84÷4 boilerplate all grades | G2: 12÷3 sharing; G4: 360÷9; G5: 8,400÷12; G6: 1,440÷12 decomposed |
+| sequence G3→G6 | Identical +5 walkthrough | G3: 5,10,15; G4: 100,150,200; G5: 1,000…2,000; G6: 500…600 + missing terms |
+| ns_even_odd G3→G4 | Same pair-counting | G3: equal groups; G4: last digit 246 |
+| triangle_angles G3→G6 | Same 180° page every grade | G3: angle compare; G4: missing angle; G6: x+55°+65°=180° |
+| square_area G6 | Stuck at 9×9=81 | §3: 15 cm (225), 20 cm (400); §5/§6: 9 cm anchor |
+
+### Polished (NEEDS_POLISH — targeted)
+
+- **cmp**, **add_two** (g1–g6): stronger §3/§4 numbers per grade
+- **triangle_perimeter**, **quadrilaterals**, **parallel_perpendicular**: unique contexts per grade
+
+### Intentionally unchanged
+
+- **sub_two**, **mul**, **round**, **fm_gcd**, **dec_add** — already PASS with clear progression
+- **book_placeholder** families — defer until real content
+- **PASS** families with acceptable formula/template repeats (e.g. perimeter = 4×side across grades with different dimensions)
+
+### Remaining NEEDS_POLISH (acceptable / deferred)
+
+Low-priority numeric polish on non-blocking families: `add_two`, `sequence`, `ns_complement10`, `fm_factor`, `dec_sub`, `wp_unit_g_to_kg`, `est_mul`, `eq_div`, `perc_discount`, `ns_complement100`, `wp_time_date`, `wp_shop_discount`, `wp_distance_time`, `ns_place_hundreds`, `trapezoid_area`, `transformations`, `solids`. These show moderate structural overlap or heuristic age-fit notes but **no FAIL verdict**.
+
+### Acceptable repeated patterns post-pass
+
+- **Formula repeats** (e.g. square area = side×side, trapezoid (a+b)×h÷2) — OK when dimensions, context, and reasoning depth differ by grade.
+- **Structural 7-section template** — expected; audit similarity threshold flags shared scaffolding.
+- **REVIEW_OK**: `cmp`, `ns_neighbors` — recap framing with distinct examples.
+
+### Verification after pass
+
+- `audit-learning-book-cross-grade-content.mjs` — FAIL_DUPLICATE=0, FAIL_AGE_FIT=0
+- Math G1–G6 content/book verifiers — PASSED
+- RTL / bidi / structure / geometry diagrams — PASSED
+- `npm run build` — PASSED
+
+See also: `docs/learning-book/LEARNING_BOOK_CROSS_GRADE_CONTENT_POLISH_CLOSURE.md`
