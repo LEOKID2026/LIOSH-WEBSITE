@@ -1,0 +1,1731 @@
+{
+  "WARNING": "This file is NOT part of the Ministry oracle. It documents the current product topic state only. These rows must never be merged into ministry-matrix.draft.json and must never raise confidence for any oracle row.",
+  "generated_at": "2026-06-02T18:14:52.998Z",
+  "source_script": "scripts/build-ministry-oracle-moledet-geography.mjs",
+  "source_class": "internal_scaffold",
+  "row_count": 36,
+  "rows": [
+    {
+      "row_id": "moledet_scaffold.g1.homeland",
+      "subject": "moledet",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "homeland",
+      "official_subtopic": "מהי משפחה? תפקידי המשפחה. הכיתה והבית ספר – קהילה קרובה. חגים ומועדים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g1.homeland",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "קהילה ומשפחה",
+        "focus_lines": [
+          "מהי משפחה? תפקידי המשפחה",
+          "הכיתה והבית ספר – קהילה קרובה",
+          "חגים ומועדים",
+          "היכרות ראשונית עם מפת הכיתה ובית הספר",
+          "יסודות: כללי התנהגות, שיתוף פעולה"
+        ],
+        "geography": [
+          "מפת כיתה",
+          "מפת בית ספר",
+          "כיוונים בסיסיים"
+        ],
+        "citizenship": [
+          "כללי התנהגות",
+          "שיתוף פעולה",
+          "השתייכות לקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g1.community",
+      "subject": "moledet",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "community",
+      "official_subtopic": "מהי משפחה? תפקידי המשפחה. הכיתה והבית ספר – קהילה קרובה. חגים ומועדים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g1.community",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "קהילה ומשפחה",
+        "focus_lines": [
+          "מהי משפחה? תפקידי המשפחה",
+          "הכיתה והבית ספר – קהילה קרובה",
+          "חגים ומועדים",
+          "היכרות ראשונית עם מפת הכיתה ובית הספר",
+          "יסודות: כללי התנהגות, שיתוף פעולה"
+        ],
+        "geography": [
+          "מפת כיתה",
+          "מפת בית ספר",
+          "כיוונים בסיסיים"
+        ],
+        "citizenship": [
+          "כללי התנהגות",
+          "שיתוף פעולה",
+          "השתייכות לקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g1.citizenship",
+      "subject": "moledet",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "citizenship",
+      "official_subtopic": "מהי משפחה? תפקידי המשפחה. הכיתה והבית ספר – קהילה קרובה. חגים ומועדים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g1.citizenship",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "קהילה ומשפחה",
+        "focus_lines": [
+          "מהי משפחה? תפקידי המשפחה",
+          "הכיתה והבית ספר – קהילה קרובה",
+          "חגים ומועדים",
+          "היכרות ראשונית עם מפת הכיתה ובית הספר",
+          "יסודות: כללי התנהגות, שיתוף פעולה"
+        ],
+        "geography": [
+          "מפת כיתה",
+          "מפת בית ספר",
+          "כיוונים בסיסיים"
+        ],
+        "citizenship": [
+          "כללי התנהגות",
+          "שיתוף פעולה",
+          "השתייכות לקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g1.geography",
+      "subject": "moledet",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "geography",
+      "official_subtopic": "מהי משפחה? תפקידי המשפחה. הכיתה והבית ספר – קהילה קרובה. חגים ומועדים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g1.geography",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "קהילה ומשפחה",
+        "focus_lines": [
+          "מהי משפחה? תפקידי המשפחה",
+          "הכיתה והבית ספר – קהילה קרובה",
+          "חגים ומועדים",
+          "היכרות ראשונית עם מפת הכיתה ובית הספר",
+          "יסודות: כללי התנהגות, שיתוף פעולה"
+        ],
+        "geography": [
+          "מפת כיתה",
+          "מפת בית ספר",
+          "כיוונים בסיסיים"
+        ],
+        "citizenship": [
+          "כללי התנהגות",
+          "שיתוף פעולה",
+          "השתייכות לקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g1.values",
+      "subject": "moledet",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "values",
+      "official_subtopic": "מהי משפחה? תפקידי המשפחה. הכיתה והבית ספר – קהילה קרובה. חגים ומועדים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g1.values",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "קהילה ומשפחה",
+        "focus_lines": [
+          "מהי משפחה? תפקידי המשפחה",
+          "הכיתה והבית ספר – קהילה קרובה",
+          "חגים ומועדים",
+          "היכרות ראשונית עם מפת הכיתה ובית הספר",
+          "יסודות: כללי התנהגות, שיתוף פעולה"
+        ],
+        "geography": [
+          "מפת כיתה",
+          "מפת בית ספר",
+          "כיוונים בסיסיים"
+        ],
+        "citizenship": [
+          "כללי התנהגות",
+          "שיתוף פעולה",
+          "השתייכות לקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g1.maps",
+      "subject": "moledet",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "maps",
+      "official_subtopic": "מהי משפחה? תפקידי המשפחה. הכיתה והבית ספר – קהילה קרובה. חגים ומועדים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g1.maps",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "קהילה ומשפחה",
+        "focus_lines": [
+          "מהי משפחה? תפקידי המשפחה",
+          "הכיתה והבית ספר – קהילה קרובה",
+          "חגים ומועדים",
+          "היכרות ראשונית עם מפת הכיתה ובית הספר",
+          "יסודות: כללי התנהגות, שיתוף פעולה"
+        ],
+        "geography": [
+          "מפת כיתה",
+          "מפת בית ספר",
+          "כיוונים בסיסיים"
+        ],
+        "citizenship": [
+          "כללי התנהגות",
+          "שיתוף פעולה",
+          "השתייכות לקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g2.homeland",
+      "subject": "moledet",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "homeland",
+      "official_subtopic": "מהי שכונה? מבנים וסביבות. שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה). מפת שכונה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g2.homeland",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "שכונה ועיר",
+        "focus_lines": [
+          "מהי שכונה? מבנים וסביבות",
+          "שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה)",
+          "מפת שכונה",
+          "ארץ ישראל – מושגים בסיסיים",
+          "קבלת החלטות בקבוצה",
+          "יסודות של חברה ואחריות"
+        ],
+        "geography": [
+          "מפת שכונה",
+          "מבנים וסביבות",
+          "שירותים בקהילה"
+        ],
+        "citizenship": [
+          "קבלת החלטות בקבוצה",
+          "חברה ואחריות",
+          "השתתפות בקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g2.community",
+      "subject": "moledet",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "community",
+      "official_subtopic": "מהי שכונה? מבנים וסביבות. שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה). מפת שכונה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g2.community",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "שכונה ועיר",
+        "focus_lines": [
+          "מהי שכונה? מבנים וסביבות",
+          "שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה)",
+          "מפת שכונה",
+          "ארץ ישראל – מושגים בסיסיים",
+          "קבלת החלטות בקבוצה",
+          "יסודות של חברה ואחריות"
+        ],
+        "geography": [
+          "מפת שכונה",
+          "מבנים וסביבות",
+          "שירותים בקהילה"
+        ],
+        "citizenship": [
+          "קבלת החלטות בקבוצה",
+          "חברה ואחריות",
+          "השתתפות בקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g2.citizenship",
+      "subject": "moledet",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "citizenship",
+      "official_subtopic": "מהי שכונה? מבנים וסביבות. שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה). מפת שכונה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g2.citizenship",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "שכונה ועיר",
+        "focus_lines": [
+          "מהי שכונה? מבנים וסביבות",
+          "שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה)",
+          "מפת שכונה",
+          "ארץ ישראל – מושגים בסיסיים",
+          "קבלת החלטות בקבוצה",
+          "יסודות של חברה ואחריות"
+        ],
+        "geography": [
+          "מפת שכונה",
+          "מבנים וסביבות",
+          "שירותים בקהילה"
+        ],
+        "citizenship": [
+          "קבלת החלטות בקבוצה",
+          "חברה ואחריות",
+          "השתתפות בקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g2.geography",
+      "subject": "moledet",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "geography",
+      "official_subtopic": "מהי שכונה? מבנים וסביבות. שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה). מפת שכונה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g2.geography",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "שכונה ועיר",
+        "focus_lines": [
+          "מהי שכונה? מבנים וסביבות",
+          "שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה)",
+          "מפת שכונה",
+          "ארץ ישראל – מושגים בסיסיים",
+          "קבלת החלטות בקבוצה",
+          "יסודות של חברה ואחריות"
+        ],
+        "geography": [
+          "מפת שכונה",
+          "מבנים וסביבות",
+          "שירותים בקהילה"
+        ],
+        "citizenship": [
+          "קבלת החלטות בקבוצה",
+          "חברה ואחריות",
+          "השתתפות בקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g2.values",
+      "subject": "moledet",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "values",
+      "official_subtopic": "מהי שכונה? מבנים וסביבות. שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה). מפת שכונה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g2.values",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "שכונה ועיר",
+        "focus_lines": [
+          "מהי שכונה? מבנים וסביבות",
+          "שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה)",
+          "מפת שכונה",
+          "ארץ ישראל – מושגים בסיסיים",
+          "קבלת החלטות בקבוצה",
+          "יסודות של חברה ואחריות"
+        ],
+        "geography": [
+          "מפת שכונה",
+          "מבנים וסביבות",
+          "שירותים בקהילה"
+        ],
+        "citizenship": [
+          "קבלת החלטות בקבוצה",
+          "חברה ואחריות",
+          "השתתפות בקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g2.maps",
+      "subject": "moledet",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "maps",
+      "official_subtopic": "מהי שכונה? מבנים וסביבות. שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה). מפת שכונה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g2.maps",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "שכונה ועיר",
+        "focus_lines": [
+          "מהי שכונה? מבנים וסביבות",
+          "שירותים בקהילה (ספרייה, מתנ\"ס, תחבורה)",
+          "מפת שכונה",
+          "ארץ ישראל – מושגים בסיסיים",
+          "קבלת החלטות בקבוצה",
+          "יסודות של חברה ואחריות"
+        ],
+        "geography": [
+          "מפת שכונה",
+          "מבנים וסביבות",
+          "שירותים בקהילה"
+        ],
+        "citizenship": [
+          "קבלת החלטות בקבוצה",
+          "חברה ואחריות",
+          "השתתפות בקהילה"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g3.homeland",
+      "subject": "moledet",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "homeland",
+      "official_subtopic": "מפת ישראל – אזורים, ערים גדולות. סוגי נופים: מדבר, הר, ים. מחוזות, גבולות, יבשות וימים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g3.homeland",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ארץ ישראל ומרחבים גיאוגרפיים",
+        "focus_lines": [
+          "מפת ישראל – אזורים, ערים גדולות",
+          "סוגי נופים: מדבר, הר, ים",
+          "מחוזות, גבולות, יבשות וימים",
+          "מקורות מים בישראל",
+          "שילוב במערכת חברתית – כללי אזרחות בסיסיים"
+        ],
+        "geography": [
+          "מפת ישראל",
+          "אזורים וערים",
+          "סוגי נופים",
+          "מקורות מים"
+        ],
+        "citizenship": [
+          "כללי אזרחות בסיסיים",
+          "השתתפות חברתית",
+          "זכויות וחובות"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g3.community",
+      "subject": "moledet",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "community",
+      "official_subtopic": "מפת ישראל – אזורים, ערים גדולות. סוגי נופים: מדבר, הר, ים. מחוזות, גבולות, יבשות וימים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g3.community",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ארץ ישראל ומרחבים גיאוגרפיים",
+        "focus_lines": [
+          "מפת ישראל – אזורים, ערים גדולות",
+          "סוגי נופים: מדבר, הר, ים",
+          "מחוזות, גבולות, יבשות וימים",
+          "מקורות מים בישראל",
+          "שילוב במערכת חברתית – כללי אזרחות בסיסיים"
+        ],
+        "geography": [
+          "מפת ישראל",
+          "אזורים וערים",
+          "סוגי נופים",
+          "מקורות מים"
+        ],
+        "citizenship": [
+          "כללי אזרחות בסיסיים",
+          "השתתפות חברתית",
+          "זכויות וחובות"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g3.citizenship",
+      "subject": "moledet",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "citizenship",
+      "official_subtopic": "מפת ישראל – אזורים, ערים גדולות. סוגי נופים: מדבר, הר, ים. מחוזות, גבולות, יבשות וימים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g3.citizenship",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ארץ ישראל ומרחבים גיאוגרפיים",
+        "focus_lines": [
+          "מפת ישראל – אזורים, ערים גדולות",
+          "סוגי נופים: מדבר, הר, ים",
+          "מחוזות, גבולות, יבשות וימים",
+          "מקורות מים בישראל",
+          "שילוב במערכת חברתית – כללי אזרחות בסיסיים"
+        ],
+        "geography": [
+          "מפת ישראל",
+          "אזורים וערים",
+          "סוגי נופים",
+          "מקורות מים"
+        ],
+        "citizenship": [
+          "כללי אזרחות בסיסיים",
+          "השתתפות חברתית",
+          "זכויות וחובות"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g3.geography",
+      "subject": "moledet",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "geography",
+      "official_subtopic": "מפת ישראל – אזורים, ערים גדולות. סוגי נופים: מדבר, הר, ים. מחוזות, גבולות, יבשות וימים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g3.geography",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ארץ ישראל ומרחבים גיאוגרפיים",
+        "focus_lines": [
+          "מפת ישראל – אזורים, ערים גדולות",
+          "סוגי נופים: מדבר, הר, ים",
+          "מחוזות, גבולות, יבשות וימים",
+          "מקורות מים בישראל",
+          "שילוב במערכת חברתית – כללי אזרחות בסיסיים"
+        ],
+        "geography": [
+          "מפת ישראל",
+          "אזורים וערים",
+          "סוגי נופים",
+          "מקורות מים"
+        ],
+        "citizenship": [
+          "כללי אזרחות בסיסיים",
+          "השתתפות חברתית",
+          "זכויות וחובות"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g3.values",
+      "subject": "moledet",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "values",
+      "official_subtopic": "מפת ישראל – אזורים, ערים גדולות. סוגי נופים: מדבר, הר, ים. מחוזות, גבולות, יבשות וימים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g3.values",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ארץ ישראל ומרחבים גיאוגרפיים",
+        "focus_lines": [
+          "מפת ישראל – אזורים, ערים גדולות",
+          "סוגי נופים: מדבר, הר, ים",
+          "מחוזות, גבולות, יבשות וימים",
+          "מקורות מים בישראל",
+          "שילוב במערכת חברתית – כללי אזרחות בסיסיים"
+        ],
+        "geography": [
+          "מפת ישראל",
+          "אזורים וערים",
+          "סוגי נופים",
+          "מקורות מים"
+        ],
+        "citizenship": [
+          "כללי אזרחות בסיסיים",
+          "השתתפות חברתית",
+          "זכויות וחובות"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g3.maps",
+      "subject": "moledet",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "maps",
+      "official_subtopic": "מפת ישראל – אזורים, ערים גדולות. סוגי נופים: מדבר, הר, ים. מחוזות, גבולות, יבשות וימים.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g3.maps",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ארץ ישראל ומרחבים גיאוגרפיים",
+        "focus_lines": [
+          "מפת ישראל – אזורים, ערים גדולות",
+          "סוגי נופים: מדבר, הר, ים",
+          "מחוזות, גבולות, יבשות וימים",
+          "מקורות מים בישראל",
+          "שילוב במערכת חברתית – כללי אזרחות בסיסיים"
+        ],
+        "geography": [
+          "מפת ישראל",
+          "אזורים וערים",
+          "סוגי נופים",
+          "מקורות מים"
+        ],
+        "citizenship": [
+          "כללי אזרחות בסיסיים",
+          "השתתפות חברתית",
+          "זכויות וחובות"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g4.homeland",
+      "subject": "moledet",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "homeland",
+      "official_subtopic": "סוגי יישובים: עיר, מושב, קיבוץ. ההתפתחות של היישובים בישראל. משאבי טבע.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g4.homeland",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "יישובי הארץ וגאוגרפיה פיזית",
+        "focus_lines": [
+          "סוגי יישובים: עיר, מושב, קיבוץ",
+          "ההתפתחות של היישובים בישראל",
+          "משאבי טבע",
+          "מפות: קנה מידה, סימנים מוסכמים",
+          "מבנה היישוב בישראל",
+          "ארגוני ממשל בסיסיים"
+        ],
+        "geography": [
+          "סוגי יישובים",
+          "מפות: קנה מידה, סימנים",
+          "משאבי טבע"
+        ],
+        "citizenship": [
+          "מבנה ממשל",
+          "ארגונים",
+          "מוסדות שלטון"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g4.community",
+      "subject": "moledet",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "community",
+      "official_subtopic": "סוגי יישובים: עיר, מושב, קיבוץ. ההתפתחות של היישובים בישראל. משאבי טבע.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g4.community",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "יישובי הארץ וגאוגרפיה פיזית",
+        "focus_lines": [
+          "סוגי יישובים: עיר, מושב, קיבוץ",
+          "ההתפתחות של היישובים בישראל",
+          "משאבי טבע",
+          "מפות: קנה מידה, סימנים מוסכמים",
+          "מבנה היישוב בישראל",
+          "ארגוני ממשל בסיסיים"
+        ],
+        "geography": [
+          "סוגי יישובים",
+          "מפות: קנה מידה, סימנים",
+          "משאבי טבע"
+        ],
+        "citizenship": [
+          "מבנה ממשל",
+          "ארגונים",
+          "מוסדות שלטון"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g4.citizenship",
+      "subject": "moledet",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "citizenship",
+      "official_subtopic": "סוגי יישובים: עיר, מושב, קיבוץ. ההתפתחות של היישובים בישראל. משאבי טבע.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g4.citizenship",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "יישובי הארץ וגאוגרפיה פיזית",
+        "focus_lines": [
+          "סוגי יישובים: עיר, מושב, קיבוץ",
+          "ההתפתחות של היישובים בישראל",
+          "משאבי טבע",
+          "מפות: קנה מידה, סימנים מוסכמים",
+          "מבנה היישוב בישראל",
+          "ארגוני ממשל בסיסיים"
+        ],
+        "geography": [
+          "סוגי יישובים",
+          "מפות: קנה מידה, סימנים",
+          "משאבי טבע"
+        ],
+        "citizenship": [
+          "מבנה ממשל",
+          "ארגונים",
+          "מוסדות שלטון"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g4.geography",
+      "subject": "moledet",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "geography",
+      "official_subtopic": "סוגי יישובים: עיר, מושב, קיבוץ. ההתפתחות של היישובים בישראל. משאבי טבע.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g4.geography",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "יישובי הארץ וגאוגרפיה פיזית",
+        "focus_lines": [
+          "סוגי יישובים: עיר, מושב, קיבוץ",
+          "ההתפתחות של היישובים בישראל",
+          "משאבי טבע",
+          "מפות: קנה מידה, סימנים מוסכמים",
+          "מבנה היישוב בישראל",
+          "ארגוני ממשל בסיסיים"
+        ],
+        "geography": [
+          "סוגי יישובים",
+          "מפות: קנה מידה, סימנים",
+          "משאבי טבע"
+        ],
+        "citizenship": [
+          "מבנה ממשל",
+          "ארגונים",
+          "מוסדות שלטון"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g4.values",
+      "subject": "moledet",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "values",
+      "official_subtopic": "סוגי יישובים: עיר, מושב, קיבוץ. ההתפתחות של היישובים בישראל. משאבי טבע.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g4.values",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "יישובי הארץ וגאוגרפיה פיזית",
+        "focus_lines": [
+          "סוגי יישובים: עיר, מושב, קיבוץ",
+          "ההתפתחות של היישובים בישראל",
+          "משאבי טבע",
+          "מפות: קנה מידה, סימנים מוסכמים",
+          "מבנה היישוב בישראל",
+          "ארגוני ממשל בסיסיים"
+        ],
+        "geography": [
+          "סוגי יישובים",
+          "מפות: קנה מידה, סימנים",
+          "משאבי טבע"
+        ],
+        "citizenship": [
+          "מבנה ממשל",
+          "ארגונים",
+          "מוסדות שלטון"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g4.maps",
+      "subject": "moledet",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "maps",
+      "official_subtopic": "סוגי יישובים: עיר, מושב, קיבוץ. ההתפתחות של היישובים בישראל. משאבי טבע.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g4.maps",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "יישובי הארץ וגאוגרפיה פיזית",
+        "focus_lines": [
+          "סוגי יישובים: עיר, מושב, קיבוץ",
+          "ההתפתחות של היישובים בישראל",
+          "משאבי טבע",
+          "מפות: קנה מידה, סימנים מוסכמים",
+          "מבנה היישוב בישראל",
+          "ארגוני ממשל בסיסיים"
+        ],
+        "geography": [
+          "סוגי יישובים",
+          "מפות: קנה מידה, סימנים",
+          "משאבי טבע"
+        ],
+        "citizenship": [
+          "מבנה ממשל",
+          "ארגונים",
+          "מוסדות שלטון"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g5.homeland",
+      "subject": "moledet",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "homeland",
+      "official_subtopic": "מפות מתקדמות: רשת קואורדינטות. אקלים ישראל: מדבר, ים תיכון, הרים. משאבים: מים, קרקע, אנרגיה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g5.homeland",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "מפות, אקלים ומשאבים",
+        "focus_lines": [
+          "מפות מתקדמות: רשת קואורדינטות",
+          "אקלים ישראל: מדבר, ים תיכון, הרים",
+          "סכנות טבע: רעידות אדמה, שטפונות",
+          "משאבים: מים, קרקע, אנרגיה",
+          "מוסדות שלטון בסיסיים",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ],
+        "geography": [
+          "קואורדינטות",
+          "אקלים ישראל",
+          "סכנות טבע",
+          "משאבים"
+        ],
+        "citizenship": [
+          "מוסדות שלטון",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g5.community",
+      "subject": "moledet",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "community",
+      "official_subtopic": "מפות מתקדמות: רשת קואורדינטות. אקלים ישראל: מדבר, ים תיכון, הרים. משאבים: מים, קרקע, אנרגיה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g5.community",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "מפות, אקלים ומשאבים",
+        "focus_lines": [
+          "מפות מתקדמות: רשת קואורדינטות",
+          "אקלים ישראל: מדבר, ים תיכון, הרים",
+          "סכנות טבע: רעידות אדמה, שטפונות",
+          "משאבים: מים, קרקע, אנרגיה",
+          "מוסדות שלטון בסיסיים",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ],
+        "geography": [
+          "קואורדינטות",
+          "אקלים ישראל",
+          "סכנות טבע",
+          "משאבים"
+        ],
+        "citizenship": [
+          "מוסדות שלטון",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g5.citizenship",
+      "subject": "moledet",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "citizenship",
+      "official_subtopic": "מפות מתקדמות: רשת קואורדינטות. אקלים ישראל: מדבר, ים תיכון, הרים. משאבים: מים, קרקע, אנרגיה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g5.citizenship",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "מפות, אקלים ומשאבים",
+        "focus_lines": [
+          "מפות מתקדמות: רשת קואורדינטות",
+          "אקלים ישראל: מדבר, ים תיכון, הרים",
+          "סכנות טבע: רעידות אדמה, שטפונות",
+          "משאבים: מים, קרקע, אנרגיה",
+          "מוסדות שלטון בסיסיים",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ],
+        "geography": [
+          "קואורדינטות",
+          "אקלים ישראל",
+          "סכנות טבע",
+          "משאבים"
+        ],
+        "citizenship": [
+          "מוסדות שלטון",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g5.geography",
+      "subject": "moledet",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "geography",
+      "official_subtopic": "מפות מתקדמות: רשת קואורדינטות. אקלים ישראל: מדבר, ים תיכון, הרים. משאבים: מים, קרקע, אנרגיה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g5.geography",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "מפות, אקלים ומשאבים",
+        "focus_lines": [
+          "מפות מתקדמות: רשת קואורדינטות",
+          "אקלים ישראל: מדבר, ים תיכון, הרים",
+          "סכנות טבע: רעידות אדמה, שטפונות",
+          "משאבים: מים, קרקע, אנרגיה",
+          "מוסדות שלטון בסיסיים",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ],
+        "geography": [
+          "קואורדינטות",
+          "אקלים ישראל",
+          "סכנות טבע",
+          "משאבים"
+        ],
+        "citizenship": [
+          "מוסדות שלטון",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g5.values",
+      "subject": "moledet",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "values",
+      "official_subtopic": "מפות מתקדמות: רשת קואורדינטות. אקלים ישראל: מדבר, ים תיכון, הרים. משאבים: מים, קרקע, אנרגיה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g5.values",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "מפות, אקלים ומשאבים",
+        "focus_lines": [
+          "מפות מתקדמות: רשת קואורדינטות",
+          "אקלים ישראל: מדבר, ים תיכון, הרים",
+          "סכנות טבע: רעידות אדמה, שטפונות",
+          "משאבים: מים, קרקע, אנרגיה",
+          "מוסדות שלטון בסיסיים",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ],
+        "geography": [
+          "קואורדינטות",
+          "אקלים ישראל",
+          "סכנות טבע",
+          "משאבים"
+        ],
+        "citizenship": [
+          "מוסדות שלטון",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g5.maps",
+      "subject": "moledet",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "maps",
+      "official_subtopic": "מפות מתקדמות: רשת קואורדינטות. אקלים ישראל: מדבר, ים תיכון, הרים. משאבים: מים, קרקע, אנרגיה.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g5.maps",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "מפות, אקלים ומשאבים",
+        "focus_lines": [
+          "מפות מתקדמות: רשת קואורדינטות",
+          "אקלים ישראל: מדבר, ים תיכון, הרים",
+          "סכנות טבע: רעידות אדמה, שטפונות",
+          "משאבים: מים, קרקע, אנרגיה",
+          "מוסדות שלטון בסיסיים",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ],
+        "geography": [
+          "קואורדינטות",
+          "אקלים ישראל",
+          "סכנות טבע",
+          "משאבים"
+        ],
+        "citizenship": [
+          "מוסדות שלטון",
+          "חוק וכללי חברה",
+          "זהות אישית וקהילתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g6.homeland",
+      "subject": "moledet",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "homeland",
+      "official_subtopic": "אוכלוסיית ישראל — תרבויות, דתות, קבוצות. הדמוקרטיה בישראל. ערכים: שוויון, חירות, צדק.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g6.homeland",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ישראל כחברה ומדינה",
+        "focus_lines": [
+          "אוכלוסיית ישראל — תרבויות, דתות, קבוצות",
+          "תופעות טבע: הרים, בקעות, מדבריות",
+          "איכות הסביבה, שמירה על הטבע",
+          "יחסי אדם–סביבה",
+          "הדמוקרטיה בישראל",
+          "ערכים: שוויון, חירות, צדק",
+          "מוסדות המדינה: כנסת, ממשלה, נשיא, רשויות מקומיות",
+          "קבלת החלטות ומעורבות חברתית"
+        ],
+        "geography": [
+          "אוכלוסיית ישראל",
+          "תופעות טבע",
+          "איכות הסביבה",
+          "יחסי אדם-סביבה"
+        ],
+        "citizenship": [
+          "דמוקרטיה בישראל",
+          "ערכים",
+          "מוסדות המדינה",
+          "מעורבות חברתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g6.community",
+      "subject": "moledet",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "community",
+      "official_subtopic": "אוכלוסיית ישראל — תרבויות, דתות, קבוצות. הדמוקרטיה בישראל. ערכים: שוויון, חירות, צדק.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g6.community",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ישראל כחברה ומדינה",
+        "focus_lines": [
+          "אוכלוסיית ישראל — תרבויות, דתות, קבוצות",
+          "תופעות טבע: הרים, בקעות, מדבריות",
+          "איכות הסביבה, שמירה על הטבע",
+          "יחסי אדם–סביבה",
+          "הדמוקרטיה בישראל",
+          "ערכים: שוויון, חירות, צדק",
+          "מוסדות המדינה: כנסת, ממשלה, נשיא, רשויות מקומיות",
+          "קבלת החלטות ומעורבות חברתית"
+        ],
+        "geography": [
+          "אוכלוסיית ישראל",
+          "תופעות טבע",
+          "איכות הסביבה",
+          "יחסי אדם-סביבה"
+        ],
+        "citizenship": [
+          "דמוקרטיה בישראל",
+          "ערכים",
+          "מוסדות המדינה",
+          "מעורבות חברתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g6.citizenship",
+      "subject": "moledet",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "citizenship",
+      "official_subtopic": "אוכלוסיית ישראל — תרבויות, דתות, קבוצות. הדמוקרטיה בישראל. ערכים: שוויון, חירות, צדק.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g6.citizenship",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ישראל כחברה ומדינה",
+        "focus_lines": [
+          "אוכלוסיית ישראל — תרבויות, דתות, קבוצות",
+          "תופעות טבע: הרים, בקעות, מדבריות",
+          "איכות הסביבה, שמירה על הטבע",
+          "יחסי אדם–סביבה",
+          "הדמוקרטיה בישראל",
+          "ערכים: שוויון, חירות, צדק",
+          "מוסדות המדינה: כנסת, ממשלה, נשיא, רשויות מקומיות",
+          "קבלת החלטות ומעורבות חברתית"
+        ],
+        "geography": [
+          "אוכלוסיית ישראל",
+          "תופעות טבע",
+          "איכות הסביבה",
+          "יחסי אדם-סביבה"
+        ],
+        "citizenship": [
+          "דמוקרטיה בישראל",
+          "ערכים",
+          "מוסדות המדינה",
+          "מעורבות חברתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g6.geography",
+      "subject": "moledet",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "geography",
+      "official_subtopic": "אוכלוסיית ישראל — תרבויות, דתות, קבוצות. הדמוקרטיה בישראל. ערכים: שוויון, חירות, צדק.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g6.geography",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ישראל כחברה ומדינה",
+        "focus_lines": [
+          "אוכלוסיית ישראל — תרבויות, דתות, קבוצות",
+          "תופעות טבע: הרים, בקעות, מדבריות",
+          "איכות הסביבה, שמירה על הטבע",
+          "יחסי אדם–סביבה",
+          "הדמוקרטיה בישראל",
+          "ערכים: שוויון, חירות, צדק",
+          "מוסדות המדינה: כנסת, ממשלה, נשיא, רשויות מקומיות",
+          "קבלת החלטות ומעורבות חברתית"
+        ],
+        "geography": [
+          "אוכלוסיית ישראל",
+          "תופעות טבע",
+          "איכות הסביבה",
+          "יחסי אדם-סביבה"
+        ],
+        "citizenship": [
+          "דמוקרטיה בישראל",
+          "ערכים",
+          "מוסדות המדינה",
+          "מעורבות חברתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g6.values",
+      "subject": "moledet",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "values",
+      "official_subtopic": "אוכלוסיית ישראל — תרבויות, דתות, קבוצות. הדמוקרטיה בישראל. ערכים: שוויון, חירות, צדק.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g6.values",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ישראל כחברה ומדינה",
+        "focus_lines": [
+          "אוכלוסיית ישראל — תרבויות, דתות, קבוצות",
+          "תופעות טבע: הרים, בקעות, מדבריות",
+          "איכות הסביבה, שמירה על הטבע",
+          "יחסי אדם–סביבה",
+          "הדמוקרטיה בישראל",
+          "ערכים: שוויון, חירות, צדק",
+          "מוסדות המדינה: כנסת, ממשלה, נשיא, רשויות מקומיות",
+          "קבלת החלטות ומעורבות חברתית"
+        ],
+        "geography": [
+          "אוכלוסיית ישראל",
+          "תופעות טבע",
+          "איכות הסביבה",
+          "יחסי אדם-סביבה"
+        ],
+        "citizenship": [
+          "דמוקרטיה בישראל",
+          "ערכים",
+          "מוסדות המדינה",
+          "מעורבות חברתית"
+        ]
+      }
+    },
+    {
+      "row_id": "moledet_scaffold.g6.maps",
+      "subject": "moledet",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "maps",
+      "official_subtopic": "אוכלוסיית ישראל — תרבויות, דתות, קבוצות. הדמוקרטיה בישראל. ערכים: שוויון, חירות, צדק.",
+      "ministry_source_file": "data/moledet-geography-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "moledet.g6.maps",
+      "notes": "Internal product topic state; NOT Ministry oracle.",
+      "blocker_reason": "Derived from data/moledet-geography-curriculum.js; must never merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "ישראל כחברה ומדינה",
+        "focus_lines": [
+          "אוכלוסיית ישראל — תרבויות, דתות, קבוצות",
+          "תופעות טבע: הרים, בקעות, מדבריות",
+          "איכות הסביבה, שמירה על הטבע",
+          "יחסי אדם–סביבה",
+          "הדמוקרטיה בישראל",
+          "ערכים: שוויון, חירות, צדק",
+          "מוסדות המדינה: כנסת, ממשלה, נשיא, רשויות מקומיות",
+          "קבלת החלטות ומעורבות חברתית"
+        ],
+        "geography": [
+          "אוכלוסיית ישראל",
+          "תופעות טבע",
+          "איכות הסביבה",
+          "יחסי אדם-סביבה"
+        ],
+        "citizenship": [
+          "דמוקרטיה בישראל",
+          "ערכים",
+          "מוסדות המדינה",
+          "מעורבות חברתית"
+        ]
+      }
+    }
+  ]
+}

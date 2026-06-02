@@ -1,0 +1,1523 @@
+{
+  "WARNING": "This file is NOT part of the Ministry oracle. It is a scaffold for reference until the DOCX is parsed.",
+  "generated_at": "2026-06-02T18:14:52.943Z",
+  "source_script": "scripts/build-ministry-oracle-science.mjs",
+  "source_class": "internal_scaffold",
+  "row_count": 38,
+  "rows": [
+    {
+      "row_id": "science.g1.scaffold.body",
+      "subject": "science",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "body",
+      "official_subtopic": "שנה ראשונה של היכרות עם הטבע שסביבנו: הבחנה בין חי לדומם, צרכים בסיסיים ותחושת מזג אוויר.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g1.body",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "היכרות בסיסית עם העולם הטבעי",
+        "focus_lines": [
+          "חי לעומת דומם, צמיחה בסיסית של צמחים ובעלי חיים.",
+          "גוף האדם – חושים ותנועה, תכונות של חומרים יומיומיים.",
+          "תצפית במזג אוויר ושינויים יומיים."
+        ],
+        "skills": [
+          "תצפית ותיאור מדויק של עצמים וחוויות.",
+          "השוואה בין תכונות (קשה/רך, חם/קר).",
+          "שימוש בשפה מדעית פשוטה וציור נתונים ביומן כיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g1.scaffold.animals",
+      "subject": "science",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "animals",
+      "official_subtopic": "שנה ראשונה של היכרות עם הטבע שסביבנו: הבחנה בין חי לדומם, צרכים בסיסיים ותחושת מזג אוויר.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g1.animals",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "היכרות בסיסית עם העולם הטבעי",
+        "focus_lines": [
+          "חי לעומת דומם, צמיחה בסיסית של צמחים ובעלי חיים.",
+          "גוף האדם – חושים ותנועה, תכונות של חומרים יומיומיים.",
+          "תצפית במזג אוויר ושינויים יומיים."
+        ],
+        "skills": [
+          "תצפית ותיאור מדויק של עצמים וחוויות.",
+          "השוואה בין תכונות (קשה/רך, חם/קר).",
+          "שימוש בשפה מדעית פשוטה וציור נתונים ביומן כיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g1.scaffold.plants",
+      "subject": "science",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "plants",
+      "official_subtopic": "שנה ראשונה של היכרות עם הטבע שסביבנו: הבחנה בין חי לדומם, צרכים בסיסיים ותחושת מזג אוויר.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g1.plants",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "היכרות בסיסית עם העולם הטבעי",
+        "focus_lines": [
+          "חי לעומת דומם, צמיחה בסיסית של צמחים ובעלי חיים.",
+          "גוף האדם – חושים ותנועה, תכונות של חומרים יומיומיים.",
+          "תצפית במזג אוויר ושינויים יומיים."
+        ],
+        "skills": [
+          "תצפית ותיאור מדויק של עצמים וחוויות.",
+          "השוואה בין תכונות (קשה/רך, חם/קר).",
+          "שימוש בשפה מדעית פשוטה וציור נתונים ביומן כיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g1.scaffold.materials",
+      "subject": "science",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "materials",
+      "official_subtopic": "שנה ראשונה של היכרות עם הטבע שסביבנו: הבחנה בין חי לדומם, צרכים בסיסיים ותחושת מזג אוויר.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g1.materials",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "היכרות בסיסית עם העולם הטבעי",
+        "focus_lines": [
+          "חי לעומת דומם, צמיחה בסיסית של צמחים ובעלי חיים.",
+          "גוף האדם – חושים ותנועה, תכונות של חומרים יומיומיים.",
+          "תצפית במזג אוויר ושינויים יומיים."
+        ],
+        "skills": [
+          "תצפית ותיאור מדויק של עצמים וחוויות.",
+          "השוואה בין תכונות (קשה/רך, חם/קר).",
+          "שימוש בשפה מדעית פשוטה וציור נתונים ביומן כיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g1.scaffold.earth_space",
+      "subject": "science",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "earth_space",
+      "official_subtopic": "שנה ראשונה של היכרות עם הטבע שסביבנו: הבחנה בין חי לדומם, צרכים בסיסיים ותחושת מזג אוויר.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g1.earth_space",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "היכרות בסיסית עם העולם הטבעי",
+        "focus_lines": [
+          "חי לעומת דומם, צמיחה בסיסית של צמחים ובעלי חיים.",
+          "גוף האדם – חושים ותנועה, תכונות של חומרים יומיומיים.",
+          "תצפית במזג אוויר ושינויים יומיים."
+        ],
+        "skills": [
+          "תצפית ותיאור מדויק של עצמים וחוויות.",
+          "השוואה בין תכונות (קשה/רך, חם/קר).",
+          "שימוש בשפה מדעית פשוטה וציור נתונים ביומן כיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g1.scaffold.environment",
+      "subject": "science",
+      "grade": 1,
+      "official_domain": null,
+      "official_topic": "environment",
+      "official_subtopic": "שנה ראשונה של היכרות עם הטבע שסביבנו: הבחנה בין חי לדומם, צרכים בסיסיים ותחושת מזג אוויר.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g1.environment",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "היכרות בסיסית עם העולם הטבעי",
+        "focus_lines": [
+          "חי לעומת דומם, צמיחה בסיסית של צמחים ובעלי חיים.",
+          "גוף האדם – חושים ותנועה, תכונות של חומרים יומיומיים.",
+          "תצפית במזג אוויר ושינויים יומיים."
+        ],
+        "skills": [
+          "תצפית ותיאור מדויק של עצמים וחוויות.",
+          "השוואה בין תכונות (קשה/רך, חם/קר).",
+          "שימוש בשפה מדעית פשוטה וציור נתונים ביומן כיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g2.scaffold.body",
+      "subject": "science",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "body",
+      "official_subtopic": "העמקת מושגים בסיסיים: מחזורי חיים, הרגלי גוף בריא, תכונות חומרים ומצבי צבירה.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g2.body",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "בסיס ללמידה מדעית",
+        "focus_lines": [
+          "מחזורי חיים של צמחים ובעלי חיים והצרכים שלהם.",
+          "גוף האדם – בריאות והרגלי חיים נכונים.",
+          "חומרים ותכונותיהם, מצבי צבירה בסיסיים.",
+          "טכנולוגיה פשוטה וכלים בסביבת הילד."
+        ],
+        "skills": [
+          "מיון וסיווג עצמים לפי קריטריונים שנקבעו.",
+          "רישום תצפיות בטבלה והשוואה בין תוצאות.",
+          "זיהוי קשרים בסיסיים בין סיבה לתוצאה (צמח בלי מים נובל)."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g2.scaffold.animals",
+      "subject": "science",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "animals",
+      "official_subtopic": "העמקת מושגים בסיסיים: מחזורי חיים, הרגלי גוף בריא, תכונות חומרים ומצבי צבירה.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g2.animals",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "בסיס ללמידה מדעית",
+        "focus_lines": [
+          "מחזורי חיים של צמחים ובעלי חיים והצרכים שלהם.",
+          "גוף האדם – בריאות והרגלי חיים נכונים.",
+          "חומרים ותכונותיהם, מצבי צבירה בסיסיים.",
+          "טכנולוגיה פשוטה וכלים בסביבת הילד."
+        ],
+        "skills": [
+          "מיון וסיווג עצמים לפי קריטריונים שנקבעו.",
+          "רישום תצפיות בטבלה והשוואה בין תוצאות.",
+          "זיהוי קשרים בסיסיים בין סיבה לתוצאה (צמח בלי מים נובל)."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g2.scaffold.plants",
+      "subject": "science",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "plants",
+      "official_subtopic": "העמקת מושגים בסיסיים: מחזורי חיים, הרגלי גוף בריא, תכונות חומרים ומצבי צבירה.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g2.plants",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "בסיס ללמידה מדעית",
+        "focus_lines": [
+          "מחזורי חיים של צמחים ובעלי חיים והצרכים שלהם.",
+          "גוף האדם – בריאות והרגלי חיים נכונים.",
+          "חומרים ותכונותיהם, מצבי צבירה בסיסיים.",
+          "טכנולוגיה פשוטה וכלים בסביבת הילד."
+        ],
+        "skills": [
+          "מיון וסיווג עצמים לפי קריטריונים שנקבעו.",
+          "רישום תצפיות בטבלה והשוואה בין תוצאות.",
+          "זיהוי קשרים בסיסיים בין סיבה לתוצאה (צמח בלי מים נובל)."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g2.scaffold.materials",
+      "subject": "science",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "materials",
+      "official_subtopic": "העמקת מושגים בסיסיים: מחזורי חיים, הרגלי גוף בריא, תכונות חומרים ומצבי צבירה.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g2.materials",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "בסיס ללמידה מדעית",
+        "focus_lines": [
+          "מחזורי חיים של צמחים ובעלי חיים והצרכים שלהם.",
+          "גוף האדם – בריאות והרגלי חיים נכונים.",
+          "חומרים ותכונותיהם, מצבי צבירה בסיסיים.",
+          "טכנולוגיה פשוטה וכלים בסביבת הילד."
+        ],
+        "skills": [
+          "מיון וסיווג עצמים לפי קריטריונים שנקבעו.",
+          "רישום תצפיות בטבלה והשוואה בין תוצאות.",
+          "זיהוי קשרים בסיסיים בין סיבה לתוצאה (צמח בלי מים נובל)."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g2.scaffold.experiments",
+      "subject": "science",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "experiments",
+      "official_subtopic": "העמקת מושגים בסיסיים: מחזורי חיים, הרגלי גוף בריא, תכונות חומרים ומצבי צבירה.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g2.experiments",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "בסיס ללמידה מדעית",
+        "focus_lines": [
+          "מחזורי חיים של צמחים ובעלי חיים והצרכים שלהם.",
+          "גוף האדם – בריאות והרגלי חיים נכונים.",
+          "חומרים ותכונותיהם, מצבי צבירה בסיסיים.",
+          "טכנולוגיה פשוטה וכלים בסביבת הילד."
+        ],
+        "skills": [
+          "מיון וסיווג עצמים לפי קריטריונים שנקבעו.",
+          "רישום תצפיות בטבלה והשוואה בין תוצאות.",
+          "זיהוי קשרים בסיסיים בין סיבה לתוצאה (צמח בלי מים נובל)."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g2.scaffold.earth_space",
+      "subject": "science",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "earth_space",
+      "official_subtopic": "העמקת מושגים בסיסיים: מחזורי חיים, הרגלי גוף בריא, תכונות חומרים ומצבי צבירה.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g2.earth_space",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "בסיס ללמידה מדעית",
+        "focus_lines": [
+          "מחזורי חיים של צמחים ובעלי חיים והצרכים שלהם.",
+          "גוף האדם – בריאות והרגלי חיים נכונים.",
+          "חומרים ותכונותיהם, מצבי צבירה בסיסיים.",
+          "טכנולוגיה פשוטה וכלים בסביבת הילד."
+        ],
+        "skills": [
+          "מיון וסיווג עצמים לפי קריטריונים שנקבעו.",
+          "רישום תצפיות בטבלה והשוואה בין תוצאות.",
+          "זיהוי קשרים בסיסיים בין סיבה לתוצאה (צמח בלי מים נובל)."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g2.scaffold.environment",
+      "subject": "science",
+      "grade": 2,
+      "official_domain": null,
+      "official_topic": "environment",
+      "official_subtopic": "העמקת מושגים בסיסיים: מחזורי חיים, הרגלי גוף בריא, תכונות חומרים ומצבי צבירה.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g2.environment",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "בסיס ללמידה מדעית",
+        "focus_lines": [
+          "מחזורי חיים של צמחים ובעלי חיים והצרכים שלהם.",
+          "גוף האדם – בריאות והרגלי חיים נכונים.",
+          "חומרים ותכונותיהם, מצבי צבירה בסיסיים.",
+          "טכנולוגיה פשוטה וכלים בסביבת הילד."
+        ],
+        "skills": [
+          "מיון וסיווג עצמים לפי קריטריונים שנקבעו.",
+          "רישום תצפיות בטבלה והשוואה בין תוצאות.",
+          "זיהוי קשרים בסיסיים בין סיבה לתוצאה (צמח בלי מים נובל)."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g3.scaffold.body",
+      "subject": "science",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "body",
+      "official_subtopic": "הרחבה למדעי החיים, פיזיקה בסיסית ומדעי כדור הארץ. הכרות עם מכונות פשוטות ותהליך פתרון בעיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g3.body",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבת מושגים מדעיים",
+        "focus_lines": [
+          "מדעי החיים: תנאי גידול, התאמה לסביבה ובתי גידול.",
+          "פיזיקה: כוחות דחיפה/משיכה, תנועה ומהירות ראשונית.",
+          "מדעי כדור הארץ: מזג אוויר מול אקלים, מחזור המים.",
+          "טכנולוגיה: מכונות פשוטות ותכנון פתרון."
+        ],
+        "skills": [
+          "ביצוע ניסויים קצרים והבנת חשיבות משתנה אחד.",
+          "מדידה באמצעות סרט מדידה, כוסות מדידה ומדחום בסיסי.",
+          "ניסוח מסקנות קצרות באמצעות גרפים וטבלאות."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g3.scaffold.animals",
+      "subject": "science",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "animals",
+      "official_subtopic": "הרחבה למדעי החיים, פיזיקה בסיסית ומדעי כדור הארץ. הכרות עם מכונות פשוטות ותהליך פתרון בעיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g3.animals",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבת מושגים מדעיים",
+        "focus_lines": [
+          "מדעי החיים: תנאי גידול, התאמה לסביבה ובתי גידול.",
+          "פיזיקה: כוחות דחיפה/משיכה, תנועה ומהירות ראשונית.",
+          "מדעי כדור הארץ: מזג אוויר מול אקלים, מחזור המים.",
+          "טכנולוגיה: מכונות פשוטות ותכנון פתרון."
+        ],
+        "skills": [
+          "ביצוע ניסויים קצרים והבנת חשיבות משתנה אחד.",
+          "מדידה באמצעות סרט מדידה, כוסות מדידה ומדחום בסיסי.",
+          "ניסוח מסקנות קצרות באמצעות גרפים וטבלאות."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g3.scaffold.plants",
+      "subject": "science",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "plants",
+      "official_subtopic": "הרחבה למדעי החיים, פיזיקה בסיסית ומדעי כדור הארץ. הכרות עם מכונות פשוטות ותהליך פתרון בעיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g3.plants",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבת מושגים מדעיים",
+        "focus_lines": [
+          "מדעי החיים: תנאי גידול, התאמה לסביבה ובתי גידול.",
+          "פיזיקה: כוחות דחיפה/משיכה, תנועה ומהירות ראשונית.",
+          "מדעי כדור הארץ: מזג אוויר מול אקלים, מחזור המים.",
+          "טכנולוגיה: מכונות פשוטות ותכנון פתרון."
+        ],
+        "skills": [
+          "ביצוע ניסויים קצרים והבנת חשיבות משתנה אחד.",
+          "מדידה באמצעות סרט מדידה, כוסות מדידה ומדחום בסיסי.",
+          "ניסוח מסקנות קצרות באמצעות גרפים וטבלאות."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g3.scaffold.materials",
+      "subject": "science",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "materials",
+      "official_subtopic": "הרחבה למדעי החיים, פיזיקה בסיסית ומדעי כדור הארץ. הכרות עם מכונות פשוטות ותהליך פתרון בעיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g3.materials",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבת מושגים מדעיים",
+        "focus_lines": [
+          "מדעי החיים: תנאי גידול, התאמה לסביבה ובתי גידול.",
+          "פיזיקה: כוחות דחיפה/משיכה, תנועה ומהירות ראשונית.",
+          "מדעי כדור הארץ: מזג אוויר מול אקלים, מחזור המים.",
+          "טכנולוגיה: מכונות פשוטות ותכנון פתרון."
+        ],
+        "skills": [
+          "ביצוע ניסויים קצרים והבנת חשיבות משתנה אחד.",
+          "מדידה באמצעות סרט מדידה, כוסות מדידה ומדחום בסיסי.",
+          "ניסוח מסקנות קצרות באמצעות גרפים וטבלאות."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g3.scaffold.experiments",
+      "subject": "science",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "experiments",
+      "official_subtopic": "הרחבה למדעי החיים, פיזיקה בסיסית ומדעי כדור הארץ. הכרות עם מכונות פשוטות ותהליך פתרון בעיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g3.experiments",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבת מושגים מדעיים",
+        "focus_lines": [
+          "מדעי החיים: תנאי גידול, התאמה לסביבה ובתי גידול.",
+          "פיזיקה: כוחות דחיפה/משיכה, תנועה ומהירות ראשונית.",
+          "מדעי כדור הארץ: מזג אוויר מול אקלים, מחזור המים.",
+          "טכנולוגיה: מכונות פשוטות ותכנון פתרון."
+        ],
+        "skills": [
+          "ביצוע ניסויים קצרים והבנת חשיבות משתנה אחד.",
+          "מדידה באמצעות סרט מדידה, כוסות מדידה ומדחום בסיסי.",
+          "ניסוח מסקנות קצרות באמצעות גרפים וטבלאות."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g3.scaffold.earth_space",
+      "subject": "science",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "earth_space",
+      "official_subtopic": "הרחבה למדעי החיים, פיזיקה בסיסית ומדעי כדור הארץ. הכרות עם מכונות פשוטות ותהליך פתרון בעיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g3.earth_space",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבת מושגים מדעיים",
+        "focus_lines": [
+          "מדעי החיים: תנאי גידול, התאמה לסביבה ובתי גידול.",
+          "פיזיקה: כוחות דחיפה/משיכה, תנועה ומהירות ראשונית.",
+          "מדעי כדור הארץ: מזג אוויר מול אקלים, מחזור המים.",
+          "טכנולוגיה: מכונות פשוטות ותכנון פתרון."
+        ],
+        "skills": [
+          "ביצוע ניסויים קצרים והבנת חשיבות משתנה אחד.",
+          "מדידה באמצעות סרט מדידה, כוסות מדידה ומדחום בסיסי.",
+          "ניסוח מסקנות קצרות באמצעות גרפים וטבלאות."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g3.scaffold.environment",
+      "subject": "science",
+      "grade": 3,
+      "official_domain": null,
+      "official_topic": "environment",
+      "official_subtopic": "הרחבה למדעי החיים, פיזיקה בסיסית ומדעי כדור הארץ. הכרות עם מכונות פשוטות ותהליך פתרון בעיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g3.environment",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבת מושגים מדעיים",
+        "focus_lines": [
+          "מדעי החיים: תנאי גידול, התאמה לסביבה ובתי גידול.",
+          "פיזיקה: כוחות דחיפה/משיכה, תנועה ומהירות ראשונית.",
+          "מדעי כדור הארץ: מזג אוויר מול אקלים, מחזור המים.",
+          "טכנולוגיה: מכונות פשוטות ותכנון פתרון."
+        ],
+        "skills": [
+          "ביצוע ניסויים קצרים והבנת חשיבות משתנה אחד.",
+          "מדידה באמצעות סרט מדידה, כוסות מדידה ומדחום בסיסי.",
+          "ניסוח מסקנות קצרות באמצעות גרפים וטבלאות."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g4.scaffold.body",
+      "subject": "science",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "body",
+      "official_subtopic": "מערכות גוף, מצבי צבירה, חשמל בסיסי, סלעים ועונות השנה. שילוב בין חקר מדעי לתכנון הנדסי.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g4.body",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הבנה מדעית מעמיקה",
+        "focus_lines": [
+          "ביולוגיה: מערכות הנשימה, העיכול והדם, יחסי גומלין במערכות אקולוגיות.",
+          "חומרים: מצבי צבירה, שינויים פיזיקליים וכימיים פשוטים.",
+          "פיזיקה: חשמל בסיסי, מוליכים ומבודדים.",
+          "כדור הארץ: עונות, סוגי סלעים וקרקעות."
+        ],
+        "skills": [
+          "תכנון ניסוי הכולל שאלת חקר, השערה ורישום תוצאות.",
+          "עבודה עם טבלאות וגרפים להצגת נתונים.",
+          "שימוש בשפה מדעית מדויקת להצגת ממצאים לכיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g4.scaffold.animals",
+      "subject": "science",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "animals",
+      "official_subtopic": "מערכות גוף, מצבי צבירה, חשמל בסיסי, סלעים ועונות השנה. שילוב בין חקר מדעי לתכנון הנדסי.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g4.animals",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הבנה מדעית מעמיקה",
+        "focus_lines": [
+          "ביולוגיה: מערכות הנשימה, העיכול והדם, יחסי גומלין במערכות אקולוגיות.",
+          "חומרים: מצבי צבירה, שינויים פיזיקליים וכימיים פשוטים.",
+          "פיזיקה: חשמל בסיסי, מוליכים ומבודדים.",
+          "כדור הארץ: עונות, סוגי סלעים וקרקעות."
+        ],
+        "skills": [
+          "תכנון ניסוי הכולל שאלת חקר, השערה ורישום תוצאות.",
+          "עבודה עם טבלאות וגרפים להצגת נתונים.",
+          "שימוש בשפה מדעית מדויקת להצגת ממצאים לכיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g4.scaffold.materials",
+      "subject": "science",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "materials",
+      "official_subtopic": "מערכות גוף, מצבי צבירה, חשמל בסיסי, סלעים ועונות השנה. שילוב בין חקר מדעי לתכנון הנדסי.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g4.materials",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הבנה מדעית מעמיקה",
+        "focus_lines": [
+          "ביולוגיה: מערכות הנשימה, העיכול והדם, יחסי גומלין במערכות אקולוגיות.",
+          "חומרים: מצבי צבירה, שינויים פיזיקליים וכימיים פשוטים.",
+          "פיזיקה: חשמל בסיסי, מוליכים ומבודדים.",
+          "כדור הארץ: עונות, סוגי סלעים וקרקעות."
+        ],
+        "skills": [
+          "תכנון ניסוי הכולל שאלת חקר, השערה ורישום תוצאות.",
+          "עבודה עם טבלאות וגרפים להצגת נתונים.",
+          "שימוש בשפה מדעית מדויקת להצגת ממצאים לכיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g4.scaffold.experiments",
+      "subject": "science",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "experiments",
+      "official_subtopic": "מערכות גוף, מצבי צבירה, חשמל בסיסי, סלעים ועונות השנה. שילוב בין חקר מדעי לתכנון הנדסי.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g4.experiments",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הבנה מדעית מעמיקה",
+        "focus_lines": [
+          "ביולוגיה: מערכות הנשימה, העיכול והדם, יחסי גומלין במערכות אקולוגיות.",
+          "חומרים: מצבי צבירה, שינויים פיזיקליים וכימיים פשוטים.",
+          "פיזיקה: חשמל בסיסי, מוליכים ומבודדים.",
+          "כדור הארץ: עונות, סוגי סלעים וקרקעות."
+        ],
+        "skills": [
+          "תכנון ניסוי הכולל שאלת חקר, השערה ורישום תוצאות.",
+          "עבודה עם טבלאות וגרפים להצגת נתונים.",
+          "שימוש בשפה מדעית מדויקת להצגת ממצאים לכיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g4.scaffold.earth_space",
+      "subject": "science",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "earth_space",
+      "official_subtopic": "מערכות גוף, מצבי צבירה, חשמל בסיסי, סלעים ועונות השנה. שילוב בין חקר מדעי לתכנון הנדסי.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g4.earth_space",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הבנה מדעית מעמיקה",
+        "focus_lines": [
+          "ביולוגיה: מערכות הנשימה, העיכול והדם, יחסי גומלין במערכות אקולוגיות.",
+          "חומרים: מצבי צבירה, שינויים פיזיקליים וכימיים פשוטים.",
+          "פיזיקה: חשמל בסיסי, מוליכים ומבודדים.",
+          "כדור הארץ: עונות, סוגי סלעים וקרקעות."
+        ],
+        "skills": [
+          "תכנון ניסוי הכולל שאלת חקר, השערה ורישום תוצאות.",
+          "עבודה עם טבלאות וגרפים להצגת נתונים.",
+          "שימוש בשפה מדעית מדויקת להצגת ממצאים לכיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g4.scaffold.environment",
+      "subject": "science",
+      "grade": 4,
+      "official_domain": null,
+      "official_topic": "environment",
+      "official_subtopic": "מערכות גוף, מצבי צבירה, חשמל בסיסי, סלעים ועונות השנה. שילוב בין חקר מדעי לתכנון הנדסי.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g4.environment",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הבנה מדעית מעמיקה",
+        "focus_lines": [
+          "ביולוגיה: מערכות הנשימה, העיכול והדם, יחסי גומלין במערכות אקולוגיות.",
+          "חומרים: מצבי צבירה, שינויים פיזיקליים וכימיים פשוטים.",
+          "פיזיקה: חשמל בסיסי, מוליכים ומבודדים.",
+          "כדור הארץ: עונות, סוגי סלעים וקרקעות."
+        ],
+        "skills": [
+          "תכנון ניסוי הכולל שאלת חקר, השערה ורישום תוצאות.",
+          "עבודה עם טבלאות וגרפים להצגת נתונים.",
+          "שימוש בשפה מדעית מדויקת להצגת ממצאים לכיתה."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g5.scaffold.body",
+      "subject": "science",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "body",
+      "official_subtopic": "מערכות גוף מפורטות, אנרגיה, אור וצל, משאבי כדור הארץ ותהליכים טכנולוגיים מתקדמים.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g5.body",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבה ויישום ידע",
+        "focus_lines": [
+          "ביולוגיה: שלד, שרירים, חושים, רבייה בצמחים ובעלי חיים.",
+          "חומרים: תערובות ותמיסות, טבעי מול סינתטי.",
+          "פיזיקה: מקורות אנרגיה, אור וצל, החזר ושקיפות.",
+          "כדור הארץ: מבנה כדור הארץ, משאבים טבעיים ותופעות טבע."
+        ],
+        "skills": [
+          "הסקת מסקנות מורכבות ושימוש בהוכחות מהנתונים.",
+          "תיעוד תהליך חקר מלא ביומן אישי/דיגיטלי.",
+          "הצגת פתרון טכנולוגי והערכת יעילותו."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g5.scaffold.animals",
+      "subject": "science",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "animals",
+      "official_subtopic": "מערכות גוף מפורטות, אנרגיה, אור וצל, משאבי כדור הארץ ותהליכים טכנולוגיים מתקדמים.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g5.animals",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבה ויישום ידע",
+        "focus_lines": [
+          "ביולוגיה: שלד, שרירים, חושים, רבייה בצמחים ובעלי חיים.",
+          "חומרים: תערובות ותמיסות, טבעי מול סינתטי.",
+          "פיזיקה: מקורות אנרגיה, אור וצל, החזר ושקיפות.",
+          "כדור הארץ: מבנה כדור הארץ, משאבים טבעיים ותופעות טבע."
+        ],
+        "skills": [
+          "הסקת מסקנות מורכבות ושימוש בהוכחות מהנתונים.",
+          "תיעוד תהליך חקר מלא ביומן אישי/דיגיטלי.",
+          "הצגת פתרון טכנולוגי והערכת יעילותו."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g5.scaffold.materials",
+      "subject": "science",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "materials",
+      "official_subtopic": "מערכות גוף מפורטות, אנרגיה, אור וצל, משאבי כדור הארץ ותהליכים טכנולוגיים מתקדמים.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g5.materials",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבה ויישום ידע",
+        "focus_lines": [
+          "ביולוגיה: שלד, שרירים, חושים, רבייה בצמחים ובעלי חיים.",
+          "חומרים: תערובות ותמיסות, טבעי מול סינתטי.",
+          "פיזיקה: מקורות אנרגיה, אור וצל, החזר ושקיפות.",
+          "כדור הארץ: מבנה כדור הארץ, משאבים טבעיים ותופעות טבע."
+        ],
+        "skills": [
+          "הסקת מסקנות מורכבות ושימוש בהוכחות מהנתונים.",
+          "תיעוד תהליך חקר מלא ביומן אישי/דיגיטלי.",
+          "הצגת פתרון טכנולוגי והערכת יעילותו."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g5.scaffold.experiments",
+      "subject": "science",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "experiments",
+      "official_subtopic": "מערכות גוף מפורטות, אנרגיה, אור וצל, משאבי כדור הארץ ותהליכים טכנולוגיים מתקדמים.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g5.experiments",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבה ויישום ידע",
+        "focus_lines": [
+          "ביולוגיה: שלד, שרירים, חושים, רבייה בצמחים ובעלי חיים.",
+          "חומרים: תערובות ותמיסות, טבעי מול סינתטי.",
+          "פיזיקה: מקורות אנרגיה, אור וצל, החזר ושקיפות.",
+          "כדור הארץ: מבנה כדור הארץ, משאבים טבעיים ותופעות טבע."
+        ],
+        "skills": [
+          "הסקת מסקנות מורכבות ושימוש בהוכחות מהנתונים.",
+          "תיעוד תהליך חקר מלא ביומן אישי/דיגיטלי.",
+          "הצגת פתרון טכנולוגי והערכת יעילותו."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g5.scaffold.earth_space",
+      "subject": "science",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "earth_space",
+      "official_subtopic": "מערכות גוף מפורטות, אנרגיה, אור וצל, משאבי כדור הארץ ותהליכים טכנולוגיים מתקדמים.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g5.earth_space",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבה ויישום ידע",
+        "focus_lines": [
+          "ביולוגיה: שלד, שרירים, חושים, רבייה בצמחים ובעלי חיים.",
+          "חומרים: תערובות ותמיסות, טבעי מול סינתטי.",
+          "פיזיקה: מקורות אנרגיה, אור וצל, החזר ושקיפות.",
+          "כדור הארץ: מבנה כדור הארץ, משאבים טבעיים ותופעות טבע."
+        ],
+        "skills": [
+          "הסקת מסקנות מורכבות ושימוש בהוכחות מהנתונים.",
+          "תיעוד תהליך חקר מלא ביומן אישי/דיגיטלי.",
+          "הצגת פתרון טכנולוגי והערכת יעילותו."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g5.scaffold.environment",
+      "subject": "science",
+      "grade": 5,
+      "official_domain": null,
+      "official_topic": "environment",
+      "official_subtopic": "מערכות גוף מפורטות, אנרגיה, אור וצל, משאבי כדור הארץ ותהליכים טכנולוגיים מתקדמים.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g5.environment",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "הרחבה ויישום ידע",
+        "focus_lines": [
+          "ביולוגיה: שלד, שרירים, חושים, רבייה בצמחים ובעלי חיים.",
+          "חומרים: תערובות ותמיסות, טבעי מול סינתטי.",
+          "פיזיקה: מקורות אנרגיה, אור וצל, החזר ושקיפות.",
+          "כדור הארץ: מבנה כדור הארץ, משאבים טבעיים ותופעות טבע."
+        ],
+        "skills": [
+          "הסקת מסקנות מורכבות ושימוש בהוכחות מהנתונים.",
+          "תיעוד תהליך חקר מלא ביומן אישי/דיגיטלי.",
+          "הצגת פתרון טכנולוגי והערכת יעילותו."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g6.scaffold.body",
+      "subject": "science",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "body",
+      "official_subtopic": "חיבור בין תחומי מדע שונים: רב־מערכתיות בגוף האדם, כימיה בסיסית, כוח המשיכה, שינויי אקלים ופתרון בעיות הנדסיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g6.body",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "רמה מתקדמת לפני חטיבה",
+        "focus_lines": [
+          "ביולוגיה: תיאום בין מערכות גוף והתאמות מורכבות לסביבה.",
+          "כימיה: תגובות קלות, חומרים מסוכנים ובטיחות במעבדה.",
+          "פיזיקה: כוח משיכה, מסה ומשקל, מעגלים חשמליים מורכבים.",
+          "כדור הארץ: שרשראות מזון, שינויי אקלים והשפעת האדם."
+        ],
+        "skills": [
+          "ביצוע חקר מלא – שאלת חקר, תכנון, מדידה, מסקנות ודיון.",
+          "קריאה וניתוח מידע מדעי ממקורות שונים.",
+          "הצגת פרויקט מדעי/טכנולוגי בפני קהל."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g6.scaffold.animals",
+      "subject": "science",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "animals",
+      "official_subtopic": "חיבור בין תחומי מדע שונים: רב־מערכתיות בגוף האדם, כימיה בסיסית, כוח המשיכה, שינויי אקלים ופתרון בעיות הנדסיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g6.animals",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "רמה מתקדמת לפני חטיבה",
+        "focus_lines": [
+          "ביולוגיה: תיאום בין מערכות גוף והתאמות מורכבות לסביבה.",
+          "כימיה: תגובות קלות, חומרים מסוכנים ובטיחות במעבדה.",
+          "פיזיקה: כוח משיכה, מסה ומשקל, מעגלים חשמליים מורכבים.",
+          "כדור הארץ: שרשראות מזון, שינויי אקלים והשפעת האדם."
+        ],
+        "skills": [
+          "ביצוע חקר מלא – שאלת חקר, תכנון, מדידה, מסקנות ודיון.",
+          "קריאה וניתוח מידע מדעי ממקורות שונים.",
+          "הצגת פרויקט מדעי/טכנולוגי בפני קהל."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g6.scaffold.materials",
+      "subject": "science",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "materials",
+      "official_subtopic": "חיבור בין תחומי מדע שונים: רב־מערכתיות בגוף האדם, כימיה בסיסית, כוח המשיכה, שינויי אקלים ופתרון בעיות הנדסיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g6.materials",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "רמה מתקדמת לפני חטיבה",
+        "focus_lines": [
+          "ביולוגיה: תיאום בין מערכות גוף והתאמות מורכבות לסביבה.",
+          "כימיה: תגובות קלות, חומרים מסוכנים ובטיחות במעבדה.",
+          "פיזיקה: כוח משיכה, מסה ומשקל, מעגלים חשמליים מורכבים.",
+          "כדור הארץ: שרשראות מזון, שינויי אקלים והשפעת האדם."
+        ],
+        "skills": [
+          "ביצוע חקר מלא – שאלת חקר, תכנון, מדידה, מסקנות ודיון.",
+          "קריאה וניתוח מידע מדעי ממקורות שונים.",
+          "הצגת פרויקט מדעי/טכנולוגי בפני קהל."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g6.scaffold.experiments",
+      "subject": "science",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "experiments",
+      "official_subtopic": "חיבור בין תחומי מדע שונים: רב־מערכתיות בגוף האדם, כימיה בסיסית, כוח המשיכה, שינויי אקלים ופתרון בעיות הנדסיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g6.experiments",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "רמה מתקדמת לפני חטיבה",
+        "focus_lines": [
+          "ביולוגיה: תיאום בין מערכות גוף והתאמות מורכבות לסביבה.",
+          "כימיה: תגובות קלות, חומרים מסוכנים ובטיחות במעבדה.",
+          "פיזיקה: כוח משיכה, מסה ומשקל, מעגלים חשמליים מורכבים.",
+          "כדור הארץ: שרשראות מזון, שינויי אקלים והשפעת האדם."
+        ],
+        "skills": [
+          "ביצוע חקר מלא – שאלת חקר, תכנון, מדידה, מסקנות ודיון.",
+          "קריאה וניתוח מידע מדעי ממקורות שונים.",
+          "הצגת פרויקט מדעי/טכנולוגי בפני קהל."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g6.scaffold.earth_space",
+      "subject": "science",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "earth_space",
+      "official_subtopic": "חיבור בין תחומי מדע שונים: רב־מערכתיות בגוף האדם, כימיה בסיסית, כוח המשיכה, שינויי אקלים ופתרון בעיות הנדסיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g6.earth_space",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "רמה מתקדמת לפני חטיבה",
+        "focus_lines": [
+          "ביולוגיה: תיאום בין מערכות גוף והתאמות מורכבות לסביבה.",
+          "כימיה: תגובות קלות, חומרים מסוכנים ובטיחות במעבדה.",
+          "פיזיקה: כוח משיכה, מסה ומשקל, מעגלים חשמליים מורכבים.",
+          "כדור הארץ: שרשראות מזון, שינויי אקלים והשפעת האדם."
+        ],
+        "skills": [
+          "ביצוע חקר מלא – שאלת חקר, תכנון, מדידה, מסקנות ודיון.",
+          "קריאה וניתוח מידע מדעי ממקורות שונים.",
+          "הצגת פרויקט מדעי/טכנולוגי בפני קהל."
+        ]
+      }
+    },
+    {
+      "row_id": "science.g6.scaffold.environment",
+      "subject": "science",
+      "grade": 6,
+      "official_domain": null,
+      "official_topic": "environment",
+      "official_subtopic": "חיבור בין תחומי מדע שונים: רב־מערכתיות בגוף האדם, כימיה בסיסית, כוח המשיכה, שינויי אקלים ופתרון בעיות הנדסיות.",
+      "ministry_source_file": "data/science-curriculum.js",
+      "ministry_source_type": "internal_js_scaffold",
+      "source_class": "internal_scaffold",
+      "source_anchor": null,
+      "corroborating_source": null,
+      "status": "source_blocker",
+      "confidence": "low",
+      "geometry_strand": false,
+      "internal_candidate_skill_id": "science.g6.environment",
+      "notes": "Internal product scaffold row; NOT Ministry curriculum.",
+      "blocker_reason": "Science Curriculum2016.docx not parsed; this is NOT an official oracle row. Do not merge into ministry-matrix.draft.json.",
+      "sequence_index": null,
+      "sequence_group": null,
+      "prerequisite_row_ids": null,
+      "prerequisite_skill_ids": null,
+      "sequence_source_anchor": null,
+      "sequence_confidence": null,
+      "sequence_notes": null,
+      "product_scaffold": {
+        "stage": "רמה מתקדמת לפני חטיבה",
+        "focus_lines": [
+          "ביולוגיה: תיאום בין מערכות גוף והתאמות מורכבות לסביבה.",
+          "כימיה: תגובות קלות, חומרים מסוכנים ובטיחות במעבדה.",
+          "פיזיקה: כוח משיכה, מסה ומשקל, מעגלים חשמליים מורכבים.",
+          "כדור הארץ: שרשראות מזון, שינויי אקלים והשפעת האדם."
+        ],
+        "skills": [
+          "ביצוע חקר מלא – שאלת חקר, תכנון, מדידה, מסקנות ודיון.",
+          "קריאה וניתוח מידע מדעי ממקורות שונים.",
+          "הצגת פרויקט מדעי/טכנולוגי בפני קהל."
+        ]
+      }
+    }
+  ]
+}
