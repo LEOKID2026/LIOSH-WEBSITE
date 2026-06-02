@@ -10,8 +10,8 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | פועל ושם — צירוף נכון (כיתה ו׳) `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | פועל ושם — צירוף נכון (כיתה ו׳) |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

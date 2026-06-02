@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
-| **title_hebrew** | תיקון: נושא ופועל ברבים `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | תיקון: נושא ופועל ברבים |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

@@ -10,8 +10,8 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | mixed |
-| **approval_status** | draft |
-| **title_hebrew** | דומה כמו... `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | דומה כמו... |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

@@ -73,8 +73,8 @@ for (const pageId of HEBREW_G1_PAGE_ORDER) {
   if (page.metadata?.subject !== "hebrew") {
     fail(`hebrew/g1/${pageId}: metadata subject must be hebrew`);
   }
-  if (page.metadata?.approval_status !== "draft") {
-    fail(`hebrew/g1/${pageId}: source approval_status must remain draft`);
+  if (page.metadata?.approval_status !== "approved") {
+    fail(`hebrew/g1/${pageId}: approval_status must be approved`);
   }
 }
 
@@ -97,4 +97,4 @@ if (errors.length) {
 console.log("G1 Hebrew runtime verification PASSED.");
 console.log("- catalog entry authored, 32 pages, dynamic route /learning/book/hebrew/g1");
 console.log("- practice feature disabled (no mappings)");
-console.log("- all pages load with 7 sections; draft metadata preserved in source");
+console.log("- all pages load with 7 sections; approved metadata; no visible DRAFT markers");

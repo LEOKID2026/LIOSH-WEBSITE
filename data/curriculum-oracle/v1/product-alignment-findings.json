@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generator": "scripts/verify-product-alignment.mjs",
-  "generated_at": "2026-06-02T21:59:06.263Z",
+  "generated_at": "2026-06-02T22:14:04.893Z",
   "oracle_snapshot": {
     "matrix_path": "data/curriculum-oracle/v1/ministry-matrix.draft.json",
     "row_count": 638,
@@ -14,14 +14,14 @@
     "moledet_oracle_rows": 4,
     "geography_oracle_rows": 2,
     "source_inventory_verified_count": null,
-    "finding_count": 2,
+    "finding_count": 1,
     "severity_counts": {
       "P0": 0,
       "P1": 0,
       "P2": 0,
-      "INFO": 2
+      "INFO": 1
     },
-    "generated_at": "2026-06-02T21:59:06.264Z"
+    "generated_at": "2026-06-02T22:14:04.894Z"
   },
   "inputs_read": [
     "data/curriculum-oracle/v1/ministry-matrix.draft.json",
@@ -42,30 +42,13 @@
   ],
   "findings": [
     {
-      "finding_id": "HEB-01",
-      "subject": "hebrew",
-      "grade": null,
-      "topic": "learning_book",
-      "product_surface": "learning_book",
-      "file_path": "lib/learning-book/",
-      "current_behavior": "Hebrew learning-book registries: hebrew-g1-registry.js; missing G2, G3, G4, G5, G6 registries.",
-      "oracle_status": "derived_alignment",
-      "evidence_from_code": "hebrew registries=[\"hebrew-g1-registry.js\"]",
-      "evidence_from_oracle": "16 hebrew oracle rows for grades 2–6",
-      "classification": "MISSING_REQUIRED_TOPIC",
-      "severity": "INFO",
-      "recommended_action": "Add Hebrew G2–6 learning-book registries when editorial pipeline ready; subject has derived_alignment not blocking launch gates.",
-      "can_implement_immediately": false,
-      "source_verification_required": false
-    },
-    {
       "finding_id": "SEQ-02",
       "subject": "all",
       "grade": null,
       "topic": "pedagogical_sequence",
       "product_surface": "learning_book",
       "file_path": "lib/learning-book/*-registry.js",
-      "current_behavior": "21 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).",
+      "current_behavior": "26 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).",
       "oracle_status": "sequence_fields_populated",
       "evidence_from_code": "grep sequence_index in lib/learning-book/*-registry.js → 0 matches",
       "evidence_from_oracle": "631 rows with non-null sequence_index in ministry-matrix.draft.json",

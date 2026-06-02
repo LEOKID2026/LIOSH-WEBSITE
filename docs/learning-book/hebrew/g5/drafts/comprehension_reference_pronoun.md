@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
-| **title_hebrew** | כינוי גוף — למי זה מתייחס? `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | כינוי גוף — למי זה מתייחס? |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

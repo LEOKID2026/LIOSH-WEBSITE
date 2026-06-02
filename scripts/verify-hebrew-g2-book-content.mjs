@@ -85,11 +85,11 @@ for (const pageId of HEBREW_G2_PAGE_ORDER) {
     errors.push(e.message);
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
+  if (readMetadataField(raw, "approval_status") !== "approved") {
+    errors.push(`${pageId}: approval_status must be approved`);
   }
-  if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
-    errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
+  if (readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
+    errors.push(`${pageId}: title_hebrew must not include DRAFT marker`);
   }
   if (readMetadataField(raw, "grade") !== "g2") {
     errors.push(`${pageId}: grade must be g2`);

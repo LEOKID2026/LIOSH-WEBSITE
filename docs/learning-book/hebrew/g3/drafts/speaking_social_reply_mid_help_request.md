@@ -10,8 +10,8 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | בקשת עזרה בנימוס `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | בקשת עזרה בנימוס |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

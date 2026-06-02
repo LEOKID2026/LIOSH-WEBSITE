@@ -10,8 +10,8 @@
 | **grade** | g1 |
 | **age_band** | grades_1_2 |
 | **page_type** | mixed |
-| **approval_status** | draft |
-| **title_hebrew** | חידת מילה — חפץ `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | חידת מילה — חפץ |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

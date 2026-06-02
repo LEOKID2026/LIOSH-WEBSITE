@@ -108,11 +108,11 @@ for (const pageId of HEBREW_G3_PAGE_ORDER) {
     }
   }
 
-  if (readMetadataField(raw, "approval_status") !== "draft") {
-    errors.push(`${pageId}: approval_status must be draft`);
+  if (readMetadataField(raw, "approval_status") !== "approved") {
+    errors.push(`${pageId}: approval_status must be approved`);
   }
-  if (!readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
-    errors.push(`${pageId}: title_hebrew missing DRAFT marker`);
+  if (readMetadataField(raw, "title_hebrew").includes("[DRAFT")) {
+    errors.push(`${pageId}: title_hebrew must not include DRAFT marker`);
   }
   if (readMetadataField(raw, "grade") !== "g3") {
     errors.push(`${pageId}: grade must be g3`);

@@ -10,8 +10,8 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | practice_bridge |
-| **approval_status** | draft |
-| **title_hebrew** | מה משתמע מהטקסט? `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מה משתמע מהטקסט? |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

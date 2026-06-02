@@ -10,8 +10,8 @@
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | סיבה ותוצאה — כי (כיתה ד׳) `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | סיבה ותוצאה — כי (כיתה ד׳) |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

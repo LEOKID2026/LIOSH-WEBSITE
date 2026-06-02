@@ -10,8 +10,8 @@
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | בחירת איות נכון `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | בחירת איות נכון |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

@@ -1,6 +1,6 @@
 # Product Alignment Findings — Grades 1–6
 
-**Generated:** 2026-06-02T21:59:06.263Z  
+**Generated:** 2026-06-02T22:14:04.893Z  
 **Generator:** `scripts/verify-product-alignment.mjs`  
 **Findings source:** `data/curriculum-oracle/v1/product-alignment-findings.json`
 
@@ -12,11 +12,11 @@ This report compares live product surfaces against `data/curriculum-oracle/v1/mi
 
 | Metric | Value |
 |--------|-------|
-| Total findings | 2 |
+| Total findings | 1 |
 | P0 | 0 |
 | P1 | 0 |
 | P2 | 0 |
-| INFO | 2 |
+| INFO | 1 |
 | Oracle row count | 638 |
 | Oracle blockers | 35 |
 | Science oracle rows | 473 |
@@ -67,11 +67,10 @@ _None._
 _None._
 
 
-### INFO (2)
+### INFO (1)
 
 | ID | Subject | Grade | Classification | Severity | Surface |
 |----|---------|-------|----------------|----------|---------|
-| HEB-01 | hebrew | — | MISSING_REQUIRED_TOPIC | INFO | learning_book |
 | SEQ-02 | all | — | OUT_OF_SEQUENCE | INFO | learning_book |
 
 
@@ -83,28 +82,12 @@ _None._
 
 | ID | Subject | Grade | Classification | Severity | Surface |
 |----|---------|-------|----------------|----------|---------|
-| HEB-01 | hebrew | — | MISSING_REQUIRED_TOPIC | INFO | learning_book |
 | SEQ-02 | all | — | OUT_OF_SEQUENCE | INFO | learning_book |
 
 
 ---
 
 ## 5. Findings by subject
-
-### hebrew (1)
-
-#### HEB-01 — MISSING_REQUIRED_TOPIC (INFO)
-
-- **Subject / grade / topic:** hebrew / all / learning_book
-- **Surface:** learning_book
-- **File:** `lib/learning-book/`
-- **Current behavior:** Hebrew learning-book registries: hebrew-g1-registry.js; missing G2, G3, G4, G5, G6 registries.
-- **Oracle status:** derived_alignment
-- **Code evidence:** hebrew registries=["hebrew-g1-registry.js"]
-- **Oracle evidence:** 16 hebrew oracle rows for grades 2–6
-- **Recommended action:** Add Hebrew G2–6 learning-book registries when editorial pipeline ready; subject has derived_alignment not blocking launch gates.
-- **Immediate fix (Track A):** No
-- **Source verification required:** No
 
 ### all (1)
 
@@ -113,7 +96,7 @@ _None._
 - **Subject / grade / topic:** all / all / pedagogical_sequence
 - **Surface:** learning_book
 - **File:** `lib/learning-book/*-registry.js`
-- **Current behavior:** 21 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).
+- **Current behavior:** 26 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).
 - **Oracle status:** sequence_fields_populated
 - **Code evidence:** grep sequence_index in lib/learning-book/*-registry.js → 0 matches
 - **Oracle evidence:** 631 rows with non-null sequence_index in ministry-matrix.draft.json
@@ -152,7 +135,6 @@ Additional open questions:
 
 When fixes are approved, these files appear most frequently in findings:
 
-- `lib/learning-book/`
 - `lib/learning-book/*-registry.js`
 
 ---

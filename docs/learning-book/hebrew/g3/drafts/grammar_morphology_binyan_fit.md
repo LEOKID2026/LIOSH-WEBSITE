@@ -10,8 +10,8 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
-| **title_hebrew** | איזו צורת פועל מתאימה? `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | איזו צורת פועל מתאימה? |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`
