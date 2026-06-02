@@ -1,6 +1,6 @@
 # Product Alignment Findings — Grades 1–6
 
-**Generated:** 2026-06-02T21:36:51.271Z  
+**Generated:** 2026-06-02T21:59:06.263Z  
 **Generator:** `scripts/verify-product-alignment.mjs`  
 **Findings source:** `data/curriculum-oracle/v1/product-alignment-findings.json`
 
