@@ -10,8 +10,8 @@
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
-| **title_hebrew** | שגרת יום — משפטים מלאים `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | שגרת יום — משפטים מלאים |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

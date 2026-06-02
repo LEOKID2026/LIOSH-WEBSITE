@@ -348,14 +348,43 @@ if (hebrewG1Entry.registry.pageOrder.length !== 32) {
     `hebrew/g1 expected 32 pages, got ${hebrewG1Entry.registry.pageOrder.length}`
   );
 }
-if (hebrewG1Entry.features?.practice === true) {
-  fail("hebrew/g1 must not enable practice feature (no mappings yet)");
+if (hebrewG1Entry.features?.practice !== true) {
+  fail("hebrew/g1 must enable practice feature");
 }
 if (!hebrewG1Entry.meta.bookTitleHe?.includes("עברית")) {
   fail("hebrew/g1 book title must use עברית");
 }
 if (hebrewG1Entry.meta.routeBase !== "/learning/book/hebrew/g1") {
   fail(`hebrew/g1 routeBase must be /learning/book/hebrew/g1`);
+}
+
+const HEBREW_GRADE_EXPECTATIONS = {
+  g1: 32,
+  g2: 23,
+  g3: 31,
+  g4: 29,
+  g5: 28,
+  g6: 29,
+};
+
+for (const [grade, pages] of Object.entries(HEBREW_GRADE_EXPECTATIONS)) {
+  if (grade === "g1") continue;
+  const entry = getLearningBookEntry("hebrew", grade);
+  if (!entry || entry.status !== "authored") {
+    fail(`hebrew/${grade} must be authored in catalog`);
+    continue;
+  }
+  if (entry.registry.pageOrder.length !== pages) {
+    fail(
+      `hebrew/${grade} expected ${pages} pages, got ${entry.registry.pageOrder.length}`
+    );
+  }
+  if (entry.features?.practice !== true) {
+    fail(`hebrew/${grade} must enable practice feature`);
+  }
+  if (!entry.meta.bookTitleHe?.includes("עברית")) {
+    fail(`hebrew/${grade} book title must use עברית`);
+  }
 }
 
 if (failures > 0) {

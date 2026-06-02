@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | Comparatives — bigger, more interesting `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | Comparatives — bigger, more interesting |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

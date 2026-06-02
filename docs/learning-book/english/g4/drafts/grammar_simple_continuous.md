@@ -10,8 +10,8 @@
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | contrast_page |
-| **approval_status** | draft |
-| **title_hebrew** | Present Simple לעומת Continuous `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | Present Simple לעומת Continuous |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

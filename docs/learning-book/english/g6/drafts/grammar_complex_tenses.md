@@ -10,8 +10,8 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | contrast_page |
-| **approval_status** | draft |
-| **title_hebrew** | Past Continuous + Past Simple + היכרות Present Perfect `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | Past Continuous + Past Simple + היכרות Present Perfect |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

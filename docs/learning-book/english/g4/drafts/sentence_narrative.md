@@ -10,8 +10,8 @@
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
-| **title_hebrew** | סיפור קצר — First… Then… `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | סיפור קצר — First… Then… |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

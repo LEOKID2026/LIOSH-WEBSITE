@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generator": "scripts/verify-product-alignment.mjs",
-  "generated_at": "2026-06-02T22:14:04.893Z",
+  "generated_at": "2026-06-02T22:58:13.049Z",
   "oracle_snapshot": {
     "matrix_path": "data/curriculum-oracle/v1/ministry-matrix.draft.json",
     "row_count": 638,
@@ -21,7 +21,7 @@
       "P2": 0,
       "INFO": 1
     },
-    "generated_at": "2026-06-02T22:14:04.894Z"
+    "generated_at": "2026-06-02T22:58:13.051Z"
   },
   "inputs_read": [
     "data/curriculum-oracle/v1/ministry-matrix.draft.json",
@@ -48,7 +48,7 @@
       "topic": "pedagogical_sequence",
       "product_surface": "learning_book",
       "file_path": "lib/learning-book/*-registry.js",
-      "current_behavior": "26 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).",
+      "current_behavior": "32 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).",
       "oracle_status": "sequence_fields_populated",
       "evidence_from_code": "grep sequence_index in lib/learning-book/*-registry.js → 0 matches",
       "evidence_from_oracle": "631 rows with non-null sequence_index in ministry-matrix.draft.json",

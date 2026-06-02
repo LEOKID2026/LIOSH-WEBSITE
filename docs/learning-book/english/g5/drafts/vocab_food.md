@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | vocabulary_theme |
-| **approval_status** | draft |
-| **title_hebrew** | מזון — cooked healthy food `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מזון — cooked healthy food |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

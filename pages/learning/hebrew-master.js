@@ -140,6 +140,17 @@ import {
 } from "../../utils/learning-time-credit";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
+import { getHebrewBookHref } from "../../lib/learning-book/resolve-hebrew-book-page";
+import {
+  HEBREW_BOOK_GRADES,
+  consumeAnyHebrewBookLearningSnapshot,
+  consumeAnyHebrewBookPracticePreset,
+  isHebrewBookPracticeEntry,
+  saveHebrewBookLearningSnapshot,
+  withHebrewBookLearningReturn,
+} from "../../lib/learning-book/hebrew-book-nav";
+
+const HEBREW_BOOK_GRADE_SET = new Set(HEBREW_BOOK_GRADES);
 
 const AVATAR_OPTIONS = [
   "👤",
@@ -211,6 +222,9 @@ export default function HebrewMaster() {
   const niqqudByIdRef = useRef({});
   const audioBuild1CounterRef = useRef(0);
   const currentQuestionRef = useRef(null);
+  const bookPracticePresetRef = useRef(null);
+  const practiceForceKindRef = useRef(null);
+  const practiceForceSkillIdRef = useRef(null);
 
   const [mounted, setMounted] = useState(false);
 
@@ -227,9 +241,26 @@ export default function HebrewMaster() {
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("reading"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
+  const bookTopicHref = useMemo(() => {
+    if (!HEBREW_BOOK_GRADE_SET.has(grade)) return null;
+    return getHebrewBookHref({ grade, operation, kind: null });
+  }, [grade, operation]);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const questionBookHref = useMemo(() => {
+    if (mode !== "learning" || !currentQuestion) return null;
+    if (!HEBREW_BOOK_GRADE_SET.has(grade)) return null;
+    const params = currentQuestion.params || {};
+    return getHebrewBookHref({
+      grade,
+      operation: currentQuestion.operation || currentQuestion.topic || operation,
+      kind: params.subtopicId ?? params.kind ?? null,
+      subtopicId: params.subtopicId ?? null,
+      patternFamily: params.patternFamily ?? currentQuestion.patternFamily ?? null,
+      subtype: params.subtype ?? currentQuestion.subtype ?? null,
+    });
+  }, [grade, mode, currentQuestion, operation]);
 
   useEffect(() => {
     currentQuestionRef.current = currentQuestion;
@@ -556,6 +587,68 @@ export default function HebrewMaster() {
     }
     return "";
   });
+
+  const openBookFromLearning = useCallback(
+    (href) => {
+      if (!href) return;
+      if (!HEBREW_BOOK_GRADE_SET.has(grade)) return;
+      const snapshot = {
+        gameActive: true,
+        mode,
+        grade,
+        gradeNumber,
+        level,
+        operation,
+        currentQuestion,
+        score,
+        streak,
+        correct,
+        wrong,
+        selectedAnswer,
+        typedAnswer,
+        feedback,
+        questionStartTime,
+      };
+      saveHebrewBookLearningSnapshot(grade, snapshot);
+      router.push(withHebrewBookLearningReturn(href));
+    },
+    [
+      mode,
+      grade,
+      gradeNumber,
+      level,
+      operation,
+      currentQuestion,
+      score,
+      streak,
+      correct,
+      wrong,
+      selectedAnswer,
+      typedAnswer,
+      feedback,
+      questionStartTime,
+      router,
+    ]
+  );
+
+  const applyBookPracticePreset = useCallback((preset) => {
+    if (!preset || preset.mode !== "learning") return;
+    const presetGrade = preset.grade;
+    if (!HEBREW_BOOK_GRADE_SET.has(presetGrade)) return;
+    const op = preset.operation || preset.topic;
+    if (!GRADES[presetGrade]?.topics?.includes(op)) return;
+    bookPracticePresetRef.current = preset;
+    setGrade(presetGrade);
+    const presetGradeNumber = gradeKeyToNumber(presetGrade);
+    if (presetGradeNumber) {
+      setGradeNumber(presetGradeNumber);
+    }
+    setMode("learning");
+    setOperation(op);
+    practiceForceKindRef.current = preset.forceKind || null;
+    practiceForceSkillIdRef.current = preset.skillId || null;
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
@@ -576,12 +669,15 @@ export default function HebrewMaster() {
           } catch {}
         }
         const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey) {
+        if (gradeKey && !bookPracticePresetRef.current) {
           setGrade(gradeKey);
           const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
           if (gradeNumberFromDb) {
             setGradeNumber(gradeNumberFromDb);
           }
+        }
+        if (bookPracticePresetRef.current) {
+          applyBookPracticePreset(bookPracticePresetRef.current);
         }
       })
       .catch(() => {
@@ -590,7 +686,40 @@ export default function HebrewMaster() {
     return () => {
       mounted = false;
     };
+  }, [applyBookPracticePreset]);
+
+  useEffect(() => {
+    const snap = consumeAnyHebrewBookLearningSnapshot();
+    if (!snap || snap.gameActive !== true) return;
+    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    if (typeof snap.grade === "string") setGrade(snap.grade);
+    if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
+    if (typeof snap.level === "string") setLevel(snap.level);
+    if (typeof snap.operation === "string") setOperation(snap.operation);
+    setGameActive(true);
+    if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
+    setScore(typeof snap.score === "number" ? snap.score : 0);
+    setStreak(typeof snap.streak === "number" ? snap.streak : 0);
+    setCorrect(typeof snap.correct === "number" ? snap.correct : 0);
+    setWrong(typeof snap.wrong === "number" ? snap.wrong : 0);
+    setSelectedAnswer(snap.selectedAnswer ?? null);
+    setTypedAnswer(typeof snap.typedAnswer === "string" ? snap.typedAnswer : "");
+    setFeedback(snap.feedback ?? null);
+    setQuestionStartTime(
+      typeof snap.questionStartTime === "number"
+        ? snap.questionStartTime
+        : Date.now()
+    );
   }, []);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (!isHebrewBookPracticeEntry(router.query)) return;
+    const preset = consumeAnyHebrewBookPracticePreset();
+    if (preset) {
+      applyBookPracticePreset(preset);
+    }
+  }, [router.isReady, router.query, applyBookPracticePreset]);
 
   useEffect(() => {
     clearActiveDiagnosticState(
@@ -1310,7 +1439,11 @@ export default function HebrewMaster() {
         opForQuestion,
         grade,
         opForQuestion === "mixed" ? mixedOperations : null,
-        { excludeFingerprints: localRecentQuestions.toSet() }
+        {
+          excludeFingerprints: localRecentQuestions.toSet(),
+          forceKind: practiceForceKindRef.current,
+          forceSkillId: practiceForceSkillIdRef.current,
+        }
       );
       attempts++;
 
@@ -3614,6 +3747,16 @@ export default function HebrewMaster() {
                 >
                   📚 לוח עזרה
                 </button>
+                {bookTopicHref ? (
+                  <button
+                    type="button"
+                    data-testid={`hebrew-${grade}-book-topic-button`}
+                    onClick={() => router.push(bookTopicHref)}
+                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                  >
+                    📖 הסבר בספר
+                  </button>
+                ) : null}
                 <div
                   className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
                   title="מטבעות משחק"
@@ -3708,7 +3851,18 @@ export default function HebrewMaster() {
                     </div>
                   )}
 
-                  <div data-testid="hebrew-question-stem" className={questionSlotClassForStem}>
+                  <div data-testid="hebrew-question-stem" className={`${questionSlotClassForStem} relative`}>
+                  {questionBookHref ? (
+                    <button
+                      type="button"
+                      data-testid={`hebrew-${grade}-book-question-button`}
+                      onClick={() => openBookFromLearning(questionBookHref)}
+                      className="absolute top-0 right-0 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      title="הסבר בספר לנושא הנוכחי"
+                    >
+                      📖 הסבר
+                    </button>
+                  ) : null}
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
                     <div className="mb-4 flex gap-6 items-center justify-center flex-wrap" style={{ direction: "ltr" }}>

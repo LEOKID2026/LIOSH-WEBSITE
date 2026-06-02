@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | step_by_step_procedure |
-| **approval_status** | draft |
-| **title_hebrew** | Past Simple — עבר פשוט `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | Past Simple — עבר פשוט |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

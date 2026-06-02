@@ -36,8 +36,8 @@ if (entry?.registry.pageOrder.length !== 32) {
 if (JSON.stringify(entry?.registry.pageOrder) !== JSON.stringify(HEBREW_G1_PAGE_ORDER)) {
   fail("hebrew/g1 page order mismatch vs registry");
 }
-if (entry?.features?.practice === true) {
-  fail("hebrew/g1 must not enable practice feature (no mappings yet)");
+if (entry?.features?.practice !== true) {
+  fail("hebrew/g1 must enable practice feature");
 }
 if (getLearningBookIndexHref("hebrew", "g1") !== HEBREW_G1_BOOK_META.routeBase) {
   fail("hebrew/g1 index href mismatch");
@@ -96,5 +96,5 @@ if (errors.length) {
 
 console.log("G1 Hebrew runtime verification PASSED.");
 console.log("- catalog entry authored, 32 pages, dynamic route /learning/book/hebrew/g1");
-console.log("- practice feature disabled (no mappings)");
+console.log("- practice feature enabled (topic mappings)");
 console.log("- all pages load with 7 sections; approved metadata; no visible DRAFT markers");

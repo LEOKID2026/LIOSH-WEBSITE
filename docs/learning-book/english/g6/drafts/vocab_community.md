@@ -10,8 +10,8 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | vocabulary_theme |
-| **approval_status** | draft |
-| **title_hebrew** | קהילה — festival, celebrate `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | קהילה — festival, celebrate |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

@@ -10,8 +10,8 @@
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | visual_intuition |
-| **approval_status** | draft |
-| **title_hebrew** | משפטים קצרים — כיתה ב׳ `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | משפטים קצרים — כיתה ב׳ |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

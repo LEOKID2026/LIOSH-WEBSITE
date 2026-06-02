@@ -1,5 +1,6 @@
 import { GRADES, BLANK, TOPICS, GRADE_LEVELS } from './hebrew-constants.js';
 import { filterRichHebrewPool } from './hebrew-rich-question-bank.js';
+import { filterHebrewPoolByBookPage } from './hebrew-book-practice-filter.js';
 import {
   inferHebrewLegacyMeta,
   scopeHebrewStemForGrade,
@@ -4876,6 +4877,10 @@ export function generateQuestion(
     selectionOpts?.excludeFingerprints instanceof Set
       ? selectionOpts.excludeFingerprints
       : null;
+  const forceKind =
+    selectionOpts?.forceKind != null ? String(selectionOpts.forceKind) : "";
+  const forceSkillId =
+    selectionOpts?.forceSkillId != null ? String(selectionOpts.forceSkillId) : "";
   const gradeCfg = GRADES[gradeKey] || GRADES.g3;
 
   let allowedTopics = gradeCfg.topics.filter((t) => t !== "mixed");
@@ -4933,6 +4938,16 @@ export function generateQuestion(
   } else if (["g3", "g4", "g5", "g6"].includes(String(gradeKey).toLowerCase())) {
     const w = withUpperGradeSubtopicPreference(gradeKey, selectedTopic, topicQuestionsMerged);
     topicQuestionsMerged = w.merged;
+  }
+
+  if (forceKind) {
+    topicQuestionsMerged = filterHebrewPoolByBookPage(
+      topicQuestionsMerged,
+      gradeKey,
+      selectedTopic,
+      forceKind,
+      forceSkillId
+    );
   }
 
   const HEBREW_NIQQUD_RE = /[\u0591-\u05C7]/g;

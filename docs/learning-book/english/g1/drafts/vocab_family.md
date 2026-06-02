@@ -10,8 +10,8 @@
 | **grade** | g1 |
 | **age_band** | grades_1_2 |
 | **page_type** | vocabulary_theme |
-| **approval_status** | draft |
-| **title_hebrew** | משפחה באנגלית `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | משפחה באנגלית |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

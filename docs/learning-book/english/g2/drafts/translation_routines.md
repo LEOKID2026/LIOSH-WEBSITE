@@ -10,8 +10,8 @@
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | practice_bridge |
-| **approval_status** | draft |
-| **title_hebrew** | שגרת יום — תרגום `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | שגרת יום — תרגום |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

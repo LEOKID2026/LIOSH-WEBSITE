@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | practice_bridge |
-| **approval_status** | draft |
-| **title_hebrew** | much/many — חיזוק כיתה ה׳ `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | much/many — חיזוק כיתה ה׳ |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

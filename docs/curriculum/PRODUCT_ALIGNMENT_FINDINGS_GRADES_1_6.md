@@ -1,6 +1,6 @@
 # Product Alignment Findings — Grades 1–6
 
-**Generated:** 2026-06-02T22:14:04.893Z  
+**Generated:** 2026-06-02T22:58:13.049Z  
 **Generator:** `scripts/verify-product-alignment.mjs`  
 **Findings source:** `data/curriculum-oracle/v1/product-alignment-findings.json`
 
@@ -96,7 +96,7 @@ _None._
 - **Subject / grade / topic:** all / all / pedagogical_sequence
 - **Surface:** learning_book
 - **File:** `lib/learning-book/*-registry.js`
-- **Current behavior:** 26 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).
+- **Current behavior:** 32 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).
 - **Oracle status:** sequence_fields_populated
 - **Code evidence:** grep sequence_index in lib/learning-book/*-registry.js → 0 matches
 - **Oracle evidence:** 631 rows with non-null sequence_index in ministry-matrix.draft.json

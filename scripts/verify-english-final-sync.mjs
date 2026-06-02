@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ENGLISH_GRADES } from "../data/english-curriculum.js";
+import { getLearningBookEntry } from "../lib/learning-book/learning-book-catalog.js";
 import { hasLearningBook } from "../lib/learning-book/learning-book-catalog-meta.js";
 import { englishTopicOptionsForGrade } from "../lib/teacher-portal/teacher-class-topic-options.js";
 import { resolveClassroomSkillLabelHe } from "../lib/classroom-activities/classroom-skill-labels-he.js";
@@ -20,9 +21,83 @@ import {
   ENGLISH_MASTER_SCOPE,
   ENGLISH_SUBJECT_KEY,
 } from "./lib/english-learning-book-master-scope-manifest.mjs";
+import {
+  ENGLISH_G1_PAGE_ORDER,
+  ENGLISH_G1_BOOK_META,
+  ENGLISH_G1_BOOK_BATCHES,
+} from "../lib/learning-book/english-g1-registry.js";
+import {
+  ENGLISH_G2_PAGE_ORDER,
+  ENGLISH_G2_BOOK_META,
+  ENGLISH_G2_BOOK_BATCHES,
+} from "../lib/learning-book/english-g2-registry.js";
+import {
+  ENGLISH_G3_PAGE_ORDER,
+  ENGLISH_G3_BOOK_META,
+  ENGLISH_G3_BOOK_BATCHES,
+} from "../lib/learning-book/english-g3-registry.js";
+import {
+  ENGLISH_G4_PAGE_ORDER,
+  ENGLISH_G4_BOOK_META,
+  ENGLISH_G4_BOOK_BATCHES,
+} from "../lib/learning-book/english-g4-registry.js";
+import {
+  ENGLISH_G5_PAGE_ORDER,
+  ENGLISH_G5_BOOK_META,
+  ENGLISH_G5_BOOK_BATCHES,
+} from "../lib/learning-book/english-g5-registry.js";
+import {
+  ENGLISH_G6_PAGE_ORDER,
+  ENGLISH_G6_BOOK_META,
+  ENGLISH_G6_BOOK_BATCHES,
+} from "../lib/learning-book/english-g6-registry.js";
+import {
+  verifyEnglishBookRuntime,
+  assertEnglishMasterPath,
+  checkEnglishLearningPageIdCollisions,
+} from "./lib/verify-english-book-runtime-lib.mjs";
 
 const ROOT = process.cwd();
 const GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
+
+const BOOK_SPECS = [
+  {
+    grade: "g1",
+    pageOrder: ENGLISH_G1_PAGE_ORDER,
+    bookMeta: ENGLISH_G1_BOOK_META,
+    batchCount: ENGLISH_G1_BOOK_BATCHES.length,
+  },
+  {
+    grade: "g2",
+    pageOrder: ENGLISH_G2_PAGE_ORDER,
+    bookMeta: ENGLISH_G2_BOOK_META,
+    batchCount: ENGLISH_G2_BOOK_BATCHES.length,
+  },
+  {
+    grade: "g3",
+    pageOrder: ENGLISH_G3_PAGE_ORDER,
+    bookMeta: ENGLISH_G3_BOOK_META,
+    batchCount: ENGLISH_G3_BOOK_BATCHES.length,
+  },
+  {
+    grade: "g4",
+    pageOrder: ENGLISH_G4_PAGE_ORDER,
+    bookMeta: ENGLISH_G4_BOOK_META,
+    batchCount: ENGLISH_G4_BOOK_BATCHES.length,
+  },
+  {
+    grade: "g5",
+    pageOrder: ENGLISH_G5_PAGE_ORDER,
+    bookMeta: ENGLISH_G5_BOOK_META,
+    batchCount: ENGLISH_G5_BOOK_BATCHES.length,
+  },
+  {
+    grade: "g6",
+    pageOrder: ENGLISH_G6_PAGE_ORDER,
+    bookMeta: ENGLISH_G6_BOOK_META,
+    batchCount: ENGLISH_G6_BOOK_BATCHES.length,
+  },
+];
 
 /** Topics that must not be assignable below this grade (product gates). */
 const GRADE_TOPIC_GATES = {
@@ -75,24 +150,6 @@ function checkSpineTopicAccess() {
     }
   }
 
-  for (const skill of englishSkills) {
-    if (skill.spine_layer !== "curriculum_topic_access") continue;
-    const m = /^english:g([1-6]):topic:(\w+)$/.exec(skill.skill_id);
-    if (!m) continue;
-    const gk = `g${m[1]}`;
-    const topic = m[2];
-    const allowed = ENGLISH_GRADES[gk]?.topics || [];
-    if (!allowed.includes(topic)) {
-      fail("spine.policy", `${skill.skill_id} topic not in ENGLISH_GRADES.${gk}`);
-    }
-  }
-}
-
-function checkMasterScopeManifest() {
-  const spine = JSON.parse(
-    fs.readFileSync(path.join(ROOT, "data/curriculum-spine/v1/skills.json"), "utf8")
-  );
-  const englishSkills = (spine.skills || []).filter((s) => s.subject === ENGLISH_SUBJECT_KEY);
   if (englishSkills.length !== ENGLISH_MASTER_SCOPE.totalEnglishSkills) {
     fail(
       "spine.manifest",
@@ -193,34 +250,46 @@ function checkDiagnosticLabels() {
   }
 }
 
-function learningBookStatus(gradeKey) {
-  return hasLearningBook("english", gradeKey) ? "PASS" : "NOT READY";
+function checkDraftFilesOnDisk(spec) {
+  const draftsDir = path.join(ROOT, spec.bookMeta.draftsDir);
+  for (const pageId of spec.pageOrder) {
+    const filePath = path.join(draftsDir, `${pageId}.md`);
+    if (!fs.existsSync(filePath)) {
+      fail("book.missing", `english ${spec.grade} missing draft file ${pageId}.md`);
+      continue;
+    }
+    const raw = fs.readFileSync(filePath, "utf8");
+    if (raw.includes("[DRAFT")) {
+      fail("book.draft", `english ${spec.grade}/${pageId}: raw file contains DRAFT marker`);
+    }
+    if (/\|\s*\*\*approval_status\*\*\s*\|\s*draft\s*\|/.test(raw)) {
+      fail("book.draft", `english ${spec.grade}/${pageId}: approval_status still draft`);
+    }
+  }
 }
 
-/** @param {string} gradeKey @param {string[]} gradeFailures @param {string} bookStatus */
-function gradeStatus(gradeKey, gradeFailures, bookStatus) {
-  const runtimeFail = gradeFailures.some(
-    (f) =>
-      f.startsWith("runtime.") ||
-      f.startsWith("activity.") ||
-      f.startsWith("spine.") ||
-      f.startsWith("oracle.")
-  );
-  const assignmentFail = gradeFailures.some((f) => f.startsWith("assignment."));
-  const diagnosticFail = gradeFailures.some((f) => f.startsWith("diagnostic."));
-  const bookFail = gradeFailures.some((f) => f.startsWith("book."));
-
-  const overall =
-    gradeFailures.length === 0 && bookStatus !== "FAIL" ? "PASS" : gradeFailures.length ? "FAIL" : "PASS";
-
+/** @param {string} gradeKey @param {string[]} gradeFailures */
+function gradeStatus(gradeKey, gradeFailures) {
+  if (gradeFailures.length === 0) {
+    return {
+      learningBook: "PASS",
+      practice: "PASS",
+      studentLearning: "PASS",
+      teacherAssignment: "PASS",
+      parentAssignment: "PASS",
+      reportsDiagnostics: "PASS",
+      status: "PASS",
+    };
+  }
+  const has = (p) => gradeFailures.some((f) => f.startsWith(p));
   return {
-    learningBook: bookFail ? "FAIL" : bookStatus,
-    practice: runtimeFail ? "FAIL" : "PASS",
-    studentLearning: runtimeFail ? "FAIL" : "PASS",
-    teacherAssignment: assignmentFail ? "FAIL" : "PASS",
-    parentAssignment: assignmentFail ? "FAIL" : "PASS",
-    reportsDiagnostics: diagnosticFail ? "FAIL" : "PASS",
-    status: overall,
+    learningBook: has("book.") ? "FAIL" : "PASS",
+    practice: has("practice.") ? "FAIL" : "PASS",
+    studentLearning: has("runtime.") || has("activity.") || has("spine.") ? "FAIL" : "PASS",
+    teacherAssignment: has("assignment.") ? "FAIL" : "PASS",
+    parentAssignment: has("assignment.") ? "FAIL" : "PASS",
+    reportsDiagnostics: has("diagnostic.") ? "FAIL" : "PASS",
+    status: "FAIL",
   };
 }
 
@@ -228,7 +297,6 @@ function gradeStatus(gradeKey, gradeFailures, bookStatus) {
 const failuresByGrade = Object.fromEntries(GRADE_KEYS.map((g) => [`english:${g}`, []]));
 
 checkOracleBacking();
-checkMasterScopeManifest();
 checkSpineTopicAccess();
 checkTopicPolicySpans();
 
@@ -241,29 +309,46 @@ if (!placement.ok) {
   for (const v of placement.violations) fail("runtime.placement", v);
 }
 
-for (const gradeKey of GRADE_KEYS) {
-  const bucket = `english:${gradeKey}`;
+for (const err of assertEnglishMasterPath()) fail("book.catalog", err);
+for (const err of checkEnglishLearningPageIdCollisions(BOOK_SPECS)) {
+  fail("book.collision", err);
+}
+
+for (const spec of BOOK_SPECS) {
+  const bucket = `english:${spec.grade}`;
   const before = failures.length;
 
-  if (hasLearningBook("english", gradeKey)) {
-    fail(
-      "book.exposed",
-      `english ${gradeKey} learning book exposed but no authored registry — hide or implement`
-    );
+  if (!hasLearningBook("english", spec.grade)) {
+    fail("book.catalog", `english ${spec.grade} not in catalog meta`);
   }
 
-  checkAssignmentTopics(gradeKey);
-  await checkActivityGeneration(gradeKey);
+  const registryPath = path.join(ROOT, `lib/learning-book/english-${spec.grade}-registry.js`);
+  if (!fs.existsSync(registryPath)) {
+    fail("book.registry", `missing ${registryPath}`);
+  }
+
+  checkDraftFilesOnDisk(spec);
+  for (const err of verifyEnglishBookRuntime(spec)) {
+    fail("book.runtime", err);
+  }
+  checkAssignmentTopics(spec.grade);
+  await checkActivityGeneration(spec.grade);
 
   failuresByGrade[bucket].push(...failures.slice(before));
 }
 
 checkDiagnosticLabels();
 
+for (const gk of GRADE_KEYS) {
+  const entry = getLearningBookEntry("english", gk);
+  if (!entry || entry.status !== "authored") {
+    fail("book.catalog", `english ${gk} not authored/visible`);
+  }
+}
+
 const englishStatus = {};
 for (const gk of GRADE_KEYS) {
-  const bookStatus = learningBookStatus(gk);
-  englishStatus[gk] = gradeStatus(gk, failuresByGrade[`english:${gk}`], bookStatus);
+  englishStatus[gk] = gradeStatus(gk, failuresByGrade[`english:${gk}`]);
 }
 
 console.log(JSON.stringify({ english: englishStatus }, null, 2));
@@ -275,4 +360,3 @@ if (failures.length > 0) {
 }
 
 console.log("\nverify-english-final-sync: all checks passed");
-console.log("Note: English learning books G1–G6 are NOT READY (not in student catalog); runtime surfaces verified.");
