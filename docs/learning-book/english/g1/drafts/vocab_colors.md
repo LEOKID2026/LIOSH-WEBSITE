@@ -1,0 +1,95 @@
+# צבעים באנגלית
+
+## Metadata
+
+| Field | Value |
+|-------|-------|
+| **learning_page_id** | `english:g1:vocab_colors` |
+| **skill_id** | `english:vocabulary:wordlist:colors` |
+| **subject** | english |
+| **grade** | g1 |
+| **age_band** | grades_1_2 |
+| **page_type** | vocabulary_theme |
+| **approval_status** | draft |
+| **title_hebrew** | צבעים באנגלית `[DRAFT — not owner-approved]` |
+
+**Source references:**
+- `data/curriculum-spine/v1/skills.json`
+- `docs/learning-book/ENGLISH_GRADE_1_LEARNING_BOOK_PLAN.md`
+- `docs/learning-book/ENGLISH_LEARNING_BOOK_MASTER_SCOPE_PLAN.md`
+
+**Content scope:** red, blue, green, yellow — זיהוי והחלפה עם עברית; ללא איות
+
+---
+
+## 1. מה לומדים?
+
+היום נלמד מילים באנגלית לצבעים.
+צבעים מסביבנו — בגדים, צעצועים וציורים.
+
+---
+
+## 2. הסבר
+
+כל צבע יש לו שם באנגלית.
+כששומעים את השם — מחברים אותו לצבע שאנחנו מכירים בעברית.
+
+red — אדום
+blue — כחול
+green — ירוק
+yellow — צהוב
+
+---
+
+## 3. דוגמה
+
+דמיינו תפוח אדום.
+באנגלית אומרים:
+
+red
+
+התפוח הוא red.
+
+---
+
+## 4. בואו נפתור
+
+שאלה: מה הצבע של שמיים בהירים ביום יפה?
+
+שלב 1: חושבים על הצבע — כחול.
+שלב 2: בוחרים את המילה באנגלית:
+
+blue
+
+תשובה: blue
+
+---
+
+## 5. נסו בעצמכם
+
+מה הצבע של תפוח אדום?
+
+בחרו את המילה הנכונה באנגלית:
+
+red
+
+(רמז: התפוח הוא red.)
+
+---
+
+## 6. שימו לב!
+
+קל לבלבל בין צבעים דומים.
+
+❌ לקרוא לתפוח blue — זה לא נכון!
+
+✓ תפוח אדום — red.
+
+זכרו: red = אדום.
+
+---
+
+## 7. בואו נתרגל!
+
+עכשיו אתם מכירים כמה צבעים באנגלית.
+בתרגול תמצאו שאלות על צבעים — red, blue, green ו-yellow.
