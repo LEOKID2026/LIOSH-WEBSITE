@@ -1,6 +1,9 @@
 import { chromium } from "playwright";
 
-const browser = await chromium.launch();
+page.on("console", (m) => {
+  if (m.type() === "error") console.error("CONSOLE", m.text());
+});
+page.on("pageerror", (e) => console.error("PAGEERROR", e.message));
 const page = await browser.newPage();
 await page.goto("http://localhost:3000/learning/book/math/g3/ns_place_hundreds", {
   waitUntil: "networkidle",
