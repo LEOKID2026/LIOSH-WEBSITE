@@ -32,7 +32,9 @@ export default function LearningBookShell({
       ? "חזרה להנדסה"
       : subject === "science"
         ? "חזרה למדעים"
-        : "חזרה לחשבון";
+        : subject === "hebrew"
+          ? "חזרה לעברית"
+          : "חזרה לחשבון";
 
   const handleReturnClick = () => {
     if (fromLearning) {

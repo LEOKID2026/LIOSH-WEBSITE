@@ -138,6 +138,8 @@ import {
   isFairnessVisibilityLedgerActive,
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
+import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
+import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 
 const AVATAR_OPTIONS = [
   "👤",
@@ -220,6 +222,7 @@ export default function HebrewMaster() {
   // NEW: grade & mode
   const [gradeNumber, setGradeNumber] = useState(3); // 1 = כיתה א׳, 2 = ב׳, ... 6 = ו׳
   const [grade, setGrade] = useState("g3"); // g1, g2, g3, g4, g5, g6
+  const bookIndexHref = getLearningBookIndexHref("hebrew", grade);
   const [mode, setMode] = useState("learning");
 
   const [level, setLevel] = useState("easy");
@@ -3423,7 +3426,15 @@ export default function HebrewMaster() {
           )}
 
           {!gameActive ? (
-            <div className="flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+            <div className="relative flex flex-col flex-1 min-h-0 min-w-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+              {bookIndexHref ? (
+                <LearningBookIndexTile
+                  subject="hebrew"
+                  grade={grade}
+                  testId={`hebrew-${grade}-book-index-button`}
+                  onClick={() => router.push(bookIndexHref)}
+                />
+              ) : null}
               <div className="w-full flex justify-center mb-3 md:mb-4 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] px-0.5">
                 <div
                   className="inline-flex flex-nowrap items-center justify-center gap-2 md:gap-2.5 lg:gap-3 w-max max-w-full min-w-0"

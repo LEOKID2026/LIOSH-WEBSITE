@@ -73,6 +73,9 @@ for (const book of LEARNING_BOOK_CATALOG_LIST) {
   if (book.subject === "science" && !book.meta.bookTitleHe?.includes("מדעים")) {
     fail(`science book missing מדעים in title: ${book.meta.bookTitleHe}`);
   }
+  if (book.subject === "hebrew" && !book.meta.bookTitleHe?.includes("עברית")) {
+    fail(`hebrew book missing עברית in title: ${book.meta.bookTitleHe}`);
+  }
 
   const ids = book.registry.pageOrder;
   const unique = new Set(ids);
@@ -334,6 +337,25 @@ for (const [grade, exp] of Object.entries(SCIENCE_GRADE_EXPECTATIONS)) {
   if (!exp.plants && hasPlants) {
     fail(`science/${grade} must not include plants page`);
   }
+}
+
+const hebrewG1Entry = getLearningBookEntry("hebrew", "g1");
+if (!hebrewG1Entry || hebrewG1Entry.status !== "authored") {
+  fail("hebrew/g1 must be authored in catalog");
+}
+if (hebrewG1Entry.registry.pageOrder.length !== 32) {
+  fail(
+    `hebrew/g1 expected 32 pages, got ${hebrewG1Entry.registry.pageOrder.length}`
+  );
+}
+if (hebrewG1Entry.features?.practice === true) {
+  fail("hebrew/g1 must not enable practice feature (no mappings yet)");
+}
+if (!hebrewG1Entry.meta.bookTitleHe?.includes("עברית")) {
+  fail("hebrew/g1 book title must use עברית");
+}
+if (hebrewG1Entry.meta.routeBase !== "/learning/book/hebrew/g1") {
+  fail(`hebrew/g1 routeBase must be /learning/book/hebrew/g1`);
 }
 
 if (failures > 0) {
