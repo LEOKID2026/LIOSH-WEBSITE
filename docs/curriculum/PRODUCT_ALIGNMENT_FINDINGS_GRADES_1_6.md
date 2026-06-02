@@ -1,6 +1,6 @@
 # Product Alignment Findings — Grades 1–6
 
-**Generated:** 2026-06-02T22:58:13.049Z  
+**Generated:** 2026-06-02T23:20:15.427Z  
 **Generator:** `scripts/verify-product-alignment.mjs`  
 **Findings source:** `data/curriculum-oracle/v1/product-alignment-findings.json`
 
@@ -12,11 +12,11 @@ This report compares live product surfaces against `data/curriculum-oracle/v1/mi
 
 | Metric | Value |
 |--------|-------|
-| Total findings | 1 |
+| Total findings | 0 |
 | P0 | 0 |
 | P1 | 0 |
 | P2 | 0 |
-| INFO | 1 |
+| INFO | 0 |
 | Oracle row count | 638 |
 | Oracle blockers | 35 |
 | Science oracle rows | 473 |
@@ -67,42 +67,21 @@ _None._
 _None._
 
 
-### INFO (1)
+### INFO (0)
 
-| ID | Subject | Grade | Classification | Severity | Surface |
-|----|---------|-------|----------------|----------|---------|
-| SEQ-02 | all | — | OUT_OF_SEQUENCE | INFO | learning_book |
+_None._
 
 
 ---
 
 ## 4. Findings by product surface
 
-### learning_book
-
-| ID | Subject | Grade | Classification | Severity | Surface |
-|----|---------|-------|----------------|----------|---------|
-| SEQ-02 | all | — | OUT_OF_SEQUENCE | INFO | learning_book |
 
 
 ---
 
 ## 5. Findings by subject
 
-### all (1)
-
-#### SEQ-02 — OUT_OF_SEQUENCE (INFO)
-
-- **Subject / grade / topic:** all / all / pedagogical_sequence
-- **Surface:** learning_book
-- **File:** `lib/learning-book/*-registry.js`
-- **Current behavior:** 32 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).
-- **Oracle status:** sequence_fields_populated
-- **Code evidence:** grep sequence_index in lib/learning-book/*-registry.js → 0 matches
-- **Oracle evidence:** 631 rows with non-null sequence_index in ministry-matrix.draft.json
-- **Recommended action:** Long-term: derive book page order and topic menus from oracle sequence fields.
-- **Immediate fix (Track A):** No
-- **Source verification required:** No
 
 
 ---
@@ -135,7 +114,7 @@ Additional open questions:
 
 When fixes are approved, these files appear most frequently in findings:
 
-- `lib/learning-book/*-registry.js`
+
 
 ---
 

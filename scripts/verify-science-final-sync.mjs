@@ -15,26 +15,32 @@ import {
 import {
   SCIENCE_G1_PAGE_ORDER,
   SCIENCE_G1_BOOK_META,
+  SCIENCE_G1_BOOK_BATCHES,
 } from "../lib/learning-book/science-g1-registry.js";
 import {
   SCIENCE_G2_PAGE_ORDER,
   SCIENCE_G2_BOOK_META,
+  SCIENCE_G2_BOOK_BATCHES,
 } from "../lib/learning-book/science-g2-registry.js";
 import {
   SCIENCE_G3_PAGE_ORDER,
   SCIENCE_G3_BOOK_META,
+  SCIENCE_G3_BOOK_BATCHES,
 } from "../lib/learning-book/science-g3-registry.js";
 import {
   SCIENCE_G4_PAGE_ORDER,
   SCIENCE_G4_BOOK_META,
+  SCIENCE_G4_BOOK_BATCHES,
 } from "../lib/learning-book/science-g4-registry.js";
 import {
   SCIENCE_G5_PAGE_ORDER,
   SCIENCE_G5_BOOK_META,
+  SCIENCE_G5_BOOK_BATCHES,
 } from "../lib/learning-book/science-g5-registry.js";
 import {
   SCIENCE_G6_PAGE_ORDER,
   SCIENCE_G6_BOOK_META,
+  SCIENCE_G6_BOOK_BATCHES,
 } from "../lib/learning-book/science-g6-registry.js";
 import { getLearningBookEntry } from "../lib/learning-book/learning-book-catalog.js";
 import { scienceTopicOptionsForGrade } from "../lib/teacher-portal/teacher-class-topic-options.js";
@@ -50,6 +56,7 @@ import {
   verifyScienceBookRuntime,
   assertScienceMasterPath,
 } from "./lib/verify-science-book-runtime-lib.mjs";
+import { verifyBookSequenceEnforced, verifyGlobalSequenceEnforcement } from "./lib/verify-learning-book-sequence-lib.mjs";
 
 const ROOT = process.cwd();
 const GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
@@ -58,6 +65,7 @@ const BOOK_SPECS = [
   {
     grade: "g1",
     pageOrder: SCIENCE_G1_PAGE_ORDER,
+    batches: SCIENCE_G1_BOOK_BATCHES,
     bookMeta: SCIENCE_G1_BOOK_META,
     batchCount: 2,
     mustExcludeExperiments: true,
@@ -66,6 +74,7 @@ const BOOK_SPECS = [
   {
     grade: "g2",
     pageOrder: SCIENCE_G2_PAGE_ORDER,
+    batches: SCIENCE_G2_BOOK_BATCHES,
     bookMeta: SCIENCE_G2_BOOK_META,
     batchCount: 3,
     mustIncludeExperiments: true,
@@ -74,6 +83,7 @@ const BOOK_SPECS = [
   {
     grade: "g3",
     pageOrder: SCIENCE_G3_PAGE_ORDER,
+    batches: SCIENCE_G3_BOOK_BATCHES,
     bookMeta: SCIENCE_G3_BOOK_META,
     batchCount: 3,
     mustIncludeExperiments: true,
@@ -82,6 +92,7 @@ const BOOK_SPECS = [
   {
     grade: "g4",
     pageOrder: SCIENCE_G4_PAGE_ORDER,
+    batches: SCIENCE_G4_BOOK_BATCHES,
     bookMeta: SCIENCE_G4_BOOK_META,
     batchCount: 3,
     mustIncludeExperiments: true,
@@ -90,6 +101,7 @@ const BOOK_SPECS = [
   {
     grade: "g5",
     pageOrder: SCIENCE_G5_PAGE_ORDER,
+    batches: SCIENCE_G5_BOOK_BATCHES,
     bookMeta: SCIENCE_G5_BOOK_META,
     batchCount: 3,
     mustIncludeExperiments: true,
@@ -98,6 +110,7 @@ const BOOK_SPECS = [
   {
     grade: "g6",
     pageOrder: SCIENCE_G6_PAGE_ORDER,
+    batches: SCIENCE_G6_BOOK_BATCHES,
     bookMeta: SCIENCE_G6_BOOK_META,
     batchCount: 3,
     mustIncludeExperiments: true,
@@ -306,6 +319,14 @@ for (const spec of BOOK_SPECS) {
   for (const err of verifyScienceBookRuntime(spec)) {
     fail("book.runtime", err);
   }
+  for (const err of verifyBookSequenceEnforced(
+    "science",
+    spec.grade,
+    spec.pageOrder,
+    spec.batches
+  )) {
+    fail("book.sequence", err);
+  }
   checkPracticeMappings(spec.grade);
   checkAssignmentTopics(spec.grade);
   await checkActivityGeneration(spec.grade);
@@ -314,6 +335,11 @@ for (const spec of BOOK_SPECS) {
 }
 
 checkDiagnosticLabels();
+
+const globalSeq = verifyGlobalSequenceEnforcement();
+if (!globalSeq.ok) {
+  for (const v of globalSeq.violations) fail("book.sequence.global", v);
+}
 
 const catalogEntry = (gk) => getLearningBookEntry("science", gk);
 for (const gk of GRADE_KEYS) {

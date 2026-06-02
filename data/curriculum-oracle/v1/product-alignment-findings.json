@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generator": "scripts/verify-product-alignment.mjs",
-  "generated_at": "2026-06-02T22:58:13.049Z",
+  "generated_at": "2026-06-02T23:20:15.427Z",
   "oracle_snapshot": {
     "matrix_path": "data/curriculum-oracle/v1/ministry-matrix.draft.json",
     "row_count": 638,
@@ -14,14 +14,14 @@
     "moledet_oracle_rows": 4,
     "geography_oracle_rows": 2,
     "source_inventory_verified_count": null,
-    "finding_count": 1,
+    "finding_count": 0,
     "severity_counts": {
       "P0": 0,
       "P1": 0,
       "P2": 0,
-      "INFO": 1
+      "INFO": 0
     },
-    "generated_at": "2026-06-02T22:58:13.051Z"
+    "generated_at": "2026-06-02T23:20:15.431Z"
   },
   "inputs_read": [
     "data/curriculum-oracle/v1/ministry-matrix.draft.json",
@@ -40,23 +40,5 @@
     "data/science-curriculum.js",
     "utils/parent-report-language/grade-aware-recommendation-templates.js"
   ],
-  "findings": [
-    {
-      "finding_id": "SEQ-02",
-      "subject": "all",
-      "grade": null,
-      "topic": "pedagogical_sequence",
-      "product_surface": "learning_book",
-      "file_path": "lib/learning-book/*-registry.js",
-      "current_behavior": "32 learning-book registries; none reference oracle sequence_index (631 oracle rows have sequence_index).",
-      "oracle_status": "sequence_fields_populated",
-      "evidence_from_code": "grep sequence_index in lib/learning-book/*-registry.js → 0 matches",
-      "evidence_from_oracle": "631 rows with non-null sequence_index in ministry-matrix.draft.json",
-      "classification": "OUT_OF_SEQUENCE",
-      "severity": "INFO",
-      "recommended_action": "Long-term: derive book page order and topic menus from oracle sequence fields.",
-      "can_implement_immediately": false,
-      "source_verification_required": false
-    }
-  ]
+  "findings": []
 }

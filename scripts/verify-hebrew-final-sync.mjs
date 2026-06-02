@@ -49,6 +49,7 @@ import {
   assertHebrewMasterPath,
   checkHebrewLearningPageIdCollisions,
 } from "./lib/verify-hebrew-book-runtime-lib.mjs";
+import { verifyBookSequenceEnforced, verifyGlobalSequenceEnforcement } from "./lib/verify-learning-book-sequence-lib.mjs";
 
 const ROOT = process.cwd();
 const GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
@@ -57,36 +58,42 @@ const BOOK_SPECS = [
   {
     grade: "g1",
     pageOrder: HEBREW_G1_PAGE_ORDER,
+    batches: HEBREW_G1_BOOK_BATCHES,
     bookMeta: HEBREW_G1_BOOK_META,
     batchCount: HEBREW_G1_BOOK_BATCHES.length,
   },
   {
     grade: "g2",
     pageOrder: HEBREW_G2_PAGE_ORDER,
+    batches: HEBREW_G2_BOOK_BATCHES,
     bookMeta: HEBREW_G2_BOOK_META,
     batchCount: HEBREW_G2_BOOK_BATCHES.length,
   },
   {
     grade: "g3",
     pageOrder: HEBREW_G3_PAGE_ORDER,
+    batches: HEBREW_G3_BOOK_BATCHES,
     bookMeta: HEBREW_G3_BOOK_META,
     batchCount: HEBREW_G3_BOOK_BATCHES.length,
   },
   {
     grade: "g4",
     pageOrder: HEBREW_G4_PAGE_ORDER,
+    batches: HEBREW_G4_BOOK_BATCHES,
     bookMeta: HEBREW_G4_BOOK_META,
     batchCount: HEBREW_G4_BOOK_BATCHES.length,
   },
   {
     grade: "g5",
     pageOrder: HEBREW_G5_PAGE_ORDER,
+    batches: HEBREW_G5_BOOK_BATCHES,
     bookMeta: HEBREW_G5_BOOK_META,
     batchCount: HEBREW_G5_BOOK_BATCHES.length,
   },
   {
     grade: "g6",
     pageOrder: HEBREW_G6_PAGE_ORDER,
+    batches: HEBREW_G6_BOOK_BATCHES,
     bookMeta: HEBREW_G6_BOOK_META,
     batchCount: HEBREW_G6_BOOK_BATCHES.length,
   },
@@ -236,6 +243,14 @@ for (const spec of BOOK_SPECS) {
   for (const err of verifyHebrewBookRuntime(spec)) {
     fail("book.runtime", err);
   }
+  for (const err of verifyBookSequenceEnforced(
+    "hebrew",
+    spec.grade,
+    spec.pageOrder,
+    spec.batches
+  )) {
+    fail("book.sequence", err);
+  }
   checkAssignmentTopics(spec.grade);
   await checkActivityGeneration(spec.grade);
 
@@ -243,6 +258,11 @@ for (const spec of BOOK_SPECS) {
 }
 
 checkDiagnosticLabels();
+
+const globalSeq = verifyGlobalSequenceEnforcement();
+if (!globalSeq.ok) {
+  for (const v of globalSeq.violations.slice(0, 10)) fail("book.sequence", v);
+}
 
 for (const gk of GRADE_KEYS) {
   const entry = getLearningBookEntry("hebrew", gk);

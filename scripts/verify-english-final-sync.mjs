@@ -56,6 +56,7 @@ import {
   assertEnglishMasterPath,
   checkEnglishLearningPageIdCollisions,
 } from "./lib/verify-english-book-runtime-lib.mjs";
+import { verifyBookSequenceEnforced, verifyGlobalSequenceEnforcement } from "./lib/verify-learning-book-sequence-lib.mjs";
 
 const ROOT = process.cwd();
 const GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
@@ -64,36 +65,42 @@ const BOOK_SPECS = [
   {
     grade: "g1",
     pageOrder: ENGLISH_G1_PAGE_ORDER,
+    batches: ENGLISH_G1_BOOK_BATCHES,
     bookMeta: ENGLISH_G1_BOOK_META,
     batchCount: ENGLISH_G1_BOOK_BATCHES.length,
   },
   {
     grade: "g2",
     pageOrder: ENGLISH_G2_PAGE_ORDER,
+    batches: ENGLISH_G2_BOOK_BATCHES,
     bookMeta: ENGLISH_G2_BOOK_META,
     batchCount: ENGLISH_G2_BOOK_BATCHES.length,
   },
   {
     grade: "g3",
     pageOrder: ENGLISH_G3_PAGE_ORDER,
+    batches: ENGLISH_G3_BOOK_BATCHES,
     bookMeta: ENGLISH_G3_BOOK_META,
     batchCount: ENGLISH_G3_BOOK_BATCHES.length,
   },
   {
     grade: "g4",
     pageOrder: ENGLISH_G4_PAGE_ORDER,
+    batches: ENGLISH_G4_BOOK_BATCHES,
     bookMeta: ENGLISH_G4_BOOK_META,
     batchCount: ENGLISH_G4_BOOK_BATCHES.length,
   },
   {
     grade: "g5",
     pageOrder: ENGLISH_G5_PAGE_ORDER,
+    batches: ENGLISH_G5_BOOK_BATCHES,
     bookMeta: ENGLISH_G5_BOOK_META,
     batchCount: ENGLISH_G5_BOOK_BATCHES.length,
   },
   {
     grade: "g6",
     pageOrder: ENGLISH_G6_PAGE_ORDER,
+    batches: ENGLISH_G6_BOOK_BATCHES,
     bookMeta: ENGLISH_G6_BOOK_META,
     batchCount: ENGLISH_G6_BOOK_BATCHES.length,
   },
@@ -331,6 +338,14 @@ for (const spec of BOOK_SPECS) {
   for (const err of verifyEnglishBookRuntime(spec)) {
     fail("book.runtime", err);
   }
+  for (const err of verifyBookSequenceEnforced(
+    "english",
+    spec.grade,
+    spec.pageOrder,
+    spec.batches
+  )) {
+    fail("book.sequence", err);
+  }
   checkAssignmentTopics(spec.grade);
   await checkActivityGeneration(spec.grade);
 
@@ -338,6 +353,11 @@ for (const spec of BOOK_SPECS) {
 }
 
 checkDiagnosticLabels();
+
+const globalSeq = verifyGlobalSequenceEnforcement();
+if (!globalSeq.ok) {
+  for (const v of globalSeq.violations.slice(0, 10)) fail("book.sequence", v);
+}
 
 for (const gk of GRADE_KEYS) {
   const entry = getLearningBookEntry("english", gk);

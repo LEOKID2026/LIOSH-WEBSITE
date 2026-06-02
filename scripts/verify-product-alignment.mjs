@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { ORACLE_DIR, REPO_ROOT, readJson, writeJson } from "./lib/ministry-oracle-shared.mjs";
+import { verifyAllCompletedBooksSequenceEnforced } from "../lib/learning-book/learning-book-sequence.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT = path.join(ORACLE_DIR, "product-alignment-findings.json");
@@ -752,14 +753,19 @@ function runChecks(ctx) {
     );
   }
 
-  // SEQ-02 — no book registry consumes oracle sequence_index
+  // SEQ-02 — completed books must enforce learning sequence via resolver
   const registries = listLearningBookRegistries();
-  const registryTexts = registries.map((f) =>
-    fs.readFileSync(path.join(REPO_ROOT, "lib/learning-book", f), "utf8")
+  const completedSubjects = ["math", "geometry", "science", "hebrew", "english"];
+  const completedRegs = registries.filter((f) =>
+    completedSubjects.some((s) => f.startsWith(`${s}-g`))
   );
-  const usesSequenceIndex = registryTexts.some((t) => t.includes("sequence_index"));
-  const oracleWithSequence = rows.filter((r) => r.sequence_index != null).length;
-  if (!usesSequenceIndex && oracleWithSequence > 0) {
+  const unpatchted = completedRegs.filter((f) => {
+    const t = fs.readFileSync(path.join(REPO_ROOT, "lib/learning-book", f), "utf8");
+    return !t.includes("createSequencedBookExports");
+  });
+  const seqCheck = verifyAllCompletedBooksSequenceEnforced();
+  const seqEnforced = seqCheck.ok && unpatchted.length === 0;
+  if (!seqEnforced) {
     findings.push(
       finding({
         finding_id: "SEQ-02",
@@ -767,15 +773,15 @@ function runChecks(ctx) {
         grade: null,
         topic: "pedagogical_sequence",
         product_surface: "learning_book",
-        file_path: "lib/learning-book/*-registry.js",
-        current_behavior: `${registries.length} learning-book registries; none reference oracle sequence_index (${oracleWithSequence} oracle rows have sequence_index).`,
+        file_path: "lib/learning-book/learning-book-sequence.js",
+        current_behavior: `Sequence resolver incomplete: unpatchted=${unpatchted.length}, metaViolations=${seqCheck.violations.length}`,
         oracle_status: "sequence_fields_populated",
-        evidence_from_code: "grep sequence_index in lib/learning-book/*-registry.js → 0 matches",
-        evidence_from_oracle: `${oracleWithSequence} rows with non-null sequence_index in ministry-matrix.draft.json`,
+        evidence_from_code: `unpatchted registries=${JSON.stringify(unpatchted.slice(0, 5))}`,
+        evidence_from_oracle: `${rows.filter((r) => r.sequence_index != null).length} rows with sequence_index`,
         classification: "OUT_OF_SEQUENCE",
-        severity: "INFO",
-        recommended_action: "Long-term: derive book page order and topic menus from oracle sequence fields.",
-        can_implement_immediately: false,
+        severity: "P1",
+        recommended_action: "Wire all completed book registries through createSequencedBookExports and learning-book-sequence-meta.",
+        can_implement_immediately: true,
         source_verification_required: false,
       })
     );

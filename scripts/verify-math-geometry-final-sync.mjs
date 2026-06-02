@@ -29,6 +29,7 @@ import { isPrismVolumeTriangleAllowed } from "../utils/geometry-curriculum-gates
 import { GRADES as MATH_GRADES } from "../utils/math-constants.js";
 import { GRADES as GEOMETRY_GRADES } from "../utils/geometry-constants.js";
 import { generateActivityQuestionSetClient } from "../lib/classroom-activities/generate-activity-questions-client.js";
+import { verifyBookSequenceEnforced, verifyGlobalSequenceEnforcement } from "./lib/verify-learning-book-sequence-lib.mjs";
 
 const ROOT = process.cwd();
 const GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
@@ -135,6 +136,10 @@ function checkBookPages(cfg) {
     } catch (err) {
       fail("book.parse", `${subject} ${gradeKey} ${pageId}: ${err.message}`);
     }
+  }
+
+  for (const err of verifyBookSequenceEnforced(subject, gradeKey, pageOrder, batches)) {
+    fail("book.sequence", err);
   }
 }
 
@@ -373,6 +378,11 @@ for (const gradeKey of GRADE_KEYS) {
 }
 
 checkGeometrySequenceRules();
+
+const globalSeq = verifyGlobalSequenceEnforcement();
+if (!globalSeq.ok) {
+  for (const v of globalSeq.violations) fail("book.sequence.global", v);
+}
 
 for (const gradeKey of GRADE_KEYS) {
   mathStatus[gradeKey] = gradeStatus("math", gradeKey, failuresByGrade[`math:${gradeKey}`]);
