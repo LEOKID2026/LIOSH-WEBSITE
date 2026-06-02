@@ -85,6 +85,18 @@ import {
   saveHebrewBookPracticePreset,
 } from "../../lib/learning-book/hebrew-book-nav";
 import { resolveHebrewPracticeTarget } from "../../lib/learning-book/hebrew-book-practice-map";
+import { ENGLISH_G1_BOOK_META } from "../../lib/learning-book/english-g1-registry";
+import { ENGLISH_G2_BOOK_META } from "../../lib/learning-book/english-g2-registry";
+import { ENGLISH_G3_BOOK_META } from "../../lib/learning-book/english-g3-registry";
+import { ENGLISH_G4_BOOK_META } from "../../lib/learning-book/english-g4-registry";
+import { ENGLISH_G5_BOOK_META } from "../../lib/learning-book/english-g5-registry";
+import { ENGLISH_G6_BOOK_META } from "../../lib/learning-book/english-g6-registry";
+import {
+  getEnglishBookReturnQuerySuffix,
+  getEnglishBookPracticePath,
+  saveEnglishBookPracticePreset,
+} from "../../lib/learning-book/english-book-nav";
+import { resolveEnglishPracticeTarget } from "../../lib/learning-book/english-book-practice-map";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta, getLearningBookMasterPath } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
@@ -191,6 +203,24 @@ const HEBREW_G4_BOOK_UI = makeHebrewBookUi("g4", HEBREW_G4_BOOK_META);
 const HEBREW_G5_BOOK_UI = makeHebrewBookUi("g5", HEBREW_G5_BOOK_META);
 const HEBREW_G6_BOOK_UI = makeHebrewBookUi("g6", HEBREW_G6_BOOK_META);
 
+/** @param {string} grade @param {typeof ENGLISH_G1_BOOK_META} bookMeta */
+function makeEnglishBookUi(grade, bookMeta) {
+  return {
+    bookMeta,
+    getReturnQuerySuffix: getEnglishBookReturnQuerySuffix,
+    resolvePracticeTarget: (pageId) => resolveEnglishPracticeTarget(grade, pageId),
+    getPracticePath: getEnglishBookPracticePath,
+    savePracticePreset: (preset) => saveEnglishBookPracticePreset(grade, preset),
+  };
+}
+
+const ENGLISH_G1_BOOK_UI = makeEnglishBookUi("g1", ENGLISH_G1_BOOK_META);
+const ENGLISH_G2_BOOK_UI = makeEnglishBookUi("g2", ENGLISH_G2_BOOK_META);
+const ENGLISH_G3_BOOK_UI = makeEnglishBookUi("g3", ENGLISH_G3_BOOK_META);
+const ENGLISH_G4_BOOK_UI = makeEnglishBookUi("g4", ENGLISH_G4_BOOK_META);
+const ENGLISH_G5_BOOK_UI = makeEnglishBookUi("g5", ENGLISH_G5_BOOK_META);
+const ENGLISH_G6_BOOK_UI = makeEnglishBookUi("g6", ENGLISH_G6_BOOK_META);
+
 export default function LearningPageBody({
   page,
   prevPageId = null,
@@ -218,6 +248,12 @@ export default function LearningPageBody({
     if (bookSubject === "hebrew" && bookGrade === "g3") return HEBREW_G3_BOOK_UI;
     if (bookSubject === "hebrew" && bookGrade === "g2") return HEBREW_G2_BOOK_UI;
     if (bookSubject === "hebrew" && bookGrade === "g1") return HEBREW_G1_BOOK_UI;
+    if (bookSubject === "english" && bookGrade === "g6") return ENGLISH_G6_BOOK_UI;
+    if (bookSubject === "english" && bookGrade === "g5") return ENGLISH_G5_BOOK_UI;
+    if (bookSubject === "english" && bookGrade === "g4") return ENGLISH_G4_BOOK_UI;
+    if (bookSubject === "english" && bookGrade === "g3") return ENGLISH_G3_BOOK_UI;
+    if (bookSubject === "english" && bookGrade === "g2") return ENGLISH_G2_BOOK_UI;
+    if (bookSubject === "english" && bookGrade === "g1") return ENGLISH_G1_BOOK_UI;
     if (bookSubject === "science" && bookGrade === "g6") return SCIENCE_G6_BOOK_UI;
     if (bookSubject === "science" && bookGrade === "g5") return SCIENCE_G5_BOOK_UI;
     if (bookSubject === "science" && bookGrade === "g4") return SCIENCE_G4_BOOK_UI;
@@ -318,7 +354,9 @@ export default function LearningPageBody({
         ? "נעבור לתרגול של הנושא הזה במדעים"
         : bookSubject === "hebrew"
           ? "נעבור לתרגול של הנושא הזה בעברית"
-          : "נעבור לתרגול של הנושא הזה בחשבון";
+          : bookSubject === "english"
+            ? "נעבור לתרגול של הנושא הזה באנגלית"
+            : "נעבור לתרגול של הנושא הזה בחשבון";
 
   return (
     <>

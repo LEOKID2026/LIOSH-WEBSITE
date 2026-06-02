@@ -114,6 +114,19 @@ import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsV
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
+import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
+import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
+import { getEnglishBookHref } from "../../lib/learning-book/resolve-english-book-page";
+import {
+  ENGLISH_BOOK_GRADES,
+  consumeAnyEnglishBookLearningSnapshot,
+  consumeAnyEnglishBookPracticePreset,
+  isEnglishBookPracticeEntry,
+  saveEnglishBookLearningSnapshot,
+  withEnglishBookLearningReturn,
+} from "../../lib/learning-book/english-book-nav";
+
+const ENGLISH_BOOK_GRADE_SET = new Set(ENGLISH_BOOK_GRADES);
 
 /** Grades 1–2: hard band excluded from default practice UI (owner policy). */
 function englishLevelKeysForGradeKey(gradeKey) {
@@ -604,6 +617,28 @@ export default function EnglishMaster() {
   const englishPendingDiagnosticProbeRef = useRef(null);
   const englishHypothesisLedgerRef = useRef(null);
   const englishGrammarRecentRowKeysRef = useRef([]);
+  const bookPracticePresetRef = useRef(null);
+  const practiceForceKindRef = useRef(null);
+  const practiceForceSkillIdRef = useRef(null);
+  const bookPracticeSemanticTopicRef = useRef(null);
+  const bookIndexHref = getLearningBookIndexHref("english", grade);
+  const bookTopicHref = useMemo(() => {
+    if (!ENGLISH_BOOK_GRADE_SET.has(grade)) return null;
+    return getEnglishBookHref({ grade, topic });
+  }, [grade, topic]);
+  const questionBookHref = useMemo(() => {
+    if (mode !== "learning" || !currentQuestion) return null;
+    if (!ENGLISH_BOOK_GRADE_SET.has(grade)) return null;
+    const params = currentQuestion.params || {};
+    return getEnglishBookHref({
+      grade,
+      topic: currentQuestion.topic || topic,
+      forceKind: params.bookPageId ?? practiceForceKindRef.current,
+      pageId: params.bookPageId ?? null,
+      listKey: params.listKey ?? null,
+      englishPoolKey: params.englishPoolKey ?? null,
+    });
+  }, [grade, mode, currentQuestion, topic]);
   const [showPracticeModal, setShowPracticeModal] = useState(false);
   const [showReferenceModal, setShowReferenceModal] = useState(false);
   const [referenceCategory, setReferenceCategory] = useState(REFERENCE_CATEGORY_KEYS[0]);
@@ -632,6 +667,69 @@ export default function EnglishMaster() {
     }
     return "";
   });
+
+  const openBookFromLearning = useCallback(
+    (href) => {
+      if (!href) return;
+      if (!ENGLISH_BOOK_GRADE_SET.has(grade)) return;
+      const snapshot = {
+        gameActive: true,
+        mode,
+        grade,
+        gradeNumber,
+        level,
+        topic,
+        currentQuestion,
+        score,
+        streak,
+        correct,
+        wrong,
+        selectedAnswer,
+        typedAnswer,
+        feedback,
+        questionStartTime,
+      };
+      saveEnglishBookLearningSnapshot(grade, snapshot);
+      router.push(withEnglishBookLearningReturn(href));
+    },
+    [
+      mode,
+      grade,
+      gradeNumber,
+      level,
+      topic,
+      currentQuestion,
+      score,
+      streak,
+      correct,
+      wrong,
+      selectedAnswer,
+      typedAnswer,
+      feedback,
+      questionStartTime,
+      router,
+    ]
+  );
+
+  const applyBookPracticePreset = useCallback((preset) => {
+    if (!preset || preset.mode !== "learning") return;
+    const presetGrade = preset.grade;
+    if (!ENGLISH_BOOK_GRADE_SET.has(presetGrade)) return;
+    const presetTopic = preset.topic;
+    if (!presetTopic || typeof preset.forceKind !== "string") return;
+    bookPracticePresetRef.current = preset;
+    practiceForceKindRef.current = preset.forceKind || null;
+    practiceForceSkillIdRef.current = preset.skillId || null;
+    bookPracticeSemanticTopicRef.current = presetTopic;
+    setGrade(presetGrade);
+    const presetGradeNumber = gradeKeyToNumber(presetGrade);
+    if (presetGradeNumber) {
+      setGradeNumber(presetGradeNumber);
+    }
+    setMode("learning");
+    setTopic(presetTopic);
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
@@ -652,12 +750,15 @@ export default function EnglishMaster() {
           } catch {}
         }
         const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey) {
+        if (gradeKey && !bookPracticePresetRef.current) {
           setGrade(gradeKey);
           const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
           if (gradeNumberFromDb) {
             setGradeNumber(gradeNumberFromDb);
           }
+        }
+        if (bookPracticePresetRef.current) {
+          applyBookPracticePreset(bookPracticePresetRef.current);
         }
       })
       .catch(() => {
@@ -666,7 +767,40 @@ export default function EnglishMaster() {
     return () => {
       mounted = false;
     };
+  }, [applyBookPracticePreset]);
+
+  useEffect(() => {
+    const snap = consumeAnyEnglishBookLearningSnapshot();
+    if (!snap || snap.gameActive !== true) return;
+    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    if (typeof snap.grade === "string") setGrade(snap.grade);
+    if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
+    if (typeof snap.level === "string") setLevel(snap.level);
+    if (typeof snap.topic === "string") setTopic(snap.topic);
+    setGameActive(true);
+    if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
+    setScore(typeof snap.score === "number" ? snap.score : 0);
+    setStreak(typeof snap.streak === "number" ? snap.streak : 0);
+    setCorrect(typeof snap.correct === "number" ? snap.correct : 0);
+    setWrong(typeof snap.wrong === "number" ? snap.wrong : 0);
+    setSelectedAnswer(snap.selectedAnswer ?? null);
+    setTypedAnswer(typeof snap.typedAnswer === "string" ? snap.typedAnswer : "");
+    setFeedback(snap.feedback ?? null);
+    setQuestionStartTime(
+      typeof snap.questionStartTime === "number"
+        ? snap.questionStartTime
+        : Date.now()
+    );
   }, []);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (!isEnglishBookPracticeEntry(router.query)) return;
+    const preset = consumeAnyEnglishBookPracticePreset();
+    if (preset) {
+      applyBookPracticePreset(preset);
+    }
+  }, [router.isReady, router.query, applyBookPracticePreset]);
 
   useEffect(() => {
     setLevel((prev) => clampEnglishLevelForGrade(grade, prev));
@@ -890,6 +1024,9 @@ export default function EnglishMaster() {
     const numeric = Number(value);
     if (!numeric) return;
     const nextGradeKey = GRADE_ORDER[numeric - 1] || "g3";
+    practiceForceKindRef.current = null;
+    practiceForceSkillIdRef.current = null;
+    bookPracticeSemanticTopicRef.current = null;
     setGradeNumber(numeric);
     setGrade(nextGradeKey);
     setLevel((prev) => clampEnglishLevelForGrade(nextGradeKey, prev));
@@ -1241,12 +1378,13 @@ export default function EnglishMaster() {
 
   useEffect(() => {
     if (showMixedSelector) return;
+    if (practiceForceKindRef.current) return;
     const allowed = GRADES[grade].topics;
     if (!allowed.includes(topic)) {
       const firstAllowed = allowed.find((t) => t !== "mixed") || allowed[0];
       setTopic(firstAllowed);
     }
-  }, [grade]);
+  }, [grade, showMixedSelector]);
 
   useEffect(() => {
     const availableTopics = GRADES[grade].topics.filter((t) => t !== "mixed");
@@ -1451,6 +1589,9 @@ export default function EnglishMaster() {
     let gradeForQuestion = grade;
     let levelForQuestion = level;
     let topicForState = topic;
+    if (practiceForceKindRef.current && bookPracticeSemanticTopicRef.current) {
+      topicForState = bookPracticeSemanticTopicRef.current;
+    }
     let mixedConfig = topic === "mixed" ? mixedTopics : null;
 
     if (focusedPracticeMode === "mistakes" && mistakes.length > 0) {
@@ -1517,6 +1658,8 @@ export default function EnglishMaster() {
           grammarProbe: probeAtStart,
           grammarRecentRowKeys: englishGrammarRecentRowKeysRef.current,
           probeMetaHolder,
+          forceKind: practiceForceKindRef.current,
+          forceSkillId: practiceForceSkillIdRef.current,
         }
       );
       attempts++;
@@ -2547,7 +2690,15 @@ export default function EnglishMaster() {
           )}
 
                     {!gameActive ? (
-            <div className="flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+            <div className="relative flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+              {bookIndexHref ? (
+                <LearningBookIndexTile
+                  subject="english"
+                  grade={grade}
+                  testId={`english-${grade}-book-index-button`}
+                  onClick={() => router.push(bookIndexHref)}
+                />
+              ) : null}
               <div className="w-full flex justify-center mb-3 md:mb-4 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] px-0.5">
                 <div
                   className="inline-flex flex-nowrap items-center justify-center gap-2 md:gap-2.5 lg:gap-3 w-max max-w-full min-w-0"
@@ -2598,6 +2749,9 @@ export default function EnglishMaster() {
                     onChange={(e) => {
                       const newTopic = e.target.value;
                       setGameActive(false);
+                      practiceForceKindRef.current = null;
+                      practiceForceSkillIdRef.current = null;
+                      bookPracticeSemanticTopicRef.current = null;
                       if (newTopic === "mixed") {
                         setTopic(newTopic);
                         setShowMixedSelector(true);
@@ -2722,6 +2876,16 @@ export default function EnglishMaster() {
                 >
                   📚 לוח עזרה
                 </button>
+                {bookTopicHref ? (
+                  <button
+                    type="button"
+                    data-testid={`english-${grade}-book-topic-button`}
+                    onClick={() => router.push(bookTopicHref)}
+                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                  >
+                    📖 הסבר בספר
+                  </button>
+                ) : null}
                 <div
                   className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
                   title="מטבעות משחק"
@@ -2789,7 +2953,18 @@ export default function EnglishMaster() {
                     </div>
                   )}
 
-                  <div className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2">
+                  <div className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2 relative">
+                    {questionBookHref ? (
+                      <button
+                        type="button"
+                        data-testid={`english-${grade}-book-question-button`}
+                        onClick={() => openBookFromLearning(questionBookHref)}
+                        className="absolute top-0 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                        title="הסבר בספר לנושא הנוכחי"
+                      >
+                        📖 הסבר
+                      </button>
+                    ) : null}
                     <StudentQuestionDisplay
                       testId="english-question-stem"
                       question={currentQuestion.question}

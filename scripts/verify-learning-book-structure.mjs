@@ -387,6 +387,34 @@ for (const [grade, pages] of Object.entries(HEBREW_GRADE_EXPECTATIONS)) {
   }
 }
 
+const ENGLISH_GRADE_EXPECTATIONS = {
+  g1: 10,
+  g2: 15,
+  g3: 19,
+  g4: 19,
+  g5: 21,
+  g6: 17,
+};
+
+for (const [grade, pages] of Object.entries(ENGLISH_GRADE_EXPECTATIONS)) {
+  const entry = getLearningBookEntry("english", grade);
+  if (!entry || entry.status !== "authored") {
+    fail(`english/${grade} must be authored in catalog`);
+    continue;
+  }
+  if (entry.registry.pageOrder.length !== pages) {
+    fail(
+      `english/${grade} expected ${pages} pages, got ${entry.registry.pageOrder.length}`
+    );
+  }
+  if (entry.features?.practice !== true) {
+    fail(`english/${grade} must enable practice feature`);
+  }
+  if (!entry.meta.bookTitleHe?.includes("אנגלית")) {
+    fail(`english/${grade} book title must use אנגלית`);
+  }
+}
+
 if (failures > 0) {
   console.error(`\n${failures} failure(s).`);
   process.exit(1);

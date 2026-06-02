@@ -22,6 +22,12 @@ import {
   probeMatchesSession,
   selectQuestionWithProbe,
 } from "./active-diagnostic-runtime/index.js";
+import {
+  parseEnglishTopicFromSkillId,
+  parseEnglishWordListKeyFromSkillId,
+  parseEnglishPoolKeyFromSkillId,
+  englishWordListKeyFromPageId,
+} from "../lib/learning-book/english-book-practice-map.js";
 export const ENGLISH_LEVELS = {
   easy: { name: "קל", maxWords: 5, complexity: "basic" },
   medium: { name: "בינוני", maxWords: 10, complexity: "intermediate" },
@@ -264,6 +270,19 @@ export function generateQuestion(
     selectedTopic = topic;
   }
 
+  const forceKind =
+    probeOpts?.forceKind != null ? String(probeOpts.forceKind).trim() : "";
+  const forceSkillId =
+    probeOpts?.forceSkillId != null ? String(probeOpts.forceSkillId).trim() : "";
+  const forcedTopic = parseEnglishTopicFromSkillId(forceSkillId);
+  if (forcedTopic && !isMixed) {
+    selectedTopic = forcedTopic;
+  }
+  const forcedWordListKey =
+    parseEnglishWordListKeyFromSkillId(forceSkillId) ||
+    englishWordListKeyFromPageId(forceKind);
+  const forcedPoolKey = parseEnglishPoolKeyFromSkillId(forceSkillId);
+
   let question,
     correctAnswer,
     params = {};
@@ -313,9 +332,12 @@ export function generateQuestion(
   ).filter((k) => WORD_LISTS[k]);
   const vocabKeysForMcq =
     gradeScopedVocabKeys.length > 0 ? gradeScopedVocabKeys : ["colors"];
-  const selectedList =
+  let activeVocabList =
     fallbackWordLists[Math.floor(Math.random() * fallbackWordLists.length)];
-  const words = WORD_LISTS[selectedList] || WORD_LISTS.colors;
+  if (forcedWordListKey && WORD_LISTS[forcedWordListKey]) {
+    activeVocabList = forcedWordListKey;
+  }
+  const words = WORD_LISTS[activeVocabList] || WORD_LISTS.colors;
   const wordEntries = Object.entries(words);
   const randomWord =
     wordEntries[Math.floor(Math.random() * wordEntries.length)] || [
@@ -337,7 +359,7 @@ export function generateQuestion(
           word: randomWord[0],
           translation: randomWord[1],
           direction: "en_to_he",
-          listKey: selectedList,
+          listKey: activeVocabList,
           patternFamily: "vocab_translation",
         };
       } else {
@@ -347,17 +369,21 @@ export function generateQuestion(
           word: randomWord[1],
           translation: randomWord[0],
           direction: "he_to_en",
-          listKey: selectedList,
+          listKey: activeVocabList,
           patternFamily: "vocab_recall_en",
         };
       }
+      if (forceKind) params.bookPageId = forceKind;
       break;
     }
 
     case "grammar": {
-      const grammarPools = gradeProfile.grammarPools || ["present_simple"];
+      const grammarPoolKeys =
+        forcedPoolKey && GRAMMAR_POOLS[forcedPoolKey]
+          ? [forcedPoolKey]
+          : gradeProfile.grammarPools || ["present_simple"];
       let pool = [];
-      grammarPools.forEach((key) => {
+      grammarPoolKeys.forEach((key) => {
         if (GRAMMAR_POOLS[key]) {
           const rows = GRAMMAR_POOLS[key].filter((item) =>
             englishPoolItemAllowedWithClassSplit("grammar", key, item, gradeKey)
@@ -441,6 +467,8 @@ export function generateQuestion(
         },
         grammarQ
       );
+      if (forcedPoolKey) params.englishPoolKey = forcedPoolKey;
+      if (forceKind) params.bookPageId = forceKind;
       if (grammarProbePick && probeOpts?.probeMetaHolder) {
         probeOpts.probeMetaHolder.current = {
           probeSnapshot: grammarProbePick.snapshot,
@@ -454,9 +482,12 @@ export function generateQuestion(
     }
 
     case "translation": {
-      const translationPools = gradeProfile.translationPools || ["classroom"];
+      const translationPoolKeys =
+        forcedPoolKey && TRANSLATION_POOLS[forcedPoolKey]
+          ? [forcedPoolKey]
+          : gradeProfile.translationPools || ["classroom"];
       let sentencesPool = [];
-      translationPools.forEach((key) => {
+      translationPoolKeys.forEach((key) => {
         if (TRANSLATION_POOLS[key]) {
           const rows = TRANSLATION_POOLS[key].filter((item) =>
             englishPoolItemAllowedWithClassSplit("translation", key, item, gradeKey)
@@ -528,13 +559,18 @@ export function generateQuestion(
           patternFamily: trFam,
         };
       }
+      if (forcedPoolKey) params.englishPoolKey = forcedPoolKey;
+      if (forceKind) params.bookPageId = forceKind;
       break;
     }
 
     case "sentences": {
-      const sentencePools = gradeProfile.sentencePools || ["routine"];
+      const sentencePoolKeys =
+        forcedPoolKey && SENTENCE_POOLS[forcedPoolKey]
+          ? [forcedPoolKey]
+          : gradeProfile.sentencePools || ["routine"];
       let pool = [];
-      sentencePools.forEach((key) => {
+      sentencePoolKeys.forEach((key) => {
         if (SENTENCE_POOLS[key]) {
           const rows = SENTENCE_POOLS[key].filter((item) =>
             englishPoolItemAllowedWithClassSplit("sentence", key, item, gradeKey)
@@ -588,6 +624,8 @@ export function generateQuestion(
           ? template.options
           : null,
       };
+      if (forcedPoolKey) params.englishPoolKey = forcedPoolKey;
+      if (forceKind) params.bookPageId = forceKind;
       break;
     }
 

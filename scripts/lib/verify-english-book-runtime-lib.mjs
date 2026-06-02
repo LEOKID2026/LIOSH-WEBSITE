@@ -46,8 +46,8 @@ export function verifyEnglishBookRuntime(spec) {
   ) {
     errors.push(`${label} page order mismatch vs registry`);
   }
-  if (entry?.features?.practice === true) {
-    errors.push(`${label} must not enable practice feature (no mappings yet)`);
+  if (entry?.features?.practice !== true) {
+    errors.push(`${label} must enable practice feature`);
   }
   if (getLearningBookIndexHref("english", spec.grade) !== spec.bookMeta.routeBase) {
     errors.push(`${label} index href mismatch`);
