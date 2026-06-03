@@ -26,11 +26,177 @@ function parseSimpleExercise(text) {
 }
 
 /**
+ * @param {number|null|undefined} n
+ * @returns {boolean}
+ */
+function isPosInt(n) {
+  return typeof n === "number" && Number.isFinite(n) && n >= 0;
+}
+
+/**
+ * @param {number} n
+ * @param {number} d
+ * @returns {{ num: number, den: number, missingDen?: boolean }|null}
+ */
+function fracPart(n, d, opts = {}) {
+  if (!isPosInt(n) || !isPosInt(d) || d === 0) {
+    if (opts.missingDen && isPosInt(n)) {
+      return { num: Math.round(n), den: 0, missingDen: true };
+    }
+    return null;
+  }
+  return { num: Math.round(n), den: Math.round(d) };
+}
+
+/**
+ * Extract read-only fraction operands for scratchpad display.
+ * Never returns result numerators/denominators from params.
+ *
  * @param {Record<string, unknown>|null|undefined} question
- * @returns {{ a: number|null, b: number|null, operation: string|null }}
+ * @returns {{ fractionOperands: { num: number, den: number, missingDen?: boolean }[], fractionOperator: string|null }}
+ */
+export function extractScratchpadFractionLayout(question) {
+  const empty = { fractionOperands: [], fractionOperator: null };
+  if (!question) return empty;
+
+  const params =
+    question.params && typeof question.params === "object" ? question.params : {};
+  const kind = String(params.kind || "");
+
+  const pair = (n1, d1, n2, d2, op) => {
+    const f1 = fracPart(n1, d1);
+    const f2 = fracPart(n2, d2);
+    if (!f1 || !f2) return empty;
+    return { fractionOperands: [f1, f2], fractionOperator: op };
+  };
+
+  const single = (n, d) => {
+    const f = fracPart(n, d);
+    if (!f) return empty;
+    return { fractionOperands: [f], fractionOperator: null };
+  };
+
+  if (kind === "frac_add_sub" || kind.includes("frac_same_den")) {
+    const den1 = params.den1 ?? params.den;
+    const den2 = params.den2 ?? params.den;
+    const op = params.op === "sub" ? "−" : "+";
+    return pair(params.n1, den1, params.n2, den2, op);
+  }
+
+  if (kind === "frac_multiply") {
+    return pair(params.n1, params.den1, params.n2, params.den2, "×");
+  }
+
+  if (kind === "frac_divide") {
+    return pair(params.n1, params.den1, params.n2, params.den2, "÷");
+  }
+
+  if (kind.includes("frac_compare")) {
+    const den = params.den;
+    const f1 = fracPart(params.n1, den);
+    const f2 = fracPart(params.n2, den);
+    if (!f1 || !f2) return empty;
+    return { fractionOperands: [f1, f2], fractionOperator: null };
+  }
+
+  if (kind.includes("frac_simplify") || kind === "frac_as_division") {
+    const n = params.num ?? params.n1 ?? params.improperNum;
+    const d = params.den ?? params.den1;
+    return single(n, d);
+  }
+
+  if (kind === "frac_to_mixed" || kind === "mixed_to_frac") {
+    const n =
+      params.improperNum ??
+      (isPosInt(params.whole) && isPosInt(params.num) && isPosInt(params.den)
+        ? params.whole * params.den + params.num
+        : null);
+    return single(n, params.den);
+  }
+
+  if (kind === "frac_half" || kind === "frac_half_reverse") {
+    return single(1, 2);
+  }
+
+  if (kind === "frac_quarter" || kind === "frac_quarter_reverse") {
+    return single(1, 4);
+  }
+
+  if (kind.includes("frac_equiv_missing_den")) {
+    const f1 = fracPart(params.numBig, params.bigDen);
+    const f2 = fracPart(params.numSmall, 0, { missingDen: true });
+    if (!f1 || !f2) return empty;
+    return { fractionOperands: [f1, f2], fractionOperator: "=" };
+  }
+
+  if (kind.includes("frac_reduce") || kind.includes("frac_expand")) {
+    const n = params.num ?? params.expandedNum;
+    const d = params.den ?? params.expandedDen;
+    return single(n, d);
+  }
+
+  const text = [question.exerciseText, question.question]
+    .filter((t) => typeof t === "string" && t.trim())
+    .join(" ")
+    .replace(/\u2066|\u2069/g, "");
+
+  const binary = text.match(
+    /(\d+)\s*\/\s*(\d+)\s*([+\-−×x*÷=])\s*(\d+)\s*\/\s*(\d+)/
+  );
+  if (binary) {
+    const opMap = {
+      "+": "+",
+      "-": "−",
+      "−": "−",
+      "×": "×",
+      x: "×",
+      "*": "×",
+      "÷": "÷",
+      "=": "=",
+    };
+    return pair(
+      Number(binary[1]),
+      Number(binary[2]),
+      Number(binary[4]),
+      Number(binary[5]),
+      opMap[binary[3]] || binary[3]
+    );
+  }
+
+  const singles = [...text.matchAll(/(\d+)\s*\/\s*(\d+)/g)];
+  if (singles.length >= 2) {
+    const f1 = fracPart(Number(singles[0][1]), Number(singles[0][2]));
+    const f2 = fracPart(Number(singles[1][1]), Number(singles[1][2]));
+    if (!f1 || !f2) return empty;
+    let op = null;
+    if (text.includes("+")) op = "+";
+    else if (text.includes("−") || text.includes("-")) op = "−";
+    else if (text.includes("×")) op = "×";
+    else if (text.includes("÷")) op = "÷";
+    return { fractionOperands: [f1, f2], fractionOperator: op };
+  }
+
+  if (singles.length === 1) {
+    return single(Number(singles[0][1]), Number(singles[0][2]));
+  }
+
+  return empty;
+}
+
+/**
+ * @param {Record<string, unknown>|null|undefined} question
+ * @returns {{ a: number|null, b: number|null, operation: string|null, fractionOperands: { num: number, den: number, missingDen?: boolean }[], fractionOperator: string|null }}
  */
 export function extractScratchpadOperands(question) {
-  if (!question) return { a: null, b: null, operation: null };
+  if (!question) {
+    return {
+      a: null,
+      b: null,
+      operation: null,
+      fractionOperands: [],
+      fractionOperator: null,
+    };
+  }
 
   const operation =
     typeof question.operation === "string" ? question.operation : null;
@@ -76,7 +242,9 @@ export function extractScratchpadOperands(question) {
   if (a != null) a = Math.max(0, Math.round(a));
   if (b != null) b = Math.max(0, Math.round(b));
 
-  return { a, b, operation };
+  const { fractionOperands, fractionOperator } = extractScratchpadFractionLayout(question);
+
+  return { a, b, operation, fractionOperands, fractionOperator };
 }
 
 /**

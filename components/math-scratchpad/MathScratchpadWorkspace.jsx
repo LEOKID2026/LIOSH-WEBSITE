@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import {
   decomposeBaseTen,
   digitCount,
@@ -593,40 +593,127 @@ function DivisionGroupsWorkspace({ operands }) {
   );
 }
 
-function FractionStripsWorkspace() {
-  const stripCount = 3;
-  const segments = 8;
-  const [strips, setStrips] = useState(() =>
-    Array.from({ length: stripCount }, () => Array(segments).fill(false))
-  );
+function FractionStack({
+  numerator,
+  denominator,
+  editable = false,
+  missingDen = false,
+  onNumeratorChange,
+  onDenominatorChange,
+}) {
+  const operandNumClass =
+    "min-w-[2.75rem] h-10 px-1 text-center text-xl md:text-2xl font-bold rounded text-white bg-sky-500/25 border border-sky-300/30";
+  const operandDenClass =
+    "min-w-[2.75rem] h-10 px-1 text-center text-xl md:text-2xl font-bold rounded text-white bg-sky-500/25 border border-sky-300/30";
+  const resultCellClass =
+    "min-w-[2.75rem] h-10 px-1 text-center text-xl md:text-2xl font-bold bg-white/10 rounded text-white";
 
-  useEffect(() => {
-    setStrips(Array.from({ length: stripCount }, () => Array(segments).fill(false)));
-  }, []);
+  const numValue = numerator == null ? "" : String(numerator);
+  const denValue = denominator == null ? "" : String(denominator);
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-lg" dir="ltr" onKeyDown={stopKeyBubble}>
-      {strips.map((strip, si) => (
-        <div key={si} className="flex gap-0.5 justify-center">
-          {strip.map((filled, seg) => (
-            <button
-              key={seg}
-              type="button"
-              aria-label={`strip ${si + 1} segment ${seg + 1}`}
-              onClick={() =>
-                setStrips((prev) => {
-                  const next = prev.map((row) => [...row]);
-                  next[si][seg] = !next[si][seg];
-                  return next;
-                })
-              }
-              className={`h-10 flex-1 max-w-[2.5rem] rounded-sm border ${
-                filled ? "bg-orange-400/80 border-orange-200" : "bg-white/5 border-white/25"
-              }`}
+    <div className="inline-flex flex-col items-center justify-center min-w-[3rem]">
+      {editable && !missingDen ? (
+        <ScratchpadDigitInput
+          value={numValue}
+          onChange={onNumeratorChange}
+          className={resultCellClass}
+          aria-label="fraction numerator"
+          maxLength={3}
+        />
+      ) : (
+        <ScratchpadDigitDisplay
+          value={numValue}
+          className={operandNumClass}
+          aria-label="fraction numerator"
+        />
+      )}
+      <div className="w-full min-w-[2.75rem] border-t-2 border-white/70 my-1" aria-hidden />
+      {editable || missingDen ? (
+        <ScratchpadDigitInput
+          value={denValue}
+          onChange={onDenominatorChange}
+          className={resultCellClass}
+          aria-label="fraction denominator"
+          maxLength={3}
+        />
+      ) : (
+        <ScratchpadDigitDisplay
+          value={denValue}
+          className={operandDenClass}
+          aria-label="fraction denominator"
+        />
+      )}
+    </div>
+  );
+}
+
+function FractionStripsWorkspace({ operands }) {
+  const { fractionOperands = [], fractionOperator = null } = operands;
+  const [resultNum, setResultNum] = useState("");
+  const [resultDen, setResultDen] = useState("");
+
+  const layoutKey = fractionOperands
+    .map((f) => `${f.num}/${f.den}${f.missingDen ? "?" : ""}`)
+    .join("|");
+
+  useEffect(() => {
+    setResultNum("");
+    setResultDen("");
+  }, [layoutKey, fractionOperator]);
+
+  const secondMissingDen = fractionOperands[1]?.missingDen;
+  const showEqualsResult = fractionOperands.length > 0 && !secondMissingDen;
+
+  return (
+    <div
+      className="flex flex-col items-center justify-center w-full max-w-xl py-2"
+      dir="ltr"
+      onKeyDown={stopKeyBubble}
+    >
+      <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+        {fractionOperands.map((frac, index) => (
+          <Fragment key={`${frac.num}-${frac.den}-${index}`}>
+            {index > 0 && fractionOperator ? (
+              <span className="text-3xl md:text-4xl font-bold text-white/85 leading-none select-none">
+                {fractionOperator}
+              </span>
+            ) : null}
+            <FractionStack
+              numerator={frac.num}
+              denominator={frac.missingDen ? null : frac.den}
+              missingDen={Boolean(frac.missingDen)}
+              editable={Boolean(frac.missingDen)}
+              onDenominatorChange={frac.missingDen ? setResultDen : undefined}
             />
-          ))}
-        </div>
-      ))}
+          </Fragment>
+        ))}
+
+        {showEqualsResult ? (
+          <>
+            <span className="text-3xl md:text-4xl font-bold text-white/85 leading-none select-none">
+              =
+            </span>
+            <FractionStack
+              numerator={resultNum}
+              denominator={resultDen}
+              editable
+              onNumeratorChange={setResultNum}
+              onDenominatorChange={setResultDen}
+            />
+          </>
+        ) : null}
+
+        {fractionOperands.length === 0 ? (
+          <FractionStack
+            numerator={resultNum}
+            denominator={resultDen}
+            editable
+            onNumeratorChange={setResultNum}
+            onDenominatorChange={setResultDen}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -930,7 +1017,7 @@ export default function MathScratchpadWorkspace({ type, operands }) {
     case "blank_division_groups":
       return <DivisionGroupsWorkspace operands={operands} />;
     case "blank_fraction_strips":
-      return <FractionStripsWorkspace />;
+      return <FractionStripsWorkspace operands={operands} />;
     case "blank_decimal_place_value_table":
       return <DecimalPlaceValueTableWorkspace operands={operands} />;
     case "blank_percent_grid":

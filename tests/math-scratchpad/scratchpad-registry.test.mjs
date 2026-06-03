@@ -187,7 +187,13 @@ test("word problems use structure board without operation hints", () => {
 test("extractScratchpadOperands reads a/b from question", () => {
   assert.deepEqual(
     extractScratchpadOperands({ operation: "addition", a: 7, b: 3 }),
-    { a: 7, b: 3, operation: "addition" }
+    {
+      a: 7,
+      b: 3,
+      operation: "addition",
+      fractionOperands: [],
+      fractionOperator: null,
+    }
   );
 });
 
@@ -215,11 +221,41 @@ test("extractScratchpadOperands never returns answer fields", () => {
     a: 5,
     b: 3,
     correctAnswer: 8,
-    params: { answer: 8, result: 8 },
+    params: { answer: 8, result: 8, resNum: 8, commonDen: 12, finalNum: 2, finalDen: 3 },
   });
-  assert.deepEqual(Object.keys(result).sort(), ["a", "b", "operation"]);
+  assert.deepEqual(Object.keys(result).sort(), [
+    "a",
+    "b",
+    "fractionOperands",
+    "fractionOperator",
+    "operation",
+  ]);
   assert.equal(result.a, 5);
   assert.equal(result.b, 3);
+});
+
+test("extractScratchpadFractionLayout reads add/sub fractions from params", () => {
+  const result = extractScratchpadOperands({
+    operation: "fractions",
+    params: { kind: "frac_same_den_add", n1: 2, n2: 1, den: 4, op: "add" },
+  });
+  assert.deepEqual(result.fractionOperands, [
+    { num: 2, den: 4 },
+    { num: 1, den: 4 },
+  ]);
+  assert.equal(result.fractionOperator, "+");
+});
+
+test("extractScratchpadFractionLayout parses exercise text", () => {
+  const result = extractScratchpadOperands({
+    operation: "fractions",
+    exerciseText: "3/4 + 1/4 = __",
+  });
+  assert.deepEqual(result.fractionOperands, [
+    { num: 3, den: 4 },
+    { num: 1, den: 4 },
+  ]);
+  assert.equal(result.fractionOperator, "+");
 });
 
 test("digitCount helper", () => {
