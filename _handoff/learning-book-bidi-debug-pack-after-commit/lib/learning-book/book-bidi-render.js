@@ -9,7 +9,6 @@ import {
   bookMathIsolateStyle,
   bookProseIsolateStyle,
   isFormulaLikeBody,
-  isMathLikeText,
   splitFormulaTokens,
   splitHebrewMathRuns,
   splitTextAndMathRuns,
@@ -196,41 +195,6 @@ export function hasProseBetweenMathRuns(line) {
     }
   }
   return false;
-}
-
-/**
- * Split "חשבו: 68 − 24 = ?" into Hebrew prefix + one LTR equation island.
- * @param {string} text
- * @returns {{ prefix: string, equation: string }|null}
- */
-export function splitInlineHebrewTaskEquation(text) {
-  const input = String(text || "").trim();
-  const match = input.match(/^([\u0590-\u05FF][\u0590-\u05FF\s]*:)\s*(\d[\s\S]+)$/u);
-  if (!match?.[2]) return null;
-  const equation = stripStrayMarkdown(match[2]).trim();
-  if (!isMathLikeText(equation)) return null;
-  return { prefix: stripStrayMarkdown(match[1]).trim(), equation };
-}
-
-/**
- * Split comma-separated Hebrew formula rows like "2 מאות = 200, 3 עשרות = 30".
- * @param {string} body
- * @returns {string[]|null}
- */
-export function splitCommaSeparatedFormulaDisplay(body) {
-  const input = String(body || "").trim();
-  if (!input.includes(",")) return null;
-  if ((input.match(/=/g) || []).length < 2) return null;
-  if (!HEBREW_CHAR.test(input)) return null;
-
-  const parts = input
-    .split(/,\s+(?=[\u0590-\u05FF\d*])/)
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  if (parts.length < 2) return null;
-  if (!parts.every((part) => /=/.test(part))) return null;
-  return parts;
 }
 
 /**

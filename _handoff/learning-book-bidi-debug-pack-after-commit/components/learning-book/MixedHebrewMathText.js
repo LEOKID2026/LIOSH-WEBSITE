@@ -10,7 +10,7 @@ import {
   splitHebrewMathRuns,
   splitTextAndMathRuns,
 } from "../../lib/learning-book/book-math-display";
-import { splitProseForBidiRendering, splitCommaSeparatedFormulaDisplay, splitCommaVavEquationDisplay, splitInlineHebrewTaskEquation } from "../../lib/learning-book/book-bidi-render";
+import { splitProseForBidiRendering, splitCommaVavEquationDisplay } from "../../lib/learning-book/book-bidi-render";
 import { parseBookLineStructure, splitMixedBodyClauses } from "../../lib/learning-book/book-line-structure";
 import {
   parseInlineMarkdown,
@@ -77,9 +77,12 @@ function DigitSpan({ value, sourceText, start, end }) {
   );
 }
 
+const MIXED_LINE_CLASS =
+  "inline-flex max-w-full flex-wrap items-baseline [direction:rtl]";
+
 function MixedLineBody({ children, className = "" }) {
   return (
-    <span className={`book-mixed-line-body block max-w-full ${className}`.trim()} dir="rtl">
+    <span className={`book-mixed-line-body ${MIXED_LINE_CLASS} ${className}`.trim()} dir="rtl">
       {children}
     </span>
   );
@@ -259,47 +262,15 @@ function renderFormulaBody(text) {
   });
 }
 
-function renderInlineHebrewTaskEquation(text) {
-  const split = splitInlineHebrewTaskEquation(text);
-  if (!split) return null;
-
-  return (
-    <>
-      <ProseSpan>{split.prefix}</ProseSpan>
-      <LabelBodyGap />
-      <MathSpan
-        value={split.equation}
-        sourceText={text}
-        start={text.indexOf(split.equation)}
-        end={text.indexOf(split.equation) + split.equation.length}
-      />
-    </>
-  );
-}
-
 function renderMixedBodyInner(text) {
   const input = String(text || "");
   if (isFormulaLikeBody(input)) {
     return renderFormulaBody(input);
   }
 
-  const inlineTask = renderInlineHebrewTaskEquation(input);
-  if (inlineTask) {
-    return inlineTask;
-  }
-
-  const vavRows = splitCommaVavEquationDisplay(input);
-  if (vavRows) {
-    return vavRows.map((row, i) => (
-      <span key={i} className="book-equation-display-row block w-full">
-        {renderMixedBodyInnerSingle(row)}
-      </span>
-    ));
-  }
-
-  const commaRows = splitCommaSeparatedFormulaDisplay(input);
-  if (commaRows) {
-    return commaRows.map((row, i) => (
+  const displayRows = splitCommaVavEquationDisplay(input);
+  if (displayRows) {
+    return displayRows.map((row, i) => (
       <span key={i} className="book-equation-display-row block w-full">
         {renderMixedBodyInnerSingle(row)}
       </span>
@@ -309,31 +280,8 @@ function renderMixedBodyInner(text) {
   return renderMixedBodyInnerSingle(input);
 }
 
-function renderVavPrefixedMathRow(text) {
-  const input = String(text || "").trim();
-  const match = input.match(/^(ו-)(\d[\s\S]+)$/u);
-  if (!match?.[2]) return null;
-
-  return (
-    <bdi
-      dir="ltr"
-      style={bookMathIsolateStyle}
-      className="book-vav-math-row font-semibold tabular-nums"
-      data-book-math-run="true"
-    >
-      {match[1]}
-      {stripStrayMarkdown(match[2])}
-    </bdi>
-  );
-}
-
 function renderMixedBodyInnerSingle(text) {
   const input = String(text || "");
-  const vavRow = renderVavPrefixedMathRow(input);
-  if (vavRow) {
-    return vavRow;
-  }
-
   const segments = splitTextAndMathRuns(input);
 
   return segments.map((segment, i) => {

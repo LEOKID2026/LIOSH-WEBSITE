@@ -1,0 +1,123 @@
+﻿C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_BIDI_STABILIZATION_REPORT.md:145:- `58 + 37 = 95`
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_CROSS_GRADE_CONTENT_AUDIT.md:424:| g3 | ns_place_hundreds | math:kind:ns_place_hundreds | מאות, עשרות ואחדות — עד 1,000 | `docs/learning-book/math/g3/drafts/ns_place_hundreds.md` |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_CROSS_GRADE_CONTENT_AUDIT.md:434:| g2 | ns_place_tens_units | math:kind:ns_place_tens_units | מאות, עשרות ואחדות — עד 1,000 | `docs/learning-book/math/g2/drafts/ns_place_tens_units.md` |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1207:- היום נלמד שמספרים גדולים בנויים ממאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1215:- לדוגמה, במספר 236:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1219:- 236 = 200 + 30 + 6
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1220:- בכיתה ב׳ נעבוד הרבה עם מספרים כמו 124, 236 ו-405, וגם מספרים עד 1,000.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1224:- טבלת ערך מקום — המספר 124:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1226:- - 1 מאה + 2 עשרות + 4 אחדות = 124
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1227:- - 124 = 100 + 20 + 4
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1228:- דוגמה נוספת — 405:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1230:- - 405 = 400 + 0 + 5
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1232:- 1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = 124 עפרונות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1237:- _(diagram)_ = 124
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1241:- שאלה: כמה מאות, עשרות ואחדות יש במספר 236?
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1244:- שלב 3: 236 = 200 + 30 + 6.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1245:- תשובה: ב־236 יש 2 מאות, 3 עשרות ו-6 אחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1249:- כמה מאות, עשרות ואחדות יש במספר 405?
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1254:- קל לטעות: לחשוב שהספרה 4 במספר 405 אומרת "4 עשרות".
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1255:- ❌ ב־405 יש 4 עשרות — לא נכון! יש 4 מאות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1256:- ✓ ב־405 יש 4 מאות, 0 עשרות ו־5 אחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1261:- עכשיו אתם יודעים לפרק מספר למאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1547:- 58 + 37 — פירוק לעשרות ואחדות:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1548:- 58 + 37 = 95
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1549:- _(diagram)_ 58 = 50 + 8
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:1550:- _(diagram)_ 37 = 30 + 7
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:2599:- במספר גדול יש מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:2642:- עכשיו אתם יודעים לפרק מספר עד 1,000 למאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:2840:- לדוגמה: 248 = 124 + 124 → זוגי.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:3010:- נפרק למאות, עשרות ואחדות — ונזכור נשיאה כשסכום האחדות או העשרות עובר 10.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:4061:- במספר ארבע ספרות יש אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:4110:- עכשיו אתם יודעים לפרק מספר עד 10,000 לאלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:4414:- קודם אלפים, אחר כך מאות, עשרות ואחדות!
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:4786:- נפרק לאלפים, מאות, עשרות ואחדות — ונזכור נשיאה כשסכום עובר 10.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6087:- שלב 2: 342 − 218 = 124.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6088:- תשובה: 124 מדבקות יותר.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6233:- במספר חמש ספרות יש עשרות אלפים, אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6250:- 63,405 — פירוק לפי מיקום:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6251:- 63,405 = 60,000 + 3,000 + 400 + 0 + 5
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6257:- 63,405 = שישים ושלושה אלף ארבע מאות וחמש.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6604:- נפרק לעשרות אלפים, אלפים, מאות, עשרות ואחדות — ונזכור נשיאה כשסכום עובר 10.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:6704:- זכרו: מחסרים את כל המחסר — אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:8483:- נזהה מאות אלפים, עשרות אלפים, אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\LEARNING_BOOK_VISIBLE_TEXT_EXPORT.md:8553:- - שלפני: 124,999
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:44:| **title_hebrew** | מאות, עשרות ואחדות — עד 1,000 `[DRAFT — not owner-approved]` |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:64:לדוגמה, במספר **236**:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:69:236 = 200 + 30 + 6
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:71:בכיתה ב׳ נעבוד הרבה עם מספרים כמו **124**, **236** ו-**405**, וגם מספרים עד **1,000**.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:81:**טבלת ערך מקום — המספר 124:**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:88:= 124
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:92:- **1** מאה + **2** עשרות + **4** אחדות = **124**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:93:- 124 = 100 + 20 + 4
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:95:**דוגמה נוספת — 405:**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:97:- 405 = 400 + 0 + 5
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:100:1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = **124** עפרונות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:110:**שאלה:** כמה מאות, עשרות ואחדות יש במספר 236?
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:116:**שלב 3:** 236 = 200 + 30 + 6.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:118:**תשובה:** ב־236 יש **2** מאות, **3** עשרות ו-**6** אחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:128:כמה מאות, עשרות ואחדות יש במספר 405?
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:140:**קל לטעות:** לחשוב שהספרה **4** במספר **405** אומרת "4 עשרות".
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:142:❌ ב־405 יש 4 עשרות — **לא נכון!** יש **4 מאות**.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:144:✓ ב־405 יש **4 מאות**, **0 עשרות** ו־**5** אחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_2_HEBREW_REVIEW_PACK.md:156:עכשיו אתם יודעים לפרק מספר למאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_3_HEBREW_REVIEW_PACK.md:44:| **title_hebrew** | מאות, עשרות ואחדות — עד 1,000 `[DRAFT — not owner-approved]` |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_3_HEBREW_REVIEW_PACK.md:142:עכשיו אתם יודעים לפרק מספר עד 1,000 למאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_3_LEARNING_BOOK_PLAN.md:101:| A | 1 | `math:g3:ns_place_hundreds` | `math:kind:ns_place_hundreds` | `ns_place_hundreds.md` | מאות, עשרות ואחדות — עד 1,000 | לזהות ערך ספרה לפי מיקום במספר עד 1,000 |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_4_HEBREW_REVIEW_PACK.md:53:במספר ארבע ספרות יש אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_4_HEBREW_REVIEW_PACK.md:149:עכשיו אתם יודעים לפרק מספר עד 10,000 לאלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_4_HEBREW_REVIEW_PACK.md:698:בתרגול תמצאו >, <, =. קודם אלפים, אחר כך מאות, עשרות ואחדות!
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_4_HEBREW_REVIEW_PACK.md:3813:**שלב 2:** 342 − 218 = **124**.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_4_HEBREW_REVIEW_PACK.md:3815:**תשובה:** **124** מדבקות יותר.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_5_HEBREW_REVIEW_PACK.md:54:במספר חמש ספרות יש עשרות אלפים, אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_5_HEBREW_REVIEW_PACK.md:86:63,405 — פירוק לפי מיקום:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_5_HEBREW_REVIEW_PACK.md:88:63,405 = 60,000 + 3,000 + 400 + 0 + 5
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_5_HEBREW_REVIEW_PACK.md:96:63,405 = שישים ושלושה אלף ארבע מאות וחמש.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_5_HEBREW_REVIEW_PACK.md:698:נפרק לעשרות אלפים, אלפים, מאות, עשרות ואחדות — ונזכור נשיאה כשסכום עובר 10.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\MATH_GRADE_5_HEBREW_REVIEW_PACK.md:893:זכרו: מחסרים את כל המחסר — אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\add_two.md:50:**58 + 37 — פירוק לעשרות ואחדות:**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\add_two.md:53:58 = 50 + 8
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\add_two.md:54:37 = 30 + 7
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\add_two.md:61:**58 + 37 = 95**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:1:# מאות, עשרות ואחדות — עד 1,000
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:14:| **title_hebrew** | מאות, עשרות ואחדות — עד 1,000 `[DRAFT — not owner-approved]` |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:21:**Content scope:** מספרים עד 1,000. מאות, עשרות ואחדות. ללא עשרוניים, ללא מספרים שליליים.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:38:לדוגמה, במספר **236**:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:43:236 = 200 + 30 + 6
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:45:בכיתה ב׳ נעבוד הרבה עם מספרים כמו **124**, **236** ו-**405**, וגם מספרים עד **1,000**.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:51:**טבלת ערך מקום — המספר 124:**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:58:= 124
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:62:- **1** מאה + **2** עשרות + **4** אחדות = **124**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:63:- 124 = 100 + 20 + 4
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:65:**דוגמה נוספת — 405:**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:67:- 405 = 400 + 0 + 5
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:70:1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = **124** עפרונות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:76:**שאלה:** כמה מאות, עשרות ואחדות יש במספר 236?
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:82:**שלב 3:** 236 = 200 + 30 + 6.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:84:**תשובה:** ב־236 יש **2** מאות, **3** עשרות ו-**6** אחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:90:כמה מאות, עשרות ואחדות יש במספר 405?
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:98:**קל לטעות:** לחשוב שהספרה **4** במספר **405** אומרת "4 עשרות".
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:100:❌ ב־405 יש 4 עשרות — **לא נכון!** יש **4 מאות**.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:102:✓ ב־405 יש **4 מאות**, **0 עשרות** ו־**5** אחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\ns_place_tens_units.md:110:עכשיו אתם יודעים לפרק מספר למאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g2\drafts\README.md:64:| `ns_place_tens_units.md` | מאות, עשרות ואחדות — עד 1,000 |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g3\drafts\ns_even_odd.md:35:לדוגמה: **248** = **124** + **124** → **זוגי**.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g3\drafts\ns_place_hundreds.md:1:# מאות, עשרות ואחדות — עד 1,000
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g3\drafts\ns_place_hundreds.md:14:| **title_hebrew** | מאות, עשרות ואחדות — עד 1,000 `[DRAFT — not owner-approved]` |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g3\drafts\ns_place_hundreds.md:96:עכשיו אתם יודעים לפרק מספר עד 1,000 למאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g3\drafts\README.md:38:| `ns_place_hundreds.md` | מאות, עשרות ואחדות — עד 1,000 |
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g4\drafts\cmp.md:100:בתרגול תמצאו >, <, =. קודם אלפים, אחר כך מאות, עשרות ואחדות!
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g4\drafts\ns_place_hundreds.md:28:במספר ארבע ספרות יש אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g4\drafts\ns_place_hundreds.md:100:עכשיו אתם יודעים לפרק מספר עד 10,000 לאלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g4\drafts\sub_two.md:21:**Content scope:** חיסור עד 10,000. השאלה (borrow) באלפים, מאות, עשרות ואחדות. ללא שליליים בתוצאה.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g4\drafts\wp_comparison_more.md:62:**שלב 2:** 342 − 218 = **124**.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g4\drafts\wp_comparison_more.md:64:**תשובה:** **124** מדבקות יותר.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g5\drafts\add_two.md:28:נפרק לעשרות אלפים, אלפים, מאות, עשרות ואחדות — ונזכור נשיאה כשסכום עובר 10.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g5\drafts\ns_place_hundreds.md:28:במספר חמש ספרות יש עשרות אלפים, אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g5\drafts\ns_place_hundreds.md:52:63,405 — פירוק לפי מיקום:
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g5\drafts\ns_place_hundreds.md:54:63,405 = 60,000 + 3,000 + 400 + 0 + 5
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g5\drafts\ns_place_hundreds.md:62:63,405 = שישים ושלושה אלף ארבע מאות וחמש.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g5\drafts\sub_two.md:88:זכרו: מחסרים את כל המחסר — אלפים, מאות, עשרות ואחדות.
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\docs\learning-book\math\g6\drafts\ns_neighbors.md:50:- שלפני: **124,999**
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\components\learning\geometry\GeometryExplanationDiagram.jsx:25:textMuted: "rgba(236, 253, 245, 0.82)",
+C:\Users\ERAN YOSEF\Desktop\final projects\FINAL-WEB\LIOSH-WEB-TRY\components\learning-book\BookDiagram.js:427:aria-label="טבלת ערך מקום"

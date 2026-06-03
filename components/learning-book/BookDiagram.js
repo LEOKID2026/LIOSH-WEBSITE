@@ -165,13 +165,25 @@ function NumberLineRow({ line }) {
   );
 }
 
+function DiagramCodeLineRow({ children, dir = "ltr", className = "" }) {
+  return (
+    <div
+      className={`book-diagram-line block w-full text-center ${className}`.trim()}
+      data-book-diagram-line="true"
+      dir={dir}
+    >
+      {children}
+    </div>
+  );
+}
+
 function DiagramEquationLine({ equation }) {
   const theme = useBookGradeTheme().classes;
   if (!equation) return null;
   return (
-    <p className={`mt-1 text-center text-base font-bold sm:text-lg ${theme.diagramAccent}`}>
+    <DiagramCodeLineRow dir="rtl" className={`mt-1 text-base font-bold sm:text-lg ${theme.diagramAccent}`}>
       <MixedHebrewMathText text={equation} />
-    </p>
+    </DiagramCodeLineRow>
   );
 }
 
@@ -407,9 +419,9 @@ function FrameTextDiagram({ lines }) {
   return (
     <div className="space-y-2 rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4" dir="rtl">
       {lines.map((line, i) => (
-        <p key={i} className="text-right text-base sm:text-lg">
+        <DiagramCodeLineRow key={i} dir="rtl" className="text-right text-base sm:text-lg">
           <MixedHebrewMathText text={line} />
-        </p>
+        </DiagramCodeLineRow>
       ))}
     </div>
   );
@@ -456,15 +468,20 @@ function PlaceValueDiagram({ parsed }) {
 function FrameDiagram({ lines }) {
   const theme = useBookGradeTheme().classes;
   const sizeClass = diagramTextSizeClass(lines.join("\n"));
-  const cleaned = lines.map((line) => stripStrayMarkdown(line)).join("\n");
   return (
-    <pre
-      className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium ${theme.diagramSecondaryMuted} ${sizeClass}`}
-      style={bookMathIsolateStyle}
-      dir="ltr"
-    >
-      {cleaned}
-    </pre>
+    <div className="space-y-1">
+      {lines.map((line, i) => (
+        <DiagramCodeLineRow key={i} dir="ltr">
+          <bdi
+            dir="ltr"
+            style={bookMathIsolateStyle}
+            className={`font-medium tabular-nums ${theme.diagramSecondaryMuted} ${sizeClass}`}
+          >
+            {stripStrayMarkdown(line)}
+          </bdi>
+        </DiagramCodeLineRow>
+      ))}
+    </div>
   );
 }
 
@@ -480,67 +497,56 @@ function isPureMathDiagramLine(line) {
   return isMathLikeText(text) || /^=?\s*\d/.test(text);
 }
 
-function MixedDiagramLine({ line }) {
+function MixedDiagramLine({ line, sizeClass = "" }) {
   const theme = useBookGradeTheme().classes;
   const trimmed = String(line || "").trim();
   if (!trimmed) return null;
 
+  const textSize = sizeClass || "text-base sm:text-lg";
+
   if (isMixedHebrewMathLine(trimmed)) {
     return (
-      <p className="text-center text-base sm:text-lg" dir="rtl">
+      <DiagramCodeLineRow dir="rtl" className={textSize}>
         <MixedHebrewMathText text={trimmed} />
-      </p>
+      </DiagramCodeLineRow>
     );
   }
 
   if (isPureMathDiagramLine(trimmed)) {
     return (
-      <p
-        className={`text-center text-base font-semibold tabular-nums sm:text-lg ${theme.diagramSecondaryMuted}`}
-        dir="ltr"
-        style={bookMathIsolateStyle}
-      >
-        {stripStrayMarkdown(trimmed)}
-      </p>
+      <DiagramCodeLineRow dir="ltr" className={textSize}>
+        <bdi
+          dir="ltr"
+          style={bookMathIsolateStyle}
+          className={`font-semibold tabular-nums ${theme.diagramSecondaryMuted}`}
+        >
+          {stripStrayMarkdown(trimmed)}
+        </bdi>
+      </DiagramCodeLineRow>
     );
   }
 
   return (
-    <p className={`text-center text-base sm:text-lg ${theme.diagramSecondaryMuted}`} dir="rtl">
+    <DiagramCodeLineRow dir="rtl" className={`${textSize} ${theme.diagramSecondaryMuted}`}>
       <MixedHebrewMathText text={trimmed} />
-    </p>
+    </DiagramCodeLineRow>
   );
 }
 
 function GenericDiagram({ content }) {
-  const theme = useBookGradeTheme().classes;
   const lines = String(content || "")
     .split("\n")
     .map((l) => l.trim())
     .filter(Boolean);
 
-  const hasMixed = lines.some((line) => isMixedHebrewMathLine(line));
-
-  if (hasMixed) {
-    return (
-      <div className="space-y-2">
-        {lines.map((line, i) => (
-          <MixedDiagramLine key={i} line={line} />
-        ))}
-      </div>
-    );
-  }
-
   const sizeClass = diagramTextSizeClass(content);
-  const cleaned = stripStrayMarkdown(String(content || ""));
+
   return (
-    <pre
-      className={`m-0 max-w-full whitespace-pre-wrap break-words text-center font-medium ${theme.diagramSecondaryMuted} ${sizeClass}`}
-      style={bookMathIsolateStyle}
-      dir="ltr"
-    >
-      {cleaned}
-    </pre>
+    <div className="space-y-1">
+      {lines.map((line, i) => (
+        <MixedDiagramLine key={i} line={line} sizeClass={sizeClass} />
+      ))}
+    </div>
   );
 }
 
