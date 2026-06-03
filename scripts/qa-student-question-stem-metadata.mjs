@@ -13,6 +13,9 @@ const {
   sanitizeQuestionForStudentDisplay,
   sanitizeStudentQuestionStem,
 } = await import("../utils/student-question-stem-sanitizer.js");
+const { resolveStudentQuestionDisplayParts } = await import(
+  "../utils/student-question-display.js"
+);
 const { generateForMatrixCell, SUPPORTED_SUBJECTS } = await import(
   "./learning-simulator/lib/question-generator-adapters.mjs"
 );
@@ -87,6 +90,31 @@ const BEFORE_AFTER_SEEDS = [
     subject: "hebrew",
     topic: "reading",
     before: "זיהוי כתיב: קרא את המילה ___",
+    after: "זיהוי כתיב: קרא את המילה ___",
+  },
+  {
+    subject: "math",
+    topic: "decimals",
+    before: "חיסור עשרוניים (קל): 1.23 − 0.45 = __",
+    expectedAfter: "1.23 − 0.45 = __",
+  },
+  {
+    subject: "geometry",
+    topic: "triangles",
+    before: "פיתגורס (קל): ניצבים 3 ו-4 — מה אורך היתר?",
+    expectedAfter: "ניצבים 3 ו-4 — מה אורך היתר?",
+  },
+  {
+    subject: "math",
+    topic: "divisibility",
+    before: "התחלקות (קל): האם 24 מתחלק ב-3 בלי שארית?",
+    expectedAfter: "האם 24 מתחלק ב-3 בלי שארית?",
+  },
+  {
+    subject: "geometry",
+    topic: "volume",
+    before: "כיתה ד׳ (קל): תיבה 2×3×4 — מה הנפח?",
+    expectedAfter: "תיבה 2×3×4 — מה הנפח?",
   },
 ];
 
@@ -126,6 +154,12 @@ function recordLeak(ctx, field, stem, checks) {
 
 function scanQuestion(q, ctx) {
   const sanitized = sanitizeQuestionForStudentDisplay(q);
+  const display = resolveStudentQuestionDisplayParts(sanitized);
+  if (display.leadText && detectStudentStemMetadataLeaks(display.leadText).leak) {
+    recordLeak(ctx, "displayLead", display.leadText, [
+      { id: "visible_metadata_lead", label: "metadata lead visible after sanitize" },
+    ]);
+  }
   for (const field of ["stem", "question", "exerciseText", "questionLabel"]) {
     const stem = sanitized?.[field];
     if (typeof stem !== "string" || !stem.trim()) continue;

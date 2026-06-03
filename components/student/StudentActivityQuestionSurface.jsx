@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import StudentQuestionDisplay from "../learning/StudentQuestionDisplay.jsx";
+import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display.js";
 import {
   canStudentActivityQuestionDisplayVertically,
   getStudentActivityEquationFontStyle,
@@ -33,6 +34,16 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
     [layoutQuestion]
   );
 
+  const displayParts = useMemo(
+    () =>
+      resolveStudentQuestionDisplayParts({
+        question: layoutQuestion?.question,
+        questionLabel: layoutQuestion?.questionLabel,
+        exerciseText: layoutQuestion?.exerciseText || layoutQuestion?.question,
+      }),
+    [layoutQuestion]
+  );
+
   useEffect(() => {
     setIsVerticalDisplay(false);
   }, [questionIndex]);
@@ -56,7 +67,7 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
       <div className="w-full flex flex-col items-center justify-center overflow-visible px-1">
         {isVerticalDisplay && canDisplayVertically && verticalText ? (
           <>
-            {layoutQuestion.questionLabel ? (
+            {displayParts.leadText ? (
               <p
                 className={L.questionLead}
                 dir="rtl"
@@ -65,12 +76,12 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
                   direction: "rtl",
                   unicodeBidi: "plaintext",
                   ...getStudentActivityQuestionFontStyle({
-                    text: layoutQuestion.questionLabel,
+                    text: displayParts.leadText,
                     kind: "label",
                   }),
                 }}
               >
-                {layoutQuestion.questionLabel}
+                {displayParts.leadText}
               </p>
             ) : null}
             <div

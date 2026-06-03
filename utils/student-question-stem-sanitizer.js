@@ -1,4 +1,7 @@
-import { normalizeStudentQuestionDisplayFields } from "./student-question-display.js";
+import {
+  isTopicDifficultyMetadataLead,
+  normalizeStudentQuestionDisplayFields,
+} from "./student-question-display.js";
 
 /**
  * Strip UI-duplicated metadata from student-facing question stems (all subjects).
@@ -61,6 +64,16 @@ export const STUDENT_STEM_METADATA_LEAK_CHECKS = [
     id: "concepts_level_framing",
     re: /^מושגים\s*\((קל|בינוני|אתגר)\)\s*:/u,
     label: "geometry concepts level framing",
+  },
+  {
+    id: "topic_difficulty_paren_lead",
+    re: /^[^:\n]{1,72}\((קל|בינוני|אתגר|מאתגר)\)\s*:?\s*$/u,
+    label: "topic + difficulty parenthetical lead",
+  },
+  {
+    id: "grade_difficulty_paren_lead",
+    re: /^כיתה\s+[אבגדהו]['׳]?\s*\((קל|בינוני|אתגר|מאתגר)\)\s*:?\s*$/u,
+    label: "grade + difficulty parenthetical lead",
   },
   {
     id: "school_inquiry_frame",
@@ -165,10 +178,24 @@ export function sanitizeStudentQuestionStem(text) {
 
   t = t.replace(/^\s*שאלה\s+בנושא\s*:\s*/iu, "");
 
+  // Generator topic/difficulty framing — keep exercise body only
+  t = t.replace(
+    /^[^:\n]{1,72}\((קל|בינוני|אתגר|מאתגר)\)[^:\n]*:\s*/u,
+    ""
+  );
+  t = t.replace(
+    /^כיתה\s+[אבגדהו]['׳]?\s*\((קל|בינוני|אתגר|מאתגר)\)\s*:\s*/u,
+    ""
+  );
+
   // Redundant fluff openers only (keep real task wording like "מצאו את הנעלם")
   const fluffOpeners =
     /^(?:חישוב קל|מה התוצאה|פתרו|חיבור\/חיסור קצר|נסו לבד|חשבו לבד|מה יוצא|תרגיל|משחקון חשבון|אתגר קטן|בדקו|חידה חשבונית|כמה יוצא בסוף|חישוב|אתגר\s*[—–-]\s*הערכו ואמתו|בדקו פעמיים לפני בחירה|שאלת אתגר|גרסה מאתגרת|יחס\s*\(קל\)|בעיית יחסים|אתגר יחסים)\s*:\s*/iu;
   t = t.replace(fluffOpeners, "");
+
+  if (isTopicDifficultyMetadataLead(t)) {
+    return "";
+  }
 
   // Separator chains left at start
   t = t.replace(/^(?:\s*[·•—|]\s*)+/, "");

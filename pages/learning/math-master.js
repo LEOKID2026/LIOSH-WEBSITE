@@ -20,6 +20,7 @@ import {
 import { generateQuestion } from "../../utils/math-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import StudentNumericAnswerField, {
   useMobileEmbeddedNumericSubmit,
 } from "../../components/learning/StudentNumericAnswerField";
@@ -4394,23 +4395,30 @@ export default function MathMaster() {
                     canDisplayVertically &&
                     currentQuestion.exerciseText ? (
                       <div className="relative w-full pr-2 pl-2 pt-0">
-                        {currentQuestion.questionLabel ? (
-                          <p
-                            className="text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full px-2"
-                            dir="rtl"
-                            data-testid="student-question-lead"
-                            style={{
-                              direction: "rtl",
-                              unicodeBidi: "plaintext",
-                              ...getQuestionFontStyle({
-                                text: currentQuestion.questionLabel,
-                                kind: "label",
-                              }),
-                            }}
-                          >
-                            {currentQuestion.questionLabel}
-                          </p>
-                        ) : null}
+                        {(() => {
+                          const displayParts = resolveStudentQuestionDisplayParts({
+                            question: currentQuestion.question,
+                            questionLabel: currentQuestion.questionLabel,
+                            exerciseText: currentQuestion.exerciseText,
+                          });
+                          return displayParts.leadText ? (
+                            <p
+                              className="text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full px-2"
+                              dir="rtl"
+                              data-testid="student-question-lead"
+                              style={{
+                                direction: "rtl",
+                                unicodeBidi: "plaintext",
+                                ...getQuestionFontStyle({
+                                  text: displayParts.leadText,
+                                  kind: "label",
+                                }),
+                              }}
+                            >
+                              {displayParts.leadText}
+                            </p>
+                          ) : null;
+                        })()}
 
                         <div
                           className="flex justify-center w-full max-w-full px-2 overflow-x-hidden"

@@ -45,6 +45,7 @@ import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repea
 import { getQuestionFingerprintForSubject } from "../../utils/question-fingerprints";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import {
   getHint,
   getSolutionSteps,
@@ -3469,22 +3470,29 @@ export default function MoledetGeographyMaster() {
                   canDisplayVertically &&
                   currentQuestion.exerciseText ? (
                     <>
-                      {currentQuestion.questionLabel ? (
-                        <p
-                          className="text-2xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
-                          dir="rtl"
-                          data-testid="student-question-lead"
-                          style={{
-                            direction: "rtl",
-                            unicodeBidi: "plaintext",
-                            ...getQuestionFontStyle({
-                              text: currentQuestion.questionLabel || "",
-                            }),
-                          }}
-                        >
-                          {currentQuestion.questionLabel}
-                        </p>
-                      ) : null}
+                      {(() => {
+                        const displayParts = resolveStudentQuestionDisplayParts({
+                          question: currentQuestion.question,
+                          questionLabel: currentQuestion.questionLabel,
+                          exerciseText: currentQuestion.exerciseText,
+                        });
+                        return displayParts.leadText ? (
+                          <p
+                            className="text-2xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
+                            dir="rtl"
+                            data-testid="student-question-lead"
+                            style={{
+                              direction: "rtl",
+                              unicodeBidi: "plaintext",
+                              ...getQuestionFontStyle({
+                                text: displayParts.leadText,
+                              }),
+                            }}
+                          >
+                            {displayParts.leadText}
+                          </p>
+                        ) : null;
+                      })()}
                       <div
                         className="mb-4 flex justify-center w-full max-w-full px-2 overflow-x-hidden"
                         data-testid="student-question-body"

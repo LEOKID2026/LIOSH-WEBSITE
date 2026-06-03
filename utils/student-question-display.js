@@ -57,6 +57,36 @@ export function formatCompactExpression(text) {
   return t;
 }
 
+const DIFFICULTY_IN_PAREN = /\((קל|בינוני|אתגר|מאתגר)\)/u;
+
+/**
+ * Generator topic/difficulty framing (not child-facing instruction).
+ * @param {string} lead
+ */
+export function isTopicDifficultyMetadataLead(lead) {
+  const raw = String(lead ?? "").trim();
+  if (!raw) return false;
+  const t = raw.replace(/:\s*$/, "").trim();
+  if (!t) return false;
+
+  if (isKnownInstructionLead(t)) return false;
+  if (/^Choose\b|^What\b|^Read\b|^Select\b|^Complete\b|^Fill\b|^Which\b/i.test(t)) {
+    return false;
+  }
+
+  if (
+    /^כיתה\s+[אבגדהו]['׳]?\s*\((קל|בינוני|אתגר|מאתגר)\)\s*$/u.test(t)
+  ) {
+    return true;
+  }
+
+  if (DIFFICULTY_IN_PAREN.test(t) && t.length <= 72) {
+    return true;
+  }
+
+  return false;
+}
+
 /** @param {string} lead @param {string} body */
 export function shouldOmitInstructionLead(lead, body) {
   const leadT = String(lead ?? "")
@@ -64,6 +94,10 @@ export function shouldOmitInstructionLead(lead, body) {
     .replace(/:$/, "");
   const bodyT = formatCompactExpression(body);
   if (!leadT || !bodyT) return true;
+  if (isTopicDifficultyMetadataLead(leadT)) return true;
+  if (/^Choose\b|^What\b|^Read\b|^Select\b|^Complete\b|^Fill in\b|^Which\b/i.test(leadT)) {
+    return false;
+  }
   if (!isKnownInstructionLead(leadT)) return false;
   if (isEquationLikeText(bodyT) && bodyT.length <= 56) return true;
   if (

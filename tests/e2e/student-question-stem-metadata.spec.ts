@@ -21,6 +21,14 @@ const FORBIDDEN_UI_PATTERNS: { id: string; re: RegExp }[] = [
   { id: "grade_label", re: /(?:^|[·•—(])\s*כיתה\s+[אבגדהו]['׳]?/u },
   { id: "concepts_framing", re: /^מושגים\s*\((קל|בינוני|אתגר)\)\s*:/u },
   {
+    id: "topic_difficulty_paren",
+    re: /^[^:\n]{1,72}\((קל|בינוני|אתגר|מאתגר)\)\s*:?\s*$/u,
+  },
+  {
+    id: "grade_difficulty_paren",
+    re: /^כיתה\s+[אבגדהו]['׳]?\s*\((קל|בינוני|אתגר|מאתגר)\)\s*:?\s*$/u,
+  },
+  {
     id: "level_en_meta",
     re: /(?:^|[·•—(])\s*(easy|medium|hard)\s*(?:[):·•—]|$)/iu,
   },
