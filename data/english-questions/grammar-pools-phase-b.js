@@ -13,14 +13,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_ps_hard_01",
-      "question": "Choose the correct word: My cousin speaks English and French fluently",
+      "question": "Choose the correct sentence:",
       "options": [
-        "speak",
-        "speaks",
-        "speaking",
-        "spoken"
+        "My cousin speak English and French fluently",
+        "My cousin speaks English and French fluently",
+        "My cousin speaking English and French fluently",
+        "My cousin spoken English and French fluently"
       ],
-      "correct": "speaks",
+      "correct": "My cousin speaks English and French fluently",
       "explanation": "He/she/it → -s in present simple.",
       "difficulty": "advanced"
     },
@@ -36,14 +36,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_ps_hard_02",
-      "question": "Choose the correct word: Does your brother play the piano on Sundays?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "Do",
-        "Does",
-        "Did",
-        "Is"
+        "Do your brother play the piano on Sundays?",
+        "Does your brother play the piano on Sundays?",
+        "Did your brother play the piano on Sundays?",
+        "Is your brother play the piano on Sundays?"
       ],
-      "correct": "Does",
+      "correct": "Does your brother play the piano on Sundays?",
       "explanation": "Questions with he/she/it → Does.",
       "difficulty": "advanced"
     },
@@ -59,14 +59,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_ps_hard_03",
-      "question": "Choose the correct word: We don't watch TV before we finish homework",
+      "question": "Choose the correct sentence:",
       "options": [
-        "don't",
-        "doesn't",
-        "didn't",
-        "aren't"
+        "We don't watch TV before we finish homework",
+        "We doesn't watch TV before we finish homework",
+        "We didn't watch TV before we finish homework",
+        "We aren't watch TV before we finish homework"
       ],
-      "correct": "don't",
+      "correct": "We don't watch TV before we finish homework",
       "explanation": "We → don't + base verb for negatives.",
       "difficulty": "advanced"
     },
@@ -82,14 +82,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_ps_hard_04",
-      "question": "Choose the correct word: The train leaves at eight every morning",
+      "question": "Choose the correct sentence:",
       "options": [
-        "leave",
-        "leaves",
-        "leaving",
-        "left"
+        "The train leave at eight every morning",
+        "The train leaves at eight every morning",
+        "The train leaving at eight every morning",
+        "The train left at eight every morning"
       ],
-      "correct": "leaves",
+      "correct": "The train leaves at eight every morning",
       "explanation": "The train → leaves.",
       "difficulty": "advanced"
     },
@@ -105,14 +105,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_ps_hard_05",
-      "question": "Choose the correct word: Those children play soccer after school",
+      "question": "Choose the correct sentence:",
       "options": [
-        "play",
-        "plays",
-        "playing",
-        "played"
+        "Those children play soccer after school",
+        "Those children plays soccer after school",
+        "Those children playing soccer after school",
+        "Those children played soccer after school"
       ],
-      "correct": "play",
+      "correct": "Those children play soccer after school",
       "explanation": "Those children → play.",
       "difficulty": "advanced"
     },
@@ -128,14 +128,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_ps_hard_06",
-      "question": "Choose the correct word: She never eats vegetables at lunch",
+      "question": "Choose the correct sentence:",
       "options": [
-        "eat",
-        "eats",
-        "eating",
-        "ate"
+        "She never eat vegetables at lunch",
+        "She never eats vegetables at lunch",
+        "She never eating vegetables at lunch",
+        "She never ate vegetables at lunch"
       ],
-      "correct": "eats",
+      "correct": "She never eats vegetables at lunch",
       "explanation": "She → eats.",
       "difficulty": "advanced"
     },
@@ -151,14 +151,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_ps_hard_07",
-      "question": "Choose the correct word: We always keep our classroom tidy",
+      "question": "Choose the correct sentence:",
       "options": [
-        "keep",
-        "keeps",
-        "keeping",
-        "kept"
+        "We always keep our classroom tidy",
+        "We always keeps our classroom tidy",
+        "We always keeping our classroom tidy",
+        "We always kept our classroom tidy"
       ],
-      "correct": "keep",
+      "correct": "We always keep our classroom tidy",
       "explanation": "We → keep.",
       "difficulty": "advanced"
     },
@@ -174,14 +174,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_ps_med_01",
-      "question": "Choose the correct word: The shop opens at nine every morning",
+      "question": "Choose the correct sentence:",
       "options": [
-        "open",
-        "opens",
-        "opening",
-        "opened"
+        "The shop open at nine every morning",
+        "The shop opens at nine every morning",
+        "The shop opening at nine every morning",
+        "The shop opened at nine every morning"
       ],
-      "correct": "opens",
+      "correct": "The shop opens at nine every morning",
       "explanation": "Habitual schedule → present simple, third person -s.",
       "difficulty": "standard"
     },
@@ -197,14 +197,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_ps_hard_01",
-      "question": "Choose the correct word: Do your parents work near the school?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "Do",
-        "Does",
-        "Are",
-        "Did"
+        "Do your parents work near the school?",
+        "Does your parents work near the school?",
+        "Are your parents work near the school?",
+        "Did your parents work near the school?"
       ],
-      "correct": "Do",
+      "correct": "Do your parents work near the school?",
       "explanation": "Plural subject → Do in present simple questions.",
       "difficulty": "advanced"
     },
@@ -222,14 +222,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_qf_hard_01",
-      "question": "Choose the correct word: How many students are in your class?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "How",
-        "What",
-        "Where",
-        "When"
+        "How many students are in your class?",
+        "What many students are in your class?",
+        "Where many students are in your class?",
+        "When many students are in your class?"
       ],
-      "correct": "How",
+      "correct": "How many students are in your class?",
       "explanation": "How many → quantity questions.",
       "difficulty": "advanced"
     },
@@ -245,14 +245,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_qf_hard_02",
-      "question": "Choose the correct word: Where did you put your library book?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "Where",
-        "Who",
-        "Whose",
-        "Which"
+        "Where did you put your library book?",
+        "Who did you put your library book?",
+        "Whose did you put your library book?",
+        "Which did you put your library book?"
       ],
-      "correct": "Where",
+      "correct": "Where did you put your library book?",
       "explanation": "Asking about place → Where.",
       "difficulty": "advanced"
     },
@@ -268,14 +268,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_qf_hard_03",
-      "question": "Choose the correct word: What is your favorite subject this year?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "What",
-        "Where",
-        "When",
-        "Who"
+        "What is your favorite subject this year?",
+        "Where is your favorite subject this year?",
+        "When is your favorite subject this year?",
+        "Who is your favorite subject this year?"
       ],
-      "correct": "What",
+      "correct": "What is your favorite subject this year?",
       "explanation": "Asking about a thing → What.",
       "difficulty": "advanced"
     },
@@ -291,14 +291,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_qf_hard_04",
-      "question": "Choose the correct word: How often do you visit your grandparents?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "How",
-        "What",
-        "Where",
-        "Which"
+        "How often do you visit your grandparents?",
+        "What often do you visit your grandparents?",
+        "Where often do you visit your grandparents?",
+        "Which often do you visit your grandparents?"
       ],
-      "correct": "How",
+      "correct": "How often do you visit your grandparents?",
       "explanation": "How often → frequency questions.",
       "difficulty": "advanced"
     },
@@ -314,14 +314,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 3,
       "maxGrade": 3,
       "patternFamily": "phase_b_g3_qf_hard_05",
-      "question": "Choose the correct word: When does the art lesson start on Thursdays?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "When",
-        "Who",
-        "Whose",
-        "Which"
+        "When does the art lesson start on Thursdays?",
+        "Who does the art lesson start on Thursdays?",
+        "Whose does the art lesson start on Thursdays?",
+        "Which does the art lesson start on Thursdays?"
       ],
-      "correct": "When",
+      "correct": "When does the art lesson start on Thursdays?",
       "explanation": "Asking about time → When.",
       "difficulty": "advanced"
     },
@@ -339,14 +339,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_prog_med_01",
-      "question": "Choose the correct word: Listen! The birds are singing in the trees",
+      "question": "Choose the correct sentence:",
       "options": [
-        "sing",
-        "sings",
-        "are singing",
-        "sang"
+        "Listen! The birds sing in the trees",
+        "Listen! The birds sings in the trees",
+        "Listen! The birds are singing in the trees",
+        "Listen! The birds sang in the trees"
       ],
-      "correct": "are singing",
+      "correct": "Listen! The birds are singing in the trees",
       "explanation": "Listen! → action now → present continuous.",
       "difficulty": "standard"
     },
@@ -362,14 +362,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_prog_med_02",
-      "question": "Choose the correct word: Right now, I am writing a letter to my pen pal",
+      "question": "Choose the correct sentence:",
       "options": [
-        "write",
-        "writes",
-        "am writing",
-        "wrote"
+        "Right now, I write a letter to my pen pal",
+        "Right now, I writes a letter to my pen pal",
+        "Right now, I am writing a letter to my pen pal",
+        "Right now, I wrote a letter to my pen pal"
       ],
-      "correct": "am writing",
+      "correct": "Right now, I am writing a letter to my pen pal",
       "explanation": "Right now → am + verb-ing.",
       "difficulty": "standard"
     },
@@ -385,14 +385,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_prog_hard_01",
-      "question": "Choose the correct word: While we were having dinner, it started to rain",
+      "question": "Choose the correct sentence:",
       "options": [
-        "have",
-        "had",
-        "were having",
-        "are having"
+        "While we have dinner, it started to rain",
+        "While we had dinner, it started to rain",
+        "While we were having dinner, it started to rain",
+        "While we are having dinner, it started to rain"
       ],
-      "correct": "were having",
+      "correct": "While we were having dinner, it started to rain",
       "explanation": "Longer past action in progress → past continuous.",
       "difficulty": "advanced"
     },
@@ -408,14 +408,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_prog_hard_02",
-      "question": "Choose the correct word: She usually walks, but today she is taking the bus",
+      "question": "Choose the correct sentence:",
       "options": [
-        "takes",
-        "is taking",
-        "took",
-        "take"
+        "She usually walks, but today she takes the bus",
+        "She usually walks, but today she is taking the bus",
+        "She usually walks, but today she took the bus",
+        "She usually walks, but today she take the bus"
       ],
-      "correct": "is taking",
+      "correct": "She usually walks, but today she is taking the bus",
       "explanation": "Contrast: usually vs today → present continuous for now.",
       "difficulty": "advanced"
     },
@@ -433,14 +433,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_quant_med_01",
-      "question": "Choose the correct word: There isn't much sugar left in the bowl",
+      "question": "Choose the correct sentence:",
       "options": [
-        "many",
-        "much",
-        "few",
-        "several"
+        "There isn't many sugar left in the bowl",
+        "There isn't much sugar left in the bowl",
+        "There isn't few sugar left in the bowl",
+        "There isn't several sugar left in the bowl"
       ],
-      "correct": "much",
+      "correct": "There isn't much sugar left in the bowl",
       "explanation": "Uncountable nouns → much in negatives.",
       "difficulty": "standard"
     },
@@ -456,14 +456,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_quant_med_02",
-      "question": "Choose the correct word: We saw many interesting posters at the museum",
+      "question": "Choose the correct sentence:",
       "options": [
-        "much",
-        "many",
-        "little",
-        "a little"
+        "We saw much interesting posters at the museum",
+        "We saw many interesting posters at the museum",
+        "We saw little interesting posters at the museum",
+        "We saw a little interesting posters at the museum"
       ],
-      "correct": "many",
+      "correct": "We saw many interesting posters at the museum",
       "explanation": "Countable plural → many.",
       "difficulty": "standard"
     },
@@ -479,14 +479,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_quant_hard_01",
-      "question": "Choose the correct word: There are only a few apples, so share them",
+      "question": "Choose the correct sentence:",
       "options": [
-        "a few",
-        "a little",
-        "much",
-        "plenty"
+        "There are only a few apples, so share them",
+        "There are only a little apples, so share them",
+        "There are only much apples, so share them",
+        "There are only plenty apples, so share them"
       ],
-      "correct": "a few",
+      "correct": "There are only a few apples, so share them",
       "explanation": "Countable → a few (small positive amount).",
       "difficulty": "advanced"
     },
@@ -502,14 +502,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 4,
       "maxGrade": 4,
       "patternFamily": "phase_b_g4_quant_hard_02",
-      "question": "Choose the correct word: We have a little time before the bell rings",
+      "question": "Choose the correct sentence:",
       "options": [
-        "few",
-        "a few",
-        "little",
-        "a little"
+        "We have few time before the bell rings",
+        "We have a few time before the bell rings",
+        "We have little time before the bell rings",
+        "We have a little time before the bell rings"
       ],
-      "correct": "a little",
+      "correct": "We have a little time before the bell rings",
       "explanation": "Uncountable time → a little.",
       "difficulty": "advanced"
     },
@@ -527,14 +527,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_past_med_01",
-      "question": "Choose the correct word: Last night they watched a documentary about oceans",
+      "question": "Choose the correct sentence:",
       "options": [
-        "watch",
-        "watched",
-        "watching",
-        "have watched"
+        "Last night they watch a documentary about oceans",
+        "Last night they watched a documentary about oceans",
+        "Last night they watching a documentary about oceans",
+        "Last night they have watched a documentary about oceans"
       ],
-      "correct": "watched",
+      "correct": "Last night they watched a documentary about oceans",
       "explanation": "Last night → past simple.",
       "difficulty": "standard"
     },
@@ -550,14 +550,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_past_med_02",
-      "question": "Choose the correct word: She lost her keys on the bus yesterday",
+      "question": "Choose the correct sentence:",
       "options": [
-        "lose",
-        "lost",
-        "loses",
-        "has lost"
+        "She lose her keys on the bus yesterday",
+        "She lost her keys on the bus yesterday",
+        "She loses her keys on the bus yesterday",
+        "She has lost her keys on the bus yesterday"
       ],
-      "correct": "lost",
+      "correct": "She lost her keys on the bus yesterday",
       "explanation": "Irregular past: lose → lost.",
       "difficulty": "standard"
     },
@@ -573,14 +573,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_past_med_03",
-      "question": "Choose the correct word: Did you finish the survey before lunch?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "Do",
-        "Did",
-        "Have",
-        "Are"
+        "Do you finish the survey before lunch?",
+        "Did you finish the survey before lunch?",
+        "Have you finish the survey before lunch?",
+        "Are you finish the survey before lunch?"
       ],
-      "correct": "Did",
+      "correct": "Did you finish the survey before lunch?",
       "explanation": "Past time → Did for questions.",
       "difficulty": "standard"
     },
@@ -596,14 +596,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_past_hard_01",
-      "question": "Choose the correct word: By the time we arrived, the show began",
+      "question": "Choose the correct sentence:",
       "options": [
-        "begin",
-        "began",
-        "begins",
-        "has begun"
+        "By the time we arrived, the show begin",
+        "By the time we arrived, the show began",
+        "By the time we arrived, the show begins",
+        "By the time we arrived, the show has begun"
       ],
-      "correct": "began",
+      "correct": "By the time we arrived, the show began",
       "explanation": "Earlier past event → past simple.",
       "difficulty": "advanced"
     },
@@ -619,14 +619,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_past_hard_02",
-      "question": "Choose the correct word: Nobody told me about the schedule change",
+      "question": "Choose the correct sentence:",
       "options": [
-        "tell",
-        "told",
-        "tells",
-        "has told"
+        "Nobody tell me about the schedule change",
+        "Nobody told me about the schedule change",
+        "Nobody tells me about the schedule change",
+        "Nobody has told me about the schedule change"
       ],
-      "correct": "told",
+      "correct": "Nobody told me about the schedule change",
       "explanation": "Nobody + past context → told.",
       "difficulty": "advanced"
     },
@@ -642,14 +642,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_past_hard_03",
-      "question": "Choose the correct word: Did she already pack her bag last night?",
+      "question": "Choose the correct sentence:",
       "options": [
-        "Do",
-        "Did",
-        "Has",
-        "Was"
+        "Do she already pack her bag last night?",
+        "Did she already pack her bag last night?",
+        "Has she already pack her bag last night?",
+        "Was she already pack her bag last night?"
       ],
-      "correct": "Did",
+      "correct": "Did she already pack her bag last night?",
       "explanation": "Completed past action → Did.",
       "difficulty": "advanced"
     },
@@ -667,14 +667,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_mod_med_01",
-      "question": "Choose the correct word: You must wear a helmet when you ride a bike",
+      "question": "Choose the correct sentence:",
       "options": [
-        "can",
-        "must",
-        "might",
-        "would"
+        "You can wear a helmet when you ride a bike",
+        "You must wear a helmet when you ride a bike",
+        "You might wear a helmet when you ride a bike",
+        "You would wear a helmet when you ride a bike"
       ],
-      "correct": "must",
+      "correct": "You must wear a helmet when you ride a bike",
       "explanation": "Rule/obligation → must.",
       "difficulty": "standard"
     },
@@ -690,14 +690,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_mod_med_02",
-      "question": "Choose the correct word: We can visit grandma if the road is open",
+      "question": "Choose the correct sentence:",
       "options": [
-        "must",
-        "can",
-        "should",
-        "had"
+        "We must visit grandma if the road is open",
+        "We can visit grandma if the road is open",
+        "We should visit grandma if the road is open",
+        "We had visit grandma if the road is open"
       ],
-      "correct": "can",
+      "correct": "We can visit grandma if the road is open",
       "explanation": "Possibility/ability → can.",
       "difficulty": "standard"
     },
@@ -713,14 +713,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_mod_hard_01",
-      "question": "Choose the correct word: You shouldn't eat so much candy; it's bad for teeth",
+      "question": "Choose the correct sentence:",
       "options": [
-        "mustn't",
-        "can't",
-        "shouldn't",
-        "won't"
+        "You mustn't eat so much candy; it's bad for teeth",
+        "You can't eat so much candy; it's bad for teeth",
+        "You shouldn't eat so much candy; it's bad for teeth",
+        "You won't eat so much candy; it's bad for teeth"
       ],
-      "correct": "shouldn't",
+      "correct": "You shouldn't eat so much candy; it's bad for teeth",
       "explanation": "Advice → shouldn't.",
       "difficulty": "advanced"
     },
@@ -736,14 +736,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_mod_hard_02",
-      "question": "Choose the correct word: Guests mustn't bring food without asking the host",
+      "question": "Choose the correct sentence:",
       "options": [
-        "must",
-        "mustn't",
-        "can",
-        "will"
+        "Guests must bring food without asking the host",
+        "Guests mustn't bring food without asking the host",
+        "Guests can bring food without asking the host",
+        "Guests will bring food without asking the host"
       ],
-      "correct": "mustn't",
+      "correct": "Guests mustn't bring food without asking the host",
       "explanation": "Prohibition → mustn't.",
       "difficulty": "advanced"
     },
@@ -759,14 +759,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_mod_med_01",
-      "question": "Choose the correct word: Students have to submit the form by Thursday",
+      "question": "Choose the correct sentence:",
       "options": [
-        "might",
-        "have to",
-        "could",
-        "would"
+        "Students might submit the form by Thursday",
+        "Students have to submit the form by Thursday",
+        "Students could submit the form by Thursday",
+        "Students would submit the form by Thursday"
       ],
-      "correct": "have to",
+      "correct": "Students have to submit the form by Thursday",
       "explanation": "External obligation → have to.",
       "difficulty": "standard"
     },
@@ -782,14 +782,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_mod_med_02",
-      "question": "Choose the correct word: You might be tired after the hike",
+      "question": "Choose the correct sentence:",
       "options": [
-        "must",
-        "might",
-        "mustn't",
-        "shouldn't"
+        "You must be tired after the hike",
+        "You might be tired after the hike",
+        "You mustn't be tired after the hike",
+        "You shouldn't be tired after the hike"
       ],
-      "correct": "might",
+      "correct": "You might be tired after the hike",
       "explanation": "Possibility → might.",
       "difficulty": "standard"
     },
@@ -805,14 +805,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_mod_hard_01",
-      "question": "Choose the correct word: You should have told me about the change earlier",
+      "question": "Choose the correct sentence:",
       "options": [
-        "should",
-        "must",
-        "can",
-        "will"
+        "You should have told me about the change earlier",
+        "You must have told me about the change earlier",
+        "You can have told me about the change earlier",
+        "You will have told me about the change earlier"
       ],
-      "correct": "should",
+      "correct": "You should have told me about the change earlier",
       "explanation": "Past advice/regret → should have.",
       "difficulty": "advanced"
     },
@@ -828,14 +828,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_mod_hard_02",
-      "question": "Choose the correct word: The keys can't be in the drawer; I checked",
+      "question": "Choose the correct sentence:",
       "options": [
-        "can't",
-        "must",
-        "might",
-        "should"
+        "The keys can't be in the drawer; I checked",
+        "The keys must be in the drawer; I checked",
+        "The keys might be in the drawer; I checked",
+        "The keys should be in the drawer; I checked"
       ],
-      "correct": "can't",
+      "correct": "The keys can't be in the drawer; I checked",
       "explanation": "Strong negative deduction → can't.",
       "difficulty": "advanced"
     },
@@ -853,14 +853,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_comp_med_01",
-      "question": "Choose the correct word: This backpack is lighter than my old one",
+      "question": "Choose the correct sentence:",
       "options": [
-        "light",
-        "lighter",
-        "lightest",
-        "more light"
+        "This backpack is light than my old one",
+        "This backpack is lighter than my old one",
+        "This backpack is lightest than my old one",
+        "This backpack is more light than my old one"
       ],
-      "correct": "lighter",
+      "correct": "This backpack is lighter than my old one",
       "explanation": "Two items → comparative -er.",
       "difficulty": "standard"
     },
@@ -876,14 +876,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_comp_med_02",
-      "question": "Choose the correct word: The second chapter is more interesting than the first",
+      "question": "Choose the correct sentence:",
       "options": [
-        "more",
-        "most",
-        "much",
-        "many"
+        "The second chapter is more interesting than the first",
+        "The second chapter is most interesting than the first",
+        "The second chapter is much interesting than the first",
+        "The second chapter is many interesting than the first"
       ],
-      "correct": "more",
+      "correct": "The second chapter is more interesting than the first",
       "explanation": "Long adjective → more + adjective.",
       "difficulty": "standard"
     },
@@ -899,14 +899,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_comp_hard_01",
-      "question": "Choose the correct word: Mount Hermon is the highest peak we studied",
+      "question": "Choose the correct sentence:",
       "options": [
-        "high",
-        "higher",
-        "highest",
-        "more high"
+        "Mount Hermon is the high peak we studied",
+        "Mount Hermon is the higher peak we studied",
+        "Mount Hermon is the highest peak we studied",
+        "Mount Hermon is the more high peak we studied"
       ],
-      "correct": "highest",
+      "correct": "Mount Hermon is the highest peak we studied",
       "explanation": "Superlative with the → -est.",
       "difficulty": "advanced"
     },
@@ -922,14 +922,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_comp_hard_02",
-      "question": "Choose the correct word: Her explanation was more clear than his",
+      "question": "Choose the correct sentence:",
       "options": [
-        "more",
-        "most",
-        "much",
-        "many"
+        "Her explanation was more clear than his",
+        "Her explanation was most clear than his",
+        "Her explanation was much clear than his",
+        "Her explanation was many clear than his"
       ],
-      "correct": "more",
+      "correct": "Her explanation was more clear than his",
       "explanation": "Comparative of clear → more clear.",
       "difficulty": "advanced"
     },
@@ -945,14 +945,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_comp_med_01",
-      "question": "Choose the correct word: This essay is better organized than the draft",
+      "question": "Choose the correct sentence:",
       "options": [
-        "well",
-        "better",
-        "best",
-        "gooder"
+        "This essay is well organized than the draft",
+        "This essay is better organized than the draft",
+        "This essay is best organized than the draft",
+        "This essay is gooder organized than the draft"
       ],
-      "correct": "better",
+      "correct": "This essay is better organized than the draft",
       "explanation": "Irregular comparative: good → better.",
       "difficulty": "standard"
     },
@@ -968,14 +968,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_comp_med_02",
-      "question": "Choose the correct word: The data set is more accurate than we expected",
+      "question": "Choose the correct sentence:",
       "options": [
-        "more",
-        "most",
-        "much",
-        "many"
+        "The data set is more accurate than we expected",
+        "The data set is most accurate than we expected",
+        "The data set is much accurate than we expected",
+        "The data set is many accurate than we expected"
       ],
-      "correct": "more",
+      "correct": "The data set is more accurate than we expected",
       "explanation": "Long adjective → more accurate.",
       "difficulty": "standard"
     },
@@ -991,14 +991,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_comp_med_03",
-      "question": "Choose the correct word: Of the three routes, this one is the safest",
+      "question": "Choose the correct sentence:",
       "options": [
-        "safe",
-        "safer",
-        "safest",
-        "more safe"
+        "Of the three routes, this one is the safe",
+        "Of the three routes, this one is the safer",
+        "Of the three routes, this one is the safest",
+        "Of the three routes, this one is the more safe"
       ],
-      "correct": "safest",
+      "correct": "Of the three routes, this one is the safest",
       "explanation": "Three or more → superlative.",
       "difficulty": "standard"
     },
@@ -1014,14 +1014,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_comp_hard_01",
-      "question": "Choose the correct word: This is the most difficult puzzle in the set",
+      "question": "Choose the correct sentence:",
       "options": [
-        "more",
-        "most",
-        "much",
-        "many"
+        "This is the more difficult puzzle in the set",
+        "This is the most difficult puzzle in the set",
+        "This is the much difficult puzzle in the set",
+        "This is the many difficult puzzle in the set"
       ],
-      "correct": "most",
+      "correct": "This is the most difficult puzzle in the set",
       "explanation": "Superlative of difficult → most.",
       "difficulty": "advanced"
     },
@@ -1037,14 +1037,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_comp_hard_02",
-      "question": "Choose the correct word: Her score was even higher than anyone else's",
+      "question": "Choose the correct sentence:",
       "options": [
-        "even",
-        "ever",
-        "much",
-        "many"
+        "Her score was even higher than anyone else's",
+        "Her score was ever higher than anyone else's",
+        "Her score was much higher than anyone else's",
+        "Her score was many higher than anyone else's"
       ],
-      "correct": "even",
+      "correct": "Her score was even higher than anyone else's",
       "explanation": "Emphasis with comparative → even higher.",
       "difficulty": "advanced"
     },
@@ -1060,14 +1060,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_comp_hard_03",
-      "question": "Choose the correct word: No other city is more historic than Jerusalem",
+      "question": "Choose the correct sentence:",
       "options": [
-        "more",
-        "most",
-        "as",
-        "so"
+        "No other city is more historic than Jerusalem",
+        "No other city is most historic than Jerusalem",
+        "No other city is as historic than Jerusalem",
+        "No other city is so historic than Jerusalem"
       ],
-      "correct": "more",
+      "correct": "No other city is more historic than Jerusalem",
       "explanation": "Comparative with than → more historic.",
       "difficulty": "advanced"
     },
@@ -1085,14 +1085,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_fut_med_01",
-      "question": "Choose the correct word: We are going to have a class party next Friday",
+      "question": "Choose the correct sentence:",
       "options": [
-        "have",
-        "had",
-        "are going to have",
-        "having"
+        "We have a class party next Friday",
+        "We had a class party next Friday",
+        "We are going to have a class party next Friday",
+        "We having a class party next Friday"
       ],
-      "correct": "are going to have",
+      "correct": "We are going to have a class party next Friday",
       "explanation": "Planned future → going to.",
       "difficulty": "standard"
     },
@@ -1108,14 +1108,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_fut_med_02",
-      "question": "Choose the correct word: I think it will rain this afternoon",
+      "question": "Choose the correct sentence:",
       "options": [
-        "will",
-        "is",
-        "was",
-        "goes"
+        "I think it will rain this afternoon",
+        "I think it is rain this afternoon",
+        "I think it was rain this afternoon",
+        "I think it goes rain this afternoon"
       ],
-      "correct": "will",
+      "correct": "I think it will rain this afternoon",
       "explanation": "Prediction → will.",
       "difficulty": "standard"
     },
@@ -1131,14 +1131,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_fut_med_03",
-      "question": "Choose the correct word: They will travel to Haifa tomorrow morning",
+      "question": "Choose the correct sentence:",
       "options": [
-        "will",
-        "went",
-        "go",
-        "going"
+        "They will travel to Haifa tomorrow morning",
+        "They went travel to Haifa tomorrow morning",
+        "They go travel to Haifa tomorrow morning",
+        "They going travel to Haifa tomorrow morning"
       ],
-      "correct": "will",
+      "correct": "They will travel to Haifa tomorrow morning",
       "explanation": "Tomorrow → will + base verb.",
       "difficulty": "standard"
     },
@@ -1154,14 +1154,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_fut_hard_01",
-      "question": "Choose the correct word: Look at those clouds — it is going to pour soon",
+      "question": "Choose the correct sentence:",
       "options": [
-        "will",
-        "is going to",
-        "went",
-        "goes"
+        "Look at those clouds — it will pour soon",
+        "Look at those clouds — it is going to pour soon",
+        "Look at those clouds — it went pour soon",
+        "Look at those clouds — it goes pour soon"
       ],
-      "correct": "is going to",
+      "correct": "Look at those clouds — it is going to pour soon",
       "explanation": "Evidence now → going to.",
       "difficulty": "advanced"
     },
@@ -1177,14 +1177,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_fut_hard_02",
-      "question": "Choose the correct word: I promise I will send send you the photos tonight",
+      "question": "Choose the correct sentence:",
       "options": [
-        "am sending",
-        "send",
-        "will send",
-        "sent"
+        "I promise I am sending send you the photos tonight",
+        "I promise I send send you the photos tonight",
+        "I promise I will send send you the photos tonight",
+        "I promise I sent send you the photos tonight"
       ],
-      "correct": "will send",
+      "correct": "I promise I will send send you the photos tonight",
       "explanation": "Promise → will.",
       "difficulty": "advanced"
     },
@@ -1200,14 +1200,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "phase_b_g5_fut_hard_03",
-      "question": "Choose the correct word: We will not decide until we hear from the coach",
+      "question": "Choose the correct sentence:",
       "options": [
-        "do",
-        "will",
-        "are",
-        "did"
+        "We do not decide until we hear from the coach",
+        "We will not decide until we hear from the coach",
+        "We are not decide until we hear from the coach",
+        "We did not decide until we hear from the coach"
       ],
-      "correct": "will",
+      "correct": "We will not decide until we hear from the coach",
       "explanation": "Future decision → will not.",
       "difficulty": "advanced"
     },
@@ -1225,14 +1225,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_ct_med_01",
-      "question": "Choose the correct word: She has sung in this choir since last year",
+      "question": "Choose the correct sentence:",
       "options": [
-        "sings",
-        "sang",
-        "has sung",
-        "is singing"
+        "She sings in this choir since last year",
+        "She sang in this choir since last year",
+        "She has sung in this choir since last year",
+        "She is singing in this choir since last year"
       ],
-      "correct": "has sung",
+      "correct": "She has sung in this choir since last year",
       "explanation": "Since + point in past → present perfect.",
       "difficulty": "standard"
     },
@@ -1248,14 +1248,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_ct_med_02",
-      "question": "Choose the correct word: While I was doing homework, my sister called",
+      "question": "Choose the correct sentence:",
       "options": [
-        "did",
-        "was doing",
-        "do",
-        "have done"
+        "While I did homework, my sister called",
+        "While I was doing homework, my sister called",
+        "While I do homework, my sister called",
+        "While I have done homework, my sister called"
       ],
-      "correct": "was doing",
+      "correct": "While I was doing homework, my sister called",
       "explanation": "Interrupted past → past continuous.",
       "difficulty": "standard"
     },
@@ -1271,14 +1271,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_ct_med_03",
-      "question": "Choose the correct word: They have finished the project before the deadline",
+      "question": "Choose the correct sentence:",
       "options": [
-        "finish",
-        "finished",
-        "have finished",
-        "finishing"
+        "They finish the project before the deadline",
+        "They finished the project before the deadline",
+        "They have finished the project before the deadline",
+        "They finishing the project before the deadline"
       ],
-      "correct": "have finished",
+      "correct": "They have finished the project before the deadline",
       "explanation": "Before now, result matters → present perfect.",
       "difficulty": "standard"
     },
@@ -1294,14 +1294,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_ct_hard_01",
-      "question": "Choose the correct word: By noon, we had read three chapters",
+      "question": "Choose the correct sentence:",
       "options": [
-        "read",
-        "were reading",
-        "had read",
-        "have read"
+        "By noon, we read three chapters",
+        "By noon, we were reading three chapters",
+        "By noon, we had read three chapters",
+        "By noon, we have read three chapters"
       ],
-      "correct": "had read",
+      "correct": "By noon, we had read three chapters",
       "explanation": "Earlier past before another past → past perfect.",
       "difficulty": "advanced"
     },
@@ -1317,14 +1317,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_ct_hard_02",
-      "question": "Choose the correct word: She was playing for the team when she lived here",
+      "question": "Choose the correct sentence:",
       "options": [
-        "has played",
-        "played",
-        "was playing",
-        "plays"
+        "She has played for the team when she lived here",
+        "She played for the team when she lived here",
+        "She was playing for the team when she lived here",
+        "She plays for the team when she lived here"
       ],
-      "correct": "was playing",
+      "correct": "She was playing for the team when she lived here",
       "explanation": "Past habit in progress → past continuous.",
       "difficulty": "advanced"
     },
@@ -1340,15 +1340,15 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_ct_hard_03",
-      "question": "Choose the correct word: I have never seen such a detailed map before",
+      "question": "Choose the correct sentence:",
       "options": [
-        "see",
-        "saw",
-        "seen",
-        "seeing"
+        "I have never seen such a detailed map before",
+        "I had never seen such a detailed map before",
+        "I was never seen such a detailed map before",
+        "I did never seen such a detailed map before"
       ],
-      "correct": "seen",
-      "explanation": "Present perfect → have + past participle (seen).",
+      "correct": "I have never seen such a detailed map before",
+      "explanation": "Experience up to now → present perfect.",
       "difficulty": "advanced"
     },
   ],
@@ -1365,14 +1365,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_cond_med_01",
-      "question": "Choose the correct word: If it rains, we will have the picnic indoors",
+      "question": "Choose the correct sentence:",
       "options": [
-        "have",
-        "will have",
-        "had",
-        "having"
+        "If it rains, we have the picnic indoors",
+        "If it rains, we will have the picnic indoors",
+        "If it rains, we had the picnic indoors",
+        "If it rains, we having the picnic indoors"
       ],
-      "correct": "will have",
+      "correct": "If it rains, we will have the picnic indoors",
       "explanation": "Zero/first conditional → will.",
       "difficulty": "standard"
     },
@@ -1388,14 +1388,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_cond_med_02",
-      "question": "Choose the correct word: If you heat ice, it melts",
+      "question": "Choose the correct sentence:",
       "options": [
-        "melted",
-        "melts",
-        "will melt",
-        "is melting"
+        "If you heat ice, it melted",
+        "If you heat ice, it melts",
+        "If you heat ice, it will melt",
+        "If you heat ice, it is melting"
       ],
-      "correct": "melts",
+      "correct": "If you heat ice, it melts",
       "explanation": "General truth → present simple.",
       "difficulty": "standard"
     },
@@ -1411,14 +1411,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_cond_hard_01",
-      "question": "Choose the correct word: If I had more time, I would join the club",
+      "question": "Choose the correct sentence:",
       "options": [
-        "have",
-        "had",
-        "will have",
-        "has"
+        "If I have more time, I would join the club",
+        "If I had more time, I would join the club",
+        "If I will have more time, I would join the club",
+        "If I has more time, I would join the club"
       ],
-      "correct": "had",
+      "correct": "If I had more time, I would join the club",
       "explanation": "Second conditional → If + past, would.",
       "difficulty": "advanced"
     },
@@ -1434,14 +1434,14 @@ export const GRAMMAR_POOLS_PHASE_B = {
       "minGrade": 6,
       "maxGrade": 6,
       "patternFamily": "phase_b_g6_cond_hard_02",
-      "question": "Choose the correct word: Unless you leave now, you'll miss the bus",
+      "question": "Choose the correct sentence:",
       "options": [
-        "leave",
-        "left",
-        "will leave",
-        "leaving"
+        "Unless you leave now, you'll miss the bus",
+        "Unless you left now, you'll miss the bus",
+        "Unless you will leave now, you'll miss the bus",
+        "Unless you leaving now, you'll miss the bus"
       ],
-      "correct": "leave",
+      "correct": "Unless you leave now, you'll miss the bus",
       "explanation": "Unless + present → future warning.",
       "difficulty": "advanced"
     },

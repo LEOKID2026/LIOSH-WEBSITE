@@ -41,13 +41,25 @@ function pushGrammar(pool, item) {
   grammarItems[pool].push(g({ subtype: pool, ...item }));
 }
 
-function finalizeGrammarQuestion(question, correct) {
+/** @param {string} question @param {string[]} options @param {string} correct */
+function finalizeGrammarAsSentenceMcq(question, options, correct) {
   const match = question.match(/Choose:\s*"([^"]+)"/);
-  if (match) {
-    const filled = match[1].replace(/___+/g, correct);
-    return `Choose the correct word: ${filled}`;
+  const template = match ? match[1] : question.replace(/^Choose:\s*/i, "").trim();
+
+  function fillBlank(word) {
+    if (/___+/.test(template)) return template.replace(/___+/g, word);
+    if (/__+/.test(template)) return template.replace(/__+/g, word);
+    return template;
   }
-  return question.replace(/___+/g, correct).replace(/^Choose:\s*/, "Choose the correct word: ");
+
+  const fullOptions = options.map((opt) => fillBlank(opt).trim());
+  const correctSentence = fillBlank(correct).trim();
+
+  return {
+    question: "Choose the correct sentence:",
+    options: fullOptions,
+    correct: correctSentence,
+  };
 }
 
 // G3 hard (5): 3 present_simple + 2 question_frames
@@ -145,7 +157,7 @@ g6Med.forEach(([pool, pf, minG, maxG, q, opts, correct, expl]) =>
 const g6Hard = [
   ["complex_tenses", "phase_b_g6_ct_hard_01", 6, 6, "Choose: \"By noon, we ___ three chapters\"", ["read", "were reading", "had read", "have read"], "had read", "Earlier past before another past → past perfect."],
   ["complex_tenses", "phase_b_g6_ct_hard_02", 6, 6, "Choose: \"She ___ for the team when she lived here\"", ["has played", "played", "was playing", "plays"], "was playing", "Past habit in progress → past continuous."],
-  ["complex_tenses", "phase_b_g6_ct_hard_03", 6, 6, "Choose: \"I ___ never ___ such a detailed map before\"", ["have / seen", "had / seen", "was / seeing", "do / see"], "have / seen", "Experience up to now → present perfect."],
+  ["complex_tenses", "phase_b_g6_ct_hard_03", 6, 6, "Choose: \"I ___ never seen such a detailed map before\"", ["have", "had", "was", "did"], "have", "Experience up to now → present perfect."],
   ["conditionals", "phase_b_g6_cond_hard_01", 6, 6, "Choose: \"If I ___ more time, I would join the club\"", ["have", "had", "will have", "has"], "had", "Second conditional → If + past, would."],
   ["conditionals", "phase_b_g6_cond_hard_02", 6, 6, "Choose: \"Unless you ___ now, you'll miss the bus\"", ["leave", "left", "will leave", "leaving"], "leave", "Unless + present → future warning."],
   ["modals", "phase_b_g6_mod_hard_01", 6, 6, "Choose: \"You ___ have told me about the change earlier\"", ["should", "must", "can", "will"], "should", "Past advice/regret → should have."],
@@ -154,34 +166,30 @@ const g6Hard = [
   ["comparatives", "phase_b_g6_comp_hard_02", 6, 6, "Choose: \"Her score was ___ higher than anyone else's\"", ["even", "ever", "much", "many"], "even", "Emphasis with comparative → even higher."],
   ["comparatives", "phase_b_g6_comp_hard_03", 6, 6, "Choose: \"No other city is ___ historic than Jerusalem\"", ["more", "most", "as", "so"], "more", "Comparative with than → more historic."],
 ];
-g6Hard.forEach(([pool, pf, minG, maxG, q, opts, correct, expl]) => {
-  const correctFixed = correct === "have / seen" ? "have seen" : correct;
-  const optsFixed = opts.map((o) => o.replace("have / seen", "have seen"));
+g6Hard.forEach(([pool, pf, minG, maxG, q, opts, correct, expl]) =>
   pushGrammar(pool, {
     minGrade: minG,
     maxGrade: maxG,
     patternFamily: pf,
-    question: q.replace("have / seen", "have seen"),
-    options: optsFixed,
-    correct: correctFixed,
+    question: q,
+    options: opts,
+    correct,
     explanation: expl,
     difficulty: "advanced",
     cognitiveLevel: "analysis",
-  });
-});
-
-// Fix g6 hard item 3 - use proper options
-const ctHard3 = grammarItems.complex_tenses.find((x) => x.patternFamily === "phase_b_g6_ct_hard_03");
-if (ctHard3) {
-  ctHard3.question = "Choose the correct word: I have never seen such a detailed map before";
-  ctHard3.options = ["see", "saw", "seen", "seeing"];
-  ctHard3.correct = "seen";
-  ctHard3.explanation = "Present perfect → have + past participle (seen).";
-}
+  })
+);
 
 for (const arr of Object.values(grammarItems)) {
   for (const item of arr) {
-    item.question = finalizeGrammarQuestion(item.question, item.correct);
+    const finalized = finalizeGrammarAsSentenceMcq(
+      item.question,
+      item.options,
+      item.correct
+    );
+    item.question = finalized.question;
+    item.options = finalized.options;
+    item.correct = finalized.correct;
   }
 }
 
@@ -421,9 +429,10 @@ function serializePools(name, pools) {
   return lines.join("\n");
 }
 
-writeFileSync(join(root, "data/english-questions/grammar-pools-phase-b.js"), serializePools("GRAMMAR_POOLS_PHASE_B", grammarItems));
-writeFileSync(join(root, "data/english-questions/sentence-pools-phase-b.js"), serializePools("SENTENCE_POOLS_PHASE_B", SENTENCE_POOLS_PHASE_B));
-writeFileSync(join(root, "data/english-questions/translation-pools-phase-b.js"), serializePools("TRANSLATION_POOLS_PHASE_B", TRANSLATION_POOLS_PHASE_B));
+writeFileSync(
+  join(root, "data/english-questions/grammar-pools-phase-b.js"),
+  serializePools("GRAMMAR_POOLS_PHASE_B", grammarItems)
+);
 
 console.log("Wrote Phase B pools:", { grammarTotal, sentenceTotal, transTotal });
 console.log("Grammar by pool:", Object.fromEntries(Object.entries(grammarItems).map(([k, v]) => [k, v.length])));
