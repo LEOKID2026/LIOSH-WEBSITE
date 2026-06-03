@@ -57,5 +57,10 @@ test("compact numeric keyboard layout — 4 rows for mobile", () => {
   assert.ok(ids.includes("0"));
   assert.ok(ids.includes("backspace"));
   assert.ok(ids.includes("clear"));
-  assert.ok(ids.includes("-"));
+  assert.ok(ids.includes("."));
+  assert.ok(!ids.includes(","));
+  assert.ok(!ids.includes("-"));
+  assert.equal(rows[2].keys[3].id, ".");
+  assert.equal(rows[3].keys.length, 1);
+  assert.equal(rows[3].keys[0].id, "0");
 });

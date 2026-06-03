@@ -6,7 +6,8 @@ import {
 import { getVirtualAnswerKeyboardRows } from "../../lib/learning/virtual-answer-keyboard-layouts.js";
 
 /**
- * On-screen answer keyboard — inserts into existing answer state only (no submit).
+ * On-screen answer keyboard — inserts into existing answer state only.
+ * Optional embedded submit button on compact mobile last row (not a duplicate logic path).
  *
  * @param {{
  *   layout?: "numeric" | "hebrew" | "english",
@@ -17,6 +18,7 @@ import { getVirtualAnswerKeyboardRows } from "../../lib/learning/virtual-answer-
  *   onClose?: () => void,
  *   showClose?: boolean,
  *   compact?: boolean,
+ *   submitButton?: { label?: string, onClick: () => void, disabled?: boolean, testId?: string } | null,
  * }} props
  */
 export default function VirtualAnswerKeyboard({
@@ -28,6 +30,7 @@ export default function VirtualAnswerKeyboard({
   onClose,
   showClose = false,
   compact = false,
+  submitButton = null,
 }) {
   const rows = getVirtualAnswerKeyboardRows(layout, { compact });
   if (!rows.length) return null;
@@ -50,9 +53,10 @@ export default function VirtualAnswerKeyboard({
   const keyClass = compact
     ? "min-h-[40px] h-10 rounded-md border border-white/20 bg-black/35 text-white text-base font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
     : "min-h-[44px] rounded-lg border border-white/20 bg-black/35 text-white text-lg font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform";
-  const actionKeyClass = compact
-    ? `${keyClass} text-sm`
-    : keyClass;
+  const actionKeyClass = compact ? `${keyClass} text-sm` : keyClass;
+  const submitClass = compact
+    ? "col-span-3 min-h-[40px] h-10 rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
+    : "";
 
   return (
     <div
@@ -77,46 +81,63 @@ export default function VirtualAnswerKeyboard({
         </div>
       ) : null}
       <div className={`flex flex-col ${rowGapClass}`}>
-        {rows.map((row) => (
-          <div key={row.id} className={`grid grid-cols-4 ${colGapClass}`}>
-            {row.keys.map((keyDef) => {
-              if (keyDef.spacer) {
+        {rows.map((row) => {
+          const embedSubmit =
+            compact && submitButton && row.id === "m-row-0-submit";
+
+          return (
+            <div key={row.id} className={`grid grid-cols-4 ${colGapClass}`}>
+              {row.keys.map((keyDef) => {
+                if (keyDef.spacer) {
+                  return (
+                    <span
+                      key={keyDef.id}
+                      className={compact ? "h-10" : "min-h-[44px]"}
+                      aria-hidden="true"
+                    />
+                  );
+                }
+
+                const spanClass =
+                  keyDef.colSpan === 2
+                    ? "col-span-2"
+                    : keyDef.colSpan === 3
+                      ? "col-span-3"
+                      : "";
+                const testId = keyDef.action
+                  ? `virtual-key-${keyDef.action}`
+                  : `virtual-key-${keyDef.id}`;
+                const isAction =
+                  keyDef.action === "backspace" || keyDef.action === "clear";
+
                 return (
-                  <span
+                  <button
                     key={keyDef.id}
-                    className={compact ? "h-10" : "min-h-[44px]"}
-                    aria-hidden="true"
-                  />
+                    type="button"
+                    data-testid={testId}
+                    disabled={disabled}
+                    onClick={() => handleKey(keyDef)}
+                    aria-label={keyDef.ariaLabel || keyDef.label}
+                    className={`${isAction ? actionKeyClass : keyClass} ${spanClass}`}
+                  >
+                    {keyDef.label}
+                  </button>
                 );
-              }
-
-              const spanClass =
-                keyDef.colSpan === 2
-                  ? "col-span-2"
-                  : keyDef.colSpan === 3
-                    ? "col-span-3"
-                    : "";
-              const testId = keyDef.action
-                ? `virtual-key-${keyDef.action}`
-                : `virtual-key-${keyDef.id}`;
-              const isAction = keyDef.action === "backspace" || keyDef.action === "clear";
-
-              return (
+              })}
+              {embedSubmit ? (
                 <button
-                  key={keyDef.id}
                   type="button"
-                  data-testid={testId}
-                  disabled={disabled}
-                  onClick={() => handleKey(keyDef)}
-                  aria-label={keyDef.ariaLabel || keyDef.label}
-                  className={`${isAction ? actionKeyClass : keyClass} ${spanClass}`}
+                  data-testid={submitButton.testId}
+                  disabled={submitButton.disabled}
+                  onClick={submitButton.onClick}
+                  className={submitClass}
                 >
-                  {keyDef.label}
+                  {submitButton.label || "בדוק"}
                 </button>
-              );
-            })}
-          </div>
-        ))}
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

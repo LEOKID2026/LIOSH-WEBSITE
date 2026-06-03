@@ -28,7 +28,9 @@ import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repea
 import { generateQuestion } from "../../utils/geometry-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
-import StudentNumericAnswerField from "../../components/learning/StudentNumericAnswerField";
+import StudentNumericAnswerField, {
+  useMobileEmbeddedNumericSubmit,
+} from "../../components/learning/StudentNumericAnswerField";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
 import { getGeometryBookHref } from "../../lib/learning-book/resolve-geometry-book-page";
@@ -204,6 +206,7 @@ const GEOMETRY_BOOK_GRADES = new Set(["g1", "g2", "g3", "g4", "g5", "g6"]);
 
 export default function GeometryMaster() {
   useIOSViewportFix();
+  const mobileEmbeddedNumericSubmit = useMobileEmbeddedNumericSubmit("geometry");
   const router = useRouter();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
@@ -3031,7 +3034,7 @@ export default function GeometryMaster() {
                       {currentQuestion.params?.kind !== "no_question" &&
                         ((mode === "learning" || mode === "practice") ? (
                           <div className="w-full mb-3 p-4 rounded-lg bg-blue-500/20 border border-blue-400/50">
-                            <div className="text-center mb-3">
+                            <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1" : "mb-3"}`}>
                               <StudentNumericAnswerField
                                 subject="geometry"
                                 value={textAnswer}
@@ -3045,10 +3048,20 @@ export default function GeometryMaster() {
                                     handleAnswer(textAnswer.trim());
                                   }
                                 }}
+                                onSubmit={() => {
+                                  if (!selectedAnswer && textAnswer.trim() !== "") {
+                                    handleAnswer(textAnswer.trim());
+                                  }
+                                }}
+                                submitDisabled={!!selectedAnswer || textAnswer.trim() === ""}
+                                submitTestId="geometry-check-answer"
                               />
                             </div>
                             <div className="flex gap-2 justify-center">
+                              {!mobileEmbeddedNumericSubmit ? (
                               <button
+                                type="button"
+                                data-testid="geometry-check-answer"
                                 onClick={() => {
                                   if (!selectedAnswer && textAnswer.trim() !== "") {
                                     handleAnswer(textAnswer.trim());
@@ -3059,6 +3072,7 @@ export default function GeometryMaster() {
                               >
                                 בדוק
                               </button>
+                              ) : null}
                               {selectedAnswer && (
                                 <button
                                   onClick={() => {

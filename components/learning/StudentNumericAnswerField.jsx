@@ -11,7 +11,7 @@ const MOBILE_INPUT_CLASS =
 
 /**
  * Numeric answer input with optional on-screen keyboard (math / geometry only).
- * Does not render submit — parent keeps existing בדוק button.
+ * On mobile touch, the existing submit action can render in the keypad last row.
  */
 export default function StudentNumericAnswerField({
   value,
@@ -21,6 +21,10 @@ export default function StudentNumericAnswerField({
   testId,
   subject,
   onEnterSubmit,
+  onSubmit,
+  submitDisabled = false,
+  submitTestId,
+  submitLabel = "בדוק",
   className = "",
   inputClassName = "",
   autoFocus = false,
@@ -41,6 +45,8 @@ export default function StudentNumericAnswerField({
   const showKeyboard = virtualEnabled && (policy.defaultOpen || keyboardOpen);
   const inputReadOnly = virtualEnabled && isTouch && !disabled;
   const useCompactKeyboard = virtualEnabled && isTouch;
+  const embedSubmitInKeyboard =
+    useCompactKeyboard && typeof onSubmit === "function";
 
   const inputProps = virtualEnabled
     ? {
@@ -57,6 +63,7 @@ export default function StudentNumericAnswerField({
       className={`w-full flex flex-col items-center ${
         useCompactKeyboard ? "gap-1.5" : "gap-2"
       } ${className}`}
+      data-mobile-submit-embedded={embedSubmitInKeyboard ? "true" : undefined}
     >
       <div
         className={`w-full flex items-center justify-center gap-2 ${
@@ -107,8 +114,29 @@ export default function StudentNumericAnswerField({
           showClose={virtualEnabled && !isTouch}
           onClose={() => setKeyboardOpen(false)}
           className={useCompactKeyboard ? "mt-0" : "mt-1"}
+          submitButton={
+            embedSubmitInKeyboard
+              ? {
+                  label: submitLabel,
+                  onClick: onSubmit,
+                  disabled: submitDisabled,
+                  testId: submitTestId,
+                }
+              : null
+          }
         />
       ) : null}
     </div>
   );
+}
+
+/** @returns {boolean} True when submit is rendered inside the compact mobile keypad. */
+export function useMobileEmbeddedNumericSubmit(subject) {
+  const isTouch = useTouchPrimaryDevice();
+  const policy = resolveVirtualAnswerKeyboard({
+    subject,
+    hasTextInput: true,
+    isTouch,
+  });
+  return policy.enabled && isTouch;
 }
