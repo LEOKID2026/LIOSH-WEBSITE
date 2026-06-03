@@ -49,3 +49,13 @@ test("numeric keyboard layout has expected keys", () => {
   assert.ok(ids.includes("backspace"));
   assert.ok(ids.includes("clear"));
 });
+
+test("compact numeric keyboard layout — 4 rows for mobile", () => {
+  const rows = getVirtualAnswerKeyboardRows("numeric", { compact: true });
+  assert.equal(rows.length, 4);
+  const ids = rows.flatMap((r) => r.keys.filter((k) => !k.spacer).map((k) => k.id));
+  assert.ok(ids.includes("0"));
+  assert.ok(ids.includes("backspace"));
+  assert.ok(ids.includes("clear"));
+  assert.ok(ids.includes("-"));
+});

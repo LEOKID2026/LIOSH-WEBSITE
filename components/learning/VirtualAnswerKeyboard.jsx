@@ -16,6 +16,7 @@ import { getVirtualAnswerKeyboardRows } from "../../lib/learning/virtual-answer-
  *   className?: string,
  *   onClose?: () => void,
  *   showClose?: boolean,
+ *   compact?: boolean,
  * }} props
  */
 export default function VirtualAnswerKeyboard({
@@ -26,12 +27,13 @@ export default function VirtualAnswerKeyboard({
   className = "",
   onClose,
   showClose = false,
+  compact = false,
 }) {
-  const rows = getVirtualAnswerKeyboardRows(layout);
+  const rows = getVirtualAnswerKeyboardRows(layout, { compact });
   if (!rows.length) return null;
 
   const handleKey = (keyDef) => {
-    if (disabled) return;
+    if (disabled || keyDef.spacer) return;
     if (keyDef.action === "backspace") {
       onChange(backspaceVirtualAnswer(value));
       return;
@@ -43,9 +45,19 @@ export default function VirtualAnswerKeyboard({
     onChange(insertVirtualAnswerChar(value, keyDef.label === "−" ? "-" : keyDef.id));
   };
 
+  const rowGapClass = compact ? "gap-1" : "gap-1.5";
+  const colGapClass = compact ? "gap-1" : "gap-1.5";
+  const keyClass = compact
+    ? "min-h-[40px] h-10 rounded-md border border-white/20 bg-black/35 text-white text-base font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
+    : "min-h-[44px] rounded-lg border border-white/20 bg-black/35 text-white text-lg font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform";
+  const actionKeyClass = compact
+    ? `${keyClass} text-sm`
+    : keyClass;
+
   return (
     <div
       data-testid="virtual-answer-keyboard"
+      data-keyboard-variant={compact ? "compact" : "default"}
       className={`w-full max-w-[300px] mx-auto select-none ${className}`}
       dir="ltr"
       role="group"
@@ -64,10 +76,20 @@ export default function VirtualAnswerKeyboard({
           </button>
         </div>
       ) : null}
-      <div className="flex flex-col gap-1.5">
+      <div className={`flex flex-col ${rowGapClass}`}>
         {rows.map((row) => (
-          <div key={row.id} className="grid grid-cols-4 gap-1.5">
+          <div key={row.id} className={`grid grid-cols-4 ${colGapClass}`}>
             {row.keys.map((keyDef) => {
+              if (keyDef.spacer) {
+                return (
+                  <span
+                    key={keyDef.id}
+                    className={compact ? "h-10" : "min-h-[44px]"}
+                    aria-hidden="true"
+                  />
+                );
+              }
+
               const spanClass =
                 keyDef.colSpan === 2
                   ? "col-span-2"
@@ -77,6 +99,8 @@ export default function VirtualAnswerKeyboard({
               const testId = keyDef.action
                 ? `virtual-key-${keyDef.action}`
                 : `virtual-key-${keyDef.id}`;
+              const isAction = keyDef.action === "backspace" || keyDef.action === "clear";
+
               return (
                 <button
                   key={keyDef.id}
@@ -85,7 +109,7 @@ export default function VirtualAnswerKeyboard({
                   disabled={disabled}
                   onClick={() => handleKey(keyDef)}
                   aria-label={keyDef.ariaLabel || keyDef.label}
-                  className={`min-h-[44px] rounded-lg border border-white/20 bg-black/35 text-white text-lg font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform ${spanClass}`}
+                  className={`${isAction ? actionKeyClass : keyClass} ${spanClass}`}
                 >
                   {keyDef.label}
                 </button>
