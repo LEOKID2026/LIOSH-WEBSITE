@@ -1,5 +1,6 @@
 import MixedHebrewMathText from "./MixedHebrewMathText";
 import BookDiagram from "./BookDiagram";
+import BookPipeTable from "./BookPipeTable";
 import GeometryDiagram from "./GeometryDiagram";
 import { splitBookMarkdownBlocks } from "../../lib/learning-book/book-markdown-blocks";
 
@@ -26,6 +27,10 @@ function MarkdownBlock({ block }) {
 
   if (block.type === "code") {
     return <BookDiagram content={block.content} />;
+  }
+
+  if (block.type === "pipe_table") {
+    return <BookPipeTable headers={block.headers} rows={block.rows} />;
   }
 
   if (block.type === "hr") {

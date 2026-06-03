@@ -30,11 +30,18 @@ export const BIDI_LIVE_QA_PAGES = [
   { subject: "math", grade: "g1", pageId: "sub_two", sections: [2, 3, 4, 6] },
   { subject: "math", grade: "g2", pageId: "add_two", sections: [2, 3, 4, 6] },
   { subject: "math", grade: "g2", pageId: "sub_two", sections: [2, 3, 4, 6] },
+  { subject: "math", grade: "g2", pageId: "cmp", sections: [2, 3, 4, 6] },
   { subject: "math", grade: "g2", pageId: "add_vertical", sections: [2, 3, 4, 6] },
   { subject: "math", grade: "g2", pageId: "sub_vertical", sections: [2, 3, 4, 6] },
+  { subject: "math", grade: "g3", pageId: "add_two", sections: [2, 3, 4, 6] },
+  { subject: "math", grade: "g4", pageId: "cmp", sections: [2, 3, 4, 6] },
   { subject: "math", grade: "g5", pageId: "div_with_remainder", sections: [2, 3, 4, 6] },
+  { subject: "math", grade: "g6", pageId: "add_two", sections: [2, 3, 4, 6] },
+  { subject: "geometry", grade: "g3", pageId: "parallel_perpendicular", sections: [2, 3, 4, 6] },
   { subject: "geometry", grade: "g4", pageId: "square_perimeter", sections: [2, 3, 4, 6] },
+  { subject: "geometry", grade: "g4", pageId: "shapes_basic_properties_angles", sections: [2, 3, 4, 6] },
   { subject: "geometry", grade: "g5", pageId: "heights_triangle", sections: [2, 3, 4, 6] },
+  { subject: "geometry", grade: "g6", pageId: "triangle_angles", sections: [2, 3, 4, 6] },
 ];
 
 const errors = [];

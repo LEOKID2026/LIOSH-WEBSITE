@@ -1,13 +1,16 @@
 import { Fragment } from "react";
 import {
+  bookLabelBodyGapStyle,
   bookLabelIsolateStyle,
   bookMathIsolateStyle,
+  bookProseIsolateStyle,
   isFormulaLikeBody,
   isMathLikeText,
   splitFormulaTokens,
   splitHebrewMathRuns,
   splitTextAndMathRuns,
 } from "../../lib/learning-book/book-math-display";
+import { splitProseForBidiRendering, splitCommaVavEquationDisplay } from "../../lib/learning-book/book-bidi-render";
 import { parseBookLineStructure, splitMixedBodyClauses } from "../../lib/learning-book/book-line-structure";
 import {
   parseInlineMarkdown,
@@ -74,6 +77,44 @@ function DigitSpan({ value, sourceText, start, end }) {
   );
 }
 
+const MIXED_LINE_CLASS =
+  "inline-flex max-w-full flex-wrap items-baseline [direction:rtl]";
+
+function MixedLineBody({ children, className = "" }) {
+  return (
+    <span className={`book-mixed-line-body ${MIXED_LINE_CLASS} ${className}`.trim()} dir="rtl">
+      {children}
+    </span>
+  );
+}
+
+function ProseSpan({ children, className = "" }) {
+  return (
+    <bdi
+      dir="rtl"
+      style={bookProseIsolateStyle}
+      className={`book-prose-isolate ${className}`.trim()}
+      data-book-prose-run="true"
+    >
+      {children}
+    </bdi>
+  );
+}
+
+function renderProseText(value) {
+  const cleaned = stripStrayMarkdown(value);
+  if (!cleaned) return null;
+
+  const chunks = splitProseForBidiRendering(cleaned);
+  if (chunks.length <= 1) {
+    return <ProseSpan>{cleaned}</ProseSpan>;
+  }
+
+  return chunks.map((chunk, i) => (
+    <ProseSpan key={i}>{stripStrayMarkdown(chunk.value)}</ProseSpan>
+  ));
+}
+
 function renderContentRuns(text, sourceText, sourceOffset = 0) {
   const runs = splitHebrewMathRuns(text);
   const scopedSource = sourceText || text;
@@ -112,7 +153,7 @@ function renderContentRuns(text, sourceText, sourceOffset = 0) {
           end={end}
         />
       ) : (
-        stripStrayMarkdown(run.value)
+        renderProseText(run.value)
       );
 
     return (
@@ -144,11 +185,19 @@ function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
         </strong>
       );
     }
-    return <strong className="font-bold text-white">{content}</strong>;
+    return (
+      <strong className="font-bold text-white">
+        <ProseSpan>{content}</ProseSpan>
+      </strong>
+    );
   }
 
   if (type === "italic") {
-    return <em className="text-white/85">{content}</em>;
+    return (
+      <em className="text-white/85">
+        <ProseSpan>{content}</ProseSpan>
+      </em>
+    );
   }
 
   if (type === "code") {
@@ -200,9 +249,15 @@ function renderFormulaBody(text) {
       );
     }
     return (
-      <span key={i} className="book-formula-term" data-book-formula-term="true">
+      <bdi
+        key={i}
+        dir="rtl"
+        style={bookLabelIsolateStyle}
+        className="book-formula-term"
+        data-book-formula-term="true"
+      >
         {token.value}
-      </span>
+      </bdi>
     );
   });
 }
@@ -213,6 +268,20 @@ function renderMixedBodyInner(text) {
     return renderFormulaBody(input);
   }
 
+  const displayRows = splitCommaVavEquationDisplay(input);
+  if (displayRows) {
+    return displayRows.map((row, i) => (
+      <span key={i} className="book-equation-display-row block w-full">
+        {renderMixedBodyInnerSingle(row)}
+      </span>
+    ));
+  }
+
+  return renderMixedBodyInnerSingle(input);
+}
+
+function renderMixedBodyInnerSingle(text) {
+  const input = String(text || "");
   const segments = splitTextAndMathRuns(input);
 
   return segments.map((segment, i) => {
@@ -241,18 +310,10 @@ function renderMixedBodyInner(text) {
   });
 }
 
-function renderMixedClause(clause, keyPrefix) {
+function renderMixedClause(clause) {
   const structure = parseBookLineStructure(clause);
   if (structure?.body) {
-    return (
-      <>
-        <BookLineLabel label={structure.label} />
-        {" "}
-        <span className="book-line-body inline">
-          {renderMixedBodyInner(structure.body)}
-        </span>
-      </>
-    );
+    return renderLabelWithBody(structure.label, structure.body);
   }
   return renderMixedBodyInner(clause);
 }
@@ -262,7 +323,7 @@ function renderMixedBody(text) {
   return clauses.map((clause, i) => (
     <Fragment key={i}>
       {i > 0 ? " " : null}
-      {renderMixedClause(clause, String(i))}
+      {renderMixedClause(clause)}
     </Fragment>
   ));
 }
@@ -282,6 +343,27 @@ function BookLineLabel({ label }) {
   );
 }
 
+function LabelBodyGap() {
+  return (
+    <span
+      className="book-label-body-gap"
+      aria-hidden="true"
+      style={bookLabelBodyGapStyle}
+      data-book-label-gap="true"
+    />
+  );
+}
+
+function renderLabelWithBody(label, body) {
+  return (
+    <>
+      <BookLineLabel label={label} />
+      <LabelBodyGap />
+      {renderMixedBodyInner(body)}
+    </>
+  );
+}
+
 /**
  * Render Hebrew text with math isolated first, then markdown in prose segments.
  */
@@ -289,29 +371,47 @@ export default function MixedHebrewMathText({ text, className = "" }) {
   const input = String(text || "");
   const structure = parseBookLineStructure(input);
 
-  if (structure) {
+  if (structure?.label) {
     return (
-      <span
-        className={`book-mixed-hebrew-math book-structured-line inline ${className}`.trim()}
-        dir="rtl"
+      <MixedLineBody
+        className={`book-mixed-hebrew-math book-structured-line ${className}`.trim()}
       >
-        <BookLineLabel label={structure.label} />
-        {structure.body ? (
-          <>
-            {" "}
-            <span className="book-line-body inline">{renderMixedBody(structure.body)}</span>
-          </>
-        ) : null}
-      </span>
+        {structure.body
+          ? renderLabelWithBody(structure.label, structure.body)
+          : <BookLineLabel label={structure.label} />}
+      </MixedLineBody>
+    );
+  }
+
+  const clauses = splitMixedBodyClauses(input);
+  if (clauses.length <= 1) {
+    return (
+      <MixedLineBody className={`book-mixed-hebrew-math ${className}`.trim()}>
+        {renderMixedBodyInner(input)}
+      </MixedLineBody>
     );
   }
 
   return (
-    <span
-      dir="rtl"
-      className={`book-mixed-hebrew-math inline ${className}`.trim()}
-    >
-      {renderMixedBody(input)}
-    </span>
+    <>
+      {clauses.map((clause, i) => {
+        const sub = parseBookLineStructure(clause);
+        return (
+          <MixedLineBody
+            key={i}
+            className={`book-mixed-hebrew-math ${className}`.trim()}
+          >
+            {sub?.label && sub?.body
+              ? renderLabelWithBody(sub.label, sub.body)
+              : (
+                <>
+                  {sub?.label ? <BookLineLabel label={sub.label} /> : null}
+                  {renderMixedBodyInner(sub?.body ?? clause)}
+                </>
+              )}
+          </MixedLineBody>
+        );
+      })}
+    </>
   );
 }

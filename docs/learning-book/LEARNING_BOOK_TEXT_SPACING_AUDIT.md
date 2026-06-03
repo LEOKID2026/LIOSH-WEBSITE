@@ -1,15 +1,15 @@
 # Learning Book Text Spacing Audit
 
-Generated: 2026-06-02
+Generated: 2026-06-03
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Files scanned | 253 |
-| Pages scanned | 253 |
-| Sections scanned | 1771 |
-| Visible lines checked | 6569 |
+| Files scanned | 254 |
+| Pages scanned | 254 |
+| Sections scanned | 1778 |
+| Visible lines checked | 6584 |
 | Suspicious spacing issues | 0 |
 | Test failures | 0 |
 
@@ -26,11 +26,9 @@ The RTL/LTR renderer treated some **plain Hebrew prose** as **formula-like bodie
 
 ## Fix applied
 
-- Tightened `isFormulaLikeBody` (exclude word hyphens, markdown markers, and multi-word explanatory equals chains).
+- Tightened `isFormulaLikeBody` (exclude word hyphens and multi-word explanatory equals chains).
 - `splitFormulaTokens` preserves whitespace as `space` tokens; no `.trim()` on Hebrew chunks.
 - `MixedHebrewMathText` re-inserts source gaps between runs/segments and renders formula space tokens.
-- `parseBookLineStructure` no longer splits on Hebrew:Hebrew colons (`שעות:דקות`) or clock-time pseudo-labels (`שיעור 2:`).
-- `splitLeadingLabel` skips lines with inline markdown colons (`**שעות:דקות**`).
 - Added `book-visible-text-render.js` for export + regression simulation.
 
 ## Known glued patterns checked
@@ -82,8 +80,6 @@ _None — all scanned lines preserve source spacing._
 
 - `components/learning-book/MixedHebrewMathText.js`
 - `lib/learning-book/book-math-display.js`
-- `lib/learning-book/book-line-structure.js`
-- `lib/learning-book/book-prose-format.js`
 - `lib/learning-book/book-visible-text-render.js` (new simulation helper)
 
 ## Verification
