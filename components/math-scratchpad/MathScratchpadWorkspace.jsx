@@ -4,7 +4,121 @@ import {
   digitCount,
   numberToDigitCells,
 } from "../../utils/math-scratchpad/extract-operands";
+import {
+  PAPER_GRID_MULTIPLICATION,
+  PAPER_GRID_PLACE_VALUE,
+  PAPER_GRID_VERTICAL,
+  createEmptyPaperGrid,
+  rightAlignDigitCells,
+} from "../../utils/math-scratchpad/paper-grid-config";
 import { ScratchpadDigitDisplay, ScratchpadDigitInput } from "./scratchpad-virtual-input";
+
+const WORK_CELL_CLASS =
+  "w-9 h-9 md:w-10 md:h-10 text-center text-base md:text-lg bg-white/10 rounded text-white";
+const OPERAND_CELL_CLASS =
+  "w-9 h-9 md:w-10 md:h-10 text-center text-base md:text-lg rounded text-white bg-sky-500/25 border border-sky-300/30";
+const CARRY_CELL_CLASS =
+  "w-9 h-9 md:w-10 md:h-10 text-center text-base md:text-lg bg-amber-500/15 border border-amber-300/30 rounded text-white";
+
+function useCarryRow(cols, resetKey) {
+  const [carryRow, setCarryRow] = useState(() => Array(cols).fill(""));
+
+  useEffect(() => {
+    setCarryRow(Array(cols).fill(""));
+  }, [cols, resetKey]);
+
+  return [carryRow, setCarryRow];
+}
+
+function PaperCarryRowFlex({ carryRow, setCarryRow }) {
+  return (
+    <div className="flex justify-end gap-1 w-full mb-1">
+      {carryRow.map((cell, i) => (
+        <ScratchpadDigitInput
+          key={`carry-${i}`}
+          value={cell}
+          onChange={(v) => {
+            setCarryRow((prev) => {
+              const next = [...prev];
+              next[i] = v;
+              return next;
+            });
+          }}
+          className={CARRY_CELL_CLASS}
+          aria-label={`carry col ${i + 1}`}
+          maxLength={1}
+        />
+      ))}
+    </div>
+  );
+}
+
+function PaperCarryRowTable({ carryRow, setCarryRow }) {
+  return (
+    <tr>
+      {carryRow.map((cell, i) => (
+        <td key={`carry-${i}`} className="border border-amber-300/20 p-0.5">
+          <ScratchpadDigitInput
+            value={cell}
+            onChange={(v) => {
+              setCarryRow((prev) => {
+                const next = [...prev];
+                next[i] = v;
+                return next;
+              });
+            }}
+            className={CARRY_CELL_CLASS}
+            aria-label={`carry col ${i + 1}`}
+            maxLength={1}
+          />
+        </td>
+      ))}
+    </tr>
+  );
+}
+
+function PaperScrollShell({ children }) {
+  return (
+    <div
+      className="w-full max-h-[min(52vh,26rem)] overflow-y-auto overflow-x-auto overscroll-contain px-1 py-1"
+      dir="ltr"
+      onKeyDown={stopKeyBubble}
+    >
+      {children}
+    </div>
+  );
+}
+
+function PaperWorkGridRows({ grid, setGrid, rowLabelPrefix = "work" }) {
+  return grid.map((row, ri) => (
+    <tr key={`${rowLabelPrefix}-${ri}`}>
+      {row.map((cell, ci) => (
+        <td key={ci} className="border border-white/15 p-0.5">
+          <ScratchpadDigitInput
+            value={cell}
+            onChange={(v) => {
+              setGrid((prev) => {
+                const next = prev.map((r) => [...r]);
+                next[ri][ci] = v;
+                return next;
+              });
+            }}
+            className={WORK_CELL_CLASS}
+            aria-label={`${rowLabelPrefix} row ${ri + 1} col ${ci + 1}`}
+          />
+        </td>
+      ))}
+    </tr>
+  ));
+}
+
+function placeValueHeaderLabels(cols) {
+  const named = ["א", "ע", "מ", "אלף"];
+  return Array.from({ length: cols }, (_, i) => {
+    const fromRight = cols - 1 - i;
+    return fromRight < named.length ? named[fromRight] : "";
+  });
+}
 
 function stopKeyBubble(e) {
   if (e.key === "Enter" || e.key === "Escape") {
@@ -361,187 +475,208 @@ function ManualNumberLineWorkspace({ operands }) {
 }
 
 function PlaceValueTableWorkspace({ operands }) {
-  const cols = Math.max(digitCount(operands.a ?? 0), digitCount(operands.b ?? 0), 2);
-  const labels = ["א", "ע", "מ", "אלף"].slice(0, cols).reverse();
+  const spec = PAPER_GRID_PLACE_VALUE;
   const topRow = useMemo(
-    () => numberToDigitCells(operands.a, cols),
-    [operands.a, cols]
+    () =>
+      rightAlignDigitCells(
+        numberToDigitCells(operands.a, digitCount(operands.a ?? 0)),
+        spec.cols
+      ),
+    [operands.a, spec.cols]
   );
   const bottomRow = useMemo(
-    () => numberToDigitCells(operands.b, cols),
-    [operands.b, cols]
+    () =>
+      rightAlignDigitCells(
+        numberToDigitCells(operands.b, digitCount(operands.b ?? 0)),
+        spec.cols
+      ),
+    [operands.b, spec.cols]
   );
-  const [resultRow, setResultRow] = useState(() => Array(cols).fill(""));
+  const labels = useMemo(() => placeValueHeaderLabels(spec.cols), [spec.cols]);
+  const [workGrid, setWorkGrid] = useState(() =>
+    createEmptyPaperGrid(spec.workRows, spec.cols)
+  );
+  const resetKey = `${operands.a}|${operands.b}`;
+  const [carryRow, setCarryRow] = useCarryRow(spec.cols, resetKey);
 
   useEffect(() => {
-    setResultRow(Array(cols).fill(""));
-  }, [cols, operands.a, operands.b]);
-
-  const operandCellClass =
-    "w-10 h-10 md:w-12 md:h-12 text-center text-lg rounded text-white bg-sky-500/25 border border-sky-300/30";
-  const resultCellClass =
-    "w-10 h-10 md:w-12 md:h-12 text-center text-lg bg-white/10 rounded text-white";
-
-  const tableRows = [
-    { cells: topRow, editable: false, rowLabel: "operand top" },
-    { cells: bottomRow, editable: false, rowLabel: "operand bottom" },
-    { cells: resultRow, editable: true, rowLabel: "result" },
-  ];
+    setWorkGrid(createEmptyPaperGrid(spec.workRows, spec.cols));
+  }, [spec.workRows, spec.cols, operands.a, operands.b]);
 
   return (
-    <div className="overflow-x-auto" dir="ltr" onKeyDown={stopKeyBubble}>
+    <PaperScrollShell>
       <table className="mx-auto border-collapse text-center">
         <thead>
           <tr>
-            {labels.map((label) => (
-              <th key={label} className="border border-white/20 px-2 py-1 text-xs text-white/70">
+            {labels.map((label, i) => (
+              <th
+                key={i}
+                className="border border-white/20 px-1 py-1 text-xs text-white/60 min-w-[2.25rem]"
+              >
                 {label}
               </th>
             ))}
           </tr>
+          <tr>
+            <th
+              colSpan={spec.cols}
+              className="border-0 py-0.5 text-[10px] md:text-xs font-normal text-amber-200/70 text-end pe-1"
+              dir="rtl"
+            >
+              נשיאה
+            </th>
+          </tr>
         </thead>
         <tbody>
-          {tableRows.map(({ cells, editable, rowLabel }, ri) => (
-            <tr key={rowLabel}>
+          <PaperCarryRowTable carryRow={carryRow} setCarryRow={setCarryRow} />
+          {[topRow, bottomRow].map((cells, ri) => (
+            <tr key={`operand-${ri}`}>
               {cells.map((cell, ci) => (
-                <td key={ci} className="border border-white/20 p-1">
-                  {editable ? (
-                    <ScratchpadDigitInput
-                      value={cell}
-                      onChange={(v) => {
-                        setResultRow((prev) => {
-                          const next = [...prev];
-                          next[ci] = v;
-                          return next;
-                        });
-                      }}
-                      className={resultCellClass}
-                      aria-label={`${rowLabel} column ${ci + 1}`}
-                    />
-                  ) : (
-                    <ScratchpadDigitDisplay
-                      value={cell}
-                      className={operandCellClass}
-                      aria-label={`${rowLabel} column ${ci + 1}`}
-                    />
-                  )}
+                <td key={ci} className="border border-white/20 p-0.5">
+                  <ScratchpadDigitDisplay
+                    value={cell}
+                    className={OPERAND_CELL_CLASS}
+                    aria-label={`operand row ${ri + 1} col ${ci + 1}`}
+                  />
                 </td>
               ))}
             </tr>
           ))}
+          <tr>
+            <td colSpan={spec.cols} className="py-1">
+              <div className="border-t-2 border-white/35" />
+            </td>
+          </tr>
+          <PaperWorkGridRows grid={workGrid} setGrid={setWorkGrid} rowLabelPrefix="place-value-work" />
         </tbody>
       </table>
-    </div>
+    </PaperScrollShell>
   );
 }
 
 function VerticalLayoutWorkspace({ operands, variant }) {
   const { a, b } = operands;
-  const cols = Math.max(digitCount(a ?? 0), digitCount(b ?? 0), 2);
-  const topRow = useMemo(() => numberToDigitCells(a, cols), [a, cols]);
-  const bottomRow = useMemo(() => numberToDigitCells(b, cols), [b, cols]);
-  const [resultRow, setResultRow] = useState(() => Array(cols).fill(""));
+  const spec = PAPER_GRID_VERTICAL;
+  const topRow = useMemo(
+    () => rightAlignDigitCells(numberToDigitCells(a, digitCount(a ?? 0)), spec.cols),
+    [a, spec.cols]
+  );
+  const bottomRow = useMemo(
+    () => rightAlignDigitCells(numberToDigitCells(b, digitCount(b ?? 0)), spec.cols),
+    [b, spec.cols]
+  );
+  const [workGrid, setWorkGrid] = useState(() =>
+    createEmptyPaperGrid(spec.workRows, spec.cols)
+  );
+  const resetKey = `${variant}|${a}|${b}`;
+  const [carryRow, setCarryRow] = useCarryRow(spec.cols, resetKey);
 
   useEffect(() => {
-    setResultRow(Array(cols).fill(""));
-  }, [cols, variant, a, b]);
+    setWorkGrid(createEmptyPaperGrid(spec.workRows, spec.cols));
+  }, [spec.workRows, spec.cols, variant, a, b]);
 
   const opSymbol = variant === "blank_vertical_subtraction" ? "−" : "+";
-  const operandCellClass =
-    "w-10 h-12 md:w-12 md:h-14 text-center text-xl rounded text-white bg-sky-500/25 border border-sky-300/30";
-  const resultCellClass =
-    "w-10 h-12 md:w-12 md:h-14 text-center text-xl bg-white/10 rounded text-white";
 
   return (
-    <div className="flex flex-col items-end gap-1 font-mono" dir="ltr" onKeyDown={stopKeyBubble}>
-      <div className="flex justify-end gap-1 font-mono text-xl">
-        {topRow.map((cell, i) => (
-          <ScratchpadDigitDisplay
-            key={`top-${i}`}
-            value={cell}
-            className={operandCellClass}
-            aria-label={`top digit ${i + 1}`}
-          />
-        ))}
+    <PaperScrollShell>
+      <div className="flex flex-col items-end gap-1 font-mono w-full max-w-md mx-auto">
+        <div className="w-full text-[10px] md:text-xs text-amber-200/70 text-end pe-1 mb-0.5" dir="rtl">
+          נשיאה
+        </div>
+        <PaperCarryRowFlex carryRow={carryRow} setCarryRow={setCarryRow} />
+        <div className="flex justify-end gap-1 w-full">
+          {topRow.map((cell, i) => (
+            <ScratchpadDigitDisplay
+              key={`top-${i}`}
+              value={cell}
+              className={OPERAND_CELL_CLASS}
+              aria-label={`top digit ${i + 1}`}
+            />
+          ))}
+        </div>
+        <div className="flex justify-end items-center gap-1 w-full">
+          <span className="w-6 text-center text-white/80 text-xl shrink-0">{opSymbol}</span>
+          {bottomRow.map((cell, i) => (
+            <ScratchpadDigitDisplay
+              key={`bottom-${i}`}
+              value={cell}
+              className={OPERAND_CELL_CLASS}
+              aria-label={`bottom digit ${i + 1}`}
+            />
+          ))}
+        </div>
+        <div className="w-full border-t-2 border-white/40 my-2" />
+        <table className="border-collapse w-full">
+          <tbody>
+            <PaperWorkGridRows grid={workGrid} setGrid={setWorkGrid} rowLabelPrefix="vertical-work" />
+          </tbody>
+        </table>
       </div>
-      <div className="flex justify-end items-center gap-1">
-        <span className="w-6 text-center text-white/80">{opSymbol}</span>
-        {bottomRow.map((cell, i) => (
-          <ScratchpadDigitDisplay
-            key={`bottom-${i}`}
-            value={cell}
-            className={operandCellClass}
-            aria-label={`bottom digit ${i + 1}`}
-          />
-        ))}
-      </div>
-      <div className="w-full border-t-2 border-white/50 my-1" />
-      <div className="flex justify-end gap-1 font-mono text-xl">
-        {resultRow.map((cell, i) => (
-          <ScratchpadDigitInput
-            key={`result-${i}`}
-            value={cell}
-            onChange={(v) => {
-              setResultRow((prev) => {
-                const next = [...prev];
-                next[i] = v;
-                return next;
-              });
-            }}
-            className={resultCellClass}
-            aria-label={`result digit ${i + 1}`}
-          />
-        ))}
-      </div>
-    </div>
+    </PaperScrollShell>
   );
 }
 
 function MultiplicationArrayWorkspace({ operands }) {
   const { a, b } = operands;
-  const rows = Math.min(Math.max(0, Math.round(a ?? 0)), 12);
-  const cols = Math.min(Math.max(0, Math.round(b ?? 0)), 12);
-  const [marked, setMarked] = useState(() => new Set());
+  const spec = PAPER_GRID_MULTIPLICATION;
+  const topRow = useMemo(
+    () => rightAlignDigitCells(numberToDigitCells(a, digitCount(a ?? 0)), spec.cols),
+    [a, spec.cols]
+  );
+  const bottomRow = useMemo(
+    () => rightAlignDigitCells(numberToDigitCells(b, digitCount(b ?? 0)), spec.cols),
+    [b, spec.cols]
+  );
+  const [workGrid, setWorkGrid] = useState(() =>
+    createEmptyPaperGrid(spec.workRows, spec.cols)
+  );
+  const resetKey = `${a}|${b}`;
+  const [carryRow, setCarryRow] = useCarryRow(spec.cols, resetKey);
 
   useEffect(() => {
-    setMarked(new Set());
-  }, [rows, cols]);
+    setWorkGrid(createEmptyPaperGrid(spec.workRows, spec.cols));
+  }, [spec.workRows, spec.cols, a, b]);
 
   return (
-    <div className="flex flex-col items-center gap-3" dir="ltr" onKeyDown={stopKeyBubble}>
-      <div className="text-sm font-bold text-white/80 font-mono">
-        {a} × {b}
+    <PaperScrollShell>
+      <div className="flex flex-col items-end gap-1 font-mono w-full max-w-md mx-auto">
+        <div className="w-full text-[10px] md:text-xs text-amber-200/70 text-end pe-1 mb-0.5" dir="rtl">
+          נשיאה
+        </div>
+        <PaperCarryRowFlex carryRow={carryRow} setCarryRow={setCarryRow} />
+        <div className="flex justify-end gap-1 w-full">
+          {topRow.map((cell, i) => (
+            <ScratchpadDigitDisplay
+              key={`mult-top-${i}`}
+              value={cell}
+              className={OPERAND_CELL_CLASS}
+              aria-label={`factor top ${i + 1}`}
+            />
+          ))}
+        </div>
+        <div className="flex justify-end items-center gap-1 w-full">
+          <span className="w-6 text-center text-white/80 text-xl shrink-0">×</span>
+          {bottomRow.map((cell, i) => (
+            <ScratchpadDigitDisplay
+              key={`mult-bottom-${i}`}
+              value={cell}
+              className={OPERAND_CELL_CLASS}
+              aria-label={`factor bottom ${i + 1}`}
+            />
+          ))}
+        </div>
+        <div className="w-full border-t-2 border-white/40 my-2" />
+        <table className="border-collapse w-full">
+          <tbody>
+            <PaperWorkGridRows
+              grid={workGrid}
+              setGrid={setWorkGrid}
+              rowLabelPrefix="multiplication-work"
+            />
+          </tbody>
+        </table>
       </div>
-      <div className="flex flex-col gap-1">
-        {Array.from({ length: rows }, (_, r) => (
-          <div key={r} className="flex gap-1 justify-center">
-            {Array.from({ length: cols }, (_, c) => {
-              const key = `${r}-${c}`;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  aria-label={`array cell ${r + 1},${c + 1}`}
-                  onClick={() =>
-                    setMarked((prev) => {
-                      const next = new Set(prev);
-                      if (next.has(key)) next.delete(key);
-                      else next.add(key);
-                      return next;
-                    })
-                  }
-                  className={`h-8 w-8 md:h-9 md:w-9 rounded border-2 ${
-                    marked.has(key)
-                      ? "bg-emerald-400/80 border-emerald-200"
-                      : "bg-white/5 border-white/25"
-                  }`}
-                />
-              );
-            })}
-          </div>
-        ))}
-      </div>
-    </div>
+    </PaperScrollShell>
   );
 }
 
