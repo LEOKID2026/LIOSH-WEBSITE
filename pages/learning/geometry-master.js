@@ -28,6 +28,7 @@ import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repea
 import { generateQuestion } from "../../utils/geometry-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import StudentNumericAnswerField from "../../components/learning/StudentNumericAnswerField";
 import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
 import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta";
 import { getGeometryBookHref } from "../../lib/learning-book/resolve-geometry-book-page";
@@ -3031,20 +3032,19 @@ export default function GeometryMaster() {
                         ((mode === "learning" || mode === "practice") ? (
                           <div className="w-full mb-3 p-4 rounded-lg bg-blue-500/20 border border-blue-400/50">
                             <div className="text-center mb-3">
-                              <input
-                                type="text"
-                                data-testid="geometry-text-answer"
+                              <StudentNumericAnswerField
+                                subject="geometry"
                                 value={textAnswer}
-                                onChange={(e) => setTextAnswer(e.target.value)}
-                                onKeyPress={(e) => {
-                                  if (e.key === "Enter" && !selectedAnswer && textAnswer.trim() !== "") {
+                                onChange={setTextAnswer}
+                                disabled={!!selectedAnswer}
+                                testId="geometry-text-answer"
+                                placeholder="תשובה"
+                                autoFocus
+                                onEnterSubmit={() => {
+                                  if (!selectedAnswer && textAnswer.trim() !== "") {
                                     handleAnswer(textAnswer.trim());
                                   }
                                 }}
-                                placeholder="תשובה"
-                                disabled={!!selectedAnswer}
-                                className="w-full max-w-[300px] px-4 py-4 rounded-lg bg-black/40 border border-white/20 text-white text-2xl font-bold text-center disabled:opacity-50"
-                                autoFocus
                               />
                             </div>
                             <div className="flex gap-2 justify-center">

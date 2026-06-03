@@ -20,6 +20,7 @@ import {
 import { generateQuestion } from "../../utils/math-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import StudentNumericAnswerField from "../../components/learning/StudentNumericAnswerField";
 import {
   loadMathIntel,
   persistMathIntel,
@@ -4531,20 +4532,19 @@ export default function MathMaster() {
                       return (
                         <div className="w-full mb-3 p-4 rounded-lg bg-blue-500/20 border border-blue-400/50">
                           <div className="text-center mb-3">
-                            <input
-                              type="number"
-                              data-testid="math-text-answer"
+                            <StudentNumericAnswerField
+                              subject="math"
                               value={textAnswer}
-                              onChange={(e) => setTextAnswer(e.target.value)}
-                              onKeyPress={(e) => {
-                                if (e.key === "Enter" && !selectedAnswer && textAnswer.trim() !== "") {
+                              onChange={setTextAnswer}
+                              disabled={!!selectedAnswer}
+                              testId="math-text-answer"
+                              placeholder="תשובה"
+                              autoFocus
+                              onEnterSubmit={() => {
+                                if (!selectedAnswer && textAnswer.trim() !== "") {
                                   handleAnswer(textAnswer);
                                 }
                               }}
-                              placeholder="תשובה"
-                              disabled={!!selectedAnswer}
-                              className="w-full max-w-[300px] px-4 py-4 rounded-lg bg-black/40 border border-white/20 text-white text-2xl font-bold text-center disabled:opacity-50"
-                              autoFocus
                             />
                           </div>
                           <div className="flex gap-2 justify-center">
