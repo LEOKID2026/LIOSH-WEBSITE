@@ -4,9 +4,9 @@ import { generateActivityQuestionSetClient } from "../../lib/classroom-activitie
 import { activityModeLabelHe } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../../lib/learning-student-defaults.js";
 import {
-  defaultTopicForSubject,
-  topicOptionsForSubject,
-} from "../../lib/teacher-portal/teacher-class-topic-options.js";
+  defaultTopicForAssignedActivity,
+  topicOptionsForAssignedActivity,
+} from "../../lib/classroom-activities/assigned-activity-topic-options.js";
 import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
 
@@ -24,7 +24,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
 
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
-  const [topic, setTopic] = useState(() => defaultTopicForSubject("math", gradeKey));
+  const [topic, setTopic] = useState(() => defaultTopicForAssignedActivity("math", gradeKey));
   const [mode] = useState("guided_practice");
   const [difficulty, setDifficulty] = useState("medium");
   const [questionCount, setQuestionCount] = useState(5);
@@ -33,11 +33,11 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setTopic(defaultTopicForSubject(subject, gradeKey));
+    setTopic(defaultTopicForAssignedActivity(subject, gradeKey));
     setPreview([]);
   }, [subject, gradeKey]);
 
-  const topicOpts = topicOptionsForSubject(subject, gradeKey);
+  const topicOpts = topicOptionsForAssignedActivity(subject, gradeKey);
 
   const runPreview = useCallback(async () => {
     setBusy(true);

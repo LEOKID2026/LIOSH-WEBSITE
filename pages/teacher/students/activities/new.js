@@ -9,9 +9,9 @@ import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../../../lib/classroom-a
 import { generateActivityQuestionSetClient } from "../../../../lib/classroom-activities/generate-activity-questions-client.js";
 import { activityModeLabelHe } from "../../../../lib/classroom-activities/classroom-activities-labels.client.js";
 import {
-  defaultTopicForSubject,
-  topicOptionsForSubject,
-} from "../../../../lib/teacher-portal/teacher-class-topic-options.js";
+  defaultTopicForAssignedActivity,
+  topicOptionsForAssignedActivity,
+} from "../../../../lib/classroom-activities/assigned-activity-topic-options.js";
 import { formatGradeLevelHe } from "../../../../lib/learning-student-defaults.js";
 import AssignedActivityQuestionDisplay from "../../../../components/classroom-activities/AssignedActivityQuestionDisplay.jsx";
 import AssignedActivityBidiText from "../../../../components/classroom-activities/AssignedActivityBidiText.jsx";
@@ -32,7 +32,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
   const [gradeKey, setGradeKey] = useState("g3");
-  const [topic, setTopic] = useState(() => defaultTopicForSubject("math", "g3"));
+  const [topic, setTopic] = useState(() => defaultTopicForAssignedActivity("math", "g3"));
   const [mode, setMode] = useState("guided_practice");
   const [difficulty, setDifficulty] = useState("medium");
   const [questionCount, setQuestionCount] = useState(5);
@@ -57,7 +57,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   useEffect(() => {
     if (lockedGrade && lockedGrade !== gradeKey) {
       setGradeKey(lockedGrade);
-      setTopic(defaultTopicForSubject(subject, lockedGrade));
+      setTopic(defaultTopicForAssignedActivity(subject, lockedGrade));
       setPreview([]);
     }
   }, [lockedGrade]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -125,7 +125,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
     setError("");
   }, []);
 
-  const topicOpts = topicOptionsForSubject(subject, gradeKey);
+  const topicOpts = topicOptionsForAssignedActivity(subject, gradeKey);
 
   const runPreview = useCallback(async () => {
     setBusy(true);
@@ -335,7 +335,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
                 onChange={(e) => {
                   const s = e.target.value;
                   setSubject(s);
-                  setTopic(defaultTopicForSubject(s, gradeKey));
+                  setTopic(defaultTopicForAssignedActivity(s, gradeKey));
                   setPreview([]);
                 }}
               >
@@ -359,7 +359,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
                 onChange={(e) => {
                   if (lockedGrade) return;
                   setGradeKey(e.target.value);
-                  setTopic(defaultTopicForSubject(subject, e.target.value));
+                  setTopic(defaultTopicForAssignedActivity(subject, e.target.value));
                   setPreview([]);
                 }}
               >

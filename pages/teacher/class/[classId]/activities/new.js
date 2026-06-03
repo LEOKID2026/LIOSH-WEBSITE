@@ -16,14 +16,14 @@ import {
   resolveCanonicalGradeKey,
 } from "../../../../../lib/teacher-portal/teacher-class-grade.js";
 import {
-  defaultTopicForSubject,
-  englishTopicOptionsForGrade,
+  defaultTopicForAssignedActivity,
+  topicOptionsForAssignedActivity,
+} from "../../../../../lib/classroom-activities/assigned-activity-topic-options.js";
+import {
   geometryTopicOptionsForGrade,
-  hebrewTopicOptionsForGrade,
   mathTopicOptionsForGrade,
   moledetGeographyTopicOptionsForGrade,
   scienceTopicOptionsForGrade,
-  topicOptionsForSubject,
 } from "../../../../../lib/teacher-portal/teacher-class-topic-options.js";
 import AssignedActivityQuestionDisplay from "../../../../../components/classroom-activities/AssignedActivityQuestionDisplay.jsx";
 
@@ -38,7 +38,7 @@ export default function TeacherNewActivityPage({ classId }) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
-  const [topic, setTopic] = useState(() => defaultTopicForSubject("math", "g3"));
+  const [topic, setTopic] = useState(() => defaultTopicForAssignedActivity("math", "g3"));
   const [subtopic, setSubtopic] = useState("");
   const [mode, setMode] = useState("guided_practice");
   const [difficulty, setDifficulty] = useState("medium");
@@ -99,9 +99,9 @@ export default function TeacherNewActivityPage({ classId }) {
         const nextGrade = ctx.gradeKey || resolveCanonicalGradeKey(cls.gradeLevel) || "g3";
         if (ctx.subjectFocus) {
           setSubject(ctx.subjectFocus);
-          setTopic(defaultTopicForSubject(ctx.subjectFocus, nextGrade));
+          setTopic(defaultTopicForAssignedActivity(ctx.subjectFocus, nextGrade));
         } else {
-          setTopic(defaultTopicForSubject(subject, nextGrade));
+          setTopic(defaultTopicForAssignedActivity(subject, nextGrade));
         }
         setGradeLevel(nextGrade);
         setClassContext({ ...ctx, loaded: true });
@@ -117,7 +117,7 @@ export default function TeacherNewActivityPage({ classId }) {
     };
   }, [classId, router]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const topicOpts = topicOptionsForSubject(subject, gradeLevel);
+  const topicOpts = topicOptionsForAssignedActivity(subject, gradeLevel);
 
   useEffect(() => {
     if (subject === "moledet_geography") return;
@@ -135,7 +135,7 @@ export default function TeacherNewActivityPage({ classId }) {
     );
     if (next) {
       setSubject(next);
-      setTopic(defaultTopicForSubject(next, gradeLevel));
+      setTopic(defaultTopicForAssignedActivity(next, gradeLevel));
     }
   }, [gradeLevel, subject]);
 
@@ -273,7 +273,7 @@ export default function TeacherNewActivityPage({ classId }) {
               onChange={(e) => {
                 const next = e.target.value;
                 setSubject(next);
-                setTopic(defaultTopicForSubject(next, gradeLevel));
+                setTopic(defaultTopicForAssignedActivity(next, gradeLevel));
               }}
             >
               {activitySubjectsForGrade(gradeLevel, REPORT_SUBJECTS)
@@ -308,25 +308,13 @@ export default function TeacherNewActivityPage({ classId }) {
                   </option>
                 ))}
               </select>
-            ) : subject === "hebrew" ? (
+            ) : subject === "hebrew" || subject === "english" ? (
               <select
                 className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
               >
-                {hebrewTopicOptionsForGrade(gradeLevel).map(({ key, label }) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            ) : subject === "english" ? (
-              <select
-                className="mt-1 w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-              >
-                {englishTopicOptionsForGrade(gradeLevel).map(({ key, label }) => (
+                {topicOpts.map(({ key, label }) => (
                   <option key={key} value={key}>
                     {label}
                   </option>
@@ -388,7 +376,7 @@ export default function TeacherNewActivityPage({ classId }) {
               onChange={(e) => {
                 const g = e.target.value;
                 setGradeLevel(g);
-                setTopic(defaultTopicForSubject(subject, g));
+                setTopic(defaultTopicForAssignedActivity(subject, g));
               }}
             >
               {["g1", "g2", "g3", "g4", "g5", "g6"].map((g) => (
