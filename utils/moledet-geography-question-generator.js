@@ -208,6 +208,15 @@ export function resolveMoledetTopicPool(levelConfig, topic, gradeKey, mixedTopic
   return { topicQuestions, resolvedTopic, levelKey, poolFallbackCode };
 }
 
+function attachBookPracticeMeta(question, forceKind) {
+  if (!forceKind || !question || question.emptyPool) return question;
+  const params = { ...(question.params || {}) };
+  params.kind = forceKind;
+  params.subtopicId = forceKind;
+  params.bookPageId = forceKind;
+  return { ...question, params };
+}
+
 // ========== פונקציה עיקרית ליצירת שאלה ==========
 /**
  * @param {object} [probeOpts]
@@ -216,6 +225,8 @@ export function resolveMoledetTopicPool(levelConfig, topic, gradeKey, mixedTopic
  * @param {{ usedProbe?: boolean, reason?: string }} [probeOpts.resultHolder]
  */
 export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = null, probeOpts = null) {
+  const forceKind =
+    probeOpts?.forceKind != null ? String(probeOpts.forceKind).trim() : "";
   const { topicQuestions, resolvedTopic, levelKey, poolFallbackCode } = resolveMoledetTopicPool(
     levelConfig,
     topic,
@@ -257,14 +268,17 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
     }
   }
 
-  return sanitizeQuestionForStudentDisplay(
-    shuffleAnswersAndBuild(
-      randomQ,
-      resolvedTopic,
-      gradeKey,
-      levelKey,
-      uiLevel,
-      poolFallbackCode
-    )
+  return attachBookPracticeMeta(
+    sanitizeQuestionForStudentDisplay(
+      shuffleAnswersAndBuild(
+        randomQ,
+        resolvedTopic,
+        gradeKey,
+        levelKey,
+        uiLevel,
+        poolFallbackCode
+      )
+    ),
+    forceKind
   );
 }

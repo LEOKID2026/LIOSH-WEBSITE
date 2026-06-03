@@ -97,6 +97,17 @@ import {
   saveEnglishBookPracticePreset,
 } from "../../lib/learning-book/english-book-nav";
 import { resolveEnglishPracticeTarget } from "../../lib/learning-book/english-book-practice-map";
+import { MOLEDET_G2_BOOK_META } from "../../lib/learning-book/moledet-g2-registry";
+import { MOLEDET_G3_BOOK_META } from "../../lib/learning-book/moledet-g3-registry";
+import { MOLEDET_G4_BOOK_META } from "../../lib/learning-book/moledet-g4-registry";
+import { GEOGRAPHY_G5_BOOK_META } from "../../lib/learning-book/geography-g5-registry";
+import { GEOGRAPHY_G6_BOOK_META } from "../../lib/learning-book/geography-g6-registry";
+import {
+  getMoledetGeographyBookReturnQuerySuffix,
+  getMoledetGeographyBookPracticePath,
+  saveMoledetGeographyBookPracticePreset,
+} from "../../lib/learning-book/moledet-geography-book-nav";
+import { resolveMoledetGeographyPracticeTarget } from "../../lib/learning-book/moledet-geography-book-practice-map";
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta, getLearningBookMasterPath } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
@@ -221,6 +232,23 @@ const ENGLISH_G4_BOOK_UI = makeEnglishBookUi("g4", ENGLISH_G4_BOOK_META);
 const ENGLISH_G5_BOOK_UI = makeEnglishBookUi("g5", ENGLISH_G5_BOOK_META);
 const ENGLISH_G6_BOOK_UI = makeEnglishBookUi("g6", ENGLISH_G6_BOOK_META);
 
+/** @param {string} grade @param {typeof MOLEDET_G2_BOOK_META} bookMeta */
+function makeMoledetGeographyBookUi(grade, bookMeta) {
+  return {
+    bookMeta,
+    getReturnQuerySuffix: getMoledetGeographyBookReturnQuerySuffix,
+    resolvePracticeTarget: (pageId) => resolveMoledetGeographyPracticeTarget(grade, pageId),
+    getPracticePath: getMoledetGeographyBookPracticePath,
+    savePracticePreset: (preset) => saveMoledetGeographyBookPracticePreset(grade, preset),
+  };
+}
+
+const MOLEDET_G2_BOOK_UI = makeMoledetGeographyBookUi("g2", MOLEDET_G2_BOOK_META);
+const MOLEDET_G3_BOOK_UI = makeMoledetGeographyBookUi("g3", MOLEDET_G3_BOOK_META);
+const MOLEDET_G4_BOOK_UI = makeMoledetGeographyBookUi("g4", MOLEDET_G4_BOOK_META);
+const GEOGRAPHY_G5_BOOK_UI = makeMoledetGeographyBookUi("g5", GEOGRAPHY_G5_BOOK_META);
+const GEOGRAPHY_G6_BOOK_UI = makeMoledetGeographyBookUi("g6", GEOGRAPHY_G6_BOOK_META);
+
 export default function LearningPageBody({
   page,
   prevPageId = null,
@@ -254,6 +282,11 @@ export default function LearningPageBody({
     if (bookSubject === "english" && bookGrade === "g3") return ENGLISH_G3_BOOK_UI;
     if (bookSubject === "english" && bookGrade === "g2") return ENGLISH_G2_BOOK_UI;
     if (bookSubject === "english" && bookGrade === "g1") return ENGLISH_G1_BOOK_UI;
+    if (bookSubject === "geography" && bookGrade === "g6") return GEOGRAPHY_G6_BOOK_UI;
+    if (bookSubject === "geography" && bookGrade === "g5") return GEOGRAPHY_G5_BOOK_UI;
+    if (bookSubject === "moledet" && bookGrade === "g4") return MOLEDET_G4_BOOK_UI;
+    if (bookSubject === "moledet" && bookGrade === "g3") return MOLEDET_G3_BOOK_UI;
+    if (bookSubject === "moledet" && bookGrade === "g2") return MOLEDET_G2_BOOK_UI;
     if (bookSubject === "science" && bookGrade === "g6") return SCIENCE_G6_BOOK_UI;
     if (bookSubject === "science" && bookGrade === "g5") return SCIENCE_G5_BOOK_UI;
     if (bookSubject === "science" && bookGrade === "g4") return SCIENCE_G4_BOOK_UI;
@@ -356,7 +389,11 @@ export default function LearningPageBody({
           ? "נעבור לתרגול של הנושא הזה בעברית"
           : bookSubject === "english"
             ? "נעבור לתרגול של הנושא הזה באנגלית"
-            : "נעבור לתרגול של הנושא הזה בחשבון";
+            : bookSubject === "moledet"
+              ? "נעבור לתרגול של הנושא הזה במולדת"
+              : bookSubject === "geography"
+                ? "נעבור לתרגול של הנושא הזה בגאוגרפיה"
+                : "נעבור לתרגול של הנושא הזה בחשבון";
 
   return (
     <>

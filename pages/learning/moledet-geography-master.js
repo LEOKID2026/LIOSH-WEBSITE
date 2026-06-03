@@ -24,6 +24,13 @@ import {
   getMoledetGeographyBookSubjectForGrade,
 } from "../../lib/learning-book/resolve-moledet-geography-book-page.js";
 import { MOLEDET_GEOGRAPHY_ACTIVE_BOOK_GRADES } from "../../lib/learning-book/moledet-geography-book-practice-map.js";
+import {
+  consumeAnyMoledetGeographyBookLearningSnapshot,
+  consumeAnyMoledetGeographyBookPracticePreset,
+  isMoledetGeographyBookPracticeEntry,
+  saveMoledetGeographyBookLearningSnapshot,
+  withMoledetGeographyBookLearningReturn,
+} from "../../lib/learning-book/moledet-geography-book-nav.js";
 
 const MG_SUBJECT = MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID;
 const MG_BOOK_GRADE_SET = new Set(MOLEDET_GEOGRAPHY_ACTIVE_BOOK_GRADES);
@@ -210,6 +217,9 @@ export default function MoledetGeographyMaster() {
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const bookPracticePresetRef = useRef(null);
+  const practiceForceKindRef = useRef(null);
+  const practiceForceSkillIdRef = useRef(null);
   const questionBookHref = useMemo(() => {
     if (mode !== "learning" || !currentQuestion) return null;
     if (!MG_BOOK_GRADE_SET.has(grade)) return null;
@@ -217,17 +227,69 @@ export default function MoledetGeographyMaster() {
     return getMoledetGeographyBookHref({
       grade,
       topic: currentQuestion.topic || currentQuestion.operation || operation,
-      kind: params.subtopicId ?? params.kind ?? currentQuestion.pageId ?? null,
+      kind: params.bookPageId ?? params.subtopicId ?? params.kind ?? null,
+      forceKind: params.bookPageId ?? practiceForceKindRef.current,
+      pageId: params.bookPageId ?? null,
     });
   }, [grade, mode, currentQuestion, operation]);
   const openBookFromLearning = useCallback(
     (href) => {
       if (!href) return;
       if (!MG_BOOK_GRADE_SET.has(grade)) return;
-      router.push(href);
+      const snapshot = {
+        gameActive: true,
+        mode,
+        grade,
+        gradeNumber,
+        level,
+        operation,
+        currentQuestion,
+        score,
+        streak,
+        correct,
+        wrong,
+        selectedAnswer,
+        feedback,
+        questionStartTime,
+      };
+      saveMoledetGeographyBookLearningSnapshot(grade, snapshot);
+      router.push(withMoledetGeographyBookLearningReturn(href));
     },
-    [grade, router]
+    [
+      mode,
+      grade,
+      gradeNumber,
+      level,
+      operation,
+      currentQuestion,
+      score,
+      streak,
+      correct,
+      wrong,
+      selectedAnswer,
+      feedback,
+      questionStartTime,
+      router,
+    ]
   );
+  const applyBookPracticePreset = useCallback((preset) => {
+    if (!preset || preset.mode !== "learning") return;
+    const presetGrade = preset.grade;
+    if (!MG_BOOK_GRADE_SET.has(presetGrade)) return;
+    const presetTopic = preset.topic || preset.operation;
+    if (!presetTopic || typeof preset.forceKind !== "string") return;
+    if (!GRADES[presetGrade]?.topics?.includes(presetTopic)) return;
+    bookPracticePresetRef.current = preset;
+    practiceForceKindRef.current = preset.forceKind || null;
+    practiceForceSkillIdRef.current = preset.skillId || null;
+    setGrade(presetGrade);
+    const presetGradeNumber = gradeKeyToNumber(presetGrade);
+    if (presetGradeNumber) {
+      setGradeNumber(clampMoledetGeographyGradeNumber(presetGradeNumber));
+    }
+    setMode("learning");
+    setOperation(presetTopic);
+  }, []);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -634,7 +696,7 @@ export default function MoledetGeographyMaster() {
           } catch {}
         }
         const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey) {
+        if (gradeKey && !bookPracticePresetRef.current) {
           const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
           const clampedNum =
             gradeNumberFromDb != null
@@ -643,6 +705,9 @@ export default function MoledetGeographyMaster() {
           setGrade(`g${clampedNum}`);
           setGradeNumber(clampedNum);
         }
+        if (bookPracticePresetRef.current) {
+          applyBookPracticePreset(bookPracticePresetRef.current);
+        }
       })
       .catch(() => {
         if (mounted) setChildCoinBalance(0);
@@ -650,7 +715,40 @@ export default function MoledetGeographyMaster() {
     return () => {
       mounted = false;
     };
+  }, [applyBookPracticePreset]);
+
+  useEffect(() => {
+    const snap = consumeAnyMoledetGeographyBookLearningSnapshot();
+    if (!snap || snap.gameActive !== true) return;
+    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    if (typeof snap.grade === "string") setGrade(snap.grade);
+    if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
+    if (typeof snap.level === "string") setLevel(snap.level);
+    if (typeof snap.operation === "string") setOperation(snap.operation);
+    setGameActive(true);
+    if (snap.currentQuestion) setCurrentQuestion(snap.currentQuestion);
+    setScore(typeof snap.score === "number" ? snap.score : 0);
+    setStreak(typeof snap.streak === "number" ? snap.streak : 0);
+    setCorrect(typeof snap.correct === "number" ? snap.correct : 0);
+    setWrong(typeof snap.wrong === "number" ? snap.wrong : 0);
+    setSelectedAnswer(snap.selectedAnswer ?? null);
+    setFeedback(snap.feedback ?? null);
+    setQuestionStartTime(
+      typeof snap.questionStartTime === "number"
+        ? snap.questionStartTime
+        : Date.now()
+    );
   }, []);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (!isMoledetGeographyBookPracticeEntry(router.query)) return;
+    const preset = consumeAnyMoledetGeographyBookPracticePreset();
+    if (preset) {
+      applyBookPracticePreset(preset);
+    }
+  }, [router.isReady, router.query, applyBookPracticePreset]);
+
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedCol, setSelectedCol] = useState(null);
   const [highlightedAnswer, setHighlightedAnswer] = useState(null);
@@ -867,7 +965,8 @@ export default function MoledetGeographyMaster() {
   useEffect(() => {
     // אל תשנה אם ה-modal פתוח
     if (showMixedSelector) return;
-    
+    if (practiceForceKindRef.current) return;
+
     const allowed = GRADES[grade].topics;
     if (!allowed.includes(operation)) {
       // מצא את הנושא הראשון שזמין (לא mixed)
@@ -1159,8 +1258,13 @@ export default function MoledetGeographyMaster() {
               pendingProbe: probeAtStart,
               recentIds: recentQuestions,
               resultHolder: probeResultHolder,
+              forceKind: practiceForceKindRef.current,
+              forceSkillId: practiceForceSkillIdRef.current,
             }
-          : null;
+          : {
+              forceKind: practiceForceKindRef.current,
+              forceSkillId: practiceForceSkillIdRef.current,
+            };
       question = generateQuestion(
         levelConfigCopy,
         opForQuestion,
@@ -2902,6 +3006,8 @@ export default function MoledetGeographyMaster() {
                     title={`כיתה ${["א", "ב", "ג", "ד", "ה", "ו"][gradeNumber - 1]}`}
                     onChange={(e) => {
                       const newGradeNum = Number(e.target.value);
+                      practiceForceKindRef.current = null;
+                      practiceForceSkillIdRef.current = null;
                       setGradeNumber(newGradeNum);
                       setGrade(`g${newGradeNum}`);
                       setGameActive(false);
@@ -2940,6 +3046,8 @@ export default function MoledetGeographyMaster() {
                       onChange={(e) => {
                         const newOp = e.target.value;
                         setGameActive(false);
+                        practiceForceKindRef.current = null;
+                        practiceForceSkillIdRef.current = null;
                         if (newOp === "mixed") {
                           setOperation(newOp);
                           setShowMixedSelector(true);
