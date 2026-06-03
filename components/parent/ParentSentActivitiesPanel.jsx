@@ -6,6 +6,8 @@ import {
   parentSentActivityStatusLabelHe,
   parentViewActivityResultsLabelHe,
 } from "../../lib/parent-server/parent-activity-labels.client.js";
+import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
+import AssignedActivityBidiText from "../classroom-activities/AssignedActivityBidiText.jsx";
 
 const POLL_MS = 8000;
 
@@ -126,20 +128,30 @@ function ParentActivityResultsModal({ activityId, accessToken, onClose }) {
                       : "—"}
                 </div>
                 {q.question ? (
-                  <div className="text-white/85 mt-1 whitespace-pre-wrap" dir="auto">
-                    {q.question}
+                  <div className="text-white/85 mt-1">
+                    <AssignedActivityQuestionDisplay
+                      question={q}
+                      variant="compact"
+                      testId={`parent-activity-question-text-${q.questionIndex}`}
+                    />
                   </div>
                 ) : null}
                 {Array.isArray(q.choices) && q.choices.length > 0 ? (
-                  <div className="text-white/60 text-xs mt-1" dir="auto">
-                    אפשרויות: {q.choices.join(" · ")}
+                  <div className="text-white/60 text-xs mt-1">
+                    אפשרויות:{" "}
+                    {q.choices.map((choice, choiceIndex) => (
+                      <span key={choiceIndex}>
+                        {choiceIndex > 0 ? " · " : ""}
+                        <AssignedActivityBidiText text={choice} />
+                      </span>
+                    ))}
                   </div>
                 ) : null}
                 <div className="text-white/70 mt-1">
-                  תשובה: {q.selectedAnswer || "—"}
+                  תשובה: <AssignedActivityBidiText text={q.selectedAnswer || "—"} />
                 </div>
                 <div className="text-white/70">
-                  תשובה נכונה: {q.correctAnswer || "—"}
+                  תשובה נכונה: <AssignedActivityBidiText text={q.correctAnswer || "—"} />
                 </div>
                 {q.legacyFallback ? (
                   <div className="text-white/45 text-xs mt-1" data-testid="legacy-fallback-indicator">

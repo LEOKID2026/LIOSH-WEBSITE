@@ -13,6 +13,7 @@ import { activityChoiceGridClassName } from "../../../lib/classroom-activities/s
 import { STUDENT_ACTIVITY_LAYOUT } from "../../../lib/classroom-activities/student-activity-layout.client.js";
 import StudentAssignedActivityShell from "../../../components/student/StudentAssignedActivityShell";
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
+import AssignedActivityBidiText from "../../../components/classroom-activities/AssignedActivityBidiText.jsx";
 
 function buildSavedAttemptsMap(attempts) {
   /** @type {Record<number, { questionIndex: number, selectedAnswer: string|null, isCorrect: boolean|null }>} */
@@ -372,7 +373,7 @@ export default function StudentActivityPage({ activityId }) {
                 answerInput === String(c) ? L.choiceButtonSelected : L.choiceButtonDefault
               }`}
             >
-              {c}
+              <AssignedActivityBidiText text={c} className="block w-full" />
             </button>
           ))}
         </div>
@@ -408,7 +409,9 @@ export default function StudentActivityPage({ activityId }) {
         >
           <p>{feedback.message}</p>
           {feedback.correctAnswer ? (
-            <p className="mt-1">תשובה נכונה: {feedback.correctAnswer}</p>
+            <p className="mt-1">
+              תשובה נכונה: <AssignedActivityBidiText text={feedback.correctAnswer} />
+            </p>
           ) : null}
           {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
         </div>

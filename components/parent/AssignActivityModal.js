@@ -8,6 +8,7 @@ import {
   topicOptionsForSubject,
 } from "../../lib/teacher-portal/teacher-class-topic-options.js";
 import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
+import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
 
 const PARENT_MODES = ["guided_practice"];
 const MAX_QUESTION_COUNT = 30;
@@ -287,7 +288,10 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
             <ul className="space-y-2 max-h-48 overflow-y-auto text-sm">
               {preview.map((q, i) => (
                 <li key={i} className="rounded border border-white/10 bg-black/30 px-3 py-2">
-                  {i + 1}. {q.question || q.prompt || "—"}
+                  <div className="flex gap-2 items-start">
+                    <span className="shrink-0 text-white/70">{i + 1}.</span>
+                    <AssignedActivityQuestionDisplay question={q} variant="preview" />
+                  </div>
                 </li>
               ))}
             </ul>

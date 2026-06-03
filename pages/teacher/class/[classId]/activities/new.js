@@ -25,6 +25,7 @@ import {
   scienceTopicOptionsForGrade,
   topicOptionsForSubject,
 } from "../../../../../lib/teacher-portal/teacher-class-topic-options.js";
+import AssignedActivityQuestionDisplay from "../../../../../components/classroom-activities/AssignedActivityQuestionDisplay.jsx";
 
 export async function getServerSideProps(context) {
   const classId = String(context.params?.classId || "").trim();
@@ -479,10 +480,10 @@ export default function TeacherNewActivityPage({ classId }) {
         {preview.length > 0 ? (
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
             <h2 className="text-lg font-semibold mb-3">תצוגה מקדימה ({preview.length} שאלות)</h2>
-            <ol className="list-decimal list-inside space-y-2 text-sm text-white/90">
+            <ol className="list-decimal list-inside space-y-3 text-sm text-white/90">
               {preview.map((q, i) => (
-                <li key={i}>
-                  <span dir="auto">{q.question}</span>
+                <li key={i} className="list-item">
+                  <AssignedActivityQuestionDisplay question={q} variant="preview" />
                   <span className="text-white/40 text-xs mr-2"> (לא נשלח לתלמיד)</span>
                 </li>
               ))}

@@ -13,6 +13,8 @@ import {
   topicOptionsForSubject,
 } from "../../../../lib/teacher-portal/teacher-class-topic-options.js";
 import { formatGradeLevelHe } from "../../../../lib/learning-student-defaults.js";
+import AssignedActivityQuestionDisplay from "../../../../components/classroom-activities/AssignedActivityQuestionDisplay.jsx";
+import AssignedActivityBidiText from "../../../../components/classroom-activities/AssignedActivityBidiText.jsx";
 
 const MODES = ["guided_practice", "quiz", "homework", "discussion"];
 
@@ -486,18 +488,22 @@ export default function TeacherPrivateStudentsNewActivityPage() {
             </p>
             <ul className="space-y-2">
               {preview.slice(0, mode === "discussion" ? 1 : undefined).map((q, i) => {
-                const prompt = String(q?.question || q?.prompt || q?.stem || "").trim();
                 const choices = Array.isArray(q?.choices) ? q.choices : [];
                 return (
                   <li
                     key={i}
                     className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-sm"
                   >
-                    <p className="font-medium mb-1" dir="auto">{i + 1}. {prompt}</p>
+                    <div className="flex gap-2 items-start mb-1">
+                      <span className="shrink-0 font-medium text-white/80">{i + 1}.</span>
+                      <AssignedActivityQuestionDisplay question={q} variant="preview" />
+                    </div>
                     {choices.length > 0 ? (
-                      <ul className="space-y-0.5 text-white/70">
+                      <ul className="space-y-0.5 text-white/70 mr-6">
                         {choices.map((c, ci) => (
-                          <li key={ci} dir="auto">{c}</li>
+                          <li key={ci}>
+                            <AssignedActivityBidiText text={c} />
+                          </li>
                         ))}
                       </ul>
                     ) : null}

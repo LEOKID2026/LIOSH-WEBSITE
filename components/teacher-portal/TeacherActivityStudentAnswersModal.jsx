@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import ClassroomGeometryQuestionDiagram from "../student/ClassroomGeometryQuestionDiagram";
 import { teacherAuthFetch } from "../../lib/teacher-portal/teacher-ui.he.js";
 import { studentActivityStatusLabelHe } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
+import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
+import AssignedActivityBidiText from "../classroom-activities/AssignedActivityBidiText.jsx";
 
 function answerStatusLabel(isCorrect) {
   if (isCorrect === true) return { text: "נכון", className: "text-emerald-300" };
@@ -154,26 +156,32 @@ export default function TeacherActivityStudentAnswersModal({
                       <ClassroomGeometryQuestionDiagram question={diagramQuestion} />
                     ) : null}
                     {q.question ? (
-                      <p className="text-white/90 text-sm mb-2 whitespace-pre-wrap" dir="auto">
-                        {q.question}
-                      </p>
+                      <div className="text-white/90 text-sm mb-2">
+                        <AssignedActivityQuestionDisplay question={q} variant="compact" />
+                      </div>
                     ) : null}
                     {Array.isArray(q.choices) && q.choices.length > 0 ? (
-                      <p className="text-white/50 text-xs mb-2" dir="auto">
-                        אפשרויות: {q.choices.join(" · ")}
+                      <p className="text-white/50 text-xs mb-2">
+                        אפשרויות:{" "}
+                        {q.choices.map((choice, choiceIndex) => (
+                          <span key={choiceIndex}>
+                            {choiceIndex > 0 ? " · " : ""}
+                            <AssignedActivityBidiText text={choice} />
+                          </span>
+                        ))}
                       </p>
                     ) : null}
                     <dl className="grid gap-1 text-sm">
                       <div className="flex flex-wrap gap-x-2">
                         <dt className="text-white/50">תשובת התלמיד:</dt>
-                        <dd className="text-white/90" dir="auto" data-testid="student-selected-answer">
-                          {q.selectedAnswer ?? "—"}
+                        <dd className="text-white/90" data-testid="student-selected-answer">
+                          <AssignedActivityBidiText text={q.selectedAnswer ?? "—"} />
                         </dd>
                       </div>
                       <div className="flex flex-wrap gap-x-2">
                         <dt className="text-white/50">תשובה נכונה:</dt>
-                        <dd className="text-white/90" dir="auto" data-testid="student-correct-answer">
-                          {q.correctAnswer ?? "—"}
+                        <dd className="text-white/90" data-testid="student-correct-answer">
+                          <AssignedActivityBidiText text={q.correctAnswer ?? "—"} />
                         </dd>
                       </div>
                       {q.legacyFallback ? (
