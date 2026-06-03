@@ -949,10 +949,6 @@ export default function MathMaster() {
     setStoryOnly(false);
   }, []);
 
-  // מעקב אחר עיגולים שעברו (רק לכיתה א')
-  const [movedCirclesA, setMovedCirclesA] = useState(0); // כמה עיגולים עברו מ-a
-  const [movedCirclesB, setMovedCirclesB] = useState(0); // כמה עיגולים עברו מ-b
-
   // בחירת פעולות למיקס
   const [showMixedSelector, setShowMixedSelector] = useState(false);
   const [showHowTo, setShowHowTo] = useState(false);
@@ -1688,8 +1684,6 @@ export default function MathMaster() {
           setHintUsed(false);
           closeExplanationModal();
           setErrorExplanation("");
-          setMovedCirclesA(0);
-          setMovedCirclesB(0);
           return;
         }
       }
@@ -1819,9 +1813,6 @@ export default function MathMaster() {
     setHintUsed(false);
     closeExplanationModal();
     setErrorExplanation("");
-    // איפוס עיגולים שעברו כשמשנים שאלה
-    setMovedCirclesA(0);
-    setMovedCirclesB(0);
   }
 
   function trackCurrentQuestionTime() {
@@ -3148,10 +3139,6 @@ export default function MathMaster() {
         .animate-confetti {
           animation: confetti 2s ease-out forwards;
         }
-        @keyframes fadeIn {
-          0% { opacity: 0; transform: scale(0.5); }
-          100% { opacity: 1; transform: scale(1); }
-        }
       `}</style>
       <div className="flex flex-col h-dvh max-h-dvh min-h-0 overflow-hidden bg-gradient-to-b from-[#0a0f1d] to-[#141928]" dir="rtl">
         <div
@@ -4151,292 +4138,6 @@ export default function MathMaster() {
                       }
                       getQuestionFontStyle={getQuestionFontStyle}
                     >
-                    {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
-                    {(grade === "g1" || grade === "g2" || grade === "g3") &&
-                      (currentQuestion.operation === "addition" ||
-                        currentQuestion.operation === "subtraction") && (
-                        <div
-                          className="mb-4 flex gap-6 items-center justify-center flex-wrap"
-                          style={{ direction: "ltr" }}
-                        >
-                          {/* הגדרת מגבלות לפי כיתה */}
-                          {(() => {
-                            const maxVisual =
-                              grade === "g1" ? 10 : grade === "g2" ? 20 : 30;
-                            const showVisual =
-                              currentQuestion.a <= maxVisual &&
-                              currentQuestion.b <= maxVisual;
-                            if (!showVisual) return null;
-
-                            const maxA = Math.min(currentQuestion.a, maxVisual);
-                            const maxB = Math.min(currentQuestion.b, maxVisual);
-                            let remainingA;
-
-                            if (currentQuestion.operation === "subtraction") {
-                              // בחיסור - העיגולים הכחולים שנותרו (לפני שעברו לאחר הסימן שווה)
-                              if (movedCirclesB >= maxB) {
-                                remainingA = 0;
-                              } else {
-                                remainingA = Math.max(0, maxA - movedCirclesB);
-                              }
-                            } else {
-                              remainingA = maxA - movedCirclesA;
-                            }
-
-                            return (
-                              <>
-                                <div className="flex flex-wrap gap-3 justify-center max-w-[200px] min-w-[120px]">
-                                  {Array(remainingA)
-                                    .fill(0)
-                                    .map((_, i) => (
-                                      <span
-                                        key={`a-${i}`}
-                                        onClick={() => {
-                                          if (
-                                            currentQuestion.operation ===
-                                            "addition"
-                                          ) {
-                                            if (movedCirclesA < maxA) {
-                                              setMovedCirclesA((prev) => prev + 1);
-                                            }
-                                          } else {
-                                            if (movedCirclesB < maxB) {
-                                              setMovedCirclesB((prev) => prev + 1);
-                                            }
-                                          }
-                                        }}
-                                        className="inline-block bg-blue-500 rounded-full cursor-pointer hover:bg-blue-400 active:bg-blue-600 transition-all duration-300 touch-manipulation hover:scale-110 active:scale-95 animate-pulse-glow ring-2 ring-blue-300 ring-opacity-75"
-                                        style={{
-                                          userSelect: "none",
-                                          width:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          height:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          minWidth:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          minHeight:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          animation: "none",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.animation =
-                                            "bounce 0.3s ease";
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.animation = "none";
-                                        }}
-                                      />
-                                    ))}
-                                </div>
-                                <span className="text-white text-3xl font-bold min-w-[40px] text-center">
-                                  {currentQuestion.operation === "addition"
-                                    ? "+"
-                                    : "−"}
-                                </span>
-                                <div className="flex flex-wrap gap-3 justify-center max-w-[200px] min-w-[120px]">
-                                  {Array(
-                                    Math.min(currentQuestion.b, maxVisual) -
-                                      movedCirclesB
-                                  )
-                                    .fill(0)
-                                    .map((_, i) => (
-                                      <span
-                                        key={`b-${i}`}
-                                        onClick={() => {
-                                          if (
-                                            currentQuestion.operation ===
-                                            "addition"
-                                          ) {
-                                            if (
-                                              movedCirclesB <
-                                              Math.min(
-                                                currentQuestion.b,
-                                                maxVisual
-                                              )
-                                            ) {
-                                              setMovedCirclesB((prev) => prev + 1);
-                                            }
-                                          }
-                                        }}
-                                        className={`inline-block rounded-full ${
-                                          currentQuestion.operation === "addition"
-                                            ? "bg-green-500 cursor-pointer hover:bg-green-400 active:bg-green-600 transition-all duration-300 hover:scale-110 active:scale-95 animate-pulse-glow-green ring-2 ring-green-300 ring-opacity-75"
-                                            : "bg-green-500"
-                                        } touch-manipulation`}
-                                        style={{
-                                          userSelect: "none",
-                                          width:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          height:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          minWidth:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          minHeight:
-                                            grade === "g1"
-                                              ? "24px"
-                                              : grade === "g2"
-                                              ? "20px"
-                                              : "18px",
-                                          animation: "none",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                          if (
-                                            currentQuestion.operation ===
-                                            "addition"
-                                          ) {
-                                            e.currentTarget.style.animation =
-                                              "bounce 0.3s ease";
-                                          }
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.animation = "none";
-                                        }}
-                                      />
-                                    ))}
-                                </div>
-                                <span className="text-white text-3xl font-bold min-w-[40px] text-center">
-                                  =
-                                </span>
-                                {/* עיגולים שעברו מאחורי הסימן שווה */}
-                                {(() => {
-                                  const maxVisual =
-                                    grade === "g1"
-                                      ? 10
-                                      : grade === "g2"
-                                      ? 20
-                                      : 30;
-                                  const showResult =
-                                    movedCirclesA > 0 ||
-                                    movedCirclesB > 0 ||
-                                    (currentQuestion.operation ===
-                                      "subtraction" &&
-                                      movedCirclesB >=
-                                        Math.min(currentQuestion.b, maxVisual));
-                                  if (!showResult) return null;
-
-                                  return (
-                                    <div className="flex flex-wrap gap-3 justify-center max-w-[200px] min-w-[120px]">
-                                      {currentQuestion.operation === "addition" ? (
-                                        Array(movedCirclesA + movedCirclesB)
-                                          .fill(0)
-                                          .map((_, i) => (
-                                            <span
-                                              key={`result-${i}`}
-                                              className={`inline-block rounded-full transition-all duration-300 ${
-                                                i < movedCirclesA
-                                                  ? "bg-blue-500"
-                                                  : "bg-green-500"
-                                              }`}
-                                              style={{
-                                                width:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                height:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                minWidth:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                minHeight:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                animation: "fadeIn 0.5s ease-in",
-                                              }}
-                                            />
-                                          ))
-                                      ) : (
-                                        movedCirclesB >=
-                                          Math.min(currentQuestion.b, maxVisual) &&
-                                        Array(
-                                          Math.max(
-                                            0,
-                                            Math.min(currentQuestion.a, maxVisual) -
-                                              movedCirclesB
-                                          )
-                                        )
-                                          .fill(0)
-                                          .map((_, i) => (
-                                            <span
-                                              key={`result-${i}`}
-                                              className="inline-block bg-blue-500 rounded-full transition-all duration-300"
-                                              style={{
-                                                width:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                height:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                minWidth:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                minHeight:
-                                                  grade === "g1"
-                                                    ? "24px"
-                                                    : grade === "g2"
-                                                    ? "20px"
-                                                    : "18px",
-                                                animation: "fadeIn 0.5s ease-in",
-                                              }}
-                                            />
-                                          ))
-                                      )}
-                                    </div>
-                                  );
-                                })()}
-                              </>
-                            );
-                          })()}
-                        </div>
-                      )}
 
                     {/* הפרדה בין שורת השאלה לשורת התרגיל */}
                     {isVerticalDisplay &&

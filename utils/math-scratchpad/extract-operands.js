@@ -10,8 +10,15 @@
 function parseSimpleExercise(text) {
   if (!text || typeof text !== "string") return null;
   const normalized = text.replace(/×/g, "*").replace(/÷/g, "/").replace(/\s+/g, " ").trim();
-  const match = normalized.match(/^(\d+)\s*([+\-*/])\s*(\d+)/);
-  if (!match) return null;
+  const match = normalized.match(/^(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)/);
+  if (!match) {
+    const divMatch = normalized.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);
+    if (!divMatch) return null;
+    const aDiv = Number(divMatch[1]);
+    const bDiv = Number(divMatch[2]);
+    if (!Number.isFinite(aDiv) || !Number.isFinite(bDiv)) return null;
+    return { a: aDiv, b: bDiv };
+  }
   const a = Number(match[1]);
   const b = Number(match[3]);
   if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
@@ -44,6 +51,12 @@ export function extractScratchpadOperands(question) {
   }
   if (b == null && typeof params.b === "number" && Number.isFinite(params.b)) {
     b = params.b;
+  }
+  if (a == null && typeof params.dividend === "number" && Number.isFinite(params.dividend)) {
+    a = params.dividend;
+  }
+  if (b == null && typeof params.divisor === "number" && Number.isFinite(params.divisor)) {
+    b = params.divisor;
   }
 
   if (a == null || b == null) {

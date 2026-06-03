@@ -89,7 +89,11 @@ function ObjectCounterWorkspace({ operands, operation }) {
   }, [a, b, operation]);
 
   const groups = useMemo(() => {
-    if (operation === "addition" && a != null && b != null) {
+    if (
+      (operation === "addition" || operation === "compare") &&
+      a != null &&
+      b != null
+    ) {
       return [
         { id: "g1", count: a, label: String(a) },
         { id: "g2", count: b, label: String(b) },
@@ -493,6 +497,404 @@ function VerticalLayoutWorkspace({ operands, variant }) {
   );
 }
 
+function MultiplicationArrayWorkspace({ operands }) {
+  const { a, b } = operands;
+  const rows = Math.min(Math.max(0, Math.round(a ?? 0)), 12);
+  const cols = Math.min(Math.max(0, Math.round(b ?? 0)), 12);
+  const [marked, setMarked] = useState(() => new Set());
+
+  useEffect(() => {
+    setMarked(new Set());
+  }, [rows, cols]);
+
+  return (
+    <div className="flex flex-col items-center gap-3" dir="ltr" onKeyDown={stopKeyBubble}>
+      <div className="text-sm font-bold text-white/80 font-mono">
+        {a} × {b}
+      </div>
+      <div className="flex flex-col gap-1">
+        {Array.from({ length: rows }, (_, r) => (
+          <div key={r} className="flex gap-1 justify-center">
+            {Array.from({ length: cols }, (_, c) => {
+              const key = `${r}-${c}`;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  aria-label={`array cell ${r + 1},${c + 1}`}
+                  onClick={() =>
+                    setMarked((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(key)) next.delete(key);
+                      else next.add(key);
+                      return next;
+                    })
+                  }
+                  className={`h-8 w-8 md:h-9 md:w-9 rounded border-2 ${
+                    marked.has(key)
+                      ? "bg-emerald-400/80 border-emerald-200"
+                      : "bg-white/5 border-white/25"
+                  }`}
+                />
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const GROUP_COLORS = [
+  "bg-white/5 border-white/25",
+  "bg-sky-400/70 border-sky-200",
+  "bg-amber-400/70 border-amber-200",
+  "bg-emerald-400/70 border-emerald-200",
+  "bg-purple-400/70 border-purple-200",
+];
+
+function DivisionGroupsWorkspace({ operands }) {
+  const { a, b } = operands;
+  const count = Math.min(Math.max(0, Math.round(a ?? 0)), 60);
+  const [groups, setGroups] = useState(() => Array(count).fill(0));
+
+  useEffect(() => {
+    setGroups(Array(Math.min(Math.max(0, Math.round(a ?? 0)), 60)).fill(0));
+  }, [a, b]);
+
+  return (
+    <div className="flex flex-col items-center gap-4" dir="ltr" onKeyDown={stopKeyBubble}>
+      <div className="flex gap-6 text-sm font-bold text-white/80 font-mono">
+        <ScratchpadDigitDisplay value={String(a ?? "")} className="px-2 py-1 rounded bg-sky-500/25 border border-sky-300/30 min-w-[2.5rem]" aria-label="dividend" />
+        <span className="text-white/50">÷</span>
+        <ScratchpadDigitDisplay value={String(b ?? "")} className="px-2 py-1 rounded bg-sky-500/25 border border-sky-300/30 min-w-[2.5rem]" aria-label="divisor" />
+      </div>
+      <div className="flex flex-wrap gap-2 justify-center max-w-md">
+        {groups.map((groupId, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`object ${i + 1} group ${groupId}`}
+            onClick={() =>
+              setGroups((prev) => {
+                const next = [...prev];
+                next[i] = (next[i] + 1) % GROUP_COLORS.length;
+                return next;
+              })
+            }
+            className={`h-8 w-8 rounded-full border-2 ${GROUP_COLORS[groupId]}`}
+          />
+        ))}
+      </div>
+      <p className="text-xs text-white/50 text-center" dir="rtl">
+        לחצו לסימון קבוצות — ללא חלוקה אוטומטית
+      </p>
+    </div>
+  );
+}
+
+function FractionStripsWorkspace() {
+  const stripCount = 3;
+  const segments = 8;
+  const [strips, setStrips] = useState(() =>
+    Array.from({ length: stripCount }, () => Array(segments).fill(false))
+  );
+
+  useEffect(() => {
+    setStrips(Array.from({ length: stripCount }, () => Array(segments).fill(false)));
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-4 w-full max-w-lg" dir="ltr" onKeyDown={stopKeyBubble}>
+      {strips.map((strip, si) => (
+        <div key={si} className="flex gap-0.5 justify-center">
+          {strip.map((filled, seg) => (
+            <button
+              key={seg}
+              type="button"
+              aria-label={`strip ${si + 1} segment ${seg + 1}`}
+              onClick={() =>
+                setStrips((prev) => {
+                  const next = prev.map((row) => [...row]);
+                  next[si][seg] = !next[si][seg];
+                  return next;
+                })
+              }
+              className={`h-10 flex-1 max-w-[2.5rem] rounded-sm border ${
+                filled ? "bg-orange-400/80 border-orange-200" : "bg-white/5 border-white/25"
+              }`}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DecimalPlaceValueTableWorkspace({ operands }) {
+  const intCols = 3;
+  const fracCols = 2;
+
+  const topInt = useMemo(
+    () => numberToDigitCells(operands.a, intCols),
+    [operands.a, intCols]
+  );
+  const topFrac = useMemo(() => {
+    const n = operands.a;
+    if (n == null || !Number.isFinite(n)) return Array(fracCols).fill("");
+    const frac = Math.abs(n - Math.trunc(n));
+    const fracStr = frac.toFixed(fracCols).slice(2);
+    return fracStr.split("").slice(0, fracCols);
+  }, [operands.a, fracCols]);
+  const bottomInt = useMemo(
+    () => numberToDigitCells(operands.b, intCols),
+    [operands.b, intCols]
+  );
+  const bottomFrac = useMemo(() => {
+    const n = operands.b;
+    if (n == null || !Number.isFinite(n)) return Array(fracCols).fill("");
+    const frac = Math.abs(n - Math.trunc(n));
+    const fracStr = frac.toFixed(fracCols).slice(2);
+    return fracStr.split("").slice(0, fracCols);
+  }, [operands.b, fracCols]);
+  const [resultInt, setResultInt] = useState(() => Array(intCols).fill(""));
+  const [resultFrac, setResultFrac] = useState(() => Array(fracCols).fill(""));
+
+  useEffect(() => {
+    setResultInt(Array(intCols).fill(""));
+    setResultFrac(Array(fracCols).fill(""));
+  }, [operands.a, operands.b, intCols, fracCols]);
+
+  const operandCellClass =
+    "w-9 h-10 md:w-10 md:h-11 text-center text-base rounded text-white bg-sky-500/25 border border-sky-300/30";
+  const resultCellClass =
+    "w-9 h-10 md:w-10 md:h-11 text-center text-base bg-white/10 rounded text-white";
+
+  function renderOperandRow(intCells, fracCells) {
+    return (
+      <tr>
+        {intCells.map((cell, i) => (
+          <td key={`i-${i}`} className="border border-white/20 p-1">
+            <ScratchpadDigitDisplay value={cell} className={operandCellClass} aria-label={`int ${i + 1}`} />
+          </td>
+        ))}
+        <td className="border border-white/20 p-1 text-white/70 font-bold">.</td>
+        {fracCells.map((cell, i) => (
+          <td key={`f-${i}`} className="border border-white/20 p-1">
+            <ScratchpadDigitDisplay value={cell} className={operandCellClass} aria-label={`frac ${i + 1}`} />
+          </td>
+        ))}
+      </tr>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto" dir="ltr" onKeyDown={stopKeyBubble}>
+      <table className="mx-auto border-collapse text-center">
+        <tbody>
+          {renderOperandRow(topInt, topFrac)}
+          {renderOperandRow(bottomInt, bottomFrac)}
+          <tr>
+            {resultInt.map((cell, i) => (
+              <td key={`ri-${i}`} className="border border-white/20 p-1">
+                <ScratchpadDigitInput
+                  value={cell}
+                  onChange={(v) => {
+                    setResultInt((prev) => {
+                      const next = [...prev];
+                      next[i] = v;
+                      return next;
+                    });
+                  }}
+                  className={resultCellClass}
+                  aria-label={`result int ${i + 1}`}
+                />
+              </td>
+            ))}
+            <td className="border border-white/20 p-1 text-white/70 font-bold">.</td>
+            {resultFrac.map((cell, i) => (
+              <td key={`rf-${i}`} className="border border-white/20 p-1">
+                <ScratchpadDigitInput
+                  value={cell}
+                  onChange={(v) => {
+                    setResultFrac((prev) => {
+                      const next = [...prev];
+                      next[i] = v;
+                      return next;
+                    });
+                  }}
+                  className={resultCellClass}
+                  aria-label={`result frac ${i + 1}`}
+                />
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function PercentGridWorkspace() {
+  const [cells, setCells] = useState(() => Array(100).fill(false));
+
+  useEffect(() => {
+    setCells(Array(100).fill(false));
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center gap-2" dir="ltr" onKeyDown={stopKeyBubble}>
+      <div className="grid grid-cols-10 gap-0.5 max-w-xs">
+        {cells.map((filled, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`percent grid cell ${i + 1}`}
+            onClick={() =>
+              setCells((prev) => {
+                const next = [...prev];
+                next[i] = !next[i];
+                return next;
+              })
+            }
+            className={`h-6 w-6 md:h-7 md:w-7 rounded-sm border ${
+              filled ? "bg-violet-400/80 border-violet-200" : "bg-white/5 border-white/25"
+            }`}
+          />
+        ))}
+      </div>
+      <p className="text-xs text-white/50" dir="rtl">
+        סמנו ריבועים — ללא חישוב אחוז
+      </p>
+    </div>
+  );
+}
+
+function RatioTableWorkspace() {
+  const rowCount = 4;
+  const [rows, setRows] = useState(() =>
+    Array.from({ length: rowCount }, () => ["", ""])
+  );
+
+  useEffect(() => {
+    setRows(Array.from({ length: rowCount }, () => ["", ""]));
+  }, []);
+
+  return (
+    <div className="overflow-x-auto" dir="rtl" onKeyDown={stopKeyBubble}>
+      <table className="mx-auto border-collapse text-center">
+        <thead>
+          <tr>
+            <th className="border border-white/20 px-3 py-1 text-xs text-white/70">צד א׳</th>
+            <th className="border border-white/20 px-3 py-1 text-xs text-white/70">צד ב׳</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, ri) => (
+            <tr key={ri}>
+              {row.map((cell, ci) => (
+                <td key={ci} className="border border-white/20 p-1">
+                  <ScratchpadDigitInput
+                    value={cell}
+                    onChange={(v) => {
+                      setRows((prev) => {
+                        const next = prev.map((r) => [...r]);
+                        next[ri][ci] = v;
+                        return next;
+                      });
+                    }}
+                    className="w-14 h-10 text-center text-lg bg-white/10 rounded text-white"
+                    aria-label={`ratio row ${ri + 1} col ${ci + 1}`}
+                    maxLength={4}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ManualOrderWorkspace() {
+  const slotCount = 8;
+  const [cells, setCells] = useState(() => Array(slotCount).fill(""));
+
+  useEffect(() => {
+    setCells(Array(slotCount).fill(""));
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center gap-3" dir="ltr" onKeyDown={stopKeyBubble}>
+      <div className="flex flex-wrap gap-2 justify-center max-w-md">
+        {cells.map((cell, i) => (
+          <ScratchpadDigitInput
+            key={i}
+            value={cell}
+            onChange={(v) => {
+              setCells((prev) => {
+                const next = [...prev];
+                next[i] = v;
+                return next;
+              });
+            }}
+            className="w-11 h-12 md:w-12 md:h-14 text-center text-xl bg-white/10 rounded text-white"
+            aria-label={`order slot ${i + 1}`}
+            maxLength={2}
+          />
+        ))}
+      </div>
+      <p className="text-xs text-white/50 text-center" dir="rtl">
+        תיבות ריקות לסדר פעולות — ללא רמז לפעולה
+      </p>
+    </div>
+  );
+}
+
+function WordProblemStructureBoard() {
+  const calcSlots = 6;
+  const [calcCells, setCalcCells] = useState(() => Array(calcSlots).fill(""));
+
+  useEffect(() => {
+    setCalcCells(Array(calcSlots).fill(""));
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-4 w-full max-w-md" dir="rtl" onKeyDown={stopKeyBubble}>
+      <section className="rounded-lg border border-white/20 bg-white/5 p-3 min-h-[4rem]">
+        <h4 className="text-xs font-semibold text-white/70 mb-2">נתונים:</h4>
+        <div className="min-h-[2.5rem] border border-dashed border-white/15 rounded" aria-hidden />
+      </section>
+      <section className="rounded-lg border border-white/20 bg-white/5 p-3 min-h-[4rem]">
+        <h4 className="text-xs font-semibold text-white/70 mb-2">שאלה:</h4>
+        <div className="min-h-[2.5rem] border border-dashed border-white/15 rounded" aria-hidden />
+      </section>
+      <section className="rounded-lg border border-white/20 bg-white/5 p-3">
+        <h4 className="text-xs font-semibold text-white/70 mb-2">חישוב:</h4>
+        <div className="flex flex-wrap gap-2 justify-center" dir="ltr">
+          {calcCells.map((cell, i) => (
+            <ScratchpadDigitInput
+              key={i}
+              value={cell}
+              onChange={(v) => {
+                setCalcCells((prev) => {
+                  const next = [...prev];
+                  next[i] = v;
+                  return next;
+                });
+              }}
+              className="w-10 h-11 text-center text-lg bg-white/10 rounded text-white"
+              aria-label={`calculation slot ${i + 1}`}
+              maxLength={3}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 /**
  * @param {{ type: string, operands: { a: number|null, b: number|null, operation: string|null } }} props
  */
@@ -523,6 +925,22 @@ export default function MathScratchpadWorkspace({ type, operands }) {
       return (
         <VerticalLayoutWorkspace operands={operands} variant="blank_vertical_subtraction" />
       );
+    case "blank_multiplication_array":
+      return <MultiplicationArrayWorkspace operands={operands} />;
+    case "blank_division_groups":
+      return <DivisionGroupsWorkspace operands={operands} />;
+    case "blank_fraction_strips":
+      return <FractionStripsWorkspace />;
+    case "blank_decimal_place_value_table":
+      return <DecimalPlaceValueTableWorkspace operands={operands} />;
+    case "blank_percent_grid":
+      return <PercentGridWorkspace />;
+    case "blank_ratio_table":
+      return <RatioTableWorkspace />;
+    case "manual_order_workspace":
+      return <ManualOrderWorkspace />;
+    case "word_problem_structure_board":
+      return <WordProblemStructureBoard />;
     default:
       return null;
   }
