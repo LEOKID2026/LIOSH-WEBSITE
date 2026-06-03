@@ -135,6 +135,7 @@
     "audit:questions": "tsx scripts/generator-deterministic-harness.mjs && tsx scripts/audit-question-banks.mjs",
     "qa:student-question-stem-metadata": "tsx scripts/qa-student-question-stem-metadata.mjs",
     "test:student-question-metadata-lead": "node tests/student-question-metadata-lead.test.mjs",
+    "verify:subject-metadata-label-qa": "node scripts/verify-subject-metadata-label-qa.mjs",
     "qa:question-quality": "tsx scripts/qa-question-quality.mjs",
     "qa:session-question-variety": "tsx scripts/qa-session-question-variety.mjs",
     "qa:session-question-variety:all": "tsx scripts/qa-session-question-variety.mjs",

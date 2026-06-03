@@ -13,9 +13,8 @@ const {
   sanitizeQuestionForStudentDisplay,
   sanitizeStudentQuestionStem,
 } = await import("../utils/student-question-stem-sanitizer.js");
-const { resolveStudentQuestionDisplayParts } = await import(
-  "../utils/student-question-display.js"
-);
+const { resolveStudentQuestionDisplayParts, isTopicDifficultyMetadataLead } =
+  await import("../utils/student-question-display.js");
 const { generateForMatrixCell, SUPPORTED_SUBJECTS } = await import(
   "./learning-simulator/lib/question-generator-adapters.mjs"
 );
@@ -116,6 +115,24 @@ const BEFORE_AFTER_SEEDS = [
     before: "כיתה ד׳ (קל): תיבה 2×3×4 — מה הנפח?",
     expectedAfter: "תיבה 2×3×4 — מה הנפח?",
   },
+  {
+    subject: "moledet_geography",
+    topic: "homeland",
+    before: "שאלה בנושא: מולדת — מהו סמל המדינה?",
+    expectedAfter: "מולדת — מהו סמל המדינה?",
+  },
+  {
+    subject: "english",
+    topic: "vocabulary",
+    before: "Choose the correct word: The cat is ___ the table.",
+    expectedAfter: "Choose the correct word: The cat is ___ the table.",
+  },
+  {
+    subject: "hebrew",
+    topic: "grammar",
+    before: "איזה משפט נכון?",
+    expectedAfter: "איזה משפט נכון?",
+  },
 ];
 
 const FORBIDDEN_GEOMETRY_WORDING = [
@@ -155,6 +172,11 @@ function recordLeak(ctx, field, stem, checks) {
 function scanQuestion(q, ctx) {
   const sanitized = sanitizeQuestionForStudentDisplay(q);
   const display = resolveStudentQuestionDisplayParts(sanitized);
+  if (display.leadText && isTopicDifficultyMetadataLead(display.leadText)) {
+    recordLeak(ctx, "displayLead", display.leadText, [
+      { id: "topic_difficulty_visible_lead", label: "topic/difficulty metadata visible in UI lead" },
+    ]);
+  }
   if (display.leadText && detectStudentStemMetadataLeaks(display.leadText).leak) {
     recordLeak(ctx, "displayLead", display.leadText, [
       { id: "visible_metadata_lead", label: "metadata lead visible after sanitize" },
@@ -191,7 +213,9 @@ async function scanGeneratedSubjects() {
     ],
     geometry: ["area", "perimeter", "angles", "shapes_basic", "triangles"],
     hebrew: ["reading", "grammar", "vocabulary", "comprehension"],
-    moledet_geography: ["israel_map", "settlements", "climate"],
+    english: ["vocabulary", "grammar", "reading", "translation"],
+    science: ["body", "materials", "environment", "energy"],
+    moledet_geography: ["israel_map", "settlements", "climate", "homeland"],
   };
 
   for (const subject of SUPPORTED_SUBJECTS) {
