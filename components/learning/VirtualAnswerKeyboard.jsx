@@ -116,6 +116,7 @@ export default function VirtualAnswerKeyboard({
                     type="button"
                     data-testid={testId}
                     disabled={disabled}
+                    onPointerDown={(e) => e.preventDefault()}
                     onClick={() => handleKey(keyDef)}
                     aria-label={keyDef.ariaLabel || keyDef.label}
                     className={`${isAction ? actionKeyClass : keyClass} ${spanClass}`}
@@ -129,6 +130,7 @@ export default function VirtualAnswerKeyboard({
                   type="button"
                   data-testid={submitButton.testId}
                   disabled={submitButton.disabled}
+                  onPointerDown={(e) => e.preventDefault()}
                   onClick={submitButton.onClick}
                   className={submitClass}
                 >

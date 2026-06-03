@@ -2,7 +2,6 @@ import MixedHebrewMathText from "./MixedHebrewMathText";
 import BookContentLine from "./BookContentLine";
 import BookVerticalArithmetic from "./BookVerticalArithmetic";
 import { classifyBookLine } from "../../lib/learning-book/book-line-classifier";
-import { isVerticalArithmeticBlock } from "../../lib/learning-book/vertical-arithmetic-parse";
 import {
   bookMathIsolateStyle,
   diagramTextSizeClass,

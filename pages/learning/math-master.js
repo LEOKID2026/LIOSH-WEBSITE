@@ -20,6 +20,11 @@ import {
 import { generateQuestion } from "../../utils/math-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import MathScratchpadSlot from "../../components/math-scratchpad/MathScratchpadSlot";
+import { ScratchpadVirtualInputProvider } from "../../components/math-scratchpad/scratchpad-virtual-input";
+import VirtualAnswerKeyboard from "../../components/learning/VirtualAnswerKeyboard.jsx";
+import { resolveVirtualAnswerKeyboard } from "../../lib/learning/virtual-answer-keyboard-policy.js";
+import { useTouchPrimaryDevice } from "../../hooks/useTouchPrimaryDevice.js";
 import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import StudentNumericAnswerField, {
   useMobileEmbeddedNumericSubmit,
@@ -361,10 +366,18 @@ function consumeMathBookPracticePreset() {
 export default function MathMaster() {
   useIOSViewportFix();
   const mobileEmbeddedNumericSubmit = useMobileEmbeddedNumericSubmit("math");
+  const isTouchDevice = useTouchPrimaryDevice();
+  const mathVkPolicy = resolveVirtualAnswerKeyboard({
+    subject: "math",
+    hasTextInput: true,
+    isTouch: isTouchDevice,
+  });
   const router = useRouter();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
   const gameRef = useRef(null);
+  const answerAreaRef = useRef(null);
+  const scratchpadOverlayTopRef = useRef(null);
   const controlsRef = useRef(null);
   const operationSelectRef = useRef(null);
   const sessionStartRef = useRef(null);
@@ -611,6 +624,16 @@ export default function MathMaster() {
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [scratchpadCloseSignal, setScratchpadCloseSignal] = useState(0);
+  const [scratchpadOpen, setScratchpadOpen] = useState(false);
+  const [activeScratchpadCell, setActiveScratchpadCell] = useState(null);
+  const sharedScratchpadKeyboard =
+    scratchpadOpen && mathVkPolicy.enabled && isTouchDevice;
+
+  const handleScratchpadOpenChange = useCallback((isOpen) => {
+    setScratchpadOpen(isOpen);
+    if (!isOpen) setActiveScratchpadCell(null);
+  }, []);
   
   // Ref לשמירת timeouts לניקוי - מונע תקיעות
   const animationTimeoutsRef = useRef([]);
@@ -2187,6 +2210,7 @@ export default function MathMaster() {
 
   function handleAnswer(answer) {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
+    setScratchpadCloseSignal((n) => n + 1);
     const questionForSave = currentQuestion;
     const hintUsedForSave = hintUsed;
 
@@ -3188,7 +3212,7 @@ export default function MathMaster() {
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
           }}
         >
-          <div className="text-center mb-3">
+          <div className="text-center mb-3" ref={scratchpadOverlayTopRef}>
             <div className="flex items-center justify-center gap-2 mb-0.5">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white">
                 🧮 חשבון
@@ -4015,9 +4039,10 @@ export default function MathMaster() {
               )}
 
               {currentQuestion && (
+                <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
                 <div
                   ref={gameRef}
-                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col items-center justify-start mb-2 flex-1 mx-auto"
+                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden"
                   style={{ height: "var(--game-h, 400px)", minHeight: "300px" }}
                 >
                   {/* שכבת הודעות שלא משנה פריסה (אין מקום שמור / אין מיקרו-סק롤) */}
@@ -4076,7 +4101,7 @@ export default function MathMaster() {
                   )}
 
                   {/* כפתור מאוזן/מאונך מעוגן למעלה (לא מזיז פריסה) */}
-                  {canDisplayVertically && (
+                  {canDisplayVertically && !scratchpadOpen && (
                     <button
                       onClick={() => setIsVerticalDisplay((prev) => !prev)}
                       className="absolute top-2 left-2 z-10 px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all pointer-events-auto shadow-lg"
@@ -4086,7 +4111,7 @@ export default function MathMaster() {
                     </button>
                   )}
 
-                  {questionBookHref ? (
+                  {questionBookHref && !scratchpadOpen ? (
                     <button
                       type="button"
                       data-testid={`math-${grade}-book-question-button`}
@@ -4101,8 +4126,31 @@ export default function MathMaster() {
                   {/* אזור שאלה יציב למניעת קפיצות בפריסת התשובות */}
                   <div
                     data-testid="math-question-surface"
-                    className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2"
+                    className="w-full flex-1 min-h-0 flex flex-col overflow-hidden px-2"
                   >
+                    <MathScratchpadSlot
+                      gradeKey={grade}
+                      operation={currentQuestion.operation || operation}
+                      question={currentQuestion}
+                      questionKey={
+                        mathQuestionFingerprint(currentQuestion) ||
+                        `${currentQuestion.question}|${currentQuestion.correctAnswer}`
+                      }
+                      forceClose={isShowingAnySolution}
+                      closeSignal={scratchpadCloseSignal}
+                      onOpenChange={handleScratchpadOpenChange}
+                      overlayTopRef={scratchpadOverlayTopRef}
+                      overlayWidthRef={controlsRef}
+                      answerAnchorRef={answerAreaRef}
+                      exerciseHeadlineOverride={
+                        isVerticalDisplay &&
+                        canDisplayVertically &&
+                        currentQuestion.exerciseText
+                          ? getVerticalExercise() || currentQuestion.exerciseText
+                          : undefined
+                      }
+                      getQuestionFontStyle={getQuestionFontStyle}
+                    >
                     {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                     {(grade === "g1" || grade === "g2" || grade === "g3") &&
                       (currentQuestion.operation === "addition" ||
@@ -4455,10 +4503,15 @@ export default function MathMaster() {
                         }`}
                       />
                     )}
+                    </MathScratchpadSlot>
                   </div>
 
-                  {/* אזור התשובות/בקרים (קבוע בתחתית) */}
-                  <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
+                  {/* אזור התשובות/בקרים (קבוע בתחתית) — נשאר חשוף מעל overlay */}
+                  <div
+                    ref={answerAreaRef}
+                    data-testid="math-answer-surface"
+                    className="w-full shrink-0 mt-2 flex flex-col items-center relative z-30"
+                  >
                     {/* בדיקה אם צריך להציג כפתורי בחירה או שדה קלט */}
                     {(() => {
                     // נושאים שצריכים כפתורי בחירה: שברים, יחס, השוואה, קנה מידה, גורמים וכפולות, חילוק עם שארית
@@ -4550,7 +4603,9 @@ export default function MathMaster() {
                               disabled={!!selectedAnswer}
                               testId="math-text-answer"
                               placeholder="תשובה"
-                              autoFocus
+                              autoFocus={!scratchpadOpen}
+                              suppressEmbeddedKeyboard={sharedScratchpadKeyboard}
+                              onInputFocus={() => setActiveScratchpadCell(null)}
                               onEnterSubmit={() => {
                                 if (!selectedAnswer && textAnswer.trim() !== "") {
                                   handleAnswer(textAnswer);
@@ -4565,6 +4620,45 @@ export default function MathMaster() {
                               submitTestId="math-check-answer"
                             />
                           </div>
+                          {sharedScratchpadKeyboard ? (
+                            <VirtualAnswerKeyboard
+                              layout={mathVkPolicy.layout || "numeric"}
+                              value={
+                                activeScratchpadCell
+                                  ? activeScratchpadCell.value
+                                  : textAnswer
+                              }
+                              onChange={(next) => {
+                                if (activeScratchpadCell) {
+                                  activeScratchpadCell.onChange(next);
+                                } else {
+                                  setTextAnswer(next);
+                                }
+                              }}
+                              disabled={!!selectedAnswer}
+                              compact={isTouchDevice}
+                              className="mt-1"
+                              submitButton={
+                                mobileEmbeddedNumericSubmit
+                                  ? {
+                                      label: "בדוק",
+                                      onClick: () => {
+                                        if (
+                                          !selectedAnswer &&
+                                          textAnswer.trim() !== ""
+                                        ) {
+                                          handleAnswer(textAnswer);
+                                        }
+                                      },
+                                      disabled:
+                                        !!selectedAnswer ||
+                                        textAnswer.trim() === "",
+                                      testId: "math-check-answer",
+                                    }
+                                  : null
+                              }
+                            />
+                          ) : null}
                           <div className="flex gap-2 justify-center">
                             {!mobileEmbeddedNumericSubmit ? (
                             <button
@@ -5527,6 +5621,7 @@ export default function MathMaster() {
                   )}
                   </div>
                 </div>
+                </ScratchpadVirtualInputProvider>
               )}
 
               <button

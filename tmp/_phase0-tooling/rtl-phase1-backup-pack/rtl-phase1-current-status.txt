@@ -1,0 +1,21 @@
+﻿ M components/learning-book/BookDiagram.js
+ M components/learning-book/LearningMarkdown.js
+?? .cursor/plans/math_scratchpad_planning_49eb3f96.plan.md
+?? components/learning-book/BookContentLine.js
+?? components/learning-book/BookExampleTitleLine.js
+?? components/learning-book/BookPlaceValueEquation.js
+?? components/learning-book/BookVerticalArithmetic.js
+?? docs/qa/MATH_SCRATCHPAD_EXISTING_SURFACE_AUDIT.md
+?? docs/qa/MATH_SCRATCHPAD_GRADE_MAPPING_PLAN.md
+?? docs/qa/MATH_SCRATCHPAD_IMPLEMENTATION_PLAN_DRAFT.md
+?? docs/qa/MATH_SCRATCHPAD_INTEGRATION_RISK_AUDIT.md
+?? docs/qa/MATH_SCRATCHPAD_NON_HINTING_RULES.md
+?? lib/learning-book/book-line-classifier.js
+?? lib/learning-book/vertical-arithmetic-parse.js
+?? rtl-phase1-current-status.txt
+?? scripts/capture-book-render-qa.mjs
+?? scripts/capture-render-regression-baseline.mjs
+?? scripts/tests/verify-book-line-classifier.mjs
+?? scripts/tests/verify-step-by-step-render-guard.mjs
+?? tmp/render-regression-baseline/
+?? tmp/render-regression-phase1/

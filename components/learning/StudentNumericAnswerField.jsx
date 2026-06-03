@@ -28,6 +28,8 @@ export default function StudentNumericAnswerField({
   className = "",
   inputClassName = "",
   autoFocus = false,
+  suppressEmbeddedKeyboard = false,
+  onInputFocus,
 }) {
   const isTouch = useTouchPrimaryDevice();
   const policy = resolveVirtualAnswerKeyboard({
@@ -42,7 +44,8 @@ export default function StudentNumericAnswerField({
   }, [policy.defaultOpen]);
 
   const virtualEnabled = policy.enabled;
-  const showKeyboard = virtualEnabled && (policy.defaultOpen || keyboardOpen);
+  const showKeyboard =
+    virtualEnabled && (policy.defaultOpen || keyboardOpen) && !suppressEmbeddedKeyboard;
   const inputReadOnly = virtualEnabled && isTouch && !disabled;
   const useCompactKeyboard = virtualEnabled && isTouch;
   const embedSubmitInKeyboard =
@@ -80,6 +83,9 @@ export default function StudentNumericAnswerField({
               e.preventDefault();
               onEnterSubmit();
             }
+          }}
+          onFocus={() => {
+            onInputFocus?.();
           }}
           placeholder={placeholder}
           disabled={disabled}
