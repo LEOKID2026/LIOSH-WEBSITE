@@ -74,4 +74,25 @@ describe("assigned activity topic visibility gating", () => {
       assert.equal(base, assigned);
     }
   });
+
+  it("Phase B English grammar/sentences/translation remain visible g2–g6", () => {
+    const g2Keys = topicOptionsForAssignedActivity("english", "g2").map((o) => o.key);
+    assert.ok(g2Keys.includes("translation"));
+
+    for (const g of ["g3", "g4", "g5", "g6"]) {
+      const keys = topicOptionsForAssignedActivity("english", g).map((o) => o.key);
+      assert.ok(keys.includes("grammar"), g);
+      assert.ok(keys.includes("sentences"), g);
+      assert.ok(keys.includes("translation"), g);
+    }
+  });
+
+  it("Phase B Science materials/earth_space/environment remain visible g1–g6", () => {
+    for (const g of ["g1", "g2", "g3", "g4", "g5", "g6"]) {
+      const keys = topicOptionsForAssignedActivity("science", g).map((o) => o.key);
+      assert.ok(keys.includes("materials"), g);
+      assert.ok(keys.includes("earth_space"), g);
+      assert.ok(keys.includes("environment"), g);
+    }
+  });
 });

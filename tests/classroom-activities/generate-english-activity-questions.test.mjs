@@ -46,15 +46,15 @@ test("english generates N=5 for g3 grammar easy", async () => {
   assert.equal(validateSameExactQuestionSet(qs, 5).ok, true);
 });
 
-test("english generates translation MCQ with pre-expanded choices (g3 easy pool max 4)", async () => {
+test("english generates translation MCQ with pre-expanded choices (g3 easy pool)", async () => {
   const qs = await generateActivityQuestionSetClient({
     subject: "english",
     gradeLevel: "g3",
     topic: "translation",
     difficulty: "easy",
-    count: 4,
+    count: 5,
   });
-  assert.equal(qs.length, 4);
+  assert.equal(qs.length, 5);
   for (const item of qs) {
     assert.equal(item.subject, "english");
     assert.equal(item.topic, "translation");
@@ -63,24 +63,22 @@ test("english generates translation MCQ with pre-expanded choices (g3 easy pool 
     assert.ok(item.choices.includes(item.correctAnswer));
     assert.equal(item.params?.answerMode, "choice");
   }
-  assert.equal(validateSameExactQuestionSet(qs, 4).ok, true);
+  assert.equal(validateSameExactQuestionSet(qs, 5).ok, true);
 });
 
-test("english translation g3 easy throws when count exceeds unique pool (no fallback)", async () => {
-  await assert.rejects(
-    () =>
-      generateActivityQuestionSetClient({
-        subject: "english",
-        gradeLevel: "g3",
-        topic: "translation",
-        difficulty: "easy",
-        count: 5,
-      }),
-    (err) => {
-      assert.match(String(err.message), /אין מספיק שאלות אנגלית/);
-      return true;
-    }
-  );
+test("english translation g6 easy passes after global_advanced pool wiring", async () => {
+  const qs = await generateActivityQuestionSetClient({
+    subject: "english",
+    gradeLevel: "g6",
+    topic: "translation",
+    difficulty: "easy",
+    count: 5,
+  });
+  assert.equal(qs.length, 5);
+  for (const item of qs) {
+    assert.equal(item.topic, "translation");
+    assert.ok(item.choices.includes(item.correctAnswer));
+  }
 });
 
 test("english generates N=5 for g2 vocabulary easy", async () => {

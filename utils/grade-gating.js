@@ -105,6 +105,11 @@ export const ENGLISH_TRANSLATION_POOL_RANGE = {
   community: { minGrade: 4, maxGrade: 5 },
   technology: { minGrade: 5, maxGrade: 6 },
   global: { minGrade: 5, maxGrade: 6 },
+  global_advanced: { minGrade: 6, maxGrade: 6 },
+  phase_b_routines: { minGrade: 2, maxGrade: 3 },
+  phase_b_hobbies: { minGrade: 3, maxGrade: 4 },
+  phase_b_community: { minGrade: 4, maxGrade: 5 },
+  phase_b_technology: { minGrade: 5, maxGrade: 6 },
 };
 
 /** @type {Record<string, { minGrade: number, maxGrade: number }>} */
@@ -114,6 +119,7 @@ export const ENGLISH_SENTENCE_POOL_RANGE = {
   descriptive: { minGrade: 3, maxGrade: 4 },
   narrative: { minGrade: 4, maxGrade: 5 },
   advanced: { minGrade: 5, maxGrade: 6 },
+  assigned_sentence_mcq: { minGrade: 3, maxGrade: 6 },
 };
 
 /**

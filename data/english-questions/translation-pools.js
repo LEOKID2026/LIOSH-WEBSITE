@@ -1,4 +1,6 @@
 // Metadata enrichment (safe pass): difficulty, cognitiveLevel, expectedErrorTypes, skillId (when no diagnostic), subtype (pool bucket when taxonomy-valid), prerequisiteSkillIds (gated). See reports/question-metadata-qa/english-metadata-apply-report.json.
+import { TRANSLATION_POOLS_PHASE_B } from "./translation-pools-phase-b.js";
+
 export const TRANSLATION_POOLS = {
   "classroom": [
     {
@@ -1508,3 +1510,8 @@ export const TRANSLATION_POOLS = {
     }
   ]
 };
+
+for (const [poolKey, rows] of Object.entries(TRANSLATION_POOLS_PHASE_B)) {
+  if (!TRANSLATION_POOLS[poolKey]) TRANSLATION_POOLS[poolKey] = [];
+  TRANSLATION_POOLS[poolKey].push(...rows);
+}

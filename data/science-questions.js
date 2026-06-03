@@ -9,6 +9,7 @@ import { SCIENCE_QUESTIONS_P0_G123_FILL } from "./science-questions-p0-g123-fill
 import { SCIENCE_QUESTIONS_P1_G456_FILL } from "./science-questions-p1-g456-fill.js";
 import { SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME } from "./science-questions-needs-more-volume.js";
 import { SCIENCE_G3_BODY_BANK } from "./science-questions-g3-body-bank.js";
+import { SCIENCE_QUESTIONS_PHASE_B } from "./science-questions-phase-b.js";
 import { applyPass1ScienceMetadata } from "./science-questions-metadata-pass1-enrich.js";
 
 const SCIENCE_QUESTIONS_RAW = [
@@ -10869,6 +10870,7 @@ const SCIENCE_QUESTIONS_RAW = [
   .concat(SCIENCE_QUESTIONS_P0_G123_FILL)
   .concat(SCIENCE_QUESTIONS_P1_G456_FILL)
   .concat(SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME)
-  .concat(SCIENCE_G3_BODY_BANK);
+  .concat(SCIENCE_G3_BODY_BANK)
+  .concat(SCIENCE_QUESTIONS_PHASE_B);
 
 export const SCIENCE_QUESTIONS = SCIENCE_QUESTIONS_RAW.map(applyPass1ScienceMetadata);
