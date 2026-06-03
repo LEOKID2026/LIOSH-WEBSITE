@@ -123,6 +123,42 @@ test("geometry Hebrew label answers score via answersMatch when present", async 
   }
 });
 
+const CORE_DIAGRAM_GEOMETRY_CASES = [
+  { gradeLevel: "g3", topic: "parallel_perpendicular" },
+  { gradeLevel: "g4", topic: "parallel_perpendicular" },
+  { gradeLevel: "g4", topic: "diagonal" },
+  { gradeLevel: "g4", topic: "symmetry" },
+  { gradeLevel: "g5", topic: "parallel_perpendicular" },
+  { gradeLevel: "g5", topic: "diagonal" },
+  { gradeLevel: "g5", topic: "heights" },
+  { gradeLevel: "g5", topic: "tiling" },
+];
+
+for (const tc of CORE_DIAGRAM_GEOMETRY_CASES) {
+  for (const difficulty of ["easy", "medium", "hard"]) {
+    test(`geometry core diagram topic ${tc.gradeLevel} ${tc.topic} ${difficulty}`, async () => {
+      const qs = await generateActivityQuestionSetClient({
+        subject: "geometry",
+        gradeLevel: tc.gradeLevel,
+        topic: tc.topic,
+        difficulty,
+        count: 5,
+      });
+      assert.equal(qs.length, 5);
+      for (const item of qs) {
+        assert.equal(item.subject, "geometry");
+        assert.equal(item.topic, tc.topic);
+        const spec = getGeometryDiagramSpec({
+          topic: item.topic,
+          shape: item.shape,
+          params: item.params,
+        });
+        assert.ok(spec?.kind, `expected diagram spec for ${item.params?.kind}`);
+      }
+    });
+  }
+}
+
 const BROKEN_GEOMETRY_CASES = [
   { name: "g3 shapes_basic medium", gradeLevel: "g3", topic: "shapes_basic", difficulty: "medium" },
   { name: "g3 rotation easy", gradeLevel: "g3", topic: "rotation", difficulty: "easy" },

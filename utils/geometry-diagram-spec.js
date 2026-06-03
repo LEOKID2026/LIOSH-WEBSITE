@@ -174,6 +174,105 @@ export function getGeometryDiagramSpec(question, options = {}) {
     };
   }
 
+  if (
+    topic === "parallel_perpendicular" ||
+    p.kind === "parallel_perpendicular" ||
+    p.kind === "concept_lines"
+  ) {
+    const isParallel =
+      p.isParallel === true ||
+      p.isParallel === "true" ||
+      String(p.type || "") === "מקבילות" ||
+      String(p.conceptTag || "").includes("parallel") ||
+      (String(p.subtype || "").includes("parallel") && !String(p.subtype || "").includes("perp"));
+    const isPerp =
+      String(p.type || "") === "מאונכות" ||
+      String(p.conceptTag || "").includes("perp");
+    return {
+      kind: "parallel_lines",
+      mode: isPerp && !isParallel ? "perpendicular" : "parallel",
+    };
+  }
+
+  if (topic === "symmetry" || p.kind === "symmetry" || p.kind === "concept_symmetry") {
+    const shapeHe = String(p.shape || shape || "");
+    let template = "square";
+    if (shapeHe.includes("מלבן")) template = "rectangle";
+    else if (shapeHe.includes("משולש")) template = "equilateral_triangle";
+    return { kind: "symmetry", template };
+  }
+
+  if (topic === "diagonal" || String(p.kind || "").startsWith("diagonal_")) {
+    const shapeHe = String(p.shape || shape || "");
+    let diagShape = "square";
+    if (p.kind === "diagonal_rectangle" || shapeHe === "מלבן") diagShape = "rectangle";
+    else if (p.kind === "diagonal_parallelogram" || shapeHe === "מקבילית") {
+      diagShape = "parallelogram";
+    }
+    /** @type {Record<string, unknown>} */
+    const out = {
+      kind: "diagonal",
+      shape: diagShape,
+      hideDiagonal: hideUnknownValues,
+    };
+    if (typeof p.side === "number") out.side = p.side;
+    if (typeof p.width === "number") out.width = p.width;
+    if (typeof p.diagonal === "number") out.diagonal = p.diagonal;
+    return out;
+  }
+
+  if (topic === "heights" || String(p.kind || "").startsWith("heights_")) {
+    const hideHeight = hideUnknownValues;
+    if (p.kind === "heights_triangle" || p.shape === "triangle") {
+      if (typeof p.base !== "number" || typeof p.height !== "number") return null;
+      return {
+        kind: "triangle",
+        mode: "height",
+        base: p.base,
+        height: p.height,
+        hideHeight,
+      };
+    }
+    if (p.kind === "heights_parallelogram" || p.shape === "parallelogram") {
+      if (typeof p.base !== "number" || typeof p.height !== "number") return null;
+      return {
+        kind: "parallelogram",
+        mode: "height",
+        base: p.base,
+        height: p.height,
+        hideHeight,
+      };
+    }
+    if (p.kind === "heights_trapezoid" || p.shape === "trapezoid") {
+      if (
+        typeof p.base1 !== "number" ||
+        typeof p.base2 !== "number" ||
+        typeof p.height !== "number"
+      ) {
+        return null;
+      }
+      return {
+        kind: "trapezoid",
+        mode: "height",
+        base1: p.base1,
+        base2: p.base2,
+        height: p.height,
+        hideHeight,
+      };
+    }
+    return null;
+  }
+
+  if (topic === "tiling" || p.kind === "tiling" || p.kind === "concept_tiling") {
+    const shapeHe = String(p.shape || "");
+    let tile = "square";
+    if (shapeHe.includes("משושה")) tile = "hexagon";
+    else if (shapeHe.includes("משולש")) tile = "triangle";
+    const out = { kind: "tiling", tile, hideAngle: hideUnknownValues };
+    if (typeof p.angle === "number") out.angle = p.angle;
+    return out;
+  }
+
   return null;
 }
 
@@ -305,6 +404,30 @@ export function getAssessmentDiagramHiddenAnswerValues(spec) {
   if (spec.kind === "pythagoras" && spec.hideSide) {
     const val = spec[spec.hideSide];
     return val != null ? [String(val)] : [];
+  }
+
+  if (spec.kind === "triangle" && spec.mode === "height" && spec.hideHeight) {
+    return spec.height != null ? [String(spec.height)] : [];
+  }
+
+  if (spec.kind === "parallelogram" && spec.mode === "height" && spec.hideHeight) {
+    return [String(spec.height)];
+  }
+
+  if (spec.kind === "trapezoid" && spec.mode === "height" && spec.hideHeight) {
+    return [String(spec.height)];
+  }
+
+  if (spec.kind === "diagonal" && spec.hideDiagonal) {
+    if (spec.diagonal != null) return [String(spec.diagonal)];
+  }
+
+  if (spec.kind === "tiling" && spec.hideAngle && typeof spec.angle === "number") {
+    return [String(spec.angle), `${spec.angle}°`];
+  }
+
+  if (spec.kind === "symmetry" && typeof spec.axes === "number") {
+    return [String(spec.axes)];
   }
 
   return [];

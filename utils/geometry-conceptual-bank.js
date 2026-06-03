@@ -1003,6 +1003,117 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
   {
     "gradeBand": "mid",
     "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "parallel_symbol",
+    "conceptTag": "parallel_symbol",
+    "distractorFamily": "line_relation",
+    "question": "סמל ∥ במישור מסמן בדרך כלל:",
+    "correct": "ישרים מקבילים",
+    "options": [
+      "ישרים מקבילים",
+      "ישרים מאונכים",
+      "ישרים שווים באורך",
+      "ישרים שחותכים זווית 45°"
+    ],
+    "difficulty": "basic",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "mid",
+    "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "medium",
+      "hard"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "compare_relation_mid",
+    "conceptTag": "parallel_vs_perp_mid",
+    "distractorFamily": "line_relation",
+    "question": "מה נכון לגבי ישרים מקבילים באותו מישור?",
+    "correct": "הם לא נפגשים ושומרים על מרחק קבוע",
+    "options": [
+      "הם לא נפגשים ושומרים על מרחק קבוע",
+      "הם תמיד נפגשים בזווית 90°",
+      "הם חייבים להיות באותו אורך",
+      "הם תמיד מאונכים"
+    ],
+    "difficulty": "standard",
+    "cognitiveLevel": "understanding",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "mid",
+    "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "hard"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "perp_symbol_mid",
+    "conceptTag": "perp_symbol_mid",
+    "distractorFamily": "line_relation",
+    "question": "סמל ⊥ במישור מסמן בדרך כלל:",
+    "correct": "ישרים מאונכים",
+    "options": [
+      "ישרים מאונכים",
+      "ישרים מקבילים",
+      "ישרים שווים באורך",
+      "ישרים שאינם בני השוואה"
+    ],
+    "difficulty": "standard",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "mid",
+    "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "hard"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "perp_angle_mid",
+    "conceptTag": "perp_angle_mid",
+    "distractorFamily": "line_relation",
+    "question": "כששני ישרים במישור מאונכים, זווית החיתוך ביניהם היא:",
+    "correct": "90°",
+    "options": [
+      "90°",
+      "180°",
+      "45°",
+      "360°"
+    ],
+    "difficulty": "standard",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "mid",
+    "topics": [
       "volume"
     ],
     "levels": [
@@ -1383,6 +1494,63 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
   {
     "gradeBand": "late",
     "topics": [
+      "tiling"
+    ],
+    "levels": [
+      "easy",
+      "medium"
+    ],
+    "kind": "concept_tiling",
+    "patternFamily": "regular_tiling",
+    "subtype": "square_tile_angle",
+    "conceptTag": "square_tile_90",
+    "distractorFamily": "tiling_angle",
+    "question": "בריצוף משוכלל של ריבועים, זווית פנימית אופיינית בכל ריבוע היא:",
+    "correct": "90°",
+    "options": [
+      "90°",
+      "60°",
+      "120°",
+      "180°"
+    ],
+    "difficulty": "basic",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "late",
+    "topics": [
+      "tiling"
+    ],
+    "levels": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "kind": "concept_tiling",
+    "patternFamily": "regular_tiling",
+    "subtype": "triangle_tile_angle",
+    "conceptTag": "triangle_tile_60",
+    "distractorFamily": "tiling_angle",
+    "question": "בריצוף משוכלל של משולשים שווי צלעות, זווית פנימית אופיינית בכל משולש היא:",
+    "correct": "60°",
+    "options": [
+      "60°",
+      "90°",
+      "120°",
+      "360°"
+    ],
+    "difficulty": "basic",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "late",
+    "topics": [
       "heights"
     ],
     "levels": [
@@ -1436,6 +1604,115 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "expectedErrorTypes": [
       "concept_confusion",
       "careless_error"
+    ]
+  },
+  {
+    "gradeBand": "late",
+    "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "hard"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "compare_relation",
+    "conceptTag": "parallel_vs_perp",
+    "distractorFamily": "line_relation",
+    "question": "במישור: מה ההבדל העיקרי בין ישרים מקבילים לישרים מאונכים?",
+    "correct": "מקבילים לא נפגשים; מאונכים נפגשים בזווית 90°",
+    "options": [
+      "מקבילים לא נפגשים; מאונכים נפגשים בזווית 90°",
+      "מקבילים תמיד קצרים יותר",
+      "מאונכים לעולם לא נפגשים",
+      "אין הבדל — זה אותו דבר"
+    ],
+    "difficulty": "standard",
+    "cognitiveLevel": "understanding",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "late",
+    "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "easy"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "symbol_recognition",
+    "conceptTag": "perp_symbol",
+    "distractorFamily": "line_relation",
+    "question": "סמל ⊥ במישור מסמן בדרך כלל:",
+    "correct": "ישרים מאונכים",
+    "options": [
+      "ישרים מאונכים",
+      "ישרים מקבילים",
+      "ישרים שווים באורך",
+      "ישרים שאינם בני השוואה"
+    ],
+    "difficulty": "basic",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "late",
+    "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "medium",
+      "hard"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "perp_def_late",
+    "conceptTag": "perp_def_late",
+    "distractorFamily": "line_relation",
+    "question": "כששני ישרים במישור מאונכים, זווית החיתוך ביניהם היא:",
+    "correct": "90°",
+    "options": [
+      "90°",
+      "180°",
+      "45°",
+      "360°"
+    ],
+    "difficulty": "standard",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
+    ]
+  },
+  {
+    "gradeBand": "late",
+    "topics": [
+      "parallel_perpendicular"
+    ],
+    "levels": [
+      "hard"
+    ],
+    "kind": "concept_lines",
+    "patternFamily": "parallel_perpendicular",
+    "subtype": "parallel_symbol_late",
+    "conceptTag": "parallel_symbol_late",
+    "distractorFamily": "line_relation",
+    "question": "סמל ∥ במישור מסמן בדרך כלל:",
+    "correct": "ישרים מקבילים",
+    "options": [
+      "ישרים מקבילים",
+      "ישרים מאונכים",
+      "ישרים שווים באורך",
+      "ישרים שחותכים זווית 45°"
+    ],
+    "difficulty": "standard",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion"
     ]
   },
   {

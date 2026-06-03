@@ -288,7 +288,7 @@ export default function GeometryExplanationDiagram({
     );
   }
 
-  if (spec.kind === "triangle" && spec.mode === "area") {
+  if (spec.kind === "triangle" && (spec.mode === "area" || spec.mode === "height")) {
     const b = spec.base;
     const h = spec.height;
     const { w: bw, h: bh } = scaleBaseToHeight(b, h);
@@ -301,6 +301,7 @@ export default function GeometryExplanationDiagram({
     const baseHi = emph === "base_height" || emph === "formula";
     const heightHi = emph === "base_height" || emph === "formula";
     const isRes = emph === "result";
+    const heightLabel = spec.hideHeight ? "גובה ?" : `גובה ${fmtLen(h, question)}`;
     return (
       <DiagramFrame {...frameProps}>
         <svg viewBox={VB} className="block" aria-hidden>
@@ -331,7 +332,7 @@ export default function GeometryExplanationDiagram({
             בסיס {fmtLen(b, question)}
           </SvgText>
           <SvgText x={xL - 8} y={(apexY + baseY) / 2 + 5} variant="label" anchor="end">
-            גובה {fmtLen(h, question)}
+            {heightLabel}
           </SvgText>
           <SvgText x={cx} y={Math.max(16, apexY - 14)} variant="note">
             הגובה ניצב לבסיס
@@ -351,6 +352,7 @@ export default function GeometryExplanationDiagram({
     const xr = cx + w / 2;
     const yt = yb - ph;
     const bh = emphasis === "base_height" || emphasis === "formula";
+    const heightLabel = spec.hideHeight ? "גובה ?" : `גובה ${fmtLen(h, question)}`;
     return (
       <DiagramFrame {...frameProps}>
         <svg viewBox={VB} className="block" aria-hidden>
@@ -381,7 +383,7 @@ export default function GeometryExplanationDiagram({
             בסיס {fmtLen(b, question)}
           </SvgText>
           <SvgText x={xl + skew - 12} y={(yt + yb) / 2 + 5} variant="label" anchor="end">
-            גובה {fmtLen(h, question)}
+            {heightLabel}
           </SvgText>
           <SvgText x={xr + skew + 18} y={(yt + yb) / 2} variant="note" anchor="start">
             מוסט ≠ גובה
@@ -404,6 +406,7 @@ export default function GeometryExplanationDiagram({
     const xTl = cx - topW / 2;
     const xTr = cx + topW / 2;
     const tri = emphasis === "bases_height" || emphasis === "formula";
+    const heightLabel = spec.hideHeight ? "גובה ?" : `גובה ${fmtLen(ht, question)}`;
     return (
       <DiagramFrame {...frameProps}>
         <svg viewBox={VB} className="block" aria-hidden>
@@ -445,7 +448,193 @@ export default function GeometryExplanationDiagram({
             בסיס {fmtLen(b2, question)}
           </SvgText>
           <SvgText x={xTl - 8} y={(yt + yb) / 2 + 5} variant="label" anchor="end">
-            גובה {fmtLen(ht, question)}
+            {heightLabel}
+          </SvgText>
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "parallel_lines") {
+    const perp = spec.mode === "perpendicular";
+    return (
+      <DiagramFrame {...frameProps}>
+        <svg viewBox={VB} className="block" aria-hidden>
+          {perp ? (
+            <>
+              <line x1="72" y1="200" x2="288" y2="200" stroke={ST.stroke} strokeWidth="2.8" />
+              <line x1="180" y1="220" x2="180" y2="72" stroke={ST.strokeHi} strokeWidth="2.8" />
+              <rect
+                x="168"
+                y="188"
+                width="18"
+                height="18"
+                fill="none"
+                stroke={ST.strokeHi}
+                strokeWidth="2"
+              />
+            </>
+          ) : (
+            <>
+              <line x1="72" y1="108" x2="288" y2="108" stroke={ST.stroke} strokeWidth="2.8" />
+              <line x1="72" y1="168" x2="288" y2="168" stroke={ST.strokeHi} strokeWidth="2.8" />
+            </>
+          )}
+          <SvgText x="180" y="36" variant="note">
+            {perp ? "ישרים מאונכים" : "ישרים מקבילים"}
+          </SvgText>
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "symmetry") {
+    const tpl = spec.template || "square";
+    const cx = 180;
+    const cy = 138;
+    let points = shapeTemplatePointsString("square", { x: cx, y: cy });
+    if (tpl === "rectangle") {
+      points = shapeTemplatePointsString("rectangle", { x: cx, y: cy - 8 });
+    } else if (tpl === "equilateral_triangle") {
+      points = shapeTemplatePointsString("triangle_equilateral", { x: cx, y: cy + 12 });
+    }
+    return (
+      <DiagramFrame {...frameProps}>
+        <svg viewBox={VB} className="block" aria-hidden>
+          {points ? (
+            <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.5" />
+          ) : null}
+          <line
+            x1={cx}
+            y1="52"
+            x2={cx}
+            y2="228"
+            stroke={ST.strokeHi}
+            strokeWidth="2"
+            strokeDasharray="7 5"
+          />
+          <SvgText x={cx} y="28" variant="note">
+            ציר סימטרייה
+          </SvgText>
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "diagonal") {
+    const cx = 180;
+    const cy = 132;
+    if (spec.shape === "rectangle" || spec.shape === "parallelogram") {
+      const L = typeof spec.side === "number" ? spec.side : 8;
+      const Wd = typeof spec.width === "number" ? spec.width : 5;
+      const { w: rw, h: rh } = scaleLengthToWidth(L, Wd);
+      const left = cx - rw / 2;
+      const right = cx + rw / 2;
+      const top = cy - rh / 2;
+      const bottom = cy + rh / 2;
+      const skew = spec.shape === "parallelogram" ? rw * 0.18 : 0;
+      const poly =
+        spec.shape === "parallelogram"
+          ? `${left},${bottom} ${right},${bottom} ${right + skew},${top} ${left + skew},${top}`
+          : null;
+      return (
+        <DiagramFrame {...frameProps}>
+          <svg viewBox={VB} className="block" aria-hidden>
+            {poly ? (
+              <polygon points={poly} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.4" />
+            ) : (
+              <rect
+                x={left}
+                y={top}
+                width={rw}
+                height={rh}
+                fill={ST.fillShape}
+                stroke={ST.stroke}
+                strokeWidth="2.4"
+                rx="3"
+              />
+            )}
+            <line
+              x1={left}
+              y1={bottom}
+              x2={right + skew}
+              y2={top}
+              stroke={ST.strokeHi}
+              strokeWidth="2.2"
+              strokeDasharray="6 4"
+            />
+            <SvgText x={cx} y={bottom + 22} variant="label">
+              {typeof spec.side === "number" ? fmtLen(spec.side, question) : "אורך"}
+            </SvgText>
+            <SvgText x={left - 10} y={cy + 4} variant="label" anchor="end">
+              {typeof spec.width === "number" ? fmtLen(spec.width, question) : "רוחב"}
+            </SvgText>
+            {!spec.hideDiagonal ? (
+              <SvgText x={cx + 20} y={cy - 8} variant="note" anchor="start">
+                {spec.diagonal != null ? fmtLen(spec.diagonal, question) : "אלכסון"}
+              </SvgText>
+            ) : null}
+          </svg>
+        </DiagramFrame>
+      );
+    }
+    const s = typeof spec.side === "number" ? spec.side : 8;
+    const sz = scaleSquareSide(s);
+    const half = sz / 2;
+    return (
+      <DiagramFrame {...frameProps}>
+        <svg viewBox={VB} className="block" aria-hidden>
+          <rect
+            x={cx - half}
+            y={cy - half}
+            width={sz}
+            height={sz}
+            fill={ST.fillShape}
+            stroke={ST.stroke}
+            strokeWidth="2.4"
+            rx="4"
+          />
+          <line
+            x1={cx - half}
+            y1={cy + half}
+            x2={cx + half}
+            y2={cy - half}
+            stroke={ST.strokeHi}
+            strokeWidth="2.2"
+            strokeDasharray="6 4"
+          />
+          <SvgText x={cx} y={cy + half + 20} variant="label">
+            {typeof spec.side === "number" ? fmtLen(spec.side, question) : "צלע"}
+          </SvgText>
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "tiling") {
+    const cx = 180;
+    const cy = 138;
+    const tile = spec.tile || "square";
+    let points = shapeTemplatePointsString("square", { x: cx, y: cy });
+    if (tile === "triangle") {
+      points = shapeTemplatePointsString("triangle_equilateral", { x: cx, y: cy + 10 });
+    } else if (tile === "hexagon") {
+      const r = 56;
+      const hex = [];
+      for (let i = 0; i < 6; i += 1) {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        hex.push(`${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`);
+      }
+      points = hex.join(" ");
+    }
+    return (
+      <DiagramFrame {...frameProps}>
+        <svg viewBox={VB} className="block" aria-hidden>
+          {points ? (
+            <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.5" />
+          ) : null}
+          <SvgText x={cx} y="28" variant="note">
+            צורה לריצוף
           </SvgText>
         </svg>
       </DiagramFrame>
