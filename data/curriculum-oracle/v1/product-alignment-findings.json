@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generator": "scripts/verify-product-alignment.mjs",
-  "generated_at": "2026-06-03T00:12:46.244Z",
+  "generated_at": "2026-06-03T00:36:11.797Z",
   "oracle_snapshot": {
     "matrix_path": "data/curriculum-oracle/v1/ministry-matrix.draft.json",
     "row_count": 638,
@@ -21,7 +21,7 @@
       "P2": 0,
       "INFO": 0
     },
-    "generated_at": "2026-06-03T00:12:46.245Z"
+    "generated_at": "2026-06-03T00:36:11.798Z"
   },
   "inputs_read": [
     "data/curriculum-oracle/v1/ministry-matrix.draft.json",

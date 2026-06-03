@@ -29,9 +29,18 @@ import { GRADES as GEOMETRY_GRADES } from "../utils/geometry-constants.js";
 import { GRADES as HEBREW_GRADES } from "../utils/hebrew-constants.js";
 import { SCIENCE_GRADES } from "../data/science-curriculum.js";
 import { ENGLISH_GRADES } from "../data/english-curriculum.js";
+import { GRADES as MG_GRADES } from "../utils/moledet-geography-constants.js";
+import {
+  MOLEDET_GEOGRAPHY_PAGE_TO_PRACTICE_BY_GRADE,
+} from "../lib/learning-book/moledet-geography-book-practice-map.js";
+import {
+  getMoledetGeographyBookHref,
+  getMoledetGeographyBookSubjectForGrade,
+} from "../lib/learning-book/resolve-moledet-geography-book-page.js";
 
 const ROOT = process.cwd();
 const GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
+const MG_PUBLISHED_GRADES = ["g2", "g3", "g4", "g5", "g6"];
 
 /** @type {string[]} */
 const failures = [];
@@ -344,6 +353,119 @@ function verifySubject(cfg) {
   }
 }
 
+function verifyMoledetGeographyBooks() {
+  const masterSrc = readMaster("pages/learning/moledet-geography-master.js");
+  if (!masterSrc) return;
+
+  if (!masterSrc.includes("LearningBookIndexTile")) {
+    fail("main.ui", "moledet-geography: master missing LearningBookIndexTile");
+  }
+  if (!masterSrc.includes("getLearningBookIndexHref")) {
+    fail("main.ui", "moledet-geography: master missing getLearningBookIndexHref call");
+  }
+  if (!masterSrc.includes("bookSubjectForGrade")) {
+    fail("main.ui", "moledet-geography: master missing bookSubjectForGrade");
+  }
+  if (!masterSrc.includes("bookTopicHref")) {
+    fail("explain.ui", "moledet-geography: master missing bookTopicHref");
+  }
+  if (!masterSrc.includes("הסבר בספר")) {
+    fail("explain.ui", "moledet-geography: master missing הסבר בספר label");
+  }
+  if (!masterSrc.includes("bookTopicHref ?")) {
+    fail("explain.ui", "moledet-geography: master must gate הסבר בספר on bookTopicHref");
+  }
+
+  for (const forbiddenSubject of ["moledet", "geography"]) {
+    if (hasLearningBook(forbiddenSubject, "g1")) {
+      fail("scope.g1", `${forbiddenSubject} g1 must not be authored`);
+    }
+    if (getLearningBookIndexHref(forbiddenSubject, "g1")) {
+      fail("scope.g1", `${forbiddenSubject} g1 must not expose index href`);
+    }
+    setResult(forbiddenSubject, "g1", "main", "NOT_APPLICABLE");
+    setResult(forbiddenSubject, "g1", "explain", "NOT_APPLICABLE");
+  }
+
+  for (const grade of MG_PUBLISHED_GRADES) {
+    const subject = getMoledetGeographyBookSubjectForGrade(grade);
+    if (!subject) {
+      fail("main.subject", `moledet-geography ${grade}: missing book subject mapping`);
+      continue;
+    }
+
+    setResult(subject, grade, "main", "PASS");
+    setResult(subject, grade, "explain", "PASS");
+
+    const expectedIndex = `/learning/book/${subject}/${grade}`;
+    const indexHref = getLearningBookIndexHref(subject, grade);
+
+    if (!hasLearningBook(subject, grade)) {
+      fail("main.catalog", `${subject} ${grade}: not authored in catalog meta`);
+      setResult(subject, grade, "main", "FAIL");
+    }
+    if (indexHref !== expectedIndex) {
+      fail("main.route", `${subject} ${grade}: index ${indexHref} != ${expectedIndex}`);
+      setResult(subject, grade, "main", "FAIL");
+    }
+
+    const entry = getLearningBookEntry(subject, grade);
+    if (!entry) {
+      fail("main.load", `${subject} ${grade}: getLearningBookEntry returned null`);
+      setResult(subject, grade, "main", "FAIL");
+    } else if (entry.meta?.routeBase !== expectedIndex) {
+      fail(
+        "main.route",
+        `${subject} ${grade}: catalog routeBase ${entry.meta?.routeBase} != ${expectedIndex}`
+      );
+      setResult(subject, grade, "main", "FAIL");
+    } else if (!entry.registry.pageOrder?.length) {
+      fail("main.load", `${subject} ${grade}: empty page order`);
+      setResult(subject, grade, "main", "FAIL");
+    }
+
+    const topics = MG_GRADES[grade]?.topics || [];
+    let mappableCount = 0;
+    let resolvedCount = 0;
+
+    for (const topic of topics) {
+      const href = getMoledetGeographyBookHref({ grade, topic, kind: null });
+      if (EXEMPT_TOPIC_KEYS.has(topic)) {
+        if (href) {
+          fail("explain.exempt", `${subject} ${grade} topic ${topic} must not resolve (got ${href})`);
+          setResult(subject, grade, "explain", "FAIL");
+        }
+        continue;
+      }
+      mappableCount += 1;
+      if (href) {
+        resolvedCount += 1;
+        validateHrefOrNull(href, subject, grade, `topic=${topic}`);
+      }
+    }
+
+    const practiceMap = MOLEDET_GEOGRAPHY_PAGE_TO_PRACTICE_BY_GRADE[grade] || {};
+    for (const [pageId, practice] of Object.entries(practiceMap)) {
+      const topic = practice.topic;
+      const href = getMoledetGeographyBookHref({ grade, topic, kind: null });
+      if (!href) {
+        fail(
+          "explain.practice",
+          `${subject} ${grade}: practice page ${pageId} topic ${topic} has no bookTopicHref`
+        );
+        setResult(subject, grade, "explain", "FAIL");
+        continue;
+      }
+      const pageFromHref = href.split("/").pop();
+      validateBookPageHref(href, subject, grade, pageFromHref);
+    }
+
+    if (mappableCount > 0 && resolvedCount === 0) {
+      setResult(subject, grade, "explain", "NOT_APPLICABLE");
+    }
+  }
+}
+
 function runAllChecks() {
   verifySubject({
     subject: "math",
@@ -390,22 +512,13 @@ function runAllChecks() {
     getPracticeMap: (grade) => ENGLISH_PAGE_TO_PRACTICE_BY_GRADE[grade] || {},
   });
 
-  for (const forbidden of ["moledet", "geography"]) {
-    for (const grade of GRADE_KEYS) {
-      if (hasLearningBook(forbidden, grade)) {
-        fail("scope.gated", `${forbidden} ${grade} must not be authored yet`);
-      }
-      if (getLearningBookIndexHref(forbidden, grade)) {
-        fail("scope.gated", `${forbidden} ${grade} must not expose index href`);
-      }
-    }
-  }
+  verifyMoledetGeographyBooks();
 }
 
 function printResults() {
   console.log("\n=== Learning book buttons — subject × grade ===\n");
   console.log("subject\tgrade\tmain_index\texplain_in_book");
-  for (const subject of ["math", "geometry", "science", "hebrew", "english"]) {
+  for (const subject of ["math", "geometry", "science", "hebrew", "english", "moledet", "geography"]) {
     for (const grade of GRADE_KEYS) {
       const r = results[key(subject, grade)] || { main: "FAIL", explain: "FAIL" };
       console.log(`${subject}\t${grade}\t${r.main}\t${r.explain}`);
@@ -418,7 +531,7 @@ function printResults() {
     process.exit(1);
   }
 
-  console.log(`\nPASS: all learning-book buttons verified (${GRADE_KEYS.length * 5} books)`);
+  console.log(`\nPASS: all learning-book buttons verified (${GRADE_KEYS.length * 5 + MG_PUBLISHED_GRADES.length} books)`);
   process.exit(0);
 }
 

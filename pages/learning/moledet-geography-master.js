@@ -17,8 +17,16 @@ import {
   MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE,
 } from "../../utils/moledet-geography-curriculum-gates.js";
 import { MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID } from "../../lib/learning-shared/moledet-geography-subject-id.js";
+import LearningBookIndexTile from "../../components/learning-book/LearningBookIndexTile";
+import { getLearningBookIndexHref } from "../../lib/learning-book/learning-book-catalog-meta.js";
+import {
+  getMoledetGeographyBookHref,
+  getMoledetGeographyBookSubjectForGrade,
+} from "../../lib/learning-book/resolve-moledet-geography-book-page.js";
+import { MOLEDET_GEOGRAPHY_ACTIVE_BOOK_GRADES } from "../../lib/learning-book/moledet-geography-book-practice-map.js";
 
 const MG_SUBJECT = MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID;
+const MG_BOOK_GRADE_SET = new Set(MOLEDET_GEOGRAPHY_ACTIVE_BOOK_GRADES);
 import {
   getLevelConfig,
   getLevelForGrade,
@@ -187,13 +195,39 @@ export default function MoledetGeographyMaster() {
   // NEW: grade & mode
   const [gradeNumber, setGradeNumber] = useState(3); // 1 = כיתה א׳, 2 = ב׳, ... 6 = ו׳
   const [grade, setGrade] = useState("g3"); // g1, g2, g3, g4, g5, g6
+  const bookSubjectForGrade = getMoledetGeographyBookSubjectForGrade(grade);
+  const bookIndexHref = bookSubjectForGrade
+    ? getLearningBookIndexHref(bookSubjectForGrade, grade)
+    : null;
   const [mode, setMode] = useState("learning");
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("homeland"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
+  const bookTopicHref = useMemo(() => {
+    if (!MG_BOOK_GRADE_SET.has(grade)) return null;
+    return getMoledetGeographyBookHref({ grade, topic: operation, kind: null });
+  }, [grade, operation]);
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const questionBookHref = useMemo(() => {
+    if (mode !== "learning" || !currentQuestion) return null;
+    if (!MG_BOOK_GRADE_SET.has(grade)) return null;
+    const params = currentQuestion.params || {};
+    return getMoledetGeographyBookHref({
+      grade,
+      topic: currentQuestion.topic || currentQuestion.operation || operation,
+      kind: params.subtopicId ?? params.kind ?? currentQuestion.pageId ?? null,
+    });
+  }, [grade, mode, currentQuestion, operation]);
+  const openBookFromLearning = useCallback(
+    (href) => {
+      if (!href) return;
+      if (!MG_BOOK_GRADE_SET.has(grade)) return;
+      router.push(href);
+    },
+    [grade, router]
+  );
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -2839,7 +2873,15 @@ export default function MoledetGeographyMaster() {
           )}
 
           {!gameActive ? (
-            <div className="flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+            <div className="relative flex flex-col flex-1 min-h-0 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl items-center justify-start md:gap-1">
+              {bookIndexHref && bookSubjectForGrade ? (
+                <LearningBookIndexTile
+                  subject={bookSubjectForGrade}
+                  grade={grade}
+                  testId={`moledet-geography-${grade}-book-index-button`}
+                  onClick={() => router.push(bookIndexHref)}
+                />
+              ) : null}
               <div className="w-full flex justify-center mb-3 md:mb-4 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] px-0.5">
                 <div
                   className="inline-flex flex-nowrap items-center justify-center gap-2 md:gap-2.5 lg:gap-3 w-max max-w-full min-w-0"
@@ -3026,6 +3068,16 @@ export default function MoledetGeographyMaster() {
                 >
                   📚 לוח עזרה
                 </button>
+                {bookTopicHref ? (
+                  <button
+                    type="button"
+                    data-testid={`moledet-geography-${grade}-book-topic-button`}
+                    onClick={() => router.push(bookTopicHref)}
+                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                  >
+                    📖 הסבר בספר
+                  </button>
+                ) : null}
                 <div
                   className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
                   title="מטבעות משחק"
@@ -3120,8 +3172,19 @@ export default function MoledetGeographyMaster() {
 
                   <div
                     data-testid="moledet-question-stem"
-                    className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2"
+                    className="relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2"
                   >
+                  {questionBookHref ? (
+                    <button
+                      type="button"
+                      data-testid={`moledet-geography-${grade}-book-question-button`}
+                      onClick={() => openBookFromLearning(questionBookHref)}
+                      className="absolute top-2 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      title="הסבר בספר לנושא הנוכחי"
+                    >
+                      📖 הסבר
+                    </button>
+                  ) : null}
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
                     <div className="mb-4 flex gap-6 items-center justify-center flex-wrap" style={{ direction: "ltr" }}>

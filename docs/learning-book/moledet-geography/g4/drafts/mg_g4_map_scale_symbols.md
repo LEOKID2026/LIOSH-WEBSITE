@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g4:mg_g4_map_scale_symbols` |
 | **skill_id** | `geography:g4:geography:geography_1_מפות_קנה_מידה_סימנים` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מפות — קנה מידה וסימנים `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מפות — קנה מידה וסימנים |
 
 **Bound skill_ids:** `geography:g4:skills:skills_2_קריאת_מפות_מתקדמות`
 

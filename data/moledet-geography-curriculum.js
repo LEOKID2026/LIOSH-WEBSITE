@@ -1,5 +1,8 @@
 export const MOLEDET_GEOGRAPHY_GRADE_ORDER = ["g1", "g2", "g3", "g4", "g5", "g6"];
 
+/** Grades with active product + book scope (G1 excluded — not in official MoE band). */
+export const MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER = ["g2", "g3", "g4", "g5", "g6"];
+
 export const MOLEDET_GEOGRAPHY_GENERAL_GOALS = [
   "היכרות עם ארץ ישראל, חיי קהילה ומשפחה, יסודות בחברה ודמוקרטיה, גאוגרפיה, ערכים, שייכות וזהות ישראלית.",
   "התאמת רמת המשחק (קל / בינוני / קשה) לכל שחקן לפי כיתה, הצלחות ואתגרים יומיים.",

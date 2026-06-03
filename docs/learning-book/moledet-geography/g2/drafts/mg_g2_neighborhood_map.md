@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g2:mg_g2_neighborhood_map` |
 | **skill_id** | `geography:g2:geography:geography_0_מפת_שכונה` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מפת השכונה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מפת השכונה |
 
 **Bound skill_ids:** `geography:g2:skills:skills_2_קריאת_מפת_שכונה`
 

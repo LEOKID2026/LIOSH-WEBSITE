@@ -6,15 +6,14 @@
 |-------|-------|
 | **learning_page_id** | `geography:g4:mg_g4_government_institutions` |
 | **skill_id** | `geography:g4:citizenship:citizenship_2_מוסדות_שלטון` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מוסדות שלטון `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מוסדות שלטון |
 
 **Content scope:** מוסדות בסיסיים — תפקידים; ללא אנשים או אירועים נוכחיים  
-**Owner verification:** רשימת מוסדות וניסוח — [VERIFY]
 
 ---
 

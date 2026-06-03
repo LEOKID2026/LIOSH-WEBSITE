@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | אקלים ישראל `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | אקלים ישראל |
 
 **Bound skill_ids:** `geography:g5:skills:skills_1_הבנת_אקלים_ישראל`
 

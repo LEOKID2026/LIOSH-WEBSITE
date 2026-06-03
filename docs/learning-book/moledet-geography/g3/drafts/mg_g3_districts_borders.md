@@ -6,15 +6,14 @@
 |-------|-------|
 | **learning_page_id** | `geography:g3:mg_g3_districts_borders` |
 | **skill_id** | `geography:g3:skills:skills_3_הבנת_מחוזות_וגבולות` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מחוזות וגבולות `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מחוזות וגבולות |
 
 **Content scope:** מחוז כחלוקה מנהלית; גבול כקצה הארץ; ללא דיון פוליטי  
-**Owner verification:** שמות מחוזות ותוויות גבול — [VERIFY]
 
 ---
 

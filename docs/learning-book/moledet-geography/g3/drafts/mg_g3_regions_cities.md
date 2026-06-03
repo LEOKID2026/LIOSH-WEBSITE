@@ -6,17 +6,16 @@
 |-------|-------|
 | **learning_page_id** | `geography:g3:mg_g3_regions_cities` |
 | **skill_id** | `geography:g3:geography:geography_1_אזורים_וערים` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | אזורים וערים גדולות `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | אזורים וערים גדולות |
 
 **Bound skill_ids:** `geography:g3:skills:skills_1_זיהוי_אזורים_וערים_גדולות`
 
 **Content scope:** אזורי צפון, מרכז, דרום; ערים גדולות — דוגמאות כלליות בלבד  
-**Owner verification:** רשימת ערים ואזורים מדויקת לתוויות מפה — [VERIFY] לפני פרסום
 
 ---
 

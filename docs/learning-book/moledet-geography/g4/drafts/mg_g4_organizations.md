@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g4:mg_g4_organizations` |
 | **skill_id** | `geography:g4:citizenship:citizenship_1_ארגונים` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | ארגונים בקהילה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | ארגונים בקהילה |
 
 **Content scope:** ארגונים לעזרה ופעילות; מתנדבים; ללא ארגונים פוליטיים
 

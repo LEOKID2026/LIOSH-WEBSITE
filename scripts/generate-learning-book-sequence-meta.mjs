@@ -12,8 +12,14 @@ const matrix = JSON.parse(
   fs.readFileSync(path.join(ROOT, "data/curriculum-oracle/v1/ministry-matrix.draft.json"), "utf8")
 );
 
-const SUBJECTS = ["math", "geometry", "science", "hebrew", "english"];
+const SUBJECTS = ["math", "geometry", "science", "hebrew", "english", "moledet", "geography"];
 const GRADES = ["g1", "g2", "g3", "g4", "g5", "g6"];
+
+/** @type {Record<string, string[]>} */
+const SUBJECT_GRADES = {
+  moledet: ["g2", "g3", "g4"],
+  geography: ["g5", "g6"],
+};
 
 /** @param {string} subject @param {number} gradeNum @param {string} pageId */
 function findOracleRow(subject, gradeNum, pageId) {
@@ -60,15 +66,29 @@ const PREREQUISITE_OVERRIDES = {
 const LEARNING_BOOK_PAGE_SEQUENCE = {};
 
 for (const subject of SUBJECTS) {
-  for (const grade of GRADES) {
+  const gradesForSubject = SUBJECT_GRADES[subject] || GRADES;
+  for (const grade of gradesForSubject) {
     const regPath = path.join(ROOT, `lib/learning-book/${subject}-${grade}-registry.js`);
-    if (!fs.existsSync(regPath)) continue;
-
-    const mod = await import(pathToFileURL(regPath).href);
     const upper = grade.toUpperCase();
     const prefix = subject.toUpperCase();
-    const batchesKey = `${prefix}_${upper}_BOOK_BATCHES`;
-    const batches = mod[batchesKey];
+    /** @type {{ id: string, titleHe: string, pages: string[] }[]|null} */
+    let batches = null;
+
+    if (subject === "moledet" || subject === "geography") {
+      const manifestPath = path.join(
+        ROOT,
+        `scripts/lib/moledet-geography-${grade}-draft-manifest.mjs`
+      );
+      if (fs.existsSync(manifestPath)) {
+        const manifestMod = await import(pathToFileURL(manifestPath).href);
+        batches = manifestMod[`MOLEDET_GEOGRAPHY_${upper}_BOOK_BATCHES`];
+      }
+    } else if (fs.existsSync(regPath)) {
+      const mod = await import(pathToFileURL(regPath).href);
+      const batchesKey = `${prefix}_${upper}_BOOK_BATCHES`;
+      batches = mod[batchesKey];
+    }
+
     if (!Array.isArray(batches)) continue;
 
     const bookKey = `${subject}:${grade}`;

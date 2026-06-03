@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g2:mg_g2_community_services` |
 | **skill_id** | `geography:g2:geography:geography_2_שירותים_בקהילה` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | שירותים בקהילה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | שירותים בקהילה |
 
 **Bound skill_ids:** `geography:g2:skills:skills_1_הבנת_שירותים_בקהילה`
 

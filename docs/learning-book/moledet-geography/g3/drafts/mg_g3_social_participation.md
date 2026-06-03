@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g3:mg_g3_social_participation` |
 | **skill_id** | `geography:g3:citizenship:citizenship_1_השתתפות_חברתית` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | השתתפות חברתית `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | השתתפות חברתית |
 
 **Content scope:** השתתפות בפעילויות כיתה וקהילה; ללא מעורבות פוליטית
 

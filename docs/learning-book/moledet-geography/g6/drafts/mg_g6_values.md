@@ -10,13 +10,12 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | ערכי המדינה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | ערכי המדינה |
 
 **Bound skill_ids:** `geography:g6:skills:skills_3_הבנת_ערכי_המדינה`
 
 **Content scope:** ערכים אזרחיים — שוויון, חירות, צדק, כבוד; ללא מסגור פוליטי  
-**Owner verification:** רשימת ערכים מדויקת — [VERIFY]
 
 ---
 

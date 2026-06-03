@@ -10,13 +10,12 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | דמוקרטיה בישראל `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | דמוקרטיה בישראל |
 
 **Bound skill_ids:** `geography:g6:skills:skills_2_הבנת_הדמוקרטיה_בישראל`
 
 **Content scope:** השתתפות, בחירות (מבוגרים), כללים, כבוד לדעות שונות; ללא מפלגות ואירועים נוכחיים  
-**Owner verification:** ניסוח מושגי דמוקרטיה — [VERIFY]
 
 ---
 

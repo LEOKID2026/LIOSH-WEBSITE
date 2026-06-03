@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g3:mg_g3_citizenship_basics` |
 | **skill_id** | `geography:g3:citizenship:citizenship_0_כללי_אזרחות_בסיסיים` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | כללי אזרחות בסיסיים `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | כללי אזרחות בסיסיים |
 
 **Bound skill_ids:** `geography:g3:skills:skills_4_הבנת_כללי_אזרחות_בסיסיים`
 

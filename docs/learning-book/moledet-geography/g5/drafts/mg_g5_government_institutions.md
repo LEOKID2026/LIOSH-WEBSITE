@@ -10,13 +10,12 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מוסדות שלטון `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מוסדות שלטון |
 
 **Bound skill_ids:** `geography:g5:skills:skills_4_הבנת_מוסדות_שלטון`
 
 **Content scope:** תפקידי מוסדות — חקיקה, ניהול, שפיטה; ללא שמות נושאי תפקיד נוכחיים  
-**Owner verification:** שמות מוסדות מדויקים (כנסת, ממשלה וכו') — [VERIFY]
 
 ---
 

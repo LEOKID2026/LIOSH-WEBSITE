@@ -1,15 +1,20 @@
-/**
- * Moledet / Geography learning-book master scope manifest.
+/** Moledet / Geography learning-book master scope manifest.
  * Used by scripts/verify-moledet-geography-learning-book-master-scope.mjs
- * Mapping-only — no runtime registry.
  *
  * Child-facing subject: מולדת וגאוגרפיה
- * Spine subject key: geography
+ * Spine learning_page_id prefix: geography (unchanged)
+ * Active book subject metadata: moledet (G2–G4), geography (G5–G6)
  */
 
 export const SPINE_SUBJECT = "geography";
 
 export const CHILD_FACING_SUBJECT = "מולדת וגאוגרפיה";
+
+/** Grades with active runtime + prepared books. G1 archived — not taught. */
+export const ACTIVE_BOOK_GRADES = ["g2", "g3", "g4", "g5", "g6"];
+
+/** @deprecated G1 content archived under docs/learning-book/moledet-geography/_archive/g1 */
+export const ARCHIVED_GRADES = ["g1"];
 
 /** @type {Record<string, { page_id: string, title_hebrew: string, primary_skill_id: string, bound_skill_ids: string[] }[]>} */
 export const PAGE_CANDIDATES_BY_GRADE = {

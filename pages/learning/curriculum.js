@@ -19,7 +19,7 @@ import {
 import {
   MOLEDET_GEOGRAPHY_GENERAL_GOALS,
   MOLEDET_GEOGRAPHY_GRADES,
-  MOLEDET_GEOGRAPHY_GRADE_ORDER,
+  MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER,
 } from "../../data/moledet-geography-curriculum";
 import {
   GRADES as GEOMETRY_GRADES,
@@ -46,7 +46,9 @@ export default function Curriculum() {
   const englishGrades = ENGLISH_GRADE_ORDER.map((key) => ENGLISH_GRADES[key]);
   const scienceGrades = SCIENCE_GRADE_ORDER.map((key) => SCIENCE_GRADES[key]);
   const hebrewGrades = HEBREW_GRADE_ORDER.map((key) => HEBREW_GRADES[key]);
-  const moledetGeographyGrades = MOLEDET_GEOGRAPHY_GRADE_ORDER.map((key) => MOLEDET_GEOGRAPHY_GRADES[key]);
+  const moledetGeographyGrades = MOLEDET_GEOGRAPHY_TEACHABLE_GRADE_ORDER.map(
+    (key) => MOLEDET_GEOGRAPHY_GRADES[key]
+  );
   
   const subjectTitles = {
     math: "מתמטיקה",

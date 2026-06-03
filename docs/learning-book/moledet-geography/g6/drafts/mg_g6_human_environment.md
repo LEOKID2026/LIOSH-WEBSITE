@@ -10,8 +10,8 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | יחסי אדם–סביבה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | יחסי אדם–סביבה |
 
 **Bound skill_ids:** `geography:g6:skills:skills_1_הבנת_תופעות_טבע_ואיכות_סביבה`
 

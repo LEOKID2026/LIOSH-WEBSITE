@@ -6,15 +6,14 @@
 |-------|-------|
 | **learning_page_id** | `geography:g3:mg_g3_water_sources` |
 | **skill_id** | `geography:g3:geography:geography_3_מקורות_מים` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g3 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מקורות מים `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מקורות מים |
 
 **Content scope:** ים, אגם, נחל — מושגים; ללא הנדסת מים  
-**Owner verification:** שמות גופי מים ספציפיים על מפה — [VERIFY]
 
 ---
 

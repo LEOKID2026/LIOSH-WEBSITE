@@ -10,13 +10,12 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מגוון האוכלוסייה בישראל `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מגוון האוכלוסייה בישראל |
 
 **Bound skill_ids:** `geography:g6:skills:skills_0_הבנת_מגוון_האוכלוסייה_בישראל`
 
 **Content scope:** מגוון אוכלוסייה — שפות, מסורות, קהילות; כבוד; ללא הכללות על קבוצות; ללא מסגור פוליטי  
-**Owner verification:** אוצר מילים לתיאור קהילות וקבוצות — [VERIFY]
 
 ---
 

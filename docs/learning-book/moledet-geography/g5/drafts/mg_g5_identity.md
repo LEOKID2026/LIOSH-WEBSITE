@@ -10,8 +10,8 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | זהות אישית וקהילתית `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | זהות אישית וקהילתית |
 
 **Content scope:** מי אני; קהילות שאני שייך אליהן; כבוד למגוון; ללא מסגור פוליטי
 

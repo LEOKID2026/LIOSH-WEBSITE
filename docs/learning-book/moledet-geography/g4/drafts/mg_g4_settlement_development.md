@@ -6,15 +6,14 @@
 |-------|-------|
 | **learning_page_id** | `geography:g4:mg_g4_settlement_development` |
 | **skill_id** | `geography:g4:skills:skills_1_הבנת_התפתחות_היישובים` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | התפתחות היישובים בישראל `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | התפתחות היישובים בישראל |
 
 **Content scope:** סקירה כללית — יישובים נוספו עם הזמן; ללא תאריכים או פרטים היסטוריים  
-**Owner verification:** ניסוח היסטורי — [VERIFY] לפני פרסום; אין להוסיף תאריכים בלי אישור
 
 ---
 

@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g4:mg_g4_settlement_types` |
 | **skill_id** | `geography:g4:geography:geography_0_סוגי_יישובים` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | סוגי יישובים `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | סוגי יישובים |
 
 **Bound skill_ids:** `geography:g4:skills:skills_0_הכרת_סוגי_יישובים`
 

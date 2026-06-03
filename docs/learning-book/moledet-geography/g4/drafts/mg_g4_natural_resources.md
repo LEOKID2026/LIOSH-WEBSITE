@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g4:mg_g4_natural_resources` |
 | **skill_id** | `geography:g4:geography:geography_2_משאבי_טבע` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | משאבי טבע `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | משאבי טבע |
 
 **Bound skill_ids:** `geography:g4:skills:skills_3_הבנת_משאבי_טבע`
 

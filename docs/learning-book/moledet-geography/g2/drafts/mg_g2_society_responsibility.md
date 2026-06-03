@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g2:mg_g2_society_responsibility` |
 | **skill_id** | `geography:g2:citizenship:citizenship_1_חברה_ואחריות` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | חברה ואחריות `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | חברה ואחריות |
 
 **Content scope:** אחריות אישית בקהילה; שמירה על סביבה; ללא מושגים פוליטיים
 

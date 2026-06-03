@@ -6,12 +6,12 @@
 |-------|-------|
 | **learning_page_id** | `geography:g2:mg_g2_community_participation` |
 | **skill_id** | `geography:g2:citizenship:citizenship_2_השתתפות_בקהילה` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g2 |
 | **age_band** | grades_1_2 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | השתתפות בקהילה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | השתתפות בקהילה |
 
 **Content scope:** השתתפות בפעילויות קהילתיות; חוגים, ניקיון, חגים; ללא מעורבות פוליטית
 

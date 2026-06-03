@@ -10,8 +10,8 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | תופעות טבע `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | תופעות טבע |
 
 **Content scope:** תופעות טבע בנוף — שינויים, סופות, שיטפונות עונתיים; גאוגרפיה — לא מנגנונים מדעיים
 

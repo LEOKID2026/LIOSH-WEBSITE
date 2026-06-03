@@ -6,17 +6,16 @@
 |-------|-------|
 | **learning_page_id** | `geography:g4:mg_g4_government_structure` |
 | **skill_id** | `geography:g4:citizenship:citizenship_0_מבנה_ממשל` |
-| **subject** | geography |
+| **subject** | moledet |
 | **grade** | g4 |
 | **age_band** | grades_3_4 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מבנה הממשל `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מבנה הממשל |
 
 **Bound skill_ids:** `geography:g4:skills:skills_4_הבנת_מבנה_הממשל`
 
 **Content scope:** רמות שלטון — מקומי ומרכזי; תפקידים; ללא שמות נושאי תפקיד נוכחיים  
-**Owner verification:** שמות מוסדות ותפקידים — [VERIFY]
 
 ---
 

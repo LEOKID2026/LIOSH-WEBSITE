@@ -10,13 +10,12 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | מוסדות המדינה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | מוסדות המדינה |
 
 **Bound skill_ids:** `geography:g6:skills:skills_4_הבנת_מוסדות_המדינה`
 
 **Content scope:** מוסדות המדינה לפי תפקיד — חקיקה, ניהול, שפיטה; ללא שמות נושאי תפקיד נוכחיים  
-**Owner verification:** שמות מוסדות ותפקידים (כנסת, ממשלה, בית משפט וכו') — [VERIFY]
 
 ---
 

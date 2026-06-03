@@ -10,13 +10,12 @@
 | **grade** | g5 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | חוק וכללי חברה `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | חוק וכללי חברה |
 
 **Bound skill_ids:** `geography:g5:skills:skills_5_הבנת_חוק_וכללי_חברה`
 
 **Content scope:** חוק מול כלל חברתי; כבוד ושוויון; ניטרלי  
-**Owner verification:** דוגמאות חוק — [VERIFY]
 
 ---
 

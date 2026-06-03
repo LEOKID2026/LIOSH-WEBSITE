@@ -6,6 +6,7 @@
     "dev": "next dev -p 3001",
     "dev:run-button": "next dev -p 3002",
     "build": "next build",
+    "extract:book-language-review": "node scripts/extract-book-language-review.mjs",
     "help:provision-demo": "node --env-file=.env.local scripts/help-center/provision-demo-account.mjs",
     "help:seed-demo-report": "node --env-file=.env.local scripts/help-center/seed-demo-report-data.mjs",
     "help:build-manifest": "node scripts/help-center/build-screenshots-manifest.mjs",

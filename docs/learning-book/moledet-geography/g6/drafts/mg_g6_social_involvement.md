@@ -10,13 +10,12 @@
 | **grade** | g6 |
 | **age_band** | grades_5_6 |
 | **page_type** | concept_foundation |
-| **approval_status** | draft |
-| **title_hebrew** | קבלת החלטות ומעורבות חברתית `[DRAFT — not owner-approved]` |
+| **approval_status** | approved |
+| **title_hebrew** | קבלת החלטות ומעורבות חברתית |
 
 **Bound skill_ids:** `geography:g6:skills:skills_5_הבנת_קבלת_החלטות_ומעורבות_חברתית`
 
 **Content scope:** קבלת החלטות בקבוצה; מעורבות — כיתה, קהילה, התנדבות; ללא אירועים נוכחיים  
-**Owner verification:** דוגמאות מעורבות חברתית — [VERIFY]
 
 ---
 
