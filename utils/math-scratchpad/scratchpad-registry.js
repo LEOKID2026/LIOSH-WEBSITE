@@ -3,7 +3,7 @@
  * Returns null when no safe type exists (button hidden). Math / math-master only.
  */
 
-/** @typedef {'object_counter'|'movable_objects'|'ten_frame'|'base_ten_blocks'|'manual_number_line'|'blank_place_value_table'|'blank_vertical_addition'|'blank_vertical_subtraction'|'blank_multiplication_array'|'blank_division_groups'|'blank_fraction_strips'|'blank_decimal_place_value_table'|'blank_percent_grid'|'blank_ratio_table'|'manual_order_workspace'|'word_problem_structure_board'} ScratchpadType */
+/** @typedef {'object_counter'|'movable_objects'|'ten_frame'|'base_ten_blocks'|'manual_number_line'|'blank_place_value_table'|'blank_vertical_addition'|'blank_vertical_subtraction'|'blank_multiplication_array'|'blank_division_groups'|'blank_long_division_grid'|'blank_fraction_strips'|'blank_decimal_place_value_table'|'blank_percent_grid'|'blank_ratio_table'|'manual_order_workspace'|'word_problem_structure_board'} ScratchpadType */
 
 /** @type {ScratchpadType[]} */
 export const ALL_SCRATCHPAD_TYPES = [
@@ -17,6 +17,7 @@ export const ALL_SCRATCHPAD_TYPES = [
   "blank_vertical_subtraction",
   "blank_multiplication_array",
   "blank_division_groups",
+  "blank_long_division_grid",
   "blank_fraction_strips",
   "blank_decimal_place_value_table",
   "blank_percent_grid",
@@ -67,8 +68,8 @@ export const SCRATCHPAD_MAP = {
     addition: ["blank_vertical_addition"],
     subtraction: ["blank_vertical_subtraction"],
     multiplication: ["blank_multiplication_array"],
-    division: ["blank_division_groups"],
-    division_with_remainder: ["blank_division_groups"],
+    division: ["blank_place_value_table"],
+    division_with_remainder: ["blank_place_value_table"],
     fractions: ["blank_fraction_strips"],
     decimals: ["blank_decimal_place_value_table"],
     sequences: ["manual_number_line"],
@@ -89,8 +90,8 @@ export const SCRATCHPAD_MAP = {
     addition: ["blank_vertical_addition"],
     subtraction: ["blank_vertical_subtraction"],
     multiplication: ["blank_multiplication_array"],
-    division: ["blank_division_groups"],
-    division_with_remainder: ["blank_division_groups"],
+    division: ["blank_place_value_table"],
+    division_with_remainder: ["blank_place_value_table"],
     fractions: ["blank_fraction_strips"],
     percentages: ["blank_percent_grid"],
     sequences: ["manual_number_line"],
@@ -108,8 +109,8 @@ export const SCRATCHPAD_MAP = {
     addition: ["blank_vertical_addition"],
     subtraction: ["blank_vertical_subtraction"],
     multiplication: ["blank_multiplication_array"],
-    division: ["blank_division_groups"],
-    division_with_remainder: ["blank_division_groups"],
+    division: ["blank_place_value_table"],
+    division_with_remainder: ["blank_place_value_table"],
     fractions: ["blank_fraction_strips"],
     percentages: ["blank_percent_grid"],
     ratio: ["blank_ratio_table"],
@@ -143,6 +144,7 @@ const OPERAND_A_TYPES = new Set([
 const OPERAND_AB_TYPES = new Set([
   "blank_multiplication_array",
   "blank_division_groups",
+  "blank_long_division_grid",
   "blank_place_value_table",
   ...VERTICAL_TYPES,
 ]);
@@ -163,6 +165,7 @@ const G1_FORBIDDEN_TYPES = new Set([
   "blank_vertical_subtraction",
   "blank_multiplication_array",
   "blank_division_groups",
+  "blank_long_division_grid",
   "blank_fraction_strips",
   "blank_decimal_place_value_table",
   "blank_percent_grid",
@@ -242,6 +245,9 @@ function validatePrimaryType(primary, operandHint, gradeKey) {
     }
     if (guarded === "blank_division_groups") {
       if (a > MAX_DIVISION_DOTS || b < 1) return null;
+    }
+    if (guarded === "blank_long_division_grid") {
+      if (b < 1) return null;
     }
     return guarded;
   }

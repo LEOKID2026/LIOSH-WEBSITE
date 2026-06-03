@@ -290,3 +290,43 @@ test("g6 ratio and order of operations supported", () => {
     "manual_order_workspace"
   );
 });
+
+test("basic division uses groups in lower grades", () => {
+  assert.equal(
+    getScratchpadType("g2", "division", { a: 24, b: 6 }),
+    "blank_division_groups"
+  );
+  assert.equal(
+    getScratchpadType("g3", "division_with_remainder", { a: 17, b: 5 }),
+    "blank_division_groups"
+  );
+});
+
+test("long division uses place value table in grades 4-6", () => {
+  assert.equal(
+    getScratchpadType("g4", "division", { a: 456, b: 12 }),
+    "blank_place_value_table"
+  );
+  assert.equal(
+    getScratchpadType("g5", "division_with_remainder", { a: 789, b: 23 }),
+    "blank_place_value_table"
+  );
+  assert.equal(
+    getScratchpadType("g6", "division", { a: 1234, b: 56 }),
+    "blank_place_value_table"
+  );
+});
+
+test("large multiplication falls back to same place value table", () => {
+  assert.equal(
+    getScratchpadType("g4", "multiplication", { a: 34, b: 40 }),
+    "blank_place_value_table"
+  );
+});
+
+test("long division hidden when operands missing", () => {
+  assert.equal(
+    getScratchpadType("g4", "division", { a: null, b: null }),
+    null
+  );
+});

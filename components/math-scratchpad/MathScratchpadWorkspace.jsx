@@ -5,10 +5,10 @@ import {
   numberToDigitCells,
 } from "../../utils/math-scratchpad/extract-operands";
 import {
-  PAPER_GRID_MULTIPLICATION,
+  PAPER_GRID_NOTEBOOK,
   PAPER_GRID_PLACE_VALUE,
-  PAPER_GRID_VERTICAL,
   createEmptyPaperGrid,
+  centerAlignDigitCells,
   rightAlignDigitCells,
 } from "../../utils/math-scratchpad/paper-grid-config";
 import { ScratchpadDigitDisplay, ScratchpadDigitInput } from "./scratchpad-virtual-input";
@@ -474,24 +474,31 @@ function ManualNumberLineWorkspace({ operands }) {
   );
 }
 
-function PlaceValueTableWorkspace({ operands }) {
+function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
   const spec = PAPER_GRID_PLACE_VALUE;
-  const topRow = useMemo(
-    () =>
-      rightAlignDigitCells(
-        numberToDigitCells(operands.a, digitCount(operands.a ?? 0)),
-        spec.cols
-      ),
-    [operands.a, spec.cols]
-  );
-  const bottomRow = useMemo(
-    () =>
-      rightAlignDigitCells(
-        numberToDigitCells(operands.b, digitCount(operands.b ?? 0)),
-        spec.cols
-      ),
-    [operands.b, spec.cols]
-  );
+  const topRow = useMemo(() => {
+    const cells = numberToDigitCells(operands.a, digitCount(operands.a ?? 0));
+    return centerOperands
+      ? centerAlignDigitCells(cells, spec.cols)
+      : rightAlignDigitCells(cells, spec.cols);
+  }, [operands.a, spec.cols, centerOperands]);
+  const bottomRow = useMemo(() => {
+    const cells = numberToDigitCells(operands.b, digitCount(operands.b ?? 0));
+    return centerOperands
+      ? centerAlignDigitCells(cells, spec.cols)
+      : rightAlignDigitCells(cells, spec.cols);
+  }, [operands.b, spec.cols, centerOperands]);
+  const divisionExerciseRow = useMemo(() => {
+    if (!centerOperands) return null;
+    const dividendCells = numberToDigitCells(operands.a, digitCount(operands.a ?? 0));
+    const divisorCells = numberToDigitCells(operands.b, digitCount(operands.b ?? 0));
+    const blockLen = dividendCells.length + divisorCells.length;
+    const blockStart = Math.max(0, Math.floor((spec.cols - blockLen) / 2));
+    return {
+      cells: centerAlignDigitCells([...dividendCells, ...divisorCells], spec.cols),
+      dividerCol: blockStart + dividendCells.length,
+    };
+  }, [operands.a, operands.b, spec.cols, centerOperands]);
   const labels = useMemo(() => placeValueHeaderLabels(spec.cols), [spec.cols]);
   const [workGrid, setWorkGrid] = useState(() =>
     createEmptyPaperGrid(spec.workRows, spec.cols)
@@ -507,16 +514,18 @@ function PlaceValueTableWorkspace({ operands }) {
     <PaperScrollShell>
       <table className="mx-auto border-collapse text-center">
         <thead>
-          <tr>
-            {labels.map((label, i) => (
-              <th
-                key={i}
-                className="border border-white/20 px-1 py-1 text-xs text-white/60 min-w-[2.25rem]"
-              >
-                {label}
-              </th>
-            ))}
-          </tr>
+          {!centerOperands && (
+            <tr>
+              {labels.map((label, i) => (
+                <th
+                  key={i}
+                  className="border border-white/20 px-1 py-1 text-xs text-white/60 min-w-[2.25rem]"
+                >
+                  {label}
+                </th>
+              ))}
+            </tr>
+          )}
           <tr>
             <th
               colSpan={spec.cols}
@@ -529,24 +538,47 @@ function PlaceValueTableWorkspace({ operands }) {
         </thead>
         <tbody>
           <PaperCarryRowTable carryRow={carryRow} setCarryRow={setCarryRow} />
-          {[topRow, bottomRow].map((cells, ri) => (
-            <tr key={`operand-${ri}`}>
-              {cells.map((cell, ci) => (
-                <td key={ci} className="border border-white/20 p-0.5">
+          {centerOperands && divisionExerciseRow ? (
+            <tr>
+              {divisionExerciseRow.cells.map((cell, ci) => (
+                <td
+                  key={ci}
+                  className={`border border-white/20 p-0.5 ${
+                    ci === divisionExerciseRow.dividerCol
+                      ? "border-l-2 border-l-white/45"
+                      : ""
+                  }`}
+                >
                   <ScratchpadDigitDisplay
                     value={cell}
                     className={OPERAND_CELL_CLASS}
-                    aria-label={`operand row ${ri + 1} col ${ci + 1}`}
+                    aria-label={`exercise col ${ci + 1}`}
                   />
                 </td>
               ))}
             </tr>
-          ))}
-          <tr>
-            <td colSpan={spec.cols} className="py-1">
-              <div className="border-t-2 border-white/35" />
-            </td>
-          </tr>
+          ) : (
+            [topRow, bottomRow].map((cells, ri) => (
+              <tr key={`operand-${ri}`}>
+                {cells.map((cell, ci) => (
+                  <td key={ci} className="border border-white/20 p-0.5">
+                    <ScratchpadDigitDisplay
+                      value={cell}
+                      className={OPERAND_CELL_CLASS}
+                      aria-label={`operand row ${ri + 1} col ${ci + 1}`}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
+          {!centerOperands && (
+            <tr>
+              <td colSpan={spec.cols} className="py-1">
+                <div className="border-t-2 border-white/35" />
+              </td>
+            </tr>
+          )}
           <PaperWorkGridRows grid={workGrid} setGrid={setWorkGrid} rowLabelPrefix="place-value-work" />
         </tbody>
       </table>
@@ -554,61 +586,37 @@ function PlaceValueTableWorkspace({ operands }) {
   );
 }
 
-function VerticalLayoutWorkspace({ operands, variant }) {
+function MathNotebookGridWorkspace({ operands, operatorSymbol }) {
   const { a, b } = operands;
-  const spec = PAPER_GRID_VERTICAL;
-  const topRow = useMemo(
-    () => rightAlignDigitCells(numberToDigitCells(a, digitCount(a ?? 0)), spec.cols),
-    [a, spec.cols]
-  );
-  const bottomRow = useMemo(
-    () => rightAlignDigitCells(numberToDigitCells(b, digitCount(b ?? 0)), spec.cols),
-    [b, spec.cols]
-  );
+  const spec = PAPER_GRID_NOTEBOOK;
   const [workGrid, setWorkGrid] = useState(() =>
     createEmptyPaperGrid(spec.workRows, spec.cols)
   );
-  const resetKey = `${variant}|${a}|${b}`;
-  const [carryRow, setCarryRow] = useCarryRow(spec.cols, resetKey);
 
   useEffect(() => {
     setWorkGrid(createEmptyPaperGrid(spec.workRows, spec.cols));
-  }, [spec.workRows, spec.cols, variant, a, b]);
+  }, [spec.workRows, spec.cols, a, b, operatorSymbol]);
 
-  const opSymbol = variant === "blank_vertical_subtraction" ? "−" : "+";
+  const left = a == null ? "?" : String(a);
+  const right = b == null ? "?" : String(b);
 
   return (
     <PaperScrollShell>
-      <div className="flex flex-col items-end gap-1 font-mono w-full max-w-md mx-auto">
-        <div className="w-full text-[10px] md:text-xs text-amber-200/70 text-end pe-1 mb-0.5" dir="rtl">
-          נשיאה
-        </div>
-        <PaperCarryRowFlex carryRow={carryRow} setCarryRow={setCarryRow} />
-        <div className="flex justify-end gap-1 w-full">
-          {topRow.map((cell, i) => (
-            <ScratchpadDigitDisplay
-              key={`top-${i}`}
-              value={cell}
-              className={OPERAND_CELL_CLASS}
-              aria-label={`top digit ${i + 1}`}
-            />
-          ))}
-        </div>
-        <div className="flex justify-end items-center gap-1 w-full">
-          <span className="w-6 text-center text-white/80 text-xl shrink-0">{opSymbol}</span>
-          {bottomRow.map((cell, i) => (
-            <ScratchpadDigitDisplay
-              key={`bottom-${i}`}
-              value={cell}
-              className={OPERAND_CELL_CLASS}
-              aria-label={`bottom digit ${i + 1}`}
-            />
-          ))}
-        </div>
-        <div className="w-full border-t-2 border-white/40 my-2" />
-        <table className="border-collapse w-full">
+      <div className="flex flex-col w-full gap-3">
+        <p
+          className="text-center font-mono text-lg md:text-xl text-white/90 shrink-0"
+          dir="ltr"
+          aria-label="exercise"
+        >
+          {left} {operatorSymbol} {right} = __
+        </p>
+        <table className="border-collapse mx-auto w-full min-w-max" dir="ltr">
           <tbody>
-            <PaperWorkGridRows grid={workGrid} setGrid={setWorkGrid} rowLabelPrefix="vertical-work" />
+            <PaperWorkGridRows
+              grid={workGrid}
+              setGrid={setWorkGrid}
+              rowLabelPrefix="notebook"
+            />
           </tbody>
         </table>
       </div>
@@ -616,68 +624,15 @@ function VerticalLayoutWorkspace({ operands, variant }) {
   );
 }
 
-function MultiplicationArrayWorkspace({ operands }) {
-  const { a, b } = operands;
-  const spec = PAPER_GRID_MULTIPLICATION;
-  const topRow = useMemo(
-    () => rightAlignDigitCells(numberToDigitCells(a, digitCount(a ?? 0)), spec.cols),
-    [a, spec.cols]
-  );
-  const bottomRow = useMemo(
-    () => rightAlignDigitCells(numberToDigitCells(b, digitCount(b ?? 0)), spec.cols),
-    [b, spec.cols]
-  );
-  const [workGrid, setWorkGrid] = useState(() =>
-    createEmptyPaperGrid(spec.workRows, spec.cols)
-  );
-  const resetKey = `${a}|${b}`;
-  const [carryRow, setCarryRow] = useCarryRow(spec.cols, resetKey);
-
-  useEffect(() => {
-    setWorkGrid(createEmptyPaperGrid(spec.workRows, spec.cols));
-  }, [spec.workRows, spec.cols, a, b]);
-
+function VerticalLayoutWorkspace({ operands, variant }) {
+  const operatorSymbol = variant === "blank_vertical_subtraction" ? "−" : "+";
   return (
-    <PaperScrollShell>
-      <div className="flex flex-col items-end gap-1 font-mono w-full max-w-md mx-auto">
-        <div className="w-full text-[10px] md:text-xs text-amber-200/70 text-end pe-1 mb-0.5" dir="rtl">
-          נשיאה
-        </div>
-        <PaperCarryRowFlex carryRow={carryRow} setCarryRow={setCarryRow} />
-        <div className="flex justify-end gap-1 w-full">
-          {topRow.map((cell, i) => (
-            <ScratchpadDigitDisplay
-              key={`mult-top-${i}`}
-              value={cell}
-              className={OPERAND_CELL_CLASS}
-              aria-label={`factor top ${i + 1}`}
-            />
-          ))}
-        </div>
-        <div className="flex justify-end items-center gap-1 w-full">
-          <span className="w-6 text-center text-white/80 text-xl shrink-0">×</span>
-          {bottomRow.map((cell, i) => (
-            <ScratchpadDigitDisplay
-              key={`mult-bottom-${i}`}
-              value={cell}
-              className={OPERAND_CELL_CLASS}
-              aria-label={`factor bottom ${i + 1}`}
-            />
-          ))}
-        </div>
-        <div className="w-full border-t-2 border-white/40 my-2" />
-        <table className="border-collapse w-full">
-          <tbody>
-            <PaperWorkGridRows
-              grid={workGrid}
-              setGrid={setWorkGrid}
-              rowLabelPrefix="multiplication-work"
-            />
-          </tbody>
-        </table>
-      </div>
-    </PaperScrollShell>
+    <MathNotebookGridWorkspace operands={operands} operatorSymbol={operatorSymbol} />
   );
+}
+
+function MultiplicationArrayWorkspace({ operands }) {
+  return <MathNotebookGridWorkspace operands={operands} operatorSymbol="×" />;
 }
 
 const GROUP_COLORS = [
@@ -1117,6 +1072,10 @@ function WordProblemStructureBoard() {
   );
 }
 
+function isDivisionOperation(operation) {
+  return operation === "division" || operation === "division_with_remainder";
+}
+
 /**
  * @param {{ type: string, operands: { a: number|null, b: number|null, operation: string|null } }} props
  */
@@ -1138,7 +1097,12 @@ export default function MathScratchpadWorkspace({ type, operands }) {
     case "manual_number_line":
       return <ManualNumberLineWorkspace operands={operands} />;
     case "blank_place_value_table":
-      return <PlaceValueTableWorkspace operands={operands} />;
+      return (
+        <PlaceValueTableWorkspace
+          operands={operands}
+          centerOperands={isDivisionOperation(operands.operation)}
+        />
+      );
     case "blank_vertical_addition":
       return (
         <VerticalLayoutWorkspace operands={operands} variant="blank_vertical_addition" />
@@ -1151,6 +1115,8 @@ export default function MathScratchpadWorkspace({ type, operands }) {
       return <MultiplicationArrayWorkspace operands={operands} />;
     case "blank_division_groups":
       return <DivisionGroupsWorkspace operands={operands} />;
+    case "blank_long_division_grid":
+      return <PlaceValueTableWorkspace operands={operands} centerOperands />;
     case "blank_fraction_strips":
       return <FractionStripsWorkspace operands={operands} />;
     case "blank_decimal_place_value_table":

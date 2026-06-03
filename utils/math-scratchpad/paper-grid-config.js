@@ -14,8 +14,15 @@ export const PAPER_GRID_VERTICAL = { cols: 8, workRows: 10 };
 /** @type {PaperGridSpec} */
 export const PAPER_GRID_PLACE_VALUE = { cols: 8, workRows: 8 };
 
+/** Generous fixed notebook grid — not derived from answer length. */
 /** @type {PaperGridSpec} */
-export const PAPER_GRID_MULTIPLICATION = { cols: 8, workRows: 12 };
+export const PAPER_GRID_NOTEBOOK = { cols: 14, workRows: 16 };
+
+/** @type {PaperGridSpec} */
+export const PAPER_GRID_LONG_DIVISION = PAPER_GRID_NOTEBOOK;
+
+/** @type {PaperGridSpec} */
+export const PAPER_GRID_MULTIPLICATION = PAPER_GRID_NOTEBOOK;
 
 /**
  * @param {string[]} cells
@@ -25,6 +32,20 @@ export const PAPER_GRID_MULTIPLICATION = { cols: 8, workRows: 12 };
 export function rightAlignDigitCells(cells, totalCols) {
   const row = Array(totalCols).fill("");
   const start = Math.max(0, totalCols - cells.length);
+  cells.forEach((cell, i) => {
+    row[start + i] = cell;
+  });
+  return row;
+}
+
+/**
+ * @param {string[]} cells
+ * @param {number} totalCols
+ * @returns {string[]}
+ */
+export function centerAlignDigitCells(cells, totalCols) {
+  const row = Array(totalCols).fill("");
+  const start = Math.max(0, Math.floor((totalCols - cells.length) / 2));
   cells.forEach((cell, i) => {
     row[start + i] = cell;
   });
