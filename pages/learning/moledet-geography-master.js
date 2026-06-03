@@ -232,6 +232,19 @@ export default function MoledetGeographyMaster() {
       pageId: params.bookPageId ?? null,
     });
   }, [grade, mode, currentQuestion, operation]);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  const [wrong, setWrong] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(20);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const [bestScore, setBestScore] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [lives, setLives] = useState(3);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [avgTime, setAvgTime] = useState(0);
+  const [questionStartTime, setQuestionStartTime] = useState(null);
   const openBookFromLearning = useCallback(
     (href) => {
       if (!href) return;
@@ -290,83 +303,11 @@ export default function MoledetGeographyMaster() {
     setMode("learning");
     setOperation(presetTopic);
   }, []);
-  const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [correct, setCorrect] = useState(0);
-  const [wrong, setWrong] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(20);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [feedback, setFeedback] = useState(null);
-  const [bestScore, setBestScore] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-
-  // NEW: lives (for Challenge mode)
-  const [lives, setLives] = useState(3);
-
-  // Progress stats (אפשר להרחיב בעתיד)
-  const [totalQuestions, setTotalQuestions] = useState(0);
-  const [avgTime, setAvgTime] = useState(0);
-  const [questionStartTime, setQuestionStartTime] = useState(null);
 
   useLearningVisibilityClock({
     enabled: gameActive && isFairnessVisibilityLedgerActive(mode),
     ledger: questionTimeLedgerRef.current,
   });
-
-  const applyMoledetTopicCreditFromClosed = useCallback(
-    (closed, questionForTrack, metaHint) => {
-      if (!closed || closed.creditedSecForTopic <= 0) return;
-      const topic =
-        moledetTrackingTopicKeyRef.current ??
-        questionForTrack?.topic ??
-        questionForTrack?.operation ??
-        "mixed";
-      if (!topic) return;
-      trackMoledetGeographyTopicTime(
-        topic,
-        grade,
-        level,
-        closed.creditedSecForTopic,
-        metaHint ?? {
-          mode: reportModeFromGameState(mode, focusedPracticeMode),
-          total: 1,
-          correct: undefined,
-        }
-      );
-    },
-    [grade, level, mode, focusedPracticeMode]
-  );
-
-  const closeOpenQuestionLedger = useCallback(
-    (includeTopic) => {
-      const questionForTrack = currentQuestion;
-      finalizeMasterQuestionLedger(
-        questionTimeLedgerRef,
-        sessionSecondsRef,
-        includeTopic
-          ? (closed) => {
-              const meta = pendingMoledetGeographyTrackMetaRef.current;
-              pendingMoledetGeographyTrackMetaRef.current = null;
-              if (meta && meta.mode != null) {
-                applyMoledetTopicCreditFromClosed(closed, questionForTrack, {
-                  mode: meta.mode,
-                  correct: meta.correct,
-                  total: meta.total,
-                });
-              } else {
-                applyMoledetTopicCreditFromClosed(closed, questionForTrack);
-              }
-            }
-          : null
-      );
-      if (questionStartTime) setQuestionStartTime(null);
-    },
-    [currentQuestion, questionStartTime, applyMoledetTopicCreditFromClosed]
-  );
-
-  const accumulateQuestionTime = useCallback(() => {
-    closeOpenQuestionLedger(false);
-  }, [closeOpenQuestionLedger]);
 
   const beginMoledetQuestionLedger = useCallback(
     (questionObj) => {
@@ -469,6 +410,62 @@ export default function MoledetGeographyMaster() {
   // תרגול ממוקד - שמירת שגיאות ותרגול מדורג
   const [mistakes, setMistakes] = useState([]);
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal"); // "normal", "mistakes", "graded"
+
+  const applyMoledetTopicCreditFromClosed = useCallback(
+    (closed, questionForTrack, metaHint) => {
+      if (!closed || closed.creditedSecForTopic <= 0) return;
+      const topic =
+        moledetTrackingTopicKeyRef.current ??
+        questionForTrack?.topic ??
+        questionForTrack?.operation ??
+        "mixed";
+      if (!topic) return;
+      trackMoledetGeographyTopicTime(
+        topic,
+        grade,
+        level,
+        closed.creditedSecForTopic,
+        metaHint ?? {
+          mode: reportModeFromGameState(mode, focusedPracticeMode),
+          total: 1,
+          correct: undefined,
+        }
+      );
+    },
+    [grade, level, mode, focusedPracticeMode]
+  );
+
+  const closeOpenQuestionLedger = useCallback(
+    (includeTopic) => {
+      const questionForTrack = currentQuestion;
+      finalizeMasterQuestionLedger(
+        questionTimeLedgerRef,
+        sessionSecondsRef,
+        includeTopic
+          ? (closed) => {
+              const meta = pendingMoledetGeographyTrackMetaRef.current;
+              pendingMoledetGeographyTrackMetaRef.current = null;
+              if (meta && meta.mode != null) {
+                applyMoledetTopicCreditFromClosed(closed, questionForTrack, {
+                  mode: meta.mode,
+                  correct: meta.correct,
+                  total: meta.total,
+                });
+              } else {
+                applyMoledetTopicCreditFromClosed(closed, questionForTrack);
+              }
+            }
+          : null
+      );
+      if (questionStartTime) setQuestionStartTime(null);
+    },
+    [currentQuestion, questionStartTime, applyMoledetTopicCreditFromClosed]
+  );
+
+  const accumulateQuestionTime = useCallback(() => {
+    closeOpenQuestionLedger(false);
+  }, [closeOpenQuestionLedger]);
+
   const [showPracticeOptions, setShowPracticeOptions] = useState(false);
   const [showReferenceModal, setShowReferenceModal] = useState(false);
   const [referenceCategory, setReferenceCategory] = useState(REFERENCE_CATEGORY_KEYS[0]);
