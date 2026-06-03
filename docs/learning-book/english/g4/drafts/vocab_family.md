@@ -76,7 +76,7 @@ My parents work hard
 
 My parents works hard — שגוי!
 
-❌ My parents works — parents = רבים!
+❌ My parents works — parents היא מילה ברבים, לכן כותבים work.
 
 ✓ My parents work hard.
 

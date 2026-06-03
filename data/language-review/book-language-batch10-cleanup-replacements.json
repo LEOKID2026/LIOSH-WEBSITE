@@ -1,0 +1,26 @@
+{
+  "batch": "book-language-batch10-cleanup",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Hebrew G6 — missed Batch 10 items J/K (actual files)",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g6/drafts/sv_agreement_plural.md",
+      "replacements": [
+        {
+          "old": "הפועל חייב להיות בלשון רבים.",
+          "new": "הפועל צריך להתאים לנושא ולהיות בלשון רבים."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g6/drafts/g6.discipline_words_light.md",
+      "replacements": [
+        {
+          "old": "כל מקצוע יש לו מילים משלו — לא צריך לזכור הכל, רק להכיר.",
+          "new": "לכל מקצוע יש מילים משלו. לא צריך לזכור הכול מיד, אבל חשוב להכיר אותן."
+        }
+      ]
+    }
+  }
+}

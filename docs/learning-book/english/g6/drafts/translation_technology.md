@@ -23,7 +23,7 @@
 
 ## 1. מה לומדים?
 
-היום נתרגל תרגום מתקדם על טכנולוגיה — might ומשפטים ארוכים.
+היום נתרגל תרגום בנושא טכנולוגיה עם might ועם משפטים ארוכים.
 Scientists might discover new ways to save energy — מדענים אולי יגלו דרכים חדשות לחסוך אנרגיה.
 
 ---
@@ -76,7 +76,7 @@ Scientists might discover new ways to save energy
 
 Scientists must discover new ways to save energy — חזק מדי!
 
-❌ must = חייב — לא אותה משמעות כמו might!
+❌ must פירושו חייב. כאן המשמעות היא אולי, לכן מתאים יותר might.
 
 ✓ Scientists might discover new ways to save energy.
 

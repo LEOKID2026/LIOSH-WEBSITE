@@ -1,0 +1,24 @@
+{
+  "batch": "book-language-batch15",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Close final 4 NEEDS_FIX items",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g3/drafts/vocabulary_synonym_near_meaning.md",
+      "replacements": [{ "old": "❌ שמח — עצוב — נרדפות — לא! זה ניגוד.", "new": "❌ שמח ועצוב אינן מילים נרדפות. הן מילים מנוגדות." }]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g3/drafts/vocabulary_antonym_opposite.md",
+      "replacements": [{ "old": "❌ חם — גשם — הפוך — לא! גשם לא הפוך לחם.", "new": "❌ גשם אינו ההפך של חם. צריך לבחור מילה שמביעה משמעות הפוכה." }]
+    },
+    "C": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.connector_use_choice.md",
+      "replacements": [{ "old": "❌ יצאתי — לכן — בלי קשר — לא!", "new": "❌ \"לכן\" צריך להראות קשר של סיבה ותוצאה. כאן הקשר לא מתאים." }]
+    },
+    "D": {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_supporting_detail_evidence.md",
+      "replacements": [{ "old": "סמנו מה תומך ומה לא!", "new": "סמנו מה תומך בטענה ומה אינו תומך בה." }]
+    }
+  }
+}

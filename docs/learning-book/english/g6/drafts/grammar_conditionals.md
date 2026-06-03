@@ -76,7 +76,7 @@ If it rains, we will stay at home
 
 If it will rain, we will stay at home — שגוי!
 
-❌ will rain — אחרי If לא will!
+❌ אחרי If לא משתמשים ב־will.
 
 ✓ If it rains, we will stay at home.
 

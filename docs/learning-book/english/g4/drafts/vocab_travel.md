@@ -75,7 +75,7 @@ We travel by bus
 
 We travel in bus — שגוי!
 
-❌ in bus — צריך by bus!
+❌ in bus — כשמדברים על נסיעה באוטובוס אומרים by bus.
 
 ✓ We travel by bus.
 

@@ -76,7 +76,7 @@ We eat healthy food
 
 We eats healthy food — שגוי!
 
-❌ We eats — We לא מקבל s!
+❌ We eats — אחרי We לא מוסיפים s לפועל.
 
 ✓ We eat healthy food.
 

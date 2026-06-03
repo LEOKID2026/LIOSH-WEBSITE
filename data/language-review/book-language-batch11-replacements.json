@@ -1,0 +1,48 @@
+{
+  "batch": "book-language-batch11",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Hebrew G1 child-friendly wording",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "replacements": [{ "old": "❌ בַּת וְגַת — אותו צליל — לא! ב וְג הם צלילים שונים.", "new": "❌ בַּת וְגַת — לא אותו צליל. ב וְג הם צלילים שונים." }]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.syllables.md",
+      "replacements": [{ "old": "❌ שָׁלוֹם — הברה אחת — לא! יש שָׁ וְלוֹם.", "new": "❌ שָׁלוֹם — זו לא הברה אחת. יש שתי הברות: שָׁ וְלוֹם." }]
+    },
+    "C": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md",
+      "replacements": [{ "old": "❌ אוֹכֵל — משפט — לא! חסר מי אוכל.", "new": "❌ אוֹכֵל — זה לא משפט שלם. חסר מי אוכל." }]
+    },
+    "D": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md",
+      "replacements": [{ "old": "❌ שׁוֹתֶה הַיֶּלֶד — נכון בעברית — לא!", "new": "❌ שׁוֹתֶה הַיֶּלֶד — זה לא הסדר שאנחנו מתרגלים כאן." }]
+    },
+    "E": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md",
+      "replacements": [{ "old": "❌ תַּפּוּחַ — לא שייך — לא! תַּפּוּחַ הוא פירות.", "new": "❌ תַּפּוּחַ — לא שייך לקבוצה הזאת. תַּפּוּחַ הוא פרי." }]
+    },
+    "F": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md",
+      "replacements": [{ "old": "❌ מַה שִׁמְךָ. — לא! שאלה עם נקודה.", "new": "❌ מַה שִׁמְךָ. — זו שאלה, ולכן מתאים סימן שאלה." }]
+    },
+    "G": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md",
+      "replacements": [{ "old": "❌ הכדור לידי — שָׁם — לא! לידי = כָּאן.", "new": "❌ הכדור לידי — שָׁם לא מתאים. לידי פירושו כָּאן, קרוב אליי." }]
+    },
+    "H": {
+      "file": "docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md",
+      "replacements": [{ "old": "❌ יַלְדָּה — שתיים — לא מתאים!", "new": "❌ יַלְדָּה — זו ילדה אחת, לא שתיים." }]
+    },
+    "I": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md",
+      "replacements": [{ "old": "❌ סְגוֹר הַדֶּלֶת — לפתוח — לא!", "new": "❌ סְגוֹר הַדֶּלֶת — לא פותחים. סוגרים את הדלת." }]
+    },
+    "J": {
+      "file": "docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md",
+      "replacements": [{ "old": "❌ שֶׁמֶשׁ בלילה — נכון — לא!", "new": "❌ שֶׁמֶשׁ בלילה — זה לא נכון במשפט הזה." }]
+    }
+  }
+}

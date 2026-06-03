@@ -1,0 +1,52 @@
+{
+  "batch": "book-language-batch6-cleanup",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/moledet-geography/g3/drafts/mg_g3_districts_borders.md",
+      "replacements": [
+        {
+          "old": "גבול — זה הקו שמסמן איפה הארץ נגמרת.",
+          "new": "גבול הוא קו שמסמן היכן מקום אחד מסתיים ומקום אחר מתחיל."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/moledet-geography/g4/drafts/mg_g4_settlement_development.md",
+      "replacements": [
+        {
+          "old": "המפה מתמלאת ביישובים — לא ביום אחד.",
+          "new": "יישובים התפתחו עם הזמן. לא כל היישובים נבנו באותו זמן או באותה דרך."
+        }
+      ]
+    },
+    "C": {
+      "file": "docs/learning-book/moledet-geography/g6/drafts/mg_g6_social_involvement.md",
+      "replacements": [
+        {
+          "old": "מעורבות חברתית — לקחת אחריות:",
+          "new": "מעורבות חברתית היא השתתפות ועשייה למען הכיתה, הקהילה או החברה:"
+        }
+      ]
+    },
+    "D": {
+      "file": "docs/learning-book/moledet-geography/g6/drafts/mg_g6_population.md",
+      "replacements": [
+        {
+          "old": "אוכלוסייה — כל האנשים שחיים במדינה.",
+          "new": "אוכלוסייה כוללת את האנשים והקבוצות שחיים במדינה."
+        }
+      ]
+    },
+    "E": {
+      "file": "docs/learning-book/english/g5/drafts/grammar_future_forms.md",
+      "replacements": [
+        {
+          "old": "will — החלטה או הבטחה:",
+          "new": "will עוזר לדבר על פעולה שתקרה בעתיד, למשל החלטה או הבטחה:"
+        }
+      ]
+    }
+  }
+}

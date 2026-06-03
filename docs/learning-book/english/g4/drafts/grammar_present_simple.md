@@ -76,7 +76,7 @@ He walks to school
 
 He walk to school — שגוי!
 
-❌ He walk — חסר s!
+❌ He walk — אחרי he מוסיפים s לפועל: He walks.
 
 ✓ He walks to school.
 

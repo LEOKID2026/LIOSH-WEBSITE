@@ -76,7 +76,7 @@ The hospital is next to the park
 
 The hospital is in the park — שונה!
 
-❌ in the park — בתוך הפארק!
+❌ in the park פירושו בתוך הפארק. כאן צריך ליד הפארק: next to the park.
 
 ✓ The hospital is next to the park.
 

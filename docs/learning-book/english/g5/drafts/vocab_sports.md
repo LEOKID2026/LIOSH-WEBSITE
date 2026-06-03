@@ -76,7 +76,7 @@ He scored a goal yesterday
 
 He score a goal yesterday — שגוי!
 
-❌ score — Present Simple!
+❌ score הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ He scored a goal yesterday.
 

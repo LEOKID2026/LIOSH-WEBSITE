@@ -155,7 +155,7 @@ Subject: Geometry
 
 היום נסווג מרובעים — מקבילית, טרפז, מלבן, ריבוע.
 
-בכיתה ה׳ — קשרי הכלה: מי «יושב בתוך» מי?
+בכיתה ה׳ — קשרי הכלה: מי "יושב בתוך" מי?
 
 ### Section 2 — הסבר
 
@@ -181,7 +181,7 @@ Subject: Geometry
 
 → טרפז — לא מקבילית (רק זוג אחד).
 
-מגרש משחק — מקבילית «נטויה»: 2 זוגות מקבילים.
+מגרש משחק — מקבילית "נטויה": 2 זוגות מקבילים.
 
 ### Section 4 — בואו נפתור
 
@@ -201,7 +201,7 @@ Subject: Geometry
 
 ### Section 6 — שימו לב!
 
-קל לקרוא למקבילית «טרפז» — כי יש גם בה צלעות מקבילות.
+קל לקרוא למקבילית "טרפז" — כי יש גם בה צלעות מקבילות.
 
 ❌ מקבילית = 2 זוגות — לא טרפז!
 
@@ -241,7 +241,7 @@ Subject: Geometry
 
 היום נעמיק למה סכום זוויות במשולש הוא 180° — ונשתמש בזה כדי למצוא זווית חסרה.
 
-רעיון: אם «גוזרים» את שלוש הזוויות ומצמידים אותן — הן יוצרות קו ישר (180°).
+רעיון: אם "גוזרים" את שלוש הזוויות ומצמידים אותן — הן יוצרות קו ישר (180°).
 
 ### Section 2 — הסבר
 
@@ -253,7 +253,7 @@ Subject: Geometry
 
 > Review flags: mixed_language, contains_formula_or_symbols, contains_directional_rtl_ltr_mix
 
-למה? שלוש הזוויות «ממלאות» יחד פתיחה של קו ישר — לכן הסכום תמיד 180°.
+למה? שלוש הזוויות "ממלאות" יחד פתיחה של קו ישר — לכן הסכום תמיד 180°.
 
 > Review flags: possible_factual_claim
 
@@ -271,7 +271,7 @@ C = 180° − (A + B)
 
 > Review flags: mixed_language, contains_formula_or_symbols
 
-נימוק: 60° + 70° = 130° — «כמה נשאר» עד 180°?
+נימוק: 60° + 70° = 130° — "כמה נשאר" עד 180°?
 
 > Review flags: contains_formula_or_symbols
 
@@ -279,7 +279,7 @@ C = 180° − (A + B)
 
 > Review flags: contains_formula_or_symbols
 
-בדיקה: 60° + 70° + 50° = 180° ✓ — שלוש הזוויות «סוגרות» קו ישר.
+בדיקה: 60° + 70° + 50° = 180° ✓ — שלוש הזוויות "סוגרות" קו ישר.
 
 > Review flags: contains_formula_or_symbols
 
@@ -315,7 +315,7 @@ C = 180° − (A + B)
 
 ### Section 6 — שימו לב!
 
-בזוויות 60° ו-70° לפעמים מחסירים רק 60° מ-180° — בלי לשאול «למה 180°».
+בזוויות 60° ו-70° לפעמים מחסירים רק 60° מ-180° — בלי לשאול "למה 180°".
 
 > Review flags: contains_formula_or_symbols
 
@@ -393,10 +393,13 @@ Subject: Geometry
 
 ריבוע צלע 9 ס״מ:
 
-- נימוק:  4 צלעות × 9 = 36 ס״מ
+- נימוק: 4 צלעות, וכל צלע באורך 9 ס״מ.
 
 > Review flags: contains_formula_or_symbols
-> Extraction warning: source_render_mismatch
+
+לכן 4 × 9 = 36 ס״מ.
+
+> Review flags: contains_formula_or_symbols
 
 - לא 9×9 — זה שטח!
 
@@ -1150,7 +1153,7 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-רעיון: «ממוצע» של שני הבסיסים × גובה.
+רעיון: "ממוצע" של שני הבסיסים × גובה.
 
 > Review flags: contains_formula_or_symbols
 

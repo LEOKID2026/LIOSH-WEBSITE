@@ -1,0 +1,60 @@
+{
+  "batch": "book-language-batch14",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Hebrew G3 remaining abrupt error lines",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.multi_sentence.md",
+      "replacements": [{ "old": "❌ שלושה משפטים — רק אחד — לא! יש עוד שני משפטים אחריו.", "new": "❌ זה לא רק משפט אחד. יש עוד שני משפטים אחריו, וביחד יש שלושה משפטים." }]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.genre_tag_info_vs_story.md",
+      "replacements": [{ "old": "❌ הכלב הוא חיית מחמד — סיפור — לא! זה מידע, בלי עלילה.", "new": "❌ \"הכלב הוא חיית מחמד\" הוא מידע, לא סיפור. אין כאן עלילה." }]
+    },
+    "C": {
+      "file": "docs/learning-book/hebrew/g3/drafts/reading_sentence_read_meaning.md",
+      "replacements": [{ "old": "❌ גשם — המשמעות שמש — לא! המשפט אומר גשם ושיחקו בו.", "new": "❌ המשמעות אינה שמש. המשפט מדבר על גשם ועל כך ששיחקו בגשם." }]
+    },
+    "D": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.explicit_only.md",
+      "replacements": [{ "old": "❌ לא כתוב — אבל בטח המורה צעקה — לא! אין מילה כזו בטקסט.", "new": "❌ אם זה לא כתוב בטקסט, לא קובעים שהמורה צעקה. אין לכך רמז בטקסט." }]
+    },
+    "E": {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_explicit_detail.md",
+      "replacements": [{ "old": "❌ דני — בטח תיק — לא! בקטע כתוב שעון, לא תיק.", "new": "❌ לא מנחשים \"תיק\". בקטע כתוב שעון, לא תיק." }]
+    },
+    "F": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.cause_effect.md",
+      "replacements": [{ "old": "❌ מטריה — הסיבה לגשם — לא! הגשם קודם, המטריה אחר כך.", "new": "❌ המטריה אינה הסיבה לגשם. הגשם הגיע קודם, ואז משתמשים במטריה." }]
+    },
+    "G": {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_cause_effect_because.md",
+      "replacements": [{ "old": "❌ נח — כי שמח — לא! בקטע כתוב כי עייף.", "new": "❌ לא בוחרים \"כי שמח\". בקטע כתוב שהוא נח כי היה עייף." }]
+    },
+    "H": {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md",
+      "replacements": [{ "old": "❌ חם — בלי רמז — לא! בקטע יש קור ומעיל.", "new": "❌ לא מסיקים שהיה חם. בקטע יש רמזים לקור ולמעיל." }]
+    },
+    "I": {
+      "file": "docs/learning-book/hebrew/g3/drafts/comprehension_analogy_reasoning_parallel.md",
+      "replacements": [{ "old": "❌ חם : שולחן — לא! אין קשר כמו קיץ.", "new": "❌ חם ושולחן אינם יוצרים קשר מתאים כמו חם וקיץ." }]
+    },
+    "J": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.tense_system_intro.md",
+      "replacements": [{ "old": "❌ טיילנו — מחר — לא! טיילנו קשור לאתמול.", "new": "❌ טיילנו אינו מתאים למחר. טיילנו קשור למה שקרה אתמול או בעבר." }]
+    },
+    "K": {
+      "file": "docs/learning-book/hebrew/g3/drafts/grammar_morphology_binyan_fit.md",
+      "replacements": [{ "old": "❌ שירה — הוא קורא — לא! שירה — היא קוראת.", "new": "❌ שירה היא בת, לכן מתאים: היא קוראת." }]
+    },
+    "L": {
+      "file": "docs/learning-book/hebrew/g3/drafts/grammar_part_of_speech_verb_noun.md",
+      "replacements": [{ "old": "❌ הריצה — פועל — לא! כאן ריצה שם.", "new": "❌ הריצה אינה פועל כאן. כאן \"ריצה\" היא שם." }]
+    },
+    "M": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.context_meaning.md",
+      "replacements": [{ "old": "❌ שער — תמיד מלך — לא! בגן זה כניסה.", "new": "❌ שער לא תמיד קשור למלך. בגן, שער הוא כניסה." }]
+    }
+  }
+}

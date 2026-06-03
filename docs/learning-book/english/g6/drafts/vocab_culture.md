@@ -76,7 +76,7 @@ Music is an important part of our culture
 
 Music is an important part of our cultures — שגוי!
 
-❌ cultures — מדברים על תרבות אחת שלנו!
+❌ cultures היא צורת רבים. כאן מדברים על תרבות אחת, לכן צריך culture.
 
 ✓ Music is an important part of our culture.
 

@@ -76,7 +76,7 @@ The park is in our town
 
 The park on our town — שגוי!
 
-❌ on our town — צריך in!
+❌ on our town — כשמדברים על מקום כמו town משתמשים ב־in.
 
 ✓ The park is in our town.
 

@@ -76,7 +76,7 @@ The students read books
 
 The student read books — שגוי!
 
-❌ The student — יחיד, צריך students!
+❌ The student — כאן מדברים על כמה תלמידים, לכן צריך students.
 
 ✓ The students read books.
 

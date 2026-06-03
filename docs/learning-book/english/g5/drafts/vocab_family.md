@@ -76,7 +76,7 @@ My grandparents live far away
 
 My grandparent live far away — שגוי!
 
-❌ grandparent — צריך grandparents (זוג)!
+❌ grandparent מדבר על אדם אחד. כאן מדברים על סבא וסבתא, לכן צריך grandparents.
 
 ✓ My grandparents live far away.
 

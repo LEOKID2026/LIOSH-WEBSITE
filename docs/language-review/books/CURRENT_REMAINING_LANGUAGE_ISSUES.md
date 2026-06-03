@@ -1,0 +1,4918 @@
+# Current Remaining Language Issues
+
+Generated: 2026-06-03T15:07:34.878Z
+Source: `data/language-review/book-text-extract.json`
+
+Scan patterns: `❌`, `לא!`, `חסר`, `לא נכון`, `צריך`, `Present Simple`, `חייב`, `דרוש`
+
+Book markdown was **not** modified. This report reflects current extracted visible text only.
+
+## Summary
+
+| Metric | Count |
+|--------|------:|
+| Total issues | 1039 |
+| MATH_EXPECTED | 433 |
+| OK_AS_TEACHING_ERROR | 249 |
+| REVIEW_LATER | 156 |
+| ENGLISH_GRAMMAR_EXPECTED | 111 |
+| GEOMETRY_EXPECTED | 90 |
+
+### By subject
+
+| Subject | Count |
+|---------|------:|
+| math | 433 |
+| geometry | 90 |
+| science | 61 |
+| hebrew | 264 |
+| english | 133 |
+| moledet | 38 |
+| geography | 20 |
+
+## NEEDS_FIX (priority)
+
+_None classified as NEEDS_FIX._
+
+---
+
+## All current issues
+
+### math (433)
+
+- **g1/ns_counting_forward** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_counting_forward.md`
+  - Patterns: chayav
+  - Visible: לא חייבים להתחיל מ־1.
+  - Source: `לא חייבים להתחיל מ־1. אפשר להתחיל גם ממספר אחר:`
+- **g1/ns_counting_forward** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_counting_forward.md`
+  - Patterns: x_mark
+  - Visible: ❌ 8, 10 — דילגנו על 9!
+- **g1/ns_counting_forward** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_counting_forward.md`
+  - Patterns: tsarich
+  - Visible: בתרגול תמצאו שאלות שבהן צריך להמשיך סדרה של מספרים.
+  - Source: `בתרגול תמצאו שאלות שבהן צריך להמשיך סדרה של מספרים. זכרו: בכל פעם מתקדמים צעד אחד ימינה.`
+- **g1/ns_counting_backward** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_counting_backward.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2, 1, 0, ואז ממשיכים עוד צעד — בכיתה א׳ לא עושים זאת בדף הזה.
+  - Source: `❌ 2, 1, 0, ואז ממשיכים עוד צעד — בכיתה א׳ לא עושים זאת בדף הזה.`
+- **g1/ns_counting_backward** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_counting_backward.md`
+  - Patterns: haser, tsarich
+  - Visible: בתרגול תמצאו שאלות שבהן צריך למלא מספר חסר בסדר יורד.
+  - Source: `בתרגול תמצאו שאלות שבהן צריך למלא מספר חסר בסדר יורד. קפצו שמאלה!`
+- **g1/ns_number_line** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_number_line.md`
+  - Patterns: x_mark
+  - Visible: ❌ "2 צעדים מ־4" → 4 ואז 5 — ספרנו רק קפיצה אחת!
+  - Source: `❌ "2 צעדים מ־4" → 4 ואז 5 — ספרנו רק קפיצה אחת!`
+- **g1/ns_neighbors** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_neighbors.md`
+  - Patterns: x_mark
+  - Visible: ❌ השכנים של 12 הם 10 ו-14 — אלה רחוקים מדי!
+- **g1/cmp** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/cmp.md`
+  - Patterns: x_mark
+  - Visible: ❌ 14 < 9 — הפתח פונה ל-9, אבל 9 קטן מ-14!
+- **g1/ns_place_tens_units** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_place_tens_units.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ ב-12 יש 2 עשרות — לא נכון! יש רק 1 עשרה.
+- **g1/ns_even_odd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_even_odd.md`
+  - Patterns: x_mark
+  - Visible: ❌ 11 נראה "גדול" — אבל כשמסדרים בזוגות, נשאר אחד בלי שותף → אי-זוגי.
+- **g1/ns_complement10** §3 דוגמה — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_complement10.md`
+  - Patterns: tsarich
+  - Visible: כמה עוד צריך כדי שיהיו 10? 4 — כי 6 + 4 = 10.
+- **g1/ns_complement10** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: שאלה: 8 + ? = 10 — מה המספר החסר?
+- **g1/ns_complement10** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: 4 + ? = 10 — מה המספר החסר?
+- **g1/ns_complement10** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: (רמז: כמה חסר כדי למלא את מסגרת עשר?)
+- **g1/ns_complement10** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_complement10.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 4 + 10 = 14 — לא נכון, כי 4 + 10 גדול מ-10.
+- **g1/ns_complement10** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו שאלות כמה חסר ל-10? השתמשו במסגרת עשר!
+- **g1/add_second_decade** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/add_second_decade.md`
+  - Patterns: tsarich
+  - Visible: שלב 1: 7 צריך 3 כדי להגיע ל-10 (זוג של 7 הוא 3)
+- **g1/add_second_decade** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/add_second_decade.md`
+  - Patterns: x_mark
+  - Visible: ❌ 9 + 4 → 10 + 4 = 14 — הוספנו את כל ה-4 אחרי שכבר הגענו ל-10.
+  - Source: `❌ 9 + 4 → 10 + 4 = 14 — הוספנו את כל ה-4 אחרי שכבר הגענו ל-10.`
+- **g1/add_tens_only** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/add_tens_only.md`
+  - Patterns: x_mark
+  - Visible: ❌ 20 + 10 = 210 — הוספנו ספרות במקום עשרות!
+- **g1/add_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/add_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 7 + 4 → 7, 8, 9, 10 — ספרנו את 7 עצמו, ולכן הגענו לתשובה קטנה מדי.
+  - Source: `❌ 7 + 4 → 7, 8, 9, 10 — ספרנו את 7 עצמו, ולכן הגענו לתשובה קטנה מדי.`
+- **g1/sub_two** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר שני מספרים.
+- **g1/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: כשמחסרים — מורידים כמות.
+- **g1/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: קל לטעות: לספור את המספר שממנו מחסרים כ"צעד ראשון".
+- **g1/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/sub_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10 − 3 → 10, 9, 8 — ספרנו את 10 עצמו, ולכן הגענו לתשובה גדולה מדי.
+  - Source: `❌ 10 − 3 → 10, 9, 8 — ספרנו את 10 עצמו, ולכן הגענו לתשובה גדולה מדי.`
+- **g1/sub_two** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר שני מספרים.
+  - Source: `עכשיו אתם יודעים לחסר שני מספרים.`
+- **g1/eq_add_simple** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: חיבור עם מספר חסר
+  - Source: `# חיבור עם מספר חסר`
+- **g1/eq_add_simple** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser, tsarich
+  - Visible: יש מקום ריק — צריך למצוא את המספר החסר.
+- **g1/eq_add_simple** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: המקום הריק (__) = מספר חסר.
+- **g1/eq_add_simple** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: tsarich
+  - Visible: שואלים: "כמה צריך להוסיף כדי להגיע ל-7?"
+- **g1/eq_add_simple** §3 דוגמה — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: tsarich
+  - Visible: - צריך עוד כוכבים עד 7
+  - Source: `- צריך עוד כוכבים עד 7`
+- **g1/eq_add_simple** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: שאלה: 6 + __ = 10 — מה המספר החסר?
+- **g1/eq_add_simple** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: שלב 2: על מסגרת עשר — 6 מלאים, 4 חסרים.
+- **g1/eq_add_simple** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: שלב 3: המספר החסר הוא 4 — כי 6 + 4 = 10.
+- **g1/eq_add_simple** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: 2 + __ = 8 — מה המספר החסר?
+  - Source: `2 + __ = 8 — מה המספר החסר?`
+- **g1/eq_add_simple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: קל לטעות: לכתוב את התוצאה במקום המספר החסר.
+- **g1/eq_add_simple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2 + 8 = 8 — שמנו את 8 פעמיים!
+- **g1/eq_add_simple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: ✓ 2 + 6 = 8 — המספר החסר הוא 6, לא 8.
+- **g1/eq_add_simple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser, tsarich
+  - Visible: זכרו: המספר החסר הוא מה שצריך לכתוב במקום הריק, לא התוצאה שכבר כתובה אחרי סימן השווה.
+- **g1/eq_add_simple** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים למצוא מספר חסר במשפט חיבור.
+  - Source: `עכשיו אתם יודעים למצוא מספר חסר במשפט חיבור.`
+- **g1/eq_add_simple** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_add_simple.md`
+  - Patterns: haser
+  - Visible: חפשו כמה חסר!
+  - Source: `בתרגול תמצאו מקום ריק (**__**). חפשו כמה חסר!`
+- **g1/eq_sub_simple** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: haser
+  - Visible: חיסור עם מספר חסר
+  - Source: `# חיסור עם מספר חסר`
+- **g1/eq_sub_simple** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: haser, tsarich
+  - Visible: יש מקום ריק — צריך למצוא את המספר החסר.
+- **g1/eq_sub_simple** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: haser
+  - Visible: שאלה: __ − 2 = 6 — מה המספר החסר?
+- **g1/eq_sub_simple** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: haser
+  - Visible: 10 − __ = 7 — מה המספר החסר?
+  - Source: `10 − __ = 7 — מה המספר החסר?`
+- **g1/eq_sub_simple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10 − 7 = 7 — שמנו את 7 (מה שנשאר) במקום הריק!
+- **g1/eq_sub_simple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: haser
+  - Visible: ✓ 10 − 3 = 7 — המספר החסר הוא 3 (כמה לקחו).
+- **g1/eq_sub_simple** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים למצוא מספר חסר במשפט חיסור.
+  - Source: `עכשיו אתם יודעים למצוא מספר חסר במשפט חיסור.`
+- **g1/eq_sub_simple** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/eq_sub_simple.md`
+  - Patterns: haser
+  - Visible: בדקו מה חסר:
+  - Source: `בתרגול תמצאו מקום ריק (**__**). בדקו מה חסר: כמה לקחו, או כמה היה בהתחלה.`
+- **g1/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3 × 3 = 3 + 3 = 6 — חיברנו רק שתי קבוצות.
+- **g1/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/mul.md`
+  - Patterns: tsarich
+  - Visible: זכרו: × זה קבוצות שוות, וצריך לחבר את כל הקבוצות.
+- **g1/wp_coins** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_coins.md`
+  - Patterns: tsarich
+  - Visible: כמה כסף בסך הכל — צריך לחבר.
+- **g1/wp_coins** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_coins.md`
+  - Patterns: x_mark
+  - Visible: ❌ מטבע אחד של 10 ושני מטבעות של 2 → "יש 3 מטבעות" — זה רק מספר המטבעות, לא כמה כסף יש!
+  - Source: `❌ מטבע אחד של 10 ושני מטבעות של 2 → "יש 3 מטבעות" — זה רק מספר המטבעות, לא כמה כסף יש!`
+- **g1/wp_coins_spent** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_coins_spent.md`
+  - Patterns: haser
+  - Visible: 3. מה עושים? — מחסרים: היה − הוציאו = נשאר
+- **g1/wp_coins_spent** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_coins_spent.md`
+  - Patterns: haser, tsarich
+  - Visible: כמה נשאר — צריך לחסר.
+- **g1/wp_coins_spent** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_coins_spent.md`
+  - Patterns: haser
+  - Visible: קל לטעות ולחבר במקום לחסר — כי רואים "כמה" בשאלה.
+  - Source: `**קל לטעות ולחבר במקום לחסר — כי רואים "כמה" בשאלה.**`
+- **g1/wp_coins_spent** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_coins_spent.md`
+  - Patterns: x_mark
+  - Visible: ❌ אמיר שילם 10, והמשחק עלה 7 → 10 + 7 = 17 — הוספנו במקום לחשב עודף.
+  - Source: `❌ אמיר שילם 10, והמשחק עלה 7 → 10 + 7 = 17 — **הוספנו** במקום לחשב עודף.`
+- **g1/wp_coins_spent** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_coins_spent.md`
+  - Patterns: haser
+  - Visible: בדקו כמה היה, כמה שילמו או הוציאו, ואז חסרו.
+  - Source: `בדקו כמה היה, כמה שילמו או הוציאו, ואז חסרו.`
+- **g1/wp_time_date** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_time_date.md`
+  - Patterns: tsarich
+  - Visible: איזה יום בעוד 2 ימים — צריך לספור 2 צעדים קדימה.
+- **g1/wp_time_date** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_time_date.md`
+  - Patterns: x_mark
+  - Visible: ❌ היום שלישי, בעוד 2 ימים → שלישי, רביעי — זה רק יום אחד קדימה!
+  - Source: `❌ היום שלישי, בעוד 2 ימים → שלישי, רביעי — זה רק **יום אחד** קדימה!`
+- **g1/wp_time_days** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_time_days.md`
+  - Patterns: tsarich
+  - Visible: כמה ימים יעברו — צריך לספור צעדים קדימה.
+- **g1/wp_time_days** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g1/drafts/wp_time_days.md`
+  - Patterns: x_mark
+  - Visible: ❌ מראשון עד רביעי → "ראשון, שני, שלישי" — ספרנו את ראשון כצעד, ועצרנו לפני רביעי → רק 2 ימים!
+  - Source: `❌ מראשון עד רביעי → "ראשון, שני, שלישי" — ספרנו את **ראשון** כצעד, ו**עצרנו לפני רביעי** → רק **2** ימים!`
+- **g2/ns_place_tens_units** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_place_tens_units.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ ב־405 יש 4 עשרות — לא נכון! יש 4 מאות.
+- **g2/ns_neighbors** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_neighbors.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ השכנים של 199 הם 189 ו-299 — לא נכון!
+- **g2/ns_complement10** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_complement10.md`
+  - Patterns: tsarich
+  - Visible: ב-8 + 5 אפשר לחשוב: 8 צריך 2 כדי להגיע ל-10, ואז נשאר 3.
+- **g2/ns_complement10** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: שאלה: 7 + ? = 10 — מה המספר החסר?
+- **g2/ns_complement10** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: 6 + ? = 10 — מה המספר החסר?
+- **g2/ns_complement10** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: (רמז: כמה חסר כדי למלא את מסגרת עשר?)
+- **g2/ns_complement10** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_complement10.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 6 + 10 = 16 — לא נכון! 6 + 10 גדול מ-10.
+- **g2/ns_complement10** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו שאלות כמה חסר ל-10? השתמשו במסגרת עשר!
+- **g2/ns_even_odd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/ns_even_odd.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 35 זוגי — לא נכון! כשמסדרים בזוגות, נשאר אחד בלי שותף.
+- **g2/cmp** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/cmp.md`
+  - Patterns: x_mark, lo_nachon, tsarich
+  - Visible: ❌ ב-518 יש 8 וב-485 יש 5, אז 485 גדול — לא נכון! צריך להתחיל ממאות.
+- **g2/add_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/add_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 52 + 36 = 58 — חיברו 2 + 6 = 8 לאחדות, אבל שכחו 50 + 30 = 80.
+- **g2/sub_two** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר שני מספרים עד 100 — בשורה, בראש או בכתב.
+- **g2/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: כשמחסרים שני מספרים בכיתה ב׳, אפשר לחשוב כך:
+  - Source: `כשמחסרים שני מספרים בכיתה ב׳, אפשר לחשוב כך:`
+- **g2/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: מחסרים עשרות מעשרות
+- **g2/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: מחסרים אחדות מאחדות
+- **g2/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: חשוב: בדף הזה מחסרים בשורה. חיסור במאונך נלמד בדף נפרד.
+- **g2/sub_two** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: שלב 2: מחסרים עשרות: 60 − 20 = 40.
+- **g2/sub_two** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: שלב 3: מחסרים אחדות: 8 − 4 = 4.
+- **g2/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: קל לטעות: ב-75 − 33 לחסר רק את האחדות ולשכוח את העשרות.
+- **g2/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 75 − 33 = 72 — חיסרו 5 − 3 = 2, אבל שכחו ש-70 − 30 = 40.
+- **g2/sub_two** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר שני מספרים עד 100 — בשורה.
+  - Source: `עכשיו אתם יודעים לחסר שני מספרים עד 100 — בשורה.`
+- **g2/add_vertical** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/add_vertical.md`
+  - Patterns: tsarich
+  - Visible: (רמז: קודם אחדות — 6 + 7. האם צריך נשיאה?)
+  - Source: `*(רמז: קודם אחדות — 6 + 7. האם צריך נשיאה?)*`
+- **g2/add_vertical** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/add_vertical.md`
+  - Patterns: x_mark
+  - Visible: ❌ 36 + 27 = 53 — חיברו 6 + 7 = 13, כתבו 3, אבל שכחו להוסיף 1 לעשרות (3 + 2 = 5 במקום 3 + 2 + 1 = 6).
+- **g2/sub_vertical** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_vertical.md`
+  - Patterns: haser
+  - Visible: היום נלמד חיסור במאונך — כותבים מספרים אחד מתחת לשני ומחסרים עמודה אחר עמודה.
+- **g2/sub_vertical** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_vertical.md`
+  - Patterns: tsarich
+  - Visible: לפעמים צריך להחליף עשרה אחת ב־10 אחדות — וזה בסדר!
+- **g2/sub_vertical** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_vertical.md`
+  - Patterns: haser
+  - Visible: איך מחסרים?
+  - Source: `**איך מחסרים?**`
+- **g2/sub_vertical** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_vertical.md`
+  - Patterns: haser
+  - Visible: מחסרים אחדות, ואז עשרות
+- **g2/sub_vertical** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_vertical.md`
+  - Patterns: haser
+  - Visible: (רמז: ב-64, האם יש מספיק אחדות כדי לחסר 8?)
+  - Source: `*(רמז: ב-64, האם יש מספיק אחדות כדי לחסר 8?)*`
+- **g2/sub_vertical** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_vertical.md`
+  - Patterns: x_mark
+  - Visible: ❌ 64 − 38 = 36 — ניסו 4 − 8 בלי להחליף, או חיסרו רק את האחדות (4 − 8 לא עובד!).
+- **g2/sub_vertical** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/sub_vertical.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר במאונך — עם החלפת עשרה ב־10 אחדות.
+  - Source: `עכשיו אתם יודעים לחסר במאונך — עם החלפת עשרה ב־10 אחדות.`
+- **g2/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/mul.md`
+  - Patterns: tsarich
+  - Visible: קל לטעות: ב-7 × 3 לחשוב שצריך לחבר 7 + 3.
+- **g2/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 7 × 3 = 10 — זה 7 + 3, לא כפל!
+- **g2/div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/div.md`
+  - Patterns: haser, tsarich
+  - Visible: קל לטעות: ב-20 ÷ 5 לחשוב שצריך לחסר 5 מ-20 פעם אחת ולענות 15.
+- **g2/div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/div.md`
+  - Patterns: x_mark
+  - Visible: ❌ 20 ÷ 5 = 15 — זה 20 − 5, לא חילוק!
+- **g2/divisibility** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/divisibility.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 35 מתחלק ב־10 — לא נכון! 35 נגמר ב־5, לא ב־0.
+- **g2/frac_half** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/frac_half.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ חצי מ־10 = 4 — לא נכון! 4 ו־6 לא שווים.
+- **g2/frac_half_reverse** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/frac_half_reverse.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ השלם הוא 6 — לא נכון! זה רק 5 + 1, לא שני חצאים.
+- **g2/frac_quarter** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/frac_quarter.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ רבע מ־20 = 10 — לא נכון! 10 זה חצי, לא רבע.
+- **g2/frac_quarter_reverse** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/frac_quarter_reverse.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ השלם הוא 10 — לא נכון! 5 + 5 = 10 זה רק שני חלקים, לא ארבעה.
+- **g2/wp_coins** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_coins.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ יש 3 מטבעות → 3 שקלים — לא נכון! זה מספר המטבעות, לא הכסף.
+- **g2/wp_coins_spent** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_coins_spent.md`
+  - Patterns: haser, tsarich
+  - Visible: כששילמתם יותר מהמחיר, מקבלים עודף — צריך לחסר.
+- **g2/wp_coins_spent** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_coins_spent.md`
+  - Patterns: haser
+  - Visible: קל לטעות: ב־40 − 28 לחסר 40 − 20 = 20 ולשכוח את 8 הנוספים.
+- **g2/wp_coins_spent** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_coins_spent.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ עודף = 20 — לא נכון! חיסרו רק עד 20, לא עד 28.
+- **g2/wp_time_date** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_time_date.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ רביעי → חמישי — לא נכון! זו רק קפיצה אחת.
+- **g2/wp_time_days** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_time_days.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ שני, שלישי, רביעי → 3 ימים — לא נכון! ספרו את שני או עצרו לפני שישי.
+- **g2/wp_groups_g2** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_groups_g2.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 6 + 3 = 9 — לא נכון! זה חיבור, לא קבוצות שוות.
+- **g2/wp_division_simple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g2/drafts/wp_division_simple.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 20 − 5 = 15 — לא נכון! חיסרתם פעם אחת, לא חילקתם לכולם.
+- **g3/ns_place_hundreds** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_place_hundreds.md`
+  - Patterns: x_mark
+  - Visible: ❌ 472 → 7 מאות — 7 היא ספרת עשרות (70), לא מאות!
+- **g3/ns_neighbors** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_neighbors.md`
+  - Patterns: x_mark
+  - Visible: ❌ שלפני 350 = 340 — קפיצה של 10, לא שכן!
+- **g3/ns_complement10** §3 דוגמה — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: tsarich
+  - Visible: שלב 1: 8 צריך 2 כדי להגיע ל-10 → 8 + 2 = 10
+- **g3/ns_complement10** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: שאלה: 6 + ? = 10 — מה המספר החסר?
+- **g3/ns_complement10** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 4.
+- **g3/ns_complement10** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: 7 + ? = 10 — מה המספר החסר?
+- **g3/ns_complement10** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: (רמז: כמה חסר מ-7 עד 10?)
+- **g3/ns_complement10** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: x_mark
+  - Visible: ❌ 7 + 7 = 10 — 7 + 7 = 14, לא 10!
+- **g3/ns_complement10** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: זכרו: שואלים מה חסר כדי להגיע ל-10, לא לחזור על המספר שכבר יש.
+- **g3/ns_complement10** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו כמה חסר ל-10? חפשו את הזוג המוכר!
+- **g3/ns_complement100** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: כשיודעים את הזוגות, קל למצוא מה חסר כדי להגיע ל-100.
+- **g3/ns_complement100** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: tsarich
+  - Visible: משלימים ל-100: שואלים — כמה צריך להוסיף?
+- **g3/ns_complement100** §3 דוגמה — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: מ-45 ל-100 חסרים 55
+- **g3/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: שאלה: 72 + ? = 100 — מה המספר החסר?
+- **g3/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: שלב 1: כמה חסר מ-72 ל-100?
+- **g3/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 28.
+- **g3/ns_complement100** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: 63 + ? = 100 — מה המספר החסר?
+- **g3/ns_complement100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: x_mark
+  - Visible: ❌ 63 + 63 = 100 — 63 + 63 = 126!
+- **g3/ns_complement100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: זכרו: אחרי שמצאתם את החסר — חברו שוב וודאו שיוצא 100.
+- **g3/ns_complement100** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים למצוא מה חסר ל-100.
+- **g3/ns_even_odd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/ns_even_odd.md`
+  - Patterns: x_mark, lo_bang
+  - Visible: ❌ 48 אי-זוגי — כי 4 אי-זוגי? לא! 4 הוא זוגי, אבל לא הוא ספרת האחדות.
+- **g3/cmp** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/cmp.md`
+  - Patterns: x_mark
+  - Visible: ❌ 456 > 465 — 6 ו-5 הם עשרות, לא מאות — ו-5 < 6!
+- **g3/sequence** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/sequence.md`
+  - Patterns: x_mark
+  - Visible: ❌ 5, 10, 15, 19 — קפיצה של +4 אחרי 15? 15+4=19, אבל 10−5=5, לא 4!
+- **g3/add_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/add_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 248 + 156 = 314 — חיברו 48 + 56 בלבד, בלי 200 + 100!
+- **g3/sub_two** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר שני מספרים עד 1,000.
+- **g3/sub_two** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/sub_two.md`
+  - Patterns: tsarich
+  - Visible: (רמז: 3 אחדות לא מספיק ל-7 — צריך השאלה.)
+  - Source: `*(רמז: 3 אחדות לא מספיק ל-7 — צריך השאלה.)*`
+- **g3/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/sub_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 503 − 287 = 316 — חיסרו 3 − 7 כאילו 13 − 7, אבל שכחו לשנות את העשרות והמאות!
+- **g3/sub_two** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר עד 1,000 עם השאלה.
+  - Source: `עכשיו אתם יודעים לחסר עד 1,000 עם השאלה.`
+- **g3/add_three** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/add_three.md`
+  - Patterns: x_mark
+  - Visible: ❌ 125 + 40 + 35 = 165 — שכחו את 35!
+- **g3/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 7 × 8 = 15 — זה חיבור, לא כפל!
+- **g3/mul_tens** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/mul_tens.md`
+  - Patterns: x_mark
+  - Visible: ❌ 4 × 30 = 34 — זה חיבור, לא כפל!
+- **g3/mul_hundreds** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/mul_hundreds.md`
+  - Patterns: x_mark
+  - Visible: ❌ 5 × 200 = 205 — חיבור, לא כפל!
+- **g3/div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/div.md`
+  - Patterns: x_mark
+  - Visible: ❌ 84 ÷ 4 = 80 — זה חיסור, לא חילוק!
+- **g3/div_with_remainder** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/div_with_remainder.md`
+  - Patterns: x_mark
+  - Visible: ❌ 23 ÷ 5 = 4 — 5 × 4 = 20, אבל 3 נשארו!
+- **g3/divisibility** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/divisibility.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ 35 ÷ 2 = 17.5 — לא שלם! ל-2 צריך אחדות זוגית.
+- **g3/eq_add** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: משוואת חיבור — מספר חסר
+  - Source: `# משוואת חיבור — מספר חסר`
+- **g3/eq_add** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: היום נפתור משוואת חיבור — תרגיל עם מספר חסר (__).
+- **g3/eq_add** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser, tsarich
+  - Visible: צריך למצוא מה חסר כדי שהשוויון יהיה נכון.
+- **g3/eq_add** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: tsarich
+  - Visible: שואלים: מה צריך להוסיף ל-45 כדי להגיע ל-72?
+- **g3/eq_add** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: המספר החסר הוא 27 — לא 72!
+- **g3/eq_add** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: שאלה: 52 + __ = 80 — מה המספר החסר?
+- **g3/eq_add** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 28.
+- **g3/eq_add** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: 45 + __ = 72 — מה המספר החסר?
+  - Source: `45 + __ = 72 — מה המספר החסר?`
+- **g3/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 45 + 72 = 72 — 45 + 72 = 117, לא 72!
+- **g3/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: ✓ 45 + 27 = 72 — המספר החסר הוא 27.
+- **g3/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: זכרו: __ = מה חסר, לא התוצאה שכבר כתובה אחרי =.
+- **g3/eq_add** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לפתור משוואת חיבור עם מספר חסר.
+  - Source: `עכשיו אתם יודעים לפתור משוואת חיבור עם מספר חסר.`
+- **g3/eq_add** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: חפשו מה חסר!
+  - Source: `בתרגול תמצאו __ במשוואות חיבור. חפשו מה חסר!`
+- **g3/eq_sub** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: משוואת חיסור — מספר חסר
+  - Source: `# משוואת חיסור — מספר חסר`
+- **g3/eq_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: היום נפתור משוואת חיסור עם מספר חסר — למשל __ − 18 = 42.
+- **g3/eq_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser, tsarich
+  - Visible: צריך למצוא את המספר הגדול (מה שממנו מחסרים).
+- **g3/eq_sub** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: שאלה: __ − 14 = 56 — מה המספר החסר?
+- **g3/eq_sub** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 70.
+- **g3/eq_sub** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: __ − 18 = 42 — מה המספר החסר?
+  - Source: `__ − 18 = 42 — מה המספר החסר?`
+- **g3/eq_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ __ = 24 — 24 − 18 = 6, לא 42!
+- **g3/eq_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: זכרו: מספר חסר לפני המינוס = חיבור של התוצאה והמחוסר.
+- **g3/eq_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לפתור משוואת חיסור עם מספר חסר.
+  - Source: `עכשיו אתם יודעים לפתור משוואת חיסור עם מספר חסר.`
+- **g3/dec_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/dec_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2.3 + 1.4 = 37 — שכחו את הנקודה!
+- **g3/dec_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר מספרים עשרוניים — למשל 5.7 − 2.2.
+- **g3/dec_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/dec_sub.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 5.7 − 2.2 = 35 — חסר נקודה!
+- **g3/dec_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר מספרים עשרוניים.
+  - Source: `עכשיו אתם יודעים לחסר מספרים עשרוניים.`
+- **g3/dec_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: יישרו וחסרו!
+  - Source: `בתרגול תמצאו חיסור עם נקודה. יישרו וחסרו!`
+- **g3/order_add_mul** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/order_add_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא משמאל לימין: 6 + 4 = 10, 10 × 2…
+  - Source: `❌ לא משמאל לימין: 6 + 4 = 10, 10 × 2…`
+- **g3/order_add_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/order_add_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 6 + 4 × 2 = 10 — חיברו 6+4 קודם ושכחו את ×2!
+- **g3/order_mul_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/order_mul_sub.md`
+  - Patterns: haser
+  - Visible: היום נלמד סדר פעולות כשיש חיסור וכפל — קודם כופלים, אחר כך מחסרים.
+- **g3/order_mul_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/order_mul_sub.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 30 − 3 × 4 = 108 — לא נכון! קודם כפל.
+- **g3/order_parentheses** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/order_parentheses.md`
+  - Patterns: x_mark
+  - Visible: ❌ (8 + 2) × 3 = 14 — שכחו את הסוגריים!
+- **g3/wp_comparison_more** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/wp_comparison_more.md`
+  - Patterns: tsarich
+  - Visible: צריך למצוא את ההפרש — גדול פחות קטן.
+- **g3/wp_comparison_more** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: מה עושים? מחסרים: גדול − קטן
+- **g3/wp_comparison_more** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/wp_comparison_more.md`
+  - Patterns: x_mark
+  - Visible: ❌ 89 — "יותר" = הפרש, לא סכום!
+- **g3/wp_comparison_more** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: זכרו: "כמה יותר?" → מחסרים (גדול − קטן).
+- **g3/wp_leftover** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/wp_leftover.md`
+  - Patterns: x_mark
+  - Visible: ❌ 7 — זה כמה קבוצות מלאות, לא כמה נשארו!
+- **g3/wp_time_sum** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g3/drafts/wp_time_sum.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10 דקות — זו הפרשה, לא סכום!
+- **g4/ns_place_hundreds** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_place_hundreds.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3,482 → 8 אלפים — 8 היא ספרת עשרות (80), לא אלפים!
+  - Source: `❌ 3,482 → 8 אלפים — 8 היא ספרת עשרות (80), לא אלפים!`
+- **g4/ns_neighbors** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_neighbors.md`
+  - Patterns: x_mark
+  - Visible: ❌ שלפני 2,450 = 2,440 — קפיצה של 10!
+- **g4/ns_complement100** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: tsarich
+  - Visible: משלימים ל-100: כמה צריך להוסיף כדי שהסכום יהיה 100?
+- **g4/ns_complement100** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: 37 + ? = 100 → חסרים 63 (כי 37 + 63 = 100)
+- **g4/ns_complement100** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: מוצאים כמה חסר לעשרה עגולה הקרובה (למשל 37 + 3 = 40)
+- **g4/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: שאלה: 37 + ? = 100 — מה המספר החסר?
+- **g4/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 63.
+- **g4/ns_complement100** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: 37 + ? = 100 — מה המספר החסר?
+- **g4/ns_complement100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: קל לטעות: ב-37 + ? = 100 לכתוב 37 במקום החסר.
+- **g4/ns_complement100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement100.md`
+  - Patterns: x_mark
+  - Visible: ❌ 37 + 37 = 100 — 37 + 37 = 74, לא 100!
+- **g4/ns_complement10** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement10.md`
+  - Patterns: tsarich
+  - Visible: 8 + 2 = 10 — זוג שצריך לזכור בעל פה, בלי מסגרת עשר.
+- **g4/ns_complement10** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement10.md`
+  - Patterns: tsarich
+  - Visible: לא צריך מסגרת עשר — רק זוגות בעל פה.
+- **g4/ns_complement10** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: שאלה: 8 + ? = 10 — מה המספר החסר?
+- **g4/ns_complement10** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 2.
+- **g4/ns_complement10** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: 8 + ? = 10 — מה המספר החסר?
+- **g4/ns_complement10** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement10.md`
+  - Patterns: x_mark
+  - Visible: ❌ 8 + 8 = 10 — 8 + 8 = 16, לא 10!
+- **g4/ns_complement10** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_complement10.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו כמה חסר ל-10? וחיבורים עם השלמה ל-10!
+- **g4/ns_even_odd** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_even_odd.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לחשב את כל המספר: מספיק ספרת האחדות.
+- **g4/ns_even_odd** §3 דוגמה — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_even_odd.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לחשב את 3,512 כולו — רק הספרה האחרונה.
+- **g4/ns_even_odd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/ns_even_odd.md`
+  - Patterns: x_mark, lo_bang
+  - Visible: ❌ 246 אי-זוגי — כי 4 אי-זוגי? לא! 4 הוא זוגי, אבל לא הוא ספרת האחדות.
+- **g4/cmp** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/cmp.md`
+  - Patterns: x_mark
+  - Visible: ❌ 4,560 > 4,650 — 6 ו-5 הם מאות, לא אחדות — ו-5 < 6!
+  - Source: `❌ 4,560 > 4,650 — 6 ו-5 הם מאות, לא אחדות — ו-5 < 6!`
+- **g4/sequence** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/sequence.md`
+  - Patterns: x_mark
+  - Visible: ❌ 100, 150, 200, 240 — קפיצה של +40 אחרי 200? 200+40=240, אבל 150−100=50, לא 40!
+- **g4/round** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/round.md`
+  - Patterns: x_mark
+  - Visible: ❌ 1,247 → 1,300 — 7 היא ספרת אחדות, לא העשרות! מסתכלים על 4.
+  - Source: `❌ 1,247 → 1,300 — 7 היא ספרת אחדות, לא העשרות! מסתכלים על 4.`
+- **g4/zero_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/zero_add.md`
+  - Patterns: tsarich
+  - Visible: ב-456 + 0 לחשוב שצריך "לעשות משהו" ולכתוב 460 או 457.
+  - Source: `קל לטעות: ב-456 + 0 לחשוב שצריך "לעשות משהו" ולכתוב 460 או 457.`
+- **g4/zero_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/zero_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 456 + 0 = 460 — 0 לא מוסיף 4!
+  - Source: `❌ 456 + 0 = 460 — 0 לא מוסיף 4!`
+- **g4/zero_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/zero_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ 789 − 0 = 0 — זה 789 − 789, לא חיסור 0!
+  - Source: `❌ 789 − 0 = 0 — זה 789 − 789, לא חיסור 0!`
+- **g4/zero_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/zero_mul.md`
+  - Patterns: tsarich
+  - Visible: ב-52 × 0 לחשוב שצריך "להשאיר" את 52 ולכתוב 52.
+  - Source: `קל לטעות: ב-52 × 0 לחשוב שצריך "להשאיר" את 52 ולכתוב 52.`
+- **g4/zero_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/zero_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 52 × 0 = 52 — כפל ב-0 לא משאיר את המספר!
+  - Source: `❌ 52 × 0 = 52 — כפל ב-0 לא משאיר את המספר!`
+- **g4/one_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/one_mul.md`
+  - Patterns: tsarich
+  - Visible: ב-347 × 1 לחשוב שצריך "להוסיף" 1 ולכתוב 348.
+  - Source: `קל לטעות: ב-347 × 1 לחשוב שצריך "להוסיף" 1 ולכתוב 348.`
+- **g4/one_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/one_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 347 × 1 = 348 — כפל ב-1 לא מוסיף 1!
+  - Source: `❌ 347 × 1 = 348 — כפל ב-1 לא מוסיף 1!`
+- **g4/add_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/add_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 1,240 + 375 = 615 — חיברו בלי אלף!
+- **g4/sub_two** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר שני מספרים עד 10,000.
+- **g4/sub_two** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/sub_two.md`
+  - Patterns: tsarich
+  - Visible: (רמז: 3 אחדות לא מספיק ל-6 — צריך השאלה. שימו לב ל-0 בעשרות.)
+  - Source: `*(רמז: 3 אחדות לא מספיק ל-6 — צריך השאלה. שימו לב ל-0 בעשרות.)*`
+- **g4/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/sub_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2,503 − 876 = 1,727 — חיסרו 3 − 6 כאילו 13 − 6, אבל שכחו לשנות מאות ואלפים!
+- **g4/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/sub_two.md`
+  - Patterns: tsarich
+  - Visible: זכרו: השאלה משנה את הספרה שמשמאל — לפעמים צריך שרשרת השאלות.
+- **g4/sub_two** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר עד 10,000 עם השאלה.
+  - Source: `עכשיו אתם יודעים לחסר עד 10,000 עם השאלה.`
+- **g4/add_three** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/add_three.md`
+  - Patterns: x_mark
+  - Visible: ❌ 450 + 120 + 80 = 570 — שכחו את 80!
+- **g4/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 12 × 8 = 20 — זה חיבור, לא כפל!
+- **g4/mul_vertical** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/mul_vertical.md`
+  - Patterns: x_mark
+  - Visible: ❌ 23 × 4 = 82 — 3 × 4 = 12, לא 2!
+- **g4/div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/div.md`
+  - Patterns: x_mark
+  - Visible: ❌ 360 ÷ 9 = 351 — זה חיסור, לא חילוק!
+- **g4/div_with_remainder** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/div_with_remainder.md`
+  - Patterns: x_mark
+  - Visible: ❌ 47 ÷ 6 = 7 — 6 × 7 = 42, אבל 5 נשארו!
+- **g4/div_long** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/div_long.md`
+  - Patterns: x_mark
+  - Visible: ❌ 156 ÷ 6 = 21 — 6 × 21 = 126, לא 156!
+- **g4/divisibility** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/divisibility.md`
+  - Patterns: chayav
+  - Visible: ÷6: חייב להתחלק גם ב-2 וגם ב-3.
+- **g4/divisibility** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/divisibility.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ 234 ÷ 5 = 46.8 — לא שלם! ל-5 צריך אחדות 0 או 5.
+- **g4/prime_composite** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/prime_composite.md`
+  - Patterns: tsarich
+  - Visible: (רמז: בדקו חילוק ב-2, 3, 5. עד איזה מספר צריך?)
+  - Source: `*(רמז: בדקו חילוק ב-2, 3, 5. עד איזה מספר צריך?)*`
+- **g4/prime_composite** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/prime_composite.md`
+  - Patterns: x_mark
+  - Visible: ❌ 29 = ראשוני — אין לו גורמים חוץ מ-1 ו-29!
+- **g4/fm_factor** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/fm_factor.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 2, 3, 4, 6, 8, 12 — חסרים 1 ו-24!
+- **g4/fm_multiple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/fm_multiple.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 10, 15, 20, 25, 30 — חסרה הכפולה הראשונה 5!
+- **g4/fm_gcd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/fm_gcd.md`
+  - Patterns: x_mark
+  - Visible: ❌ מ.א.ח = 24 — 24 לא מחלק את 18!
+- **g4/fm_gcd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/fm_gcd.md`
+  - Patterns: chayav
+  - Visible: זכרו: מ.א.ח חייב לחלק את שני המספרים.
+- **g4/dec_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_add.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 3.45 + 2.30 = 575 — חסרה נקודה!
+- **g4/dec_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3.45 + 2.30 = 5.7 — חיברו רק עשיריות, שכחו מאיות (5 + 0)!
+- **g4/dec_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר מספרים עשרוניים עם שתי ספרות אחרי הנקודה — למשל 5.80 − 2.35.
+- **g4/dec_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_sub.md`
+  - Patterns: tsarich
+  - Visible: שוב: מיישרים נקודות — ולפעמים צריך הלוואה מעשיריות למאיות.
+- **g4/dec_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ 5.80 − 2.35 = 3.55 — חיסרו 0 − 5 בלי הלוואה (0 − 5 ≠ 5)!
+- **g4/dec_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: זכרו: כשמאיות קטנות מהמחסר — לווים מעשיריות.
+- **g4/dec_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר מספרים עשרוניים עם שתי ספרות אחרי הנקודה.
+  - Source: `עכשיו אתם יודעים לחסר מספרים עשרוניים עם שתי ספרות אחרי הנקודה.`
+- **g4/dec_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/dec_sub.md`
+  - Patterns: tsarich
+  - Visible: יישרו נקודות, וזכרו הלוואה כשצריך!
+  - Source: `יישרו נקודות, וזכרו הלוואה כשצריך!`
+- **g4/eq_add** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: משוואת חיבור — מספר חסר (מאות)
+  - Source: `# משוואת חיבור — מספר חסר (מאות)`
+- **g4/eq_add** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser, tsarich
+  - Visible: צריך למצוא מה חסר ב-__ כדי שהשוויון יהיה נכון.
+- **g4/eq_add** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: tsarich
+  - Visible: שואלים: מה צריך להוסיף ל-125 כדי להגיע ל-380?
+- **g4/eq_add** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: כלל: המספר החסר = סכום (אחרי =) פחות המספר שכבר יש.
+- **g4/eq_add** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: שאלה: 318 + __ = 600 — מה המספר החסר?
+- **g4/eq_add** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 282.
+- **g4/eq_add** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: 125 + __ = 380 — מה המספר החסר?
+- **g4/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 125 + 380 = 380 — 125 + 380 = 505, לא 380!
+- **g4/eq_add** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לפתור משוואת חיבור עם מספר חסר עד 1,000.
+  - Source: `עכשיו אתם יודעים לפתור משוואת חיבור עם מספר חסר עד 1,000.`
+- **g4/eq_add** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: חפשו מה חסר — חסרו את המספר הידוע מהסכום!
+  - Source: `חפשו מה חסר — חסרו את המספר הידוע מהסכום!`
+- **g4/eq_sub** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: משוואת חיסור — מספר חסר (מאות)
+  - Source: `# משוואת חיסור — מספר חסר (מאות)`
+- **g4/eq_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: היום נפתור משוואת חיסור עם מספר חסר — למשל __ − 45 = 120.
+- **g4/eq_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser, tsarich
+  - Visible: צריך למצוא את המספר הגדול — ממנו מחסרים.
+- **g4/eq_sub** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: כלל: מספר חסר לפני המינוס = חיבור של התוצאה והמחוסר.
+- **g4/eq_sub** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: שאלה: __ − 38 = 142 — מה המספר החסר?
+- **g4/eq_sub** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 180.
+- **g4/eq_sub** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: __ − 45 = 120 — מה המספר החסר?
+- **g4/eq_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ __ = 75 — 75 − 45 = 30, לא 120!
+- **g4/eq_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: זכרו: מספר חסר לפני המינוס → חברו את שני המספרים האחרים!
+- **g4/eq_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לפתור משוואת חיסור עם מספר חסר עד 1,000.
+  - Source: `עכשיו אתם יודעים לפתור משוואת חיסור עם מספר חסר עד 1,000.`
+- **g4/est_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/est_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 487 + 512 ≈ 900 — עיגלו 487 ל-400 במקום 500!
+- **g4/est_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/est_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 48 × 51 ≈ 99 — חיברו במקום לכפול!
+- **g4/est_quantity** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/est_quantity.md`
+  - Patterns: tsarich
+  - Visible: היום נלמד להעריך כמות — כשאי אפשר (או לא צריך) לספור בדיוק.
+- **g4/est_quantity** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/est_quantity.md`
+  - Patterns: x_mark
+  - Visible: ❌ 987 ≈ 900 — 987 רחוק מ-900 יותר מאשר מ-1,000!
+- **g4/power_base** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/power_base.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10³ = 30 — זה 10 × 3, לא 10 × 10 × 10!
+- **g4/power_calc** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/power_calc.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2⁵ = 10 — זה 2 × 5, לא חמישה גורמים של 2!
+- **g4/power_calc** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/power_calc.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2⁵ = 8 — זה 2³, לא 2⁵!
+- **g4/wp_comparison_more** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/wp_comparison_more.md`
+  - Patterns: tsarich
+  - Visible: צריך הפרש — גדול פחות קטן.
+- **g4/wp_comparison_more** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: מה עושים? מחסרים: גדול − קטן
+- **g4/wp_comparison_more** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/wp_comparison_more.md`
+  - Patterns: x_mark
+  - Visible: ❌ 214 — "יותר" = הפרש, לא סכום!
+- **g4/wp_comparison_more** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: זכרו: "כמה יותר?" → מחסרים (גדול − קטן).
+- **g4/wp_leftover** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/wp_leftover.md`
+  - Patterns: x_mark
+  - Visible: ❌ 6 — זה מספר הקבוצות המלאות, לא השארית!
+- **g4/wp_time_sum** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g4/drafts/wp_time_sum.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10 — זה הפרש בין שני המשכים, לא סכום!
+- **g5/ns_place_hundreds** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_place_hundreds.md`
+  - Patterns: x_mark
+  - Visible: ❌ 48,726 → 6 אלפים — 6 היא ספרת אחדות, לא אלפים!
+  - Source: `❌ 48,726 → 6 אלפים — 6 היא ספרת אחדות, לא אלפים!`
+- **g5/ns_neighbors** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_neighbors.md`
+  - Patterns: x_mark
+  - Visible: ❌ שלפני 45,600 → 45,500 — ירדו 100, לא 1!
+- **g5/ns_complement100** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_complement100.md`
+  - Patterns: tsarich
+  - Visible: היום נראה איך זוגות ל-100 עוזרים גם באומדן — כשלא צריך תשובה מדויקת, אלא קרובה.
+- **g5/ns_complement100** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: משלימים ל-100 = בסיס לחשיבה על "כמה חסר ל-100" — גם באומדן.
+- **g5/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: שאלה: 37 + ? = 100 — מה המספר החסר?
+- **g5/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 63.
+- **g5/ns_complement100** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: 37 + ? = 100 — מה המספר החסר?
+- **g5/ns_complement100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/ns_complement100.md`
+  - Patterns: x_mark
+  - Visible: ❌ 37 + 73 = 110 — יותר מ-100!
+- **g5/cmp** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/cmp.md`
+  - Patterns: x_mark
+  - Visible: ❌ 52,390 > 52,400 — 390 קטן מ-400!
+  - Source: `❌ 52,390 > 52,400 — 390 קטן מ-400!`
+- **g5/sequence** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sequence.md`
+  - Patterns: x_mark
+  - Visible: ❌ 1,000 → 2,000 → 3,000 — הקפיצה היא 500, לא 1,000!
+- **g5/round** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/round.md`
+  - Patterns: x_mark
+  - Visible: ❌ 38,750 → 38,000 — 750 לא קובע! מסתכלים על ספרת האלפים (8).
+  - Source: `❌ 38,750 → 38,000 — 750 לא קובע! מסתכלים על ספרת האלפים (8).`
+- **g5/add_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/add_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 24,680 + 5,415 = 1,095 — חיברו בלי 20,000!
+  - Source: `❌ 24,680 + 5,415 = 1,095 — חיברו בלי 20,000!`
+- **g5/sub_two** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר מספר גדול ממספר גדול — עד 100,000.
+  - Source: `היום נלמד לחסר מספר גדול ממספר גדול — עד 100,000.`
+- **g5/sub_two** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: tsarich
+  - Visible: נפרק לפי ערך המקום ונשתמש בהשאלה כשצריך.
+  - Source: `נפרק לפי ערך המקום ונשתמש בהשאלה כשצריך.`
+- **g5/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: מחסרים אחדות — אם לא מספיק, שואלים 1 מעשרות
+  - Source: `2. מחסרים אחדות — אם לא מספיק, שואלים 1 מעשרות`
+- **g5/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: מחסרים עשרות — השאלה ממאות
+  - Source: `3. מחסרים עשרות — השאלה ממאות`
+- **g5/sub_two** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: tsarich
+  - Visible: צריך השאלה במקומות רבים — עובדים שלב אחר שלב.
+  - Source: `צריך השאלה במקומות רבים — עובדים שלב אחר שלב.`
+- **g5/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 50,000 − 12,375 = 38,000 — לא הורידו 375!
+  - Source: `❌ 50,000 − 12,375 = 38,000 — לא הורידו 375!`
+- **g5/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: זכרו: מחסרים את כל המחסר — אלפים, מאות, עשרות ואחדות.
+  - Source: `זכרו: מחסרים את כל המחסר — אלפים, מאות, עשרות ואחדות.`
+- **g5/sub_two** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/sub_two.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר מספרים עד 100,000.
+  - Source: `עכשיו אתם יודעים לחסר מספרים עד 100,000.`
+- **g5/add_three** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/add_three.md`
+  - Patterns: tsarich
+  - Visible: עובדים מאחדות — נשיאה כשצריך
+- **g5/add_three** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/add_three.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2,300 — חיברו רק שני מספרים!
+- **g5/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 25 × 36 = 75 — חישבו רק 25 × 3!
+  - Source: `❌ 25 × 36 = 75 — חישבו רק 25 × 3!`
+- **g5/div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/div.md`
+  - Patterns: x_mark
+  - Visible: ❌ 8,400 ÷ 12 = 840 — חילקו ב-10, לא ב-12!
+- **g5/div_with_remainder** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/div_with_remainder.md`
+  - Patterns: x_mark
+  - Visible: ❌ 1,247 ÷ 8 = 156 — 8 × 156 = 1,248 > 1,247!
+- **g5/div_two_digit** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/div_two_digit.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2,450 ÷ 35 = 81 — חילקו ב-30, לא ב-35!
+  - Source: `❌ 2,450 ÷ 35 = 81 — חילקו ב-30, לא ב-35!`
+- **g5/frac_reduce** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_reduce.md`
+  - Patterns: x_mark
+  - Visible: ❌ 12/18 = 2/18 — צמצמו רק מונה!
+  - Source: `❌ 12/18 = 2/18 — צמצמו רק מונה!`
+- **g5/frac_expand** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_expand.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2/3 = 8/3 — כפלו רק מונה!
+  - Source: `❌ 2/3 = 8/3 — כפלו רק מונה!`
+- **g5/frac_add_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_add_sub.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחבר ולחסר שברים עם מכנה משותף.
+  - Source: `היום נלמד לחבר ולחסר שברים עם מכנה משותף.`
+- **g5/frac_add_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_add_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3/8 + 2/8 = 5/16 — חיברו מכנים!
+  - Source: `❌ 3/8 + 2/8 = 5/16 — חיברו מכנים!`
+- **g5/frac_add_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_add_sub.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחבר ולחסר שברים.
+  - Source: `עכשיו אתם יודעים לחבר ולחסר שברים.`
+- **g5/mixed_to_frac** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/mixed_to_frac.md`
+  - Patterns: lo_nachon
+  - Visible: היום נלמד להמיר מספר מעורב לשבר לא נכון.
+  - Source: `היום נלמד להמיר מספר מעורב לשבר לא נכון.`
+- **g5/mixed_to_frac** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/mixed_to_frac.md`
+  - Patterns: lo_nachon
+  - Visible: 2 1/3 → שבר לא נכון:
+  - Source: `2 1/3 → שבר לא נכון:`
+- **g5/mixed_to_frac** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/mixed_to_frac.md`
+  - Patterns: lo_nachon
+  - Visible: המירו 2 1/3 לשבר לא נכון.
+  - Source: `המירו 2 1/3 לשבר לא נכון.`
+- **g5/mixed_to_frac** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/mixed_to_frac.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2 1/3 = 2/3 — איבדו את 2 השלמים!
+  - Source: `❌ 2 1/3 = 2/3 — איבדו את 2 השלמים!`
+- **g5/frac_to_mixed** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_to_mixed.md`
+  - Patterns: lo_nachon
+  - Visible: היום נלמד להמיר שבר לא נכון למספר מעורב.
+  - Source: `היום נלמד להמיר שבר לא נכון למספר מעורב.`
+- **g5/frac_to_mixed** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_to_mixed.md`
+  - Patterns: lo_nachon
+  - Visible: שבר לא נכון = מונה גדול או שווה למכנה.
+  - Source: `שבר לא נכון = מונה גדול או שווה למכנה.`
+- **g5/frac_to_mixed** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/frac_to_mixed.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 7/3 = 3 1/7 — 3×3=9 > 7, לא נכון!
+  - Source: `❌ 7/3 = 3 1/7 — 3×3=9 > 7, לא נכון!`
+- **g5/dec_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/dec_add.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 12.45 + 3.60 = 1605 — חסרה נקודה!
+  - Source: `❌ 12.45 + 3.60 = 1605 — חסרה נקודה!`
+- **g5/dec_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: היום נלמד לחסר מספרים עשרוניים עם שתי ספרות אחרי הנקודה.
+  - Source: `היום נלמד לחסר מספרים עשרוניים עם שתי ספרות אחרי הנקודה.`
+- **g5/dec_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/dec_sub.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 8.70 − 2.35 = 635 — חסרה נקודה!
+  - Source: `❌ 8.70 − 2.35 = 635 — חסרה נקודה!`
+- **g5/dec_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/dec_sub.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים לחסר מספרים עשרוניים.
+  - Source: `עכשיו אתם יודעים לחסר מספרים עשרוניים.`
+- **g5/eq_add** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: מוצאים את המספר החסר.
+- **g5/eq_add** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_add.md`
+  - Patterns: tsarich
+  - Visible: שואלים: מה צריך להוסיף ל-3,250 כדי להגיע ל-8,400?
+- **g5/eq_add** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: שאלה: 3,250 + __ = 8,400 — מה החסר?
+- **g5/eq_add** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: 3,250 + __ = 8,400 — מה המספר החסר?
+- **g5/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_add.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ __ = 11,650 — חיברו במקום לחסר!
+- **g5/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: זכרו: מוצאים חסר — מחסרים את הידוע מהסכום.
+- **g5/eq_add** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו משוואות עם __. חסרו כדי למצוא את החסר!
+- **g5/eq_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_sub.md`
+  - Patterns: haser, tsarich
+  - Visible: צריך למצוא את המספר החסר.
+- **g5/eq_sub** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: שאלה: __ − 1,875 = 4,200 — מה החסר?
+- **g5/eq_sub** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: __ − 1,875 = 4,200 — מה המספר החסר?
+- **g5/eq_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ __ = 2,325 — חיסרו במקום לחבר!
+- **g5/eq_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: ✓ __ = 4,200 + 1,875 = 6,075 — מחוסר = תוצאה + מחסר.
+- **g5/eq_sub** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו משוואות עם __. חברו כדי למצוא את החסר!
+- **g5/eq_mul** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: היום נלמד לפתור משוואת כפל — למצוא גורם חסר.
+  - Source: `היום נלמד לפתור משוואת כפל — למצוא גורם חסר.`
+- **g5/eq_mul** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: גורם חסר = תוצאה ÷ גורם ידוע
+  - Source: `כלל: גורם חסר = תוצאה ÷ גורם ידוע`
+- **g5/eq_mul** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: שאלה: __ × 12 = 480 — מה החסר?
+  - Source: `שאלה: __ × 12 = 480 — מה החסר?`
+- **g5/eq_mul** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: __ × 12 = 480 — מה המספר החסר?
+  - Source: `__ × 12 = 480 — מה המספר החסר?`
+- **g5/eq_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ __ = 468 — חיסרו במקום לחלק!
+  - Source: `❌ __ = 468 — חיסרו במקום לחלק!`
+- **g5/eq_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: זכרו: בכפל — גורם חסר = תוצאה ÷ גורם ידוע.
+  - Source: `זכרו: בכפל — גורם חסר = תוצאה ÷ גורם ידוע.`
+- **g5/eq_mul** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו משוואות עם גורם חסר.
+  - Source: `בתרגול תמצאו משוואות עם גורם חסר. חלקו!`
+- **g5/eq_div** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: היום נלמד לפתור משוואת חילוק — למצוא מחלק חסר.
+  - Source: `היום נלמד לפתור משוואת חילוק — למצוא מחלק חסר.`
+- **g5/eq_div** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: מחלק חסר = מחולק ÷ תוצאה
+  - Source: `כלל: מחלק חסר = מחולק ÷ תוצאה`
+- **g5/eq_div** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: 2,400 ÷ __ = 60 — מה המחלק החסר?
+  - Source: `2,400 ÷ __ = 60 — מה המחלק החסר?`
+- **g5/eq_div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_div.md`
+  - Patterns: x_mark
+  - Visible: ❌ __ = 60 — זו התוצאה, לא המחלק!
+  - Source: `❌ __ = 60 — זו התוצאה, לא המחלק!`
+- **g5/eq_div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: זכרו: מחלק חסר = מחולק ÷ תוצאה.
+  - Source: `זכרו: מחלק חסר = מחולק ÷ תוצאה.`
+- **g5/eq_div** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו משוואות עם מחלק חסר.
+  - Source: `בתרגול תמצאו משוואות עם מחלק חסר. חלקו מחולק בתוצאה!`
+- **g5/fm_factor** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/fm_factor.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ גורמים: 2, 3, 4, 6, 9, 12, 18 — חסרים 1 ו-36!
+  - Source: `❌ גורמים: 2, 3, 4, 6, 9, 12, 18 — חסרים 1 ו-36!`
+- **g5/fm_multiple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/fm_multiple.md`
+  - Patterns: x_mark
+  - Visible: ❌ 0, 7, 14… — לא מה שמבקשים בכפולות ראשונות!
+  - Source: `❌ 0, 7, 14… — לא מה שמבקשים בכפולות ראשונות!`
+- **g5/fm_gcd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/fm_gcd.md`
+  - Patterns: x_mark
+  - Visible: ❌ מ.א.ח = 45 — 45 לא מחלק את 30!
+  - Source: `❌ מ.א.ח = 45 — 45 לא מחלק את 30!`
+- **g5/fm_gcd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/fm_gcd.md`
+  - Patterns: chayav
+  - Visible: זכרו: מ.א.ח חייב לחלק את שני המספרים.
+  - Source: `זכרו: מ.א.ח חייב לחלק את שני המספרים.`
+- **g5/est_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/est_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3,487 + 2,512 = 5,999 — זו תשובה מדויקת, לא הערכה!
+  - Source: `❌ 3,487 + 2,512 = 5,999 — זו תשובה מדויקת, לא הערכה!`
+- **g5/est_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/est_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 48 × 52 ≈ 2,400 — עיגלו רק גורם אחד!
+  - Source: `❌ 48 × 52 ≈ 2,400 — עיגלו רק גורם אחד!`
+- **g5/est_quantity** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/est_quantity.md`
+  - Patterns: x_mark
+  - Visible: ❌ ≈ 1,200 — קטן פי 10 מ-12,000!
+  - Source: `❌ ≈ 1,200 — קטן פי 10 מ-12,000!`
+- **g5/perc_part_of** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/perc_part_of.md`
+  - Patterns: x_mark
+  - Visible: ❌ 25% מ-80 = 55 — חיסרו 25, לא חישבו אחוז!
+  - Source: `❌ 25% מ-80 = 55 — חיסרו 25, לא חישבו אחוז!`
+- **g5/perc_discount** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/perc_discount.md`
+  - Patterns: x_mark
+  - Visible: ❌ 150 − 20 = 130 — 20 זה 20 ₪, לא 20%!
+  - Source: `❌ 150 − 20 = 130 — 20 זה 20 ₪, לא 20%!`
+- **g5/wp_comparison_more** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_comparison_more.md`
+  - Patterns: tsarich
+  - Visible: צריך הפרש — גדול פחות קטן, לא סכום!
+- **g5/wp_comparison_more** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: מה עושים? מחסרים: גדול − קטן
+- **g5/wp_comparison_more** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_comparison_more.md`
+  - Patterns: x_mark
+  - Visible: ❌ 6,050 — "יותר" = הפרש, לא סכום!
+- **g5/wp_comparison_more** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: זכרו: "כמה יותר?" → מחסרים (גדול − קטן).
+- **g5/wp_leftover** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_leftover.md`
+  - Patterns: x_mark
+  - Visible: ❌ 8 — 8 ארגזים מלאים, לא תפוחים שנשארו!
+- **g5/wp_time_sum** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_time_sum.md`
+  - Patterns: haser
+  - Visible: כששואלים "סה״כ" או "ביחד" — מחברים, לא מחסרים!
+- **g5/wp_time_sum** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_time_sum.md`
+  - Patterns: haser
+  - Visible: ב-1:25 ו-0:45 — לפעמים מחסרים (1:25 − 0:45) כי נראה "שאלת הפרש".
+- **g5/wp_time_sum** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_time_sum.md`
+  - Patterns: x_mark
+  - Visible: ❌ 0:40 — זה כמה יותר ארוך הראשון, לא סה״כ!
+- **g5/wp_multi_step** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_multi_step.md`
+  - Patterns: x_mark
+  - Visible: ❌ 450 − 200 = 250 — נכון במקרה הזה, אבל לא תמיד אפשר לחבר!
+  - Source: `❌ 450 − 200 = 250 — נכון במקרה הזה, אבל לא תמיד אפשר לחבר!`
+- **g5/wp_distance_time** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_distance_time.md`
+  - Patterns: x_mark
+  - Visible: ❌ 63 ק״מ — חיברו במקום לכפול!
+  - Source: `❌ 63 ק״מ — חיברו במקום לכפול!`
+- **g5/wp_shop_discount** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_shop_discount.md`
+  - Patterns: x_mark
+  - Visible: ❌ 185 ₪ — 15 זה 15 ₪, לא 15%!
+  - Source: `❌ 185 ₪ — 15 זה 15 ₪, לא 15%!`
+- **g5/wp_unit_cm_to_m** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_unit_cm_to_m.md`
+  - Patterns: x_mark
+  - Visible: ❌ 250 cm = 250 מ׳ — cm קטן ממטר!
+  - Source: `❌ 250 cm = 250 מ׳ — cm קטן ממטר!`
+- **g5/wp_unit_g_to_kg** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g5/drafts/wp_unit_g_to_kg.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3,500 g = 3,500 ק״ג — גרם קטן מק״ג!
+  - Source: `❌ 3,500 g = 3,500 ק״ג — גרם קטן מק״ג!`
+- **g6/ns_place_hundreds** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ns_place_hundreds.md`
+  - Patterns: x_mark
+  - Visible: ❌ ערך הספרה 2 הוא 2 — שכחו את המקום!
+- **g6/ns_neighbors** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ns_neighbors.md`
+  - Patterns: x_mark
+  - Visible: ❌ 48,640 — חיסרו 10, לא 1!
+- **g6/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: שאלה: 63 + ? = 100 — מה המספר החסר?
+- **g6/ns_complement100** §4 בואו נפתור — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: תשובה: המספר החסר הוא 37.
+- **g6/ns_complement100** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ns_complement100.md`
+  - Patterns: haser
+  - Visible: 63 + ? = 100 — מה המספר החסר?
+- **g6/ns_complement100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ns_complement100.md`
+  - Patterns: x_mark
+  - Visible: ❌ 63 + 47 = 110 — יותר מ-100!
+- **g6/cmp** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/cmp.md`
+  - Patterns: x_mark
+  - Visible: ❌ 185,420 < 185,240 — השוו רק את 420 ו-240!
+- **g6/sequence** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/sequence.md`
+  - Patterns: haser
+  - Visible: היום נלמד לגלות את הכלל של סדרה — ואז להשלים מונחים חסרים או להמשיך קדימה.
+- **g6/sequence** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/sequence.md`
+  - Patterns: haser
+  - Visible: שלב 2 — שימוש בכלל: מחברים (או מחסירים) את אותה קפיצה כדי למצוא מונח חסר או הבא.
+- **g6/sequence** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/sequence.md`
+  - Patterns: x_mark
+  - Visible: ❌ 700, 800 — ב-550→600 הקפיצה היא 50, לא 100!
+- **g6/sequence** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/sequence.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו סדרות עם מונחים חסרים — כתבו קודם את הקפיצה!
+- **g6/round** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/round.md`
+  - Patterns: x_mark
+  - Visible: ❌ 40,000 — בדקו את הספרה הלא נכונה!
+  - Source: `❌ 40,000 — בדקו את הספרה הלא נכונה!`
+- **g6/add_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/add_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 16,315 — חיברו 5+7=12 אבל לא נשאו!
+  - Source: `❌ 16,315 — חיברו 5+7=12 אבל לא נשאו!`
+- **g6/sub_two** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/sub_two.md`
+  - Patterns: tsarich
+  - Visible: (רמז: בדקו אם צריך לשאול.)
+  - Source: `*(רמז: בדקו אם צריך לשאול.)*`
+- **g6/sub_two** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/sub_two.md`
+  - Patterns: x_mark
+  - Visible: ❌ 31,825 — לא שאלו נכון!
+  - Source: `❌ 31,825 — לא שאלו נכון!`
+- **g6/add_three** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/add_three.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 1,550 — חסר מספר שלישי!
+  - Source: `❌ 1,550 — חסר מספר שלישי!`
+- **g6/mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ 24 × 5 = 100 → 240+100=340 — טעות!
+  - Source: `❌ 24 × 5 = 100 → 240+100=340 — טעות!`
+- **g6/div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/div.md`
+  - Patterns: x_mark
+  - Visible: ❌ 1,440 ÷ 12 = 12 — 12 × 12 = 144, קטן מדי!
+- **g6/div_with_remainder** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/div_with_remainder.md`
+  - Patterns: x_mark
+  - Visible: ❌ 121 ושארית 7 — 7 × 122 = 854 > 850, ושארית 7 לא קטנה מהמחלק!
+- **g6/fm_factor** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/fm_factor.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 2, 3, 4, 6, 9, 12, 18 — חסרים 1 ו-36!
+  - Source: `❌ 2, 3, 4, 6, 9, 12, 18 — חסרים 1 ו-36!`
+- **g6/fm_multiple** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/fm_multiple.md`
+  - Patterns: x_mark
+  - Visible: ❌ 0, 8, 16… — לא מה שמבקשים בכפולות ראשונות!
+- **g6/fm_gcd** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/fm_gcd.md`
+  - Patterns: x_mark
+  - Visible: ❌ מ.א.ח = 3 — יש משותף גדול יותר!
+  - Source: `❌ מ.א.ח = 3 — יש משותף גדול יותר!`
+- **g6/eq_add** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: משוואת חיבור — מספר חסר
+  - Source: `# משוואת חיבור — מספר חסר`
+- **g6/eq_add** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: היום נפתור משוואות חיבור — מספר חסר עם מספרים גדולים.
+- **g6/eq_add** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: 150,000 + ? = 400,000 — מספר חסר בחיבור:
+- **g6/eq_add** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: כלל: חסר = סכום − ידוע — לא חיבור של שני המספרים!
+- **g6/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_add.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 6,480 — חיברו במקום לחסר!
+- **g6/eq_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_add.md`
+  - Patterns: haser
+  - Visible: זכרו: חסר = סכום − ידוע — בדקו בהחלפה!
+- **g6/eq_sub** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: משוואת חיסור — מספר חסר
+  - Source: `# משוואת חיסור — מספר חסר`
+- **g6/eq_sub** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: היום נפתור משוואות חיסור — מספר חסר עם מספרים גדולים.
+- **g6/eq_sub** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: 200,000 − ? = 175,000 — מספר חסר באמצע:
+- **g6/eq_sub** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_sub.md`
+  - Patterns: haser
+  - Visible: כלל: כשה-__ אחרי המינוס — מחסרים את התוצאה מהמחוסר.
+- **g6/eq_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ 1,725 — 5,000 − 1,725 ≠ 3,725!
+- **g6/eq_mul** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: משוואת כפל — מספר חסר
+  - Source: `# משוואת כפל — מספר חסר`
+- **g6/eq_mul** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_mul.md`
+  - Patterns: haser
+  - Visible: היום נפתור משוואות כפל — גורם חסר.
+- **g6/eq_mul** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_mul.md`
+  - Patterns: x_mark
+  - Visible: ❌ ? = 10 — כי 48×10=480, לא 576!
+  - Source: `❌ ? = 10 — כי 48×10=480, לא 576!`
+- **g6/eq_div** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: משוואת חילוק — מספר חסר
+  - Source: `# משוואת חילוק — מספר חסר`
+- **g6/eq_div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_div.md`
+  - Patterns: x_mark
+  - Visible: ❌ 768 — זה מחולק, לא מחלק!
+  - Source: `❌ 768 — זה מחולק, לא מחלק!`
+- **g6/eq_div** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: זכרו: מחלק חסר → מחולק ÷ מנה.
+- **g6/eq_div** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/eq_div.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו משוואות חילוק — זהו מה חסר!
+  - Source: `בתרגול תמצאו משוואות חילוק — זהו מה חסר!`
+- **g6/dec_add** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/dec_add.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3.85 — חיברו 45+30=75 אבל טעו בעמודות!
+  - Source: `❌ 3.85 — חיברו 45+30=75 אבל טעו בעמודות!`
+- **g6/dec_sub** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/dec_sub.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3.55 — טעות בהשאלה!
+  - Source: `❌ 3.55 — טעות בהשאלה!`
+- **g6/dec_multiply** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/dec_multiply.md`
+  - Patterns: x_mark
+  - Visible: ❌ 360 — שלם, לא עשרוני!
+  - Source: `❌ 360 — שלם, לא עשרוני!`
+- **g6/dec_multiply_10_100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/dec_multiply_10_100.md`
+  - Patterns: x_mark
+  - Visible: ❌ 0.325 — כיוון הפוך!
+  - Source: `❌ 0.325 — כיוון הפוך!`
+- **g6/dec_divide** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/dec_divide.md`
+  - Patterns: x_mark
+  - Visible: ❌ 0.4 — לא הכפילו את המחולק!
+  - Source: `❌ 0.4 — לא הכפילו את המחולק!`
+- **g6/dec_divide_10_100** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/dec_divide_10_100.md`
+  - Patterns: x_mark
+  - Visible: ❌ 456 — זה ×10, לא ÷10!
+  - Source: `❌ 456 — זה ×10, לא ÷10!`
+- **g6/dec_repeating** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/dec_repeating.md`
+  - Patterns: x_mark
+  - Visible: ❌ 0.33 — לא מדויק! 0.33 ≠ 1/3.
+  - Source: `❌ 0.33 — לא מדויק! 0.33 ≠ 1/3.`
+- **g6/frac_as_division** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/frac_as_division.md`
+  - Patterns: x_mark
+  - Visible: ❌ 4 ÷ 3 — סדר הפוך!
+  - Source: `❌ 4 ÷ 3 — סדר הפוך!`
+- **g6/frac_multiply** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/frac_multiply.md`
+  - Patterns: x_mark
+  - Visible: ❌ 5/7 — חיברו מונים ומכנים!
+  - Source: `❌ 5/7 — חיברו מונים ומכנים!`
+- **g6/frac_divide** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/frac_divide.md`
+  - Patterns: x_mark
+  - Visible: ❌ 1/2 — לא כך!
+  - Source: `❌ 1/2 — לא כך!`
+- **g6/ratio_first** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ratio_first.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2:3 — בנות:בנים, לא בנים:בנות!
+  - Source: `❌ 2:3 — בנות:בנים, לא בנים:בנות!`
+- **g6/ratio_second** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ratio_second.md`
+  - Patterns: x_mark
+  - Visible: ❌ 6:4 — לא בצורה פשוטה!
+  - Source: `❌ 6:4 — לא בצורה פשוטה!`
+- **g6/ratio_find** §— — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ratio_find.md`
+  - Patterns: haser
+  - Visible: מציאת כמות חסרה ביחס
+  - Source: `# מציאת כמות חסרה ביחס`
+- **g6/ratio_find** §1 מה לומדים? — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ratio_find.md`
+  - Patterns: haser
+  - Visible: היום נלמד למצוא כמות חסרה כשיחס ידוע.
+- **g6/ratio_find** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/ratio_find.md`
+  - Patterns: x_mark
+  - Visible: ❌ 35÷2 — לא מספר החלקים!
+  - Source: `❌ 35÷2 — לא מספר החלקים!`
+- **g6/scale_find** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/scale_find.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 1 ס״מ = 50 מ' — חסר אפס!
+  - Source: `❌ 1 ס״מ = 50 מ' — חסר אפס!`
+- **g6/scale_map_to_real** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/scale_map_to_real.md`
+  - Patterns: x_mark
+  - Visible: ❌ 4 × 25 = 100 מ' — שכחו 000!
+  - Source: `❌ 4 × 25 = 100 מ' — שכחו 000!`
+- **g6/scale_real_to_map** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/scale_real_to_map.md`
+  - Patterns: x_mark
+  - Visible: ❌ 2 × 500 = 1,000 ס״מ — כיוון הפוך!
+  - Source: `❌ 2 × 500 = 1,000 ס״מ — כיוון הפוך!`
+- **g6/perc_part_of** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/perc_part_of.md`
+  - Patterns: x_mark
+  - Visible: ❌ 250 ÷ 40 — סדר הפוך!
+  - Source: `❌ 250 ÷ 40 — סדר הפוך!`
+- **g6/perc_discount** §5 נסו בעצמכם — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/perc_discount.md`
+  - Patterns: haser
+  - Visible: (רמז: חשבו הנחה, ואז חסרו.)
+  - Source: `*(רמז: חשבו הנחה, ואז חסרו.)*`
+- **g6/perc_discount** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/perc_discount.md`
+  - Patterns: x_mark
+  - Visible: ❌ 180 − 20 = 160 — 20 ש״ח ≠ 20%!
+  - Source: `❌ 180 − 20 = 160 — 20 ש״ח ≠ 20%!`
+- **g6/wp_comparison_more** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: לא מחברים — מחסרים!
+- **g6/wp_comparison_more** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_comparison_more.md`
+  - Patterns: x_mark
+  - Visible: ❌ 12,450 + 9,875 — זה סה״כ, לא הפרש!
+- **g6/wp_comparison_more** §7 בואו נתרגל — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_comparison_more.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו כמה יותר? — חסרו את הקטן מהגדול!
+- **g6/wp_leftover** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_leftover.md`
+  - Patterns: x_mark
+  - Visible: ❌ 141 — מספר ארגזים מלאים, לא חפיסות שנשארו!
+- **g6/wp_time_sum** §2 הסבר — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_time_sum.md`
+  - Patterns: chayav
+  - Visible: 3. בדיקה — התוצאה חייבת להיות בפורמט חוקי (דקות 0–59).
+- **g6/wp_time_sum** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_time_sum.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3:65 — 65 דקות לא חוקי בפורמט שעות:דקות!
+- **g6/wp_distance_time** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_distance_time.md`
+  - Patterns: x_mark
+  - Visible: ❌ 60 ÷ 2 = 30 — זה מהירות, לא מרחק!
+  - Source: `❌ 60 ÷ 2 = 30 — זה מהירות, לא מרחק!`
+- **g6/wp_shop_discount** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_shop_discount.md`
+  - Patterns: x_mark
+  - Visible: ❌ 150 − 15 = 135 — לא 15%!
+  - Source: `❌ 150 − 15 = 135 — לא 15%!`
+- **g6/wp_unit_cm_to_m** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_unit_cm_to_m.md`
+  - Patterns: x_mark
+  - Visible: ❌ 35,000 — כיוון הפוך!
+  - Source: `❌ 35,000 — כיוון הפוך!`
+- **g6/wp_unit_g_to_kg** §6 שימו לב! — **MATH_EXPECTED**
+  - File: `docs/learning-book/math/g6/drafts/wp_unit_g_to_kg.md`
+  - Patterns: x_mark
+  - Visible: ❌ 25 ק״ג — חילקו ב-100 במקום 1,000!
+  - Source: `❌ 25 ק״ג — חילקו ב-100 במקום 1,000!`
+
+### geometry (90)
+
+- **g1/shapes_basic_square** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g1/drafts/shapes_basic_square.md`
+  - Patterns: x_mark
+  - Visible: ❌ צורה עם 4 צלעות — שתיים ארוכות ושתיים קצרות — זה לא ריבוע!
+  - Source: `❌ צורה עם 4 צלעות — שתיים ארוכות ושתיים קצרות — זה לא ריבוע!`
+- **g1/shapes_basic_rectangle** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g1/drafts/shapes_basic_rectangle.md`
+  - Patterns: x_mark
+  - Visible: ❌ דלת עם אורך ורוחב שונים — זה לא ריבוע!
+  - Source: `❌ דלת עם אורך ורוחב שונים — זה לא ריבוע!`
+- **g1/transformations** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g1/drafts/transformations.md`
+  - Patterns: x_mark
+  - Visible: ❌ קיפול הפרפר — זו לא הזזה! הצורה לא רק עברה מקום — היא כמו מראה.
+  - Source: `❌ קיפול הפרפר — זו לא הזזה! הצורה לא רק עברה מקום — היא כמו מראה.`
+- **g2/solids** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g2/drafts/solids.md`
+  - Patterns: x_mark
+  - Visible: ❌ קופסה עם 6 פאות ריבועיות שוות — זו לא תיבה!
+  - Source: `❌ קופסה עם 6 פאות ריבועיות שוות — זו לא תיבה!`
+- **g2/square_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g2/drafts/square_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ שטח = 4 — רק צלע אחת!
+- **g2/transformations** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g2/drafts/transformations.md`
+  - Patterns: x_mark
+  - Visible: ❌ מדבקה במראה — זו לא הזזה! המראה הופכת ימין ושמאל.
+  - Source: `❌ מדבקה במראה — זו לא הזזה! המראה הופכת ימין ושמאל.`
+- **g3/triangles** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/triangles.md`
+  - Patterns: x_mark
+  - Visible: ❌ צלעות 3, 3, 5 — זה לא משולש שווה צלעות! רק שתי צלעות שוות.
+  - Source: `❌ צלעות 3, 3, 5 — זה לא משולש שווה צלעות! רק שתי צלעות שוות.`
+- **g3/quadrilaterals** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/quadrilaterals.md`
+  - Patterns: x_mark
+  - Visible: ❌ דלת עם רוחב ≠ גובה — לא ריבוע!
+- **g3/parallel_perpendicular** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/parallel_perpendicular.md`
+  - Patterns: x_mark
+  - Visible: ❌ מאונכים = נפגשים ב-90° — במסילה לא נפגשים!
+- **g3/square_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/square_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ שטח = 5 — רק צלע אחת!
+- **g3/square_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/square_perimeter.md`
+  - Patterns: x_mark
+  - Visible: ❌ 36 סמ״ר — שטח, לא היקף!
+- **g3/triangle_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/triangle_perimeter.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ היקף = 7 — חסרה צלע 5!
+- **g3/triangle_angles** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/triangle_angles.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ 60° > 70° — לא נכון! 70 > 60.
+- **g3/rotation** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/rotation.md`
+  - Patterns: x_mark
+  - Visible: ❌ 180° — זה חצי סיבוב, לא רבע!
+  - Source: `❌ 180° — זה חצי סיבוב, לא רבע!`
+- **g3/solids** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g3/drafts/solids.md`
+  - Patterns: x_mark
+  - Visible: ❌ 6 קדקודים — זה מספר הפאות, לא הקדקודים!
+  - Source: `❌ 6 קדקודים — זה מספר הפאות, לא הקדקודים!`
+- **g4/shapes_basic_properties_square** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/shapes_basic_properties_square.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ "לריבוע יש 2 צלעות" — חסרות הצלעות הצדדיות!
+  - Source: `❌ "לריבוע יש 2 צלעות" — חסרות הצלעות הצדדיות!`
+- **g4/shapes_basic_properties_rectangle** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/shapes_basic_properties_rectangle.md`
+  - Patterns: chayav
+  - Visible: לחשוב שבמלבן כל 4 הצלעות חייבות להיות שוות.
+  - Source: `קל לטעות: לחשוב שבמלבן כל 4 הצלעות חייבות להיות שוות.`
+- **g4/shapes_basic_properties_rectangle** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/shapes_basic_properties_rectangle.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מלבן 5×2 — כל הצלעות 5" — רק זוג אחד הוא 5!
+  - Source: `❌ "מלבן 5×2 — כל הצלעות 5" — רק זוג אחד הוא 5!`
+- **g4/shapes_basic_properties_angles** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/shapes_basic_properties_angles.md`
+  - Patterns: x_mark
+  - Visible: ❌ "בריבוע זווית אחת 90°" — יש 4 פינות!
+  - Source: `❌ "בריבוע זווית אחת 90°" — יש 4 פינות!`
+- **g4/symmetry** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/symmetry.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ "לריבוע 2 צירים" — חסרים 2 צירי האלכסון!
+  - Source: `❌ "לריבוע 2 צירים" — חסרים 2 צירי האלכסון!`
+- **g4/quadrilaterals** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/quadrilaterals.md`
+  - Patterns: x_mark
+  - Visible: ❌ 3 ו-7 שונים — מלבן, לא ריבוע!
+- **g4/parallel_perpendicular** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/parallel_perpendicular.md`
+  - Patterns: x_mark
+  - Visible: ❌ עליונה + ימנית — מאונכות (90°), לא מקבילות!
+- **g4/square_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/square_perimeter.md`
+  - Patterns: x_mark
+  - Visible: ❌ 64 סמ״ר — שטח, לא היקף!
+- **g4/square_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/square_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ שטח = 7 — רק צלע!
+- **g4/triangle_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/triangle_perimeter.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 11 — חסרה צלע 7!
+- **g4/triangle_perimeter** §7 בואו נתרגל — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/triangle_perimeter.md`
+  - Patterns: haser
+  - Visible: בתרגול חברו שלוש צלעות — בדקו שלא חסרה אף אחת!
+  - Source: `בתרגול חברו שלוש צלעות — בדקו שלא חסרה אף אחת!`
+- **g4/triangle_angles** §1 מה לומדים? — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: אם יודעים שתי זוויות — אפשר למצוא את השלישית, החסרה.
+- **g4/triangle_angles** §2 הסבר — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: זווית חסרה = 180° − (זווית1 + זווית2)
+  - Source: `**זווית חסרה = 180° − (זווית1 + זווית2)**`
+- **g4/triangle_angles** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/triangle_angles.md`
+  - Patterns: x_mark
+  - Visible: ❌ 135° — חיברתם רק זווית אחת!
+- **g4/triangle_angles** §7 בואו נתרגל — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים למצוא זווית חסרה במשולש בכיתה ד׳ בגאומטריה.
+  - Source: `עכשיו אתם יודעים למצוא זווית חסרה במשולש בכיתה ד׳ בגאומטריה.`
+- **g4/triangle_angles** §7 בואו נתרגל — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו שתי זוויות ידועות — חברו אותן וחסרו מ-180°!
+  - Source: `בתרגול תמצאו שתי זוויות ידועות — חברו אותן וחסרו מ-180°!`
+- **g4/diagonal_square** §2 הסבר — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/diagonal_square.md`
+  - Patterns: chayav
+  - Visible: בכיתה ד׳ משווים לאורך הצלע — לא חייבים נוסחת שורש.
+  - Source: `בכיתה ד׳ משווים לאורך הצלע — לא חייבים נוסחת שורש.`
+- **g4/diagonal_square** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/diagonal_square.md`
+  - Patterns: x_mark
+  - Visible: ❌ "אלכסון = 6" — האלכסון ארוך יותר מצלע 6!
+  - Source: `❌ "אלכסון = 6" — האלכסון ארוך יותר מצלע 6!`
+- **g4/diagonal_rectangle** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/diagonal_rectangle.md`
+  - Patterns: x_mark
+  - Visible: ❌ 7 — זה סכום הצלעות, לא אורך האלכסון!
+  - Source: `❌ 7 — זה סכום הצלעות, לא אורך האלכסון!`
+- **g4/solids** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/solids.md`
+  - Patterns: x_mark
+  - Visible: ❌ 4 פאות — זה מלבן על דף, לא תיבה במרחב!
+  - Source: `❌ 4 פאות — זה מלבן על דף, לא תיבה במרחב!`
+- **g4/rectangular_prism_volume** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g4/drafts/rectangular_prism_volume.md`
+  - Patterns: x_mark
+  - Visible: ❌ 12 מחיבור — זה לא נפח!
+- **g5/parallel_perpendicular** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/parallel_perpendicular.md`
+  - Patterns: x_mark
+  - Visible: ❌ AB = CD — אורך שווה ≠ מקביל!
+- **g5/quadrilaterals** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/quadrilaterals.md`
+  - Patterns: x_mark
+  - Visible: ❌ מקבילית = 2 זוגות — לא טרפז!
+- **g5/triangle_angles** §1 מה לומדים? — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: היום נעמיק למה סכום זוויות במשולש הוא 180° — ונשתמש בזה כדי למצוא זווית חסרה.
+- **g5/triangle_angles** §4 בואו נפתור — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: שלב 2 (חסר): 180° − 130° = 50°.
+- **g5/triangle_angles** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/triangle_angles.md`
+  - Patterns: x_mark
+  - Visible: ❌ 180° − 60° = 120° — שכחו את 70°!
+- **g5/triangle_angles** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: זכרו: קודם מנמקים (130° מתוך 180°), ואז מוצאים את החסר.
+- **g5/triangle_angles** §7 בואו נתרגל — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו זווית חסרה — חברו, חסרו מ-180°, ובדקו שהסכום 180°!
+  - Source: `בתרגול תמצאו זווית חסרה — חברו, חסרו מ-180°, ו**בדקו** שהסכום 180°!`
+- **g5/square_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/square_perimeter.md`
+  - Patterns: x_mark
+  - Visible: ❌ 81 סמ״ר — שטח!
+- **g5/triangle_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/triangle_perimeter.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 11 ס״מ — רק 5 + 6, חסרה 7!
+- **g5/heights_triangle** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/heights_triangle.md`
+  - Patterns: x_mark
+  - Visible: ❌ 30 ÷ 10 = 3 ס״מ — שכחו ×2!
+  - Source: `❌ 30 ÷ 10 = 3 ס״מ — שכחו ×2!`
+- **g5/heights_parallelogram** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/heights_parallelogram.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10 ס״מ — חלוקה ב-2 לא במקבילית!
+- **g5/heights_trapezoid** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/heights_trapezoid.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ (28×2)÷5 — חסר 9 ס״מ!
+- **g5/square_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/square_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ 28 ס״מ — זה היקף, לא שטח!
+- **g5/triangle_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/triangle_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10 × 6 = 60 — זה שטח מלבן, לא משולש!
+- **g5/parallelogram_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/parallelogram_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ 8 × 6 = 48 — 6 ס״מ אינו הגובה!
+- **g5/trapezoid_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/trapezoid_area.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ (6+10)×4 = 64 סמ״ר — חסר ÷2!
+- **g5/diagonal_square** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/diagonal_square.md`
+  - Patterns: x_mark
+  - Visible: ❌ 12 ס״מ — זה 2 צלעות, לא אלכסון!
+- **g5/diagonal_rectangle** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/diagonal_rectangle.md`
+  - Patterns: x_mark
+  - Visible: ❌ 14 ס״מ — זו לא נוסחת אלכסון!
+- **g5/diagonal_parallelogram** §2 הסבר — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/diagonal_parallelogram.md`
+  - Patterns: tsarich
+  - Visible: לא ניתן למצוא אורך אלכסון רק משתי צלעות סמוכות — צריך עוד מידע:
+- **g5/diagonal_parallelogram** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/diagonal_parallelogram.md`
+  - Patterns: x_mark
+  - Visible: ❌ זו נוסחת מלבן (זוויות ישרות) — לא כלל לכל מקבילית!
+- **g5/solids** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/solids.md`
+  - Patterns: x_mark
+  - Visible: ❌ תיבה — לרוב יש פאות מלבניות לא שוות!
+- **g5/rectangular_prism_volume** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/rectangular_prism_volume.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 12 — רק שכבת בסיס, חסרות 4 שכבות נוספות!
+- **g5/tiling** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g5/drafts/tiling.md`
+  - Patterns: x_mark
+  - Visible: ❌ 360° — סכום סביב נקודה, לא זווית אריח!
+- **g6/square_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/square_perimeter.md`
+  - Patterns: x_mark
+  - Visible: ❌ 144 סמ״ר — שטח, לא היקף!
+- **g6/triangle_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/triangle_perimeter.md`
+  - Patterns: x_mark
+  - Visible: ❌ 17 ס״מ — רק 8 + 9!
+- **g6/square_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/square_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ 36 ס״מ — היקף!
+- **g6/parallelogram_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/parallelogram_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ 10 × 8 = 80 — 8 ס״מ אינו הגובה!
+- **g6/trapezoid_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/trapezoid_area.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ (8+12)×5 = 100 סמ״ר — חסר ÷2!
+- **g6/trapezoid_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/trapezoid_area.md`
+  - Patterns: chayav
+  - Visible: זכרו: (ב1+ב2)×ג נותן פי 2 יותר מדי — חייבים ÷ 2.
+- **g6/triangle_angles** §1 מה לומדים? — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: היום נפתור זווית חסרה במשולש בשלבים — עם משוואה ואות x לזווית הלא ידועה.
+- **g6/triangle_angles** §2 הסבר — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: במשולש ABC, נסמן את הזווית החסרה ב-x.
+- **g6/triangle_angles** §3 דוגמה — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: במשולש: 55°, 65° ו-x (חסרה).
+- **g6/triangle_angles** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/triangle_angles.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ x = 180° − 55° = 125° — חסרה 65° במשוואה!
+- **g6/triangle_angles** §7 בואו נתרגל — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/triangle_angles.md`
+  - Patterns: haser
+  - Visible: בכיתה ו׳ פותרים זווית חסרה עם משוואה ובדיקה.
+- **g6/circle_perimeter** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/circle_perimeter.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 15.7 — חסר ה-2 בנוסחת ההיקף.
+  - Source: `❌ 15.7 — חסר ה-2 בנוסחת ההיקף.`
+- **g6/circle_area** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/circle_area.md`
+  - Patterns: x_mark
+  - Visible: ❌ 25.12 ס״מ — זה היקף, לא שטח!
+- **g6/pythagoras_hyp** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_hyp.md`
+  - Patterns: x_mark
+  - Visible: ❌ 7 ס״מ — זו לא נוסחת פיתגורס!
+- **g6/pythagoras_leg** §1 מה לומדים? — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_leg.md`
+  - Patterns: haser
+  - Visible: היום נלמד משפט פיתגורס — מציאת ניצב חסר.
+- **g6/pythagoras_leg** §1 מה לומדים? — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_leg.md`
+  - Patterns: haser
+  - Visible: הניצב החסר² = היתר² − הניצב הידוע²
+  - Source: `הניצב החסר² = היתר² − הניצב הידוע²`
+- **g6/pythagoras_leg** §2 הסבר — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_leg.md`
+  - Patterns: haser
+  - Visible: מבודדים את הריבוע של הניצב החסר:
+  - Source: `מבודדים את הריבוע של הניצב החסר:`
+- **g6/pythagoras_leg** §2 הסבר — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_leg.md`
+  - Patterns: haser
+  - Visible: 3. שורש = הניצב החסר
+- **g6/pythagoras_leg** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_leg.md`
+  - Patterns: x_mark
+  - Visible: ❌ 25 ס״מ — זו לא הנוסחה!
+- **g6/pythagoras_leg** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_leg.md`
+  - Patterns: haser
+  - Visible: זכרו: מחסרים ריבועים, לא מחברים צלעות.
+- **g6/pythagoras_leg** §7 בואו נתרגל — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pythagoras_leg.md`
+  - Patterns: haser
+  - Visible: ניצב חסר = √(c² − a²).
+  - Source: `ניצב חסר = √(c² − a²).`
+- **g6/solids** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/solids.md`
+  - Patterns: x_mark
+  - Visible: ❌ פירמידה — בסיס מצולע, לא עיגול!
+- **g6/rectangular_prism_volume** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/rectangular_prism_volume.md`
+  - Patterns: x_mark
+  - Visible: ❌ 20 סמ״ר — רק פאה אחת!
+- **g6/rectangular_prism_volume** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/rectangular_prism_volume.md`
+  - Patterns: chayav
+  - Visible: זכרו: נפח = a × b × h — חייבים את הגובה (6) בכפל.
+- **g6/prism_volume_rectangular** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/prism_volume_rectangular.md`
+  - Patterns: x_mark
+  - Visible: ❌ 6 × 10 = 60 — רק צלע × גובה, לא שטח בסיס!
+- **g6/prism_volume_triangle** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/prism_volume_triangle.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 6 × 4 × 10 = 240 — חסר ÷2!
+  - Source: `❌ 6 × 4 × 10 = 240 — חסר ÷2!`
+- **g6/pyramid_volume_square** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pyramid_volume_square.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 36 × 9 = 324 — חסר ⅓!
+- **g6/pyramid_volume_rectangular** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/pyramid_volume_rectangular.md`
+  - Patterns: x_mark
+  - Visible: ❌ 216 — זה 3 פעמים הנפח!
+- **g6/cylinder_volume** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/cylinder_volume.md`
+  - Patterns: x_mark
+  - Visible: ❌ 188.4 — זו נוסחת היקף×גובה, לא נפח!
+- **g6/cone_volume** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/cone_volume.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ 3.14 × 9 × 9 = 254.34 — חסר שליש!
+- **g6/sphere_volume** §6 שימו לב! — **GEOMETRY_EXPECTED**
+  - File: `docs/learning-book/geometry/g6/drafts/sphere_volume.md`
+  - Patterns: x_mark
+  - Visible: ❌ 28.26 — זה π×r² (שטח), לא נפח!
+
+### science (61)
+
+- **g1/body** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g1/drafts/body.md`
+  - Patterns: x_mark
+  - Visible: ❌ "אני שומע בצבעים" — שמיעה היא באוזניים, לא בעיניים.
+  - Source: `❌ "אני שומע בצבעים" — שמיעה היא באוזניים, לא בעיניים.`
+- **g1/animals** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/animals.md`
+  - Patterns: tsarich
+  - Visible: העץ גדל וצריך מים ואור — גם הוא חי (צמח).
+  - Source: `העץ גדל וצריך מים ואור — גם הוא חי (צמח).`
+- **g1/animals** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/animals.md`
+  - Patterns: tsarich
+  - Visible: מה הוא צריך כדי לחיות?
+  - Source: `מה הוא צריך כדי לחיות?`
+- **g1/animals** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g1/drafts/animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ "רק מה שזז הוא חי" — גם עץ חי גם כשהוא לא זז.
+  - Source: `❌ "רק מה שזז הוא חי" — גם עץ חי גם כשהוא לא זז.`
+- **g1/animals** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/animals.md`
+  - Patterns: tsarich
+  - Visible: ✓ כלב — חי, צריך מזון, מים ואוויר.
+  - Source: `✓ כלב — חי, צריך מזון, מים ואוויר.`
+- **g1/animals** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/animals.md`
+  - Patterns: tsarich
+  - Visible: זכרו: חי = גדל, נושם, צריך מזון ומים.
+  - Source: `זכרו: חי = גדל, נושם, צריך מזון ומים.`
+- **g1/plants** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: צמח צריך שלושה דברים כדי לחיות ולגדול:
+  - Source: `צמח צריך שלושה דברים כדי לחיות ולגדול:`
+- **g1/plants** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: שאלה: מה הצמח צריך כדי לגדול?
+  - Source: `שאלה: מה הצמח צריך כדי לגדול?`
+- **g1/plants** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: צמח צריך מים.
+  - Source: `רמז: צמח צריך מים.`
+- **g1/plants** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: לפעמים חושבים שצמח צריך רק מים.
+  - Source: `לפעמים חושבים שצמח צריך רק מים.`
+- **g1/plants** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g1/drafts/plants.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק מים — בלי שמש הצמח לא יגדל טוב.
+  - Source: `❌ רק מים — בלי שמש הצמח לא יגדל טוב.`
+- **g1/plants** §7 בואו נתרגל — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: בתרגול חפשו שאלות על שורש, עלה ומה צמח צריך.
+  - Source: `בתרגול חפשו שאלות על שורש, עלה ומה צמח צריך.`
+- **g1/materials** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g1/drafts/materials.md`
+  - Patterns: x_mark
+  - Visible: ❌ "הספוג קשה" — ספוג רך, לא קשה כמו אבן.
+  - Source: `❌ "הספוג קשה" — ספוג רך, לא קשה כמו אבן.`
+- **g1/earth_space** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g1/drafts/earth_space.md`
+  - Patterns: x_mark
+  - Visible: ❌ "בלילה השמש מאירה חזק" — בלילה חשוך, השמש בצד השני של כדור הארץ.
+  - Source: `❌ "בלילה השמש מאירה חזק" — בלילה חשוך, השמש בצד השני של כדור הארץ.`
+- **g1/environment** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g1/drafts/environment.md`
+  - Patterns: tsarich
+  - Visible: שאלה: איפה צריך לזרוק עטיפת חטיף?
+  - Source: `שאלה: איפה צריך לזרוק עטיפת חטיף?`
+- **g1/environment** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g1/drafts/environment.md`
+  - Patterns: x_mark
+  - Visible: ❌ פסולת על הרצפה — מלכלכת את הכיתה והסביבה.
+  - Source: `❌ פסולת על הרצפה — מלכלכת את הכיתה והסביבה.`
+- **g2/body** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g2/drafts/body.md`
+  - Patterns: tsarich
+  - Visible: גוף בריא צריך הרגלים טובים:
+  - Source: `גוף בריא צריך הרגלים טובים:`
+- **g2/body** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g2/drafts/body.md`
+  - Patterns: x_mark
+  - Visible: ❌ ידיים מלוכלכות לפני אוכל — עלול להרגיש לא טוב.
+  - Source: `❌ ידיים מלוכלכות לפני אוכל — עלול להרגיש לא טוב.`
+- **g2/animals** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g2/drafts/animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ כלב וחתול — נולדים כגור, לא בביצה.
+  - Source: `❌ כלב וחתול — נולדים כגור, לא בביצה.`
+- **g2/plants** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g2/drafts/plants.md`
+  - Patterns: haser
+  - Visible: היום נלמד במדעים איך צמח גדל מזרע — ומה קורה כשחסר מים.
+  - Source: `היום נלמד במדעים איך צמח גדל מזרע — ומה קורה כשחסר מים.`
+- **g2/plants** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g2/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: צמח צריך שמש, מים ואדמה.
+  - Source: `צמח צריך שמש, מים ואדמה.`
+- **g2/plants** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g2/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: שלב 1: זרע צריך מים כדי לנבוט.
+  - Source: `שלב 1: זרע צריך מים כדי לנבוט.`
+- **g2/plants** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g2/drafts/plants.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק מים — בלי אור הצמח חלש.
+  - Source: `❌ רק מים — בלי אור הצמח חלש.`
+- **g2/plants** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g2/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: זכרו: זרע → צמח — צריך תנאים טובים.
+  - Source: `זכרו: זרע → צמח — צריך תנאים טובים.`
+- **g2/materials** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g2/drafts/materials.md`
+  - Patterns: x_mark
+  - Visible: ❌ קרח ומים — אותו חומר, מצב שונה.
+  - Source: `❌ קרח ומים — אותו חומר, מצב שונה.`
+- **g2/earth_space** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g2/drafts/earth_space.md`
+  - Patterns: x_mark
+  - Visible: ❌ הירח — מואר מהשמש; אורו חלש בלילה.
+  - Source: `❌ הירח — מואר מהשמש; אורו חלש בלילה.`
+- **g2/environment** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g2/drafts/environment.md`
+  - Patterns: x_mark
+  - Visible: ❌ אם כולם קוטפים — פחות מזון לחרקים ולציפורים.
+  - Source: `❌ אם כולם קוטפים — פחות מזון לחרקים ולציפורים.`
+- **g2/experiments** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g2/drafts/experiments.md`
+  - Patterns: x_mark
+  - Visible: ❌ מים שונים ואור שונה — לא בדיקה הוגנת.
+  - Source: `❌ מים שונים ואור שונה — לא בדיקה הוגנת.`
+- **g3/body** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g3/drafts/body.md`
+  - Patterns: x_mark
+  - Visible: ❌ "רק השרירים צריכים אוכל" — כל הגוף, כולל המוח, משתמש באנרגיה מהמזון.
+  - Source: `❌ "רק השרירים צריכים אוכל" — כל הגוף, כולל המוח, משתמש באנרגיה מהמזון.`
+- **g3/animals** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g3/drafts/animals.md`
+  - Patterns: tsarich
+  - Visible: אם הסביבה משתנה, בעל חיים צריך התאמות מתאימות או מקום אחר.
+  - Source: `אם הסביבה משתנה, בעל חיים צריך התאמות מתאימות או מקום אחר.`
+- **g3/animals** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g3/drafts/animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ "אריה יחיה טוב בים" — אריה מותאם ליבשה, לא למים.
+  - Source: `❌ "אריה יחיה טוב בים" — אריה מותאם ליבשה, לא למים.`
+- **g3/plants** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g3/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: צמח צריך שמש, מים ואדמה טובה.
+  - Source: `צמח צריך שמש, מים ואדמה טובה.`
+- **g3/plants** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g3/drafts/plants.md`
+  - Patterns: tsarich
+  - Visible: כמות המים — גם עם אור, בלי מים הצמח לא יכול לבנות מזון כמו שצריך.
+  - Source: `ההבדל: כמות המים — גם עם אור, בלי מים הצמח לא יכול לבנות מזון כמו שצריך.`
+- **g3/plants** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g3/drafts/plants.md`
+  - Patterns: haser
+  - Visible: איזה תנאי גידול חסר?
+  - Source: `איזה תנאי גידול חסר?`
+- **g3/plants** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g3/drafts/plants.md`
+  - Patterns: x_mark
+  - Visible: ❌ "השורש אוכל את כל האדמה" — השורש שואב מים ומלחים; מזון נבנה בעלים באור.
+  - Source: `❌ "השורש אוכל את כל האדמה" — השורש שואב מים ומלחים; מזון נבנה בעלים באור.`
+- **g3/materials** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g3/drafts/materials.md`
+  - Patterns: x_mark
+  - Visible: ❌ "ללא כוח הספר נשאר מהיר" — בלי כוח דחיפה, חיכוך מאט ועוצר.
+  - Source: `❌ "ללא כוח הספר נשאר מהיר" — בלי כוח דחיפה, חיכוך מאט ועוצר.`
+- **g3/earth_space** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g3/drafts/earth_space.md`
+  - Patterns: x_mark
+  - Visible: ❌ "היום קר — האקלים כאן תמיד קר" — יום אחד = מזג אוויר, לא אקלים.
+  - Source: `❌ "היום קר — האקלים כאן תמיד קר" — יום אחד = מזג אוויר, לא אקלים.`
+- **g3/environment** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g3/drafts/environment.md`
+  - Patterns: tsarich
+  - Visible: שלב 1: צריך מקור מזון.
+  - Source: `שלב 1: צריך מקור מזון.`
+- **g3/environment** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g3/drafts/environment.md`
+  - Patterns: x_mark
+  - Visible: ❌ "נמר רע — נעדיף רק ארנבים" — בלי טורף האוכלים מתרבים יותר מדי.
+  - Source: `❌ "נמר רע — נעדיף רק ארנבים" — בלי טורף האוכלים מתרבים יותר מדי.`
+- **g3/experiments** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g3/drafts/experiments.md`
+  - Patterns: x_mark
+  - Visible: ❌ שני משתנים יחד — לא ניסוי הוגן.
+  - Source: `❌ שני משתנים יחד — לא ניסוי הוגן.`
+- **g4/body** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g4/drafts/body.md`
+  - Patterns: tsarich
+  - Visible: הגוף צריך יותר חמצן לשרירים.
+  - Source: `הגוף צריך יותר חמצן לשרירים.`
+- **g4/body** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g4/drafts/body.md`
+  - Patterns: x_mark
+  - Visible: ❌ "בולעים אוויר לקיבה לעיכול" — אוויר לריאות; מזון לעיכול.
+  - Source: `❌ "בולעים אוויר לקיבה לעיכול" — אוויר לריאות; מזון לעיכול.`
+- **g4/animals** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g4/drafts/animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ פרה שאוכלת עשב — לא טורף; היא אוכלת צמחים.
+  - Source: `❌ פרה שאוכלת עשב — לא טורף; היא אוכלת צמחים.`
+- **g4/materials** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g4/drafts/materials.md`
+  - Patterns: x_mark
+  - Visible: ❌ מוליך — מעביר חשמל; זה מסוכן ליד מכשירים מחוברים לחשמל!
+  - Source: `❌ מוליך — מעביר חשמל; זה מסוכן ליד מכשירים מחוברים לחשמל!`
+- **g4/earth_space** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g4/drafts/earth_space.md`
+  - Patterns: x_mark
+  - Visible: ❌ חימר וחול — סוגי קרקע שונים.
+  - Source: `❌ חימר וחול — סוגי קרקע שונים.`
+- **g4/environment** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g4/drafts/environment.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ מים וקרקע טובה — מוגבלים; צריך לשמור.
+  - Source: `❌ מים וקרקע טובה — מוגבלים; צריך לשמור.`
+- **g4/experiments** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g4/drafts/experiments.md`
+  - Patterns: x_mark
+  - Visible: ❌ בלי חיזוי — קשה לתכנן מה לרשום.
+  - Source: `❌ בלי חיזוי — קשה לתכנן מה לרשום.`
+- **g5/body** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g5/drafts/body.md`
+  - Patterns: x_mark
+  - Visible: ❌ בלי מידע מהעיניים/אוזניים — קשה לתפוס כדור.
+  - Source: `❌ בלי מידע מהעיניים/אוזניים — קשה לתפוס כדור.`
+- **g5/animals** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g5/drafts/animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ גורים באותה משפחה — דומים, לא עותקים זהים.
+  - Source: `❌ גורים באותה משפחה — דומים, לא עותקים זהים.`
+- **g5/materials** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g5/drafts/materials.md`
+  - Patterns: x_mark
+  - Visible: ❌ מי מלח — תערובת; ביצה על המחבת — שינוי כימי.
+  - Source: `❌ מי מלח — תערובת; ביצה על המחבת — שינוי כימי.`
+- **g5/earth_space** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g5/drafts/earth_space.md`
+  - Patterns: tsarich
+  - Visible: משאב מים תת-קרקעיים — חשוב לחקלאות; צריך לשמור ולא לשאוב יותר מדי.
+  - Source: `משאב מים תת-קרקעיים — חשוב לחקלאות; צריך לשמור ולא לשאוב יותר מדי.`
+- **g5/earth_space** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g5/drafts/earth_space.md`
+  - Patterns: x_mark
+  - Visible: ❌ רוב האזורים — יציבים; מדענים עוקבים אחרי תופעות.
+  - Source: `❌ רוב האזורים — יציבים; מדענים עוקבים אחרי תופעות.`
+- **g5/environment** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g5/drafts/environment.md`
+  - Patterns: x_mark
+  - Visible: ❌ כל פעולה קטנה — מיחזור, חיסכון — עוזרת.
+  - Source: `❌ כל פעולה קטנה — מיחזור, חיסכון — עוזרת.`
+- **g5/experiments** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g5/drafts/experiments.md`
+  - Patterns: x_mark
+  - Visible: ❌ גרף בלי נתונים — ניחוש, לא מדע.
+  - Source: `❌ גרף בלי נתונים — ניחוש, לא מדע.`
+- **g6/body** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g6/drafts/body.md`
+  - Patterns: x_mark
+  - Visible: ❌ עיכול בלי דם — המזון לא מגיע לשרירים.
+  - Source: `❌ עיכול בלי דם — המזון לא מגיע לשרירים.`
+- **g6/animals** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/science/g6/drafts/animals.md`
+  - Patterns: haser
+  - Visible: דוגמה: עשב → ארנב → נמר. אם חסר קישור — הרשת נפגעת.
+  - Source: `דוגמה: עשב → ארנב → נמר. אם חסר קישור — הרשת נפגעת.`
+- **g6/animals** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g6/drafts/animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ בלי טורפים — הרשת לא מאוזנת.
+  - Source: `❌ בלי טורפים — הרשת לא מאוזנת.`
+- **g6/materials** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g6/drafts/materials.md`
+  - Patterns: x_mark
+  - Visible: ❌ חומרי ניקוי — מסוכנים; רק עם מורה במעבדה.
+  - Source: `❌ חומרי ניקוי — מסוכנים; רק עם מורה במעבדה.`
+- **g6/earth_space** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g6/drafts/earth_space.md`
+  - Patterns: x_mark
+  - Visible: ❌ מפחידים — לא עוזר ללמוד.
+  - Source: `❌ מפחידים — לא עוזר ללמוד.`
+- **g6/environment** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g6/drafts/environment.md`
+  - Patterns: x_mark
+  - Visible: ❌ הרבה אנשים עם בחירות טובות — שינוי גדול.
+  - Source: `❌ הרבה אנשים עם בחירות טובות — שינוי גדול.`
+- **g6/experiments** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/science/g6/drafts/experiments.md`
+  - Patterns: x_mark
+  - Visible: ❌ הצגה בלי גרף — קשה להוכיח מסקנה.
+  - Source: `❌ הצגה בלי גרף — קשה להוכיח מסקנה.`
+
+### hebrew (264)
+
+- **g1/g1.phoneme_awareness** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md`
+  - Patterns: x_mark
+  - Visible: ❌ בַּת וְגַת — לא אותו צליל. ב וְג הם צלילים שונים.
+  - Source: `❌ בַּת וְגַת — לא אותו צליל. ב וְג הם צלילים שונים.`
+- **g1/g1.open_close_syllable** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md`
+  - Patterns: x_mark
+  - Visible: ❌ בַּת וְבָּ הן לא אותו דבר. בַּת היא הברה סגורה, ובָּ היא הברה פתוחה.
+  - Source: `❌ בַּת וְבָּ הן לא אותו דבר. בַּת היא הברה סגורה, ובָּ היא הברה פתוחה.`
+- **g1/g1.open_close_syllable** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md`
+  - Patterns: x_mark
+  - Visible: ❌ לבלבל בַּת עם בָּתָּה — בַּת הברה אחת סגורה; בָּ הברה פתוחה.
+  - Source: `❌ לבלבל בַּת עם בָּתָּה — בַּת הברה אחת סגורה; בָּ הברה פתוחה.`
+- **g1/g1.rhyme** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.rhyme.md`
+  - Patterns: chayav
+  - Visible: לא חייבות להיות זהות — רק להישמע דומה בסוף.
+  - Source: `לא חייבות להיות זהות — רק להישמע דומה בסוף.`
+- **g1/g1.rhyme** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.rhyme.md`
+  - Patterns: x_mark
+  - Visible: ❌ בַּיִת וְבַּר אינן חרוזות. ההתחלה דומה, אבל הסוף שונה.
+  - Source: `❌ בַּיִת וְבַּר אינן חרוזות. ההתחלה דומה, אבל הסוף שונה.`
+- **g1/g1.syllables** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.syllables.md`
+  - Patterns: x_mark
+  - Visible: ❌ שָׁלוֹם — זו לא הברה אחת. יש שתי הברות: שָׁ וְלוֹם.
+  - Source: `❌ שָׁלוֹם — זו לא הברה אחת. יש שתי הברות: שָׁ וְלוֹם.`
+- **g1/g1.letters** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.letters.md`
+  - Patterns: x_mark
+  - Visible: ❌ האות א היא אָלֶף, לא בֵּית.
+  - Source: `❌ האות א היא אָלֶף, לא בֵּית.`
+- **g1/g1.final_letters** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.final_letters.md`
+  - Patterns: x_mark
+  - Visible: ❌ בסוף מִלָּה לפעמים משתמשים באות סופית מיוחדת.
+  - Source: `❌ בסוף מִלָּה לפעמים משתמשים באות סופית מיוחדת.`
+- **g1/g1.final_letters** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.final_letters.md`
+  - Patterns: tsarich
+  - Visible: ✓ בסוף מִלָּה — בודקים אם צריך אות סופית, כמו במילה מֶלֶךְ.
+  - Source: `✓ בסוף מִלָּה — בודקים אם צריך אות סופית, כמו במילה מֶלֶךְ.`
+- **g1/g1.basic_niqqud** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md`
+  - Patterns: x_mark
+  - Visible: ❌ קָם לא קוראים קומ. הקמץ נשמע כמו אָ, לא כמו וּ.
+  - Source: `❌ קָם לא קוראים קומ. הקמץ נשמע כמו אָ, לא כמו וּ.`
+- **g1/g1.sound_letter_match** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md`
+  - Patterns: x_mark
+  - Visible: ❌ הצליל מ מתאים לאות מ, לא לאות נ.
+  - Source: `❌ הצליל מ מתאים לאות מ, לא לאות נ.`
+- **g1/g1.simple_words_read** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא קוראים רק ב ו־ת בנפרד. מחברים וקוראים בַּת.
+  - Source: `❌ לא קוראים רק ב ו־ת בנפרד. מחברים וקוראים בַּת.`
+- **g1/reading_word_level_early_g1_spelling_meaning_then_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ מַיִם אינם חיה. מַיִם שותים.
+  - Source: `❌ מַיִם אינם חיה. מַיִם שותים.`
+- **g1/g1.grammar_pos_roles** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md`
+  - Patterns: x_mark
+  - Visible: ❌ יֶלֶד הוא שם, אבל רָץ היא פעולה.
+  - Source: `❌ יֶלֶד הוא שם, אבל רָץ היא פעולה.`
+- **g1/g1.grammar_wellformed** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md`
+  - Patterns: tsarich
+  - Visible: משפט צריך להגיד משהו ברור.
+  - Source: `משפט צריך להגיד משהו ברור.`
+- **g1/g1.grammar_wellformed** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_wellformed.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ אוֹכֵל — זה לא משפט שלם. חסר מי אוכל.
+  - Source: `❌ אוֹכֵל — זה לא משפט שלם. חסר מי אוכל.`
+- **g1/g1.grammar_agreement_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_agreement_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ יַלְדָּה קָטָן — לא מתאים!
+  - Source: `❌ יַלְדָּה קָטָן — לא מתאים!`
+- **g1/g1.grammar_cloze_deixis** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_cloze_deixis.md`
+  - Patterns: x_mark
+  - Visible: ❌ הכדור לידי — שָׁם לא מתאים. לידי פירושו כָּאן, קרוב אליי.
+  - Source: `❌ הכדור לידי — שָׁם לא מתאים. לידי פירושו כָּאן, קרוב אליי.`
+- **g1/g1.grammar_word_order** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_word_order.md`
+  - Patterns: x_mark
+  - Visible: ❌ שׁוֹתֶה הַיֶּלֶד — זה לא הסדר שאנחנו מתרגלים כאן.
+  - Source: `❌ שׁוֹתֶה הַיֶּלֶד — זה לא הסדר שאנחנו מתרגלים כאן.`
+- **g1/g1.grammar_odd_category** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_odd_category.md`
+  - Patterns: x_mark
+  - Visible: ❌ תַּפּוּחַ — לא שייך לקבוצה הזאת. תַּפּוּחַ הוא פרי.
+  - Source: `❌ תַּפּוּחַ — לא שייך לקבוצה הזאת. תַּפּוּחַ הוא פרי.`
+- **g1/g1.grammar_punctuation** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_punctuation.md`
+  - Patterns: x_mark
+  - Visible: ❌ מַה שִׁמְךָ. — זו שאלה, ולכן מתאים סימן שאלה.
+  - Source: `❌ מַה שִׁמְךָ. — זו שאלה, ולכן מתאים סימן שאלה.`
+- **g1/g1.grammar_connectors_time** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md`
+  - Patterns: x_mark
+  - Visible: ❌ עכשיו אינו מָחָר. עכשיו פירושו בזמן הזה, היום.
+  - Source: `❌ עכשיו אינו מָחָר. עכשיו פירושו בזמן הזה, היום.`
+- **g1/grammar_gender_number_early_g1_agreement_girl_singular** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/grammar_gender_number_early_g1_agreement_girl_singular.md`
+  - Patterns: x_mark
+  - Visible: ❌ יַלְדָּה — זו ילדה אחת, לא שתיים.
+  - Source: `❌ יַלְדָּה — זו ילדה אחת, לא שתיים.`
+- **g1/comprehension_g1.word_meaning_concrete** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md`
+  - Patterns: x_mark
+  - Visible: ❌ רָץ אינו שם של דבר. רָץ היא פעולה.
+  - Source: `❌ רָץ אינו שם של דבר. רָץ היא פעולה.`
+- **g1/g1.one_sentence_who_what** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md`
+  - Patterns: x_mark
+  - Visible: ❌ אוֹכֵל אינו עונה על השאלה מִי. אוֹכֵל מתאר פעולה.
+  - Source: `❌ אוֹכֵל אינו עונה על השאלה מִי. אוֹכֵל מתאר פעולה.`
+- **g1/g1.simple_instruction** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.simple_instruction.md`
+  - Patterns: x_mark
+  - Visible: ❌ סְגוֹר הַדֶּלֶת — לא פותחים. סוגרים את הדלת.
+  - Source: `❌ סְגוֹר הַדֶּלֶת — לא פותחים. סוגרים את הדלת.`
+- **g1/comprehension_binary_fact_early_g1_tf_science_simple** §— — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md`
+  - Patterns: lo_nachon
+  - Visible: נכון או לא נכון
+  - Source: `# נכון או לא נכון`
+- **g1/comprehension_binary_fact_early_g1_tf_science_simple** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md`
+  - Patterns: lo_nachon
+  - Visible: היום נלמד בעברית לענות נכון או לא נכון.
+  - Source: `היום נלמד בעברית לענות נכון או לא נכון.`
+- **g1/comprehension_binary_fact_early_g1_tf_science_simple** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md`
+  - Patterns: lo_nachon
+  - Visible: הַשֶּׁמֶשׁ זורחת בלילה — לא נכון.
+  - Source: `הַשֶּׁמֶשׁ זורחת בלילה — לא נכון.`
+- **g1/comprehension_binary_fact_early_g1_tf_science_simple** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md`
+  - Patterns: lo_nachon
+  - Visible: הַשֶּׁמֶשׁ זורחת ביוֹם — נכון או לא נכון?
+  - Source: `הַשֶּׁמֶשׁ זורחת ביוֹם — נכון או לא נכון?`
+- **g1/comprehension_binary_fact_early_g1_tf_science_simple** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ שֶׁמֶשׁ בלילה — זה לא נכון במשפט הזה.
+  - Source: `❌ שֶׁמֶשׁ בלילה — זה לא נכון במשפט הזה.`
+- **g1/comprehension_binary_fact_early_g1_tf_science_simple** §7 בואו נתרגל — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/comprehension_binary_fact_early_g1_tf_science_simple.md`
+  - Patterns: lo_nachon
+  - Visible: עכשיו אתם יודעים לענות נכון או לא נכון בעברית.
+  - Source: `עכשיו אתם יודעים לענות נכון או לא נכון בעברית.`
+- **g1/vocabulary_g1.word_meaning_concrete** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md`
+  - Patterns: x_mark
+  - Visible: ❌ אָדֹם אינו פרי. אָדֹם הוא צבע.
+  - Source: `❌ אָדֹם אינו פרי. אָדֹם הוא צבע.`
+- **g1/g1.word_picture** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.word_picture.md`
+  - Patterns: x_mark
+  - Visible: ❌ אם בציור יש בית, המילה המתאימה היא בַּיִת, לא כֶּלֶב.
+  - Source: `❌ אם בציור יש בית, המילה המתאימה היא בַּיִת, לא כֶּלֶב.`
+- **g1/vocabulary_word_context_early_g1_cloze_morning** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md`
+  - Patterns: haser
+  - Visible: המילה החסרה מתאימה להקשר.
+  - Source: `המילה החסרה מתאימה להקשר.`
+- **g1/vocabulary_word_context_early_g1_cloze_morning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/vocabulary_word_context_early_g1_cloze_morning.md`
+  - Patterns: x_mark
+  - Visible: ❌ בֹּקֶר — לַיְלָה — לא מתאים!
+  - Source: `❌ בֹּקֶר — לַיְלָה — לא מתאים!`
+- **g1/g1.copy_word** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.copy_word.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ שָׁלוֹם — שָׁלֹם — חסרה אות!
+  - Source: `❌ שָׁלוֹם — שָׁלֹם — חסרה אות!`
+- **g1/g1.spell_word_choice** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md`
+  - Patterns: lo_nachon
+  - Visible: ב + ט — לא נכון.
+  - Source: `אפשרות ב: ב + ט — לא נכון.`
+- **g1/g1.spell_word_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ בַּת כותבים עם ת, לא עם ט.
+  - Source: `❌ בַּת כותבים עם ת, לא עם ט.`
+- **g1/writing_spell_word_early_ab_writing_object_riddle** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md`
+  - Patterns: x_mark
+  - Visible: ❌ שׁוֹתִים לא מתאים למילה בַּיִת.
+  - Source: `❌ שׁוֹתִים לא מתאים למילה בַּיִת.`
+- **g1/writing_spell_word_early_ab_writing_role_meaning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md`
+  - Patterns: x_mark
+  - Visible: ❌ יָפֶה אינו שם של דבר. יָפֶה מתאר איך משהו נראה.
+  - Source: `❌ יָפֶה אינו שם של דבר. יָפֶה מתאר איך משהו נראה.`
+- **g1/g1.phrase_appropriateness** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md`
+  - Patterns: tsarich
+  - Visible: הביטוי צריך להתאים למצב.
+  - Source: `הביטוי צריך להתאים למצב.`
+- **g1/g1.phrase_appropriateness** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/g1.phrase_appropriateness.md`
+  - Patterns: x_mark
+  - Visible: ❌ מקבלים מתנה — בּוֹקֶר טוֹב — לא מתאים!
+  - Source: `❌ מקבלים מתנה — בּוֹקֶר טוֹב — לא מתאים!`
+- **g1/speaking_social_reply_early_g1_bump_sorry** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md`
+  - Patterns: x_mark
+  - Visible: ❌ שותקים ולא אומרים כלום — לא מנומס!
+  - Source: `❌ שותקים ולא אומרים כלום — לא מנומס!`
+- **g1/speaking_social_reply_early_g1_bump_sorry** §7 בואו נתרגל — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md`
+  - Patterns: tsarich
+  - Visible: בתרגול תמצאו מצבים שבהם צריך לומר סְלִיחָה.
+  - Source: `בתרגול תמצאו מצבים שבהם צריך לומר סְלִיחָה. דברו בנימוס!`
+- **g2/g2.fluent_words** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.fluent_words.md`
+  - Patterns: x_mark
+  - Visible: ❌ ש־מ־ש — עצירה על כל אות במילה מוכרת.
+  - Source: `❌ ש־מ־ש — עצירה על כל אות במילה מוכרת.`
+- **g2/g2.short_sentence** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.short_sentence.md`
+  - Patterns: x_mark
+  - Visible: ❌ כלב — זו רק מילה, לא כל המשפט.
+  - Source: `❌ כלב — זו רק מילה, לא כל המשפט.`
+- **g2/g2.simple_punctuation_read** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.simple_punctuation_read.md`
+  - Patterns: x_mark
+  - Visible: ❌ מה אכלת היום — קריאה שטוחה, בלי שאלה.
+  - Source: `❌ מה אכלת היום — קריאה שטוחה, בלי שאלה.`
+- **g2/spelling_choice_niqqud** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md`
+  - Patterns: tsarich
+  - Visible: לפעמים מילה נראית דומה — צריך לבדוק איזו אות נכונה.
+  - Source: `לפעמים מילה נראית דומה — צריך לבדוק איזו אות נכונה.`
+- **g2/spelling_choice_niqqud** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/spelling_choice_niqqud.md`
+  - Patterns: x_mark
+  - Visible: ❌ שפר — אות ש במקום ס — לא המילה הנכונה.
+  - Source: `❌ שפר — אות ש במקום ס — לא המילה הנכונה.`
+- **g2/g2.pos_basic** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לזכור שמות מסובכים — רק לזהות בדוגמה.
+  - Source: `לא צריך לזכור שמות מסובכים — רק לזהות בדוגמה.`
+- **g2/g2.pos_basic** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.pos_basic.md`
+  - Patterns: x_mark
+  - Visible: ❌ רץ — זו פעולה, לא שם של דבר.
+  - Source: `❌ רץ — זו פעולה, לא שם של דבר.`
+- **g2/g2.simple_tense** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.simple_tense.md`
+  - Patterns: x_mark
+  - Visible: ❌ מחר הלכתי — מחר = עתיד, לא עבר.
+  - Source: `❌ מחר הלכתי — מחר = עתיד, לא עבר.`
+- **g2/g2.number_gender_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.number_gender_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ ילדהים — אין מילה כזו.
+  - Source: `❌ ילדהים — אין מילה כזו.`
+- **g2/agreement_boy_plural** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/agreement_boy_plural.md`
+  - Patterns: x_mark
+  - Visible: ❌ הילדים רץ — רץ מתאים ליחיד, לא לרבים.
+  - Source: `❌ הילדים רץ — רץ מתאים ליחיד, לא לרבים.`
+- **g2/g2.detail_main_idea** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.detail_main_idea.md`
+  - Patterns: x_mark
+  - Visible: ❌ בחצר — זה איפה, לא העיקר.
+  - Source: `❌ בחצר — זה איפה, לא העיקר.`
+- **g2/g2.light_inference** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.light_inference.md`
+  - Patterns: x_mark
+  - Visible: ❌ דנה אוהבת צבעים — לא כתוב ולא נובע מהמשפט.
+  - Source: `❌ דנה אוהבת צבעים — לא כתוב ולא נובע מהמשפט.`
+- **g2/g2.simple_sequence** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.simple_sequence.md`
+  - Patterns: x_mark
+  - Visible: ❌ קודם אכלתי — לא מתאים למה שכתוב.
+  - Source: `❌ קודם אכלתי — לא מתאים למה שכתוב.`
+- **g2/where_from_sentence** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/where_from_sentence.md`
+  - Patterns: x_mark
+  - Visible: ❌ נסעו לתל אביב — לא כתוב במשפט.
+  - Source: `❌ נסעו לתל אביב — לא כתוב במשפט.`
+- **g2/g2.synonyms_basic** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.synonyms_basic.md`
+  - Patterns: x_mark
+  - Visible: ❌ שמח ושמן — נשמע דומה, משמעות שונה.
+  - Source: `❌ שמח ושמן — נשמע דומה, משמעות שונה.`
+- **g2/g2.context_clue_easy** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.context_clue_easy.md`
+  - Patterns: x_mark
+  - Visible: ❌ רעב = שמח — לא קשור.
+  - Source: `❌ רעב = שמח — לא קשור.`
+- **g2/cloze_school** §— — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: מילה חסרה — בית ספר
+  - Source: `# מילה חסרה — בית ספר`
+- **g2/cloze_school** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: היום נלמד בעברית להשלים מילה חסרה — בנושא בית ספר.
+  - Source: `היום נלמד בעברית להשלים מילה חסרה — בנושא בית ספר.`
+- **g2/cloze_school** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: קוראים את המשפט ומבינים איזו מילה חסרה.
+  - Source: `קוראים את המשפט ומבינים איזו מילה חסרה.`
+- **g2/cloze_school** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: מילה חסרה — יש רווח במשפט.
+  - Source: `מילה חסרה — יש רווח במשפט.`
+- **g2/cloze_school** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: חסר:
+  - Source: `חסר: כיתה — כי נכנסים ויושבים.`
+- **g2/cloze_school** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: איזו מילה חסרה — מורה או עץ?
+  - Source: `איזו מילה חסרה — מורה או עץ?`
+- **g2/cloze_school** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: x_mark
+  - Visible: ❌ עץ — לא מתאים למשפט על בית ספר.
+  - Source: `❌ עץ — לא מתאים למשפט על בית ספר.`
+- **g2/cloze_school** §7 בואו נתרגל — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: עכשיו אתם יודעים להשלים מילה חסרה במשפט על בית ספר.
+  - Source: `עכשיו אתם יודעים להשלים מילה חסרה במשפט על בית ספר.`
+- **g2/cloze_school** §7 בואו נתרגל — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/cloze_school.md`
+  - Patterns: haser
+  - Visible: בתרגול תמצאו משפט עם מילה חסרה — ותבחרו את המילה הנכונה.
+  - Source: `בתרגול תמצאו משפט עם מילה חסרה — ותבחרו את המילה הנכונה.`
+- **g2/g2.sentence_wellformed** §3 דוגמה — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md`
+  - Patterns: x_mark
+  - Visible: ❌ אוכל תפוח הילד — סדר מבלבל.
+  - Source: `❌ אוכל תפוח הילד — סדר מבלבל.`
+- **g2/g2.sentence_wellformed** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.sentence_wellformed.md`
+  - Patterns: x_mark
+  - Visible: ❌ אוכל הילד — מבלבל.
+  - Source: `❌ אוכל הילד — מבלבל.`
+- **g2/g2.punctuation_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.punctuation_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ היום מזג האוויר יפה? — זו לא שאלה.
+  - Source: `❌ היום מזג האוויר יפה? — זו לא שאלה.`
+- **g2/g2.short_paragraph_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.short_paragraph_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ יש לי חתול. המכונית אדומה — שני נושאים.
+  - Source: `❌ יש לי חתול. המכונית אדומה — שני נושאים.`
+- **g2/object_riddle** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/object_riddle.md`
+  - Patterns: tsarich
+  - Visible: יש רמזים; צריך לחשוב ולמצוא את המילה.
+  - Source: `יש רמזים; צריך לחשוב ולמצוא את המילה.`
+- **g2/object_riddle** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/object_riddle.md`
+  - Patterns: x_mark
+  - Visible: ❌ מפתח — רק חלק מהרמזים.
+  - Source: `❌ מפתח — רק חלק מהרמזים.`
+- **g2/role_meaning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/role_meaning.md`
+  - Patterns: x_mark
+  - Visible: ❌ שחור — לא שם של דבר, אלא תיאור.
+  - Source: `❌ שחור — לא שם של דבר, אלא תיאור.`
+- **g2/g2.describe_prompt_choice** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md`
+  - Patterns: tsarich
+  - Visible: לא צריך סיפור ארוך.
+  - Source: `לא צריך סיפור ארוך.`
+- **g2/g2.describe_prompt_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.describe_prompt_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ אתמול קניתי פרח — סיפור, לא תיאור.
+  - Source: `❌ אתמול קניתי פרח — סיפור, לא תיאור.`
+- **g2/g2.situation_register** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.situation_register.md`
+  - Patterns: tsarich
+  - Visible: בבית הספר — מנומס, שקט כשצריך.
+  - Source: `בבית הספר — מנומס, שקט כשצריך.`
+- **g2/g2.situation_register** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/g2.situation_register.md`
+  - Patterns: x_mark
+  - Visible: ❌ היי — קצר מדי למורה בבוקר.
+  - Source: `❌ היי — קצר מדי למורה בבוקר.`
+- **g2/thanks_response** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g2/drafts/thanks_response.md`
+  - Patterns: x_mark
+  - Visible: ❌ תודה! (שוב) — מבלבל.
+  - Source: `❌ תודה! (שוב) — מבלבל.`
+- **g3/g3.multi_sentence** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.multi_sentence.md`
+  - Patterns: x_mark
+  - Visible: ❌ זה לא רק משפט אחד. יש עוד שני משפטים אחריו, וביחד יש שלושה משפטים.
+  - Source: `❌ זה לא רק משפט אחד. יש עוד שני משפטים אחריו, וביחד יש שלושה משפטים.`
+- **g3/g3.genre_tag_info_vs_story** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.genre_tag_info_vs_story.md`
+  - Patterns: x_mark
+  - Visible: ❌ "הכלב הוא חיית מחמד" הוא מידע, לא סיפור. אין כאן עלילה.
+  - Source: `❌ "הכלב הוא חיית מחמד" הוא מידע, לא סיפור. אין כאן עלילה.`
+- **g3/reading_sentence_read_meaning** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/reading_sentence_read_meaning.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לנחש — המשפט אומר זאת במפורש.
+  - Source: `לא צריך לנחש — המשפט אומר זאת במפורש.`
+- **g3/reading_sentence_read_meaning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/reading_sentence_read_meaning.md`
+  - Patterns: x_mark
+  - Visible: ❌ המשמעות אינה שמש. המשפט מדבר על גשם ועל כך ששיחקו בגשם.
+  - Source: `❌ המשמעות אינה שמש. המשפט מדבר על גשם ועל כך ששיחקו בגשם.`
+- **g3/g3.explicit_only** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.explicit_only.md`
+  - Patterns: x_mark
+  - Visible: ❌ אם זה לא כתוב בטקסט, לא קובעים שהמורה צעקה. אין לכך רמז בטקסט.
+  - Source: `❌ אם זה לא כתוב בטקסט, לא קובעים שהמורה צעקה. אין לכך רמז בטקסט.`
+- **g3/comprehension_passage_explicit_detail** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_passage_explicit_detail.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא מנחשים "תיק". בקטע כתוב שעון, לא תיק.
+  - Source: `❌ לא מנחשים "תיק". בקטע כתוב שעון, לא תיק.`
+- **g3/g3.cause_effect** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.cause_effect.md`
+  - Patterns: x_mark
+  - Visible: ❌ המטריה אינה הסיבה לגשם. הגשם הגיע קודם, ואז משתמשים במטריה.
+  - Source: `❌ המטריה אינה הסיבה לגשם. הגשם הגיע קודם, ואז משתמשים במטריה.`
+- **g3/comprehension_cause_effect_because** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_cause_effect_because.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא בוחרים "כי שמח". בקטע כתוב שהוא נח כי היה עייף.
+  - Source: `❌ לא בוחרים "כי שמח". בקטע כתוב שהוא נח כי היה עייף.`
+- **g3/g3.compare_light** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.compare_light.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לכתוב הרבה — משפט או שניים.
+  - Source: `לא צריך לכתוב הרבה — משפט או שניים.`
+- **g3/g3.compare_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.compare_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ "שונים" לבד לא מספיק. כדאי להסביר במה הם שונים: גבוה מול נמוך.
+  - Source: `❌ "שונים" לבד לא מספיק. כדאי להסביר במה הם שונים: גבוה מול נמוך.`
+- **g3/comprehension_passage_inference_implied** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md`
+  - Patterns: tsarich
+  - Visible: זה לא ניחוש חופשי — צריך רמזים בכתב.
+  - Source: `זה לא ניחוש חופשי — צריך רמזים בכתב.`
+- **g3/comprehension_passage_inference_implied** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_passage_inference_implied.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא מסיקים שהיה חם. בקטע יש רמזים לקור ולמעיל.
+  - Source: `❌ לא מסיקים שהיה חם. בקטע יש רמזים לקור ולמעיל.`
+- **g3/comprehension_completion_context_clue** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md`
+  - Patterns: haser
+  - Visible: המילים לפני ואחרי החסר עוזרות לבחור.
+  - Source: `המילים לפני ואחרי החסר עוזרות לבחור.`
+- **g3/comprehension_completion_context_clue** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md`
+  - Patterns: haser
+  - Visible: הקשר הוא כל מה שמסביב למילה החסרה.
+  - Source: `הקשר הוא כל מה שמסביב למילה החסרה.`
+- **g3/comprehension_completion_context_clue** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md`
+  - Patterns: haser
+  - Visible: מה חסר — שמח או עייף מאוד בלי שמח?
+  - Source: `משפט: אחרי המשחק ניצחנו, כולנו ___ וחייכנו. מה חסר — שמח או עייף מאוד בלי שמח?`
+- **g3/comprehension_completion_context_clue** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_completion_context_clue.md`
+  - Patterns: x_mark
+  - Visible: ❌ עייף — אחרי ניצחון וחייך — לא מתאים להקשר.
+  - Source: `❌ עייף — אחרי ניצחון וחייך — לא מתאים להקשר.`
+- **g3/comprehension_analogy_reasoning_parallel** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_analogy_reasoning_parallel.md`
+  - Patterns: x_mark
+  - Visible: ❌ חם ושולחן אינם יוצרים קשר מתאים כמו חם וקיץ.
+  - Source: `❌ חם ושולחן אינם יוצרים קשר מתאים כמו חם וקיץ.`
+- **g3/comprehension_binary_fact_mid_grammar_tf** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_binary_fact_mid_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: היום נתרגל בעברית לענות נכון או לא נכון לפי טקסט.
+  - Source: `היום נתרגל בעברית לענות נכון או לא נכון לפי טקסט.`
+- **g3/comprehension_binary_fact_mid_grammar_tf** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_binary_fact_mid_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: אם לא כתוב גשם — לא נכון לומר ירד גשם.
+  - Source: `אם לא כתוב גשם — לא נכון לומר ירד גשם.`
+- **g3/comprehension_binary_fact_mid_grammar_tf** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_binary_fact_mid_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: ירד גשם — לא נכון, לא כתוב.
+  - Source: `טענה: ירד גשם — לא נכון, לא כתוב.`
+- **g3/comprehension_binary_fact_mid_grammar_tf** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_binary_fact_mid_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: נכון או לא נכון?
+  - Source: `קטע: בשמש חם הילדים שיחקו. טענה: בלילה ירד שלג. נכון או לא נכון?`
+- **g3/comprehension_binary_fact_mid_grammar_tf** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_binary_fact_mid_grammar_tf.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ בחום תמיד יורד שלג — לא נכון לפי הקטע!
+  - Source: `❌ בחום תמיד יורד שלג — לא נכון לפי הקטע!`
+- **g3/comprehension_binary_fact_mid_grammar_tf** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/comprehension_binary_fact_mid_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: זכרו: נכון/לא נכון — רק לפי הטקסט.
+  - Source: `זכרו: נכון/לא נכון — רק לפי הטקסט.`
+- **g3/g3.tense_system_intro** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.tense_system_intro.md`
+  - Patterns: x_mark
+  - Visible: ❌ טיילנו אינו מתאים למחר. טיילנו קשור למה שקרה אתמול או בעבר.
+  - Source: `❌ טיילנו אינו מתאים למחר. טיילנו קשור למה שקרה אתמול או בעבר.`
+- **g3/g3.connectors** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.connectors.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ "עייפתי אבל לא ישנתי" לא מתאים כאן. צריך מילת סיבה: כי.
+  - Source: `❌ "עייפתי אבל לא ישנתי" לא מתאים כאן. צריך מילת סיבה: כי.`
+- **g3/g3.binyan_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.binyan_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ בית וביט — אותה משפחה — לא בהכרח!
+  - Source: `❌ בית וביט — אותה משפחה — לא בהכרח!`
+- **g3/grammar_morphology_binyan_fit** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/grammar_morphology_binyan_fit.md`
+  - Patterns: chayav
+  - Visible: פועל חייב להתאים לנושא:
+  - Source: `פועל חייב להתאים לנושא: הוא, היא, הם.`
+- **g3/grammar_morphology_binyan_fit** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/grammar_morphology_binyan_fit.md`
+  - Patterns: x_mark
+  - Visible: ❌ שירה היא בת, לכן מתאים: היא קוראת.
+  - Source: `❌ שירה היא בת, לכן מתאים: היא קוראת.`
+- **g3/grammar_part_of_speech_verb_noun** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/grammar_part_of_speech_verb_noun.md`
+  - Patterns: x_mark
+  - Visible: ❌ הריצה אינה פועל כאן. כאן "ריצה" היא שם.
+  - Source: `❌ הריצה אינה פועל כאן. כאן "ריצה" היא שם.`
+- **g3/grammar_gender_number_plural** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/grammar_gender_number_plural.md`
+  - Patterns: x_mark
+  - Visible: ❌ "ילדים רץ" לא מתאים. כשמדברים על ילדים, כותבים "רצים".
+  - Source: `❌ "ילדים רץ" לא מתאים. כשמדברים על ילדים, כותבים "רצים".`
+- **g3/grammar_prep_choice_collocation** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/grammar_prep_choice_collocation.md`
+  - Patterns: x_mark
+  - Visible: ❌ "הספר בשולחן" בדרך כלל לא מתאים. אומרים "הספר על השולחן".
+  - Source: `❌ "הספר בשולחן" בדרך כלל לא מתאים. אומרים "הספר על השולחן".`
+- **g3/g3.context_meaning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.context_meaning.md`
+  - Patterns: x_mark
+  - Visible: ❌ שער לא תמיד קשור למלך. בגן, שער הוא כניסה.
+  - Source: `❌ שער לא תמיד קשור למלך. בגן, שער הוא כניסה.`
+- **g3/g3.word_families** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.word_families.md`
+  - Patterns: x_mark
+  - Visible: ❌ שער ושער — לא משפחת מילים. זו אותה מילה במשמעויות שונות.
+  - Source: `❌ שער ושער — לא משפחת מילים. זו אותה מילה במשמעויות שונות.`
+- **g3/vocabulary_synonym_near_meaning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/vocabulary_synonym_near_meaning.md`
+  - Patterns: x_mark
+  - Visible: ❌ שמח ועצוב אינן מילים נרדפות. הן מילים מנוגדות.
+  - Source: `❌ שמח ועצוב אינן מילים נרדפות. הן מילים מנוגדות.`
+- **g3/vocabulary_antonym_opposite** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/vocabulary_antonym_opposite.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ גשם אינו ההפך של חם. צריך לבחור מילה שמביעה משמעות הפוכה.
+  - Source: `❌ גשם אינו ההפך של חם. צריך לבחור מילה שמביעה משמעות הפוכה.`
+- **g3/vocabulary_semantic_field_education_lexicon** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/vocabulary_semantic_field_education_lexicon.md`
+  - Patterns: x_mark
+  - Visible: ❌ מורה — פעמיים — לא רלוונטי לשדה — בדקו נושא.
+  - Source: `❌ מורה — פעמיים — לא רלוונטי לשדה — בדקו נושא.`
+- **g3/vocabulary_precision_best_word** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/vocabulary_precision_best_word.md`
+  - Patterns: x_mark
+  - Visible: ❌ שקט — אמר בקול — לא מדויק!
+  - Source: `❌ שקט — אמר בקול — לא מדויק!`
+- **g3/g3.two_three_sentences_structure** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.two_three_sentences_structure.md`
+  - Patterns: x_mark
+  - Visible: ❌ סוף — אתמול למדנו מתמטיקה — לא קשור לגשם!
+  - Source: `❌ סוף — אתמול למדנו מתמטיקה — לא קשור לגשם!`
+- **g3/g3.connector_use_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.connector_use_choice.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ "לכן" צריך להראות קשר של סיבה ותוצאה. כאן הקשר לא מתאים.
+  - Source: `❌ "לכן" צריך להראות קשר של סיבה ותוצאה. כאן הקשר לא מתאים.`
+- **g3/writing_logic_completion_conclusion** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/writing_logic_completion_conclusion.md`
+  - Patterns: chayav
+  - Visible: הסיום חייב להתחבר למה שכתבתם לפניו.
+  - Source: `הסיום חייב להתחבר למה שכתבתם לפניו.`
+- **g3/writing_logic_completion_conclusion** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/writing_logic_completion_conclusion.md`
+  - Patterns: x_mark
+  - Visible: ❌ למדנו — ואז חתול — לא סיום!
+  - Source: `❌ למדנו — ואז חתול — לא סיום!`
+- **g3/writing_structured_completion_polite_phrase** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/writing_structured_completion_polite_phrase.md`
+  - Patterns: haser
+  - Visible: שאלה: מה חסר — בבקשה או תודה?
+  - Source: `שאלה: מה חסר — בבקשה או תודה?`
+- **g3/writing_structured_completion_polite_phrase** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/writing_structured_completion_polite_phrase.md`
+  - Patterns: x_mark
+  - Visible: ❌ תן לי — בלי בבקשה — פחות מנומס.
+  - Source: `❌ תן לי — בלי בבקשה — פחות מנומס.`
+- **g3/g3.discussion_prompt_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/g3.discussion_prompt_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ כן — בלי כי — קשה להבין.
+  - Source: `❌ כן — בלי כי — קשה להבין.`
+- **g3/speaking_social_reply_mid_help_request** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/speaking_social_reply_mid_help_request.md`
+  - Patterns: tsarich
+  - Visible: גם כשצריך עזרה — אפשר לדבר יפה.
+  - Source: `גם כשצריך עזרה — אפשר לדבר יפה.`
+- **g3/speaking_social_reply_mid_help_request** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/speaking_social_reply_mid_help_request.md`
+  - Patterns: tsarich
+  - Visible: שיחה קצרה — לא צריך הרבה מילים.
+  - Source: `שיחה קצרה — לא צריך הרבה מילים.`
+- **g3/speaking_social_reply_mid_help_request** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g3/drafts/speaking_social_reply_mid_help_request.md`
+  - Patterns: tsarich
+  - Visible: שלב 2: אומרים מה צריך — עזרה.
+  - Source: `שלב 2: אומרים מה צריך — עזרה.`
+- **g3/speaking_social_reply_mid_help_request** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g3/drafts/speaking_social_reply_mid_help_request.md`
+  - Patterns: x_mark
+  - Visible: ❌ תעזור לי עכשיו — חד — פחות מנומס.
+  - Source: `❌ תעזור לי עכשיו — חד — פחות מנומס.`
+- **g4/g4.genre_mix** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.genre_mix.md`
+  - Patterns: x_mark
+  - Visible: ❌ כתבה בעיתון עם רון שדואג — עדיין סיפור, לא רק מידע.
+  - Source: `❌ כתבה בעיתון עם רון שדואג — עדיין סיפור, לא רק מידע.`
+- **g4/g4.info_lit_intro** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.info_lit_intro.md`
+  - Patterns: x_mark
+  - Visible: ❌ תגובה בלי שם — קשה לדעת אם נכון.
+  - Source: `❌ תגובה בלי שם — קשה לדעת אם נכון.`
+- **g4/meaning** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/meaning.md`
+  - Patterns: tsarich
+  - Visible: משפט אחד יכול להכיל כמה רעיונות — צריך לחבר ביניהם.
+  - Source: `משפט אחד יכול להכיל כמה רעיונות — צריך לחבר ביניהם.`
+- **g4/meaning** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/meaning.md`
+  - Patterns: tsarich
+  - Visible: שלב 2: מה צריך להביא? — נעליים, מים, מחברת.
+  - Source: `שלב 2: מה צריך להביא? — נעליים, מים, מחברת.`
+- **g4/meaning** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/meaning.md`
+  - Patterns: tsarich
+  - Visible: תשובה: טיול בקרוב — צריך להיערך.
+  - Source: `תשובה: טיול בקרוב — צריך להיערך.`
+- **g4/meaning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/meaning.md`
+  - Patterns: x_mark
+  - Visible: ❌ ספרייה — חלק קטן, בלי הסיבה.
+  - Source: `❌ ספרייה — חלק קטן, בלי הסיבה.`
+- **g4/g4.summary_intro** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.summary_intro.md`
+  - Patterns: x_mark
+  - Visible: ❌ סיכום ארוך עם כל פרט — לא סיכום.
+  - Source: `❌ סיכום ארוך עם כל פרט — לא סיכום.`
+- **g4/g4.text_structure** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.text_structure.md`
+  - Patterns: x_mark
+  - Visible: ❌ משפט אחרון עם פרט חדש גדול — אולי עדיין גוף.
+  - Source: `❌ משפט אחרון עם פרט חדש גדול — אולי עדיין גוף.`
+- **g4/detail** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/detail.md`
+  - Patterns: chayav
+  - Visible: התשובה חייבת להיות בטקסט — לא בדמיון.
+  - Source: `התשובה חייבת להיות בטקסט — לא בדמיון.`
+- **g4/detail** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/detail.md`
+  - Patterns: x_mark
+  - Visible: ❌ "בערך עשרים" — לא בטקסט.
+  - Source: `❌ "בערך עשרים" — לא בטקסט.`
+- **g4/detail** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/detail.md`
+  - Patterns: chayav
+  - Visible: זכרו: פרט — חייב להיות כתוב בטקסט.
+  - Source: `זכרו: פרט — חייב להיות כתוב בטקסט.`
+- **g4/implied** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/implied.md`
+  - Patterns: x_mark
+  - Visible: ❌ "דנה גרה בים" — לא כתוב.
+  - Source: `❌ "דנה גרה בים" — לא כתוב.`
+- **g4/because** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/because.md`
+  - Patterns: x_mark
+  - Visible: ❌ תלמידים שמחו — זו תוצאה, לא סיבה לסידור.
+  - Source: `❌ תלמידים שמחו — זו תוצאה, לא סיבה לסידור.`
+- **g4/parallel** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/parallel.md`
+  - Patterns: x_mark
+  - Visible: ❌ "שניהם ירוקים" — לא בקטע.
+  - Source: `❌ "שניהם ירוקים" — לא בקטע.`
+- **g4/tf** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/tf.md`
+  - Patterns: lo_nachon
+  - Visible: אם אין רמז — אולי לא נכון.
+  - Source: `אם אין רמז — אולי לא נכון.`
+- **g4/tf** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/tf.md`
+  - Patterns: lo_nachon
+  - Visible: לא נכון — כתוב חודש.
+  - Source: `לא נכון — כתוב חודש.`
+- **g4/tf** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/tf.md`
+  - Patterns: lo_nachon
+  - Visible: תשובה: לא נכון — אסור להדליק אש.
+  - Source: `תשובה: לא נכון — אסור להדליק אש.`
+- **g4/tf** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/tf.md`
+  - Patterns: x_mark
+  - Visible: ❌ "בדרך כלל פתוחה" — לא בטקסט.
+  - Source: `❌ "בדרך כלל פתוחה" — לא בטקסט.`
+- **g4/tf** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/tf.md`
+  - Patterns: lo_nachon
+  - Visible: ✓ מחר סגורה — לא נכון לפי המשפט בקטע.
+  - Source: `✓ מחר סגורה — לא נכון לפי המשפט בקטע.`
+- **g4/context_clue** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/context_clue.md`
+  - Patterns: haser
+  - Visible: היום נלמד להשלים מילה חסרה לפי הקשר.
+  - Source: `היום נלמד להשלים מילה חסרה לפי הקשר.`
+- **g4/context_clue** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/context_clue.md`
+  - Patterns: haser
+  - Visible: המילה החסרה:
+  - Source: `המילה החסרה: עשויים — מתאימה להקשר של כלי קדומים ושנים.`
+- **g4/context_clue** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/context_clue.md`
+  - Patterns: x_mark
+  - Visible: ❌ חם — לא קשור לגשם ושביל.
+  - Source: `❌ חם — לא קשור לגשם ושביל.`
+- **g4/g4.root_pattern_intro** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.root_pattern_intro.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ לקחת את כל המילה "מוזיאון" כשורש — לא נכון.
+  - Source: `❌ לקחת את כל המילה "מוזיאון" כשורש — לא נכון.`
+- **g4/g4.dictation_spot_error** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.dictation_spot_error.md`
+  - Patterns: x_mark
+  - Visible: ❌ להשאיר שגיאה כי "נראה בסדר" במבט מהיר.
+  - Source: `❌ להשאיר שגיאה כי "נראה בסדר" במבט מהיר.`
+- **g4/plural** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/plural.md`
+  - Patterns: x_mark
+  - Visible: ❌ חמש ילדות קורא — יחיד לא מתאים.
+  - Source: `❌ חמש ילדות קורא — יחיד לא מתאים.`
+- **g4/binyan_fit** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/binyan_fit.md`
+  - Patterns: x_mark
+  - Visible: ❌ בשנה שעברה הם מבקרים — זמן לא מתאים.
+  - Source: `❌ בשנה שעברה הם מבקרים — זמן לא מתאים.`
+- **g4/verb_noun** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/verb_noun.md`
+  - Patterns: x_mark
+  - Visible: ❌ "יערות" — שם, לא פועל.
+  - Source: `❌ "יערות" — שם, לא פועל.`
+- **g4/collocation** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/collocation.md`
+  - Patterns: x_mark
+  - Visible: ❌ עומד על כיסא — לא צירוף רגיל.
+  - Source: `❌ עומד על כיסא — לא צירוף רגיל.`
+- **g4/g4.literary_lexicon_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.literary_lexicon_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ הילדה במוזיאון — דמות, לא המחבר.
+  - Source: `❌ הילדה במוזיאון — דמות, לא המחבר.`
+- **g4/g4.idiom_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.idiom_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ אסימון נפל על הרצפה — לא בהכרח.
+  - Source: `❌ אסימון נפל על הרצפה — לא בהכרח.`
+- **g4/near_meaning** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/near_meaning.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מצחיק" במקום "מרתק" — לא אותו משמעות.
+  - Source: `❌ "מצחיק" במקום "מרתק" — לא אותו משמעות.`
+- **g4/opposite** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/opposite.md`
+  - Patterns: x_mark
+  - Visible: ❌ "ים" ו"חוף" — לא הפוכים.
+  - Source: `❌ "ים" ו"חוף" — לא הפוכים.`
+- **g4/best_word** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/best_word.md`
+  - Patterns: x_mark
+  - Visible: ❌ שיחה "טובה" — לא מדויק.
+  - Source: `❌ שיחה "טובה" — לא מדויק.`
+- **g4/education_lexicon** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/education_lexicon.md`
+  - Patterns: tsarich
+  - Visible: מה צריך להכין?
+  - Source: `שאלות: מה המורה ביקשה? מה צריך להכין?`
+- **g4/education_lexicon** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/education_lexicon.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מסיבה" — לא מילה שמתאימה לנושא הלימוד כאן.
+  - Source: `❌ "מסיבה" — לא מילה שמתאימה לנושא הלימוד כאן.`
+- **g4/g4.intro_body_conclusion_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.intro_body_conclusion_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ "ראיתי שלד" — פתאום, בלי פתיחה.
+  - Source: `❌ "ראיתי שלד" — פתאום, בלי פתיחה.`
+- **g4/g4.genre_appropriate_language** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.genre_appropriate_language.md`
+  - Patterns: x_mark
+  - Visible: ❌ "פתאום הכל נעלם" — בסיפור אולי, לא בדיווח.
+  - Source: `❌ "פתאום הכל נעלם" — בסיפור אולי, לא בדיווח.`
+- **g4/conclusion** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/conclusion.md`
+  - Patterns: x_mark
+  - Visible: ❌ חייזר — לא קשור.
+  - Source: `❌ חייזר — לא קשור.`
+- **g4/polite_phrase** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/polite_phrase.md`
+  - Patterns: x_mark
+  - Visible: ❌ "תני ספר" — לא מנומס.
+  - Source: `❌ "תני ספר" — לא מנומס.`
+- **g4/g4.present_text_based_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/g4.present_text_based_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ קריאה מהירה של כל המשפטים — לא הצגה.
+  - Source: `❌ קריאה מהירה של כל המשפטים — לא הצגה.`
+- **g4/request** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/request.md`
+  - Patterns: tsarich
+  - Visible: מה צריך — הסבר, דוגמה, זמן נוסף.
+  - Source: `מה צריך — הסבר, דוגמה, זמן נוסף.`
+- **g4/request** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/request.md`
+  - Patterns: tsarich
+  - Visible: עזרה — מה צריך; בקשה — בבקשה.)
+  - Source: `(רמז: עזרה — מה צריך; בקשה — בבקשה.)`
+- **g4/request** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g4/drafts/request.md`
+  - Patterns: tsarich
+  - Visible: לבקש בלי להגיד מה צריך — "עזרו לי" בלבד.
+  - Source: `קל לטעות: לבקש בלי להגיד מה צריך — "עזרו לי" בלבד.`
+- **g4/request** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g4/drafts/request.md`
+  - Patterns: x_mark
+  - Visible: ❌ "עזרו" — לא ברור מה.
+  - Source: `❌ "עזרו" — לא ברור מה.`
+- **g5/g5.multi_layer_read** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md`
+  - Patterns: x_mark
+  - Visible: ❌ "דנה אוכלת ארוחה" לא מתאים כאן. בטקסט יש כתיבה ושקט.
+  - Source: `❌ "דנה אוכלת ארוחה" לא מתאים כאן. בטקסט יש כתיבה ושקט.`
+- **g5/g5.position_in_text** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.position_in_text.md`
+  - Patterns: x_mark
+  - Visible: ❌ הרעיון לא מופיע בהתחלה. בהתחלה יש רק הסבר פתיחה.
+  - Source: `❌ הרעיון לא מופיע בהתחלה. בהתחלה יש רק הסבר פתיחה.`
+- **g5/reading_structural_paragraph_role** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/reading_structural_paragraph_role.md`
+  - Patterns: chayav
+  - Visible: לחשוב שכל פסקה חייבת להיות אותו אורך.
+  - Source: `קל לטעות: לחשוב שכל פסקה חייבת להיות אותו אורך.`
+- **g5/reading_structural_paragraph_role** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/reading_structural_paragraph_role.md`
+  - Patterns: x_mark, chayav
+  - Visible: ❌ פסקת סיכום לא חייבת להיות הארוכה ביותר. סיכום יכול להיות קצר.
+  - Source: `❌ פסקת סיכום לא חייבת להיות הארוכה ביותר. סיכום יכול להיות קצר.`
+- **g5/g5.inference** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.inference.md`
+  - Patterns: tsarich
+  - Visible: צריך רמז בטקסט, ואז מסקנה שמתחברת אליו.
+  - Source: `צריך רמז בטקסט, ואז מסקנה שמתחברת אליו.`
+- **g5/g5.inference** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.inference.md`
+  - Patterns: x_mark
+  - Visible: ❌ מסקנה — בטח יוסי הולך לקנות גלידה — אין רמז לגלידה!
+  - Source: `❌ מסקנה — בטח יוסי הולך לקנות גלידה — אין רמז לגלידה!`
+- **g5/g5.multiple_perspectives_light** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.multiple_perspectives_light.md`
+  - Patterns: chayav
+  - Visible: לא חייבים להסכים — רק להבין שיש יותר מזווית אחת.
+  - Source: `לא חייבים להסכים — רק להבין שיש יותר מזווית אחת.`
+- **g5/g5.multiple_perspectives_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.multiple_perspectives_light.md`
+  - Patterns: x_mark, chayav
+  - Visible: ❌ לא חייבים לומר שיוסי טועה. ייתכן שיש כאן נקודות מבט שונות.
+  - Source: `❌ לא חייבים לומר שיוסי טועה. ייתכן שיש כאן נקודות מבט שונות.`
+- **g5/comprehension_main_idea_summary** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/comprehension_main_idea_summary.md`
+  - Patterns: x_mark
+  - Visible: ❌ רעיון מרכזי — הם שיתפו סיכום אחד — זה רק פרט!
+  - Source: `❌ רעיון מרכזי — הם שיתפו סיכום אחד — זה רק פרט!`
+- **g5/comprehension_supporting_detail_evidence** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/comprehension_supporting_detail_evidence.md`
+  - Patterns: x_mark
+  - Visible: ❌ פרט תומך — ראינו סרט אתמול — לא קשור לטיול!
+  - Source: `❌ פרט תומך — ראינו סרט אתמול — לא קשור לטיול!`
+- **g5/comprehension_compare_statements_contrast** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/comprehension_compare_statements_contrast.md`
+  - Patterns: x_mark, chayav
+  - Visible: ❌ ניגוד לא חייב להיות רק בין דמויות. כאן משווים בין שני משפטים בטקסט.
+  - Source: `❌ ניגוד לא חייב להיות רק בין דמויות. כאן משווים בין שני משפטים בטקסט.`
+- **g5/comprehension_implicit_tone_attitude** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/comprehension_implicit_tone_attitude.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא קובעים שהטון דואג רק בגלל שדנה צוחקת. בודקים את הטון של כל הטקסט.
+  - Source: `❌ לא קובעים שהטון דואג רק בגלל שדנה צוחקת. בודקים את הטון של כל הטקסט.`
+- **g5/comprehension_reference_pronoun** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/comprehension_reference_pronoun.md`
+  - Patterns: tsarich
+  - Visible: צריך לחזור אחורה ולמצוא את השם.
+  - Source: `צריך לחזור אחורה ולמצוא את השם.`
+- **g5/comprehension_reference_pronoun** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/comprehension_reference_pronoun.md`
+  - Patterns: x_mark
+  - Visible: ❌ "הוא" לא מתייחס לספר. דני הוא זה שפותח.
+  - Source: `❌ "הוא" לא מתייחס לספר. דני הוא זה שפותח.`
+- **g5/comprehension_sequence_order** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/comprehension_sequence_order.md`
+  - Patterns: x_mark
+  - Visible: ❌ קודם מצאו שביל — לפני שהגיעו — לא הגיוני!
+  - Source: `❌ קודם מצאו שביל — לפני שהגיעו — לא הגיוני!`
+- **g5/g5.syntax_agreement** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.syntax_agreement.md`
+  - Patterns: lo_nachon
+  - Visible: לא נכון:
+  - Source: `לא נכון: הילדים משחק בחצר.`
+- **g5/g5.syntax_agreement** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.syntax_agreement.md`
+  - Patterns: x_mark
+  - Visible: ❌ ילדים קטן משחקים — שם תואר לא מתאים!
+  - Source: `❌ ילדים קטן משחקים — שם תואר לא מתאים!`
+- **g5/g5.verb_patterns** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.verb_patterns.md`
+  - Patterns: x_mark
+  - Visible: ❌ "כתב" אינו בזמן הווה. "כתב" הוא פועל בזמן עבר.
+  - Source: `❌ "כתב" אינו בזמן הווה. "כתב" הוא פועל בזמן עבר.`
+- **g5/grammar_sentence_correction_choose_correct** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_choose_correct.md`
+  - Patterns: lo_nachon
+  - Visible: משפט לא נכון — משהו צורם באוזן.
+  - Source: `משפט לא נכון — משהו צורם באוזן.`
+- **g5/grammar_sentence_correction_choose_correct** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_choose_correct.md`
+  - Patterns: x_mark
+  - Visible: ❌ משפט נכון — המורה הסבירו — עדיין שגוי!
+  - Source: `❌ משפט נכון — המורה הסבירו — עדיין שגוי!`
+- **g5/grammar_sentence_correction_sv_agreement_plural** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_sv_agreement_plural.md`
+  - Patterns: chayav
+  - Visible: כשהנושא ברבים — הפועל חייב להיות ברבים.
+  - Source: `כשהנושא ברבים — הפועל חייב להיות ברבים.`
+- **g5/grammar_sentence_correction_sv_agreement_plural** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_sv_agreement_plural.md`
+  - Patterns: lo_nachon
+  - Visible: לא נכון:
+  - Source: `לא נכון: הילדים לומד בשקט.`
+- **g5/grammar_sentence_correction_sv_agreement_plural** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_sv_agreement_plural.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ כאן לא מתקנים את המילה "ספר". צריך לבדוק את הפועל במשפט.
+  - Source: `❌ כאן לא מתקנים את המילה "ספר". צריך לבדוק את הפועל במשפט.`
+- **g5/grammar_verb_agreement_plural_subject** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_verb_agreement_plural_subject.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ "הציפורים עף" לא מתאים. הנושא הוא "הציפורים", ולכן צריך פועל ברבים.
+  - Source: `❌ "הציפורים עף" לא מתאים. הנושא הוא "הציפורים", ולכן צריך פועל ברבים.`
+- **g5/grammar_tense_shift_past_present** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_tense_shift_past_present.md`
+  - Patterns: lo_nachon
+  - Visible: לא נכון:
+  - Source: `לא נכון: אתמול אני רואה סרט — בלבול זמנים.`
+- **g5/grammar_tense_shift_past_present** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_tense_shift_past_present.md`
+  - Patterns: x_mark
+  - Visible: ❌ אתמול אני לומד — לא עקבי!
+  - Source: `❌ אתמול אני לומד — לא עקבי!`
+- **g5/grammar_transform_negation** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_transform_negation.md`
+  - Patterns: lo_nachon
+  - Visible: לשים לא במקום הלא נכון.
+  - Source: `קל לטעות: לשים לא במקום הלא נכון.`
+- **g5/grammar_transform_negation** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_transform_negation.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא דני בא — סדר מבלבל!
+  - Source: `❌ לא דני בא — סדר מבלבל!`
+- **g5/grammar_binary_grammar_tf** §— — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_binary_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: נכון או לא נכון — דקדוק
+  - Source: `# נכון או לא נכון — דקדוק`
+- **g5/grammar_binary_grammar_tf** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_binary_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: נכון או לא נכון — בדיקה מהירה של דקדוק.
+  - Source: `נכון או לא נכון — בדיקה מהירה של דקדוק.`
+- **g5/grammar_binary_grammar_tf** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_binary_grammar_tf.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לתקן — רק להחליט.
+  - Source: `לא צריך לתקן — רק להחליט.`
+- **g5/grammar_binary_grammar_tf** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_binary_grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: לסמוך לא נכון כי המשפט ארוך ומבלבל.
+  - Source: `קל לטעות: לסמוך לא נכון כי המשפט ארוך ומבלבל.`
+- **g5/grammar_binary_grammar_tf** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/grammar_binary_grammar_tf.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא תקין — לא מסתפקים בכך שזה נשמע מוזר. בודקים אם הנושא והפועל מתאימים.
+  - Source: `❌ לא תקין — לא מסתפקים בכך שזה נשמע מוזר. בודקים אם הנושא והפועל מתאימים.`
+- **g5/g5.academic_starter_words** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.academic_starter_words.md`
+  - Patterns: tsarich
+  - Visible: משתמשים כשצריך, לא בכל משפט.
+  - Source: `משתמשים כשצריך, לא בכל משפט.`
+- **g5/g5.academic_starter_words** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.academic_starter_words.md`
+  - Patterns: x_mark
+  - Visible: ❌ אני אוהב פיצה. לכן, הכלב נובח — אין קשר!
+  - Source: `❌ אני אוהב פיצה. לכן, הכלב נובח — אין קשר!`
+- **g5/g5.semantic_fields** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.semantic_fields.md`
+  - Patterns: x_mark
+  - Visible: ❌ שדה טבע — שמח — שמח זה רגש!
+  - Source: `❌ שדה טבע — שמח — שמח זה רגש!`
+- **g5/vocabulary_collocation_verb_noun_fit** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g5/drafts/vocabulary_collocation_verb_noun_fit.md`
+  - Patterns: lo_nachon
+  - Visible: לא נכון:
+  - Source: `לא נכון: הוא שמר כיסא (במשמעות סוד).`
+- **g5/vocabulary_collocation_verb_noun_fit** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/vocabulary_collocation_verb_noun_fit.md`
+  - Patterns: x_mark
+  - Visible: ❌ עשה בית ספר — במקום למד בבית ספר — לא צירוף עברי!
+  - Source: `❌ עשה בית ספר — במקום למד בבית ספר — לא צירוף עברי!`
+- **g5/vocabulary_category_exclusion_odd_out** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/vocabulary_category_exclusion_odd_out.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא שייך — כי לא אוהבים תפוזים — זה דעה, לא קטגוריה!
+  - Source: `❌ לא שייך — כי לא אוהבים תפוזים — זה דעה, לא קטגוריה!`
+- **g5/vocabulary_context_fit_register** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/vocabulary_context_fit_register.md`
+  - Patterns: x_mark
+  - Visible: ❌ מכתב — יאללה — לא מתאים!
+  - Source: `❌ מכתב — יאללה — לא מתאים!`
+- **g5/g5.full_composition_scaffold_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.full_composition_scaffold_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ חיבור מלא — רק פתיחה — לא מלא!
+  - Source: `❌ חיבור מלא — רק פתיחה — לא מלא!`
+- **g5/g5.genre_variety** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.genre_variety.md`
+  - Patterns: x_mark
+  - Visible: ❌ טיעון — אני אוהב שוקולד — דעה בלי נימוק מספיק!
+  - Source: `❌ טיעון — אני אוהב שוקולד — דעה בלי נימוק מספיק!`
+- **g5/writing_rephrase_clarity** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/writing_rephrase_clarity.md`
+  - Patterns: x_mark
+  - Visible: ❌ משפט ברור יותר — והם גם טיילו — שיניתם משמעות!
+  - Source: `❌ משפט ברור יותר — והם גם טיילו — שיניתם משמעות!`
+- **g5/g5.argument_scaffold_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g5/drafts/g5.argument_scaffold_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ טיעון — אתמול ראיתי כלב — אין טענה!
+  - Source: `❌ טיעון — אתמול ראיתי כלב — אין טענה!`
+- **g6/g6.compare_genres** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.compare_genres.md`
+  - Patterns: tsarich
+  - Visible: לדעתי כל תלמיד צריך לבקר בספרייה פעמיים בשבוע — שם לומדים יותר מאשר רק ממסך.
+  - Source: `לדעתי כל תלמיד צריך לבקר בספרייה פעמיים בשבוע — שם לומדים יותר מאשר רק ממסך.`
+- **g6/g6.compare_genres** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.compare_genres.md`
+  - Patterns: x_mark
+  - Visible: ❌ אם רועי מופיע ומביע הסכמה, זה לא רק מידע. יש כאן גם סיפור קצר ודעה.
+  - Source: `❌ אם רועי מופיע ומביע הסכמה, זה לא רק מידע. יש כאן גם סיפור קצר ודעה.`
+- **g6/g6.complex_text_analysis** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.complex_text_analysis.md`
+  - Patterns: x_mark
+  - Visible: ❌ זיהום — מילה אחת, לא ניתוח של הקטע.
+  - Source: `❌ זיהום — מילה אחת, לא ניתוח של הקטע.`
+- **g6/paragraph_role** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/paragraph_role.md`
+  - Patterns: x_mark
+  - Visible: ❌ פסקה אחרונה עם פרט חדש — עדיין גוף, לא סיום.
+  - Source: `❌ פסקה אחרונה עם פרט חדש — עדיין גוף, לא סיום.`
+- **g6/g6.critical_evaluation_light** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לתקוף את הטענה.
+  - Source: `לא צריך לתקוף את הטענה. צריך לבדוק אותה בעזרת שאלות: יש נימוק? האם הוא מתאים?`
+- **g6/g6.critical_evaluation_light** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md`
+  - Patterns: tsarich
+  - Visible: צריך לבדוק אותה בעזרת שאלות:
+  - Source: `לא צריך לתקוף את הטענה. צריך לבדוק אותה בעזרת שאלות: יש נימוק? האם הוא מתאים?`
+- **g6/g6.critical_evaluation_light** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md`
+  - Patterns: haser
+  - Visible: האם חסר מידע?
+  - Source: `שאלו: האם הנימוק תומך בטענה? האם חסר מידע?`
+- **g6/g6.critical_evaluation_light** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md`
+  - Patterns: tsarich
+  - Visible: טענה: "כל תלמיד צריך לקרוא לפחות עשרים דקות ביום".
+  - Source: `טענה: "כל תלמיד צריך לקרוא לפחות עשרים דקות ביום".`
+- **g6/g6.critical_evaluation_light** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md`
+  - Patterns: chayav
+  - Visible: לכן כל בית חייב למיין נייר".
+  - Source: `"מיחזור נייר חוסך עצים. לכן כל בית חייב למיין נייר".`
+- **g6/g6.critical_evaluation_light** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md`
+  - Patterns: haser
+  - Visible: מה חסר אולי?
+  - Source: `האם הטענה מוצדקת? מה חסר אולי?`
+- **g6/g6.critical_evaluation_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ "נשמע נכון" — בלי בדיקה — לא ביקורת.
+  - Source: `❌ "נשמע נכון" — בלי בדיקה — לא ביקורת.`
+- **g6/g6.evidence_from_text** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.evidence_from_text.md`
+  - Patterns: x_mark
+  - Visible: ❌ "בטח אנשים אוהבים ספרים" — לא בקטע.
+  - Source: `❌ "בטח אנשים אוהבים ספרים" — לא בקטע.`
+- **g6/main_summary** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/main_summary.md`
+  - Patterns: x_mark
+  - Visible: ❌ "יוסי מתקן גלגלים" — פרט, לא סיכום של כל הקטע.
+  - Source: `❌ "יוסי מתקן גלגלים" — פרט, לא סיכום של כל הקטע.`
+- **g6/supporting_evidence** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/supporting_evidence.md`
+  - Patterns: x_mark
+  - Visible: ❌ "הוצבו שלטים" — לא מראה שהחוף נקי יותר.
+  - Source: `❌ "הוצבו שלטים" — לא מראה שהחוף נקי יותר.`
+- **g6/contrast** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/contrast.md`
+  - Patterns: x_mark
+  - Visible: ❌ "גם וגם" — לא השוואה.
+  - Source: `❌ "גם וגם" — לא השוואה.`
+- **g6/attitude** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/attitude.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מאה" — מספר, לא טון.
+  - Source: `❌ "מאה" — מספר, לא טון.`
+- **g6/pronoun** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/pronoun.md`
+  - Patterns: tsarich
+  - Visible: בקטע ארוך יש כמה דמויות — צריך לחזור אחורה.
+  - Source: `בקטע ארוך יש כמה דמויות — צריך לחזור אחורה.`
+- **g6/pronoun** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/pronoun.md`
+  - Patterns: x_mark
+  - Visible: ❌ "הם" — בלי לבדוק — אולי מישהו אחר.
+  - Source: `❌ "הם" — בלי לבדוק — אולי מישהו אחר.`
+- **g6/order** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/order.md`
+  - Patterns: x_mark
+  - Visible: ❌ "זוכים" ראשון — כי מעניין — לא לפי הטקסט.
+  - Source: `❌ "זוכים" ראשון — כי מעניין — לא לפי הטקסט.`
+- **g6/g6.complex_syntax_spot** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.complex_syntax_spot.md`
+  - Patterns: tsarich
+  - Visible: שלב 2: פועל צריך להיות בלשון רבים.
+  - Source: `שלב 2: פועל צריך להיות בלשון רבים.`
+- **g6/g6.complex_syntax_spot** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.complex_syntax_spot.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מציגה" — בלי לראות "הכיתה" — טעות.
+  - Source: `❌ "מציגה" — בלי לראות "הכיתה" — טעות.`
+- **g6/g6.subject_verb_advanced** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.subject_verb_advanced.md`
+  - Patterns: x_mark
+  - Visible: ❌ "ילדים... מקשיב" — נושא יכול להיות "ילדים" → "מקשיבים" — כן! אבל "רשימה... חשובים" — לא.
+  - Source: `❌ "ילדים... מקשיב" — נושא יכול להיות "ילדים" → "מקשיבים" — כן! אבל "רשימה... חשובים" — לא.`
+- **g6/g6.possession_prep** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.possession_prep.md`
+  - Patterns: lo_nachon
+  - Visible: קל לטעות: "מחברת אני" — סדר מילים לא נכון בעברית.
+  - Source: `קל לטעות: "מחברת אני" — סדר מילים לא נכון בעברית.`
+- **g6/g6.possession_prep** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.possession_prep.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מחברת אני" — לא שייכות נכונה.
+  - Source: `❌ "מחברת אני" — לא שייכות נכונה.`
+- **g6/choose_correct** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/choose_correct.md`
+  - Patterns: x_mark
+  - Visible: ❌ "נמצא" — יחיד, ספרים — רבים.
+  - Source: `❌ "נמצא" — יחיד, ספרים — רבים.`
+- **g6/sv_agreement_plural** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/sv_agreement_plural.md`
+  - Patterns: tsarich
+  - Visible: הפועל צריך להתאים לנושא ולהיות בלשון רבים.
+  - Source: `הפועל צריך להתאים לנושא ולהיות בלשון רבים.`
+- **g6/sv_agreement_plural** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/sv_agreement_plural.md`
+  - Patterns: x_mark
+  - Visible: ❌ "תלמידים... משחק" — יחיד, לא מתאים.
+  - Source: `❌ "תלמידים... משחק" — יחיד, לא מתאים.`
+- **g6/plural_subject** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/plural_subject.md`
+  - Patterns: tsarich
+  - Visible: הפועל צריך להתאים: "הילדים רצים", לא "הילדים רץ".
+  - Source: `הפועל צריך להתאים: "הילדים רצים", לא "הילדים רץ".`
+- **g6/plural_subject** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/plural_subject.md`
+  - Patterns: x_mark
+  - Visible: ❌ "עצים... גבוה" — יחיד.
+  - Source: `❌ "עצים... גבוה" — יחיד.`
+- **g6/past_present** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/past_present.md`
+  - Patterns: x_mark
+  - Visible: ❌ "אתמול... קורא" — זמנים לא מתאימים.
+  - Source: `❌ "אתמול... קורא" — זמנים לא מתאימים.`
+- **g6/negation** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/negation.md`
+  - Patterns: x_mark
+  - Visible: ❌ "לא אין" — מבלבל, נשמע כמו "יש".
+  - Source: `❌ "לא אין" — מבלבל, נשמע כמו "יש".`
+- **g6/grammar_tf** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/grammar_tf.md`
+  - Patterns: lo_nachon
+  - Visible: "הכלבים רץ" — לא נכון.
+  - Source: `"הכלבים רץ" — לא נכון. כלבים (רבים) → רצים.`
+- **g6/grammar_tf** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/grammar_tf.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ "ספרים... נמצא" לא מתאים. "ספרים" הם רבים, לכן צריך פועל ברבים.
+  - Source: `❌ "ספרים... נמצא" לא מתאים. "ספרים" הם רבים, לכן צריך פועל ברבים.`
+- **g6/g6.academic_vocab** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.academic_vocab.md`
+  - Patterns: x_mark
+  - Visible: ❌ "ניתוח" — מילה ריקה, בלי עבודה.
+  - Source: `❌ "ניתוח" — מילה ריקה, בלי עבודה.`
+- **g6/g6.discipline_words_light** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.discipline_words_light.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לזכור הכול מיד, אבל חשוב להכיר אותן.
+  - Source: `לכל מקצוע יש מילים משלו. לא צריך לזכור הכול מיד, אבל חשוב להכיר אותן.`
+- **g6/g6.discipline_words_light** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.discipline_words_light.md`
+  - Patterns: x_mark
+  - Visible: ❌ עלילה — לא במדע.
+  - Source: `❌ עלילה — לא במדע.`
+- **g6/register** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/register.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מגניב בטירוף" — לא רמת כתיבה לימודית.
+  - Source: `❌ "מגניב בטירוף" — לא רמת כתיבה לימודית.`
+- **g6/verb_noun_fit** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/verb_noun_fit.md`
+  - Patterns: lo_nachon
+  - Visible: לא נכון: "התלמיד אוכל ניסוי".
+  - Source: `לא נכון: "התלמיד אוכל ניסוי".`
+- **g6/verb_noun_fit** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/verb_noun_fit.md`
+  - Patterns: lo_nachon
+  - Visible: לא נכון: "היא שותה עבודה".
+  - Source: `לא נכון: "היא שותה עבודה".`
+- **g6/verb_noun_fit** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/verb_noun_fit.md`
+  - Patterns: x_mark
+  - Visible: ❌ "שותה עבודה" — פועל לא מתאים.
+  - Source: `❌ "שותה עבודה" — פועל לא מתאים.`
+- **g6/verb_noun_fit** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/hebrew/g6/drafts/verb_noun_fit.md`
+  - Patterns: tsarich
+  - Visible: זכרו: פועל — צריך להתאים לשם.
+  - Source: `זכרו: פועל — צריך להתאים לשם.`
+- **g6/odd_out** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/odd_out.md`
+  - Patterns: x_mark
+  - Visible: ❌ לפי אורך — לא לפי משמעות.
+  - Source: `❌ לפי אורך — לא לפי משמעות.`
+- **g6/g6.argumentative_full_scaffold** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.argumentative_full_scaffold.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מסכים רעים" — טענה בלי נימוק.
+  - Source: `❌ "מסכים רעים" — טענה בלי נימוק.`
+- **g6/g6.research_literacy_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.research_literacy_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ תגובה בלי שם — לא מקור למחקר.
+  - Source: `❌ תגובה בלי שם — לא מקור למחקר.`
+- **g6/rephrase** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/rephrase.md`
+  - Patterns: x_mark
+  - Visible: ❌ להוסיף רעיון שלא היה — לא ניסוח, שינוי.
+  - Source: `❌ להוסיף רעיון שלא היה — לא ניסוח, שינוי.`
+- **g6/g6.debate_scaffold_choice** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/hebrew/g6/drafts/g6.debate_scaffold_choice.md`
+  - Patterns: x_mark
+  - Visible: ❌ תקיפה אישית — לא דיבייט.
+  - Source: `❌ תקיפה אישית — לא דיבייט.`
+
+### english (133)
+
+- **g1/vocab_colors** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/vocab_colors.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ לקרוא לתפוח blue — זה לא נכון!
+  - Source: `❌ לקרוא לתפוח blue — זה לא נכון!`
+- **g1/vocab_numbers** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/vocab_numbers.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ לקרוא ל-5 את המילה four — לא נכון!
+  - Source: `❌ לקרוא ל-5 את המילה four — לא נכון!`
+- **g1/vocab_family** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/vocab_family.md`
+  - Patterns: x_mark
+  - Visible: ❌ לקרוא לאמא dad — זה אבא!
+  - Source: `❌ לקרוא לאמא dad — זה אבא!`
+- **g1/vocab_animals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/vocab_animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ לקרוא לחתול dog — זה כלב!
+  - Source: `❌ לקרוא לחתול dog — זה כלב!`
+- **g1/vocab_emotions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/vocab_emotions.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ לקרוא לילד שמח sad — לא נכון!
+  - Source: `❌ לקרוא לילד שמח sad — לא נכון!`
+- **g1/vocab_actions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/vocab_actions.md`
+  - Patterns: x_mark
+  - Visible: ❌ לקרוא לריצה jump — זה לקפוץ!
+  - Source: `❌ לקרוא לריצה jump — זה לקפוץ!`
+- **g1/vocab_school** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/vocab_school.md`
+  - Patterns: x_mark
+  - Visible: ❌ לקרוא לספר pen — זה עט!
+  - Source: `❌ לקרוא לספר pen — זה עט!`
+- **g1/grammar_be** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/grammar_be.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ happy I am — לא נכון!
+  - Source: `❌ happy I am — לא נכון!`
+- **g1/sentence_base** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g1/drafts/sentence_base.md`
+  - Patterns: tsarich
+  - Visible: משפט צריך סדר נכון.
+  - Source: `משפט צריך סדר נכון.`
+- **g1/sentence_base** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/sentence_base.md`
+  - Patterns: x_mark
+  - Visible: ❌ happy am I — לא משפט!
+  - Source: `❌ happy am I — לא משפט!`
+- **g1/translation_classroom** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g1/drafts/translation_classroom.md`
+  - Patterns: x_mark
+  - Visible: ❌ לומר Thank you כשנכנסים — זה תודה, לא שלום!
+  - Source: `❌ לומר Thank you כשנכנסים — זה תודה, לא שלום!`
+- **g2/vocab_colors** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_colors.md`
+  - Patterns: x_mark
+  - Visible: ❌ blue is pen the — לא משפט!
+  - Source: `❌ blue is pen the — לא משפט!`
+- **g2/vocab_numbers** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_numbers.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ I am seventeen כשאנחנו 7 — לא נכון!
+  - Source: `❌ I am seventeen כשאנחנו 7 — לא נכון!`
+- **g2/vocab_family** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_family.md`
+  - Patterns: x_mark
+  - Visible: ❌ This is my mom כשמצביעים על אבא!
+  - Source: `❌ This is my mom כשמצביעים על אבא!`
+- **g2/vocab_animals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_animals.md`
+  - Patterns: x_mark
+  - Visible: ❌ I see a cat כשרואים כלב!
+  - Source: `❌ I see a cat כשרואים כלב!`
+- **g2/vocab_emotions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_emotions.md`
+  - Patterns: x_mark
+  - Visible: ❌ I am happy כשעצובים!
+  - Source: `❌ I am happy כשעצובים!`
+- **g2/vocab_actions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_actions.md`
+  - Patterns: x_mark
+  - Visible: ❌ I run כשקופצים!
+  - Source: `❌ I run כשקופצים!`
+- **g2/vocab_school** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_school.md`
+  - Patterns: x_mark
+  - Visible: ❌ My pen is blue כשמדברים על ספר!
+  - Source: `❌ My pen is blue כשמדברים על ספר!`
+- **g2/vocab_food** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_food.md`
+  - Patterns: x_mark
+  - Visible: ❌ לקרוא לתפוח bread!
+  - Source: `❌ לקרוא לתפוח bread!`
+- **g2/vocab_house** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/vocab_house.md`
+  - Patterns: x_mark
+  - Visible: ❌ לקרוא למיטה door!
+  - Source: `❌ לקרוא למיטה door!`
+- **g2/grammar_be** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/grammar_be.md`
+  - Patterns: x_mark
+  - Visible: ❌ He is happy לילדה!
+  - Source: `❌ He is happy לילדה!`
+- **g2/grammar_plural_questions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/grammar_plural_questions.md`
+  - Patterns: x_mark
+  - Visible: ❌ cat כשיש שניים!
+  - Source: `❌ cat כשיש שניים!`
+- **g2/sentence_base** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/sentence_base.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ seven am I — לא נכון!
+  - Source: `❌ seven am I — לא נכון!`
+- **g2/sentence_routine** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/sentence_routine.md`
+  - Patterns: x_mark
+  - Visible: ❌ I go to school כשקמים מהמיטה!
+  - Source: `❌ I go to school כשקמים מהמיטה!`
+- **g2/translation_classroom** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/translation_classroom.md`
+  - Patterns: x_mark
+  - Visible: ❌ Hello כשאומרים תודה!
+  - Source: `❌ Hello כשאומרים תודה!`
+- **g2/translation_routines** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g2/drafts/translation_routines.md`
+  - Patterns: x_mark
+  - Visible: ❌ I wake up כשאוכלים!
+  - Source: `❌ I wake up כשאוכלים!`
+- **g3/vocab_actions** §— — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_actions.md`
+  - Patterns: present_simple
+  - Visible: פעולות — Present Simple
+  - Source: `# פעולות — Present Simple`
+- **g3/vocab_actions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_actions.md`
+  - Patterns: x_mark
+  - Visible: ❌ I run כשמשחקים!
+  - Source: `❌ I run כשמשחקים!`
+- **g3/vocab_animals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_animals.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ The dog run — חסר s!
+  - Source: `❌ The dog run — חסר s!`
+- **g3/vocab_colors** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/vocab_colors.md`
+  - Patterns: haser
+  - Visible: The sky blue — חסר is!
+  - Source: `The sky blue — חסר is!`
+- **g3/vocab_colors** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_colors.md`
+  - Patterns: x_mark
+  - Visible: ❌ The sky blue — לא משפט מלא!
+  - Source: `❌ The sky blue — לא משפט מלא!`
+- **g3/vocab_emotions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_emotions.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ She feel — חסר s!
+  - Source: `❌ She feel — חסר s!`
+- **g3/vocab_family** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_family.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ My brother read — חסר s!
+  - Source: `❌ My brother read — חסר s!`
+- **g3/vocab_food** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_food.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ a apple — לפני apple צריך an!
+  - Source: `❌ a apple — לפני apple צריך an!`
+- **g3/vocab_house** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/vocab_house.md`
+  - Patterns: haser
+  - Visible: The book on the table — חסר is!
+  - Source: `The book on the table — חסר is!`
+- **g3/vocab_house** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_house.md`
+  - Patterns: x_mark
+  - Visible: ❌ The book on the table — לא משפט!
+  - Source: `❌ The book on the table — לא משפט!`
+- **g3/vocab_numbers** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_numbers.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ There is — לרבים צריך are!
+  - Source: `❌ There is — לרבים צריך are!`
+- **g3/vocab_school** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_school.md`
+  - Patterns: x_mark
+  - Visible: ❌ We learns — אחרי We לא מוסיפים s לפועל.
+  - Source: `❌ We learns — אחרי We לא מוסיפים s לפועל.`
+- **g3/vocab_body** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_body.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ My head hurt — חסר s!
+  - Source: `❌ My head hurt — חסר s!`
+- **g3/vocab_sports** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/vocab_sports.md`
+  - Patterns: lo_nachon
+  - Visible: I play the football — לא נכון!
+  - Source: `I play the football — לא נכון!`
+- **g3/vocab_sports** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_sports.md`
+  - Patterns: x_mark
+  - Visible: ❌ the football — בכדורגל לא שמים the!
+  - Source: `❌ the football — בכדורגל לא שמים the!`
+- **g3/vocab_weather** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/vocab_weather.md`
+  - Patterns: haser
+  - Visible: It sunny — חסר is!
+  - Source: `It sunny — חסר is!`
+- **g3/vocab_weather** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/vocab_weather.md`
+  - Patterns: x_mark
+  - Visible: ❌ It sunny — לא משפט!
+  - Source: `❌ It sunny — לא משפט!`
+- **g3/grammar_present_simple** §— — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/grammar_present_simple.md`
+  - Patterns: present_simple
+  - Visible: Present Simple — חיובי, שלילי ושאלה
+  - Source: `# Present Simple — חיובי, שלילי ושאלה`
+- **g3/grammar_present_simple** §1 מה לומדים? — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/grammar_present_simple.md`
+  - Patterns: present_simple
+  - Visible: היום נלמד Present Simple — זמן הווה פשוט.
+  - Source: `היום נלמד Present Simple — זמן הווה פשוט.`
+- **g3/grammar_present_simple** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/grammar_present_simple.md`
+  - Patterns: x_mark
+  - Visible: ❌ I plays — I לא מקבל s!
+  - Source: `❌ I plays — I לא מקבל s!`
+- **g3/grammar_present_simple** §7 בואו נתרגל — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/grammar_present_simple.md`
+  - Patterns: present_simple
+  - Visible: עכשיו אתם יודעים Present Simple — חיובי, שלילי ושאלה.
+  - Source: `עכשיו אתם יודעים Present Simple — חיובי, שלילי ושאלה.`
+- **g3/grammar_articles_prepositions** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/grammar_articles_prepositions.md`
+  - Patterns: haser
+  - Visible: The cat under the bed — חסר is!
+  - Source: `The cat under the bed — חסר is!`
+- **g3/grammar_articles_prepositions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/grammar_articles_prepositions.md`
+  - Patterns: x_mark
+  - Visible: ❌ The cat under — לא משפט!
+  - Source: `❌ The cat under — לא משפט!`
+- **g3/grammar_question_frames** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/grammar_question_frames.md`
+  - Patterns: x_mark, haser
+  - Visible: ❌ You like music? — חסר Do!
+  - Source: `❌ You like music? — חסר Do!`
+- **g3/sentence_routine** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/sentence_routine.md`
+  - Patterns: haser
+  - Visible: I brush teeth — חסר my!
+  - Source: `I brush teeth — חסר my!`
+- **g3/sentence_routine** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/sentence_routine.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ I brush teeth — צריך my teeth!
+  - Source: `❌ I brush teeth — צריך my teeth!`
+- **g3/sentence_descriptive** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/sentence_descriptive.md`
+  - Patterns: x_mark
+  - Visible: ❌ The dog big — התאר לפני השם!
+  - Source: `❌ The dog big — התאר לפני השם!`
+- **g3/translation_routines** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/translation_routines.md`
+  - Patterns: haser
+  - Visible: I go bed — חסר to!
+  - Source: `I go bed — חסר to!`
+- **g3/translation_routines** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/translation_routines.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ I go bed — צריך to bed!
+  - Source: `❌ I go bed — צריך to bed!`
+- **g3/translation_hobbies** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g3/drafts/translation_hobbies.md`
+  - Patterns: haser
+  - Visible: I like draw — חסר to!
+  - Source: `I like draw — חסר to!`
+- **g3/translation_hobbies** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g3/drafts/translation_hobbies.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ I like draw — צריך to draw!
+  - Source: `❌ I like draw — צריך to draw!`
+- **g4/vocab_animals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_animals.md`
+  - Patterns: x_mark, present_simple
+  - Visible: ❌ The birds fly — Present Simple!
+  - Source: `❌ The birds fly — Present Simple!`
+- **g4/vocab_body** §2 הסבר — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_body.md`
+  - Patterns: present_simple
+  - Visible: Present Simple — הרגל:
+  - Source: `Present Simple — הרגל:`
+- **g4/vocab_body** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_body.md`
+  - Patterns: x_mark
+  - Visible: ❌ He wash — אחרי he מוסיפים es לפועל wash: He washes.
+  - Source: `❌ He wash — אחרי he מוסיפים es לפועל wash: He washes.`
+- **g4/vocab_emotions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_emotions.md`
+  - Patterns: x_mark
+  - Visible: ❌ They feels — אחרי They לא מוסיפים s לפועל.
+  - Source: `❌ They feels — אחרי They לא מוסיפים s לפועל.`
+- **g4/vocab_family** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_family.md`
+  - Patterns: x_mark
+  - Visible: ❌ My parents works — parents היא מילה ברבים, לכן כותבים work.
+  - Source: `❌ My parents works — parents היא מילה ברבים, לכן כותבים work.`
+- **g4/vocab_food** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_food.md`
+  - Patterns: x_mark
+  - Visible: ❌ We eats — אחרי We לא מוסיפים s לפועל.
+  - Source: `❌ We eats — אחרי We לא מוסיפים s לפועל.`
+- **g4/vocab_school** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_school.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ The student — כאן מדברים על כמה תלמידים, לכן צריך students.
+  - Source: `❌ The student — כאן מדברים על כמה תלמידים, לכן צריך students.`
+- **g4/vocab_sports** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_sports.md`
+  - Patterns: x_mark, present_simple
+  - Visible: ❌ She swims — Present Simple!
+  - Source: `❌ She swims — Present Simple!`
+- **g4/vocab_weather** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_weather.md`
+  - Patterns: x_mark
+  - Visible: ❌ It rains — הרגל כללי!
+  - Source: `❌ It rains — הרגל כללי!`
+- **g4/vocab_community** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_community.md`
+  - Patterns: x_mark
+  - Visible: ❌ on our town — כשמדברים על מקום כמו town משתמשים ב־in.
+  - Source: `❌ on our town — כשמדברים על מקום כמו town משתמשים ב־in.`
+- **g4/vocab_environment** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_environment.md`
+  - Patterns: x_mark
+  - Visible: ❌ We protects — אחרי We לא מוסיפים s לפועל.
+  - Source: `❌ We protects — אחרי We לא מוסיפים s לפועל.`
+- **g4/vocab_travel** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/vocab_travel.md`
+  - Patterns: x_mark
+  - Visible: ❌ in bus — כשמדברים על נסיעה באוטובוס אומרים by bus.
+  - Source: `❌ in bus — כשמדברים על נסיעה באוטובוס אומרים by bus.`
+- **g4/grammar_present_simple** §— — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_present_simple.md`
+  - Patterns: present_simple
+  - Visible: Present Simple — חיזוק
+  - Source: `# Present Simple — חיזוק`
+- **g4/grammar_present_simple** §1 מה לומדים? — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_present_simple.md`
+  - Patterns: present_simple
+  - Visible: היום נחזק Present Simple — הרגל ועובדות.
+  - Source: `היום נחזק Present Simple — הרגל ועובדות.`
+- **g4/grammar_present_simple** §2 הסבר — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_present_simple.md`
+  - Patterns: present_simple
+  - Visible: Present Simple — הרגל:
+  - Source: `Present Simple — הרגל:`
+- **g4/grammar_present_simple** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_present_simple.md`
+  - Patterns: x_mark
+  - Visible: ❌ He walk — אחרי he מוסיפים s לפועל: He walks.
+  - Source: `❌ He walk — אחרי he מוסיפים s לפועל: He walks.`
+- **g4/grammar_present_simple** §7 בואו נתרגל — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_present_simple.md`
+  - Patterns: present_simple
+  - Visible: עכשיו אתם מחזקים Present Simple — הרגל, לא עכשיו.
+  - Source: `עכשיו אתם מחזקים Present Simple — הרגל, לא עכשיו.`
+- **g4/grammar_simple_continuous** §— — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_simple_continuous.md`
+  - Patterns: present_simple
+  - Visible: Present Simple לעומת Continuous
+  - Source: `# Present Simple לעומת Continuous`
+- **g4/grammar_simple_continuous** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_simple_continuous.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ She reads now — המילה now רומזת לפעולה שקורית עכשיו, לכן צריך Continuous.
+  - Source: `❌ She reads now — המילה now רומזת לפעולה שקורית עכשיו, לכן צריך Continuous.`
+- **g4/grammar_quantifiers** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/grammar_quantifiers.md`
+  - Patterns: x_mark
+  - Visible: ❌ I have any — במשפט חיובי משתמשים בדרך כלל ב־some.
+  - Source: `❌ I have any — במשפט חיובי משתמשים בדרך כלל ב־some.`
+- **g4/sentence_descriptive** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/sentence_descriptive.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ quick — כאן צריך quickly, כי מתארים איך הפעולה נעשית.
+  - Source: `❌ quick — כאן צריך quickly, כי מתארים איך הפעולה נעשית.`
+- **g4/sentence_routine** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/sentence_routine.md`
+  - Patterns: x_mark
+  - Visible: ❌ I helps — אחרי I לא מוסיפים s לפועל.
+  - Source: `❌ I helps — אחרי I לא מוסיפים s לפועל.`
+- **g4/sentence_narrative** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g4/drafts/sentence_narrative.md`
+  - Patterns: haser
+  - Visible: First we pack bags — חסר our!
+  - Source: `First we pack bags — חסר our!`
+- **g4/sentence_narrative** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/sentence_narrative.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ pack bags — כאן צריך our bags כדי לומר "התיקים שלנו".
+  - Source: `❌ pack bags — כאן צריך our bags כדי לומר "התיקים שלנו".`
+- **g4/translation_hobbies** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/translation_hobbies.md`
+  - Patterns: x_mark, present_simple
+  - Visible: ❌ He plays — Present Simple!
+  - Source: `❌ He plays — Present Simple!`
+- **g4/translation_community** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g4/drafts/translation_community.md`
+  - Patterns: x_mark
+  - Visible: ❌ in the school — בתוך בית הספר!
+  - Source: `❌ in the school — בתוך בית הספר!`
+- **g5/vocab_animals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_animals.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ walk הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ walk הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/vocab_community** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_community.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ visit הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ visit הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/vocab_emotions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_emotions.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ feel הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ feel הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/vocab_environment** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_environment.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ plant הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ plant הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/vocab_family** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_family.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ grandparent מדבר על אדם אחד. כאן מדברים על סבא וסבתא, לכן צריך grandparents.
+  - Source: `❌ grandparent מדבר על אדם אחד. כאן מדברים על סבא וסבתא, לכן צריך grandparents.`
+- **g5/vocab_food** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_food.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ cook הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ cook הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/vocab_school** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_school.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ win הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ win הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/vocab_sports** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_sports.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ score הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ score הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/vocab_travel** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_travel.md`
+  - Patterns: x_mark
+  - Visible: ❌ travel הוא בזמן הווה. כאן מדברים על עתיד.
+  - Source: `❌ travel הוא בזמן הווה. כאן מדברים על עתיד.`
+- **g5/vocab_health** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: tsarich
+  - Visible: I need to rest and drink water — אני צריך לנוח ולשתות מים.
+  - Source: `I need to rest and drink water — אני צריך לנוח ולשתות מים.`
+- **g5/vocab_health** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: tsarich
+  - Visible: אני צריך לנוח ולשתות מים.
+  - Source: `I need to rest and drink water — אני צריך לנוח ולשתות מים.`
+- **g5/vocab_health** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: tsarich
+  - Visible: אני צריך לנוח ולשתות מים.
+  - Source: `I need to rest and drink water — אני צריך לנוח ולשתות מים.`
+- **g5/vocab_health** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: tsarich
+  - Visible: שאלה: איך אומרים "אני צריך לנוח ולשתות מים"?
+  - Source: `שאלה: איך אומרים "אני צריך לנוח ולשתות מים"?`
+- **g5/vocab_health** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: tsarich
+  - Visible: אחרי יום ארוך — הגוף צריך מנוחה.
+  - Source: `אחרי יום ארוך — הגוף צריך מנוחה.`
+- **g5/vocab_health** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: tsarich
+  - Visible: (רמז: need to = צריך ל…)
+  - Source: `(רמז: need to = צריך ל…)`
+- **g5/vocab_health** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ אחרי need צריך להוסיף to לפני הפועל.
+  - Source: `❌ אחרי need צריך להוסיף to לפני הפועל.`
+- **g5/vocab_health** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/vocab_health.md`
+  - Patterns: tsarich
+  - Visible: need to = צריך ל…
+  - Source: `(רמז: need to = צריך ל…)`
+- **g5/vocab_technology** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/vocab_technology.md`
+  - Patterns: x_mark
+  - Visible: ❌ אחרי he, she או it מוסיפים בדרך כלל s לפועל: uses.
+  - Source: `❌ אחרי he, she או it מוסיפים בדרך כלל s לפועל: uses.`
+- **g5/grammar_past_simple** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/grammar_past_simple.md`
+  - Patterns: x_mark, present_simple
+  - Visible: ❌ play — Present Simple!
+  - Source: `❌ play — Present Simple!`
+- **g5/grammar_future_forms** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/grammar_future_forms.md`
+  - Patterns: x_mark
+  - Visible: ❌ בדרך כלל לא משתמשים יחד ב־will וב־going to באותו פועל.
+  - Source: `❌ בדרך כלל לא משתמשים יחד ב־will וב־going to באותו פועל.`
+- **g5/grammar_modals** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/grammar_modals.md`
+  - Patterns: chayav
+  - Visible: You must wear a helmet — אתה חייב לחבוש קסדה.
+  - Source: `You must wear a helmet — אתה חייב לחבוש קסדה.`
+- **g5/grammar_modals** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/grammar_modals.md`
+  - Patterns: chayav
+  - Visible: אתה חייב לחבוש קסדה.
+  - Source: `You must wear a helmet — אתה חייב לחבוש קסדה.`
+- **g5/grammar_modals** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/grammar_modals.md`
+  - Patterns: chayav
+  - Visible: אתה חייב לחבוש קסדה.
+  - Source: `You must wear a helmet — אתה חייב לחבוש קסדה.`
+- **g5/grammar_modals** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/grammar_modals.md`
+  - Patterns: chayav
+  - Visible: שאלה: איך אומרים "אתה חייב לחבוש קסדה"?
+  - Source: `שאלה: איך אומרים "אתה חייב לחבוש קסדה"?`
+- **g5/grammar_modals** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/english/g5/drafts/grammar_modals.md`
+  - Patterns: chayav
+  - Visible: (רמז: must = חייב.)
+  - Source: `(רמז: must = חייב.)`
+- **g5/grammar_modals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/grammar_modals.md`
+  - Patterns: x_mark
+  - Visible: ❌ אחרי must לא משתמשים ב־to.
+  - Source: `❌ אחרי must לא משתמשים ב־to.`
+- **g5/grammar_comparatives** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/grammar_comparatives.md`
+  - Patterns: x_mark
+  - Visible: ❌ interestinger אינה צורה נכונה. אומרים more interesting.
+  - Source: `❌ interestinger אינה צורה נכונה. אומרים more interesting.`
+- **g5/grammar_quantifiers** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/grammar_quantifiers.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ people היא מילה ברבים, לכן צריך were.
+  - Source: `❌ people היא מילה ברבים, לכן צריך were.`
+- **g5/sentence_narrative** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/sentence_narrative.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ arrive הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ arrive הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/sentence_advanced** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/sentence_advanced.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ learn הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ learn הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g5/translation_community** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/translation_community.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ in the park פירושו בתוך הפארק. כאן צריך ליד הפארק: next to the park.
+  - Source: `❌ in the park פירושו בתוך הפארק. כאן צריך ליד הפארק: next to the park.`
+- **g5/translation_technology** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/translation_technology.md`
+  - Patterns: x_mark
+  - Visible: ❌ send הוא בזמן הווה. כאן מדברים על עתיד.
+  - Source: `❌ send הוא בזמן הווה. כאן מדברים על עתיד.`
+- **g5/translation_global** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g5/drafts/translation_global.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ people היא מילה ברבים, לכן צריך speak.
+  - Source: `❌ people היא מילה ברבים, לכן צריך speak.`
+- **g6/vocab_animals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_animals.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ swim הוא בזמן הווה. כאן צריך לתאר פעולה מתמשכת בעבר.
+  - Source: `❌ swim הוא בזמן הווה. כאן צריך לתאר פעולה מתמשכת בעבר.`
+- **g6/vocab_community** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_community.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ celebrate הוא בזמן הווה. כאן צריך פועל בעבר.
+  - Source: `❌ celebrate הוא בזמן הווה. כאן צריך פועל בעבר.`
+- **g6/vocab_emotions** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_emotions.md`
+  - Patterns: x_mark
+  - Visible: ❌ must פירושו חובה חזקה. כאן הכוונה היא אולי, לכן מתאים יותר להשתמש ב־might.
+  - Source: `❌ must פירושו חובה חזקה. כאן הכוונה היא אולי, לכן מתאים יותר להשתמש ב־might.`
+- **g6/vocab_environment** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_environment.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ Climate change הוא יחיד, לכן צריך affects.
+  - Source: `❌ Climate change הוא יחיד, לכן צריך affects.`
+- **g6/vocab_health** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_health.md`
+  - Patterns: x_mark
+  - Visible: ❌ אחרי should לא משתמשים ב־to.
+  - Source: `❌ אחרי should לא משתמשים ב־to.`
+- **g6/vocab_technology** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_technology.md`
+  - Patterns: x_mark
+  - Visible: ❌ אחרי If לא משתמשים ב־will.
+  - Source: `❌ אחרי If לא משתמשים ב־will.`
+- **g6/vocab_travel** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_travel.md`
+  - Patterns: x_mark
+  - Visible: ❌ visited לבד — Past Simple, דגש על מתי!
+  - Source: `❌ visited לבד — Past Simple, דגש על מתי!`
+- **g6/vocab_culture** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_culture.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ cultures היא צורת רבים. כאן מדברים על תרבות אחת, לכן צריך culture.
+  - Source: `❌ cultures היא צורת רבים. כאן מדברים על תרבות אחת, לכן צריך culture.`
+- **g6/vocab_global_issues** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_global_issues.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ countries היא מילה ברבים, לכן צריך work.
+  - Source: `❌ countries היא מילה ברבים, לכן צריך work.`
+- **g6/vocab_history** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/vocab_history.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ learn הוא בזמן הווה. המילה yesterday מראה שצריך פועל בעבר.
+  - Source: `❌ learn הוא בזמן הווה. המילה yesterday מראה שצריך פועל בעבר.`
+- **g6/grammar_complex_tenses** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/grammar_complex_tenses.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ read + was calling לא מתאים כאן, כי צריך להראות פעולה מתמשכת ברקע ואירוע שקרה באמצע.
+  - Source: `❌ read + was calling לא מתאים כאן, כי צריך להראות פעולה מתמשכת ברקע ואירוע שקרה באמצע.`
+- **g6/grammar_conditionals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/grammar_conditionals.md`
+  - Patterns: x_mark
+  - Visible: ❌ אחרי If לא משתמשים ב־will.
+  - Source: `❌ אחרי If לא משתמשים ב־will.`
+- **g6/grammar_modals** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/grammar_modals.md`
+  - Patterns: x_mark
+  - Visible: ❌ אחרי should לא משתמשים ב־to.
+  - Source: `❌ אחרי should לא משתמשים ב־to.`
+- **g6/grammar_comparatives** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/grammar_comparatives.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ more interesting משווה בין דברים. כאן צריך צורת superlative: the most interesting.
+  - Source: `❌ more interesting משווה בין דברים. כאן צריך צורת superlative: the most interesting.`
+- **g6/sentence_advanced** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/sentence_advanced.md`
+  - Patterns: x_mark
+  - Visible: ❌ studied / listened הם רק Past Simple. כאן רוצים להדגיש שתי פעולות שקרו באותו זמן.
+  - Source: `❌ studied / listened הם רק Past Simple. כאן רוצים להדגיש שתי פעולות שקרו באותו זמן.`
+- **g6/translation_technology** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/translation_technology.md`
+  - Patterns: x_mark, chayav
+  - Visible: ❌ must פירושו חייב. כאן המשמעות היא אולי, לכן מתאים יותר might.
+  - Source: `❌ must פירושו חייב. כאן המשמעות היא אולי, לכן מתאים יותר might.`
+- **g6/translation_global** §6 שימו לב! — **ENGLISH_GRAMMAR_EXPECTED**
+  - File: `docs/learning-book/english/g6/drafts/translation_global.md`
+  - Patterns: x_mark, tsarich
+  - Visible: ❌ אחרי If לא משתמשים ב־will, ובחלק השני צריך will.
+  - Source: `❌ אחרי If לא משתמשים ב־will, ובחלק השני צריך will.`
+
+### moledet (38)
+
+- **g2/mg_g2_neighborhood** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_neighborhood.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק החדר שלי בבית — זו לא כל השכונה.
+  - Source: `❌ רק החדר שלי בבית — זו לא כל השכונה.`
+- **g2/mg_g2_neighborhood_map** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_neighborhood_map.md`
+  - Patterns: x_mark
+  - Visible: ❌ בתים במפה נראים כמו צילום אמיתי מלפנים.
+  - Source: `❌ בתים במפה נראים כמו צילום אמיתי מלפנים.`
+- **g2/mg_g2_community_services** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_community_services.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק חנות — ואז שוכחים את הספרייה.
+  - Source: `❌ רק חנות — ואז שוכחים את הספרייה.`
+- **g2/mg_g2_israel_basics** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_israel_basics.md`
+  - Patterns: tsarich
+  - Visible: לחשוב שצריך לזכור עכשיו את כל הערים והגבולות.
+  - Source: `קל לטעות: לחשוב שצריך לזכור עכשיו את כל הערים והגבולות.`
+- **g2/mg_g2_israel_basics** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_israel_basics.md`
+  - Patterns: x_mark
+  - Visible: ❌ ללמוד מפת ארץ מלאה — זה לכיתות גבוהות יותר.
+  - Source: `❌ ללמוד מפת ארץ מלאה — זה לכיתות גבוהות יותר.`
+- **g2/mg_g2_group_decisions** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_group_decisions.md`
+  - Patterns: tsarich
+  - Visible: לפעמים צריך לבחור יחד — במשחק, בפעילות או בכיתה.
+  - Source: `לפעמים צריך לבחור יחד — במשחק, בפעילות או בכיתה.`
+- **g2/mg_g2_group_decisions** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_group_decisions.md`
+  - Patterns: tsarich
+  - Visible: כשצריך להחליט — כולם יכולים להציע רעיון.
+  - Source: `כשצריך להחליט — כולם יכולים להציע רעיון.`
+- **g2/mg_g2_group_decisions** §5 נסו בעצמכם — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_group_decisions.md`
+  - Patterns: tsarich
+  - Visible: צריך לבחור צבע לכרטיס.
+  - Source: `חשבו על קבוצה בכיתה: צריך לבחור צבע לכרטיס.`
+- **g2/mg_g2_group_decisions** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_group_decisions.md`
+  - Patterns: x_mark
+  - Visible: ❌ ילד אחד מחליט לבד — והקבוצה לא שמעה אחרים.
+  - Source: `❌ ילד אחד מחליט לבד — והקבוצה לא שמעה אחרים.`
+- **g2/mg_g2_society_responsibility** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_society_responsibility.md`
+  - Patterns: tsarich
+  - Visible: שלב 2: לעשות מה שצריך — גם כשלא מישהו אומר.
+  - Source: `שלב 2: לעשות מה שצריך — גם כשלא מישהו אומר.`
+- **g2/mg_g2_society_responsibility** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_society_responsibility.md`
+  - Patterns: x_mark
+  - Visible: ❌ "זה לא שלי" — ואז לא עוזרים בכלל.
+  - Source: `❌ "זה לא שלי" — ואז לא עוזרים בכלל.`
+- **g2/mg_g2_community_participation** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g2/drafts/mg_g2_community_participation.md`
+  - Patterns: x_mark
+  - Visible: ❌ לעמוד בצד ולא לעשות כלום ביום ניקיון.
+  - Source: `❌ לעמוד בצד ולא לעשות כלום ביום ניקיון.`
+- **g3/mg_g3_israel_map** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_israel_map.md`
+  - Patterns: x_mark
+  - Visible: ❌ מפת ישראל נראית בדיוק כמו צילום לווין.
+  - Source: `❌ מפת ישראל נראית בדיוק כמו צילום לווין.`
+- **g3/mg_g3_regions_cities** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_regions_cities.md`
+  - Patterns: x_mark
+  - Visible: ❌ כל נקודה על המפה — זה תמיד אזור שלם.
+  - Source: `❌ כל נקודה על המפה — זה תמיד אזור שלם.`
+- **g3/mg_g3_landscapes** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_landscapes.md`
+  - Patterns: x_mark
+  - Visible: ❌ כל תל — זה הר ענק.
+  - Source: `❌ כל תל — זה הר ענק.`
+- **g3/mg_g3_water_sources** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_water_sources.md`
+  - Patterns: x_mark
+  - Visible: ❌ כל כחול במפה — זה תמיד הים הגדול.
+  - Source: `❌ כל כחול במפה — זה תמיד הים הגדול.`
+- **g3/mg_g3_districts_borders** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_districts_borders.md`
+  - Patterns: x_mark
+  - Visible: ❌ כל קו במפה — זה תמיד גבול המדינה.
+  - Source: `❌ כל קו במפה — זה תמיד גבול המדינה.`
+- **g3/mg_g3_citizenship_basics** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_citizenship_basics.md`
+  - Patterns: tsarich
+  - Visible: עוזרים כשצריך.
+  - Source: `עוזרים כשצריך.`
+- **g3/mg_g3_citizenship_basics** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_citizenship_basics.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק ילדים צריכים לשמור על כללים.
+  - Source: `❌ רק ילדים צריכים לשמור על כללים.`
+- **g3/mg_g3_rights_duties** §1 מה לומדים? — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_rights_duties.md`
+  - Patterns: tsarich
+  - Visible: וגם חובות — דברים שצריך לעשות.
+  - Source: `לכל אחד יש זכויות — דברים שמגיעים לו. וגם חובות — דברים שצריך לעשות.`
+- **g3/mg_g3_rights_duties** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_rights_duties.md`
+  - Patterns: tsarich
+  - Visible: שלב 1: חובה — משהו שצריך לעשות.
+  - Source: `שלב 1: חובה — משהו שצריך לעשות.`
+- **g3/mg_g3_rights_duties** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_rights_duties.md`
+  - Patterns: tsarich
+  - Visible: שלב 2: לא רק מה שרוצים — מה שצריך.
+  - Source: `שלב 2: לא רק מה שרוצים — מה שצריך.`
+- **g3/mg_g3_rights_duties** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_rights_duties.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק "מגיע לי" — ולא עושים כלום לכולם.
+  - Source: `❌ רק "מגיע לי" — ולא עושים כלום לכולם.`
+- **g3/mg_g3_social_participation** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g3/drafts/mg_g3_social_participation.md`
+  - Patterns: x_mark, chayav
+  - Visible: ❌ עוזרים רק אם חייבים.
+  - Source: `❌ עוזרים רק אם חייבים.`
+- **g4/mg_g4_settlement_types** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_settlement_types.md`
+  - Patterns: x_mark
+  - Visible: ❌ כל מקום קטן — זה קיבוץ.
+  - Source: `❌ כל מקום קטן — זה קיבוץ.`
+- **g4/mg_g4_settlement_development** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_settlement_development.md`
+  - Patterns: x_mark
+  - Visible: ❌ לזכור תאריכים מדויקים שלא נלמדו בכיתה.
+  - Source: `❌ לזכור תאריכים מדויקים שלא נלמדו בכיתה.`
+- **g4/mg_g4_settlement_development** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_settlement_development.md`
+  - Patterns: tsarich
+  - Visible: זכרו: התפתחות — שינוי לאורך זמן; לא צריך תאריכים עכשיו.
+  - Source: `זכרו: התפתחות — שינוי לאורך זמן; לא צריך תאריכים עכשיו.`
+- **g4/mg_g4_map_scale_symbols** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_map_scale_symbols.md`
+  - Patterns: tsarich
+  - Visible: שאלה: למה צריך קנה מידה?
+  - Source: `שאלה: למה צריך קנה מידה?`
+- **g4/mg_g4_map_scale_symbols** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_map_scale_symbols.md`
+  - Patterns: x_mark
+  - Visible: ❌ כל מרחק במפה — זה מטרים בודדים.
+  - Source: `❌ כל מרחק במפה — זה מטרים בודדים.`
+- **g4/mg_g4_natural_resources** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_natural_resources.md`
+  - Patterns: tsarich
+  - Visible: משאבים מוגבלים — צריך לשמור ולא לבזבז.
+  - Source: `משאבים מוגבלים — צריך לשמור ולא לבזבז.`
+- **g4/mg_g4_natural_resources** §3 דוגמה — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_natural_resources.md`
+  - Patterns: tsarich
+  - Visible: שניהם — משאבי טבע שצריך לחשוב עליהם.
+  - Source: `שניהם — משאבי טבע שצריך לחשוב עליהם.`
+- **g4/mg_g4_natural_resources** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_natural_resources.md`
+  - Patterns: tsarich
+  - Visible: שלב 2: לא אין סוף — צריך לשמור.
+  - Source: `שלב 2: לא אין סוף — צריך לשמור.`
+- **g4/mg_g4_natural_resources** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_natural_resources.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק בטבע — לא בבית.
+  - Source: `❌ רק בטבע — לא בבית.`
+- **g4/mg_g4_natural_resources** §6 שימו לב! — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_natural_resources.md`
+  - Patterns: tsarich
+  - Visible: ✓ גם בבית — מים ואנרגיה — משאבים שצריך לשמור.
+  - Source: `✓ גם בבית — מים ואנרגיה — משאבים שצריך לשמור.`
+- **g4/mg_g4_government_structure** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_government_structure.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק ממשל מרכזי — ואז שוכחים את העיר.
+  - Source: `❌ רק ממשל מרכזי — ואז שוכחים את העיר.`
+- **g4/mg_g4_organizations** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_organizations.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק עירייה — בלי מתנדבים.
+  - Source: `❌ רק עירייה — בלי מתנדבים.`
+- **g4/mg_g4_government_institutions** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_government_institutions.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לזכור הכל — רק להבין:
+  - Source: `לא צריך לזכור הכל — רק להבין: למוסדות יש תפקידים.`
+- **g4/mg_g4_government_institutions** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g4/drafts/mg_g4_government_institutions.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מי מנהיג עכשיו" — זה לא הנושא כאן.
+  - Source: `❌ "מי מנהיג עכשיו" — זה לא הנושא כאן.`
+
+### geography (20)
+
+- **g5/mg_g5_coordinates** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_coordinates.md`
+  - Patterns: x_mark
+  - Visible: ❌ (5, 3) — זה אותו מקום כמו (3, 5).
+  - Source: `❌ (5, 3) — זה אותו מקום כמו (3, 5).`
+- **g5/mg_g5_climate** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_climate.md`
+  - Patterns: x_mark
+  - Visible: ❌ היום גשם — אז כל הארץ תמיד גשומה.
+  - Source: `❌ היום גשם — אז כל הארץ תמיד גשומה.`
+- **g5/mg_g5_natural_hazards** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_natural_hazards.md`
+  - Patterns: x_mark
+  - Visible: ❌ לרוץ בבהלה — בלי לחשוב.
+  - Source: `❌ לרוץ בבהלה — בלי לחשוב.`
+- **g5/mg_g5_resources** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_resources.md`
+  - Patterns: tsarich
+  - Visible: בישראל מים יקרים — צריך לחסוך.
+  - Source: `בישראל מים יקרים — צריך לחסוך.`
+- **g5/mg_g5_resources** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_resources.md`
+  - Patterns: tsarich
+  - Visible: קרקע — לגידולים ולבנייה — צריך לשמור.
+  - Source: `קרקע — לגידולים ולבנייה — צריך לשמור.`
+- **g5/mg_g5_resources** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_resources.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק גדולים — ואנחנו לא עושים כלום.
+  - Source: `❌ רק גדולים — ואנחנו לא עושים כלום.`
+- **g5/mg_g5_government_institutions** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_government_institutions.md`
+  - Patterns: tsarich
+  - Visible: לא צריך לזכור שמות של אנשים — רק מה כל סוג מוסד עושה.
+  - Source: `לא צריך לזכור שמות של אנשים — רק מה כל סוג מוסד עושה.`
+- **g5/mg_g5_government_institutions** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_government_institutions.md`
+  - Patterns: x_mark
+  - Visible: ❌ לשאול "מי המנהיג עכשיו" — זה לא נושא הלימוד.
+  - Source: `❌ לשאול "מי המנהיג עכשיו" — זה לא נושא הלימוד.`
+- **g5/mg_g5_law_society** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_law_society.md`
+  - Patterns: x_mark
+  - Visible: ❌ חבר לא שיתף צעצוע — זה תמיד עבירה על החוק.
+  - Source: `❌ חבר לא שיתף צעצוע — זה תמיד עבירה על החוק.`
+- **g5/mg_g5_identity** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g5/drafts/mg_g5_identity.md`
+  - Patterns: x_mark
+  - Visible: ❌ רק מי שדומה לי — שייך לקהילה.
+  - Source: `❌ רק מי שדומה לי — שייך לקהילה.`
+- **g6/mg_g6_population** §2 הסבר — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_population.md`
+  - Patterns: lo_nachon
+  - Visible: אין "נכון" או "לא נכון" להיות שייך לקהילה אחרת — יש כבוד לכולם.
+  - Source: `אין "נכון" או "לא נכון" להיות שייך לקהילה אחרת — יש כבוד לכולם.`
+- **g6/mg_g6_population** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_population.md`
+  - Patterns: x_mark
+  - Visible: ❌ "רק מי שדומה לי — טוב" — זה לא מכבד מגוון.
+  - Source: `❌ "רק מי שדומה לי — טוב" — זה לא מכבד מגוון.`
+- **g6/mg_g6_natural_phenomena** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_natural_phenomena.md`
+  - Patterns: x_mark, lo_nachon
+  - Visible: ❌ גשם רגיל בחורף — "מסוכן תמיד" — זה לא נכון.
+  - Source: `❌ גשם רגיל בחורף — "מסוכן תמיד" — זה לא נכון.`
+- **g6/mg_g6_environment_quality** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_environment_quality.md`
+  - Patterns: x_mark
+  - Visible: ❌ זורקים זבל — "מישהו יסדר" — פוגע באיכות הסביבה.
+  - Source: `❌ זורקים זבל — "מישהו יסדר" — פוגע באיכות הסביבה.`
+- **g6/mg_g6_human_environment** §4 בואו נפתור — **REVIEW_LATER**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_human_environment.md`
+  - Patterns: tsarich
+  - Visible: שלב 1: אדם — צריך מהסביבה.
+  - Source: `שלב 1: אדם — צריך מהסביבה.`
+- **g6/mg_g6_human_environment** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_human_environment.md`
+  - Patterns: x_mark
+  - Visible: ❌ לקחת הכל מהטבע — בלי לחשוב על המחר.
+  - Source: `❌ לקחת הכל מהטבע — בלי לחשוב על המחר.`
+- **g6/mg_g6_democracy** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_democracy.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא מסכים — ולכן לא מקשיבים — זה לא דמוקרטי.
+  - Source: `❌ לא מסכים — ולכן לא מקשיבים — זה לא דמוקרטי.`
+- **g6/mg_g6_values** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_values.md`
+  - Patterns: x_mark
+  - Visible: ❌ "שוויון חשוב" — אבל מדלגים על מישהו — זה סתירה.
+  - Source: `❌ "שוויון חשוב" — אבל מדלגים על מישהו — זה סתירה.`
+- **g6/mg_g6_state_institutions** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_state_institutions.md`
+  - Patterns: x_mark
+  - Visible: ❌ "מי המנהיג עכשיו" — זה לא נושא הלימוד.
+  - Source: `❌ "מי המנהיג עכשיו" — זה לא נושא הלימוד.`
+- **g6/mg_g6_social_involvement** §6 שימו לב! — **OK_AS_TEACHING_ERROR**
+  - File: `docs/learning-book/moledet-geography/g6/drafts/mg_g6_social_involvement.md`
+  - Patterns: x_mark
+  - Visible: ❌ לא מעורב — ומצפה שאחרים יפתרו — זה לא מעורבות.
+  - Source: `❌ לא מעורב — ומצפה שאחרים יפתרו — זה לא מעורבות.`

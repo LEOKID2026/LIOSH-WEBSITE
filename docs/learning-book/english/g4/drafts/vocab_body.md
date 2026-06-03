@@ -76,7 +76,7 @@ He washes his hands
 
 He wash his hands — שגוי!
 
-❌ He wash — חסר es!
+❌ He wash — אחרי he מוסיפים es לפועל wash: He washes.
 
 ✓ He washes his hands.
 

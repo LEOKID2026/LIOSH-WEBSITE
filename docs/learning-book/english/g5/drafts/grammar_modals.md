@@ -78,11 +78,11 @@ You must wear a helmet
 
 You must to wear a helmet — שגוי!
 
-❌ must + to — לא נכון!
+❌ אחרי must לא משתמשים ב־to.
 
 ✓ You must wear a helmet.
 
-must + פועל (בלי to).
+אחרי must כותבים את הפועל בלי to.
 
 ---
 

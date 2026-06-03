@@ -1,0 +1,104 @@
+{
+  "batch": "book-language-batch5",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/english/g1/drafts/grammar_be.md",
+      "replacements": [
+        {
+          "old": "תמיד I am ואז המילה.",
+          "new": "במשפט כזה כותבים קודם I am ואז את המילה."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/english/g2/drafts/sentence_base.md",
+      "replacements": [
+        {
+          "old": "כל מילה במקום.",
+          "new": "באנגלית חשוב לשמור על סדר המילים."
+        }
+      ]
+    },
+    "C": {
+      "file": "docs/learning-book/english/g3/drafts/vocab_school.md",
+      "replacements": [
+        {
+          "old": "❌ We learns — We לא מקבל s!",
+          "new": "❌ We learns — אחרי We לא מוסיפים s לפועל."
+        }
+      ]
+    },
+    "D": {
+      "file": "docs/learning-book/english/g5/drafts/grammar_modals.md",
+      "replacements": [
+        {
+          "old": "❌ must + to — לא נכון!",
+          "new": "❌ אחרי must לא משתמשים ב־to."
+        },
+        {
+          "old": "must + פועל (בלי to).",
+          "new": "אחרי must כותבים את הפועל בלי to."
+        }
+      ]
+    },
+    "E": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_health.md",
+      "replacements": [
+        {
+          "old": "❌ should + to — לא נכון!",
+          "new": "❌ אחרי should לא משתמשים ב־to."
+        },
+        {
+          "old": "should + פועל (בלי to).",
+          "new": "אחרי should כותבים את הפועל בלי to."
+        }
+      ]
+    },
+    "F": {
+      "file": "docs/learning-book/science/g5/drafts/environment.md",
+      "replacements": [
+        {
+          "old": "מכונית שרופה דלק — משאב לא מתחדש; פליטות מזהמות את האוויר.",
+          "new": "מכונית ששורפת דלק משתמשת במשאב שאינו מתחדש, ופולטת חומרים שמזהמים את האוויר."
+        }
+      ]
+    },
+    "G": {
+      "file": "docs/learning-book/science/g6/drafts/earth_space.md",
+      "replacements": [
+        {
+          "old": "שינויי אקלים — ממוצע הטמפרטורה בעולם עולה לאט:",
+          "new": "שינויי אקלים — מדענים עוקבים אחרי שינויים בממוצע הטמפרטורה בעולם לאורך זמן:"
+        }
+      ]
+    },
+    "H": {
+      "file": "docs/learning-book/science/g6/drafts/environment.md",
+      "replacements": [
+        {
+          "old": "שלב 1: מכונית — דלק ופליטות.",
+          "new": "שלב 1: מכונית משתמשת בדלק ויוצרת פליטות."
+        },
+        {
+          "old": "שלב 2: הליכה — כמעט בלי פליטות.",
+          "new": "שלב 2: הליכה כמעט לא יוצרת פליטות."
+        }
+      ]
+    },
+    "I": {
+      "file": "docs/learning-book/hebrew/g4/drafts/g4.genre_appropriate_language.md",
+      "replacements": [
+        {
+          "old": "א: ואז — בום!",
+          "new": "א: ואז — הכול קרה בבת אחת!"
+        },
+        {
+          "old": "הכל קרס (דרמטי מדי)",
+          "new": "הכול היה דרמטי מדי"
+        }
+      ]
+    }
+  }
+}

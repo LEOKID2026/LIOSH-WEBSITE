@@ -1,0 +1,26 @@
+{
+  "batch": "book-language-batch12-cleanup",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Hebrew G5 — missed Batch 12 items I/J (actual files)",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_sv_agreement_plural.md",
+      "replacements": [
+        {
+          "old": "❌ הילדים לומדים ספר — מתקנים ספר במקום פועל — לא!",
+          "new": "❌ כאן לא מתקנים את המילה \"ספר\". צריך לבדוק את הפועל במשפט."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g5/drafts/grammar_verb_agreement_plural_subject.md",
+      "replacements": [
+        {
+          "old": "❌ הציפורים עף — כי עץ קרוב — לא!",
+          "new": "❌ \"הציפורים עף\" לא מתאים. הנושא הוא \"הציפורים\", ולכן צריך פועל ברבים."
+        }
+      ]
+    }
+  }
+}

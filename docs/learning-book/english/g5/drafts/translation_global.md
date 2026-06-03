@@ -76,7 +76,7 @@ People around the world speak many languages
 
 People around the world speaks many languages — שגוי!
 
-❌ speaks — People רבים, צריך speak!
+❌ people היא מילה ברבים, לכן צריך speak.
 
 ✓ People around the world speak many languages.
 

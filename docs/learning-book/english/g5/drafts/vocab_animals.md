@@ -76,7 +76,7 @@ The elephant walked slowly
 
 The elephant walk slowly — שגוי!
 
-❌ walk — Present Simple, לא עבר!
+❌ walk הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ The elephant walked slowly.
 

@@ -76,7 +76,7 @@ We learn English
 
 We learns English — שגוי!
 
-❌ We learns — We לא מקבל s!
+❌ We learns — אחרי We לא מוסיפים s לפועל.
 
 ✓ We learn English.
 

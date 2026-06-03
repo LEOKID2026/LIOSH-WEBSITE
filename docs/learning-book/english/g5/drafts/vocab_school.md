@@ -76,7 +76,7 @@ Our class won the project
 
 Our class win the project — שגוי!
 
-❌ win — Present Simple!
+❌ win הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ Our class won the project.
 

@@ -76,7 +76,7 @@ He might feel nervous before the presentation
 
 He must feel nervous before the presentation — לא תמיד נכון!
 
-❌ must = חייב — חזק מדי!
+❌ must פירושו חובה חזקה. כאן הכוונה היא אולי, לכן מתאים יותר להשתמש ב־might.
 
 ✓ He might feel nervous before the presentation.
 

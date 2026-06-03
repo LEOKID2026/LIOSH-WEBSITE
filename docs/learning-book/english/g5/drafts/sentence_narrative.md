@@ -76,7 +76,7 @@ Then we arrived at the station
 
 Then we arrive at the station — שגוי!
 
-❌ arrive — Present Simple!
+❌ arrive הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ Then we arrived at the station.
 

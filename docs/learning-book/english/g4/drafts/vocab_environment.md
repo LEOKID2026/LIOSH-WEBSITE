@@ -75,7 +75,7 @@ We protect the trees
 
 We protects the trees — שגוי!
 
-❌ We protects — We לא מקבל s!
+❌ We protects — אחרי We לא מוסיפים s לפועל.
 
 ✓ We protect the trees.
 

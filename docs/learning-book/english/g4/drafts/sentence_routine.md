@@ -76,7 +76,7 @@ Every day I help at home
 
 Every day I helps at home — שגוי!
 
-❌ I helps — I לא מקבל s!
+❌ I helps — אחרי I לא מוסיפים s לפועל.
 
 ✓ Every day I help at home.
 

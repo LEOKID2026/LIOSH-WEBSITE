@@ -79,7 +79,7 @@ This book is more interesting than that one
 
 This book is interestinger than that one — שגוי!
 
-❌ interestinger — לא קיים!
+❌ interestinger אינה צורה נכונה. אומרים more interesting.
 
 ✓ This book is more interesting than that one.
 

@@ -77,7 +77,7 @@ I need to rest and drink water
 
 I need rest and drink water — שגוי!
 
-❌ חסר to אחרי need!
+❌ אחרי need צריך להוסיף to לפני הפועל.
 
 ✓ I need to rest and drink water.
 

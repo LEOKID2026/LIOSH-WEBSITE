@@ -76,11 +76,11 @@ You should drink water and rest when you are tired
 
 You should to drink water and rest — שגוי!
 
-❌ should + to — לא נכון!
+❌ אחרי should לא משתמשים ב־to.
 
 ✓ You should drink water and rest when you are tired.
 
-should + פועל (בלי to).
+אחרי should כותבים את הפועל בלי to.
 
 ---
 

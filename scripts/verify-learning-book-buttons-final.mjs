@@ -41,6 +41,8 @@ import {
 const ROOT = process.cwd();
 const GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
 const MG_PUBLISHED_GRADES = ["g2", "g3", "g4", "g5", "g6"];
+const MOLEDET_BOOK_GRADES = ["g2", "g3", "g4"];
+const GEOGRAPHY_BOOK_GRADES = ["g5", "g6"];
 
 /** @type {string[]} */
 const failures = [];
@@ -385,6 +387,15 @@ function verifyMoledetGeographyBooks() {
     }
     setResult(forbiddenSubject, "g1", "main", "NOT_APPLICABLE");
     setResult(forbiddenSubject, "g1", "explain", "NOT_APPLICABLE");
+  }
+
+  for (const grade of MOLEDET_BOOK_GRADES) {
+    setResult("geography", grade, "main", "NOT_APPLICABLE");
+    setResult("geography", grade, "explain", "NOT_APPLICABLE");
+  }
+  for (const grade of GEOGRAPHY_BOOK_GRADES) {
+    setResult("moledet", grade, "main", "NOT_APPLICABLE");
+    setResult("moledet", grade, "explain", "NOT_APPLICABLE");
   }
 
   for (const grade of MG_PUBLISHED_GRADES) {

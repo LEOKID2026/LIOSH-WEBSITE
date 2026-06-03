@@ -171,9 +171,9 @@ He wash his hands — שגוי!
 
 > Review flags: mixed_language
 
-❌ He wash — חסר es!
+❌ He wash — אחרי he מוסיפים es לפועל wash: He washes.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ He washes his hands.
 
@@ -269,9 +269,9 @@ They feels excited — שגוי!
 
 > Review flags: mixed_language
 
-❌ They feels — They לא מקבל s!
+❌ They feels — אחרי They לא מוסיפים s לפועל.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ They feel excited.
 
@@ -359,9 +359,9 @@ My parents works hard — שגוי!
 
 > Review flags: mixed_language
 
-❌ My parents works — parents = רבים!
+❌ My parents works — parents היא מילה ברבים, לכן כותבים work.
 
-> Review flags: mixed_language, contains_formula_or_symbols
+> Review flags: mixed_language
 
 ✓ My parents work hard.
 
@@ -447,9 +447,9 @@ We eats healthy food — שגוי!
 
 > Review flags: mixed_language
 
-❌ We eats — We לא מקבל s!
+❌ We eats — אחרי We לא מוסיפים s לפועל.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ We eat healthy food.
 
@@ -545,7 +545,7 @@ The student read books — שגוי!
 
 > Review flags: mixed_language, possible_instruction
 
-❌ The student — יחיד, צריך students!
+❌ The student — כאן מדברים על כמה תלמידים, לכן צריך students.
 
 > Review flags: mixed_language
 
@@ -817,9 +817,9 @@ The park on our town — שגוי!
 
 > Review flags: mixed_language
 
-❌ on our town — צריך in!
+❌ on our town — כשמדברים על מקום כמו town משתמשים ב־in.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ The park is in our town.
 
@@ -907,9 +907,9 @@ We protects the trees — שגוי!
 
 > Review flags: mixed_language
 
-❌ We protects — We לא מקבל s!
+❌ We protects — אחרי We לא מוסיפים s לפועל.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ We protect the trees.
 
@@ -997,7 +997,7 @@ We travel in bus — שגוי!
 
 > Review flags: mixed_language
 
-❌ in bus — צריך by bus!
+❌ in bus — כשמדברים על נסיעה באוטובוס אומרים by bus.
 
 > Review flags: mixed_language
 
@@ -1089,9 +1089,9 @@ He walk to school — שגוי!
 
 > Review flags: mixed_language
 
-❌ He walk — חסר s!
+❌ He walk — אחרי he מוסיפים s לפועל: He walks.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ He walks to school.
 
@@ -1187,9 +1187,9 @@ She reads now — Simple, לא Continuous!
 
 > Review flags: mixed_language
 
-❌ She reads now — הרגל!
+❌ She reads now — המילה now רומזת לפעולה שקורית עכשיו, לכן צריך Continuous.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ She is reading now.
 
@@ -1287,9 +1287,9 @@ I have any apples — any בשאלה/שלילה!
 
 > Review flags: mixed_language, contains_formula_or_symbols
 
-❌ I have any — בחיוב: some!
+❌ I have any — במשפט חיובי משתמשים בדרך כלל ב־some.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ I have some apples.
 
@@ -1379,7 +1379,7 @@ The tall girl runs quick — שגוי!
 
 > Review flags: mixed_language
 
-❌ quick — צריך quickly (תואר פועל)!
+❌ quick — כאן צריך quickly, כי מתארים איך הפעולה נעשית.
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
@@ -1477,9 +1477,9 @@ Every day I helps at home — שגוי!
 
 > Review flags: mixed_language
 
-❌ I helps — I לא מקבל s!
+❌ I helps — אחרי I לא מוסיפים s לפועל.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ Every day I help at home.
 
@@ -1573,9 +1573,9 @@ First we pack bags — חסר our!
 
 > Review flags: mixed_language
 
-❌ pack bags — צריך our bags!
+❌ pack bags — כאן צריך our bags כדי לומר "התיקים שלנו".
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ First we pack our bags.
 

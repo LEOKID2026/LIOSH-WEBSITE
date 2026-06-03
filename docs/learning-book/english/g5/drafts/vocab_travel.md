@@ -76,7 +76,7 @@ We will travel by train
 
 We travel by train tomorrow — שגוי!
 
-❌ travel — Present Simple, לא עתיד!
+❌ travel הוא בזמן הווה. כאן מדברים על עתיד.
 
 ✓ We will travel by train.
 

@@ -74,7 +74,7 @@ The tall girl runs quickly
 
 The tall girl runs quick — שגוי!
 
-❌ quick — צריך quickly (תואר פועל)!
+❌ quick — כאן צריך quickly, כי מתארים איך הפעולה נעשית.
 
 ✓ The tall girl runs quickly.
 

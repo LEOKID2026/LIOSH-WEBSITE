@@ -1,0 +1,52 @@
+{
+  "batch": "book-language-batch10",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Hebrew G3-G6 child-friendly wording",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.compare_light.md",
+      "replacements": [{ "old": "❌ שונים — בלי להסביר — לא! צריך: גבוה מול נמוך.", "new": "❌ \"שונים\" לבד לא מספיק. כדאי להסביר במה הם שונים: גבוה מול נמוך." }]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g3/drafts/g3.connectors.md",
+      "replacements": [{ "old": "❌ עייפתי אבל לא ישנתי — לא! כאן צריך כי (סיבה).", "new": "❌ \"עייפתי אבל לא ישנתי\" לא מתאים כאן. צריך מילת סיבה: כי." }]
+    },
+    "C": {
+      "file": "docs/learning-book/hebrew/g3/drafts/grammar_gender_number_plural.md",
+      "replacements": [{ "old": "❌ ילדים רץ — לא! צריך רצים.", "new": "❌ \"ילדים רץ\" לא מתאים. כשמדברים על ילדים, כותבים \"רצים\"." }]
+    },
+    "D": {
+      "file": "docs/learning-book/hebrew/g3/drafts/grammar_prep_choice_collocation.md",
+      "replacements": [{ "old": "❌ הספר בשולחן — בדרך כלל לא נכון — צריך על השולחן.", "new": "❌ \"הספר בשולחן\" בדרך כלל לא מתאים. אומרים \"הספר על השולחן\"." }]
+    },
+    "E": {
+      "file": "docs/learning-book/hebrew/g5/drafts/grammar_binary_grammar_tf.md",
+      "replacements": [{ "old": "❌ לא תקין — כי נשמע מוזר — צריך לבדוק נושא ופועל!", "new": "❌ לא תקין — לא מסתפקים בכך שזה נשמע מוזר. בודקים אם הנושא והפועל מתאימים." }]
+    },
+    "F": {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.genre_variety.md",
+      "replacements": [{ "old": "שאלה: איזו סוגה — הכיתה חייבת לשמור על הגינה כי היא מלמדת אחריות?", "new": "שאלה: איזו סוגה מתאימה למשפט: \"הכיתה צריכה לשמור על הגינה כי היא מלמדת אחריות\"?" }]
+    },
+    "G": {
+      "file": "docs/learning-book/hebrew/g6/drafts/g6.compare_genres.md",
+      "replacements": [{ "old": "❌ מאמר עם רועי שמסכים — לא רק מידע, יש סיפור קטן ודעה.", "new": "❌ אם רועי מופיע ומביע הסכמה, זה לא רק מידע. יש כאן גם סיפור קצר ודעה." }]
+    },
+    "H": {
+      "file": "docs/learning-book/hebrew/g6/drafts/g6.critical_evaluation_light.md",
+      "replacements": [{ "old": "לא צריך לתקוף — רק לבדוק:", "new": "לא צריך לתקוף את הטענה. צריך לבדוק אותה בעזרת שאלות:" }]
+    },
+    "I": {
+      "file": "docs/learning-book/hebrew/g6/drafts/grammar_tf.md",
+      "replacements": [{ "old": "❌ \"ספרים... נמצא\" — לא נכון.", "new": "❌ \"ספרים... נמצא\" לא מתאים. \"ספרים\" הם רבים, לכן צריך פועל ברבים." }]
+    },
+    "J": {
+      "file": "docs/learning-book/hebrew/g6/drafts/grammar_subject_verb.md",
+      "replacements": [{ "old": "הפועל חייב להיות בלשון רבים.", "new": "הפועל צריך להתאים לנושא ולהיות בלשון רבים." }]
+    },
+    "K": {
+      "file": "docs/learning-book/hebrew/g6/drafts/vocabulary_subject_specific.md",
+      "replacements": [{ "old": "כל מקצוע יש לו מילים משלו — לא צריך לזכור הכל, רק להכיר.", "new": "לכל מקצוע יש מילים משלו. לא צריך לזכור הכול מיד, אבל חשוב להכיר אותן." }]
+    }
+  }
+}

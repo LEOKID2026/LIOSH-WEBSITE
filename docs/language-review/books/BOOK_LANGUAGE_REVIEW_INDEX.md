@@ -1,6 +1,6 @@
 # Book Language Review — Index
 
-Generated: 2026-06-03T00:38:30.149Z
+Generated: 2026-06-03T15:31:36.811Z
 
 Extraction-only package for owner/assistant manual language review. Book source content was not modified.
 
@@ -12,9 +12,9 @@ Extraction-only package for owner/assistant manual language review. Book source 
 | Grades (distinct) | 6 |
 | Books | 35 |
 | Pages | 602 |
-| Text blocks | 21742 |
-| Blocks with review flags | 6029 |
-| Blocks with extraction warnings | 9 |
+| Text blocks | 21770 |
+| Blocks with review flags | 6022 |
+| Blocks with extraction warnings | 8 |
 
 ## Scope
 
@@ -115,7 +115,6 @@ Extraction-only package for owner/assistant manual language review. Book source 
 - math:g6/eq_sub §6 (body_line): source_render_mismatch
 - geometry:g2/square_area §3 (body_line): source_render_mismatch
 - geometry:g4/triangle_perimeter §2 (body_line): source_render_mismatch
-- geometry:g5/square_perimeter §3 (body_line): source_render_mismatch
 - geometry:g6/square_perimeter §3 (body_line): source_render_mismatch
 - geometry:g6/square_perimeter §3 (body_line): source_render_mismatch
 - geometry:g6/triangle_angles §2 (body_line): source_render_mismatch

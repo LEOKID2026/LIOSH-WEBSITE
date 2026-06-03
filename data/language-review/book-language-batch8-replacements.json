@@ -1,0 +1,72 @@
+{
+  "batch": "book-language-batch8",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "English G5-G6 grammar/error explanations",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_animals.md",
+      "replacements": [{ "old": "❌ walk — Present Simple, לא עבר!", "new": "❌ walk הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "B": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_community.md",
+      "replacements": [{ "old": "❌ visit — Present Simple!", "new": "❌ visit הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "C": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_food.md",
+      "replacements": [{ "old": "❌ cook — Present Simple!", "new": "❌ cook הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "D": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_school.md",
+      "replacements": [{ "old": "❌ win — Present Simple!", "new": "❌ win הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "E": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_sports.md",
+      "replacements": [{ "old": "❌ score — Present Simple!", "new": "❌ score הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "F": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_travel.md",
+      "replacements": [{ "old": "❌ travel — Present Simple, לא עתיד!", "new": "❌ travel הוא בזמן הווה. כאן מדברים על עתיד." }]
+    },
+    "G": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_technology.md",
+      "replacements": [{ "old": "❌ use — חסר s ב-he/she/it!", "new": "❌ אחרי he, she או it מוסיפים בדרך כלל s לפועל: uses." }]
+    },
+    "H": {
+      "file": "docs/learning-book/english/g5/drafts/grammar_future_forms.md",
+      "replacements": [{ "old": "❌ will + going to — לא יחד!", "new": "❌ בדרך כלל לא משתמשים יחד ב־will וב־going to באותו פועל." }]
+    },
+    "I": {
+      "file": "docs/learning-book/english/g5/drafts/grammar_comparatives.md",
+      "replacements": [{ "old": "❌ interestinger — לא קיים!", "new": "❌ interestinger אינה צורה נכונה. אומרים more interesting." }]
+    },
+    "J": {
+      "file": "docs/learning-book/english/g5/drafts/grammar_quantifiers.md",
+      "replacements": [{ "old": "❌ was — people רבים, צריך were!", "new": "❌ people היא מילה ברבים, לכן צריך were." }]
+    },
+    "K": {
+      "file": "docs/learning-book/english/g5/drafts/translation_technology.md",
+      "replacements": [{ "old": "❌ send — Present Simple, לא עתיד!", "new": "❌ send הוא בזמן הווה. כאן מדברים על עתיד." }]
+    },
+    "L": {
+      "file": "docs/learning-book/english/g5/drafts/translation_global.md",
+      "replacements": [{ "old": "❌ speaks — People רבים, צריך speak!", "new": "❌ people היא מילה ברבים, לכן צריך speak." }]
+    },
+    "M": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_animals.md",
+      "replacements": [{ "old": "❌ swim — Present Simple, לא פעולה מתמשכת בעבר!", "new": "❌ swim הוא בזמן הווה. כאן צריך לתאר פעולה מתמשכת בעבר." }]
+    },
+    "N": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_community.md",
+      "replacements": [{ "old": "❌ celebrate — Present Simple!", "new": "❌ celebrate הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "O": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_environment.md",
+      "replacements": [{ "old": "❌ affect — Climate change יחיד, צריך affects!", "new": "❌ Climate change הוא יחיד, לכן צריך affects." }]
+    },
+    "P": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_global_issues.md",
+      "replacements": [{ "old": "❌ works — countries רבים!", "new": "❌ countries היא מילה ברבים, לכן צריך work." }]
+    }
+  }
+}

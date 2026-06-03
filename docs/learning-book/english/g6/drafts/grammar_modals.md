@@ -82,7 +82,7 @@ You should ask the teacher for help
 
 You should to ask the teacher for help — שגוי!
 
-❌ should + to!
+❌ אחרי should לא משתמשים ב־to.
 
 ✓ You should ask the teacher for help.
 

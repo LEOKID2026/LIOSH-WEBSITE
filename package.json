@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "dev:run-button": "next dev -p 3002",
-    "build": "next build",
+    "build": "node scripts/ensure-clean-next-build.mjs && next build",
     "extract:book-language-review": "node scripts/extract-book-language-review.mjs",
     "help:provision-demo": "node --env-file=.env.local scripts/help-center/provision-demo-account.mjs",
     "help:seed-demo-report": "node --env-file=.env.local scripts/help-center/seed-demo-report-data.mjs",

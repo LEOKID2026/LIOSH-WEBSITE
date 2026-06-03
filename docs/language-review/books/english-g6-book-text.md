@@ -85,7 +85,7 @@ The whales swim when we saw them — שגוי!
 
 > Review flags: mixed_language
 
-❌ swim — Present Simple, לא פעולה מתמשכת בעבר!
+❌ swim הוא בזמן הווה. כאן צריך לתאר פעולה מתמשכת בעבר.
 
 > Review flags: mixed_language
 
@@ -179,7 +179,9 @@ Our community celebrate the festival last month — שגוי!
 
 > Review flags: mixed_language
 
-❌ celebrate — Present Simple!
+❌ celebrate הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ Our community celebrated the festival last month.
 
@@ -269,9 +271,9 @@ He must feel nervous before the presentation — לא תמיד נכון!
 
 > Review flags: mixed_language, possible_factual_claim
 
-❌ must = חייב — חזק מדי!
+❌ must פירושו חובה חזקה. כאן הכוונה היא אולי, לכן מתאים יותר להשתמש ב־might.
 
-> Review flags: mixed_language, contains_formula_or_symbols, possible_factual_claim
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix, possible_factual_claim
 
 ✓ He might feel nervous before the presentation.
 
@@ -361,7 +363,7 @@ Climate change affect people around the world — שגוי!
 
 > Review flags: mixed_language
 
-❌ affect — Climate change יחיד, צריך affects!
+❌ Climate change הוא יחיד, לכן צריך affects.
 
 > Review flags: mixed_language
 
@@ -451,15 +453,15 @@ You should to drink water and rest — שגוי!
 
 > Review flags: mixed_language
 
-❌ should + to — לא נכון!
+❌ אחרי should לא משתמשים ב־to.
 
-> Review flags: mixed_language, contains_formula_or_symbols
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ You should drink water and rest when you are tired.
 
-should + פועל (בלי to).
+אחרי should כותבים את הפועל בלי to.
 
-> Review flags: mixed_language, contains_formula_or_symbols
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ### Section 7 — בואו נתרגל
 
@@ -549,7 +551,7 @@ If the internet will stop, we could use books — שגוי!
 
 > Review flags: mixed_language
 
-❌ will stop — אחרי If לא שמים will!
+❌ אחרי If לא משתמשים ב־will.
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
@@ -737,7 +739,7 @@ Music is an important part of our cultures — שגוי!
 
 > Review flags: mixed_language
 
-❌ cultures — מדברים על תרבות אחת שלנו!
+❌ cultures היא צורת רבים. כאן מדברים על תרבות אחת, לכן צריך culture.
 
 > Review flags: mixed_language
 
@@ -829,7 +831,7 @@ Many countries works together on global issues — שגוי!
 
 > Review flags: mixed_language
 
-❌ works — countries רבים!
+❌ countries היא מילה ברבים, לכן צריך work.
 
 > Review flags: mixed_language
 
@@ -919,9 +921,9 @@ We learn about ancient history in class yesterday — שגוי!
 
 > Review flags: mixed_language
 
-❌ learn — Present! yesterday דורש עבר!
+❌ learn הוא בזמן הווה. המילה yesterday מראה שצריך פועל בעבר.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ We learned about ancient history in class.
 
@@ -1019,7 +1021,7 @@ I read when my friend was calling — מבלבל!
 
 > Review flags: mixed_language, possible_instruction
 
-❌ read + was calling — לא מדגיש פעולה מתמשכת ואירוע!
+❌ read + was calling לא מתאים כאן, כי צריך להראות פעולה מתמשכת ברקע ואירוע שקרה באמצע.
 
 > Review flags: mixed_language, contains_formula_or_symbols, possible_instruction
 
@@ -1115,7 +1117,7 @@ If it will rain, we will stay at home — שגוי!
 
 > Review flags: mixed_language
 
-❌ will rain — אחרי If לא will!
+❌ אחרי If לא משתמשים ב־will.
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
@@ -1213,9 +1215,9 @@ You should to ask the teacher for help — שגוי!
 
 > Review flags: mixed_language
 
-❌ should + to!
+❌ אחרי should לא משתמשים ב־to.
 
-> Review flags: contains_formula_or_symbols
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ You should ask the teacher for help.
 
@@ -1315,9 +1317,9 @@ This is the more interesting book I have read — שגוי!
 
 > Review flags: mixed_language, possible_instruction
 
-❌ more interesting — זה comparative, לא superlative!
+❌ more interesting משווה בין דברים. כאן צריך צורת superlative: the most interesting.
 
-> Review flags: mixed_language, contains_directional_rtl_ltr_mix
+> Review flags: mixed_language
 
 ✓ This is the most interesting book I have read.
 
@@ -1355,9 +1357,9 @@ Subject: English
 
 ### Section 1 — מה לומדים?
 
-היום נבנים משפטים מורכבים — 8–10 מילים, While + Past Continuous.
+היום נבנה משפטים מורכבים של 8–10 מילים עם While ו־Past Continuous.
 
-> Review flags: mixed_language, contains_formula_or_symbols
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 While I was studying, my sister was listening to music — בזמן שלמדתי, אחותי האזינה למוזיקה.
 
@@ -1411,9 +1413,9 @@ While I studied, my sister listened to music — פחות מדויק!
 
 > Review flags: mixed_language
 
-❌ studied / listened — Past Simple בלבד, פחות מדגיש מקביל!
+❌ studied / listened הם רק Past Simple. כאן רוצים להדגיש שתי פעולות שקרו באותו זמן.
 
-> Review flags: mixed_language, contains_formula_or_symbols
+> Review flags: mixed_language, contains_formula_or_symbols, contains_directional_rtl_ltr_mix
 
 ✓ While I was studying, my sister was listening to music.
 
@@ -1449,7 +1451,7 @@ Subject: English
 
 ### Section 1 — מה לומדים?
 
-היום נתרגל תרגום מתקדם על טכנולוגיה — might ומשפטים ארוכים.
+היום נתרגל תרגום בנושא טכנולוגיה עם might ועם משפטים ארוכים.
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
@@ -1521,9 +1523,9 @@ Scientists must discover new ways to save energy — חזק מדי!
 
 > Review flags: mixed_language, possible_factual_claim
 
-❌ must = חייב — לא אותה משמעות כמו might!
+❌ must פירושו חייב. כאן המשמעות היא אולי, לכן מתאים יותר might.
 
-> Review flags: mixed_language, contains_formula_or_symbols, possible_factual_claim
+> Review flags: mixed_language, possible_factual_claim
 
 ✓ Scientists might discover new ways to save energy.
 
@@ -1617,7 +1619,7 @@ If we will protect the oceans, future generations benefit — שגוי!
 
 > Review flags: mixed_language
 
-❌ will protect אחרי If; benefit בלי will!
+❌ אחרי If לא משתמשים ב־will, ובחלק השני צריך will.
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 

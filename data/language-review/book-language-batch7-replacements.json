@@ -1,0 +1,134 @@
+{
+  "batch": "book-language-batch7",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "English G4 grammar explanations",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/english/g4/drafts/grammar_present_simple.md",
+      "replacements": [
+        {
+          "old": "❌ He walk — חסר s!",
+          "new": "❌ He walk — אחרי he מוסיפים s לפועל: He walks."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_body.md",
+      "replacements": [
+        {
+          "old": "❌ He wash — חסר es!",
+          "new": "❌ He wash — אחרי he מוסיפים es לפועל wash: He washes."
+        }
+      ]
+    },
+    "C": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_emotions.md",
+      "replacements": [
+        {
+          "old": "❌ They feels — They לא מקבל s!",
+          "new": "❌ They feels — אחרי They לא מוסיפים s לפועל."
+        }
+      ]
+    },
+    "D": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_environment.md",
+      "replacements": [
+        {
+          "old": "❌ We protects — We לא מקבל s!",
+          "new": "❌ We protects — אחרי We לא מוסיפים s לפועל."
+        }
+      ]
+    },
+    "E": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_food.md",
+      "replacements": [
+        {
+          "old": "❌ We eats — We לא מקבל s!",
+          "new": "❌ We eats — אחרי We לא מוסיפים s לפועל."
+        }
+      ]
+    },
+    "F": {
+      "file": "docs/learning-book/english/g4/drafts/sentence_routine.md",
+      "replacements": [
+        {
+          "old": "❌ I helps — I לא מקבל s!",
+          "new": "❌ I helps — אחרי I לא מוסיפים s לפועל."
+        }
+      ]
+    },
+    "G": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_family.md",
+      "replacements": [
+        {
+          "old": "❌ My parents works — parents = רבים!",
+          "new": "❌ My parents works — parents היא מילה ברבים, לכן כותבים work."
+        }
+      ]
+    },
+    "H": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_school.md",
+      "replacements": [
+        {
+          "old": "❌ The student — יחיד, צריך students!",
+          "new": "❌ The student — כאן מדברים על כמה תלמידים, לכן צריך students."
+        }
+      ]
+    },
+    "I": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_community.md",
+      "replacements": [
+        {
+          "old": "❌ on our town — צריך in!",
+          "new": "❌ on our town — כשמדברים על מקום כמו town משתמשים ב־in."
+        }
+      ]
+    },
+    "J": {
+      "file": "docs/learning-book/english/g4/drafts/vocab_travel.md",
+      "replacements": [
+        {
+          "old": "❌ in bus — צריך by bus!",
+          "new": "❌ in bus — כשמדברים על נסיעה באוטובוס אומרים by bus."
+        }
+      ]
+    },
+    "K": {
+      "file": "docs/learning-book/english/g4/drafts/grammar_quantifiers.md",
+      "replacements": [
+        {
+          "old": "❌ I have any — בחיוב: some!",
+          "new": "❌ I have any — במשפט חיובי משתמשים בדרך כלל ב־some."
+        }
+      ]
+    },
+    "L": {
+      "file": "docs/learning-book/english/g4/drafts/sentence_descriptive.md",
+      "replacements": [
+        {
+          "old": "❌ quick — צריך quickly (תואר פועל)!",
+          "new": "❌ quick — כאן צריך quickly, כי מתארים איך הפעולה נעשית."
+        }
+      ]
+    },
+    "M": {
+      "file": "docs/learning-book/english/g4/drafts/grammar_simple_continuous.md",
+      "replacements": [
+        {
+          "old": "❌ She reads now — הרגל!",
+          "new": "❌ She reads now — המילה now רומזת לפעולה שקורית עכשיו, לכן צריך Continuous."
+        }
+      ]
+    },
+    "N": {
+      "file": "docs/learning-book/english/g4/drafts/sentence_travel.md",
+      "replacements": [
+        {
+          "old": "❌ pack bags — צריך our bags!",
+          "new": "❌ pack bags — כאן צריך our bags כדי לומר \"התיקים שלנו\"."
+        }
+      ]
+    }
+  }
+}

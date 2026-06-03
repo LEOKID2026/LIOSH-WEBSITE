@@ -78,7 +78,7 @@ She is reading now
 
 She reads now — Simple, לא Continuous!
 
-❌ She reads now — הרגל!
+❌ She reads now — המילה now רומזת לפעולה שקורית עכשיו, לכן צריך Continuous.
 
 ✓ She is reading now.
 

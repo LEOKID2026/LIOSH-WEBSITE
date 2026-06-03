@@ -327,7 +327,7 @@ mom
 
 > Review flags: mixed_language, contains_formula_or_symbols
 
-זכרו: mom לאבא לא מתאים.
+זכרו: לאבא אומרים dad, לא mom.
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
@@ -409,7 +409,7 @@ dog
 
 ### Section 5 — נסו בעצמכם
 
-איזו חיה מיואות ואומרת meow?
+איזו חיה מייללת ואומרת meow?
 
 > Review flags: mixed_language
 
@@ -851,9 +851,9 @@ I am happy
 
 > Review flags: mixed_language
 
-תמיד I am ואז המילה.
+במשפט כזה כותבים קודם I am ואז את המילה.
 
-> Review flags: mixed_language, contains_directional_rtl_ltr_mix, possible_factual_claim
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ### Section 7 — בואו נתרגל
 
@@ -1049,9 +1049,9 @@ Hello ו-Thank you — שני ביטויים שונים.
 
 > Review flags: mixed_language, contains_formula_or_symbols
 
-Hello בבוקר בכיתה.
+אומרים Hello כשנכנסים לכיתה או פוגשים מישהו.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ### Section 7 — בואו נתרגל
 

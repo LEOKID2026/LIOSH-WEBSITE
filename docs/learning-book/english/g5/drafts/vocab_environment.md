@@ -76,7 +76,7 @@ They planted trees last year
 
 They plant trees last year — שגוי!
 
-❌ plant — Present Simple!
+❌ plant הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ They planted trees last year.
 

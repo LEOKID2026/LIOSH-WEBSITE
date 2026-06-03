@@ -76,7 +76,7 @@ This is the most interesting book I have read
 
 This is the more interesting book I have read — שגוי!
 
-❌ more interesting — זה comparative, לא superlative!
+❌ more interesting משווה בין דברים. כאן צריך צורת superlative: the most interesting.
 
 ✓ This is the most interesting book I have read.
 

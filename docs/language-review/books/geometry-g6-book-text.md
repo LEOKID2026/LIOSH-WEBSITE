@@ -49,18 +49,18 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-היקף — «מסלול הליכה» סביב; שטח — «ריצוף» בפנים.
+היקף — "מסלול הליכה" סביב; שטח — "ריצוף" בפנים.
 
 ### Section 3 — דוגמה
 
 ריבוע 12 ס״מ:
 
-- היקף:  4 × 12 = 48 ס״מ
+- היקף:  4 × 12 = 48 ס״מ.
 
 > Review flags: contains_formula_or_symbols
 > Extraction warning: source_render_mismatch
 
-- שטח:  12 × 12 = 144 סמ״ר
+- שטח:  12 × 12 = 144 סמ״ר.
 
 > Review flags: contains_formula_or_symbols
 > Extraction warning: source_render_mismatch
@@ -333,19 +333,19 @@ Subject: Geometry
 
 היום נעמיק שטח מקבילית — ונשווה למלבן.
 
-מקבילית «נטויה» — אבל שטח = בסיס × גובה — כמו מלבן עם אותו בסיס וגובה!
+מקבילית "נטויה" — אבל שטח = בסיס × גובה — כמו מלבן עם אותו בסיס וגובה!
 
 > Review flags: contains_formula_or_symbols
 
 ### Section 2 — הסבר
 
-מקבילית vs מלבן — אותה נוסחה: בסיס × גובה.
+מקבילית לעומת מלבן — אותה נוסחת שטח: בסיס × גובה.
 
-> Review flags: mixed_language, contains_formula_or_symbols, contains_directional_rtl_ltr_mix
+> Review flags: contains_formula_or_symbols
 
 מלבן — זוויות 90°.
 
-מקבילית — «נטויה» — אבל גובה עדיין מאונך לבסיס.
+מקבילית — "נטויה" — אבל גובה עדיין מאונך לבסיס.
 
 גובה — תמיד מאונך — לא הצלע הנטויה.
 
@@ -363,7 +363,7 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-«גזירת» המשולשים מהצדדים — לא משנה את השטח.
+"גזירת" המשולשים מהצדדים — לא משנה את השטח.
 
 בסיס 10 ס״מ, גובה 6 ס״מ → 60 סמ״ר
 
@@ -451,7 +451,7 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-3. ÷ 2 — חצי מהמלבן «הדמיוני» שמקיף את הטרפז
+3. ÷ 2 — חצי מהמלבן "הדמיוני" שמקיף את הטרפז
 
 > Review flags: contains_formula_or_symbols
 
@@ -473,7 +473,7 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-«ממוצע» הבסיסים: (8+12)÷2 = 10 → 10 × 5 = 50 — אותה תוצאה.
+"ממוצע" הבסיסים: (8+12)÷2 = 10 → 10 × 5 = 50 — אותה תוצאה.
 
 > Review flags: contains_formula_or_symbols
 
@@ -557,7 +557,7 @@ Subject: Geometry
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
-לא רק «180° פחות חיבור» — אלא: x + זווית1 + זווית2 = 180°.
+לא רק "180° פחות חיבור" — אלא: x + זווית1 + זווית2 = 180°.
 
 > Review flags: mixed_language, contains_formula_or_symbols, contains_directional_rtl_ltr_mix
 
@@ -593,7 +593,7 @@ Subject: Geometry
 
 > Review flags: mixed_language, contains_formula_or_symbols
 
-4. בודקים:  x + A + B = 180°
+4. בודקים:  x + A + B = 180°.
 
 > Review flags: mixed_language, contains_formula_or_symbols
 > Extraction warning: source_render_mismatch
@@ -1210,7 +1210,7 @@ Subject: Geometry
 
 > Review flags: mixed_language, contains_formula_or_symbols, contains_directional_rtl_ltr_mix
 
-(שונה מ«מנסרה»: כאן תיבה — כל הפאות מלבנים, ללא הפרדה לשלב «שטח בסיס».)
+(שונה מ"מנסרה": כאן תיבה — כל הפאות מלבנים, ללא הפרדה לשלב "שטח בסיס".)
 
 ### Section 2 — הסבר
 
@@ -1320,7 +1320,7 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-קודם מחשבים שטח של הבסיס — ואז «מרחיבים» בגובה.
+קודם מחשבים שטח של הבסיס — ואז "מרחיבים" בגובה.
 
 ### Section 2 — הסבר
 
@@ -1348,7 +1348,7 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-«24 יחידות ריבוע בבסיס, 10 שכבות» → 240 יחידות קуб.
+"24 יחידות ריבוע בבסיס, 10 שכבות" → 240 קוביות יחידה.
 
 ### Section 4 — בואו נפתור
 

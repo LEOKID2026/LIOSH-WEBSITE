@@ -23,7 +23,7 @@
 
 ## 1. מה לומדים?
 
-היום נבנים משפטים מורכבים — 8–10 מילים, While + Past Continuous.
+היום נבנה משפטים מורכבים של 8–10 מילים עם While ו־Past Continuous.
 While I was studying, my sister was listening to music — בזמן שלמדתי, אחותי האזינה למוזיקה.
 
 ---
@@ -76,7 +76,7 @@ While I was studying, my sister was listening to music
 
 While I studied, my sister listened to music — פחות מדויק!
 
-❌ studied / listened — Past Simple בלבד, פחות מדגיש מקביל!
+❌ studied / listened הם רק Past Simple. כאן רוצים להדגיש שתי פעולות שקרו באותו זמן.
 
 ✓ While I was studying, my sister was listening to music.
 

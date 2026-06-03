@@ -1,0 +1,76 @@
+{
+  "batch": "book-language-batch13",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Hebrew G1 remaining abrupt error lines",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.open_close_syllable.md",
+      "replacements": [{ "old": "❌ בַּת = בָּ — לא! בַּת סגורה, בָּ פתוחה.", "new": "❌ בַּת וְבָּ הן לא אותו דבר. בַּת היא הברה סגורה, ובָּ היא הברה פתוחה." }]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.rhyme.md",
+      "replacements": [{ "old": "❌ בַּיִת וְבַּר — חרוזות — לא! רק ההתחלה דומה, הסוף שונה.", "new": "❌ בַּיִת וְבַּר אינן חרוזות. ההתחלה דומה, אבל הסוף שונה." }]
+    },
+    "C": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.letters.md",
+      "replacements": [{ "old": "❌ אות א — בֵּית — לא! א זו אָלֶף.", "new": "❌ האות א היא אָלֶף, לא בֵּית." }]
+    },
+    "D": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.final_letters.md",
+      "replacements": [{ "old": "❌ בסוף מִלָּה — אות רגילה — לא! יש אותיות מיוחדות בסוף.", "new": "❌ בסוף מִלָּה לפעמים משתמשים באות סופית מיוחדת." }]
+    },
+    "E": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.basic_niqqud.md",
+      "replacements": [{ "old": "❌ קָם — קומ — לא! הקמץ אומר א, לא ו.", "new": "❌ קָם לא קוראים קומ. הקמץ נשמע כמו אָ, לא כמו וּ." }]
+    },
+    "F": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.sound_letter_match.md",
+      "replacements": [{ "old": "❌ הצליל מ — האות נ — לא! מ שייך ל־מ.", "new": "❌ הצליל מ מתאים לאות מ, לא לאות נ." }]
+    },
+    "G": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.simple_words_read.md",
+      "replacements": [{ "old": "❌ בַּת — ב, ת בנפרד — לא! צריך לקרוא בַּת.", "new": "❌ לא קוראים רק ב ו־ת בנפרד. מחברים וקוראים בַּת." }]
+    },
+    "H": {
+      "file": "docs/learning-book/hebrew/g1/drafts/reading_word_level_early_g1_spelling_meaning_then_choice.md",
+      "replacements": [{ "old": "❌ חיה — מַיִם — לא! מַיִם זה לשתות, לא חיה.", "new": "❌ מַיִם אינם חיה. מַיִם שותים." }]
+    },
+    "I": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.grammar_pos_roles.md",
+      "replacements": [{ "old": "❌ יֶלֶד וְרָץ — שניהם שמות — לא! רָץ זו פעולה.", "new": "❌ יֶלֶד הוא שם, אבל רָץ היא פעולה." }]
+    },
+    "J": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.grammar_connectors_time.md",
+      "replacements": [{ "old": "❌ עכשיו — מָחָר — לא! עכשיו = הַיּוֹם.", "new": "❌ עכשיו אינו מָחָר. עכשיו פירושו בזמן הזה, היום." }]
+    },
+    "K": {
+      "file": "docs/learning-book/hebrew/g1/drafts/comprehension_g1.word_meaning_concrete.md",
+      "replacements": [{ "old": "❌ כֶּלֶב — רָץ = שם של ריצה — לא! רָץ זה הפועל.", "new": "❌ רָץ אינו שם של דבר. רָץ היא פעולה." }]
+    },
+    "L": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.one_sentence_who_what.md",
+      "replacements": [{ "old": "❌ מִי אוֹכֵל? — אוֹכֵל — לא! אוֹכֵל זה פעולה.", "new": "❌ אוֹכֵל אינו עונה על השאלה מִי. אוֹכֵל מתאר פעולה." }]
+    },
+    "M": {
+      "file": "docs/learning-book/hebrew/g1/drafts/vocabulary_g1.word_meaning_concrete.md",
+      "replacements": [{ "old": "❌ אָדֹם — פרי — לא! אָדֹם = צבע.", "new": "❌ אָדֹם אינו פרי. אָדֹם הוא צבע." }]
+    },
+    "N": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.word_picture.md",
+      "replacements": [{ "old": "❌ צִיּוּר בית — כֶּלֶב — לא!", "new": "❌ אם בציור יש בית, המילה המתאימה היא בַּיִת, לא כֶּלֶב." }]
+    },
+    "O": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.spell_word_choice.md",
+      "replacements": [{ "old": "❌ בַּת — ב+ט — לא! ט לא ת.", "new": "❌ בַּת כותבים עם ת, לא עם ט." }]
+    },
+    "P": {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_object_riddle.md",
+      "replacements": [{ "old": "❌ שׁוֹתִים — בַּיִת — לא!", "new": "❌ שׁוֹתִים לא מתאים למילה בַּיִת." }]
+    },
+    "Q": {
+      "file": "docs/learning-book/hebrew/g1/drafts/writing_spell_word_early_ab_writing_role_meaning.md",
+      "replacements": [{ "old": "❌ יָפֶה — שם של דבר — לא!", "new": "❌ יָפֶה אינו שם של דבר. יָפֶה מתאר איך משהו נראה." }]
+    }
+  }
+}

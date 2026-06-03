@@ -76,7 +76,7 @@ We cooked healthy soup
 
 We cook healthy soup yesterday — שגוי!
 
-❌ cook — Present Simple!
+❌ cook הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ We cooked healthy soup.
 

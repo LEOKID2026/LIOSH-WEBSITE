@@ -85,7 +85,7 @@ The elephant walk slowly — שגוי!
 
 > Review flags: mixed_language
 
-❌ walk — Present Simple, לא עבר!
+❌ walk הוא בזמן הווה. כאן צריך פועל בעבר.
 
 > Review flags: mixed_language
 
@@ -177,7 +177,9 @@ We visit the museum yesterday — שגוי!
 
 > Review flags: mixed_language
 
-❌ visit — Present Simple!
+❌ visit הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ We visited the museum yesterday.
 
@@ -267,7 +269,9 @@ She feel proud after the test — שגוי!
 
 > Review flags: mixed_language
 
-❌ feel — Present Simple!
+❌ feel הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ She felt proud after the test.
 
@@ -357,7 +361,9 @@ They plant trees last year — שגוי!
 
 > Review flags: mixed_language
 
-❌ plant — Present Simple!
+❌ plant הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ They planted trees last year.
 
@@ -447,9 +453,9 @@ My grandparent live far away — שגוי!
 
 > Review flags: mixed_language
 
-❌ grandparent — צריך grandparents (זוג)!
+❌ grandparent מדבר על אדם אחד. כאן מדברים על סבא וסבתא, לכן צריך grandparents.
 
-> Review flags: mixed_language, contains_directional_rtl_ltr_mix
+> Review flags: mixed_language
 
 ✓ My grandparents live far away.
 
@@ -539,7 +545,9 @@ We cook healthy soup yesterday — שגוי!
 
 > Review flags: mixed_language
 
-❌ cook — Present Simple!
+❌ cook הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ We cooked healthy soup.
 
@@ -627,7 +635,9 @@ Our class win the project — שגוי!
 
 > Review flags: mixed_language
 
-❌ win — Present Simple!
+❌ win הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ Our class won the project.
 
@@ -717,7 +727,9 @@ He score a goal yesterday — שגוי!
 
 > Review flags: mixed_language
 
-❌ score — Present Simple!
+❌ score הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ He scored a goal yesterday.
 
@@ -807,7 +819,7 @@ We travel by train tomorrow — שגוי!
 
 > Review flags: mixed_language
 
-❌ travel — Present Simple, לא עתיד!
+❌ travel הוא בזמן הווה. כאן מדברים על עתיד.
 
 > Review flags: mixed_language
 
@@ -907,7 +919,7 @@ I need rest and drink water — שגוי!
 
 > Review flags: mixed_language
 
-❌ חסר to אחרי need!
+❌ אחרי need צריך להוסיף to לפני הפועל.
 
 > Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
@@ -1003,9 +1015,9 @@ She use a computer for homework — שגוי!
 
 > Review flags: mixed_language
 
-❌ use — חסר s ב-he/she/it!
+❌ אחרי he, she או it מוסיפים בדרך כלל s לפועל: uses.
 
-> Review flags: mixed_language, contains_formula_or_symbols, contains_directional_rtl_ltr_mix
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ She uses a computer for homework.
 
@@ -1145,7 +1157,7 @@ We are going to visit grandma — אנחנו הולכים לבקר את סבתא
 
 ### Section 2 — הסבר
 
-will — החלטה או הבטחה:
+will עוזר לדבר על פעולה שתקרה בעתיד, למשל החלטה או הבטחה:
 
 > Review flags: mixed_language
 
@@ -1195,9 +1207,9 @@ We will going to visit grandma — שגוי!
 
 > Review flags: mixed_language
 
-❌ will + going to — לא יחד!
+❌ בדרך כלל לא משתמשים יחד ב־will וב־going to באותו פועל.
 
-> Review flags: mixed_language, contains_formula_or_symbols
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ We are going to visit grandma.
 
@@ -1301,17 +1313,17 @@ You must to wear a helmet — שגוי!
 
 > Review flags: mixed_language, possible_factual_claim
 
-❌ must + to — לא נכון!
+❌ אחרי must לא משתמשים ב־to.
 
-> Review flags: mixed_language, contains_formula_or_symbols, possible_factual_claim
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix, possible_factual_claim
 
 ✓ You must wear a helmet.
 
 > Review flags: possible_factual_claim
 
-must + פועל (בלי to).
+אחרי must כותבים את הפועל בלי to.
 
-> Review flags: mixed_language, contains_formula_or_symbols, possible_factual_claim
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix, possible_factual_claim
 
 ### Section 7 — בואו נתרגל
 
@@ -1401,7 +1413,7 @@ This book is interestinger than that one — שגוי!
 
 > Review flags: mixed_language
 
-❌ interestinger — לא קיים!
+❌ interestinger אינה צורה נכונה. אומרים more interesting.
 
 > Review flags: mixed_language
 
@@ -1499,7 +1511,7 @@ There was many people at the park — שגוי!
 
 > Review flags: mixed_language
 
-❌ was — people רבים, צריך were!
+❌ people היא מילה ברבים, לכן צריך were.
 
 > Review flags: mixed_language
 
@@ -1599,7 +1611,9 @@ Then we arrive at the station — שגוי!
 
 > Review flags: mixed_language
 
-❌ arrive — Present Simple!
+❌ arrive הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ Then we arrived at the station.
 
@@ -1689,7 +1703,9 @@ Last week we learn about the environment — שגוי!
 
 > Review flags: mixed_language
 
-❌ learn — Present Simple!
+❌ learn הוא בזמן הווה. כאן צריך פועל בעבר.
+
+> Review flags: mixed_language
 
 ✓ Last week we learned about the environment.
 
@@ -1777,7 +1793,7 @@ The hospital is in the park — שונה!
 
 > Review flags: mixed_language
 
-❌ in the park — בתוך הפארק!
+❌ in the park פירושו בתוך הפארק. כאן צריך ליד הפארק: next to the park.
 
 > Review flags: mixed_language
 
@@ -1865,7 +1881,7 @@ I send an email tomorrow — שגוי!
 
 > Review flags: mixed_language
 
-❌ send — Present Simple, לא עתיד!
+❌ send הוא בזמן הווה. כאן מדברים על עתיד.
 
 > Review flags: mixed_language
 
@@ -1955,7 +1971,7 @@ People around the world speaks many languages — שגוי!
 
 > Review flags: mixed_language
 
-❌ speaks — People רבים, צריך speak!
+❌ people היא מילה ברבים, לכן צריך speak.
 
 > Review flags: mixed_language
 

@@ -76,7 +76,7 @@ Our community celebrated the festival last month
 
 Our community celebrate the festival last month — שגוי!
 
-❌ celebrate — Present Simple!
+❌ celebrate הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ Our community celebrated the festival last month.
 

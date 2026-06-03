@@ -32,7 +32,7 @@ We are going to visit grandma — אנחנו הולכים לבקר את סבתא
 
 ## 2. הסבר
 
-will — החלטה או הבטחה:
+will עוזר לדבר על פעולה שתקרה בעתיד, למשל החלטה או הבטחה:
 I will call you.
 
 אני אתקשר אליך.
@@ -78,7 +78,7 @@ We are going to visit grandma
 
 We will going to visit grandma — שגוי!
 
-❌ will + going to — לא יחד!
+❌ בדרך כלל לא משתמשים יחד ב־will וב־going to באותו פועל.
 
 ✓ We are going to visit grandma.
 

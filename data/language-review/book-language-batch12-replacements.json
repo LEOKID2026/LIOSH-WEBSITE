@@ -1,0 +1,48 @@
+{
+  "batch": "book-language-batch12",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "Hebrew G5 child-friendly wording",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multi_layer_read.md",
+      "replacements": [{ "old": "❌ שכבה של רמז — דנה אוכלת ארוחה — לא! בטקסט כתיבה ושקט.", "new": "❌ \"דנה אוכלת ארוחה\" לא מתאים כאן. בטקסט יש כתיבה ושקט." }]
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.position_in_text.md",
+      "replacements": [{ "old": "❌ הרעיון בסוף — עדיין בהתחלה — לא! שם רק הסבר.", "new": "❌ הרעיון לא מופיע בהתחלה. בהתחלה יש רק הסבר פתיחה." }]
+    },
+    "C": {
+      "file": "docs/learning-book/hebrew/g5/drafts/reading_structural_paragraph_role.md",
+      "replacements": [{ "old": "❌ פסקת סיכום — חייבת להיות הארוכה — לא! סיכום יכול להיות קצר.", "new": "❌ פסקת סיכום לא חייבת להיות הארוכה ביותר. סיכום יכול להיות קצר." }]
+    },
+    "D": {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.multiple_perspectives_light.md",
+      "replacements": [{ "old": "❌ יוסי טועה כי דנה שמחה — לא! פשוט נקודות מבט שונות.", "new": "❌ לא חייבים לומר שיוסי טועה. ייתכן שיש כאן נקודות מבט שונות." }]
+    },
+    "E": {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_compare_statements_contrast.md",
+      "replacements": [{ "old": "❌ ניגוד — רק בין דמויות — לא! כאן שני משפטים בטקסט.", "new": "❌ ניגוד לא חייב להיות רק בין דמויות. כאן משווים בין שני משפטים בטקסט." }]
+    },
+    "F": {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_implicit_tone_attitude.md",
+      "replacements": [{ "old": "❌ טון דואג — כי דנה צוחקת — לא! הצחוק של דמות, לא כל הטקסט.", "new": "❌ לא קובעים שהטון דואג רק בגלל שדנה צוחקת. בודקים את הטון של כל הטקסט." }]
+    },
+    "G": {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_reference_pronoun.md",
+      "replacements": [{ "old": "❌ הוא — על הספר — לא! הספר לא פותח, דני פותח.", "new": "❌ \"הוא\" לא מתייחס לספר. דני הוא זה שפותח." }]
+    },
+    "H": {
+      "file": "docs/learning-book/hebrew/g5/drafts/g5.verb_patterns.md",
+      "replacements": [{ "old": "❌ כתב — זה הווה — לא! כתב = עבר.", "new": "❌ \"כתב\" אינו בזמן הווה. \"כתב\" הוא פועל בזמן עבר." }]
+    },
+    "I": {
+      "file": "docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_choose_correct.md",
+      "replacements": [{ "old": "❌ הילדים לומדים ספר — מתקנים ספר במקום פועל — לא!", "new": "❌ כאן לא מתקנים את המילה \"ספר\". צריך לבדוק את הפועל במשפט." }]
+    },
+    "J": {
+      "file": "docs/learning-book/hebrew/g5/drafts/grammar_sentence_correction_sv_agreement_plural.md",
+      "replacements": [{ "old": "❌ הציפורים עף — כי עץ קרוב — לא!", "new": "❌ \"הציפורים עף\" לא מתאים. הנושא הוא \"הציפורים\", ולכן צריך פועל ברבים." }]
+    }
+  }
+}

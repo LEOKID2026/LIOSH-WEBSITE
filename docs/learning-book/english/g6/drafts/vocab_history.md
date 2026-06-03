@@ -76,7 +76,7 @@ We learned about ancient history in class
 
 We learn about ancient history in class yesterday — שגוי!
 
-❌ learn — Present! yesterday דורש עבר!
+❌ learn הוא בזמן הווה. המילה yesterday מראה שצריך פועל בעבר.
 
 ✓ We learned about ancient history in class.
 

@@ -76,7 +76,7 @@ Climate change affects people around the world
 
 Climate change affect people around the world — שגוי!
 
-❌ affect — Climate change יחיד, צריך affects!
+❌ Climate change הוא יחיד, לכן צריך affects.
 
 ✓ Climate change affects people around the world.
 

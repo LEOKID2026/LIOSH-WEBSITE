@@ -76,7 +76,7 @@ They feel excited
 
 They feels excited — שגוי!
 
-❌ They feels — They לא מקבל s!
+❌ They feels — אחרי They לא מוסיפים s לפועל.
 
 ✓ They feel excited.
 

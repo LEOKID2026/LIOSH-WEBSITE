@@ -1,0 +1,187 @@
+{
+  "batch": "book-language-batch1",
+  "version": 1,
+  "scope": "docs/learning-book/** active drafts only (exclude _archive)",
+  "sections": {
+    "A": {
+      "description": "Global punctuation: guillemets to straight double quotes",
+      "replacements": [
+        { "old": "«", "new": "\"" },
+        { "old": "»", "new": "\"" }
+      ],
+      "apply_to": "all_draft_markdown_under_docs_learning_book_excluding_archive"
+    },
+    "B": {
+      "file": "docs/learning-book/hebrew/g1/drafts/g1.phoneme_awareness.md",
+      "replacements": [
+        {
+          "old": "דוגמה: בַּת וְגַם פַּת — ההתחלה שונה.",
+          "new": "דוגמה: בַּת וְפַּת — ההתחלה שונה."
+        },
+        {
+          "old": "דוגמה: בַּת וְגַם בַּר — ההתחלה דומה, הסוף שונה.",
+          "new": "דוגמה: בַּת וּבַר — ההתחלה דומה, הסוף שונה."
+        },
+        { "old": "מַיִם וָרֶגֶל.", "new": "מַיִם וְרֶגֶל." }
+      ]
+    },
+    "C": {
+      "file": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "replacements": [
+        { "old": "סליחה אחרי בום", "new": "סליחה כשנתקלים", "note": "title and title_hebrew" },
+        { "old": "בּוּם — נתקלנו.", "new": "נתקלנו בטעות." },
+        { "old": "בּוּם — קרה משהו בטעות.", "new": "לפעמים נתקלים בטעות." },
+        { "old": "דחפתם בטעות — בּוּם!", "new": "נתקלתם בחבר בטעות." },
+        {
+          "old": "נתקלתם בחבר בבּוּם — מה אומרים, סְלִיחָה או תּוֹדָה?",
+          "new": "נתקלתם בחבר בטעות — מה אומרים, סְלִיחָה או תּוֹדָה?"
+        }
+      ]
+    },
+    "D": {
+      "file": "docs/learning-book/hebrew/g2/drafts/cloze_school.md",
+      "replacements": [
+        {
+          "old": "❌ עץ — לא במסגרת השיעור.",
+          "new": "❌ עץ — לא מתאים למשפט על בית ספר."
+        },
+        {
+          "old": "עכשיו אתם משלימים מילה חסרה בהקשר של בית ספר.",
+          "new": "עכשיו אתם יודעים להשלים מילה חסרה במשפט על בית ספר."
+        },
+        {
+          "old": "בתרגול תמצאו משפט עם חסר — ותבחרו את המילה הנכונה.",
+          "new": "בתרגול תמצאו משפט עם מילה חסרה — ותבחרו את המילה הנכונה."
+        }
+      ]
+    },
+    "E": {
+      "file": "docs/learning-book/hebrew/g4/drafts/education_lexicon.md",
+      "replacements": [
+        {
+          "old": "בשיעור עברית נתרגלו סיכום קטע וכתיבת מסקנה.",
+          "new": "בשיעור עברית נתרגל סיכום קטע וכתיבת מסקנה."
+        }
+      ]
+    },
+    "F": {
+      "file": "docs/learning-book/hebrew/g4/drafts/near_meaning.md",
+      "replacements": [
+        {
+          "old": "בסיפור — אולי «עלז».",
+          "new": "בסיפור — אולי \"מאושר\" או \"נרגש\", לפי ההקשר."
+        },
+        {
+          "old": "אחרי הביקור במוזיאון, הכיתה חזרה רגועה אבל שבעת רצון.",
+          "new": "אחרי הביקור במוזיאון, הכיתה חזרה רגועה ומרוצה."
+        },
+        {
+          "old": "«שבעת רצון» קרוב ל«מרוצה» — מתאים להקשר.",
+          "new": "\"מרוצה\" היא מילה מדויקת שמתאימה להקשר."
+        }
+      ]
+    },
+    "G": {
+      "file": "docs/learning-book/hebrew/g5/drafts/comprehension_reference_pronoun.md",
+      "replacements": [
+        { "old": "אותו כלל ל הם ו ל זה בטקסט.", "new": "אותו כלל גם ל־הם ול־זה בטקסט." },
+        {
+          "old": "למי מתייחס הן — לדני, לרינה ונועה, או לספר?",
+          "new": "למי מתייחסת המילה \"הן\" — לדני, לרינה ונועה, או לספר?"
+        },
+        {
+          "old": "בתרגול תמצאו משפטים עם הוא ודני.",
+          "new": "בתרגול תמצאו משפטים עם כינויי גוף ושמות."
+        }
+      ]
+    },
+    "H": {
+      "file": "docs/learning-book/hebrew/g6/drafts/comprehension_reference_pronoun.md",
+      "replacements": [
+        { "old": "למי \"היא\" מתייחס?", "new": "למי \"היא\" מתייחסת?" },
+        { "old": "ו\"הם\"?", "new": "ולמי \"הם\" מתייחס?" },
+        {
+          "old": "הוא/היא — חזרו למי הוזכר; מתייחס — מי הדמות.)",
+          "new": "חזרו למשפטים הקודמים ובדקו למי כל כינוי מתייחס.)"
+        },
+        {
+          "old": "✓ הוא/היא/הם — תמיד חוזרים לשם שהוזכר קרוב.",
+          "new": "✓ הוא/היא/הם — בדרך כלל חוזרים לשם שכבר הוזכר בטקסט. בודקים לפי ההקשר."
+        },
+        {
+          "old": "זכרו: כינוי — מי מתייחס? קראו משפט לפני.",
+          "new": "זכרו: כינוי מחליף שם. קראו גם את המשפט הקודם."
+        }
+      ]
+    },
+    "I": {
+      "file": "docs/learning-book/geometry/g6/drafts/parallelogram_area.md",
+      "replacements": [
+        {
+          "old": "מקבילית vs מלבן — אותה נוסחה: בסיס × גובה.",
+          "new": "מקבילית לעומת מלבן — אותה נוסחת שטח: בסיס × גובה."
+        }
+      ]
+    },
+    "J": {
+      "file": "docs/learning-book/geometry/g6/drafts/prism_volume_rectangular.md",
+      "replacements": [
+        {
+          "old": "\"24 יחידות ריבוע בבסיס, 10 שכבות\" → 240 יחידות קוב.",
+          "note": "Source uses קוב (not קוב); applied to source spelling"
+          "new": "\"24 יחידות ריבוע בבסיס, 10 שכבות\" → 240 קוביות יחידה."
+        }
+      ]
+    },
+    "K": {
+      "description": "Remove double spaces in source (render mismatch warnings)",
+      "replacements": [
+        {
+          "file": "docs/learning-book/math/g2/drafts/frac_quarter_reverse.md",
+          "old": "מחברים 4 פעמים:  4 + 4 + 4 + 4",
+          "new": "מחברים 4 פעמים: 4 + 4 + 4 + 4"
+        },
+        {
+          "file": "docs/learning-book/math/g6/drafts/sequence.md",
+          "old": "הכלל:  קפיצה +50",
+          "new": "הכלל: קפיצה +50"
+        },
+        {
+          "file": "docs/learning-book/math/g6/drafts/eq_sub.md",
+          "old": "בדיקה:  5,000 − 1,275 = 3,725.",
+          "new": "בדיקה: 5,000 − 1,275 = 3,725."
+        },
+        {
+          "file": "docs/learning-book/geometry/g2/drafts/square_area.md",
+          "old": "4 שורות:  4 × 4 = 16",
+          "new": "4 שורות: 4 × 4 = 16"
+        },
+        {
+          "file": "docs/learning-book/geometry/g4/drafts/triangle_perimeter.md",
+          "old": "אפשר בשלבים:  קודם 5 + 6, ואז + 7.",
+          "new": "אפשר בשלבים: קודם 5 + 6, ואז + 7."
+        },
+        {
+          "file": "docs/learning-book/geometry/g5/drafts/square_perimeter.md",
+          "old": "נימוק:  4 צלעות × 9 = 36 ס״מ",
+          "new": "נימוק: 4 צלעות × 9 = 36 ס״מ"
+        },
+        {
+          "file": "docs/learning-book/geometry/g6/drafts/square_perimeter.md",
+          "old": "היקף:  4 × 12 = 48 ס״מ",
+          "new": "היקף: 4 × 12 = 48 ס״מ"
+        },
+        {
+          "file": "docs/learning-book/geometry/g6/drafts/square_perimeter.md",
+          "old": "שטח:  12 × 12 = 144 סמ״ר",
+          "new": "שטח: 12 × 12 = 144 סמ״ר"
+        },
+        {
+          "file": "docs/learning-book/geometry/g6/drafts/triangle_angles.md",
+          "old": "בודקים:  x + A + B = 180°",
+          "new": "בודקים: x + A + B = 180°"
+        }
+      ]
+    }
+  }
+}

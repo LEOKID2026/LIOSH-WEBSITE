@@ -80,7 +80,7 @@ I was reading when my friend called
 
 I read when my friend was calling — מבלבל!
 
-❌ read + was calling — לא מדגיש פעולה מתמשכת ואירוע!
+❌ read + was calling לא מתאים כאן, כי צריך להראות פעולה מתמשכת ברקע ואירוע שקרה באמצע.
 
 ✓ I was reading when my friend called.
 

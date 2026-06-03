@@ -76,7 +76,7 @@ The whales were swimming when we saw them
 
 The whales swim when we saw them — שגוי!
 
-❌ swim — Present Simple, לא פעולה מתמשכת בעבר!
+❌ swim הוא בזמן הווה. כאן צריך לתאר פעולה מתמשכת בעבר.
 
 ✓ The whales were swimming when we saw them.
 

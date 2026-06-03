@@ -2102,7 +2102,7 @@ Subject: Math
 
 איך מוצאים?
 
-- מחברים 4 פעמים:  4 + 4 + 4 + 4
+- מחברים ארבע פעמים:  4 + 4 + 4 + 4
 
 > Review flags: contains_formula_or_symbols
 > Extraction warning: source_render_mismatch

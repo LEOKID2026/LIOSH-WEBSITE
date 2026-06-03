@@ -76,7 +76,7 @@ She uses a computer for homework
 
 She use a computer for homework — שגוי!
 
-❌ use — חסר s ב-he/she/it!
+❌ אחרי he, she או it מוסיפים בדרך כלל s לפועל: uses.
 
 ✓ She uses a computer for homework.
 

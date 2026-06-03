@@ -519,7 +519,7 @@ Subject: Math
 
 > Review flags: mixed_language, contains_formula_or_symbols
 
-- הכלל:  קפיצה +50
+- הכלל:  קפיצה של +50
 
 > Review flags: contains_formula_or_symbols
 > Extraction warning: source_render_mismatch

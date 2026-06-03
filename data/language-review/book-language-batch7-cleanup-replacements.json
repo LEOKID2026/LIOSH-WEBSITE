@@ -1,0 +1,17 @@
+{
+  "batch": "book-language-batch7-cleanup",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "English G4 — missed Batch 7 item N (actual file)",
+  "sections": {
+    "N": {
+      "file": "docs/learning-book/english/g4/drafts/sentence_narrative.md",
+      "replacements": [
+        {
+          "old": "❌ pack bags — צריך our bags!",
+          "new": "❌ pack bags — כאן צריך our bags כדי לומר \"התיקים שלנו\"."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "batch": "book-language-batch3",
+  "version": 1,
+  "scope": "docs/learning-book/** active drafts only (exclude _archive)",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/hebrew/g1/drafts/speaking_social_reply_early_g1_bump_sorry.md",
+      "replacements": [
+        {
+          "old": "אחרי בּוּם — מתנצלים.)",
+          "new": "אחרי טעות — מבקשים סליחה.)"
+        },
+        {
+          "old": "לא לומר כלום אחרי בּוּם.",
+          "new": "לא להתעלם אחרי שפוגעים במישהו בטעות."
+        },
+        {
+          "old": "❌ בּוּם — שותקים — לא מנומס!",
+          "new": "❌ שותקים ולא אומרים כלום — לא מנומס."
+        },
+        {
+          "old": "✓ בּוּם — סְלִיחָה. זה נכון.",
+          "new": "✓ אומרים סְלִיחָה. זה נכון."
+        },
+        {
+          "old": "בתרגול תמצאו מצבים עם בּוּם וְסְלִיחָה.",
+          "new": "בתרגול תמצאו מצבים שבהם צריך לומר סְלִיחָה."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_technology.md",
+      "replacements": [
+        {
+          "old": "❌ will stop — אחרי If לא שמים will!",
+          "new": "❌ אחרי If לא משתמשים ב־will."
+        }
+      ]
+    },
+    "C": {
+      "file": "docs/learning-book/english/g6/drafts/grammar_conditionals.md",
+      "replacements": [
+        {
+          "old": "❌ will rain — אחרי If לא will!",
+          "new": "❌ אחרי If לא משתמשים ב־will."
+        }
+      ]
+    },
+    "D": {
+      "apply_to": [
+        "docs/learning-book/moledet-geography/g2/drafts/*.md",
+        "docs/learning-book/moledet-geography/g3/drafts/*.md",
+        "docs/learning-book/moledet-geography/g4/drafts/*.md"
+      ],
+      "replacements": [
+        { "old": "במולדת וגאוגרפיה", "new": "במולדת" }
+      ]
+    },
+    "E": {
+      "apply_to": [
+        "docs/learning-book/moledet-geography/g5/drafts/*.md",
+        "docs/learning-book/moledet-geography/g6/drafts/*.md"
+      ],
+      "replacements": [
+        { "old": "במולדת וגאוגרפיה", "new": "בגאוגרפיה" }
+      ]
+    },
+    "F": {
+      "file": "docs/learning-book/moledet-geography/g2/drafts/mg_g2_society_responsibility.md",
+      "replacements": [
+        {
+          "old": "אנחנו חלק מחברה — לא רק לבד.",
+          "new": "אנחנו חלק מחברה — אנחנו חיים ופועלים עם עוד אנשים."
+        },
+        {
+          "old": "✓ גם ילדים לוקחים אחריות — כמו לזרוק פחית לפח בחברה.",
+          "new": "✓ גם ילדים לוקחים אחריות — כמו לזרוק פחית לפח ולשמור על הסביבה."
+        }
+      ]
+    },
+    "G": {
+      "file": "docs/learning-book/moledet-geography/g2/drafts/mg_g2_neighborhood.md",
+      "replacements": [
+        {
+          "old": "בשכונה יש בתים שבהם גרים משפחות.",
+          "new": "בשכונה יש בתים שבהם גרות משפחות."
+        }
+      ]
+    },
+    "H": {
+      "file": "docs/learning-book/moledet-geography/g6/drafts/mg_g6_state_institutions.md",
+      "replacements": [
+        {
+          "old": "זכרו: מוסד = תפקיד — לא איש בתפקיד.",
+          "new": "זכרו: כשמדברים על מוסד מדינה, מתכוונים לתפקיד של הגוף — לא לאדם מסוים."
+        }
+      ]
+    }
+  }
+}

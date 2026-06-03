@@ -76,7 +76,7 @@ I will send an email tomorrow
 
 I send an email tomorrow — שגוי!
 
-❌ send — Present Simple, לא עתיד!
+❌ send הוא בזמן הווה. כאן מדברים על עתיד.
 
 ✓ I will send an email tomorrow.
 

@@ -1,0 +1,124 @@
+{
+  "batch": "book-language-batch6",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/moledet-geography/g4/drafts/mg_g4_government_institutions.md",
+      "replacements": [
+        {
+          "old": "❌ \"מי המנהיג עכשיו\" — זה נושא לכיתות גבוהות.",
+          "new": "❌ \"מי מנהיג עכשיו\" — זה לא הנושא כאן."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/moledet-geography/g3/drafts/mg_g3_districts_borders.md",
+      "replacements": [
+        {
+          "old": "גבול — קו שמפריד בין מקומות.",
+          "new": "גבול הוא קו שמסמן היכן אזור אחד מסתיים ואזור אחר מתחיל."
+        }
+      ]
+    },
+    "C": {
+      "file": "docs/learning-book/moledet-geography/g3/drafts/mg_g3_regions_cities.md",
+      "replacements": [
+        {
+          "old": "אזור — חלק גדול יותר ממקום קטן.",
+          "new": "אזור הוא חלק גדול יחסית במפה, שיכול לכלול כמה יישובים או מקומות."
+        }
+      ]
+    },
+    "D": {
+      "file": "docs/learning-book/moledet-geography/g3/drafts/mg_g3_water_sources.md",
+      "replacements": [
+        {
+          "old": "מקור מים — מקום שיש בו מים.",
+          "new": "מקור מים הוא מקום שממנו מגיעים מים או שבו נמצאים מים."
+        }
+      ]
+    },
+    "E": {
+      "file": "docs/learning-book/moledet-geography/g4/drafts/mg_g4_settlement_development.md",
+      "replacements": [
+        {
+          "old": "יישובים קמו עם הזמן — לא כולם ביום אחד.",
+          "new": "יישובים התפתחו עם הזמן. לא כל היישובים נבנו באותו זמן או באותה דרך."
+        }
+      ]
+    },
+    "F": {
+      "file": "docs/learning-book/moledet-geography/g5/drafts/mg_g5_map_symbols.md",
+      "replacements": [
+        {
+          "old": "סימן במפה — אומר משהו בלי מילים.",
+          "new": "סימן במפה עוזר להבין מידע בלי לכתוב הרבה מילים."
+        }
+      ]
+    },
+    "G": {
+      "file": "docs/learning-book/moledet-geography/g5/drafts/mg_g5_population.md",
+      "replacements": [
+        {
+          "old": "אוכלוסייה — אנשים שחיים במקום.",
+          "new": "אוכלוסייה היא קבוצת האנשים שחיים במקום מסוים."
+        }
+      ]
+    },
+    "H": {
+      "file": "docs/learning-book/moledet-geography/g6/drafts/mg_g6_social_involvement.md",
+      "replacements": [
+        {
+          "old": "מעורבות חברתית — לא רק לדבר, גם לעשות.",
+          "new": "מעורבות חברתית היא השתתפות ועשייה למען הכיתה, הקהילה או החברה."
+        }
+      ]
+    },
+    "I": {
+      "file": "docs/learning-book/moledet-geography/g6/drafts/mg_g6_population.md",
+      "replacements": [
+        {
+          "old": "אוכלוסייה — לא כולם אותו דבר.",
+          "new": "אוכלוסייה כוללת אנשים וקבוצות שונות שחיים באותו מקום או במדינה."
+        }
+      ]
+    },
+    "J": {
+      "file": "docs/learning-book/science/g4/drafts/experiments.md",
+      "replacements": [
+        {
+          "old": "ניסוי — בודקים מה קורה.",
+          "new": "בניסוי בודקים שאלה בעזרת תצפית, מדידה או פעולה מסודרת."
+        }
+      ]
+    },
+    "K": {
+      "file": "docs/learning-book/science/g5/drafts/materials.md",
+      "replacements": [
+        {
+          "old": "חומר — מה שממנו עשוי דבר.",
+          "new": "חומר הוא מה שממנו עשויים חפצים וגופים סביבנו."
+        }
+      ]
+    },
+    "L": {
+      "file": "docs/learning-book/english/g4/drafts/grammar_comparatives.md",
+      "replacements": [
+        {
+          "old": "bigger — יותר גדול.",
+          "new": "bigger פירושו \"גדול יותר\"."
+        }
+      ]
+    },
+    "M": {
+      "file": "docs/learning-book/english/g5/drafts/grammar_future.md",
+      "replacements": [
+        {
+          "old": "will — עתיד.",
+          "new": "will עוזר לנו לדבר על פעולה שתקרה בעתיד."
+        }
+      ]
+    }
+  }
+}

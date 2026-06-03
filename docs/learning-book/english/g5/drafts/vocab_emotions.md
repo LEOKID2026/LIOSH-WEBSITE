@@ -76,7 +76,7 @@ She felt proud after the test
 
 She feel proud after the test — שגוי!
 
-❌ feel — Present Simple!
+❌ feel הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ She felt proud after the test.
 

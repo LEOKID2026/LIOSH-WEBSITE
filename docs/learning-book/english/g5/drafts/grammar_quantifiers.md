@@ -76,7 +76,7 @@ There were many people at the park
 
 There was many people at the park — שגוי!
 
-❌ was — people רבים, צריך were!
+❌ people היא מילה ברבים, לכן צריך were.
 
 ✓ There were many people at the park.
 

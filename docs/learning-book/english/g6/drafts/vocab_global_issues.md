@@ -76,7 +76,7 @@ Many countries work together on global issues
 
 Many countries works together on global issues — שגוי!
 
-❌ works — countries רבים!
+❌ countries היא מילה ברבים, לכן צריך work.
 
 ✓ Many countries work together on global issues.
 

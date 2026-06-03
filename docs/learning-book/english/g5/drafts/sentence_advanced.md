@@ -76,7 +76,7 @@ Last week we learned about the environment
 
 Last week we learn about the environment — שגוי!
 
-❌ learn — Present Simple!
+❌ learn הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ Last week we learned about the environment.
 

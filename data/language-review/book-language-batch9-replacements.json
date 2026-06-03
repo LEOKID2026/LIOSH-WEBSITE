@@ -1,0 +1,68 @@
+{
+  "batch": "book-language-batch9",
+  "version": 1,
+  "scope": "docs/learning-book/**/drafts/*.md only",
+  "focus": "English G5-G6 remaining grammar/error explanations",
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_emotions.md",
+      "replacements": [{ "old": "❌ feel — Present Simple!", "new": "❌ feel הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "B": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_environment.md",
+      "replacements": [{ "old": "❌ plant — Present Simple!", "new": "❌ plant הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "C": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_family.md",
+      "replacements": [{ "old": "❌ grandparent — צריך grandparents (זוג)!", "new": "❌ grandparent מדבר על אדם אחד. כאן מדברים על סבא וסבתא, לכן צריך grandparents." }]
+    },
+    "D": {
+      "file": "docs/learning-book/english/g5/drafts/vocab_health.md",
+      "replacements": [{ "old": "❌ חסר to אחרי need!", "new": "❌ אחרי need צריך להוסיף to לפני הפועל." }]
+    },
+    "E": {
+      "file": "docs/learning-book/english/g5/drafts/sentence_narrative.md",
+      "replacements": [{ "old": "❌ arrive — Present Simple!", "new": "❌ arrive הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "F": {
+      "file": "docs/learning-book/english/g5/drafts/sentence_advanced.md",
+      "replacements": [{ "old": "❌ learn — Present Simple!", "new": "❌ learn הוא בזמן הווה. כאן צריך פועל בעבר." }]
+    },
+    "G": {
+      "file": "docs/learning-book/english/g5/drafts/translation_community.md",
+      "replacements": [{ "old": "❌ in the park — בתוך הפארק!", "new": "❌ in the park פירושו בתוך הפארק. כאן צריך ליד הפארק: next to the park." }]
+    },
+    "H": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_emotions.md",
+      "replacements": [{ "old": "❌ must = חייב — חזק מדי!", "new": "❌ must פירושו חובה חזקה. כאן הכוונה היא אולי, לכן מתאים יותר להשתמש ב־might." }]
+    },
+    "I": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_culture.md",
+      "replacements": [{ "old": "❌ cultures — מדברים על תרבות אחת שלנו!", "new": "❌ cultures היא צורת רבים. כאן מדברים על תרבות אחת, לכן צריך culture." }]
+    },
+    "J": {
+      "file": "docs/learning-book/english/g6/drafts/vocab_history.md",
+      "replacements": [{ "old": "❌ learn — Present! yesterday דורש עבר!", "new": "❌ learn הוא בזמן הווה. המילה yesterday מראה שצריך פועל בעבר." }]
+    },
+    "K": {
+      "file": "docs/learning-book/english/g6/drafts/grammar_complex_tenses.md",
+      "replacements": [{ "old": "❌ read + was calling — לא מדגיש פעולה מתמשכת ואירוע!", "new": "❌ read + was calling לא מתאים כאן, כי צריך להראות פעולה מתמשכת ברקע ואירוע שקרה באמצע." }]
+    },
+    "L": {
+      "file": "docs/learning-book/english/g6/drafts/grammar_modals.md",
+      "replacements": [{ "old": "❌ should + to!", "new": "❌ אחרי should לא משתמשים ב־to." }]
+    },
+    "M": {
+      "file": "docs/learning-book/english/g6/drafts/grammar_comparatives.md",
+      "replacements": [{ "old": "❌ more interesting — זה comparative, לא superlative!", "new": "❌ more interesting משווה בין דברים. כאן צריך צורת superlative: the most interesting." }]
+    },
+    "N": {
+      "file": "docs/learning-book/english/g6/drafts/sentence_advanced.md",
+      "replacements": [{ "old": "❌ studied / listened — Past Simple בלבד, פחות מדגיש מקביל!", "new": "❌ studied / listened הם רק Past Simple. כאן רוצים להדגיש שתי פעולות שקרו באותו זמן." }]
+    },
+    "O": {
+      "file": "docs/learning-book/english/g6/drafts/translation_technology.md",
+      "replacements": [{ "old": "❌ must = חייב — לא אותה משמעות כמו might!", "new": "❌ must פירושו חייב. כאן המשמעות היא אולי, לכן מתאים יותר might." }]
+    }
+  }
+}

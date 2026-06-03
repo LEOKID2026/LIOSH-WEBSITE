@@ -165,7 +165,7 @@ Subject: Geometry
 
 > Review flags: contains_formula_or_symbols
 
-- 4 שורות:  4 × 4 = 16
+- 4 שורות:  4 × 4 = 16 ריבועים.
 
 > Review flags: contains_formula_or_symbols
 > Extraction warning: source_render_mismatch

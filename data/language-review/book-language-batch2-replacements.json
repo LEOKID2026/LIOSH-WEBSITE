@@ -1,0 +1,89 @@
+{
+  "batch": "book-language-batch2",
+  "version": 1,
+  "scope": "docs/learning-book/** active drafts only",
+  "out_of_scope": ["moledet", "geography"],
+  "sections": {
+    "A": {
+      "file": "docs/learning-book/english/g1/drafts/family.md",
+      "replacements": [
+        {
+          "old": "זכרו: mom לאבא לא מתאים.",
+          "new": "זכרו: לאבא אומרים dad, לא mom."
+        }
+      ]
+    },
+    "B": {
+      "file": "docs/learning-book/english/g1/drafts/animals.md",
+      "replacements": [
+        {
+          "old": "איזו חיה מיואות ואומרת meow?",
+          "new": "איזו חיה מייללת ואומרת meow?"
+        }
+      ]
+    },
+    "C": {
+      "file": "docs/learning-book/english/g1/drafts/classroom_phrases.md",
+      "replacements": [
+        {
+          "old": "Hello בבוקר בכיתה.",
+          "new": "אומרים Hello כשנכנסים לכיתה או פוגשים מישהו."
+        }
+      ]
+    },
+    "D": {
+      "file": "docs/learning-book/english/g6/drafts/sentence_advanced.md",
+      "replacements": [
+        {
+          "old": "היום נבנים משפטים מורכבים — 8–10 מילים, While + Past Continuous.",
+          "new": "היום נבנה משפטים מורכבים של 8–10 מילים עם While ו־Past Continuous."
+        }
+      ]
+    },
+    "E": {
+      "file": "docs/learning-book/english/g6/drafts/translation_technology.md",
+      "replacements": [
+        {
+          "old": "היום נתרגל תרגום מתקדם על טכנולוגיה — might ומשפטים ארוכים.",
+          "new": "היום נתרגל תרגום בנושא טכנולוגיה עם might ועם משפטים ארוכים."
+        }
+      ]
+    },
+    "F": {
+      "file": "docs/learning-book/english/g6/drafts/translation_world.md",
+      "replacements": [
+        {
+          "old": "❌ will protect אחרי If; benefit בלי will!",
+          "new": "❌ אחרי If לא משתמשים ב־will, ובחלק השני צריך will."
+        }
+      ]
+    },
+    "G": {
+      "file": "docs/learning-book/science/g3/drafts/body_systems.md",
+      "replacements": [
+        {
+          "old": "דמיינו שלד כמו מסגרת, שרירים כמו חבלים שמושכים, ומזון כמו דלק.",
+          "new": "אפשר לחשוב על השלד כמו מסגרת שתומכת בגוף, ועל השרירים כחלקים שעוזרים לנו לזוז. המזון נותן לגוף אנרגיה לפעילות."
+        }
+      ]
+    },
+    "H": {
+      "file": "docs/learning-book/hebrew/g3/drafts/word_family.md",
+      "replacements": [
+        {
+          "old": "❌ שער ושער — משפחה — לא! זו אותה מילה בהקשרים שונים.",
+          "new": "❌ שער ושער — לא משפחת מילים. זו אותה מילה במשמעויות שונות."
+        }
+      ]
+    },
+    "I": {
+      "file": "docs/learning-book/hebrew/g4/drafts/education_lexicon.md",
+      "replacements": [
+        {
+          "old": "❌ \"מסיבה\" — לא בהקשר שיעור.",
+          "new": "❌ \"מסיבה\" — לא מילה שמתאימה לנושא הלימוד כאן."
+        }
+      ]
+    }
+  }
+}

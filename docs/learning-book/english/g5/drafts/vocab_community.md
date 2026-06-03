@@ -76,7 +76,7 @@ We visited the museum yesterday
 
 We visit the museum yesterday — שגוי!
 
-❌ visit — Present Simple!
+❌ visit הוא בזמן הווה. כאן צריך פועל בעבר.
 
 ✓ We visited the museum yesterday.
 

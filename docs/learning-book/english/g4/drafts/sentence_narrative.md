@@ -77,7 +77,7 @@ First we pack our bags
 
 First we pack bags — חסר our!
 
-❌ pack bags — צריך our bags!
+❌ pack bags — כאן צריך our bags כדי לומר "התיקים שלנו".
 
 ✓ First we pack our bags.
 

@@ -797,9 +797,9 @@ We learns English — שגוי!
 
 > Review flags: mixed_language
 
-❌ We learns — We לא מקבל s!
+❌ We learns — אחרי We לא מוסיפים s לפועל.
 
-> Review flags: mixed_language
+> Review flags: mixed_language, contains_directional_rtl_ltr_mix
 
 ✓ We learn English.
 
