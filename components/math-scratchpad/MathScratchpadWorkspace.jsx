@@ -532,7 +532,7 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
               className="border-0 py-0.5 text-[10px] md:text-xs font-normal text-amber-200/70 text-end pe-1"
               dir="rtl"
             >
-              נשיאה
+              {centerOperands ? "מנה" : "נשיאה"}
             </th>
           </tr>
         </thead>
