@@ -19,6 +19,8 @@ const OPERAND_CELL_CLASS =
   "w-9 h-9 md:w-10 md:h-10 text-center text-base md:text-lg rounded text-white bg-sky-500/25 border border-sky-300/30";
 const CARRY_CELL_CLASS =
   "w-9 h-9 md:w-10 md:h-10 text-center text-base md:text-lg bg-amber-500/15 border border-amber-300/30 rounded text-white";
+const DIVISION_SEPARATOR_H = "border-t-2 border-amber-300";
+const DIVISION_SEPARATOR_V = "border-l-2 border-l-amber-300";
 
 function useCarryRow(cols, resetKey) {
   const [carryRow, setCarryRow] = useState(() => Array(cols).fill(""));
@@ -497,6 +499,8 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
     return {
       cells: centerAlignDigitCells([...dividendCells, ...divisorCells], spec.cols),
       dividerCol: blockStart + dividendCells.length,
+      dividendStartCol: blockStart,
+      dividendLen: dividendCells.length,
     };
   }, [operands.a, operands.b, spec.cols, centerOperands]);
   const labels = useMemo(() => placeValueHeaderLabels(spec.cols), [spec.cols]);
@@ -539,24 +543,52 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
         <tbody>
           <PaperCarryRowTable carryRow={carryRow} setCarryRow={setCarryRow} />
           {centerOperands && divisionExerciseRow ? (
-            <tr>
-              {divisionExerciseRow.cells.map((cell, ci) => (
-                <td
-                  key={ci}
-                  className={`border border-white/20 p-0.5 ${
-                    ci === divisionExerciseRow.dividerCol
-                      ? "border-l-2 border-l-white/45"
-                      : ""
-                  }`}
-                >
-                  <ScratchpadDigitDisplay
-                    value={cell}
-                    className={OPERAND_CELL_CLASS}
-                    aria-label={`exercise col ${ci + 1}`}
-                  />
-                </td>
-              ))}
-            </tr>
+            <>
+              <tr>
+                {(() => {
+                  const lineCells = [];
+                  let ci = 0;
+                  while (ci < spec.cols) {
+                    if (ci === divisionExerciseRow.dividendStartCol) {
+                      lineCells.push(
+                        <td
+                          key={`line-${ci}`}
+                          colSpan={divisionExerciseRow.dividendLen}
+                          className="p-0 border-0"
+                        >
+                          <div className={DIVISION_SEPARATOR_H} />
+                        </td>
+                      );
+                      ci += divisionExerciseRow.dividendLen;
+                    } else {
+                      lineCells.push(
+                        <td key={`line-pad-${ci}`} className="p-0 border-0" aria-hidden="true" />
+                      );
+                      ci += 1;
+                    }
+                  }
+                  return lineCells;
+                })()}
+              </tr>
+              <tr>
+                {divisionExerciseRow.cells.map((cell, ci) => (
+                  <td
+                    key={ci}
+                    className={
+                      ci === divisionExerciseRow.dividerCol
+                        ? `border-t border-r border-b border-white/20 p-0.5 ${DIVISION_SEPARATOR_V}`
+                        : "border border-white/20 p-0.5"
+                    }
+                  >
+                    <ScratchpadDigitDisplay
+                      value={cell}
+                      className={OPERAND_CELL_CLASS}
+                      aria-label={`exercise col ${ci + 1}`}
+                    />
+                  </td>
+                ))}
+              </tr>
+            </>
           ) : (
             [topRow, bottomRow].map((cells, ri) => (
               <tr key={`operand-${ri}`}>
