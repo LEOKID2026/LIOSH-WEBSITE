@@ -268,7 +268,7 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
           ? "יחידות"
           : i === maxLen - 2
           ? "עשרות"
-          : "מאות ומעלה";
+          : "מאות";
 
       const highlightKey = i === maxLen - 1 ? "Units" : i === maxLen - 2 ? "Tens" : "Hundreds";
 
@@ -375,7 +375,7 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
           ? "יחידות"
           : i === maxLen - 2
           ? "עשרות"
-          : "מאות ומעלה";
+          : "מאות";
 
       const highlightKey = i === maxLen - 1 ? "Units" : i === maxLen - 2 ? "Tens" : "Hundreds";
 

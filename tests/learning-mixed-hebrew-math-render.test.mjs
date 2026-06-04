@@ -7,12 +7,12 @@ import {
 
 test("parses addition step into three separate lines", () => {
   const blocks = parseStepExplanationThreeLines(
-    "מחברים את ספרת המאות ומעלה: 1 + 8 = 9. כותבים 9 בעמודת המאות ומעלה."
+    "מחברים את ספרת המאות: 1 + 8 = 9. כותבים 9 בעמודת המאות."
   );
   assert.deepEqual(blocks, {
-    instruction: "מחברים את ספרת המאות ומעלה:",
+    instruction: "מחברים את ספרת המאות:",
     equation: "1 + 8 = 9",
-    explanation: "כותבים 9 בעמודת המאות ומעלה.",
+    explanation: "כותבים 9 בעמודת המאות.",
   });
 });
 
@@ -43,7 +43,7 @@ test("parses subtraction step with וכותבים connector", () => {
 
 test("inline fallback still keeps full equation before Hebrew explanation", () => {
   const runs = splitLearningMixedHebrewMathRuns(
-    "6 + 2 = 8. כותבים 8 בעמודת המאות ומעלה."
+    "6 + 2 = 8. כותבים 8 בעמודת המאות."
   );
   assert.equal(runs[0].type, "math");
   assert.equal(runs[0].value, "6 + 2 = 8");

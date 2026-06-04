@@ -970,7 +970,7 @@ export function buildStepExplanation(question) {
           ? "יחידות"
           : i === maxLen - 2
           ? "עשרות"
-          : "מאות ומעלה";
+          : "מאות";
 
       if (topDigit < bottomDigit) {
         steps.push(
@@ -1175,7 +1175,7 @@ export function buildStepExplanation(question) {
           ? "יחידות"
           : i === maxLen - 2
           ? "עשרות"
-          : "מאות ומעלה";
+          : "מאות";
 
       let text = `${stepIndex}. מחברים את ספרת ה${placeName}: ${LTR(
         `${da} + ${db}${carry ? " + " + carry : ""} = ${sum}`
@@ -1235,7 +1235,7 @@ export function buildStepExplanation(question) {
           ? "יחידות"
           : i === maxLen - 2
           ? "עשרות"
-          : "מאות ומעלה";
+          : "מאות";
 
       if (da < db) {
         steps.push(

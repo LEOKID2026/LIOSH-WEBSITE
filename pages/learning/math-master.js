@@ -60,6 +60,8 @@ import {
 } from "../../utils/math-animations";
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
+import StepVerticalExerciseView from "../../components/learning/StepVerticalExerciseView";
+import { supportsPlaceValueStepExerciseView } from "../../utils/learning-step-vertical-exercise";
 import {
   learningModalOverlay,
   learningModalPanel,
@@ -4617,6 +4619,12 @@ export default function MathMaster() {
                             answerVal = (currentQuestion.params.quotient ?? answer);
                             opSymbol = "÷";
                           }
+
+                          const usePlaceValueExerciseView = supportsPlaceValueStepExerciseView(
+                            effectiveOp,
+                            op,
+                            opSymbol
+                          );
                           
                           // פונקציה לפיצול ספרות עם padding
                           const splitDigits = (num, minLength = 1) => {
@@ -4937,8 +4945,19 @@ export default function MathMaster() {
                                 
                                 {/* תוכן - גלילה */}
                                 <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-2">
-                                  {/* אם יש בלוק מונוספייס מהאנימציה: מציגים אותו במקום הטבלה (כדי למנוע כפילות) */}
-                                  {activeStep.pre ? (
+                                  {usePlaceValueExerciseView ? (
+                                    <StepVerticalExerciseView
+                                      key={activeStep?.id ?? `step-${safeStepIndex}`}
+                                      topValue={aVal}
+                                      bottomValue={bVal}
+                                      answerValue={answerVal}
+                                      operator={opSymbol}
+                                      step={activeStep}
+                                      pre={activeStep.pre}
+                                      stepIndex={safeStepIndex}
+                                      isDecimal={isDecimal}
+                                    />
+                                  ) : activeStep.pre ? (
                                     <div className="mb-4 w-full">
                                       <div className="rounded-lg bg-emerald-900/50 px-3 py-2 overflow-x-auto">
                                         {activeStep?.type === "division" && typeof activeStep.pre === "string" ? (() => {
@@ -4954,7 +4973,7 @@ export default function MathMaster() {
                                                 style={{
                                                   unicodeBidi: "plaintext",
                                                   margin: 0,
-                                                  transform: "translateY(6px)", // מקרב רק את שורת המנה לקו, בלי להזיז את הקו
+                                                  transform: "translateY(6px)",
                                                 }}
                                               >
                                                 {`\u2066${firstLine}\u2069`}
@@ -4979,106 +4998,7 @@ export default function MathMaster() {
                                         )}
                                       </div>
                                     </div>
-                                  ) : (
-                                    /* תצוגת התרגיל המאונך עם הדגשות - טבלה */
-                                    <div className="mb-4 flex flex-col items-center font-mono text-2xl leading-[1.8]" style={{ direction: "ltr" }}>
-                                    {/* שורה 1 – המספר הראשון (תא ריק במקום סימן הפעולה) */}
-                                    <div 
-                                      className="grid gap-x-1 mb-1"
-                                      style={{ 
-                                        gridTemplateColumns: `auto repeat(${maxLen}, 1.5ch)`
-                                      }}
-                                    >
-                                      <span className="w-4" /> {/* תא ריק במקום סימן הפעולה */}
-                                      {aDigits.map((d, idx) => {
-                                        const pos = maxLen - idx - 1; // מיקום מהסוף (0 = אחדות, 1 = עשרות וכו')
-                                        const highlightKey = pos === 0 ? "Units" : pos === 1 ? "Tens" : "Hundreds";
-                                        const shouldHighlight = isHighlighted("aAll") || 
-                                                              (pos === 0 && isHighlighted("aUnits")) ||
-                                                              (pos === 1 && isHighlighted("aTens")) ||
-                                                              (pos === 2 && isHighlighted("aHundreds"));
-                                        return (
-                                          <span
-                                            key={`a-${idx}`}
-                                            className={`text-center font-bold ${
-                                              shouldHighlight ? "bg-yellow-500/30 rounded px-1 animate-pulse" : ""
-                                            }`}
-                                          >
-                                            {d.trim() || "\u00A0"}
-                                          </span>
-                                        );
-                                      })}
-                                    </div>
-                                    
-                                    {/* שורה 2 – סימן הפעולה והמספר השני */}
-                                    <div 
-                                      className="grid gap-x-1 mb-1"
-                                      style={{ 
-                                        gridTemplateColumns: `auto repeat(${maxLen}, 1.5ch)`
-                                      }}
-                                    >
-                                      <span className="w-4 text-center text-2xl font-bold">
-                                        {opSymbol}
-                                      </span>
-                                      {bDigits.map((d, idx) => {
-                                        const pos = maxLen - idx - 1;
-                                        const highlightKey = pos === 0 ? "Units" : pos === 1 ? "Tens" : "Hundreds";
-                                        const shouldHighlight = isHighlighted("bAll") || 
-                                                              (pos === 0 && isHighlighted("bUnits")) ||
-                                                              (pos === 1 && isHighlighted("bTens")) ||
-                                                              (pos === 2 && isHighlighted("bHundreds"));
-                                        return (
-                                          <span
-                                            key={`b-${idx}`}
-                                            className={`text-center font-bold ${
-                                              shouldHighlight ? "bg-yellow-500/30 rounded px-1 animate-pulse" : ""
-                                            }`}
-                                          >
-                                            {d.trim() || "\u00A0"}
-                                          </span>
-                                        );
-                                      })}
-                                    </div>
-                                    
-                                    {/* קו תחתון */}
-                                    <div 
-                                      className="h-[2px] bg-white my-2"
-                                      style={{ width: `${(maxLen + 1) * 1.5}ch` }}
-                                    />
-                                    
-                                    {/* שורה 3 – התוצאה (חשיפה הדרגתית) */}
-                                    <div 
-                                      className="grid gap-x-1"
-                                      style={{ 
-                                        gridTemplateColumns: `auto repeat(${maxLen}, 1.5ch)`
-                                      }}
-                                    >
-                                      <span className="w-4" /> {/* תא ריק */}
-                                      {visibleResultDigits.map((d, idx) => {
-                                        const pos = maxLen - idx - 1;
-                                        const fromRight = pos; // 0 = אחדות, 1 = עשרות וכו'
-                                        const isVisible = fromRight < revealCount;
-                                        const highlightKey = pos === 0 ? "Units" : pos === 1 ? "Tens" : "Hundreds";
-                                        const shouldHighlight = isVisible && (
-                                          isHighlighted("resultAll") || 
-                                          (pos === 0 && isHighlighted("resultUnits")) ||
-                                          (pos === 1 && isHighlighted("resultTens")) ||
-                                          (pos === 2 && isHighlighted("resultHundreds"))
-                                        );
-                                        return (
-                                          <span
-                                            key={`r-${idx}`}
-                                            className={`text-center font-bold ${
-                                              shouldHighlight ? "bg-yellow-500/30 rounded px-1 animate-pulse" : ""
-                                            }`}
-                                          >
-                                            {d}
-                                          </span>
-                                        );
-                                      })}
-                                    </div>
-                                  </div>
-                                  )}
+                                  ) : null}
                                   
                                   {/* טקסט ההסבר */}
                                   <div className="mb-4 text-emerald-50" dir="rtl">
