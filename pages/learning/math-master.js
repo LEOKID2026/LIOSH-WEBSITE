@@ -110,6 +110,7 @@ import {
   finishLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
+import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
 import {
   beginMasterQuestionLedger,
@@ -222,7 +223,6 @@ import {
   logStudentSubjectDashboardDiagnostics,
 } from "../../lib/learning-shared/student-subject-dashboard-view";
 import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMissionsModal";
-import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthlyPrizeJourney";
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
@@ -631,6 +631,8 @@ export default function MathMaster() {
   // הסבר מפורט לשאלה
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
+  // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
+  const stepByStepViewedRef = useRef(false);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
@@ -1511,6 +1513,7 @@ export default function MathMaster() {
   function openPreviousExplanation() {
     setShowSolution(false);
     setShowPreviousSolution(true);
+    stepByStepViewedRef.current = true;
   }
 
   const applyMathTopicCreditFromClosed = useCallback(
@@ -1664,6 +1667,7 @@ export default function MathMaster() {
           setHintUsed(false);
           closeExplanationModal();
           setErrorExplanation("");
+          stepByStepViewedRef.current = false;
           return;
         }
       }
@@ -1793,6 +1797,7 @@ export default function MathMaster() {
     setHintUsed(false);
     closeExplanationModal();
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
   }
 
   function trackCurrentQuestionTime() {
@@ -1954,6 +1959,9 @@ export default function MathMaster() {
     questionId,
     topic,
     timeSpentMs,
+    rawTimeSpentMs,
+    creditedTimeMs,
+    timingStatus,
     diagnosticProbeMeta,
   }) {
     ensureLearningSessionId()
@@ -1970,12 +1978,17 @@ export default function MathMaster() {
           userAnswer,
           isCorrect,
           hintsUsed: hintUsed ? 1 : 0,
-          timeSpentMs,
+          // Phase 3: send both raw and credited time
+          timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          creditedTimeMs,
+          timingStatus,
           gradeLevel: String(grade || ""),
           clientMeta: {
             source: "math-master",
-            version: "phase-2d-b2",
+            version: "phase-3",
             gradeKey: String(grade || ""),
+            afterStepByStep: stepByStepViewedRef.current,
             ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
@@ -2026,6 +2039,7 @@ export default function MathMaster() {
     setHintUsed(false);
     setShowBadge(null);
     setShowLevelUp(false);
+    stepByStepViewedRef.current = false;
     
     // Start background music and play game start sound
     sound.playBackgroundMusic();
@@ -2212,7 +2226,12 @@ export default function MathMaster() {
       return;
     }
 
-    const timeSpentMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const timeSpentMs = rawMs;
+    const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
+      creditedMs: questionTimeLedgerRef.current ? questionTimeLedgerRef.current.peekCreditedMs() : undefined,
+      tierCapMs: questionTimeLedgerRef.current?.tierCapMs,
+    });
 
     let diagnosticProbeMetaForSave = null;
     if (
@@ -2312,6 +2331,9 @@ export default function MathMaster() {
       questionId,
       topic: resolvedTopic,
       timeSpentMs,
+      rawTimeSpentMs,
+      creditedTimeMs,
+      timingStatus,
       diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
 
@@ -2738,14 +2760,14 @@ export default function MathMaster() {
         recordMathAnswerIntel(prev, currentQuestion.operation, false)
       );
       
-      setErrorExplanation(
-        getErrorExplanation(
-          currentQuestion,
-          currentQuestion.operation,
-          numericAnswer,
-          grade
-        )
+      const errExpl = getErrorExplanation(
+        currentQuestion,
+        currentQuestion.operation,
+        numericAnswer,
+        grade
       );
+      setErrorExplanation(errExpl);
+      if (errExpl) stepByStepViewedRef.current = true;
       
       // עדכון התקדמות אישית
       const op = currentQuestion.operation;
@@ -2932,7 +2954,6 @@ export default function MathMaster() {
           totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
           goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
           yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
-          selectedRewardKey: null,
           celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
         mode,
@@ -3862,7 +3883,6 @@ export default function MathMaster() {
                 onRecommendedPractice={handleAdaptivePlannerRecommendedPractice}
               />
               
-              <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2.5 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
@@ -4389,7 +4409,7 @@ export default function MathMaster() {
                         {mode === "learning" && (
                           <button
                             type="button"
-                            onClick={() => setShowSolution((prev) => !prev)}
+                            onClick={() => { stepByStepViewedRef.current = true; setShowSolution((prev) => !prev); }}
                             className={`${learningExplainOpenBtn} bg-indigo-500/80 hover:bg-indigo-500 border-indigo-300/40`}
                           >
                             📖 צעד-צעד
@@ -4397,7 +4417,7 @@ export default function MathMaster() {
                         )}
                         <button
                           type="button"
-                          onClick={() => setShowHint((prev) => !prev)}
+                          onClick={() => { stepByStepViewedRef.current = true; setShowHint((prev) => !prev); }}
                           className={`${learningHintTriggerBtn} bg-amber-500/80 hover:bg-amber-500 border-amber-300/40 text-white`}
                         >
                           💡 רמז

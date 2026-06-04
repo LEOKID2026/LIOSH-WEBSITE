@@ -135,6 +135,7 @@ import {
   startLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
 import { resolveGeometrySessionTopic } from "../../lib/learning/session-topic-helpers.js";
+import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -172,7 +173,6 @@ import {
   logStudentSubjectDashboardDiagnostics,
 } from "../../lib/learning-shared/student-subject-dashboard-view";
 import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMissionsModal";
-import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthlyPrizeJourney";
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
@@ -356,6 +356,8 @@ export default function GeometryMaster() {
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
+  // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
+  const stepByStepViewedRef = useRef(false);
   const [animationStep, setAnimationStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
   const animationTimeoutsRef = useRef([]);
@@ -1193,6 +1195,7 @@ export default function GeometryMaster() {
     setShowPreviousSolution(false);
     setShowTheoryHelp(false);
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
   };
 
   const recordSessionProgress = (opts = {}) => {
@@ -1341,6 +1344,9 @@ export default function GeometryMaster() {
     userAnswer,
     isCorrect,
     timeSpentMs,
+    rawTimeSpentMs,
+    creditedTimeMs,
+    timingStatus,
     usedHint,
     diagnosticProbeMeta,
   }) {
@@ -1363,12 +1369,17 @@ export default function GeometryMaster() {
           userAnswer: userAnswer != null ? String(userAnswer) : "",
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
-          timeSpentMs,
+          // Phase 3: send both raw and credited time
+          timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          creditedTimeMs,
+          timingStatus,
           gradeLevel: String(grade || ""),
           clientMeta: {
             source: "geometry-master",
-            version: "phase-2d-b3",
+            version: "phase-3",
             gradeKey: String(grade || ""),
+            afterStepByStep: stepByStepViewedRef.current,
             ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
@@ -1382,7 +1393,12 @@ export default function GeometryMaster() {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     const questionForSave = currentQuestion;
     const hintUsedForSave = hintUsed;
-    const timeSpentMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const timeSpentMs = rawMs;
+    const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
+      creditedMs: questionTimeLedgerRef.current ? questionTimeLedgerRef.current.peekCreditedMs() : undefined,
+      tierCapMs: questionTimeLedgerRef.current?.tierCapMs,
+    });
     setTotalQuestions((prevCount) => {
       const newCount = prevCount + 1;
       if (questionStartTime) {
@@ -1492,6 +1508,9 @@ export default function GeometryMaster() {
       userAnswer: answer,
       isCorrect,
       timeSpentMs,
+      rawTimeSpentMs,
+      creditedTimeMs,
+      timingStatus,
       usedHint: hintUsedForSave,
       diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
@@ -1707,14 +1726,14 @@ export default function GeometryMaster() {
       setWrong((prev) => prev + 1);
       setStreak(0);
       
-      setErrorExplanation(
-        getErrorExplanation(
-          currentQuestion,
-          currentQuestion.topic,
-          answer,
-          grade
-        )
+      const errExpl = getErrorExplanation(
+        currentQuestion,
+        currentQuestion.topic,
+        answer,
+        grade
       );
+      setErrorExplanation(errExpl);
+      if (errExpl) stepByStepViewedRef.current = true;
       
       // עדכון התקדמות אישית
       const top = currentQuestion.topic;
@@ -2076,6 +2095,7 @@ export default function GeometryMaster() {
     setShowPreviousSolution(false);
     setShowTheoryHelp(false);
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
     learningSessionIdRef.current = null;
     learningSessionStartPromiseRef.current = null;
     void ensureLearningSessionId();
@@ -2262,6 +2282,7 @@ export default function GeometryMaster() {
     if (!previousExplanationQuestion) return;
     setShowSolution(false);
     setShowPreviousSolution(true);
+    stepByStepViewedRef.current = true;
   };
 
   const profileSnap = getCachedStudentLearningProfile();
@@ -2288,7 +2309,6 @@ export default function GeometryMaster() {
           totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
           goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
           yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
-          selectedRewardKey: null,
           celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
         mode,
@@ -2828,7 +2848,6 @@ export default function GeometryMaster() {
                 onRecommendedPractice={handleAdaptivePlannerRecommendedPractice}
               />
 
-              <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
@@ -3120,7 +3139,7 @@ export default function GeometryMaster() {
                           currentQuestion.params?.kind !== "no_question" && (
                             <button
                               type="button"
-                              onClick={() => setShowSolution((prev) => !prev)}
+                              onClick={() => { stepByStepViewedRef.current = true; setShowSolution((prev) => !prev); }}
                               className={`${learningExplainOpenBtn} bg-indigo-500/80 hover:bg-indigo-500 border-indigo-300/40`}
                             >
                               📘 צעד-צעד
@@ -3133,6 +3152,7 @@ export default function GeometryMaster() {
                             if (hintUsed || selectedAnswer || currentQuestion.params?.kind === "no_question") return;
                             setShowHint(true);
                             setHintUsed(true);
+                            stepByStepViewedRef.current = true;
                           }}
                           disabled={hintUsed || !!selectedAnswer || currentQuestion.params?.kind === "no_question"}
                           className={`${learningHintTriggerBtn} bg-amber-500/80 hover:bg-amber-500 border-amber-300/40 text-white ${

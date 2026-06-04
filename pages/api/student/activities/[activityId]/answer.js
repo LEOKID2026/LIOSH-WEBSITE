@@ -35,11 +35,23 @@ export default async function handler(req, res) {
     const selectedAnswer =
       body.selectedAnswer != null ? String(body.selectedAnswer).trim().slice(0, 1000) : "";
 
+    // Phase 3: accept raw + credited timing fields; fall back to legacy timeSpentMs if absent
+    const rawTimeSpentMs =
+      normalizeOptionalInteger(body.rawTimeSpentMs, 0, 36_000_000) ??
+      normalizeOptionalInteger(body.timeSpentMs, 0, 36_000_000);
+    const creditedTimeMs =
+      normalizeOptionalInteger(body.creditedTimeMs, 0, 36_000_000) ?? rawTimeSpentMs;
+    const timingStatus =
+      typeof body.timingStatus === "string" ? body.timingStatus.slice(0, 40) : null;
+
     const supabase = getLearningSupabaseServiceRoleClient();
     const result = await recordStudentActivityAnswer(supabase, auth.studentId, activityId, {
       questionIndex,
       selectedAnswer,
-      timeSpentMs: normalizeOptionalInteger(body.timeSpentMs, 0, 36000000),
+      timeSpentMs: rawTimeSpentMs,
+      rawTimeSpentMs,
+      creditedTimeMs,
+      timingStatus,
       hintsUsed: normalizeOptionalInteger(body.hintsUsed, 0, 1000) ?? 0,
       explanationViewed: body.explanationViewed === true,
     });

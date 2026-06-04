@@ -7,20 +7,12 @@ import { safeGetItem, safeSetJson, safeGetJsonArray } from "./safe-local-storage
 /** Parent / legacy UI (no student id): keep original global keys. */
 const PROGRESS_STORAGE_KEY_GLOBAL = "LEO_MONTHLY_PROGRESS";
 const PROGRESS_LOG_KEY_GLOBAL = "LEO_PROGRESS_LOG";
-const REWARD_CHOICE_KEY_GLOBAL = "LEO_REWARD_CHOICE";
-const REWARD_CELEBRATION_KEY_GLOBAL = "LEO_REWARD_CELEBRATION";
 
 function nsMonthlyProgressKey(studentId) {
   return `liosh_lp_${String(studentId).trim()}_LEO_MONTHLY_PROGRESS`;
 }
 function nsProgressLogKey(studentId) {
   return `liosh_lp_${String(studentId).trim()}_LEO_PROGRESS_LOG`;
-}
-function nsRewardChoiceKey(studentId) {
-  return `liosh_lp_${String(studentId).trim()}_LEO_REWARD_CHOICE`;
-}
-function nsRewardCelebrationKey(studentId) {
-  return `liosh_lp_${String(studentId).trim()}_LEO_REWARD_CELEBRATION`;
 }
 
 function getMonthlyProgressStorageKey(studentId) {
@@ -31,16 +23,6 @@ function getMonthlyProgressStorageKey(studentId) {
 function getProgressLogStorageKey(studentId) {
   const id = studentId != null && String(studentId).trim() ? String(studentId).trim() : "";
   return id ? nsProgressLogKey(id) : PROGRESS_LOG_KEY_GLOBAL;
-}
-
-function getRewardChoiceStorageKey(studentId) {
-  const id = studentId != null && String(studentId).trim() ? String(studentId).trim() : "";
-  return id ? nsRewardChoiceKey(id) : REWARD_CHOICE_KEY_GLOBAL;
-}
-
-function getRewardCelebrationStorageKey(studentId) {
-  const id = studentId != null && String(studentId).trim() ? String(studentId).trim() : "";
-  return id ? nsRewardCelebrationKey(id) : REWARD_CELEBRATION_KEY_GLOBAL;
 }
 
 function getYearMonth(date = new Date()) {
@@ -114,45 +96,6 @@ export function addSessionProgress(durationMinutes, exercisesSolved, meta = {}, 
   );
 }
 
-/**
- * @param {string} yearMonth
- * @param {string} [studentId]
- */
-export function loadRewardChoice(yearMonth, studentId) {
-  if (typeof window === "undefined") return null;
-  const raw = safeGetItem(getRewardChoiceStorageKey(studentId));
-  if (!raw) return null;
-  try {
-    const all = JSON.parse(raw);
-    return all[yearMonth] || null;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * @param {string} yearMonth
- * @param {string} choiceKey
- * @param {string} [studentId]
- */
-export function saveRewardChoice(yearMonth, choiceKey, studentId) {
-  if (typeof window === "undefined") return;
-  const raw = safeGetItem(getRewardChoiceStorageKey(studentId));
-  let all = {};
-  if (raw) {
-    try {
-      const parsed = JSON.parse(raw);
-      if (parsed != null && typeof parsed === "object" && !Array.isArray(parsed)) {
-        all = parsed;
-      }
-    } catch {
-      /* keep {} */
-    }
-  }
-  all[yearMonth] = choiceKey;
-  safeSetJson(getRewardChoiceStorageKey(studentId), all);
-}
-
 export function getCurrentYearMonth() {
   return getYearMonth();
 }
@@ -191,40 +134,3 @@ function appendProgressLog(entry, studentId) {
   }
 }
 
-/**
- * @param {string} yearMonth
- * @param {string} [studentId]
- */
-export function hasRewardCelebrationShown(yearMonth, studentId) {
-  if (typeof window === "undefined") return false;
-  const raw = safeGetItem(getRewardCelebrationStorageKey(studentId));
-  if (!raw) return false;
-  try {
-    const all = JSON.parse(raw);
-    return Boolean(all[yearMonth]);
-  } catch {
-    return false;
-  }
-}
-
-/**
- * @param {string} yearMonth
- * @param {string} [studentId]
- */
-export function markRewardCelebrationShown(yearMonth, studentId) {
-  if (typeof window === "undefined") return;
-  const raw = safeGetItem(getRewardCelebrationStorageKey(studentId));
-  let all = {};
-  if (raw) {
-    try {
-      const parsed = JSON.parse(raw);
-      if (parsed != null && typeof parsed === "object" && !Array.isArray(parsed)) {
-        all = parsed;
-      }
-    } catch {
-      /* keep {} */
-    }
-  }
-  all[yearMonth] = true;
-  safeSetJson(getRewardCelebrationStorageKey(studentId), all);
-}

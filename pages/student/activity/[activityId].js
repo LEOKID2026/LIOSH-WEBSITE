@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
@@ -11,6 +11,7 @@ import { resolveStudentActivityApiErrorHe } from "../../../lib/classroom-activit
 import { resolveStudentActivityAnswerInputProps } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
 import { STUDENT_ACTIVITY_LAYOUT } from "../../../lib/classroom-activities/student-activity-layout.client.js";
+import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
 import StudentAssignedActivityShell from "../../../components/student/StudentAssignedActivityShell";
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
 import AssignedActivityBidiText from "../../../components/classroom-activities/AssignedActivityBidiText.jsx";
@@ -60,6 +61,12 @@ export default function StudentActivityPage({ activityId }) {
   const [liveIdx, setLiveIdx] = useState(null);
   const [error, setError] = useState("");
   const [savedAttempts, setSavedAttempts] = useState({});
+
+  // Phase 3: real per-question timing
+  const questionStartTimeRef = useRef(null);
+  // explanationViewedRef: set true when post-answer explanation is shown (guided_practice/homework);
+  // flows into the NEXT question's submit as explanationViewed=true
+  const explanationViewedRef = useRef(false);
 
   const startSession = useCallback(async () => {
     setPhase("loading");
@@ -166,6 +173,12 @@ export default function StudentActivityPage({ activityId }) {
     setFeedback(feedbackFromSavedAttempt(saved, activity));
   }, [effectiveIdx, savedAttempts, activity]);
 
+  // Phase 3: start question timer when question changes; reset explanationViewed
+  useEffect(() => {
+    questionStartTimeRef.current = Date.now();
+    explanationViewedRef.current = false;
+  }, [effectiveIdx]);
+
   const answerInputProps = useMemo(
     () => resolveStudentActivityAnswerInputProps(currentQuestion),
     [currentQuestion]
@@ -182,6 +195,18 @@ export default function StudentActivityPage({ activityId }) {
     setBusy(true);
     setFeedback(null);
     try {
+      // Phase 3: compute real elapsed time and credit cap
+      const rawMs =
+        questionStartTimeRef.current != null
+          ? Math.max(0, Date.now() - questionStartTimeRef.current)
+          : 0;
+      const { rawTimeSpentMs, creditedTimeMs, timingStatus } =
+        computeAssignedActivityTiming(rawMs);
+      // Capture whether the student saw an explanation from the previous question
+      const explanationViewedNow = explanationViewedRef.current;
+      // Reset for the upcoming question (will be overwritten by effectiveIdx useEffect on advance)
+      explanationViewedRef.current = false;
+
       const res = await fetch(`/api/student/activities/${encodeURIComponent(activityId)}/answer`, {
         method: "POST",
         credentials: "include",
@@ -189,9 +214,11 @@ export default function StudentActivityPage({ activityId }) {
         body: JSON.stringify({
           questionIndex: effectiveIdx,
           selectedAnswer: answerInput,
-          timeSpentMs: 5000,
-          hintsUsed: 0,
-          explanationViewed: false,
+          rawTimeSpentMs,
+          creditedTimeMs,
+          timingStatus,
+          hintsUsed: 0, // no hint UI in assigned activities
+          explanationViewed: explanationViewedNow,
         }),
       });
       const json = await res.json().catch(() => ({}));
@@ -212,10 +239,13 @@ export default function StudentActivityPage({ activityId }) {
           message: "התשובה נשלחה",
         });
       } else {
+        const explanationText = showExplanation ? json.explanation : undefined;
+        // Phase 3: mark that an explanation was shown; next question submit will carry explanationViewed=true
+        if (explanationText) explanationViewedRef.current = true;
         setFeedback({
           type: json.isCorrect ? "correct" : "wrong",
           message: json.isCorrect ? "נכון!" : "לא נכון",
-          explanation: showExplanation ? json.explanation : undefined,
+          explanation: explanationText,
           correctAnswer: showExplanation ? json.correctAnswer : undefined,
         });
       }

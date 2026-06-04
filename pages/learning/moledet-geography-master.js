@@ -60,6 +60,7 @@ import {
   isFairnessVisibilityLedgerActive,
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
+import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
 import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
@@ -133,7 +134,6 @@ import {
   logStudentSubjectDashboardDiagnostics,
 } from "../../lib/learning-shared/student-subject-dashboard-view";
 import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMissionsModal";
-import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthlyPrizeJourney";
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
@@ -495,6 +495,8 @@ export default function MoledetGeographyMaster() {
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
+  // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
+  const stepByStepViewedRef = useRef(false);
   
   // Ref לשמירת timeouts לניקוי - מונע תקיעות
   const animationTimeoutsRef = useRef([]);
@@ -1338,6 +1340,7 @@ export default function MoledetGeographyMaster() {
     setShowSolution(false);
     setShowPreviousSolution(false);
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
     setIsVerticalDisplay(false); // איפוס למצב מאוזן בכל שאלה חדשה
     // איפוס עיגולים שעברו כשמשנים שאלה
     setMovedCirclesA(0);
@@ -1505,6 +1508,9 @@ export default function MoledetGeographyMaster() {
     userAnswer,
     isCorrect,
     timeSpentMs,
+    rawTimeSpentMs,
+    creditedTimeMs,
+    timingStatus,
     usedHint,
   }) {
     const questionFingerprint = question?.id ? String(question.id) : null;
@@ -1527,12 +1533,17 @@ export default function MoledetGeographyMaster() {
           userAnswer: userAnswer != null ? String(userAnswer) : "",
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
-          timeSpentMs,
+          // Phase 3: send both raw and credited time
+          timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          creditedTimeMs,
+          timingStatus,
           gradeLevel: String(grade || ""),
           clientMeta: {
             source: "moledet-geography-master",
-            version: "phase-2d-b7",
+            version: "phase-3",
             gradeKey: String(grade || ""),
+            afterStepByStep: stepByStepViewedRef.current,
           },
         });
       })
@@ -1576,6 +1587,7 @@ export default function MoledetGeographyMaster() {
     setShowPreviousSolution(false);
     setPreviousExplanationQuestion(null);
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
     learningSessionIdRef.current = null;
     learningSessionStartPromiseRef.current = null;
 
@@ -1718,7 +1730,12 @@ export default function MoledetGeographyMaster() {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     const questionForSave = currentQuestion;
     const hintUsedForSave = hintUsed;
-    const timeSpentMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const timeSpentMs = rawMs;
+    const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
+      creditedMs: questionTimeLedgerRef.current ? questionTimeLedgerRef.current.peekCreditedMs() : undefined,
+      tierCapMs: questionTimeLedgerRef.current?.tierCapMs,
+    });
     if (
       currentQuestion.emptyPool ||
       !Array.isArray(currentQuestion.answers) ||
@@ -1751,6 +1768,9 @@ export default function MoledetGeographyMaster() {
       userAnswer: answer,
       isCorrect,
       timeSpentMs,
+      rawTimeSpentMs,
+      creditedTimeMs,
+      timingStatus,
       usedHint: hintUsedForSave,
     });
     pendingMoledetGeographyTrackMetaRef.current = {
@@ -2093,14 +2113,14 @@ export default function MoledetGeographyMaster() {
         return updated;
       });
       
-      setErrorExplanation(
-        getErrorExplanation(
-          currentQuestion,
-          topicKey,
-          answer,
-          grade
-        )
+      const errExpl = getErrorExplanation(
+        currentQuestion,
+        topicKey,
+        answer,
+        grade
       );
+      setErrorExplanation(errExpl);
+      if (errExpl) stepByStepViewedRef.current = true;
       
       // עדכון התקדמות אישית
       setProgress((prev) => {
@@ -2199,6 +2219,7 @@ export default function MoledetGeographyMaster() {
     if (!previousExplanationQuestion) return;
     setShowSolution(false);
     setShowPreviousSolution(true);
+    stepByStepViewedRef.current = true;
   };
 
   function resetStats() {
@@ -2250,7 +2271,6 @@ export default function MoledetGeographyMaster() {
           totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
           goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
           yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
-          selectedRewardKey: null,
           celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
         mode,
@@ -3134,7 +3154,6 @@ export default function MoledetGeographyMaster() {
                 onRecommendedPractice={handleAdaptivePlannerRecommendedPractice}
               />
               
-              <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
@@ -3556,7 +3575,7 @@ export default function MoledetGeographyMaster() {
                         {mode === "learning" && currentQuestion && (
                           <button
                             type="button"
-                            onClick={() => setShowSolution(true)}
+                            onClick={() => { stepByStepViewedRef.current = true; setShowSolution(true); }}
                             className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/80 hover:bg-emerald-500 text-white"
                           >
                             📘 הסבר מלא
@@ -3568,6 +3587,7 @@ export default function MoledetGeographyMaster() {
                             if (hintUsed || selectedAnswer) return;
                             setShowHint(true);
                             setHintUsed(true);
+                            stepByStepViewedRef.current = true;
                           }}
                           disabled={hintUsed || !!selectedAnswer}
                           className={`px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-500/80 hover:bg-blue-500 text-white ${

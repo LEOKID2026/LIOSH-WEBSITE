@@ -23,6 +23,7 @@ import {
   normalizePracticeGradeKey,
 } from "../../../lib/learning-supabase/practice-grade-resolution.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
+import { classifyActivityEvidence } from "../../../lib/learning/activity-classification.js";
 
 async function verifyLearningSessionOwnership(supabase, learningSessionId, studentId) {
   const { data, error } = await supabase
@@ -125,6 +126,25 @@ export default async function handler(req, res) {
       resolveContentGradeFromSessionMetadata(sessionMeta, registeredGradeKey);
     const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
 
+    const hintsUsed = normalizeOptionalInteger(body.hintsUsed, 0, 1000) ?? 0;
+    const afterStepByStep = clientMeta.afterStepByStep === true;
+    const contextAfterBookReading = clientMeta.contextAfterBookReading === true;
+
+    // Phase 3: timing truth — accept separate raw and credited values
+    const rawTimeSpentMs =
+      normalizeOptionalInteger(body.rawTimeSpentMs, 0, 36_000_000) ??
+      normalizeOptionalInteger(body.timeSpentMs, 0, 36_000_000);
+    const creditedTimeMs =
+      normalizeOptionalInteger(body.creditedTimeMs, 0, 36_000_000) ?? rawTimeSpentMs;
+    const timingStatus =
+      typeof body.timingStatus === "string" ? body.timingStatus.slice(0, 40) : null;
+
+    const classification = classifyActivityEvidence(
+      sessionMode,
+      "free_practice",
+      { afterStepByStep, contextAfterBookReading, hintsUsed }
+    );
+
     const answerPayload = {
       subject,
       topic: normalizeOptionalString(body.topic, 120),
@@ -132,14 +152,22 @@ export default async function handler(req, res) {
       prompt: normalizeOptionalString(body.prompt, 5000),
       expectedAnswer: normalizeOptionalString(body.expectedAnswer, 1000),
       userAnswer: normalizeOptionalString(body.userAnswer, 1000),
-      hintsUsed: normalizeOptionalInteger(body.hintsUsed, 0, 1000) ?? 0,
-      timeSpentMs: normalizeOptionalInteger(body.timeSpentMs, 0, 36000000),
+      hintsUsed,
+      // Phase 3: raw wall time preserved; credited time capped by policy
+      timeSpentMs: rawTimeSpentMs,
+      rawTimeSpentMs,
+      creditedTimeMs,
+      timingStatus,
       clientMeta,
       registeredGradeLevel: gradeEvidence.registeredGradeLevel,
       contentGradeLevel: gradeEvidence.contentGradeLevel,
       gradeRelation: gradeEvidence.gradeRelation,
       gradeLevel: gradeEvidence.contentGradeLevel || gradeEvidence.registeredGradeLevel,
       gameMode: sessionMode,
+      // Phase 1: activity classification
+      evidenceCategory: classification.evidenceCategory,
+      isDiagnosticEligible: classification.isDiagnosticEligible,
+      contextFlags: classification.contextFlags,
     };
 
     logLearningPipelineDebug("answer-save", {

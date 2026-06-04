@@ -51,6 +51,7 @@ import {
   isFairnessVisibilityLedgerActive,
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
+import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import {
@@ -109,7 +110,6 @@ import {
   logStudentSubjectDashboardDiagnostics,
 } from "../../lib/learning-shared/student-subject-dashboard-view";
 import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMissionsModal";
-import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthlyPrizeJourney";
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
@@ -601,6 +601,8 @@ export default function EnglishMaster() {
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
+  // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
+  const stepByStepViewedRef = useRef(false);
 
   // הסבר לטעות אחרונה
   const [errorExplanation, setErrorExplanation] = useState("");
@@ -1277,6 +1279,9 @@ export default function EnglishMaster() {
     userAnswer,
     isCorrect,
     timeSpentMs,
+    rawTimeSpentMs,
+    creditedTimeMs,
+    timingStatus,
     usedHint,
     diagnosticProbeMeta,
   }) {
@@ -1304,12 +1309,17 @@ export default function EnglishMaster() {
           userAnswer: userAnswer != null ? String(userAnswer) : "",
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
-          timeSpentMs,
+          // Phase 3: send both raw and credited time
+          timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+          creditedTimeMs,
+          timingStatus,
           gradeLevel: String(grade || ""),
           clientMeta: {
             source: "english-master",
-            version: "phase-2d-b4",
+            version: "phase-3",
             gradeKey: String(grade || ""),
+            afterStepByStep: stepByStepViewedRef.current,
             ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
@@ -1695,6 +1705,7 @@ export default function EnglishMaster() {
     setShowSolution(false);
     setShowPreviousSolution(false);
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
   }
 
   function startGame(opts = {}) {
@@ -1737,6 +1748,7 @@ export default function EnglishMaster() {
     setShowSolution(false);
     setShowPreviousSolution(false);
     setPreviousExplanationQuestion(null);
+    stepByStepViewedRef.current = false;
     learningSessionIdRef.current = null;
     learningSessionStartPromiseRef.current = null;
     
@@ -1817,6 +1829,7 @@ export default function EnglishMaster() {
     if (!previousExplanationQuestion) return;
     setShowSolution(false);
     setShowPreviousSolution(true);
+    stepByStepViewedRef.current = true;
   };
 
   function handleTimeUp() {
@@ -1844,7 +1857,12 @@ export default function EnglishMaster() {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     const questionForSave = currentQuestion;
     const hintUsedForSave = hintUsed;
-    const timeSpentMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const timeSpentMs = rawMs;
+    const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
+      creditedMs: questionTimeLedgerRef.current ? questionTimeLedgerRef.current.peekCreditedMs() : undefined,
+      tierCapMs: questionTimeLedgerRef.current?.tierCapMs,
+    });
     setTotalQuestions((prevCount) => {
       const newCount = prevCount + 1;
       if (questionStartTime) {
@@ -1958,6 +1976,9 @@ export default function EnglishMaster() {
       userAnswer: answer,
       isCorrect,
       timeSpentMs,
+      rawTimeSpentMs,
+      creditedTimeMs,
+      timingStatus,
       usedHint: hintUsedForSave,
       diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
@@ -2100,14 +2121,14 @@ export default function EnglishMaster() {
       // Play sound for wrong answer
       sound.playSound("wrong");
       
-      setErrorExplanation(
-        getErrorExplanation(
-          currentQuestion,
-          currentQuestion.topic,
-          answer,
-          questionGradeKey
-        )
+      const errExpl = getErrorExplanation(
+        currentQuestion,
+        currentQuestion.topic,
+        answer,
+        questionGradeKey
       );
+      setErrorExplanation(errExpl);
+      if (errExpl) stepByStepViewedRef.current = true;
       
       const top = currentQuestion.topic;
       updateTopicProgress(top, false);
@@ -2322,7 +2343,6 @@ export default function EnglishMaster() {
           totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
           goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
           yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
-          selectedRewardKey: null,
           celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
         mode,
@@ -2818,7 +2838,6 @@ export default function EnglishMaster() {
                 onRecommendedPractice={handleAdaptivePlannerRecommendedPractice}
               />
 
-              <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
@@ -3033,7 +3052,7 @@ export default function EnglishMaster() {
                     <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
                       {mode === "learning" && currentQuestion && (
                         <button
-                          onClick={() => setShowSolution(true)}
+                          onClick={() => { stepByStepViewedRef.current = true; setShowSolution(true); }}
                           className={learningExplainOpenBtn}
                         >
                           📘 הסבר מלא
@@ -3044,6 +3063,7 @@ export default function EnglishMaster() {
                           if (hintUsed || selectedAnswer) return;
                           setShowHint(true);
                           setHintUsed(true);
+                          stepByStepViewedRef.current = true;
                         }}
                         disabled={hintUsed || !!selectedAnswer}
                         className={`${learningHintTriggerBtn} ${

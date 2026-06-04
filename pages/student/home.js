@@ -126,15 +126,6 @@ function MonthlyJourneySection({ monthlyJourney, className = "" }) {
           />
         </div>
         <p className="text-sm text-white/75">{monthlyJourney.encouragementHe}</p>
-        {monthlyJourney.selectedRewardLabel ? (
-          <p className="text-sm text-amber-200/95">
-            פרס שנבחר לחודש: <span className="font-semibold">{monthlyJourney.selectedRewardLabel}</span>
-          </p>
-        ) : (
-          <p className="text-sm text-white/55">
-            עדיין לא נבחר פרס לחודש — אפשר לבחור מעמוד הנושא אחרי התקדמות.
-          </p>
-        )}
       </div>
     </section>
   );

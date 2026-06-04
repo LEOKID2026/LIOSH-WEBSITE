@@ -15,6 +15,7 @@ import {
   isFairnessVisibilityLedgerActive,
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
+import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
@@ -107,7 +108,6 @@ import {
   logStudentSubjectDashboardDiagnostics,
 } from "../../lib/learning-shared/student-subject-dashboard-view";
 import SubjectDailyMissionsModal from "../../components/learning/SubjectDailyMissionsModal";
-import SubjectMonthlyPrizeJourney from "../../components/learning/SubjectMonthlyPrizeJourney";
 import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsView";
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
@@ -128,19 +128,6 @@ import {
 
 const STORAGE_KEY = "mleo_science_master";
 
-/** Lobby monthly prizes: storage keys unchanged; visible labels aligned with Math. */
-const LOBBY_MONTHLY_REWARD_DISPLAY_BY_KEY = {
-  ROBUX: "10K מטבעות משחק",
-  VBUCKS: "30K מטבעות משחק",
-  CLASH_ROYALE: "60K מטבעות משחק",
-  MINECOINS: "100K מטבעות משחק",
-};
-const LOBBY_MONTHLY_PRIZE_COIN_ICON = "🪙";
-
-function lobbyMonthlyRewardDisplayLabel(key) {
-  if (!key) return "";
-  return LOBBY_MONTHLY_REWARD_DISPLAY_BY_KEY[key] || getRewardLabel(key);
-}
 
 const LEVELS = {
   easy: { name: "קל", difficulty: 1 },
@@ -767,6 +754,8 @@ export default function ScienceMaster() {
   const [showTheoryHelp, setShowTheoryHelp] = useState(false);
   const [showHowTo, setShowHowTo] = useState(false);
   const [errorExplanation, setErrorExplanation] = useState("");
+  // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
+  const stepByStepViewedRef = useRef(false);
 
   const questionPoolRef = useRef([]);
   const questionIndexRef = useRef(0);
@@ -1773,6 +1762,9 @@ function saveScienceAnswerInParallel({
   answerText,
   isCorrect,
   timeSpentMs,
+  rawTimeSpentMs,
+  creditedTimeMs,
+  timingStatus,
   usedHint,
   diagnosticProbeMeta,
 }) {
@@ -1803,12 +1795,17 @@ function saveScienceAnswerInParallel({
               : "",
         isCorrect: Boolean(isCorrect),
         hintsUsed: usedHint ? 1 : 0,
-        timeSpentMs,
+        // Phase 3: send both raw and credited time
+        timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+        rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
+        creditedTimeMs,
+        timingStatus,
         gradeLevel: String(grade || ""),
         clientMeta: {
           source: "science-master",
-          version: "phase-2d-b6",
+          version: "phase-3",
           gradeKey: String(grade || ""),
+          afterStepByStep: stepByStepViewedRef.current,
           ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
         },
       });
@@ -2102,6 +2099,7 @@ function saveScienceAnswerInParallel({
     setShowPreviousSolution(false);
     setShowTheoryHelp(false);
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
     setQuestionStartTime(Date.now());
     beginScienceQuestionLedger(displayQuestion);
 
@@ -2236,6 +2234,7 @@ function saveScienceAnswerInParallel({
     setPreviousExplanationQuestion(null);
     setShowTheoryHelp(false);
     setErrorExplanation("");
+    stepByStepViewedRef.current = false;
     learningSessionIdRef.current = null;
     learningSessionStartPromiseRef.current = null;
     clearActiveDiagnosticState(pendingDiagnosticProbeRef, scienceHypothesisLedgerRef);
@@ -2316,7 +2315,12 @@ function saveScienceAnswerInParallel({
     if (!gameActive || !currentQuestion || selectedAnswer != null) return;
     const questionForSave = currentQuestion;
     const hintUsedForSave = hintUsed;
-    const timeSpentMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
+    const timeSpentMs = rawMs;
+    const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
+      creditedMs: questionTimeLedgerRef.current ? questionTimeLedgerRef.current.peekCreditedMs() : undefined,
+      tierCapMs: questionTimeLedgerRef.current?.tierCapMs,
+    });
     const answerText = currentQuestion.options?.[idx];
     // update time stats
     setTotalQuestions((prev) => {
@@ -2391,6 +2395,9 @@ function saveScienceAnswerInParallel({
       answerText,
       isCorrect,
       timeSpentMs,
+      rawTimeSpentMs,
+      creditedTimeMs,
+      timingStatus,
       usedHint: hintUsedForSave,
       diagnosticProbeMeta: diagnosticProbeMetaForSave,
     });
@@ -2618,7 +2625,9 @@ function saveScienceAnswerInParallel({
       // Play sound for wrong answer
       sound.playSound("wrong");
       
-      setErrorExplanation(getErrorExplanationScience(currentQuestion, answerText));
+      const errExpl = getErrorExplanationScience(currentQuestion, answerText);
+      setErrorExplanation(errExpl);
+      if (errExpl) stepByStepViewedRef.current = true;
       logScienceMistakeEntry(currentQuestion, answerText, {
         selectedOptionIndex: idx,
         correctOptionIndex:
@@ -2702,6 +2711,7 @@ function saveScienceAnswerInParallel({
     if (!previousExplanationQuestion) return;
     setShowSolution(false);
     setShowPreviousSolution(true);
+    stepByStepViewedRef.current = true;
   };
 
   const saveBadge = (badge) => {
@@ -2792,7 +2802,6 @@ function saveScienceAnswerInParallel({
           totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
           goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
           yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
-          selectedRewardKey: null,
           celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
         mode,
@@ -3268,7 +3277,6 @@ function saveScienceAnswerInParallel({
                 onRecommendedPractice={handleAdaptivePlannerRecommendedPractice}
               />
 
-              <SubjectMonthlyPrizeJourney view={monthlyPersistenceView} />
 
               <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
@@ -3461,7 +3469,7 @@ function saveScienceAnswerInParallel({
                     {mode === "learning" && currentQuestion && (
                       <button
                         type="button"
-                        onClick={() => setShowSolution(true)}
+                        onClick={() => { stepByStepViewedRef.current = true; setShowSolution(true); }}
                         className={learningExplainOpenBtn}
                       >
                         📘 הסבר מלא
@@ -3469,10 +3477,11 @@ function saveScienceAnswerInParallel({
                     )}
                     <button
                       type="button"
-                      onClick={() => {
+                        onClick={() => {
                         if (hintUsed || selectedAnswer || !currentQuestion) return;
                         setShowHint(true);
                         setHintUsed(true);
+                        stepByStepViewedRef.current = true;
                       }}
                       disabled={hintUsed || !!selectedAnswer || !currentQuestion}
                       className={`${learningHintTriggerBtn} ${
