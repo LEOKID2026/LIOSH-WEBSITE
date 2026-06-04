@@ -56,6 +56,7 @@ import {
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
@@ -355,7 +356,7 @@ export default function GeometryMaster() {
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
+  const [autoPlay, setAutoPlay] = useState(false);
   const animationTimeoutsRef = useRef([]);
   const [showHowTo, setShowHowTo] = useState(false);
   const [errorExplanation, setErrorExplanation] = useState("");
@@ -2211,10 +2212,19 @@ export default function GeometryMaster() {
     animationTimeoutsRef.current.forEach(clearTimeout);
     animationTimeoutsRef.current = [];
     if (!isShowingAnySolution || !autoPlay || !geometryAnimationSteps) return;
-    if (animationStep >= geometryAnimationSteps.length - 1) return;
+    if (animationStep >= geometryAnimationSteps.length - 1) {
+      setAutoPlay(false);
+      return;
+    }
     const id = setTimeout(() => {
-      setAnimationStep((s) => s + 1);
-    }, 2000);
+      setAnimationStep((s) => {
+        const next = s + 1;
+        if (next >= geometryAnimationSteps.length - 1) {
+          setAutoPlay(false);
+        }
+        return next;
+      });
+    }, STEP_BY_STEP_AUTO_PLAY_DELAY_MS);
     animationTimeoutsRef.current.push(id);
     return () => {
       animationTimeoutsRef.current.forEach(clearTimeout);
@@ -2231,10 +2241,10 @@ export default function GeometryMaster() {
       geometryAnimationSteps.length > 0
     ) {
       setAnimationStep(0);
-      setAutoPlay(true);
+      setAutoPlay(false);
     } else if (!isShowingAnySolution) {
       setAnimationStep(0);
-      setAutoPlay(true);
+      setAutoPlay(false);
     }
     return () => {
       animationTimeoutsRef.current.forEach(clearTimeout);

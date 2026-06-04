@@ -35,6 +35,7 @@ import {
 } from "../../utils/hebrew-explanations";
 import { trackHebrewTopicTime } from "../../utils/hebrew-time-tracking";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
@@ -400,7 +401,7 @@ export default function HebrewMaster() {
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
+  const [autoPlay, setAutoPlay] = useState(false);
   
   // Ref לשמירת timeouts לניקוי - מונע תקיעות
   const animationTimeoutsRef = useRef([]);
@@ -493,11 +494,20 @@ export default function HebrewMaster() {
     animationTimeoutsRef.current = [];
     
     if (!showSolution || !autoPlay || !animationSteps) return;
-    if (animationStep >= animationSteps.length - 1) return;
+    if (animationStep >= animationSteps.length - 1) {
+      setAutoPlay(false);
+      return;
+    }
 
     const id = setTimeout(() => {
-      setAnimationStep((s) => s + 1);
-    }, 2000); // 2 שניות בין שלבים
+      setAnimationStep((s) => {
+        const next = s + 1;
+        if (next >= animationSteps.length - 1) {
+          setAutoPlay(false);
+        }
+        return next;
+      });
+    }, STEP_BY_STEP_AUTO_PLAY_DELAY_MS);
     
     animationTimeoutsRef.current.push(id);
 
@@ -515,14 +525,14 @@ export default function HebrewMaster() {
     
     if (showSolution && animationSteps && animationSteps.length > 0) {
       setAnimationStep(0);
-      setAutoPlay(true);
+      setAutoPlay(false);
     } else if (showSolution && (!animationSteps || animationSteps.length === 0)) {
       // אם אין אנימציה, נאפס את הצעד
       setAnimationStep(0);
     } else if (!showSolution) {
       // כשסוגרים את המודל - ניקוי מלא
       setAnimationStep(0);
-      setAutoPlay(true);
+      setAutoPlay(false);
     }
     
     // cleanup כשסוגרים את המודל או משנים שאלה

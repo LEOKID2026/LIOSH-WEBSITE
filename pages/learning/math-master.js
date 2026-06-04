@@ -48,6 +48,7 @@ import {
 } from "../../utils/math-explanations";
 import { trackOperationTime, buildMathReportStorageKey } from "../../utils/math-time-tracking";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
@@ -629,7 +630,7 @@ export default function MathMaster() {
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
+  const [autoPlay, setAutoPlay] = useState(false);
   const [scratchpadCloseSignal, setScratchpadCloseSignal] = useState(0);
   const [scratchpadOpen, setScratchpadOpen] = useState(false);
   const [activeScratchpadCell, setActiveScratchpadCell] = useState(null);
@@ -817,11 +818,20 @@ export default function MathMaster() {
     animationTimeoutsRef.current = [];
     
     if (!isShowingAnySolution || !autoPlay || !animationSteps) return;
-    if (animationStep >= animationSteps.length - 1) return;
+    if (animationStep >= animationSteps.length - 1) {
+      setAutoPlay(false);
+      return;
+    }
 
     const id = setTimeout(() => {
-      setAnimationStep((s) => s + 1);
-    }, 2000); // 2 שניות בין שלבים
+      setAnimationStep((s) => {
+        const next = s + 1;
+        if (next >= animationSteps.length - 1) {
+          setAutoPlay(false);
+        }
+        return next;
+      });
+    }, STEP_BY_STEP_AUTO_PLAY_DELAY_MS);
     
     animationTimeoutsRef.current.push(id);
 
@@ -839,14 +849,14 @@ export default function MathMaster() {
     
     if (isShowingAnySolution && animationSteps && animationSteps.length > 0) {
       setAnimationStep(0);
-      setAutoPlay(true);
+      setAutoPlay(false);
     } else if (isShowingAnySolution && (!animationSteps || animationSteps.length === 0)) {
       // אם אין אנימציה, נאפס את הצעד
       setAnimationStep(0);
     } else if (!isShowingAnySolution) {
       // כשסוגרים את המודל - ניקוי מלא
       setAnimationStep(0);
-      setAutoPlay(true);
+      setAutoPlay(false);
     }
     
     // cleanup כשסוגרים את המודל או משנים שאלה
