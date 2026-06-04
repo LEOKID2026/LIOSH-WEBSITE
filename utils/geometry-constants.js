@@ -43,13 +43,13 @@ export const TOPICS = {
 };
 
 /**
- * Subtitles for כיתות א׳–ג׳ on the curriculum transparency page — aligned to תוכנית המתמטיקה (מדידות וגאומטריה)
+ * Subtitles for כיתות א׳–ג׳ on the curriculum transparency page (מדידות וגאומטריה).
  * phrasing: היכרות / זיהוי / השוואה / מדידות — not “formal calculation only”.
  */
 export const TOPIC_DESCRIPTION_LOW_GRADES = {
   g1: {
     shapes_basic: "הכרת מצולעים — זיהוי ריבוע ומלבן והשוואה בסיסית",
-    transformations: "הזזה ושיקוף — היכרות (בתוכנית היסודי ללא סיבוב נפרד בכיתה א׳)",
+    transformations: "הזזה ושיקוף — היכרות (ברמה המקובלת לכיתה א׳, ללא סיבוב נפרד)",
   },
   g2: {
     shapes_basic: "צורות במישור — זיהוי והשוואה",
@@ -65,7 +65,7 @@ export const TOPIC_DESCRIPTION_LOW_GRADES = {
     quadrilaterals: "מרובעים — מיון והיכרות",
     area: "שטח — מדידות והשוואה (עומק לפי רמה)",
     perimeter: "היקף — מדידה והיכרות במצולעים",
-    rotation: "סיבוב במישור — היכרות בתוכנית היסודי",
+    rotation: "סיבוב במישור — היכרות בסיסית",
     solids: "גופים תלת־ממדיים — היכרות ושמות",
   },
 };
@@ -100,7 +100,7 @@ export const TOPIC_DESCRIPTION_MID_HIGH_GRADES = {
   g6: {
     solids: "גופים משוכללים — נפח ושטח פנים לפי רמה",
     circles: "מעגל ועיגול — היקף ושטח",
-    volume: "נפח — גופים שונים לפי התוכנית",
+    volume: "נפח — גופים שונים לפי רמה",
     area: "שטח — יישומים כולל צורות מורכבות",
     perimeter: "היקף — יישומים כולל מעגל",
     angles: "זוויות — יישום במצולשים ובבעיות",
@@ -121,7 +121,6 @@ export function topicDescriptionForCurriculumPage(gradeKey, topicKey) {
 }
 
 // עדכון ל-6 כיתות נפרדות (א', ב', ג', ד', ה', ו')
-// בהתאם לתוכנית משרד החינוך
 export const GRADES = {
   g1: {
     name: "כיתה א'",
