@@ -111,10 +111,25 @@ test("grade 2 never gets vertical calculation", () => {
   }
 });
 
-test("grade 4 vertical falls back to place value when operands missing", () => {
+test("grades 3-6 addition and subtraction use place value table", () => {
+  assert.equal(
+    getScratchpadType("g3", "addition", { a: 45, b: 23 }),
+    "blank_place_value_table"
+  );
+  assert.equal(
+    getScratchpadType("g4", "subtraction", { a: 120, b: 45 }),
+    "blank_place_value_table"
+  );
+  assert.equal(
+    getScratchpadType("g6", "addition", { a: 999, b: 111 }),
+    "blank_place_value_table"
+  );
+});
+
+test("grade 4 addition hidden when operands missing", () => {
   assert.equal(
     getScratchpadType("g4", "addition", { a: null, b: null }),
-    "blank_place_value_table"
+    null
   );
 });
 

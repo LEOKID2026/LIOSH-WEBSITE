@@ -9,7 +9,6 @@ import {
   PAPER_GRID_PLACE_VALUE,
   createEmptyPaperGrid,
   centerAlignDigitCells,
-  rightAlignDigitCells,
 } from "../../utils/math-scratchpad/paper-grid-config";
 import { ScratchpadDigitDisplay, ScratchpadDigitInput } from "./scratchpad-virtual-input";
 
@@ -480,16 +479,12 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
   const spec = PAPER_GRID_PLACE_VALUE;
   const topRow = useMemo(() => {
     const cells = numberToDigitCells(operands.a, digitCount(operands.a ?? 0));
-    return centerOperands
-      ? centerAlignDigitCells(cells, spec.cols)
-      : rightAlignDigitCells(cells, spec.cols);
-  }, [operands.a, spec.cols, centerOperands]);
+    return centerAlignDigitCells(cells, spec.cols);
+  }, [operands.a, spec.cols]);
   const bottomRow = useMemo(() => {
     const cells = numberToDigitCells(operands.b, digitCount(operands.b ?? 0));
-    return centerOperands
-      ? centerAlignDigitCells(cells, spec.cols)
-      : rightAlignDigitCells(cells, spec.cols);
-  }, [operands.b, spec.cols, centerOperands]);
+    return centerAlignDigitCells(cells, spec.cols);
+  }, [operands.b, spec.cols]);
   const divisionExerciseRow = useMemo(() => {
     if (!centerOperands) return null;
     const dividendCells = numberToDigitCells(operands.a, digitCount(operands.a ?? 0));

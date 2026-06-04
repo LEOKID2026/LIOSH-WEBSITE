@@ -65,8 +65,8 @@ export const SCRATCHPAD_MAP = {
     mixed: ["blank_place_value_table"],
   },
   g4: {
-    addition: ["blank_vertical_addition"],
-    subtraction: ["blank_vertical_subtraction"],
+    addition: ["blank_place_value_table"],
+    subtraction: ["blank_place_value_table"],
     multiplication: ["blank_multiplication_array"],
     division: ["blank_place_value_table"],
     division_with_remainder: ["blank_place_value_table"],
@@ -87,8 +87,8 @@ export const SCRATCHPAD_MAP = {
     mixed: ["blank_place_value_table"],
   },
   g5: {
-    addition: ["blank_vertical_addition"],
-    subtraction: ["blank_vertical_subtraction"],
+    addition: ["blank_place_value_table"],
+    subtraction: ["blank_place_value_table"],
     multiplication: ["blank_multiplication_array"],
     division: ["blank_place_value_table"],
     division_with_remainder: ["blank_place_value_table"],
@@ -106,8 +106,8 @@ export const SCRATCHPAD_MAP = {
     mixed: ["blank_place_value_table"],
   },
   g6: {
-    addition: ["blank_vertical_addition"],
-    subtraction: ["blank_vertical_subtraction"],
+    addition: ["blank_place_value_table"],
+    subtraction: ["blank_place_value_table"],
     multiplication: ["blank_multiplication_array"],
     division: ["blank_place_value_table"],
     division_with_remainder: ["blank_place_value_table"],
