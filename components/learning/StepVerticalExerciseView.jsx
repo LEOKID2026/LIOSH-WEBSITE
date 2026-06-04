@@ -26,23 +26,43 @@ function DigitCell({ children, highlighted }) {
 }
 
 function ColumnLabelRow({ maxLen, activeColumn, label, stepKey }) {
-  if (activeColumn == null || !label) return null;
   return (
     <div
-      className="grid gap-x-1 mb-0.5"
+      className="grid gap-x-1 mb-0.5 h-3"
       style={{ gridTemplateColumns: gridColumns(maxLen) }}
       aria-hidden
     >
       <span className="w-4" />
       {Array.from({ length: maxLen }, (_, idx) => {
         const columnFromRight = maxLen - idx - 1;
+        const showLabel = activeColumn != null && label && columnFromRight === activeColumn;
         return (
           <span
             key={`${stepKey}-label-${idx}`}
             className="inline-block w-[1.5ch] text-center text-[10px] leading-none text-emerald-300/75"
           >
-            {columnFromRight === activeColumn ? label : "\u00A0"}
+            {showLabel ? label : "\u00A0"}
           </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function CarryRow({ maxLen, carryDigits, carryHighlight, stepKey }) {
+  return (
+    <div
+      className="grid gap-x-1 mb-1"
+      style={{ gridTemplateColumns: gridColumns(maxLen) }}
+      aria-hidden={!carryDigits?.some((digit) => digit.trim())}
+    >
+      <span className="w-4" />
+      {Array.from({ length: maxLen }, (_, idx) => {
+        const digit = carryDigits?.[idx] ?? " ";
+        return (
+          <DigitCell key={`${stepKey}-carry-${idx}`} highlighted={carryHighlight[idx]}>
+            {digit.trim() || "\u00A0"}
+          </DigitCell>
         );
       })}
     </div>
@@ -92,22 +112,12 @@ export default function StepVerticalExerciseView({
             stepKey={stepKey}
           />
 
-          {highlightState.carryDigits && (
-            <div
-              className="grid gap-x-1 mb-1"
-              style={{ gridTemplateColumns: gridColumns(maxLen) }}
-            >
-              <span className="w-4" />
-              {highlightState.carryDigits.map((digit, idx) => (
-                <DigitCell
-                  key={`${stepKey}-carry-${idx}`}
-                  highlighted={highlightState.carry[idx]}
-                >
-                  {digit.trim() || "\u00A0"}
-                </DigitCell>
-              ))}
-            </div>
-          )}
+          <CarryRow
+            maxLen={maxLen}
+            carryDigits={highlightState.carryDigits}
+            carryHighlight={highlightState.carry}
+            stepKey={stepKey}
+          />
 
           <div
             className="grid gap-x-1 mb-1"
