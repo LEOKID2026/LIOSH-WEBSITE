@@ -271,6 +271,7 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
           : "מאות";
 
       const highlightKey = i === maxLen - 1 ? "Units" : i === maxLen - 2 ? "Tens" : "Hundreds";
+      const columnFromRight = maxLen - 1 - i;
 
       revealedCount++; // חושפים ספרה נוספת
 
@@ -288,7 +289,11 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
         id: `step-${stepIndex}`,
         title: `ספרת ה${placeName}`,
         text: `מחברים את ספרת ה${placeName}: ${da} + ${db}${carry ? " + " + carry : ""} = ${sum}. כותבים ${ones} בעמודת ה${placeName}${newCarry ? " ומעבירים 1 לעמודה הבאה" : ""}.`,
-        highlights: [`a${highlightKey}`, `b${highlightKey}`, `result${highlightKey}`],
+        highlights: [
+          `aCol${columnFromRight}`,
+          `bCol${columnFromRight}`,
+          `resultCol${columnFromRight}`,
+        ],
         carry: newCarry,
         revealDigits: revealedCount, // כמה ספרות מימין חשופות
         pre: makeVerticalSnapshot({
@@ -378,13 +383,14 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
           : "מאות";
 
       const highlightKey = i === maxLen - 1 ? "Units" : i === maxLen - 2 ? "Tens" : "Hundreds";
+      const columnFromRight = maxLen - 1 - i;
 
       if (da < db) {
         steps.push({
           id: `borrow-${stepIndex}`,
           title: `השאלה מעמודת ה${placeName}`,
           text: `בעמודת ה${placeName} ${da} קטן מ-${db}, לכן לוקחים "השאלה" מהעמודה הבאה (מוסיפים 10 לספרה הזו ומפחיתים 1 בעמודה הבאה).`,
-          highlights: [`a${highlightKey}`, `b${highlightKey}`],
+          highlights: [`aCol${columnFromRight}`, `bCol${columnFromRight}`],
           revealDigits: revealedCount, // לא חושפים ספרה חדשה בשלב ההשאלה
           pre: makeVerticalSnapshot({
             operator: "−",
@@ -407,7 +413,11 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
         id: `step-${stepIndex}`,
         title: `ספרת ה${placeName}`,
         text: `כעת מחשבים בעמודת ה${placeName}: ${da} - ${db} = ${diff} וכותבים ${diff} בעמודה זו.`,
-        highlights: [`a${highlightKey}`, `b${highlightKey}`, `result${highlightKey}`],
+        highlights: [
+          `aCol${columnFromRight}`,
+          `bCol${columnFromRight}`,
+          `resultCol${columnFromRight}`,
+        ],
         revealDigits: revealedCount, // כמה ספרות מימין חשופות
         pre: makeVerticalSnapshot({
           operator: "−",

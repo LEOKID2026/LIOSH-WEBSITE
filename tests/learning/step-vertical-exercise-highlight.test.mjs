@@ -24,7 +24,7 @@ test("addition animation steps expose column highlights from metadata", () => {
   const steps = buildAdditionOrSubtractionAnimation(47, 38, 85, "addition");
   const unitsStep = steps.find((s) => s.title === "ספרת היחידות");
   assert.ok(unitsStep);
-  assert.deepEqual(unitsStep.highlights, ["aUnits", "bUnits", "resultUnits"]);
+  assert.deepEqual(unitsStep.highlights, ["aCol0", "bCol0", "resultCol0"]);
   assert.equal(resolveActiveColumnFromHighlights(unitsStep.highlights), 0);
   assert.equal(shouldHighlightRowCell(unitsStep.highlights, "a", 0, 0), true);
   assert.equal(shouldHighlightRowCell(unitsStep.highlights, "a", 1, 0), false);
@@ -95,6 +95,37 @@ test("54+26 tens step highlights operands, incoming carry, and result", () => {
   assert.deepEqual(state.carry, [true, false]);
 });
 
+test("68+56 align step highlights only real operand digits", () => {
+  const steps = buildAdditionOrSubtractionAnimation(68, 56, 124, "addition");
+  const alignStep = steps.find((s) => s.id === "place-value");
+  const layout = buildVerticalExerciseDigitLayout({
+    topValue: 68,
+    bottomValue: 56,
+    answerValue: 124,
+  });
+  const state = buildStepCellHighlightState(alignStep, layout, alignStep.pre);
+
+  assert.deepEqual(state.operandA, [false, true, true]);
+  assert.deepEqual(state.operandB, [false, true, true]);
+  assert.deepEqual(state.result, [false, false, false]);
+});
+
+test("68+56 units step highlights 8, 6, 4 and carry above tens only", () => {
+  const steps = buildAdditionOrSubtractionAnimation(68, 56, 124, "addition");
+  const unitsStep = steps.find((s) => s.title === "ספרת היחידות");
+  const layout = buildVerticalExerciseDigitLayout({
+    topValue: 68,
+    bottomValue: 56,
+    answerValue: 124,
+  });
+  const state = buildStepCellHighlightState(unitsStep, layout, unitsStep.pre);
+
+  assert.deepEqual(state.operandA, [false, false, true]);
+  assert.deepEqual(state.operandB, [false, false, true]);
+  assert.deepEqual(state.result, [false, false, true]);
+  assert.deepEqual(state.carry, [false, true, false]);
+});
+
 test("highlight state resets between units and tens steps with no sticky cells", () => {
   const steps = buildAdditionOrSubtractionAnimation(54, 26, 80, "addition");
   const layout = buildVerticalExerciseDigitLayout({
@@ -129,6 +160,32 @@ test("highlight state resets between units and tens steps with no sticky cells",
       units.result[idx] && tens.result[idx],
       false,
       `result cell ${idx} must not stay highlighted across steps`
+    );
+  }
+});
+
+test("6234+8164 hundreds and next column use different highlight columns", () => {
+  const steps = buildAdditionOrSubtractionAnimation(6234, 8164, 14398, "addition");
+  const layout = buildVerticalExerciseDigitLayout({
+    topValue: 6234,
+    bottomValue: 8164,
+    answerValue: 14398,
+  });
+  const hundredsStep = steps[3];
+  const nextColumnStep = steps[4];
+  const hundreds = buildStepCellHighlightState(hundredsStep, layout, hundredsStep.pre);
+  const nextColumn = buildStepCellHighlightState(nextColumnStep, layout, nextColumnStep.pre);
+
+  assert.equal(hundreds.activeColumn, 2);
+  assert.equal(nextColumn.activeColumn, 3);
+  assert.deepEqual(hundreds.operandA, [false, false, true, false, false]);
+  assert.deepEqual(nextColumn.operandA, [false, true, false, false, false]);
+
+  for (let idx = 0; idx < layout.maxLen; idx++) {
+    assert.equal(
+      hundreds.operandA[idx] && nextColumn.operandA[idx],
+      false,
+      `step 4 and 5 must not share operand A highlight at ${idx}`
     );
   }
 });

@@ -2,13 +2,24 @@
 
 export const PLACE_VALUE_SUFFIXES = ["Units", "Tens", "Hundreds"];
 
-export const PLACE_VALUE_LABELS = ["אחדות", "עשרות", "מאות"];
+export const PLACE_VALUE_LABELS = ["אחדות", "עשרות", "מאות", "אלפים"];
 
 const PLACE_SUFFIX_BY_COLUMN = {
   0: "Units",
   1: "Tens",
   2: "Hundreds",
 };
+
+const COLUMN_HIGHLIGHT_RE = /^(a|b|result)Col(\d+)$/;
+
+export function columnIndexFromColumnHighlightKey(key) {
+  const match = String(key).match(COLUMN_HIGHLIGHT_RE);
+  return match ? Number(match[2]) : null;
+}
+
+export function hasColumnIndexHighlights(highlights = []) {
+  return highlights.some((key) => COLUMN_HIGHLIGHT_RE.test(key));
+}
 
 export function columnIndexFromHighlightSuffix(suffix) {
   if (suffix === "Units") return 0;
@@ -19,6 +30,16 @@ export function columnIndexFromHighlightSuffix(suffix) {
 
 export function resolveActiveColumnFromHighlights(highlights = []) {
   if (!Array.isArray(highlights)) return null;
+
+  if (hasColumnIndexHighlights(highlights)) {
+    let activeColumn = null;
+    for (const key of highlights) {
+      const col = columnIndexFromColumnHighlightKey(key);
+      if (col != null) activeColumn = col;
+    }
+    return activeColumn;
+  }
+
   for (const suffix of PLACE_VALUE_SUFFIXES) {
     const inColumn =
       highlights.includes(`a${suffix}`) ||
@@ -34,6 +55,7 @@ export function getPlaceValueLabel(columnFromRight) {
 }
 
 export function hasColumnSpecificHighlights(highlights = []) {
+  if (hasColumnIndexHighlights(highlights)) return true;
   return PLACE_VALUE_SUFFIXES.some(
     (suffix) =>
       highlights.includes(`a${suffix}`) ||
@@ -58,6 +80,10 @@ export function shouldHighlightRowCell(highlights, row, columnFromRight, activeC
 
   if (!hasColumnSpecificHighlights(list)) return false;
   if (activeColumn == null || columnFromRight !== activeColumn) return false;
+
+  if (hasColumnIndexHighlights(list)) {
+    return list.includes(`${row}Col${columnFromRight}`);
+  }
 
   const suffix = PLACE_SUFFIX_BY_COLUMN[activeColumn] ?? "Hundreds";
   return list.includes(`${row}${suffix}`);
@@ -113,6 +139,12 @@ export function buildVerticalExerciseDigitLayout({ topValue, bottomValue, answer
   };
 }
 
+export function isSignificantDigitCell(value) {
+  if (value == null) return false;
+  const trimmed = String(value).trim();
+  return trimmed !== "" && trimmed !== "\u00A0";
+}
+
 export function resolveStepExerciseHighlight(step, layout, pre) {
   const highlights = Array.isArray(step?.highlights) ? [...step.highlights] : [];
   const activeColumn = resolveActiveColumnFromHighlights(highlights);
@@ -143,28 +175,40 @@ export function resolveStepExerciseHighlight(step, layout, pre) {
 
 export function buildStepCellHighlightState(step, layout, pre) {
   const meta = resolveStepExerciseHighlight(step, layout, pre);
-  const { maxLen } = layout;
+  const { maxLen, topDigits, bottomDigits, answerDigits } = layout;
   const { highlights, activeColumn, carryHighlightColumns, revealDigits } = meta;
 
   const operandA = Array.from({ length: maxLen }, (_, idx) => {
     const columnFromRight = maxLen - idx - 1;
-    return shouldHighlightRowCell(highlights, "a", columnFromRight, activeColumn);
+    return (
+      isSignificantDigitCell(topDigits[idx]) &&
+      shouldHighlightRowCell(highlights, "a", columnFromRight, activeColumn)
+    );
   });
   const operandB = Array.from({ length: maxLen }, (_, idx) => {
     const columnFromRight = maxLen - idx - 1;
-    return shouldHighlightRowCell(highlights, "b", columnFromRight, activeColumn);
+    return (
+      isSignificantDigitCell(bottomDigits[idx]) &&
+      shouldHighlightRowCell(highlights, "b", columnFromRight, activeColumn)
+    );
   });
   const result = Array.from({ length: maxLen }, (_, idx) => {
     const columnFromRight = maxLen - idx - 1;
     const isVisible = columnFromRight < revealDigits;
     return (
       isVisible &&
+      isSignificantDigitCell(answerDigits[idx]) &&
       shouldHighlightRowCell(highlights, "result", columnFromRight, activeColumn)
     );
   });
   const carry = Array.from({ length: maxLen }, (_, idx) => {
     const columnFromRight = maxLen - idx - 1;
-    return carryHighlightColumns.has(columnFromRight);
+    const carryDigit = meta.carryDigits?.[idx];
+    if (!carryHighlightColumns.has(columnFromRight)) return false;
+    if (isSignificantDigitCell(carryDigit)) return true;
+    return Boolean(
+      step?.carry && activeColumn != null && columnFromRight === activeColumn + 1
+    );
   });
 
   return {
