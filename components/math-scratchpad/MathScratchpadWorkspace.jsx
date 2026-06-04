@@ -10,6 +10,7 @@ import {
   createEmptyPaperGrid,
   centerAlignDigitCells,
   rightAlignDigitCells,
+  PLACE_VALUE_OPERAND_EDGE_PADDING,
 } from "../../utils/math-scratchpad/paper-grid-config";
 import { ScratchpadDigitDisplay, ScratchpadDigitInput } from "./scratchpad-virtual-input";
 
@@ -114,11 +115,11 @@ function PaperWorkGridRows({ grid, setGrid, rowLabelPrefix = "work" }) {
   ));
 }
 
-function placeValueHeaderLabels(cols) {
+function placeValueHeaderLabels(cols, edgePadding = 0) {
   const named = ["א", "ע", "מ", "אלף"];
   return Array.from({ length: cols }, (_, i) => {
-    const fromRight = cols - 1 - i;
-    return fromRight < named.length ? named[fromRight] : "";
+    const fromRight = cols - 1 - edgePadding - i;
+    return fromRight >= 0 && fromRight < named.length ? named[fromRight] : "";
   });
 }
 
@@ -581,8 +582,16 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
       1
     );
     return {
-      topRow: rightAlignDigitCells(numberToDigitCells(operands.a, width), spec.cols),
-      bottomRow: rightAlignDigitCells(numberToDigitCells(operands.b, width), spec.cols),
+      topRow: rightAlignDigitCells(
+        numberToDigitCells(operands.a, width),
+        spec.cols,
+        PLACE_VALUE_OPERAND_EDGE_PADDING
+      ),
+      bottomRow: rightAlignDigitCells(
+        numberToDigitCells(operands.b, width),
+        spec.cols,
+        PLACE_VALUE_OPERAND_EDGE_PADDING
+      ),
     };
   }, [operands.a, operands.b, spec.cols]);
   const divisionExerciseRow = useMemo(() => {
@@ -602,7 +611,10 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
     if (!fractionMode) return null;
     return buildFractionExerciseLayout(fractionOperands, fractionOperator, spec.cols);
   }, [fractionMode, fractionOperands, fractionOperator, spec.cols]);
-  const labels = useMemo(() => placeValueHeaderLabels(spec.cols), [spec.cols]);
+  const labels = useMemo(
+    () => placeValueHeaderLabels(spec.cols, PLACE_VALUE_OPERAND_EDGE_PADDING),
+    [spec.cols]
+  );
   const [workGrid, setWorkGrid] = useState(() =>
     createEmptyPaperGrid(spec.workRows, spec.cols)
   );

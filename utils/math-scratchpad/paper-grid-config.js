@@ -14,6 +14,9 @@ export const PAPER_GRID_VERTICAL = { cols: 8, workRows: 10 };
 /** @type {PaperGridSpec} */
 export const PAPER_GRID_PLACE_VALUE = { cols: 8, workRows: 8 };
 
+/** Empty grid cells before place-value operand digits (away from grid edge). */
+export const PLACE_VALUE_OPERAND_EDGE_PADDING = 2;
+
 /** Generous fixed notebook grid — not derived from answer length. */
 /** @type {PaperGridSpec} */
 export const PAPER_GRID_NOTEBOOK = { cols: 14, workRows: 16 };
@@ -27,11 +30,12 @@ export const PAPER_GRID_MULTIPLICATION = PAPER_GRID_NOTEBOOK;
 /**
  * @param {string[]} cells
  * @param {number} totalCols
+ * @param {number} [edgePadding=0]
  * @returns {string[]}
  */
-export function rightAlignDigitCells(cells, totalCols) {
+export function rightAlignDigitCells(cells, totalCols, edgePadding = 0) {
   const row = Array(totalCols).fill("");
-  const start = Math.max(0, totalCols - cells.length);
+  const start = Math.max(0, totalCols - cells.length - edgePadding);
   cells.forEach((cell, i) => {
     row[start + i] = cell;
   });
