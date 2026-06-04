@@ -59,6 +59,7 @@ import {
   buildAnimationForOperation,
 } from "../../utils/math-animations";
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
+import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
 import {
   learningModalOverlay,
   learningModalPanel,
@@ -2979,48 +2980,6 @@ export default function MathMaster() {
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
   const gradeSupportsWordProblems = GRADES[grade].operations.includes("word_problems");
 
-  // עוטף ביטויים מתמטיים (עם אופרטורים) בתוך טקסט עברי כדי שיוצגו משמאל לימין.
-  // לדוגמה: "12 = 1 + 6 + 5" אחרת זה מתהפך בגלל RTL.
-  const renderMathLTRInText = (text) => {
-    if (!text || typeof text !== "string") return text;
-
-    // רצף שמכיל ספרות + לפחות אופרטור אחד (כולל / או %), כדי להציג אותו ב-LTR.
-    const re =
-      /(\d[\d\s.,]*\s*(?:%|(?:\/\s*\d)|[+\-−×÷=])\s*[\d\s.,]+(?:\s*(?:%|(?:\/\s*\d)|[+\-−×÷=])\s*[\d\s.,]+)*)/g;
-
-    const parts = text.split(re);
-    if (parts.length === 1) return text;
-
-    const needsLeadingSpace = (prevText) => {
-      if (!prevText) return false;
-      return !/[\s([\u200f\u200e]$/.test(prevText) && !/[—–-]$/.test(prevText);
-    };
-    const needsTrailingSpace = (nextText) => {
-      if (!nextText) return false;
-      return !/^[\s).,;:!?]/.test(nextText);
-    };
-
-    return parts.map((part, idx) => {
-      if (idx % 2 === 1) {
-        const prev = parts[idx - 1] ?? "";
-        const next = parts[idx + 1] ?? "";
-        const addBefore = needsLeadingSpace(prev);
-        const addAfter = needsTrailingSpace(next);
-
-        return (
-          <span key={`mwrap-${idx}`}>
-            {addBefore ? " " : ""}
-            <span dir="ltr" style={{ unicodeBidi: "plaintext" }}>
-              {part}
-            </span>
-            {addAfter ? " " : ""}
-          </span>
-        );
-      }
-      return <span key={`t-${idx}`}>{part}</span>;
-    });
-  };
-
   // ✅ טקסט רמז והסבר מלא לשאלה הנוכחית
   const hintText =
     currentQuestion && currentQuestion.operation
@@ -4910,7 +4869,7 @@ export default function MathMaster() {
                                     {/* טקסט ההסבר */}
                                     <div className="mb-4 text-emerald-50" dir="rtl">
                                       <h4 className={learningExplTitle}>{activeStep?.title || ""}</h4>
-                                      <p className={learningExplBody}>{activeStep?.text || ""}</p>
+                                      {renderLearningMixedHebrewMathText(activeStep?.text || "", learningExplBody)}
                                     </div>
                                   </div>
                                   
@@ -5127,7 +5086,7 @@ export default function MathMaster() {
                                     {activeStep.content ? (
                                       <div className={learningExplBody}>{activeStep.content}</div>
                                     ) : (
-                                      <p className={learningExplBody}>{renderMathLTRInText(activeStep.text)}</p>
+                                      renderLearningMixedHebrewMathText(activeStep.text, learningExplBody)
                                     )}
                                   </div>
                                 </div>
@@ -5255,7 +5214,7 @@ export default function MathMaster() {
                                   {activeStep.content ? (
                                     <div className={learningExplBody}>{activeStep.content}</div>
                                   ) : (
-                                    <p className={learningExplBody}>{renderMathLTRInText(activeStep.text || "")}</p>
+                                    renderLearningMixedHebrewMathText(activeStep.text || "", learningExplBody)
                                   )}
                                 </div>
                               </div>

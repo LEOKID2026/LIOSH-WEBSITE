@@ -32,11 +32,11 @@ for (const file of forbiddenTouch) {
 }
 
 const mathMaster = read("pages/learning/math-master.js");
-if (!/const renderMathLTRInText\s*=/.test(mathMaster)) {
-  errors.push("math-master: renderMathLTRInText missing");
+if (!/renderLearningMixedHebrewMathText/.test(mathMaster)) {
+  errors.push("math-master: step modal must use renderLearningMixedHebrewMathText");
 }
-if (!/renderMathLTRInText\(activeStep\.text/.test(mathMaster)) {
-  errors.push("math-master: step modal must still use renderMathLTRInText");
+if (!/LearningMixedHebrewMathText/.test(mathMaster)) {
+  errors.push("math-master: LearningMixedHebrewMathText import missing");
 }
 
 const studentDisplay = read("utils/student-question-display.js");

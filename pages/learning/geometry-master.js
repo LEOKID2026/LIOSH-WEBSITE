@@ -61,6 +61,7 @@ import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
+import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
 import { getGeometryDiagramSpec } from "../../utils/geometry-diagram-spec";
 import GeometryExplanationDiagram from "../../components/learning/geometry/GeometryExplanationDiagram";
 import {
@@ -3245,12 +3246,7 @@ export default function GeometryMaster() {
                                         {activeStep.content}
                                       </div>
                                     ) : (
-                                      <p
-                                        className={learningExplBody}
-                                        style={learningMixedHebrewMathStyle}
-                                      >
-                                        {activeStep.text || ""}
-                                      </p>
+                                      renderLearningMixedHebrewMathText(activeStep.text || "", learningExplBody)
                                     )}
                                   </div>
                                 </div>
