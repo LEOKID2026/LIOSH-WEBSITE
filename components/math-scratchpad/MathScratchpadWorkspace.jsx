@@ -121,6 +121,100 @@ function placeValueHeaderLabels(cols) {
   });
 }
 
+function fractionBlockWidth(num, den, missingDen) {
+  const nLen = numberToDigitCells(num, digitCount(num ?? 0)).length;
+  if (missingDen) return Math.max(nLen, 1);
+  const dLen = numberToDigitCells(den, digitCount(den ?? 0)).length;
+  return Math.max(nLen, dLen, 1);
+}
+
+/**
+ * @param {{ num: number, den: number, missingDen?: boolean }[]} fractionOperands
+ * @param {string|null} fractionOperator
+ * @param {number} cols
+ */
+function buildFractionExerciseLayout(fractionOperands, fractionOperator, cols) {
+  if (!fractionOperands?.length) return null;
+
+  const segments = [];
+  fractionOperands.forEach((frac, index) => {
+    if (index > 0 && fractionOperator) {
+      segments.push({ type: "op", symbol: fractionOperator });
+    }
+    segments.push({ type: "frac", frac });
+  });
+
+  let totalLen = 0;
+  for (const seg of segments) {
+    if (seg.type === "op") totalLen += 1;
+    else totalLen += fractionBlockWidth(seg.frac.num, seg.frac.den, seg.frac.missingDen);
+  }
+
+  const startCol = Math.max(0, Math.floor((cols - totalLen) / 2));
+  const numRow = Array(cols).fill("");
+  const lineRow = Array(cols).fill(false);
+  const denRow = Array(cols).fill("");
+  const denMissingAt = Array(cols).fill(false);
+
+  let col = startCol;
+  for (const seg of segments) {
+    if (seg.type === "op") {
+      numRow[col] = seg.symbol;
+      col += 1;
+      continue;
+    }
+    const { frac } = seg;
+    const nCells = numberToDigitCells(frac.num, digitCount(frac.num ?? 0));
+    const dCells = frac.missingDen
+      ? [""]
+      : numberToDigitCells(frac.den, digitCount(frac.den ?? 0));
+    const w = Math.max(nCells.length, dCells.length, 1);
+    const blockStart = col;
+
+    const numStart = blockStart + Math.floor((w - nCells.length) / 2);
+    nCells.forEach((c, i) => {
+      numRow[numStart + i] = c;
+    });
+
+    const denStart = blockStart + Math.floor((w - dCells.length) / 2);
+    dCells.forEach((c, i) => {
+      const idx = denStart + i;
+      denRow[idx] = c;
+      if (frac.missingDen) denMissingAt[idx] = true;
+    });
+
+    for (let i = blockStart; i < blockStart + w; i++) {
+      lineRow[i] = true;
+    }
+    col += w;
+  }
+
+  return { numRow, lineRow, denRow, denMissingAt };
+}
+
+function renderPartialLineCells(lineFlags, cols, keyPrefix) {
+  const cells = [];
+  let ci = 0;
+  while (ci < cols) {
+    if (lineFlags[ci]) {
+      let span = 1;
+      while (ci + span < cols && lineFlags[ci + span]) span += 1;
+      cells.push(
+        <td key={`${keyPrefix}-${ci}`} colSpan={span} className="p-0 border-0">
+          <div className={DIVISION_SEPARATOR_H} />
+        </td>
+      );
+      ci += span;
+    } else {
+      cells.push(
+        <td key={`${keyPrefix}-pad-${ci}`} className="p-0 border-0" aria-hidden="true" />
+      );
+      ci += 1;
+    }
+  }
+  return cells;
+}
+
 function stopKeyBubble(e) {
   if (e.key === "Enter" || e.key === "Escape") {
     e.stopPropagation();
@@ -500,6 +594,10 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
       dividendLen: dividendCells.length,
     };
   }, [operands.a, operands.b, spec.cols, centerOperands]);
+  const fractionExerciseLayout = useMemo(() => {
+    if (!fractionMode) return null;
+    return buildFractionExerciseLayout(fractionOperands, fractionOperator, spec.cols);
+  }, [fractionMode, fractionOperands, fractionOperator, spec.cols]);
   const labels = useMemo(() => placeValueHeaderLabels(spec.cols), [spec.cols]);
   const [workGrid, setWorkGrid] = useState(() =>
     createEmptyPaperGrid(spec.workRows, spec.cols)
@@ -550,36 +648,50 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
           {!fractionMode && (
             <PaperCarryRowTable carryRow={carryRow} setCarryRow={setCarryRow} />
           )}
-          {fractionMode ? (
+          {fractionMode && fractionExerciseLayout ? (
+            <>
+              <tr>
+                {fractionExerciseLayout.numRow.map((cell, ci) => (
+                  <td key={`frac-num-${ci}`} className="border border-white/20 p-0.5">
+                    <ScratchpadDigitDisplay
+                      value={cell}
+                      className={OPERAND_CELL_CLASS}
+                      aria-label={`fraction numerator col ${ci + 1}`}
+                    />
+                  </td>
+                ))}
+              </tr>
+              <tr>{renderPartialLineCells(fractionExerciseLayout.lineRow, spec.cols, "frac-line")}</tr>
+              <tr>
+                {fractionExerciseLayout.denRow.map((cell, ci) => (
+                  <td key={`frac-den-${ci}`} className="border border-white/20 p-0.5">
+                    {fractionExerciseLayout.denMissingAt[ci] ? (
+                      <ScratchpadDigitInput
+                        value={missingDenValue}
+                        onChange={setMissingDenValue}
+                        className={WORK_CELL_CLASS}
+                        aria-label="fraction denominator"
+                        maxLength={3}
+                      />
+                    ) : (
+                      <ScratchpadDigitDisplay
+                        value={cell}
+                        className={OPERAND_CELL_CLASS}
+                        aria-label={`fraction denominator col ${ci + 1}`}
+                      />
+                    )}
+                  </td>
+                ))}
+              </tr>
+            </>
+          ) : fractionMode ? (
             <tr>
-              <td colSpan={spec.cols} className="border border-white/20 p-3">
-                <div
-                  className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
-                  dir="ltr"
-                >
-                  {fractionOperands.length === 0 ? (
-                    <span className="text-sm text-white/50">—</span>
-                  ) : (
-                    fractionOperands.map((frac, index) => (
-                      <Fragment key={`${frac.num}-${frac.den}-${index}`}>
-                        {index > 0 && fractionOperator ? (
-                          <span className="text-2xl md:text-3xl font-bold text-white/85 leading-none select-none">
-                            {fractionOperator}
-                          </span>
-                        ) : null}
-                        <FractionStack
-                          numerator={frac.num}
-                          denominator={frac.missingDen ? missingDenValue : frac.den}
-                          missingDen={Boolean(frac.missingDen)}
-                          editable={Boolean(frac.missingDen)}
-                          onDenominatorChange={
-                            frac.missingDen ? setMissingDenValue : undefined
-                          }
-                        />
-                      </Fragment>
-                    ))
-                  )}
-                </div>
+              <td colSpan={spec.cols} className="border border-white/20 p-2">
+                <ScratchpadDigitDisplay
+                  value="—"
+                  className={`${OPERAND_CELL_CLASS} mx-auto`}
+                  aria-label="fraction exercise"
+                />
               </td>
             </tr>
           ) : null}
@@ -645,13 +757,13 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
               </tr>
             ))
           ) : null}
-          {(!centerOperands && !fractionMode) || fractionMode ? (
+          {!centerOperands && !fractionMode ? (
             <tr>
               <td colSpan={spec.cols} className="py-1">
                 <div className="border-t-2 border-white/35" />
               </td>
             </tr>
-          )}
+          ) : null}
           <PaperWorkGridRows grid={workGrid} setGrid={setWorkGrid} rowLabelPrefix="place-value-work" />
         </tbody>
       </table>
