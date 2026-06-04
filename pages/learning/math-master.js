@@ -174,9 +174,9 @@ import {
 } from "../../lib/learning-client/adaptive-planner-recommended-practice";
 import {
   gradeKeyToNumber,
-  normalizeGradeLevelToKey,
 } from "../../lib/learning-student-defaults";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
+import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
 import { normalizeMistakeEvent } from "../../utils/mistake-event.js";
 import { inferNormalizedTags } from "../../utils/fast-diagnostic-engine/infer-tags.js";
 import {
@@ -401,14 +401,20 @@ export default function MathMaster() {
 
   const [mounted, setMounted] = useState(false);
 
-  // NEW: grade & mode
-  const [gradeNumber, setGradeNumber] = useState(3); // 1 = כיתה א׳, 2 = ב׳, ... 6 = ו׳
-  const [grade, setGrade] = useState("g3"); // g1, g2, g3, g4, g5, g6
   const [mode, setMode] = useState("learning");
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("addition"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
-  const bookIndexHref = getLearningBookIndexHref("math", grade);
+  const {
+    grade,
+    setGrade,
+    gradeNumber,
+    setGradeNumber,
+    gradeReady,
+    fullName: sessionFullName,
+    coinBalance: sessionCoinBalance,
+  } = useSubjectSessionDefaults();
+  const bookIndexHref = grade ? getLearningBookIndexHref("math", grade) : null;
   const bookTopicHref = useMemo(() => {
     if (!MATH_BOOK_GRADES.has(grade)) return null;
     return getMathBookHref(grade, { grade, operation, kind: null });
@@ -979,6 +985,7 @@ export default function MathMaster() {
   const [leaderboardLevel, setLeaderboardLevel] = useState("easy");
   const [leaderboardData, setLeaderboardData] = useState([]);
   useEffect(() => {
+    if (!grade) return;
     if (!GRADES[grade].operations.includes("word_problems")) {
       setUseStoryQuestions(false);
       setStoryOnly(false);
@@ -1032,56 +1039,14 @@ export default function MathMaster() {
   }, [router.isReady, router.query, applyBookPracticePreset]);
 
   useEffect(() => {
-    let mounted = true;
-    fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
-      .then((res) => res.json().catch(() => ({})))
-      .then((payload) => {
-        if (!mounted) return;
-        const rawBal = payload?.student?.coin_balance;
-        const bal =
-          typeof rawBal === "number" && !Number.isNaN(rawBal) ? rawBal : 0;
-        setChildCoinBalance(bal);
-        if (!payload?.ok || !payload?.student?.id) return;
-        const student = payload.student;
-        const fullName = String(student.full_name || "").trim();
-        if (fullName) {
-          setPlayerName(fullName);
-          try {
-            localStorage.setItem("mleo_player_name", fullName);
-          } catch {}
-        }
-        const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey && !bookPracticePresetRef.current) {
-          setGrade(gradeKey);
-          const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
-          if (gradeNumberFromDb) {
-            setGradeNumber(gradeNumberFromDb);
-          }
-        }
-        if (bookPracticePresetRef.current) {
-          applyBookPracticePreset(bookPracticePresetRef.current);
-        }
-        if (isStudentIdentityDiagnosticsEnabled()) {
-          console.log("[math-master] GET /api/student/me", {
-            id: payload.student?.id,
-            fullName: payload.student?.full_name,
-            gradeLevel: payload.student?.grade_level,
-            debug: payload.debugStudentIdentity,
-            fullNameAppliedToState: fullName,
-          });
-          console.log("[math-master] localStorage after /me handler", {
-            liosh_active_student_id: localStorage.getItem("liosh_active_student_id"),
-            mleo_player_name: localStorage.getItem("mleo_player_name"),
-          });
-        }
-      })
-      .catch(() => {
-        if (mounted) setChildCoinBalance(0);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    if (sessionFullName) {
+      setPlayerName(sessionFullName);
+    }
+  }, [sessionFullName]);
+
+  useEffect(() => {
+    setChildCoinBalance(sessionCoinBalance);
+  }, [sessionCoinBalance]);
 
   useEffect(() => {
     installLearningDiagnosticDebugOnce();
@@ -1204,6 +1169,7 @@ export default function MathMaster() {
 
   // לוודא שהפעולה שתבחר קיימת לכיתה שנבחרה
   useEffect(() => {
+    if (!grade) return;
     // אל תשנה אם ה-modal פתוח
     if (showMixedSelector) return;
     
@@ -1217,6 +1183,7 @@ export default function MathMaster() {
 
   // עדכון mixedOperations לפי הכיתה — כל פעולה זמינה לכיתה מקבלת מפתח (ברירת מחדל: הכל פעיל)
   useEffect(() => {
+    if (!grade) return;
     const availableOps = GRADES[grade].operations.filter(
       (op) => op !== "mixed"
     );
@@ -2991,7 +2958,7 @@ export default function MathMaster() {
     });
   }, [subjectView, learningProfileHydrationTick]);
 
-  if (!mounted)
+  if (!mounted || !gradeReady)
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center">
         <div className="text-white text-xl">טוען...</div>

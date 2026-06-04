@@ -80,7 +80,7 @@ import {
   mapPlannerTargetDifficultyToTriLevel,
   mergePlannerSessionClientMeta,
 } from "../../lib/learning-client/adaptive-planner-recommended-practice";
-import { normalizeGradeLevelToKey } from "../../lib/learning-student-defaults";
+import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
 import {
   debounceStudentLearningProfilePatch,
   fetchStudentLearningProfile,
@@ -711,11 +711,17 @@ export default function ScienceMaster() {
   const controlsRef = useRef(null);
   const gameRef = useRef(null);
   const [mounted, setMounted] = useState(false);
-  const [grade, setGrade] = useState(GRADE_ORDER[0]);
+  const {
+    grade,
+    setGrade,
+    gradeReady,
+    fullName: sessionFullName,
+    coinBalance: sessionCoinBalance,
+  } = useSubjectSessionDefaults({ requireGradeNumber: false });
   const [mode, setMode] = useState("learning");
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("body");
-  const bookIndexHref = getLearningBookIndexHref("science", grade);
+  const bookIndexHref = grade ? getLearningBookIndexHref("science", grade) : null;
   const bookTopicHref = useMemo(() => {
     if (!SCIENCE_BOOK_GRADE_SET.has(grade)) return null;
     return getScienceBookHref({ grade, topic, kind: null });
@@ -859,39 +865,14 @@ export default function ScienceMaster() {
   }, []);
 
   useEffect(() => {
-    let mounted = true;
-    fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
-      .then((res) => res.json().catch(() => ({})))
-      .then((payload) => {
-        if (!mounted) return;
-        const rawBal = payload?.student?.coin_balance;
-        const bal =
-          typeof rawBal === "number" && !Number.isNaN(rawBal) ? rawBal : 0;
-        setChildCoinBalance(bal);
-        if (!payload?.ok || !payload?.student?.id) return;
-        const student = payload.student;
-        const fullName = String(student.full_name || "").trim();
-        if (fullName) {
-          setPlayerName(fullName);
-          try {
-            localStorage.setItem("mleo_player_name", fullName);
-          } catch {}
-        }
-        const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey && !bookPracticePresetRef.current) {
-          setGrade(gradeKey);
-        }
-        if (bookPracticePresetRef.current) {
-          applyBookPracticePreset(bookPracticePresetRef.current);
-        }
-      })
-      .catch(() => {
-        if (mounted) setChildCoinBalance(0);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [applyBookPracticePreset]);
+    if (sessionFullName) {
+      setPlayerName(sessionFullName);
+    }
+  }, [sessionFullName]);
+
+  useEffect(() => {
+    setChildCoinBalance(sessionCoinBalance);
+  }, [sessionCoinBalance]);
 
   useEffect(() => {
     const snap = consumeAnyScienceBookLearningSnapshot();
@@ -2850,7 +2831,7 @@ function saveScienceAnswerInParallel({
     });
   }, [subjectView, learningProfileHydrationTick]);
 
-  if (!mounted) {
+  if (!mounted || !gradeReady) {
     return (
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-[#050816] to-[#0b1121] flex items-center justify-center">

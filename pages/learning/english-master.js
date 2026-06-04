@@ -81,8 +81,8 @@ import {
 } from "../../lib/learning-client/adaptive-planner-recommended-practice";
 import {
   gradeKeyToNumber,
-  normalizeGradeLevelToKey,
 } from "../../lib/learning-student-defaults";
+import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
 import {
   debounceStudentLearningProfilePatch,
   fetchStudentLearningProfile,
@@ -511,11 +511,15 @@ export default function EnglishMaster() {
   const progressStringRef = useRef("");
 
   const [mounted, setMounted] = useState(false);
-  const [grade, setGrade] = useState("g3");
-  const [gradeNumber, setGradeNumber] = useState(() => {
-    const idx = GRADE_ORDER.indexOf("g3");
-    return idx >= 0 ? idx + 1 : 3;
-  });
+  const {
+    grade,
+    setGrade,
+    gradeNumber,
+    setGradeNumber,
+    gradeReady,
+    fullName: sessionFullName,
+    coinBalance: sessionCoinBalance,
+  } = useSubjectSessionDefaults();
   const [mode, setMode] = useState("learning");
   const [practiceFocus, setPracticeFocus] = useState("balanced");
   const [focusedPracticeMode, setFocusedPracticeMode] = useState("normal");
@@ -731,43 +735,14 @@ export default function EnglishMaster() {
   }, []);
 
   useEffect(() => {
-    let mounted = true;
-    fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
-      .then((res) => res.json().catch(() => ({})))
-      .then((payload) => {
-        if (!mounted) return;
-        const rawBal = payload?.student?.coin_balance;
-        const bal =
-          typeof rawBal === "number" && !Number.isNaN(rawBal) ? rawBal : 0;
-        setChildCoinBalance(bal);
-        if (!payload?.ok || !payload?.student?.id) return;
-        const student = payload.student;
-        const fullName = String(student.full_name || "").trim();
-        if (fullName) {
-          setPlayerName(fullName);
-          try {
-            localStorage.setItem("mleo_player_name", fullName);
-          } catch {}
-        }
-        const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey && !bookPracticePresetRef.current) {
-          setGrade(gradeKey);
-          const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
-          if (gradeNumberFromDb) {
-            setGradeNumber(gradeNumberFromDb);
-          }
-        }
-        if (bookPracticePresetRef.current) {
-          applyBookPracticePreset(bookPracticePresetRef.current);
-        }
-      })
-      .catch(() => {
-        if (mounted) setChildCoinBalance(0);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [applyBookPracticePreset]);
+    if (sessionFullName) {
+      setPlayerName(sessionFullName);
+    }
+  }, [sessionFullName]);
+
+  useEffect(() => {
+    setChildCoinBalance(sessionCoinBalance);
+  }, [sessionCoinBalance]);
 
   useEffect(() => {
     const snap = consumeAnyEnglishBookLearningSnapshot();
@@ -1377,6 +1352,7 @@ export default function EnglishMaster() {
   }, []);
 
   useEffect(() => {
+    if (!grade) return;
     if (showMixedSelector) return;
     if (practiceForceKindRef.current) return;
     const allowed = GRADES[grade].topics;
@@ -1387,6 +1363,7 @@ export default function EnglishMaster() {
   }, [grade, showMixedSelector]);
 
   useEffect(() => {
+    if (!grade) return;
     const availableTopics = GRADES[grade].topics.filter((t) => t !== "mixed");
     const newMixedTopics = {
       vocabulary: availableTopics.includes("vocabulary"),
@@ -2384,7 +2361,7 @@ export default function EnglishMaster() {
     });
   }, [subjectView, learningProfileHydrationTick]);
 
-  if (!mounted)
+  if (!mounted || !gradeReady)
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center">
         <div className="text-white text-xl">טוען...</div>

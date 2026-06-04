@@ -11,6 +11,7 @@ import { buildStudentHomeView } from "../../lib/learning-client/studentHomeDashb
 import {
   invalidateStudentLearningProfileClientCache,
 } from "../../lib/learning-client/studentLearningProfileClient";
+import { invalidateStudentMeClientCache } from "../../lib/learning-client/studentMeClient";
 import { formatGradeLevelHe } from "../../lib/learning-student-defaults";
 import StudentAvatarPickerModal from "../../components/student/StudentAvatarPickerModal";
 import StudentHomeModal from "../../components/student/StudentHomeModal";
@@ -510,6 +511,7 @@ export default function StudentHomePage() {
       await fetch("/api/student/logout", { method: "POST", credentials: "include" });
       clearAllStudentScopedBrowserStorage(sid);
       invalidateStudentLearningProfileClientCache();
+      invalidateStudentMeClientCache();
       setStudent(null);
       setHomePayload(null);
       setProfilePhase("idle");

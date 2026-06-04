@@ -104,8 +104,8 @@ import {
 } from "../../lib/learning-client/adaptive-planner-recommended-practice";
 import {
   gradeKeyToNumber,
-  normalizeGradeLevelToKey,
 } from "../../lib/learning-student-defaults";
+import { useSubjectSessionDefaults } from "../../hooks/useSubjectSessionDefaults";
 import {
   debounceStudentLearningProfilePatch,
   fetchStudentLearningProfile,
@@ -200,13 +200,26 @@ export default function MoledetGeographyMaster() {
 
   const [mounted, setMounted] = useState(false);
 
-  // NEW: grade & mode
-  const [gradeNumber, setGradeNumber] = useState(3); // 1 = כיתה א׳, 2 = ב׳, ... 6 = ו׳
-  const [grade, setGrade] = useState("g3"); // g1, g2, g3, g4, g5, g6
-  const bookSubjectForGrade = getMoledetGeographyBookSubjectForGrade(grade);
-  const bookIndexHref = bookSubjectForGrade
-    ? getLearningBookIndexHref(bookSubjectForGrade, grade)
-    : null;
+  const transformMoledetGradeKey = useCallback((gradeKey) => {
+    const n = gradeKeyToNumber(gradeKey);
+    if (n == null) return gradeKey;
+    return `g${clampMoledetGeographyGradeNumber(n)}`;
+  }, []);
+
+  const {
+    grade,
+    setGrade,
+    gradeNumber,
+    setGradeNumber,
+    gradeReady,
+    fullName: sessionFullName,
+    coinBalance: sessionCoinBalance,
+  } = useSubjectSessionDefaults({ transformGradeKey: transformMoledetGradeKey });
+  const bookSubjectForGrade = grade ? getMoledetGeographyBookSubjectForGrade(grade) : null;
+  const bookIndexHref =
+    bookSubjectForGrade && grade
+      ? getLearningBookIndexHref(bookSubjectForGrade, grade)
+      : null;
   const [mode, setMode] = useState("learning");
 
   const [level, setLevel] = useState("easy");
@@ -675,45 +688,14 @@ export default function MoledetGeographyMaster() {
     return "";
   });
   useEffect(() => {
-    let mounted = true;
-    fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
-      .then((res) => res.json().catch(() => ({})))
-      .then((payload) => {
-        if (!mounted) return;
-        const rawBal = payload?.student?.coin_balance;
-        const bal =
-          typeof rawBal === "number" && !Number.isNaN(rawBal) ? rawBal : 0;
-        setChildCoinBalance(bal);
-        if (!payload?.ok || !payload?.student?.id) return;
-        const student = payload.student;
-        const fullName = String(student.full_name || "").trim();
-        if (fullName) {
-          setPlayerName(fullName);
-          try {
-            localStorage.setItem("mleo_player_name", fullName);
-          } catch {}
-        }
-        const gradeKey = normalizeGradeLevelToKey(student.grade_level);
-        if (gradeKey && !bookPracticePresetRef.current) {
-          const gradeNumberFromDb = gradeKeyToNumber(gradeKey);
-          const clampedNum =
-            gradeNumberFromDb != null
-              ? clampMoledetGeographyGradeNumber(gradeNumberFromDb)
-              : MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE;
-          setGrade(`g${clampedNum}`);
-          setGradeNumber(clampedNum);
-        }
-        if (bookPracticePresetRef.current) {
-          applyBookPracticePreset(bookPracticePresetRef.current);
-        }
-      })
-      .catch(() => {
-        if (mounted) setChildCoinBalance(0);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [applyBookPracticePreset]);
+    if (sessionFullName) {
+      setPlayerName(sessionFullName);
+    }
+  }, [sessionFullName]);
+
+  useEffect(() => {
+    setChildCoinBalance(sessionCoinBalance);
+  }, [sessionCoinBalance]);
 
   useEffect(() => {
     const snap = consumeAnyMoledetGeographyBookLearningSnapshot();
@@ -961,6 +943,7 @@ export default function MoledetGeographyMaster() {
 
   // לוודא שהפעולה שתבחר קיימת לכיתה שנבחרה
   useEffect(() => {
+    if (!grade) return;
     // אל תשנה אם ה-modal פתוח
     if (showMixedSelector) return;
     if (practiceForceKindRef.current) return;
@@ -975,6 +958,7 @@ export default function MoledetGeographyMaster() {
 
   // עדכון mixedOperations לפי הכיתה
   useEffect(() => {
+    if (!grade) return;
     const availableTopics = GRADES[grade].topics.filter(
       (topic) => topic !== "mixed"
     );
@@ -2295,7 +2279,7 @@ export default function MoledetGeographyMaster() {
     });
   }, [subjectView, learningProfileHydrationTick]);
 
-  if (!mounted)
+  if (!mounted || !gradeReady)
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center">
         <div className="text-white text-xl">טוען...</div>
