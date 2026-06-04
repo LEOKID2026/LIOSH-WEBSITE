@@ -4,31 +4,31 @@ overview: "תוכנית מלאה להרחבת מנגנון ההדגשות בצע
 todos:
   - id: phase-0-foundation
     content: "שלב 0: תשתית — exerciseView schema, highlight styles משותף, StepExerciseViewRouter, StepExerciseShell, refactor StepVerticalExerciseView, tests router"
-    status: pending
+    status: completed
   - id: phase-1-place-mult
     content: "שלב 1: הרחבת place-value (עשרוניים mul/div) + StepMultiplicationExerciseView + metadata/buildMultiplicationAnimation + tests"
-    status: pending
+    status: completed
   - id: phase-2-division
     content: "שלב 2: StepLongDivisionExerciseView + learning-step-division-exercise + איחוד UI מ-math-master + metadata cleanup + tests"
-    status: pending
+    status: completed
   - id: phase-3-fractions
     content: "שלב 3: StepFractionExerciseView + learning-step-fraction-exercise + מיפוי highlights קיים + tests"
-    status: pending
+    status: completed
   - id: phase-4-expression
     content: "שלב 4: StepExpressionExerciseView + enrichment highlights ל-12 builders (אחוזים, משוואות, סדרות, compare, number_sense, factors, prime, powers, ratio, order_of_ops, rounding, estimation, scale, divisibility, zero_one) + tests"
-    status: pending
+    status: completed
   - id: phase-5-word-problems
     content: "שלב 5: StepWordProblemExerciseView + keywords/numbers highlights + embedded exercise routing + tests"
-    status: pending
+    status: completed
   - id: phase-6-math-master
     content: "שלב 6: חיווט סופי math-master — router במקום pre/inline division; fallback בטוח; key remount"
-    status: pending
+    status: completed
   - id: phase-7-automated-tests
     content: "שלב 7: smoke test לכל buildAnimationForOperation — כל step עם exerciseView + highlights תקין"
-    status: pending
+    status: completed
   - id: phase-8-qa-build
     content: "שלב 8–9: QA matrix ידני, npm run build, צילומים/וידאו — ללא commit/push עד אישור"
-    status: pending
+    status: completed
 isProject: false
 ---
 

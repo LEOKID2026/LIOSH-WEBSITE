@@ -2,28 +2,13 @@ import {
   buildStepCellHighlightState,
   buildVerticalExerciseDigitLayout,
 } from "../../utils/learning-step-vertical-exercise";
-
-const OP_COL_WIDTH = "1rem";
-const DIGIT_COL_WIDTH = "1.5ch";
-const HIGHLIGHT_STYLE = {
-  backgroundColor: "rgba(251, 191, 36, 0.15)",
-  boxShadow: "inset 0 0 0 1px rgba(251, 191, 36, 0.45)",
-};
-
-function gridColumns(maxLen) {
-  return `${OP_COL_WIDTH} repeat(${maxLen}, ${DIGIT_COL_WIDTH})`;
-}
-
-function DigitCell({ children, highlighted }) {
-  return (
-    <span
-      className="inline-block w-[1.5ch] text-center font-bold leading-none rounded-sm"
-      style={highlighted ? HIGHLIGHT_STYLE : undefined}
-    >
-      {children}
-    </span>
-  );
-}
+import {
+  DIGIT_COL_WIDTH,
+  gridColumns,
+  OP_COL_WIDTH,
+} from "../../utils/learning-step-highlight-styles";
+import { DigitCell } from "./StepHighlightCells";
+import StepExerciseShell from "./StepExerciseShell";
 
 function ColumnLabelRow({ maxLen, activeColumn, label, stepKey }) {
   return (
@@ -99,10 +84,9 @@ export default function StepVerticalExerciseView({
   });
 
   return (
-    <div className={`mb-4 w-full ${className}`.trim()} data-step-id={stepKey}>
-      <div className="rounded-lg bg-emerald-900/50 px-3 py-2 overflow-x-auto">
+    <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
         <div
-          className="flex flex-col items-center font-mono text-2xl leading-[1.8]"
+          className="flex flex-col items-center font-mono text-2xl leading-[1.8] max-w-full"
           style={{ direction: "ltr" }}
         >
           <ColumnLabelRow
@@ -162,7 +146,6 @@ export default function StepVerticalExerciseView({
             ))}
           </div>
         </div>
-      </div>
-    </div>
+    </StepExerciseShell>
   );
 }

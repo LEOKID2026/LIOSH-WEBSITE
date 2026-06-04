@@ -11,26 +11,19 @@ import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-
 function renderInlineMixedRuns(text) {
   const runs = splitLearningMixedHebrewMathRuns(text);
   if (runs.length === 0) return null;
-  if (runs.length === 1 && runs[0].type === "prose") {
-    return (
-      <bdi dir="rtl" style={learningProseIsolateStyle}>
-        {runs[0].value}
-      </bdi>
-    );
-  }
 
   return runs.map((run, idx) => {
     if (run.type === "math") {
       return (
-        <bdi key={`math-${idx}`} dir="ltr" style={learningMathIsolateStyle}>
+        <p key={`math-${idx}`} className="my-1" style={learningMathBlockStyle} dir="ltr">
           {run.value}
-        </bdi>
+        </p>
       );
     }
     return (
-      <bdi key={`prose-${idx}`} dir="rtl" style={learningProseIsolateStyle}>
+      <p key={`prose-${idx}`} className="my-0" style={learningProseBlockStyle} dir="rtl">
         {run.value}
-      </bdi>
+      </p>
     );
   });
 }
@@ -65,9 +58,9 @@ export function renderLearningMixedHebrewMathText(text, className = "") {
   }
 
   return (
-    <p className={className} style={learningMixedHebrewMathStyle}>
+    <div className={className} style={learningMixedHebrewMathStyle}>
       {renderInlineMixedRuns(text)}
-    </p>
+    </div>
   );
 }
 

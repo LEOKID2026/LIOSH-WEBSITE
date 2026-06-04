@@ -1,0 +1,41 @@
+import React from "react";
+import StepExerciseShell from "./StepExerciseShell";
+import { ExpressionSpan } from "./StepHighlightCells";
+import {
+  highlightFractionLine,
+  parseFractionPreLines,
+} from "../../utils/learning-step-fraction-exercise";
+
+export default function StepFractionExerciseView({ step, pre, stepIndex = 0, className = "" }) {
+  const lines = parseFractionPreLines(pre || step?.pre);
+  const highlights = Array.isArray(step?.highlights) ? step.highlights : [];
+  const stepKey = step?.id ?? `frac-${stepIndex}`;
+
+  if (!lines.length) return null;
+
+  return (
+    <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
+      <div
+        className="flex flex-col items-center font-mono text-xl leading-relaxed text-emerald-100 gap-1 w-full max-w-full"
+        style={{ direction: "ltr", unicodeBidi: "plaintext" }}
+      >
+        {lines.map((line, li) => {
+          const segments = highlightFractionLine(line, highlights);
+          return (
+            <div key={`${stepKey}-line-${li}`} className="whitespace-pre">
+              {segments.map((seg, si) =>
+                seg.highlighted ? (
+                  <ExpressionSpan key={`${stepKey}-${li}-${si}`} highlighted>
+                    {seg.text}
+                  </ExpressionSpan>
+                ) : (
+                  <span key={`${stepKey}-${li}-${si}`}>{seg.text}</span>
+                )
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </StepExerciseShell>
+  );
+}

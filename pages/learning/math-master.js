@@ -60,8 +60,13 @@ import {
 } from "../../utils/math-animations";
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
-import StepVerticalExerciseView from "../../components/learning/StepVerticalExerciseView";
-import { supportsPlaceValueStepExerciseView } from "../../utils/learning-step-vertical-exercise";
+import StepExerciseViewRouter from "../../components/learning/StepExerciseViewRouter";
+import StepWordProblemExerciseView from "../../components/learning/StepWordProblemExerciseView";
+import {
+  EXERCISE_VIEWS,
+  shouldShowStandaloneExerciseView,
+} from "../../utils/learning-step-exercise-types";
+import { finalizeAnimationSteps } from "../../utils/learning-step-animation-pipeline";
 import {
   learningModalOverlay,
   learningModalPanel,
@@ -765,12 +770,18 @@ export default function MathMaster() {
     // חיבור וחיסור - אנימציה מיוחדת עם תרגיל בעמודה (קוד מקורי - לא לשנות!)
     if ((effectiveOp === "addition" || effectiveOp === "subtraction") && 
         typeof top === "number" && typeof bottom === "number") {
-      return buildAdditionOrSubtractionAnimation(top, bottom, answer, effectiveOp);
+      return finalizeAnimationSteps(
+        buildAdditionOrSubtractionAnimation(top, bottom, answer, effectiveOp),
+        explanationQuestion,
+        effectiveOp
+      );
     }
     
     // שאר הנושאים - אנימציה כללית (רק אם זה לא חיבור/חיסור)
     const built = buildAnimationForOperation(explanationQuestion, op, grade);
-    if (built && Array.isArray(built) && built.length > 0) return built;
+    if (built && Array.isArray(built) && built.length > 0) {
+      return finalizeAnimationSteps(built, explanationQuestion, op);
+    }
 
     // Fallback: אם אין אנימציה מובנית לנושא - עדיין נותנים "צעדים" עם ניווט,
     // על בסיס getSolutionSteps (React nodes) כדי שכל הנושאים יעבדו כמו בכפל.
@@ -4640,301 +4651,31 @@ export default function MathMaster() {
                             opSymbol = "÷";
                           }
 
-                          const usePlaceValueExerciseView = supportsPlaceValueStepExerciseView(
-                            effectiveOp,
-                            op,
-                            opSymbol
-                          );
-                          
-                          // פונקציה לפיצול ספרות עם padding
-                          const splitDigits = (num, minLength = 1) => {
-                            const s = String(Math.abs(num)).padStart(minLength, " ");
-                            return s.split("");
-                          };
-                          
-                          // טיפול בעשרוניים - צריך לטפל בנקודה העשרונית
                           const isDecimal = op === "decimals";
-                          const safeToFixed2 = (v) => (typeof v === "number" ? v.toFixed(2) : String(v ?? ""));
-                          let aStr = isDecimal ? safeToFixed2(aVal) : String(aVal);
-                          let bStr = isDecimal ? safeToFixed2(bVal) : String(bVal);
-                          let answerStr = isDecimal ? safeToFixed2(answerVal) : String(answerVal);
-                          
-                          // חישוב אורך מקסימלי (כולל נקודה עשרונית)
-                          const maxLen = Math.max(
-                            aStr.length,
-                            bStr.length,
-                            answerStr.length
-                          );
-                          
-                          const aDigits = aStr.padStart(maxLen, " ").split("");
-                          const bDigits = bStr.padStart(maxLen, " ").split("");
-                          const resDigitsFull = answerStr.padStart(maxLen, " ").split("");
-                          
-                          // חישוב כמה ספרות לחשוף לפי הצעד הנוכחי
-                          const revealCount = (activeStep && typeof activeStep.revealDigits === "number") 
-                            ? activeStep.revealDigits 
-                            : 0;
-                          
-                          // יצירת מערך ספרות תוצאה חלקי - רק הספרות החשופות
-                          const visibleResultDigits = resDigitsFull.map((d, idx) => {
-                            const fromRight = maxLen - 1 - idx; // 0 = ספרת אחדות (מימין)
-                            if (fromRight < revealCount) {
-                              return d.trim() || "\u00A0";
-                            }
-                            // ספרות לא חשופות - רווח
-                            return "\u00A0";
-                          });
-                          
-                          const isHighlighted = (key) => {
-                            if (!activeStep || !activeStep.highlights || !Array.isArray(activeStep.highlights)) {
-                              return false;
-                            }
-                            return activeStep.highlights.includes(key);
+
+                          const layoutProps = {
+                            topValue: aVal,
+                            bottomValue: bVal,
+                            answerValue: answerVal,
+                            operator: opSymbol,
+                            isDecimal,
                           };
+
+                          const exerciseRouter = shouldShowStandaloneExerciseView(
+                            activeStep,
+                            explanationQuestion,
+                            layoutProps
+                          ) ? (
+                            <StepExerciseViewRouter
+                              key={activeStep?.id ?? `step-${safeStepIndex}`}
+                              step={activeStep}
+                              question={explanationQuestion}
+                              layoutProps={layoutProps}
+                              stepIndex={safeStepIndex}
+                            />
+                          ) : null;
                           
-                          // טיפול מיוחד בחילוק ארוך - תצוגה שונה עם כל השלבים
-                          // אם יש לנו pre (ASCII) מהאנימציה – נשתמש במודל הרגיל כמו בכפל (בלי המסך המיוחד).
-                          if ((effectiveOp === "division" || effectiveOp === "division_with_remainder") && activeStep?.type === "division" && !activeStep?.pre) {
-                            // חישוב כל השלבים בחילוק ארוך (בדיוק כמו ב-buildDivisionAnimation)
-                            const divSteps = [];
-                            let wNum = 0;
-                            let qPos = 0;
-                            const divStr = String(aVal);
-                            
-                            let startPos = 0;
-                            for (let i = 0; i < divStr.length; i++) {
-                              if (wNum === 0) {
-                                startPos = i;
-                              }
-                              wNum = wNum * 10 + parseInt(divStr[i]);
-                              if (wNum >= bVal) {
-                                const qDig = Math.floor(wNum / bVal);
-                                const prod = qDig * bVal;
-                                const rem = wNum - prod;
-                                divSteps.push({
-                                  pos: i, // מיקום הספרה האחרונה
-                                  startPos: startPos, // מיקום הספרה הראשונה
-                                  wNum,
-                                  qDig,
-                                  prod,
-                                  rem,
-                                  qPos: qPos++,
-                                  wNumLen: String(wNum).length,
-                                });
-                                wNum = rem;
-                                startPos = rem > 0 ? i : i + 1;
-                              }
-                            }
-                            
-                            // בניית תצוגת חילוק ארוך עם כל השלבים
-                            const quotientDigits = divSteps.map(s => s.qDig);
-                            const quotientStrFull = quotientDigits.join("");
-                            const quotientDigitsArray = quotientStrFull.split("");
-                            const dividendDigitsArray = divStr.split("");
-                            const divisorStr = String(bVal);
-                            
-                            // קביעת מה להציג לפי הצעד הנוכחי
-                            const currentStepIndex = activeStep?.stepIndex ?? -1;
-                            const revealQuotientCount = activeStep?.revealDigits ?? 0;
-                            const isSubtractStep = activeStep?.id?.includes("subtract");
-                            const isBringDownStep = activeStep?.id?.includes("bring-down");
-                            
-                            // חישוב מיקום המחלק והמחולק
-                            const divisorPadding = divisorStr.length + 2; // מקום למחלק + "│" + רווח
-                            
-                            return (
-                              <div
-                                className={learningModalOverlay}
-                                onClick={closeExplanationModal}
-                                dir="rtl"
-                              >
-                                <div
-                                  className={learningModalPanel}
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {/* כותרת */}
-                                  <div className={learningModalHeader}>
-                                    <button
-                                      type="button"
-                                      onClick={closeExplanationModal}
-                                      className={learningModalCloseBtn}
-                                      aria-label="סגור"
-                                    >
-                                      ✖
-                                    </button>
-                                    <h3 className={learningModalTitle}>
-                                      {showPreviousSolution
-                                        ? "פתרון התרגיל הקודם"
-                                        : "\u200Fאיך פותרים את התרגיל?"}
-                                    </h3>
-                                    <span className="w-10 shrink-0" aria-hidden />
-                                  </div>
-                                  
-                                  {/* תוכן */}
-                                  <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-2">
-                                    {/* תצוגת חילוק ארוך */}
-                                    <div className="mb-4 flex flex-col items-start font-mono text-xl leading-[1.6]" style={{ direction: "ltr", minWidth: "300px" }}>
-                                      {/* שורה 1: המנה (quotient) - מעל, מיושרת לימין של המחולק */}
-                                      <div className="mb-1 flex" style={{ paddingLeft: `${divisorPadding * 1.5}ch` }}>
-                                        <div className="grid gap-x-1" style={{ gridTemplateColumns: `repeat(${quotientDigitsArray.length}, 1.5ch)` }}>
-                                          {quotientDigitsArray.map((d, idx) => {
-                                            const shouldHighlight = isHighlighted(`result${idx}`);
-                                            return (
-                                              <span
-                                                key={`q-${idx}`}
-                                                className={`text-center font-bold ${shouldHighlight ? "bg-yellow-500/30 rounded px-1 animate-pulse" : ""}`}
-                                              >
-                                                {idx < revealQuotientCount ? d : "\u00A0"}
-                                              </span>
-                                            );
-                                          })}
-                                        </div>
-                                      </div>
-                                      
-                                      {/* שורה 2: קו תחתון מעל המחולק */}
-                                      <div className="mb-1 flex" style={{ paddingLeft: `${divisorPadding * 1.5}ch` }}>
-                                        <div className="h-[2px] bg-white" style={{ width: `${dividendDigitsArray.length * 1.5}ch` }} />
-                                      </div>
-                                      
-                                      {/* שורה 3: המחלק משמאל + סוגר + המחולק */}
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-xl font-bold">{bVal}</span>
-                                        <span className="text-xl font-bold">│</span>
-                                        <div className="grid gap-x-1" style={{ gridTemplateColumns: `repeat(${dividendDigitsArray.length}, 1.5ch)` }}>
-                                          {dividendDigitsArray.map((d, idx) => {
-                                            const shouldHighlight = isHighlighted(`a${idx}`) || isHighlighted("aAll");
-                                            return (
-                                              <span
-                                                key={`d-${idx}`}
-                                                className={`text-center font-bold ${shouldHighlight ? "bg-yellow-500/30 rounded px-1 animate-pulse" : ""}`}
-                                              >
-                                                {d}
-                                              </span>
-                                            );
-                                          })}
-                                        </div>
-                                      </div>
-                                      
-                                      {/* הצגת שלבי החילוק לפי הצעד הנוכחי */}
-                                      {currentStepIndex >= 0 && divSteps[currentStepIndex] && (() => {
-                                        const step = divSteps[currentStepIndex];
-                                        const showWorkingNum = isSubtractStep || isHighlighted(`workingNum${currentStepIndex}`);
-                                        const showProduct = isSubtractStep || isHighlighted(`product${currentStepIndex}`);
-                                        const showRemainder = isSubtractStep || isHighlighted(`remainder${currentStepIndex}`);
-                                        
-                                        // חישוב מיקום - המספר צריך להיות מיושר מעל החלק הרלוונטי של המחולק
-                                        // step.pos הוא המיקום במחולק (משמאל, החל מ-0)
-                                        // צריך לחשב כמה מקום יש מהמחלק ועד למיקום הנכון
-                                        // workingNumber מתחיל מהמיקום step.pos, אבל יכול להיות מספר ספרות
-                                        const wNumStr = String(step.wNum);
-                                        const prodStr = String(step.prod);
-                                        const remStr = String(step.rem);
-                                        
-                                        // המיקום הוא: divisorPadding + מיקום התחלה של המספר במחולק
-                                        // step.startPos הוא המיקום של הספרה הראשונה (השמאלית ביותר) של workingNumber
-                                        const alignmentOffset = divisorPadding + (step.startPos || 0);
-                                        
-                                        return (
-                                          <div className="mt-2 flex flex-col gap-1">
-                                            {/* שורה עם המספר שמחלקים (workingNumber) - אם צריך להציג */}
-                                            {showWorkingNum && (
-                                              <div className="flex" style={{ paddingLeft: `${alignmentOffset * 1.5}ch` }}>
-                                                <div className="grid gap-x-1" style={{ gridTemplateColumns: `repeat(${wNumStr.length}, 1.5ch)` }}>
-                                                  {wNumStr.split("").map((d, idx) => (
-                                                    <span key={`wn-${idx}`} className="text-center font-bold text-emerald-300">
-                                                      {d}
-                                                    </span>
-                                                  ))}
-                                                </div>
-                                              </div>
-                                            )}
-                                            
-                                            {/* שורה עם התוצאה של הכפל (product) - מיושר לימין של workingNumber */}
-                                            {showProduct && (
-                                              <div className="flex" style={{ paddingLeft: `${(alignmentOffset + wNumStr.length - prodStr.length) * 1.5}ch` }}>
-                                                <div className="grid gap-x-1" style={{ gridTemplateColumns: `repeat(${prodStr.length}, 1.5ch)` }}>
-                                                  {prodStr.split("").map((d, idx) => (
-                                                    <span key={`prod-${idx}`} className="text-center font-bold text-red-300">
-                                                      {d}
-                                                    </span>
-                                                  ))}
-                                                </div>
-                                              </div>
-                                            )}
-                                            
-                                            {/* קו חיסור - מיושר כמו product */}
-                                            {showProduct && (
-                                              <div className="flex" style={{ paddingLeft: `${(alignmentOffset + wNumStr.length - prodStr.length) * 1.5}ch` }}>
-                                                <div className="h-[1px] bg-white" style={{ width: `${Math.max(prodStr.length, wNumStr.length) * 1.5}ch` }} />
-                                              </div>
-                                            )}
-                                            
-                                            {/* שורה עם השארית (remainder) - מיושר לימין של product */}
-                                            {showRemainder && step.rem >= 0 && (
-                                              <div className="flex" style={{ paddingLeft: `${(alignmentOffset + wNumStr.length - remStr.length) * 1.5}ch` }}>
-                                                <div className="grid gap-x-1" style={{ gridTemplateColumns: `repeat(${remStr.length}, 1.5ch)` }}>
-                                                  {remStr.split("").map((d, idx) => (
-                                                    <span key={`rem-${idx}`} className="text-center font-bold text-blue-300">
-                                                      {d}
-                                                    </span>
-                                                  ))}
-                                                </div>
-                                              </div>
-                                            )}
-                                            
-                                            {/* אם זה צעד של הורדת ספרה, הצג את הספרה הבאה */}
-                                            {isBringDownStep && currentStepIndex < divSteps.length - 1 && activeStep?.nextDigit !== undefined && (
-                                              <div className="flex items-center gap-1 mt-1" style={{ paddingLeft: `${(divisorPadding + (step.pos + 1)) * 1.5}ch` }}>
-                                                <span className="text-blue-300 font-bold text-sm">↓</span>
-                                                <span className="text-emerald-300 font-bold">{activeStep.nextDigit}</span>
-                                              </div>
-                                            )}
-                                          </div>
-                                        );
-                                      })()}
-                                    </div>
-                                    
-                                    {/* טקסט ההסבר */}
-                                    <div className="mb-4 text-emerald-50" dir="rtl">
-                                      <h4 className={learningExplTitle}>{activeStep?.title || ""}</h4>
-                                      {renderLearningMixedHebrewMathText(activeStep?.text || "", learningExplBody)}
-                                    </div>
-                                  </div>
-                                  
-                                  {/* כפתורים ואינדיקטור */}
-                                  <div className={learningModalFooter}>
-                                    <div className={learningStepNavRow} dir="rtl">
-                                      <button
-                                        onClick={() => setAnimationStep((s) => (s > 0 ? s - 1 : 0))}
-                                        disabled={animationStep === 0}
-                                        className={learningStepNavBtn}
-                                      >
-                                        קודם
-                                      </button>
-                                      <button
-                                        onClick={() => setAutoPlay((p) => !p)}
-                                        className={learningStepNavBtnPlay}
-                                      >
-                                        {autoPlay ? "עצור" : "נגן"}
-                                      </button>
-                                      <button
-                                        onClick={() => setAnimationStep((s) => (s < animationSteps.length - 1 ? s + 1 : s))}
-                                        disabled={animationStep >= animationSteps.length - 1}
-                                        className={learningStepNavBtn}
-                                      >
-                                        הבא
-                                      </button>
-                                    </div>
-                                    <div className={learningStepCounter}>
-                                      צעד {animationStep + 1} מתוך {animationSteps.length}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          }
-                          
-                          // חיבור, חיסור, כפל - הקוד המקורי בדיוק כמו שהיה
+                          // חיבור, חיסור, כפל, חילוק — router אחיד
                           return (
                             <div
                               className={learningModalOverlay}
@@ -4965,60 +4706,7 @@ export default function MathMaster() {
                                 
                                 {/* תוכן - גלילה */}
                                 <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-2">
-                                  {usePlaceValueExerciseView ? (
-                                    <StepVerticalExerciseView
-                                      key={activeStep?.id ?? `step-${safeStepIndex}`}
-                                      topValue={aVal}
-                                      bottomValue={bVal}
-                                      answerValue={answerVal}
-                                      operator={opSymbol}
-                                      step={activeStep}
-                                      pre={activeStep.pre}
-                                      stepIndex={safeStepIndex}
-                                      isDecimal={isDecimal}
-                                    />
-                                  ) : activeStep.pre ? (
-                                    <div className="mb-4 w-full">
-                                      <div className="rounded-lg bg-emerald-900/50 px-3 py-2 overflow-x-auto">
-                                        {activeStep?.type === "division" && typeof activeStep.pre === "string" ? (() => {
-                                          const raw = activeStep.pre.replace(/\u2066|\u2069/g, "");
-                                          const lines = raw.split("\n");
-                                          const firstLine = lines[0] ?? "";
-                                          const rest = lines.slice(1).join("\n");
-                                          return (
-                                            <div className="flex flex-col items-center">
-                                              <pre
-                                                dir="ltr"
-                                                className="text-center font-mono text-lg whitespace-pre text-emerald-100"
-                                                style={{
-                                                  unicodeBidi: "plaintext",
-                                                  margin: 0,
-                                                  transform: "translateY(6px)",
-                                                }}
-                                              >
-                                                {`\u2066${firstLine}\u2069`}
-                                              </pre>
-                                              <pre
-                                                dir="ltr"
-                                                className="text-center font-mono text-lg leading-relaxed whitespace-pre text-emerald-100"
-                                                style={{ unicodeBidi: "plaintext", margin: 0 }}
-                                              >
-                                                {`\u2066${rest}\u2069`}
-                                              </pre>
-                                            </div>
-                                          );
-                                        })() : (
-                                          <pre
-                                            dir="ltr"
-                                            className="text-center font-mono text-lg leading-relaxed whitespace-pre text-emerald-100"
-                                            style={{ unicodeBidi: "plaintext" }}
-                                          >
-                                            {activeStep.pre}
-                                          </pre>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ) : null}
+                                  {exerciseRouter}
                                   
                                   {/* טקסט ההסבר */}
                                   <div className="mb-4 text-emerald-50" dir="rtl">
@@ -5111,47 +4799,26 @@ export default function MathMaster() {
                                 {/* טקסט ההסבר */}
                                 <div className="mb-4 text-emerald-50" dir="rtl">
                                   <h4 className={learningExplTitle}>{activeStep.title || "הסבר"}</h4>
-                                  {activeStep.pre && (
-                                    <div className="mt-2 mb-3 rounded-lg bg-emerald-900/50 border border-emerald-500/15 px-3 py-2 overflow-x-auto">
-                                      {activeStep?.type === "division" && typeof activeStep.pre === "string" ? (() => {
-                                        const raw = activeStep.pre.replace(/\u2066|\u2069/g, "");
-                                        const lines = raw.split("\n");
-                                        const firstLine = lines[0] ?? "";
-                                        const rest = lines.slice(1).join("\n");
-                                        return (
-                                          <div className="flex flex-col items-center">
-                                            <pre
-                                              dir="ltr"
-                                              className="text-center font-mono text-base whitespace-pre text-emerald-100"
-                                              style={{
-                                                unicodeBidi: "plaintext",
-                                                margin: 0,
-                                                transform: "translateY(6px)",
-                                              }}
-                                            >
-                                              {`\u2066${firstLine}\u2069`}
-                                            </pre>
-                                            <pre
-                                              dir="ltr"
-                                              className="text-center font-mono text-base leading-relaxed whitespace-pre text-emerald-100"
-                                              style={{ unicodeBidi: "plaintext", margin: 0 }}
-                                            >
-                                              {`\u2066${rest}\u2069`}
-                                            </pre>
-                                          </div>
-                                        );
-                                      })() : (
-                                        <pre
-                                          dir="ltr"
-                                          className="text-center font-mono text-base leading-relaxed whitespace-pre text-emerald-100"
-                                          style={{ unicodeBidi: "plaintext" }}
-                                        >
-                                          {activeStep.pre}
-                                        </pre>
-                                      )}
+                                  {shouldShowStandaloneExerciseView(
+                                    activeStep,
+                                    explanationQuestion,
+                                    {}
+                                  ) && (
+                                    <div className="mt-2 mb-3">
+                                      <StepExerciseViewRouter
+                                        key={activeStep?.id ?? `step-${safeStepIndex}`}
+                                        step={activeStep}
+                                        question={explanationQuestion}
+                                        layoutProps={{}}
+                                        stepIndex={safeStepIndex}
+                                      />
                                     </div>
                                   )}
-                                  {activeStep.content ? (
+                                  {(activeStep.exerciseView === EXERCISE_VIEWS.wordProblem ||
+                                    activeStep.type === "word_problems") &&
+                                  !activeStep.pre ? (
+                                    <StepWordProblemExerciseView step={activeStep} />
+                                  ) : activeStep.content ? (
                                     <div className={learningExplBody}>{activeStep.content}</div>
                                   ) : (
                                     renderLearningMixedHebrewMathText(activeStep.text || "", learningExplBody)

@@ -96,6 +96,10 @@ export const learningMathBlockStyle = Object.freeze({
   display: "block",
   textAlign: "center",
   fontVariantNumeric: "tabular-nums",
+  whiteSpace: "pre-wrap",
+  overflowWrap: "anywhere",
+  wordBreak: "break-word",
+  maxWidth: "100%",
 });
 
 /**
