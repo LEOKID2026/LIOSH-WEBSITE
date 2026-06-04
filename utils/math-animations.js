@@ -229,7 +229,7 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
     steps.push({
       id: "place-value",
       title: "מיישרים את הספרות",
-      text: "כותבים את המספרים אחד מעל השני כך שסַפְרות היחידות נמצאות באותה עמודה.",
+      text: "כותבים את המספרים אחד מעל השני כך שסַפְרות האחדות נמצאות באותה עמודה.",
       highlights: ["aAll", "bAll"],
       revealDigits: 0, // עדיין לא מראים כלום
       pre: makeVerticalSnapshot({
@@ -265,7 +265,7 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
 
       const placeName =
         i === maxLen - 1
-          ? "יחידות"
+          ? "אחדות"
           : i === maxLen - 2
           ? "עשרות"
           : "מאות";
@@ -353,7 +353,7 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
     steps.push({
       id: "place-value",
       title: "מיישרים את הספרות",
-      text: "כותבים את המספרים אחד מעל השני כך שסַפְרות היחידות, העשרות וכו' נמצאות באותו טור.",
+      text: "כותבים את המספרים אחד מעל השני כך שסַפְרות האחדות, העשרות וכו' נמצאות באותו טור.",
       highlights: ["aAll", "bAll"],
       revealDigits: 0, // עדיין לא מראים כלום
       pre: makeVerticalSnapshot({
@@ -377,7 +377,7 @@ export function buildAdditionOrSubtractionAnimation(a, b, answer, op) {
 
       const placeName =
         i === maxLen - 1
-          ? "יחידות"
+          ? "אחדות"
           : i === maxLen - 2
           ? "עשרות"
           : "מאות";
@@ -508,7 +508,7 @@ export function buildMultiplicationAnimation(a, b, answer) {
   steps.push({
     id: "place-value",
     title: "מיישרים את הספרות",
-    text: "כותבים את שני המספרים אחד מתחת לשני, כך שסַפְרות היחידות נמצאות באותה עמודה.",
+    text: "כותבים את שני המספרים אחד מתחת לשני, כך שסַפְרות האחדות נמצאות באותה עמודה.",
     highlights: ["aAll", "bAll"],
     revealDigits: 0,
     pre: makeSnapshot({ partialRows: [] }),
@@ -544,7 +544,7 @@ export function buildMultiplicationAnimation(a, b, answer) {
     pre: makeSnapshot({ partialRows: [] }),
   });
 
-  const aDigits = digitsRev(A); // יחידות קודם
+  const aDigits = digitsRev(A); // אחדות קודם
   const bDigits = digitsRev(B);
 
   const partials = []; // numbers as strings already shifted
@@ -559,8 +559,8 @@ export function buildMultiplicationAnimation(a, b, answer) {
 
   steps.push({
       id: `row-${j}-start`,
-      title: `שורה ${j + 1}: כופלים ב-${bd}${j === 0 ? " (יחידות)" : j === 1 ? " (עשרות)" : " (מקום גבוה)"}`,
-      text: `כופלים את ${A} בספרה ${bd} של ${B}. מתחילים מימין (יחידות).`,
+      title: `שורה ${j + 1}: כופלים ב-${bd}${j === 0 ? " (אחדות)" : j === 1 ? " (עשרות)" : " (מקום גבוה)"}`,
+      text: `כופלים את ${A} בספרה ${bd} של ${B}. מתחילים מימין (אחדות).`,
       highlights: ["aAll", "bAll"],
       revealDigits: 0,
       pre: makeSnapshot({ partialRows: partials.map((p) => p) }),
@@ -572,7 +572,7 @@ export function buildMultiplicationAnimation(a, b, answer) {
       const digit = prod % 10;
       const nextCarry = Math.floor(prod / 10);
       const place =
-        i === 0 ? "ספרת היחידות" : i === 1 ? "ספרת העשרות" : i === 2 ? "ספרת המאות" : `ספרה במקום ${i + 1} מימין`;
+        i === 0 ? "ספרת האחדות" : i === 1 ? "ספרת העשרות" : i === 2 ? "ספרת המאות" : `ספרה במקום ${i + 1} מימין`;
 
       rowDigits.push(digit);
 
@@ -646,7 +646,7 @@ export function buildMultiplicationAnimation(a, b, answer) {
     resDigits[col] = digit;
 
     const place =
-      col === 0 ? "יחידות" : col === 1 ? "עשרות" : col === 2 ? "מאות" : `מקום ${col + 1} מימין`;
+      col === 0 ? "אחדות" : col === 1 ? "עשרות" : col === 2 ? "מאות" : `מקום ${col + 1} מימין`;
     steps.push({
       id: `sum-col-${col}`,
       title: `חיבור בעמודת ה${place}`,
@@ -1514,8 +1514,8 @@ export function buildDecimalsAnimation(params, answer) {
       // כללי
       return `מקום ${idxFromRight + 1} אחרי הנקודה`;
     }
-    const k = idxFromRight - places; // 0=יחידות, 1=עשרות...
-    if (k === 0) return "יחידות";
+    const k = idxFromRight - places; // 0=אחדות, 1=עשרות...
+    if (k === 0) return "אחדות";
     if (k === 1) return "עשרות";
     if (k === 2) return "מאות";
     return `מקום ${k + 1} משמאל לנקודה`;
@@ -2200,10 +2200,10 @@ export function buildNumberSenseAnimation(params, answer) {
     if (kind === "ns_place_tens_units") {
       questionText = askTens 
         ? `מהי ספרת העשרות במספר ${n}?`
-        : `מהי ספרת היחידות במספר ${n}?`;
+        : `מהי ספרת האחדות במספר ${n}?`;
     } else {
       const partType = params.partType;
-      const label = partType === "hundreds" ? "המאות" : partType === "tens" ? "העשרות" : "היחידות";
+      const label = partType === "hundreds" ? "המאות" : partType === "tens" ? "העשרות" : "האחדות";
       questionText = `מהי ספרת ${label} במספר ${n}?`;
     }
     
@@ -2220,9 +2220,9 @@ export function buildNumberSenseAnimation(params, answer) {
     // צעד 2: פירוק המספר
     let breakdown = "";
     if (kind === "ns_place_tens_units") {
-      breakdown = `${n} = ${tens} עשרות + ${units} יחידות`;
+      breakdown = `${n} = ${tens} עשרות + ${units} אחדות`;
     } else {
-      breakdown = `${n} = ${hundreds} מאות + ${tens} עשרות + ${units} יחידות`;
+      breakdown = `${n} = ${hundreds} מאות + ${tens} עשרות + ${units} אחדות`;
     }
     
     steps.push({
@@ -2310,7 +2310,7 @@ export function buildNumberSenseAnimation(params, answer) {
     steps.push({
       id: "explain",
       title: "איך בודקים?",
-      text: `מסתכלים על ספרת היחידות של ${n}. אם הספרה היא 0,2,4,6,8 – המספר זוגי. אם 1,3,5,7,9 – אי-זוגי.`,
+      text: `מסתכלים על ספרת האחדות של ${n}. אם הספרה היא 0,2,4,6,8 – המספר זוגי. אם 1,3,5,7,9 – אי-זוגי.`,
       highlights: ["explanation"],
       type: "number_sense",
       params,
@@ -3345,7 +3345,7 @@ export function buildRoundingAnimation(params, answer) {
 
   const targetLabel = toWhat === "tens" ? "עשרות" : "מאות";
   const digitToCheck = toWhat === "tens" ? Math.floor((n % 10) / 1) : Math.floor((n % 100) / 10);
-  const checkLabel = toWhat === "tens" ? "ספרת היחידות" : "ספרת העשרות";
+  const checkLabel = toWhat === "tens" ? "ספרת האחדות" : "ספרת העשרות";
 
   steps.push({
     id: "show",
@@ -3414,7 +3414,7 @@ export function buildDivisibilityAnimation(params, answer) {
     steps.push({
       id: "rule",
       title: "כלל התחלקות ב-2",
-      text: `מספר מתחלק ב-2 אם ספרת היחידות זוגית (0,2,4,6,8).`,
+      text: `מספר מתחלק ב-2 אם ספרת האחדות זוגית (0,2,4,6,8).`,
       type: "divisibility",
       params,
       answer,
@@ -3422,7 +3422,7 @@ export function buildDivisibilityAnimation(params, answer) {
     steps.push({
       id: "check",
       title: "בודקים",
-      text: `ספרת היחידות היא ${lastDigit}. לכן ${answer === "כן" ? "כן" : "לא"}.`,
+      text: `ספרת האחדות היא ${lastDigit}. לכן ${answer === "כן" ? "כן" : "לא"}.`,
       type: "divisibility",
       params,
       answer,
@@ -3431,7 +3431,7 @@ export function buildDivisibilityAnimation(params, answer) {
     steps.push({
       id: "rule",
       title: "כלל התחלקות ב-5",
-      text: `מספר מתחלק ב-5 אם ספרת היחידות היא 0 או 5.`,
+      text: `מספר מתחלק ב-5 אם ספרת האחדות היא 0 או 5.`,
       type: "divisibility",
       params,
       answer,
@@ -3439,7 +3439,7 @@ export function buildDivisibilityAnimation(params, answer) {
     steps.push({
       id: "check",
       title: "בודקים",
-      text: `ספרת היחידות היא ${lastDigit}. לכן ${answer === "כן" ? "כן" : "לא"}.`,
+      text: `ספרת האחדות היא ${lastDigit}. לכן ${answer === "כן" ? "כן" : "לא"}.`,
       type: "divisibility",
       params,
       answer,
@@ -3448,7 +3448,7 @@ export function buildDivisibilityAnimation(params, answer) {
     steps.push({
       id: "rule",
       title: "כלל התחלקות ב-10",
-      text: `מספר מתחלק ב-10 אם ספרת היחידות היא 0.`,
+      text: `מספר מתחלק ב-10 אם ספרת האחדות היא 0.`,
       type: "divisibility",
       params,
       answer,
@@ -3456,7 +3456,7 @@ export function buildDivisibilityAnimation(params, answer) {
     steps.push({
       id: "check",
       title: "בודקים",
-      text: `ספרת היחידות היא ${lastDigit}. לכן ${answer === "כן" ? "כן" : "לא"}.`,
+      text: `ספרת האחדות היא ${lastDigit}. לכן ${answer === "כן" ? "כן" : "לא"}.`,
       type: "divisibility",
       params,
       answer,
@@ -3498,7 +3498,7 @@ export function buildDivisibilityAnimation(params, answer) {
     steps.push({
       id: "check2",
       title: "בודקים התחלקות ב-2",
-      text: `ספרת היחידות היא ${lastDigit} ⇒ ${lastDigit % 2 === 0 ? "מתחלק ב-2" : "לא מתחלק ב-2"}.`,
+      text: `ספרת האחדות היא ${lastDigit} ⇒ ${lastDigit % 2 === 0 ? "מתחלק ב-2" : "לא מתחלק ב-2"}.`,
       type: "divisibility",
       params,
       answer,

@@ -2691,7 +2691,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       isStory: false,
     });
 
-  // ===== Number Sense – שכנים, עשרות/יחידות, זוגי/אי-זוגי, השלמה, ישר המספרים, מנייה =====
+  // ===== Number Sense – שכנים, עשרות/אחדות, זוגי/אי-זוגי, השלמה, ישר המספרים, מנייה =====
   } else if (selectedOp === "number_sense") {
     const maxNumberSense = levelConfig.number_sense?.max || levelConfig.addition?.max || 999;
 
@@ -2735,7 +2735,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       correctAnswer = askTens ? tens : units;
       question = askTens
         ? `מהי ספרת העשרות במספר ${n}? = ${BLANK}`
-        : `מהי ספרת היחידות במספר ${n}? = ${BLANK}`;
+        : `מהי ספרת האחדות במספר ${n}? = ${BLANK}`;
       params = { kind: "ns_place_tens_units", n, askTens, tens, units };
     } else if (mathForce === "ns_complement10") {
       const b = randInt(1, 9);
@@ -2760,7 +2760,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           ? "המאות"
           : partType === "tens"
           ? "העשרות"
-          : "היחידות";
+          : "האחדות";
       question = `מהי ספרת ${label} במספר ${n}? = ${BLANK}`;
       params = { kind: "ns_place_hundreds", n, partType, hundreds, tens, units };
     } else if (mathForce === "ns_complement100") {
@@ -2851,7 +2851,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       correctAnswer = askTens ? tens : units;
       question = askTens
         ? `מהי ספרת העשרות במספר ${n}? = ${BLANK}`
-        : `מהי ספרת היחידות במספר ${n}? = ${BLANK}`;
+        : `מהי ספרת האחדות במספר ${n}? = ${BLANK}`;
       params = { kind: "ns_place_tens_units", n, askTens, tens, units };
     } else if (t === "place_hundreds") {
       const n = randInt(100, 999);
@@ -2869,7 +2869,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           ? "המאות"
           : partType === "tens"
           ? "העשרות"
-          : "היחידות";
+          : "האחדות";
       question = `מהי ספרת ${label} במספר ${n}? = ${BLANK}`;
       params = { kind: "ns_place_hundreds", n, partType, hundreds, tens, units };
     } else if (t === "complement10") {

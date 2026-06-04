@@ -47,7 +47,7 @@ export function getHint(question, operation, gradeKey) {
       return "דמיין את המספרים על ציר מספרים: מי שמימין גדול יותר. במספרים עשרוניים משווים קודם את החלק השלם.";
     case "number_sense":
       if (p.kind?.startsWith("ns_place")) {
-        return `פרק את המספר לעשרות/מאות/יחידות: למשל ${M("57")} זה ${M("5")} עשרות ו-${M("7")} יחידות.`;
+        return `פרק את המספר לעשרות/מאות/אחדות: למשל ${M("57")} זה ${M("5")} עשרות ו-${M("7")} אחדות.`;
       }
       if (p.kind === "ns_neighbors") {
         return `מספר אחד לפני – מורידים ${M("1")}. מספר אחד אחרי – מוסיפים ${M("1")}.`;
@@ -56,9 +56,9 @@ export function getHint(question, operation, gradeKey) {
         return "חפש כמה חסר כדי להשלים לעשר/מאה – זה ההפרש בין שני המספרים.";
       }
       if (p.kind === "ns_even_odd") {
-        return `הסתכל על ספרת היחידות: ${M("0,2,4,6,8")} – זוגי. ${M("1,3,5,7,9")} – אי-זוגי.`;
+        return `הסתכל על ספרת האחדות: ${M("0,2,4,6,8")} – זוגי. ${M("1,3,5,7,9")} – אי-זוגי.`;
       }
-      return "נסה לחשוב על \"תחושת מספר\" – עשרות, יחידות, שכנים, זוגי/אי-זוגי.";
+      return "נסה לחשוב על \"תחושת מספר\" – עשרות, אחדות, שכנים, זוגי/אי-זוגי.";
     case "factors_multiples":
       return "מחלק (גורם) מתחלק במספר בלי שארית. כפולה מתקבלת כשמכפילים את המספר במספר שלם.";
     case "word_problems":
@@ -85,9 +85,9 @@ export function getAdditionStepsColumn(a, b) {
   // מציג ביטויים מתמטיים משמאל לימין בתוך שורה בעברית
   const ltr = (expr) => `\u2066${expr}\u2069`; // LRI ... PDI
 
-  // פונקציה שנותנת שם מקום (יחידות/עשרות/מאות...)
+  // פונקציה שנותנת שם מקום (אחדות/עשרות/מאות...)
   const placeName = (idxFromRight) => {
-    if (idxFromRight === 0) return "ספרת היחידות";
+    if (idxFromRight === 0) return "ספרת האחדות";
     if (idxFromRight === 1) return "ספרת העשרות";
     if (idxFromRight === 2) return "ספרת המאות";
     return `המקום ה-${idxFromRight + 1} מימין`;
@@ -504,11 +504,11 @@ export function getSolutionSteps(question, operation, gradeKey) {
       if (p.kind === "ns_place_tens_units" || p.kind === "ns_place_hundreds") {
         return [
           toSpan(
-            `1. מפרקים את המספר לעשרות/מאות/יחידות.`,
+            `1. מפרקים את המספר לעשרות/מאות/אחדות.`,
             "1"
           ),
           toSpan(
-            `2. לדוגמה ${ltr(String(p.n))} = ${p.hundreds ?? ""}${p.hundreds != null ? " מאות," : ""} ${p.tens ?? ""}${p.tens != null ? " עשרות," : ""} ${p.units ?? ""}${p.units != null ? " יחידות" : ""}.`,
+            `2. לדוגמה ${ltr(String(p.n))} = ${p.hundreds ?? ""}${p.hundreds != null ? " מאות," : ""} ${p.tens ?? ""}${p.tens != null ? " עשרות," : ""} ${p.units ?? ""}${p.units != null ? " אחדות" : ""}.`,
             "2"
           ),
           toSpan(
@@ -548,7 +548,7 @@ export function getSolutionSteps(question, operation, gradeKey) {
       if (p.kind === "ns_even_odd") {
         return [
           toSpan(
-            `1. מסתכלים על ספרת היחידות של ${p.n}.`,
+            `1. מסתכלים על ספרת האחדות של ${p.n}.`,
             "1"
           ),
           toSpan(
@@ -861,7 +861,7 @@ export function getErrorExplanation(question, operation, wrongAnswer, gradeKey) 
     case "compare":
       return "בהשוואת מספרים הטעות הנפוצה היא להתבלבל מי גדול יותר, במיוחד בעשרוניים. נסה להשוות קודם את החלק השלם.";
     case "number_sense":
-      return "בדוק שוב את פירוק המספר לעשרות/מאות/יחידות או אם המספר זוגי/אי-זוגי. אלה דברים שקל להתבלבל בהם כשממהרים.";
+      return "בדוק שוב את פירוק המספר לעשרות/מאות/אחדות או אם המספר זוגי/אי-זוגי. אלה דברים שקל להתבלבל בהם כשממהרים.";
     case "factors_multiples":
       return "בגורמים וכפולות קל להתבלבל בין \"מה מחלק את המספר\" לבין \"מה מתקבל כשמכפילים\". נסה לכתוב את כל הגורמים או הכפולות בצד.";
     case "word_problems":
@@ -946,7 +946,7 @@ export function buildStepExplanation(question) {
       )}.`
     );
     steps.push(
-      "2. כותבים את המספרים זה מתחת לזה בעמודות: עשרות מעל עשרות ויחידות מעל יחידות."
+      "2. כותבים את המספרים זה מתחת לזה בעמודות: עשרות מעל עשרות ואחדות מעל אחדות."
     );
 
     // חישוב ספרה ספרה
@@ -967,7 +967,7 @@ export function buildStepExplanation(question) {
 
       const placeName =
         i === maxLen - 1
-          ? "יחידות"
+          ? "אחדות"
           : i === maxLen - 2
           ? "עשרות"
           : "מאות";
@@ -1155,7 +1155,7 @@ export function buildStepExplanation(question) {
     const pb = bStr.padStart(maxLen, "0");
 
     steps.push(
-      `1. כותבים את המספרים אחד מעל השני, כך שסַפְרות היחידות נמצאות באותה עמודה: ${LTR(
+      `1. כותבים את המספרים אחד מעל השני, כך שסַפְרות האחדות נמצאות באותה עמודה: ${LTR(
         `${aEff}\n+ ${bEff}`
       )}.`
     );
@@ -1172,7 +1172,7 @@ export function buildStepExplanation(question) {
 
       const placeName =
         i === maxLen - 1
-          ? "יחידות"
+          ? "אחדות"
           : i === maxLen - 2
           ? "עשרות"
           : "מאות";
@@ -1217,7 +1217,7 @@ export function buildStepExplanation(question) {
     const pb = bStr.padStart(maxLen, "0");
 
     steps.push(
-      `1. כותבים את המספרים אחד מעל השני, כך שסַפְרות היחידות, העשרות וכו' נמצאות באותו טור: ${LTR(
+      `1. כותבים את המספרים אחד מעל השני, כך שסַפְרות האחדות, העשרות וכו' נמצאות באותו טור: ${LTR(
         `${aEff}\n- ${bEff}`
       )}.`
     );
@@ -1232,7 +1232,7 @@ export function buildStepExplanation(question) {
 
       const placeName =
         i === maxLen - 1
-          ? "יחידות"
+          ? "אחדות"
           : i === maxLen - 2
           ? "עשרות"
           : "מאות";

@@ -33,7 +33,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
   {
     lookupKey: "finding:taxonomy:M-01",
     explanationHe:
-      "המערכת זיהתה קושי בפירוק מספר לעשרות ויחידות. הכוונה היא להבין שמספר מורכב מעשרות ויחידות, כדי להשתמש בזה בחישוב.",
+      "המערכת זיהתה קושי בפירוק מספר לעשרות ואחדות. הכוונה היא להבין שמספר מורכב מעשרות ואחדות, כדי להשתמש בזה בחישוב.",
     exampleHe: "14 = 10 + 4",
     status: "approved",
     approvalSource: "owner_math_batch_approved",

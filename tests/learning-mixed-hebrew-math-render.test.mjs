@@ -35,7 +35,7 @@ test("parses alternate column-addition wording", () => {
 
 test("parses subtraction step with וכותבים connector", () => {
   const blocks = parseStepExplanationThreeLines(
-    "כעת מחשבים בעמודת היחידות: 5 - 3 = 2 וכותבים 2 בעמודה זו."
+    "כעת מחשבים בעמודת האחדות: 5 - 3 = 2 וכותבים 2 בעמודה זו."
   );
   assert.equal(blocks?.equation, "5 - 3 = 2");
   assert.equal(blocks?.explanation, "כותבים 2 בעמודה זו.");

@@ -123,7 +123,7 @@ export function buildSectionsForGrade(grade) {
         sectionKey: "g2_numbers_to_1000",
         labelHe: "מבנה העשרוני ומספרים עד 1000",
         strand: strand.numbers,
-        subsectionLabelsHe: ["מאות/עשרות/יחידות", "השוואה והערכה"],
+        subsectionLabelsHe: ["מאות/עשרות/אחדות", "השוואה והערכה"],
         expectedDepth: "basic",
         sourcePageHint: "מספרים ופעולות — כיתה ב׳",
         mapsToNormalizedKeys: ["math.number_sense", "math.estimation_rounding"],

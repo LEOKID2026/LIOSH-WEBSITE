@@ -22,7 +22,7 @@ test("supports place-value view for vertical add/sub only", () => {
 
 test("addition animation steps expose column highlights from metadata", () => {
   const steps = buildAdditionOrSubtractionAnimation(47, 38, 85, "addition");
-  const unitsStep = steps.find((s) => s.title === "ספרת היחידות");
+  const unitsStep = steps.find((s) => s.title === "ספרת האחדות");
   assert.ok(unitsStep);
   assert.deepEqual(unitsStep.highlights, ["aCol0", "bCol0", "resultCol0"]);
   assert.equal(resolveActiveColumnFromHighlights(unitsStep.highlights), 0);
@@ -32,7 +32,7 @@ test("addition animation steps expose column highlights from metadata", () => {
 
 test("54+26 units step highlights only active column operands and outgoing carry", () => {
   const steps = buildAdditionOrSubtractionAnimation(54, 26, 80, "addition");
-  const unitsStep = steps.find((s) => s.title === "ספרת היחידות");
+  const unitsStep = steps.find((s) => s.title === "ספרת האחדות");
   const layout = buildVerticalExerciseDigitLayout({
     topValue: 54,
     bottomValue: 26,
@@ -112,7 +112,7 @@ test("68+56 align step highlights only real operand digits", () => {
 
 test("68+56 units step highlights 8, 6, 4 and carry above tens only", () => {
   const steps = buildAdditionOrSubtractionAnimation(68, 56, 124, "addition");
-  const unitsStep = steps.find((s) => s.title === "ספרת היחידות");
+  const unitsStep = steps.find((s) => s.title === "ספרת האחדות");
   const layout = buildVerticalExerciseDigitLayout({
     topValue: 68,
     bottomValue: 56,
@@ -133,7 +133,7 @@ test("highlight state resets between units and tens steps with no sticky cells",
     bottomValue: 26,
     answerValue: 80,
   });
-  const unitsStep = steps.find((s) => s.title === "ספרת היחידות");
+  const unitsStep = steps.find((s) => s.title === "ספרת האחדות");
   const tensStep = steps.find((s) => s.title === "ספרת העשרות");
   const units = buildStepCellHighlightState(unitsStep, layout, unitsStep.pre);
   const tens = buildStepCellHighlightState(tensStep, layout, tensStep.pre);
