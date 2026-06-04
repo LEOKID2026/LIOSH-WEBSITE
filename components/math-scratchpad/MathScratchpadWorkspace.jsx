@@ -7,10 +7,9 @@ import {
 import {
   PAPER_GRID_NOTEBOOK,
   PAPER_GRID_PLACE_VALUE,
+  buildPlaceValueOperandLayout,
   createEmptyPaperGrid,
   centerAlignDigitCells,
-  rightAlignDigitCells,
-  PLACE_VALUE_OPERAND_EDGE_PADDING,
 } from "../../utils/math-scratchpad/paper-grid-config";
 import { ScratchpadDigitDisplay, ScratchpadDigitInput } from "./scratchpad-virtual-input";
 
@@ -113,14 +112,6 @@ function PaperWorkGridRows({ grid, setGrid, rowLabelPrefix = "work" }) {
       ))}
     </tr>
   ));
-}
-
-function placeValueHeaderLabels(cols, edgePadding = 0) {
-  const named = ["א", "ע", "מ", "אלף"];
-  return Array.from({ length: cols }, (_, i) => {
-    const fromRight = cols - 1 - edgePadding - i;
-    return fromRight >= 0 && fromRight < named.length ? named[fromRight] : "";
-  });
 }
 
 function fractionBlockWidth(num, den, missingDen) {
@@ -575,25 +566,18 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
   const fractionMode = operands.operation === "fractions";
   const { fractionOperands = [], fractionOperator = null } = operands;
   const spec = PAPER_GRID_PLACE_VALUE;
-  const { topRow, bottomRow } = useMemo(() => {
-    const width = Math.max(
-      digitCount(operands.a ?? 0),
-      digitCount(operands.b ?? 0),
-      1
-    );
-    return {
-      topRow: rightAlignDigitCells(
-        numberToDigitCells(operands.a, width),
+  const { topRow, bottomRow, headerLabels: labels } = useMemo(
+    () =>
+      buildPlaceValueOperandLayout(
+        operands.a,
+        operands.b,
         spec.cols,
-        PLACE_VALUE_OPERAND_EDGE_PADDING
+        undefined,
+        digitCount,
+        numberToDigitCells
       ),
-      bottomRow: rightAlignDigitCells(
-        numberToDigitCells(operands.b, width),
-        spec.cols,
-        PLACE_VALUE_OPERAND_EDGE_PADDING
-      ),
-    };
-  }, [operands.a, operands.b, spec.cols]);
+    [operands.a, operands.b, spec.cols]
+  );
   const divisionExerciseRow = useMemo(() => {
     if (!centerOperands) return null;
     const dividendCells = numberToDigitCells(operands.a, digitCount(operands.a ?? 0));
@@ -611,10 +595,6 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
     if (!fractionMode) return null;
     return buildFractionExerciseLayout(fractionOperands, fractionOperator, spec.cols);
   }, [fractionMode, fractionOperands, fractionOperator, spec.cols]);
-  const labels = useMemo(
-    () => placeValueHeaderLabels(spec.cols, PLACE_VALUE_OPERAND_EDGE_PADDING),
-    [spec.cols]
-  );
   const [workGrid, setWorkGrid] = useState(() =>
     createEmptyPaperGrid(spec.workRows, spec.cols)
   );

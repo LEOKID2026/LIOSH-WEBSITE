@@ -64,3 +64,43 @@ export function centerAlignDigitCells(cells, totalCols) {
 export function createEmptyPaperGrid(rows, cols) {
   return Array.from({ length: rows }, () => Array(cols).fill(""));
 }
+
+/**
+ * @param {number} cols
+ * @param {number} [edgePadding=0]
+ * @returns {string[]}
+ */
+export function placeValueHeaderLabels(cols, edgePadding = 0) {
+  const named = ["א", "ע", "מ", "אלף"];
+  return Array.from({ length: cols }, (_, i) => {
+    const fromRight = cols - 1 - edgePadding - i;
+    return fromRight >= 0 && fromRight < named.length ? named[fromRight] : "";
+  });
+}
+
+/**
+ * Shared column mapping for place-value scratchpad rows (addition, subtraction, multiplication, etc.).
+ *
+ * @param {number|null|undefined} a
+ * @param {number|null|undefined} b
+ * @param {number} totalCols
+ * @param {number} [edgePadding=PLACE_VALUE_OPERAND_EDGE_PADDING]
+ * @param {(n: number|null|undefined) => number} digitCountFn
+ * @param {(n: number|null|undefined, width: number) => string[]} numberToDigitCellsFn
+ * @returns {{ topRow: string[], bottomRow: string[], headerLabels: string[] }}
+ */
+export function buildPlaceValueOperandLayout(
+  a,
+  b,
+  totalCols,
+  edgePadding = PLACE_VALUE_OPERAND_EDGE_PADDING,
+  digitCountFn,
+  numberToDigitCellsFn
+) {
+  const width = Math.max(digitCountFn(a ?? 0), digitCountFn(b ?? 0), 1);
+  return {
+    topRow: rightAlignDigitCells(numberToDigitCellsFn(a, width), totalCols, edgePadding),
+    bottomRow: rightAlignDigitCells(numberToDigitCellsFn(b, width), totalCols, edgePadding),
+    headerLabels: placeValueHeaderLabels(totalCols, edgePadding),
+  };
+}

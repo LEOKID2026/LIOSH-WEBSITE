@@ -3,24 +3,18 @@ import test from "node:test";
 import { digitCount, numberToDigitCells } from "../../utils/math-scratchpad/extract-operands.js";
 import {
   PAPER_GRID_PLACE_VALUE,
-  PLACE_VALUE_OPERAND_EDGE_PADDING,
-  rightAlignDigitCells,
+  buildPlaceValueOperandLayout,
 } from "../../utils/math-scratchpad/paper-grid-config.js";
 
-function alignPlaceValueOperands(a, b) {
-  const width = Math.max(digitCount(a ?? 0), digitCount(b ?? 0), 1);
-  return {
-    topRow: rightAlignDigitCells(
-      numberToDigitCells(a, width),
-      PAPER_GRID_PLACE_VALUE.cols,
-      PLACE_VALUE_OPERAND_EDGE_PADDING
-    ),
-    bottomRow: rightAlignDigitCells(
-      numberToDigitCells(b, width),
-      PAPER_GRID_PLACE_VALUE.cols,
-      PLACE_VALUE_OPERAND_EDGE_PADDING
-    ),
-  };
+function layout(a, b) {
+  return buildPlaceValueOperandLayout(
+    a,
+    b,
+    PAPER_GRID_PLACE_VALUE.cols,
+    undefined,
+    digitCount,
+    numberToDigitCells
+  );
 }
 
 function lastNonEmptyIndex(row) {
@@ -30,8 +24,12 @@ function lastNonEmptyIndex(row) {
   return -1;
 }
 
+function onesColumn(row) {
+  return lastNonEmptyIndex(row);
+}
+
 test("two-digit over one-digit: ones align in same column", () => {
-  const { topRow, bottomRow } = alignPlaceValueOperands(42, 3);
+  const { topRow, bottomRow } = layout(42, 3);
   assert.equal(topRow[5], "2");
   assert.equal(bottomRow[5], "3");
   assert.equal(topRow[4], "4");
@@ -41,7 +39,7 @@ test("two-digit over one-digit: ones align in same column", () => {
 });
 
 test("two-digit over two-digit: all columns match", () => {
-  const { topRow, bottomRow } = alignPlaceValueOperands(42, 15);
+  const { topRow, bottomRow } = layout(42, 15);
   assert.deepEqual(
     topRow.map((cell, i) => cell || bottomRow[i] ? [topRow[i], bottomRow[i]] : null).filter(Boolean),
     [
@@ -52,8 +50,8 @@ test("two-digit over two-digit: all columns match", () => {
 });
 
 test("three-digit over shorter operands: shared right edge", () => {
-  const { topRow, bottomRow: bottom42 } = alignPlaceValueOperands(123, 42);
-  const { bottomRow: bottom3 } = alignPlaceValueOperands(123, 3);
+  const { topRow, bottomRow: bottom42 } = layout(123, 42);
+  const { bottomRow: bottom3 } = layout(123, 3);
   assert.equal(topRow[5], "3");
   assert.equal(bottom42[5], "2");
   assert.equal(bottom42[4], "4");
@@ -62,4 +60,13 @@ test("three-digit over shorter operands: shared right edge", () => {
   assert.equal(lastNonEmptyIndex(topRow), lastNonEmptyIndex(bottom3));
   assert.equal(topRow[6], "");
   assert.equal(topRow[7], "");
+});
+
+test("addition/subtraction headers align with operand place-value columns", () => {
+  const { topRow, bottomRow, headerLabels } = layout(42, 3);
+  const onesCol = onesColumn(topRow);
+  assert.equal(headerLabels[onesCol], "א");
+  assert.equal(bottomRow[onesCol], "3");
+  assert.equal(headerLabels[onesCol - 1], "ע");
+  assert.equal(topRow[onesCol - 1], "4");
 });
