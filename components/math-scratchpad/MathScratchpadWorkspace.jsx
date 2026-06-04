@@ -476,6 +476,8 @@ function ManualNumberLineWorkspace({ operands }) {
 }
 
 function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
+  const fractionMode = operands.operation === "fractions";
+  const { fractionOperands = [], fractionOperator = null } = operands;
   const spec = PAPER_GRID_PLACE_VALUE;
   const topRow = useMemo(() => {
     const cells = numberToDigitCells(operands.a, digitCount(operands.a ?? 0));
@@ -502,41 +504,85 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
   const [workGrid, setWorkGrid] = useState(() =>
     createEmptyPaperGrid(spec.workRows, spec.cols)
   );
-  const resetKey = `${operands.a}|${operands.b}`;
+  const resetKey = fractionMode
+    ? `${fractionOperands.map((f) => `${f.num}/${f.den}${f.missingDen ? "?" : ""}`).join("|")}|${fractionOperator}`
+    : `${operands.a}|${operands.b}`;
   const [carryRow, setCarryRow] = useCarryRow(spec.cols, resetKey);
+  const [missingDenValue, setMissingDenValue] = useState("");
 
   useEffect(() => {
     setWorkGrid(createEmptyPaperGrid(spec.workRows, spec.cols));
-  }, [spec.workRows, spec.cols, operands.a, operands.b]);
+  }, [spec.workRows, spec.cols, resetKey]);
+
+  useEffect(() => {
+    setMissingDenValue("");
+  }, [resetKey]);
 
   return (
     <PaperScrollShell>
       <table className="mx-auto border-collapse text-center">
-        <thead>
-          {!centerOperands && (
+        {!fractionMode && (
+          <thead>
+            {!centerOperands && (
+              <tr>
+                {labels.map((label, i) => (
+                  <th
+                    key={i}
+                    className="border border-white/20 px-1 py-1 text-xs text-white/60 min-w-[2.25rem]"
+                  >
+                    {label}
+                  </th>
+                ))}
+              </tr>
+            )}
             <tr>
-              {labels.map((label, i) => (
-                <th
-                  key={i}
-                  className="border border-white/20 px-1 py-1 text-xs text-white/60 min-w-[2.25rem]"
-                >
-                  {label}
-                </th>
-              ))}
+              <th
+                colSpan={spec.cols}
+                className="border-0 py-0.5 text-[10px] md:text-xs font-normal text-amber-200/70 text-end pe-1"
+                dir="rtl"
+              >
+                {centerOperands ? "מנה" : "נשיאה"}
+              </th>
             </tr>
-          )}
-          <tr>
-            <th
-              colSpan={spec.cols}
-              className="border-0 py-0.5 text-[10px] md:text-xs font-normal text-amber-200/70 text-end pe-1"
-              dir="rtl"
-            >
-              {centerOperands ? "מנה" : "נשיאה"}
-            </th>
-          </tr>
-        </thead>
+          </thead>
+        )}
         <tbody>
-          <PaperCarryRowTable carryRow={carryRow} setCarryRow={setCarryRow} />
+          {!fractionMode && (
+            <PaperCarryRowTable carryRow={carryRow} setCarryRow={setCarryRow} />
+          )}
+          {fractionMode ? (
+            <tr>
+              <td colSpan={spec.cols} className="border border-white/20 p-3">
+                <div
+                  className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
+                  dir="ltr"
+                >
+                  {fractionOperands.length === 0 ? (
+                    <span className="text-sm text-white/50">—</span>
+                  ) : (
+                    fractionOperands.map((frac, index) => (
+                      <Fragment key={`${frac.num}-${frac.den}-${index}`}>
+                        {index > 0 && fractionOperator ? (
+                          <span className="text-2xl md:text-3xl font-bold text-white/85 leading-none select-none">
+                            {fractionOperator}
+                          </span>
+                        ) : null}
+                        <FractionStack
+                          numerator={frac.num}
+                          denominator={frac.missingDen ? missingDenValue : frac.den}
+                          missingDen={Boolean(frac.missingDen)}
+                          editable={Boolean(frac.missingDen)}
+                          onDenominatorChange={
+                            frac.missingDen ? setMissingDenValue : undefined
+                          }
+                        />
+                      </Fragment>
+                    ))
+                  )}
+                </div>
+              </td>
+            </tr>
+          ) : null}
           {centerOperands && divisionExerciseRow ? (
             <>
               <tr>
@@ -584,7 +630,7 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
                 ))}
               </tr>
             </>
-          ) : (
+          ) : !fractionMode ? (
             [topRow, bottomRow].map((cells, ri) => (
               <tr key={`operand-${ri}`}>
                 {cells.map((cell, ci) => (
@@ -598,8 +644,8 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
                 ))}
               </tr>
             ))
-          )}
-          {!centerOperands && (
+          ) : null}
+          {(!centerOperands && !fractionMode) || fractionMode ? (
             <tr>
               <td colSpan={spec.cols} className="py-1">
                 <div className="border-t-2 border-white/35" />
@@ -1145,7 +1191,11 @@ export default function MathScratchpadWorkspace({ type, operands }) {
     case "blank_long_division_grid":
       return <PlaceValueTableWorkspace operands={operands} centerOperands />;
     case "blank_fraction_strips":
-      return <FractionStripsWorkspace operands={operands} />;
+      return (
+        <PlaceValueTableWorkspace
+          operands={{ ...operands, operation: operands.operation || "fractions" }}
+        />
+      );
     case "blank_decimal_place_value_table":
       return <DecimalPlaceValueTableWorkspace operands={operands} />;
     case "blank_percent_grid":

@@ -42,7 +42,7 @@ export const SCRATCHPAD_MAP = {
     subtraction: ["base_ten_blocks"],
     multiplication: ["blank_multiplication_array"],
     division: ["blank_division_groups"],
-    fractions: ["blank_fraction_strips"],
+    fractions: ["blank_place_value_table"],
     compare: ["object_counter"],
     number_sense: ["base_ten_blocks"],
     word_problems: ["word_problem_structure_board"],
@@ -54,7 +54,7 @@ export const SCRATCHPAD_MAP = {
     multiplication: ["blank_multiplication_array"],
     division: ["blank_division_groups"],
     division_with_remainder: ["blank_division_groups"],
-    fractions: ["blank_fraction_strips"],
+    fractions: ["blank_place_value_table"],
     sequences: ["manual_number_line"],
     decimals: ["blank_decimal_place_value_table"],
     divisibility: [],
@@ -70,7 +70,7 @@ export const SCRATCHPAD_MAP = {
     multiplication: ["blank_multiplication_array"],
     division: ["blank_place_value_table"],
     division_with_remainder: ["blank_place_value_table"],
-    fractions: ["blank_fraction_strips"],
+    fractions: ["blank_place_value_table"],
     decimals: ["blank_decimal_place_value_table"],
     sequences: ["manual_number_line"],
     rounding: ["blank_place_value_table"],
@@ -92,7 +92,7 @@ export const SCRATCHPAD_MAP = {
     multiplication: ["blank_multiplication_array"],
     division: ["blank_place_value_table"],
     division_with_remainder: ["blank_place_value_table"],
-    fractions: ["blank_fraction_strips"],
+    fractions: ["blank_place_value_table"],
     percentages: ["blank_percent_grid"],
     sequences: ["manual_number_line"],
     decimals: ["blank_decimal_place_value_table"],
@@ -111,7 +111,7 @@ export const SCRATCHPAD_MAP = {
     multiplication: ["blank_multiplication_array"],
     division: ["blank_place_value_table"],
     division_with_remainder: ["blank_place_value_table"],
-    fractions: ["blank_fraction_strips"],
+    fractions: ["blank_place_value_table"],
     percentages: ["blank_percent_grid"],
     ratio: ["blank_ratio_table"],
     sequences: ["manual_number_line"],
@@ -209,11 +209,15 @@ function enforceGradeRules(gradeKey, type) {
  * @param {string} gradeKey
  * @returns {ScratchpadType|null}
  */
-function validatePrimaryType(primary, operandHint, gradeKey) {
+function validatePrimaryType(primary, operandHint, gradeKey, operation = "") {
   const guarded = enforceGradeRules(gradeKey, primary);
   if (!guarded) return null;
 
   if (NO_OPERAND_TYPES.has(guarded)) {
+    return guarded;
+  }
+
+  if (guarded === "blank_place_value_table" && operation === "fractions") {
     return guarded;
   }
 
@@ -270,7 +274,7 @@ export function getScratchpadType(gradeKey, operation, operandHint = {}) {
   if (!types || types.length === 0) return null;
 
   const primary = types[0];
-  return validatePrimaryType(primary, operandHint, gradeKey);
+  return validatePrimaryType(primary, operandHint, gradeKey, op);
 }
 
 /**

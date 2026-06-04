@@ -287,7 +287,11 @@ test("numberToDigitCells right-aligns operands without answer", () => {
 test("g5 fractions and percentages supported", () => {
   assert.equal(
     getScratchpadType("g5", "fractions", SAMPLE_OPERANDS),
-    "blank_fraction_strips"
+    "blank_place_value_table"
+  );
+  assert.equal(
+    getScratchpadType("g5", "fractions", {}),
+    "blank_place_value_table"
   );
   assert.equal(
     getScratchpadType("g5", "percentages", SAMPLE_OPERANDS),
