@@ -9,6 +9,8 @@ import {
 import { formatStudentActivityCompletionSummaryHe } from "../../../lib/classroom-activities/student-activity-result-labels.client.js";
 import { resolveStudentActivityApiErrorHe } from "../../../lib/classroom-activities/student-activity-error-labels.client.js";
 import { resolveStudentActivityAnswerInputProps } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
+import { assignedActivityQuestionUsesChoiceUi } from "../../../utils/geometry-activity-answer-ui.js";
+import StudentNumericAnswerField from "../../../components/learning/StudentNumericAnswerField";
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
 import { STUDENT_ACTIVITY_LAYOUT } from "../../../lib/classroom-activities/student-activity-layout.client.js";
 import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
@@ -391,7 +393,7 @@ export default function StudentActivityPage({ activityId }) {
             {effectiveIdx < questionSet.length - 1 ? "קראתי — המשך" : "סיימתי לקרוא"}
           </button>
         </>
-      ) : Array.isArray(currentQuestion?.choices) && currentQuestion.choices.length ? (
+      ) : assignedActivityQuestionUsesChoiceUi(currentQuestion) ? (
         <div className={choiceGridClass} data-testid="activity-answer-choices">
           {currentQuestion.choices.map((c, i) => (
             <button
@@ -407,6 +409,21 @@ export default function StudentActivityPage({ activityId }) {
             </button>
           ))}
         </div>
+      ) : currentQuestion?.subject === "geometry" ? (
+        <StudentNumericAnswerField
+          subject="geometry"
+          value={answerInput}
+          onChange={setAnswerInput}
+          disabled={isCurrentQuestionAnswered || busy}
+          testId="activity-geometry-numeric-answer"
+          placeholder="הקלידו תשובה"
+          autoFocus
+          onEnterSubmit={() => {
+            if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
+              void submitAnswer();
+            }
+          }}
+        />
       ) : (
         <input
           className={L.textInput}

@@ -23,25 +23,14 @@ function shuffleMcqList(answers) {
   return arr;
 }
 
+import {
+  GEOMETRY_HEBREW_LABEL_OPTIONS,
+  GEOMETRY_INDEX_LABEL_KINDS,
+} from "./geometry-activity-answer-ui.js";
+
 /**
  * מסיחים סבירים לפי סוג שאלה — לא לולאת 1..10 אקראית כשהקשר הוא שטח/נפח וכו'.
  */
-/** Stems use (1 = …, 2 = …) — options must be index strings, not unrelated numeric distractors. */
-const GEOMETRY_INDEX_LABEL_KINDS = {
-  shapes_basic_square: 2,
-  shapes_basic_rectangle: 2,
-  shapes_basic_properties_square: 4,
-  shapes_basic_properties_rectangle: 4,
-  shapes_basic_properties_angles: 4,
-  quadrilaterals: 4,
-  solids: 6,
-};
-
-const GEOMETRY_HEBREW_LABEL_OPTIONS = {
-  parallel_perpendicular: ["מקבילות", "מאונכות"],
-  triangles: ["שווה צלעות", "שווה שוקיים", "שונה צלעות"],
-  transformations: ["הזזה", "שיקוף"],
-};
 
 function geometryIndexLabelAnswers(correctAnswer, optionCount) {
   const opts = Array.from({ length: optionCount }, (_, i) => String(i + 1));
