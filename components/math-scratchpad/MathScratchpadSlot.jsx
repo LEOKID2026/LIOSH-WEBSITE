@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { isMathScratchpadV1Enabled } from "../../utils/math-scratchpad/feature-flag";
 import { getScratchpadType } from "../../utils/math-scratchpad/scratchpad-registry";
@@ -36,11 +36,25 @@ export default function MathScratchpadSlot({
   overlayTopRef,
   overlayWidthRef,
   answerAnchorRef,
+  open: openControlled,
+  defaultOpen = false,
+  hideInlineOpenButton = false,
+  preserveQuestionLayout = false,
   children,
 }) {
-  const [open, setOpen] = useState(false);
+  const isControlled = openControlled !== undefined;
+  const [openUncontrolled, setOpenUncontrolled] = useState(defaultOpen);
+  const open = isControlled ? Boolean(openControlled) : openUncontrolled;
   const [overlayRect, setOverlayRect] = useState(null);
   const [mounted, setMounted] = useState(false);
+
+  const setOpen = useCallback(
+    (next) => {
+      if (!isControlled) setOpenUncontrolled(next);
+      onOpenChange?.(next);
+    },
+    [isControlled, onOpenChange]
+  );
 
   const operands = useMemo(
     () => extractScratchpadOperands(question),
@@ -88,20 +102,17 @@ export default function MathScratchpadSlot({
   }, []);
 
   useEffect(() => {
-    onOpenChange?.(open);
-  }, [open, onOpenChange]);
-
-  useEffect(() => {
     if (forceClose && open) setOpen(false);
-  }, [forceClose, open]);
+  }, [forceClose, open, setOpen]);
 
   useEffect(() => {
-    setOpen(false);
-  }, [questionKey]);
+    if (isControlled) return;
+    setOpenUncontrolled(defaultOpen);
+  }, [questionKey, defaultOpen, isControlled]);
 
   useEffect(() => {
     if (closeSignal > 0) setOpen(false);
-  }, [closeSignal]);
+  }, [closeSignal, setOpen]);
 
   useLayoutEffect(() => {
     if (!open) {
@@ -136,7 +147,12 @@ export default function MathScratchpadSlot({
     if (ro) {
       if (overlayTopRef?.current) ro.observe(overlayTopRef.current);
       if (overlayWidthRef?.current) ro.observe(overlayWidthRef.current);
-      if (answerAnchorRef?.current) ro.observe(answerAnchorRef.current);
+      if (answerAnchorRef?.current) {
+        ro.observe(answerAnchorRef.current);
+        if (answerAnchorRef.current.parentElement) {
+          ro.observe(answerAnchorRef.current.parentElement);
+        }
+      }
     }
 
     return () => {
@@ -184,6 +200,37 @@ export default function MathScratchpadSlot({
     return <>{children}</>;
   }
 
+  const questionStageBody =
+    preserveQuestionLayout || !open ? (
+      <>
+        <div
+          className={`flex flex-col flex-1 min-h-0 w-full justify-center items-center overflow-hidden ${
+            open ? "invisible pointer-events-none" : ""
+          }`}
+        >
+          {children}
+        </div>
+        {!hideInlineOpenButton && !open ? (
+          <div className="shrink-0 flex justify-center py-2">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="px-4 py-2 text-sm rounded-lg bg-white/10 text-white/90 hover:bg-white/15 border border-white/20"
+              data-testid="math-scratchpad-open"
+            >
+              דף טיוטה
+            </button>
+          </div>
+        ) : null}
+      </>
+    ) : (
+      <div
+        className="flex-1 min-h-0 w-full"
+        aria-hidden="true"
+        data-testid="math-scratchpad-placeholder"
+      />
+    );
+
   return (
     <>
       {overlayPortal}
@@ -191,29 +238,7 @@ export default function MathScratchpadSlot({
         className="flex flex-col flex-1 min-h-0 w-full h-full"
         data-testid="math-scratchpad-slot"
       >
-        {!open ? (
-          <>
-            <div className="flex flex-col flex-1 min-h-0 w-full justify-center items-center overflow-hidden">
-              {children}
-            </div>
-            <div className="shrink-0 flex justify-center py-2">
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="px-4 py-2 text-sm rounded-lg bg-white/10 text-white/90 hover:bg-white/15 border border-white/20"
-                data-testid="math-scratchpad-open"
-              >
-                דף טיוטה
-              </button>
-            </div>
-          </>
-        ) : (
-          <div
-            className="flex-1 min-h-0 w-full"
-            aria-hidden="true"
-            data-testid="math-scratchpad-placeholder"
-          />
-        )}
+        {questionStageBody}
       </div>
     </>
   );

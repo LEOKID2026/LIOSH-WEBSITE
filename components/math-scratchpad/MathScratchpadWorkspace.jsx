@@ -79,10 +79,14 @@ function PaperCarryRowTable({ carryRow, setCarryRow }) {
   );
 }
 
-function PaperScrollShell({ children }) {
+function PaperScrollShell({ children, fillParent = false }) {
   return (
     <div
-      className="w-full max-h-[min(52vh,26rem)] overflow-y-auto overflow-x-auto overscroll-contain px-1 py-1"
+      className={`w-full px-1 py-1 ${
+        fillParent
+          ? "min-h-0"
+          : "max-h-[min(52vh,26rem)] overflow-y-auto overflow-x-auto overscroll-contain"
+      }`}
       dir="ltr"
       onKeyDown={stopKeyBubble}
     >
@@ -562,7 +566,7 @@ function ManualNumberLineWorkspace({ operands }) {
   );
 }
 
-function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
+function PlaceValueTableWorkspace({ operands, centerOperands = false, fillParent = false }) {
   const fractionMode = operands.operation === "fractions";
   const { fractionOperands = [], fractionOperator = null } = operands;
   const spec = PAPER_GRID_PLACE_VALUE;
@@ -613,7 +617,7 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
   }, [resetKey]);
 
   return (
-    <PaperScrollShell>
+    <PaperScrollShell fillParent={fillParent}>
       <table className="mx-auto border-collapse text-center">
         {!fractionMode && (
           <thead>
@@ -767,7 +771,7 @@ function PlaceValueTableWorkspace({ operands, centerOperands = false }) {
   );
 }
 
-function MathNotebookGridWorkspace({ operands, operatorSymbol }) {
+function MathNotebookGridWorkspace({ operands, operatorSymbol, fillParent = false }) {
   const { a, b } = operands;
   const spec = PAPER_GRID_NOTEBOOK;
   const [workGrid, setWorkGrid] = useState(() =>
@@ -782,7 +786,7 @@ function MathNotebookGridWorkspace({ operands, operatorSymbol }) {
   const right = b == null ? "?" : String(b);
 
   return (
-    <PaperScrollShell>
+    <PaperScrollShell fillParent={fillParent}>
       <div className="flex flex-col w-full gap-3">
         <p
           className="text-center font-mono text-lg md:text-xl text-white/90 shrink-0"
@@ -805,15 +809,21 @@ function MathNotebookGridWorkspace({ operands, operatorSymbol }) {
   );
 }
 
-function VerticalLayoutWorkspace({ operands, variant }) {
+function VerticalLayoutWorkspace({ operands, variant, fillParent = false }) {
   const operatorSymbol = variant === "blank_vertical_subtraction" ? "−" : "+";
   return (
-    <MathNotebookGridWorkspace operands={operands} operatorSymbol={operatorSymbol} />
+    <MathNotebookGridWorkspace
+      operands={operands}
+      operatorSymbol={operatorSymbol}
+      fillParent={fillParent}
+    />
   );
 }
 
-function MultiplicationArrayWorkspace({ operands }) {
-  return <MathNotebookGridWorkspace operands={operands} operatorSymbol="×" />;
+function MultiplicationArrayWorkspace({ operands, fillParent = false }) {
+  return (
+    <MathNotebookGridWorkspace operands={operands} operatorSymbol="×" fillParent={fillParent} />
+  );
 }
 
 const GROUP_COLORS = [
@@ -1258,9 +1268,10 @@ function isDivisionOperation(operation) {
 }
 
 /**
- * @param {{ type: string, operands: { a: number|null, b: number|null, operation: string|null } }} props
+ * @param {{ type: string, operands: { a: number|null, b: number|null, operation: string|null }, embeddedInOverlay?: boolean }} props
  */
-export default function MathScratchpadWorkspace({ type, operands }) {
+export default function MathScratchpadWorkspace({ type, operands, embeddedInOverlay = false }) {
+  const fillParent = embeddedInOverlay;
   switch (type) {
     case "object_counter":
       return (
@@ -1282,26 +1293,36 @@ export default function MathScratchpadWorkspace({ type, operands }) {
         <PlaceValueTableWorkspace
           operands={operands}
           centerOperands={isDivisionOperation(operands.operation)}
+          fillParent={fillParent}
         />
       );
     case "blank_vertical_addition":
       return (
-        <VerticalLayoutWorkspace operands={operands} variant="blank_vertical_addition" />
+        <VerticalLayoutWorkspace
+          operands={operands}
+          variant="blank_vertical_addition"
+          fillParent={fillParent}
+        />
       );
     case "blank_vertical_subtraction":
       return (
-        <VerticalLayoutWorkspace operands={operands} variant="blank_vertical_subtraction" />
+        <VerticalLayoutWorkspace
+          operands={operands}
+          variant="blank_vertical_subtraction"
+          fillParent={fillParent}
+        />
       );
     case "blank_multiplication_array":
-      return <MultiplicationArrayWorkspace operands={operands} />;
+      return <MultiplicationArrayWorkspace operands={operands} fillParent={fillParent} />;
     case "blank_division_groups":
       return <DivisionGroupsWorkspace operands={operands} />;
     case "blank_long_division_grid":
-      return <PlaceValueTableWorkspace operands={operands} centerOperands />;
+      return <PlaceValueTableWorkspace operands={operands} centerOperands fillParent={fillParent} />;
     case "blank_fraction_strips":
       return (
         <PlaceValueTableWorkspace
           operands={{ ...operands, operation: operands.operation || "fractions" }}
+          fillParent={fillParent}
         />
       );
     case "blank_decimal_place_value_table":

@@ -15,6 +15,9 @@ import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-
  *   singleColumn?: boolean,
  *   overlayTopRef?: React.RefObject<HTMLElement|null>,
  *   overlayWidthRef?: React.RefObject<HTMLElement|null>,
+ *   scratchpadDockAnchorRef?: React.RefObject<HTMLElement|null>,
+ *   scratchpadDock?: React.ReactNode,
+ *   usesScratchpadDock?: boolean,
  * }} props
  */
 export default function StudentAssignedActivityShell({
@@ -27,11 +30,20 @@ export default function StudentAssignedActivityShell({
   singleColumn = false,
   overlayTopRef,
   overlayWidthRef,
+  scratchpadDockAnchorRef,
+  scratchpadDock = null,
+  usesScratchpadDock = false,
 }) {
   const L = STUDENT_ACTIVITY_LAYOUT;
+  const footerOffset = L.layoutFooterOffsetPx;
 
   return (
-    <div className={L.page} dir="rtl" lang="he">
+    <div
+      className={L.page}
+      dir="rtl"
+      lang="he"
+      data-scratchpad-dock={usesScratchpadDock ? "true" : undefined}
+    >
       <div ref={overlayTopRef}>
         <div className={L.headerRow} dir="ltr">
           <Link href="/student/home" className={L.backLink}>
@@ -51,18 +63,37 @@ export default function StudentAssignedActivityShell({
       <div ref={overlayWidthRef} className={L.card}>
         <div className={singleColumn ? "flex flex-col gap-3 min-w-0" : L.cardGrid}>
           <div
-            className={singleColumn ? "min-w-0 overflow-visible" : L.questionStage}
+            className={
+              singleColumn
+                ? "min-w-0 overflow-visible"
+                : usesScratchpadDock
+                  ? `${L.questionStage} ${L.scratchpadOpenQuestionStage}`
+                  : L.questionStage
+            }
             data-testid="activity-question-stage"
           >
             {visual}
           </div>
-          <div className={L.actionsPanel} data-testid="activity-actions-panel">
-            {actions}
-          </div>
+          {!usesScratchpadDock ? (
+            <div className={L.actionsPanel} data-testid="activity-actions-panel">
+              {actions}
+            </div>
+          ) : null}
         </div>
       </div>
 
-      {footer ? <div className={L.footerNav}>{footer}</div> : null}
+      {footer && !usesScratchpadDock ? <div className={L.footerNav}>{footer}</div> : null}
+
+      {scratchpadDock ? (
+        <div
+          className={L.scratchpadDockShell}
+          style={{ bottom: `${footerOffset}px` }}
+          data-testid="activity-scratchpad-bottom-dock"
+        >
+          <div ref={scratchpadDockAnchorRef} className="h-0 w-full shrink-0" aria-hidden />
+          <div className={L.scratchpadDockInner}>{scratchpadDock}</div>
+        </div>
+      ) : null}
     </div>
   );
 }

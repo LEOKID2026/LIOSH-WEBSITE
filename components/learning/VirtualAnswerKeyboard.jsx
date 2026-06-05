@@ -19,6 +19,7 @@ import { getVirtualAnswerKeyboardRows } from "../../lib/learning/virtual-answer-
  *   showClose?: boolean,
  *   compact?: boolean,
  *   submitButton?: { label?: string, onClick: () => void, disabled?: boolean, testId?: string } | null,
+ *   submitTone?: "green" | "blue",
  * }} props
  */
 export default function VirtualAnswerKeyboard({
@@ -31,6 +32,7 @@ export default function VirtualAnswerKeyboard({
   showClose = false,
   compact = false,
   submitButton = null,
+  submitTone = "green",
 }) {
   const rows = getVirtualAnswerKeyboardRows(layout, { compact });
   if (!rows.length) return null;
@@ -55,7 +57,9 @@ export default function VirtualAnswerKeyboard({
     : "min-h-[44px] rounded-lg border border-white/20 bg-black/35 text-white text-lg font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform";
   const actionKeyClass = compact ? `${keyClass} text-sm` : keyClass;
   const submitClass = compact
-    ? "col-span-3 min-h-[40px] h-10 rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
+    ? submitTone === "blue"
+      ? "col-span-3 min-h-[40px] h-10 rounded-md border border-cyan-400/50 bg-cyan-500 text-black text-base font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-400 transition-transform"
+      : "col-span-3 min-h-[40px] h-10 rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
     : "";
 
   return (

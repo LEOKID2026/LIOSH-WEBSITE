@@ -78,8 +78,8 @@ export default function StudentActivityPage({ activityId }) {
   const explanationViewedRef = useRef(false);
   const scratchpadOverlayTopRef = useRef(null);
   const scratchpadOverlayWidthRef = useRef(null);
-  const answerAnchorRef = useRef(null);
-  const [scratchpadOpen, setScratchpadOpen] = useState(false);
+  const scratchpadDockAnchorRef = useRef(null);
+  const [scratchpadOpen, setScratchpadOpen] = useState(true);
   const [activeScratchpadCell, setActiveScratchpadCell] = useState(null);
   const [verticalExerciseHeadline, setVerticalExerciseHeadline] = useState(null);
   const isTouchDevice = useTouchPrimaryDevice();
@@ -193,7 +193,7 @@ export default function StudentActivityPage({ activityId }) {
   useEffect(() => {
     questionStartTimeRef.current = Date.now();
     explanationViewedRef.current = false;
-    setScratchpadOpen(false);
+    setScratchpadOpen(true);
     setActiveScratchpadCell(null);
     setVerticalExerciseHeadline(null);
   }, [effectiveIdx]);
@@ -211,8 +211,9 @@ export default function StudentActivityPage({ activityId }) {
     hasTextInput: true,
     isTouch: isTouchDevice,
   });
+  const usesScratchpadDock = Boolean(usesMathScratchpad && scratchpadCtx);
   const sharedScratchpadKeyboard =
-    usesMathScratchpad && scratchpadOpen && mathVkPolicy.enabled && isTouchDevice;
+    usesScratchpadDock && mathVkPolicy.enabled && isTouchDevice;
 
   const handleScratchpadOpenChange = useCallback((open) => {
     setScratchpadOpen(open);
@@ -415,7 +416,122 @@ export default function StudentActivityPage({ activityId }) {
 
   const activitySubtitle = `${activityModeLabelHe(activity?.mode)} · שאלה ${effectiveIdx + 1} מתוך ${questionSet.length}`;
 
-  const renderActions = () => (
+  const renderAnswerFeedback = () => (
+    <>
+      {!isExplanationOnly && showHints && currentQuestion?.hint ? (
+        <p className="text-xs text-white/50">רמז: {currentQuestion.hint}</p>
+      ) : null}
+      {feedback?.type === "wait" ? (
+        <p className="text-amber-200 text-sm">{feedback.message}</p>
+      ) : null}
+      {feedback && feedback.type !== "wait" ? (
+        <div
+          className={`${L.feedbackBox} ${
+            feedback.type === "correct"
+              ? "bg-emerald-500/20 text-emerald-100"
+              : feedback.type === "submitted"
+                ? "bg-white/10 text-white/90"
+                : feedback.type === "error"
+                  ? "bg-red-500/20 text-red-100"
+                  : "bg-amber-500/20 text-amber-100"
+          }`}
+        >
+          <p>{feedback.message}</p>
+          {feedback.correctAnswer ? (
+            <p className="mt-1">
+              תשובה נכונה: <AssignedActivityBidiText text={feedback.correctAnswer} />
+            </p>
+          ) : null}
+          {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
+        </div>
+      ) : null}
+    </>
+  );
+
+  const renderSharedScratchpadKeyboard = () =>
+    sharedScratchpadKeyboard ? (
+      <VirtualAnswerKeyboard
+        layout={mathVkPolicy.layout || "numeric"}
+        value={activeScratchpadCell ? activeScratchpadCell.value : answerInput}
+        onChange={(next) => {
+          if (activeScratchpadCell) {
+            activeScratchpadCell.onChange(next);
+          } else {
+            setAnswerInput(next);
+          }
+        }}
+        disabled={isCurrentQuestionAnswered || busy}
+        compact={isTouchDevice}
+        submitTone="blue"
+        className={usesScratchpadDock ? "mt-0" : "mt-1"}
+        submitButton={
+          mobileEmbeddedNumericSubmit
+            ? {
+                label: isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה",
+                onClick: () => {
+                  if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
+                    void submitAnswer();
+                  }
+                },
+                disabled:
+                  busy || String(answerInput).trim() === "" || isCurrentQuestionAnswered,
+                testId: "activity-submit-answer",
+              }
+            : null
+        }
+      />
+    ) : null;
+
+  const renderActivityFinishRow = (compact = false) =>
+    activity?.mode !== "live_lesson" && !isExplanationOnly ? (
+      compact ? (
+        <div className={L.scratchpadDockFinishRow}>
+          {effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion ? (
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
+              }}
+              className={L.scratchpadDockSecondaryButton}
+            >
+              שאלה הבאה
+            </button>
+          ) : null}
+          <button
+            type="button"
+            disabled={busy}
+            onClick={submitActivity}
+            className={L.scratchpadDockFinishButton}
+          >
+            סיום והגשה
+          </button>
+        </div>
+      ) : (
+        <>
+          {effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion ? (
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
+              }}
+              className={L.footerButton}
+            >
+              שאלה הבאה
+            </button>
+          ) : null}
+          <button
+            type="button"
+            disabled={busy}
+            onClick={submitActivity}
+            className={L.footerSubmit}
+          >
+            סיום והגשה
+          </button>
+        </>
+      )
+    ) : null;
+
+  const renderActions = ({ includeInlineKeyboard = true } = {}) => (
     <>
       {isExplanationOnly ? (
         <>
@@ -485,45 +601,9 @@ export default function StudentActivityPage({ activityId }) {
             submitTestId="activity-submit-answer"
             submitLabel={isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה"}
           />
-          {sharedScratchpadKeyboard ? (
-            <VirtualAnswerKeyboard
-              layout={mathVkPolicy.layout || "numeric"}
-              value={
-                activeScratchpadCell ? activeScratchpadCell.value : answerInput
-              }
-              onChange={(next) => {
-                if (activeScratchpadCell) {
-                  activeScratchpadCell.onChange(next);
-                } else {
-                  setAnswerInput(next);
-                }
-              }}
-              disabled={isCurrentQuestionAnswered || busy}
-              compact={isTouchDevice}
-              className="mt-1"
-              submitButton={
-                mobileEmbeddedNumericSubmit
-                  ? {
-                      label: isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה",
-                      onClick: () => {
-                        if (
-                          !busy &&
-                          !isCurrentQuestionAnswered &&
-                          String(answerInput).trim() !== ""
-                        ) {
-                          void submitAnswer();
-                        }
-                      },
-                      disabled:
-                        busy ||
-                        String(answerInput).trim() === "" ||
-                        isCurrentQuestionAnswered,
-                      testId: "activity-submit-answer",
-                    }
-                  : null
-              }
-            />
-          ) : null}
+          {includeInlineKeyboard && sharedScratchpadKeyboard
+            ? renderSharedScratchpadKeyboard()
+            : null}
         </>
       ) : (
         <input
@@ -537,33 +617,7 @@ export default function StudentActivityPage({ activityId }) {
           {...answerInputProps}
         />
       )}
-      {!isExplanationOnly && showHints && currentQuestion?.hint ? (
-        <p className="text-xs text-white/50">רמז: {currentQuestion.hint}</p>
-      ) : null}
-      {feedback?.type === "wait" ? (
-        <p className="text-amber-200 text-sm">{feedback.message}</p>
-      ) : null}
-      {feedback && feedback.type !== "wait" ? (
-        <div
-          className={`${L.feedbackBox} ${
-            feedback.type === "correct"
-              ? "bg-emerald-500/20 text-emerald-100"
-              : feedback.type === "submitted"
-                ? "bg-white/10 text-white/90"
-                : feedback.type === "error"
-                  ? "bg-red-500/20 text-red-100"
-                  : "bg-amber-500/20 text-amber-100"
-          }`}
-        >
-          <p>{feedback.message}</p>
-          {feedback.correctAnswer ? (
-            <p className="mt-1">
-              תשובה נכונה: <AssignedActivityBidiText text={feedback.correctAnswer} />
-            </p>
-          ) : null}
-          {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
-        </div>
-      ) : null}
+      {renderAnswerFeedback()}
       {!isExplanationOnly && !mobileEmbeddedNumericSubmit ? (
         <button
           type="button"
@@ -581,30 +635,27 @@ export default function StudentActivityPage({ activityId }) {
     </>
   );
 
-  const renderFooter = () =>
-    activity?.mode !== "live_lesson" && !isExplanationOnly ? (
-      <>
-        {effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion ? (
-          <button
-            type="button"
-            onClick={() => {
-              setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
-            }}
-            className={L.footerButton}
-          >
-            שאלה הבאה
-          </button>
-        ) : null}
-        <button
-          type="button"
-          disabled={busy}
-          onClick={submitActivity}
-          className={L.footerSubmit}
-        >
-          סיום והגשה
-        </button>
-      </>
-    ) : null;
+  const renderScratchpadDock = () => (
+    <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
+      <div className={L.scratchpadDockActionsPanel}>
+        <div className={L.scratchpadDockToggleRow}>
+          {!scratchpadOpen ? (
+            <button
+              type="button"
+              onClick={() => setScratchpadOpen(true)}
+              className="w-full px-3 py-1.5 text-sm rounded-lg bg-white/10 text-white/90 hover:bg-white/15 border border-white/20"
+              data-testid="math-scratchpad-open-dock"
+            >
+              דף טיוטה
+            </button>
+          ) : null}
+        </div>
+        {renderActions({ includeInlineKeyboard: false })}
+        {renderSharedScratchpadKeyboard()}
+        {renderActivityFinishRow(true)}
+      </div>
+    </ScratchpadVirtualInputProvider>
+  );
 
   return (
     <Layout>
@@ -627,10 +678,13 @@ export default function StudentActivityPage({ activityId }) {
                 operation={scratchpadCtx.operation}
                 question={scratchpadCtx.question}
                 questionKey={`${effectiveIdx}-${String(currentQuestion.qk || currentQuestion.question || "")}`}
+                open={scratchpadOpen}
                 onOpenChange={handleScratchpadOpenChange}
+                hideInlineOpenButton
+                preserveQuestionLayout
                 overlayTopRef={scratchpadOverlayTopRef}
                 overlayWidthRef={scratchpadOverlayWidthRef}
-                answerAnchorRef={answerAnchorRef}
+                answerAnchorRef={scratchpadDockAnchorRef}
                 exerciseHeadlineOverride={verticalExerciseHeadline || undefined}
                 getQuestionFontStyle={getStudentActivityQuestionFontStyle}
               >
@@ -649,15 +703,18 @@ export default function StudentActivityPage({ activityId }) {
             )
           }
           actions={
-            usesMathScratchpad ? (
+            usesScratchpadDock ? null : usesMathScratchpad ? (
               <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
-                <div ref={answerAnchorRef}>{renderActions()}</div>
+                {renderActions()}
               </ScratchpadVirtualInputProvider>
             ) : (
               renderActions()
             )
           }
-          footer={renderFooter()}
+          usesScratchpadDock={usesScratchpadDock}
+          scratchpadDockAnchorRef={scratchpadDockAnchorRef}
+          scratchpadDock={usesScratchpadDock ? renderScratchpadDock() : null}
+          footer={usesScratchpadDock ? null : renderActivityFinishRow(false)}
         />
       ) : (
         <div className={L.page} dir="rtl" lang="he" />

@@ -70,8 +70,12 @@ export default function MathScratchpadPanel({
         </div>
       ) : null}
 
-      <div className="flex-1 min-h-0 flex flex-col items-center justify-center p-3 md:p-8 overflow-y-auto overscroll-contain">
-        <MathScratchpadWorkspace type={scratchpadType} operands={operands} />
+      <div className="flex-1 min-h-0 w-full overflow-y-auto overscroll-contain touch-pan-y flex flex-col items-center justify-start px-2 py-2 md:px-4 md:py-3">
+        <MathScratchpadWorkspace
+          type={scratchpadType}
+          operands={operands}
+          embeddedInOverlay={overlay}
+        />
       </div>
     </div>
   );

@@ -65,6 +65,9 @@ test("StudentAssignedActivityShell provides consistent header and full-width sta
   assert.match(shell, /activity-question-stage/);
   assert.match(shell, /activity-actions-panel/);
   assert.match(shell, /overlayTopRef/);
+  assert.match(shell, /usesScratchpadDock/);
+  assert.match(shell, /data-scratchpad-dock/);
+  assert.match(layout, /scratchpadDockShell/);
   assert.match(layout, /max-w-6xl/);
   assert.match(layout, /flex flex-col/);
 });
