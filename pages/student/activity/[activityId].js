@@ -23,6 +23,7 @@ import { STUDENT_ACTIVITY_LAYOUT } from "../../../lib/classroom-activities/stude
 import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
 import StudentAssignedActivityShell from "../../../components/student/StudentAssignedActivityShell";
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
+import StudentActivitySubmitConfirmModal from "../../../components/student/StudentActivitySubmitConfirmModal";
 import AssignedActivityBidiText from "../../../components/classroom-activities/AssignedActivityBidiText.jsx";
 
 function buildSavedAttemptsMap(attempts) {
@@ -82,6 +83,7 @@ export default function StudentActivityPage({ activityId }) {
   const [scratchpadOpen, setScratchpadOpen] = useState(true);
   const [activeScratchpadCell, setActiveScratchpadCell] = useState(null);
   const [verticalExerciseHeadline, setVerticalExerciseHeadline] = useState(null);
+  const [submitConfirmOpen, setSubmitConfirmOpen] = useState(false);
   const isTouchDevice = useTouchPrimaryDevice();
 
   const startSession = useCallback(async () => {
@@ -181,6 +183,14 @@ export default function StudentActivityPage({ activityId }) {
   const currentQuestion = questionSet[effectiveIdx];
   const currentSavedAttempt = savedAttempts[effectiveIdx] ?? null;
   const isCurrentQuestionAnswered = Boolean(currentSavedAttempt);
+  const answeredQuestionCount = useMemo(
+    () =>
+      questionSet.reduce(
+        (count, _question, idx) => (savedAttempts[idx] ? count + 1 : count),
+        0
+      ),
+    [questionSet, savedAttempts]
+  );
 
   useEffect(() => {
     if (activity?.mode === "live_lesson") return;
@@ -324,16 +334,27 @@ export default function StudentActivityPage({ activityId }) {
       });
       const json = await res.json().catch(() => ({}));
       if (json?.ok) {
+        setSubmitConfirmOpen(false);
         setFinished({
           scorePct: json.scorePct,
           correctCount: json.correctCount,
           questionCount: json.questionCount,
         });
         setPhase("done");
+        return true;
       }
+      return false;
     } finally {
       setBusy(false);
     }
+  };
+
+  const openSubmitConfirm = () => {
+    if (!busy) setSubmitConfirmOpen(true);
+  };
+
+  const handleConfirmSubmitActivity = () => {
+    void submitActivity();
   };
 
   if (phase === "loading") {
@@ -482,7 +503,30 @@ export default function StudentActivityPage({ activityId }) {
       />
     ) : null;
 
-  const renderActivityFinishRow = (compact = false) =>
+  const renderDockScratchpadToggleButton = (className, testId = "math-scratchpad-open-dock") => {
+    const openModifier =
+      testId === "math-scratchpad-toggle-dock-desktop"
+        ? L.scratchpadDockDesktopScratchpadButtonOpen
+        : L.scratchpadDockScratchpadButtonOpen;
+    const label = scratchpadOpen ? "סגור טיוטה" : "דף טיוטה";
+    return (
+      <button
+        type="button"
+        onClick={() => setScratchpadOpen((open) => !open)}
+        className={`relative ${className}${scratchpadOpen ? ` ${openModifier}` : ""}`}
+        data-testid={testId}
+      >
+        <span className="invisible select-none" aria-hidden="true">
+          דף טיוטה
+        </span>
+        <span className="absolute inset-0 flex items-center justify-center overflow-hidden px-3">
+          {label}
+        </span>
+      </button>
+    );
+  };
+
+  const renderActivityFinishRow = (compact = false, { includeScratchpadToggle = false } = {}) =>
     activity?.mode !== "live_lesson" && !isExplanationOnly ? (
       compact ? (
         <div className={L.scratchpadDockFinishRow}>
@@ -497,10 +541,16 @@ export default function StudentActivityPage({ activityId }) {
               שאלה הבאה
             </button>
           ) : null}
+          {includeScratchpadToggle
+            ? renderDockScratchpadToggleButton(
+                L.scratchpadDockScratchpadButton,
+                "math-scratchpad-toggle-dock-mobile"
+              )
+            : null}
           <button
             type="button"
             disabled={busy}
-            onClick={submitActivity}
+            onClick={openSubmitConfirm}
             className={L.scratchpadDockFinishButton}
           >
             סיום והגשה
@@ -522,7 +572,7 @@ export default function StudentActivityPage({ activityId }) {
           <button
             type="button"
             disabled={busy}
-            onClick={submitActivity}
+            onClick={openSubmitConfirm}
             className={L.footerSubmit}
           >
             סיום והגשה
@@ -531,7 +581,7 @@ export default function StudentActivityPage({ activityId }) {
       )
     ) : null;
 
-  const renderActions = ({ includeInlineKeyboard = true } = {}) => (
+  const renderActions = ({ includeInlineKeyboard = true, includePerQuestionSubmit = true } = {}) => (
     <>
       {isExplanationOnly ? (
         <>
@@ -618,7 +668,7 @@ export default function StudentActivityPage({ activityId }) {
         />
       )}
       {renderAnswerFeedback()}
-      {!isExplanationOnly && !mobileEmbeddedNumericSubmit ? (
+      {!isExplanationOnly && includePerQuestionSubmit && !mobileEmbeddedNumericSubmit ? (
         <button
           type="button"
           disabled={
@@ -635,24 +685,72 @@ export default function StudentActivityPage({ activityId }) {
     </>
   );
 
+  const showDockNextQuestion =
+    effectiveIdx < questionSet.length - 1 && !isQuiz && !isDiscussion;
+  const showDockFinishActions = activity?.mode !== "live_lesson" && !isExplanationOnly;
+
+  const renderDockPerQuestionSubmitButton = (className) =>
+    !isExplanationOnly ? (
+      <button
+        type="button"
+        disabled={
+          busy || String(answerInput).trim() === "" || isCurrentQuestionAnswered
+        }
+        onClick={submitAnswer}
+        className={className}
+        data-testid="activity-submit-answer"
+      >
+        {isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה"}
+      </button>
+    ) : null;
+
+  const renderDesktopDockButtonRow = () =>
+    showDockFinishActions ? (
+      <div
+        className={`hidden md:flex ${L.scratchpadDockDesktopButtonRow}`}
+        data-testid="activity-scratchpad-desktop-actions"
+      >
+        {showDockNextQuestion ? (
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentIdx((i) => Math.min(questionSet.length - 1, i + 1));
+            }}
+            className={L.scratchpadDockDesktopSecondaryButton}
+          >
+            שאלה הבאה
+          </button>
+        ) : null}
+        {renderDockScratchpadToggleButton(
+          L.scratchpadDockDesktopScratchpadButton,
+          "math-scratchpad-toggle-dock-desktop"
+        )}
+        {renderDockPerQuestionSubmitButton(L.scratchpadDockDesktopSubmitButton)}
+        <button
+          type="button"
+          disabled={busy}
+          onClick={openSubmitConfirm}
+          className={L.scratchpadDockDesktopFinishButton}
+        >
+          סיום והגשה
+        </button>
+      </div>
+    ) : null;
+
   const renderScratchpadDock = () => (
     <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
       <div className={L.scratchpadDockActionsPanel}>
-        <div className={L.scratchpadDockToggleRow}>
-          {!scratchpadOpen ? (
-            <button
-              type="button"
-              onClick={() => setScratchpadOpen(true)}
-              className="w-full px-3 py-1.5 text-sm rounded-lg bg-white/10 text-white/90 hover:bg-white/15 border border-white/20"
-              data-testid="math-scratchpad-open-dock"
-            >
-              דף טיוטה
-            </button>
-          ) : null}
+        {renderActions({ includeInlineKeyboard: false, includePerQuestionSubmit: false })}
+
+        <div className="flex flex-col gap-1 md:hidden">
+          {!mobileEmbeddedNumericSubmit
+            ? renderDockPerQuestionSubmitButton(L.submitButton)
+            : null}
+          {renderSharedScratchpadKeyboard()}
+          {renderActivityFinishRow(true, { includeScratchpadToggle: true })}
         </div>
-        {renderActions({ includeInlineKeyboard: false })}
-        {renderSharedScratchpadKeyboard()}
-        {renderActivityFinishRow(true)}
+
+        {renderDesktopDockButtonRow()}
       </div>
     </ScratchpadVirtualInputProvider>
   );
@@ -719,6 +817,17 @@ export default function StudentActivityPage({ activityId }) {
       ) : (
         <div className={L.page} dir="rtl" lang="he" />
       )}
+      <StudentActivitySubmitConfirmModal
+        open={submitConfirmOpen}
+        busy={busy}
+        activityTitle={activity?.title || ""}
+        answeredCount={answeredQuestionCount}
+        questionCount={questionSet.length}
+        onCancel={() => {
+          if (!busy) setSubmitConfirmOpen(false);
+        }}
+        onConfirm={handleConfirmSubmitActivity}
+      />
     </Layout>
   );
 }

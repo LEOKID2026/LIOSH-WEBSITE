@@ -46,6 +46,7 @@ test("student activity page uses unified shell components", () => {
     "utf8"
   );
   assert.match(src, /StudentAssignedActivityShell/);
+  assert.match(src, /activity-scratchpad-desktop-actions/);
   assert.match(src, /StudentAssignedActivityQuestionStage/);
   assert.match(src, /STUDENT_ACTIVITY_LAYOUT/);
   assert.doesNotMatch(src, /ClassroomGeometryQuestionDiagram/);
@@ -68,6 +69,7 @@ test("StudentAssignedActivityShell provides consistent header and full-width sta
   assert.match(shell, /usesScratchpadDock/);
   assert.match(shell, /data-scratchpad-dock/);
   assert.match(layout, /scratchpadDockShell/);
+  assert.match(layout, /scratchpadDockDesktopButtonRow/);
   assert.match(layout, /max-w-6xl/);
   assert.match(layout, /flex flex-col/);
 });
