@@ -1,4 +1,4 @@
-import { getDiagramEmphasisForStep } from "./geometry-diagram-spec.js";
+import { enrichGeometryAnimationSteps } from "./geometry-animations.js";
 import {
   resultPhraseArea,
   resultPhraseLength,
@@ -1097,14 +1097,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
 export function buildGeometryAnimationSteps(question, topic, gradeKey) {
   const slides = getSolutionSteps(question, topic, gradeKey);
   if (!Array.isArray(slides) || slides.length === 0) return [];
-  const n = slides.length;
-  return slides.map((content, idx) => ({
-    id: `geometry-step-${idx + 1}`,
-    title: `שלב ${idx + 1}`,
-    content,
-    text: "",
-    diagramEmphasis: getDiagramEmphasisForStep(question, idx, n),
-  }));
+  return enrichGeometryAnimationSteps(question, topic, gradeKey, slides);
 }
 
 // תקציר תיאורטי קצר לפי נושא וכיתה – מוצג לפני השאלה במצב Learning

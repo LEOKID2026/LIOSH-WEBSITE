@@ -195,6 +195,29 @@ test("quadrilateral topic maps to distinct shape templates", () => {
   assert.notEqual(squareSpec.template, paraSpec.template);
 });
 
+test("volume solid diagram specs resolve for 3D shapes", () => {
+  const specs = [
+    getGeometryDiagramSpec({
+      topic: "volume",
+      shape: "rectangular_prism",
+      params: { kind: "prism_volume_rectangular", length: 4, width: 3, height: 5 },
+    }),
+    getGeometryDiagramSpec({
+      topic: "volume",
+      shape: "cylinder",
+      params: { kind: "cylinder_volume", radius: 2, height: 6 },
+    }),
+    getGeometryDiagramSpec({
+      topic: "solids",
+      shape: "cube",
+      params: { kind: "solids_identify", solidShape: "cube" },
+    }),
+  ];
+  assert.equal(specs[0]?.kind, "solid_box");
+  assert.equal(specs[1]?.kind, "solid_cylinder");
+  assert.equal(specs[2]?.kind, "solid_identify");
+});
+
 test("assessment triangle spec still hides third angle and shows known labels", () => {
   const spec = getGeometryDiagramSpec(
     {

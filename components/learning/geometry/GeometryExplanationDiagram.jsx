@@ -14,6 +14,12 @@ import {
   shapeTemplatePointsString,
   triangleLayoutFromAngles,
 } from "../../../utils/geometry-diagram-layout";
+import {
+  GEOMETRY_DIAGRAM_CSS,
+  animatedStrokeProps,
+} from "../../../utils/geometry-step-highlight-styles";
+import { GEOMETRY_ANIMATION_PRESETS } from "../../../utils/geometry-step-types";
+import IsometricSolidView from "./solids/IsometricSolidView";
 
 const ST = {
   stroke: "#6ee7b7",
@@ -28,6 +34,85 @@ const ST = {
 
 const VB = "0 0 360 280";
 
+function DiagramAnimationStyles() {
+  return <style>{GEOMETRY_DIAGRAM_CSS}</style>;
+}
+
+function GridFillOverlay({ x, y, w, h, cols = 4, rows = 4, active = false }) {
+  if (!active) return null;
+  const cells = [];
+  const cw = w / cols;
+  const rh = h / rows;
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      cells.push(
+        <rect
+          key={`${r}-${c}`}
+          x={x + c * cw}
+          y={y + r * rh}
+          width={cw}
+          height={rh}
+          fill="rgba(253, 224, 71, 0.12)"
+          stroke="rgba(253, 224, 71, 0.35)"
+          strokeWidth="0.8"
+          className="geo-animate-grid"
+          style={{ animationDelay: `${(r * cols + c) * 0.04}s` }}
+        />
+      );
+    }
+  }
+  return <g>{cells}</g>;
+}
+
+function TracePerimeterRect({ x, y, w, h, active = false }) {
+  if (!active) return null;
+  const len = 2 * (w + h);
+  const props = animatedStrokeProps(GEOMETRY_ANIMATION_PRESETS.tracePerimeter, len);
+  return (
+    <rect
+      x={x}
+      y={y}
+      width={w}
+      height={h}
+      fill="none"
+      stroke={ST.strokeHi}
+      strokeWidth="3"
+      {...props}
+    />
+  );
+}
+
+function PythagorasSquares({ x0, y0, x1, y1, x2, y2, a, b, active = false }) {
+  if (!active) return null;
+  const sqA = Math.min(48, a * 3);
+  const sqB = Math.min(48, b * 3);
+  return (
+    <g>
+      <rect
+        x={x0 - sqA}
+        y={(y0 + y2) / 2 - sqA / 2}
+        width={sqA}
+        height={sqA}
+        fill="rgba(253, 224, 71, 0.14)"
+        stroke={ST.strokeHi}
+        strokeWidth="2"
+        className="geo-animate-grid"
+      />
+      <rect
+        x={(x0 + x1) / 2 - sqB / 2}
+        y={y0}
+        width={sqB}
+        height={sqB}
+        fill="rgba(253, 224, 71, 0.14)"
+        stroke={ST.strokeHi}
+        strokeWidth="2"
+        className="geo-animate-grid"
+        style={{ animationDelay: "0.15s" }}
+      />
+    </g>
+  );
+}
+
 function fmtLen(n, question) {
   const u = inferGeometryDiagramLengthUnit(question);
   return u ? `${n} ${u}` : String(n);
@@ -39,6 +124,8 @@ function useHL(active, emphasis, ...tokens) {
       return active === "length_width" || active === "formula";
     if (t === "base_height")
       return active === "base_height" || active === "formula";
+    if (t === "base")
+      return active === "base" || active === "formula";
     if (t === "bases_height")
       return active === "bases_height" || active === "formula";
     if (t === "all_sides") return active === "all_sides" || active === "formula";
@@ -135,10 +222,21 @@ export default function GeometryExplanationDiagram({
   question = null,
   compact = false,
   embedded = false,
+  reveal = [],
+  animationPreset = GEOMETRY_ANIMATION_PRESETS.none,
+  stepId = "",
 }) {
   if (!spec?.kind) return null;
 
   const frameProps = { compact, embedded };
+  const preset = animationPreset || GEOMETRY_ANIMATION_PRESETS.none;
+  const showGrid = preset === GEOMETRY_ANIMATION_PRESETS.gridFill;
+  const showTrace = preset === GEOMETRY_ANIMATION_PRESETS.tracePerimeter;
+  const showHeightDraw = preset === GEOMETRY_ANIMATION_PRESETS.drawHeight;
+  const showPulse = preset === GEOMETRY_ANIMATION_PRESETS.pulseRadius || preset === GEOMETRY_ANIMATION_PRESETS.pulseAngle;
+  const showPythSq = preset === GEOMETRY_ANIMATION_PRESETS.pythagorasSquares;
+  const showDiagonalDraw = preset === GEOMETRY_ANIMATION_PRESETS.drawDiagonal;
+  const revealSet = new Set(Array.isArray(reveal) ? reveal : []);
 
   if (spec.kind === "shape_template") {
     const points = shapeTemplatePointsString(spec.template);
@@ -182,7 +280,8 @@ export default function GeometryExplanationDiagram({
     const bottomY = cy + half;
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
           <rect
             x={cx - half}
             y={cy - half}
@@ -192,6 +291,22 @@ export default function GeometryExplanationDiagram({
             stroke={stroke}
             strokeWidth={sw}
             rx="4"
+          />
+          <GridFillOverlay
+            x={cx - half}
+            y={cy - half}
+            w={sz}
+            h={sz}
+            cols={Math.min(6, Math.max(2, Math.round(s / 2)))}
+            rows={Math.min(6, Math.max(2, Math.round(s / 2)))}
+            active={showGrid && spec.mode === "area"}
+          />
+          <TracePerimeterRect
+            x={cx - half}
+            y={cy - half}
+            w={sz}
+            h={sz}
+            active={showTrace && spec.mode === "perimeter"}
           />
           <SvgText x={cx} y={bottomY + 18} variant="label">
             {fmtLen(s, question)}
@@ -247,7 +362,8 @@ export default function GeometryExplanationDiagram({
     const leftSw = isLw ? 4 : isR ? 3 : 2.2;
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
           <rect
             x={left}
             y={top}
@@ -258,6 +374,16 @@ export default function GeometryExplanationDiagram({
             strokeWidth={isR ? 3 : 2}
             rx="3"
           />
+          <GridFillOverlay
+            x={left}
+            y={top}
+            w={rw}
+            h={rh}
+            cols={4}
+            rows={3}
+            active={showGrid}
+          />
+          <TracePerimeterRect x={left} y={top} w={rw} h={rh} active={showTrace} />
           <line
             x1={left}
             y1={bottom}
@@ -298,13 +424,18 @@ export default function GeometryExplanationDiagram({
     const xR = cx + bw / 2;
     const apexY = baseY - bh;
     const emph = emphasis;
-    const baseHi = emph === "base_height" || emph === "formula";
+    const baseHi = emph === "base_height" || emph === "base" || emph === "formula";
     const heightHi = emph === "base_height" || emph === "formula";
     const isRes = emph === "result";
     const heightLabel = spec.hideHeight ? "גובה ?" : `גובה ${fmtLen(h, question)}`;
+    const heightDrawProps =
+      showHeightDraw && heightHi
+        ? animatedStrokeProps(GEOMETRY_ANIMATION_PRESETS.drawHeight, bh + 40)
+        : {};
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
           <polygon
             points={`${cx},${apexY} ${xL},${baseY} ${xR},${baseY}`}
             fill={ST.fillShape}
@@ -326,7 +457,9 @@ export default function GeometryExplanationDiagram({
             y2={baseY}
             stroke={ST.dash}
             strokeWidth={isRes ? 3 : heightHi ? 3.6 : 1.8}
-            strokeDasharray="6 5"
+            strokeDasharray={heightDrawProps.strokeDasharray || "6 5"}
+            {...heightDrawProps}
+            className={heightDrawProps.className || undefined}
           />
           <SvgText x={cx} y={baseY + 20} variant="label">
             בסיס {fmtLen(b, question)}
@@ -648,9 +781,11 @@ export default function GeometryExplanationDiagram({
     const cy = 138;
     const rim = emphasis === "rim";
     const radHi = emphasis === "radius" || emphasis === "formula";
+    const rimTraceProps = showTrace && rim ? animatedStrokeProps(GEOMETRY_ANIMATION_PRESETS.tracePerimeter, 2 * Math.PI * rad) : {};
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
           <circle
             cx={cx}
             cy={cy}
@@ -658,6 +793,8 @@ export default function GeometryExplanationDiagram({
             fill={ST.fillShape}
             stroke={rim ? ST.strokeHi : ST.stroke}
             strokeWidth={rim ? 4 : radHi ? 3.2 : 2.4}
+            className={showPulse && radHi ? "geo-animate-pulse" : undefined}
+            {...rimTraceProps}
           />
           <line
             x1={cx}
@@ -666,6 +803,7 @@ export default function GeometryExplanationDiagram({
             y2={cy}
             stroke={radHi ? ST.strokeHi : ST.strokeDim}
             strokeWidth={radHi ? 4 : 2}
+            className={showPulse && radHi ? "geo-animate-pulse" : undefined}
           />
           <SvgText x={cx + rad * 0.45} y={cy - 12} variant="label">
             r = {fmtLen(r, question)}
@@ -879,7 +1017,8 @@ export default function GeometryExplanationDiagram({
 
     return (
       <DiagramFrame {...frameProps}>
-        <svg viewBox={VB} className="block" aria-hidden>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
           <polygon
             points={`${x0},${y0} ${x1},${y1} ${x2},${y2}`}
             fill={ST.fillShape}
@@ -909,6 +1048,20 @@ export default function GeometryExplanationDiagram({
             y2={y2}
             stroke={hypStroke}
             strokeWidth={hypSw}
+            {...(emph === "hyp" || emph === "missing_leg"
+              ? animatedStrokeProps(GEOMETRY_ANIMATION_PRESETS.drawPath, Math.hypot(x2 - x1, y2 - y1))
+              : {})}
+          />
+          <PythagorasSquares
+            x0={x0}
+            y0={y0}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            a={a}
+            b={b}
+            active={showPythSq}
           />
           <path
             d={`M ${x0 + 16} ${y0} L ${x0 + 16} ${y0 - 16} L ${x0} ${y0 - 16}`}
@@ -927,6 +1080,112 @@ export default function GeometryExplanationDiagram({
           </SvgText>
           <SvgText x="180" y="20" variant="note">
             זווית ישרה — היתר נגדה הוא c
+          </SvgText>
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "solid_identify" || String(spec.kind).startsWith("solid_")) {
+    const solidShape =
+      spec.solidShape ||
+      (spec.kind === "solid_box" ? "rectangular_prism" : spec.kind.replace("solid_", ""));
+    return (
+      <DiagramFrame {...frameProps}>
+        <DiagramAnimationStyles />
+        <IsometricSolidView solidShape={solidShape} emphasis={emphasis} />
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "transformation_translate") {
+    const points = shapeTemplatePointsString(spec.template || "square", { x: 130, y: 142 });
+    const ghostPoints = shapeTemplatePointsString(spec.template || "square", { x: 210, y: 142 });
+    return (
+      <DiagramFrame {...frameProps}>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+          {points ? (
+            <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.4" />
+          ) : null}
+          {ghostPoints ? (
+            <polygon
+              points={ghostPoints}
+              fill="rgba(253, 224, 71, 0.1)"
+              stroke={ST.strokeHi}
+              strokeWidth="2"
+              strokeDasharray="6 4"
+              className={preset === GEOMETRY_ANIMATION_PRESETS.translateGhost ? "geo-animate-grid" : undefined}
+            />
+          ) : null}
+          <line x1="210" y1="142" x2="250" y2="142" stroke={ST.strokeHi} strokeWidth="3" markerEnd="url(#geo-arrow)" />
+          <defs>
+            <marker id="geo-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill={ST.strokeHi} />
+            </marker>
+          </defs>
+          <SvgText x="180" y="28" variant="note">
+            הזזה — אותה צורה במיקום חדש
+          </SvgText>
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "transformation_reflect") {
+    const points = shapeTemplatePointsString(spec.template || "square", { x: 120, y: 142 });
+    const mirrorPoints = shapeTemplatePointsString(spec.template || "square", { x: 240, y: 142 });
+    return (
+      <DiagramFrame {...frameProps}>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+          <line x1="180" y1="60" x2="180" y2="220" stroke={ST.strokeHi} strokeWidth="2" strokeDasharray="8 5" />
+          {points ? (
+            <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.4" />
+          ) : null}
+          {mirrorPoints ? (
+            <polygon
+              points={mirrorPoints}
+              fill="rgba(253, 224, 71, 0.12)"
+              stroke={ST.strokeHi}
+              strokeWidth="2.4"
+            />
+          ) : null}
+          <SvgText x="180" y="28" variant="note">
+            שיקוף — תמונה מול קו המראה
+          </SvgText>
+        </svg>
+      </DiagramFrame>
+    );
+  }
+
+  if (spec.kind === "rotation_step") {
+    const angle = spec.angle || 90;
+    const points = shapeTemplatePointsString(spec.template || "square", { x: 180, y: 150 });
+    return (
+      <DiagramFrame {...frameProps}>
+        <DiagramAnimationStyles />
+        <svg viewBox={VB} className="block" aria-hidden data-step-id={stepId}>
+          <circle cx="180" cy="150" r="4" fill={ST.strokeHi} />
+          <path
+            d="M 220 150 A 40 40 0 0 0 180 110"
+            fill="none"
+            stroke={ST.strokeHi}
+            strokeWidth="2.5"
+            className={preset === GEOMETRY_ANIMATION_PRESETS.rotateArc ? "geo-animate-draw" : undefined}
+          />
+          {points ? (
+            <g
+              style={{
+                transformOrigin: "180px 150px",
+                transform: `rotate(${angle}deg)`,
+              }}
+            >
+              <polygon points={points} fill={ST.fillShape} stroke={ST.stroke} strokeWidth="2.4" />
+            </g>
+          ) : null}
+          <SvgText x="180" y="28" variant="note">
+            סיבוב {angle}° סביב נקודת מרכז
           </SvgText>
         </svg>
       </DiagramFrame>

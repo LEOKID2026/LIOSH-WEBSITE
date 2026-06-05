@@ -7,6 +7,7 @@ import {
   resolveQuadrilateralTemplate,
   resolveTriangleClassTemplate,
 } from "./geometry-diagram-layout.js";
+import { getDiagramEmphasisFromMetadata } from "./geometry-animations.js";
 
 /**
  * @param {object} question
@@ -86,6 +87,46 @@ export function getGeometryDiagramSpec(question, options = {}) {
   if (topic === "volume" && shape === "cube") {
     if (typeof p.side !== "number") return null;
     return { kind: "square", mode: "volume", side: p.side };
+  }
+
+  if (topic === "volume") {
+    if (shape === "rectangular_prism" || shape === "cube") {
+      const l = p.length ?? p.side;
+      const w = p.width ?? p.side;
+      const h = p.height ?? p.side;
+      if (typeof l !== "number" || typeof w !== "number" || typeof h !== "number") return null;
+      return { kind: "solid_box", mode: "volume", length: l, width: w, height: h };
+    }
+    if (shape === "cylinder" && typeof p.radius === "number" && typeof p.height === "number") {
+      return { kind: "solid_cylinder", mode: "volume", radius: p.radius, height: p.height };
+    }
+    if (shape === "sphere" && typeof p.radius === "number") {
+      return { kind: "solid_sphere", mode: "volume", radius: p.radius };
+    }
+    if (shape === "pyramid" && typeof p.side === "number" && typeof p.height === "number") {
+      return { kind: "solid_pyramid", mode: "volume", side: p.side, height: p.height };
+    }
+    if (shape === "cone" && typeof p.radius === "number" && typeof p.height === "number") {
+      return { kind: "solid_cone", mode: "volume", radius: p.radius, height: p.height };
+    }
+  }
+
+  if (topic === "transformations" || p.kind === "concept_transform") {
+    const type = String(p.type || "הזזה");
+    if (type === "שיקוף") {
+      return { kind: "transformation_reflect", mode: "reflect", template: "square" };
+    }
+    return { kind: "transformation_translate", mode: "translate", template: "square" };
+  }
+
+  if (topic === "rotation" || p.kind === "concept_rotation") {
+    const angle = typeof p.angle === "number" ? p.angle : 90;
+    return { kind: "rotation_step", angle, template: "square" };
+  }
+
+  if (topic === "solids" || p.kind === "solids_identify") {
+    const solidShape = shape || p.solidShape || "cube";
+    return { kind: "solid_identify", solidShape, mode: "identify" };
   }
 
   if (topic === "angles" && p.kind === "triangle_angles") {
@@ -281,6 +322,11 @@ export function getGeometryDiagramSpec(question, options = {}) {
  * Aligns with typical 4-step flow: נוסחה → הצבה → חישוב → תוצאה.
  */
 export function getDiagramEmphasisForStep(question, stepIndex, totalSteps) {
+  return getDiagramEmphasisFromMetadata(question, stepIndex, totalSteps);
+}
+
+/** @deprecated inline mapping — kept for reference tests only */
+export function getDiagramEmphasisForStepLegacy(question, stepIndex, totalSteps) {
   const spec = getGeometryDiagramSpec(question);
   if (!spec || typeof stepIndex !== "number" || stepIndex < 0) return "neutral";
 

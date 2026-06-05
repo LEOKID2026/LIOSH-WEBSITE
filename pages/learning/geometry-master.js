@@ -64,6 +64,7 @@ import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
 import { getGeometryDiagramSpec } from "../../utils/geometry-diagram-spec";
 import GeometryExplanationDiagram from "../../components/learning/geometry/GeometryExplanationDiagram";
+import StepGeometryStepPanel from "../../components/learning/geometry/StepGeometryStepPanel";
 import {
   learningModalOverlay,
   learningModalPanel,
@@ -2223,6 +2224,9 @@ export default function GeometryMaster() {
           ),
           text: "",
           diagramEmphasis: "neutral",
+          diagramReveal: [],
+          animationPreset: "none",
+          textHighlights: [],
         },
       ];
     }
@@ -3241,12 +3245,18 @@ export default function GeometryMaster() {
                                     return (
                                       <div className="flex-shrink-0 w-full flex justify-center items-stretch min-h-[min(36svh,240px)] max-h-[min(48svh,340px)] py-2">
                                         <GeometryExplanationDiagram
+                                          key={activeStep.id}
                                           spec={diagramSpec}
                                           question={explanationQuestion}
                                           emphasis={
                                             activeStep.diagramEmphasis ||
                                             "neutral"
                                           }
+                                          reveal={activeStep.diagramReveal || []}
+                                          animationPreset={
+                                            activeStep.animationPreset || "none"
+                                          }
+                                          stepId={activeStep.id}
                                         />
                                       </div>
                                     );
@@ -3256,18 +3266,12 @@ export default function GeometryMaster() {
                                     className="flex-1 min-h-0 overflow-y-auto mb-1 pt-1"
                                     dir="rtl"
                                   >
-                                    <h4
-                                      className={`${learningExplTitle} sticky top-0 bg-gradient-to-b from-emerald-950/98 to-emerald-950/80 backdrop-blur-[2px] pb-1 -mb-1 z-[1]`}
-                                    >
-                                      {activeStep.title || "הסבר"}
-                                    </h4>
-                                    {activeStep.content ? (
-                                      <div className={learningExplBody}>
-                                        {activeStep.content}
-                                      </div>
-                                    ) : (
-                                      renderLearningMixedHebrewMathText(activeStep.text || "", learningExplBody)
-                                    )}
+                                    <StepGeometryStepPanel
+                                      key={activeStep.id}
+                                      step={activeStep}
+                                      titleClassName={`${learningExplTitle} sticky top-0 bg-gradient-to-b from-emerald-950/98 to-emerald-950/80 backdrop-blur-[2px] pb-1 -mb-1 z-[1]`}
+                                      bodyClassName={learningExplBody}
+                                    />
                                   </div>
                                 </div>
 

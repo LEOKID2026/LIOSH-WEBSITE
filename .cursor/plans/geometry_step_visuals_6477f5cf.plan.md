@@ -4,37 +4,37 @@ overview: "תוכנית מלאה לשיפור חלונות צעד-צעד בגא�
 todos:
   - id: geo-phase-0
     content: "שלב 0: תשתית — geometry-step-types, geometry-animations.js, text highlights, StepGeometryStepPanel, refactor buildGeometryAnimationSteps, tests metadata"
-    status: pending
+    status: completed
   - id: geo-phase-1
     content: "שלב 1: שטח + היקף — gridFill, tracePerimeter, drawHeight, תיקון stepKind mapping, כל הצורות ב׳–ו׳"
-    status: pending
+    status: completed
   - id: geo-phase-2
     content: "שלב 2: נפח — diagram kinds תלת-מימד (prism/cylinder/sphere/pyramid/cone), solids/* components, emphasis per formula step"
-    status: pending
+    status: completed
   - id: geo-phase-3
     content: "שלב 3: זוויות + פיתגורס — קשתות זווית, ריבועים על ניצבים, draw-on hyp/missing leg"
-    status: pending
+    status: completed
   - id: geo-phase-4
     content: "שלב 4: גבהים + מעגל — reverse formula highlights, pulseRadius, tracePerimeter rim"
-    status: pending
+    status: completed
   - id: geo-phase-5
     content: "שלב 5: קונצепט מישור — shapes_basic, triangles, quadrilaterals, parallel, symmetry, diagonal, tiling"
-    status: pending
+    status: completed
   - id: geo-phase-6
     content: "שלב 6: transformations + rotation — diagram kinds חדשים (translate/reflect/rotate arc)"
-    status: pending
+    status: completed
   - id: geo-phase-7
     content: "שלב 7: solids היכרות — solid_identify, highlight faces/vertices, ב׳–ו׳"
-    status: pending
+    status: completed
   - id: geo-phase-8
     content: "שלב 8: mixed routing + fallback בטוח לשאלות conceptual"
-    status: pending
+    status: completed
   - id: geo-phase-9
     content: "שלב 9: geometry-master wiring — StepGeometryStepPanel, key remount, diagramReveal/animationPreset props"
-    status: pending
+    status: completed
   - id: geo-phase-10
     content: "שלב 10: בדיקות smoke + QA matrix + npm run build — ללא commit/push עד אישור"
-    status: pending
+    status: completed
 isProject: false
 ---
 
