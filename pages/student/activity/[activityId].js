@@ -80,7 +80,7 @@ export default function StudentActivityPage({ activityId }) {
   const scratchpadOverlayTopRef = useRef(null);
   const scratchpadOverlayWidthRef = useRef(null);
   const scratchpadDockAnchorRef = useRef(null);
-  const [scratchpadOpen, setScratchpadOpen] = useState(true);
+  const [scratchpadOpen, setScratchpadOpen] = useState(false);
   const [activeScratchpadCell, setActiveScratchpadCell] = useState(null);
   const [verticalExerciseHeadline, setVerticalExerciseHeadline] = useState(null);
   const [submitConfirmOpen, setSubmitConfirmOpen] = useState(false);
@@ -203,7 +203,7 @@ export default function StudentActivityPage({ activityId }) {
   useEffect(() => {
     questionStartTimeRef.current = Date.now();
     explanationViewedRef.current = false;
-    setScratchpadOpen(true);
+    setScratchpadOpen(false);
     setActiveScratchpadCell(null);
     setVerticalExerciseHeadline(null);
   }, [effectiveIdx]);
@@ -314,6 +314,7 @@ export default function StudentActivityPage({ activityId }) {
           isCorrect: json.isCorrect ?? null,
         },
       }));
+      setScratchpadOpen(false);
       if (activity?.mode !== "live_lesson" && effectiveIdx < questionSet.length - 1) {
         setTimeout(() => {
           setCurrentIdx((i) => i + 1);
@@ -476,10 +477,10 @@ export default function StudentActivityPage({ activityId }) {
         value={activeScratchpadCell ? activeScratchpadCell.value : answerInput}
         onChange={(next) => {
           if (activeScratchpadCell) {
-            activeScratchpadCell.onChange(next);
-          } else {
-            setAnswerInput(next);
+            activeScratchpadCell.onChange(String(next ?? "").replace(/\D/g, "").slice(-1));
+            return;
           }
+          setAnswerInput(next);
         }}
         disabled={isCurrentQuestionAnswered || busy}
         compact={isTouchDevice}
@@ -738,31 +739,23 @@ export default function StudentActivityPage({ activityId }) {
     ) : null;
 
   const renderScratchpadDock = () => (
-    <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
-      <div className={L.scratchpadDockActionsPanel}>
-        {renderActions({ includeInlineKeyboard: false, includePerQuestionSubmit: false })}
+    <div className={L.scratchpadDockActionsPanel}>
+      {renderActions({ includeInlineKeyboard: false, includePerQuestionSubmit: false })}
 
-        <div className="flex flex-col gap-1 md:hidden">
-          {!mobileEmbeddedNumericSubmit
-            ? renderDockPerQuestionSubmitButton(L.submitButton)
-            : null}
-          {renderSharedScratchpadKeyboard()}
-          {renderActivityFinishRow(true, { includeScratchpadToggle: true })}
-        </div>
-
-        {renderDesktopDockButtonRow()}
+      <div className="flex flex-col gap-1 md:hidden">
+        {!mobileEmbeddedNumericSubmit
+          ? renderDockPerQuestionSubmitButton(L.submitButton)
+          : null}
+        {renderSharedScratchpadKeyboard()}
+        {renderActivityFinishRow(true, { includeScratchpadToggle: true })}
       </div>
-    </ScratchpadVirtualInputProvider>
+
+      {renderDesktopDockButtonRow()}
+    </div>
   );
 
-  return (
-    <Layout>
-      {activity?.mode === "live_lesson" && activity?.activityStatus === "paused" ? (
-        <div className={L.page} dir="rtl" lang="he">
-          <p className="text-amber-200 text-center py-4">ממתינים למורה…</p>
-        </div>
-      ) : currentQuestion ? (
-        <StudentAssignedActivityShell
+  const assignedActivityShell = currentQuestion ? (
+    <StudentAssignedActivityShell
           title={activity?.title || ""}
           subtitle={activitySubtitle}
           progressPct={progressPct}
@@ -800,20 +793,33 @@ export default function StudentActivityPage({ activityId }) {
               />
             )
           }
-          actions={
-            usesScratchpadDock ? null : usesMathScratchpad ? (
-              <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
-                {renderActions()}
-              </ScratchpadVirtualInputProvider>
-            ) : (
-              renderActions()
-            )
-          }
-          usesScratchpadDock={usesScratchpadDock}
-          scratchpadDockAnchorRef={scratchpadDockAnchorRef}
-          scratchpadDock={usesScratchpadDock ? renderScratchpadDock() : null}
-          footer={usesScratchpadDock ? null : renderActivityFinishRow(false)}
-        />
+      actions={
+        usesScratchpadDock ? null : renderActions()
+      }
+      usesScratchpadDock={usesScratchpadDock}
+      scratchpadDockAnchorRef={scratchpadDockAnchorRef}
+      scratchpadDock={usesScratchpadDock ? renderScratchpadDock() : null}
+      footer={usesScratchpadDock ? null : renderActivityFinishRow(false)}
+    />
+  ) : null;
+
+  const wrapScratchpadVirtualInput = (node) =>
+    usesScratchpadDock ? (
+      <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
+        {node}
+      </ScratchpadVirtualInputProvider>
+    ) : (
+      node
+    );
+
+  return (
+    <Layout>
+      {activity?.mode === "live_lesson" && activity?.activityStatus === "paused" ? (
+        <div className={L.page} dir="rtl" lang="he">
+          <p className="text-amber-200 text-center py-4">ממתינים למורה…</p>
+        </div>
+      ) : assignedActivityShell ? (
+        wrapScratchpadVirtualInput(assignedActivityShell)
       ) : (
         <div className={L.page} dir="rtl" lang="he" />
       )}
