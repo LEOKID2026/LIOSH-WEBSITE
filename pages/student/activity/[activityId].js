@@ -8,9 +8,16 @@ import {
 } from "../../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { formatStudentActivityCompletionSummaryHe } from "../../../lib/classroom-activities/student-activity-result-labels.client.js";
 import { resolveStudentActivityApiErrorHe } from "../../../lib/classroom-activities/student-activity-error-labels.client.js";
-import { resolveStudentActivityAnswerInputProps, assignedActivityUsesNumericKeyboard } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
+import { resolveStudentActivityAnswerInputProps, assignedActivityUsesNumericKeyboard, resolveAssignedActivityMathScratchpadContext, assignedActivityUsesMathScratchpad, getStudentActivityQuestionFontStyle } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
 import { assignedActivityQuestionUsesChoiceUi } from "../../../utils/geometry-activity-answer-ui.js";
-import StudentNumericAnswerField from "../../../components/learning/StudentNumericAnswerField";
+import StudentNumericAnswerField, {
+  useMobileEmbeddedNumericSubmit,
+} from "../../../components/learning/StudentNumericAnswerField";
+import VirtualAnswerKeyboard from "../../../components/learning/VirtualAnswerKeyboard.jsx";
+import MathScratchpadSlot from "../../../components/math-scratchpad/MathScratchpadSlot";
+import { ScratchpadVirtualInputProvider } from "../../../components/math-scratchpad/scratchpad-virtual-input";
+import { useTouchPrimaryDevice } from "../../../hooks/useTouchPrimaryDevice.js";
+import { resolveVirtualAnswerKeyboard } from "../../../lib/learning/virtual-answer-keyboard-policy.js";
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
 import { STUDENT_ACTIVITY_LAYOUT } from "../../../lib/classroom-activities/student-activity-layout.client.js";
 import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
@@ -69,6 +76,13 @@ export default function StudentActivityPage({ activityId }) {
   // explanationViewedRef: set true when post-answer explanation is shown (guided_practice/homework);
   // flows into the NEXT question's submit as explanationViewed=true
   const explanationViewedRef = useRef(false);
+  const scratchpadOverlayTopRef = useRef(null);
+  const scratchpadOverlayWidthRef = useRef(null);
+  const answerAnchorRef = useRef(null);
+  const [scratchpadOpen, setScratchpadOpen] = useState(false);
+  const [activeScratchpadCell, setActiveScratchpadCell] = useState(null);
+  const [verticalExerciseHeadline, setVerticalExerciseHeadline] = useState(null);
+  const isTouchDevice = useTouchPrimaryDevice();
 
   const startSession = useCallback(async () => {
     setPhase("loading");
@@ -179,12 +193,42 @@ export default function StudentActivityPage({ activityId }) {
   useEffect(() => {
     questionStartTimeRef.current = Date.now();
     explanationViewedRef.current = false;
+    setScratchpadOpen(false);
+    setActiveScratchpadCell(null);
+    setVerticalExerciseHeadline(null);
   }, [effectiveIdx]);
+
+  const usesMathScratchpad = assignedActivityUsesMathScratchpad(currentQuestion);
+  const scratchpadCtx = useMemo(
+    () =>
+      usesMathScratchpad
+        ? resolveAssignedActivityMathScratchpadContext(currentQuestion, activity)
+        : null,
+    [usesMathScratchpad, currentQuestion, activity]
+  );
+  const mathVkPolicy = resolveVirtualAnswerKeyboard({
+    subject: "math",
+    hasTextInput: true,
+    isTouch: isTouchDevice,
+  });
+  const sharedScratchpadKeyboard =
+    usesMathScratchpad && scratchpadOpen && mathVkPolicy.enabled && isTouchDevice;
+
+  const handleScratchpadOpenChange = useCallback((open) => {
+    setScratchpadOpen(open);
+    if (!open) setActiveScratchpadCell(null);
+  }, []);
 
   const answerInputProps = useMemo(
     () => resolveStudentActivityAnswerInputProps(currentQuestion),
     [currentQuestion]
   );
+
+  const numericKeyboardSubject =
+    currentQuestion?.subject === "geometry" ? "geometry" : "math";
+  const usesNumericKeyboard = assignedActivityUsesNumericKeyboard(currentQuestion);
+  const mobileEmbeddedNumericSubmit =
+    useMobileEmbeddedNumericSubmit(numericKeyboardSubject) && usesNumericKeyboard;
 
   const advanceToNextQuestion = useCallback(() => {
     if (effectiveIdx < questionSet.length - 1) {
@@ -410,24 +454,77 @@ export default function StudentActivityPage({ activityId }) {
           ))}
         </div>
       ) : assignedActivityUsesNumericKeyboard(currentQuestion) ? (
-        <StudentNumericAnswerField
-          subject={currentQuestion.subject === "geometry" ? "geometry" : "math"}
-          value={answerInput}
-          onChange={setAnswerInput}
-          disabled={isCurrentQuestionAnswered || busy}
-          testId={
-            currentQuestion.subject === "geometry"
-              ? "activity-geometry-numeric-answer"
-              : "activity-math-numeric-answer"
-          }
-          placeholder="הקלידו תשובה"
-          autoFocus
-          onEnterSubmit={() => {
-            if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
-              void submitAnswer();
+        <>
+          <StudentNumericAnswerField
+            subject={currentQuestion.subject === "geometry" ? "geometry" : "math"}
+            value={answerInput}
+            onChange={setAnswerInput}
+            disabled={isCurrentQuestionAnswered || busy}
+            testId={
+              currentQuestion.subject === "geometry"
+                ? "activity-geometry-numeric-answer"
+                : "activity-math-numeric-answer"
             }
-          }}
-        />
+            placeholder="הקלידו תשובה"
+            autoFocus={!scratchpadOpen || currentQuestion.subject !== "math"}
+            suppressEmbeddedKeyboard={sharedScratchpadKeyboard}
+            onInputFocus={() => setActiveScratchpadCell(null)}
+            onEnterSubmit={() => {
+              if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
+                void submitAnswer();
+              }
+            }}
+            onSubmit={() => {
+              if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
+                void submitAnswer();
+              }
+            }}
+            submitDisabled={
+              busy || String(answerInput).trim() === "" || isCurrentQuestionAnswered
+            }
+            submitTestId="activity-submit-answer"
+            submitLabel={isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה"}
+          />
+          {sharedScratchpadKeyboard ? (
+            <VirtualAnswerKeyboard
+              layout={mathVkPolicy.layout || "numeric"}
+              value={
+                activeScratchpadCell ? activeScratchpadCell.value : answerInput
+              }
+              onChange={(next) => {
+                if (activeScratchpadCell) {
+                  activeScratchpadCell.onChange(next);
+                } else {
+                  setAnswerInput(next);
+                }
+              }}
+              disabled={isCurrentQuestionAnswered || busy}
+              compact={isTouchDevice}
+              className="mt-1"
+              submitButton={
+                mobileEmbeddedNumericSubmit
+                  ? {
+                      label: isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה",
+                      onClick: () => {
+                        if (
+                          !busy &&
+                          !isCurrentQuestionAnswered &&
+                          String(answerInput).trim() !== ""
+                        ) {
+                          void submitAnswer();
+                        }
+                      },
+                      disabled:
+                        busy ||
+                        String(answerInput).trim() === "" ||
+                        isCurrentQuestionAnswered,
+                      testId: "activity-submit-answer",
+                    }
+                  : null
+              }
+            />
+          ) : null}
+        </>
       ) : (
         <input
           className={L.textInput}
@@ -467,7 +564,7 @@ export default function StudentActivityPage({ activityId }) {
           {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
         </div>
       ) : null}
-      {!isExplanationOnly ? (
+      {!isExplanationOnly && !mobileEmbeddedNumericSubmit ? (
         <button
           type="button"
           disabled={
@@ -521,13 +618,45 @@ export default function StudentActivityPage({ activityId }) {
           subtitle={activitySubtitle}
           progressPct={progressPct}
           singleColumn={isExplanationOnly}
+          overlayTopRef={usesMathScratchpad ? scratchpadOverlayTopRef : undefined}
+          overlayWidthRef={usesMathScratchpad ? scratchpadOverlayWidthRef : undefined}
           visual={
-            <StudentAssignedActivityQuestionStage
-              question={currentQuestion}
-              questionIndex={effectiveIdx}
-            />
+            usesMathScratchpad && scratchpadCtx ? (
+              <MathScratchpadSlot
+                gradeKey={scratchpadCtx.gradeKey}
+                operation={scratchpadCtx.operation}
+                question={scratchpadCtx.question}
+                questionKey={`${effectiveIdx}-${String(currentQuestion.qk || currentQuestion.question || "")}`}
+                onOpenChange={handleScratchpadOpenChange}
+                overlayTopRef={scratchpadOverlayTopRef}
+                overlayWidthRef={scratchpadOverlayWidthRef}
+                answerAnchorRef={answerAnchorRef}
+                exerciseHeadlineOverride={verticalExerciseHeadline || undefined}
+                getQuestionFontStyle={getStudentActivityQuestionFontStyle}
+              >
+                <StudentAssignedActivityQuestionStage
+                  question={currentQuestion}
+                  questionIndex={effectiveIdx}
+                  hideLayoutToggle={scratchpadOpen}
+                  onVerticalExerciseHeadlineChange={setVerticalExerciseHeadline}
+                />
+              </MathScratchpadSlot>
+            ) : (
+              <StudentAssignedActivityQuestionStage
+                question={currentQuestion}
+                questionIndex={effectiveIdx}
+              />
+            )
           }
-          actions={renderActions()}
+          actions={
+            usesMathScratchpad ? (
+              <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
+                <div ref={answerAnchorRef}>{renderActions()}</div>
+              </ScratchpadVirtualInputProvider>
+            ) : (
+              renderActions()
+            )
+          }
           footer={renderFooter()}
         />
       ) : (

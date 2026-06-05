@@ -13,9 +13,14 @@ import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-
 /**
  * Question text inside the unified activity question stage — stable footprint for math toggle.
  *
- * @param {{ question: Record<string, unknown>|null|undefined, questionIndex: number }} props
+ * @param {{ question: Record<string, unknown>|null|undefined, questionIndex: number, hideLayoutToggle?: boolean, onVerticalExerciseHeadlineChange?: (headline: string|null) => void }} props
  */
-export default function StudentActivityQuestionSurface({ question, questionIndex }) {
+export default function StudentActivityQuestionSurface({
+  question,
+  questionIndex,
+  hideLayoutToggle = false,
+  onVerticalExerciseHeadlineChange,
+}) {
   const [isVerticalDisplay, setIsVerticalDisplay] = useState(false);
   const L = STUDENT_ACTIVITY_LAYOUT;
 
@@ -48,6 +53,20 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
     setIsVerticalDisplay(false);
   }, [questionIndex]);
 
+  useEffect(() => {
+    if (typeof onVerticalExerciseHeadlineChange !== "function") return;
+    if (isVerticalDisplay && canDisplayVertically && verticalText) {
+      onVerticalExerciseHeadlineChange(verticalText);
+    } else {
+      onVerticalExerciseHeadlineChange(null);
+    }
+  }, [
+    isVerticalDisplay,
+    canDisplayVertically,
+    verticalText,
+    onVerticalExerciseHeadlineChange,
+  ]);
+
   if (!layoutQuestion) return null;
 
   return (
@@ -56,7 +75,7 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
         canDisplayVertically ? L.mathVerticalQuestionSurface : "relative w-full flex flex-col items-center justify-center overflow-visible"
       }
     >
-      {canDisplayVertically ? (
+      {canDisplayVertically && !hideLayoutToggle ? (
         <button
           type="button"
           onClick={() => setIsVerticalDisplay((prev) => !prev)}

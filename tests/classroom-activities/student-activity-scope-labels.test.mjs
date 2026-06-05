@@ -88,7 +88,13 @@ test("student activity page supports layout toggle and numeric input", () => {
   assert.match(activityPage, /StudentAssignedActivityQuestionStage/);
   assert.match(activityPage, /assignedActivityUsesNumericKeyboard/);
   assert.match(activityPage, /StudentNumericAnswerField/);
-  assert.match(activityPage, /activity-math-numeric-answer/);
+  assert.match(activityPage, /useMobileEmbeddedNumericSubmit/);
+  assert.match(activityPage, /onSubmit=\{/);
+  assert.match(activityPage, /activity-submit-answer/);
+  assert.match(activityPage, /mobileEmbeddedNumericSubmit/);
+  assert.match(activityPage, /MathScratchpadSlot/);
+  assert.match(activityPage, /ScratchpadVirtualInputProvider/);
+  assert.match(activityPage, /assignedActivityUsesMathScratchpad/);
 
   const ui = readFileSync(
     path.join(repoRoot, "lib/classroom-activities/student-activity-question-ui.client.js"),

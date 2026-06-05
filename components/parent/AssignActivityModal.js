@@ -18,9 +18,10 @@ const MAX_QUESTION_COUNT = 30;
  */
 export default function AssignActivityModal({ student, accessToken, onClose, onSuccess }) {
   const gradeKey = useMemo(
-    () => normalizeGradeLevelToKey(student.grade_level) || "g3",
+    () => normalizeGradeLevelToKey(student.grade_level),
     [student.grade_level]
   );
+  const missingGrade = !gradeKey;
 
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
@@ -40,6 +41,10 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
   const topicOpts = topicOptionsForAssignedActivity(subject, gradeKey);
 
   const runPreview = useCallback(async () => {
+    if (!gradeKey) {
+      setError("יש להגדיר כיתה בפרופיל הילד לפני יצירת פעילות");
+      return;
+    }
     setBusy(true);
     setError("");
     setPreview([]);
@@ -60,6 +65,10 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
   }, [subject, gradeKey, topic, difficulty, questionCount]);
 
   const sendActivity = useCallback(async () => {
+    if (!gradeKey) {
+      setError("יש להגדיר כיתה בפרופיל הילד לפני שליחת פעילות");
+      return;
+    }
     if (!title.trim()) {
       setError("יש להזין כותרת לפעילות");
       return;
@@ -84,6 +93,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           subject,
           topic,
           mode,
+          gradeLevel: gradeKey,
           difficultyLevel: difficulty,
           questionCount,
           questionSet: preview,
@@ -114,6 +124,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
     mode,
     difficulty,
     questionCount,
+    gradeKey,
     onSuccess,
   ]);
 
@@ -176,7 +187,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           <label className="block text-sm">
             <span className="text-white/70">כיתה</span>
             <div className="mt-1 w-full rounded bg-black/30 border border-white/10 px-3 py-2 text-white/90">
-              {formatGradeLevelHe(gradeKey)}
+              {missingGrade ? "לא הוגדרה כיתה בפרופיל" : formatGradeLevelHe(gradeKey)}
             </div>
           </label>
 
@@ -268,7 +279,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
             type="button"
             className="rounded bg-white/15 px-3 py-2 text-sm font-semibold hover:bg-white/25 disabled:opacity-60"
             onClick={runPreview}
-            disabled={busy}
+            disabled={busy || missingGrade}
           >
             תצוגה מקדימה
           </button>
@@ -276,7 +287,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
             type="button"
             className="rounded bg-emerald-600 text-white px-3 py-2 text-sm font-semibold hover:bg-emerald-500 disabled:opacity-60"
             onClick={sendActivity}
-            disabled={busy}
+            disabled={busy || missingGrade}
           >
             שלח פעילות
           </button>

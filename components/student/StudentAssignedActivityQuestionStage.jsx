@@ -5,9 +5,19 @@ import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-
 /**
  * Unified visual column: geometry diagram (if any) + question text in one stable stage.
  *
- * @param {{ question: Record<string, unknown>|null|undefined, questionIndex: number }} props
+ * @param {{
+ *   question: Record<string, unknown>|null|undefined,
+ *   questionIndex: number,
+ *   hideLayoutToggle?: boolean,
+ *   onVerticalExerciseHeadlineChange?: (headline: string|null) => void,
+ * }} props
  */
-export default function StudentAssignedActivityQuestionStage({ question, questionIndex }) {
+export default function StudentAssignedActivityQuestionStage({
+  question,
+  questionIndex,
+  hideLayoutToggle = false,
+  onVerticalExerciseHeadlineChange,
+}) {
   if (!question) return null;
 
   const isGeometry = question.subject === "geometry";
@@ -19,7 +29,12 @@ export default function StudentAssignedActivityQuestionStage({ question, questio
           <ClassroomGeometryQuestionDiagram question={question} embedded />
         </div>
       ) : null}
-      <StudentActivityQuestionSurface question={question} questionIndex={questionIndex} />
+      <StudentActivityQuestionSurface
+        question={question}
+        questionIndex={questionIndex}
+        hideLayoutToggle={hideLayoutToggle}
+        onVerticalExerciseHeadlineChange={onVerticalExerciseHeadlineChange}
+      />
     </div>
   );
 }

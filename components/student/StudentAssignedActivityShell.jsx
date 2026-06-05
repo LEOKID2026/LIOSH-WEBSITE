@@ -13,6 +13,8 @@ import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-
  *   actions: React.ReactNode,
  *   footer?: React.ReactNode,
  *   singleColumn?: boolean,
+ *   overlayTopRef?: React.RefObject<HTMLElement|null>,
+ *   overlayWidthRef?: React.RefObject<HTMLElement|null>,
  * }} props
  */
 export default function StudentAssignedActivityShell({
@@ -23,26 +25,30 @@ export default function StudentAssignedActivityShell({
   actions,
   footer = null,
   singleColumn = false,
+  overlayTopRef,
+  overlayWidthRef,
 }) {
   const L = STUDENT_ACTIVITY_LAYOUT;
 
   return (
     <div className={L.page} dir="rtl" lang="he">
-      <div className={L.headerRow} dir="ltr">
-        <Link href="/student/home" className={L.backLink}>
-          ← חזרה לבית
-        </Link>
-        <div className={L.titleBlock} dir="rtl">
-          <h1 className={L.title}>{title}</h1>
-          <p className={L.subtitle}>{subtitle}</p>
+      <div ref={overlayTopRef}>
+        <div className={L.headerRow} dir="ltr">
+          <Link href="/student/home" className={L.backLink}>
+            ← חזרה לבית
+          </Link>
+          <div className={L.titleBlock} dir="rtl">
+            <h1 className={L.title}>{title}</h1>
+            <p className={L.subtitle}>{subtitle}</p>
+          </div>
+        </div>
+
+        <div className={L.progressTrack} aria-hidden>
+          <div className={L.progressFill} style={{ width: `${progressPct}%` }} />
         </div>
       </div>
 
-      <div className={L.progressTrack} aria-hidden>
-        <div className={L.progressFill} style={{ width: `${progressPct}%` }} />
-      </div>
-
-      <div className={L.card}>
+      <div ref={overlayWidthRef} className={L.card}>
         <div className={singleColumn ? "flex flex-col gap-3 min-w-0" : L.cardGrid}>
           <div
             className={singleColumn ? "min-w-0 overflow-visible" : L.questionStage}
