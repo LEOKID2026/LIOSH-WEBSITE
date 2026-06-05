@@ -4709,7 +4709,7 @@ export default function MathMaster() {
                                   {exerciseRouter}
                                   
                                   {/* טקסט ההסבר */}
-                                  <div className="mb-4 text-emerald-50" dir="rtl">
+                                  <div className="mb-4 text-emerald-50 space-y-2" dir="rtl">
                                     <h4 className={learningExplTitle}>{activeStep.title}</h4>
                                     {activeStep.content ? (
                                       <div className={learningExplBody}>{activeStep.content}</div>
@@ -4797,7 +4797,7 @@ export default function MathMaster() {
                                 </div>
                                 
                                 {/* טקסט ההסבר */}
-                                <div className="mb-4 text-emerald-50" dir="rtl">
+                                <div className="mb-4 text-emerald-50 space-y-2" dir="rtl">
                                   <h4 className={learningExplTitle}>{activeStep.title || "הסבר"}</h4>
                                   {shouldShowStandaloneExerciseView(
                                     activeStep,

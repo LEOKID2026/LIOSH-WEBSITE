@@ -1,6 +1,7 @@
 import React from "react";
 import { buildGeometryTextHighlightState } from "../../../utils/learning-step-geometry-text";
 import { GEOMETRY_HIGHLIGHT_STYLE } from "../../../utils/geometry-step-highlight-styles";
+import { normalizeHebrewWordNumberSpacing } from "../../../utils/learning-hebrew-number-spacing";
 
 function kindStyle(kind) {
   if (kind === "formula" || kind === "keyword") {
@@ -13,13 +14,19 @@ function kindStyle(kind) {
 }
 
 export default function StepGeometryTextHighlights({ step, text, className = "" }) {
-  const plain = String(text || step?.plainText || step?.text || "");
+  const plain = normalizeHebrewWordNumberSpacing(
+    String(text || step?.plainText || step?.text || "").replace(/\u2066|\u2069/g, "")
+  );
   if (!plain) return null;
 
   const { ranges } = buildGeometryTextHighlightState(step, plain);
   if (!ranges.length) {
     return (
-      <p className={className} dir="rtl" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+      <p
+        className={className}
+        dir="rtl"
+        style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: 1.75 }}
+      >
         {plain}
       </p>
     );
@@ -43,7 +50,11 @@ export default function StepGeometryTextHighlights({ step, text, className = "" 
   }
 
   return (
-    <p className={className} dir="rtl" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+    <p
+      className={className}
+      dir="rtl"
+      style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: 1.75 }}
+    >
       {parts}
     </p>
   );

@@ -79,7 +79,7 @@ import {
   learningQuestionBox,
   learningQuestionText,
   learningExplTitle,
-  learningExplBody,
+  learningExplBodyGeometry,
   learningHintTriggerBtn,
   learningExplainOpenBtn,
 } from "../../utils/learning-ui-classes";
@@ -3270,7 +3270,7 @@ export default function GeometryMaster() {
                                       key={activeStep.id}
                                       step={activeStep}
                                       titleClassName={`${learningExplTitle} sticky top-0 bg-gradient-to-b from-emerald-950/98 to-emerald-950/80 backdrop-blur-[2px] pb-1 -mb-1 z-[1]`}
-                                      bodyClassName={learningExplBody}
+                                      bodyClassName={learningExplBodyGeometry}
                                     />
                                   </div>
                                 </div>

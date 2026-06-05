@@ -1,4 +1,5 @@
 import { enrichGeometryAnimationSteps } from "./geometry-animations.js";
+import GeometryStepLine from "../components/learning/geometry/GeometryStepLine.jsx";
 import {
   resultPhraseArea,
   resultPhraseLength,
@@ -40,7 +41,7 @@ export function getHint(question, topic, gradeKey) {
         return "שטח מקבילית = בסיס × הגובה האנך אליו (לא אלכסון).";
       }
       if (sh === "trapezoid") {
-        return "שטח טרפז = ((בסיס1 + בסיס2) × גובה) ÷ 2. קודם חבר את שני הבסיסים המקבילים, כפול גובה, ואז חלקי 2.";
+        return "שטח טרפז = ((בסיס 1 + בסיס 2) × גובה) ÷ 2. קודם חבר את שני הבסיסים המקבילים, כפול גובה, ואז חלקי 2.";
       }
       break;
 
@@ -140,7 +141,7 @@ export function getHint(question, topic, gradeKey) {
         return `במקבילית שטח = ${M("בסיס × גובה")}; לכן גובה = ${M("שטח ÷ בסיס")}.`;
       }
       if (p.shape === "trapezoid") {
-        return `בטרפז קודם ${M("(בסיס1 + בסיס2)")}, אחר כך קשרו לשטח וחלקו — גובה = ${M("(שטח × 2) ÷ (סכום הבסיסים)")}.`;
+        return `בטרפז קודם ${M("(בסיס 1 + בסיס 2)")}, אחר כך קשרו לשטח וחלקו — גובה = ${M("(שטח × 2) ÷ (סכום הבסיסים)")}.`;
       }
       return "בודדים גובה מהנוסחה לשטח של אותה צורה.";
 
@@ -169,14 +170,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
   const { correctAnswer } = question;
 
   const ltr = (expr) => `\u2066${expr}\u2069`; // LRI ... PDI
-  const toSpan = (text, key) => (
-    <span
-      key={key}
-      style={{ display: "block", direction: "rtl", unicodeBidi: "plaintext" }}
-    >
-      {text}
-    </span>
-  );
+  const toSpan = (text, key) => <GeometryStepLine key={key} stepKey={key} text={text} />;
 
   switch (topic) {
     case "area": {
@@ -236,7 +230,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
             "1. זיהוי: בטרפז שני בסיסים מקבילים; הגובה הוא המרחק האנך ביניהם. קודם ממוצע של הבסיסים, כפול גובה, חלקי 2.",
             "1"
           ),
-          toSpan("2. נוסחה: שטח טרפז = ((בסיס1 + בסיס2) × גובה) ÷ 2.", "2"),
+          toSpan("2. נוסחה: שטח טרפז = ((בסיס 1 + בסיס 2) × גובה) ÷ 2.", "2"),
           toSpan(`3. נציב: ${ltr(`((${p.base1} + ${p.base2}) × ${p.height}) ÷ 2`)}.`, "3"),
           toSpan(
             `4. נחשב: ${ltr(`${p.base1} + ${p.base2} = ${sumBases}`)}, ואז ${ltr(`(${sumBases} × ${p.height}) ÷ 2 = ${correctAnswer}`)}.`,
@@ -287,7 +281,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
       }
       if (shape === "triangle") {
         return [
-          toSpan("1. נוסחה: היקף משולש = צלע1 + צלע2 + צלע3.", "1"),
+          toSpan("1. נוסחה: היקף משולש = צלע 1 + צלע 2 + צלע 3.", "1"),
           toSpan(
             `2. נציב: ${ltr(`${p.side1} + ${p.side2} + ${p.side3}`)}.`,
             "2"
@@ -461,7 +455,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
           "1"
         ),
         toSpan(
-          `2. מה מצוין בשאלה: ${ltr(`זווית1 = ${angle1}°`)} ו-${ltr(`זווית2 = ${angle2}°`)} — מחפשים את הזווית השלישית.`,
+          `2. מה מצוין בשאלה: ${ltr(`זווית 1 = ${angle1}°`)} ו-${ltr(`זווית 2 = ${angle2}°`)} — מחפשים את הזווית השלישית.`,
           "2"
         ),
         toSpan(
@@ -743,7 +737,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
         const sumBases = base1 + base2;
         return [
           toSpan("1. גובה בטרפז הוא המרחק בין שתי הבסיסים המקבילים.", "1"),
-          toSpan(`2. נוסחה: שטח = ((בסיס1 + בסיס2) × גובה) ÷ 2.`, "2"),
+          toSpan(`2. נוסחה: שטח = ((בסיס 1 + בסיס 2) × גובה) ÷ 2.`, "2"),
           toSpan(`3. נציב: ${ltr(`${area} = ((${base1} + ${base2}) × גובה) ÷ 2`)}.`, "3"),
           toSpan(`4. נחשב: ${ltr(`${base1} + ${base2} = ${sumBases}`)}, ואז ${ltr(`גובה = (${area} × 2) ÷ ${sumBases} = ${correctAnswer}`)}.`, "4"),
         ];
@@ -937,7 +931,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       if (!Number.isNaN(userAnsNum) && userAnsNum > correctNum) {
         return `תוצאה גדולה מדי: אולי חיברת במקום לחסר מ־${iso("180°")}.`;
       }
-      return `במשולש סכום זוויות = ${iso("180°")}. הזווית החסרה = ${iso("180° − (זווית1 + זווית2)")}.`;
+      return `במשולש סכום זוויות = ${iso("180°")}. הזווית החסרה = ${iso("180° − (זווית 1 + זווית 2)")}.`;
     }
 
     case "pythagoras": {
@@ -1121,14 +1115,14 @@ export function getTheorySummary(question, topic, gradeKey) {
         lines.push("מלבן: שטח = אורך × רוחב.");
         lines.push("משולש: שטח = (בסיס × גובה) ÷ 2.");
         lines.push("מקבילית: שטח = בסיס × גובה.");
-        lines.push("טרפז: שטח = ((בסיס1 + בסיס2) × גובה) ÷ 2.");
+        lines.push("טרפז: שטח = ((בסיס 1 + בסיס 2) × גובה) ÷ 2.");
       } else {
         // g6
         lines.push("ריבוע: שטח = צלע².");
         lines.push("מלבן: שטח = אורך × רוחב.");
         lines.push("משולש: שטח = (בסיס × גובה) ÷ 2.");
         lines.push("מקבילית: שטח = בסיס × גובה.");
-        lines.push("טרפז: שטח = ((בסיס1 + בסיס2) × גובה) ÷ 2.");
+        lines.push("טרפז: שטח = ((בסיס 1 + בסיס 2) × גובה) ÷ 2.");
         lines.push("עיגול: שטח = π × רדיוס².");
       }
       break;
@@ -1234,7 +1228,7 @@ export function getTheorySummary(question, topic, gradeKey) {
       lines.push("אלכסון: קטע המחבר שני קדקודים שאינם על אותה צלע.");
       lines.push("ריבוע: אלכסון = צלע × √2.");
       lines.push("מלבן: אלכסון = √(אורך² + רוחב²).");
-      lines.push("מקבילית: אלכסון = √(צלע1² + צלע2²).");
+      lines.push("מקבילית: אלכסון = √(צלע 1² + צלע 2²).");
       break;
     }
 
@@ -1242,7 +1236,7 @@ export function getTheorySummary(question, topic, gradeKey) {
       lines.push("גובה: המרחק מהקדקוד לבסיס (במשולש) או המרחק בין צלעות מקבילות (במקבילית/טרפז).");
       lines.push("משולש: שטח = (בסיס × גובה) ÷ 2, אז גובה = (שטח × 2) ÷ בסיס.");
       lines.push("מקבילית: שטח = בסיס × גובה, אז גובה = שטח ÷ בסיס.");
-      lines.push("טרפז: שטח = ((בסיס1 + בסיס2) × גובה) ÷ 2, אז גובה = (שטח × 2) ÷ (בסיס1 + בסיס2).");
+      lines.push("טרפז: שטח = ((בסיס 1 + בסיס 2) × גובה) ÷ 2, אז גובה = (שטח × 2) ÷ (בסיס 1 + בסיס 2).");
       break;
     }
 
