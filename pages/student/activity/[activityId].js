@@ -8,7 +8,7 @@ import {
 } from "../../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { formatStudentActivityCompletionSummaryHe } from "../../../lib/classroom-activities/student-activity-result-labels.client.js";
 import { resolveStudentActivityApiErrorHe } from "../../../lib/classroom-activities/student-activity-error-labels.client.js";
-import { resolveStudentActivityAnswerInputProps } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
+import { resolveStudentActivityAnswerInputProps, assignedActivityUsesNumericKeyboard } from "../../../lib/classroom-activities/student-activity-question-ui.client.js";
 import { assignedActivityQuestionUsesChoiceUi } from "../../../utils/geometry-activity-answer-ui.js";
 import StudentNumericAnswerField from "../../../components/learning/StudentNumericAnswerField";
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
@@ -409,13 +409,17 @@ export default function StudentActivityPage({ activityId }) {
             </button>
           ))}
         </div>
-      ) : currentQuestion?.subject === "geometry" ? (
+      ) : assignedActivityUsesNumericKeyboard(currentQuestion) ? (
         <StudentNumericAnswerField
-          subject="geometry"
+          subject={currentQuestion.subject === "geometry" ? "geometry" : "math"}
           value={answerInput}
           onChange={setAnswerInput}
           disabled={isCurrentQuestionAnswered || busy}
-          testId="activity-geometry-numeric-answer"
+          testId={
+            currentQuestion.subject === "geometry"
+              ? "activity-geometry-numeric-answer"
+              : "activity-math-numeric-answer"
+          }
           placeholder="הקלידו תשובה"
           autoFocus
           onEnterSubmit={() => {

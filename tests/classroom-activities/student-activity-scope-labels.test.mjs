@@ -86,12 +86,15 @@ test("student activity page supports layout toggle and numeric input", () => {
   );
   assert.match(activityPage, /StudentAssignedActivityShell/);
   assert.match(activityPage, /StudentAssignedActivityQuestionStage/);
-  assert.match(activityPage, /resolveStudentActivityAnswerInputProps/);
+  assert.match(activityPage, /assignedActivityUsesNumericKeyboard/);
+  assert.match(activityPage, /StudentNumericAnswerField/);
+  assert.match(activityPage, /activity-math-numeric-answer/);
 
   const ui = readFileSync(
     path.join(repoRoot, "lib/classroom-activities/student-activity-question-ui.client.js"),
     "utf8"
   );
+  assert.match(ui, /assignedActivityUsesNumericKeyboard/);
   assert.match(ui, /inputMode: "decimal"/);
   assert.match(ui, /buildVerticalOperation/);
 
