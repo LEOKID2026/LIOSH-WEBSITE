@@ -51,7 +51,11 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
   if (!layoutQuestion) return null;
 
   return (
-    <div className="relative w-full flex flex-col items-center justify-center overflow-visible">
+    <div
+      className={
+        canDisplayVertically ? L.mathVerticalQuestionSurface : "relative w-full flex flex-col items-center justify-center overflow-visible"
+      }
+    >
       {canDisplayVertically ? (
         <button
           type="button"
@@ -64,7 +68,13 @@ export default function StudentActivityQuestionSurface({ question, questionIndex
         </button>
       ) : null}
 
-      <div className="w-full flex flex-col items-center justify-center overflow-visible px-1">
+      <div
+        className={
+          canDisplayVertically
+            ? L.mathVerticalExerciseSlot
+            : "w-full flex flex-col items-center justify-center overflow-visible px-1"
+        }
+      >
         {isVerticalDisplay && canDisplayVertically && verticalText ? (
           <>
             {displayParts.leadText ? (

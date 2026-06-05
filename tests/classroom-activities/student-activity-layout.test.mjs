@@ -74,6 +74,8 @@ test("StudentActivityQuestionSurface uses shared layout typography", () => {
     "utf8"
   );
   assert.match(src, /STUDENT_ACTIVITY_LAYOUT/);
+  assert.match(src, /mathVerticalQuestionSurface/);
+  assert.match(src, /mathVerticalExerciseSlot/);
   assert.match(src, /overflow-visible/);
   assert.match(src, /getStudentActivityQuestionFontStyle/);
   assert.doesNotMatch(src, /min-h-\[230px\]/);
