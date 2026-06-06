@@ -57,7 +57,7 @@ import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
   resolveParentReportGenerationArgs,
-} from "../../lib/learning-supabase/parent-dashboard-report-bridge.js";
+} from "../../lib/learning-supabase/parent-report-from-api-payload.js";
 import {
   parentReportRemoteDataUrl,
   parseParentReportRemoteSource,

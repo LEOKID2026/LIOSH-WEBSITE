@@ -24,6 +24,7 @@ import {
 } from "../../../lib/learning-supabase/practice-grade-resolution.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { classifyActivityEvidence } from "../../../lib/learning/activity-classification.js";
+import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-engine-metadata.js";
 
 async function verifyLearningSessionOwnership(supabase, learningSessionId, studentId) {
   const { data, error } = await supabase
@@ -145,6 +146,8 @@ export default async function handler(req, res) {
       { afterStepByStep, contextAfterBookReading, hintsUsed }
     );
 
+    const questionEngine = normalizeQuestionEnginePayload(body.questionEngine);
+
     const answerPayload = {
       subject,
       topic: normalizeOptionalString(body.topic, 120),
@@ -152,6 +155,7 @@ export default async function handler(req, res) {
       prompt: normalizeOptionalString(body.prompt, 5000),
       expectedAnswer: normalizeOptionalString(body.expectedAnswer, 1000),
       userAnswer: normalizeOptionalString(body.userAnswer, 1000),
+      ...(questionEngine ? { questionEngine } : {}),
       hintsUsed,
       // Phase 3: raw wall time preserved; credited time capped by policy
       timeSpentMs: rawTimeSpentMs,

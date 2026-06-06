@@ -36,7 +36,7 @@ import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/cl
 import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
-} from "../../lib/learning-supabase/parent-dashboard-report-bridge.js";
+} from "../../lib/learning-supabase/parent-report-from-api-payload.js";
 import {
   parentReportRemoteDataUrl,
   parseParentReportRemoteSource,

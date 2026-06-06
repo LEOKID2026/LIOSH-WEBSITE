@@ -26,9 +26,6 @@ import {
 } from "../../utils/daily-streak";
 import { useSound } from "../../hooks/useSound";
 import {
-  addSessionProgress,
-} from "../../utils/progress-storage";
-import {
   MONTHLY_MINUTES_TARGET,
 } from "../../data/reward-options";
 
@@ -74,6 +71,7 @@ import {
   saveLearningAnswer,
   startLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
+import { buildQuestionEngineMetadataFromQuestion } from "../../lib/learning/question-engine-metadata.js";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -123,6 +121,10 @@ import {
   SCIENCE_BOOK_GRADES,
   withScienceBookLearningReturn,
 } from "../../lib/learning-book/science-book-nav";
+import {
+  buildBookContextClientMetaExtras,
+  tryConsumeBookContextOnPracticeEntry,
+} from "../../lib/learning-book/book-context-master-helper";
 
 // ================== CONFIG ==================
 
@@ -756,6 +758,8 @@ export default function ScienceMaster() {
   const [errorExplanation, setErrorExplanation] = useState("");
   // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
   const stepByStepViewedRef = useRef(false);
+  const bookContextRef = useRef(null);
+  const bookContextConsumedRef = useRef(false);
 
   const questionPoolRef = useRef([]);
   const questionIndexRef = useRef(0);
@@ -893,6 +897,14 @@ export default function ScienceMaster() {
       applyBookPracticePreset(preset);
     }
   }, [router.isReady, router.query, applyBookPracticePreset]);
+
+  useEffect(() => {
+    tryConsumeBookContextOnPracticeEntry(
+      router,
+      { subject: "science", grade },
+      { bookContextRef, bookContextConsumedRef }
+    );
+  }, [router.isReady, router.query, grade]);
 
   useEffect(() => {
     setLevel((prev) => {
@@ -1645,19 +1657,6 @@ function recordSessionProgress(opts = {}) {
   const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
   const accuracyForFinish =
     answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
-  addSessionProgress(
-    durationMinutes,
-    answered,
-    {
-    subject: "science",
-    topic: scienceTrackingTopicKeyRef.current ?? currentQuestion?.topic ?? "",
-    grade,
-    mode,
-    game: "ScienceMaster",
-    date: new Date(),
-    },
-    { studentId: learningProfileStudentIdRef.current || undefined }
-  );
   void refreshStudentLearningProfileAfterSession().then((p) => {
     if (p?.ok) {
       refreshMonthlyPersistenceView();
@@ -1776,6 +1775,22 @@ function saveScienceAnswerInParallel({
     typeof question?.correctIndex === "number" && Array.isArray(question?.options)
       ? String(question.options[question.correctIndex] ?? "")
       : null;
+  const selectedValue =
+    answerText != null
+      ? answerText
+      : answerIndex != null && Array.isArray(question?.options)
+        ? question.options[answerIndex]
+        : answerIndex;
+  const questionEngine = question
+    ? buildQuestionEngineMetadataFromQuestion(
+        { ...question, type: question.type || "mcq", question: question.stem },
+        {
+          selectedValue,
+          generatorSource: "science-master",
+          afterStepByStep: stepByStepViewedRef.current,
+        }
+      )
+    : null;
   ensureLearningSessionId()
     .then((learningSessionId) => {
       if (!learningSessionId) return;
@@ -1793,6 +1808,7 @@ function saveScienceAnswerInParallel({
             : answerIndex != null
               ? String(answerIndex)
               : "",
+        questionEngine,
         isCorrect: Boolean(isCorrect),
         hintsUsed: usedHint ? 1 : 0,
         // Phase 3: send both raw and credited time
@@ -1806,6 +1822,10 @@ function saveScienceAnswerInParallel({
           version: "phase-3",
           gradeKey: String(grade || ""),
           afterStepByStep: stepByStepViewedRef.current,
+          ...buildBookContextClientMetaExtras(mode, {
+            bookContextRef,
+            bookContextConsumedRef,
+          }),
           ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
         },
       });

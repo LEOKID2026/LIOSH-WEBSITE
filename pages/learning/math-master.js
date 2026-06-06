@@ -87,9 +87,6 @@ import {
   learningExplainOpenBtn,
 } from "../../utils/learning-ui-classes";
 import {
-  addSessionProgress,
-} from "../../utils/progress-storage";
-import {
   MONTHLY_MINUTES_TARGET,
 } from "../../data/reward-options";
 import {
@@ -114,6 +111,7 @@ import {
   saveLearningAnswer,
   finishLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
+import { buildQuestionEngineMetadataFromQuestion } from "../../lib/learning/question-engine-metadata.js";
 import { resolveMathSessionTopic } from "../../lib/learning/session-topic-helpers.js";
 import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
@@ -175,6 +173,10 @@ import {
   saveMathG6BookLearningSnapshot,
   withMathG6BookLearningReturn,
 } from "../../lib/learning-book/math-g6-book-nav";
+import {
+  buildBookContextClientMetaExtras,
+  tryConsumeBookContextOnPracticeEntry,
+} from "../../lib/learning-book/book-context-master-helper";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -638,6 +640,8 @@ export default function MathMaster() {
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
   const stepByStepViewedRef = useRef(false);
+  const bookContextRef = useRef(null);
+  const bookContextConsumedRef = useRef(false);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
@@ -1063,6 +1067,14 @@ export default function MathMaster() {
       applyBookPracticePreset(preset);
     }
   }, [router.isReady, router.query, applyBookPracticePreset]);
+
+  useEffect(() => {
+    tryConsumeBookContextOnPracticeEntry(
+      router,
+      { subject: "math", grade },
+      { bookContextRef, bookContextConsumedRef }
+    );
+  }, [router.isReady, router.query, grade]);
 
   useEffect(() => {
     if (sessionFullName) {
@@ -1841,23 +1853,9 @@ export default function MathMaster() {
       return;
     }
     const answered = Math.max(solvedCountRef.current, totalQuestions);
-    const totalMinutes = Number((totalMs / 60000).toFixed(2));
     const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correct) / answered) * 100) : 0;
-    addSessionProgress(
-      totalMinutes,
-      answered,
-      {
-        subject: "math",
-        topic: mathTrackingOperationKeyRef.current ?? currentQuestion?.operation ?? "",
-        grade,
-        mode,
-        game: "MathMaster",
-        date: new Date(),
-      },
-      { studentId: learningProfileStudentIdRef.current || undefined }
-    );
     void refreshStudentLearningProfileAfterSession().then((p) => {
       if (p?.ok) {
         refreshMonthlyPersistenceView();
@@ -1962,6 +1960,7 @@ export default function MathMaster() {
   }
 
   function saveAnswerInParallel({
+    question,
     userAnswer,
     isCorrect,
     expectedAnswer,
@@ -1975,6 +1974,13 @@ export default function MathMaster() {
     timingStatus,
     diagnosticProbeMeta,
   }) {
+    const questionEngine = question
+      ? buildQuestionEngineMetadataFromQuestion(question, {
+          selectedValue: userAnswer,
+          generatorSource: "math-master",
+          afterStepByStep: stepByStepViewedRef.current,
+        })
+      : null;
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -1987,6 +1993,7 @@ export default function MathMaster() {
           prompt,
           expectedAnswer,
           userAnswer,
+          questionEngine,
           isCorrect,
           hintsUsed: hintUsed ? 1 : 0,
           // Phase 3: send both raw and credited time
@@ -2000,6 +2007,10 @@ export default function MathMaster() {
             version: "phase-3",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            ...buildBookContextClientMetaExtras(mode, {
+              bookContextRef,
+              bookContextConsumedRef,
+            }),
             ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
@@ -2334,6 +2345,7 @@ export default function MathMaster() {
       ? String(currentQuestion.id)
       : questionFingerprint || `math-${Date.now()}`;
     saveAnswerInParallel({
+      question: currentQuestion,
       userAnswer: numericAnswer,
       isCorrect,
       expectedAnswer: currentQuestion.correctAnswer,

@@ -435,6 +435,74 @@ function shuffleMcqList(items) {
   return arr;
 }
 
+export const GENERIC_PROXIMITY_FAMILY = "generic_proximity";
+
+function toMcqOptionCell(value, distractorFamily = null) {
+  if (value != null && typeof value === "object" && !Array.isArray(value) && "value" in value) {
+    const cell = { ...value };
+    if (distractorFamily && !cell.distractorFamily) cell.distractorFamily = distractorFamily;
+    return cell;
+  }
+  const cell = { value };
+  if (distractorFamily) cell.distractorFamily = distractorFamily;
+  return cell;
+}
+
+function inferMathDistractorFamily(wrongVal, correctAnswer, kind, params) {
+  const n = Number(wrongVal);
+  if (!Number.isFinite(n)) return GENERIC_PROXIMITY_FAMILY;
+  const a = params?.a;
+  const b = params?.b;
+  if (
+    (kind === "add_two" ||
+      kind === "add_vertical" ||
+      kind === "add_second_decade" ||
+      kind === "add_tens_only") &&
+    a != null &&
+    b != null
+  ) {
+    if (n === a * b) return "mul_instead_of_add";
+    if (n === Math.abs(a - b)) return "sub_instead_of_add";
+  }
+  if ((kind === "sub_two" || kind === "sub_vertical") && a != null && b != null) {
+    if (n === a + b) return "add_instead_of_sub";
+  }
+  if (kind === "mul" || kind === "mul_vertical" || kind === "mul_tens" || kind === "mul_hundreds") {
+    let mx = a;
+    let my = b;
+    if (kind === "mul_tens") {
+      mx = params?.tens;
+      my = params?.multiplier;
+    } else if (kind === "mul_hundreds") {
+      mx = params?.hundreds;
+      my = params?.multiplier;
+    } else if (kind === "mul_vertical") {
+      mx = params?.twoDigit;
+      my = params?.oneDigit;
+    }
+    if (mx != null && my != null && n === mx + my) return "add_instead_of_mul";
+  }
+  if (kind.startsWith("wp_") && a != null && b != null && n === a * b) {
+    return "wrong_operation_wp";
+  }
+  void correctAnswer;
+  return GENERIC_PROXIMITY_FAMILY;
+}
+
+function finalizeMcqOptions(correctAnswer, wrongValues, kind, params) {
+  const correct = toMcqOptionCell(correctAnswer);
+  const wrongList = Array.isArray(wrongValues) ? wrongValues : Array.from(wrongValues);
+  const wrongs = wrongList.slice(0, 3).map((v) => {
+    const val = typeof v === "object" && v != null && "value" in v ? v.value : v;
+    const fam =
+      typeof v === "object" && v != null && v.distractorFamily
+        ? v.distractorFamily
+        : inferMathDistractorFamily(val, correctAnswer, kind, params);
+    return toMcqOptionCell(val, fam);
+  });
+  return shuffleMcqList([correct, ...wrongs]);
+}
+
 /**
  * מסיחים לפי סוג תרגיל — טעויות תלמידים סבירות, לא רק ±אחוז אקראי
  */
@@ -467,7 +535,7 @@ export function buildMathMcqAnswerList(correctAnswer, selectedOp, params, randIn
       const nn = Math.max(1, cn + sign * d);
       add(`${nn}/${cd}`);
     }
-    return shuffleMcqList([correctAnswer, ...Array.from(wrong).slice(0, 3)]);
+    return finalizeMcqOptions(correctAnswer, Array.from(wrong), kind, params);
   }
 
   if (selectedOp === "decimals" || kind.startsWith("dec_")) {
@@ -497,7 +565,7 @@ export function buildMathMcqAnswerList(correctAnswer, selectedOp, params, randIn
       guard++;
       addN(cn + (Math.random() < 0.5 ? 1 : -1) * step * randInt(1, 4));
     }
-    return shuffleMcqList([target, ...Array.from(wrong).slice(0, 3)]);
+    return finalizeMcqOptions(target, Array.from(wrong), kind, params);
   }
 
   if (typeof correctAnswer !== "number" || !Number.isFinite(correctAnswer)) {
@@ -573,7 +641,7 @@ export function buildMathMcqAnswerList(correctAnswer, selectedOp, params, randIn
         tryAdd(diff - bump);
         bump += 1;
       }
-      return shuffleMcqList([diff, ...Array.from(wrong).slice(0, 3)]);
+      return finalizeMcqOptions(diff, Array.from(wrong), kind, params);
     }
   } else if (
     kind === "mul" ||
@@ -698,7 +766,7 @@ export function buildMathMcqAnswerList(correctAnswer, selectedOp, params, randIn
     break;
   }
 
-  return shuffleMcqList([correctAnswer, ...Array.from(wrongN).slice(0, 3)]);
+  return finalizeMcqOptions(correctAnswer, Array.from(wrongN), kind, params);
 }
 
 /**

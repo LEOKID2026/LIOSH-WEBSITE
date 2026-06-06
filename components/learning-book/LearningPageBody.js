@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LearningMarkdown from "./LearningMarkdown";
 import MixedHebrewMathText from "./MixedHebrewMathText";
 import BookTopicCardTitle from "./BookTopicCardTitle";
@@ -111,6 +111,8 @@ import { resolveMoledetGeographyPracticeTarget } from "../../lib/learning-book/m
 import { createLearningBookNav } from "../../lib/learning-book/learning-book-nav";
 import { getLearningBookClientMeta, getLearningBookMasterPath } from "../../lib/learning-book/learning-book-catalog-meta";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
+import { saveLastBookContext } from "../../lib/learning-book/book-context-after-reading";
+import { createBookReadingTracker } from "../../lib/learning-book/book-reading-tracker";
 
 const G1_BOOK_UI = {
   bookMeta: MATH_G1_BOOK_META,
@@ -324,11 +326,59 @@ export default function LearningPageBody({
   const returnQuerySuffix = getReturnQuerySuffix(router.query);
   const [sectionIndex, setSectionIndex] = useState(0);
   const [slideDir, setSlideDir] = useState(0);
+  const trackerRef = useRef(null);
+  const prevSectionIndexRef = useRef(0);
 
   useEffect(() => {
     setSectionIndex(0);
     setSlideDir(0);
+    prevSectionIndexRef.current = 0;
   }, [page?.pageId]);
+
+  useEffect(() => {
+    if (!page?.pageId) return undefined;
+    const tracker = createBookReadingTracker({
+      subject: bookSubject,
+      grade: bookGrade,
+      pageId: page.pageId,
+      batchId: page.batchId,
+      sequenceIndex: page.sequenceIndex,
+      entryPageId: page.pageId,
+      returnFrom: router.query?.returnFrom ? String(router.query.returnFrom) : null,
+    });
+    trackerRef.current = tracker;
+    tracker.onPageEnter(page.pageId, page.batchId, page.sequenceIndex);
+
+    const handleRouteChange = () => {
+      tracker.onPageLeave(true);
+      tracker.endSession(true, page.pageId);
+    };
+    const handleBeforeUnload = () => {
+      tracker.onPageLeave(true);
+      tracker.endSession(true, page.pageId);
+    };
+
+    router.events?.on?.("routeChangeStart", handleRouteChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      router.events?.off?.("routeChangeStart", handleRouteChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      tracker.onPageLeave(true);
+      tracker.dispose();
+      trackerRef.current = null;
+    };
+  }, [page?.pageId, page?.batchId, page?.sequenceIndex, bookSubject, bookGrade, router.events, router.query?.returnFrom]);
+
+  useEffect(() => {
+    const tracker = trackerRef.current;
+    if (!tracker) return;
+    const prev = prevSectionIndexRef.current;
+    if (prev !== sectionIndex) {
+      tracker.onSectionChange(prev, sectionIndex);
+      prevSectionIndexRef.current = sectionIndex;
+    }
+  }, [sectionIndex]);
 
   const goPrev = useCallback(() => {
     setSlideDir(-1);
@@ -362,7 +412,15 @@ export default function LearningPageBody({
     if (practiceTarget) {
       savePracticePreset(practiceTarget);
     }
-  }, [practiceTarget, savePracticePreset]);
+    if (page?.pageId) {
+      saveLastBookContext({
+        subject: bookSubject,
+        grade: bookGrade,
+        pageId: page.pageId,
+      });
+      trackerRef.current?.onCtaClick();
+    }
+  }, [practiceTarget, savePracticePreset, page?.pageId, bookSubject, bookGrade]);
 
   if (!page?.sections?.length) {
     return (

@@ -14,6 +14,7 @@ import assert from "node:assert/strict";
 
 import {
   aggregateReportPayloadFromActivityRows,
+  mergeLearningActivityBookData,
   stripInternalReportPayloadFields,
 } from "../../lib/parent-server/report-data-aggregate.server.js";
 
@@ -548,7 +549,7 @@ describe("Phase 4 — parent activity attempts classification", () => {
 // ── Test 6: meta version and structure ───────────────────────────────────────
 
 describe("Phase 4 — payload meta and version", () => {
-  test("result.meta.version is phase-4-diagnostic-accuracy", () => {
+  test("result.meta.version is phase-8-mcq-engine-contract", () => {
     const result = aggregateReportPayloadFromActivityRows(
       makeStudent(),
       [],
@@ -558,7 +559,7 @@ describe("Phase 4 — payload meta and version", () => {
       FETCH_META
     );
 
-    assert.equal(result.meta.version, "phase-4-diagnostic-accuracy");
+    assert.equal(result.meta.version, "phase-8-mcq-engine-contract");
     // _rawActivityAccuracy lives in the unstripped internal result only
     assert.ok(
       Object.prototype.hasOwnProperty.call(result.meta, "_rawActivityAccuracy"),
@@ -666,5 +667,39 @@ describe("Phase 4 — stripInternalReportPayloadFields contract", () => {
     assert.equal(stripped.subjects.math.diagnosticAccuracy, 0, "diagnosticAccuracy preserved");
     assert.equal(stripped.subjects.math.competitiveAnswers, 0, "competitiveAnswers preserved");
     assert.equal(stripped.subjects.math.learningAnswers, 0, "learningAnswers preserved");
+  });
+});
+
+// ── Phase 5 regression: book rows excluded from diagnostic buckets ───────────
+
+describe("Phase 4/5 — book data does not affect diagnosticAccuracy", () => {
+  test("mergeLearningActivityBookData leaves diagnostic summary unchanged", () => {
+    const session = makeSession("sess-book-reg", "math", "algebra", "practice");
+    const answer = makeClassifiedAnswer(
+      "sess-book-reg",
+      "math",
+      "algebra",
+      true,
+      true,
+      "diagnostic_independent"
+    );
+    const base = aggregateReportPayloadFromActivityRows(
+      makeStudent(),
+      [session],
+      [answer],
+      FROM_DATE,
+      TO_DATE,
+      FETCH_META
+    );
+    const merged = mergeLearningActivityBookData(
+      base,
+      [{ subject: "math", credited_dwell_ms: 300_000, page_read: true }],
+      [{ id: "brs-1" }],
+      []
+    );
+    assert.equal(merged.summary.diagnosticAnswers, 1);
+    assert.equal(merged.summary.diagnosticAccuracy, 100);
+    assert.ok(merged.learningActivity.bookReadingMinutes > 0);
+    assert.equal(merged.subjects.math.diagnosticAnswers, 1);
   });
 });

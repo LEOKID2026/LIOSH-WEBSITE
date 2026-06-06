@@ -40,9 +40,6 @@ import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
 import {
-  addSessionProgress,
-} from "../../utils/progress-storage";
-import {
   MONTHLY_MINUTES_TARGET,
 } from "../../data/reward-options";
 import {
@@ -90,6 +87,7 @@ import {
   saveLearningAnswer,
   startLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
+import { buildQuestionEngineMetadataFromQuestion } from "../../lib/learning/question-engine-metadata.js";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -150,6 +148,10 @@ import {
   saveHebrewBookLearningSnapshot,
   withHebrewBookLearningReturn,
 } from "../../lib/learning-book/hebrew-book-nav";
+import {
+  buildBookContextClientMetaExtras,
+  tryConsumeBookContextOnPracticeEntry,
+} from "../../lib/learning-book/book-context-master-helper";
 
 const HEBREW_BOOK_GRADE_SET = new Set(HEBREW_BOOK_GRADES);
 
@@ -404,6 +406,8 @@ export default function HebrewMaster() {
   const [autoPlay, setAutoPlay] = useState(false);
   // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
   const stepByStepViewedRef = useRef(false);
+  const bookContextRef = useRef(null);
+  const bookContextConsumedRef = useRef(false);
   
   // Ref לשמירת timeouts לניקוי - מונע תקיעות
   const animationTimeoutsRef = useRef([]);
@@ -710,6 +714,14 @@ export default function HebrewMaster() {
       applyBookPracticePreset(preset);
     }
   }, [router.isReady, router.query, applyBookPracticePreset]);
+
+  useEffect(() => {
+    tryConsumeBookContextOnPracticeEntry(
+      router,
+      { subject: "hebrew", grade },
+      { bookContextRef, bookContextConsumedRef }
+    );
+  }, [router.isReady, router.query, grade]);
 
   useEffect(() => {
     clearActiveDiagnosticState(
@@ -1596,23 +1608,6 @@ export default function HebrewMaster() {
     const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
-    addSessionProgress(
-      durationMinutes,
-      answered,
-      {
-      subject: "hebrew",
-      topic:
-        hebrewTrackingTopicKeyRef.current ??
-        currentQuestion?.topic ??
-        currentQuestion?.operation ??
-        "",
-      grade,
-      mode,
-      game: "HebrewMaster",
-      date: new Date(),
-      },
-      { studentId: learningProfileStudentIdRef.current || undefined }
-    );
     void refreshStudentLearningProfileAfterSession().then((p) => {
       if (p?.ok) {
         refreshMonthlyPersistenceView();
@@ -1743,6 +1738,13 @@ export default function HebrewMaster() {
         : question?.correctAnswer != null
           ? String(question.correctAnswer)
           : null;
+    const questionEngine = question
+      ? buildQuestionEngineMetadataFromQuestion(question, {
+          selectedValue: userAnswer,
+          generatorSource: "hebrew-master",
+          afterStepByStep: stepByStepViewedRef.current,
+        })
+      : null;
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -1755,6 +1757,7 @@ export default function HebrewMaster() {
           prompt: String(question?.exerciseText || question?.question || ""),
           expectedAnswer: expectedValue,
           userAnswer: userAnswer != null ? String(userAnswer) : "",
+          questionEngine,
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
           // Phase 3: send both raw and credited time
@@ -1768,6 +1771,10 @@ export default function HebrewMaster() {
             version: "phase-3",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            ...buildBookContextClientMetaExtras(mode, {
+              bookContextRef,
+              bookContextConsumedRef,
+            }),
             ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });

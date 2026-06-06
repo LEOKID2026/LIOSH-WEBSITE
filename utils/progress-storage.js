@@ -4,6 +4,12 @@ import {
 } from "./tracking-debug.js";
 import { safeGetItem, safeSetJson, safeGetJsonArray } from "./safe-local-storage.js";
 
+/**
+ * Phase 9 — NOT authoritative for product progress.
+ * Monthly minutes / exercises truth: `computeStudentLearningDerived` via
+ * GET /api/student/home-profile and GET /api/student/learning-profile.
+ */
+
 /** Parent / legacy UI (no student id): keep original global keys. */
 const PROGRESS_STORAGE_KEY_GLOBAL = "LEO_MONTHLY_PROGRESS";
 const PROGRESS_LOG_KEY_GLOBAL = "LEO_PROGRESS_LOG";
@@ -32,7 +38,8 @@ function getYearMonth(date = new Date()) {
 }
 
 /**
- * @param {string} [studentId] — when set, uses per-student namespaced cache (not authoritative vs server).
+ * Debug / legacy read only — not product authority.
+ * @param {string} [studentId]
  */
 export function loadMonthlyProgress(studentId) {
   if (typeof window === "undefined") return {};
@@ -46,6 +53,39 @@ export function loadMonthlyProgress(studentId) {
 }
 
 /**
+ * Overwrite local cache from server-derived monthly progress (server wins).
+ * @param {string} [studentId]
+ * @param {Record<string, unknown>|null|undefined} derived — `computeStudentLearningDerived` shape
+ */
+export function syncMonthlyProgressCacheFromServer(studentId, derived) {
+  if (typeof window === "undefined" || !derived || typeof derived !== "object") return;
+  const minutes = Number(
+    derived.monthlyMinutesIsraelMonth ?? derived.monthlyMinutesUtcMonth
+  );
+  if (!Number.isFinite(minutes)) return;
+  const ym =
+    derived.yearMonthIsrael != null
+      ? String(derived.yearMonthIsrael)
+      : derived.yearMonthUtc != null
+        ? String(derived.yearMonthUtc)
+        : getCurrentYearMonth();
+  const exercises = Number(
+    derived.monthlyAnswersCountIsraelMonth ?? derived.monthlyAnswersCountUtcMonth ?? 0
+  );
+  const sid = studentId != null && String(studentId).trim() ? String(studentId).trim() : "";
+  saveMonthlyProgress(
+    {
+      [ym]: {
+        totalMinutes: Math.round(minutes * 100) / 100,
+        totalExercises: Number.isFinite(exercises) ? Math.max(0, Math.floor(exercises)) : 0,
+        _source: "server",
+      },
+    },
+    sid || undefined
+  );
+}
+
+/**
  * @param {Record<string, unknown>} data
  * @param {string} [studentId]
  */
@@ -55,45 +95,21 @@ export function saveMonthlyProgress(data, studentId) {
 }
 
 /**
+ * Legacy hook — no longer writes product authority keys (Phase 9).
+ * Tracking debug may still record session metadata when explicitly enabled.
+ *
  * @param {number} durationMinutes
  * @param {number} exercisesSolved
  * @param {Record<string, unknown>} meta
  * @param {{ studentId?: string }} [opts]
  */
 export function addSessionProgress(durationMinutes, exercisesSolved, meta = {}, opts = {}) {
-  if (!durationMinutes || durationMinutes <= 0) return;
-  if (typeof window === "undefined") return;
-
+  void durationMinutes;
+  void exercisesSolved;
+  void opts;
   if (isTrackingDebugEnabled()) {
     trackingDebugRecordSession(meta);
   }
-
-  const sessionDate = meta.date ? new Date(meta.date) : new Date();
-  const ym = getYearMonth(sessionDate);
-  const sid = opts.studentId != null && String(opts.studentId).trim() ? String(opts.studentId).trim() : "";
-  const allProgress = loadMonthlyProgress(sid || undefined);
-  const prev = allProgress[ym] || { totalMinutes: 0, totalExercises: 0 };
-
-  allProgress[ym] = {
-    totalMinutes: prev.totalMinutes + durationMinutes,
-    totalExercises: prev.totalExercises + (exercisesSolved || 0),
-  };
-
-  saveMonthlyProgress(allProgress, sid || undefined);
-  appendProgressLog(
-    {
-      id: Date.now(),
-      date: sessionDate.toISOString(),
-      minutes: durationMinutes,
-      exercises: exercisesSolved || 0,
-      subject: meta.subject || "general",
-      topic: meta.topic || "",
-      grade: meta.grade || "",
-      mode: meta.mode || "",
-      game: meta.game || "",
-    },
-    sid || undefined
-  );
 }
 
 export function getCurrentYearMonth() {
@@ -101,6 +117,7 @@ export function getCurrentYearMonth() {
 }
 
 /**
+ * Debug / legacy read only.
  * @param {string} [studentId]
  */
 export function loadProgressLog(studentId) {
@@ -114,23 +131,3 @@ export function loadProgressLog(studentId) {
     return [];
   }
 }
-
-/**
- * @param {Record<string, unknown>} entry
- * @param {string} [studentId]
- */
-function appendProgressLog(entry, studentId) {
-  if (typeof window === "undefined") return;
-  try {
-    const key = getProgressLogStorageKey(studentId);
-    const list = safeGetJsonArray(key);
-    list.push(entry);
-    while (list.length > 1000) {
-      list.shift();
-    }
-    safeSetJson(key, list);
-  } catch {
-    /* ignore */
-  }
-}
-

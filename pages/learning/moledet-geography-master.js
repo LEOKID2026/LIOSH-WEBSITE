@@ -31,6 +31,10 @@ import {
   saveMoledetGeographyBookLearningSnapshot,
   withMoledetGeographyBookLearningReturn,
 } from "../../lib/learning-book/moledet-geography-book-nav.js";
+import {
+  buildBookContextClientMetaExtras,
+  tryConsumeBookContextOnPracticeEntry,
+} from "../../lib/learning-book/book-context-master-helper";
 
 const MG_SUBJECT = MOLEDET_GEOGRAPHY_ACTIVITY_SUBJECT_ID;
 const MG_BOOK_GRADE_SET = new Set(MOLEDET_GEOGRAPHY_ACTIVE_BOOK_GRADES);
@@ -67,9 +71,6 @@ import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
 import {
-  addSessionProgress,
-} from "../../utils/progress-storage";
-import {
   MONTHLY_MINUTES_TARGET,
 } from "../../data/reward-options";
 import {
@@ -97,6 +98,7 @@ import {
   saveLearningAnswer,
   startLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
+import { buildQuestionEngineMetadataFromQuestion } from "../../lib/learning/question-engine-metadata.js";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -497,6 +499,8 @@ export default function MoledetGeographyMaster() {
   const [autoPlay, setAutoPlay] = useState(false);
   // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
   const stepByStepViewedRef = useRef(false);
+  const bookContextRef = useRef(null);
+  const bookContextConsumedRef = useRef(false);
   
   // Ref לשמירת timeouts לניקוי - מונע תקיעות
   const animationTimeoutsRef = useRef([]);
@@ -740,6 +744,14 @@ export default function MoledetGeographyMaster() {
       applyBookPracticePreset(preset);
     }
   }, [router.isReady, router.query, applyBookPracticePreset]);
+
+  useEffect(() => {
+    tryConsumeBookContextOnPracticeEntry(
+      router,
+      { subject: MG_SUBJECT, grade },
+      { bookContextRef, bookContextConsumedRef }
+    );
+  }, [router.isReady, router.query, grade]);
 
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedCol, setSelectedCol] = useState(null);
@@ -1377,23 +1389,6 @@ export default function MoledetGeographyMaster() {
     const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
-    addSessionProgress(
-      durationMinutes,
-      answered,
-      {
-      subject: MG_SUBJECT,
-      topic:
-        moledetTrackingTopicKeyRef.current ??
-        currentQuestion?.topic ??
-        currentQuestion?.operation ??
-        "",
-      grade,
-      mode,
-      game: "MoledetGeographyMaster",
-      date: new Date(),
-      },
-      { studentId: learningProfileStudentIdRef.current || undefined }
-    );
     void refreshStudentLearningProfileAfterSession().then((p) => {
       if (p?.ok) {
         refreshMonthlyPersistenceView();
@@ -1519,6 +1514,13 @@ export default function MoledetGeographyMaster() {
       : questionFingerprint || `moledet-geography-${Date.now()}`;
     const expectedValue =
       question?.correctAnswer != null ? String(question.correctAnswer) : null;
+    const questionEngine = question
+      ? buildQuestionEngineMetadataFromQuestion(question, {
+          selectedValue: userAnswer,
+          generatorSource: "moledet-geography-master",
+          afterStepByStep: stepByStepViewedRef.current,
+        })
+      : null;
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -1531,6 +1533,7 @@ export default function MoledetGeographyMaster() {
           prompt: String(question?.exerciseText || question?.question || ""),
           expectedAnswer: expectedValue,
           userAnswer: userAnswer != null ? String(userAnswer) : "",
+          questionEngine,
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
           // Phase 3: send both raw and credited time
@@ -1544,6 +1547,10 @@ export default function MoledetGeographyMaster() {
             version: "phase-3",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            ...buildBookContextClientMetaExtras(mode, {
+              bookContextRef,
+              bookContextConsumedRef,
+            }),
           },
         });
       })

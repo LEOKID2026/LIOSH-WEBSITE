@@ -6,9 +6,6 @@ import { trackEnglishTopicTime } from "../../utils/english-time-tracking";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
 import {
-  addSessionProgress,
-} from "../../utils/progress-storage";
-import {
   MONTHLY_MINUTES_TARGET,
 } from "../../data/reward-options";
 import {
@@ -73,6 +70,7 @@ import {
   saveLearningAnswer,
   startLearningSession,
 } from "../../lib/learning-client/learningActivityClient";
+import { buildQuestionEngineMetadataFromQuestion } from "../../lib/learning/question-engine-metadata.js";
 import { scheduleAdaptivePlannerRecommendation } from "../../lib/learning-client/scheduleAdaptivePlannerRecommendation";
 import { buildPlannerRecommendationViewModel } from "../../lib/learning-client/adaptive-planner-recommendation-view-model";
 import {
@@ -125,6 +123,10 @@ import {
   saveEnglishBookLearningSnapshot,
   withEnglishBookLearningReturn,
 } from "../../lib/learning-book/english-book-nav";
+import {
+  buildBookContextClientMetaExtras,
+  tryConsumeBookContextOnPracticeEntry,
+} from "../../lib/learning-book/book-context-master-helper";
 
 const ENGLISH_BOOK_GRADE_SET = new Set(ENGLISH_BOOK_GRADES);
 
@@ -603,6 +605,8 @@ export default function EnglishMaster() {
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
   const stepByStepViewedRef = useRef(false);
+  const bookContextRef = useRef(null);
+  const bookContextConsumedRef = useRef(false);
 
   // הסבר לטעות אחרונה
   const [errorExplanation, setErrorExplanation] = useState("");
@@ -778,6 +782,14 @@ export default function EnglishMaster() {
       applyBookPracticePreset(preset);
     }
   }, [router.isReady, router.query, applyBookPracticePreset]);
+
+  useEffect(() => {
+    tryConsumeBookContextOnPracticeEntry(
+      router,
+      { subject: "english", grade },
+      { bookContextRef, bookContextConsumedRef }
+    );
+  }, [router.isReady, router.query, grade]);
 
   useEffect(() => {
     setLevel((prev) => clampEnglishLevelForGrade(grade, prev));
@@ -1162,19 +1174,6 @@ export default function EnglishMaster() {
     const durationSeconds = resolveMasterSessionDurationSeconds(sessionSecondsRef);
     const accuracyForFinish =
       answered > 0 ? Math.round((Math.max(0, correctForFinish) / answered) * 100) : 0;
-    addSessionProgress(
-      durationMinutes,
-      answered,
-      {
-      subject: "english",
-      topic: englishTrackingTopicKeyRef.current ?? currentQuestion?.topic ?? "",
-      grade: gradeNumber,
-      mode,
-      game: "EnglishMaster",
-      date: new Date(),
-      },
-      { studentId: learningProfileStudentIdRef.current || undefined }
-    );
     void refreshStudentLearningProfileAfterSession().then((p) => {
       if (p?.ok) {
         refreshMonthlyPersistenceView();
@@ -1295,6 +1294,13 @@ export default function EnglishMaster() {
         : question?.correctAnswer != null
           ? String(question.correctAnswer)
           : null;
+    const questionEngine = question
+      ? buildQuestionEngineMetadataFromQuestion(question, {
+          selectedValue: userAnswer,
+          generatorSource: "english-master",
+          afterStepByStep: stepByStepViewedRef.current,
+        })
+      : null;
     ensureLearningSessionId()
       .then((learningSessionId) => {
         if (!learningSessionId) return;
@@ -1307,6 +1313,7 @@ export default function EnglishMaster() {
           prompt: String(question?.question || ""),
           expectedAnswer: expectedValue,
           userAnswer: userAnswer != null ? String(userAnswer) : "",
+          questionEngine,
           isCorrect: Boolean(isCorrect),
           hintsUsed: usedHint ? 1 : 0,
           // Phase 3: send both raw and credited time
@@ -1320,6 +1327,10 @@ export default function EnglishMaster() {
             version: "phase-3",
             gradeKey: String(grade || ""),
             afterStepByStep: stepByStepViewedRef.current,
+            ...buildBookContextClientMetaExtras(mode, {
+              bookContextRef,
+              bookContextConsumedRef,
+            }),
             ...(diagnosticProbeMeta ? { diagnosticProbe: diagnosticProbeMeta } : {}),
           },
         });
