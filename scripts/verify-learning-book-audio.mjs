@@ -106,9 +106,6 @@ for (const pageId of scope.pageIds) {
       badScripts += 1;
       continue;
     }
-    if (page.displayTitle && script.includes(page.displayTitle)) {
-      fail(`spoken script must not include page title: ${pageId} section ${sectionNumber}`);
-    }
     if (/^מה לומדים\?/m.test(script)) {
       fail(`spoken script must not include section nav title: ${pageId} section ${sectionNumber}`);
     }

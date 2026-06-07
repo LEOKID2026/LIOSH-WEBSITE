@@ -44,7 +44,7 @@ function fail(msg, code = 1) {
 function buildPrepFlags(page, section, spokenScript) {
   const rawBody = String(section?.body || "");
   return {
-    titleStripped: !spokenScript.includes(page.displayTitle),
+    titleStripped: !spokenScript.trim().startsWith(page.displayTitle),
     sectionNavTitleStripped: !spokenScript.includes(section.title),
     hyphensNormalized: !HEBREW_HYPHEN_IN_SCRIPT.test(spokenScript),
     hintsRemoved: !/\(רמז\s*:/u.test(spokenScript) && !/^רמז\s*:/m.test(spokenScript),

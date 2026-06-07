@@ -13,6 +13,7 @@
  *   node --env-file=.env.local scripts/qa/parent-report-q2e-monthly-realistic-pdf-export.mjs --verify-only
  */
 import { execSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -544,7 +545,18 @@ async function main() {
   console.log("Step 6: create ZIP...");
   await createZip();
 
+  const zipBytes = await readFile(ZIP_PATH);
+  const zipSha256 = createHash("sha256").update(zipBytes).digest("hex").toUpperCase();
+  await writeFile(`${ZIP_PATH}.sha256`, `${zipSha256}  ${path.basename(ZIP_PATH)}\n`, "utf8");
+  console.log(`  ZIP SHA256: ${zipSha256}`);
+  console.log("Step 7: verify PDF content from ZIP (not loose folders)...");
+  execSync(`node scripts/qa/parent-report-q2e-monthly-realistic-zip-verify.mjs "${ZIP_PATH.replace(/\\/g, "/")}"`, {
+    cwd: ROOT,
+    stdio: "inherit",
+  });
+
   manifest.summary.expected = students.length * EXPORT_TYPES.length;
+  manifest.zip = { path: ZIP_PATH, sizeBytes: zipBytes.length, sha256: zipSha256 };
   await writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2), "utf8");
   await writeFile(CONTENT_VERIFY_PATH, JSON.stringify(manifest.contentVerification, null, 2), "utf8");
 

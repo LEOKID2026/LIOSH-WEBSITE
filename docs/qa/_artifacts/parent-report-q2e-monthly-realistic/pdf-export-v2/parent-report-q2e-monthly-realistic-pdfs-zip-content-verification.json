@@ -1,0 +1,158 @@
+{
+  "verifiedAt": "2026-06-07T23:27:27.651Z",
+  "zipPath": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\parent-report-q2e-monthly-realistic\\pdf-export-v2\\parent-report-q2e-monthly-realistic-pdfs.zip",
+  "zipSizeBytes": 5508310,
+  "sha256": "AE83547D396A11145C4933F02C3DCADD270F3C3279DD17D80C0BCC09BD62D4D9",
+  "totalPdfEntries": 36,
+  "expectedPdfEntries": 36,
+  "allFilenames": [
+    "AAA1/AAA1_2026-04_detailed-full.pdf",
+    "AAA1/AAA1_2026-04_detailed-summary.pdf",
+    "AAA1/AAA1_2026-04_short-report.pdf",
+    "AAA10/AAA10_2026-04_detailed-full.pdf",
+    "AAA10/AAA10_2026-04_detailed-summary.pdf",
+    "AAA10/AAA10_2026-04_short-report.pdf",
+    "AAA11/AAA11_2026-04_detailed-full.pdf",
+    "AAA11/AAA11_2026-04_detailed-summary.pdf",
+    "AAA11/AAA11_2026-04_short-report.pdf",
+    "AAA12/AAA12_2026-04_detailed-full.pdf",
+    "AAA12/AAA12_2026-04_detailed-summary.pdf",
+    "AAA12/AAA12_2026-04_short-report.pdf",
+    "AAA2/AAA2_2026-04_detailed-full.pdf",
+    "AAA2/AAA2_2026-04_detailed-summary.pdf",
+    "AAA2/AAA2_2026-04_short-report.pdf",
+    "AAA3/AAA3_2026-04_detailed-full.pdf",
+    "AAA3/AAA3_2026-04_detailed-summary.pdf",
+    "AAA3/AAA3_2026-04_short-report.pdf",
+    "AAA4/AAA4_2026-04_detailed-full.pdf",
+    "AAA4/AAA4_2026-04_detailed-summary.pdf",
+    "AAA4/AAA4_2026-04_short-report.pdf",
+    "AAA5/AAA5_2026-04_detailed-full.pdf",
+    "AAA5/AAA5_2026-04_detailed-summary.pdf",
+    "AAA5/AAA5_2026-04_short-report.pdf",
+    "AAA6/AAA6_2026-04_detailed-full.pdf",
+    "AAA6/AAA6_2026-04_detailed-summary.pdf",
+    "AAA6/AAA6_2026-04_short-report.pdf",
+    "AAA7/AAA7_2026-04_detailed-full.pdf",
+    "AAA7/AAA7_2026-04_detailed-summary.pdf",
+    "AAA7/AAA7_2026-04_short-report.pdf",
+    "AAA8/AAA8_2026-04_detailed-full.pdf",
+    "AAA8/AAA8_2026-04_detailed-summary.pdf",
+    "AAA8/AAA8_2026-04_short-report.pdf",
+    "AAA9/AAA9_2026-04_detailed-full.pdf",
+    "AAA9/AAA9_2026-04_detailed-summary.pdf",
+    "AAA9/AAA9_2026-04_short-report.pdf"
+  ],
+  "shortReportResults": [
+    {
+      "entry": "AAA1/AAA1_2026-04_short-report.pdf",
+      "bytes": 1151870,
+      "pdfQuestions": 240,
+      "pdfMinutes": 336,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA10/AAA10_2026-04_short-report.pdf",
+      "bytes": 1133062,
+      "pdfQuestions": 280,
+      "pdfMinutes": 455,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA11/AAA11_2026-04_short-report.pdf",
+      "bytes": 1224197,
+      "pdfQuestions": 280,
+      "pdfMinutes": 471,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA12/AAA12_2026-04_short-report.pdf",
+      "bytes": 1132015,
+      "pdfQuestions": 280,
+      "pdfMinutes": 471,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA2/AAA2_2026-04_short-report.pdf",
+      "bytes": 1057882,
+      "pdfQuestions": 240,
+      "pdfMinutes": 338,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA3/AAA3_2026-04_short-report.pdf",
+      "bytes": 1057798,
+      "pdfQuestions": 240,
+      "pdfMinutes": 340,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA4/AAA4_2026-04_short-report.pdf",
+      "bytes": 1057664,
+      "pdfQuestions": 240,
+      "pdfMinutes": 342,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA5/AAA5_2026-04_short-report.pdf",
+      "bytes": 1094487,
+      "pdfQuestions": 234,
+      "pdfMinutes": 398,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA6/AAA6_2026-04_short-report.pdf",
+      "bytes": 1094266,
+      "pdfQuestions": 234,
+      "pdfMinutes": 399,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA7/AAA7_2026-04_short-report.pdf",
+      "bytes": 1094401,
+      "pdfQuestions": 234,
+      "pdfMinutes": 402,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA8/AAA8_2026-04_short-report.pdf",
+      "bytes": 1094439,
+      "pdfQuestions": 234,
+      "pdfMinutes": 405,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    },
+    {
+      "entry": "AAA9/AAA9_2026-04_short-report.pdf",
+      "bytes": 1222402,
+      "pdfQuestions": 280,
+      "pdfMinutes": 451,
+      "dateRange": "01/04/2026 - 30/04/2026",
+      "hasInactivityWarning": false,
+      "passRealistic": true
+    }
+  ],
+  "passCount": 12,
+  "shortReportCount": 12
+}
