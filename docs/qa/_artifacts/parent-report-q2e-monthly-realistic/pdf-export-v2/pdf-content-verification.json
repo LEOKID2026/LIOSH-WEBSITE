@@ -1,0 +1,350 @@
+[
+  {
+    "studentLabel": "AAA1",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 336,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA1",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 336,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA1",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 181,
+    "pdfQuestions": 240,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA2",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 338,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA2",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 338,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA2",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 182,
+    "pdfQuestions": 240,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA3",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 340,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA3",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 340,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA3",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 183,
+    "pdfQuestions": 240,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA4",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 342,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA4",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 342,
+    "pdfQuestions": 240,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA4",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 184,
+    "pdfQuestions": 240,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA5",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 398,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA5",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 398,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA5",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 152,
+    "pdfQuestions": 234,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA6",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 399,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA6",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 399,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA6",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 153,
+    "pdfQuestions": 234,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA7",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 402,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA7",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 402,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA7",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 154,
+    "pdfQuestions": 234,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA8",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 405,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA8",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 405,
+    "pdfQuestions": 234,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA8",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 155,
+    "pdfQuestions": 234,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA9",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 451,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA9",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 451,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA9",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 128,
+    "pdfQuestions": 280,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA10",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 455,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA10",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 455,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA10",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 129,
+    "pdfQuestions": 280,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA11",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 471,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA11",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 471,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA11",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 117,
+    "pdfQuestions": 280,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  },
+  {
+    "studentLabel": "AAA12",
+    "exportType": "detailed-full",
+    "pass": true,
+    "pdfMinutes": 471,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA12",
+    "exportType": "detailed-summary",
+    "pass": true,
+    "pdfMinutes": 471,
+    "pdfQuestions": 280,
+    "checks": []
+  },
+  {
+    "studentLabel": "AAA12",
+    "exportType": "short-report",
+    "pass": false,
+    "pdfMinutes": 117,
+    "pdfQuestions": 280,
+    "checks": [
+      {
+        "name": "pdf_minutes_at_least_250",
+        "pass": false
+      }
+    ]
+  }
+]

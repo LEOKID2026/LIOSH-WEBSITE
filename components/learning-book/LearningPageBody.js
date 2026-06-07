@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LearningMarkdown from "./LearningMarkdown";
+import LearningBookAudioPlayer from "./LearningBookAudioPlayer";
 import MixedHebrewMathText from "./MixedHebrewMathText";
 import BookTopicCardTitle from "./BookTopicCardTitle";
 import { getSectionDisplayTitle } from "../../lib/learning-book/section-display-labels";
@@ -511,6 +512,14 @@ export default function LearningPageBody({
               {displayTitle}
             </h2>
           </header>
+
+          <LearningBookAudioPlayer
+            subject={bookSubject}
+            grade={bookGrade}
+            pageId={page.pageId}
+            sectionNumber={section.number}
+            sectionIndex={sectionIndex}
+          />
 
           <div
             data-book-scroll

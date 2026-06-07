@@ -142,6 +142,36 @@ function parseSessionTime(session) {
   return null;
 }
 
+const CALENDAR_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** @param {string|null|undefined} value */
+export function normalizeCalendarDateString(value) {
+  const s = String(value || "").trim().slice(0, 10);
+  return CALENDAR_DATE_RE.test(s) ? s : null;
+}
+
+/**
+ * UTC calendar boundaries for custom parent-report ranges (timezone-safe storage).
+ * @param {string} customStartDate YYYY-MM-DD
+ * @param {string} customEndDate YYYY-MM-DD
+ * @param {Date} [now]
+ */
+export function resolveCustomReportCalendarRange(customStartDate, customEndDate, now = new Date()) {
+  const startCalendar = normalizeCalendarDateString(customStartDate);
+  const endCalendar = normalizeCalendarDateString(customEndDate);
+  if (!startCalendar || !endCalendar) {
+    throw new Error("invalid custom calendar date range");
+  }
+  const startMs = Date.parse(`${startCalendar}T00:00:00.000Z`);
+  let endMs = Date.parse(`${endCalendar}T23:59:59.999Z`);
+  if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) {
+    throw new Error("invalid custom calendar date range");
+  }
+  const nowMs = now.getTime();
+  if (endMs > nowMs) endMs = nowMs;
+  return { startCalendar, endCalendar, startMs, endMs };
+}
+
 function sessionInRange(session, startMs, endMs) {
   const t = parseSessionTime(session);
   if (!Number.isFinite(t)) return false;
@@ -1778,13 +1808,15 @@ export function generateParentReportV2(
   const now = new Date();
   let startDate;
   let endDate;
+  let startDateCalendar = null;
+  let endDateCalendar = null;
 
   if (period === "custom" && customStartDate && customEndDate) {
-    startDate = new Date(customStartDate);
-    startDate.setHours(0, 0, 0, 0);
-    endDate = new Date(customEndDate);
-    endDate.setHours(23, 59, 59, 999);
-    if (endDate > now) endDate = now;
+    const resolved = resolveCustomReportCalendarRange(customStartDate, customEndDate, now);
+    startDate = new Date(resolved.startMs);
+    endDate = new Date(resolved.endMs);
+    startDateCalendar = resolved.startCalendar;
+    endDateCalendar = resolved.endCalendar;
   } else {
     const days = period === "week" ? 7 : period === "month" ? 30 : 365;
     endDate = now;
@@ -2424,8 +2456,8 @@ export function generateParentReportV2(
     playerName,
     reportVersion: 2,
     period: period === "custom" ? "custom" : period,
-    startDate: startDate.toISOString().split("T")[0],
-    endDate: endDate.toISOString().split("T")[0],
+    startDate: startDateCalendar ?? startDate.toISOString().split("T")[0],
+    endDate: endDateCalendar ?? endDate.toISOString().split("T")[0],
     generatedAt: now.toISOString(),
     registeredGradeKey,
     gradePracticeMeta: {

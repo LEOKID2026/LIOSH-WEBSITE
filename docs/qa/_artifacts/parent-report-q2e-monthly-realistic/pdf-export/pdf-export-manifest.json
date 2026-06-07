@@ -1,0 +1,839 @@
+{
+  "runAt": "2026-06-07T22:19:45.849Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "monthWindow": {
+    "from": "2026-04-01",
+    "to": "2026-04-30"
+  },
+  "seedTag": "parent-report-q2e-monthly-realistic-v1",
+  "parentAccount": "admin@admin.com",
+  "exportTypes": [
+    "detailed-full",
+    "detailed-summary",
+    "short-report"
+  ],
+  "context": "parent-only (no school/classroom/private-teacher)",
+  "students": [
+    {
+      "label": "AAA1",
+      "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA2",
+      "studentId": "6c4f6dc1-de43-4b86-abe7-4f041e9d3a8c",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA3",
+      "studentId": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA4",
+      "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA5",
+      "studentId": "79c8f8c7-2494-439e-b867-93b096c8590b",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA6",
+      "studentId": "b325272f-b554-4865-a827-6477773fb200",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA7",
+      "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA8",
+      "studentId": "921e1c5d-4124-41cd-bad7-a16dbf0dfecc",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA9",
+      "studentId": "cd4ba8f0-fe4f-424d-8ed1-0c3acaf5f412",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA10",
+      "studentId": "dea2bbce-1712-4862-9de7-00b732672fbb",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA11",
+      "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+      "sanitizationPass": true
+    },
+    {
+      "label": "AAA12",
+      "studentId": "873c6971-06ed-4b31-9d76-616b4b623a52",
+      "sanitizationPass": true
+    }
+  ],
+  "exports": [
+    {
+      "student": "AAA1",
+      "type": "detailed-full",
+      "fileName": "AAA1_2026-04_detailed-full.pdf",
+      "relativePath": "AAA1/AAA1_2026-04_detailed-full.pdf",
+      "pass": false,
+      "error": "EBUSY: resource busy or locked, open 'C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\parent-report-q2e-monthly-realistic\\pdf-export\\AAA1\\AAA1_2026-04_detailed-full.pdf'"
+    },
+    {
+      "student": "AAA1",
+      "type": "detailed-summary",
+      "fileName": "AAA1_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA1/AAA1_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 111594,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון. מומלץ 1מהתרגול של בדיקה-א להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 110 התרגול בעברית נראה יציב — .80% שאלות, דיוק"
+    },
+    {
+      "student": "AAA1",
+      "type": "short-report",
+      "fileName": "AAA1_2026-04_short-report.pdf",
+      "relativePath": "AAA1/AAA1_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1151870,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 1בדיקה-א 01/04/2026 - 30/04/2026 זמן כולל 'דק 336 (שעות 5.60) שאלות 240 נכון 192 דיוק כללי 80% רמה Lv.4 6 🏆 • 32 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, עברית. 80% שאלות, דיוק 110עברית: עושר שפתי: כ- עוד נושאים למעקב: מה חשוב לדעת יש טעויות חוזרות בעברית"
+    },
+    {
+      "student": "AAA2",
+      "type": "detailed-full",
+      "fileName": "AAA2_2026-04_detailed-full.pdf",
+      "relativePath": "AAA2/AAA2_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 110444,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון. מומלץ 2מהתרגול של בדיקה-א להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 110 התרגול בעברית נראה יציב — .80% שאלות, דיוק 130 "
+    },
+    {
+      "student": "AAA2",
+      "type": "detailed-summary",
+      "fileName": "AAA2_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA2/AAA2_2026-04_detailed-summary.pdf",
+      "pass": false,
+      "error": "page.evaluate: Execution context was destroyed, most likely because of a navigation"
+    },
+    {
+      "student": "AAA2",
+      "type": "short-report",
+      "fileName": "AAA2_2026-04_short-report.pdf",
+      "relativePath": "AAA2/AAA2_2026-04_short-report.pdf",
+      "pass": false,
+      "error": "Report shell timeout: page.waitForSelector: Timeout 240000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-pdf')\n | body="
+    },
+    {
+      "student": "AAA3",
+      "type": "detailed-full",
+      "fileName": "AAA3_2026-04_detailed-full.pdf",
+      "relativePath": "AAA3/AAA3_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 110505,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון. מומלץ 1מהתרגול של בדיקה-ב להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 110 התרגול בעברית נראה יציב — .80% שאלות, דיוק 130 "
+    },
+    {
+      "student": "AAA3",
+      "type": "detailed-summary",
+      "fileName": "AAA3_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA3/AAA3_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 111465,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון. מומלץ 1מהתרגול של בדיקה-ב להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 110 התרגול בעברית נראה יציב — .80% שאלות, דיוק"
+    },
+    {
+      "student": "AAA3",
+      "type": "short-report",
+      "fileName": "AAA3_2026-04_short-report.pdf",
+      "relativePath": "AAA3/AAA3_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1057798,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 1בדיקה-ב 01/04/2026 - 30/04/2026 זמן כולל 'דק 340 (שעות 5.67) שאלות 240 נכון 192 דיוק כללי 80% רמה Lv.3 0 🏆 • 10 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, עברית. 80% שאלות, דיוק 110עברית: עושר שפתי: כ- עוד נושאים למעקב: מה חשוב לדעת יש טעויות חוזרות בעברית"
+    },
+    {
+      "student": "AAA4",
+      "type": "detailed-full",
+      "fileName": "AAA4_2026-04_detailed-full.pdf",
+      "relativePath": "AAA4/AAA4_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 110438,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון. מומלץ 2מהתרגול של בדיקה-ב להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 110 התרגול בעברית נראה יציב — .80% שאלות, דיוק 130 "
+    },
+    {
+      "student": "AAA4",
+      "type": "detailed-summary",
+      "fileName": "AAA4_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA4/AAA4_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 111394,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון. מומלץ 2מהתרגול של בדיקה-ב להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 110 התרגול בעברית נראה יציב — .80% שאלות, דיוק"
+    },
+    {
+      "student": "AAA4",
+      "type": "short-report",
+      "fileName": "AAA4_2026-04_short-report.pdf",
+      "relativePath": "AAA4/AAA4_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1057664,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 2בדיקה-ב 01/04/2026 - 30/04/2026 זמן כולל 'דק 342 (שעות 5.70) שאלות 240 נכון 192 דיוק כללי 80% רמה Lv.2 0 🏆 • 2 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, עברית. 80% שאלות, דיוק 110עברית: עושר שפתי: כ- עוד נושאים למעקב: מה חשוב לדעת יש טעויות חוזרות בעברית "
+    },
+    {
+      "student": "AAA5",
+      "type": "detailed-full",
+      "fileName": "AAA5_2026-04_detailed-full.pdf",
+      "relativePath": "AAA5/AAA5_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 114512,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 1מהתרגול של בדיקה-ג מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. להעניק"
+    },
+    {
+      "student": "AAA5",
+      "type": "detailed-summary",
+      "fileName": "AAA5_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA5/AAA5_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 115342,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 1מהתרגול של בדיקה-ג מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. ל"
+    },
+    {
+      "student": "AAA5",
+      "type": "short-report",
+      "fileName": "AAA5_2026-04_short-report.pdf",
+      "relativePath": "AAA5/AAA5_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1094487,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 1בדיקה-ג 01/04/2026 - 30/04/2026 זמן כולל 'דק 398 (שעות 6.63) שאלות 234 נכון 182 דיוק כללי 78% רמה Lv.4 0 🏆 • 18 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, עברית, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, אנגלית, מדעים. 78% שאלות, דיוק 72· מדעים: גוף האדם: כ- 78% שאלות, דיוק 72אנגלית: אוצר מילים: כ- עוד נושאים למ"
+    },
+    {
+      "student": "AAA6",
+      "type": "detailed-full",
+      "fileName": "AAA6_2026-04_detailed-full.pdf",
+      "relativePath": "AAA6/AAA6_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 114514,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 2מהתרגול של בדיקה-ג מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. להעניק"
+    },
+    {
+      "student": "AAA6",
+      "type": "detailed-summary",
+      "fileName": "AAA6_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA6/AAA6_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 115344,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 2מהתרגול של בדיקה-ג מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. ל"
+    },
+    {
+      "student": "AAA6",
+      "type": "short-report",
+      "fileName": "AAA6_2026-04_short-report.pdf",
+      "relativePath": "AAA6/AAA6_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1094266,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 2בדיקה-ג 01/04/2026 - 30/04/2026 זמן כולל 'דק 399 (שעות 6.65) שאלות 234 נכון 182 דיוק כללי 78% רמה Lv.2 0 🏆 • 9 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, עברית, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, אנגלית, מדעים. 78% שאלות, דיוק 72· מדעים: גוף האדם: כ- 78% שאלות, דיוק 72אנגלית: אוצר מילים: כ- עוד נושאים למע"
+    },
+    {
+      "student": "AAA7",
+      "type": "detailed-full",
+      "fileName": "AAA7_2026-04_detailed-full.pdf",
+      "relativePath": "AAA7/AAA7_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 114489,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 1מהתרגול של בדיקה-ד מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. להעניק"
+    },
+    {
+      "student": "AAA7",
+      "type": "detailed-summary",
+      "fileName": "AAA7_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA7/AAA7_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 115343,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 1מהתרגול של בדיקה-ד מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. ל"
+    },
+    {
+      "student": "AAA7",
+      "type": "short-report",
+      "fileName": "AAA7_2026-04_short-report.pdf",
+      "relativePath": "AAA7/AAA7_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1094401,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 1בדיקה-ד 01/04/2026 - 30/04/2026 זמן כולל 'דק 402 (שעות 6.70) שאלות 234 נכון 182 דיוק כללי 78% רמה Lv.3 0 🏆 • 7 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, עברית, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, אנגלית, מדעים. 78% שאלות, דיוק 72· מדעים: גוף האדם: כ- 78% שאלות, דיוק 72אנגלית: דקדוק: כ- עוד נושאים למעקב: מ"
+    },
+    {
+      "student": "AAA8",
+      "type": "detailed-full",
+      "fileName": "AAA8_2026-04_detailed-full.pdf",
+      "relativePath": "AAA8/AAA8_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 114613,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 2מהתרגול של בדיקה-ד מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. להעניק"
+    },
+    {
+      "student": "AAA8",
+      "type": "detailed-summary",
+      "fileName": "AAA8_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA8/AAA8_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 115469,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, חשבון, מדעים. 2מהתרגול של בדיקה-ד מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. טיפים לבית לקבוע זמן קצר וקבוע בבית לתרגול שגרתי, ללא לחץ של זמן. ל"
+    },
+    {
+      "student": "AAA8",
+      "type": "short-report",
+      "fileName": "AAA8_2026-04_short-report.pdf",
+      "relativePath": "AAA8/AAA8_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1094439,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 2בדיקה-ד 01/04/2026 - 30/04/2026 זמן כולל 'דק 405 (שעות 6.75) שאלות 234 נכון 182 דיוק כללי 78% רמה Lv.2 0 🏆 • 4 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, עברית, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, אנגלית, מדעים. 78% שאלות, דיוק 72· מדעים: גוף האדם: כ- 78% שאלות, דיוק 72אנגלית: דקדוק: כ- עוד נושאים למעקב: מ"
+    },
+    {
+      "student": "AAA9",
+      "type": "detailed-full",
+      "fileName": "AAA9_2026-04_detailed-full.pdf",
+      "relativePath": "AAA9/AAA9_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 119786,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, עברית, חשבון. 1מהתרגול של בדיקה-ה מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 70 התרגול באנגלית נראה יציב — .80% שאלות, ד"
+    },
+    {
+      "student": "AAA9",
+      "type": "detailed-summary",
+      "fileName": "AAA9_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA9/AAA9_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 123083,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, עברית, חשבון. 1מהתרגול של בדיקה-ה מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 70 התרגול באנגלית נראה יציב — .80% שאל"
+    },
+    {
+      "student": "AAA9",
+      "type": "short-report",
+      "fileName": "AAA9_2026-04_short-report.pdf",
+      "relativePath": "AAA9/AAA9_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1222402,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 1בדיקה-ה 01/04/2026 - 30/04/2026 זמן כולל 'דק 451 (שעות 7.52) שאלות 280 נכון 224 דיוק כללי 80% רמה Lv.4 3 🏆 • 25 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, אנגלית, מדעים, עברית. 60· מדעים: גוף האדם: כ- 80% שאלות, דיוק 70· עברית: הבנת הנקרא: כ- 80% שאלות, דיוק 70אנגלית: דק"
+    },
+    {
+      "student": "AAA10",
+      "type": "detailed-full",
+      "fileName": "AAA10_2026-04_detailed-full.pdf",
+      "relativePath": "AAA10/AAA10_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 119806,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, עברית, חשבון. 2מהתרגול של בדיקה-ה מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 70 התרגול באנגלית נראה יציב — .80% שאלות, ד"
+    },
+    {
+      "student": "AAA10",
+      "type": "detailed-summary",
+      "fileName": "AAA10_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA10/AAA10_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 123079,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: אנגלית, עברית, חשבון. 2מהתרגול של בדיקה-ה מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 70 התרגול באנגלית נראה יציב — .80% שאל"
+    },
+    {
+      "student": "AAA10",
+      "type": "short-report",
+      "fileName": "AAA10_2026-04_short-report.pdf",
+      "relativePath": "AAA10/AAA10_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1131655,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 2בדיקה-ה 01/04/2026 - 30/04/2026 זמן כולל 'דק 455 (שעות 7.58) שאלות 280 נכון 224 דיוק כללי 80% רמה Lv.3 0 🏆 • 14 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, מולדת וגאוגרפיה. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, אנגלית, מדעים, עברית. 60· מדעים: גוף האדם: כ- 80% שאלות, דיוק 70· עברית: הבנת הנקרא: כ- 80% שאלות, דיוק 70אנגלית: דק"
+    },
+    {
+      "student": "AAA11",
+      "type": "detailed-full",
+      "fileName": "AAA11_2026-04_detailed-full.pdf",
+      "relativePath": "AAA11/AAA11_2026-04_detailed-full.pdf",
+      "pass": false,
+      "error": "Report shell timeout: page.waitForSelector: Timeout 240000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print')\n | body=טוען דוח מקיף…{\"props\":{\"pageProps\":{}},\"page\":\"/learning/parent-report-detailed\",\"query\":{},\"buildId\":\"development\",\"nextExport\":true,\"autoExport\":true,\"isFallback\":false,\"scriptLoader\":[]}"
+    },
+    {
+      "student": "AAA11",
+      "type": "detailed-summary",
+      "fileName": "AAA11_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA11/AAA11_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 122881,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון, מולדת 1מהתרגול של בדיקה-ו וגיאוגרפיה. מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 70 התרגול בעברית נראה יציב —"
+    },
+    {
+      "student": "AAA11",
+      "type": "short-report",
+      "fileName": "AAA11_2026-04_short-report.pdf",
+      "relativePath": "AAA11/AAA11_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1224197,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 1בדיקה-ו 01/04/2026 - 30/04/2026 זמן כולל 'דק 471 (שעות 7.85) שאלות 280 נכון 224 דיוק כללי 80% רמה Lv.4 8 🏆 • 39 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, מדעים, עברית, מולדת וגאוגרפיה. · מולדת וגאוגרפיה: מולדת: 80% שאלות, דיוק 70· עברית: הבנת הנקרא: כ- 80% שאלות, דיוק 70מדעים: ג"
+    },
+    {
+      "student": "AAA12",
+      "type": "detailed-full",
+      "fileName": "AAA12_2026-04_detailed-full.pdf",
+      "relativePath": "AAA12/AAA12_2026-04_detailed-full.pdf",
+      "pass": true,
+      "bytes": 119587,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח מלא דוח דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון, מולדת 2מהתרגול של בדיקה-ו וגיאוגרפיה. מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 70 התרגול בעברית נראה יציב — .80%"
+    },
+    {
+      "student": "AAA12",
+      "type": "detailed-summary",
+      "fileName": "AAA12_2026-04_detailed-summary.pdf",
+      "relativePath": "AAA12/AAA12_2026-04_detailed-summary.pdf",
+      "pass": true,
+      "bytes": 122882,
+      "contentPass": true,
+      "contentFailures": [],
+      "textSample": "לתקופה מקיף דוח להדפסה תקציר דוח הורים מקיף — מבוסס על התאריכים הנבחרים תאריכים מותאמים מצב תקופה: | 30/04/2026 – 01/04/2026 טווח תאריכים: סיכום חכם להורה בתקופה זו עולה תמונה של תרגול עקבי עם יציבות סבירה. המקצועות שתורגלו בתקופה: עברית, חשבון, מולדת 2מהתרגול של בדיקה-ו וגיאוגרפיה. מומלץ להמשיך עם שגרת תרגול קצרה ושוטפת כדי לחזק את התובנה. מה הולך טוב .80% שאלות, דיוק 70 התרגול בעברית נראה יציב —"
+    },
+    {
+      "student": "AAA12",
+      "type": "short-report",
+      "fileName": "AAA12_2026-04_short-report.pdf",
+      "relativePath": "AAA12/AAA12_2026-04_short-report.pdf",
+      "pass": true,
+      "bytes": 1132015,
+      "contentPass": false,
+      "contentFailures": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ],
+      "textSample": "להורים דוח 📊 2בדיקה-ו 01/04/2026 - 30/04/2026 זמן כולל 'דק 471 (שעות 7.85) שאלות 280 נכון 224 דיוק כללי 80% רמה Lv.2 0 🏆 • 6 ⭐ מצב הנתונים בדוח מקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית. (לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו המקצועות שתורגלו בתקופה: חשבון, מדעים, עברית, מולדת וגאוגרפיה. · מולדת וגאוגרפיה: מולדת: 80% שאלות, דיוק 70· עברית: הבנת הנקרא: כ- 80% שאלות, דיוק 70מדעים: גו"
+    }
+  ],
+  "contentVerification": [
+    {
+      "studentLabel": "AAA1",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 336,
+      "pdfQuestions": 240,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA1",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 181,
+      "pdfQuestions": 240,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA2",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 338,
+      "pdfQuestions": 240,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA3",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 340,
+      "pdfQuestions": 240,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA3",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 340,
+      "pdfQuestions": 240,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA3",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 183,
+      "pdfQuestions": 240,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA4",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 342,
+      "pdfQuestions": 240,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA4",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 342,
+      "pdfQuestions": 240,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA4",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 184,
+      "pdfQuestions": 240,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA5",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 398,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA5",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 398,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA5",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 152,
+      "pdfQuestions": 234,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA6",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 399,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA6",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 399,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA6",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 153,
+      "pdfQuestions": 234,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA7",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 402,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA7",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 402,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA7",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 154,
+      "pdfQuestions": 234,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA8",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 405,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA8",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 405,
+      "pdfQuestions": 234,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA8",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 155,
+      "pdfQuestions": 234,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA9",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 451,
+      "pdfQuestions": 280,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA9",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 451,
+      "pdfQuestions": 280,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA9",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 128,
+      "pdfQuestions": 280,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA10",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 455,
+      "pdfQuestions": 280,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA10",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 455,
+      "pdfQuestions": 280,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA10",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 129,
+      "pdfQuestions": 280,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA11",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA11",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 117,
+      "pdfQuestions": 280,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "studentLabel": "AAA12",
+      "exportType": "detailed-full",
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA12",
+      "exportType": "detailed-summary",
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "checks": []
+    },
+    {
+      "studentLabel": "AAA12",
+      "exportType": "short-report",
+      "pass": false,
+      "pdfMinutes": 117,
+      "pdfQuestions": 280,
+      "checks": [
+        {
+          "name": "pdf_minutes_at_least_250",
+          "pass": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "expected": 36,
+    "generated": 32,
+    "failed": 4,
+    "contentPass": 21,
+    "contentFail": 11
+  }
+}

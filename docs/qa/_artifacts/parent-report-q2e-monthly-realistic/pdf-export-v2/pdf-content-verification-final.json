@@ -1,0 +1,547 @@
+{
+  "runAt": "2026-06-07T22:37:00.952Z",
+  "total": 36,
+  "passCount": 36,
+  "results": [
+    {
+      "student": "AAA1",
+      "file": "AAA1_2026-04_detailed-full.pdf",
+      "bytes": 110626,
+      "pass": true,
+      "pdfMinutes": 336,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA1",
+      "file": "AAA1_2026-04_detailed-summary.pdf",
+      "bytes": 111594,
+      "pass": true,
+      "pdfMinutes": 336,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA1",
+      "file": "AAA1_2026-04_short-report.pdf",
+      "bytes": 1151870,
+      "pass": true,
+      "pdfMinutes": 336,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA2",
+      "file": "AAA2_2026-04_detailed-full.pdf",
+      "bytes": 110444,
+      "pass": true,
+      "pdfMinutes": 338,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA2",
+      "file": "AAA2_2026-04_detailed-summary.pdf",
+      "bytes": 111400,
+      "pass": true,
+      "pdfMinutes": 338,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA2",
+      "file": "AAA2_2026-04_short-report.pdf",
+      "bytes": 1057882,
+      "pass": true,
+      "pdfMinutes": 338,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA3",
+      "file": "AAA3_2026-04_detailed-full.pdf",
+      "bytes": 110505,
+      "pass": true,
+      "pdfMinutes": 340,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA3",
+      "file": "AAA3_2026-04_detailed-summary.pdf",
+      "bytes": 111465,
+      "pass": true,
+      "pdfMinutes": 340,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA3",
+      "file": "AAA3_2026-04_short-report.pdf",
+      "bytes": 1057798,
+      "pass": true,
+      "pdfMinutes": 340,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA4",
+      "file": "AAA4_2026-04_detailed-full.pdf",
+      "bytes": 110438,
+      "pass": true,
+      "pdfMinutes": 342,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA4",
+      "file": "AAA4_2026-04_detailed-summary.pdf",
+      "bytes": 111394,
+      "pass": true,
+      "pdfMinutes": 342,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA4",
+      "file": "AAA4_2026-04_short-report.pdf",
+      "bytes": 1057664,
+      "pass": true,
+      "pdfMinutes": 342,
+      "pdfQuestions": 240,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA5",
+      "file": "AAA5_2026-04_detailed-full.pdf",
+      "bytes": 114512,
+      "pass": true,
+      "pdfMinutes": 398,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA5",
+      "file": "AAA5_2026-04_detailed-summary.pdf",
+      "bytes": 115342,
+      "pass": true,
+      "pdfMinutes": 398,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA5",
+      "file": "AAA5_2026-04_short-report.pdf",
+      "bytes": 1094487,
+      "pass": true,
+      "pdfMinutes": 398,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA6",
+      "file": "AAA6_2026-04_detailed-full.pdf",
+      "bytes": 114514,
+      "pass": true,
+      "pdfMinutes": 399,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA6",
+      "file": "AAA6_2026-04_detailed-summary.pdf",
+      "bytes": 115344,
+      "pass": true,
+      "pdfMinutes": 399,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA6",
+      "file": "AAA6_2026-04_short-report.pdf",
+      "bytes": 1094266,
+      "pass": true,
+      "pdfMinutes": 399,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA7",
+      "file": "AAA7_2026-04_detailed-full.pdf",
+      "bytes": 114489,
+      "pass": true,
+      "pdfMinutes": 402,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA7",
+      "file": "AAA7_2026-04_detailed-summary.pdf",
+      "bytes": 115343,
+      "pass": true,
+      "pdfMinutes": 402,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA7",
+      "file": "AAA7_2026-04_short-report.pdf",
+      "bytes": 1094401,
+      "pass": true,
+      "pdfMinutes": 402,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA8",
+      "file": "AAA8_2026-04_detailed-full.pdf",
+      "bytes": 114613,
+      "pass": true,
+      "pdfMinutes": 405,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA8",
+      "file": "AAA8_2026-04_detailed-summary.pdf",
+      "bytes": 115469,
+      "pass": true,
+      "pdfMinutes": 405,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA8",
+      "file": "AAA8_2026-04_short-report.pdf",
+      "bytes": 1094439,
+      "pass": true,
+      "pdfMinutes": 405,
+      "pdfQuestions": 234,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA9",
+      "file": "AAA9_2026-04_detailed-full.pdf",
+      "bytes": 119786,
+      "pass": true,
+      "pdfMinutes": 451,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA9",
+      "file": "AAA9_2026-04_detailed-summary.pdf",
+      "bytes": 123083,
+      "pass": true,
+      "pdfMinutes": 451,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA9",
+      "file": "AAA9_2026-04_short-report.pdf",
+      "bytes": 1222402,
+      "pass": true,
+      "pdfMinutes": 451,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA10",
+      "file": "AAA10_2026-04_detailed-full.pdf",
+      "bytes": 119806,
+      "pass": true,
+      "pdfMinutes": 455,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA10",
+      "file": "AAA10_2026-04_detailed-summary.pdf",
+      "bytes": 123079,
+      "pass": true,
+      "pdfMinutes": 455,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA10",
+      "file": "AAA10_2026-04_short-report.pdf",
+      "bytes": 1133062,
+      "pass": true,
+      "pdfMinutes": 455,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA11",
+      "file": "AAA11_2026-04_detailed-full.pdf",
+      "bytes": 119586,
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA11",
+      "file": "AAA11_2026-04_detailed-summary.pdf",
+      "bytes": 122881,
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA11",
+      "file": "AAA11_2026-04_short-report.pdf",
+      "bytes": 1224197,
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA12",
+      "file": "AAA12_2026-04_detailed-full.pdf",
+      "bytes": 119587,
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA12",
+      "file": "AAA12_2026-04_detailed-summary.pdf",
+      "bytes": 122882,
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    },
+    {
+      "student": "AAA12",
+      "file": "AAA12_2026-04_short-report.pdf",
+      "bytes": 1132015,
+      "pass": true,
+      "pdfMinutes": 471,
+      "pdfQuestions": 280,
+      "failures": [],
+      "datesFound": {
+        "apr1": true,
+        "apr30": true,
+        "mar31": false
+      },
+      "hasInactivityWarning": false
+    }
+  ]
+}

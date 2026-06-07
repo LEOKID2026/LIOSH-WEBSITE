@@ -1,0 +1,628 @@
+{
+  "runAt": "2026-06-07T19:32:03.203Z",
+  "baseUrl": "http://127.0.0.1:3001",
+  "monthWindow": {
+    "from": "2026-04-01",
+    "to": "2026-04-30"
+  },
+  "seedTag": "parent-report-q2e-monthly-v1",
+  "parentAccount": "admin@admin.com",
+  "reportSurface": "parent-report-detailed-full",
+  "modes": [
+    "A",
+    "C",
+    "D"
+  ],
+  "students": [
+    {
+      "label": "AAA1",
+      "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA2",
+      "studentId": "6c4f6dc1-de43-4b86-abe7-4f041e9d3a8c",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA3",
+      "studentId": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA4",
+      "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA5",
+      "studentId": "79c8f8c7-2494-439e-b867-93b096c8590b",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA6",
+      "studentId": "b325272f-b554-4865-a827-6477773fb200",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA7",
+      "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA8",
+      "studentId": "921e1c5d-4124-41cd-bad7-a16dbf0dfecc",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA9",
+      "studentId": "cd4ba8f0-fe4f-424d-8ed1-0c3acaf5f412",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA10",
+      "studentId": "dea2bbce-1712-4862-9de7-00b732672fbb",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA11",
+      "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    },
+    {
+      "label": "AAA12",
+      "studentId": "873c6971-06ed-4b31-9d76-616b4b623a52",
+      "modes": {
+        "A": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "C": {
+          "sanitizationPass": true,
+          "checks": []
+        },
+        "D": {
+          "sanitizationPass": true,
+          "checks": []
+        }
+      }
+    }
+  ],
+  "exports": [
+    {
+      "student": "AAA1",
+      "login": "aaa1",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA1_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA1/AAA1_2026-04_mode-A-default.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n    16 × waiting for\" http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent&period=custom&start=2026-04-01&end=2026-04-30\" navigation to finish...\n       - navigated to \"http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent&period=custom&start=2026-04-01&end=2026-04-30\"\n"
+    },
+    {
+      "student": "AAA1",
+      "login": "aaa1",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA1_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA1/AAA1_2026-04_mode-C-suppression.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n    19 × waiting for\" http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent&period=custom&start=2026-04-01&end=2026-04-30\" navigation to finish...\n       - navigated to \"http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent&period=custom&start=2026-04-01&end=2026-04-30\"\n    - waiting for navigation to finish...\n    - navigated to \"http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent&period=custom&start=2026-04-01&end=2026-04-30\"\n"
+    },
+    {
+      "student": "AAA1",
+      "login": "aaa1",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA1_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA1/AAA1_2026-04_mode-D-promotion.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n    14 × waiting for\" http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent&period=custom&start=2026-04-01&end=2026-04-30\" navigation to finish...\n       - navigated to \"http://127.0.0.1:3001/learning/parent-report-detailed?studentId=fd3901da-66ce-46c7-a24c-b33df2141c04&source=parent&period=custom&start=2026-04-01&end=2026-04-30\"\n"
+    },
+    {
+      "student": "AAA2",
+      "login": "aaa2",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA2_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA2/AAA2_2026-04_mode-A-default.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n"
+    },
+    {
+      "student": "AAA2",
+      "login": "aaa2",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA2_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA2/AAA2_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 106111,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA2",
+      "login": "aaa2",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA2_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA2/AAA2_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 106111,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA3",
+      "login": "aaa3",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA3_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA3/AAA3_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 109411,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA3",
+      "login": "aaa3",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA3_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA3/AAA3_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 109411,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA3",
+      "login": "aaa3",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA3_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA3/AAA3_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 109411,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA4",
+      "login": "aaa4",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA4_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA4/AAA4_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 103775,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA4",
+      "login": "aaa4",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA4_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA4/AAA4_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 103775,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA4",
+      "login": "aaa4",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA4_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA4/AAA4_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 103775,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA5",
+      "login": "aaa5",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA5_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA5/AAA5_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 109397,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA5",
+      "login": "aaa5",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA5_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA5/AAA5_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 109397,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA5",
+      "login": "aaa5",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA5_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA5/AAA5_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 109397,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA6",
+      "login": "aaa6",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA6_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA6/AAA6_2026-04_mode-A-default.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n"
+    },
+    {
+      "student": "AAA6",
+      "login": "aaa6",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA6_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA6/AAA6_2026-04_mode-C-suppression.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n"
+    },
+    {
+      "student": "AAA6",
+      "login": "aaa6",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA6_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA6/AAA6_2026-04_mode-D-promotion.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n"
+    },
+    {
+      "student": "AAA7",
+      "login": "aaa7",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA7_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA7/AAA7_2026-04_mode-A-default.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n    - waiting for\" http://127.0.0.1:3001/learning/parent-report-detailed?studentId=d8f6b184-80f2-4f2b-897e-cbbf557022e7&source=parent&period=custom&start=2026-04-01&end=2026-04-30\" navigation to finish...\n    - navigated to \"http://127.0.0.1:3001/learning/parent-report-detailed?studentId=d8f6b184-80f2-4f2b-897e-cbbf557022e7&source=parent&period=custom&start=2026-04-01&end=2026-04-30\"\n"
+    },
+    {
+      "student": "AAA7",
+      "login": "aaa7",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA7_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA7/AAA7_2026-04_mode-C-suppression.pdf",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#parent-report-detailed-print').first()\n"
+    },
+    {
+      "student": "AAA7",
+      "login": "aaa7",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA7_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA7/AAA7_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 94146,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA8",
+      "login": "aaa8",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA8_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA8/AAA8_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 111013,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA8",
+      "login": "aaa8",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA8_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA8/AAA8_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 111013,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA8",
+      "login": "aaa8",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA8_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA8/AAA8_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 111013,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA9",
+      "login": "aaa9",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA9_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA9/AAA9_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 109219,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA9",
+      "login": "aaa9",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA9_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA9/AAA9_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 109219,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA9",
+      "login": "aaa9",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA9_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA9/AAA9_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 109219,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA10",
+      "login": "aaa10",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA10_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA10/AAA10_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 106142,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA10",
+      "login": "aaa10",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA10_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA10/AAA10_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 106142,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA10",
+      "login": "aaa10",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA10_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA10/AAA10_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 106142,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA11",
+      "login": "aaa11",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA11_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA11/AAA11_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 107132,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA11",
+      "login": "aaa11",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA11_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA11/AAA11_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 107132,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA11",
+      "login": "aaa11",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA11_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA11/AAA11_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 107132,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA12",
+      "login": "aaa12",
+      "mode": "A",
+      "modeSlug": "mode-A-default",
+      "fileName": "AAA12_2026-04_mode-A-default.pdf",
+      "relativePath": "AAA12/AAA12_2026-04_mode-A-default.pdf",
+      "pass": true,
+      "bytes": 113674,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA12",
+      "login": "aaa12",
+      "mode": "C",
+      "modeSlug": "mode-C-suppression",
+      "fileName": "AAA12_2026-04_mode-C-suppression.pdf",
+      "relativePath": "AAA12/AAA12_2026-04_mode-C-suppression.pdf",
+      "pass": true,
+      "bytes": 113674,
+      "hebrewSignal": true
+    },
+    {
+      "student": "AAA12",
+      "login": "aaa12",
+      "mode": "D",
+      "modeSlug": "mode-D-promotion",
+      "fileName": "AAA12_2026-04_mode-D-promotion.pdf",
+      "relativePath": "AAA12/AAA12_2026-04_mode-D-promotion.pdf",
+      "pass": true,
+      "bytes": 113674,
+      "hebrewSignal": true
+    }
+  ],
+  "summary": {
+    "expected": 36,
+    "generated": 27,
+    "failed": 9
+  }
+}

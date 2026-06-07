@@ -1,0 +1,383 @@
+{
+  "runAt": "2026-06-07T21:55:51.500Z",
+  "seedTag": "parent-report-q2e-monthly-realistic-v1",
+  "metaKey": "parentReportQ2eMonthlyRealistic",
+  "monthWindow": {
+    "from": "2026-04-01",
+    "to": "2026-04-30"
+  },
+  "cleanupNote": "Exclusive April window for realistic PDF package. Q2E sufficiency and Q1 sim tags removed (tag-scoped). Re-run parent-report-q2e-monthly-simulation.mjs to restore edge-case seed.",
+  "cleanup": {
+    "realistic": {
+      "tag": "parent-report-q2e-monthly-realistic-v1",
+      "metaKey": "parentReportQ2eMonthlyRealistic",
+      "removedSessions": 182,
+      "removedParentActivities": 0,
+      "removedBookSessions": 0
+    },
+    "q2e": {
+      "tag": "parent-report-q2e-monthly-v1",
+      "metaKey": "parentReportQ2eMonthly",
+      "removedSessions": 14,
+      "removedParentActivities": 1,
+      "removedBookSessions": 1
+    },
+    "q1": {
+      "tag": "parent-report-q1-sim-v1",
+      "metaKey": "parentReportQ1Sim",
+      "removedSessions": 0,
+      "removedParentActivities": 0,
+      "removedBookSessions": 0
+    }
+  },
+  "students": [
+    {
+      "label": "AAA1",
+      "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+      "totalSessions": 24,
+      "totalAnswers": 240,
+      "totalDurationMinutes": 336,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "addition",
+          "sessions": 13,
+          "answers": 130
+        },
+        {
+          "subject": "hebrew",
+          "topic": "vocabulary",
+          "sessions": 11,
+          "answers": 110
+        }
+      ]
+    },
+    {
+      "label": "AAA2",
+      "studentId": "6c4f6dc1-de43-4b86-abe7-4f041e9d3a8c",
+      "totalSessions": 24,
+      "totalAnswers": 240,
+      "totalDurationMinutes": 338,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "addition",
+          "sessions": 13,
+          "answers": 130
+        },
+        {
+          "subject": "hebrew",
+          "topic": "vocabulary",
+          "sessions": 11,
+          "answers": 110
+        }
+      ]
+    },
+    {
+      "label": "AAA3",
+      "studentId": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+      "totalSessions": 24,
+      "totalAnswers": 240,
+      "totalDurationMinutes": 340,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "addition",
+          "sessions": 13,
+          "answers": 130
+        },
+        {
+          "subject": "hebrew",
+          "topic": "vocabulary",
+          "sessions": 11,
+          "answers": 110
+        }
+      ]
+    },
+    {
+      "label": "AAA4",
+      "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+      "totalSessions": 24,
+      "totalAnswers": 240,
+      "totalDurationMinutes": 342,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "addition",
+          "sessions": 13,
+          "answers": 130
+        },
+        {
+          "subject": "hebrew",
+          "topic": "vocabulary",
+          "sessions": 11,
+          "answers": 110
+        }
+      ]
+    },
+    {
+      "label": "AAA5",
+      "studentId": "79c8f8c7-2494-439e-b867-93b096c8590b",
+      "totalSessions": 26,
+      "totalAnswers": 234,
+      "totalDurationMinutes": 398,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "multiplication",
+          "sessions": 10,
+          "answers": 90
+        },
+        {
+          "subject": "english",
+          "topic": "vocabulary",
+          "sessions": 8,
+          "answers": 72
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 8,
+          "answers": 72
+        }
+      ]
+    },
+    {
+      "label": "AAA6",
+      "studentId": "b325272f-b554-4865-a827-6477773fb200",
+      "totalSessions": 26,
+      "totalAnswers": 234,
+      "totalDurationMinutes": 400,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "multiplication",
+          "sessions": 10,
+          "answers": 90
+        },
+        {
+          "subject": "english",
+          "topic": "vocabulary",
+          "sessions": 8,
+          "answers": 72
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 8,
+          "answers": 72
+        }
+      ]
+    },
+    {
+      "label": "AAA7",
+      "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+      "totalSessions": 26,
+      "totalAnswers": 234,
+      "totalDurationMinutes": 402,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "multiplication",
+          "sessions": 10,
+          "answers": 90
+        },
+        {
+          "subject": "english",
+          "topic": "grammar",
+          "sessions": 8,
+          "answers": 72
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 8,
+          "answers": 72
+        }
+      ]
+    },
+    {
+      "label": "AAA8",
+      "studentId": "921e1c5d-4124-41cd-bad7-a16dbf0dfecc",
+      "totalSessions": 26,
+      "totalAnswers": 234,
+      "totalDurationMinutes": 404,
+      "activeDaysApprox": 20,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "multiplication",
+          "sessions": 10,
+          "answers": 90
+        },
+        {
+          "subject": "english",
+          "topic": "grammar",
+          "sessions": 8,
+          "answers": 72
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 8,
+          "answers": 72
+        }
+      ]
+    },
+    {
+      "label": "AAA9",
+      "studentId": "cd4ba8f0-fe4f-424d-8ed1-0c3acaf5f412",
+      "totalSessions": 28,
+      "totalAnswers": 280,
+      "totalDurationMinutes": 452,
+      "activeDaysApprox": 21,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "fractions",
+          "sessions": 8,
+          "answers": 80
+        },
+        {
+          "subject": "english",
+          "topic": "grammar",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "hebrew",
+          "topic": "reading_comprehension",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 6,
+          "answers": 60
+        }
+      ]
+    },
+    {
+      "label": "AAA10",
+      "studentId": "dea2bbce-1712-4862-9de7-00b732672fbb",
+      "totalSessions": 28,
+      "totalAnswers": 280,
+      "totalDurationMinutes": 454,
+      "activeDaysApprox": 21,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "fractions",
+          "sessions": 8,
+          "answers": 80
+        },
+        {
+          "subject": "english",
+          "topic": "grammar",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "hebrew",
+          "topic": "reading_comprehension",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 6,
+          "answers": 60
+        }
+      ]
+    },
+    {
+      "label": "AAA11",
+      "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+      "totalSessions": 28,
+      "totalAnswers": 280,
+      "totalDurationMinutes": 470,
+      "activeDaysApprox": 21,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "fractions",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "hebrew",
+          "topic": "reading_comprehension",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "moledet_geography",
+          "topic": "homeland",
+          "sessions": 7,
+          "answers": 70
+        }
+      ]
+    },
+    {
+      "label": "AAA12",
+      "studentId": "873c6971-06ed-4b31-9d76-616b4b623a52",
+      "totalSessions": 28,
+      "totalAnswers": 280,
+      "totalDurationMinutes": 473,
+      "activeDaysApprox": 21,
+      "lastActivityDay": "2026-04-30",
+      "subjects": [
+        {
+          "subject": "math",
+          "topic": "fractions",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "hebrew",
+          "topic": "reading_comprehension",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "science",
+          "topic": "body",
+          "sessions": 7,
+          "answers": 70
+        },
+        {
+          "subject": "moledet_geography",
+          "topic": "homeland",
+          "sessions": 7,
+          "answers": 70
+        }
+      ]
+    }
+  ]
+}
