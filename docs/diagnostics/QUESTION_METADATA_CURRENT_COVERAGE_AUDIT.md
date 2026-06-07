@@ -15,13 +15,15 @@
 | **Math** | **High** | Auto via `resolveMathSkillId` | `subskillId` / `params.subtype` | `problemClass`, `difficultyDepth` not canonical |
 | **Geometry** | **High** | Bridge maps `params.kind` | `params.patternFamily`, `subtype` | Some procedural kinds unmapped |
 | **Science** | **High** (static bank) | Bank `params.diagnosticSkillId` | `params.subtype`, `conceptTag` | No procedural generator |
-| **English** | **Medium** | Pool-dependent | `params.subtype`, `patternFamily` | Sparse `diagnosticSkillId` on pools |
-| **Hebrew** | **Low–Medium** | Only when row tagged | `subtopicId`, inferred `subtype` | Weak auto-`diagnosticSkillId` |
-| **Moledet/Geography** | **Medium** | Topic default + bridge | `subtype` on live gen; stripped on freeze | Frozen assigned rows lose params |
+| **English** | **High-bank** (Q2-C3) | 1189/1189 pool rows + generator attach | `params.canonicalMetadata` on all topics | Vocab procedural only at generation; translation poolKey sometimes general |
+| **Hebrew** | **High-bank** (Q2-C4) | Rich pool 100% + generator attach | `params.canonicalMetadata` | Legacy inline pools use conservative `heb_*` fallbacks |
+| **Moledet/Geography** | **High-bank** (Q2-C5) | 100% bank + generator + freeze params | `params.canonicalMetadata` preserved on freeze | Text-only banks; no map image assets yet |
 | **Parent assigned** | **Medium** | `skill_key` when frozen | `subtopic` column + frozen | Depends on source generator |
 | **Phase 8 engine** | **Answer-time** | Maps to `skillId` | `subtopic` only (not `subSkill`) | No `problemClass` / `difficultyDepth` |
 
-**Bottom line:** Math, geometry, and science are ready for Q2-C population first. Hebrew, English, and moledet frozen activities need normalizer + targeted bank/generator work before skill-level diagnosis is reliable.
+**Bottom line:** Q2-C1–C5 population is complete for all six subjects. Q2-D validator gates coverage/quality before Q2-E consumption.
+
+**Q2-D validator:** `node scripts/tests/question-metadata-validator.mjs` — see `QUESTION_METADATA_Q2_D_VALIDATOR.md`.
 
 ---
 
@@ -208,72 +210,101 @@
 
 ---
 
-### 2.4 English
+### 2.4 English (Q2-C3 complete)
 
 **Paths:**
-- `utils/english-question-generator.js`
-- `data/english-questions/` (grammar-pools, vocabulary, translation)
-- `pages/learning/english-master.js`
+- `lib/learning/english-canonical-metadata.js`
+- `utils/english-question-generator.js` — `attachCanonicalMetadataToEnglishQuestion` on every `generateQuestion()` return
+- `data/english-questions/index.js` — pool enrich at export (`GRAMMAR_POOLS`, `SENTENCE_POOLS`, `TRANSLATION_POOLS`)
+- `pages/learning/english-master.js` (unchanged consumer)
+
+**Runtime coverage (Q2-C3):**
+
+| Surface | Before Q2-C3 | After Q2-C3 |
+|---------|--------------|-------------|
+| Static pool rows | 0 / 1189 `canonicalMetadata` | **1189 / 1189** `row.canonicalMetadata` + `skillId` |
+| `generateQuestion()` output | 0 `params.canonicalMetadata` | **100%** on grammar, vocabulary, translation, sentences, writing |
+| Vocabulary (procedural) | no pool row | `eng_vocabulary_{listKey}` at generation |
 
 **Fields:**
 
 | Field | Status |
 |-------|--------|
-| `topic` | `grammar`, `vocabulary`, `translation`, … |
-| `subSkill` | `params.subtype`, `params.patternFamily` on enriched pools |
-| `skillId` | **Sparse** — 4 explicit `diagnosticSkillId` in grammar-pools |
-| `questionType` | Infer: `grammar`/`vocabulary`/`translation` from topic |
-| `possibleErrorPatterns` | `distractorFamily` on grammar rows |
+| `topic` | `grammar`, `vocabulary`, `translation`, `sentences`, `writing` |
+| `subSkill` | `subtype`, `patternFamily`, `listKey`, `englishPoolKey` |
+| `skillId` | Explicit `diagnosticSkillId` / row `skillId` when present; else `eng_grammar_{subtype}`, `eng_vocabulary_{listKey}`, `eng_translation_{poolKey}`, `eng_sentences_{subtype}`, `eng_{topic}_general` |
+| `questionType` | `grammar` / `vocabulary` / `translation` from topic |
+| `problemClass` | `conceptual` or `mixed` (translation/writing); omitted when unknown |
+| `possibleErrorPatterns` | From `expectedErrorTags` / `distractorFamily` via normalizer |
 
-**Gaps:** Pool-dependent; no uniform auto-skill id.
+**Gaps:** Procedural vocabulary has no static pool row metadata (generation-only). Translation without `englishPoolKey` uses `eng_translation_general`. `diagnosticEligibleByMetadata` is QA/debug only.
 
-**Coverage rating:** ⭐⭐⭐ — Q2-C phase 2.
+**Coverage rating:** ⭐⭐⭐⭐ — bank + generator populated; see `QUESTION_METADATA_Q2_C3_ENGLISH.md`.
 
 ---
 
-### 2.5 Hebrew
+### 2.5 Hebrew (Q2-C4 complete)
 
 **Paths:**
-- `utils/hebrew-question-generator.js`
-- `utils/hebrew-g*-subtopic.js`, `utils/hebrew-rich-question-bank.js`
-- `utils/hebrew-rich-diagnostic-metadata-enrich.js`
-- `pages/learning/hebrew-master.js`
+- `lib/learning/hebrew-canonical-metadata.js`
+- `utils/hebrew-question-generator.js` — attach on all `generateQuestion()` returns
+- `utils/hebrew-rich-question-bank.js` — `row.canonicalMetadata` at module load
+- `utils/hebrew-rich-diagnostic-metadata-enrich.js` (unchanged diagnostic pass)
+- `pages/learning/hebrew-master.js` (unchanged consumer)
+
+**Runtime coverage (Q2-C4):**
+
+| Surface | Before Q2-C4 | After Q2-C4 |
+|---------|--------------|-------------|
+| `HEBREW_RICH_POOL` rows | 0 `canonicalMetadata` | **100%** `row.canonicalMetadata` + `skillId` |
+| `generateQuestion()` output | 0 `params.canonicalMetadata` | **100%** (incl. empty-pool placeholder) |
+| Legacy inline pools | sparse ids | generation-time attach with `heb_*` fallbacks |
 
 **Fields:**
 
 | Field | Status |
 |-------|--------|
 | `topic` | Grade-scoped topics |
-| `subSkill` | `subtopicId` (e.g. `g1.phoneme_awareness`), `subtype` |
-| `skillId` | **Only if on raw row** — not auto-generated in `finalizeHebrewMcq` |
-| `difficultyDepth` | `difficultyBand` from level |
-| `possibleErrorPatterns` | Optional `expectedErrorTags`, `distractorFamily` |
+| `subSkill` | `subtopicId` → `subtype` → `patternFamily` |
+| `skillId` | Explicit `diagnosticSkillId` when present; else `heb_{topic}_{subtopicId}` / `heb_{topic}_{subtype}` / `heb_{topic}_general` |
+| `questionType` | `reading_comprehension` / `vocabulary` / `grammar` / `technical`; omitted when unclear |
+| `possibleErrorPatterns` | `expectedErrorTags` / `distractorFamily` via normalizer |
 
-**Gaps:** Weakest uniform `skillId`. Enrichment tooling exists but coverage uneven.
+**Gaps:** Legacy inline generator pools still rely on runtime attach + conservative fallbacks. Assigned-activity freeze adapter still strips most params (canonical preserved only when full `params` passed to freeze).
 
-**Coverage rating:** ⭐⭐ — Q2-C phase 3; needs bank pass.
+**Coverage rating:** ⭐⭐⭐⭐ — rich bank + generator; see `QUESTION_METADATA_Q2_C4_HEBREW.md`.
 
 ---
 
-### 2.6 Moledet / Geography
+### 2.6 Moledet / Geography (Q2-C5 complete)
 
 **Paths:**
-- `utils/moledet-geography-question-generator.js`
-- `utils/moledet-geography-diagnostic-metadata-bridge.js`
-- `data/geography-questions/`
-- `pages/learning/moledet-geography-master.js`
+- `lib/learning/moledet-geography-canonical-metadata.js`
+- `data/geography-questions/index.js` — enrich all grade pools at export
+- `utils/moledet-geography-question-generator.js` — attach on `generateQuestion()`
+- `lib/classroom-activities/generate-activity-questions-client.js` — freeze adapter preserves full `params`
+- `pages/learning/moledet-geography-master.js` (unchanged consumer)
+
+**Runtime coverage (Q2-C5):**
+
+| Surface | Before Q2-C5 | After Q2-C5 |
+|---------|--------------|-------------|
+| Static bank rows | 0 `params.canonicalMetadata` | **100%** all grade×level pools |
+| `generateQuestion()` | bridge-only `params` | **100%** with `params.canonicalMetadata` |
+| Assigned freeze `params` | `{ subtype, cognitiveLevel }` only | **Full** diagnostic + `canonicalMetadata` |
 
 **Fields:**
 
 | Field | Status |
 |-------|--------|
-| `skillId` | `moledet_geo_{topic}` default; row override |
-| `subSkill` | `subtype`, `subtopicId`, `bookPageId` (book practice) |
-| `requiresVisual` | Map items |
+| `skillId` | Row `skillId` or `moledet_geo_{topic}_{subtype}` / `_general` |
+| `subSkill` | `conceptTag` → `subtype` → `patternFamily` |
+| `questionType` | vocabulary / reading_comprehension / technical / visual (when assets exist) |
+| `requiresVisual` | Only when `mapUrl` / `diagram` / `shape` present (banks text-only today) |
 
-**Gaps:** Static bank files have **no** `diagnosticSkillId` strings (bridge derives at runtime). Frozen assigned rows often keep only `subtype`, `cognitiveLevel` — params stripped.
+**Gaps:** No rendered map assets in banks; `maps` topic is text map-literacy MCQ.
 
-**Coverage rating:** ⭐⭐⭐ live / ⭐⭐ frozen.
+**Coverage rating:** ⭐⭐⭐⭐ — see `QUESTION_METADATA_Q2_C5_MOLEDET.md`.
 
 ---
 
@@ -401,3 +432,42 @@ See `QUESTION_METADATA_CONTRACT.md` §7:
 | Phase 8 tests green | Unchanged |
 | Public `meta.evidenceQuality` | Unchanged |
 | Cross-context isolation | Unchanged |
+
+---
+
+## 10. Q2-D Validator Coverage (2026-06-06)
+
+**Script:** `node scripts/tests/question-metadata-validator.mjs`  
+**Library:** `lib/learning/question-metadata-validator.js`  
+**Doc:** `QUESTION_METADATA_Q2_D_VALIDATOR.md`
+
+### Per-subject thresholds
+
+| Subject | Phase | minTotal | minCoveragePct | Last run |
+|---------|-------|----------|----------------|----------|
+| Math | Q2-C1 | 1 | 100% | 1/1 PASS |
+| Geometry | Q2-C1 | 1 | 100% | 1/1 PASS |
+| Science | Q2-C2 | 1000 | 100% | 1017/1017 PASS |
+| English | Q2-C3 | 1000 | 100% | 1191/1191 PASS |
+| Hebrew | Q2-C4 | 50 | 100% | 55/55 PASS |
+| Moledet/Geography | Q2-C5 | 3000 | 100% | 3508/3508 PASS |
+
+### Validator rules (summary)
+
+1. **Required fields** — `contractVersion`, `subject`, `topic`, `skillId`, `answerFormat`, `metadataConfidence`; `subSkill` / `questionType` when derivable; `diagnosticEligibleByMetadata` QA-only.
+2. **Confidence quality** — fallback-only `skillId` cannot be `high`; `requiresVisual` / `requiresAudio` conservative; `answerFormat` matches mcq/numeric/text.
+3. **Non-diagnostic safety** — book, step-by-step, guided practice, discussion, review/mistakes never overridden by metadata.
+4. **No-consumption** — grep guard: no `canonicalMetadata` in report aggregate, evidence-quality, or public API shaping (pre Q2-E).
+5. **Cross-context** — no parent/school/teacher parity or merge logic tied to `canonicalMetadata`.
+
+### Audit label corrections (Q2-D)
+
+| Subject | Correct phase |
+|---------|---------------|
+| English | Q2-C3 (was mislabeled Q2-C1 in some audit strings) |
+| Hebrew | Q2-C4 |
+| Moledet/Geography | Q2-C5 |
+
+### Confidence-quality findings (last run)
+
+None — all sampled rows passed conservative confidence checks.

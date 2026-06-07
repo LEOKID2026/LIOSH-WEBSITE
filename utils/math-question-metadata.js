@@ -6,6 +6,7 @@ import {
   EXTENDED_EXPECTED_ERROR_TYPES,
   mapDifficultyToCanonical,
 } from "./question-metadata-qa/question-metadata-taxonomy.js";
+import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/math-geometry-canonical-metadata.js";
 
 function pickStr(v) {
   if (v === undefined || v === null) return "";
@@ -174,5 +175,11 @@ export function attachProfessionalMathMetadata(output, ctx) {
     params,
   };
 
-  return next;
+  return attachCanonicalMetadataToMathGeometryQuestion(next, {
+    subject: "math",
+    gradeKey: pickStr(ctx.gradeKey) || null,
+    levelKey: pickStr(ctx.mathLevelKey) || null,
+    topic: pickStr(base.operation) || selectedOp || null,
+    selectedOp,
+  });
 }

@@ -11,6 +11,7 @@ import { SCIENCE_QUESTIONS_NEEDS_MORE_VOLUME } from "./science-questions-needs-m
 import { SCIENCE_G3_BODY_BANK } from "./science-questions-g3-body-bank.js";
 import { SCIENCE_QUESTIONS_PHASE_B } from "./science-questions-phase-b.js";
 import { applyPass1ScienceMetadata } from "./science-questions-metadata-pass1-enrich.js";
+import { enrichScienceBankRowWithCanonicalMetadata } from "../lib/learning/science-canonical-metadata.js";
 
 const SCIENCE_QUESTIONS_RAW = [
   {
@@ -10873,4 +10874,6 @@ const SCIENCE_QUESTIONS_RAW = [
   .concat(SCIENCE_G3_BODY_BANK)
   .concat(SCIENCE_QUESTIONS_PHASE_B);
 
-export const SCIENCE_QUESTIONS = SCIENCE_QUESTIONS_RAW.map(applyPass1ScienceMetadata);
+export const SCIENCE_QUESTIONS = SCIENCE_QUESTIONS_RAW.map(applyPass1ScienceMetadata).map(
+  enrichScienceBankRowWithCanonicalMetadata
+);

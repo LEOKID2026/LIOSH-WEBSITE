@@ -1,5 +1,6 @@
 import { itemAllowedForGrade, itemAllowedForLevel } from "./grade-gating.js";
 import { enrichHebrewRichPoolRows } from "./hebrew-rich-diagnostic-metadata-enrich.js";
+import { enrichHebrewRichPoolWithCanonicalMetadata } from "../lib/learning/hebrew-canonical-metadata.js";
 
 /**
  * בנק שאלות עברית מובנה — משלים את המאגר הקלאסי.
@@ -1409,6 +1410,7 @@ export const HEBREW_RICH_POOL = [
 
 // P0/P1 diagnostic metadata + level/grade eligibility (no stem/answer changes).
 enrichHebrewRichPoolRows(HEBREW_RICH_POOL);
+enrichHebrewRichPoolWithCanonicalMetadata(HEBREW_RICH_POOL);
 
 export function filterRichHebrewPool(gradeKey, levelKey, topic) {
   const l = String(levelKey || "easy").toLowerCase();

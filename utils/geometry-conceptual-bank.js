@@ -1,6 +1,7 @@
 import { itemAllowedForGrade } from "./grade-gating.js";
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
+import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/math-geometry-canonical-metadata.js";
 
 /**
  * שאלות גיאומטריה קונספטואליות — הסקה, השוואה, סיווג, בלבול שטח/היקף, רב-שלבי מושגי.
@@ -64,14 +65,24 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
         : "מושגים (אתגר)";
   const qText = String(row.question || "").trim();
 
-  return sanitizeQuestionForStudentDisplay({
-    question: qText,
-    correctAnswer: correct,
-    answers,
-    topic,
-    shape: null,
-    params: { ...params, conceptualLevelFraming: levelFr },
-  });
+  return sanitizeQuestionForStudentDisplay(
+    attachCanonicalMetadataToMathGeometryQuestion(
+      {
+        question: qText,
+        correctAnswer: correct,
+        answers,
+        topic,
+        shape: null,
+        params: { ...params, conceptualLevelFraming: levelFr },
+      },
+      {
+        subject: "geometry",
+        gradeKey,
+        levelKey: lv,
+        topic,
+      }
+    )
+  );
 }
 
 /**

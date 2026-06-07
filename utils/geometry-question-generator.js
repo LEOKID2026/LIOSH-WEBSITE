@@ -11,6 +11,7 @@ import {
 } from "./geometry-conceptual-bank.js";
 import { gradeBandForKey } from "./grade-gating.js";
 import { enrichGeometryProceduralParams } from "./geometry-diagnostic-metadata-bridge.js";
+import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/math-geometry-canonical-metadata.js";
 import { formatTriangleAnglesKnownTwoStem } from "./geometry-activity-question-stem.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 
@@ -2149,13 +2150,23 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     levelKey,
   });
 
-  return sanitizeQuestionForStudentDisplay({
-    question,
-    correctAnswer: resolvedCorrect,
-    answers: shuffledAnswers,
-    topic: selectedTopic,
-    shape,
-    params: enrichedParams,
-  });
+  return sanitizeQuestionForStudentDisplay(
+    attachCanonicalMetadataToMathGeometryQuestion(
+      {
+        question,
+        correctAnswer: resolvedCorrect,
+        answers: shuffledAnswers,
+        topic: selectedTopic,
+        shape,
+        params: enrichedParams,
+      },
+      {
+        subject: "geometry",
+        gradeKey,
+        levelKey,
+        topic: selectedTopic,
+      }
+    )
+  );
 }
 

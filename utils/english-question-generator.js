@@ -3,6 +3,7 @@
  */
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
+import { attachCanonicalMetadataToEnglishQuestion } from "../lib/learning/english-canonical-metadata.js";
 import { mcqCellValue } from "./mcq-option-cell.js";
 import { ENGLISH_GRADES, ENGLISH_GRADE_ORDER } from "../data/english-curriculum.js";
 import {
@@ -286,6 +287,8 @@ export function generateQuestion(
   let question,
     correctAnswer,
     params = {};
+  /** @type {Record<string, unknown>|null} */
+  let englishSourceRow = null;
   let qType = "choice"; // ייקבע אחרי הבנייה לפי כללים דטרמיניסטיים
   const buildAcceptedAnswers = (baseAnswer) => {
     const normalizeQuotes = (value) =>
@@ -454,6 +457,7 @@ export function generateQuestion(
         };
         break;
       }
+      englishSourceRow = grammarQ;
       question = grammarQ.question;
       correctAnswer = grammarQ.correct;
       params = mergeDiagnosticContractIntoParams(
@@ -534,6 +538,7 @@ export function generateQuestion(
         levelKey === "hard" ||
         (levelKey === "medium" && gNum >= 4) ||
         (levelKey === "easy" && gNum >= 6);
+      englishSourceRow = sentence;
       const direction = translationToEnglish ? "he_to_en" : "en_to_he";
       const trFam =
         sentence.patternFamily ||
@@ -543,21 +548,31 @@ export function generateQuestion(
       if (direction === "en_to_he") {
         question = `תרגם: "${sentence.en}"`;
         correctAnswer = sentence.he;
-        params = {
-          sentence: sentence.en,
-          translation: sentence.he,
-          direction: "en_to_he",
-          patternFamily: trFam,
-        };
+        params = mergeDiagnosticContractIntoParams(
+          {
+            sentence: sentence.en,
+            translation: sentence.he,
+            direction: "en_to_he",
+            patternFamily: trFam,
+            difficulty: sentence.difficulty,
+            cognitiveLevel: sentence.cognitiveLevel,
+          },
+          sentence
+        );
       } else {
         question = `תרגם: "${sentence.he}"`;
         correctAnswer = sentence.en;
-        params = {
-          sentence: sentence.he,
-          translation: sentence.en,
-          direction: "he_to_en",
-          patternFamily: trFam,
-        };
+        params = mergeDiagnosticContractIntoParams(
+          {
+            sentence: sentence.he,
+            translation: sentence.en,
+            direction: "he_to_en",
+            patternFamily: trFam,
+            difficulty: sentence.difficulty,
+            cognitiveLevel: sentence.cognitiveLevel,
+          },
+          sentence
+        );
       }
       if (forcedPoolKey) params.englishPoolKey = forcedPoolKey;
       if (forceKind) params.bookPageId = forceKind;
@@ -613,17 +628,26 @@ export function generateQuestion(
         };
         break;
       }
+      englishSourceRow = template;
       question = `השלם את המשפט: "${template.template}"`;
       correctAnswer = template.correct;
-      params = {
-        template: template.template,
-        explanation: template.explanation,
-        patternFamily: template.patternFamily || "sentence_completion",
-        distractorFamily: template.distractorFamily || "same_slot_forms",
-        sentenceOptionSet: Array.isArray(template.options)
-          ? template.options
-          : null,
-      };
+      params = mergeDiagnosticContractIntoParams(
+        {
+          template: template.template,
+          explanation: template.explanation,
+          patternFamily: template.patternFamily || "sentence_completion",
+          distractorFamily: template.distractorFamily || "same_slot_forms",
+          sentenceOptionSet: Array.isArray(template.options)
+            ? template.options
+            : null,
+          difficulty: template.difficulty,
+          cognitiveLevel: template.cognitiveLevel,
+        },
+        template
+      );
+      if (!params.diagnosticSkillId && template.skillId) {
+        params.diagnosticSkillId = template.skillId;
+      }
       if (forcedPoolKey) params.englishPoolKey = forcedPoolKey;
       if (forceKind) params.bookPageId = forceKind;
       break;
@@ -805,7 +829,7 @@ export function generateQuestion(
     levelKey,
   };
 
-  return sanitizeQuestionForStudentDisplay({
+  const display = sanitizeQuestionForStudentDisplay({
     question,
     correctAnswer,
     acceptedAnswers: buildAcceptedAnswers(correctAnswer),
@@ -813,6 +837,13 @@ export function generateQuestion(
     topic: selectedTopic,
     params: mergedParams,
     qType,
+  });
+
+  return attachCanonicalMetadataToEnglishQuestion(display, {
+    topic: selectedTopic,
+    gradeKey,
+    levelKey,
+    sourceRow: englishSourceRow,
   });
 }
 

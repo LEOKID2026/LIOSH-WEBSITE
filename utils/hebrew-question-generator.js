@@ -22,6 +22,7 @@ import {
   attachUpperGradeSubtopicParams,
 } from './hebrew-g3456-subtopic.js';
 import { pickDiagnosticContractFields } from './diagnostic-question-contract.js';
+import { attachCanonicalMetadataToHebrewQuestion } from '../lib/learning/hebrew-canonical-metadata.js';
 import {
   dedupeMcqOptionsInPlace,
   rebalanceGenericHebrewReadingDistractors,
@@ -5081,32 +5082,35 @@ export function generateQuestion(
           "data/hebrew-questions/g*.js is not imported by the app; grep the repo for 'hebrew-questions' / 'data/hebrew-questions' on JS/TS entrypoints.",
       };
       logHebrewSourceTraceIfDev(emptyTrace);
-      return {
-        question:
-          "אין כרגע שאלות זמינות לכיתה ולרמה שנבחרו. נסו נושא אחר או רמת קושי אחרת.",
-        questionLabel: "",
-        exerciseText:
-          "אין כרגע שאלות זמינות לכיתה ולרמה שנבחרו. נסו נושא אחר או רמת קושי אחרת.",
-        answers: ["הבנתי", "אנסה שוב", "אחזור לתפריט", "אבחר נושא אחר"],
-        correctAnswer: "הבנתי",
-        acceptedAnswers: ["הבנתי"],
-        answerMode: "choice",
-        optionCount: 4,
-        correctIndex: 0,
-        topic: selectedTopic,
-        operation: selectedTopic,
-        a: null,
-        b: null,
-        params: {
-          kind: "empty_pool",
-          grade: gradeKey,
-          gradeKey,
-          levelKey,
-          patternFamily: "no_questions",
+      return attachCanonicalMetadataToHebrewQuestion(
+        {
+          question:
+            "אין כרגע שאלות זמינות לכיתה ולרמה שנבחרו. נסו נושא אחר או רמת קושי אחרת.",
+          questionLabel: "",
+          exerciseText:
+            "אין כרגע שאלות זמינות לכיתה ולרמה שנבחרו. נסו נושא אחר או רמת קושי אחרת.",
+          answers: ["הבנתי", "אנסה שוב", "אחזור לתפריט", "אבחר נושא אחר"],
+          correctAnswer: "הבנתי",
+          acceptedAnswers: ["הבנתי"],
           answerMode: "choice",
-          sourceTrace: emptyTrace,
+          optionCount: 4,
+          correctIndex: 0,
+          topic: selectedTopic,
+          operation: selectedTopic,
+          a: null,
+          b: null,
+          params: {
+            kind: "empty_pool",
+            grade: gradeKey,
+            gradeKey,
+            levelKey,
+            patternFamily: "no_questions",
+            answerMode: "choice",
+            sourceTrace: emptyTrace,
+          },
         },
-      };
+        { topic: selectedTopic, gradeKey, levelKey, sourceRow: null }
+      );
     }
     const fallbackTopic = got.topic;
     const fallbackLevelKey = got.lv;
@@ -5167,48 +5171,56 @@ export function generateQuestion(
       subtopicParams,
     });
     logHebrewSourceTraceIfDev(sourceTrace);
-    return {
-      question: randomQ.question,
-      questionLabel: "",
-      exerciseText: randomQ.question,
-      answers: shuffledAnswers,
-      correctAnswer: correctAnswer,
-      acceptedAnswers,
-      answerMode,
-      optionCount,
-      correctIndex: newCorrectIndex >= 0 ? newCorrectIndex : 0,
-      topic: fallbackTopic,
-      operation: fallbackTopic,
-      a: null,
-      b: null,
-      params: {
-        kind: fallbackTopic,
-        grade: gradeKey,
-        gradeKey: gradeKey,
-        levelKey: fallbackLevelKey,
-        patternFamily: randomQ.patternFamily,
-        subtype: randomQ.subtype,
-        distractorFamily: randomQ.distractorFamily,
-        difficultyBand: randomQ.difficultyBand,
-        optionCount,
+    return attachCanonicalMetadataToHebrewQuestion(
+      {
+        question: randomQ.question,
+        questionLabel: "",
+        exerciseText: randomQ.question,
+        answers: shuffledAnswers,
+        correctAnswer: correctAnswer,
+        acceptedAnswers,
         answerMode,
-        requestedLevelKey: levelKey,
-        ...(randomQ.hebrewLegacyMeta
-          ? { hebrewLegacyMeta: randomQ.hebrewLegacyMeta }
-          : {}),
-        ...(fallbackTopic !== selectedTopic
-          ? { gradeFallbackFromTopic: selectedTopic }
-          : {}),
-        ...(fallbackLevelKey !== levelKey ? { levelRelaxedFrom: levelKey } : {}),
-        ...subtopicParams,
-        ...pickDiagnosticContractFields(randomQ),
-        ...(randomQ.authenticity_pattern != null &&
-        String(randomQ.authenticity_pattern).trim() !== ""
-          ? { authenticity_pattern: String(randomQ.authenticity_pattern).trim() }
-          : {}),
-        sourceTrace,
+        optionCount,
+        correctIndex: newCorrectIndex >= 0 ? newCorrectIndex : 0,
+        topic: fallbackTopic,
+        operation: fallbackTopic,
+        a: null,
+        b: null,
+        params: {
+          kind: fallbackTopic,
+          grade: gradeKey,
+          gradeKey: gradeKey,
+          levelKey: fallbackLevelKey,
+          patternFamily: randomQ.patternFamily,
+          subtype: randomQ.subtype,
+          distractorFamily: randomQ.distractorFamily,
+          difficultyBand: randomQ.difficultyBand,
+          optionCount,
+          answerMode,
+          requestedLevelKey: levelKey,
+          ...(randomQ.hebrewLegacyMeta
+            ? { hebrewLegacyMeta: randomQ.hebrewLegacyMeta }
+            : {}),
+          ...(fallbackTopic !== selectedTopic
+            ? { gradeFallbackFromTopic: selectedTopic }
+            : {}),
+          ...(fallbackLevelKey !== levelKey ? { levelRelaxedFrom: levelKey } : {}),
+          ...subtopicParams,
+          ...pickDiagnosticContractFields(randomQ),
+          ...(randomQ.authenticity_pattern != null &&
+          String(randomQ.authenticity_pattern).trim() !== ""
+            ? { authenticity_pattern: String(randomQ.authenticity_pattern).trim() }
+            : {}),
+          sourceTrace,
+        },
       },
-    };
+      {
+        topic: fallbackTopic,
+        gradeKey,
+        levelKey: fallbackLevelKey,
+        sourceRow: rawPick,
+      }
+    );
   }
 
   const rawPick = pickWeightedHebrewItem(
@@ -5260,43 +5272,51 @@ export function generateQuestion(
     subtopicParams,
   });
   logHebrewSourceTraceIfDev(sourceTrace);
-  return {
-    question: randomQ.question,
-    questionLabel: "",
-    exerciseText: randomQ.question,
-    answers: shuffledAnswers,
-    correctAnswer: correctAnswer,
-    acceptedAnswers,
-    answerMode,
-    optionCount,
-    correctIndex: newCorrectIndex >= 0 ? newCorrectIndex : 0,
-    topic: selectedTopic,
-    operation: selectedTopic,
-    a: null,
-    b: null,
-    params: {
-      kind: selectedTopic,
-      grade: gradeKey,
-      gradeKey: gradeKey,
-      levelKey: poolLevelKey,
-      patternFamily: randomQ.patternFamily,
-      subtype: randomQ.subtype,
-      distractorFamily: randomQ.distractorFamily,
-      difficultyBand: randomQ.difficultyBand,
-      optionCount,
+  return attachCanonicalMetadataToHebrewQuestion(
+    {
+      question: randomQ.question,
+      questionLabel: "",
+      exerciseText: randomQ.question,
+      answers: shuffledAnswers,
+      correctAnswer: correctAnswer,
+      acceptedAnswers,
       answerMode,
-      requestedLevelKey: levelKey,
-      ...(randomQ.hebrewLegacyMeta
-        ? { hebrewLegacyMeta: randomQ.hebrewLegacyMeta }
-        : {}),
-      ...(poolLevelKey !== levelKey ? { levelRelaxedFrom: levelKey } : {}),
-      ...subtopicParams,
-      ...pickDiagnosticContractFields(randomQ),
-      ...(randomQ.authenticity_pattern != null &&
-      String(randomQ.authenticity_pattern).trim() !== ""
-        ? { authenticity_pattern: String(randomQ.authenticity_pattern).trim() }
-        : {}),
-      sourceTrace,
+      optionCount,
+      correctIndex: newCorrectIndex >= 0 ? newCorrectIndex : 0,
+      topic: selectedTopic,
+      operation: selectedTopic,
+      a: null,
+      b: null,
+      params: {
+        kind: selectedTopic,
+        grade: gradeKey,
+        gradeKey: gradeKey,
+        levelKey: poolLevelKey,
+        patternFamily: randomQ.patternFamily,
+        subtype: randomQ.subtype,
+        distractorFamily: randomQ.distractorFamily,
+        difficultyBand: randomQ.difficultyBand,
+        optionCount,
+        answerMode,
+        requestedLevelKey: levelKey,
+        ...(randomQ.hebrewLegacyMeta
+          ? { hebrewLegacyMeta: randomQ.hebrewLegacyMeta }
+          : {}),
+        ...(poolLevelKey !== levelKey ? { levelRelaxedFrom: levelKey } : {}),
+        ...subtopicParams,
+        ...pickDiagnosticContractFields(randomQ),
+        ...(randomQ.authenticity_pattern != null &&
+        String(randomQ.authenticity_pattern).trim() !== ""
+          ? { authenticity_pattern: String(randomQ.authenticity_pattern).trim() }
+          : {}),
+        sourceTrace,
+      },
     },
-  };
+    {
+      topic: selectedTopic,
+      gradeKey,
+      levelKey: poolLevelKey,
+      sourceRow: rawPick,
+    }
+  );
 }

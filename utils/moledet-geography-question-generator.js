@@ -3,6 +3,7 @@ import { isMoledetGeographyGradeAllowed } from './moledet-geography-curriculum-g
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
 import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contract.js';
 import { moledetDiagnosticContractFromBankRow } from './moledet-geography-diagnostic-metadata-bridge.js';
+import { attachCanonicalMetadataToMoledetQuestion } from '../lib/learning/moledet-geography-canonical-metadata.js';
 import { selectQuestionWithProbe } from './active-diagnostic-runtime/select-with-probe.js';
 import {
   G1_EASY_QUESTIONS,
@@ -94,7 +95,7 @@ function shuffleAnswersAndBuild(randomQ, selectedTopic, gradeKey, levelKey, uiLe
     },
     diag
   );
-  return sanitizeQuestionForStudentDisplay({
+  const display = sanitizeQuestionForStudentDisplay({
     question: randomQ.question,
     questionLabel: "",
     exerciseText: randomQ.question,
@@ -112,6 +113,13 @@ function shuffleAnswersAndBuild(randomQ, selectedTopic, gradeKey, levelKey, uiLe
       /** @type {Record<string, unknown>} */ (randomQ),
       selectedTopic
     ),
+  });
+
+  return attachCanonicalMetadataToMoledetQuestion(display, {
+    topic: selectedTopic,
+    gradeKey,
+    levelKey,
+    sourceRow: randomQ,
   });
 }
 
@@ -236,7 +244,11 @@ export function generateQuestion(levelConfig, topic, gradeKey, mixedTopics = nul
   const uiLevel = levelKey;
 
   if (!topicQuestions.length) {
-    return buildEmptyPoolResult(gradeKey, uiLevel);
+    return attachCanonicalMetadataToMoledetQuestion(buildEmptyPoolResult(gradeKey, uiLevel), {
+      topic,
+      gradeKey,
+      levelKey: uiLevel,
+    });
   }
 
   const fallbackPick = () =>
