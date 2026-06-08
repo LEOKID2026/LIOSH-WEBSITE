@@ -240,6 +240,11 @@ import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsV
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
+import {
+  MATH_CORRECT_ANSWER_ADVANCE_MS,
+  MATH_WRONG_ANSWER_FEEDBACK_MS,
+  shouldPauseWrongAnswerAutoAdvance,
+} from "../../utils/math-wrong-answer-feedback-timing";
 
 /** Passed into compareMathLearnerAnswer — tolerance is not defaulted inside answer-compare. */
 const MATH_NUMERIC_TOLERANCE = 0.01;
@@ -664,6 +669,11 @@ export default function MathMaster() {
   
   // Ref לשמירת timeouts לניקוי - מונע תקיעות
   const animationTimeoutsRef = useRef([]);
+  const wrongAnswerAdvanceTimerRef = useRef(null);
+  const wrongAnswerAdvanceCallbackRef = useRef(null);
+  const wrongAnswerPendingRef = useRef(false);
+  const showSolutionRef = useRef(false);
+  const showPreviousSolutionRef = useRef(false);
   
   // בדיקה אם התרגיל יכול להיות מאונך
   const canDisplayVertically = useMemo(() => {
@@ -1508,6 +1518,9 @@ export default function MathMaster() {
   }
 
   function hardResetGame() {
+    clearWrongAnswerAdvanceTimer();
+    wrongAnswerPendingRef.current = false;
+    wrongAnswerAdvanceCallbackRef.current = null;
     accumulateQuestionTime();
     questionTimeLedgerRef.current = null;
     // Stop background music when game ends
@@ -1536,12 +1549,89 @@ export default function MathMaster() {
     );
   }
 
+  useEffect(() => {
+    showSolutionRef.current = showSolution;
+  }, [showSolution]);
+
+  useEffect(() => {
+    showPreviousSolutionRef.current = showPreviousSolution;
+  }, [showPreviousSolution]);
+
+  useEffect(() => {
+    if (shouldPauseWrongAnswerAutoAdvance({ showSolution, showPreviousSolution })) {
+      if (wrongAnswerAdvanceTimerRef.current != null) {
+        clearTimeout(wrongAnswerAdvanceTimerRef.current);
+        wrongAnswerAdvanceTimerRef.current = null;
+      }
+      return;
+    }
+    if (
+      wrongAnswerPendingRef.current &&
+      wrongAnswerAdvanceCallbackRef.current &&
+      wrongAnswerAdvanceTimerRef.current == null
+    ) {
+      const callback = wrongAnswerAdvanceCallbackRef.current;
+      wrongAnswerAdvanceTimerRef.current = setTimeout(() => {
+        wrongAnswerAdvanceTimerRef.current = null;
+        if (
+          shouldPauseWrongAnswerAutoAdvance({
+            showSolution: showSolutionRef.current,
+            showPreviousSolution: showPreviousSolutionRef.current,
+          })
+        ) {
+          return;
+        }
+        wrongAnswerPendingRef.current = false;
+        wrongAnswerAdvanceCallbackRef.current = null;
+        callback();
+      }, MATH_WRONG_ANSWER_FEEDBACK_MS);
+    }
+  }, [showSolution, showPreviousSolution]);
+
+  useEffect(
+    () => () => {
+      if (wrongAnswerAdvanceTimerRef.current != null) {
+        clearTimeout(wrongAnswerAdvanceTimerRef.current);
+        wrongAnswerAdvanceTimerRef.current = null;
+      }
+    },
+    []
+  );
+
+  function clearWrongAnswerAdvanceTimer() {
+    if (wrongAnswerAdvanceTimerRef.current != null) {
+      clearTimeout(wrongAnswerAdvanceTimerRef.current);
+      wrongAnswerAdvanceTimerRef.current = null;
+    }
+  }
+
+  function scheduleWrongAnswerAdvance(callback) {
+    clearWrongAnswerAdvanceTimer();
+    wrongAnswerPendingRef.current = true;
+    wrongAnswerAdvanceCallbackRef.current = callback;
+    wrongAnswerAdvanceTimerRef.current = setTimeout(() => {
+      wrongAnswerAdvanceTimerRef.current = null;
+      if (
+        shouldPauseWrongAnswerAutoAdvance({
+          showSolution: showSolutionRef.current,
+          showPreviousSolution: showPreviousSolutionRef.current,
+        })
+      ) {
+        return;
+      }
+      wrongAnswerPendingRef.current = false;
+      wrongAnswerAdvanceCallbackRef.current = null;
+      callback();
+    }, MATH_WRONG_ANSWER_FEEDBACK_MS);
+  }
+
   function closeExplanationModal() {
     setShowSolution(false);
     setShowPreviousSolution(false);
   }
 
   function openPreviousExplanation() {
+    clearWrongAnswerAdvanceTimer();
     setShowSolution(false);
     setShowPreviousSolution(true);
     stepByStepViewedRef.current = true;
@@ -1623,6 +1713,9 @@ export default function MathMaster() {
   );
 
   function generateNewQuestion() {
+    clearWrongAnswerAdvanceTimer();
+    wrongAnswerPendingRef.current = false;
+    wrongAnswerAdvanceCallbackRef.current = null;
     closeOpenQuestionLedger(true);
     const levelConfig = getLevelConfig(gradeNumber, level);
     if (!levelConfig) {
@@ -2052,6 +2145,9 @@ export default function MathMaster() {
       mathHypothesisLedgerRef
     );
     setRecentQuestions(new Set()); // איפוס ההיסטוריה
+    clearWrongAnswerAdvanceTimer();
+    wrongAnswerPendingRef.current = false;
+    wrongAnswerAdvanceCallbackRef.current = null;
     setIsVerticalDisplay(false); // סשן חדש: תמיד מאוזן כברירת מחדל
     setGameActive(true);
     setScore(0);
@@ -2385,6 +2481,9 @@ export default function MathMaster() {
       setStreak((prev) => prev + 1);
       setCorrect((prev) => prev + 1);
       
+      clearWrongAnswerAdvanceTimer();
+      wrongAnswerPendingRef.current = false;
+      wrongAnswerAdvanceCallbackRef.current = null;
       setErrorExplanation("");
 
       // אם במצב תרגול שגיאות — הסר לפי מזהה + סנכרון localStorage
@@ -2654,7 +2753,7 @@ export default function MathMaster() {
         } else {
           setTimeLeft(null);
         }
-      }, 1000);
+      }, MATH_CORRECT_ANSWER_ADVANCE_MS);
     } else {
       setWrong((prev) => prev + 1);
       setStreak(0);
@@ -2830,14 +2929,14 @@ export default function MathMaster() {
               : `\u2066${currentQuestion.correctAnswer}\u2069`
           } ✅`
         );
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setTextAnswer("");
           solvedCountRef.current += 1;
           setFeedback(null);
           setTimeLeft(null);
-        }, 2000);
+        });
       } else if (mode === "challenge") {
         // מצב Challenge – עובדים עם חיים
         setFeedback(
@@ -2864,13 +2963,13 @@ export default function MathMaster() {
               hardResetGame();
             }, 2000);
           } else {
-            setTimeout(() => {
+            scheduleWrongAnswerAdvance(() => {
               generateNewQuestion();
               setSelectedAnswer(null);
               setTextAnswer("");
               setFeedback(null);
               setTimeLeft(20);
-            }, 1500);
+            });
           }
 
           return nextLives;
@@ -2884,7 +2983,7 @@ export default function MathMaster() {
               : `\u2066${currentQuestion.correctAnswer}\u2069`
           } ❌`
         );
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setTextAnswer("");
@@ -2894,7 +2993,7 @@ export default function MathMaster() {
           } else {
             setTimeLeft(null);
           }
-        }, 1500);
+        });
       }
     }
   }
@@ -4425,6 +4524,9 @@ export default function MathMaster() {
                             {selectedAnswer && (
                               <button
                                 onClick={() => {
+                                  clearWrongAnswerAdvanceTimer();
+                                  wrongAnswerPendingRef.current = false;
+                                  wrongAnswerAdvanceCallbackRef.current = null;
                                   setSelectedAnswer(null);
                                   setTextAnswer("");
                                   setFeedback(null);
@@ -4504,7 +4606,11 @@ export default function MathMaster() {
                         {mode === "learning" && (
                           <button
                             type="button"
-                            onClick={() => { stepByStepViewedRef.current = true; setShowSolution((prev) => !prev); }}
+                            onClick={() => {
+                              clearWrongAnswerAdvanceTimer();
+                              stepByStepViewedRef.current = true;
+                              setShowSolution((prev) => !prev);
+                            }}
                             className={`${learningExplainOpenBtn} bg-indigo-500/80 hover:bg-indigo-500 border-indigo-300/40`}
                           >
                             📖 צעד-צעד
