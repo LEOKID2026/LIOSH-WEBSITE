@@ -1415,6 +1415,7 @@ export const SENTENCE_POOLS = {
     },
     {
       "template": "I ___ cereal before class",
+      "question": "Choose: \"I ___ cereal before class\"",
       "options": [
         "eat",
         "eats",

@@ -91,7 +91,7 @@ const DEFAULT_GRADE_PROFILE = {
 const GRADE_PROFILES = {
   g1: {
     ...DEFAULT_GRADE_PROFILE,
-    choiceCount: 2,
+    choiceCount: 4,
     translationPools: ["classroom"],
     grammarPools: ["be_basic"],
     sentencePools: ["base"],
@@ -100,7 +100,7 @@ const GRADE_PROFILES = {
   },
   g2: {
     ...DEFAULT_GRADE_PROFILE,
-    choiceCount: 3,
+    choiceCount: 4,
     translationPools: ["classroom", "routines", "phase_b_routines"],
     grammarPools: ["be_basic", "question_frames"],
     sentencePools: ["base", "routine"],
@@ -167,9 +167,42 @@ export function buildMcqFromOptionPool(correctAnswer, optionPool, targetChoices)
   ];
   const ca = String(correctAnswer ?? "").trim();
   if (!uniq.includes(ca)) uniq.push(ca);
-  const target = Math.max(2, Math.min(Math.max(2, targetChoices), uniq.length));
+  const target = Math.max(4, Number(targetChoices) || 4);
+
+  let guard = 0;
+  while (uniq.length < target && guard < 80) {
+    guard += 1;
+    const grammarWrong = [
+      "am",
+      "is",
+      "are",
+      "was",
+      "were",
+      "do",
+      "does",
+      "did",
+      "have",
+      "has",
+      "had",
+      "can",
+      "will",
+      "would",
+    ].find((w) => w !== ca && !uniq.includes(w));
+    if (grammarWrong) {
+      uniq.push(grammarWrong);
+      continue;
+    }
+    const variants = [`${ca}s`, `${ca}ed`, `${ca}ing`, `will ${ca}`, `did ${ca}`];
+    const next = variants.find((v) => v !== ca && !uniq.includes(v));
+    if (next) {
+      uniq.push(next);
+      continue;
+    }
+    break;
+  }
+
   if (uniq.length <= target) {
-    return shuffleAnswerList(uniq);
+    return shuffleAnswerList(uniq.slice(0, target));
   }
   const wrongs = uniq.filter((x) => x !== ca);
   const pickWrongs = shuffleAnswerList(wrongs).slice(0, target - 1);
@@ -730,7 +763,7 @@ export function generateQuestion(
 
   let allAnswers = [];
   if (qType === "choice") {
-    const targetChoices = Math.max(2, gradeProfile.choiceCount || 4);
+    const targetChoices = 4;
     const sameCategoryGrammar = [
       "am",
       "is",

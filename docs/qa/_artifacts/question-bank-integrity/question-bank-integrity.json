@@ -1,0 +1,608 @@
+{
+  "generatedAt": "2026-06-08T04:34:12.534Z",
+  "totalScanned": 8932,
+  "staticBankRows": 5530,
+  "generatedSamples": 3402,
+  "genSamplesPerCell": 6,
+  "bySubject": {
+    "science": {
+      "total": 1017,
+      "structuralPass": 1017,
+      "structuralFail": 0,
+      "leakRisk": 1017,
+      "missingMetadata": 0,
+      "duplicateOptions": 0,
+      "brokenAnswer": 0
+    },
+    "english": {
+      "total": 953,
+      "structuralPass": 953,
+      "structuralFail": 0,
+      "leakRisk": 953,
+      "missingMetadata": 0,
+      "duplicateOptions": 0,
+      "brokenAnswer": 0
+    },
+    "hebrew": {
+      "total": 702,
+      "structuralPass": 702,
+      "structuralFail": 0,
+      "leakRisk": 699,
+      "missingMetadata": 0,
+      "duplicateOptions": 0,
+      "brokenAnswer": 0
+    },
+    "moledet_geography": {
+      "total": 4046,
+      "structuralPass": 4046,
+      "structuralFail": 0,
+      "leakRisk": 4046,
+      "missingMetadata": 0,
+      "duplicateOptions": 0,
+      "brokenAnswer": 0
+    },
+    "math": {
+      "total": 1422,
+      "structuralPass": 1422,
+      "structuralFail": 0,
+      "leakRisk": 1083,
+      "missingMetadata": 0,
+      "duplicateOptions": 0,
+      "brokenAnswer": 0
+    },
+    "geometry": {
+      "total": 792,
+      "structuralPass": 792,
+      "structuralFail": 0,
+      "leakRisk": 583,
+      "missingMetadata": 792,
+      "duplicateOptions": 0,
+      "brokenAnswer": 0
+    }
+  },
+  "top20Examples": [
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g1",
+      "topic": "body",
+      "level": "easy",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "body_1",
+      "stem": "איפה נמצא הלב בגוף האדם?",
+      "options": [
+        "בחזה, בצד ימין של הגוף",
+        "בחזה, מעט משמאל למרכז",
+        "בבטן העליונה, באזור הכבד",
+        "בגובה הצוואר, מאחורי קנה הנשימה"
+      ],
+      "correctAnswer": "בחזה, מעט משמאל למרכז",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g1",
+      "topic": "body",
+      "level": "easy",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "body_2",
+      "stem": "באיזה איבר אנחנו משתמשים כדי לראות?",
+      "options": [
+        "אוזניים",
+        "עיניים",
+        "אף",
+        "לשון"
+      ],
+      "correctAnswer": "עיניים",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "explanation",
+          "message": "Correct answer appears in explanation",
+          "correctPreview": "עיניים"
+        },
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "body",
+      "level": "medium",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "body_3",
+      "stem": "מה תפקידה העיקרי של מערכת הנשימה?",
+      "options": [
+        "להוביל דם לרקמות עם חמצן ומזון",
+        "להחליף חמצן ופחמן דו־חמצני מול האוויר",
+        "לפרק מזון לחומרים קטנים במעיים",
+        "לתת שלד, להגין על איברים ולסייע בתנועה"
+      ],
+      "correctAnswer": "להחליף חמצן ופחמן דו־חמצני מול האוויר",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "body",
+      "level": "medium",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "body_4",
+      "stem": "השרירים והשלד עובדים יחד כדי לאפשר לנו תנועה.",
+      "options": [
+        "נכון",
+        "לא נכון"
+      ],
+      "correctAnswer": "נכון",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 0 label prefix"
+        },
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g5",
+      "topic": "body",
+      "level": "hard",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "body_5",
+      "stem": "איזה משפט מתאר בצורה הטובה ביותר את תפקיד מערכת הדם?",
+      "options": [
+        "המערכת שמעכלת מזון ומפרקת אותו לחומרים פשוטים.",
+        "המערכת שמובילה אותות עצביים בין המוח לשרירים.",
+        "המערכת שמזרימה דם עם חמצן ומזון ומפנה פסולת.",
+        "המערכת שמגינה בעיקר דרך העור ולא דרך מחזור הדם."
+      ],
+      "correctAnswer": "המערכת שמזרימה דם עם חמצן ומזון ומפנה פסולת.",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 2 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g6",
+      "topic": "body",
+      "level": "hard",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "body_6",
+      "stem": "מהו תפקידה העיקרי של מערכת העצבים?",
+      "options": [
+        "לסנן פסולת מהדם באופן שונה",
+        "לתאם ולהעביר מידע בין חלקי הגוף והסביבה",
+        "להוביל מזון מהמעיים לדם באופן שונה",
+        "לאחסן אנרגיה כשומן באופן שונה"
+      ],
+      "correctAnswer": "לתאם ולהעביר מידע בין חלקי הגוף והסביבה",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g1",
+      "topic": "animals",
+      "level": "easy",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "animals_1",
+      "stem": "איזה בעל חיים הוא יונק?",
+      "options": [
+        "צפרדע",
+        "תנין",
+        "חתול",
+        "תרנגול"
+      ],
+      "correctAnswer": "חתול",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "explanation",
+          "message": "Correct answer appears in explanation",
+          "correctPreview": "חתול"
+        },
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 2 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "animals",
+      "level": "medium",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "animals_2",
+      "stem": "מהי תכונה שמתאימה דג לחיים במים?",
+      "options": [
+        "כנפיים גדולות באופן שונה",
+        "פרווה עבה באופן שונה",
+        "סנפירים וגוף בצורת טורפדו",
+        "רגליים ארוכות באופן שונה"
+      ],
+      "correctAnswer": "סנפירים וגוף בצורת טורפדו",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 2 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "animals",
+      "level": "medium",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "animals_3",
+      "stem": "זוחלים הם בעלי חיים שמכוסים בדרך כלל קשקשים ומטילים ביצים.",
+      "options": [
+        "נכון",
+        "לא נכון"
+      ],
+      "correctAnswer": "נכון",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 0 label prefix"
+        },
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g5",
+      "topic": "animals",
+      "level": "hard",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "animals_4",
+      "stem": "מהי 'שרשרת מזון'?",
+      "options": [
+        "כל היצורים באזור שאוכלים מאותו מקור מים בלי יחס טורף-טרף (בלי מזון)",
+        "רצף של יצורים חיים שבו כל יצור משמש מזון ליצור הבא אחריו",
+        "רצף שלבים שבו כל יצור מייצר את מזונו מפוטוסינתזה בלבד (בלי מזון)",
+        "קבוצה שבה כל בעל חיים נמצא באותה רמת אנרגיה לאורך זמן"
+      ],
+      "correctAnswer": "רצף של יצורים חיים שבו כל יצור משמש מזון ליצור הבא אחריו",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g6",
+      "topic": "animals",
+      "level": "hard",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "animals_5",
+      "stem": "מה נכון לגבי התאמות התנהגותיות אצל בעלי חיים?",
+      "options": [
+        "הן תמיד קשורות רק לצבע הגוף. באופן שונה במקרה אחר",
+        "הן כוללות שינויי התנהגות שעוזרים לשרוד, כמו נדידה או תרדמת חורף.",
+        "הן קורות רק אצל חיות מחמד. באופן שונה במקרה אחר",
+        "הן תלויות רק במזג האוויר. באופן שונה במקרה אחר"
+      ],
+      "correctAnswer": "הן כוללות שינויי התנהגות שעוזרים לשרוד, כמו נדידה או תרדמת חורף.",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g1",
+      "topic": "animals",
+      "level": "hard",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "animals_gapfix_hard_g12",
+      "stem": "מה נכון בהשוואה בין דג לדולפין?",
+      "options": [
+        "שניהם סוגי דגים כי שניהם חיים במים באופן שונה",
+        "דולפין נושם אוויר דרך ריאות כמו יונק, ודג נושם במים בעזרת זימים",
+        "דולפין ודג שייכים לאותה קבוצה ביולוגית בדיוק",
+        "לדולפין יש נוצות כמו לעוף באופן שונה במקרה אחר"
+      ],
+      "correctAnswer": "דולפין נושם אוויר דרך ריאות כמו יונק, ודג נושם במים בעזרת זימים",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g4",
+      "topic": "animals",
+      "level": "easy",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "animals_gapfix_easy_g456",
+      "stem": "איזה משפט נכון לגבי צרכים בסיסיים של בעלי חיים?",
+      "options": [
+        "בעלי חיים צריכים רק מזון באופן שונה",
+        "בעלי חיים צריכים מזון, מים ותנאים מתאימים לסוג שלהם",
+        "בעלי חיים צריכים רק מים באופן שונה",
+        "אם יש מזון, בעלי חיים לא צריכים מים"
+      ],
+      "correctAnswer": "בעלי חיים צריכים מזון, מים ותנאים מתאימים לסוג שלהם",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g1",
+      "topic": "plants",
+      "level": "easy",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "plants_1",
+      "stem": "מה הצמח צריך כדי לגדול?",
+      "options": [
+        "מים בלבד, בלי אור שמש וקרקע",
+        "אור שמש, מים ואדמה",
+        "אור שמש בלבד, בלי מים מהקרקע",
+        "קרקע יבשה בלי מים ואור"
+      ],
+      "correctAnswer": "אור שמש, מים ואדמה",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "plants",
+      "level": "easy",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "plants_2",
+      "stem": "איזה חלק בצמח אחראי על הכנסת מים מהאדמה?",
+      "options": [
+        "העלים, שסופגים את רוב המים מגשם ומהאוויר",
+        "הגבעול, שמעביר מים מהשורש אך לא בולע אותם ישירות מהאדמה",
+        "השורשים, שסופגים מים ומינרלים מהאדמה",
+        "הגבעול שבולט באדמה, שסופג מים ישירות דרך קליפתו"
+      ],
+      "correctAnswer": "השורשים, שסופגים מים ומינרלים מהאדמה",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 2 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "plants",
+      "level": "medium",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "plants_3",
+      "stem": "מהי פוטוסינתזה?",
+      "options": [
+        "תהליך שבו הצמח מפרק סוכר לקבלת אנרגיה מחמצן",
+        "תהליך שבו הצמח מייצר מזון מאור, מים ופחמן דו־חמצני",
+        "תהליך שבו הצמח מאבד מים דרך פיוניות ביום בהיר",
+        "תהליך שבו רוב הפוטוסינתזה מתבצעת בגזע מתחת לאדמה"
+      ],
+      "correctAnswer": "תהליך שבו הצמח מייצר מזון מאור, מים ופחמן דו־חמצני",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g1",
+      "topic": "plants",
+      "level": "medium",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "plants_4",
+      "stem": "הצמח נושם רק ביום, כאשר יש אור שמש.",
+      "options": [
+        "נכון",
+        "לא נכון"
+      ],
+      "correctAnswer": "לא נכון",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "plants",
+      "level": "hard",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "plants_5",
+      "stem": "מה תפקיד פיוניות בעלה?",
+      "options": [
+        "הובלת מים ומינרלים מהשורש אל קצה העלה",
+        "סגירה מוחלטת של פני העלה מכל מגע עם האוויר בכל שעות היממה",
+        "ויסות כניסת פחמן דו־חמצני ויציאת גזים ואדים",
+        "אגירת עמילן לטווח ארוך בעיקר בפקעות השורש"
+      ],
+      "correctAnswer": "ויסות כניסת פחמן דו־חמצני ויציאת גזים ואדים",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 2 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "materials",
+      "level": "easy",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "materials_1",
+      "stem": "מהו מצב הצבירה של קרח?",
+      "options": [
+        "מוצק",
+        "נוזל",
+        "גז",
+        "תערובת"
+      ],
+      "correctAnswer": "מוצק",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "explanation",
+          "message": "Correct answer appears in explanation",
+          "correctPreview": "מוצק"
+        },
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 0 label prefix"
+        }
+      ]
+    },
+    {
+      "severity": 2,
+      "kind": "leak",
+      "subject": "science",
+      "grade": "g3",
+      "topic": "materials",
+      "level": "medium",
+      "source": "science_bank",
+      "sourceFile": "data/science-questions.js",
+      "id": "materials_2",
+      "stem": "מה נכון לגבי חומרים מתכתיים?",
+      "options": [
+        "הם מבודדים חשמל טוב יותר מפלסטיק ומעץ",
+        "הם מוליכים חום וחשמל יחסית טוב",
+        "הם שקופים לאור בדומה לזכוכית דקה",
+        "הם נשברים בקלות בלי כפיפה או ריקוע"
+      ],
+      "correctAnswer": "הם מוליכים חום וחשמל יחסית טוב",
+      "issues": [
+        {
+          "code": "answer_leak",
+          "field": "option_label_prefix",
+          "message": "Correct answer in option 1 label prefix"
+        }
+      ]
+    }
+  ],
+  "verdict": "PASS_WITH_WARNINGS"
+}

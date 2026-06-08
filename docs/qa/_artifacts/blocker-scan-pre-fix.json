@@ -1,0 +1,235 @@
+{
+  "mathFails": [],
+  "hebrewFails": [
+    {
+      "grade": "g2",
+      "topic": "reading",
+      "level": "easy",
+      "sample": 0,
+      "issues": [
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 1,
+          "a": ".",
+          "b": "!"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 2,
+          "a": ".",
+          "b": ","
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 3,
+          "a": ".",
+          "b": "?"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 2,
+          "a": "!",
+          "b": ","
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 3,
+          "a": "!",
+          "b": "?"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 2,
+          "j": 3,
+          "a": ",",
+          "b": "?"
+        }
+      ],
+      "stem": "בקריאה: אחרי רשימה (׳עיפרון, מחק, סרגל׳) — איזה סימן מתאים בין פריט לפריט?",
+      "answers": [
+        ".",
+        "!",
+        ",",
+        "?"
+      ]
+    },
+    {
+      "grade": "g2",
+      "topic": "writing",
+      "level": "easy",
+      "sample": 0,
+      "issues": [
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 1,
+          "a": ",",
+          "b": "."
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 2,
+          "a": ",",
+          "b": "!"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 3,
+          "a": ",",
+          "b": "?"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 2,
+          "a": ".",
+          "b": "!"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 3,
+          "a": ".",
+          "b": "?"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 2,
+          "j": 3,
+          "a": "!",
+          "b": "?"
+        }
+      ],
+      "stem": "בכתיבה: המשפט ׳מתי מתחיל השיעור׳ — איזה סימן פיסוק נכון בסוף המשפט?",
+      "answers": [
+        ",",
+        ".",
+        "!",
+        "?"
+      ]
+    },
+    {
+      "grade": "g2",
+      "topic": "writing",
+      "level": "easy",
+      "sample": 2,
+      "issues": [
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 1,
+          "a": ".",
+          "b": ","
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 2,
+          "a": ".",
+          "b": "!"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 3,
+          "a": ".",
+          "b": "?"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 2,
+          "a": ",",
+          "b": "!"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 3,
+          "a": ",",
+          "b": "?"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 2,
+          "j": 3,
+          "a": "!",
+          "b": "?"
+        }
+      ],
+      "stem": "בכתיבה: המשפט ׳וואו כמה זה גבוה׳ מביע הפתעה — איזה סימן פיסוק מתאים בסוף המשפט?",
+      "answers": [
+        ".",
+        ",",
+        "!",
+        "?"
+      ]
+    },
+    {
+      "grade": "g2",
+      "topic": "writing",
+      "level": "medium",
+      "sample": 4,
+      "issues": [
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 1,
+          "a": ".",
+          "b": "?"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 2,
+          "a": ".",
+          "b": "!"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 0,
+          "j": 3,
+          "a": ".",
+          "b": ","
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 2,
+          "a": "?",
+          "b": "!"
+        },
+        {
+          "code": "duplicate_options",
+          "i": 1,
+          "j": 3,
+          "a": "?",
+          "b": ","
+        },
+        {
+          "code": "duplicate_options",
+          "i": 2,
+          "j": 3,
+          "a": "!",
+          "b": ","
+        }
+      ],
+      "stem": "בכתיבה: המשפט ׳נתראה מחר בבוקר׳ הוא משלום קצר — איזה סימן פיסוק מתאים בסוף המשפט",
+      "answers": [
+        ".",
+        "?",
+        "!",
+        ","
+      ]
+    }
+  ],
+  "mathCount": 0,
+  "hebrewCount": 4
+}

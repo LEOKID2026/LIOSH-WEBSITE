@@ -23,6 +23,8 @@ import {
 } from './hebrew-g3456-subtopic.js';
 import { pickDiagnosticContractFields } from './diagnostic-question-contract.js';
 import { attachCanonicalMetadataToHebrewQuestion } from '../lib/learning/hebrew-canonical-metadata.js';
+import { repairMcqObviousAnswerContent } from './mcq-fail-content-repair.js';
+import { ensureMcqFourOptions } from './mcq-four-options.js';
 import {
   dedupeMcqOptionsInPlace,
   rebalanceGenericHebrewReadingDistractors,
@@ -4604,6 +4606,40 @@ export function finalizeHebrewMcq(raw, selectedTopic, levelKey, gradeKey) {
     inferredDifficultyBand: inferred.difficultyBand,
   };
   scrubHebrewMcqAnswers(q);
+  if (Array.isArray(q.answers) && q.answers.length >= 4) {
+    const repaired = repairMcqObviousAnswerContent(
+      {
+        question: q.question,
+        answers: q.answers,
+        correct: q.correct,
+        correctIndex: q.correct,
+      },
+      { subject: "hebrew", stem: q.question }
+    );
+    if (Array.isArray(repaired.answers)) {
+      const prevCorrect = q.answers[q.correct];
+      q.answers = repaired.answers;
+      const newIdx = q.answers.indexOf(prevCorrect);
+      if (newIdx >= 0) q.correct = newIdx;
+    }
+  }
+  const padded = ensureMcqFourOptions(
+    {
+      question: q.question,
+      answers: q.answers,
+      correct: q.correct,
+      correctIndex: q.correct,
+      correctAnswer: q.answers?.[q.correct],
+      params: { answerMode: "choice", subject: "hebrew" },
+    },
+    { subject: "hebrew" }
+  );
+  if (Array.isArray(padded.answers)) {
+    q.answers = padded.answers;
+    if (padded.correct != null) q.correct = padded.correct;
+    if (padded.correctIndex != null) q.correct = padded.correctIndex;
+    q.optionCount = padded.answers.length;
+  }
   return sanitizeQuestionForStudentDisplay(q);
 }
 

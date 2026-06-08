@@ -12,6 +12,8 @@ import { SCIENCE_G3_BODY_BANK } from "./science-questions-g3-body-bank.js";
 import { SCIENCE_QUESTIONS_PHASE_B } from "./science-questions-phase-b.js";
 import { applyPass1ScienceMetadata } from "./science-questions-metadata-pass1-enrich.js";
 import { enrichScienceBankRowWithCanonicalMetadata } from "../lib/learning/science-canonical-metadata.js";
+import { rebalanceObviousMcqDistractors } from "../utils/mcq-distractor-rebalance.js";
+import { repairMcqObviousAnswerContent } from "../utils/mcq-fail-content-repair.js";
 
 const SCIENCE_QUESTIONS_RAW = [
   {
@@ -10874,6 +10876,15 @@ const SCIENCE_QUESTIONS_RAW = [
   .concat(SCIENCE_G3_BODY_BANK)
   .concat(SCIENCE_QUESTIONS_PHASE_B);
 
-export const SCIENCE_QUESTIONS = SCIENCE_QUESTIONS_RAW.map(applyPass1ScienceMetadata).map(
-  enrichScienceBankRowWithCanonicalMetadata
-);
+export const SCIENCE_QUESTIONS = SCIENCE_QUESTIONS_RAW.map(applyPass1ScienceMetadata)
+  .map(enrichScienceBankRowWithCanonicalMetadata)
+  .map((row) => {
+    const balanced = rebalanceObviousMcqDistractors({
+      options: row.options,
+      correctIndex: row.correctIndex,
+    });
+    return repairMcqObviousAnswerContent(
+      balanced.options === row.options ? row : { ...row, options: balanced.options },
+      { subject: "science", stem: row.stem }
+    );
+  });

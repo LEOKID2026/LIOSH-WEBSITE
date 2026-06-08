@@ -1,0 +1,1329 @@
+{
+  "summary": {
+    "generatedAt": "2026-06-08T04:22:00.508Z",
+    "totalSamples": 60,
+    "accepted": 57,
+    "rejected": 3,
+    "bySubject": {
+      "moledet_geography": {
+        "total": 10,
+        "accepted": 10
+      },
+      "science": {
+        "total": 10,
+        "accepted": 10
+      },
+      "hebrew": {
+        "total": 10,
+        "accepted": 10
+      },
+      "geometry": {
+        "total": 10,
+        "accepted": 10
+      },
+      "english": {
+        "total": 10,
+        "accepted": 7
+      },
+      "math": {
+        "total": 10,
+        "accepted": 10
+      }
+    },
+    "smokeResults": [
+      {
+        "subject": "math",
+        "gradeLevel": "g3",
+        "topic": "multiplication",
+        "difficulty": "medium",
+        "count": 3,
+        "ok": true,
+        "issues": [],
+        "generated": 3,
+        "stripped": 3,
+        "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+      },
+      {
+        "subject": "science",
+        "gradeLevel": "g2",
+        "topic": "body",
+        "difficulty": "easy",
+        "count": 3,
+        "ok": true,
+        "issues": [],
+        "generated": 3,
+        "stripped": 3,
+        "explanationInPayload": true,
+        "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+      },
+      {
+        "subject": "hebrew",
+        "gradeLevel": "g3",
+        "topic": "comprehension",
+        "difficulty": "medium",
+        "count": 3,
+        "ok": true,
+        "issues": [],
+        "generated": 3,
+        "stripped": 3,
+        "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+      },
+      {
+        "subject": "geometry",
+        "gradeLevel": "g4",
+        "topic": "area",
+        "difficulty": "medium",
+        "count": 3,
+        "ok": true,
+        "issues": [],
+        "generated": 3,
+        "stripped": 3,
+        "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+      },
+      {
+        "subject": "english",
+        "gradeLevel": "g3",
+        "topic": "grammar",
+        "difficulty": "medium",
+        "count": 3,
+        "ok": true,
+        "issues": [],
+        "generated": 3,
+        "stripped": 3,
+        "explanationInPayload": true,
+        "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+      },
+      {
+        "subject": "moledet_geography",
+        "gradeLevel": "g3",
+        "topic": "homeland",
+        "difficulty": "easy",
+        "count": 3,
+        "ok": true,
+        "issues": [],
+        "generated": 3,
+        "stripped": 3,
+        "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+      }
+    ],
+    "smokePass": true,
+    "diffRiskChecks": {
+      "repairOnProductPaths": [
+        "data/geography-questions/index.js (export)",
+        "data/science-questions.js (export)",
+        "utils/moledet-geography-question-generator.js",
+        "utils/hebrew-question-generator.js finalizeHebrewMcq",
+        "utils/geometry-question-generator.js + geometry-conceptual-bank.js"
+      ],
+      "auditOnlyRepair": [
+        "scripts/qa/* audit collection for hebrew rich pool re-apply"
+      ],
+      "noSharedMutation": "repairMcqObviousAnswerContent copies answers via spread; export maps create new row objects",
+      "correctSync": "correctAnswer updated to answers[ci] text after in-place cell edit; index unchanged",
+      "frozenActivities": "Repair runs at export/generation time; existing frozen question_set JSON unchanged on disk"
+    }
+  },
+  "samples": [
+    {
+      "subject": "moledet_geography",
+      "grade": "g1_hard",
+      "topic": "values",
+      "source": "data/geography-questions/index.js:G1_HARD_QUESTIONS:values",
+      "repairedNote": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged.",
+      "stem": "מה זה גיוון מגדרי?",
+      "options": [
+        "שונות בין מגדרים",
+        "כולם אותו דבר (בלי מגדרי)",
+        "כולם זרים (בלי מגדרי)",
+        "כולם מוזרים"
+      ],
+      "correctAnswer": "שונות בין מגדרים",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g2_medium",
+      "topic": "maps",
+      "source": "data/geography-questions/index.js:G2_MEDIUM_QUESTIONS:maps",
+      "repairedNote": "Static bank export repair; distractors plausible for grade/topic.",
+      "stem": "מה זה מפה מדינית?",
+      "options": [
+        "מפה של מדינות",
+        "מפה של הנוף",
+        "מפה של הערים",
+        "מפה של הבתים"
+      ],
+      "correctAnswer": "מפה של מדינות",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Static bank export repair; distractors plausible for grade/topic."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g2_easy",
+      "topic": "citizenship",
+      "source": "data/geography-questions/index.js:G2_EASY_QUESTIONS:citizenship",
+      "repairedNote": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged.",
+      "stem": "מה זה יצירתיות?",
+      "options": [
+        "ליצור דברים חדשים",
+        "לא ליצור באופן שונה",
+        "להתעלם באופן שונה",
+        "לצחוק באופן שונה"
+      ],
+      "correctAnswer": "ליצור דברים חדשים",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g1_medium",
+      "topic": "homeland",
+      "source": "data/geography-questions/index.js:G1_MEDIUM_QUESTIONS:homeland",
+      "repairedNote": "Static bank export repair; distractors plausible for grade/topic.",
+      "stem": "מה זה מדינת היהודים?",
+      "options": [
+        "ישראל",
+        "אמריקה",
+        "אירופה",
+        "אסיה"
+      ],
+      "correctAnswer": "ישראל",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Static bank export repair; distractors plausible for grade/topic."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g4_easy",
+      "topic": "maps",
+      "source": "data/geography-questions/index.js:G4_EASY_QUESTIONS:maps",
+      "repairedNote": "Static bank export repair; distractors plausible for grade/topic.",
+      "stem": "מה זה מפה דו מימדית?",
+      "options": [
+        "מפה בלי עומק",
+        "מפה עם עומק",
+        "מפה קטנה",
+        "מפה גדולה"
+      ],
+      "correctAnswer": "מפה בלי עומק",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Static bank export repair; distractors plausible for grade/topic."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g2_easy",
+      "topic": "community",
+      "source": "data/geography-questions/index.js:G2_EASY_QUESTIONS:community",
+      "repairedNote": "Static bank export repair; distractors plausible for grade/topic.",
+      "stem": "מה זה בית קברות?",
+      "options": [
+        "מקום לקבורה",
+        "אזור עם הרבה אנשים",
+        "מקום עם מים",
+        "אזור בטבע"
+      ],
+      "correctAnswer": "מקום לקבורה",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Static bank export repair; distractors plausible for grade/topic."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g4_hard",
+      "topic": "citizenship",
+      "source": "data/geography-questions/index.js:G4_HARD_QUESTIONS:citizenship",
+      "repairedNote": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged.",
+      "stem": "מה זה מועצה אזורית?",
+      "options": [
+        "מועצה של אזור",
+        "אזור עם הרבה אנשים (בלי מועצה)",
+        "מקום עם מים (בלי מועצה)",
+        "אזור בטבע"
+      ],
+      "correctAnswer": "מועצה של אזור",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g6_hard",
+      "topic": "community",
+      "source": "data/geography-questions/index.js:G6_HARD_QUESTIONS:community",
+      "repairedNote": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged.",
+      "stem": "מה זה ניהול משאבים?",
+      "options": [
+        "איך מנהלים משאבים",
+        "אזור עם הרבה אנשים (בלי משאבים)",
+        "מקום עם מים (בלי משאבים)",
+        "אזור בטבע באופן שונה"
+      ],
+      "correctAnswer": "איך מנהלים משאבים",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g3_medium",
+      "topic": "community",
+      "source": "data/geography-questions/index.js:G3_MEDIUM_QUESTIONS:community",
+      "repairedNote": "Static bank export repair; distractors plausible for grade/topic.",
+      "stem": "מה זה תושבי קבע?",
+      "options": [
+        "אנשים שגרים במקום",
+        "אנשים שעוברים",
+        "אנשים שמבקרים",
+        "אנשים שעוזבים"
+      ],
+      "correctAnswer": "אנשים שגרים במקום",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Static bank export repair; distractors plausible for grade/topic."
+    },
+    {
+      "subject": "moledet_geography",
+      "grade": "g2_easy",
+      "topic": "citizenship",
+      "source": "data/geography-questions/index.js:G2_EASY_QUESTIONS:citizenship",
+      "repairedNote": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged.",
+      "stem": "מה זה הקשבה?",
+      "options": [
+        "להקשיב לאחרים",
+        "לא להקשיב",
+        "לדבר כל הזמן",
+        "לצחוק באופן שונה"
+      ],
+      "correctAnswer": "להקשיב לאחרים",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Repaired distractors balance stem-keyword/length; correct geography fact unchanged."
+    },
+    {
+      "subject": "science",
+      "grade": "g4",
+      "topic": "materials",
+      "source": "data/science-questions.js:sci_pb1_g4_materials_easy_01",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "מה הפרדה פיזיקלית טיפוסית של תערובת חול ומים גסים בכלי?",
+      "options": [
+        "שיקוע של חול למטה והפרדה על ידי סינון או מישוש זהיר",
+        "הדלקת התערובת תמיד ללא סיכון (בלי הפרדה)",
+        "מיזוג חומרים חדשים בלי דגימה (בלי הפרדה)",
+        "הפיכת חול למים חדשים ללא ניסוי באופן שונה"
+      ],
+      "correctAnswer": "שיקוע של חול למטה והפרדה על ידי סינון או מישוש זהיר",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g1",
+      "topic": "body",
+      "source": "data/science-questions.js:body_37__v2",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "מה קורה כשאנחנו נושמים?",
+      "options": [
+        "אוויר נכנס לריאות בלי יציאה",
+        "נכנס אוויר ויוצא אוויר",
+        "אוויר יוצא מהגוף בלי כניסה",
+        "לא קורה חילוף גזים"
+      ],
+      "correctAnswer": "נכנס אוויר ויוצא אוויר",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g3",
+      "topic": "environment",
+      "source": "data/science-questions.js:env_26",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "מה זה אנרגיה מתחדשת?",
+      "options": [
+        "אנרגיה ממקור מתכלה במאגר מוגבל",
+        "אנרגיה משמש, רוח או מים שחוזרים בטבע",
+        "אנרגיה מחילוף נפט מתכלה",
+        "אנרגיה שחמה משרפת פחם באופן שונה"
+      ],
+      "correctAnswer": "אנרגיה משמש, רוח או מים שחוזרים בטבע",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g5",
+      "topic": "earth_space",
+      "source": "data/science-questions.js:earth_38",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "מה הגורם העיקרי לגאות ושפל בים סמוך לחוף בקנה מידה יומי?",
+      "options": [
+        "משיכה גרביטציונית של הירח ושל השמש (ומיקום יחסי), לא רק טמפרטורת המים",
+        "אך ורק רוחות סוחפות בלי השפעת ירח באופן שונה במקרה אחר",
+        "התפשטות חום ממדבר בלי השפעת ירח ושמש באופן שונה",
+        "צבע המים בלבד באופן שונה במקרה אחר בדרך כלל לפעמים"
+      ],
+      "correctAnswer": "משיכה גרביטציונית של הירח ושל השמש (ומיקום יחסי), לא רק טמפרטורת המים",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g5",
+      "topic": "animals",
+      "source": "data/science-questions.js:sci_p1_g5_animals_medium_06",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "בכיתה ה׳ — רמה בינונית: מה מאפיין ציפור?",
+      "options": [
+        "נוצות ומקור",
+        "זימים באופן שונה",
+        "פרווה במים",
+        "גלגול דג"
+      ],
+      "correctAnswer": "נוצות ומקור",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g2",
+      "topic": "experiments",
+      "source": "data/science-questions.js:sci_vol_g2_experiments_medium_02",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "כיתה ב׳ · רמה בינונית — מה משתנה תלוי בניסוי? · מוקד dependent_variable_v2",
+      "options": [
+        "מה שנמדד",
+        "שם החוקר",
+        "צבע המחברת",
+        "שעת הצהריים"
+      ],
+      "correctAnswer": "מה שנמדד",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g1",
+      "topic": "environment",
+      "source": "data/science-questions.js:env_5",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "איפה צריך לזרוק פסולת?",
+      "options": [
+        "בשקית ליד הבית עד שמישהו אחר יזרוק למקום הנכון",
+        "בפח הרחוב בלבד אם הפח בבית מלא",
+        "בפח אשפה או במכל המיועד למיחזור",
+        "באותה שקית אחת לכל סוגי הפסולת כדי לחסוך שקיות"
+      ],
+      "correctAnswer": "בפח אשפה או במכל המיועד למיחזור",
+      "correctIndex": 2,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g4",
+      "topic": "body",
+      "source": "data/science-questions.js:p4b1_g4_body_003",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "מה תפקיד פשוט של מערכת העיכול?",
+      "options": [
+        "לפרק מזון ולסייע בספיגת חומרים",
+        "לייצר חמצן כמו ריאות",
+        "להעביר אותות מהמוח באופן שונה",
+        "להחזיק את הגוף זקוף באופן שונה"
+      ],
+      "correctAnswer": "לפרק מזון ולסייע בספיגת חומרים",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g3",
+      "topic": "materials",
+      "source": "data/science-questions.js:sci_phb_g3_materials_eas_02",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "מה מצב הצבירה של מים בחדר?",
+      "options": [
+        "נוזל",
+        "מוצק",
+        "גז בלבד",
+        "פלסמה"
+      ],
+      "correctAnswer": "נוזל",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "science",
+      "grade": "g5",
+      "topic": "earth_space",
+      "source": "data/science-questions.js:earth_39",
+      "repairedNote": "Science export repair; factual correct answer preserved.",
+      "stem": "מה הקשר האמיתי בין רעידות אדמה חזקות לבין לוחות טקטוניים בקנה לימודי?",
+      "options": [
+        "אנרגיה משוחררת כשלוחות נתקעות ומשחררות בהחלקה — זה יוצר גלים סייסמיים",
+        "רעידות נגרמות רק כשירד גשם חזק ללא קשר לקרום באופן שונה",
+        "לוחות תמיד נייחים ולכן אין רעידות מלוחות באופן שונה",
+        "רעידות מצביעות תמיד על התפרצות געשית באותו מקום ובאותה שנייה"
+      ],
+      "correctAnswer": "אנרגיה משוחררת כשלוחות נתקעות ומשחררות בהחלקה — זה יוצר גלים סייסמיים",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Science export repair; factual correct answer preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+      "options": [
+        "חום גבוה",
+        "המורה חולה",
+        "חג בית הספר",
+        "גשם כבד"
+      ],
+      "correctAnswer": "גשם כבד",
+      "correctIndex": 3,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'הילד קורא הרבה ספרים. הוא מצליח במבחנים.'?",
+      "options": [
+        "קריאה לא חשובה",
+        "קריאה עוזרת להצלחה",
+        "אין קשר באופן שונה",
+        "לא יודע באופן שונה"
+      ],
+      "correctAnswer": "קריאה עוזרת להצלחה",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+      "options": [
+        "המורה חולה",
+        "חום גבוה",
+        "גשם כבד",
+        "חג בית הספר"
+      ],
+      "correctAnswer": "גשם כבד",
+      "correctIndex": 2,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+      "options": [
+        "חג בית הספר",
+        "חום גבוה",
+        "המורה חולה",
+        "גשם כבד"
+      ],
+      "correctAnswer": "גשם כבד",
+      "correctIndex": 3,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+      "options": [
+        "המורה חולה",
+        "חג בית הספר",
+        "גשם כבד",
+        "חום גבוה"
+      ],
+      "correctAnswer": "גשם כבד",
+      "correctIndex": 2,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+      "options": [
+        "חום גבוה",
+        "המורה חולה",
+        "חג בית הספר",
+        "גשם כבד"
+      ],
+      "correctAnswer": "גשם כבד",
+      "correctIndex": 3,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'הילד קורא הרבה ספרים. הוא מצליח במבחנים.'?",
+      "options": [
+        "לא יודע באופן שונה",
+        "אין קשר באופן שונה",
+        "קריאה לא חשובה",
+        "קריאה עוזרת להצלחה"
+      ],
+      "correctAnswer": "קריאה עוזרת להצלחה",
+      "correctIndex": 3,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+      "options": [
+        "גשם כבד",
+        "המורה חולה",
+        "חג בית הספר",
+        "חום גבוה"
+      ],
+      "correctAnswer": "גשם כבד",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'הילד קורא הרבה ספרים. הוא מצליח במבחנים.'?",
+      "options": [
+        "קריאה לא חשובה",
+        "קריאה עוזרת להצלחה",
+        "אין קשר באופן שונה",
+        "לא יודע באופן שונה"
+      ],
+      "correctAnswer": "קריאה עוזרת להצלחה",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "hebrew",
+      "grade": "g3",
+      "topic": "comprehension",
+      "source": "utils/hebrew-question-generator.js:runtime",
+      "repairedNote": "finalizeHebrewMcq repair pass; reading comprehension content preserved.",
+      "stem": "'בגלל הגשם הכבד ביטלו את הטיול.' מה הסיבה לביטול?",
+      "options": [
+        "חג בית הספר",
+        "גשם כבד",
+        "חום גבוה",
+        "המורה חולה"
+      ],
+      "correctAnswer": "גשם כבד",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "finalizeHebrewMcq repair pass; reading comprehension content preserved."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g6",
+      "topic": "triangles",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "בסיווג לפי צלעות: משולש עם שלוש צלעות שוות — השם המתאים הוא:",
+      "options": [
+        "משולש ישר זווית תמיד (בלי צלעות)",
+        "משולש שווה שוקיים (בלי צלעות)",
+        "משולש שווה צלעות",
+        "ריבוע באופן שונה"
+      ],
+      "correctAnswer": "משולש שווה צלעות",
+      "correctIndex": 2,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g4",
+      "topic": "area",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "מלבן באורך 8 מ׳ וברוחב 3 מ׳. מה השלב הנכון הראשון כדי למצוא את שטח הרצפה?",
+      "options": [
+        "להכפיל אורך ברוחב",
+        "לחלק אורך ב־2 בלבד",
+        "לחבר את כל הצלעות (כמו היקף)",
+        "להכפיל אורך ב־4"
+      ],
+      "correctAnswer": "להכפיל אורך ברוחב",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g1",
+      "topic": "transformations",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "הזזה של צורה בלי לסובב וללא שינוי גודל נקראת לרוב:",
+      "options": [
+        "שיקוף — לא הזזה",
+        "עיוות — לא הזזה",
+        "טרנסלציה",
+        "הגדלה"
+      ],
+      "correctAnswer": "טרנסלציה",
+      "correctIndex": 2,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g1",
+      "topic": "transformations",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "הזזה של צורה בלי לסובב וללא שינוי גודל נקראת לרוב:",
+      "options": [
+        "טרנסלציה",
+        "עיוות — לא הזזה",
+        "שיקוף — לא הזזה",
+        "הגדלה"
+      ],
+      "correctAnswer": "טרנסלציה",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g3",
+      "topic": "parallel_perpendicular",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "\"מאונכות\" מתאים לאיזה מספר? ( 1 = מקבילות , 2 = מאונכות )",
+      "options": [
+        "מקבילות",
+        "מאונכות"
+      ],
+      "correctAnswer": "מאונכות",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g6",
+      "topic": "triangles",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "\"שונה צלעות\" מתייחס למשולש עם מאפייני צלעות — ( 1 = שווה צלעות , 2 = שווה שוקיים , 3 = שונה צלעות )",
+      "options": [
+        "שונה צלעות",
+        "שווה שוקיים",
+        "שווה צלעות"
+      ],
+      "correctAnswer": "שונה צלעות",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g3",
+      "topic": "parallel_perpendicular",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "\"מקבילות\" מתאים לאיזה מספר? ( 1 = מקבילות , 2 = מאונכות )",
+      "options": [
+        "מקבילות",
+        "מאונכות"
+      ],
+      "correctAnswer": "מקבילות",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g3",
+      "topic": "parallel_perpendicular",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Numeric geometry MCQ; distractors represent plausible mistakes.",
+      "stem": "מה נכון לגבי ישרים מקבילים באותו מישור?",
+      "options": [
+        "הם לא נפגשים ושומרים על מרחק קבוע",
+        "הם חייבים להיות באותו אורך",
+        "הם תמיד מאונכים באופן שונה",
+        "הם תמיד נפגשים בזווית 90°"
+      ],
+      "correctAnswer": "הם לא נפגשים ושומרים על מרחק קבוע",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Numeric geometry MCQ; distractors represent plausible mistakes."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g3",
+      "topic": "parallel_perpendicular",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "\"מאונכות\" מתאים לאיזה מספר? ( 1 = מקבילות , 2 = מאונכות )",
+      "options": [
+        "מקבילות",
+        "מאונכות"
+      ],
+      "correctAnswer": "מאונכות",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "geometry",
+      "grade": "g6",
+      "topic": "triangles",
+      "source": "utils/geometry-question-generator.js:runtime",
+      "repairedNote": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed.",
+      "stem": "\"שווה צלעות\" מתאר משולש שצלעותיו — ( 1 = שווה צלעות , 2 = שווה שוקיים , 3 = שונה צלעות )",
+      "options": [
+        "שווה שוקיים",
+        "שווה צלעות",
+        "שונה צלעות"
+      ],
+      "correctAnswer": "שווה צלעות",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Conceptual/procedural repair syncs correctAnswer with shortened option text when needed."
+    },
+    {
+      "subject": "english",
+      "topic": "grammar",
+      "source": "data/english-questions/index.js:grammar",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "Choose: \"She ___ a book now\"",
+      "options": [
+        "read",
+        "is reading",
+        "reads"
+      ],
+      "correctAnswer": "read",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "English pools unchanged by repair; audit unit false-positive fixed only."
+    },
+    {
+      "subject": "english",
+      "grade": "g3",
+      "topic": "sentences",
+      "source": "data/english-questions/index.js:sentences",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "",
+      "options": [
+        "is",
+        "are",
+        "am"
+      ],
+      "correctAnswer": "is",
+      "correctIndex": 0,
+      "validationIssues": [
+        "empty_stem"
+      ],
+      "accepted": false,
+      "acceptReason": null
+    },
+    {
+      "subject": "english",
+      "topic": "grammar",
+      "source": "data/english-questions/index.js:grammar",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "Choose: \"She ___ not ___ now\"",
+      "options": [
+        "is / sleeping",
+        "does / sleep",
+        "do / sleep"
+      ],
+      "correctAnswer": "is / sleeping",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "English pools unchanged by repair; audit unit false-positive fixed only."
+    },
+    {
+      "subject": "english",
+      "topic": "grammar",
+      "source": "data/english-questions/index.js:grammar",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "Choose: \"She ___ a book last night\"",
+      "options": [
+        "read",
+        "reads",
+        "reading"
+      ],
+      "correctAnswer": "read",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "English pools unchanged by repair; audit unit false-positive fixed only."
+    },
+    {
+      "subject": "english",
+      "topic": "grammar",
+      "source": "data/english-questions/index.js:grammar",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "Choose: \"This is the ___ cake\"",
+      "options": [
+        "good",
+        "better",
+        "best"
+      ],
+      "correctAnswer": "good",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "English pools unchanged by repair; audit unit false-positive fixed only."
+    },
+    {
+      "subject": "english",
+      "grade": "g5",
+      "topic": "sentences",
+      "source": "data/english-questions/index.js:sentences",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "",
+      "options": [
+        "order",
+        "ordered",
+        "ordering"
+      ],
+      "correctAnswer": "order",
+      "correctIndex": 0,
+      "validationIssues": [
+        "empty_stem"
+      ],
+      "accepted": false,
+      "acceptReason": null
+    },
+    {
+      "subject": "english",
+      "grade": "g5",
+      "topic": "sentences",
+      "source": "data/english-questions/index.js:sentences",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "",
+      "options": [
+        "in",
+        "on",
+        "at"
+      ],
+      "correctAnswer": "in",
+      "correctIndex": 0,
+      "validationIssues": [
+        "empty_stem"
+      ],
+      "accepted": false,
+      "acceptReason": null
+    },
+    {
+      "subject": "english",
+      "topic": "grammar",
+      "source": "data/english-questions/index.js:grammar",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "Choose: \"This is the ___ child\"",
+      "options": [
+        "young",
+        "younger",
+        "youngest"
+      ],
+      "correctAnswer": "young",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "English pools unchanged by repair; audit unit false-positive fixed only."
+    },
+    {
+      "subject": "english",
+      "grade": "g5",
+      "topic": "grammar",
+      "source": "data/english-questions/index.js:grammar",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "Choose the correct sentence:",
+      "options": [
+        "They will travel to Haifa tomorrow morning",
+        "They went travel to Haifa tomorrow morning",
+        "They go travel to Haifa tomorrow morning",
+        "They going travel to Haifa tomorrow morning"
+      ],
+      "correctAnswer": "They will travel to Haifa tomorrow morning",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "English pools unchanged by repair; audit unit false-positive fixed only."
+    },
+    {
+      "subject": "english",
+      "grade": "g4",
+      "topic": "grammar",
+      "source": "data/english-questions/index.js:grammar",
+      "repairedNote": "English pools unchanged by repair; audit unit false-positive fixed only.",
+      "stem": "Choose: \"They ___ TV in the evening\"",
+      "options": [
+        "watch",
+        "watches",
+        "watching"
+      ],
+      "correctAnswer": "watch",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "English pools unchanged by repair; audit unit false-positive fixed only."
+    },
+    {
+      "subject": "math",
+      "grade": "g2",
+      "topic": "fractions",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "מהו חצי מ - 11?",
+      "options": [
+        "1.5",
+        "5.5",
+        "7.5",
+        "3.5"
+      ],
+      "correctAnswer": "5.5",
+      "correctIndex": 1,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g1",
+      "topic": "multiplication",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "3 × 5 = __",
+      "options": [
+        "15",
+        "18",
+        "20",
+        "8"
+      ],
+      "correctAnswer": "15",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g5",
+      "topic": "decimals",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "20.18 + 167.47 = __",
+      "options": [
+        "187.66",
+        "187.64",
+        "187.67",
+        "187.65"
+      ],
+      "correctAnswer": "187.65",
+      "correctIndex": 3,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g4",
+      "topic": "factors_multiples",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "גורם משותף מקסימלי (GCD) לזוג 12, 8 — מהו? = __",
+      "options": [
+        "2",
+        "0",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctAnswer": "2",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g5",
+      "topic": "decimals",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "__",
+      "options": [
+        "8",
+        "7.9",
+        "8.1",
+        "8.2"
+      ],
+      "correctAnswer": "8",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g2",
+      "topic": "fractions",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "מהו חצי מ - 9?",
+      "options": [
+        "6.5",
+        "-1.5",
+        "2.5",
+        "4.5"
+      ],
+      "correctAnswer": "4.5",
+      "correctIndex": 3,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g1",
+      "topic": "multiplication",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "3 × 5 = __",
+      "options": [
+        "20",
+        "18",
+        "15",
+        "8"
+      ],
+      "correctAnswer": "15",
+      "correctIndex": 2,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g2",
+      "topic": "fractions",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "מהו רבע מ - 6?",
+      "options": [
+        "1.5",
+        "-0.5",
+        "5.5",
+        "3.5"
+      ],
+      "correctAnswer": "1.5",
+      "correctIndex": 0,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g3",
+      "topic": "word_problems",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "יש 89 תלמידים והם מתחלקים לקבוצות של 5 תלמידים בכל קבוצה. כמה תלמידים יישארו בלי קבוצה מלאה?",
+      "options": [
+        "8",
+        "5",
+        "4",
+        "6"
+      ],
+      "correctAnswer": "4",
+      "correctIndex": 2,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    },
+    {
+      "subject": "math",
+      "grade": "g1",
+      "topic": "multiplication",
+      "source": "utils/math-question-generator.js:runtime",
+      "repairedNote": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only.",
+      "stem": "5 × 1 = __",
+      "options": [
+        "11",
+        "6",
+        "10",
+        "5"
+      ],
+      "correctAnswer": "5",
+      "correctIndex": 3,
+      "validationIssues": [],
+      "accepted": true,
+      "acceptReason": "Math finalizeMathMcqAnswerBundle flattens options to primitives; mcqOptionCells kept in params only."
+    }
+  ],
+  "smokeResults": [
+    {
+      "subject": "math",
+      "gradeLevel": "g3",
+      "topic": "multiplication",
+      "difficulty": "medium",
+      "count": 3,
+      "ok": true,
+      "issues": [],
+      "generated": 3,
+      "stripped": 3,
+      "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+    },
+    {
+      "subject": "science",
+      "gradeLevel": "g2",
+      "topic": "body",
+      "difficulty": "easy",
+      "count": 3,
+      "ok": true,
+      "issues": [],
+      "generated": 3,
+      "stripped": 3,
+      "explanationInPayload": true,
+      "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+    },
+    {
+      "subject": "hebrew",
+      "gradeLevel": "g3",
+      "topic": "comprehension",
+      "difficulty": "medium",
+      "count": 3,
+      "ok": true,
+      "issues": [],
+      "generated": 3,
+      "stripped": 3,
+      "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+    },
+    {
+      "subject": "geometry",
+      "gradeLevel": "g4",
+      "topic": "area",
+      "difficulty": "medium",
+      "count": 3,
+      "ok": true,
+      "issues": [],
+      "generated": 3,
+      "stripped": 3,
+      "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+    },
+    {
+      "subject": "english",
+      "gradeLevel": "g3",
+      "topic": "grammar",
+      "difficulty": "medium",
+      "count": 3,
+      "ok": true,
+      "issues": [],
+      "generated": 3,
+      "stripped": 3,
+      "explanationInPayload": true,
+      "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+    },
+    {
+      "subject": "moledet_geography",
+      "gradeLevel": "g3",
+      "topic": "homeland",
+      "difficulty": "easy",
+      "count": 3,
+      "ok": true,
+      "issues": [],
+      "generated": 3,
+      "stripped": 3,
+      "note": "Assigned activity homework payload: no correct answer in strip; explanation may exist on object but UI shows post-submit only."
+    }
+  ]
+}

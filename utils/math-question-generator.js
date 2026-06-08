@@ -4,6 +4,8 @@ import { probeMatchesSession } from './active-diagnostic-runtime/session-match.j
 import { attachProfessionalMathMetadata } from './math-question-metadata.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
 import { attachMathEquationInstructionLabel } from './student-question-display.js';
+import { mcqCellValue } from './mcq-option-cell.js';
+import { normalizeOptionForCompare } from './question-quality.js';
 
 function mathLevelKeyFromConfig(levelConfig) {
   const n = String(levelConfig?.name || "").trim();
@@ -424,6 +426,99 @@ function applyMathLevelPresentation(question, ctx) {
   }
 
   return q0;
+}
+
+function mcqValueKey(v) {
+  return normalizeOptionForCompare(String(mcqCellValue(v) ?? ""));
+}
+
+function displayValueFromMcqCell(cell) {
+  const v = mcqCellValue(cell);
+  if (v == null || v === "") return null;
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  return String(v).trim();
+}
+
+/**
+ * Dedupe MCQ cells, ensure 4 unique options, flatten answers for student UI,
+ * preserve rich cells on params.mcqOptionCells for Phase 8 engine metadata.
+ * @param {Record<string, unknown>} out
+ * @param {(min: number, max: number) => number} randIntFn
+ */
+function finalizeMathMcqAnswerBundle(out, randIntFn) {
+  if (!out || typeof out !== "object" || !Array.isArray(out.answers) || out.answers.length < 2) {
+    return out;
+  }
+
+  const params =
+    out.params && typeof out.params === "object" ? { .../** @type {Record<string, unknown>} */ (out.params) } : {};
+  const kind = String(params.kind || "");
+  const correctAnswer = out.correctAnswer;
+  const correctKey = mcqValueKey(correctAnswer);
+  if (!correctKey) return out;
+
+  /** @type {ReturnType<typeof toMcqOptionCell>[]} */
+  const cells = [];
+  const seen = new Set();
+
+  const pushCell = (rawVal, distractorFamily = null) => {
+    const val = mcqCellValue(rawVal);
+    const fam =
+      distractorFamily ||
+      (typeof rawVal === "object" && rawVal != null && rawVal.distractorFamily
+        ? rawVal.distractorFamily
+        : inferMathDistractorFamily(val, correctAnswer, kind, params));
+    const cell = toMcqOptionCell(val, fam);
+    const key = mcqValueKey(cell);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    cells.push(cell);
+    return true;
+  };
+
+  pushCell(correctAnswer, null);
+
+  for (const a of out.answers) {
+    if (cells.length >= 4) break;
+    if (mcqValueKey(a) === correctKey) continue;
+    pushCell(a);
+  }
+
+  const cn = Number(correctAnswer);
+  let guard = 0;
+  while (cells.length < 4 && guard < 60) {
+    guard += 1;
+    if (Number.isFinite(cn)) {
+      const delta = randIntFn(1, Math.max(2, Math.min(12, Math.abs(cn) + 4)));
+      pushCell(cn + delta);
+      pushCell(cn - delta);
+      pushCell(cn + delta + 1);
+      pushCell(Math.max(0, cn - delta - 1));
+    } else if (typeof correctAnswer === "string") {
+      pushCell(`${correctAnswer}1`);
+      pushCell(`${correctAnswer.slice(0, Math.max(1, correctAnswer.length - 1))}x`);
+    } else {
+      break;
+    }
+  }
+
+  if (cells.length < 4) return out;
+
+  const shuffled = shuffleMcqList(cells);
+  params.mcqOptionCells = shuffled;
+  const displayAnswers = shuffled
+    .map(displayValueFromMcqCell)
+    .filter((v) => v != null && v !== "");
+
+  if (displayAnswers.length < 4) return out;
+
+  const caDisplay = displayValueFromMcqCell(toMcqOptionCell(correctAnswer));
+  return {
+    ...out,
+    params,
+    answers: displayAnswers,
+    correctAnswer: caDisplay != null ? caDisplay : correctAnswer,
+  };
 }
 
 function shuffleMcqList(items) {
@@ -1105,11 +1200,14 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
   const finalizeMathQuestionOutput = (out) =>
     sanitizeQuestionForStudentDisplay(
       attachMathEquationInstructionLabel(
-        attachProfessionalMathMetadata(out, {
-          selectedOp,
-          gradeKey,
-          mathLevelKey,
-        }),
+        attachProfessionalMathMetadata(
+          finalizeMathMcqAnswerBundle(out, randInt),
+          {
+            selectedOp,
+            gradeKey,
+            mathLevelKey,
+          }
+        ),
         gradeKey
       )
     );
@@ -2842,7 +2940,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const n = randInt(0, Math.min(200, maxNumberSense));
       const isEven = n % 2 === 0;
       correctAnswer = isEven ? "זוגי" : "אי-זוגי";
-      question = `האם המספר ${n} הוא זוגי או אי-זוגי?`;
+      question = `האם המספר ${n} הוא זוגי?`;
       params = { kind: "ns_even_odd", n, isEven };
       let answers = ["זוגי", "אי-זוגי"];
       for (let i = answers.length - 1; i > 0; i--) {
@@ -2993,7 +3091,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       const n = randInt(0, Math.min(200, maxNumberSense));
       const isEven = n % 2 === 0;
       correctAnswer = isEven ? "זוגי" : "אי-זוגי";
-      question = `האם המספר ${n} הוא זוגי או אי-זוגי?`;
+      question = `האם המספר ${n} הוא זוגי?`;
       params = { kind: "ns_even_odd", n, isEven };
       // רק שני ניסוחים שונים לזוגיות — לא ניתן למלא 4 אפשרויות ייחודיות באותה מילה בלי כפילויות;
       // השכנים n−1 ו-n+1 תמיד באותה זוגיות (מנוגדים ל-n), ולכן היו יוצרים כפילויות ב-MCQ.
@@ -3659,7 +3757,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     const num = randInt(2, maxNum);
     const isNumPrime = isPrime(num);
     correctAnswer = isNumPrime ? "ראשוני" : "פריק";
-    question = `האם המספר ${num} הוא ראשוני או פריק?`;
+    question = `האם המספר ${num} הוא ראשוני?`;
     params = {
       kind: "prime_composite",
       num,
@@ -4003,12 +4101,12 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       }
       fill.add(`${base}1`);
     }
-    allAnswers = shuffleMcqList([
+    allAnswers = finalizeMcqOptions(
       correctAnswer,
-      ...Array.from(fill)
-        .filter((x) => x !== correctAnswer)
-        .slice(0, 3),
-    ]);
+      Array.from(fill).filter((x) => mcqValueKey(x) !== mcqValueKey(correctAnswer)),
+      params?.kind,
+      params
+    );
   }
 
   // וודא שיש טקסט לשאלה

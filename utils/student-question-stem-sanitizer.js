@@ -2,6 +2,7 @@ import {
   isTopicDifficultyMetadataLead,
   normalizeStudentQuestionDisplayFields,
 } from "./student-question-display.js";
+import { ensureMcqFourOptions, shouldEnforceFourMcqOptions } from "./mcq-four-options.js";
 
 /**
  * Strip UI-duplicated metadata from student-facing question stems (all subjects).
@@ -259,5 +260,13 @@ export function sanitizeQuestionForStudentDisplay(q) {
   ) {
     delete next.questionLabel;
   }
-  return normalizeStudentQuestionDisplayFields(next);
+  const normalized = normalizeStudentQuestionDisplayFields(next);
+  if (shouldEnforceFourMcqOptions(normalized)) {
+    const subject =
+      normalized.subject ||
+      normalized.params?.subject ||
+      normalized.params?.canonicalMetadata?.subject;
+    return ensureMcqFourOptions(normalized, { subject: subject != null ? String(subject) : undefined });
+  }
+  return normalized;
 }

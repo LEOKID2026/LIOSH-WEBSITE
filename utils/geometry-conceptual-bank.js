@@ -2,6 +2,8 @@ import { itemAllowedForGrade } from "./grade-gating.js";
 import { mergeDiagnosticContractIntoParams } from "./diagnostic-question-contract.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
 import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/math-geometry-canonical-metadata.js";
+import { repairMcqObviousAnswerContent } from "./mcq-fail-content-repair.js";
+import { ensureMcqFourOptions, NORMAL_MCQ_OPTION_COUNT } from "./mcq-four-options.js";
 
 /**
  * שאלות גיאומטריה קונספטואליות — הסקה, השוואה, סיווג, בלבול שטח/היקף, רב-שלבי מושגי.
@@ -11,11 +13,28 @@ import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/m
 function shuffleOptions(correct, options) {
   const arr = [...new Set(options.map((s) => String(s).trim()))].filter(Boolean);
   if (!arr.includes(correct)) arr.push(correct);
+  let guard = 0;
+  while (arr.length < NORMAL_MCQ_OPTION_COUNT && guard < 40) {
+    guard += 1;
+    const extra = options.find((x) => {
+      const t = String(x).trim();
+      return t && t !== correct && !arr.includes(t);
+    });
+    if (extra) {
+      arr.push(String(extra).trim());
+      continue;
+    }
+    const synth = [`${correct} (לא)`, `${correct} — לפעמים`, `לא ${correct}`, `רק ${correct}`].find(
+      (t) => t !== correct && !arr.includes(t)
+    );
+    if (synth) arr.push(synth);
+    else break;
+  }
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return { answers: arr, correctAnswer: correct };
+  return { answers: arr.slice(0, NORMAL_MCQ_OPTION_COUNT), correctAnswer: correct };
 }
 
 /**
@@ -45,12 +64,14 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
 
   if (row.binary) {
     const opts =
-      row.options.length === 2
+      row.options.length >= NORMAL_MCQ_OPTION_COUNT
         ? row.options
-        : [correct, row.options.find((x) => x !== correct)];
+        : row.options.length === 2
+          ? row.options
+          : [correct, row.options.find((x) => x !== correct)];
     const sh = shuffleOptions(correct, opts);
     answers = sh.answers;
-    params.optionCount = 2;
+    params.optionCount = answers.length;
   } else {
     const sh = shuffleOptions(correct, row.options);
     answers = sh.answers;
@@ -64,13 +85,26 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
         ? "מושגים (בינוני)"
         : "מושגים (אתגר)";
   const qText = String(row.question || "").trim();
+  const correctIdx = answers.findIndex((a) => String(a).trim() === correct);
+  const repaired = repairMcqObviousAnswerContent(
+    {
+      question: qText,
+      answers,
+      correctIndex: correctIdx >= 0 ? correctIdx : 0,
+      correctAnswer: correct,
+    },
+    { subject: "geometry", stem: qText }
+  );
+  const outAnswers = repaired.answers ?? answers;
+  const outCorrect = String(repaired.correctAnswer ?? correct).trim();
+  const outIdx = outAnswers.findIndex((a) => String(a).trim() === outCorrect);
 
   return sanitizeQuestionForStudentDisplay(
     attachCanonicalMetadataToMathGeometryQuestion(
       {
         question: qText,
-        correctAnswer: correct,
-        answers,
+        correctAnswer: outCorrect,
+        answers: outAnswers,
         topic,
         shape: null,
         params: { ...params, conceptualLevelFraming: levelFr },

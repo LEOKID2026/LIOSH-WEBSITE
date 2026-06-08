@@ -14,6 +14,7 @@ import { enrichGeometryProceduralParams } from "./geometry-diagnostic-metadata-b
 import { attachCanonicalMetadataToMathGeometryQuestion } from "../lib/learning/math-geometry-canonical-metadata.js";
 import { formatTriangleAnglesKnownTwoStem } from "./geometry-activity-question-stem.js";
 import { sanitizeQuestionForStudentDisplay } from "./student-question-stem-sanitizer.js";
+import { repairMcqObviousAnswerContent } from "./mcq-fail-content-repair.js";
 
 function shuffleMcqList(answers) {
   const arr = [...answers];
@@ -1566,37 +1567,37 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
                   `התאמת מונח: "${selectedType}" = איזה סוג משולש? (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                   `מונח מתמטי: "${selectedType}" מגדיר משולש עם תכונות של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                   `הגדרה וסיווג: "${selectedType}" מתייחס למשולש המקיים — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `זיהוי מונח: "${selectedType}" = משולש בעל צלעות — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `זיהוי מונח: "${selectedType}" = משולש בעל צלעות — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                   `התאמת הגדרה: "${selectedType}" מתאר משולש שצלעותיו — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                   `מונח גיאומטרי: "${selectedType}" הוא משולש המוגדר כ — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `סיווג לפי שם: "${selectedType}" מצביע על משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `סיווג לפי שם: "${selectedType}" מצביע על משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                   `הבנת מונח: "${selectedType}" מתייחס למשולש עם מאפייני צלעות — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `ניתוח: "${selectedType}" מתאר משולש עם צלעות — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `ניתוח: "${selectedType}" מתאר משולש עם צלעות — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                   `זיהוי סוג: "${selectedType}" = סוג משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `הגדרה: "${selectedType}" מתאים למשולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `סיווג משולש: "${selectedType}" הוא — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `מאפייני צלעות: "${selectedType}" = משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `חקר משולשים: "${selectedType}" שייך לסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `בדיקת הבנה: "${selectedType}" סוג משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `מיון משולשים: "${selectedType}" = קטגוריה — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `הגדרה: "${selectedType}" מתאים למשולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `סיווג משולש: "${selectedType}" הוא — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `מאפייני צלעות: "${selectedType}" = משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `חקר משולשים: "${selectedType}" שייך לסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `בדיקת הבנה: "${selectedType}" סוג משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `מיון משולשים: "${selectedType}" = קטגוריה — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                 ][triLateW]
               : [
-                  `ניסוח מדויק: "${selectedType}" מתאר משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `הגדרה מדויקת: "${selectedType}" = משולש המוגדר לפי תכונות הצלעות שלו כ — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `ניתוח מונחי: השם "${selectedType}" מגדיר משולש שמתאפיין ב — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `התאמה מדויקת: "${selectedType}" מתאר משולש עם תכונות ייחודיות של — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `ביטוי מתמטי: "${selectedType}" הוא מונח המתייחס למשולש שבו — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `זיהוי מדויק: "${selectedType}" = משולש המקיים תנאים ספציפיים של — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `הגדרה מתקדמת: "${selectedType}" מוגדר כמשולש שכל צלעותיו — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `ניסוח מתמטי: "${selectedType}" מתייחס למשולש בעל תכונות גיאומטריות של — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `אתגר: "${selectedType}" הוא משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `חקר מעמיק: "${selectedType}" מתאר משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `ניתוח מתקדם: "${selectedType}" = סוג משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `הוכחה: "${selectedType}" שייך לקטגוריה — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `אתגר הגדרות: "${selectedType}" משולש מסוג — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `חקר תכונות: "${selectedType}" מאפייני צלעות — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `ניתוח מדויק: "${selectedType}" קטגוריית משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
-                  `הסבר מילולי: "${selectedType}" סוג משולש — (1 = שוׁה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `ניסוח מדויק: "${selectedType}" מתאר משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `הגדרה מדויקת: "${selectedType}" = משולש המוגדר לפי תכונות הצלעות שלו כ — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `ניתוח מונחי: השם "${selectedType}" מגדיר משולש שמתאפיין ב — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `התאמה מדויקת: "${selectedType}" מתאר משולש עם תכונות ייחודיות של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `ביטוי מתמטי: "${selectedType}" הוא מונח המתייחס למשולש שבו — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `זיהוי מדויק: "${selectedType}" = משולש המקיים תנאים ספציפיים של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `הגדרה מתקדמת: "${selectedType}" מוגדר כמשולש שכל צלעותיו — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `ניסוח מתמטי: "${selectedType}" מתייחס למשולש בעל תכונות גיאומטריות של — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `אתגר: "${selectedType}" הוא משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `חקר מעמיק: "${selectedType}" מתאר משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `ניתוח מתקדם: "${selectedType}" = סוג משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `הוכחה: "${selectedType}" שייך לקטגוריה — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `אתגר הגדרות: "${selectedType}" משולש מסוג — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `חקר תכונות: "${selectedType}" מאפייני צלעות — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `ניתוח מדויק: "${selectedType}" קטגוריית משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
+                  `הסבר מילולי: "${selectedType}" סוג משולש — (1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות)`,
                 ][triLateW];
       }
       break;
@@ -2144,6 +2145,25 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     ? String(Math.round(Number(correctAnswer)))
     : correctAnswer;
 
+  const correctIdx = shuffledAnswers.findIndex(
+    (a) => String(a) === String(resolvedCorrect) || String(a) === String(correctAnswer)
+  );
+  const repairedBundle = repairMcqObviousAnswerContent(
+    {
+      question,
+      answers: shuffledAnswers,
+      correctIndex: correctIdx >= 0 ? correctIdx : 0,
+      correctAnswer: resolvedCorrect,
+    },
+    { subject: "geometry", stem: question }
+  );
+  const repairedAnswers = repairedBundle.answers ?? shuffledAnswers;
+  const repairedCorrect =
+    repairedBundle.correctAnswer != null ? repairedBundle.correctAnswer : resolvedCorrect;
+  const finalCorrectIdx = repairedAnswers.findIndex(
+    (a) => String(a) === String(repairedCorrect)
+  );
+
   const enrichedParams = enrichGeometryProceduralParams(params, {
     topic: selectedTopic,
     gradeKey,
@@ -2154,8 +2174,8 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     attachCanonicalMetadataToMathGeometryQuestion(
       {
         question,
-        correctAnswer: resolvedCorrect,
-        answers: shuffledAnswers,
+        correctAnswer: repairedCorrect,
+        answers: repairedAnswers,
         topic: selectedTopic,
         shape,
         params: enrichedParams,

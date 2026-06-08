@@ -1,6 +1,8 @@
 import { GRADES, TOPICS } from './moledet-geography-constants.js';
 import { isMoledetGeographyGradeAllowed } from './moledet-geography-curriculum-gates.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
+import { rebalanceObviousMcqDistractors } from './mcq-distractor-rebalance.js';
+import { repairMcqObviousAnswerContent } from './mcq-fail-content-repair.js';
 import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contract.js';
 import { moledetDiagnosticContractFromBankRow } from './moledet-geography-diagnostic-metadata-bridge.js';
 import { attachCanonicalMetadataToMoledetQuestion } from '../lib/learning/moledet-geography-canonical-metadata.js';
@@ -71,12 +73,17 @@ export function listTopicQuestionsForGradeLevel(gradeKey, levelKey, topic) {
 }
 
 function shuffleAnswersAndBuild(randomQ, selectedTopic, gradeKey, levelKey, uiLevel, poolFallbackCode) {
-  const shuffledAnswers = [...randomQ.answers];
+  const balanced = rebalanceObviousMcqDistractors(randomQ);
+  const repaired = repairMcqObviousAnswerContent(balanced, {
+    subject: "moledet_geography",
+    stem: balanced.question,
+  });
+  const shuffledAnswers = [...repaired.answers];
   for (let i = shuffledAnswers.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffledAnswers[i], shuffledAnswers[j]] = [shuffledAnswers[j], shuffledAnswers[i]];
   }
-  const correctAnswer = randomQ.answers[randomQ.correct];
+  const correctAnswer = repaired.answers[repaired.correct];
   const newCorrectIndex = shuffledAnswers.findIndex((ans) => ans === correctAnswer);
   const contentPoolLevel = levelKey;
   const diag = moledetDiagnosticContractFromBankRow(
@@ -96,9 +103,9 @@ function shuffleAnswersAndBuild(randomQ, selectedTopic, gradeKey, levelKey, uiLe
     diag
   );
   const display = sanitizeQuestionForStudentDisplay({
-    question: randomQ.question,
+    question: repaired.question,
     questionLabel: "",
-    exerciseText: randomQ.question,
+    exerciseText: repaired.question,
     answers: shuffledAnswers,
     correctAnswer,
     correctIndex: newCorrectIndex >= 0 ? newCorrectIndex : 0,
@@ -110,7 +117,7 @@ function shuffleAnswersAndBuild(randomQ, selectedTopic, gradeKey, levelKey, uiLe
     b: null,
     params,
     id: moledetBankRowKey(
-      /** @type {Record<string, unknown>} */ (randomQ),
+      /** @type {Record<string, unknown>} */ (balanced),
       selectedTopic
     ),
   });

@@ -1,5 +1,7 @@
 // ========== ייבוא כל השאלות לפי כיתה (Q2-C5 canonical enrich at export) ==========
 import { enrichMoledetGradeQuestionsPool } from "../../lib/learning/moledet-geography-canonical-metadata.js";
+import { rebalanceObviousMcqDistractors } from "../../utils/mcq-distractor-rebalance.js";
+import { repairMcqObviousAnswerContent } from "../../utils/mcq-fail-content-repair.js";
 
 import {
   G1_EASY_QUESTIONS as G1_EASY_RAW,
@@ -32,26 +34,78 @@ import {
   G6_HARD_QUESTIONS as G6_HARD_RAW,
 } from "./g6.js";
 
-export const G1_EASY_QUESTIONS = enrichMoledetGradeQuestionsPool(G1_EASY_RAW);
-export const G1_MEDIUM_QUESTIONS = enrichMoledetGradeQuestionsPool(G1_MEDIUM_RAW);
-export const G1_HARD_QUESTIONS = enrichMoledetGradeQuestionsPool(G1_HARD_RAW);
+function prepareMoledetMcqRow(row) {
+  if (!row || typeof row !== "object") return row;
+  const answers = Array.isArray(row.answers)
+    ? row.answers
+    : Array.isArray(row.options)
+      ? row.options
+      : null;
+  if (!answers || answers.length < 4) return row;
 
-export const G2_EASY_QUESTIONS = enrichMoledetGradeQuestionsPool(G2_EASY_RAW);
-export const G2_MEDIUM_QUESTIONS = enrichMoledetGradeQuestionsPool(G2_MEDIUM_RAW);
-export const G2_HARD_QUESTIONS = enrichMoledetGradeQuestionsPool(G2_HARD_RAW);
+  const ci =
+    Number.isFinite(Number(row.correctIndex)) && Number(row.correctIndex) >= 0
+      ? Number(row.correctIndex)
+      : Number.isFinite(Number(row.correct)) && Number(row.correct) >= 0
+        ? Number(row.correct)
+        : 0;
 
-export const G3_EASY_QUESTIONS = enrichMoledetGradeQuestionsPool(G3_EASY_RAW);
-export const G3_MEDIUM_QUESTIONS = enrichMoledetGradeQuestionsPool(G3_MEDIUM_RAW);
-export const G3_HARD_QUESTIONS = enrichMoledetGradeQuestionsPool(G3_HARD_RAW);
+  let working = rebalanceObviousMcqDistractors({
+    question: row.question,
+    answers: [...answers],
+    correct: ci,
+    correctIndex: ci,
+  });
+  working = repairMcqObviousAnswerContent(working, {
+    subject: "moledet_geography",
+    stem: row.question,
+  });
 
-export const G4_EASY_QUESTIONS = enrichMoledetGradeQuestionsPool(G4_EASY_RAW);
-export const G4_MEDIUM_QUESTIONS = enrichMoledetGradeQuestionsPool(G4_MEDIUM_RAW);
-export const G4_HARD_QUESTIONS = enrichMoledetGradeQuestionsPool(G4_HARD_RAW);
+  const out = { ...row };
+  if (Array.isArray(row.answers)) out.answers = working.answers;
+  if (Array.isArray(row.options)) out.options = working.answers ?? working.options;
+  if (row.correct != null) out.correct = working.correct ?? working.correctIndex ?? ci;
+  if (row.correctIndex != null) {
+    out.correctIndex = working.correctIndex ?? working.correct ?? ci;
+  }
+  return out;
+}
 
-export const G5_EASY_QUESTIONS = enrichMoledetGradeQuestionsPool(G5_EASY_RAW);
-export const G5_MEDIUM_QUESTIONS = enrichMoledetGradeQuestionsPool(G5_MEDIUM_RAW);
-export const G5_HARD_QUESTIONS = enrichMoledetGradeQuestionsPool(G5_HARD_RAW);
+function enrichMoledetPool(raw) {
+  const enriched = enrichMoledetGradeQuestionsPool(raw);
+  if (!enriched || typeof enriched !== "object" || Array.isArray(enriched)) return enriched;
+  /** @type {Record<string, unknown[]>} */
+  const out = {};
+  for (const [topicKey, rows] of Object.entries(enriched)) {
+    if (!Array.isArray(rows)) {
+      out[topicKey] = rows;
+      continue;
+    }
+    out[topicKey] = rows.map((row) => prepareMoledetMcqRow(row));
+  }
+  return out;
+}
 
-export const G6_EASY_QUESTIONS = enrichMoledetGradeQuestionsPool(G6_EASY_RAW);
-export const G6_MEDIUM_QUESTIONS = enrichMoledetGradeQuestionsPool(G6_MEDIUM_RAW);
-export const G6_HARD_QUESTIONS = enrichMoledetGradeQuestionsPool(G6_HARD_RAW);
+export const G1_EASY_QUESTIONS = enrichMoledetPool(G1_EASY_RAW);
+export const G1_MEDIUM_QUESTIONS = enrichMoledetPool(G1_MEDIUM_RAW);
+export const G1_HARD_QUESTIONS = enrichMoledetPool(G1_HARD_RAW);
+
+export const G2_EASY_QUESTIONS = enrichMoledetPool(G2_EASY_RAW);
+export const G2_MEDIUM_QUESTIONS = enrichMoledetPool(G2_MEDIUM_RAW);
+export const G2_HARD_QUESTIONS = enrichMoledetPool(G2_HARD_RAW);
+
+export const G3_EASY_QUESTIONS = enrichMoledetPool(G3_EASY_RAW);
+export const G3_MEDIUM_QUESTIONS = enrichMoledetPool(G3_MEDIUM_RAW);
+export const G3_HARD_QUESTIONS = enrichMoledetPool(G3_HARD_RAW);
+
+export const G4_EASY_QUESTIONS = enrichMoledetPool(G4_EASY_RAW);
+export const G4_MEDIUM_QUESTIONS = enrichMoledetPool(G4_MEDIUM_RAW);
+export const G4_HARD_QUESTIONS = enrichMoledetPool(G4_HARD_RAW);
+
+export const G5_EASY_QUESTIONS = enrichMoledetPool(G5_EASY_RAW);
+export const G5_MEDIUM_QUESTIONS = enrichMoledetPool(G5_MEDIUM_RAW);
+export const G5_HARD_QUESTIONS = enrichMoledetPool(G5_HARD_RAW);
+
+export const G6_EASY_QUESTIONS = enrichMoledetPool(G6_EASY_RAW);
+export const G6_MEDIUM_QUESTIONS = enrichMoledetPool(G6_MEDIUM_RAW);
+export const G6_HARD_QUESTIONS = enrichMoledetPool(G6_HARD_RAW);

@@ -325,6 +325,7 @@ export const SENTENCE_POOLS_PHASE_B = {
     },
     {
       "template": "Choose the correct sentence:",
+      "question": "Choose the correct sentence:",
       "options": [
         "Last weekend, our family visited a small museum near the sea.",
         "Last weekend, our family visit a small museum near the sea.",
