@@ -42,6 +42,11 @@ import {
   learningExplainOpenBtn,
 } from "../../utils/learning-ui-classes";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import { useLearningWrongAnswerAdvance } from "../../hooks/useLearningWrongAnswerAdvance";
+import {
+  LEARNING_CORRECT_ANSWER_ADVANCE_MS,
+} from "../../utils/learning-wrong-answer-feedback-timing";
+import { getLearningPrimaryAnswerButtonState } from "../../utils/learning-answer-primary-button";
 import {
   beginMasterQuestionLedger,
   finalizeMasterQuestionLedger,
@@ -602,6 +607,11 @@ export default function EnglishMaster() {
   // הסבר מפורט לשאלה
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
+  const {
+    scheduleWrongAnswerAdvance,
+    clearWrongAnswerAdvanceTimer,
+    clearWrongAnswerAdvanceState,
+  } = useLearningWrongAnswerAdvance(showSolution, showPreviousSolution);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
   const stepByStepViewedRef = useRef(false);
@@ -1583,6 +1593,7 @@ export default function EnglishMaster() {
   );
 
   function generateNewQuestion() {
+    clearWrongAnswerAdvanceState();
     closeOpenQuestionLedger(true);
     let gradeForQuestion = grade;
     let levelForQuestion = level;
@@ -1838,10 +1849,33 @@ export default function EnglishMaster() {
 
   const openPreviousExplanation = () => {
     if (!previousExplanationQuestion) return;
+    clearWrongAnswerAdvanceTimer();
     setShowSolution(false);
     setShowPreviousSolution(true);
     stepByStepViewedRef.current = true;
   };
+
+  function advanceToNextQuestionManually() {
+    clearWrongAnswerAdvanceState();
+    setSelectedAnswer(null);
+    setTypedAnswer("");
+    setFeedback(null);
+    generateNewQuestion();
+  }
+
+  function handleEnglishPrimaryAnswerButtonClick() {
+    const { action } = getLearningPrimaryAnswerButtonState({
+      selectedAnswer,
+      textAnswer: typedAnswer,
+    });
+    if (action === "next") {
+      advanceToNextQuestionManually();
+      return;
+    }
+    if (typedAnswer.trim() !== "") {
+      handleAnswer(typedAnswer.trim());
+    }
+  }
 
   function handleTimeUp() {
     pendingEnglishTrackMetaRef.current = {
@@ -2004,6 +2038,7 @@ export default function EnglishMaster() {
       setStreak((prev) => prev + 1);
       setCorrect((prev) => prev + 1);
       
+      clearWrongAnswerAdvanceState();
       setErrorExplanation("");
 
       const top = currentQuestion.topic;
@@ -2124,7 +2159,7 @@ export default function EnglishMaster() {
         } else {
           setTimeLeft(null);
         }
-      }, 1000);
+      }, LEARNING_CORRECT_ANSWER_ADVANCE_MS);
     } else {
       setWrong((prev) => prev + 1);
       setStreak(0);
@@ -2219,13 +2254,13 @@ export default function EnglishMaster() {
         setFeedback(
           `Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`
         );
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setTypedAnswer("");
           setFeedback(null);
           setTimeLeft(null);
-        }, 1500);
+        });
       } else if (mode === "challenge") {
         setFeedback(
           `Wrong! Correct: ${currentQuestion.correctAnswer} ❌ (-1 ❤️)`
@@ -2251,20 +2286,20 @@ export default function EnglishMaster() {
               hardResetGame();
             }, 2000);
           } else {
-            setTimeout(() => {
+            scheduleWrongAnswerAdvance(() => {
               generateNewQuestion();
               setSelectedAnswer(null);
               setTypedAnswer("");
               setFeedback(null);
               setTimeLeft(20);
-            }, 1500);
+            });
           }
           return nextLives;
         });
       } else {
         // speed / marathon / practice stay in active gameplay on wrong answers
         setFeedback(`Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`);
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setTypedAnswer("");
@@ -2274,7 +2309,7 @@ export default function EnglishMaster() {
           } else {
             setTimeLeft(null);
           }
-        }, 1500);
+        });
       }
     }
 
@@ -2990,8 +3025,8 @@ export default function EnglishMaster() {
                             value={typedAnswer}
                             onChange={(e) => setTypedAnswer(e.target.value)}
                             onKeyPress={(e) => {
-                              if (e.key === "Enter" && !selectedAnswer && typedAnswer.trim() !== "") {
-                                handleAnswer(typedAnswer.trim());
+                              if (e.key === "Enter") {
+                                handleEnglishPrimaryAnswerButtonClick();
                               }
                             }}
                             disabled={!!selectedAnswer || !gameActive}
@@ -2999,30 +3034,32 @@ export default function EnglishMaster() {
                             className="w-full max-w-[300px] px-4 py-4 rounded-lg bg-black/40 border border-white/20 text-white text-2xl font-bold text-center disabled:opacity-50"
                           />
                         </div>
-                        <div className="flex gap-2 justify-center">
-                          <button
-                            onClick={() => {
-                              if (!typedAnswer.trim()) return;
-                              handleAnswer(typedAnswer.trim());
-                            }}
-                            disabled={!!selectedAnswer || !gameActive || !typedAnswer.trim()}
-                            className="px-6 py-3 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 disabled:bg-gray-500/60 font-bold text-lg"
-                          >
-                            ✅ בדוק תשובה
-                          </button>
-                          {selectedAnswer && (
-                            <button
-                              onClick={() => {
-                                setSelectedAnswer(null);
-                                setTypedAnswer("");
-                                setFeedback(null);
-                                generateNewQuestion();
-                              }}
-                              className="px-6 py-3 rounded-lg bg-blue-500/80 hover:bg-blue-500 font-bold text-lg"
-                            >
-                              שאלה הבאה
-                            </button>
-                          )}
+                        <div className="flex justify-center">
+                          {(() => {
+                            const primaryBtn = getLearningPrimaryAnswerButtonState({
+                              selectedAnswer,
+                              textAnswer: typedAnswer,
+                            });
+                            return (
+                              <button
+                                type="button"
+                                onClick={handleEnglishPrimaryAnswerButtonClick}
+                                disabled={
+                                  !gameActive ||
+                                  (primaryBtn.action === "check" && primaryBtn.disabled)
+                                }
+                                className={`px-6 py-3 rounded-lg font-bold text-lg disabled:bg-gray-500/60 disabled:opacity-50 ${
+                                  primaryBtn.action === "next"
+                                    ? "bg-blue-500/80 hover:bg-blue-500"
+                                    : "bg-emerald-500/80 hover:bg-emerald-500"
+                                }`}
+                              >
+                                {primaryBtn.action === "check"
+                                  ? "✅ בדוק תשובה"
+                                  : primaryBtn.label}
+                              </button>
+                            );
+                          })()}
                         </div>
                       </div>
                     ) : (
@@ -3063,7 +3100,11 @@ export default function EnglishMaster() {
                     <div className="w-full flex justify-center gap-2 flex-wrap mb-2 min-h-[2.75rem]" dir="rtl">
                       {mode === "learning" && currentQuestion && (
                         <button
-                          onClick={() => { stepByStepViewedRef.current = true; setShowSolution(true); }}
+                          onClick={() => {
+                            clearWrongAnswerAdvanceTimer();
+                            stepByStepViewedRef.current = true;
+                            setShowSolution(true);
+                          }}
                           className={learningExplainOpenBtn}
                         >
                           📘 הסבר מלא

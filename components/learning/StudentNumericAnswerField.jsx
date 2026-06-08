@@ -25,6 +25,7 @@ export default function StudentNumericAnswerField({
   submitDisabled = false,
   submitTestId,
   submitLabel = "בדוק",
+  submitTone = "green",
   className = "",
   inputClassName = "",
   autoFocus = false,
@@ -130,6 +131,7 @@ export default function StudentNumericAnswerField({
                 }
               : null
           }
+          submitTone={submitTone}
         />
       ) : null}
     </div>

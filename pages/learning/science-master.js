@@ -9,6 +9,7 @@ import {
 } from "../../data/science-curriculum";
 import { trackScienceTopicTime } from "../../utils/science-time-tracking";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import { useLearningWrongAnswerAdvance } from "../../hooks/useLearningWrongAnswerAdvance";
 import {
   beginMasterQuestionLedger,
   finalizeMasterQuestionLedger,
@@ -752,6 +753,11 @@ export default function ScienceMaster() {
   const [hintUsed, setHintUsed] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
+  const {
+    scheduleWrongAnswerAdvance,
+    clearWrongAnswerAdvanceTimer,
+    clearWrongAnswerAdvanceState,
+  } = useLearningWrongAnswerAdvance(showSolution, showPreviousSolution);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [showTheoryHelp, setShowTheoryHelp] = useState(false);
   const [showHowTo, setShowHowTo] = useState(false);
@@ -1984,6 +1990,7 @@ function saveScienceAnswerInParallel({
   );
 
   function generateNewQuestion(resetPool = false) {
+    clearWrongAnswerAdvanceState();
     closeOpenQuestionLedger(true);
 
     if (resetPool) {
@@ -2441,6 +2448,7 @@ function saveScienceAnswerInParallel({
         correctRef.current = next;
         return next;
       });
+      clearWrongAnswerAdvanceState();
       setErrorExplanation("");
       // progress by topic
       setProgress((prev) => {
@@ -2671,12 +2679,12 @@ function saveScienceAnswerInParallel({
       if ("vibrate" in navigator) navigator.vibrate?.(200);
       if (mode === "learning") {
         setFeedback("לא מדויק... ❌");
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setFeedback(null);
           setTimeLeft(null);
-        }, 1600);
+        });
       } else if (mode === "challenge") {
         setFeedback("טעות! ❌ (-1 ❤️)");
         setLives((prev) => {
@@ -2693,26 +2701,26 @@ function saveScienceAnswerInParallel({
               hardResetGame();
             }, 2000);
           } else {
-            setTimeout(() => {
+            scheduleWrongAnswerAdvance(() => {
               generateNewQuestion();
               setSelectedAnswer(null);
               setFeedback(null);
               if (mode === "challenge") setTimeLeft(25);
               else if (mode === "speed") setTimeLeft(12);
-            }, 1600);
+            });
           }
           return next;
         });
       } else {
         // speed / marathon / practice stay in active gameplay on wrong answers
         setFeedback("לא מדויק... ❌");
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setFeedback(null);
           if (mode === "speed") setTimeLeft(12);
           else setTimeLeft(null);
-        }, 1600);
+        });
       }
     }
   }
@@ -2729,6 +2737,7 @@ function saveScienceAnswerInParallel({
 
   const openPreviousExplanation = () => {
     if (!previousExplanationQuestion) return;
+    clearWrongAnswerAdvanceTimer();
     setShowSolution(false);
     setShowPreviousSolution(true);
     stepByStepViewedRef.current = true;
@@ -3489,7 +3498,11 @@ function saveScienceAnswerInParallel({
                     {mode === "learning" && currentQuestion && (
                       <button
                         type="button"
-                        onClick={() => { stepByStepViewedRef.current = true; setShowSolution(true); }}
+                        onClick={() => {
+                          clearWrongAnswerAdvanceTimer();
+                          stepByStepViewedRef.current = true;
+                          setShowSolution(true);
+                        }}
                         className={learningExplainOpenBtn}
                       >
                         📘 הסבר מלא

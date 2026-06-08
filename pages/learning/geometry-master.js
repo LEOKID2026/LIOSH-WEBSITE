@@ -53,6 +53,11 @@ import {
 } from "../../utils/geometry-explanations";
 import { trackGeometryTopicTime } from "../../utils/math-time-tracking";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import { useLearningWrongAnswerAdvance } from "../../hooks/useLearningWrongAnswerAdvance";
+import {
+  LEARNING_CORRECT_ANSWER_ADVANCE_MS,
+} from "../../utils/learning-wrong-answer-feedback-timing";
+import { getLearningPrimaryAnswerButtonState } from "../../utils/learning-answer-primary-button";
 import {
   beginMasterQuestionLedger,
   finalizeMasterQuestionLedger,
@@ -358,6 +363,11 @@ export default function GeometryMaster() {
   const [textAnswer, setTextAnswer] = useState("");
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
+  const {
+    scheduleWrongAnswerAdvance,
+    clearWrongAnswerAdvanceTimer,
+    clearWrongAnswerAdvanceState,
+  } = useLearningWrongAnswerAdvance(showSolution, showPreviousSolution);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   // Phase 2: tracks whether any explanation/hint/step-by-step was viewed for the current question
   const stepByStepViewedRef = useRef(false);
@@ -882,6 +892,7 @@ export default function GeometryMaster() {
   }
 
   const generateNewQuestion = () => {
+    clearWrongAnswerAdvanceState();
     closeOpenQuestionLedger(true);
     // בדיקה שהכיתה קיימת
     if (!GRADES[grade]) {
@@ -1401,6 +1412,28 @@ export default function GeometryMaster() {
       });
   }
 
+  const advanceToNextQuestionManually = () => {
+    clearWrongAnswerAdvanceState();
+    setSelectedAnswer(null);
+    setTextAnswer("");
+    setFeedback(null);
+    generateNewQuestion();
+  };
+
+  const handleGeometryPrimaryAnswerButtonClick = () => {
+    const { action } = getLearningPrimaryAnswerButtonState({
+      selectedAnswer,
+      textAnswer,
+    });
+    if (action === "next") {
+      advanceToNextQuestionManually();
+      return;
+    }
+    if (textAnswer.trim() !== "") {
+      handleAnswer(textAnswer.trim());
+    }
+  };
+
   const handleAnswer = (answer) => {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     const questionForSave = currentQuestion;
@@ -1554,6 +1587,7 @@ export default function GeometryMaster() {
       setStreak((prev) => prev + 1);
       setCorrect((prev) => prev + 1);
       
+      clearWrongAnswerAdvanceState();
       setErrorExplanation("");
 
       // עדכון התקדמות אישית
@@ -1733,7 +1767,7 @@ export default function GeometryMaster() {
         } else {
           setTimeLeft(null);
         }
-      }, 1000);
+      }, LEARNING_CORRECT_ANSWER_ADVANCE_MS);
     } else {
       setWrong((prev) => prev + 1);
       setStreak(0);
@@ -1871,12 +1905,12 @@ export default function GeometryMaster() {
         setFeedback(
           `Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`
         );
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setFeedback(null);
           setTimeLeft(null);
-        }, 1500);
+        });
       } else if (mode === "challenge") {
         // מצב Challenge – עובדים עם חיים
         setFeedback(
@@ -1899,12 +1933,12 @@ export default function GeometryMaster() {
               hardResetGame();
             }, 2000);
           } else {
-            setTimeout(() => {
+            scheduleWrongAnswerAdvance(() => {
               generateNewQuestion();
               setSelectedAnswer(null);
               setFeedback(null);
               setTimeLeft(20);
-            }, 1500);
+            });
           }
 
           return nextLives;
@@ -1912,7 +1946,7 @@ export default function GeometryMaster() {
       } else {
         // מצבי speed / marathon / practice - לא יוצאים מהמשחק על טעות
         setFeedback(`Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`);
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setFeedback(null);
@@ -1921,7 +1955,7 @@ export default function GeometryMaster() {
           } else {
             setTimeLeft(null);
           }
-        }, 1500);
+        });
       }
     }
   };
@@ -2295,6 +2329,7 @@ export default function GeometryMaster() {
 
   const openPreviousExplanation = () => {
     if (!previousExplanationQuestion) return;
+    clearWrongAnswerAdvanceTimer();
     setShowSolution(false);
     setShowPreviousSolution(true);
     stepByStepViewedRef.current = true;
@@ -3055,6 +3090,12 @@ export default function GeometryMaster() {
                     <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
                       {currentQuestion.params?.kind !== "no_question" &&
                         ((mode === "learning" || mode === "practice") ? (
+                          (() => {
+                            const primaryBtn = getLearningPrimaryAnswerButtonState({
+                              selectedAnswer,
+                              textAnswer,
+                            });
+                            return (
                           <div className="w-full mb-3 p-4 rounded-lg bg-blue-500/20 border border-blue-400/50">
                             <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1" : "mb-3"}`}>
                               <StudentNumericAnswerField
@@ -3065,51 +3106,34 @@ export default function GeometryMaster() {
                                 testId="geometry-text-answer"
                                 placeholder="תשובה"
                                 autoFocus
-                                onEnterSubmit={() => {
-                                  if (!selectedAnswer && textAnswer.trim() !== "") {
-                                    handleAnswer(textAnswer.trim());
-                                  }
-                                }}
-                                onSubmit={() => {
-                                  if (!selectedAnswer && textAnswer.trim() !== "") {
-                                    handleAnswer(textAnswer.trim());
-                                  }
-                                }}
-                                submitDisabled={!!selectedAnswer || textAnswer.trim() === ""}
+                                onEnterSubmit={handleGeometryPrimaryAnswerButtonClick}
+                                onSubmit={handleGeometryPrimaryAnswerButtonClick}
+                                submitDisabled={primaryBtn.disabled}
+                                submitLabel={primaryBtn.label}
+                                submitTone={primaryBtn.action === "next" ? "blue" : "green"}
                                 submitTestId="geometry-check-answer"
                               />
                             </div>
-                            <div className="flex gap-2 justify-center">
-                              {!mobileEmbeddedNumericSubmit ? (
-                              <button
-                                type="button"
-                                data-testid="geometry-check-answer"
-                                onClick={() => {
-                                  if (!selectedAnswer && textAnswer.trim() !== "") {
-                                    handleAnswer(textAnswer.trim());
-                                  }
-                                }}
-                                disabled={!!selectedAnswer || textAnswer.trim() === ""}
-                                className="px-6 py-3 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                בדוק
-                              </button>
-                              ) : null}
-                              {selectedAnswer && (
+                            {!mobileEmbeddedNumericSubmit ? (
+                              <div className="flex justify-center">
                                 <button
-                                  onClick={() => {
-                                    setSelectedAnswer(null);
-                                    setTextAnswer("");
-                                    setFeedback(null);
-                                    generateNewQuestion();
-                                  }}
-                                  className="px-6 py-3 rounded-lg bg-blue-500/80 hover:bg-blue-500 font-bold text-lg"
+                                  type="button"
+                                  data-testid="geometry-check-answer"
+                                  onClick={handleGeometryPrimaryAnswerButtonClick}
+                                  disabled={primaryBtn.disabled}
+                                  className={`px-6 py-3 rounded-lg font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    primaryBtn.action === "next"
+                                      ? "bg-blue-500/80 hover:bg-blue-500"
+                                      : "bg-emerald-500/80 hover:bg-emerald-500"
+                                  }`}
                                 >
-                                  שאלה הבאה
+                                  {primaryBtn.label}
                                 </button>
-                              )}
-                            </div>
+                              </div>
+                            ) : null}
                           </div>
+                            );
+                          })()
                         ) : currentQuestion.answers ? (
                           <div className="grid grid-cols-2 gap-2.5 w-full mb-3">
                             {currentQuestion.answers.map((answer, idx) => {
@@ -3154,7 +3178,11 @@ export default function GeometryMaster() {
                           currentQuestion.params?.kind !== "no_question" && (
                             <button
                               type="button"
-                              onClick={() => { stepByStepViewedRef.current = true; setShowSolution((prev) => !prev); }}
+                              onClick={() => {
+                                clearWrongAnswerAdvanceTimer();
+                                stepByStepViewedRef.current = true;
+                                setShowSolution((prev) => !prev);
+                              }}
                               className={`${learningExplainOpenBtn} bg-indigo-500/80 hover:bg-indigo-500 border-indigo-300/40`}
                             >
                               📘 צעד-צעד

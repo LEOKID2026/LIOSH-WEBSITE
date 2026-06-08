@@ -130,6 +130,10 @@ import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentH
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
+import { useLearningWrongAnswerAdvance } from "../../hooks/useLearningWrongAnswerAdvance";
+import {
+  LEARNING_CORRECT_ANSWER_ADVANCE_MS,
+} from "../../utils/learning-wrong-answer-feedback-timing";
 import {
   beginMasterQuestionLedger,
   finalizeMasterQuestionLedger,
@@ -401,6 +405,11 @@ export default function HebrewMaster() {
   // הסבר מפורט לשאלה
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
+  const {
+    scheduleWrongAnswerAdvance,
+    clearWrongAnswerAdvanceTimer,
+    clearWrongAnswerAdvanceState,
+  } = useLearningWrongAnswerAdvance(showSolution, showPreviousSolution);
   const [previousExplanationQuestion, setPreviousExplanationQuestion] = useState(null);
   const [animationStep, setAnimationStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
@@ -1347,6 +1356,7 @@ export default function HebrewMaster() {
   );
 
   function generateNewQuestion() {
+    clearWrongAnswerAdvanceState();
     closeOpenQuestionLedger(true);
     const levelConfig = getLevelConfig(gradeNumber, level);
     if (!levelConfig) {
@@ -2193,6 +2203,7 @@ export default function HebrewMaster() {
       setStreak((prev) => prev + 1);
       setCorrect((prev) => prev + 1);
       
+      clearWrongAnswerAdvanceState();
       setErrorExplanation("");
 
       // עדכון התקדמות אישית
@@ -2436,7 +2447,7 @@ export default function HebrewMaster() {
         } else {
           setTimeLeft(null);
         }
-      }, 1000);
+      }, LEARNING_CORRECT_ANSWER_ADVANCE_MS);
     } else {
       setWrong((prev) => prev + 1);
       setStreak(0);
@@ -2578,13 +2589,13 @@ export default function HebrewMaster() {
         setFeedback(
           `לא נכון 😔 התשובה הנכונה: ${correctAnswerDisplay} ✅`
         );
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setTypedAnswer("");
           setFeedback(null);
           setTimeLeft(null);
-        }, 2000);
+        });
       } else if (mode === "challenge") {
         // מצב Challenge – עובדים עם חיים
         setFeedback(
@@ -2607,13 +2618,13 @@ export default function HebrewMaster() {
               hardResetGame();
             }, 2000);
           } else {
-            setTimeout(() => {
+            scheduleWrongAnswerAdvance(() => {
               generateNewQuestion();
               setSelectedAnswer(null);
               setTypedAnswer("");
               setFeedback(null);
               setTimeLeft(20);
-            }, 1500);
+            });
           }
 
           return nextLives;
@@ -2621,14 +2632,14 @@ export default function HebrewMaster() {
       } else {
         // speed / marathon / practice stay active on wrong answers
         setFeedback(`לא נכון 😔 התשובה הנכונה: ${correctAnswerDisplay} ✅`);
-        setTimeout(() => {
+        scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
           setTypedAnswer("");
           setFeedback(null);
           if (mode === "speed") setTimeLeft(10);
           else setTimeLeft(null);
-        }, 1600);
+        });
       }
     }
   }
@@ -2645,6 +2656,7 @@ export default function HebrewMaster() {
 
   const openPreviousExplanation = () => {
     if (!previousExplanationQuestion) return;
+    clearWrongAnswerAdvanceTimer();
     setShowSolution(false);
     setShowPreviousSolution(true);
     stepByStepViewedRef.current = true;
@@ -4203,7 +4215,11 @@ export default function HebrewMaster() {
                         {mode === "learning" && currentQuestion && (
                           <button
                             type="button"
-                            onClick={() => { stepByStepViewedRef.current = true; setShowSolution(true); }}
+                            onClick={() => {
+                              clearWrongAnswerAdvanceTimer();
+                              stepByStepViewedRef.current = true;
+                              setShowSolution(true);
+                            }}
                             className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/80 hover:bg-emerald-500 text-white"
                           >
                             📘 הסבר מלא

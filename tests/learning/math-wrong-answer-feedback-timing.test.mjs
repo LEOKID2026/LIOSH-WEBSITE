@@ -12,6 +12,15 @@ const {
   shouldPauseWrongAnswerAutoAdvance,
 } = await import(href("utils/math-wrong-answer-feedback-timing.js"));
 
+const { LEARNING_WRONG_ANSWER_FEEDBACK_MS } = await import(
+  href("utils/learning-wrong-answer-feedback-timing.js")
+);
+
+test("shared learning wrong-answer delay is 7 seconds", () => {
+  assert.equal(LEARNING_WRONG_ANSWER_FEEDBACK_MS, 7000);
+  assert.equal(MATH_WRONG_ANSWER_FEEDBACK_MS, LEARNING_WRONG_ANSWER_FEEDBACK_MS);
+});
+
 test("wrong-answer feedback delay is at least 6 seconds", () => {
   assert.ok(MATH_WRONG_ANSWER_FEEDBACK_MS >= 6000);
   assert.ok(MATH_WRONG_ANSWER_FEEDBACK_MS <= 8000);
