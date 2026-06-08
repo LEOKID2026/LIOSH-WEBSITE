@@ -2792,7 +2792,10 @@ export default function MathMaster() {
       
       const errExpl = getErrorExplanation(
         finalizeComparisonSignMcq(currentQuestion),
-        currentQuestion.operation,
+        currentQuestion.operation === "compare" ||
+          currentQuestion.params?.kind === "cmp"
+          ? "compare"
+          : currentQuestion.operation,
         numericAnswer,
         grade
       );

@@ -1,9 +1,9 @@
 import { BLANK } from './math-constants.js';
 import { convertMissingNumberEquation, buildVerticalOperation } from './math-animations';
 import {
-  embedComparisonSignInRtlProse,
-  isComparisonSignMcq,
-  resolveCanonicalComparisonSignAnswer,
+  buildComparisonSignWrongAnswerExplanation,
+  isComparisonSignToken,
+  shouldUseComparisonSignErrorExplanation,
 } from './comparison-sign-mcq.js';
 
 export function getHint(question, operation, gradeKey) {
@@ -771,6 +771,14 @@ export function getSolutionSteps(question, operation, gradeKey) {
 function getAgeAppropriateExplanation(operation, gradeKey, question, correctAnswer) {
   const LTR = (expr) => `\u2066${expr}\u2069`;
 
+  if (shouldUseComparisonSignErrorExplanation(question, operation)) {
+    return buildComparisonSignWrongAnswerExplanation(question);
+  }
+
+  const displayCorrectAnswer = Number.isNaN(correctAnswer)
+    ? question?.correctAnswer
+    : correctAnswer;
+
   // לכיתות א'-ב' - הסברים פשוטים מאוד עם דוגמאות ויזואליות
   if (gradeKey === "g1" || gradeKey === "g2") {
     const a = question.a || question.params?.a;
@@ -786,7 +794,7 @@ function getAgeAppropriateExplanation(operation, gradeKey, question, correctAnsw
       case "division":
         return `💡 חילוק זה כמו חלוקה לקבוצות! ${LTR(`${a} ÷ ${b}`)} זה כמו לקחת ${LTR(String(a))} עיגולים ולחלק אותם ל-${LTR(String(b))} קבוצות שוות. כמה עיגולים בכל קבוצה? ${LTR(String(correctAnswer))}!`;
       default:
-        return `💡 נסה לחשוב על התרגיל בצורה פשוטה. התשובה הנכונה היא ${LTR(String(correctAnswer))}.`;
+        return `💡 נסה לחשוב על התרגיל בצורה פשוטה. התשובה הנכונה היא ${LTR(String(displayCorrectAnswer))}.`;
     }
   }
   
@@ -802,16 +810,16 @@ function getAgeAppropriateExplanation(operation, gradeKey, question, correctAnsw
           const ones = b % 10;
           return `💡 נסה לחשוב על חיבור: ${LTR(`${a} + ${b} = ${correctAnswer}`)}. אם קשה, נסה לפרק: ${LTR(`${a} + ${b} = ${a} + ${tens} + ${ones} = ${a + tens} + ${ones} = ${correctAnswer}`)}`;
         }
-        return `💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ${LTR(String(correctAnswer))}.`;
+        return `💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ${LTR(String(displayCorrectAnswer))}.`;
       case "subtraction":
         if (a && b) {
           const tens = Math.floor(b / 10) * 10;
           const ones = b % 10;
-          return `💡 נסה לחשוב על חיסור: ${LTR(`${a} - ${b} = ${correctAnswer}`)}. אם קשה, נסה לפרק: ${LTR(`${a} - ${b} = ${a} - ${tens} - ${ones} = ${a - tens} - ${ones} = ${correctAnswer}`)}`;
+          return `💡 נסה לחשוב על חיסור: ${LTR(`${a} - ${b} = ${displayCorrectAnswer}`)}. אם קשה, נסה לפרק: ${LTR(`${a} - ${b} = ${a} - ${tens} - ${ones} = ${a - tens} - ${ones} = ${displayCorrectAnswer}`)}`;
         }
-        return `💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ${LTR(String(correctAnswer))}.`;
+        return `💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ${LTR(String(displayCorrectAnswer))}.`;
       default:
-        return `💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ${LTR(String(correctAnswer))}.`;
+        return `💡 נסה לחשוב על התרגיל בצורה שיטתית. התשובה הנכונה היא ${LTR(String(displayCorrectAnswer))}.`;
     }
   }
   
@@ -821,24 +829,21 @@ function getAgeAppropriateExplanation(operation, gradeKey, question, correctAnsw
 
 export function getErrorExplanation(question, operation, wrongAnswer, gradeKey) {
   if (!question) return "";
-  if (isComparisonSignMcq(question) || operation === "compare") {
-    const sign = resolveCanonicalComparisonSignAnswer(question);
-    const params = question.params || {};
-    const left = params.a ?? question.a;
-    const right = params.b ?? question.b;
-    if (sign && left != null && right != null) {
-      return `בהשוואת מספרים הטעות הנפוצה היא להתבלבל מי גדול יותר. עבור ${left} ו-${right} הסימן הנכון הוא ${embedComparisonSignInRtlProse(sign)}.`;
-    }
-    return "בהשוואת מספרים הטעות הנפוצה היא להתבלבל מי גדול יותר, במיוחד בעשרוניים. נסה להשוות קודם את החלק השלם.";
+  if (shouldUseComparisonSignErrorExplanation(question, operation)) {
+    return buildComparisonSignWrongAnswerExplanation(question);
   }
   const userAnsNum = Number(wrongAnswer);
+  const correctAnswerRaw = question.correctAnswer;
+  if (isComparisonSignToken(correctAnswerRaw)) {
+    return buildComparisonSignWrongAnswerExplanation(question);
+  }
   const correctNum =
-    typeof question.correctAnswer === "string" && question.correctAnswer.includes("/")
+    typeof correctAnswerRaw === "string" && correctAnswerRaw.includes("/")
       ? Number(
-          question.correctAnswer.split("/")[0] /
-            (question.correctAnswer.split("/")[1] || 1)
+          correctAnswerRaw.split("/")[0] /
+            (correctAnswerRaw.split("/")[1] || 1)
         )
-      : Number(question.correctAnswer);
+      : Number(correctAnswerRaw);
 
   // נסה להשתמש בהסבר מותאם לגיל קודם
   const ageAppropriate = getAgeAppropriateExplanation(operation, gradeKey, question, correctNum);

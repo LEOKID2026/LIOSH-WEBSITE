@@ -89,6 +89,42 @@ export function formatCompareMathExpression(left, right, sign) {
   return `${left} ${sign} ${right}`;
 }
 
+/**
+ * Wrong-answer feedback for comparison-sign questions (operands + canonical sign only).
+ * @param {unknown} q
+ */
+export function buildComparisonSignWrongAnswerExplanation(q) {
+  const params = q?.params && typeof q.params === "object" ? q.params : {};
+  const { a: left, b: right } = coerceComparisonOperands(params.a ?? q?.a, params.b ?? q?.b);
+  const sign = getCanonicalComparisonSign(left, right);
+  if (left == null || right == null || !sign) {
+    return "בדקו איזה מספר גדול יותר ואיזה סימן מתאים ביניהם.";
+  }
+  const signInProse = embedComparisonSignInRtlProse(sign);
+  const mathExpr = formatCompareMathExpression(left, right, sign);
+  if (sign === "<") {
+    return `${mathExpr} כי ${left} קטן מ-${right}. לכן הסימן הנכון הוא ${signInProse}.`;
+  }
+  if (sign === ">") {
+    return `${mathExpr} כי ${left} גדול מ-${right}. לכן הסימן הנכון הוא ${signInProse}.`;
+  }
+  return `${mathExpr} כי שני המספרים שווים. לכן הסימן הנכון הוא ${signInProse}.`;
+}
+
+/**
+ * @param {unknown} q
+ * @param {unknown} [operation]
+ */
+export function shouldUseComparisonSignErrorExplanation(q, operation) {
+  if (isComparisonSignMcq(q)) return true;
+  if (String(operation || "") === "compare") return true;
+  const params = q?.params && typeof q.params === "object" ? q.params : {};
+  if (String(params.kind || "") === "cmp") return true;
+  const { a, b } = coerceComparisonOperands(params.a ?? q?.a, params.b ?? q?.b);
+  if (a != null && b != null && isComparisonSignToken(q?.correctAnswer)) return true;
+  return false;
+}
+
 /** @param {unknown[]} answers */
 export function isExactComparisonSignOptionSet(answers) {
   if (!Array.isArray(answers) || answers.length !== 3) return false;

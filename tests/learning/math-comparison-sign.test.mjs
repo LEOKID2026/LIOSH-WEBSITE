@@ -10,10 +10,12 @@ const {
   COMPARISON_SIGN_DISPLAY_ORDER,
   COMPARISON_SIGN_OPTIONS,
   COMPARISON_SIGN_LRM,
+  buildComparisonSignWrongAnswerExplanation,
   embedComparisonSignInRtlProse,
   finalizeComparisonSignMcq,
   getCanonicalComparisonSign,
   isExactComparisonSignOptionSet,
+  shouldUseComparisonSignErrorExplanation,
   traceComparisonSignFields,
 } = await import(href("utils/comparison-sign-mcq.js"));
 const { buildCompareAnimation } = await import(href("utils/math-animations.js"));
@@ -41,14 +43,21 @@ function validateCompare(a, b, userSign, corruptCorrect = null) {
   return { isCorrect: trace.isCorrect, trace };
 }
 
-function compareErrorExplanation(q, wrongSign) {
-  const sign = getCanonicalComparisonSign(q.params?.a ?? q.a, q.params?.b ?? q.b);
-  const left = q.params?.a ?? q.a;
-  const right = q.params?.b ?? q.b;
-  if (sign && left != null && right != null) {
-    return `בהשוואת מספרים הטעות הנפוצה היא להתבלבל מי גדול יותר. עבור ${left} ו-${right} הסימן הנכון הוא ${embedComparisonSignInRtlProse(sign)}.`;
+function wrongAnswerFeedback(q, operation = "compare") {
+  if (!shouldUseComparisonSignErrorExplanation(q, operation)) {
+    return "";
   }
-  return `wrong:${wrongSign}`;
+  return buildComparisonSignWrongAnswerExplanation(q);
+}
+
+function proseSignFromWrongFeedback(text) {
+  const marker = "הסימן הנכון הוא";
+  const idx = text.indexOf(marker);
+  if (idx < 0) return null;
+  const tail = text.slice(idx + marker.length);
+  const re = new RegExp(`${COMPARISON_SIGN_LRM}?([<>=])${COMPARISON_SIGN_LRM}?`);
+  const m = tail.match(re);
+  return m ? m[1] : null;
 }
 
 function explanationSteps(a, b) {
@@ -83,6 +92,7 @@ test("1 — canonical helper getCanonicalComparisonSign", () => {
 
 test("2 — validation: correct selections and opposite signs wrong", () => {
   const correctCases = [
+    [25, 21, ">"],
     [32, 93, "<"],
     [79, 35, ">"],
     [85, 98, "<"],
@@ -136,16 +146,39 @@ test("3 — explanation text matches canonical sign (no contradictions)", () => 
   }
 });
 
-test("4 — no NaN / undefined / null in comparison explanations", () => {
+test("4 — wrong-answer feedback: operand explanation, no NaN", () => {
+  const cases = [
+    [25, 21, "<", "25 > 21", ">"],
+    [32, 93, ">", "32 < 93", "<"],
+    [12, 12, ">", "12 = 12", "="],
+  ];
+  for (const [a, b, wrongSign, mathSnippet, canonicalSign] of cases) {
+    const q = sanitizeQuestionForStudentDisplay(buildCompareQuestion(a, b));
+    assert.equal(validateCompare(a, b, wrongSign).isCorrect, false);
+    const feedback = wrongAnswerFeedback(q);
+    assert.ok(feedback.includes(mathSnippet), `${a}/${b}: ${feedback}`);
+    assert.equal(proseSignFromWrongFeedback(feedback), canonicalSign, `${a}/${b} sign`);
+    for (const bad of ["NaN", "undefined", "null"]) {
+      assert.ok(!feedback.includes(bad), `${a}/${b} must not contain ${bad}`);
+    }
+    // Regression: stale operation label must not fall through to numeric NaN path.
+    const viaAdditionOp = wrongAnswerFeedback(q, "addition");
+    assert.ok(viaAdditionOp.includes(mathSnippet), `addition op ${a}/${b}`);
+    assert.ok(!viaAdditionOp.includes("NaN"), `addition op NaN ${a}/${b}`);
+  }
+});
+
+test("4b — no NaN in step-by-step explanations", () => {
   const cases = [
     [32, 93],
     [79, 35],
     [85, 98],
     [12, 12],
+    [25, 21],
   ];
   for (const [a, b] of cases) {
     const q = sanitizeQuestionForStudentDisplay(buildCompareQuestion(a, b));
-    const err = compareErrorExplanation(q, ">");
+    const err = wrongAnswerFeedback(q);
     for (const step of explanationSteps(a, b)) {
       const t = String(step.text || "");
       assert.ok(!t.includes("NaN"), `${a}/${b} step ${step.id}`);
