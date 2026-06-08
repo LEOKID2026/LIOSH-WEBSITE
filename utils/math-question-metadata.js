@@ -69,7 +69,15 @@ export function inferMathCognitiveLevel(kind, selectedOp, mathLevelKey, params =
   if (k.startsWith("wp_multi") || k.includes("ratio") || k === "order_parentheses") return "analysis";
   if (k.startsWith("wp_") || selectedOp === "word_problems") return "application";
   if (k.startsWith("frac_") || k.startsWith("dec_") || k.startsWith("scale_")) return "understanding";
-  if (k.startsWith("ns_") || k === "cmp" || k === "divisibility" || k === "prime_composite") return "recall";
+  if (
+    k.startsWith("ns_") ||
+    k === "cmp" ||
+    k === "divisibility" ||
+    k === "prime_composite" ||
+    k.startsWith("pc_")
+  ) {
+    return "recall";
+  }
   const lev = String(mathLevelKey || "").toLowerCase();
   if (lev === "hard") return "application";
   if (lev === "easy") return "recall";
@@ -114,7 +122,12 @@ export function inferMathExpectedErrorTypes(params, selectedOp) {
     add("unit_confusion");
     add("unit_or_scale_error");
   }
-  if (kind === "divisibility" || kind === "prime_composite" || kind.startsWith("fm_")) {
+  if (
+    kind === "divisibility" ||
+    kind === "prime_composite" ||
+    kind.startsWith("pc_") ||
+    kind.startsWith("fm_")
+  ) {
     add("concept_confusion");
   }
   if (selectedOp === "equations" || kind.startsWith("eq_") || kind.startsWith("order_")) {

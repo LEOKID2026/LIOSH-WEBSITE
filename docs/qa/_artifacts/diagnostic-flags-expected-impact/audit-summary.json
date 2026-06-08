@@ -1,0 +1,76 @@
+{
+  "generatedAt": "2026-06-08T20:38:00.000Z",
+  "scope": "read-only audit — no code or DB changes in this step",
+  "comparisonSource": "docs/qa/_artifacts/parent-report-diagnostic-flags-comparison/comparison-full.json",
+  "range": "full (2026-05-01 → 2026-06-08)",
+  "publicComparison": {
+    "A_to_B": "no public field diffs (48/48 rows identical sufficiency/confidence/diag counts)",
+    "A_to_C": "no public field diffs",
+    "A_to_D": "no public field diffs",
+    "parentFacingInsights": "identical A vs C for AAA4/AAA8/AAA9 spot-check"
+  },
+  "internalComparison": {
+    "A_to_B": {
+      "childrenWithBySubSkill": ["AAA2", "AAA3", "AAA4", "AAA5", "AAA6", "AAA8", "AAA9", "AAA10", "AAA11", "AAA12"],
+      "count": 10
+    },
+    "A_to_C": {
+      "childrenWithGating": ["AAA4"],
+      "gatingDecisionCount": 1,
+      "childrenWithBySubSkillOnly": ["AAA2", "AAA3", "AAA5", "AAA6", "AAA8", "AAA9", "AAA10", "AAA11", "AAA12"]
+    },
+    "A_to_D": {
+      "childrenWithGating": ["AAA4"],
+      "childrenWithPromotion": [],
+      "promotionDecisionCount": 0
+    }
+  },
+  "deepDive": {
+    "AAA4": {
+      "scenario": "D_preliminary_no_recurrence",
+      "publicTopicSufficiency": "supported_diagnosis (math::addition, d14)",
+      "publicStudentSufficiency": "supported_diagnosis",
+      "modeCInternal": {
+        "hasBySubSkill": true,
+        "bySubSkillCount": 1,
+        "hasAppliedGating": true,
+        "gatingDecisionCount": 1
+      },
+      "parentFacingIdenticalToA": true,
+      "rootCause": "gating is internal-only on public eq fields; suppresses narrow topic-insight gate only; student-level insights unchanged"
+    },
+    "AAA9": {
+      "scenario": "I_weak_metadata_suppression",
+      "publicTopicSufficiency": "preliminary_signal (math::fractions)",
+      "publicStudentSufficiency": "supported_diagnosis",
+      "modeCInternal": {
+        "hasBySubSkill": true,
+        "bySubSkillCount": 1,
+        "hasAppliedGating": false,
+        "gatingDecisionCount": 0
+      },
+      "expectedByQ2E": "active suppression on weak metadata at supported topic",
+      "rootCause": "shadow suppression requires topic q1Sufficiency=SUPPORTED; actual topic is preliminary — seed/data mismatch + policy gate"
+    },
+    "AAA8": {
+      "scenario": "H_questionType_contrast",
+      "publicTopicSufficiency": "preliminary_signal (math::fractions)",
+      "publicStudentSufficiency": "supported_diagnosis",
+      "modeDInternal": {
+        "hasBySubSkill": true,
+        "bySubSkillCount": 2,
+        "hasAppliedGating": false,
+        "hasPromotion": false,
+        "promotionDecisionCount": 0
+      },
+      "expectedByQ2E": "promotion trial on word_problem vs technical contrast",
+      "rootCause": "C2 promotion requires validated shadow candidate + preliminary topic + high-cap subskill recurrence; validation likely rejects (mixed/polluted data, recurrence/cap policy)"
+    }
+  },
+  "flagExpectedImpact": {
+    "DIAGNOSTIC_METADATA_SUBSKILL_ENABLED": "internal/shadow only by design (Q2-E.1); public meta.evidenceQuality unchanged",
+    "DIAGNOSTIC_METADATA_PARENT_GATING_ENABLED": "narrow parent-visible suppression only (topic insight + client pattern gate); does NOT mutate public eq fields",
+    "DIAGNOSTIC_METADATA_PARENT_PROMOTION_ENABLED": "narrow allow-strong on preliminary topics when C2 policy passes; no public eq mutation"
+  },
+  "recommendation": "shadow_only_for_B; bug_or_gap_before_visible_activation_for_C_D; postpone_production_activation"
+}

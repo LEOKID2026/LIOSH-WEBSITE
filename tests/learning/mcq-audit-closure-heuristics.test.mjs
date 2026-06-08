@@ -144,6 +144,33 @@ test("Perpendicular 90° concept MCQ is not flagged for numeric plausibility", (
   assert.equal(risks.length, 0);
 });
 
+test("Hebrew odd-one-out colon list is not a stem leak", async () => {
+  const { detectStemLeak } = await import(href("lib/learning/question-engine-metadata.js"));
+  assert.equal(
+    detectStemLeak("איזו מילה לא שייכת לקבוצה: כלב, חתול, פרח, דג?", "פרח"),
+    false
+  );
+});
+
+test("Hebrew G2 read-sentence stem with quoted passage is not a stem leak", async () => {
+  const { detectStemLeak } = await import(href("lib/learning/question-engine-metadata.js"));
+  assert.equal(
+    detectStemLeak("קרא את המשפט: 'הילד קורא ספר בכיתה'", "הילד קורא ספר בכיתה"),
+    false
+  );
+});
+
+test("Hebrew quoted reading body after display split is not a stem leak", async () => {
+  const { detectStemLeak } = await import(href("lib/learning/question-engine-metadata.js"));
+  const { isEquationLikeText } = await import(href("utils/student-question-display.js"));
+  const bodyParen = "'התפוחים אדומים וטעימים' ( 28 )";
+  const bodyDot = "'התפוחים אדומים וטעימים' · משפט 28";
+  assert.equal(isEquationLikeText(bodyParen), false);
+  assert.equal(isEquationLikeText(bodyDot), false);
+  assert.equal(detectStemLeak(bodyParen, "התפוחים אדומים וטעימים"), false);
+  assert.equal(detectStemLeak(bodyDot, "התפוחים אדומים וטעימים"), false);
+});
+
 test("Hebrew pronoun reference in quoted sentence is not a stem leak", async () => {
   const { detectStemLeak } = await import(href("lib/learning/question-engine-metadata.js"));
   assert.equal(

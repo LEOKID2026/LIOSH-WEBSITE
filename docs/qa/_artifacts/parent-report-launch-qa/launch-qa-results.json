@@ -1,0 +1,1279 @@
+{
+  "generatedAt": "2026-06-08T19:37:55.950Z",
+  "flags": {
+    "subskill": false,
+    "gating": false,
+    "promotion": false
+  },
+  "juneWeekSeeded": true,
+  "summary": {
+    "pass": 0,
+    "warn": 0,
+    "fail": 48,
+    "total": 48,
+    "overall": "FAIL"
+  },
+  "pdfSummary": "skipped (skipped by flag)",
+  "launchReadiness": "NOT_READY",
+  "highlights": [
+    {
+      "name": "AAA1 no-data (full)",
+      "result": "FAIL"
+    },
+    {
+      "name": "AAA2 insufficient (may_month)",
+      "result": "FAIL"
+    },
+    {
+      "name": "AAA5 supported (full)",
+      "result": "FAIL"
+    },
+    {
+      "name": "AAA6 parent activity (full)",
+      "result": "FAIL"
+    },
+    {
+      "name": "AAA7 book/learning (full)",
+      "result": "FAIL"
+    },
+    {
+      "name": "AAA12 parent+science (full)",
+      "result": "FAIL"
+    },
+    {
+      "name": "one_week June activity (AAA3)",
+      "result": "FAIL"
+    }
+  ],
+  "results": [
+    {
+      "child": "AAA1",
+      "scenario": "A_no_data",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 0,
+      "totalAnswers": 0,
+      "totalSessions": 0,
+      "dataSufficiency": "no_data",
+      "insights": [
+        "לא הייתה פעילות תרגול בתקופה האחרונה — כדאי לעודד התחלה קצרה ונעימה."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA2",
+      "scenario": "B_insufficient_data",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA4",
+      "scenario": "D_preliminary_no_recurrence",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA5",
+      "scenario": "E_supported_diagnosis",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA6",
+      "scenario": "F_parent_assigned",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA9",
+      "scenario": "I_weak_metadata_suppression",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA10",
+      "scenario": "J_english_metadata",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA11",
+      "scenario": "K_hebrew_metadata",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA12",
+      "scenario": "L_science_moledet",
+      "range": "one_day",
+      "rangeDates": {
+        "from": "2026-06-08",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 2,
+      "totalAnswers": 2,
+      "totalSessions": 0,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA1",
+      "scenario": "A_no_data",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 0,
+      "totalAnswers": 16,
+      "totalSessions": 1,
+      "dataSufficiency": "no_data",
+      "insights": [
+        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA2",
+      "scenario": "B_insufficient_data",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 4,
+      "totalSessions": 1,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 20,
+      "totalSessions": 2,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA4",
+      "scenario": "D_preliminary_no_recurrence",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 19,
+      "totalSessions": 3,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA5",
+      "scenario": "E_supported_diagnosis",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 20,
+      "totalSessions": 2,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA6",
+      "scenario": "F_parent_assigned",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 27,
+      "totalSessions": 3,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 20,
+      "totalSessions": 2,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 40,
+      "totalSessions": 5,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA9",
+      "scenario": "I_weak_metadata_suppression",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 16,
+      "totalSessions": 2,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA10",
+      "scenario": "J_english_metadata",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 4,
+      "totalSessions": 1,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA11",
+      "scenario": "K_hebrew_metadata",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 55,
+      "totalSessions": 5,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA12",
+      "scenario": "L_science_moledet",
+      "range": "one_week",
+      "rangeDates": {
+        "from": "2026-06-02",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 11,
+      "totalSessions": 2,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA1",
+      "scenario": "A_no_data",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 0,
+      "totalAnswers": 231,
+      "totalSessions": 21,
+      "dataSufficiency": "no_data",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA2",
+      "scenario": "B_insufficient_data",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 10,
+      "totalSessions": 6,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 9,
+      "totalAnswers": 105,
+      "totalSessions": 10,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA4",
+      "scenario": "D_preliminary_no_recurrence",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 14,
+      "totalAnswers": 66,
+      "totalSessions": 11,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA5",
+      "scenario": "E_supported_diagnosis",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 14,
+      "totalAnswers": 165,
+      "totalSessions": 15,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
+        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA6",
+      "scenario": "F_parent_assigned",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 8,
+      "totalAnswers": 136,
+      "totalSessions": 12,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
+        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 0,
+      "totalAnswers": 166,
+      "totalSessions": 16,
+      "dataSufficiency": "no_data",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 15,
+      "totalAnswers": 39,
+      "totalSessions": 9,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA9",
+      "scenario": "I_weak_metadata_suppression",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 14,
+      "totalAnswers": 170,
+      "totalSessions": 14,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
+        "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA10",
+      "scenario": "J_english_metadata",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 14,
+      "totalAnswers": 132,
+      "totalSessions": 12,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA11",
+      "scenario": "K_hebrew_metadata",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 14,
+      "totalAnswers": 294,
+      "totalSessions": 24,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA12",
+      "scenario": "L_science_moledet",
+      "range": "may_month",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "diagnosticAnswers": 14,
+      "totalAnswers": 64,
+      "totalSessions": 15,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA1",
+      "scenario": "A_no_data",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 0,
+      "totalAnswers": 247,
+      "totalSessions": 22,
+      "dataSufficiency": "no_data",
+      "insights": [
+        "מומלץ לשמור על תרגול קצר וקבוע כדי ליצור רצף למידה."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA2",
+      "scenario": "B_insufficient_data",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 8,
+      "totalAnswers": 14,
+      "totalSessions": 7,
+      "dataSufficiency": "preliminary_signal",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 13,
+      "totalAnswers": 125,
+      "totalSessions": 12,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA4",
+      "scenario": "D_preliminary_no_recurrence",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 18,
+      "totalAnswers": 85,
+      "totalSessions": 14,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA5",
+      "scenario": "E_supported_diagnosis",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 18,
+      "totalAnswers": 185,
+      "totalSessions": 17,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות בגאומטריה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA6",
+      "scenario": "F_parent_assigned",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 12,
+      "totalAnswers": 163,
+      "totalSessions": 15,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 4,
+      "totalAnswers": 186,
+      "totalSessions": 18,
+      "dataSufficiency": "insufficient_data",
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 19,
+      "totalAnswers": 79,
+      "totalSessions": 14,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA9",
+      "scenario": "I_weak_metadata_suppression",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 18,
+      "totalAnswers": 186,
+      "totalSessions": 16,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA10",
+      "scenario": "J_english_metadata",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 18,
+      "totalAnswers": 136,
+      "totalSessions": 13,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA11",
+      "scenario": "K_hebrew_metadata",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 18,
+      "totalAnswers": 349,
+      "totalSessions": 29,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    },
+    {
+      "child": "AAA12",
+      "scenario": "L_science_moledet",
+      "range": "full",
+      "rangeDates": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "diagnosticAnswers": 18,
+      "totalAnswers": 75,
+      "totalSessions": 17,
+      "dataSufficiency": "supported_diagnosis",
+      "insights": [
+        "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+        "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
+      ],
+      "visibleOk": false,
+      "verdict": "FAIL"
+    }
+  ],
+  "failures": [
+    {
+      "child": "AAA1",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA2",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA3",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA4",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA5",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA6",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA7",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA8",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA9",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA10",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA11",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA12",
+      "range": "one_day",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA1",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA2",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA3",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA4",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA5",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA6",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA7",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA8",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA9",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA10",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA11",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA12",
+      "range": "one_week",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA1",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA2",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA3",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA4",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA5",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA6",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA7",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA8",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA9",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA10",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA11",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA12",
+      "range": "may_month",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA1",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA2",
+      "range": "full",
+      "issues": [
+        "diagnostic_max(8)",
+        "insufficient_or_less(\"preliminary_signal\")",
+        "no_strong_diagnosis_language([\"יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\",\"יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.\"])",
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA3",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA4",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA5",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA6",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA7",
+      "range": "full",
+      "issues": [
+        "diagnostic_zero(4)",
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA8",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA9",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA10",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA11",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    },
+    {
+      "child": "AAA12",
+      "range": "full",
+      "issues": [
+        "detailed_build"
+      ]
+    }
+  ],
+  "warnings": [],
+  "pdf": {
+    "skipped": true,
+    "reason": "skipped by flag"
+  },
+  "recommendation": "**Not launch-ready** — fix FAIL rows before release."
+}

@@ -1,0 +1,55 @@
+{
+  "modeName": "subskill_gating_promotion",
+  "snapshot": {
+    "summary": {
+      "diagnosticAnswers": 23,
+      "diagnosticAccuracy": 65.22,
+      "totalAnswers": 23,
+      "totalSessions": 3,
+      "totalDurationSeconds": 2188980
+    },
+    "metaEvidenceQualityStudent": {
+      "evidenceCount": 23,
+      "rawDiagnosticCount": 23,
+      "dataSufficiency": "supported_diagnosis",
+      "confidenceLevel": "moderate",
+      "confidenceReason": "supported",
+      "recurrenceMet": true
+    },
+    "parentFacing": {
+      "insights": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן"
+      ],
+      "homeRecommendations": [
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "practiceFocus": [
+        {
+          "topicLabelHe": "דקדוק",
+          "focusLabelHe": "סממן זמן"
+        }
+      ],
+      "diagnosisSuppressed": false,
+      "gatingApplied": false,
+      "teacherMessageCount": 0
+    }
+  },
+  "safeFieldNotes": [
+    {
+      "field": "parentFacing.practiceFocus",
+      "safeBecause": "Hebrew labels only (topicLabelHe, focusLabelHe); no raw skillId/subSkill keys"
+    }
+  ],
+  "leakScan": {
+    "pass": true,
+    "forbiddenKeys": [],
+    "rawSkillLeaks": [],
+    "featureScopeOnly": true,
+    "fullPayloadForbiddenKeyCount": 0,
+    "recentMistakeRawSkillLeakCount": 8,
+    "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+  }
+}

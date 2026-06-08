@@ -1,0 +1,52 @@
+{
+  "modeName": "subskill_gating",
+  "snapshot": {
+    "summary": {
+      "diagnosticAnswers": 25,
+      "diagnosticAccuracy": 48,
+      "totalAnswers": 25,
+      "totalSessions": 2,
+      "totalDurationSeconds": 1494120
+    },
+    "metaEvidenceQualityStudent": {
+      "evidenceCount": 25,
+      "rawDiagnosticCount": 25,
+      "dataSufficiency": "supported_diagnosis",
+      "confidenceLevel": "moderate",
+      "confidenceReason": "supported",
+      "recurrenceMet": true
+    },
+    "parentFacing": {
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "homeRecommendations": [
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "practiceFocus": [],
+      "diagnosisSuppressed": true,
+      "gatingApplied": true,
+      "teacherMessageCount": 0
+    }
+  },
+  "safeFieldNotes": [
+    {
+      "field": "parentFacing.gatingApplied",
+      "safeBecause": "Boolean only — no gating decision arrays or internal metadata"
+    },
+    {
+      "field": "parentFacing.diagnosisSuppressed",
+      "safeBecause": "Boolean mirror of server suppression; client pattern diagnostics authority"
+    }
+  ],
+  "leakScan": {
+    "pass": true,
+    "forbiddenKeys": [],
+    "rawSkillLeaks": [],
+    "featureScopeOnly": true,
+    "fullPayloadForbiddenKeyCount": 0,
+    "recentMistakeRawSkillLeakCount": 13,
+    "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+  }
+}

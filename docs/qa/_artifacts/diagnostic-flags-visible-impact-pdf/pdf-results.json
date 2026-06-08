@@ -1,0 +1,250 @@
+[
+  {
+    "scenario": "AAA4",
+    "pdf": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-pdf\\AAA4-mode-C.pdf",
+    "bytes": 832180,
+    "textSample": "להורים דוח 📊\n2בדיקה-ב\n01/05/2026 - 08/06/2026\nזמן כולל\n'דק 62\n(שעות 1.03)\nשאלות\n14\nנכון 10\nדיוק כללי\n71%\nרמה\nLv.1\n0 🏆 • 0 ⭐\nמצב הנתונים בדוח\nמקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, עברית, מולדת וגאוגרפיה.\n(לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו\nהמקצוע שתורגל בתקופה: חשבון.\nמה חשוב לדעת\nיש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\nמה מומלץ לעשות בבית\nלחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.\nמומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר.\nחשבון 🧮\nשאלות 14\nדיוק 71% נכון • 10\nגאומטריה 📐\nשאלות 0\nלא תורגל בתקופה שנבחרה\nאנגלית 📘\nשאלות 0\nלא תורגל בתקופה שנבחרה\nמדעים 🔬\nשאלות 0\nלא תורגל בתקופה שנבחרה\nעברית 📚\nשאלות 0\nלא תורגל בתקופה שנבחרה\nמולדת וגאוגרפיה 🗺\nשאלות 0\nלא תורגל בתקופה שנבחרה\n\n-- 1 of 2 --\n\nסיכום חכם להור",
+    "checks": [
+      {
+        "name": "no_leak__evidenceQuality",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bbySubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bgatingDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bpromotionDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsupportingEvidenceIds\\",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bmath_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bfrac_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bskillId\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "hebrew_signal",
+        "pass": true
+      },
+      {
+        "name": "not_empty",
+        "pass": true
+      },
+      {
+        "name": "no_false_inactivity_if_recent",
+        "pass": true,
+        "warn": true
+      },
+      {
+        "name": "gating_no_kedai_lehashim",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  {
+    "scenario": "GATE-LOW",
+    "pdf": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-pdf\\GATE-LOW-mode-C.pdf",
+    "bytes": 982898,
+    "textSample": "להורים דוח 📊\n1בדיקה-ה\n10/05/2026 - 18/05/2026\nזמן כולל\n'דק 24902\n(שעות 415.03)\nשאלות\n25\nנכון 12\nדיוק כללי\n48%\nרמה\nLv.1\n0 🏆 • 0 ⭐\nמצב הנתונים בדוח\nמקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, עברית, מולדת וגאוגרפיה.\n(לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו\nהמקצוע שתורגל בתקופה: חשבון.\nחשבון: שברים עוד נושאים למעקב:\nמה חשוב לדעת\nיש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\nמה מומלץ לעשות בבית\nלחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.\nמומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר.\nחשבון 🧮\nשאלות 25\nדיוק 48% נכון • 12\nגאומטריה 📐\nשאלות 0\nלא תורגל בתקופה שנבחרה\nאנגלית 📘\nשאלות 0\nלא תורגל בתקופה שנבחרה\nמדעים 🔬\nשאלות 0\nלא תורגל בתקופה שנבחרה\nעברית 📚\nשאלות 0\nלא תורגל בתקופה שנבחרה\nמולדת וגאוגרפיה 🗺\nשאלות 0\nלא תורגל בתקופה ",
+    "checks": [
+      {
+        "name": "no_leak__evidenceQuality",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bbySubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bgatingDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bpromotionDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsupportingEvidenceIds\\",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bmath_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bfrac_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bskillId\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "hebrew_signal",
+        "pass": true
+      },
+      {
+        "name": "not_empty",
+        "pass": true
+      },
+      {
+        "name": "no_false_inactivity_if_recent",
+        "pass": true,
+        "warn": false
+      },
+      {
+        "name": "gating_no_kedai_lehashim",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  {
+    "scenario": "SUBSKILL-FOCUS",
+    "pdf": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-pdf\\SUBSKILL-FOCUS-mode-C.pdf",
+    "bytes": 1030680,
+    "textSample": "להורים דוח 📊\n2בדיקה-ה\n06/05/2026 - 20/05/2026\nזמן כולל\n'דק 36483\n(שעות 608.05)\nשאלות\n23\nנכון 15\nדיוק כללי\n65%\nרמה\nLv.1\n0 🏆 • 0 ⭐\nמצב הנתונים בדוח\nמקצועות שלא תורגלו בתקופה: חשבון, גאומטריה, מדעים, עברית, מולדת וגאוגרפיה.\n(לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו\nהמקצוע שתורגל בתקופה: אנגלית.\n— הנתונים עדיין חלקיים, ולכן כדאי לאסוף עוד מידע לפני שקובעים כיוון 100% שאלות, דיוק 3אנגלית: אוצר מילים: כ- עוד נושאים למעקב:\nסופי.\nמה חשוב לדעת\nיש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.\nנושא לחיזוק: דקדוק\nמוקד לתרגול: סממן זמן\nמה מומלץ לעשות בבית\nלחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.\nמומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר.\n\n-- 1 of 4 --\n\nחשבון 🧮\nשאלות 0\nלא תורגל בתקופה שנבחרה\nגאומטריה 📐\nשאלות 0\nלא תורגל בתקופה שנבחרה\nאנגלית ",
+    "checks": [
+      {
+        "name": "no_leak__evidenceQuality",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bbySubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bgatingDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bpromotionDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsupportingEvidenceIds\\",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bmath_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bfrac_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bskillId\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "hebrew_signal",
+        "pass": true
+      },
+      {
+        "name": "not_empty",
+        "pass": true
+      },
+      {
+        "name": "no_false_inactivity_if_recent",
+        "pass": true,
+        "warn": false
+      },
+      {
+        "name": "focus_in_pdf",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  {
+    "scenario": "SUBSKILL-CONFLICT",
+    "pdf": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-pdf\\SUBSKILL-CONFLICT-mode-C.pdf",
+    "bytes": 981791,
+    "textSample": "להורים דוח 📊\n2בדיקה-ד\n20/05/2026 - 24/05/2026\nזמן כולל\n'דק 6484\n(שעות 108.07)\nשאלות\n30\nנכון 20\nדיוק כללי\n67%\nרמה\nLv.1\n0 🏆 • 0 ⭐\nמצב הנתונים בדוח\nמקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, עברית, מולדת וגאוגרפיה.\n(לפי התרגול שנאסף בתקופה שנבחרה) מה הכי בולט עכשיו\nהמקצוע שתורגל בתקופה: חשבון.\nחשבון: שברים עוד נושאים למעקב:\nמה חשוב לדעת\nיש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.\nמה מומלץ לעשות בבית\nלחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.\nמומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר.\nחשבון 🧮\nשאלות 30\nדיוק 67% נכון • 20\nגאומטריה 📐\nשאלות 0\nלא תורגל בתקופה שנבחרה\nאנגלית 📘\nשאלות 0\nלא תורגל בתקופה שנבחרה\nמדעים 🔬\nשאלות 0\nלא תורגל בתקופה שנבחרה\nעברית 📚\nשאלות 0\nלא תורגל בתקופה שנבחרה\nמולדת וגאוגרפיה 🗺\nשאלות 0\nלא תורגל בתקופה שנבח",
+    "checks": [
+      {
+        "name": "no_leak__evidenceQuality",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bbySubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bgatingDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bpromotionDecisions\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsupportingEvidenceIds\\",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bmath_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bfrac_[a-z0-9_]+\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bskillId\\b",
+        "pass": true
+      },
+      {
+        "name": "no_leak_\\bsubSkill\\b",
+        "pass": true
+      },
+      {
+        "name": "hebrew_signal",
+        "pass": true
+      },
+      {
+        "name": "not_empty",
+        "pass": true
+      },
+      {
+        "name": "no_false_inactivity_if_recent",
+        "pass": true,
+        "warn": false
+      },
+      {
+        "name": "no_focus_in_pdf",
+        "pass": true
+      }
+    ],
+    "pass": true
+  }
+]

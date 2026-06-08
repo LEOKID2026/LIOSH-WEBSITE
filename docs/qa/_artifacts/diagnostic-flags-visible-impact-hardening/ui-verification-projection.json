@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-06-08T20:25:00.000Z",
+  "method": "Server payload uiProjection + ParentReportParentSections code trace (no live browser)",
+  "componentPath": "components/parent/ParentReportParentSections.jsx",
+  "notes": [
+    "practiceFocus[] is not a separate UI section; focus lines are duplicated into parentFacing.insights",
+    "gatingApplied/diagnosisSuppressed are API booleans only; effect is fewer insight lines",
+    "normalizeParentFacing strips practiceFocus from UI props — UI reads insights/homeRecommendations only"
+  ],
+  "scenarios": {
+    "AAA4": {
+      "uiSection": "מה חשוב לדעת",
+      "modeA_insightCount": 3,
+      "modeC_insightCount": 1,
+      "modeC_gatingApplied": true,
+      "expectEmptyReport": false
+    },
+    "GATE-LOW": {
+      "modeA_hasStrongTopicLine": true,
+      "modeC_hasStrongTopicLine": false,
+      "modeC_gatingApplied": true
+    },
+    "SUBSKILL-FOCUS": {
+      "modeB_practiceFocusLinesInInsights": [
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן"
+      ],
+      "rawKeysInUI": false,
+      "hebrewSource": "existing taxonomy labels"
+    },
+    "SUBSKILL-CONFLICT": {
+      "modeB_practiceFocusCount": 0,
+      "modeB_insightsExcludeFocusLines": true
+    }
+  },
+  "pdfGap": {
+    "practiceFocusDedicatedBlock": false,
+    "insightsIncludeFocusLines": true,
+    "gatingSuppressionViaFewerInsights": true,
+    "endToEndPdfRunThisPass": false
+  }
+}

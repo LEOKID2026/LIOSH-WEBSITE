@@ -8,24 +8,55 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { topicOptionsForSubject } from "../lib/teacher-portal/teacher-class-topic-options.js";
-import {
-  generateActivityQuestionSetClient,
-  scienceLevelAllowed,
-} from "../lib/classroom-activities/generate-activity-questions-client.js";
-import { GRADES as GEOMETRY_GRADES, TOPICS as GEOMETRY_TOPICS } from "../utils/geometry-constants.js";
-import { GRADES as HEBREW_GRADES, TOPICS as HEBREW_TOPICS } from "../utils/hebrew-constants.js";
-import {
-  ENGLISH_GRADES,
-  ENGLISH_TOPICS,
-  generateQuestion as generateEnglishQuestion,
-  getLevelForGrade,
-} from "../utils/english-question-generator.js";
-import { SCIENCE_GRADES } from "../data/science-curriculum.js";
-import { GRADES as MOLEDET_GRADES, TOPICS as MOLEDET_TOPICS } from "../utils/moledet-geography-constants.js";
-import { isMoledetGeographyGradeAllowed } from "../utils/moledet-geography-curriculum-gates.js";
-import { getGeometryDiagramSpec } from "../utils/geometry-diagram-spec.js";
-import { listTopicQuestionsForGradeLevel } from "../utils/moledet-geography-question-generator.js";
+import * as teacherTopicOptionsMod from "../lib/teacher-portal/teacher-class-topic-options.js";
+import * as activityQuestionsClientMod from "../lib/classroom-activities/generate-activity-questions-client.js";
+import * as geometryConstantsMod from "../utils/geometry-constants.js";
+import * as hebrewConstantsMod from "../utils/hebrew-constants.js";
+import * as englishCurriculumMod from "../data/english-curriculum.js";
+import * as englishGeneratorMod from "../utils/english-question-generator.js";
+import * as scienceCurriculumMod from "../data/science-curriculum.js";
+import * as moledetConstantsMod from "../utils/moledet-geography-constants.js";
+import * as moledetGatesMod from "../utils/moledet-geography-curriculum-gates.js";
+import * as geometryDiagramSpecMod from "../utils/geometry-diagram-spec.js";
+import * as moledetGeneratorMod from "../utils/moledet-geography-question-generator.js";
+
+/** @param {Record<string, unknown>} mod @param {string} name */
+function resolveNamed(mod, name) {
+  const direct = mod?.[name];
+  if (direct !== undefined) return direct;
+  const nested = mod?.default;
+  if (nested && typeof nested === "object" && name in nested) {
+    return nested[name];
+  }
+  return undefined;
+}
+
+const topicOptionsForSubject = resolveNamed(teacherTopicOptionsMod, "topicOptionsForSubject");
+const generateActivityQuestionSetClient = resolveNamed(
+  activityQuestionsClientMod,
+  "generateActivityQuestionSetClient"
+);
+const scienceLevelAllowed = resolveNamed(activityQuestionsClientMod, "scienceLevelAllowed");
+const GEOMETRY_GRADES = resolveNamed(geometryConstantsMod, "GRADES");
+const GEOMETRY_TOPICS = resolveNamed(geometryConstantsMod, "TOPICS");
+const HEBREW_GRADES = resolveNamed(hebrewConstantsMod, "GRADES");
+const HEBREW_TOPICS = resolveNamed(hebrewConstantsMod, "TOPICS");
+const ENGLISH_GRADES = resolveNamed(englishCurriculumMod, "ENGLISH_GRADES");
+const ENGLISH_TOPICS = resolveNamed(englishGeneratorMod, "ENGLISH_TOPICS");
+const generateEnglishQuestion = resolveNamed(englishGeneratorMod, "generateQuestion");
+const getLevelForGrade = resolveNamed(englishGeneratorMod, "getLevelForGrade");
+const SCIENCE_GRADES = resolveNamed(scienceCurriculumMod, "SCIENCE_GRADES");
+const MOLEDET_GRADES = resolveNamed(moledetConstantsMod, "GRADES");
+const MOLEDET_TOPICS = resolveNamed(moledetConstantsMod, "TOPICS");
+const isMoledetGeographyGradeAllowed = resolveNamed(
+  moledetGatesMod,
+  "isMoledetGeographyGradeAllowed"
+);
+const getGeometryDiagramSpec = resolveNamed(geometryDiagramSpecMod, "getGeometryDiagramSpec");
+const listTopicQuestionsForGradeLevel = resolveNamed(
+  moledetGeneratorMod,
+  "listTopicQuestionsForGradeLevel"
+);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");

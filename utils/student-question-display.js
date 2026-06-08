@@ -16,6 +16,8 @@ const KNOWN_INSTRUCTION_LEADS = [
   /^השלם(?:\s+את)?(?:\s+הסדרה)?$/u,
   /^מה\s+התוצאה$/u,
   /^קראו(?:\s+את)?(?:\s+הטקסט)?$/u,
+  /^קרא את המשפט$/u,
+  /^קרא את המילה(?: המנוקדת)?$/u,
   /^בחרו(?:\s+תשובה)?$/u,
   /^מה\s+המשפט/u,
   /^מה\s+המילה/u,
@@ -26,6 +28,13 @@ const KNOWN_INSTRUCTION_LEADS = [
 export function isEquationLikeText(s) {
   const t = String(s ?? "").trim();
   if (!t) return false;
+  if (
+    /^['"«׳][\u0590-\u05FF][^'"»׳]*['"»׳](?:\s*(?:\(\s*\d+\s*\)|·\s*משפט\s*\d+))?\s*$/u.test(
+      t
+    )
+  ) {
+    return false;
+  }
   if (BLANK.test(t)) return true;
   if (/=\s*[\d(]|[\d)]\s*=/.test(t)) return true;
   if (/[0-9]/.test(t) && /[+\-×÷*/()]/.test(t)) return true;

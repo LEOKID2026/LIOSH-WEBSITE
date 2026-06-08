@@ -1,0 +1,98 @@
+{
+  "runAt": "2026-06-08T19:36:23.245Z",
+  "seedTag": "parent-report-launch-june-week-v1",
+  "days": [
+    "2026-06-06",
+    "2026-06-08"
+  ],
+  "cleanup": {
+    "tag": "parent-report-launch-june-week-v1",
+    "removedSessions": 0,
+    "removedParentActivities": 0,
+    "removedBookSessions": 0
+  },
+  "seeded": [
+    {
+      "label": "AAA1",
+      "skipped": true,
+      "reason": "A_no_data scenario"
+    },
+    {
+      "label": "AAA2",
+      "subject": "math",
+      "topic": "addition",
+      "sessionId": "365192f5-a08b-4057-a2f2-46d2215056ed",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA3",
+      "subject": "math",
+      "topic": "addition",
+      "sessionId": "3f203f75-0c55-4459-a14c-9abc64f0f333",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA4",
+      "subject": "math",
+      "topic": "addition",
+      "sessionId": "84530f49-1f5f-46a9-b22f-7d3bccde6952",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA5",
+      "subject": "math",
+      "topic": "multiplication",
+      "sessionId": "0c2dba1e-fd01-4329-bffb-293103d1e367",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA6",
+      "subject": "math",
+      "topic": "multiplication",
+      "sessionId": "31aa75aa-c81c-4d7b-bafd-cc4bec0c026b",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA7",
+      "subject": "math",
+      "topic": "multiplication",
+      "sessionId": "8075536f-3c7c-472b-80b3-8f57964bbec1",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA8",
+      "subject": "math",
+      "topic": "fractions",
+      "sessionId": "388dda6e-ac68-45a6-9772-3305ea914072",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA9",
+      "subject": "math",
+      "topic": "fractions",
+      "sessionId": "8f7ffedb-49f1-432a-8cfb-674381dab5a6",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA10",
+      "subject": "english",
+      "topic": "grammar",
+      "sessionId": "20a3e406-b642-48bc-9d20-6b08238a6dd6",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA11",
+      "subject": "hebrew",
+      "topic": "reading_comprehension",
+      "sessionId": "c1acf87c-c3ea-43fe-8eed-f2f1e9e89392",
+      "answerCount": 4
+    },
+    {
+      "label": "AAA12",
+      "subject": "science",
+      "topic": "body",
+      "sessionId": "a2fdc0f3-0ed3-4223-964c-d089f09638fd",
+      "answerCount": 4
+    }
+  ]
+}

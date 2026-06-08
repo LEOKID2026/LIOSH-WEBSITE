@@ -1,0 +1,162 @@
+{
+  "runAt": "2026-06-08T19:59:12.275Z",
+  "seedTag": "parent-report-diagnostic-visible-impact-v1",
+  "seedMetaKey": "parentReportDiagnosticVisibleImpact",
+  "cleanup": {
+    "tag": "parent-report-diagnostic-visible-impact-v1",
+    "removedSessions": 5,
+    "removedParentActivities": 0,
+    "removedBookSessions": 0
+  },
+  "fixtures": {
+    "GATE-LOW": {
+      "label": "AAA9",
+      "scenario": "GATE-LOW",
+      "subject": "math",
+      "topic": "fractions",
+      "seed": {
+        "days": [
+          "2026-05-10",
+          "2026-05-14",
+          "2026-05-18"
+        ],
+        "counts": [
+          5,
+          5,
+          5
+        ],
+        "wrongs": [
+          3,
+          3,
+          3
+        ],
+        "metaKey": "weakTopicOnly"
+      }
+    },
+    "SUBSKILL-FOCUS": {
+      "label": "AAA10",
+      "scenario": "SUBSKILL-FOCUS",
+      "subject": "english",
+      "topic": "grammar",
+      "seed": {
+        "days": [
+          "2026-05-06",
+          "2026-05-13",
+          "2026-05-20"
+        ],
+        "counts": [
+          4,
+          4,
+          4
+        ],
+        "wrongs": [
+          2,
+          2,
+          2
+        ],
+        "metaKey": "englishGrammar"
+      }
+    },
+    "SUBSKILL-CONFLICT": {
+      "label": "AAA8",
+      "scenario": "SUBSKILL-CONFLICT",
+      "subject": "math",
+      "topic": "fractions",
+      "seed": {
+        "type": "practice_mixed_meta",
+        "segments": [
+          {
+            "days": [
+              "2026-05-20",
+              "2026-05-21"
+            ],
+            "counts": [
+              4,
+              4
+            ],
+            "wrongs": [
+              0,
+              1
+            ],
+            "metaKey": "mathTechnical"
+          },
+          {
+            "days": [
+              "2026-05-23",
+              "2026-05-24"
+            ],
+            "counts": [
+              3,
+              4
+            ],
+            "wrongs": [
+              2,
+              2
+            ],
+            "metaKey": "mathWordProblem"
+          }
+        ]
+      }
+    },
+    "PROMOTE-STRONG": {
+      "label": "AAA5",
+      "scenario": "PROMOTE-STRONG",
+      "subject": "math",
+      "topic": "fractions",
+      "seed": {
+        "days": [
+          "2026-05-04",
+          "2026-05-11"
+        ],
+        "counts": [
+          5,
+          5
+        ],
+        "wrongs": [
+          2,
+          2
+        ],
+        "metaKey": "mathTechnical"
+      }
+    }
+  },
+  "seeded": [
+    {
+      "fixtureId": "GATE-LOW",
+      "label": "AAA9",
+      "scenario": "GATE-LOW",
+      "sessionId": "b2ae0d68-8f12-4afe-97ff-34bcd084d2ad",
+      "answerCount": 15
+    },
+    {
+      "fixtureId": "SUBSKILL-FOCUS",
+      "label": "AAA10",
+      "scenario": "SUBSKILL-FOCUS",
+      "sessionId": "b82c2ca5-8756-45ca-80d1-8997130fd6d5",
+      "answerCount": 12
+    },
+    {
+      "fixtureId": "SUBSKILL-CONFLICT",
+      "label": "AAA8",
+      "scenario": "SUBSKILL-CONFLICT",
+      "sessions": [
+        {
+          "sessionId": "5a8c81de-1e92-4dd5-9f34-d3af422efbe7",
+          "answerCount": 8
+        },
+        {
+          "sessionId": "389ce325-3559-44ab-8cf2-368ccfbb9a47",
+          "answerCount": 7
+        }
+      ],
+      "answerCount": 15
+    },
+    {
+      "fixtureId": "PROMOTE-STRONG",
+      "label": "AAA5",
+      "scenario": "PROMOTE-STRONG",
+      "sessionId": "1508c860-d52a-40e8-938a-f68b691b4b16",
+      "answerCount": 10
+    }
+  ]
+}

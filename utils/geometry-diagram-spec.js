@@ -116,6 +116,18 @@ export function getGeometryDiagramSpec(question, options = {}) {
     if (type === "שיקוף") {
       return { kind: "transformation_reflect", mode: "reflect", template: "square" };
     }
+    if (type === "סיבוב") {
+      return { kind: "rotation_step", angle: 90, template: "square" };
+    }
+    if (type === "ללא תנועה") {
+      return {
+        kind: "transformation_translate",
+        mode: "translate",
+        template: "square",
+        dx: 0,
+        dy: 0,
+      };
+    }
     return { kind: "transformation_translate", mode: "translate", template: "square" };
   }
 

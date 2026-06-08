@@ -1,0 +1,466 @@
+﻿{
+  "generatedAt": "2026-06-08T19:06:45.019Z",
+  "range": {
+    "from": "2026-05-01",
+    "to": "2026-06-08"
+  },
+  "locks": null,
+  "simState": {
+    "schoolId": "bb4e5984-d95f-438f-a465-e1a8208ea7de",
+    "demoSchoolName": "╫æ╫Ö╫¬ ╫í╫ñ╫¿ ╫á╫Ö╫í╫ò╫Ö ╫£╫É╫ò ╫º╫Ö╫ô╫í",
+    "demoParentEmail": "demofamily@leo-k.com",
+    "currentSchoolDay": 18,
+    "lastSimCalendarDate": "2026-05-28-selftest",
+    "lastSimStatus": "pass",
+    "lastRunAt": "2026-05-28T03:43:39.267Z",
+    "studentCount": 398
+  },
+  "baseline": {
+    "activeClasses": 108,
+    "enrollments": 398,
+    "classStudentLinks": 2388,
+    "managerSchoolAdminOn": [
+      "bb4e5984-d95f-438f-a465-e1a8208ea7de"
+    ],
+    "ok": true,
+    "mismatches": []
+  },
+  "artifactDatesInRepo": [
+    "2026-05-28",
+    "2026-05-28-selftest",
+    "2026-05-29",
+    "2026-05-29.zip"
+  ],
+  "rangeSummary": {
+    "2026-05-01_to_2026-06-01": {
+      "totalDays": 32,
+      "full": 9,
+      "partial": 2,
+      "missing": 8,
+      "weekendOk": 13
+    },
+    "2026-06-02_to_2026-06-08": {
+      "totalDays": 7,
+      "full": 0,
+      "partial": 0,
+      "missing": 4,
+      "weekendOk": 3
+    }
+  },
+  "partialDays": [
+    {
+      "date": "2026-05-14",
+      "classroomActivities": 27
+    },
+    {
+      "date": "2026-05-19",
+      "classroomActivities": 1
+    }
+  ],
+  "missingWeekdayDays": [
+    "2026-05-18",
+    "2026-05-20",
+    "2026-05-21",
+    "2026-05-25",
+    "2026-05-26",
+    "2026-05-27",
+    "2026-05-28",
+    "2026-06-01",
+    "2026-06-02",
+    "2026-06-03",
+    "2026-06-04",
+    "2026-06-08"
+  ],
+  "dayRows": [
+    {
+      "date": "2026-05-01",
+      "weekday": 5,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-02",
+      "weekday": 6,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-03",
+      "weekday": 0,
+      "schoolDay": 244,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 180,
+      "distinctStudents": 18,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-04",
+      "weekday": 1,
+      "schoolDay": 245,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 240,
+      "distinctStudents": 24,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-05",
+      "weekday": 2,
+      "schoolDay": 246,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 120,
+      "distinctStudents": 12,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-06",
+      "weekday": 3,
+      "schoolDay": 247,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 180,
+      "distinctStudents": 18,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-07",
+      "weekday": 4,
+      "schoolDay": 248,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 240,
+      "distinctStudents": 24,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-08",
+      "weekday": 5,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-09",
+      "weekday": 6,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-10",
+      "weekday": 0,
+      "schoolDay": 251,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 120,
+      "distinctStudents": 12,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-11",
+      "weekday": 1,
+      "schoolDay": 252,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 180,
+      "distinctStudents": 18,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-12",
+      "weekday": 2,
+      "schoolDay": 253,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 240,
+      "distinctStudents": 24,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-13",
+      "weekday": 3,
+      "schoolDay": 254,
+      "classroomActivities": 108,
+      "hpSessions": 0,
+      "answers": 120,
+      "distinctStudents": 12,
+      "status": "full"
+    },
+    {
+      "date": "2026-05-14",
+      "weekday": 4,
+      "schoolDay": 255,
+      "classroomActivities": 27,
+      "hpSessions": 0,
+      "answers": 180,
+      "distinctStudents": 18,
+      "status": "partial"
+    },
+    {
+      "date": "2026-05-15",
+      "weekday": 5,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-16",
+      "weekday": 6,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-17",
+      "weekday": 0,
+      "schoolDay": 258,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 240,
+      "distinctStudents": 24,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-18",
+      "weekday": 1,
+      "schoolDay": 259,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 120,
+      "distinctStudents": 12,
+      "status": "missing"
+    },
+    {
+      "date": "2026-05-19",
+      "weekday": 2,
+      "schoolDay": 260,
+      "classroomActivities": 1,
+      "hpSessions": 0,
+      "answers": 180,
+      "distinctStudents": 18,
+      "status": "partial"
+    },
+    {
+      "date": "2026-05-20",
+      "weekday": 3,
+      "schoolDay": 261,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 240,
+      "distinctStudents": 24,
+      "status": "missing"
+    },
+    {
+      "date": "2026-05-21",
+      "weekday": 4,
+      "schoolDay": 262,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 120,
+      "distinctStudents": 12,
+      "status": "missing"
+    },
+    {
+      "date": "2026-05-22",
+      "weekday": 5,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-23",
+      "weekday": 6,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-24",
+      "weekday": 0,
+      "schoolDay": 265,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 180,
+      "distinctStudents": 18,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-25",
+      "weekday": 1,
+      "schoolDay": 266,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 240,
+      "distinctStudents": 24,
+      "status": "missing"
+    },
+    {
+      "date": "2026-05-26",
+      "weekday": 2,
+      "schoolDay": 267,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 120,
+      "distinctStudents": 12,
+      "status": "missing"
+    },
+    {
+      "date": "2026-05-27",
+      "weekday": 3,
+      "schoolDay": 268,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 180,
+      "distinctStudents": 18,
+      "status": "missing"
+    },
+    {
+      "date": "2026-05-28",
+      "weekday": 4,
+      "schoolDay": 269,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 235,
+      "distinctStudents": 24,
+      "status": "missing"
+    },
+    {
+      "date": "2026-05-29",
+      "weekday": 5,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 509,
+      "distinctStudents": 15,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-30",
+      "weekday": 6,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 473,
+      "distinctStudents": 15,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-05-31",
+      "weekday": 0,
+      "schoolDay": 272,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 774,
+      "distinctStudents": 26,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-06-01",
+      "weekday": 1,
+      "schoolDay": 273,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 211,
+      "distinctStudents": 31,
+      "status": "missing"
+    },
+    {
+      "date": "2026-06-02",
+      "weekday": 2,
+      "schoolDay": 274,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 229,
+      "distinctStudents": 24,
+      "status": "missing"
+    },
+    {
+      "date": "2026-06-03",
+      "weekday": 3,
+      "schoolDay": 275,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 111,
+      "distinctStudents": 12,
+      "status": "missing"
+    },
+    {
+      "date": "2026-06-04",
+      "weekday": 4,
+      "schoolDay": 276,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 168,
+      "distinctStudents": 18,
+      "status": "missing"
+    },
+    {
+      "date": "2026-06-05",
+      "weekday": 5,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-06-06",
+      "weekday": 6,
+      "schoolDay": null,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-06-07",
+      "weekday": 0,
+      "schoolDay": 279,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 240,
+      "distinctStudents": 24,
+      "status": "weekend_ok"
+    },
+    {
+      "date": "2026-06-08",
+      "weekday": 1,
+      "schoolDay": 280,
+      "classroomActivities": 0,
+      "hpSessions": 0,
+      "answers": 0,
+      "distinctStudents": 0,
+      "status": "missing"
+    }
+  ]
+}

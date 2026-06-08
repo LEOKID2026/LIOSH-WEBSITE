@@ -11,6 +11,7 @@ const GEOMETRY_HEBREW_LABEL_KINDS = new Set([
   "parallel_perpendicular",
   "triangles",
   "transformations",
+  "concept_transform",
 ]);
 
 const GEOMETRY_INDEX_LABEL_KINDS = new Set([

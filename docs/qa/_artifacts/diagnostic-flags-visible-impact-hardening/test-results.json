@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-06-08T20:25:00.000Z",
+  "build": {
+    "command": "npm run build",
+    "pass": false,
+    "note": "Pre-existing duplicate HEBREW_G2_GAP_POOL in literacy-pool-builder.js — unrelated to diagnostic flags"
+  },
+  "unitTests": [
+    { "file": "tests/learning/evidence-quality-layer.test.mjs", "pass": 14, "fail": 0 },
+    { "file": "tests/learning/question-metadata-consumption.test.mjs", "pass": 88, "fail": 0 },
+    { "file": "tests/reports/diagnostic-truth-consumer-verification.test.mjs", "pass": 24, "fail": 0 }
+  ],
+  "comparison": {
+    "command": "parent-report-diagnostic-flags-comparison.mjs --verify-only",
+    "pass": 48,
+    "warn": 0,
+    "fail": 0
+  },
+  "hardening": {
+    "command": "parent-report-diagnostic-visible-impact-hardening.mjs",
+    "leakScanPass": true,
+    "invariantsPass": true,
+    "featureScopeOnly": true
+  }
+}

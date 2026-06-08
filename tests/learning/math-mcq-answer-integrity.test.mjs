@@ -47,6 +47,9 @@ const MATRIX_CASES = [
   ["g3", "word_problems", "easy"],
   ["g4", "zero_one_properties", "medium"],
   ["g4", "factors_multiples", "easy"],
+  ["g4", "prime_composite", "easy"],
+  ["g4", "prime_composite", "medium"],
+  ["g4", "prime_composite", "hard"],
   ["g6", "factors_multiples", "hard"],
 ];
 

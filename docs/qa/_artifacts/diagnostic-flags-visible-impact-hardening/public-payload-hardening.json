@@ -1,0 +1,1248 @@
+{
+  "summary": {
+    "generatedAt": "2026-06-08T21:14:55.345Z",
+    "scenarios": 5,
+    "leakScanPass": true,
+    "invariantsPass": true,
+    "newPublicFields": [
+      {
+        "field": "parentFacing.practiceFocus",
+        "type": "Array<{ topicLabelHe, focusLabelHe }>",
+        "modes": [
+          "B",
+          "C",
+          "D when subskill flag on"
+        ]
+      },
+      {
+        "field": "parentFacing.gatingApplied",
+        "type": "boolean",
+        "modes": [
+          "C",
+          "D when gating fires"
+        ]
+      },
+      {
+        "field": "parentFacing.diagnosisSuppressed",
+        "type": "boolean",
+        "modes": [
+          "C",
+          "D when pattern diagnostics suppressed"
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "scenarioKey": "AAA4",
+      "child": "AAA4",
+      "range": {
+        "label": "AAA4",
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "fixtureMeta": null,
+      "modes": {
+        "A": {
+          "modeName": "baseline",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 14,
+              "diagnosticAccuracy": 71.43,
+              "totalAnswers": 81,
+              "totalSessions": 13,
+              "totalDurationSeconds": 4089
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 14,
+              "rawDiagnosticCount": 14,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 6,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "B": {
+          "modeName": "subskill_only",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 14,
+              "diagnosticAccuracy": 71.43,
+              "totalAnswers": 81,
+              "totalSessions": 13,
+              "totalDurationSeconds": 4089
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 14,
+              "rawDiagnosticCount": 14,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 6,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "C": {
+          "modeName": "subskill_gating",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 14,
+              "diagnosticAccuracy": 71.43,
+              "totalAnswers": 81,
+              "totalSessions": 13,
+              "totalDurationSeconds": 4089
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 14,
+              "rawDiagnosticCount": 14,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": true,
+              "gatingApplied": true,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [
+            {
+              "field": "parentFacing.gatingApplied",
+              "safeBecause": "Boolean only — no gating decision arrays or internal metadata"
+            },
+            {
+              "field": "parentFacing.diagnosisSuppressed",
+              "safeBecause": "Boolean mirror of server suppression; client pattern diagnostics authority"
+            }
+          ],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 6,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "D": {
+          "modeName": "subskill_gating_promotion",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 14,
+              "diagnosticAccuracy": 71.43,
+              "totalAnswers": 81,
+              "totalSessions": 13,
+              "totalDurationSeconds": 4089
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 14,
+              "rawDiagnosticCount": 14,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": true,
+              "gatingApplied": true,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [
+            {
+              "field": "parentFacing.gatingApplied",
+              "safeBecause": "Boolean only — no gating decision arrays or internal metadata"
+            },
+            {
+              "field": "parentFacing.diagnosisSuppressed",
+              "safeBecause": "Boolean mirror of server suppression; client pattern diagnostics authority"
+            }
+          ],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 6,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        }
+      },
+      "invariants": {
+        "diagnosticAnswers": true,
+        "totalAnswers": true,
+        "totalSessions": true,
+        "totalDurationSeconds": true,
+        "coins": true,
+        "monthlyProgress": true
+      },
+      "uiProjection": {
+        "whatToNoticeA": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+        ],
+        "whatToNoticeC": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+        ],
+        "practiceFocusB": [],
+        "gatingAppliedC": true
+      }
+    },
+    {
+      "scenarioKey": "GATE-LOW",
+      "child": "AAA9",
+      "range": {
+        "label": "AAA9",
+        "from": "2026-05-10",
+        "to": "2026-05-18"
+      },
+      "fixtureMeta": {
+        "label": "AAA9",
+        "scenario": "GATE-LOW",
+        "subject": "math",
+        "topic": "fractions",
+        "seed": {
+          "days": [
+            "2026-05-10",
+            "2026-05-14",
+            "2026-05-18"
+          ],
+          "counts": [
+            5,
+            5,
+            5
+          ],
+          "wrongs": [
+            3,
+            3,
+            3
+          ],
+          "metaKey": "weakTopicOnly"
+        }
+      },
+      "modes": {
+        "A": {
+          "modeName": "baseline",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 25,
+              "diagnosticAccuracy": 48,
+              "totalAnswers": 25,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1494120
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 25,
+              "rawDiagnosticCount": 25,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+                "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+                "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+              ],
+              "homeRecommendations": [
+                "להקדיש 10 דקות ביום לתרגול קצר במתמטיקה, במקום תרגול ארוך פעם בשבוע.",
+                "לפתור כמה שאלות קלות לפני מעבר לשאלות קשות יותר.",
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 13,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "B": {
+          "modeName": "subskill_only",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 25,
+              "diagnosticAccuracy": 48,
+              "totalAnswers": 25,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1494120
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 25,
+              "rawDiagnosticCount": 25,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+                "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+                "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+              ],
+              "homeRecommendations": [
+                "להקדיש 10 דקות ביום לתרגול קצר במתמטיקה, במקום תרגול ארוך פעם בשבוע.",
+                "לפתור כמה שאלות קלות לפני מעבר לשאלות קשות יותר.",
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 13,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "C": {
+          "modeName": "subskill_gating",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 25,
+              "diagnosticAccuracy": 48,
+              "totalAnswers": 25,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1494120
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 25,
+              "rawDiagnosticCount": 25,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": true,
+              "gatingApplied": true,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [
+            {
+              "field": "parentFacing.gatingApplied",
+              "safeBecause": "Boolean only — no gating decision arrays or internal metadata"
+            },
+            {
+              "field": "parentFacing.diagnosisSuppressed",
+              "safeBecause": "Boolean mirror of server suppression; client pattern diagnostics authority"
+            }
+          ],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 13,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "D": {
+          "modeName": "subskill_gating_promotion",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 25,
+              "diagnosticAccuracy": 48,
+              "totalAnswers": 25,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1494120
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 25,
+              "rawDiagnosticCount": 25,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": true,
+              "gatingApplied": true,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [
+            {
+              "field": "parentFacing.gatingApplied",
+              "safeBecause": "Boolean only — no gating decision arrays or internal metadata"
+            },
+            {
+              "field": "parentFacing.diagnosisSuppressed",
+              "safeBecause": "Boolean mirror of server suppression; client pattern diagnostics authority"
+            }
+          ],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 13,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        }
+      },
+      "invariants": {
+        "diagnosticAnswers": true,
+        "totalAnswers": true,
+        "totalSessions": true,
+        "totalDurationSeconds": true,
+        "coins": true,
+        "monthlyProgress": true
+      },
+      "uiProjection": {
+        "whatToNoticeA": [
+          "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+          "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+          "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+        ],
+        "whatToNoticeC": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+        ],
+        "practiceFocusB": [],
+        "gatingAppliedC": true
+      }
+    },
+    {
+      "scenarioKey": "SUBSKILL-FOCUS",
+      "child": "AAA10",
+      "range": {
+        "label": "AAA10",
+        "from": "2026-05-06",
+        "to": "2026-05-20"
+      },
+      "fixtureMeta": {
+        "label": "AAA10",
+        "scenario": "SUBSKILL-FOCUS",
+        "subject": "english",
+        "topic": "grammar",
+        "seed": {
+          "days": [
+            "2026-05-06",
+            "2026-05-13",
+            "2026-05-20"
+          ],
+          "counts": [
+            4,
+            4,
+            4
+          ],
+          "wrongs": [
+            2,
+            2,
+            2
+          ],
+          "metaKey": "englishGrammar"
+        }
+      },
+      "modes": {
+        "A": {
+          "modeName": "baseline",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 23,
+              "diagnosticAccuracy": 65.22,
+              "totalAnswers": 23,
+              "totalSessions": 3,
+              "totalDurationSeconds": 2188980
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 23,
+              "rawDiagnosticCount": 23,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 8,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "B": {
+          "modeName": "subskill_only",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 23,
+              "diagnosticAccuracy": 65.22,
+              "totalAnswers": 23,
+              "totalSessions": 3,
+              "totalDurationSeconds": 2188980
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 23,
+              "rawDiagnosticCount": 23,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                "נושא לחיזוק: דקדוק",
+                "מוקד לתרגול: סממן זמן"
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [
+                {
+                  "topicLabelHe": "דקדוק",
+                  "focusLabelHe": "סממן זמן"
+                }
+              ],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [
+            {
+              "field": "parentFacing.practiceFocus",
+              "safeBecause": "Hebrew labels only (topicLabelHe, focusLabelHe); no raw skillId/subSkill keys"
+            }
+          ],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 8,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "C": {
+          "modeName": "subskill_gating",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 23,
+              "diagnosticAccuracy": 65.22,
+              "totalAnswers": 23,
+              "totalSessions": 3,
+              "totalDurationSeconds": 2188980
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 23,
+              "rawDiagnosticCount": 23,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                "נושא לחיזוק: דקדוק",
+                "מוקד לתרגול: סממן זמן"
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [
+                {
+                  "topicLabelHe": "דקדוק",
+                  "focusLabelHe": "סממן זמן"
+                }
+              ],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [
+            {
+              "field": "parentFacing.practiceFocus",
+              "safeBecause": "Hebrew labels only (topicLabelHe, focusLabelHe); no raw skillId/subSkill keys"
+            }
+          ],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 8,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "D": {
+          "modeName": "subskill_gating_promotion",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 23,
+              "diagnosticAccuracy": 65.22,
+              "totalAnswers": 23,
+              "totalSessions": 3,
+              "totalDurationSeconds": 2188980
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 23,
+              "rawDiagnosticCount": 23,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                "נושא לחיזוק: דקדוק",
+                "מוקד לתרגול: סממן זמן"
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [
+                {
+                  "topicLabelHe": "דקדוק",
+                  "focusLabelHe": "סממן זמן"
+                }
+              ],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [
+            {
+              "field": "parentFacing.practiceFocus",
+              "safeBecause": "Hebrew labels only (topicLabelHe, focusLabelHe); no raw skillId/subSkill keys"
+            }
+          ],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 8,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        }
+      },
+      "invariants": {
+        "diagnosticAnswers": true,
+        "totalAnswers": true,
+        "totalSessions": true,
+        "totalDurationSeconds": true,
+        "coins": true,
+        "monthlyProgress": true
+      },
+      "uiProjection": {
+        "whatToNoticeA": [
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+        ],
+        "whatToNoticeC": [
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "נושא לחיזוק: דקדוק",
+          "מוקד לתרגול: סממן זמן"
+        ],
+        "practiceFocusB": [
+          {
+            "topicLabelHe": "דקדוק",
+            "focusLabelHe": "סממן זמן"
+          }
+        ],
+        "gatingAppliedC": false
+      }
+    },
+    {
+      "scenarioKey": "SUBSKILL-CONFLICT",
+      "child": "AAA8",
+      "range": {
+        "label": "AAA8",
+        "from": "2026-05-20",
+        "to": "2026-05-24"
+      },
+      "fixtureMeta": {
+        "label": "AAA8",
+        "scenario": "SUBSKILL-CONFLICT",
+        "subject": "math",
+        "topic": "fractions",
+        "seed": {
+          "type": "practice_mixed_meta",
+          "segments": [
+            {
+              "days": [
+                "2026-05-20",
+                "2026-05-21"
+              ],
+              "counts": [
+                4,
+                4
+              ],
+              "wrongs": [
+                0,
+                1
+              ],
+              "metaKey": "mathTechnical"
+            },
+            {
+              "days": [
+                "2026-05-23",
+                "2026-05-24"
+              ],
+              "counts": [
+                3,
+                4
+              ],
+              "wrongs": [
+                2,
+                2
+              ],
+              "metaKey": "mathWordProblem"
+            }
+          ]
+        }
+      },
+      "modes": {
+        "A": {
+          "modeName": "baseline",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 30,
+              "diagnosticAccuracy": 66.67,
+              "totalAnswers": 54,
+              "totalSessions": 11,
+              "totalDurationSeconds": 389379
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 30,
+              "rawDiagnosticCount": 30,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 16,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "B": {
+          "modeName": "subskill_only",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 30,
+              "diagnosticAccuracy": 66.67,
+              "totalAnswers": 54,
+              "totalSessions": 11,
+              "totalDurationSeconds": 389379
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 30,
+              "rawDiagnosticCount": 30,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 16,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "C": {
+          "modeName": "subskill_gating",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 30,
+              "diagnosticAccuracy": 66.67,
+              "totalAnswers": 54,
+              "totalSessions": 11,
+              "totalDurationSeconds": 389379
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 30,
+              "rawDiagnosticCount": 30,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 16,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "D": {
+          "modeName": "subskill_gating_promotion",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 30,
+              "diagnosticAccuracy": 66.67,
+              "totalAnswers": 54,
+              "totalSessions": 11,
+              "totalDurationSeconds": 389379
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 30,
+              "rawDiagnosticCount": 30,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 16,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        }
+      },
+      "invariants": {
+        "diagnosticAnswers": true,
+        "totalAnswers": true,
+        "totalSessions": true,
+        "totalDurationSeconds": true,
+        "coins": true,
+        "monthlyProgress": true
+      },
+      "uiProjection": {
+        "whatToNoticeA": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "whatToNoticeC": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusB": [],
+        "gatingAppliedC": false
+      }
+    },
+    {
+      "scenarioKey": "PROMOTE-STRONG",
+      "child": "AAA5",
+      "range": {
+        "label": "AAA5",
+        "from": "2026-05-04",
+        "to": "2026-05-11"
+      },
+      "fixtureMeta": {
+        "label": "AAA5",
+        "scenario": "PROMOTE-STRONG",
+        "subject": "math",
+        "topic": "fractions",
+        "seed": {
+          "days": [
+            "2026-05-04",
+            "2026-05-11"
+          ],
+          "counts": [
+            5,
+            5
+          ],
+          "wrongs": [
+            2,
+            2
+          ],
+          "metaKey": "mathTechnical"
+        }
+      },
+      "modes": {
+        "A": {
+          "modeName": "baseline",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 15,
+              "diagnosticAccuracy": 60,
+              "totalAnswers": 15,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1321320
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 15,
+              "rawDiagnosticCount": 15,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 4,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "B": {
+          "modeName": "subskill_only",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 15,
+              "diagnosticAccuracy": 60,
+              "totalAnswers": 15,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1321320
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 15,
+              "rawDiagnosticCount": 15,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 4,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "C": {
+          "modeName": "subskill_gating",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 15,
+              "diagnosticAccuracy": 60,
+              "totalAnswers": 15,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1321320
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 15,
+              "rawDiagnosticCount": 15,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 4,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        },
+        "D": {
+          "modeName": "subskill_gating_promotion",
+          "snapshot": {
+            "summary": {
+              "diagnosticAnswers": 15,
+              "diagnosticAccuracy": 60,
+              "totalAnswers": 15,
+              "totalSessions": 2,
+              "totalDurationSeconds": 1321320
+            },
+            "metaEvidenceQualityStudent": {
+              "evidenceCount": 15,
+              "rawDiagnosticCount": 15,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "recurrenceMet": true
+            },
+            "parentFacing": {
+              "insights": [
+                "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+              ],
+              "homeRecommendations": [
+                "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+              ],
+              "practiceFocus": [],
+              "diagnosisSuppressed": false,
+              "gatingApplied": false,
+              "teacherMessageCount": 0
+            }
+          },
+          "safeFieldNotes": [],
+          "leakScan": {
+            "pass": true,
+            "forbiddenKeys": [],
+            "rawSkillLeaks": [],
+            "featureScopeOnly": true,
+            "fullPayloadForbiddenKeyCount": 0,
+            "recentMistakeRawSkillLeakCount": 4,
+            "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+          }
+        }
+      },
+      "invariants": {
+        "diagnosticAnswers": true,
+        "totalAnswers": true,
+        "totalSessions": true,
+        "totalDurationSeconds": true,
+        "coins": true,
+        "monthlyProgress": true
+      },
+      "uiProjection": {
+        "whatToNoticeA": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "whatToNoticeC": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusB": [],
+        "gatingAppliedC": false
+      }
+    }
+  ]
+}

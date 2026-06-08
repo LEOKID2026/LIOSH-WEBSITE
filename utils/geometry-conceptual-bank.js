@@ -75,6 +75,10 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
     probePower: row.probePower,
     suggestedQuestionType: row.suggestedQuestionType,
   });
+  if (row.kind === "concept_transform") {
+    params.type = correct;
+    params.subtype = row.subtype || params.subtype;
+  }
 
   if (row.binary) {
     const opts =
@@ -100,15 +104,18 @@ export function renderGeometryConceptualRowToQuestion(row, ctx) {
         : "מושגים (אתגר)";
   const qText = String(row.question || "").trim();
   const correctIdx = answers.findIndex((a) => String(a).trim() === correct);
-  const repaired = repairMcqObviousAnswerContent(
-    {
-      question: qText,
-      answers,
-      correctIndex: correctIdx >= 0 ? correctIdx : 0,
-      correctAnswer: correct,
-    },
-    { subject: "geometry", stem: qText }
-  );
+  const skipLabelRepair = row.kind === "concept_transform";
+  const repaired = skipLabelRepair
+    ? { answers, correctAnswer: correct }
+    : repairMcqObviousAnswerContent(
+        {
+          question: qText,
+          answers,
+          correctIndex: correctIdx >= 0 ? correctIdx : 0,
+          correctAnswer: correct,
+        },
+        { subject: "geometry", stem: qText }
+      );
   const outAnswers = repaired.answers ?? answers;
   const outCorrect = String(repaired.correctAnswer ?? correct).trim();
   const outIdx = outAnswers.findIndex((a) => String(a).trim() === outCorrect);
@@ -2096,13 +2103,13 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "translation",
     "conceptTag": "slide",
     "distractorFamily": "transform_confusion",
-    "question": "הזזה של צורה בלי לסובב וללא שינוי גודל נקראת לרוב:",
-    "correct": "הזזה (טרנסלציה)",
+    "question": "הצורה זזה למקום חדש בלי סיבוב ובלי שינוי גודל — איזו תנועה זו?",
+    "correct": "הזזה",
     "options": [
-      "הזזה (טרנסלציה)",
+      "הזזה",
       "שיקוף",
-      "הגדלה",
-      "עיוות"
+      "סיבוב",
+      "ללא תנועה"
     ],
     "difficulty": "basic",
     "cognitiveLevel": "recall",
@@ -2125,16 +2132,160 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "reflection",
     "conceptTag": "mirror_flip",
     "distractorFamily": "transform_confusion",
-    "question": "שיקוף מול קו נותן תמונה כמו:",
-    "correct": "מראה ליד הקו",
+    "question": "הצורה מתהפכת כמו במראה ליד קו — איזו תנועה זו?",
+    "correct": "שיקוף",
     "options": [
-      "מראה ליד הקו",
-      "סיבוב סביב מרכז הצורה",
-      "הזזה בלבד",
-      "מחיקת חצי מהצורה"
+      "שיקוף",
+      "הזזה",
+      "סיבוב",
+      "ללא תנועה"
     ],
     "difficulty": "basic",
     "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion",
+      "careless_error"
+    ]
+  },
+  {
+    "gradeBand": "early",
+    "topics": [
+      "transformations"
+    ],
+    "levels": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "kind": "concept_transform",
+    "patternFamily": "rotation_intro",
+    "subtype": "rotation",
+    "conceptTag": "turn",
+    "distractorFamily": "transform_confusion",
+    "question": "הצורה מסתובבת סביב נקודה בלי לשנות גודל — איזו תנועה זו?",
+    "correct": "סיבוב",
+    "options": [
+      "סיבוב",
+      "הזזה",
+      "שיקוף",
+      "ללא תנועה"
+    ],
+    "difficulty": "basic",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion",
+      "careless_error"
+    ]
+  },
+  {
+    "gradeBand": "early",
+    "topics": [
+      "transformations"
+    ],
+    "levels": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "kind": "concept_transform",
+    "patternFamily": "identity_motion",
+    "subtype": "identity",
+    "conceptTag": "no_motion",
+    "distractorFamily": "transform_confusion",
+    "question": "הצורה נשארה באותו מקום ובאותו כיוון — איזו טרנספורמציה מתאימה?",
+    "correct": "ללא תנועה",
+    "options": [
+      "ללא תנועה",
+      "הזזה",
+      "שיקוף",
+      "סיבוב"
+    ],
+    "difficulty": "basic",
+    "cognitiveLevel": "recall",
+    "expectedErrorTypes": [
+      "concept_confusion",
+      "careless_error"
+    ]
+  },
+  {
+    "gradeBand": "early",
+    "topics": [
+      "transformations"
+    ],
+    "levels": [
+      "hard"
+    ],
+    "kind": "concept_transform",
+    "patternFamily": "transform_discriminate",
+    "subtype": "reflection_hard",
+    "conceptTag": "mirror_axis",
+    "distractorFamily": "transform_confusion",
+    "question": "אתגר: רק הכיוון משתנה כמו במראה מול ציר, הגודל נשמר — איזו טרנספורמציה?",
+    "correct": "שיקוף",
+    "options": [
+      "שיקוף",
+      "הזזה",
+      "סיבוב",
+      "ללא תנועה"
+    ],
+    "difficulty": "advanced",
+    "cognitiveLevel": "understanding",
+    "expectedErrorTypes": [
+      "concept_confusion",
+      "careless_error"
+    ]
+  },
+  {
+    "gradeBand": "early",
+    "topics": [
+      "transformations"
+    ],
+    "levels": [
+      "hard"
+    ],
+    "kind": "concept_transform",
+    "patternFamily": "transform_discriminate",
+    "subtype": "translation_hard",
+    "conceptTag": "slide_only",
+    "distractorFamily": "transform_confusion",
+    "question": "אתגר: רק המיקום במישור משתנה, בלי סיבוב ובלי שינוי גודל — איזו תנועה?",
+    "correct": "הזזה",
+    "options": [
+      "הזזה",
+      "שיקוף",
+      "סיבוב",
+      "ללא תנועה"
+    ],
+    "difficulty": "advanced",
+    "cognitiveLevel": "understanding",
+    "expectedErrorTypes": [
+      "concept_confusion",
+      "careless_error"
+    ]
+  },
+  {
+    "gradeBand": "early",
+    "topics": [
+      "transformations"
+    ],
+    "levels": [
+      "hard"
+    ],
+    "kind": "concept_transform",
+    "patternFamily": "transform_discriminate",
+    "subtype": "rotation_hard",
+    "conceptTag": "turn_center",
+    "distractorFamily": "transform_confusion",
+    "question": "אתגר: הצורה מסתובבת סביב מרכז קבוע בלי שינוי גודל — איזו טרנספורמציה?",
+    "correct": "סיבוב",
+    "options": [
+      "סיבוב",
+      "הזזה",
+      "שיקוף",
+      "ללא תנועה"
+    ],
+    "difficulty": "advanced",
+    "cognitiveLevel": "understanding",
     "expectedErrorTypes": [
       "concept_confusion",
       "careless_error"

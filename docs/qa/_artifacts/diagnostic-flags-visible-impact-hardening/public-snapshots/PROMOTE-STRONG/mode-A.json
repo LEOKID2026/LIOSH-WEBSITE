@@ -1,0 +1,43 @@
+{
+  "modeName": "baseline",
+  "snapshot": {
+    "summary": {
+      "diagnosticAnswers": 15,
+      "diagnosticAccuracy": 60,
+      "totalAnswers": 15,
+      "totalSessions": 2,
+      "totalDurationSeconds": 1321320
+    },
+    "metaEvidenceQualityStudent": {
+      "evidenceCount": 15,
+      "rawDiagnosticCount": 15,
+      "dataSufficiency": "supported_diagnosis",
+      "confidenceLevel": "moderate",
+      "confidenceReason": "supported",
+      "recurrenceMet": true
+    },
+    "parentFacing": {
+      "insights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "homeRecommendations": [
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "practiceFocus": [],
+      "diagnosisSuppressed": false,
+      "gatingApplied": false,
+      "teacherMessageCount": 0
+    }
+  },
+  "safeFieldNotes": [],
+  "leakScan": {
+    "pass": true,
+    "forbiddenKeys": [],
+    "rawSkillLeaks": [],
+    "featureScopeOnly": true,
+    "fullPayloadForbiddenKeyCount": 0,
+    "recentMistakeRawSkillLeakCount": 4,
+    "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+  }
+}

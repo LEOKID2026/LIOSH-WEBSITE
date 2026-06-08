@@ -1,0 +1,45 @@
+{
+  "modeName": "subskill_only",
+  "snapshot": {
+    "summary": {
+      "diagnosticAnswers": 14,
+      "diagnosticAccuracy": 71.43,
+      "totalAnswers": 81,
+      "totalSessions": 13,
+      "totalDurationSeconds": 4089
+    },
+    "metaEvidenceQualityStudent": {
+      "evidenceCount": 14,
+      "rawDiagnosticCount": 14,
+      "dataSufficiency": "supported_diagnosis",
+      "confidenceLevel": "moderate",
+      "confidenceReason": "supported",
+      "recurrenceMet": true
+    },
+    "parentFacing": {
+      "insights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "homeRecommendations": [
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "practiceFocus": [],
+      "diagnosisSuppressed": false,
+      "gatingApplied": false,
+      "teacherMessageCount": 0
+    }
+  },
+  "safeFieldNotes": [],
+  "leakScan": {
+    "pass": true,
+    "forbiddenKeys": [],
+    "rawSkillLeaks": [],
+    "featureScopeOnly": true,
+    "fullPayloadForbiddenKeyCount": 0,
+    "recentMistakeRawSkillLeakCount": 6,
+    "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+  }
+}

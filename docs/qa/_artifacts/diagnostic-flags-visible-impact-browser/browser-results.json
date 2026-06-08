@@ -1,0 +1,153 @@
+[
+  {
+    "scenario": "AAA4",
+    "mode": "A",
+    "flags": "all OFF",
+    "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-browser\\AAA4-mode-A.png",
+    "insights": [
+      "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+      "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+      "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+      "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+      "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+    ],
+    "checks": [
+      {
+        "name": "not_empty_report",
+        "pass": true,
+        "actual": 5
+      },
+      {
+        "name": "no_raw_skill_keys",
+        "pass": true
+      },
+      {
+        "name": "mode_a_has_strong_or_activity_lines",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  {
+    "scenario": "AAA4",
+    "mode": "C",
+    "flags": "B+C ON, D OFF",
+    "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-browser\\AAA4-mode-C.png",
+    "insights": [
+      "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+      "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+      "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+    ],
+    "checks": [
+      {
+        "name": "not_empty_report",
+        "pass": true,
+        "actual": 3
+      },
+      {
+        "name": "no_raw_skill_keys",
+        "pass": true
+      },
+      {
+        "name": "no_strong_diagnosis",
+        "pass": true
+      },
+      {
+        "name": "has_soft_fallback",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  {
+    "scenario": "GATE-LOW",
+    "mode": "C",
+    "flags": "B+C ON, D OFF",
+    "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-browser\\GATE-LOW-mode-C.png",
+    "insights": [
+      "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+      "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+      "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+    ],
+    "checks": [
+      {
+        "name": "not_empty_report",
+        "pass": true,
+        "actual": 3
+      },
+      {
+        "name": "no_raw_skill_keys",
+        "pass": true
+      },
+      {
+        "name": "no_kedai_lehashim_lav",
+        "pass": true
+      },
+      {
+        "name": "soft_line_present",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  {
+    "scenario": "SUBSKILL-FOCUS",
+    "mode": "C",
+    "flags": "B+C ON, D OFF",
+    "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-browser\\SUBSKILL-FOCUS-mode-C.png",
+    "insights": [
+      "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+      "נושא לחיזוק: דקדוק",
+      "מוקד לתרגול: סממן זמן",
+      "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+      "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+    ],
+    "checks": [
+      {
+        "name": "not_empty_report",
+        "pass": true,
+        "actual": 5
+      },
+      {
+        "name": "no_raw_skill_keys",
+        "pass": true
+      },
+      {
+        "name": "has_nose_lechizuk",
+        "pass": true
+      },
+      {
+        "name": "has_moked_litargul",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  {
+    "scenario": "SUBSKILL-CONFLICT",
+    "mode": "C",
+    "flags": "B+C ON, D OFF",
+    "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\_artifacts\\diagnostic-flags-visible-impact-browser\\SUBSKILL-CONFLICT-mode-C.png",
+    "insights": [
+      "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+      "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+      "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+    ],
+    "checks": [
+      {
+        "name": "not_empty_report",
+        "pass": true,
+        "actual": 3
+      },
+      {
+        "name": "no_raw_skill_keys",
+        "pass": true
+      },
+      {
+        "name": "no_practice_focus_lines",
+        "pass": true
+      }
+    ],
+    "pass": true
+  }
+]

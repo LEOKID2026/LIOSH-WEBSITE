@@ -28,7 +28,8 @@ export const GEOMETRY_INDEX_LABEL_KINDS = {
 export const GEOMETRY_HEBREW_LABEL_OPTIONS = {
   parallel_perpendicular: ["מקבילות", "מאונכות"],
   triangles: ["שווה צלעות", "שווה שוקיים", "שונה צלעות"],
-  transformations: ["הזזה", "שיקוף"],
+  transformations: ["הזזה", "שיקוף", "סיבוב", "ללא תנועה"],
+  concept_transform: ["הזזה", "שיקוף", "סיבוב", "ללא תנועה"],
 };
 
 /** Same tolerances as geometry-master learning/practice numeric input. */

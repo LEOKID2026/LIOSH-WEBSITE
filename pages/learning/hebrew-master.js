@@ -156,6 +156,14 @@ import {
   buildBookContextClientMetaExtras,
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
+import {
+  dismissHebrewG1BookFirstSoftGateClient,
+  getHebrewG1BookFirstRecommendationCopy,
+  getHebrewG1LiteracyFoundationBookHref,
+  readHebrewG1LiteracyProgressClient,
+  recordHebrewG1LiteracyPageViewClient,
+  shouldShowHebrewG1BookFirstSoftGate,
+} from "../../lib/learning-book/hebrew-g1-literacy-progress";
 
 const HEBREW_BOOK_GRADE_SET = new Set(HEBREW_BOOK_GRADES);
 
@@ -259,8 +267,25 @@ export default function HebrewMaster() {
     if (!HEBREW_BOOK_GRADE_SET.has(grade)) return null;
     return getHebrewBookHref({ grade, operation, kind: null });
   }, [grade, operation]);
+  const g1FoundationBookHref = useMemo(
+    () => (grade === "g1" ? getHebrewG1LiteracyFoundationBookHref() : null),
+    [grade]
+  );
+  const g1BookFirstCopy = useMemo(() => getHebrewG1BookFirstRecommendationCopy(), []);
+  const showG1BookFirstSoftGate = useMemo(
+    () =>
+      shouldShowHebrewG1BookFirstSoftGate({
+        gradeKey: grade,
+        topic: operation,
+        progressState: g1LiteracyProgress,
+      }),
+    [grade, operation, g1LiteracyProgress]
+  );
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
+  const [g1LiteracyProgress, setG1LiteracyProgress] = useState(() =>
+    typeof window !== "undefined" ? readHebrewG1LiteracyProgressClient() : { viewedPageIds: [], dismissedTopics: [] }
+  );
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const questionBookHref = useMemo(() => {
     if (mode !== "learning" || !currentQuestion) return null;
@@ -679,7 +704,15 @@ export default function HebrewMaster() {
     setOperation(op);
     practiceForceKindRef.current = preset.forceKind || null;
     practiceForceSkillIdRef.current = preset.skillId || null;
+    if (presetGrade === "g1" && preset.pageId) {
+      setG1LiteracyProgress(recordHebrewG1LiteracyPageViewClient(preset.pageId));
+    }
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setG1LiteracyProgress(readHebrewG1LiteracyProgressClient());
+  }, [grade]);
 
   useEffect(() => {
     if (sessionFullName) {
@@ -3736,6 +3769,42 @@ export default function HebrewMaster() {
                   </div>
                 </div>
               </div>
+
+              {showG1BookFirstSoftGate ? (
+                <div
+                  className="bg-teal-900/35 border border-teal-400/35 rounded-lg px-3 py-3 mb-3 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl shadow-sm"
+                  dir="rtl"
+                  data-testid="hebrew-g1-book-first-soft-gate"
+                >
+                  <div className="text-sm font-bold text-teal-50 mb-1">{g1BookFirstCopy.title}</div>
+                  <p className="text-xs text-white/85 leading-snug mb-1">{g1BookFirstCopy.body}</p>
+                  <p className="text-[11px] text-white/70 leading-snug mb-3">{g1BookFirstCopy.hint}</p>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button
+                      type="button"
+                      data-testid="hebrew-g1-book-first-open-book"
+                      className="h-9 flex-1 rounded-lg bg-teal-500/85 hover:bg-teal-500 font-bold text-xs text-white shadow-sm"
+                      onClick={() => {
+                        if (g1FoundationBookHref) router.push(g1FoundationBookHref);
+                      }}
+                    >
+                      {g1BookFirstCopy.openBookLabel}
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="hebrew-g1-book-first-continue-practice"
+                      className="h-9 flex-1 rounded-lg bg-black/35 border border-white/20 hover:bg-black/45 font-bold text-xs text-white shadow-sm"
+                      onClick={() => {
+                        setG1LiteracyProgress(
+                          dismissHebrewG1BookFirstSoftGateClient(operation)
+                        );
+                      }}
+                    >
+                      {g1BookFirstCopy.continueLabel}
+                    </button>
+                  </div>
+                </div>
+              ) : null}
 
               <LearningPlannerRecommendationBlock
                 model={adaptivePlannerRecommendationView}

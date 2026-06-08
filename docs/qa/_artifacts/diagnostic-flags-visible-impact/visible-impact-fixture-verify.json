@@ -1,0 +1,310 @@
+{
+  "generatedAt": "2026-06-08T20:00:06.013Z",
+  "results": {
+    "GATE-LOW": {
+      "label": "AAA9",
+      "scenario": "GATE-LOW",
+      "window": {
+        "from": "2026-05-10",
+        "to": "2026-05-18"
+      },
+      "modes": {
+        "A": {
+          "insights": [
+            "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+            "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+            "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 0,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "B": {
+          "insights": [
+            "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+            "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+            "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 1,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "C": {
+          "insights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": true,
+          "diagnosisSuppressed": true,
+          "internal": {
+            "bySubSkillCount": 1,
+            "gatingDecisionCount": 1,
+            "promotionDecisionCount": 0
+          }
+        },
+        "D": {
+          "insights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": true,
+          "diagnosisSuppressed": true,
+          "internal": {
+            "bySubSkillCount": 1,
+            "gatingDecisionCount": 1,
+            "promotionDecisionCount": 0
+          }
+        }
+      },
+      "checks": {
+        "subskillInternalB": true,
+        "practiceFocusB": false,
+        "insightsDiffAC": true,
+        "gatingC": true,
+        "noPracticeFocusConflictB": true,
+        "promotionD": false
+      }
+    },
+    "SUBSKILL-FOCUS": {
+      "label": "AAA10",
+      "scenario": "SUBSKILL-FOCUS",
+      "window": {
+        "from": "2026-05-06",
+        "to": "2026-05-20"
+      },
+      "modes": {
+        "A": {
+          "insights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 0,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "B": {
+          "insights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן"
+          ],
+          "practiceFocus": [
+            {
+              "topicLabelHe": "דקדוק",
+              "focusLabelHe": "סממן זמן"
+            }
+          ],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "C": {
+          "insights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן"
+          ],
+          "practiceFocus": [
+            {
+              "topicLabelHe": "דקדוק",
+              "focusLabelHe": "סממן זמן"
+            }
+          ],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "D": {
+          "insights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן"
+          ],
+          "practiceFocus": [
+            {
+              "topicLabelHe": "דקדוק",
+              "focusLabelHe": "סממן זמן"
+            }
+          ],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        }
+      },
+      "checks": {
+        "subskillInternalB": true,
+        "practiceFocusB": true,
+        "insightsDiffAC": true,
+        "gatingC": false,
+        "noPracticeFocusConflictB": false,
+        "promotionD": false
+      }
+    },
+    "SUBSKILL-CONFLICT": {
+      "label": "AAA8",
+      "scenario": "SUBSKILL-CONFLICT",
+      "window": {
+        "from": "2026-05-20",
+        "to": "2026-05-24"
+      },
+      "modes": {
+        "A": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 0,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "B": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "C": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "D": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        }
+      },
+      "checks": {
+        "subskillInternalB": true,
+        "practiceFocusB": false,
+        "insightsDiffAC": false,
+        "gatingC": false,
+        "noPracticeFocusConflictB": true,
+        "promotionD": false
+      }
+    },
+    "PROMOTE-STRONG": {
+      "label": "AAA5",
+      "scenario": "PROMOTE-STRONG",
+      "window": {
+        "from": "2026-05-04",
+        "to": "2026-05-11"
+      },
+      "modes": {
+        "A": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 0,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "B": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "C": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 0
+          }
+        },
+        "D": {
+          "insights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "practiceFocus": [],
+          "gatingApplied": false,
+          "diagnosisSuppressed": false,
+          "internal": {
+            "bySubSkillCount": 2,
+            "gatingDecisionCount": 0,
+            "promotionDecisionCount": 1
+          }
+        }
+      },
+      "checks": {
+        "subskillInternalB": true,
+        "practiceFocusB": false,
+        "insightsDiffAC": false,
+        "gatingC": false,
+        "noPracticeFocusConflictB": true,
+        "promotionD": true
+      }
+    }
+  }
+}

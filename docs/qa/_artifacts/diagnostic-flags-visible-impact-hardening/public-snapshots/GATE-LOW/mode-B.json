@@ -1,0 +1,47 @@
+{
+  "modeName": "subskill_only",
+  "snapshot": {
+    "summary": {
+      "diagnosticAnswers": 25,
+      "diagnosticAccuracy": 48,
+      "totalAnswers": 25,
+      "totalSessions": 2,
+      "totalDurationSeconds": 1494120
+    },
+    "metaEvidenceQualityStudent": {
+      "evidenceCount": 25,
+      "rawDiagnosticCount": 25,
+      "dataSufficiency": "supported_diagnosis",
+      "confidenceLevel": "moderate",
+      "confidenceReason": "supported",
+      "recurrenceMet": true
+    },
+    "parentFacing": {
+      "insights": [
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+      ],
+      "homeRecommendations": [
+        "להקדיש 10 דקות ביום לתרגול קצר במתמטיקה, במקום תרגול ארוך פעם בשבוע.",
+        "לפתור כמה שאלות קלות לפני מעבר לשאלות קשות יותר.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "practiceFocus": [],
+      "diagnosisSuppressed": false,
+      "gatingApplied": false,
+      "teacherMessageCount": 0
+    }
+  },
+  "safeFieldNotes": [],
+  "leakScan": {
+    "pass": true,
+    "forbiddenKeys": [],
+    "rawSkillLeaks": [],
+    "featureScopeOnly": true,
+    "fullPayloadForbiddenKeyCount": 0,
+    "recentMistakeRawSkillLeakCount": 13,
+    "recentMistakeNote": "Pre-existing: questionId strings may embed diagnosticSkillId; not introduced by visible-impact fields"
+  }
+}

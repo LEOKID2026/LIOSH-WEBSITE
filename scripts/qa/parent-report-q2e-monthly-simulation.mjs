@@ -36,7 +36,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 const ARTIFACT_DIR = path.join(ROOT, "docs/qa/_artifacts/parent-report-q2e-monthly");
 const SCREENSHOT_DIR = path.join(ARTIFACT_DIR, "screenshots");
-const SEED_TAG = "parent-report-q2e-monthly-v1";
+const SEED_TAG = process.env.QA_PARENT_SEED_TAG || "parent-report-q2e-monthly-v1";
+const SEED_META_KEY = process.env.QA_PARENT_SEED_META_KEY || "parentReportQ2eMonthly";
 const LEGACY_Q1_TAG = "parent-report-q1-sim-v1";
 const QA_PARENT_EMAIL = "admin@admin.com";
 const QA_PARENT_ID = "05c73a19-bf1f-4f1a-b034-7cd2ece4feec";
@@ -323,12 +324,12 @@ function diagnosticAnswerPayload({ subject, topic, mode = "practice", grade, isC
     isDiagnosticEligible: classification.isDiagnosticEligible,
     evidenceCategory: classification.evidenceCategory,
     contextFlags: classification.contextFlags || {},
-    clientMeta: { parentReportQ2eMonthly: SEED_TAG },
+    clientMeta: { [SEED_META_KEY]: SEED_TAG },
   };
   if (meta) {
     return {
       ...base,
-      params: { ...(meta.params || {}), clientMeta: { parentReportQ2eMonthly: SEED_TAG } },
+      params: { ...(meta.params || {}), clientMeta: { [SEED_META_KEY]: SEED_TAG } },
       questionEngine: meta.questionEngine,
     };
   }
@@ -351,7 +352,7 @@ function learningAnswerPayload({ subject, topic, grade }) {
     isDiagnosticEligible: classification.isDiagnosticEligible,
     evidenceCategory: classification.evidenceCategory,
     contextFlags: classification.contextFlags || {},
-    clientMeta: { parentReportQ2eMonthly: SEED_TAG },
+    clientMeta: { [SEED_META_KEY]: SEED_TAG },
   };
 }
 
@@ -433,7 +434,7 @@ async function cleanTaggedSeedsForTag(supabase, studentIds, tag, metaKey) {
 }
 
 async function cleanAllSimTags(supabase, studentIds) {
-  const q2e = await cleanTaggedSeedsForTag(supabase, studentIds, SEED_TAG, "parentReportQ2eMonthly");
+  const q2e = await cleanTaggedSeedsForTag(supabase, studentIds, SEED_TAG, SEED_META_KEY);
   const q1 = await cleanTaggedSeedsForTag(supabase, studentIds, LEGACY_Q1_TAG, "parentReportQ1Sim");
   return { q2e, q1 };
 }
@@ -458,7 +459,7 @@ async function insertPracticeSession(supabase, studentId, { subject, topic, grad
         mode: mode || "practice",
         gameMode: mode || "practice",
         gradeLevel: grade,
-        parentReportQ2eMonthly: SEED_TAG,
+        [SEED_META_KEY]: SEED_TAG,
         summary: { totalQuestions: answers.length, correctAnswers: correct, wrongAnswers: answers.length - correct },
       },
     })
@@ -559,7 +560,7 @@ async function seedParentAssignedActivity(supabase, parentId, studentId, { subje
         isDiagnosticEligible: classification.isDiagnosticEligible,
         evidenceCategory: classification.evidenceCategory,
         contextFlags: classification.contextFlags || {},
-        clientMeta: { parentReportQ2eMonthly: SEED_TAG },
+        clientMeta: { [SEED_META_KEY]: SEED_TAG },
       },
     });
   }
@@ -886,7 +887,7 @@ async function seedScenario(supabase, parentId, entry, plan) {
         ended_at: new Date(endedMs).toISOString(),
         duration_seconds: 600,
         status: "completed",
-        metadata: { mode: "learning", gameMode: "learning", gradeLevel: s.grade, parentReportQ2eMonthly: SEED_TAG },
+        metadata: { mode: "learning", gameMode: "learning", gradeLevel: s.grade, [SEED_META_KEY]: SEED_TAG },
       })
       .select("id")
       .single();
@@ -1406,7 +1407,38 @@ async function main() {
   if (artifact.summary.failed > 0) process.exit(1);
 }
 
-main().catch((e) => {
-  console.error("FATAL", e?.message || e);
-  process.exit(1);
-});
+export function shiftScenarioPlanDates(plan, oldMonthPrefix = "2026-04", newMonthPrefix = "2026-05") {
+  if (!plan) return plan;
+  return JSON.parse(
+    JSON.stringify(plan).replaceAll(`${oldMonthPrefix}-`, `${newMonthPrefix}-`)
+  );
+}
+
+export {
+  SEED_TAG,
+  SEED_META_KEY,
+  QA_PARENT_ID,
+  QA_PARENT_EMAIL,
+  AAA_STUDENTS,
+  FLAG_MODES,
+  META,
+  resolveAaaStudents,
+  scenarioPlan,
+  seedScenario,
+  cleanTaggedSeedsForTag,
+  verifyStudent,
+  gradeDbKey,
+  buildAnswerSchedule,
+  insertPracticeSession,
+};
+
+const isDirectRun =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+
+if (isDirectRun) {
+  main().catch((e) => {
+    console.error("FATAL", e?.message || e);
+    process.exit(1);
+  });
+}

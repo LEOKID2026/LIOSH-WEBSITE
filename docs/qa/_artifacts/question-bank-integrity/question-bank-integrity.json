@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-08T15:27:54.677Z",
-  "totalScanned": 8932,
-  "staticBankRows": 5530,
+  "generatedAt": "2026-06-08T21:01:03.308Z",
+  "totalScanned": 9913,
+  "staticBankRows": 6511,
   "generatedSamples": 3402,
   "genSamplesPerCell": 6,
   "bySubject": {
@@ -24,8 +24,8 @@
       "brokenAnswer": 0
     },
     "hebrew": {
-      "total": 702,
-      "structuralPass": 702,
+      "total": 1683,
+      "structuralPass": 1683,
       "structuralFail": 0,
       "leakRisk": 0,
       "missingMetadata": 0,

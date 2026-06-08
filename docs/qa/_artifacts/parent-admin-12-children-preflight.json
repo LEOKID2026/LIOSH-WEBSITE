@@ -1,0 +1,343 @@
+{
+  "generatedAt": "2026-06-08T19:17:15.831Z",
+  "parent": {
+    "email": "admin@admin.com",
+    "id": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec"
+  },
+  "confirmedChildren": "AAA1–AAA12 via student_access_codes login aaa1..aaa12",
+  "range": {
+    "from": "2026-05-01",
+    "to": "2026-06-08"
+  },
+  "summary": {
+    "totalChildren": 12,
+    "enoughForComparison": 12,
+    "needsSeed": false
+  },
+  "children": [
+    {
+      "label": "AAA1",
+      "login": "aaa1",
+      "name": "בדיקה-א1",
+      "grade": 1,
+      "scenario": "A_no_data",
+      "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 247,
+      "sessions": 22,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 247,
+        "diagnosticAnswers": 0,
+        "totalSessions": 22,
+        "totalDurationSeconds": 2622,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "scenario expects no data"
+    },
+    {
+      "label": "AAA2",
+      "login": "aaa2",
+      "name": "בדיקה-א2",
+      "grade": 1,
+      "scenario": "B_insufficient_data",
+      "studentId": "6c4f6dc1-de43-4b86-abe7-4f041e9d3a8c",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 6,
+      "sessions": 5,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 6,
+        "diagnosticAnswers": 0,
+        "totalSessions": 5,
+        "totalDurationSeconds": 250,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "raw answers >= 5"
+    },
+    {
+      "label": "AAA3",
+      "login": "aaa3",
+      "name": "בדיקה-ב1",
+      "grade": 2,
+      "scenario": "C_preliminary_by_count",
+      "studentId": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 112,
+      "sessions": 10,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 112,
+        "diagnosticAnswers": 0,
+        "totalSessions": 10,
+        "totalDurationSeconds": 828,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA4",
+      "login": "aaa4",
+      "name": "בדיקה-ב2",
+      "grade": 2,
+      "scenario": "D_preliminary_no_recurrence",
+      "studentId": "38e2dbcf-a927-419f-a2ed-b26c7100e656",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 67,
+      "sessions": 12,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 67,
+        "diagnosticAnswers": 0,
+        "totalSessions": 12,
+        "totalDurationSeconds": 429,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA5",
+      "login": "aaa5",
+      "name": "בדיקה-ג1",
+      "grade": 3,
+      "scenario": "E_supported_diagnosis",
+      "studentId": "79c8f8c7-2494-439e-b867-93b096c8590b",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 167,
+      "sessions": 15,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 167,
+        "diagnosticAnswers": 0,
+        "totalSessions": 15,
+        "totalDurationSeconds": 632,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA6",
+      "login": "aaa6",
+      "name": "בדיקה-ג2",
+      "grade": 3,
+      "scenario": "F_parent_assigned",
+      "studentId": "b325272f-b554-4865-a827-6477773fb200",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 151,
+      "sessions": 14,
+      "parentActivities": 1,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 151,
+        "diagnosticAnswers": 0,
+        "totalSessions": 14,
+        "totalDurationSeconds": 1190,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA7",
+      "login": "aaa7",
+      "name": "בדיקה-ד1",
+      "grade": 4,
+      "scenario": "G_non_diagnostic_exclusion",
+      "studentId": "d8f6b184-80f2-4f2b-897e-cbbf557022e7",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 174,
+      "sessions": 16,
+      "parentActivities": 0,
+      "bookEvents": 1,
+      "reportSummary": {
+        "totalAnswers": 174,
+        "diagnosticAnswers": 0,
+        "totalSessions": 16,
+        "totalDurationSeconds": 805,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA8",
+      "login": "aaa8",
+      "name": "בדיקה-ד2",
+      "grade": 4,
+      "scenario": "H_questionType_contrast",
+      "studentId": "921e1c5d-4124-41cd-bad7-a16dbf0dfecc",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 60,
+      "sessions": 11,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 60,
+        "diagnosticAnswers": 0,
+        "totalSessions": 11,
+        "totalDurationSeconds": 704,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA9",
+      "login": "aaa9",
+      "name": "בדיקה-ה1",
+      "grade": 5,
+      "scenario": "I_weak_metadata_suppression",
+      "studentId": "cd4ba8f0-fe4f-424d-8ed1-0c3acaf5f412",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 168,
+      "sessions": 14,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 168,
+        "diagnosticAnswers": 0,
+        "totalSessions": 14,
+        "totalDurationSeconds": 568,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA10",
+      "login": "aaa10",
+      "name": "בדיקה-ה2",
+      "grade": 5,
+      "scenario": "J_english_metadata",
+      "studentId": "dea2bbce-1712-4862-9de7-00b732672fbb",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 118,
+      "sessions": 10,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 118,
+        "diagnosticAnswers": 0,
+        "totalSessions": 10,
+        "totalDurationSeconds": 1959,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA11",
+      "login": "aaa11",
+      "name": "בדיקה-ו1",
+      "grade": 6,
+      "scenario": "K_hebrew_metadata",
+      "studentId": "5f3df0a3-4527-4f8b-97cf-6e8ec5624920",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 331,
+      "sessions": 26,
+      "parentActivities": 0,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 331,
+        "diagnosticAnswers": 0,
+        "totalSessions": 26,
+        "totalDurationSeconds": 2502,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    },
+    {
+      "label": "AAA12",
+      "login": "aaa12",
+      "name": "בדיקה-ו2",
+      "grade": 6,
+      "scenario": "L_science_moledet",
+      "studentId": "873c6971-06ed-4b31-9d76-616b4b623a52",
+      "parentId": "05c73a19-bf1f-4f1a-b034-7cd2ece4feec",
+      "isActive": true,
+      "range": {
+        "from": "2026-05-01",
+        "to": "2026-06-08"
+      },
+      "answers": 57,
+      "sessions": 14,
+      "parentActivities": 1,
+      "bookEvents": 0,
+      "reportSummary": {
+        "totalAnswers": 57,
+        "diagnosticAnswers": 0,
+        "totalSessions": 14,
+        "totalDurationSeconds": 1079,
+        "coins": 0
+      },
+      "hasEnoughData": true,
+      "enoughDataReason": "report aggregate has activity"
+    }
+  ]
+}

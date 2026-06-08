@@ -1,0 +1,809 @@
+{
+  "diffs": {
+    "public": {
+      "A_to_B": [],
+      "A_to_C": [
+        {
+          "child": "AAA4",
+          "range": "full",
+          "changeCount": 4,
+          "fields": [
+            "parentFacingInsights",
+            "parentFacingDiagnosisSuppressed",
+            "parentFacingGatingApplied",
+            "parentFacingBlocks"
+          ],
+          "details": [
+            {
+              "field": "parentFacingInsights",
+              "from": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+              ],
+              "to": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+              ]
+            },
+            {
+              "field": "parentFacingDiagnosisSuppressed",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "parentFacingGatingApplied",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "parentFacingBlocks",
+              "from": {
+                "insights": [
+                  "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+                  "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                  "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+                ],
+                "homeRecommendations": [
+                  "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                  "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+                ],
+                "teacherMessages": [],
+                "practiceFocus": [],
+                "diagnosisSuppressed": false,
+                "gatingApplied": false
+              },
+              "to": {
+                "insights": [
+                  "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+                ],
+                "homeRecommendations": [
+                  "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                  "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+                ],
+                "teacherMessages": [],
+                "practiceFocus": [],
+                "diagnosisSuppressed": true,
+                "gatingApplied": true
+              }
+            }
+          ]
+        }
+      ],
+      "A_to_D": [
+        {
+          "child": "AAA4",
+          "range": "full",
+          "changeCount": 4,
+          "fields": [
+            "parentFacingInsights",
+            "parentFacingDiagnosisSuppressed",
+            "parentFacingGatingApplied",
+            "parentFacingBlocks"
+          ],
+          "details": [
+            {
+              "field": "parentFacingInsights",
+              "from": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+                "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+              ],
+              "to": [
+                "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+              ]
+            },
+            {
+              "field": "parentFacingDiagnosisSuppressed",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "parentFacingGatingApplied",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "parentFacingBlocks",
+              "from": {
+                "insights": [
+                  "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+                  "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+                  "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+                ],
+                "homeRecommendations": [
+                  "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                  "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+                ],
+                "teacherMessages": [],
+                "practiceFocus": [],
+                "diagnosisSuppressed": false,
+                "gatingApplied": false
+              },
+              "to": {
+                "insights": [
+                  "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+                ],
+                "homeRecommendations": [
+                  "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+                  "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+                ],
+                "teacherMessages": [],
+                "practiceFocus": [],
+                "diagnosisSuppressed": true,
+                "gatingApplied": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "internal": {
+      "A_to_B": [
+        {
+          "child": "AAA2",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA3",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA4",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA5",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA6",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA8",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA9",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA10",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA11",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA12",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        }
+      ],
+      "A_to_C": [
+        {
+          "child": "AAA2",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA3",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA4",
+          "range": "full",
+          "changeCount": 4,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount",
+            "hasAppliedGating",
+            "gatingDecisionCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            },
+            {
+              "field": "hasAppliedGating",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "gatingDecisionCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA5",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA6",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA8",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA9",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA10",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA11",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA12",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        }
+      ],
+      "A_to_D": [
+        {
+          "child": "AAA2",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA3",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA4",
+          "range": "full",
+          "changeCount": 4,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount",
+            "hasAppliedGating",
+            "gatingDecisionCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            },
+            {
+              "field": "hasAppliedGating",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "gatingDecisionCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA5",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA6",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA8",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA9",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "child": "AAA10",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA11",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        },
+        {
+          "child": "AAA12",
+          "range": "full",
+          "changeCount": 2,
+          "fields": [
+            "hasBySubSkill",
+            "bySubSkillCount"
+          ],
+          "details": [
+            {
+              "field": "hasBySubSkill",
+              "from": false,
+              "to": true
+            },
+            {
+              "field": "bySubSkillCount",
+              "from": 0,
+              "to": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "summary": {
+    "pass": 48,
+    "warn": 0,
+    "fail": 0,
+    "total": 48
+  }
+}

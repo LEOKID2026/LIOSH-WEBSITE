@@ -1700,28 +1700,96 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
 
     // ===================== TRANSFORMATIONS =====================
     case "transformations": {
-      const types = ["הזזה", "שיקוף"];
-      const selectedType = types[Math.floor(Math.random() * types.length)];
-      const isTranslation = selectedType === "הזזה";
-      
-      params = { type: selectedType, isTranslation, kind: "transformations" };
-      correctAnswer = selectedType;
-      if (gradeKey === "g1") {
-        question =
-          levelKey === "easy"
-            ? `טרנספורמציה (כיתה א׳): מה סוג התנועה של ${selectedType}? (1 = הזזה, 2 = שיקוף)`
-            : levelKey === "medium"
-              ? `מה סוג התנועה של ${selectedType}? (1 = הזזה, 2 = שיקוף)`
-              : `אתגר — זיהוי תנועה במישור: ${selectedType}? (1 = הזזה, 2 = שיקוף)`;
-      } else if (gradeKey === "g2") {
-        question =
-          levelKey === "easy"
-            ? `(כיתה ב׳) מה סוג הטרנספורמציה של ${selectedType}? (1 = הזזה, 2 = שיקוף)`
-            : levelKey === "medium"
-              ? `איזה סוג טרנספורמציה מתאים ל־${selectedType}? (1 = הזזה, 2 = שיקוף)`
-              : `אתגר טרנספורמציה — ${selectedType}: (1 = הזזה, 2 = שיקוף)`;
-      } else {
-        question = `איזה סוג טרנספורמציה היא ${selectedType}? (1 = הזזה, 2 = שיקוף)`;
+      const scenarios = [
+        {
+          answer: "הזזה",
+          subtype: "translation",
+          stems: {
+            easy: [
+              "הצורה זזה ימינה בלי סיבוב ובלי שינוי גודל — איזו תנועה זו?",
+              "העתקנו צורה למקום חדש בלי לסובב אותה — מה סוג התנועה?",
+            ],
+            medium: [
+              "במישור, צורה עוברת למקום אחר בלי שינוי כיוון — איזו טרנספורמציה?",
+              "העתקת צורה למקום חדש בלי סיבוב ובלי שינוי גודל — מה השם הנכון?",
+            ],
+            hard: [
+              "אתגר: צורה נשארת אותה צורה ואותו גודל אבל משנה מיקום בלבד — איזו תנועה?",
+              "ניתוח תנועה: רק המיקום משתנה, לא הכיוון ולא הגודל — מה סוג הטרנספורמציה?",
+            ],
+          },
+        },
+        {
+          answer: "שיקוף",
+          subtype: "reflection",
+          stems: {
+            easy: [
+              "הצורה מתהפכת כמו במראה ליד קו — איזו תנועה זו?",
+              "ראינו תמונת מראה של צורה מול קו — מה סוג התנועה?",
+            ],
+            medium: [
+              "תמונת מראה מול קו ישר נותן צורה הפוכה — איזו טרנספורמציה?",
+              "הצורה מתהפכת ביחס לקו בלי שינוי גודל — מה סוג התנועה?",
+            ],
+            hard: [
+              "אתגר: צורה מקבלת תמונת מראה מול ציר — איזו תנועה מתארת זאת?",
+              "הכיוון משתנה כמו במראה והגודל נשאר — מה התשובה?",
+            ],
+          },
+        },
+        {
+          answer: "סיבוב",
+          subtype: "rotation",
+          stems: {
+            easy: [
+              "הצורה מסתובבת סביב נקודה בלי לשנות גודל — איזו תנועה זו?",
+              "סובבנו צורה סביב מרכזה — מה סוג התנועה?",
+            ],
+            medium: [
+              "במישור, צורה מסתובבת סביב נקודה קבועה — איזו טרנספורמציה?",
+              "סיבוב סביב מרכז בלי שינוי גודל — מה השם הנכון?",
+            ],
+            hard: [
+              "אתגר: רק הכיוון משתנה סביב נקודת מרכז, המיקום הכללי והגודל נשמרים — איזו תנועה?",
+              "הצורה מסתובבת סביב נקודה קבועה — מה סוג הטרנספורמציה?",
+            ],
+          },
+        },
+        {
+          answer: "ללא תנועה",
+          subtype: "identity",
+          stems: {
+            easy: [
+              "הצורה נשארה בדיוק באותו מקום ובאותו כיוון — איזו טרנספורמציה מתאימה?",
+              "לא הזזנו ולא סובבנו את הצורה — מה הסוג הנכון?",
+            ],
+            medium: [
+              "אין שינוי במיקום, בכיוון או בגודל — איזו טרנספורמציה מתארת זאת?",
+              "הצורה נשארה ללא שינוי במישור — מה התשובה הנכונה?",
+            ],
+            hard: [
+              "אתגר: לא השתנה מיקום, כיוון או גודל — איזו טרנספורמציה מתאימה?",
+              "ניתוח: הצורה זהה לחלוטין לפני ואחרי — מה סוג הטרנספורמציה?",
+            ],
+          },
+        },
+      ];
+      const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+      const stemPool = scenario.stems[levelKey] || scenario.stems.medium;
+      correctAnswer = scenario.answer;
+      params = {
+        kind: "concept_transform",
+        type: scenario.answer,
+        subtype: scenario.subtype,
+        patternFamily: `transform_${formulaBand}_${levelKey}`,
+        conceptTag: scenario.subtype,
+        distractorFamily: "transform_confusion",
+      };
+      question = stemPool[Math.floor(Math.random() * stemPool.length)];
+      if (gradeKey === "g1" && levelKey === "easy") {
+        question = `טרנספורמציה (כיתה א׳): ${question}`;
+      } else if (gradeKey === "g2" && levelKey === "easy") {
+        question = `(כיתה ב׳) ${question}`;
       }
       break;
     }
@@ -2158,15 +2226,19 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
   const correctIdx = shuffledAnswers.findIndex(
     (a) => String(a) === String(resolvedCorrect) || String(a) === String(correctAnswer)
   );
-  const repairedBundle = repairMcqObviousAnswerContent(
-    {
-      question,
-      answers: shuffledAnswers,
-      correctIndex: correctIdx >= 0 ? correctIdx : 0,
-      correctAnswer: resolvedCorrect,
-    },
-    { subject: "geometry", stem: question }
-  );
+  const skipLabelRepair =
+    baseKindOut === "concept_transform" && Boolean(GEOMETRY_HEBREW_LABEL_OPTIONS.concept_transform);
+  const repairedBundle = skipLabelRepair
+    ? { answers: shuffledAnswers, correctAnswer: resolvedCorrect }
+    : repairMcqObviousAnswerContent(
+        {
+          question,
+          answers: shuffledAnswers,
+          correctIndex: correctIdx >= 0 ? correctIdx : 0,
+          correctAnswer: resolvedCorrect,
+        },
+        { subject: "geometry", stem: question }
+      );
   const repairedAnswers = repairedBundle.answers ?? shuffledAnswers;
   const repairedCorrect =
     repairedBundle.correctAnswer != null ? repairedBundle.correctAnswer : resolvedCorrect;

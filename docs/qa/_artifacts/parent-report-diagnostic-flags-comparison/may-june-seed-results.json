@@ -1,0 +1,103 @@
+{
+  "runAt": "2026-06-08T19:17:38.466Z",
+  "seedTag": "parent-report-qa-may-june-v1",
+  "window": {
+    "from": "2026-05-01",
+    "to": "2026-06-08"
+  },
+  "cleanup": {
+    "tag": "parent-report-qa-may-june-v1",
+    "removedSessions": 0,
+    "removedParentActivities": 0,
+    "removedBookSessions": 0
+  },
+  "seeded": [
+    {
+      "label": "AAA1",
+      "scenario": "A_no_data",
+      "seeded": false
+    },
+    {
+      "label": "AAA2",
+      "scenario": "B_insufficient_data",
+      "seeded": true,
+      "type": "practice",
+      "count": 4
+    },
+    {
+      "label": "AAA3",
+      "scenario": "C_preliminary_by_count",
+      "seeded": true,
+      "type": "practice",
+      "count": 9
+    },
+    {
+      "label": "AAA4",
+      "scenario": "D_preliminary_no_recurrence",
+      "seeded": true,
+      "type": "practice",
+      "count": 14
+    },
+    {
+      "label": "AAA5",
+      "scenario": "E_supported_diagnosis",
+      "seeded": true,
+      "type": "practice",
+      "count": 14
+    },
+    {
+      "label": "AAA6",
+      "scenario": "F_parent_assigned",
+      "seeded": true,
+      "type": "assigned_parent",
+      "activityId": "cbd30a0c-5cde-4785-b6a6-018464096276",
+      "count": 8
+    },
+    {
+      "label": "AAA7",
+      "scenario": "G_non_diagnostic_exclusion",
+      "seeded": true,
+      "type": "learning+book",
+      "learningCount": 8,
+      "book": {
+        "ok": true,
+        "sessionId": "772acb14-3de1-4027-9759-26646df187af"
+      }
+    },
+    {
+      "label": "AAA8",
+      "scenario": "H_questionType_contrast",
+      "seeded": true,
+      "type": "practice_mixed_meta",
+      "count": 15
+    },
+    {
+      "label": "AAA9",
+      "scenario": "I_weak_metadata_suppression",
+      "seeded": true,
+      "type": "practice",
+      "count": 14
+    },
+    {
+      "label": "AAA10",
+      "scenario": "J_english_metadata",
+      "seeded": true,
+      "type": "practice_multi",
+      "count": 14
+    },
+    {
+      "label": "AAA11",
+      "scenario": "K_hebrew_metadata",
+      "seeded": true,
+      "type": "practice_multi",
+      "count": 14
+    },
+    {
+      "label": "AAA12",
+      "scenario": "L_science_moledet",
+      "seeded": true,
+      "type": "practice_multi",
+      "count": 14
+    }
+  ]
+}

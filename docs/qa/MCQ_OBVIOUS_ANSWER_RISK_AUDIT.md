@@ -1,6 +1,6 @@
 # MCQ Obvious Answer Risk Audit
 
-**Generated:** 2026-06-08T15:28:14.474Z
+**Generated:** 2026-06-08T21:01:00.369Z
 **Verdict:** PASS
 
 ## Command
@@ -13,7 +13,7 @@ npx tsx scripts/qa/system-health-mcq-obvious-answer-risk-audit.mjs
 
 | Metric | Count |
 |--------|------:|
-| MCQ scanned | 8932 |
+| MCQ scanned | 9913 |
 | Flagged questions | 0 |
 | BLOCKER | 0 |
 | FAIL | 0 |
@@ -25,7 +25,7 @@ npx tsx scripts/qa/system-health-mcq-obvious-answer-risk-audit.mjs
 |---------|----------:|--------:|-----:|-----:|
 | english | 953 | 0 | 0 | 0 |
 | geometry | 792 | 0 | 0 | 0 |
-| hebrew | 702 | 0 | 0 | 0 |
+| hebrew | 1683 | 0 | 0 | 0 |
 | math | 1422 | 0 | 0 | 0 |
 | moledet_geography | 4046 | 0 | 0 | 0 |
 | science | 1017 | 0 | 0 | 0 |

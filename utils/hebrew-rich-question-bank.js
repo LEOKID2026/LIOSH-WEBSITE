@@ -1,6 +1,8 @@
 import { itemAllowedForGrade, itemAllowedForLevel } from "./grade-gating.js";
 import { enrichHebrewRichPoolRows } from "./hebrew-rich-diagnostic-metadata-enrich.js";
 import { enrichHebrewRichPoolWithCanonicalMetadata } from "../lib/learning/hebrew-canonical-metadata.js";
+import { HEBREW_G1_LITERACY_POOL } from "../data/hebrew-literacy-g1/literacy-pool-builder.js";
+import { HEBREW_G2_LITERACY_POOL } from "../data/hebrew-literacy-g2/literacy-pool-builder.js";
 
 /**
  * בנק שאלות עברית מובנה — משלים את המאגר הקלאסי.
@@ -1405,7 +1407,9 @@ export const HEBREW_RICH_POOL = [
       "concept_confusion",
       "careless_error"
     ]
-  }
+  },
+  ...HEBREW_G1_LITERACY_POOL,
+  ...HEBREW_G2_LITERACY_POOL,
 ];
 
 // P0/P1 diagnostic metadata + level/grade eligibility (no stem/answer changes).

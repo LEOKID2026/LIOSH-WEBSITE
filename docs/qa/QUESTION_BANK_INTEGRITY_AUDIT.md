@@ -1,12 +1,12 @@
 # Question Bank Integrity Audit
 
-**Generated:** 2026-06-08T15:27:54.677Z
+**Generated:** 2026-06-08T21:01:03.308Z
 **Verdict:** PASS
 
 ## Scope
 
-- Total questions scanned: **8932**
-- Static bank rows: **5530**
+- Total questions scanned: **9913**
+- Static bank rows: **6511**
 - Generated samples: **3402** (6 per matrix cell for math/geometry/hebrew/moledet)
 - Subjects: math, geometry, hebrew, english, science, moledet_geography
 
@@ -22,7 +22,7 @@ npx tsx scripts/qa/system-health-question-bank-integrity-audit.mjs
 |---------|------:|----------------:|----------------:|----------:|-----------------:|------------------:|--------------:|
 | english | 953 | 953 | 0 | 0 | 0 | 0 | 0 |
 | geometry | 792 | 792 | 0 | 0 | 0 | 0 | 0 |
-| hebrew | 702 | 702 | 0 | 0 | 0 | 0 | 0 |
+| hebrew | 1683 | 1683 | 0 | 0 | 0 | 0 | 0 |
 | math | 1422 | 1422 | 0 | 0 | 0 | 0 | 0 |
 | moledet_geography | 4046 | 4046 | 0 | 0 | 0 | 0 | 0 |
 | science | 1017 | 1017 | 0 | 0 | 0 | 0 | 0 |

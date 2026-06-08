@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-08T15:28:14.474Z",
-  "totalMcqScanned": 8932,
+  "generatedAt": "2026-06-08T21:01:00.369Z",
+  "totalMcqScanned": 9913,
   "totalFlagged": 0,
   "blockers": 0,
   "fails": 0,
@@ -19,7 +19,7 @@
       "byCategory": {}
     },
     "hebrew": {
-      "total": 702,
+      "total": 1683,
       "flagged": 0,
       "bySeverity": {},
       "byCategory": {}

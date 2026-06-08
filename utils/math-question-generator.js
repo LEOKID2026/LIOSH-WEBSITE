@@ -166,7 +166,36 @@ function applyMathLevelPresentation(question, ctx) {
 
   if (selectedOp === "prime_composite" || kind === "prime_composite") {
     const num = params?.num;
+    const subKind = String(params?.subKind || "pc_classify");
     const pv = Math.abs(Number(params?.presentationVariant) || 0) % 2;
+    if (subKind === "pc_factor_count" && num != null) {
+      if (mathLevelKey === "easy") {
+        return `מספרים ראשוניים (קל): כמה מחלקים יש למספר ${num}?`;
+      }
+      if (mathLevelKey === "medium") {
+        return `ספירת מחלקים: כמה מחלקים טבעיים יש ל-${num} (כולל 1 והמספר עצמו)?`;
+      }
+      return `אתגר מחלקים: כמה מחלקים שונים יש למספר ${num}?`;
+    }
+    if (subKind === "pc_smallest_prime" && num != null) {
+      if (mathLevelKey === "easy") {
+        return `גורם ראשוני (קל): מה הגורם הראשוני הקטן ביותר של ${num}?`;
+      }
+      if (mathLevelKey === "medium") {
+        return `מצאו את הגורם הראשוני הקטן ביותר של המספר ${num}.`;
+      }
+      return `אתגר גורמים: מה הגורם הראשוני הקטן ביותר של ${num}?`;
+    }
+    if (subKind === "pc_divisor_pick" && num != null && params?.divisorCandidate != null) {
+      const d = params.divisorCandidate;
+      if (mathLevelKey === "easy") {
+        return `בדיקת מחלק (קל): האם ${d} מחלק את ${num} בלי שארית?`;
+      }
+      if (mathLevelKey === "medium") {
+        return `מחלקים: האם ${num} מתחלק ב-${d}?`;
+      }
+      return `אתגר מחלקים: האם ${d} מחלק את ${num} בדיוק?`;
+    }
     if (num != null) {
       if (mathLevelKey === "easy") {
         return pv === 0
@@ -180,7 +209,7 @@ function applyMathLevelPresentation(question, ctx) {
       }
       return pv === 0
         ? `אתגר — האם ${num} הוא מספר ראשוני או פריק? הסבירו לעצמכם לפני שבוחרים.`
-        : `הוכחה קצרה בראש: האם ${num} מתפרק לשני גורמים > 1?`;
+        : `הוכחה קצרה בראש: האם ${num} מתפרק לשני גורמים גדולים מ-1?`;
     }
   }
 
@@ -3756,9 +3785,8 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
   } else if (selectedOp === "prime_composite") {
     const primeConfig = levelConfig.prime_composite || {};
     const maxNum = primeConfig.maxNumber || 100;
-    
-    // פונקציה לבדיקת ראשוני
-    const isPrime = (n) => {
+
+    const isPrimeNum = (n) => {
       if (n < 2) return false;
       if (n === 2) return true;
       if (n % 2 === 0) return false;
@@ -3767,27 +3795,119 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       }
       return true;
     };
-    
-    const num = randInt(2, maxNum);
-    const isNumPrime = isPrime(num);
-    correctAnswer = isNumPrime ? "ראשוני" : "פריק";
-    question = `האם המספר ${num} הוא ראשוני?`;
-    params = {
-      kind: "prime_composite",
-      num,
-      isPrime: isNumPrime,
-      presentationVariant: randInt(0, 3),
+    const countDivisors = (n) => {
+      let c = 0;
+      for (let i = 1; i <= n; i += 1) {
+        if (n % i === 0) c += 1;
+      }
+      return c;
     };
-    operandA = num;
-    operandB = null;
-    
-    const wrongAnswer = isNumPrime ? "פריק" : "ראשוני";
-    const answers = shuffleMcqList([correctAnswer, wrongAnswer]);
-    
-    // ערבוב התשובות
-    for (let i = answers.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [answers[i], answers[j]] = [answers[j], answers[i]];
+    const smallestPrimeFactor = (n) => {
+      if (n < 2) return null;
+      for (let i = 2; i <= n; i += 1) {
+        if (n % i === 0) return i;
+      }
+      return n;
+    };
+    const buildPrimeClassifyAnswers = () =>
+      shuffleMcqList(["ראשוני", "פריק", "לא ראשוני", "לא פריק"]);
+
+    const variantPool =
+      mathLevelKey === "easy"
+        ? ["pc_classify", "pc_classify", "pc_factor_count"]
+        : mathLevelKey === "medium"
+          ? ["pc_classify", "pc_factor_count", "pc_smallest_prime", "pc_divisor_pick"]
+          : ["pc_classify", "pc_factor_count", "pc_smallest_prime", "pc_divisor_pick"];
+    const variant = variantPool[randInt(0, variantPool.length - 1)];
+    let answers;
+
+    if (variant === "pc_factor_count") {
+      const num = randInt(8, Math.min(maxNum, mathLevelKey === "hard" ? maxNum : 72));
+      const factorCount = countDivisors(num);
+      correctAnswer = factorCount;
+      question = `כמה מחלקים (כולל 1 והמספר עצמו) יש למספר ${num}?`;
+      params = {
+        kind: "prime_composite",
+        subKind: "pc_factor_count",
+        num,
+        factorCount,
+        presentationVariant: randInt(0, 3),
+      };
+      operandA = num;
+      operandB = null;
+      answers = buildMathMcqAnswerList(correctAnswer, selectedOp, params, randInt, round);
+    } else if (variant === "pc_smallest_prime") {
+      const compositeMin = mathLevelKey === "easy" ? 12 : 15;
+      let num = randInt(compositeMin, Math.min(maxNum, mathLevelKey === "hard" ? maxNum : 120));
+      while (isPrimeNum(num)) {
+        num = randInt(compositeMin, Math.min(maxNum, mathLevelKey === "hard" ? maxNum : 120));
+      }
+      const spf = smallestPrimeFactor(num);
+      correctAnswer = spf;
+      question = `מה הגורם הראשוני הקטן ביותר של המספר ${num}?`;
+      params = {
+        kind: "prime_composite",
+        subKind: "pc_smallest_prime",
+        num,
+        smallestPrimeFactor: spf,
+        presentationVariant: randInt(0, 3),
+      };
+      operandA = num;
+      operandB = null;
+      answers = buildMathMcqAnswerList(correctAnswer, selectedOp, params, randInt, round);
+    } else if (variant === "pc_divisor_pick") {
+      const num = randInt(12, Math.min(maxNum, mathLevelKey === "hard" ? maxNum : 96));
+      const divisors = [];
+      for (let i = 2; i <= Math.min(12, num); i += 1) {
+        if (num % i === 0) divisors.push(i);
+      }
+      const nonDivisors = [5, 7, 9, 11].filter((d) => num % d !== 0);
+      const pickDivisor = divisors.length
+        ? divisors[randInt(0, divisors.length - 1)]
+        : null;
+      const pickNon = nonDivisors.length
+        ? nonDivisors[randInt(0, nonDivisors.length - 1)]
+        : null;
+      const useDivisible = pickDivisor != null && (pickNon == null || Math.random() < 0.55);
+      const divisorCandidate = useDivisible ? pickDivisor : pickNon ?? 5;
+      const divides = num % divisorCandidate === 0;
+      correctAnswer = divides ? "כן" : "לא";
+      question = `האם ${divisorCandidate} מחלק את ${num} בלי שארית?`;
+      params = {
+        kind: "prime_composite",
+        subKind: "pc_divisor_pick",
+        num,
+        divisorCandidate,
+        divides,
+        presentationVariant: randInt(0, 3),
+      };
+      operandA = num;
+      operandB = divisorCandidate;
+      const wrongPool = divides
+        ? ["לא", "רק לפעמים", "תלוי במספר"]
+        : ["כן", "תמיד כן", "כן עם שארית"];
+      answers = shuffleMcqList([correctAnswer, ...wrongPool.filter((x) => x !== correctAnswer)]);
+      while (answers.length < 4) {
+        const extra = ["אולי", "לא ידוע"].find((x) => !answers.includes(x));
+        if (!extra) break;
+        answers.push(extra);
+      }
+      answers = answers.slice(0, 4);
+    } else {
+      const num = randInt(2, maxNum);
+      const isNumPrime = isPrimeNum(num);
+      correctAnswer = isNumPrime ? "ראשוני" : "פריק";
+      question = `האם המספר ${num} ראשוני או פריק?`;
+      params = {
+        kind: "prime_composite",
+        subKind: "pc_classify",
+        num,
+        isPrime: isNumPrime,
+        presentationVariant: randInt(0, 3),
+      };
+      operandA = num;
+      operandB = null;
+      answers = buildPrimeClassifyAnswers();
     }
 
     question = applyMathLevelPresentation(question, {
@@ -3796,15 +3916,15 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       mathLevelKey,
       gradeKey,
     });
-    
+
     return finalizeMathQuestionOutput({
       question,
       correctAnswer,
       answers,
       operation: selectedOp,
       params,
-      a: num,
-      b: null,
+      a: operandA,
+      b: operandB,
       isStory: false,
     });
 
