@@ -245,6 +245,7 @@ import {
   MATH_WRONG_ANSWER_FEEDBACK_MS,
   shouldPauseWrongAnswerAutoAdvance,
 } from "../../utils/math-wrong-answer-feedback-timing";
+import { getMathPrimaryAnswerButtonState } from "../../utils/math-answer-primary-button";
 
 /** Passed into compareMathLearnerAnswer — tolerance is not defaulted inside answer-compare. */
 const MATH_NUMERIC_TOLERANCE = 0.01;
@@ -1623,6 +1624,30 @@ export default function MathMaster() {
       wrongAnswerAdvanceCallbackRef.current = null;
       callback();
     }, MATH_WRONG_ANSWER_FEEDBACK_MS);
+  }
+
+  function advanceToNextQuestionManually() {
+    clearWrongAnswerAdvanceTimer();
+    wrongAnswerPendingRef.current = false;
+    wrongAnswerAdvanceCallbackRef.current = null;
+    setSelectedAnswer(null);
+    setTextAnswer("");
+    setFeedback(null);
+    generateNewQuestion();
+  }
+
+  function handleMathPrimaryAnswerButtonClick() {
+    const { action } = getMathPrimaryAnswerButtonState({
+      selectedAnswer,
+      textAnswer,
+    });
+    if (action === "next") {
+      advanceToNextQuestionManually();
+      return;
+    }
+    if (textAnswer.trim() !== "") {
+      handleAnswer(textAnswer);
+    }
   }
 
   function closeExplanationModal() {
@@ -4452,17 +4477,14 @@ export default function MathMaster() {
                               autoFocus={!scratchpadOpen}
                               suppressEmbeddedKeyboard={sharedScratchpadKeyboard}
                               onInputFocus={() => setActiveScratchpadCell(null)}
-                              onEnterSubmit={() => {
-                                if (!selectedAnswer && textAnswer.trim() !== "") {
-                                  handleAnswer(textAnswer);
-                                }
-                              }}
-                              onSubmit={() => {
-                                if (!selectedAnswer && textAnswer.trim() !== "") {
-                                  handleAnswer(textAnswer);
-                                }
-                              }}
-                              submitDisabled={!!selectedAnswer || textAnswer.trim() === ""}
+                              onEnterSubmit={handleMathPrimaryAnswerButtonClick}
+                              onSubmit={handleMathPrimaryAnswerButtonClick}
+                              submitDisabled={
+                                getMathPrimaryAnswerButtonState({
+                                  selectedAnswer,
+                                  textAnswer,
+                                }).disabled
+                              }
                               submitTestId="math-check-answer"
                             />
                           </div>
@@ -4486,58 +4508,48 @@ export default function MathMaster() {
                               className="mt-1"
                               submitButton={
                                 mobileEmbeddedNumericSubmit
-                                  ? {
-                                      label: "בדוק",
-                                      onClick: () => {
-                                        if (
-                                          !selectedAnswer &&
-                                          textAnswer.trim() !== ""
-                                        ) {
-                                          handleAnswer(textAnswer);
-                                        }
-                                      },
-                                      disabled:
-                                        !!selectedAnswer ||
-                                        textAnswer.trim() === "",
-                                      testId: "math-check-answer",
-                                    }
+                                  ? (() => {
+                                      const primaryBtn =
+                                        getMathPrimaryAnswerButtonState({
+                                          selectedAnswer,
+                                          textAnswer,
+                                        });
+                                      return {
+                                        label: primaryBtn.label,
+                                        onClick: handleMathPrimaryAnswerButtonClick,
+                                        disabled: primaryBtn.disabled,
+                                        testId: "math-check-answer",
+                                      };
+                                    })()
                                   : null
                               }
                             />
                           ) : null}
-                          <div className="flex gap-2 justify-center">
-                            {!mobileEmbeddedNumericSubmit ? (
-                            <button
-                              type="button"
-                              data-testid="math-check-answer"
-                              onClick={() => {
-                                if (!selectedAnswer && textAnswer.trim() !== "") {
-                                  handleAnswer(textAnswer);
-                                }
-                              }}
-                              disabled={!!selectedAnswer || textAnswer.trim() === ""}
-                              className="px-6 py-3 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              בדוק
-                            </button>
-                            ) : null}
-                            {selectedAnswer && (
-                              <button
-                                onClick={() => {
-                                  clearWrongAnswerAdvanceTimer();
-                                  wrongAnswerPendingRef.current = false;
-                                  wrongAnswerAdvanceCallbackRef.current = null;
-                                  setSelectedAnswer(null);
-                                  setTextAnswer("");
-                                  setFeedback(null);
-                                  generateNewQuestion();
-                                }}
-                                className="px-6 py-3 rounded-lg bg-blue-500/80 hover:bg-blue-500 font-bold text-lg"
-                              >
-                                שאלה הבאה
-                              </button>
-                            )}
-                          </div>
+                          {!mobileEmbeddedNumericSubmit ? (
+                            <div className="flex justify-center">
+                              {(() => {
+                                const primaryBtn = getMathPrimaryAnswerButtonState({
+                                  selectedAnswer,
+                                  textAnswer,
+                                });
+                                return (
+                                  <button
+                                    type="button"
+                                    data-testid="math-check-answer"
+                                    onClick={handleMathPrimaryAnswerButtonClick}
+                                    disabled={primaryBtn.disabled}
+                                    className={`px-6 py-3 rounded-lg font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed ${
+                                      primaryBtn.action === "next"
+                                        ? "bg-blue-500/80 hover:bg-blue-500"
+                                        : "bg-emerald-500/80 hover:bg-emerald-500"
+                                    }`}
+                                  >
+                                    {primaryBtn.label}
+                                  </button>
+                                );
+                              })()}
+                            </div>
+                          ) : null}
                         </div>
                       );
                     } else {
