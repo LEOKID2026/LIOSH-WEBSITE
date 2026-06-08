@@ -3,10 +3,11 @@
  *
  * Usage:
  *   node scripts/generate-learning-book-audio.mjs --subject hebrew --grade g1
- *   node scripts/generate-learning-book-audio.mjs --subject hebrew --grade g1 --pages g1.letters,g1.rhyme
- *   node scripts/generate-learning-book-audio.mjs --subject hebrew --grade g1 --dry-run
+ *   node scripts/generate-learning-book-audio.mjs --subject math --grade g1
+ *   node scripts/generate-learning-book-audio.mjs --subject math --grade g1 --pages add_two
+ *   node scripts/generate-learning-book-audio.mjs --subject math --grade g1 --dry-run
  *
- * Hebrew G1: all 32 topics × 7 visible internal pages = 224 section MP3s.
+ * Pilots: Hebrew G1 (32×7) and Math G1 (19×7) section-level audio only.
  * Requires LEARNING_BOOK_AUDIO_ENABLED=true for write mode (or pass --force).
  */
 import fs from "node:fs";
@@ -41,6 +42,14 @@ function fail(msg, code = 1) {
   process.exit(code);
 }
 
+function buildReportRowExtras(prepDetail) {
+  return {
+    pronunciationReplacementsApplied: prepDetail.pronunciationReplacementsApplied || [],
+    mathExpressionConversionsApplied: prepDetail.mathExpressionConversionsApplied || [],
+    ttsRate: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_RATE,
+  };
+}
+
 function buildPrepFlags(page, section, spokenScript) {
   const rawBody = String(section?.body || "");
   return {
@@ -62,12 +71,8 @@ const grade = String(args.grade || "").trim().toLowerCase();
 
 if (!subject || !grade) {
   fail(
-    "Usage: node scripts/generate-learning-book-audio.mjs --subject hebrew --grade g1 [--pages pageA,pageB] [--dry-run]"
+    "Usage: node scripts/generate-learning-book-audio.mjs --subject hebrew|math --grade g1 [--pages pageA,pageB] [--dry-run]"
   );
-}
-
-if (subject !== "hebrew" || grade !== "g1") {
-  fail("This pass supports Hebrew Grade 1 only (hebrew/g1).");
 }
 
 const enabled =
@@ -93,11 +98,18 @@ const manifestMod = await import(
 const textMod = await import(
   pathToFileURL(path.join(root, "lib", "learning-book", "audio", "prepare-learning-book-audio-text.js"))
 );
+const ttsConfigMod = await import(
+  pathToFileURL(path.join(root, "lib", "learning-book", "audio", "learning-book-audio-tts-config.js"))
+);
 const catalogMod = await import(
   pathToFileURL(path.join(root, "lib", "learning-book", "learning-book-catalog.js"))
 );
 
-const scope = manifestMod.HEBREW_G1_SECTION_AUDIO;
+const scope = manifestMod.getBookSectionAudioScope(subject, grade);
+if (!scope) {
+  fail(`Unsupported pilot book: ${subject}/${grade} (approved: hebrew/g1, math/g1).`);
+}
+
 const pageIds = args.pages
   ? String(args.pages)
       .split(",")
@@ -107,7 +119,7 @@ const pageIds = args.pages
 
 for (const pageId of pageIds) {
   if (!scope.pageIds.includes(pageId)) {
-    fail(`Unknown Hebrew G1 pageId: ${pageId}`);
+    fail(`Unknown ${subject}/${grade} pageId: ${pageId}`);
   }
 }
 
@@ -123,8 +135,9 @@ if (!args.dryRun && provider === "edge") {
   try {
     const { EdgeTTS } = await import("node-edge-tts");
     tts = new EdgeTTS({
-      voice: "he-IL-HilaNeural",
-      lang: "he-IL",
+      voice: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_VOICE,
+      lang: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_LANG,
+      rate: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_RATE,
       timeout: 120000,
     });
   } catch (e) {
@@ -177,17 +190,21 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
         bytes: null,
         durationSec: null,
         prepFlags: null,
+        pronunciationReplacementsApplied: [],
+        mathExpressionConversionsApplied: [],
+        ttsRate: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_RATE,
       });
       continue;
     }
 
-    const spokenScript = textMod.prepareBookSectionAudioText(
+    const prepDetail = textMod.prepareBookSectionAudioTextDetailed(
       subject,
       grade,
       pageId,
       page,
       sectionNumber
     );
+    const spokenScript = prepDetail.spokenScript || null;
 
     const relOut = path.join(
       "public",
@@ -220,6 +237,7 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
         bytes: null,
         durationSec: null,
         prepFlags,
+        ...buildReportRowExtras(prepDetail),
       });
       continue;
     }
@@ -242,6 +260,7 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
         bytes: null,
         durationSec: null,
         prepFlags,
+        ...buildReportRowExtras(prepDetail),
         generatedAt: new Date().toISOString(),
       });
       continue;
@@ -276,6 +295,7 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
         bytes: st.size,
         durationSec: null,
         prepFlags,
+        ...buildReportRowExtras(prepDetail),
         generatedAt: new Date().toISOString(),
       });
     } catch (e) {
@@ -297,6 +317,7 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
         bytes: null,
         durationSec: null,
         prepFlags,
+        ...buildReportRowExtras(prepDetail),
         generatedAt: new Date().toISOString(),
       });
     }
@@ -325,8 +346,9 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
     subject,
     grade,
     pageId,
-    cacheVersion: manifestMod.LEARNING_BOOK_AUDIO_CACHE_VERSION,
+    cacheVersion: scope.cacheVersion,
     provider: args.dryRun ? "dry-run" : provider,
+    ttsRate: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_RATE,
     dryRun: Boolean(args.dryRun),
     sections: allRows.filter((r) => r.pageId === pageId),
   };
@@ -351,8 +373,9 @@ const masterReport = {
   generatedAt: new Date().toISOString(),
   subject,
   grade,
-  cacheVersion: manifestMod.LEARNING_BOOK_AUDIO_CACHE_VERSION,
+  cacheVersion: scope.cacheVersion,
   provider: args.dryRun ? "dry-run" : provider,
+  ttsRate: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_RATE,
   dryRun: Boolean(args.dryRun),
   architecture: "section-level",
   rejected: "pageId-level page.mp3",

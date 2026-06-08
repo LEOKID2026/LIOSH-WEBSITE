@@ -1,8 +1,8 @@
 # Learning Book Audio Infrastructure — Audit
 
 **Date:** 2026-06-08 (updated)  
-**Scope:** Hebrew Grade 1 — full book, section-level audio  
-**Status:** Section-level architecture approved; pageId-level audio **rejected**
+**Scope:** Pilots only — Hebrew G1 (complete) + Math G1 (second/final pilot)  
+**Status:** Section-level architecture approved; pageId-level audio **rejected**. **Stop after Math G1** until books are final.
 
 ---
 
@@ -66,7 +66,19 @@ Hebrew Grade 1 is **authored** (`status: "authored"`) in `learning-book-catalog.
 | c | הבנה, אוצר מילים וכתיבה | 11 |
 | d | דיבור והבעה | 2 |
 
-**Current wiring:** All 32 topics × 7 sections in `lib/learning-book/audio/learning-book-audio-manifest.js`.
+**Wiring:** `lib/learning-book/audio/learning-book-audio-manifest.js` — Hebrew G1 (32×7) + Math G1 (19×7).
+
+### Math Grade 1 (pilot 2)
+
+| File | Purpose |
+|------|---------|
+| `lib/learning-book/math-g1-registry.js` | 4 batches (a–d), `MATH_G1_PAGE_ORDER` (19 pages) |
+| `docs/learning-book/math/g1/drafts/*.md` | 19 markdown draft files |
+| `lib/learning-book/audio/prepare-math-book-audio-text.js` | Per-section spoken script + math→Hebrew TTS |
+
+**Inventory:** 19 topics × 7 internal pages = **133 section audio files**.
+
+Math TTS rules: `+`→ועוד, `-`→פחות, `=`→שווה, `<`/`>`→קטן מ/גדול מ, digits→Hebrew cardinals, `__`→מקום ריק.
 
 ---
 

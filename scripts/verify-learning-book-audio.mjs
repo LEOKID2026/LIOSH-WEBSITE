@@ -1,5 +1,5 @@
 /**
- * Verify learning book section-level audio — full Hebrew Grade 1.
+ * Verify learning book section-level audio — Hebrew G1 + Math G1 pilots.
  * Run: node scripts/verify-learning-book-audio.mjs
  */
 import fs from "node:fs";
@@ -11,6 +11,8 @@ const root = path.join(__dirname, "..");
 
 const HEBREW_HYPHEN_IN_SCRIPT =
   /[\u0590-\u05FF][\u002D\u2010\u2011\u2012\u2013\u2014\u05BE\uFE58\uFE63\uFF0D][\u0590-\u05FF]/;
+
+const RAW_EQUATION_IN_SCRIPT = /\d+\s*[+−\-]\s*\d+\s*=\s*\d+/;
 
 function fail(msg) {
   console.error(`verify-learning-book-audio: FAIL — ${msg}`);
@@ -37,9 +39,6 @@ const catalogMod = await import(
   pathToFileURL(path.join(root, "lib", "learning-book", "learning-book-catalog.js"))
 );
 
-const scope = manifestMod.HEBREW_G1_SECTION_AUDIO;
-const entry = catalogMod.getLearningBookEntry(scope.subject, scope.grade);
-
 const prevClient = process.env.NEXT_PUBLIC_LEARNING_BOOK_AUDIO_ENABLED;
 const prevServer = process.env.LEARNING_BOOK_AUDIO_ENABLED;
 delete process.env.NEXT_PUBLIC_LEARNING_BOOK_AUDIO_ENABLED;
@@ -56,117 +55,135 @@ if (!playerSrc.includes("sectionNumber")) fail("player must accept sectionNumber
 if (!playerSrc.includes("playbackSrc")) fail("player must use playbackSrc with cache bust");
 if (!playerSrc.includes("stopAndResetAudio")) fail("player must stop/reset on section change");
 if (playerSrc.includes("speechSynthesis")) fail("player must not use runtime TTS");
+if (!/NODE_ENV\s*!==\s*["']development["']/.test(playerSrc)) {
+  fail("player debug logs must be dev-only");
+}
 
-/** @type {string[]} */
-const allSrcs = [];
-let totalBytes = 0;
-let missingFiles = 0;
-let badScripts = 0;
+/**
+ * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookSectionAudioScope} scope
+ */
+function verifyScope(scope) {
+  const entry = catalogMod.getLearningBookEntry(scope.subject, scope.grade);
+  if (!entry) fail(`missing catalog entry: ${scope.subject}/${scope.grade}`);
 
-for (const pageId of scope.pageIds) {
-  const page = entry.loader.loadPage(pageId);
-  if (!page) fail(`missing page: ${pageId}`);
+  let scopeBytes = 0;
+  let scopeMp3 = 0;
 
-  const pageScripts = [];
+  for (const pageId of scope.pageIds) {
+    const page = entry.loader.loadPage(pageId);
+    if (!page) fail(`missing page: ${pageId}`);
 
-  for (let sectionNumber = 1; sectionNumber <= scope.sectionsPerPage; sectionNumber += 1) {
-    const resolved = resolverMod.resolveLearningBookAudio(
-      scope.subject,
-      scope.grade,
-      pageId,
-      sectionNumber
-    );
-    if (!resolved?.src || !resolved?.playbackSrc) {
-      fail(`${pageId} section ${sectionNumber} should resolve`);
+    const pageScripts = [];
+
+    for (let sectionNumber = 1; sectionNumber <= scope.sectionsPerPage; sectionNumber += 1) {
+      const resolved = resolverMod.resolveLearningBookAudio(
+        scope.subject,
+        scope.grade,
+        pageId,
+        sectionNumber
+      );
+      if (!resolved?.src || !resolved?.playbackSrc) {
+        fail(`${pageId} section ${sectionNumber} should resolve`);
+      }
+      if (resolved.src.includes("page.mp3")) {
+        fail(`${pageId} section ${sectionNumber} must not use page.mp3`);
+      }
+      if (!/\/section-0[1-7]\.mp3$/.test(resolved.src)) {
+        fail(`${pageId} section ${sectionNumber} must use section-NN.mp3`);
+      }
+
+      const publicPath = path.join(
+        root,
+        "public",
+        resolved.src.replace(/^\//, "").replace(/\//g, path.sep)
+      );
+      if (!fs.existsSync(publicPath)) {
+        fail(`missing section audio: ${resolved.src}`);
+      }
+
+      const st = fs.statSync(publicPath);
+      if (st.size < 500) fail(`audio file too small: ${pageId} section ${sectionNumber}`);
+      scopeBytes += st.size;
+      scopeMp3 += 1;
+
+      const script = textMod.prepareBookSectionAudioText(
+        scope.subject,
+        scope.grade,
+        pageId,
+        page,
+        sectionNumber
+      );
+      if (!script || script.length < 5) {
+        fail(`spoken script too short: ${pageId} section ${sectionNumber}`);
+      }
+      if (/^מה לומדים\?|^מה אנחנו לומדים\?/m.test(script)) {
+        fail(`spoken script must not include section nav title: ${pageId} section ${sectionNumber}`);
+      }
+      if (HEBREW_HYPHEN_IN_SCRIPT.test(script)) {
+        fail(`spoken script still contains Hebrew hyphens: ${pageId} section ${sectionNumber}`);
+      }
+      if (scope.subject === "math" && RAW_EQUATION_IN_SCRIPT.test(script)) {
+        fail(`math spoken script still contains raw equation digits: ${pageId} section ${sectionNumber}`);
+      }
+      pageScripts.push(script);
     }
 
-    const publicPath = path.join(
-      root,
-      "public",
-      resolved.src.replace(/^\//, "").replace(/\//g, path.sep)
-    );
-    if (!fs.existsSync(publicPath)) {
-      missingFiles += 1;
-      continue;
+    if (new Set(pageScripts).size !== pageScripts.length) {
+      fail(`section spoken scripts must be unique within ${pageId}`);
     }
-
-    const st = fs.statSync(publicPath);
-    if (st.size < 500) fail(`audio file too small: ${pageId} section ${sectionNumber}`);
-    totalBytes += st.size;
-    allSrcs.push(resolved.src);
-
-    const script = textMod.prepareBookSectionAudioText(
-      scope.subject,
-      scope.grade,
-      pageId,
-      page,
-      sectionNumber
-    );
-    if (!script || script.length < 5) {
-      badScripts += 1;
-      continue;
-    }
-    if (/^מה לומדים\?/m.test(script)) {
-      fail(`spoken script must not include section nav title: ${pageId} section ${sectionNumber}`);
-    }
-    if (HEBREW_HYPHEN_IN_SCRIPT.test(script)) {
-      fail(`spoken script still contains Hebrew hyphens: ${pageId} section ${sectionNumber}`);
-    }
-    pageScripts.push(script);
   }
 
-  if (new Set(pageScripts).size !== pageScripts.length) {
-    fail(`section spoken scripts must be unique within ${pageId}`);
+  ok(`${scope.subject}/${scope.grade} — ${scopeMp3} section MP3s, ${scopeBytes} bytes`);
+}
+
+for (const scope of manifestMod.BOOK_SECTION_AUDIO_SCOPES) {
+  verifyScope(scope);
+}
+
+const lettersS1 = resolverMod.resolveLearningBookAudio("hebrew", "g1", "g1.letters", 1);
+const lettersS2 = resolverMod.resolveLearningBookAudio("hebrew", "g1", "g1.letters", 2);
+if (!lettersS1 || !lettersS2 || lettersS1.src === lettersS2.src) {
+  fail("same pageId different sectionNumber must return different src");
+}
+
+const addS1 = resolverMod.resolveLearningBookAudio("math", "g1", "add_two", 1);
+const addS2 = resolverMod.resolveLearningBookAudio("math", "g1", "add_two", 2);
+if (!addS1 || !addS2 || addS1.src === addS2.src) {
+  fail("math same pageId different sections must return different src");
+}
+
+if (resolverMod.resolveLearningBookAudio("math", "g1", "add_two", 99) !== null) {
+  fail("missing section must return null, not fallback");
+}
+if (resolverMod.resolveLearningBookAudio("math", "g2", "add_two", 1) !== null) {
+  fail("Math G2 must return null");
+}
+if (resolverMod.resolveLearningBookAudio("english", "g1", "add_two", 1) !== null) {
+  fail("English must return null");
+}
+
+const mathPage = catalogMod.getLearningBookEntry("math", "g1").loader.loadPage("add_two");
+const mathS5 = textMod.prepareBookSectionAudioText("math", "g1", "add_two", mathPage, 5);
+if (!/שבע (וְעוֹד|ועוד) ארבע (שָׁוֶה|שווה)/.test(mathS5)) {
+  fail("math exercise section should speak addition in Hebrew words");
+}
+
+for (const reportName of [
+  "hebrew-g1-full-section-audio-report.json",
+  "math-g1-full-section-audio-report.json",
+]) {
+  const reportPath = path.join(root, "reports", "learning-book-audio", reportName);
+  if (!fs.existsSync(reportPath)) continue;
+  const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+  if (!report.ttsRate) fail(`${reportName} must record ttsRate`);
+  const generatedRow = (report.rows || []).find((r) => r.status === "generated");
+  if (generatedRow && !generatedRow.ttsRate) {
+    fail(`${reportName} rows must include ttsRate`);
   }
 }
 
-if (missingFiles > 0) {
-  fail(`${missingFiles} section MP3 files missing — run generate-learning-book-audio.mjs`);
-}
-
-const lettersS1 = resolverMod.resolveLearningBookAudio(scope.subject, scope.grade, "g1.letters", 1);
-const rhymeS1 = resolverMod.resolveLearningBookAudio(scope.subject, scope.grade, "g1.rhyme", 1);
-if (!lettersS1 || !rhymeS1 || lettersS1.src === rhymeS1.src) {
-  fail("different topics must resolve different section src values");
-}
-
-if (resolverMod.resolveLearningBookAudio("hebrew", "g2", "g1.letters", 1) !== null) {
-  fail("Hebrew G2 should return null");
-}
-if (resolverMod.resolveLearningBookAudio("math", "g1", "g1.letters", 1) !== null) {
-  fail("Math should return null");
-}
-if (resolverMod.resolveLearningBookAudio(scope.subject, scope.grade, "g1.letters", 99) !== null) {
-  fail("missing section index should return null");
-}
-
-ok(`Hebrew G1 full book — ${allSrcs.length} section MP3s, ${totalBytes} bytes total`);
-
-const samplePage = entry.loader.loadPage("g1.letters");
-console.log("verify-learning-book-audio: sample audit (g1.letters section 1):");
-const sampleResolved = resolverMod.resolveLearningBookAudio(
-  scope.subject,
-  scope.grade,
-  "g1.letters",
-  1
-);
-const sampleScript = textMod.prepareBookSectionAudioText(
-  scope.subject,
-  scope.grade,
-  "g1.letters",
-  samplePage,
-  1
-);
-const samplePath = path.join(
-  root,
-  "public",
-  sampleResolved.src.replace(/^\//, "").replace(/\//g, path.sep)
-);
-console.log(`  visiblePage: 1/7`);
-console.log(`  audioSrc: ${sampleResolved.src}`);
-console.log(`  playbackSrc: ${sampleResolved.playbackSrc}`);
-console.log(`  mp3: ${path.relative(root, samplePath)} (${fs.statSync(samplePath).size} bytes)`);
-console.log(`  spokenScript: ${JSON.stringify(sampleScript)}`);
+console.log("verify-learning-book-audio: sample math exercise (add_two section 5):");
+console.log(`  spokenScript: ${JSON.stringify(mathS5)}`);
 
 if (prevClient !== undefined) process.env.NEXT_PUBLIC_LEARNING_BOOK_AUDIO_ENABLED = prevClient;
 if (prevServer !== undefined) process.env.LEARNING_BOOK_AUDIO_ENABLED = prevServer;

@@ -1,6 +1,6 @@
 # Learning Book Audio — Full Rollout Plan
 
-**Current phase:** Hebrew Grade 1 — full book, section-level audio  
+**Current phase:** Two pilots only — Hebrew G1 (complete) + Math G1 (in progress). **Stop after Math G1.**  
 **Principle:** Pre-generated static audio only — no runtime TTS in student UI
 
 ---
@@ -18,9 +18,9 @@ Example: `/learning/book/hebrew/g1/g1.letters` → `עמוד 1 מתוך 7` … `
 
 | Phase | Scope | Status |
 |-------|-------|--------|
-| **Now** | Hebrew G1 — 32 topics, 224 sections | In implementation |
-| Future | Hebrew G2–G6 | Not started |
-| Future | English, Math, Geometry, Science, Moledet/Geography | Not started |
+| **Pilot 1** | Hebrew G1 — 32 topics, 224 sections | Complete — manual review |
+| **Pilot 2 (final)** | Math G1 — 19 topics, 133 sections | In implementation |
+| **Stopped** | Hebrew G2–G6, Math G2–G6, English, Geometry, Science, Moledet/Geography | Not until books final + owner approves |
 
 ---
 
