@@ -1,5 +1,5 @@
 {
-  "runAt": "2026-06-07T19:28:30.505Z",
+  "runAt": "2026-06-08T22:19:19.163Z",
   "seedTag": "parent-report-q2e-monthly-v1",
   "monthWindow": {
     "from": "2026-04-01",
@@ -7,9 +7,20 @@
   },
   "qaParentEmail": "admin@admin.com",
   "cleanup": {
-    "skipped": true
+    "q2e": {
+      "tag": "parent-report-q2e-monthly-v1",
+      "removedSessions": 14,
+      "removedParentActivities": 1,
+      "removedBookSessions": 1
+    },
+    "q1": {
+      "tag": "parent-report-q1-sim-v1",
+      "removedSessions": 9,
+      "removedParentActivities": 2,
+      "removedBookSessions": 1
+    }
   },
-  "verifyOnly": true,
+  "verifyOnly": false,
   "flagModes": [
     {
       "id": "A",
@@ -63,10 +74,10 @@
       "subject": "math",
       "topic": "addition",
       "expectedQ1Sufficiency": "no_data",
-      "actualQ1Sufficiency": "no_data",
+      "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 0,
-        "wrongAnswers": 0,
+        "diagnosticAnswers": 130,
+        "wrongAnswers": 26,
         "mistakes": 0,
         "distinctDays": 0,
         "learningAnswers": 0,
@@ -77,21 +88,23 @@
         "A": {
           "modeId": "A",
           "modeName": "production_default",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 130,
+            "wrongAnswers": 26,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות תרגול בתקופה האחרונה — כדאי לעודד התחלה קצרה ונעימה."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף."
           ],
-          "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "strongDiagnosisLanguage": true,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": false,
             "bySubSkillKeys": [],
@@ -109,14 +122,40 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 240,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::addition": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -158,34 +197,39 @@
             }
           ],
           "sanitizationPass": true,
-          "q1Pass": true,
-          "noStrongDiagnosisPass": true
+          "q1Pass": false,
+          "noStrongDiagnosisPass": false
         },
         "B": {
           "modeId": "B",
           "modeName": "metadata_internal_only",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 130,
+            "wrongAnswers": 26,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות תרגול בתקופה האחרונה — כדאי לעודד התחלה קצרה ונעימה."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף."
           ],
-          "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "strongDiagnosisLanguage": true,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
-            "hasBySubSkill": false,
-            "bySubSkillKeys": [],
+            "hasBySubSkill": true,
+            "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
+              "math::addition::__topic__"
+            ],
             "hasErrorPatterns": false,
-            "hasQuestionTypes": false,
-            "hasProblemClasses": false,
-            "hasDifficultyDepths": false,
+            "hasQuestionTypes": true,
+            "hasProblemClasses": true,
+            "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": false,
             "gatingDecisionCount": 0,
@@ -196,14 +240,40 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 240,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::addition": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -249,31 +319,35 @@
         "C": {
           "modeId": "C",
           "modeName": "active_suppression",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 130,
+            "wrongAnswers": 26,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות תרגול בתקופה האחרונה — כדאי לעודד התחלה קצרה ונעימה."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
           "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
-            "hasBySubSkill": false,
-            "bySubSkillKeys": [],
+            "hasBySubSkill": true,
+            "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
+              "math::addition::__topic__"
+            ],
             "hasErrorPatterns": false,
-            "hasQuestionTypes": false,
-            "hasProblemClasses": false,
-            "hasDifficultyDepths": false,
+            "hasQuestionTypes": true,
+            "hasProblemClasses": true,
+            "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -281,14 +355,40 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 240,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::addition": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -334,31 +434,35 @@
         "D": {
           "modeId": "D",
           "modeName": "promotion_trial",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 130,
+            "wrongAnswers": 26,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות תרגול בתקופה האחרונה — כדאי לעודד התחלה קצרה ונעימה."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
           "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
-            "hasBySubSkill": false,
-            "bySubSkillKeys": [],
+            "hasBySubSkill": true,
+            "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
+              "math::addition::__topic__"
+            ],
             "hasErrorPatterns": false,
-            "hasQuestionTypes": false,
-            "hasProblemClasses": false,
-            "hasDifficultyDepths": false,
+            "hasQuestionTypes": true,
+            "hasProblemClasses": true,
+            "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -366,14 +470,40 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 240,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::addition": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 130,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -420,9 +550,9 @@
       "checks": [
         {
           "name": "modeA_q1_sufficiency",
-          "pass": true,
+          "pass": false,
           "expected": "no_data",
-          "actual": "no_data"
+          "actual": "supported_diagnosis"
         },
         {
           "name": "modeA_sanitization",
@@ -434,10 +564,10 @@
         },
         {
           "name": "no_strong_diagnosis",
-          "pass": true
+          "pass": false
         }
       ],
-      "pass": true
+      "pass": false
     },
     {
       "label": "AAA2",
@@ -453,12 +583,12 @@
       "subject": "math",
       "topic": "addition",
       "expectedQ1Sufficiency": "insufficient_data",
-      "actualQ1Sufficiency": "insufficient_data",
+      "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 4,
-        "wrongAnswers": 1,
-        "mistakes": 1,
-        "distinctDays": 1,
+        "diagnosticAnswers": 134,
+        "wrongAnswers": 27,
+        "mistakes": 0,
+        "distinctDays": 0,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -467,22 +597,23 @@
         "A": {
           "modeId": "A",
           "modeName": "production_default",
-          "dataSufficiency": "insufficient_data",
-          "topicSufficiency": "insufficient_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 4,
-            "wrongAnswers": 1,
-            "mistakes": 1,
-            "distinctDays": 1,
+            "diagnosticAnswers": 134,
+            "wrongAnswers": 27,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
           ],
-          "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "strongDiagnosisLanguage": true,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": false,
             "bySubSkillKeys": [],
@@ -500,26 +631,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "insufficient_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "too_few_questions",
-              "evidenceCount": 4,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 244,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -563,31 +706,33 @@
             }
           ],
           "sanitizationPass": true,
-          "q1Pass": true,
-          "noStrongDiagnosisPass": true
+          "q1Pass": false,
+          "noStrongDiagnosisPass": false
         },
         "B": {
           "modeId": "B",
           "modeName": "metadata_internal_only",
-          "dataSufficiency": "insufficient_data",
-          "topicSufficiency": "insufficient_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 4,
-            "wrongAnswers": 1,
-            "mistakes": 1,
-            "distinctDays": 1,
+            "diagnosticAnswers": 134,
+            "wrongAnswers": 27,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
           ],
-          "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "strongDiagnosisLanguage": true,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -604,26 +749,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "insufficient_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "too_few_questions",
-              "evidenceCount": 4,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 244,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -671,25 +828,26 @@
         "C": {
           "modeId": "C",
           "modeName": "active_suppression",
-          "dataSufficiency": "insufficient_data",
-          "topicSufficiency": "insufficient_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 4,
-            "wrongAnswers": 1,
-            "mistakes": 1,
-            "distinctDays": 1,
+            "diagnosticAnswers": 134,
+            "wrongAnswers": 27,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
           "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -697,8 +855,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -706,26 +864,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "insufficient_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "too_few_questions",
-              "evidenceCount": 4,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 244,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -773,25 +943,26 @@
         "D": {
           "modeId": "D",
           "modeName": "promotion_trial",
-          "dataSufficiency": "insufficient_data",
-          "topicSufficiency": "insufficient_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 4,
-            "wrongAnswers": 1,
-            "mistakes": 1,
-            "distinctDays": 1,
+            "diagnosticAnswers": 134,
+            "wrongAnswers": 27,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
           "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -799,8 +970,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -808,26 +979,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "insufficient_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "too_few_questions",
-              "evidenceCount": 4,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 244,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
-                "dataSufficiency": "insufficient_data",
-                "confidenceLevel": "insufficient_data",
-                "evidenceCount": 4,
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 134,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -876,9 +1059,9 @@
       "checks": [
         {
           "name": "modeA_q1_sufficiency",
-          "pass": true,
+          "pass": false,
           "expected": "insufficient_data",
-          "actual": "insufficient_data"
+          "actual": "supported_diagnosis"
         },
         {
           "name": "modeA_sanitization",
@@ -890,10 +1073,10 @@
         },
         {
           "name": "no_strong_diagnosis",
-          "pass": true
+          "pass": false
         }
       ],
-      "pass": true
+      "pass": false
     },
     {
       "label": "AAA3",
@@ -909,12 +1092,12 @@
       "subject": "math",
       "topic": "addition",
       "expectedQ1Sufficiency": "preliminary_signal",
-      "actualQ1Sufficiency": "preliminary_signal",
+      "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 9,
-        "wrongAnswers": 3,
-        "mistakes": 3,
-        "distinctDays": 3,
+        "diagnosticAnswers": 139,
+        "wrongAnswers": 29,
+        "mistakes": 0,
+        "distinctDays": 0,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -923,19 +1106,19 @@
         "A": {
           "modeId": "A",
           "modeName": "production_default",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 9,
-            "wrongAnswers": 3,
-            "mistakes": 3,
-            "distinctDays": 3,
+            "diagnosticAnswers": 139,
+            "wrongAnswers": 29,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -957,17 +1140,23 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 9,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             },
@@ -975,7 +1164,13 @@
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             }
@@ -1020,25 +1215,25 @@
             }
           ],
           "sanitizationPass": true,
-          "q1Pass": true,
+          "q1Pass": false,
           "noStrongDiagnosisPass": true
         },
         "B": {
           "modeId": "B",
           "modeName": "metadata_internal_only",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 9,
-            "wrongAnswers": 3,
-            "mistakes": 3,
-            "distinctDays": 3,
+            "diagnosticAnswers": 139,
+            "wrongAnswers": 29,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -1046,6 +1241,7 @@
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -1062,17 +1258,23 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 9,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             },
@@ -1080,7 +1282,13 @@
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             }
@@ -1129,26 +1337,26 @@
         "C": {
           "modeId": "C",
           "modeName": "active_suppression",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 9,
-            "wrongAnswers": 3,
-            "mistakes": 3,
-            "distinctDays": 3,
+            "diagnosticAnswers": 139,
+            "wrongAnswers": 29,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -1156,8 +1364,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -1165,17 +1373,23 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 9,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             },
@@ -1183,7 +1397,13 @@
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             }
@@ -1232,26 +1452,26 @@
         "D": {
           "modeId": "D",
           "modeName": "promotion_trial",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 9,
-            "wrongAnswers": 3,
-            "mistakes": 3,
-            "distinctDays": 3,
+            "diagnosticAnswers": 139,
+            "wrongAnswers": 29,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -1259,8 +1479,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -1268,17 +1488,23 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 9,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             },
@@ -1286,7 +1512,13 @@
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 9,
+                "evidenceCount": 139,
+                "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
                 "recurrenceMet": true
               }
             }
@@ -1336,9 +1568,9 @@
       "checks": [
         {
           "name": "modeA_q1_sufficiency",
-          "pass": true,
+          "pass": false,
           "expected": "preliminary_signal",
-          "actual": "preliminary_signal"
+          "actual": "supported_diagnosis"
         },
         {
           "name": "modeA_sanitization",
@@ -1349,7 +1581,7 @@
           "pass": true
         }
       ],
-      "pass": true
+      "pass": false
     },
     {
       "label": "AAA4",
@@ -1365,12 +1597,12 @@
       "subject": "math",
       "topic": "addition",
       "expectedQ1Sufficiency": "preliminary_signal",
-      "actualQ1Sufficiency": "preliminary_signal",
+      "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 14,
-        "wrongAnswers": 4,
-        "mistakes": 4,
-        "distinctDays": 1,
+        "diagnosticAnswers": 144,
+        "wrongAnswers": 30,
+        "mistakes": 0,
+        "distinctDays": 0,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -1379,19 +1611,19 @@
         "A": {
           "modeId": "A",
           "modeName": "production_default",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 4,
-            "mistakes": 4,
-            "distinctDays": 1,
+            "diagnosticAnswers": 144,
+            "wrongAnswers": 30,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -1413,26 +1645,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "no_recurrence",
-              "evidenceCount": 14,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 254,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -1476,25 +1720,25 @@
             }
           ],
           "sanitizationPass": true,
-          "q1Pass": true,
+          "q1Pass": false,
           "noStrongDiagnosisPass": true
         },
         "B": {
           "modeId": "B",
           "modeName": "metadata_internal_only",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 4,
-            "mistakes": 4,
-            "distinctDays": 1,
+            "diagnosticAnswers": 144,
+            "wrongAnswers": 30,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית בעברית — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -1502,6 +1746,7 @@
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -1518,26 +1763,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "no_recurrence",
-              "evidenceCount": 14,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 254,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -1585,26 +1842,26 @@
         "C": {
           "modeId": "C",
           "modeName": "active_suppression",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 4,
-            "mistakes": 4,
-            "distinctDays": 1,
+            "diagnosticAnswers": 144,
+            "wrongAnswers": 30,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -1612,8 +1869,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -1621,26 +1878,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "no_recurrence",
-              "evidenceCount": 14,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 254,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -1688,26 +1957,26 @@
         "D": {
           "modeId": "D",
           "modeName": "promotion_trial",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 4,
-            "mistakes": 4,
-            "distinctDays": 1,
+            "diagnosticAnswers": 144,
+            "wrongAnswers": 30,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "hebrew::vocabulary::__topic__",
               "math::addition::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -1715,8 +1984,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -1724,26 +1993,38 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "no_recurrence",
-              "evidenceCount": 14,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 254,
+              "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::addition": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 14,
+                "evidenceCount": 144,
                 "recurrenceMet": false
+              },
+              "hebrew::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 110,
+                "recurrenceMet": true
               }
             }
           },
@@ -1792,9 +2073,9 @@
       "checks": [
         {
           "name": "modeA_q1_sufficiency",
-          "pass": true,
+          "pass": false,
           "expected": "preliminary_signal",
-          "actual": "preliminary_signal"
+          "actual": "supported_diagnosis"
         },
         {
           "name": "modeA_sanitization",
@@ -1805,7 +2086,7 @@
           "pass": true
         }
       ],
-      "pass": true
+      "pass": false
     },
     {
       "label": "AAA5",
@@ -1823,10 +2104,10 @@
       "expectedQ1Sufficiency": "supported_diagnosis",
       "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 14,
-        "wrongAnswers": 5,
-        "mistakes": 5,
-        "distinctDays": 3,
+        "diagnosticAnswers": 104,
+        "wrongAnswers": 25,
+        "mistakes": 0,
+        "distinctDays": 0,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -1836,18 +2117,17 @@
           "modeId": "A",
           "modeName": "production_default",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 104,
+            "wrongAnswers": 25,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -1872,22 +2152,46 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 248,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -1939,18 +2243,17 @@
           "modeId": "B",
           "modeName": "metadata_internal_only",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 104,
+            "wrongAnswers": 25,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -1958,6 +2261,8 @@
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::vocabulary::__topic__",
               "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -1977,22 +2282,46 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 248,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -2042,25 +2371,26 @@
           "modeId": "C",
           "modeName": "active_suppression",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 104,
+            "wrongAnswers": 25,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::vocabulary::__topic__",
               "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -2069,7 +2399,7 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 1,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -2080,22 +2410,46 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 248,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -2145,25 +2499,26 @@
           "modeId": "D",
           "modeName": "promotion_trial",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 104,
+            "wrongAnswers": 25,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::vocabulary::__topic__",
               "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -2172,7 +2527,7 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 1,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -2183,22 +2538,46 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 248,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 104,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -2277,12 +2656,12 @@
       "subject": "math",
       "topic": "multiplication",
       "expectedQ1Sufficiency": "preliminary_signal",
-      "actualQ1Sufficiency": "preliminary_signal",
+      "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 8,
-        "wrongAnswers": 2,
-        "mistakes": 2,
-        "distinctDays": 2,
+        "diagnosticAnswers": 98,
+        "wrongAnswers": 22,
+        "mistakes": 0,
+        "distinctDays": 0,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -2291,19 +2670,18 @@
         "A": {
           "modeId": "A",
           "modeName": "production_default",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 98,
+            "wrongAnswers": 22,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -2325,17 +2703,29 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 8,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 242,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -2343,7 +2733,19 @@
               "math::multiplication": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -2388,25 +2790,24 @@
             }
           ],
           "sanitizationPass": true,
-          "q1Pass": true,
+          "q1Pass": false,
           "noStrongDiagnosisPass": true
         },
         "B": {
           "modeId": "B",
           "modeName": "metadata_internal_only",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 98,
+            "wrongAnswers": 22,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -2414,6 +2815,8 @@
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::vocabulary::__topic__",
               "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -2430,17 +2833,29 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 8,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 242,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -2448,7 +2863,19 @@
               "math::multiplication": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -2497,26 +2924,27 @@
         "C": {
           "modeId": "C",
           "modeName": "active_suppression",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 98,
+            "wrongAnswers": 22,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::vocabulary::__topic__",
               "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -2524,8 +2952,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -2533,17 +2961,29 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 8,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 242,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -2551,7 +2991,19 @@
               "math::multiplication": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -2600,26 +3052,27 @@
         "D": {
           "modeId": "D",
           "modeName": "promotion_trial",
-          "dataSufficiency": "preliminary_signal",
+          "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 98,
+            "wrongAnswers": 22,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::vocabulary::__topic__",
               "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": false,
@@ -2627,8 +3080,8 @@
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -2636,17 +3089,29 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "preliminary_signal",
-              "confidenceLevel": "low",
-              "confidenceReason": "below_supported_threshold",
-              "evidenceCount": 8,
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 242,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -2654,7 +3119,19 @@
               "math::multiplication": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 98,
+                "recurrenceMet": false
+              },
+              "english::vocabulary": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -2704,9 +3181,9 @@
       "checks": [
         {
           "name": "modeA_q1_sufficiency",
-          "pass": true,
+          "pass": false,
           "expected": "preliminary_signal",
-          "actual": "preliminary_signal"
+          "actual": "supported_diagnosis"
         },
         {
           "name": "modeA_sanitization",
@@ -2717,7 +3194,7 @@
           "pass": true
         }
       ],
-      "pass": true
+      "pass": false
     },
     {
       "label": "AAA7",
@@ -2733,10 +3210,10 @@
       "subject": "math",
       "topic": "multiplication",
       "expectedQ1Sufficiency": "no_data",
-      "actualQ1Sufficiency": "no_data",
+      "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 0,
-        "wrongAnswers": 0,
+        "diagnosticAnswers": 90,
+        "wrongAnswers": 20,
         "mistakes": 0,
         "distinctDays": 0,
         "learningAnswers": 8,
@@ -2747,21 +3224,22 @@
         "A": {
           "modeId": "A",
           "modeName": "production_default",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 90,
+            "wrongAnswers": 20,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 8,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
-          "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "strongDiagnosisLanguage": true,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": false,
             "bySubSkillKeys": [],
@@ -2779,14 +3257,52 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 234,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -2828,35 +3344,40 @@
             }
           ],
           "sanitizationPass": true,
-          "q1Pass": true,
-          "noStrongDiagnosisPass": true,
-          "nonDiagnosticPass": true
+          "q1Pass": false,
+          "noStrongDiagnosisPass": false,
+          "nonDiagnosticPass": false
         },
         "B": {
           "modeId": "B",
           "modeName": "metadata_internal_only",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 90,
+            "wrongAnswers": 20,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 8,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
-          "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "strongDiagnosisLanguage": true,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
-            "hasBySubSkill": false,
-            "bySubSkillKeys": [],
+            "hasBySubSkill": true,
+            "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::grammar::__topic__",
+              "math::multiplication::__topic__"
+            ],
             "hasErrorPatterns": false,
-            "hasQuestionTypes": false,
-            "hasProblemClasses": false,
-            "hasDifficultyDepths": false,
+            "hasQuestionTypes": true,
+            "hasProblemClasses": true,
+            "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": false,
             "gatingDecisionCount": 0,
@@ -2867,14 +3388,52 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 234,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -2920,31 +3479,36 @@
         "C": {
           "modeId": "C",
           "modeName": "active_suppression",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 90,
+            "wrongAnswers": 20,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 8,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
           "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
-            "hasBySubSkill": false,
-            "bySubSkillKeys": [],
+            "hasBySubSkill": true,
+            "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::grammar::__topic__",
+              "math::multiplication::__topic__"
+            ],
             "hasErrorPatterns": false,
-            "hasQuestionTypes": false,
-            "hasProblemClasses": false,
-            "hasDifficultyDepths": false,
+            "hasQuestionTypes": true,
+            "hasProblemClasses": true,
+            "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -2952,14 +3516,52 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 234,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -3005,31 +3607,36 @@
         "D": {
           "modeId": "D",
           "modeName": "promotion_trial",
-          "dataSufficiency": "no_data",
+          "dataSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 0,
-            "wrongAnswers": 0,
+            "diagnosticAnswers": 90,
+            "wrongAnswers": 20,
             "mistakes": 0,
             "distinctDays": 0,
             "learningAnswers": 8,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
           "strongDiagnosisLanguage": false,
-          "allowsStrongTopicDiagnosis": false,
-          "allowsStrongTopicInsight": false,
+          "allowsStrongTopicDiagnosis": true,
+          "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
-            "hasBySubSkill": false,
-            "bySubSkillKeys": [],
+            "hasBySubSkill": true,
+            "bySubSkillKeys": [
+              "science::body::__topic__",
+              "english::grammar::__topic__",
+              "math::multiplication::__topic__"
+            ],
             "hasErrorPatterns": false,
-            "hasQuestionTypes": false,
-            "hasProblemClasses": false,
-            "hasDifficultyDepths": false,
+            "hasQuestionTypes": true,
+            "hasProblemClasses": true,
+            "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -3037,14 +3644,52 @@
           "evidenceQualitySnapshot": {
             "context": "parent",
             "student": {
-              "dataSufficiency": "no_data",
-              "confidenceLevel": "insufficient_data",
-              "confidenceReason": "no_diagnostic_evidence",
-              "evidenceCount": 0,
-              "recurrenceMet": false
+              "dataSufficiency": "supported_diagnosis",
+              "confidenceLevel": "moderate",
+              "confidenceReason": "supported",
+              "evidenceCount": 234,
+              "recurrenceMet": true
             },
-            "bySubject": {},
-            "byTopic": {}
+            "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            },
+            "byTopic": {
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
+                "recurrenceMet": true
+              }
+            }
           },
           "sanitization": [
             {
@@ -3091,9 +3736,9 @@
       "checks": [
         {
           "name": "modeA_q1_sufficiency",
-          "pass": true,
+          "pass": false,
           "expected": "no_data",
-          "actual": "no_data"
+          "actual": "supported_diagnosis"
         },
         {
           "name": "modeA_sanitization",
@@ -3105,14 +3750,14 @@
         },
         {
           "name": "no_strong_diagnosis",
-          "pass": true
+          "pass": false
         },
         {
           "name": "non_diagnostic_excluded",
-          "pass": true
+          "pass": false
         }
       ],
-      "pass": true
+      "pass": false
     },
     {
       "label": "AAA8",
@@ -3153,8 +3798,7 @@
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -3179,14 +3823,26 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 15,
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 15,
+                "evidenceCount": 105,
+                "recurrenceMet": true
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -3195,6 +3851,24 @@
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
                 "evidenceCount": 15,
+                "recurrenceMet": true
+              },
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -3256,8 +3930,7 @@
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -3265,8 +3938,11 @@
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
               "math::fractions::frac_word_problem",
-              "math::fractions::frac_add_like"
+              "math::fractions::frac_add_like",
+              "english::grammar::__topic__",
+              "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": true,
             "hasQuestionTypes": true,
@@ -3285,14 +3961,26 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 15,
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 15,
+                "evidenceCount": 105,
+                "recurrenceMet": true
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -3301,6 +3989,24 @@
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
                 "evidenceCount": 15,
+                "recurrenceMet": true
+              },
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -3360,17 +4066,19 @@
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
               "math::fractions::frac_word_problem",
-              "math::fractions::frac_add_like"
+              "math::fractions::frac_add_like",
+              "english::grammar::__topic__",
+              "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": true,
             "hasQuestionTypes": true,
@@ -3378,7 +4086,7 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 0,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": true,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -3389,14 +4097,26 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 15,
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 15,
+                "evidenceCount": 105,
+                "recurrenceMet": true
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -3405,6 +4125,24 @@
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
                 "evidenceCount": 15,
+                "recurrenceMet": true
+              },
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -3464,17 +4202,19 @@
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
               "math::fractions::frac_word_problem",
-              "math::fractions::frac_add_like"
+              "math::fractions::frac_add_like",
+              "english::grammar::__topic__",
+              "math::multiplication::__topic__"
             ],
             "hasErrorPatterns": true,
             "hasQuestionTypes": true,
@@ -3482,7 +4222,7 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 0,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": true,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -3493,14 +4233,26 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 15,
+              "evidenceCount": 249,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 15,
+                "evidenceCount": 105,
+                "recurrenceMet": true
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             },
@@ -3509,6 +4261,24 @@
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
                 "evidenceCount": 15,
+                "recurrenceMet": true
+              },
+              "math::multiplication": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 90,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 72,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 72,
                 "recurrenceMet": true
               }
             }
@@ -3590,10 +4360,10 @@
       "expectedQ1Sufficiency": "supported_diagnosis",
       "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 14,
-        "wrongAnswers": 5,
-        "mistakes": 5,
-        "distinctDays": 3,
+        "diagnosticAnswers": 94,
+        "wrongAnswers": 21,
+        "mistakes": 1,
+        "distinctDays": 1,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -3603,18 +4373,18 @@
           "modeId": "A",
           "modeName": "production_default",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 94,
+            "wrongAnswers": 21,
+            "mistakes": 1,
+            "distinctDays": 1,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית באנגלית — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -3639,22 +4409,58 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -3706,18 +4512,18 @@
           "modeId": "B",
           "modeName": "metadata_internal_only",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 94,
+            "wrongAnswers": 21,
+            "mistakes": 1,
+            "distinctDays": 1,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית באנגלית — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -3725,7 +4531,10 @@
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
-              "math::fractions::__topic__"
+              "science::body::__topic__",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__",
+              "english::grammar::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -3744,22 +4553,58 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -3810,26 +4655,28 @@
           "modeId": "C",
           "modeName": "active_suppression",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 94,
+            "wrongAnswers": 21,
+            "mistakes": 1,
+            "distinctDays": 1,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
-              "math::fractions::__topic__"
+              "science::body::__topic__",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__",
+              "english::grammar::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -3837,7 +4684,7 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 1,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -3848,22 +4695,58 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -3915,26 +4798,28 @@
           "modeId": "D",
           "modeName": "promotion_trial",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "supported_diagnosis",
+          "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 14,
-            "wrongAnswers": 5,
-            "mistakes": 5,
-            "distinctDays": 3,
+            "diagnosticAnswers": 94,
+            "wrongAnswers": 21,
+            "mistakes": 1,
+            "distinctDays": 1,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
-              "math::fractions::__topic__"
+              "science::body::__topic__",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__",
+              "english::grammar::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -3942,7 +4827,7 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 1,
+            "gatingDecisionCount": 2,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -3953,22 +4838,58 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
               "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
               "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 94,
+                "recurrenceMet": false
+              },
+              "english::grammar": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -4049,10 +4970,10 @@
       "expectedQ1Sufficiency": "supported_diagnosis",
       "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 8,
-        "wrongAnswers": 2,
-        "mistakes": 2,
-        "distinctDays": 2,
+        "diagnosticAnswers": 78,
+        "wrongAnswers": 16,
+        "mistakes": 0,
+        "distinctDays": 0,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -4064,17 +4985,16 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -4099,18 +5019,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4120,7 +5064,19 @@
               "english::grammar": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -4174,17 +5130,16 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -4192,8 +5147,12 @@
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
               "english::vocabulary::school_objects",
-              "english::grammar::past_simple"
+              "hebrew::reading_comprehension::__topic__",
+              "english::grammar::__topic__",
+              "english::grammar::past_simple",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -4202,7 +5161,7 @@
             "hasShadowGating": true,
             "hasAppliedGating": false,
             "gatingDecisionCount": 0,
-            "hasValidatedPromotion": true,
+            "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
           },
@@ -4212,18 +5171,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4233,7 +5216,19 @@
               "english::grammar": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -4286,26 +5281,28 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
               "english::vocabulary::school_objects",
-              "english::grammar::past_simple"
+              "hebrew::reading_comprehension::__topic__",
+              "english::grammar::__topic__",
+              "english::grammar::past_simple",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -4313,8 +5310,8 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 0,
-            "hasValidatedPromotion": true,
+            "gatingDecisionCount": 2,
+            "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
           },
@@ -4324,18 +5321,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4345,7 +5366,19 @@
               "english::grammar": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -4397,26 +5430,28 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
+              "science::body::__topic__",
               "english::vocabulary::school_objects",
-              "english::grammar::past_simple"
+              "hebrew::reading_comprehension::__topic__",
+              "english::grammar::__topic__",
+              "english::grammar::past_simple",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -4424,10 +5459,10 @@
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
             "hasAppliedGating": true,
-            "gatingDecisionCount": 0,
-            "hasValidatedPromotion": true,
-            "hasAppliedPromotion": true,
-            "promotionDecisionCount": 1
+            "gatingDecisionCount": 2,
+            "hasValidatedPromotion": false,
+            "hasAppliedPromotion": false,
+            "promotionDecisionCount": 0
           },
           "evidenceQualitySnapshot": {
             "context": "parent",
@@ -4435,18 +5470,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "hebrew": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 80,
+                "recurrenceMet": false
+              },
               "english::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4456,7 +5515,19 @@
               "english::grammar": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 60,
                 "recurrenceMet": true
               }
             }
@@ -4537,10 +5608,10 @@
       "expectedQ1Sufficiency": "supported_diagnosis",
       "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 8,
-        "wrongAnswers": 2,
-        "mistakes": 2,
-        "distinctDays": 2,
+        "diagnosticAnswers": 78,
+        "wrongAnswers": 16,
+        "mistakes": 0,
+        "distinctDays": 0,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -4552,17 +5623,16 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -4587,18 +5657,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "science": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4608,7 +5702,19 @@
               "hebrew::reading_comprehension": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography::homeland": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             }
@@ -4662,17 +5768,16 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במתמטיקה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -4681,7 +5786,9 @@
             "hasBySubSkill": true,
             "bySubSkillKeys": [
               "hebrew::vocabulary::__topic__",
-              "hebrew::reading_comprehension::__topic__"
+              "science::body::__topic__",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -4700,18 +5807,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "science": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4721,7 +5852,19 @@
               "hebrew::reading_comprehension": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography::homeland": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             }
@@ -4774,34 +5917,34 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
               "hebrew::vocabulary::__topic__",
-              "hebrew::reading_comprehension::__topic__"
+              "science::body::__topic__",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -4812,18 +5955,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "science": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4833,7 +6000,19 @@
               "hebrew::reading_comprehension": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography::homeland": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             }
@@ -4885,34 +6064,34 @@
           "dataSufficiency": "supported_diagnosis",
           "topicSufficiency": "preliminary_signal",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 0,
+            "distinctDays": 0,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות בעברית — שווה לחזור עליהן בקצב איטי.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
           ],
-          "strongDiagnosisLanguage": true,
+          "strongDiagnosisLanguage": false,
           "allowsStrongTopicDiagnosis": true,
           "allowsStrongTopicInsight": true,
           "internalEvidenceQuality": {
             "hasBySubSkill": true,
             "bySubSkillKeys": [
               "hebrew::vocabulary::__topic__",
-              "hebrew::reading_comprehension::__topic__"
+              "science::body::__topic__",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": false,
-            "gatingDecisionCount": 0,
+            "hasAppliedGating": true,
+            "gatingDecisionCount": 1,
             "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
@@ -4923,18 +6102,42 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
+              "math": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 84,
+                "recurrenceMet": false
+              },
+              "science": {
                 "dataSufficiency": "supported_diagnosis",
                 "confidenceLevel": "moderate",
-                "evidenceCount": 14,
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             },
             "byTopic": {
+              "math::fractions": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
               "hebrew::vocabulary": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
@@ -4944,7 +6147,19 @@
               "hebrew::reading_comprehension": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 78,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
+                "recurrenceMet": true
+              },
+              "moledet_geography::homeland": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 70,
                 "recurrenceMet": true
               }
             }
@@ -5025,10 +6240,10 @@
       "expectedQ1Sufficiency": "supported_diagnosis",
       "actualQ1Sufficiency": "supported_diagnosis",
       "metrics": {
-        "diagnosticAnswers": 8,
-        "wrongAnswers": 2,
-        "mistakes": 2,
-        "distinctDays": 2,
+        "diagnosticAnswers": 78,
+        "wrongAnswers": 16,
+        "mistakes": 5,
+        "distinctDays": 3,
         "learningAnswers": 0,
         "bookMinutes": 0
       },
@@ -5038,20 +6253,18 @@
           "modeId": "A",
           "modeName": "production_default",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "preliminary_signal",
+          "topicSufficiency": "supported_diagnosis",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 5,
+            "distinctDays": 3,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
-            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -5076,35 +6289,59 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
-              "science": {
+              "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
-              "science::body": {
+              "math::fractions": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography::homeland": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             }
           },
@@ -5155,20 +6392,18 @@
           "modeId": "B",
           "modeName": "metadata_internal_only",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "preliminary_signal",
+          "topicSufficiency": "supported_diagnosis",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 5,
+            "distinctDays": 3,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
-            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -5177,7 +6412,10 @@
             "hasBySubSkill": true,
             "bySubSkillKeys": [
               "moledet_geography::homeland::map_regions",
-              "science::body::sci_body_general"
+              "science::body::__topic__",
+              "science::body::sci_body_general",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
@@ -5186,7 +6424,7 @@
             "hasShadowGating": true,
             "hasAppliedGating": false,
             "gatingDecisionCount": 0,
-            "hasValidatedPromotion": true,
+            "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
           },
@@ -5196,35 +6434,59 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
-              "science": {
+              "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
-              "science::body": {
+              "math::fractions": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography::homeland": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             }
           },
@@ -5274,20 +6536,18 @@
           "modeId": "C",
           "modeName": "active_suppression",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "preliminary_signal",
+          "topicSufficiency": "supported_diagnosis",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 5,
+            "distinctDays": 3,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
-            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -5296,16 +6556,19 @@
             "hasBySubSkill": true,
             "bySubSkillKeys": [
               "moledet_geography::homeland::map_regions",
-              "science::body::sci_body_general"
+              "science::body::__topic__",
+              "science::body::sci_body_general",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": true,
+            "hasAppliedGating": false,
             "gatingDecisionCount": 0,
-            "hasValidatedPromotion": true,
+            "hasValidatedPromotion": false,
             "hasAppliedPromotion": false,
             "promotionDecisionCount": 0
           },
@@ -5315,35 +6578,59 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
-              "science": {
+              "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
-              "science::body": {
+              "math::fractions": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography::homeland": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             }
           },
@@ -5392,20 +6679,18 @@
           "modeId": "D",
           "modeName": "promotion_trial",
           "dataSufficiency": "supported_diagnosis",
-          "topicSufficiency": "preliminary_signal",
+          "topicSufficiency": "supported_diagnosis",
           "metrics": {
-            "diagnosticAnswers": 8,
-            "wrongAnswers": 2,
-            "mistakes": 2,
-            "distinctDays": 2,
+            "diagnosticAnswers": 78,
+            "wrongAnswers": 16,
+            "mistakes": 5,
+            "distinctDays": 3,
             "learningAnswers": 0,
             "bookMinutes": 0
           },
           "parentFacingInsights": [
-            "לא הייתה פעילות לאחרונה — מומלץ לחזור לתרגול קצר כדי לשמור על רצף למידה.",
-            "יש טעויות חוזרות במדעים — שווה לחזור עליהן בקצב איטי.",
-            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף.",
-            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            "יש טעויות חוזרות במולדת וגאוגרפיה — שווה לחזור עליהן בקצב איטי.",
+            "יש התקדמות יחסית במולדת וגאוגרפיה — כדאי לשמר את הרצף."
           ],
           "strongDiagnosisLanguage": true,
           "allowsStrongTopicDiagnosis": true,
@@ -5414,18 +6699,21 @@
             "hasBySubSkill": true,
             "bySubSkillKeys": [
               "moledet_geography::homeland::map_regions",
-              "science::body::sci_body_general"
+              "science::body::__topic__",
+              "science::body::sci_body_general",
+              "hebrew::reading_comprehension::__topic__",
+              "math::fractions::__topic__"
             ],
             "hasErrorPatterns": false,
             "hasQuestionTypes": true,
             "hasProblemClasses": true,
             "hasDifficultyDepths": true,
             "hasShadowGating": true,
-            "hasAppliedGating": true,
+            "hasAppliedGating": false,
             "gatingDecisionCount": 0,
-            "hasValidatedPromotion": true,
-            "hasAppliedPromotion": true,
-            "promotionDecisionCount": 1
+            "hasValidatedPromotion": false,
+            "hasAppliedPromotion": false,
+            "promotionDecisionCount": 0
           },
           "evidenceQualitySnapshot": {
             "context": "parent",
@@ -5433,35 +6721,59 @@
               "dataSufficiency": "supported_diagnosis",
               "confidenceLevel": "moderate",
               "confidenceReason": "supported",
-              "evidenceCount": 14,
+              "evidenceCount": 294,
               "recurrenceMet": true
             },
             "bySubject": {
-              "science": {
+              "math": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             },
             "byTopic": {
-              "science::body": {
+              "math::fractions": {
                 "dataSufficiency": "preliminary_signal",
                 "confidenceLevel": "low",
-                "evidenceCount": 8,
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "hebrew::reading_comprehension": {
+                "dataSufficiency": "preliminary_signal",
+                "confidenceLevel": "low",
+                "evidenceCount": 70,
+                "recurrenceMet": false
+              },
+              "science::body": {
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 78,
                 "recurrenceMet": true
               },
               "moledet_geography::homeland": {
-                "dataSufficiency": "preliminary_signal",
-                "confidenceLevel": "low",
-                "evidenceCount": 6,
-                "recurrenceMet": false
+                "dataSufficiency": "supported_diagnosis",
+                "confidenceLevel": "moderate",
+                "evidenceCount": 76,
+                "recurrenceMet": true
               }
             }
           },
@@ -5532,7 +6844,7 @@
   },
   "summary": {
     "total": 12,
-    "passed": 12,
-    "failed": 0
+    "passed": 6,
+    "failed": 6
   }
 }

@@ -22,6 +22,7 @@ import {
   allowsStrongParentTopicInsight,
 } from "../../lib/learning/evidence-quality.js";
 import { attachParentContextEvidenceQuality } from "../../lib/learning/evidence-quality.js";
+import { estimatePracticeDurationSeconds } from "../../lib/parent-server/report-duration-sanity.js";
 import { processBookEventsRequest } from "../../lib/learning-supabase/book-events.server.js";
 import {
   aggregateParentReportPayload,
@@ -440,9 +441,49 @@ async function cleanAllSimTags(supabase, studentIds) {
 }
 
 async function insertPracticeSession(supabase, studentId, { subject, topic, grade, mode, answers, metaForAll, metaPerAnswer }) {
+  if (!answers.length) return { sessionId: null, answerCount: 0, sessionCount: 0, sessionIds: [] };
+
+  const byDay = new Map();
+  for (const answer of answers) {
+    const day = String(answer.answeredAt || "").slice(0, 10);
+    if (!day) continue;
+    if (!byDay.has(day)) byDay.set(day, []);
+    byDay.get(day).push(answer);
+  }
+
+  let answerCount = 0;
+  const sessionIds = [];
+  for (const dayAnswers of byDay.values()) {
+    const one = await insertPracticeSessionForDay(supabase, studentId, {
+      subject,
+      topic,
+      grade,
+      mode,
+      answers: dayAnswers,
+      metaForAll,
+      metaPerAnswer,
+    });
+    answerCount += one.answerCount;
+    if (one.sessionId) sessionIds.push(one.sessionId);
+  }
+
+  return {
+    sessionId: sessionIds[0] || null,
+    sessionIds,
+    sessionCount: sessionIds.length,
+    answerCount,
+  };
+}
+
+async function insertPracticeSessionForDay(
+  supabase,
+  studentId,
+  { subject, topic, grade, mode, answers, metaForAll, metaPerAnswer }
+) {
   if (!answers.length) return { sessionId: null, answerCount: 0 };
   const startedMs = Date.parse(answers[0].answeredAt);
-  const endedMs = Date.parse(answers[answers.length - 1].answeredAt) + 60_000;
+  const durationSeconds = estimatePracticeDurationSeconds(answers.length);
+  const endedMs = startedMs + durationSeconds * 1000;
   const correct = answers.filter((a) => a.isCorrect).length;
 
   const { data: sessionRow, error: sessErr } = await supabase
@@ -453,7 +494,7 @@ async function insertPracticeSession(supabase, studentId, { subject, topic, grad
       topic,
       started_at: new Date(startedMs).toISOString(),
       ended_at: new Date(endedMs).toISOString(),
-      duration_seconds: Math.max(60, Math.floor((endedMs - startedMs) / 1000)),
+      duration_seconds: durationSeconds,
       status: "completed",
       metadata: {
         mode: mode || "practice",

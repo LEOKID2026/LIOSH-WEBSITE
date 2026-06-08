@@ -1,15 +1,15 @@
 # Parent Report Q2-E Monthly Simulation QA
 
-**Date:** 2026-06-07
+**Date:** 2026-06-08
 **Window:** 2026-04-01 → 2026-04-30
 **Seed tag:** `parent-report-q2e-monthly-v1`
-**Status:** **PASS** (12/12)
+**Status:** **FAIL** (6/12)
 
 ## Summary
 
 | Area | Result |
 |------|--------|
-| Students verified | 12/12 PASS |
+| Students verified | 6/12 PASS |
 | Flag modes | A default · B metadata · C suppression · D promotion |
 | Public API sanitization | All modes, all students |
 | Product code changes | None |
@@ -18,18 +18,18 @@
 
 | Student | Login | Grade | Scenario | Subject/Topic | Diag | Wrongs | Days | Expected Q1 | Actual Q1 | Pass |
 |---------|-------|-------|----------|---------------|------|--------|------|-------------|-----------|------|
-| AAA1 | `aaa1` | 1 | A_no_data | math/addition | 0 | 0 | 0 | no_data | no_data | PASS |
-| AAA2 | `aaa2` | 1 | B_insufficient_data | math/addition | 4 | 1 | 1 | insufficient_data | insufficient_data | PASS |
-| AAA3 | `aaa3` | 2 | C_preliminary_by_count | math/addition | 9 | 3 | 3 | preliminary_signal | preliminary_signal | PASS |
-| AAA4 | `aaa4` | 2 | D_preliminary_no_recurrence | math/addition | 14 | 4 | 1 | preliminary_signal | preliminary_signal | PASS |
-| AAA5 | `aaa5` | 3 | E_supported_diagnosis | math/multiplication | 14 | 5 | 3 | supported_diagnosis | supported_diagnosis | PASS |
-| AAA6 | `aaa6` | 3 | F_parent_assigned | math/multiplication | 8 | 2 | 2 | preliminary_signal | preliminary_signal | PASS |
-| AAA7 | `aaa7` | 4 | G_non_diagnostic_exclusion | math/multiplication | 0 | 0 | 0 | no_data | no_data | PASS |
+| AAA1 | `aaa1` | 1 | A_no_data | math/addition | 130 | 26 | 0 | no_data | supported_diagnosis | FAIL |
+| AAA2 | `aaa2` | 1 | B_insufficient_data | math/addition | 134 | 27 | 0 | insufficient_data | supported_diagnosis | FAIL |
+| AAA3 | `aaa3` | 2 | C_preliminary_by_count | math/addition | 139 | 29 | 0 | preliminary_signal | supported_diagnosis | FAIL |
+| AAA4 | `aaa4` | 2 | D_preliminary_no_recurrence | math/addition | 144 | 30 | 0 | preliminary_signal | supported_diagnosis | FAIL |
+| AAA5 | `aaa5` | 3 | E_supported_diagnosis | math/multiplication | 104 | 25 | 0 | supported_diagnosis | supported_diagnosis | PASS |
+| AAA6 | `aaa6` | 3 | F_parent_assigned | math/multiplication | 98 | 22 | 0 | preliminary_signal | supported_diagnosis | FAIL |
+| AAA7 | `aaa7` | 4 | G_non_diagnostic_exclusion | math/multiplication | 90 | 20 | 0 | no_data | supported_diagnosis | FAIL |
 | AAA8 | `aaa8` | 4 | H_questionType_contrast | math/fractions | 15 | 5 | 3 | supported_diagnosis | supported_diagnosis | PASS |
-| AAA9 | `aaa9` | 5 | I_weak_metadata_suppression | math/fractions | 14 | 5 | 3 | supported_diagnosis | supported_diagnosis | PASS |
-| AAA10 | `aaa10` | 5 | J_english_metadata | english/grammar | 8 | 2 | 2 | supported_diagnosis | supported_diagnosis | PASS |
-| AAA11 | `aaa11` | 6 | K_hebrew_metadata | hebrew/reading_comprehension | 8 | 2 | 2 | supported_diagnosis | supported_diagnosis | PASS |
-| AAA12 | `aaa12` | 6 | L_science_moledet | science/body | 8 | 2 | 2 | supported_diagnosis | supported_diagnosis | PASS |
+| AAA9 | `aaa9` | 5 | I_weak_metadata_suppression | math/fractions | 94 | 21 | 1 | supported_diagnosis | supported_diagnosis | PASS |
+| AAA10 | `aaa10` | 5 | J_english_metadata | english/grammar | 78 | 16 | 0 | supported_diagnosis | supported_diagnosis | PASS |
+| AAA11 | `aaa11` | 6 | K_hebrew_metadata | hebrew/reading_comprehension | 78 | 16 | 0 | supported_diagnosis | supported_diagnosis | PASS |
+| AAA12 | `aaa12` | 6 | L_science_moledet | science/body | 78 | 16 | 3 | supported_diagnosis | supported_diagnosis | PASS |
 
 ## Manual inspection helpers
 
@@ -87,18 +87,18 @@ All 12 students × 4 flag modes (48 snapshots): public payload checks pass for `
 
 | Student | Mode B (internal) | Mode C (suppression) | Mode D (promotion) |
 |---------|-------------------|----------------------|---------------------|
-| AAA1 | bySubSkill=false shadow=true | appliedGating=false | promotionDecisions=0 |
-| AAA2 | bySubSkill=true shadow=true | appliedGating=false | promotionDecisions=0 |
-| AAA3 | bySubSkill=true shadow=true | appliedGating=false | promotionDecisions=0 |
-| AAA4 | bySubSkill=true shadow=true | appliedGating=false | promotionDecisions=0 |
+| AAA1 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
+| AAA2 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
+| AAA3 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
+| AAA4 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
 | AAA5 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
-| AAA6 | bySubSkill=true shadow=true | appliedGating=false | promotionDecisions=0 |
-| AAA7 | bySubSkill=false shadow=true | appliedGating=false | promotionDecisions=0 |
+| AAA6 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
+| AAA7 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
 | AAA8 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
 | AAA9 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
-| AAA10 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=1 |
-| AAA11 | bySubSkill=true shadow=true | appliedGating=false | promotionDecisions=0 |
-| AAA12 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=1 |
+| AAA10 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
+| AAA11 | bySubSkill=true shadow=true | appliedGating=true | promotionDecisions=0 |
+| AAA12 | bySubSkill=true shadow=true | appliedGating=false | promotionDecisions=0 |
 
 
 ```bash

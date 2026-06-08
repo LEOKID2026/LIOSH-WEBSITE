@@ -1,0 +1,68 @@
+{
+  "scenario": "GATE-LOW",
+  "window": {
+    "label": "AAA9",
+    "from": "2026-05-10",
+    "to": "2026-05-18"
+  },
+  "student": {
+    "label": "AAA9",
+    "login": "aaa9",
+    "grade": 5,
+    "scenario": "I_weak_metadata_suppression",
+    "studentId": "cd4ba8f0-fe4f-424d-8ed1-0c3acaf5f412",
+    "fullName": "בדיקה-ה1",
+    "gradeLevel": "grade_5",
+    "isActive": true
+  },
+  "traces": [
+    {
+      "sessionId": "417eff5b-ad15-4256-991b-079be113e1af",
+      "student": "AAA9",
+      "subject": "math",
+      "topic": "fractions",
+      "started_at": "2026-05-10T09:20:00+00:00",
+      "ended_at": "2026-05-10T09:27:30+00:00",
+      "duration_seconds_db": 450,
+      "duration_minutes_db": 8,
+      "answerCount": 5,
+      "first_answer_at": "2026-05-10T09:20:00+00:00",
+      "last_answer_at": "2026-05-10T13:20:00+00:00",
+      "wall_clock_span_minutes": 240,
+      "sourceField": "learning_sessions.duration_seconds",
+      "seedTag": "parent-report-diagnostic-visible-impact-v1"
+    },
+    {
+      "sessionId": "173bf614-1bf9-4c6d-868b-1996b1018e46",
+      "student": "AAA9",
+      "subject": "math",
+      "topic": "fractions",
+      "started_at": "2026-05-14T09:20:00+00:00",
+      "ended_at": "2026-05-14T09:27:30+00:00",
+      "duration_seconds_db": 450,
+      "duration_minutes_db": 8,
+      "answerCount": 5,
+      "first_answer_at": "2026-05-14T09:20:00+00:00",
+      "last_answer_at": "2026-05-14T13:20:00+00:00",
+      "wall_clock_span_minutes": 240,
+      "sourceField": "learning_sessions.duration_seconds",
+      "seedTag": "parent-report-diagnostic-visible-impact-v1"
+    },
+    {
+      "sessionId": "e8c26716-28c3-4dac-a4eb-87fb948cb0d9",
+      "student": "AAA9",
+      "subject": "math",
+      "topic": "fractions",
+      "started_at": "2026-05-18T09:20:00+00:00",
+      "ended_at": "2026-05-18T09:27:30+00:00",
+      "duration_seconds_db": 450,
+      "duration_minutes_db": 8,
+      "answerCount": 5,
+      "first_answer_at": "2026-05-18T09:20:00+00:00",
+      "last_answer_at": "2026-05-18T13:20:00+00:00",
+      "wall_clock_span_minutes": 240,
+      "sourceField": "learning_sessions.duration_seconds",
+      "seedTag": "parent-report-diagnostic-visible-impact-v1"
+    }
+  ]
+}

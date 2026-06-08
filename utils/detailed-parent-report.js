@@ -91,6 +91,7 @@ import {
   resolveRowDataSufficiencyLevel,
   resolveHasSubskillMetadataFromRowSources,
   shouldThinEvidenceDowngradeRecommendation,
+  TOPIC_EVIDENCE_THRESHOLDS,
 } from "./parent-report-topic-evidence.js";
 import { buildRowIdentityV1 } from "./parent-report-output-integrity/row-identity-v1.js";
 import {
@@ -1971,7 +1972,21 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
   }
 
   const gateReadiness =
-    canonicalReadiness === "ready" ? "ready" : canonicalReadiness === "forming" ? "moderate" : "insufficient";
+    outQuestions >= TOPIC_EVIDENCE_THRESHOLDS.minQuestionsModerate
+      ? canonicalReadiness === "ready"
+        ? "ready"
+        : "moderate"
+      : outQuestions >= TOPIC_EVIDENCE_THRESHOLDS.minQuestionsTopicConclusion
+        ? canonicalReadiness === "ready"
+          ? "ready"
+          : canonicalReadiness === "forming"
+            ? "moderate"
+            : "insufficient"
+        : canonicalReadiness === "ready"
+          ? "ready"
+          : canonicalReadiness === "forming"
+            ? "moderate"
+            : "insufficient";
   const priorityLevel = String(u?.priority?.level || "");
   const priorityScore =
     Number(u?.priority?.score)

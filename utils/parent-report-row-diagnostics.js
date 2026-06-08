@@ -5,6 +5,7 @@
 
 import { mathReportBaseOperationKey, canonicalParentReportGradeKey } from "./math-report-generator.js";
 import { DEFAULT_TOPIC_NEXT_STEP_CONFIG } from "./topic-next-step-config.js";
+import { TOPIC_EVIDENCE_THRESHOLDS } from "./parent-report-topic-evidence.js";
 import { buildEvidenceContractV1, validateEvidenceContractV1 } from "./contracts/parent-report-contracts-v1.js";
 export const TRACK_ROW_MODE_SEP = "\u0001";
 
@@ -274,6 +275,16 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
     return {
       level: "strong",
       labelHe: "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+      suppressAggressiveStep: false,
+    };
+  }
+  if (q >= TOPIC_EVIDENCE_THRESHOLDS.minQuestionsModerate && evidenceStrength !== "low") {
+    return {
+      level: evidenceStrength === "strong" ? "strong" : "medium",
+      labelHe:
+        evidenceStrength === "strong"
+          ? "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
       suppressAggressiveStep: false,
     };
   }

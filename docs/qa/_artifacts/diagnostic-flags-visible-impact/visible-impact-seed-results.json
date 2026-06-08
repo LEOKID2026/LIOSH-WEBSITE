@@ -1,10 +1,10 @@
 {
-  "runAt": "2026-06-08T19:59:12.275Z",
+  "runAt": "2026-06-08T22:59:32.732Z",
   "seedTag": "parent-report-diagnostic-visible-impact-v1",
   "seedMetaKey": "parentReportDiagnosticVisibleImpact",
   "cleanup": {
     "tag": "parent-report-diagnostic-visible-impact-v1",
-    "removedSessions": 5,
+    "removedSessions": 12,
     "removedParentActivities": 0,
     "removedBookSessions": 0
   },
@@ -125,14 +125,26 @@
       "fixtureId": "GATE-LOW",
       "label": "AAA9",
       "scenario": "GATE-LOW",
-      "sessionId": "b2ae0d68-8f12-4afe-97ff-34bcd084d2ad",
+      "sessionId": "ce7fdb1e-0e8f-421e-8b9a-4fdaba82ebf5",
+      "sessionIds": [
+        "ce7fdb1e-0e8f-421e-8b9a-4fdaba82ebf5",
+        "0a8c9f31-2892-46c2-a95e-24ed68384fcd",
+        "1a071dee-b8f1-402a-b432-55b464ed1104"
+      ],
+      "sessionCount": 3,
       "answerCount": 15
     },
     {
       "fixtureId": "SUBSKILL-FOCUS",
       "label": "AAA10",
       "scenario": "SUBSKILL-FOCUS",
-      "sessionId": "b82c2ca5-8756-45ca-80d1-8997130fd6d5",
+      "sessionId": "56213105-3fb7-4410-b00c-8d2ff5c62862",
+      "sessionIds": [
+        "56213105-3fb7-4410-b00c-8d2ff5c62862",
+        "adacaf57-092f-4b4c-a518-b8a3a484f33f",
+        "f04e4faa-e65b-4da0-8f20-9b762e9c1213"
+      ],
+      "sessionCount": 3,
       "answerCount": 12
     },
     {
@@ -141,11 +153,21 @@
       "scenario": "SUBSKILL-CONFLICT",
       "sessions": [
         {
-          "sessionId": "5a8c81de-1e92-4dd5-9f34-d3af422efbe7",
+          "sessionId": "fe632c07-cd28-4409-81f8-c57ca7010393",
+          "sessionIds": [
+            "fe632c07-cd28-4409-81f8-c57ca7010393",
+            "229f3f11-cda6-47fa-a6fe-07b0d20302de"
+          ],
+          "sessionCount": 2,
           "answerCount": 8
         },
         {
-          "sessionId": "389ce325-3559-44ab-8cf2-368ccfbb9a47",
+          "sessionId": "cac43b44-7d15-4d69-8fc0-f8c28486c0b9",
+          "sessionIds": [
+            "cac43b44-7d15-4d69-8fc0-f8c28486c0b9",
+            "f5660c13-448e-41f0-83f0-6e308e796e68"
+          ],
+          "sessionCount": 2,
           "answerCount": 7
         }
       ],
@@ -155,7 +177,12 @@
       "fixtureId": "PROMOTE-STRONG",
       "label": "AAA5",
       "scenario": "PROMOTE-STRONG",
-      "sessionId": "1508c860-d52a-40e8-938a-f68b691b4b16",
+      "sessionId": "1928ee0b-b70f-4697-9dbd-6c41ad470759",
+      "sessionIds": [
+        "1928ee0b-b70f-4697-9dbd-6c41ad470759",
+        "b32c6e5a-1c1f-47ef-a541-2cb84c9708b1"
+      ],
+      "sessionCount": 2,
       "answerCount": 10
     }
   ]

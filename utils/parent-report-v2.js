@@ -21,6 +21,7 @@ import {
   formatParentReportActivityIsrael,
   parseActivityTimestampMs,
 } from "../lib/learning-supabase/parent-report-activity-time.js";
+import { sanitizeReportDurationSeconds } from "../lib/parent-server/report-duration-sanity.js";
 import { analyzeLearningPatterns } from "./learning-patterns-analysis.js";
 import {
   enrichTopicMapsWithRowDiagnostics,
@@ -208,14 +209,20 @@ function normalizeSessionsArray(sessions) {
  */
 function sessionDurationSeconds(session) {
   if (!session || typeof session !== "object") return 0;
+  let sec = 0;
   if (session.duration !== undefined && session.duration !== null) {
     const n = Number(session.duration);
-    if (Number.isFinite(n) && n >= 0) return n;
-    return 0;
+    if (Number.isFinite(n) && n >= 0) sec = n;
+  } else {
+    const total = session.total !== undefined && session.total !== null ? Number(session.total) : 0;
+    const t = Number.isFinite(total) ? total : 0;
+    sec = t * 30;
   }
-  const total = session.total !== undefined && session.total !== null ? Number(session.total) : 0;
-  const t = Number.isFinite(total) ? total : 0;
-  return t * 30;
+  const answerCount =
+    session.total !== undefined && session.total !== null ? Number(session.total) : 0;
+  return sanitizeReportDurationSeconds(sec, {
+    answerCount: Number.isFinite(answerCount) ? answerCount : 0,
+  }).seconds;
 }
 
 /**

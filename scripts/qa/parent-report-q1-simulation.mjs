@@ -14,7 +14,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 
-import { classifyActivityEvidence } from "../../lib/learning/activity-classification.js";
+import { estimatePracticeDurationSeconds } from "../../lib/parent-server/report-duration-sanity.js";
 import { DATA_SUFFICIENCY } from "../../lib/learning/evidence-quality.js";
 import { processBookEventsRequest } from "../../lib/learning-supabase/book-events.server.js";
 import {
@@ -207,7 +207,8 @@ async function cleanTaggedSeeds(supabase, studentIds) {
 async function insertPracticeSession(supabase, studentId, { subject, topic, grade, mode, answers }) {
   if (!answers.length) return { sessionId: null, answerCount: 0 };
   const startedMs = Date.parse(answers[0].answeredAt);
-  const endedMs = Date.parse(answers[answers.length - 1].answeredAt) + 60_000;
+  const durationSeconds = estimatePracticeDurationSeconds(answers.length);
+  const endedMs = startedMs + durationSeconds * 1000;
   const correct = answers.filter((a) => a.isCorrect).length;
 
   const { data: sessionRow, error: sessErr } = await supabase
@@ -218,7 +219,7 @@ async function insertPracticeSession(supabase, studentId, { subject, topic, grad
       topic,
       started_at: new Date(startedMs).toISOString(),
       ended_at: new Date(endedMs).toISOString(),
-      duration_seconds: Math.max(60, Math.floor((endedMs - startedMs) / 1000)),
+      duration_seconds: durationSeconds,
       status: "completed",
       metadata: {
         mode: mode || "practice",

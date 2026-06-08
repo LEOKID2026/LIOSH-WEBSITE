@@ -1,5 +1,5 @@
 {
-  "runAt": "2026-06-08T19:17:38.466Z",
+  "runAt": "2026-06-08T22:59:22.676Z",
   "seedTag": "parent-report-qa-may-june-v1",
   "window": {
     "from": "2026-05-01",
@@ -50,7 +50,7 @@
       "scenario": "F_parent_assigned",
       "seeded": true,
       "type": "assigned_parent",
-      "activityId": "cbd30a0c-5cde-4785-b6a6-018464096276",
+      "activityId": "c0f47abb-f77d-4863-98de-fc1f60fb5f33",
       "count": 8
     },
     {
@@ -61,7 +61,7 @@
       "learningCount": 8,
       "book": {
         "ok": true,
-        "sessionId": "772acb14-3de1-4027-9759-26646df187af"
+        "sessionId": "b4fd3265-9802-436a-9111-d32532a36516"
       }
     },
     {

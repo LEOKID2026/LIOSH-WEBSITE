@@ -1,6 +1,6 @@
 {
   "summary": {
-    "generatedAt": "2026-06-08T21:14:55.345Z",
+    "generatedAt": "2026-06-08T23:17:55.690Z",
     "scenarios": 5,
     "leakScanPass": true,
     "invariantsPass": true,
@@ -51,7 +51,7 @@
               "diagnosticAccuracy": 71.43,
               "totalAnswers": 81,
               "totalSessions": 13,
-              "totalDurationSeconds": 4089
+              "totalDurationSeconds": 1689
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 14,
@@ -96,7 +96,7 @@
               "diagnosticAccuracy": 71.43,
               "totalAnswers": 81,
               "totalSessions": 13,
-              "totalDurationSeconds": 4089
+              "totalDurationSeconds": 1689
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 14,
@@ -141,7 +141,7 @@
               "diagnosticAccuracy": 71.43,
               "totalAnswers": 81,
               "totalSessions": 13,
-              "totalDurationSeconds": 4089
+              "totalDurationSeconds": 1689
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 14,
@@ -193,7 +193,7 @@
               "diagnosticAccuracy": 71.43,
               "totalAnswers": 81,
               "totalSessions": 13,
-              "totalDurationSeconds": 4089
+              "totalDurationSeconds": 1689
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 14,
@@ -299,8 +299,8 @@
               "diagnosticAnswers": 25,
               "diagnosticAccuracy": 48,
               "totalAnswers": 25,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1494120
+              "totalSessions": 5,
+              "totalDurationSeconds": 2250
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 25,
@@ -346,8 +346,8 @@
               "diagnosticAnswers": 25,
               "diagnosticAccuracy": 48,
               "totalAnswers": 25,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1494120
+              "totalSessions": 5,
+              "totalDurationSeconds": 2250
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 25,
@@ -393,8 +393,8 @@
               "diagnosticAnswers": 25,
               "diagnosticAccuracy": 48,
               "totalAnswers": 25,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1494120
+              "totalSessions": 5,
+              "totalDurationSeconds": 2250
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 25,
@@ -445,8 +445,8 @@
               "diagnosticAnswers": 25,
               "diagnosticAccuracy": 48,
               "totalAnswers": 25,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1494120
+              "totalSessions": 5,
+              "totalDurationSeconds": 2250
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 25,
@@ -552,8 +552,8 @@
               "diagnosticAnswers": 23,
               "diagnosticAccuracy": 65.22,
               "totalAnswers": 23,
-              "totalSessions": 3,
-              "totalDurationSeconds": 2188980
+              "totalSessions": 6,
+              "totalDurationSeconds": 2070
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 23,
@@ -595,8 +595,8 @@
               "diagnosticAnswers": 23,
               "diagnosticAccuracy": 65.22,
               "totalAnswers": 23,
-              "totalSessions": 3,
-              "totalDurationSeconds": 2188980
+              "totalSessions": 6,
+              "totalDurationSeconds": 2070
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 23,
@@ -650,8 +650,8 @@
               "diagnosticAnswers": 23,
               "diagnosticAccuracy": 65.22,
               "totalAnswers": 23,
-              "totalSessions": 3,
-              "totalDurationSeconds": 2188980
+              "totalSessions": 6,
+              "totalDurationSeconds": 2070
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 23,
@@ -705,8 +705,8 @@
               "diagnosticAnswers": 23,
               "diagnosticAccuracy": 65.22,
               "totalAnswers": 23,
-              "totalSessions": 3,
-              "totalDurationSeconds": 2188980
+              "totalSessions": 6,
+              "totalDurationSeconds": 2070
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 23,
@@ -837,8 +837,8 @@
               "diagnosticAnswers": 30,
               "diagnosticAccuracy": 66.67,
               "totalAnswers": 54,
-              "totalSessions": 11,
-              "totalDurationSeconds": 389379
+              "totalSessions": 15,
+              "totalDurationSeconds": 3039
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 30,
@@ -880,8 +880,8 @@
               "diagnosticAnswers": 30,
               "diagnosticAccuracy": 66.67,
               "totalAnswers": 54,
-              "totalSessions": 11,
-              "totalDurationSeconds": 389379
+              "totalSessions": 15,
+              "totalDurationSeconds": 3039
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 30,
@@ -923,8 +923,8 @@
               "diagnosticAnswers": 30,
               "diagnosticAccuracy": 66.67,
               "totalAnswers": 54,
-              "totalSessions": 11,
-              "totalDurationSeconds": 389379
+              "totalSessions": 15,
+              "totalDurationSeconds": 3039
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 30,
@@ -966,8 +966,8 @@
               "diagnosticAnswers": 30,
               "diagnosticAccuracy": 66.67,
               "totalAnswers": 54,
-              "totalSessions": 11,
-              "totalDurationSeconds": 389379
+              "totalSessions": 15,
+              "totalDurationSeconds": 3039
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 30,
@@ -1059,8 +1059,8 @@
               "diagnosticAnswers": 15,
               "diagnosticAccuracy": 60,
               "totalAnswers": 15,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1321320
+              "totalSessions": 3,
+              "totalDurationSeconds": 1350
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 15,
@@ -1102,8 +1102,8 @@
               "diagnosticAnswers": 15,
               "diagnosticAccuracy": 60,
               "totalAnswers": 15,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1321320
+              "totalSessions": 3,
+              "totalDurationSeconds": 1350
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 15,
@@ -1145,8 +1145,8 @@
               "diagnosticAnswers": 15,
               "diagnosticAccuracy": 60,
               "totalAnswers": 15,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1321320
+              "totalSessions": 3,
+              "totalDurationSeconds": 1350
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 15,
@@ -1188,8 +1188,8 @@
               "diagnosticAnswers": 15,
               "diagnosticAccuracy": 60,
               "totalAnswers": 15,
-              "totalSessions": 2,
-              "totalDurationSeconds": 1321320
+              "totalSessions": 3,
+              "totalDurationSeconds": 1350
             },
             "metaEvidenceQualityStudent": {
               "evidenceCount": 15,

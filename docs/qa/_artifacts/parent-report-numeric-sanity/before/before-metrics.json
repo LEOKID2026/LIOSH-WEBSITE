@@ -1,0 +1,33 @@
+{
+  "capturedAt": "2026-06-08T22:00:00.000Z",
+  "note": "Pre-fix metrics captured from user blocker report and first root-cause DB trace (before re-seed). Original matrix PNG/PDF files were not retained on disk after the fix branch work.",
+  "reportedByUser": {
+    "GATE-LOW_or_similar": {
+      "totalMinutes": 30602,
+      "totalQuestions": 20,
+      "statusHe": "אין מספיק מפגשים"
+    },
+    "SUBSKILL-FOCUS_or_similar": {
+      "totalMinutes": 5881,
+      "totalQuestions": 3,
+      "statusHe": null
+    }
+  },
+  "rootCauseTracePreFix": {
+    "scenario": "GATE-LOW",
+    "student": "AAA9",
+    "subject": "math",
+    "topic": "fractions",
+    "worstSession": {
+      "duration_seconds_db": 788460,
+      "duration_minutes_db": 13141,
+      "wall_clock_span_minutes": 13140,
+      "answerCount": 14,
+      "seedTag": "parent-report-q2e-monthly-v1",
+      "sourceField": "learning_sessions.duration_seconds",
+      "started_at": "2026-05-12T09:20:00+00:00",
+      "last_answer_at": "2026-05-21T12:20:00+00:00"
+    },
+    "mechanism": "insertPracticeSession stored duration_seconds as wall-clock span from first_answer_at to last_answer_at across multi-day fixtures (single session spanning days)."
+  }
+}

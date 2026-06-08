@@ -1,0 +1,18 @@
+{
+  "scannedAt": "2026-06-08T23:19:55.034Z",
+  "pdfCount": 20,
+  "badPatternHits": [],
+  "minutesOver300": [],
+  "insufficientSessionsPhrase": [],
+  "gateLowModeCMinutes": [
+    38,
+    38
+  ],
+  "subskillFocusModeCMinutes": [
+    5,
+    10,
+    30,
+    35
+  ],
+  "pass": true
+}

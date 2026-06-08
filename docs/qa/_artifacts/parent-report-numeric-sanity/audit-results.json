@@ -1,0 +1,6652 @@
+{
+  "summary": {
+    "generatedAt": "2026-06-08T23:19:36.251Z",
+    "auditedRows": 115,
+    "failCount": 0,
+    "passCount": 115,
+    "thresholds": {
+      "maxSessionMinutes": 180,
+      "maxMinutesPerQuestion": 10,
+      "maxTopicMinutesShortWindow": 300,
+      "shortWindowDays": 14,
+      "defaultSecondsPerAnswer": 90,
+      "minSessionSeconds": 60
+    }
+  },
+  "audits": [
+    {
+      "child": "AAA1",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA1",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 16,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 1,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 16,
+        "sessionCount": 1
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA1",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 231,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 43,
+      "sessionCount": 21,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 43
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.19
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 43
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 43
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.18614718614718614,
+        "totalMinutes": 43,
+        "questions": 231,
+        "sessionCount": 21
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA1",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 247,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 44,
+      "sessionCount": 22,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 44
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.18
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 44
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 44
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.17813765182186234,
+        "totalMinutes": 44,
+        "questions": 247,
+        "sessionCount": 22
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 10,
+      "correct": 3,
+      "accuracy": 75,
+      "totalMinutes": 10,
+      "sessionCount": 7,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 10
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1,
+        "totalMinutes": 10,
+        "questions": 10,
+        "sessionCount": 7
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 4,
+      "correct": 3,
+      "accuracy": 75,
+      "totalMinutes": 10,
+      "sessionCount": 5,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 10
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.5,
+        "totalMinutes": 10,
+        "questions": 4,
+        "sessionCount": 5
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "addition",
+      "totalQuestions": 4,
+      "correct": 3,
+      "accuracy": 75,
+      "totalMinutes": 6,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 6
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 6
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 6
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 6,
+        "questions": 4,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 10,
+      "correct": 3,
+      "accuracy": 75,
+      "totalMinutes": 10,
+      "sessionCount": 7,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 10
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1,
+        "totalMinutes": 10,
+        "questions": 10,
+        "sessionCount": 7
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 4,
+      "correct": 3,
+      "accuracy": 75,
+      "totalMinutes": 10,
+      "sessionCount": 5,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 10
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 10
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.5,
+        "totalMinutes": 10,
+        "questions": 4,
+        "sessionCount": 5
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA2",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "addition",
+      "totalQuestions": 4,
+      "correct": 3,
+      "accuracy": 75,
+      "totalMinutes": 6,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 6
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 6
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 6
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 6,
+        "questions": 4,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 16,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 1,
+      "sessionCount": 1,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.06
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 1
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.0625,
+        "totalMinutes": 1,
+        "questions": 16,
+        "sessionCount": 1
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 105,
+      "correct": 6,
+      "accuracy": 66.67,
+      "totalMinutes": 27,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 27
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.26
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 27
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 27
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.2571428571428571,
+        "totalMinutes": 27,
+        "questions": 105,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 9,
+      "correct": 6,
+      "accuracy": 66.67,
+      "totalMinutes": 14,
+      "sessionCount": 5,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 14
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.56
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 14
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 14
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5555555555555556,
+        "totalMinutes": 14,
+        "questions": 9,
+        "sessionCount": 5
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "addition",
+      "totalQuestions": 9,
+      "correct": 6,
+      "accuracy": 66.67,
+      "totalMinutes": 14,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 14
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.56
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 14
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 14
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5555555555555556,
+        "totalMinutes": 14,
+        "questions": 9,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 121,
+      "correct": 6,
+      "accuracy": 66.67,
+      "totalMinutes": 27,
+      "sessionCount": 13,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 27
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.22
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 27
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 27
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.2231404958677686,
+        "totalMinutes": 27,
+        "questions": 121,
+        "sessionCount": 13
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 9,
+      "correct": 6,
+      "accuracy": 66.67,
+      "totalMinutes": 15,
+      "sessionCount": 6,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.67
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 15
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.6666666666666667,
+        "totalMinutes": 15,
+        "questions": 9,
+        "sessionCount": 6
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA3",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "addition",
+      "totalQuestions": 9,
+      "correct": 6,
+      "accuracy": 66.67,
+      "totalMinutes": 15,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.67
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 15
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.6666666666666667,
+        "totalMinutes": 15,
+        "questions": 9,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 15,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 1,
+      "sessionCount": 2,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.07
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 1
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.06666666666666667,
+        "totalMinutes": 1,
+        "questions": 15,
+        "sessionCount": 2
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 66,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 27,
+      "sessionCount": 11,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 27
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.41
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 27
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 27
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.4090909090909091,
+        "totalMinutes": 27,
+        "questions": 66,
+        "sessionCount": 11
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 14,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 24,
+      "sessionCount": 6,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 24
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.71
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 24
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 24
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.7142857142857142,
+        "totalMinutes": 24,
+        "questions": 14,
+        "sessionCount": 6
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "addition",
+      "totalQuestions": 14,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 22,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.57
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 22
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5714285714285714,
+        "totalMinutes": 22,
+        "questions": 14,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 81,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 28,
+      "sessionCount": 13,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 28
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.35
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 28
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 28
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.345679012345679,
+        "totalMinutes": 28,
+        "questions": 81,
+        "sessionCount": 13
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 14,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 24,
+      "sessionCount": 6,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 24
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.71
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 24
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 24
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.7142857142857142,
+        "totalMinutes": 24,
+        "questions": 14,
+        "sessionCount": 6
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "addition",
+      "totalQuestions": 14,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 22,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.57
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 22
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5714285714285714,
+        "totalMinutes": 22,
+        "questions": 14,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 16,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 1,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 16,
+        "sessionCount": 1
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 175,
+      "correct": 15,
+      "accuracy": 62.5,
+      "totalMinutes": 46,
+      "sessionCount": 19,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 46
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.26
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 46
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 46
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.26285714285714284,
+        "totalMinutes": 46,
+        "questions": 175,
+        "sessionCount": 19
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 24,
+      "correct": 15,
+      "accuracy": 62.5,
+      "totalMinutes": 36,
+      "sessionCount": 7,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 36
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 36
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 36
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 36,
+        "questions": 24,
+        "sessionCount": 7
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "multiplication",
+      "totalQuestions": 14,
+      "correct": 9,
+      "accuracy": 64.29,
+      "totalMinutes": 21,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 21
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 21
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 21
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 21,
+        "questions": 14,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 10,
+      "correct": 6,
+      "accuracy": 60,
+      "totalMinutes": 15,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 15
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 15,
+        "questions": 10,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 191,
+      "correct": 15,
+      "accuracy": 62.5,
+      "totalMinutes": 47,
+      "sessionCount": 20,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 47
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.25
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 47
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 47
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.24607329842931938,
+        "totalMinutes": 47,
+        "questions": 191,
+        "sessionCount": 20
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 24,
+      "correct": 15,
+      "accuracy": 62.5,
+      "totalMinutes": 36,
+      "sessionCount": 7,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 36
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 36
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 36
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 36,
+        "questions": 24,
+        "sessionCount": 7
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "multiplication",
+      "totalQuestions": 14,
+      "correct": 9,
+      "accuracy": 64.29,
+      "totalMinutes": 21,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 21
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 21
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 21
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 21,
+        "questions": 14,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 10,
+      "correct": 6,
+      "accuracy": 60,
+      "totalMinutes": 15,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 15
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 15,
+        "questions": 10,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 23,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 2,
+      "sessionCount": 2,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 2
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.09
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 2
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 2
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.08695652173913043,
+        "totalMinutes": 2,
+        "questions": 23,
+        "sessionCount": 2
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 136,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 17,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 17
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.125,
+        "totalMinutes": 17,
+        "questions": 136,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 3,
+      "sessionCount": 5,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 3
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.38
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 3
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 3
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.375,
+        "totalMinutes": 3,
+        "questions": 8,
+        "sessionCount": 5
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "multiplication",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 8,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 159,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 20,
+      "sessionCount": 14,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 20
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 20
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 20
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.12578616352201258,
+        "totalMinutes": 20,
+        "questions": 159,
+        "sessionCount": 14
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 3,
+      "sessionCount": 5,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 3
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.38
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 3
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 3
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.375,
+        "totalMinutes": 3,
+        "questions": 8,
+        "sessionCount": 5
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA6",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "multiplication",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 8,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA7",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA7",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 16,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 2,
+      "sessionCount": 1,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 2
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 2
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 2
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.125,
+        "totalMinutes": 2,
+        "questions": 16,
+        "sessionCount": 1
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA7",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 166,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 22,
+      "sessionCount": 16,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 22
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.13253012048192772,
+        "totalMinutes": 22,
+        "questions": 166,
+        "sessionCount": 16
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA7",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 182,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 23,
+      "sessionCount": 17,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 23
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 23
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 23
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.12637362637362637,
+        "totalMinutes": 23,
+        "questions": 182,
+        "sessionCount": 17
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 36,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 6,
+      "sessionCount": 4,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 6
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.17
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 6
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 6
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.16666666666666666,
+        "totalMinutes": 6,
+        "questions": 36,
+        "sessionCount": 4
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 54,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 51,
+      "sessionCount": 15,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 51
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.94
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 51
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 51
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.9444444444444444,
+        "totalMinutes": 51,
+        "questions": 54,
+        "sessionCount": 15
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 30,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 49,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 49
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.63
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 49
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 49
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.6333333333333333,
+        "totalMinutes": 49,
+        "questions": 30,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 30,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 45,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 45
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 45,
+        "questions": 30,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 90,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 57,
+      "sessionCount": 19,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 57
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.63
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 57
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 57
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.6333333333333333,
+        "totalMinutes": 57,
+        "questions": 90,
+        "sessionCount": 19
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 30,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 49,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 49
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.63
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 49
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 49
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.6333333333333333,
+        "totalMinutes": 49,
+        "questions": 30,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 30,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 45,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 45
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 45,
+        "questions": 30,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 12,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 1,
+      "sessionCount": 1,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.08
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 1
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 1
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.08333333333333333,
+        "totalMinutes": 1,
+        "questions": 12,
+        "sessionCount": 1
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 185,
+      "correct": 15,
+      "accuracy": 51.72,
+      "totalMinutes": 52,
+      "sessionCount": 19,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 52
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.28
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 52
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 52
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.2810810810810811,
+        "totalMinutes": 52,
+        "questions": 185,
+        "sessionCount": 19
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 29,
+      "correct": 15,
+      "accuracy": 51.72,
+      "totalMinutes": 45,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.55
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 45
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5517241379310345,
+        "totalMinutes": 45,
+        "questions": 29,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 29,
+      "correct": 15,
+      "accuracy": 51.72,
+      "totalMinutes": 44,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 44
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.52
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 44
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 44
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5172413793103448,
+        "totalMinutes": 44,
+        "questions": 29,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 197,
+      "correct": 15,
+      "accuracy": 51.72,
+      "totalMinutes": 53,
+      "sessionCount": 20,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 53
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.27
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 53
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 53
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.26903553299492383,
+        "totalMinutes": 53,
+        "questions": 197,
+        "sessionCount": 20
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 29,
+      "correct": 15,
+      "accuracy": 51.72,
+      "totalMinutes": 45,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.55
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 45
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5517241379310345,
+        "totalMinutes": 45,
+        "questions": 29,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 29,
+      "correct": 15,
+      "accuracy": 51.72,
+      "totalMinutes": 44,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 44
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.52
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 44
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 44
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5172413793103448,
+        "totalMinutes": 44,
+        "questions": 29,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 144,
+      "correct": 17,
+      "accuracy": 65.38,
+      "totalMinutes": 72,
+      "sessionCount": 17,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 72
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 72
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 72
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.5,
+        "totalMinutes": 72,
+        "questions": 144,
+        "sessionCount": 17
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "english",
+      "topic": "—",
+      "totalQuestions": 26,
+      "correct": 17,
+      "accuracy": 65.38,
+      "totalMinutes": 39,
+      "sessionCount": 7,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 39
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 39
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 39
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 39,
+        "questions": 26,
+        "sessionCount": 7
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "english",
+      "topic": "vocabulary",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 9,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 9
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 9,
+        "questions": 6,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "english",
+      "topic": "grammar",
+      "totalQuestions": 20,
+      "correct": 12,
+      "accuracy": 60,
+      "totalMinutes": 30,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 30
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 30
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 30
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 30,
+        "questions": 20,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 144,
+      "correct": 17,
+      "accuracy": 65.38,
+      "totalMinutes": 72,
+      "sessionCount": 17,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 72
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 72
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 72
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.5,
+        "totalMinutes": 72,
+        "questions": 144,
+        "sessionCount": 17
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "english",
+      "topic": "—",
+      "totalQuestions": 26,
+      "correct": 17,
+      "accuracy": 65.38,
+      "totalMinutes": 39,
+      "sessionCount": 7,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 39
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 39
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 39
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 39,
+        "questions": 26,
+        "sessionCount": 7
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "english",
+      "topic": "vocabulary",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 9,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 9
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 9,
+        "questions": 6,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "english",
+      "topic": "grammar",
+      "totalQuestions": 20,
+      "correct": 12,
+      "accuracy": 60,
+      "totalMinutes": 30,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 30
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 30
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 30
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 30,
+        "questions": 20,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 51,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 3,
+      "sessionCount": 4,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 3
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.06
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 3
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 3
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.058823529411764705,
+        "totalMinutes": 3,
+        "questions": 51,
+        "sessionCount": 4
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 294,
+      "correct": 11,
+      "accuracy": 78.57,
+      "totalMinutes": 60,
+      "sessionCount": 26,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 60
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.2
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 60
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 60
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.20408163265306123,
+        "totalMinutes": 60,
+        "questions": 294,
+        "sessionCount": 26
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "hebrew",
+      "topic": "—",
+      "totalQuestions": 14,
+      "correct": 11,
+      "accuracy": 78.57,
+      "totalMinutes": 29,
+      "sessionCount": 10,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 29
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.07
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 29
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 29
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.0714285714285716,
+        "totalMinutes": 29,
+        "questions": 14,
+        "sessionCount": 10
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "hebrew",
+      "topic": "vocabulary",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 9,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 9
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 9,
+        "questions": 6,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "hebrew",
+      "topic": "reading_comprehension",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 12,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 12
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 12
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 12
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 12,
+        "questions": 8,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 345,
+      "correct": 11,
+      "accuracy": 78.57,
+      "totalMinutes": 63,
+      "sessionCount": 30,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 63
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.18
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 63
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 63
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.1826086956521739,
+        "totalMinutes": 63,
+        "questions": 345,
+        "sessionCount": 30
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "hebrew",
+      "topic": "—",
+      "totalQuestions": 14,
+      "correct": 11,
+      "accuracy": 78.57,
+      "totalMinutes": 31,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 31
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.21
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 31
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 31
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.2142857142857144,
+        "totalMinutes": 31,
+        "questions": 14,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "hebrew",
+      "topic": "vocabulary",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 9,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 9
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 9,
+        "questions": 6,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA11",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "hebrew",
+      "topic": "reading_comprehension",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 12,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 12
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 12
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 12
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 12,
+        "questions": 8,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "one_day",
+      "from": "2026-06-08",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 0,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 0,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 0
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 0
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0,
+        "totalMinutes": 0,
+        "questions": 0,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "לא נאספו שאלות בתקופה שנבחרה — אין בסיס נתונים לשורה זו.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "one_week",
+      "from": "2026-06-02",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 7,
+      "correct": 0,
+      "accuracy": 0,
+      "totalMinutes": 2,
+      "sessionCount": 1,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 2
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.29
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 2
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 2
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.2857142857142857,
+        "totalMinutes": 2,
+        "questions": 7,
+        "sessionCount": 1
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 64,
+      "correct": 11,
+      "accuracy": 78.57,
+      "totalMinutes": 37,
+      "sessionCount": 17,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 37
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.58
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 37
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 37
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.578125,
+        "totalMinutes": 37,
+        "questions": 64,
+        "sessionCount": 17
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "science",
+      "topic": "—",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 17,
+      "sessionCount": 3,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 17
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.125,
+        "totalMinutes": 17,
+        "questions": 8,
+        "sessionCount": 3
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "science",
+      "topic": "body",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 17,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 17
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.125,
+        "totalMinutes": 17,
+        "questions": 8,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "subject",
+      "subject": "moledet_geography",
+      "topic": "—",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 11,
+      "sessionCount": 3,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 11
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.83
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 11
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 11
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.8333333333333333,
+        "totalMinutes": 11,
+        "questions": 6,
+        "sessionCount": 3
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "may_month",
+      "from": "2026-05-01",
+      "to": "2026-05-31",
+      "scope": "topic",
+      "subject": "moledet_geography",
+      "topic": "homeland",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 9,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 9
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 9,
+        "questions": 6,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 71,
+      "correct": 11,
+      "accuracy": 78.57,
+      "totalMinutes": 39,
+      "sessionCount": 18,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 39
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.55
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 39
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 39
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.5492957746478874,
+        "totalMinutes": 39,
+        "questions": 71,
+        "sessionCount": 18
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "science",
+      "topic": "—",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 17,
+      "sessionCount": 3,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 17
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.125,
+        "totalMinutes": 17,
+        "questions": 8,
+        "sessionCount": 3
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "science",
+      "topic": "body",
+      "totalQuestions": 8,
+      "correct": 6,
+      "accuracy": 75,
+      "totalMinutes": 17,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.13
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 17
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 17
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.125,
+        "totalMinutes": 17,
+        "questions": 8,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "moledet_geography",
+      "topic": "—",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 13,
+      "sessionCount": 4,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 13
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 2.17
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 13
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 13
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 2.1666666666666665,
+        "totalMinutes": 13,
+        "questions": 6,
+        "sessionCount": 4
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA12",
+      "range": "full",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "moledet_geography",
+      "topic": "homeland",
+      "totalQuestions": 6,
+      "correct": 5,
+      "accuracy": 83.33,
+      "totalMinutes": 9,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 9
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 9
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 9,
+        "questions": 6,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "fixture": "AAA4",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 81,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 28,
+      "sessionCount": 13,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 28
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.35
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 28
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 28
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.345679012345679,
+        "totalMinutes": 28,
+        "questions": 81,
+        "sessionCount": 13
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "fixture": "AAA4",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 14,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 24,
+      "sessionCount": 6,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 24
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.71
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 24
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 24
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.7142857142857142,
+        "totalMinutes": 24,
+        "questions": 14,
+        "sessionCount": 6
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA4",
+      "fixture": "AAA4",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "addition",
+      "totalQuestions": 14,
+      "correct": 10,
+      "accuracy": 71.43,
+      "totalMinutes": 22,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.57
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 22
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 22
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5714285714285714,
+        "totalMinutes": 22,
+        "questions": 14,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "fixture": "GATE-LOW",
+      "from": "2026-05-10",
+      "to": "2026-05-18",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 25,
+      "correct": 12,
+      "accuracy": 48,
+      "totalMinutes": 38,
+      "sessionCount": 5,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 38
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.52
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 38
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 38
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.52,
+        "totalMinutes": 38,
+        "questions": 25,
+        "sessionCount": 5
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "fixture": "GATE-LOW",
+      "from": "2026-05-10",
+      "to": "2026-05-18",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 25,
+      "correct": 12,
+      "accuracy": 48,
+      "totalMinutes": 38,
+      "sessionCount": 5,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 38
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.52
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 38
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 38
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.52,
+        "totalMinutes": 38,
+        "questions": 25,
+        "sessionCount": 5
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA9",
+      "fixture": "GATE-LOW",
+      "from": "2026-05-10",
+      "to": "2026-05-18",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 25,
+      "correct": 12,
+      "accuracy": 48,
+      "totalMinutes": 38,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 38
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.52
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 38
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 38
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.52,
+        "totalMinutes": 38,
+        "questions": 25,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "fixture": "SUBSKILL-FOCUS",
+      "from": "2026-05-06",
+      "to": "2026-05-20",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 23,
+      "correct": 15,
+      "accuracy": 65.22,
+      "totalMinutes": 35,
+      "sessionCount": 6,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 35
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.52
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 35
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 35
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5217391304347827,
+        "totalMinutes": 35,
+        "questions": 23,
+        "sessionCount": 6
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "fixture": "SUBSKILL-FOCUS",
+      "from": "2026-05-06",
+      "to": "2026-05-20",
+      "scope": "subject",
+      "subject": "english",
+      "topic": "—",
+      "totalQuestions": 23,
+      "correct": 15,
+      "accuracy": 65.22,
+      "totalMinutes": 35,
+      "sessionCount": 6,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 35
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.52
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 35
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 35
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5217391304347827,
+        "totalMinutes": 35,
+        "questions": 23,
+        "sessionCount": 6
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "fixture": "SUBSKILL-FOCUS",
+      "from": "2026-05-06",
+      "to": "2026-05-20",
+      "scope": "topic",
+      "subject": "english",
+      "topic": "vocabulary",
+      "totalQuestions": 3,
+      "correct": 3,
+      "accuracy": 100,
+      "totalMinutes": 5,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 5
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.67
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 5
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 5
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.6666666666666667,
+        "totalMinutes": 5,
+        "questions": 3,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "מעט מדי שאלות בתקופה — ההסקות לשורה זו חלקיות מאוד.",
+        "sufficiencyLevel": "low"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA10",
+      "fixture": "SUBSKILL-FOCUS",
+      "from": "2026-05-06",
+      "to": "2026-05-20",
+      "scope": "topic",
+      "subject": "english",
+      "topic": "grammar",
+      "totalQuestions": 20,
+      "correct": 12,
+      "accuracy": 60,
+      "totalMinutes": 30,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 30
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 30
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 30
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 30,
+        "questions": 20,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "fixture": "SUBSKILL-CONFLICT",
+      "from": "2026-05-20",
+      "to": "2026-05-24",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 54,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 51,
+      "sessionCount": 15,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 51
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 0.94
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 51
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 51
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 0.9444444444444444,
+        "totalMinutes": 51,
+        "questions": 54,
+        "sessionCount": 15
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "strong: נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
+          }
+        ],
+        "fail": false,
+        "statusHe": "נאספו הרבה שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה.",
+        "sufficiencyLevel": "strong"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "fixture": "SUBSKILL-CONFLICT",
+      "from": "2026-05-20",
+      "to": "2026-05-24",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 30,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 49,
+      "sessionCount": 12,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 49
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.63
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 49
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 49
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.6333333333333333,
+        "totalMinutes": 49,
+        "questions": 30,
+        "sessionCount": 12
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA8",
+      "fixture": "SUBSKILL-CONFLICT",
+      "from": "2026-05-20",
+      "to": "2026-05-24",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 30,
+      "correct": 20,
+      "accuracy": 66.67,
+      "totalMinutes": 45,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 45
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 45
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 45,
+        "questions": 30,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [
+          {
+            "name": "q20_not_low_volume_label",
+            "pass": true,
+            "actual": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          },
+          {
+            "name": "q20_not_insufficient_only_sessions",
+            "pass": true,
+            "actual": "medium: יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד."
+          }
+        ],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "fixture": "PROMOTE-STRONG",
+      "from": "2026-05-04",
+      "to": "2026-05-11",
+      "scope": "summary",
+      "subject": "ALL",
+      "topic": "—",
+      "totalQuestions": 15,
+      "correct": 9,
+      "accuracy": 60,
+      "totalMinutes": 23,
+      "sessionCount": 3,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 23
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.53
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 23
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 23
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5333333333333334,
+        "totalMinutes": 23,
+        "questions": 15,
+        "sessionCount": 3
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "fixture": "PROMOTE-STRONG",
+      "from": "2026-05-04",
+      "to": "2026-05-11",
+      "scope": "subject",
+      "subject": "math",
+      "topic": "—",
+      "totalQuestions": 15,
+      "correct": 9,
+      "accuracy": 60,
+      "totalMinutes": 23,
+      "sessionCount": 3,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 23
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.53
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 23
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 23
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5333333333333334,
+        "totalMinutes": 23,
+        "questions": 15,
+        "sessionCount": 3
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "fixture": "PROMOTE-STRONG",
+      "from": "2026-05-04",
+      "to": "2026-05-11",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "fractions",
+      "totalQuestions": 10,
+      "correct": 6,
+      "accuracy": 60,
+      "totalMinutes": 15,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.5
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 15
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 15
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.5,
+        "totalMinutes": 15,
+        "questions": 10,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "נתונים בינוניים — מומלץ שינויים זהירים בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    },
+    {
+      "child": "AAA5",
+      "fixture": "PROMOTE-STRONG",
+      "from": "2026-05-04",
+      "to": "2026-05-11",
+      "scope": "topic",
+      "subject": "math",
+      "topic": "multiplication",
+      "totalQuestions": 5,
+      "correct": 3,
+      "accuracy": 60,
+      "totalMinutes": 8,
+      "sessionCount": 0,
+      "statusHe": "",
+      "evidenceStrength": "medium",
+      "confidence01": 0.5,
+      "durationAudit": {
+        "checks": [
+          {
+            "name": "session_cap_180m",
+            "pass": true,
+            "actual": 8
+          },
+          {
+            "name": "minutes_per_question_10",
+            "pass": true,
+            "actual": 1.6
+          },
+          {
+            "name": "topic_short_window_300m",
+            "pass": true,
+            "actual": 8
+          },
+          {
+            "name": "non_negative",
+            "pass": true,
+            "actual": 8
+          }
+        ],
+        "fail": false,
+        "minutesPerQuestion": 1.6,
+        "totalMinutes": 8,
+        "questions": 5,
+        "sessionCount": 0
+      },
+      "statusAudit": {
+        "checks": [],
+        "fail": false,
+        "statusHe": "המידע עדיין חלקי — לא משנים כיתה או רמה לפי שורה אחת בלבד.",
+        "sufficiencyLevel": "medium"
+      },
+      "fail": false
+    }
+  ]
+}

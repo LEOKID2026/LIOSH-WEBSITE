@@ -1,0 +1,1533 @@
+{
+  "generatedAt": "2026-06-08T23:17:11.017Z",
+  "artifactRoot": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix",
+  "route": "/learning/parent-report",
+  "cellCount": 20,
+  "scenarios": [
+    {
+      "scenario": "AAA4",
+      "child": "AAA4",
+      "from": "2026-05-01",
+      "to": "2026-06-08",
+      "expectedDiff": "A/B strong or activity lines; C/D soften/remove strong; report not empty",
+      "actualDiff": "A:soft; B:soft; C:soft, gating, suppressed; D:soft, gating, suppressed",
+      "modes": {
+        "A": {
+          "scenario": "AAA4",
+          "mode": "A",
+          "flags": "S=false G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.pdf",
+          "pdfBytes": 832586,
+          "uiInsightLines": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+          ],
+          "analysis": {
+            "insightCount": 3,
+            "payloadInsights": [
+              "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+              "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "B": {
+          "scenario": "AAA4",
+          "mode": "B",
+          "flags": "S=true G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.pdf",
+          "pdfBytes": 832586,
+          "uiInsightLines": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+          ],
+          "analysis": {
+            "insightCount": 3,
+            "payloadInsights": [
+              "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+              "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "C": {
+          "scenario": "AAA4",
+          "mode": "C",
+          "flags": "S=true G=true P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.pdf",
+          "pdfBytes": 832024,
+          "uiInsightLines": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": true,
+            "diagnosisSuppressed": true,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "D": {
+          "scenario": "AAA4",
+          "mode": "D",
+          "flags": "S=true G=true P=true",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.pdf",
+          "pdfBytes": 832024,
+          "uiInsightLines": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": true,
+            "diagnosisSuppressed": true,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        }
+      },
+      "verdict": {
+        "pass": true,
+        "note": "C/D gating visible vs A/B"
+      }
+    },
+    {
+      "scenario": "GATE-LOW",
+      "child": "AAA9",
+      "from": "2026-05-10",
+      "to": "2026-05-18",
+      "expectedDiff": "A/B may show strong; C/D suppress + soft fallback",
+      "actualDiff": "A:strong, soft; B:strong, soft; C:soft, gating, suppressed; D:soft, gating, suppressed",
+      "modes": {
+        "A": {
+          "scenario": "GATE-LOW",
+          "mode": "A",
+          "flags": "S=false G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.pdf",
+          "pdfBytes": 983489,
+          "uiInsightLines": [
+            "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+            "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+            "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים.",
+            "להקדיש 10 דקות ביום לתרגול קצר במתמטיקה, במקום תרגול ארוך פעם בשבוע.",
+            "לפתור כמה שאלות קלות לפני מעבר לשאלות קשות יותר.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+            "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+            "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+          ],
+          "analysis": {
+            "insightCount": 3,
+            "payloadInsights": [
+              "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+              "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+              "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": true,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "B": {
+          "scenario": "GATE-LOW",
+          "mode": "B",
+          "flags": "S=true G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.pdf",
+          "pdfBytes": 983489,
+          "uiInsightLines": [
+            "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+            "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+            "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים.",
+            "להקדיש 10 דקות ביום לתרגול קצר במתמטיקה, במקום תרגול ארוך פעם בשבוע.",
+            "לפתור כמה שאלות קלות לפני מעבר לשאלות קשות יותר.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+            "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+            "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+          ],
+          "analysis": {
+            "insightCount": 3,
+            "payloadInsights": [
+              "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+              "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+              "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": true,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "C": {
+          "scenario": "GATE-LOW",
+          "mode": "C",
+          "flags": "S=true G=true P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.pdf",
+          "pdfBytes": 982880,
+          "uiInsightLines": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": true,
+            "diagnosisSuppressed": true,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "D": {
+          "scenario": "GATE-LOW",
+          "mode": "D",
+          "flags": "S=true G=true P=true",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.pdf",
+          "pdfBytes": 982880,
+          "uiInsightLines": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": true,
+            "diagnosisSuppressed": true,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        }
+      },
+      "verdict": {
+        "pass": true,
+        "note": "C/D suppress strong + soft fallback"
+      }
+    },
+    {
+      "scenario": "SUBSKILL-FOCUS",
+      "child": "AAA10",
+      "from": "2026-05-06",
+      "to": "2026-05-20",
+      "expectedDiff": "A no focus; B/C/D show נושא לחיזוק + מוקד לתרגול; no raw keys",
+      "actualDiff": "A:soft; B:soft, focus, pf=1; C:soft, focus, pf=1; D:soft, focus, pf=1",
+      "modes": {
+        "A": {
+          "scenario": "SUBSKILL-FOCUS",
+          "mode": "A",
+          "flags": "S=false G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.pdf",
+          "pdfBytes": 1028937,
+          "uiInsightLines": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "B": {
+          "scenario": "SUBSKILL-FOCUS",
+          "mode": "B",
+          "flags": "S=true G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.pdf",
+          "pdfBytes": 1029689,
+          "uiInsightLines": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן"
+          ],
+          "analysis": {
+            "insightCount": 3,
+            "payloadInsights": [
+              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+              "נושא לחיזוק: דקדוק",
+              "מוקד לתרגול: סממן זמן"
+            ],
+            "practiceFocusCount": 1,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": true,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "C": {
+          "scenario": "SUBSKILL-FOCUS",
+          "mode": "C",
+          "flags": "S=true G=true P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.pdf",
+          "pdfBytes": 1029689,
+          "uiInsightLines": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן"
+          ],
+          "analysis": {
+            "insightCount": 3,
+            "payloadInsights": [
+              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+              "נושא לחיזוק: דקדוק",
+              "מוקד לתרגול: סממן זמן"
+            ],
+            "practiceFocusCount": 1,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": true,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "D": {
+          "scenario": "SUBSKILL-FOCUS",
+          "mode": "D",
+          "flags": "S=true G=true P=true",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.pdf",
+          "pdfBytes": 1029689,
+          "uiInsightLines": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "נושא לחיזוק: דקדוק",
+            "מוקד לתרגול: סממן זמן"
+          ],
+          "analysis": {
+            "insightCount": 3,
+            "payloadInsights": [
+              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+              "נושא לחיזוק: דקדוק",
+              "מוקד לתרגול: סממן זמן"
+            ],
+            "practiceFocusCount": 1,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": true,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        }
+      },
+      "verdict": {
+        "pass": true,
+        "note": "A focus=false; B/C/D focus=true/true/true"
+      }
+    },
+    {
+      "scenario": "SUBSKILL-CONFLICT",
+      "child": "AAA8",
+      "from": "2026-05-20",
+      "to": "2026-05-24",
+      "expectedDiff": "All modes: no practice focus (conflict suppresses B/C/D)",
+      "actualDiff": "A:soft; B:soft; C:soft; D:soft",
+      "modes": {
+        "A": {
+          "scenario": "SUBSKILL-CONFLICT",
+          "mode": "A",
+          "flags": "S=false G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.pdf",
+          "pdfBytes": 981308,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "B": {
+          "scenario": "SUBSKILL-CONFLICT",
+          "mode": "B",
+          "flags": "S=true G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.pdf",
+          "pdfBytes": 981308,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "C": {
+          "scenario": "SUBSKILL-CONFLICT",
+          "mode": "C",
+          "flags": "S=true G=true P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.pdf",
+          "pdfBytes": 981308,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "D": {
+          "scenario": "SUBSKILL-CONFLICT",
+          "mode": "D",
+          "flags": "S=true G=true P=true",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.pdf",
+          "pdfBytes": 981308,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        }
+      },
+      "verdict": {
+        "pass": true,
+        "note": "conflict suppresses all modes"
+      }
+    },
+    {
+      "scenario": "PROMOTE-STRONG",
+      "child": "AAA5",
+      "from": "2026-05-04",
+      "to": "2026-05-11",
+      "expectedDiff": "D may show promotion-visible delta; else internal-only promotion",
+      "actualDiff": "A:soft; B:soft; C:soft; D:soft",
+      "modes": {
+        "A": {
+          "scenario": "PROMOTE-STRONG",
+          "mode": "A",
+          "flags": "S=false G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.pdf",
+          "pdfBytes": 981693,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "B": {
+          "scenario": "PROMOTE-STRONG",
+          "mode": "B",
+          "flags": "S=true G=false P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-B.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-B.pdf",
+          "pdfBytes": 981691,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "C": {
+          "scenario": "PROMOTE-STRONG",
+          "mode": "C",
+          "flags": "S=true G=true P=false",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.pdf",
+          "pdfBytes": 981691,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        },
+        "D": {
+          "scenario": "PROMOTE-STRONG",
+          "mode": "D",
+          "flags": "S=true G=true P=true",
+          "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.png",
+          "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.pdf",
+          "pdfBytes": 981675,
+          "uiInsightLines": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+            "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+            "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+          ],
+          "payloadInsights": [
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+          ],
+          "analysis": {
+            "insightCount": 1,
+            "payloadInsights": [
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+            ],
+            "practiceFocusCount": 0,
+            "gatingApplied": false,
+            "diagnosisSuppressed": false,
+            "hasStrong": false,
+            "hasSoft": true,
+            "hasFocus": false,
+            "hasRawKeys": false,
+            "notEmpty": true
+          },
+          "leak": {
+            "pass": true,
+            "hits": []
+          }
+        }
+      },
+      "verdict": {
+        "pass": true,
+        "note": "promotion internal only — D identical to A/C on parentFacing (policy/fixture)"
+      }
+    }
+  ],
+  "cells": [
+    {
+      "scenario": "AAA4",
+      "mode": "A",
+      "flags": "S=false G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.pdf",
+      "pdfBytes": 832586,
+      "uiInsightLines": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "analysis": {
+        "insightCount": 3,
+        "payloadInsights": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "AAA4",
+      "mode": "B",
+      "flags": "S=true G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.pdf",
+      "pdfBytes": 832586,
+      "uiInsightLines": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+      ],
+      "analysis": {
+        "insightCount": 3,
+        "payloadInsights": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "AAA4",
+      "mode": "C",
+      "flags": "S=true G=true P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.pdf",
+      "pdfBytes": 832024,
+      "uiInsightLines": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": true,
+        "diagnosisSuppressed": true,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "AAA4",
+      "mode": "D",
+      "flags": "S=true G=true P=true",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.pdf",
+      "pdfBytes": 832024,
+      "uiInsightLines": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": true,
+        "diagnosisSuppressed": true,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "GATE-LOW",
+      "mode": "A",
+      "flags": "S=false G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.pdf",
+      "pdfBytes": 983489,
+      "uiInsightLines": [
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים.",
+        "להקדיש 10 דקות ביום לתרגול קצר במתמטיקה, במקום תרגול ארוך פעם בשבוע.",
+        "לפתור כמה שאלות קלות לפני מעבר לשאלות קשות יותר.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+      ],
+      "analysis": {
+        "insightCount": 3,
+        "payloadInsights": [
+          "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+          "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+          "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": true,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "GATE-LOW",
+      "mode": "B",
+      "flags": "S=true G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.pdf",
+      "pdfBytes": 983489,
+      "uiInsightLines": [
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים.",
+        "להקדיש 10 דקות ביום לתרגול קצר במתמטיקה, במקום תרגול ארוך פעם בשבוע.",
+        "לפתור כמה שאלות קלות לפני מעבר לשאלות קשות יותר.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+        "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+        "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+      ],
+      "analysis": {
+        "insightCount": 3,
+        "payloadInsights": [
+          "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
+          "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
+          "כדאי לשים לב לשברים — זה נושא שחוזר בתרגולים."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": true,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "GATE-LOW",
+      "mode": "C",
+      "flags": "S=true G=true P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.pdf",
+      "pdfBytes": 982880,
+      "uiInsightLines": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": true,
+        "diagnosisSuppressed": true,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "GATE-LOW",
+      "mode": "D",
+      "flags": "S=true G=true P=true",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.pdf",
+      "pdfBytes": 982880,
+      "uiInsightLines": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": true,
+        "diagnosisSuppressed": true,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-FOCUS",
+      "mode": "A",
+      "flags": "S=false G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.pdf",
+      "pdfBytes": 1028937,
+      "uiInsightLines": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-FOCUS",
+      "mode": "B",
+      "flags": "S=true G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.pdf",
+      "pdfBytes": 1029689,
+      "uiInsightLines": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן"
+      ],
+      "analysis": {
+        "insightCount": 3,
+        "payloadInsights": [
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "נושא לחיזוק: דקדוק",
+          "מוקד לתרגול: סממן זמן"
+        ],
+        "practiceFocusCount": 1,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": true,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-FOCUS",
+      "mode": "C",
+      "flags": "S=true G=true P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.pdf",
+      "pdfBytes": 1029689,
+      "uiInsightLines": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן"
+      ],
+      "analysis": {
+        "insightCount": 3,
+        "payloadInsights": [
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "נושא לחיזוק: דקדוק",
+          "מוקד לתרגול: סממן זמן"
+        ],
+        "practiceFocusCount": 1,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": true,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-FOCUS",
+      "mode": "D",
+      "flags": "S=true G=true P=true",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.pdf",
+      "pdfBytes": 1029689,
+      "uiInsightLines": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "נושא לחיזוק: דקדוק",
+        "מוקד לתרגול: סממן זמן"
+      ],
+      "analysis": {
+        "insightCount": 3,
+        "payloadInsights": [
+          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "נושא לחיזוק: דקדוק",
+          "מוקד לתרגול: סממן זמן"
+        ],
+        "practiceFocusCount": 1,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": true,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-CONFLICT",
+      "mode": "A",
+      "flags": "S=false G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.pdf",
+      "pdfBytes": 981308,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-CONFLICT",
+      "mode": "B",
+      "flags": "S=true G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.pdf",
+      "pdfBytes": 981308,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-CONFLICT",
+      "mode": "C",
+      "flags": "S=true G=true P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.pdf",
+      "pdfBytes": 981308,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "SUBSKILL-CONFLICT",
+      "mode": "D",
+      "flags": "S=true G=true P=true",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.pdf",
+      "pdfBytes": 981308,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "PROMOTE-STRONG",
+      "mode": "A",
+      "flags": "S=false G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.pdf",
+      "pdfBytes": 981693,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "PROMOTE-STRONG",
+      "mode": "B",
+      "flags": "S=true G=false P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-B.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-B.pdf",
+      "pdfBytes": 981691,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "PROMOTE-STRONG",
+      "mode": "C",
+      "flags": "S=true G=true P=false",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.pdf",
+      "pdfBytes": 981691,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    },
+    {
+      "scenario": "PROMOTE-STRONG",
+      "mode": "D",
+      "flags": "S=true G=true P=true",
+      "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.pdf",
+      "pdfBytes": 981675,
+      "uiInsightLines": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+        "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+        "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+      ],
+      "payloadInsights": [
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+      ],
+      "analysis": {
+        "insightCount": 1,
+        "payloadInsights": [
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי."
+        ],
+        "practiceFocusCount": 0,
+        "gatingApplied": false,
+        "diagnosisSuppressed": false,
+        "hasStrong": false,
+        "hasSoft": true,
+        "hasFocus": false,
+        "hasRawKeys": false,
+        "notEmpty": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      }
+    }
+  ],
+  "leakScanPass": true
+}
