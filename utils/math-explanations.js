@@ -1,5 +1,10 @@
 import { BLANK } from './math-constants.js';
 import { convertMissingNumberEquation, buildVerticalOperation } from './math-animations';
+import {
+  embedComparisonSignInRtlProse,
+  isComparisonSignMcq,
+  resolveCanonicalComparisonSignAnswer,
+} from './comparison-sign-mcq.js';
 
 export function getHint(question, operation, gradeKey) {
   if (!question || !question.params) return "";
@@ -816,6 +821,16 @@ function getAgeAppropriateExplanation(operation, gradeKey, question, correctAnsw
 
 export function getErrorExplanation(question, operation, wrongAnswer, gradeKey) {
   if (!question) return "";
+  if (isComparisonSignMcq(question) || operation === "compare") {
+    const sign = resolveCanonicalComparisonSignAnswer(question);
+    const params = question.params || {};
+    const left = params.a ?? question.a;
+    const right = params.b ?? question.b;
+    if (sign && left != null && right != null) {
+      return `בהשוואת מספרים הטעות הנפוצה היא להתבלבל מי גדול יותר. עבור ${left} ו-${right} הסימן הנכון הוא ${embedComparisonSignInRtlProse(sign)}.`;
+    }
+    return "בהשוואת מספרים הטעות הנפוצה היא להתבלבל מי גדול יותר, במיוחד בעשרוניים. נסה להשוות קודם את החלק השלם.";
+  }
   const userAnsNum = Number(wrongAnswer);
   const correctNum =
     typeof question.correctAnswer === "string" && question.correctAnswer.includes("/")

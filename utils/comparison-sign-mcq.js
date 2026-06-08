@@ -1,4 +1,4 @@
-/** Comparison-sign MCQ (`params.kind === "cmp"`): exactly {>, =, <}. */
+/** Comparison-sign MCQ (`params.kind === "cmp"` / `operation === "compare"`): exactly {>, =, <}. */
 
 export const COMPARISON_SIGN_OPTIONS = [">", "=", "<"];
 
@@ -7,10 +7,18 @@ export const COMPARISON_SIGN_DISPLAY_ORDER = ["<", "=", ">"];
 
 const COMPARISON_SIGN_SET = new Set(COMPARISON_SIGN_OPTIONS);
 
+/** Left-to-right mark — prevents bidi mirroring of < > in RTL prose (display only). */
+export const COMPARISON_SIGN_LRM = "\u200E";
+
 /** @param {unknown} q */
 export function isComparisonSignMcq(q) {
   const params = q?.params && typeof q.params === "object" ? q.params : {};
-  return params.kind === "cmp";
+  if (params.kind === "cmp") return true;
+  if (String(q?.operation || "") === "compare") {
+    const { a, b } = coerceComparisonOperands(params.a ?? q?.a, params.b ?? q?.b);
+    return a != null && b != null;
+  }
+  return false;
 }
 
 /** @param {unknown} token */
@@ -33,12 +41,12 @@ export function coerceComparisonOperands(left, right) {
 }
 
 /**
- * Canonical comparison sign for `left __ right` (numeric only — never RTL-flipped).
+ * Single canonical comparison sign for `left __ right`.
  * @param {unknown} left
  * @param {unknown} right
  * @returns {">"|"="|"<"|null}
  */
-export function computeComparisonSign(left, right) {
+export function getCanonicalComparisonSign(left, right) {
   const { a, b } = coerceComparisonOperands(left, right);
   if (a == null || b == null) return null;
   if (a > b) return ">";
@@ -46,25 +54,39 @@ export function computeComparisonSign(left, right) {
   return "=";
 }
 
-/** @alias computeComparisonSign */
-export const getComparisonSign = computeComparisonSign;
+/** @alias getCanonicalComparisonSign */
+export const computeComparisonSign = getCanonicalComparisonSign;
+
+/** @alias getCanonicalComparisonSign */
+export const getComparisonSign = getCanonicalComparisonSign;
 
 /**
- * Operand-based canonical answer for cmp rows (ignores stale / RTL-corrupted correctAnswer).
+ * Operand-based canonical answer (ignores stale correctAnswer strings).
  * @param {unknown} q
  * @returns {">"|"="|"<"|null}
  */
 export function resolveCanonicalComparisonSignAnswer(q) {
   if (!isComparisonSignMcq(q)) return null;
   const params = q?.params && typeof q.params === "object" ? q.params : {};
-  return computeComparisonSign(params.a ?? q?.a, params.b ?? q?.b);
+  return getCanonicalComparisonSign(params.a ?? q?.a, params.b ?? q?.b);
 }
 
-/** LTR-isolate a sign for embedding in RTL Hebrew prose (display only). */
-export function isolateComparisonSignForDisplay(sign) {
+/**
+ * Embed sign in RTL Hebrew prose without bidi mirroring (display only — not stored value).
+ * Uses LRM, not LRI/PDI (those break the mixed Hebrew/math text splitter).
+ */
+export function embedComparisonSignInRtlProse(sign) {
   const s = String(sign ?? "").trim();
   if (!isComparisonSignToken(s)) return s;
-  return `\u2066${s}\u2069`;
+  return `${COMPARISON_SIGN_LRM}${s}${COMPARISON_SIGN_LRM}`;
+}
+
+/** @deprecated use embedComparisonSignInRtlProse */
+export const isolateComparisonSignForDisplay = embedComparisonSignInRtlProse;
+
+/** Plain LTR math fragment for mixed-text splitter (no bidi isolate chars). */
+export function formatCompareMathExpression(left, right, sign) {
+  return `${left} ${sign} ${right}`;
 }
 
 /** @param {unknown[]} answers */
@@ -86,8 +108,10 @@ export function finalizeComparisonSignMcq(q) {
     q.params && typeof q.params === "object"
       ? { .../** @type {Record<string, unknown>} */ (q.params) }
       : {};
+  if (!params.kind) params.kind = "cmp";
+
   const coerced = coerceComparisonOperands(params.a ?? q.a, params.b ?? q.b);
-  const sign = computeComparisonSign(coerced.a, coerced.b);
+  const sign = getCanonicalComparisonSign(coerced.a, coerced.b);
   if (!sign) return q;
 
   const out = {
@@ -99,4 +123,42 @@ export function finalizeComparisonSignMcq(q) {
   if (coerced.a != null) out.a = coerced.a;
   if (coerced.b != null) out.b = coerced.b;
   return out;
+}
+
+/**
+ * Full trace object for QA — every answer-related field for one comparison row.
+ * @param {Record<string, unknown>} q
+ * @param {unknown} [selected]
+ */
+export function traceComparisonSignFields(q, selected = null) {
+  const finalized = finalizeComparisonSignMcq(q);
+  const params =
+    finalized.params && typeof finalized.params === "object" ? finalized.params : {};
+  const left = params.a ?? finalized.a;
+  const right = params.b ?? finalized.b;
+  const canonicalSign = getCanonicalComparisonSign(left, right);
+  const normalizedSelected =
+    selected != null ? String(selected).trim() : null;
+  const normalizedCorrect = String(finalized.correctAnswer ?? "").trim();
+  return {
+    left,
+    right,
+    canonicalSign,
+    choices: finalized.answers,
+    buttonLabel: normalizedSelected,
+    buttonValue: normalizedSelected,
+    selectedAnswer: normalizedSelected,
+    normalizedSelectedAnswer: normalizedSelected,
+    correctAnswer: normalizedCorrect,
+    normalizedCorrectAnswer: normalizedCorrect,
+    isCorrect:
+      normalizedSelected != null &&
+      canonicalSign != null &&
+      normalizedSelected === canonicalSign,
+    feedbackCorrectAnswer: canonicalSign,
+    bannerCorrectAnswer: canonicalSign,
+    explanationSign: canonicalSign,
+    stepByStepSign: canonicalSign,
+    previousExerciseSign: canonicalSign,
+  };
 }

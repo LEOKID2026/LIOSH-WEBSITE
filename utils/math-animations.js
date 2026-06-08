@@ -1,7 +1,8 @@
 import {
-  computeComparisonSign,
   coerceComparisonOperands,
-  isolateComparisonSignForDisplay,
+  embedComparisonSignInRtlProse,
+  formatCompareMathExpression,
+  getCanonicalComparisonSign,
 } from "./comparison-sign-mcq.js";
 
 export function buildVerticalOperation(topNumber, bottomNumber, operator = "-") {
@@ -2093,20 +2094,22 @@ export function buildEquationsAnimation(params, answer) {
 }
 
 // פונקציה לבניית צעדי אנימציה להשוואה
-export function buildCompareAnimation(params, answer) {
+export function buildCompareAnimation(params, _answerIgnored) {
   const steps = [];
   const { a: numA, b: numB } = coerceComparisonOperands(params?.a, params?.b);
-  const sign = computeComparisonSign(numA, numB) ?? String(answer ?? "").trim();
-  const ltr = (expr) => `\u2066${expr}\u2069`;
-  
-  // צעד 1: הצגת השאלה
-  const aLabel = numA != null ? String(numA) : "";
-  const bLabel = numB != null ? String(numB) : "";
+  const sign = getCanonicalComparisonSign(numA, numB);
+  if (!sign || numA == null || numB == null) {
+    return steps;
+  }
+
+  const aLabel = String(numA);
+  const bLabel = String(numB);
+  const signInProse = embedComparisonSignInRtlProse(sign);
 
   steps.push({
     id: "show-question",
     title: "הצגת השאלה",
-    text: `השלם את הסימן: ${ltr(`${aLabel} __ ${bLabel}`)}`,
+    text: `השלם את הסימן: ${aLabel} __ ${bLabel}`,
     highlights: ["question"],
     type: "compare",
     params,
@@ -2117,7 +2120,7 @@ export function buildCompareAnimation(params, answer) {
   steps.push({
     id: "explain",
     title: "איך משווים?",
-    text: `נסתכל על שני המספרים: ${ltr(aLabel)} ו-${ltr(bLabel)}.`,
+    text: `נסתכל על שני המספרים: ${aLabel} ו-${bLabel}.`,
     highlights: ["explanation"],
     type: "compare",
     params,
@@ -2125,21 +2128,20 @@ export function buildCompareAnimation(params, answer) {
   });
   
   // צעד 3: החישוב
+  const mathExpr = formatCompareMathExpression(numA, numB, sign);
   let comparison = "";
-  if (numA != null && numB != null) {
-    if (sign === "<") {
-      comparison = `${ltr(`${numA} < ${numB}`)} כי ${numA} קטן מ-${numB}.`;
-    } else if (sign === ">") {
-      comparison = `${ltr(`${numA} > ${numB}`)} כי ${numA} גדול מ-${numB}.`;
-    } else {
-      comparison = `${ltr(`${numA} = ${numB}`)} כי המספרים שווים.`;
-    }
+  if (sign === "<") {
+    comparison = `${mathExpr} כי ${numA} קטן מ-${numB}.`;
+  } else if (sign === ">") {
+    comparison = `${mathExpr} כי ${numA} גדול מ-${numB}.`;
+  } else {
+    comparison = `${mathExpr} כי המספרים שווים.`;
   }
-  
+
   steps.push({
     id: "calculate",
     title: "החישוב",
-    text: `${comparison} לכן בוחרים את הסימן ${isolateComparisonSignForDisplay(sign)}.`,
+    text: `${comparison} לכן בוחרים את הסימן ${signInProse}.`,
     highlights: ["calculation"],
     type: "compare",
     params,
@@ -2150,7 +2152,7 @@ export function buildCompareAnimation(params, answer) {
   steps.push({
     id: "final",
     title: "התוצאה הסופית",
-    text: `הסימן הנכון הוא ${isolateComparisonSignForDisplay(sign)}`,
+    text: `הסימן הנכון הוא ${signInProse}`,
     highlights: ["result"],
     type: "compare",
     params,
@@ -3940,7 +3942,7 @@ export function buildAnimationForOperation(question, operation, gradeKey) {
       return buildEquationsAnimation(params, answer);
       
     case "compare":
-      return buildCompareAnimation(params, answer);
+      return buildCompareAnimation(params, null);
       
     case "number_sense":
       return buildNumberSenseAnimation(params, answer);

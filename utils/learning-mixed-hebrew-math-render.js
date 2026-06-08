@@ -53,9 +53,12 @@ function moveTrailingPunctuationFromMathToProse(runs) {
 export function splitLearningMixedHebrewMathRuns(text) {
   if (text == null || typeof text !== "string" || text === "") return [];
 
-  const parts = text.split(LEARNING_MATH_RUN_RE);
+  // Strip LRI/PDI isolates before split — orphan markers break RTL/LTR runs and mirror < >.
+  const normalized = String(text).replace(/\u2066|\u2067|\u2068|\u2069/g, "");
+
+  const parts = normalized.split(LEARNING_MATH_RUN_RE);
   if (parts.length === 1) {
-    return [{ type: "prose", value: text }];
+    return [{ type: "prose", value: normalized }];
   }
 
   /** @type {LearningMixedRun[]} */

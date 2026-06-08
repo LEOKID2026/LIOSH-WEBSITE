@@ -101,8 +101,10 @@ import {
   compareMathLearnerAnswer,
 } from "../../utils/answer-compare";
 import {
-  isolateComparisonSignForDisplay,
+  embedComparisonSignInRtlProse,
+  finalizeComparisonSignMcq,
   isComparisonSignToken,
+  resolveCanonicalComparisonSignAnswer,
 } from "../../utils/comparison-sign-mcq";
 import {
   computeMcqIndicesForQuestion,
@@ -743,7 +745,7 @@ export default function MathMaster() {
   const stepExplanation = useMemo(
     () =>
       isShowingAnySolution && explanationQuestion
-        ? buildStepExplanation(explanationQuestion)
+        ? buildStepExplanation(finalizeComparisonSignMcq(explanationQuestion))
         : null,
     [isShowingAnySolution, explanationQuestion]
   );
@@ -751,16 +753,18 @@ export default function MathMaster() {
   // בניית צעדי אנימציה
   const animationSteps = useMemo(() => {
     if (!isShowingAnySolution || !explanationQuestion) return null;
-    
-    const p = explanationQuestion.params || {};
-    const op = explanationQuestion.operation;
+
+    const explanationQuestionResolved = finalizeComparisonSignMcq(explanationQuestion);
+
+    const p = explanationQuestionResolved.params || {};
+    const op = explanationQuestionResolved.operation;
     let effectiveOp = op;
-    let top = p.a ?? explanationQuestion.a;
-    let bottom = p.b ?? explanationQuestion.b;
+    let top = p.a ?? explanationQuestionResolved.a;
+    let bottom = p.b ?? explanationQuestionResolved.b;
     
-    const answer = explanationQuestion.correctAnswer !== undefined
-      ? explanationQuestion.correctAnswer
-      : explanationQuestion.answer;
+    const answer = explanationQuestionResolved.correctAnswer !== undefined
+      ? explanationQuestionResolved.correctAnswer
+      : explanationQuestionResolved.answer;
     
     // טיפול כללי בתרגילי השלמה
     const missingConversion = convertMissingNumberEquation(op, p.kind, p);
@@ -780,23 +784,23 @@ export default function MathMaster() {
         typeof top === "number" && typeof bottom === "number") {
       return finalizeAnimationSteps(
         buildAdditionOrSubtractionAnimation(top, bottom, answer, effectiveOp),
-        explanationQuestion,
+        explanationQuestionResolved,
         effectiveOp
       );
     }
     
     // שאר הנושאים - אנימציה כללית (רק אם זה לא חיבור/חיסור)
-    const built = buildAnimationForOperation(explanationQuestion, op, grade);
+    const built = buildAnimationForOperation(explanationQuestionResolved, op, grade);
     if (built && Array.isArray(built) && built.length > 0) {
-      return finalizeAnimationSteps(built, explanationQuestion, op);
+      return finalizeAnimationSteps(built, explanationQuestionResolved, op);
     }
 
     // Fallback: אם אין אנימציה מובנית לנושא - עדיין נותנים "צעדים" עם ניווט,
     // על בסיס getSolutionSteps (React nodes) כדי שכל הנושאים יעבדו כמו בכפל.
     try {
       const fallbackSteps = getSolutionSteps(
-        explanationQuestion,
-        explanationQuestion.params?.op || op,
+        explanationQuestionResolved,
+        explanationQuestionResolved.params?.op || op,
         grade
       );
       if (fallbackSteps && Array.isArray(fallbackSteps) && fallbackSteps.length > 0) {
@@ -809,11 +813,11 @@ export default function MathMaster() {
       }
 
       // fallback נוסף אם אין params/אין צעדים מפורטים: לפחות שיהיה תמיד הסבר בסיסי עם ניווט
-      const qText = explanationQuestion.exerciseText || explanationQuestion.question || "";
+      const qText = explanationQuestionResolved.exerciseText || explanationQuestionResolved.question || "";
       const ansText =
-        explanationQuestion.correctAnswer !== undefined
-          ? String(explanationQuestion.correctAnswer)
-          : (explanationQuestion.answer !== undefined ? String(explanationQuestion.answer) : "");
+        explanationQuestionResolved.correctAnswer !== undefined
+          ? String(explanationQuestionResolved.correctAnswer)
+          : (explanationQuestionResolved.answer !== undefined ? String(explanationQuestionResolved.answer) : "");
       return [
         {
           id: "fallback-basic-1",
@@ -2241,7 +2245,10 @@ export default function MathMaster() {
       isCorrect,
       rejectInvalidNumber,
       selectedValue: numericAnswer,
-    } = compareLearnerAnswerForQuestion(currentQuestion, answer);
+    } = compareLearnerAnswerForQuestion(
+      finalizeComparisonSignMcq(currentQuestion),
+      answer
+    );
     if (rejectInvalidNumber) {
       setFeedback("נא להזין מספר תקין");
       setTimeout(() => setFeedback(null), 2000);
@@ -2784,7 +2791,7 @@ export default function MathMaster() {
       );
       
       const errExpl = getErrorExplanation(
-        currentQuestion,
+        finalizeComparisonSignMcq(currentQuestion),
         currentQuestion.operation,
         numericAnswer,
         grade
@@ -2816,7 +2823,7 @@ export default function MathMaster() {
         setFeedback(
           `לא נכון 😔 התשובה הנכונה: ${
             currentQuestion.operation === "compare"
-              ? formatCompareFeedbackSign(currentQuestion.correctAnswer)
+              ? formatCompareFeedbackSign(compareCorrectSignForDisplay(currentQuestion))
               : `\u2066${currentQuestion.correctAnswer}\u2069`
           } ✅`
         );
@@ -2833,7 +2840,7 @@ export default function MathMaster() {
         setFeedback(
           `לא נכון 😔 התשובה: ${
             currentQuestion.operation === "compare"
-              ? formatCompareFeedbackSign(currentQuestion.correctAnswer)
+              ? formatCompareFeedbackSign(compareCorrectSignForDisplay(currentQuestion))
               : `\u2066${currentQuestion.correctAnswer}\u2069`
           } ❌ (-1 ❤️)`
         );
@@ -2870,7 +2877,7 @@ export default function MathMaster() {
         setFeedback(
           `לא נכון 😔 התשובה הנכונה: ${
             currentQuestion.operation === "compare"
-              ? formatCompareFeedbackSign(currentQuestion.correctAnswer)
+              ? formatCompareFeedbackSign(compareCorrectSignForDisplay(currentQuestion))
               : `\u2066${currentQuestion.correctAnswer}\u2069`
           } ❌`
         );
@@ -3082,8 +3089,15 @@ export default function MathMaster() {
 
   const formatCompareFeedbackSign = (sign) =>
     isComparisonSignToken(sign)
-      ? isolateComparisonSignForDisplay(sign)
+      ? embedComparisonSignInRtlProse(sign)
       : String(sign ?? "");
+
+  const compareCorrectSignForDisplay = (question) => {
+    const sign = resolveCanonicalComparisonSignAnswer(
+      finalizeComparisonSignMcq(question)
+    );
+    return sign ?? question?.correctAnswer;
+  };
 
   // תשובות עם מלל – מקטינים את האותיות בתוך הכפתור כמו בשאלות מילוליות
   const renderAnswerLabel = (ans) => {
