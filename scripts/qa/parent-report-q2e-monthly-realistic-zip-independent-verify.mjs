@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * Independent ZIP PDF verification — reads ONLY PDFs extracted from the given ZIP.
- * No DB, API, manifest, or loose export-folder reuse.
+ * Independent verification: reads ONLY PDFs extracted from the final ZIP.
+ * No DB, API, manifest, or loose export-folder paths.
  *
  * Usage:
  *   node scripts/qa/parent-report-q2e-monthly-realistic-zip-independent-verify.mjs <path-to.zip>
  */
 import { execSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -47,65 +47,27 @@ async function extractPdfText(buf) {
   }
 }
 
-/** Extract summary-block totals as they appear near "זמן כולל" on page 1. */
-function extractSummaryHeader(text) {
-  const header = text.slice(0, 2500);
+/** Parse only the page-1 summary header block (before subject sections). */
+function parseSummaryHeader(text) {
+  const page1 = text.split(/--\s*1 of/i)[0] || text.slice(0, 3000);
+  const header = page1.slice(0, 3000);
   const dateRange = header.match(/(\d{2}\/\d{2}\/\d{4})\s*-\s*(\d{2}\/\d{2}\/\d{4})/);
-  const afterTotalTime = header.split(/זמן\s*כולל/i)[1]?.slice(0, 400) || header.slice(0, 400);
+  const afterTotal = header.split(/זמן\s*כולל/i)[1]?.slice(0, 500) || "";
   const minutes =
-    afterTotalTime.match(/['׳]?דק\s*(\d{1,4})/)?.[1] ||
-    afterTotalTime.match(/(\d{1,4})\s*['׳]?דק/)?.[1] ||
+    afterTotal.match(/['׳]?דק\s*['']?\s*(\d{1,4})/)?.[1] ||
+    afterTotal.match(/(\d{1,4})\s*['׳]?דק/)?.[1] ||
     null;
-  const afterQuestions = header.split(/שאלות/i)[1]?.slice(0, 120) || "";
-  const questions =
-    afterQuestions.match(/^[\s\n\r]*(\d{1,4})/)?.[1] ||
-    header.match(/שאלות[\s\n\r]*(\d{1,4})/)?.[1] ||
-    null;
+  const qBlock = header.split(/שאלות/i)[1]?.slice(0, 80) || "";
+  const questions = qBlock.match(/^\s*(\d{1,4})/m)?.[1] || null;
   return {
     dateRange: dateRange ? `${dateRange[1]} - ${dateRange[2]}` : null,
-    summaryMinutes: minutes != null ? Number(minutes) : null,
     summaryQuestions: questions != null ? Number(questions) : null,
-    hasInactivityWarning: text.includes(INACTIVITY),
+    summaryMinutes: minutes != null ? Number(minutes) : null,
+    hasInactivityWarning: page1.includes(INACTIVITY),
     headerSnippet: header.replace(/\s+/g, " ").slice(0, 1000),
+    contains83: /\b83\b/.test(page1),
+    contains42: /\b42\b/.test(page1),
   };
-}
-
-async function renderPage1(pdfPath, pngPath) {
-  try {
-    execSync(
-      `npx --yes pdf-to-img "${pdfPath.replace(/"/g, '\\"')}" --output "${path.dirname(pngPath).replace(/"/g, '\\"')}" --format png --pages 1`,
-      { stdio: "pipe", cwd: ROOT, timeout: 120_000 }
-    );
-  } catch {
-    /* fallback below */
-  }
-  const base = path.basename(pdfPath, ".pdf");
-  const candidates = [
-    pngPath,
-    path.join(path.dirname(pngPath), `${base}-1.png`),
-    path.join(path.dirname(pngPath), `${base}_1.png`),
-    path.join(path.dirname(pngPath), "page-1.png"),
-  ];
-  for (const c of candidates) {
-    try {
-      await stat(c);
-      return c;
-    } catch {
-      /* try playwright */
-    }
-  }
-  try {
-    const { chromium } = await import("playwright");
-    const browser = await chromium.launch();
-    const page = await browser.newPage();
-    await page.goto(`file:///${pdfPath.replace(/\\/g, "/")}`, { waitUntil: "load", timeout: 60_000 });
-    await page.waitForTimeout(1500);
-    await page.screenshot({ path: pngPath, fullPage: false });
-    await browser.close();
-    return pngPath;
-  } catch (err) {
-    return null;
-  }
 }
 
 async function main() {
@@ -114,9 +76,7 @@ async function main() {
   const tmpDir = await mkdtemp(path.join(os.tmpdir(), "parent-report-zip-ind-"));
   const reportDir = path.join(path.dirname(zipPath), "independent-zip-verify");
   await rm(reportDir, { recursive: true, force: true }).catch(() => {});
-  await mkdtemp(reportDir + path.sep).catch(async () => {
-    await import("node:fs/promises").then(({ mkdir }) => mkdir(reportDir, { recursive: true }));
-  });
+  await mkdir(reportDir, { recursive: true });
 
   execSync(
     `powershell -NoProfile -Command "Expand-Archive -LiteralPath '${zipPath.replace(/'/g, "''")}' -DestinationPath '${tmpDir.replace(/'/g, "''")}' -Force"`,
@@ -128,66 +88,69 @@ async function main() {
   const results = [];
 
   for (const entry of shortReports) {
-    const pdfPath = path.join(tmpDir, entry);
-    const buf = await readFile(pdfPath);
+    const buf = await readFile(path.join(tmpDir, entry));
     const text = await extractPdfText(buf);
-    const summary = extractSummaryHeader(text);
+    const parsed = parseSummaryHeader(text);
     results.push({
       entry,
       bytes: buf.length,
-      ...summary,
+      ...parsed,
+      passRealistic:
+        parsed.summaryQuestions >= 150 &&
+        parsed.summaryMinutes >= 250 &&
+        !parsed.hasInactivityWarning &&
+        parsed.dateRange?.includes("01/04/2026") &&
+        parsed.dateRange?.includes("30/04/2026"),
     });
   }
 
   const aaa1 = results.find((r) => r.entry.includes("AAA1/"));
-  let page1Png = null;
   if (aaa1) {
-    const aaa1Path = path.join(tmpDir, aaa1.entry);
-    page1Png = path.join(reportDir, "AAA1_2026-04_short-report_page1.png");
-    await renderPage1(aaa1Path, page1Png).catch(() => null);
-    await writeFile(path.join(reportDir, "AAA1_short-report_first1000.txt"), aaa1.headerSnippet, "utf8");
+    await writeFile(path.join(reportDir, "AAA1_short-report_header1000.txt"), aaa1.headerSnippet, "utf8");
   }
 
-  const out = {
+  const report = {
     verifiedAt: new Date().toISOString(),
-    method: "independent-zip-extract-only",
+    method: "zip-extract-temp-only",
     zipPath,
     zipSizeBytes: raw.length,
     sha256,
     zipEntryCount: allPdfs.length,
     zipEntries: allPdfs,
     shortReportResults: results,
-    aaa1Page1Screenshot: page1Png,
+    passCount: results.filter((r) => r.passRealistic).length,
   };
-  const outJson = path.join(reportDir, "independent-zip-verify.json");
-  await writeFile(outJson, JSON.stringify(out, null, 2), "utf8");
 
-  console.log("=== Independent ZIP verification ===");
+  const outJson = path.join(reportDir, "independent-zip-verify.json");
+  await writeFile(outJson, JSON.stringify(report, null, 2), "utf8");
+
+  console.log("=== Independent ZIP PDF verification ===");
   console.log(`ZIP: ${zipPath}`);
-  console.log(`Size: ${raw.length}`);
+  console.log(`Size: ${report.zipSizeBytes}`);
   console.log(`SHA256: ${sha256}`);
-  console.log(`PDF entries: ${allPdfs.length}`);
+  console.log(`Entries: ${allPdfs.length}`);
   console.log("");
   if (aaa1) {
-    console.log("=== AAA1 short-report — first ~1000 chars (pdf-parse) ===");
+    console.log("=== AAA1 short-report header (first ~1000 chars from extracted PDF) ===");
     console.log(aaa1.headerSnippet);
     console.log("");
-    console.log(`Summary header parse: questions=${aaa1.summaryQuestions} minutes=${aaa1.summaryMinutes}`);
-    console.log(`Inactivity warning: ${aaa1.hasInactivityWarning ? "YES" : "no"}`);
-    console.log(`Page-1 screenshot: ${page1Png || "not rendered"}`);
+    console.log(`Parsed summary: ${aaa1.summaryQuestions} questions, ${aaa1.summaryMinutes} minutes`);
+    console.log(`Inactivity warning in page-1 text: ${aaa1.hasInactivityWarning ? "YES" : "no"}`);
+    console.log(`Page-1 contains literal 83/42: ${aaa1.contains83}/${aaa1.contains42}`);
     console.log("");
   }
-  console.log("| Student | Summary Q | Summary min | Date | Inactivity |");
-  console.log("|---------|-----------|-------------|------|------------|");
+  console.log("| Student | Summary Q | Summary min | Date | Inactivity | 83 on p1 | PASS |");
+  console.log("|---------|-----------|-------------|------|------------|----------|------|");
   for (const r of results) {
     const student = r.entry.split("/")[0];
     console.log(
-      `| ${student} | ${r.summaryQuestions ?? "?"} | ${r.summaryMinutes ?? "?"} | ${r.dateRange ?? "?"} | ${r.hasInactivityWarning ? "YES" : "no"} |`
+      `| ${student} | ${r.summaryQuestions ?? "?"} | ${r.summaryMinutes ?? "?"} | ${r.dateRange ?? "?"} | ${r.hasInactivityWarning ? "YES" : "no"} | ${r.contains83 ? "yes" : "no"} | ${r.passRealistic ? "yes" : "NO"} |`
     );
   }
   console.log(`\nWrote ${outJson}`);
 
   await rm(tmpDir, { recursive: true, force: true });
+  if (report.passCount !== 12 || allPdfs.length !== 36) process.exit(1);
 }
 
 main().catch((err) => {
