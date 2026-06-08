@@ -3,6 +3,7 @@
  * All subjects must route learner-facing correctness through compareAnswers — see plan.
  */
 
+import { resolveCanonicalComparisonSignAnswer } from "./comparison-sign-mcq.js";
 import { normalizeAnswerForSpellingNiqqudStrict } from "./hebrew-spelling-niqqud";
 
 /**
@@ -306,7 +307,15 @@ export function compareMathLearnerAnswer(p) {
   }
   const effectiveTol = clampAbsoluteTolerance(tol);
   const user = p.user;
-  const correctAnswer = p.correctAnswer;
+  const canonicalCmpSign = resolveCanonicalComparisonSignAnswer({
+    params: p.params,
+    a: p.a,
+    b: p.b,
+    operation: p.operation,
+    correctAnswer: p.correctAnswer,
+  });
+  const correctAnswer =
+    canonicalCmpSign != null ? canonicalCmpSign : p.correctAnswer;
   const percentageCompatible = p?.percentageCompatible === true;
   const unitConversionEnabled = p?.unitConversionEnabled === true;
   const unitConversionKind = String(p?.unitConversionKind || "");

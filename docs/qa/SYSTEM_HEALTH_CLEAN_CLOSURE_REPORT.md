@@ -148,3 +148,61 @@ Working tree modified (not committed). **No commit. No push.**
 | No parent-report product logic change | ✓ |
 | No MCQ downweighting | ✓ |
 | No new active flags | ✓ |
+
+---
+
+## 10. Comparison sign RTL/value mapping closure
+
+**Date:** 2026-06-08 (follow-up regression pass)
+
+### Root cause
+
+Comparison-sign (`params.kind === "cmp"`) had two coupled failures:
+
+1. **RTL display without value isolation** — Comparison clauses like `79 > 35` were LTR-wrapped, but standalone signs embedded in Hebrew prose (`לכן בוחרים את הסימן >`) and MCQ button labels were rendered in RTL/`unicode-bidi: plaintext` context. Unicode bidi mirrored `<`/`>` visually while internal string values stayed canonical, producing impossible explanations (`79 > 35 … הסימן <`) and misleading tap targets.
+2. **No single canonical enforcement** — Stale `correctAnswer` strings could diverge from numeric `params.a` / `params.b`; validation compared user taps only to the stored string, not the operand-derived sign.
+
+### Fix (cmp only)
+
+- Shared helper: `getComparisonSign` / `computeComparisonSign` + `finalizeComparisonSignMcq` in `utils/comparison-sign-mcq.js`
+- Sanitization/generator re-derive canonical sign from numeric operands
+- `compareMathLearnerAnswer` resolves expected sign from operands when `kind === "cmp"`
+- Step-by-step text isolates signs in Hebrew sentences; mixed Hebrew/math splitter treats `N < N` / `N > N` as LTR math runs
+- Math compare MCQ buttons: `dir="ltr"` row + LTR-isolated sign labels (internal submitted value unchanged)
+
+### Files changed
+
+- `utils/comparison-sign-mcq.js`
+- `utils/math-question-generator.js`
+- `utils/student-question-stem-sanitizer.js`
+- `utils/answer-compare.js`
+- `utils/math-animations.js`
+- `utils/learning-mixed-hebrew-math-render.js`
+- `pages/learning/math-master.js` (compare-sign answer surface only)
+- `tests/learning/comparison-sign-mcq-regression.test.mjs`
+- `tests/learning/mcq-four-options-integrity.test.mjs`
+
+### Examples verified
+
+| Exercise | Canonical sign |
+|----------|----------------|
+| `79 __ 35` | `>` |
+| `85 __ 98` | `<` |
+| `12 __ 12` | `=` |
+
+### Scope confirmation
+
+- **Only** comparison-sign (`cmp`) question type touched for product logic
+- Other MCQ types, diagnostic engine, parent report, SQL/routes unchanged
+- Math-master changes limited to compare answer buttons, feedback sign display, and operand-aware validation wiring
+- Step-by-step modal text pipeline for compare only (no other modal layouts changed)
+
+### Tests run
+
+```powershell
+node --test tests/learning/comparison-sign-mcq-regression.test.mjs
+node --test tests/learning/mcq-four-options-integrity.test.mjs
+node --test tests/learning/math-mcq-answer-integrity.test.mjs
+```
+
+**No commit. No push.**

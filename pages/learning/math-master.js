@@ -101,6 +101,10 @@ import {
   compareMathLearnerAnswer,
 } from "../../utils/answer-compare";
 import {
+  isolateComparisonSignForDisplay,
+  isComparisonSignToken,
+} from "../../utils/comparison-sign-mcq";
+import {
   computeMcqIndicesForQuestion,
   distractorFamilyFromOptionCell,
   extractDiagnosticMetadataFromQuestion,
@@ -2237,11 +2241,7 @@ export default function MathMaster() {
       isCorrect,
       rejectInvalidNumber,
       selectedValue: numericAnswer,
-    } = compareMathLearnerAnswer({
-      user: answer,
-      correctAnswer: currentQuestion.correctAnswer,
-      numericTolerance: MATH_NUMERIC_TOLERANCE,
-    });
+    } = compareLearnerAnswerForQuestion(currentQuestion, answer);
     if (rejectInvalidNumber) {
       setFeedback("נא להזין מספר תקין");
       setTimeout(() => setFeedback(null), 2000);
@@ -2814,7 +2814,11 @@ export default function MathMaster() {
       if (mode === "learning") {
         // במצב למידה – אין Game Over, רק הצגת תשובה והמשך
         setFeedback(
-          `לא נכון 😔 התשובה הנכונה: \u2066${currentQuestion.correctAnswer}\u2069 ✅`
+          `לא נכון 😔 התשובה הנכונה: ${
+            currentQuestion.operation === "compare"
+              ? formatCompareFeedbackSign(currentQuestion.correctAnswer)
+              : `\u2066${currentQuestion.correctAnswer}\u2069`
+          } ✅`
         );
         setTimeout(() => {
           generateNewQuestion();
@@ -2827,7 +2831,11 @@ export default function MathMaster() {
       } else if (mode === "challenge") {
         // מצב Challenge – עובדים עם חיים
         setFeedback(
-          `לא נכון 😔 התשובה: \u2066${currentQuestion.correctAnswer}\u2069 ❌ (-1 ❤️)`
+          `לא נכון 😔 התשובה: ${
+            currentQuestion.operation === "compare"
+              ? formatCompareFeedbackSign(currentQuestion.correctAnswer)
+              : `\u2066${currentQuestion.correctAnswer}\u2069`
+          } ❌ (-1 ❤️)`
         );
         setLives((prevLives) => {
           const nextLives = prevLives - 1;
@@ -2860,7 +2868,11 @@ export default function MathMaster() {
       } else {
         // מצבי speed / marathon / practice - לא יוצאים מהמשחק על טעות
         setFeedback(
-          `לא נכון 😔 התשובה הנכונה: \u2066${currentQuestion.correctAnswer}\u2069 ❌`
+          `לא נכון 😔 התשובה הנכונה: ${
+            currentQuestion.operation === "compare"
+              ? formatCompareFeedbackSign(currentQuestion.correctAnswer)
+              : `\u2066${currentQuestion.correctAnswer}\u2069`
+          } ❌`
         );
         setTimeout(() => {
           generateNewQuestion();
@@ -3057,6 +3069,22 @@ export default function MathMaster() {
   // חלונות תשובה (כפתורים/קלט) – מקטינים ב-20% רק ויזואלית, בלי להזיז layout
   const ANSWER_AREA_SCALE = 0.8;
 
+  const compareLearnerAnswerForQuestion = (question, user) =>
+    compareMathLearnerAnswer({
+      user,
+      correctAnswer: question.correctAnswer,
+      numericTolerance: MATH_NUMERIC_TOLERANCE,
+      params: question.params,
+      a: question.a,
+      b: question.b,
+      operation: question.operation,
+    });
+
+  const formatCompareFeedbackSign = (sign) =>
+    isComparisonSignToken(sign)
+      ? isolateComparisonSignForDisplay(sign)
+      : String(sign ?? "");
+
   // תשובות עם מלל – מקטינים את האותיות בתוך הכפתור כמו בשאלות מילוליות
   const renderAnswerLabel = (ans) => {
     const s = typeof ans === "string" ? ans : String(ans ?? "");
@@ -3080,6 +3108,19 @@ export default function MathMaster() {
       );
     }
     if (mathyPlain) {
+      return (
+        <span
+          style={{
+            display: "inline-block",
+            direction: "ltr",
+            unicodeBidi: "isolate",
+          }}
+        >
+          {s}
+        </span>
+      );
+    }
+    if (isComparisonSignToken(s)) {
       return (
         <span
           style={{
@@ -4241,14 +4282,21 @@ export default function MathMaster() {
                             transformOrigin: "top center",
                           }}
                         >
-                          <div className={`grid ${gridCols} gap-3 w-full`}>
+                          <div
+                            className={`grid ${gridCols} gap-3 w-full`}
+                            dir={isCompare ? "ltr" : undefined}
+                            style={
+                              isCompare
+                                ? { direction: "ltr", unicodeBidi: "isolate" }
+                                : undefined
+                            }
+                          >
                             {currentQuestion.answers.map((answer, idx) => {
                               const isSelected = selectedAnswer === answer;
-                              const isCorrect = compareMathLearnerAnswer({
-                                user: answer,
-                                correctAnswer: currentQuestion.correctAnswer,
-                                numericTolerance: MATH_NUMERIC_TOLERANCE,
-                              }).isCorrect;
+                              const isCorrect = compareLearnerAnswerForQuestion(
+                                currentQuestion,
+                                answer
+                              ).isCorrect;
                               const isWrong = isSelected && !isCorrect;
 
                               return (
@@ -4389,14 +4437,21 @@ export default function MathMaster() {
                             transformOrigin: "top center",
                           }}
                         >
-                          <div className={`grid ${gridCols} gap-3 w-full`}>
+                          <div
+                            className={`grid ${gridCols} gap-3 w-full`}
+                            dir={isCompare ? "ltr" : undefined}
+                            style={
+                              isCompare
+                                ? { direction: "ltr", unicodeBidi: "isolate" }
+                                : undefined
+                            }
+                          >
                             {currentQuestion.answers.map((answer, idx) => {
                               const isSelected = selectedAnswer === answer;
-                              const isCorrect = compareMathLearnerAnswer({
-                                user: answer,
-                                correctAnswer: currentQuestion.correctAnswer,
-                                numericTolerance: MATH_NUMERIC_TOLERANCE,
-                              }).isCorrect;
+                              const isCorrect = compareLearnerAnswerForQuestion(
+                                currentQuestion,
+                                answer
+                              ).isCorrect;
                               const isWrong = isSelected && !isCorrect;
 
                               return (

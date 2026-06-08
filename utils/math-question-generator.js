@@ -4,8 +4,9 @@ import { probeMatchesSession } from './active-diagnostic-runtime/session-match.j
 import { attachProfessionalMathMetadata } from './math-question-metadata.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
 import {
-  COMPARISON_SIGN_OPTIONS,
+  COMPARISON_SIGN_DISPLAY_ORDER,
   computeComparisonSign,
+  finalizeComparisonSignMcq,
   isComparisonSignMcq,
 } from './comparison-sign-mcq.js';
 import { attachMathEquationInstructionLabel } from './student-question-display.js';
@@ -456,7 +457,7 @@ function finalizeMathMcqAnswerBundle(out, randIntFn) {
   }
 
   if (isComparisonSignMcq(out)) {
-    return out;
+    return finalizeComparisonSignMcq(out);
   }
 
   const params =
@@ -2855,7 +2856,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       gradeKey,
     });
 
-    const answers = [...COMPARISON_SIGN_OPTIONS];
+    const answers = [...COMPARISON_SIGN_DISPLAY_ORDER];
 
     return finalizeMathQuestionOutput({
       question,

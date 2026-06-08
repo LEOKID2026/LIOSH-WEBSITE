@@ -268,6 +268,18 @@ assert.equal(
 );
 assert.equal(
   compareMathLearnerAnswer({
+    user: ">",
+    correctAnswer: "<",
+    numericTolerance: TOL,
+    params: { kind: "cmp", a: 79, b: 35 },
+    a: 79,
+    b: 35,
+  }).isCorrect,
+  true,
+  "cmp: operand canonical sign wins over stale correctAnswer"
+);
+assert.equal(
+  compareMathLearnerAnswer({
     user: "2.005",
     correctAnswer: 2,
     numericTolerance: TOL,

@@ -1,4 +1,8 @@
-import { computeComparisonSign, coerceComparisonOperands } from "./comparison-sign-mcq.js";
+import {
+  computeComparisonSign,
+  coerceComparisonOperands,
+  isolateComparisonSignForDisplay,
+} from "./comparison-sign-mcq.js";
 
 export function buildVerticalOperation(topNumber, bottomNumber, operator = "-") {
   const top = String(topNumber);
@@ -2135,7 +2139,7 @@ export function buildCompareAnimation(params, answer) {
   steps.push({
     id: "calculate",
     title: "החישוב",
-    text: `${comparison} לכן בוחרים את הסימן ${sign}.`,
+    text: `${comparison} לכן בוחרים את הסימן ${isolateComparisonSignForDisplay(sign)}.`,
     highlights: ["calculation"],
     type: "compare",
     params,
@@ -2146,7 +2150,7 @@ export function buildCompareAnimation(params, answer) {
   steps.push({
     id: "final",
     title: "התוצאה הסופית",
-    text: `הסימן הנכון הוא ${sign}`,
+    text: `הסימן הנכון הוא ${isolateComparisonSignForDisplay(sign)}`,
     highlights: ["result"],
     type: "compare",
     params,

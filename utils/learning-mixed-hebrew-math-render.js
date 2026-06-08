@@ -11,7 +11,7 @@ const STEP_EQUATION_BODY =
   String.raw`\d[\d\s]*(?:[+\-−×÷]\s*\d[\d\s]*)*\s*=\s*\d[\d\s]*`;
 
 export const LEARNING_MATH_RUN_RE =
-  /(\d[\d\s.,]*\s*(?:%|(?:\/\s*\d)|[+\-−×÷=])\s*[\d\s.,]+(?:\s*(?:%|(?:\/\s*\d)|[+\-−×÷=])\s*[\d\s.,]+)*)/g;
+  /(\d[\d\s.,]*\s*(?:%|(?:\/\s*\d)|[+\-−×÷=<>])\s*[\d\s.,]+(?:\s*(?:%|(?:\/\s*\d)|[+\-−×÷=<>])\s*[\d\s.,]+)*)/g;
 
 /**
  * @param {LearningMixedRun[]} runs

@@ -2,6 +2,7 @@ import {
   isTopicDifficultyMetadataLead,
   normalizeStudentQuestionDisplayFields,
 } from "./student-question-display.js";
+import { finalizeComparisonSignMcq } from "./comparison-sign-mcq.js";
 import { ensureMcqFourOptions, shouldEnforceFourMcqOptions } from "./mcq-four-options.js";
 
 /**
@@ -261,12 +262,13 @@ export function sanitizeQuestionForStudentDisplay(q) {
     delete next.questionLabel;
   }
   const normalized = normalizeStudentQuestionDisplayFields(next);
-  if (shouldEnforceFourMcqOptions(normalized)) {
+  const cmpReady = finalizeComparisonSignMcq(normalized);
+  if (shouldEnforceFourMcqOptions(cmpReady)) {
     const subject =
-      normalized.subject ||
-      normalized.params?.subject ||
-      normalized.params?.canonicalMetadata?.subject;
-    return ensureMcqFourOptions(normalized, { subject: subject != null ? String(subject) : undefined });
+      cmpReady.subject ||
+      cmpReady.params?.subject ||
+      cmpReady.params?.canonicalMetadata?.subject;
+    return ensureMcqFourOptions(cmpReady, { subject: subject != null ? String(subject) : undefined });
   }
-  return normalized;
+  return cmpReady;
 }

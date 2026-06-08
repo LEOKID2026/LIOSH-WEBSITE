@@ -9,7 +9,7 @@ const href = (rel) => pathToFileURL(join(root, rel)).href;
 const { ensureMcqFourOptions, shouldEnforceFourMcqOptions, NORMAL_MCQ_OPTION_COUNT } = await import(
   href("utils/mcq-four-options.js")
 ).then((m) => (m.default?.ensureMcqFourOptions ? m.default : m));
-const { COMPARISON_SIGN_OPTIONS } = await import(href("utils/comparison-sign-mcq.js"));
+const { COMPARISON_SIGN_DISPLAY_ORDER } = await import(href("utils/comparison-sign-mcq.js"));
 const { buildMcqFromOptionPool, generateQuestion, getLevelForGrade } = await import(
   href("utils/english-question-generator.js")
 ).then((m) => (m.default?.generateQuestion ? m.default : m));
@@ -51,7 +51,7 @@ test("english generator yields four sanitized MCQ options for g1 sentences", () 
 test("comparison-sign MCQ is exempt from four-option enforcement", () => {
   const q = {
     question: "16 __ 7",
-    answers: [...COMPARISON_SIGN_OPTIONS],
+    answers: [...COMPARISON_SIGN_DISPLAY_ORDER],
     correctAnswer: ">",
     params: { kind: "cmp", a: 16, b: 7 },
     operation: "compare",
@@ -59,7 +59,7 @@ test("comparison-sign MCQ is exempt from four-option enforcement", () => {
   assert.equal(shouldEnforceFourMcqOptions(q), false);
   const out = ensureMcqFourOptions(q);
   assert.equal(out.answers.length, 3);
-  assert.deepEqual([...out.answers].sort(), [...COMPARISON_SIGN_OPTIONS].sort());
+  assert.deepEqual(out.answers, COMPARISON_SIGN_DISPLAY_ORDER);
 });
 
 test("geometry variable-label MCQ is exempt from four-option enforcement", () => {
