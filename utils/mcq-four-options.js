@@ -2,6 +2,7 @@
  * Ensure normal MCQ rows expose exactly four unique child-visible options.
  * Used at generator output / student-display sanitization — not UI copy.
  */
+import { isComparisonSignMcq } from "./comparison-sign-mcq.js";
 import { normalizeOptionForCompare } from "./question-quality.js";
 
 export const NORMAL_MCQ_OPTION_COUNT = 4;
@@ -92,6 +93,7 @@ export function shouldEnforceFourMcqOptions(q) {
   if (params.kind === "empty_pool" || params.patternFamily === "no_questions") return false;
 
   if (isGeometryVariableLabelMcq(q)) return false;
+  if (isComparisonSignMcq(q)) return false;
 
   return true;
 }

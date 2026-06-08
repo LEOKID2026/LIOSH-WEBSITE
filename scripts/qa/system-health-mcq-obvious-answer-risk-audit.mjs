@@ -71,6 +71,15 @@ async function collectMcqQuestions() {
   const scienceMod = await import(modUrl("data/science-questions.js"));
   for (const q of scienceMod.SCIENCE_QUESTIONS || []) {
     if (!Array.isArray(q.options) || q.options.length < 2) continue;
+    const repaired = repairMcqObviousAnswerContent(
+      {
+        question: q.stem,
+        answers: q.options,
+        correctIndex: q.correctIndex,
+        params: q.params,
+      },
+      { subject: "science", stem: q.stem }
+    );
     await pushMcq({
       subject: "science",
       grade: q.grades?.[0],
@@ -79,12 +88,7 @@ async function collectMcqQuestions() {
       source: "science_bank",
       sourceFile: "data/science-questions.js",
       id: q.id,
-      raw: {
-        question: q.stem,
-        answers: q.options,
-        correctIndex: q.correctIndex,
-        params: q.params,
-      },
+      raw: repaired,
     });
   }
 
@@ -144,12 +148,16 @@ async function collectMcqQuestions() {
       for (const [band, arr] of Object.entries(pool)) {
         if (!Array.isArray(arr)) continue;
         arr.forEach((q, idx) => {
+          const repaired = repairMcqObviousAnswerContent(q, {
+            subject: "moledet_geography",
+            stem: q.question,
+          });
           pushMcq({
             subject: "moledet_geography",
             source: `moledet:${poolName}:${band}`,
             sourceFile: "data/geography-questions/index.js",
             id: q.id || `${poolName}:${band}:${idx}`,
-            raw: q,
+            raw: repaired,
           });
         });
       }
@@ -169,6 +177,10 @@ async function collectMcqQuestions() {
               i
             );
             if (gen.unsupported || !gen.ok || !gen.raw) continue;
+            const repaired = repairMcqObviousAnswerContent(gen.raw, {
+              subject,
+              stem: gen.raw?.question ?? gen.raw?.stem,
+            });
             pushMcq({
               subject,
               grade,
@@ -176,7 +188,7 @@ async function collectMcqQuestions() {
               difficulty: level,
               source: `generator:${subject}:${grade}:${topic}:${level}:${i}`,
               sourceFile: `utils/${subject === "moledet_geography" ? "moledet-geography" : subject}-question-generator.js`,
-              raw: gen.raw,
+              raw: repaired,
             });
           }
         }

@@ -9,6 +9,7 @@ const href = (rel) => pathToFileURL(join(root, rel)).href;
 const { ensureMcqFourOptions, shouldEnforceFourMcqOptions, NORMAL_MCQ_OPTION_COUNT } = await import(
   href("utils/mcq-four-options.js")
 ).then((m) => (m.default?.ensureMcqFourOptions ? m.default : m));
+const { COMPARISON_SIGN_OPTIONS } = await import(href("utils/comparison-sign-mcq.js"));
 const { buildMcqFromOptionPool, generateQuestion, getLevelForGrade } = await import(
   href("utils/english-question-generator.js")
 ).then((m) => (m.default?.generateQuestion ? m.default : m));
@@ -47,6 +48,20 @@ test("english generator yields four sanitized MCQ options for g1 sentences", () 
   assert.ok(q.answers.includes(String(q.correctAnswer)));
 });
 
+test("comparison-sign MCQ is exempt from four-option enforcement", () => {
+  const q = {
+    question: "16 __ 7",
+    answers: [...COMPARISON_SIGN_OPTIONS],
+    correctAnswer: ">",
+    params: { kind: "cmp", a: 16, b: 7 },
+    operation: "compare",
+  };
+  assert.equal(shouldEnforceFourMcqOptions(q), false);
+  const out = ensureMcqFourOptions(q);
+  assert.equal(out.answers.length, 3);
+  assert.deepEqual([...out.answers].sort(), [...COMPARISON_SIGN_OPTIONS].sort());
+});
+
 test("geometry variable-label MCQ is exempt from four-option enforcement", () => {
   const q = {
     question: '"מקבילות" מתאים לאיזה מספר?',
@@ -55,4 +70,55 @@ test("geometry variable-label MCQ is exempt from four-option enforcement", () =>
     params: { kind: "parallel_perpendicular", answerMode: "choice" },
   };
   assert.equal(shouldEnforceFourMcqOptions(q), false);
+});
+
+test("typing questions are not forced to four MCQ options", () => {
+  const q = {
+    question: "כתוב באנגלית: שלום",
+    answers: [],
+    params: { answerMode: "typing" },
+  };
+  assert.equal(shouldEnforceFourMcqOptions(q), false);
+});
+
+test("ensureMcqFourOptions preserves correct answer and avoids duplicates", () => {
+  const out = ensureMcqFourOptions(
+    {
+      question: "בחר",
+      answers: ["alpha", "beta", "gamma"],
+      correctAnswer: "beta",
+      correctIndex: 1,
+      params: { answerMode: "choice", subject: "english" },
+    },
+    { subject: "english" }
+  );
+  assert.equal(out.answers.length, 4);
+  assert.ok(out.answers.includes("beta"));
+  assert.equal(new Set(out.answers.map(String)).size, 4);
+  assert.equal(String(out.correctAnswer), "beta");
+});
+
+test("ensureMcqFourOptions keeps primitive display-safe options", () => {
+  const out = ensureMcqFourOptions(
+    {
+      question: "3 × 4 = ?",
+      answers: [12, 7, 8],
+      correctAnswer: 12,
+      params: { answerMode: "choice", subject: "math" },
+    },
+    { subject: "math" }
+  );
+  for (const a of out.answers) {
+    assert.ok(typeof a === "string" || typeof a === "number");
+  }
+});
+
+test("pool correctIndex histogram audit is disabled (runtime shuffle)", async () => {
+  const { assessCorrectIndexPattern } = await import(
+    href("scripts/qa/lib/mcq-obvious-answer-risk.mjs")
+  );
+  assert.equal(
+    assessCorrectIndexPattern(0, 100, { 0: 100 }, "utils/hebrew-rich-question-bank.js"),
+    null
+  );
 });

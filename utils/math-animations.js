@@ -1,3 +1,5 @@
+import { computeComparisonSign, coerceComparisonOperands } from "./comparison-sign-mcq.js";
+
 export function buildVerticalOperation(topNumber, bottomNumber, operator = "-") {
   const top = String(topNumber);
   const bottom = String(bottomNumber);
@@ -2089,60 +2091,66 @@ export function buildEquationsAnimation(params, answer) {
 // פונקציה לבניית צעדי אנימציה להשוואה
 export function buildCompareAnimation(params, answer) {
   const steps = [];
-  const { a, b, exerciseText } = params;
+  const { a: numA, b: numB } = coerceComparisonOperands(params?.a, params?.b);
+  const sign = computeComparisonSign(numA, numB) ?? String(answer ?? "").trim();
   const ltr = (expr) => `\u2066${expr}\u2069`;
   
   // צעד 1: הצגת השאלה
+  const aLabel = numA != null ? String(numA) : "";
+  const bLabel = numB != null ? String(numB) : "";
+
   steps.push({
     id: "show-question",
     title: "הצגת השאלה",
-    text: `השלם את הסימן: ${ltr(`${a} __ ${b}`)}`,
+    text: `השלם את הסימן: ${ltr(`${aLabel} __ ${bLabel}`)}`,
     highlights: ["question"],
     type: "compare",
     params,
-    answer,
+    answer: sign,
   });
   
   // צעד 2: הסבר על השוואה
   steps.push({
     id: "explain",
     title: "איך משווים?",
-    text: `נסתכל על שני המספרים: ${ltr(`${a}`)} ו-${ltr(`${b}`)}.`,
+    text: `נסתכל על שני המספרים: ${ltr(aLabel)} ו-${ltr(bLabel)}.`,
     highlights: ["explanation"],
     type: "compare",
     params,
-    answer,
+    answer: sign,
   });
   
   // צעד 3: החישוב
   let comparison = "";
-  if (a < b) {
-    comparison = `${ltr(`${a} < ${b}`)} כי ${a} קטן מ-${b}.`;
-  } else if (a > b) {
-    comparison = `${ltr(`${a} > ${b}`)} כי ${a} גדול מ-${b}.`;
-  } else {
-    comparison = `${ltr(`${a} = ${b}`)} כי המספרים שווים.`;
+  if (numA != null && numB != null) {
+    if (sign === "<") {
+      comparison = `${ltr(`${numA} < ${numB}`)} כי ${numA} קטן מ-${numB}.`;
+    } else if (sign === ">") {
+      comparison = `${ltr(`${numA} > ${numB}`)} כי ${numA} גדול מ-${numB}.`;
+    } else {
+      comparison = `${ltr(`${numA} = ${numB}`)} כי המספרים שווים.`;
+    }
   }
   
   steps.push({
     id: "calculate",
     title: "החישוב",
-    text: `${comparison} לכן בוחרים את הסימן ${answer}.`,
+    text: `${comparison} לכן בוחרים את הסימן ${sign}.`,
     highlights: ["calculation"],
     type: "compare",
     params,
-    answer,
+    answer: sign,
   });
   
   // צעד 4: התוצאה
   steps.push({
     id: "final",
     title: "התוצאה הסופית",
-    text: `הסימן הנכון הוא ${answer}`,
+    text: `הסימן הנכון הוא ${sign}`,
     highlights: ["result"],
     type: "compare",
     params,
-    answer,
+    answer: sign,
   });
   
   return steps;

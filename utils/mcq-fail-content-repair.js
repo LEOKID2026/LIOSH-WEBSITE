@@ -229,8 +229,18 @@ function repairFormatOutliers(answers, ci) {
   if (hasParens(correct)) {
     for (let i = 0; i < answers.length; i++) {
       if (i === ci) continue;
-      if (!hasParens(answers[i]) && String(answers[i]).length <= 12) {
-        answers[i] = `${answers[i]} (לא)`;
+      const t = String(answers[i] ?? "").trim();
+      if (!hasParens(t) && t.length >= 4 && t.length <= 24) {
+        answers[i] = t.length <= 12 ? `${t} (לא)` : `${t} (אחר)`;
+      }
+    }
+  }
+  if (/[.!?]$/.test(correct.trim())) {
+    for (let i = 0; i < answers.length; i++) {
+      if (i === ci) continue;
+      const t = String(answers[i] ?? "").trim();
+      if (t && !/[.!?]$/.test(t) && t.length >= 4) {
+        answers[i] = `${t}.`;
       }
     }
   }
@@ -246,7 +256,7 @@ export function repairMcqObviousAnswerContent(row, ctx = {}) {
   let current = row;
   for (let pass = 0; pass < 3; pass++) {
     const fields = readMcqFields(current);
-    if (!fields || fields.answers.length < 4) return current;
+    if (!fields || fields.answers.length < 2) return current;
 
     let { answers, ci, stem } = fields;
     answers = repairStemKeywordClues([...answers], ci, stem);

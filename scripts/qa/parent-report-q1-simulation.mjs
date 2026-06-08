@@ -375,9 +375,9 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          answers: buildAnswerSchedule(["2026-04-03"], [3], [1]),
+          answers: buildAnswerSchedule(["2027-02-03"], [3], [1]),
         },
-        verifyRange: { from: "2026-04-03", to: "2026-04-03" },
+        verifyRange: { from: "2027-02-03", to: "2027-02-03" },
         expected: DATA_SUFFICIENCY.INSUFFICIENT,
       };
     case "C_preliminary_by_count":
@@ -387,9 +387,9 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          answers: buildAnswerSchedule(["2026-04-05", "2026-04-06"], [4, 4], [2, 1]),
+          answers: buildAnswerSchedule(["2027-02-05", "2027-02-06"], [4, 4], [2, 1]),
         },
-        verifyRange: { from: "2026-04-05", to: "2026-04-06" },
+        verifyRange: { from: "2027-02-05", to: "2027-02-06" },
         expected: DATA_SUFFICIENCY.PRELIMINARY,
       };
     case "D_preliminary_no_recurrence":
@@ -399,9 +399,9 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          answers: buildAnswerSchedule(["2026-04-08"], [14], [4]),
+          answers: buildAnswerSchedule(["2027-02-08"], [14], [4]),
         },
-        verifyRange: { from: "2026-04-08", to: "2026-04-08" },
+        verifyRange: { from: "2027-02-08", to: "2027-02-08" },
         expected: DATA_SUFFICIENCY.PRELIMINARY,
       };
     case "E_supported_diagnosis":
@@ -412,9 +412,9 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          answers: buildAnswerSchedule(["2026-04-10", "2026-04-12"], [7, 7], [2, 2]),
+          answers: buildAnswerSchedule(["2027-02-10", "2027-02-12"], [7, 7], [2, 2]),
         },
-        verifyRange: { from: "2026-04-10", to: "2026-04-12" },
+        verifyRange: { from: "2027-02-10", to: "2027-02-12" },
         expected: DATA_SUFFICIENCY.SUPPORTED,
       };
     case "F_parent_assigned":
@@ -427,9 +427,9 @@ function scenarioPlan(entry) {
           grade,
           count: 6,
           wrongCount: 2,
-          days: ["2026-04-14", "2026-04-15"],
+          days: ["2027-02-14", "2027-02-15"],
         },
-        verifyRange: { from: "2026-04-14", to: "2026-04-15" },
+        verifyRange: { from: "2027-02-14", to: "2027-02-15" },
         expected: DATA_SUFFICIENCY.PRELIMINARY,
       };
     case "G_non_diagnostic_exclusion":
@@ -439,10 +439,10 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          learningAnswers: buildAnswerSchedule(["2026-04-16"], [8], 0),
-          bookDay: "2026-04-16",
+          learningAnswers: buildAnswerSchedule(["2027-02-16"], [8], 0),
+          bookDay: "2027-02-16",
         },
-        verifyRange: { from: "2026-04-16", to: "2026-04-16" },
+        verifyRange: { from: "2027-02-16", to: "2027-02-16" },
         expected: DATA_SUFFICIENCY.NO_DATA,
       };
     case "I_date_range_1":
@@ -452,13 +452,13 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          answers: buildAnswerSchedule(["2026-04-18", "2026-04-22", "2026-04-25"], [5, 5, 5], [1, 1, 0]),
+          answers: buildAnswerSchedule(["2027-02-18", "2027-02-22", "2027-02-25"], [5, 5, 5], [1, 1, 0]),
         },
-        verifyRange: { from: "2026-04-18", to: "2026-04-25" },
+        verifyRange: { from: "2027-02-18", to: "2027-02-25" },
         dateRangeChecks: [
-          { label: "day", from: "2026-04-18", to: "2026-04-18", expectedDiag: 5 },
-          { label: "week", from: "2026-04-18", to: "2026-04-24", expectedDiag: 10 },
-          { label: "month", from: "2026-04-01", to: "2026-04-30", expectedDiagMin: 15 },
+          { label: "day", from: "2027-02-18", to: "2027-02-18", expectedDiag: 5 },
+          { label: "week", from: "2027-02-18", to: "2027-02-24", expectedDiag: 10 },
+          { label: "month", from: "2027-02-01", to: "2027-02-30", expectedDiagMin: 15 },
         ],
         expected: DATA_SUFFICIENCY.SUPPORTED,
       };
@@ -469,12 +469,12 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          answers: buildAnswerSchedule(["2026-04-19", "2026-04-26"], [6, 6], [1, 1]),
+          answers: buildAnswerSchedule(["2027-02-19", "2027-02-26"], [6, 6], [1, 1]),
         },
-        verifyRange: { from: "2026-04-19", to: "2026-04-26" },
+        verifyRange: { from: "2027-02-19", to: "2027-02-26" },
         dateRangeChecks: [
-          { label: "day_apr19", from: "2026-04-19", to: "2026-04-19", expectedDiag: 6 },
-          { label: "day_apr26", from: "2026-04-26", to: "2026-04-26", expectedDiag: 6 },
+          { label: "day_apr19", from: "2027-02-19", to: "2027-02-19", expectedDiag: 6 },
+          { label: "day_apr26", from: "2027-02-26", to: "2027-02-26", expectedDiag: 6 },
         ],
         expected: DATA_SUFFICIENCY.SUPPORTED,
       };
@@ -485,9 +485,9 @@ function scenarioPlan(entry) {
           subject,
           topic,
           grade,
-          answers: buildAnswerSchedule(["2026-04-20", "2026-04-21"], [4, 4], [1, 1]),
+          answers: buildAnswerSchedule(["2027-02-20", "2027-02-21"], [4, 4], [1, 1]),
         },
-        verifyRange: { from: "2026-04-20", to: "2026-04-21" },
+        verifyRange: { from: "2027-02-20", to: "2027-02-21" },
         expected: DATA_SUFFICIENCY.PRELIMINARY,
       };
     default:
@@ -790,6 +790,19 @@ async function main() {
       const result = await seedScenario(supabase, QA_PARENT_ID, entry, plan);
       console.log(`  ${entry.label}: seeded`, result);
     }
+  } else {
+    const { count, error } = await supabase
+      .from("learning_sessions")
+      .select("id", { count: "exact", head: true })
+      .contains("metadata", { parentReportQ1Sim: SEED_TAG })
+      .in("student_id", studentIds);
+    if (error) throw error;
+    if (!count) {
+      throw new Error(
+        "Q1 verify-only: no tagged sessions found. Run without --verify-only first to seed isolated 2027-02 data."
+      );
+    }
+    console.log(`Q1 verify-only: found ${count} tagged sessions (isolated 2027-02 window)`);
   }
 
   const results = [];

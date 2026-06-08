@@ -3,6 +3,11 @@ import { mergeDiagnosticContractIntoParams } from './diagnostic-question-contrac
 import { probeMatchesSession } from './active-diagnostic-runtime/session-match.js';
 import { attachProfessionalMathMetadata } from './math-question-metadata.js';
 import { sanitizeQuestionForStudentDisplay } from './student-question-stem-sanitizer.js';
+import {
+  COMPARISON_SIGN_OPTIONS,
+  computeComparisonSign,
+  isComparisonSignMcq,
+} from './comparison-sign-mcq.js';
 import { attachMathEquationInstructionLabel } from './student-question-display.js';
 import { mcqCellValue } from './mcq-option-cell.js';
 import { normalizeOptionForCompare } from './question-quality.js';
@@ -450,6 +455,10 @@ function finalizeMathMcqAnswerBundle(out, randIntFn) {
     return out;
   }
 
+  if (isComparisonSignMcq(out)) {
+    return out;
+  }
+
   const params =
     out.params && typeof out.params === "object" ? { .../** @type {Record<string, unknown>} */ (out.params) } : {};
   const kind = String(params.kind || "");
@@ -635,11 +644,18 @@ export function buildMathMcqAnswerList(correctAnswer, selectedOp, params, randIn
 
   if (selectedOp === "decimals" || kind.startsWith("dec_")) {
     const places =
-      params?.places != null ? Math.max(1, Math.min(3, params.places)) : 1;
+      kind === "dec_round_whole_standard"
+        ? 2
+        : params?.places != null
+          ? Math.max(1, Math.min(3, params.places))
+          : 1;
     const cn = Number(correctAnswer);
     if (Number.isNaN(cn)) return null;
     const step = Math.pow(10, -places);
-    const fmt = (x) => roundFn(x, places);
+    const fmt = (x) =>
+      kind === "dec_round_whole_standard"
+        ? roundFn(x, 0).toFixed(places)
+        : roundFn(x, places);
     const target = fmt(cn);
     const wrong = new Set();
     const addN = (x) => {
@@ -2503,9 +2519,9 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
         operandB = y;
       } else if (allowDecimalVariety && roll < 0.38) {
         const n = round(randInt(12, Math.min(98, Math.floor(maxBase))) / 10, 1);
-        correctAnswer = Math.round(n);
+        correctAnswer = round(n, 0);
         question = `עגלו את ${n.toFixed(1)} למספר השלם הקרוב (כללי עיגול סטנדרטי): ${BLANK}`;
-        params = { kind: "dec_round_whole_standard", n, places: 1 };
+        params = { kind: "dec_round_whole_standard", n, places: 2 };
         operandA = n;
         operandB = null;
       } else {
@@ -2816,9 +2832,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
 
     // חשוב: הסימן צריך להיות מתמטי נכון. כדי למנוע היפוך בתצוגת RTL,
     // נעטוף את התרגיל עצמו ב-LTR markers (LRI/PDI).
-    let symbol = "=";
-    if (a < b) symbol = "<";
-    else if (a > b) symbol = ">";
+    const symbol = computeComparisonSign(a, b) ?? "=";
 
     correctAnswer = symbol;
     const questionLabel = "השלם את הסימן:";
@@ -2841,8 +2855,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       gradeKey,
     });
 
-    // כפתורי השוואה תמיד באותו סדר: <, =, > (שווה באמצע)
-    const answers = ["<", "=", ">"];
+    const answers = [...COMPARISON_SIGN_OPTIONS];
 
     return finalizeMathQuestionOutput({
       question,

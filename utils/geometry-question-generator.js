@@ -488,14 +488,24 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       topic: selectedTopic,
     });
     if (conceptual) {
-      return {
-        question: conceptual.question,
-        correctAnswer: conceptual.correctAnswer,
-        answers: conceptual.answers,
-        topic: selectedTopic,
-        shape,
-        params: conceptual.params,
-      };
+      return sanitizeQuestionForStudentDisplay(
+        attachCanonicalMetadataToMathGeometryQuestion(
+          {
+            question: conceptual.question,
+            correctAnswer: conceptual.correctAnswer,
+            answers: conceptual.answers,
+            topic: selectedTopic,
+            shape,
+            params: conceptual.params,
+          },
+          {
+            subject: "geometry",
+            gradeKey,
+            levelKey,
+            topic: selectedTopic,
+          }
+        )
+      );
     }
   }
 
@@ -1729,40 +1739,40 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       if (formulaBand === "mid") {
         if (levelKey === "easy") {
           question = [
-            `פעולת סיבוב סביב מרכז: מה גודל הסיבוב במעלות? (רמז: ${angle}°)`,
-            `סיבוב חצי/רבע/שלוש רבעים — כמה מעלות במקרה הזה? (${angle}°)`,
-            `זווית סיבוב סטנדרטית במישור — בחרו במעלות. (${angle}°)`,
+            `פעולת סיבוב סביב מרכז: מה גודל הסיבוב במעלות?`,
+            `סיבוב חצי/רבע/שלוש רבעים — כמה מעלות במקרה הזה?`,
+            `זווית סיבוב סטנדרטית במישור — בחרו במעלות.`,
           ][rotW];
         } else if (levelKey === "medium") {
           question = [
-            `בכמה מעלות מסתובבת צורה במישור סביב נקודת המרכז? (${angle}°)`,
-            `סיבוב סביב מרכז הצורה — מה גודל הסיבוב? (${angle}°)`,
-            `מעלות סיבוב במישור (סביב מרכז): (${angle}°)`,
+            `בכמה מעלות מסתובבת צורה במישור סביב נקודת המרכז?`,
+            `סיבוב סביב מרכז הצורה — מה גודל הסיבוב במעלות?`,
+            `מה גודל הסיבוב במעלות סביב מרכז הצורה?`,
           ][rotW];
         } else {
           question = [
-            `סיבוב במערכת צירים — העריכו את מספר המעלות לפני בחירה. (${angle}°)`,
-            `סיבוב מדויק — אימות לפני בחירה במעלות. (${angle}°)`,
-            `אתגר סיבוב במישור — מה המעלות? (${angle}°)`,
+            `סיבוב במערכת צירים — העריכו את מספר המעלות לפני בחירה.`,
+            `סיבוב מדויק — בחרו את מספר המעלות הנכון.`,
+            `אתגר סיבוב במישור — מה המעלות?`,
           ][rotW];
         }
       } else if (levelKey === "easy") {
         question = [
-          `זווית סיבוב בסיסית במישור — כמה מעלות? (${angle}°)`,
-          `כמה מעלות בפעולת סיבוב זו? (${angle}°)`,
-          `סיבוב במישור — בחרו זווית נכונה. (${angle}°)`,
+          `זווית סיבוב בסיסית במישור — כמה מעלות?`,
+          `כמה מעלות בפעולת סיבוב זו?`,
+          `סיבוב במישור — בחרו זווית נכונה.`,
         ][rotW];
       } else if (levelKey === "medium") {
         question = [
-          `סיבוב במישור סביב מרכז — כמה מעלות? (${angle}°)`,
-          `זווית סיבוב סביב נקודת מרכז — מה המעלות? (${angle}°)`,
-          `פעולת סיבוב במישור — מה גודל המעלות? (${angle}°)`,
+          `סיבוב במישור סביב מרכז — כמה מעלות?`,
+          `זווית סיבוב סביב נקודת מרכז — מה המעלות?`,
+          `פעולת סיבוב במישור — מה גודל המעלות?`,
         ][rotW];
       } else {
         question = [
-          `אתגר סיבוב — מה גודל הסיבוב במעלות? (${angle}°)`,
-          `סיבוב מאתגר — העריכו מעלות. (${angle}°)`,
-          `ניתוח סיבוב במישור — מה המעלות? (${angle}°)`,
+          `אתגר סיבוב — מה גודל הסיבוב במעלות?`,
+          `סיבוב מאתגר — העריכו מעלות.`,
+          `ניתוח סיבוב במישור — מה המעלות?`,
         ][rotW];
       }
       break;

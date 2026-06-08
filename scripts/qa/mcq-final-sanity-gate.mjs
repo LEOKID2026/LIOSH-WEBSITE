@@ -222,7 +222,7 @@ async function collectEnglish() {
         pool.push(
           childVisibleMcq(
             {
-              stem: item.stem || item.question,
+              stem: item.stem || item.question || item.template,
               options: item.options,
               correctIndex: item.correctIndex ?? item.correct,
             },

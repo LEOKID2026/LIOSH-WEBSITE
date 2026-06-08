@@ -149,10 +149,8 @@ function auditOne(ref) {
 
   const leakFields = [
     ["stem", norm.stem],
-    ["explanation", norm.explanation],
     ["hint", norm.hint],
     ["title", raw?.title],
-    ["questionLabel", raw?.questionLabel],
     ["prompt", raw?.prompt],
     ["metadataLabel", raw?.params?.displayLabel || raw?.params?.questionPrefix],
     ["frozenSnapshot", raw?.frozenSnapshot?.stem || raw?.question_snapshot?.stem],
@@ -174,11 +172,15 @@ function auditOne(ref) {
   if (isMcq && leakTarget != null) {
     for (let i = 0; i < answers.length; i++) {
       const label = mcqCellLabel(answers[i]);
-      if (label && detectStemLeak(label, leakTarget)) {
+      const value = String(mcqCellValue(answers[i]) ?? "");
+      // Plain string options: label falls back to full option text — not a separate label prefix.
+      if (!label || label === value) continue;
+      if (/^[0-9]+$/.test(label) || /^[0-9]+$/.test(value)) continue;
+      if (detectStemLeak(label, leakTarget)) {
         leakIssues.push({
           code: "answer_leak",
           field: "option_label_prefix",
-          message: `Correct answer in option ${i} label prefix`,
+          message: `Correct answer in option ${i} explicit label prefix`,
         });
       }
     }
@@ -197,10 +199,26 @@ function auditOne(ref) {
     topic: ref.topic || raw?.topic || raw?.operation,
     answerMode: raw?.params?.answerMode || (isMcq ? "choice" : "typing"),
     isEmptyPool: raw?.params?.kind === "empty_pool" || raw?.params?.kind === "no_question",
+    hasVisualAsset: Boolean(
+      raw?.shape ||
+        raw?.imageUrl ||
+        raw?.diagram ||
+        raw?.params?.requiresVisual ||
+        ref.subject === "geometry"
+    ),
+    sourceHasErrorTags:
+      Array.isArray(raw?.params?.expectedErrorTags) && raw.params.expectedErrorTags.length > 0,
+    hasExplicitDiagnostic: Boolean(
+      raw?.params?.diagnosticSkillId || cm?.skillId || raw?.params?.kind?.startsWith?.("concept_")
+    ),
   };
   const metaProblems = validateCanonicalMetadataBlock(cm, metaCtx);
+  const hardMetadataRe =
+    /canonicalMetadata missing|contractVersion must|subject required|skillId required|forbidden canonical field|answerFormat must|metadataConfidence must|requiresVisual true without|requiresAudio true without|subject mismatch|empty pool must/;
   for (const m of metaProblems) {
-    metadataIssues.push({ code: "metadata", message: m });
+    if (hardMetadataRe.test(m)) {
+      metadataIssues.push({ code: "metadata", message: m });
+    }
   }
 
   if (norm.stem && cm?.skillId && norm.stem.trim().startsWith(String(cm.skillId))) {

@@ -13,6 +13,7 @@ import { ensureMcqFourOptions, NORMAL_MCQ_OPTION_COUNT } from "./mcq-four-option
 function shuffleOptions(correct, options) {
   const arr = [...new Set(options.map((s) => String(s).trim()))].filter(Boolean);
   if (!arr.includes(correct)) arr.push(correct);
+  const isBinaryTf = arr.every((t) => t === "נכון" || t === "לא נכון");
   let guard = 0;
   while (arr.length < NORMAL_MCQ_OPTION_COUNT && guard < 40) {
     guard += 1;
@@ -24,7 +25,20 @@ function shuffleOptions(correct, options) {
       arr.push(String(extra).trim());
       continue;
     }
-    const synth = [`${correct} (לא)`, `${correct} — לפעמים`, `לא ${correct}`, `רק ${correct}`].find(
+    if (isBinaryTf) {
+      const tfPool =
+        correct === "נכון"
+          ? ["לא נכון", "רק במקרים מיוחדים", "תלוי בצורה"]
+          : correct === "לא נכון"
+            ? ["נכון", "נכון בכל מקרה", "תמיד נכון"]
+            : [];
+      const next = tfPool.find((t) => t !== correct && !arr.includes(t));
+      if (next) {
+        arr.push(next);
+        continue;
+      }
+    }
+    const synth = ["אפשרות אחרת", "לא מתאים", "בדרך כלל לא", "לא נכון כאן"].find(
       (t) => t !== correct && !arr.includes(t)
     );
     if (synth) arr.push(synth);
@@ -1002,9 +1016,9 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "conceptTag": "parallel_never_meet",
     "distractorFamily": "line_relation",
     "question": "שני קווים מקבילים באותו מישור — מה תכונה נכונה?",
-    "correct": "אין להם נקודת חיתוך (נשארים באותו מרחק)",
+    "correct": "אין להם נקודת חיתוך ונשארים באותו מרחק",
     "options": [
-      "אין להם נקודת חיתוך (נשארים באותו מרחק)",
+      "אין להם נקודת חיתוך ונשארים באותו מרחק",
       "הם חייבים להיפגש בנקודה אחת",
       "הם תמיד מאונכים",
       "הם תמיד שווים באורך"
@@ -1031,9 +1045,9 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "conceptTag": "parallel_never_meet_late",
     "distractorFamily": "line_relation",
     "question": "שני ישרים מקבילים באותו מישור — לגבי חיתוך ביניהם נכון ש:",
-    "correct": "אין להם נקודת חיתוך (נשארים באותו מרחק)",
+    "correct": "אין להם נקודת חיתוך ונשארים באותו מרחק",
     "options": [
-      "אין להם נקודת חיתוך (נשארים באותו מרחק)",
+      "אין להם נקודת חיתוך ונשארים באותו מרחק",
       "הם חייבים להיפגש בנקודה אחת",
       "הם תמיד מאונכים",
       "הם תמיד שווים באורך"
@@ -1177,9 +1191,9 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "measurement_error"
     ],
     "question": "נפח של תיבה מבטא בעיקר:",
-    "correct": "כמה מקום תפוס בתוך התיבה (שלושה ממדים)",
+    "correct": "כמה מקום תפוס בתוך התיבה בשלושה ממדים",
     "options": [
-      "כמה מקום תפוס בתוך התיבה (שלושה ממדים)",
+      "כמה מקום תפוס בתוך התיבה בשלושה ממדים",
       "אורך הקצה הארוך ביותר בלבד",
       "שטח של פאה אחת בלבד",
       "היקף הבסיס בלבד"
@@ -1212,9 +1226,9 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "measurement_error"
     ],
     "question": "כשמדברים על נפח של תיבה סגורה — מה המשמעות הגיאומטרית העיקרית?",
-    "correct": "כמה מקום תפוס בתוך התיבה (שלושה ממדים)",
+    "correct": "כמה מקום תפוס בתוך התיבה בשלושה ממדים",
     "options": [
-      "כמה מקום תפוס בתוך התיבה (שלושה ממדים)",
+      "כמה מקום תפוס בתוך התיבה בשלושה ממדים",
       "אורך הקצה הארוך ביותר בלבד",
       "שטח של פאה אחת בלבד",
       "היקף הבסיס בלבד"
@@ -1316,9 +1330,9 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "measurement_error"
     ],
     "question": "כמה מטרים עובר גלגל אופניים במסלול מעגלי אחד מלא — זה קשור בעיקר ל:",
-    "correct": "היקף (היקף המעגל)",
+    "correct": "היקף המעגל",
     "options": [
-      "היקף (היקף המעגל)",
+      "היקף המעגל",
       "שטח העיגול",
       "נפח הצמיג",
       "רדיוס בלבד בלי כפל"
@@ -1608,9 +1622,9 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "conceptTag": "perpendicular_to_base",
     "distractorFamily": "height_confusion",
     "question": "גובה במשולש (ביחס לבסיס נתון) הוא:",
-    "correct": "קטע מאונך מהקודקוד הנגדי לבסיס (או להארכתו)",
+    "correct": "קטע מאונך מהקודקוד הנגדי לבסיס או להארכתו",
     "options": [
-      "קטע מאונך מהקודקוד הנגדי לבסיס (או להארכתו)",
+      "קטע מאונך מהקודקוד הנגדי לבסיס או להארכתו",
       "תמיד אחת מצלעות המשולש",
       "האלכסון של המשולש",
       "הממוצע של שלוש הצלעות"
@@ -1908,12 +1922,14 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "right_angle_property_error",
       "shape_property_misread"
     ],
-    "binary": true,
+    "binary": false,
     "question": "במלבן כל ארבע הזוויות הפנימיות ישרות (90°). נכון או לא נכון?",
     "correct": "נכון",
     "options": [
       "נכון",
-      "לא נכון"
+      "לא נכון",
+      "רק שלוש זוויות ישרות",
+      "תלוי בגודל המלבן"
     ],
     "difficulty": "basic",
     "cognitiveLevel": "recall",
@@ -1942,12 +1958,14 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "right_angle_property_error",
       "shape_property_misread"
     ],
-    "binary": true,
+    "binary": false,
     "question": "במלבן במישור, כל ארבע הזוויות הפנימיות ישרות (90°). נכון או לא נכון?",
     "correct": "נכון",
     "options": [
       "נכון",
-      "לא נכון"
+      "לא נכון",
+      "רק בזווית אחת",
+      "לא בכל מלבן"
     ],
     "difficulty": "basic",
     "cognitiveLevel": "recall",
@@ -1976,12 +1994,14 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "rhombus_rectangle_overgeneralization",
       "shape_family_mislabel"
     ],
-    "binary": true,
+    "binary": false,
     "question": "כל מעוין הוא תמיד גם מלבן. נכון או לא נכון?",
     "correct": "לא נכון",
     "options": [
+      "לא נכון",
       "נכון",
-      "לא נכון"
+      "נכון רק כשכל הצלעות שוות",
+      "נכון בכל מעוין"
     ],
     "difficulty": "advanced",
     "cognitiveLevel": "analysis",
@@ -2010,12 +2030,14 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "rhombus_rectangle_overgeneralization",
       "shape_family_mislabel"
     ],
-    "binary": true,
+    "binary": false,
     "question": "טענה: כל מעוין הוא בהכרח גם מלבן. נכון או לא נכון?",
     "correct": "לא נכון",
     "options": [
+      "לא נכון",
       "נכון",
-      "לא נכון"
+      "נכון רק במלבן",
+      "נכון תמיד"
     ],
     "difficulty": "advanced",
     "cognitiveLevel": "analysis",
@@ -2044,12 +2066,14 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "obtuse_angle_misconception",
       "triangle_angle_type_error"
     ],
-    "binary": true,
+    "binary": false,
     "question": "במשולש יכולות להיות שתי זוויות כהות (גדולות מ־90°). נכון או לא נכון?",
     "correct": "לא נכון",
     "options": [
+      "לא נכון",
       "נכון",
-      "לא נכון"
+      "שתי זוויות כהות תמיד",
+      "שלוש זוויות כהות אפשריות"
     ],
     "difficulty": "advanced",
     "cognitiveLevel": "analysis",
@@ -2166,9 +2190,9 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "formula_selection_error"
     ],
     "question": "לריבוע היקף 20 ס״מ. מה נכון לגבי אורך צלע?",
-    "correct": "אורך צלע הוא 5 ס״מ (כי 20 ÷ 4 = 5)",
+    "correct": "אורך צלע הוא 5 ס״מ כי 20 ÷ 4 = 5",
     "options": [
-      "אורך צלע הוא 5 ס״מ (כי 20 ÷ 4 = 5)",
+      "אורך צלע הוא 5 ס״מ כי 20 ÷ 4 = 5",
       "אורך צלע הוא 20 ס״מ",
       "אי אפשר לדעת בלי השטח",
       "אורך צלע הוא 10 ס״מ"
