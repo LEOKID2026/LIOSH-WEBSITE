@@ -1,0 +1,157 @@
+{
+  "startedAt": "2026-06-09T20:55:21.505Z",
+  "guardType": "dry_run_preflight_with_blocked_live_hook",
+  "flagBaseline": {
+    "subskill": "true",
+    "gating": "true",
+    "promotion": "false",
+    "modeId": "C",
+    "modeName": "subskill_gating"
+  },
+  "staticPreflight": {
+    "verdict": "PASS",
+    "checks": [
+      {
+        "group": "static_preflight",
+        "name": "all_phonics_pages_have_skill_index",
+        "pass": true,
+        "detail": {
+          "missing": []
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "static_preflight",
+        "name": "phonics_skill_ids_use_english_phonics_taxonomy",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "static_preflight",
+        "name": "phonics_skill_ids_not_parsed_as_grammar_translation_vocab",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "static_preflight",
+        "name": "english_master_topics_excludes_phonics",
+        "pass": true,
+        "detail": {
+          "masterTopics": [
+            "vocabulary",
+            "grammar",
+            "translation",
+            "sentences",
+            "writing",
+            "mixed"
+          ]
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "static_preflight",
+        "name": "phonics_pages_have_no_practice_targets_yet",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "static_preflight",
+        "name": "phonics_pages_marked_phonics_foundation",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      }
+    ]
+  },
+  "flagBaselineCheck": {
+    "verdict": "PASS",
+    "checks": [
+      {
+        "group": "flag_baseline",
+        "name": "subskill_enabled",
+        "pass": true,
+        "detail": null,
+        "verdict": "PASS"
+      },
+      {
+        "group": "flag_baseline",
+        "name": "gating_enabled",
+        "pass": true,
+        "detail": null,
+        "verdict": "PASS"
+      },
+      {
+        "group": "flag_baseline",
+        "name": "promotion_disabled",
+        "pass": true,
+        "detail": null,
+        "verdict": "PASS"
+      },
+      {
+        "group": "flag_baseline",
+        "name": "active_gating_on_mode_c",
+        "pass": true,
+        "detail": null,
+        "verdict": "PASS"
+      },
+      {
+        "group": "flag_baseline",
+        "name": "active_promotion_off_mode_c",
+        "pass": true,
+        "detail": null,
+        "verdict": "PASS"
+      }
+    ]
+  },
+  "livePhonicsReport": {
+    "status": "SKIPPED",
+    "reason": "no_--live",
+    "note": null,
+    "checks": [],
+    "deferredAssertions": [
+      "g1_phonics_only_no_strong_diagnosis",
+      "g2_phonics_only_no_grammar_translation_conclusions",
+      "thin_phonics_evidence_soft_copy_only",
+      "no_internal_metadata_in_html_pdf",
+      "gating_active_under_mode_c",
+      "promotion_remains_off"
+    ]
+  },
+  "patterns": {
+    "leakScan": [
+      "_evidenceQuality",
+      "bySubSkill",
+      "gatingDecisions",
+      "promotionDecisions",
+      "supportingEvidenceIds",
+      "skillId",
+      "subSkill",
+      "english_phonics_taxonomy",
+      "math_*",
+      "frac_*"
+    ],
+    "strongDiagnosis": "(כדאי לשים לב ל|נראה שיש קושי|הביצועים הכלליים)",
+    "softThin": "(מעט נתוני תרגול|יש עדיין מעט נתוני תרגול|מומלץ לשמור)",
+    "grammarTranslation": [
+      "english_grammar_he",
+      "english_translation_he",
+      "past_simple_en",
+      "present_continuous_en",
+      "grammar_basics_token",
+      "translation_pool_token"
+    ]
+  },
+  "summary": {
+    "passCount": 11,
+    "failCount": 0,
+    "total": 11,
+    "allPass": true,
+    "liveCheckCount": 0,
+    "livePassCount": 0
+  },
+  "executableVerdict": "PASS",
+  "liveVerdict": "SKIPPED"
+}

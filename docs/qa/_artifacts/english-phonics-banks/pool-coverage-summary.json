@@ -1,0 +1,87 @@
+{
+  "artifact": "english-phonics-banks",
+  "phase": "4B Step 3B",
+  "generatedAt": "2026-06-09T20:33:27.453Z",
+  "status": "static_banks_only_not_wired",
+  "files": [
+    "data/english-questions/phonics-g1.js",
+    "data/english-questions/phonics-g2.js",
+    "tests/learning/english-phonics-pool-coverage.test.mjs"
+  ],
+  "g1": {
+    "grade": 1,
+    "total": 53,
+    "minRequired": 50,
+    "bookPagesCovered": 12,
+    "audioRequiredItems": 20,
+    "byItemType": {
+      "choose_matching_letter": 14,
+      "match_uppercase_lowercase": 5,
+      "hear_sound_choose_letter": 5,
+      "first_sound_recognition": 5,
+      "picture_word_matching": 12,
+      "early_word_reading": 4,
+      "hear_word_choose_picture_word": 4,
+      "simple_listening_instruction": 4
+    },
+    "byBookPage": {
+      "letters_upper": 5,
+      "letters_lower": 5,
+      "letters_match": 5,
+      "letter_names": 4,
+      "phonics_sounds": 5,
+      "phonics_first_sound": 5,
+      "classroom_words": 4,
+      "first_words_simple": 4,
+      "first_words_cvc": 4,
+      "picture_word_match": 4,
+      "listening_classroom": 4,
+      "listening_commands": 4
+    }
+  },
+  "g2": {
+    "grade": 2,
+    "total": 54,
+    "minRequired": 50,
+    "bookPagesCovered": 11,
+    "audioRequiredItems": 27,
+    "byItemType": {
+      "choose_matching_letter": 8,
+      "match_uppercase_lowercase": 2,
+      "hear_sound_choose_letter": 8,
+      "first_sound_recognition": 4,
+      "early_word_reading": 14,
+      "picture_word_matching": 4,
+      "hear_word_choose_picture_word": 6,
+      "simple_listening_instruction": 3,
+      "simple_sentence_exposure": 5
+    },
+    "byBookPage": {
+      "letters_review": 5,
+      "letters_order": 4,
+      "phonics_sounds_review": 5,
+      "phonics_blending": 5,
+      "sound_letter_match": 5,
+      "first_word_reading": 5,
+      "word_families_cvc": 5,
+      "classroom_vocab_g2": 5,
+      "listening_comprehension": 5,
+      "picture_audio_word_match": 5,
+      "early_sentences_exposure": 5
+    }
+  },
+  "integrity": {
+    "uniqueIds": true,
+    "fourOptionMcq": true,
+    "noStemAnswerLeakMultiChar": true,
+    "diagnosticContribution": ["manual_only", "thin"],
+    "promotionEligible": false,
+    "indexWired": false
+  },
+  "verification": {
+    "englishPhonicsPoolCoverageTest": "PASS",
+    "verifyEnglishFinalSync": "PASS",
+    "englishPhonicsG1G2RegistryTest": "PASS",
+    "npmRunBuild": "FAIL — uncaughtException TypeError: Cannot read properties of null (reading 'length') during next build (pre-existing / other agent audio work; static banks not imported by runtime)"
+  }
+}

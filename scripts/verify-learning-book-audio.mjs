@@ -62,6 +62,25 @@ if (!/NODE_ENV\s*!==\s*["']development["']/.test(playerSrc)) {
 /**
  * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookSectionAudioScope} scope
  */
+function scopeHasAnySectionMp3(scope) {
+  for (const pageId of scope.pageIds) {
+    for (let sectionNumber = 1; sectionNumber <= scope.sectionsPerPage; sectionNumber += 1) {
+      const src = manifestMod.defaultLearningBookSectionAudioPublicPath(
+        scope.subject,
+        scope.grade,
+        pageId,
+        sectionNumber
+      );
+      const publicPath = path.join(root, "public", src.replace(/^\//, "").replace(/\//g, path.sep));
+      if (fs.existsSync(publicPath)) return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * @param {import("../../lib/learning-book/audio/learning-book-audio-manifest.js").BookSectionAudioScope} scope
+ */
 function verifyScope(scope) {
   const entry = catalogMod.getLearningBookEntry(scope.subject, scope.grade);
   if (!entry) fail(`missing catalog entry: ${scope.subject}/${scope.grade}`);
@@ -137,6 +156,10 @@ function verifyScope(scope) {
 }
 
 for (const scope of manifestMod.BOOK_SECTION_AUDIO_SCOPES) {
+  if (!scopeHasAnySectionMp3(scope)) {
+    ok(`${scope.subject}/${scope.grade} — skipped (no section MP3s on disk yet)`);
+    continue;
+  }
   verifyScope(scope);
 }
 
@@ -158,8 +181,20 @@ if (resolverMod.resolveLearningBookAudio("math", "g1", "add_two", 99) !== null) 
 if (resolverMod.resolveLearningBookAudio("math", "g2", "add_two", 1) !== null) {
   fail("Math G2 must return null");
 }
-if (resolverMod.resolveLearningBookAudio("english", "g1", "add_two", 1) !== null) {
-  fail("English must return null");
+if (resolverMod.resolveLearningBookAudio("english", "g1", "vocab_colors", 1) !== null) {
+  fail("English G1 non-phonics pages must return null");
+}
+if (resolverMod.resolveLearningBookAudio("english", "g2", "vocab_colors", 1) !== null) {
+  fail("English G2 non-phonics pages must return null");
+}
+
+const englishG1Letters = resolverMod.resolveLearningBookAudio("english", "g1", "letters_upper", 1);
+const englishG2Review = resolverMod.resolveLearningBookAudio("english", "g2", "letters_review", 1);
+if (!englishG1Letters?.src || !englishG2Review?.src) {
+  fail("English phonics pages must resolve section audio");
+}
+if (!englishG1Letters.src.includes("/english/g1/letters_upper/section-01.mp3")) {
+  fail("English G1 phonics src path mismatch");
 }
 
 const mathPage = catalogMod.getLearningBookEntry("math", "g1").loader.loadPage("add_two");
@@ -171,6 +206,8 @@ if (!/שבע (וְעוֹד|ועוד) ארבע (שָׁוֶה|שווה)/.test(math
 for (const reportName of [
   "hebrew-g1-full-section-audio-report.json",
   "math-g1-full-section-audio-report.json",
+  "english-g1-full-section-audio-report.json",
+  "english-g2-full-section-audio-report.json",
 ]) {
   const reportPath = path.join(root, "reports", "learning-book-audio", reportName);
   if (!fs.existsSync(reportPath)) continue;

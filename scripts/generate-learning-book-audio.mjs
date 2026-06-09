@@ -4,10 +4,12 @@
  * Usage:
  *   node scripts/generate-learning-book-audio.mjs --subject hebrew --grade g1
  *   node scripts/generate-learning-book-audio.mjs --subject math --grade g1
+ *   node scripts/generate-learning-book-audio.mjs --subject english --grade g1
+ *   node scripts/generate-learning-book-audio.mjs --subject english --grade g2
  *   node scripts/generate-learning-book-audio.mjs --subject math --grade g1 --pages add_two
  *   node scripts/generate-learning-book-audio.mjs --subject math --grade g1 --dry-run
  *
- * Pilots: Hebrew G1 (32×7) and Math G1 (19×7) section-level audio only.
+ * Pilots: Hebrew G1, Math G1, English G1/G2 phonics (section-level audio only).
  * Requires LEARNING_BOOK_AUDIO_ENABLED=true for write mode (or pass --force).
  */
 import fs from "node:fs";
@@ -71,7 +73,7 @@ const grade = String(args.grade || "").trim().toLowerCase();
 
 if (!subject || !grade) {
   fail(
-    "Usage: node scripts/generate-learning-book-audio.mjs --subject hebrew|math --grade g1 [--pages pageA,pageB] [--dry-run]"
+    "Usage: node scripts/generate-learning-book-audio.mjs --subject hebrew|math|english --grade g1|g2 [--pages pageA,pageB] [--dry-run]"
   );
 }
 
@@ -101,14 +103,23 @@ const textMod = await import(
 const ttsConfigMod = await import(
   pathToFileURL(path.join(root, "lib", "learning-book", "audio", "learning-book-audio-tts-config.js"))
 );
+const synthesizeMod = await import(
+  pathToFileURL(
+    path.join(root, "lib", "learning-book", "audio", "synthesize-learning-book-section-audio.js")
+  )
+);
 const catalogMod = await import(
   pathToFileURL(path.join(root, "lib", "learning-book", "learning-book-catalog.js"))
 );
 
 const scope = manifestMod.getBookSectionAudioScope(subject, grade);
 if (!scope) {
-  fail(`Unsupported pilot book: ${subject}/${grade} (approved: hebrew/g1, math/g1).`);
+  fail(
+    `Unsupported book audio scope: ${subject}/${grade} (approved: hebrew/g1, math/g1, english/g1, english/g2).`
+  );
 }
+
+const ttsOptions = ttsConfigMod.getLearningBookAudioTtsOptions(subject, grade);
 
 const pageIds = args.pages
   ? String(args.pages)
@@ -128,22 +139,6 @@ if (!entry) fail(`Unknown learning book: ${subject}/${grade}`);
 
 const reportDir = path.join(root, "reports", "learning-book-audio");
 fs.mkdirSync(reportDir, { recursive: true });
-
-/** @type {import('node-edge-tts').EdgeTTS | null} */
-let tts = null;
-if (!args.dryRun && provider === "edge") {
-  try {
-    const { EdgeTTS } = await import("node-edge-tts");
-    tts = new EdgeTTS({
-      voice: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_VOICE,
-      lang: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_LANG,
-      rate: ttsConfigMod.LEARNING_BOOK_AUDIO_TTS_RATE,
-      timeout: 120000,
-    });
-  } catch (e) {
-    fail(`Failed to load node-edge-tts: ${e instanceof Error ? e.message : String(e)}`);
-  }
-}
 
 /** @type {object[]} */
 const allRows = [];
@@ -219,7 +214,7 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
     const prepFlags = spokenScript ? buildPrepFlags(page, section, spokenScript) : null;
 
     if (!spokenScript) {
-      skipped += 1;
+      failed += 1;
       allRows.push({
         subject,
         grade,
@@ -229,7 +224,7 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
         sectionId: `${pageId}:section:${String(sectionNumber).padStart(2, "0")}`,
         visiblePage,
         sectionTitle: section.title,
-        status: "skipped",
+        status: "failed",
         error: "empty_spoken_script",
         audioSrc: resolvedSrc,
         outputPath: null,
@@ -268,16 +263,8 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
 
     try {
       fs.mkdirSync(path.dirname(absOut), { recursive: true });
-      await tts.ttsPromise(spokenScript, absOut);
+      await synthesizeMod.synthesizeLearningBookSectionAudio(prepDetail, absOut, ttsOptions);
       const st = fs.statSync(absOut);
-      if (!st.size || st.size < 500) {
-        try {
-          fs.unlinkSync(absOut);
-        } catch {
-          /* ignore */
-        }
-        throw new Error("empty_audio");
-      }
       generated += 1;
       allRows.push({
         subject,
@@ -292,6 +279,7 @@ for (let pi = 0; pi < pageIds.length; pi += 1) {
         audioSrc: resolvedSrc,
         outputPath: relOut.replace(/\\/g, "/"),
         spokenScript,
+        ssmlUsed: Boolean(prepDetail.ssml),
         bytes: st.size,
         durationSec: null,
         prepFlags,
@@ -398,3 +386,4 @@ console.log(
 console.log(`generate-learning-book-audio: master report: ${path.relative(root, masterPath)}`);
 
 if (failed > 0 && !args.dryRun) process.exit(1);
+if (failed > 0 && args.dryRun) process.exit(1);

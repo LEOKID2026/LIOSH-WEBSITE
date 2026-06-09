@@ -4,13 +4,13 @@ overview: Write a planning-only document at `docs/qa/ENGLISH_G1_G2_PHASE_4B_IMPL
 todos:
   - id: write-4b-plan-doc
     content: Write docs/qa/ENGLISH_G1_G2_PHASE_4B_IMPLEMENTATION_PLAN.md with all 12 required sections
-    status: pending
+    status: cancelled
   - id: verify-git-clean
     content: Run git status and git diff --stat; confirm only the plan doc changed
-    status: pending
+    status: cancelled
   - id: report-back
     content: Report completion, flag snapshot, and any unrelated working tree items
-    status: pending
+    status: cancelled
 isProject: false
 ---
 

@@ -14,6 +14,8 @@ import { resolveLearningBookAudio } from "../../lib/learning-book/audio/resolve-
 import {
   HEBREW_G1_SECTION_AUDIO,
   MATH_G1_SECTION_AUDIO,
+  ENGLISH_G1_PHONICS_SECTION_AUDIO,
+  ENGLISH_G2_PHONICS_SECTION_AUDIO,
   learningBookAudioManifestKey,
   defaultLearningBookSectionAudioPublicPath,
   appendLearningBookAudioCacheBust,
@@ -28,7 +30,12 @@ import {
   prepareHebrewBookSectionAudioText,
   normalizeHebrewHyphensForTts,
 } from "../../lib/learning-book/audio/prepare-hebrew-book-audio-text.js";
-import { prepareBookSectionAudioText } from "../../lib/learning-book/audio/prepare-learning-book-audio-text.js";
+import {
+  prepareEnglishBookAudioTextForSection,
+  buildEnglishMixedLanguageSsml,
+  splitMixedLanguageRuns,
+} from "../../lib/learning-book/audio/prepare-english-book-audio-text.js";
+import { prepareBookSectionAudioText, prepareBookSectionAudioTextDetailed } from "../../lib/learning-book/audio/prepare-learning-book-audio-text.js";
 import {
   applyLearningBookPronunciationCorrections,
   LEARNING_BOOK_PRONUNCIATION_ENTRIES,
@@ -293,6 +300,35 @@ describe("prepareMathBookSectionAudioText (add_two)", () => {
   });
 });
 
+describe("prepareEnglishBookSectionAudioText (letters_upper)", () => {
+  test("builds mixed-language spoken script and SSML", () => {
+    const entry = getLearningBookEntry("english", "g1");
+    const page = entry.loader.loadPage("letters_upper");
+    const script = prepareEnglishBookAudioTextForSection(page, 1);
+    const detail = prepareBookSectionAudioTextDetailed("english", "g1", "letters_upper", page, 1);
+
+    assert.ok(script && script.length > 20);
+    assert.doesNotMatch(script, /^מה לומדים\?/m);
+    assert.match(script, /A, B, C/);
+    assert.ok(detail.ssml && detail.ssml.includes("en-US-JennyNeural"));
+    assert.ok(detail.ssml.includes("he-IL-HilaNeural"));
+  });
+
+  test("mixed language runs split Hebrew and English", () => {
+    const runs = splitMixedLanguageRuns("היום נלמד cat");
+    assert.equal(runs.length, 2);
+    assert.equal(runs[0].lang, "he");
+    assert.equal(runs[1].lang, "en");
+    assert.equal(runs[1].text, "cat");
+  });
+
+  test("CVC blend notation becomes SSML breaks", () => {
+    const ssml = buildEnglishMixedLanguageSsml("c … a … t → cat");
+    assert.match(ssml, /break time="350ms"/);
+    assert.match(ssml, /en-US-JennyNeural/);
+  });
+});
+
 describe("manifest coverage", () => {
   test("all Hebrew G1 pages have 7 section slots", () => {
     assert.equal(HEBREW_G1_SECTION_AUDIO.pageIds.length, 32);
@@ -316,5 +352,24 @@ describe("manifest coverage", () => {
         /page\.mp3/
       );
     }
+  });
+
+  test("English G1 phonics pages have 7 section slots; vocab excluded", () => {
+    assert.equal(ENGLISH_G1_PHONICS_SECTION_AUDIO.pageIds.length, 12);
+    for (const pageId of ENGLISH_G1_PHONICS_SECTION_AUDIO.pageIds) {
+      assert.ok(resolveLearningBookAudio("english", "g1", pageId, 1));
+      assert.ok(resolveLearningBookAudio("english", "g1", pageId, 7));
+      assert.equal(resolveLearningBookAudio("english", "g1", pageId, 8), null);
+    }
+    assert.equal(resolveLearningBookAudio("english", "g1", "vocab_colors", 1), null);
+  });
+
+  test("English G2 phonics-review pages have 7 section slots", () => {
+    assert.equal(ENGLISH_G2_PHONICS_SECTION_AUDIO.pageIds.length, 11);
+    for (const pageId of ENGLISH_G2_PHONICS_SECTION_AUDIO.pageIds) {
+      assert.ok(resolveLearningBookAudio("english", "g2", pageId, 1));
+      assert.ok(resolveLearningBookAudio("english", "g2", pageId, 7));
+    }
+    assert.equal(resolveLearningBookAudio("english", "g2", "vocab_colors", 1), null);
   });
 });

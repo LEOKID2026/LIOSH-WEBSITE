@@ -1,0 +1,108 @@
+{
+  "version": "2026-06-09",
+  "status": "not_seeded",
+  "flagBaseline": {
+    "subskill": "true",
+    "gating": "true",
+    "promotion": "false",
+    "modeId": "C",
+    "modeName": "subskill_gating"
+  },
+  "students": [
+    {
+      "id": "PHONICS-G1-ONLY",
+      "label": "PhonicsG1",
+      "grade": 1,
+      "login": "phonicsg1",
+      "scenario": "g1_phonics_only_thin",
+      "pages": [
+        "letters_upper",
+        "letters_lower",
+        "letters_match",
+        "letter_names",
+        "phonics_sounds",
+        "phonics_first_sound",
+        "classroom_words",
+        "first_words_simple",
+        "first_words_cvc",
+        "picture_word_match",
+        "listening_classroom",
+        "listening_commands"
+      ],
+      "sessionPlan": {
+        "sessions": 3,
+        "questionsPerSession": 6,
+        "itemMix": [
+          "letter_id",
+          "sound_match",
+          "listening_command"
+        ],
+        "diagnosticContribution": "manual_only"
+      },
+      "reportWindow": {
+        "from": "2026-06-01",
+        "to": "2026-06-09"
+      },
+      "assertions": [
+        "no_strong_diagnosis",
+        "soft_or_thin_copy_only",
+        "no_grammar_translation_conclusions",
+        "no_internal_metadata_leaks",
+        "gating_active_mode_c",
+        "promotion_off"
+      ]
+    },
+    {
+      "id": "PHONICS-G2-ONLY",
+      "label": "PhonicsG2",
+      "grade": 2,
+      "login": "phonicsg2",
+      "scenario": "g2_phonics_only_thin",
+      "pages": [
+        "letters_review",
+        "letters_order",
+        "phonics_sounds_review",
+        "phonics_blending",
+        "sound_letter_match",
+        "first_word_reading",
+        "word_families_cvc",
+        "classroom_vocab_g2",
+        "listening_comprehension",
+        "picture_audio_word_match",
+        "early_sentences_exposure"
+      ],
+      "sessionPlan": {
+        "sessions": 4,
+        "questionsPerSession": 8,
+        "itemMix": [
+          "blend_cvc",
+          "listening_comprehension",
+          "early_sentence_exposure"
+        ],
+        "diagnosticContribution": "manual_only"
+      },
+      "reportWindow": {
+        "from": "2026-06-01",
+        "to": "2026-06-09"
+      },
+      "assertions": [
+        "no_strong_diagnosis",
+        "no_grammar_translation_conclusions",
+        "no_internal_metadata_leaks",
+        "gating_active_mode_c",
+        "promotion_off"
+      ]
+    }
+  ],
+  "blockedUntil": [
+    "english_phonics_question_banks_wired",
+    "english-book-practice-map phonics topic routing (topic=phonics)",
+    "generator emits phonics questionType (not grammar/translation)",
+    "fixture seed script inserts phonics-only answer rows"
+  ],
+  "relatedScripts": [
+    "scripts/qa/parent-report-diagnostic-flags-staging-smoke.mjs",
+    "scripts/qa/parent-report-diagnostic-visible-impact-hardening.mjs",
+    "scripts/qa/parent-report-visible-truth-audit.mjs"
+  ]
+}
