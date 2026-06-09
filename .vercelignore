@@ -1,0 +1,7 @@
+docs/qa/_artifacts/**
+review-packages/**
+_handoff/**
+tmp/**
+.cursor/**
+*.zip
+node_modules/.cache/**

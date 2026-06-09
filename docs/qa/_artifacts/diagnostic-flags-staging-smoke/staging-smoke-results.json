@@ -1,0 +1,284 @@
+{
+  "scannedAt": "2026-06-09T05:06:25.718Z",
+  "baseUrl": "http://localhost:3002",
+  "flags": {
+    "subskill": true,
+    "gating": true,
+    "promotion": false
+  },
+  "passCount": 4,
+  "total": 4,
+  "overallPass": true,
+  "results": [
+    {
+      "scenario": "AAA4",
+      "student": "AAA4",
+      "window": "2026-05-01 → 2026-06-08",
+      "pass": true,
+      "checks": [
+        {
+          "name": "report_not_empty",
+          "pass": true,
+          "actual": 2539
+        },
+        {
+          "name": "pdf_not_empty",
+          "pass": true,
+          "actual": 2207
+        },
+        {
+          "name": "leak_scan",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "numeric_scan",
+          "pass": true,
+          "actual": {
+            "badPatternHits": [],
+            "minutesOver300": [],
+            "insufficientHighQ": [],
+            "minuteSamples": [
+              22
+            ],
+            "pass": true
+          }
+        },
+        {
+          "name": "no_insufficient_sessions_q12_plus",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "strong_suppressed",
+          "pass": true
+        },
+        {
+          "name": "soft_fallback",
+          "pass": true
+        }
+      ],
+      "numeric": {
+        "badPatternHits": [],
+        "minutesOver300": [],
+        "insufficientHighQ": [],
+        "minuteSamples": [
+          22
+        ],
+        "pass": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      },
+      "png": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/AAA4.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/AAA4.pdf"
+    },
+    {
+      "scenario": "GATE-LOW",
+      "student": "AAA9",
+      "window": "2026-05-10 → 2026-05-18",
+      "pass": true,
+      "checks": [
+        {
+          "name": "report_not_empty",
+          "pass": true,
+          "actual": 3046
+        },
+        {
+          "name": "pdf_not_empty",
+          "pass": true,
+          "actual": 2740
+        },
+        {
+          "name": "leak_scan",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "numeric_scan",
+          "pass": true,
+          "actual": {
+            "badPatternHits": [],
+            "minutesOver300": [],
+            "insufficientHighQ": [],
+            "minuteSamples": [
+              38,
+              42
+            ],
+            "pass": true
+          }
+        },
+        {
+          "name": "no_insufficient_sessions_q12_plus",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "strong_suppressed",
+          "pass": true
+        },
+        {
+          "name": "soft_fallback",
+          "pass": true
+        },
+        {
+          "name": "minutes_not_inflated",
+          "pass": true,
+          "actual": [
+            38,
+            42
+          ]
+        }
+      ],
+      "numeric": {
+        "badPatternHits": [],
+        "minutesOver300": [],
+        "insufficientHighQ": [],
+        "minuteSamples": [
+          38,
+          42
+        ],
+        "pass": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      },
+      "png": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/GATE-LOW.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/GATE-LOW.pdf"
+    },
+    {
+      "scenario": "SUBSKILL-FOCUS",
+      "student": "AAA10",
+      "window": "2026-05-06 → 2026-05-20",
+      "pass": true,
+      "checks": [
+        {
+          "name": "report_not_empty",
+          "pass": true,
+          "actual": 3378
+        },
+        {
+          "name": "pdf_not_empty",
+          "pass": true,
+          "actual": 2812
+        },
+        {
+          "name": "leak_scan",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "numeric_scan",
+          "pass": true,
+          "actual": {
+            "badPatternHits": [],
+            "minutesOver300": [],
+            "insufficientHighQ": [],
+            "minuteSamples": [
+              5,
+              30,
+              35,
+              38
+            ],
+            "pass": true
+          }
+        },
+        {
+          "name": "no_insufficient_sessions_q12_plus",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "has_nose_lechizuk",
+          "pass": true
+        },
+        {
+          "name": "has_moked_litargul",
+          "pass": true
+        }
+      ],
+      "numeric": {
+        "badPatternHits": [],
+        "minutesOver300": [],
+        "insufficientHighQ": [],
+        "minuteSamples": [
+          5,
+          30,
+          35,
+          38
+        ],
+        "pass": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      },
+      "png": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/SUBSKILL-FOCUS.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/SUBSKILL-FOCUS.pdf"
+    },
+    {
+      "scenario": "SUBSKILL-CONFLICT",
+      "student": "AAA8",
+      "window": "2026-05-20 → 2026-05-24",
+      "pass": true,
+      "checks": [
+        {
+          "name": "report_not_empty",
+          "pass": true,
+          "actual": 2868
+        },
+        {
+          "name": "pdf_not_empty",
+          "pass": true,
+          "actual": 2567
+        },
+        {
+          "name": "leak_scan",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "numeric_scan",
+          "pass": true,
+          "actual": {
+            "badPatternHits": [],
+            "minutesOver300": [],
+            "insufficientHighQ": [],
+            "minuteSamples": [
+              45,
+              49
+            ],
+            "pass": true
+          }
+        },
+        {
+          "name": "no_insufficient_sessions_q12_plus",
+          "pass": true,
+          "actual": []
+        },
+        {
+          "name": "no_focus",
+          "pass": true
+        }
+      ],
+      "numeric": {
+        "badPatternHits": [],
+        "minutesOver300": [],
+        "insufficientHighQ": [],
+        "minuteSamples": [
+          45,
+          49
+        ],
+        "pass": true
+      },
+      "leak": {
+        "pass": true,
+        "hits": []
+      },
+      "png": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/SUBSKILL-CONFLICT.png",
+      "pdf": "docs/qa/_artifacts/diagnostic-flags-staging-smoke/SUBSKILL-CONFLICT.pdf"
+    }
+  ]
+}

@@ -7,11 +7,35 @@
 
 export const SUBJECT_VALID_MIN_QUESTIONS = 8;
 
+/** Card-visible Hebrew labels (+ aliases used in parentFacing insights). */
+export const SUBJECT_VISIBLE_LABELS_HE = Object.freeze({
+  math: ["חשבון", "מתמטיקה"],
+  geometry: ["גאומטריה"],
+  english: ["אנגלית"],
+  science: ["מדעים"],
+  hebrew: ["עברית"],
+  "moledet-geography": ["מולדת וגאוגרפיה"],
+});
+
+/** Primary label per subject id (matches subject cards). */
+export const SUBJECT_LABEL_BY_ID = Object.freeze({
+  math: "חשבון",
+  geometry: "גאומטריה",
+  english: "אנגלית",
+  science: "מדעים",
+  hebrew: "עברית",
+  "moledet-geography": "מולדת וגאוגרפיה",
+});
+
 export const SUBJECT_EVIDENCE_TIER = Object.freeze({
   none: "none",
   thin: "thin",
   valid: "valid",
 });
+
+/** Subject-specific insight wording forbidden when visible questions = 0. */
+export const ZERO_EVIDENCE_SUBJECT_INSIGHT_RE =
+  /(?:יש\s+(?:עדיין\s+)?מעט\s+(?:נתונ|מידע|תרגול)|טעויות\s+חוזרות|נראה\s+שיש\s+קושי|כדאי\s+לשים\s+לב|נושא\s+לחיזוק|מוקד\s+לתרגול|התקדמות\s+יחסית)/u;
 
 /** Wording that must never accompany zero-question subjects. */
 export const ZERO_EVIDENCE_FORBIDDEN_RE =
@@ -136,32 +160,125 @@ export function textViolatesZeroEvidencePolicy(text) {
 }
 
 /**
+ * Visible question counts aligned with subject cards (diagnosticAnswers / v2 summary).
+ * @param {Record<string, unknown>|null|undefined} payload
+ */
+export function subjectQuestionCountsFromPayload(payload) {
+  const s = payload?.summary || {};
+  if (
+    s.mathQuestions != null ||
+    s.englishQuestions != null ||
+    s.geometryQuestions != null ||
+    s.hebrewQuestions != null ||
+    s.scienceQuestions != null ||
+    s.moledetGeographyQuestions != null
+  ) {
+    return {
+      math: Math.max(0, Math.floor(Number(s.mathQuestions) || 0)),
+      geometry: Math.max(0, Math.floor(Number(s.geometryQuestions) || 0)),
+      english: Math.max(0, Math.floor(Number(s.englishQuestions) || 0)),
+      science: Math.max(0, Math.floor(Number(s.scienceQuestions) || 0)),
+      hebrew: Math.max(0, Math.floor(Number(s.hebrewQuestions) || 0)),
+      "moledet-geography": Math.max(0, Math.floor(Number(s.moledetGeographyQuestions) || 0)),
+    };
+  }
+
+  const subjects = payload?.subjects || {};
+  const read = (canonicalId) => {
+    const aggKey = canonicalId === "moledet-geography" ? "moledet_geography" : canonicalId;
+    const subj = subjects[aggKey];
+    if (!subj || typeof subj !== "object") return 0;
+    return Math.max(0, Math.floor(Number(subj.diagnosticAnswers ?? subj.answers) || 0));
+  };
+
+  return {
+    math: read("math"),
+    geometry: read("geometry"),
+    english: read("english"),
+    science: read("science"),
+    hebrew: read("hebrew"),
+    "moledet-geography": read("moledet-geography"),
+  };
+}
+
+/**
+ * @param {string} text
+ * @param {string} label
+ */
+export function lineMentionsSubjectLabelHe(text, label) {
+  const t = String(text || "");
+  const lab = String(label || "").trim();
+  if (!t || !lab) return false;
+  return (
+    t.startsWith(`${lab}:`) ||
+    t.startsWith(`${lab} —`) ||
+    t.includes(`${lab}:`) ||
+    t.includes(`ב${lab}`) ||
+    t.includes(`${lab},`)
+  );
+}
+
+/**
+ * @param {string} line
+ * @param {Record<string, number>} subjectQuestionCounts
+ * @returns {string|null} canonical subject id when line mentions a zero-evidence subject
+ */
+export function lineMentionsZeroEvidenceSubjectHe(line, subjectQuestionCounts) {
+  const t = String(line || "");
+  if (!t) return null;
+  for (const [sid, labels] of Object.entries(SUBJECT_VISIBLE_LABELS_HE)) {
+    if (classifySubjectEvidenceTier(subjectQuestionCounts[sid]) !== SUBJECT_EVIDENCE_TIER.none) continue;
+    for (const label of labels) {
+      if (lineMentionsSubjectLabelHe(t, label)) return sid;
+    }
+  }
+  return null;
+}
+
+/**
+ * @param {unknown[]} recentMistakes
+ * @param {Record<string, number>} subjectQuestionCounts
+ */
+export function filterRecentMistakesForVisibleSubjects(recentMistakes, subjectQuestionCounts) {
+  return (recentMistakes || []).filter((m) => {
+    const raw = String(m?.subject || "").trim();
+    if (!raw) return false;
+    const sid = raw === "moledet_geography" ? "moledet-geography" : raw;
+    return (Number(subjectQuestionCounts[sid]) || 0) > 0;
+  });
+}
+
+/**
+ * @param {string} line
+ * @param {Record<string, number>} subjectQuestionCounts
+ */
+export function lineViolatesZeroEvidenceInsightPolicy(line, subjectQuestionCounts) {
+  const sid = lineMentionsZeroEvidenceSubjectHe(line, subjectQuestionCounts);
+  if (!sid) return false;
+  return ZERO_EVIDENCE_SUBJECT_INSIGHT_RE.test(String(line || ""));
+}
+
+/**
  * @param {string[]} lines
  * @param {Record<string, number>} subjectQuestionCounts
- * @param {Record<string, string>} subjectLabelById
+ * @param {Record<string, string>} [subjectLabelById]
  */
 export function filterInsightLinesForUnpracticedSubjects(lines, subjectQuestionCounts, subjectLabelById) {
-  const zeroLabels = new Set(
-    Object.entries(subjectLabelById)
-      .filter(([sid]) => classifySubjectEvidenceTier(subjectQuestionCounts[sid]) === SUBJECT_EVIDENCE_TIER.none)
-      .map(([, label]) => label),
-  );
+  void subjectLabelById;
   return (lines || []).filter((line) => {
     const t = String(line || "");
     if (!t) return false;
-    for (const label of zeroLabels) {
-      if (t.startsWith(`${label}:`) || t.startsWith(`${label} —`) || t.includes(`${label}:`)) {
-        return false;
-      }
-    }
-    return true;
+    return !lineMentionsZeroEvidenceSubjectHe(t, subjectQuestionCounts);
   });
 }
 
 export default {
   SUBJECT_VALID_MIN_QUESTIONS,
+  SUBJECT_VISIBLE_LABELS_HE,
+  SUBJECT_LABEL_BY_ID,
   SUBJECT_EVIDENCE_TIER,
   ZERO_EVIDENCE_FORBIDDEN_RE,
+  ZERO_EVIDENCE_SUBJECT_INSIGHT_RE,
   classifySubjectEvidenceTier,
   zeroEvidenceSubjectLineHe,
   thinEvidenceSubjectLineHe,
@@ -172,5 +289,10 @@ export default {
   notPracticedSubjectsSummaryLineHe,
   zeroEvidenceSubjectCopilotHe,
   textViolatesZeroEvidencePolicy,
+  subjectQuestionCountsFromPayload,
+  lineMentionsSubjectLabelHe,
+  lineMentionsZeroEvidenceSubjectHe,
+  filterRecentMistakesForVisibleSubjects,
+  lineViolatesZeroEvidenceInsightPolicy,
   filterInsightLinesForUnpracticedSubjects,
 };

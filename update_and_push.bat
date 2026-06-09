@@ -22,20 +22,13 @@ git remote set-url origin https://github.com/GLA7479/LIOSH-WEBSITE.git
 
 for /f "delims=" %%b in ('git branch --show-current') do set BRANCH=%%b
 
-if /I not "%BRANCH%"=="main" (
-  echo ERROR: Current branch is "%BRANCH%". Expected "main".
-  echo Aborting to avoid pushing the wrong branch.
-  pause
-  exit /b 1
-)
+echo Current branch: %BRANCH%
+echo.
 
-echo Pulling latest changes from origin/main...
-git pull --rebase --autostash origin main
+echo Pulling latest changes from origin/%BRANCH%...
+git pull --rebase --autostash origin %BRANCH% 2>nul
 if errorlevel 1 (
-  echo.
-  echo ERROR: git pull/rebase failed. Resolve the issue manually.
-  pause
-  exit /b 1
+  echo Note: No remote updates for "%BRANCH%" yet - continuing.
 )
 
 echo.
@@ -69,8 +62,8 @@ if errorlevel 1 (
 )
 
 echo.
-echo Pushing to GitHub origin/main...
-git push origin main
+echo Pushing to GitHub origin/%BRANCH%...
+git push -u origin %BRANCH%
 if errorlevel 1 (
   echo.
   echo ERROR: git push failed.

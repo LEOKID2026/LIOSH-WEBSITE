@@ -11,6 +11,26 @@ const afterDir = path.join(ROOT, "docs/qa/_artifacts/parent-report-numeric-sanit
 const scenarios = ["AAA4", "GATE-LOW", "SUBSKILL-FOCUS", "SUBSKILL-CONFLICT", "PROMOTE-STRONG"];
 const modes = ["A", "B", "C", "D"];
 const badPatterns = [/30602/, /5881/, /13141/, /36483/, /24902/];
+const INSUFFICIENT_SESSIONS_RE = /אין\s+מספיק\s+מפגש/;
+const MIN_QUESTIONS_FOR_STATUS = 12;
+
+/** Fail only when insufficient-session copy appears on a progress-table row with enough questions. */
+function findInsufficientSessionsOnHighQuestionRows(text) {
+  const hits = [];
+  const parts = String(text || "").split(/(?=דק['\u2019]?\s*\d+)/);
+  for (const part of parts) {
+    const m = part.match(
+      /^דק['\u2019]?\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)%\s*[⚠👍✓]?\s*(.*?)(?=דק['\u2019]?|$)/s
+    );
+    if (!m) continue;
+    const questions = Number(m[2]);
+    const status = String(m[5] || "");
+    if (questions >= MIN_QUESTIONS_FOR_STATUS && INSUFFICIENT_SESSIONS_RE.test(status)) {
+      hits.push({ questions, statusSnippet: status.replace(/\s+/g, " ").trim().slice(0, 100) });
+    }
+  }
+  return hits;
+}
 
 async function parsePdfText(buf) {
   const { PDFParse } = await import("pdf-parse");
@@ -43,8 +63,11 @@ async function main() {
         if (sc === "GATE-LOW" && m === "C") gateLowModeC.minutes.push(n);
         if (sc === "SUBSKILL-FOCUS" && m === "C") subskillFocusModeC.minutes.push(n);
       }
-      if (/אין מספיק מפגשים/.test(text)) {
-        insufficientSessions.push({ scenario: sc, mode: m });
+      if (INSUFFICIENT_SESSIONS_RE.test(text)) {
+        const highQHits = findInsufficientSessionsOnHighQuestionRows(text);
+        if (highQHits.length) {
+          insufficientSessions.push({ scenario: sc, mode: m, rows: highQHits });
+        }
       }
       await copyFile(pdfPath, path.join(afterDir, "all-pdfs", `${sc}-mode-${m}.pdf`));
     }
@@ -63,7 +86,10 @@ async function main() {
     insufficientSessionsPhrase: insufficientSessions,
     gateLowModeCMinutes: gateLowModeC.minutes.sort((a, b) => a - b),
     subskillFocusModeCMinutes: subskillFocusModeC.minutes.sort((a, b) => a - b),
-    pass: badPatternHits.length === 0 && over300.length === 0,
+    pass:
+      badPatternHits.length === 0 &&
+      over300.length === 0 &&
+      insufficientSessions.length === 0,
   };
 
   await writeFile(path.join(afterDir, "pdf-numeric-scan.json"), JSON.stringify(summary, null, 2), "utf8");

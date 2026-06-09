@@ -28,8 +28,10 @@ import {
   stripTechnicalParensForParentDiagnosticsHe as stripTechnicalParensHe,
   shortReportDiagnosticsParentVisibleHe as diagnosticParentVisibleTextHe,
   trendCompactLineHe,
+  truncateHe,
   confidenceBadgeLabelHe,
 } from "../../utils/parent-report-ui-explain-he";
+import { TOPIC_EVIDENCE_THRESHOLDS } from "../../utils/parent-report-topic-evidence.js";
 import { normalizeParentFacingHe } from "../../utils/parent-report-language/parent-facing-normalize-he.js";
 import { diagnosticPrimarySourceParentLabelHe } from "../../utils/parent-report-language/index.js";
 import { deriveParentDataPresenceForDiagnosticsView } from "../../utils/parent-data-presence.js";
@@ -192,12 +194,34 @@ function sumTopicMapMinutes(map) {
   return Object.values(map || {}).reduce((a, r) => a + (Number(r?.timeMinutes) || 0), 0);
 }
 
+const INSUFFICIENT_TREND_SESSIONS_RE = /אין\s+מספיק\s+מפגש/;
+
 /** שורת משנה בעמודת סטטוס — שורה קצרה מנתוני שורה קיימים בלבד. */
 function ParentReportRowDiagnosticsFootnote({ data }) {
   const row = data && typeof data === "object" ? data : null;
   if (!row) return null;
+  const q = Number(row.questions) || 0;
+  const minQuestionsForStatus = TOPIC_EVIDENCE_THRESHOLDS.minQuestionsModerate;
+  const suffLabel = String(row.dataSufficiencyLabelHe || "").trim();
   const fromTrendSummary = String(row.trend?.summaryHe || "").trim();
-  if (fromTrendSummary) {
+  const trendShowsInsufficientSessions =
+    !!fromTrendSummary && INSUFFICIENT_TREND_SESSIONS_RE.test(fromTrendSummary);
+
+  if (
+    q >= minQuestionsForStatus &&
+    suffLabel &&
+    (!fromTrendSummary || trendShowsInsufficientSessions)
+  ) {
+    const t = diagnosticParentVisibleTextHe(truncateHe(suffLabel, 90));
+    if (t) {
+      return (
+        <div className="text-[9px] md:text-[10px] text-white/55 leading-tight max-w-[14rem] min-w-0 w-full mx-auto text-center line-clamp-2 break-words">
+          {t}
+        </div>
+      );
+    }
+  }
+  if (fromTrendSummary && !(q >= minQuestionsForStatus && trendShowsInsufficientSessions)) {
     const t = diagnosticParentVisibleTextHe(fromTrendSummary);
     if (t) {
       return (
@@ -208,7 +232,10 @@ function ParentReportRowDiagnosticsFootnote({ data }) {
     }
   }
   const compact = trendCompactLineHe(row.trend);
-  if (compact) {
+  if (
+    compact &&
+    !(q >= minQuestionsForStatus && INSUFFICIENT_TREND_SESSIONS_RE.test(compact))
+  ) {
     return (
       <div className="text-[9px] md:text-[10px] text-white/55 leading-tight max-w-[14rem] min-w-0 w-full mx-auto text-center line-clamp-2 break-words">
         {diagnosticParentVisibleTextHe(compact)}

@@ -1,0 +1,64 @@
+{
+  "scenario": "AAA4",
+  "student": "AAA4",
+  "range": {
+    "from": "2026-05-01",
+    "to": "2026-06-08"
+  },
+  "mode": "A",
+  "subjectQuestionCounts": {
+    "math": 14,
+    "geometry": 0,
+    "english": 0,
+    "science": 0,
+    "hebrew": 0,
+    "moledet-geography": 0
+  },
+  "english": {
+    "visibleQuestions": 0,
+    "diagnosticAnswers": 0,
+    "totalAnswers": 7
+  },
+  "parentFacing": {
+    "insights": [
+      "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
+      "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
+      "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
+    ],
+    "homeRecommendations": [
+      "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
+      "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
+    ],
+    "practiceFocus": []
+  },
+  "recentMistakesSubjects": [
+    "math"
+  ],
+  "recentMistakesFiltered": [
+    {
+      "subject": "math",
+      "topic": "addition"
+    },
+    {
+      "subject": "math",
+      "topic": "addition"
+    },
+    {
+      "subject": "math",
+      "topic": "addition"
+    },
+    {
+      "subject": "math",
+      "topic": "addition"
+    },
+    {
+      "subject": "math",
+      "topic": "addition"
+    },
+    {
+      "subject": "math",
+      "topic": "addition"
+    }
+  ],
+  "rootCause": "parentFacing used recentMistakes from non-diagnostic learning answers while subject cards count diagnosticAnswers only (0 for english). Fix: filter mistakes + insights by visible subject question counts."
+}

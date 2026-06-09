@@ -14,6 +14,7 @@ import {
 } from "./parent-report-row-diagnostics.js";
 import { normalizeMistakeEvent } from "./mistake-event.js";
 import { mathReportBaseOperationKey } from "./math-report-generator.js";
+import { TOPIC_EVIDENCE_THRESHOLDS } from "./parent-report-topic-evidence.js";
 
 /** @param {unknown} session */
 function parseSessionTime(session) {
@@ -301,12 +302,16 @@ export function computeRowTrend({
     ) * 100
   ) / 100;
 
+  const hasEnoughQuestionsForStatus =
+    nCur >= TOPIC_EVIDENCE_THRESHOLDS.minQuestionsModerate;
   const parts = [];
   if (accCurrent != null) parts.push(`בטווח הנוכחי כ-${accCurrent}% דיוק על ${nCur} שאלות`);
   if (accPrev != null && nPrev > 0) parts.push(`בתקופה המקבילה הקודמת כ-${accPrev}% (${nPrev} שאלות)`);
   if (accRecent != null && recentSessions.length) parts.push(`בחלון האחרון בטווח כ-${accRecent}% דיוק`);
-  if (!parts.length) parts.push("אין מספיק מפגשים בטווח כדי להשוות מגמה");
-  if (!hasMinTrendEvidence) {
+  if (!parts.length && !hasEnoughQuestionsForStatus) {
+    parts.push("אין מספיק מפגשים בטווח כדי להשוות מגמה");
+  }
+  if (!hasMinTrendEvidence && !hasEnoughQuestionsForStatus) {
     parts.push(`אין מספיק מפגשים תקינים להשוואת מגמה אמינה (נדרשים לפחות ${MIN_TREND_POINTS})`);
   }
   let summaryHe = parts.join(" · ") + ".";

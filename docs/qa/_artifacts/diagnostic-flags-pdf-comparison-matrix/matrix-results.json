@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T23:17:11.017Z",
+  "generatedAt": "2026-06-09T05:51:29.224Z",
   "artifactRoot": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix",
   "route": "/learning/parent-report",
   "cellCount": 20,
@@ -18,24 +18,24 @@
           "flags": "S=false G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.pdf",
-          "pdfBytes": 832586,
+          "pdfBytes": 832574,
           "uiInsightLines": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
             "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
           ],
           "payloadInsights": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
           ],
           "analysis": {
             "insightCount": 3,
             "payloadInsights": [
               "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
               "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
             ],
             "practiceFocusCount": 0,
@@ -58,24 +58,24 @@
           "flags": "S=true G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.pdf",
-          "pdfBytes": 832586,
+          "pdfBytes": 832574,
           "uiInsightLines": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
             "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
           ],
           "payloadInsights": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-            "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+            "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
           ],
           "analysis": {
             "insightCount": 3,
             "payloadInsights": [
               "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-              "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+              "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
               "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
             ],
             "practiceFocusCount": 0,
@@ -98,7 +98,7 @@
           "flags": "S=true G=true P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.pdf",
-          "pdfBytes": 832024,
+          "pdfBytes": 832013,
           "uiInsightLines": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -132,7 +132,7 @@
           "flags": "S=true G=true P=true",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.pdf",
-          "pdfBytes": 832024,
+          "pdfBytes": 832013,
           "uiInsightLines": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -180,7 +180,7 @@
           "flags": "S=false G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.pdf",
-          "pdfBytes": 983489,
+          "pdfBytes": 983484,
           "uiInsightLines": [
             "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
             "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
@@ -222,7 +222,7 @@
           "flags": "S=true G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.pdf",
-          "pdfBytes": 983489,
+          "pdfBytes": 983484,
           "uiInsightLines": [
             "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
             "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
@@ -264,7 +264,7 @@
           "flags": "S=true G=true P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.pdf",
-          "pdfBytes": 982880,
+          "pdfBytes": 982870,
           "uiInsightLines": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -298,7 +298,7 @@
           "flags": "S=true G=true P=true",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.pdf",
-          "pdfBytes": 982880,
+          "pdfBytes": 982870,
           "uiInsightLines": [
             "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -346,7 +346,7 @@
           "flags": "S=false G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.pdf",
-          "pdfBytes": 1028937,
+          "pdfBytes": 1028984,
           "uiInsightLines": [
             "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -380,7 +380,7 @@
           "flags": "S=true G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.pdf",
-          "pdfBytes": 1029689,
+          "pdfBytes": 1029728,
           "uiInsightLines": [
             "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
             "נושא לחיזוק: דקדוק",
@@ -420,7 +420,7 @@
           "flags": "S=true G=true P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.pdf",
-          "pdfBytes": 1029689,
+          "pdfBytes": 1029728,
           "uiInsightLines": [
             "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
             "נושא לחיזוק: דקדוק",
@@ -460,7 +460,7 @@
           "flags": "S=true G=true P=true",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.pdf",
-          "pdfBytes": 1029689,
+          "pdfBytes": 1029728,
           "uiInsightLines": [
             "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
             "נושא לחיזוק: דקדוק",
@@ -514,7 +514,7 @@
           "flags": "S=false G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.pdf",
-          "pdfBytes": 981308,
+          "pdfBytes": 981305,
           "uiInsightLines": [
             "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -548,7 +548,7 @@
           "flags": "S=true G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.pdf",
-          "pdfBytes": 981308,
+          "pdfBytes": 981305,
           "uiInsightLines": [
             "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -582,7 +582,7 @@
           "flags": "S=true G=true P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.pdf",
-          "pdfBytes": 981308,
+          "pdfBytes": 981305,
           "uiInsightLines": [
             "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -616,7 +616,7 @@
           "flags": "S=true G=true P=true",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.pdf",
-          "pdfBytes": 981308,
+          "pdfBytes": 981305,
           "uiInsightLines": [
             "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -664,7 +664,7 @@
           "flags": "S=false G=false P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.pdf",
-          "pdfBytes": 981693,
+          "pdfBytes": 981676,
           "uiInsightLines": [
             "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -732,7 +732,7 @@
           "flags": "S=true G=true P=false",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.pdf",
-          "pdfBytes": 981691,
+          "pdfBytes": 981688,
           "uiInsightLines": [
             "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -766,7 +766,7 @@
           "flags": "S=true G=true P=true",
           "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.png",
           "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.pdf",
-          "pdfBytes": 981675,
+          "pdfBytes": 981691,
           "uiInsightLines": [
             "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
             "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -808,24 +808,24 @@
       "flags": "S=false G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-A.pdf",
-      "pdfBytes": 832586,
+      "pdfBytes": 832574,
       "uiInsightLines": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
         "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
       ],
       "payloadInsights": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
       ],
       "analysis": {
         "insightCount": 3,
         "payloadInsights": [
           "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
           "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
         ],
         "practiceFocusCount": 0,
@@ -848,24 +848,24 @@
       "flags": "S=true G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-B.pdf",
-      "pdfBytes": 832586,
+      "pdfBytes": 832574,
       "uiInsightLines": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
         "מומלץ לשמור על תרגול קצר וקבוע — עדיף על תרגול ארוך ונדיר."
       ],
       "payloadInsights": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-        "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+        "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
       ],
       "analysis": {
         "insightCount": 3,
         "payloadInsights": [
           "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
-          "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
+          "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
           "נראה שיש שיפור ביחס לתרגולים קודמים — המשיכו בקצב הנוכחי."
         ],
         "practiceFocusCount": 0,
@@ -888,7 +888,7 @@
       "flags": "S=true G=true P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-C.pdf",
-      "pdfBytes": 832024,
+      "pdfBytes": 832013,
       "uiInsightLines": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -922,7 +922,7 @@
       "flags": "S=true G=true P=true",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/AAA4/mode-D.pdf",
-      "pdfBytes": 832024,
+      "pdfBytes": 832013,
       "uiInsightLines": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -956,7 +956,7 @@
       "flags": "S=false G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-A.pdf",
-      "pdfBytes": 983489,
+      "pdfBytes": 983484,
       "uiInsightLines": [
         "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
         "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
@@ -998,7 +998,7 @@
       "flags": "S=true G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-B.pdf",
-      "pdfBytes": 983489,
+      "pdfBytes": 983484,
       "uiInsightLines": [
         "נראה שיש קושי במתמטיקה, בעיקר לפי התרגולים האחרונים.",
         "הביצועים הכלליים בתקופה מצביעים על צורך בחיזוק נוסף.",
@@ -1040,7 +1040,7 @@
       "flags": "S=true G=true P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-C.pdf",
-      "pdfBytes": 982880,
+      "pdfBytes": 982870,
       "uiInsightLines": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1074,7 +1074,7 @@
       "flags": "S=true G=true P=true",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/GATE-LOW/mode-D.pdf",
-      "pdfBytes": 982880,
+      "pdfBytes": 982870,
       "uiInsightLines": [
         "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1108,7 +1108,7 @@
       "flags": "S=false G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-A.pdf",
-      "pdfBytes": 1028937,
+      "pdfBytes": 1028984,
       "uiInsightLines": [
         "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1142,7 +1142,7 @@
       "flags": "S=true G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-B.pdf",
-      "pdfBytes": 1029689,
+      "pdfBytes": 1029728,
       "uiInsightLines": [
         "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
         "נושא לחיזוק: דקדוק",
@@ -1182,7 +1182,7 @@
       "flags": "S=true G=true P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-C.pdf",
-      "pdfBytes": 1029689,
+      "pdfBytes": 1029728,
       "uiInsightLines": [
         "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
         "נושא לחיזוק: דקדוק",
@@ -1222,7 +1222,7 @@
       "flags": "S=true G=true P=true",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-FOCUS/mode-D.pdf",
-      "pdfBytes": 1029689,
+      "pdfBytes": 1029728,
       "uiInsightLines": [
         "יש טעויות חוזרות באנגלית — שווה לחזור עליהן בקצב איטי.",
         "נושא לחיזוק: דקדוק",
@@ -1262,7 +1262,7 @@
       "flags": "S=false G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-A.pdf",
-      "pdfBytes": 981308,
+      "pdfBytes": 981305,
       "uiInsightLines": [
         "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1296,7 +1296,7 @@
       "flags": "S=true G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-B.pdf",
-      "pdfBytes": 981308,
+      "pdfBytes": 981305,
       "uiInsightLines": [
         "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1330,7 +1330,7 @@
       "flags": "S=true G=true P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-C.pdf",
-      "pdfBytes": 981308,
+      "pdfBytes": 981305,
       "uiInsightLines": [
         "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1364,7 +1364,7 @@
       "flags": "S=true G=true P=true",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/SUBSKILL-CONFLICT/mode-D.pdf",
-      "pdfBytes": 981308,
+      "pdfBytes": 981305,
       "uiInsightLines": [
         "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1398,7 +1398,7 @@
       "flags": "S=false G=false P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-A.pdf",
-      "pdfBytes": 981693,
+      "pdfBytes": 981676,
       "uiInsightLines": [
         "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1466,7 +1466,7 @@
       "flags": "S=true G=true P=false",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-C.pdf",
-      "pdfBytes": 981691,
+      "pdfBytes": 981688,
       "uiInsightLines": [
         "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
@@ -1500,7 +1500,7 @@
       "flags": "S=true G=true P=true",
       "png": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.png",
       "pdf": "docs/qa/_artifacts/diagnostic-flags-pdf-comparison-matrix/PROMOTE-STRONG/mode-D.pdf",
-      "pdfBytes": 981675,
+      "pdfBytes": 981691,
       "uiInsightLines": [
         "יש טעויות חוזרות במתמטיקה — שווה לחזור עליהן בקצב איטי.",
         "לחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב או למה בחר בתשובה.",
