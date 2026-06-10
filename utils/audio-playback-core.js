@@ -36,7 +36,7 @@ export function primeSpeechSynthesisVoices() {
  * @param {string} [locale]
  * @returns {SpeechSynthesisVoice | null}
  */
-export function pickHebrewTtsVoice(voices, locale = "he-IL") {
+function pickLocaleTtsVoice(voices, locale, hints = []) {
   if (!Array.isArray(voices) || !voices.length) return null;
   const want = String(locale || "he-IL").toLowerCase();
   const base = want.split("-")[0] || "he";
@@ -47,9 +47,11 @@ export function pickHebrewTtsVoice(voices, locale = "he-IL") {
     if (lang === want) s += 100;
     else if (lang.startsWith(`${base}-`)) s += 80;
     else if (lang === base) s += 70;
-    else if (lang.startsWith("he")) s += 50;
+    else if (lang.startsWith(base)) s += 50;
     const name = `${v.name || ""} ${v.voiceURI || ""}`.toLowerCase();
-    if (name.includes("hebrew") || name.includes("עברית")) s += 25;
+    for (const hint of hints) {
+      if (name.includes(String(hint).toLowerCase())) s += 25;
+    }
     if (v.default && s > 0) s += 5;
     return s;
   };
@@ -64,6 +66,21 @@ export function pickHebrewTtsVoice(voices, locale = "he-IL") {
     }
   }
   return bestScore > 0 ? best : null;
+}
+
+export function pickHebrewTtsVoice(voices, locale = "he-IL") {
+  return pickLocaleTtsVoice(voices, locale, ["hebrew", "עברית"]);
+}
+
+export function pickEnglishTtsVoice(voices, locale = "en-US") {
+  return pickLocaleTtsVoice(voices, locale, [
+    "english united states",
+    "english (united states)",
+    "us english",
+    "jenny",
+    "guy",
+    "aria",
+  ]);
 }
 
 /**
@@ -112,8 +129,88 @@ export function createStemPlaybackController(stem, opts = {}) {
   /**
    * @returns {Promise<void>}
    */
+  /**
+   * @param {{ locale?: string, text: string }} segment
+   * @returns {Promise<void>}
+   */
+  function playTtsSegment(segment) {
+    const text = String(segment?.text || "").trim();
+    if (!text) return Promise.resolve();
+
+    if (typeof window === "undefined" || !window.speechSynthesis) {
+      return Promise.reject(
+        ttsErr("speech_synthesis_unavailable", "הדפדפן לא תומך בהקראה (Speech Synthesis). נסו דפדפן אחר או מכשיר אחר.")
+      );
+    }
+
+    const locale = String(segment.locale || stem.locale || "he-IL");
+    const synth = window.speechSynthesis;
+
+    return new Promise((resolve, reject) => {
+      let settled = false;
+      const doneOk = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      const doneErr = (code, message) => {
+        if (settled) return;
+        settled = true;
+        reject(ttsErr(code, message));
+      };
+
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = locale;
+      u.rate = locale.toLowerCase().startsWith("en") ? 0.9 : 0.92;
+      u.volume = 1;
+      u.pitch = 1;
+
+      const voices = (() => {
+        try {
+          return synth.getVoices() || [];
+        } catch {
+          return [];
+        }
+      })();
+      const picked = locale.toLowerCase().startsWith("en")
+        ? pickEnglishTtsVoice(voices, locale)
+        : pickHebrewTtsVoice(voices, locale);
+      if (picked) u.voice = picked;
+
+      u.onend = () => doneOk();
+      u.onerror = (ev) => {
+        const code = ev.error || "unknown";
+        doneErr(String(code), `שגיאת TTS: ${code}`);
+      };
+
+      try {
+        synth.speak(u);
+      } catch (err) {
+        doneErr("speak_throw", err instanceof Error ? err.message : "שגיאה בהפעלת ההקראה.");
+      }
+    });
+  }
+
+  /**
+   * @param {{ locale?: string, text: string }[]} segments
+   * @returns {Promise<void>}
+   */
+  async function playTtsSegments(segments) {
+    for (const segment of segments) {
+      await playTtsSegment(segment);
+    }
+    opts.onEnded?.();
+  }
+
   function play() {
     stopAll();
+    const segments = Array.isArray(stem.tts_segments) ? stem.tts_segments : null;
+    if (stem.playback_kind === "tts" && segments && segments.length > 0) {
+      return playTtsSegments(segments).catch((err) => {
+        opts.onEnded?.();
+        return Promise.reject(err);
+      });
+    }
     if (stem.playback_kind === "static_url" && stem.stem_audio_url) {
       audioEl = new Audio(stem.stem_audio_url);
       audioEl.onended = () => {

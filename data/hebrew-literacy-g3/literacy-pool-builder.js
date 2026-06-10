@@ -1,0 +1,678 @@
+/**
+ * Hebrew G3 supplemental MCQ banks — Phase 5A (comprehension + reading).
+ */
+import { HEBREW_G3_GAP_POOL } from "./gap-fill-banks.js";
+import {
+  HEBREW_G3_GRAMMAR_POOL,
+  HEBREW_G3_VOCABULARY_POOL,
+} from "./grammar-vocabulary-banks.js";
+
+/**
+ * @param {string} correct
+ * @param {string[]} wrongPool
+ * @param {number} seed
+ */
+function fourOptions(correct, wrongPool, seed) {
+  const distractors = [];
+  for (let i = 0; i < wrongPool.length && distractors.length < 3; i += 1) {
+    const w = wrongPool[(seed + i) % wrongPool.length];
+    if (w !== correct && !distractors.includes(w)) distractors.push(w);
+  }
+  while (distractors.length < 3) {
+    distractors.push(`אפשרות${distractors.length + 1}`);
+  }
+  const answers = [correct, distractors[0], distractors[1], distractors[2]];
+  const shift = seed % 4;
+  const ordered = [
+    answers[shift % 4],
+    answers[(shift + 1) % 4],
+    answers[(shift + 2) % 4],
+    answers[(shift + 3) % 4],
+  ];
+  return { answers: ordered, correct: ordered.indexOf(correct) };
+}
+
+/**
+ * @param {object[]} baseItems
+ * @param {string} topic
+ * @param {string} patternFamily
+ * @param {string} subtype
+ * @param {string} level
+ * @param {number} targetCount
+ */
+const G3_FEMALE_NAMES = new Set(["מיה", "שרה", "הילה", "תמר", "נועה", "מיכל", "הדר", "שיר"]);
+
+/** @param {string} name */
+function g3GenderForms(name) {
+  const f = G3_FEMALE_NAMES.has(name);
+  return {
+    kept: f ? "שמרה" : "שמר",
+    checked: f ? "בדקה" : "בדק",
+    didLabel: f ? "עשתה" : "עשה",
+    broke: f ? "שברה" : "שבר",
+    sold: f ? "מכרה" : "מכר",
+    forgot: f ? "שכחה" : "שכח",
+    checkObj: (obj) => (f ? `בדקה שה${obj} מסודר` : `בדק שה${obj} מסודר`),
+    dailyPrompt: (n) => (f ? `מה עשתה ${n} בכל יום?` : `מה עשה ${n} בכל יום?`),
+  };
+}
+
+function expandPool(baseItems, topic, patternFamily, subtype, level, targetCount) {
+  /** @type {Record<string, unknown>[]} */
+  const out = [];
+  for (let i = 0; i < targetCount; i += 1) {
+    const item = baseItems[i % baseItems.length];
+    const seed = i + topic.length * 11 + level.length * 7 + patternFamily.length;
+    let question;
+    if (item.passage && item.prompt) {
+      const place = G3_UNIQUE_TAGS[i % G3_UNIQUE_TAGS.length];
+      question = `קרא את הטקסט: '${item.passage} ליד ${place}.' ${item.prompt}`;
+    } else if (item.question) {
+      question = item.question;
+      if (i >= baseItems.length) {
+        const ctx = G3_PLACES[i % G3_PLACES.length];
+        question = item.question.replace(/\?$/, ` ב${ctx}?`);
+      }
+    } else {
+      question = `כיתה ג׳ — ${topic} · ${i + 1}`;
+    }
+    const answer = item.answer;
+    const wrong = [...(item.wrong || [])];
+    if (i >= baseItems.length && wrong.length > 1) {
+      wrong.push(wrong.shift());
+    }
+    const { answers, correct } = fourOptions(answer, wrong, seed);
+    out.push({
+      topic,
+      minGrade: 3,
+      maxGrade: 3,
+      levels: [level],
+      patternFamily,
+      subtype: `${subtype}_${i + 1}`,
+      question,
+      answers,
+      correct,
+    });
+  }
+  return out;
+}
+
+/** @type {Array<{ passage?: string, prompt?: string, question?: string, answer: string, wrong: string[] }>} */
+const G3_COMP_EXPLICIT = [
+  {
+    passage: "דני שם את הספר בתיק לפני שיצא לבית הספר",
+    prompt: "מה עשה דני לפני היציאה?",
+    answer: "שם את הספר בתיק",
+    wrong: ["קנה ספר חדש", "שכח את התיק בבית", "קרא את הספר בדרך"],
+  },
+  {
+    passage: "מיכל חיפשה את המפתחות בכל הבית, ובסוף מצאה אותם בכיס המעיל",
+    prompt: "איפה מצאה מיכל את המפתחות?",
+    answer: "בכיס המעיל",
+    wrong: ["בים", "בכיתה", "בחנות"],
+  },
+  {
+    passage: "התלמידים ישבו בשקט והקשיבו לסיפור של המורה",
+    prompt: "מה עשו התלמידים?",
+    answer: "הקשיבו לסיפור",
+    wrong: ["רצו בחצר", "אכלו ארוחת צהריים", "כתבו מבחן"],
+  },
+  {
+    passage: "אביב אסף עלים יבשים לפרויקט בכיתה",
+    prompt: "למה אסף עלים?",
+    answer: "לפרויקט בכיתה",
+    wrong: ["למכור בשוק", "לזרוק לפח", "לצבוע קיר"],
+  },
+  {
+    passage: "המורה כתבה על הלוח את מילות היום",
+    prompt: "מה כתבה המורה?",
+    answer: "מילות היום",
+    wrong: ["שמות תלמידים בלבד", "מתכון לעוגה", "מספר טלפון"],
+  },
+  {
+    passage: "נועה החזירה ספר לספרייה אחרי שסיימה לקרוא",
+    prompt: "לאן החזירה נועה את הספר?",
+    answer: "לספרייה",
+    wrong: ["לים", "לחנות", "לגג"],
+  },
+  {
+    passage: "הילדים שתו מים אחרי הפעילות בחצר",
+    prompt: "מתי שתו מים?",
+    answer: "אחרי הפעילות בחצר",
+    wrong: ["לפני השינה", "בזמן מבחן", "בלי לצאת מהכיתה"],
+  },
+  {
+    passage: "החתול ישן על הספה בזמן שהמשפחה צפתה בטלוויזיה",
+    prompt: "איפה ישן החתול?",
+    answer: "על הספה",
+    wrong: ["בים", "בגינה", "על הלוח"],
+  },
+  {
+    passage: "הכיתה ביקרה במוזיאון וראתה שלד דינוזאור",
+    prompt: "מה ראו במוזיאון?",
+    answer: "שלד דינוזאור",
+    wrong: ["דגים חיים", "מכונית אמיתית", "עוגה גדולה"],
+  },
+  {
+    passage: "יואב שמר את המחברת בתיק כדי שלא תלכלך",
+    prompt: "למה שמר את המחברת בתיק?",
+    answer: "כדי שלא תלכלך",
+    wrong: ["כדי לא ללמוד", "כדי לזרוק אותה", "כדי למכור אותה"],
+  },
+  {
+    passage: "הספרנית עזרה לתלמיד למצוא ספר על חלל",
+    prompt: "איזה ספר חיפש התלמיד?",
+    answer: "ספר על חלל",
+    wrong: ["ספר בישול", "ספר על נעליים", "ספר בלי מילים"],
+  },
+  {
+    passage: "התלמידים כתבו ברכה לחג והציגו אותה על הקיר",
+    prompt: "מה עשו עם הברכה?",
+    answer: "הציגו אותה על הקיר",
+    wrong: ["זרקו לפח", "אכלו אותה", "מחקו מיד"],
+  },
+];
+
+/** @type {typeof G3_COMP_EXPLICIT} */
+const G3_COMP_CAUSE = [
+  {
+    question: "למה נרטבים מסלול החצר אחרי גשם?",
+    answer: "כי הגשם שוטף את האדמה",
+    wrong: ["כי השמש חמה מאוד", "כי הילדים ישנים", "כי הספר נסגר"],
+  },
+  {
+    question: "למה סוגרים חלון כשמתחילה סופת רוח חזקה?",
+    answer: "כדי למנוע נזק או כניסת חפצים",
+    wrong: ["כדי שהשמש תיכנס יותר", "כדי שהספר יישן", "כדי שהמורה תיעלם"],
+  },
+  {
+    question: "למה מדליקים אור לפני קריאה בחדר חשוך?",
+    answer: "כדי לראות את האותיות",
+    wrong: ["כדי לישון", "כדי לכבות את הספר", "כי בחושך תמיד יש יותר זמן"],
+  },
+  {
+    question: "למה התלמידים לבשו מעילים לפני יציאה בגשם?",
+    answer: "כדי לא להתרטב",
+    wrong: ["כדי להתחמם בקיץ", "כי אסור לצאת", "כי אין גשם"],
+  },
+  {
+    question: "למה שמרו על שקט בספרייה?",
+    answer: "כדי לא להפריע לקוראים",
+    wrong: ["כדי לצעוק", "כדי לרוץ", "כי אין ספרים"],
+  },
+  {
+    question: "למה אוספים פחיות למיחזור בכיתה?",
+    answer: "לעזור לסביבה",
+    wrong: ["לקבל מתנה", "לשחק", "לישון"],
+  },
+  {
+    question: "למה מחכים לתור אצל הרופא?",
+    answer: "כדי לקבל טיפול",
+    wrong: ["כדי לשחק", "כדי לצעוק", "כדי לברוח"],
+  },
+  {
+    question: "למה שותפים לחבר בפרויקט?",
+    answer: "כדי להצליח יחד",
+    wrong: ["כדי לריב", "כדי לישון", "כדי לברוח"],
+  },
+  {
+    question: "למה מנקים את הכיתה בסוף היום?",
+    answer: "כדי שיהיה נעים מחר",
+    wrong: ["כדי ללכלך", "כדי לישון", "כדי לצעוק"],
+  },
+  {
+    question: "למה מחזירים ספר אחרי קריאה?",
+    answer: "כדי שאחרים יקראו",
+    wrong: ["כדי לקרוע", "כדי לאבד", "כדי לזרוק"],
+  },
+];
+
+/** @type {typeof G3_COMP_EXPLICIT} */
+const G3_COMP_COMPARE = [
+  {
+    question: "השוו: מה ההבדל העיקרי בין 'תכנון' ל'התרשמות' בדיון על טיול?",
+    answer: "תכנון הוא לפני; התרשמות היא אחרי החוויה",
+    wrong: ["אין שום הבדל", "שניהם אותו דבר תמיד", "שניהם רק מספרים"],
+  },
+  {
+    question: "במה דומים 'חלון' ו'פתח' בטקסט שמתאר כיתה?",
+    answer: "שניהם מאפשרים להביט החוצה",
+    wrong: ["שניהם פירות", "שניהם חיות מחמד", "שניהם משחקים"],
+  },
+  {
+    question: "מה ההבדל בין 'סיפור' ל'טקסט מידעי' לפי מה שנלמד בכיתה ג׳?",
+    answer: "בסיפור יש עלילה, במידע יש עובדות",
+    wrong: ["אין שום הבדל", "שניהם רק שירים", "שניהם בלי מילים"],
+  },
+  {
+    question: "בטקסט כתוב: 'היא חיכתה בשקט ליד הדלת.' מה ההבדל בין 'חיכתה' ל'דיברה'?",
+    answer: "חיכתה = המתנה; דיברה = הוצאת מילים",
+    wrong: ["אין הבדל", "שתיהן אותה פעולה", "רק סדר אותיות"],
+  },
+  {
+    question: "השוו בין 'סיפור' ל'טקסט מידעי': באחד יש דמות שעוזרת, בשני יש עובדות.",
+    answer: "בסיפור יש עלילה, במידע עובדות",
+    wrong: ["שניהם טבלאות", "במידע חייבת מטפורה", "בסיפור אין משפטים"],
+  },
+  {
+    question: "מה ההבדל בין 'בוקר' ל'ערב'?",
+    answer: "בוקר — התחלת היום, ערב — סוף היום",
+    wrong: ["בוקר — ערב", "אין הבדל", "בוקר — לילה"],
+  },
+  {
+    question: "השוו בין 'ספר מעניין' ל'ספר משעמם':",
+    answer: "מעניין — משמח, משעמם — לא משמח",
+    wrong: ["אין הבדל", "זה אותו דבר", "לא יודע"],
+  },
+  {
+    question: "מה ההבדל בין 'תיאור' ל'סיפור קצר'?",
+    answer: "בתיאור מתארים, בסיפור יש עלילה",
+    wrong: ["אין הבדל", "שניהם רק מספרים", "בתיאור חייבת להיות עלילה"],
+  },
+];
+
+/** @type {typeof G3_COMP_EXPLICIT} */
+const G3_COMP_HARD = [
+  {
+    question: "מה המסקנה מהטקסט: 'הילד קורא הרבה ספרים. הוא מצליח במבחנים.'?",
+    answer: "קריאה עוזרת להצלחה",
+    wrong: ["קריאה לא חשובה", "אין קשר", "לא יודע"],
+  },
+  {
+    question: "מה קודם: לקרוא הוראות או להתחיל לבנות מודל?",
+    answer: "לקרוא הוראות",
+    wrong: ["להתחיל לבנות מיד", "לישון", "לצעוק"],
+  },
+  {
+    question: "למה שמר הגיבור על סוד על מתנה?",
+    answer: "כדי לשמור על הפתעה",
+    wrong: ["כי שכח", "כי לא אהב", "כי לא יצא מבית"],
+  },
+  {
+    question: "מה הייתה הטעות כשחשבו שחבר כועס אבל הוא עייף?",
+    answer: "בלבלו בין כעס לעייפות",
+    wrong: ["חשבו שמדובר במבחן", "חשבו שאין חברים", "חשבו שזה ספר בישול"],
+  },
+  {
+    question: "מה המסר כשהגיבור החזיר חפץ שמצא?",
+    answer: "יושר מוביל להערכה",
+    wrong: ["אסור למצוא דברים", "כדאי לשמור הכל", "אין צורך להודות"],
+  },
+  {
+    question: "מה קודם: לשטוף ידיים או לאכול ארוחת בוקר?",
+    answer: "לשטוף ידיים",
+    wrong: ["לאכול ארוחת בוקר", "לצאת לרוץ", "לכתוב סיפור"],
+  },
+  {
+    question: "למה מסכמים סיפור בסוף?",
+    answer: "כדי לזכור את העיקר",
+    wrong: ["כדי לשכוח", "כדי לישון", "כדי לצעוק"],
+  },
+  {
+    question: "מה קודם: לתכנן עבודה או לבצע אותה?",
+    answer: "לתכנן עבודה",
+    wrong: ["לבצע אותה", "לישון", "לצעוק"],
+  },
+];
+
+/** @type {typeof G3_COMP_EXPLICIT} */
+const G3_READ_PASSAGES_EASY = [
+  {
+    passage: "מיה קוראת ספר על חיות בגן החיות. היא לומדת על האוכל של כל חיה",
+    prompt: "מה הנושא העיקרי?",
+    answer: "למידה על חיות בגן החיות",
+    wrong: ["משחק בכדורגל", "ציור בכיתה", "אוכל בחדר האוכל"],
+  },
+  {
+    passage: "נועם שמר על הצמח בחלון. הוא השקה אותו בכל יום. העלים נשארו ירוקים",
+    prompt: "מה עשה נועם?",
+    answer: "השקה את הצמח בקביעות",
+    wrong: ["שבר את האגרטל", "שכח להדליק אור", "מכר את הצמח"],
+  },
+  {
+    passage: "בכיתה יש מפה על הקיר. התלמידים מוצאים עליה את העיר שלהם",
+    prompt: "למה המפה בכיתה?",
+    answer: "לעזור למצוא מקומות",
+    wrong: ["לצייר פנים של חיות", "להחליף ספרים", "לשמור על השקט"],
+  },
+  {
+    passage: "הכלב של דנה רץ בגינה. הוא מצא עציץ ושיחק איתו. אחר כך שתה מים",
+    prompt: "מה עשה הכלב אחרי המשחק?",
+    answer: "שתה מים",
+    wrong: ["כתב סיפור", "נסע באוטובוס", "קנה כובע"],
+  },
+  {
+    passage: "ליאו אסף פחיות למיחזור. הוא מיין אותן לשקית נפרדת. הכיתה קיבלה תג מצטיינים",
+    prompt: "למה אסף ליאו פחיות?",
+    answer: "למחזר ולשמור על הסביבה",
+    wrong: ["לבנות בית", "למכור צעצועים", "לצבוע קירות"],
+  },
+  {
+    passage: "בספרייה שקט. ילדים יושבים וקוראים. הספרנית עוזרת למצוא ספר",
+    prompt: "איך מתנהגים הילדים?",
+    answer: "בשקט וקוראים",
+    wrong: ["צועקים ורצים", "רוקדים בין המדפים", "מבשלים אוכל"],
+  },
+  {
+    passage: "אביב נתן לחבר מחברת צבעים. החבר חייך והודה לו. שניהם חזרו לצייר",
+    prompt: "מה למדנו על אביב?",
+    answer: "הוא נתן מתנה לחברו",
+    wrong: ["הוא מחק את הציור", "הוא איבד את התיק", "הוא ישן בכיתה"],
+  },
+  {
+    passage: "הרוח נשפה. העלה עף מהעץ. התלמידים תפסו אותו בחצר",
+    prompt: "מה קרה לעלה?",
+    answer: "עף בגלל הרוח",
+    wrong: ["נשרף באש", "הפך לעוגה", "נבלע במים"],
+  },
+  {
+    passage: "תמר אהבה את הסיפור כי הגיבור סייע לחבר. היא אמרה שהלב חשוב",
+    prompt: "מה חשוב לתמר בסיפור?",
+    answer: "עזרה לחברים וטוב לב",
+    wrong: ["ניצחון במירוץ בלבד", "קניית צעצועים", "אכילת ממתקים"],
+  },
+  {
+    passage: "האח הגדול עזר לאחותו לקשור שרוכים. היא חייכה והצליחה לבד",
+    prompt: "מה תפקיד האח?",
+    answer: "עזר לאחותו עד שהצליחה",
+    wrong: ["לקח את השרוכים", "כתב שיעורי בית", "שיחק בטלפון"],
+  },
+  {
+    passage: "הדגים בכסא נראו כחולים. הילדים ספרו כמה דגים ראו",
+    prompt: "על מה מדבר הטקסט?",
+    answer: "ספירת דגים בכסא",
+    wrong: ["בישול עוגה", "טיול בחלל", "כתיבת שיר"],
+  },
+  {
+    passage: "לפני הצגה הכיתה תרגלה. כולם זכרו את התפקיד. ההצגה עברה בהצלחה",
+    prompt: "מה עשתה הכיתה לפני ההצגה?",
+    answer: "תרגלה את התפקידים",
+    wrong: ["אכלה פיצה", "נעצרה בבית חולים", "מכרה כרטיסים"],
+  },
+];
+
+/** @type {typeof G3_COMP_EXPLICIT} */
+const G3_READ_PASSAGES_MEDIUM = [
+  {
+    passage: "רוני הגיע מוקדם לספרייה. הוא חיפש ספר על כוכבים. הספרנית הראתה לו מדף מיוחד",
+    prompt: "מה רצה רוני לקרוא?",
+    answer: "ספר על כוכבים",
+    wrong: ["ספר בישול", "ספר על בגדים", "ספר בלי תמונות"],
+  },
+  {
+    passage: "נעמה שמרה על כלב במשך שבוע. היא האכילה אותו בזמן והוליכה לטיול. הבעלים הודו לה בכתב",
+    prompt: "למה כתבו הבעלים תודה?",
+    answer: "כי נעמה דאגה לכלב היטב",
+    wrong: ["כי נעמה איבדה את הכלב", "כי הכלב לא אכל", "כי נעמה לא הגיעה"],
+  },
+  {
+    passage: "איתי שכח מטריה ונרטב בדרך. המורה נתנה לו חולצה יבשה ודיברה איתו על תכנון",
+    prompt: "מה הלקח של איתי?",
+    answer: "לתכנן לקחת מטריה בגשם",
+    wrong: ["לא ללכת לבית ספר", "למחוק את התיק", "לצייר על הקיר"],
+  },
+  {
+    passage: "בטקסט מידע: '12 ימים עם גשם, 18 בלי גשם.' לעומת סיפור: 'הגשם דפק על החלון.' מה ההבדל?",
+    prompt: "מה מאפיין את המידע?",
+    answer: "במידע יש עובדות ובסיפור תיאור חווייתי",
+    wrong: ["אין הבדל", "שניהם רק שירים", "במידע חייבת עלילה"],
+  },
+  {
+    passage: "שתי דמויות בסיפור לא הסכימו. בסוף מצאו פתרון ושיתפו פעולה",
+    prompt: "מה השתנה בסוף?",
+    answer: "הן שיתפו פעולה",
+    wrong: ["הן נעלמו", "הן הפסיקו לדבר לנצח", "הן עזבו את בית הספר"],
+  },
+  {
+    passage: "הגיבור בחר להגיד את האמת, גם כשהיה קשה. חבריו סלחו לו בסוף",
+    prompt: "מה עשה הגיבור?",
+    answer: "אמר את האמת",
+    wrong: ["גנב צעצוע", "הסתיר ספר", "ברח מהכיתה"],
+  },
+  {
+    passage: "בטיול הכיתה מצאה נוצה. המורה ביקשה לא לקחת מטבעות טבע",
+    prompt: "מה ביקשה המורה?",
+    answer: "לשמור על הטבע ולא לאסוף הכל",
+    wrong: ["לאכול את הנוצה", "לזרוק אשפה", "לרוץ לבד"],
+  },
+  {
+    passage: "הילדה כתבה יומן על יום גשום. היא תיארה ריח של אדמה וצליל טיפות",
+    prompt: "מה סוג הטקסט?",
+    answer: "תיאור אישי של יום גשום",
+    wrong: ["טבלת מספרים", "רשימת קניות", "הוראות מבחן"],
+  },
+  {
+    passage: "בסוף הסיפור הגיבור החזיר חפץ שמצא. הבעלים שמח והזמין אותו לתה",
+    prompt: "למה שמח הבעלים?",
+    answer: "כי החזירו לו חפץ שאבד",
+    wrong: ["כי הגיבור עזב", "כי לא היה סיפור", "כי ירד שלג"],
+  },
+  {
+    passage: "התלמידים השוו בין שני סיפורים: באחד הגיבור עזר, בשני הוא ויתר",
+    prompt: "מה נושא הדיון?",
+    answer: "השוואה בין עזרה לוויתור",
+    wrong: ["ספירת כיסאות", "צבעי עפרונות", "זמני ארוחה"],
+  },
+];
+
+/** @type {typeof G3_COMP_EXPLICIT} */
+const G3_READ_PASSAGES_HARD = [
+  {
+    passage: "מיכל קראה סיפור על ילדה שעברה לעיר. בתחילה התביישה, אחר כך מצאה חברה",
+    prompt: "מה השתנה אצל מיכל בקריאה?",
+    answer: "הבינה שהתביישות יכולה לעבור",
+    wrong: ["למדה שאין חברים", "גילתה שאסור לקרוא", "החליטה שלא ללכת לבית ספר"],
+  },
+  {
+    passage: "במסע הקריאה הכיתה קראה על מדען שטעה ותיקן. המורה אמרה שגם טעויות עוזרות",
+    prompt: "מה המסר?",
+    answer: "טעויות יכולות לעזור ללמידה",
+    wrong: ["אסור לטעות לעולם", "מדענים לא לומדים", "ספרים מיותרים"],
+  },
+  {
+    passage: "בטקסט מידע: 'לדגים צריך מים נקיים.' בסיפור: 'הדג מדבר על חלום לשחות בנהר.'",
+    prompt: "מה ההבדל?",
+    answer: "מידע נותן עובדה, סיפור מוסיף דמיון",
+    wrong: ["אין הבדל", "שניהם רק שירים", "מידע תמיד בלי מילים"],
+  },
+  {
+    passage: "הילד שמר סוד על מתנה לסבתא. הוא לא סיפר, כדי שלא יתקלקל ההפתעה",
+    prompt: "למה שמר על סוד?",
+    answer: "כדי לשמור על הפתעה",
+    wrong: ["כי שכח", "כי לא אהב את סבתא", "כי לא יצא מבית"],
+  },
+  {
+    passage: "בסוף הספר הגיבור מחליט לסלוח. הקורא מבין שהסליחה מאפשרת להמשיך",
+    prompt: "מה מאפשרת הסליחה?",
+    answer: "להמשיך הלאה בלי להישאר כועס",
+    wrong: ["למחוק את הספר", "לא לדבר לעולם", "לברוח מהבית"],
+  },
+  {
+    passage: "בסיפור עם שני קולות, ילד חשב שחברו כועס, אבל הוא רק היה עייף",
+    prompt: "מה הייתה הטעות?",
+    answer: "חשבו שכעס במקום עייף",
+    wrong: ["חשבו שמדובר במתמטיקה", "חשבו שאין סיפור", "חשבו שזה ספר בישול"],
+  },
+  {
+    passage: "המחבר כתב: אני כותב כדי לשתף חוויה, לא רק עובדות",
+    prompt: "איזו מילה מבטאת כוונה?",
+    answer: "לשתף חוויה",
+    wrong: ["רק עובדות", "אני כותב", "לא רק"],
+  },
+  {
+    passage: "בסוף המשחק התלמידים קראו חוקים. כולם הסכימו לכבד אחד את השני",
+    prompt: "למה קראו חוקים?",
+    answer: "כדי לשחק בצורה הוגנת",
+    wrong: ["כדי לא לשחק", "כדי לישון", "כדי לצבוע קירות"],
+  },
+];
+
+const G3_UNIQUE_TAGS = [
+  "אגוז", "בלון", "גשר", "דגל", "הר", "וילון", "זמזם", "חול", "טבעת", "יונה",
+  "כלוב", "ליבה", "מגדל", "נמלה", "סולם", "ענף", "פעמון", "צל", "קשת", "רכבת",
+  "שער", "תמר", "אבן", "באר", "גמל", "דב", "הבל", "חתול", "טלה", "יער",
+  "כוכב", "לוטוס", "מעיין", "נחל", "סירה", "ענן", "פלג", "ציפור", "קן", "רימון",
+  "שביל", "תפוז", "אריה", "ביצה", "גזר", "דלת", "הדס", "חלום", "טיפה", "ירח",
+  "כתר", "לילה", "מגב", "ניצן", "נעל", "עלה", "פרח", "צמח", "קמח", "רוח",
+  "שמש", "תפוח", "אגם", "ברק", "גשם", "דשא", "הרים", "חוף", "טיול", "יער",
+];
+const G3_NAMES = [
+  "דני", "מיה", "נועם", "שרה", "איתי", "הילה", "רועי", "תמר", "יואב", "נועה",
+  "אביב", "ליאור", "עומר", "מיכל", "אלי", "גיל", "הדר", "יונתן", "שיר", "אור",
+];
+const G3_PLACES = [
+  "כיתה", "חצר", "ספרייה", "גינה", "מוזיאון", "בית", "פארק", "מטבח", "חדר", "מסדרון",
+];
+const G3_OBJECTS = [
+  "ספר", "מחברת", "עט", "תיק", "כדור", "מטריה", "מעיל", "צמח", "מפתח", "מכתב",
+];
+
+/**
+ * @param {number} count
+ * @param {"comprehension"|"reading"} topic
+ * @param {string} level
+ * @param {string} patternFamily
+ * @param {string} subtype
+ */
+function generateUniquePassageItems(count, topic, level, patternFamily, subtype) {
+  /** @type {Record<string, unknown>[]} */
+  const out = [];
+  const templates = [
+    (name, obj, place, g, dayWord) => ({
+      passage: `${name} ${g.kept} על ${obj} ב${place}. ב${dayWord} ${name} ${g.checked} שהכל מסודר.`,
+      prompt: g.dailyPrompt(name),
+      answer: g.checkObj(obj),
+      wrong: [`${g.broke} את ${obj}`, `${g.sold} את ${obj}`, `${g.forgot} את ${obj}`],
+    }),
+    (name, obj, place, g, dayWord) => ({
+      passage: `לפני היציאה ${name} סידר${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj} ב${place}. ב${dayWord} חזר${G3_FEMALE_NAMES.has(name) ? "ה" : ""} לבדוק.`,
+      prompt: `מה עש${G3_FEMALE_NAMES.has(name) ? "תה" : "ה"} ${name} לפני היציאה?`,
+      answer: `סידר${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj}`,
+      wrong: [`${g.broke} את ${obj}`, `${g.forgot} את ${obj}`, `קנה ${obj} חדש`],
+    }),
+    (name, obj, place, g, dayWord) => ({
+      passage: `${name} אהב${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj} של${G3_FEMALE_NAMES.has(name) ? "ה" : "ו"} ב${place}. ב${dayWord} ${name} ${g.checked} שהוא במקום.`,
+      prompt: `מה עש${G3_FEMALE_NAMES.has(name) ? "תה" : "ה"} ${name} ב${dayWord}?`,
+      answer: g.checkObj(obj),
+      wrong: [`${g.broke} את ${obj}`, `${g.sold} את ${obj}`, `מצא${G3_FEMALE_NAMES.has(name) ? "ה" : ""} ${obj} אחר`],
+    }),
+    (name, obj, place, g, dayWord) => ({
+      passage: `בבוקר ${name} הכין${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj} ב${place}. ב${dayWord} ${name} ${g.checked} שוב.`,
+      prompt: `מה ${name} ${g.checked} ב${dayWord}?`,
+      answer: g.checkObj(obj),
+      wrong: [`${g.broke} את ${obj}`, `${g.forgot} את ${obj}`, `החליף${G3_FEMALE_NAMES.has(name) ? "ה" : ""} את ${obj}`],
+    }),
+    (name, obj, place, g, dayWord) => ({
+      passage: `${name} למד${G3_FEMALE_NAMES.has(name) ? "ה" : ""} לשמור על ${obj} ב${place}. ב${dayWord} ${name} ${g.checked} שה${obj} של${G3_FEMALE_NAMES.has(name) ? "ה" : "ו"} מסודר.`,
+      prompt: `למה ${name} ${g.checked} ב${dayWord}?`,
+      answer: `כדי לוודא שה${obj} מסודר`,
+      wrong: [`כדי למכור את ${obj}`, `כדי לשבור את ${obj}`, `כדי לשכוח את ${obj}`],
+    }),
+  ];
+  for (let i = 0; i < count; i += 1) {
+    const name = G3_NAMES[i % G3_NAMES.length];
+    const place = G3_PLACES[(i * 2) % G3_PLACES.length];
+    const obj = G3_OBJECTS[(i * 3) % G3_OBJECTS.length];
+    const g = g3GenderForms(name);
+    const dayWord = G3_UNIQUE_TAGS[i % G3_UNIQUE_TAGS.length];
+    const build = templates[i % templates.length];
+    const built = build(name, obj, place, g, dayWord);
+    const seed = i + topic.length + name.length + obj.length + dayWord.length;
+    const { answers, correct } = fourOptions(built.answer, built.wrong, seed);
+    out.push({
+      topic,
+      minGrade: 3,
+      maxGrade: 3,
+      levels: [level],
+      patternFamily,
+      subtype: `${subtype}_gen_${i + 1}`,
+      question: `קרא את הטקסט: '${built.passage}' ${built.prompt}`,
+      answers,
+      correct,
+    });
+  }
+  return out;
+}
+
+/**
+ * @param {number} count
+ * @param {string} level
+ */
+function generateUniqueCauseItems(count, level) {
+  /** @type {Record<string, unknown>[]} */
+  const out = [];
+  const causes = [
+    { q: "למה שותים מים אחרי ריצה?", a: "כדי להרגיש טוב", w: ["כדי לישון", "כדי לצעוק", "כי אין מים"] },
+    { q: "למה סוגרים את התיק בדרך לבית הספר?", a: "כדי שלא יאבדו דברים", w: ["כדי לאבד", "כדי לישון", "כדי לצעוק"] },
+    { q: "למה מקשיבים להוראות בטיול?", a: "כדי להישאר בטוחים", w: ["כדי לברוח", "כדי לישון", "כדי לריב"] },
+    { q: "למה מחזירים ציוד שאול?", a: "כדי שיהיה לכולם", w: ["כדי לשבור", "כדי לזרוק", "כדי לשכוח"] },
+    { q: "למה כותבים רשימה לפני קניות?", a: "כדי לא לשכוח", w: ["כדי לישון", "כדי לרוץ", "כדי לצעוק"] },
+    { q: "למה לובשים מעיל ביום קר?", a: "כדי להתחמם", w: ["כדי לרוץ מהר", "כדי לישון", "כדי לצעוק"] },
+    { q: "למה מכבים את האור לפני שינה?", a: "כדי לישון בשקט", w: ["כדי לשחק", "כדי לצעוק", "כדי לרוץ"] },
+    { q: "למה מנקים את הכיתה בסוף היום?", a: "כדי שיהיה נעים למחר", w: ["כדי לישון", "כדי לברוח", "כדי לצעוק"] },
+    { q: "למה שואלים כשלא מבינים?", a: "כדי להבין את החומר", w: ["כדי לישון", "כדי לצעוק", "כדי לברוח"] },
+    { q: "למה מתכוננים לפני מבחן?", a: "כדי להצליח", w: ["כדי לישון", "כדי לשכוח", "כדי לצעוק"] },
+    { q: "למה חולקים אוכל עם חבר?", a: "כדי לעזור לו", w: ["כדי לזרוק", "כדי לישון", "כדי לצעוק"] },
+    { q: "למה מחכים בתור בספרייה?", a: "כדי לשמור על סדר", w: ["כדי לרוץ", "כדי לצעוק", "כדי לברוח"] },
+    { q: "למה שוטפים ידיים לפני אוכל?", a: "כדי להישאר בריאים", w: ["כדי לישון", "כדי לצעוק", "כדי לרוץ"] },
+    { q: "למה מסיימים שיעורי בית בערב?", a: "כדי להיות מוכנים למחר", w: ["כדי לישון בבוקר", "כדי לצעוק", "כדי לברוח"] },
+    { q: "למה מדברים בלחש בספרייה?", a: "כדי לא להפריע", w: ["כדי לצעוק", "כדי לרוץ", "כדי לשחק"] },
+    { q: "למה שומרים על ספרים?", a: "כדי שיהיו לכולם", w: ["כדי לקרוע", "כדי לזרוק", "כדי לישון"] },
+    { q: "למה מתאמנים לפני משחק?", a: "כדי להתחמם", w: ["כדי לישון", "כדי לצעוק", "כדי לשבת"] },
+    { q: "למה מסבירים לחבר שלא הבין?", a: "כדי שיבין", w: ["כדי לצעוק", "כדי לישון", "כדי לברוח"] },
+    { q: "למה מבקשים סליחה אחרי טעות?", a: "כדי לתקן את הקשר", w: ["כדי לצעוק", "כדי לישון", "כדי לברוח"] },
+    { q: "למה מכינים תיק מראש?", a: "כדי לא לשכוח דברים", w: ["כדי לישון", "כדי לצעוק", "כדי לזרוק"] },
+  ];
+  for (let i = 0; i < count; i += 1) {
+    const base = causes[i % causes.length];
+    const question = base.q;
+    const seed = i + question.length;
+    const { answers, correct } = fourOptions(base.a, base.w, seed);
+    out.push({
+      topic: "comprehension",
+      minGrade: 3,
+      maxGrade: 3,
+      levels: [level],
+      patternFamily: "g3_cause_effect",
+      subtype: `cause_gen_${i + 1}`,
+      question,
+      answers,
+      correct,
+    });
+  }
+  return out;
+}
+
+function buildG3ComprehensionPool() {
+  const easy = generateUniquePassageItems(55, "comprehension", "easy", "g3_explicit_detail", "explicit_gen");
+  const medium = [
+    ...expandPool(G3_COMP_CAUSE, "comprehension", "g3_cause_effect", "cause", "medium", 25),
+    ...generateUniqueCauseItems(20, "medium"),
+  ];
+  const hard = expandPool(G3_COMP_COMPARE.concat(G3_COMP_HARD), "comprehension", "g3_inference", "infer", "hard", 35);
+  return [...easy, ...medium, ...hard];
+}
+
+function buildG3ReadingPool() {
+  const easy = [
+    ...expandPool(G3_READ_PASSAGES_EASY, "reading", "g3_read_main_idea", "read_easy", "easy", 30),
+    ...generateUniquePassageItems(30, "reading", "easy", "g3_read_main_idea", "read_gen"),
+  ];
+  const medium = [
+    ...expandPool(G3_READ_PASSAGES_MEDIUM, "reading", "g3_read_medium_detail", "read_med", "medium", 25),
+    ...generateUniquePassageItems(20, "reading", "medium", "g3_read_medium_detail", "read_med_gen"),
+  ];
+  const hard = [
+    ...expandPool(G3_READ_PASSAGES_HARD, "reading", "g3_read_hard_inference", "read_hard", "hard", 20),
+    ...generateUniquePassageItems(15, "reading", "hard", "g3_read_hard_inference", "read_hard_gen"),
+  ];
+  return [...easy, ...medium, ...hard];
+}
+
+export const HEBREW_G3_LITERACY_POOL = [
+  ...buildG3ComprehensionPool(),
+  ...buildG3ReadingPool(),
+  ...HEBREW_G3_GAP_POOL,
+  ...HEBREW_G3_GRAMMAR_POOL,
+  ...HEBREW_G3_VOCABULARY_POOL,
+];

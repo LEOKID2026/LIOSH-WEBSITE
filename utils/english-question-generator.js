@@ -33,6 +33,7 @@ import {
   englishWordListKeyFromPageId,
   englishPhonicsSkillIdFromBookPageRef,
 } from "../lib/learning-book/english-book-practice-map.js";
+import { attachEnglishPhonicsPracticeAudio } from "./english-phonics-practice-audio.js";
 export const ENGLISH_LEVELS = {
   easy: { name: "קל", maxWords: 5, complexity: "basic" },
   medium: { name: "בינוני", maxWords: 10, complexity: "intermediate" },
@@ -947,6 +948,13 @@ export function generateQuestion(
     params: mergedParams,
     qType,
   });
+
+  if (selectedTopic === "phonics") {
+    attachEnglishPhonicsPracticeAudio(display, {
+      gradeKey,
+      sourceRow: englishSourceRow,
+    });
+  }
 
   return attachCanonicalMetadataToEnglishQuestion(display, {
     topic: selectedTopic,

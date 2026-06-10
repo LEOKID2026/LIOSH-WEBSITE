@@ -16,6 +16,8 @@ import { useSound } from "../../hooks/useSound";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import EnglishPhonicsAudioPanel from "../../components/EnglishPhonicsAudioPanel";
+import { validateAudioStem } from "../../utils/audio-task-contract";
 import { compareAnswers } from "../../utils/answer-compare";
 import {
   computeMcqIndicesForQuestion,
@@ -2996,6 +2998,15 @@ export default function EnglishMaster() {
                   )}
 
                   <div className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2 relative">
+                    {gameActive &&
+                      currentQuestion?.topic === "phonics" &&
+                      currentQuestion?.params?.audioStem &&
+                      validateAudioStem(currentQuestion.params.audioStem) && (
+                        <EnglishPhonicsAudioPanel
+                          stem={currentQuestion.params.audioStem}
+                          gameActive={gameActive && !selectedAnswer}
+                        />
+                      )}
                     {questionBookHref ? (
                       <button
                         type="button"
