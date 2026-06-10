@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-06-10T17:05:00.000Z",
+  "phase": "5A",
+  "scope": ["hebrew", "g3", "comprehension", "reading"],
+  "baseline": {
+    "source": "reports/question-audit/QUESTION_INVENTORY_MATRIX.json",
+    "baselineDate": "2026-06-08",
+    "g3": {
+      "comprehension": { "easy": 9, "medium": 10, "hard": 5, "total": 24 },
+      "reading": { "easy": 22, "medium": 20, "hard": 11, "total": 53 }
+    }
+  },
+  "post5A": {
+    "source": "reports/question-audit/QUESTION_INVENTORY_MATRIX.json",
+    "generatedDate": "2026-06-10",
+    "g3": {
+      "comprehension": {
+        "easy": { "count": 69, "minimum": 50, "status": "PROFESSIONAL_READY" },
+        "medium": { "count": 60, "minimum": 40, "status": "PROFESSIONAL_READY" },
+        "hard": { "count": 44, "minimum": 30, "status": "PROFESSIONAL_READY" }
+      },
+      "reading": {
+        "easy": { "count": 85, "minimum": 50, "status": "PROFESSIONAL_READY" },
+        "medium": { "count": 65, "minimum": 40, "status": "PROFESSIONAL_READY" },
+        "hard": { "count": 46, "minimum": 30, "status": "PROFESSIONAL_READY" }
+      }
+    }
+  },
+  "tests": {
+    "hebrew-g3-bank-coverage": "PASS 5/5",
+    "build": "PASS",
+    "criticalBlocking": 0
+  },
+  "gitAtBaseline": "clean working tree on staging/diagnostic-flags"
+}

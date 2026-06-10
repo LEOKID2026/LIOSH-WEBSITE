@@ -272,6 +272,9 @@ export default function HebrewMaster() {
     [grade]
   );
   const g1BookFirstCopy = useMemo(() => getHebrewG1BookFirstRecommendationCopy(), []);
+  const [g1LiteracyProgress, setG1LiteracyProgress] = useState(() =>
+    typeof window !== "undefined" ? readHebrewG1LiteracyProgressClient() : { viewedPageIds: [], dismissedTopics: [] }
+  );
   const showG1BookFirstSoftGate = useMemo(
     () =>
       shouldShowHebrewG1BookFirstSoftGate({
@@ -283,9 +286,6 @@ export default function HebrewMaster() {
   );
   const [gameActive, setGameActive] = useState(false);
   const [adaptivePlannerRecommendationView, setAdaptivePlannerRecommendationView] = useState(null);
-  const [g1LiteracyProgress, setG1LiteracyProgress] = useState(() =>
-    typeof window !== "undefined" ? readHebrewG1LiteracyProgressClient() : { viewedPageIds: [], dismissedTopics: [] }
-  );
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const questionBookHref = useMemo(() => {
     if (mode !== "learning" || !currentQuestion) return null;
