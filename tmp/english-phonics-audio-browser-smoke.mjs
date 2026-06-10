@@ -1,11 +1,13 @@
 /**
- * Browser smoke — English G1/G2 phonics practice audio button presence.
+ * Browser smoke — English G1/G2 phonics visible question + additive audio.
  * Run: node tmp/english-phonics-audio-browser-smoke.mjs
  */
 import { chromium } from "playwright";
 import { countRuntimeEligiblePhonicsItems } from "../data/english-questions/index.js";
 
 const BASE_URL = (process.env.QA_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
+const PICTURE_RE = /תמונה/u;
+const BROKEN_PROMPT_RE = /\/\s+'|קרא\s+\/\s+[\u05d0-\u05ea'\s]|\/\s+י\s/u;
 
 async function mockStudentSession(page) {
   await page.route("**/api/student/me", async (route) => {
@@ -50,6 +52,28 @@ async function mockStudentSession(page) {
   });
 }
 
+async function readVisibleStem(page) {
+  const lead = (await page.locator("[data-testid='student-question-lead']").first().isVisible().catch(() => false))
+    ? (await page.locator("[data-testid='student-question-lead']").first().innerText().catch(() => "")).trim()
+    : "";
+  const body = (await page.locator("[data-testid='student-question-body']").first().isVisible().catch(() => false))
+    ? (await page.locator("[data-testid='student-question-body']").first().innerText().catch(() => "")).trim()
+    : "";
+  const fallback = (await page.locator("[data-testid='english-question-stem']").first().innerText().catch(() => "")).trim();
+  return { lead, body, combined: [lead, body, fallback].filter(Boolean).join("\n") };
+}
+
+async function readOptions(page) {
+  const options = [];
+  for (let idx = 0; idx < 4; idx += 1) {
+    const btn = page.locator(`[data-testid='english-mcq-${idx}']`);
+    if (await btn.isVisible().catch(() => false)) {
+      options.push((await btn.innerText()).trim());
+    }
+  }
+  return options;
+}
+
 async function runGradePhonicsAudioSmoke(page, gradeNum) {
   await page.goto(`${BASE_URL}/learning/english-master`, {
     waitUntil: "domcontentloaded",
@@ -62,17 +86,34 @@ async function runGradePhonicsAudioSmoke(page, gradeNum) {
   await page.getByTestId("english-start-game").click();
   await page.locator("[data-testid='english-question-stem']").first().waitFor({ state: "visible", timeout: 60000 });
 
+  const beforeStem = await readVisibleStem(page);
+  const optionsBefore = await readOptions(page);
+
   const audioBtn = page.getByTestId("english-phonics-audio-play");
   await audioBtn.waitFor({ state: "visible", timeout: 15000 });
-  const label = (await audioBtn.innerText()).trim();
+  const audioLabel = (await audioBtn.innerText()).trim();
   await audioBtn.click();
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(900);
+
+  const afterStem = await readVisibleStem(page);
+  const optionsAfter = await readOptions(page);
 
   return {
     grade: `g${gradeNum}`,
     audioButtonVisible: await audioBtn.isVisible(),
-    audioButtonLabel: label,
-    clickOk: true,
+    audioButtonLabel: audioLabel,
+    leadVisible: Boolean(beforeStem.lead),
+    bodyVisible: Boolean(beforeStem.body),
+    optionsCount: optionsBefore.length,
+    stemUnchangedAfterAudio:
+      beforeStem.lead === afterStem.lead &&
+      beforeStem.body === afterStem.body &&
+      JSON.stringify(optionsBefore) === JSON.stringify(optionsAfter),
+    noPicturePrompt: !PICTURE_RE.test(beforeStem.combined),
+    noBrokenPrompt: !BROKEN_PROMPT_RE.test(beforeStem.combined),
+    sampleLead: beforeStem.lead.slice(0, 80),
+    sampleBody: beforeStem.body.slice(0, 40),
+    sampleOptions: optionsBefore,
   };
 }
 
@@ -92,7 +133,18 @@ async function main() {
     counts.total === 42 &&
     g1.audioButtonVisible &&
     g2.audioButtonVisible &&
-    /האזנה|🔊/.test(g1.audioButtonLabel);
+    g1.leadVisible &&
+    g2.leadVisible &&
+    g1.bodyVisible &&
+    g2.bodyVisible &&
+    g1.optionsCount === 4 &&
+    g2.optionsCount === 4 &&
+    g1.stemUnchangedAfterAudio &&
+    g2.stemUnchangedAfterAudio &&
+    g1.noPicturePrompt &&
+    g2.noPicturePrompt &&
+    g1.noBrokenPrompt &&
+    g2.noBrokenPrompt;
 
   console.log(
     JSON.stringify(

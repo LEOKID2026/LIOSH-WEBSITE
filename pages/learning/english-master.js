@@ -3021,7 +3021,10 @@ export default function EnglishMaster() {
                     <StudentQuestionDisplay
                       testId="english-question-stem"
                       question={currentQuestion.question}
+                      questionLabel={currentQuestion.questionLabel}
+                      exerciseText={currentQuestion.exerciseText}
                       getQuestionFontStyle={getQuestionFontStyle}
+                      leadClassName="text-xl md:text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full px-2"
                       bodyClassName="text-4xl font-black text-white text-center max-w-full px-2 break-words overflow-wrap-anywhere"
                     />
                   </div>

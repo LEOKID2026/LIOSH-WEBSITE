@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { getRuntimeEligiblePhonicsPool } from "../../data/english-questions/index.js";
 import { generateQuestion } from "../../utils/english-question-generator.js";
 import { validateAudioStemV1 } from "../../utils/audio-task-contract.js";
+import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display.js";
 import {
   attachEnglishPhonicsPracticeAudio,
   buildPhonicsPracticeTtsSegments,
@@ -59,6 +60,71 @@ describe("english phonics practice audio", () => {
     const joined = segments.map((s) => s.text).join(" ");
     assert.match(joined, /אפשרויות/);
     assert.match(joined, /bee|aitch|ar/i);
+  });
+
+  /** Mirrors english-master StudentQuestionDisplay props (not question-only). */
+  function visiblePartsFromUiProps(q) {
+    return resolveStudentQuestionDisplayParts({
+      question: q.question,
+      questionLabel: q.questionLabel,
+      exerciseText: q.exerciseText,
+    });
+  }
+
+  it("audio is additive: visible prompt, target, and options remain on the question", () => {
+    const BROKEN_SLASH_PROMPT = /\/\s+'\s|קרא\s+\/\s+'/u;
+    const positions = new Set();
+
+    for (let i = 0; i < 80; i += 1) {
+      const gradeKey = i % 2 === 0 ? "g1" : "g2";
+      const pages =
+        gradeKey === "g1"
+          ? ["letters_upper", "first_words_cvc", "letters_match"]
+          : ["phonics_blending", "first_word_reading", "letters_review"];
+      const pageId = pages[i % pages.length];
+      if (getRuntimeEligiblePhonicsPool(gradeKey, pageId).length === 0) continue;
+
+      const q = generateQuestion(1, "phonics", gradeKey, null, "easy", {
+        forceKind: pageId,
+        forceSkillId: `english:phonics:${gradeKey}:${pageId}`,
+      });
+
+      assert.ok(q.params?.audioStem, "audioStem must exist");
+      assert.equal(q.params?.requiresAudio, false);
+
+      const parts = visiblePartsFromUiProps(q);
+      assert.ok(parts.leadText.trim(), "visible Hebrew instruction");
+      assert.ok(parts.bodyText.trim(), "visible target letter/word");
+      assert.equal(BROKEN_SLASH_PROMPT.test(parts.leadText), false);
+      assert.equal(BROKEN_SLASH_PROMPT.test(parts.bodyText), false);
+      assert.ok(
+        String(q.params?.phonicsStimulus || q.exerciseText || "").trim(),
+        "stimulus field preserved"
+      );
+      assert.equal(q.answers.length, 4);
+      assert.ok(q.answers.includes(q.correctAnswer));
+      positions.add(q.answers.indexOf(q.correctAnswer));
+    }
+
+    assert.ok(positions.size >= 2, "answer positions still vary");
+  });
+
+  it("attach helper does not mutate visual display fields", () => {
+    const q = generateQuestion(1, "phonics", "g1", null, "easy", {
+      forceKind: "letters_upper",
+      forceSkillId: "english:phonics:g1:letters_upper",
+    });
+    const before = {
+      question: q.question,
+      questionLabel: q.questionLabel,
+      exerciseText: q.exerciseText,
+      answers: [...q.answers],
+    };
+    attachEnglishPhonicsPracticeAudio(q, { gradeKey: "g1", sourceRow: { id: "x" } });
+    assert.equal(q.question, before.question);
+    assert.equal(q.questionLabel, before.questionLabel);
+    assert.equal(q.exerciseText, before.exerciseText);
+    assert.deepEqual(q.answers, before.answers);
   });
 
   it("attach helper is idempotent-safe and skips non-phonics", () => {

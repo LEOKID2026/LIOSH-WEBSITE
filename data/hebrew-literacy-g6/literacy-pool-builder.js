@@ -1,5 +1,5 @@
 /**
- * Hebrew G6 supplemental MCQ banks — Phase 5G (comprehension + reading only).
+ * Hebrew G6 supplemental MCQ banks — Phase 5G (comprehension + reading) + 5H (grammar + vocabulary).
  */
 import {
   G6_COMP_EXPLICIT_EASY,
@@ -25,6 +25,10 @@ import {
   G6_READ_ARGUMENT_HARD,
   G6_READ_GENRE_COMPARE_HARD,
 } from "./reading-banks.js";
+import {
+  HEBREW_G6_GRAMMAR_POOL,
+  HEBREW_G6_VOCABULARY_POOL,
+} from "./grammar-vocabulary-banks.js";
 
 /**
  * @param {string} correct
@@ -280,4 +284,6 @@ function buildG6ReadingPool() {
 export const HEBREW_G6_LITERACY_POOL = [
   ...buildG6ComprehensionPool(),
   ...buildG6ReadingPool(),
+  ...HEBREW_G6_GRAMMAR_POOL,
+  ...HEBREW_G6_VOCABULARY_POOL,
 ];
