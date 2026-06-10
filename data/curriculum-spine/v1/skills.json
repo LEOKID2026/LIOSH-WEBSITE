@@ -3628,6 +3628,20 @@
     },
     {
       "schema_version": 1,
+      "skill_id": "english:g1:topic:phonics",
+      "subject": "english",
+      "topic": "phonics",
+      "subtopic": "g1_phonics_access",
+      "minGrade": 1,
+      "maxGrade": 1,
+      "cognitive_level": "recognition",
+      "description": "English curriculum declares topic \"phonics\" for g1 (Phase 4B internal preview). Runtime excludes requiresAudio bank rows until practice-item audio ships.",
+      "source": "data/english-curriculum.js ENGLISH_GRADES",
+      "spine_layer": "curriculum_topic_access",
+      "linked_skill_ids": []
+    },
+    {
+      "schema_version": 1,
       "skill_id": "english:g2:topic:vocabulary",
       "subject": "english",
       "topic": "vocabulary",
@@ -3636,6 +3650,20 @@
       "maxGrade": 2,
       "cognitive_level": "recognition",
       "description": "English curriculum declares topic \"vocabulary\" for g2 (כיתה ב׳ · Grade 2). Linked pools cover generator bank items allowed in this grade for this topic.",
+      "source": "data/english-curriculum.js ENGLISH_GRADES",
+      "spine_layer": "curriculum_topic_access",
+      "linked_skill_ids": []
+    },
+    {
+      "schema_version":  1,
+      "skill_id": "english:g2:topic:phonics",
+      "subject": "english",
+      "topic": "phonics",
+      "subtopic": "g2_phonics_access",
+      "minGrade": 2,
+      "maxGrade": 2,
+      "cognitive_level": "recognition",
+      "description": "English curriculum declares topic \"phonics\" for g2 (Phase 4B internal preview). Runtime excludes requiresAudio bank rows until practice-item audio ships.",
       "source": "data/english-curriculum.js ENGLISH_GRADES",
       "spine_layer": "curriculum_topic_access",
       "linked_skill_ids": []

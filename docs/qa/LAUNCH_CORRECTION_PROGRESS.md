@@ -1,7 +1,7 @@
 # Launch Correction — Progress Checkpoint
 
-**Checkpoint date:** 2026-06-08  
-**Status:** **SAFE PAUSE** — Phases 1–3C complete and verified. Phase 4 not started.  
+**Checkpoint date:** 2026-06-09  
+**Status:** **SAFE PAUSE** — Phases 1–3C and **Phase 4B** complete and verified. **Phase 5 not started** — paused pending owner approval.  
 **Master plan:** [`LAUNCH_CORRECTION_MASTER_PLAN.md`](LAUNCH_CORRECTION_MASTER_PLAN.md)
 
 ---
@@ -46,6 +46,30 @@
 - All G1/G2 reading/comprehension/grammar per-level targets now at or above 50/40/30.
 - Integrity + MCQ audits **PASS**; `CRITICAL_BLOCKING: 0`; build passes.
 
+### Phase 4A — English G1/G2 phonics content map ✓
+
+- Content map written and approved: `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md`
+- Implementation plan: `docs/qa/ENGLISH_G1_G2_PHASE_4B_IMPLEMENTATION_PLAN.md`
+
+### Phase 4B — English G1/G2 phonics implementation ✓ **CLOSED / PASS for INTERNAL PREVIEW**
+
+**Final closure report:** [`docs/qa/_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md`](_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md)
+
+| Gate | Result |
+|------|--------|
+| Browser smoke (AAA fixture `aaa1`) | **PASS 18/18** |
+| Parent-report static guard | **PASS 12/12** |
+| Parent-report live guard | **PASS 17/17** |
+| Runtime QA | **PASS** (60 runtime-eligible phonics items; 15 wired / 8 audio-only practice pages) |
+| Audio verify | **PASS 161/161** (english/g1 84 + english/g2 77 section MP3s) |
+| Production build | **PASS** |
+
+**Delivered:** 23 phonics book pages, section audio, static phonics banks, runtime wiring (Approach B — `requiresAudio: true` excluded at runtime), practice-map integration, parent-report metadata leak fix.
+
+**Not marked external FULL launch** — internal preview only unless owner separately approves broader launch QA.
+
+**No remaining Phase 4B blocker.**
+
 ---
 
 ## Hebrew G1/G2 inventory snapshot (post–3C)
@@ -68,34 +92,37 @@ Source: `reports/question-audit/QUESTION_INVENTORY_MATRIX.csv` (2026-06-08).
 | Constraint | Status |
 |------------|--------|
 | SQL / migrations | No changes |
-| Parent report behavior | No changes |
-| Diagnostic flags (`DIAGNOSTIC_METADATA_*`) | **OFF** |
-| English Phase 4 | **Not started** |
-| Audio generation | Hebrew G1 verify only; no G2/English generation |
+| Parent report behavior | Sanitization hardening only (Phase 4B metadata leak fix); no scoring/threshold changes |
+| Diagnostic flags (`DIAGNOSTIC_METADATA_*`) | **OFF** (Launch Correction track); staging ON per separate addendum |
+| English Phase 4B | **Complete** — internal preview PASS; not external FULL launch |
+| Audio generation | English G1/G2 section audio **161/161 verified**; Hebrew G2 not generated |
 | Public marketing / homepage / curriculum copy | No changes |
 | UI redesign | No changes |
 
 ---
 
-## Safe pause point — next step (not started)
+## Safe pause point — Phase 5 (not started)
 
-**Phase 4A — English G1/G2 phonics content map** opens only after explicit owner approval.
+**Phase 4B English G1/G2 phonics is CLOSED / PASS for INTERNAL PREVIEW.** No remaining Phase 4B blocker.
 
-Planning-only deliverable (no implementation, no audio generation):
+**Do not start Phase 5 now.** Phase 5 (Hebrew G3–G6 bank expansion) will continue later **only after explicit owner approval**.
 
-- Letters/sounds scope
-- Book page list
-- Question types
-- Audio script text
-- Audio manifest structure
-
-Required artifact before Phase 4B: `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md` (not yet written).
-
-**Do not** implement Phase 4 or generate English audio until separately approved.
+Phase 4B is **not** marked external FULL launch unless owner separately approves broader launch QA.
 
 ---
 
-## Verification commands (last green run)
+## Verification commands (last green run — Phase 4B closure)
+
+```powershell
+# Phase 4B closure (2026-06-09)
+QA_BASE_URL=http://localhost:3001 E2E_STUDENT_USERNAME=aaa1 E2E_STUDENT_PIN=1234 node scripts/qa/english-phonics-runtime-qa.mjs --browser --write-artifacts
+node --env-file=.env.local scripts/qa/english-phonics-parent-report-guard.mjs --live --write-artifacts
+node scripts/qa/english-phonics-runtime-qa.mjs --write-artifacts
+node scripts/verify-learning-book-audio.mjs
+npm run build
+```
+
+Prior phases (still green):
 
 ```powershell
 node --test tests/learning/launch-readiness-policy.test.mjs
@@ -117,9 +144,9 @@ npm run build
 
 | Phase | Scope | Status |
 |-------|-------|--------|
-| **4A** | English G1/G2 phonics content map | **Paused** — awaiting approval |
-| **4B** | English book pages, banks, manifest, audio | **Not started** |
-| **5** | Hebrew G3–G6 expansion | Not started |
+| **4A** | English G1/G2 phonics content map | **Complete** ✓ |
+| **4B** | English book pages, banks, manifest, audio, runtime QA | **CLOSED / PASS — INTERNAL PREVIEW** ✓ |
+| **5** | Hebrew G3–G6 expansion | **Paused** — do not start until owner approval |
 | **6** | English G3–G6 expansion | Not started |
 | **7** | Geometry / Science / Moledet depth | Not started |
 | **8** | Final launch QA gate | Not started |
@@ -128,7 +155,7 @@ npm run build
 
 ## Diagnostic Visible Impact Addendum — 2026-06-08
 
-**Launch Correction progress (this document) is unchanged:** Phases 1–3C content/inventory work stands as recorded above. English Phase 4 has **not started**.
+**Launch Correction progress:** Phases 1–3C and **Phase 4B** complete. Phase 4B closure: [`PHASE_4B_FINAL_CLOSURE.md`](_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md). **Phase 5 not started** — paused pending owner approval.
 
 **Separate track — Diagnostic Flags Visible Impact (parent report):**
 

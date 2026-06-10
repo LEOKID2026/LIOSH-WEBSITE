@@ -1,0 +1,44 @@
+{
+  "tag": "english-phonics-parent-report-v1",
+  "metaKey": "englishPhonicsParentReport",
+  "seededAt": "2026-06-09T21:31:04.027Z",
+  "students": [
+    {
+      "label": "AAA1",
+      "login": "aaa1",
+      "grade": 1,
+      "reportWindow": {
+        "from": "2026-06-01",
+        "to": "2026-06-09"
+      }
+    },
+    {
+      "label": "AAA3",
+      "login": "aaa3",
+      "grade": 2,
+      "reportWindow": {
+        "from": "2026-06-01",
+        "to": "2026-06-09"
+      }
+    }
+  ],
+  "results": {
+    "AAA1": {
+      "studentId": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+      "login": "aaa1",
+      "grade": 1,
+      "topic": "phonics",
+      "answerCount": 12,
+      "sessionCount": 3
+    },
+    "AAA3": {
+      "studentId": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+      "login": "aaa3",
+      "grade": 2,
+      "topic": "phonics",
+      "answerCount": 12,
+      "sessionCount": 3
+    }
+  },
+  "cleanupScope": "tag-scoped only via cleanTaggedSeedsForTag"
+}

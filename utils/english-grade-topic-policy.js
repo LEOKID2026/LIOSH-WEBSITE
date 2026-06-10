@@ -7,6 +7,7 @@ import { findTopicPlacement } from "./curriculum-audit/israeli-primary-curriculu
 
 /** Representative normalized keys for UI topic tabs (prefix-match via curriculum map). */
 export const ENGLISH_TOPIC_TO_REP_NORM = {
+  phonics: "english.exposure_oral_listening",
   vocabulary: "english.vocabulary_translation",
   grammar: "english.grammar",
   translation: "english.vocabulary_translation",

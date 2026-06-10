@@ -101,22 +101,24 @@ export const GRAMMAR_TRANSLATION_CONCLUSION_RES = [
 ];
 
 export const PHONICS_FIXTURE_SPEC = {
-  version: "2026-06-09",
-  status: "not_seeded",
+  version: "2026-06-09-post-integration",
+  status: "uses_aaa_accounts",
   flagBaseline: EXPECTED_FLAG_BASELINE,
+  seedTag: "english-phonics-parent-report-v1",
+  seedScript: "scripts/qa/english-phonics-parent-report-seed.mjs",
   students: [
     {
       id: "PHONICS-G1-ONLY",
-      label: "PhonicsG1",
+      label: "AAA1",
       grade: 1,
-      login: "phonicsg1",
+      login: "aaa1",
       scenario: "g1_phonics_only_thin",
       pages: G1_PHONICS_PAGES,
       sessionPlan: {
         sessions: 3,
-        questionsPerSession: 6,
-        itemMix: ["letter_id", "sound_match", "listening_command"],
-        diagnosticContribution: "manual_only",
+        questionsPerSession: 4,
+        topic: "phonics",
+        diagnosticContribution: "thin",
       },
       reportWindow: { from: "2026-06-01", to: "2026-06-09" },
       assertions: [
@@ -130,16 +132,16 @@ export const PHONICS_FIXTURE_SPEC = {
     },
     {
       id: "PHONICS-G2-ONLY",
-      label: "PhonicsG2",
+      label: "AAA3",
       grade: 2,
-      login: "phonicsg2",
+      login: "aaa3",
       scenario: "g2_phonics_only_thin",
       pages: G2_PHONICS_PAGES,
       sessionPlan: {
-        sessions: 4,
-        questionsPerSession: 8,
-        itemMix: ["blend_cvc", "listening_comprehension", "early_sentence_exposure"],
-        diagnosticContribution: "manual_only",
+        sessions: 3,
+        questionsPerSession: 4,
+        topic: "phonics",
+        diagnosticContribution: "thin",
       },
       reportWindow: { from: "2026-06-01", to: "2026-06-09" },
       assertions: [
@@ -151,13 +153,9 @@ export const PHONICS_FIXTURE_SPEC = {
       ],
     },
   ],
-  blockedUntil: [
-    "english_phonics_question_banks_wired",
-    "english-book-practice-map phonics topic routing (topic=phonics)",
-    "generator emits phonics questionType (not grammar/translation)",
-    "fixture seed script inserts phonics-only answer rows",
-  ],
+  blockedUntil: [],
   relatedScripts: [
+    "scripts/qa/english-phonics-parent-report-seed.mjs",
     "scripts/qa/parent-report-diagnostic-flags-staging-smoke.mjs",
     "scripts/qa/parent-report-diagnostic-visible-impact-hardening.mjs",
     "scripts/qa/parent-report-visible-truth-audit.mjs",
@@ -226,23 +224,35 @@ function runStaticPreflight() {
   pushCheck(
     results,
     "static_preflight",
-    "english_master_topics_excludes_phonics",
-    !ENGLISH_MASTER_TOPICS.has("phonics"),
+    "english_master_topics_includes_phonics",
+    ENGLISH_MASTER_TOPICS.has("phonics"),
     { masterTopics: [...ENGLISH_MASTER_TOPICS] },
   );
 
   const withPractice = [];
+  const badPracticeTopic = [];
   for (const r of rows) {
-    if (hasEnglishPracticeTarget(r.grade, r.pageId)) {
-      withPractice.push(`${r.grade}:${r.pageId} -> ${JSON.stringify(resolveEnglishPracticeTarget(r.grade, r.pageId))}`);
+    const target = resolveEnglishPracticeTarget(r.grade, r.pageId);
+    if (target) {
+      withPractice.push(`${r.grade}:${r.pageId} -> ${JSON.stringify(target)}`);
+      if (target.topic !== "phonics") {
+        badPracticeTopic.push(`${r.grade}:${r.pageId}:${target.topic}`);
+      }
     }
   }
   pushCheck(
     results,
     "static_preflight",
-    "phonics_pages_have_no_practice_targets_yet",
-    withPractice.length === 0,
-    withPractice,
+    "phonics_pages_with_runtime_items_resolve_phonics_practice",
+    badPracticeTopic.length === 0,
+    badPracticeTopic,
+  );
+  pushCheck(
+    results,
+    "static_preflight",
+    "phonics_pages_without_runtime_items_have_no_practice_target",
+    withPractice.every((line) => line.includes('"topic":"phonics"')),
+    { withPractice, count: withPractice.length },
   );
 
   const nonPhonicsPageType = rows.filter((r) => r.entry?.pageType !== "phonics_foundation");
@@ -315,6 +325,15 @@ async function runLivePhonicsGuard() {
   }
 
   const { createClient } = await import("@supabase/supabase-js");
+  const { attachParentContextEvidenceQuality } = await import("../../lib/learning/evidence-quality.js");
+  const {
+    aggregateParentReportPayload,
+    stripInternalReportPayloadFields,
+  } = await import("../../lib/parent-server/report-data-aggregate.server.js");
+  const { enrichPayloadWithParentFacing } = await import("../../lib/parent-server/parent-report-parent-facing.server.js");
+  const { parseIsoDate, resolveAaaStudents } = await import("./lib/parent-aaa-qa-constants.mjs");
+  const { PHONICS_SEED_TAG, PHONICS_SEED_META_KEY } = await import("./english-phonics-parent-report-seed.mjs");
+
   const supabase = createClient(url, key, { auth: { persistSession: false } });
   const logins = PHONICS_FIXTURE_SPEC.students.map((s) => s.login);
   const { data: codes, error } = await supabase
@@ -334,26 +353,146 @@ async function runLivePhonicsGuard() {
   pushCheck(
     results,
     "live_phonics_report",
-    "phonics_fixture_students_seeded",
+    "phonics_fixture_students_present",
     missing.length === 0,
     { expected: logins, missing },
   );
-
   if (missing.length > 0) {
-    return {
-      results,
-      status: "BLOCKED",
-      reason: "phonics_fixture_not_seeded",
-      note: "Runtime phonics practice + seed not wired — live parent-report assertions deferred.",
-    };
+    return { results, status: "BLOCKED", reason: "phonics_fixture_students_missing" };
   }
 
-  // Future: aggregate payloads for phonics-only students under mode C and run leak/strong/grammar scans.
+  const students = await resolveAaaStudents(supabase);
+  const byLabel = new Map(students.map((s) => [s.label, s]));
+
+  process.env[FLAG_ENV.subskill] = EXPECTED_FLAG_BASELINE.subskill;
+  process.env[FLAG_ENV.gating] = EXPECTED_FLAG_BASELINE.gating;
+  process.env[FLAG_ENV.promotion] = EXPECTED_FLAG_BASELINE.promotion;
+
+  let allLivePass = true;
+
+  for (const spec of PHONICS_FIXTURE_SPEC.students) {
+    const entry = byLabel.get(spec.label);
+    if (!entry) {
+      pushCheck(results, "live_phonics_report", `${spec.label}_student_resolved`, false, spec.label);
+      allLivePass = false;
+      continue;
+    }
+    pushCheck(results, "live_phonics_report", `${spec.label}_student_resolved`, true, entry.studentId);
+
+    const { count: seedCount, error: seedErr } = await supabase
+      .from("learning_sessions")
+      .select("id", { count: "exact", head: true })
+      .eq("student_id", entry.studentId)
+      .eq("subject", "english")
+      .eq("topic", "phonics")
+      .gte("started_at", `${spec.reportWindow.from}T00:00:00.000Z`)
+      .lte("started_at", `${spec.reportWindow.to}T23:59:59.999Z`)
+      .contains("metadata", { [PHONICS_SEED_META_KEY]: PHONICS_SEED_TAG });
+
+    if (seedErr) {
+      pushCheck(results, "live_phonics_report", `${spec.label}_seed_tag_present`, false, seedErr.message);
+      allLivePass = false;
+      continue;
+    }
+
+    const seeded = (seedCount || 0) >= 3;
+    pushCheck(results, "live_phonics_report", `${spec.label}_seed_tag_present`, seeded, {
+      tag: PHONICS_SEED_TAG,
+      count: seedCount,
+      hint: "Run: node --env-file=.env.local scripts/qa/english-phonics-parent-report-seed.mjs",
+    });
+    if (!seeded) {
+      allLivePass = false;
+      continue;
+    }
+
+    const student = {
+      id: entry.studentId,
+      full_name: entry.fullName,
+      grade_level: entry.gradeLevel || `g${spec.grade}`,
+      is_active: true,
+    };
+
+    const raw = await aggregateParentReportPayload(
+      supabase,
+      student,
+      parseIsoDate(spec.reportWindow.from),
+      parseIsoDate(spec.reportWindow.to),
+      { includeParentActivities: true }
+    );
+    const withEq = attachParentContextEvidenceQuality(structuredClone(raw));
+    const enriched = await enrichPayloadWithParentFacing(supabase, withEq, entry.studentId);
+    const pub = stripInternalReportPayloadFields(structuredClone(enriched));
+
+    const insights = pub.parentFacing?.insights || [];
+    const insightText = insights.join("\n");
+    const pubJson = JSON.stringify(pub);
+
+    const strongHit = STRONG_DIAGNOSIS_RE.test(insightText);
+    pushCheck(
+      results,
+      "live_phonics_report",
+      `${spec.label}_no_strong_diagnosis`,
+      !strongHit,
+      { insights },
+    );
+    if (strongHit) allLivePass = false;
+
+    const softOk = insights.length === 0 || SOFT_THIN_RE.test(insightText) || !strongHit;
+    pushCheck(
+      results,
+      "live_phonics_report",
+      `${spec.label}_soft_or_thin_copy`,
+      softOk,
+      { insights },
+    );
+    if (!softOk) allLivePass = false;
+
+    const grammarScan = grammarTranslationScan(insightText + pubJson);
+    pushCheck(
+      results,
+      "live_phonics_report",
+      `${spec.label}_no_grammar_translation_conclusions`,
+      grammarScan.pass,
+      grammarScan.hits,
+    );
+    if (!grammarScan.pass) allLivePass = false;
+
+    const leak = leakScan(pubJson);
+    pushCheck(
+      results,
+      "live_phonics_report",
+      `${spec.label}_no_internal_metadata_leaks`,
+      leak.pass,
+      leak.hits,
+    );
+    if (!leak.pass) allLivePass = false;
+
+    const promotionCount = enriched.meta?._evidenceQuality?.promotionDecisions?.length || 0;
+    pushCheck(
+      results,
+      "live_phonics_report",
+      `${spec.label}_promotion_off`,
+      promotionCount === 0,
+      { promotionDecisionCount: promotionCount },
+    );
+    if (promotionCount !== 0) allLivePass = false;
+
+    const gatingApplied = pub.parentFacing?.gatingApplied === true;
+    pushCheck(
+      results,
+      "live_phonics_report",
+      `${spec.label}_gating_active_mode_c`,
+      gatingApplied,
+      { gatingApplied },
+    );
+    if (!gatingApplied) allLivePass = false;
+  }
+
   return {
     results,
-    status: "BLOCKED",
-    reason: "live_assertions_not_implemented",
-    note: "Fixture students exist but live assertion pipeline is not implemented until banks/generator connect.",
+    status: allLivePass ? "PASS" : "BLOCKED",
+    reason: allLivePass ? null : "live_assertion_failed",
   };
 }
 
@@ -469,7 +608,17 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("\nenglish-phonics-parent-report-guard: executable preflight PASS (live assertions BLOCKED until banks/generator/seed)");
+  if (args.live && liveBundle.status !== "PASS") {
+    console.error(`\nenglish-phonics-parent-report-guard: live phonics report ${liveBundle.status}${liveBundle.reason ? ` (${liveBundle.reason})` : ""}`);
+    if (liveBundle.note) console.error(`  ${liveBundle.note}`);
+    process.exit(1);
+  }
+
+  if (args.live && liveBundle.status === "PASS") {
+    console.log("\nenglish-phonics-parent-report-guard: executable preflight PASS + live phonics report PASS");
+  } else {
+    console.log("\nenglish-phonics-parent-report-guard: executable preflight PASS (live assertions SKIPPED or BLOCKED until seed + --live)");
+  }
   process.exit(0);
 }
 

@@ -23,6 +23,7 @@ import {
   hasEnglishPracticeTarget,
   resolveEnglishPracticeTarget,
 } from "../../lib/learning-book/english-book-practice-map.js";
+import { getRuntimeEligiblePhonicsPool } from "../../data/english-questions/index.js";
 
 const G1_PHONICS = [
   "letters_upper",
@@ -83,14 +84,30 @@ test("all 23 phonics pages have skill index entries and draft files", () => {
   }
 });
 
-test("phonics pages do not expose practice targets yet", () => {
+test("phonics pages resolve phonics practice targets only when runtime-eligible", () => {
   for (const pageId of G1_PHONICS) {
-    assert.equal(hasEnglishPracticeTarget("g1", pageId), false);
-    assert.equal(resolveEnglishPracticeTarget("g1", pageId), null);
+    const eligible = getRuntimeEligiblePhonicsPool("g1", pageId).length > 0;
+    assert.equal(hasEnglishPracticeTarget("g1", pageId), eligible, pageId);
+    const target = resolveEnglishPracticeTarget("g1", pageId);
+    if (eligible) {
+      assert.equal(target?.topic, "phonics");
+      assert.equal(target?.forceKind, pageId);
+      assert.match(target?.skillId || "", /^english:phonics:g1:/);
+    } else {
+      assert.equal(target, null);
+    }
   }
   for (const pageId of G2_PHONICS) {
-    assert.equal(hasEnglishPracticeTarget("g2", pageId), false);
-    assert.equal(resolveEnglishPracticeTarget("g2", pageId), null);
+    const eligible = getRuntimeEligiblePhonicsPool("g2", pageId).length > 0;
+    assert.equal(hasEnglishPracticeTarget("g2", pageId), eligible, pageId);
+    const target = resolveEnglishPracticeTarget("g2", pageId);
+    if (eligible) {
+      assert.equal(target?.topic, "phonics");
+      assert.equal(target?.forceKind, pageId);
+      assert.match(target?.skillId || "", /^english:phonics:g2:/);
+    } else {
+      assert.equal(target, null);
+    }
   }
 });
 

@@ -1,6 +1,6 @@
 {
-  "version": "2026-06-09",
-  "status": "not_seeded",
+  "version": "2026-06-09-post-integration",
+  "status": "uses_aaa_accounts",
   "flagBaseline": {
     "subskill": "true",
     "gating": "true",
@@ -8,12 +8,14 @@
     "modeId": "C",
     "modeName": "subskill_gating"
   },
+  "seedTag": "english-phonics-parent-report-v1",
+  "seedScript": "scripts/qa/english-phonics-parent-report-seed.mjs",
   "students": [
     {
       "id": "PHONICS-G1-ONLY",
-      "label": "PhonicsG1",
+      "label": "AAA1",
       "grade": 1,
-      "login": "phonicsg1",
+      "login": "aaa1",
       "scenario": "g1_phonics_only_thin",
       "pages": [
         "letters_upper",
@@ -31,13 +33,9 @@
       ],
       "sessionPlan": {
         "sessions": 3,
-        "questionsPerSession": 6,
-        "itemMix": [
-          "letter_id",
-          "sound_match",
-          "listening_command"
-        ],
-        "diagnosticContribution": "manual_only"
+        "questionsPerSession": 4,
+        "topic": "phonics",
+        "diagnosticContribution": "thin"
       },
       "reportWindow": {
         "from": "2026-06-01",
@@ -54,9 +52,9 @@
     },
     {
       "id": "PHONICS-G2-ONLY",
-      "label": "PhonicsG2",
+      "label": "AAA3",
       "grade": 2,
-      "login": "phonicsg2",
+      "login": "aaa3",
       "scenario": "g2_phonics_only_thin",
       "pages": [
         "letters_review",
@@ -72,14 +70,10 @@
         "early_sentences_exposure"
       ],
       "sessionPlan": {
-        "sessions": 4,
-        "questionsPerSession": 8,
-        "itemMix": [
-          "blend_cvc",
-          "listening_comprehension",
-          "early_sentence_exposure"
-        ],
-        "diagnosticContribution": "manual_only"
+        "sessions": 3,
+        "questionsPerSession": 4,
+        "topic": "phonics",
+        "diagnosticContribution": "thin"
       },
       "reportWindow": {
         "from": "2026-06-01",
@@ -94,13 +88,9 @@
       ]
     }
   ],
-  "blockedUntil": [
-    "english_phonics_question_banks_wired",
-    "english-book-practice-map phonics topic routing (topic=phonics)",
-    "generator emits phonics questionType (not grammar/translation)",
-    "fixture seed script inserts phonics-only answer rows"
-  ],
+  "blockedUntil": [],
   "relatedScripts": [
+    "scripts/qa/english-phonics-parent-report-seed.mjs",
     "scripts/qa/parent-report-diagnostic-flags-staging-smoke.mjs",
     "scripts/qa/parent-report-diagnostic-visible-impact-hardening.mjs",
     "scripts/qa/parent-report-visible-truth-audit.mjs"

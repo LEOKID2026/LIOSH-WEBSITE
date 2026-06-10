@@ -15,10 +15,10 @@ todos:
     content: "Phase 3 + 3B + 3C: Hebrew G1/G2 literacy path, integrity cleanup, G2 reading easy 55/50"
     status: completed
   - id: phase-4-english-g1-g2
-    content: "Phase 4A/4B: English G1/G2 phonics — PAUSED; content map first, no implementation until approved"
-    status: pending
+    content: "Phase 4A/4B: English G1/G2 phonics — CLOSED / PASS for INTERNAL PREVIEW (2026-06-09)"
+    status: completed
   - id: phase-5-7-content
-    content: "Phases 5-7: Hebrew G3-6, English G3-6 translation, Geometry/Science/Moledet depth expansion"
+    content: "Phases 5-7: Hebrew G3-6, English G3-6 translation, Geometry/Science/Moledet depth — PAUSED; do not start Phase 5 until owner approval"
     status: pending
   - id: phase-8-launch-qa
     content: "Phase 8: Full QA rerun suite + owner launch gate sign-off"
@@ -28,7 +28,7 @@ isProject: false
 
 # Launch Correction Master Plan
 
-**Checkpoint (2026-06-08):** Phases 1–3C **complete and verified**. Safe pause before Phase 4. Progress: [`docs/qa/LAUNCH_CORRECTION_PROGRESS.md`](docs/qa/LAUNCH_CORRECTION_PROGRESS.md).
+**Checkpoint (2026-06-09):** Phases 1–3C and **Phase 4B** **complete and verified**. **Phase 5 not started** — paused pending owner approval. Progress: [`docs/qa/LAUNCH_CORRECTION_PROGRESS.md`](docs/qa/LAUNCH_CORRECTION_PROGRESS.md). Closure: [`docs/qa/_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md`](docs/qa/_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md).
 
 **Deliverable:** [`docs/qa/LAUNCH_CORRECTION_MASTER_PLAN.md`](docs/qa/LAUNCH_CORRECTION_MASTER_PLAN.md) — living plan; Phases 1–3C implemented (uncommitted working tree).
 
@@ -356,8 +356,8 @@ flowchart LR
 | Scope | Mandatory? | Status |
 |-------|------------|--------|
 | Hebrew G1 book | **Yes** | Pilot complete (224 MP3s); owner manual review pending |
-| English G1 book | **Yes** | Not started |
-| English G2 book | **Yes** | Not started |
+| English G1 book | **Yes** | **Phase 4B complete** — 84 MP3s verified |
+| English G2 book | **Yes** | **Phase 4B complete** — 77 MP3s verified |
 | Hebrew G2 book | Recommended | Not started |
 | Math G1 book | Optional | Pilot complete |
 
@@ -371,43 +371,19 @@ flowchart LR
 
 ---
 
-> Historical sections below may describe the original implementation plan. Current status is the checkpoint header: Phases 1–3C are complete and verified; Phase 4 is paused/pending and must not start without explicit approval.
+> Historical sections below may describe the original implementation plan. **Current status (2026-06-09):** Phases 1–3C and Phase 4B are complete; Phase 4B **PASS — INTERNAL PREVIEW** (not external FULL launch). **Do not start Phase 5** until owner approval.
 
-## 14. Implementation phases
+### Phase 4 — English G1/G2 foundational path ✓ COMPLETE (Phase 4B closed)
 
-### Phase 0 — Baseline freeze
-- `git status`, `git diff --stat`
-- Confirm input reports dated 2026-06-08
-- **No product changes**
-- Acceptance: clean documentation baseline
+- 23 phonics book pages + section audio (161/161 verified)
+- Runtime wiring + parent-report metadata leak fix
+- Browser smoke **PASS 18/18**; parent-report guards **12/12** static, **17/17** live; runtime QA + build **PASS**
+- Final report: `docs/qa/_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md`
+- **Not** external FULL launch unless owner separately approves broader launch QA
 
-### Phase 1 — Central launch-readiness model
-- Create `lib/launch-readiness/*`, seed registry from matrix JSON
-- Wire topic pickers + QA script to policy
-- Tests: `tests/learning/launch-readiness-policy.test.mjs`
-- **Must not change:** parent report aggregate, SQL, diagnostic flags
-- Rollback: delete new module; pickers revert to curriculum-only
+### Phase 5 — Hebrew G3–G6 expansion ⏸ PAUSED
 
-### Phase 2 — Critical blockers
-- Fix `prime_composite` 4-option generator
-- Fix geometry transformations all bands
-- Rerun inventory matrix → 0 CRITICAL_BLOCKING
-- Acceptance: 5 cells → PROFESSIONAL_READY or LAUNCH_ACCEPTABLE_THIN
-
-### Phase 3 — Hebrew G1/G2 literacy path
-- Book-first progress module + master gating
-- G1 literacy banks + audio question types
-- G2 bank expansion + optional G2 audio pilot
-- Acceptance: G1 reading ≥50 easy; book path E2E manual PASS
-
-### Phase 4 — English G1/G2 foundational path
-- New book batches + phonics pools + English audio manifest
-- Registry marks G1/G2 PRACTICE_ONLY until acceptance
-- Acceptance: phonics ≥50 easy G1; audio verify PASS
-
-### Phase 5 — Hebrew G3–G6 expansion
-- Batch author comprehension → reading → grammar → vocabulary
-- Acceptance: each grade ≥4 topics at 50/40/30
+- **Do not start now.** Continue only after explicit owner approval.
 
 ### Phase 6 — English G3–G6 expansion
 - Translation pool overhaul (grades 2–6)

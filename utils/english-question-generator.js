@@ -11,6 +11,7 @@ import {
   GRAMMAR_POOLS,
   SENTENCE_POOLS,
   TRANSLATION_POOLS,
+  getRuntimeEligiblePhonicsPool,
 } from "../data/english-questions/index.js";
 import {
   englishClassSplitBucket,
@@ -27,7 +28,9 @@ import {
   parseEnglishTopicFromSkillId,
   parseEnglishWordListKeyFromSkillId,
   parseEnglishPoolKeyFromSkillId,
+  parseEnglishPhonicsPageFromSkillId,
   englishWordListKeyFromPageId,
+  englishPhonicsSkillIdFromBookPageRef,
 } from "../lib/learning-book/english-book-practice-map.js";
 export const ENGLISH_LEVELS = {
   easy: { name: "קל", maxWords: 5, complexity: "basic" },
@@ -36,6 +39,7 @@ export const ENGLISH_LEVELS = {
 };
 
 export const ENGLISH_TOPICS = {
+  phonics: { name: "פוניקה", description: "Phonics foundation", icon: "🔤" },
   vocabulary: { name: "אוצר מילים", description: "Vocabulary practice", icon: "📚" },
   grammar: { name: "דקדוק", description: "Grammar focus", icon: "✏️" },
   translation: { name: "תרגום", description: "Sentence translation", icon: "🌐" },
@@ -227,6 +231,8 @@ export function resolveEnglishQType({
 
   if (selectedTopic === "writing") return "typing";
 
+  if (selectedTopic === "phonics") return "choice";
+
   if (selectedTopic === "vocabulary") {
     if (params?.direction === "en_to_he") return "choice";
     if (gNum <= 2 && levelKey === "easy") return "choice";
@@ -316,6 +322,12 @@ export function generateQuestion(
     parseEnglishWordListKeyFromSkillId(forceSkillId) ||
     englishWordListKeyFromPageId(forceKind);
   const forcedPoolKey = parseEnglishPoolKeyFromSkillId(forceSkillId);
+  const forcedPhonicsPage = parseEnglishPhonicsPageFromSkillId(forceSkillId);
+  const phonicsForceKind =
+    forceKind ||
+    (forcedPhonicsPage && forcedPhonicsPage.grade === gradeKey
+      ? forcedPhonicsPage.pageId
+      : "");
 
   let question,
     correctAnswer,
@@ -742,6 +754,53 @@ export function generateQuestion(
       break;
     }
 
+    case "phonics": {
+      const pool = getRuntimeEligiblePhonicsPool(gradeKey, phonicsForceKind);
+      if (pool.length === 0) {
+        if (typeof console !== "undefined" && console.warn) {
+          console.warn("[english] phonics pool empty after runtime gating", gradeKey, phonicsForceKind);
+        }
+        question =
+          "אין כרגע תרגיל פוניקה מתאים לכיתה הזו. נסו עמוד אחר או חזרו לתפריט.";
+        correctAnswer = "הבנתי";
+        params = {
+          patternFamily: "english_empty_pool",
+          phonicsOptionSet: ["הבנתי", "אנסה שוב", "אחזור לתפריט", "בחרו נושא אחר"],
+          promotionEligible: false,
+          diagnosticContribution: "manual_only",
+          topic: "phonics",
+        };
+        break;
+      }
+      const phonicsQ = pool[Math.floor(Math.random() * pool.length)];
+      englishSourceRow = phonicsQ;
+      const displayRef = phonicsQ.displayRef ? String(phonicsQ.displayRef).trim() : "";
+      question = displayRef ? `${phonicsQ.question}\n${displayRef}` : phonicsQ.question;
+      correctAnswer = phonicsQ.correct;
+      const skillId =
+        englishPhonicsSkillIdFromBookPageRef(phonicsQ.bookPageRef) ||
+        (phonicsForceKind ? `english:phonics:${gradeKey}:${phonicsForceKind}` : null);
+      params = mergeDiagnosticContractIntoParams(
+        {
+          itemType: phonicsQ.itemType,
+          subtype: phonicsQ.itemType,
+          patternFamily: phonicsQ.patternFamily || "phonics_mcq",
+          phonicsOptionSet: Array.isArray(phonicsQ.options) ? phonicsQ.options : null,
+          bookPageRef: phonicsQ.bookPageRef,
+          bookPageId: phonicsForceKind || phonicsQ.bookPageRef?.split(":")[2] || "",
+          englishPhonicsGrade: gradeKey,
+          diagnosticContribution: phonicsQ.diagnosticContribution || "thin",
+          promotionEligible: false,
+          requiresAudio: false,
+          topic: "phonics",
+        },
+        phonicsQ
+      );
+      if (skillId) params.diagnosticSkillId = skillId;
+      if (phonicsForceKind) params.bookPageId = phonicsForceKind;
+      break;
+    }
+
     case "mixed": {
       const availableTopics = GRADES[gradeKey].topics.filter(
         (t) => t !== "mixed"
@@ -800,6 +859,16 @@ export function generateQuestion(
       allAnswers = buildMcqFromOptionPool(
         correctAnswer,
         params.sentenceOptionSet,
+        targetChoices
+      );
+    } else if (
+      selectedTopic === "phonics" &&
+      Array.isArray(params.phonicsOptionSet) &&
+      params.phonicsOptionSet.length >= 2
+    ) {
+      allAnswers = buildMcqFromOptionPool(
+        correctAnswer,
+        params.phonicsOptionSet,
         targetChoices
       );
     } else if (selectedTopic === "vocabulary") {

@@ -155,13 +155,21 @@ describe("english phonics pool coverage", () => {
     }
   });
 
-  it("pools are not wired into english-questions index yet", async () => {
+  it("pools are wired into english-questions index with runtime audio filter", async () => {
     const { readFileSync } = await import("node:fs");
     const src = readFileSync(new URL("../../data/english-questions/index.js", import.meta.url), "utf8");
-    assert.equal(src.includes("phonics-g1"), false);
-    assert.equal(src.includes("phonics-g2"), false);
-    assert.equal(src.includes("PHONICS_G1_POOL"), false);
-    assert.equal(src.includes("PHONICS_G2_POOL"), false);
+    assert.ok(src.includes("phonics-g1"));
+    assert.ok(src.includes("phonics-g2"));
+    assert.ok(src.includes("PHONICS_POOLS"));
+    assert.ok(src.includes("getRuntimeEligiblePhonicsPool"));
+
+    const { countRuntimeEligiblePhonicsItems } = await import(
+      "../../data/english-questions/index.js"
+    );
+    const counts = countRuntimeEligiblePhonicsItems();
+    assert.equal(counts.g1, 33);
+    assert.equal(counts.g2, 27);
+    assert.equal(counts.total, 60);
   });
 });
 

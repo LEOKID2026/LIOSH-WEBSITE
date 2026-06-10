@@ -1,0 +1,172 @@
+{
+  "startedAt": "2026-06-09T22:33:38.263Z",
+  "generatorSmoke": {
+    "pass": true,
+    "generated": 60,
+    "checks": 15
+  },
+  "practiceMapSmoke": {
+    "pass": true,
+    "wiredCount": 15,
+    "audioOnlyCount": 8,
+    "expectedWiredG1": [
+      "letters_upper",
+      "letters_lower",
+      "letters_match",
+      "letter_names",
+      "classroom_words",
+      "first_words_simple",
+      "first_words_cvc",
+      "picture_word_match"
+    ],
+    "expectedWiredG2": [
+      "letters_review",
+      "letters_order",
+      "phonics_blending",
+      "first_word_reading",
+      "word_families_cvc",
+      "classroom_vocab_g2",
+      "picture_audio_word_match"
+    ],
+    "expectedAudioOnlyG1": [
+      "phonics_sounds",
+      "phonics_first_sound",
+      "listening_classroom",
+      "listening_commands"
+    ],
+    "expectedAudioOnlyG2": [
+      "phonics_sounds_review",
+      "sound_letter_match",
+      "listening_comprehension",
+      "early_sentences_exposure"
+    ]
+  },
+  "activityClientSmoke": {
+    "pass": true,
+    "g1Count": 8,
+    "g2Count": 8,
+    "checks": [
+      {
+        "name": "activity_client_g1_phonics",
+        "pass": true,
+        "count": 8
+      },
+      {
+        "name": "activity_client_g2_phonics",
+        "pass": true,
+        "count": 8
+      }
+    ]
+  },
+  "browserSmoke": {
+    "status": "PASS",
+    "reason": null,
+    "checks": [
+      {
+        "name": "student_login",
+        "pass": true,
+        "username": "aaa1",
+        "method": "api_cookie"
+      },
+      {
+        "name": "g1_book_renders",
+        "pass": true,
+        "url": "http://localhost:3001/learning/book/english/g1/letters_upper"
+      },
+      {
+        "name": "g1_section_ui_ok",
+        "pass": true
+      },
+      {
+        "name": "g1_audio_ui_not_broken",
+        "pass": true
+      },
+      {
+        "name": "g1_practice_cta_visible",
+        "pass": true,
+        "bookPath": "/learning/book/english/g1/letters_upper"
+      },
+      {
+        "name": "g1_practice_launches",
+        "pass": true
+      },
+      {
+        "name": "g1_valid_phonics_question",
+        "pass": true,
+        "stemPreview": "בחר / י את האות הגדולה שמתאימה לאות הקטנה שמוצגת s",
+        "mcqVisible": true
+      },
+      {
+        "name": "g1_no_audio_required_stem",
+        "pass": true,
+        "stemPreview": "בחר / י את האות הגדולה שמתאימה לאות הקטנה שמוצגת s"
+      },
+      {
+        "name": "g2_book_renders",
+        "pass": true,
+        "url": "http://localhost:3001/learning/book/english/g2/phonics_blending"
+      },
+      {
+        "name": "g2_section_ui_ok",
+        "pass": true
+      },
+      {
+        "name": "g2_audio_ui_not_broken",
+        "pass": true
+      },
+      {
+        "name": "g2_practice_cta_visible",
+        "pass": true,
+        "bookPath": "/learning/book/english/g2/phonics_blending"
+      },
+      {
+        "name": "g2_practice_launches",
+        "pass": true
+      },
+      {
+        "name": "g2_valid_phonics_question",
+        "pass": true,
+        "stemPreview": "קרא / י את המילה — בחר / י את המילה הנכונה",
+        "mcqVisible": true
+      },
+      {
+        "name": "g2_no_audio_required_stem",
+        "pass": true,
+        "stemPreview": "קרא / י את המילה — בחר / י את המילה הנכונה"
+      },
+      {
+        "name": "audio_only_book_renders",
+        "pass": true,
+        "url": "http://localhost:3001/learning/book/english/g1/phonics_sounds"
+      },
+      {
+        "name": "audio_only_section_ui_ok",
+        "pass": true
+      },
+      {
+        "name": "audio_only_audio_ui_not_broken",
+        "pass": true
+      },
+      {
+        "name": "audio_only_no_practice_cta",
+        "pass": true,
+        "bookPath": "/learning/book/english/g1/phonics_sounds",
+        "practiceVisible": false,
+        "practiceCount": 0
+      },
+      {
+        "name": "audio_only_no_practice_launch",
+        "pass": true,
+        "bookPath": "/learning/book/english/g1/phonics_sounds"
+      }
+    ],
+    "studentFixture": "aaa1"
+  },
+  "runtimeEligible": {
+    "g1": 33,
+    "g2": 27,
+    "total": 60
+  },
+  "requiresAudioPolicy": "excluded_at_runtime",
+  "verdict": "PASS"
+}

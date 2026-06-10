@@ -12,7 +12,7 @@ export const ENGLISH_GRADES = {
     key: "g1",
     name: "כיתה א׳ · Grade 1",
     stage: "שלב חשיפה",
-    topics: ["vocabulary"],
+    topics: ["phonics", "vocabulary"],
     wordLists: ["colors", "numbers", "family", "animals", "emotions", "actions", "school"],
     curriculum: {
       summary: "היכרות חווייתית עם מילים בסיסיות באנגלית באמצעות כרטיסי אוצר מילים דו-כיווניים.",
@@ -39,7 +39,7 @@ export const ENGLISH_GRADES = {
     key: "g2",
     name: "כיתה ב׳ · Grade 2",
     stage: "שלב יסוד",
-    topics: ["vocabulary", "translation", "writing"],
+    topics: ["phonics", "vocabulary", "translation", "writing"],
     wordLists: [
       "colors",
       "numbers",

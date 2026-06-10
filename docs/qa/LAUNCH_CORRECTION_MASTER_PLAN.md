@@ -1,8 +1,9 @@
 # Launch Correction Master Plan
 
-**Version:** 1.1  
+**Version:** 1.2  
 **Generated:** 2026-06-08  
-**Status:** **SAFE PAUSE** — Phases 1–3C complete and verified (see [`LAUNCH_CORRECTION_PROGRESS.md`](LAUNCH_CORRECTION_PROGRESS.md)). Phase 4 not started.  
+**Updated:** 2026-06-09 (Phase 4B closure)  
+**Status:** **SAFE PAUSE** — Phases 1–3C and **Phase 4B** complete and verified (see [`LAUNCH_CORRECTION_PROGRESS.md`](LAUNCH_CORRECTION_PROGRESS.md)). **Phase 5 not started** — paused pending owner approval.  
 **Purpose:** Turn the product into launch-ready content through real authoring and a centralized launch policy — not patchwork hiding.
 
 ---
@@ -340,13 +341,13 @@ G3 comprehension → G3 reading → G4 reading → G5/G6 reading (parallel) → 
 
 # 7. English G1–G2 correction plan
 
-## Current state
+## Current state (post–Phase 4B)
 
-- G1: vocabulary only (11 MCQ items); no letters/sounds/phonics/listening
-- G2: vocab 9, translation **1**, writing typing — no phonics path
-- No English G1/G2 audio
-- Grade rollup: **PRACTICE_ONLY**
-- Vocabulary flashcards are **not** full literacy
+- G1/G2: **23 phonics book pages** shipped with section audio and runtime practice wiring
+- Static phonics banks wired (Approach B: `requiresAudio: true` excluded at runtime)
+- **161/161** English book-section MP3s verified
+- Grade rollup: still **PRACTICE_ONLY** internally — **not** external FULL launch unless owner separately approves broader launch QA
+- Closure report: [`docs/qa/_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md`](_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md)
 
 ## Target path
 
@@ -394,14 +395,18 @@ Create `docs/qa/ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md` containing:
 - Extend `utils/english-question-generator.js`
 - **Only then:** add manifest scopes + run `scripts/generate-learning-book-audio.mjs`
 
-## Acceptance criteria
+## Acceptance criteria (Phase 4B closure — 2026-06-09)
 
-- [ ] Content map owner-approved
-- [ ] Book pages authored for approved list
-- [ ] Phonics practice ≥50 easy G1, ≥50 easy G2
-- [ ] `scripts/verify-learning-book-audio.mjs` PASS for English G1/G2
-- [ ] Registry: G1/G2 remain PRACTICE_ONLY until all above PASS; then reassess LIMITED
-- [ ] Translation G2 blocked from assign until pool ≥50
+- [x] Content map owner-approved
+- [x] Book pages authored for approved list (23 pages)
+- [x] Runtime-eligible phonics pool: G1 33 + G2 27 = **60** (47 audio-only items excluded at runtime)
+- [x] `scripts/verify-learning-book-audio.mjs` **PASS 161/161** for English G1/G2
+- [x] Runtime QA **PASS**; browser smoke **PASS 18/18**
+- [x] Parent-report static guard **PASS 12/12**; live guard **PASS 17/17**
+- [x] Metadata leak blocker fixed (parent-report sanitization only)
+- [x] Production build **PASS**
+- [ ] Registry: G1/G2 reassess LIMITED/FULL — **deferred** (internal preview only; not external FULL launch)
+- [ ] Translation G2 blocked from assign until pool ≥50 — unchanged
 
 ---
 
@@ -574,8 +579,8 @@ Re-run `node --env-file=.env.local scripts/qa/parent-report-q1-simulation.mjs` w
 | Scope | Status | Generation allowed? |
 |-------|--------|-------------------|
 | Hebrew G1 book | Pilot complete (224 MP3s); owner review pending | Already generated |
-| English G1 book | Not started | **Only after content map approved (§7)** |
-| English G2 book | Not started | **Only after content map approved (§7)** |
+| English G1 book | **Phase 4B complete** — 84 section MP3s verified | Generated + verified |
+| English G2 book | **Phase 4B complete** — 77 section MP3s verified | Generated + verified |
 
 ## Recommended
 
@@ -658,23 +663,30 @@ Re-run `node --env-file=.env.local scripts/qa/parent-report-q1-simulation.mjs` w
 | Rollback | Disable progress module; banks remain but gating off |
 | **Verified** | 2026-06-08 — see [`LAUNCH_CORRECTION_PROGRESS.md`](LAUNCH_CORRECTION_PROGRESS.md) |
 
-## Phase 4 — English G1/G2 foundational path ⏸ PAUSED (not started)
+## Phase 4 — English G1/G2 foundational path ✓ COMPLETE (Phase 4B closed — INTERNAL PREVIEW)
 
 | Item | Detail |
 |------|--------|
-| Phase 4a | Content map doc + owner approval — **no audio generation** — **NEXT STEP when approved** |
-| Phase 4b | Book pages, practice banks, manifest, **then** audio generation — **blocked until 4a approved** |
-| Acceptance | §7 criteria |
-| Rollback | Remove phonics pages from registry; vocab-only path unchanged |
-| **Status** | **Not started.** Requires `ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md` before any implementation or audio generation. |
+| Phase 4a | Content map + implementation plan — **complete** |
+| Phase 4b | Book pages, practice banks, manifest, audio, runtime wiring, QA — **complete** |
+| Closure report | [`docs/qa/_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md`](_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md) |
+| Browser smoke | **PASS 18/18** (AAA fixture) |
+| Parent-report guards | Static **12/12**; live **17/17** |
+| Audio verify | **PASS 161/161** |
+| Runtime QA + build | **PASS** |
+| Metadata leak | **Fixed** (parent-report sanitization) |
+| Acceptance | §7 criteria met for internal preview |
+| Rollback | Remove phonics pages from registry; revert banks/audio per git |
+| **Verified** | 2026-06-09 — **PASS — Phase 4B closed**; **not** external FULL launch |
 
-## Phase 5 — Hebrew G3–G6 bank expansion
+## Phase 5 — Hebrew G3–G6 bank expansion ⏸ PAUSED (not started)
 
 | Item | Detail |
 |------|--------|
 | Actions | Batch author comprehension → reading → grammar → vocabulary |
 | Acceptance | Each grade ≥4 topics at 50/40/30 |
 | Rollback | Per-batch git revert |
+| **Status** | **Do not start now.** Continue only after explicit owner approval. |
 
 ## Phase 6 — English G3–G6 bank expansion
 
@@ -713,14 +725,15 @@ Re-run `node --env-file=.env.local scripts/qa/parent-report-q1-simulation.mjs` w
 | Launch readiness reports accepted as baseline | Approved 2026-06-08 |
 | This master plan direction | **Approved** |
 | Phases 1–3C implementation | **Complete and verified** 2026-06-08 |
-| `ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md` | **Not yet written** — required before Phase 4a/4b |
+| `ENGLISH_G1_G2_PHONICS_CONTENT_MAP.md` | **Complete** (Phase 4A) |
+| Phase 4B English G1/G2 phonics | **CLOSED / PASS — INTERNAL PREVIEW** 2026-06-09 — [`PHASE_4B_FINAL_CLOSURE.md`](_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md) |
 | Hebrew G1 soft-gate UX wording | Implemented (Phase 3); owner copy review optional |
 
 ## B. Implementation approval
 
-**Phases 1–3C:** Implemented and verified (2026-06-08). Working tree uncommitted.
+**Phases 1–3C + 4B:** Implemented and verified. Phase 4B closure 2026-06-09.
 
-**Phases 4–8:** Not granted. Pause at safe checkpoint before English work.
+**Phases 5–8:** Not granted. **Do not start Phase 5 now** — paused pending owner approval.
 
 Completed implementation checklist:
 
@@ -729,8 +742,9 @@ Completed implementation checklist:
 - [x] No public marketing UI changes in Phases 1–3C
 - [x] Phase 2 authoring complete (no HIDE for blockers; `CRITICAL_BLOCKING: 0`)
 - [x] Hebrew G1/G2 scoped literacy targets closed (Phase 3B/3C)
-- [ ] English content map approved before Phase 4a/4b
-- [ ] Phase 4 implementation approval (separate step)
+- [x] English content map approved (Phase 4A)
+- [x] Phase 4B implementation complete — internal preview PASS; metadata leak fixed
+- [ ] External FULL launch / broader launch QA — **not approved** (separate owner step)
 
 ## C. Owner approval required before each phase
 
@@ -749,11 +763,13 @@ Completed implementation checklist:
 
 ---
 
-## Recommended next step (post–Phase 3C pause)
+## Recommended next step (post–Phase 4B pause)
 
-**Phase 4A — English G1/G2 phonics content map** (planning only; no implementation, no audio generation).
+**Phase 4B English G1/G2 phonics is CLOSED / PASS for INTERNAL PREVIEW.** Final report: [`docs/qa/_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md`](_artifacts/english-phonics-integration/PHASE_4B_FINAL_CLOSURE.md).
 
-Phases 1–3C are complete. Do not open Phase 4B until the content map is written and owner-approved.
+**Do not start Phase 5 now.** Phase 5 (Hebrew G3–G6 bank expansion) will continue later **only after explicit owner approval**.
+
+Phase 4B is **not** marked external FULL launch unless owner separately approves broader launch QA. No remaining Phase 4B blocker.
 
 ---
 
@@ -846,7 +862,7 @@ npm run build
 
 | Track | Status |
 | --- | --- |
-| Launch Correction (content / inventory / topic policy) | **Unchanged** — Phases 1–3C remain as documented; English Phase 4 **not started** |
+| Launch Correction (content / inventory / topic policy) | Phases 1–3C + **Phase 4B complete** (internal preview PASS); **Phase 5 paused** pending owner approval |
 | Diagnostic Flags Visible Impact (parent report B/C/D) | **Phases 1–3 complete** — see `docs/qa/DIAGNOSTIC_FLAGS_VISIBLE_IMPACT_LAUNCH_GATE_REPORT.md` |
 
 **Gate results (visible-impact track):**

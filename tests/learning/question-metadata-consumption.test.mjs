@@ -284,6 +284,9 @@ describe("Q2-E.1 — flag OFF public payload unchanged", () => {
     assert.equal(stripped._diagnosticProblemClassRollup, undefined);
     assert.equal(stripped._diagnosticDifficultyDepthRollup, undefined);
     assert.equal(stripped.recentMistakes[0]._canonicalMeta, undefined);
+    assert.equal(stripped.recentMistakes[0].skillId, undefined);
+    assert.equal(stripped.recentMistakes[0].subSkill, undefined);
+    assert.equal(stripped.recentMistakes[0].metadataConfidence, undefined);
 
     assert.deepEqual(
       Object.keys(stripped.meta.evidenceQuality.student).sort(),

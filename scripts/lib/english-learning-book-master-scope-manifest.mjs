@@ -2,9 +2,11 @@
 export const ENGLISH_SUBJECT_KEY = "english";
 export const ENGLISH_MASTER_SCOPE = {
   "subjectKey": "english",
-  "totalEnglishSkills": 81,
+  "totalEnglishSkills": 83,
   "allSkillIds": [
+    "english:g1:topic:phonics",
     "english:g1:topic:vocabulary",
+    "english:g2:topic:phonics",
     "english:g2:topic:translation",
     "english:g2:topic:vocabulary",
     "english:g2:topic:writing",

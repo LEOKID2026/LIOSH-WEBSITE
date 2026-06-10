@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-06-09T20:55:21.505Z",
+  "startedAt": "2026-06-09T22:22:54.947Z",
   "guardType": "dry_run_preflight_with_blocked_live_hook",
   "flagBaseline": {
     "subskill": "true",
@@ -36,10 +36,11 @@
       },
       {
         "group": "static_preflight",
-        "name": "english_master_topics_excludes_phonics",
+        "name": "english_master_topics_includes_phonics",
         "pass": true,
         "detail": {
           "masterTopics": [
+            "phonics",
             "vocabulary",
             "grammar",
             "translation",
@@ -52,9 +53,35 @@
       },
       {
         "group": "static_preflight",
-        "name": "phonics_pages_have_no_practice_targets_yet",
+        "name": "phonics_pages_with_runtime_items_resolve_phonics_practice",
         "pass": true,
         "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "static_preflight",
+        "name": "phonics_pages_without_runtime_items_have_no_practice_target",
+        "pass": true,
+        "detail": {
+          "withPractice": [
+            "g1:letters_upper -> {\"pageId\":\"letters_upper\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"letters_upper\",\"skillId\":\"english:phonics:g1:letters_upper\"}",
+            "g1:letters_lower -> {\"pageId\":\"letters_lower\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"letters_lower\",\"skillId\":\"english:phonics:g1:letters_lower\"}",
+            "g1:letters_match -> {\"pageId\":\"letters_match\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"letters_match\",\"skillId\":\"english:phonics:g1:letters_match\"}",
+            "g1:letter_names -> {\"pageId\":\"letter_names\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"letter_names\",\"skillId\":\"english:phonics:g1:letter_names\"}",
+            "g1:classroom_words -> {\"pageId\":\"classroom_words\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"classroom_words\",\"skillId\":\"english:phonics:g1:classroom_words\"}",
+            "g1:first_words_simple -> {\"pageId\":\"first_words_simple\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"first_words_simple\",\"skillId\":\"english:phonics:g1:first_words_simple\"}",
+            "g1:first_words_cvc -> {\"pageId\":\"first_words_cvc\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"first_words_cvc\",\"skillId\":\"english:phonics:g1:first_words_cvc\"}",
+            "g1:picture_word_match -> {\"pageId\":\"picture_word_match\",\"grade\":\"g1\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"picture_word_match\",\"skillId\":\"english:phonics:g1:picture_word_match\"}",
+            "g2:letters_review -> {\"pageId\":\"letters_review\",\"grade\":\"g2\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"letters_review\",\"skillId\":\"english:phonics:g2:letters_review\"}",
+            "g2:letters_order -> {\"pageId\":\"letters_order\",\"grade\":\"g2\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"letters_order\",\"skillId\":\"english:phonics:g2:letters_order\"}",
+            "g2:phonics_blending -> {\"pageId\":\"phonics_blending\",\"grade\":\"g2\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"phonics_blending\",\"skillId\":\"english:phonics:g2:phonics_blending\"}",
+            "g2:first_word_reading -> {\"pageId\":\"first_word_reading\",\"grade\":\"g2\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"first_word_reading\",\"skillId\":\"english:phonics:g2:first_word_reading\"}",
+            "g2:word_families_cvc -> {\"pageId\":\"word_families_cvc\",\"grade\":\"g2\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"word_families_cvc\",\"skillId\":\"english:phonics:g2:word_families_cvc\"}",
+            "g2:classroom_vocab_g2 -> {\"pageId\":\"classroom_vocab_g2\",\"grade\":\"g2\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"classroom_vocab_g2\",\"skillId\":\"english:phonics:g2:classroom_vocab_g2\"}",
+            "g2:picture_audio_word_match -> {\"pageId\":\"picture_audio_word_match\",\"grade\":\"g2\",\"mode\":\"learning\",\"topic\":\"phonics\",\"forceKind\":\"picture_audio_word_match\",\"skillId\":\"english:phonics:g2:picture_audio_word_match\"}"
+          ],
+          "count": 15
+        },
         "verdict": "PASS"
       },
       {
@@ -107,10 +134,168 @@
     ]
   },
   "livePhonicsReport": {
-    "status": "SKIPPED",
-    "reason": "no_--live",
+    "status": "PASS",
+    "reason": null,
     "note": null,
-    "checks": [],
+    "checks": [
+      {
+        "group": "live_phonics_report",
+        "name": "phonics_fixture_students_present",
+        "pass": true,
+        "detail": {
+          "expected": [
+            "aaa1",
+            "aaa3"
+          ],
+          "missing": []
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_student_resolved",
+        "pass": true,
+        "detail": "fd3901da-66ce-46c7-a24c-b33df2141c04",
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_seed_tag_present",
+        "pass": true,
+        "detail": {
+          "tag": "english-phonics-parent-report-v1",
+          "count": 3,
+          "hint": "Run: node --env-file=.env.local scripts/qa/english-phonics-parent-report-seed.mjs"
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_no_strong_diagnosis",
+        "pass": true,
+        "detail": {
+          "insights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ]
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_soft_or_thin_copy",
+        "pass": true,
+        "detail": {
+          "insights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ]
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_no_grammar_translation_conclusions",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_no_internal_metadata_leaks",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_promotion_off",
+        "pass": true,
+        "detail": {
+          "promotionDecisionCount": 0
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA1_gating_active_mode_c",
+        "pass": true,
+        "detail": {
+          "gatingApplied": true
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_student_resolved",
+        "pass": true,
+        "detail": "a5b644c4-7407-422f-bb23-a78a0a608a98",
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_seed_tag_present",
+        "pass": true,
+        "detail": {
+          "tag": "english-phonics-parent-report-v1",
+          "count": 3,
+          "hint": "Run: node --env-file=.env.local scripts/qa/english-phonics-parent-report-seed.mjs"
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_no_strong_diagnosis",
+        "pass": true,
+        "detail": {
+          "insights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ]
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_soft_or_thin_copy",
+        "pass": true,
+        "detail": {
+          "insights": [
+            "יש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע."
+          ]
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_no_grammar_translation_conclusions",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_no_internal_metadata_leaks",
+        "pass": true,
+        "detail": [],
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_promotion_off",
+        "pass": true,
+        "detail": {
+          "promotionDecisionCount": 0
+        },
+        "verdict": "PASS"
+      },
+      {
+        "group": "live_phonics_report",
+        "name": "AAA3_gating_active_mode_c",
+        "pass": true,
+        "detail": {
+          "gatingApplied": true
+        },
+        "verdict": "PASS"
+      }
+    ],
     "deferredAssertions": [
       "g1_phonics_only_no_strong_diagnosis",
       "g2_phonics_only_no_grammar_translation_conclusions",
@@ -145,13 +330,13 @@
     ]
   },
   "summary": {
-    "passCount": 11,
+    "passCount": 12,
     "failCount": 0,
-    "total": 11,
+    "total": 12,
     "allPass": true,
-    "liveCheckCount": 0,
-    "livePassCount": 0
+    "liveCheckCount": 17,
+    "livePassCount": 17
   },
   "executableVerdict": "PASS",
-  "liveVerdict": "SKIPPED"
+  "liveVerdict": "PASS"
 }

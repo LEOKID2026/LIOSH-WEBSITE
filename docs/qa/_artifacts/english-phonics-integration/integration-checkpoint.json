@@ -1,0 +1,47 @@
+{
+  "phase": "4B-integration",
+  "approach": "B-runtime-audio-filter",
+  "audioRequiredItems": {
+    "enabledAtRuntime": false,
+    "filter": "requiresAudio !== true in getRuntimeEligiblePhonicsPool()"
+  },
+  "runtimeEligibleItems": { "g1": 33, "g2": 27, "total": 60 },
+  "bankTotals": { "g1": 53, "g2": 54, "total": 107 },
+  "bookPracticeTargets": {
+    "g1Wired": 8,
+    "g2Wired": 7,
+    "totalWired": 15,
+    "g1WiredPages": [
+      "letters_upper",
+      "letters_lower",
+      "letters_match",
+      "letter_names",
+      "classroom_words",
+      "first_words_simple",
+      "first_words_cvc",
+      "picture_word_match"
+    ],
+    "g2WiredPages": [
+      "letters_review",
+      "letters_order",
+      "phonics_blending",
+      "first_word_reading",
+      "word_families_cvc",
+      "classroom_vocab_g2",
+      "picture_audio_word_match"
+    ],
+    "audioOnlyNoPracticeG1": [
+      "phonics_sounds",
+      "phonics_first_sound",
+      "listening_classroom",
+      "listening_commands"
+    ],
+    "audioOnlyNoPracticeG2": [
+      "phonics_sounds_review",
+      "sound_letter_match",
+      "listening_comprehension",
+      "early_sentences_exposure"
+    ]
+  },
+  "launchStatus": "internal-preview-not-external-launch-ready"
+}
