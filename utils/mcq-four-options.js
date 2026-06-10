@@ -7,6 +7,16 @@ import { normalizeOptionForCompare } from "./question-quality.js";
 
 export const NORMAL_MCQ_OPTION_COUNT = 4;
 
+/** @param {string[]} arr */
+function shuffleMcqOptions(arr) {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 const GEOMETRY_HEBREW_LABEL_KINDS = new Set([
   "parallel_perpendicular",
   "triangles",
@@ -241,6 +251,8 @@ export function ensureMcqFourOptions(q, ctx = {}) {
   }
 
   if (answers.length !== NORMAL_MCQ_OPTION_COUNT) return q;
+
+  answers = shuffleMcqOptions(answers);
 
   const newIdx = answers.findIndex((a) => normalizeOptionForCompare(a) === normalizeOptionForCompare(correct));
   const out = { ...q };

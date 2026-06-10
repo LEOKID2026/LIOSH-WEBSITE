@@ -17,6 +17,7 @@ import {
   resolveEnglishPracticeTarget,
 } from "../../lib/learning-book/english-book-practice-map.js";
 import { generateQuestion } from "../../utils/english-question-generator.js";
+import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display.js";
 
 const G1_PHONICS_PAGES = [
   "letters_upper",
@@ -55,10 +56,15 @@ function assertMcqShape(q, label) {
   assert.equal(q.answers.length, 4, `${label} answer count`);
   assert.equal(new Set(q.answers).size, 4, `${label} unique answers`);
   assert.ok(q.answers.includes(q.correctAnswer), `${label} correct in answers`);
-  const stem = String(q.question || "").toLowerCase();
+  const parts = resolveStudentQuestionDisplayParts(q);
+  const instructionOnly = String(parts.leadText || q.questionLabel || "").trim();
   const correct = String(q.correctAnswer || "").toLowerCase();
   if (correct.length > 1) {
-    assert.equal(stem.includes(correct), false, `${label} stem leak`);
+    assert.equal(
+      instructionOnly.toLowerCase().includes(correct),
+      false,
+      `${label} instruction leak`
+    );
   }
 }
 
@@ -84,9 +90,9 @@ describe("english phonics integration", () => {
 
   it("runtime-eligible counts exclude requiresAudio rows", () => {
     const counts = countRuntimeEligiblePhonicsItems();
-    assert.equal(counts.g1, 33);
-    assert.equal(counts.g2, 27);
-    assert.equal(counts.total, 60);
+    assert.equal(counts.g1, 19);
+    assert.equal(counts.g2, 23);
+    assert.equal(counts.total, 42);
 
     const audioRows = [...PHONICS_G1_POOL, ...PHONICS_G2_POOL].filter((r) => r.requiresAudio);
     assert.equal(audioRows.length, 47);

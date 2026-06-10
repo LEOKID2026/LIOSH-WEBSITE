@@ -30,12 +30,12 @@ describe("english phonics runtime QA", () => {
     assert.equal(result.g2Count, 8);
   });
 
-  it("practice map smoke: 15 wired + 8 audio-only across 23 pages", () => {
+  it("practice map smoke: 10 wired + 8 audio-only across 23 pages", () => {
     const result = runPracticeMapSmoke();
     assert.equal(result.pass, true);
-    assert.equal(result.wiredCount, 15);
+    assert.equal(result.wiredCount, 10);
     assert.equal(result.audioOnlyCount, 8);
-    assert.equal(EXPECTED_WIRED_G1.length + EXPECTED_WIRED_G2.length, 15);
+    assert.equal(EXPECTED_WIRED_G1.length + EXPECTED_WIRED_G2.length, 10);
     assert.equal(EXPECTED_AUDIO_ONLY_G1.length + EXPECTED_AUDIO_ONLY_G2.length, 8);
   });
 

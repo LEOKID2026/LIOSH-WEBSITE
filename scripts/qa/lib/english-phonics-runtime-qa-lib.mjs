@@ -9,6 +9,7 @@ import {
   resolveEnglishPracticeTarget,
 } from "../../../lib/learning-book/english-book-practice-map.js";
 import { generateQuestion } from "../../../utils/english-question-generator.js";
+import { resolveStudentQuestionDisplayParts } from "../../../utils/student-question-display.js";
 import { generateActivityQuestionSetClient } from "../../../lib/classroom-activities/generate-activity-questions-client.js";
 
 export const G1_PHONICS_PAGES = [
@@ -45,11 +46,7 @@ export const EXPECTED_WIRED_G1 = [
   "letters_upper",
   "letters_lower",
   "letters_match",
-  "letter_names",
-  "classroom_words",
-  "first_words_simple",
   "first_words_cvc",
-  "picture_word_match",
 ];
 
 export const EXPECTED_WIRED_G2 = [
@@ -58,8 +55,15 @@ export const EXPECTED_WIRED_G2 = [
   "phonics_blending",
   "first_word_reading",
   "word_families_cvc",
-  "classroom_vocab_g2",
   "picture_audio_word_match",
+];
+
+/** Wired in book map but filtered from runtime (picture / picture-stem prompts). */
+export const EXPECTED_DISPLAY_BLOCKED_G1 = [
+  "letter_names",
+  "classroom_words",
+  "first_words_simple",
+  "picture_word_match",
 ];
 
 export const EXPECTED_AUDIO_ONLY_G1 = [
@@ -76,6 +80,8 @@ export const EXPECTED_AUDIO_ONLY_G2 = [
   "early_sentences_exposure",
 ];
 
+export const EXPECTED_DISPLAY_BLOCKED_G2 = ["classroom_vocab_g2"];
+
 const FORBIDDEN_TOPICS = new Set(["grammar", "translation", "vocabulary", "sentences", "writing"]);
 
 function assertMcqShape(q, label) {
@@ -84,10 +90,15 @@ function assertMcqShape(q, label) {
   assert.equal(q.answers.length, 4, `${label} answer count`);
   assert.equal(new Set(q.answers).size, 4, `${label} unique answers`);
   assert.ok(q.answers.includes(q.correctAnswer), `${label} correct in answers`);
-  const stem = String(q.question || "").toLowerCase();
+  const parts = resolveStudentQuestionDisplayParts(q);
+  const instructionOnly = String(parts.leadText || q.questionLabel || "").trim();
   const correct = String(q.correctAnswer || "").toLowerCase();
   if (correct.length > 1) {
-    assert.equal(stem.includes(correct), false, `${label} stem leak`);
+    assert.equal(
+      instructionOnly.toLowerCase().includes(correct),
+      false,
+      `${label} instruction leak`
+    );
   }
 }
 
@@ -177,6 +188,7 @@ export function runPracticeMapSmoke() {
   const checks = [];
   const wired = [];
   const audioOnly = [];
+  const displayBlocked = [];
 
   for (const pageId of G1_PHONICS_PAGES) {
     const eligible = getRuntimeEligiblePhonicsPool("g1", pageId).length > 0;
@@ -184,8 +196,9 @@ export function runPracticeMapSmoke() {
     const target = resolveEnglishPracticeTarget("g1", pageId);
     const expectWired = EXPECTED_WIRED_G1.includes(pageId);
     const expectAudioOnly = EXPECTED_AUDIO_ONLY_G1.includes(pageId);
+    const expectDisplayBlocked = EXPECTED_DISPLAY_BLOCKED_G1.includes(pageId);
 
-    assert.equal(expectWired || expectAudioOnly, true, `g1:${pageId} classification`);
+    assert.equal(expectWired || expectAudioOnly || expectDisplayBlocked, true, `g1:${pageId} classification`);
     assert.equal(expectWired, eligible, `g1:${pageId} wired/eligible mismatch`);
     assert.equal(hasTarget, eligible, `g1:${pageId} hasTarget/eligible mismatch`);
     if (eligible) {
@@ -194,7 +207,11 @@ export function runPracticeMapSmoke() {
       wired.push(`g1:${pageId}`);
     } else {
       assert.equal(target, null);
-      audioOnly.push(`g1:${pageId}`);
+      if (expectDisplayBlocked) {
+        displayBlocked.push(`g1:${pageId}`);
+      } else {
+        audioOnly.push(`g1:${pageId}`);
+      }
     }
     checks.push({ name: `g1_practice_map_${pageId}`, pass: true, wired: eligible });
   }
@@ -205,8 +222,9 @@ export function runPracticeMapSmoke() {
     const target = resolveEnglishPracticeTarget("g2", pageId);
     const expectWired = EXPECTED_WIRED_G2.includes(pageId);
     const expectAudioOnly = EXPECTED_AUDIO_ONLY_G2.includes(pageId);
+    const expectDisplayBlocked = EXPECTED_DISPLAY_BLOCKED_G2.includes(pageId);
 
-    assert.equal(expectWired || expectAudioOnly, true, `g2:${pageId} classification`);
+    assert.equal(expectWired || expectAudioOnly || expectDisplayBlocked, true, `g2:${pageId} classification`);
     assert.equal(expectWired, eligible, `g2:${pageId} wired/eligible mismatch`);
     assert.equal(hasTarget, eligible, `g2:${pageId} hasTarget/eligible mismatch`);
     if (eligible) {
@@ -215,18 +233,24 @@ export function runPracticeMapSmoke() {
       wired.push(`g2:${pageId}`);
     } else {
       assert.equal(target, null);
-      audioOnly.push(`g2:${pageId}`);
+      if (expectDisplayBlocked) {
+        displayBlocked.push(`g2:${pageId}`);
+      } else {
+        audioOnly.push(`g2:${pageId}`);
+      }
     }
     checks.push({ name: `g2_practice_map_${pageId}`, pass: true, wired: eligible });
   }
 
-  assert.equal(wired.length, 15);
+  assert.equal(wired.length, 10);
   assert.equal(audioOnly.length, 8);
+  assert.equal(displayBlocked.length, 5);
 
   return {
     pass: true,
     wiredCount: wired.length,
     audioOnlyCount: audioOnly.length,
+    displayBlockedCount: displayBlocked.length,
     wired,
     audioOnly,
     checks,

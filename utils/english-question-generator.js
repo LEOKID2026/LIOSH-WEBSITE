@@ -12,6 +12,7 @@ import {
   SENTENCE_POOLS,
   TRANSLATION_POOLS,
   getRuntimeEligiblePhonicsPool,
+  getPhonicsPracticeStimulus,
 } from "../data/english-questions/index.js";
 import {
   englishClassSplitBucket,
@@ -331,6 +332,8 @@ export function generateQuestion(
 
   let question,
     correctAnswer,
+    questionLabel = "",
+    exerciseText = "",
     params = {};
   /** @type {Record<string, unknown>|null} */
   let englishSourceRow = null;
@@ -774,8 +777,9 @@ export function generateQuestion(
       }
       const phonicsQ = pool[Math.floor(Math.random() * pool.length)];
       englishSourceRow = phonicsQ;
-      const displayRef = phonicsQ.displayRef ? String(phonicsQ.displayRef).trim() : "";
-      question = displayRef ? `${phonicsQ.question}\n${displayRef}` : phonicsQ.question;
+      questionLabel = String(phonicsQ.question || "").trim();
+      exerciseText = getPhonicsPracticeStimulus(phonicsQ);
+      question = exerciseText || questionLabel;
       correctAnswer = phonicsQ.correct;
       const skillId =
         englishPhonicsSkillIdFromBookPageRef(phonicsQ.bookPageRef) ||
@@ -786,6 +790,7 @@ export function generateQuestion(
           subtype: phonicsQ.itemType,
           patternFamily: phonicsQ.patternFamily || "phonics_mcq",
           phonicsOptionSet: Array.isArray(phonicsQ.options) ? phonicsQ.options : null,
+          phonicsStimulus: exerciseText || null,
           bookPageRef: phonicsQ.bookPageRef,
           bookPageId: phonicsForceKind || phonicsQ.bookPageRef?.split(":")[2] || "",
           englishPhonicsGrade: gradeKey,
@@ -933,6 +938,8 @@ export function generateQuestion(
 
   const display = sanitizeQuestionForStudentDisplay({
     question,
+    questionLabel: questionLabel || undefined,
+    exerciseText: exerciseText || undefined,
     correctAnswer,
     acceptedAnswers: buildAcceptedAnswers(correctAnswer),
     answers: allAnswers,
