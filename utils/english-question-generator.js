@@ -34,6 +34,10 @@ import {
   englishPhonicsSkillIdFromBookPageRef,
 } from "../lib/learning-book/english-book-practice-map.js";
 import { attachEnglishPhonicsPracticeAudio } from "./english-phonics-practice-audio.js";
+import {
+  isG1G2RuntimePracticeEligible,
+  isLowerGradeG1G2Key,
+} from "./lower-grade-practice-runtime-quality.js";
 export const ENGLISH_LEVELS = {
   easy: { name: "קל", maxWords: 5, complexity: "basic" },
   medium: { name: "בינוני", maxWords: 10, complexity: "intermediate" },
@@ -956,12 +960,28 @@ export function generateQuestion(
     });
   }
 
-  return attachCanonicalMetadataToEnglishQuestion(display, {
+  const finalized = attachCanonicalMetadataToEnglishQuestion(display, {
     topic: selectedTopic,
     gradeKey,
     levelKey,
     sourceRow: englishSourceRow,
   });
+
+  if (
+    selectedTopic === "phonics" &&
+    isLowerGradeG1G2Key(gradeKey) &&
+    !isG1G2RuntimePracticeEligible(finalized, { gradeKey, subject: "english" })
+  ) {
+    const retry = Number(probeOpts?._runtimeQualityRetry) || 0;
+    if (retry < 12) {
+      return generateQuestion(level, selectedTopic, gradeKey, mixedOps, levelKey, {
+        ...probeOpts,
+        _runtimeQualityRetry: retry + 1,
+      });
+    }
+  }
+
+  return finalized;
 }
 
 export { ENGLISH_GRADES, ENGLISH_GRADE_ORDER };

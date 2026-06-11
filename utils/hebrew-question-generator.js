@@ -26,6 +26,10 @@ import { attachCanonicalMetadataToHebrewQuestion } from '../lib/learning/hebrew-
 import { repairMcqObviousAnswerContent } from './mcq-fail-content-repair.js';
 import { ensureMcqFourOptions } from './mcq-four-options.js';
 import {
+  isHebrewReadAloudCopyLeakRaw,
+  isLowerGradeG1G2Key,
+} from './lower-grade-practice-runtime-quality.js';
+import {
   dedupeMcqOptionsInPlace,
   rebalanceGenericHebrewReadingDistractors,
 } from './question-quality.js';
@@ -4778,8 +4782,12 @@ function mergeTopicPoolsRaw(gradeKey, levelKey, topic, legacyList) {
 }
 
 function mergeTopicPools(gradeKey, levelKey, topic, legacyList) {
-  const merged = mergeTopicPoolsRaw(gradeKey, levelKey, topic, legacyList);
-  return augmentThinHebrewPool(merged, gradeKey, levelKey, topic);
+  let merged = mergeTopicPoolsRaw(gradeKey, levelKey, topic, legacyList);
+  merged = augmentThinHebrewPool(merged, gradeKey, levelKey, topic);
+  if (isLowerGradeG1G2Key(gradeKey) && topic === "reading") {
+    merged = merged.filter((row) => !isHebrewReadAloudCopyLeakRaw(row));
+  }
+  return merged;
 }
 
 /** מאגרי עברית חיים ב־UI — לא `data/hebrew-questions/*` (אין ייבוא בריפו). */

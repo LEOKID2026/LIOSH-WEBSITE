@@ -47,26 +47,42 @@ export function attachHebrewAudioToQuestion(question, ctx) {
   if (!question.correctAnswer) return false;
 
   const seq = Math.max(0, Number(ctx.sequenceIndex) || 0);
-  if (seq % 9 < 4) return false;
+  const lowerGrade = gNum <= 2;
+  if (!lowerGrade && seq % 9 < 4) return false;
 
   const qText = question.exerciseText || question.question || "";
   const r2 = seq % 13;
 
   /** @type {import("./audio-task-contract.js").AudioTaskMode} */
-  let task_mode = seq % 3 === 1 ? "oral_comprehension_mcq" : seq % 3 === 2 ? "guided_recording" : "listen_and_choose";
+  let task_mode;
 
-  if (topic === "reading" && gNum <= 2 && r2 === 5) {
-    task_mode = "phonological_discrimination_he";
-  } else if (topic === "grammar" && r2 === 6) {
-    task_mode = "audio_grammar_choice_he";
-  } else if (topic === "reading" && gNum >= 3 && r2 === 7) {
-    task_mode = "read_aloud_short_he";
-  } else if ((topic === "speaking" || topic === "comprehension") && gNum >= 3 && r2 === 8) {
-    task_mode = "structured_spoken_response_he";
-  } else if (topic === "vocabulary" && r2 === 9) {
-    task_mode = "oral_comprehension_mcq";
-  } else if (topic === "writing" && r2 === 10) {
-    task_mode = "listen_and_choose";
+  if (lowerGrade) {
+    if (topic === "reading" && seq % 5 === 0) {
+      task_mode = "phonological_discrimination_he";
+    } else if (topic === "grammar" && seq % 4 === 0) {
+      task_mode = "audio_grammar_choice_he";
+    } else if (seq % 2 === 0) {
+      task_mode = "oral_comprehension_mcq";
+    } else {
+      task_mode = "listen_and_choose";
+    }
+  } else {
+    task_mode =
+      seq % 3 === 1 ? "oral_comprehension_mcq" : seq % 3 === 2 ? "guided_recording" : "listen_and_choose";
+
+    if (topic === "reading" && r2 === 5) {
+      task_mode = "phonological_discrimination_he";
+    } else if (topic === "grammar" && r2 === 6) {
+      task_mode = "audio_grammar_choice_he";
+    } else if (topic === "reading" && gNum >= 3 && r2 === 7) {
+      task_mode = "read_aloud_short_he";
+    } else if ((topic === "speaking" || topic === "comprehension") && gNum >= 3 && r2 === 8) {
+      task_mode = "structured_spoken_response_he";
+    } else if (topic === "vocabulary" && r2 === 9) {
+      task_mode = "oral_comprehension_mcq";
+    } else if (topic === "writing" && r2 === 10) {
+      task_mode = "listen_and_choose";
+    }
   }
 
   const isRecording = RECORDING_MODES.has(task_mode);
@@ -182,13 +198,13 @@ export function attachHebrewAudioToQuestion(question, ctx) {
   } else {
     const hint =
       task_mode === "oral_comprehension_mcq"
-        ? "האזינו לקריאה וענו לפי השאלה."
+        ? "האזינו ובחרו את התשובה הנכונה."
         : task_mode === "audio_grammar_choice_he"
-          ? "האזינו ובחרו לפי הכללים לפי השמע."
+          ? "בחרו את המשפט המתאים."
           : task_mode === "phonological_discrimination_he"
-            ? "האזינו ובחרו לפי ההבחנה הפונולוגית."
+            ? "בחרו את המילה המתאימה."
             : "האזינו ובחרו את התשובה הנכונה.";
-    question.questionLabel = question.questionLabel || "שמע";
+    question.questionLabel = question.questionLabel || "האזינו ובחרו";
     question.exerciseText = `${hint}\n\n${qText}`;
     question.question = question.exerciseText;
   }

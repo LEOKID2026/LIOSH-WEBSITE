@@ -81,7 +81,13 @@ export async function applyStudentSessionFromLogin(browserContext, baseUrl) {
   const loginUrl = `${origin}/api/student/login`;
   const body = code ? { code, pin } : { username, pin };
 
-  const res = await browserContext.request.post(loginUrl, { data: body });
+  const res = await browserContext.request.post(loginUrl, {
+    data: body,
+    headers: {
+      Origin: origin,
+      Referer: `${origin}/student/login`,
+    },
+  });
   if (!res.ok()) {
     const bodyText = await res.text().catch(() => "");
     throw new Error(

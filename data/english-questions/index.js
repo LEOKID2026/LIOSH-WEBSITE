@@ -1,4 +1,5 @@
 import { enrichEnglishPoolMapWithCanonicalMetadata } from "../../lib/learning/english-canonical-metadata.js";
+import { isEnglishPhonicsCopyLeakRow } from "../../utils/lower-grade-practice-runtime-quality.js";
 import { WORD_LISTS } from "./word-lists.js";
 import { GRAMMAR_POOLS as GRAMMAR_POOLS_RAW } from "./grammar-pools.js";
 import { SENTENCE_POOLS as SENTENCE_POOLS_RAW } from "./sentence-pools.js";
@@ -61,6 +62,7 @@ export function getPhonicsPracticeStimulus(row) {
 export function isPhonicsRowRuntimeDisplayable(row) {
   if (!row || row.requiresAudio === true) return false;
   if (PHONICS_RUNTIME_BLOCKED_ITEM_TYPES.has(row.itemType)) return false;
+  if (isEnglishPhonicsCopyLeakRow(row)) return false;
   if (row.pictureRef) return false;
   if (/תמונה/u.test(String(row.question || ""))) return false;
   if (PHONICS_STIMULUS_REQUIRED_ITEM_TYPES.has(row.itemType)) {

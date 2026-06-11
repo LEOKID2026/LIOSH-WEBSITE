@@ -80,6 +80,11 @@ import {
 } from "../../utils/hebrew-spelling-niqqud";
 import { isHebrewFullCompetitiveScoringGrade } from "../../utils/hebrew-scoring-policy";
 import { attachHebrewAudioToQuestion } from "../../utils/hebrew-audio-build1";
+import {
+  isG1G2RuntimePracticeEligible,
+  isLowerGradeG1G2Key,
+  sanitizeLowerGradeChildFacingText,
+} from "../../utils/lower-grade-practice-runtime-quality";
 import { validateAudioStem } from "../../utils/audio-task-contract";
 import HebrewAudioBuild1Panel from "../../components/HebrewAudioBuild1Panel";
 import {
@@ -1547,6 +1552,25 @@ export default function HebrewMaster() {
       }
 
       if (baseOk && probeAccept) {
+        if (isLowerGradeG1G2Key(grade)) {
+          audioBuild1CounterRef.current += 1;
+          attachHebrewAudioToQuestion(question, {
+            gradeKey: grade,
+            topic: question.topic || question.operation || opForQuestion,
+            sequenceIndex: audioBuild1CounterRef.current,
+          });
+          sanitizeLowerGradeChildFacingText(question);
+          const displayProbe = sanitizeQuestionForStudentDisplay(question);
+          if (
+            !isG1G2RuntimePracticeEligible(displayProbe, {
+              gradeKey: grade,
+              subject: "hebrew",
+            })
+          ) {
+            continue;
+          }
+        }
+
         if (probeBiasMode && question._fromRich) {
           const m = bankQuestionProbeMatch(question, probeAtStart);
           if (m.matches) {
@@ -1596,13 +1620,57 @@ export default function HebrewMaster() {
 
     hebrewTrackingTopicKeyRef.current =
       questionOut.topic || questionOut.operation || "mixed";
-    audioBuild1CounterRef.current += 1;
-    attachHebrewAudioToQuestion(questionOut, {
-      gradeKey: grade,
-      topic: questionOut.topic || questionOut.operation || operationForState,
-      sequenceIndex: audioBuild1CounterRef.current,
-    });
-    const displayQuestion = sanitizeQuestionForStudentDisplay(questionOut);
+    if (!isLowerGradeG1G2Key(grade)) {
+      audioBuild1CounterRef.current += 1;
+      attachHebrewAudioToQuestion(questionOut, {
+        gradeKey: grade,
+        topic: questionOut.topic || questionOut.operation || operationForState,
+        sequenceIndex: audioBuild1CounterRef.current,
+      });
+    }
+    let displayQuestion = sanitizeQuestionForStudentDisplay(questionOut);
+    if (isLowerGradeG1G2Key(grade)) {
+      let qualityRetries = 0;
+      const maxQualityRetries = 80;
+      while (
+        !isG1G2RuntimePracticeEligible(displayQuestion, {
+          gradeKey: grade,
+          subject: "hebrew",
+        }) &&
+        qualityRetries < maxQualityRetries
+      ) {
+        qualityRetries += 1;
+        const recoveryQ = generateQuestion(
+          levelConfigCopy,
+          operationForState,
+          grade,
+          operationForState === "mixed" ? mixedOperations : null,
+          { excludeFingerprints: new Set() }
+        );
+        audioBuild1CounterRef.current += 1;
+        attachHebrewAudioToQuestion(recoveryQ, {
+          gradeKey: grade,
+          topic:
+            recoveryQ.topic || recoveryQ.operation || operationForState,
+          sequenceIndex: audioBuild1CounterRef.current,
+        });
+        sanitizeLowerGradeChildFacingText(recoveryQ);
+        questionOut = recoveryQ;
+        displayQuestion = sanitizeQuestionForStudentDisplay(questionOut);
+      }
+      if (
+        !isG1G2RuntimePracticeEligible(displayQuestion, {
+          gradeKey: grade,
+          subject: "hebrew",
+        })
+      ) {
+        console.warn(
+          "[hebrew][g1g2] display quality guard exhausted — regenerating question"
+        );
+        generateNewQuestion();
+        return;
+      }
+    }
     setCurrentQuestion(displayQuestion);
     setSelectedAnswer(null);
     setTypedAnswer("");

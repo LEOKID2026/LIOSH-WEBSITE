@@ -90,9 +90,9 @@ describe("english phonics integration", () => {
 
   it("runtime-eligible counts exclude requiresAudio rows", () => {
     const counts = countRuntimeEligiblePhonicsItems();
-    assert.equal(counts.g1, 19);
-    assert.equal(counts.g2, 23);
-    assert.equal(counts.total, 42);
+    assert.equal(counts.g1, 15);
+    assert.equal(counts.g2, 9);
+    assert.equal(counts.total, 24);
 
     const audioRows = [...PHONICS_G1_POOL, ...PHONICS_G2_POOL].filter((r) => r.requiresAudio);
     assert.equal(audioRows.length, 47);
@@ -179,6 +179,6 @@ describe("english phonics integration", () => {
       assert.equal(target?.topic, "phonics");
       assert.equal(target?.forceKind, pageId);
     }
-    assert.ok(wired >= 10, "expected multiple wired phonics book pages");
+    assert.ok(wired >= 4, "expected wired phonics book pages after copy-leak filtering");
   });
 });

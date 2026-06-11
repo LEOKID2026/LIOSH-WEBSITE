@@ -167,9 +167,9 @@ describe("english phonics pool coverage", () => {
       "../../data/english-questions/index.js"
     );
     const counts = countRuntimeEligiblePhonicsItems();
-    assert.equal(counts.g1, 19);
-    assert.equal(counts.g2, 23);
-    assert.equal(counts.total, 42);
+    assert.equal(counts.g1, 15);
+    assert.equal(counts.g2, 9);
+    assert.equal(counts.total, 24);
   });
 });
 

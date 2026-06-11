@@ -130,7 +130,7 @@ async function main() {
   await browser.close();
 
   const pass =
-    counts.total === 42 &&
+    counts.total === 24 &&
     g1.audioButtonVisible &&
     g2.audioButtonVisible &&
     g1.leadVisible &&
