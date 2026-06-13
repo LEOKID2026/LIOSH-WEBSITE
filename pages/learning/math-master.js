@@ -4527,7 +4527,7 @@ export default function MathMaster() {
                               }}
                               disabled={!!selectedAnswer}
                               compact={isTouchDevice}
-                              className="mt-1"
+                              className={MB.vkPad}
                               keyClassName={isTouchDevice ? MB.vkKeyCompact : MB.vkKey}
                               actionKeyClassName={isTouchDevice ? `${MB.vkKeyCompact} text-sm` : MB.vkKey}
                               submitClassName={
