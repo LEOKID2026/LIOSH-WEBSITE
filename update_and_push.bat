@@ -23,26 +23,17 @@ if errorlevel 1 (
 
 git remote set-url origin %REPO_URL%
 
-for /f "delims=" %%b in ('git branch --show-current') do set "BRANCH=%%b"
+for /f "delims=" %%b in ('git branch --show-current') do set "WORK_BRANCH=%%b"
 
 echo Repository:  %REPO_WEB%
-echo Branch:      %BRANCH%
-echo Destination: %REPO_WEB%/tree/%BRANCH%
+echo Work branch: %WORK_BRANCH%
+echo Production:  %REPO_WEB%/tree/main  ^(Vercel live site^)
 echo.
 
-if /I not "%BRANCH%"=="main" (
-  echo NOTE: You are NOT on "main".
-  echo       - Files go to GitHub branch: %BRANCH%
-  echo       - Vercel PRODUCTION deploys only from "main" ^(liosh-website.vercel.app^)
-  echo       - To update the live site: merge %BRANCH% into main, then push main.
-  echo       - Preview deploy may appear under this branch in Vercel Deployments.
-  echo.
-)
-
-echo Pulling latest changes from origin/%BRANCH%...
-git pull --rebase --autostash origin %BRANCH% 2>nul
+echo Pulling latest from origin/%WORK_BRANCH%...
+git pull --rebase --autostash origin %WORK_BRANCH% 2>nul
 if errorlevel 1 (
-  echo Note: No remote updates for "%BRANCH%" yet - continuing.
+  echo Note: No remote branch "%WORK_BRANCH%" yet - continuing.
 )
 
 echo.
@@ -74,11 +65,14 @@ if errorlevel 1 (
 )
 
 if "!DID_COMMIT!"=="0" (
-  git rev-list --count origin/%BRANCH%..HEAD 2>nul | findstr /R "^0$" >nul
+  git rev-list --count origin/%WORK_BRANCH%..HEAD 2>nul | findstr /R "^0$" >nul
   if not errorlevel 1 (
+    if /I not "%WORK_BRANCH%"=="main" (
+      goto :DeployMain
+    )
     echo.
     echo Already up to date on GitHub - nothing to push.
-    echo View branch: %REPO_WEB%/tree/%BRANCH%
+    echo Live site: %REPO_WEB%/tree/main
     echo.
     git status --short
     pause
@@ -88,39 +82,76 @@ if "!DID_COMMIT!"=="0" (
 )
 
 echo.
-echo Pushing to GitHub...
-echo   origin/%BRANCH%
-echo   %REPO_WEB%/tree/%BRANCH%
+echo [1/2] Pushing work branch to GitHub...
+echo   %REPO_WEB%/tree/%WORK_BRANCH%
 echo.
-git push -u origin %BRANCH%
+git push -u origin %WORK_BRANCH%
 if errorlevel 1 (
   echo.
-  echo ERROR: git push failed.
+  echo ERROR: git push failed for %WORK_BRANCH%.
   pause
   exit /b 1
 )
 
-echo.
-echo ================================
-echo SUCCESS: pushed to GitHub
-echo ================================
-echo Repository: %REPO_WEB%
-echo Branch:     %BRANCH%
-echo Commits:    %REPO_WEB%/commits/%BRANCH%
-echo Files:      %REPO_WEB%/tree/%BRANCH%
-echo.
+if /I "%WORK_BRANCH%"=="main" goto :DoneMain
 
-if /I not "%BRANCH%"=="main" (
-  echo Open PR to merge into main ^(updates Production^):
-  echo   %REPO_WEB%/compare/main...%BRANCH%?expand=1
-  echo.
-  echo Vercel Production ^(main only^): https://vercel.com/erans-projects/liosh-website/deployments?filterBranch=main
-  echo Vercel this branch:            https://vercel.com/erans-projects/liosh-website/deployments?filterBranch=%BRANCH%
-  echo.
-) else (
-  echo Vercel should start a Production build shortly:
-  echo   https://vercel.com/erans-projects/liosh-website/deployments?filterBranch=main
-  echo.
+:DeployMain
+echo.
+echo [2/2] Updating PRODUCTION ^(main - triggers Vercel live site^)...
+git fetch origin main 2>nul
+git checkout main
+if errorlevel 1 (
+  echo ERROR: could not switch to main.
+  git checkout %WORK_BRANCH%
+  pause
+  exit /b 1
 )
 
+git pull --rebase origin main
+if errorlevel 1 (
+  echo ERROR: git pull on main failed.
+  git checkout %WORK_BRANCH%
+  pause
+  exit /b 1
+)
+
+git merge %WORK_BRANCH% -m "Auto update production from %WORK_BRANCH% - %date% %time%"
+if errorlevel 1 (
+  echo.
+  echo ERROR: merge into main failed - fix conflicts manually.
+  git checkout %WORK_BRANCH%
+  pause
+  exit /b 1
+)
+
+echo Pushing main to GitHub ^(Vercel Production build starts here^)...
+git push origin main
+if errorlevel 1 (
+  echo ERROR: git push main failed.
+  git checkout %WORK_BRANCH%
+  pause
+  exit /b 1
+)
+
+git checkout %WORK_BRANCH%
+if errorlevel 1 (
+  echo WARNING: main pushed OK but could not switch back to %WORK_BRANCH%.
+)
+
+goto :Success
+
+:DoneMain
+echo.
+echo Pushed directly to main - Vercel Production build should start now.
+
+:Success
+echo.
+echo ================================
+echo SUCCESS
+echo ================================
+echo Work branch: %REPO_WEB%/tree/%WORK_BRANCH%
+echo PRODUCTION:  %REPO_WEB%/tree/main
+echo Live site:   https://liosh-website.vercel.app
+echo Vercel:      https://vercel.com/erans-projects/liosh-website/deployments?filterBranch=main
+echo.
 pause
