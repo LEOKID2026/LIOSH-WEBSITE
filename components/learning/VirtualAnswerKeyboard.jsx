@@ -61,14 +61,14 @@ export default function VirtualAnswerKeyboard({
   const rowGapClass = compact ? "gap-1 max-[420px]:gap-0.5" : "gap-1.5";
   const colGapClass = compact ? "gap-1 max-[420px]:gap-0.5" : "gap-1.5";
   const defaultKeyClass = compact
-    ? "min-h-[40px] h-10 max-[420px]:min-h-[36px] max-[420px]:h-9 rounded-md border border-white/20 bg-black/35 text-white text-base max-[420px]:text-sm font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
+    ? "min-h-[40px] h-10 max-[420px]:min-h-7 max-[420px]:h-7 rounded-md border border-white/20 bg-black/35 text-white text-base max-[420px]:text-sm font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
     : "min-h-[44px] rounded-lg border border-white/20 bg-black/35 text-white text-lg font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform";
   const keyClass = keyClassName || defaultKeyClass;
   const actionKeyClass = actionKeyClassName || (compact ? `${keyClass} text-sm max-[420px]:text-xs` : keyClass);
   const defaultSubmitClass = compact
     ? submitTone === "blue"
-      ? "col-span-3 min-h-[40px] h-10 max-[420px]:min-h-[36px] max-[420px]:h-9 rounded-md border border-cyan-400/50 bg-cyan-500 text-black text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-400 transition-transform"
-      : "col-span-3 min-h-[40px] h-10 max-[420px]:min-h-[36px] max-[420px]:h-9 rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
+      ? "col-span-3 min-h-[40px] h-10 max-[420px]:min-h-7 max-[420px]:h-7 rounded-md border border-cyan-400/50 bg-cyan-500 text-black text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-400 transition-transform"
+      : "col-span-3 min-h-[40px] h-10 max-[420px]:min-h-7 max-[420px]:h-7 rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base max-[420px]:text-sm font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
     : "";
   const submitClass = submitClassName || defaultSubmitClass;
   const closeBtnClass =
@@ -79,7 +79,7 @@ export default function VirtualAnswerKeyboard({
     <div
       data-testid="virtual-answer-keyboard"
       data-keyboard-variant={compact ? "compact" : "default"}
-      className={`w-full max-w-[300px] mx-auto select-none ${className}`}
+      className={`w-full max-w-[300px] mx-auto select-none max-[420px]:p-1 ${className}`}
       dir="ltr"
       role="group"
       aria-label="מקלדת מספרים"
@@ -109,7 +109,7 @@ export default function VirtualAnswerKeyboard({
                   return (
                     <span
                       key={keyDef.id}
-                      className={compact ? "h-10 max-[420px]:h-9" : "min-h-[44px]"}
+                      className={compact ? "h-10 max-[420px]:h-7" : "min-h-[44px]"}
                       aria-hidden="true"
                     />
                   );

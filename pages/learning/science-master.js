@@ -3307,7 +3307,7 @@ function saveScienceAnswerInParallel({
 
                 <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
                   {currentQuestion && (
-                    <div className="grid grid-cols-2 gap-2 sm:gap-2.5 w-full max-w-xl mb-3 auto-rows-fr">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-2.5 max-[420px]:gap-1.5 w-full max-w-xl mb-3 max-[420px]:mb-2 auto-rows-fr">
                       {currentQuestion.options?.map((opt, idx) => {
                         const isSelected = selectedAnswer === idx;
                         const isCorrect = idx === currentQuestion.correctIndex;
@@ -3321,7 +3321,7 @@ function saveScienceAnswerInParallel({
                             data-testid={`science-mcq-${idx}`}
                             onClick={() => handleAnswer(idx)}
                             disabled={showResult}
-                            className={`rounded-xl border-2 px-2.5 py-2.5 sm:px-3 sm:py-3 text-sm font-semibold leading-snug min-h-[5.25rem] sm:min-h-[5.5rem] h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default ${
+                            className={`rounded-xl border-2 px-2.5 py-2.5 sm:px-3 sm:py-3 text-sm font-semibold leading-snug min-h-[5.25rem] sm:min-h-[5.5rem] max-[420px]:px-2 max-[420px]:py-2 max-[420px]:min-h-[4.25rem] max-[420px]:text-xs max-[420px]:leading-snug h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default ${
                               isCorrect && isSelected
                                 ? MB.choiceCorrect
                                 : isWrong

@@ -2994,7 +2994,7 @@ export default function GeometryMaster() {
                             );
                           })()
                         ) : currentQuestion.answers ? (
-                          <div className="grid grid-cols-2 gap-2.5 w-full mb-3">
+                          <div className="grid grid-cols-2 gap-2.5 max-[420px]:gap-2 w-full mb-3 max-[420px]:mb-2">
                             {currentQuestion.answers.map((answer, idx) => {
                               const isSelected = selectedAnswer === answer;
                               const isCorrect = compareGeometryLearnerAnswer({
@@ -3013,7 +3013,7 @@ export default function GeometryMaster() {
                                   data-testid={`geometry-mcq-${idx}`}
                                   onClick={() => handleAnswer(answer)}
                                   disabled={!!selectedAnswer}
-                                  className={`rounded-xl border-2 px-5 py-5 text-xl font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                                  className={`rounded-xl border-2 px-5 py-5 text-xl font-bold max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-base transition-all active:scale-95 disabled:opacity-50 ${
                                     isCorrect && isSelected
                                       ? MB.choiceCorrect
                                       : isWrong

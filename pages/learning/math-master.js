@@ -4332,19 +4332,23 @@ export default function MathMaster() {
                       // בנושא השוואה - 3 עמודות, כפתורים קטנים יותר
                       const isCompare = currentQuestion.operation === "compare";
                       const gridCols = isCompare ? "grid-cols-3" : "grid-cols-2";
-                      const buttonPadding = isCompare ? "px-3 py-3" : "px-6 py-6";
-                      const buttonText = isCompare ? "text-lg" : "text-2xl";
+                      const buttonPadding = isCompare
+                        ? "px-3 py-3 max-[420px]:px-2.5 max-[420px]:py-2.5"
+                        : "px-6 py-6 max-[420px]:px-3 max-[420px]:py-3";
+                      const buttonText = isCompare
+                        ? "text-lg max-[420px]:text-base"
+                        : "text-2xl max-[420px]:text-lg";
                       
                       return (
                         <div
-                          className="w-full mb-3"
+                          className={`w-full mb-3 max-[420px]:mb-2`}
                           style={{
                             transform: `scale(${ANSWER_AREA_SCALE})`,
                             transformOrigin: "top center",
                           }}
                         >
                           <div
-                            className={`grid ${gridCols} gap-3 w-full`}
+                            className={`grid ${gridCols} gap-3 w-full ${MB.answerMcqGridCompact}`}
                             dir={isCompare ? "ltr" : undefined}
                             style={
                               isCompare
@@ -4467,19 +4471,23 @@ export default function MathMaster() {
                       // בנושא השוואה - 3 עמודות, כפתורים קטנים יותר
                       const isCompare = currentQuestion.operation === "compare";
                       const gridCols = isCompare ? "grid-cols-3" : "grid-cols-2";
-                      const buttonPadding = isCompare ? "px-3 py-3" : "px-6 py-6";
-                      const buttonText = isCompare ? "text-lg" : "text-2xl";
+                      const buttonPadding = isCompare
+                        ? "px-3 py-3 max-[420px]:px-2.5 max-[420px]:py-2.5"
+                        : "px-6 py-6 max-[420px]:px-3 max-[420px]:py-3";
+                      const buttonText = isCompare
+                        ? "text-lg max-[420px]:text-base"
+                        : "text-2xl max-[420px]:text-lg";
                       
                       return (
                         <div
-                          className="w-full mb-3"
+                          className={`w-full mb-3 max-[420px]:mb-2`}
                           style={{
                             transform: `scale(${ANSWER_AREA_SCALE})`,
                             transformOrigin: "top center",
                           }}
                         >
                           <div
-                            className={`grid ${gridCols} gap-3 w-full`}
+                            className={`grid ${gridCols} gap-3 w-full ${MB.answerMcqGridCompact}`}
                             dir={isCompare ? "ltr" : undefined}
                             style={
                               isCompare

@@ -3016,6 +3016,11 @@ export default function HebrewMaster() {
       : "w-full max-w-[320px] px-4 py-3.5 rounded-lg bg-black/40 border border-white/20 text-white text-xl font-bold text-center disabled:opacity-50";
   const typingRowClass =
     questionPressureBucket === "veryLong" ? "flex gap-1.5 justify-center" : "flex gap-2 justify-center";
+  const answerCardNarrowClass =
+    "max-[420px]:px-3 max-[420px]:py-2.5 max-[420px]:min-h-[4.25rem] max-[420px]:text-sm";
+  const typingInputNarrowClass =
+    "max-[420px]:px-3 max-[420px]:py-2 max-[420px]:text-base max-[420px]:h-10 max-[420px]:max-h-10";
+  const typingPanelNarrowClass = "max-[420px]:p-2 max-[420px]:mb-2";
 
   return (
     <Layout>
@@ -4130,8 +4135,8 @@ export default function HebrewMaster() {
 
                   <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
                   {isTypingQuestion ? (
-                    <div className={typingPanelClass}>
-                      <div className={`text-center ${questionPressureBucket === "veryLong" ? "mb-2" : "mb-3"}`}>
+                    <div className={`${typingPanelClass} ${typingPanelNarrowClass}`}>
+                      <div className={`text-center ${questionPressureBucket === "veryLong" ? "mb-2" : "mb-3"} max-[420px]:mb-2`}>
                         <input
                           dir="rtl"
                           type="text"
@@ -4148,7 +4153,7 @@ export default function HebrewMaster() {
                           }}
                           disabled={!!selectedAnswer || !gameActive}
                           placeholder="כתוב את התשובה שלך כאן..."
-                          className={typingInputClass}
+                          className={`${typingInputClass} ${typingInputNarrowClass}`}
                         />
                       </div>
                       <div className={typingRowClass}>
@@ -4172,7 +4177,7 @@ export default function HebrewMaster() {
                     </p>
                   ) : (
                     <div
-                      className={`grid gap-3 w-full mb-3 ${
+                      className={`grid gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2 ${
                         useNarrowMobileAnswerFallback
                           ? "grid-cols-2 max-[420px]:grid-cols-1"
                           : "grid-cols-2"
@@ -4205,7 +4210,7 @@ export default function HebrewMaster() {
                             data-testid={`hebrew-mcq-${idx}`}
                             onClick={() => handleAnswer(answer)}
                             disabled={!!selectedAnswer}
-                            className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${answerCardTextClass} ${
+                            className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${answerCardTextClass} ${answerCardNarrowClass} ${
                               isCorrect && isSelected
                                 ? MB.choiceCorrect
                                 : isWrong

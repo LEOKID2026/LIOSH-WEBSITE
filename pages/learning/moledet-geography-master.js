@@ -3425,7 +3425,7 @@ export default function MoledetGeographyMaster() {
                   </div>
 
                   <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
-                  <div className="grid grid-cols-2 gap-3 w-full mb-3">
+                  <div className="grid grid-cols-2 gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2">
                     {currentQuestion.answers.map((answer, idx) => {
                       const isSelected = selectedAnswer === answer;
                       const { isCorrect: isCorrectChoice } = compareAnswers({
@@ -3442,7 +3442,7 @@ export default function MoledetGeographyMaster() {
                           data-testid={`moledet-mcq-${idx}`}
                           onClick={() => handleAnswer(answer)}
                           disabled={!!selectedAnswer}
-                          className={`rounded-xl border-2 px-6 py-6 text-2xl font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                          className={`rounded-xl border-2 px-6 py-6 text-2xl font-bold max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-lg transition-all active:scale-95 disabled:opacity-50 ${
                             isCorrectChoice && isSelected
                               ? MB.choiceCorrect
                               : isWrong
