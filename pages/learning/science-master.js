@@ -115,6 +115,7 @@ import {
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 
@@ -623,14 +624,6 @@ function buildTop10(saved) {
   return sorted;
 }
 
-function getHintForQuestion(q) {
-  if (!q) return "";
-  if (q.theoryLines && q.theoryLines.length > 0) {
-    return q.theoryLines[0];
-  }
-  return "נסה להיזכר בהסבר שלמדת בנושא זה.";
-}
-
 function getErrorExplanationScience(question, wrongAnswer) {
   if (!question) return "";
   const correct = question.options?.[question.correctIndex];
@@ -699,7 +692,6 @@ export default function ScienceMaster() {
   const learningModalScrollBody = ui.learningModalScrollBody;
   const stepExerciseUi = ui.stepExerciseUi;
   const learningPrimaryCloseBtn = ui.learningPrimaryCloseBtn;
-  const learningHintTriggerBtn = ui.learningHintTriggerBtn;
   const learningExplainOpenBtn = ui.learningExplainOpenBtn;
   const router = useRouter();
   const wrapRef = useRef(null);
@@ -755,8 +747,6 @@ export default function ScienceMaster() {
     ledger: questionTimeLedgerRef.current,
   });
 
-  const [showHint, setShowHint] = useState(false);
-  const [hintUsed, setHintUsed] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
   const {
@@ -1822,7 +1812,7 @@ function saveScienceAnswerInParallel({
               : "",
         questionEngine,
         isCorrect: Boolean(isCorrect),
-        hintsUsed: usedHint ? 1 : 0,
+        hintsUsed: 0,
         // Phase 3: send both raw and credited time
         timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
         rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
@@ -2126,8 +2116,6 @@ function saveScienceAnswerInParallel({
       setPreviousExplanationQuestion(currentQuestion);
     }
     setSelectedAnswer(null);
-    setShowHint(false);
-    setHintUsed(false);
     setShowSolution(false);
     setShowPreviousSolution(false);
     setShowTheoryHelp(false);
@@ -2260,8 +2248,6 @@ function saveScienceAnswerInParallel({
     setQuestionStartTime(null);
     setFeedback(null);
     setSelectedAnswer(null);
-    setShowHint(false);
-    setHintUsed(false);
     setShowSolution(false);
     setShowPreviousSolution(false);
     setPreviousExplanationQuestion(null);
@@ -2347,7 +2333,7 @@ function saveScienceAnswerInParallel({
   function handleAnswer(idx) {
     if (!gameActive || !currentQuestion || selectedAnswer != null) return;
     const questionForSave = currentQuestion;
-    const hintUsedForSave = hintUsed;
+    const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
     const timeSpentMs = rawMs;
     const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
@@ -2478,7 +2464,7 @@ function saveScienceAnswerInParallel({
         });
       }
       // XP
-      const xpGain = hintUsed ? 5 : 10;
+      const xpGain = 10;
       setXp((prev) => {
         let newXp = prev + xpGain;
         let lv = playerLevel;
@@ -3258,7 +3244,7 @@ function saveScienceAnswerInParallel({
                   minHeight: "300px",
                 }}
               >
-                {(feedback || (showHint && currentQuestion) || errorExplanation) && (
+                {(feedback || errorExplanation) && (
                   <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
                     <div className="flex flex-col gap-2 items-stretch">
                       {feedback && (
@@ -3266,14 +3252,6 @@ function saveScienceAnswerInParallel({
                           className={`${feedback.includes("מצוין") ? MB.feedbackOk : MB.feedbackBad}`}
                         >
                           <div style={learningMixedHebrewMathStyle}>{feedback}</div>
-                        </div>
-                      )}
-                      {showHint && currentQuestion && (
-                        <div
-                          className={MB.hintBox}
-                          style={learningMixedHebrewMathStyle}
-                        >
-                          {getHintForQuestion(currentQuestion)}
                         </div>
                       )}
                       {errorExplanation && (
@@ -3377,20 +3355,11 @@ function saveScienceAnswerInParallel({
                     )}
                     <button
                       type="button"
-                        onClick={() => {
-                        if (hintUsed || selectedAnswer || !currentQuestion) return;
-                        setShowHint(true);
-                        setHintUsed(true);
-                        stepByStepViewedRef.current = true;
-                      }}
-                      disabled={hintUsed || !!selectedAnswer || !currentQuestion}
-                      className={`${learningHintTriggerBtn} ${
-                        hintUsed || selectedAnswer || !currentQuestion
-                          ? "opacity-60 cursor-not-allowed"
-                          : ""
-                      }`}
+                      data-testid="learning-stop-game"
+                      onClick={stopGame}
+                      className={MB.btnStop}
                     >
-                      💡 רמז
+                      ⏹️ עצור
                     </button>
                     {(mode === "learning" || mode === "practice") &&
                       previousExplanationQuestion && (
@@ -3406,14 +3375,7 @@ function saveScienceAnswerInParallel({
                 </div>
               </div>
 
-              <button
-                type="button"
-                data-testid="learning-stop-game"
-                onClick={stopGame}
-                className={MB.btnStop}
-              >
-                ⏹️ עצור
-              </button>
+              <LearningMasterAdSlot MB={MB} />
 
               {/* SOLUTION MODAL */}
               {isShowingAnySolution && explanationQuestion && (
@@ -4109,7 +4071,6 @@ function saveScienceAnswerInParallel({
                   <li>בחר כיתה, רמה ונושא (לדוגמה: גוף האדם, צמחים, בעלי חיים ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>ענה על שאלות בחירה, נכון/לא נכון ותסריטי ניסוי.</li>
-                  <li>לחץ על 💡 רמז לקבלת רמז קצר, ועל "📘 הסבר מלא" לפתרון צעד־אחר־צעד.</li>
                   <li>נסה להגיע לרצף תשובות נכון ולקבל כוכבים ו־XP.</li>
                 </ul>
 

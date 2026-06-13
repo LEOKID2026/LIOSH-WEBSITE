@@ -28,7 +28,6 @@ import {
 } from "../../utils/hebrew-learning-intel";
 import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
 import {
-  getHint,
   getSolutionSteps,
   getErrorExplanation,
   buildStepExplanation,
@@ -172,6 +171,7 @@ import {
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 
@@ -224,7 +224,6 @@ export default function HebrewMaster() {
   const learningModalScrollBody = ui.learningModalScrollBody;
   const stepExerciseUi = ui.stepExerciseUi;
   const learningPrimaryCloseBtn = ui.learningPrimaryCloseBtn;
-  const learningHintTriggerBtn = ui.learningHintTriggerBtn;
   const learningExplainOpenBtn = ui.learningExplainOpenBtn;
   const router = useRouter();
   const wrapRef = useRef(null);
@@ -447,10 +446,6 @@ export default function HebrewMaster() {
   const [showPracticeOptions, setShowPracticeOptions] = useState(false);
   const [showReferenceModal, setShowReferenceModal] = useState(false);
   const [referenceCategory, setReferenceCategory] = useState(REFERENCE_CATEGORY_KEYS[0]);
-
-  // רמזים
-  const [showHint, setShowHint] = useState(false);
-  const [hintUsed, setHintUsed] = useState(false);
 
   // הסבר מפורט לשאלה
   const [showSolution, setShowSolution] = useState(false);
@@ -1697,8 +1692,6 @@ export default function HebrewMaster() {
     setFeedback(null);
     setQuestionStartTime(Date.now());
     beginHebrewQuestionLedger(displayQuestion);
-    setShowHint(false);
-    setHintUsed(false);
     setShowSolution(false);
     setShowPreviousSolution(false);
     setErrorExplanation("");
@@ -1890,7 +1883,7 @@ export default function HebrewMaster() {
           userAnswer: userAnswer != null ? String(userAnswer) : "",
           questionEngine,
           isCorrect: Boolean(isCorrect),
-          hintsUsed: usedHint ? 1 : 0,
+          hintsUsed: 0,
           // Phase 3: send both raw and credited time
           timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
           rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
@@ -1951,8 +1944,6 @@ export default function HebrewMaster() {
     setSelectedAnswer(null);
     setTypedAnswer("");
     setLives(mode === "challenge" ? 3 : 0);
-    setShowHint(false);
-    setHintUsed(false);
     setShowBadge(null);
     setShowLevelUp(false);
     setShowSolution(false);
@@ -2154,8 +2145,6 @@ export default function HebrewMaster() {
       setSelectedAnswer(null);
       setTypedAnswer("");
       setFeedback(null);
-      setShowHint(false);
-      setHintUsed(false);
       setShowSolution(false);
       if (mode === "challenge") setTimeLeft(20);
       else if (mode === "speed") setTimeLeft(10);
@@ -2167,7 +2156,7 @@ export default function HebrewMaster() {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     if (currentQuestion.answerMode === "hebrew_audio_recorded_manual") return;
     const questionForSave = currentQuestion;
-    const hintUsedForSave = hintUsed;
+    const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
     const timeSpentMs = rawMs;
     const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
@@ -2468,7 +2457,7 @@ export default function HebrewMaster() {
 
       // מערכת XP ורמות (כיתות א׳–ב׳ בלבד)
       if (hebrewCompetitiveScoring) {
-        const xpGain = hintUsed ? 5 : 10; // פחות XP אם השתמש ברמז
+        const xpGain = 10;
         setXp((prev) => {
           const newXp = prev + xpGain;
           const xpNeeded = playerLevel * 100;
@@ -2882,12 +2871,6 @@ export default function HebrewMaster() {
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
   // No word problems for Hebrew - all topics are text-based
-
-  // ✅ טקסט רמז והסבר מלא לשאלה הנוכחית
-  const hintText =
-    currentQuestion && currentQuestion.operation
-      ? getHint(currentQuestion, currentQuestion.operation, grade)
-      : "";
 
   const solutionSteps =
     currentQuestion && currentQuestion.operation
@@ -3877,7 +3860,7 @@ export default function HebrewMaster() {
                   className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col items-center justify-start mb-2 flex-1 mx-auto"
                   style={{ height: "var(--game-h, 400px)", minHeight: "300px" }}
                 >
-                  {(feedback || (showHint && hintText) || errorExplanation) && (
+                  {(feedback || errorExplanation) && (
                     <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
                       <div className="flex flex-col gap-2">
                         {feedback && (
@@ -3893,11 +3876,6 @@ export default function HebrewMaster() {
                             }`}
                           >
                             <div className="text-base">{feedback}</div>
-                          </div>
-                        )}
-                        {showHint && hintText && (
-                          <div className={MB.hintBox}>
-                            {hintText}
                           </div>
                         )}
                         {errorExplanation && (
@@ -4261,18 +4239,11 @@ export default function HebrewMaster() {
                         )}
                         <button
                           type="button"
-                          onClick={() => {
-                            if (hintUsed || selectedAnswer) return;
-                            setShowHint(true);
-                            setHintUsed(true);
-                            stepByStepViewedRef.current = true;
-                          }}
-                          disabled={hintUsed || !!selectedAnswer}
-                          className={`${MB.btnHint} ${
-                            hintUsed || selectedAnswer ? "opacity-60 cursor-not-allowed" : ""
-                          }`}
+                          data-testid="learning-stop-game"
+                          onClick={stopGame}
+                          className={MB.btnStop}
                         >
-                          💡 רמז
+                          ⏹️ עצור
                         </button>
                         {(mode === "learning" || mode === "practice") &&
                           previousExplanationQuestion && (
@@ -4384,14 +4355,7 @@ export default function HebrewMaster() {
                 </div>
               )}
 
-              <button
-                type="button"
-                data-testid="learning-stop-game"
-                onClick={stopGame}
-                className={MB.btnStop}
-              >
-                ⏹️ עצור
-              </button>
+              <LearningMasterAdSlot MB={MB} />
             </>
           )}
 
@@ -4672,7 +4636,6 @@ export default function HebrewMaster() {
                   <li>בחר כיתה, רמת קושי ונושא (אוצר מילים, דקדוק, כתיבה, הבנת הנקרא ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש שאלות מורכבות שצריך להבין את ההקשר.</li>
-                  <li>לחץ על 💡 Hint כדי לקבל רמז, ועל "📘 הסבר מלא" כדי לראות פתרון צעד־אחר־צעד.</li>
                   <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
                 </ul>
 

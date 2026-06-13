@@ -70,6 +70,7 @@ import { finalizeAnimationSteps } from "../../utils/learning-step-animation-pipe
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import {
@@ -393,7 +394,6 @@ export default function MathMaster() {
   const learningModalScrollBody = ui.learningModalScrollBody;
   const stepExerciseUi = ui.stepExerciseUi;
   const learningPrimaryCloseBtn = ui.learningPrimaryCloseBtn;
-  const learningHintTriggerBtn = ui.learningHintTriggerBtn;
   const learningExplainOpenBtn = ui.learningExplainOpenBtn;
   const mobileEmbeddedNumericSubmit = useMobileEmbeddedNumericSubmit("math");
   const isTouchDevice = useTouchPrimaryDevice();
@@ -649,10 +649,6 @@ export default function MathMaster() {
   const [showPracticeOptions, setShowPracticeOptions] = useState(false);
   const [showReferenceModal, setShowReferenceModal] = useState(false);
   const [referenceCategory, setReferenceCategory] = useState(REFERENCE_CATEGORY_KEYS[0]);
-
-  // רמזים
-  const [showHint, setShowHint] = useState(false);
-  const [hintUsed, setHintUsed] = useState(false);
 
   // הסבר מפורט לשאלה
   const [showSolution, setShowSolution] = useState(false);
@@ -1819,8 +1815,6 @@ export default function MathMaster() {
           setFeedback(null);
           setQuestionStartTime(Date.now());
           beginMathQuestionLedger(replay);
-          setShowHint(false);
-          setHintUsed(false);
           closeExplanationModal();
           setErrorExplanation("");
           stepByStepViewedRef.current = false;
@@ -1949,8 +1943,6 @@ export default function MathMaster() {
     setFeedback(null);
     setQuestionStartTime(Date.now());
     beginMathQuestionLedger(displayQuestion);
-    setShowHint(false);
-    setHintUsed(false);
     closeExplanationModal();
     setErrorExplanation("");
     stepByStepViewedRef.current = false;
@@ -2128,7 +2120,7 @@ export default function MathMaster() {
           userAnswer,
           questionEngine,
           isCorrect,
-          hintsUsed: hintUsed ? 1 : 0,
+          hintsUsed: 0,
           // Phase 3: send both raw and credited time
           timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
           rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
@@ -2193,8 +2185,6 @@ export default function MathMaster() {
     setSelectedAnswer(null);
     setTextAnswer("");
     setLives(mode === "challenge" ? 3 : 0);
-    setShowHint(false);
-    setHintUsed(false);
     setShowBadge(null);
     setShowLevelUp(false);
     stepByStepViewedRef.current = false;
@@ -2355,7 +2345,7 @@ export default function MathMaster() {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     setScratchpadCloseSignal((n) => n + 1);
     const questionForSave = currentQuestion;
-    const hintUsedForSave = hintUsed;
+    const hintUsedForSave = false;
 
     // סטטיסטיקה – ספירת שאלה וזמן
     setTotalQuestions((prevCount) => {
@@ -2689,7 +2679,7 @@ export default function MathMaster() {
       }
 
       // מערכת XP ורמות
-      const xpGain = hintUsed ? 5 : 10; // פחות XP אם השתמש ברמז
+      const xpGain = 10;
       setXp((prev) => {
         const newXp = prev + xpGain;
         const xpNeeded = playerLevel * 100;
@@ -3182,12 +3172,7 @@ export default function MathMaster() {
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
   const gradeSupportsWordProblems = GRADES[grade].operations.includes("word_problems");
 
-  // ✅ טקסט רמז והסבר מלא לשאלה הנוכחית
-  const hintText =
-    currentQuestion && currentQuestion.operation
-      ? getHint(currentQuestion, currentQuestion.operation, grade)
-      : "";
-
+  // ✅ הסבר מלא לשאלה הנוכחית
   const solutionSteps =
     currentQuestion && currentQuestion.operation
       ? getSolutionSteps(currentQuestion, currentQuestion.params?.op || currentQuestion.operation, grade)
@@ -4092,7 +4077,7 @@ export default function MathMaster() {
                   style={{ height: "var(--game-h, 400px)", minHeight: "300px" }}
                 >
                   {/* שכבת הודעות שלא משנה פריסה (אין מקום שמור / אין מיקרו-סק롤) */}
-                  {(feedback || (showHint && hintText) || errorExplanation) && (
+                  {(feedback || errorExplanation) && (
                     <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
                       <div className="flex flex-col gap-2 items-stretch">
                         {feedback && (
@@ -4111,20 +4096,6 @@ export default function MathMaster() {
                           >
                             <div className="text-lg" style={learningMixedHebrewMathStyle}>
                               {feedback}
-                            </div>
-                          </div>
-                        )}
-
-                        {showHint && hintText && (
-                          <div className={MB.hintBox}>
-                            <div className={MB.hintTitle}>
-                              רמז
-                            </div>
-                            <div
-                              className={MB.hintBody}
-                              style={learningMixedHebrewMathStyle}
-                            >
-                              {hintText}
                             </div>
                           </div>
                         )}
@@ -4499,10 +4470,9 @@ export default function MathMaster() {
                     }
                   })()}
 
-                  {/* רמז + הסבר + למה טעיתי */}
+                  {/* כפתורי הסבר / עצירה */}
                   {currentQuestion && (
                     <div className="mt-2 flex flex-col gap-2 w-full">
-                      {/* כפתורי רמז/הסבר */}
                       <div className={MB.answerActionsBar} dir="rtl">
                         {mode === "learning" && (
                           <button
@@ -4519,10 +4489,11 @@ export default function MathMaster() {
                         )}
                         <button
                           type="button"
-                          onClick={() => { stepByStepViewedRef.current = true; setShowHint((prev) => !prev); }}
-                          className={MB.btnHint}
+                          data-testid="learning-stop-game"
+                          onClick={stopGame}
+                          className={MB.btnStop}
                         >
-                          💡 רמז
+                          ⏹️ עצור
                         </button>
                         {(mode === "learning" || mode === "practice") &&
                           previousExplanationQuestion && (
@@ -4965,14 +4936,7 @@ export default function MathMaster() {
                 </ScratchpadVirtualInputProvider>
               )}
 
-              <button
-                type="button"
-                data-testid="learning-stop-game"
-                onClick={stopGame}
-                className={MB.btnStop}
-              >
-                ⏹️ עצור
-              </button>
+              <LearningMasterAdSlot MB={MB} />
             </>
           )}
 
@@ -5836,7 +5800,6 @@ export default function MathMaster() {
                   <li>בחר כיתה, רמת קושי ופעולה (חיבור, חיסור, כפל, חילוק, שברים, אחוזים ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש תרגילי מילים שצריך להבין את הסיפור.</li>
-                  <li>לחץ על 💡 רמז לקבלת רמז, ועל "📘 הסבר מלא" לפתרון צעד־אחר־צעד.</li>
                   <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
                 </ul>
 

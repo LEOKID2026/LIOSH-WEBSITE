@@ -51,7 +51,6 @@ import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import {
-  getHint,
   getSolutionSteps,
   getErrorExplanation,
   buildStepExplanation,
@@ -147,6 +146,7 @@ import { navigateToStudentHome } from "../../lib/learning-client/navigateToStude
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 
@@ -197,7 +197,6 @@ export default function MoledetGeographyMaster() {
   const learningExplTitle = ui.learningExplTitle;
   const learningExplBody = ui.learningExplBody;
   const learningPrimaryCloseBtn = ui.learningPrimaryCloseBtn;
-  const learningHintTriggerBtn = ui.learningHintTriggerBtn;
   const learningExplainOpenBtn = ui.learningExplainOpenBtn;
   const stepExerciseUi = ui.stepExerciseUi;
   const router = useRouter();
@@ -511,10 +510,6 @@ export default function MoledetGeographyMaster() {
   const [showPracticeOptions, setShowPracticeOptions] = useState(false);
   const [showReferenceModal, setShowReferenceModal] = useState(false);
   const [referenceCategory, setReferenceCategory] = useState(REFERENCE_CATEGORY_KEYS[0]);
-
-  // רמזים
-  const [showHint, setShowHint] = useState(false);
-  const [hintUsed, setHintUsed] = useState(false);
 
   // הסבר מפורט לשאלה
   const [showSolution, setShowSolution] = useState(false);
@@ -1378,8 +1373,6 @@ export default function MoledetGeographyMaster() {
     setFeedback(null);
     setQuestionStartTime(Date.now());
     beginMoledetQuestionLedger(displayQuestion);
-    setShowHint(false);
-    setHintUsed(false);
     setShowSolution(false);
     setShowPreviousSolution(false);
     setErrorExplanation("");
@@ -1566,7 +1559,7 @@ export default function MoledetGeographyMaster() {
           userAnswer: userAnswer != null ? String(userAnswer) : "",
           questionEngine,
           isCorrect: Boolean(isCorrect),
-          hintsUsed: usedHint ? 1 : 0,
+          hintsUsed: 0,
           // Phase 3: send both raw and credited time
           timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
           rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
@@ -1617,8 +1610,6 @@ export default function MoledetGeographyMaster() {
     setFeedback(null);
     setSelectedAnswer(null);
     setLives(mode === "challenge" ? 3 : 0);
-    setShowHint(false);
-    setHintUsed(false);
     setShowBadge(null);
     setShowLevelUp(false);
     setShowSolution(false);
@@ -1767,7 +1758,7 @@ export default function MoledetGeographyMaster() {
   function handleAnswer(answer) {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     const questionForSave = currentQuestion;
-    const hintUsedForSave = hintUsed;
+    const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
     const timeSpentMs = rawMs;
     const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
@@ -1963,7 +1954,7 @@ export default function MoledetGeographyMaster() {
       }
 
       // מערכת XP ורמות
-      const xpGain = hintUsed ? 5 : 10; // פחות XP אם השתמש ברמז
+      const xpGain = 10;
       setXp((prev) => {
         const newXp = prev + xpGain;
         const xpNeeded = playerLevel * 100;
@@ -2359,12 +2350,6 @@ export default function MoledetGeographyMaster() {
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
   // No word problems for Moledet & Geography - all topics are text-based
-
-  // ✅ טקסט רמז והסבר מלא לשאלה הנוכחית
-  const hintText =
-    currentQuestion && currentQuestion.operation
-      ? getHint(currentQuestion, currentQuestion.operation, grade)
-      : "";
 
   const solutionSteps =
     currentQuestion && currentQuestion.operation
@@ -3164,7 +3149,7 @@ export default function MoledetGeographyMaster() {
                   className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col items-center justify-start mb-2 flex-1 mx-auto"
                   style={{ height: "var(--game-h, 400px)", minHeight: "300px" }}
                 >
-                  {(feedback || (showHint && hintText) || errorExplanation) && (
+                  {(feedback || errorExplanation) && (
                     <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
                       <div className="flex flex-col gap-2">
                         {feedback && (
@@ -3180,12 +3165,6 @@ export default function MoledetGeographyMaster() {
                             }`}
                           >
                             <div className="text-base">{feedback}</div>
-                          </div>
-                        )}
-                        {showHint && hintText && (
-                          <div className={MB.hintBox}>
-                            <div className={MB.hintTitle}>רמז</div>
-                            <div className={MB.hintBody}>{hintText}</div>
                           </div>
                         )}
                         {errorExplanation && (
@@ -3496,18 +3475,11 @@ export default function MoledetGeographyMaster() {
                         )}
                         <button
                           type="button"
-                          onClick={() => {
-                            if (hintUsed || selectedAnswer) return;
-                            setShowHint(true);
-                            setHintUsed(true);
-                            stepByStepViewedRef.current = true;
-                          }}
-                          disabled={hintUsed || !!selectedAnswer}
-                          className={`${learningHintTriggerBtn} ${
-                            hintUsed || selectedAnswer ? "opacity-60 cursor-not-allowed" : ""
-                          }`}
+                          data-testid="learning-stop-game"
+                          onClick={stopGame}
+                          className={MB.btnStop}
                         >
-                          💡 רמז
+                          ⏹️ עצור
                         </button>
                         {(mode === "learning" || mode === "practice") &&
                           previousExplanationQuestion && (
@@ -3605,13 +3577,7 @@ export default function MoledetGeographyMaster() {
                 </div>
               )}
 
-              <button
-                data-testid="learning-stop-game"
-                onClick={stopGame}
-                className={MB.btnStop}
-              >
-                ⏹️ עצור
-              </button>
+              <LearningMasterAdSlot MB={MB} />
             </>
           )}
 
@@ -3892,7 +3858,6 @@ export default function MoledetGeographyMaster() {
                   <li>בחר כיתה, רמת קושי ונושא (מולדת, חברה ואזרחות, גאוגרפיה, היסטוריה ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש שאלות מורכבות שצריך להבין את ההקשר.</li>
-                  <li>לחץ על 💡 Hint כדי לקבל רמז, ועל "📘 הסבר מלא" כדי לראות פתרון צעד־אחר־צעד.</li>
                   <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
                 </ul>
 

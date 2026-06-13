@@ -42,6 +42,7 @@ import { mcqCellValue } from "../../utils/mcq-option-cell";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi";
 import LearningMasterHud from "../../components/learning/LearningMasterHud";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar";
+import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
@@ -274,39 +275,6 @@ function saveScoreEntry(saved, key, entry) {
   saved[key] = levelData;
 }
 
-// פונקציה ליצירת רמז
-function getHint(question, topic, gradeKey) {
-  if (!question || !question.params) return "";
-  switch (topic) {
-    case "vocabulary":
-      if (question.params.direction === "en_to_he") {
-        return `נסה לחשוב על המילה "${question.params.word}" - מה הפירוש שלה בעברית?`;
-      } else {
-        return `נסה לחשוב על המילה "${question.params.word}" - מה הפירוש שלה באנגלית?`;
-      }
-    case "grammar":
-      return question.params.explanation || "זכור: I am, You/We/They are, He/She/It is";
-    case "translation":
-      if (question.params.direction === "en_to_he") {
-        return `תרגם מילה אחר מילה: "${question.params.sentence}"`;
-      } else {
-        return `תרגם מילה אחר מילה: "${question.params.sentence}"`;
-      }
-    case "sentences":
-      return question.params.explanation || "בדוק מה מתאים: I/You/We/They = are, He/She/It = is";
-    case "writing":
-      if (question.params?.type === "word" && question.params.wordHe) {
-        return `כתוב באנגלית את המילה "${question.params.wordHe}". שים לב לאיות (spelling) של כל אות.`;
-      }
-      if (question.params?.type === "sentence" && question.params.sentenceHe) {
-        return `נסה לפרק את המשפט "${question.params.sentenceHe}" למילים באנגלית. התחל באות גדולה בתחילת המשפט.`;
-      }
-      return "בדוק אות אחר אות באנגלית, בלי למהר.";
-    default:
-      return "נסה לחשוב על התשובה צעד אחר צעד";
-  }
-}
-
 // פונקציית עזר למיספור צעדים
 function makeStep(num, text) {
   return (
@@ -509,7 +477,6 @@ export default function EnglishMaster() {
     learningModalScrollBody,
     stepExerciseUi,
     learningPrimaryCloseBtn,
-    learningHintTriggerBtn,
     learningExplainOpenBtn,
   } = ui;
   const router = useRouter();
@@ -621,8 +588,6 @@ export default function EnglishMaster() {
     };
   });
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-  const [hintUsed, setHintUsed] = useState(false);
 
   // הסבר מפורט לשאלה
   const [showSolution, setShowSolution] = useState(false);
@@ -1345,7 +1310,7 @@ export default function EnglishMaster() {
           userAnswer: userAnswer != null ? String(userAnswer) : "",
           questionEngine,
           isCorrect: Boolean(isCorrect),
-          hintsUsed: usedHint ? 1 : 0,
+          hintsUsed: 0,
           // Phase 3: send both raw and credited time
           timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
           rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
@@ -1742,8 +1707,6 @@ export default function EnglishMaster() {
     setFeedback(null);
     setQuestionStartTime(Date.now());
     beginEnglishQuestionLedger(displayQuestion);
-    setShowHint(false);
-    setHintUsed(false);
     setShowSolution(false);
     setShowPreviousSolution(false);
     setErrorExplanation("");
@@ -1783,8 +1746,6 @@ export default function EnglishMaster() {
     setSelectedAnswer(null);
     setTypedAnswer("");
     setLives(mode === "challenge" ? 3 : 0);
-    setShowHint(false);
-    setHintUsed(false);
     setShowBadge(null);
     setShowLevelUp(false);
     setShowSolution(false);
@@ -1921,7 +1882,7 @@ export default function EnglishMaster() {
   function handleAnswer(answer) {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     const questionForSave = currentQuestion;
-    const hintUsedForSave = hintUsed;
+    const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
     const timeSpentMs = rawMs;
     const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
@@ -2118,7 +2079,7 @@ export default function EnglishMaster() {
           } catch {}
         }
       }
-      const xpGain = hintUsed ? 5 : 10;
+      const xpGain = 10;
       setXp((prev) => {
         const newXp = prev + xpGain;
         const xpNeeded = playerLevel * 100;
@@ -2857,7 +2818,7 @@ export default function EnglishMaster() {
                   className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col items-center justify-start mb-2 flex-1 mx-auto"
                   style={{ height: "var(--game-h, 400px)", minHeight: "300px" }}
                 >
-                  {(feedback || showHint || errorExplanation) && (
+                  {(feedback || errorExplanation) && (
                     <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
                       <div className="flex flex-col gap-2 items-stretch">
                         {feedback && (
@@ -2871,16 +2832,6 @@ export default function EnglishMaster() {
                             }`}
                           >
                             <div>{feedback}</div>
-                          </div>
-                        )}
-                        {showHint && (
-                          <div className={MB.hintBox} dir="ltr">
-                            <div className={MB.hintTitle}>
-                              רמז
-                            </div>
-                            <div className={MB.hintBody}>
-                              {getHint(currentQuestion, currentQuestion.topic, grade)}
-                            </div>
                           </div>
                         )}
                         {errorExplanation && (
@@ -3023,18 +2974,12 @@ export default function EnglishMaster() {
                         </button>
                       )}
                       <button
-                        onClick={() => {
-                          if (hintUsed || selectedAnswer) return;
-                          setShowHint(true);
-                          setHintUsed(true);
-                          stepByStepViewedRef.current = true;
-                        }}
-                        disabled={hintUsed || !!selectedAnswer}
-                        className={`${learningHintTriggerBtn} ${
-                          hintUsed || selectedAnswer ? "opacity-60 cursor-not-allowed" : ""
-                        }`}
+                        type="button"
+                        data-testid="learning-stop-game"
+                        onClick={stopGame}
+                        className={MB.btnStop}
                       >
-                        💡 רמז
+                        ⏹️ עצור
                       </button>
                       {(mode === "learning" || mode === "practice") &&
                         previousExplanationQuestion && (
@@ -3051,14 +2996,7 @@ export default function EnglishMaster() {
                 </div>
               )}
 
-              <button
-                type="button"
-                data-testid="learning-stop-game"
-                onClick={stopGame}
-                className={MB.btnStop}
-              >
-                ⏹️ עצור
-              </button>
+              <LearningMasterAdSlot MB={MB} />
             </>
           )}
 
@@ -3809,7 +3747,6 @@ export default function EnglishMaster() {
                     <li>בחר כיתה, רמת קושי ונושא (אוצר מילים, דקדוק, תרגום, כתיבה ועוד).</li>
                     <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                     <li>קרא היטב את השאלה – לפעמים צריך לבחור תשובה, ולפעמים לכתוב באנגלית.</li>
-                    <li>לחץ על 💡 Hint כדי לקבל רמז, ועל "📘 הסבר מלא" כדי לראות פתרון צעד־אחר־צעד.</li>
                     <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
                   </ul>
                 </div>

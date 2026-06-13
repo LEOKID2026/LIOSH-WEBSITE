@@ -46,7 +46,6 @@ import {
   tryConsumeBookContextOnPracticeEntry,
 } from "../../lib/learning-book/book-context-master-helper";
 import {
-  getHint,
   buildGeometryAnimationSteps,
   getErrorExplanation,
   getTheorySummary,
@@ -77,6 +76,7 @@ import StepGeometryStepPanel from "../../components/learning/geometry/StepGeomet
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useTouchPrimaryDevice } from "../../hooks/useTouchPrimaryDevice.js";
@@ -364,8 +364,6 @@ export default function GeometryMaster() {
     };
   });
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-  const [hintUsed, setHintUsed] = useState(false);
   const [textAnswer, setTextAnswer] = useState("");
   const [showSolution, setShowSolution] = useState(false);
   const [showPreviousSolution, setShowPreviousSolution] = useState(false);
@@ -951,8 +949,6 @@ export default function GeometryMaster() {
         setFeedback(null);
         setQuestionStartTime(Date.now());
         beginGeometryQuestionLedger(replayQ);
-        setShowHint(false);
-        setHintUsed(false);
         setShowSolution(false);
         setShowPreviousSolution(false);
         setShowTheoryHelp(false);
@@ -1219,8 +1215,6 @@ export default function GeometryMaster() {
     setFeedback(null);
     setQuestionStartTime(Date.now());
     beginGeometryQuestionLedger(displayQuestion);
-    setShowHint(false);
-    setHintUsed(false);
     setShowSolution(false);
     setShowPreviousSolution(false);
     setShowTheoryHelp(false);
@@ -1393,7 +1387,7 @@ export default function GeometryMaster() {
           userAnswer: userAnswer != null ? String(userAnswer) : "",
           questionEngine,
           isCorrect: Boolean(isCorrect),
-          hintsUsed: usedHint ? 1 : 0,
+          hintsUsed: 0,
           // Phase 3: send both raw and credited time
           timeSpentMs: rawTimeSpentMs ?? timeSpentMs,
           rawTimeSpentMs: rawTimeSpentMs ?? timeSpentMs,
@@ -1443,7 +1437,7 @@ export default function GeometryMaster() {
   const handleAnswer = (answer) => {
     if (selectedAnswer || !gameActive || !currentQuestion) return;
     const questionForSave = currentQuestion;
-    const hintUsedForSave = hintUsed;
+    const hintUsedForSave = false;
     const rawMs = questionStartTime ? Math.max(0, Date.now() - questionStartTime) : null;
     const timeSpentMs = rawMs;
     const { rawTimeSpentMs, creditedTimeMs, timingStatus } = computeFreePracticeTiming(rawMs, {
@@ -1669,7 +1663,7 @@ export default function GeometryMaster() {
       }
 
       // מערכת XP ורמות
-      const xpGain = hintUsed ? 5 : 10; // פחות XP אם השתמש ברמז
+      const xpGain = 10;
       setXp((prev) => {
         const newXp = prev + xpGain;
         const xpNeeded = playerLevel * 100;
@@ -2139,8 +2133,6 @@ export default function GeometryMaster() {
     setSelectedAnswer(null);
     setTextAnswer("");
     setLives(mode === "challenge" ? 3 : 0);
-    setShowHint(false);
-    setHintUsed(false);
     setShowBadge(null);
     setShowLevelUp(false);
     setShowSolution(false);
@@ -2270,7 +2262,7 @@ export default function GeometryMaster() {
                 display: "block",
               }}
             >
-              אין כאן פירוט צעדים לשאלה זו. השתמשו ברמז או בלוח הנוסחאות.
+              אין כאן פירוט צעדים לשאלה זו. השתמשו בלוח הנוסחאות.
             </span>
           ),
           text: "",
@@ -2627,8 +2619,6 @@ export default function GeometryMaster() {
                     setCurrentQuestion(null);
                     setFeedback(null);
                     setSelectedAnswer(null);
-                    setShowHint(false);
-                    setHintUsed(false);
                     setShowSolution(false);
 
                     // בחירת נושא ברירת מחדל שמתאים לכיתה
@@ -2874,9 +2864,7 @@ export default function GeometryMaster() {
                   style={{ height: "var(--game-h, 400px)", minHeight: "300px" }}
                 >
                   {/* שכבת הודעות לא דוחפת פריסה */}
-                  {(feedback ||
-                    (showHint && currentQuestion.params?.kind !== "no_question") ||
-                    errorExplanation) && (
+                  {(feedback || errorExplanation) && (
                     <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
                       <div className="flex flex-col gap-2 items-stretch">
                         {feedback && (
@@ -2891,15 +2879,6 @@ export default function GeometryMaster() {
                             }`}
                           >
                             <div style={learningMixedHebrewMathStyle}>{feedback}</div>
-                          </div>
-                        )}
-
-                        {showHint && currentQuestion.params?.kind !== "no_question" && (
-                          <div
-                            className="px-4 py-3 rounded-lg bg-blue-500/20 border border-blue-400/50 text-blue-100/95 text-sm leading-relaxed text-center w-full"
-                            style={{ direction: "rtl", unicodeBidi: "plaintext" }}
-                          >
-                            {getHint(currentQuestion, currentQuestion.topic, grade)}
                           </div>
                         )}
 
@@ -3071,16 +3050,11 @@ export default function GeometryMaster() {
 
                         <button
                           type="button"
-                          onClick={() => {
-                            if (hintUsed || selectedAnswer || currentQuestion.params?.kind === "no_question") return;
-                            setShowHint(true);
-                            setHintUsed(true);
-                            stepByStepViewedRef.current = true;
-                          }}
-                          disabled={hintUsed || !!selectedAnswer || currentQuestion.params?.kind === "no_question"}
-                          className={MB.btnHint}
+                          data-testid="learning-stop-game"
+                          onClick={stopGame}
+                          className={MB.btnStop}
                         >
-                          💡 רמז
+                          ⏹️ עצור
                         </button>
                         {(mode === "learning" || mode === "practice") &&
                           previousExplanationQuestion &&
@@ -3281,14 +3255,7 @@ export default function GeometryMaster() {
                   </div>
               )}
 
-              <button
-                type="button"
-                data-testid="learning-stop-game"
-                onClick={stopGame}
-                className={MB.btnStop}
-              >
-                ⏹️ עצור
-              </button>
+              <LearningMasterAdSlot MB={MB} />
             </>
           )}
 
@@ -3921,7 +3888,6 @@ export default function GeometryMaster() {
                   <li>בחר כיתה, רמת קושי ונושא (שטח, היקף, נפח, זוויות, פיתגורס ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש תרגילי מילים על גינות, גדרות וארגזים.</li>
-                  <li>לחץ על 💡 רמז לקבלת רמז, ועל "📘 הסבר מלא" לפתרון צעד־אחר־צעד.</li>
                   <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
                 </ul>
 
