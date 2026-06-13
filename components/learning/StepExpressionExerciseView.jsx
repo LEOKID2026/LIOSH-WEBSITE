@@ -1,7 +1,9 @@
 import React from "react";
+import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 import { learningMathBlockStyle } from "../../utils/learning-mixed-hebrew-math-render";
 
 export default function StepExpressionExerciseView({ step, className = "" }) {
+  const ex = useStepExerciseUi();
   const pre = String(step?.pre || "").replace(/\u2066|\u2069/g, "");
   if (!pre.trim()) return null;
 
@@ -13,7 +15,7 @@ export default function StepExpressionExerciseView({ step, className = "" }) {
         <p
           key={`expr-line-${li}`}
           dir="ltr"
-          className="text-center font-mono text-lg leading-relaxed text-emerald-100 my-1"
+          className={`text-center font-mono text-lg leading-relaxed my-1 ${ex.monoText}`}
           style={{ ...learningMathBlockStyle, fontFamily: "ui-monospace, monospace" }}
         >
           {line}

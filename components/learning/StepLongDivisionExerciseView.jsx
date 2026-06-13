@@ -1,5 +1,6 @@
 import React from "react";
 import StepExerciseShell from "./StepExerciseShell";
+import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 import { DigitCell } from "./StepHighlightCells";
 import {
   computeDivisionSteps,
@@ -16,6 +17,7 @@ export default function StepLongDivisionExerciseView({
   stepIndex = 0,
   className = "",
 }) {
+  const ex = useStepExerciseUi();
   const parsed = parseDivisionPre(pre || step?.pre);
   const divStr = String(dividend ?? parsed?.dividend ?? "");
   const divVal = Number(divisor ?? parsed?.divisor ?? 0);
@@ -43,7 +45,7 @@ export default function StepLongDivisionExerciseView({
   return (
     <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
       <div
-        className="flex flex-col items-start font-mono text-xl leading-[1.6]"
+        className={`flex flex-col items-start font-mono text-xl leading-[1.6] ${ex.monoText}`}
         style={{ direction: "ltr", maxWidth: "100%" }}
       >
         <div className="mb-1 flex" style={{ paddingLeft: `${divisorPadding * 1.5}ch` }}>
@@ -68,7 +70,7 @@ export default function StepLongDivisionExerciseView({
 
         <div className="mb-1 flex" style={{ paddingLeft: `${divisorPadding * 1.5}ch` }}>
           <div
-            className="h-[2px] bg-white"
+            className={`h-[2px] ${ex.divider}`}
             style={{ width: `${dividendDigitsArray.length * 1.5}ch` }}
           />
         </div>
@@ -114,7 +116,7 @@ export default function StepLongDivisionExerciseView({
                     style={{ gridTemplateColumns: `repeat(${wNumStr.length}, 1.5ch)` }}
                   >
                     {wNumStr.split("").map((d, idx) => (
-                      <span key={`${stepKey}-wn-${idx}`} className="text-center font-bold text-emerald-300">
+                      <span key={`${stepKey}-wn-${idx}`} className={`text-center ${ex.accent}`}>
                         {d}
                       </span>
                     ))}
@@ -148,7 +150,7 @@ export default function StepLongDivisionExerciseView({
                   }}
                 >
                   <div
-                    className="h-[1px] bg-white"
+                    className={`h-[1px] ${ex.dividerThin}`}
                     style={{ width: `${Math.max(prodStr.length, wNumStr.length) * 1.5}ch` }}
                   />
                 </div>
@@ -178,7 +180,7 @@ export default function StepLongDivisionExerciseView({
                   style={{ paddingLeft: `${(divisorPadding + (ds.pos + 1)) * 1.5}ch` }}
                 >
                   <span className="text-blue-300 font-bold text-sm">↓</span>
-                  <span className="text-emerald-300 font-bold">{step.nextDigit}</span>
+                  <span className={`${ex.accent} text-sm`}>{step.nextDigit}</span>
                 </div>
               )}
             </div>

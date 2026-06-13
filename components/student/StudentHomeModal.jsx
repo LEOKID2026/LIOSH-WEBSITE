@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from "react";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 
 const SIZE_CLASS = {
   md: "md:max-w-md",
@@ -10,13 +11,52 @@ const SIZE_CLASS = {
   "6xl": "md:max-w-6xl",
 };
 
+const HEADER_ACCENT_BRIGHT = {
+  stats: "border-b-sky-200 bg-gradient-to-l from-sky-50 to-white",
+  progress: "border-b-emerald-200 bg-gradient-to-l from-emerald-50 to-white",
+  missions: "border-b-cyan-200 bg-gradient-to-l from-cyan-50 to-white",
+  subjects: "border-b-teal-200 bg-gradient-to-l from-teal-50 to-white",
+  classroom: "border-b-violet-200 bg-gradient-to-l from-violet-50 to-white",
+  worksheets: "border-b-amber-200 bg-gradient-to-l from-amber-50 to-white",
+  badges: "border-b-rose-200 bg-gradient-to-l from-rose-50 to-white",
+  recommendations: "border-b-orange-200 bg-gradient-to-l from-orange-50 to-white",
+  default: "border-b-slate-200 bg-white",
+};
+
+const HEADER_ICON_BRIGHT = {
+  stats: "bg-sky-100 border-sky-200 text-sky-900",
+  progress: "bg-emerald-100 border-emerald-200 text-emerald-900",
+  missions: "bg-cyan-100 border-cyan-200 text-cyan-900",
+  subjects: "bg-teal-100 border-teal-200 text-teal-900",
+  classroom: "bg-violet-100 border-violet-200 text-violet-900",
+  worksheets: "bg-amber-100 border-amber-200 text-amber-900",
+  badges: "bg-rose-100 border-rose-200 text-rose-900",
+  recommendations: "bg-orange-100 border-orange-200 text-orange-900",
+  default: "bg-slate-100 border-slate-200",
+};
+
 /**
  * Modal shell for student home dashboard panels — RTL, scrollable body, Escape + backdrop close.
  */
-export default function StudentHomeModal({ open, title, onClose, children, size = "2xl" }) {
+export default function StudentHomeModal({
+  open,
+  title,
+  emoji = "",
+  variant = "default",
+  onClose,
+  children,
+  size = "2xl",
+}) {
+  const { homeModalShell, isBright } = useStudentTheme();
   const titleId = useId();
   const closeRef = useRef(null);
   const sizeClass = SIZE_CLASS[size] || SIZE_CLASS["2xl"];
+  const headerClass = isBright
+    ? HEADER_ACCENT_BRIGHT[variant] || HEADER_ACCENT_BRIGHT.default
+    : "border-b-white/10 bg-black/20";
+  const iconClass = isBright
+    ? HEADER_ICON_BRIGHT[variant] || HEADER_ICON_BRIGHT.default
+    : homeModalShell.iconWrap;
 
   useEffect(() => {
     if (!open) return undefined;
@@ -37,31 +77,38 @@ export default function StudentHomeModal({ open, title, onClose, children, size 
 
   return (
     <div
-      className="fixed inset-0 z-[150] flex flex-col md:items-center md:justify-center bg-black/80 md:p-4"
+      className={homeModalShell.overlay}
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
     >
       <div
-        className={[
-          "relative flex flex-col w-full h-full md:h-auto md:max-h-[90vh]",
-          sizeClass,
-          "md:rounded-2xl border-0 md:border-2 border-white/20",
-          "bg-gradient-to-br from-[#080c16] to-[#0a0f1d] shadow-2xl overflow-hidden",
-        ].join(" ")}
+        className={`${homeModalShell.panel} ${sizeClass}`}
         onClick={(event) => event.stopPropagation()}
         dir="rtl"
       >
-        <div className="flex items-center justify-between gap-3 shrink-0 border-b border-white/10 px-4 py-3 md:px-5 md:py-4">
-          <h2 id={titleId} className="text-lg md:text-xl font-bold text-white text-right min-w-0">
-            {title}
-          </h2>
+        <div
+          className={`${homeModalShell.header} ${headerClass}`}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            {emoji ? (
+              <span
+                className={`${homeModalShell.iconWrap} ${iconClass}`}
+                aria-hidden
+              >
+                {emoji}
+              </span>
+            ) : null}
+            <h2 id={titleId} className={homeModalShell.title}>
+              {title}
+            </h2>
+          </div>
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-lg font-bold text-white/80 hover:text-white hover:bg-white/10 transition"
+            className={homeModalShell.closeBtn}
             style={{ direction: "ltr" }}
             aria-label="סגור"
           >
@@ -69,7 +116,7 @@ export default function StudentHomeModal({ open, title, onClose, children, size 
           </button>
         </div>
         <div
-          className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-4 md:px-5 md:py-5"
+          className={homeModalShell.body}
           style={{ scrollbarGutter: "stable", scrollbarWidth: "thin" }}
         >
           {children}

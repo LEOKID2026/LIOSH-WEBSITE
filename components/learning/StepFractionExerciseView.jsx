@@ -1,5 +1,6 @@
 import React from "react";
 import StepExerciseShell from "./StepExerciseShell";
+import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 import { ExpressionSpan } from "./StepHighlightCells";
 import {
   highlightFractionLine,
@@ -7,6 +8,7 @@ import {
 } from "../../utils/learning-step-fraction-exercise";
 
 export default function StepFractionExerciseView({ step, pre, stepIndex = 0, className = "" }) {
+  const ex = useStepExerciseUi();
   const lines = parseFractionPreLines(pre || step?.pre);
   const highlights = Array.isArray(step?.highlights) ? step.highlights : [];
   const stepKey = step?.id ?? `frac-${stepIndex}`;
@@ -16,7 +18,7 @@ export default function StepFractionExerciseView({ step, pre, stepIndex = 0, cla
   return (
     <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
       <div
-        className="flex flex-col items-center font-mono text-xl leading-relaxed text-emerald-100 gap-1 w-full max-w-full"
+        className={`flex flex-col items-center font-mono text-xl leading-relaxed gap-1 w-full max-w-full ${ex.monoText}`}
         style={{ direction: "ltr", unicodeBidi: "plaintext" }}
       >
         {lines.map((line, li) => {

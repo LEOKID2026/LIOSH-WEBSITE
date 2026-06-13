@@ -1,5 +1,6 @@
 import React from "react";
 import { EXERCISE_VIEWS, resolveExerciseView } from "../../utils/learning-step-exercise-types";
+import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 import StepVerticalExerciseView from "./StepVerticalExerciseView";
 import StepMultiplicationExerciseView from "./StepMultiplicationExerciseView";
 import StepLongDivisionExerciseView from "./StepLongDivisionExerciseView";
@@ -7,10 +8,8 @@ import StepFractionExerciseView from "./StepFractionExerciseView";
 import StepExpressionExerciseView from "./StepExpressionExerciseView";
 import StepWordProblemExerciseView from "./StepWordProblemExerciseView";
 
-const EXERCISE_PANEL_CLASS =
-  "rounded-lg bg-emerald-900/50 px-3 py-2 max-w-full overflow-x-hidden overflow-y-visible";
-
 function DivisionPreFallback({ step }) {
+  const ex = useStepExerciseUi();
   if (!step?.pre) return null;
   const raw = String(step.pre).replace(/\u2066|\u2069/g, "");
   const lines = raw.split("\n");
@@ -18,18 +17,18 @@ function DivisionPreFallback({ step }) {
   const rest = lines.slice(1).join("\n");
   return (
     <div className="mb-4 w-full max-w-full">
-      <div className={EXERCISE_PANEL_CLASS}>
+      <div className={ex.panel}>
         <div className="flex flex-col items-center w-full max-w-full">
           <pre
             dir="ltr"
-            className="text-center font-mono text-lg whitespace-pre-wrap text-emerald-100 w-full max-w-full"
+            className={`text-center font-mono text-lg whitespace-pre-wrap w-full max-w-full ${ex.monoText}`}
             style={{ unicodeBidi: "plaintext", margin: 0, transform: "translateY(6px)" }}
           >
             {`\u2066${firstLine}\u2069`}
           </pre>
           <pre
             dir="ltr"
-            className="text-center font-mono text-lg leading-relaxed whitespace-pre-wrap text-emerald-100 w-full max-w-full"
+            className={`text-center font-mono text-lg leading-relaxed whitespace-pre-wrap w-full max-w-full ${ex.monoText}`}
             style={{ unicodeBidi: "plaintext", margin: 0 }}
           >
             {`\u2066${rest}\u2069`}
@@ -41,13 +40,14 @@ function DivisionPreFallback({ step }) {
 }
 
 function PreFallback({ step }) {
+  const ex = useStepExerciseUi();
   if (!step?.pre) return null;
   return (
     <div className="mb-4 w-full max-w-full">
-      <div className={EXERCISE_PANEL_CLASS}>
+      <div className={ex.panel}>
         <pre
           dir="ltr"
-          className="text-center font-mono text-lg leading-relaxed whitespace-pre-wrap text-emerald-100 w-full max-w-full"
+          className={`text-center font-mono text-lg leading-relaxed whitespace-pre-wrap w-full max-w-full ${ex.monoText}`}
           style={{ unicodeBidi: "plaintext" }}
         >
           {step.pre}

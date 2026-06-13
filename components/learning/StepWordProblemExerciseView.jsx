@@ -1,4 +1,5 @@
 import React from "react";
+import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 import { ExpressionSpan } from "./StepHighlightCells";
 import { buildWordProblemHighlightRanges } from "../../utils/learning-step-word-problem-exercise";
 import {
@@ -49,6 +50,7 @@ function renderWordProblemText(text, ranges) {
 }
 
 export default function StepWordProblemExerciseView({ step, className = "" }) {
+  const ex = useStepExerciseUi();
   const text = String(step?.text || "").replace(/\u2066|\u2069/g, "");
   if (!text) return null;
 
@@ -58,7 +60,7 @@ export default function StepWordProblemExerciseView({ step, className = "" }) {
 
   if (hasMathRun && ranges.length === 0) {
     return (
-      <div className={`text-emerald-100 mb-2 w-full max-w-full ${className}`.trim()}>
+      <div className={`mb-2 w-full max-w-full ${ex.monoText} ${className}`.trim()}>
         {runs.map((run, idx) =>
           run.type === "math" ? (
             <p key={`math-${idx}`} dir="ltr" className="my-1" style={learningMathBlockStyle}>
@@ -75,7 +77,7 @@ export default function StepWordProblemExerciseView({ step, className = "" }) {
   }
 
   return (
-    <div className={`text-emerald-100 mb-2 w-full max-w-full ${className}`.trim()}>
+    <div className={`mb-2 w-full max-w-full ${ex.monoText} ${className}`.trim()}>
       {renderWordProblemText(text, ranges)}
     </div>
   );

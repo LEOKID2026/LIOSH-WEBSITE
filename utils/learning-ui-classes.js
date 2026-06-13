@@ -44,6 +44,10 @@ export const learningExplTitle =
 export const learningExplBody =
   "text-base leading-7 text-emerald-50/95";
 
+export const learningStepSection = "mb-4 text-emerald-50 space-y-2";
+
+export const learningModalScrollBody = "flex-1 min-h-0 overflow-y-auto px-4 pb-2";
+
 /** Geometry step text — same size as math explanations, modest line spacing. */
 export const learningExplBodyGeometry =
   "text-base leading-7 text-emerald-50/95";

@@ -3,51 +3,53 @@ import Layout from "../../components/Layout";
 import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import StudentThemePicker from "../../components/student/StudentThemePicker";
 
 const LEARNING_GAMES = [
   {
     slug: "math-master",
     title: "חשבון",
     emoji: "🧮",
-    grades: "כיתות א׳–ו׳",
     blurb: "תרגול חיבור, חיסור, כפל, חילוק ועוד לפי כיתה.",
   },
   {
     slug: "geometry-master",
     title: "גאומטריה",
     emoji: "📐",
-    grades: "כיתות א׳–ו׳",
     blurb: "שטחים, היקפים, נפח, זוויות, פיתגורס וצורות — עם הסברים.",
   },
   {
     slug: "english-master",
     title: "אנגלית",
     emoji: "🇬🇧",
-    grades: "כיתות א׳–ו׳",
     blurb: "אוצר מילים, דקדוק, תרגום ובניית משפטים עם תמיכה בעברית.",
   },
   {
     slug: "science-master",
     title: "מדעים",
     emoji: "🔬",
-    grades: "כיתות א׳–ו׳",
     blurb: "גוף, בעלי חיים, צמחים, חלל, חומר, מזג אוויר, כוחות ועוד — עם הסברים.",
   },
   {
     slug: "hebrew-master",
     title: "עברית",
     emoji: "📚",
-    grades: "כיתות א׳–ו׳",
     blurb: "תרגול שפה, אוצר מילים, דקדוק, הבנת הנקרא ועוד לפי כיתה.",
   },
   {
     slug: "moledet-geography-master",
     title: "מולדת וגיאוגרפיה",
     emoji: "🗺️",
-    grades: "כיתות א׳–ו׳",
     blurb: "מולדת, חברה, אזרחות וגיאוגרפיה בתרגילים אינטראקטיביים.",
   },
 ];
+
+const DEFAULT_SUBJECT_CARD = {
+  card: "border-slate-100 hover:border-sky-100 bg-white",
+  bar: "bg-sky-300",
+  emoji: "bg-slate-50 border-slate-100",
+};
 
 export async function getServerSideProps() {
   return {
@@ -60,6 +62,7 @@ export async function getServerSideProps() {
 
 export default function LearningHub({ showDevStudentSimulator }) {
   useIOSViewportFix();
+  const { tokens: T, theme, subjectHubCard } = useStudentTheme();
 
   useEffect(() => {
     if (!isStudentIdentityDiagnosticsEnabled()) return undefined;
@@ -89,47 +92,51 @@ export default function LearningHub({ showDevStudentSimulator }) {
   }, []);
 
   return (
-    <Layout>
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-3 md:py-6 pb-4 overflow-x-hidden" dir="rtl">
-        <div className="mb-3 md:mb-4">
-          <Link
-            href="/student/home"
-            className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white/85 hover:bg-white/10 hover:text-white transition"
-          >
-            חזרה לפורטל תלמיד
-          </Link>
-        </div>
-
-        <header className="text-center space-y-1.5 md:space-y-2 mb-3 md:mb-5">
-          <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs tracking-wider uppercase text-amber-300 font-semibold">
+    <Layout studentTheme={theme} studentShell="learning">
+      <div className={`max-w-5xl mx-auto px-3 sm:px-4 py-3 md:py-6 pb-4 overflow-x-hidden ${T.learningPageWrap}`} dir="rtl">
+        <div className={T.hubTopBar}>
+          <div className={T.hubTopBarBack}>
+            <Link href="/student/home" className={T.hubBackLink}>
+              חזרה
+            </Link>
+          </div>
+          <p className={`${T.hubBadge} max-w-[min(100%,14rem)] sm:max-w-none text-center leading-tight`}>
             📚 תרגול · חזרה · שיפור
           </p>
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-black leading-tight">מרכז משחקי הלימוד</h1>
-          <p className="text-xs md:text-sm text-white/70 max-w-2xl mx-auto leading-relaxed line-clamp-2 md:line-clamp-none">
-            בחרו מקצוע והתחילו לשחק — לכל משחק התאמה לכיתות שונות, ציונים, רמות והסברים לשאלות.
+          <div className={T.hubTopBarTheme}>
+            <StudentThemePicker variant="icon" />
+          </div>
+        </div>
+
+        <header className={T.hubHeaderCard}>
+          <h1 className={T.hubTitle}>מרכז משחקי הלימוד</h1>
+          <p className={`${T.hubDesc} mt-2 line-clamp-2 md:line-clamp-none`}>
+            בחרו מקצוע והתחילו לשחק — ציונים, רמות והסברים לשאלות.
           </p>
         </header>
 
-        <section className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4" aria-label="בחירת מקצוע">
-          {LEARNING_GAMES.map((g) => (
-            <Link
-              key={g.slug}
-              href={`/learning/${g.slug}`}
-              className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] hover:border-emerald-400/35 hover:from-emerald-950/25 hover:to-white/[0.05] transition p-3 md:p-4 flex flex-col text-right min-h-[7.5rem] md:min-h-[8.5rem]"
-            >
-              <span className="text-2xl md:text-3xl leading-none mb-2" aria-hidden>
-                {g.emoji}
-              </span>
-              <h2 className="font-bold text-sm md:text-base leading-snug text-white">{g.title}</h2>
-              <p className="text-[11px] md:text-xs text-white/55 mt-0.5">{g.grades}</p>
-              <p className="text-[11px] md:text-xs text-white/60 mt-1.5 leading-snug line-clamp-2 flex-1">
-                {g.blurb}
-              </p>
-            </Link>
-          ))}
+        <section className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" aria-label="בחירת מקצוע">
+          {LEARNING_GAMES.map((g) => {
+            const subject = subjectHubCard[g.slug] || DEFAULT_SUBJECT_CARD;
+            return (
+              <Link
+                key={g.slug}
+                href={`/learning/${g.slug}`}
+                className={`${T.hubCardBase} ${subject.card}`}
+              >
+                <span className={`${T.hubCardBar} ${subject.bar}`} aria-hidden />
+                <div className={T.hubCardHeadRow}>
+                  <span className={`${T.hubCardEmoji} ${subject.emoji}`} aria-hidden>
+                    {g.emoji}
+                  </span>
+                  <h2 className={T.hubCardTitle}>{g.title}</h2>
+                </div>
+                <p className={T.hubCardBlurb}>{g.blurb}</p>
+              </Link>
+            );
+          })}
         </section>
 
-        {/* Dev simulator — kept for development; hidden from visible UI for now */}
         {false && showDevStudentSimulator ? (
           <section className="mt-4">
             <Link

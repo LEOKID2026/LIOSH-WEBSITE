@@ -21,6 +21,8 @@ import StudentClassroomActivitiesPanel from "../../components/student/StudentCla
 import StudentWorksheetsPanel from "../../components/worksheet-activities/StudentWorksheetsPanel";
 import { isClassroomActivitiesEnabled } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { normalizeStudentActivityScope } from "../../lib/classroom-activities/student-activity-scope-labels.client.js";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import StudentThemePicker from "../../components/student/StudentThemePicker";
 
 const HOME_PROFILE_PATH = "/api/student/home-profile";
 
@@ -33,142 +35,218 @@ function mapApiErrorToHebrew(raw) {
 }
 
 function LoadingScreen({ message }) {
+  const { tokens: T, theme } = useStudentTheme();
   return (
-    <Layout>
+    <Layout studentTheme={theme} studentShell="home">
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
-        <div className="h-12 w-12 rounded-full border-2 border-emerald-400/30 border-t-emerald-400 animate-spin mb-4" aria-hidden />
-        <p className="text-white/90 text-lg font-medium">{message}</p>
+        <div className={T.loadingSpinner} aria-hidden />
+        <p className={T.loadingText}>{message}</p>
       </div>
     </Layout>
   );
 }
 
 function StatCard({ label, value, sub }) {
+  const { tokens: T } = useStudentTheme();
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:px-3 md:py-2.5 shadow-inner shadow-black/20 min-h-[4.25rem] flex flex-col justify-center">
-      <p className="text-[11px] md:text-xs text-white/65 mb-0.5 leading-snug line-clamp-2">{label}</p>
-      <p className="text-lg md:text-xl font-bold text-white tabular-nums leading-tight">{value}</p>
-      {sub ? <p className="text-[10px] text-white/45 mt-0.5 leading-tight line-clamp-2">{sub}</p> : null}
+    <div className={T.statCard}>
+      <p className={T.statLabel}>{label}</p>
+      <p className={T.statValue}>{value}</p>
+      {sub ? <p className={T.statSub}>{sub}</p> : null}
     </div>
   );
 }
 
 const HOME_PANELS = {
-  stats: { title: "הנתונים שלי", emoji: "📊", size: "6xl" },
-  progress: { title: "ההתקדמות שלי", emoji: "📈", size: "2xl" },
-  missions: { title: "המשימות שלי", emoji: "✅", size: "2xl" },
-  classroom: { title: "פעילויות אישיות", emoji: "📋", size: "4xl" },
-  worksheets: { title: "דפי עבודה", emoji: "📄", size: "4xl" },
-  subjects: { title: "הנושאים שלי", emoji: "📚", size: "6xl" },
-  badges: { title: "תגים והישגים", emoji: "🏅", size: "2xl" },
-  recommendations: { title: "המלצות להמשך", emoji: "💡", size: "4xl" },
+  stats: { title: "הנתונים שלי", emoji: "📊", size: "6xl", variant: "stats" },
+  progress: { title: "ההתקדמות שלי", emoji: "📈", size: "2xl", variant: "progress" },
+  missions: { title: "המשימות שלי", emoji: "✅", size: "2xl", variant: "missions" },
+  classroom: { title: "פעילויות אישיות", emoji: "📋", size: "4xl", variant: "classroom" },
+  worksheets: { title: "דפי עבודה", emoji: "📄", size: "4xl", variant: "worksheets" },
+  subjects: { title: "הנושאים שלי", emoji: "📚", size: "6xl", variant: "subjects" },
+  badges: { title: "תגים והישגים", emoji: "🏅", size: "2xl", variant: "badges" },
+  recommendations: { title: "המלצות להמשך", emoji: "💡", size: "4xl", variant: "recommendations" },
 };
 
-function DashboardTile({ emoji, title, subtitle, onClick }) {
+function getTileVariant(T) {
+  return {
+    stats: { accent: T.tileAccentStats, iconWrap: T.tileIconWrapStats, hover: T.tileHoverStats },
+    progress: { accent: T.tileAccentProgress, iconWrap: T.tileIconWrapProgress, hover: T.tileHoverProgress },
+    missions: { accent: T.tileAccentMissions, iconWrap: T.tileIconWrapMissions, hover: T.tileHoverMissions },
+    subjects: { accent: T.tileAccentSubjects, iconWrap: T.tileIconWrapSubjects, hover: T.tileHoverSubjects },
+    classroom: { accent: T.tileAccentClassroom, iconWrap: T.tileIconWrapClassroom, hover: T.tileHoverClassroom },
+    worksheets: { accent: T.tileAccentWorksheets, iconWrap: T.tileIconWrapWorksheets, hover: T.tileHoverWorksheets },
+    badges: { accent: T.tileAccentBadges, iconWrap: T.tileIconWrapBadges, hover: T.tileHoverBadges },
+    recommendations: {
+      accent: T.tileAccentRecommendations,
+      iconWrap: T.tileIconWrapRecommendations,
+      hover: T.tileHoverRecommendations,
+    },
+    default: { accent: T.tileAccentDefault, iconWrap: T.tileIconWrapDefault, hover: T.tileHoverDefault },
+  };
+}
+
+function DashboardTile({ emoji, title, subtitle, onClick, variant = "default" }) {
+  const { tokens: T } = useStudentTheme();
+  const tileVariant = getTileVariant(T);
+  const v = tileVariant[variant] || tileVariant.default;
   return (
     <button
       type="button"
       onClick={onClick}
-      className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3 md:p-4 text-right shadow-lg shadow-black/20 hover:border-emerald-400/35 hover:from-emerald-950/30 hover:to-white/[0.04] transition min-h-[5.5rem] md:min-h-[6.25rem] flex flex-col justify-between gap-1.5"
+      className={`${T.tile} ${v.hover}`}
     >
-      <span className="text-2xl md:text-3xl leading-none" aria-hidden>
-        {emoji}
-      </span>
-      <div className="min-w-0">
-        <p className="text-sm md:text-base font-bold text-white leading-snug">{title}</p>
-        <p className="text-[11px] md:text-xs text-white/55 mt-0.5 leading-snug tabular-nums">
-          {subtitle ?? "0"}
-        </p>
+      <span className={v.accent} aria-hidden />
+      <div className="flex items-start gap-3 md:gap-3.5">
+        <span className={v.iconWrap} aria-hidden>
+          {emoji}
+        </span>
+        <div className={T.tileBody}>
+          <p className={T.tileTitle}>{title}</p>
+          <p className={T.tileSub}>{subtitle ?? "0"}</p>
+        </div>
       </div>
     </button>
   );
 }
 
 function StatsSection({ dashboardView, accLabel }) {
+  const { tokens: T } = useStudentTheme();
+  const { accountStats: s } = dashboardView;
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-3">
-      <StatCard label="מטבעות" value={dashboardView.identity.coinBalance} />
-      <StatCard label="רמה" value={dashboardView.accountStats.summaryLevel} />
-      <StatCard label="כוכבים (סה״כ)" value={dashboardView.accountStats.summaryStars} />
-      <StatCard label="ניקוד שיא" value={dashboardView.accountStats.bestScoreOverall} />
-      <StatCard label="שיא רצף" value={dashboardView.accountStats.bestStreakOverall} />
-      <StatCard label="דיוק כללי" value={accLabel(dashboardView.accountStats.overallAccuracyPct)} />
-      <StatCard label="שאלות שנענו" value={dashboardView.accountStats.questionsAnswered} />
-      <StatCard label="תשובות נכונות" value={dashboardView.accountStats.correctAnswers} />
-      <StatCard
-        label="דקות למידה החודש"
-        value={dashboardView.accountStats.learningMinutesThisMonth}
-        sub={`יעד חודשי: ${dashboardView.accountStats.monthlyGoalMinutes} דק׳`}
-      />
-      <StatCard
-        label="דקות למידה מצטברות"
-        value={dashboardView.accountStats.learningMinutesLifetimeRounded}
-        sub="מפי סיכומי פגישות"
-      />
-    </div>
+    <>
+      <p className={T.panelIntro}>
+        סיכום ההתקדמות שלך בכל הנושאים — רמה, כוכבים, דיוק ודקות למידה.
+      </p>
+      <div className={T.statsSummaryCard}>
+        <p className={T.statsSummaryTitle}>במבט מהיר</p>
+        <div className={T.statsSummaryGrid}>
+          <div className={T.statsSummaryItem}>
+            <p className={T.statsSummaryLabel}>רמה</p>
+            <p className={T.statsSummaryValue}>{s.summaryLevel}</p>
+          </div>
+          <div className={T.statsSummaryItem}>
+            <p className={T.statsSummaryLabel}>כוכבים</p>
+            <p className={T.statsSummaryValue}>{s.summaryStars}</p>
+          </div>
+          <div className={T.statsSummaryItem}>
+            <p className={T.statsSummaryLabel}>דיוק</p>
+            <p className={T.statsSummaryValue}>{accLabel(s.overallAccuracyPct)}</p>
+          </div>
+          <div className={T.statsSummaryItem}>
+            <p className={T.statsSummaryLabel}>מטבעות</p>
+            <p className={T.statsSummaryValue}>{dashboardView.identity.coinBalance}</p>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-3">
+        <StatCard label="ניקוד שיא" value={s.bestScoreOverall} />
+        <StatCard label="שיא רצף" value={s.bestStreakOverall} />
+        <StatCard label="שאלות שנענו" value={s.questionsAnswered} />
+        <StatCard label="תשובות נכונות" value={s.correctAnswers} />
+        <StatCard
+          label="דקות למידה החודש"
+          value={s.learningMinutesThisMonth}
+          sub={`יעד: ${s.monthlyGoalMinutes} דק׳`}
+        />
+        <StatCard
+          label="דקות מצטברות"
+          value={s.learningMinutesLifetimeRounded}
+          sub="מפי סיכומי פגישות"
+        />
+      </div>
+    </>
   );
 }
 
 function MonthlyJourneySection({ monthlyJourney, className = "" }) {
+  const { tokens: T } = useStudentTheme();
   return (
-    <section className={`rounded-3xl border border-white/10 bg-white/[0.03] p-4 md:p-5 ${className}`}>
-      <h3 className="text-base md:text-lg font-bold text-white mb-3 text-right">מסע חודשי</h3>
+    <section className={`${T.monthlySection} ${className}`}>
+      <h3 className={T.monthlyTitle}>מסע חודשי</h3>
       <div className="space-y-3 text-right">
-        <p className="text-white/90">
+        <p className={T.monthlyText}>
           דקות החודש:{" "}
-          <span className="font-bold text-emerald-300 tabular-nums">{monthlyJourney.minutesThisMonth}</span> /{" "}
+          <span className={T.monthlyHighlight}>{monthlyJourney.minutesThisMonth}</span> /{" "}
           <span className="tabular-nums">{monthlyJourney.goalMinutes}</span>
         </p>
-        <div className="h-3 rounded-full bg-black/40 overflow-hidden border border-white/10">
+        <div className={T.progressTrack}>
           <div
-            className="h-full rounded-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-500"
+            className={T.progressFill}
             style={{ width: `${monthlyJourney.progressPct}%` }}
           />
         </div>
-        <p className="text-sm text-white/75">{monthlyJourney.encouragementHe}</p>
+        <p className={T.monthlyEncouragement}>{monthlyJourney.encouragementHe}</p>
       </div>
     </section>
   );
 }
 
 function SubjectsSection({ subjects }) {
+  const { tokens: T, subjectAccentBar } = useStudentTheme();
+  const subjectKeyAccent = {
+    math: subjectAccentBar["math-master"],
+    geometry: subjectAccentBar["geometry-master"],
+    english: subjectAccentBar["english-master"],
+    science: subjectAccentBar["science-master"],
+    hebrew: subjectAccentBar["hebrew-master"],
+    moledet_geography: subjectAccentBar["moledet-geography-master"],
+  };
   return (
-    <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
-      {subjects.map((s) => (
-        <div
-          key={s.key}
-          className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-4 flex flex-col text-right shadow-lg"
-        >
-          <h3 className="text-lg font-bold text-white mb-2">{s.labelHe}</h3>
-          <div className="text-sm text-white/70 space-y-1 mb-3 flex-1">
-            <p>דיוק: {s.accuracyPct != null ? `${s.accuracyPct}%` : "עדיין אין נתונים"}</p>
-            <p>
-              שאלות / נכונות: {s.answersTotal} / {s.correctTotal}
-            </p>
-            <p>
-              רמה {s.level} · כוכבים {s.stars}
-            </p>
-            <p className="text-xs text-white/55">דקות למידה (הערכה): {s.sessionMinutesRounded}</p>
+    <>
+      <p className={T.panelIntro}>
+        התקדמות לפי מקצוע — דיוק, שאלות, רמה וכוכבים. לחצו על «כניסה לנושא» כדי להתחיל לתרגל.
+      </p>
+      <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
+        {subjects.map((s) => (
+          <div key={s.key} className={T.subjectCard}>
+            <span
+              className={`${T.subjectAccentBar} ${subjectKeyAccent[s.key] || "bg-sky-400"}`}
+              aria-hidden
+            />
+            <h3 className={T.subjectTitle}>{s.labelHe}</h3>
+            <div className={`${T.subjectBody} flex-1`}>
+              <div className={T.subjectStatRow}>
+                <span className={T.subjectStatLabel}>דיוק</span>
+                <span className={T.subjectStatValue}>
+                  {s.accuracyPct != null ? `${s.accuracyPct}%` : "—"}
+                </span>
+              </div>
+              <div className={T.subjectStatRow}>
+                <span className={T.subjectStatLabel}>שאלות / נכונות</span>
+                <span className={T.subjectStatValue}>
+                  {s.answersTotal} / {s.correctTotal}
+                </span>
+              </div>
+              <div className={T.subjectStatRow}>
+                <span className={T.subjectStatLabel}>רמה · כוכבים</span>
+                <span className={T.subjectStatValue}>
+                  {s.level} · {s.stars}
+                </span>
+              </div>
+              <div className={T.subjectStatRow}>
+                <span className={T.subjectStatLabel}>דקות למידה</span>
+                <span className={T.subjectStatValue}>{s.sessionMinutesRounded}</span>
+              </div>
+            </div>
+            <div className={T.subjectProgressTrack}>
+              <div className={T.subjectProgressFill} style={{ width: `${s.progressIndicatorPct}%` }} />
+            </div>
+            <Link href={s.href} className={T.subjectLink}>
+              כניסה לנושא
+            </Link>
           </div>
-          <div className="h-1.5 rounded-full bg-black/40 mb-3 overflow-hidden">
-            <div className="h-full bg-sky-500/80 rounded-full" style={{ width: `${s.progressIndicatorPct}%` }} />
-          </div>
-          <Link
-            href={s.href}
-            className="mt-auto inline-flex justify-center rounded-xl bg-sky-500/90 hover:bg-sky-400 text-black font-bold py-2.5 text-sm transition"
-          >
-            כניסה לנושא
-          </Link>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
 
 function BadgesSection({ badges }) {
+  const { tokens: T } = useStudentTheme();
   if (badges.length === 0) {
     return (
-      <p className="text-white/70 text-right leading-relaxed">
+      <p className={T.emptyText}>
         עדיין אין תגים — אפשר להתחיל ללמוד ולצבור הישגים בכל נושא.
       </p>
     );
@@ -178,10 +256,10 @@ function BadgesSection({ badges }) {
       {badges.map((b, i) => (
         <li
           key={`${b.label}-${i}`}
-          className="rounded-full border border-amber-400/35 bg-amber-500/10 px-3 py-1.5 text-sm text-amber-50"
+          className={T.badgePill}
         >
           {b.label}
-          <span className="text-white/45 text-xs mr-1">({b.subjectLabelHe})</span>
+          <span className={T.badgeSubject}>({b.subjectLabelHe})</span>
         </li>
       ))}
     </ul>
@@ -189,18 +267,19 @@ function BadgesSection({ badges }) {
 }
 
 function RecommendationsSection({ recommendations }) {
+  const { tokens: T } = useStudentTheme();
   return (
     <div className="grid md:grid-cols-2 gap-3 md:gap-4">
       {recommendations.map((r) => (
         <div
           key={r.id}
-          className="rounded-2xl border border-violet-500/25 bg-violet-950/20 p-4 md:p-5 text-right flex flex-col"
+          className={T.recommendCard}
         >
-          <h3 className="font-bold text-violet-100 mb-2">{r.titleHe}</h3>
-          <p className="text-sm text-white/75 flex-1 mb-4">{r.descriptionHe}</p>
+          <h3 className={T.recommendTitle}>{r.titleHe}</h3>
+          <p className={T.recommendBody}>{r.descriptionHe}</p>
           <Link
             href={r.href}
-            className="inline-flex justify-center rounded-xl bg-violet-500 hover:bg-violet-400 text-white font-bold py-2.5 text-sm transition"
+            className={T.recommendCta}
           >
             {r.ctaHe}
           </Link>
@@ -212,6 +291,7 @@ function RecommendationsSection({ recommendations }) {
 
 export default function StudentHomePage() {
   const router = useRouter();
+  const { tokens: T, theme, isBright } = useStudentTheme();
   const [authPhase, setAuthPhase] = useState("checking");
   const [student, setStudent] = useState(null);
   const [homePayload, setHomePayload] = useState(null);
@@ -539,23 +619,38 @@ export default function StudentHomePage() {
         return dashboardView.dailyMissions?.missions?.length ? (
           <StudentDailyMissionsPanel dailyMissions={dashboardView.dailyMissions} />
         ) : (
-          <p className="text-white/70 text-right leading-relaxed">עדיין אין נתונים</p>
+          <p className={T.emptyText}>עדיין אין נתונים</p>
         );
       case "progress":
         return dashboardView.monthlyPersistence?.tiers?.length ? (
           <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />
         ) : (
-          <p className="text-white/70 text-right leading-relaxed">עדיין אין נתונים</p>
+          <p className={T.emptyText}>עדיין אין נתונים</p>
         );
       case "classroom":
-        return (
+        return personalActivitiesPhase === "loading" ? (
+          <p className={T.emptyText}>טוען פעילויות...</p>
+        ) : (
           <StudentClassroomActivitiesPanel
             activities={personalActivities}
             activitiesLoaded={personalActivitiesPhase === "ok" || personalActivitiesPhase === "error"}
+            emptyFallback={
+              <p className={T.panelEmpty}>
+                אין פעילויות אישיות כרגע. כשהמורה או ההורה ישלחו משימה — היא תופיע כאן.
+              </p>
+            }
           />
         );
       case "worksheets":
-        return <StudentWorksheetsPanel />;
+        return (
+          <StudentWorksheetsPanel
+            emptyFallback={
+              <p className={T.panelEmpty}>
+                אין דפי עבודה פתוחים כרגע. כשיוקצו דפי עבודה — הם יופיעו כאן.
+              </p>
+            }
+          />
+        );
       case "subjects":
         return <SubjectsSection subjects={dashboardView.subjects} />;
       case "badges":
@@ -568,15 +663,15 @@ export default function StudentHomePage() {
   };
 
   return (
-    <Layout>
-      <div key={student.id} className="max-w-6xl mx-auto px-3 sm:px-4 py-4 md:py-8 pb-6 overflow-x-hidden">
-        <section className="rounded-3xl border border-emerald-500/25 bg-gradient-to-br from-emerald-950/50 via-[#0c1224] to-indigo-950/40 p-5 md:p-8 shadow-xl shadow-black/40">
+    <Layout studentTheme={theme} studentShell="home">
+      <div key={student.id} className={`max-w-6xl mx-auto px-3 sm:px-4 py-4 md:py-8 pb-6 overflow-x-hidden ${T.pageWrap}`}>
+        <section className={T.hero}>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
             <div className="flex items-start gap-4">
               <button
                 type="button"
                 onClick={() => setShowAvatarModal(true)}
-                className="group shrink-0 rounded-2xl border border-white/10 bg-black/30 text-5xl md:text-6xl w-16 h-16 md:w-20 md:h-20 flex items-center justify-center cursor-pointer transition hover:border-emerald-400/50 hover:bg-black/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70"
+                className={T.heroAvatarBtn}
                 title="בחירת אווטר"
                 aria-label="פתח בחירת אווטר"
               >
@@ -593,60 +688,64 @@ export default function StudentHomePage() {
                 )}
               </button>
               <div className="min-w-0 text-right">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">שלום {heroName}</h1>
-                <p className="text-white/80 mt-1 text-sm md:text-base">
+                <h1 className={T.heroTitle}>שלום {heroName}</h1>
+                <p className={T.heroSub}>
                   {heroGrade ? heroGrade : "עדיין אין נתונים"}
                 </p>
-                <p className="text-amber-200/95 mt-1 text-sm font-semibold tabular-nums">מטבעות: {heroCoins}</p>
-                <p className="text-emerald-200/90 mt-2 text-sm md:text-base leading-relaxed">{heroTagline}</p>
+                <p className={T.heroCoins}>מטבעות: {heroCoins}</p>
+                <p className={T.heroTagline}>{heroTagline}</p>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 shrink-0">
-              <Link
-                href="/learning"
-                className="inline-flex justify-center items-center rounded-xl bg-emerald-500 text-black font-bold px-5 py-3 text-sm md:text-base hover:bg-emerald-400 transition shadow-lg shadow-emerald-900/40"
-              >
-                התחל ללמוד
-              </Link>
-              <Link
-                href="/games"
-                className="inline-flex justify-center items-center rounded-xl border border-amber-400/40 bg-amber-500/15 px-5 py-3 text-sm md:text-base font-semibold text-amber-100 hover:bg-amber-500/25 transition"
-              >
-                משחקים
-              </Link>
-              <button
-                type="button"
-                disabled={logoutBusy}
-                onClick={() => void onLogout()}
-                className="inline-flex justify-center items-center rounded-xl border border-rose-400/40 bg-rose-500/15 px-5 py-3 text-sm md:text-base font-semibold text-rose-100 hover:bg-rose-500/25 transition disabled:opacity-50"
-              >
-                {logoutBusy ? "יוצאים..." : "התנתקות"}
-              </button>
+            <div className="flex flex-col gap-2 md:gap-3 shrink-0">
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                <Link
+                  href="/learning"
+                  className={T.ctaPrimary}
+                >
+                  התחל ללמוד
+                </Link>
+                <Link href="/games" className={T.ctaGames}>
+                  משחקים
+                </Link>
+                <button
+                  type="button"
+                  disabled={logoutBusy}
+                  onClick={() => void onLogout()}
+                  className={T.ctaLogout}
+                >
+                  {logoutBusy ? "יוצאים..." : "התנתקות"}
+                </button>
+              </div>
+              <StudentThemePicker className="w-full sm:max-w-xs" />
             </div>
           </div>
-          {logoutMessage ? <p className="text-rose-200 text-sm mt-4 text-right">{logoutMessage}</p> : null}
+          {logoutMessage ? (
+            <p className={`text-sm mt-4 text-right ${isBright ? "text-rose-600" : "text-rose-200"}`}>
+              {logoutMessage}
+            </p>
+          ) : null}
         </section>
 
         {profilePending ? (
-          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 animate-pulse">
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 animate-pulse">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="h-[5.5rem] md:h-[6.25rem] rounded-2xl bg-white/5" />
+              <div key={i} className={T.skeleton} />
             ))}
           </div>
         ) : null}
 
         {profilePhase === "error" && !profilePending ? (
-          <div className="mt-4 rounded-2xl border border-amber-500/30 bg-amber-950/25 p-5 text-right space-y-3">
-            <p className="text-amber-100 font-semibold">לא הצלחנו לטעון את נתוני ההתקדמות מהשרת</p>
-            <p className="text-white/80 text-sm leading-relaxed">
+          <div className={T.errorBox}>
+            <p className={T.errorTitle}>לא הצלחנו לטעון את נתוני ההתקדמות מהשרת</p>
+            <p className={T.errorBody}>
               פרטי החשבון (שם, כיתה, מטבעות) עדיין מההתחברות. נתוני רמה, כוכבים, שאלות ודקות למידה לא הוצגו כדי
               שלא יופיעו אפסים מטעים.
             </p>
-            <p className="text-white/70 text-sm">{profileError}</p>
+            <p className={T.errorBody}>{profileError}</p>
             <button
               type="button"
               onClick={() => void loadHomeDashboard()}
-              className="rounded-xl bg-amber-500 text-black font-bold px-4 py-2 text-sm hover:bg-amber-400"
+              className={T.errorBtn}
             >
               נסו שוב
             </button>
@@ -654,13 +753,13 @@ export default function StudentHomePage() {
         ) : null}
 
         {buildFailed ? (
-          <div className="mt-4 rounded-2xl border border-rose-500/30 bg-rose-950/20 p-5 text-right">
-            <p className="text-rose-100 font-semibold mb-2">שגיאה בעיבוד הנתונים</p>
-            <p className="text-white/75 text-sm mb-4">השרת החזיר תשובה תקינה אבל לא ניתן היה לבנות את לוח הבקרה.</p>
+          <div className={T.buildErrorBox}>
+            <p className={T.buildErrorTitle}>שגיאה בעיבוד הנתונים</p>
+            <p className={T.buildErrorBody}>השרת החזיר תשובה תקינה אבל לא ניתן היה לבנות את לוח הבקרה.</p>
             <button
               type="button"
               onClick={() => void loadHomeDashboard()}
-              className="rounded-xl bg-rose-500/90 text-white font-bold px-4 py-2 text-sm hover:bg-rose-400"
+              className={T.buildErrorBtn}
             >
               נסו שוב
             </button>
@@ -669,13 +768,14 @@ export default function StudentHomePage() {
 
         {dashboardView ? (
           <section className="mt-4 md:mt-5" aria-label="לוח בקרה">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               {Object.entries(HOME_PANELS).map(([id, panel]) => (
                 <DashboardTile
                   key={id}
                   emoji={panel.emoji}
                   title={panel.title}
                   subtitle={dashboardSubtitles[id] || null}
+                  variant={panel.variant}
                   onClick={() => setActivePanel(id)}
                 />
               ))}
@@ -686,6 +786,8 @@ export default function StudentHomePage() {
       <StudentHomeModal
         open={Boolean(activePanel && dashboardView)}
         title={activePanel ? HOME_PANELS[activePanel]?.title ?? "" : ""}
+        emoji={activePanel ? HOME_PANELS[activePanel]?.emoji ?? "" : ""}
+        variant={activePanel ? HOME_PANELS[activePanel]?.variant ?? "default" : "default"}
         size={activePanel ? HOME_PANELS[activePanel]?.size ?? "2xl" : "2xl"}
         onClose={closeHomePanel}
       >

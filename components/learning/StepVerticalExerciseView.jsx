@@ -9,8 +9,10 @@ import {
 } from "../../utils/learning-step-highlight-styles";
 import { DigitCell } from "./StepHighlightCells";
 import StepExerciseShell from "./StepExerciseShell";
+import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 
 function ColumnLabelRow({ maxLen, activeColumn, label, stepKey }) {
+  const ex = useStepExerciseUi();
   return (
     <div
       className="grid gap-x-1 mb-0.5 h-3"
@@ -24,7 +26,7 @@ function ColumnLabelRow({ maxLen, activeColumn, label, stepKey }) {
         return (
           <span
             key={`${stepKey}-label-${idx}`}
-            className="inline-block w-[1.5ch] text-center text-[10px] leading-none text-emerald-300/75"
+            className={`inline-block w-[1.5ch] text-center text-[10px] leading-none ${ex.accentMuted}`}
           >
             {showLabel ? label : "\u00A0"}
           </span>
@@ -65,6 +67,7 @@ export default function StepVerticalExerciseView({
   isDecimal = false,
   className = "",
 }) {
+  const ex = useStepExerciseUi();
   const layout = buildVerticalExerciseDigitLayout({
     topValue,
     bottomValue,
@@ -86,7 +89,7 @@ export default function StepVerticalExerciseView({
   return (
     <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
         <div
-          className="flex flex-col items-center font-mono text-2xl leading-[1.8] max-w-full"
+          className={`flex flex-col items-center font-mono text-2xl leading-[1.8] max-w-full ${ex.monoText}`}
           style={{ direction: "ltr" }}
         >
           <ColumnLabelRow
@@ -128,7 +131,7 @@ export default function StepVerticalExerciseView({
           </div>
 
           <div
-            className="h-[2px] bg-white my-2"
+            className={`h-[2px] ${ex.divider} my-2`}
             style={{
               width: `calc(${OP_COL_WIDTH} + ${maxLen} * ${DIGIT_COL_WIDTH} + ${maxLen - 1} * 0.25rem)`,
             }}

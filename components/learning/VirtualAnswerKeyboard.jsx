@@ -20,6 +20,10 @@ import { getVirtualAnswerKeyboardRows } from "../../lib/learning/virtual-answer-
  *   compact?: boolean,
  *   submitButton?: { label?: string, onClick: () => void, disabled?: boolean, testId?: string } | null,
  *   submitTone?: "green" | "blue",
+ *   keyClassName?: string,
+ *   actionKeyClassName?: string,
+ *   submitClassName?: string,
+ *   closeButtonClassName?: string,
  * }} props
  */
 export default function VirtualAnswerKeyboard({
@@ -33,6 +37,10 @@ export default function VirtualAnswerKeyboard({
   compact = false,
   submitButton = null,
   submitTone = "green",
+  keyClassName = "",
+  actionKeyClassName = "",
+  submitClassName = "",
+  closeButtonClassName = "",
 }) {
   const rows = getVirtualAnswerKeyboardRows(layout, { compact });
   if (!rows.length) return null;
@@ -52,15 +60,20 @@ export default function VirtualAnswerKeyboard({
 
   const rowGapClass = compact ? "gap-1" : "gap-1.5";
   const colGapClass = compact ? "gap-1" : "gap-1.5";
-  const keyClass = compact
+  const defaultKeyClass = compact
     ? "min-h-[40px] h-10 rounded-md border border-white/20 bg-black/35 text-white text-base font-semibold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform"
     : "min-h-[44px] rounded-lg border border-white/20 bg-black/35 text-white text-lg font-bold active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-transform";
-  const actionKeyClass = compact ? `${keyClass} text-sm` : keyClass;
-  const submitClass = compact
+  const keyClass = keyClassName || defaultKeyClass;
+  const actionKeyClass = actionKeyClassName || (compact ? `${keyClass} text-sm` : keyClass);
+  const defaultSubmitClass = compact
     ? submitTone === "blue"
       ? "col-span-3 min-h-[40px] h-10 rounded-md border border-cyan-400/50 bg-cyan-500 text-black text-base font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-400 transition-transform"
       : "col-span-3 min-h-[40px] h-10 rounded-md border border-emerald-400/40 bg-emerald-500/80 text-white text-base font-bold leading-none active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500 transition-transform"
     : "";
+  const submitClass = submitClassName || defaultSubmitClass;
+  const closeBtnClass =
+    closeButtonClassName ||
+    "px-2 py-0.5 rounded-md text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10";
 
   return (
     <div
@@ -76,7 +89,7 @@ export default function VirtualAnswerKeyboard({
           <button
             type="button"
             onClick={onClose}
-            className="px-2 py-0.5 rounded-md text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10"
+            className={closeBtnClass}
             aria-label="סגור"
             title="סגור"
           >

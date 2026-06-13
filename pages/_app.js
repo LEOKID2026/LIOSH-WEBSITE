@@ -7,6 +7,7 @@ import StudentAccessGate from "../components/student/StudentAccessGate";
 import DevServiceWorkerCleanup from "../components/dev/DevServiceWorkerCleanup";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
+import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
 
 if (typeof window !== "undefined") {
   initPwaInstallPromptCapture();
@@ -188,13 +189,15 @@ export default function MyApp({ Component, pageProps }) {
         <title>LEO K - Kids Games & Learning</title>
       </Head>
       <OfflineIndicator />
-      {shouldGate ? (
-        <StudentAccessGate>
+      <StudentThemeProvider>
+        {shouldGate ? (
+          <StudentAccessGate>
+            <Component {...pageProps} />
+          </StudentAccessGate>
+        ) : (
           <Component {...pageProps} />
-        </StudentAccessGate>
-      ) : (
-        <Component {...pageProps} />
-      )}
+        )}
+      </StudentThemeProvider>
     </>
   );
 }

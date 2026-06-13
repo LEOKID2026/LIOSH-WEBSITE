@@ -40,6 +40,7 @@ export default function MathScratchpadSlot({
   defaultOpen = false,
   hideInlineOpenButton = false,
   preserveQuestionLayout = false,
+  openButtonClassName,
   children,
 }) {
   const isControlled = openControlled !== undefined;
@@ -215,7 +216,10 @@ export default function MathScratchpadSlot({
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="px-4 py-2 text-sm rounded-lg bg-white/10 text-white/90 hover:bg-white/15 border border-white/20"
+              className={
+                openButtonClassName ??
+                "px-4 py-2 text-sm rounded-lg bg-white/10 text-white/90 hover:bg-white/15 border border-white/20"
+              }
               data-testid="math-scratchpad-open"
             >
               דף טיוטה

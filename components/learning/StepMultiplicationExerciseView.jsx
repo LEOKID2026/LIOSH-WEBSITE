@@ -1,5 +1,6 @@
 import React from "react";
 import StepExerciseShell from "./StepExerciseShell";
+import { useStepExerciseUi } from "../../contexts/StepExerciseUiContext";
 import { DigitCell } from "./StepHighlightCells";
 import {
   DIGIT_COL_WIDTH,
@@ -31,6 +32,7 @@ export default function StepMultiplicationExerciseView({
   stepIndex = 0,
   className = "",
 }) {
+  const ex = useStepExerciseUi();
   const parsed = parseMultiplicationPre(pre || step?.pre);
   if (!parsed) return null;
 
@@ -41,7 +43,7 @@ export default function StepMultiplicationExerciseView({
   return (
     <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
       <div
-        className="flex flex-col items-center font-mono text-2xl leading-[1.8] max-w-full"
+        className={`flex flex-col items-center font-mono text-2xl leading-[1.8] max-w-full ${ex.monoText}`}
         style={{ direction: "ltr" }}
       >
         <Row
@@ -60,7 +62,7 @@ export default function StepMultiplicationExerciseView({
           prefix="b"
         />
         <div
-          className="h-[2px] bg-white my-2"
+          className={`h-[2px] ${ex.divider} my-2`}
           style={{
             width: `calc(${OP_COL_WIDTH} + ${layout.width} * ${DIGIT_COL_WIDTH} + ${Math.max(0, layout.width - 1)} * 0.25rem)`,
           }}
@@ -87,7 +89,7 @@ export default function StepMultiplicationExerciseView({
         {layout.sumDigits && (
           <>
             <div
-              className="h-[2px] bg-white my-2"
+              className={`h-[2px] ${ex.divider} my-2`}
               style={{
                 width: `calc(${OP_COL_WIDTH} + ${layout.width} * ${DIGIT_COL_WIDTH} + ${Math.max(0, layout.width - 1)} * 0.25rem)`,
               }}

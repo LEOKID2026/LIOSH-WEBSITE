@@ -179,7 +179,7 @@ export default function StudentAvatarPickerModal({
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/40 p-4"
       onClick={() => onClose()}
       dir="rtl"
       role="dialog"
@@ -187,42 +187,42 @@ export default function StudentAvatarPickerModal({
       aria-labelledby="student-avatar-modal-title"
     >
       <div
-        className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border-2 border-white/20 bg-gradient-to-br from-[#080c16] to-[#0a0f1d] p-6 shadow-2xl"
+        className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-sky-200 bg-white p-6 shadow-xl shadow-slate-300/40"
         onClick={(ev) => ev.stopPropagation()}
         style={{ scrollbarGutter: "stable", scrollbarWidth: "thin" }}
       >
         <button
           type="button"
           onClick={() => onClose()}
-          className="absolute left-4 top-4 z-10 text-2xl font-bold text-white/80 hover:text-white"
+          className="absolute left-4 top-4 z-10 text-2xl font-bold text-slate-500 hover:text-slate-800"
           style={{ direction: "ltr" }}
           aria-label="סגור"
         >
           ✖
         </button>
 
-        <h2 id="student-avatar-modal-title" className="mb-4 text-center text-2xl font-extrabold text-white">
+        <h2 id="student-avatar-modal-title" className="mb-4 text-center text-2xl font-extrabold text-slate-800">
           👤 פרופיל שחקן
         </h2>
 
-        <div className="rounded-lg border border-white/10 bg-black/30 p-3">
+        <div className="rounded-xl border border-slate-200 bg-sky-50/50 p-3">
           <div className="mb-3 flex items-center gap-3">
             <div className="text-4xl">
               {playerAvatarImage ? (
-                <img src={playerAvatarImage} alt="אווטר" className="h-16 w-16 rounded-full object-cover" />
+                <img src={playerAvatarImage} alt="אווטר" className="h-16 w-16 rounded-full object-cover border-2 border-sky-200" />
               ) : (
-                <span className="inline-flex h-16 w-16 items-center justify-center text-5xl leading-none" aria-hidden>
+                <span className="inline-flex h-16 w-16 items-center justify-center text-5xl leading-none bg-white rounded-full border-2 border-sky-200" aria-hidden>
                   {playerAvatar}
                 </span>
               )}
             </div>
             <div className="min-w-0 flex-1 text-right">
-              <div className="mb-1 text-xs text-white/60">שם שחקן</div>
-              <div className="truncate text-lg font-bold text-white">{playerName || "שחקן"}</div>
+              <div className="mb-1 text-xs text-slate-500">שם שחקן</div>
+              <div className="truncate text-lg font-bold text-slate-800">{playerName || "שחקן"}</div>
             </div>
           </div>
 
-          <div className="text-xs text-white/60 mb-2">בחר אווטר:</div>
+          <div className="text-xs text-slate-500 mb-2">בחר אווטר:</div>
 
           <div className="mb-3">
             <label className="block w-full cursor-pointer">
@@ -237,7 +237,7 @@ export default function StudentAvatarPickerModal({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex-1 rounded-lg bg-blue-500/80 px-3 py-2 text-xs font-bold text-white transition-all hover:bg-blue-500"
+                  className="flex-1 rounded-lg bg-sky-500 px-3 py-2 text-xs font-bold text-white transition-all hover:bg-sky-600 min-h-10"
                 >
                   📷 בחר תמונה
                 </button>
@@ -246,7 +246,7 @@ export default function StudentAvatarPickerModal({
                     type="button"
                     onClick={() => void handleRemoveAvatarImage()}
                     disabled={saving}
-                    className="rounded-lg bg-red-500/80 px-3 py-2 text-xs font-bold text-white transition-all hover:bg-red-500 disabled:opacity-50"
+                    className="rounded-lg bg-rose-500 px-3 py-2 text-xs font-bold text-white transition-all hover:bg-rose-600 disabled:opacity-50 min-h-10"
                   >
                     🗑️ מחק תמונה
                   </button>
@@ -254,7 +254,7 @@ export default function StudentAvatarPickerModal({
               </div>
             </label>
             {playerAvatarImage ? (
-              <div className="mt-2 text-center text-xs text-white/60">תמונה נבחרה ✓</div>
+              <div className="mt-2 text-center text-xs text-slate-500">תמונה נבחרה ✓</div>
             ) : null}
           </div>
 
@@ -265,10 +265,10 @@ export default function StudentAvatarPickerModal({
                 type="button"
                 disabled={saving}
                 onClick={() => selectEmoji(avatar)}
-                className={`rounded-lg p-1.5 text-2xl transition-all ${
+                className={`rounded-lg p-1.5 text-2xl transition-all min-h-10 ${
                   !playerAvatarImage && playerAvatar === avatar
-                    ? "scale-110 border-2 border-yellow-400 bg-yellow-500/40"
-                    : "border border-white/10 bg-black/30 hover:bg-black/40"
+                    ? "scale-110 border-2 border-amber-400 bg-amber-50"
+                    : "border border-slate-200 bg-white hover:bg-sky-50"
                 } disabled:opacity-50`}
               >
                 {avatar}
@@ -276,13 +276,13 @@ export default function StudentAvatarPickerModal({
             ))}
           </div>
 
-          {saveError ? <p className="mt-3 text-center text-sm text-rose-300">{saveError}</p> : null}
+          {saveError ? <p className="mt-3 text-center text-sm text-rose-600">{saveError}</p> : null}
         </div>
 
         <button
           type="button"
           onClick={() => onClose()}
-          className="mt-4 w-full rounded-xl bg-white/10 py-2.5 text-sm font-bold text-white ring-1 ring-white/15 transition hover:bg-white/15"
+          className="mt-4 w-full rounded-xl bg-sky-500 py-2.5 text-sm font-bold text-white transition hover:bg-sky-600 min-h-12"
         >
           סגור
         </button>

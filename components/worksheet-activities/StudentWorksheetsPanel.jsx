@@ -4,8 +4,10 @@ import {
   worksheetGradingStatusLabelHe,
   worksheetModeLabelHe,
 } from "../../lib/worksheet-activities/worksheet-labels.client.js";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 
-export default function StudentWorksheetsPanel() {
+export default function StudentWorksheetsPanel({ emptyFallback = null }) {
+  const { tokens: T } = useStudentTheme();
   const [worksheets, setWorksheets] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -30,31 +32,33 @@ export default function StudentWorksheetsPanel() {
     void load();
   }, [load]);
 
-  if (!loaded || worksheets.length === 0) return null;
+  if (!loaded) {
+    return <p className={T.emptyText}>טוען דפי עבודה...</p>;
+  }
+
+  if (worksheets.length === 0) {
+    return emptyFallback;
+  }
 
   return (
-    <section className="rounded-3xl border border-violet-500/25 bg-violet-950/20 p-5 md:p-7 mb-6">
-      <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">דפי עבודה</h2>
+    <section className={T.worksheetSection}>
+      <p className={T.panelIntro}>
+        דפי עבודה שהוקצו לך — פתחו כל דף, מלאו ושלחו לבדיקה.
+      </p>
       <div className="grid gap-3">
         {worksheets.map((w) => {
           const st = w.studentStatus?.gradingStatus || "not_submitted";
           const href = `/student/worksheet/${encodeURIComponent(w.worksheetId)}`;
           return (
-            <div
-              key={w.worksheetId}
-              className="rounded-2xl border border-white/10 bg-black/30 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-right"
-            >
+            <div key={w.worksheetId} className={T.worksheetCard}>
               <div>
-                <h3 className="font-bold text-white">{w.title}</h3>
-                <p className="text-sm text-white/65 mt-1">
+                <h3 className={T.worksheetCardTitle}>{w.title}</h3>
+                <p className={T.worksheetCardMeta}>
                   {worksheetModeLabelHe(w.worksheetMode)} · {worksheetGradingStatusLabelHe(st)}
                   {w.displayScore != null ? ` · ציון: ${w.displayScore}%` : ""}
                 </p>
               </div>
-              <Link
-                href={href}
-                className="inline-flex justify-center rounded-xl bg-violet-500/90 hover:bg-violet-400 text-black font-bold py-2.5 px-5 text-sm shrink-0"
-              >
+              <Link href={href} className={T.worksheetCardCta}>
                 פתיחה
               </Link>
             </div>

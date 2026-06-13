@@ -11,6 +11,8 @@ export default function LearningBookIndexTile({
   grade,
   onClick,
   testId,
+  /** Mobile-only absolute bottom offset (pre-game HUD). */
+  mobileBottomClass = "bottom-[9.25rem]",
 }) {
   const href = getLearningBookIndexHref(subject, grade);
   if (!href) return null;
@@ -19,7 +21,7 @@ export default function LearningBookIndexTile({
 
   return (
     <div
-      className="pointer-events-none absolute z-30 bottom-[9.25rem] left-1/2 -translate-x-1/2 md:bottom-auto md:left-0 md:top-[0.35rem] md:translate-x-0 md:-translate-y-10 lg:top-[0.5rem] lg:-translate-y-12"
+      className={`pointer-events-none absolute z-30 ${mobileBottomClass} left-1/2 -translate-x-1/2 md:bottom-auto md:left-0 md:top-[0.35rem] md:translate-x-0 md:-translate-y-10 lg:top-[0.5rem] lg:-translate-y-12`}
       aria-hidden={false}
     >
       <button

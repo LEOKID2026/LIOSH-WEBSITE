@@ -10,8 +10,10 @@ import {
   studentActivityScopeBadgeHe,
 } from "../../lib/classroom-activities/student-activity-scope-labels.client.js";
 import { personalActivitiesSectionTitleHe } from "../../lib/teacher-portal/teacher-ui.he.js";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 
 function ActivityCard({ a, scopeBadge = null }) {
+  const { tokens: T } = useStudentTheme();
   const href = `/student/activity/${encodeURIComponent(a.activityId)}`;
   const cta =
     a.studentStatus === "submitted"
@@ -21,27 +23,20 @@ function ActivityCard({ a, scopeBadge = null }) {
         : "התחל";
 
   return (
-    <div
-      className="rounded-2xl border border-white/10 bg-black/30 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-right"
-    >
+    <div className={T.activityCard}>
       <div>
         <div className="flex flex-wrap items-center gap-2 justify-end">
-          <h3 className="font-bold text-white">{a.title}</h3>
+          <h3 className={T.activityCardTitle}>{a.title}</h3>
           {scopeBadge ? (
-            <span className="text-[10px] tracking-wide rounded px-1.5 py-0.5 bg-violet-500/30 text-violet-100 border border-violet-400/40">
-              {scopeBadge}
-            </span>
+            <span className={T.activityScopeBadge}>{scopeBadge}</span>
           ) : null}
         </div>
-        <p className="text-sm text-white/65 mt-1">
+        <p className={T.activityCardMeta}>
           {activityModeLabelHe(a.mode)} · {a.questionCount} שאלות ·{" "}
           {studentActivityStatusLabelHe(a.studentStatus)}
         </p>
       </div>
-      <Link
-        href={href}
-        className="inline-flex justify-center rounded-xl bg-cyan-500/90 hover:bg-cyan-400 text-black font-bold py-2.5 px-5 text-sm shrink-0"
-      >
+      <Link href={href} className={T.activityCardCta}>
         {cta}
       </Link>
     </div>
@@ -49,13 +44,14 @@ function ActivityCard({ a, scopeBadge = null }) {
 }
 
 /**
- * @param {{ activities?: Array<Record<string, unknown>>|null, activitiesLoaded?: boolean }} props
- * When `activities` is passed from student home, the panel reuses that fetch (avoids duplicate/empty modal).
+ * @param {{ activities?: Array<Record<string, unknown>>|null, activitiesLoaded?: boolean, emptyFallback?: import('react').ReactNode }} props
  */
 export default function StudentClassroomActivitiesPanel({
   activities: activitiesProp = null,
   activitiesLoaded: activitiesLoadedProp = false,
+  emptyFallback = null,
 }) {
+  const { tokens: T } = useStudentTheme();
   const useParentActivities = activitiesProp != null;
   const [activities, setActivities] = useState(() =>
     useParentActivities ? activitiesProp : []
@@ -105,7 +101,7 @@ export default function StudentClassroomActivitiesPanel({
   }
 
   if (activities.length === 0) {
-    return null;
+    return emptyFallback;
   }
 
   const personalSectionTitle = personalActivitiesSectionTitleHe();
@@ -121,11 +117,12 @@ export default function StudentClassroomActivitiesPanel({
 
   return (
     <>
+      <p className={T.panelIntro}>
+        משימות מהמורה, מההורה או מהכיתה — לחצו «התחל» או «המשך» כדי לפתוח.
+      </p>
       {classActivities.length > 0 ? (
-        <section className="rounded-3xl border border-cyan-500/25 bg-cyan-950/20 p-5 md:p-7 mb-6">
-          <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">
-            פעילויות כיתה
-          </h2>
+        <section className={T.activitySection}>
+          <h2 className={T.activitySectionTitle}>פעילויות כיתה</h2>
           <div className="grid gap-3">
             {classActivities.map((a) => (
               <ActivityCard key={a.activityId} a={a} />
@@ -135,13 +132,8 @@ export default function StudentClassroomActivitiesPanel({
       ) : null}
 
       {teacherPersonalActivities.length > 0 ? (
-        <section
-          className="rounded-3xl border border-violet-500/25 bg-violet-950/20 p-5 md:p-7 mb-6"
-          data-testid="student-personal-activities"
-        >
-          <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">
-            {personalSectionTitle}
-          </h2>
+        <section className={T.activitySection} data-testid="student-personal-activities">
+          <h2 className={T.activitySectionTitle}>{personalSectionTitle}</h2>
           <div className="grid gap-3">
             {teacherPersonalActivities.map((a) => (
               <ActivityCard
@@ -156,12 +148,10 @@ export default function StudentClassroomActivitiesPanel({
 
       {parentActivities.length > 0 ? (
         <section
-          className="rounded-3xl border border-emerald-500/25 bg-emerald-950/20 p-5 md:p-7"
+          className={`${T.activitySection} border-emerald-200 bg-emerald-50/50`}
           data-testid="student-parent-activities"
         >
-          <h2 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 text-right">
-            פעילות אישית
-          </h2>
+          <h2 className={`${T.activitySectionTitle} text-emerald-900`}>פעילות מההורים</h2>
           <div className="grid gap-3">
             {parentActivities.map((a) => (
               <ActivityCard
