@@ -4036,8 +4036,6 @@ export default function MathMaster() {
                 </button>
               </div>
 
-              <LearningMasterAdSlot MB={MB} />
-
               {!playerName.trim() && (
                 <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל
@@ -4951,10 +4949,10 @@ export default function MathMaster() {
                 </div>
                 </ScratchpadVirtualInputProvider>
               )}
-
-              <LearningMasterAdSlot MB={MB} />
             </>
           )}
+
+          <LearningMasterAdSlot MB={MB} />
 
           {/* Multiplication Table Modal */}
           {showMultiplicationTable && (

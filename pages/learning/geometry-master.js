@@ -2831,8 +2831,6 @@ export default function GeometryMaster() {
                 </button>
               </div>
 
-              <LearningMasterAdSlot MB={MB} />
-
               {!playerName.trim() && (
                 <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל
@@ -3257,9 +3255,10 @@ export default function GeometryMaster() {
                   </div>
               )}
 
-              <LearningMasterAdSlot MB={MB} />
             </>
           )}
+
+          <LearningMasterAdSlot MB={MB} />
 
           {showLeaderboard && (
             <div

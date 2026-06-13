@@ -11,8 +11,8 @@ export default function LearningBookIndexTile({
   grade,
   onClick,
   testId,
-  /** Mobile-only absolute bottom offset (pre-game HUD; includes pre-game ad slot below action buttons). */
-  mobileBottomClass = "bottom-[12.5rem]",
+  /** Mobile-only absolute bottom offset (pre-game HUD; aligned above action buttons). */
+  mobileBottomClass = "bottom-[9.25rem]",
 }) {
   const href = getLearningBookIndexHref(subject, grade);
   if (!href) return null;

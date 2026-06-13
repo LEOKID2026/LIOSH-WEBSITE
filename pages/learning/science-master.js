@@ -3227,8 +3227,6 @@ function saveScienceAnswerInParallel({
                 </button>
               </div>
 
-              <LearningMasterAdSlot MB={MB} />
-
               {!playerName.trim() && (
                 <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל
@@ -3377,8 +3375,6 @@ function saveScienceAnswerInParallel({
                 </div>
               </div>
 
-              <LearningMasterAdSlot MB={MB} />
-
               {/* SOLUTION MODAL */}
               {isShowingAnySolution && explanationQuestion && (
                 <StepExerciseUiProvider value={stepExerciseUi}>
@@ -3496,6 +3492,8 @@ function saveScienceAnswerInParallel({
                 )}
             </>
           )}
+
+          <LearningMasterAdSlot MB={MB} />
 
           {/* LEADERBOARD MODAL */}
           {showLeaderboard && (
