@@ -2,8 +2,10 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
-
-const CONTACT_EMAIL = "leokid2026@gmail.com";
+import {
+  CONTACT_EMAIL,
+  LEGAL_CONTACT_PAGE_LINKS,
+} from "../data/legal/sitePolicies.he";
 const INSTAGRAM_URL = "https://www.instagram.com/leotheshiba21";
 /** כשיש קישור — ממלאים כאן */
 const FACEBOOK_URL = "";
@@ -196,26 +198,29 @@ export default function Contact() {
           ))}
         </div>
 
-        <motion.p
-          className="text-sm text-white/60 text-center max-w-xl mx-auto pb-8 leading-relaxed"
+        <motion.nav
+          className="w-full max-w-2xl mx-auto pb-8 text-center space-y-3"
+          aria-label="מסמכים משפטיים ויצירת קשר"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
         >
-          לפניות בנושא פרטיות, מחיקת נתונים או נגישות —{" "}
-          <Link href="/privacy" className="text-amber-300 underline">
-            מדיניות פרטיות
-          </Link>
-          ,{" "}
-          <Link href="/data-deletion" className="text-amber-300 underline">
-            מחיקת נתונים
-          </Link>
-          ,{" "}
-          <Link href="/accessibility" className="text-amber-300 underline">
-            נגישות
-          </Link>
-          .
-        </motion.p>
+          <p className="text-sm font-semibold text-white/80">מסמכים משפטיים</p>
+          <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+            {LEGAL_CONTACT_PAGE_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-amber-300 underline hover:text-amber-200">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="text-sm text-white/70">
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-amber-300 underline hover:text-amber-200">
+              {CONTACT_EMAIL}
+            </a>
+          </p>
+        </motion.nav>
       </div>
 
       {activeAnswer && (

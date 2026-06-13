@@ -2,10 +2,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
+import SiteLegalFooterBar from "./layout/SiteLegalFooterBar.jsx";
 import StudentAdSlot from "./student/StudentAdSlot.jsx";
-import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
 import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl, shouldShowLayoutStudentAdSlot } from "../lib/site-nav";
 import { STUDENT_BRIGHT_PAGE_BG_STYLE, STUDENT_BRIGHT_SITE_CHROME_BG } from "../lib/student-ui/student-bright-page-background.client.js";
+import { STUDENT_LAYOUT_CHROME_BOTTOM_CSS } from "../lib/student-ui/student-ad-slot.client.js";
 
 export default function Layout({
   children,
@@ -78,12 +79,14 @@ export default function Layout({
     : "px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition";
   const showStudentAd = shouldShowLayoutStudentAdSlot(pathname);
   const footerClass = isStudentBright
-    ? `border-t border-sky-100 ${STUDENT_BRIGHT_SITE_CHROME_BG} shrink-0 ${homepage ? "" : "mt-10"}`
-    : `border-t border-white/10 bg-black/40 shrink-0 ${homepage ? "" : "mt-10"}`;
-  const footerTextClass = isStudentBright ? "text-slate-500" : "text-white/60";
-  const footerLinkClass = isStudentBright
-    ? "hover:text-slate-800 transition"
-    : "hover:text-white transition";
+    ? `border-t border-sky-100 ${STUDENT_BRIGHT_SITE_CHROME_BG} shrink-0 ${homepage || showStudentAd ? "" : "mt-10"}`
+    : `border-t border-white/10 bg-black/40 shrink-0 ${homepage || showStudentAd ? "" : "mt-10"}`;
+
+  const renderLegalFooter = () => (
+    <footer className={footerClass}>
+      <SiteLegalFooterBar isStudentBright={isStudentBright} />
+    </footer>
+  );
 
   return (
     <div
@@ -162,29 +165,26 @@ export default function Layout({
         </div>
       )}
 
-      <main className="flex-1 min-h-0 flex flex-col">
+      <main
+        className="flex-1 min-h-0 flex flex-col"
+        style={showStudentAd ? { paddingBottom: STUDENT_LAYOUT_CHROME_BOTTOM_CSS } : undefined}
+      >
         {children}
       </main>
       {showStudentAd ? (
-        <StudentAdSlot
-          variant="layout"
-          theme={isStudentBright ? "bright" : "classic"}
-        />
-      ) : null}
-      <footer className={footerClass}>
-        <div className={`max-w-6xl mx-auto px-4 py-4 text-xs ${footerTextClass} flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-between items-start sm:items-center`}>
-          <span>
-            © {new Date().getFullYear()} LEO K · משחקים ולמידה לילדים
-          </span>
-          <nav aria-label="קישורים משפטיים" className="flex flex-wrap gap-x-4 gap-y-1">
-            {LEGAL_FOOTER_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className={footerLinkClass}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+        <div
+          className="fixed inset-x-0 bottom-0 z-30 flex flex-col"
+          style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+        >
+          <StudentAdSlot
+            variant="layout"
+            theme={isStudentBright ? "bright" : "classic"}
+          />
+          {renderLegalFooter()}
         </div>
-      </footer>
+      ) : (
+        renderLegalFooter()
+      )}
     </div>
   );
 }

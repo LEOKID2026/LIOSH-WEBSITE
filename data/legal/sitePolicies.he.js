@@ -23,7 +23,7 @@ export const DELETION_SLA_BUSINESS_DAYS = 7;
 
 export const NORMAL_PARENT_CHILD_LIMIT = 3;
 
-/** Footer legal navigation (Hebrew labels). */
+/** Footer legal navigation — shown on contact page, not in site chrome footer. */
 export const LEGAL_FOOTER_LINKS = [
   { href: "/privacy", label: "פרטיות" },
   { href: "/terms", label: "תנאי שימוש" },
@@ -33,6 +33,11 @@ export const LEGAL_FOOTER_LINKS = [
   { href: "/security", label: "אבטחה" },
   { href: "/contact", label: "צור קשר" },
 ];
+
+/** Legal doc links for contact page (excludes self). */
+export const LEGAL_CONTACT_PAGE_LINKS = LEGAL_FOOTER_LINKS.filter(
+  (l) => l.href !== "/contact",
+);
 
 /** Cross-links shown at bottom of each policy page. */
 export const LEGAL_CROSS_LINKS = LEGAL_FOOTER_LINKS.filter((l) => l.href !== "/contact");
