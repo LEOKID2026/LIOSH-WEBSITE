@@ -296,7 +296,7 @@ export function applyPhase2GuardsToStep(proposed, ctx) {
     if (!strongPerformanceNoTrend) {
       apply(
         "unclear_trend_cap_aggressive",
-        "עדיין לא ברור אם הדיוק משתפר לאורך זמן — לא עושים שינוי גדול עכשיו.",
+        "עדיין לא ברור כיוון הדיוק לאורך זמן — לא עושים שינוי גדול עכשיו.",
         "maintain_and_strengthen"
       );
     }
@@ -1198,7 +1198,7 @@ export function buildWhyThisRecommendationHe(p) {
   if (riskFlags.insufficientEvidenceRisk) rf.push("מידע חלקי בלבד");
   if (riskFlags.recentTransitionRisk) rf.push("שינוי עדין לאחרונה");
   if (rf.length) parts.push(`נקודות לתשומת לב: ${rf.join(", ")}.`);
-  if (trendDer.unclearTrend) parts.push("עדיין לא ברור אם הדיוק משתפר לאורך זמן — נשארים זהירים.");
+  if (trendDer.unclearTrend) parts.push("עדיין לא ברור כיוון הדיוק לאורך זמן — נשארים זהירים.");
   if (trendDer.fragileProgressPattern) parts.push("הדיוק עולה, אבל הילד עדיין צריך יותר עזרה — לא מתקדמים מהר מדי.");
   if (trendDer.progressSupportsAdvance) parts.push("אם ההצלחה והעצמאות חוזרות יחד, אפשר לשקול התקדמות זהירה.");
   return parts.join(" ");

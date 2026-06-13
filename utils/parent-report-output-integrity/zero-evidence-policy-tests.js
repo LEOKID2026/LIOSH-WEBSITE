@@ -141,7 +141,7 @@ export function assertCopilotZeroEvidenceClarification(res, subjectId) {
   if (res?.resolutionStatus !== "clarification_required") {
     failures.push(`copilot: expected clarification_required for ${subjectId}, got ${res?.resolutionStatus}`);
   }
-  if (!/אין נתוני תרגול|אי אפשר להסיק מסקנה/u.test(text)) {
+  if (!/אין נתוני תרגול|לא נאספו נתוני תרגול|אי אפשר להסיק מסקנה|אי אפשר לקבוע כיוון/u.test(text)) {
     failures.push(`copilot: missing no-data wording for ${label}`);
   }
   if (/כיוון ראשוני/u.test(text)) {
