@@ -13,9 +13,6 @@ const ENTRY_OPTIONS = [
   { label: "10K", value: 10000 },
 ];
 
-const SHOW_ARCADE_DEBUG =
-  process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_ARCADE_DEBUG === "true";
-
 const POLL_MS = 5000;
 
 /** @param {string} [gameKey] @param {string} [fallback] */
@@ -298,8 +295,6 @@ export default function StudentArcadePage() {
   const [entryCost, setEntryCost] = useState(10);
   const [userMessage, setUserMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const [debugPayload, setDebugPayload] = useState("");
-  const [joinRoomIdDebug, setJoinRoomIdDebug] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [openRooms, setOpenRooms] = useState([]);
   const [initialSyncDone, setInitialSyncDone] = useState(false);
@@ -410,13 +405,9 @@ export default function StudentArcadePage() {
   const run = async (promise) => {
     setBusy(true);
     setUserMessage("");
-    setDebugPayload("");
     try {
       const result = await promise;
       setUserMessage(apiMessage(result));
-      if (SHOW_ARCADE_DEBUG) {
-        setDebugPayload(JSON.stringify(result.payload ?? {}, null, 2));
-      }
       await refresh();
       await refreshOpenRooms();
       return result;
@@ -428,16 +419,12 @@ export default function StudentArcadePage() {
   const runQuick = async (promise) => {
     setBusy(true);
     setUserMessage("");
-    setDebugPayload("");
     try {
       const result = await promise;
       if (result.payload?.ok) {
         setUserMessage(quickMatchMessage(result.payload));
       } else {
         setUserMessage(apiMessage(result));
-      }
-      if (SHOW_ARCADE_DEBUG) {
-        setDebugPayload(JSON.stringify(result.payload ?? {}, null, 2));
       }
       await refresh();
       await refreshOpenRooms();
@@ -518,28 +505,6 @@ export default function StudentArcadePage() {
         if (result.payload?.ok && result.payload?.room) {
           setRoomHighlight({ kind: "joined", room: result.payload.room });
           setJoinCode("");
-        }
-        return result;
-      })(),
-    );
-
-  const onJoinByRoomIdDebug = () =>
-    run(
-      (async () => {
-        const rid = String(joinRoomIdDebug || "").trim();
-        if (!rid) {
-          setUserMessage("הזן מזהה חדר (מצב פיתוח)");
-          return { ok: false, payload: {}, status: 400 };
-        }
-        const res = await fetch("/api/arcade/rooms/join", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ roomId: rid }),
-        });
-        const result = await readJson(res);
-        if (result.payload?.ok && result.payload?.room) {
-          setRoomHighlight({ kind: "joined", room: result.payload.room });
-          setJoinRoomIdDebug("");
         }
         return result;
       })(),
@@ -780,33 +745,6 @@ export default function StudentArcadePage() {
               >
                 כניסה למשחק
               </Link>
-              {SHOW_ARCADE_DEBUG ? (
-                <p className="mt-2 break-all font-mono text-[10px] text-emerald-300/70">{hlRoomId}</p>
-              ) : null}
-            </div>
-          ) : null}
-
-          {SHOW_ARCADE_DEBUG ? (
-            <div className={`${GH.card} mt-4`}>
-              <h3 className={`text-xs font-semibold ${GH.cardTitle}`}>מצב פיתוח — הצטרפות לפי roomId</h3>
-              <div className="mt-2 flex flex-col gap-2 sm:flex-row">
-                <input
-                  type="text"
-                  autoComplete="off"
-                  placeholder="UUID"
-                  value={joinRoomIdDebug}
-                  onChange={(e) => setJoinRoomIdDebug(e.target.value)}
-                  className={`min-w-0 flex-1 font-mono text-xs ${GH.input}`}
-                />
-                <button
-                  type="button"
-                  disabled={busy || !openRoomsPollActive}
-                  onClick={() => void onJoinByRoomIdDebug()}
-                  className={GH.btnJoinCode}
-                >
-                  הצטרף (debug)
-                </button>
-              </div>
             </div>
           ) : null}
 
@@ -814,14 +752,6 @@ export default function StudentArcadePage() {
             <p className={`mt-4 rounded-lg border px-3 py-2 text-xs font-medium sm:text-sm ${GH.userMessage}`}>
               {userMessage}
             </p>
-          ) : null}
-
-          {SHOW_ARCADE_DEBUG && debugPayload ? (
-            <pre
-              className={`mt-3 max-h-40 overflow-auto whitespace-pre-wrap break-words rounded-lg border p-2.5 font-mono text-[10px] ${GH.card} ${GH.muted}`}
-            >
-              {debugPayload}
-            </pre>
           ) : null}
         </div>
       </div>

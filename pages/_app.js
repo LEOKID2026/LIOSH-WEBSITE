@@ -8,6 +8,11 @@ import DevServiceWorkerCleanup from "../components/dev/DevServiceWorkerCleanup";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { initPwaInstallPromptCapture } from "../lib/pwa/pwa-install-prompt";
 import { StudentThemeProvider } from "../contexts/StudentThemeContext.jsx";
+import BrowserThemeColorSync from "../components/BrowserThemeColorSync.jsx";
+import {
+  BROWSER_THEME_COLOR_BRIGHT,
+  BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT,
+} from "../lib/student-ui/browser-theme-color.client.js";
 
 if (typeof window !== "undefined") {
   initPwaInstallPromptCapture();
@@ -165,12 +170,13 @@ export default function MyApp({ Component, pageProps }) {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
         <meta name="description" content="LEO K - Fun games and learning activities for kids. Play arcade games, solve puzzles, and practice math, geometry and English." />
-        <meta name="theme-color" content="#fbbf24" />
+        <meta name="theme-color" content={BROWSER_THEME_COLOR_BRIGHT} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="LEO K" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-TileColor" content="#fbbf24" />
+        <meta name="msapplication-TileColor" content={BROWSER_THEME_COLOR_BRIGHT} />
+        <script dangerouslySetInnerHTML={{ __html: BROWSER_THEME_COLOR_BOOTSTRAP_SCRIPT }} />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         
         {/* Icons */}
@@ -190,6 +196,7 @@ export default function MyApp({ Component, pageProps }) {
       </Head>
       <OfflineIndicator />
       <StudentThemeProvider>
+        <BrowserThemeColorSync />
         {shouldGate ? (
           <StudentAccessGate>
             <Component {...pageProps} />

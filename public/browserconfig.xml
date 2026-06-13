@@ -3,7 +3,7 @@
   <msapplication>
     <tile>
       <square150x150logo src="/images/leo-icons/mstile-150x150.png"/>
-      <TileColor>#fbbf24</TileColor>
+      <TileColor>#c9f4ff</TileColor>
     </tile>
   </msapplication>
 </browserconfig>
