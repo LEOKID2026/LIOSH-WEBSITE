@@ -2781,7 +2781,7 @@ export default function EnglishMaster() {
                     onClick={() => router.push(bookTopicHref)}
                     className={`${MB.btnActionHelp} ${MB.btnActionTeal}`}
                   >
-                    📖 הסבר בספר
+                    הסבר בספר
                   </button>
                 ) : null}
                 <div
@@ -2798,7 +2798,7 @@ export default function EnglishMaster() {
                     onClick={() => setShowPracticeOptions(true)}
                     className={`${MB.btnActionHelp} ${MB.btnActionPink}`}
                   >
-                    🎯 תרגול ממוקד ({mistakes.length})
+                    תרגול ממוקד ({mistakes.length})
                   </button>
                 )}
               </div>
@@ -2866,7 +2866,7 @@ export default function EnglishMaster() {
                         className={`${MB.floatBtn} ${MB.floatBtnBook} pointer-events-auto`}
                         title="הסבר בספר לנושא הנוכחי"
                       >
-                        📖 הסבר
+                        הסבר
                       </button>
                     ) : null}
                     <StudentQuestionDisplay

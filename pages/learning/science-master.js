@@ -3206,7 +3206,7 @@ function saveScienceAnswerInParallel({
                     onClick={() => router.push(bookTopicHref)}
                     className={`${MB.btnActionHelp} ${MB.btnActionTeal}`}
                   >
-                    📖 הסבר בספר
+                    הסבר בספר
                   </button>
                 ) : null}
                 <div
@@ -3222,7 +3222,7 @@ function saveScienceAnswerInParallel({
                   onClick={() => setShowPracticeOptions(true)}
                   className={`${MB.btnActionHelp} ${MB.btnActionPink}`}
                 >
-                  🎯 תרגול ממוקד
+                  תרגול ממוקד
                   {mistakes.length > 0 ? ` (${mistakes.length})` : ""}
                 </button>
               </div>
@@ -3290,7 +3290,7 @@ function saveScienceAnswerInParallel({
                       className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
-                      📖 הסבר
+                      הסבר
                     </button>
                   ) : null}
                   <StudentQuestionDisplay

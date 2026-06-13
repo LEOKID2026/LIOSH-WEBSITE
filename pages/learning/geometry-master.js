@@ -2810,7 +2810,7 @@ export default function GeometryMaster() {
                     onClick={() => router.push(bookTopicHref)}
                     className={`${MB.btnActionHelp} ${MB.btnActionTeal}`}
                   >
-                    📖 הסבר בספר
+                    הסבר בספר
                   </button>
                 ) : null}
                 <div
@@ -2826,7 +2826,7 @@ export default function GeometryMaster() {
                   onClick={() => setShowPracticeOptions(true)}
                   className={`${MB.btnActionHelp} ${MB.btnActionPink}`}
                 >
-                  🎯 תרגול ממוקד
+                  תרגול ממוקד
                   {mistakes.length > 0 ? ` (${mistakes.length})` : ""}
                 </button>
               </div>
@@ -2921,7 +2921,7 @@ export default function GeometryMaster() {
                       className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
-                      📖 הסבר
+                      הסבר
                     </button>
                   ) : null}
 
@@ -3770,7 +3770,7 @@ export default function GeometryMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-2xl font-extrabold text-white mb-4 text-center">
-                  🎯 תרגול ממוקד
+                  תרגול ממוקד
                 </h2>
 
                 <div className="space-y-3 mb-4">

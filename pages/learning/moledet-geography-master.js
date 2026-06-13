@@ -2784,7 +2784,7 @@ export default function MoledetGeographyMaster() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-2xl font-extrabold text-white mb-4 text-center">
-                  🎯 תרגול ממוקד
+                  תרגול ממוקד
                 </h2>
 
                 <div className="space-y-3 mb-4">
@@ -3092,7 +3092,7 @@ export default function MoledetGeographyMaster() {
                     onClick={() => router.push(bookTopicHref)}
                     className={`${MB.btnActionHelp} ${MB.btnActionTeal}`}
                   >
-                    📖 הסבר בספר
+                    הסבר בספר
                   </button>
                 ) : null}
                 <div className={MB.coinBadgeMobile} title="מטבעות משחק">
@@ -3106,7 +3106,7 @@ export default function MoledetGeographyMaster() {
                     onClick={() => setShowPracticeOptions(true)}
                     className={`${MB.btnActionHelp} ${MB.btnActionPink}`}
                   >
-                    🎯 תרגול ממוקד ({mistakes.length})
+                    תרגול ממוקד ({mistakes.length})
                   </button>
                 )}
               </div>
@@ -3189,7 +3189,7 @@ export default function MoledetGeographyMaster() {
                       className={`${MB.floatBtn} ${MB.floatBtnBook} pointer-events-auto`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
-                      📖 הסבר
+                      הסבר
                     </button>
                   ) : null}
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
