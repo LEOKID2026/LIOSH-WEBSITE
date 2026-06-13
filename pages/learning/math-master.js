@@ -4128,16 +4128,66 @@ export default function MathMaster() {
                     </button>
                   )}
 
-                  {questionBookHref && !scratchpadOpen ? (
-                    <button
-                      type="button"
-                      data-testid={`math-${grade}-book-question-button`}
-                      onClick={() => openBookFromLearning(questionBookHref)}
-                      className={`${MB.floatBtn} ${MB.floatBtnBook} pointer-events-auto`}
-                      title="הסבר בספר לנושא הנוכחי"
-                    >
-                      📖 הסבר
-                    </button>
+                  {!scratchpadOpen &&
+                  (questionBookHref ||
+                    (mode === "learning" &&
+                      currentQuestion &&
+                      (currentQuestion.operation === "multiplication" ||
+                        currentQuestion.operation === "division"))) ? (
+                    <div className={MB.floatBtnStack}>
+                      {questionBookHref ? (
+                        <button
+                          type="button"
+                          data-testid={`math-${grade}-book-question-button`}
+                          onClick={() => openBookFromLearning(questionBookHref)}
+                          className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
+                          title="הסבר בספר לנושא הנוכחי"
+                        >
+                          📖 הסבר
+                        </button>
+                      ) : null}
+                      {mode === "learning" &&
+                      currentQuestion &&
+                      (currentQuestion.operation === "multiplication" ||
+                        currentQuestion.operation === "division") ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowMultiplicationTable(true);
+                            setTableMode(
+                              currentQuestion.operation === "multiplication"
+                                ? "multiplication"
+                                : "division"
+                            );
+                            if (currentQuestion.operation === "multiplication") {
+                              const a = currentQuestion.a;
+                              const b = currentQuestion.b;
+                              if (a >= 1 && a <= 12 && b >= 1 && b <= 12) {
+                                const value = a * b;
+                                setSelectedCell({ row: a, col: b, value });
+                                setSelectedRow(null);
+                                setSelectedCol(null);
+                                setSelectedResult(null);
+                                setSelectedDivisor(null);
+                              }
+                            } else {
+                              const { a, b } = currentQuestion;
+                              const value = a;
+                              if (b >= 1 && b <= 12) {
+                                setSelectedCell({ row: 1, col: b, value });
+                                setSelectedResult(value);
+                                setSelectedDivisor(b);
+                                setSelectedRow(null);
+                                setSelectedCol(null);
+                              }
+                            }
+                          }}
+                          className={`${MB.floatBtnHelper} ${MB.floatBtnTable}`}
+                        >
+                          📊 לוח הכפל
+                        </button>
+                      ) : null}
+                    </div>
                   ) : null}
 
                   {/* אזור שאלה יציב למניעת קפיצות בפריסת התשובות */}
@@ -4506,49 +4556,6 @@ export default function MathMaster() {
                             </button>
                           )}
                   </div>
-
-                  {/* כפתור חיבור לטבלת כפל/חילוק – רק במצב למידה */}
-                  {mode === "learning" &&
-                    (currentQuestion.operation === "multiplication" ||
-                      currentQuestion.operation === "division") && (
-                          <div className="flex justify-center">
-                      <button
-                        onClick={() => {
-                          setShowMultiplicationTable(true);
-                          setTableMode(
-                            currentQuestion.operation === "multiplication"
-                              ? "multiplication"
-                              : "division"
-                          );
-                          if (currentQuestion.operation === "multiplication") {
-                            const a = currentQuestion.a;
-                            const b = currentQuestion.b;
-                            if (a >= 1 && a <= 12 && b >= 1 && b <= 12) {
-                              const value = a * b;
-                              setSelectedCell({ row: a, col: b, value });
-                              setSelectedRow(null);
-                              setSelectedCol(null);
-                              setSelectedResult(null);
-                              setSelectedDivisor(null);
-                            }
-                          } else {
-                            const { a, b } = currentQuestion;
-                            const value = a;
-                            if (b >= 1 && b <= 12) {
-                              setSelectedCell({ row: 1, col: b, value });
-                              setSelectedResult(value);
-                              setSelectedDivisor(b);
-                              setSelectedRow(null);
-                              setSelectedCol(null);
-                            }
-                          }
-                        }}
-                              className={MB.btnShowTable}
-                      >
-                              📊 הצג בטבלה
-                      </button>
-                          </div>
-                        )}
 
                       {/* חלון הסבר מלא - Modal גדול ומרכזי - למידה/תרגול קודם */}
                       {(((mode === "learning" && showSolution && currentQuestion) ||
