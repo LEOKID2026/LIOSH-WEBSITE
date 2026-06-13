@@ -2803,6 +2803,8 @@ export default function EnglishMaster() {
                 )}
               </div>
 
+              <LearningMasterAdSlot MB={MB} />
+
               {!playerName.trim() && (
                 <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל

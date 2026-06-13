@@ -6,8 +6,10 @@ export default function LearningMasterAdSlot({ MB }) {
   return (
     <div
       className={MB.adSlot}
-      aria-hidden="true"
+      aria-label="שמור לפרסומת"
       data-ad-slot="learning-master-reserved"
-    />
+    >
+      <span className={MB.adSlotLabel}>שמור לפרסומת</span>
+    </div>
   );
 }

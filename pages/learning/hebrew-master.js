@@ -3827,6 +3827,8 @@ export default function HebrewMaster() {
                 )}
               </div>
 
+              <LearningMasterAdSlot MB={MB} />
+
               {!playerName.trim() && (
                 <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל

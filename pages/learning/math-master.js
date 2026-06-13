@@ -4036,6 +4036,8 @@ export default function MathMaster() {
                 </button>
               </div>
 
+              <LearningMasterAdSlot MB={MB} />
+
               {!playerName.trim() && (
                 <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל
