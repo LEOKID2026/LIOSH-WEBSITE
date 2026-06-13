@@ -2,8 +2,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
+import StudentAdSlot from "./student/StudentAdSlot.jsx";
 import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
-import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl } from "../lib/site-nav";
+import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl, shouldShowLayoutStudentAdSlot } from "../lib/site-nav";
 import { STUDENT_BRIGHT_PAGE_BG_STYLE, STUDENT_BRIGHT_SITE_CHROME_BG } from "../lib/student-ui/student-bright-page-background.client.js";
 
 export default function Layout({
@@ -75,6 +76,7 @@ export default function Layout({
   const mobileMenuItem = isStudentBright
     ? "px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 hover:bg-sky-50 text-slate-800 transition"
     : "px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition";
+  const showStudentAd = shouldShowLayoutStudentAdSlot(pathname);
   const footerClass = isStudentBright
     ? `border-t border-sky-100 ${STUDENT_BRIGHT_SITE_CHROME_BG} shrink-0 ${homepage ? "" : "mt-10"}`
     : `border-t border-white/10 bg-black/40 shrink-0 ${homepage ? "" : "mt-10"}`;
@@ -163,6 +165,12 @@ export default function Layout({
       <main className="flex-1 min-h-0 flex flex-col">
         {children}
       </main>
+      {showStudentAd ? (
+        <StudentAdSlot
+          variant="layout"
+          theme={isStudentBright ? "bright" : "classic"}
+        />
+      ) : null}
       <footer className={footerClass}>
         <div className={`max-w-6xl mx-auto px-4 py-4 text-xs ${footerTextClass} flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-between items-start sm:items-center`}>
           <span>

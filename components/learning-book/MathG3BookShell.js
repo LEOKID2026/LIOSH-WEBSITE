@@ -12,6 +12,7 @@ import {
 import { BookGradeThemeProvider } from "./BookGradeThemeContext";
 import BookTocModal from "./BookTocModal";
 import MixedHebrewMathText from "./MixedHebrewMathText";
+import StudentAdSlot from "../student/StudentAdSlot.jsx";
 
 const GRADE = "g3";
 const theme = getBookGradeTheme(GRADE);
@@ -137,6 +138,7 @@ export default function MathG3BookShell({
             routeBase={MATH_G3_BOOK_META.routeBase}
           />
         ) : null}
+        <StudentAdSlot variant="inline" theme="classic" />
       </main>
     </BookGradeThemeProvider>
   );

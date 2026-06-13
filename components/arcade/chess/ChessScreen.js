@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChessSession } from "../../../hooks/arcade/useChessSession";
 import { squareFromRowCol } from "../../../lib/arcade/chess/buildChessSnapshot";
+import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const GAME_TITLE = "שחמט";
 
@@ -12,24 +13,6 @@ const HUD_CHIP =
   "rounded-lg border border-white/20 bg-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:bg-white/[0.11] active:scale-[0.97]";
 const HUD_BTN_BASE = `flex ${HUD_CONTROL_H} shrink-0 items-center justify-center ${HUD_CHIP}`;
 const HUD_BTN_SQUARE = `${HUD_BTN_BASE} w-9`;
-
-function ChessAdSlot() {
-  return (
-    <aside
-      role="complementary"
-      aria-label="אזור פרסומת"
-      className="relative z-10 w-full shrink-0 border-t border-white/[0.08] bg-black/50 px-2 pt-2"
-      style={{ paddingBottom: "max(10px, env(safe-area-inset-bottom, 0px))" }}
-    >
-      <div
-        className="mx-auto flex w-full max-w-[728px] items-center justify-center rounded-xl border border-dashed border-white/15 bg-zinc-900/70 text-zinc-500"
-        style={{ minHeight: "clamp(52px, 11vw, 90px)", maxHeight: "min(90px, 22vh)" }}
-      >
-        <span className="select-none px-3 text-[10px] font-semibold text-zinc-500 sm:text-xs">מקום לפרסומת</span>
-      </div>
-    </aside>
-  );
-}
 
 /** @param {{ onLeave: () => void, disabled?: boolean, busy?: boolean }} props */
 function LeaveRow({ onLeave, disabled = false, busy = false }) {
@@ -333,7 +316,7 @@ export default function ChessScreen({ roomId }) {
       </div>
 
       {room ? <LeaveRow onLeave={onLeaveRoom} busy={leaveBusy} disabled={!String(roomId || "").trim()} /> : null}
-      <ChessAdSlot />
+      <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
     </div>
   );
 }

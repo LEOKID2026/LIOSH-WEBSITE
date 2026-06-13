@@ -2,6 +2,7 @@ import Layout from "../../components/Layout";
 import Link from "next/link";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../../components/student/StudentThemePicker";
 
 const OFFLINE_GAMES = [
@@ -37,11 +38,12 @@ const OFFLINE_GAMES = [
 
 export default function OfflineHub() {
   useIOSViewportFix();
-  const { GH, pageBgStyle } = useGamesHubUi();
+  const { theme } = useStudentTheme();
+  const { GH } = useGamesHubUi();
 
   return (
-    <Layout>
-      <main className={GH.pageWrap} style={pageBgStyle} dir="rtl">
+    <Layout studentTheme={theme} studentShell="home">
+      <main className={GH.pageWrap} dir="rtl">
         <div className={`${GH.container} space-y-6`}>
           <div className="flex justify-between items-center gap-3 flex-wrap">
             <Link href="/" className={GH.backBtn}>

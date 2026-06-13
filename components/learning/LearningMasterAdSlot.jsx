@@ -1,15 +1,13 @@
+import StudentAdSlot from "../student/StudentAdSlot.jsx";
+
 /**
- * Reserved ad placement below the active game area (learning masters).
- * Fixed height — avoids layout shift when real ads are wired later.
+ * Reserved ad placement for learning masters (dvh footer band).
  */
 export default function LearningMasterAdSlot({ MB }) {
   return (
-    <div
-      className={MB.adSlot}
-      aria-label="שמור לפרסומת"
-      data-ad-slot="learning-master-reserved"
-    >
-      <span className={MB.adSlotLabel}>שמור לפרסומת</span>
-    </div>
+    <StudentAdSlot
+      variant="inline"
+      dataAdSlot="learning-master-reserved"
+    />
   );
 }

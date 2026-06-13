@@ -12,6 +12,7 @@ import {
 import { BookGradeThemeProvider } from "./BookGradeThemeContext";
 import BookTocModal from "./BookTocModal";
 import MixedHebrewMathText from "./MixedHebrewMathText";
+import StudentAdSlot from "../student/StudentAdSlot.jsx";
 
 const GRADE = "g1";
 const theme = getBookGradeTheme(GRADE);
@@ -138,6 +139,7 @@ export default function MathG1BookShell({
             returnQuerySuffix={returnQuerySuffix}
           />
         ) : null}
+        <StudentAdSlot variant="inline" theme="classic" />
       </main>
     </BookGradeThemeProvider>
   );

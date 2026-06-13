@@ -2,6 +2,7 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import { useIOSViewportFix } from "../hooks/useIOSViewportFix";
 import { useGamesHubUi } from "../hooks/useGamesHubUi.js";
+import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../components/student/StudentThemePicker";
 
 const GAME_HUB_CARDS = [
@@ -30,15 +31,16 @@ const GAME_HUB_CARDS = [
 
 export default function GamesHubPage() {
   useIOSViewportFix();
-  const { GH, pageBgStyle } = useGamesHubUi();
+  const { theme } = useStudentTheme();
+  const { GH } = useGamesHubUi();
 
   return (
-    <Layout>
-      <div className={GH.pageWrap} style={pageBgStyle} dir="rtl">
+    <Layout studentTheme={theme} studentShell="home">
+      <div className={GH.pageWrap} dir="rtl">
         <div className={GH.container}>
           <div className="mb-4 md:mb-6 flex items-center justify-between gap-3 flex-wrap">
             <Link href="/student/home" className={GH.backBtn}>
-              חזרה לפורטל תלמיד
+              חזרה
             </Link>
             <StudentThemePicker variant="icon" iconSize="nav" />
           </div>

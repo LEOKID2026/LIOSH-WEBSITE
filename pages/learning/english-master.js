@@ -2999,8 +2999,6 @@ export default function EnglishMaster() {
             </>
           )}
 
-          <LearningMasterAdSlot MB={MB} />
-
           {showLeaderboard && (
             <div
               className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
@@ -3844,6 +3842,7 @@ export default function EnglishMaster() {
             loading={subjectDailyMissionsLoading}
           />
         </div>
+        <LearningMasterAdSlot MB={MB} />
       </div>
     </div>
     <TrackingDebugPanel

@@ -1,4 +1,5 @@
 import Layout from "../../components/Layout";
+import StudentImmersiveAdPage from "../../components/student/StudentImmersiveAdPage.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import {
@@ -83,6 +84,7 @@ export default function Curriculum() {
   
   return (
     <Layout>
+      <StudentImmersiveAdPage>
       <main className="min-h-screen bg-gradient-to-b from-[#120b1f] to-[#1b1430] text-white px-4 py-10">
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex justify-between items-center">
@@ -625,6 +627,7 @@ export default function Curriculum() {
           )}
         </div>
       </main>
+      </StudentImmersiveAdPage>
     </Layout>
   );
 }

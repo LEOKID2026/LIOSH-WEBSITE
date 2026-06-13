@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
+import StudentAdSlot from "../../components/student/StudentAdSlot.jsx";
 import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 
@@ -171,7 +172,7 @@ export default function MemoryMatch() {
     <Layout>
       <div
         ref={wrapRef}
-        className="relative w-full overflow-hidden bg-gradient-to-b from-[#090d17] to-[#11172b] game-page-mobile"
+        className="relative w-full overflow-hidden bg-gradient-to-b from-[#090d17] to-[#11172b] game-page-mobile flex flex-col"
         style={{ height: "100vh", height: "100dvh" }}
       >
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -210,7 +211,7 @@ export default function MemoryMatch() {
         </div>
 
         <div
-          className="relative flex flex-col items-center justify-start px-4 overflow-hidden"
+          className="relative flex flex-col flex-1 min-h-0 items-center justify-start px-4 overflow-hidden"
           style={{
             height: "100%",
             maxHeight: "100%",
@@ -348,6 +349,7 @@ export default function MemoryMatch() {
             </div>
           </div>
         </div>
+        <StudentAdSlot variant="dvh" />
       </div>
     </Layout>
   );

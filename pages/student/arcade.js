@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../../components/student/StudentThemePicker";
 
 const ENTRY_OPTIONS = [
@@ -16,6 +17,14 @@ const SHOW_ARCADE_DEBUG =
   process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_ARCADE_DEBUG === "true";
 
 const POLL_MS = 5000;
+
+/** @param {string} [gameKey] @param {string} [fallback] */
+function displayArcadeGameTitle(gameKey, fallback = "") {
+  const key = String(gameKey || "").trim().toLowerCase();
+  if (key === "fourline") return "ארבע בשורה";
+  if (key === "ludo") return "לודו";
+  return fallback || gameKey || "";
+}
 
 /** חדרים ציבוריים לריענון רשימה */
 const OPEN_ROOM_POLL_KEYS = [
@@ -281,7 +290,8 @@ function ArcadeGameCard({
 }
 
 export default function StudentArcadePage() {
-  const { GH, pageBgStyle } = useGamesHubUi();
+  const { theme } = useStudentTheme();
+  const { GH } = useGamesHubUi();
   const [studentName, setStudentName] = useState("");
   const [balance, setBalance] = useState(null);
   const [games, setGames] = useState([]);
@@ -586,11 +596,11 @@ export default function StudentArcadePage() {
   };
 
   return (
-    <Layout>
+    <Layout studentTheme={theme} studentShell="home">
       <Head>
         <title>משחקים — LEO K</title>
       </Head>
-      <div className={`min-h-[calc(100vh-56px)] ${GH.pageWrap}`} style={pageBgStyle} dir="rtl">
+      <div className={GH.pageWrap} dir="rtl">
         <div className={`${GH.container} max-w-7xl`}>
           <header
             className={`mb-5 flex flex-col gap-3 border-b pb-5 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4 ${GH.headerBorder}`}
@@ -628,7 +638,7 @@ export default function StudentArcadePage() {
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 xl:gap-4">
                 <ArcadeGameCard
                   {...arcadeCardProps}
-                  title="Fourline"
+                  title="ארבע בשורה"
                   blurb="ארבע בשורה · שניים נגד שניים"
                   bullets={["שחקנים: 2", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
                   gameKey="fourline"
@@ -643,7 +653,7 @@ export default function StudentArcadePage() {
                 />
                 <ArcadeGameCard
                   {...arcadeCardProps}
-                  title="Ludo"
+                  title="לודו"
                   blurb="לודו · 2–4 שחקנים"
                   bullets={["שחקנים: עד 4", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
                   gameKey="ludo"
@@ -697,7 +707,9 @@ export default function StudentArcadePage() {
                             className={`flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between ${GH.roomItem}`}
                           >
                             <div className={`min-w-0 text-right ${GH.roomItemMeta}`}>
-                              <p className={GH.roomItemTitle}>{row.gameTitle || "Fourline"}</p>
+                              <p className={GH.roomItemTitle}>
+                                {displayArcadeGameTitle(row.gameKey, row.gameTitle)}
+                              </p>
                               <p>
                                 עלות {costLabel} · {row.playerCount}/{row.maxPlayers} שחקנים ·{" "}
                                 {roomTypeLabel(row.roomType)} · ממתין

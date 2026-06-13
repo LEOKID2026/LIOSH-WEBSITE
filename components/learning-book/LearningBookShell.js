@@ -6,6 +6,7 @@ import { maybeRecordHebrewG1LiteracyBookPageView } from "../../lib/learning-book
 import { BookGradeThemeProvider } from "./BookGradeThemeContext";
 import BookTocModal from "./BookTocModal";
 import MixedHebrewMathText from "./MixedHebrewMathText";
+import StudentAdSlot from "../student/StudentAdSlot.jsx";
 
 /**
  * Shared learning book shell for all subjects/grades.
@@ -156,6 +157,7 @@ export default function LearningBookShell({
             routeBase={bookMeta.routeBase}
           />
         ) : null}
+        <StudentAdSlot variant="inline" theme="classic" />
       </main>
     </BookGradeThemeProvider>
   );

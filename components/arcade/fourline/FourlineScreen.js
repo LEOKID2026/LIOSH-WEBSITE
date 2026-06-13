@@ -9,41 +9,13 @@ import {
   parseFourLineCells,
 } from "../../../lib/arcade/fourline/fourlineClientLegality";
 import { useFourlineSession } from "../../../hooks/arcade/useFourlineSession";
+import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 const DROP_MS = 155;
 const WIN_FREEZE_MS = 280;
 const MOVE_PULSE_MS = 220;
 
 const GAME_TITLE = "ארבע בשורה";
-
-/**
- * רצועת פרסומת קבועה בתחתית — שומרת גובה יציב (מובייל + דסקטופ), תואמת דפוס OV2 / Learning masters.
- */
-function FourlineOv2AdSlot() {
-  return (
-    <aside
-      role="complementary"
-      aria-label="אזור פרסומת"
-      data-arcade-ad-slot="1"
-      className="relative z-10 w-full shrink-0 border-t border-white/[0.08] bg-black/50 px-2 pt-2"
-      style={{
-        paddingBottom: "max(10px, env(safe-area-inset-bottom, 0px))",
-      }}
-    >
-      <div
-        className="mx-auto flex w-full max-w-[728px] items-center justify-center rounded-xl border border-dashed border-white/15 bg-zinc-900/70 text-zinc-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:rounded-2xl"
-        style={{
-          minHeight: "clamp(52px, 11vw, 90px)",
-          maxHeight: "min(90px, 22vh)",
-        }}
-      >
-        <span className="select-none px-3 text-center text-[10px] font-semibold uppercase tracking-wide text-zinc-500 sm:text-xs">
-          מקום לפרסומת
-        </span>
-      </div>
-    </aside>
-  );
-}
 
 /**
  * @param {{ onLeave: () => void, disabled?: boolean, busy?: boolean }} props
@@ -862,7 +834,7 @@ export default function FourlineScreen({ roomId }) {
           ) : null}
         </div>
 
-        <FourlineOv2AdSlot />
+        <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
       </div>
     </div>
   );

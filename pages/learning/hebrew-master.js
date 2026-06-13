@@ -4363,8 +4363,6 @@ export default function HebrewMaster() {
             </>
           )}
 
-          <LearningMasterAdSlot MB={MB} />
-
 
           {/* Leaderboard Modal */}
           {showLeaderboard && (
@@ -4763,6 +4761,7 @@ export default function HebrewMaster() {
           )}
 
         </div>
+        <LearningMasterAdSlot MB={MB} />
       </div>
     </div>
     <TrackingDebugPanel

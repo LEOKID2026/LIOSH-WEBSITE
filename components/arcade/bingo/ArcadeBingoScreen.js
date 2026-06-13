@@ -9,6 +9,7 @@ import { useArcadeBingoSession } from "../../../hooks/useArcadeBingoSession";
 import Ov2BingoCard from "./Ov2BingoCard";
 import Ov2BingoFinishModal from "./Ov2BingoFinishModal";
 import Ov2GameStatusStrip from "./Ov2GameStatusStrip";
+import StudentAdSlot from "../../student/StudentAdSlot.jsx";
 
 /** @param {number|null|undefined} ms */
 function fmtCountdown(ms) {
@@ -611,6 +612,8 @@ export default function ArcadeBingoScreen({ roomId: roomIdProp }) {
         onStartNext={onStartNext}
         onLeaveTable={onExitToLobby}
       />
+
+      <StudentAdSlot variant="dvh" dataAdSlot="arcade-ad-reserved" />
     </div>
   );
 }

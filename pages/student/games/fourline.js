@@ -13,7 +13,7 @@ export default function StudentFourlinePage() {
     return (
       <>
         <Head>
-          <title>Fourline — Arcade</title>
+          <title>ארבע בשורה — ארקייד</title>
         </Head>
         <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-300">טוען…</div>
       </>
@@ -24,7 +24,7 @@ export default function StudentFourlinePage() {
     return (
       <>
         <Head>
-          <title>Fourline — Arcade</title>
+          <title>ארבע בשורה — ארקייד</title>
         </Head>
         <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-300 space-y-3">
           <p>חסר מזהה חדר (roomId).</p>
@@ -39,7 +39,7 @@ export default function StudentFourlinePage() {
   return (
     <>
       <Head>
-        <title>Fourline — Arcade</title>
+        <title>ארבע בשורה — ארקייד</title>
       </Head>
       <div
         className="flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-zinc-950 text-zinc-100"

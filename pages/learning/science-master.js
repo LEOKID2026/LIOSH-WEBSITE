@@ -3493,8 +3493,6 @@ function saveScienceAnswerInParallel({
             </>
           )}
 
-          <LearningMasterAdSlot MB={MB} />
-
           {/* LEADERBOARD MODAL */}
           {showLeaderboard && (
             <div
@@ -4093,6 +4091,7 @@ function saveScienceAnswerInParallel({
             loading={subjectDailyMissionsLoading}
           />
         </div>
+        <LearningMasterAdSlot MB={MB} />
       </div>
     </div>
     <TrackingDebugPanel

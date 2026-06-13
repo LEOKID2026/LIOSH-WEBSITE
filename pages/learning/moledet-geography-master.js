@@ -3580,8 +3580,6 @@ export default function MoledetGeographyMaster() {
             </>
           )}
 
-          <LearningMasterAdSlot MB={MB} />
-
 
           {/* Leaderboard Modal */}
           {showLeaderboard && (
@@ -3985,6 +3983,7 @@ export default function MoledetGeographyMaster() {
           )}
 
         </div>
+        <LearningMasterAdSlot MB={MB} />
       </div>
     </div>
     <TrackingDebugPanel

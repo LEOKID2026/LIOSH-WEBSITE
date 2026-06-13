@@ -4952,8 +4952,6 @@ export default function MathMaster() {
             </>
           )}
 
-          <LearningMasterAdSlot MB={MB} />
-
           {/* Multiplication Table Modal */}
           {showMultiplicationTable && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" dir="rtl">
@@ -5979,6 +5977,7 @@ export default function MathMaster() {
             </div>
           )}
         </div>
+        <LearningMasterAdSlot MB={MB} />
       </div>
     </div>
     <TrackingDebugPanel
