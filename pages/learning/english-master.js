@@ -39,10 +39,11 @@ import {
 } from "../../utils/active-diagnostic-runtime/index.js";
 import { mergeDiagnosticContractIntoParams } from "../../utils/diagnostic-question-contract";
 import { mcqCellValue } from "../../utils/mcq-option-cell";
-import {
-  learningHintTriggerBtn,
-  learningExplainOpenBtn,
-} from "../../utils/learning-ui-classes";
+import { useLearningMasterUi } from "../../hooks/useLearningMasterUi";
+import LearningMasterHud from "../../components/learning/LearningMasterHud";
+import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar";
+import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
+import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
 import { useLearningWrongAnswerAdvance } from "../../hooks/useLearningWrongAnswerAdvance";
 import {
@@ -494,6 +495,23 @@ function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
 
 export default function EnglishMaster() {
   useIOSViewportFix();
+  const { MB, ui } = useLearningMasterUi();
+  const {
+    learningModalOverlay,
+    learningModalPanel,
+    learningModalHeader,
+    learningModalCloseBtn,
+    learningModalTitle,
+    learningModalFooter,
+    learningQuestionBox,
+    learningQuestionText,
+    learningExplBody,
+    learningModalScrollBody,
+    stepExerciseUi,
+    learningPrimaryCloseBtn,
+    learningHintTriggerBtn,
+    learningExplainOpenBtn,
+  } = ui;
   const router = useRouter();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
@@ -2431,8 +2449,8 @@ export default function EnglishMaster() {
 
   if (!mounted || !gradeReady)
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center">
-        <div className="text-white text-xl">טוען...</div>
+      <div className={`min-h-screen ${MB.shell} flex items-center justify-center`}>
+        <div className="text-slate-700 text-xl">טוען...</div>
       </div>
     );
 
@@ -2458,7 +2476,7 @@ export default function EnglishMaster() {
 
   return (
     <Layout>
-      <div className="flex flex-col h-dvh max-h-dvh min-h-0 overflow-hidden bg-gradient-to-b from-[#0a0f1d] to-[#141928]" dir="rtl">
+      <div className={MB.shell} dir="rtl">
         <div
           ref={wrapRef}
           className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)]"
@@ -2470,7 +2488,7 @@ export default function EnglishMaster() {
             margin: "0 auto"
           }}
         >
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0 opacity-0 pointer-events-none hidden">
           <div
             className="absolute inset-0"
             style={{
@@ -2481,32 +2499,12 @@ export default function EnglishMaster() {
           />
         </div>
 
-        <div
-          ref={headerRef}
-          className="absolute top-0 left-0 right-0 z-50 pointer-events-none"
-        >
-          <div
-            className="relative px-2 py-3"
-            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
-          >
-            <div className="absolute right-2 top-2 flex gap-2 pointer-events-auto">
-              <button
-                onClick={() => router.push("/learning/curriculum?subject=english")}
-                className="min-w-[100px] px-3 py-1 rounded-lg text-sm font-bold bg-emerald-500/20 border border-emerald-400/30 hover:bg-emerald-500/30 text-emerald-200"
-              >
-                📋 תוכנית לימודים
-              </button>
-            </div>
-            <div className="absolute left-2 top-2 pointer-events-auto">
-              <button
-                onClick={backSafe}
-                className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
-              >
-                חזרה
-              </button>
-            </div>
-          </div>
-        </div>
+        <LearningMasterNavBar
+          MB={MB}
+          headerRef={headerRef}
+          onCurriculumClick={() => router.push("/learning/curriculum?subject=english")}
+          onBack={backSafe}
+        />
 
         <div
           className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch]"
@@ -2519,7 +2517,7 @@ export default function EnglishMaster() {
         >
           <div className="text-center mb-3">
             <div className="flex items-center justify-center gap-2 mb-0.5">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white">
+              <h1 className={MB.pageTitle}>
                 🇬🇧 אנגלית
               </h1>
               <button
@@ -2527,133 +2525,32 @@ export default function EnglishMaster() {
                   sound.toggleSounds();
                   sound.toggleMusic();
                 }}
-                className={`h-7 w-7 rounded-lg border border-white/20 text-white text-sm font-bold flex items-center justify-center transition-all flex-shrink-0 ${
-                  sound.soundsEnabled && sound.musicEnabled
-                    ? "bg-green-500/80 hover:bg-green-500"
-                    : "bg-red-500/80 hover:bg-red-500"
-                }`}
+                className={
+                  sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
+                }
                 title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
               >
                 {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
               </button>
             </div>
-            <p className="text-white/70 text-xs md:text-sm">
+            <p className={MB.pageSub}>
               {playerName || "שחקן"} • {gradeInfo.name} •{" "}
               {LEVELS[level].name} • {getTopicName(topic)} • {MODES[mode].name}
             </p>
           </div>
 
-          <div
-            ref={controlsRef}
-            className="mx-auto grid grid-cols-8 gap-0.5 md:gap-1 lg:gap-1.5 mb-3 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl"
-          >
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">ניקוד</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-emerald-300 md:text-emerald-300 lg:text-emerald-200 leading-tight">
-                  {subjectView.topHud.score}
-                </div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">רצף</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-amber-300 md:text-amber-300 lg:text-amber-200 leading-tight">
-                  🔥{subjectView.topHud.streak}
-                </div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">כוכבים</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-yellow-300 md:text-yellow-300 lg:text-yellow-200 leading-tight">⭐{subjectView.topHud.stars}</div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">רמה</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-purple-300 md:text-purple-300 lg:text-purple-200 leading-tight">רמה {subjectView.topHud.level}</div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">✅</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-green-300 md:text-green-300 lg:text-green-200 leading-tight">
-                  {subjectView.topHud.correct}
-                </div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">חיים</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-rose-300 md:text-rose-300 lg:text-rose-200 leading-tight">
-                  {mode === "challenge" ? `${lives} ❤️` : "∞"}
-                </div>
-              </div>
-            </div>
-            <div
-              className={`rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px] ${
-                gameActive && (mode === "challenge" || mode === "speed") && timeLeft <= 5
-                  ? "bg-red-500/30 border-2 border-red-400 animate-pulse"
-                  : "bg-black/30 border border-white/10"
-              }`}
-            >
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">⏰ טיימר</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div
-                  className={`text-sm md:text-lg lg:text-xl font-black leading-tight ${
-                    gameActive && (mode === "challenge" || mode === "speed") && timeLeft <= 5
-                      ? "text-red-400"
-                      : gameActive && (mode === "challenge" || mode === "speed")
-                      ? "text-yellow-400"
-                      : "text-white/78 md:text-white/85 lg:text-white/90"
-                  }`}
-                >
-                  {gameActive
-                    ? mode === "challenge" || mode === "speed"
-                      ? timeLeft ?? "--"
-                      : "∞"
-                    : "--"}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowPlayerProfile(true)}
-              className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px] hover:bg-purple-500/20 transition-all cursor-pointer"
-              title="פרופיל שחקן"
-            >
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">אווטר</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-lg md:text-2xl lg:text-3xl font-bold leading-tight">
-                  {playerAvatarImage ? (
-                    <img 
-                      src={playerAvatarImage} 
-                      alt="אווטר" 
-                      className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-full object-cover mx-auto"
-                    />
-                  ) : (
-                    playerAvatar
-                  )}
-                </div>
-              </div>
-            </button>
-          </div>
+          <LearningMasterHud
+            MB={MB}
+            controlsRef={controlsRef}
+            topHud={subjectView.topHud}
+            lives={lives}
+            mode={mode}
+            gameActive={gameActive}
+            timeLeft={timeLeft}
+            onAvatarClick={() => setShowPlayerProfile(true)}
+            playerAvatar={playerAvatar}
+            playerAvatarImage={playerAvatarImage}
+          />
 
           <div
             className="mx-auto flex items-center justify-center gap-1.5 md:gap-2.5 lg:gap-3 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
@@ -2667,11 +2564,7 @@ export default function EnglishMaster() {
                   setGameActive(false);
                   setFeedback(null);
                 }}
-                className={`h-8 md:h-10 lg:h-11 px-3 md:px-4 lg:px-5 rounded-lg text-xs md:text-sm lg:text-base font-bold transition-all flex-shrink-0 ${
-                  mode === m
-                    ? "bg-emerald-500/80 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
+                className={mode === m ? MB.modeTabActive : MB.modeTabInactive}
               >
                 {MODES[m].name}
               </button>
@@ -2684,20 +2577,16 @@ export default function EnglishMaster() {
                   setGameActive(false);
                   setFeedback(null);
                 }}
-                className={`h-8 md:h-10 lg:h-11 px-3 md:px-4 lg:px-5 rounded-lg text-xs md:text-sm lg:text-base font-bold transition-all flex-shrink-0 ${
-                  mode === "practice"
-                    ? "bg-emerald-500/80 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
+                className={mode === "practice" ? MB.modeTabActive : MB.modeTabInactive}
               >
                 {MODES.practice.name}
               </button>
               <div
-                className="hidden md:inline-flex items-center justify-center gap-1.5 md:gap-2 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 md:h-10 lg:h-11 md:px-4 lg:px-5 md:text-sm lg:text-base font-bold tabular-nums shadow-sm"
+                className={MB.coinBadgeDesktop}
                 title="מטבעות משחק"
               >
-                <span className="text-white">מטבעות:</span>
-                <span dir="ltr" className="text-amber-100">
+                <span className={MB.coinBadgeLabel}>מטבעות:</span>
+                <span dir="ltr" className={MB.coinBadgeValue}>
                   {childCoinBalance}
                 </span>
               </div>
@@ -2751,7 +2640,7 @@ export default function EnglishMaster() {
                 >
                 <div
                   data-testid="english-player-name"
-                  className="h-10 md:h-11 shrink-0 w-[3.5rem] md:w-[8.5rem] lg:w-[9.25rem] px-1.5 md:px-3 lg:px-3.5 rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold box-border flex items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap select-none pointer-events-none min-w-0"
+                  className={MB.preGamePlayerBadge}
                   dir={playerName && /[\u0590-\u05FF]/.test(playerName) ? "rtl" : "ltr"}
                   title={playerName.trim() ? playerName.trim() : undefined}
                   aria-label={playerName.trim() ? `שם תלמיד: ${playerName.trim()}` : "שם תלמיד לא זמין"}
@@ -2762,7 +2651,7 @@ export default function EnglishMaster() {
                   value={gradeNumber}
                   title={`כיתה ${gradeLabels[gradeNumber - 1]}`}
                   onChange={(e) => handleGradeNumberChange(e.target.value)}
-                  className="h-10 md:h-11 shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+                  className={`${MB.selectControl} shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem]`}
                 >
                   {GRADE_ORDER.map((_, idx) => (
                     <option key={`grade-${idx + 1}`} value={idx + 1}>
@@ -2777,7 +2666,7 @@ export default function EnglishMaster() {
                     setLevel(e.target.value);
                     setGameActive(false);
                   }}
-                  className="h-10 md:h-11 shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+                  className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem]`}
                 >
                   {englishLevelKeysForGradeKey(grade).map((lvl) => (
                     <option key={lvl} value={lvl}>
@@ -2805,7 +2694,7 @@ export default function EnglishMaster() {
                         setShowMixedSelector(false);
                       }
                     }}
-                    className="h-10 md:h-11 min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+                    className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                   >
                     {GRADES[grade].topics.map((t) => (
                       <option key={t} value={t}>
@@ -2817,7 +2706,7 @@ export default function EnglishMaster() {
                     <button
                       type="button"
                       onClick={() => setShowMixedSelector(true)}
-                      className="h-10 w-10 md:h-11 md:w-11 shrink-0 rounded-lg bg-blue-500/80 hover:bg-blue-500 border border-white/20 text-white text-sm md:text-base font-bold flex items-center justify-center box-border"
+                      className={MB.preGameGearBtn}
                       title="ערוך נושאים למיקס"
                     >
                       ⚙️
@@ -2828,33 +2717,37 @@ export default function EnglishMaster() {
               </div>
 
               <div className="grid grid-cols-4 gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto" dir="rtl">
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight max-w-full line-clamp-2">שיא ניקוד</span>
+                    <span className={MB.preGameTileLabel}>שיא ניקוד</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
-                    <span className="text-base md:text-xl lg:text-2xl font-bold text-emerald-300 md:text-emerald-300 lg:text-emerald-200 tabular-nums leading-tight">{subjectView.middleTiles.bestScore}</span>
+                    <span className={MB.preGameTileValueEmerald} dir="ltr">
+                      {formatMathHudNumber(subjectView.middleTiles.bestScore)}
+                    </span>
                   </div>
                 </div>
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight max-w-full line-clamp-2">שיא רצף</span>
+                    <span className={MB.preGameTileLabel}>שיא רצף</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
-                    <span className="text-base md:text-xl lg:text-2xl font-bold text-amber-300 md:text-amber-300 lg:text-amber-200 tabular-nums leading-tight">{subjectView.middleTiles.bestStreak}</span>
+                    <span className={MB.preGameTileValueAmber} dir="ltr">
+                      {formatMathHudNumber(subjectView.middleTiles.bestStreak)}
+                    </span>
                   </div>
                 </div>
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight max-w-full line-clamp-2">דיוק</span>
+                    <span className={MB.preGameTileLabel}>דיוק</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
-                    <span className="text-base md:text-xl lg:text-2xl font-bold text-blue-300 md:text-blue-300 lg:text-blue-200 tabular-nums leading-tight">{subjectView.middleTiles.accuracy}%</span>
+                    <span className={MB.preGameTileValueBlue}>{subjectView.middleTiles.accuracy}%</span>
                   </div>
                 </div>
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight">אתגרים</span>
+                    <span className={MB.preGameTileLabel}>אתגרים</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
                     <button
@@ -2873,7 +2766,7 @@ export default function EnglishMaster() {
                             setShowDailyChallenge(true);
                           });
                       }}
-                      className="h-7 md:h-8 w-full max-w-[3.5rem] md:max-w-[4rem] px-1.5 md:px-2 rounded-md bg-blue-500/85 hover:bg-blue-500 text-white text-[11px] md:text-sm lg:text-base font-bold"
+                      className={MB.btnOpenSmall}
                     >
                       פתיחה
                     </button>
@@ -2887,20 +2780,20 @@ export default function EnglishMaster() {
               />
 
 
-              <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2 md:gap-3">
+              <div className="mt-auto mb-2 w-full pt-3 md:pt-4 flex flex-col items-center gap-2.5 md:gap-3">
               <div className="flex items-center justify-center gap-1.5 md:gap-2.5 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2 mx-auto">
                 <button
                   type="button"
                   data-testid="english-start-game"
                   onClick={startGame}
                   disabled={!playerName.trim()}
-                  className="h-9 md:h-10 px-4 md:px-5 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 disabled:bg-gray-500/50 disabled:cursor-not-allowed font-bold text-xs md:text-sm"
+                  className={MB.btnPrimary}
                 >
                   ▶️ התחל
                 </button>
                 <button
                   onClick={() => setShowLeaderboard(true)}
-                  className="h-9 md:h-10 px-3 md:px-4 rounded-lg bg-orange-500/80 hover:bg-orange-500 font-bold text-xs md:text-sm"
+                  className={`${MB.btnAction} ${MB.btnActionOrange}`}
                 >
                   🏆 לוח תוצאות
                 </button>
@@ -2910,13 +2803,13 @@ export default function EnglishMaster() {
               <div className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex justify-center gap-2 md:gap-2.5 flex-wrap mx-auto px-1 md:px-2">
                 <button
                   onClick={() => setShowHowTo(true)}
-                  className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg bg-cyan-500/80 hover:bg-cyan-500 text-xs md:text-sm font-bold text-white shadow-sm"
+                  className={`${MB.btnActionHelp} ${MB.btnActionCyan}`}
                 >
                   ❓ איך לומדים אנגלית כאן?
                 </button>
                 <button
                   onClick={() => setShowReferenceModal(true)}
-                  className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg bg-purple-500/80 hover:bg-purple-500 text-xs md:text-sm font-bold text-white shadow-sm"
+                  className={`${MB.btnActionHelp} ${MB.btnActionPurple}`}
                 >
                   📚 לוח עזרה
                 </button>
@@ -2925,24 +2818,24 @@ export default function EnglishMaster() {
                     type="button"
                     data-testid={`english-${grade}-book-topic-button`}
                     onClick={() => router.push(bookTopicHref)}
-                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                    className={`${MB.btnActionHelp} ${MB.btnActionTeal}`}
                   >
                     📖 הסבר בספר
                   </button>
                 ) : null}
                 <div
-                  className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
+                  className={MB.coinBadgeMobile}
                   title="מטבעות משחק"
                 >
-                  <span>מטבעות:</span>
-                  <span dir="ltr" className="text-amber-100">
+                  <span className={MB.coinBadgeLabel}>מטבעות:</span>
+                  <span dir="ltr" className={MB.coinBadgeValue}>
                     {childCoinBalance}
                   </span>
                 </div>
                 {mistakes.length > 0 && (
                   <button
                     onClick={() => setShowPracticeOptions(true)}
-                    className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg bg-pink-500/80 hover:bg-pink-500 text-xs md:text-sm font-bold text-white shadow-sm"
+                    className={`${MB.btnActionHelp} ${MB.btnActionPink}`}
                   >
                     🎯 תרגול ממוקד ({mistakes.length})
                   </button>
@@ -2950,7 +2843,7 @@ export default function EnglishMaster() {
               </div>
 
               {!playerName.trim() && (
-                <p className="text-xs text-white/60 text-center mb-1">
+                <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל
                 </p>
               )}
@@ -2973,24 +2866,31 @@ export default function EnglishMaster() {
                               feedback.includes("Correct") ||
                               feedback.includes("∞") ||
                               feedback.includes("Start")
-                                ? "bg-emerald-500/20 text-emerald-200"
-                                : "bg-red-500/20 text-red-200"
+                                ? MB.feedbackOk
+                                : MB.feedbackBad
                             }`}
                           >
                             <div>{feedback}</div>
                           </div>
                         )}
                         {showHint && (
-                          <div className="px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-400/50 text-blue-200 text-sm text-center" dir="ltr">
-                            {getHint(currentQuestion, currentQuestion.topic, grade)}
+                          <div className={MB.hintBox} dir="ltr">
+                            <div className={MB.hintTitle}>
+                              רמז
+                            </div>
+                            <div className={MB.hintBody}>
+                              {getHint(currentQuestion, currentQuestion.topic, grade)}
+                            </div>
                           </div>
                         )}
                         {errorExplanation && (
-                          <div className="px-4 py-3 rounded-lg bg-[#0a1222]/95 border border-rose-300/60 shadow-xl backdrop-blur-sm text-sm leading-relaxed text-center w-full" dir="ltr">
-                            <div className="text-xs font-semibold text-rose-100 mb-1.5 tracking-tight">
+                          <div className={MB.errorBox}>
+                            <div className={MB.errorTitle}>
                               Why was this wrong?
                             </div>
-                            <div className="text-rose-50">{errorExplanation}</div>
+                            <div className={MB.errorBody} dir="ltr">
+                              {errorExplanation}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -3012,7 +2912,7 @@ export default function EnglishMaster() {
                         type="button"
                         data-testid={`english-${grade}-book-question-button`}
                         onClick={() => openBookFromLearning(questionBookHref)}
-                        className="absolute top-0 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                        className={`${MB.floatBtn} ${MB.floatBtnBook} pointer-events-auto`}
                         title="הסבר בספר לנושא הנוכחי"
                       >
                         📖 הסבר
@@ -3024,14 +2924,14 @@ export default function EnglishMaster() {
                       questionLabel={currentQuestion.questionLabel}
                       exerciseText={currentQuestion.exerciseText}
                       getQuestionFontStyle={getQuestionFontStyle}
-                      leadClassName="text-xl md:text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full px-2"
-                      bodyClassName="text-4xl font-black text-white text-center max-w-full px-2 break-words overflow-wrap-anywhere"
+                      leadClassName={MB.questionLead}
+                      bodyClassName={MB.questionBody}
                     />
                   </div>
 
                   <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
                     {currentQuestion.qType === "typing" ? (
-                      <div className="w-full mb-3 p-4 rounded-lg bg-blue-500/20 border border-blue-400/50">
+                      <div className={MB.answerWrap}>
                         <div className="text-center mb-3">
                           <input
                             dir="ltr"
@@ -3045,7 +2945,7 @@ export default function EnglishMaster() {
                             }}
                             disabled={!!selectedAnswer || !gameActive}
                             placeholder="כתוב את התשובה שלך כאן..."
-                            className="w-full max-w-[300px] px-4 py-4 rounded-lg bg-black/40 border border-white/20 text-white text-2xl font-bold text-center disabled:opacity-50"
+                            className={`w-full max-w-[300px] ${MB.inputDesktop} disabled:opacity-50`}
                           />
                         </div>
                         <div className="flex justify-center">
@@ -3062,11 +2962,9 @@ export default function EnglishMaster() {
                                   !gameActive ||
                                   (primaryBtn.action === "check" && primaryBtn.disabled)
                                 }
-                                className={`px-6 py-3 rounded-lg font-bold text-lg disabled:bg-gray-500/60 disabled:opacity-50 ${
-                                  primaryBtn.action === "next"
-                                    ? "bg-blue-500/80 hover:bg-blue-500"
-                                    : "bg-emerald-500/80 hover:bg-emerald-500"
-                                }`}
+                                className={
+                                  primaryBtn.action === "next" ? MB.checkBtnNext : MB.checkBtn
+                                }
                               >
                                 {primaryBtn.action === "check"
                                   ? "✅ בדוק תשובה"
@@ -3094,14 +2992,14 @@ export default function EnglishMaster() {
                               disabled={!!selectedAnswer}
                               className={`rounded-xl border-2 px-6 py-6 text-2xl font-bold transition-all active:scale-95 disabled:opacity-50 ${
                                 isCorrect && isSelected
-                                  ? "bg-emerald-500/30 border-emerald-400 text-emerald-200"
+                                  ? MB.choiceCorrect
                                   : isWrong
-                                  ? "bg-red-500/30 border-red-400 text-red-200"
+                                  ? MB.choiceWrong
                                   : selectedAnswer &&
                                       String(answer).trim().toLowerCase() ===
                                         String(currentQuestion.correctAnswer).trim().toLowerCase()
-                                  ? "bg-emerald-500/30 border-emerald-400 text-emerald-200"
-                                  : "bg-black/30 border-white/15 text-white hover:border-white/40"
+                                  ? MB.choiceCorrect
+                                  : MB.choiceDefault
                               }`}
                             >
                               {answer}
@@ -3157,7 +3055,7 @@ export default function EnglishMaster() {
                 type="button"
                 data-testid="learning-stop-game"
                 onClick={stopGame}
-                className="h-9 px-4 rounded-lg bg-red-500/80 hover:bg-red-500 font-bold text-sm"
+                className={MB.btnStop}
               >
                 ⏹️ עצור
               </button>
@@ -3879,37 +3777,53 @@ export default function EnglishMaster() {
 
           {showHowTo && (
             <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[180] p-4"
+              className={learningModalOverlay}
               onClick={() => setShowHowTo(false)}
             >
               <div
-                className="bg-gradient-to-br from-[#080c16] to-[#0a0f1d] border-2 border-emerald-400/60 rounded-2xl p-4 max-w-md w-full text-sm text-white"
+                className={learningModalPanel}
                 dir="rtl"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h2 className="text-xl font-extrabold mb-2 text-center">
-                  📘 איך לומדים אנגלית כאן?
-                </h2>
-
-                <p className="text-white/80 text-xs mb-3 text-center">
-                  המטרה היא לתרגל אנגלית בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי.
-                </p>
-
-                <ul className="list-disc pr-4 space-y-1 text-[13px] text-white/90">
-                  <li>בחר כיתה, רמת קושי ונושא (אוצר מילים, דקדוק, תרגום, כתיבה ועוד).</li>
-                  <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
-                  <li>קרא היטב את השאלה – לפעמים צריך לבחור תשובה, ולפעמים לכתוב באנגלית.</li>
-                  <li>לחץ על 💡 Hint כדי לקבל רמז, ועל "📘 הסבר מלא" כדי לראות פתרון צעד־אחר־צעד.</li>
-                  <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
-                </ul>
-
-                <div className="mt-4 flex justify-center">
+                <div className={learningModalHeader}>
                   <button
+                    type="button"
                     onClick={() => setShowHowTo(false)}
-                    className="px-5 py-2 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 text-sm font-bold"
+                    className={learningModalCloseBtn}
+                    aria-label="סגור"
                   >
-                    סגור
+                    ✖
                   </button>
+                  <h2 className={learningModalTitle}>
+                    📘 איך לומדים אנגלית כאן?
+                  </h2>
+                  <span className="w-10 shrink-0" aria-hidden />
+                </div>
+
+                <div className={`${learningModalScrollBody} text-sm`}>
+                  <p className="text-xs mb-3 text-center">
+                    המטרה היא לתרגל אנגלית בצורה משחקית, עם התאמה לכיתה, נושא ורמת קושי.
+                  </p>
+
+                  <ul className="list-disc pr-4 space-y-1 text-[13px]">
+                    <li>בחר כיתה, רמת קושי ונושא (אוצר מילים, דקדוק, תרגום, כתיבה ועוד).</li>
+                    <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
+                    <li>קרא היטב את השאלה – לפעמים צריך לבחור תשובה, ולפעמים לכתוב באנגלית.</li>
+                    <li>לחץ על 💡 Hint כדי לקבל רמז, ועל "📘 הסבר מלא" כדי לראות פתרון צעד־אחר־צעד.</li>
+                    <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
+                  </ul>
+                </div>
+
+                <div className={learningModalFooter}>
+                  <div className="flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setShowHowTo(false)}
+                      className={learningPrimaryCloseBtn}
+                    >
+                      סגור
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3918,56 +3832,68 @@ export default function EnglishMaster() {
           {/* חלון הסבר מלא - Modal גדול ומרכזי */}
           {isShowingAnySolution && explanationQuestion && (
             <div
-              className="fixed inset-0 z-[200] bg-black/70 flex items-center justify-center px-4"
+              className={learningModalOverlay}
               onClick={closeExplanationModal}
             >
               <div
-                className="bg-gradient-to-br from-emerald-950 to-emerald-900 border border-emerald-400/60 rounded-2xl p-4 w-full max-w-md max-h-[80vh] overflow-y-auto shadow-2xl"
+                className={learningModalPanel}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <h3
-                    className="text-lg font-bold text-emerald-100"
-                    dir="rtl"
+                <div className={learningModalHeader}>
+                  <button
+                    type="button"
+                    onClick={closeExplanationModal}
+                    className={learningModalCloseBtn}
+                    aria-label="סגור"
                   >
+                    ✖
+                  </button>
+                  <h3 className={learningModalTitle} dir="rtl">
                     {showPreviousSolution
                       ? "פתרון התרגיל הקודם"
                       : "\u200Fאיך פותרים את השאלה?"}
                   </h3>
-                  <button
-                    onClick={closeExplanationModal}
-                    className="text-emerald-200 hover:text-white text-xl leading-none px-2"
-                  >
-                    ✖
-                  </button>
+                  <span className="w-10 shrink-0" aria-hidden />
                 </div>
-                <div className="mb-2 text-sm text-emerald-50" dir="rtl">
-                  {/* מציגים שוב את השאלה */}
-                  <p
-                    className="text-base font-bold text-white mb-3 text-center"
-                    style={{ direction: "rtl", unicodeBidi: "plaintext" }}
-                  >
-                    {explanationQuestion.stem || explanationQuestion.question}
-                  </p>
-                  {/* כאן הצעדים */}
-                  <div className="space-y-1 text-sm" style={{ direction: "rtl" }}>
-                    {getSolutionSteps(
-                      explanationQuestion,
-                      explanationQuestion.topic,
-                      grade
-                    ).map((step, idx) => (
-                      <div key={idx}>{step}</div>
-                    ))}
+
+                <StepExerciseUiProvider value={stepExerciseUi}>
+                  <div className={learningModalScrollBody} dir="rtl">
+                    <div className={`mb-3 ${learningQuestionBox}`}>
+                      <p
+                        className={`${learningQuestionText} text-center`}
+                        style={{ direction: "rtl", unicodeBidi: "plaintext" }}
+                      >
+                        {explanationQuestion.stem || explanationQuestion.question}
+                      </p>
+                    </div>
+                    <div
+                      className="space-y-2"
+                      style={{ direction: "rtl", unicodeBidi: "plaintext" }}
+                    >
+                      {getSolutionSteps(
+                        explanationQuestion,
+                        explanationQuestion.topic,
+                        grade
+                      ).map((step, idx) => (
+                        <div key={idx} className={learningExplBody}>
+                          {step}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <div className="mt-3 flex justify-center">
-                  <button
-                    onClick={closeExplanationModal}
-                    className="px-6 py-2 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 text-sm font-bold"
-                    dir="rtl"
-                  >
-                    {"\u200Fסגור"}
-                  </button>
+                </StepExerciseUiProvider>
+
+                <div className={learningModalFooter}>
+                  <div className="flex justify-center">
+                    <button
+                      type="button"
+                      onClick={closeExplanationModal}
+                      className={learningPrimaryCloseBtn}
+                      dir="rtl"
+                    >
+                      {"\u200Fסגור"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

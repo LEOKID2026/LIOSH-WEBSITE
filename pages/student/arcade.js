@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
+import StudentThemePicker from "../../components/student/StudentThemePicker";
 
 const ENTRY_OPTIONS = [
   { label: "10", value: 10 },
@@ -58,9 +60,6 @@ const MORE_ARCADE_LOBBY_ROWS = [
     playersLine: "שחקנים: עד 8",
   },
 ];
-
-const CARD_SHELL =
-  "flex h-full flex-col rounded-xl border border-white/10 bg-white/[0.04] p-3 shadow-lg shadow-black/20 backdrop-blur-sm sm:p-4";
 
 function playHrefForArcadeRoom(gameKey, roomId) {
   const q = encodeURIComponent(roomId);
@@ -155,6 +154,12 @@ function EntryCostSelector({ entryCost, setEntryCost, costDisabledReason, busy, 
  * @param {boolean} props.busy
  * @param {() => void} props.onQuickGame
  * @param {(roomType: string, gk?: string) => void} props.onCreateRoom
+ * @param {string} props.cardShell
+ * @param {string} props.cardTitle
+ * @param {string} props.cardBlurb
+ * @param {string} props.cardCta
+ * @param {string} props.badgeActive
+ * @param {string} props.badgeInactive
  */
 function ArcadeGameCard({
   title,
@@ -169,23 +174,29 @@ function ArcadeGameCard({
   busy,
   onQuickGame,
   onCreateRoom,
+  cardShell,
+  cardTitle,
+  cardBlurb,
+  cardCta,
+  badgeActive,
+  badgeInactive,
 }) {
   const quickLabel =
     gameKey === "fourline" ? "משחק מהיר" : gameKey === "ludo" ? "משחק מהיר (לודו)" : `משחק מהיר (${title})`;
 
   return (
-    <div className={CARD_SHELL}>
+    <div className={cardShell}>
       <div className="flex flex-wrap items-start justify-between gap-2 border-b border-white/10 pb-2">
-        <h2 className="text-base font-bold text-white sm:text-lg">{title}</h2>
+        <h2 className={cardTitle}>{title}</h2>
         <span
           className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold sm:text-xs ${
-            active ? "bg-emerald-500/25 text-emerald-200 ring-1 ring-emerald-500/40" : "bg-white/10 text-white/50"
+            active ? badgeActive : badgeInactive
           }`}
         >
           {active ? "פעיל" : "לא זמין"}
         </span>
       </div>
-      <p className="mt-2 text-xs leading-snug text-white/70 sm:text-sm">{blurb}</p>
+      <p className={`mt-2 text-xs leading-snug sm:text-sm ${cardBlurb}`}>{blurb}</p>
       <ul className="mt-2 space-y-0.5 text-[11px] text-white/65 sm:text-xs">
         {bullets.map((line) => (
           <li key={line} className="flex gap-1.5">
@@ -214,7 +225,7 @@ function ArcadeGameCard({
           disabled={busy || !active || Boolean(costDisabledReason(entryCost))}
           title={costDisabledReason(entryCost) || (!active ? idleReason || undefined : undefined)}
           onClick={onQuickGame}
-          className="w-full rounded-lg bg-amber-500 px-3 py-2 text-center text-sm font-bold text-zinc-950 shadow-md transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-45"
+          className={`w-full ${cardCta} disabled:cursor-not-allowed disabled:opacity-45`}
         >
           {quickLabel}
         </button>
@@ -242,6 +253,7 @@ function ArcadeGameCard({
 }
 
 export default function StudentArcadePage() {
+  const { GH, isBright } = useGamesHubUi();
   const [studentName, setStudentName] = useState("");
   const [balance, setBalance] = useState(null);
   const [games, setGames] = useState([]);
@@ -526,36 +538,58 @@ export default function StudentArcadePage() {
   const waitingCopy =
     hlStatus === "waiting" ? "ממתין לשחקן נוסף" : hlStatus === "active" ? "המשחק פעיל" : hlStatus;
 
+  const badgeActive = isBright
+    ? "bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300"
+    : "bg-emerald-500/25 text-emerald-200 ring-1 ring-emerald-500/40";
+  const badgeInactive = isBright
+    ? "bg-slate-100 text-slate-500 ring-1 ring-slate-200"
+    : "bg-white/10 text-white/50";
+  const arcadeCardProps = {
+    cardShell: GH.card,
+    cardTitle: GH.cardTitle,
+    cardBlurb: GH.cardBlurb,
+    cardCta: GH.cardCta,
+    badgeActive,
+    badgeInactive,
+  };
+
   return (
     <Layout>
       <Head>
         <title>משחקים — LEO K</title>
       </Head>
-      <div
-        className="min-h-[calc(100vh-56px)] bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white"
-        dir="rtl"
-      >
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+      <div className={`min-h-[calc(100vh-56px)] ${GH.pageWrap}`} dir="rtl">
+        <div className={`${GH.container} max-w-7xl`}>
           <header className="mb-5 flex flex-col gap-3 border-b border-white/10 pb-5 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="min-w-0 space-y-1.5 text-right">
-              <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">משחקים</h1>
-              <p className="text-xs text-white/55 sm:text-sm">בחר משחק, עלות כניסה והצטרף לחדר</p>
+              <h1 className={GH.hubTitle}>משחקים</h1>
+              <p className={`text-xs sm:text-sm ${GH.hubSub}`}>בחר משחק, עלות כניסה והצטרף לחדר</p>
               <div className="flex flex-wrap items-center justify-end gap-2 pt-1 text-sm">
-                <span className="font-medium text-white/95">{studentName || "—"}</span>
-                <span className="text-white/25">·</span>
-                <span className="rounded-md bg-black/30 px-2 py-0.5 font-mono text-sm text-amber-200 ring-1 ring-white/10">
+                <span className={`font-medium ${isBright ? "text-slate-800" : "text-white/95"}`}>
+                  {studentName || "—"}
+                </span>
+                <span className={isBright ? "text-slate-300" : "text-white/25"}>·</span>
+                <span
+                  className={
+                    isBright
+                      ? "rounded-md bg-amber-50 px-2 py-0.5 font-mono text-sm text-amber-800 ring-1 ring-amber-200"
+                      : "rounded-md bg-black/30 px-2 py-0.5 font-mono text-sm text-amber-200 ring-1 ring-white/10"
+                  }
+                >
                   {balanceDisplay}
-                  <span className="mr-1.5 text-[11px] font-sans text-white/45">מטבעות</span>
+                  <span className={`mr-1.5 text-[11px] font-sans ${isBright ? "text-amber-700/70" : "text-white/45"}`}>
+                    מטבעות
+                  </span>
                 </span>
               </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:items-end">
-              <Link
-                href="/student/home"
-                className="inline-flex items-center justify-center rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 transition hover:bg-emerald-500/25 sm:text-sm"
-              >
-                חזרה ללמידה
-              </Link>
+              <div className="flex items-center gap-2">
+                <StudentThemePicker variant="icon" iconSize="nav" />
+                <Link href="/student/home" className={GH.backBtn}>
+                  חזרה ללמידה
+                </Link>
+              </div>
             </div>
           </header>
 
@@ -573,6 +607,7 @@ export default function StudentArcadePage() {
             <>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 xl:gap-4">
                 <ArcadeGameCard
+                  {...arcadeCardProps}
                   title="Fourline"
                   blurb="ארבע בשורה · שניים נגד שניים"
                   bullets={["שחקנים: 2", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
@@ -587,6 +622,7 @@ export default function StudentArcadePage() {
                   onCreateRoom={(rt, gk) => void onCreateRoom(rt, gk)}
                 />
                 <ArcadeGameCard
+                  {...arcadeCardProps}
                   title="Ludo"
                   blurb="לודו · 2–4 שחקנים"
                   bullets={["שחקנים: עד 4", "בחר עלות כניסה לפני משחק מהיר או יצירת חדר"]}
@@ -602,6 +638,7 @@ export default function StudentArcadePage() {
                 />
                 {moreArcadeLobbyVm.map((row) => (
                   <ArcadeGameCard
+                    {...arcadeCardProps}
                     key={row.gameKey}
                     title={row.title}
                     blurb={row.blurb}
@@ -620,9 +657,9 @@ export default function StudentArcadePage() {
               </div>
 
               <div className="mt-5 grid gap-3 lg:mt-6 lg:grid-cols-3 lg:gap-4">
-                <div className={`${CARD_SHELL} lg:col-span-2`}>
-                  <h3 className="text-sm font-bold text-white sm:text-base">חדרים פתוחים</h3>
-                  <p className="mt-1 text-[11px] text-white/55 sm:text-xs">חדרים ציבוריים ומשחק מהיר שמחכים לשחקן</p>
+                <div className={`${GH.card} lg:col-span-2`}>
+                  <h3 className={GH.sectionTitle}>חדרים פתוחים</h3>
+                  <p className={`mt-1 text-[11px] sm:text-xs ${GH.cardBlurb}`}>חדרים ציבוריים ומשחק מהיר שמחכים לשחקן</p>
                   {!openRoomsPollActive ? (
                     <p className="mt-3 text-xs text-white/45">אין רשימה — המשחק לא פעיל</p>
                   ) : openRooms.length === 0 ? (
@@ -662,9 +699,9 @@ export default function StudentArcadePage() {
                   )}
                 </div>
 
-                <div className={CARD_SHELL}>
-                  <h3 className="text-sm font-bold text-white sm:text-base">חדר פרטי — הצטרפות בקוד</h3>
-                  <p className="mt-1 text-[11px] text-white/55 sm:text-xs">הזן את הקוד שקיבלת מחבר</p>
+                <div className={GH.card}>
+                  <h3 className={GH.sectionTitle}>חדר פרטי — הצטרפות בקוד</h3>
+                  <p className={`mt-1 text-[11px] sm:text-xs ${GH.cardBlurb}`}>הזן את הקוד שקיבלת מחבר</p>
                   <div className="mt-3 flex flex-col gap-2">
                     <input
                       type="text"
@@ -720,7 +757,7 @@ export default function StudentArcadePage() {
           ) : null}
 
           {SHOW_ARCADE_DEBUG ? (
-            <div className={`${CARD_SHELL} mt-4`}>
+            <div className={`${GH.card} mt-4`}>
               <h3 className="text-xs font-semibold text-white/90">מצב פיתוח — הצטרפות לפי roomId</h3>
               <div className="mt-2 flex flex-col gap-2 sm:flex-row">
                 <input

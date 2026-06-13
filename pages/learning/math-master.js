@@ -67,10 +67,10 @@ import {
   shouldShowStandaloneExerciseView,
 } from "../../utils/learning-step-exercise-types";
 import { finalizeAnimationSteps } from "../../utils/learning-step-animation-pipeline";
-import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
+import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
-import StudentThemePicker from "../../components/student/StudentThemePicker";
-import { resolveMathMasterUi } from "../../lib/student-ui/student-theme-resolver.client.js";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import {
   MONTHLY_MINUTES_TARGET,
@@ -374,9 +374,7 @@ function consumeMathBookPracticePreset() {
 
 export default function MathMaster() {
   useIOSViewportFix();
-  const { theme } = useStudentTheme();
-  const ui = useMemo(() => resolveMathMasterUi(theme), [theme]);
-  const MB = ui.MB;
+  const { MB, ui } = useLearningMasterUi();
   const learningModalOverlay = ui.learningModalOverlay;
   const learningModalPanel = ui.learningModalPanel;
   const learningModalHeader = ui.learningModalHeader;
@@ -3344,23 +3342,12 @@ export default function MathMaster() {
             className="relative px-2 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
           >
-            <div className="absolute right-2 top-2 flex gap-2 pointer-events-auto">
-              <button
-                onClick={() => router.push("/learning/curriculum?subject=math")}
-                className={MB.navBtn}
-              >
-                📋 תוכנית לימודים
-              </button>
-            </div>
-            <div className="absolute left-2 top-2 flex gap-2 pointer-events-auto items-center">
-              <StudentThemePicker variant="icon" iconSize="nav" />
-              <button
-                onClick={backSafe}
-                className={MB.backBtn}
-              >
-                חזרה
-              </button>
-            </div>
+            <LearningMasterNavBar
+              MB={MB}
+              headerRef={headerRef}
+              onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
+              onBack={backSafe}
+            />
           </div>
         </div>
 
@@ -3398,121 +3385,18 @@ export default function MathMaster() {
             </p>
           </div>
 
-          <div
-            ref={controlsRef}
-            className="mx-auto grid grid-cols-8 gap-0.5 md:gap-1 lg:gap-1.5 mb-3 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl"
-          >
-            <div className={MB.hudCell}>
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>ניקוד</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className={MB.hudValueScore} dir="ltr">
-                  {formatMathHudNumber(subjectView.topHud.score)}
-                </div>
-              </div>
-            </div>
-            <div className={MB.hudCell}>
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>רצף</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className={MB.hudValueStreak} dir="ltr">
-                  {formatMathHudNumber(subjectView.topHud.streak)}
-                </div>
-              </div>
-            </div>
-            <div className={MB.hudCell}>
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>כוכבים</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className={MB.hudValueStars} dir="ltr">
-                  {formatMathHudNumber(subjectView.topHud.stars)}
-                </div>
-              </div>
-            </div>
-            <div className={MB.hudCell}>
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>רמה</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className={MB.hudValueLevel} dir="ltr">
-                  {formatMathHudNumber(subjectView.topHud.level)}
-                </div>
-              </div>
-            </div>
-            <div className={MB.hudCell}>
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>✅</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className={MB.hudValueCorrect} dir="ltr">
-                  {formatMathHudNumber(subjectView.topHud.correct)}
-                </div>
-              </div>
-            </div>
-            <div className={MB.hudCell}>
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>חיים</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className={MB.hudValueLives} dir="ltr">
-                  {mode === "challenge" ? `${formatMathHudNumber(lives)} ❤️` : "∞"}
-                </div>
-              </div>
-            </div>
-            <div
-              className={`rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px] ${
-                gameActive && (mode === "challenge" || mode === "speed") && timeLeft <= 5
-                  ? MB.hudTimerUrgent
-                  : MB.hudTimerNormal
-              }`}
-            >
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>⏰ טיימר</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div
-                  className={
-                    gameActive && (mode === "challenge" || mode === "speed") && timeLeft <= 5
-                      ? MB.hudTimerValueUrgent
-                      : gameActive && (mode === "challenge" || mode === "speed")
-                      ? MB.hudTimerValueActive
-                      : MB.hudTimerValueNormal
-                  }
-                >
-                  {gameActive
-                    ? mode === "challenge" || mode === "speed"
-                      ? timeLeft ?? "--"
-                      : "∞"
-                    : "--"}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowPlayerProfile(true)}
-              className={MB.hudAvatarBtn}
-              title="פרופיל שחקן"
-            >
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className={MB.hudLabel}>אווטר</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-lg md:text-2xl lg:text-3xl font-bold leading-tight">
-                  {playerAvatarImage ? (
-                    <img 
-                      src={playerAvatarImage} 
-                      alt="אווטר" 
-                      className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-full object-cover mx-auto"
-                    />
-                  ) : (
-                    playerAvatar
-                  )}
-                </div>
-              </div>
-            </button>
-          </div>
+          <LearningMasterHud
+            MB={MB}
+            controlsRef={controlsRef}
+            topHud={subjectView.topHud}
+            lives={lives}
+            mode={mode}
+            gameActive={gameActive}
+            timeLeft={timeLeft}
+            onAvatarClick={() => setShowPlayerProfile(true)}
+            playerAvatar={playerAvatar}
+            playerAvatarImage={playerAvatarImage}
+          />
 
           {/* בחירת מצב (Learning / Challenge) */}
           <div

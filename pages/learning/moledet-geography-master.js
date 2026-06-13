@@ -144,6 +144,11 @@ import { buildDailyMissionsView } from "../../lib/learning-client/dailyMissionsV
 import { fetchStudentHomeProfile } from "../../lib/learning-client/fetchStudentHomeProfile";
 import { buildSubjectMonthlyPersistenceViewFromProfile } from "../../lib/learning-client/subjectMonthlyPersistenceView";
 import { navigateToStudentHome } from "../../lib/learning-client/navigateToStudentHome";
+import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
+import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
+import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
+import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 
 const AVATAR_OPTIONS = [
   "👤",
@@ -179,6 +184,22 @@ const MOLEDET_GEOGRAPHY_MISTAKES_KEY = `mleo_${MOLEDET_GEOGRAPHY_ACTIVITY_SUBJEC
 
 export default function MoledetGeographyMaster() {
   useIOSViewportFix();
+  const { MB, ui } = useLearningMasterUi();
+  const learningModalOverlay = ui.learningModalOverlay;
+  const learningModalPanel = ui.learningModalPanel;
+  const learningModalHeader = ui.learningModalHeader;
+  const learningModalCloseBtn = ui.learningModalCloseBtn;
+  const learningModalTitle = ui.learningModalTitle;
+  const learningModalFooter = ui.learningModalFooter;
+  const learningModalScrollBody = ui.learningModalScrollBody;
+  const learningQuestionBox = ui.learningQuestionBox;
+  const learningQuestionText = ui.learningQuestionText;
+  const learningExplTitle = ui.learningExplTitle;
+  const learningExplBody = ui.learningExplBody;
+  const learningPrimaryCloseBtn = ui.learningPrimaryCloseBtn;
+  const learningHintTriggerBtn = ui.learningHintTriggerBtn;
+  const learningExplainOpenBtn = ui.learningExplainOpenBtn;
+  const stepExerciseUi = ui.stepExerciseUi;
   const router = useRouter();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
@@ -2330,8 +2351,8 @@ export default function MoledetGeographyMaster() {
 
   if (!mounted || !gradeReady)
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center">
-        <div className="text-white text-xl">טוען...</div>
+      <div className={`min-h-screen ${MB.shell} flex items-center justify-center`}>
+        <div className="text-slate-700 text-xl">טוען...</div>
       </div>
     );
 
@@ -2381,7 +2402,7 @@ export default function MoledetGeographyMaster() {
           100% { opacity: 1; transform: scale(1); }
         }
       `}</style>
-      <div className="flex flex-col h-dvh max-h-dvh min-h-0 overflow-hidden bg-gradient-to-b from-[#0a0f1d] to-[#141928]" dir="rtl">
+      <div className={MB.shell} dir="rtl">
         <div
           ref={wrapRef}
           className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)]"
@@ -2393,7 +2414,7 @@ export default function MoledetGeographyMaster() {
             margin: "0 auto"
           }}
         >
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0 opacity-0 pointer-events-none hidden">
           <div
             className="absolute inset-0"
             style={{
@@ -2404,32 +2425,12 @@ export default function MoledetGeographyMaster() {
           />
         </div>
 
-        <div
-          ref={headerRef}
-          className="absolute top-0 left-0 right-0 z-50 pointer-events-none"
-        >
-          <div
-            className="relative px-2 py-3"
-            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
-          >
-            <div className="absolute right-2 top-2 flex gap-2 pointer-events-auto">
-              <button
-                onClick={() => router.push("/learning/curriculum?subject=moledet-geography")}
-                className="min-w-[100px] px-3 py-1 rounded-lg text-sm font-bold bg-emerald-500/20 border border-emerald-400/30 hover:bg-emerald-500/30 text-emerald-200"
-              >
-                📋 תוכנית לימודים
-              </button>
-            </div>
-            <div className="absolute left-2 top-2 pointer-events-auto">
-              <button
-                onClick={backSafe}
-                className="min-w-[60px] px-3 py-1 rounded-lg text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10"
-              >
-                חזרה
-              </button>
-            </div>
-          </div>
-        </div>
+        <LearningMasterNavBar
+          MB={MB}
+          headerRef={headerRef}
+          onCurriculumClick={() => router.push("/learning/curriculum?subject=moledet-geography")}
+          onBack={backSafe}
+        />
 
         <div
           className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch]"
@@ -2442,7 +2443,7 @@ export default function MoledetGeographyMaster() {
         >
           <div className="text-center mb-3">
             <div className="flex items-center justify-center gap-2 mb-0.5">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white">
+              <h1 className={MB.pageTitle}>
                 🗺️ מולדת וגיאוגרפיה
               </h1>
               <button
@@ -2450,134 +2451,34 @@ export default function MoledetGeographyMaster() {
                   sound.toggleSounds();
                   sound.toggleMusic();
                 }}
-                className={`h-7 w-7 rounded-lg border border-white/20 text-white text-sm font-bold flex items-center justify-center transition-all flex-shrink-0 ${
-                  sound.soundsEnabled && sound.musicEnabled
-                    ? "bg-green-500/80 hover:bg-green-500"
-                    : "bg-red-500/80 hover:bg-red-500"
-                }`}
+                className={
+                  sound.soundsEnabled && sound.musicEnabled ? MB.btnSoundOn : MB.btnSoundOff
+                }
                 title={sound.soundsEnabled && sound.musicEnabled ? "השתק צלילים" : "הפעל צלילים"}
               >
                 {sound.soundsEnabled && sound.musicEnabled ? "🔊" : "🔇"}
               </button>
             </div>
-            <p className="text-white/70 text-xs md:text-sm">
+            <p className={MB.pageSub}>
               {playerName || "שחקן"} • {GRADES[grade].name} •{" "}
               {LEVELS[level].name} • {getOperationName(operation)} •{" "}
               {MODES[mode].name}
             </p>
           </div>
 
-          <div
-            ref={controlsRef}
-            className="mx-auto grid grid-cols-8 gap-0.5 md:gap-1 lg:gap-1.5 mb-3 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl"
-          >
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">ניקוד</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-emerald-300 md:text-emerald-300 lg:text-emerald-200 leading-tight">
-                  {subjectView.topHud.score}
-                </div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">רצף</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-amber-300 md:text-amber-300 lg:text-amber-200 leading-tight">
-                  🔥{subjectView.topHud.streak}
-                </div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">כוכבים</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-yellow-300 md:text-yellow-300 lg:text-yellow-200 leading-tight">⭐{subjectView.topHud.stars}</div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">רמה</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-purple-300 md:text-purple-300 lg:text-purple-200 leading-tight">רמה {subjectView.topHud.level}</div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">✅</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-green-300 md:text-green-300 lg:text-green-200 leading-tight">
-                  {subjectView.topHud.correct}
-                </div>
-              </div>
-            </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px]">
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">חיים</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-sm md:text-lg lg:text-xl font-bold text-rose-300 md:text-rose-300 lg:text-rose-200 leading-tight">
-                  {mode === "challenge" ? `${lives} ❤️` : "∞"}
-                </div>
-              </div>
-            </div>
-            <div
-              className={`rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px] ${
-                gameActive && (mode === "challenge" || mode === "speed") && timeLeft <= 5
-                  ? "bg-red-500/30 border-2 border-red-400 animate-pulse"
-                  : "bg-black/30 border border-white/10"
-              }`}
-            >
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">⏰ טיימר</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div
-                  className={`text-sm md:text-lg lg:text-xl font-black leading-tight ${
-                    gameActive && (mode === "challenge" || mode === "speed") && timeLeft <= 5
-                      ? "text-red-400"
-                      : gameActive && (mode === "challenge" || mode === "speed")
-                      ? "text-yellow-400"
-                      : "text-white/78 md:text-white/85 lg:text-white/90"
-                  }`}
-                >
-                  {gameActive
-                    ? mode === "challenge" || mode === "speed"
-                      ? timeLeft ?? "--"
-                      : "∞"
-                    : "--"}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowPlayerProfile(true)}
-              className="bg-black/30 border border-white/10 rounded-lg py-1.5 px-0.5 md:py-2 md:px-1 lg:px-1.5 text-center flex flex-col items-stretch justify-start min-h-[50px] md:min-h-[58px] lg:min-h-[62px] hover:bg-purple-500/20 transition-all cursor-pointer"
-              title="פרופיל שחקן"
-            >
-              <div className="flex shrink-0 items-center justify-center mb-0.5 md:mb-1 md:min-h-[26px] lg:min-h-[28px] px-0.5">
-                <div className="text-[9px] md:text-[12px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 leading-tight">אווטר</div>
-              </div>
-              <div className="flex flex-1 items-center justify-center min-h-0">
-                <div className="text-lg md:text-2xl lg:text-3xl font-bold leading-tight">
-                  {playerAvatarImage ? (
-                    <img 
-                      src={playerAvatarImage} 
-                      alt="אווטר" 
-                      className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-full object-cover mx-auto"
-                    />
-                  ) : (
-                    playerAvatar
-                  )}
-                </div>
-              </div>
-            </button>
-          </div>
+          <LearningMasterHud
+            MB={MB}
+            controlsRef={controlsRef}
+            topHud={subjectView.topHud}
+            lives={lives}
+            mode={mode}
+            gameActive={gameActive}
+            timeLeft={timeLeft}
+            onAvatarClick={() => setShowPlayerProfile(true)}
+            playerAvatar={playerAvatar}
+            playerAvatarImage={playerAvatarImage}
+            formatValue={formatMathHudNumber}
+          />
 
           {/* בחירת מצב (Learning / Challenge) */}
           <div
@@ -2592,11 +2493,7 @@ export default function MoledetGeographyMaster() {
                   setGameActive(false);
                   setFeedback(null);
                 }}
-                className={`h-8 md:h-10 lg:h-11 px-3 md:px-4 lg:px-5 rounded-lg text-xs md:text-sm lg:text-base font-bold transition-all flex-shrink-0 ${
-                  mode === m
-                    ? "bg-emerald-500/80 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
+                className={mode === m ? MB.modeTabActive : MB.modeTabInactive}
               >
                 {MODES[m].name}
               </button>
@@ -2609,20 +2506,13 @@ export default function MoledetGeographyMaster() {
                   setGameActive(false);
                   setFeedback(null);
                 }}
-                className={`h-8 md:h-10 lg:h-11 px-3 md:px-4 lg:px-5 rounded-lg text-xs md:text-sm lg:text-base font-bold transition-all flex-shrink-0 ${
-                  mode === "practice"
-                    ? "bg-emerald-500/80 text-white"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
+                className={mode === "practice" ? MB.modeTabActive : MB.modeTabInactive}
               >
                 {MODES.practice.name}
               </button>
-              <div
-                className="hidden md:inline-flex items-center justify-center gap-1.5 md:gap-2 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 md:h-10 lg:h-11 md:px-4 lg:px-5 md:text-sm lg:text-base font-bold tabular-nums shadow-sm"
-                title="מטבעות משחק"
-              >
-                <span className="text-white">מטבעות:</span>
-                <span dir="ltr" className="text-amber-100">
+              <div className={MB.coinBadgeDesktop} title="מטבעות משחק">
+                <span className={MB.coinBadgeLabel}>מטבעות:</span>
+                <span dir="ltr" className={MB.coinBadgeValue}>
                   {childCoinBalance}
                 </span>
               </div>
@@ -3024,7 +2914,7 @@ export default function MoledetGeographyMaster() {
                 >
                   <div
                     data-testid="moledet-player-name"
-                    className="h-10 md:h-11 shrink-0 w-[3.5rem] md:w-[8.5rem] lg:w-[9.25rem] px-1.5 md:px-3 lg:px-3.5 rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold box-border flex items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap select-none pointer-events-none min-w-0"
+                    className={MB.preGamePlayerBadge}
                     dir={playerName && /[\u0590-\u05FF]/.test(playerName) ? "rtl" : "ltr"}
                     title={playerName.trim() ? playerName.trim() : undefined}
                     aria-label={playerName.trim() ? `שם תלמיד: ${playerName.trim()}` : "שם תלמיד לא זמין"}
@@ -3043,7 +2933,7 @@ export default function MoledetGeographyMaster() {
                       setGrade(`g${newGradeNum}`);
                       setGameActive(false);
                     }}
-                    className="h-10 md:h-11 shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+                    className={`${MB.selectControl} shrink-0 min-w-0 w-[5.75rem] max-w-[6.25rem] md:w-[6.5rem] md:max-w-[7rem]`}
                   >
                     {[1, 2, 3, 4, 5, 6]
                       .filter((g) => g >= MOLEDET_GEOGRAPHY_MIN_TEACH_GRADE)
@@ -3060,7 +2950,7 @@ export default function MoledetGeographyMaster() {
                       setLevel(e.target.value);
                       setGameActive(false);
                     }}
-                    className="h-10 md:h-11 shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+                    className={`${MB.selectControl} shrink-0 min-w-0 w-[5rem] max-w-[5.5rem] md:w-[5.75rem] md:max-w-[6.25rem]`}
                   >
                     {Object.keys(LEVELS).map((lvl) => (
                       <option key={lvl} value={lvl}>
@@ -3087,7 +2977,7 @@ export default function MoledetGeographyMaster() {
                           setShowMixedSelector(false);
                         }
                       }}
-                      className="h-10 md:h-11 min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem] rounded-lg bg-black/30 border border-white/20 text-white text-xs md:text-sm font-bold px-2 box-border overflow-hidden text-ellipsis whitespace-nowrap"
+                      className={`${MB.selectControl} min-w-0 w-full md:w-[min(22rem,42vw)] md:max-w-[22rem]`}
                     >
                       {GRADES[grade].topics.map((topic) => (
                         <option key={topic} value={topic}>
@@ -3099,7 +2989,7 @@ export default function MoledetGeographyMaster() {
                       <button
                         type="button"
                         onClick={() => setShowMixedSelector(true)}
-                        className="h-10 w-10 md:h-11 md:w-11 shrink-0 rounded-lg bg-blue-500/80 hover:bg-blue-500 border border-white/20 text-white text-sm md:text-base font-bold flex items-center justify-center box-border"
+                        className={MB.preGameGearBtn}
                         title="ערוך פעולות למיקס"
                       >
                         ⚙️
@@ -3110,33 +3000,37 @@ export default function MoledetGeographyMaster() {
               </div>
 
               <div className="grid grid-cols-4 gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto" dir="rtl">
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight max-w-full line-clamp-2">שיא ניקוד</span>
+                    <span className={MB.preGameTileLabel}>שיא ניקוד</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
-                    <span className="text-base md:text-xl lg:text-2xl font-bold text-emerald-300 md:text-emerald-300 lg:text-emerald-200 tabular-nums leading-tight">{subjectView.middleTiles.bestScore}</span>
+                    <span className={MB.preGameTileValueEmerald} dir="ltr">
+                      {formatMathHudNumber(subjectView.middleTiles.bestScore)}
+                    </span>
                   </div>
                 </div>
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight max-w-full line-clamp-2">שיא רצף</span>
+                    <span className={MB.preGameTileLabel}>שיא רצף</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
-                    <span className="text-base md:text-xl lg:text-2xl font-bold text-amber-300 md:text-amber-300 lg:text-amber-200 tabular-nums leading-tight">{subjectView.middleTiles.bestStreak}</span>
+                    <span className={MB.preGameTileValueAmber} dir="ltr">
+                      {formatMathHudNumber(subjectView.middleTiles.bestStreak)}
+                    </span>
                   </div>
                 </div>
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight max-w-full line-clamp-2">דיוק</span>
+                    <span className={MB.preGameTileLabel}>דיוק</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
-                    <span className="text-base md:text-xl lg:text-2xl font-bold text-blue-300 md:text-blue-300 lg:text-blue-200 tabular-nums leading-tight">{subjectView.middleTiles.accuracy}%</span>
+                    <span className={MB.preGameTileValueBlue}>{subjectView.middleTiles.accuracy}%</span>
                   </div>
                 </div>
-                <div className="bg-black/25 border border-white/15 rounded-lg md:rounded-xl px-1 py-2 md:px-2 md:py-3 min-h-[4.5rem] md:min-h-[5.25rem] lg:min-h-[5.75rem] flex flex-col items-stretch justify-start gap-1 md:gap-1.5 min-w-0 shadow-sm">
+                <div className={MB.preGameTile}>
                   <div className="flex shrink-0 items-center justify-center md:min-h-[28px] lg:min-h-[30px] px-0.5">
-                    <span className="text-[10px] md:text-[13px] lg:text-sm text-white/78 md:text-white/85 lg:text-white/90 text-center leading-tight">אתגרים</span>
+                    <span className={MB.preGameTileLabel}>אתגרים</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
                     <button
@@ -3160,7 +3054,7 @@ export default function MoledetGeographyMaster() {
                           })
                           .finally(() => setShowDailyChallenge(true));
                       }}
-                      className="h-7 md:h-8 w-full max-w-[3.5rem] md:max-w-[4rem] px-1.5 md:px-2 rounded-md bg-blue-500/85 hover:bg-blue-500 text-white text-[11px] md:text-sm lg:text-base font-bold"
+                      className={MB.btnOpenSmall}
                     >
                       פתיחה
                     </button>
@@ -3180,13 +3074,13 @@ export default function MoledetGeographyMaster() {
                   data-testid="moledet-start-game"
                   onClick={startGame}
                   disabled={!playerName.trim()}
-                  className="h-9 md:h-10 px-4 md:px-5 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 disabled:bg-gray-500/50 disabled:cursor-not-allowed font-bold text-xs md:text-sm"
+                  className={MB.btnPrimary}
                 >
                   ▶️ התחל
                 </button>
                 <button
                   onClick={() => setShowLeaderboard(true)}
-                  className="h-9 md:h-10 px-3 md:px-4 rounded-lg bg-orange-500/80 hover:bg-orange-500 font-bold text-xs md:text-sm"
+                  className={`${MB.btnAction} ${MB.btnActionOrange}`}
                 >
                   🏆 לוח תוצאות
                 </button>
@@ -3196,13 +3090,13 @@ export default function MoledetGeographyMaster() {
               <div className="w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex justify-center gap-2 md:gap-2.5 flex-wrap mx-auto px-1 md:px-2">
                 <button
                   onClick={() => setShowHowTo(true)}
-                  className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg bg-cyan-500/80 hover:bg-cyan-500 text-xs md:text-sm font-bold text-white shadow-sm"
+                  className={`${MB.btnActionHelp} ${MB.btnActionCyan}`}
                 >
                   ❓ איך לומדים מולדת וגאוגרפיה כאן?
                 </button>
                 <button
                   onClick={() => setShowReferenceModal(true)}
-                  className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg bg-purple-500/80 hover:bg-purple-500 text-xs md:text-sm font-bold text-white shadow-sm"
+                  className={`${MB.btnActionHelp} ${MB.btnActionPurple}`}
                 >
                   📚 לוח עזרה
                 </button>
@@ -3211,24 +3105,21 @@ export default function MoledetGeographyMaster() {
                     type="button"
                     data-testid={`moledet-geography-${grade}-book-topic-button`}
                     onClick={() => router.push(bookTopicHref)}
-                    className="px-3 py-2 md:px-4 md:py-2.5 rounded-lg border border-teal-400/30 bg-teal-800/70 hover:bg-teal-700/80 text-xs md:text-sm font-bold text-teal-50 shadow-sm shrink-0"
+                    className={`${MB.btnActionHelp} ${MB.btnActionTeal}`}
                   >
                     📖 הסבר בספר
                   </button>
                 ) : null}
-                <div
-                  className="md:hidden inline-flex items-center justify-center gap-1.5 shrink-0 rounded-lg border border-amber-400/45 bg-black/35 px-3 py-2 text-xs font-bold tabular-nums shadow-sm text-white"
-                  title="מטבעות משחק"
-                >
-                  <span>מטבעות:</span>
-                  <span dir="ltr" className="text-amber-100">
+                <div className={MB.coinBadgeMobile} title="מטבעות משחק">
+                  <span className={MB.coinBadgeLabel}>מטבעות:</span>
+                  <span dir="ltr" className={MB.coinBadgeValue}>
                     {childCoinBalance}
                   </span>
                 </div>
                 {mistakes.length > 0 && (
                   <button
                     onClick={() => setShowPracticeOptions(true)}
-                    className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg bg-pink-500/80 hover:bg-pink-500 text-xs md:text-sm font-bold text-white shadow-sm"
+                    className={`${MB.btnActionHelp} ${MB.btnActionPink}`}
                   >
                     🎯 תרגול ממוקד ({mistakes.length})
                   </button>
@@ -3236,7 +3127,7 @@ export default function MoledetGeographyMaster() {
               </div>
 
               {!playerName.trim() && (
-                <p className="text-xs text-white/60 text-center mb-1">
+                <p className={MB.mutedHint}>
                   הכנס את שמך כדי להתחיל
                 </p>
               )}
@@ -3280,28 +3171,27 @@ export default function MoledetGeographyMaster() {
                           <div
                             className={`px-4 py-2 rounded-lg text-sm font-semibold text-center ${
                               showCorrectAnimation
-                                ? "bg-emerald-500/40 text-emerald-100 shadow-lg shadow-emerald-500/50"
+                                ? MB.feedbackOkAnim
                                 : showWrongAnimation
-                                ? "bg-red-500/40 text-red-100 shadow-lg shadow-red-500/50"
+                                ? MB.feedbackBadAnim
                                 : feedback.includes("נכון")
-                                ? "bg-emerald-500/20 text-emerald-200"
-                                : "bg-red-500/20 text-red-200"
+                                ? MB.feedbackOk
+                                : MB.feedbackBad
                             }`}
                           >
                             <div className="text-base">{feedback}</div>
                           </div>
                         )}
                         {showHint && hintText && (
-                          <div className="px-4 py-3 rounded-lg bg-blue-500/20 border border-blue-400/50 text-blue-100/95 text-sm text-right leading-relaxed">
-                            {hintText}
+                          <div className={MB.hintBox}>
+                            <div className={MB.hintTitle}>רמז</div>
+                            <div className={MB.hintBody}>{hintText}</div>
                           </div>
                         )}
                         {errorExplanation && (
-                          <div className="px-4 py-3 rounded-lg bg-[#060b16]/98 border border-rose-200/70 shadow-xl backdrop-blur-sm text-sm text-right leading-relaxed text-rose-50">
-                            <div className="text-xs font-semibold text-rose-100 mb-1.5 tracking-tight">
-                              למה הטעות קרתה?
-                            </div>
-                            <div className="text-rose-50/95">{errorExplanation}</div>
+                          <div className={MB.errorBox}>
+                            <div className={MB.errorTitle}>למה הטעות קרתה?</div>
+                            <div className={MB.errorBody}>{errorExplanation}</div>
                           </div>
                         )}
                       </div>
@@ -3317,7 +3207,7 @@ export default function MoledetGeographyMaster() {
                       type="button"
                       data-testid={`moledet-geography-${grade}-book-question-button`}
                       onClick={() => openBookFromLearning(questionBookHref)}
-                      className="absolute top-2 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      className={`${MB.floatBtn} ${MB.floatBtnBook} pointer-events-auto`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
                       📖 הסבר
@@ -3544,13 +3434,13 @@ export default function MoledetGeographyMaster() {
                       questionLabel={currentQuestion.questionLabel}
                       exerciseText={currentQuestion.exerciseText}
                       getQuestionFontStyle={getQuestionFontStyle}
-                      leadClassName="text-2xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
-                      bodyClassName={`text-4xl text-center text-white font-bold mb-4 max-w-full px-2 ${
+                      leadClassName={MB.questionLead}
+                      bodyClassName={`${MB.questionBody} ${
                         currentQuestion.operation === "sequences"
                           ? "whitespace-normal break-words overflow-wrap-anywhere"
                           : ""
                       }`}
-                      formulaClassName="text-3xl text-center text-white font-bold font-mono max-w-full px-2 py-1"
+                      formulaClassName={MB.questionFormula}
                     />
                   )}
                   </div>
@@ -3575,12 +3465,12 @@ export default function MoledetGeographyMaster() {
                           disabled={!!selectedAnswer}
                           className={`rounded-xl border-2 px-6 py-6 text-2xl font-bold transition-all active:scale-95 disabled:opacity-50 ${
                             isCorrectChoice && isSelected
-                              ? "bg-emerald-500/30 border-emerald-400 text-emerald-200"
+                              ? MB.choiceCorrect
                               : isWrong
-                              ? "bg-red-500/30 border-red-400 text-red-200"
+                              ? MB.choiceWrong
                               : selectedAnswer && isCorrectChoice
-                              ? "bg-emerald-500/30 border-emerald-400 text-emerald-200"
-                              : "bg-black/30 border-white/15 text-white hover:border-white/40"
+                              ? MB.choiceCorrect
+                              : MB.choiceDefault
                           }`}
                         >
                           {answer}
@@ -3599,7 +3489,7 @@ export default function MoledetGeographyMaster() {
                               stepByStepViewedRef.current = true;
                               setShowSolution(true);
                             }}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/80 hover:bg-emerald-500 text-white"
+                            className={learningExplainOpenBtn}
                           >
                             📘 הסבר מלא
                           </button>
@@ -3613,7 +3503,7 @@ export default function MoledetGeographyMaster() {
                             stepByStepViewedRef.current = true;
                           }}
                           disabled={hintUsed || !!selectedAnswer}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-500/80 hover:bg-blue-500 text-white ${
+                          className={`${learningHintTriggerBtn} ${
                             hintUsed || selectedAnswer ? "opacity-60 cursor-not-allowed" : ""
                           }`}
                         >
@@ -3624,7 +3514,7 @@ export default function MoledetGeographyMaster() {
                             <button
                               type="button"
                               onClick={openPreviousExplanation}
-                              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/80 hover:bg-cyan-500 text-white"
+                              className={MB.btnPrevExercise}
                             >
                               🕘 תרגיל קודם
                             </button>
@@ -3641,43 +3531,44 @@ export default function MoledetGeographyMaster() {
                         
                         return (
                             <div
-                              className="fixed inset-0 z-[200] bg-black/70 flex items-center justify-center px-4"
+                              className={learningModalOverlay}
                               onClick={closeExplanationModal}
                             >
                               <div
-                                className="bg-gradient-to-br from-emerald-950 to-emerald-900 border border-emerald-400/60 rounded-2xl w-[390px] h-[450px] shadow-2xl flex flex-col"
+                                className={learningModalPanel}
                                 onClick={(e) => e.stopPropagation()}
                                 style={{ maxWidth: "90vw", maxHeight: "90vh" }}
                               >
-                                {/* כותרת - קבועה */}
-                                <div className="flex items-center justify-between p-4 pb-2 flex-shrink-0">
-                                  <h3 className="text-lg font-bold text-emerald-100" dir="rtl">
+                                <div className={learningModalHeader}>
+                                  <h3 className={learningModalTitle} dir="rtl">
                                     {showPreviousSolution
                                       ? "פתרון התרגיל הקודם"
                                       : "\u200Fאיך פותרים את התרגיל?"}
                                   </h3>
                                   <button
                                     onClick={closeExplanationModal}
-                                    className="text-emerald-200 hover:text-white text-xl leading-none px-2"
+                                    className={learningModalCloseBtn}
                                   >
                                     ✖
                                   </button>
                                 </div>
                                 
-                                {/* תוכן - גלילה */}
-                                <div className="flex-1 overflow-y-auto px-4 pb-2 text-sm text-emerald-50" dir="rtl">
-                                  <div
-                                    className="mb-2 font-semibold text-base text-center text-white break-words overflow-wrap-anywhere max-w-full px-2"
-                                    style={{ 
-                                      direction: "ltr", 
-                                      unicodeBidi: "plaintext",
-                                      wordBreak: "break-word",
-                                      overflowWrap: "break-word",
-                                    }}
-                                  >
-                                    {info.exercise ||
-                                      explanationQuestion.exerciseText ||
-                                      explanationQuestion.question}
+                                <StepExerciseUiProvider value={stepExerciseUi}>
+                                <div className={learningModalScrollBody} dir="rtl">
+                                  <div className={`mb-3 ${learningQuestionBox}`} dir="ltr">
+                                    <div
+                                      className={learningQuestionText}
+                                      style={{ 
+                                        direction: "ltr", 
+                                        unicodeBidi: "plaintext",
+                                        wordBreak: "break-word",
+                                        overflowWrap: "break-word",
+                                      }}
+                                    >
+                                      {info.exercise ||
+                                        explanationQuestion.exerciseText ||
+                                        explanationQuestion.question}
+                                    </div>
                                   </div>
                                   {info.vertical && (
                                     <div className="mb-3 rounded-lg bg-emerald-900/50 px-3 py-2">
@@ -3691,18 +3582,18 @@ export default function MoledetGeographyMaster() {
                                   )}
                                   <div className="space-y-1.5 text-sm" style={{ direction: "rtl", unicodeBidi: "plaintext" }}>
                                     {info.steps.map((step, idx) => (
-                                      <div key={idx} className="text-emerald-50 leading-relaxed">
+                                      <div key={idx} className={learningExplBody}>
                                         {step}
                                       </div>
                                     ))}
                                   </div>
                                 </div>
+                                </StepExerciseUiProvider>
                                 
-                                {/* כפתורים - קבועים בתחתית */}
-                                <div className="p-4 pt-2 flex justify-center flex-shrink-0 border-t border-emerald-400/20">
+                                <div className={learningModalFooter}>
                                   <button
                                     onClick={closeExplanationModal}
-                                    className="px-6 py-2 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 text-sm font-bold"
+                                    className={learningPrimaryCloseBtn}
                                   >
                                     סגור
                                   </button>
@@ -3717,7 +3608,7 @@ export default function MoledetGeographyMaster() {
               <button
                 data-testid="learning-stop-game"
                 onClick={stopGame}
-                className="h-9 px-4 rounded-lg bg-red-500/80 hover:bg-red-500 font-bold text-sm"
+                className={MB.btnStop}
               >
                 ⏹️ עצור
               </button>
