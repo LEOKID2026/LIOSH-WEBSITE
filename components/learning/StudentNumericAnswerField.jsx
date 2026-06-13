@@ -7,7 +7,7 @@ const DESKTOP_INPUT_CLASS =
   "w-full px-4 py-4 rounded-lg bg-black/40 border border-white/20 text-white text-2xl font-bold text-center leading-none disabled:opacity-50";
 
 const MOBILE_INPUT_CLASS =
-  "w-full h-11 max-h-11 px-3 py-0 rounded-lg bg-black/40 border border-white/20 text-white text-lg font-semibold text-center leading-none placeholder:text-white/35 placeholder:font-normal disabled:opacity-50 [appearance:textfield] overflow-hidden text-ellipsis whitespace-nowrap";
+  "w-full h-11 max-h-11 max-[420px]:h-9 max-[420px]:max-h-9 px-3 max-[420px]:px-2 py-0 rounded-lg bg-black/40 border border-white/20 text-white text-lg max-[420px]:text-base font-semibold text-center leading-none placeholder:text-white/35 placeholder:font-normal disabled:opacity-50 [appearance:textfield] overflow-hidden text-ellipsis whitespace-nowrap";
 
 /**
  * Numeric answer input with optional on-screen keyboard (math / geometry only).
@@ -65,13 +65,13 @@ export default function StudentNumericAnswerField({
   return (
     <div
       className={`w-full flex flex-col items-center ${
-        useCompactKeyboard ? "gap-1.5" : "gap-2"
+        useCompactKeyboard ? "gap-1.5 max-[420px]:gap-1" : "gap-2"
       } ${className}`}
       data-mobile-submit-embedded={embedSubmitInKeyboard ? "true" : undefined}
     >
       <div
-        className={`w-full flex items-center justify-center gap-2 ${
-          useCompactKeyboard ? "max-w-[280px]" : "max-w-[300px]"
+        className={`w-full flex items-center justify-center gap-2 max-[420px]:gap-1.5 ${
+          useCompactKeyboard ? "max-w-[280px] max-[420px]:max-w-[260px]" : "max-w-[300px]"
         }`}
       >
         <input

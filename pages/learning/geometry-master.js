@@ -2907,7 +2907,7 @@ export default function GeometryMaster() {
                     <button
                       type="button"
                       onClick={() => setShowTheoryHelp(true)}
-                      className="absolute top-2 left-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold bg-white/10 text-white/80 border border-white/20 hover:bg-white/20"
+                      className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto`}
                     >
                       🧠 מה חשוב לזכור?
                     </button>
@@ -2918,7 +2918,7 @@ export default function GeometryMaster() {
                       type="button"
                       data-testid={`geometry-${grade}-book-question-button`}
                       onClick={() => openBookFromLearning(questionBookHref)}
-                      className="absolute top-2 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
                       📖 הסבר
@@ -2940,9 +2940,9 @@ export default function GeometryMaster() {
                         questionLabel={currentQuestion.questionLabel}
                         exerciseText={currentQuestion.exerciseText}
                         getQuestionFontStyle={getQuestionFontStyle}
-                        leadClassName="text-xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
-                        formulaClassName="text-3xl text-center text-white font-bold font-mono max-w-full px-2 py-1"
-                        bodyClassName="text-3xl font-black text-white text-center break-words overflow-wrap-anywhere max-w-full px-2"
+                        leadClassName={MB.questionLead}
+                        formulaClassName={MB.questionFormula}
+                        bodyClassName={MB.questionBody}
                       />
                     </>
                   )}
@@ -2957,7 +2957,7 @@ export default function GeometryMaster() {
                             });
                             return (
                           <div className={MB.answerWrap}>
-                            <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1" : "mb-3"}`}>
+                            <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1 max-[420px]:mb-0.5" : "mb-3 max-[420px]:mb-2"}`}>
                               <StudentNumericAnswerField
                                 subject="geometry"
                                 value={textAnswer}

@@ -3898,7 +3898,7 @@ export default function HebrewMaster() {
                       type="button"
                       data-testid={`hebrew-${grade}-book-question-button`}
                       onClick={() => openBookFromLearning(questionBookHref)}
-                      className="absolute top-0 right-0 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
                       📖 הסבר

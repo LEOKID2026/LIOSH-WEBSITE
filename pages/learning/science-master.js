@@ -3277,7 +3277,7 @@ function saveScienceAnswerInParallel({
                       <button
                         type="button"
                         onClick={() => setShowTheoryHelp(true)}
-                        className="absolute top-2 left-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold bg-white/10 text-white/80 border border-white/20 hover:bg-white/20"
+                        className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto`}
                       >
                         🧠 מה חשוב לזכור?
                       </button>
@@ -3287,7 +3287,7 @@ function saveScienceAnswerInParallel({
                       type="button"
                       data-testid={`science-${grade}-book-question-button`}
                       onClick={() => openBookFromLearning(questionBookHref)}
-                      className="absolute top-2 right-2 z-[6] h-7 px-2.5 rounded-lg text-[11px] font-bold border border-teal-400/35 bg-teal-800/80 hover:bg-teal-700/90 text-teal-50 shadow-lg"
+                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
                       📖 הסבר

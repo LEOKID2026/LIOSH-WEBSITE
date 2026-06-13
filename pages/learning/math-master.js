@@ -4398,7 +4398,7 @@ export default function MathMaster() {
                         : null;
                       return (
                         <div className={MB.answerWrap}>
-                          <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1" : "mb-3"}`}>
+                          <div className={`text-center ${mobileEmbeddedNumericSubmit ? "mb-1 max-[420px]:mb-0.5" : "mb-3 max-[420px]:mb-2"}`}>
                             <StudentNumericAnswerField
                               subject="math"
                               value={textAnswer}
