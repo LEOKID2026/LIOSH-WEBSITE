@@ -4,7 +4,7 @@ import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
 import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
 import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl } from "../lib/site-nav";
-import { STUDENT_BRIGHT_PAGE_BG_STYLE } from "../lib/student-ui/student-bright-page-background.client.js";
+import { STUDENT_BRIGHT_PAGE_BG_STYLE, STUDENT_BRIGHT_SITE_CHROME_BG } from "../lib/student-ui/student-bright-page-background.client.js";
 
 export default function Layout({
   children,
@@ -58,7 +58,7 @@ export default function Layout({
     ? brightHomeShell
     : classicShell;
   const headerClass = isStudentBright
-    ? "w-full border-b border-sky-100 bg-white/90 backdrop-blur sticky top-0 z-30 shrink-0 shadow-sm"
+    ? `w-full border-b border-sky-100 ${STUDENT_BRIGHT_SITE_CHROME_BG} backdrop-blur sticky top-0 z-30 shrink-0 shadow-sm`
     : "w-full border-b border-white/10 bg-black/40 backdrop-blur sticky top-0 z-30 shrink-0";
   const navLinkClass = isStudentBright
     ? "px-2 py-1.5 rounded-full hover:bg-sky-50 text-slate-700 transition whitespace-nowrap"
@@ -76,7 +76,7 @@ export default function Layout({
     ? "px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 hover:bg-sky-50 text-slate-800 transition"
     : "px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition";
   const footerClass = isStudentBright
-    ? `border-t border-sky-100 bg-white/80 shrink-0 ${homepage ? "" : "mt-10"}`
+    ? `border-t border-sky-100 ${STUDENT_BRIGHT_SITE_CHROME_BG} shrink-0 ${homepage ? "" : "mt-10"}`
     : `border-t border-white/10 bg-black/40 shrink-0 ${homepage ? "" : "mt-10"}`;
   const footerTextClass = isStudentBright ? "text-slate-500" : "text-white/60";
   const footerLinkClass = isStudentBright
