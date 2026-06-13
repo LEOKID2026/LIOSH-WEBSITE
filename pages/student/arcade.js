@@ -281,7 +281,7 @@ function ArcadeGameCard({
 }
 
 export default function StudentArcadePage() {
-  const { GH } = useGamesHubUi();
+  const { GH, pageBgStyle } = useGamesHubUi();
   const [studentName, setStudentName] = useState("");
   const [balance, setBalance] = useState(null);
   const [games, setGames] = useState([]);
@@ -590,7 +590,7 @@ export default function StudentArcadePage() {
       <Head>
         <title>משחקים — LEO K</title>
       </Head>
-      <div className={`min-h-[calc(100vh-56px)] ${GH.pageWrap}`} dir="rtl">
+      <div className={`min-h-[calc(100vh-56px)] ${GH.pageWrap}`} style={pageBgStyle} dir="rtl">
         <div className={`${GH.container} max-w-7xl`}>
           <header
             className={`mb-5 flex flex-col gap-3 border-b pb-5 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4 ${GH.headerBorder}`}

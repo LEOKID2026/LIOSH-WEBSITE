@@ -4,6 +4,7 @@ import { useState } from "react";
 import DevCoinTopupNav from "./layout/DevCoinTopupNav";
 import { LEGAL_FOOTER_LINKS } from "../data/legal/sitePolicies.he";
 import { getContextNav, isImmersiveGameLayoutPath, shouldLayoutUseRtl } from "../lib/site-nav";
+import { STUDENT_BRIGHT_PAGE_BG_STYLE } from "../lib/student-ui/student-bright-page-background.client.js";
 
 export default function Layout({
   children,
@@ -45,9 +46,9 @@ export default function Layout({
   const isLearningBright = isStudentBright && resolvedShell === "learning";
 
   const brightHomeShell =
-    "min-h-[100svh] md:min-h-screen bg-gradient-to-b from-[#EAF6FF] via-[#F4FAFF] to-[#F8FAFC] text-slate-900 flex flex-col";
+    "min-h-[100svh] md:min-h-screen text-slate-900 flex flex-col";
   const brightLearningShell =
-    "min-h-[100svh] md:min-h-screen bg-gradient-to-b from-[#EEF6FC] via-[#F8FAFC] to-[#FFFBF5] text-slate-800 flex flex-col";
+    "min-h-[100svh] md:min-h-screen text-slate-800 flex flex-col";
   const classicShell =
     "min-h-[100svh] md:min-h-screen bg-gradient-to-b from-[#050816] via-[#0b1020] to-[#050816] text-white flex flex-col";
 
@@ -85,6 +86,7 @@ export default function Layout({
   return (
     <div
       className={shellClass}
+      style={isStudentBright ? STUDENT_BRIGHT_PAGE_BG_STYLE : undefined}
       dir={layoutRtlHebrew ? "rtl" : undefined}
       lang={layoutRtlHebrew ? "he" : undefined}
     >

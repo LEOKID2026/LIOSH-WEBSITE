@@ -686,7 +686,7 @@ function getSolutionStepsScience(question) {
 
 export default function ScienceMaster() {
   useIOSViewportFix();
-  const { MB, ui } = useLearningMasterUi();
+  const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
   const learningModalOverlay = ui.learningModalOverlay;
   const learningModalPanel = ui.learningModalPanel;
   const learningModalHeader = ui.learningModalHeader;
@@ -2878,7 +2878,7 @@ function saveScienceAnswerInParallel({
   if (!mounted || !gradeReady) {
     return (
       <Layout>
-        <div className={`min-h-screen ${MB.shell} flex items-center justify-center`}>
+        <div className={`min-h-screen ${shellClass} flex items-center justify-center`} style={shellBgStyle}>
         <div className="text-slate-700 text-xl">טוען מדעים...</div>
         </div>
       </Layout>
@@ -2894,7 +2894,7 @@ function saveScienceAnswerInParallel({
 
   return (
     <Layout>
-      <div className={MB.shell} dir="rtl">
+      <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
           className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)]"

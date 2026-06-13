@@ -30,11 +30,11 @@ const GAME_HUB_CARDS = [
 
 export default function GamesHubPage() {
   useIOSViewportFix();
-  const { GH } = useGamesHubUi();
+  const { GH, pageBgStyle } = useGamesHubUi();
 
   return (
     <Layout>
-      <div className={GH.pageWrap} dir="rtl">
+      <div className={GH.pageWrap} style={pageBgStyle} dir="rtl">
         <div className={GH.container}>
           <div className="mb-4 md:mb-6 flex items-center justify-between gap-3 flex-wrap">
             <Link href="/student/home" className={GH.backBtn}>

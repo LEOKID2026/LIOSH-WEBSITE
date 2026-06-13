@@ -495,7 +495,7 @@ function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
 
 export default function EnglishMaster() {
   useIOSViewportFix();
-  const { MB, ui } = useLearningMasterUi();
+  const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
   const {
     learningModalOverlay,
     learningModalPanel,
@@ -2449,7 +2449,7 @@ export default function EnglishMaster() {
 
   if (!mounted || !gradeReady)
     return (
-      <div className={`min-h-screen ${MB.shell} flex items-center justify-center`}>
+        <div className={`min-h-screen ${shellClass} flex items-center justify-center`} style={shellBgStyle}>
         <div className="text-slate-700 text-xl">טוען...</div>
       </div>
     );
@@ -2476,7 +2476,7 @@ export default function EnglishMaster() {
 
   return (
     <Layout>
-      <div className={MB.shell} dir="rtl">
+      <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
           className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)]"

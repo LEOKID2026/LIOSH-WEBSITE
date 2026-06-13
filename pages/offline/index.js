@@ -37,11 +37,11 @@ const OFFLINE_GAMES = [
 
 export default function OfflineHub() {
   useIOSViewportFix();
-  const { GH } = useGamesHubUi();
+  const { GH, pageBgStyle } = useGamesHubUi();
 
   return (
     <Layout>
-      <main className={GH.pageWrap} dir="rtl">
+      <main className={GH.pageWrap} style={pageBgStyle} dir="rtl">
         <div className={`${GH.container} space-y-6`}>
           <div className="flex justify-between items-center gap-3 flex-wrap">
             <Link href="/" className={GH.backBtn}>

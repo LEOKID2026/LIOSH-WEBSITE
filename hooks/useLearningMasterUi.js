@@ -6,5 +6,11 @@ export function useLearningMasterUi() {
   const { theme } = useStudentTheme();
   const ui = useMemo(() => resolveLearningMasterUi(theme), [theme]);
   const MB = ui.MB;
-  return { theme, MB, ui };
+  return {
+    theme,
+    MB,
+    ui,
+    shellClass: ui.shellClass,
+    shellBgStyle: ui.shellBgStyle,
+  };
 }

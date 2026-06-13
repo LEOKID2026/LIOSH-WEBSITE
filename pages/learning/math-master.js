@@ -68,8 +68,6 @@ import {
 } from "../../utils/learning-step-exercise-types";
 import { finalizeAnimationSteps } from "../../utils/learning-step-animation-pipeline";
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
-import { MATH_MASTER_BRIGHT_PAGE_BACKGROUND, MATH_MASTER_BRIGHT_SHELL_LAYOUT } from "../../lib/student-ui/student-bright-math-ui.client.js";
-import { STUDENT_THEME_BRIGHT } from "../../lib/student-ui/student-theme-preference.client.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
@@ -376,10 +374,7 @@ function consumeMathBookPracticePreset() {
 
 export default function MathMaster() {
   useIOSViewportFix();
-  const { MB, ui, theme } = useLearningMasterUi();
-  const isMathBright = theme === STUDENT_THEME_BRIGHT;
-  const mathShellClass = isMathBright ? MATH_MASTER_BRIGHT_SHELL_LAYOUT : MB.shell;
-  const mathShellBgStyle = isMathBright ? { background: MATH_MASTER_BRIGHT_PAGE_BACKGROUND } : undefined;
+  const { MB, ui, shellClass, shellBgStyle } = useLearningMasterUi();
   const learningModalOverlay = ui.learningModalOverlay;
   const learningModalPanel = ui.learningModalPanel;
   const learningModalHeader = ui.learningModalHeader;
@@ -3176,8 +3171,8 @@ export default function MathMaster() {
   if (!mounted || !gradeReady)
     return (
       <div
-        className={`min-h-screen ${mathShellClass} flex items-center justify-center`}
-        style={mathShellBgStyle}
+        className={`min-h-screen ${shellClass} flex items-center justify-center`}
+        style={shellBgStyle}
       >
         <div className="text-slate-700 text-xl">טוען...</div>
       </div>
@@ -3319,7 +3314,7 @@ export default function MathMaster() {
           animation: confetti 2s ease-out forwards;
         }
       `}</style>
-      <div className={mathShellClass} style={mathShellBgStyle} dir="rtl">
+      <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
           className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)]"
