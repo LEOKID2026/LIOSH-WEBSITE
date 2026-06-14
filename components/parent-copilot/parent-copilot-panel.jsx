@@ -149,6 +149,10 @@ export function ParentCopilotPanel({ payload, selectedContextRef = null, asyncTu
         });
       } catch (e) {
         const processingId = processingLine.id;
+        const errText =
+          e instanceof Error && String(e.message || "").trim()
+            ? String(e.message).trim()
+            : "לא ניתן לענות על השאלה כרגע. נסו שוב בעוד רגע.";
         setLines((prev) => {
           const withoutProc = prev.filter((l) => l.id !== processingId);
           return [
@@ -157,8 +161,8 @@ export function ParentCopilotPanel({ payload, selectedContextRef = null, asyncTu
               id: lineId(),
               role: "assistant",
               kind: "message",
-              text: "אירעה שגיאה טכנית. נסו שוב בעוד רגע.",
-              answerCore: "אירעה שגיאה טכנית. נסו שוב בעוד רגע.",
+              text: errText,
+              answerCore: errText,
               followUpText: "",
               revealFollowUp: true,
               response: null,

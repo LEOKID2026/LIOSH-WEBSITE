@@ -33,6 +33,7 @@ import {
   getDeterministicDetailedParentAiExplanation,
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
+import { postParentCopilotTurn } from "../../lib/parent-client/copilot-turn-api.js";
 import {
   runParentReportGenerationFromApiBody,
   computeReportRangeForParentApi,
@@ -305,35 +306,18 @@ export default function ParentReportDetailedPage() {
 
   const detailedCopilotTurnRunner = useMemo(() => {
     if (!payload || isTeacherSource) return null;
-    return async (input) => {
-      const r = await fetch("/api/parent/copilot-turn", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          utterance: input.utterance,
-          sessionId: input.sessionId,
-          audience: input.audience,
-          payload: input.payload,
-          reportPeriod: queryPeriod,
-          ...(customDatesForCopilot ? { rangeFrom: queryStart, rangeTo: queryEnd } : {}),
-          ...(copilotStudentId ? { studentId: copilotStudentId } : {}),
-          selectedContextRef: input.selectedContextRef ?? null,
-          clickedFollowupFamily: input.clickedFollowupFamily ?? null,
-        }),
+    return async (input) =>
+      postParentCopilotTurn({
+        utterance: input.utterance,
+        sessionId: input.sessionId,
+        audience: input.audience,
+        payload: input.payload,
+        reportPeriod: queryPeriod,
+        ...(customDatesForCopilot ? { rangeFrom: queryStart, rangeTo: queryEnd } : {}),
+        ...(copilotStudentId ? { studentId: copilotStudentId } : {}),
+        selectedContextRef: input.selectedContextRef ?? null,
+        clickedFollowupFamily: input.clickedFollowupFamily ?? null,
       });
-      let data = {};
-      try {
-        data = await r.json();
-      } catch {
-        data = {};
-      }
-      if (!r.ok || !data.ok) {
-        const err = typeof data.error === "string" ? data.error : `copilot-turn failed (${r.status})`;
-        throw new Error(err);
-      }
-      return data.result;
-    };
   }, [payload, queryPeriod, customDatesForCopilot, queryStart, queryEnd, copilotStudentId, isTeacherSource]);
 
   useEffect(() => {
