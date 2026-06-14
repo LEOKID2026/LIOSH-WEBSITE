@@ -309,9 +309,14 @@ function ParentSentActivitiesModal({ studentId, accessToken, refreshKey, onClose
 /**
  * Compact trigger button — opens sent-activities modal (no inline list on dashboard).
  *
- * @param {{ studentId: string, accessToken: string, refreshKey?: number }} props
+ * @param {{ studentId: string, accessToken: string, refreshKey?: number, buttonClassName?: string }} props
  */
-export default function ParentSentActivitiesPanel({ studentId, accessToken, refreshKey = 0 }) {
+export default function ParentSentActivitiesPanel({
+  studentId,
+  accessToken,
+  refreshKey = 0,
+  buttonClassName,
+}) {
   const [open, setOpen] = useState(false);
 
   if (!accessToken) return null;
@@ -320,7 +325,10 @@ export default function ParentSentActivitiesPanel({ studentId, accessToken, refr
     <>
       <button
         type="button"
-        className="rounded border border-emerald-500/40 bg-emerald-950/30 text-emerald-100 px-3 py-2 text-sm font-semibold hover:bg-emerald-900/40"
+        className={
+          buttonClassName ||
+          "rounded border border-emerald-500/40 bg-emerald-950/30 text-emerald-100 px-3 py-2 text-sm font-semibold hover:bg-emerald-900/40"
+        }
         onClick={() => setOpen(true)}
       >
         {parentSentActivitiesSectionTitleHe()}

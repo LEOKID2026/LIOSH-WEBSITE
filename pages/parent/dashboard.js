@@ -5,7 +5,6 @@ import Layout from "../../components/Layout";
 import ParentPolicyAcceptanceGate from "../../components/parent/ParentPolicyAcceptanceGate";
 import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
-import ParentSentActivitiesPanel from "../../components/parent/ParentSentActivitiesPanel";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { shouldDisplayStudentAccessCode } from "../../lib/teacher-portal/student-access-display.js";
 
@@ -673,14 +672,6 @@ export default function ParentDashboardPage() {
             </div>
           )}
         </div>
-
-        {session?.access_token ? (
-          <ParentSentActivitiesPanel
-            studentId={student.id}
-            accessToken={session.access_token}
-            refreshKey={sentActivitiesRefresh}
-          />
-        ) : null}
       </div>
     );
   };
@@ -811,6 +802,7 @@ export default function ParentDashboardPage() {
           <AssignActivityModal
             student={activityModalStudent}
             accessToken={session.access_token}
+            refreshKey={sentActivitiesRefresh}
             onClose={() => setActivityModalStudent(null)}
             onSuccess={() => {
               setActivityModalStudent(null);

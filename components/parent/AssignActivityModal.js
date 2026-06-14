@@ -9,17 +9,18 @@ import {
 } from "../../lib/classroom-activities/assigned-activity-topic-options.js";
 import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
+import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
 
 const PARENT_MODES = ["guided_practice"];
 const MAX_QUESTION_COUNT = 30;
 
 /**
- * @param {{ student: { id: string, full_name?: string, grade_level?: string|null }, accessToken: string, onClose: () => void, onSuccess: () => void }} props
+ * @param {{ student: { id: string, full_name?: string, grade_level?: string|null }, accessToken: string, onClose: () => void, onSuccess: () => void, refreshKey?: number }} props
  */
-export default function AssignActivityModal({ student, accessToken, onClose, onSuccess }) {
+export default function AssignActivityModal({ student, accessToken, onClose, onSuccess, refreshKey = 0 }) {
   const gradeKey = useMemo(
-    () => normalizeGradeLevelToKey(student.grade_level),
-    [student.grade_level]
+    () => normalizeGradeLevelToKey(student?.grade_level),
+    [student?.grade_level]
   );
   const missingGrade = !gradeKey;
 
@@ -274,7 +275,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </fieldset>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 items-center">
           <button
             type="button"
             className="rounded bg-white/15 px-3 py-2 text-sm font-semibold hover:bg-white/25 disabled:opacity-60"
@@ -291,6 +292,12 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           >
             שלח פעילות
           </button>
+          <ParentSentActivitiesPanel
+            studentId={student.id}
+            accessToken={accessToken}
+            refreshKey={refreshKey}
+            buttonClassName="rounded border border-emerald-500/40 bg-emerald-950/30 text-emerald-100 px-3 py-2 text-sm font-semibold hover:bg-emerald-900/40"
+          />
         </div>
 
         {preview.length > 0 ? (

@@ -42,7 +42,7 @@ import {
   parentReportRemoteDataUrl,
   parseParentReportRemoteSource,
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
-import { navigateToParentDashboard } from "../../lib/parent-report-navigation";
+import { ParentReportExitNav } from "../../components/parent/ParentReportExitNav.jsx";
 
 /**
  * מיפוי ויזואלי בלבד לפי recommendedNextStep מה payload — לא משנה מנוע או תוכן.
@@ -247,14 +247,6 @@ function buildDetailedReportQueryFromQueryObject(query, mode) {
 export default function ParentReportDetailedPage() {
   useIOSViewportFix();
   const router = useRouter();
-  const handleBackToParentDashboard = useCallback(() => {
-    const remote = parseParentReportRemoteSource(router);
-    if (remote.isTeacher && remote.studentId) {
-      router.push(`/teacher/student/${remote.studentId}`);
-      return;
-    }
-    navigateToParentDashboard(router);
-  }, [router]);
 
   const remoteReportSource = useMemo(
     () => parseParentReportRemoteSource(router),
@@ -1517,15 +1509,7 @@ export default function ParentReportDetailedPage() {
       >
         <div className="max-w-4xl mx-auto w-full min-w-0 overflow-x-hidden">
           <div className="no-pdf flex flex-col gap-3 mb-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={handleBackToParentDashboard}
-                className="inline-flex px-4 py-2 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all"
-              >
-                חזרה
-              </button>
-            </div>
+            <ParentReportExitNav />
             <ModeToggle />
           </div>
           {payload ? (
@@ -1913,13 +1897,6 @@ export default function ParentReportDetailedPage() {
                   className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold bg-amber-600/85 border border-amber-400/50 hover:bg-amber-600 text-white transition-all"
                 >
                   🖨️ הדפס תקציר
-                </button>
-                <button
-                  type="button"
-                  onClick={handleBackToParentDashboard}
-                  className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all text-center"
-                >
-                  חזרה
                 </button>
                 <Link
                   href="/learning"

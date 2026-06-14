@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { navigateToParentDashboard } from "../../lib/parent-report-navigation";
 import Layout from "../../components/Layout";
+import { ParentReportExitNav } from "../../components/parent/ParentReportExitNav.jsx";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { getMathReportBucketDisplayName, getTopicName, getEnglishTopicName, getScienceTopicName, getHebrewTopicName, getMoledetGeographyTopicName, exportReportToPDF } from "../../utils/math-report-generator";
@@ -805,14 +805,6 @@ function sanitizeDiagnosticsFootnoteDetailHe(raw) {
 export default function ParentReport() {
   useIOSViewportFix();
   const router = useRouter();
-  const handleBackToParentDashboard = useCallback(() => {
-    const remote = parseParentReportRemoteSource(router);
-    if (remote.isTeacher && remote.studentId) {
-      router.push(`/teacher/student/${remote.studentId}`);
-      return;
-    }
-    navigateToParentDashboard(router);
-  }, [router]);
   /** Phase D — staged Parent Copilot on short report (server-side turns). Default off. */
   const enableParentCopilotOnShort =
     typeof process !== "undefined" && process.env.NEXT_PUBLIC_ENABLE_PARENT_COPILOT_ON_SHORT === "true";
@@ -1385,16 +1377,7 @@ export default function ParentReport() {
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex items-center justify-center p-4" dir="rtl">
           <div className="text-center text-white max-w-md w-full">
-            {/* כפתור חזרה */}
-            <div className="mb-4 text-left">
-              <button
-                type="button"
-                onClick={handleBackToParentDashboard}
-                className="px-4 py-2 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all"
-              >
-                חזרה
-              </button>
-            </div>
+            <ParentReportExitNav className="mb-4" />
             
             <div className="text-4xl mb-4">📊</div>
             <h1 className="text-2xl font-bold mb-2">דוח להורים</h1>
@@ -1844,16 +1827,7 @@ export default function ParentReport() {
           ref={parentReportPdfRef}
           className="max-w-4xl mx-auto w-full min-w-0 overflow-x-hidden"
         >
-          {/* כפתור חזרה (לא נכנס ל-PDF) */}
-          <div className="mb-0 text-left no-pdf">
-            <button
-              type="button"
-              onClick={handleBackToParentDashboard}
-              className="px-4 py-2 rounded-lg text-sm font-bold bg-white/10 border border-white/20 hover:bg-white/20 text-white transition-all"
-            >
-              חזרה
-            </button>
-          </div>
+          <ParentReportExitNav className="mb-0" />
           
           {/* כותרת */}
           <div className="text-center mb-1 md:mb-2">
