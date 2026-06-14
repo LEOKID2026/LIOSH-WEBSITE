@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Layout from "../Layout";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 import { setCachedStudentMe, invalidateStudentMeClientCache } from "../../lib/learning-client/studentMeClient";
 import { StudentSessionProvider } from "./StudentSessionContext";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 
 /** מותר לשמור ב־next= אחרי login — ללא open redirect */
 function isSafeNextPath(path) {
@@ -16,15 +18,56 @@ function isSafeNextPath(path) {
   );
 }
 
+function resolveGateLayoutShell(pathname) {
+  const path = pathname || "";
+  if (path.startsWith("/student/")) return "home";
+  return "learning";
+}
+
+function StudentGateShell({ pathname, children }) {
+  const { theme } = useStudentTheme();
+  return (
+    <Layout studentTheme={theme} studentShell={resolveGateLayoutShell(pathname)}>
+      {children}
+    </Layout>
+  );
+}
+
+function StudentGateLoadingPanel({ message }) {
+  const { tokens: T } = useStudentTheme();
+  return (
+    <div className="max-w-md mx-auto px-4 py-8 md:py-12" dir="rtl" lang="he">
+      <div className="min-h-[50vh] flex flex-col items-center justify-center text-center">
+        <div className={T.loadingSpinner} aria-hidden />
+        <p className={T.loadingText}>{message}</p>
+      </div>
+    </div>
+  );
+}
+
+function StudentGateBlockedPanel({ loginHref }) {
+  const { tokens: T } = useStudentTheme();
+  return (
+    <div className="max-w-md mx-auto px-4 py-8 md:py-12 space-y-4" dir="rtl" lang="he">
+      <p className={`${T.loadingText} text-right`}>יש להתחבר כתלמיד כדי להמשיך</p>
+      <Link href={loginHref} className={`${T.ctaPrimary} inline-flex justify-center w-full sm:w-auto`}>
+        כניסת תלמיד
+      </Link>
+    </div>
+  );
+}
+
 export default function StudentAccessGate({ children }) {
   const router = useRouter();
   /** @type {[{ status: "loading" | "ok" | "blocked", student: object | null }, function]: any} */
   const [session, setSession] = useState({ status: "loading", student: null });
+  const [loginNextPath, setLoginNextPath] = useState("/learning");
 
   useEffect(() => {
     if (!router.isReady) return undefined;
     let mounted = true;
     const pathForNext = router.asPath || "/learning";
+    setLoginNextPath(isSafeNextPath(pathForNext) ? pathForNext : "/learning");
     invalidateStudentMeClientCache();
     fetch("/api/student/me", { credentials: "same-origin", cache: "no-store" })
       .then(async (res) => {
@@ -72,20 +115,19 @@ export default function StudentAccessGate({ children }) {
     [session.status, session.student]
   );
 
+  const loginHref = `/student/login?next=${encodeURIComponent(loginNextPath)}`;
+  const pathname = router.pathname || "";
+
   return (
     <StudentSessionProvider value={providerValue}>
       {session.status === "loading" ? (
-        <div className="max-w-3xl mx-auto px-4 py-10">בודק התחברות תלמיד...</div>
+        <StudentGateShell pathname={pathname}>
+          <StudentGateLoadingPanel message="בודק התחברות תלמיד..." />
+        </StudentGateShell>
       ) : session.status !== "ok" ? (
-        <div className="max-w-3xl mx-auto px-4 py-10 space-y-3">
-          <p>יש להתחבר כתלמיד כדי להמשיך</p>
-          <Link
-            href="/student/login"
-            className="inline-block rounded bg-amber-500 text-black px-3 py-2 font-semibold"
-          >
-            כניסת תלמיד
-          </Link>
-        </div>
+        <StudentGateShell pathname={pathname}>
+          <StudentGateBlockedPanel loginHref={loginHref} />
+        </StudentGateShell>
       ) : (
         children
       )}

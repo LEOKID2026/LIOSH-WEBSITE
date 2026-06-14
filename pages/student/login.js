@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
+import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
 
@@ -33,11 +34,22 @@ export function redirectAfterStudentLogin(router) {
 
 export default function StudentLoginPage() {
   const router = useRouter();
+  const { theme, tokens: T, isBright } = useStudentTheme();
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [sessionCheck, setSessionCheck] = useState("pending");
+
+  const layoutProps = { studentTheme: theme, studentShell: "home" };
+  const labelClass = isBright ? "text-slate-700" : "text-white/80";
+  const inputClass = isBright
+    ? "mt-1 w-full rounded-lg bg-white border border-slate-300 px-3 py-2 text-slate-900 shadow-sm"
+    : "mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2";
+  const submitClass = isBright
+    ? "w-full rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 disabled:opacity-60 shadow-sm"
+    : "w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60";
+  const errorClass = isBright ? "mt-3 text-sm text-rose-600" : "mt-3 text-sm text-red-300";
 
   useEffect(() => {
     if (!router.isReady) return undefined;
@@ -61,12 +73,12 @@ export default function StudentLoginPage() {
 
   if (sessionCheck === "pending") {
     return (
-      <Layout>
+      <Layout {...layoutProps}>
         <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
-          <PortalLoginHeading title="כניסת תלמיד" />
+          <PortalLoginHeading title="כניסת תלמיד" bright={isBright} />
           <div className="py-8 md:py-12 flex flex-col items-center justify-center">
-            <div className="h-10 w-10 rounded-full border-2 border-emerald-400/30 border-t-emerald-400 animate-spin mb-3" aria-hidden />
-            <p className="text-white/85">בודקים חיבור...</p>
+            <div className={T.loadingSpinner} aria-hidden />
+            <p className={T.loadingText}>בודקים חיבור...</p>
           </div>
         </div>
       </Layout>
@@ -108,16 +120,16 @@ export default function StudentLoginPage() {
   };
 
   return (
-    <Layout>
+    <Layout {...layoutProps}>
       <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
-        <PortalLoginHeading title="כניסת תלמיד" />
+        <PortalLoginHeading title="כניסת תלמיד" bright={isBright} />
 
         <form onSubmit={submitLogin} className="space-y-3">
           <label className="block text-sm">
-            <span className="text-white/80">שם משתמש</span>
+            <span className={labelClass}>שם משתמש</span>
             <input
               data-testid="student-login-username"
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              className={inputClass}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="שם משתמש"
@@ -126,10 +138,10 @@ export default function StudentLoginPage() {
             />
           </label>
           <label className="block text-sm">
-            <span className="text-white/80">קוד כניסה</span>
+            <span className={labelClass}>קוד כניסה</span>
             <input
               data-testid="student-login-pin"
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              className={inputClass}
               value={pin}
               onChange={(e) => setPin(e.target.value)}
               placeholder="קוד כניסה"
@@ -140,7 +152,7 @@ export default function StudentLoginPage() {
           </label>
           <button
             data-testid="student-login-submit"
-            className="w-full rounded bg-amber-500 text-black font-semibold py-2 disabled:opacity-60"
+            className={submitClass}
             disabled={busy}
             type="submit"
           >
@@ -149,7 +161,7 @@ export default function StudentLoginPage() {
         </form>
 
         {message ? (
-          <p className="mt-3 text-sm text-red-300" role="alert">
+          <p className={errorClass} role="alert">
             {message}
           </p>
         ) : null}
