@@ -145,7 +145,7 @@ export function activeRiskFlagLabelsHe(riskFlags, maxLabels = 4) {
 }
 
 /**
- * שורת מגמה קצרה — עדיפות ל־summaryHe מהמנוע.
+ * שורת מגמה קצרה — עדיפות אל summaryHe מהמנוע.
  * @param {Record<string, unknown>|null|undefined} trend
  */
 export function trendCompactLineHe(trend) {
@@ -313,7 +313,7 @@ export function phase8PracticeCalibrationLineHe(rowOrRec) {
         ? "עד ~15 דק׳"
         : "8–12 דק׳";
   if (!countOk) return "";
-  return `${n} פעמים בשבוע, כ־${len} בכל פעם.`;
+  return `${n} פעמים בשבוע, כ ${len} בכל פעם.`;
 }
 
 /**
@@ -813,7 +813,7 @@ export function sequenceActionLineHe(rowOrRec) {
   return a ? truncateHe(a, 170) : "";
 }
 
-/** שורה אחת לחזרתיות + עייפות — רק כשיש תווית מעבר ל־unknown */
+/** שורה אחת לחזרתיות + עייפות — רק כשיש תווית מעבר אל unknown */
 export function topicRepetitionFatigueCompactLineHe(rowOrRec) {
   const r = repetitionRiskLineHe(rowOrRec);
   const f = fatigueRiskLineHe(rowOrRec);

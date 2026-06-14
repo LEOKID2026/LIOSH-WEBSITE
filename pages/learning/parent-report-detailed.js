@@ -44,7 +44,7 @@ import {
 import { navigateToParentDashboard } from "../../lib/parent-report-navigation";
 
 /**
- * מיפוי ויזואלי בלבד לפי recommendedNextStep מה־payload — לא משנה מנוע או תוכן.
+ * מיפוי ויזואלי בלבד לפי recommendedNextStep מה payload — לא משנה מנוע או תוכן.
  * @param {string | undefined} step
  * @returns {"advance" | "maintain" | "remediate" | "drop"}
  */

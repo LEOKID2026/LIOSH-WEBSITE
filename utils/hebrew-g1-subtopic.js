@@ -5,11 +5,11 @@ import {
   getG1SubtopicSpec,
 } from "../data/hebrew-g1-content-map.js";
 
-/** כיתה א׳–ב׳ קל: אם צמצום לתת־נושא משאיר בריכה קטנה מדי — מרחיבים לפי סדר תתי־נושאים או חוזרים למלא. */
+/** כיתה א׳–ב׳ קל: אם צמצום לתת נושא משאיר בריכה קטנה מדי — מרחיבים לפי סדר תתי נושאים או חוזרים למלא. */
 export const EARLY_G12_SUBTOPIC_POOL_MIN = 18;
 
 /**
- * היסק תת־נושא לשאלת legacy / עשירה ללא שדה subtopicId (כיתה א׳ בלבד).
+ * היסק תת נושא לשאלת legacy / עשירה ללא שדה subtopicId (כיתה א׳ בלבד).
  * @param {string} stem
  * @param {string} topicKey
  * @returns {string}
@@ -87,7 +87,7 @@ export function resolveG1ItemSubtopicId(raw, topicKey) {
 }
 
 /**
- * מצר את הבריכה לתת־נושא שנבחר; אם אין התאמות — מחזיר את המקור.
+ * מצר את הבריכה לתת נושא שנבחר; אם אין התאמות — מחזיר את המקור.
  * @param {unknown[]} merged
  * @param {string} topicKey
  * @param {string} pickedSubtopicId
@@ -102,7 +102,7 @@ export function narrowHebrewG1Pool(merged, topicKey, pickedSubtopicId) {
 }
 
 /**
- * מרחיב את הבריכה אם הצמצום לתת־נושא יחיד קטן מדי (מפחית חזרות בסשן ארוך).
+ * מרחיב את הבריכה אם הצמצום לתת נושא יחיד קטן מדי (מפחית חזרות בסשן ארוך).
  */
 export function widenHebrewG1PoolIfSmall(
   merged,

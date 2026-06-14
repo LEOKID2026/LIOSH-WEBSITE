@@ -61,8 +61,8 @@ export function augmentHighVolumeEvidenceAnchorDraft(draft, truthPacket, payload
   const acc = Math.max(0, Math.round(Number(truthPacket.surfaceFacts?.accuracy ?? 0)));
   const line =
     acc > 0
-      ? `לפי נתוני הדוח, נענו כ־${vol} שאלות בתרגול, עם דיוק כללי של כ־${acc}%. כרגע כדאי למקד את התרגול ב־${subj}.`
-      : `לפי נתוני הדוח, נענו כ־${vol} שאלות בתרגול. כרגע כדאי למקד את התרגול ב־${subj}.`;
+      ? `לפי נתוני הדוח, נענו כ ${vol} שאלות בתרגול, עם דיוק כללי של כ ${acc}%. כרגע כדאי למקד את התרגול ב ${subj}.`
+      : `לפי נתוני הדוח, נענו כ ${vol} שאלות בתרגול. כרגע כדאי למקד את התרגול ב ${subj}.`;
 
   return {
     ...draft,

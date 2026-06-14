@@ -110,7 +110,7 @@ function buildStrengthWithCautionLines(row, mistakeCount) {
   const q = Number(row?.questions) || 0;
   const n = Number(mistakeCount) || 0;
   return [
-    `ב${label} נראית שליטה טובה בתקופה שנבחרה: כ־${acc}% נכון מתוך ${q} שאלות.`,
+    `ב${label} נראית שליטה טובה בתקופה שנבחרה: כ ${acc}% נכון מתוך ${q} שאלות.`,
     `כשיש טעות, לפעמים חוזר אותו דפוס (${n} מקרים דומים בתקופה שנבחרה) — כדאי לעצור רגע על דוגמה אחת ביחד.`,
     `מה כדאי לעשות בבית: לבחור תרגיל אחד קצר, לעבור עליו בקול צעד אחר צעד, ואז לתת לילד לנסות שוב בעצמו.`,
   ];
@@ -289,8 +289,8 @@ function inferWeaknessKindHe(labelHe) {
  * - topStrengths: Array<{ id, labelHe, questions, accuracy, confidence, needsPractice, excellent, tierHe }>
  * - topWeaknesses: Array<{ id, labelHe, mistakeCount, confidence, tierHe }>
  * - parentTopicToneByKey: Record<topicRowKey, "strength"|"strength_with_caution"|"stable_monitor"|"true_weakness"> — reconciliation מול שורות דוח
- * - parentStrengthWithCautionLinesByKey: Record<topicRowKey, [string,string,string]> — חיובי, הסתייגות על דפוס בטעויות, כיוון לבית (רק ב־strength_with_caution)
- * - stableExcellence: Array<{ id, labelHe, questions, accuracy, confidence, needsPractice, excellent, tierHe }> — סף גבוה, נפרד מ־maintain
+ * - parentStrengthWithCautionLinesByKey: Record<topicRowKey, [string,string,string]> — חיובי, הסתייגות על דפוס בטעויות, כיוון לבית (רק ב strength_with_caution)
+ * - stableExcellence: Array<{ id, labelHe, questions, accuracy, confidence, needsPractice, excellent, tierHe }> — סף גבוה, נפרד מ maintain
  * - maintain, improving: session bands + tierHe על כל שורה
  * - parentActionHe: string | null  (max 1 concrete home action)
  * - nextWeekGoalHe: string | null   (חיזוק + שימור when data allows)
@@ -344,7 +344,7 @@ const MAX_TOP_WEAKNESSES = 3;
 const MAX_TOP_STRENGTHS = 3;
 const MAX_MAINTAIN = 2;
 const MAX_IMPROVING = 2;
-/** עד כמה שורות "הילד מצליח בנושא הזה לאורך זמן" (נפרד מ־maintain / חוזקות מובילות) */
+/** עד כמה שורות "הילד מצליח בנושא הזה לאורך זמן" (נפרד מ maintain / חוזקות מובילות) */
 const MAX_STABLE_EXCELLENCE = 3;
 /** סף הצלחה לאורך זמן: לא מכריזים מהר — דיוק גבוה + מספיק שאלות בטווח */
 const STABLE_EXCELLENCE_MIN_ACCURACY = 92;
@@ -489,8 +489,8 @@ function buildTopStrengthsMerged(excellent, strengths, max) {
 }
 
 /**
- * מחלק שורות דוח ל־stableExcellence / excellent / strengths / maintain / improving (ללא כפילויות לפי מפתח שורה).
- * אוסף בריכה פנימית גדולה יותר לצורך דירוג לפני חיתוך ל־topStrengths וכו׳.
+ * מחלק שורות דוח אל stableExcellence / excellent / strengths / maintain / improving (ללא כפילויות לפי מפתח שורה).
+ * אוסף בריכה פנימית גדולה יותר לצורך דירוג לפני חיתוך אל topStrengths וכו׳.
  */
 function buildSessionBands(subjectId, report) {
   const rowsKey = REPORT_ROWS_KEY[subjectId];
@@ -619,7 +619,7 @@ function buildEvidenceSuccessFromPick(pick) {
     pick.confidence === "high" || pick.questions >= 20 ? "high" : "moderate";
   return {
     titleHe: "מה שהילד עושה טוב בתרגול",
-    bodyHe: `בנושא ${pick.labelHe} יש הצלחה טובה בתקופה שנבחרה: כ־${pick.accuracy}% נכון מתוך ${pick.questions} שאלות.`,
+    bodyHe: `בנושא ${pick.labelHe} יש הצלחה טובה בתקופה שנבחרה: כ ${pick.accuracy}% נכון מתוך ${pick.questions} שאלות.`,
     confidence: conf,
   };
 }
@@ -673,11 +673,11 @@ function buildSummaryHe(
     );
   } else if (!stableExcellence.length && maintain.length) {
     parts.push(
-      `רואים שמירה טובה על הרמה ב־${joinHebrewList(maintain.map((m) => m.labelHe))}.`
+      `רואים שמירה טובה על הרמה ב ${joinHebrewList(maintain.map((m) => m.labelHe))}.`
     );
   } else if (stableExcellence.length && maintain.length) {
     parts.push(
-      `רואים גם שמירה טובה על הרמה ב־${joinHebrewList(maintain.map((m) => m.labelHe))}.`
+      `רואים גם שמירה טובה על הרמה ב ${joinHebrewList(maintain.map((m) => m.labelHe))}.`
     );
   }
 
@@ -737,7 +737,7 @@ function buildParentActionHe(
     return `פעמיים בשבוע, רבע שעה: תרגול ב${subj} ממוקד ${tp(w0.labelHe)} — לחזור על שאלות בתרגול ממוקד, להמשיך לאט עד שהנושא מובן, ואז לזהות שיפור קטן.`;
   }
   if (i0) {
-    return `פעמיים בשבוע, רבע שעה: תרגול קצר ב${subj} ${tp(i0.labelHe)} (כרגע דיוק כ־${i0.accuracy}%) — לנסח קודם, לבדוק אחר כך.`;
+    return `פעמיים בשבוע, רבע שעה: תרגול קצר ב${subj} ${tp(i0.labelHe)} (כרגע דיוק כ ${i0.accuracy}%) — לנסח קודם, לבדוק אחר כך.`;
   }
   const pick = m0 || s0;
   if (pick) {
@@ -761,7 +761,7 @@ function buildNextWeekGoalHe(subjectLabelHe, topWeaknesses, improving, topStreng
   if (w0) {
     if (inferWeaknessKindHe(w0.labelHe) === "wording") {
       goals.push(
-        `מומלץ לבחור כמה דוגמאות לעבור ביחד עם הילד צעד־צעד, ולנסות השבוע להעלות את אחוזי ההצלחה — מספיק אפילו שיפור קטן באחוזי ההצלחה.`
+        `מומלץ לבחור כמה דוגמאות לעבור ביחד עם הילד צעד צעד, ולנסות השבוע להעלות את אחוזי ההצלחה — מספיק אפילו שיפור קטן באחוזי ההצלחה.`
       );
     } else {
       goals.push(
@@ -813,11 +813,11 @@ function buildDiagnosticSectionsHe({
 }) {
   const strongHe = [];
   for (const x of stableExcellence) {
-    strongHe.push(`${x.labelHe} — דיוק כ־${x.accuracy}% (${x.questions} שאלות)`);
+    strongHe.push(`${x.labelHe} — דיוק כ ${x.accuracy}% (${x.questions} שאלות)`);
   }
   for (const x of topStrengths) {
     if (strongHe.length >= 6) break;
-    strongHe.push(`${x.labelHe} — דיוק כ־${x.accuracy}% (${x.questions} שאלות)`);
+    strongHe.push(`${x.labelHe} — דיוק כ ${x.accuracy}% (${x.questions} שאלות)`);
   }
 
   const maintainHe = (maintain || []).map(
@@ -831,7 +831,7 @@ function buildDiagnosticSectionsHe({
 
   const urgentAttentionHe = topWeaknesses.map((w) =>
     `${w.labelHe}${
-      typeof w.mistakeCount === "number" ? ` — כ־${w.mistakeCount} טעויות דומות בתקופה שנבחרה` : ""
+      typeof w.mistakeCount === "number" ? ` — כ ${w.mistakeCount} טעויות דומות בתקופה שנבחרה` : ""
     }`
   );
 
@@ -865,7 +865,7 @@ function buildSubSkillInsightsHe(topWeaknesses) {
         ? "דפוס שחוזר בתקופה שנבחרה."
         : typeof w.mistakeCount === "number" && w.mistakeCount >= MIN_PATTERN_FAMILY_FOR_DIAGNOSIS
           ? "דפוס חוזר בינוני — שווה לשים לב."
-          : "סימן ראשוני בלבד — עדיין מוקדם לסיכום חד־משמעי.",
+          : "סימן ראשוני בלבד — עדיין מוקדם לסיכום חד משמעי.",
   }));
 }
 
@@ -1440,10 +1440,10 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   const anyHighRisk = riskOr.falsePromotionRisk || riskOr.hintDependenceRisk || riskOr.recentTransitionRisk;
   const trendParts = [];
   if (bestPositive && bestPositive.summaryHe && (bestPositive.conf >= 0.35 || !Number.isFinite(bestPositive.conf))) {
-    trendParts.push(`מגמה חיובית ב־${bestPositive.labelHe}: ${bestPositive.summaryHe}`);
+    trendParts.push(`מגמה חיובית ב ${bestPositive.labelHe}: ${bestPositive.summaryHe}`);
   }
   if (worstCaution && worstCaution.summaryHe) {
-    trendParts.push(`נקודת זהירות ב־${worstCaution.labelHe}: ${worstCaution.summaryHe}`);
+    trendParts.push(`נקודת זהירות ב ${worstCaution.labelHe}: ${worstCaution.summaryHe}`);
   }
   if (modeConcentrationNoteHe) trendParts.push(modeConcentrationNoteHe);
   let trendNarrativeHe = trendParts.join(" ").trim();
@@ -1459,7 +1459,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   const suffMed = rows.filter((r) => r.row.dataSufficiencyLevel === "medium").length;
   const suffLow = rows.filter((r) => r.row.dataSufficiencyLevel === "low" || !r.row.dataSufficiencyLevel).length;
   const hiConf = rows.filter((r) => (Number(r.row.confidenceScore) || 0) >= 72).length;
-  let confidenceSummaryHe = `לפי הנתונים שנאספו: ${suffStrong} שורות נותנות כיוון ברור, ${suffMed} שורות נותנות כיוון חלקי, ו־${suffLow} שורות עדיין עם מעט מידע; ${hiConf} נתונים ברורים יותר מתוך ${rows.length}.`;
+  let confidenceSummaryHe = `לפי הנתונים שנאספו: ${suffStrong} שורות נותנות כיוון ברור, ${suffMed} שורות נותנות כיוון חלקי, ו ${suffLow} שורות עדיין עם מעט מידע; ${hiConf} נתונים ברורים יותר מתוך ${rows.length}.`;
   if (suffLow >= rows.length * 0.55) {
     confidenceSummaryHe += " התמונה במקצוע עדיין חלקית — נשארים בזהירות.";
   }
@@ -1565,7 +1565,7 @@ function synthesizeSubjectPhase3FromRows(subjectId, report) {
   let subjectDiagnosticRestraintHe = "";
   if (subjectConclusionReadiness === "not_ready") {
     subjectDiagnosticRestraintHe =
-      "ברוב נתוני המקצוע עדיין יש מעט מידע או מוקדם לקבוע — לא קובעים עדיין הסבר חד־משמעי.";
+      "ברוב נתוני המקצוע עדיין יש מעט מידע או מוקדם לקבוע — לא קובעים עדיין הסבר חד משמעי.";
   } else if (subjectConclusionReadiness === "partial") {
     subjectDiagnosticRestraintHe =
       "יש מידע מסוים, אבל גם נתונים שדורשים זהירות — כדאי לעקוב ולא למהר לקבוע כיוון חזק מדי.";
@@ -2043,7 +2043,7 @@ export function analyzeLearningPatterns(report, rawMistakesBySubject = {}) {
         if (insufficientData.length < 24) {
           insufficientData.push({
             mistakeCount: n,
-            note: "פחות מ־5 טעויות באותו דפוס — עדיין מוקדם לקבוע קושי שחוזר",
+            note: "פחות מ 5 טעויות באותו דפוס — עדיין מוקדם לקבוע קושי שחוזר",
           });
         }
         return;
@@ -2124,7 +2124,7 @@ export function analyzeLearningPatterns(report, rawMistakesBySubject = {}) {
           : "moderate";
       studentRecommendationsMaintain.push({
         id: `stu-maint:${topPositive.id}`,
-        textHe: `להמשיך לתרגל בנוחות בנושא ${topPositive.labelHe} — הרמה שם נשמרת (דיוק כ־${topPositive.accuracy}%).`,
+        textHe: `להמשיך לתרגל בנוחות בנושא ${topPositive.labelHe} — הרמה שם נשמרת (דיוק כ ${topPositive.accuracy}%).`,
         strength: rs,
       });
       parentRecommendationsMaintain.push({
@@ -2328,7 +2328,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
           type: "success",
           titleHe: "מה שהילד עושה טוב בתרגול",
           bodyHe:
-            "בנושא חיבור יש הצלחה טובה בתקופה שנבחרה: כ־93% נכון מתוך 42 שאלות.",
+            "בנושא חיבור יש הצלחה טובה בתקופה שנבחרה: כ 93% נכון מתוך 42 שאלות.",
           confidence: "high",
         },
       ],
@@ -2357,7 +2357,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
         {
           id: "stu-maint:math:addition:learning",
           textHe:
-            "להמשיך לתרגל בנוחות בנושא חיבור — הרמה שם נשמרת (דיוק כ־93%).",
+            "להמשיך לתרגל בנוחות בנושא חיבור — הרמה שם נשמרת (דיוק כ 93%).",
           strength: "strong",
         },
       ],
@@ -2387,13 +2387,13 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
       evidenceSuccess: {
         titleHe: "מה שהילד עושה טוב בתרגול",
         bodyHe:
-          "בנושא חיבור יש הצלחה טובה בתקופה שנבחרה: כ־93% נכון מתוך 42 שאלות.",
+          "בנושא חיבור יש הצלחה טובה בתקופה שנבחרה: כ 93% נכון מתוך 42 שאלות.",
         confidence: "high",
       },
       insufficientData: [
         {
           mistakeCount: 2,
-          note: "פחות מ־5 טעויות באותו דפוס — עדיין מוקדם לקבוע קושי שחוזר",
+          note: "פחות מ 5 טעויות באותו דפוס — עדיין מוקדם לקבוע קושי שחוזר",
         },
       ],
       diagnosticSparseNoteHe: null,
@@ -2602,7 +2602,7 @@ export const EXAMPLE_PATTERN_DIAGNOSTICS_PAYLOAD = {
       insufficientData: [
         {
           mistakeCount: 3,
-          note: "פחות מ־5 טעויות באותו דפוס — עדיין מוקדם לקבוע קושי שחוזר",
+          note: "פחות מ 5 טעויות באותו דפוס — עדיין מוקדם לקבוע קושי שחוזר",
         },
       ],
       diagnosticSparseNoteHe: null,

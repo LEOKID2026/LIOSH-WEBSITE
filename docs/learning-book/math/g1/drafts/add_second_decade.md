@@ -1,4 +1,4 @@
-# חיבור בעשרייה השנייה — מספרים בין 11 ל־19
+# חיבור בעשרייה השנייה — מספרים בין 11 אל 19
 
 ## Metadata
 
@@ -11,7 +11,7 @@
 | **age_band** | grades_1_2 |
 | **page_type** | concept_foundation |
 | **approval_status** | draft |
-| **title_hebrew** | חיבור בעשרייה השנייה — מספרים בין 11 ל־19 `[DRAFT — not owner-approved]` |
+| **title_hebrew** | חיבור בעשרייה השנייה — מספרים בין 11 אל 19 `[DRAFT — not owner-approved]` |
 
 **Source references:**
 - `data/curriculum-spine/v1/skills.json`

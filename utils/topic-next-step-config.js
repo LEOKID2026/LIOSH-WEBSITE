@@ -21,7 +21,7 @@ export const DEFAULT_TOPIC_NEXT_STEP_CONFIG = {
   stabilityWrongPenaltyCoef: 0.35,
   /** תקרת לחץ טעויות ביציבות */
   stabilityMistakePressureMax: 0.45,
-  /** מכנה ב־mistakePressure ליחס m/q */
+  /** מכנה ב mistakePressure ליחס m/q */
   stabilityMistakeQDivisor: 8,
 
   /** ביטחון: 1 - exp(-q/div) */
@@ -46,7 +46,7 @@ export const DEFAULT_TOPIC_NEXT_STEP_CONFIG = {
   mistakeDragMistakesMin: 4,
   mistakeDragAccMax: 90,
 
-  /** תחום בינוני ל־remediate */
+  /** תחום בינוני אל remediate */
   remediateAccLo: 54,
   remediateAccHi: 68,
 

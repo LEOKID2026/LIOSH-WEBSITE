@@ -8,7 +8,7 @@ import { setCachedStudentMe, invalidateStudentMeClientCache } from "../../lib/le
 import { StudentSessionProvider } from "./StudentSessionContext";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 
-/** מותר לשמור ב־next= אחרי login — ללא open redirect */
+/** מותר לשמור ב next= אחרי login — ללא open redirect */
 function isSafeNextPath(path) {
   return (
     typeof path === "string" &&

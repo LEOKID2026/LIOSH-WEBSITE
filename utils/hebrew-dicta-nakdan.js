@@ -1,12 +1,12 @@
 /** Unicode Hebrew + niqqud block (rough) */
 const HEBREW_SCRIPT_RE = /[\u0590-\u05FF]/;
 /**
- * טעמים, ניקוד ונקודות — בלי U+05BE (מקף־עברי / מקף־מילה) שלא נחשב ניקוד.
+ * טעמים, ניקוד ונקודות — בלי U+05BE (מקף עברי / מקף מילה) שלא נחשב ניקוד.
  * טווח רחב מדי (\u0591–\u05C7) גרם לדילוג על כל השאלה כשיש מקף עברי בטקסט.
  */
 const HEBREW_NIQQUD_RE = /[\u0591-\u05BD\u05BF-\u05C7]/;
 
-/** מסיר תווי ניקוד/טעם לפני שליחה ל־Nakdan — כדי לנקד מחדש את כל המחרוזת (גם כשיש ניקוד חלקי). */
+/** מסיר תווי ניקוד/טעם לפני שליחה אל Nakdan — כדי לנקד מחדש את כל המחרוזת (גם כשיש ניקוד חלקי). */
 export function stripHebrewNiqqudMarks(s) {
   return String(s ?? "").replace(HEBREW_NIQQUD_RE, "");
 }
@@ -75,7 +75,7 @@ export function getDictaNakdanApiUrl() {
 }
 
 /**
- * נקדון שרת (לשימוש מ־API route של Next).
+ * נקדון שרת (לשימוש מ API route של Next).
  * @param {string} text
  * @param {{ url?: string, signal?: AbortSignal }} [opts]
  * @returns {Promise<string>}

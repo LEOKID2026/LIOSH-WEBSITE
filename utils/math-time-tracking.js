@@ -32,7 +32,7 @@ export function buildMathReportStorageKey(baseOperation, questionLike) {
   return `${base}::${kind}`;
 }
 
-// שמירת זמן עבודה על פעולה ספציפית (חשבון) — המפתח הראשון הוא מפתח bucket ב־saved.operations (יכול להיות מורכב לדוח)
+// שמירת זמן עבודה על פעולה ספציפית (חשבון) — המפתח הראשון הוא מפתח bucket ב saved.operations (יכול להיות מורכב לדוח)
 export function trackOperationTime(storageBucketKey, grade, level, duration, meta = {}) {
   if (typeof window === "undefined") return;
 

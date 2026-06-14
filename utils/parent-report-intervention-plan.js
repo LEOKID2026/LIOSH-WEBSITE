@@ -1,5 +1,5 @@
 /**
- * Phase 8 — תוכנית התערבות מיקרו־מבנית לשורת נושא (מבוססת Phase 7).
+ * Phase 8 — תוכנית התערבות מיקרומבנית לשורת נושא (מבוססת Phase 7).
  * טהור לוגית; לא תלוי React.
  */
 
@@ -52,10 +52,10 @@ export function buildInterventionPlanPhase8(ctx) {
     interventionFormat = "observation_block";
     interventionParentEffort = "low";
     interventionGoal = "collect_evidence";
-    stepsHe.push(`לצפות ב־2–3 תרגולים קצרים ב«${displayName}» באותה רמת קושי — לרשום רק האם הילד קורא את המשימה לפני מענה.`);
+    stepsHe.push(`לצפות ב 2–3 תרגולים קצרים ב«${displayName}» באותה רמת קושי — לרשום רק האם הילד קורא את המשימה לפני מענה.`);
     stepsHe.push("לא לשנות כיתה או רמה בבית בשלב זה.");
     interventionSuccessSignalHe = "אחרי 2–3 מפגשים קצרים נראה אם הדפוס חוזר — אז אפשר להחמיר מיקוד.";
-    interventionStopSignalHe = "אם כל מפגש הופך למאבק — לצמצם ל־5–7 דקות ולחזור למחר.";
+    interventionStopSignalHe = "אם כל מפגש הופך למאבק — לצמצם אל 5–7 דקות ולחזור למחר.";
     doNowHe = "תרגול קצר ומדיד: אותה משימה, אותה רמה, דגש על קריאה לפני תשובה.";
     avoidNowHe = "לא לגזור מסקנות עמוקות ולא להחמיר רמה בגלל תוצאה בודדת.";
   } else if (rootCause === "speed_pressure") {
@@ -154,9 +154,9 @@ export function buildInterventionPlanPhase8(ctx) {
   const ls9 = String(p9?.learningStage || "");
   const rr9 = String(p9?.retentionRisk || "");
   if (mp9 === "concept_confusion" && stepsHe.length && !capAggressivePlan) {
-    stepsHe.push(`התאמה לדפוס: לבודד משפט־מפתח אחד ב«${displayName}» ולחזור עליו לפני הרחבה.`);
+    stepsHe.push(`התאמה לדפוס: לבודד משפט מפתח אחד ב«${displayName}» ולחזור עליו לפני הרחבה.`);
   } else if (mp9 === "procedure_break" && stepsHe.length) {
-    stepsHe.push(`התאמה לדפוס: לכתוב שלב־ביניים אחד בכל פעם — לא לדלג לתוצאה סופית מיד.`);
+    stepsHe.push(`התאמה לדפוס: לכתוב שלבביניים אחד בכל פעם — לא לדלג לתוצאה סופית מיד.`);
   } else if (mp9 === "speed_driven_error") {
     if (doNowHe && !doNowHe.includes("טיימר")) doNowHe = `${doNowHe} בלי טיימר בשלב זה.`.trim();
   } else if (mp9 === "instruction_misread" && stepsHe.length) {
@@ -179,7 +179,7 @@ export function buildInterventionPlanPhase8(ctx) {
       interventionDurationBand === "very_short"
         ? "2–3 מפגשים קצרים בשבוע (5–8 דקות)"
         : interventionDurationBand === "short"
-          ? "2 מפגשים בשבוע (כ־8–12 דקות)"
+          ? "2 מפגשים בשבוע (כ 8–12 דקות)"
           : "2–3 מפגשים בשבוע (עד ~15 דקות)",
   };
 

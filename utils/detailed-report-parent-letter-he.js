@@ -70,7 +70,7 @@ export function rewriteParentRecommendationForDetailedHe(raw) {
   s = s.replace(/לתת לילד/g, "לסייע לילד");
   s = s.replace(/ולבנות הצלחות קטנות/g, "ולבנות את הנושא בהדרגה עם הילד");
   s = s.replace(/נשארים על רמה [^ ו]+ ומתמקדים/g, "כדאי להישאר על אותה רמת קושי ולהתמקד");
-  s = s.replace(/2–3 סשנים קצרים/g, "שני־שלושה תרגולים קצרים");
+  s = s.replace(/2–3 סשנים קצרים/g, "שני שלושה תרגולים קצרים");
   s = s.replace(/סשנים קצרים/g, "תרגולים קצרים");
   s = s.replace(/מפגשי תרגול קצרים/g, "תרגולים קצרים");
   s = s.replace(/מומלץ לעלות רמת קושי אחת רק בנושא הזה בתרגול/g, "מומלץ לעלות רמה רק בנושא הזה");
@@ -167,19 +167,19 @@ function buildSubjectOpeningLineHe(sp, lab) {
 
   if (domSucc && sp?.dominantSuccessPattern === "stable_mastery" && ex0 && !mr) {
     return stripGuillemetsHe(
-      `ב${lab} נראית עקביות טובה (${domSucc}) ב־${displayTopicPhraseHe(ex0.labelHe)} — כדאי לשמור על קצב רגוע.`
+      `ב${lab} נראית עקביות טובה (${domSucc}) ב ${displayTopicPhraseHe(ex0.labelHe)} — כדאי לשמור על קצב רגוע.`
     );
   }
   if (mr && ex0) {
     const acc = Math.round(Number(ex0.accuracy) || 0);
     return stripGuillemetsHe(
-      `ב${lab} יש גם תחומים עם תוצאות טובות יחסית (למשל ${displayTopicPhraseHe(ex0.labelHe)}, כ־${acc}%) וגם נקודות שכדאי לשים לב אליהן — לא מסמנים עדיין את כל הנושא כיציב.`
+      `ב${lab} יש גם תחומים עם תוצאות טובות יחסית (למשל ${displayTopicPhraseHe(ex0.labelHe)}, כ ${acc}%) וגם נקודות שכדאי לשים לב אליהן — לא מסמנים עדיין את כל הנושא כיציב.`
     );
   }
   if (domRisk && domRisk !== "דל נתון" && w0) {
     const pre = sparse ? "עדיין מוקדם לסגור סופית, אבל " : "";
     return stripGuillemetsHe(
-      `${pre}ב${lab} התמונה המרכזית נוגעת ל־${domRisk} לצד ${displayTopicPhraseHe(w0.labelHe)}.`
+      `${pre}ב${lab} התמונה המרכזית נוגעת אל ${domRisk} לצד ${displayTopicPhraseHe(w0.labelHe)}.`
     );
   }
 
@@ -196,12 +196,12 @@ function buildSubjectOpeningLineHe(sp, lab) {
   }
   if (ex0) {
     const acc = Math.round(Number(ex0.accuracy) || 0);
-    return stripGuillemetsHe(`ב${lab} יש אחיזה טובה ב־${displayTopicPhraseHe(ex0.labelHe)} (דיוק כ־${acc}%).`);
+    return stripGuillemetsHe(`ב${lab} יש אחיזה טובה ב ${displayTopicPhraseHe(ex0.labelHe)} (דיוק כ ${acc}%).`);
   }
   if (imp0) {
     const acc = Math.round(Number(imp0.accuracy) || 0);
     const pre = sparse ? "נראה ש" : "";
-    return stripGuillemetsHe(`${pre}ב${lab} יש התקדמות חלקית ב־${displayTopicPhraseHe(imp0.labelHe)} (דיוק כ־${acc}%).`);
+    return stripGuillemetsHe(`${pre}ב${lab} יש התקדמות חלקית ב ${displayTopicPhraseHe(imp0.labelHe)} (דיוק כ ${acc}%).`);
   }
   return stripGuillemetsHe(`עדיין מוקדם לסכם לגבי ${lab} — מעט מידע בתקופה שנבחרה.`);
 }
@@ -403,7 +403,7 @@ export function buildTopicRecommendationNarrative(tr) {
   const step = String(tr?.recommendedNextStep || "").trim();
   const statsLine =
     q > 0
-      ? `היו ${q} שאלות, עם דיוק של כ־${acc}%${m > 0 ? ` ו־${m} טעויות מצטברות` : ""}.`
+      ? `היו ${q} שאלות, עם דיוק של כ ${acc}%${m > 0 ? ` ו ${m} טעויות מצטברות` : ""}.`
       : "בתקופה שנבחרה עדיין אין מספיק שאלות כדי לראות אם יש מגמה ברורה.";
   let snap = q > 0 ? `ב${core} ${statsLine}` : `ב${core} ${statsLine}`;
   if (q > 0) {
@@ -429,7 +429,7 @@ export function buildTopicRecommendationNarrative(tr) {
     const alt = [
       `בשלב הזה לא קובעים סופית לגבי ${core}. ${statsLine}${rc ? ` הכיוון הסביר כרגע: ${rc}.` : ""}`,
       q >= 20 && acc >= 85
-        ? `ב${core} נראים ביצועים טובים לאורך התקופה. ${statsLine} עדיין מוקדם לקבוע כיוון חד־משמעי.${rc ? ` מה שנראה סביר עכשיו: ${rc}.` : ""}`
+        ? `ב${core} נראים ביצועים טובים לאורך התקופה. ${statsLine} עדיין מוקדם לקבוע כיוון חד משמעי.${rc ? ` מה שנראה סביר עכשיו: ${rc}.` : ""}`
         : `ב${core} הנתון עדיין חלקי. ${statsLine}${rc ? ` מה שכדאי לעקוב אחריו כרגע: ${rc}.` : ""}`,
     ];
     snap = stripGuillemetsHe(pickVariant(`${core}|${q}|${acc}`, alt));
@@ -461,7 +461,7 @@ export function buildTopicRecommendationNarrative(tr) {
   };
 }
 
-/** Phase 10–11 — שורות קצרות לניסוח הורי (ממופות מ־parent-report-ui-explain-he) */
+/** Phase 10–11 — שורות קצרות לניסוח הורי (ממופות מ parent-report-ui-explain-he) */
 export {
   responseToInterventionLineHe,
   supportAdjustmentLineHe,

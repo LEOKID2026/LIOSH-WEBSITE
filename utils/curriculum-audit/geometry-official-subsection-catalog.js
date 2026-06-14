@@ -311,7 +311,7 @@ export function buildGeometrySectionsForGrade(grade) {
         strand: strand.measure,
         subsectionLabelsHe: [],
         expectedDepth: "advanced",
-        sourcePageHint: "גופים תלת־ממדיים",
+        sourcePageHint: "גופים תלת ממדיים",
         mapsToNormalizedKeys: ["geometry.solids_3d", "geometry.triangles"],
         confidence: "medium",
       }),
@@ -361,7 +361,7 @@ export function buildGeometrySectionsForGrade(grade) {
         strand: strand.reasoning,
         subsectionLabelsHe: [],
         expectedDepth: "advanced",
-        sourcePageHint: "משולש ישר־זווית",
+        sourcePageHint: "משולש ישר זווית",
         mapsToNormalizedKeys: ["geometry.pythagoras_right_triangles", "geometry.triangles"],
         confidence: "medium",
       }),
@@ -404,7 +404,7 @@ export function buildGeometrySectionsForGrade(grade) {
 export function geometryMissingUncertainAreasForGrade(grade) {
   const common = [
     "מיתר הגאומטריה משולב בתוכנית המתמטיקה — לאמת סדר עומק מול מסמך הכיתה.",
-    "קישור לעמוד מדויק ב־PDF לא נסרק אוטומטית.",
+    "קישור לעמוד מדויק ב PDF לא נסרק אוטומטית.",
   ];
   if (grade <= 2) return [...common, "חשיפה מוקדמת לנושאים מתקדמים — רגישות רצף מוסדית."];
   if (grade <= 4) return [...common, "נפח ואלכסונים — לאמת עומק לפי המוסד."];

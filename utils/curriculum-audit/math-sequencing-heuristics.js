@@ -68,7 +68,7 @@ export function mathSequencingSuspicions(invRecord, normKey) {
       flags.push({
         code: "missing_number_intro_review",
         severity: "review",
-        note: "איזון קצר / מספר חסר בטרום־אלגברה — לא משוואות פורמליות; לאמת מול המוסד רק אם נדרש.",
+        note: "איזון קצר / מספר חסר בטרום אלגברה — לא משוואות פורמליות; לאמת מול המוסד רק אם נדרש.",
       });
     } else {
       flags.push({

@@ -50,13 +50,13 @@ export function buildHybridExplanations({ snapshot, ranking, probeIntel, gate, c
     const tail =
       gate.mode === "rank_only"
         ? "מידת הוודאות בינונית — כדאי לקרוא את ההסבר יחד עם המורה לפני החלטות."
-        : "ניתן להשתמש בהמלצות הבדיקה כדי לצמצם אי־ודאות.";
+        : "ניתן להשתמש בהמלצות הבדיקה כדי לצמצם אי ודאות.";
     return base + tail;
   }
 
   function templateTeacher() {
     if (cannot) {
-      return "שער פלט: cannot-conclude. אין להסיק אבחנה חדה; להשתמש ב־probe ובמעקב חוזר לפי מדיניות V2.";
+      return "שער פלט: cannot-conclude. אין להסיק אבחנה חדה; להשתמש ב probe ובמעקב חוזר לפי מדיניות V2.";
     }
     return `V2 authority: taxonomy=${taxonomyId || "none"}, confidence=${conf}, mode=${gate.mode}, ambiguity=${(ambiguity ?? "").toString()}, suggestedProbe=${probeIntel?.suggestedProbeId || "none"}.`;
   }

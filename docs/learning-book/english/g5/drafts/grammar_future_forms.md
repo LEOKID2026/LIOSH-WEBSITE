@@ -78,7 +78,7 @@ We are going to visit grandma
 
 We will going to visit grandma — שגוי!
 
-❌ בדרך כלל לא משתמשים יחד ב־will וב־going to באותו פועל.
+❌ בדרך כלל לא משתמשים יחד ב will וב going to באותו פועל.
 
 ✓ We are going to visit grandma.
 

@@ -41,7 +41,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
   {
     lookupKey: "finding:taxonomy:M-02",
     explanationHe:
-      "המערכת זיהתה קושי בחיבור שבו צריך להעביר עשרת לעמודה הבאה. זה קורה כשמחברים ספרות ומתקבל מספר גדול מ־9.",
+      "המערכת זיהתה קושי בחיבור שבו צריך להעביר עשרת לעמודה הבאה. זה קורה כשמחברים ספרות ומתקבל מספר גדול מ 9.",
     exampleHe: "27 + 18",
     status: "approved",
     approvalSource: "owner_math_batch_approved",
@@ -145,7 +145,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
   {
     lookupKey: "finding:taxonomy:G-05",
     explanationHe:
-      "המערכת זיהתה קושי בהבנת גוף תלת־ממדי. הכוונה היא לראות שלא מדובר רק בציור שטוח, אלא בצורה שיש לה אורך, רוחב וגובה.",
+      "המערכת זיהתה קושי בהבנת גוף תלת ממדי. הכוונה היא לראות שלא מדובר רק בציור שטוח, אלא בצורה שיש לה אורך, רוחב וגובה.",
     exampleHe: "קובייה",
     status: "approved",
     approvalSource: "owner_geometry_batch_approved",
@@ -169,7 +169,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
   {
     lookupKey: "finding:taxonomy:G-08",
     explanationHe:
-      "המערכת זיהתה קושי בחישוב שטח משולש. כדי למצוא שטח משולש משתמשים בבסיס ובגובה המתאים, ואז מחלקים את התוצאה ב־2.",
+      "המערכת זיהתה קושי בחישוב שטח משולש. כדי למצוא שטח משולש משתמשים בבסיס ובגובה המתאים, ואז מחלקים את התוצאה ב 2.",
     exampleHe: "בסיס 6, גובה 4: 6 × 4 ÷ 2",
     status: "approved",
     approvalSource: "owner_geometry_batch_approved",
@@ -402,7 +402,7 @@ const PARENT_DIAGNOSTIC_EXPLANATION_CATALOG = [
     lookupKey: "finding:taxonomy:MG-05",
     explanationHe:
       "המערכת זיהתה קושי בקריאת מפת אקלים. הכוונה היא להשתמש בצבעים, בסימנים ובמקרא כדי להבין איזה סוג אקלים מופיע בכל אזור.",
-    exampleHe: "מדברי / ים־תיכוני",
+    exampleHe: "מדברי / ים תיכוני",
     status: "approved",
     approvalSource: "owner_moledet_geography_batch_approved",
   },

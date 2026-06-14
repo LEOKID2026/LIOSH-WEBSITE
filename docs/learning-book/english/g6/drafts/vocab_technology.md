@@ -76,7 +76,7 @@ If the internet stops, we could use books instead
 
 If the internet will stop, we could use books — שגוי!
 
-❌ אחרי If לא משתמשים ב־will.
+❌ אחרי If לא משתמשים ב will.
 
 ✓ If the internet stops, we could use books instead.
 

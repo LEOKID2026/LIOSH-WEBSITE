@@ -76,7 +76,7 @@ You should drink water and rest when you are tired
 
 You should to drink water and rest — שגוי!
 
-❌ אחרי should לא משתמשים ב־to.
+❌ אחרי should לא משתמשים ב to.
 
 ✓ You should drink water and rest when you are tired.
 

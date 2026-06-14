@@ -78,7 +78,7 @@ You must wear a helmet
 
 You must to wear a helmet — שגוי!
 
-❌ אחרי must לא משתמשים ב־to.
+❌ אחרי must לא משתמשים ב to.
 
 ✓ You must wear a helmet.
 

@@ -21,7 +21,7 @@ export function buildInterventionPlan(taxonomyId) {
     avoidHe: "קפיצה לרמה גבוהה; ערבוב נושאים; משוב כללי בלי דוגמה נגדית",
     improvementSignalsHe: ["התאמה לסמני ההצלחה מהטקסונומיה", "שחזור בהעברה למשימה דומה"],
     failureSignalsHe: [row.escalationHe],
-    hypothesisChangeHe: "כאשר נכשל probe המומלץ או מופיעה נגד־ראיה חזקה",
+    hypothesisChangeHe: "כאשר נכשל probe המומלץ או מופיעה נגד ראיה חזקה",
     taxonomyId: row.id,
   };
 }

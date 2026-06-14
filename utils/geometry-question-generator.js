@@ -518,7 +518,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
     Math.round(num * Math.pow(10, roundTo)) / Math.pow(10, roundTo);
 
   const formulaBand = gradeBandForKey(gradeKey) || "mid";
-  // תרגילי מילים רק ב־late (ה׳–ו׳)
+  // תרגילי מילים רק ב late (ה׳–ו׳)
   const allowStory = formulaBand === "late";
 
   switch (selectedTopic) {
@@ -673,7 +673,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           if (useStory) {
             question = `גג של בית הוא משולש עם בסיס ${base} מטר וגובה ${height} מטר. מה שטח הגג בצד אחד?`;
           } else if (formulaBand === "early") {
-            question = `משולש: בסיס ${base}, גובה ${height}. שטח ≈ חצי מ־(בסיס × גובה). כמה?`;
+            question = `משולש: בסיס ${base}, גובה ${height}. שטח ≈ חצי מ (בסיס × גובה). כמה?`;
           } else if (formulaBand === "mid") {
             if (levelKey === "easy") {
               question = `משולש בסיס ${base}, גובה ${height}: שטח = חצי × בסיס × גובה. מה התוצאה?`;
@@ -1185,7 +1185,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         } else if (levelKey === "medium") {
           question =
             gradeKey === "g6" && Math.random() < 0.5
-              ? `משולש ישר־זווית: ניצבים ${a} ו-${b}. מה אורך היתר (c)?`
+              ? `משולש ישר זווית: ניצבים ${a} ו-${b}. מה אורך היתר (c)?`
               : `במשולש ישר זווית, הניצבים הם ${a} ו-${b}. מה אורך היתר?`;
         } else {
           question = `אתגר פיתגורס — ניצבים ${a} ו-${b}: חשבו היתר והסבירו לעצמכם את הנוסחה.`;
@@ -1948,7 +1948,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
 
     // ===================== DIAGONAL =====================
     case "diagonal": {
-      // מסלול נוסחתי: משתמשים ב־shape שנבחר מ־TOPIC_SHAPES (כולל כפייה ל־harness)
+      // מסלול נוסחתי: משתמשים ב shape שנבחר מ TOPIC_SHAPES (כולל כפייה אל harness)
       const fromTopic =
         shape === "square"
           ? "ריבוע"
@@ -2021,7 +2021,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           if (levelKey === "easy") {
             question = [
               `מלבן ${side}×${width}: השתמשו בפיתגורס (ניצבים ${side} ו-${width}). מה אלכסון?`,
-              `אלכסון במלבן ישר־זווית: ניצבים ${side}, ${width} — מה d?`,
+              `אלכסון במלבן ישר זווית: ניצבים ${side}, ${width} — מה d?`,
               `ניצבים במלבן ${side} ו-${width}. חשבו אלכסון (פיתגורס).`,
             ][diagW];
           } else if (levelKey === "medium") {
@@ -2039,9 +2039,9 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
           }
         } else if (formulaBand === "late") {
           if (levelKey === "easy") {
-            question = `במלבן ישר־זווית: ניצבים ${side} ו־${width}. מה אורך האלכסון (פיתגורס)?`;
+            question = `במלבן ישר זווית: ניצבים ${side} ו ${width}. מה אורך האלכסון (פיתגורס)?`;
           } else if (levelKey === "medium") {
-            question = `חישוב אלכסון — מלבן עם צלעות ניצבות ${side} ו־${width}. מה d?`;
+            question = `חישוב אלכסון — מלבן עם צלעות ניצבות ${side} ו ${width}. מה d?`;
           } else {
             question = `בשלב אתגר — מלבן ${side}×${width}: הוכיחו בראש ואז חשבו את אלכסון.`;
           }
@@ -2136,7 +2136,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
         correctAnswer = round(PI * radius * radius);
         if (gradeKey === "g6") {
           if (levelKey === "easy") {
-            question = `שטח דיסק (קל): רדיוס ${radius}, השתמשו ב־πr² (π = 3.14). מה השטח?`;
+            question = `שטח דיסק (קל): רדיוס ${radius}, השתמשו ב πr² (π = 3.14). מה השטח?`;
           } else if (levelKey === "medium") {
             question = `דיסק במישור, רדיוס ${radius}. מה השטח? (π = 3.14)`;
           } else {
@@ -2187,7 +2187,7 @@ export function generateQuestion(level, topic, gradeKey, mixedOps = null, probeO
       question =
         gradeKey === "g2"
           ? `בחרו שם לגוף: ${selected.desc}. (1 = קובייה, 2 = תיבה, 3 = גליל, 4 = פירמידה, 5 = חרוט, 6 = כדור)`
-          : `גוף תלת־ממדי עם ${selected.desc}. מה שמו? (1 = קובייה, 2 = תיבה, 3 = גליל, 4 = פירמידה, 5 = חרוט, 6 = כדור)`;
+          : `גוף תלת ממדי עם ${selected.desc}. מה שמו? (1 = קובייה, 2 = תיבה, 3 = גליל, 4 = פירמידה, 5 = חרוט, 6 = כדור)`;
       break;
     }
 

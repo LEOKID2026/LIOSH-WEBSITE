@@ -80,7 +80,7 @@ I have some apples
 
 I have any apples — any בשאלה/שלילה!
 
-❌ I have any — במשפט חיובי משתמשים בדרך כלל ב־some.
+❌ I have any — במשפט חיובי משתמשים בדרך כלל ב some.
 
 ✓ I have some apples.
 

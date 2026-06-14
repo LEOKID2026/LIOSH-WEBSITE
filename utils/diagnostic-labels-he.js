@@ -13,13 +13,13 @@ import {
 
 /**
  * כשאין מספיק מידע לתווית ספציפית — אותו ניסוח לכל המקצועות.
- * (באנגלית: `englishWeaknessFallbackHe` — בלי "באנגלית" בטקסט, כי בדוחות חוצה־מקצועיים מוסיפים `(אנגלית)`.)
+ * (באנגלית: `englishWeaknessFallbackHe` — בלי "באנגלית" בטקסט, כי בדוחות חוצהמקצועיים מוסיפים `(אנגלית)`.)
  */
 export const GENERIC_WEAKNESS_HE = "יש טעויות שחוזרות כאן";
 export const GENERIC_POINT_HE = "קושי שכדאי לשים אליו לב";
 export const GENERIC_REINFORCE_HE = "כדאי לחזק את הנושא הזה עוד קצת";
 
-/** מפתח נושא באנגלית (כמו ב־localStorage) → תווית עברית להורה */
+/** מפתח נושא באנגלית (כמו ב localStorage) → תווית עברית להורה */
 const ENGLISH_TOPIC_KEY_HE = {
   vocabulary: "אוצר מילים",
   grammar: "דקדוק וצורות",
@@ -172,7 +172,7 @@ export function weaknessLabelHe(subjectId, sampleEv) {
     if (hay.includes("perimeter")) return "קושי בהבחנה ובחישוב היקף";
     if (hay.includes("area")) return "בנושא שטחים ויחידות שטח";
     if (hay.includes("volume") || hay.includes("prism"))
-      return "קושי בנפח ובתבניות תלת־ממד";
+      return "קושי בנפח ובתבניות תלת ממד";
     if (hay.includes("angle")) return "קושי בנושא זוויות וביחסים בין זוויות";
   }
 

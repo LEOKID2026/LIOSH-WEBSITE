@@ -60,7 +60,7 @@ export default function MyApp({ Component, pageProps }) {
       return undefined;
     }
 
-    // בפיתוח: ראה DevServiceWorkerCleanup — לא רושמים SW; מנקים רישומים ו־Cache Storage.
+    // בפיתוח: ראה DevServiceWorkerCleanup — לא רושמים SW; מנקים רישומים ו Cache Storage.
     if (process.env.NODE_ENV === "development") {
       return undefined;
     }

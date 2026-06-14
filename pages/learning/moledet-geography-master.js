@@ -1110,7 +1110,7 @@ export default function MoledetGeographyMaster() {
     return () => clearTimeout(timer);
   }, [gameActive, mode, timeLeft]);
 
-  // שמירת ריצה נוכחית ל־localStorage + עדכון Best & Leaderboard
+  // שמירת ריצה נוכחית אל localStorage + עדכון Best & Leaderboard
   function saveRunToStorage() {
     if (typeof window === "undefined" || !playerName.trim()) return;
 
@@ -3857,7 +3857,7 @@ export default function MoledetGeographyMaster() {
                   <li>בחר כיתה, רמת קושי ונושא (מולדת, חברה ואזרחות, גאוגרפיה, היסטוריה ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש שאלות מורכבות שצריך להבין את ההקשר.</li>
-                  <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
+                  <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו Badges עוזרים לך לעלות רמה כשחקן.</li>
                 </ul>
 
                 <div className="mt-4 flex justify-center">

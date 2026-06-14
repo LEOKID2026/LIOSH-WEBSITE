@@ -8,10 +8,10 @@ import StudentThemePicker from "../../components/student/StudentThemePicker";
 const OFFLINE_GAMES = [
   {
     slug: "tic-tac-toe",
-    title: "איקס־עיגול XL",
+    title: "איקס עיגול XL",
     emoji: "❌⭕️",
     players: "2 שחקנים",
-    blurb: "לוחות מ־3×3 ועד 7×7 עם מעקב ציון.",
+    blurb: "לוחות מ 3×3 ועד 7×7 עם מעקב ציון.",
   },
   {
     slug: "rock-paper-scissors",

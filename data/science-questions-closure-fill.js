@@ -573,7 +573,7 @@ export const SCIENCE_QUESTIONS_CLOSURE_FILL = [
     "minLevel": "easy",
     "maxLevel": "easy",
     "type": "mcq",
-    "stem": "מה דוגמה למחזור יום־לילה?",
+    "stem": "מה דוגמה למחזור יום לילה?",
     "options": [
       "סיבוב כדור הארץ והיחס לשמש",
       "רק עונות בלי יום",

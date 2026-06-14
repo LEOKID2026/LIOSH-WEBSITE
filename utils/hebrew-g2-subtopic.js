@@ -5,7 +5,7 @@ import {
   getG2SubtopicSpec,
 } from "../data/hebrew-g2-content-map.js";
 
-/** כמו `EARLY_G12_SUBTOPIC_POOL_MIN` ב־g1 — ערך זהה בלי ייבוא מוצלב. */
+/** כמו `EARLY_G12_SUBTOPIC_POOL_MIN` ב g1 — ערך זהה בלי ייבוא מוצלב. */
 const EARLY_G12_SUBTOPIC_POOL_MIN = 18;
 
 /**

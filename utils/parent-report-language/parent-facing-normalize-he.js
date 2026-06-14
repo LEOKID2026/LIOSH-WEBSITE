@@ -21,7 +21,7 @@ export function normalizeParentFacingHe(raw) {
   // Phase 4-B6 — E-06 mixed Hebrew/English phrases must run before the standalone `\binference\b` replacement.
   const e06EnglishMixedPre = [
     [/עובדה מול inference/giu, "הסקת משמעות מתוך ההקשר"],
-    [/טעות רק ב־inference/giu, "טעות בהסקת משמעות מההקשר"],
+    [/טעות רק ב inference/giu, "טעות בהסקת משמעות מההקשר"],
     [/לפני לימוד inference/giu, "לפני לימוד מסוג זה"],
   ];
   for (const [re, rep] of e06EnglishMixedPre) {
@@ -279,7 +279,7 @@ export function normalizeSubjectParentLetterHe(letter) {
 }
 
 /**
- * מעבר על אובייקט המלצת נושא — כל שדות מחרוזת ששמם מסתיים ב־He.
+ * מעבר על אובייקט המלצת נושא — כל שדות מחרוזת ששמם מסתיים ב He.
  * @param {Record<string, unknown>} rec
  * @returns {Record<string, unknown>}
  */

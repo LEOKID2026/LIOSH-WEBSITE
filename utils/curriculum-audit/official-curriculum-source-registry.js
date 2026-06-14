@@ -124,7 +124,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
       actionNeeded:
         "לאמת פריטי מאגר מול הסעיפים הרלוונטיים בתוך המסמך לכיתה זו (מספרים, שברים, חקר נתונים, גאומטריה וכו׳).",
       notes:
-        "מסמך כיתה רשמי במאגר מיידע — עיגון ישיר לכיתה; פירוט נושאים בתוך ה־PDF.",
+        "מסמך כיתה רשמי במאגר מיידע — עיגון ישיר לכיתה; פירוט נושאים בתוך ה PDF.",
     };
   }),
   {
@@ -182,7 +182,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     actionNeeded:
       "בדיקת רצף פדגוגי מול מסמך כיתה (PDF) ומיפוי מילולי לפני תיקוני תוכן — ראו דוח math-bank-vs-official-source.",
     notes:
-      "העיגון הרשמי לכיתה קיים ב־PDF; המיפוי האוטומטי לנושא משנה בתוך הכיתה נשאר לאימות אנושי.",
+      "העיגון הרשמי לכיתה קיים ב PDF; המיפוי האוטומטי לנושא משנה בתוך הכיתה נשאר לאימות אנושי.",
   },
 
   /* ---------- Geometry (product strand — officially math strand) ---------- */
@@ -270,7 +270,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesTopicLevelDetail: true,
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
-    actionNeeded: "להצמיד טבלאות כיתה/שכבה מתוך מסמכי התוכנית המלאים במיידע אם נדרש עיגון נושא־כיתה.",
+    actionNeeded: "להצמיד טבלאות כיתה/שכבה מתוך מסמכי התוכנית המלאים במיידע אם נדרש עיגון נושא כיתה.",
     notes: "מקור POP רשמי ישיר — עדיין דורש השלמת פריסה כיתתית ידנית לצורך התאמת מאגר.",
   },
   {
@@ -370,7 +370,7 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesSkillOrDepthDetail: true,
     needsHumanPedagogyReview: true,
     actionNeeded: "להשתמש יחד עם תוכנית הלימודים כדי לסווג פריטי חשיפה לעומת ליבה.",
-    notes: "תומך בהפרדת מודליות שפה ואוריינות — לא עיגון נושא־כיתה עצמו.",
+    notes: "תומך בהפרדת מודליות שפה ואוריינות — לא עיגון נושא כיתה עצמו.",
   },
   {
     subject: "english",
@@ -656,8 +656,8 @@ export const OFFICIAL_CURRICULUM_SOURCE_REGISTRY = [
     providesTopicLevelDetail: false,
     providesSkillOrDepthDetail: false,
     needsHumanPedagogyReview: true,
-    actionNeeded: "להצליב עם תוכנית האנגלית ב־POP — לא עם דף ראמ\"ה כמפת תוכן.",
-    notes: "מקור הערכה ארצית — לא עיגון תוכן פריט־פריט.",
+    actionNeeded: "להצליב עם תוכנית האנגלית ב POP — לא עם דף ראמ\"ה כמפת תוכן.",
+    notes: "מקור הערכה ארצית — לא עיגון תוכן פריט פריט.",
   },
   {
     subject: "science",

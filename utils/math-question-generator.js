@@ -298,7 +298,7 @@ function applyMathLevelPresentation(question, ctx) {
       if (mathLevelKey === "medium") {
         return `${base}₪ אחרי הנחה של ${p}% — מה המחיר החדש? = ${BLANK}${gSuf}`;
       }
-      return `בעיית אחוזים: ירידת מחיר ${p}% מ־${base}₪ — מה המחיר אחרי ההנחה? = ${BLANK}${gSuf}`;
+      return `בעיית אחוזים: ירידת מחיר ${p}% מ ${base}₪ — מה המחיר אחרי ההנחה? = ${BLANK}${gSuf}`;
     }
   }
 
@@ -2116,7 +2116,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
           `${n1}/${den1} ÷ ${n2}/${den2} = ${BLANK}`,
           `חילוק שברים: ${n1}/${den1} : ${n2}/${den2} = ${BLANK}`,
           `מה תוצאת ${n1}/${den1} חלקי ${n2}/${den2}? ${BLANK}`,
-          `${n1}/${den1} לחלק ב-${n2}/${den2} שווה ל־${BLANK}`,
+          `${n1}/${den1} לחלק ב-${n2}/${den2} שווה אל ${BLANK}`,
         ][Math.floor(Math.random() * 4)];
         params = { kind: "frac_divide", n1, den1, n2, den2, finalNum, finalDen };
       }
@@ -2401,7 +2401,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
     };
   // ===== עשרוניים =====
   } else if (selectedOp === "decimals") {
-    // Grade-band alignment: א׳–ב׳ אין פעולת עשרוניים ב־GRADES — אם הגיע סימפול ידני/ארוע נדיר, נפיל לתפיסה מספרית.
+    // Grade-band alignment: א׳–ב׳ אין פעולת עשרוניים ב GRADES — אם הגיע סימפול ידני/ארוע נדיר, נפיל לתפיסה מספרית.
     if (gradeKey === "g1" || gradeKey === "g2") {
       return generateQuestion(
         levelConfig,
@@ -4054,7 +4054,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       operandB = a;
     } else if (slot < 0.375) {
       correctAnswer = 0;
-      question = `חשב במילים: ${a} כפול אפס שווה ל־__`;
+      question = `חשב במילים: ${a} כפול אפס שווה אל __`;
       params = { kind: "zero_mul_word", a };
       operandA = a;
       operandB = 0;
@@ -4078,7 +4078,7 @@ export function generateQuestion(levelConfig, operation, gradeKey, mixedOps = nu
       operandB = 0;
     } else if (slot < 0.875) {
       correctAnswer = a;
-      question = `מספר ${a} נשאר אותו דבר כשמכפילים אותו ב־1: ${a} × 1 = ${BLANK}`;
+      question = `מספר ${a} נשאר אותו דבר כשמכפילים אותו ב 1: ${a} × 1 = ${BLANK}`;
       params = { kind: "one_mul_identity", a };
       operandA = a;
       operandB = 1;

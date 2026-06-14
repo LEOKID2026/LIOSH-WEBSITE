@@ -231,7 +231,7 @@ export default function MleoFlyer() {
     let dt = (now - lastTimeRef.current) / 1000; // seconds
     lastTimeRef.current = now;
     if (dt > 0.05) dt = 0.05; // cap long frames
-    const scale = dt * 60;    // נרמול ל־60FPS
+    const scale = dt * 60;    // נרמול אל 60FPS
 
     const canvas = canvasRef.current;
     if (!canvas) { rafRef.current = requestAnimationFrame(loop); return; }

@@ -16,7 +16,7 @@ const FORBIDDEN_UI_PATTERNS: { id: string; re: RegExp }[] = [
   { id: "topic_key", re: /(?:^|[·•—(])\s*נושא\s+[a-z0-9_-]+/iu },
   { id: "domain_key", re: /(?:^|[·•—(])\s*תחום\s+[a-z0-9_-]+/iu },
   { id: "unique_mark", re: /סימון\s+ייחודי/u },
-  { id: "school_inquiry", re: /חקר\s+בית[\s־-]?ספרי/u },
+  { id: "school_inquiry", re: /חקר\s+בית[\s -]?ספרי/u },
   { id: "question_about_topic", re: /שאלה\s+בנושא/u },
   { id: "grade_label", re: /(?:^|[·•—(])\s*כיתה\s+[אבגדהו]['׳]?/u },
   { id: "concepts_framing", re: /^מושגים\s*\((קל|בינוני|אתגר)\)\s*:/u },

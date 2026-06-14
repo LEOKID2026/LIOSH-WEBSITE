@@ -154,7 +154,7 @@ export function validateParentNarrativeSafety(input) {
     if (blocking) blockedReasons.push(code);
   }
 
-  /** Reduce must_not_say false positives (negated “לא מאסטרי”, cautious “חד־משמעית” about actions). */
+  /** Reduce must_not_say false positives (negated “לא מאסטרי”, cautious “חד משמעית” about actions). */
   function scrubForMustNotSayScan(s) {
     return String(s)
       .replace(/לא\s+מאסטרי(?:\s+מלא)?/gu, " ")

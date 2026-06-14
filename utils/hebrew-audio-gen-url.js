@@ -1,5 +1,5 @@
 /**
- * כתובת נגינה ל־MP3 שנוצר בשרת — בלי קבצים סטטיים ב־public בפרודקשן (Vercel וכו׳).
+ * כתובת נגינה אל MP3 שנוצר בשרת — בלי קבצים סטטיים ב public בפרודקשן (Vercel וכו׳).
  * @param {string} hash16
  */
 export function hebrewGenStreamUrl(hash16) {

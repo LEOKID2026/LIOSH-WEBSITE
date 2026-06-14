@@ -96,7 +96,7 @@ export function mergeTopicNextStepConfig(partial) {
 }
 
 /**
- * מפתח אחיד לחיפוש טעויות מול שורת דוח (מתאים ל־operation/topic ב־localStorage ול־bucket במתמטיקה).
+ * מפתח אחיד לחיפוש טעויות מול שורת דוח (מתאים אל operation/topic ב localStorage ואל bucket במתמטיקה).
  * @param {string} subjectId
  * @param {string|null|undefined} rawKey
  */
@@ -346,7 +346,7 @@ function runLegacyTopicNextStep(row, mistakeEventCount, cfg) {
         stability,
         confidence,
         reasonHe: `יש רק ${q} שאלות ב«${displayName}» בתקופה שנבחרה — מוקדם מדי לשנות כיתה או רמת קושי. עדיף עוד מפגשים קצרים באותה הגדרה ואז נבחן מחדש.`,
-        parentHe: `ב«${displayName}» יש עדיין מעט נתונים (${q} שאלות). המלצה להמשיך באותה רמת קושי, להוסיף שניים־שלושה תרגולים קצרים כדי שההמלצה הבאה תהיה מדויקת יותר.`,
+        parentHe: `ב«${displayName}» יש עדיין מעט נתונים (${q} שאלות). המלצה להמשיך באותה רמת קושי, להוסיף שניים שלושה תרגולים קצרים כדי שההמלצה הבאה תהיה מדויקת יותר.`,
         studentHe: `נמשיך עוד קצת באותה רמה ב«${displayName}» — ואז נדע טוב יותר מה הלאה.`,
         recommendationDecisionTrace: trace,
       },
@@ -1568,7 +1568,7 @@ export function buildTopicRecommendationRecord(
 }
 
 /**
- * מוסיף לכל שורת נושא בדוח תוויות המלצה קצרות בעברית (ל־UI הדוח הרגיל).
+ * מוסיף לכל שורת נושא בדוח תוויות המלצה קצרות בעברית (אל UI הדוח הרגיל).
  * @param {Record<string, Record<string, unknown>>} maps
  * @param {Record<string, Record<string, { count?: number }>>} mistakesBySubject
  * @param {number} periodEndMs

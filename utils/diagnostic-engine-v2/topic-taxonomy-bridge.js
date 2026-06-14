@@ -1,6 +1,6 @@
 /**
  * מיפוי bucketKey (אחסון דוח) ↔ מזהי טקסונומיה — גשר לתוכן הקיים במוצר.
- * מבוסס stage1 blueprint §5 + מפתחות ב־math-report-generator.
+ * מבוסס stage1 blueprint §5 + מפתחות ב math-report-generator.
  */
 import { mathReportBaseOperationKey } from "../math-report-generator.js";
 

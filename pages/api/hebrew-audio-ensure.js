@@ -1,7 +1,7 @@
 /**
  * יוצר/מבטיח קובץ MP3 להקראת טקסט עברי (Edge neural TTS בשרת בלבד — לא בדפדפן המשתמש).
- * מפתח קובץ: sha256(normalize(text)) → דיסק לפי getHebrewGenMp3Paths (public מקומית / tmp ב־Vercel).
- * כתובת נגינה: GET /api/hebrew-audio-stream?h=<hash16> (לא קובץ סטטי ב־Git).
+ * מפתח קובץ: sha256(normalize(text)) → דיסק לפי getHebrewGenMp3Paths (public מקומית / tmp ב Vercel).
+ * כתובת נגינה: GET /api/hebrew-audio-stream?h=<hash16> (לא קובץ סטטי ב Git).
  */
 import fs from "node:fs";
 

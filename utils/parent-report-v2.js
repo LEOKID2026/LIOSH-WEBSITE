@@ -869,7 +869,7 @@ function safeNumber(n) {
 const EVIDENCE_STRENGTH_HE = { low: "מוגבלת", medium: "בינונית", strong: "טובה" };
 
 const INSUFFICIENT_EVIDENCE_LINE_HE =
-  "מידע מועט בנושא — כדאי להמשיך בתרגול לפני שקובעים כיוון חד־משמעי.";
+  "מידע מועט בנושא — כדאי להמשיך בתרגול לפני שקובעים כיוון חד משמעי.";
 
 /** Strip internal engine identifiers from diagnostic trace lines shown to parents. */
 function sanitizeDecisionTraceDetailHeForParents(raw) {
@@ -2552,7 +2552,7 @@ export function generateParentReportV2(
     diagnosticPrimarySource: hasV2Units
       ? "diagnosticEngineV2"
       : "legacy_patternDiagnostics_fallback",
-    /** שלמות נתונים — לבדיקה; לא מוצג ב־UI בשלב 1 */
+    /** שלמות נתונים — לבדיקה; לא מוצג ב UI בשלב 1 */
     dataIntegrityReport,
     /** מנוע אבחון V2 — פלט מובנה לפי stage1 blueprint (שכבות נפרדות, שערים, טקסונומיה) */
     diagnosticEngineV2: sanitizeDiagnosticEngineV2ForParentFacing(diagnosticEngineV2),

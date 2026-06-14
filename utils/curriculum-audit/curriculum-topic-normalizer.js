@@ -172,7 +172,7 @@ function normalizeGeometry(rawTopic, rawSubtopic) {
     area: { key: "geometry.area", he: "שטח" },
     perimeter: { key: "geometry.perimeter", he: "היקף" },
     volume: { key: "geometry.volume", he: "נפח" },
-    solids: { key: "geometry.solids_3d", he: "גופים תלת־מימדיים" },
+    solids: { key: "geometry.solids_3d", he: "גופים תלת מימדיים" },
     angles: { key: "geometry.angles", he: "זוויות" },
     parallel_perpendicular: {
       key: "geometry.parallel_perpendicular_spatial",

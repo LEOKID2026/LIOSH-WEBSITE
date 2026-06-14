@@ -205,7 +205,7 @@ function gradeSplitNarrativeHe(rows) {
   if (rows.length < 2) return "";
   const parts = rows
     .filter((r) => r.q > 0)
-    .map((r) => `${r.label}: ${r.q} שאלות, דיוק כ־${r.acc}%`)
+    .map((r) => `${r.label}: ${r.q} שאלות, דיוק כ ${r.acc}%`)
     .join("; ");
   const weak = pickWeakestRow(rows);
   if (!parts) return "";
@@ -268,23 +268,23 @@ function composeReportExplanation(params) {
 
   const practicedPhrase =
     subjectLabels.length > 0
-      ? `בטווח התקופה נרשם תרגול ב${subjectLabels.join(", ")} — סה״כ כ־${totalQ} שאלות.`
+      ? `בטווח התקופה נרשם תרגול ב${subjectLabels.join(", ")} — סה״כ כ ${totalQ} שאלות.`
       : totalQ > 0
-        ? `בטווח התקופה נרשמו כ־${totalQ} שאלות תרגול.`
+        ? `בטווח התקופה נרשמו כ ${totalQ} שאלות תרגול.`
         : "בטווח התקופה יש עדיין מעט מאוד תרגול — התמונה כללית עדיין חלקית.";
 
   /** @type {string[]} */
   const meaningParts = [];
   if (strong.length) {
     meaningParts.push(
-      `מה שעובד יחסית טוב: ${strong.map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName} (כ־${m.acc}% על ${m.q} שאלות)`).join("; ")}.`,
+      `מה שעובד יחסית טוב: ${strong.map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ")}.`,
     );
   }
   if (weak.length) {
     const lead =
       weak.length === 1
         ? `הדבר המרכזי שדורש תשומת לב כרגע הוא ${subjectLabelHe(weak[0].sid)} — ${weak[0].displayName}`
-        : `מקומות שדורשים חיזוק: ${weak.map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName} (כ־${m.acc}%)`).join("; ")}`;
+        : `מקומות שדורשים חיזוק: ${weak.map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName} (כ ${m.acc}%)`).join("; ")}`;
     meaningParts.push(`${lead}.`);
   } else if (!strong.length && metas.length) {
     meaningParts.push("אין עדיין קו חזק מאוד בולט — כדאי להמשיך תרגול קצר ולעקוב אחרי יציבות.");
@@ -369,7 +369,7 @@ function composeTopicProblem(params) {
   if (polarity === POLARITY.support_needed) {
     meaningParts.push(
       patternHe
-        ? `ב${displayName} יש ${q} שאלות עם דיוק כ־${acc}% — נראה קושי חוזר: ${patternHe}. מבחינה לימודית, זה אומר שהבסיס עדיין לא יציב מספיק לפני שמוסיפים קושי.`
+        ? `ב${displayName} יש ${q} שאלות עם דיוק כ ${acc}% — נראה קושי חוזר: ${patternHe}. מבחינה לימודית, זה אומר שהבסיס עדיין לא יציב מספיק לפני שמוסיפים קושי.`
         : meaningHeForPolarity(displayName, q, acc) +
             " מבחינה לימודית, זה אומר שכדאי לחזק לפני שמסיקים שהכול יציב.",
     );
@@ -384,7 +384,7 @@ function composeTopicProblem(params) {
   const observation =
     rowMetricsList.length >= 2
       ? `ב${displayName} יש תרגול בכמה רמות כיתה בתקופה — להלן הפירוט לפי שורות בדוח.`
-      : `ב${primary.label} בתקופה הזו יש ${q} שאלות, עם דיוק של כ־${acc}%.`;
+      : `ב${primary.label} בתקופה הזו יש ${q} שאלות, עם דיוק של כ ${acc}%.`;
 
   const action =
     polarity === POLARITY.support_needed
@@ -585,7 +585,7 @@ function composeStrength(params) {
         {
           type: "meaning",
           textHe: best
-            ? `לפי מה שיש בדוח, ${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול — ${best.displayName} בכ־${best.acc}% על ${best.q} שאלות.`
+            ? `לפי מה שיש בדוח, ${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול — ${best.displayName} בכ ${best.acc}% על ${best.q} שאלות.`
             : `${subjectLabelHe(sid)} הוא המקצוע היחיד עם תרגול בטווח — אי אפשר לדרג «חזק/חלש» בין מקצועות.`,
           source: "intent_composer",
         },
@@ -615,7 +615,7 @@ function composeStrength(params) {
   }
 
   const list = metas
-    .map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName}: כ־${m.acc}% על ${m.q} שאלות`)
+    .map((m) => `${subjectLabelHe(m.sid)} — ${m.displayName}: כ ${m.acc}% על ${m.q} שאלות`)
     .join("; ");
 
   const singleSubjectNote =

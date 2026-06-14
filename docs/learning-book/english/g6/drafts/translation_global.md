@@ -76,7 +76,7 @@ If we protect the oceans, future generations will benefit
 
 If we will protect the oceans, future generations benefit — שגוי!
 
-❌ אחרי If לא משתמשים ב־will, ובחלק השני צריך will.
+❌ אחרי If לא משתמשים ב will, ובחלק השני צריך will.
 
 ✓ If we protect the oceans, future generations will benefit.
 

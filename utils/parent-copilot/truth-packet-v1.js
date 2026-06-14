@@ -160,7 +160,7 @@ function clipHe(s, max = 140) {
 function looksLikeNumericOrCountLead(line) {
   const t = String(line || "").trim();
   if (t.length < 10) return false;
-  if (/^(בדוח\s+התקופתי\s+נספרו|כ־\s*\d|בסך\s+הכל\s+כ־?\d)/u.test(t)) return true;
+  if (/^(בדוח\s+התקופתי\s+נספרו|כ \s*\d|בסך\s+הכל\s+כ ?\d)/u.test(t)) return true;
   if (/נספרו\s+כ|שאלות\s+בכלל\s+המקצועות|דיוק\s+הממוצע\s+הכללי|ממוצע\s+דיוק\s+כללי/u.test(t)) return true;
   return false;
 }
@@ -196,8 +196,8 @@ function supportingNumericTail(x, canonicalIntent = "") {
   if (omitRollup.has(intent)) return "";
   if (tq <= 0 && aa <= 0) return "";
   const bits = [];
-  if (tq > 0) bits.push(`כ־${tq} שאלות בתקופה`);
-  if (aa > 0) bits.push(`דיוק כללי כ־${aa}%`);
+  if (tq > 0) bits.push(`כ ${tq} שאלות בתקופה`);
+  if (aa > 0) bits.push(`דיוק כללי כ ${aa}%`);
   return bits.length ? `${bits.join(", ")}.` : "";
 }
 
@@ -560,16 +560,16 @@ function buildExecutiveIntentNarrativeSlots(x) {
       let obs = defaultObs;
       if (best && worst && (best.dn !== worst.dn || best.sid !== worst.sid)) {
         obs = `בהשוואה בתוך הדוח: הנושא שבו נראו התוצאות הטובות ביותר הוא ${labelPair(best)} · התחום שדורש חיזוק כרגע הוא ${labelPair(worst)}.`;
-        obs = appendDistinctSentence(obs, `ליד המספרים: כ־${best.acc}% מול כ־${worst.acc}%.`);
+        obs = appendDistinctSentence(obs, `ליד המספרים: כ ${best.acc}% מול כ ${worst.acc}%.`);
       } else if (best) {
         obs = `לפי הדוח, הנקודה הבולטת ביותר במדדים היא ${labelPair(best)}.`;
-        obs = appendDistinctSentence(obs, `ליד המספרים: כ־${best.acc}%.`);
+        obs = appendDistinctSentence(obs, `ליד המספרים: כ ${best.acc}%.`);
       }
       const interpParts = [];
       if (best?.interp && !interpretationReadsAsWeaknessNeedingSupport(best.interp)) {
         interpParts.push(`בניסוח המעוגן של ${labelPair(best)}: ${clipHe(best.interp, 125)}`);
       } else if (best) {
-        interpParts.push(`ליד המספרים ב${labelPair(best)} נראית רמת דיוק של כ־${best.acc}%.`);
+        interpParts.push(`ליד המספרים ב${labelPair(best)} נראית רמת דיוק של כ ${best.acc}%.`);
       }
       if (worst && worst !== best && worst.interp) {
         interpParts.push(`ב${labelPair(worst)}: ${clipHe(worst.interp, 125)}`);
@@ -642,12 +642,12 @@ function buildExecutiveIntentNarrativeSlots(x) {
       if (!thinPlan && week && hot2.length >= 2) {
         const a0 = stepAnchorFrom(hot2[0]);
         const a1 = stepAnchorFrom(hot2[1]);
-        stepsOnly = `בבית: 3 פעמים בשבוע, כ־10 דקות בכל פעם — לחלק זמן בין ${a0} לבין ${a1} (למשל יום לנושא או חצי־חצי באותו יום). בכל תרגול 5–8 שאלות קצרות, ובסוף לבקש מהילד להסביר בקול איך הגיע לתשובה.`;
+        stepsOnly = `בבית: 3 פעמים בשבוע, כ 10 דקות בכל פעם — לחלק זמן בין ${a0} לבין ${a1} (למשל יום לנושא או חצי חצי באותו יום). בכל תרגול 5–8 שאלות קצרות, ובסוף לבקש מהילד להסביר בקול איך הגיע לתשובה.`;
       } else if (focus && !thinPlan) {
         const stepAnchor = stepAnchorFrom(focus);
         stepsOnly = week
-          ? `בבית כדאי להתחיל ב${stepAnchor}: 3 פעמים בשבוע, כ־10 דקות בכל פעם. בכל תרגול לפתור 5–8 שאלות קצרות, ואז לבקש מהילד להסביר בקול איך הגיע לתשובה.`
-          : `מחר: כ־10 דקות תרגול ממוקד ב${stepAnchor}, 5–8 שאלות קצרות, ואז בקשו מהילד להסביר בקול איך חישב.`;
+          ? `בבית כדאי להתחיל ב${stepAnchor}: 3 פעמים בשבוע, כ 10 דקות בכל פעם. בכל תרגול לפתור 5–8 שאלות קצרות, ואז לבקש מהילד להסביר בקול איך הגיע לתשובה.`
+          : `מחר: כ 10 דקות תרגול ממוקד ב${stepAnchor}, 5–8 שאלות קצרות, ואז בקשו מהילד להסביר בקול איך חישב.`;
       } else if (thinPlan) {
         const hot = rankedWorstFirst.filter((m) => m.q > 0).slice(0, 2);
         const focusLabel =
@@ -727,7 +727,7 @@ function buildExecutiveIntentNarrativeSlots(x) {
       const b = rankedBestFirst[0];
       const obs =
         w && b && (w.dn !== b.dn || w.sid !== b.sid)
-          ? `בדוח כרגע רואים תמונה תקופתית לפי הנתונים מהתרגול: למשל ב${labelPair(w)} יש דיוק של כ־${w.acc}% על פני כ־${w.q} שאלות, לעומת ${labelPair(b)} עם כ־${b.acc}% על פני כ־${b.q} שאלות — זה משקף מה שנספר בתרגול בטווח, לא רגע בודד.`
+          ? `בדוח כרגע רואים תמונה תקופתית לפי הנתונים מהתרגול: למשל ב${labelPair(w)} יש דיוק של כ ${w.acc}% על פני כ ${w.q} שאלות, לעומת ${labelPair(b)} עם כ ${b.acc}% על פני כ ${b.q} שאלות — זה משקף מה שנספר בתרגול בטווח, לא רגע בודד.`
           : w
             ? `בדוח כרגע רואים מה שנכתב כראיה מהתרגול ב${labelPair(w)} — בעיקר ניסוח מספרי על דיוק ועל נפח שאלות.`
             : defaultObs;
@@ -1263,8 +1263,8 @@ export function buildTruthPacketV1(payload, scope) {
     const trendsForSurface = trendLines.length
       ? trendLines.slice(0, 4)
       : [
-          `בדוח התקופתי נספרו כ־${totalQ} שאלות בכלל המקצועות.`,
-          totalQ > 0 ? `הדיוק הממוצע בתקופה הוא כ־${avgAcc}%.` : "עדיין חסר תרגול מצטבר לתמונה יציבה.",
+          `בדוח התקופתי נספרו כ ${totalQ} שאלות בכלל המקצועות.`,
+          totalQ > 0 ? `הדיוק הממוצע בתקופה הוא כ ${avgAcc}%.` : "עדיין חסר תרגול מצטבר לתמונה יציבה.",
         ];
     let uncertaintyLine;
     if (totalQ >= 50 && avgAcc >= 65) {

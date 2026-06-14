@@ -490,7 +490,7 @@ export default function MathMaster() {
   // מניעת שאלות חוזרות
   const [recentQuestions, setRecentQuestions] = useState(new Set());
 
-  /** תצוגת תרגיל: מאוזן (ברירת מחדל) / מאונך — רק לסשן הפעיל; לא נשמר בשרת או ב-localStorage קבוע. מתאפס ב־startGame / stopGame / hardResetGame. */
+  /** תצוגת תרגיל: מאוזן (ברירת מחדל) / מאונך — רק לסשן הפעיל; לא נשמר בשרת או ב-localStorage קבוע. מתאפס ב startGame / stopGame / hardResetGame. */
   const [isVerticalDisplay, setIsVerticalDisplay] = useState(false);
 
   const openBookFromLearning = useCallback(
@@ -1456,7 +1456,7 @@ export default function MathMaster() {
     return () => clearTimeout(timer);
   }, [gameActive, mode, timeLeft]);
 
-  // שמירת ריצה נוכחית ל־localStorage + עדכון Best & Leaderboard
+  // שמירת ריצה נוכחית אל localStorage + עדכון Best & Leaderboard
   function saveRunToStorage() {
     if (typeof window === "undefined" || !playerName.trim()) return;
 
@@ -5812,7 +5812,7 @@ export default function MathMaster() {
                   <li>בחר כיתה, רמת קושי ופעולה (חיבור, חיסור, כפל, חילוק, שברים, אחוזים ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש תרגילי מילים שצריך להבין את הסיפור.</li>
-                  <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
+                  <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו Badges עוזרים לך לעלות רמה כשחקן.</li>
                 </ul>
 
                 <div className="mt-4 flex justify-center">

@@ -732,7 +732,7 @@ export function SubjectPhase3Insights({ sp, compact }) {
   );
 }
 
-/** פירוט מקוצר למקצוע — רק שדות מה־payload הקיים (ללא מנוע נפרד) */
+/** פירוט מקוצר למקצוע — רק שדות מה payload הקיים (ללא מנוע נפרד) */
 export function SubjectSummaryBlock({ sp }) {
   const L = useMemo(() => buildSubjectParentLetterCompact(sp), [sp]);
   const riskChips = useMemo(() => subjectMajorRiskLabelsHe(sp?.majorRiskFlagsAcrossRows, 4), [sp]);

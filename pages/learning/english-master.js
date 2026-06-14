@@ -454,7 +454,7 @@ function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       return "בדוק שוב: האם המילה שבחרת מתאימה לנושא המשפט? זכור: I/You/We/They = are, He/She/It = is.";
 
     case "writing":
-      return "כנראה שטעית באיות (spelling). בדוק שוב אות-אחר-אות, שים לב ל־th / sh / ch ולסיום המילה (s / ed / ing).";
+      return "כנראה שטעית באיות (spelling). בדוק שוב אות-אחר-אות, שים לב אל th / sh / ch ולסיום המילה (s / ed / ing).";
 
     default:
       return "";
@@ -3746,7 +3746,7 @@ export default function EnglishMaster() {
                     <li>בחר כיתה, רמת קושי ונושא (אוצר מילים, דקדוק, תרגום, כתיבה ועוד).</li>
                     <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                     <li>קרא היטב את השאלה – לפעמים צריך לבחור תשובה, ולפעמים לכתוב באנגלית.</li>
-                    <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
+                    <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו Badges עוזרים לך לעלות רמה כשחקן.</li>
                   </ul>
                 </div>
 

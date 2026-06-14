@@ -12,7 +12,7 @@ import {
 
 /**
  * @param {object} ctx
- * @param {string} [ctx.priorSupportPattern] מ־Phase 11
+ * @param {string} [ctx.priorSupportPattern] מ Phase 11
  * @param {object|null} [ctx.trend]
  * @param {object} [ctx.trendDer]
  */

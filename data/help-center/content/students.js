@@ -61,7 +61,7 @@ export const chooseSubjectAndGrade = studentArticle({
 export const answeringQuestions = studentArticle({
   slug: "answering-questions",
   title: "איך עונים על שאלות?",
-  summary: "בחירה, הקלדה ורב־ברירה.",
+  summary: "בחירה, הקלדה ורבברירה.",
   keywords: ["שאלות", "תשובה"],
   toc: [{ id: "types", title: "סוגי שאלות" }],
   blocks: [
@@ -155,7 +155,7 @@ export const offlineGames = studentArticle({
   toc: [{ id: "offline", title: "לא מקוון" }],
   blocks: [
     heading(2, "offline", "לא מקוון"),
-    paragraph("איקס־עיגול ומשחקים נוספים — בלי צורך ברשת."),
+    paragraph("איקס עיגול ומשחקים נוספים — בלי צורך ברשת."),
     screenshotBlock(S, "offline-games", "offline", "רשימת משחקים לא מקוונים"),
     videoBlock(S, "offline-games"),
     relatedLinks([{ href: "/offline", label: "משחקים לא מקוונים" }]),

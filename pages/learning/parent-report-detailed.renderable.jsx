@@ -28,7 +28,7 @@ import {
 } from "../../utils/parent-report-ai/parent-report-ai-adapter";
 
 /**
- * מיפוי ויזואלי בלבד לפי recommendedNextStep מה־payload — לא משנה מנוע או תוכן.
+ * מיפוי ויזואלי בלבד לפי recommendedNextStep מה payload — לא משנה מנוע או תוכן.
  * @param {string | undefined} step
  * @returns {"advance" | "maintain" | "remediate" | "drop"}
  */

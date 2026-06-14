@@ -1,6 +1,6 @@
 /**
  * Phase 2 — סיכונים, נגזרות מגמה, וחסימות המלצה (ללא UI).
- * נקרא מ־topic-next-step-engine.js בלבד.
+ * נקרא מ topic-next-step-engine.js בלבד.
  */
 
 import { applyIntelligenceDecisionGuards } from "./intelligence-layer-v1/intelligence-decision-guards.js";
@@ -673,7 +673,7 @@ export function buildPhase9RecommendationOverlay(p) {
   } else if (mp === "concept_confusion") {
     mistakeFocusedActionHe = "חזרה על טעות טיפוסית עם הסבר מושגי אחד בכל מפגש.";
   } else if (mp === "procedure_break") {
-    mistakeFocusedActionHe = "לכתוב סדר פעולות על טיוטה ולעבור צעד־אחר־צעד.";
+    mistakeFocusedActionHe = "לכתוב סדר פעולות על טיוטה ולעבור צעד אחר צעד.";
   } else if (mp === "insufficient_mistake_evidence") {
     mistakeFocusedActionHe = "לתעד 2–3 מפגשים קצרים באותה רמה לפני שמזקקים סוג טעות.";
   }
@@ -1207,7 +1207,7 @@ export function buildWhyThisRecommendationHe(p) {
 export function buildWhatCouldChangeThisHe(p) {
   const { q, behaviorType } = p;
   const parts = [];
-  parts.push(`לאסוף יותר מ־${Math.max(12, Number(q) || 0)} שאלות בתקופה שנבחרה,`);
+  parts.push(`לאסוף יותר מ ${Math.max(12, Number(q) || 0)} שאלות בתקופה שנבחרה,`);
   parts.push("עוד פרטים על טעויות, כמו זמן תגובה וניסיונות חוזרים, כדי לחדד את התמונה,");
   parts.push("וכיוון דיוק ברור בין התקופה הנוכחית לקודמת — יכולים לשנות את הצעד.");
   if (behaviorType === "undetermined") parts.push("הדפוס עדיין לא מספיק ברור — נתונים נוספים יעזרו להבין אותו טוב יותר.");

@@ -1,11 +1,11 @@
 /**
  * נגינת stem — static_url או TTS (speechSynthesis).
- * TTS: אין resolve שקט על שגיאה; המתנה ל־voices; בחירת voice עברי; fallback והודעות ברורות.
+ * TTS: אין resolve שקט על שגיאה; המתנה אל voices; בחירת voice עברי; fallback והודעות ברורות.
  */
 
 /**
- * טוען/מעורר את רשימת ה־voices בדפדפנים (במיוחד כרום) לפני לחיצת המשתמש — מומלץ ב־useEffect.
- * לא מדבר בקול: speak ריק ו־cancel או רק getVoices אחרי voiceschanged.
+ * טוען/מעורר את רשימת ה voices בדפדפנים (במיוחד כרום) לפני לחיצת המשתמש — מומלץ ב useEffect.
+ * לא מדבר בקול: speak ריק ו cancel או רק getVoices אחרי voiceschanged.
  */
 export function primeSpeechSynthesisVoices() {
   if (typeof window === "undefined" || !window.speechSynthesis) return () => {};
@@ -275,7 +275,7 @@ export function createStemPlaybackController(stem, opts = {}) {
       };
 
       /**
-       * מריצים speak באותו סנכרון ככל האפשר אחרי לחיצה (חשוב ל־iOS Safari).
+       * מריצים speak באותו סנכרון ככל האפשר אחרי לחיצה (חשוב אל iOS Safari).
        * @param {string} reason
        */
       const runSpeak = (reason) => {
@@ -322,7 +322,7 @@ export function createStemPlaybackController(stem, opts = {}) {
           return;
         }
 
-        /** כרום לפעמים לא מתחיל עד ש־voices נטענו — מאריכים timeout אם הרשימה הייתה ריקה */
+        /** כרום לפעמים לא מתחיל עד ש voices נטענו — מאריכים timeout אם הרשימה הייתה ריקה */
         const gen = ++watchdogGeneration;
         const watchdogMs = initialVoiceCount === 0 && voicesNow().length === 0 ? 5200 : 2800;
         window.setTimeout(() => {
@@ -330,7 +330,7 @@ export function createStemPlaybackController(stem, opts = {}) {
           if (!synth.speaking && !synth.pending) {
             doneErr(
               "tts_no_activity",
-              "לא זוהתה השמעה. אם אתם בכרום: ודאו שמותקנת חבילת עברית; אם ב־Safari ב־iOS: נסו שוב מיד אחרי טעינת הדף. אפשר גם להשתמש בטקסט שמוצג למעלה."
+              "לא זוהתה השמעה. אם אתם בכרום: ודאו שמותקנת חבילת עברית; אם ב Safari ב iOS: נסו שוב מיד אחרי טעינת הדף. אפשר גם להשתמש בטקסט שמוצג למעלה."
             );
           }
         }, watchdogMs);

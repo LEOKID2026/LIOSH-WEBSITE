@@ -1,6 +1,6 @@
 /**
  * מיקום כתיבת קבצי TTS לעברית — API בלבד (Node).
- * ב־Vercel/Lambda אין כתיבה קבועה ל־public; משתמשים ב־/tmp באותה מכונה.
+ * ב Vercel/Lambda אין כתיבה קבועה אל public; משתמשים ב /tmp באותה מכונה.
  * אם יש כמה instances, ייתכן cache miss — אז צריך object storage או sticky sessions.
  */
 import fs from "node:fs";

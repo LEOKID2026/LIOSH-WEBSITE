@@ -98,7 +98,7 @@ export const HEBREW_G1_PAGE_META = {
     skillId: "hebrew:g1:reading:g1.letters",
     learningPageId: "hebrew:g1:g1.letters",
     pageType: "visual_intuition",
-    titleHe: "אותיות האלף־בית",
+    titleHe: "אותיות האלף בית",
     scope: "זיהוי אותיות; שם האות; לא כל צירופי האותיות",
   },
   "g1.final_letters": {

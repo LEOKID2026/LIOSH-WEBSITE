@@ -167,7 +167,7 @@ export const HEBREW_G2_PAGE_META = {
     skillId: "hebrew:g2:vocabulary:g2.synonyms_basic",
     pageType: "concept_foundation",
     titleHe: "מילים נרדפות",
-    scope: "מילים דומות במשמעות; יום־יום",
+    scope: "מילים דומות במשמעות; יום יום",
   },
   "g2.context_clue_easy": {
     skillId: "hebrew:g2:vocabulary:g2.context_clue_easy",

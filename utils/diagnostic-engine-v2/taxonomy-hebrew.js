@@ -40,7 +40,7 @@ export const HEBREW_TAXONOMY_ROWS = [
     doNotConcludeHe: ["דיסלקציה"],
     probeHe: "נושא מודגש",
     interventionHe: "טבלת התאמה",
-    escalationHe: "דיווח חוצה־מקצועות",
+    escalationHe: "דיווח חוצהמקצועות",
   },
   {
     id: "H-03",
@@ -115,7 +115,7 @@ export const HEBREW_TAXONOMY_ROWS = [
     minWrong: 3,
     minDistinctPatternFamilies: 0,
     minDistinctDays: 0,
-    observableMarkersHe: ["חוזר ב־3 סוגי שאלות"],
+    observableMarkersHe: ["חוזר ב 3 סוגי שאלות"],
     counterEvidenceHe: "נכון בתבנית מודפסת",
     countsWhenHe: "תבנית נלמדת",
     doesNotCountWhenHe: "לפני לימוד סדר",

@@ -9,7 +9,7 @@
 export const GEOMETRY_G2_BOOK_BATCHES = [
   {
     id: "a",
-    titleHe: "גופים תלת־ממדיים",
+    titleHe: "גופים תלת ממדיים",
     pages: ["solids"],
   },
   {
@@ -38,7 +38,7 @@ export const GEOMETRY_G2_PAGE_META = {
   solids: {
     skillId: "geometry:kind:solids",
     pageType: "visual_intuition",
-    titleHe: "גופים תלת־ממדיים — שמות והיכרות",
+    titleHe: "גופים תלת ממדיים — שמות והיכרות",
     scope: "קובייה, תיבה, גליל, פירמידה, חרוט, כדור — זיהוי; ללא נפח",
   },
   square_area: {

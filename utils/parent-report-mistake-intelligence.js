@@ -1,6 +1,6 @@
 /**
  * Phase 9 — אינטליגנציית טעויות ברמת שורה (v1).
- * טהור לוגית; תוויות עברית מיובאות מ־parent-report-ui-explain-he.
+ * טהור לוגית; תוויות עברית מיובאות מ parent-report-ui-explain-he.
  */
 
 import { MISTAKE_PATTERN_LABEL_HE } from "./parent-report-ui-explain-he.js";
@@ -99,7 +99,7 @@ export function buildMistakeIntelligencePhase9(ctx) {
       mistakePatternConfidence = 0.4;
     } else {
       dominantMistakePattern = "mixed_mistake_pattern";
-      evidence.push("תערובת אותות — דפוס טעות לא חד־משמעי.");
+      evidence.push("תערובת אותות — דפוס טעות לא חד משמעי.");
       mistakePatternConfidence = 0.45;
     }
 

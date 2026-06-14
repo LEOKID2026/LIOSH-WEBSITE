@@ -1,6 +1,6 @@
 /**
  * מדיניות ציון אודיו — גבולות בטוח / ביניים / ידני בלבד / אסור (מחזור נוכחי).
- * English-ready: מתאים ל־locale packs בלי להפעיל אנגלית.
+ * English-ready: מתאים אל locale packs בלי להפעיל אנגלית.
  */
 
 /** @typedef {"safe_auto"|"borderline_manual_first"|"manual_review_only"|"forbidden_product_autoscore"} AudioScoreTier */

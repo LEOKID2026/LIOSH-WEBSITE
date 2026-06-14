@@ -79,7 +79,7 @@ export const STUDENT_STEM_METADATA_LEAK_CHECKS = [
   },
   {
     id: "school_inquiry_frame",
-    re: /(?:במסגרת\s+)?חקר\s+בית[\s־-]?ספרי\s*:/u,
+    re: /(?:במסגרת\s+)?חקר\s+בית[\s -]?ספרי\s*:/u,
     label: "school inquiry framing prefix",
   },
   {
@@ -99,7 +99,7 @@ export function sanitizeStudentQuestionStem(text) {
 
   // Debug / bank batch markers
   t = t.replace(/סימון\s+ייחודי\s*[\u0590-\u05FFa-zA-Z0-9]*\s*/gu, "");
-  t = t.replace(/(?:במסגרת\s+)?חקר\s+בית[\s־-]?ספרי\s*:\s*/gu, "");
+  t = t.replace(/(?:במסגרת\s+)?חקר\s+בית[\s -]?ספרי\s*:\s*/gu, "");
 
   // Science / batch opener: "בכיתה ה׳ — רמה בינונית: …" (metadata header only — not in-question grade mentions)
   t = t.replace(

@@ -161,7 +161,7 @@ export default function GeometryCurriculum() {
               <div className="bg-emerald-500/20 border-r-4 border-emerald-500 p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-3 text-center">סיכום כללי</h3>
                 <p className="text-center mb-3">
-                  במערכת מוצגים <strong>{topicCountLabel} נושאי גאומטריה</strong> (בנוסף למצב ערבוב היכן שקיים), ב־
+                  במערכת מוצגים <strong>{topicCountLabel} נושאי גאומטריה</strong> (בנוסף למצב ערבוב היכן שקיים), ב 
                   <strong> שש כיתות</strong> ובשלוש רמות קושי — בהתאם להגדרות הקוד והתצורה בעמוד התרגול.
                 </p>
                 <p className="text-center text-sm text-white/80">

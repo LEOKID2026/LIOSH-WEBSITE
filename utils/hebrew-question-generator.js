@@ -40,7 +40,7 @@ import {
   G3_READING_HARD,
 } from '../data/hebrew-g3-reading-bank.js';
 
-/** Layer 3: typing רק לפריטים עם preferredAnswerMode + תת־נושא מאושר (א׳–ב׳). */
+/** Layer 3: typing רק לפריטים עם preferredAnswerMode + תת נושא מאושר (א׳–ב׳). */
 const G12_ALLOWED_TYPING_SUBTOPICS = new Set([
   "g1.spell_word_choice",
   "g1.copy_word",
@@ -3162,7 +3162,7 @@ const G3_MEDIUM_QUESTIONS = {
     { question: "מה נטיית הפועל 'קורא' בגוף ראשון יחיד?", answers: ["אני קורא", "אתה קורא", "הוא קורא", "אנחנו קוראים"], correct: 0 },
     {
       question: "כיתה ג׳ — שאלה 1 מתוך חיזוק: איזה משפט מתאר נכון שורש, ביניין וגזרה של הפועל 'הִתְכַּנְּסוּ'?",
-      answers: ["שורש כ־נ־ס בבניין התפעל", "שורש כ־נ־ס בבניין קל", "אין שורש משותף", "רק ניקוד בלי משמעות"],
+      answers: ["שורש כנ ס בבניין התפעל", "שורש כנ ס בבניין קל", "אין שורש משותף", "רק ניקוד בלי משמעות"],
       correct: 0,
       subtopicId: "g3.binyan_light",
       patternFamily: "phase717_p0_binyan",
@@ -3170,7 +3170,7 @@ const G3_MEDIUM_QUESTIONS = {
     },
     {
       question: "כיתה ג׳ — שאלה 2 מתוך חיזוק: מה משותף ל'כָּתַב' ו'יִכְתֹּב' מבחינת שורש וביניין?",
-      answers: ["שורש כ־ת־ב ובניינים שונים (עבר/עתיד)", "אין שורש משותף", "רק אות ראשונה", "רק ארוך המילה"],
+      answers: ["שורש כת ב ובניינים שונים (עבר/עתיד)", "אין שורש משותף", "רק אות ראשונה", "רק ארוך המילה"],
       correct: 0,
       subtopicId: "g3.binyan_light",
       patternFamily: "phase717_p0_binyan",
@@ -3178,7 +3178,7 @@ const G3_MEDIUM_QUESTIONS = {
     },
     {
       question: "כיתה ג׳ — שאלה 3 מתוך חיזוק: באיזה משפט מופיעים שורש וגזרה בצורה ברורה?",
-      answers: ["'הִתְפַּלְּלוּ' מראה שורש פ־ל־ל בבניין התפעל", "'שולחן' הוא פועל בבניין התפעל", "'ספר' הוא רק שם תואר", "'אני' הוא שורש"],
+      answers: ["'הִתְפַּלְּלוּ' מראה שורש פ לל בבניין התפעל", "'שולחן' הוא פועל בבניין התפעל", "'ספר' הוא רק שם תואר", "'אני' הוא שורש"],
       correct: 0,
       subtopicId: "g3.binyan_light",
       patternFamily: "phase717_p0_binyan",
@@ -3406,13 +3406,13 @@ const G4_EASY_QUESTIONS = {
     { question: "מה נטיית הפועל 'כותב' בגוף ראשון רבים?", answers: ["אנחנו כותבים", "אני כותב", "אתה כותב", "הוא כותב"], correct: 0 },
     {
       question: "במילה 'הִתְכּוֹנְנוּ' — מה הבניין והשורש לפי מה שלמדנו?",
-      answers: ["התפעל + כ־ו־נ", "פיעל + כתב", "קל + רוץ", "נפעל + אכל"],
+      answers: ["התפעל + כונ", "פיעל + כתב", "קל + רוץ", "נפעל + אכל"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
     },
     {
       question: "במילה 'כותבים' — מה השורש והבניין הנפוצים בדומה ל'לכתוב'?",
-      answers: ["שורש כ־ת־ב ובניין פעל (צורת רבים)", "שורש ר־ו־ץ בלבד", "אין שורש", "בניין התפעל תמיד"],
+      answers: ["שורש כת ב ובניין פעל (צורת רבים)", "שורש ר וץ בלבד", "אין שורש", "בניין התפעל תמיד"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
       patternFamily: "g4_root_ktb_plural",
@@ -3539,7 +3539,7 @@ const G4_MEDIUM_QUESTIONS = {
     { question: "מה חלקי דיבר?", answers: ["שם עצם, פועל, תואר, מילות קישור", "רק שם עצם", "רק פועל", "ללא כלום"], correct: 0 },
     {
       question: "במילים 'הִסְתַּכְּלוּ' ו'מִסְתַּכֵּל' — מה משותף לפי שורש ודפוס?",
-      answers: ["שורש ס־כ־ל ובניינים שונים של אותו שורש", "אין שורש משותף", "רק אות ראשונה", "רק ארוך המילה"],
+      answers: ["שורש ס כל ובניינים שונים של אותו שורש", "אין שורש משותף", "רק אות ראשונה", "רק ארוך המילה"],
       correct: 0,
       subtopicId: "g4.root_pattern_intro",
     },
@@ -3635,7 +3635,7 @@ const G4_HARD_QUESTIONS = {
     { question: "מה חשיבה ביקורתית?", answers: ["חשיבה ביקורתית על הטקסט והמסר", "רק הסכמה", "רק סירוב", "ללא חשיבה"], correct: 0 },
     {
       question: "בטקסט ארוך על מחזור המים — מה כדאי לכלול במשפט פתיחה של סיכום?",
-      answers: ["הנושא המרכזי: מחזור המים בטבע", "רק שם המחבר", "רשימת כל המילים באל״ף־בי״ת", "ציטוט מלא בלי הבנה"],
+      answers: ["הנושא המרכזי: מחזור המים בטבע", "רק שם המחבר", "רשימת כל המילים באל״ף בי״ת", "ציטוט מלא בלי הבנה"],
       correct: 0,
       subtopicId: "g4.summary_intro",
     },
@@ -3814,7 +3814,7 @@ const G5_EASY_QUESTIONS = {
     { question: "איך מציגים מצגת?", answers: ["הצגה ברורה ומסודרת", "רק שתיקה", "רק צחוק", "ללא הצגה"], correct: 0 },
     { question: "איך טוענים טיעון?", answers: ["הצגת טיעון עם נימוקים", "רק הסכמה", "רק סירוב", "ללא טיעון"], correct: 0 },
     {
-      question: "בחרו פתיחה מתאימה לנאום קצר: '_____ אני חושב שיש לצמצם שימוש בבקבוקי פלסטיק אחד־פעמי.'",
+      question: "בחרו פתיחה מתאימה לנאום קצר: '_____ אני חושב שיש לצמצם שימוש בבקבוקי פלסטיק אחד פעמי.'",
       answers: ["לדעתי", "אולי מחר", "בלי קשר", "סתם"],
       correct: 0,
       subtopicId: "g5.argument_scaffold_choice",
@@ -4444,7 +4444,7 @@ const G6_HARD_QUESTIONS = {
       subtopicId: "g6.discipline_words_light",
     },
     {
-      question: "מה המשמעות של 'שכיחות' (prevalence) בטקסט רפואי־מדעי פשוט?",
+      question: "מה המשמעות של 'שכיחות' (prevalence) בטקסט רפואי מדעי פשוט?",
       answers: ["כמה נפוץ מצב בתוך קבוצה מוגדרת", "תמיד אומר שמישהו חולה", "מילה נרדפת ל'טעם'", "אין משמעות"],
       correct: 0,
       subtopicId: "g6.academic_vocab",
@@ -4790,7 +4790,7 @@ function mergeTopicPools(gradeKey, levelKey, topic, legacyList) {
   return merged;
 }
 
-/** מאגרי עברית חיים ב־UI — לא `data/hebrew-questions/*` (אין ייבוא בריפו). */
+/** מאגרי עברית חיים ב UI — לא `data/hebrew-questions/*` (אין ייבוא בריפו). */
 const HEBREW_LIVE_SOURCE_FILE_LEGACY = "utils/hebrew-question-generator.js";
 const HEBREW_LIVE_SOURCE_FILE_RICH = "utils/hebrew-rich-question-bank.js";
 
@@ -4805,7 +4805,7 @@ function attachSubtopicParamsForGrade(gradeKey, topicKey, rawPick) {
 }
 
 /**
- * מעקב מקור לשאלה חיה (ל־params / דיבוג). מאגר `data/hebrew-questions/*.js` לא נטען ב־generateQuestion.
+ * מעקב מקור לשאלה חיה (אל params / דיבוג). מאגר `data/hebrew-questions/*.js` לא נטען ב generateQuestion.
  * @param {Record<string, unknown>} rawPick
  * @param {Record<string, unknown>} randomQ
  */

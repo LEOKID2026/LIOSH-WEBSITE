@@ -1,6 +1,6 @@
 /**
- * מטא־דאטה מסווגת לשאלות legacy בעברית (ללא שינוי תוכן הבנק).
- * משמש ב־finalizeHebrewMcq ובסקריפט audit.
+ * מטא דאטה מסווגת לשאלות legacy בעברית (ללא שינוי תוכן הבנק).
+ * משמש ב finalizeHebrewMcq ובסקריפט audit.
  */
 
 /**
@@ -75,7 +75,7 @@ const PEDAGOGICAL_LEAD_IN_RES = [
   /^\s*זיהוי\s+התאמת\s+גוף\s*:\s*/i,
 ];
 
-/** מסיר שורת־כותרת פדגוגית לפני גוף השאלה (למשל "זיהוי כתיב:") — חוזר על עצמו עד יציבות */
+/** מסיר שורת כותרת פדגוגית לפני גוף השאלה (למשל "זיהוי כתיב:") — חוזר על עצמו עד יציבות */
 export function stripHebrewQuestionPedagogicalLeadIn(s) {
   let t = String(s ?? "").trim();
   let prev;

@@ -1,8 +1,8 @@
 ﻿/**
- * ⚠️ ARCHIVE / PARALLEL — לא מקור חי ל־Hebrew Master.
+ * ⚠️ ARCHIVE / PARALLEL — לא מקור חי אל Hebrew Master.
  *
- * לא מחובר ל־`pages/learning/hebrew-master.js` ולא ל־`utils/hebrew-question-generator.js`.
- * מאגר ה־MCQ החי בלבד: `utils/hebrew-question-generator.js` + `utils/hebrew-rich-question-bank.js`.
+ * לא מחובר אל `pages/learning/hebrew-master.js` ולא אל `utils/hebrew-question-generator.js`.
+ * מאגר ה MCQ החי בלבד: `utils/hebrew-question-generator.js` + `utils/hebrew-rich-question-bank.js`.
  *
  * אל תערכו כאן לצורך תיקוני UI; אל תסיקו מה רץ במסך מתוך קובץ זה בלי חיפוש ייבוא בפועל בריפו.
  */

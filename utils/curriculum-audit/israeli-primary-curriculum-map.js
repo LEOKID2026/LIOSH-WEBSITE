@@ -247,7 +247,7 @@ function geometryGrade(g) {
   const PR = td("geometry.perimeter", "היקף", "core");
   const AR = td("geometry.area", "שטח", "core");
   const VOL = td("geometry.volume", "נפח", "core");
-  const SOL = td("geometry.solids_3d", "גופים תלת־מימדיים", "allowed");
+  const SOL = td("geometry.solids_3d", "גופים תלת מימדיים", "allowed");
   const TR = td("geometry.transformations_symmetry", "טרנספורמציות וסימטריה", "allowed");
   const TRI = td("geometry.triangles", "משולשים", "allowed");
   const QUAD = td("geometry.polygons_quadrilaterals", "מרובעים ומצולעים", "allowed");

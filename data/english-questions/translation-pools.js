@@ -1073,7 +1073,7 @@ export const TRANSLATION_POOLS = {
     },
     {
       "en": "The librarian recommended a bilingual atlas",
-      "he": "הספרנית המליצה על אטלס דו־לשוני",
+      "he": "הספרנית המליצה על אטלס דולשוני",
       "minGrade": 5,
       "maxGrade": 5,
       "patternFamily": "pcb_trans_g5_std_10",

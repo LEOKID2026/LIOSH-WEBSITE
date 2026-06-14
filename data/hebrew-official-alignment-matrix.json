@@ -17,7 +17,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "official_objective = ניסוח עבודה פנימי לפי taxonomy ב־data/hebrew-g1-content-map.js; runtime: שאלות חיות מ־utils/hebrew-question-generator.js + utils/hebrew-rich-question-bank.js; כיתה א׳–ב׳: ברירת מחדל MCQ, ו־typing מבוקר רק בפריטים עם preferredAnswerMode בתתי־נושא מאושר (Layer 3).",
+    "notes": "official_objective = ניסוח עבודה פנימי לפי taxonomy ב data/hebrew-g1-content-map.js; runtime: שאלות חיות מ utils/hebrew-question-generator.js + utils/hebrew-rich-question-bank.js; כיתה א׳–ב׳: ברירת מחדל MCQ, ו typing מבוקר רק בפריטים עם preferredAnswerMode בתתי נושא מאושר (Layer 3).",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -55,7 +55,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "official_objective = ניסוח עבודה פנימי; אין מסמך משרד החינוך מחובר ל־runtime.",
+    "notes": "official_objective = ניסוח עבודה פנימי; אין מסמך משרד החינוך מחובר אל runtime.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -169,7 +169,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "official_objective = ניסוח עבודה פנימי; חלק מהגזעים מפעילים typing ב־g3+ אבל לא בא׳–ב׳.",
+    "notes": "official_objective = ניסוח עבודה פנימי; חלק מהגזעים מפעילים typing ב g3+ אבל לא בא׳–ב׳.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -207,7 +207,7 @@
     "live_source": "both",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "official_objective = ניסוח עבודה פנימי; live_source כולל פריטים מ־HEBREW_RICH_POOL (מסונן לפי grade/level/topic).",
+    "notes": "official_objective = ניסוח עבודה פנימי; live_source כולל פריטים מ HEBREW_RICH_POOL (מסונן לפי grade/level/topic).",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -435,7 +435,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); הוראות קצרות והתאמה לטקסט — כיסוי בקל ובינוני עם תת־נושא מפורש.",
+    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); הוראות קצרות והתאמה לטקסט — כיסוי בקל ובינוני עם תת נושא מפורש.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -474,7 +474,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); כיתה א׳–ב׳: בנוסף לבחירת איות/צורה, יש subset הקלדת מילה בודדת (Layer 3, תת־נושא מאושר) — לא העתקה ארוכה.",
+    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); כיתה א׳–ב׳: בנוסף לבחירת איות/צורה, יש subset הקלדת מילה בודדת (Layer 3, תת נושא מאושר) — לא העתקה ארוכה.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -551,7 +551,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "medium",
-    "notes": "official_objective = ניסוח עבודה פנימי; narrowHebrewG1Pool עלול להחזיר merged מלא כשאין התאמה לתת־נושא שנבחר — סיכון masking ברמת subtopic; בדיקה סימולטיבית: narrowFallbackRate גבוה ב־grammar/rמה medium.",
+    "notes": "official_objective = ניסוח עבודה פנימי; narrowHebrewG1Pool עלול להחזיר merged מלא כשאין התאמה לתת נושא שנבחר — סיכון masking ברמת subtopic; בדיקה סימולטיבית: narrowFallbackRate גבוה ב grammar/rמה medium.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -665,7 +665,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "medium",
-    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב־runtime יש פריטי השלמה הקשרית בקל/בינוני/קשה — בריכה מספקת; עדיין MCQ בלבד בא׳–ב׳.",
+    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב runtime יש פריטי השלמה הקשרית בקל/בינוני/קשה — בריכה מספקת; עדיין MCQ בלבד בא׳–ב׳.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -702,7 +702,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "medium",
-    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב־runtime יש סדר מילים בקל ובינוני ובקשה — בריכה מספקת.",
+    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב runtime יש סדר מילים בקל ובינוני ובקשה — בריכה מספקת.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -739,7 +739,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "medium",
-    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב־runtime יש ׳לא שייך לקבוצה׳ בקל ובינוני ובקשה.",
+    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב runtime יש ׳לא שייך לקבוצה׳ בקל ובינוני ובקשה.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -814,7 +814,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "medium",
-    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב־runtime יש זמן/מחברים בקל ובינוני ובקשה כולל רמת medium מורחבת.",
+    "notes": "יעד מסונכרן לתוכנית העברית (א–ו); ב runtime יש זמן/מחברים בקל ובינוני ובקשה כולל רמת medium מורחבת.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -852,7 +852,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "שם התת־נושא היסטורית מרמז על תמונה; בפועל משימות ״תמונה מילולית״ בטקסט (MCQ) — מסומן במטריצה כחוזה מוצר בא׳–ב׳ ללא אודיו.",
+    "notes": "שם התת נושא היסטורית מרמז על תמונה; בפועל משימות ״תמונה מילולית״ בטקסט (MCQ) — מסומן במטריצה כחוזה מוצר בא׳–ב׳ ללא אודיו.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -890,7 +890,7 @@
     "live_source": "both",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "official_objective = ניסוח עבודה פנימי; אותו subtopic_id קיים גם ב־comprehension — שורה נפרדת שם.",
+    "notes": "official_objective = ניסוח עבודה פנימי; אותו subtopic_id קיים גם ב comprehension — שורה נפרדת שם.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -966,7 +966,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "low",
-    "notes": "official_objective = ניסוח עבודה פנימי לפי taxonomy ב־data/hebrew-g2-content-map.js.",
+    "notes": "official_objective = ניסוח עבודה פנימי לפי taxonomy ב data/hebrew-g2-content-map.js.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -1192,7 +1192,7 @@
     "live_source": "both",
     "coverage_status": "partial",
     "fallback_masking_risk": "medium",
-    "notes": "official_objective = ניסוח עבודה פנימי; נכון ל־2026-04: יש פריטי typing מבוקרים (משפט קצר / מילת מפתח) בנוסף ל־MCQ; עדיין יש צורך באיזון MCQ/typing וצמצום misleading.",
+    "notes": "official_objective = ניסוח עבודה פנימי; נכון אל 2026-04: יש פריטי typing מבוקרים (משפט קצר / מילת מפתח) בנוסף אל MCQ; עדיין יש צורך באיזון MCQ/typing וצמצום misleading.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",
@@ -1267,7 +1267,7 @@
     "live_source": "legacy",
     "coverage_status": "partial",
     "fallback_masking_risk": "medium",
-    "notes": "official_objective = ניסוח עבודה פנימי; נכון ל־2026-04: מאגר writing כולל עשרות פריטי פיסוק; חלקם typing מילולי (שם סימן) + שאר MCQ — סיכון masking ירד אך עדיין יש ערבוב פיסוק/רמות.",
+    "notes": "official_objective = ניסוח עבודה פנימי; נכון אל 2026-04: מאגר writing כולל עשרות פריטי פיסוק; חלקם typing מילולי (שם סימן) + שאר MCQ — סיכון masking ירד אך עדיין יש ערבוב פיסוק/רמות.",
     "official_provenance": {
       "schema_version": 1,
       "mapping_status": "file_bound_excerpt_linked",

@@ -390,8 +390,8 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "options": [
       "להכפיל אורך ברוחב",
       "לחבר את כל הצלעות (כמו היקף)",
-      "להכפיל אורך ב־4",
-      "לחלק אורך ב־2 בלבד"
+      "להכפיל אורך ב 4",
+      "לחלק אורך ב 2 בלבד"
     ],
     "difficulty": "standard",
     "cognitiveLevel": "application",
@@ -429,8 +429,8 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "options": [
       "להכפיל אורך ברוחב",
       "לחבר את כל הצלעות (כמו היקף)",
-      "להכפיל אורך ב־4",
-      "לחלק אורך ב־2 בלבד"
+      "להכפיל אורך ב 4",
+      "לחלק אורך ב 2 בלבד"
     ],
     "difficulty": "standard",
     "cognitiveLevel": "application",
@@ -469,7 +469,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "השטחים יכולים להיות שונים",
       "השטחים תמיד שווים",
       "תמיד למלבן הגבוה יותר יש שטח גדול יותר בלי קשר לרוחב",
-      "ההיקף קובע את השטח בצורה חד־משמעית"
+      "ההיקף קובע את השטח בצורה חד משמעית"
     ],
     "difficulty": "advanced",
     "cognitiveLevel": "analysis",
@@ -491,7 +491,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "inference",
     "conceptTag": "tri_sum_180",
     "distractorFamily": "angle_misconception",
-    "question": "במשולש ידועות שתי זוויות: 50° ו־60°. מה אפשר להסיק על הזווית השלישית בלי לחשב עדיין את המספר?",
+    "question": "במשולש ידועות שתי זוויות: 50° ו 60°. מה אפשר להסיק על הזווית השלישית בלי לחשב עדיין את המספר?",
     "correct": "סכום שלוש הזוויות במשולש הוא 180°",
     "options": [
       "סכום שלוש הזוויות במשולש הוא 180°",
@@ -526,7 +526,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "triangle_angle_sum_error",
       "angle_measure_error"
     ],
-    "question": "במשולש במישור, שתי זוויות פנימיות ידועות (למשל 50° ו־60°). לפני חישוב המספר המדויק — איזה עיקרון גיאומטרי מאפשר להסיק על השלישית?",
+    "question": "במשולש במישור, שתי זוויות פנימיות ידועות (למשל 50° ו 60°). לפני חישוב המספר המדויק — איזה עיקרון גיאומטרי מאפשר להסיק על השלישית?",
     "correct": "סכום שלוש הזוויות במשולש הוא 180°",
     "options": [
       "סכום שלוש הזוויות במשולש הוא 180°",
@@ -595,7 +595,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "concept_confusion"
     ],
     "suggestedQuestionType": "geometry_identify_shape_property",
-    "question": "במדידה מדויקת, זווית ישרת־מעשית קרובה ל:",
+    "question": "במדידה מדויקת, זווית ישרת מעשית קרובה ל:",
     "correct": "90°",
     "options": [
       "90°",
@@ -632,7 +632,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "correct": "שוות בגודל",
     "options": [
       "שוות בגודל",
-      "תמיד משלימות ל־180° זו עם זו",
+      "תמיד משלימות אל 180° זו עם זו",
       "תמיד סכומן 90°",
       "אין קשר קבוע"
     ],
@@ -1455,7 +1455,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
     "subtype": "cube_faces_late",
     "conceptTag": "cube_faces_late",
     "distractorFamily": "solid_confusion",
-    "question": "בגוף תלת־ממדי מסוג קובייה — כמה פאות מרובעות יש בדרך כלל?",
+    "question": "בגוף תלת ממדי מסוג קובייה — כמה פאות מרובעות יש בדרך כלל?",
     "correct": "6",
     "options": [
       "6",
@@ -2074,7 +2074,7 @@ export const GEOMETRY_CONCEPTUAL_ITEMS = [
       "triangle_angle_type_error"
     ],
     "binary": false,
-    "question": "במשולש יכולות להיות שתי זוויות כהות (גדולות מ־90°). נכון או לא נכון?",
+    "question": "במשולש יכולות להיות שתי זוויות כהות (גדולות מ 90°). נכון או לא נכון?",
     "correct": "לא נכון",
     "options": [
       "לא נכון",

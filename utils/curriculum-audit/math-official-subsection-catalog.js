@@ -85,7 +85,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g1_patterns_intro",
-        labelHe: "דפוסים ויחסים טרום־אלגבריים",
+        labelHe: "דפוסים ויחסים טרום אלגבריים",
         strand: strand.patterns,
         subsectionLabelsHe: ["המשך דפוס", "שוויון פשוט"],
         expectedDepth: "intro",
@@ -155,7 +155,7 @@ export function buildSectionsForGrade(grade) {
         sectionKey: "g2_fractions_intro",
         labelHe: "שברים — חצי ורבע כחלק מכלל",
         strand: strand.numbers,
-        subsectionLabelsHe: ["דגם חלק־משלם", "השוואת שברי יחידה"],
+        subsectionLabelsHe: ["דגם חלק משלם", "השוואת שברי יחידה"],
         expectedDepth: "basic",
         sourcePageHint: "שברים בסיסיים",
         mapsToNormalizedKeys: ["math.fractions"],
@@ -253,7 +253,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g3_word_complex",
-        labelHe: "שאלות מילוליות רב־שלביות",
+        labelHe: "שאלות מילוליות רבשלביות",
         strand: strand.numbers,
         subsectionLabelsHe: [],
         expectedDepth: "developing",
@@ -283,7 +283,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g3_divisibility_intro",
-        labelHe: "התחלקות — זוגיות, התחלקות ב־3/5",
+        labelHe: "התחלקות — זוגיות, התחלקות ב 3/5",
         strand: strand.numbers,
         subsectionLabelsHe: [],
         expectedDepth: "developing",
@@ -291,7 +291,7 @@ export function buildSectionsForGrade(grade) {
         mapsToNormalizedKeys: ["math.divisibility_factors"],
         confidence: "low",
         notes:
-          "מיפוי ראשון ל־math.divisibility_factors; מיושר עם שחרור הגנרטור (סימני התחלקות) מכיתה ג׳ — לאמת מול kita3.pdf.",
+          "מיפוי ראשון אל math.divisibility_factors; מיושר עם שחרור הגנרטור (סימני התחלקות) מכיתה ג׳ — לאמת מול kita3.pdf.",
       }),
       sec({
         sectionKey: "g3_patterns_algebra",
@@ -313,7 +313,7 @@ export function buildSectionsForGrade(grade) {
         sectionKey: "g4_operations_fractions_decimals",
         labelHe: "פעולות בשברים ובעשרוניים פשוטים",
         strand: strand.numbers,
-        subsectionLabelsHe: ["חיבור שברים בעלי מכנה משותף", "קשר עשרוני־שבר"],
+        subsectionLabelsHe: ["חיבור שברים בעלי מכנה משותף", "קשר עשרוני שבר"],
         expectedDepth: "developing",
         sourcePageHint: "שברים ועשרוניים",
         mapsToNormalizedKeys: [
@@ -349,7 +349,7 @@ export function buildSectionsForGrade(grade) {
       }),
       sec({
         sectionKey: "g4_word_multistep",
-        labelHe: "שאלות מילוליות רב־שלביות",
+        labelHe: "שאלות מילוליות רבשלביות",
         strand: strand.numbers,
         subsectionLabelsHe: [],
         expectedDepth: "developing",
@@ -597,7 +597,7 @@ export function buildSectionsForGrade(grade) {
  */
 export function missingUncertainAreasForGrade(grade) {
   const common = [
-    "קישור מדויק לעמוד ב־PDF לא נסרק אוטומטית — דורש צלב עם המסמך המודפס.",
+    "קישור מדויק לעמוד ב PDF לא נסרק אוטומטית — דורש צלב עם המסמך המודפס.",
     "עומק מילולי וסדר הוראה משתנה בין מוסדות — לאמת מול המורה המקצועית.",
   ];
   if (grade <= 2)

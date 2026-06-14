@@ -206,7 +206,7 @@ const HEBREW_GRADE_TO_CANON = {
 };
 
 /**
- * מנרמל מפתח כיתה פנימי (g1, gg3, "3" וכו׳) ל־g1…g6.
+ * מנרמל מפתח כיתה פנימי (g1, gg3, "3" וכו׳) אל g1…g6.
  * @returns {string|null}
  */
 export function canonicalParentReportGradeKey(raw) {
@@ -1217,7 +1217,7 @@ function getDisplayNameForEntry(op, data) {
   return getOperationName(keyForLookup);
 }
 
-// יצירת המלצות (משותף לדוח V1 ול־V2)
+// יצירת המלצות (משותף לדוח V1 ואל V2)
 export function generateRecommendations(operations, mistakes) {
   const recommendations = [];
 
@@ -1301,8 +1301,8 @@ export function generateRecommendations(operations, mistakes) {
 
     if (promoteLevelToKey || promoteGradeToKey) {
       const parts = [];
-      if (promoteLevelToKey) parts.push(`לעלות רמה ל־${LEVEL_LABELS[promoteLevelToKey] || promoteLevelToKey}`);
-      if (promoteGradeToKey) parts.push(`לעלות כיתה ל־${GRADE_LABELS[promoteGradeToKey] || promoteGradeToKey}`);
+      if (promoteLevelToKey) parts.push(`לעלות רמה אל ${LEVEL_LABELS[promoteLevelToKey] || promoteLevelToKey}`);
+      if (promoteGradeToKey) parts.push(`לעלות כיתה אל ${GRADE_LABELS[promoteGradeToKey] || promoteGradeToKey}`);
 
       recommendations.push({
         type: "promotion",

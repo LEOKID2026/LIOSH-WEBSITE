@@ -70,7 +70,7 @@ export function estimateRowRootCause(p) {
   }
 
   if (behaviorType === "speed_pressure" || (modeKey === "speed" || modeKey === "marathon") && acc >= 52 && wr < 0.35) {
-    evidence.push("מצב תרגול מהיר/מרתון עם דיוק בינוני־ומעלה");
+    evidence.push("מצב תרגול מהיר/מרתון עם דיוק בינוני ומעלה");
     return finalize("speed_pressure", 0.7, evidence, secondary, acc, wr, q, trendDer, behaviorType);
   }
 

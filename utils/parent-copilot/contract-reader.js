@@ -198,7 +198,7 @@ export function listSyntheticAggregateAnchoredTopicRows(payload) {
     const ts0 = nar0.textSlots && typeof nar0.textSlots === "object" ? nar0.textSlots : {};
     const obs =
       String(ts0.observation || "").trim() ||
-      `ב${subjectLabelHe(sid)} נספרו בטווח כ־${qc} שאלות, עם דיוק של כ־${acc}% — זו התמונה שעולה מנתוני הדוח לתקופה הזו.`;
+      `ב${subjectLabelHe(sid)} נספרו בטווח כ ${qc} שאלות, עם דיוק של כ ${acc}% — זו התמונה שעולה מנתוני הדוח לתקופה הזו.`;
     const interp =
       String(ts0.interpretation || "").trim() ||
       `לפי מה שמופיע בדוח תחת ${subjectLabelHe(sid)}, ניתן לראות את נפח התרגול ואת רמת הדיוק בתקופה שנבחרה (בלי להסיק מוקד חולשה מחוץ למה שמוצג שם).`;
@@ -268,7 +268,7 @@ export function listSyntheticAggregateAnchoredTopicRows(payload) {
           narrative: {
             contractVersion: "v1",
             textSlots: {
-              observation: `בתקופה שנבחרה נענו כ־${tq} שאלות, עם דיוק כולל של כ־${acc}%. זהו סיכום כללי של התרגול שנאסף עד עכשיו.`,
+              observation: `בתקופה שנבחרה נענו כ ${tq} שאלות, עם דיוק כולל של כ ${acc}%. זהו סיכום כללי של התרגול שנאסף עד עכשיו.`,
               interpretation: `בשלב הזה אפשר להתייחס בעיקר להיקף התרגול ולדיוק הכללי, לפני שמסיקים מסקנות מפורטות לפי מקצוע או נושא.`,
               uncertainty: cannotConcludeYet
                 ? "עדיין אין מספיק נתונים כדי להסיק מסקנה חזקה. כדאי לבדוק שוב אחרי עוד תרגול."

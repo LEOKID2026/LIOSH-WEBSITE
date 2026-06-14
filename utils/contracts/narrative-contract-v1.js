@@ -155,9 +155,9 @@ function buildObservationSlot(displayName, q, acc, seed) {
     ]);
   }
   return pickVariant(seed, [
-    `ב${displayName} בתקופה שנבחרה יש ${q} שאלות, עם דיוק של כ־${acc}%.`,
+    `ב${displayName} בתקופה שנבחרה יש ${q} שאלות, עם דיוק של כ ${acc}%.`,
     `ב${displayName} נאספו ${q} שאלות בתקופה, ורמת הדיוק סביב ${acc}%.`,
-    `ב${displayName} נאספו ${q} שאלות בתקופה, עם דיוק ממוצע של כ־${acc}%.`,
+    `ב${displayName} נאספו ${q} שאלות בתקופה, עם דיוק ממוצע של כ ${acc}%.`,
   ]);
 }
 
@@ -188,7 +188,7 @@ function buildInterpretationSlot(envelope, cannotConcludeYet, seed, q = 0, acc =
   if (envelope === "WE2") {
     return pickVariant(seed, [
       "יש כאן כיוון עבודה הגיוני, ונעדיף לראות את זה חוזר עוד פעם לפני שמחמירים בקביעת כיוון.",
-      "הדוח נראה מתקדם לטובה, וכדאי לוודא שזה לא מקרה חד־פעמי.",
+      "הדוח נראה מתקדם לטובה, וכדאי לוודא שזה לא מקרה חד פעמי.",
       "הכיוון חיובי יחסית; נשארים עם חיזוק קצר וברור לפני שקובעים שהנושא יציב.",
     ]);
   }

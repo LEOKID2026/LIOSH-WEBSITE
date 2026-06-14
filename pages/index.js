@@ -71,10 +71,10 @@ export default function HomePage() {
             כיף · בטוח · חינוכי
           </p>
           <h1 className="text-[1.75rem] md:text-4xl lg:text-5xl font-black leading-tight">
-            ברוכים הבאים ל־<span className="text-amber-300">LEO KIDS</span>
+            ברוכים הבאים אל <span className="text-amber-300">LEO KIDS</span>
           </h1>
           <p className="text-sm md:text-base lg:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed md:leading-normal px-1">
-            עולם קטן של מיני־משחקים ופעילויות לימוד לילדים: ריצה, טיסה, חידות
+            עולם קטן של מיני משחקים ופעילויות לימוד לילדים: ריצה, טיסה, חידות
             ותרגול במתמטיקה, גאומטריה ואנגלית — הכול במקום אחד.
           </p>
         </section>

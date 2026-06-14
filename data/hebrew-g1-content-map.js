@@ -1,12 +1,12 @@
 /**
  * Source of truth — כיתה א׳ (g1) בלבד.
- * נושאי UI קיימים (reading, …) עם תתי־נושאים, משקלים, מצבים מותרים ודגלים עתידיים.
- * אין תלות ב־React; מיובא מ־utils/hebrew-question-generator.
+ * נושאי UI קיימים (reading, …) עם תתי נושאים, משקלים, מצבים מותרים ודגלים עתידיים.
+ * אין תלות ב React; מיובא מ utils/hebrew-question-generator.
  */
 
 const ALL_MODES = ["learning", "challenge", "speed", "marathon", "practice"];
 
-/** דגלים ברירת־מחדל לכיתה א׳ (תחרות מלאה + ניקוד תצוגה לפי כללי הדף הקיימים) */
+/** דגלים ברירת מחדל לכיתה א׳ (תחרות מלאה + ניקוד תצוגה לפי כללי הדף הקיימים) */
 const G1_FLAGS_DEFAULT = {
   scoring: "full",
   niqqud: "inherit",

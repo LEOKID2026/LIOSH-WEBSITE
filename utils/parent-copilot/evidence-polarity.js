@@ -50,7 +50,7 @@ export function meaningHeForPolarity(displayName, q, acc) {
   if (tier === POLARITY.strong) {
     return `ב${label} נראית יציבות טובה יחסית (${accuracy}% דיוק על ${questions} שאלות) — כדאי לשמר תרגול שגרתי.`;
   }
-  return `ב${label} יש ${questions} שאלות עם דיוק של כ־${accuracy}% — זה מצב שדורש חיזוק ממוקד, לא סימן ליציבות חזקה.`;
+  return `ב${label} יש ${questions} שאלות עם דיוק של כ ${accuracy}% — זה מצב שדורש חיזוק ממוקד, לא סימן ליציבות חזקה.`;
 }
 
 /**

@@ -290,7 +290,7 @@ function buildClarifyReexplainDraft(input) {
   if (interpretation.length >= 8) {
     obs = `${lead}במילים פשוטות, זה אומר: ${interpretation}`;
   } else if (observation.length >= 8) {
-    obs = `${lead}במילים פשוטות, זה אומר: מה שרואים בדוח הוא ש־${observation.charAt(0).toLowerCase()}${observation.slice(1)}`;
+    obs = `${lead}במילים פשוטות, זה אומר: מה שרואים בדוח הוא ש ${observation.charAt(0).toLowerCase()}${observation.slice(1)}`;
   } else if (uncertainty.length >= 8) {
     obs = `${lead}${uncertainty}`;
   } else {
@@ -549,7 +549,7 @@ export function buildSemanticAggregateDraft(input) {
     } else if (withAvg.length) {
       const sorted = [...withAvg].sort((a, b) => (b.avg || 0) - (a.avg || 0) || b.totalQ - a.totalQ);
       const top = sorted.slice(0, 2);
-      obs = `הכי גבוהים כרגע בממוצע דירוג הדיוק הכללי בדוח: ${top.map((r) => `${r.label} (כ־${r.avg}%)`).join(" · ")}.`;
+      obs = `הכי גבוהים כרגע בממוצע דירוג הדיוק הכללי בדוח: ${top.map((r) => `${r.label} (כ ${r.avg}%)`).join(" · ")}.`;
       meaning = "הדירוג מבוסס על ממוצעים על פני נושאים עם תרגול בכל מקצוע, לא על ניסוח נושא בודד.";
       aggregateContinuity = { questionClass: qc, subjectId: top[0]?.sid || "", role: "period_numeric" };
     } else {
@@ -568,12 +568,12 @@ export function buildSemanticAggregateDraft(input) {
         obs = `${lead} יש אזכור לשני מקצועות בשאלה, אבל בדוח חסרים מספיק נתוני תרגול מספריים לשניהם כדי להשוות בצורה יציבה.`;
         meaning = "כשמופיעים שאלות ודיוק לשני המקצועות, אפשר לשאול שוב ולקבל השוואה ישירה לפי הממוצעים בדוח.";
       } else if (a.avg === b.avg) {
-        obs = `${lead} לפי הממוצעים בדוח, ${a.label} ו־${b.label} נמצאים כרגע על אותו קו מבחינת דיוק כללי (כ־${a.avg}%).`;
+        obs = `${lead} לפי הממוצעים בדוח, ${a.label} ו ${b.label} נמצאים כרגע על אותו קו מבחינת דיוק כללי (כ ${a.avg}%).`;
         meaning = "כדי להבדיל בין הכיוונים כדאי להסתכל גם על כמות השאלות בכל מקצוע ובניסוח הנושאים עצמם בדוח.";
       } else {
         const hi = a.avg > b.avg ? a : b;
         const lo = a.avg > b.avg ? b : a;
-        obs = `${hi.label} גבוה יותר כרגע מ־${lo.label} — לפי ממוצע הדיוק הכללי בדוח (בערך ${hi.avg}% לעומת ${lo.avg}%).`;
+        obs = `${hi.label} גבוה יותר כרגע מ ${lo.label} — לפי ממוצע הדיוק הכללי בדוח (בערך ${hi.avg}% לעומת ${lo.avg}%).`;
         meaning = "ההשוואה מבוססת על ממוצעים על פני הנושאים שיש להם תרגול בדוח, לא על ניסוח של נושא בודד.";
         aggregateContinuity = { questionClass: qc, subjectId: hi.sid, role: "comparison_hi" };
       }
@@ -614,7 +614,7 @@ export function buildSemanticAggregateDraft(input) {
       const uImp = norm(utterance).toLowerCase();
       const mathRow = roll.find((r) => r.sid === "math");
       if (/מתמטיקה|חשבון/.test(uImp) && mathRow && mathRow.avg != null && mathRow.totalQ > 0) {
-        obs = `${lead}בחשבון נספרו בטווח כ־${mathRow.totalQ} שאלות, עם דיוק ממוצע של כ־${mathRow.avg}% לפי הדוח.`;
+        obs = `${lead}בחשבון נספרו בטווח כ ${mathRow.totalQ} שאלות, עם דיוק ממוצע של כ ${mathRow.avg}% לפי הדוח.`;
         meaning =
           "מגמת שיפור מפורשת לא תמיד מופיעה כשורה נפרדת בדוח — עדיין אפשר לעגן לנפח ולדיוק במקצוע מתוך הנתונים שמוצגים.";
       } else {
@@ -636,7 +636,7 @@ export function buildSemanticAggregateDraft(input) {
       meaning =
         atRisk.avg == null
           ? "הסיבה המרכזית היא שיש מעט מדי נתונים במקצוע הזה בתקופה הנוכחית."
-          : `הדירוג מבוסס על שילוב של דיוק ממוצע (כ־${atRisk.avg}%) יחד עם סימני חוסר יציבות בדוח.`;
+          : `הדירוג מבוסס על שילוב של דיוק ממוצע (כ ${atRisk.avg}%) יחד עם סימני חוסר יציבות בדוח.`;
       aggregateContinuity = { questionClass: qc, subjectId: atRisk.sid, role: "needs_attention" };
     }
   } else if (qc === "still_unclear") {
@@ -670,7 +670,7 @@ export function buildSemanticAggregateDraft(input) {
       const pct =
         only.avg == null
           ? "עדיין בלי ממוצע דיוק יציב שאפשר לסמוך עליו בביטחון"
-          : `עם דיוק ממוצע של כ־${only.avg}%`;
+          : `עם דיוק ממוצע של כ ${only.avg}%`;
       obs = `יש כרגע בעיקר מקצוע אחד עם מספיק תרגול מספרי בדוח — ${only.label}, ${pct}.`;
       if (qc === "strongest_subject") {
         meaning =

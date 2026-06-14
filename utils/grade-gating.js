@@ -392,7 +392,7 @@ export function itemAllowedForGradeAndLevel(item, gradeKey, levelKey) {
 export function englishVocabListKeysForGrade(gradeKey, wordListsObject) {
   const n = parseGradeKey(gradeKey);
   if (n == null) return ["colors"];
-  // Dynamic import avoided — נשען על מפת ברירת־מחדל תואמת data/english-curriculum.js
+  // Dynamic import avoided — נשען על מפת ברירת מחדל תואמת data/english-curriculum.js
   const byGrade = {
     g1: ["colors", "numbers", "family", "animals", "emotions", "actions", "school"],
     g2: [

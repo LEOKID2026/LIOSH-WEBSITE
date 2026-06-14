@@ -1,6 +1,6 @@
 /**
- * אותות דיאגנוסטיים לשורת דוח V2 — מקור אחד ל־parent-report-v2 ול־topic-next-step-engine.
- * ללא תלות ב־parent-report-v2 (מניעת מעגל ייבוא).
+ * אותות דיאגנוסטיים לשורת דוח V2 — מקור אחד אל parent-report-v2 ואל topic-next-step-engine.
+ * ללא תלות ב parent-report-v2 (מניעת מעגל ייבוא).
  */
 
 import { mathReportBaseOperationKey, canonicalParentReportGradeKey } from "./math-report-generator.js";
@@ -39,7 +39,7 @@ export function splitTopicRowKey(itemKey) {
   return { bucketKey: raw, modeKey: null, gradeScope: null, levelScope: null };
 }
 
-/** מפרק מפתח שורה — bucket + mode (תאימות); למתמטיקה מלאה השתמשו ב־splitTopicRowKey */
+/** מפרק מפתח שורה — bucket + mode (תאימות); למתמטיקה מלאה השתמשו ב splitTopicRowKey */
 export function splitBucketModeRowKey(itemKey) {
   const s = splitTopicRowKey(itemKey);
   return { bucketKey: s.bucketKey, modeKey: s.modeKey };
@@ -97,7 +97,7 @@ export function mistakeMathScopeComplete(ev) {
 /**
  * מפתח אגרגציה לטעויות מתמטיקה (תואם מפתח שורת דוח scoped).
  * @param {Record<string, unknown>|null|undefined} ev
- * @returns {string|null} null אם חסרים נתוני scope — הקורא יפנה ל־UNSCOPED
+ * @returns {string|null} null אם חסרים נתוני scope — הקורא יפנה אל UNSCOPED
  */
 export function buildMathScopedMistakeAggregationKey(ev) {
   if (!ev || typeof ev !== "object") return null;
@@ -136,7 +136,7 @@ export function aggregateMistakeCountsByCanonicalKey(subjectId, mistakesByBucket
 }
 
 /**
- * ספירת אירועי טעות לשורה — תואם ל־resolveMistakeEventCount ב־topic-next-step-engine.
+ * ספירת אירועי טעות לשורה — תואם אל resolveMistakeEventCount ב topic-next-step-engine.
  */
 export function rowMistakeEventCount(subjectId, mistakesByBucket, bucketKey, topicRowKey, row) {
   const byCanon = aggregateMistakeCountsByCanonicalKey(subjectId, mistakesByBucket);
@@ -220,7 +220,7 @@ export function computeConfidence01(row, mistakeEventCount, cfg) {
   return Math.round(Math.max(0, Math.min(1, base * noise)) * 100) / 100;
 }
 
-/** 0–100 לפי מרחק בזמן מסוף תקופת הדוח (לא מ־"עכשיו") */
+/** 0–100 לפי מרחק בזמן מסוף תקופת הדוח (לא מ "עכשיו") */
 export function computeRecencyScore(lastSessionMs, periodEndMs) {
   if (!Number.isFinite(periodEndMs)) return 55;
   if (!Number.isFinite(lastSessionMs)) return 55;
@@ -284,7 +284,7 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
       labelHe:
         evidenceStrength === "strong"
           ? "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
-          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת מיומנות בלבד.",
       suppressAggressiveStep: false,
     };
   }
@@ -294,7 +294,7 @@ export function evaluateDataSufficiency(q, evidenceStrength, confidence01) {
       labelHe:
         evidenceStrength === "strong"
           ? "יש מספיק שאלות — אפשר לסמוך יותר על מה שרואים בנושא הזה."
-          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת־מיומנות בלבד.",
+          : "יש מספיק שאלות לנושא הזה — שינויים זהירים בתת מיומנות בלבד.",
       suppressAggressiveStep: false,
     };
   }
@@ -424,7 +424,7 @@ export function computeRowDiagnosticSignals(subjectId, topicRowKey, row, mistake
   if (isStablePattern) {
     patternStabilityHe = "זה חוזר בכמה תרגולים — התמונה משקפת מגמה ולא רק מפגש בודד.";
   } else if (sufficiency.level === "medium") {
-    patternStabilityHe = "יש כיוון חלקי — כדאי לאסוף עוד תרגול לפני שאומרים משהו חד־משמעי.";
+    patternStabilityHe = "יש כיוון חלקי — כדאי לאסוף עוד תרגול לפני שאומרים משהו חד משמעי.";
   }
 
   const decisionTrace = buildDiagnosticsDecisionTrace({

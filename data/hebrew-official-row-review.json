@@ -1,6 +1,6 @@
 {
   "review_ledger_version": 1,
-  "description_he": "יומן אישור שורה־שורה: רק שורות approved מקבלות binding סופי במטריצה. הצעות heuristic מגיעות מ־proposed_* — חובה סקירה ידנית לפני perfect close.",
+  "description_he": "יומן אישור שורהשורה: רק שורות approved מקבלות binding סופי במטריצה. הצעות heuristic מגיעות מ proposed_* — חובה סקירה ידנית לפני perfect close.",
   "rows": [
     {
       "grade": "g1",

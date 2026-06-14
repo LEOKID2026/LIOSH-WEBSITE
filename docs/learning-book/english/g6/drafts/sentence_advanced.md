@@ -23,7 +23,7 @@
 
 ## 1. מה לומדים?
 
-היום נבנה משפטים מורכבים של 8–10 מילים עם While ו־Past Continuous.
+היום נבנה משפטים מורכבים של 8–10 מילים עם While ו Past Continuous.
 While I was studying, my sister was listening to music — בזמן שלמדתי, אחותי האזינה למוזיקה.
 
 ---

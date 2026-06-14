@@ -118,7 +118,7 @@ function UnitBlock({ unit, idx }) {
         </FieldRow>
         <FieldRow label="מדדים">
           <span className="font-mono text-[11px]">
-            Δאי־ודאות≈{Number(p.uncertaintyReductionEstimate || 0).toFixed(3)} · עצירה=
+            Δאי ודאות≈{Number(p.uncertaintyReductionEstimate || 0).toFixed(3)} · עצירה=
             {String(p.stoppingRuleMet)} · הסלמה={String(p.escalationRuleTriggered)}
           </span>
         </FieldRow>

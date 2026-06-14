@@ -17,7 +17,7 @@ export const TOPIC_EVIDENCE_THRESHOLDS = Object.freeze({
 });
 
 export const SUBSKILL_DETAIL_LIMITATION_HE =
-  "יש מספיק מידע על מצב הנושא, אבל אין מספיק פירוט כדי לזהות את תת־המיומנות המדויקת.";
+  "יש מספיק מידע על מצב הנושא, אבל אין מספיק פירוט כדי לזהות את תת המיומנות המדויקת.";
 
 /**
  * @param {number} questionCount

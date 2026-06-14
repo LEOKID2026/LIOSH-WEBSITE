@@ -21,7 +21,7 @@ export function buildCompetingHypotheses(taxonomyRow, behaviorDominant) {
   } else if (b === "careless_pattern") {
     out.push({
       hypothesisId: "careless_vs_misunderstanding",
-      labelHe: "רשלנות מול אי־הבנה",
+      labelHe: "רשלנות מול אי הבנה",
       role: "behavior",
     });
   } else if (b === "instruction_friction") {

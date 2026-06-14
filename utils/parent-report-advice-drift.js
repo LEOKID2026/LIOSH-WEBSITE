@@ -9,7 +9,7 @@ import {
 } from "./parent-report-ui-explain-he.js";
 
 /**
- * @param {object} ctx — פלט מ־buildSupportSequencingPhase11 + שדות התערבות
+ * @param {object} ctx — פלט מ buildSupportSequencingPhase11 + שדות התערבות
  */
 export function buildAdviceDriftPhase11(ctx) {
   const rp = String(ctx?.priorSupportPattern || "unknown");

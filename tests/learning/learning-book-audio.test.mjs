@@ -246,8 +246,8 @@ describe("convertMathExpressionsForTts", () => {
     assert.equal(convertMathExpressionsForTts("7 - 4 = 3"), "שבע פחות ארבע שווה שלוש");
     assert.equal(convertMathExpressionsForTts("10"), "עשר");
     assert.equal(cardinalHebrewForTts(0), "אפס");
-    assert.match(convertMathExpressionsForTts("12 < 18"), /קטן מ־/);
-    assert.match(convertMathExpressionsForTts("6 > 4"), /גדול מ־/);
+    assert.match(convertMathExpressionsForTts("12 < 18"), /קטן מ /);
+    assert.match(convertMathExpressionsForTts("6 > 4"), /גדול מ /);
     assert.match(convertMathExpressionsForTts("6 + __ = 10"), /מקום ריק/);
   });
 

@@ -1,6 +1,6 @@
 {
   "queue_version": 2,
-  "description": "תור סגירה g1/g2 — סגור; כל הפריטים הועברו ל־completed_in_this_pass אחרי סנכרון מטריצה ובנק (2026-04).",
+  "description": "תור סגירה g1/g2 — סגור; כל הפריטים הועברו אל completed_in_this_pass אחרי סנכרון מטריצה ובנק (2026-04).",
   "priority_1": [],
   "priority_2": [],
   "completed_in_this_pass": [
@@ -10,7 +10,7 @@
     },
     {
       "mapped_subtopic_id": "g2.punctuation_choice",
-      "note": "מאגר עשיר; עדכון סטטוס מטריצה מ־weak"
+      "note": "מאגר עשיר; עדכון סטטוס מטריצה מ weak"
     },
     {
       "mapped_subtopic_id": "g2.sentence_wellformed",
@@ -34,7 +34,7 @@
     },
     {
       "mapped_subtopic_id": "g2.situation_register",
-      "note": "תיוג subtopicId + authenticity_pattern ב־speaking קל"
+      "note": "תיוג subtopicId + authenticity_pattern ב speaking קל"
     },
     {
       "mapped_subtopic_id": "g1.grammar_cloze_deixis",
@@ -78,7 +78,7 @@
     },
     {
       "mapped_subtopic_id": "ministry_primary_hebrew_1_6",
-      "note": "קישור ל־hebrew-1-6.pdf (meyda) לכל שורות המטריצה"
+      "note": "קישור אל hebrew-1-6.pdf (meyda) לכל שורות המטריצה"
     }
   ]
 }

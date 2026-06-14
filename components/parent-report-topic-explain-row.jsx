@@ -45,7 +45,7 @@ export function PrMiniBadge({ children, tone = "neutral" }) {
 }
 
 /**
- * הסבר שורת נושא מתחת לגרף — שורה ראשית קומפקטית; פרטים ב־details.
+ * הסבר שורת נושא מתחת לגרף — שורה ראשית קומפקטית; פרטים ב details.
  * @param {{ row: Record<string, unknown> }} props
  */
 export function ParentReportTopicExplainRow({ row }) {

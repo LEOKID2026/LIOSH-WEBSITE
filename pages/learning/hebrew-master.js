@@ -257,7 +257,7 @@ export default function HebrewMaster() {
   const scoresStoreRef = useRef({});
   const progressLoadedRef = useRef(false);
   const progressStringRef = useRef("");
-  /** עדכני ל־handleAnswer (משוב שגוי) כדי להציג תשובה נכונה מנוקדת כשה־map כבר הגיע */
+  /** עדכני אל handleAnswer (משוב שגוי) כדי להציג תשובה נכונה מנוקדת כשה map כבר הגיע */
   const niqqudByIdRef = useRef({});
   const audioBuild1CounterRef = useRef(0);
   const currentQuestionRef = useRef(null);
@@ -1238,7 +1238,7 @@ export default function HebrewMaster() {
     return () => clearTimeout(timer);
   }, [gameActive, mode, timeLeft]);
 
-  // שמירת ריצה נוכחית ל־localStorage + עדכון Best & Leaderboard
+  // שמירת ריצה נוכחית אל localStorage + עדכון Best & Leaderboard
   function saveRunToStorage() {
     if (typeof window === "undefined" || !playerName.trim()) return;
 
@@ -2094,7 +2094,7 @@ export default function HebrewMaster() {
     closeOpenQuestionLedger(true);
   }
 
-  /** הקלטה ידנית־ראשונה — ללא ציון אוטומטי; רק ספירת שאלה + מעבר הלאה */
+  /** הקלטה ידנית ראשונה — ללא ציון אוטומטי; רק ספירת שאלה + מעבר הלאה */
   function finishAudioRecordedManualNeutral() {
     if (!gameActive) return;
     const cq = currentQuestionRef.current;
@@ -2300,7 +2300,7 @@ export default function HebrewMaster() {
 
     if (isCorrect) {
       const hebrewCompetitiveScoring = isHebrewFullCompetitiveScoringGrade(grade);
-      // חישוב נקודות לפי מצב (כיתות ג׳+ — לא מצטברות ל־score)
+      // חישוב נקודות לפי מצב (כיתות ג׳+ — לא מצטברות אל score)
       let points = 10 + streak;
       if (mode === "speed") {
         const timeBonus = timeLeft ? Math.floor(timeLeft * 2) : 0;
@@ -4640,7 +4640,7 @@ export default function HebrewMaster() {
                   <li>בחר כיתה, רמת קושי ונושא (אוצר מילים, דקדוק, כתיבה, הבנת הנקרא ועוד).</li>
                   <li>בחר מצב משחק: למידה, אתגר עם טיימר וחיים, מהירות או מרתון.</li>
                   <li>קרא היטב את השאלה – לפעמים יש שאלות מורכבות שצריך להבין את ההקשר.</li>
-                  <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו־Badges עוזרים לך לעלות רמה כשחקן.</li>
+                  <li>ניקוד גבוה, רצף תשובות נכון, כוכבים ו Badges עוזרים לך לעלות רמה כשחקן.</li>
                 </ul>
 
                 <div className="mt-4 flex justify-center">

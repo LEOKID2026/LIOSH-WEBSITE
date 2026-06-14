@@ -1,6 +1,6 @@
 /**
  * מגמות ברמת שורת דוח — השוואות מבוססות נתונים בין חלונות זמן (ללא UI).
- * לא תלוי ב־window; ניתן לבדיקות יחידה.
+ * לא תלוי ב window; ניתן לבדיקות יחידה.
  */
 
 import {
@@ -375,7 +375,7 @@ export function computeRowTrend({
 }
 
 /**
- * מוסיף לכל שורה אובייקט trend לפי אחסון גולמי (אותו מפתח דלי כמו ב־V2).
+ * מוסיף לכל שורה אובייקט trend לפי אחסון גולמי (אותו מפתח דלי כמו ב V2).
  * @param {Record<string, Record<string, unknown>>} maps
  * @param {Record<string, unknown>} trackingSnapshots bucket פר מקצוע (operations/topics)
  * @param {Record<string, unknown[]>} rawMistakesBySubject

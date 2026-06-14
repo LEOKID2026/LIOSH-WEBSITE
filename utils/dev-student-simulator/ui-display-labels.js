@@ -46,7 +46,7 @@ export const TOPIC_DISPLAY_HE = Object.freeze({
   ratio: "יחס",
   equations: "משוואות",
   order_of_operations: "סדר פעולות חשבון",
-  zero_one_properties: "תכונות 0 ו־1",
+  zero_one_properties: "תכונות 0 ו 1",
   estimation: "אומדן",
   scale: "קנה מידה",
   compare: "השוואת מספרים",

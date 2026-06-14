@@ -335,7 +335,7 @@ const CROSS_RISK_LABEL_HE = {
   knowledge_gap: "קושי בבסיס או בחומר שלא הוסדר מספיק",
   speed_pressure: "לחץ מהירות במשימות",
   instruction_friction: "המשימה עמוסה או שהילד נשען הרבה על רמזים",
-  careless_pattern: "רשלנות קטנה או אי־יציבות בתשובות",
+  careless_pattern: "רשלנות קטנה או אי יציבות בתשובות",
   fragile_success: "הצלחה שבירה (דיוק גבוה עם סיכון)",
   mixed: "כמה סוגי קשיים במקביל",
   mixed_low_signal: "מעט נתונים — התמונה עדיין לא ברורה",
@@ -457,7 +457,7 @@ function buildMajorTrendsHe(subjects, subjectCoverage) {
     if (out.length >= 2) break;
   }
   if (!out.length) {
-    out.push("עדיין אין שתי מגמות חוצות־מקצועות ברורות — התמונה תתבהר אחרי עוד תרגול בתקופה שנבחרה.");
+    out.push("עדיין אין שתי מגמות חוצות מקצועות ברורות — התמונה תתבהר אחרי עוד תרגול בתקופה שנבחרה.");
   }
   if (out.length === 1) {
     out.push("מגמה שנייה תתבהר אחרי עוד תרגול במקצועות עם מעט שאלות.");
@@ -557,7 +557,7 @@ function buildEvidenceBalanceHe(subjects) {
     weak += Array.isArray(s.topWeaknesses) ? s.topWeaknesses.length : 0;
   }
   return shortenHe(
-    `איזון הכוונה: כ־${stab} נתונים עם שליטה טובה ויציבה מול ${frag} שבירות; ${str} כיווני חוזק מובחרים מול ${weak} מוקדי חולשה מובחרים.`,
+    `איזון הכוונה: כ ${stab} נתונים עם שליטה טובה ויציבה מול ${frag} שבירות; ${str} כיווני חוזק מובחרים מול ${weak} מוקדי חולשה מובחרים.`,
     220
   );
 }
@@ -1609,7 +1609,7 @@ function buildOverallSnapshot(baseReport, subjectCoverage) {
     notableSubjectsHe.push("אין עדיין מקצוע בולט לפי כמות השאלות והדיוק — המשך תרגול יעשה את ההבדל.");
   }
   return {
-    /** סה״כ זמן למידה בדקות (כמו ב־V2 summary.totalTimeMinutes) */
+    /** סה״כ זמן למידה בדקות (כמו ב V2 summary.totalTimeMinutes) */
     totalTime: Number(sum.totalTimeMinutes) || 0,
     totalQuestions: Number(sum.totalQuestions) || 0,
     overallAccuracy: Number(sum.overallAccuracy) || 0,
@@ -1740,7 +1740,7 @@ function buildSubjectProfiles(baseReport) {
       parentActionHe: s.parentActionHe ?? null,
       nextWeekGoalHe: s.nextWeekGoalHe ?? null,
       evidenceExamples: Array.isArray(s.evidenceExamples) ? s.evidenceExamples : [],
-      /** כשתהיה השוואת תקופות אמיתית — ימולא; לא שולחים placeholder ל־UI */
+      /** כשתהיה השוואת תקופות אמיתית — ימולא; לא שולחים placeholder אל UI */
       trendVsPreviousPeriod: null,
       /** המלצות צעד הבא ברמת נושא — מנוע נפרד, מבוסס שורות V2 + טעויות */
       topicRecommendations,
@@ -2279,7 +2279,7 @@ function pickClearWeakestSubjectFromSummaryAggregates(summary) {
 }
 
 function crossSubjectWeakFocusLineHe(worst) {
-  return `לפי סיכום התרגול בתקופה שנבחרה, הדיוק הנמוך ביותר (כ־${worst.acc}% על ${worst.q} תשובות) מופיע כרגע ב${worst.labelHe} — כדאי לתת שם דגש ממוקד השבוע.`;
+  return `לפי סיכום התרגול בתקופה שנבחרה, הדיוק הנמוך ביותר (כ ${worst.acc}% על ${worst.q} תשובות) מופיע כרגע ב${worst.labelHe} — כדאי לתת שם דגש ממוקד השבוע.`;
 }
 
 /**

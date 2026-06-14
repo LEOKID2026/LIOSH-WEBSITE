@@ -277,7 +277,7 @@ export const PROBE_BY_DIAGNOSTIC_SKILL_ID = {
   sci_respiration_concept: {
     skill: "תפקיד מערכת הנשימה בחילוף גזים",
     suggestedQuestionType: "science_concept_minimal_contrast",
-    reasonHe: "להבדיל בין הובלת דם לבין חילוף חמצן/פחמן דו־חמצני מול האוויר.",
+    reasonHe: "להבדיל בין הובלת דם לבין חילוף חמצן/פחמן דוחמצני מול האוויר.",
   },
   moledet_geo_homeland: {
     skill: "מולדת — עובדות בסיס",

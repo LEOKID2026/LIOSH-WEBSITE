@@ -4,5 +4,5 @@
   "canonical_download_url": "https://meyda.education.gov.il/files/Curriculum/hebrew-1-6.pdf",
   "expected_pdf_sha256": "893f073a600300feafc1f30e6432400add365c42a69f850ff3e89deeab1b4f4a",
   "recorded_at": "2026-04-13",
-  "notes_he": "SHA256 מחושב על הקובץ המקומי; אם ה־PDF במקור עודכן בשרת — יש לעדכן expected_pdf_sha256 אחרי אימות מחדש."
+  "notes_he": "SHA256 מחושב על הקובץ המקומי; אם ה PDF במקור עודכן בשרת — יש לעדכן expected_pdf_sha256 אחרי אימות מחדש."
 }

@@ -1,5 +1,5 @@
 /**
- * צירוף שאלות עברית ל־audio stem — Build 1 + הרחבת Build 2 (סכמה 2).
+ * צירוף שאלות עברית אל audio stem — Build 1 + הרחבת Build 2 (סכמה 2).
  */
 
 import { validateAudioStemV2 } from "./audio-task-contract.js";

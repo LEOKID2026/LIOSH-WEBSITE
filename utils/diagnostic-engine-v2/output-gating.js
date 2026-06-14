@@ -144,7 +144,7 @@ export function applyOutputGating(p) {
     out.cannotConcludeYet = true;
     if (confidence === "contradictory" || counterEvidenceStrong) {
       out.probeOnly = true;
-      reasons.push("ראיות סותרות או נגד־ראיה חזקה");
+      reasons.push("ראיות סותרות או נגד ראיה חזקה");
     } else if (weakEvidence) {
       out.confidenceOnly = true;
       out.probeOnly = true;

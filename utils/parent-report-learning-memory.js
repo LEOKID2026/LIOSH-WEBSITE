@@ -90,7 +90,7 @@ export function buildLearningMemoryPhase9(ctx) {
     stabilizationState = "forming";
     transferReadiness = rf.hintDependenceRisk ? "not_ready" : "limited";
     independenceProgress = indepDown ? "limited" : indepUp ? "improving" : "stable";
-    memEvidence.push("דיוק בינוני־טוב — יציבות חלקית בלי אישור להעברה מלאה.");
+    memEvidence.push("דיוק בינוני טוב — יציבות חלקית בלי אישור להעברה מלאה.");
   } else {
     learningStage = "partial_stabilization";
     retentionRisk = "moderate";

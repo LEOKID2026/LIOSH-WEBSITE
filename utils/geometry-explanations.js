@@ -89,7 +89,7 @@ export function getHint(question, topic, gradeKey) {
       return `בכל משולש סכום זוויות פנימיות = ${M("180°")}. חברי את שתי הזוויות הנתונות, ואז הפחיתי מהתוצאה מ‑${M("180°")}.`;
 
     case "pythagoras":
-      return `במשולש ישר־זווית: ${M("a² + b² = c²")}. זהה מי היתר (הצלע מול הזווית הישרה) ומה מבקשים — ניצב או יתר — ואז פעולה הפוכה (שורש או הפרש ריבועים).`;
+      return `במשולש ישר זווית: ${M("a² + b² = c²")}. זהה מי היתר (הצלע מול הזווית הישרה) ומה מבקשים — ניצב או יתר — ואז פעולה הפוכה (שורש או הפרש ריבועים).`;
 
     case "shapes_basic":
       if (p.kind === "shapes_basic_square" || p.kind === "shapes_basic_rectangle") {
@@ -126,12 +126,12 @@ export function getHint(question, topic, gradeKey) {
 
     case "diagonal":
       if (p.kind === "diagonal_square") {
-        return `בריבוע האלכסון יוצר משולש ישר־זווית עם שתי צלעות שוות — אפשר ${M("√2 × צלע")}.`;
+        return `בריבוע האלכסון יוצר משולש ישר זווית עם שתי צלעות שוות — אפשר ${M("√2 × צלע")}.`;
       }
       if (p.kind === "diagonal_rectangle" || p.kind === "diagonal_parallelogram") {
-        return "אלכסון הוא יתר במשולש ישר־זווית שצלעותיו שני הצלעות הנתונות — השתמשו בפיתגרור.";
+        return "אלכסון הוא יתר במשולש ישר זווית שצלעותיו שני הצלעות הנתונות — השתמשו בפיתגרור.";
       }
-      return "חשבו אלכסון כיתר במשולש ישר־זווית שנבנה משני הצלעות הנתונות.";
+      return "חשבו אלכסון כיתר במשולש ישר זווית שנבנה משני הצלעות הנתונות.";
 
     case "heights":
       if (p.shape === "triangle") {
@@ -243,7 +243,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
         const r2 = p.radius * p.radius;
         return [
           toSpan(
-            "1. זיהוי: רדיוס מהמרכז לשפה. שטח משתמש ב־r² (ריבוע), היקף ב־r בלי ריבוע — לא לבלבל ביניהם.",
+            "1. זיהוי: רדיוס מהמרכז לשפה. שטח משתמש ב r² (ריבוע), היקף ב r בלי ריבוע — לא לבלבל ביניהם.",
             "1"
           ),
           toSpan("2. נוסחה: שטח עיגול = π × רדיוס² (כאן π ≈ 3.14).", "2"),
@@ -479,7 +479,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
         const sum = a2 + b2;
         return [
           toSpan(
-            "1. במשולש ישר־זווית: שתי הצלעות שליד הזווית הישרה הן ניצבים; היתר נגד הזווית הישרה והוא הצלע הארוכה ביותר. נוסחה: a² + b² = c².",
+            "1. במשולש ישר זווית: שתי הצלעות שליד הזווית הישרה הן ניצבים; היתר נגד הזווית הישרה והוא הצלע הארוכה ביותר. נוסחה: a² + b² = c².",
             "1"
           ),
           toSpan(`2. נציב את הניצבים: ${ltr(`${a}² + ${b}² = c²`)}.`, "2"),
@@ -594,10 +594,10 @@ export function getSolutionSteps(question, topic, gradeKey) {
         toSpan(`1. מסווגים את המשולש לפי שוויון אורכי צלעות — השם בשאלה: "${type}".`, "1"),
         toSpan(
           type === "שווה צלעות"
-            ? "2. בשווה־צלעות כל שלוש הצלעות באותו אורך."
+            ? "2. בשווהצלעות כל שלוש הצלעות באותו אורך."
             : type === "שווה שוקיים"
-            ? "2. בשווה־שוקיים בדיוק שתי צלעות שוות."
-            : "2. בשונה־צלעות כל שלושת האורכים שונים.",
+            ? "2. בשווהשוקיים בדיוק שתי צלעות שוות."
+            : "2. בשונהצלעות כל שלושת האורכים שונים.",
           "2"
         ),
         toSpan(
@@ -628,7 +628,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
           "3. מפתח: 1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז.",
           "3"
         ),
-        toSpan(`4. המספר שמתאים ל־"${type}" הוא ${idx}.`, "4"),
+        toSpan(`4. המספר שמתאים אל "${type}" הוא ${idx}.`, "4"),
       ];
     }
 
@@ -675,7 +675,7 @@ export function getSolutionSteps(question, topic, gradeKey) {
             ? "2. בריבוע: 4 צירים — 2 דרך אמצעי צלעות נגדיות ו-2 אלכסונים."
             : shapeName === "מלבן"
             ? "2. במלבן שאינו ריבוע: 2 צירים דרך אמצעי צלעות נגדיות."
-            : "2. במשולש שווה־צלעות: 3 צירים — מכל קודקוד לאמצע הצלע הנגדית.",
+            : "2. במשולש שווהצלעות: 3 צירים — מכל קודקוד לאמצע הצלע הנגדית.",
           "2"
         ),
         toSpan(`3. ספירה זהירה לפי סוג הצורה "${shapeName}".`, "3"),
@@ -749,12 +749,12 @@ export function getSolutionSteps(question, topic, gradeKey) {
       const shape = p.shape || "ריבוע";
       const angle = p.angle || 90;
       return [
-        toSpan("1. בריצוף סביב כל קודקוד סכום הזוויות החוצות צריך להסתדר ל־360°.", "1"),
+        toSpan("1. בריצוף סביב כל קודקוד סכום הזוויות החוצות צריך להסתדר אל 360°.", "1"),
         toSpan(
           shape === "ריבוע"
             ? "2. לריבוע זווית פנימית 90° — 4 × 90° = 360°."
             : shape === "משולש שווה צלעות"
-            ? "2. במשולש שווה־צלעות זווית בסיס 60°."
+            ? "2. במשולש שווהצלעות זווית בסיס 60°."
             : "2. במשושה זווית פנימית 120°.",
           "2"
         ),
@@ -841,10 +841,10 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
         return `נראה שחישבת היקף במקום שטח — כפל ${iso("אורך × רוחב")}, לא סכום כפול.`;
       }
       if (sh === "triangle" && base > 0 && ht > 0 && userAnsNum === base * ht) {
-        return `נראה שכפלת ${iso("בסיס × גובה")} אבל שכחת לחלק ב־${iso("2")} (נוסחת שטח משולש).`;
+        return `נראה שכפלת ${iso("בסיס × גובה")} אבל שכחת לחלק ב ${iso("2")} (נוסחת שטח משולש).`;
       }
       if (sh === "parallelogram" && base > 0 && ht > 0 && userAnsNum === (base * ht) / 2) {
-        return `במקבילית שטח הבסיס הוא ${iso("בסיס × גובה")} — בלי חלוקה ב־${iso("2")} (זה נוהג במשולש).`;
+        return `במקבילית שטח הבסיס הוא ${iso("בסיס × גובה")} — בלי חלוקה ב ${iso("2")} (זה נוהג במשולש).`;
       }
       if (sh === "circle" && r > 0 && !Number.isNaN(userAnsNum)) {
         const circ = Math.round(2 * 3.14 * r);
@@ -859,7 +859,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
         return "תוצאה קטנה מדי: אולי חיסרת כפל, חילקת יותר מדי, או השתמשת בנוסחת היקף.";
       }
       if (!Number.isNaN(userAnsNum) && userAnsNum > correctNum) {
-        return "תוצאה גדולה מדי: אולי שכחת לחלק ב־2 במשולש/טרפז, או כפלת פעמיים במקום פעם אחת.";
+        return "תוצאה גדולה מדי: אולי שכחת לחלק ב 2 במשולש/טרפז, או כפלת פעמיים במקום פעם אחת.";
       }
       return "בדוק שזו נוסחת שטח (ולא היקף): ריבוע \u2066צלע²\u2069, מלבן \u2066אורך×רוחב\u2069, משולש \u2066(בסיס×גובה)/2\u2069, עיגול \u2066πr²\u2069.";
     }
@@ -882,7 +882,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
         }
       }
       if (!Number.isNaN(userAnsNum) && userAnsNum < correctNum) {
-        return "היקף קטן מדי: אולי שכחת לכפול ב־2 במלבן או ב־4 בריבוע, או צלע אחת בסכום.";
+        return "היקף קטן מדי: אולי שכחת לכפול ב 2 במלבן או ב 4 בריבוע, או צלע אחת בסכום.";
       }
       return `היקף = סכום כל הצלעות (או ${iso("2πr")} במעגל) — לא כפל כמו בשטח.`;
     }
@@ -922,14 +922,14 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       const a2 = toNum(p.angle2);
       if (!Number.isNaN(userAnsNum) && !Number.isNaN(a1) && !Number.isNaN(a2)) {
         if (userAnsNum === a1 + a2) {
-          return `חיברת את שתי הזוויות — צריך לחסר את הסכום מ־${iso("180°")}.`;
+          return `חיברת את שתי הזוויות — צריך לחסר את הסכום מ ${iso("180°")}.`;
         }
         if (userAnsNum === 180 - Math.abs(a1 - a2)) {
           return `בדוק: הזווית השלישית היא ${iso("180°")} מינוס סכום שתי הזוויות הנתונות.`;
         }
       }
       if (!Number.isNaN(userAnsNum) && userAnsNum > correctNum) {
-        return `תוצאה גדולה מדי: אולי חיברת במקום לחסר מ־${iso("180°")}.`;
+        return `תוצאה גדולה מדי: אולי חיברת במקום לחסר מ ${iso("180°")}.`;
       }
       return `במשולש סכום זוויות = ${iso("180°")}. הזווית החסרה = ${iso("180° − (זווית 1 + זווית 2)")}.`;
     }
@@ -950,7 +950,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       if (!Number.isNaN(userAnsNum) && userAnsNum > correctNum) {
         return `תשובה גדולה מדי: אולי שכפת ריבוע במקום שורש, או חיברת ${iso("a+b")} במקום ${iso("√(a²+b²)")}.`;
       }
-      return "משולש ישר־זווית: \u2066a² + b² = c²\u2069. יתר מול הזווית הישרה, ניצבים כותפיים.";
+      return "משולש ישר זווית: \u2066a² + b² = c²\u2069. יתר מול הזווית הישרה, ניצבים כותפיים.";
     }
 
     case "shapes_basic": {
@@ -982,11 +982,11 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       if (p.isParallel === false && userAnsNum === 1) {
         return "בשאלה מדובר במאונחים — חיתוך בזווית ישרה; 1 מסמן כאן מקבילים.";
       }
-      return `מקבילים: לא נפגשים באותו מישור. מאונחים: חיתוך ב־${iso("90°")}.`;
+      return `מקבילים: לא נפגשים באותו מישור. מאונחים: חיתוך ב ${iso("90°")}.`;
     }
 
     case "triangles":
-      return `המספר בשאלה חייב להתאים לשם המשפחה: ${iso("1 שווה־צלעות (כולן שוות), 2 שווה־שוקיים (שתיים שוות), 3 שונה־צלעות")}.`;
+      return `המספר בשאלה חייב להתאים לשם המשפחה: ${iso("1 שווהצלעות (כולן שוות), 2 שווהשוקיים (שתיים שוות), 3 שונהצלעות")}.`;
 
     case "quadrilaterals":
       return "בדקו זוגות צלעות מקבילות וזוויות: ריבוע/מלבן — ארבע ישרות; מקבילית — שני זוגות מקבילים; טרפז — זוג בסיסים מקבילים אחד.";
@@ -1011,31 +1011,31 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       if (!Number.isNaN(userAnsNum) && !Number.isNaN(ax) && userAnsNum === ax + 1) {
         return "אולי ספרת ציר אחד כפול — ספרו רק צירי סימטרייה אמיתיים לצורה.";
       }
-      return `ריבוע ${iso("4")}, מלבן (לא ריבוע) ${iso("2")}, משולש שווה־צלעות ${iso("3")} — לפי צורת השאלה.`;
+      return `ריבוע ${iso("4")}, מלבן (לא ריבוע) ${iso("2")}, משולש שווהצלעות ${iso("3")} — לפי צורת השאלה.`;
     }
 
     case "diagonal":
       if (p.kind === "diagonal_square") {
         const s = toNum(p.side);
         if (s > 0 && userAnsNum === 2 * s) {
-          return `אולי הכפלת צלע ב־${iso("2")} — באלכסון ריבוע משתמשים ב־${iso("√2 × צלע")}.`;
+          return `אולי הכפלת צלע ב ${iso("2")} — באלכסון ריבוע משתמשים ב ${iso("√2 × צלע")}.`;
         }
         if (s > 0 && userAnsNum === s * s) {
           return `אלכסון אינו שטח הצלע — נסו ${iso("√(צלע²+צלע²)")} או ${iso("צלע×√2")}.`;
         }
-        return `אלכסון בריבוע: ${iso("צלע × √2")} (משולש ישר־זווית עם שני ניצבים שווים).`;
+        return `אלכסון בריבוע: ${iso("צלע × √2")} (משולש ישר זווית עם שני ניצבים שווים).`;
       }
       if (p.kind === "diagonal_rectangle" || p.kind === "diagonal_parallelogram") {
         return `השתמשו בפיתגורס עם שני הניצבים מהשאלה — ${iso("√(אורך² + רוחב²)")}.`;
       }
-      return "אלכסון כיתר במשולש ישר־זווית שנבנה מהצלעות.";
+      return "אלכסון כיתר במשולש ישר זווית שנבנה מהצלעות.";
 
     case "heights": {
       if (p.shape === "triangle") {
         const ba = toNum(p.base);
         const ar = toNum(p.area);
         if (ba > 0 && ar > 0 && userAnsNum === Math.round(ar / ba)) {
-          return "אולי חילקת שטח בבסיס בלי להכפיל קודם את השטח ב־2 (נוסחת המשולש).";
+          return "אולי חילקת שטח בבסיס בלי להכפיל קודם את השטח ב 2 (נוסחת המשולש).";
         }
         return `גובה במשולש: ${iso("(שטח × 2) ÷ בסיס")}.`;
       }
@@ -1043,7 +1043,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
         const ba = toNum(p.base);
         const ar = toNum(p.area);
         if (ba > 0 && ar > 0 && userAnsNum === Math.round((ar * 2) / ba)) {
-          return `במקבילית אין חלוקה ב־${iso("2")} בשטח — גובה = ${iso("שטח ÷ בסיס")}.`;
+          return `במקבילית אין חלוקה ב ${iso("2")} בשטח — גובה = ${iso("שטח ÷ בסיס")}.`;
         }
         return `גובה במקבילית: ${iso("שטח ÷ בסיס")}.`;
       }
@@ -1057,7 +1057,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       if (!Number.isNaN(userAnsNum) && userAnsNum === 360) {
         return `${iso("360°")} הוא סכום סביב נקודה — לא גודל זווית הבסיס של צורת הריצוף.`;
       }
-      return `זווית הריצוף היא הזווית הפנימית של צורת האריח (ריבוע ${iso("90°")}, משולש שווה־צלעות ${iso("60°")}, משושה ${iso("120°")}).`;
+      return `זווית הריצוף היא הזווית הפנימית של צורת האריח (ריבוע ${iso("90°")}, משולש שווהצלעות ${iso("60°")}, משושה ${iso("120°")}).`;
     }
 
     case "circles": {
@@ -1065,14 +1065,14 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
         const r = toNum(p.radius);
         const circ = Math.round(2 * 3.14 * r);
         if (userAnsNum === circ) {
-          return `נתון שטח אך חישבת כמו היקף — השתמשו ב־${iso("π × רדיוס²")}.`;
+          return `נתון שטח אך חישבת כמו היקף — השתמשו ב ${iso("π × רדיוס²")}.`;
         }
         return `שטח: ${iso("πr²")}. אם קיבלתם קטן מדי — אולי שכחתם להעלות את ${iso("r")} בריבוע.`;
       }
       const r = toNum(p.radius);
       const ar = Math.round(3.14 * r * r);
       if (userAnsNum === ar) {
-        return `נתון היקף אך חישבת כמו שטח — השתמשו ב־${iso("2πr")}.`;
+        return `נתון היקף אך חישבת כמו שטח — השתמשו ב ${iso("2πr")}.`;
       }
       return `הבחנה: ${iso("שטח ∝ r², היקף ∝ r")} — אל תבלבלו בין הנוסחאות.`;
     }
@@ -1086,7 +1086,7 @@ export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
 }
 
 /**
- * שלבים ל־UI של נגן ההסבר (כמו math animationSteps): כל פריט = צעד אחד עם כותרת ותוכן.
+ * שלבים אל UI של נגן ההסבר (כמו math animationSteps): כל פריט = צעד אחד עם כותרת ותוכן.
  */
 export function buildGeometryAnimationSteps(question, topic, gradeKey) {
   const slides = getSolutionSteps(question, topic, gradeKey);
