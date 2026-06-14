@@ -68,14 +68,14 @@ export default function HomePage() {
       >
         <section className="text-center space-y-2.5 md:space-y-4 mt-1.5 mb-0.5 md:mt-0 md:mb-0">
           <p className="inline-flex items-center gap-2 px-3 py-1 md:py-1.5 rounded-full bg-white/10 text-xs md:text-xs tracking-[0.2em] md:tracking-[0.25em] uppercase text-amber-300 font-semibold">
-            כיף · בטוח · חינוכי
+            לומדים · מתרגלים · מתקדמים
           </p>
           <h1 className="text-[1.75rem] md:text-4xl lg:text-5xl font-black leading-tight">
             ברוכים הבאים אל <span className="text-amber-300">LEO KIDS</span>
           </h1>
           <p className="text-sm md:text-base lg:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed md:leading-normal px-1">
-            עולם קטן של מיני משחקים ופעילויות לימוד לילדים: ריצה, טיסה, חידות
-            ותרגול במתמטיקה, גאומטריה ואנגלית — הכול במקום אחד.
+            אתר לימודים לילדים עם תרגול חכם, פעילויות קצרות ומיני משחקים — מתמטיקה,
+            גאומטריה, אנגלית ועוד הכל במקום אחד.
           </p>
         </section>
 
