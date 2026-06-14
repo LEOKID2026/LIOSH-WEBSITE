@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS } from "../../lib/classroom-activities/classroom-activities-preview.js";
 import { generateActivityQuestionSetClient } from "../../lib/classroom-activities/generate-activity-questions-client.js";
-import { activityModeLabelHe } from "../../lib/classroom-activities/classroom-activities-labels.client.js";
 import { formatGradeLevelHe, normalizeGradeLevelToKey } from "../../lib/learning-student-defaults.js";
 import {
   defaultTopicForAssignedActivity,
@@ -11,8 +10,27 @@ import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-port
 import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
 import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
 
-const PARENT_MODES = ["guided_practice"];
+const PARENT_ACTIVITY_MODE = "guided_practice";
 const MAX_QUESTION_COUNT = 30;
+
+function parseQuestionCountInput(raw) {
+  const s = String(raw ?? "").trim();
+  if (!s) return null;
+  const n = parseInt(s, 10);
+  if (!Number.isFinite(n) || n < 1) return null;
+  return n;
+}
+
+function questionCountExceedsMax(raw) {
+  const n = parseQuestionCountInput(raw);
+  return n != null && n > MAX_QUESTION_COUNT;
+}
+
+function resolveQuestionCountForApi(raw) {
+  const n = parseQuestionCountInput(raw);
+  if (n == null) return null;
+  return Math.min(n, MAX_QUESTION_COUNT);
+}
 
 /**
  * @param {{ student: { id: string, full_name?: string, grade_level?: string|null }, accessToken: string, onClose: () => void, onSuccess: () => void, refreshKey?: number }} props
@@ -27,9 +45,8 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
   const [topic, setTopic] = useState(() => defaultTopicForAssignedActivity("math", gradeKey));
-  const [mode] = useState("guided_practice");
-  const [difficulty, setDifficulty] = useState("medium");
-  const [questionCount, setQuestionCount] = useState(5);
+  const [difficulty, setDifficulty] = useState("easy");
+  const [questionCountInput, setQuestionCountInput] = useState("");
   const [preview, setPreview] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -46,6 +63,11 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
       setError("יש להגדיר כיתה בפרופיל הילד לפני יצירת פעילות");
       return;
     }
+    const count = resolveQuestionCountForApi(questionCountInput);
+    if (count == null) {
+      setError("יש להזין מספר שאלות");
+      return;
+    }
     setBusy(true);
     setError("");
     setPreview([]);
@@ -55,7 +77,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
         gradeLevel: gradeKey,
         topic,
         difficulty,
-        count: questionCount,
+        count,
       });
       setPreview(qs || []);
     } catch {
@@ -63,11 +85,16 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
     } finally {
       setBusy(false);
     }
-  }, [subject, gradeKey, topic, difficulty, questionCount]);
+  }, [subject, gradeKey, topic, difficulty, questionCountInput]);
 
   const sendActivity = useCallback(async () => {
     if (!gradeKey) {
       setError("יש להגדיר כיתה בפרופיל הילד לפני שליחת פעילות");
+      return;
+    }
+    const count = resolveQuestionCountForApi(questionCountInput);
+    if (count == null) {
+      setError("יש להזין מספר שאלות");
       return;
     }
     if (!title.trim()) {
@@ -93,10 +120,10 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           title: title.trim(),
           subject,
           topic,
-          mode,
+          mode: PARENT_ACTIVITY_MODE,
           gradeLevel: gradeKey,
           difficultyLevel: difficulty,
-          questionCount,
+          questionCount: count,
           questionSet: preview,
         }),
       });
@@ -122,9 +149,8 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
     student.id,
     subject,
     topic,
-    mode,
     difficulty,
-    questionCount,
+    questionCountInput,
     gradeKey,
     onSuccess,
   ]);
@@ -226,18 +252,25 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           <label className="block text-sm">
             <span className="text-white/70">מספר שאלות</span>
             <input
-              type="number"
-              min={1}
-              max={MAX_QUESTION_COUNT}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-              value={questionCount}
+              value={questionCountInput}
               onChange={(e) => {
-                const n = Math.max(1, Math.min(MAX_QUESTION_COUNT, Number(e.target.value) || 1));
-                setQuestionCount(n);
+                setQuestionCountInput(e.target.value.replace(/\D/g, ""));
                 setPreview([]);
               }}
               disabled={busy}
+              aria-describedby={
+                questionCountExceedsMax(questionCountInput) ? "question-count-max-hint" : undefined
+              }
             />
+            {questionCountExceedsMax(questionCountInput) ? (
+              <p id="question-count-max-hint" className="text-amber-200/90 text-xs mt-1">
+                {`מספר השאלות מוגבל עד ${MAX_QUESTION_COUNT}`}
+              </p>
+            ) : null}
           </label>
 
           <fieldset className="block text-sm">
@@ -261,24 +294,12 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
               ))}
             </div>
           </fieldset>
-
-          <fieldset className="block text-sm md:col-span-2">
-            <legend className="text-white/70 mb-1">סוג פעילות</legend>
-            <div className="flex flex-wrap gap-3">
-              {PARENT_MODES.map((m) => (
-                <label key={m} className="flex items-center gap-1">
-                  <input type="radio" name="mode" value={m} checked={mode === m} readOnly disabled={busy} />
-                  {activityModeLabelHe(m)}
-                </label>
-              ))}
-            </div>
-          </fieldset>
         </div>
 
         <div className="flex flex-wrap gap-2 items-center">
           <button
             type="button"
-            className="rounded bg-white/15 px-3 py-2 text-sm font-semibold hover:bg-white/25 disabled:opacity-60"
+            className="rounded border border-sky-500/40 bg-sky-950/30 text-sky-100 px-3 py-2 text-sm font-semibold hover:bg-sky-900/40 disabled:opacity-60"
             onClick={runPreview}
             disabled={busy || missingGrade}
           >
@@ -286,7 +307,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </button>
           <button
             type="button"
-            className="rounded bg-emerald-600 text-white px-3 py-2 text-sm font-semibold hover:bg-emerald-500 disabled:opacity-60"
+            className="rounded border border-violet-500/40 bg-violet-950/30 text-violet-100 px-3 py-2 text-sm font-semibold hover:bg-violet-900/40 disabled:opacity-60"
             onClick={sendActivity}
             disabled={busy || missingGrade}
           >
@@ -296,7 +317,6 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
             studentId={student.id}
             accessToken={accessToken}
             refreshKey={refreshKey}
-            buttonClassName="rounded border border-emerald-500/40 bg-emerald-950/30 text-emerald-100 px-3 py-2 text-sm font-semibold hover:bg-emerald-900/40"
           />
         </div>
 
