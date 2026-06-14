@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-activity-layout.client.js";
+import StudentThemePicker from "./StudentThemePicker";
+import { useStudentActivityUi } from "../../hooks/useStudentActivityUi.js";
 
 /**
  * Unified assigned-activity page shell — header, progress, card grid, footer.
@@ -34,7 +35,7 @@ export default function StudentAssignedActivityShell({
   scratchpadDock = null,
   usesScratchpadDock = false,
 }) {
-  const L = STUDENT_ACTIVITY_LAYOUT;
+  const { L } = useStudentActivityUi();
   const footerOffset = L.layoutFooterOffsetPx;
 
   return (
@@ -46,9 +47,12 @@ export default function StudentAssignedActivityShell({
     >
       <div ref={overlayTopRef}>
         <div className={L.headerRow} dir="ltr">
-          <Link href="/student/home" className={L.backLink}>
-            ← חזרה לבית
-          </Link>
+          <div className={L.headerNavGroup}>
+            <Link href="/student/home" className={L.backLink}>
+              ← חזרה לבית
+            </Link>
+            <StudentThemePicker variant="icon" iconSize="nav" />
+          </div>
           <div className={L.titleBlock} dir="rtl">
             <h1 className={L.title}>{title}</h1>
             <p className={L.subtitle}>{subtitle}</p>

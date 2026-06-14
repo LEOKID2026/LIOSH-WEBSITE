@@ -8,7 +8,7 @@ import {
   getStudentActivityVerticalExerciseText,
   normalizeStudentActivityMathLayoutQuestion,
 } from "../../lib/classroom-activities/student-activity-question-ui.client.js";
-import { STUDENT_ACTIVITY_LAYOUT } from "../../lib/classroom-activities/student-activity-layout.client.js";
+import { useStudentActivityUi } from "../../hooks/useStudentActivityUi.js";
 
 /**
  * Question text inside the unified activity question stage — stable footprint for math toggle.
@@ -22,7 +22,7 @@ export default function StudentActivityQuestionSurface({
   onVerticalExerciseHeadlineChange,
 }) {
   const [isVerticalDisplay, setIsVerticalDisplay] = useState(false);
-  const L = STUDENT_ACTIVITY_LAYOUT;
+  const { L } = useStudentActivityUi();
 
   const layoutQuestion = useMemo(
     () => normalizeStudentActivityMathLayoutQuestion(question),

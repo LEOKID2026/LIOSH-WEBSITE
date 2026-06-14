@@ -19,7 +19,7 @@ import { ScratchpadVirtualInputProvider } from "../../../components/math-scratch
 import { useTouchPrimaryDevice } from "../../../hooks/useTouchPrimaryDevice.js";
 import { resolveVirtualAnswerKeyboard } from "../../../lib/learning/virtual-answer-keyboard-policy.js";
 import { activityChoiceGridClassName } from "../../../lib/classroom-activities/student-activity-choice-layout.client.js";
-import { STUDENT_ACTIVITY_LAYOUT } from "../../../lib/classroom-activities/student-activity-layout.client.js";
+import { useStudentActivityUi } from "../../../hooks/useStudentActivityUi.js";
 import { computeAssignedActivityTiming } from "../../../lib/learning/timing-policy.js";
 import StudentAssignedActivityShell from "../../../components/student/StudentAssignedActivityShell";
 import StudentAssignedActivityQuestionStage from "../../../components/student/StudentAssignedActivityQuestionStage";
@@ -60,6 +60,7 @@ export async function getServerSideProps(context) {
 
 export default function StudentActivityPage({ activityId }) {
   const router = useRouter();
+  const { L, MB, isBright, theme } = useStudentActivityUi();
   const [phase, setPhase] = useState("loading");
   const [activity, setActivity] = useState(null);
   const [questionSet, setQuestionSet] = useState([]);
@@ -358,20 +359,22 @@ export default function StudentActivityPage({ activityId }) {
     void submitActivity();
   };
 
+  const layoutProps = { studentTheme: theme, studentShell: "learning" };
+
   if (phase === "loading") {
     return (
-      <Layout>
-        <div className="min-h-[50vh] flex items-center justify-center text-white/80">טוען פעילות…</div>
+      <Layout {...layoutProps}>
+        <div className={`min-h-[50vh] flex items-center justify-center ${L.loadingText}`}>טוען פעילות…</div>
       </Layout>
     );
   }
 
   if (phase === "error") {
     return (
-      <Layout>
+      <Layout {...layoutProps}>
         <div className="max-w-lg mx-auto px-4 py-12 text-center" dir="rtl">
-          <p className="text-red-200 mb-4">{error}</p>
-          <Link href="/student/home" className="text-amber-300 underline">
+          <p className={`${L.errorText} mb-4`}>{error}</p>
+          <Link href="/student/home" className={L.errorLink}>
             חזרה לבית
           </Link>
         </div>
@@ -386,9 +389,9 @@ export default function StudentActivityPage({ activityId }) {
     const multiQuestionDiscussion =
       isDiscussionDone && !isExplanationOnly && (finished.questionCount ?? questionSet.length) > 1;
     return (
-      <Layout>
+      <Layout {...layoutProps}>
         <div className="max-w-lg mx-auto px-4 py-12 text-center" dir="rtl">
-          <h1 className="text-2xl font-bold text-white mb-4">
+          <h1 className={`${L.doneTitle} mb-4`}>
             {isExplanationOnly
               ? "קראת את ההסבר"
               : isDiscussionDone
@@ -398,25 +401,22 @@ export default function StudentActivityPage({ activityId }) {
                 : "סיימת את הפעילות!"}
           </h1>
           {!isDiscussionDone ? (
-            <p className="text-xl font-bold text-emerald-300 mb-6">
+            <p className={`${L.doneScore} mb-6`}>
               {formatStudentActivityCompletionSummaryHe(
                 finished.correctCount,
                 finished.questionCount
               )}
             </p>
           ) : isExplanationOnly ? (
-            <p className="text-white/70 text-sm mb-6">קראת את ההסבר של המורה. תודה!</p>
+            <p className={`${L.doneBody} mb-6`}>קראת את ההסבר של המורה. תודה!</p>
           ) : multiQuestionDiscussion ? (
-            <p className="text-white/70 text-sm mb-6">
+            <p className={`${L.doneBody} mb-6`}>
               סיימת {finished.questionCount ?? questionSet.length} שאלות דיון. תודה על המענה!
             </p>
           ) : (
-            <p className="text-white/70 text-sm mb-6">תודה על המענה. המורה יראה את התשובה בכיתה.</p>
+            <p className={`${L.doneBody} mb-6`}>תודה על המענה. המורה יראה את התשובה בכיתה.</p>
           )}
-          <Link
-            href="/student/home"
-            className="inline-flex rounded-xl bg-emerald-500 text-black font-bold px-6 py-3"
-          >
+          <Link href="/student/home" className={L.doneButton}>
             חזרה לבית
           </Link>
         </div>
@@ -434,30 +434,28 @@ export default function StudentActivityPage({ activityId }) {
   const progressPct =
     questionSet.length > 0 ? Math.round(((effectiveIdx + 1) / questionSet.length) * 100) : 0;
   const choiceGridClass = activityChoiceGridClassName(currentQuestion?.choices);
-  const L = STUDENT_ACTIVITY_LAYOUT;
 
   const activitySubtitle = `${activityModeLabelHe(activity?.mode)} · שאלה ${effectiveIdx + 1} מתוך ${questionSet.length}`;
+
+  const feedbackToneClass =
+    feedback?.type === "correct"
+      ? L.feedbackCorrect
+      : feedback?.type === "submitted"
+        ? L.feedbackSubmitted
+        : feedback?.type === "error"
+          ? L.feedbackError
+          : L.feedbackWrong;
 
   const renderAnswerFeedback = () => (
     <>
       {!isExplanationOnly && showHints && currentQuestion?.hint ? (
-        <p className="text-xs text-white/50">רמז: {currentQuestion.hint}</p>
+        <p className={L.hintText}>רמז: {currentQuestion.hint}</p>
       ) : null}
       {feedback?.type === "wait" ? (
-        <p className="text-amber-200 text-sm">{feedback.message}</p>
+        <p className={L.waitText}>{feedback.message}</p>
       ) : null}
       {feedback && feedback.type !== "wait" ? (
-        <div
-          className={`${L.feedbackBox} ${
-            feedback.type === "correct"
-              ? "bg-emerald-500/20 text-emerald-100"
-              : feedback.type === "submitted"
-                ? "bg-white/10 text-white/90"
-                : feedback.type === "error"
-                  ? "bg-red-500/20 text-red-100"
-                  : "bg-amber-500/20 text-amber-100"
-          }`}
-        >
+        <div className={`${L.feedbackBox} ${feedbackToneClass}`}>
           <p>{feedback.message}</p>
           {feedback.correctAnswer ? (
             <p className="mt-1">
@@ -485,7 +483,16 @@ export default function StudentActivityPage({ activityId }) {
         disabled={isCurrentQuestionAnswered || busy}
         compact={isTouchDevice}
         submitTone="blue"
-        className={usesScratchpadDock ? "mt-0" : "mt-1"}
+        className={isBright ? MB.vkPad : usesScratchpadDock ? "mt-0" : "mt-1"}
+        keyClassName={isBright ? (isTouchDevice ? MB.vkKeyCompact : MB.vkKey) : undefined}
+        actionKeyClassName={
+          isBright
+            ? isTouchDevice
+              ? `${MB.vkKeyCompact} text-sm`
+              : MB.vkKey
+            : undefined
+        }
+        submitClassName={isBright ? MB.vkSubmitBlue : undefined}
         submitButton={
           mobileEmbeddedNumericSubmit
             ? {
@@ -586,7 +593,7 @@ export default function StudentActivityPage({ activityId }) {
     <>
       {isExplanationOnly ? (
         <>
-          <p className="text-sm text-cyan-200/90 rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-2">
+          <p className={L.explanationBanner}>
             אין צורך להגיש תשובה — קרא/י את התוכן
           </p>
           <button
@@ -605,68 +612,77 @@ export default function StudentActivityPage({ activityId }) {
           </button>
         </>
       ) : assignedActivityQuestionUsesChoiceUi(currentQuestion) ? (
-        <div className={choiceGridClass} data-testid="activity-answer-choices">
-          {currentQuestion.choices.map((c, i) => (
-            <button
-              key={i}
-              type="button"
-              disabled={isCurrentQuestionAnswered || busy}
-              onClick={() => setAnswerInput(String(c))}
-              className={`${L.choiceButton} ${
-                answerInput === String(c) ? L.choiceButtonSelected : L.choiceButtonDefault
-              }`}
-            >
-              <AssignedActivityBidiText text={c} className="block w-full" />
-            </button>
-          ))}
+        <div className={L.answerWrap}>
+          <div className={choiceGridClass} data-testid="activity-answer-choices">
+            {currentQuestion.choices.map((c, i) => (
+              <button
+                key={i}
+                type="button"
+                disabled={isCurrentQuestionAnswered || busy}
+                onClick={() => setAnswerInput(String(c))}
+                className={`${L.choiceButton} ${
+                  answerInput === String(c) ? L.choiceButtonSelected : L.choiceButtonDefault
+                }`}
+              >
+                <AssignedActivityBidiText text={c} className="block w-full" />
+              </button>
+            ))}
+          </div>
         </div>
       ) : assignedActivityUsesNumericKeyboard(currentQuestion) ? (
         <>
-          <StudentNumericAnswerField
-            subject={currentQuestion.subject === "geometry" ? "geometry" : "math"}
-            value={answerInput}
-            onChange={setAnswerInput}
-            disabled={isCurrentQuestionAnswered || busy}
-            testId={
-              currentQuestion.subject === "geometry"
-                ? "activity-geometry-numeric-answer"
-                : "activity-math-numeric-answer"
-            }
-            placeholder="הקלידו תשובה"
-            autoFocus={!scratchpadOpen || currentQuestion.subject !== "math"}
-            suppressEmbeddedKeyboard={sharedScratchpadKeyboard}
-            onInputFocus={() => setActiveScratchpadCell(null)}
-            onEnterSubmit={() => {
-              if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
-                void submitAnswer();
+          <div className={L.answerWrap}>
+            <StudentNumericAnswerField
+              subject={currentQuestion.subject === "geometry" ? "geometry" : "math"}
+              value={answerInput}
+              onChange={setAnswerInput}
+              disabled={isCurrentQuestionAnswered || busy}
+              testId={
+                currentQuestion.subject === "geometry"
+                  ? "activity-geometry-numeric-answer"
+                  : "activity-math-numeric-answer"
               }
-            }}
-            onSubmit={() => {
-              if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
-                void submitAnswer();
+              placeholder="הקלידו תשובה"
+              autoFocus={!scratchpadOpen || currentQuestion.subject !== "math"}
+              suppressEmbeddedKeyboard={sharedScratchpadKeyboard}
+              onInputFocus={() => setActiveScratchpadCell(null)}
+              inputClassName={
+                isBright ? (isTouchDevice ? MB.inputMobile : MB.inputDesktop) : undefined
               }
-            }}
-            submitDisabled={
-              busy || String(answerInput).trim() === "" || isCurrentQuestionAnswered
-            }
-            submitTestId="activity-submit-answer"
-            submitLabel={isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה"}
-          />
+              onEnterSubmit={() => {
+                if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
+                  void submitAnswer();
+                }
+              }}
+              onSubmit={() => {
+                if (!busy && !isCurrentQuestionAnswered && String(answerInput).trim() !== "") {
+                  void submitAnswer();
+                }
+              }}
+              submitDisabled={
+                busy || String(answerInput).trim() === "" || isCurrentQuestionAnswered
+              }
+              submitTestId="activity-submit-answer"
+              submitLabel={isCurrentQuestionAnswered ? "התשובה נשמרה" : "שליחת תשובה"}
+            />
+          </div>
           {includeInlineKeyboard && sharedScratchpadKeyboard
             ? renderSharedScratchpadKeyboard()
             : null}
         </>
       ) : (
-        <input
-          className={L.textInput}
-          value={answerInput}
-          onChange={(e) => setAnswerInput(e.target.value)}
-          placeholder="הקלידו תשובה"
-          dir="auto"
-          readOnly={isCurrentQuestionAnswered}
-          disabled={isCurrentQuestionAnswered}
-          {...answerInputProps}
-        />
+        <div className={L.answerWrap}>
+          <input
+            className={L.textInput}
+            value={answerInput}
+            onChange={(e) => setAnswerInput(e.target.value)}
+            placeholder="הקלידו תשובה"
+            dir="auto"
+            readOnly={isCurrentQuestionAnswered}
+            disabled={isCurrentQuestionAnswered}
+            {...answerInputProps}
+          />
+        </div>
       )}
       {renderAnswerFeedback()}
       {!isExplanationOnly && includePerQuestionSubmit && !mobileEmbeddedNumericSubmit ? (
@@ -813,10 +829,10 @@ export default function StudentActivityPage({ activityId }) {
     );
 
   return (
-    <Layout>
+    <Layout {...layoutProps}>
       {activity?.mode === "live_lesson" && activity?.activityStatus === "paused" ? (
         <div className={L.page} dir="rtl" lang="he">
-          <p className="text-amber-200 text-center py-4">ממתינים למורה…</p>
+          <p className={`${L.waitText} text-center py-4`}>ממתינים למורה…</p>
         </div>
       ) : assignedActivityShell ? (
         wrapScratchpadVirtualInput(assignedActivityShell)
