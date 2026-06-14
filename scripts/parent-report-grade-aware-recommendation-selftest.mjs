@@ -139,7 +139,7 @@ const M04_G34_ACTION =
 const M04_G34_GOAL =
   "בשבוע הקרוב התמקדו בהשוואת שברים ובהבנת תפקיד המונה והמכנה, במיוחד בשברים בעלי אותו מכנה או בייצוגים פשוטים וברורים.";
 const M04_G56_ACTION =
-  "כדאי לתרגל השוואת שברים בעזרת שברים שקולים, מכנה משותף או אומדן ביחס ל־0, חצי ו־1. בקשו מהילד להסביר מדוע שבר אחד גדול מאחר, ולא להסתמך רק על גודל המונה או המכנה.";
+  "כדאי לתרגל השוואת שברים בעזרת שברים שקולים, מכנה משותף או אומדן ביחס אל 0, חצי ו 1. בקשו מהילד להסביר מדוע שבר אחד גדול מאחר, ולא להסתמך רק על גודל המונה או המכנה.";
 const M04_G56_GOAL =
   "בשבוע הקרוב התמקדו בהשוואת שברים בעזרת שברים שקולים, מכנה משותף ואומדן, עם נימוק ברור לכל השוואה.";
 
@@ -157,7 +157,7 @@ const FRACTION_TEMPLATE_BANNED_SUBSTRINGS = [
   "השוואה לפי מונה בלבד",
   "טעות באותה שלב",
   "עם/בלי שרטוט",
-  "חלק־כלל קונקרטי",
+  "חלק כלל קונקרטי",
   "המראה 2,3,4",
   "שלבים כתובים + דוגמה מקבילה",
 ];
@@ -178,7 +178,7 @@ function makeM04InterveneUnit() {
     displayName: "שברים",
     diagnosis: { allowed: true, taxonomyId: "M-04" },
     intervention: {
-      immediateActionHe: "חלק־כלל קונקרטי",
+      immediateActionHe: "חלק כלל קונקרטי",
       shortPracticeHe: "עם/בלי שרטוט",
       taxonomyId: "M-04",
     },
@@ -398,7 +398,7 @@ check(
   const m04Surf = resolveUnitParentActionHe(uM04, "g4");
   check(
     "resolveUnit M-04 g4 uses template (not raw engine immediate)",
-    m04Surf != null && !String(m04Surf).includes("חלק־כלל קונקרטי")
+    m04Surf != null && !String(m04Surf).includes("חלק כלל קונקרטי")
   );
   const uM05 = makeM05InterveneUnit();
   const m05Surf = resolveUnitParentActionHe(uM05, "g5");
@@ -476,7 +476,7 @@ check(
     });
     check(
       "M-09 g6 uses estimation / multi-step wording",
-      t != null && String(t).includes("אומדן") && String(t).includes("רב־שלבי")
+      t != null && String(t).includes("אומדן") && String(t).includes("רב שלבי")
     );
   }
   {
@@ -592,7 +592,7 @@ check(
         bucketKey: "compare",
         slot: "action",
       }) || ""
-    ).includes("רב־ספרתיים")
+    ).includes("רב ספרתיים")
   );
   check(
     "M-01 compare g6 action uses large-number / representation wording",
@@ -698,7 +698,7 @@ check(
         bucketKey: "estimation",
         slot: "action",
       }) || ""
-    ).includes("רב־ספרתיים")
+    ).includes("רב ספרתיים")
   );
   check(
     "M-01 estimation g6 action mentions fractions or decimals or percentages",
@@ -1216,7 +1216,7 @@ check(
     const fb2 = resolveUnitParentActionHe(u4g2, "g2");
     check(
       "resolveUnit M-04 g2 flag on → engine fallback (null g1_g2 template)",
-      fb2 != null && (String(fb2).includes("חלק־כלל") || String(fb2).includes("עם/בלי שרטוט"))
+      fb2 != null && (String(fb2).includes("חלק כלל") || String(fb2).includes("עם/בלי שרטוט"))
     );
   }
 
@@ -1516,7 +1516,7 @@ check(
           displayName: "שברים",
           diagnosis: { allowed: true, taxonomyId: "M-04", lineHe: "מצביע על דפוס." },
           intervention: {
-            immediateActionHe: "חלק־כלל קונקרטי",
+            immediateActionHe: "חלק כלל קונקרטי",
             shortPracticeHe: "עם/בלי שרטוט",
             taxonomyId: "M-04",
           },
@@ -1666,7 +1666,7 @@ check(
           displayName: "שברים",
           diagnosis: { allowed: true, taxonomyId: "M-04", lineHe: "מצביע על דפוס." },
           intervention: {
-            immediateActionHe: "חלק־כלל קונקרטי",
+            immediateActionHe: "חלק כלל קונקרטי",
             shortPracticeHe: "עם/בלי שרטוט",
             taxonomyId: "M-04",
           },

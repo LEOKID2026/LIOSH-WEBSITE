@@ -245,7 +245,7 @@ function scienceTopicPairFromMetadataIndex(bucketKey, index) {
   const topic = String(bucketKey || "").trim();
   if (!topic) return null;
   const needle = `_${topic}_`;
-  const hit = index.entries.find(
+  const candidates = index.entries.filter(
     (e) =>
       e &&
       typeof e === "object" &&
@@ -254,6 +254,13 @@ function scienceTopicPairFromMetadataIndex(bucketKey, index) {
         String(e.subskillId || "").includes(needle) ||
         String(e.skillId || "") === topic)
   );
+  if (!candidates.length) return null;
+  const preferredSkillId =
+    topic === "experiments" ? "sci_experiments_scientific_method" : "";
+  const hit =
+    (preferredSkillId
+      ? candidates.find((e) => String(e.skillId || "").trim() === preferredSkillId)
+      : null) || candidates[0];
   if (!hit || typeof hit !== "object") return null;
   const skillId = String(hit.skillId || "").trim();
   const subskillId = String(hit.subskillId || "").trim();

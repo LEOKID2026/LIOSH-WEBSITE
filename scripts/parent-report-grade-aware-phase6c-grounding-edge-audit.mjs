@@ -172,10 +172,12 @@ assert.ok(rawUnit?.taxonomy?.patternHe, "fixture: detailed payload retains raw t
 
 const redacted = redactPayloadForCopilotGrounding(detailed);
 const ru = redacted?.diagnosticEngineV2?.units?.[0];
-assert.equal(ru?.taxonomy, undefined);
+assert.equal(ru?.taxonomy?.id, undefined, "raw taxonomy id must be stripped from Copilot input");
+assert.equal(ru?.taxonomy?.patternHe, undefined, "raw patternHe key must be stripped from Copilot input");
+assert.equal(ru?.taxonomy?.topicHe, undefined, "raw topicHe must be stripped from Copilot input");
 assert.equal(ru?.intervention, undefined);
 assert.equal(ru?.probe, undefined);
-assert.equal(ru?.diagnosis, undefined);
+assert.equal(ru?.diagnosis?.taxonomyId, undefined, "raw diagnosis taxonomyId must be stripped from Copilot input");
 assertNoBanned("redacted payload (Copilot engine input shape)", redacted);
 
 const tpTopic = buildTruthPacketV1(redacted, {

@@ -141,10 +141,13 @@ function sanitizeDiagnosticUnitForCopilotGrounding(u) {
   }
   const tax = u.taxonomy && typeof u.taxonomy === "object" ? u.taxonomy : null;
   if (tax) {
-    const patternHe = parentFacingPatternLabelHe(u);
+    const patternLabelHe = parentFacingPatternLabelHe(u);
     const subskillHe = tax.subskillHe != null ? String(tax.subskillHe).trim() : "";
-    if (patternHe || subskillHe) {
-      out.taxonomy = { ...(patternHe ? { patternHe } : {}), ...(subskillHe ? { subskillHe } : {}) };
+    if (patternLabelHe || subskillHe) {
+      out.taxonomy = {
+        ...(patternLabelHe ? { patternLabelHe } : {}),
+        ...(subskillHe ? { subskillHe } : {}),
+      };
     }
   }
   const diag = u.diagnosis && typeof u.diagnosis === "object" ? u.diagnosis : null;

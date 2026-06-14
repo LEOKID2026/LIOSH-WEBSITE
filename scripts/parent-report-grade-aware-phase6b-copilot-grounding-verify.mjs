@@ -166,9 +166,11 @@ assertNoBanned("redacted Copilot payload JSON", redacted);
 const u0 = redacted?.diagnosticEngineV2?.units?.[0];
 assert.ok(u0 && typeof u0 === "object", "redacted unit exists");
 assert.equal(u0.intervention, undefined, "raw intervention must be stripped from Copilot grounding payload");
-assert.equal(u0.taxonomy, undefined, "raw taxonomy must be stripped");
+assert.equal(u0.taxonomy?.id, undefined, "raw taxonomy id must be stripped");
+assert.equal(u0.taxonomy?.patternHe, undefined, "raw patternHe key must be stripped");
+assert.equal(u0.taxonomy?.topicHe, undefined, "raw topicHe must be stripped");
 assert.equal(u0.probe, undefined, "raw probe must be stripped");
-assert.equal(u0.diagnosis, undefined, "raw diagnosis must be stripped");
+assert.equal(u0.diagnosis?.taxonomyId, undefined, "raw diagnosis taxonomyId must be stripped");
 
 const tp = buildTruthPacketV1(redacted, {
   scopeType: "topic",
