@@ -2,6 +2,7 @@ const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const isProdBuild = process.env.NODE_ENV === "production";
+const isWindows = process.platform === "win32";
 
 function buildContentSecurityPolicy() {
   const connectSrc = [
@@ -60,6 +61,15 @@ const nextConfig = {
   // Avoid wrong workspace root when another package-lock.json exists under the user profile.
   outputFileTracingRoot: path.join(__dirname),
   reactStrictMode: false, // זמנית - כדי למנוע רענון אינסופי בפיתוח
+  // Windows: lower parallel SSG concurrency to avoid intermittent PageNotFoundError
+  // during prerender ("Cannot find module for page") when workers race on .next artifacts.
+  ...(isWindows
+    ? {
+        experimental: {
+          staticGenerationMaxConcurrency: 1,
+        },
+      }
+    : {}),
   webpack: (config, { dev, isServer }) => {
     if (dev) {
       config.watchOptions = {
