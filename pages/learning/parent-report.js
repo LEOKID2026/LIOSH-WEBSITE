@@ -1409,15 +1409,6 @@ export default function ParentReport() {
               <div className="text-sm text-white/60 mb-2">בחר תקופה:</div>
               {parentReportDatePresets}
             </div>
-            
-            <div className="space-y-3">
-              <button
-                onClick={() => router.push("/learning")}
-                className="px-6 py-3 rounded-lg bg-blue-500/80 hover:bg-blue-500 font-bold block w-full"
-              >
-                חזור למשחקים
-              </button>
-            </div>
           </div>
         </div>
       </Layout>
