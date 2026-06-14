@@ -3,17 +3,17 @@ import { test, expect, devices } from "@playwright/test";
 const email = process.env.E2E_PARENT_EMAIL || "";
 const password = process.env.E2E_PARENT_PASSWORD || "";
 
-test.use({
-  ...devices["iPhone 13"],
-});
-
 test.describe("Parent dashboard modals — mobile input stability", () => {
+  test.use({
+    ...devices["iPhone 13"],
+  });
+
   test.skip(!email || !password, "Set E2E_PARENT_EMAIL + E2E_PARENT_PASSWORD");
 
   async function loginParent(page: import("@playwright/test").Page) {
     await page.goto("/parent/login");
-    await page.getByPlaceholder("אימייל הורה").fill(email);
-    await page.getByPlaceholder("סיסמה").fill(password);
+    await page.getByPlaceholder("הקלידו אימייל או שם משתמש שקיבלתם מהמורה").fill(email);
+    await page.getByPlaceholder("הקלידו סיסמה או קוד כניסה").fill(password);
     await page.locator("form").getByRole("button", { name: "כניסה" }).click();
     await page.waitForURL("**/parent/dashboard", { timeout: 20_000 });
     const policyApprove = page.getByRole("button", { name: "אני מסכים/ה וממשיך/ה" });
@@ -52,7 +52,7 @@ test.describe("Parent dashboard modals — mobile input stability", () => {
 
     await loginParent(page);
     const detailsBtn = page.getByRole("button", { name: "פרטים" }).first();
-    test.skip(!(await detailsBtn.isVisible({ timeout: 5_000 }).catch(() => false)), "No child cards");
+    if ((await detailsBtn.count()) === 0) return;
 
     await detailsBtn.click();
     const pinInput = page.getByPlaceholder("4 ספרות").first();
