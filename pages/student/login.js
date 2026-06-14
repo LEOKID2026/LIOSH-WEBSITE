@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import PortalLoginHeading from "../../components/auth/PortalLoginHeading";
+import StudentThemePicker from "../../components/student/StudentThemePicker";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { isStudentIdentityDiagnosticsEnabled } from "../../lib/dev-student-identity-client";
@@ -158,6 +159,9 @@ export default function StudentLoginPage() {
           >
             {busy ? "מתחבר…" : "כניסה ללמידה"}
           </button>
+          <div className="pt-2">
+            <StudentThemePicker className="w-full" />
+          </div>
         </form>
 
         {message ? (
