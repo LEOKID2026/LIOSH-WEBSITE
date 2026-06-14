@@ -45,6 +45,14 @@ function normalizeBalance(student) {
  */
 const MAX_CHILDREN_DEFAULT = 3;
 
+const CHILD_PIN_INPUT_PROPS = {
+  type: "tel",
+  inputMode: "numeric",
+  pattern: "[0-9]*",
+  autoComplete: "one-time-code",
+  maxLength: 4,
+};
+
 export default function ParentDashboardPage() {
   const router = useRouter();
   const supabaseRef = useRef(null);
@@ -384,6 +392,14 @@ export default function ParentDashboardPage() {
     router.push("/parent/login");
   };
 
+  const closeAddChildModal = useCallback(() => {
+    setAddChildModalOpen(false);
+  }, []);
+
+  const closeDetailsModal = useCallback(() => {
+    setDetailsModalStudent(null);
+  }, []);
+
   const openDetailsModal = (student) => {
     setDetailsModalStudent(student);
     setEditById((prev) => {
@@ -415,6 +431,8 @@ export default function ParentDashboardPage() {
         value={newName}
         onChange={(e) => setNewName(e.target.value)}
         placeholder="שם הילד"
+        autoComplete="name"
+        enterKeyHint="next"
         required
         disabled={busy || students.length >= studentLimit}
       />
@@ -580,10 +598,7 @@ export default function ParentDashboardPage() {
                     }))
                   }
                   placeholder="4 ספרות"
-                  inputMode="numeric"
-                  type="password"
-                  autoComplete="new-password"
-                  maxLength={4}
+                  {...CHILD_PIN_INPUT_PROPS}
                 />
               </div>
               <button
@@ -644,10 +659,7 @@ export default function ParentDashboardPage() {
                     }))
                   }
                   placeholder="4 ספרות"
-                  inputMode="numeric"
-                  type="password"
-                  autoComplete="new-password"
-                  maxLength={4}
+                  {...CHILD_PIN_INPUT_PROPS}
                 />
               </div>
               <button
@@ -780,7 +792,7 @@ export default function ParentDashboardPage() {
         <ParentDashboardModal
           open={addChildModalOpen}
           title="הוספת ילד"
-          onClose={() => setAddChildModalOpen(false)}
+          onClose={closeAddChildModal}
           size="md"
         >
           {renderAddChildForm()}
@@ -789,7 +801,7 @@ export default function ParentDashboardPage() {
         <ParentDashboardModal
           open={Boolean(detailsStudent)}
           title={detailsStudent ? `פרטים — ${detailsStudent.full_name || "ילד"}` : "פרטים"}
-          onClose={() => setDetailsModalStudent(null)}
+          onClose={closeDetailsModal}
           size="2xl"
         >
           {detailsStudent ? renderChildDetailsContent(detailsStudent) : null}

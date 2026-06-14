@@ -14,29 +14,39 @@ const SIZE_CLASS = {
 export default function ParentDashboardModal({ open, title, onClose, children, size = "2xl" }) {
   const titleId = useId();
   const closeRef = useRef(null);
+  const onCloseRef = useRef(onClose);
   const sizeClass = SIZE_CLASS[size] || SIZE_CLASS["2xl"];
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return undefined;
     const onKeyDown = (event) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", onKeyDown);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
+    const focusFrame = requestAnimationFrame(() => {
+      closeRef.current?.focus({ preventScroll: true });
+    });
     return () => {
+      cancelAnimationFrame(focusFrame);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = prevOverflow;
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 
   return (
     <div
       className="fixed inset-0 z-[150] flex flex-col md:items-center md:justify-center bg-black/80 md:p-4"
-      onClick={onClose}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onCloseRef.current();
+      }}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
