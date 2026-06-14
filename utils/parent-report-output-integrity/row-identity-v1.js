@@ -87,6 +87,9 @@ export function buildRowSourceId(subjectId, topicRowKey, contentGradeKey = null)
  *   hasSubskillMetadata?: boolean;
  *   recommendedStepLabelHe?: string|null;
  *   diagnosticPatternHe?: string|null;
+ *   evidenceSources?: string[]|null;
+ *   primaryEvidenceSource?: string|null;
+ *   evidenceSourceCounts?: Record<string, number>|null;
  * }} fields
  */
 export function buildRowIdentityV1(fields) {
@@ -135,6 +138,17 @@ export function buildRowIdentityV1(fields) {
     hasSubskillMetadata: fields?.hasSubskillMetadata === true,
     recommendedStepLabelHe: fields?.recommendedStepLabelHe != null ? String(fields.recommendedStepLabelHe) : null,
     diagnosticPatternHe: fields?.diagnosticPatternHe != null ? String(fields.diagnosticPatternHe).trim() : null,
+    evidenceSources: Array.isArray(fields?.evidenceSources)
+      ? fields.evidenceSources.map((s) => String(s || "").trim()).filter(Boolean)
+      : [],
+    primaryEvidenceSource:
+      fields?.primaryEvidenceSource != null && String(fields.primaryEvidenceSource).trim()
+        ? String(fields.primaryEvidenceSource).trim()
+        : null,
+    evidenceSourceCounts:
+      fields?.evidenceSourceCounts && typeof fields.evidenceSourceCounts === "object" && !Array.isArray(fields.evidenceSourceCounts)
+        ? fields.evidenceSourceCounts
+        : {},
   };
 }
 

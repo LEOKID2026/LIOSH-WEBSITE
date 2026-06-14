@@ -290,6 +290,10 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
           gradeRelation,
           gradeDelta: row.gradeDelta ?? null,
           evidenceScope: gradeEvidenceScope,
+          // Provenance passthrough only (Phase C) — never affects scoring/classification.
+          primaryEvidenceSource:
+            typeof row.primaryEvidenceSource === "string" ? row.primaryEvidenceSource : null,
+          evidenceSources: Array.isArray(row.evidenceSources) ? row.evidenceSources : null,
         },
         classification: {
           state: classificationState,

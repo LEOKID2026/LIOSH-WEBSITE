@@ -12,6 +12,8 @@ import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
 
 const PARENT_ACTIVITY_MODE = "guided_practice";
 const MAX_QUESTION_COUNT = 30;
+const ACTIVITY_GRADE_KEYS = ["g1", "g2", "g3", "g4", "g5", "g6"];
+const FALLBACK_ACTIVITY_GRADE = "g1";
 
 function parseQuestionCountInput(raw) {
   const s = String(raw ?? "").trim();
@@ -36,31 +38,54 @@ function resolveQuestionCountForApi(raw) {
  * @param {{ student: { id: string, full_name?: string, grade_level?: string|null }, accessToken: string, onClose: () => void, onSuccess: () => void, refreshKey?: number }} props
  */
 export default function AssignActivityModal({ student, accessToken, onClose, onSuccess, refreshKey = 0 }) {
-  const gradeKey = useMemo(
+  // Registered profile grade — used only as the default; never mutated here.
+  const profileGradeKey = useMemo(
     () => normalizeGradeLevelToKey(student?.grade_level),
     [student?.grade_level]
   );
-  const missingGrade = !gradeKey;
 
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("math");
-  const [topic, setTopic] = useState(() => defaultTopicForAssignedActivity("math", gradeKey));
+  // Per-activity grade selection (defaults to profile grade, safe fallback otherwise).
+  // This is a one-off choice for THIS activity — it does not change the child's profile.
+  const [activityGradeKey, setActivityGradeKey] = useState(
+    () => profileGradeKey || FALLBACK_ACTIVITY_GRADE
+  );
+  const [topic, setTopic] = useState(() =>
+    defaultTopicForAssignedActivity("math", profileGradeKey || FALLBACK_ACTIVITY_GRADE)
+  );
   const [difficulty, setDifficulty] = useState("easy");
   const [questionCountInput, setQuestionCountInput] = useState("");
   const [preview, setPreview] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    setTopic(defaultTopicForAssignedActivity(subject, gradeKey));
-    setPreview([]);
-  }, [subject, gradeKey]);
+  const missingGrade = !activityGradeKey;
 
-  const topicOpts = topicOptionsForAssignedActivity(subject, gradeKey);
+  // When opening for a different child, reset the per-activity grade to that child's profile grade.
+  useEffect(() => {
+    setActivityGradeKey(profileGradeKey || FALLBACK_ACTIVITY_GRADE);
+  }, [student?.id, profileGradeKey]);
+
+  // Keep subject valid for the selected grade (some subjects are grade-gated).
+  useEffect(() => {
+    const subs = activitySubjectsForGrade(activityGradeKey, [...ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS]);
+    if (subs.length > 0 && !subs.includes(subject)) {
+      setSubject(subs[0]);
+    }
+  }, [activityGradeKey, subject]);
+
+  // On subject/grade change: reset topic to a valid default and clear any stale preview.
+  useEffect(() => {
+    setTopic(defaultTopicForAssignedActivity(subject, activityGradeKey));
+    setPreview([]);
+  }, [subject, activityGradeKey]);
+
+  const topicOpts = topicOptionsForAssignedActivity(subject, activityGradeKey);
 
   const runPreview = useCallback(async () => {
-    if (!gradeKey) {
-      setError("יש להגדיר כיתה בפרופיל הילד לפני יצירת פעילות");
+    if (!activityGradeKey) {
+      setError("יש לבחור כיתה לפעילות לפני יצירת שאלות");
       return;
     }
     const count = resolveQuestionCountForApi(questionCountInput);
@@ -74,7 +99,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
     try {
       const qs = await generateActivityQuestionSetClient({
         subject,
-        gradeLevel: gradeKey,
+        gradeLevel: activityGradeKey,
         topic,
         difficulty,
         count,
@@ -85,11 +110,11 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
     } finally {
       setBusy(false);
     }
-  }, [subject, gradeKey, topic, difficulty, questionCountInput]);
+  }, [subject, activityGradeKey, topic, difficulty, questionCountInput]);
 
   const sendActivity = useCallback(async () => {
-    if (!gradeKey) {
-      setError("יש להגדיר כיתה בפרופיל הילד לפני שליחת פעילות");
+    if (!activityGradeKey) {
+      setError("יש לבחור כיתה לפעילות לפני השליחה");
       return;
     }
     const count = resolveQuestionCountForApi(questionCountInput);
@@ -121,7 +146,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           subject,
           topic,
           mode: PARENT_ACTIVITY_MODE,
-          gradeLevel: gradeKey,
+          gradeLevel: activityGradeKey,
           difficultyLevel: difficulty,
           questionCount: count,
           questionSet: preview,
@@ -151,7 +176,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
     topic,
     difficulty,
     questionCountInput,
-    gradeKey,
+    activityGradeKey,
     onSuccess,
   ]);
 
@@ -203,7 +228,7 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
               onChange={(e) => setSubject(e.target.value)}
               disabled={busy}
             >
-              {activitySubjectsForGrade(gradeKey, [...ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS]).map((s) => (
+              {activitySubjectsForGrade(activityGradeKey, [...ACTIVITY_PREVIEW_SUPPORTED_SUBJECTS]).map((s) => (
                 <option key={s} value={s}>
                   {subjectLabelHe(s)}
                 </option>
@@ -212,10 +237,22 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
           </label>
 
           <label className="block text-sm">
-            <span className="text-white/70">כיתה</span>
-            <div className="mt-1 w-full rounded bg-black/30 border border-white/10 px-3 py-2 text-white/90">
-              {missingGrade ? "לא הוגדרה כיתה בפרופיל" : formatGradeLevelHe(gradeKey)}
-            </div>
+            <span className="text-white/70">כיתה לפעילות</span>
+            <select
+              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              value={activityGradeKey}
+              onChange={(e) => {
+                setActivityGradeKey(e.target.value);
+                setPreview([]);
+              }}
+              disabled={busy}
+            >
+              {ACTIVITY_GRADE_KEYS.map((g) => (
+                <option key={g} value={g}>
+                  {formatGradeLevelHe(g)}
+                </option>
+              ))}
+            </select>
           </label>
 
           <label className="block text-sm md:col-span-2">

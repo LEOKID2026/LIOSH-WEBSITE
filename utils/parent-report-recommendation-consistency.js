@@ -1,6 +1,7 @@
 import { normalizeParentFacingHe } from "./parent-report-language/index.js";
 import { resolveGradeAwareParentRecommendationHe } from "./parent-report-language/grade-aware-recommendation-resolver.js";
 import { shouldOmitRawDiagnosticRecommendationFallback } from "./report-diagnostic-safety-guards.js";
+import { gradeScopeMeaningHe } from "./parent-report-language/grade-insight-he.js";
 
 function canonicalState(unit) {
   return unit?.canonicalState || null;
@@ -13,6 +14,34 @@ function actionState(unit) {
 function isStrengthAction(unit) {
   const a = actionState(unit);
   return a === "maintain" || a === "expand_cautiously";
+}
+
+/**
+ * Append a grade-scope meaning sentence (foundation / enrichment / mastery) when the
+ * unit carries a known gradeRelation. Phrasing only — based on already-computed facts.
+ * @param {string|null|undefined} text
+ * @param {unknown} unit
+ * @returns {string|null}
+ */
+function withGradeScopeInsight(text, unit) {
+  const base = String(text || "").trim();
+  if (!base) return text ?? null;
+  const ge = unit?.gradeEvidence && typeof unit.gradeEvidence === "object" ? unit.gradeEvidence : null;
+  const rel = ge?.gradeRelation ? String(ge.gradeRelation).trim() : "";
+  if (!rel || rel === "unknown") return base;
+  const insight = gradeScopeMeaningHe({
+    gradeRelation: rel,
+    evidenceScope: ge?.evidenceScope ?? null,
+    isStrength: isStrengthAction(unit),
+    needsSupport: !isStrengthAction(unit),
+    topicName: topicName(unit),
+  });
+  if (!insight) return base;
+  // Avoid duplicating the relation phrase if the base already mentions it.
+  if (base.includes("מעל הכיתה") || base.includes("מתחת לכיתה") || base.includes("מעל רמת הכיתה")) {
+    return base;
+  }
+  return normalizeParentFacingHe(`${base} ${insight}`);
 }
 
 function positiveAuthorityLevel(unit) {
@@ -95,13 +124,19 @@ export function resolveUnitParentActionHe(unit, gradeKey, opts = {}) {
   if (cs?.recommendation?.allowed) {
     const family = cs.recommendation.family;
     if (family === "expand_cautiously") {
-      return normalizeParentFacingHe(
-        `ב${name} מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך — להוסיף קושי קטן ומדוד.`
+      return withGradeScopeInsight(
+        normalizeParentFacingHe(
+          `ב${name} מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך — להוסיף קושי קטן ומדוד.`
+        ),
+        unit
       );
     }
     if (family === "maintain") {
-      return normalizeParentFacingHe(
-        `ב${name} מומלץ להמשיך באותה רמה, ורק אם זה ממשיך להצליח באופן יציב — להוסיף מעט קושי.`
+      return withGradeScopeInsight(
+        normalizeParentFacingHe(
+          `ב${name} מומלץ להמשיך באותה רמה, ורק אם זה ממשיך להצליח באופן יציב — להוסיף מעט קושי.`
+        ),
+        unit
       );
     }
   }
@@ -136,8 +171,11 @@ export function resolveUnitNextGoalHe(unit, gradeKey, opts = {}) {
   const cs = canonicalState(unit);
   if (isStrengthAction(unit) && cs?.recommendation?.allowed) {
     const name = topicName(unit);
-    return normalizeParentFacingHe(
-      `לשבוע הקרוב ב${name}: להמשיך באותה רמה, ואם ההצלחה נשמרת — לנסות צעד אחד מעט מאתגר יותר.`
+    return withGradeScopeInsight(
+      normalizeParentFacingHe(
+        `לשבוע הקרוב ב${name}: להמשיך באותה רמה, ואם ההצלחה נשמרת — לנסות צעד אחד מעט מאתגר יותר.`
+      ),
+      unit
     );
   }
 

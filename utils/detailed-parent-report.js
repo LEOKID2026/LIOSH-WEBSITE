@@ -2165,6 +2165,13 @@ function recommendationFromV2Unit(u, mapRow, reportMeta = {}) {
       hasSubskillMetadata,
       recommendedStepLabelHe: finalLabel,
       diagnosticPatternHe: parentFacingPatternLabelHe(u) || null,
+      evidenceSources: Array.isArray(mapRow?.evidenceSources) ? mapRow.evidenceSources : null,
+      primaryEvidenceSource:
+        typeof mapRow?.primaryEvidenceSource === "string" ? mapRow.primaryEvidenceSource : null,
+      evidenceSourceCounts:
+        mapRow?.evidenceSourceCounts && typeof mapRow.evidenceSourceCounts === "object"
+          ? mapRow.evidenceSourceCounts
+          : null,
     }),
     threshold_policy_used: `topic_recommendation_questions>=${TOPIC_REC_MIN_ACTIONABLE_QUESTIONS}`,
     contractsV1,

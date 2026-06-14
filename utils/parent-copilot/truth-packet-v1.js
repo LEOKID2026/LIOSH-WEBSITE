@@ -1476,6 +1476,10 @@ export function buildTruthPacketV1(payload, scope) {
       rowSourceId: String(topicRow?.rowIdentityV1?.sourceId || "").trim() || null,
       contentGradeKey: topicRow?.rowIdentityV1?.contentGradeKey ?? null,
       gradeRelation: topicRow?.rowIdentityV1?.gradeRelation ?? null,
+      evidenceSources: Array.isArray(topicRow?.rowIdentityV1?.evidenceSources)
+        ? topicRow.rowIdentityV1.evidenceSources
+        : [],
+      primaryEvidenceSource: topicRow?.rowIdentityV1?.primaryEvidenceSource ?? null,
       displayName,
       subjectId: String(subjectId || "").trim() || null,
       subjectLabelHe: subjectLabelHe(subjectId),

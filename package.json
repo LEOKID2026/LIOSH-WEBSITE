@@ -234,6 +234,7 @@
     "test:adaptive-planner": "tsx scripts/adaptive-planner-selftest.mjs",
     "test:adaptive-planner:artifacts": "tsx scripts/adaptive-planner-artifact-runner.mjs",
     "test:diagnostic-unit-skill-alignment": "tsx scripts/diagnostic-unit-skill-alignment-selftest.mjs",
+    "test:parent-activity-grade-evidence": "node scripts/parent-activity-grade-evidence-selftest.mjs",
     "test:adaptive-planner:preview-pack": "tsx scripts/adaptive-planner-preview-pack.mjs",
     "test:adaptive-planner:runtime": "tsx scripts/adaptive-planner-runtime-bridge.mjs",
     "test:adaptive-planner:runtime-bridge": "tsx scripts/adaptive-planner-runtime-bridge.mjs",

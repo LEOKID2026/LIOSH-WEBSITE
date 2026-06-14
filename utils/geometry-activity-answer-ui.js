@@ -55,7 +55,10 @@ export function geometryQuestionUsesChoiceUi(params) {
  * @param {Record<string, unknown>|null|undefined} question
  */
 export function assignedActivityQuestionUsesChoiceUi(question) {
-  if (String(question?.subject) === "geometry") {
+  const subject = String(question?.subject || "").trim().toLowerCase();
+  // Math assigned activities use numeric typing + scratchpad — never MCQ from stored choices.
+  if (subject === "math") return false;
+  if (subject === "geometry") {
     return geometryQuestionUsesChoiceUi(question?.params);
   }
   return Array.isArray(question?.choices) && question.choices.length > 0;

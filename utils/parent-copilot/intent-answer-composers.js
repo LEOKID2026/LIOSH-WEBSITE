@@ -26,10 +26,18 @@ import {
 } from "../parent-report-language/subject-evidence-policy.js";
 import { ANSWER_CONTRACT, resolveAnswerContract, subjectQuestionCountFromPayload } from "./intent-answer-contract.js";
 import { foldUtteranceForHeMatch } from "./utterance-normalize-he.js";
+import {
+  evidenceSourcePhraseHe,
+  gradeScopeMeaningHe,
+  masteryReallocationHe,
+} from "../parent-report-language/grade-insight-he.js";
 
 const STRONG_ACC_MIN = 75;
 const STRONG_Q_MIN = 8;
 const WEAK_ACC_MAX = 54;
+// Soft volume gate for "you may be over-investing in an already-mastered topic".
+// Not an evidence/confidence threshold — only decides whether to OFFER a reallocation hint.
+const MASTERY_REALLOCATION_Q_MIN = 24;
 
 /**
  * @param {unknown} tr
@@ -49,6 +57,8 @@ function rowMetrics(tr) {
     displayName,
     contentGradeKey: riv.contentGradeKey ?? null,
     gradeRelation: riv.gradeRelation ?? null,
+    evidenceSources: Array.isArray(riv.evidenceSources) ? riv.evidenceSources : [],
+    primaryEvidenceSource: riv.primaryEvidenceSource ?? null,
     label: parentFacingTopicRowLabelHe({
       displayName,
       contentGradeKey: riv.contentGradeKey,
@@ -364,7 +374,11 @@ function composeTopicProblem(params) {
   if (registered && primary.gradeRelation === "higher") {
     meaningParts.push(`חלק מהתרגול בוצע מעל הכיתה הרשומה (${registered}) — כדאי לקרוא את זה בנפרד מביצוע בכיתה הרשומה.`);
   } else if (primary.gradeRelation === "lower") {
-    meaningParts.push("חלק מהתרגול בוצע ברמת בסיס/כיתה נמוכה — זה יכול להסביר פער מול תוכן כיתה רשומה.");
+    meaningParts.push("חלק מהתרגול בוצע ברמת בסיס/כיתה נמוכה — קושי כאן עשוי להעיד על צורך בחיזוק היסודות בנושא לפני שמתקדמים לרמת הכיתה.");
+  }
+  const problemSrcPhrase = evidenceSourcePhraseHe(primary.primaryEvidenceSource);
+  if (problemSrcPhrase) {
+    meaningParts.push(`עיקר הראיה בנושא הזה נאספה ${problemSrcPhrase}.`);
   }
   if (polarity === POLARITY.support_needed) {
     meaningParts.push(
@@ -623,6 +637,24 @@ function composeStrength(params) {
       ? `בטווח התקופה תורגל רק ${subjectLabelHe(practicedSubjects[0])} — אין מספיק נתונים להשוואה בין מקצועות. `
       : "";
 
+  const lead = metas[0];
+  const srcPhrase = evidenceSourcePhraseHe(lead?.primaryEvidenceSource);
+  const meaningHe = srcPhrase
+    ? `${list}. חלק מהראיה ל${lead.displayName} נאספה ${srcPhrase}.`
+    : `${list}.`;
+
+  // gradeRelation-aware next step: higher → consider leveling up; same → advance gradually.
+  const relStep = gradeScopeMeaningHe({
+    gradeRelation: lead?.gradeRelation,
+    isStrength: true,
+    topicName: lead?.displayName,
+  });
+  const reallocate =
+    lead && lead.q >= MASTERY_REALLOCATION_Q_MIN ? masteryReallocationHe(lead.displayName) : "";
+  const nextStepHe =
+    [relStep, reallocate].filter(Boolean).join(" ") ||
+    "כדאי לשמר תרגול קצר ושגרתי שם, ולעלות רמה רק אם ההצלחה ממשיכה להופיע.";
+
   return {
     answerBlocks: [
       {
@@ -630,10 +662,10 @@ function composeStrength(params) {
         textHe: `${singleSubjectNote}לפי נתוני התרגול בטווח, אלה התחומים החזקים יחסית בתוך מה שתורגל:`,
         source: "intent_composer",
       },
-      { type: "meaning", textHe: list + ".", source: "intent_composer" },
+      { type: "meaning", textHe: meaningHe, source: "intent_composer" },
       {
         type: "next_step",
-        textHe: "כדאי לשמר תרגול קצר ושגרתי שם — בלי למהר להעלות רמה.",
+        textHe: nextStepHe,
         source: "intent_composer",
       },
     ],
@@ -715,6 +747,197 @@ function composeTopicLookup(params) {
       },
     },
   });
+}
+
+/**
+ * Progression family: advance / level up / level down / mastered / above-grade /
+ * below-grade / focus elsewhere. Uses gradeRelation + evidenceScope + evidenceSource +
+ * strengths/weaknesses + evidence volume (confidence) — never just the profile grade.
+ * @param {object} params
+ */
+function composeProgression(params) {
+  const payload = params.payload;
+  const truthPacket = params.truthPacket;
+  const folded = foldUtteranceForHeMatch(String(params?.utteranceStr || ""));
+  const scopeType = String(truthPacket?.scopeType || "");
+
+  const asksAboveGrade = /מעל\s*(?:ה)?כיתה|מעל\s*הרמה/u.test(folded);
+  const asksBelowGrade = /מתחת\s*(?:ל)?כיתה|מתקשה\s*(?:גם\s*)?מתחת/u.test(folded);
+  const asksLevelDown = /לרדת\s*(?:ב)?רמה|להוריד\s*(?:את\s*)?(?:ה)?רמה/u.test(folded);
+  const isDown = asksBelowGrade || asksLevelDown;
+
+  let metas = collectPracticeMetrics(payload);
+  if (scopeType === "topic" && truthPacket?.scopeId) {
+    const focus = metas.filter((m) => m.topicRowKey === String(truthPacket.scopeId).trim());
+    if (focus.length) metas = focus;
+  }
+
+  const sttl = (sid, name) => `${subjectLabelHe(sid)} — ${name}`;
+
+  if (!metas.length) {
+    return {
+      answerBlocks: [
+        {
+          type: "observation",
+          textHe: "בתקופה הזו אין עדיין מספיק נתוני תרגול כדי להמליץ על עלייה או ירידה ברמה.",
+          source: "intent_composer",
+        },
+        {
+          type: "meaning",
+          textHe: "כדאי לאסוף עוד תרגול בנושא לפני החלטה על שינוי רמה.",
+          source: "intent_composer",
+        },
+      ],
+      plannerIntent: "why_not_advance",
+      answerComposerUsed: ANSWER_CONTRACT.progression,
+    };
+  }
+
+  const strong = metas
+    .filter((m) => m.q >= STRONG_Q_MIN && m.acc >= STRONG_ACC_MIN)
+    .sort((a, b) => b.acc - a.acc || b.q - a.q);
+  const weak = metas
+    .filter((m) => m.q >= STRONG_Q_MIN && m.acc <= WEAK_ACC_MAX)
+    .sort((a, b) => a.acc - b.acc || b.q - a.q);
+
+  // ----- DOWN: level down / struggling below grade -----
+  if (isDown) {
+    const lowerWeak = weak.filter((m) => m.gradeRelation === "lower");
+    if (asksBelowGrade) {
+      if (lowerWeak.length) {
+        const list = lowerWeak.slice(0, 3).map((m) => `${sttl(m.sid, m.displayName)} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ");
+        return {
+          answerBlocks: [
+            { type: "observation", textHe: `כן — לפי הדוח יש קושי גם מתחת לכיתה הרשומה ב: ${list}.`, source: "intent_composer" },
+            { type: "meaning", textHe: "קושי ברמת בסיס מצביע על צורך לחזק את היסודות בנושא לפני שמתקדמים לרמת הכיתה.", source: "intent_composer" },
+            { type: "next_step", textHe: `כדאי לתרגל ברמת בסיס ב${lowerWeak[0].displayName} עד שהדיוק עולה, ורק אז לחזור לרמת הכיתה.`, source: "intent_composer" },
+          ],
+          plannerIntent: "what_is_still_difficult",
+          answerComposerUsed: ANSWER_CONTRACT.progression,
+        };
+      }
+      return {
+        answerBlocks: [
+          { type: "observation", textHe: "לפי הדוח, לא נראה קושי ברמה שמתחת לכיתה הרשומה בתקופה הזו.", source: "intent_composer" },
+          {
+            type: "meaning",
+            textHe: weak.length
+              ? `הקשיים שמופיעים הם ברמת הכיתה עצמה: ${weak.slice(0, 2).map((m) => sttl(m.sid, m.displayName)).join("; ")}.`
+              : "לא בלט קו חלש עם מספיק תרגול בטווח.",
+            source: "intent_composer",
+          },
+        ],
+        plannerIntent: "what_is_still_difficult",
+        answerComposerUsed: ANSWER_CONTRACT.progression,
+      };
+    }
+
+    // generic "should we level down in a topic?"
+    if (!weak.length) {
+      return {
+        answerBlocks: [
+          { type: "observation", textHe: "לפי הדוח אין כרגע נושא עם מספיק תרגול ודיוק נמוך שמצדיק ירידת רמה.", source: "intent_composer" },
+          { type: "meaning", textHe: "ירידת רמה מתאימה כשיש קושי חוזר; כרגע לא רואים כזה בנתונים בטווח.", source: "intent_composer" },
+        ],
+        plannerIntent: "why_not_advance",
+        answerComposerUsed: ANSWER_CONTRACT.progression,
+      };
+    }
+    const w = weak[0];
+    const foundationNote =
+      w.gradeRelation === "lower"
+        ? " הקושי כבר ברמת בסיס, ולכן חיזוק יסודות חשוב במיוחד."
+        : "";
+    return {
+      answerBlocks: [
+        { type: "observation", textHe: `המקום שבו הכי כדאי לשקול ירידת רמה זמנית לחיזוק הוא ${sttl(w.sid, w.displayName)} (כ ${w.acc}% על ${w.q} שאלות).`, source: "intent_composer" },
+        { type: "meaning", textHe: `ירידת רמה זמנית מאפשרת לבסס את הבסיס לפני שחוזרים לרמת הכיתה.${foundationNote}`, source: "intent_composer" },
+        { type: "next_step", textHe: `כדאי לתרגל ב${w.displayName} רמה אחת נמוכה יותר למספר ימים, ואז לבדוק אם הדיוק עולה.`, source: "intent_composer" },
+      ],
+      plannerIntent: "what_is_still_difficult",
+      answerComposerUsed: ANSWER_CONTRACT.progression,
+    };
+  }
+
+  // ----- UP: advance / level up / above grade / mastered / focus elsewhere -----
+  if (asksAboveGrade) {
+    const higherStrong = strong.filter((m) => m.gradeRelation === "higher");
+    if (higherStrong.length) {
+      const list = higherStrong.slice(0, 3).map((m) => `${sttl(m.sid, m.displayName)} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ");
+      return {
+        answerBlocks: [
+          { type: "observation", textHe: `כן — הילד עבד והצליח גם מעל הכיתה הרשומה ב: ${list}.`, source: "intent_composer" },
+          { type: "meaning", textHe: "הצלחה מעל רמת הכיתה מצביעה על יכולת גבוהה בנושא הזה.", source: "intent_composer" },
+          { type: "next_step", textHe: `אפשר לשקול להעלות קושי או להתקדם לנושא מתקדם יותר ב${higherStrong[0].displayName}.`, source: "intent_composer" },
+        ],
+        plannerIntent: "what_is_going_well",
+        answerComposerUsed: ANSWER_CONTRACT.progression,
+      };
+    }
+    return {
+      answerBlocks: [
+        {
+          type: "observation",
+          textHe: strong.length
+            ? "לפי הדוח, ההצלחות נמדדו ברמת הכיתה הרשומה ולא מעליה."
+            : "לפי הדוח, אין עדיין מספיק ראיות לעבודה מעל הכיתה הרשומה.",
+          source: "intent_composer",
+        },
+        {
+          type: "meaning",
+          textHe: strong.length
+            ? `יש שליטה יפה ברמת הכיתה (למשל ${sttl(strong[0].sid, strong[0].displayName)}) — אפשר לשקול להעלות קושי בהדרגה.`
+            : "כדאי לאסוף עוד תרגול לפני שמסיקים על יכולת מעל הכיתה.",
+          source: "intent_composer",
+        },
+      ],
+      plannerIntent: "what_is_going_well",
+      answerComposerUsed: ANSWER_CONTRACT.progression,
+    };
+  }
+
+  if (!strong.length) {
+    return {
+      answerBlocks: [
+        { type: "observation", textHe: "לפי הדוח, אין עדיין נושא עם מספיק תרגול ודיוק גבוה כדי להמליץ על התקדמות בביטחון.", source: "intent_composer" },
+        { type: "meaning", textHe: "זה לא אומר שאין הצלחות — רק שעדיין מוקדם להמליץ על עלייה ברמה לפי הנתונים בטווח.", source: "intent_composer" },
+        { type: "next_step", textHe: "כדאי להמשיך תרגול קצר וקבוע, ואז לשאול שוב כשהדיוק מתייצב.", source: "intent_composer" },
+      ],
+      plannerIntent: "why_not_advance",
+      answerComposerUsed: ANSWER_CONTRACT.progression,
+    };
+  }
+
+  const lead = strong[0];
+  const list = strong.slice(0, 3).map((m) => `${sttl(m.sid, m.displayName)} (כ ${m.acc}% על ${m.q} שאלות)`).join("; ");
+  const relStep =
+    gradeScopeMeaningHe({ gradeRelation: lead.gradeRelation, isStrength: true, topicName: lead.displayName }) ||
+    `ב${lead.displayName} יש שליטה טובה — אפשר להעלות קושי בהדרגה או לעבור לנושא הבא.`;
+  const reallocate = lead.q >= MASTERY_REALLOCATION_Q_MIN ? masteryReallocationHe(lead.displayName) : "";
+  const focusElsewhere =
+    weak.length && weak[0].topicRowKey !== lead.topicRowKey
+      ? `אם רוצים למקד מאמץ — אפשר להפנות חלק מהזמן מ${lead.displayName} אל ${sttl(weak[0].sid, weak[0].displayName)} שדורש יותר חיזוק.`
+      : "";
+  const srcPhrase = evidenceSourcePhraseHe(lead.primaryEvidenceSource);
+
+  return {
+    answerBlocks: [
+      { type: "observation", textHe: `המקום שבו הכי ברור שאפשר להתקדם הוא: ${list}.`, source: "intent_composer" },
+      {
+        type: "meaning",
+        textHe: srcPhrase ? `${relStep} חלק מהראיה נאספה ${srcPhrase}.` : relStep,
+        source: "intent_composer",
+      },
+      {
+        type: "next_step",
+        textHe: [reallocate, focusElsewhere].filter(Boolean).join(" ") ||
+          `כדאי להמשיך לאתגר ב${lead.displayName} ולהעלות קושי בהדרגה כל עוד ההצלחה נשמרת.`,
+        source: "intent_composer",
+      },
+    ],
+    plannerIntent: "what_is_going_well",
+    answerComposerUsed: ANSWER_CONTRACT.progression,
+  };
 }
 
 function composeZeroEvidence(params) {
@@ -828,6 +1051,9 @@ export function tryComposeIntentAnswer(params) {
       break;
     case ANSWER_CONTRACT.strength:
       composed = composeStrength(base);
+      break;
+    case ANSWER_CONTRACT.progression:
+      composed = composeProgression(base);
       break;
     case ANSWER_CONTRACT.zero_evidence:
       composed = composeZeroEvidence({

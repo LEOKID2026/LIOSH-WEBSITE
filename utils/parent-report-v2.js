@@ -40,6 +40,10 @@ import {
   buildGradeEvidenceFields,
   practiceGradeRelation,
 } from "../lib/learning-supabase/practice-grade-resolution.js";
+import {
+  mergeEvidenceSourceCounts,
+  summarizeEvidenceSources,
+} from "../lib/learning-supabase/evidence-source.js";
 import { normalizeGradeLevelToKey } from "../lib/learning-student-defaults.js";
 import { isMoledetGeographyGradeAllowed } from "./moledet-geography-curriculum-gates.js";
 import { enrichTopicMapsWithRowTrends, filterMistakesForRow } from "./parent-report-row-trend.js";
@@ -366,6 +370,7 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
     const modeCounts = {};
     const gradeCounts = {};
     const levelCounts = {};
+    let mergedEvidenceSourceCounts = {};
     let representative = rows[0];
     for (const r of rows) {
       const q = Number(r?.questions) || 0;
@@ -382,6 +387,12 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       if (gKey) gradeCounts[gKey] = (gradeCounts[gKey] || 0) + q;
       const lKey = String(r?.levelKey || "").trim();
       if (lKey) levelCounts[lKey] = (levelCounts[lKey] || 0) + q;
+      if (r?.evidenceSourceCounts) {
+        mergedEvidenceSourceCounts = mergeEvidenceSourceCounts(
+          mergedEvidenceSourceCounts,
+          r.evidenceSourceCounts
+        );
+      }
       const lms = Number(r?.lastSessionMs);
       if (Number.isFinite(lms) && (lastSessionMs == null || lms > lastSessionMs)) {
         lastSessionMs = lms;
@@ -409,6 +420,7 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       null;
     const contentGradeKey = gradeKey || null;
     const gradeEvidence = buildGradeEvidenceFields(registeredGradeKey, contentGradeKey);
+    const mergedEvidenceSourceSummary = summarizeEvidenceSources(mergedEvidenceSourceCounts);
     const merged = {
       ...representative,
       bucketKey,
@@ -418,6 +430,9 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       actualGradeKey: gradeEvidence.contentGradeLevel,
       gradeRelation: gradeEvidence.gradeRelation,
       gradeDelta: gradeEvidence.gradeDelta,
+      evidenceSourceCounts: mergedEvidenceSourceSummary.evidenceSourceCounts,
+      evidenceSources: mergedEvidenceSourceSummary.evidenceSources,
+      primaryEvidenceSource: mergedEvidenceSourceSummary.primaryEvidenceSource,
       questions,
       correct,
       wrong,
@@ -585,6 +600,13 @@ function buildRowSummary({
     return max;
   })();
   const latestActivitySourceFromSessions = latestSessionFieldValue(sessions, "latestActivitySource");
+  let evidenceSourceCountsAcc = {};
+  for (const s of sessions) {
+    if (s && s.evidenceSourceCounts) {
+      evidenceSourceCountsAcc = mergeEvidenceSourceCounts(evidenceSourceCountsAcc, s.evidenceSourceCounts);
+    }
+  }
+  const evidenceSourceSummary = summarizeEvidenceSources(evidenceSourceCountsAcc);
   const base = {
     subject,
     bucketKey,
@@ -597,6 +619,9 @@ function buildRowSummary({
       ? formatParentReportActivityIsrael(lastAnswerMsFromSessions)
       : null,
     latestActivitySource: latestActivitySourceFromSessions || null,
+    evidenceSourceCounts: evidenceSourceSummary.evidenceSourceCounts,
+    evidenceSources: evidenceSourceSummary.evidenceSources,
+    primaryEvidenceSource: evidenceSourceSummary.primaryEvidenceSource,
     questions,
     correct,
     wrong: questions - correct,

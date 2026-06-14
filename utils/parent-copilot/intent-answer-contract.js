@@ -15,6 +15,7 @@ export const ANSWER_CONTRACT = Object.freeze({
   mistake_pattern: "mistake_pattern",
   home_practice: "home_practice",
   strength: "strength",
+  progression: "progression",
   zero_evidence: "zero_evidence",
 });
 
@@ -33,7 +34,11 @@ const HOME_PRACTICE_RE =
   /מה\s*לעשות|איך\s*לתרגל|כמה\s*זמן|בבית|הצעד\s*הבא|מה\s*עושים\s*עכשיו|תרגול\s*בבית|איך\s*מתרגלים/u;
 
 const STRENGTH_RE =
-  /מה\s*הולך\s*טוב|במה\s*(?:הוא|היא|הילד)?\s*חזק|מה\s*חזק|איפה\s*חזק|מה\s*מצליח|תחומי\s*חוזק/u;
+  /מה\s*הולך\s*טוב|במה\s*(?:הוא|היא|הילד)?\s*חזק|מה\s*חזק|איפה\s*חזק|מה\s*מצליח|תחומי\s*חוזק|(?:ה)?מקצוע\s*(?:הכי\s*)?(?:ה)?חזק|הכי\s*חזק|(?:ה)?חזק\s*ביותר/u;
+
+// Progression family: advance / level up / level down / mastered / above-grade / below-grade / focus elsewhere.
+const PROGRESSION_RE =
+  /להתקדם|לעלות\s*(?:ב)?רמה|להעלות\s*(?:את\s*)?(?:ה)?רמה|לרדת\s*(?:ב)?רמה|להוריד\s*(?:את\s*)?(?:ה)?רמה|כבר\s*שולט|שולט\s*בנושא|כבר\s*יודע|מעל\s*(?:ה)?כיתה|מעל\s*הרמה|מתחת\s*(?:ל)?כיתה|מתקשה\s*(?:גם\s*)?מתחת|להתמקד\s*בנושא\s*אחר|לעבור\s*לנושא\s*אחר|מבזבז/u;
 
 /**
  * @param {unknown} payload
@@ -83,6 +88,10 @@ export function resolveAnswerContract(params) {
     (isContextualFollowUpUtterance(utteranceStr) && /מה\s*לעשות|איך\s*לתרגל|כמה\s*זמן/u.test(folded))
   ) {
     return ANSWER_CONTRACT.home_practice;
+  }
+
+  if (PROGRESSION_RE.test(folded)) {
+    return ANSWER_CONTRACT.progression;
   }
 
   if (stageAIntent === "what_is_going_well" || STRENGTH_RE.test(folded)) {
