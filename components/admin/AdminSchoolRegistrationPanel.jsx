@@ -111,7 +111,7 @@ export default function AdminSchoolRegistrationPanel({
             ) : null}
             {req.approxStudents != null ? (
               <p>
-                <span className="text-white/50">תלמידים משוער: </span>
+                <span className="text-white/50">ילדים משוער: </span>
                 {req.approxStudents}
               </p>
             ) : null}

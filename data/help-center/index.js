@@ -14,7 +14,7 @@ export const SECTIONS = {
   },
   students: {
     key: "students",
-    title: "מדריך לתלמידים",
+    title: "מדריך לילדים",
     description: "כניסה, תרגול, משימות ומשחקים — בשפה פשוטה.",
     href: "/help/students",
     emoji: "🎒",

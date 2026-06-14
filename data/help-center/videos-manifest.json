@@ -187,7 +187,7 @@
       "section": "parents",
       "slug": "add-students",
       "audience": "parent",
-      "title": "הוספת תלמיד",
+      "title": "הוספת ילד/ה",
       "viewports": [
         "desktop",
         "mobile"
@@ -817,7 +817,7 @@
       "section": "parents",
       "slug": "student-pin-and-credentials",
       "audience": "parent",
-      "title": "קוד PIN ופרטי כניסה לתלמיד",
+      "title": "קוד PIN ופרטי כניסה לילד/ה",
       "viewports": [
         "desktop",
         "mobile"
@@ -2691,7 +2691,7 @@
       "section": "parents",
       "slug": "edit-or-delete-student",
       "audience": "parent",
-      "title": "עריכה ומחיקת תלמיד",
+      "title": "עריכה ומחיקת ילד/ה",
       "viewports": [
         "desktop",
         "mobile"

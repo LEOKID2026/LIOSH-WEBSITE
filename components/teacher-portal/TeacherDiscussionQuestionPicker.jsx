@@ -197,7 +197,7 @@ export default function TeacherDiscussionQuestionPicker({
       return;
     }
     if (isClassDiscussion && recipientScope === "selected_students" && selectedStudentIds.size === 0) {
-      setError("נא לבחור לפחות תלמיד אחד");
+      setError("נא לבחור לפחות ילד/ה אחד");
       return;
     }
     setBusy(true);
@@ -498,7 +498,7 @@ export default function TeacherDiscussionQuestionPicker({
                 checked={recipientScope === "selected_students"}
                 onChange={() => setRecipientScope("selected_students")}
               />
-              <span>תלמידים נבחרים</span>
+              <span>ילדים נבחרים</span>
             </label>
           </div>
 
@@ -523,7 +523,7 @@ export default function TeacherDiscussionQuestionPicker({
                 </button>
               </div>
               {classMembers.length === 0 ? (
-                <p className="text-white/50 text-sm">אין תלמידים פעילים בכיתה.</p>
+                <p className="text-white/50 text-sm">אין ילדים פעילים בכיתה.</p>
               ) : (
                 <ul className="max-h-48 overflow-y-auto space-y-1 rounded-lg border border-white/10 p-2">
                   {classMembers.map((m) => (
@@ -555,7 +555,7 @@ export default function TeacherDiscussionQuestionPicker({
               checked={answerRequired}
               onChange={() => setAnswerRequired(true)}
             />
-            <span>דיון עם מענה (תלמידים מגישים תשובה)</span>
+            <span>דיון עם מענה (ילדים מגישים תשובה)</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input

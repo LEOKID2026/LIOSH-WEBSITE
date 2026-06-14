@@ -13,7 +13,7 @@ export default function TeacherWorksheetReport({ classId, worksheetId, report, w
   return (
     <div className="space-y-6 text-right">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <Stat label="סה״כ תלמידים" value={report.totalStudents} />
+        <Stat label="סה״כ ילדים" value={report.totalStudents} />
         <Stat label="פתחו PDF" value={report.pdfOpenedCount} />
         <Stat label="סיימו (PDF)" value={report.markedCompleteCount} />
         <Stat label="הגישו תשובות" value={report.digitalSubmittedCount} />
@@ -28,7 +28,7 @@ export default function TeacherWorksheetReport({ classId, worksheetId, report, w
         <table className="w-full text-sm text-right">
           <thead className="bg-white/5 text-white/70">
             <tr>
-              <th className="p-3">תלמיד</th>
+              <th className="p-3">ילד/ה</th>
               <th className="p-3">פתח PDF</th>
               <th className="p-3">סיים</th>
               <th className="p-3">הגשה דיגיטלית</th>

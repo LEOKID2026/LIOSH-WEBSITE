@@ -61,14 +61,14 @@ export default function DevStudentSimulatorPage({ authorized }) {
     return (
       <Layout>
         <Head>
-          <title>סימולטור תלמידים לפיתוח</title>
+          <title>סימולטור ילדים לפיתוח</title>
         </Head>
         <main
           dir="rtl"
           lang="he"
           style={{ minHeight: "50vh", padding: 24, maxWidth: 480, margin: "0 auto" }}
         >
-          <h1 style={{ fontSize: 22 }}>סימולטור תלמידים לפיתוח</h1>
+          <h1 style={{ fontSize: 22 }}>סימולטור ילדים לפיתוח</h1>
           <p style={{ color: "#475569", fontSize: 14 }}>
             התחברות עם סיסמת הפיתוח שהוגדרה בשרת. האזור הזה מוסתר כאשר הדגל כבוי.
           </p>
@@ -117,7 +117,7 @@ export default function DevStudentSimulatorPage({ authorized }) {
   return (
     <Layout>
       <Head>
-        <title>סימולטור תלמידים לפיתוח</title>
+        <title>סימולטור ילדים לפיתוח</title>
       </Head>
       <main dir="rtl" lang="he" style={{ padding: "24px 12px 56px", background: "#020617", minHeight: "100vh" }}>
         <DevStudentSimulatorClient />

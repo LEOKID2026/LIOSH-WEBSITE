@@ -16,7 +16,7 @@ export default function HelpLayoutShell({
     <Layout>
       <Head>
         <title>{pageTitle}</title>
-        <meta name="description" content={summary || "מרכז עזרה לליאו — מדריכים להורים, לתלמידים ולדוחות."} />
+        <meta name="description" content={summary || "מרכז עזרה לליאו — מדריכים להורים, לילדים ולדוחות."} />
       </Head>
       <a
         href="#help-main"

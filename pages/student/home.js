@@ -603,7 +603,7 @@ export default function StudentHomePage() {
     return <LoadingScreen message="טוען..." />;
   }
 
-  const heroName = String(student.full_name || "").trim() || "תלמיד";
+  const heroName = String(student.full_name || "").trim() || "ילד/ה";
   const heroGrade =
     student.grade_level != null && student.grade_level !== "" ? formatGradeLevelHe(student.grade_level) : "";
   const heroCoins = Number(student.coin_balance) || 0;

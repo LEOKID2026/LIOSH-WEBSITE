@@ -65,7 +65,7 @@ export default function SchoolTeacherClassStudentsModal({
         </SchoolCardGrid>
       ) : null}
       {!loading && !error && !students.length ? (
-        <SchoolEmptyState title="אין תלמידים בכיתה זו." />
+        <SchoolEmptyState title="אין ילדים בכיתה זו." />
       ) : null}
     </ReportModalFrame>
   );

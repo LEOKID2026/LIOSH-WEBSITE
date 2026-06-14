@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   if (!session?.studentId) {
     return res.status(401).json({
       ok: false,
-      error: "נדרשת התחברות תלמיד",
+      error: "נדרשת התחברות ילד/ה",
       code: "unauthorized",
     });
   }

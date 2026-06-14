@@ -96,7 +96,7 @@ export default function TeacherDiscussionSubjectsSection({ teacher, accessToken 
     >
       <p className="text-white/60 text-sm mb-4">
         מורה פרטי ללא הרשאות מקצוע לא יוכל ליצור פעילויות דיון. ההרשאה היא לפי מקצוע בלבד (לא
-        לפי כיתה או שכבה). רמת התלמיד משמשת רק לבחירת שאלות מתאימות.
+        לפי כיתה או שכבה). רמת הילד/ה משמשת רק לבחירת שאלות מתאימות.
       </p>
 
       {error ? <p className="text-red-200 text-sm mb-3">{error}</p> : null}

@@ -103,7 +103,7 @@ export default function SchoolStudentCreateForm({
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(apiErrorMessageHe(json?.error, "יצירת תלמיד/ה נכשלה"));
+        setError(apiErrorMessageHe(json?.error, "יצירת ילד/ה נכשלה"));
         return;
       }
 

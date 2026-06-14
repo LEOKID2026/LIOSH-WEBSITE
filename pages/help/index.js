@@ -20,7 +20,7 @@ export default function HelpCenterHome() {
         <title>מרכז עזרה · LEO KIDS</title>
         <meta
           name="description"
-          content="מרכז עזרה בעברית — מדריכים להורים, לתלמידים, לדוחות ולמקצועות."
+          content="מרכז עזרה בעברית — מדריכים להורים, לילדים, לדוחות ולמקצועות."
         />
       </Head>
       <div dir="rtl" className="max-w-5xl mx-auto px-4 py-10 space-y-10">
@@ -32,7 +32,7 @@ export default function HelpCenterHome() {
             מרכז עזרה
           </h1>
           <p className="text-base md:text-lg text-white/70 max-w-2xl mx-auto">
-            מדריכים בעברית להורים ולתלמידים — איך להשתמש באתר, איך לקרוא את הדוח,
+            מדריכים בעברית להורים ולילדים — איך להשתמש באתר, איך לקרוא את הדוח,
             ואיך לתרגל בכל מקצוע.
           </p>
         </header>

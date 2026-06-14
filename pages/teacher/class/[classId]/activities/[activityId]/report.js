@@ -151,7 +151,7 @@ export default function TeacherActivityReportPage({ classId, activityId }) {
             <table className="w-full text-sm text-right">
               <thead className="bg-white/5 text-white/70">
                 <tr>
-                  <th className="px-3 py-2">תלמיד</th>
+                  <th className="px-3 py-2">ילד/ה</th>
                   <th className="px-3 py-2">סטטוס</th>
                   <th className="px-3 py-2">ציון</th>
                   <th className="px-3 py-2">נכונות</th>

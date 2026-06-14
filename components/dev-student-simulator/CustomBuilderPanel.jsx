@@ -230,7 +230,7 @@ export default function CustomBuilderPanel({ value, setValue, disabled }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={{ border: "1px solid #cbd5e1", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
-        <h3 style={{ margin: "0 0 12px", fontSize: 16 }}>תלמיד</h3>
+        <h3 style={{ margin: "0 0 12px", fontSize: 16 }}>ילד/ה</h3>
         <label style={fieldStyle}>
           {LABEL.student}
           <input

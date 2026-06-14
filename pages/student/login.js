@@ -75,7 +75,7 @@ export default function StudentLoginPage() {
     return (
       <Layout {...layoutProps}>
         <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
-          <PortalLoginHeading title="כניסת תלמיד" bright={isBright} />
+          <PortalLoginHeading title="כניסת ילד/ה" bright={isBright} />
           <div className="py-8 md:py-12 flex flex-col items-center justify-center">
             <div className={T.loadingSpinner} aria-hidden />
             <p className={T.loadingText}>בודקים חיבור...</p>
@@ -122,7 +122,7 @@ export default function StudentLoginPage() {
   return (
     <Layout {...layoutProps}>
       <div className="max-w-md mx-auto px-4 py-3 md:py-10" dir="rtl" lang="he">
-        <PortalLoginHeading title="כניסת תלמיד" bright={isBright} />
+        <PortalLoginHeading title="כניסת ילד/ה" bright={isBright} />
 
         <form onSubmit={submitLogin} className="space-y-3">
           <label className="block text-sm">

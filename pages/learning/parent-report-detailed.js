@@ -404,7 +404,7 @@ export default function ParentReportDetailedPage() {
                     ? "נדרשת התחברות מחדש כמורה."
                     : "נדרשת התחברות מחדש כהורה."
                   : res.status === 403 || res.status === 404
-                    ? "אין גישה לדוח של תלמיד זה."
+                    ? "אין גישה לדוח של ילד/ה זה."
                     : typeof body?.error === "string"
                       ? body.error
                       : "לא ניתן לטעון את דוח ההורה.";

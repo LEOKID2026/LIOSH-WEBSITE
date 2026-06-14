@@ -1151,7 +1151,7 @@ export default function ParentReport() {
                   ? "נדרשת התחברות מחדש כמורה."
                   : "נדרשת התחברות מחדש כהורה."
                 : res.status === 403 || res.status === 404
-                  ? "אין גישה לדוח של תלמיד זה."
+                  ? "אין גישה לדוח של ילד/ה זה."
                   : typeof body?.error === "string"
                     ? body.error
                     : "לא ניתן לטעון את דוח ההורה.";
@@ -3385,7 +3385,7 @@ export default function ParentReport() {
                                   <span className="text-lg shrink-0">🎯</span>
                                   <div className="flex-1 min-w-0">
                                     <div className="parent-report-print-subheading font-semibold text-xs md:text-sm text-white/90 mb-0.5">
-                                      המלצה לתלמיד
+                                      המלצה לילד/ה
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
                                       {diagnosticParentVisibleTextHe(r.textHe)}
@@ -3403,7 +3403,7 @@ export default function ParentReport() {
                                   <span className="text-lg shrink-0">✨</span>
                                   <div className="flex-1 min-w-0">
                                     <div className="parent-report-print-subheading font-semibold text-xs md:text-sm text-white/90 mb-0.5">
-                                      המלצה לתלמיד — שימור מה שעובד טוב
+                                      המלצה לילד/ה — שימור מה שעובד טוב
                                     </div>
                                     <div className="parent-report-print-muted-text text-xs md:text-sm text-white/80 break-words">
                                       {diagnosticParentVisibleTextHe(r.textHe)}

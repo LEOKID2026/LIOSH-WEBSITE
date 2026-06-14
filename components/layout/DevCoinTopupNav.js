@@ -36,7 +36,7 @@ export default function DevCoinTopupNav({ variant = "desktop" }) {
       const data = await res.json().catch(() => ({}));
 
       if (res.status === 401) {
-        setMsg("לא מחובר כתלמיד");
+        setMsg("לא מחובר כילד/ה");
         return;
       }
       if (res.status === 403 && data?.code === "invalid_code") {

@@ -94,8 +94,8 @@ test.describe("School physical class report", () => {
     await physicalDialog.getByTestId("report-nav-students").click();
     const studentDetail = page.getByTestId("report-hub-detail");
     await expect(studentDetail).toBeVisible({ timeout: 10_000 });
-    await expect(studentDetail.getByRole("button", { name: "דוח תלמיד" }).first()).toBeVisible();
-    await studentDetail.getByRole("button", { name: "דוח תלמיד" }).first().click();
+    await expect(studentDetail.getByRole("button", { name: "דוח ילד/ה" }).first()).toBeVisible();
+    await studentDetail.getByRole("button", { name: "דוח ילד/ה" }).first().click();
     await expect(page.getByTestId("report-hub-student-main")).toBeVisible({ timeout: 60_000 });
     await page.getByTestId("report-hub-student-main").getByTestId("report-modal-back").click();
 

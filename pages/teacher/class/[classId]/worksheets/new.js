@@ -227,7 +227,7 @@ export default function TeacherNewWorksheetPage({ classId }) {
           </label>
 
           <label className="block text-sm text-white/80">
-            הוראות לתלמידים
+            הוראות לילדים
             <textarea
               rows={3}
               className="mt-1 w-full rounded-lg bg-black/40 border border-white/15 px-3 py-2 text-white"

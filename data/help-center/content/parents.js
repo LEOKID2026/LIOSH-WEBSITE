@@ -24,7 +24,7 @@ export const welcomeAndOverview = baseArticle({
   blocks: [
     heading(2, "what-is-leo", "מה זה ליאו?"),
     paragraph(
-      "ליאו הוא מרחב לימודי בעברית לתלמידי כיתות א׳–ו׳, עם תרגול במקצועות שונים, משחקים ודוחות התקדמות להורים."
+      "ליאו הוא מרחב לימודי בעברית לילד/הי כיתות א׳–ו׳, עם תרגול במקצועות שונים, משחקים ודוחות התקדמות להורים."
     ),
     screenshotBlock(S, "welcome-and-overview", "overview", "דף הבית של ליאו עם אזורי לימוד ומשחקים"),
     videoBlock(S, "welcome-and-overview"),
@@ -62,7 +62,7 @@ export const parentDashboardTour = baseArticle({
   slug: "parent-dashboard-tour",
   section: S,
   title: "סיור בעמוד ההורה",
-  summary: "רשימת הילדים, יצירת תלמיד חדש ומגבלת מספר ילדים בחשבון.",
+  summary: "רשימת הילדים, יצירת ילד/ה חדש ומגבלת מספר ילדים בחשבון.",
   keywords: ["לוח בקרה", "ילדים", "הורים"],
   toc: [
     { id: "children-list", title: "רשימת הילדים" },
@@ -71,26 +71,26 @@ export const parentDashboardTour = baseArticle({
   blocks: [
     heading(2, "children-list", "רשימת הילדים"),
     paragraph("בעמוד ההורה תראו את כל הילדים המשויכים לחשבון, עם שם, כיתה ואפשרויות ניהול."),
-    screenshotBlock(S, "parent-dashboard-tour", "dashboard", "עמוד ההורה עם רשימת תלמידים"),
+    screenshotBlock(S, "parent-dashboard-tour", "dashboard", "עמוד ההורה עם רשימת ילדים"),
     videoBlock(S, "parent-dashboard-tour"),
     heading(2, "limits", "מגבלות חשבון"),
     paragraph("ברירת המחדל מאפשרת עד שלושה ילדים לכל חשבון הורה."),
-    callout("info", "אם הגעתם למגבלה, יש לערוך או למחוק תלמיד קיים לפני הוספת חדש."),
+    callout("info", "אם הגעתם למגבלה, יש לערוך או למחוק ילד/ה קיים לפני הוספת חדש."),
   ],
 });
 
 export const addStudents = baseArticle({
   slug: "add-students",
   section: S,
-  title: "הוספת תלמיד",
-  summary: "יצירת פרופיל תלמיד, בחירת כיתה ושמירה.",
-  keywords: ["תלמיד", "כיתה", "הוספה"],
+  title: "הוספת ילד/ה",
+  summary: "יצירת פרופיל ילד/ה, בחירת כיתה ושמירה.",
+  keywords: ["ילד/ה", "כיתה", "הוספה"],
   toc: [{ id: "add-form", title: "טופס הוספה" }],
   blocks: [
     heading(2, "add-form", "טופס הוספה"),
-    paragraph("הזינו שם לתלמיד ובחרו כיתה (א׳ עד ו׳). לאחר השמירה יוצגו פרטי כניסה לתלמיד."),
+    paragraph("הזינו שם לילד/ה ובחרו כיתה (א׳ עד ו׳). לאחר השמירה יוצגו פרטי כניסה לילד/ה."),
     videoBlock(S, "add-students"),
-    screenshotBlock(S, "add-students", "form", "טופס הוספת תלמיד עם בחירת כיתה"),
+    screenshotBlock(S, "add-students", "form", "טופס הוספת ילד/ה עם בחירת כיתה"),
     list(["כיתה א׳ — grade_1", "כיתה ב׳ — grade_2", "ועד כיתה ו׳ — grade_6"], false),
   ],
 });
@@ -98,20 +98,20 @@ export const addStudents = baseArticle({
 export const studentPinAndCredentials = baseArticle({
   slug: "student-pin-and-credentials",
   section: S,
-  title: "קוד PIN ופרטי כניסה לתלמיד",
+  title: "קוד PIN ופרטי כניסה לילד/ה",
   summary: "מה זה PIN, מתי הוא מוצג פעם אחת, ואיך מאפסים.",
-  keywords: ["PIN", "סיסמה", "תלמיד"],
+  keywords: ["PIN", "סיסמה", "ילד/ה"],
   toc: [
     { id: "what-is-pin", title: "מה זה PIN?" },
     { id: "reset", title: "איפוס" },
   ],
   blocks: [
     heading(2, "what-is-pin", "מה זה PIN?"),
-    paragraph("התלמיד נכנס עם שם משתמש וקוד בן 4 ספרות. לאחר יצירה או איפוס, הקוד מוצג פעם אחת — שמרו אותו."),
+    paragraph("הילד/ה נכנס עם שם משתמש וקוד בן 4 ספרות. לאחר יצירה או איפוס, הקוד מוצג פעם אחת — שמרו אותו."),
     screenshotBlock(S, "student-pin-and-credentials", "pin-display", "הודעה עם קוד PIN חדש"),
     videoBlock(S, "student-pin-and-credentials"),
     heading(2, "reset", "איפוס"),
-    paragraph("בעמוד ההורה אפשר ליצור קוד כניסה חדש לתלמיד. הקוד הישן יפסיק לעבוד."),
+    paragraph("בעמוד ההורה אפשר ליצור קוד כניסה חדש לילד/ה. הקוד הישן יפסיק לעבוד."),
     callout("warning", "אל תשתפו את הקוד ברשתות חברתיות או בקבוצות ציבוריות."),
   ],
 });
@@ -119,18 +119,18 @@ export const studentPinAndCredentials = baseArticle({
 export const editOrDeleteStudent = baseArticle({
   slug: "edit-or-delete-student",
   section: S,
-  title: "עריכה ומחיקת תלמיד",
+  title: "עריכה ומחיקת ילד/ה",
   summary: "שינוי שם או כיתה, ומחיקה עם אישור.",
-  keywords: ["עריכה", "מחיקה", "תלמיד"],
+  keywords: ["עריכה", "מחיקה", "ילד/ה"],
   toc: [{ id: "edit", title: "עריכה" }, { id: "delete", title: "מחיקה" }],
   blocks: [
     heading(2, "edit", "עריכה"),
-    paragraph("לחצו על עריכה ליד שם התלמיד, עדכנו פרטים ושמרו."),
-    screenshotBlock(S, "edit-or-delete-student", "edit", "מצב עריכת פרטי תלמיד"),
+    paragraph("לחצו על עריכה ליד שם הילד/ה, עדכנו פרטים ושמרו."),
+    screenshotBlock(S, "edit-or-delete-student", "edit", "מצב עריכת פרטי ילד/ה"),
     videoBlock(S, "edit-or-delete-student"),
     heading(2, "delete", "מחיקה"),
-    paragraph("מחיקה דורשת הקלדת שם התלמיד לאישור — פעולה שלא ניתן לבטל."),
-    callout("warning", "מחיקת תלמיד מסירה את הגישה והנתונים המשויכים אליו מהחשבון שלכם."),
+    paragraph("מחיקה דורשת הקלדת שם הילד/ה לאישור — פעולה שלא ניתן לבטל."),
+    callout("warning", "מחיקת ילד/ה מסירה את הגישה והנתונים המשויכים אליו מהחשבון שלכם."),
   ],
 });
 
@@ -221,7 +221,7 @@ export const mobileAndOffline = baseArticle({
   ],
   blocks: [
     heading(2, "mobile", "שימוש בנייד"),
-    paragraph("האתר מותאם למסכים קטנים. התחברות תלמיד והורה עובדת גם מהטלפון."),
+    paragraph("האתר מותאם למסכים קטנים. התחברות ילד/ה והורה עובדת גם מהטלפון."),
     heading(2, "offline", "לא מקוון"),
     paragraph("באזור «לא מקוון» יש משחקים שעובדים על אותו מכשיר בלי חיבור לאינטרנט."),
     screenshotBlock(S, "mobile-and-offline", "offline-hub", "עמוד משחקים לא מקוונים"),
@@ -260,7 +260,7 @@ export const privacyAndData = baseArticle({
   blocks: [
     heading(2, "data", "נתוני תרגול"),
     paragraph(
-      "המערכת שומרת נתוני תרגול כדי להציג התקדמות ודוחות. אין לשתף קודי כניסה של תלמידים עם אחרים."
+      "המערכת שומרת נתוני תרגול כדי להציג התקדמות ודוחות. אין לשתף קודי כניסה של ילדים עם אחרים."
     ),
     callout("info", "לשאלות או בקשות בנושא פרטיות — השתמשו בעמוד צור קשר."),
     videoBlock(S, "privacy-and-data"),

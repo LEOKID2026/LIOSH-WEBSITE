@@ -126,7 +126,7 @@ export default function TeacherActivityStudentAnswersModal({
               {error}
             </p>
           ) : emptyNotStarted ? (
-            <p className="text-white/60 text-sm py-6 text-center">התלמיד/ה עדיין לא התחיל/ה את הפעילות.</p>
+            <p className="text-white/60 text-sm py-6 text-center">הילד/ה עדיין לא התחיל/ה את הפעילות.</p>
           ) : emptyNoAnswers ? (
             <p className="text-white/60 text-sm py-6 text-center">אין עדיין תשובות.</p>
           ) : (
@@ -173,7 +173,7 @@ export default function TeacherActivityStudentAnswersModal({
                     ) : null}
                     <dl className="grid gap-1 text-sm">
                       <div className="flex flex-wrap gap-x-2">
-                        <dt className="text-white/50">תשובת התלמיד:</dt>
+                        <dt className="text-white/50">תשובת הילד/ה:</dt>
                         <dd className="text-white/90" data-testid="student-selected-answer">
                           <AssignedActivityBidiText text={q.selectedAnswer ?? "—"} />
                         </dd>

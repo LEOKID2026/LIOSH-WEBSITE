@@ -57,7 +57,7 @@ export default function TeacherPrivateStudentsBatchMonitorPage({ batchId }) {
   return (
     <Layout>
       <TeacherPortalShell
-        title={activity?.title ? `מעקב: ${activity.title}` : "מעקב פעילות — תלמידים פרטיים"}
+        title={activity?.title ? `מעקב: ${activity.title}` : "מעקב פעילות — ילדים פרטיים"}
         backHref="/teacher/dashboard"
       >
         {error ? (
@@ -86,7 +86,7 @@ export default function TeacherPrivateStudentsBatchMonitorPage({ batchId }) {
             <table className="w-full text-sm text-right">
               <thead className="bg-white/5 text-white/70">
                 <tr>
-                  <th className="px-3 py-2">תלמיד</th>
+                  <th className="px-3 py-2">ילד/ה</th>
                   <th className="px-3 py-2">סטטוס</th>
                   <th className="px-3 py-2">תשובות</th>
                   <th className="px-3 py-2">נכונות</th>

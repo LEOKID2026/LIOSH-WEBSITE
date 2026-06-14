@@ -103,7 +103,7 @@ export default function TeacherWorksheetGradePage({ classId, worksheetId, studen
         setError(body?.error?.code || "grading_incomplete");
         return;
       }
-      setMsg(`פורסם לתלמיד · ציון: ${body?.data?.finalScorePct ?? "—"}%`);
+      setMsg(`פורסם לילד/ה · ציון: ${body?.data?.finalScorePct ?? "—"}%`);
       await load();
     } finally {
       setBusy(false);
@@ -113,7 +113,7 @@ export default function TeacherWorksheetGradePage({ classId, worksheetId, studen
   return (
     <Layout>
       <TeacherPortalShell
-        title="בדיקת תלמיד"
+        title="בדיקת ילד/ה"
         backHref={`/teacher/class/${classId}/worksheets/${worksheetId}/report`}
       >
         <TeacherClassActivitiesNav classId={classId} active="worksheets" />

@@ -3590,7 +3590,7 @@ export default function HebrewMaster() {
                   className={MB.preGamePlayerBadge}
                   dir={playerName && /[\u0590-\u05FF]/.test(playerName) ? "rtl" : "ltr"}
                   title={playerName.trim() ? playerName.trim() : undefined}
-                  aria-label={playerName.trim() ? `שם תלמיד: ${playerName.trim()}` : "שם תלמיד לא זמין"}
+                  aria-label={playerName.trim() ? `שם ילד/ה: ${playerName.trim()}` : "שם ילד/ה לא זמין"}
                 >
                   {playerName.trim() ? playerName.trim() : "שחקן"}
                 </div>

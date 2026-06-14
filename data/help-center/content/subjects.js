@@ -26,7 +26,7 @@ function subjectArticle(slug, title, emoji, topics, masterPath) {
     ],
     blocks: [
       heading(2, "who", "למי מתאים?"),
-      paragraph("התרגול מיועד לתלמידי כיתות א׳ עד ו׳, עם התאמה לרמת הכיתה."),
+      paragraph("התרגול מיועד לילד/הי כיתות א׳ עד ו׳, עם התאמה לרמת הכיתה."),
       heading(2, "topics", "מה מתרגלים?"),
       list(topics),
       heading(2, "practice", "איך נראה תרגול?"),

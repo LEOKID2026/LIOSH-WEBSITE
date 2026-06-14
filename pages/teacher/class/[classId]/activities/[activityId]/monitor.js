@@ -202,7 +202,7 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
 
         {data?.stuckStudents?.length ? (
           <div className="mb-4 rounded-lg border border-orange-400/30 bg-orange-500/10 px-3 py-2 text-sm text-orange-100">
-            תלמידים תקועים:{" "}
+            ילדים תקועים:{" "}
             {data.stuckStudents.map((s) => s.studentFullNameMasked).join(", ")}
           </div>
         ) : null}
@@ -219,7 +219,7 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
             <table className="w-full text-sm text-right">
               <thead className="bg-white/5 text-white/70">
                 <tr>
-                  <th className="px-3 py-2">תלמיד</th>
+                  <th className="px-3 py-2">ילד/ה</th>
                   <th className="px-3 py-2">סטטוס</th>
                   <th className="px-3 py-2">תשובות</th>
                   <th className="px-3 py-2">נכונות</th>
@@ -284,7 +284,7 @@ export default function TeacherActivityMonitorPage({ classId, activityId }) {
                 ) : null}
                 {pq.wrongStudentIds?.length ? (
                   <p className="text-red-200/90 text-xs mt-2">
-                    טעו: {pq.wrongStudentIds.length} תלמידים
+                    טעו: {pq.wrongStudentIds.length} ילדים
                   </p>
                 ) : null}
               </details>

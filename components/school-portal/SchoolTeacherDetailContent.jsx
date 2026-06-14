@@ -280,7 +280,7 @@ export default function SchoolTeacherDetailContent({
         row?.displayName ||
         body?.student?.full_name ||
         reportViewModel?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
-        "תלמיד/ה";
+        "ילד/ה";
       setNestedStudentVm(
         parseStudentReportViewModel(
           body,
@@ -332,12 +332,12 @@ export default function SchoolTeacherDetailContent({
       const res = await schoolAuthFetch(accessToken, `/api/school/students?${q.toString()}`);
       const body = await res.json().catch(() => ({}));
       if (res.status !== 200) {
-        setStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת תלמידים"));
+        setStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת ילדים"));
         return;
       }
       setStudents(body?.data?.students || []);
     } catch {
-      setStudentsError("שגיאה בטעינת תלמידים");
+      setStudentsError("שגיאה בטעינת ילדים");
     } finally {
       setStudentsLoading(false);
     }
@@ -434,7 +434,7 @@ export default function SchoolTeacherDetailContent({
                   <SchoolManagementCard
                     key={key}
                     title={group.name}
-                    subtitle={`${studentCount} תלמידים`}
+                    subtitle={`${studentCount} ילדים`}
                     meta={`${SCHOOL_TEACHER_CLASS_SUBJECTS_PREFIX}: ${subjectLabels.join(", ")}`}
                     onClick={() => openPhysicalClass(group)}
                     data-testid={`school-teacher-physical-class-card-${key}`}

@@ -75,7 +75,7 @@ export default function SchoolActivityMonitorPage({ activityId }) {
             <div className="rounded-lg border border-white/10 bg-black/25 p-4 space-y-1">
               <h1 className="text-lg font-semibold text-white">{activity.title}</h1>
               <p className="text-sm text-white/70">
-                תלמידים: {students.length} · שאלות: {activity.questionCount ?? "—"}
+                ילדים: {students.length} · שאלות: {activity.questionCount ?? "—"}
               </p>
               {data?.summary?.classAccuracy != null ? (
                 <p className="text-sm text-white/70">
@@ -90,7 +90,7 @@ export default function SchoolActivityMonitorPage({ activityId }) {
               <table className="w-full min-w-[640px] text-sm text-right">
                 <thead className="bg-white/5 text-white/70">
                   <tr>
-                    <th className="px-3 py-2">תלמיד</th>
+                    <th className="px-3 py-2">ילד/ה</th>
                     <th className="px-3 py-2">סטטוס</th>
                     <th className="px-3 py-2">תשובות</th>
                     <th className="px-3 py-2">נכונות</th>

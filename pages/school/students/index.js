@@ -215,7 +215,7 @@ export default function SchoolStudentsPage() {
         const body = result?.body || {};
         setClassStudents([]);
         if (schoolId) deleteSchoolCacheEntry(schoolId, path);
-        setClassStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת תלמידים"));
+        setClassStudentsError(apiErrorMessageHe(body?.error, "שגיאה בטעינת ילדים"));
         return;
       }
       setClassStudentsError("");
@@ -238,7 +238,7 @@ export default function SchoolStudentsPage() {
     } catch {
       setClassStudents([]);
       if (schoolId) deleteSchoolCacheEntry(schoolId, path);
-      setClassStudentsError("שגיאה בטעינת תלמידים");
+      setClassStudentsError("שגיאה בטעינת ילדים");
     } finally {
       setClassStudentsLoading(false);
     }
@@ -518,7 +518,7 @@ export default function SchoolStudentsPage() {
                             key={grade.level}
                             title={grade.label}
                             subtitle={
-                              count != null ? `${count} תלמידים` : summaryLoading ? "…" : "0 תלמידים"
+                              count != null ? `${count} ילדים` : summaryLoading ? "…" : "0 ילדים"
                             }
                             gradeStatusLabel={
                               canViewReports ? browseStatus?.gradeStatusByLevel?.[grade.level] || null : null
@@ -556,7 +556,7 @@ export default function SchoolStudentsPage() {
                           <SchoolManagementCard
                             key={group.name}
                             title={group.name}
-                            subtitle={`${group.studentCount} תלמידים`}
+                            subtitle={`${group.studentCount} ילדים`}
                             classStatusLabel={
                               canViewReports ? browseStatus?.physicalByKey?.[physKey] || null : null
                             }
@@ -566,7 +566,7 @@ export default function SchoolStudentsPage() {
                       })}
                     </SchoolCardGrid>
                   ) : (
-                    <SchoolEmptyState title="אין תלמידים בשכבה זו." />
+                    <SchoolEmptyState title="אין ילדים בשכבה זו." />
                   )}
                 </SchoolSection>
               </>
@@ -637,7 +637,7 @@ export default function SchoolStudentsPage() {
                       ))}
                     </SchoolCardGrid>
                   ) : (
-                    <SchoolEmptyState title="לא נמצאו תלמידים בכיתה זו." />
+                    <SchoolEmptyState title="לא נמצאו ילדים בכיתה זו." />
                   )}
                 </SchoolSection>
               </>

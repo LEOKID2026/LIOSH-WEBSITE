@@ -39,7 +39,7 @@ test.describe("Android WebView parity — production mobile @android-qa", () => 
     await waitStudentLoginReady(page);
     const rtl = page.locator('[dir="rtl"]').first();
     await expect(rtl).toBeVisible();
-    await expect(page.getByText("כניסת תלמיד")).toBeVisible();
+    await expect(page.getByText("כניסת ילד/ה")).toBeVisible();
   });
 
   test("S1–S2 — student login and home", async ({ page }) => {

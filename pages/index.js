@@ -8,7 +8,7 @@ import InstallAppButton from "../components/InstallAppButton";
 const PORTAL_CARDS = [
   {
     key: "student",
-    title: "פורטל תלמידים",
+    title: "עולם הילדים",
     emoji: "🎒",
     gradient: "from-amber-500/60 to-rose-600/70",
     authAware: true,

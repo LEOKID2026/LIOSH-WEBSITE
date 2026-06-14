@@ -156,13 +156,13 @@ export default function TeacherStudentIndividualActivitiesPanel({ accessToken, s
       data-testid="teacher-student-individual-activities"
     >
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h2 className="text-lg font-semibold">פעילויות אישיות לתלמיד</h2>
+        <h2 className="text-lg font-semibold">פעילויות אישיות לילד/ה</h2>
         <button
           type="button"
           onClick={() => setShowForm((v) => !v)}
           className="rounded-lg bg-violet-500/90 hover:bg-violet-400 text-black text-sm font-bold px-4 py-2"
         >
-          {showForm ? "ביטול" : "יצירת פעילות אישית לתלמיד"}
+          {showForm ? "ביטול" : "יצירת פעילות אישית לילד/ה"}
         </button>
       </div>
 

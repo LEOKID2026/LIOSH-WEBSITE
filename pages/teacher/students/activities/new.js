@@ -96,8 +96,8 @@ export default function TeacherPrivateStudentsNewActivityPage() {
           student.gradeLevel !== currentLocked
         ) {
           setError(
-            `לא ניתן לשלב תלמידים מכיתות שונות. הפעילות נועלת לכיתה ${currentLocked}. ` +
-            `תלמיד זה בכיתה ${student.gradeLevel}.`
+            `לא ניתן לשלב ילדים מכיתות שונות. הפעילות נועלת לכיתה ${currentLocked}. ` +
+            `ילד/ה זה בכיתה ${student.gradeLevel}.`
           );
           return prev;
         }
@@ -148,7 +148,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   }, [subject, gradeKey, topic, difficulty, mode, questionCount]);
 
   const createActivity = useCallback(async () => {
-    if (selectedIds.size === 0) { setError("נא לבחור לפחות תלמיד אחד"); return; }
+    if (selectedIds.size === 0) { setError("נא לבחור לפחות ילד/ה אחד"); return; }
     if (!title.trim()) { setError("נא למלא כותרת"); return; }
     if (!preview.length) { setError("נא לייצר שאלות תחילה"); return; }
     if (mode === "quiz" && !timeLimitSeconds) { setError("שאלון דורש הגבלת זמן"); return; }
@@ -222,7 +222,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
   return (
     <Layout>
       <TeacherPortalShell
-        title="פעילות לתלמידים פרטיים נבחרים"
+        title="פעילות לילדים פרטיים נבחרים"
         backHref="/teacher/dashboard"
       >
         {error ? (
@@ -234,7 +234,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
         {/* Student selection */}
         <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mb-5">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <h2 className="text-base font-semibold">בחר תלמידים פרטיים</h2>
+            <h2 className="text-base font-semibold">בחר ילדים פרטיים</h2>
             <span className="text-sm text-white/60">
               נבחרו: {selectedIds.size}
               {lockedGrade ? ` (${formatGradeLevelHe(lockedGrade)})` : ""}
@@ -243,17 +243,17 @@ export default function TeacherPrivateStudentsNewActivityPage() {
 
           {multipleGradesExist ? (
             <p className="text-amber-200/80 text-xs mb-3 rounded border border-amber-400/20 bg-amber-500/10 px-3 py-1.5">
-              ⚠ יש לך תלמידים מכיתות שונות. ניתן לשלוח פעילות אחת רק לתלמידים מאותה כיתה.
+              ⚠ יש לך ילדים מכיתות שונות. ניתן לשלוח פעילות אחת רק לילדים מאותה כיתה.
               {lockedGrade
                 ? ` הפעילות נעולה ל-${formatGradeLevelHe(lockedGrade)}.`
-                : " בחר תלמיד ראשון לנעילת הכיתה."}
+                : " בחר ילד/ה ראשון לנעילת הכיתה."}
             </p>
           ) : null}
 
           {!studentsLoaded ? (
-            <p className="text-white/50 text-sm">טוען תלמידים…</p>
+            <p className="text-white/50 text-sm">טוען ילדים…</p>
           ) : students.length === 0 ? (
-            <p className="text-white/50 text-sm">אין תלמידים פרטיים מקושרים.</p>
+            <p className="text-white/50 text-sm">אין ילדים פרטיים מקושרים.</p>
           ) : (
             <>
               <div className="flex flex-wrap gap-2 mb-2 text-xs">
@@ -349,7 +349,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
               <span className="text-white/70">
                 כיתה (לצורך תוכן)
                 {lockedGrade ? (
-                  <span className="text-emerald-300/80 text-xs mr-1">— נגזר מהתלמידים הנבחרים</span>
+                  <span className="text-emerald-300/80 text-xs mr-1">— נגזר מהילדים הנבחרים</span>
                 ) : null}
               </span>
               <select
@@ -476,7 +476,7 @@ export default function TeacherPrivateStudentsNewActivityPage() {
               onClick={createActivity}
               className="px-4 py-2 rounded-xl bg-emerald-600/90 text-white font-semibold text-sm disabled:opacity-50"
             >
-              צור ושלח ({selectedIds.size} תלמידים)
+              צור ושלח ({selectedIds.size} ילדים)
             </button>
           ) : null}
         </div>

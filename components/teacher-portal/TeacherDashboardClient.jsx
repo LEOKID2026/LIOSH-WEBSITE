@@ -115,7 +115,7 @@ function Modal({ title, onClose, children }) {
 function classLimitErrorMessage(body) {
   const code = body?.error?.code;
   if (code === "class_student_limit_reached") {
-    return "הכיתה הגיעה למגבלת 40 תלמידים. לא ניתן להוסיף עוד תלמידים לכיתה זו.";
+    return "הכיתה הגיעה למגבלת 40 ילדים. לא ניתן להוסיף עוד ילדים לכיתה זו.";
   }
   return null;
 }
@@ -195,14 +195,14 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
     const body = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.status !== 201) {
-      setError(classLimitErrorMessage(body) || "לא ניתן להוסיף תלמיד.");
+      setError(classLimitErrorMessage(body) || "לא ניתן להוסיף ילד/ה.");
       return;
     }
     setNewStudentName("");
     await loadMembers();
     onRefresh();
     if (body.data?.loginUsername) {
-      window.alert(`תלמיד נוסף.\nשם משתמש: ${body.data.loginUsername}\nPIN: 1234`);
+      window.alert(`ילד/ה נוסף.\nשם משתמש: ${body.data.loginUsername}\nPIN: 1234`);
     }
   };
 
@@ -220,7 +220,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
     const body = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.status !== 201) {
-      setError(classLimitErrorMessage(body) || "לא ניתן להוסיף את התלמיד לכיתה.");
+      setError(classLimitErrorMessage(body) || "לא ניתן להוסיף את הילד/ה לכיתה.");
       return;
     }
     await loadMembers();
@@ -234,7 +234,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
   const atClassCap = perClassCap != null && members.length >= perClassCap;
 
   const onRemoveFromClass = async (member) => {
-    if (!window.confirm("להסיר את התלמיד מהכיתה?")) return;
+    if (!window.confirm("להסיר את הילד/ה מהכיתה?")) return;
     setBusy(true);
     setError("");
     const idsByClass = member.membershipIdsByClass || {};
@@ -269,7 +269,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
     });
     setBusy(false);
     if (res.status !== 200) {
-      setError("לא ניתן לעדכן את שם התלמיד.");
+      setError("לא ניתן לעדכן את שם הילד/ה.");
       return;
     }
     setEditStudentId(null);
@@ -278,7 +278,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
   };
 
   const onArchiveStudent = async (studentId) => {
-    if (!window.confirm("להסיר את התלמיד מרשימת המורה?")) return;
+    if (!window.confirm("להסיר את הילד/ה מרשימת המורה?")) return;
     setBusy(true);
     const res = await teacherAuthFetch(accessToken, `/api/teacher/students/${studentId}/archive`, {
       method: "POST",
@@ -286,7 +286,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
     });
     setBusy(false);
     if (res.status !== 200) {
-      setError("לא ניתן להסיר את התלמיד.");
+      setError("לא ניתן להסיר את הילד/ה.");
       return;
     }
     await loadMembers();
@@ -316,11 +316,11 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
         </div>
 
         <section>
-          <h4 className="text-sm font-semibold mb-2">הוספת תלמיד</h4>
+          <h4 className="text-sm font-semibold mb-2">הוספת ילד/ה</h4>
           <div className="flex flex-wrap gap-2">
             <input
               className="flex-1 min-w-0 rounded bg-black/40 border border-white/20 px-3 py-2 text-sm"
-              placeholder="שם מלא של תלמיד חדש"
+              placeholder="שם מלא של ילד/ה חדש"
               value={newStudentName}
               onChange={(e) => setNewStudentName(e.target.value)}
             />
@@ -335,7 +335,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
           </div>
           {addableStudents.length > 0 ? (
             <div className="mt-2 space-y-1">
-              <p className="text-xs text-white/50">תלמידים מקושרים שלא בכיתה:</p>
+              <p className="text-xs text-white/50">ילדים מקושרים שלא בכיתה:</p>
               {addableStudents.slice(0, 5).map((s) => (
                 <div key={s.studentId} className="flex items-center justify-between gap-2 text-sm">
                   <span className="truncate">{s.studentFullName}</span>
@@ -355,16 +355,16 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
 
         <section>
           <h4 className="text-sm font-semibold mb-2">
-            תלמידים בכיתה ({members.length}
+            ילדים בכיתה ({members.length}
             {perClassCap != null ? ` / ${perClassCap}` : ""})
           </h4>
           {atClassCap ? (
             <p className="text-sm text-amber-200 mb-2">
-              הכיתה הגיעה למגבלת {perClassCap} תלמידים.
+              הכיתה הגיעה למגבלת {perClassCap} ילדים.
             </p>
           ) : null}
           {members.length === 0 ? (
-            <p className="text-sm text-white/60">אין תלמידים בכיתה.</p>
+            <p className="text-sm text-white/60">אין ילדים בכיתה.</p>
           ) : (
             <ul className="space-y-2 max-h-64 overflow-y-auto">
               {members.map((m) => (
@@ -398,7 +398,7 @@ function ClassManagePanel({ accessToken, classInfo, allStudents, maxStudentsPerC
                   ) : (
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="font-medium truncate">
-                        {m.studentFullName || m.studentFullNameMasked || "תלמיד"}
+                        {m.studentFullName || m.studentFullNameMasked || "ילד/ה"}
                       </span>
                       <div className="flex flex-wrap gap-2 shrink-0">
                         <button
@@ -581,7 +581,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
           <p className="text-xl font-semibold">
             {displayName ? `שלום, ${displayName}` : "שלום, מורה"}
           </p>
-          <p className="text-sm text-white/60 mt-1">לוח בקרה — כיתות ותלמידים</p>
+          <p className="text-sm text-white/60 mt-1">לוח בקרה — כיתות וילדים</p>
         </div>
         <button
           type="button"
@@ -595,7 +595,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
       <section className="rounded-xl border border-white/15 bg-black/30 p-4 sm:p-5">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <SummaryStat
-            label="תלמידים"
+            label="ילדים"
             value={dashboard?.summary?.studentCount ?? 0}
             testId="teacher-dashboard-summary-students"
           />
@@ -622,7 +622,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
               className="text-sm text-emerald-300 hover:underline font-medium w-fit"
               data-testid="teacher-dashboard-private-students-activity-link"
             >
-              שלח פעילות לתלמידים פרטיים →
+              שלח פעילות לילדים פרטיים →
             </Link>
           </div>
         </div>
@@ -633,7 +633,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
           className="rounded-xl border border-amber-400/25 bg-amber-500/5 p-4 sm:p-5"
           data-testid="teacher-dashboard-attention-signals"
         >
-          <h2 className="text-lg font-semibold mb-3">תלמידים הדורשים תשומת לב</h2>
+          <h2 className="text-lg font-semibold mb-3">ילדים הדורשים תשומת לב</h2>
           <ul className="grid gap-2 sm:grid-cols-3">
             {dashboard.teacherAttentionSignals.topAttentionStudents.map((s) => (
               <li
@@ -737,7 +737,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
                 <div>
                   <p className="font-semibold break-words">{c.name}</p>
                   <p className="text-sm text-white/65 mt-1">
-                    תלמידים: {studentCount}
+                    ילדים: {studentCount}
                   </p>
                   {c.subjectsLabel ? (
                     <p className="text-sm text-white/55 mt-0.5">מקצועות: {c.subjectsLabel}</p>
@@ -750,7 +750,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
                     className="text-xs rounded border border-white/25 px-3 py-1.5 hover:bg-white/10"
                     data-testid={`teacher-roster-filter-class-${rosterKey}`}
                   >
-                    הצגת תלמידי הכיתה
+                    הצגת ילדי הכיתה
                   </button>
                   {reportLinks.map((link) => (
                     <Link
@@ -791,7 +791,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
       )}
 
       <section data-testid="teacher-student-roster-section">
-        <h2 className="text-lg font-semibold mb-1">תלמידים</h2>
+        <h2 className="text-lg font-semibold mb-1">ילדים</h2>
         {activeRosterOption && rosterFilterLabel(activeRosterOption) ? (
           <p className="text-sm text-white/60 mb-3" data-testid="teacher-roster-active-label">
             מציג: {rosterFilterLabel(activeRosterOption)}
@@ -802,7 +802,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
           <div
             className="flex flex-wrap gap-2 mb-4"
             role="tablist"
-            aria-label="סינון רשימת תלמידים"
+            aria-label="סינון רשימת ילדים"
             data-testid="teacher-roster-filter-tabs"
           >
             {rosterFilters.map((opt) => {
@@ -874,7 +874,7 @@ export default function TeacherDashboardClient({ accessToken, dashboard, activit
 
         {filteredStudents.length === 0 ? (
           <p className="text-white/60 text-sm" data-testid="teacher-roster-empty">
-            אין תלמידים להצגה בסינון זה.
+            אין ילדים להצגה בסינון זה.
           </p>
         ) : (
           <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">

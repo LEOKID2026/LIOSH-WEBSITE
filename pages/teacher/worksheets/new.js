@@ -79,7 +79,7 @@ export default function TeacherNewDirectWorksheetPage() {
       return null;
     }
     if (!selectedStudentIds.length) {
-      setError("נא לבחור לפחות תלמיד אחד");
+      setError("נא לבחור לפחות ילד/ה אחד");
       return null;
     }
     setBusy(true);
@@ -206,7 +206,7 @@ export default function TeacherNewDirectWorksheetPage() {
 
   return (
     <Layout>
-      <TeacherPortalShell title="פעילות דף עבודה — תלמידים נבחרים" backHref="/teacher/worksheets">
+      <TeacherPortalShell title="פעילות דף עבודה — ילדים נבחרים" backHref="/teacher/worksheets">
         <div className="max-w-2xl mx-auto space-y-5 text-right">
           {error ? <p className="text-red-300 text-sm">{error}</p> : null}
 
@@ -242,7 +242,7 @@ export default function TeacherNewDirectWorksheetPage() {
           </label>
 
           <label className="block text-sm text-white/80">
-            הוראות לתלמידים
+            הוראות לילדים
             <textarea
               rows={3}
               className="mt-1 w-full rounded-lg bg-black/40 border border-white/15 px-3 py-2 text-white"
@@ -316,7 +316,7 @@ export default function TeacherNewDirectWorksheetPage() {
             className="w-full py-3 rounded-xl bg-violet-500/90 text-black font-bold hover:bg-violet-400"
             data-testid="teacher-worksheet-activate-selected-students"
           >
-            הפעל ושלח לתלמידים הנבחרים
+            הפעל ושלח לילדים הנבחרים
           </button>
         </div>
       </TeacherPortalShell>

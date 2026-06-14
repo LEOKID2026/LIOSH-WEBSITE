@@ -170,7 +170,7 @@ export default function TeacherDirectWorksheetManagePage({ worksheetId }) {
         <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-right mb-6">
           <p className="text-white/80 text-sm">
             {worksheetModeLabelHe(worksheet.worksheetMode)} · {worksheetStatusLabelHe(worksheet.status)}
-            {worksheet.assignmentScope === "selected_students" ? " · תלמידים נבחרים" : null}
+            {worksheet.assignmentScope === "selected_students" ? " · ילדים נבחרים" : null}
           </p>
           {worksheet.instructions ? (
             <p className="text-white mt-2 text-sm">{worksheet.instructions}</p>

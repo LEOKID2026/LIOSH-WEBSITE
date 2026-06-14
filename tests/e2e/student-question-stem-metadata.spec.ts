@@ -277,7 +277,7 @@ test.describe("Student question stem — rendered DOM (mobile)", () => {
 
   test("sanitizer preserves valid educational wording", () => {
     const cases = [
-      "בכיתה יש 24 תלמידים ו-6 תלמידות. כמה תלמידים בסך הכול?",
+      "בכיתה יש 24 ילדים ו-6 ילדות. כמה ילדים בסך הכול?",
       "בבית הספר יש מגרש מלבני. רוצים גדר סביב המגרש.",
       "מה נושא המשפט הראשי בקטע?",
       "לפני ניסוי בכיתה, מה חשוב לתעד?",

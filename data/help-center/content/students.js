@@ -25,7 +25,7 @@ export const studentLogin = studentArticle({
     heading(2, "steps", "שלבים"),
     list(["בקשו מההורה את שם המשתמש והקוד", "הקלידו בעמוד הכניסה", "לחצו התחבר"], true),
     videoBlock(S, "student-login"),
-    screenshotBlock(S, "student-login", "login", "מסך כניסת תלמיד"),
+    screenshotBlock(S, "student-login", "login", "מסך כניסת ילד/ה"),
   ],
 });
 
@@ -33,13 +33,13 @@ export const studentHomeTour = studentArticle({
   slug: "student-home-tour",
   title: "עמוד הבית שלי",
   summary: "מה רואים אחרי שנכנסים: מקצועות, מטבעות ואווטאר.",
-  keywords: ["בית", "תלמיד"],
+  keywords: ["בית", "ילד/ה"],
   toc: [{ id: "home", title: "עמוד הבית" }],
   blocks: [
     heading(2, "home", "עמוד הבית"),
     paragraph("כאן תראו את השם שלכם, כמה מטבעות יש לכם, ולאיזה מקצועים אפשר להיכנס."),
     videoBlock(S, "student-home-tour"),
-    screenshotBlock(S, "student-home-tour", "home", "עמוד בית תלמיד עם כרטיסי מקצועות"),
+    screenshotBlock(S, "student-home-tour", "home", "עמוד בית ילד/ה עם כרטיסי מקצועות"),
   ],
 });
 

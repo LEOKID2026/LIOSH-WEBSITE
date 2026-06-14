@@ -165,7 +165,7 @@ export function SchoolSubjectClassCard({ cls, onReport, reportLabel }) {
   return (
     <SchoolManagementCard
       title={subject}
-      subtitle={`${cls.teacherName || "—"} · ${cls.memberCount ?? 0} תלמידים`}
+      subtitle={`${cls.teacherName || "—"} · ${cls.memberCount ?? 0} ילדים`}
       meta={cls.activityCount != null ? `פעילויות: ${cls.activityCount}` : null}
       action={
         <button

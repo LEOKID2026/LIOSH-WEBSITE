@@ -121,7 +121,7 @@ export default function GuardianAccessPanel({ accessToken, studentId }) {
     setBusy(false);
     if (res.status !== 201) {
       if (body?.error?.code === "active_access_exists") {
-        setError("כבר קיימת גישה פעילה לתלמיד זה.");
+        setError("כבר קיימת גישה פעילה לילד/ה זה.");
       } else {
         setError("אירעה שגיאה ביצירת הגישה.");
       }
@@ -207,7 +207,7 @@ export default function GuardianAccessPanel({ accessToken, studentId }) {
       ) : null}
 
       {!loading && accesses.length === 0 ? (
-        <p className="text-white/70 text-sm mb-4">לא הוגדרה גישת הורה לתלמיד זה.</p>
+        <p className="text-white/70 text-sm mb-4">לא הוגדרה גישת הורה לילד/ה זה.</p>
       ) : null}
 
       <ul className="space-y-3 mb-4">

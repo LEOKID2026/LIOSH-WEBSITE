@@ -316,7 +316,7 @@ export default function SchoolClassesPage() {
         row?.name ||
         body?.student?.full_name ||
         physicalReportVm?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
-        "תלמיד/ה";
+        "ילד/ה";
       setPhysicalNestedStudentVm(
         parseStudentReportViewModel(
           body,
@@ -357,7 +357,7 @@ export default function SchoolClassesPage() {
         row?.name ||
         body?.student?.full_name ||
         subjectFromPhysicalVm?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
-        "תלמיד/ה";
+        "ילד/ה";
       setSubjectFromPhysicalNestedStudentVm(
         parseStudentReportViewModel(
           body,
@@ -496,7 +496,7 @@ export default function SchoolClassesPage() {
         row?.name ||
         body?.student?.full_name ||
         reportViewModel?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
-        "תלמיד/ה";
+        "ילד/ה";
       setNestedStudentVm(
         parseStudentReportViewModel(
           body,

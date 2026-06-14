@@ -172,12 +172,12 @@ export default function TeacherClassReportPage({ classId }) {
             className="mb-4"
           />
           <p className="text-white/60 text-sm mb-2">
-            {memberCount} תלמידים פעילים
+            {memberCount} ילדים פעילים
           </p>
 
           {memberCount === 0 ? (
             <p className="text-amber-200 text-sm mb-6">
-              הכיתה ריקה — הוסף תלמידים כדי לראות דוח.
+              הכיתה ריקה — הוסף ילדים כדי לראות דוח.
             </p>
           ) : null}
 
@@ -203,7 +203,7 @@ export default function TeacherClassReportPage({ classId }) {
                     <dd>{formatPercent(cohort.accuracy)}</dd>
                   </div>
                   <div>
-                    <dt className="text-white/60">תלמידים עם נתונים</dt>
+                    <dt className="text-white/60">ילדים עם נתונים</dt>
                     <dd>{cohort.studentsWithActivity ?? 0}</dd>
                   </div>
                 </dl>
@@ -233,7 +233,7 @@ export default function TeacherClassReportPage({ classId }) {
                           className="rounded border border-white/10 px-3 py-2"
                         >
                           <span className="font-medium">{t.headlineHe}</span>
-                          : {t.affectedStudentCount ?? 0}/{memberCount} תלמידים ·{" "}
+                          : {t.affectedStudentCount ?? 0}/{memberCount} ילדים ·{" "}
                           {formatPercent(t.cohortAccuracyPct)} הצלחה
                           {t.actionHe ? ` · ${t.actionHe}` : action ? ` · ${action}` : ""}
                         </li>
@@ -256,7 +256,7 @@ export default function TeacherClassReportPage({ classId }) {
                         <span className="font-medium">
                           {subj ? `${subj} — ${headline}` : headline}
                         </span>
-                        : {t.affectedStudentCount ?? 0}/{memberCount} תלמידים ·{" "}
+                        : {t.affectedStudentCount ?? 0}/{memberCount} ילדים ·{" "}
                         {formatPercent(t.cohortAccuracyPct)} הצלחה · שיעור טעות {errPct}
                         {action ? ` · ${action}` : ""}
                       </li>
@@ -271,7 +271,7 @@ export default function TeacherClassReportPage({ classId }) {
                   return (
                     <li key={i}>
                       {line}: {acc} שגיאות ממוצע
-                      {t.studentCount ? ` · ${t.studentCount} תלמידים` : ""}
+                      {t.studentCount ? ` · ${t.studentCount} ילדים` : ""}
                     </li>
                   );
                 }).filter(Boolean)}
@@ -305,7 +305,7 @@ export default function TeacherClassReportPage({ classId }) {
           ) : null}
 
           <section className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">תלמידים שדורשים מעקב</h2>
+            <h2 className="text-lg font-semibold mb-2">ילדים שדורשים מעקב</h2>
             {attentionList.length ? (
               <ul className="space-y-2">
                 {attentionList.map((s) => (
@@ -335,7 +335,7 @@ export default function TeacherClassReportPage({ classId }) {
               </ul>
             ) : memberCount > 0 ? (
               <p className="text-white/60 text-sm">
-                כל תלמידי הכיתה בסדר — אין צורך בהתערבות מיוחדת.
+                כל ילדי הכיתה בסדר — אין צורך בהתערבות מיוחדת.
               </p>
             ) : null}
           </section>
@@ -348,7 +348,7 @@ export default function TeacherClassReportPage({ classId }) {
               return (
                 <div key={tier} className="mb-2 text-sm">
                   <span className="font-semibold text-amber-200">
-                    {groupTierHe(tier)} ({list.length} תלמידים):
+                    {groupTierHe(tier)} ({list.length} ילדים):
                   </span>{" "}
                   <span className="text-white/70 break-words">
                     {list.map((x) => x.studentFullName || x.studentFullNameMasked).join("، ")}
@@ -361,7 +361,7 @@ export default function TeacherClassReportPage({ classId }) {
             !groups.advanced?.length ? (
               <p className="text-white/60 text-sm">
                 {memberCount < 3
-                  ? "אין מספיק תלמידים עם נתונים להרכבת קבוצות."
+                  ? "אין מספיק ילדים עם נתונים להרכבת קבוצות."
                   : "אין מספיק נתונים להרכבת קבוצות."}
               </p>
             ) : (
@@ -384,7 +384,7 @@ export default function TeacherClassReportPage({ classId }) {
                       <li key={i}>
                         {line}
                         {f.affectedStudents
-                          ? ` — ${f.affectedStudents} תלמידים התקשו בנושא זה`
+                          ? ` — ${f.affectedStudents} ילדים התקשו בנושא זה`
                           : ""}
                       </li>
                     );

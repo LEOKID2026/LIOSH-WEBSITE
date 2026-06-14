@@ -72,8 +72,8 @@ export default function TeacherStudentReportPage({ studentId }) {
       <Layout>
         <TeacherReportForbidden
           backHref="/teacher/dashboard"
-          title="דוח תלמיד"
-          message="מזהה תלמיד שגוי."
+          title="דוח ילד/ה"
+          message="מזהה ילד/ה שגוי."
         />
       </Layout>
     );
@@ -84,7 +84,7 @@ export default function TeacherStudentReportPage({ studentId }) {
       <Layout>
         <TeacherReportLoading
           backHref="/teacher/dashboard"
-          title="דוח תלמיד"
+          title="דוח ילד/ה"
           hint={loadingHint}
         />
       </Layout>
@@ -96,8 +96,8 @@ export default function TeacherStudentReportPage({ studentId }) {
       <Layout>
         <TeacherReportForbidden
           backHref="/teacher/dashboard"
-          title="דוח תלמיד"
-          message="אין לך הרשאה לצפות בדוח תלמיד זה."
+          title="דוח ילד/ה"
+          message="אין לך הרשאה לצפות בדוח ילד/ה זה."
         />
       </Layout>
     );
@@ -108,7 +108,7 @@ export default function TeacherStudentReportPage({ studentId }) {
       <Layout>
         <TeacherReportError
           backHref="/teacher/dashboard"
-          title="דוח תלמיד"
+          title="דוח ילד/ה"
           message={errorMessage}
           onRetry={reload}
         />
@@ -117,7 +117,7 @@ export default function TeacherStudentReportPage({ studentId }) {
   }
 
   const studentName =
-    report?.student?.full_name || report?.accountSnapshot?.displayName || "תלמיד";
+    report?.student?.full_name || report?.accountSnapshot?.displayName || "ילד/ה";
   const guidance = report?.teacherGuidanceBlock || {};
   const tg = guidance.teacherGuidance || {};
   const summary = report?.summary || {};
@@ -191,7 +191,7 @@ export default function TeacherStudentReportPage({ studentId }) {
         data-student-id={studentId}
         data-report-ok="true"
       >
-        <TeacherPortalShell backHref="/teacher/dashboard" title={`דוח תלמיד: ${studentName}`}>
+        <TeacherPortalShell backHref="/teacher/dashboard" title={`דוח ילד/ה: ${studentName}`}>
           <div className="mb-4 flex flex-wrap gap-3">
             <Link
               href={`/teacher/student/${encodeURIComponent(studentId)}/parent-report`}
@@ -259,7 +259,7 @@ export default function TeacherStudentReportPage({ studentId }) {
             </dl>
             {inactiveDays != null && inactiveDays >= 7 ? (
               <p className="mt-3 text-amber-200 text-sm">
-                התלמיד לא תרגל ביותר מ-7 ימים.
+                הילד/ה לא תרגל ביותר מ-7 ימים.
               </p>
             ) : null}
           </section>
@@ -280,7 +280,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                 ) : null}
                 {inactiveDays != null && inactiveDays >= 7 ? (
                   <p className="text-amber-200 text-sm mb-2">
-                    התלמיד לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
+                    הילד/ה לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
                   </p>
                 ) : null}
                 {recommendationUnits.slice(0, 5).map((u) => {
@@ -349,7 +349,7 @@ export default function TeacherStudentReportPage({ studentId }) {
                 ) : null}
                 {inactiveDays != null && inactiveDays >= 7 ? (
                   <p className="text-amber-200 text-sm mb-2">
-                    התלמיד לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
+                    הילד/ה לא תרגל ביותר מ-7 ימים — מומלץ לעקוב.
                   </p>
                 ) : null}
               </>
@@ -441,7 +441,7 @@ export default function TeacherStudentReportPage({ studentId }) {
             ) : gas.revoked > 0 ? (
               <p className="text-white/60 text-sm">גישה בוטלה</p>
             ) : (
-              <p className="text-white/70 text-sm">לא הוגדרה גישת הורה לתלמיד זה.</p>
+              <p className="text-white/70 text-sm">לא הוגדרה גישת הורה לילד/ה זה.</p>
             )}
           </section>
 

@@ -143,8 +143,8 @@ export default function LearningHub({ showDevStudentSimulator }) {
               href="/learning/dev-student-simulator"
               className="block rounded-2xl border border-indigo-300/40 bg-indigo-500/10 hover:bg-indigo-500/20 transition p-4 text-center"
             >
-              <h2 className="font-bold text-lg">סימולטור תלמידים (פיתוח)</h2>
-              <p className="text-sm text-white/70">סימולטור תלמידים לפיתוח</p>
+              <h2 className="font-bold text-lg">סימולטור ילדים (פיתוח)</h2>
+              <p className="text-sm text-white/70">סימולטור ילדים לפיתוח</p>
             </Link>
           </section>
         ) : null}

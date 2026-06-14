@@ -49,9 +49,9 @@ function StudentGateBlockedPanel({ loginHref }) {
   const { tokens: T } = useStudentTheme();
   return (
     <div className="max-w-md mx-auto px-4 py-8 md:py-12 space-y-4" dir="rtl" lang="he">
-      <p className={`${T.loadingText} text-right`}>יש להתחבר כתלמיד כדי להמשיך</p>
+      <p className={`${T.loadingText} text-right`}>יש להתחבר כילד/ה כדי להמשיך</p>
       <Link href={loginHref} className={`${T.ctaPrimary} inline-flex justify-center w-full sm:w-auto`}>
-        כניסת תלמיד
+        כניסת ילד/ה
       </Link>
     </div>
   );
@@ -122,7 +122,7 @@ export default function StudentAccessGate({ children }) {
     <StudentSessionProvider value={providerValue}>
       {session.status === "loading" ? (
         <StudentGateShell pathname={pathname}>
-          <StudentGateLoadingPanel message="בודק התחברות תלמיד..." />
+          <StudentGateLoadingPanel message="בודק התחברות ילד/ה..." />
         </StudentGateShell>
       ) : session.status !== "ok" ? (
         <StudentGateShell pathname={pathname}>

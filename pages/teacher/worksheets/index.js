@@ -72,7 +72,7 @@ export default function TeacherWorksheetsListPage() {
         backLabel="← חזרה ללוח הבקרה"
       >
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <p className="text-white/70 text-sm">כל דפי העבודה שלך — כיתה או תלמידים נבחרים.</p>
+          <p className="text-white/70 text-sm">כל דפי העבודה שלך — כיתה או ילדים נבחרים.</p>
           <Link
             href="/teacher/worksheets/new"
             className="inline-flex items-center px-4 py-2 rounded-xl bg-violet-500/90 text-black font-semibold text-sm hover:bg-violet-400"
@@ -100,7 +100,7 @@ export default function TeacherWorksheetsListPage() {
                   <h3 className="font-bold text-white">{w.title}</h3>
                   <p className="text-sm text-white/65 mt-1">
                     {worksheetModeLabelHe(w.worksheetMode)} · {worksheetStatusLabelHe(w.status)}
-                    {w.assignmentScope === "selected_students" ? " · תלמידים נבחרים" : " · כיתה"}
+                    {w.assignmentScope === "selected_students" ? " · ילדים נבחרים" : " · כיתה"}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 justify-end">

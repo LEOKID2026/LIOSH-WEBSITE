@@ -86,7 +86,7 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
     const body = await res.json().catch(() => ({}));
     setLoading(false);
     if (res.status !== 200) {
-      setError("לא ניתן לטעון את פרטי כניסת התלמיד.");
+      setError("לא ניתן לטעון את פרטי כניסת הילד/ה.");
       return;
     }
     setAccesses(body?.data?.accesses || []);
@@ -107,9 +107,9 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
     setBusy(false);
     if (res.status !== 201) {
       if (body?.error?.code === "active_access_exists") {
-        setError("כבר קיימת כניסת תלמיד פעילה.");
+        setError("כבר קיימת כניסת ילד/ה פעילה.");
       } else {
-        setError("אירעה שגיאה ביצירת כניסת תלמיד.");
+        setError("אירעה שגיאה ביצירת כניסת ילד/ה.");
       }
       return;
     }
@@ -127,7 +127,7 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
     setBusy(false);
     setConfirmRevoke(null);
     if (res.status === 200) load();
-    else setError("לא ניתן לבטל את כניסת התלמיד.");
+    else setError("לא ניתן לבטל את כניסת הילד/ה.");
   };
 
   const onRotatePin = async (accessId) => {
@@ -180,7 +180,7 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
 
   return (
     <section className="mt-8 rounded-xl border border-white/15 bg-black/25 p-5">
-      <h2 className="text-lg font-semibold mb-3">כניסת תלמיד</h2>
+      <h2 className="text-lg font-semibold mb-3">כניסת ילד/ה</h2>
 
       {loading ? <p className="text-white/60 text-sm">טוען…</p> : null}
       {error ? (
@@ -190,7 +190,7 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
       ) : null}
 
       {!loading && accesses.length === 0 ? (
-        <p className="text-white/70 text-sm mb-4">לא הוגדרה כניסת תלמיד.</p>
+        <p className="text-white/70 text-sm mb-4">לא הוגדרה כניסת ילד/ה.</p>
       ) : null}
 
       <ul className="space-y-3 mb-4">
@@ -259,9 +259,9 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
 
       {confirmRevoke ? (
         <div className="mb-4 p-4 rounded-lg border border-red-400/30 bg-red-500/10">
-          <p className="font-semibold mb-2">ביטול כניסת תלמיד</p>
+          <p className="font-semibold mb-2">ביטול כניסת ילד/ה</p>
           <p className="text-sm text-white/80 mb-3">
-            לאחר הביטול התלמיד לא יוכל להיכנס עם הקוד. פעולה זו בלתי הפיכה.
+            לאחר הביטול הילד/ה לא יוכל להיכנס עם הקוד. פעולה זו בלתי הפיכה.
           </p>
           <div className="flex gap-2">
             <button
@@ -292,7 +292,7 @@ export default function StudentLoginAccessPanel({ accessToken, studentId }) {
           disabled={busy}
           onClick={onCreate}
         >
-          צור כניסת תלמיד
+          צור כניסת ילד/ה
         </button>
       ) : null}
     </section>

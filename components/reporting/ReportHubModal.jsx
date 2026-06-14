@@ -25,7 +25,7 @@ function studentReportButton(onStudentReport, studentReportLoading) {
       className="shrink-0 rounded-lg bg-amber-500 text-black text-xs font-semibold px-3 py-1.5 disabled:opacity-50"
       data-testid={item.studentId ? `report-open-student-${item.studentId}` : undefined}
     >
-      {studentReportLoading ? "טוען…" : "דוח תלמיד"}
+      {studentReportLoading ? "טוען…" : "דוח ילד/ה"}
     </button>
   );
 }
@@ -80,7 +80,7 @@ export default function ReportHubModal({
     (n) => n.id === studentDetailId
   );
   const studentDetailTitle =
-    studentDetailSection?.title || studentDetailNav?.label || "פירוט תלמיד";
+    studentDetailSection?.title || studentDetailNav?.label || "פירוט ילד/ה";
 
   const detailVariant = useMemo(
     () => DETAIL_VARIANT[detailId] || "default",
@@ -192,7 +192,7 @@ export default function ReportHubModal({
         <ReportDetailSectionView
           section={{
             title: drilldownSection?.title,
-            empty: "אין תלמידים בקבוצה זו.",
+            empty: "אין ילדים בקבוצה זו.",
             items: drilldownSection?.items || [],
           }}
           variant="students"
@@ -205,7 +205,7 @@ export default function ReportHubModal({
 
       <ReportModalFrame
         open={studentMainOpen}
-        title={nestedStudentViewModel?.header?.title || "דוח תלמיד"}
+        title={nestedStudentViewModel?.header?.title || "דוח ילד/ה"}
         subtitle={displayTitle}
         onClose={handleCloseAll}
         onBack={handleBackFromStudentMain}
@@ -215,7 +215,7 @@ export default function ReportHubModal({
       >
         {rangeControl}
         {studentReportLoading ? (
-          <p className="text-white/60 text-sm py-6 text-center">טוען דוח תלמיד…</p>
+          <p className="text-white/60 text-sm py-6 text-center">טוען דוח ילד/ה…</p>
         ) : (
           <ReportHubSummary
             viewModel={nestedStudentViewModel}
@@ -227,7 +227,7 @@ export default function ReportHubModal({
       <ReportModalFrame
         open={Boolean(open && nestedStudentViewModel && studentDetailId && studentDetailSection)}
         title={studentDetailTitle}
-        subtitle={nestedStudentViewModel?.header?.title || "דוח תלמיד"}
+        subtitle={nestedStudentViewModel?.header?.title || "דוח ילד/ה"}
         onClose={handleCloseAll}
         onBack={handleBackFromStudentDetail}
         zIndex={130 + z}

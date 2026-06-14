@@ -21,7 +21,7 @@ export default function SchoolAdminTable({ schools }) {
               <th className="px-3 py-2.5 font-medium">{ADMIN_SCHOOL_NAME}</th>
               <th className="px-3 py-2.5 font-medium">עיר</th>
               <th className="px-3 py-2.5 font-medium text-center">מורים</th>
-              <th className="px-3 py-2.5 font-medium text-center">תלמידים</th>
+              <th className="px-3 py-2.5 font-medium text-center">ילדים</th>
               <th className="px-3 py-2.5 font-medium text-center">פעיל</th>
               <th className="px-3 py-2.5 font-medium">{ADMIN_COL_ACTIONS}</th>
             </tr>

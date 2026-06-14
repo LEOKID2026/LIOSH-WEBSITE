@@ -113,7 +113,7 @@ export default function TeacherClassReportModal({
         row?.name ||
         body?.student?.full_name ||
         viewModel?.sections?.students?.items?.find((i) => i.studentId === studentId)?.name ||
-        "תלמיד/ה";
+        "ילד/ה";
       setNestedStudentVm(
         parseStudentReportViewModel(
           body,

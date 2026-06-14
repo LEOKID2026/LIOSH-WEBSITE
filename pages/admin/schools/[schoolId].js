@@ -77,7 +77,7 @@ export default function AdminSchoolDetailPage() {
                 {school.contactEmail ? ` · ${school.contactEmail}` : null}
               </p>
               <p className="text-white/50 text-xs mt-1">
-                מורים: {school.teacherCount} · תלמידים רשומים: {school.enrolledStudentCount}
+                מורים: {school.teacherCount} · ילדים רשומים: {school.enrolledStudentCount}
               </p>
             </div>
 

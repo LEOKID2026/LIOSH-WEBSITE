@@ -525,7 +525,7 @@ export default function ParentDashboardPage() {
         </div>
 
         <div className="rounded border border-white/15 p-3 bg-black/30 space-y-3">
-          <div className="font-semibold">פרטי כניסת תלמיד</div>
+          <div className="font-semibold">פרטי כניסת ילד/ה</div>
 
           {showConfirmationHere ? (
             <div className="rounded border border-emerald-500/40 bg-emerald-950/40 p-3 space-y-2 text-sm">
@@ -597,7 +597,7 @@ export default function ParentDashboardPage() {
             </div>
           ) : hasHiddenDemoAccess ? (
             <div className="space-y-2">
-              <div className="text-sm text-white/80">כניסת תלמיד פעילה</div>
+              <div className="text-sm text-white/80">כניסת ילד/ה פעילה</div>
               <div className="text-sm">
                 PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
               </div>
@@ -609,10 +609,10 @@ export default function ParentDashboardPage() {
                 PIN: {student.has_active_access_code ? "מוגדר" : "לא מוגדר"}
               </div>
               <p className="text-xs text-white/60">
-                יש להגדיר שם משתמש ו-PIN לכניסת התלמיד. אם כבר קיימת כניסה ישנה, הגדרה זו תחליף אותה.
+                יש להגדיר שם משתמש ו-PIN לכניסת הילד/ה. אם כבר קיימת כניסה ישנה, הגדרה זו תחליף אותה.
               </p>
               <div>
-                <label className="text-sm text-white/80">שם משתמש לתלמיד</label>
+                <label className="text-sm text-white/80">שם משתמש לילד/ה</label>
                 <input
                   className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
                   value={credentialsByStudentId[student.id]?.username || ""}
@@ -630,7 +630,7 @@ export default function ParentDashboardPage() {
                 />
               </div>
               <div>
-                <label className="text-sm text-white/80">PIN לתלמיד</label>
+                <label className="text-sm text-white/80">PIN לילד/ה</label>
                 <input
                   className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
                   value={credentialsByStudentId[student.id]?.pin || ""}

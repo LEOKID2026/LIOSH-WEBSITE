@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       return res.status(403).json({ ok: false, error: "Student not found for this parent" });
     }
     if (student.is_active !== true) {
-      return res.status(403).json({ ok: false, error: "התלמיד אינו פעיל" });
+      return res.status(403).json({ ok: false, error: "הילד/ה אינו פעיל" });
     }
 
     const codeHash = hashStudentSecret(username);

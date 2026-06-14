@@ -100,7 +100,7 @@ function RowActionButtons({ actions, onRowAction, item, studentReportLoading, on
               className="rounded-lg bg-amber-500 text-black text-xs font-semibold px-3 py-1.5 disabled:opacity-50"
               data-testid={`report-open-student-${action.studentId}`}
             >
-              {studentReportLoading ? "טוען…" : action.label || "דוח תלמיד"}
+              {studentReportLoading ? "טוען…" : action.label || "דוח ילד/ה"}
             </button>
           );
         }
@@ -324,7 +324,7 @@ export function ReportDetailSectionView({
           const Tag = clickable ? "button" : "div";
           const countText =
             item.count != null && item.count !== ""
-              ? `${item.count} תלמידים`
+              ? `${item.count} ילדים`
               : null;
           return (
             <li key={`${label}-${i}`}>

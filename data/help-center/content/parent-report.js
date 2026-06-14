@@ -57,7 +57,7 @@ export const dataPresence = baseArticle({
   toc: [{ id: "presence", title: "נוכחות נתונים" }],
   blocks: [
     heading(2, "presence", "נוכחות נתונים"),
-    paragraph("אם התלמיד תרגל מעט, הדוח יציין שאין עדיין מספיק מידע. זה תקין — המשיכו לתרגל."),
+    paragraph("אם הילד/ה תרגל מעט, הדוח יציין שאין עדיין מספיק מידע. זה תקין — המשיכו לתרגל."),
     callout("info", "ככל שיש יותר תרגול, התובנות בדוח נעשות מדויקות יותר."),
     screenshotBlock(S, "data-presence", "low-data", "הודעה על מעט נתונים בדוח"),
     videoBlock(S, "data-presence"),
@@ -171,7 +171,7 @@ export const detailedReport = baseArticle({
     heading(2, "exec", "סיכום מנהלים"),
     paragraph("פתיח כללי לדוח המפורט עם המסר המרכזי."),
     heading(2, "letter", "מכתב הורי"),
-    paragraph("לכל מקצוע יש הסבר מילולי להורים — מה התלמיד יודע ומה כדאי לחזק."),
+    paragraph("לכל מקצוע יש הסבר מילולי להורים — מה הילד/ה יודע ומה כדאי לחזק."),
     screenshotBlock(S, "detailed-report", "letter", "מכתב הורי במקצוע אחד"),
     videoBlock(S, "detailed-report"),
   ],

@@ -44,7 +44,7 @@ export default function TeacherGradingScreen({ questions, answers, busy, onSave,
               שאלה {idx} ({worksheetQuestionTypeLabelHe(q.questionType)} — {pts} נק')
             </p>
             <p className="text-sm text-white/70 mt-2">
-              תשובת התלמיד:{" "}
+              תשובת הילד/ה:{" "}
               <span className="text-white">{formatAnswer(ans?.answerValue)}</span>
             </p>
             {ans?.autoIsCorrect != null ? (
@@ -130,7 +130,7 @@ export default function TeacherGradingScreen({ questions, answers, busy, onSave,
           onClick={onPublish}
           className="px-4 py-2 rounded-xl bg-amber-500/90 text-black font-semibold hover:bg-amber-400"
         >
-          פרסם לתלמיד
+          פרסם לילד/ה
         </button>
       </div>
     </div>
