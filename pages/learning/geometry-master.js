@@ -28,6 +28,11 @@ import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repea
 import { generateQuestion } from "../../utils/geometry-question-generator";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import {
+  buildLearningMasterQuestionPressureLayout,
+  LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS,
+  LEARNING_MASTER_ANSWER_SURFACE_CLASS,
+} from "../../utils/learning-master-question-pressure.client.js";
 import StudentNumericAnswerField, {
   useMobileEmbeddedNumericSubmit,
 } from "../../components/learning/StudentNumericAnswerField";
@@ -2423,6 +2428,23 @@ export default function GeometryMaster() {
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
 
+  const questionPressureLayout = currentQuestion
+    ? buildLearningMasterQuestionPressureLayout({
+        MB,
+        questionParts: [
+          currentQuestion.question,
+          currentQuestion.questionLabel,
+          currentQuestion.exerciseText,
+        ],
+        answers: currentQuestion.options ?? currentQuestion.answers ?? [],
+        hasFloatButtons: Boolean(
+          questionBookHref ||
+            (mode === "learning" &&
+              currentQuestion.params?.kind !== "no_question")
+        ),
+      })
+    : null;
+
   return (
     <Layout>
       <style jsx>{`
@@ -2886,44 +2908,6 @@ export default function GeometryMaster() {
                 </div>
               )}
 
-              {currentQuestion &&
-                (questionBookHref ||
-                  (mode === "learning" &&
-                    currentQuestion.params?.kind !== "no_question")) && (
-                <div
-                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-between gap-2 px-1 mb-1"
-                  dir="ltr"
-                >
-                  <div className="shrink-0">
-                    {mode === "learning" &&
-                    currentQuestion.params?.kind !== "no_question" ? (
-                      <button
-                        type="button"
-                        onClick={() => setShowTheoryHelp(true)}
-                        className={`${MB.floatBtnHelper} ${MB.floatBtnPurple}`}
-                      >
-                        🧠 מה חשוב לזכור?
-                      </button>
-                    ) : null}
-                  </div>
-                  {questionBookHref ? (
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        type="button"
-                        data-testid={`geometry-${grade}-book-question-button`}
-                        onClick={() => openBookFromLearning(questionBookHref)}
-                        className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                        title="הסבר בספר לנושא הנוכחי"
-                      >
-                        הסבר
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="shrink-0" aria-hidden="true" />
-                  )}
-                </div>
-              )}
-
               {currentQuestion && (
                 <div
                   ref={gameRef}
@@ -2965,32 +2949,34 @@ export default function GeometryMaster() {
                     </div>
                   )}
 
-                  <div
-                    data-testid="geometry-question-stem"
-                    className="relative w-full shrink-0 min-h-[200px] md:min-h-[240px] flex flex-col items-center justify-center px-2 py-2 gap-2 max-[420px]:min-h-[180px]"
-                  >
-                  {mode === "learning" && currentQuestion.params?.kind !== "no_question" && (
-                    <button
-                      type="button"
-                      onClick={() => setShowTheoryHelp(true)}
-                      className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto md:hidden`}
-                    >
-                      🧠 מה חשוב לזכור?
-                    </button>
-                  )}
-
+                  {mode === "learning" &&
+                    currentQuestion.params?.kind !== "no_question" && (
+                      <button
+                        type="button"
+                        onClick={() => setShowTheoryHelp(true)}
+                        className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto`}
+                      >
+                        🧠 מה חשוב לזכור?
+                      </button>
+                    )}
                   {questionBookHref ? (
-                    <button
-                      type="button"
-                      data-testid={`geometry-${grade}-book-question-button`}
-                      onClick={() => openBookFromLearning(questionBookHref)}
-                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto md:hidden`}
-                      title="הסבר בספר לנושא הנוכחי"
-                    >
-                      הסבר
-                    </button>
+                    <div className={MB.floatBtnStack}>
+                      <button
+                        type="button"
+                        data-testid={`geometry-${grade}-book-question-button`}
+                        onClick={() => openBookFromLearning(questionBookHref)}
+                        className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
+                        title="הסבר בספר לנושא הנוכחי"
+                      >
+                        הסבר
+                      </button>
+                    </div>
                   ) : null}
 
+                  <div
+                    data-testid="geometry-question-stem"
+                    className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} py-2 gap-2`.trim()}
+                  >
                   {/* בדיקה אם יש שאלה תקינה */}
                   {currentQuestion.params?.kind === "no_question" ? (
                     <div
@@ -3006,15 +2992,29 @@ export default function GeometryMaster() {
                         questionLabel={currentQuestion.questionLabel}
                         exerciseText={currentQuestion.exerciseText}
                         getQuestionFontStyle={getQuestionFontStyle}
-                        leadClassName={`${MB.questionLead} max-[420px]:text-xl max-[420px]:leading-snug max-[420px]:mb-1`}
+                        leadClassName={
+                          questionPressureLayout?.questionLeadClassByPressure ??
+                          MB.questionLead
+                        }
                         formulaClassName={MB.questionFormula}
-                        bodyClassName={`${MB.questionBody} max-[420px]:text-2xl max-[420px]:leading-snug`}
+                        bodyClassName={
+                          questionPressureLayout?.questionBodyClassByPressure ??
+                          MB.questionBody
+                        }
+                        leadStyle={{
+                          lineHeight:
+                            questionPressureLayout?.questionLineHeightByPressure,
+                        }}
+                        bodyStyle={{
+                          lineHeight:
+                            questionPressureLayout?.questionLineHeightByPressure,
+                        }}
                         wrapperClassName="w-full flex flex-col items-center justify-center gap-2 max-w-full px-1 pb-1"
                       />
                     </>
                   )}
                   </div>
-                    <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
+                    <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                       {currentQuestion.params?.kind !== "no_question" &&
                         ((mode === "learning" || mode === "practice") ? (
                           (() => {
@@ -3061,7 +3061,13 @@ export default function GeometryMaster() {
                             );
                           })()
                         ) : currentQuestion.answers ? (
-                          <div className="grid grid-cols-2 gap-2.5 max-[420px]:gap-2 w-full mb-3 max-[420px]:mb-2">
+                          <div
+                            className={`grid gap-2.5 max-[420px]:gap-2 w-full mb-3 max-[420px]:mb-2 ${
+                              questionPressureLayout?.useNarrowMobileAnswerFallback
+                                ? "grid-cols-2 max-[420px]:grid-cols-1"
+                                : "grid-cols-2"
+                            }`}
+                          >
                             {currentQuestion.answers.map((answer, idx) => {
                               const isSelected = selectedAnswer === answer;
                               const isCorrect = compareGeometryLearnerAnswer({
@@ -3080,7 +3086,14 @@ export default function GeometryMaster() {
                                   data-testid={`geometry-mcq-${idx}`}
                                   onClick={() => handleAnswer(answer)}
                                   disabled={!!selectedAnswer}
-                                  className={`rounded-xl border-2 px-5 py-5 text-xl font-bold max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-base transition-all active:scale-95 disabled:opacity-50 ${
+                                  className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                                    questionPressureLayout?.answerCardTextClass ??
+                                    "px-5 py-5 text-xl max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-base"
+                                  } ${
+                                    questionPressureLayout?.useNarrowMobileAnswerFallback
+                                      ? LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS
+                                      : ""
+                                  } ${
                                     isCorrect && isSelected
                                       ? MB.choiceCorrect
                                       : isWrong

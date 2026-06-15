@@ -22,6 +22,11 @@ import { useSound } from "../../hooks/useSound";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import {
+  buildLearningMasterQuestionPressureLayout,
+  LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS,
+  LEARNING_MASTER_ANSWER_SURFACE_CLASS,
+} from "../../utils/learning-master-question-pressure.client.js";
 import EnglishPhonicsAudioPanel from "../../components/EnglishPhonicsAudioPanel";
 import { validateAudioStem } from "../../utils/audio-task-contract";
 import { compareAnswers } from "../../utils/answer-compare";
@@ -2458,6 +2463,25 @@ export default function EnglishMaster() {
     Object.entries(WORD_LISTS[listKey] || {})
   );
 
+  const hasPhonicsAudio =
+    gameActive &&
+    currentQuestion?.topic === "phonics" &&
+    currentQuestion?.params?.audioStem &&
+    validateAudioStem(currentQuestion.params.audioStem);
+
+  const questionPressureLayout = currentQuestion
+    ? buildLearningMasterQuestionPressureLayout({
+        MB,
+        questionParts: [
+          currentQuestion.question,
+          currentQuestion.questionLabel,
+          currentQuestion.exerciseText,
+        ],
+        answers: currentQuestion.answers ?? [],
+        hasFloatButtons: Boolean(hasPhonicsAudio || questionBookHref),
+      })
+    : null;
+
   return (
     <Layout>
       <div className={shellClass} style={shellBgStyle} dir="rtl">
@@ -2846,23 +2870,6 @@ export default function EnglishMaster() {
             </div>
           ) : (
             <div className="flex flex-col flex-1 min-h-0 w-full items-center">
-              {currentQuestion && questionBookHref && (
-                <div
-                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-end gap-2 px-1 mb-1"
-                  dir="ltr"
-                >
-                  <button
-                    type="button"
-                    data-testid={`english-${grade}-book-question-button`}
-                    onClick={() => openBookFromLearning(questionBookHref)}
-                    className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                    title="הסבר בספר לנושא הנוכחי"
-                  >
-                    הסבר
-                  </button>
-                </div>
-              )}
-
               {currentQuestion && (
                 <div
                   ref={gameRef}
@@ -2898,39 +2905,60 @@ export default function EnglishMaster() {
                     </div>
                   )}
 
-                  <div className="w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2 relative">
-                    {gameActive &&
-                      currentQuestion?.topic === "phonics" &&
-                      currentQuestion?.params?.audioStem &&
-                      validateAudioStem(currentQuestion.params.audioStem) && (
-                        <EnglishPhonicsAudioPanel
-                          stem={currentQuestion.params.audioStem}
-                          gameActive={gameActive && !selectedAnswer}
-                        />
-                      )}
-                    {questionBookHref ? (
+                  {hasPhonicsAudio ? (
+                    <div
+                      className="absolute top-2 left-2 z-10 pointer-events-auto"
+                      dir="rtl"
+                    >
+                      <EnglishPhonicsAudioPanel
+                        stem={currentQuestion.params.audioStem}
+                        gameActive={gameActive && !selectedAnswer}
+                      />
+                    </div>
+                  ) : null}
+                  {questionBookHref ? (
+                    <div className={MB.floatBtnStack}>
                       <button
                         type="button"
                         data-testid={`english-${grade}-book-question-button`}
                         onClick={() => openBookFromLearning(questionBookHref)}
-                        className={`${MB.floatBtn} ${MB.floatBtnBook} pointer-events-auto md:hidden`}
+                        className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
                         title="הסבר בספר לנושא הנוכחי"
                       >
                         הסבר
                       </button>
-                    ) : null}
+                    </div>
+                  ) : null}
+
+                  <div
+                    data-testid="english-question-stem"
+                    className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                  >
                     <StudentQuestionDisplay
-                      testId="english-question-stem"
                       question={currentQuestion.question}
                       questionLabel={currentQuestion.questionLabel}
                       exerciseText={currentQuestion.exerciseText}
                       getQuestionFontStyle={getQuestionFontStyle}
-                      leadClassName={MB.questionLead}
-                      bodyClassName={MB.questionBody}
+                      leadClassName={
+                        questionPressureLayout?.questionLeadClassByPressure ??
+                        MB.questionLead
+                      }
+                      bodyClassName={
+                        questionPressureLayout?.questionBodyClassByPressure ??
+                        MB.questionBody
+                      }
+                      leadStyle={{
+                        lineHeight:
+                          questionPressureLayout?.questionLineHeightByPressure,
+                      }}
+                      bodyStyle={{
+                        lineHeight:
+                          questionPressureLayout?.questionLineHeightByPressure,
+                      }}
                     />
                   </div>
 
-                  <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
+                  <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                     {currentQuestion.qType === "typing" ? (
                       <div className={MB.answerWrap}>
                         <div className="text-center mb-3 max-[420px]:mb-2">
@@ -2976,14 +3004,19 @@ export default function EnglishMaster() {
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2">
+                      <div
+                        className={`grid gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2 ${
+                          questionPressureLayout?.useNarrowMobileAnswerFallback
+                            ? "grid-cols-2 max-[420px]:grid-cols-1"
+                            : "grid-cols-2"
+                        }`}
+                      >
                         {currentQuestion.answers.map((answer, idx) => {
                           const isSelected = selectedAnswer === answer;
                           const isCorrect =
                             String(answer).trim().toLowerCase() ===
                             String(currentQuestion.correctAnswer).trim().toLowerCase();
                           const isWrong = isSelected && !isCorrect;
-
                           return (
                             <button
                               type="button"
@@ -2991,7 +3024,14 @@ export default function EnglishMaster() {
                               data-testid={`english-mcq-${idx}`}
                               onClick={() => handleAnswer(answer)}
                               disabled={!!selectedAnswer}
-                              className={`rounded-xl border-2 px-6 py-6 text-2xl font-bold max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-lg transition-all active:scale-95 disabled:opacity-50 ${
+                              className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                                questionPressureLayout?.answerCardTextClass ??
+                                "px-6 py-6 text-2xl max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-lg"
+                              } ${
+                                questionPressureLayout?.useNarrowMobileAnswerFallback
+                                  ? LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS
+                                  : ""
+                              } ${
                                 isCorrect && isSelected
                                   ? MB.choiceCorrect
                                   : isWrong

@@ -49,6 +49,11 @@ import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repea
 import { getQuestionFingerprintForSubject } from "../../utils/question-fingerprints";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import {
+  buildLearningMasterQuestionPressureLayout,
+  LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS,
+  LEARNING_MASTER_ANSWER_SURFACE_CLASS,
+} from "../../utils/learning-master-question-pressure.client.js";
 import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import {
   getSolutionSteps,
@@ -2361,6 +2366,19 @@ export default function MoledetGeographyMaster() {
       ? getSolutionSteps(currentQuestion, currentQuestion.params?.op || currentQuestion.operation, grade)
       : [];
 
+  const questionPressureLayout = currentQuestion
+    ? buildLearningMasterQuestionPressureLayout({
+        MB,
+        questionParts: [
+          currentQuestion.question,
+          currentQuestion.questionLabel,
+          currentQuestion.exerciseText,
+        ],
+        answers: currentQuestion.answers ?? [],
+        hasFloatButtons: Boolean(questionBookHref || canDisplayVertically),
+      })
+    : null;
+
   return (
     <Layout>
       <style jsx>{`
@@ -3159,23 +3177,6 @@ export default function MoledetGeographyMaster() {
                 </div>
               )}
 
-              {currentQuestion && questionBookHref && (
-                <div
-                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-end gap-2 px-1 mb-1"
-                  dir="ltr"
-                >
-                  <button
-                    type="button"
-                    data-testid={`moledet-geography-${grade}-book-question-button`}
-                    onClick={() => openBookFromLearning(questionBookHref)}
-                    className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                    title="הסבר בספר לנושא הנוכחי"
-                  >
-                    הסבר
-                  </button>
-                </div>
-              )}
-
               {currentQuestion && (
                 <div
                   ref={gameRef}
@@ -3209,21 +3210,34 @@ export default function MoledetGeographyMaster() {
                     </div>
                   )}
 
-                  <div
-                    data-testid="moledet-question-stem"
-                    className="relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2"
-                  >
-                  {questionBookHref ? (
+                  {canDisplayVertically && (
                     <button
                       type="button"
-                      data-testid={`moledet-geography-${grade}-book-question-button`}
-                      onClick={() => openBookFromLearning(questionBookHref)}
-                      className={`${MB.floatBtn} ${MB.floatBtnBook} pointer-events-auto md:hidden`}
-                      title="הסבר בספר לנושא הנוכחי"
+                      onClick={() => setIsVerticalDisplay((prev) => !prev)}
+                      className={`${MB.floatBtn} ${MB.floatBtnPurple} top-2 left-2 pointer-events-auto`}
+                      title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
                     >
-                      הסבר
+                      {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
                     </button>
+                  )}
+                  {questionBookHref ? (
+                    <div className={MB.floatBtnStack}>
+                      <button
+                        type="button"
+                        data-testid={`moledet-geography-${grade}-book-question-button`}
+                        onClick={() => openBookFromLearning(questionBookHref)}
+                        className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
+                        title="הסבר בספר לנושא הנוכחי"
+                      >
+                        הסבר
+                      </button>
+                    </div>
                   ) : null}
+
+                  <div
+                    data-testid="moledet-question-stem"
+                    className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                  >
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
                     <div className="mb-4 flex gap-6 items-center justify-center flex-wrap" style={{ direction: "ltr" }}>
@@ -3388,17 +3402,6 @@ export default function MoledetGeographyMaster() {
                     </div>
                   )}
                   
-                  {canDisplayVertically && (
-                    <div className="flex justify-center mb-2">
-                      <button
-                        onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
-                        title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
-                      >
-                        {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
-                      </button>
-                    </div>
-                  )}
                   {isVerticalDisplay &&
                   canDisplayVertically &&
                   currentQuestion.exerciseText ? (
@@ -3411,12 +3414,17 @@ export default function MoledetGeographyMaster() {
                         });
                         return displayParts.leadText ? (
                           <p
-                            className="text-2xl text-center text-white mb-1 break-words overflow-wrap-anywhere max-w-full px-2"
+                            className={
+                              questionPressureLayout?.questionLeadClassByPressure ??
+                              MB.questionLead
+                            }
                             dir="rtl"
                             data-testid="student-question-lead"
                             style={{
                               direction: "rtl",
                               unicodeBidi: "plaintext",
+                              lineHeight:
+                                questionPressureLayout?.questionLineHeightByPressure,
                               ...getQuestionFontStyle({
                                 text: displayParts.leadText,
                               }),
@@ -3432,7 +3440,10 @@ export default function MoledetGeographyMaster() {
                         dir="ltr"
                       >
                         <pre
-                          className="text-3xl text-center text-white font-bold font-mono whitespace-pre"
+                          className={
+                            questionPressureLayout?.verticalPreClassByPressure ??
+                            "text-3xl text-center text-white font-bold font-mono whitespace-pre"
+                          }
                           style={{ direction: "ltr", unicodeBidi: "isolate" }}
                         >
                           {getVerticalExercise() || currentQuestion.exerciseText}
@@ -3445,19 +3456,39 @@ export default function MoledetGeographyMaster() {
                       questionLabel={currentQuestion.questionLabel}
                       exerciseText={currentQuestion.exerciseText}
                       getQuestionFontStyle={getQuestionFontStyle}
-                      leadClassName={MB.questionLead}
-                      bodyClassName={`${MB.questionBody} ${
+                      leadClassName={
+                        questionPressureLayout?.questionLeadClassByPressure ??
+                        MB.questionLead
+                      }
+                      bodyClassName={`${
+                        questionPressureLayout?.questionBodyClassByPressure ??
+                        MB.questionBody
+                      } ${
                         currentQuestion.operation === "sequences"
                           ? "whitespace-normal break-words overflow-wrap-anywhere"
                           : ""
                       }`}
                       formulaClassName={MB.questionFormula}
+                      leadStyle={{
+                        lineHeight:
+                          questionPressureLayout?.questionLineHeightByPressure,
+                      }}
+                      bodyStyle={{
+                        lineHeight:
+                          questionPressureLayout?.questionLineHeightByPressure,
+                      }}
                     />
                   )}
                   </div>
 
-                  <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
-                  <div className="grid grid-cols-2 gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2">
+                  <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
+                  <div
+                    className={`grid gap-3 w-full mb-3 max-[420px]:gap-2 max-[420px]:mb-2 ${
+                      questionPressureLayout?.useNarrowMobileAnswerFallback
+                        ? "grid-cols-2 max-[420px]:grid-cols-1"
+                        : "grid-cols-2"
+                    }`}
+                  >
                     {currentQuestion.answers.map((answer, idx) => {
                       const isSelected = selectedAnswer === answer;
                       const { isCorrect: isCorrectChoice } = compareAnswers({
@@ -3474,7 +3505,14 @@ export default function MoledetGeographyMaster() {
                           data-testid={`moledet-mcq-${idx}`}
                           onClick={() => handleAnswer(answer)}
                           disabled={!!selectedAnswer}
-                          className={`rounded-xl border-2 px-6 py-6 text-2xl font-bold max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-lg transition-all active:scale-95 disabled:opacity-50 ${
+                          className={`rounded-xl border-2 font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                            questionPressureLayout?.answerCardTextClass ??
+                            "px-6 py-6 text-2xl max-[420px]:px-3 max-[420px]:py-3 max-[420px]:text-lg"
+                          } ${
+                            questionPressureLayout?.useNarrowMobileAnswerFallback
+                              ? LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS
+                              : ""
+                          } ${
                             isCorrectChoice && isSelected
                               ? MB.choiceCorrect
                               : isWrong

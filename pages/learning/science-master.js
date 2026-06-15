@@ -40,6 +40,11 @@ import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import { buildQuestionFingerprint } from "../../utils/question-quality";
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
+import {
+  buildLearningMasterQuestionPressureLayout,
+  LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS,
+  LEARNING_MASTER_ANSWER_SURFACE_CLASS,
+} from "../../utils/learning-master-question-pressure.client.js";
 import { warnDuplicateMcqOptionsDevOnly } from "../../utils/answer-compare";
 import {
   distractorFamilyFromOptionCell,
@@ -2890,6 +2895,20 @@ function saveScienceAnswerInParallel({
   const referenceEntries = referenceSection.entries || [];
   const allowedTopics = GRADES[grade]?.topics || Object.keys(TOPICS);
 
+  const questionPressureLayout = currentQuestion
+    ? buildLearningMasterQuestionPressureLayout({
+        MB,
+        questionParts: [currentQuestion.stem],
+        answers: currentQuestion.options ?? currentQuestion.answers ?? [],
+        hasFloatButtons: Boolean(
+          questionBookHref ||
+            (mode === "learning" &&
+              Array.isArray(currentQuestion.theoryLines) &&
+              currentQuestion.theoryLines.length > 0)
+        ),
+      })
+    : null;
+
   return (
     <Layout>
       <div className={shellClass} style={shellBgStyle} dir="rtl">
@@ -3258,46 +3277,6 @@ function saveScienceAnswerInParallel({
             </div>
           ) : (
             <div className="flex flex-col flex-1 min-h-0 w-full items-center">
-              {currentQuestion &&
-                (questionBookHref ||
-                  (mode === "learning" &&
-                    Array.isArray(currentQuestion.theoryLines) &&
-                    currentQuestion.theoryLines.length > 0)) && (
-                <div
-                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-between gap-2 px-1 mb-1"
-                  dir="ltr"
-                >
-                  <div className="shrink-0">
-                    {mode === "learning" &&
-                    Array.isArray(currentQuestion.theoryLines) &&
-                    currentQuestion.theoryLines.length > 0 ? (
-                      <button
-                        type="button"
-                        onClick={() => setShowTheoryHelp(true)}
-                        className={`${MB.floatBtnHelper} ${MB.floatBtnPurple}`}
-                      >
-                        🧠 מה חשוב לזכור?
-                      </button>
-                    ) : null}
-                  </div>
-                  {questionBookHref ? (
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        type="button"
-                        data-testid={`science-${grade}-book-question-button`}
-                        onClick={() => openBookFromLearning(questionBookHref)}
-                        className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                        title="הסבר בספר לנושא הנוכחי"
-                      >
-                        הסבר
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="shrink-0" aria-hidden="true" />
-                  )}
-                </div>
-              )}
-
               <div
                 ref={gameRef}
                 className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 px-1 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
@@ -3327,45 +3306,70 @@ function saveScienceAnswerInParallel({
                   </div>
                 )}
 
-                <div className="relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2">
-                  {mode === "learning" &&
-                    currentQuestion &&
-                    Array.isArray(currentQuestion.theoryLines) &&
-                    currentQuestion.theoryLines.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setShowTheoryHelp(true)}
-                        className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto md:hidden`}
-                      >
-                        🧠 מה חשוב לזכור?
-                      </button>
-                    )}
-                  {questionBookHref ? (
+                {mode === "learning" &&
+                  currentQuestion &&
+                  Array.isArray(currentQuestion.theoryLines) &&
+                  currentQuestion.theoryLines.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowTheoryHelp(true)}
+                      className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto`}
+                    >
+                      🧠 מה חשוב לזכור?
+                    </button>
+                  )}
+                {questionBookHref ? (
+                  <div className={MB.floatBtnStack}>
                     <button
                       type="button"
                       data-testid={`science-${grade}-book-question-button`}
                       onClick={() => openBookFromLearning(questionBookHref)}
-                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto md:hidden`}
+                      className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
                       הסבר
                     </button>
-                  ) : null}
+                  </div>
+                ) : null}
+
+                <div
+                  className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                >
                   <StudentQuestionDisplay
                     testId="science-question-stem"
                     question={
                       currentQuestion?.stem || "אין שאלה זמינה להגדרה זו."
                     }
                     getQuestionFontStyle={getQuestionFontStyle}
-                    leadClassName={MB.questionLead}
-                    bodyClassName={MB.questionBody}
+                    leadClassName={
+                      questionPressureLayout?.questionLeadClassByPressure ??
+                      MB.questionLead
+                    }
+                    bodyClassName={
+                      questionPressureLayout?.questionBodyClassByPressure ??
+                      MB.questionBody
+                    }
+                    leadStyle={{
+                      lineHeight:
+                        questionPressureLayout?.questionLineHeightByPressure,
+                    }}
+                    bodyStyle={{
+                      lineHeight:
+                        questionPressureLayout?.questionLineHeightByPressure,
+                    }}
                     wrapperClassName="w-full flex flex-col items-center justify-center gap-1 max-w-xl mx-auto"
                   />
                 </div>
 
-                <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
+                <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                   {currentQuestion && (
-                    <div className="grid grid-cols-2 gap-2 sm:gap-2.5 max-[420px]:gap-1.5 w-full max-w-xl mb-3 max-[420px]:mb-2 auto-rows-fr">
+                    <div
+                      className={`grid gap-2 sm:gap-2.5 max-[420px]:gap-1.5 w-full max-w-xl mb-3 max-[420px]:mb-2 auto-rows-fr ${
+                        questionPressureLayout?.useNarrowMobileAnswerFallback
+                          ? "grid-cols-2 max-[420px]:grid-cols-1"
+                          : "grid-cols-2"
+                      }`}
+                    >
                       {currentQuestion.options?.map((opt, idx) => {
                         const isSelected = selectedAnswer === idx;
                         const isCorrect = idx === currentQuestion.correctIndex;
@@ -3379,7 +3383,14 @@ function saveScienceAnswerInParallel({
                             data-testid={`science-mcq-${idx}`}
                             onClick={() => handleAnswer(idx)}
                             disabled={showResult}
-                            className={`rounded-xl border-2 px-2.5 py-2.5 sm:px-3 sm:py-3 text-sm font-semibold leading-snug min-h-[5.25rem] sm:min-h-[5.5rem] max-[420px]:px-2 max-[420px]:py-2 max-[420px]:min-h-[4.25rem] max-[420px]:text-xs max-[420px]:leading-snug h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default ${
+                            className={`rounded-xl border-2 font-semibold leading-snug h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default ${
+                              questionPressureLayout?.answerCardTextClass ??
+                              "text-sm px-2.5 py-2.5 sm:px-3 sm:py-3 min-h-[5.25rem] sm:min-h-[5.5rem]"
+                            } ${
+                              questionPressureLayout?.useNarrowMobileAnswerFallback
+                                ? LEARNING_MASTER_ANSWER_CARD_NARROW_CLASS
+                                : ""
+                            } ${
                               isCorrect && isSelected
                                 ? MB.choiceCorrect
                                 : isWrong

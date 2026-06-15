@@ -2957,24 +2957,14 @@ export default function HebrewMaster() {
 
   const questionSlotClassByPressure =
     questionPressureBucket === "veryLong"
-      ? "w-full shrink-0 min-h-[170px] md:min-h-[210px] flex flex-col items-center justify-center px-1"
+      ? "w-full shrink-0 min-h-[170px] max-[420px]:min-h-[100px] md:min-h-[210px] flex flex-col items-center justify-center px-1"
       : questionPressureBucket === "long"
-      ? "w-full shrink-0 min-h-[190px] md:min-h-[230px] flex flex-col items-center justify-center px-1.5"
+      ? "w-full shrink-0 min-h-[190px] max-[420px]:min-h-[110px] md:min-h-[230px] flex flex-col items-center justify-center px-1.5"
       : questionPressureBucket === "medium"
-      ? "w-full shrink-0 min-h-[210px] md:min-h-[245px] flex flex-col items-center justify-center px-2"
-      : "w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2";
+      ? "w-full shrink-0 min-h-[210px] max-[420px]:min-h-[120px] md:min-h-[245px] flex flex-col items-center justify-center px-2"
+      : "w-full shrink-0 min-h-[230px] max-[420px]:min-h-[130px] md:min-h-[260px] flex flex-col items-center justify-center px-2";
 
-  /** Less dead space below toolbar when audio controls live above this stem */
-  const questionSlotClassForStem =
-    hasValidAudioStem && gameActive
-      ? questionPressureBucket === "veryLong"
-        ? "w-full shrink-0 min-h-[120px] md:min-h-[150px] flex flex-col items-center justify-start px-1"
-        : questionPressureBucket === "long"
-        ? "w-full shrink-0 min-h-[135px] md:min-h-[168px] flex flex-col items-center justify-start px-1.5"
-        : questionPressureBucket === "medium"
-        ? "w-full shrink-0 min-h-[150px] md:min-h-[185px] flex flex-col items-center justify-start px-2"
-        : "w-full shrink-0 min-h-[165px] md:min-h-[200px] flex flex-col items-center justify-start px-2"
-      : questionSlotClassByPressure;
+  const questionSlotClassForStem = questionSlotClassByPressure;
 
   const questionLineHeightByPressure =
     questionPressureBucket === "veryLong"
@@ -3186,24 +3176,6 @@ export default function HebrewMaster() {
                 </div>
               </div>
             </div>
-            {gameActive &&
-              currentQuestion?.params?.audioStem &&
-              validateAudioStem(currentQuestion.params.audioStem) && (
-                <div className="flex justify-start w-full mt-2 md:mt-1" dir="rtl">
-                  <HebrewAudioBuild1Panel
-                    stem={currentQuestion.params.audioStem}
-                    gameActive={gameActive && !selectedAnswer}
-                    grade={grade}
-                    topic={
-                      currentQuestion.topic ||
-                      currentQuestion.operation ||
-                      "reading"
-                    }
-                    guidedMode={isHebrewAudioRecordedManual}
-                    onGuidedNeutralDone={finishAudioRecordedManualNeutral}
-                  />
-                </div>
-              )}
           </div>
 
           {/* הודעות מיוחדות */}
@@ -3873,23 +3845,6 @@ export default function HebrewMaster() {
                 </div>
               )}
 
-              {currentQuestion && questionBookHref && (
-                <div
-                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-end gap-2 px-1 mb-1"
-                  dir="ltr"
-                >
-                  <button
-                    type="button"
-                    data-testid={`hebrew-${grade}-book-question-button`}
-                    onClick={() => openBookFromLearning(questionBookHref)}
-                    className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                    title="הסבר בספר לנושא הנוכחי"
-                  >
-                    הסבר
-                  </button>
-                </div>
-              )}
-
               {currentQuestion && (
                 <div
                   ref={gameRef}
@@ -3927,18 +3882,40 @@ export default function HebrewMaster() {
                     </div>
                   )}
 
-                  <div data-testid="hebrew-question-stem" className={`${questionSlotClassForStem} relative`}>
-                  {questionBookHref ? (
-                    <button
-                      type="button"
-                      data-testid={`hebrew-${grade}-book-question-button`}
-                      onClick={() => openBookFromLearning(questionBookHref)}
-                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto md:hidden`}
-                      title="הסבר בספר לנושא הנוכחי"
+                  {gameActive && hasValidAudioStem ? (
+                    <div
+                      className="absolute top-2 left-2 z-10 pointer-events-auto"
+                      dir="rtl"
                     >
-                      הסבר
-                    </button>
+                      <HebrewAudioBuild1Panel
+                        stem={currentQuestion.params.audioStem}
+                        gameActive={gameActive && !selectedAnswer}
+                        grade={grade}
+                        topic={
+                          currentQuestion.topic ||
+                          currentQuestion.operation ||
+                          "reading"
+                        }
+                        guidedMode={isHebrewAudioRecordedManual}
+                        onGuidedNeutralDone={finishAudioRecordedManualNeutral}
+                      />
+                    </div>
                   ) : null}
+                  {questionBookHref ? (
+                    <div className={MB.floatBtnStack}>
+                      <button
+                        type="button"
+                        data-testid={`hebrew-${grade}-book-question-button`}
+                        onClick={() => openBookFromLearning(questionBookHref)}
+                        className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
+                        title="הסבר בספר לנושא הנוכחי"
+                      >
+                        הסבר
+                      </button>
+                    </div>
+                  ) : null}
+
+                  <div data-testid="hebrew-question-stem" className={`${questionSlotClassForStem} relative`}>
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
                     <div className="mb-4 flex gap-6 items-center justify-center flex-wrap" style={{ direction: "ltr" }}>

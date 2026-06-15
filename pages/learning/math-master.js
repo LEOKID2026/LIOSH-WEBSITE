@@ -47,7 +47,10 @@ import {
 } from "../../utils/math-explanations";
 import { trackOperationTime, buildMathReportStorageKey } from "../../utils/math-time-tracking";
 import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
-import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
+import {
+  buildLearningMasterQuestionPressureLayout,
+  LEARNING_MASTER_ANSWER_SURFACE_CLASS,
+} from "../../utils/learning-master-question-pressure.client.js";import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
@@ -3284,6 +3287,33 @@ export default function MathMaster() {
     return ans;
   };
 
+  const mathHasFloatButtons =
+    !scratchpadOpen &&
+    Boolean(
+      canDisplayVertically ||
+        questionBookHref ||
+        (mode === "learning" &&
+          currentQuestion &&
+          (currentQuestion.operation === "multiplication" ||
+            currentQuestion.operation === "division"))
+    );
+
+  const questionPressureLayout = currentQuestion
+    ? buildLearningMasterQuestionPressureLayout({
+        MB,
+        questionParts: [
+          currentQuestion.question,
+          currentQuestion.questionLabel,
+          currentQuestion.exerciseText,
+          isVerticalDisplay && canDisplayVertically
+            ? getVerticalExercise() || currentQuestion.exerciseText
+            : null,
+        ],
+        answers: currentQuestion.answers ?? [],
+        hasFloatButtons: mathHasFloatButtons,
+      })
+    : null;
+
   return (
     <Layout>
       <style jsx>{`
@@ -4082,92 +4112,6 @@ export default function MathMaster() {
                 </div>
               )}
 
-              {currentQuestion &&
-                !scratchpadOpen &&
-                (canDisplayVertically ||
-                  questionBookHref ||
-                  (mode === "learning" &&
-                    (currentQuestion.operation === "multiplication" ||
-                      currentQuestion.operation === "division"))) && (
-                <div
-                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-between gap-2 px-1 mb-1"
-                  dir="ltr"
-                >
-                  <div className="shrink-0">
-                    {canDisplayVertically ? (
-                      <button
-                        type="button"
-                        onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                        className={`${MB.floatBtnHelper} ${MB.floatBtnPurple}`}
-                        title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
-                      >
-                        {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
-                      </button>
-                    ) : null}
-                  </div>
-                  {(questionBookHref ||
-                    (mode === "learning" &&
-                      (currentQuestion.operation === "multiplication" ||
-                        currentQuestion.operation === "division"))) ? (
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      {questionBookHref ? (
-                        <button
-                          type="button"
-                          data-testid={`math-${grade}-book-question-button`}
-                          onClick={() => openBookFromLearning(questionBookHref)}
-                          className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                          title="הסבר בספר לנושא הנוכחי"
-                        >
-                          הסבר
-                        </button>
-                      ) : null}
-                      {mode === "learning" &&
-                      (currentQuestion.operation === "multiplication" ||
-                        currentQuestion.operation === "division") ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowMultiplicationTable(true);
-                            setTableMode(
-                              currentQuestion.operation === "multiplication"
-                                ? "multiplication"
-                                : "division"
-                            );
-                            if (currentQuestion.operation === "multiplication") {
-                              const a = currentQuestion.a;
-                              const b = currentQuestion.b;
-                              if (a >= 1 && a <= 12 && b >= 1 && b <= 12) {
-                                const value = a * b;
-                                setSelectedCell({ row: a, col: b, value });
-                                setSelectedRow(null);
-                                setSelectedCol(null);
-                                setSelectedResult(null);
-                                setSelectedDivisor(null);
-                              }
-                            } else {
-                              const { a, b } = currentQuestion;
-                              const value = a;
-                              if (b >= 1 && b <= 12) {
-                                setSelectedCell({ row: 1, col: b, value });
-                                setSelectedResult(value);
-                                setSelectedDivisor(b);
-                                setSelectedRow(null);
-                                setSelectedCol(null);
-                              }
-                            }
-                          }}
-                          className={`${MB.floatBtnHelper} ${MB.floatBtnTable}`}
-                        >
-                          📊 לוח הכפל
-                        </button>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <div className="shrink-0" aria-hidden="true" />
-                  )}
-                </div>
-              )}
-
               {currentQuestion && (
                 <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
                 <div
@@ -4215,11 +4159,11 @@ export default function MathMaster() {
                     </div>
                   )}
 
-                  {/* כפתור מאוזן/מאונך — מובייל בלבד; בדסקטופ בשורה מעל אזור השאלה */}
                   {canDisplayVertically && !scratchpadOpen && (
                     <button
+                      type="button"
                       onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                      className={`${MB.floatBtn} ${MB.floatBtnPurple} top-2 left-2 pointer-events-auto md:hidden`}
+                      className={`${MB.floatBtn} ${MB.floatBtnPurple} top-2 left-2 pointer-events-auto`}
                       title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
                     >
                       {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
@@ -4232,7 +4176,7 @@ export default function MathMaster() {
                       currentQuestion &&
                       (currentQuestion.operation === "multiplication" ||
                         currentQuestion.operation === "division"))) ? (
-                    <div className={`${MB.floatBtnStack} md:hidden`}>
+                    <div className={MB.floatBtnStack}>
                       {questionBookHref ? (
                         <button
                           type="button"
@@ -4291,7 +4235,7 @@ export default function MathMaster() {
                   {/* אזור שאלה יציב למניעת קפיצות בפריסת התשובות */}
                   <div
                     data-testid="math-question-surface"
-                    className="w-full flex-1 min-h-0 flex flex-col overflow-hidden px-2"
+                    className={`w-full flex-1 min-h-0 flex flex-col overflow-hidden px-2 ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
                   >
                     <MathScratchpadSlot
                       gradeKey={grade}
@@ -4331,12 +4275,17 @@ export default function MathMaster() {
                           });
                           return displayParts.leadText ? (
                             <p
-                              className={MB.questionLead}
+                              className={
+                                questionPressureLayout?.questionLeadClassByPressure ??
+                                MB.questionLead
+                              }
                               dir="rtl"
                               data-testid="student-question-lead"
                               style={{
                                 direction: "rtl",
                                 unicodeBidi: "plaintext",
+                                lineHeight:
+                                  questionPressureLayout?.questionLineHeightByPressure,
                                 ...getQuestionFontStyle({
                                   text: displayParts.leadText,
                                   kind: "label",
@@ -4354,10 +4303,15 @@ export default function MathMaster() {
                           dir="ltr"
                         >
                           <pre
-                            className={MB.questionPre}
+                            className={
+                              questionPressureLayout?.verticalPreClassByPressure ??
+                              MB.questionPre
+                            }
                             style={{
                               direction: "ltr",
                               unicodeBidi: "isolate",
+                              lineHeight:
+                                questionPressureLayout?.questionLineHeightByPressure,
                               ...getQuestionFontStyle({
                                 text:
                                   getVerticalExercise() ||
@@ -4376,13 +4330,27 @@ export default function MathMaster() {
                         exerciseText={currentQuestion.exerciseText}
                         getQuestionFontStyle={getQuestionFontStyle}
                         wrapperClassName="relative w-full pr-2 pl-2 pt-0 w-full flex flex-col items-center justify-center gap-1"
-                        leadClassName={MB.questionLead}
-                        bodyClassName={`${MB.questionBody} ${
+                        leadClassName={
+                          questionPressureLayout?.questionLeadClassByPressure ??
+                          MB.questionLead
+                        }
+                        bodyClassName={`${
+                          questionPressureLayout?.questionBodyClassByPressure ??
+                          MB.questionBody
+                        } ${
                           currentQuestion.operation === "sequences"
                             ? "whitespace-normal break-words overflow-wrap-anywhere"
                             : ""
                         }`}
                         formulaClassName={MB.questionFormula}
+                        leadStyle={{
+                          lineHeight:
+                            questionPressureLayout?.questionLineHeightByPressure,
+                        }}
+                        bodyStyle={{
+                          lineHeight:
+                            questionPressureLayout?.questionLineHeightByPressure,
+                        }}
                       />
                     )}
                     </MathScratchpadSlot>
@@ -4392,7 +4360,7 @@ export default function MathMaster() {
                   <div
                     ref={answerAreaRef}
                     data-testid="math-answer-surface"
-                    className="w-full shrink-0 mt-2 flex flex-col items-center relative z-30"
+                    className={`${LEARNING_MASTER_ANSWER_SURFACE_CLASS} relative z-30`}
                   >
                     {/* בדיקה אם צריך להציג כפתורי בחירה או שדה קלט */}
                     {(() => {
