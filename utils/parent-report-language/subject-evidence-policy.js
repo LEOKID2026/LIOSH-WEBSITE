@@ -9,6 +9,7 @@ import {
   PARENT_EVIDENCE_VOLUME,
   SUBJECT_VALID_MIN_QUESTIONS,
 } from "./parent-evidence-matrix.js";
+import { effectivePracticeAnswerCount } from "../../lib/learning/report-practice-counts.js";
 
 export { SUBJECT_VALID_MIN_QUESTIONS };
 
@@ -193,7 +194,7 @@ export function subjectQuestionCountsFromPayload(payload) {
     const aggKey = canonicalId === "moledet-geography" ? "moledet_geography" : canonicalId;
     const subj = subjects[aggKey];
     if (!subj || typeof subj !== "object") return 0;
-    return Math.max(0, Math.floor(Number(subj.diagnosticAnswers ?? subj.answers) || 0));
+    return effectivePracticeAnswerCount(subj);
   };
 
   return {
