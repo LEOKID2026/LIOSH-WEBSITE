@@ -5,15 +5,18 @@
 
 import { formatParentReportGradeLabel } from "./math-report-generator.js";
 import { splitTopicRowKey } from "./parent-report-row-diagnostics.js";
+import {
+  PARENT_EVIDENCE_VOLUME,
+} from "./parent-report-language/parent-evidence-matrix.js";
 
 export const TOPIC_EVIDENCE_THRESHOLDS = Object.freeze({
   /** Below this: topic-level conclusions are withheld. */
-  minQuestionsTopicConclusion: 8,
+  minQuestionsTopicConclusion: PARENT_EVIDENCE_VOLUME.INSIGHT_MIN,
   /** Moderate topic-level band. */
-  minQuestionsModerate: 12,
+  minQuestionsModerate: PARENT_EVIDENCE_VOLUME.STRONG_MIN,
   /** High-volume band — never "collect more data" for volume alone. */
-  minQuestionsHighVolume: 40,
-  thinMaxQuestions: 6,
+  minQuestionsHighVolume: PARENT_EVIDENCE_VOLUME.HIGH_VOLUME_MIN,
+  thinMaxQuestions: PARENT_EVIDENCE_VOLUME.INSUFFICIENT_MAX,
 });
 
 export const SUBSKILL_DETAIL_LIMITATION_HE =
@@ -29,7 +32,7 @@ export function classifyTopicEvidenceBand(questionCount, thresholds = TOPIC_EVID
   if (n >= thresholds.minQuestionsHighVolume) return "strong";
   if (n >= thresholds.minQuestionsModerate) return "moderate";
   if (n >= thresholds.minQuestionsTopicConclusion) return "low";
-  if (n >= thresholds.thinMaxQuestions + 1) return "low";
+  if (n >= PARENT_EVIDENCE_VOLUME.PRELIMINARY_MIN) return "low";
   return "thin";
 }
 

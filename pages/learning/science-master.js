@@ -3128,7 +3128,7 @@ function saveScienceAnswerInParallel({
                     <span className={MB.preGameTileLabel}>דיוק</span>
                   </div>
                   <div className="flex flex-1 items-center justify-center min-h-0">
-                    <span className={MB.preGameTileValueBlue}>{subjectView.middleTiles.accuracy}%</span>
+                    <span className={MB.preGameTileValueBlue}>{subjectView.middleTiles.accuracyDisplayHe}</span>
                   </div>
                 </div>
                 <div className={MB.preGameTile}>

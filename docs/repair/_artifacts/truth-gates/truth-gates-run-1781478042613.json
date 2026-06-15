@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-06-14T23:00:41.962Z",
+  "gates": [
+    {
+      "gate": "REWARD_PASS",
+      "verdict": "FAIL",
+      "exitCode": 1,
+      "launchRequired": true,
+      "stdoutTail": "test.mjs:32:10)\n    Test.runInAsyncScope (node:async_hooks:214:14)\n    Test.run (node:internal/test_runner/test:1047:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:744:18)\n    Test.postRun (node:internal/test_runner/test:1173:19)\n    Test.run (node:internal/test_runner/test:1101:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)\n  ...\n# Subtest: learning-coin-award skips zero-duration / zero-coin sessions\nok 4 - learning-coin-award skips zero-duration / zero-coin sessions\n  ---\n  duration_ms: 0.7031\n  type: 'test'\n  ...\n# Subtest: session finish invokes coin award helper once per request path\nok 5 - session finish invokes coin award helper once per request path\n  ---\n  duration_ms: 0.3307\n  type: 'test'\n  ...\n# Subtest: dashboard minutes use server derived profile not raw localStorage keys\nok 6 - dashboard minutes use server derived profile not raw localStorage keys\n  ---\n  duration_ms: 0.4112\n  type: 'test'\n  ...\n1..6\n# tests 6\n# suites 0\n# pass 5\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 141.4057\nREWARD_PASS: FAIL — failed: tests/truth-gates/reward-truth-contract.test.mjs\n{\n  \"gate\": \"REWARD_PASS\",\n  \"verdict\": \"FAIL\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"failed: tests/truth-gates/reward-truth-contract.test.mjs\",\n  \"details\": {},\n  \"at\": \"2026-06-14T23:00:42.601Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-14T23:00:42.612Z"
+}

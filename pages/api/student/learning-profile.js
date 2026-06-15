@@ -58,6 +58,7 @@ export default async function handler(req, res) {
       }
 
       let monthlyPersistenceStatus = null;
+      let monthlyPersistenceLoadError = false;
       try {
         const evalResult = await evaluateMonthlyPersistenceReward(supabase, { studentId });
         if (evalResult.ok) {
@@ -69,9 +70,11 @@ export default async function handler(req, res) {
             alreadyAwarded: evalResult.alreadyAwarded,
             eligible: evalResult.eligible,
           };
+        } else {
+          monthlyPersistenceLoadError = true;
         }
       } catch {
-        /* non-fatal */
+        monthlyPersistenceLoadError = true;
       }
 
       return res.status(200).json({
@@ -88,6 +91,7 @@ export default async function handler(req, res) {
         },
         derived,
         monthlyPersistenceStatus,
+        monthlyPersistenceLoadError,
       });
     }
 
@@ -148,6 +152,7 @@ export default async function handler(req, res) {
       const normalized = normalizeLearningProfileRow(fresh);
       const derived = await computeStudentLearningDerived(supabase, studentId);
       let monthlyPersistenceStatus = null;
+      let monthlyPersistenceLoadError = false;
       try {
         const evalResult = await evaluateMonthlyPersistenceReward(supabase, { studentId });
         if (evalResult.ok) {
@@ -159,9 +164,11 @@ export default async function handler(req, res) {
             alreadyAwarded: evalResult.alreadyAwarded,
             eligible: evalResult.eligible,
           };
+        } else {
+          monthlyPersistenceLoadError = true;
         }
       } catch {
-        /* non-fatal */
+        monthlyPersistenceLoadError = true;
       }
       return res.status(200).json({
         ok: true,
@@ -177,6 +184,7 @@ export default async function handler(req, res) {
         },
         derived,
         monthlyPersistenceStatus,
+        monthlyPersistenceLoadError,
       });
     }
 

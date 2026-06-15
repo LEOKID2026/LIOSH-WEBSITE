@@ -123,6 +123,23 @@ Staff/parent password for scaffolding R1 checks: `DEMO_PARENT_PASSWORD` or fall 
 
 ## 5. Running the nightly sim
 
+> **מדריך מלא (dry-run / write / guards):** [SIMULATION_RUNBOOK.md](./SIMULATION_RUNBOOK.md)
+
+### dry-run מול write
+
+| פקודה | כותב DB? |
+|-------|----------|
+| `npm run qa:school:daily` | **לא** — dry-run (ברירת מחדל) |
+| `npm run qa:school:daily:dry-run` | **לא** — dry-run מפורש |
+| `npm run qa:school:daily:write` | **כן** — סימולציה אמיתית |
+| `npm run qa:school:daily:preflight` | **לא** — בדיקות בלבד |
+
+אם ה-owner מבקש "תריץ סימולציה" — להשתמש ב-`:write`, לא בברירת המחדל.
+
+### staging
+
+אם Supabase remote לא מסומן staging (`LEARNING_STAGING_PROJECT_REFS`), write עלול להיחסם כ-production. ראו [script-guards-owner-impact-report.md](../repair/script-guards-owner-impact-report.md).
+
 ```powershell
 # .env.local — Supabase env + staff passwords (values not documented here)
 # NEXT_PUBLIC_LEARNING_SUPABASE_URL=...
@@ -131,11 +148,18 @@ Staff/parent password for scaffolding R1 checks: `DEMO_PARENT_PASSWORD` or fall 
 # DEMO_TEACHER_PASSWORD=...
 # DEMO_PARENT_PASSWORD=...   # optional; scaffolding parent
 # SCHOOL_QA_PASSWORD=...     # alternative
+# LEARNING_STAGING_PROJECT_REFS=<staging-ref>   # recommended for remote
 
+# dry-run (plan only, no DB):
 npm run qa:school:daily
+
+# real write:
+npm run qa:school:daily:write
 ```
 
 Student UI phase requires student credentials (≥12 entries) from local file or demo fixture. Preflight fails with a clear path if both are missing.
+
+Artifacts: `reports/school-sim-daily/<YYYY-MM-DD>/`. Last completed day: `scripts/school-portal/sim-state.json` → `lastSimCalendarDate`.
 
 ---
 

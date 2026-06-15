@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-06-14T23:41:24.742Z",
+  "gates": [
+    {
+      "gate": "DASHBOARD_TRUTH_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": " estimated\n      ---\n      duration_ms: 0.3056\n      type: 'test'\n      ...\n    # Subtest: monthly persistence load error surfaces unavailable\n    ok 6 - monthly persistence load error surfaces unavailable\n      ---\n      duration_ms: 0.5618\n      type: 'test'\n      ...\n    # Subtest: localStorage progress keys documented non-authoritative in client sync\n    ok 7 - localStorage progress keys documented non-authoritative in client sync\n      ---\n      duration_ms: 0.5774\n      type: 'test'\n      ...\n    1..7\nok 6 - Phase 3 — student dashboard display truth\n  ---\n  duration_ms: 4.2846\n  type: 'suite'\n  ...\n# Subtest: Phase 9 — getCurrentYearMonth helper\n    # Subtest: getCurrentYearMonth returns YYYY-MM\n    ok 1 - getCurrentYearMonth returns YYYY-MM\n      ---\n      duration_ms: 0.228\n      type: 'test'\n      ...\n    1..1\nok 7 - Phase 9 — getCurrentYearMonth helper\n  ---\n  duration_ms: 0.3133\n  type: 'suite'\n  ...\n1..7\n# tests 19\n# suites 7\n# pass 19\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 221.8087\nDASHBOARD_TRUTH_PASS: PASS — student dashboard display truth + server-derived minutes contracts passed\n{\n  \"gate\": \"DASHBOARD_TRUTH_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"student dashboard display truth + server-derived minutes contracts passed\",\n  \"details\": {},\n  \"at\": \"2026-06-14T23:41:25.223Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-14T23:41:25.236Z"
+}

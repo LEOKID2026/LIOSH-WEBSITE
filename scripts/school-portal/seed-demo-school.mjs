@@ -42,6 +42,7 @@ import {
   mergeSimState,
   requireEnv,
 } from "./demo-school-lib.mjs";
+import { bootstrapSchoolDbWriteGuard } from "./lib/school-db-write-guard.mjs";
 
 const PLAN_CODE = "teacher_basic_20";
 
@@ -573,7 +574,18 @@ async function phaseStudents(serviceRole) {
 }
 
 async function main() {
-  const phase = parsePhase(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  const guard = bootstrapSchoolDbWriteGuard(
+    "school-portal/seed-demo-school",
+    "SEED_DEMO_SCHOOL",
+    argv
+  );
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary();
+    return;
+  }
+  const phase = parsePhase(argv);
   const serviceRole = createServiceRole();
 
   if (phase === "accounts") await phaseAccounts(serviceRole);
@@ -582,6 +594,7 @@ async function main() {
   else if (phase === "students") await phaseStudents(serviceRole);
 
   console.log(`seed-demo-school: ${phase} OK`);
+  guard.printEndSummary({ affectedRows: 1, artifactPath: `phase=${phase}` });
 }
 
 main().catch((e) => {

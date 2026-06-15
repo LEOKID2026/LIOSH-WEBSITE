@@ -49,7 +49,7 @@ function loadEnvLocal() {
     ["7", "רצף", th.streak],
     ["8", "ניקוד", th.score],
     ["9", "אתגרים", `tileRole=${ch?.tileRole ?? "?"} dailyPct=${ch?.dailyProgressPct}% weeklyPct=${ch?.weeklyProgressPct}%`],
-    ["10", "דיוק", `${mt.accuracy}%`],
+    ["10", "דיוק", view.middleTiles.accuracyDisplayHe ?? `${mt.accuracy}%`],
     ["11", "שיא רצף", mt.bestStreak],
     ["12", "שיא ניקוד", mt.bestScore],
   ];
@@ -205,8 +205,11 @@ async function main() {
   if (q > 0 && c > q) {
     fail("daily correct exceeds questions (invalid).");
   }
-  if (typeof accPct === "number" && view.middleTiles.accuracy !== Math.round(accPct)) {
+  if (typeof accPct === "number" && view.middleTiles.accuracy != null && view.middleTiles.accuracy !== Math.round(accPct)) {
     fail("middleTiles.accuracy != round(derived.bySubject.accuracy).");
+  }
+  if (accPct == null && view.middleTiles.accuracy != null) {
+    fail("middleTiles.accuracy should be null when derived accuracy is missing.");
   }
 
   if (view.middleTiles.bestScore !== account.bestScore) {

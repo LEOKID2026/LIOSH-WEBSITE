@@ -10,6 +10,7 @@ import {
   createServiceRole,
   loadSimState,
 } from "./demo-school-lib.mjs";
+import { bootstrapSchoolDbWriteGuard } from "./lib/school-db-write-guard.mjs";
 
 async function rebuildClassStudentLinks(serviceRole, state) {
   const classIds = Object.values(state.classIds || {});
@@ -133,6 +134,17 @@ async function restoreManagerIsolation(serviceRole, state) {
 }
 
 async function main() {
+  const argv = process.argv.slice(2);
+  const guard = bootstrapSchoolDbWriteGuard(
+    "school-portal/restore-demo-school-baseline",
+    "RESTORE_DEMO_SCHOOL_BASELINE",
+    argv
+  );
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary();
+    return;
+  }
   const state = loadSimState();
   const serviceRole = createServiceRole();
 

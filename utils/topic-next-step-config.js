@@ -3,12 +3,14 @@
  * ניתן לייבא ולהרחיב בעתיד (merge חלקי) בלי לשנות את לוגיקת ההחלטה.
  */
 
+import { PARENT_EVIDENCE_VOLUME } from "./parent-report-language/parent-evidence-matrix.js";
+
 export const DEFAULT_TOPIC_NEXT_STEP_CONFIG = {
   /** מקסימום נושאים עם המלצה למקצוע בדוח מקיף */
   maxTopicRecommendationsPerSubject: 15,
 
   /** מתחת לכך — לא משנים כיתה/רמת קושי; רק "לבסס באותה רמה" + הסבר דגימה */
-  minQuestionsLowConfidence: 7,
+  minQuestionsLowConfidence: PARENT_EVIDENCE_VOLUME.PRELIMINARY_MAX,
   /** מינימום שאלות לשינוי רמה/כיתה אגרסיבי (ירידה / מאבק חוזר) */
   minQuestionsStepChange: 14,
   minQuestionsAdvanceLevel: 18,

@@ -11,6 +11,8 @@ import {
   computeParentContextEvidenceQuality,
   allowsStrongParentDiagnosisAtStudent,
   allowsStrongParentDiagnosisAtTopic,
+  allowsHedgedParentInsightAtStudent,
+  allowsHedgedParentTopicInsight,
   allowsStrongParentTopicInsight,
   shouldSuppressClientPatternDiagnostics,
 } from "../../lib/learning/evidence-quality.js";
@@ -1379,7 +1381,8 @@ describe("Q2-E.5-B — active parent gating trial (flag-gated)", () => {
   test("both flags ON — does not suppress when high-confidence subSkill recurrence supports diagnosis", () => {
     setBothMetadataFlags();
     const payload = attachParentContextEvidenceQuality(basePayload());
-    assert.equal(allowsStrongParentDiagnosisAtTopic(payload, "math", "fractions"), true);
+    assert.equal(allowsStrongParentDiagnosisAtTopic(payload, "math", "fractions"), false);
+    assert.equal(allowsHedgedParentTopicInsight(payload, "math", "fractions"), true);
     assert.equal(payload.meta._evidenceQuality?.gatingDecisions, undefined);
     const blocks = buildParentFacingBlocks(payload);
     setMetadataOnlyFlag();
@@ -1756,8 +1759,10 @@ describe("Q2-E.5-C1 — promotion candidate validation (shadow only)", () => {
     process.env[FLAG_ENV] = "true";
     const attached = attachParentContextEvidenceQuality(basePayload());
     assert.equal(attached.meta.evidenceQuality.byTopic["math::fractions"].dataSufficiency, "preliminary_signal");
-    assert.equal(allowsStrongParentDiagnosisAtTopic(attached, "math", "fractions"), true);
-    assert.equal(allowsStrongParentDiagnosisAtStudent(attached), true);
+    assert.equal(allowsStrongParentDiagnosisAtTopic(attached, "math", "fractions"), false);
+    assert.equal(allowsStrongParentDiagnosisAtStudent(attached), false);
+    assert.equal(allowsHedgedParentInsightAtStudent(attached), true);
+    assert.equal(allowsHedgedParentTopicInsight(attached, "math", "fractions"), true);
     assert.equal(attached.meta._evidenceQuality?.promotionValidation?.activePromotionApplied, false);
     assert.equal(attached.meta._evidenceQuality?.gatingDecisions, undefined);
   });

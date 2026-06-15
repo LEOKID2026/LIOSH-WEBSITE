@@ -2,8 +2,10 @@
  * Phase 2.5 — Child-friendly monthly persistence progress (display only).
  */
 
+import { STUDENT_TRUTH_LABELS_HE } from "../../lib/learning-shared/student-display-truth.js";
+
 function TierMilestone({ tier, currentMinutes }) {
-  const done = currentMinutes >= tier.minutes;
+  const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
 
   return (
     <div className="flex flex-col items-center min-w-0 flex-1">
@@ -33,13 +35,22 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
 
   const {
     currentMinutes,
+    currentMinutesDisplayHe,
+    filterNoteHe,
+    loadError,
     tiers,
     nextTier,
     progressToNextTierPct,
     nextTierEncouragementHe,
   } = monthlyPersistence;
 
-  const allDone = !nextTier;
+  const minutesLabel =
+    loadError
+      ? STUDENT_TRUTH_LABELS_HE.unavailable
+      : currentMinutesDisplayHe ??
+        (currentMinutes != null ? String(currentMinutes) : STUDENT_TRUTH_LABELS_HE.noData);
+
+  const allDone = !nextTier && typeof currentMinutes === "number";
 
   return (
     <section
@@ -58,8 +69,11 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
         <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-2.5 text-center shadow-sm">
           <p className="text-[10px] text-slate-500 uppercase tracking-wide">דקות החודש</p>
           <p className="text-2xl md:text-3xl font-extrabold text-amber-600 tabular-nums leading-tight">
-            {currentMinutes}
+            {minutesLabel}
           </p>
+          {filterNoteHe ? (
+            <p className="text-[10px] text-slate-500 mt-1">{filterNoteHe}</p>
+          ) : null}
         </div>
       </div>
 
@@ -76,7 +90,7 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
 
       <div className="sm:hidden space-y-2 mb-5">
         {tiers.map((tier) => {
-          const done = currentMinutes >= tier.minutes;
+          const done = typeof currentMinutes === "number" && currentMinutes >= tier.minutes;
           return (
             <div
               key={tier.minutes}
@@ -108,7 +122,7 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
         >
           השגת את כל פרסי החודש! כל הכבוד!
         </div>
-      ) : (
+      ) : progressToNextTierPct != null && typeof currentMinutes === "number" && nextTier ? (
         <div className="space-y-2">
           <p className="text-slate-700 text-sm text-right font-medium">
             {nextTierEncouragementHe || `עוד ${Math.ceil(nextTier.minutes - currentMinutes)} דקות לפרס הבא`}
@@ -126,6 +140,8 @@ export default function StudentMonthlyPersistencePanel({ monthlyPersistence }) {
             {currentMinutes} / {nextTier.minutes} דק׳ ({progressToNextTierPct}%)
           </p>
         </div>
+      ) : (
+        <p className="text-sm text-slate-600 text-right">{STUDENT_TRUTH_LABELS_HE.noData}</p>
       )}
     </section>
   );

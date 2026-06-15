@@ -15,6 +15,7 @@ import {
   teacherKeyForSubject,
 } from "./demo-school-data.mjs";
 import { createServiceRole, loadSimState, mergeSimState } from "./demo-school-lib.mjs";
+import { bootstrapSchoolDbWriteGuard } from "./lib/school-db-write-guard.mjs";
 
 const QUESTION_COUNT = 10;
 const START_DATE = "2025-09-01";
@@ -22,11 +23,12 @@ const START_DATE = "2025-09-01";
 function parseArgs(argv) {
   let mode = "advance";
   let days = 10;
-  let dryRun = false;
+  let dryRun = true;
   let force = false;
 
   for (const arg of argv) {
     if (arg === "--dry-run") dryRun = true;
+    else if (arg === "--write") dryRun = false;
     else if (arg === "--force") force = true;
     else if (arg.startsWith("--mode=")) mode = arg.slice("--mode=".length);
     else if (arg === "--mode") continue;
@@ -264,7 +266,16 @@ async function advanceOneSchoolDay(serviceRole, state, { dryRun, force }) {
 }
 
 async function main() {
-  const { mode, days, dryRun, force } = parseArgs(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  const guard = bootstrapSchoolDbWriteGuard(
+    "school-portal/run-school-nightly-simulation",
+    "RUN_SCHOOL_NIGHTLY_SIMULATION",
+    argv
+  );
+  const { mode, days, dryRun, force } = parseArgs(argv);
+  if (dryRun !== guard.isDryRun) {
+    throw new Error("Internal guard/argv dry-run mismatch");
+  }
   const serviceRole = createServiceRole();
   const state = loadSimState();
 
@@ -300,12 +311,17 @@ async function main() {
       );
     }
     console.log(JSON.stringify({ mode: "seed-history", days, activitiesCreated: total }, null, 2));
+    guard.printEndSummary({ affectedRows: total });
     return;
   }
 
   if (mode === "advance") {
     const result = await advanceOneSchoolDay(serviceRole, state, { dryRun, force });
     console.log(JSON.stringify({ mode: "advance", ...result }, null, 2));
+    guard.printEndSummary({
+      affectedRows: result.activities || 0,
+      skippedRows: dryRun ? result.activities || 0 : 0,
+    });
     return;
   }
 
@@ -313,6 +329,10 @@ async function main() {
 }
 
 main().catch((e) => {
+  if (e?.name === "ProductionScriptGuardError") {
+    console.error(`[production-guard] BLOCKED: ${e.message}`);
+    process.exit(1);
+  }
   console.error("run-school-nightly-simulation: FAIL", e.message || e);
   process.exit(1);
 });

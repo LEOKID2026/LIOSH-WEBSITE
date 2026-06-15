@@ -2,12 +2,9 @@
  * Phase 13 — שערי החלטה לסבב הבא (מבוסס Phases 7–12, בלי המצאת ראיות).
  */
 
-import {
-  GATE_LEVEL_LABEL_HE,
-  GATE_READINESS_LABEL_HE,
-  GATE_STATE_LABEL_HE,
-} from "./parent-report-ui-explain-he.js";
+import { GATE_LEVEL_LABEL_HE, GATE_READINESS_LABEL_HE, GATE_STATE_LABEL_HE } from "./parent-report-ui-explain-he.js";
 import { buildDecisionReadinessContractsBundleV1 } from "./contracts/decision-readiness-contract-v1.js";
+import { PARENT_EVIDENCE_VOLUME } from "./parent-report-language/parent-evidence-matrix.js";
 
 /**
  * @param {object} ctx
@@ -39,7 +36,7 @@ export function buildDecisionGatesPhase13(ctx) {
     indep === "flat" ||
     String(td.independenceDirection || "") === "down";
   const finalStep = String(ctx?.finalStep || "");
-  const weak = q < 12 || ev === "low" || cs === "withheld" || cs === "tentative";
+  const weak = q < PARENT_EVIDENCE_VOLUME.STRONG_MIN || ev === "low" || cs === "withheld" || cs === "tentative";
   const stale = fs === "stale" || cf === "expired" || cf === "low" || rec === "structured_recheck";
 
   let continueGate = "off";

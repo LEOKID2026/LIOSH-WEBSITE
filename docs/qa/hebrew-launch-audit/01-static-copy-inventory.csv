@@ -1,0 +1,31 @@
+id,file,line,exact_text,user_surface,audience,context,issue_type,severity,recommendation,owner_decision_needed
+HLA-001,pages/mleo-flyer.js,431,"🛩️ LEO Flyer",דף בית/משחקי מותג,ילד/ה+הורה,"כותרת מסך פתיחה",MIXED_LANGUAGE,BLOCKER,"להחליף לכותרת עברית או לנוסח דו-לשוני עקבי מוגדר מוצרית",YES
+HLA-002,pages/mleo-flyer.js,432,"Hold to fly. Collect coins, avoid obstacles.",דף בית/משחקי מותג,ילד/ה+הורה,"טקסט הסבר פתיחה",MIXED_LANGUAGE,BLOCKER,"להמיר לעברית מלאה",NO
+HLA-003,pages/mleo-flyer.js,436,"Enter your name",דף בית/משחקי מותג,ילד/ה+הורה,"placeholder הזנת שם",MIXED_LANGUAGE,BLOCKER,"להמיר ל""הכנס/י שם"" או ניסוח אחיד מול שאר האתר",NO
+HLA-004,pages/about.js,95,"האתר מותאם לילד/הי כיתות א׳–ו׳",עמוד About,הורה,"פסקת ערך מוצר",TYPO_OR_GRAMMAR,BLOCKER,"לתקן שגיאת כתיב (ילד/הי)",NO
+HLA-005,pages/parent/dashboard.js,105,"Failed to load students",פורטל הורה,הורה,"שגיאת טעינה",MIXED_LANGUAGE,HIGH,"להחליף להודעת עברית",NO
+HLA-006,pages/parent/dashboard.js,121,"Network error while loading students",פורטל הורה,הורה,"שגיאת רשת",MIXED_LANGUAGE,HIGH,"להחליף להודעת עברית",NO
+HLA-007,components/arcade/bingo/ArcadeBingoScreen.js,357,"aria-label=""Seats""",אזור ילד/Arcade,ילד/ה,"נגישות קורא מסך",ACCESSIBILITY_LANGUAGE,BLOCKER,"להמיר תוויות נגישות לעברית",YES
+HLA-008,components/arcade/bingo/ArcadeBingoScreen.js,385,"Ready",אזור ילד/Arcade,ילד/ה,"מצב מושב שחקן",MIXED_LANGUAGE,HIGH,"להמיר ל""מוכן/ה""",NO
+HLA-009,components/arcade/bingo/ArcadeBingoScreen.js,388,"Open",אזור ילד/Arcade,ילד/ה,"מצב מושב פנוי",MIXED_LANGUAGE,HIGH,"להמיר ל""פנוי""",NO
+HLA-010,components/arcade/bingo/ArcadeBingoScreen.js,400,"aria-label=""Live match stats""",אזור ילד/Arcade,ילד/ה,"נגישות סטטיסטיקות משחק",ACCESSIBILITY_LANGUAGE,HIGH,"להמיר לעברית",NO
+HLA-011,components/arcade/bingo/ArcadeBingoScreen.js,403,"Last",אזור ילד/Arcade,ילד/ה,"תווית KPI",MIXED_LANGUAGE,HIGH,"להמיר ל""אחרון""",NO
+HLA-012,components/arcade/bingo/ArcadeBingoScreen.js,407,"Next",אזור ילד/Arcade,ילד/ה,"תווית KPI",MIXED_LANGUAGE,HIGH,"להמיר ל""הבא""",NO
+HLA-013,components/arcade/bingo/ArcadeBingoScreen.js,411,"Deck",אזור ילד/Arcade,ילד/ה,"תווית KPI",MIXED_LANGUAGE,HIGH,"להמיר ל""חפיסה""",NO
+HLA-014,components/math-scratchpad/MathScratchpadWorkspace.jsx,951,"aria-label=""exercise""",אזור ילד/תרגול,ילד/ה,"נגישות רכיב מרכזי",ACCESSIBILITY_LANGUAGE,BLOCKER,"להמיר את כלל aria-label ברכיב לעברית",YES
+HLA-015,components/math-scratchpad/MathScratchpadWorkspace.jsx,403,"carry col",אזור ילד/תרגול,ילד/ה,"aria-label בתא חישוב",ACCESSIBILITY_LANGUAGE,HIGH,"להמיר ל""עמודת נשיאה""",NO
+HLA-016,components/math-scratchpad/MathScratchpadWorkspace.jsx,1048,"fraction numerator",אזור ילד/תרגול,ילד/ה,"aria-label שבר",ACCESSIBILITY_LANGUAGE,HIGH,"להמיר לעברית",NO
+HLA-017,components/arcade/snakes-ladders/SnakesLaddersScreen.js,112,"כל שחקן בתורו מזריק קוביה",אזור ילד/Arcade,ילד/ה,"טקסט איך משחקים",TYPO_OR_GRAMMAR,MEDIUM,"להחליף ל""זורק קובייה""",NO
+HLA-018,components/arcade/snakes-ladders/SnakesLaddersScreen.js,115,"נשאר באותו משבצת",אזור ילד/Arcade,ילד/ה,"טקסט איך משחקים",TYPO_OR_GRAMMAR,MEDIUM,"להחליף ל""באותה משבצת""",NO
+HLA-019,pages/parent/login.js,130,"אישור המדיניות יתבקש בכניסה הראשונה לדשבורד.",כניסת הורה,הורה,"הודעת הרשמה",TERM_INCONSISTENCY,MEDIUM,"לאחד טרמינולוגיה ל""דשבורד/לוח בקרה"" בכל המערכת",YES
+HLA-020,pages/parent/login.js,135,"...יתבקש בדשבורד.",כניסת הורה,הורה,"הודעת אימות מייל",TERM_INCONSISTENCY,MEDIUM,"אותה החלטת מינוח",YES
+HLA-021,pages/student/login.js,79,"כניסת ילד/ה",כניסת ילד,ילד/ה,"כותרת פורטל",OK,OK,"לשמר",NO
+HLA-022,components/parent-copilot/parent-copilot-panel.jsx,319,"שאלה על הדוח…",פורטל הורה,הורה,"placeholder שדה שיחה",OK,OK,"לשמר",NO
+HLA-023,components/learning/StudentNumericAnswerField.jsx,20,"תשובה",אזור ילד/תרגול,ילד/ה,"placeholder תשובה",OK,OK,"לשמר",NO
+HLA-024,components/help/HelpLayoutShell.js,19,"מרכז עזרה לליאו — מדריכים להורים, לילדים ולדוחות.",עזרה,הורה+ילד/ה+מורה,"meta description",OK,OK,"לשמר",NO
+HLA-025,pages/teacher/student/[studentId].js,75,"דוח ילד/ה",פורטל מורים,מורה,"כותרת מסך",TERM_INCONSISTENCY,LOW,"להחליט אם בפורטל מורים מעדיפים ""תלמיד/ה""",YES
+HLA-026,pages/teacher/class/[classId]/activities/[activityId]/report.js,154,"ילד/ה",פורטל מורים,מורה,"כותרת עמודת תלמיד",TERM_INCONSISTENCY,LOW,"אותה החלטת מינוח",YES
+HLA-027,pages/school/students/index.js,559,"... ילדים",פורטל בית ספר,מנהל/ת בית ספר,"subtitle כמות",OK,OK,"לשמר",NO
+HLA-028,components/layout/SiteLegalFooterBar.jsx,10,"משחקים ולמידה לילדים",פוטר גלובלי,כל המשתמשים,"סלוגן פוטר",OK,OK,"לשמר",NO
+HLA-029,pages/learning/parent-report.js,1326,"טוען דוח...",פורטל הורה/דוחות,הורה,"loading state",DUPLICATE_VARIANT,LOW,"לאחד לסט ניסוחים קבוע",YES
+HLA-030,pages/learning/parent-report-detailed.js,552,"טוען דוח מקיף…",פורטל הורה/דוחות,הורה,"loading state",DUPLICATE_VARIANT,LOW,"לאחד לסט ניסוחים קבוע",YES

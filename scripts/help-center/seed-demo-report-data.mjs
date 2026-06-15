@@ -13,6 +13,10 @@ import {
   aggregateParentReportPayload,
   REPORT_AGG_SUBJECTS,
 } from "../../lib/parent-server/report-data-aggregate.server.js";
+import {
+  createProductionScriptGuard,
+  exitOnGuardError,
+} from "../lib/production-script-guard.mjs";
 
 const SUBJECT_BUCKETS = CANONICAL_SUBJECT_BUCKETS;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -71,13 +75,6 @@ const SUBJECT_PROFILES = {
   },
 };
 
-const PRODUCTION_HOST_BLOCKLIST = [
-  "leok.co.il",
-  "www.leok.co.il",
-  "liosh.com",
-  "www.liosh.com",
-];
-
 function requireEnv(name) {
   const v = String(process.env[name] || "").trim();
   if (!v) {
@@ -89,35 +86,6 @@ function requireEnv(name) {
 
 function hashStudentSecret(value, secret) {
   return crypto.createHmac("sha256", secret).update(String(value)).digest("hex");
-}
-
-function assertLocalDevOnly() {
-  if (process.env.VERCEL_ENV === "production") {
-    console.error("Refusing seed: VERCEL_ENV=production");
-    process.exit(1);
-  }
-  const url = String(process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL || "").trim();
-  if (!url) {
-    console.error("Refusing seed: missing NEXT_PUBLIC_LEARNING_SUPABASE_URL");
-    process.exit(1);
-  }
-  let host = "";
-  try {
-    host = new URL(url).hostname.toLowerCase();
-  } catch {
-    console.error("Refusing seed: invalid Supabase URL");
-    process.exit(1);
-  }
-  for (const blocked of PRODUCTION_HOST_BLOCKLIST) {
-    if (host === blocked || host.endsWith(`.${blocked}`)) {
-      console.error(`Refusing seed: Supabase host matches production blocklist (${blocked})`);
-      process.exit(1);
-    }
-  }
-  if (process.env.HELP_CENTER_BLOCK_DB_SEED === "1") {
-    console.error("Refusing seed: HELP_CENTER_BLOCK_DB_SEED=1");
-    process.exit(1);
-  }
 }
 
 function validateTopics(simSubject, topics) {
@@ -442,8 +410,31 @@ async function verifyReportAggregate(supabase, student) {
 }
 
 async function main() {
-  assertLocalDevOnly();
-  const cleanOnly = process.argv.includes("--clean-only");
+  if (process.env.HELP_CENTER_BLOCK_DB_SEED === "1") {
+    console.error("Refusing seed: HELP_CENTER_BLOCK_DB_SEED=1");
+    process.exit(1);
+  }
+
+  const guard = createProductionScriptGuard({
+    scriptName: "help-center/seed-demo-report-data",
+    confirmOperation: "SEED_HELP_CENTER_DEMO_REPORT",
+    affectedTables: ["learning_sessions", "answers", "answer_payload"],
+    defaultDryRun: true,
+  });
+  guard.printStartBanner();
+  try {
+    guard.assertWriteAllowed();
+  } catch (err) {
+    exitOnGuardError(err);
+  }
+
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary();
+    return;
+  }
+
+  const cleanOnly = guard.mode.cleanOnly;
 
   const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
   const key = requireEnv("LEARNING_SUPABASE_SERVICE_ROLE_KEY");
@@ -465,6 +456,10 @@ async function main() {
 
   if (cleanOnly) {
     console.log("--clean-only: done");
+    guard.printEndSummary({
+      affectedRows: 0,
+      skippedRows: cleanup.removedAnswers || 0,
+    });
     return;
   }
 
@@ -502,9 +497,18 @@ async function main() {
   } else {
     console.log("All six subjects meet minimum activity thresholds in report aggregate.");
   }
+
+  guard.printEndSummary({
+    affectedRows: Object.values(inserted || {}).reduce((n, row) => n + (row.answers || 0), 0),
+    skippedRows: cleanup.removedAnswers || 0,
+    artifactPath: "(inline console summary)",
+  });
 }
 
 main().catch((err) => {
+  if (err?.name === "ProductionScriptGuardError") {
+    exitOnGuardError(err);
+  }
   console.error(err?.message || err);
   process.exit(1);
 });

@@ -32,6 +32,7 @@ import {
   buildParentFacingBlocks,
   enrichPayloadWithParentFacing,
 } from "../../lib/parent-server/parent-report-parent-facing.server.js";
+import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
@@ -1370,9 +1371,20 @@ function buildQaMarkdown(artifact) {
 }
 
 async function main() {
-  const verifyOnly = process.argv.includes("--verify-only");
-  const cleanOnly = process.argv.includes("--clean-only");
-  const wantScreenshots = process.argv.includes("--screenshots");
+  const argv = process.argv.slice(2);
+  const guard = bootstrapQaDbWriteGuard(
+    "qa/parent-report-q2e-monthly-simulation",
+    "PARENT_REPORT_Q2E_MONTHLY_SIMULATION",
+    argv
+  );
+  const verifyOnly = guard.mode.verifyOnly;
+  const cleanOnly = guard.mode.cleanOnly;
+  const wantScreenshots = argv.includes("--screenshots");
+  const skipWrites = guard.isDryRun && !verifyOnly;
+
+  if (skipWrites) {
+    console.log("[production-guard] dry-run: seed/clean DB mutations skipped (pass --write to mutate)");
+  }
 
   const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
   const key = requireEnv("LEARNING_SUPABASE_SERVICE_ROLE_KEY");
@@ -1382,18 +1394,19 @@ async function main() {
   console.log(`Resolved ${students.length} AAA students`);
 
   const studentIds = students.map((s) => s.studentId);
-  let cleanup = { skipped: verifyOnly };
-  if (!verifyOnly) {
+  let cleanup = { skipped: verifyOnly || skipWrites };
+  if (!verifyOnly && !skipWrites) {
     cleanup = await cleanAllSimTags(supabase, studentIds);
     console.log("Cleanup:", cleanup);
   }
 
   if (cleanOnly) {
     console.log("--clean-only done");
+    guard.printEndSummary({ affectedRows: 0, skippedRows: cleanup.removedAnswers || 0, artifactPath: ARTIFACT_DIR });
     return;
   }
 
-  if (!verifyOnly) {
+  if (!verifyOnly && !skipWrites) {
     for (const entry of students) {
       const plan = scenarioPlan(entry);
       if (!plan.seed) {
@@ -1446,6 +1459,13 @@ async function main() {
   console.log(`Wrote ${mdPath}`);
 
   if (artifact.summary.failed > 0) process.exit(1);
+
+  guard.setArtifactPath(jsonPath);
+  guard.printEndSummary({
+    affectedRows: results.filter((r) => r.pass).length,
+    skippedRows: results.filter((r) => !r.pass).length,
+    artifactPath: jsonPath,
+  });
 }
 
 export function shiftScenarioPlanDates(plan, oldMonthPrefix = "2026-04", newMonthPrefix = "2026-05") {

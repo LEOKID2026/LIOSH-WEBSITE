@@ -18,7 +18,8 @@
  * `legacy_fabricated_timing=true` inside `question_snapshot` (Phase 3 prerequisite).
  *
  * Usage:
- *   node scripts/backfill-activity-classification.mjs [--dry-run] [--batch-size=500]
+ *   node scripts/backfill-activity-classification.mjs [--dry-run] [--write] [--batch-size=500]
+ *   Default: dry-run. Production writes require ALLOW_PRODUCTION_WRITE + CONFIRM_* env vars.
  *
  * Requires env vars:
  *   SUPABASE_URL
@@ -27,11 +28,22 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { classifyActivityEvidence } from "../lib/learning/activity-classification.js";
+import {
+  createProductionScriptGuard,
+  exitOnGuardError,
+} from "./lib/production-script-guard.mjs";
 
 // ── CLI args ────────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
-const DRY_RUN = args.includes("--dry-run");
+const guard = createProductionScriptGuard({
+  scriptName: "backfill-activity-classification",
+  confirmOperation: "BACKFILL_ACTIVITY_CLASSIFICATION",
+  affectedTables: ["answers", "answer_payload", "classroom_activity_attempts"],
+  defaultDryRun: true,
+  argv: args,
+});
+const DRY_RUN = guard.isDryRun;
 const BATCH_SIZE = (() => {
   const flag = args.find((a) => a.startsWith("--batch-size="));
   if (flag) {
@@ -245,6 +257,13 @@ async function backfillAttemptsTiming() {
 // ── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
+  guard.printStartBanner();
+  try {
+    guard.assertWriteAllowed();
+  } catch (err) {
+    exitOnGuardError(err);
+  }
+
   console.log(`[backfill] Mode: ${DRY_RUN ? "DRY RUN" : "LIVE"} | Batch size: ${BATCH_SIZE}`);
   console.log("[backfill] ================================================");
 
@@ -261,9 +280,18 @@ async function main() {
   console.log(`  attempts timing tagged     : ${stats.attemptsTaggedFabricatedTiming}`);
   console.log(`  attempts errors            : ${stats.attemptsErrors}`);
   console.log("[backfill] Done.");
+
+  guard.printEndSummary({
+    affectedRows: stats.answersClassified + stats.attemptsTaggedFabricatedTiming,
+    skippedRows: stats.answersAlreadyClassified,
+    errors: stats.answersErrors || stats.attemptsErrors ? [`answers=${stats.answersErrors} attempts=${stats.attemptsErrors}`] : [],
+  });
 }
 
 main().catch((err) => {
+  if (err?.name === "ProductionScriptGuardError") {
+    exitOnGuardError(err);
+  }
   console.error("[backfill] Fatal error:", err);
   process.exit(1);
 });

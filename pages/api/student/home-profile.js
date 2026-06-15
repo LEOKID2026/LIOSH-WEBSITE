@@ -11,6 +11,7 @@ import {
   normalizeLearningProfileRow,
 } from "../../../lib/learning-supabase/student-learning-profile.server";
 import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-progress.server";
+import { evaluateMonthlyPersistenceReward } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
 
 function shouldLogStudentHomeDebug() {
   return process.env.NEXT_PUBLIC_DEBUG_STUDENT_IDENTITY === "true";
@@ -70,6 +71,26 @@ export default async function handler(req, res) {
       // Keep existing challenges; do not fail the page load
     }
 
+    let monthlyPersistenceStatus = null;
+    let monthlyPersistenceLoadError = false;
+    try {
+      const evalResult = await evaluateMonthlyPersistenceReward(supabase, { studentId });
+      if (evalResult.ok) {
+        monthlyPersistenceStatus = {
+          yearMonthIsrael: evalResult.yearMonthIsrael,
+          activeMinutes: evalResult.activeMinutes,
+          tierMinutes: evalResult.tierMinutes,
+          wouldAward: evalResult.wouldAward,
+          alreadyAwarded: evalResult.alreadyAwarded,
+          eligible: evalResult.eligible,
+        };
+      } else {
+        monthlyPersistenceLoadError = true;
+      }
+    } catch {
+      monthlyPersistenceLoadError = true;
+    }
+
     const payload = {
       ok: true,
       studentId,
@@ -81,6 +102,8 @@ export default async function handler(req, res) {
       streaks: normalized.streaks,
       achievements: normalized.achievements,
       subjectsProgressOnly,
+      monthlyPersistenceStatus,
+      monthlyPersistenceLoadError,
       updated_at: row.updated_at,
     };
 

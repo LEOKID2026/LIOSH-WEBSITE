@@ -13,6 +13,7 @@ import {
 } from "../../lib/learning-client/studentLearningProfileClient";
 import { invalidateStudentMeClientCache } from "../../lib/learning-client/studentMeClient";
 import { formatGradeLevelHe } from "../../lib/learning-student-defaults";
+import { STUDENT_TRUTH_LABELS_HE } from "../../lib/learning-shared/student-display-truth.js";
 import StudentAvatarPickerModal from "../../components/student/StudentAvatarPickerModal";
 import StudentHomeModal from "../../components/student/StudentHomeModal";
 import StudentDailyMissionsPanel from "../../components/student/StudentDailyMissionsPanel";
@@ -128,6 +129,7 @@ function StatsSection({ dashboardView, accLabel }) {
           <div className={T.statsSummaryItem}>
             <p className={T.statsSummaryLabel}>כוכבים</p>
             <p className={T.statsSummaryValue}>{s.summaryStars}</p>
+            <p className="text-[10px] text-slate-500">{s.summaryStarsScopeHe}</p>
           </div>
           <div className={T.statsSummaryItem}>
             <p className={T.statsSummaryLabel}>דיוק</p>
@@ -135,7 +137,7 @@ function StatsSection({ dashboardView, accLabel }) {
           </div>
           <div className={T.statsSummaryItem}>
             <p className={T.statsSummaryLabel}>מטבעות</p>
-            <p className={T.statsSummaryValue}>{dashboardView.identity.coinBalance}</p>
+            <p className={T.statsSummaryValue}>{dashboardView.identity.coinBalanceDisplayHe ?? dashboardView.identity.coinBalance ?? "—"}</p>
           </div>
         </div>
       </div>
@@ -146,13 +148,13 @@ function StatsSection({ dashboardView, accLabel }) {
         <StatCard label="תשובות נכונות" value={s.correctAnswers} />
         <StatCard
           label="דקות למידה החודש"
-          value={s.learningMinutesThisMonth}
-          sub={`יעד: ${s.monthlyGoalMinutes} דק׳`}
+          value={s.learningMinutesThisMonthDisplayHe ?? s.learningMinutesThisMonth ?? STUDENT_TRUTH_LABELS_HE.noData}
+          sub={`יעד: ${s.monthlyGoalMinutes} דק׳ · ${s.learningMinutesFilterNoteHe || STUDENT_TRUTH_LABELS_HE.periodThisMonth}`}
         />
         <StatCard
           label="דקות מצטברות"
-          value={s.learningMinutesLifetimeRounded}
-          sub="מפי סיכומי פגישות"
+          value={s.learningMinutesLifetimeDisplayHe ?? s.learningMinutesLifetimeRounded}
+          sub={s.learningMinutesLifetimeScopeHe || "מפי סיכומי פגישות"}
         />
       </div>
     </>
@@ -167,15 +169,19 @@ function MonthlyJourneySection({ monthlyJourney, className = "" }) {
       <div className="space-y-3 text-right">
         <p className={T.monthlyText}>
           דקות החודש:{" "}
-          <span className={T.monthlyHighlight}>{monthlyJourney.minutesThisMonth}</span> /{" "}
-          <span className="tabular-nums">{monthlyJourney.goalMinutes}</span>
+          <span className={T.monthlyHighlight}>
+            {monthlyJourney.minutesDisplayHe ?? monthlyJourney.minutesThisMonth ?? STUDENT_TRUTH_LABELS_HE.noData}
+          </span>{" "}
+          / <span className="tabular-nums">{monthlyJourney.goalMinutes}</span>
         </p>
-        <div className={T.progressTrack}>
-          <div
-            className={T.progressFill}
-            style={{ width: `${monthlyJourney.progressPct}%` }}
-          />
-        </div>
+        {monthlyJourney.filterNoteHe ? (
+          <p className="text-xs text-slate-500 text-right">{monthlyJourney.filterNoteHe}</p>
+        ) : null}
+        {monthlyJourney.progressPct != null ? (
+          <div className={T.progressTrack}>
+            <div className={T.progressFill} style={{ width: `${monthlyJourney.progressPct}%` }} />
+          </div>
+        ) : null}
         <p className={T.monthlyEncouragement}>{monthlyJourney.encouragementHe}</p>
       </div>
     </section>
@@ -208,30 +214,36 @@ function SubjectsSection({ subjects }) {
             <div className={`${T.subjectBody} flex-1`}>
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>דיוק</span>
-                <span className={T.subjectStatValue}>
-                  {s.accuracyPct != null ? `${s.accuracyPct}%` : "—"}
-                </span>
+                <span className={T.subjectStatValue}>{s.accuracyDisplayHe ?? "—"}</span>
               </div>
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>שאלות / נכונות</span>
                 <span className={T.subjectStatValue}>
-                  {s.answersTotal} / {s.correctTotal}
+                  {s.answersDisplayHe ?? s.answersTotal} / {s.correctTotal}
                 </span>
               </div>
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>רמה · כוכבים</span>
                 <span className={T.subjectStatValue}>
-                  {s.level} · {s.stars}
+                  {s.levelDisplayHe ?? s.level ?? "—"} · {s.stars ?? "—"}
+                  {s.starsScopeHe ? ` (${s.starsScopeHe})` : ""}
                 </span>
               </div>
               <div className={T.subjectStatRow}>
                 <span className={T.subjectStatLabel}>דקות למידה</span>
-                <span className={T.subjectStatValue}>{s.sessionMinutesRounded}</span>
+                <span className={T.subjectStatValue}>
+                  {s.sessionMinutesDisplayHe ?? s.sessionMinutesRounded ?? "—"}
+                </span>
               </div>
             </div>
-            <div className={T.subjectProgressTrack}>
-              <div className={T.subjectProgressFill} style={{ width: `${s.progressIndicatorPct}%` }} />
-            </div>
+            {s.progressIndicatorPct != null ? (
+              <div className={T.subjectProgressTrack}>
+                <div
+                  className={T.subjectProgressFill}
+                  style={{ width: `${s.progressIndicatorPct}%` }}
+                />
+              </div>
+            ) : null}
             <Link href={s.href} className={T.subjectLink}>
               כניסה לנושא
             </Link>
@@ -276,6 +288,7 @@ function RecommendationsSection({ recommendations }) {
           className={T.recommendCard}
         >
           <h3 className={T.recommendTitle}>{r.titleHe}</h3>
+          {r.hintHe ? <p className="text-xs text-slate-500 mb-1">{r.hintHe}</p> : null}
           <p className={T.recommendBody}>{r.descriptionHe}</p>
           <Link
             href={r.href}
@@ -555,15 +568,19 @@ export default function StudentHomePage() {
     const missionTotal = missions?.missions?.length ?? 0;
     const missionCompleted = missions?.totalCompleted ?? 0;
     const progressMinutes =
-      dashboardView.monthlyPersistence?.currentMinutes != null
-        ? dashboardView.monthlyPersistence.currentMinutes
-        : dashboardView.monthlyJourney.minutesThisMonth;
+      dashboardView.monthlyPersistence?.currentMinutesDisplayHe ??
+      dashboardView.monthlyPersistence?.currentMinutes ??
+      dashboardView.monthlyJourney.minutesDisplayHe ??
+      dashboardView.monthlyJourney.minutesThisMonth ??
+      STUDENT_TRUTH_LABELS_HE.noData;
 
     return {
       stats: `רמה ${dashboardView.accountStats.summaryLevel}`,
       progress: `${progressMinutes} דק׳ החודש`,
       missions:
-        missionTotal > 0 ? `${missionCompleted}/${missionTotal} הושלמו` : "0/0 הושלמו",
+        missionTotal > 0
+          ? `${missionCompleted}/${missionTotal} הושלמו`
+          : STUDENT_TRUTH_LABELS_HE.noData,
       classroom: `${personalActivityCount} פעילויות`,
       worksheets: "0 דפי עבודה",
       subjects: `${dashboardView.subjects.length} נושאים`,
@@ -606,7 +623,11 @@ export default function StudentHomePage() {
   const heroName = String(student.full_name || "").trim() || "ילד/ה";
   const heroGrade =
     student.grade_level != null && student.grade_level !== "" ? formatGradeLevelHe(student.grade_level) : "";
-  const heroCoins = Number(student.coin_balance) || 0;
+  const heroCoinsDisplay =
+    authPhase === "checking" || profilePending
+      ? STUDENT_TRUTH_LABELS_HE.loading
+      : dashboardView?.identity?.coinBalanceDisplayHe ??
+        (student.coin_balance != null ? String(Number(student.coin_balance) || 0) : STUDENT_TRUTH_LABELS_HE.unavailable);
   const heroTagline =
     dashboardView?.identity?.friendlyLineHe ?? "כאן מוצגים הנתונים מהשרת אחרי התחברות.";
 
@@ -622,10 +643,12 @@ export default function StudentHomePage() {
           <p className={T.emptyText}>עדיין אין נתונים</p>
         );
       case "progress":
-        return dashboardView.monthlyPersistence?.tiers?.length ? (
+        return dashboardView.monthlyPersistence?.loadError ? (
+          <p className={T.emptyText}>{STUDENT_TRUTH_LABELS_HE.unavailable}</p>
+        ) : dashboardView.monthlyPersistence?.tiers?.length ? (
           <StudentMonthlyPersistencePanel monthlyPersistence={dashboardView.monthlyPersistence} />
         ) : (
-          <p className={T.emptyText}>עדיין אין נתונים</p>
+          <p className={T.emptyText}>{STUDENT_TRUTH_LABELS_HE.noData}</p>
         );
       case "classroom":
         return personalActivitiesPhase === "loading" ? (
@@ -692,7 +715,7 @@ export default function StudentHomePage() {
                 <p className={T.heroSub}>
                   {heroGrade ? heroGrade : "עדיין אין נתונים"}
                 </p>
-                <p className={T.heroCoins}>מטבעות: {heroCoins}</p>
+                <p className={T.heroCoins}>מטבעות: {heroCoinsDisplay}</p>
                 <p className={T.heroTagline}>{heroTagline}</p>
               </div>
             </div>

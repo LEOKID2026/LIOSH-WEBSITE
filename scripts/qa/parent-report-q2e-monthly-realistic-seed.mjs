@@ -18,6 +18,7 @@ import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 
 import { classifyActivityEvidence } from "../../lib/learning/activity-classification.js";
+import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
@@ -378,6 +379,19 @@ async function seedStudent(supabase, entry) {
 }
 
 async function main() {
+  const argv = process.argv.slice(2);
+  const guard = bootstrapQaDbWriteGuard(
+    "qa/parent-report-q2e-monthly-realistic-seed",
+    "PARENT_REPORT_Q2E_MONTHLY_REALISTIC_SEED",
+    argv
+  );
+  const cleanOnly = guard.mode.cleanOnly;
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary({ artifactPath: ARTIFACT_DIR });
+    return;
+  }
+
   const url = process.env.NEXT_PUBLIC_LEARNING_SUPABASE_URL;
   const key = process.env.LEARNING_SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) {
@@ -385,7 +399,7 @@ async function main() {
     process.exit(1);
   }
 
-  const cleanOnly = process.argv.includes("--clean-only");
+  const cleanOnly = guard.mode.cleanOnly;
   const supabase = createClient(url, key, { auth: { persistSession: false } });
   const students = await resolveAaaStudents(supabase);
   const studentIds = students.map((s) => s.studentId);

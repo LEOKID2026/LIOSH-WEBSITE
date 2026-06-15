@@ -4,8 +4,6 @@ import { ParentReportExitNav } from "../../components/parent/ParentReportExitNav
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { getMathReportBucketDisplayName, getTopicName, getEnglishTopicName, getScienceTopicName, getHebrewTopicName, getMoledetGeographyTopicName, exportReportToPDF } from "../../utils/math-report-generator";
-import { generateParentReportV2 } from "../../utils/parent-report-v2";
-import { generateDetailedParentReport } from "../../utils/detailed-parent-report";
 import {
   enrichParentReportWithParentAi,
   getDeterministicParentAiExplanationFromParentReportV2,
@@ -65,6 +63,7 @@ import {
   parentReportRemoteDataUrl,
   parseParentReportRemoteSource,
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
+import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
 
 function parentReportPresetDays(period, customDates) {
   if (customDates) return null;
@@ -72,29 +71,6 @@ function parentReportPresetDays(period, customDates) {
   if (period === "schoolYear") return "schoolYear";
   if (period === "month") return 30;
   return 7;
-}
-
-function buildLocalParentReports(playerName, period, customDates, appliedStartDate, appliedEndDate) {
-  const args = resolveParentReportGenerationArgs(
-    period,
-    customDates,
-    appliedStartDate,
-    appliedEndDate
-  );
-  return {
-    data: generateParentReportV2(
-      playerName,
-      args.period,
-      args.customStartDate,
-      args.customEndDate
-    ),
-    detailed: generateDetailedParentReport(
-      playerName,
-      args.period,
-      args.customStartDate,
-      args.customEndDate
-    ),
-  };
 }
 
 function parentReportChartLabelFromAllItemKey(key, data) {
@@ -1031,23 +1007,11 @@ export default function ParentReport() {
       return undefined;
     }
 
-    const name = localStorage.getItem("mleo_player_name") || "";
-    setPlayerName(name);
-
-    if (name) {
-      const { data, detailed } = buildLocalParentReports(
-        name,
-        nextPeriod,
-        nextCustomDates,
-        appliedS,
-        appliedE
-      );
-      setReport(data);
-      setShortContractTop(detailed?.parentProductContractV1?.top || null);
-      setCopilotDetailedPayload(detailed && typeof detailed === "object" ? detailed : null);
-    } else {
-      setCopilotDetailedPayload(null);
-    }
+    setPlayerName("");
+    setReport(null);
+    setShortContractTop(null);
+    setCopilotDetailedPayload(null);
+    setParentReportError("");
     setLoading(false);
     return undefined;
   }, [
@@ -1230,25 +1194,6 @@ export default function ParentReport() {
   );
 
   useEffect(() => {
-    if (isRemoteReportSource) return undefined;
-    if (typeof window !== "undefined" && playerName && !loading) {
-      const { data, detailed } = buildLocalParentReports(
-        playerName,
-        period,
-        customDates,
-        appliedStartDate,
-        appliedEndDate
-      );
-      if (data) {
-        setReport(data);
-        setShortContractTop(detailed?.parentProductContractV1?.top || null);
-        setCopilotDetailedPayload(detailed && typeof detailed === "object" ? detailed : null);
-      }
-    }
-    return undefined;
-  }, [isRemoteReportSource, period, customDates, appliedStartDate, appliedEndDate, playerName, loading]);
-
-  useEffect(() => {
     if (typeof window === "undefined") return undefined;
     if (!report || typeof report !== "object") return undefined;
     if ("parentAiExplanation" in report) return undefined;
@@ -1366,6 +1311,34 @@ export default function ParentReport() {
                 </Link>
               </>
             )}
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!isRemoteReportSource) {
+    return (
+      <Layout>
+        <div
+          className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex flex-col items-center justify-center gap-4 p-6"
+          dir="rtl"
+          data-testid="parent-report-portal-gate"
+        >
+          <div className="text-4xl">📊</div>
+          <h1 className="text-2xl font-bold text-white">{PARENT_REPORT_PORTAL_GATE.titleHe}</h1>
+          <p className="text-center text-white/80 max-w-md">{PARENT_REPORT_PORTAL_GATE.messageHe}</p>
+          <p className="text-center text-white/50 text-sm max-w-md">{PARENT_REPORT_PORTAL_GATE.hintHe}</p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link
+              href="/parent/login"
+              className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
+            >
+              כניסת הורה
+            </Link>
+            <Link href="/parent/dashboard" className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white">
+              דשבורד הורים
+            </Link>
           </div>
         </div>
       </Layout>

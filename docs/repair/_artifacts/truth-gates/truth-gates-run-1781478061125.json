@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-06-14T23:01:00.408Z",
+  "gates": [
+    {
+      "gate": "REWARD_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "     duration_ms: 0.189\n      type: 'test'\n      ...\n    # Subtest: monthly persistence load error surfaces unavailable\n    ok 6 - monthly persistence load error surfaces unavailable\n      ---\n      duration_ms: 0.3512\n      type: 'test'\n      ...\n    # Subtest: localStorage progress keys documented non-authoritative in client sync\n    ok 7 - localStorage progress keys documented non-authoritative in client sync\n      ---\n      duration_ms: 0.384\n      type: 'test'\n      ...\n    1..7\nok 6 - Phase 3 — student dashboard display truth\n  ---\n  duration_ms: 2.9126\n  type: 'suite'\n  ...\n# Subtest: Phase 9 — getCurrentYearMonth helper\n    # Subtest: getCurrentYearMonth returns YYYY-MM\n    ok 1 - getCurrentYearMonth returns YYYY-MM\n      ---\n      duration_ms: 0.1542\n      type: 'test'\n      ...\n    1..1\nok 7 - Phase 9 — getCurrentYearMonth helper\n  ---\n  duration_ms: 0.2075\n  type: 'suite'\n  ...\n1..7\n# tests 19\n# suites 7\n# pass 19\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 192.662\nREWARD_PASS: PASS — reward/time/dashboard unit contracts passed\n{\n  \"gate\": \"REWARD_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"reward/time/dashboard unit contracts passed\",\n  \"details\": {\n    \"liveBrowser\": \"scripts/qa/staging-e2e-learning-time-fairness.mjs (not in default gate chain)\"\n  },\n  \"at\": \"2026-06-14T23:01:01.114Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-14T23:01:01.124Z"
+}

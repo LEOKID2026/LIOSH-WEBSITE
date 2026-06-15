@@ -4,7 +4,7 @@
  */
 
 import { resolveCanonicalComparisonSignAnswer } from "./comparison-sign-mcq.js";
-import { normalizeAnswerForSpellingNiqqudStrict } from "./hebrew-spelling-niqqud";
+import { normalizeAnswerForSpellingNiqqudStrict } from "./hebrew-spelling-niqqud.js";
 
 /**
  * Upper bound for absolute numeric tolerance in {@link compareAnswers} (`numeric_absolute_tolerance`)

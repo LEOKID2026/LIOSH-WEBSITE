@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 
 import { resolveAaaStudents } from "./lib/parent-aaa-qa-constants.mjs";
+import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
@@ -125,7 +126,18 @@ async function seedFixture(supabase, entry, fixture, sim) {
 }
 
 async function main() {
-  const cleanOnly = process.argv.includes("--clean-only");
+  const argv = process.argv.slice(2);
+  const guard = bootstrapQaDbWriteGuard(
+    "qa/parent-report-diagnostic-visible-impact-seed",
+    "PARENT_REPORT_DIAGNOSTIC_VISIBLE_IMPACT_SEED",
+    argv
+  );
+  const cleanOnly = guard.mode.cleanOnly;
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary({ artifactPath: ARTIFACT_DIR });
+    return;
+  }
   const sim = await loadSimulationModule();
   const { cleanTaggedSeedsForTag } = sim;
 

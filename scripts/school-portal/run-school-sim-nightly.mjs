@@ -36,12 +36,13 @@ import {
   resolveStaffPassword,
 } from "./sim/student-credentials.mjs";
 import { assertSchoolSimStateReady } from "./sim/sim-state-guards.mjs";
+import { bootstrapSchoolDbWriteGuard } from "./lib/school-db-write-guard.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function parseArgs(argv) {
   const args = {
-    dryRun: false,
+    dryRun: true,
     preflightOnly: false,
     skipUiSample: false,
     skipReports: false,
@@ -53,6 +54,7 @@ function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--dry-run") args.dryRun = true;
+    else if (a === "--write") args.dryRun = false;
     else if (a === "--preflight-only") args.preflightOnly = true;
     else if (a === "--skip-ui-sample") args.skipUiSample = true;
     else if (a === "--skip-reports") args.skipReports = true;
@@ -78,7 +80,13 @@ async function runReset(preResetPath) {
 }
 
 async function main() {
-  const args = parseArgs(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  const args = parseArgs(argv);
+  const guard = bootstrapSchoolDbWriteGuard(
+    "school-portal/run-school-sim-nightly",
+    "RUN_SCHOOL_SIM_NIGHTLY",
+    argv
+  );
   const baseUrl = defaultBaseUrl();
   const log = (line) => console.log(line);
 
@@ -257,6 +265,10 @@ async function main() {
     reportResult,
     preflight,
   });
+  if (args.dryRun) {
+    gateSummary.verdictType = "ARTIFACT_VERIFY";
+    gateSummary.guardNote = "dry-run: no DB writes; artifact reflects simulation plan only";
+  }
 
   writeJson(artifactRoot, "run-summary.json", gateSummary);
   writeText(
@@ -285,10 +297,21 @@ async function main() {
   );
 
   console.log(JSON.stringify({ status, date: args.date, artifactRoot }, null, 2));
+  guard.setArtifactPath(artifactRoot);
+  guard.printEndSummary({
+    affectedRows: dbResult.activitiesCreated || 0,
+    skippedRows: gateSummary.skipped ? 1 : 0,
+    errors: blockers,
+    artifactPath: artifactRoot,
+  });
   process.exit(status === "fail" ? 1 : 0);
 }
 
 main().catch((e) => {
+  if (e?.name === "ProductionScriptGuardError") {
+    console.error(`[production-guard] BLOCKED: ${e.message}`);
+    process.exit(1);
+  }
   console.error("school-sim-nightly: FAIL", e?.stack || e);
   process.exit(1);
 });

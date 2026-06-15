@@ -13,6 +13,7 @@
  *   E2E_STUDENT_PIN or ACTIVITY_SIM_STUDENT_PIN
  */
 import { createClient } from "@supabase/supabase-js";
+import { bootstrapTeacherDbWriteGuard } from "./lib/teacher-db-write-guard.mjs";
 
 const BASE =
   process.env.ACTIVITY_SIM_BASE_URL ||
@@ -113,6 +114,17 @@ function sampleQuestionSet(n) {
 }
 
 async function main() {
+  const argv = process.argv.slice(2);
+  const guard = bootstrapTeacherDbWriteGuard(
+    "teacher-portal/teacher-activity-sim",
+    "TEACHER_ACTIVITY_SIM",
+    argv
+  );
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: simulation writes skipped (pass --write)");
+    guard.printEndSummary();
+    return;
+  }
   const ready = await waitForServer();
   if (!ready) {
     console.error(

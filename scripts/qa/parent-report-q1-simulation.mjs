@@ -23,6 +23,7 @@ import {
 } from "../../lib/parent-server/report-data-aggregate.server.js";
 import { enrichPayloadWithParentFacing } from "../../lib/parent-server/parent-report-parent-facing.server.js";
 import { applyServerParentFacingAuthorityToClientReport } from "../../lib/parent-server/parent-facing-report-authority.js";
+import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
@@ -759,8 +760,19 @@ async function verifyStudent(supabase, entry, plan) {
 }
 
 async function main() {
-  const verifyOnly = process.argv.includes("--verify-only");
-  const cleanOnly = process.argv.includes("--clean-only");
+  const argv = process.argv.slice(2);
+  const guard = bootstrapQaDbWriteGuard(
+    "qa/parent-report-q1-simulation",
+    "PARENT_REPORT_Q1_SIMULATION",
+    argv
+  );
+  const verifyOnly = guard.mode.verifyOnly;
+  const cleanOnly = guard.mode.cleanOnly;
+  const skipWrites = guard.isDryRun && !verifyOnly;
+
+  if (skipWrites) {
+    console.log("[production-guard] dry-run: seed/clean DB mutations skipped (pass --write to mutate)");
+  }
 
   const url = requireEnv("NEXT_PUBLIC_LEARNING_SUPABASE_URL");
   const key = requireEnv("LEARNING_SUPABASE_SERVICE_ROLE_KEY");
@@ -771,17 +783,18 @@ async function main() {
 
   const studentIds = students.map((s) => s.studentId);
   let cleanup = { skipped: true };
-  if (!verifyOnly) {
+  if (!verifyOnly && !skipWrites) {
     cleanup = await cleanTaggedSeeds(supabase, studentIds);
     console.log("Cleanup prior Q1 sim tag:", cleanup);
   }
 
   if (cleanOnly) {
     console.log("--clean-only done");
+    guard.printEndSummary({ artifactPath: path.join(ROOT, "docs/qa/_artifacts/parent-report-q1-simulation") });
     return;
   }
 
-  if (!verifyOnly) {
+  if (!verifyOnly && !skipWrites) {
     for (const entry of students) {
       const plan = scenarioPlan(entry);
       if (!plan.seed) {

@@ -6,7 +6,6 @@ import Layout from "../../components/Layout";
 import { ParentReportImportantDisclaimer } from "../../components/ParentReportImportantDisclaimer";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { buildDetailedParentReportFromBaseReport } from "../../utils/detailed-parent-report";
-import { generateParentReportV2 } from "../../utils/parent-report-v2";
 import {
   buildSubjectParentLetter,
   buildTopicRecommendationNarrative,
@@ -43,6 +42,7 @@ import {
   parseParentReportRemoteSource,
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
 import { ParentReportExitNav } from "../../components/parent/ParentReportExitNav.jsx";
+import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
 
 /**
  * מיפוי ויזואלי בלבד לפי recommendedNextStep מה payload — לא משנה מנוע או תוכן.
@@ -424,29 +424,8 @@ export default function ParentReportDetailedPage() {
       };
     }
 
-    const name = localStorage.getItem("mleo_player_name") || "";
-    if (!name) {
-      setPayload(null);
-      setLoading(false);
-      return undefined;
-    }
-    let p = queryPeriod;
-    let cs = null;
-    let ce = null;
-    if (p === "custom" && queryStart && queryEnd) {
-      cs = queryStart;
-      ce = queryEnd;
-    } else if (p !== "week" && p !== "month" && p !== "custom") {
-      p = "week";
-    }
-    if (p === "custom" && (!cs || !ce)) {
-      p = "week";
-      cs = null;
-      ce = null;
-    }
-    const base = generateParentReportV2(name, p, cs, ce);
-    const data = buildDetailedParentReportFromBaseReport(base, { playerName: name, period: p });
-    setPayload(enrichDetailedPayloadWithUiAuthority(data, base));
+    setPayload(null);
+    setParentReportError("");
     setLoading(false);
     return undefined;
   }, [router.isReady, queryPeriod, queryStart, queryEnd, isRemoteReportSource, isTeacherSource, parentStudentId]);
@@ -601,12 +580,38 @@ export default function ParentReportDetailedPage() {
     );
   }
 
+  if (!isRemoteReportSource) {
+    return (
+      <Layout>
+        <div
+          className="min-h-screen bg-gradient-to-b from-[#0a0f1d] to-[#141928] flex flex-col items-center justify-center gap-4 p-6"
+          dir="rtl"
+          data-testid="parent-report-detailed-portal-gate"
+        >
+          <div className="text-4xl">📋</div>
+          <h1 className="text-2xl font-bold text-white">{PARENT_REPORT_PORTAL_GATE.titleHe}</h1>
+          <p className="text-center text-white/80 max-w-md">{PARENT_REPORT_PORTAL_GATE.messageHe}</p>
+          <p className="text-center text-white/50 text-sm max-w-md">{PARENT_REPORT_PORTAL_GATE.hintHe}</p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link
+              href="/parent/login"
+              className="rounded-lg px-4 py-2 bg-amber-500 text-black font-semibold"
+            >
+              כניסת הורה
+            </Link>
+            <Link
+              href="/parent/dashboard"
+              className="rounded-lg px-4 py-2 bg-white/10 border border-white/20 text-white"
+            >
+              דשבורד הורים
+            </Link>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   const pi = payload?.periodInfo;
-  const noPlayer =
-    typeof window !== "undefined" &&
-    !loading &&
-    !(isRemoteReportSource && parentStudentId) &&
-    !localStorage.getItem("mleo_player_name");
   const allSubjectProfiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
   const visibleSubjectProfiles = allSubjectProfiles.filter(
     (sp) => (Number(sp?.subjectQuestionCount) || 0) > 0
@@ -1520,11 +1525,7 @@ export default function ParentReportDetailedPage() {
             </>
           ) : null}
 
-          {noPlayer ? (
-            <p className="text-center text-white/80">
-              לא נמצא שם שחקן. הזן שם בדף הדוח הרגיל או התחבר מחדש.
-            </p>
-          ) : !payload ? (
+          {!payload ? (
             <p className="text-center text-white/80">לא ניתן לטעון את הדוח המקיף.</p>
           ) : (
             <>

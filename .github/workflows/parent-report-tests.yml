@@ -22,6 +22,7 @@ jobs:
       - run: npm run test:diagnostic-engine-v2-harness
       - run: npm run test:ai-hybrid-harness
       - run: npm run test:parent-report-phase6
+      - run: npm run test:truth-gates:offline
       - run: npm run test:minimal-safe-scope
       - run: npm run test:parent-copilot-phaseA
       - run: npm run test:parent-copilot-phaseB

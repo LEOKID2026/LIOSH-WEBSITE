@@ -119,10 +119,22 @@ test("live_lesson → diagnostic_guided, eligible", () => {
   assert.equal(r.evidenceCategory, EVIDENCE_CATEGORIES.DIAGNOSTIC_GUIDED);
 });
 
-test("guided_practice → learning_guided, NOT eligible", () => {
+test("guided_practice → learning_guided, NOT eligible (classroom)", () => {
   const r = classifyActivityEvidence("guided_practice", "assigned_class");
   assert.equal(r.isDiagnosticEligible, false);
   assert.equal(r.evidenceCategory, EVIDENCE_CATEGORIES.LEARNING_GUIDED);
+});
+
+test("guided_practice from parent → diagnostic_guided, eligible", () => {
+  const r = classifyActivityEvidence("guided_practice", "assigned_parent");
+  assert.equal(r.isDiagnosticEligible, true);
+  assert.equal(r.evidenceCategory, EVIDENCE_CATEGORIES.DIAGNOSTIC_GUIDED);
+});
+
+test("homework from parent → diagnostic_independent, eligible", () => {
+  const r = classifyActivityEvidence("homework", "assigned_parent");
+  assert.equal(r.isDiagnosticEligible, true);
+  assert.equal(r.evidenceCategory, EVIDENCE_CATEGORIES.DIAGNOSTIC_INDEPENDENT);
 });
 
 test("discussion → learning_context, NOT eligible", () => {

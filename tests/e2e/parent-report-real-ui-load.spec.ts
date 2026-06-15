@@ -4,7 +4,7 @@ import { buildParentReportApiBodyE2e } from "../fixtures/parent-report-api-body-
 const STUDENT_ID = "74c30e48-895b-4f4c-a65a-888f656f54f6";
 const LOAD_ERROR_RE = /שגיאת רשת בטעינת הדוח|שגיאה בעת טעינת הדוח/u;
 
-test.describe("parent report real UI load @parent-report-ui", () => {
+test.describe("parent report UI load — MOCK_UI_PASS @mock-ui-pass @parent-report-ui", () => {
   test.beforeEach(async ({ page }) => {
     const apiBody = buildParentReportApiBodyE2e();
 

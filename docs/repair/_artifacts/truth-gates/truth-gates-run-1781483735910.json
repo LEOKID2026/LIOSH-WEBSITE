@@ -1,0 +1,123 @@
+{
+  "startedAt": "2026-06-15T00:34:08.562Z",
+  "gates": [
+    {
+      "gate": "DB_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "DB_PASS: PASS — DB rows and live API agree (totalAnswers=404)\n{\n  \"gate\": \"DB_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"database\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"DB rows and live API agree (totalAnswers=404)\",\n  \"details\": {\n    \"studentId\": \"fd3901da-66ce-46c7-a24c-b33df2141c04\",\n    \"range\": {\n      \"from\": \"2026-05-17\",\n      \"to\": \"2026-06-15\"\n    }\n  },\n  \"at\": \"2026-06-15T00:34:17.318Z\"\n}\n",
+      "stderrTail": "(node:22040) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/parent-server/report-data-aggregate.server.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "API_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "tion_ms: 1.5263\n  type: 'test'\n  ...\n# Subtest: getParentActivityDetailForParent denies activity not owned by parent\nok 18 - getParentActivityDetailForParent denies activity not owned by parent\n  ---\n  duration_ms: 0.6617\n  type: 'test'\n  ...\n# Subtest: getParentActivityDetailForParent denies child not linked to parent\nok 19 - getParentActivityDetailForParent denies child not linked to parent\n  ---\n  duration_ms: 0.4186\n  type: 'test'\n  ...\n# Subtest: parent activity detail API route imports resolve\nok 20 - parent activity detail API route imports resolve\n  ---\n  duration_ms: 5.655\n  type: 'test'\n  ...\n# Subtest: parent activity detail API uses correct relative lib import depth\nok 21 - parent activity detail API uses correct relative lib import depth\n  ---\n  duration_ms: 0.4895\n  type: 'test'\n  ...\n1..21\n# tests 21\n# suites 0\n# pass 21\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 344.9012\nreport-date-range-parent-api: ok\nAPI_PASS: PASS — live report-data OK for student fd3901da-66ce-46c7-a24c-b33df2141c04\n{\n  \"gate\": \"API_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"api\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"live report-data OK for student fd3901da-66ce-46c7-a24c-b33df2141c04\",\n  \"details\": {\n    \"status\": 200,\n    \"totalAnswers\": 145,\n    \"range\": {\n      \"from\": \"2026-06-09\",\n      \"to\": \"2026-06-15\"\n    }\n  },\n  \"at\": \"2026-06-15T00:34:24.088Z\"\n}\n",
+      "stderrTail": "(node:12292) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/reporting/parent-report-date-range.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "UI_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": ": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"UI matches browser report-data for student fd3901da-66ce-46c7-a24c-b33df2141c04\",\n  \"details\": {\n    \"apiSnap\": {\n      \"dateRangeLabelHe\": \"09/06/2026 – 15/06/2026\",\n      \"totalQuestions\": 145,\n      \"totalTimeMinutes\": 6,\n      \"totalDurationSeconds\": 343,\n      \"subjects\": {\n        \"math\": {\n          \"answers\": 11,\n          \"correct\": 9\n        },\n        \"geometry\": {\n          \"answers\": 24,\n          \"correct\": 24\n        },\n        \"english\": {\n          \"answers\": 40,\n          \"correct\": 9\n        },\n        \"hebrew\": {\n          \"answers\": 70,\n          \"correct\": 38\n        },\n        \"science\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"moledet_geography\": {\n          \"answers\": 0,\n          \"correct\": 0\n        }\n      },\n      \"hasData\": true\n    },\n    \"uiSnap\": {\n      \"dateRangeRaw\": \"09/06/2026 - 15/06/2026\",\n      \"totalQuestions\": 145,\n      \"totalTimeMinutes\": 6,\n      \"byLabel\": {\n        \"זמן כולל\": \"6 דק'\",\n        \"שאלות\": \"145\",\n        \"דיוק כללי\": \"55%\",\n        \"רמה\": \"Lv.5\",\n        \"🧮 חשבון\": \"0 שאלות\",\n        \"📐 גאומטריה\": \"0 שאלות\",\n        \"📘 אנגלית\": \"0 שאלות\",\n        \"🔬 מדעים\": \"0 שאלות\",\n        \"📚 עברית\": \"0 שאלות\",\n        \"🗺️ מולדת וגאוגרפיה\": \"0 שאלות\"\n      }\n    },\n    \"range\": {\n      \"from\": \"2026-06-09\",\n      \"to\": \"2026-06-15\"\n    }\n  },\n  \"at\": \"2026-06-15T00:34:32.640Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "PDF_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "ia pdf-parse-PDFParse\n{\n  \"gate\": \"PDF_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"pdf\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": true,\n  \"message\": \"real PDF bytes parity via pdf-parse-PDFParse\",\n  \"details\": {\n    \"pdfPath\": \"C:\\\\Users\\\\ERAN YOSEF\\\\Desktop\\\\final projects\\\\FINAL-WEB\\\\LIOSH-WEB-TRY\\\\qa-visual-output\\\\truth-gates\\\\PDF_PASS-fd3901da-66ce-46c7-a24c-b33df2141c04-2026-06-09-2026-06-15.pdf\",\n    \"apiSnap\": {\n      \"dateRangeLabelHe\": \"09/06/2026 – 15/06/2026\",\n      \"totalQuestions\": 145,\n      \"totalTimeMinutes\": 6,\n      \"totalDurationSeconds\": 343,\n      \"subjects\": {\n        \"math\": {\n          \"answers\": 11,\n          \"correct\": 9\n        },\n        \"geometry\": {\n          \"answers\": 24,\n          \"correct\": 24\n        },\n        \"english\": {\n          \"answers\": 40,\n          \"correct\": 9\n        },\n        \"hebrew\": {\n          \"answers\": 70,\n          \"correct\": 38\n        },\n        \"science\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"moledet_geography\": {\n          \"answers\": 0,\n          \"correct\": 0\n        }\n      },\n      \"hasData\": true\n    },\n    \"pdfSnap\": {\n      \"dateRangeLabelHe\": \"09/06/2026 – 15/06/2026\",\n      \"totalQuestions\": 145,\n      \"totalTimeMinutes\": 6,\n      \"rawLength\": 2179\n    },\n    \"range\": {\n      \"from\": \"2026-06-09\",\n      \"to\": \"2026-06-15\"\n    },\n    \"bytes\": 928379\n  },\n  \"at\": \"2026-06-15T00:34:43.488Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "E2E_TRUTH_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "E2E_TRUTH_PASS: PASS — DB → API → UI → PDF chain passed for live student/range\n{\n  \"gate\": \"E2E_TRUTH_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"e2e\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": true,\n  \"message\": \"DB → API → UI → PDF chain passed for live student/range\",\n  \"details\": {\n    \"chainResults\": {\n      \"DB_PASS\": 0,\n      \"API_PASS\": 0,\n      \"UI_PASS\": 0,\n      \"PDF_PASS\": 0\n    },\n    \"baseUrl\": \"http://127.0.0.1:3011\"\n  },\n  \"at\": \"2026-06-15T00:35:19.597Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "PARENT_ACTIVITY_PASS",
+      "verdict": "SKIP",
+      "exitCode": 2,
+      "launchRequired": true,
+      "stdoutTail": "PARENT_ACTIVITY_PASS: SKIP — live prerequisites missing: student login failed for configured E2E credentials; last HTTP 401: {\"ok\":false,\"error\":\"שם משתמש או PIN שגויים\"}\n{\n  \"gate\": \"PARENT_ACTIVITY_PASS\",\n  \"verdict\": \"SKIP\",\n  \"layer\": \"live-e2e\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"live prerequisites missing: student login failed for configured E2E credentials; last HTTP 401: {\\\"ok\\\":false,\\\"error\\\":\\\"שם משתמש או PIN שגויים\\\"}\",\n  \"details\": {\n    \"live\": true,\n    \"configBlocked\": true\n  },\n  \"at\": \"2026-06-15T00:35:21.750Z\"\n}\n",
+      "stderrTail": "(node:2968) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/learning-client/studentHomeDashboardClient.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "PARENT_ACTIVITY_CONTRACT_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": false,
+      "stdoutTail": "stripping is idempotent (applying twice gives same result)\n      ---\n      duration_ms: 4.1468\n      type: 'test'\n      ...\n    # Subtest: subject diagnostic fields are NOT stripped (only raw accuracy)\n    ok 2 - subject diagnostic fields are NOT stripped (only raw accuracy)\n      ---\n      duration_ms: 1.6987\n      type: 'test'\n      ...\n    1..2\nok 8 - Phase 4 — stripInternalReportPayloadFields contract\n  ---\n  duration_ms: 6.0236\n  type: 'suite'\n  ...\n# Subtest: Phase 4/5 — book data does not affect diagnosticAccuracy\n    # Subtest: mergeLearningActivityBookData leaves diagnostic summary unchanged\n    ok 1 - mergeLearningActivityBookData leaves diagnostic summary unchanged\n      ---\n      duration_ms: 0.9215\n      type: 'test'\n      ...\n    1..1\nok 9 - Phase 4/5 — book data does not affect diagnosticAccuracy\n  ---\n  duration_ms: 1.0162\n  type: 'suite'\n  ...\n1..9\n# tests 20\n# suites 9\n# pass 20\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 387.3116\nPARENT_ACTIVITY_CONTRACT_PASS: PASS — parent activity unit/source contracts passed; not a live product gate\n{\n  \"gate\": \"PARENT_ACTIVITY_CONTRACT_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"parent activity unit/source contracts passed; not a live product gate\",\n  \"details\": {\n    \"liveGate\": \"PARENT_ACTIVITY_PASS\"\n  },\n  \"at\": \"2026-06-15T00:35:23.715Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "REWARD_PASS",
+      "verdict": "SKIP",
+      "exitCode": 2,
+      "launchRequired": true,
+      "stdoutTail": "REWARD_PASS: SKIP — live prerequisites missing: student login failed for configured E2E credentials; last HTTP 429: {\"ok\":false,\"error\":\"שם משתמש או PIN שגויים\"}\n{\n  \"gate\": \"REWARD_PASS\",\n  \"verdict\": \"SKIP\",\n  \"layer\": \"live-reward\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"live prerequisites missing: student login failed for configured E2E credentials; last HTTP 429: {\\\"ok\\\":false,\\\"error\\\":\\\"שם משתמש או PIN שגויים\\\"}\",\n  \"details\": {\n    \"live\": true,\n    \"configBlocked\": true\n  },\n  \"at\": \"2026-06-15T00:35:25.377Z\"\n}\n",
+      "stderrTail": "(node:22092) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/learning-client/studentHomeDashboardClient.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "REWARD_CONTRACT_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": false,
+      "stdoutTail": " duration_ms: 0.2697\n      type: 'test'\n      ...\n    # Subtest: monthly persistence load error surfaces unavailable\n    ok 6 - monthly persistence load error surfaces unavailable\n      ---\n      duration_ms: 0.6402\n      type: 'test'\n      ...\n    # Subtest: localStorage progress keys documented non-authoritative in client sync\n    ok 7 - localStorage progress keys documented non-authoritative in client sync\n      ---\n      duration_ms: 1.6013\n      type: 'test'\n      ...\n    1..7\nok 6 - Phase 3 — student dashboard display truth\n  ---\n  duration_ms: 5.608\n  type: 'suite'\n  ...\n# Subtest: Phase 9 — getCurrentYearMonth helper\n    # Subtest: getCurrentYearMonth returns YYYY-MM\n    ok 1 - getCurrentYearMonth returns YYYY-MM\n      ---\n      duration_ms: 0.4467\n      type: 'test'\n      ...\n    1..1\nok 7 - Phase 9 — getCurrentYearMonth helper\n  ---\n  duration_ms: 0.631\n  type: 'suite'\n  ...\n1..7\n# tests 19\n# suites 7\n# pass 19\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 237.2835\nREWARD_CONTRACT_PASS: PASS — reward/time/dashboard unit contracts passed; not live coin persistence\n{\n  \"gate\": \"REWARD_CONTRACT_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"reward/time/dashboard unit contracts passed; not live coin persistence\",\n  \"details\": {\n    \"liveGate\": \"REWARD_PASS\"\n  },\n  \"at\": \"2026-06-15T00:35:26.475Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "NO_LOCALSTORAGE_REPORT_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "OK parent-report-server-truth-phase1-selftest\nNO_LOCALSTORAGE_REPORT_PASS: PASS — product parent-report pages blocked from mleo_* localStorage; API bridge only\n{\n  \"gate\": \"NO_LOCALSTORAGE_REPORT_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"source-guard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"product parent-report pages blocked from mleo_* localStorage; API bridge only\",\n  \"details\": {},\n  \"at\": \"2026-06-15T00:35:29.028Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "DASHBOARD_TRUTH_PASS",
+      "verdict": "SKIP",
+      "exitCode": 2,
+      "launchRequired": true,
+      "stdoutTail": "DASHBOARD_TRUTH_PASS: SKIP — live prerequisites missing: student login failed for configured E2E credentials; last HTTP 429: {\"ok\":false,\"error\":\"שם משתמש או PIN שגויים\"}\n{\n  \"gate\": \"DASHBOARD_TRUTH_PASS\",\n  \"verdict\": \"SKIP\",\n  \"layer\": \"live-dashboard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"live prerequisites missing: student login failed for configured E2E credentials; last HTTP 429: {\\\"ok\\\":false,\\\"error\\\":\\\"שם משתמש או PIN שגויים\\\"}\",\n  \"details\": {\n    \"live\": true,\n    \"configBlocked\": true\n  },\n  \"at\": \"2026-06-15T00:35:30.717Z\"\n}\n",
+      "stderrTail": "(node:5868) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/learning-client/studentHomeDashboardClient.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "DASHBOARD_TRUTH_CONTRACT_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": false,
+      "stdoutTail": "stence load error surfaces unavailable\n    ok 6 - monthly persistence load error surfaces unavailable\n      ---\n      duration_ms: 0.5316\n      type: 'test'\n      ...\n    # Subtest: localStorage progress keys documented non-authoritative in client sync\n    ok 7 - localStorage progress keys documented non-authoritative in client sync\n      ---\n      duration_ms: 0.901\n      type: 'test'\n      ...\n    1..7\nok 6 - Phase 3 — student dashboard display truth\n  ---\n  duration_ms: 4.3642\n  type: 'suite'\n  ...\n# Subtest: Phase 9 — getCurrentYearMonth helper\n    # Subtest: getCurrentYearMonth returns YYYY-MM\n    ok 1 - getCurrentYearMonth returns YYYY-MM\n      ---\n      duration_ms: 0.4548\n      type: 'test'\n      ...\n    1..1\nok 7 - Phase 9 — getCurrentYearMonth helper\n  ---\n  duration_ms: 0.598\n  type: 'suite'\n  ...\n1..7\n# tests 19\n# suites 7\n# pass 19\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 232.244\nDASHBOARD_TRUTH_CONTRACT_PASS: PASS — student dashboard display truth + server-derived minutes contracts passed; not live dashboard UI\n{\n  \"gate\": \"DASHBOARD_TRUTH_CONTRACT_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"student dashboard display truth + server-derived minutes contracts passed; not live dashboard UI\",\n  \"details\": {\n    \"liveGate\": \"DASHBOARD_TRUTH_PASS\"\n  },\n  \"at\": \"2026-06-15T00:35:31.166Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "EVIDENCE_THRESHOLD_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "OK parent-report-zero-evidence-policy\nOK parent-report-diagnostic-evidence\nEVIDENCE_THRESHOLD_PASS: PASS — zero-evidence + diagnostic evidence threshold suites passed\n{\n  \"gate\": \"EVIDENCE_THRESHOLD_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"zero-evidence + diagnostic evidence threshold suites passed\",\n  \"details\": {},\n  \"at\": \"2026-06-15T00:35:35.665Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "PRODUCTION_GUARD_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "PASS resolve target\nPASS production by remote supabase\nPASS staging by explicit ref\nPASS local host\nPASS default dry-run argv\nPASS production blocked without approval\nPASS production blocked wrong confirm\nPASS production allowed triple confirm\nPASS dry-run skips production write gate\nPASS staging write without triple confirm\nPASS artifact verdict label\n\nAll 11 production-script-guard tests passed\nPRODUCTION_GUARD_PASS: PASS — portal gate + isolated API bridge + production DB-write script guards passed\n{\n  \"gate\": \"PRODUCTION_GUARD_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"source-and-script-guard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"portal gate + isolated API bridge + production DB-write script guards passed\",\n  \"details\": {},\n  \"at\": \"2026-06-15T00:35:35.897Z\"\n}\n",
+      "stderrTail": "(node:15012) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/parent-report-server-truth.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    }
+  ],
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "skip": 3
+  },
+  "finishedAt": "2026-06-15T00:35:35.909Z"
+}

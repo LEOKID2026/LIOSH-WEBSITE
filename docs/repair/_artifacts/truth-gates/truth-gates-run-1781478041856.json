@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-06-14T23:00:40.093Z",
+  "gates": [
+    {
+      "gate": "PARENT_ACTIVITY_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": " twice gives same result)\n      ---\n      duration_ms: 2.9888\n      type: 'test'\n      ...\n    # Subtest: subject diagnostic fields are NOT stripped (only raw accuracy)\n    ok 2 - subject diagnostic fields are NOT stripped (only raw accuracy)\n      ---\n      duration_ms: 0.7337\n      type: 'test'\n      ...\n    1..2\nok 8 - Phase 4 — stripInternalReportPayloadFields contract\n  ---\n  duration_ms: 3.8349\n  type: 'suite'\n  ...\n# Subtest: Phase 4/5 — book data does not affect diagnosticAccuracy\n    # Subtest: mergeLearningActivityBookData leaves diagnostic summary unchanged\n    ok 1 - mergeLearningActivityBookData leaves diagnostic summary unchanged\n      ---\n      duration_ms: 0.6971\n      type: 'test'\n      ...\n    1..1\nok 9 - Phase 4/5 — book data does not affect diagnosticAccuracy\n  ---\n  duration_ms: 0.7756\n  type: 'suite'\n  ...\n1..9\n# tests 20\n# suites 9\n# pass 20\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 330.9841\nPARENT_ACTIVITY_PASS: PASS — parent activity unit contracts passed (live create→submit E2E still optional)\n{\n  \"gate\": \"PARENT_ACTIVITY_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"parent activity unit contracts passed (live create→submit E2E still optional)\",\n  \"details\": {\n    \"liveFlow\": \"see E2E_TRUTH_PASS / staging-e2e-learning-time-fairness\"\n  },\n  \"at\": \"2026-06-14T23:00:41.844Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-14T23:00:41.856Z"
+}

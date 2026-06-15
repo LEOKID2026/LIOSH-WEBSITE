@@ -1,5 +1,6 @@
 /**
  * Real parent-report UI load regression (Playwright + bridge selftest).
+ * Truth label: MOCK_UI_PASS — API is mocked via Playwright route (NOT E2E_TRUTH_PASS).
  * Default port 3002 to match dev:run-button; override with PORT / PLAYWRIGHT_BASE_URL.
  */
 import { spawnSync } from "node:child_process";

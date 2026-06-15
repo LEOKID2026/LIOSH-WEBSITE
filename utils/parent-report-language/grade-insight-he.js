@@ -12,7 +12,8 @@
 
 /** Gentle "where did this evidence come from" phrase. Empty string when not meaningful. */
 const EVIDENCE_SOURCE_PHRASE_HE = Object.freeze({
-  parent_assigned_activity: "בפעילות שנשלחה מההורה",
+  // Parent-assigned provenance is internal only — never shown as a separate parent-report label.
+  parent_assigned_activity: "",
   self_practice: "בתרגול עצמאי",
   learning_book: "לאחר עבודה בספר",
   classroom_assigned_activity: "בפעילות מהכיתה",

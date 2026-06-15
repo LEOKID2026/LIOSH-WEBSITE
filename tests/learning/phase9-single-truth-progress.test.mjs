@@ -20,6 +20,15 @@ import {
   buildStudentHomeView,
 } from "../../lib/learning-client/studentHomeDashboardClient.js";
 
+import {
+  StudentDisplayTruthState,
+  STUDENT_TRUTH_LABELS_HE,
+  formatStudentPercentHe,
+  subjectAccuracyFromDerivedSub,
+} from "../../lib/learning-shared/student-display-truth.js";
+
+import { buildStudentSubjectDashboardView } from "../../lib/learning-shared/student-subject-dashboard-view.js";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "../..");
 
@@ -59,8 +68,8 @@ describe("Phase 9 — coin formula unchanged", () => {
   });
 });
 
-describe("Phase 9 — monthly minutes from learning_sessions only", () => {
-  test("monthly persistence and derived minutes exclude book/assigned sources", () => {
+describe("Phase 9 — monthly minutes from learning_sessions + parent activity", () => {
+  test("monthly persistence and derived minutes include parent_activity_attempts credited time", () => {
     const persistenceSrc = readFileSync(
       join(ROOT, "lib/learning-supabase/monthly-persistence-reward.server.js"),
       "utf8"
@@ -70,10 +79,12 @@ describe("Phase 9 — monthly minutes from learning_sessions only", () => {
       "utf8"
     );
     assert.match(persistenceSrc, /\.from\("learning_sessions"\)/);
+    assert.match(persistenceSrc, /sumParentActivityCreditedMinutesInRange/);
     assert.doesNotMatch(persistenceSrc, /book_reading_sessions/);
     assert.match(derivedSrc, /\.from\("learning_sessions"\)/);
+    assert.match(derivedSrc, /parent_activity_attempts/);
+    assert.match(derivedSrc, /sumParentActivityCreditedMinutesInRange/);
     assert.doesNotMatch(derivedSrc, /book_reading/);
-    assert.doesNotMatch(derivedSrc, /parent_activity_attempts/);
     assert.match(persistenceSrc, /minutes: 600, coins: 100_000/);
   });
 });
@@ -116,6 +127,31 @@ describe("Phase 9 — student home uses server derived minutes", () => {
     assert.equal(view.accountStats.learningMinutesThisMonth, 123.45);
     assert.equal(view.monthlyJourney.minutesThisMonth, 123.45);
     assert.equal(view.monthlyPersistence.currentMinutes, 123.5);
+  });
+
+  test("buildStudentHomeView with persistence status prefers completed-session minutes", () => {
+    const view = buildStudentHomeView({
+      student: { id: "stu-9", full_name: "Phase 9", grade_level: "grade_3", coin_balance: 50 },
+      homePayload: {
+        derived: {
+          monthlyMinutesIsraelMonth: 200,
+          yearMonthIsrael: "2026-06",
+          answersTotalAll: 0,
+          bySubject: {},
+        },
+        accountSnapshot: { summaryPlayerLevel: 1, summaryStars: 0, bySubject: {} },
+        monthlyPersistenceStatus: { activeMinutes: 150.5, yearMonthIsrael: "2026-06" },
+        monthly: {},
+        profile: {},
+        challenges: {},
+        streaks: {},
+        achievements: {},
+        subjectsProgressOnly: {},
+      },
+    });
+    assert.ok(view);
+    assert.equal(view.monthlyPersistence.currentMinutes, 150.5);
+    assert.equal(view.meta.minutesFilterMismatch, true);
   });
 });
 
@@ -161,6 +197,112 @@ describe("Phase 9 — product path imports", () => {
     assert.match(src, /coin_transactions/);
     assert.doesNotMatch(src, /\.insert\(/);
     assert.doesNotMatch(src, /\.update\(/);
+  });
+});
+
+describe("Phase 3 — student dashboard display truth", () => {
+  test("missing accuracy → noData label, not 0%", () => {
+    assert.equal(formatStudentPercentHe(null, { gradedCount: 0 }), STUDENT_TRUTH_LABELS_HE.noData);
+    const sub = subjectAccuracyFromDerivedSub({ correctTotal: 0, wrongTotal: 0, accuracy: null });
+    assert.equal(sub.pct, null);
+    assert.equal(sub.state, StudentDisplayTruthState.noData);
+  });
+
+  test("real 0 accuracy with graded answers → 0%", () => {
+    const sub = subjectAccuracyFromDerivedSub({ correctTotal: 0, wrongTotal: 5, accuracy: 0 });
+    assert.equal(sub.pct, 0);
+    assert.equal(sub.state, StudentDisplayTruthState.realZero);
+    assert.equal(formatStudentPercentHe(0, { gradedCount: 5 }), "0%");
+  });
+
+  test("buildStudentHomeView missing monthly minutes does not fabricate zero progress", () => {
+    const view = buildStudentHomeView({
+      student: { id: "stu-p3", full_name: "P3", coin_balance: null },
+      homePayload: {
+        derived: {
+          monthlyMinutesIsraelMonth: null,
+          yearMonthIsrael: "2026-06",
+          answersTotalAll: 0,
+          bySubject: { math: { answersTotal: 0, correctTotal: 0, wrongTotal: 0, accuracy: null, sessionMinutesTotal: 0 } },
+        },
+        accountSnapshot: {
+          summaryPlayerLevel: 1,
+          summaryStars: 0,
+          bySubject: { math: { playerLevel: 1, stars: 0, bestScore: 0, bestStreak: 0, accountAccuracyPct: null } },
+        },
+        monthly: {},
+        profile: {},
+        challenges: {},
+        streaks: {},
+        achievements: {},
+        subjectsProgressOnly: {},
+      },
+    });
+    assert.ok(view);
+    assert.equal(view.accountStats.overallAccuracyPct, null);
+    assert.equal(view.accountStats.overallAccuracyDisplayHe, STUDENT_TRUTH_LABELS_HE.noData);
+    assert.equal(view.subjects[0].progressIndicatorPct, null);
+    assert.equal(view.identity.coinBalanceState, StudentDisplayTruthState.unavailable);
+    assert.match(view.recommendations[0].hintHe, /לא אבחון/);
+  });
+
+  test("buildStudentSubjectDashboardView null accuracy uses displayHe not 0%", () => {
+    const view = buildStudentSubjectDashboardView({
+      subject: "math",
+      studentId: "stu-p3",
+      profile: { row: { subjects: { math: {} }, challenges: {} }, derived: {} },
+      derived: { bySubject: { math: { correctTotal: 0, wrongTotal: 0, accuracy: null } } },
+      hydrationComplete: true,
+    });
+    assert.equal(view.middleTiles.accuracy, null);
+    assert.equal(view.middleTiles.accuracyDisplayHe, STUDENT_TRUTH_LABELS_HE.noData);
+    assert.equal(view.middleTiles.challenges.dailyProgressState, StudentDisplayTruthState.noData);
+  });
+
+  test("reconciled daily progress marked estimated", () => {
+    const view = buildStudentSubjectDashboardView({
+      subject: "math",
+      studentId: "stu-p3",
+      profile: {
+        row: {
+          subjects: { math: {} },
+          challenges: { mathDaily: { questions: 10, correct: 0, date: "2026-06-15" } },
+        },
+        derived: {},
+      },
+      derived: { bySubject: { math: { correctTotal: 10, wrongTotal: 0, accuracy: 100 } } },
+      hydrationComplete: true,
+    });
+    assert.equal(view.dailyChallenge.reconciled, true);
+    assert.equal(view.middleTiles.challenges.dailyProgressState, StudentDisplayTruthState.estimated);
+  });
+
+  test("monthly persistence load error surfaces unavailable", () => {
+    const view = buildStudentHomeView({
+      student: { id: "stu-p3", full_name: "P3", coin_balance: 10 },
+      homePayload: {
+        derived: { monthlyMinutesIsraelMonth: 5, yearMonthIsrael: "2026-06", bySubject: {}, answersTotalAll: 0 },
+        accountSnapshot: { summaryPlayerLevel: 1, summaryStars: 0, bySubject: {} },
+        monthlyPersistenceLoadError: true,
+        monthly: {},
+        profile: {},
+        challenges: {},
+        streaks: {},
+        achievements: {},
+        subjectsProgressOnly: {},
+      },
+    });
+    assert.ok(view);
+    assert.equal(view.monthlyPersistence.loadError, true);
+    assert.equal(view.monthlyPersistence.currentMinutesState, StudentDisplayTruthState.unavailable);
+  });
+
+  test("localStorage progress keys documented non-authoritative in client sync", () => {
+    const syncSrc = readFileSync(join(ROOT, "lib/learning-client/studentLearningProfileClient.js"), "utf8");
+    assert.match(syncSrc, /syncMonthlyProgressCacheFromServer/);
+    const homeSrc = readFileSync(join(ROOT, "pages/student/home.js"), "utf8");
+    assert.doesNotMatch(homeSrc, /loadMonthlyProgress/);
+    assert.doesNotMatch(homeSrc, /LEO_MONTHLY_PROGRESS/);
   });
 });
 

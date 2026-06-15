@@ -505,7 +505,7 @@ describe("Phase 4 — parent activity attempts classification", () => {
     assert.equal(mathSubj.learningAnswers, 0, "not in learning bucket");
   });
 
-  test("parent activity attempt with guided_practice mode → learning bucket", () => {
+  test("parent activity attempt with guided_practice mode → diagnostic bucket", () => {
     const parentAttempt = {
       id: "par-att-2",
       student_id: "stu-001",
@@ -517,6 +517,7 @@ describe("Phase 4 — parent activity attempts classification", () => {
       hints_used: 0,
       answered_at: "2026-01-10T11:00:00Z",
       question_snapshot: {
+        creditedTimeMs: 8000,
         isDiagnosticEligible: false,
         evidenceCategory: "learning_guided",
         contextFlags: { afterStepByStep: false, contextAfterBookReading: false, hasHints: false },
@@ -541,8 +542,9 @@ describe("Phase 4 — parent activity attempts classification", () => {
     );
 
     const mathSubj = result.subjects.math;
-    assert.equal(mathSubj.diagnosticAnswers, 0, "guided_practice → not diagnostic");
-    assert.equal(mathSubj.learningAnswers, 1, "guided_practice → learning bucket");
+    assert.equal(mathSubj.diagnosticAnswers, 1, "parent guided_practice → diagnostic");
+    assert.equal(mathSubj.learningAnswers, 0, "parent guided_practice → not learning-only");
+    assert.equal(mathSubj.durationSeconds, 8, "credited time adds to subject duration");
   });
 });
 

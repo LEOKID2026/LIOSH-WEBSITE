@@ -12,6 +12,7 @@ import {
   mergeSimState,
 } from "./demo-school-lib.mjs";
 import { MAX_ANSWERS_RESET, MAX_LEARNING_SESSIONS_RESET } from "./sim/school-sim-config.mjs";
+import { bootstrapSchoolDbWriteGuard } from "./lib/school-db-write-guard.mjs";
 
 function parseMode(argv) {
   const idx = argv.indexOf("--mode");
@@ -204,6 +205,16 @@ function parsePreResetPath(argv) {
 
 async function main() {
   const argv = process.argv.slice(2);
+  const guard = bootstrapSchoolDbWriteGuard(
+    "school-portal/reset-demo-school-activities",
+    "RESET_DEMO_SCHOOL_ACTIVITIES",
+    argv
+  );
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary();
+    return;
+  }
   const mode = parseMode(argv);
   const preResetPath = parsePreResetPath(argv);
   const state = loadSimState();

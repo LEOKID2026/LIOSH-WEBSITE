@@ -13,8 +13,17 @@ import {
   computeParentContextEvidenceQuality,
   attachParentContextEvidenceQuality,
   allowsStrongParentDiagnosisAtStudent,
+  allowsHedgedParentInsightAtStudent,
   shouldSuppressClientPatternDiagnostics,
 } from "../../lib/learning/evidence-quality.js";
+
+import {
+  classifyParentEvidenceTier,
+  PARENT_EVIDENCE_TIER,
+  PARENT_EVIDENCE_VOLUME,
+} from "../../utils/parent-report-language/parent-evidence-matrix.js";
+
+import { confidenceLevelParentSummaryHe } from "../../utils/parent-report-language/confidence-parent-he.js";
 
 import {
   isSourceAllowedInContext,
@@ -31,6 +40,27 @@ import {
 } from "../../lib/parent-server/parent-facing-report-authority.js";
 
 import { stripInternalReportPayloadFields } from "../../lib/parent-server/report-data-aggregate.server.js";
+
+describe("Phase 4 — unified evidence matrix", () => {
+  test("tier classification aligns 5 / 8 / 12 / 15 roles", () => {
+    assert.equal(classifyParentEvidenceTier(0), PARENT_EVIDENCE_TIER.none);
+    assert.equal(classifyParentEvidenceTier(4), PARENT_EVIDENCE_TIER.insufficient);
+    assert.equal(classifyParentEvidenceTier(5), PARENT_EVIDENCE_TIER.preliminary);
+    assert.equal(classifyParentEvidenceTier(7), PARENT_EVIDENCE_TIER.preliminary);
+    assert.equal(classifyParentEvidenceTier(8), PARENT_EVIDENCE_TIER.insight);
+    assert.equal(classifyParentEvidenceTier(11), PARENT_EVIDENCE_TIER.insight);
+    assert.equal(classifyParentEvidenceTier(12), PARENT_EVIDENCE_TIER.strong);
+    assert.equal(PARENT_EVIDENCE_VOLUME.STUDENT_REPORT_THIN_MAX, 15);
+  });
+
+  test("confidence high wording hedged below strong threshold", () => {
+    const hedged = confidenceLevelParentSummaryHe("high", 8);
+    assert.match(hedged, /כיוון ראשוני/u);
+    assert.ok(!hedged.includes("כיוון עקבי"));
+    const strong = confidenceLevelParentSummaryHe("high", 12);
+    assert.match(strong, /כיוון עקבי/u);
+  });
+});
 
 describe("Phase Q1 — sufficiency thresholds", () => {
   test("0 = no_data", () => {
@@ -153,7 +183,7 @@ describe("Phase Q1 — parent-facing gating (suppression only)", () => {
     assert.ok(insights.length > 0);
   });
 
-  test("preliminary allows existing Hebrew weakness lines", () => {
+  test("insight tier (8–11) allows hedged Hebrew only", () => {
     const payload = attachParentContextEvidenceQuality({
       summary: { diagnosticAnswers: 8, totalSessions: 3, totalAnswers: 8 },
       subjects: {
@@ -170,6 +200,38 @@ describe("Phase Q1 — parent-facing gating (suppression only)", () => {
         { id: "m2", subject: "math", topic: "fractions", answeredAt: "2026-01-12T10:00:00Z" },
       ],
       dailyActivity: [{ date: "2026-01-10", answers: 8, correct: 4 }],
+    });
+
+    assert.equal(allowsStrongParentDiagnosisAtStudent(payload), false);
+    assert.equal(allowsHedgedParentInsightAtStudent(payload), true);
+    const insights = buildParentInsightsHe(payload);
+    assert.ok(!insights.some((t) => t.includes("נראה שיש קושי")));
+    assert.ok(insights.some((t) => t.includes("קושי יחסי") || t.includes("כדאי לשים לב")));
+  });
+
+  test("supported tier allows strong Hebrew weakness lines", () => {
+    const mistakes = [];
+    for (let i = 0; i < 12; i++) {
+      mistakes.push({
+        id: `m${i}`,
+        subject: "math",
+        topic: "fractions",
+        answeredAt: i < 6 ? "2026-01-10T10:00:00Z" : "2026-01-15T10:00:00Z",
+      });
+    }
+    const payload = attachParentContextEvidenceQuality({
+      summary: { diagnosticAnswers: 12, totalSessions: 3, totalAnswers: 12 },
+      subjects: {
+        math: {
+          diagnosticAnswers: 12,
+          diagnosticAccuracy: 50,
+          topics: {
+            fractions: { diagnosticAnswers: 12, diagnosticAccuracy: 50 },
+          },
+        },
+      },
+      recentMistakes: mistakes,
+      dailyActivity: [{ date: "2026-01-10", answers: 12, correct: 6 }],
     });
 
     assert.equal(allowsStrongParentDiagnosisAtStudent(payload), true);

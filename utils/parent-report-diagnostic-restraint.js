@@ -3,6 +3,8 @@
  * לוגיקה טהורה; לא תלוי ב-React.
  */
 
+import { PARENT_EVIDENCE_VOLUME } from "./parent-report-language/parent-evidence-matrix.js";
+
 /**
  * @typedef {"confirmed"|"likely"|"weak"|"insufficient"|"mixed"} DiagnosticRestraintLevel
  * @typedef {"strong"|"moderate"|"tentative"|"withheld"} ConclusionStrength
@@ -45,14 +47,14 @@ export function computeDiagnosticRestraint(ctx) {
   let conclusionStrength /** @type {ConclusionStrength} */ = "strong";
   let band /** @type {DiagnosticConfidenceBand} */ = "high";
 
-  if (q >= 40 && ev !== "low") {
+  if (q >= PARENT_EVIDENCE_VOLUME.HIGH_VOLUME_MIN && ev !== "low") {
     reasons.push("high_volume_topic_evidence");
     if (level === "weak" || level === "insufficient") level = "likely";
     band = acc >= 78 || acc <= 42 ? "high" : "medium";
-  } else if (q < 4) {
+  } else if (q <= PARENT_EVIDENCE_VOLUME.INSUFFICIENT_MAX) {
     reasons.push("very_low_volume");
     level = "insufficient";
-  } else if (q < 8) {
+  } else if (q < PARENT_EVIDENCE_VOLUME.INSIGHT_MIN) {
     reasons.push("low_volume");
     if (level === "confirmed") level = "weak";
   }
@@ -73,7 +75,7 @@ export function computeDiagnosticRestraint(ctx) {
     if (level === "likely") level = "weak";
   }
 
-  if (stab < 0.32 && q >= 8) {
+  if (stab < 0.32 && q >= PARENT_EVIDENCE_VOLUME.INSIGHT_MIN) {
     reasons.push("unstable_accuracy_signal");
     if (level === "confirmed") level = "likely";
   }
@@ -129,7 +131,7 @@ export function computeDiagnosticRestraint(ctx) {
   }
 
   const kgClaim = behaviorType === "knowledge_gap";
-  const kgSupport = !!riskFlags.strongKnowledgeGapEvidence || (q >= 12 && wrongRatio >= 0.26 && acc < 62);
+  const kgSupport = !!riskFlags.strongKnowledgeGapEvidence || (q >= PARENT_EVIDENCE_VOLUME.STRONG_MIN && wrongRatio >= 0.26 && acc < 62);
   if (kgClaim && !kgSupport) {
     reasons.push("knowledge_gap_under_evidence");
     if (conclusionStrength === "strong" || conclusionStrength === "moderate") conclusionStrength = "tentative";

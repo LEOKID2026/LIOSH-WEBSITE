@@ -255,6 +255,7 @@ export default function ParentLoginPage() {
               <label className="block text-sm">
                 <span className="text-white/80">אימייל או שם משתמש</span>
                 <input
+                  data-testid="parent-login-identifier"
                   className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
                   type="text"
                   value={identifier}

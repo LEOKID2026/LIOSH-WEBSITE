@@ -5,7 +5,12 @@
  * - valid: VALID_MIN+ — may appear in insights/recommendations
  */
 
-export const SUBJECT_VALID_MIN_QUESTIONS = 8;
+import {
+  PARENT_EVIDENCE_VOLUME,
+  SUBJECT_VALID_MIN_QUESTIONS,
+} from "./parent-evidence-matrix.js";
+
+export { SUBJECT_VALID_MIN_QUESTIONS };
 
 /** Card-visible Hebrew labels (+ aliases used in parentFacing insights). */
 export const SUBJECT_VISIBLE_LABELS_HE = Object.freeze({

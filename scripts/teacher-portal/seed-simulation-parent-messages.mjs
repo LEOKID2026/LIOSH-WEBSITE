@@ -8,6 +8,7 @@
 import { createAdminClient } from "./teacher-classroom-sim/bootstrap.mjs";
 import { SIM_TEACHER_EMAIL, parseConfig } from "./teacher-classroom-sim/config.mjs";
 import { loadManifest } from "./teacher-classroom-sim/state.mjs";
+import { bootstrapTeacherDbWriteGuard } from "./lib/teacher-db-write-guard.mjs";
 
 const SAMPLE_MESSAGES = Object.freeze([
   "נועה משתפרת יפה, מומלץ להמשיך תרגול קצר במתמטיקה השבוע.",
@@ -42,6 +43,17 @@ async function assertTableReady(admin) {
 }
 
 async function main() {
+  const argv = process.argv.slice(2);
+  const guard = bootstrapTeacherDbWriteGuard(
+    "teacher-portal/seed-simulation-parent-messages",
+    "SEED_SIMULATION_PARENT_MESSAGES",
+    argv
+  );
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary();
+    return;
+  }
   const config = parseConfig([]);
   const manifest = loadManifest(config.stateDir);
   const admin = createAdminClient();

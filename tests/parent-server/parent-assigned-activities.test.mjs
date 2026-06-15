@@ -12,7 +12,10 @@ import {
 import {
   aggregateParentReportPayload,
   aggregateReportPayloadFromActivityRows,
+  stripInternalReportPayloadFields,
 } from "../../lib/parent-server/report-data-aggregate.server.js";
+import { classifyActivityEvidence } from "../../lib/learning/activity-classification.js";
+import { summarizeParentActivityAttempts } from "../../lib/learning-supabase/parent-activity-learning-credit.server.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "../..");
@@ -55,41 +58,35 @@ test("parseCreateParentActivityBody: rejects quiz mode", () => {
   assert.equal(result.ok, false);
 });
 
-test("parseCreateParentActivityBody: questionCount 1-30", () => {
-  const ok = parseCreateParentActivityBody({
+function validCreateBody(overrides = {}) {
+  return {
     studentId: STUDENT_ID,
     title: "Test",
     subject: "math",
     topic: "addition",
     mode: "guided_practice",
-    questionCount: 30,
-    questionSet: validQuestionSet(30),
-  });
+    gradeLevel: "g3",
+    questionCount: 2,
+    questionSet: validQuestionSet(2),
+    ...overrides,
+  };
+}
+
+test("parseCreateParentActivityBody: questionCount 1-30", () => {
+  const ok = parseCreateParentActivityBody(
+    validCreateBody({ questionCount: 30, questionSet: validQuestionSet(30) })
+  );
   assert.equal(ok.ok, true);
 
-  const bad = parseCreateParentActivityBody({
-    studentId: STUDENT_ID,
-    title: "Test",
-    subject: "math",
-    topic: "addition",
-    mode: "guided_practice",
-    questionCount: 31,
-    questionSet: validQuestionSet(31),
-  });
+  const bad = parseCreateParentActivityBody(
+    validCreateBody({ questionCount: 31, questionSet: validQuestionSet(31) })
+  );
   assert.equal(bad.ok, false);
 });
 
 test("parseCreateParentActivityBody: accepts guided_practice and homework", () => {
   for (const mode of ["guided_practice", "homework"]) {
-    const result = parseCreateParentActivityBody({
-      studentId: STUDENT_ID,
-      title: "Test",
-      subject: "math",
-      topic: "addition",
-      mode,
-      questionCount: 2,
-      questionSet: validQuestionSet(2),
-    });
+    const result = parseCreateParentActivityBody(validCreateBody({ mode }));
     assert.equal(result.ok, true, mode);
   }
 });
@@ -143,6 +140,67 @@ test("aggregateReportPayloadFromActivityRows: includes parent attempts only when
   assert.equal(withAttempts.summary.totalAnswers, 1);
   assert.equal(withAttempts.subjects.math.answers, 1);
   assert.equal(withAttempts.subjects.math.correct, 1);
+  assert.equal(withAttempts.subjects.math.diagnosticAnswers, 1);
+});
+
+test("guided_practice parent activity is diagnostic_guided for engine", () => {
+  const r = classifyActivityEvidence("guided_practice", "assigned_parent");
+  assert.equal(r.isDiagnosticEligible, true);
+  assert.equal(r.evidenceCategory, "diagnostic_guided");
+});
+
+test("summarizeParentActivityAttempts ignores unanswered rows", () => {
+  const summary = summarizeParentActivityAttempts([
+    { is_correct: true, question_snapshot: { creditedTimeMs: 4000 } },
+    { is_correct: null, question_snapshot: { creditedTimeMs: 9000 } },
+  ]);
+  assert.equal(summary.answersCount, 1);
+  assert.equal(summary.durationSeconds, 4);
+});
+
+test("submitParentActivity wires idempotent completion rewards on first submit", () => {
+  const src = readFileSync(
+    path.join(repoRoot, "lib/parent-server/parent-activity.server.js"),
+    "utf8"
+  );
+  const rewardSrc = readFileSync(
+    path.join(repoRoot, "lib/learning-supabase/parent-activity-completion-reward.server.js"),
+    "utf8"
+  );
+  assert.match(src, /syncParentActivityCompletionRewards/);
+  assert.match(rewardSrc, /coin_parent_activity_\$\{activityId\}/);
+  assert.match(rewardSrc, /no_answered_questions/);
+});
+
+test("stripInternalReportPayloadFields removes parent evidence source labels", () => {
+  const student = { id: STUDENT_ID, full_name: "Kid", grade_level: "grade_3" };
+  const payload = aggregateReportPayloadFromActivityRows(
+    student,
+    [],
+    [],
+    new Date("2026-05-01T00:00:00.000Z"),
+    new Date("2026-05-30T00:00:00.000Z"),
+    { sessionsFilterField: "started_at", answersFilterField: "answered_at" },
+    [
+      {
+        activity_id: ACTIVITY_ID,
+        question_index: 0,
+        is_correct: true,
+        hints_used: 0,
+        time_spent_ms: 5000,
+        answered_at: "2026-05-15T12:00:00.000Z",
+        question_snapshot: { creditedTimeMs: 5000 },
+        parent_assigned_activities: {
+          subject: "math",
+          topic: "addition",
+          mode: "homework",
+          difficulty_level: "easy",
+        },
+      },
+    ]
+  );
+  const stripped = stripInternalReportPayloadFields(payload);
+  assert.equal(stripped.subjects.math.topics.addition.primaryEvidenceSource, undefined);
 });
 
 test("aggregateParentReportPayload: without includeParentActivities skips parent fetch", async () => {

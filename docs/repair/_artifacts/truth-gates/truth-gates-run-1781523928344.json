@@ -1,0 +1,99 @@
+{
+  "startedAt": "2026-06-15T11:41:10.274Z",
+  "gates": [
+    {
+      "gate": "DB_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "DB_PASS: PASS — DB rows and live API agree (totalAnswers=240)\n{\n  \"gate\": \"DB_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"database\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"DB rows and live API agree (totalAnswers=240)\",\n  \"details\": {\n    \"studentId\": \"2352e8c7-ac0b-4daa-afbf-cb7d130062b3\",\n    \"range\": {\n      \"from\": \"2026-05-17\",\n      \"to\": \"2026-06-15\"\n    }\n  },\n  \"at\": \"2026-06-15T11:41:20.309Z\"\n}\n",
+      "stderrTail": "(node:9596) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/parent-server/report-data-aggregate.server.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "API_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "tion_ms: 1.0873\n  type: 'test'\n  ...\n# Subtest: getParentActivityDetailForParent denies activity not owned by parent\nok 18 - getParentActivityDetailForParent denies activity not owned by parent\n  ---\n  duration_ms: 0.5622\n  type: 'test'\n  ...\n# Subtest: getParentActivityDetailForParent denies child not linked to parent\nok 19 - getParentActivityDetailForParent denies child not linked to parent\n  ---\n  duration_ms: 0.5424\n  type: 'test'\n  ...\n# Subtest: parent activity detail API route imports resolve\nok 20 - parent activity detail API route imports resolve\n  ---\n  duration_ms: 6.0517\n  type: 'test'\n  ...\n# Subtest: parent activity detail API uses correct relative lib import depth\nok 21 - parent activity detail API uses correct relative lib import depth\n  ---\n  duration_ms: 0.6349\n  type: 'test'\n  ...\n1..21\n# tests 21\n# suites 0\n# pass 21\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 369.3335\nreport-date-range-parent-api: ok\nAPI_PASS: PASS — live report-data OK for student 2352e8c7-ac0b-4daa-afbf-cb7d130062b3\n{\n  \"gate\": \"API_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"api\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"live report-data OK for student 2352e8c7-ac0b-4daa-afbf-cb7d130062b3\",\n  \"details\": {\n    \"status\": 200,\n    \"totalAnswers\": 70,\n    \"range\": {\n      \"from\": \"2026-06-09\",\n      \"to\": \"2026-06-15\"\n    }\n  },\n  \"at\": \"2026-06-15T11:41:28.172Z\"\n}\n",
+      "stderrTail": "(node:12808) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/reporting/parent-report-date-range.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "UI_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "alse,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"UI matches browser report-data for student 2352e8c7-ac0b-4daa-afbf-cb7d130062b3\",\n  \"details\": {\n    \"apiSnap\": {\n      \"dateRangeLabelHe\": \"09/06/2026 – 15/06/2026\",\n      \"totalQuestions\": 70,\n      \"totalTimeMinutes\": 135,\n      \"totalDurationSeconds\": 8099,\n      \"subjects\": {\n        \"math\": {\n          \"answers\": 31,\n          \"correct\": 15\n        },\n        \"geometry\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"english\": {\n          \"answers\": 39,\n          \"correct\": 39\n        },\n        \"hebrew\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"science\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"moledet_geography\": {\n          \"answers\": 0,\n          \"correct\": 0\n        }\n      },\n      \"hasData\": true\n    },\n    \"uiSnap\": {\n      \"dateRangeRaw\": \"09/06/2026 - 15/06/2026\",\n      \"totalQuestions\": 70,\n      \"totalTimeMinutes\": 135,\n      \"byLabel\": {\n        \"זמן כולל\": \"135 דק'\",\n        \"שאלות\": \"70\",\n        \"דיוק כללי\": \"77%\",\n        \"רמה\": \"Lv.6\",\n        \"🧮 חשבון\": \"28 שאלות\",\n        \"📐 גאומטריה\": \"0 שאלות\",\n        \"📘 אנגלית\": \"0 שאלות\",\n        \"🔬 מדעים\": \"0 שאלות\",\n        \"📚 עברית\": \"0 שאלות\",\n        \"🗺️ מולדת וגאוגרפיה\": \"0 שאלות\"\n      }\n    },\n    \"range\": {\n      \"from\": \"2026-06-09\",\n      \"to\": \"2026-06-15\"\n    }\n  },\n  \"at\": \"2026-06-15T11:41:37.474Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "PDF_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": " pdf-parse-PDFParse\n{\n  \"gate\": \"PDF_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"pdf\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": true,\n  \"message\": \"real PDF bytes parity via pdf-parse-PDFParse\",\n  \"details\": {\n    \"pdfPath\": \"C:\\\\Users\\\\ERAN YOSEF\\\\Desktop\\\\final projects\\\\FINAL-WEB\\\\LIOSH-WEB-TRY\\\\qa-visual-output\\\\truth-gates\\\\PDF_PASS-2352e8c7-ac0b-4daa-afbf-cb7d130062b3-2026-06-09-2026-06-15.pdf\",\n    \"apiSnap\": {\n      \"dateRangeLabelHe\": \"09/06/2026 – 15/06/2026\",\n      \"totalQuestions\": 70,\n      \"totalTimeMinutes\": 135,\n      \"totalDurationSeconds\": 8099,\n      \"subjects\": {\n        \"math\": {\n          \"answers\": 31,\n          \"correct\": 15\n        },\n        \"geometry\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"english\": {\n          \"answers\": 39,\n          \"correct\": 39\n        },\n        \"hebrew\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"science\": {\n          \"answers\": 0,\n          \"correct\": 0\n        },\n        \"moledet_geography\": {\n          \"answers\": 0,\n          \"correct\": 0\n        }\n      },\n      \"hasData\": true\n    },\n    \"pdfSnap\": {\n      \"dateRangeLabelHe\": \"09/06/2026 – 15/06/2026\",\n      \"totalQuestions\": 70,\n      \"totalTimeMinutes\": 135,\n      \"rawLength\": 3806\n    },\n    \"range\": {\n      \"from\": \"2026-06-09\",\n      \"to\": \"2026-06-15\"\n    },\n    \"bytes\": 1354826\n  },\n  \"at\": \"2026-06-15T11:41:48.915Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "E2E_TRUTH_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "E2E_TRUTH_PASS: PASS — DB → API → UI → PDF chain passed for live student/range\n{\n  \"gate\": \"E2E_TRUTH_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"e2e\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": true,\n  \"message\": \"DB → API → UI → PDF chain passed for live student/range\",\n  \"details\": {\n    \"chainResults\": {\n      \"DB_PASS\": 0,\n      \"API_PASS\": 0,\n      \"UI_PASS\": 0,\n      \"PDF_PASS\": 0\n    },\n    \"baseUrl\": \"http://127.0.0.1:3014\"\n  },\n  \"at\": \"2026-06-15T11:42:28.961Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "PARENT_ACTIVITY_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "PARENT_ACTIVITY_PASS: PASS — live parent activity attempts reached report-data, parent report UI, and real PDF without separate parent-activity label\n{\n  \"gate\": \"PARENT_ACTIVITY_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"live-e2e\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": true,\n  \"message\": \"live parent activity attempts reached report-data, parent report UI, and real PDF without separate parent-activity label\",\n  \"details\": {\n    \"live\": true,\n    \"baseUrl\": \"http://127.0.0.1:3014\",\n    \"studentId\": \"2352e8c7-ac0b-4daa-afbf-cb7d130062b3\",\n    \"activityId\": \"591fc7ad-8014-4b9a-838b-ea4d64720e9f\",\n    \"notStartedActivityId\": \"801f1f1b-40d6-4a5f-b826-b7b2d9e53cb5\",\n    \"answeredAttempts\": 2,\n    \"pdfBytes\": 1374439,\n    \"pdfParseMethod\": \"pdf-parse-PDFParse\"\n  },\n  \"at\": \"2026-06-15T11:43:26.617Z\"\n}\n",
+      "stderrTail": "(node:15012) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/learning-client/studentHomeDashboardClient.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "REWARD_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "REWARD_PASS: PASS — live parent activity awarded coins once and updated server-derived progress/minutes\n{\n  \"gate\": \"REWARD_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"live-reward\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"live parent activity awarded coins once and updated server-derived progress/minutes\",\n  \"details\": {\n    \"live\": true,\n    \"baseUrl\": \"http://127.0.0.1:3014\",\n    \"studentId\": \"2352e8c7-ac0b-4daa-afbf-cb7d130062b3\",\n    \"activityId\": \"300c43ec-c5f0-4372-81d7-c6642fa6a861\",\n    \"coinKey\": \"coin_parent_activity_300c43ec-c5f0-4372-81d7-c6642fa6a861\",\n    \"baselineCoins\": 2530,\n    \"afterCoins\": 2540,\n    \"coinTxCount\": 1,\n    \"answeredAttempts\": 2\n  },\n  \"at\": \"2026-06-15T11:44:15.466Z\"\n}\n",
+      "stderrTail": "(node:11752) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/learning-client/studentHomeDashboardClient.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "NO_LOCALSTORAGE_REPORT_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "OK parent-report-server-truth-phase1-selftest\nNO_LOCALSTORAGE_REPORT_PASS: PASS — product parent-report pages blocked from mleo_* localStorage; API bridge only\n{\n  \"gate\": \"NO_LOCALSTORAGE_REPORT_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"source-guard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"product parent-report pages blocked from mleo_* localStorage; API bridge only\",\n  \"details\": {},\n  \"at\": \"2026-06-15T11:44:17.571Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "DASHBOARD_TRUTH_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "DASHBOARD_TRUTH_PASS: PASS — live student dashboard UI matches server home-profile after parent activity\n{\n  \"gate\": \"DASHBOARD_TRUTH_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"live-dashboard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": true,\n  \"usesLiveApi\": true,\n  \"usesLiveUi\": true,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"live student dashboard UI matches server home-profile after parent activity\",\n  \"details\": {\n    \"live\": true,\n    \"baseUrl\": \"http://127.0.0.1:3014\",\n    \"studentId\": \"2352e8c7-ac0b-4daa-afbf-cb7d130062b3\",\n    \"activityId\": \"6d1ba832-67e9-4e9a-928e-1b1652eb2de7\",\n    \"answeredAttempts\": 2,\n    \"expectedQuestions\": \"368\",\n    \"baselineAnswers\": 366,\n    \"afterAnswers\": 368,\n    \"baselineMinutes\": 186.32,\n    \"afterMinutes\": 190.32,\n    \"localStoragePoisonProbe\": \"mleo_phase9_dashboard_truth_poison\"\n  },\n  \"at\": \"2026-06-15T11:45:23.771Z\"\n}\n",
+      "stderrTail": "(node:10004) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/learning-client/studentHomeDashboardClient.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "gate": "EVIDENCE_THRESHOLD_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "OK parent-report-zero-evidence-policy\nOK parent-report-diagnostic-evidence\nEVIDENCE_THRESHOLD_PASS: PASS — zero-evidence + diagnostic evidence threshold suites passed\n{\n  \"gate\": \"EVIDENCE_THRESHOLD_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"zero-evidence + diagnostic evidence threshold suites passed\",\n  \"details\": {},\n  \"at\": \"2026-06-15T11:45:28.104Z\"\n}\n",
+      "stderrTail": ""
+    },
+    {
+      "gate": "PRODUCTION_GUARD_PASS",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "launchRequired": true,
+      "stdoutTail": "PASS resolve target\nPASS production by remote supabase\nPASS staging by explicit ref\nPASS local host\nPASS default dry-run argv\nPASS production blocked without approval\nPASS production blocked wrong confirm\nPASS production allowed triple confirm\nPASS dry-run skips production write gate\nPASS staging write without triple confirm\nPASS artifact verdict label\n\nAll 11 production-script-guard tests passed\nPRODUCTION_GUARD_PASS: PASS — portal gate + isolated API bridge + production DB-write script guards passed\n{\n  \"gate\": \"PRODUCTION_GUARD_PASS\",\n  \"verdict\": \"PASS\",\n  \"layer\": \"source-and-script-guard\",\n  \"usesMock\": false,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"portal gate + isolated API bridge + production DB-write script guards passed\",\n  \"details\": {},\n  \"at\": \"2026-06-15T11:45:28.332Z\"\n}\n",
+      "stderrTail": "(node:24548) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ERAN%20YOSEF/Desktop/final%20projects/FINAL-WEB/LIOSH-WEB-TRY/lib/parent-report-server-truth.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    }
+  ],
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-15T11:45:28.343Z"
+}

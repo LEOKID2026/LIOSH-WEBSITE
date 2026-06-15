@@ -2,6 +2,11 @@
  * Practice-volume + accuracy polarity for Copilot answers (all subjects).
  */
 
+import {
+  PARENT_EVIDENCE_VOLUME,
+  SUBJECT_VALID_MIN_QUESTIONS,
+} from "../parent-report-language/parent-evidence-matrix.js";
+
 export const POLARITY = Object.freeze({
   none: "none",
   thin: "thin",
@@ -9,8 +14,8 @@ export const POLARITY = Object.freeze({
   strong: "strong",
 });
 
-export const THIN_MAX_QUESTIONS = 7;
-export const VALID_MIN_QUESTIONS = 8;
+export const THIN_MAX_QUESTIONS = PARENT_EVIDENCE_VOLUME.PRELIMINARY_MAX;
+export const VALID_MIN_QUESTIONS = SUBJECT_VALID_MIN_QUESTIONS;
 export const SUPPORT_ACCURACY_MAX = 54;
 export const STRONG_ACCURACY_MIN = 75;
 

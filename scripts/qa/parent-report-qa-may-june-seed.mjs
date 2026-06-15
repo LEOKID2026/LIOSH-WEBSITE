@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 
 import { QA_PARENT_ID } from "./lib/parent-aaa-qa-constants.mjs";
+import { bootstrapQaDbWriteGuard } from "./lib/db-write-guard.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
@@ -28,7 +29,18 @@ async function loadSimulationModule() {
 }
 
 async function main() {
-  const cleanOnly = process.argv.includes("--clean-only");
+  const argv = process.argv.slice(2);
+  const guard = bootstrapQaDbWriteGuard(
+    "qa/parent-report-qa-may-june-seed",
+    "PARENT_REPORT_QA_MAY_JUNE_SEED",
+    argv
+  );
+  const cleanOnly = guard.mode.cleanOnly;
+  if (guard.isDryRun) {
+    console.log("[production-guard] dry-run: no DB mutations (pass --write)");
+    guard.printEndSummary({ artifactPath: ARTIFACT_DIR });
+    return;
+  }
   const {
     cleanTaggedSeedsForTag,
     resolveAaaStudents,
@@ -81,6 +93,11 @@ async function main() {
     "utf8"
   );
   console.log(`\nWrote ${outPath}`);
+  guard.setArtifactPath(outPath);
+  guard.printEndSummary({
+    affectedRows: seeded.filter((s) => s.answerCount).length,
+    artifactPath: outPath,
+  });
 }
 
 main().catch((e) => {
