@@ -161,6 +161,47 @@ function readSrc(rel) {
   assert.equal(fakeReport.math[0].levelKey, null);
 }
 
+// --- 5b. Bridge must not zero subject cards when diagnosticAnswers is explicitly 0 ---
+{
+  const { buildReportInputFromDbData } = await load("lib/learning-supabase/report-data-adapter.js");
+  const { applyBridgeProvenanceToGeneratedReport } = await load(
+    "lib/learning-supabase/bridge-report-provenance.js"
+  );
+
+  const body = {
+    student: { id: "s1", full_name: "P1", grade_level: "g3", is_active: true },
+    range: { from: "2026-05-01", to: "2026-05-07" },
+    summary: { totalAnswers: 10, correctAnswers: 8, diagnosticAnswers: 0, totalDurationSeconds: 600 },
+    subjects: {
+      math: {
+        diagnosticAnswers: 0,
+        answers: 10,
+        correct: 8,
+        durationSeconds: 0,
+        topics: { addition: { answers: 10, correct: 8, durationSeconds: 0 } },
+      },
+      geometry: { diagnosticAnswers: 0, answers: 0, topics: {} },
+      english: { diagnosticAnswers: 0, answers: 0, topics: {} },
+      hebrew: { diagnosticAnswers: 0, answers: 0, topics: {} },
+      science: { diagnosticAnswers: 0, answers: 0, topics: {} },
+      moledet_geography: { diagnosticAnswers: 0, answers: 0, topics: {} },
+    },
+  };
+  const dbInput = buildReportInputFromDbData(body);
+  const fakeReport = {
+    summary: {
+      totalTimeMinutes: 99,
+      totalQuestions: 99,
+      mathQuestions: 99,
+      geometryQuestions: 0,
+    },
+  };
+  applyBridgeProvenanceToGeneratedReport(fakeReport, dbInput, body);
+  assert.equal(fakeReport.summary.mathQuestions, 10, "learning practice count when diagnosticAnswers=0");
+  assert.equal(fakeReport.summary.mathCorrect, 8);
+  assert.equal(fakeReport.summary.geometryQuestions, 0, "zero practice stays zero");
+}
+
 // --- 6. API failure must not reference mleo fallback in product pages ---
 {
   const shortSrc = readSrc("pages/learning/parent-report.js");

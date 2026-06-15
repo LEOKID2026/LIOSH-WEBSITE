@@ -9,6 +9,7 @@ import {
   stripInternalReportPayloadFields,
 } from "../../lib/parent-server/report-data-aggregate.server.js";
 import { buildReportInputFromDbData } from "../../lib/learning-supabase/report-data-adapter.js";
+import { applyBridgeProvenanceToGeneratedReport } from "../../lib/learning-supabase/bridge-report-provenance.js";
 import {
   buildSubjectEvidenceCoverageLines,
   SUBJECT_LABEL_BY_ID,
@@ -55,6 +56,37 @@ async function resolveStudent(supabase, login) {
   };
 }
 
+const CARD_SUMMARY_FIELDS = Object.freeze({
+  math: "mathQuestions",
+  geometry: "geometryQuestions",
+  english: "englishQuestions",
+  hebrew: "hebrewQuestions",
+  science: "scienceQuestions",
+  moledet_geography: "moledetGeographyQuestions",
+});
+
+function subjectCardSummaryAfterBridge(pub, dbInput) {
+  const fakeReport = {
+    summary: {
+      mathQuestions: adapterSubjectTotal(dbInput, "math"),
+      geometryQuestions: adapterSubjectTotal(dbInput, "geometry"),
+      englishQuestions: adapterSubjectTotal(dbInput, "english"),
+      hebrewQuestions: adapterSubjectTotal(dbInput, "hebrew"),
+      scienceQuestions: adapterSubjectTotal(dbInput, "science"),
+      moledetGeographyQuestions: adapterSubjectTotal(dbInput, "moledet_geography"),
+      totalQuestions: Number(pub.summary?.totalAnswers) || 0,
+      totalCorrect: Number(pub.summary?.correctAnswers) || 0,
+    },
+  };
+  applyBridgeProvenanceToGeneratedReport(fakeReport, dbInput, pub);
+  return fakeReport.summary;
+}
+
+function cardCount(cardSummary, subject) {
+  const field = CARD_SUMMARY_FIELDS[subject];
+  return Math.max(0, Math.floor(Number(cardSummary?.[field]) || 0));
+}
+
 async function loadReport(supabase, student, from, to) {
   const raw = await aggregateParentReportPayload(
     supabase,
@@ -69,7 +101,8 @@ async function loadReport(supabase, student, from, to) {
   const policyCounts = subjectQuestionCountsFromPayload(withQuality);
   const coverage = buildSubjectEvidenceCoverageLines(policyCounts, SUBJECT_LABEL_BY_ID);
   const parentFacing = buildParentFacingBlocks(withQuality);
-  return { pub: withQuality, dbInput, policyCounts, coverage, parentFacing };
+  const cardSummary = subjectCardSummaryAfterBridge(withQuality, dbInput);
+  return { pub: withQuality, dbInput, policyCounts, coverage, parentFacing, cardSummary };
 }
 
 function aggSubjectAnswers(pub, subject) {
@@ -86,7 +119,7 @@ function policyCount(policyCounts, subject) {
 }
 
 function checkCase(name, report, expectations = {}) {
-  const { pub, dbInput, policyCounts, coverage } = report;
+  const { pub, dbInput, policyCounts, coverage, cardSummary } = report;
   const summary = pub.summary || {};
   const issues = [];
 
@@ -139,6 +172,20 @@ function checkCase(name, report, expectations = {}) {
     if (exp?.zero && policy !== 0) {
       issues.push(`${subject}: expected zero but policy=${policy}`);
     }
+
+    const card = cardCount(cardSummary, subject);
+    if (adapter > 0 && card === 0) {
+      issues.push(`${subject}: adapter=${adapter} but cardSummary=0`);
+    }
+    if (policy > 0 && card !== policy) {
+      issues.push(`${subject}: card=${card} policy=${policy}`);
+    }
+    if (exp?.min != null && card < exp.min) {
+      issues.push(`${subject}: card=${card} < min ${exp.min}`);
+    }
+    if (exp?.zero && card !== 0) {
+      issues.push(`${subject}: expected card zero but card=${card}`);
+    }
   }
 
   if (expectations.noNotPracticedFor?.length) {
@@ -187,6 +234,9 @@ function checkCase(name, report, expectations = {}) {
       adapterTotals: Object.fromEntries(
         SUBJECTS.map((s) => [s, adapterSubjectTotal(dbInput, s)]),
       ),
+      cardSummary: Object.fromEntries(
+        SUBJECTS.map((s) => [CARD_SUMMARY_FIELDS[s], cardCount(cardSummary, s)]),
+      ),
       strongDiagnosis: allowsStrongParentDiagnosisAtStudent(pub),
       sufficiency: pub.meta?.evidenceQuality?.student?.dataSufficiency,
     },
@@ -204,13 +254,36 @@ async function main() {
 
   const cases = [
     {
+      label: "AAA1-card-grid",
+      login: "aaa1",
+      from: "2026-03-01",
+      to: "2026-03-30",
+      expectations: {
+        approxTotalAnswers: 527,
+        totalTolerance: 20,
+        minDurationMin: 740,
+        noNotPracticedFor: ["math", "geometry", "english", "hebrew", "science"],
+        mustNotPracticedFor: ["moledet-geography"],
+        diagnosticAnswersZero: true,
+        noStrongDiagnosis: true,
+        subjects: {
+          math: { min: 140 },
+          geometry: { min: 90 },
+          english: { min: 80 },
+          hebrew: { min: 70 },
+          science: { min: 110 },
+          moledet_geography: { zero: true },
+        },
+      },
+    },
+    {
       label: "AAA1",
       login: "aaa1",
       from: "2026-03-01",
       to: "2026-03-31",
       expectations: {
-        approxTotalAnswers: 512,
-        totalTolerance: 30,
+        approxTotalAnswers: 549,
+        totalTolerance: 40,
         minDurationMin: 700,
         approxAccuracy: 90,
         noNotPracticedFor: ["math", "geometry", "english", "hebrew", "science"],
@@ -319,6 +392,7 @@ async function main() {
       `  totals: answers=${r.summary.totalAnswers} diag=${r.summary.diagnosticAnswers} min=${r.summary.durationMin} acc=${r.summary.accuracy}% topics=${r.summary.topicCount}`,
     );
     console.log(`  adapter: ${JSON.stringify(r.summary.adapterTotals)}`);
+    console.log(`  cards:   ${JSON.stringify(r.summary.cardSummary)}`);
     console.log(`  policy:  ${JSON.stringify(r.summary.policyCounts)}`);
     console.log(
       `  diagnostic: strong=${r.summary.strongDiagnosis} sufficiency=${r.summary.sufficiency}`,
