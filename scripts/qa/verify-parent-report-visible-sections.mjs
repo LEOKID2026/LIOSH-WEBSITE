@@ -28,6 +28,10 @@ import {
   deriveRawMetricStrengthLinesHe,
 } from "../../utils/parent-data-presence.js";
 import { applyServerParentFacingAuthorityToClientReport } from "../../lib/parent-server/parent-facing-report-authority.js";
+import {
+  activityMsInReportRange,
+  reportRangeBoundsMs,
+} from "../../lib/learning-supabase/parent-report-activity-time.js";
 
 const QA_PARENT_ID = "05c73a19-bf1f-4f1a-b034-7cd2ece4feec";
 const SUBJECTS = ["math", "geometry", "english", "hebrew", "science", "moledet_geography"];
@@ -65,6 +69,23 @@ function sumTopicQuestions(topicMap) {
     (sum, row) => sum + Math.max(0, Math.floor(Number(row?.questions) || 0)),
     0,
   );
+}
+
+function parseReportRangeBounds(apiPayload) {
+  const from = String(apiPayload?.range?.from || "").slice(0, 10);
+  const to = String(apiPayload?.range?.to || "").slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return null;
+  return reportRangeBoundsMs(new Date(`${from}T00:00:00.000Z`), new Date(`${to}T00:00:00.000Z`));
+}
+
+function topicRowActivityMs(row) {
+  const sessionMs = Number(row?.lastSessionMs);
+  if (Number.isFinite(sessionMs)) return sessionMs;
+  const answerMs = Number(row?.lastAnswerMs);
+  if (Number.isFinite(answerMs)) return answerMs;
+  const latestMs = Number(row?.latestActivityMs);
+  if (Number.isFinite(latestMs)) return latestMs;
+  return null;
 }
 
 function makeStaleV2Report(apiPayload) {
@@ -236,6 +257,7 @@ function checkVisibleSections(name, apiPayload, dbInput, report, expectations = 
     hebrew: report.hebrewTopics,
     moledet_geography: report.moledetGeographyTopics,
   };
+  const reportRangeMs = parseReportRangeBounds(apiPayload);
   for (const subject of SUBJECTS) {
     const norm = normalizedCount(normalized, subject);
     const topicSum = sumTopicQuestions(topicMaps[subject]);
@@ -244,6 +266,58 @@ function checkVisibleSections(name, apiPayload, dbInput, report, expectations = 
       section(9, topicSum <= norm, `${subject} topic sum ${topicSum} > subject ${norm}`);
     } else {
       section(9, topicSum === 0, `${subject} unpracticed but topic sum ${topicSum}`);
+    }
+    const dbTopics =
+      dbInput?.subjects?.[subject]?.topics && typeof dbInput.subjects[subject].topics === "object"
+        ? dbInput.subjects[subject].topics
+        : {};
+    for (const [topicKey, row] of Object.entries(topicMaps[subject] || {})) {
+      const q = Math.max(0, Math.floor(Number(row?.questions) || 0));
+      if (q <= 0) continue;
+      const dbRow = dbTopics[topicKey] || dbTopics[row?.topicRowKey] || null;
+      if (row?.modeKey || dbRow?.dominantMode) {
+        section(9, row?.mode && row.mode !== "לא זמין", `${subject}/${topicKey} missing mode label`);
+      }
+      if (row?.levelKey || dbRow?.dominantLevel) {
+        section(9, row?.level && row.level !== "לא זמין", `${subject}/${topicKey} missing level label`);
+      }
+      if (row?.gradeKey || dbRow?.contentGradeLevel) {
+        section(9, row?.grade && row.grade !== "לא זמין", `${subject}/${topicKey} missing grade label`);
+      }
+      const dbLatestMs = Number(dbRow?.latestActivityMs);
+      if (Number.isFinite(dbLatestMs) && dbLatestMs > 0) {
+        section(9, Boolean(row?.lastSessionAt), `${subject}/${topicKey} missing lastSessionAt`);
+      }
+      const dbDur = Math.max(0, Math.floor(Number(dbRow?.durationSeconds) || 0));
+      const dbTimeMs = Math.max(0, Math.floor(Number(dbRow?.timeMsSum) || 0));
+      if (dbDur > 0 || dbTimeMs > 0) {
+        section(9, (Number(row?.timeMinutes) || 0) > 0, `${subject}/${topicKey} timeMinutes=0 despite duration data`);
+      }
+      if (reportRangeMs) {
+        const activityMs = topicRowActivityMs(row);
+        if (q > 0) {
+          section(
+            9,
+            Boolean(row?.lastSessionAt) && Number.isFinite(activityMs),
+            `${subject}/${topicKey} missing lastSessionAt despite ${q} in-range questions`,
+          );
+          if (Number.isFinite(activityMs)) {
+            section(
+              9,
+              activityMsInReportRange(activityMs, reportRangeMs),
+              `${subject}/${topicKey} lastSessionAt out of range (${row?.lastSessionAt})`,
+            );
+          }
+          const dbLatestMs = Number(dbRow?.latestActivityMs);
+          if (Number.isFinite(dbLatestMs)) {
+            section(
+              9,
+              activityMsInReportRange(dbLatestMs, reportRangeMs),
+              `${subject}/${topicKey} API latestActivityMs out of range`,
+            );
+          }
+        }
+      }
     }
   }
 

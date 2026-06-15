@@ -21,6 +21,9 @@ const {
   createEmptyActivityTimestamps,
   formatParentReportActivityIsrael,
   parseActivityTimestampMs,
+  reportRangeBoundsMs,
+  reconcileLatestActivityToReportRange,
+  activityMsInReportRange,
 } = await importUtils("lib/learning-supabase/parent-report-activity-time.js");
 const { buildReportInputFromDbData, REPORT_TOPIC_GRADE_SEP } = await importUtils(
   "lib/learning-supabase/report-data-adapter.js"
@@ -62,6 +65,36 @@ const NEW_ISO = new Date(NEW_MS).toISOString();
   assert.equal(bucket.latestActivityMs, NEW_MS);
   assert.equal(bucket.latestActivitySource, "session.ended_at");
   assert.equal(bucket.lastAnswerMs, null);
+}
+
+// Period-scoped aggregation: ignore session updated_at outside report window.
+{
+  const MARCH_MS = Date.UTC(2026, 2, 29, 6, 15, 40);
+  const MARCH_ISO = new Date(MARCH_MS).toISOString();
+  const JUNE_MS = Date.UTC(2026, 5, 15, 12, 47, 44);
+  const JUNE_ISO = new Date(JUNE_MS).toISOString();
+  const range = reportRangeBoundsMs(
+    new Date("2026-03-01T00:00:00.000Z"),
+    new Date("2026-03-31T00:00:00.000Z")
+  );
+  const bucket = createEmptyActivityTimestamps();
+  bumpActivityFromLearningSession(
+    bucket,
+    {
+      started_at: MARCH_ISO,
+      ended_at: MARCH_ISO,
+      updated_at: JUNE_ISO,
+    },
+    range
+  );
+  bumpActivityTimestamp(bucket, {
+    ms: MARCH_MS,
+    source: "answer.answered_at",
+    kind: "answer",
+  });
+  reconcileLatestActivityToReportRange(bucket, range);
+  assert.equal(bucket.latestActivityMs, MARCH_MS);
+  assert.ok(activityMsInReportRange(bucket.latestActivityMs, range));
 }
 
 // UTC 15:00 → Israel 18:00 (May DST, Asia/Jerusalem).
