@@ -21,6 +21,8 @@ import {
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
+  selectCountablePracticeMode,
+  createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 
 const MATH_PATH = "/learning/math-master";
@@ -72,9 +74,11 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
 
   await screenshotter("02-math-master-ready");
 
+  await selectCountablePracticeMode({ page, log, subjectLabel: "math-master" });
+
   await startButton.waitFor({ state: "visible", timeout: 10_000 });
   log(
-    `math-master: starting game grade=${scenario.grade} operation=${scenario.operation} ` +
+    `math-master: starting game mode=practice grade=${scenario.grade} operation=${scenario.operation} ` +
       `profile=${scenario.profile} questions=${scenario.questionCount}`
   );
 
@@ -84,7 +88,7 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
     subject: "math-master",
   });
   await startButton.click();
-  await sessionStartPromise;
+  const sessionStartResponse = await sessionStartPromise;
 
   const textInput = page.getByTestId("math-text-answer");
   const checkButton = page.getByTestId("math-check-answer");
@@ -101,6 +105,7 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
 
   const answeredQuestions = [];
 
+  const evidenceTracker = createPracticeEvidenceTracker("math-master", log);
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
     log(
@@ -146,6 +151,11 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
       },
     });
 
+    evidenceTracker.recordAnswer({
+      sessionStartResponse,
+      answerResponse: answerRes,
+    });
+
     // After waitForAnswerSave returns, the answer save has been ack'd by the
     // server. The original Phase A driver also waited for input.disabled===true
     // here, but with the unified helper that wait races the page's auto-advance
@@ -179,6 +189,8 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
 
   await screenshotter("04-math-master-after-stop");
 
+  const evidence = evidenceTracker.finalize();
+
   const tally = tallyCorrectness(answeredQuestions);
   log(
     `math-master: profile=${scenario.profile} intendedCorrect=${tally.intendedCorrect}/${tally.total} ` +
@@ -192,6 +204,7 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
     accountGradeRaw,
     tally,
     answerFlow: "text",
+    evidence,
   };
 }
 

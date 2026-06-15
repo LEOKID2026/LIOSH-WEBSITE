@@ -13,28 +13,45 @@
  */
 
 const PARENT_REPORT_PATH = "/learning/parent-report";
+const LEGACY_CHILDREN_HEADING = /^הילדים שלי \(\d+\)$/u;
+
+/** Current product dashboard: student cards live in a section with report links. */
+function locateChildrenSection(page) {
+  const modernSection = page
+    .locator("section")
+    .filter({ has: page.getByRole("link", { name: "דוח הורים" }) })
+    .first();
+  const legacySection = page
+    .locator("section")
+    .filter({
+      has: page.getByRole("heading", { name: LEGACY_CHILDREN_HEADING }),
+    })
+    .first();
+  return modernSection.or(legacySection);
+}
+
+function locateStudentCards(section) {
+  return section.locator("div.grid > div");
+}
 
 /** Wait for the dashboard to finish loading the linked-students list. */
 async function waitForDashboardReady(page, log, expectedStudentName) {
   // The auth check renders a "בודק התחברות הורה..." placeholder before
-  // session is hydrated. After hydration we expect the real dashboard
-  // heading and the "הילדים שלי (N)" section heading.
+  // session is hydrated. After hydration we expect the real dashboard heading.
   await page
     .getByRole("heading", { name: "דשבורד הורים" })
     .waitFor({ state: "visible", timeout: 30_000 });
   log?.("parent-dashboard: heading 'דשבורד הורים' visible");
 
-  // Wait for the children section heading to render (initial render: "(0)",
-  // updates to "(N)" after /api/parent/list-students resolves).
-  const childrenHeading = page.getByRole("heading", { name: /^הילדים שלי \(\d+\)$/u });
-  await childrenHeading.waitFor({ state: "visible", timeout: 30_000 });
+  // Legacy deployments rendered "הילדים שלי (N)" as an h2; current product
+  // uses a student card grid with "דוח הורים" links instead. Keep optional
+  // wait so older deployments still converge.
+  const legacyChildrenHeading = page.getByRole("heading", {
+    name: LEGACY_CHILDREN_HEADING,
+  });
 
   // The dashboard's `students` state is `[]` on first paint and is only
-  // populated after the /api/parent/list-students fetch resolves. If we
-  // read the heading or DOM right now we'll see "(0)" / no cards even when
-  // the parent really does own children. Capture the API response so we
-  // can both wait for it deterministically and disclose what the server
-  // actually returned.
+  // populated after the /api/parent/list-students fetch resolves.
   let apiSummary = null;
   try {
     const resp = await page.waitForResponse(
@@ -61,60 +78,101 @@ async function waitForDashboardReady(page, log, expectedStudentName) {
       `parent-dashboard: /api/parent/list-students -> status=${status} students=${parsedCount} error=${bodyError || "(none)"}`
     );
   } catch (error) {
-    apiSummary = { status: null, parsedCount: null, bodyError: `wait timeout: ${error?.message || error}` };
-    log?.(`parent-dashboard: /api/parent/list-students wait timed out: ${error?.message || error}`);
+    apiSummary = {
+      status: null,
+      parsedCount: null,
+      bodyError: `wait timeout: ${error?.message || error}`,
+    };
+    log?.(
+      `parent-dashboard: /api/parent/list-students wait timed out: ${error?.message || error}`
+    );
   }
 
-  // After the API resolves, React re-renders. Poll until either the
-  // expected student card appears, the empty-state copy is visible, or
-  // we time out. This is more deterministic than reading the heading
-  // immediately, which races the React update.
+  const childrenSection = locateChildrenSection(page);
   const targetName = String(expectedStudentName || "").trim();
   const deadline = Date.now() + 15_000;
   while (Date.now() < deadline) {
     if (targetName) {
-      const cards = page
+      const modernCards = locateStudentCards(childrenSection).filter({
+        has: page.getByRole("heading", {
+          level: 3,
+          name: targetName,
+          exact: true,
+        }),
+      });
+      if ((await modernCards.count()) > 0) break;
+      const legacySection = page
         .locator("section")
         .filter({
-          has: page.getByRole("heading", { name: /^הילדים שלי \(\d+\)$/u }),
+          has: page.getByRole("heading", { name: LEGACY_CHILDREN_HEADING }),
         })
-        .first()
+        .first();
+      const legacyCards = legacySection
         .locator(":scope > div")
         .filter({ hasText: targetName });
-      const count = await cards.count();
-      if (count > 0) break;
+      if ((await legacyCards.count()) > 0) break;
     }
-    const emptyCount = await page
-      .getByText("עדיין לא נוספו ילדים", { exact: false })
-      .count();
-    if (emptyCount > 0) break;
-    const headingText = await childrenHeading.textContent().catch(() => "");
-    const m = String(headingText || "").match(/\((\d+)\)/);
-    if (m && Number(m[1]) > 0) break;
+    if ((await page.getByText("עדיין לא נוספו ילדים", { exact: false }).count()) > 0) {
+      break;
+    }
+    if ((await page.getByRole("link", { name: "דוח הורים" }).count()) > 0) {
+      break;
+    }
+    if (await legacyChildrenHeading.isVisible().catch(() => false)) {
+      const headingText = await legacyChildrenHeading.textContent().catch(() => "");
+      const m = String(headingText || "").match(/\((\d+)\)/);
+      if (m && Number(m[1]) > 0) break;
+    }
+    if (apiSummary?.parsedCount != null && apiSummary.parsedCount > 0) {
+      await page.waitForTimeout(250);
+      if ((await page.getByRole("link", { name: "דוח הורים" }).count()) > 0) {
+        break;
+      }
+    }
     await page.waitForTimeout(250);
   }
 
-  const headingText = await childrenHeading.textContent();
-  log?.(`parent-dashboard: children section heading -> ${headingText?.trim()}`);
-  return { apiSummary, headingText: headingText?.trim() || "" };
+  let childrenSummary = "";
+  if (await legacyChildrenHeading.isVisible().catch(() => false)) {
+    childrenSummary = (await legacyChildrenHeading.textContent())?.trim() || "";
+  } else {
+    const accountLine = page.getByText(/^ילדים בחשבון:/u);
+    if (await accountLine.isVisible().catch(() => false)) {
+      childrenSummary = (await accountLine.textContent())?.trim() || "";
+    } else {
+      const reportLinks = await page.getByRole("link", { name: "דוח הורים" }).count();
+      childrenSummary = `student-cards=${reportLinks} apiStudents=${apiSummary?.parsedCount ?? "(unknown)"}`;
+    }
+  }
+  log?.(`parent-dashboard: children section -> ${childrenSummary}`);
+  return { apiSummary, headingText: childrenSummary };
 }
 
 /** Locate the per-student card whose visible name matches expectedName. */
 function locateStudentCard(page, expectedName) {
-  // The dashboard renders one <section> containing the children list.
-  // Each child card is a direct <div> child of that section. Scope to
-  // the section that carries the "הילדים שלי" heading so we don't pick
-  // up unrelated divs, then filter direct child divs by visible text.
-  const childrenSection = page
+  const modernSection = page
+    .locator("section")
+    .filter({ has: page.getByRole("link", { name: "דוח הורים" }) })
+    .first();
+  const modernCard = locateStudentCards(modernSection).filter({
+    has: page.getByRole("heading", {
+      level: 3,
+      name: expectedName,
+      exact: true,
+    }),
+  });
+
+  const legacySection = page
     .locator("section")
     .filter({
-      has: page.getByRole("heading", { name: /^הילדים שלי \(\d+\)$/u }),
+      has: page.getByRole("heading", { name: LEGACY_CHILDREN_HEADING }),
     })
     .first();
-  return childrenSection
-    .locator(":scope > div")
-    .filter({ hasText: expectedName })
-    .first();
+  const legacyCard = legacySection.locator(":scope > div").filter({
+    hasText: expectedName,
+  });
+
+  return modernCard.or(legacyCard).first();
 }
 
 const PARENT_DASHBOARD_PATH = "/parent/dashboard";
@@ -139,9 +197,7 @@ export async function verifyParentDashboardAndOpenReport({
   artifacts,
   artifactPrefix,
 }) {
-  const screenshotPrefix = artifactPrefix
-    ? `${artifactPrefix}-`
-    : "";
+  const screenshotPrefix = artifactPrefix ? `${artifactPrefix}-` : "";
 
   const currentUrl = page.url();
   const isOnDashboard = (() => {
@@ -178,13 +234,12 @@ export async function verifyParentDashboardAndOpenReport({
         `${screenshotPrefix}parent-dashboard-student-missing`
       );
     }
-    const childrenSection = page
-      .locator("section")
-      .filter({
-        has: page.getByRole("heading", { name: /^הילדים שלי \(\d+\)$/u }),
-      })
-      .first();
+    const childrenSection = locateChildrenSection(page);
     const visibleNames = await childrenSection
+      .locator("h3")
+      .allTextContents()
+      .catch(() => []);
+    const legacyNames = await childrenSection
       .locator(":scope > div .font-semibold.text-white")
       .allTextContents()
       .catch(() => []);
@@ -193,7 +248,7 @@ export async function verifyParentDashboardAndOpenReport({
       : "";
     throw new Error(
       `parent-dashboard: linked student "${expectedStudentName}" not visible. ` +
-        `Visible names: ${JSON.stringify(visibleNames)}${apiInfo}`
+        `Visible names: ${JSON.stringify([...visibleNames, ...legacyNames].filter(Boolean))}${apiInfo}`
     );
   }
 

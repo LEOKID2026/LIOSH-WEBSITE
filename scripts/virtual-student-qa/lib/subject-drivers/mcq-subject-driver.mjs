@@ -31,6 +31,8 @@ import {
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
+  selectCountablePracticeMode,
+  createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickMcqIndex } from "../answer-profiles.mjs";
@@ -89,10 +91,12 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
 
     await screenshotter(`02-${subject}-master-ready`);
 
+    await selectCountablePracticeMode({ page, log, subjectLabel });
+
     const startButton = page.getByTestId(startGameTestid);
     await startButton.waitFor({ state: "visible", timeout: 10_000 });
     log(
-      `${subjectLabel}: starting game profile=${scenario.profile} ` +
+      `${subjectLabel}: starting game mode=practice profile=${scenario.profile} ` +
         `topic=${scenario.topic ?? "(default)"} questions=${scenario.questionCount}`
     );
 
@@ -102,7 +106,7 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
       subject: subjectLabel,
     });
     await startButton.click();
-    await sessionStartPromise;
+    const sessionStartResponse = await sessionStartPromise;
 
     // Wait for at least one MCQ button in the new question UI.
     try {
@@ -121,6 +125,7 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
     const probeFailures = [];
 
     let earlyExitReason = null;
+    const evidenceTracker = createPracticeEvidenceTracker(subjectLabel, log);
     for (let i = 0; i < scenario.questionCount; i++) {
       const questionIndex = i + 1;
 
@@ -238,6 +243,11 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
         },
       });
 
+      evidenceTracker.recordAnswer({
+        sessionStartResponse,
+        answerResponse: answerRes,
+      });
+
       // After the click, the page disables all MCQ buttons until the next
       // question loads. Wait for the disabled state so we don't race the
       // next iteration's "enabled" check.
@@ -286,6 +296,8 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
 
     await screenshotter(`04-${subject}-master-after-stop`);
 
+    const evidence = evidenceTracker.finalize();
+
     const tally = tallyCorrectness(answeredQuestions);
     log(
       `${subjectLabel}: profile=${scenario.profile} ` +
@@ -303,6 +315,7 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
       answerFlow: "mcq",
       probeFailures,
       earlyExitReason,
+      evidence,
     };
   };
 }

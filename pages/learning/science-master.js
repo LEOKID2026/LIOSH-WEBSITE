@@ -36,6 +36,7 @@ import {
 } from "../../data/reward-options";
 
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
+import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
 import { getQuestionFontStyle } from "../../utils/learning-question-font";
 import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-stem-sanitizer";
 import { buildQuestionFingerprint } from "../../utils/question-quality";
@@ -127,6 +128,7 @@ import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
+import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 
@@ -2895,6 +2897,14 @@ function saveScienceAnswerInParallel({
   const referenceEntries = referenceSection.entries || [];
   const allowedTopics = GRADES[grade]?.topics || Object.keys(TOPICS);
 
+  const showScienceTheoryHelp =
+    mode === "learning" &&
+    currentQuestion &&
+    Array.isArray(currentQuestion.theoryLines) &&
+    currentQuestion.theoryLines.length > 0;
+
+  const showMobileQuestionActions = Boolean(questionBookHref || showScienceTheoryHelp);
+
   const questionPressureLayout = currentQuestion
     ? buildLearningMasterQuestionPressureLayout({
         MB,
@@ -3288,7 +3298,7 @@ function saveScienceAnswerInParallel({
                         <div
                           className={`${feedback.includes("מצוין") ? MB.feedbackOk : MB.feedbackBad}`}
                         >
-                          <div style={learningMixedHebrewMathStyle}>{feedback}</div>
+                          {renderLearningMixedHebrewMathText(feedback)}
                         </div>
                       )}
                       {errorExplanation && (
@@ -3299,27 +3309,26 @@ function saveScienceAnswerInParallel({
                           <div className="text-xs font-semibold text-rose-100 mb-1.5 tracking-tight">
                             למה הטעות קרתה?
                           </div>
-                          <div className="text-rose-50">{errorExplanation}</div>
+                          <div className="text-rose-50">
+                            {renderLearningMixedHebrewMathText(errorExplanation)}
+                          </div>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
 
-                {mode === "learning" &&
-                  currentQuestion &&
-                  Array.isArray(currentQuestion.theoryLines) &&
-                  currentQuestion.theoryLines.length > 0 && (
+                {showScienceTheoryHelp ? (
                     <button
                       type="button"
                       onClick={() => setShowTheoryHelp(true)}
-                      className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto`}
+                      className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] max-md:hidden pointer-events-auto`}
                     >
                       🧠 מה חשוב לזכור?
                     </button>
-                  )}
+                  ) : null}
                 {questionBookHref ? (
-                  <div className={MB.floatBtnStack}>
+                  <div className={`${MB.floatBtnStack} max-md:hidden`}>
                     <button
                       type="button"
                       data-testid={`science-${grade}-book-question-button`}
@@ -3333,7 +3342,7 @@ function saveScienceAnswerInParallel({
                 ) : null}
 
                 <div
-                  className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                  className={`relative ${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
                 >
                   <StudentQuestionDisplay
                     testId="science-question-stem"
@@ -3360,6 +3369,37 @@ function saveScienceAnswerInParallel({
                     wrapperClassName="w-full flex flex-col items-center justify-center gap-1 max-w-xl mx-auto"
                   />
                 </div>
+
+                <LearningMasterMobileQuestionActionDock
+                  MB={MB}
+                  show={showMobileQuestionActions}
+                  testId="science-question-mobile-actions"
+                  bookSlot={
+                    questionBookHref ? (
+                      <button
+                        type="button"
+                        data-testid={`science-${grade}-book-question-button`}
+                        onClick={() => openBookFromLearning(questionBookHref)}
+                        className={`${MB.questionActionBtn} ${MB.floatBtnBookColors}`}
+                        title="הסבר בספר לנושא הנוכחי"
+                      >
+                        הסבר
+                      </button>
+                    ) : null
+                  }
+                  secondarySlot={
+                    showScienceTheoryHelp ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowTheoryHelp(true)}
+                        className={`${MB.questionActionBtn} ${MB.floatBtnPurple}`}
+                        title="מה חשוב לזכור?"
+                      >
+                        🧠 חשוב
+                      </button>
+                    ) : null
+                  }
+                />
 
                 <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                   {currentQuestion && (
@@ -3551,8 +3591,8 @@ function saveScienceAnswerInParallel({
                       </div>
                       <ul className="list-disc pr-4 space-y-1 text-sm text-white/90">
                         {currentQuestion.theoryLines.map((line, i) => (
-                          <li key={i} style={learningMixedHebrewMathStyle}>
-                            {line}
+                          <li key={i}>
+                            {renderLearningMixedHebrewMathText(line)}
                           </li>
                         ))}
                       </ul>

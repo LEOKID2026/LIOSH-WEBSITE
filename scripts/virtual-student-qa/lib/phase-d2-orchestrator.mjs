@@ -203,8 +203,12 @@ function classifyDailyDelta({ sessionResults, delta }) {
   for (const sr of sessionResults) {
     if (!sr.completed) continue; // only count sessions that produced answers
     const k = sr.subject;
-    expectedBySubject[k] =
-      (expectedBySubject[k] || 0) + (sr.answeredCount || 0);
+    const countable =
+      sr.countableAnswerCount ??
+      sr.evidence?.countableAnswers ??
+      sr.answeredCount ??
+      0;
+    expectedBySubject[k] = (expectedBySubject[k] || 0) + countable;
   }
   const ownSubjects = Object.keys(expectedBySubject);
 
@@ -657,6 +661,8 @@ export async function runPhaseD2Suite({
           topic: scenario.topic,
           intendedQuestionCount: scenario.questionCount,
           answeredCount: 0,
+          countableAnswerCount: 0,
+          excludedAnswerCount: 0,
           correctIntended: null,
           correctObserved: null,
           tally: null,
@@ -707,6 +713,10 @@ export async function runPhaseD2Suite({
             counts["/api/learning/answer"]?.responses ??
             driverResult?.answeredQuestions?.length ??
             0;
+          sessionResult.countableAnswerCount =
+            driverResult?.evidence?.countableAnswers ?? sessionResult.answeredCount;
+          sessionResult.excludedAnswerCount =
+            driverResult?.evidence?.excludedAnswers ?? 0;
           sessionResult.tally = driverResult?.tally || null;
           sessionResult.correctIntended =
             driverResult?.tally?.intendedCorrect ?? null;
@@ -723,7 +733,7 @@ export async function runPhaseD2Suite({
           }
           sessionResult.completed =
             sessionResult.tier1?.passed === true &&
-            sessionResult.answeredCount > 0;
+            sessionResult.countableAnswerCount > 0;
         } catch (driverError) {
           sessionResult.error = `driver-error: ${
             driverError?.message || driverError

@@ -13,9 +13,74 @@
 
 _(none currently — see Resolved section below)_
 
+### Operator env — parent credential precedence (documented 2026-06-15)
+
+**Not a product bug.** When the nightly wrapper or manual runs source
+`%LOCALAPPDATA%\liosh-qa\env\virtual-student-qa.env.ps1` **before** invoking
+`run.mjs`, those variables override repo `.env.e2e.local` / `.env.local`
+(`config.mjs` skips dotenv keys already set in `process.env`).
+
+If parent preflight fails **after** submit (stays on `/parent/login`, no
+dashboard redirect), verify the operator env password matches the live Vercel
+parent account. Update the **local** `virtual-student-qa.env.ps1` only — do
+not commit secrets or change repo env files for this.
+
 ---
 
 ## Resolved driver-quality issues
+
+### All subject drivers — Practice (תרגול) mode for countable parent-report evidence (RESOLVED 2026-06-15)
+
+**Status:** Fixed in QA tooling only. No product change.
+
+**Symptom (before fix).** Virtual Student D2 runs persisted `mode=learning` because
+every learning master defaults to Learning mode and drivers clicked Start without
+selecting Practice first. Parent report correctly excluded that data per product
+policy — simulation appeared "broken" but product was correct.
+
+**Fix (QA driver only).** All subject drivers now call `selectCountablePracticeMode()`
+(clicks product button **תרגול**) before `{subject}-start-game`, and use
+`createPracticeEvidenceTracker()` per session: fail on `session.mode=learning`,
+log excluded `afterStepByStep` rows, require ≥1 countable answer per session.
+See `docs/qa/virtual-student-practice-mode-compatibility.md`.
+
+**Do not:** relabel old AAA `learning` rows, soften the evidence gate, or change
+product masters/APIs to match simulation.
+
+---
+
+### Parent preflight — login selector drift (RESOLVED 2026-06-15)
+
+**Status:** Fixed in QA tooling only. No product change.
+
+**Symptom (before fix).** D2 preflight on Vercel failed with
+`parent-auth/ui: login form did not render and no dashboard redirect within 15s`.
+The live `/parent/login` **login tab** uses `data-testid="parent-login-identifier"`
+and `data-testid="parent-login-secret"`. Legacy placeholders `אימייל הורה` /
+`סיסמה` exist only on the signup tab.
+
+**Fix (QA driver only).** `parent-auth.mjs` resolves fields via test ids first,
+with placeholder fallback for older deployments.
+
+**Also required:** sync `%LOCALAPPDATA%\liosh-qa\env\virtual-student-qa.env.ps1`
+parent password with the live Vercel account when operator env overrides repo
+`.env.e2e.local` (see Open issues — Operator env precedence).
+
+---
+
+### Parent dashboard — children section selector drift (RESOLVED 2026-06-15)
+
+**Status:** Fixed in QA tooling only. No product change.
+
+**Symptom (before fix).** D2 full-run failed at baseline parent-report snapshot:
+`getByRole('heading', { name: /^הילדים שלי \(\d+\)$/u })` timed out. Live
+dashboard uses `h1` **דשבורד הורים** + student card grid with **דוח הורים**
+links; the old `הילדים שלי (N)` heading is gone.
+
+**Fix (QA driver only).** `parent-dashboard.mjs` waits for list-students + student
+cards / report links; legacy `הילדים שלי (N)` heading path kept as fallback.
+
+---
 
 ### English driver — typing questions not handled; mcq-buttons-not-ready timeout (RESOLVED 2026-05-23)
 

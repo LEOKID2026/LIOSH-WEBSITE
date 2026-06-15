@@ -18,6 +18,207 @@ const SESSION_START_PATH = "/api/learning/session/start";
 const SESSION_ANSWER_PATH = "/api/learning/answer";
 const SESSION_FINISH_PATH = "/api/learning/session/finish";
 
+/**
+ * Visible label for Practice mode on every learning master page.
+ * Must match MODES.practice.name in pages/learning/*-master.js (product copy).
+ */
+export const COUNTABLE_PRACTICE_MODE_BUTTON_LABEL = "תרגול";
+
+/** Modes that must NOT appear in parent-report countable evidence (product policy). */
+const NON_COUNTABLE_SESSION_MODES = new Set([
+  "learning",
+  "mistakes",
+  "challenge",
+  "speed",
+  "marathon",
+  "learning_book",
+]);
+
+/**
+ * Select Practice / תרגול before starting a session so session/start persists
+ * mode=practice and answers classify as countable independent practice.
+ */
+export async function selectCountablePracticeMode({ page, log, subjectLabel }) {
+  const practiceTab = page.getByRole("button", {
+    name: COUNTABLE_PRACTICE_MODE_BUTTON_LABEL,
+    exact: true,
+  });
+  await practiceTab.waitFor({ state: "visible", timeout: 15_000 });
+  await practiceTab.click();
+  log(
+    `${subjectLabel}: selected Practice tab (${COUNTABLE_PRACTICE_MODE_BUTTON_LABEL}) ` +
+      `— countable parent-report evidence path`
+  );
+}
+
+export function readSessionStartRequestBody(sessionStartResponse) {
+  if (!sessionStartResponse) return null;
+  try {
+    const postData = sessionStartResponse.request()?.postData();
+    if (!postData) return null;
+    return JSON.parse(postData);
+  } catch {
+    return null;
+  }
+}
+
+export function readAnswerRequestBody(answerResponse) {
+  if (!answerResponse) return null;
+  try {
+    const postData = answerResponse.request()?.postData();
+    if (!postData) return null;
+    return JSON.parse(postData);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fail only when session/start persisted a non-countable mode (e.g. learning).
+ */
+export function assertCountableSessionMode({
+  sessionStartResponse,
+  subjectLabel,
+  log,
+  strict = true,
+}) {
+  const startBody = readSessionStartRequestBody(sessionStartResponse);
+  const sessionMode = String(startBody?.mode || "").trim().toLowerCase();
+  if (!sessionMode || NON_COUNTABLE_SESSION_MODES.has(sessionMode)) {
+    const msg =
+      `${subjectLabel}: non-countable session.mode=${sessionMode || "(missing)"}. ` +
+      `Simulation must use Practice (תרגול), not Learning (למידה).`;
+    if (strict) throw new Error(msg);
+    log(`${subjectLabel}: WARN ${msg}`);
+    return { ok: false, sessionMode };
+  }
+  log(`${subjectLabel}: countable session.mode=${sessionMode}`);
+  return { ok: true, sessionMode };
+}
+
+/**
+ * Classify one /api/learning/answer payload.
+ * afterStepByStep / book-context rows are expected-excluded inside practice.
+ */
+export function classifyAnswerEvidence({ answerResponse, subjectLabel, log }) {
+  const answerBody = readAnswerRequestBody(answerResponse);
+  const clientMeta =
+    answerBody?.clientMeta && typeof answerBody.clientMeta === "object"
+      ? answerBody.clientMeta
+      : {};
+  const gameMode = String(
+    clientMeta.gameMode || answerBody?.gameMode || answerBody?.mode || ""
+  )
+    .trim()
+    .toLowerCase();
+
+  if (gameMode === "learning") {
+    throw new Error(
+      `${subjectLabel}: gameMode=learning on answer payload — not countable`
+    );
+  }
+
+  if (
+    clientMeta.afterStepByStep === true ||
+    clientMeta.contextAfterBookReading === true
+  ) {
+    log(
+      `${subjectLabel}: excluded answer evidence ` +
+        `(afterStepByStep=${clientMeta.afterStepByStep === true}, ` +
+        `contextAfterBookReading=${clientMeta.contextAfterBookReading === true}) ` +
+        `— expected inside practice, not report-countable`
+    );
+    return { countable: false, excluded: true, gameMode: gameMode || "practice" };
+  }
+
+  log(`${subjectLabel}: countable answer evidence ok`);
+  return { countable: true, excluded: false, gameMode: gameMode || "practice" };
+}
+
+export function assertSessionHasCountableEvidence({
+  countableCount,
+  excludedCount,
+  subjectLabel,
+  log,
+  strict = true,
+}) {
+  if (countableCount > 0) {
+    log(
+      `${subjectLabel}: session evidence summary ` +
+        `countable=${countableCount} excluded=${excludedCount}`
+    );
+    return { ok: true, countableCount, excludedCount };
+  }
+  const msg =
+    `${subjectLabel}: no report-countable answers in session ` +
+    `(countable=0 excluded=${excludedCount}). ` +
+    `Require at least one diagnostic_independent row per studied subject.`;
+  if (strict) throw new Error(msg);
+  log(`${subjectLabel}: WARN ${msg}`);
+  return { ok: false, countableCount, excludedCount };
+}
+
+/**
+ * Per-session tracker: validate practice mode once, classify each answer,
+ * require ≥1 countable row at session end.
+ */
+export function createPracticeEvidenceTracker(subjectLabel, log) {
+  let sessionModeValidated = false;
+  let sessionMode = null;
+  let countableAnswers = 0;
+  let excludedAnswers = 0;
+
+  return {
+    recordAnswer({ sessionStartResponse, answerResponse }) {
+      if (!sessionModeValidated) {
+        const modeResult = assertCountableSessionMode({
+          sessionStartResponse,
+          subjectLabel,
+          log,
+          strict: true,
+        });
+        sessionMode = modeResult.sessionMode;
+        sessionModeValidated = true;
+      }
+      const classification = classifyAnswerEvidence({
+        answerResponse,
+        subjectLabel,
+        log,
+      });
+      if (classification.countable) countableAnswers += 1;
+      if (classification.excluded) excludedAnswers += 1;
+      return classification;
+    },
+    finalize({ strict = true } = {}) {
+      assertSessionHasCountableEvidence({
+        countableCount: countableAnswers,
+        excludedCount: excludedAnswers,
+        subjectLabel,
+        log,
+        strict,
+      });
+      return {
+        countableAnswers,
+        excludedAnswers,
+        sessionMode,
+      };
+    },
+  };
+}
+
+/** @deprecated Prefer createPracticeEvidenceTracker — kept for smoke tools. */
+export function assertCountableProductEvidence({
+  sessionStartResponse,
+  answerResponse,
+  subjectLabel,
+  log,
+  strict = false,
+}) {
+  const tracker = createPracticeEvidenceTracker(subjectLabel, log);
+  tracker.recordAnswer({ sessionStartResponse, answerResponse });
+  return tracker.finalize({ strict });
+}
+
 export async function waitForSessionStart({ page, log, subject, timeoutMs = 30_000 }) {
   try {
     const res = await page.waitForResponse(

@@ -22,6 +22,9 @@ import { sanitizeQuestionForStudentDisplay } from "../../utils/student-question-
 import StudentQuestionDisplay from "../../components/learning/StudentQuestionDisplay";
 import MathScratchpadSlot from "../../components/math-scratchpad/MathScratchpadSlot";
 import { ScratchpadVirtualInputProvider } from "../../components/math-scratchpad/scratchpad-virtual-input";
+import { isMathScratchpadV1Enabled } from "../../utils/math-scratchpad/feature-flag";
+import { getScratchpadType } from "../../utils/math-scratchpad/scratchpad-registry";
+import { extractScratchpadOperands } from "../../utils/math-scratchpad/extract-operands";
 import VirtualAnswerKeyboard from "../../components/learning/VirtualAnswerKeyboard.jsx";
 import { resolveVirtualAnswerKeyboard } from "../../lib/learning/virtual-answer-keyboard-policy.js";
 import { useTouchPrimaryDevice } from "../../hooks/useTouchPrimaryDevice.js";
@@ -3298,6 +3301,34 @@ export default function MathMaster() {
             currentQuestion.operation === "division"))
     );
 
+  const mathScratchpadOperands = currentQuestion
+    ? extractScratchpadOperands(currentQuestion)
+    : null;
+  const mathScratchpadAvailable =
+    !!currentQuestion &&
+    isMathScratchpadV1Enabled() &&
+    Boolean(
+      getScratchpadType(grade, currentQuestion.operation || operation, {
+        a: mathScratchpadOperands?.a,
+        b: mathScratchpadOperands?.b,
+      })
+    );
+
+  const mathShowMultiplicationTableButton =
+    mode === "learning" &&
+    currentQuestion &&
+    (currentQuestion.operation === "multiplication" ||
+      currentQuestion.operation === "division");
+
+  const mathShowMobileQuestionActions =
+    !scratchpadOpen &&
+    Boolean(
+      canDisplayVertically ||
+        mathScratchpadAvailable ||
+        questionBookHref ||
+        mathShowMultiplicationTableButton
+    );
+
   const questionPressureLayout = currentQuestion
     ? buildLearningMasterQuestionPressureLayout({
         MB,
@@ -4136,9 +4167,7 @@ export default function MathMaster() {
                                 : MB.feedbackBad
                             }`}
                           >
-                            <div className="text-lg" style={learningMixedHebrewMathStyle}>
-                              {feedback}
-                            </div>
+                            {renderLearningMixedHebrewMathText(feedback)}
                           </div>
                         )}
 
@@ -4147,11 +4176,8 @@ export default function MathMaster() {
                             <div className={MB.errorTitle}>
                               למה הטעות קרתה?
                             </div>
-                            <div
-                              className={MB.errorBody}
-                              style={learningMixedHebrewMathStyle}
-                            >
-                              {errorExplanation}
+                            <div className={MB.errorBody}>
+                              {renderLearningMixedHebrewMathText(errorExplanation)}
                             </div>
                           </div>
                         )}
@@ -4159,84 +4185,165 @@ export default function MathMaster() {
                     </div>
                   )}
 
-                  {canDisplayVertically && !scratchpadOpen && (
-                    <button
-                      type="button"
-                      onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                      className={`${MB.floatBtn} ${MB.floatBtnPurple} top-2 left-2 pointer-events-auto`}
-                      title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
-                    >
-                      {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
-                    </button>
-                  )}
-
-                  {!scratchpadOpen &&
-                  (questionBookHref ||
-                    (mode === "learning" &&
-                      currentQuestion &&
-                      (currentQuestion.operation === "multiplication" ||
-                        currentQuestion.operation === "division"))) ? (
-                    <div className={MB.floatBtnStack}>
-                      {questionBookHref ? (
-                        <button
-                          type="button"
-                          data-testid={`math-${grade}-book-question-button`}
-                          onClick={() => openBookFromLearning(questionBookHref)}
-                          className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
-                          title="הסבר בספר לנושא הנוכחי"
-                        >
-                          הסבר
-                        </button>
-                      ) : null}
-                      {mode === "learning" &&
-                      currentQuestion &&
-                      (currentQuestion.operation === "multiplication" ||
-                        currentQuestion.operation === "division") ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowMultiplicationTable(true);
-                            setTableMode(
-                              currentQuestion.operation === "multiplication"
-                                ? "multiplication"
-                                : "division"
-                            );
-                            if (currentQuestion.operation === "multiplication") {
-                              const a = currentQuestion.a;
-                              const b = currentQuestion.b;
-                              if (a >= 1 && a <= 12 && b >= 1 && b <= 12) {
-                                const value = a * b;
-                                setSelectedCell({ row: a, col: b, value });
-                                setSelectedRow(null);
-                                setSelectedCol(null);
-                                setSelectedResult(null);
-                                setSelectedDivisor(null);
-                              }
-                            } else {
-                              const { a, b } = currentQuestion;
-                              const value = a;
-                              if (b >= 1 && b <= 12) {
-                                setSelectedCell({ row: 1, col: b, value });
-                                setSelectedResult(value);
-                                setSelectedDivisor(b);
-                                setSelectedRow(null);
-                                setSelectedCol(null);
-                              }
-                            }
-                          }}
-                          className={`${MB.floatBtnHelper} ${MB.floatBtnTable}`}
-                        >
-                          📊 לוח הכפל
-                        </button>
-                      ) : null}
-                    </div>
-                  ) : null}
-
                   {/* אזור שאלה יציב למניעת קפיצות בפריסת התשובות */}
                   <div
                     data-testid="math-question-surface"
-                    className={`w-full flex-1 min-h-0 flex flex-col overflow-hidden px-2 ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                    className={`relative w-full flex-1 min-h-0 flex flex-col overflow-hidden px-2 ${mathShowMobileQuestionActions ? "max-md:pb-11" : ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
                   >
+                    {canDisplayVertically && !scratchpadOpen && (
+                      <button
+                        type="button"
+                        onClick={() => setIsVerticalDisplay((prev) => !prev)}
+                        className={`${MB.floatBtn} ${MB.floatBtnPurple} ${MB.floatBtnCornerLeft} max-md:hidden pointer-events-auto`}
+                        title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
+                      >
+                        {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
+                      </button>
+                    )}
+
+                    {!scratchpadOpen &&
+                    (questionBookHref || mathShowMultiplicationTableButton) ? (
+                      <div className={`${MB.floatBtnStack} max-md:hidden`}>
+                        {questionBookHref ? (
+                          <button
+                            type="button"
+                            data-testid={`math-${grade}-book-question-button`}
+                            onClick={() => openBookFromLearning(questionBookHref)}
+                            className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
+                            title="הסבר בספר לנושא הנוכחי"
+                          >
+                            הסבר
+                          </button>
+                        ) : null}
+                        {mathShowMultiplicationTableButton ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowMultiplicationTable(true);
+                              setTableMode(
+                                currentQuestion.operation === "multiplication"
+                                  ? "multiplication"
+                                  : "division"
+                              );
+                              if (currentQuestion.operation === "multiplication") {
+                                const a = currentQuestion.a;
+                                const b = currentQuestion.b;
+                                if (a >= 1 && a <= 12 && b >= 1 && b <= 12) {
+                                  const value = a * b;
+                                  setSelectedCell({ row: a, col: b, value });
+                                  setSelectedRow(null);
+                                  setSelectedCol(null);
+                                  setSelectedResult(null);
+                                  setSelectedDivisor(null);
+                                }
+                              } else {
+                                const { a, b } = currentQuestion;
+                                const value = a;
+                                if (b >= 1 && b <= 12) {
+                                  setSelectedCell({ row: 1, col: b, value });
+                                  setSelectedResult(value);
+                                  setSelectedDivisor(b);
+                                  setSelectedRow(null);
+                                  setSelectedCol(null);
+                                }
+                              }
+                            }}
+                            className={`${MB.floatBtnHelper} ${MB.floatBtnTable}`}
+                          >
+                            📊 לוח הכפל
+                          </button>
+                        ) : null}
+                      </div>
+                    ) : null}
+
+                    {mathShowMobileQuestionActions ? (
+                      <div
+                        className={MB.questionMobileActionDock}
+                        data-testid="math-question-mobile-actions"
+                      >
+                        <div className="pointer-events-auto justify-self-stretch min-w-0 flex flex-col items-stretch gap-1.5">
+                          {questionBookHref ? (
+                            <button
+                              type="button"
+                              data-testid={`math-${grade}-book-question-button`}
+                              onClick={() => openBookFromLearning(questionBookHref)}
+                              className={`${MB.questionActionBtn} ${MB.floatBtnBookColors}`}
+                              title="הסבר בספר לנושא הנוכחי"
+                            >
+                              הסבר
+                            </button>
+                          ) : null}
+                          {mathShowMultiplicationTableButton ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowMultiplicationTable(true);
+                                setTableMode(
+                                  currentQuestion.operation === "multiplication"
+                                    ? "multiplication"
+                                    : "division"
+                                );
+                                if (currentQuestion.operation === "multiplication") {
+                                  const a = currentQuestion.a;
+                                  const b = currentQuestion.b;
+                                  if (a >= 1 && a <= 12 && b >= 1 && b <= 12) {
+                                    const value = a * b;
+                                    setSelectedCell({ row: a, col: b, value });
+                                    setSelectedRow(null);
+                                    setSelectedCol(null);
+                                    setSelectedResult(null);
+                                    setSelectedDivisor(null);
+                                  }
+                                } else {
+                                  const { a, b } = currentQuestion;
+                                  const value = a;
+                                  if (b >= 1 && b <= 12) {
+                                    setSelectedCell({ row: 1, col: b, value });
+                                    setSelectedResult(value);
+                                    setSelectedDivisor(b);
+                                    setSelectedRow(null);
+                                    setSelectedCol(null);
+                                  }
+                                }
+                              }}
+                              className={`${MB.questionActionBtn} ${MB.floatBtnTable}`}
+                            >
+                              📊 לוח הכפל
+                            </button>
+                          ) : null}
+                          {!questionBookHref && !mathShowMultiplicationTableButton ? (
+                            <span className="block h-8 w-full" aria-hidden="true" />
+                          ) : null}
+                        </div>
+                        <div className="pointer-events-auto justify-self-center min-w-0 flex justify-center">
+                          {mathScratchpadAvailable ? (
+                            <button
+                              type="button"
+                              onClick={() => handleScratchpadOpenChange(true)}
+                              className={`${MB.questionActionBtn} ${MB.floatBtnScratchpad} w-auto px-3`}
+                              data-testid="math-scratchpad-open"
+                            >
+                              דף טיוטה
+                            </button>
+                          ) : null}
+                        </div>
+                        <div className="pointer-events-auto justify-self-stretch min-w-0">
+                          {canDisplayVertically ? (
+                            <button
+                              type="button"
+                              onClick={() => setIsVerticalDisplay((prev) => !prev)}
+                              className={`${MB.questionActionBtn} ${MB.floatBtnPurple}`}
+                              title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
+                              data-testid="activity-math-layout-toggle"
+                            >
+                              {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
+                            </button>
+                          ) : (
+                            <span className="block h-8 w-full" aria-hidden="true" />
+                          )}
+                        </div>
+                      </div>
+                    ) : null}
                     <MathScratchpadSlot
                       gradeKey={grade}
                       operation={currentQuestion.operation || operation}
@@ -4248,6 +4355,7 @@ export default function MathMaster() {
                       forceClose={isShowingAnySolution}
                       closeSignal={scratchpadCloseSignal}
                       onOpenChange={handleScratchpadOpenChange}
+                      open={scratchpadOpen}
                       overlayTopRef={scratchpadOverlayTopRef}
                       overlayWidthRef={controlsRef}
                       answerAnchorRef={answerAreaRef}
@@ -4260,6 +4368,7 @@ export default function MathMaster() {
                       }
                       getQuestionFontStyle={getQuestionFontStyle}
                       openButtonClassName={MB.scratchpadOpenBtn}
+                      openButtonWrapClassName="max-md:hidden"
                     >
 
                     {/* הפרדה בין שורת השאלה לשורת התרגיל */}

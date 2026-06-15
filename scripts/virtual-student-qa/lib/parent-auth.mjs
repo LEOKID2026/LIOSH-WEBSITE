@@ -74,18 +74,18 @@ export async function authenticateParent({
   };
 }
 
-async function authenticateParentViaUi({ page, account, baseUrl, log }) {
-  const targetUrl = `${baseUrl}${PARENT_LOGIN_PATH}`;
-  log?.(`parent-auth/ui: navigate ${PARENT_LOGIN_PATH}`);
-  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
+function resolveParentLoginFields(page) {
+  // Current product login tab (2026-06): stable test ids on the login form.
+  const emailField = page
+    .getByTestId("parent-login-identifier")
+    .or(page.getByPlaceholder("אימייל הורה"));
+  const passwordField = page
+    .getByTestId("parent-login-secret")
+    .or(page.getByPlaceholder("סיסמה"));
+  return { emailField, passwordField };
+}
 
-  // The login page redirects to /parent/dashboard automatically if a session
-  // already exists. Race the form-visible state against the post-redirect
-  // dashboard URL, so we don't hang on a stale browser context.
-  const emailField = page.getByPlaceholder("אימייל הורה");
-  const passwordField = page.getByPlaceholder("סיסמה");
-
-  let alreadyAuthenticated = false;
+async function waitForParentLoginFormOrDashboard(page, emailField, log) {
   try {
     await Promise.race([
       emailField.waitFor({ state: "visible", timeout: 15_000 }),
@@ -96,6 +96,33 @@ async function authenticateParentViaUi({ page, account, baseUrl, log }) {
       `parent-auth/ui: login form did not render and no dashboard redirect within 15s — ${error?.message || error}`
     );
   }
+
+  if (isOnParentDashboard(page)) return;
+
+  // Supabase browser client hydrates after first paint; give the submit
+  // handler a moment to bind before we fill + click.
+  const submitButton = page.locator("form button[type=\"submit\"]");
+  await submitButton.waitFor({ state: "visible", timeout: 5_000 });
+  try {
+    await submitButton.waitFor({ state: "attached", timeout: 2_000 });
+  } catch {
+    // Best-effort — older deployments may not need the extra tick.
+  }
+  log?.("parent-auth/ui: login form ready");
+}
+
+async function authenticateParentViaUi({ page, account, baseUrl, log }) {
+  const targetUrl = `${baseUrl}${PARENT_LOGIN_PATH}`;
+  log?.(`parent-auth/ui: navigate ${PARENT_LOGIN_PATH}`);
+  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
+
+  // The login page redirects to /parent/dashboard automatically if a session
+  // already exists. Race the form-visible state against the post-redirect
+  // dashboard URL, so we don't hang on a stale browser context.
+  const { emailField, passwordField } = resolveParentLoginFields(page);
+
+  let alreadyAuthenticated = false;
+  await waitForParentLoginFormOrDashboard(page, emailField, log);
 
   if (isOnParentDashboard(page)) {
     log?.(

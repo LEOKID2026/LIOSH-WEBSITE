@@ -89,6 +89,7 @@ import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
+import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useTouchPrimaryDevice } from "../../hooks/useTouchPrimaryDevice.js";
@@ -2428,6 +2429,13 @@ export default function GeometryMaster() {
   const accuracy =
     totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
 
+  const showGeometryTheoryHelp =
+    mode === "learning" &&
+    currentQuestion &&
+    currentQuestion.params?.kind !== "no_question";
+
+  const showMobileQuestionActions = Boolean(questionBookHref || showGeometryTheoryHelp);
+
   const questionPressureLayout = currentQuestion
     ? buildLearningMasterQuestionPressureLayout({
         MB,
@@ -2928,7 +2936,7 @@ export default function GeometryMaster() {
                                 : "bg-red-500/20 text-red-200"
                             }`}
                           >
-                            <div style={learningMixedHebrewMathStyle}>{feedback}</div>
+                            {renderLearningMixedHebrewMathText(feedback)}
                           </div>
                         )}
 
@@ -2941,7 +2949,7 @@ export default function GeometryMaster() {
                               למה הטעות קרתה?
                             </div>
                             <div className="text-rose-50">
-                              {errorExplanation}
+                              {renderLearningMixedHebrewMathText(errorExplanation)}
                             </div>
                           </div>
                         )}
@@ -2949,18 +2957,17 @@ export default function GeometryMaster() {
                     </div>
                   )}
 
-                  {mode === "learning" &&
-                    currentQuestion.params?.kind !== "no_question" && (
+                  {showGeometryTheoryHelp ? (
                       <button
                         type="button"
                         onClick={() => setShowTheoryHelp(true)}
-                        className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto`}
+                        className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] max-md:hidden pointer-events-auto`}
                       >
                         🧠 מה חשוב לזכור?
                       </button>
-                    )}
+                    ) : null}
                   {questionBookHref ? (
-                    <div className={MB.floatBtnStack}>
+                    <div className={`${MB.floatBtnStack} max-md:hidden`}>
                       <button
                         type="button"
                         data-testid={`geometry-${grade}-book-question-button`}
@@ -2975,7 +2982,7 @@ export default function GeometryMaster() {
 
                   <div
                     data-testid="geometry-question-stem"
-                    className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} py-2 gap-2`.trim()}
+                    className={`relative ${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} py-2 gap-2 ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
                   >
                   {/* בדיקה אם יש שאלה תקינה */}
                   {currentQuestion.params?.kind === "no_question" ? (
@@ -3014,6 +3021,38 @@ export default function GeometryMaster() {
                     </>
                   )}
                   </div>
+
+                  <LearningMasterMobileQuestionActionDock
+                    MB={MB}
+                    show={showMobileQuestionActions}
+                    testId="geometry-question-mobile-actions"
+                    bookSlot={
+                      questionBookHref ? (
+                        <button
+                          type="button"
+                          data-testid={`geometry-${grade}-book-question-button`}
+                          onClick={() => openBookFromLearning(questionBookHref)}
+                          className={`${MB.questionActionBtn} ${MB.floatBtnBookColors}`}
+                          title="הסבר בספר לנושא הנוכחי"
+                        >
+                          הסבר
+                        </button>
+                      ) : null
+                    }
+                    secondarySlot={
+                      showGeometryTheoryHelp ? (
+                        <button
+                          type="button"
+                          onClick={() => setShowTheoryHelp(true)}
+                          className={`${MB.questionActionBtn} ${MB.floatBtnPurple}`}
+                          title="מה חשוב לזכור?"
+                        >
+                          🧠 חשוב
+                        </button>
+                      ) : null
+                    }
+                  />
+
                     <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                       {currentQuestion.params?.kind !== "no_question" &&
                         ((mode === "learning" || mode === "practice") ? (
@@ -3203,7 +3242,10 @@ export default function GeometryMaster() {
                                       className={learningQuestionText}
                                       style={learningMixedHebrewMathStyle}
                                     >
-                                      {explanationQuestion.question}
+                                      {renderLearningMixedHebrewMathText(
+                                        explanationQuestion.question,
+                                        learningQuestionText
+                                      )}
                                     </div>
                                   </div>
 

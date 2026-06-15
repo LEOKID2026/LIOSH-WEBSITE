@@ -55,6 +55,7 @@ import LearningMasterHud from "../../components/learning/LearningMasterHud";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
+import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 import { useLearningVisibilityClock } from "../../hooks/useLearningVisibilityClock";
@@ -2469,6 +2470,8 @@ export default function EnglishMaster() {
     currentQuestion?.params?.audioStem &&
     validateAudioStem(currentQuestion.params.audioStem);
 
+  const showMobileQuestionActions = Boolean(hasPhonicsAudio || questionBookHref);
+
   const questionPressureLayout = currentQuestion
     ? buildLearningMasterQuestionPressureLayout({
         MB,
@@ -2907,7 +2910,7 @@ export default function EnglishMaster() {
 
                   {hasPhonicsAudio ? (
                     <div
-                      className="absolute top-2 left-2 z-10 pointer-events-auto"
+                      className="absolute top-2 left-2 z-10 max-md:hidden pointer-events-auto"
                       dir="rtl"
                     >
                       <EnglishPhonicsAudioPanel
@@ -2917,7 +2920,7 @@ export default function EnglishMaster() {
                     </div>
                   ) : null}
                   {questionBookHref ? (
-                    <div className={MB.floatBtnStack}>
+                    <div className={`${MB.floatBtnStack} max-md:hidden`}>
                       <button
                         type="button"
                         data-testid={`english-${grade}-book-question-button`}
@@ -2932,7 +2935,7 @@ export default function EnglishMaster() {
 
                   <div
                     data-testid="english-question-stem"
-                    className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                    className={`relative ${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
                   >
                     <StudentQuestionDisplay
                       question={currentQuestion.question}
@@ -2957,6 +2960,34 @@ export default function EnglishMaster() {
                       }}
                     />
                   </div>
+
+                  <LearningMasterMobileQuestionActionDock
+                    MB={MB}
+                    show={showMobileQuestionActions}
+                    testId="english-question-mobile-actions"
+                    secondaryWide
+                    bookSlot={
+                      questionBookHref ? (
+                        <button
+                          type="button"
+                          data-testid={`english-${grade}-book-question-button`}
+                          onClick={() => openBookFromLearning(questionBookHref)}
+                          className={`${MB.questionActionBtn} ${MB.floatBtnBookColors}`}
+                          title="הסבר בספר לנושא הנוכחי"
+                        >
+                          הסבר
+                        </button>
+                      ) : null
+                    }
+                    secondarySlot={
+                      hasPhonicsAudio ? (
+                        <EnglishPhonicsAudioPanel
+                          stem={currentQuestion.params.audioStem}
+                          gameActive={gameActive && !selectedAnswer}
+                        />
+                      ) : null
+                    }
+                  />
 
                   <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                     {currentQuestion.qType === "typing" ? (

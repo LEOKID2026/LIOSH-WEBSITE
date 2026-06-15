@@ -41,6 +41,7 @@ export default function MathScratchpadSlot({
   hideInlineOpenButton = false,
   preserveQuestionLayout = false,
   openButtonClassName,
+  openButtonWrapClassName,
   children,
 }) {
   const isControlled = openControlled !== undefined;
@@ -107,9 +108,12 @@ export default function MathScratchpadSlot({
   }, [forceClose, open, setOpen]);
 
   useEffect(() => {
-    if (isControlled) return;
+    if (isControlled) {
+      onOpenChange?.(false);
+      return;
+    }
     setOpenUncontrolled(defaultOpen);
-  }, [questionKey, defaultOpen, isControlled]);
+  }, [questionKey, defaultOpen, isControlled, onOpenChange]);
 
   useEffect(() => {
     if (closeSignal > 0) setOpen(false);
@@ -212,7 +216,9 @@ export default function MathScratchpadSlot({
           {children}
         </div>
         {!hideInlineOpenButton && !open ? (
-          <div className="shrink-0 flex justify-center py-2">
+          <div
+            className={`shrink-0 flex justify-center py-2 ${openButtonWrapClassName ?? ""}`.trim()}
+          >
             <button
               type="button"
               onClick={() => setOpen(true)}

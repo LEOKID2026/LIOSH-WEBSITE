@@ -35,6 +35,8 @@ import {
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
+  selectCountablePracticeMode,
+  createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickAnswerForArithmetic } from "../answer-profiles.mjs";
@@ -79,10 +81,12 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
 
   await screenshotter("02-geometry-master-ready");
 
+  await selectCountablePracticeMode({ page, log, subjectLabel: "geometry-master" });
+
   const startButton = page.getByTestId("geometry-start-game");
   await startButton.waitFor({ state: "visible", timeout: 10_000 });
   log(
-    `geometry-master: starting game topic=${scenario.topic || "area"} ` +
+    `geometry-master: starting game mode=practice topic=${scenario.topic || "area"} ` +
       `profile=${scenario.profile} questions=${scenario.questionCount}`
   );
 
@@ -92,7 +96,7 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
     subject: "geometry-master",
   });
   await startButton.click();
-  await sessionStartPromise;
+  const sessionStartResponse = await sessionStartPromise;
 
   // The page reads currentQuestion in two flows: text-input (geometry-text-answer)
   // and MCQ (geometry-mcq-${idx}). Phase C scenarios use the text-input flow.
@@ -109,6 +113,7 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
 
   const answeredQuestions = [];
 
+  const evidenceTracker = createPracticeEvidenceTracker("geometry-master", log);
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
 
@@ -214,6 +219,11 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
       },
     });
 
+    evidenceTracker.recordAnswer({
+      sessionStartResponse,
+      answerResponse: answerRes,
+    });
+
     // Top-of-loop "input enabled and empty" wait synchronizes the next
     // question; an explicit "disabled===true" wait races the auto-advance
     // back to enabled and is unnecessary now that waitForAnswerSave already
@@ -245,6 +255,8 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
 
   await screenshotter("04-geometry-master-after-stop");
 
+  const evidence = evidenceTracker.finalize();
+
   const tally = tallyCorrectness(answeredQuestions);
   log(
     `geometry-master: profile=${scenario.profile} ` +
@@ -259,6 +271,7 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
     accountGradeRaw: null,
     tally,
     answerFlow: "text",
+    evidence,
   };
 }
 

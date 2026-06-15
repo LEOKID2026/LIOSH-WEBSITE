@@ -13,17 +13,20 @@ function renderInlineMixedRuns(text) {
   if (runs.length === 0) return null;
 
   return runs.map((run, idx) => {
+    if (run.value === "\n") {
+      return <br key={`nl-${idx}`} />;
+    }
     if (run.type === "math") {
       return (
-        <p key={`math-${idx}`} className="my-1" style={learningMathBlockStyle} dir="ltr">
+        <span key={`math-${idx}`} style={learningMathIsolateStyle} dir="ltr">
           {run.value}
-        </p>
+        </span>
       );
     }
     return (
-      <p key={`prose-${idx}`} className="my-0" style={learningProseBlockStyle} dir="rtl">
+      <span key={`prose-${idx}`} style={learningProseIsolateStyle} dir="rtl">
         {run.value}
-      </p>
+      </span>
     );
   });
 }

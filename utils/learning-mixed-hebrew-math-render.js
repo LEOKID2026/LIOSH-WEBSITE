@@ -1,7 +1,12 @@
 /**
  * Split mixed Hebrew + math strings for step-by-step explanation lines.
- * Keeps expressions like "6 + 2 = 8" as one LTR run before Hebrew prose continues.
+ * Delegates to shared BiDi policy in lib/bidi/mixed-hebrew-math-runs.js.
  */
+
+import {
+  splitMixedHebrewMathRuns,
+  detectMixedMathRenderIssues,
+} from "../lib/bidi/mixed-hebrew-math-runs.js";
 
 /** @typedef {{ type: "math" | "prose", value: string }} LearningMixedRun */
 
@@ -10,65 +15,17 @@
 const STEP_EQUATION_BODY =
   String.raw`\d[\d\s]*(?:[+\-−×÷]\s*\d[\d\s]*)*\s*=\s*\d[\d\s]*`;
 
+export { detectMixedMathRenderIssues };
+
 export const LEARNING_MATH_RUN_RE =
   /(\d[\d\s.,]*\s*(?:%|(?:\/\s*\d)|[+\-−×÷=<>])\s*[\d\s.,]+(?:\s*(?:%|(?:\/\s*\d)|[+\-−×÷=<>])\s*[\d\s.,]+)*)/g;
-
-/**
- * @param {LearningMixedRun[]} runs
- * @returns {LearningMixedRun[]}
- */
-function moveTrailingPunctuationFromMathToProse(runs) {
-  /** @type {LearningMixedRun[]} */
-  const fixed = [];
-  for (let i = 0; i < runs.length; i += 1) {
-    const run = runs[i];
-    if (run.type !== "math") {
-      fixed.push(run);
-      continue;
-    }
-
-    const match = run.value.match(/^([\s\S]*?\d)(\s*[.,;:!?]+)(\s*)$/);
-    if (!match) {
-      fixed.push(run);
-      continue;
-    }
-
-    fixed.push({ type: "math", value: match[1] });
-    const tail = `${match[2]}${match[3] || ""}`;
-    const nextRun = runs[i + 1];
-    if (nextRun?.type === "prose") {
-      fixed.push({ type: "prose", value: tail + nextRun.value });
-      i += 1;
-    } else {
-      fixed.push({ type: "prose", value: tail });
-    }
-  }
-  return fixed;
-}
 
 /**
  * @param {string|null|undefined} text
  * @returns {LearningMixedRun[]}
  */
 export function splitLearningMixedHebrewMathRuns(text) {
-  if (text == null || typeof text !== "string" || text === "") return [];
-
-  // Strip LRI/PDI isolates before split — orphan markers break RTL/LTR runs and mirror < >.
-  const normalized = String(text).replace(/\u2066|\u2067|\u2068|\u2069/g, "");
-
-  const parts = normalized.split(LEARNING_MATH_RUN_RE);
-  if (parts.length === 1) {
-    return [{ type: "prose", value: normalized }];
-  }
-
-  /** @type {LearningMixedRun[]} */
-  const runs = [];
-  for (let i = 0; i < parts.length; i += 1) {
-    const part = parts[i];
-    if (!part) continue;
-    runs.push({ type: i % 2 === 1 ? "math" : "prose", value: part });
-  }
-  return moveTrailingPunctuationFromMathToProse(runs);
+  return splitMixedHebrewMathRuns(text);
 }
 
 export const learningMathIsolateStyle = Object.freeze({

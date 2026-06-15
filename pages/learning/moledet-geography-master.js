@@ -158,6 +158,7 @@ import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
+import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 
@@ -2366,6 +2367,8 @@ export default function MoledetGeographyMaster() {
       ? getSolutionSteps(currentQuestion, currentQuestion.params?.op || currentQuestion.operation, grade)
       : [];
 
+  const showMobileQuestionActions = Boolean(questionBookHref || canDisplayVertically);
+
   const questionPressureLayout = currentQuestion
     ? buildLearningMasterQuestionPressureLayout({
         MB,
@@ -3210,18 +3213,18 @@ export default function MoledetGeographyMaster() {
                     </div>
                   )}
 
-                  {canDisplayVertically && (
+                  {canDisplayVertically ? (
                     <button
                       type="button"
                       onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                      className={`${MB.floatBtn} ${MB.floatBtnPurple} top-2 left-2 pointer-events-auto`}
+                      className={`${MB.floatBtn} ${MB.floatBtnPurple} ${MB.floatBtnCornerLeft} max-md:hidden pointer-events-auto`}
                       title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
                     >
                       {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
                     </button>
-                  )}
+                  ) : null}
                   {questionBookHref ? (
-                    <div className={MB.floatBtnStack}>
+                    <div className={`${MB.floatBtnStack} max-md:hidden`}>
                       <button
                         type="button"
                         data-testid={`moledet-geography-${grade}-book-question-button`}
@@ -3236,7 +3239,7 @@ export default function MoledetGeographyMaster() {
 
                   <div
                     data-testid="moledet-question-stem"
-                    className={`${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""}`.trim()}
+                    className={`relative ${questionPressureLayout?.questionSlotClassForStem ?? ""} ${questionPressureLayout?.questionStemInsetClass ?? ""} ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
                   >
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
@@ -3480,6 +3483,38 @@ export default function MoledetGeographyMaster() {
                     />
                   )}
                   </div>
+
+                  <LearningMasterMobileQuestionActionDock
+                    MB={MB}
+                    show={showMobileQuestionActions}
+                    testId="moledet-question-mobile-actions"
+                    bookSlot={
+                      questionBookHref ? (
+                        <button
+                          type="button"
+                          data-testid={`moledet-geography-${grade}-book-question-button`}
+                          onClick={() => openBookFromLearning(questionBookHref)}
+                          className={`${MB.questionActionBtn} ${MB.floatBtnBookColors}`}
+                          title="הסבר בספר לנושא הנוכחי"
+                        >
+                          הסבר
+                        </button>
+                      ) : null
+                    }
+                    secondarySlot={
+                      canDisplayVertically ? (
+                        <button
+                          type="button"
+                          onClick={() => setIsVerticalDisplay((prev) => !prev)}
+                          className={`${MB.questionActionBtn} ${MB.floatBtnPurple}`}
+                          title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
+                          data-testid="activity-math-layout-toggle"
+                        >
+                          {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
+                        </button>
+                      ) : null
+                    }
+                  />
 
                   <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                   <div

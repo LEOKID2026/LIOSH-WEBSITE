@@ -178,6 +178,7 @@ import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
 import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
+import LearningMasterMobileQuestionActionDock from "../../components/learning/LearningMasterMobileQuestionActionDock.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
 
@@ -2914,6 +2915,9 @@ export default function HebrewMaster() {
     hasValidAudioStem &&
     /^שמע[\s.:]*$/u.test(normalizedAudioHeadingBody);
 
+  const showHebrewAudioToolbar = gameActive && hasValidAudioStem;
+  const showMobileQuestionActions = Boolean(questionBookHref || showHebrewAudioToolbar);
+
   const questionTextForPressure = (
     currentQuestion?.questionLabel ||
     currentQuestion?.exerciseText ||
@@ -3882,9 +3886,9 @@ export default function HebrewMaster() {
                     </div>
                   )}
 
-                  {gameActive && hasValidAudioStem ? (
+                  {showHebrewAudioToolbar ? (
                     <div
-                      className="absolute top-2 left-2 z-10 pointer-events-auto"
+                      className="absolute top-2 left-2 z-10 max-md:hidden pointer-events-auto"
                       dir="rtl"
                     >
                       <HebrewAudioBuild1Panel
@@ -3902,7 +3906,7 @@ export default function HebrewMaster() {
                     </div>
                   ) : null}
                   {questionBookHref ? (
-                    <div className={MB.floatBtnStack}>
+                    <div className={`${MB.floatBtnStack} max-md:hidden`}>
                       <button
                         type="button"
                         data-testid={`hebrew-${grade}-book-question-button`}
@@ -3915,7 +3919,10 @@ export default function HebrewMaster() {
                     </div>
                   ) : null}
 
-                  <div data-testid="hebrew-question-stem" className={`${questionSlotClassForStem} relative`}>
+                  <div
+                    data-testid="hebrew-question-stem"
+                    className={`${questionSlotClassForStem} relative ${showMobileQuestionActions ? "max-md:pb-11" : ""}`.trim()}
+                  >
                   {/* ויזואליזציה של מספרים (כיתות א'-ג') */}
                   {(grade === "g1" || grade === "g2" || grade === "g3") && (currentQuestion.operation === "addition" || currentQuestion.operation === "subtraction") && (
                     <div className="mb-4 flex gap-6 items-center justify-center flex-wrap" style={{ direction: "ltr" }}>
@@ -4139,6 +4146,42 @@ export default function HebrewMaster() {
                     />
                   )}
                   </div>
+
+                  <LearningMasterMobileQuestionActionDock
+                    MB={MB}
+                    show={showMobileQuestionActions}
+                    testId="hebrew-question-mobile-actions"
+                    secondaryWide
+                    bookSlot={
+                      questionBookHref ? (
+                        <button
+                          type="button"
+                          data-testid={`hebrew-${grade}-book-question-button`}
+                          onClick={() => openBookFromLearning(questionBookHref)}
+                          className={`${MB.questionActionBtn} ${MB.floatBtnBookColors}`}
+                          title="הסבר בספר לנושא הנוכחי"
+                        >
+                          הסבר
+                        </button>
+                      ) : null
+                    }
+                    secondarySlot={
+                      showHebrewAudioToolbar ? (
+                        <HebrewAudioBuild1Panel
+                          stem={currentQuestion.params.audioStem}
+                          gameActive={gameActive && !selectedAnswer}
+                          grade={grade}
+                          topic={
+                            currentQuestion.topic ||
+                            currentQuestion.operation ||
+                            "reading"
+                          }
+                          guidedMode={isHebrewAudioRecordedManual}
+                          onGuidedNeutralDone={finishAudioRecordedManualNeutral}
+                        />
+                      ) : null
+                    }
+                  />
 
                   <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
                   {isTypingQuestion ? (

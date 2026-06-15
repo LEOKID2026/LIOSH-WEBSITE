@@ -57,6 +57,8 @@ import {
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
+  selectCountablePracticeMode,
+  createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickMcqIndex, pickAnswerForArithmetic } from "../answer-profiles.mjs";
@@ -334,10 +336,12 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
 
   await screenshotter(`02-${SUBJECT}-master-ready`);
 
+  await selectCountablePracticeMode({ page, log, subjectLabel: SUBJECT_LABEL });
+
   const startButton = page.getByTestId(`${SUBJECT}-start-game`);
   await startButton.waitFor({ state: "visible", timeout: 10_000 });
   log(
-    `${SUBJECT_LABEL}: starting game profile=${scenario.profile} ` +
+    `${SUBJECT_LABEL}: starting game mode=practice profile=${scenario.profile} ` +
       `topic=${scenario.topic ?? "(default)"} questions=${scenario.questionCount}`
   );
 
@@ -347,13 +351,14 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
     subject: SUBJECT_LABEL,
   });
   await startButton.click();
-  await sessionStartPromise;
+  const sessionStartResponse = await sessionStartPromise;
 
   const answeredQuestions = [];
   const skippedAudioQuestions = [];
   const probeFailures = [];
   const shapeCounts = { mcq: 0, typing: 0, audio_skipped: 0 };
   let earlyExitReason = null;
+  const evidenceTracker = createPracticeEvidenceTracker(SUBJECT_LABEL, log);
 
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
@@ -468,6 +473,11 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
         },
       });
 
+      evidenceTracker.recordAnswer({
+        sessionStartResponse,
+        answerResponse: answerRes,
+      });
+
       // Wait for the post-answer disabled state so we don't race the
       // next iteration's "enabled" check.
       await page
@@ -532,6 +542,11 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
       },
     });
 
+    evidenceTracker.recordAnswer({
+      sessionStartResponse,
+      answerResponse: answerRes,
+    });
+
     // After answer the typing input becomes disabled; wait briefly so the
     // next question's shape probe doesn't catch this question's input.
     await page
@@ -572,6 +587,8 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
 
   await screenshotter(`04-${SUBJECT}-master-after-stop`);
 
+  const evidence = evidenceTracker.finalize();
+
   const tally = tallyCorrectness(answeredQuestions);
   log(
     `${SUBJECT_LABEL}: profile=${scenario.profile} ` +
@@ -592,5 +609,6 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
     probeFailures,
     earlyExitReason,
     shapeCounts,
+    evidence,
   };
 }

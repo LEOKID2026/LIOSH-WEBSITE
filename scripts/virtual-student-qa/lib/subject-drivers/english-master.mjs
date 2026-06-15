@@ -37,6 +37,8 @@ import {
   buildAnsweredQuestionEntry,
   tallyCorrectness,
   shortText,
+  selectCountablePracticeMode,
+  createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickMcqIndex, pickAnswerForArithmetic } from "../answer-profiles.mjs";
@@ -246,10 +248,12 @@ export async function runEnglishScenario({
 
   await screenshotter(`02-${SUBJECT}-master-ready`);
 
+  await selectCountablePracticeMode({ page, log, subjectLabel: SUBJECT_LABEL });
+
   const startButton = page.getByTestId(`${SUBJECT}-start-game`);
   await startButton.waitFor({ state: "visible", timeout: 10_000 });
   log(
-    `${SUBJECT_LABEL}: starting game profile=${scenario.profile} ` +
+    `${SUBJECT_LABEL}: starting game mode=practice profile=${scenario.profile} ` +
       `topic=${scenario.topic ?? "(default)"} questions=${scenario.questionCount}`
   );
 
@@ -259,12 +263,13 @@ export async function runEnglishScenario({
     subject: SUBJECT_LABEL,
   });
   await startButton.click();
-  await sessionStartPromise;
+  const sessionStartResponse = await sessionStartPromise;
 
   const answeredQuestions = [];
   const probeFailures = [];
   const shapeCounts = { mcq: 0, typing: 0 };
   let earlyExitReason = null;
+  const evidenceTracker = createPracticeEvidenceTracker(SUBJECT_LABEL, log);
 
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
@@ -345,6 +350,11 @@ export async function runEnglishScenario({
         },
       });
 
+      evidenceTracker.recordAnswer({
+        sessionStartResponse,
+        answerResponse: answerRes,
+      });
+
       // Wait for disabled state — the page disables MCQs after click and
       // re-enables them when the next question auto-loads.
       await page
@@ -422,6 +432,11 @@ export async function runEnglishScenario({
       },
     });
 
+    evidenceTracker.recordAnswer({
+      sessionStartResponse,
+      answerResponse: answerRes,
+    });
+
     // The English page in "learning" mode (the default) calls generateNewQuestion()
     // automatically via setTimeout:
     //   - correct answer → 1000 ms delay
@@ -487,6 +502,8 @@ export async function runEnglishScenario({
 
   await screenshotter(`04-${SUBJECT}-master-after-stop`);
 
+  const evidence = evidenceTracker.finalize();
+
   const tally = tallyCorrectness(answeredQuestions);
   log(
     `${SUBJECT_LABEL}: profile=${scenario.profile} ` +
@@ -506,5 +523,6 @@ export async function runEnglishScenario({
     probeFailures,
     earlyExitReason,
     shapeCounts,
+    evidence,
   };
 }
