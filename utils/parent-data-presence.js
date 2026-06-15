@@ -3,6 +3,8 @@
  * Does not change storage or scoring — classification and copy only.
  */
 
+import { practicedSubjectCountFromReport } from "../lib/learning/normalized-subject-practice.js";
+
 export const ParentDataPresence = Object.freeze({
   noData: "noData",
   hasVolumeNoPattern: "hasVolumeNoPattern",
@@ -96,6 +98,15 @@ export function deriveParentDataPresenceForDiagnosticsView(report, diagnosticsVi
   }
 
   if (!patternDiagnosticsHasGlobalSignal(report)) {
+    const practicedSubjects = practicedSubjectCountFromReport(report);
+    if (practicedSubjects >= 2 && mode === "new" && rowCount === 0 && totalQ > 0) {
+      return {
+        state: ParentDataPresence.hasEvidenceLowConfidence,
+        recommendationsExplainerHe:
+          "יש פעילות בנושאים, אך עדיין לא ניתן לסגור תמונה ברורה מהתרגולים — כדאי להמשיך בתרגול ולעקוב שוב לאחר מכן.",
+        lowConfidenceExplainerHe: "יש נתונים, אך דרוש עוד תרגול כדי לחזק את הכיוון.",
+      };
+    }
     return {
       state: ParentDataPresence.hasVolumeNoPattern,
       recommendationsExplainerHe:

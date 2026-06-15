@@ -477,7 +477,7 @@ function migrateDiagnosticSubjectV1ToRow(sub, subjectId) {
 function buildParentReportDiagnosticsView(report) {
   if (report?._parentFacingAuthority === "server") {
     const legacyRecommendations = [];
-    const mode = "insufficient";
+    const mode = "new";
     return {
       mode,
       rows: [],
