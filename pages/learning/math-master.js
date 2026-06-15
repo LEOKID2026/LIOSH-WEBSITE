@@ -46,7 +46,7 @@ import {
   buildStepExplanation,
 } from "../../utils/math-explanations";
 import { trackOperationTime, buildMathReportStorageKey } from "../../utils/math-time-tracking";
-import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
 import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
@@ -75,6 +75,7 @@ import { finalizeAnimationSteps } from "../../utils/learning-step-animation-pipe
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
@@ -410,9 +411,12 @@ export default function MathMaster() {
   const router = useRouter();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
+  const desktopHeaderRef = useRef(null);
   const gameRef = useRef(null);
   const answerAreaRef = useRef(null);
   const scratchpadOverlayTopRef = useRef(null);
+  const desktopScratchpadAnchorRef = useRef(null);
+  const mobileScratchpadAnchorRef = useRef(null);
   const controlsRef = useRef(null);
   const operationSelectRef = useRef(null);
   const sessionStartRef = useRef(null);
@@ -1424,11 +1428,14 @@ export default function MathMaster() {
     const calc = () => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyLearningShellLayoutVars({
-          wrapRef,
-          headerRef,
-          controlsRef,
-        });
+        applyLearningShellLayoutVars(
+          learningMasterDesktopLayoutOptions({
+            wrapRef,
+            headerRef,
+            desktopHeaderRef,
+            controlsRef,
+          })
+        );
       }, 150);
     };
 
@@ -1443,6 +1450,21 @@ export default function MathMaster() {
       window.visualViewport?.removeEventListener("resize", calc);
     };
   }, [mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const syncScratchpadAnchor = () => {
+      const isDesktop =
+        typeof window !== "undefined" &&
+        window.matchMedia("(min-width: 768px)").matches;
+      scratchpadOverlayTopRef.current = isDesktop
+        ? desktopScratchpadAnchorRef.current
+        : mobileScratchpadAnchorRef.current;
+    };
+    syncScratchpadAnchor();
+    window.addEventListener("resize", syncScratchpadAnchor, { passive: true });
+    return () => window.removeEventListener("resize", syncScratchpadAnchor);
+  }, [mounted, gameActive, grade, level, operation, mode]);
 
   // Timer countdown (רק במצב Challenge או Speed)
   useEffect(() => {
@@ -3292,11 +3314,10 @@ export default function MathMaster() {
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
-          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)]"
+          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)] pt-[clamp(12px,3vw,32px)] md:pt-1"
           style={{
             maxWidth: "1200px",
             width: "min(1200px, 100vw)",
-            paddingTop: "clamp(12px, 3vw, 32px)",
             paddingBottom: 0,
             margin: "0 auto"
           }}
@@ -3312,33 +3333,35 @@ export default function MathMaster() {
           />
         </div>
 
-        <div
-          ref={headerRef}
-          className="absolute top-0 left-0 right-0 z-50 pointer-events-none"
-        >
-          <div
-            className="relative px-2 py-3"
-            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
-          >
-            <LearningMasterNavBar
-              MB={MB}
-              headerRef={headerRef}
-              onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
-              onBack={backSafe}
-            />
-          </div>
+        <LearningMasterDesktopHeader
+          MB={MB}
+          desktopHeaderRef={desktopHeaderRef}
+          titleAnchorRef={desktopScratchpadAnchorRef}
+          title="🧮 חשבון"
+          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getOperationName(operation)} • ${MODES[mode].name}`}
+          onBack={backSafe}
+          onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
+          sound={sound}
+        />
+
+        <div className="md:hidden">
+          <LearningMasterNavBar
+            MB={MB}
+            headerRef={headerRef}
+            onCurriculumClick={() => router.push("/learning/curriculum?subject=math")}
+            onBack={backSafe}
+          />
         </div>
 
         <div
-          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch]"
+          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch] max-md:pt-[calc(var(--head-h,56px)+8px)] md:pt-0"
           style={{
             height: "100%",
             maxHeight: "100%",
-            paddingTop: "calc(var(--head-h, 56px) + 8px)",
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
           }}
         >
-          <div className="text-center mb-3" ref={scratchpadOverlayTopRef}>
+          <div className="md:hidden text-center mb-3" ref={mobileScratchpadAnchorRef}>
             <div className="flex items-center justify-center gap-2 mb-0.5">
               <h1 className={MB.pageTitle}>
                 🧮 חשבון
@@ -3366,6 +3389,7 @@ export default function MathMaster() {
           <LearningMasterHud
             MB={MB}
             controlsRef={controlsRef}
+            className="md:!mb-1.5"
             topHud={subjectView.topHud}
             lives={lives}
             mode={mode}
@@ -3378,7 +3402,7 @@ export default function MathMaster() {
 
           {/* בחירת מצב (Learning / Challenge) */}
           <div
-            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2.5 lg:gap-3 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
+            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
             dir="rtl"
           >
             {["learning", "challenge", "speed", "marathon"].map((m) => (
@@ -4034,7 +4058,7 @@ export default function MathMaster() {
               </div>
             </div>
           ) : (
-            <>
+            <div className="flex flex-col flex-1 min-h-0 w-full items-center">
               {/* אנימציה לתשובה נכונה */}
               {showCorrectAnimation && (
                 <div className="fixed inset-0 pointer-events-none z-[300] flex items-center justify-center">
@@ -4058,12 +4082,97 @@ export default function MathMaster() {
                 </div>
               )}
 
+              {currentQuestion &&
+                !scratchpadOpen &&
+                (canDisplayVertically ||
+                  questionBookHref ||
+                  (mode === "learning" &&
+                    (currentQuestion.operation === "multiplication" ||
+                      currentQuestion.operation === "division"))) && (
+                <div
+                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-between gap-2 px-1 mb-1"
+                  dir="ltr"
+                >
+                  <div className="shrink-0">
+                    {canDisplayVertically ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsVerticalDisplay((prev) => !prev)}
+                        className={`${MB.floatBtnHelper} ${MB.floatBtnPurple}`}
+                        title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
+                      >
+                        {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
+                      </button>
+                    ) : null}
+                  </div>
+                  {(questionBookHref ||
+                    (mode === "learning" &&
+                      (currentQuestion.operation === "multiplication" ||
+                        currentQuestion.operation === "division"))) ? (
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {questionBookHref ? (
+                        <button
+                          type="button"
+                          data-testid={`math-${grade}-book-question-button`}
+                          onClick={() => openBookFromLearning(questionBookHref)}
+                          className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
+                          title="הסבר בספר לנושא הנוכחי"
+                        >
+                          הסבר
+                        </button>
+                      ) : null}
+                      {mode === "learning" &&
+                      (currentQuestion.operation === "multiplication" ||
+                        currentQuestion.operation === "division") ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowMultiplicationTable(true);
+                            setTableMode(
+                              currentQuestion.operation === "multiplication"
+                                ? "multiplication"
+                                : "division"
+                            );
+                            if (currentQuestion.operation === "multiplication") {
+                              const a = currentQuestion.a;
+                              const b = currentQuestion.b;
+                              if (a >= 1 && a <= 12 && b >= 1 && b <= 12) {
+                                const value = a * b;
+                                setSelectedCell({ row: a, col: b, value });
+                                setSelectedRow(null);
+                                setSelectedCol(null);
+                                setSelectedResult(null);
+                                setSelectedDivisor(null);
+                              }
+                            } else {
+                              const { a, b } = currentQuestion;
+                              const value = a;
+                              if (b >= 1 && b <= 12) {
+                                setSelectedCell({ row: 1, col: b, value });
+                                setSelectedResult(value);
+                                setSelectedDivisor(b);
+                                setSelectedRow(null);
+                                setSelectedCol(null);
+                              }
+                            }
+                          }}
+                          className={`${MB.floatBtnHelper} ${MB.floatBtnTable}`}
+                        >
+                          📊 לוח הכפל
+                        </button>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="shrink-0" aria-hidden="true" />
+                  )}
+                </div>
+              )}
+
               {currentQuestion && (
                 <ScratchpadVirtualInputProvider onActiveCellChange={setActiveScratchpadCell}>
                 <div
                   ref={gameRef}
-                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden"
-                  style={{ height: "var(--game-h, 400px)", minHeight: "300px" }}
+                  className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
                 >
                   {/* שכבת הודעות שלא משנה פריסה (אין מקום שמור / אין מיקרו-סק롤) */}
                   {(feedback || errorExplanation) && (
@@ -4106,11 +4215,11 @@ export default function MathMaster() {
                     </div>
                   )}
 
-                  {/* כפתור מאוזן/מאונך מעוגן למעלה (לא מזיז פריסה) */}
+                  {/* כפתור מאוזן/מאונך — מובייל בלבד; בדסקטופ בשורה מעל אזור השאלה */}
                   {canDisplayVertically && !scratchpadOpen && (
                     <button
                       onClick={() => setIsVerticalDisplay((prev) => !prev)}
-                      className={`${MB.floatBtn} ${MB.floatBtnPurple} top-2 left-2 pointer-events-auto`}
+                      className={`${MB.floatBtn} ${MB.floatBtnPurple} top-2 left-2 pointer-events-auto md:hidden`}
                       title={isVerticalDisplay ? "הצג מאוזן" : "הצג מאונך"}
                     >
                       {isVerticalDisplay ? "↔️ מאוזן" : "↕️ מאונך"}
@@ -4123,7 +4232,7 @@ export default function MathMaster() {
                       currentQuestion &&
                       (currentQuestion.operation === "multiplication" ||
                         currentQuestion.operation === "division"))) ? (
-                    <div className={MB.floatBtnStack}>
+                    <div className={`${MB.floatBtnStack} md:hidden`}>
                       {questionBookHref ? (
                         <button
                           type="button"
@@ -4939,7 +5048,7 @@ export default function MathMaster() {
                 </div>
                 </ScratchpadVirtualInputProvider>
               )}
-            </>
+            </div>
           )}
 
           {/* Multiplication Table Modal */}

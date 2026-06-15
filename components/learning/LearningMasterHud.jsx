@@ -34,13 +34,14 @@ export default function LearningMasterHud({
   playerAvatar,
   playerAvatarImage,
   formatValue = formatMathHudNumber,
+  className = "",
 }) {
   const timerActive =
     gameActive && timerModes.includes(mode);
   const timerUrgent = timerActive && timeLeft <= 5;
 
   return (
-    <div ref={controlsRef} className={HUD_GRID}>
+    <div ref={controlsRef} className={`${HUD_GRID} ${className}`.trim()}>
       <HudCell MB={MB} label="ניקוד" valueClass={MB.hudValueScore}>
         {formatValue(topHud.score)}
       </HudCell>

@@ -17,7 +17,7 @@ import {
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
 import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
-import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import { applyLearningShellLayoutVars, learningMasterDesktopLayoutOptions } from "../../utils/learning-shell-layout";
 import {
   LIVE_PRACTICE_GAME_OVER_HE,
   LIVE_PRACTICE_WRONG_HE,
@@ -120,6 +120,7 @@ import {
 import { useLearningMasterUi } from "../../hooks/useLearningMasterUi.js";
 import LearningMasterHud from "../../components/learning/LearningMasterHud.jsx";
 import LearningMasterNavBar from "../../components/learning/LearningMasterNavBar.jsx";
+import LearningMasterDesktopHeader from "../../components/learning/LearningMasterDesktopHeader.jsx";
 import LearningMasterAdSlot from "../../components/learning/LearningMasterAdSlot.jsx";
 import { StepExerciseUiProvider } from "../../contexts/StepExerciseUiContext.jsx";
 import { formatMathHudNumber } from "../../utils/math-master-hud-number.client.js";
@@ -701,6 +702,7 @@ export default function ScienceMaster() {
   const router = useRouter();
   const wrapRef = useRef(null);
   const headerRef = useRef(null);
+  const desktopHeaderRef = useRef(null);
   const controlsRef = useRef(null);
   const gameRef = useRef(null);
   const [mounted, setMounted] = useState(false);
@@ -1298,11 +1300,14 @@ export default function ScienceMaster() {
     const calc = () => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyLearningShellLayoutVars({
-          wrapRef,
-          headerRef,
-          controlsRef,
-        });
+        applyLearningShellLayoutVars(
+          learningMasterDesktopLayoutOptions({
+            wrapRef,
+            headerRef,
+            desktopHeaderRef,
+            controlsRef,
+          })
+        );
       }, 150);
     };
     const timer = setTimeout(calc, 100);
@@ -2890,11 +2895,10 @@ function saveScienceAnswerInParallel({
       <div className={shellClass} style={shellBgStyle} dir="rtl">
         <div
           ref={wrapRef}
-          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)]"
+          className="relative overflow-hidden game-page-mobile learning-master-fill flex flex-col flex-1 min-h-0 w-full max-md:pl-0 max-md:pr-0 md:pl-[clamp(8px,2vw,32px)] md:pr-[clamp(8px,2vw,32px)] pt-[clamp(12px,3vw,32px)] md:pt-1"
           style={{
             maxWidth: "1200px",
             width: "min(1200px, 100vw)",
-            paddingTop: "clamp(12px, 3vw, 32px)",
             paddingBottom: 0,
             margin: "0 auto"
           }}
@@ -2911,25 +2915,35 @@ function saveScienceAnswerInParallel({
           />
         </div>
 
-        <LearningMasterNavBar
+        <LearningMasterDesktopHeader
           MB={MB}
-          headerRef={headerRef}
-          onCurriculumClick={() => router.push("/learning/curriculum?subject=science")}
+          desktopHeaderRef={desktopHeaderRef}
+          title="🔬 מדעים"
+          subtitle={`${playerName || "שחקן"} • ${GRADES[grade].name} • ${LEVELS[level].name} • ${getTopicLabel(topic)} • ${MODES[mode].name}`}
           onBack={backSafe}
+          onCurriculumClick={() => router.push("/learning/curriculum?subject=science")}
+          sound={sound}
         />
+
+        <div className="md:hidden">
+          <LearningMasterNavBar
+            MB={MB}
+            headerRef={headerRef}
+            onCurriculumClick={() => router.push("/learning/curriculum?subject=science")}
+            onBack={backSafe}
+          />
+        </div>
 
         {/* CONTENT */}
         <div
-          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 min-w-0 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch]"
+          className="relative flex flex-1 min-h-0 flex-col items-center justify-start px-2 md:px-4 min-w-0 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch] max-md:pt-[calc(var(--head-h,56px)+8px)] md:pt-0"
           style={{
             height: "100%",
             maxHeight: "100%",
-            paddingTop: "calc(var(--head-h, 56px) + 8px)",
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 18px)",
           }}
         >
-          {/* TITLE */}
-          <div className="text-center mb-3">
+          <div className="md:hidden text-center mb-3">
             <div className="flex items-center justify-center gap-2 mb-0.5">
               <h1 className={MB.pageTitle}>
                 🔬 מדעים
@@ -2956,6 +2970,7 @@ function saveScienceAnswerInParallel({
           <LearningMasterHud
             MB={MB}
             controlsRef={controlsRef}
+            className="md:!mb-1.5"
             topHud={subjectView.topHud}
             lives={lives}
             mode={mode}
@@ -2968,7 +2983,7 @@ function saveScienceAnswerInParallel({
 
           {/* MODES */}
           <div
-            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2.5 lg:gap-3 mb-3 md:mb-4 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
+            className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
             dir="rtl"
           >
             {["learning", "challenge", "speed", "marathon"].map((m) => (
@@ -3242,14 +3257,50 @@ function saveScienceAnswerInParallel({
               </div>
             </div>
           ) : (
-            <>
+            <div className="flex flex-col flex-1 min-h-0 w-full items-center">
+              {currentQuestion &&
+                (questionBookHref ||
+                  (mode === "learning" &&
+                    Array.isArray(currentQuestion.theoryLines) &&
+                    currentQuestion.theoryLines.length > 0)) && (
+                <div
+                  className="hidden md:flex w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl mx-auto shrink-0 items-center justify-between gap-2 px-1 mb-1"
+                  dir="ltr"
+                >
+                  <div className="shrink-0">
+                    {mode === "learning" &&
+                    Array.isArray(currentQuestion.theoryLines) &&
+                    currentQuestion.theoryLines.length > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowTheoryHelp(true)}
+                        className={`${MB.floatBtnHelper} ${MB.floatBtnPurple}`}
+                      >
+                        🧠 מה חשוב לזכור?
+                      </button>
+                    ) : null}
+                  </div>
+                  {questionBookHref ? (
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        type="button"
+                        data-testid={`science-${grade}-book-question-button`}
+                        onClick={() => openBookFromLearning(questionBookHref)}
+                        className={`${MB.floatBtnHelper} ${MB.floatBtnBookColors}`}
+                        title="הסבר בספר לנושא הנוכחי"
+                      >
+                        הסבר
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="shrink-0" aria-hidden="true" />
+                  )}
+                </div>
+              )}
+
               <div
                 ref={gameRef}
-                className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col items-center justify-start mb-2 flex-1 px-1 mx-auto"
-                style={{
-                  height: "var(--game-h, 400px)",
-                  minHeight: "300px",
-                }}
+                className="relative w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-4xl flex flex-col flex-1 min-h-0 items-stretch mb-2 px-1 mx-auto overflow-hidden max-md:h-[var(--game-h,400px)] max-md:min-h-[300px] md:min-h-[280px]"
               >
                 {(feedback || errorExplanation) && (
                   <div className="absolute top-0 left-0 right-0 z-[5] px-2 pt-1 pointer-events-none">
@@ -3284,7 +3335,7 @@ function saveScienceAnswerInParallel({
                       <button
                         type="button"
                         onClick={() => setShowTheoryHelp(true)}
-                        className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto`}
+                        className={`${MB.floatBtn} ${MB.floatBtnTheory} z-[6] pointer-events-auto md:hidden`}
                       >
                         🧠 מה חשוב לזכור?
                       </button>
@@ -3294,7 +3345,7 @@ function saveScienceAnswerInParallel({
                       type="button"
                       data-testid={`science-${grade}-book-question-button`}
                       onClick={() => openBookFromLearning(questionBookHref)}
-                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto`}
+                      className={`${MB.floatBtn} ${MB.floatBtnBook} z-[6] pointer-events-auto md:hidden`}
                       title="הסבר בספר לנושא הנוכחי"
                     >
                       הסבר
@@ -3497,7 +3548,7 @@ function saveScienceAnswerInParallel({
                     </div>
                   </div>
                 )}
-            </>
+            </div>
           )}
 
           {/* LEADERBOARD MODAL */}
