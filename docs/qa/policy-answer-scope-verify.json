@@ -1,0 +1,35 @@
+{
+  "unit": {
+    "mathLearningUsesAgeAppropriate": true,
+    "mathPracticeProcessOnly": true,
+    "hebrewLearningHasAnswer": true,
+    "hebrewPracticeNoAnswer": true,
+    "revealAlwaysFalse": true,
+    "pass": true
+  },
+  "static": {
+    "forbiddenUiHits": [],
+    "pass": true,
+    "englishStepByStepHasCorrectAnswer": true,
+    "mathBuildStepUntouched": true,
+    "passLearningSource": true
+  },
+  "browser": {
+    "learningModeSample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\npolicy-test • כיתה ג׳ • קל • חיבור • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nמטבעות:\n0\nלא נכון 😔 התשובה הנכונה: ⁦129⁩ ✅\nלמה הטעות קרתה?\n💡 נסה לחשוב על חיבור: ⁦66 + 63 = 129⁩. אם קשה, נסה לפרק: ⁦66 + 63 = 66 + 60 + 3 = 126 + 3 = 129⁩\n↕️ מאונך\nהסבר\n66 + 63 = __\nדף טיוטה\n⌨️\nשאלה הבאה\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת",
+    "learningShowsAnswer": true,
+    "practiceModeSample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\npolicy-test • כיתה ג׳ • קל • חיבור • אתגר\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n2 ❤️\n⏰ טיימר\n18\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nמטבעות:\n0\nלא נכון, ננסה שוב 😔 (-1 ❤️)\nלמה הטעות קרתה?\nנראה שחיברת משהו פעמיים או טעית בחיבור ביניים.\n↕️ מאונך\n36 + 91 = __\nדף טיוטה\n3276\n55\n137\n127\n⏹️ עצור\nשמור לפרסומת",
+    "practiceNoEquationLeak": true,
+    "practiceNoAnswerInFeedback": true,
+    "practiceHasHebrewWrong": true,
+    "parentAssignedAnswerApi": {
+      "correctAnswer": null,
+      "revealAnswers": null
+    },
+    "parentAssignedSubmitApi": {
+      "correctAnswer": null,
+      "revealAnswers": false
+    },
+    "pass": true
+  },
+  "verdict": "PASS"
+}

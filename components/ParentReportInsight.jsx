@@ -150,7 +150,7 @@ export function ParentReportInsight({ explanation, className = "" }) {
 
   return (
     <div
-      className={`parent-report-parent-ai-insight mb-3 md:mb-5 avoid-break rounded-lg border border-sky-400/25 bg-sky-950/20 p-3 md:p-4 text-sm text-white/90 ${className}`}
+      className={`no-pdf parent-report-parent-ai-insight mb-3 md:mb-5 avoid-break rounded-lg border border-sky-400/25 bg-sky-950/20 p-3 md:p-4 text-sm text-white/90 ${className}`}
     >
       <p className="font-bold text-sky-100/95 m-0 text-sm md:text-base mb-2">{headingHe}</p>
       {structured ? (

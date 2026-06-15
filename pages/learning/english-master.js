@@ -4,6 +4,12 @@ import { useRouter } from "next/router";
 import { useIOSViewportFix } from "../../hooks/useIOSViewportFix";
 import { trackEnglishTopicTime } from "../../utils/english-time-tracking";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import {
+  LIVE_PRACTICE_CORRECT_HE,
+  LIVE_PRACTICE_GAME_OVER_HE,
+  LIVE_PRACTICE_WRONG_HE,
+  formatLearningWrongFeedbackHe,
+} from "../../utils/learning-live-feedback-he";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
 import {
   MONTHLY_MINUTES_TARGET,
@@ -417,7 +423,7 @@ function getSolutionSteps(question, topic, gradeKey) {
             3,
             "נבדוק סדר מילים נכון ואות גדולה בתחילת המשפט."
           ),
-          makeStep(4, `המשפט הנכון באנגלית: ${correctAnswer}.`),
+          makeStep(4, `המשפט הנכון: ${correctAnswer}.`),
         ];
       }
       return [];
@@ -429,14 +435,18 @@ function getSolutionSteps(question, topic, gradeKey) {
 }
 
 // "למה טעיתי?" – הסבר קצר לטעות נפוצה
-function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
+function getErrorExplanation(question, topic, wrongAnswer, gradeKey, opts = {}) {
   if (!question) return "";
   const userAns = String(wrongAnswer).toLowerCase();
   const correctAns = String(question.correctAnswer).toLowerCase();
+  const learning = opts.mode === "learning";
+  const ca = question.correctAnswer;
 
   switch (topic) {
     case "vocabulary":
-      return "בדוק שוב: האם הפירוש שאתה בחרת מתאים למילה? נסה לחשוב על המילה בעברית/אנגלית ולמצוא את הפירוש הנכון.";
+      return learning
+        ? `התשובה הנכונה היא "${ca}". בדוק שוב: האם הפירוש שבחרת מתאים למילה?`
+        : "בדוק שוב: האם הפירוש שבחרת מתאים למילה? נסה לחשוב על המילה בעברית/אנגלית לפי ההקשר.";
 
     case "grammar":
       if (userAns === "is" && correctAns === "am") {
@@ -445,16 +455,24 @@ function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
       if (userAns === "am" && (correctAns === "is" || correctAns === "are")) {
         return "זכור: am משמש רק עם I (אני). He/She/It = is, You/We/They = are.";
       }
-      return "בדוק שוב את כללי הדקדוק: I am, You/We/They are, He/She/It is.";
+      return learning
+        ? `התשובה הנכונה היא "${ca}". בדוק שוב את כללי הדקדוק: I am, You/We/They are, He/She/It is.`
+        : "בדוק שוב את כללי הדקדוק: I am, You/We/They are, He/She/It is.";
 
     case "translation":
-      return "בדוק שוב: האם תרגמת את כל המילים נכון? נסה לחשוב על המשמעות של המשפט ולא רק על מילים בודדות.";
+      return learning
+        ? `התרגום הנכון: ${ca}. בדוק שוב: האם תרגמת את כל המילים נכון?`
+        : "בדוק שוב: האם תרגמת את כל המילים נכון? נסה לחשוב על המשמעות של המשפט ולא רק על מילים בודדות.";
 
     case "sentences":
-      return "בדוק שוב: האם המילה שבחרת מתאימה לנושא המשפט? זכור: I/You/We/They = are, He/She/It = is.";
+      return learning
+        ? `התשובה הנכונה היא "${ca}". בדוק שוב: האם המילה שבחרת מתאימה לנושא המשפט?`
+        : "בדוק שוב: האם המילה שבחרת מתאימה לנושא המשפט? זכור: I/You/We/They = are, He/She/It = is.";
 
     case "writing":
-      return "כנראה שטעית באיות (spelling). בדוק שוב אות-אחר-אות, שים לב אל th / sh / ch ולסיום המילה (s / ed / ing).";
+      return learning
+        ? `התשובה הנכונה היא "${ca}". כנראה שטעית באיות — בדוק שוב אות-אחר-אות.`
+        : "כנראה שטעית באיות (spelling). בדוק שוב אות-אחר-אות, שים לב אל th / sh / ch ולסיום המילה (s / ed / ing).";
 
     default:
       return "";
@@ -2110,7 +2128,7 @@ export default function EnglishMaster() {
         }
         return newXp;
       });
-      setFeedback("Correct! 🎉");
+      setFeedback(LIVE_PRACTICE_CORRECT_HE);
       
       // Play sound - different sound for streak milestones
       if ((streak + 1) % 5 === 0 && streak + 1 >= 5) {
@@ -2152,7 +2170,8 @@ export default function EnglishMaster() {
         currentQuestion,
         currentQuestion.topic,
         answer,
-        questionGradeKey
+        questionGradeKey,
+        { mode }
       );
       setErrorExplanation(errExpl);
       if (errExpl) stepByStepViewedRef.current = true;
@@ -2233,7 +2252,9 @@ export default function EnglishMaster() {
       if ("vibrate" in navigator) navigator.vibrate?.(200);
       if (mode === "learning") {
         setFeedback(
-          `Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`
+          formatLearningWrongFeedbackHe(
+            `\u2066${currentQuestion.correctAnswer}\u2069`
+          )
         );
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
@@ -2243,9 +2264,7 @@ export default function EnglishMaster() {
           setTimeLeft(null);
         });
       } else if (mode === "challenge") {
-        setFeedback(
-          `Wrong! Correct: ${currentQuestion.correctAnswer} ❌ (-1 ❤️)`
-        );
+        setFeedback(`${LIVE_PRACTICE_WRONG_HE} (-1 ❤️)`);
         setLives((prevLives) => {
           const nextLives = prevLives - 1;
           if (nextLives <= 0) {
@@ -2255,7 +2274,7 @@ export default function EnglishMaster() {
               mode: reportModeFromGameState(mode, focusedPracticeMode),
             };
             trackCurrentQuestionTime();
-            setFeedback("Game Over! 💔");
+            setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
             sound.playSound("game-over");
             recordSessionProgress();
             saveRunToStorage();
@@ -2278,8 +2297,7 @@ export default function EnglishMaster() {
           return nextLives;
         });
       } else {
-        // speed / marathon / practice stay in active gameplay on wrong answers
-        setFeedback(`Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`);
+        setFeedback(LIVE_PRACTICE_WRONG_HE);
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
@@ -2837,7 +2855,7 @@ export default function EnglishMaster() {
                         {errorExplanation && (
                           <div className={MB.errorBox}>
                             <div className={MB.errorTitle}>
-                              Why was this wrong?
+                              למה הטעות קרתה?
                             </div>
                             <div className={MB.errorBody} dir="ltr">
                               {errorExplanation}

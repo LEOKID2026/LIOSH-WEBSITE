@@ -11,9 +11,12 @@ import { normalizeParentFacingHe } from "./parent-facing-normalize-he.js";
 export const M10_ENGINE_PATTERN_HE = "בחירת כפל לא מתאים לחילוק";
 
 export const M10_PARENT_PATTERN_LABELS = {
-  divisionBuckets: "קושי בקישור בין כפל לחילוק",
-  multiplication: "קושי להבין את הקשר ההפוך בין כפל לחילוק",
-  thinFallback: "קושי חוזר בחילוק — כדאי לחזק את הקשר לכפל",
+  divisionBuckets:
+    "לפי השאלות שתורגלו בתקופה שנבחרה, כדאי להמשיך לתרגל חילוק ולחזק את הקשר לכפל.",
+  multiplication:
+    "לפי השאלות שתורגלו בתקופה שנבחרה, כדאי להמשיך לתרגל את הקשר ההפוך בין כפל לחילוק.",
+  thinFallback:
+    "לפי השאלות שתורגלו בתקופה שנבחרה, כדאי להמשיך לתרגל חילוק ולחזק את הקשר לכפל.",
 };
 
 /**

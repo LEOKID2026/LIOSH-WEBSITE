@@ -827,7 +827,7 @@ function getAgeAppropriateExplanation(operation, gradeKey, question, correctAnsw
   return null; // נשתמש בהסבר הרגיל
 }
 
-export function getErrorExplanation(question, operation, wrongAnswer, gradeKey) {
+export function getErrorExplanation(question, operation, wrongAnswer, gradeKey, opts = {}) {
   if (!question) return "";
   if (shouldUseComparisonSignErrorExplanation(question, operation)) {
     return buildComparisonSignWrongAnswerExplanation(question);
@@ -845,10 +845,16 @@ export function getErrorExplanation(question, operation, wrongAnswer, gradeKey) 
         )
       : Number(correctAnswerRaw);
 
-  // נסה להשתמש בהסבר מותאם לגיל קודם
-  const ageAppropriate = getAgeAppropriateExplanation(operation, gradeKey, question, correctNum);
-  if (ageAppropriate) {
-    return ageAppropriate;
+  if (opts.mode === "learning") {
+    const ageAppropriate = getAgeAppropriateExplanation(
+      operation,
+      gradeKey,
+      question,
+      correctNum
+    );
+    if (ageAppropriate) {
+      return ageAppropriate;
+    }
   }
 
   switch (operation) {
@@ -859,7 +865,7 @@ export function getErrorExplanation(question, operation, wrongAnswer, gradeKey) 
       if (!Number.isNaN(userAnsNum) && userAnsNum > correctNum) {
         return "נראה שחיברת משהו פעמיים או טעית בחיבור ביניים.";
       }
-      return "בדוק שוב: האם חיברת את המספרים לפי הסדר?";
+      return "כדאי לבדוק שוב את החיבור לפי שלבים — אפשר לפרק לעשרות ויחידות ולחבר חלק-חלק.";
     case "subtraction":
       return "בחיסור קל להתבלבל בסדר המספרים. בדוק שוב שהקטנת את המספר הגדול ולא להפך.";
     case "multiplication":

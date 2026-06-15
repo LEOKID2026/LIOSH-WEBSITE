@@ -4,9 +4,11 @@
  */
 export function diagnosticPrimarySourceParentLabelHe(source) {
   const s = String(source || "").trim();
-  if (s === "diagnosticEngineV2") return "האבחון מבוסס על ניתוח מעודכן של פעילות התרגול בתקופה.";
-  if (s === "legacy_patternDiagnostics_fallback") {
-    return "חלק מהאבחון מבוסס על שיטה קודמת (פחות נתונים מעודכנים) — כדאי לקרוא בזהירות.";
+  if (s === "diagnosticEngineV2") {
+    return "תובנות לפי השאלות שתורגלו בתקופה שנבחרה.";
   }
-  return "מקור האבחון לא זוהה בבירור — מומלץ להמשיך בתרגול ולבדוק שוב מאוחר יותר.";
+  if (s === "legacy_patternDiagnostics_fallback") {
+    return "חלק מהתובנות מבוסס על שיטה קודמת (פחות נתונים מעודכנים) — כדאי לקרוא בזהירות.";
+  }
+  return "מקור התובנות לא זוהה בבירור — מומלץ להמשיך בתרגול ולבדוק שוב מאוחר יותר.";
 }

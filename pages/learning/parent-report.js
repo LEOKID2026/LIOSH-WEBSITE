@@ -355,7 +355,15 @@ const MAX_DIAGNOSTIC_EVIDENCE_CHARS = 200;
 
 /** תאימות ל-tierHe ישן בדוחות שמורים */
 function weaknessTierHeDisplay(tierHe) {
-  return tierHe === "קושי חוזר / קושי עקבי" ? "קושי חוזר" : tierHe;
+  const t = String(tierHe || "").trim();
+  const legacyRecurring = "\u05E7\u05D5\u05E9\u05D9 \u05D7\u05D5\u05D6\u05E8";
+  const legacyRecurringConsistent = `${legacyRecurring} / \u05E7\u05D5\u05E9\u05D9 \u05E2\u05E7\u05D1\u05D9`;
+  const legacySelfRepeating = "\u05E7\u05D5\u05E9\u05D9 \u05E9\u05D7\u05D5\u05D6\u05E8 \u05E2\u05DC \u05E2\u05E6\u05DE\u05D5";
+  if (t === legacyRecurringConsistent || t === legacyRecurring || t === legacySelfRepeating) {
+    return "כרגע בתרגול נראה שכדאי לחזק";
+  }
+  if (t === "\u05E7\u05D5\u05E9\u05D9 \u05E0\u05E7\u05D5\u05D3\u05D9") return "נראה שכדאי לחזק בתרגול";
+  return t;
 }
 
 /** תאימות ל-tierHe ישן בנתונים שימור */
@@ -428,9 +436,9 @@ function migrateDiagnosticSubjectV1ToRow(sub, subjectId) {
     confidence: w.confidence,
     tierHe:
       (w.mistakeCount || 0) >= 10
-        ? "קושי חוזר"
+        ? "כרגע בתרגול נראה שכדאי לחזק"
         : (w.mistakeCount || 0) >= 5
-          ? "קושי נקודתי"
+          ? "נראה שכדאי לחזק בתרגול"
           : "תחום לחיזוק",
   }));
   const topStrengths = excellent.map((e) => ({
@@ -2047,7 +2055,9 @@ export default function ParentReport() {
             </div>
           </div>
 
-          <ParentReportInsight explanation={report.parentAiExplanation} />
+          <div className="no-pdf">
+            <ParentReportInsight explanation={report.parentAiExplanation} />
+          </div>
 
           {enableParentCopilotOnShortEffective && copilotDetailedPayload ? (
             <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
@@ -3004,7 +3014,7 @@ export default function ParentReport() {
                       const topStr = s.topStrengths?.length ? s.topStrengths : legacyStrength;
                       const wkLegacy = (s.weaknesses || []).map((w) => ({
                         ...w,
-                        tierHe: w.tierHe || "קושי חוזר",
+                        tierHe: w.tierHe || "כרגע בתרגול נראה שכדאי לחזק",
                       }));
                       const topWk = s.topWeaknesses?.length ? s.topWeaknesses : wkLegacy;
                       const mn = s.maintain || [];
@@ -3066,12 +3076,9 @@ export default function ParentReport() {
                             {Array.isArray(s.diagnosticCards) && s.diagnosticCards.length > 0 ? (
                               <div className="text-[10px] md:text-[11px] text-white/80 space-y-1.5 border border-white/10 rounded-md bg-white/5 px-2 py-1.5">
                                 <div className="font-semibold text-white/90 text-[11px] md:text-xs">
-                                  אבחון מבוסס נתונים
+                                  לפי השאלות שתורגלו בתקופה שנבחרה
                                 </div>
                                 {s.diagnosticCards.map((card, cardIdx) => {
-                                  const confLabel = diagnosticCardConfidenceLabelHe(
-                                    card.confidence
-                                  ).trim();
                                   const recHe = String(card.recommendationHe || "").trim();
                                   return (
                                     <div
@@ -3092,14 +3099,9 @@ export default function ParentReport() {
                                             </div>
                                           ))
                                         : null}
-                                      {confLabel ? (
-                                        <div className="text-white/60 text-[9px] md:text-[10px] break-words">
-                                          אמון: {confLabel}
-                                        </div>
-                                      ) : null}
                                       {recHe ? (
                                         <div className="text-white/78 text-[9px] md:text-[10px] leading-snug break-words">
-                                          <span className="text-white/45">המלצה: </span>
+                                          <span className="text-white/45">המשך מומלץ: </span>
                                           {diagnosticParentVisibleTextHe(recHe)}
                                         </div>
                                       ) : null}

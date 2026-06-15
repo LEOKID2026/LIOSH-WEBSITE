@@ -216,7 +216,7 @@ export default function RockPaperScissors() {
   if (!mounted)
     return (
       <div className="min-h-screen bg-[#0a101d] flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl">טוען...</div>
       </div>
     );
 

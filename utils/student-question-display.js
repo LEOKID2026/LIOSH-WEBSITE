@@ -3,6 +3,8 @@
  * (instruction line vs equation/formula body, LTR isolation).
  */
 
+import { COMPARISON_SIGN_LRM } from "./comparison-sign-mcq.js";
+
 const BLANK = /_{2,}|\?\?|…/;
 
 const KNOWN_INSTRUCTION_LEADS = [
@@ -33,6 +35,10 @@ export function isEquationLikeText(s) {
       t
     )
   ) {
+    return false;
+  }
+  const hebrewChars = (t.match(/[\u0590-\u05FF]/g) || []).length;
+  if (hebrewChars >= 10 && hebrewChars / Math.max(t.length, 1) > 0.3) {
     return false;
   }
   if (BLANK.test(t)) return true;
@@ -179,8 +185,61 @@ export function formatFormulaSpacing(text) {
 
   t = t.replace(/(שטח|היקף|נפח|אורך)(\s*=\s*)/gu, "$1$2");
   t = t.replace(/=\s*(?=[א-ת])/gu, "= ");
+  t = t.replace(
+    /(\d+(?:[.,]\d+)?)\s*([<>=])\s*(\d+(?:[.,]\d+)?)/g,
+    (_, left, sign, right) =>
+      `${left} ${COMPARISON_SIGN_LRM}${sign}${COMPARISON_SIGN_LRM} ${right}`
+  );
   t = t.replace(/\s{2,}/g, " ");
   return t.trim();
+}
+
+/**
+ * Normalize percent / mixed stems that start with LTR junk before Hebrew text.
+ * @param {string} raw
+ */
+function splitHebrewQuestionWithEquationTail(raw) {
+  const t = String(raw ?? "").trim();
+  if (!t || !/[\u0590-\u05FF]/.test(t)) return null;
+
+  const leadingJunk = t.match(/^[\s_=?=]+\s*(.+[\u0590-\u05FF][\s\S]*)$/u);
+  const normalized = leadingJunk?.[1]?.trim() || t;
+
+  const trailingBlank = normalized.match(/^(.+[\u0590-\u05FF][^=]*?)\s*\??\s*(=\s*[_\s?]+)$/u);
+  if (trailingBlank?.[1] && trailingBlank?.[2]) {
+    return {
+      leadText: trailingBlank[1].replace(/\?\s*$/, "").trim(),
+      bodyText: formatCompactExpression(trailingBlank[2].trim()),
+      bodyKind: "equation",
+    };
+  }
+
+  if (leadingJunk?.[1]) {
+    return {
+      leadText: normalized.replace(/\?\s*$/, "").trim(),
+      bodyText: "",
+      bodyKind: "text",
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Split context + instruction sentences for long Hebrew geometry prompts.
+ * @param {string} raw
+ */
+function splitInstructionAfterContextSentence(raw) {
+  const t = String(raw ?? "").trim();
+  const match = t.match(/^(.+?[.!?])\s+([\u0590-\u05FF][\s\S]+)$/u);
+  if (!match?.[2]) return null;
+  const instruction = match[2].trim().replace(/\.$/, "");
+  if (!isKnownInstructionLead(instruction)) return null;
+  return {
+    leadText: match[2].trim().endsWith(".") ? match[2].trim() : `${match[2].trim()}.`,
+    bodyText: formatCompactExpression(formatFormulaSpacing(match[1].trim())),
+    bodyKind: "text",
+  };
 }
 
 /**
@@ -192,6 +251,12 @@ export function splitStudentQuestionForDisplay(text) {
   if (!raw) {
     return { leadText: "", bodyText: "", bodyKind: "text" };
   }
+
+  const hebrewEq = splitHebrewQuestionWithEquationTail(raw);
+  if (hebrewEq) return hebrewEq;
+
+  const instructionSplit = splitInstructionAfterContextSentence(raw);
+  if (instructionSplit) return instructionSplit;
 
   const colonIdx = raw.indexOf(":");
   if (colonIdx > 0 && colonIdx < 72) {

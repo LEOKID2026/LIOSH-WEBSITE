@@ -13,7 +13,7 @@ export default function StudentQuestionDisplay({
   leadClassName = "text-2xl text-center text-white mb-2 break-words overflow-wrap-anywhere max-w-full px-2",
   bodyClassName = "text-4xl text-center text-white font-bold max-w-full px-2",
   formulaClassName = "text-center text-white font-bold font-mono max-w-full px-2 py-1 leading-snug",
-  wrapperClassName = "w-full flex flex-col items-center justify-center gap-1",
+  wrapperClassName = "w-full flex flex-col items-center justify-center gap-2 max-w-full",
   leadStyle,
   bodyStyle,
   getQuestionFontStyle,

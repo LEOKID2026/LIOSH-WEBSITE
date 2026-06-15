@@ -19,14 +19,14 @@ const BEHAVIOR_OR_DIAGNOSTIC_HE = {
   mixed: "מעורב",
   mixed_low_signal: "עדיין מעט מידע — אי אפשר להסיק בוודאות",
   none_sparse: "עדיין מעט תרגול בנושא זה",
-  none_observed: "בלי קושי חוזר שבולט",
+  none_observed: "עדיין אין דפוס בולט בתרגול",
   fragile_success_cluster: "רצף הצלחות שבירות",
 };
 
 const CONF_BADGE_HE = {
-  high: "אפשר לסמוך על זה: גבוהה",
-  medium: "אפשר לסמוך על זה: בינונית",
-  low: "אפשר לסמוך על זה רק חלקית — קוראים בזהירות",
+  high: "יש מספיק שאלות בתקופה",
+  medium: "כמות בינונית של שאלות בתקופה",
+  low: "מוקדם להסיק מסקנה לפי כמות השאלות הנוכחית",
 };
 
 const SUFF_BADGE_HE = {

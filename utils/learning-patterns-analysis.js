@@ -464,11 +464,11 @@ function weaknessTierHe(labelHe, mistakeCount, confidence) {
   const lab = String(labelHe || "").trim();
   if (!lab || lab === GENERIC_WEAKNESS_HE) return "תחום לחיזוק";
   if (mistakeCount >= MIN_MISTAKES_FOR_STRONG_RECOMMENDATION) {
-    return "קושי חוזר";
+    return "כרגע בתרגול נראה שכדאי לחזק";
   }
   if (mistakeCount >= MIN_PATTERN_FAMILY_FOR_DIAGNOSIS) {
-    if (confidence === "high") return "קושי חוזר";
-    return "קושי נקודתי";
+    if (confidence === "high") return "כרגע בתרגול נראה שכדאי לחזק";
+    return "נראה שכדאי לחזק בתרגול";
   }
   return "תחום לחיזוק";
 }

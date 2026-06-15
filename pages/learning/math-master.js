@@ -40,7 +40,6 @@ import {
 } from "../../utils/math-learning-intel";
 import { SessionAntiRepeatBuffer } from "../../utils/question-session-anti-repeat";
 import {
-  getHint,
   getSolutionSteps,
   getErrorExplanation,
   getAdditionStepsColumn,
@@ -59,6 +58,12 @@ import {
   buildAnimationForOperation,
 } from "../../utils/math-animations";
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
+import {
+  LIVE_PRACTICE_CORRECT_HE,
+  LIVE_PRACTICE_GAME_OVER_HE,
+  LIVE_PRACTICE_WRONG_HE,
+  formatLearningWrongFeedbackHe,
+} from "../../utils/learning-live-feedback-he";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
 import StepExerciseViewRouter from "../../components/learning/StepExerciseViewRouter";
 import StepWordProblemExerciseView from "../../components/learning/StepWordProblemExerciseView";
@@ -845,7 +850,7 @@ export default function MathMaster() {
           ),
           text: "",
         },
-        { id: "fallback-basic-2", title: "שלב 2: איך ניגשים?", content: <span>{getHint(explanationQuestion, explanationQuestion.params?.op || op, grade) || "נפתור לפי הכללים של הנושא."}</span>, text: "" },
+        { id: "fallback-basic-2", title: "שלב 2: איך ניגשים?", content: <span>נפתור לפי הכללים של הנושא.</span>, text: "" },
         { id: "fallback-basic-3", title: "שלב 3: התשובה", content: ansText ? <span>התשובה היא: {ansText}</span> : <span>נבדוק את התשובה.</span>, text: "" },
       ];
     } catch {}
@@ -2918,7 +2923,8 @@ export default function MathMaster() {
           ? "compare"
           : currentQuestion.operation,
         numericAnswer,
-        grade
+        grade,
+        { mode }
       );
       setErrorExplanation(errExpl);
       if (errExpl) stepByStepViewedRef.current = true;
@@ -2943,13 +2949,12 @@ export default function MathMaster() {
       if ("vibrate" in navigator) navigator.vibrate?.(200);
 
       if (mode === "learning") {
-        // במצב למידה – אין Game Over, רק הצגת תשובה והמשך
         setFeedback(
-          `לא נכון 😔 התשובה הנכונה: ${
+          formatLearningWrongFeedbackHe(
             currentQuestion.operation === "compare"
               ? formatCompareFeedbackSign(compareCorrectSignForDisplay(currentQuestion))
               : `\u2066${currentQuestion.correctAnswer}\u2069`
-          } ✅`
+          )
         );
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
@@ -2960,20 +2965,12 @@ export default function MathMaster() {
           setTimeLeft(null);
         });
       } else if (mode === "challenge") {
-        // מצב Challenge – עובדים עם חיים
-        setFeedback(
-          `לא נכון 😔 התשובה: ${
-            currentQuestion.operation === "compare"
-              ? formatCompareFeedbackSign(compareCorrectSignForDisplay(currentQuestion))
-              : `\u2066${currentQuestion.correctAnswer}\u2069`
-          } ❌ (-1 ❤️)`
-        );
+        setFeedback(`${LIVE_PRACTICE_WRONG_HE} (-1 ❤️)`);
         setLives((prevLives) => {
           const nextLives = prevLives - 1;
 
           if (nextLives <= 0) {
-            // Game Over
-            setFeedback("Game Over! 💔");
+            setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
             sound.playSound("game-over");
             recordSessionProgress();
             saveRunToStorage();
@@ -2997,14 +2994,7 @@ export default function MathMaster() {
           return nextLives;
         });
       } else {
-        // מצבי speed / marathon / practice - לא יוצאים מהמשחק על טעות
-        setFeedback(
-          `לא נכון 😔 התשובה הנכונה: ${
-            currentQuestion.operation === "compare"
-              ? formatCompareFeedbackSign(compareCorrectSignForDisplay(currentQuestion))
-              : `\u2066${currentQuestion.correctAnswer}\u2069`
-          } ❌`
-        );
+        setFeedback(LIVE_PRACTICE_WRONG_HE);
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);

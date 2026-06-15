@@ -304,7 +304,6 @@ export default function StudentActivityPage({ activityId }) {
           type: json.isCorrect ? "correct" : "wrong",
           message: json.isCorrect ? "נכון!" : "לא נכון",
           explanation: explanationText,
-          correctAnswer: showExplanation ? json.correctAnswer : undefined,
         });
       }
       setSavedAttempts((prev) => ({
@@ -428,9 +427,6 @@ export default function StudentActivityPage({ activityId }) {
   const isAnswerRequired = activity?.answerRequired !== false;
   const isExplanationOnly = isDiscussion && !isAnswerRequired;
   const isQuiz = activity?.mode === "quiz";
-  const showHints =
-    !isDiscussion &&
-    (activity?.mode === "guided_practice" || activity?.mode === "homework");
   const progressPct =
     questionSet.length > 0 ? Math.round(((effectiveIdx + 1) / questionSet.length) * 100) : 0;
   const choiceGridClass = activityChoiceGridClassName(currentQuestion?.choices);
@@ -448,20 +444,12 @@ export default function StudentActivityPage({ activityId }) {
 
   const renderAnswerFeedback = () => (
     <>
-      {!isExplanationOnly && showHints && currentQuestion?.hint ? (
-        <p className={L.hintText}>רמז: {currentQuestion.hint}</p>
-      ) : null}
       {feedback?.type === "wait" ? (
         <p className={L.waitText}>{feedback.message}</p>
       ) : null}
       {feedback && feedback.type !== "wait" ? (
         <div className={`${L.feedbackBox} ${feedbackToneClass}`}>
           <p>{feedback.message}</p>
-          {feedback.correctAnswer ? (
-            <p className="mt-1">
-              תשובה נכונה: <AssignedActivityBidiText text={feedback.correctAnswer} />
-            </p>
-          ) : null}
           {feedback.explanation ? <p className="mt-1">{feedback.explanation}</p> : null}
         </div>
       ) : null}

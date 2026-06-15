@@ -66,26 +66,41 @@ export function getSolutionSteps(question, topic, gradeKey) {
   return steps;
 }
 
-export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
+export function getErrorExplanation(question, topic, wrongAnswer, gradeKey, opts = {}) {
   if (!question) return "";
 
   const correctAnswer = question.correctAnswer;
+  const learning = opts.mode === "learning";
 
   switch (topic) {
     case "homeland":
-      return `התשובה הנכונה היא "${correctAnswer}". נסה להיזכר בידע שלך על ארץ ישראל.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". נסה להיזכר בידע שלך על ארץ ישראל.`
+        : "נסה להיזכר בידע שלך על ארץ ישראל לפני שבוחרים שוב.";
     case "community":
-      return `התשובה הנכונה היא "${correctAnswer}". חשוב על חיי הקהילה והמשפחה.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". חשוב על חיי הקהילה והמשפחה.`
+        : "חשוב על חיי הקהילה והמשפחה לפי מה שלמדנו.";
     case "citizenship":
-      return `התשובה הנכונה היא "${correctAnswer}". הבן את זכויות וחובות האזרחים.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". הבן את זכויות וחובות האזרחים.`
+        : "הבן את זכויות וחובות האזרחים לפי מה שלמדנו.";
     case "geography":
-      return `התשובה הנכונה היא "${correctAnswer}". חשוב על מושגים גאוגרפיים.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". חשוב על מושגים גאוגרפיים.`
+        : "חשוב על מושגים גאוגרפיים והקשר שלהם לשאלה.";
     case "values":
-      return `התשובה הנכונה היא "${correctAnswer}". הבן את משמעות הערכים.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". הבן את משמעות הערכים.`
+        : "הבן את משמעות הערכים לפי ההקשר.";
     case "maps":
-      return `התשובה הנכונה היא "${correctAnswer}". הבן את קריאת המפות.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". הבן את קריאת המפות.`
+        : "הבן את קריאת המפות לפי הסמלים והכיוונים.";
     default:
-      return `התשובה הנכונה היא "${correctAnswer}".`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}".`
+        : "קרא את השאלה שוב ובחר תשובה לפי מה שלמדנו.";
   }
 }
 
@@ -101,4 +116,3 @@ export function buildStepExplanation(question) {
     vertical: null,
   };
 }
-

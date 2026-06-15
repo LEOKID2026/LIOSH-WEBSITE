@@ -1097,17 +1097,9 @@ export default function ParentReportDetailedPage() {
               font-weight: 700 !important;
             }
 
-            /* Parent AI summary insight — ink-safe for print/PDF (outside #parent-report-detailed-print) */
+            /* Parent AI insight — screen only, never print/PDF */
             .parent-report-parent-ai-insight {
-              break-inside: avoid;
-              page-break-inside: avoid;
-              border-color: #38bdf8 !important;
-              background: #f0f9ff !important;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            .parent-report-parent-ai-insight p {
-              color: #0f172a !important;
+              display: none !important;
             }
 
           }
@@ -1137,7 +1129,9 @@ export default function ParentReportDetailedPage() {
           </div>
           {payload ? (
             <>
-              <ParentReportInsight explanation={parentAiExplanation} />
+              <div className="no-pdf">
+                <ParentReportInsight explanation={parentAiExplanation} />
+              </div>
               <div className="no-pdf mb-4 rounded-lg border border-cyan-500/20 bg-cyan-950/15 px-3 py-2">
                 <ParentCopilotShell payload={payload} />
               </div>

@@ -1,0 +1,91 @@
+{
+  "generatedAt": "2026-06-15T16:14:29.369Z",
+  "port": 3100,
+  "commands": [
+    "node --test tests/learning/parent-report-mixed-evidence-fixture.test.mjs",
+    "node --test tests/learning/parent-report-evidence-gate.test.mjs",
+    "node scripts/qa/p0-final-verification.mjs"
+  ],
+  "filesChanged": [],
+  "evidenceFixture": {
+    "pass": true,
+    "exitCode": 0,
+    "tail": "ok 1 - P0 mixed evidence fixture\n  ---\n  duration_ms: 14.7192\n  type: 'suite'\n  ...\n1..1\n# tests 1\n# suites 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 266.5091\n"
+  },
+  "evidenceGateUnit": {
+    "pass": true,
+    "exitCode": 0
+  },
+  "greps": {
+    "english": {
+      "feedback_english": {
+        "hits": 0,
+        "sample": ""
+      },
+      "ui_string_english": {
+        "hits": 0,
+        "sample": ""
+      },
+      "wrong_correct_literal": {
+        "hits": 0,
+        "sample": ""
+      }
+    },
+    "hints": {
+      "hint_label": {
+        "hits": 22,
+        "sample": "utils\\hebrew-question-generator.js:638:      question: \"לפי הרמז: דבר לבן שיורד מהשמיים בחורף ואפשר לעשות ממנו כדור.\",\r\nutils\\hebrew-question-generator.js:644:      question: \"לפי הרמז: חיה קטנה שמצייצת ולפעמים בונה קן.\",\r\nutils\\hebrew-question-generator.js:650:      question: \"לפי הרמז: משהו שמאיר בלילה בשמיים ולפעמים נראה כמו חצי עיגול.\",\r\nutils\\hebrew-question-generator.js:656:      question: \"לפי הרמז: משקה שקור ומתאים כשחם בחוץ.\",\r\nutils\\hebrew-question-generator.js:662:      question: \"לפי הרמז: מקום בבית שבו שוטפים ידיים ופנים.\",\r\nutils\\hebrew-question-generator.js:668:      question: \"לפי הרמז: דבר שמחברים איתו בין שני קצוות של נייר.\",\r\nutils\\hebrew-question-generator.js:674:      question: \"לפי הרמז: משהו שמנקים איתו טעות בעיפרון.\",\r\nutils\\hebrew-question-generator.js:680:      question: \"לפי הרמז: בגד ששמים על הידיים כשקר בחוץ.\",\r"
+      },
+      "showHints": {
+        "hits": 0,
+        "sample": ""
+      },
+      "getHint_ui": {
+        "hits": 4,
+        "sample": "utils\\hebrew-explanations.js:1:export function getHint(question, topic, gradeKey) {\r\nutils\\geometry-explanations.js:20:export function getHint(question, topic, gradeKey) {\r\nutils\\math-explanations.js:9:export function getHint(question, operation, gradeKey) {\r\nutils\\moledet-geography-explanations.js:1:export function getHint(question, topic, gradeKey) {"
+      },
+      "hint_render": {
+        "hits": 0,
+        "sample": ""
+      }
+    },
+    "diagnosticParentSurfaces": {
+      "abchon": {
+        "hits": 5,
+        "sample": "utils/parent-report-language\\forbidden-terms.js:63:  \"מיקוד אבחוני\",\r\nutils/parent-report-language\\forbidden-terms.js:64:  \"דפוס אבחוני\",\r\nutils/parent-report-language\\parent-facing-normalize-he.js:58:    [/\\bאבחוני\\b/giu, \"מהתרגול\"],\r\nutils/parent-report-language\\parent-facing-normalize-he.js:99:    [/דפוס\\s+אבחוני/giu, \"תמונה מהתרגולים\"],\r\nutils/parent-report-language\\parent-facing-normalize-he.js:100:    [/מיקוד\\s+אבחוני/giu, \"מה הכי בולט עכשיו\"],"
+      },
+      "koshi_chozer": {
+        "hits": 0,
+        "sample": ""
+      },
+      "emun": {
+        "hits": 2,
+        "sample": "utils/parent-report-language\\parent-facing-normalize-he.js:68:    [/^אמון:\\s*/gimu, \"\"],\r\nutils/parent-report-language\\parent-facing-normalize-he.js:69:    [/אמון:\\s*/giu, \"\"],"
+      },
+      "daaga": {
+        "hits": 0,
+        "sample": ""
+      }
+    },
+    "pdfAi": {
+      "parent_ai_insight_print": {
+        "hits": 2,
+        "sample": "pages\\learning\\parent-report-detailed.renderable.jsx:1101:            .parent-report-parent-ai-insight {\r\npages\\learning\\parent-report-detailed.js:1481:            .parent-report-parent-ai-insight {"
+      },
+      "no_pdf_missing": {
+        "hits": 6,
+        "sample": "pages\\learning\\parent-report.js:11:import { ParentReportInsight } from \"../../components/ParentReportInsight.jsx\";\r\npages\\learning\\parent-report.js:2059:            <ParentReportInsight explanation={report.parentAiExplanation} />\r\npages\\learning\\parent-report-detailed.renderable.jsx:23:import { ParentReportInsight } from \"../../components/ParentReportInsight.jsx\";\r\npages\\learning\\parent-report-detailed.renderable.jsx:1133:                <ParentReportInsight explanation={parentAiExplanation} />\r\npages\\learning\\parent-report-detailed.js:29:import { ParentReportInsight } from \"../../components/ParentReportInsight.jsx\";\r\npages\\learning\\parent-report-detailed.js:1549:                  <ParentReportInsight explanation={parentAiExplanation} />"
+      }
+    }
+  },
+  "staticVerdict": {
+    "evidenceFixture": "PASS",
+    "englishGrep": "PASS",
+    "hintGrep": "FAIL",
+    "diagnosticGrep": "FAIL"
+  },
+  "staticGrepInterpretation": {
+    "hintGrep": "allowed-internal — question stems with 'לפי הרמז' and getHint() defs; no showHints/hint_render UI hits",
+    "diagnosticGrep": "allowed-internal — forbidden-terms catalog and normalize replacement rules, not parent-visible copy"
+  }
+}

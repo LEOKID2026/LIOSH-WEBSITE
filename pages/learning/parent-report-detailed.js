@@ -1477,17 +1477,9 @@ export default function ParentReportDetailedPage() {
               font-weight: 700 !important;
             }
 
-            /* Parent AI summary insight — ink-safe for print/PDF (outside #parent-report-detailed-print) */
+            /* Parent AI insight — screen only, never print/PDF */
             .parent-report-parent-ai-insight {
-              break-inside: avoid;
-              page-break-inside: avoid;
-              border-color: #38bdf8 !important;
-              background: #f0f9ff !important;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            .parent-report-parent-ai-insight p {
-              color: #0f172a !important;
+              display: none !important;
             }
 
             #parent-report-detailed-print details,
@@ -1553,7 +1545,9 @@ export default function ParentReportDetailedPage() {
                   </p>
                 </header>
 
-                <ParentReportInsight explanation={parentAiExplanation} />
+                <div className="no-pdf">
+                  <ParentReportInsight explanation={parentAiExplanation} />
+                </div>
 
                 {/* C — מה עשינו בתקופה הזאת */}
                 <SectionCard title="מה עשינו בתקופה הזאת" compact={displayMode === "summary"}>

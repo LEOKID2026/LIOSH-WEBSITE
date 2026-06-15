@@ -1,0 +1,26 @@
+{
+  "origin": "http://127.0.0.1:3100",
+  "studentId": "79c8f8c7-2494-439e-b867-93b096c8590b",
+  "studentUsername": "aaa5",
+  "range": {
+    "from": "2026-06-09",
+    "to": "2026-06-15"
+  },
+  "pass": true,
+  "shortReport": {
+    "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-report-short.png",
+    "forbiddenHits": []
+  },
+  "detailedReport": {
+    "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-report-detailed.png",
+    "forbiddenHits": []
+  },
+  "pdf": {
+    "path": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-report-live.pdf",
+    "textPath": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-report-live-pdf-text.txt",
+    "extractMethod": "pdf-parse-PDFParse",
+    "bytes": 103155,
+    "forbiddenHits": [],
+    "textSample": "לתקופה מקיף דוח\nמלא דוח\nדוח הורים מקיף — מבוסס על התאריכים הנבחרים\nתאריכים מותאמים מצב תקופה: | 15/06/2026 – 09/06/2026 טווח תאריכים:\nהזאת בתקופה עשינו מה\nזמן כולל\nדק׳ 1\nשאלות\n14\nדיוק כללי\n0%\nמקצוע לפי כיסוי\nמקצוע\tשאלות\tדיוק\t(דק׳) זמן\nחשבון\t14\t0%\t1\nגאומטריה\t0\t0%\t0\nאנגלית\t0\t0%\t0\nמדעים\t0\t0%\t0\nעברית\t0\t0%\t0\nמולדת וגאוגרפיה\t0\t0%\t0\nבתקופה תורגלו שלא מקצועות\n(שאלות 14) חשבון — מספר שאלות נמוך\nגאומטריה — לא נאספו שאלות בתקופה שנבחרה\nאנגלית — לא נאספו שאלות בתקופה שנבחרה\nמדעים — לא נאספו שאלות בתקופה שנבחרה\nעברית — לא נאספו שאלות בתקופה שנבחרה\nמולדת וגאוגרפיה — לא נאספו שאלות בתקופה שנבחרה\nבולטים מקצועות\nאין עדיין מקצוע בולט לפי כמות השאלות והדיוק — המשך תרגול יעשה את ההבדל.\nמצב הנתונים בדוח\nמקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, עברית, מולדת וגאוגרפיה.\nמספר הנושאים שנבדקו נמוך יחסית — ככל שיצטבר עוד תרגול התמונה תתבהר.\nלדעת חשוב מה\nיש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\nבמתמטיקה נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.\n\n-- 1 of 2 --\n\nכדאי לשים לב לחיבור — זה נושא שחוזר בתרגולים.\nנושאים בתקופה שנבחרה. 1 במבט על כל המקצועות יחד:\nנושאים שכדאי לעקוב אחריהם השבוע מקרוב. 0\nבבית לעשות מומלץ מה\nלחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב "
+  }
+}

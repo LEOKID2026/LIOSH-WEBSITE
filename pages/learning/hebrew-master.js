@@ -34,6 +34,11 @@ import {
 } from "../../utils/hebrew-explanations";
 import { trackHebrewTopicTime } from "../../utils/hebrew-time-tracking";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import {
+  LIVE_PRACTICE_GAME_OVER_HE,
+  LIVE_PRACTICE_WRONG_HE,
+  formatLearningWrongFeedbackHe,
+} from "../../utils/learning-live-feedback-he";
 import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
@@ -2654,7 +2659,8 @@ export default function HebrewMaster() {
           currentQuestion,
           topicKey,
           answer,
-          grade
+          grade,
+          { mode }
         );
         if (
           isChildHebrewNiqqudGradeKey(gradeKeyEff) &&
@@ -2695,10 +2701,7 @@ export default function HebrewMaster() {
       if ("vibrate" in navigator) navigator.vibrate?.(200);
 
       if (mode === "learning") {
-        // במצב למידה – אין Game Over, רק הצגת תשובה והמשך
-        setFeedback(
-          `לא נכון 😔 התשובה הנכונה: ${correctAnswerDisplay} ✅`
-        );
+        setFeedback(formatLearningWrongFeedbackHe(correctAnswerDisplay));
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
@@ -2707,16 +2710,12 @@ export default function HebrewMaster() {
           setTimeLeft(null);
         });
       } else if (mode === "challenge") {
-        // מצב Challenge – עובדים עם חיים
-        setFeedback(
-          `לא נכון 😔 התשובה: ${correctAnswerDisplay} ❌ (-1 ❤️)`
-        );
+        setFeedback(`${LIVE_PRACTICE_WRONG_HE} (-1 ❤️)`);
         setLives((prevLives) => {
           const nextLives = prevLives - 1;
 
           if (nextLives <= 0) {
-            // Game Over
-            setFeedback("Game Over! 💔");
+            setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
             sound.playSound("game-over");
             recordSessionProgress();
             saveRunToStorage();
@@ -2740,8 +2739,7 @@ export default function HebrewMaster() {
           return nextLives;
         });
       } else {
-        // speed / marathon / practice stay active on wrong answers
-        setFeedback(`לא נכון 😔 התשובה הנכונה: ${correctAnswerDisplay} ✅`);
+        setFeedback(LIVE_PRACTICE_WRONG_HE);
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);

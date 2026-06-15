@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-06-15T16:42:54.934Z",
+  "origin": "http://localhost:3100",
+  "pass": true,
+  "results": [
+    {
+      "id": "book-geo-g6-circle",
+      "screenshot": "docs/qa/p0-rtl-focused-audit-screenshots/book-geo-g6-circle-mobile.png",
+      "blockers": [],
+      "rtlHints": [],
+      "pass": true,
+      "sample": "חזרה לגאומטריה\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר גאומטריה — כיתה ו׳\n\nשטח עיגול\n\nמה לומדים?\nהיום נלמד שטח עיגול בגאומטריה.\nשטח = π × רדיוס².\nבשיעור:π ≈ 3.14.\nיחידה: סמ״ר.\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nהיקף מעגל\nנושא הבא\nמשפט פיתגורס — מציאת יתר\nשמור לפרסומת"
+    },
+    {
+      "id": "geometry-practice-area",
+      "screenshot": "docs/qa/p0-rtl-focused-audit-screenshots/geometry-practice-area-mobile.png",
+      "blockers": [],
+      "rtlHints": [],
+      "pass": true,
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n📐 גאומטריה\n🔊\n\nrtl • כיתה ה' • קל • 📐 זוויות • תרגול\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\n\nהשלימו את הזווית השלישית.:\n\nחישוב זוויות במשולש: ידועות 2 זוויות במשולש 93° ו - 31°.\n⌨️\nבדוק\n⏹️ עצור\nשמור לפרסומת"
+    },
+    {
+      "id": "math-practice-percent",
+      "screenshot": "docs/qa/p0-rtl-focused-audit-screenshots/math-practice-percent-mobile.png",
+      "blockers": [],
+      "rtlHints": [],
+      "pass": true,
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nrtl • כיתה ו׳ • קל • אחוזים • תרגול\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\n\nכמה זה 10% מתוך 630:\n\n= __\nדף טיוטה\n⌨️\nבדוק\n⏹️ עצור\nשמור לפרסומת"
+    }
+  ]
+}

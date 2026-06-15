@@ -135,6 +135,18 @@ const REGRESSION_LINES = [
     math: ["8 − 4 = 4"],
     order: ["8 − 4 = 4"],
   },
+  {
+    line: "בשיעור: π ≈ 3.14.",
+    math: ["π ≈ 3.14"],
+    order: ["π ≈ 3.14"],
+    rtlMin: 1,
+  },
+  {
+    line: "שטח = π × רדיוס².",
+    math: [],
+    order: ["π", "×"],
+    rtlMin: 1,
+  },
 ];
 
 for (const sample of REGRESSION_LINES) {

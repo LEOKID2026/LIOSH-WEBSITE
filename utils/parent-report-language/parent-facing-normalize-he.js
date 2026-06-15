@@ -52,6 +52,28 @@ export function normalizeParentFacingHe(raw) {
     s = s.replace(re, rep);
   }
 
+  // PRODUCT-ALIGNMENT — diagnostic-feeling parent copy → practice-period wording
+  const productAlignmentPairs = [
+    [/אבחון\s+מבוסס\s+נתונים/giu, "לפי השאלות שתורגלו בתקופה שנבחרה"],
+    [/\bאבחוני\b/giu, "מהתרגול"],
+    [/\bאבחון\b/giu, "תמונת תרגול"],
+    [/קושי\s+שחוזר\s+על\s+עצמו/giu, "כרגע בתרגול נראה שכדאי לחזק"],
+    [/קושי\s+חוזר/giu, "כרגע בתרגול נראה שכדאי לחזק"],
+    [/הילד\s+חלש/giu, "כרגע בתרגול נראה שיש מקום לחיזוק"],
+    [/המלצת\s+המערכת/giu, "כדאי להמשיך לתרגל"],
+    [/\bconfidence\b/giu, ""],
+    [/אין\s+סיבה\s+לדאגה/giu, "כדאי להמשיך לתרגל ולבדוק שוב בהמשך"],
+    [/יש\s+סיבה\s+לדאגה/giu, "כדאי להמשיך לתרגל ולבדוק שוב בהמשך"],
+    [/מוקדם\s+להסיק\s+מסקנה/giu, "מוקדם להסיק מסקנה לפי כמות השאלות הנוכחית"],
+    [/^אמון:\s*/gimu, ""],
+    [/אמון:\s*/giu, ""],
+    [/ביטחון\s+בנתונים/giu, "כמות השאלות בתקופה"],
+    [/בטחון\s+בנתונים/giu, "כמות השאלות בתקופה"],
+  ];
+  for (const [re, rep] of productAlignmentPairs) {
+    s = s.replace(re, rep);
+  }
+
   // ביטויים שמבלבלים הורים (מתמטיקה / מונחי מערכת)
   const phrasePairs = [
     // Phase 4-B6 — narrow E-06 raw pattern/intervention Hebrew (no English token here)

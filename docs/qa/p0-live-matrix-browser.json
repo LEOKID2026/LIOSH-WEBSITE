@@ -1,0 +1,59 @@
+{
+  "origin": "http://127.0.0.1:3100",
+  "generatedAt": "2026-06-15T14:55:16.768Z",
+  "results": [
+    {
+      "surface": "math",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/math-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nmatrix-test • כיתה ג׳ • קל • חיבור • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון, ננסה שוב 😔\nלמה הטעות קרתה?\n💡 נסה לחשוב על חיבור: ⁦140 + 77 = 217⁩. אם קשה, נסה לפרק: ⁦140 + 77 = 140 + 70 + 7 = 210 + 7 = 217⁩\n↕️ מאונך\nהסבר\n140 + 77 = __\nדף טיוטה\n⌨️\nשאלה הבאה\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת"
+    },
+    {
+      "surface": "geometry",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/geometry-wrong-feedback.png",
+      "sample": "✖ סגירה\n\nתוכנית לימודים\n\nתוכנית הלימודים באתר - גאומטריה\n\nסיכום של הנושאים, רמות הקושי והכיתות כפי שהוגדרו במערכת — לצורכי שקיפות בלבד\n\nמבנה כללי\n6 כיתות: א׳, ב׳, ג׳, ד׳, ה׳, ו׳\nקל, בינוני, קשה (3 רמות קושי) לכל כיתה\n17 נושאי גאומטריה במפת הנושאים של המוצר (לא כולל \"ערבוב\" כנושא נפרד בספירה זו)\n\nהרצף כאן משקף את הגדרות המוצר. בהתאם לנושאים המקובלים בלימודי המקצוע בבתי הספר היסודיים.\n\nכיתה א׳\nנושאי"
+    },
+    {
+      "surface": "english",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/english-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🇬🇧 אנגלית\n🔊\n\nmatrix-test • כיתה ג׳ · Grade 3 • קל • 📚 אוצר מילים • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון, ננסה שוב 😔\nלמה הטעות קרתה?\nבדוק שוב: האם הפירוש שבחרת מתאים למילה? נסה לחשוב על המילה בעברית/אנגלית לפי ההקשר.\nהסבר\nמה פירוש המילה \"eleven\"‏?\nארבעה\nשלוש עשרה\nחמישים\nאחת עשרה\n📘 הסבר מלא\n⏹️ עצור\n"
+    },
+    {
+      "surface": "science",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/science-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🔬 מדעים\n🔊\n\nmatrix-test • כיתה ג׳ • קל • 🫀 גוף האדם • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון, ננסה שוב 😔\nלמה הטעות קרתה?\nבדוק שוב: מה תפקיד המערכת או האיבר? נסה לחשוב איך הוא עוזר לגוף.\n🧠 מה חשוב לזכור?\nהסבר\nמה עושה הלב?\nמעכל לחם\nשומר על שיער\nמניע דם בגוף\nמסנן פסולת בשתן\n📘 הסבר מלא\n⏹️ עצור\nשמור לפרסו"
+    },
+    {
+      "surface": "hebrew",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/hebrew-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n📚 עברית\n🔊\n\nmatrix-test • כיתה ג׳ • קל • קריאה • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון, ננסה שוב 😔\nלמה הטעות קרתה?\nקרא את המילה בעיון וזהה את האותיות לפי מה שלמדנו.\nהסבר\nקרא את הטקסט: 'בבוקר שיר הכיןה את כדור בפארק. בקשת שיר בדקה שוב.' מה שיר בדקה בקשת?\nשברה את כדור\nבדקה שהכדור מסודר\nשכחה את כדור (בלי "
+    },
+    {
+      "surface": "moledet",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/moledet-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🗺️ מולדת וגיאוגרפיה\n🔊\n\nmatrix-test • כיתה ג׳ • קל • מולדת • למידה\n\nניקוד\n10\nרצף\n1\nכוכבים\n0\nרמה\n0\n✅\n1\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nמה זה חנוכה?\nחג הרוח\nחג האש\nחג המים\nחג האורים\n📘 הסבר מלא\n⏹️ עצור\n🕘 תרגיל קודם\nשמור לפרסומת"
+    },
+    {
+      "surface": "parent-assigned-activity",
+      "pass": false,
+      "leaks": [
+        "locator.click: Error: strict mode violation: getByTestId('activity-submit-answer') resolved to 2 elements:\n    1) <button type=\"button\" data-testid=\"activity-submit-answer\" class=\"w-full rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 disabled:opacity-50 shadow-sm\">שליחת תשובה</button> aka getByRole('button', { name: 'שליחת תשובה' })\n    2) <button type=\"button\" data-testid=\"activity-submit-answer\" class=\"shrink-0 min-h-[3rem] min-w-[9.5rem] px-7 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-base font-bold whitespace-nowrap disabled:opacity-50 shadow-sm\">שליחת תשובה</button> aka getByTestId('activity-scratchpad-desktop-actions').getByTestId('activity-submit-answer')\n\nCall log:\n  - waiting for getByTestId('activity-submit-answer')\n"
+      ],
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-assigned-activity-wrong-feedback.png",
+      "sample": "LEO KIDS\n☰\n← חזרה לבית\n🌞\n🌙\n[P0 matrix] 1781535302753\n\nתרגול מודרך · שאלה 1 מתוך 3\n\n↕️ מאונך\n2 + 3 = __\n⌨️\nשליחת תשובה\nשאלה הבאה\nדף טיוטה\nסיום והגשה\nשמור לפרסומת\n\n© 2026 LEO K · משחקים ולמידה לילדים",
+      "activityId": "64d8f520-ac8b-462c-a0a8-5a8c5b44f5fb"
+    }
+  ],
+  "pass": false
+}

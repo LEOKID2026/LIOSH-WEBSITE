@@ -9,14 +9,25 @@ test("discussion mode is registered in ACTIVITY_MODES", () => {
   assert.equal(ACTIVITY_MODES.has("discussion"), true);
 });
 
-test("discussion lifecycle: student never sees correct answer reveal", () => {
+test("assigned activities: student never sees correct answer reveal", () => {
   assert.equal(shouldRevealCorrectAnswerToStudent("discussion"), false);
   assert.equal(
     shouldRevealCorrectAnswerToStudent("discussion", { submitted: true }),
     false
   );
+  assert.equal(shouldRevealCorrectAnswerToStudent("quiz"), false);
   assert.equal(
     shouldRevealCorrectAnswerToStudent("quiz", { submitted: true }),
-    true
+    false
+  );
+  assert.equal(shouldRevealCorrectAnswerToStudent("guided_practice"), false);
+  assert.equal(
+    shouldRevealCorrectAnswerToStudent("guided_practice", { submitted: true }),
+    false
+  );
+  assert.equal(shouldRevealCorrectAnswerToStudent("homework"), false);
+  assert.equal(
+    shouldRevealCorrectAnswerToStudent("homework", { submitted: true }),
+    false
   );
 });

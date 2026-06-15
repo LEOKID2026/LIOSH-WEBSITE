@@ -164,7 +164,7 @@ export default function MemoryMatch() {
   if (!mounted)
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#090d17] to-[#11172b] flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl">טוען...</div>
       </div>
     );
 

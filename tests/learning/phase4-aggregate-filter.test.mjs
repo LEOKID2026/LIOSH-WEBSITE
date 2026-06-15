@@ -118,12 +118,12 @@ describe("Phase 4 — diagnostic bucket separation", () => {
     assert.equal(mathSubj.diagnosticAnswers, 5, "diagnosticAnswers should be 5 (only practice)");
     assert.equal(mathSubj.diagnosticCorrect, 2, "diagnosticCorrect should be 2");
     assert.equal(mathSubj.diagnosticAccuracy, 40, "diagnosticAccuracy should be 40%");
-    assert.equal(mathSubj.learningAnswers, 10, "learningAnswers should be 10");
+    assert.equal(mathSubj.learningAnswers, 0, "learning-mode answers are excluded from report evidence");
 
     const summary = result.summary;
     assert.equal(summary.diagnosticAnswers, 5, "summary.diagnosticAnswers should be 5");
     assert.equal(summary.diagnosticAccuracy, 40, "summary.diagnosticAccuracy should be 40%");
-    assert.equal(summary.learningAnswers, 10, "summary.learningAnswers should be 10");
+    assert.equal(summary.learningAnswers, 0, "summary.learningAnswers should be 0");
   });
 
   test("5 challenge answers at 40% (2/5 correct) → competitiveAccuracy=40%, diagnosticAnswers unaffected", () => {
@@ -148,14 +148,14 @@ describe("Phase 4 — diagnostic bucket separation", () => {
     );
 
     const mathSubj = result.subjects.math;
-    assert.equal(mathSubj.competitiveAnswers, 5, "competitiveAnswers should be 5");
-    assert.equal(mathSubj.competitiveAccuracy, 40, "competitiveAccuracy should be 40%");
+    assert.equal(mathSubj.competitiveAnswers, 0, "competitive/game answers are excluded from report evidence");
+    assert.equal(mathSubj.competitiveAccuracy, 0, "competitiveAccuracy should be 0 when excluded");
     assert.equal(mathSubj.diagnosticAnswers, 1, "diagnosticAnswers should be 1 (only practice)");
     assert.equal(mathSubj.diagnosticAccuracy, 100, "diagnosticAccuracy should be 100% (practice only)");
 
     const summary = result.summary;
-    assert.equal(summary.competitiveAnswers, 5, "summary.competitiveAnswers should be 5");
-    assert.equal(summary.competitiveAccuracy, 40, "summary.competitiveAccuracy should be 40%");
+    assert.equal(summary.competitiveAnswers, 0, "summary.competitiveAnswers should be 0");
+    assert.equal(summary.competitiveAccuracy, 0, "summary.competitiveAccuracy should be 0");
     assert.equal(summary.diagnosticAnswers, 1, "summary.diagnosticAnswers should be 1");
   });
 
@@ -178,8 +178,8 @@ describe("Phase 4 — diagnostic bucket separation", () => {
 
     const mathSubj = result.subjects.math;
     assert.equal(mathSubj.diagnosticAnswers, 1, "only 1 diagnostic answer (normal practice)");
-    assert.equal(mathSubj.learningAnswers, 1, "1 learning answer (afterStepByStep)");
-    assert.equal(mathSubj.stepByStepCount, 1, "stepByStepCount should be 1");
+    assert.equal(mathSubj.learningAnswers, 0, "step-by-step answers are excluded from report evidence");
+    assert.equal(mathSubj.stepByStepCount, 0, "stepByStepCount should be 0 when excluded");
     assert.equal(mathSubj.diagnosticAccuracy, 100, "diagnosticAccuracy should be 100% (normal practice only)");
   });
 
@@ -197,8 +197,9 @@ describe("Phase 4 — diagnostic bucket separation", () => {
     );
 
     const mathSubj = result.subjects.math;
-    assert.equal(mathSubj.diagnosticAnswers, 0, "unclassified should not be in diagnostic");
-    assert.equal(mathSubj.learningAnswers, 1, "unclassified goes to learningAnswers");
+    assert.equal(mathSubj.diagnosticAnswers, 0, "unclassified should not be counted");
+    assert.equal(mathSubj.learningAnswers, 0, "unclassified is excluded from report evidence");
+    assert.equal(mathSubj.answers, 0, "unclassified legacy answers are not counted");
     assert.equal(mathSubj.diagnosticAccuracy, 0, "no diagnostic answers → diagnosticAccuracy=0");
   });
 
@@ -236,7 +237,8 @@ describe("Phase 4 — diagnostic bucket separation", () => {
 
     const mathSubj = result.subjects.math;
     assert.equal(mathSubj.diagnosticAnswers, 0, "learning mode → not diagnostic");
-    assert.equal(mathSubj.learningAnswers, 1, "learning mode → learningAnswers");
+    assert.equal(mathSubj.learningAnswers, 0, "learning mode answers excluded from report evidence");
+    assert.equal(mathSubj.answers, 0, "learning mode answers not counted");
   });
 });
 
@@ -449,14 +451,14 @@ describe("Phase 4 — per-topic diagnosticAccuracy", () => {
 
     const algebraTopic = result.subjects.math.topics.algebra;
     assert.ok(algebraTopic, "algebra topic should exist");
-    assert.equal(algebraTopic.answers, 5, "total answers = 5");
+    assert.equal(algebraTopic.answers, 3, "only countable self-practice answers");
     assert.equal(algebraTopic.diagnosticAnswers, 3, "3 diagnostic answers");
     assert.equal(algebraTopic.diagnosticCorrect, 1, "1 correct diagnostic");
     assert.ok(
       Math.abs(algebraTopic.diagnosticAccuracy - (1/3)*100) < 0.1,
       "topic diagnosticAccuracy ≈ 33.33%"
     );
-    assert.equal(algebraTopic.learningAnswers, 2, "2 learning answers");
+    assert.equal(algebraTopic.learningAnswers, 0, "learning answers excluded from report evidence");
   });
 });
 
@@ -627,13 +629,14 @@ describe("Phase 4 — speed and marathon are competitive", () => {
     );
 
     const mathSubj = result.subjects.math;
-    assert.equal(mathSubj.competitiveAnswers, 5, "all speed+marathon → competitive");
-    assert.equal(mathSubj.competitiveCorrect, 3, "3 correct competitive");
+    assert.equal(mathSubj.competitiveAnswers, 0, "speed/marathon game modes excluded from report evidence");
+    assert.equal(mathSubj.competitiveCorrect, 0, "no competitive answers counted");
+    assert.equal(mathSubj.answers, 0, "game mode answers not counted");
     assert.equal(mathSubj.diagnosticAnswers, 0, "speed/marathon do NOT contaminate diagnosticAnswers");
     assert.equal(mathSubj.diagnosticAccuracy, 0, "no diagnostic answers → diagnosticAccuracy=0");
 
     const summary = result.summary;
-    assert.equal(summary.competitiveAnswers, 5);
+    assert.equal(summary.competitiveAnswers, 0);
     assert.equal(summary.diagnosticAnswers, 0);
   });
 });

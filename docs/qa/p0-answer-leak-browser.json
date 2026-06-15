@@ -1,0 +1,20 @@
+{
+  "origin": "http://127.0.0.1:3100",
+  "results": [
+    {
+      "master": "math-master",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\p0-final-verification-screenshots\\math-master-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nleak-test • כיתה ג׳ • קל • חיבור • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\n↕️ מאונך\nהסבר\n8 + 62 = __\nדף טיוטה\n⌨️\n✕\n7\n8\n9\n4\n5\n6\n1\n2\n3\n−\n.\n,\n0\n⌫\nנקה\nבדוק\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת"
+    },
+    {
+      "master": "geometry-master",
+      "pass": true,
+      "leaks": [],
+      "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\p0-final-verification-screenshots\\geometry-master-wrong-feedback.png",
+      "sample": "✖ סגירה\n\nתוכנית לימודים\n\nתוכנית הלימודים באתר - גאומטריה\n\nסיכום של הנושאים, רמות הקושי והכיתות כפי שהוגדרו במערכת — לצורכי שקיפות בלבד\n\nמבנה כללי\n6 כיתות: א׳, ב׳, ג׳, ד׳, ה׳, ו׳\nקל, בינוני, קשה (3 רמות קושי) לכל כיתה\n17 נושאי גאומטריה במפת הנושאים של המוצר (לא כולל \"ערבוב\" כנושא נפרד בספירה זו)\n\nהרצף כאן משקף את הגדרות המוצר. בהתאם לנושאים המקובלים"
+    }
+  ],
+  "pass": true
+}

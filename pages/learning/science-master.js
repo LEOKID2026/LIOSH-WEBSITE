@@ -18,6 +18,11 @@ import {
 } from "../../utils/learning-time-credit";
 import { computeFreePracticeTiming } from "../../lib/learning/timing-policy.js";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import {
+  LIVE_PRACTICE_GAME_OVER_HE,
+  LIVE_PRACTICE_WRONG_HE,
+  formatLearningWrongFeedbackHe,
+} from "../../utils/learning-live-feedback-he";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
 import { reportModeFromGameState } from "../../utils/report-track-meta";
@@ -2670,7 +2675,9 @@ function saveScienceAnswerInParallel({
       });
       if ("vibrate" in navigator) navigator.vibrate?.(200);
       if (mode === "learning") {
-        setFeedback("לא מדויק... ❌");
+        const scienceCorrect =
+          currentQuestion.options?.[currentQuestion.correctIndex] ?? "";
+        setFeedback(formatLearningWrongFeedbackHe(scienceCorrect));
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
@@ -2678,11 +2685,11 @@ function saveScienceAnswerInParallel({
           setTimeLeft(null);
         });
       } else if (mode === "challenge") {
-        setFeedback("טעות! ❌ (-1 ❤️)");
+        setFeedback(`${LIVE_PRACTICE_WRONG_HE} (-1 ❤️)`);
         setLives((prev) => {
           const next = prev - 1;
           if (next <= 0) {
-            setFeedback("Game Over! 💔");
+            setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
             sound.playSound("game-over");
             recordSessionProgress();
             saveRunToStorage();
@@ -2705,7 +2712,7 @@ function saveScienceAnswerInParallel({
         });
       } else {
         // speed / marathon / practice stay in active gameplay on wrong answers
-        setFeedback("לא מדויק... ❌");
+        setFeedback(LIVE_PRACTICE_WRONG_HE);
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);

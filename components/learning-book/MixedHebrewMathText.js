@@ -245,6 +245,19 @@ function renderFormulaBody(text) {
         </bdi>
       );
     }
+    if (token.type === "symbol") {
+      return (
+        <bdi
+          key={i}
+          dir="ltr"
+          style={bookMathIsolateStyle}
+          className="book-formula-symbol font-semibold tabular-nums"
+          data-book-formula-symbol="true"
+        >
+          {token.value}
+        </bdi>
+      );
+    }
     return (
       <bdi
         key={i}

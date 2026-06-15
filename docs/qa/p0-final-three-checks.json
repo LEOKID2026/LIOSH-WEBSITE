@@ -1,0 +1,71 @@
+{
+  "origin": "http://localhost:3100",
+  "generatedAt": "2026-06-15T16:11:41.826Z",
+  "policyNotes": {
+    "learning": "expects wrong feedback + answer reveal + explanation popup",
+    "practice": "expects Hebrew wrong feedback without answer in live feedback prefix",
+    "assigned": "expects binary feedback only; API correctAnswer null; revealAnswers never true"
+  },
+  "results": [
+    {
+      "surface": "math-learning",
+      "policy": "learning",
+      "englishLeaks": [],
+      "hasWrongFeedback": true,
+      "hasAnswerReveal": true,
+      "hasExplanation": true,
+      "pass": true,
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/math-learning-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nfinal-test • כיתה ג׳ • קל • חיבור • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון 😔 התשובה הנכונה: ⁦80⁩ ✅\nלמה הטעות קרתה?\n💡 נסה לחשוב על חיבור: ⁦8 + 72 = 80⁩. אם קשה, נסה לפרק: ⁦8 + 72 = 8 + 70 + 2 = 78 + 2 = 80⁩\n↕️ מאונך\nהסבר\n8 + 72 = __\nדף טיוטה\n⌨️\nשאלה הבאה\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת"
+    },
+    {
+      "surface": "math-challenge",
+      "policy": "practice",
+      "englishLeaks": [],
+      "feedbackLeaks": [],
+      "hasWrongFeedback": true,
+      "pass": true,
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/math-challenge-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nfinal-test • כיתה ג׳ • קל • חיבור • אתגר\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n2 ❤️\n⏰ טיימר\n18\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון, ננסה שוב 😔 (-1 ❤️)\nלמה הטעות קרתה?\nנראה שחיברת משהו פעמיים או טעית בחיבור ביניים.\n↕️ מאונך\n99 + 160 = __\nדף טיוטה\n15840\n61\n259\n269\n⏹️ עצור\nשמור לפרסומת"
+    },
+    {
+      "surface": "geometry-learning",
+      "policy": "learning",
+      "englishLeaks": [],
+      "hasWrongFeedback": true,
+      "hasAnswerReveal": true,
+      "hasExplanation": true,
+      "pass": true,
+      "onCurriculum": false,
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/geometry-learning-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n📐 גאומטריה\n🔊\n\nfinal-test • כיתה ג' • קל • 🔷 צורות בסיסיות • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון 😔 התשובה הנכונה: ⁦נכון⁩ ✅\nלמה הטעות קרתה?\nהבחנו בין תכונות צלעות לבין זוויות, ובין ריבוע למלבן. התשובה הנכונה: ⁦נכון⁩.\n🧠 מה חשוב לזכור?\nהסבר\nבמלבן במישור , כל ארבע הזוויות הפנימיות ישרות ( 90° ) . נכון או לא נכון?\n⌨️\nשאלה הבאה\n📘 צעד-צעד\n⏹️ עצור\nשמור ל"
+    },
+    {
+      "surface": "geometry-challenge",
+      "policy": "practice",
+      "englishLeaks": [],
+      "feedbackLeaks": [],
+      "hasWrongFeedback": true,
+      "pass": true,
+      "onCurriculum": false,
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/geometry-challenge-wrong-feedback.png",
+      "sample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n📐 גאומטריה\n🔊\n\nfinal-test • כיתה ג' • קל • 🔷 צורות בסיסיות • אתגר\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n2 ❤️\n⏰ טיימר\n18\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nלא נכון, ננסה שוב 😔 (-1 ❤️)\nלמה הטעות קרתה?\nכל ארבע הצלעות בריבוע שוות — לא מלבן עם שני אורכים שונים.\nמהי הצורה? ארבע צלעות 3 , זוויות ישרות. ( 1 = ריבוע , 2 = מלבן )\n2\n1\n⏹️ עצור\nשמור לפרסומת"
+    },
+    {
+      "surface": "parent-assigned-activity",
+      "policy": "assigned",
+      "englishLeaks": [],
+      "assignedLeaks": [],
+      "hasBinaryFeedback": true,
+      "pass": true,
+      "apiCorrectAnswerLeaked": null,
+      "apiRevealAnswers": null,
+      "submitRevealAnswers": false,
+      "submitCorrectAnswer": null,
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-assigned-activity-wrong-feedback.png",
+      "sample": "LEO KIDS\n☰\n← חזרה לבית\n🌞\n🌙\n[P0 final] 1781539881562\n\nתרגול מודרך · שאלה 1 מתוך 3\n\n↕️ מאונך\n2 + 3 = __\n⌨️\n\nלא נכון\n\nהתשובה נשמרה\nשאלה הבאה\nדף טיוטה\nסיום והגשה\nשמור לפרסומת\n\n© 2026 LEO K · משחקים ולמידה לילדים",
+      "activityId": "70e9e50d-ea4d-461b-8bf2-506f12b9c75b"
+    }
+  ],
+  "pass": true
+}

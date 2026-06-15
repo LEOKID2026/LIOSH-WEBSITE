@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-06-15T16:14:35.869Z",
+  "port": 3100,
+  "steps": [
+    {
+      "id": "policy_answer_scope",
+      "cmd": "node scripts/qa/policy-answer-scope-verify.mjs",
+      "pass": true,
+      "exitCode": 0,
+      "artifact": "docs/qa/policy-answer-scope-verify.json",
+      "tail": "    \"parentAssignedSubmitApi\": {\n      \"correctAnswer\": null,\n      \"revealAnswers\": false\n    },\n    \"pass\": true\n  },\n  \"verdict\": \"PASS\"\n}"
+    },
+    {
+      "id": "three_checks",
+      "cmd": "node scripts/qa/p0-final-three-checks.mjs",
+      "pass": true,
+      "exitCode": 0,
+      "artifact": "docs/qa/p0-final-three-checks.json",
+      "tail": "      \"submitCorrectAnswer\": null,\n      \"screenshot\": \"C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-assigned-activity-wrong-feedback.png\",\n      \"sample\": \"LEO KIDS\\n☰\\n← חזרה לבית\\n🌞\\n🌙\\n[P0 final] 1781539881562\\n\\nתרגול מודרך · שאלה 1 מתוך 3\\n\\n↕️ מאונך\\n2 + 3 = __\\n⌨️\\n\\nלא נכון\\n\\nהתשובה נשמרה\\nשאלה הבאה\\nדף טיוטה\\nסיום והגשה\\nשמור לפרסומת\\n\\n© 2026 LEO K · משחקים ולמידה לילדים\",\n      \"activityId\": \"70e9e50d-ea4d-461b-8bf2-506f12b9c75b\"\n    }\n  ],\n  \"pass\": true\n}"
+    },
+    {
+      "id": "parent_pdf_smoke",
+      "cmd": "node scripts/qa/p0-parent-report-live.mjs",
+      "pass": true,
+      "exitCode": 0,
+      "artifact": "docs/qa/p0-parent-report-live.json",
+      "tail": "    \"path\": \"C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-report-live.pdf\",\n    \"textPath\": \"C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-final-verification-screenshots/parent-report-live-pdf-text.txt\",\n    \"extractMethod\": \"pdf-parse-PDFParse\",\n    \"bytes\": 103155,\n    \"forbiddenHits\": [],\n    \"textSample\": \"לתקופה מקיף דוח\\nמלא דוח\\nדוח הורים מקיף — מבוסס על התאריכים הנבחרים\\nתאריכים מותאמים מצב תקופה: | 15/06/2026 – 09/06/2026 טווח תאריכים:\\nהזאת בתקופה עשינו מה\\nזמן כולל\\nדק׳ 1\\nשאלות\\n14\\nדיוק כללי\\n0%\\nמקצוע לפי כיסוי\\nמקצוע\\tשאלות\\tדיוק\\t(דק׳) זמן\\nחשבון\\t14\\t0%\\t1\\nגאומטריה\\t0\\t0%\\t0\\nאנגלית\\t0\\t0%\\t0\\nמדעים\\t0\\t0%\\t0\\nעברית\\t0\\t0%\\t0\\nמולדת וגאוגרפיה\\t0\\t0%\\t0\\nבתקופה תורגלו שלא מקצועות\\n(שאלות 14) חשבון — מספר שאלות נמוך\\nגאומטריה — לא נאספו שאלות בתקופה שנבחרה\\nאנגלית — לא נאספו שאלות בתקופה שנבחרה\\nמדעים — לא נאספו שאלות בתקופה שנבחרה\\nעברית — לא נאספו שאלות בתקופה שנבחרה\\nמולדת וגאוגרפיה — לא נאספו שאלות בתקופה שנבחרה\\nבולטים מקצועות\\nאין עדיין מקצוע בולט לפי כמות השאלות והדיוק — המשך תרגול יעשה את ההבדל.\\nמצב הנתונים בדוח\\nמקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, עברית, מולדת וגאוגרפיה.\\nמספר הנושאים שנבדקו נמוך יחסית — ככל שיצטבר עוד תרגול התמונה תתבהר.\\nלדעת חשוב מה\\nיש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\\nבמתמטיקה נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.\\n\\n-- 1 of 2 --\\n\\nכדאי לשים לב לחיבור — זה נושא שחוזר בתרגולים.\\nנושאים בתקופה שנבחרה. 1 במבט על כל המקצועות יחד:\\nנושאים שכדאי לעקוב אחריהם השבוע מקרוב. 0\\nבבית לעשות מומלץ מה\\nלחזור יחד על טעויות אחרונות ולשאול את הילד איך חשב \"\n  }\n}"
+    },
+    {
+      "id": "static_greps_evidence",
+      "cmd": "node scripts/qa/p0-final-verification.mjs",
+      "pass": true,
+      "exitCode": 0,
+      "artifact": "docs/qa/p0-final-verification-results.json",
+      "tail": "{\n  \"evidenceFixture\": \"PASS\",\n  \"englishGrep\": \"PASS\",\n  \"hintGrep\": \"FAIL\",\n  \"diagnosticGrep\": \"FAIL\"\n}\nWrote C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\docs\\qa\\p0-final-verification-results.json"
+    },
+    {
+      "id": "evidence_gate",
+      "cmd": "npm run gate:evidence-threshold",
+      "pass": true,
+      "exitCode": 0,
+      "artifact": null,
+      "tail": "  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"zero-evidence + diagnostic evidence threshold suites passed\",\n  \"details\": {},\n  \"at\": \"2026-06-15T16:14:35.836Z\"\n}"
+    }
+  ],
+  "artifacts": {
+    "docs/qa/policy-answer-scope-verify.json": "PASS",
+    "docs/qa/p0-final-three-checks.json": true,
+    "docs/qa/p0-parent-report-live.json": true,
+    "docs/qa/p0-final-verification-results.json": {
+      "evidenceFixture": "PASS",
+      "englishGrep": "PASS",
+      "hintGrep": "FAIL",
+      "diagnosticGrep": "FAIL"
+    },
+    "docs/qa/p0-final-verification-screenshots/": "browser captures from three-checks + parent smoke"
+  },
+  "tapBattleLaunchScope": {
+    "accessible": true,
+    "path": "/games → /offline → /offline/tap-battle",
+    "note": "Start/Next translated to Hebrew (התחל/הבא)"
+  },
+  "verdict": "PASS",
+  "failedSteps": [],
+  "staticGrepNotes": {
+    "hintGrep": "FAIL if showHints/hint_render/hint_label in UI paths; question stems with 'לפי הרמז' and getHint() defs may count as hits",
+    "diagnosticGrep": "FAIL if forbidden strings in parent-facing surfaces; normalization/forbidden-terms utility files may count as hits"
+  }
+}

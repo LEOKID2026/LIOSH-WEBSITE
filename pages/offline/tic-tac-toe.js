@@ -174,7 +174,7 @@ export default function TicTacToeXL() {
   if (!mounted)
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#05070f] via-[#0e111b] to-[#020308] flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl">טוען...</div>
       </div>
     );
 

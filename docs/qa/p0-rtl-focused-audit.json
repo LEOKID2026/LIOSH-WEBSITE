@@ -1,0 +1,358 @@
+{
+  "generatedAt": "2026-06-15T16:26:25.357Z",
+  "origin": "http://localhost:3100",
+  "outputDir": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots",
+  "mobileScreenshotCount": 17,
+  "rows": [
+    {
+      "id": "math-practice-compare",
+      "surface": "math-practice",
+      "label": "חשבון תרגול — < > =",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-compare-mobile.png",
+      "pass": null,
+      "blockers": [],
+      "rtlHints": [
+        "compare-reversed: סדר חשוד בסימני השוואה"
+      ],
+      "bodySample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nrtl-audit • כיתה ה׳ • קל • השוואה • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nהסבר\n9050 __ 1210\n<\n=\n>\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת",
+      "route": "/learning/math-master"
+    },
+    {
+      "id": "math-practice-fractions",
+      "surface": "math-practice",
+      "label": "חשבון תרגול — שברים",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-fractions-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nrtl-audit • כיתה ה׳ • קל • שברים • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nהסבר\n7 / 8 - 4 / 5 = __\nדף טיוטה\n3/40\n4/40\n40/3\n2/40\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת",
+      "route": "/learning/math-master"
+    },
+    {
+      "id": "math-practice-percent",
+      "surface": "math-practice",
+      "label": "חשבון תרגול — אחוזים",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-percent-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nrtl-audit • כיתה ו׳ • קל • אחוזים • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\nהסבר\nכמה זה 10% מתוך 490? = __\nדף טיוטה\n7\n8\n9\n⌫\n4\n5\n6\nנקה\n1\n2\n3\n.\n0\nבדוק\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת",
+      "route": "/learning/math-master"
+    },
+    {
+      "id": "math-practice-vertical",
+      "surface": "math-practice",
+      "label": "חשבון תרגול — חיסור (טורים)",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-vertical-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🧮 חשבון\n🔊\n\nrtl-audit • כיתה ה׳ • קל • חיסור • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\n↕️ מאונך\nהסבר\n6508 - 4763 = __\nדף טיוטה\n7\n8\n9\n⌫\n4\n5\n6\nנקה\n1\n2\n3\n.\n0\nבדוק\n📖 צעד-צעד\n⏹️ עצור\nשמור לפרסומת",
+      "route": "/learning/math-master"
+    },
+    {
+      "id": "math-learning-steps",
+      "surface": "math-learning",
+      "label": "חשבון למידה — צעד-צעד + הסבר",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-learning-steps-mobile.png",
+      "pass": false,
+      "blockers": [
+        "locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"math-answer-surface\"] input, [data-testid=\"math-answer-surface\"] textarea').first()\n    - locator resolved to <input value=\"\" readonly dir=\"ltr\" type=\"text\" inputmode=\"none\" autocomplete=\"off\" placeholder=\"תשובה\" data-testid=\"math-text-answer\" class=\"w-full h-11 max-h-11 max-[420px]:h-9 max-[420px]:max-h-9 px-3 max-[420px]:px-2 py-0 rounded-xl bg-white border-2 border-sky-500 text-slate-900 text-lg max-[420px]:text-base font-semibold text-center leading-none tabular-nums placeholder:text-slate-400 placeholder:font-normal disabled:opacity-50 disabled:bg-slate-100 [appearance:textfield] overflow-hidden text-el…/>\n    - fill(\"0\")\n  - attempting fill action\n    2 × waiting for element to be visible, enabled and editable\n      - element is not editable\n    - retrying fill action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and editable\n      - element is not editable\n    - retrying fill action\n      - waiting 100ms\n    58 × waiting for element to be visible, enabled and editable\n       - element is not editable\n     - retrying fill action\n       - waiting 500ms\n"
+      ],
+      "rtlHints": [],
+      "bodySample": "",
+      "route": "/learning/math-master",
+      "error": "locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"math-answer-surface\"] input, [data-testid=\"math-answer-surface\"] textarea').first()\n    - locator resolved to <input value=\"\" readonly dir=\"ltr\" type=\"text\" inputmode=\"none\" autocomplete=\"off\" placeholder=\"תשובה\" data-testid=\"math-text-answer\" class=\"w-full h-11 max-h-11 max-[420px]:h-9 max-[420px]:max-h-9 px-3 max-[420px]:px-2 py-0 rounded-xl bg-white border-2 border-sky-500 text-slate-900 text-lg max-[420px]:text-base font-semibold text-center leading-none tabular-nums placeholder:text-slate-400 placeholder:font-normal disabled:opacity-50 disabled:bg-slate-100 [appearance:textfield] overflow-hidden text-el…/>\n    - fill(\"0\")\n  - attempting fill action\n    2 × waiting for element to be visible, enabled and editable\n      - element is not editable\n    - retrying fill action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and editable\n      - element is not editable\n    - retrying fill action\n      - waiting 100ms\n    58 × waiting for element to be visible, enabled and editable\n       - element is not editable\n     - retrying fill action\n       - waiting 500ms\n"
+    },
+    {
+      "id": "geometry-practice-area",
+      "surface": "geometry-practice",
+      "label": "גאומטריה תרגול — שטח/היקף/יחידות",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/geometry-practice-area-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n📐 גאומטריה\n🔊\n\nrtl-audit • כיתה ה' • קל • 📐 זוויות • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\n🧠 מה חשוב לזכור?\nהסבר\n\nחישוב זוויות במשולש:\n\nידועות 2 זוויות במשולש 52° ו - 101°. השלימו את הזווית השלישית.\n7\n8\n9\n⌫\n4\n5\n6\nנקה\n1\n2\n3\n.\n0\nבדוק\n📘 צעד-צעד\n⏹️ עצור\nשמור לפרסומת",
+      "route": "/learning/geometry-master"
+    },
+    {
+      "id": "geometry-learning-formula",
+      "surface": "geometry-learning",
+      "label": "גאומטריה למידה — נוסחאות + צעד-צעד",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/geometry-learning-formula-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "סגור\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר גאומטריה — כיתה ה׳\n\nזוויות במשולש\n\nמה לומדים?\nהיום נעמיק למה סכום זוויות במשולש הוא 180° — ונשתמש בזה כדי למצוא זווית חסרה.\nרעיון:אם \"גוזרים\" את שלוש הזוויות ומצמידים אותן — הן יוצרות קו ישר (180°).\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nסיווג מרובעים — כיתה ה׳\nנושא הבא\nהיקף ריבוע\nשמור לפרסומת\n\nLEO K - Kids Games & Learning",
+      "route": "/learning/geometry-master"
+    },
+    {
+      "id": "science-practice-units",
+      "surface": "science-practice",
+      "label": "מדעים תרגול — טבלאות/יחידות/מספרים",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/science-practice-units-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "📋 תוכנית לימודים\n🌞\n🌙\nחזרה\n🔬 מדעים\n🔊\n\nrtl-audit • כיתה ה׳ • קל • 🧪 חומרים • למידה\n\nניקוד\n0\nרצף\n0\nכוכבים\n0\nרמה\n0\n✅\n0\nחיים\n∞\n⏰ טיימר\n∞\nאווטר\n👤\nלמידה\nאתגר\nמהירות\nמרתון\nתרגול\n🧠 מה חשוב לזכור?\nהסבר\nמה ההבדל הפשוט בין חומר טבעי לחומר סינתטי רבים?\nאין שום הבדל ביניהם (בלי חומר) (בלי טבעי) (בלי סינתטי)\nרק הצבע החיצוני קובע את הסוג באופן שונה\nחומר טבעי מגיע מהטבע; חומר סינתטי מיוצר לרוב בתהליכי תעשייה\nשניהם תמיד זהים לחלוטין בכל תכונה (בלי חומר) (בלי טבעי) (בלי סינתטי)\n📘 הסבר מלא\n⏹️ עצור\nשמור לפרסומת",
+      "route": "/learning/science-master"
+    },
+    {
+      "id": "science-learning-mixed",
+      "surface": "science-learning",
+      "label": "מדעים למידה — טקסט מעורב + טבלאות",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/science-learning-mixed-mobile.png",
+      "pass": false,
+      "blockers": [
+        "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid^=\"science-mcq-\"]').first()\n    - locator resolved to <button type=\"button\" data-testid=\"science-mcq-0\" class=\"rounded-xl border-2 px-2.5 py-2.5 sm:px-3 sm:py-3 text-sm font-semibold leading-snug min-h-[5.25rem] sm:min-h-[5.5rem] max-[420px]:px-2 max-[420px]:py-2 max-[420px]:min-h-[4.25rem] max-[420px]:text-xs max-[420px]:leading-snug h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default bg-white border-2 border-slate-300 text-slate-900 hover:…>אין הבדל באופן שונה במקרה אחר</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    57 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+      ],
+      "rtlHints": [],
+      "bodySample": "",
+      "route": "/learning/science-master",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid^=\"science-mcq-\"]').first()\n    - locator resolved to <button type=\"button\" data-testid=\"science-mcq-0\" class=\"rounded-xl border-2 px-2.5 py-2.5 sm:px-3 sm:py-3 text-sm font-semibold leading-snug min-h-[5.25rem] sm:min-h-[5.5rem] max-[420px]:px-2 max-[420px]:py-2 max-[420px]:min-h-[4.25rem] max-[420px]:text-xs max-[420px]:leading-snug h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default bg-white border-2 border-slate-300 text-slate-900 hover:…>אין הבדל באופן שונה במקרה אחר</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    57 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+    },
+    {
+      "id": "book-math-g1-cmp",
+      "surface": "books-math",
+      "label": "ספר חשבון g1 cmp",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-math-g1-cmp-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזרה לחשבון\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר חשבון — כיתה א׳\n\nהשוואת מספרים\n\nמה לומדים?\n🔊\nהאזנה לעמוד\nהיום נלמד להשוות בין שני מספרים.\nנגיד מי גדול יותר, מי קטן יותר, או אם הם שווים.\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nשכנים של מספר\nנושא הבא\nעשרות ואחדות\nשמור לפרסומת",
+      "route": "/learning/book/math/g1/cmp"
+    },
+    {
+      "id": "book-math-g2-sub-vertical",
+      "surface": "books-math",
+      "label": "ספר חשבון g2 sub_vertical",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-math-g2-sub-vertical-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזרה לחשבון\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר חשבון — כיתה ב׳\n\nחיסור במאונך\n\nמה לומדים?\nהיום נלמד חיסור במאונך — כותבים מספרים אחד מתחת לשני ומחסרים עמודה אחר עמודה.\nלפעמים צריך להחליף עשרה אחת ב 10 אחדות — וזה בסדר!\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nחיבור במאונך\nנושא הבא\nלוח הכפל — קבוצות שוות\nשמור לפרסומת",
+      "route": "/learning/book/math/g2/sub_vertical"
+    },
+    {
+      "id": "book-math-g5-perc",
+      "surface": "books-math",
+      "label": "ספר חשבון g5 perc_part_of",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-math-g5-perc-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזרה לחשבון\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר חשבון — כיתה ה׳\n\nאחוז מכמות\n\nמה לומדים?\nהיום נלמד לחשב אחוז מכמות — למשל 25% מ-80.\nאחוז = חלק מ-100.\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nאומדן כמות\nנושא הבא\nהנחה באחוזים\nשמור לפרסומת",
+      "route": "/learning/book/math/g5/perc_part_of"
+    },
+    {
+      "id": "book-geo-g5-triangle",
+      "surface": "books-geometry",
+      "label": "ספר גאומטריה g5 triangle_area",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-geo-g5-triangle-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזרה לגאומטריה\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר גאומטריה — כיתה ה׳\n\nשטח משולש\n\nמה לומדים?\nהיום נלמד שטח משולש.\nשטח = בסיס × גובה ÷ 2.\nהגובה — מרחק מאונך לבסיס (למדנו בפרק הגבהים).\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nשטח ריבוע\nנושא הבא\nשטח מקבילית\nשמור לפרסומת",
+      "route": "/learning/book/geometry/g5/triangle_area"
+    },
+    {
+      "id": "book-geo-g6-circle",
+      "surface": "books-geometry",
+      "label": "ספר גאומטריה g6 circle_area",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-geo-g6-circle-mobile.png",
+      "pass": null,
+      "blockers": [],
+      "rtlHints": [
+        "split-decimal: רווח בין ספרות עשרוניות (למשל 3. 14)"
+      ],
+      "bodySample": "חזרה לגאומטריה\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר גאומטריה — כיתה ו׳\n\nשטח עיגול\n\nמה לומדים?\nהיום נלמד שטח עיגול בגאומטריה.\nשטח = π × רדיוס².\nבשיעור: π ≈ 3. 14.\nיחידה: סמ״ר.\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nהיקף מעגל\nנושא הבא\nמשפט פיתגורס — מציאת יתר\nשמור לפרסומת",
+      "route": "/learning/book/geometry/g6/circle_area"
+    },
+    {
+      "id": "book-science-g3-materials",
+      "surface": "books-science",
+      "label": "ספר מדעים g3 materials",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-science-g3-materials-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזרה למדעים\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר מדעים — כיתה ג׳\n\nחומרים — כוחות ותנועה\n\nמה לומדים?\nהיום נלמד במדעים על כוחות — דחיפה ומשיכה — ואיך הם מזיזים חפצים.\nנכיר גם חיכוך ומגנט.\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nצמחים — תנאי גידול (סיכום)\nנושא הבא\nכדור הארץ — מזג אוויר ומים\nשמור לפרסומת",
+      "route": "/learning/book/science/g3/materials"
+    },
+    {
+      "id": "book-science-g4-earth",
+      "surface": "books-science",
+      "label": "ספר מדעים g4 earth_space",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-science-g4-earth-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזרה למדעים\n📑 תוכן עניינים\nחזרה לספר\n\nספר לימוד\n\nספר מדעים — כיתה ד׳\n\nכדור הארץ — סלעים, קרקע ועונות\n\nמה לומדים?\nהיום נלמד במדעים על סלעים, קרקע — ואיך מזג אוויר ועונות משפיעים עליהם.\n\nעמוד 1 מתוך 7\n\nעמוד קודם\nעמוד הבא\nנושא קודם\nחומרים — שינויים וחשמל (מושגי)\nנושא הבא\nסביבה — שמירת משאבים\nשמור לפרסומת",
+      "route": "/learning/book/science/g4/earth_space"
+    },
+    {
+      "id": "parent-report-short-mobile",
+      "surface": "parent-report",
+      "label": "דוח הורים קצר — אחוזים/מספרים בעברית",
+      "viewport": "mobile",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/parent-report-short-mobile-mobile.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזור לדוח הורים\nחזרה לפורטל הורים\n📊 דוח להורים\n\nבדיקה-ג1\n\nיום\nשבוע\nחודש\nשנה\nבחירה\nמתאריך:\nעד תאריך:\nהצג\nדוח מקיף לתקופה\n\n09/06/2026 - 15/06/2026\n\nזמן כולל\n1 דק'\n(0.02 שעות)\nשאלות\n14\n0 נכון\nדיוק כללי\n0%\nרמה\nLv.9\n⭐ 102 • 🏆 4\n\nמצב הנתונים בדוח\n\nמקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, עברית, מולדת וגאוגרפיה.\n\nמה הכי בולט עכשיו (לפי התרגול שנאסף בתקופה שנבחרה)\n\nהמקצוע שתורגל בתקופה: חשבון.\n\nעוד נושאים למעקב: חשבון: חיבור\n\nמה חשוב לדעת\nיש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\nבמתמטיקה נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.\nכדאי לשים לב לחיבור — ז",
+      "route": "/learning/parent-report"
+    },
+    {
+      "id": "parent-report-short-desktop",
+      "surface": "parent-report",
+      "label": "דוח הורים קצר — אחוזים/מספרים בעברית",
+      "viewport": "desktop",
+      "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/parent-report-short-desktop-desktop.png",
+      "pass": true,
+      "blockers": [],
+      "rtlHints": [],
+      "bodySample": "חזור לדוח הורים\nחזרה לפורטל הורים\n📊 דוח להורים\n\nבדיקה-ג1\n\nיום\nשבוע\nחודש\nשנה\nבחירה\nמתאריך:\nעד תאריך:\nהצג\nדוח מקיף לתקופה\n\n09/06/2026 - 15/06/2026\n\nזמן כולל\n1 דק'\n(0.02 שעות)\nשאלות\n14\n0 נכון\nדיוק כללי\n0%\nרמה\nLv.9\n⭐ 102 • 🏆 4\n\nמצב הנתונים בדוח\n\nמקצועות שלא תורגלו בתקופה: גאומטריה, אנגלית, מדעים, עברית, מולדת וגאוגרפיה.\n\nמה הכי בולט עכשיו (לפי התרגול שנאסף בתקופה שנבחרה)\n\nהמקצוע שתורגל בתקופה: חשבון.\n\nעוד נושאים למעקב: חשבון: חיבור\n\nמה חשוב לדעת\nיש עדיין מעט נתוני תרגול — מומלץ לשמור על תרגול קצר וקבוע.\nבמתמטיקה נראה קושי יחסי לפי התרגולים — כדאי לעקוב אחרי עוד תרגול קצר.\nכדאי לשים לב לחיבור — ז",
+      "route": "/learning/parent-report"
+    }
+  ],
+  "surfaceSummary": {
+    "math-practice": {
+      "pass": true,
+      "fails": [],
+      "reviews": [
+        {
+          "id": "math-practice-compare",
+          "rtlHints": [
+            "compare-reversed: סדר חשוד בסימני השוואה"
+          ],
+          "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-compare-mobile.png"
+        }
+      ],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-compare-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-fractions-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-percent-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-practice-vertical-mobile.png"
+      ]
+    },
+    "math-learning": {
+      "pass": false,
+      "fails": [
+        {
+          "id": "math-learning-steps",
+          "blockers": [
+            "locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"math-answer-surface\"] input, [data-testid=\"math-answer-surface\"] textarea').first()\n    - locator resolved to <input value=\"\" readonly dir=\"ltr\" type=\"text\" inputmode=\"none\" autocomplete=\"off\" placeholder=\"תשובה\" data-testid=\"math-text-answer\" class=\"w-full h-11 max-h-11 max-[420px]:h-9 max-[420px]:max-h-9 px-3 max-[420px]:px-2 py-0 rounded-xl bg-white border-2 border-sky-500 text-slate-900 text-lg max-[420px]:text-base font-semibold text-center leading-none tabular-nums placeholder:text-slate-400 placeholder:font-normal disabled:opacity-50 disabled:bg-slate-100 [appearance:textfield] overflow-hidden text-el…/>\n    - fill(\"0\")\n  - attempting fill action\n    2 × waiting for element to be visible, enabled and editable\n      - element is not editable\n    - retrying fill action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and editable\n      - element is not editable\n    - retrying fill action\n      - waiting 100ms\n    58 × waiting for element to be visible, enabled and editable\n       - element is not editable\n     - retrying fill action\n       - waiting 500ms\n"
+          ],
+          "rtlHints": [],
+          "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-learning-steps-mobile.png"
+        }
+      ],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/math-learning-steps-mobile.png"
+      ]
+    },
+    "geometry-practice": {
+      "pass": true,
+      "fails": [],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/geometry-practice-area-mobile.png"
+      ]
+    },
+    "geometry-learning": {
+      "pass": true,
+      "fails": [],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/geometry-learning-formula-mobile.png"
+      ]
+    },
+    "science-practice": {
+      "pass": true,
+      "fails": [],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/science-practice-units-mobile.png"
+      ]
+    },
+    "science-learning": {
+      "pass": false,
+      "fails": [
+        {
+          "id": "science-learning-mixed",
+          "blockers": [
+            "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid^=\"science-mcq-\"]').first()\n    - locator resolved to <button type=\"button\" data-testid=\"science-mcq-0\" class=\"rounded-xl border-2 px-2.5 py-2.5 sm:px-3 sm:py-3 text-sm font-semibold leading-snug min-h-[5.25rem] sm:min-h-[5.5rem] max-[420px]:px-2 max-[420px]:py-2 max-[420px]:min-h-[4.25rem] max-[420px]:text-xs max-[420px]:leading-snug h-full w-full flex items-center justify-center text-center transition-all duration-150 shadow-sm active:scale-[0.98] disabled:active:scale-100 disabled:cursor-default bg-white border-2 border-slate-300 text-slate-900 hover:…>אין הבדל באופן שונה במקרה אחר</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    57 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+          ],
+          "rtlHints": [],
+          "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/science-learning-mixed-mobile.png"
+        }
+      ],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/science-learning-mixed-mobile.png"
+      ]
+    },
+    "books-math": {
+      "pass": true,
+      "fails": [],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-math-g1-cmp-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-math-g2-sub-vertical-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-math-g5-perc-mobile.png"
+      ]
+    },
+    "books-geometry": {
+      "pass": true,
+      "fails": [],
+      "reviews": [
+        {
+          "id": "book-geo-g6-circle",
+          "rtlHints": [
+            "split-decimal: רווח בין ספרות עשרוניות (למשל 3. 14)"
+          ],
+          "screenshot": "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-geo-g6-circle-mobile.png"
+        }
+      ],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-geo-g5-triangle-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-geo-g6-circle-mobile.png"
+      ]
+    },
+    "books-science": {
+      "pass": true,
+      "fails": [],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-science-g3-materials-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/book-science-g4-earth-mobile.png"
+      ]
+    },
+    "parent-report": {
+      "pass": true,
+      "fails": [],
+      "reviews": [],
+      "screenshots": [
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/parent-report-short-mobile-mobile.png",
+        "C:/Users/ERAN YOSEF/Desktop/final projects/FINAL-WEB/LIOSH-WEB-TRY/docs/qa/p0-rtl-focused-audit-screenshots/parent-report-short-desktop-desktop.png"
+      ]
+    }
+  }
+}

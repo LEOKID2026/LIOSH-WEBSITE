@@ -152,7 +152,7 @@ export default function TapBattle() {
   if (!mounted)
     return (
       <div className="min-h-screen bg-[#05070f] flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl">טוען...</div>
       </div>
     );
 
@@ -255,13 +255,13 @@ export default function TapBattle() {
               disabled={phase === "countdown" || phase === "playing"}
               className="h-9 px-4 rounded-lg bg-red-500/80 hover:bg-red-500 font-bold text-sm disabled:opacity-50"
             >
-              Start
+              התחל
             </button>
             <button
               onClick={nextRound}
               className="h-9 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-sm"
             >
-              Next
+              הבא
             </button>
             <button
               onClick={resetMatch}
@@ -272,7 +272,7 @@ export default function TapBattle() {
           </div>
 
           <div className="text-center mb-1 text-sm text-white/80 font-semibold">
-            {phase === "idle" && "Tap Start to begin"}
+            {phase === "idle" && "לחצו התחל כדי להתחיל"}
             {phase === "countdown" && `Get ready... ${countdown}`}
             {phase === "playing" && `Time: ${timeLeft.toFixed(1)}s`}
             {phase === "finished" && winnerMessage}

@@ -64,6 +64,12 @@ import {
   resolveMasterSessionDurationSeconds,
 } from "../../utils/learning-time-credit";
 import { applyLearningShellLayoutVars } from "../../utils/learning-shell-layout";
+import {
+  LIVE_PRACTICE_CORRECT_HE,
+  LIVE_PRACTICE_GAME_OVER_HE,
+  LIVE_PRACTICE_WRONG_HE,
+  formatLearningWrongFeedbackHe,
+} from "../../utils/learning-live-feedback-he";
 import { STEP_BY_STEP_AUTO_PLAY_DELAY_MS } from "../../utils/learning-step-by-step-config";
 import TrackingDebugPanel from "../../components/TrackingDebugPanel";
 import LearningPlannerRecommendationBlock from "../../components/LearningPlannerRecommendationBlock";
@@ -1736,7 +1742,7 @@ export default function GeometryMaster() {
       setShowCorrectAnimation(true);
       setTimeout(() => setShowCorrectAnimation(false), 1000);
 
-      setFeedback("Correct! 🎉");
+      setFeedback(LIVE_PRACTICE_CORRECT_HE);
       
       // Play sound - different sound for streak milestones
       if ((streak + 1) % 5 === 0 && streak + 1 >= 5) {
@@ -1772,12 +1778,25 @@ export default function GeometryMaster() {
       setWrong((prev) => prev + 1);
       setStreak(0);
       
-      const errExpl = getErrorExplanation(
+      let errExpl = getErrorExplanation(
         currentQuestion,
         currentQuestion.topic,
         answer,
-        grade
+        grade,
+        { mode }
       );
+      if (
+        mode === "learning" &&
+        currentQuestion?.correctAnswer != null &&
+        String(currentQuestion.correctAnswer) !== ""
+      ) {
+        const ans = `\u2066${currentQuestion.correctAnswer}\u2069`;
+        if (errExpl && !errExpl.includes(String(currentQuestion.correctAnswer))) {
+          errExpl = `${errExpl} התשובה הנכונה: ${ans}.`;
+        } else if (!errExpl) {
+          errExpl = `התשובה הנכונה: ${ans}.`;
+        }
+      }
       setErrorExplanation(errExpl);
       if (errExpl) stepByStepViewedRef.current = true;
       
@@ -1901,9 +1920,8 @@ export default function GeometryMaster() {
       if ("vibrate" in navigator) navigator.vibrate?.(200);
 
       if (mode === "learning") {
-        // במצב למידה – אין Game Over, רק הצגת תשובה והמשך
         setFeedback(
-          `Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`
+          formatLearningWrongFeedbackHe(`\u2066${currentQuestion.correctAnswer}\u2069`)
         );
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
@@ -1912,16 +1930,12 @@ export default function GeometryMaster() {
           setTimeLeft(null);
         });
       } else if (mode === "challenge") {
-        // מצב Challenge – עובדים עם חיים
-        setFeedback(
-          `Wrong! Correct: ${currentQuestion.correctAnswer} ❌ (-1 ❤️)`
-        );
+        setFeedback(`${LIVE_PRACTICE_WRONG_HE} (-1 ❤️)`);
         setLives((prevLives) => {
           const nextLives = prevLives - 1;
 
           if (nextLives <= 0) {
-            // Game Over
-            setFeedback("Game Over! 💔");
+            setFeedback(LIVE_PRACTICE_GAME_OVER_HE);
             sound.playSound("game-over");
             recordSessionProgress();
             saveRunToStorage();
@@ -1944,8 +1958,7 @@ export default function GeometryMaster() {
           return nextLives;
         });
       } else {
-        // מצבי speed / marathon / practice - לא יוצאים מהמשחק על טעות
-        setFeedback(`Wrong! Correct answer: ${currentQuestion.correctAnswer} ❌`);
+        setFeedback(LIVE_PRACTICE_WRONG_HE);
         scheduleWrongAnswerAdvance(() => {
           generateNewQuestion();
           setSelectedAnswer(null);
@@ -2901,7 +2914,7 @@ export default function GeometryMaster() {
 
                   <div
                     data-testid="geometry-question-stem"
-                    className="relative w-full shrink-0 min-h-[230px] md:min-h-[260px] flex flex-col items-center justify-center px-2"
+                    className="relative w-full shrink-0 min-h-[200px] md:min-h-[240px] flex flex-col items-center justify-center px-2 py-2 gap-2 max-[420px]:min-h-[180px]"
                   >
                   {mode === "learning" && currentQuestion.params?.kind !== "no_question" && (
                     <button
@@ -2940,9 +2953,10 @@ export default function GeometryMaster() {
                         questionLabel={currentQuestion.questionLabel}
                         exerciseText={currentQuestion.exerciseText}
                         getQuestionFontStyle={getQuestionFontStyle}
-                        leadClassName={MB.questionLead}
+                        leadClassName={`${MB.questionLead} max-[420px]:text-xl max-[420px]:leading-snug max-[420px]:mb-1`}
                         formulaClassName={MB.questionFormula}
-                        bodyClassName={MB.questionBody}
+                        bodyClassName={`${MB.questionBody} max-[420px]:text-2xl max-[420px]:leading-snug`}
+                        wrapperClassName="w-full flex flex-col items-center justify-center gap-2 max-w-full px-1 pb-1"
                       />
                     </>
                   )}

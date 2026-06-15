@@ -66,26 +66,41 @@ export function getSolutionSteps(question, topic, gradeKey) {
   return steps;
 }
 
-export function getErrorExplanation(question, topic, wrongAnswer, gradeKey) {
+export function getErrorExplanation(question, topic, wrongAnswer, gradeKey, opts = {}) {
   if (!question) return "";
 
   const correctAnswer = question.correctAnswer;
+  const learning = opts.mode === "learning";
 
   switch (topic) {
     case "reading":
-      return `התשובה הנכונה היא "${correctAnswer}". קרא את המילה בעיון וזהה את האותיות הנכונות.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". קרא את המילה בעיון וזהה את האותיות הנכונות.`
+        : "קרא את המילה בעיון וזהה את האותיות לפי מה שלמדנו.";
     case "comprehension":
-      return `התשובה הנכונה היא "${correctAnswer}". קרא את הטקסט בעיון והבין את המשמעות.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". קרא את הטקסט בעיון והבין את המשמעות.`
+        : "קרא את הטקסט בעיון והבין את המשמעות לפני שבוחרים תשובה.";
     case "writing":
-      return `התשובה הנכונה היא "${correctAnswer}". בדוק את כללי הכתיב והדקדוק.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". בדוק את כללי הכתיב והדקדוק.`
+        : "בדוק שוב את כללי הכתיב והדקדוק לפי מה שלמדנו.";
     case "grammar":
-      return `התשובה הנכונה היא "${correctAnswer}". חשוב על חלקי הדיבר השונים.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". חשוב על חלקי הדיבר השונים.`
+        : "חשוב על חלקי הדיבר ועל המשמעות של המשפט.";
     case "vocabulary":
-      return `התשובה הנכונה היא "${correctAnswer}". הבן את המשמעות של המילה.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". הבן את המשמעות של המילה.`
+        : "הבן את המשמעות של המילה לפי ההקשר.";
     case "speaking":
-      return `התשובה הנכונה היא "${correctAnswer}". זכור את כללי השיח והביטוי.`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}". זכור את כללי השיח והביטוי.`
+        : "זכור את כללי השיח והביטוי שתרגלנו.";
     default:
-      return `התשובה הנכונה היא "${correctAnswer}".`;
+      return learning
+        ? `התשובה הנכונה היא "${correctAnswer}".`
+        : "קרא את השאלה שוב ובחר תשובה לפי מה שלמדנו.";
   }
 }
 
