@@ -71,6 +71,13 @@ function sumTopicQuestions(topicMap) {
   );
 }
 
+function sumTopicMinutes(topicMap) {
+  return Object.values(topicMap || {}).reduce(
+    (sum, row) => sum + Math.max(0, Math.floor(Number(row?.timeMinutes) || 0)),
+    0,
+  );
+}
+
 function parseReportRangeBounds(apiPayload) {
   const from = String(apiPayload?.range?.from || "").slice(0, 10);
   const to = String(apiPayload?.range?.to || "").slice(0, 10);
@@ -318,6 +325,26 @@ function checkVisibleSections(name, apiPayload, dbInput, report, expectations = 
           }
         }
       }
+    }
+    const subDurSec = Math.max(
+      0,
+      Math.floor(Number(apiPayload?.subjects?.[subject]?.durationSeconds) || 0),
+    );
+    const subDurMin = Math.round(subDurSec / 60);
+    const topicMinSum = sumTopicMinutes(topicMaps[subject]);
+    if (norm > 20 && subDurMin >= 5) {
+      section(
+        9,
+        topicMinSum >= Math.max(5, subDurMin - 10),
+        `${subject} topic minutes ${topicMinSum} too low vs subject ${subDurMin}`,
+      );
+    }
+    if (subject === "geometry" && norm >= 50 && subDurMin >= 100) {
+      section(
+        9,
+        topicMinSum >= 100,
+        `geometry progress time ${topicMinSum} min too low vs subject ${subDurMin} min`,
+      );
     }
   }
 
