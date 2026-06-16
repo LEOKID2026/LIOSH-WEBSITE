@@ -189,10 +189,13 @@ function renderVavPrefixedMathRow(text) {
   const input = String(text || "").trim();
   const match = input.match(/^(ו-)(\d[\s\S]+)$/u);
   if (!match?.[2]) return null;
+  // Only a real vav-prefixed equation, not a sentence that happens to start "ו-2 …".
+  const body = stripStrayMarkdown(match[2]);
+  if (/[\u0590-\u05FF]+\s+[\u0590-\u05FF]+/u.test(body)) return null;
 
   return (
     <MathSpan
-      value={`${match[1]}${stripStrayMarkdown(match[2])}`}
+      value={`${match[1]}${body}`}
       className="book-vav-math-row"
     />
   );

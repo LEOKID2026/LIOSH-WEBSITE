@@ -148,7 +148,7 @@ test("forbidden G1/G2 patterns are listed", () => {
   for (const bad of [
     "צעדים ימינה מ-2 3",
     "? = 20 + 10",
-    "3020 + 10 =",
+    "3020 + 10",
     "137 + 6",
     "10 + 133",
   ]) {
