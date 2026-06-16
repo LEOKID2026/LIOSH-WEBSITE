@@ -1,0 +1,253 @@
+#!/usr/bin/env node
+/**
+ * Browser-level scanner for Grade 2 math learning-book BiDi regressions.
+ *
+ * This intentionally opens the real routes and reconstructs child-visible rows
+ * from DOM geometry. It catches visual failures that raw Markdown / helper
+ * scanners can miss, such as a bold result span visually moving before the
+ * start of an equation (5030 + 20 =) or a number gluing to Hebrew prose
+ * (24זוגי).
+ */
+import { mkdir } from "node:fs/promises";
+import { chromium } from "playwright";
+
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3001";
+const SCREENSHOT_DIR = "docs/qa/rtl-route-regression-screenshots";
+
+const ROUTES = [
+  {
+    pageId: "add_two",
+    section: 2,
+    title: "חיבור שני מספרים",
+    expected: ["30 + 20 = 50", "4 + 5 = 9", "50 + 9 = 59"],
+  },
+  {
+    pageId: "sub_two",
+    section: 2,
+    title: "חיסור שני מספרים",
+    expected: ["60 − 20 = 40", "8 − 4 = 4", "40 + 4 = 44"],
+  },
+  {
+    pageId: "sub_two",
+    section: 3,
+    title: "חיסור שני מספרים — דוגמה מלאה",
+    expected: ["68 − 24 = 44"],
+  },
+  {
+    pageId: "sub_vertical",
+    section: 3,
+    title: "חיסור מאונך",
+    expected: ["52 − 27 = 25"],
+  },
+  {
+    pageId: "add_vertical",
+    section: 3,
+    title: "חיבור מאונך",
+    expected: ["7 + 8 = 15", "47 + 28 = 75"],
+  },
+  {
+    pageId: "ns_even_odd",
+    section: 3,
+    title: "זוגי ואי-זוגי",
+    expected: ["24 זוגי", "35 אי-זוגי"],
+  },
+  {
+    pageId: "ns_neighbors",
+    section: 3,
+    title: "ציר מספרים",
+    expected: ["248 − 1 = 247", "248 + 1 = 249"],
+  },
+  {
+    pageId: "ns_place_tens_units",
+    section: 3,
+    title: "עשרות ואחדות",
+    expected: ["100 + 20 + 4 = 124", "400 + 0 + 5 = 405"],
+  },
+  {
+    pageId: "cmp",
+    section: 3,
+    title: "השוואות",
+    expected: ["612 < 628", "628 > 612"],
+  },
+];
+
+const FORBIDDEN = [
+  "5030",
+  "5950",
+  "2552",
+  "4060",
+  "4440",
+  "24זוגי",
+  "35אי-זוגי",
+  "137 + 6",
+  "10 + 133",
+  "157 + 8",
+  "7547 + 28",
+  "4468 − 24",
+  "124 = 100 + 20 + 4",
+  "405 = 400 + 0 + 5",
+];
+
+function normalizeText(value) {
+  return String(value || "")
+    .replace(/\u00a0/g, " ")
+    .replace(/-/g, "−")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function getRouteLevelText(page) {
+  return page.locator("[data-book-scroll]").evaluate((root) => {
+    const normalize = (value) =>
+      String(value || "")
+        .replace(/\u00a0/g, " ")
+        .replace(/-/g, "−")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const rows = [];
+    const lineRoots = Array.from(
+      root.querySelectorAll(".book-mixed-hebrew-math, .book-equation-display-row")
+    );
+
+    for (const line of lineRoots) {
+      const pieces = [];
+
+      const addPiece = (text, rect) => {
+        if (!text || rect.width === 0) return;
+        pieces.push({
+          text: String(text).replace(/\u00a0/g, " "),
+          top: Math.round(rect.top),
+          left: rect.left,
+          right: rect.right,
+        });
+      };
+
+      const collectNode = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent || "";
+          if (!text) return;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          const rect = range.getClientRects()[0];
+          range.detach();
+          if (rect) addPiece(text, rect);
+          return;
+        }
+
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        const el = /** @type {HTMLElement} */ (node);
+        if (
+          el.matches("[data-book-label], [data-book-prose-run], [data-book-math-run], code")
+        ) {
+          addPiece(el.innerText || el.textContent || "", el.getBoundingClientRect());
+          return;
+        }
+
+        for (const child of Array.from(el.childNodes)) collectNode(child);
+      };
+
+      for (const child of Array.from(line.childNodes)) collectNode(child);
+
+      if (!pieces.length) {
+        const fallback = normalize(line.innerText || line.textContent || "");
+        if (fallback) rows.push(fallback);
+        continue;
+      }
+
+      const byLine = new Map();
+      for (const piece of pieces) {
+        const key = [...byLine.keys()].find((top) => Math.abs(top - piece.top) <= 3);
+        const groupKey = key ?? piece.top;
+        const group = byLine.get(groupKey) ?? [];
+        group.push(piece);
+        byLine.set(groupKey, group);
+      }
+
+      for (const group of byLine.values()) {
+        const visual = group
+          .sort((a, b) => b.right - a.right || b.left - a.left)
+          .map((piece) => piece.text)
+          .join("");
+        if (visual) rows.push(normalize(visual));
+      }
+    }
+
+    return {
+      domText: normalize(root.innerText || root.textContent || ""),
+      visualRows: rows,
+    };
+  });
+}
+
+async function main() {
+  await mkdir(SCREENSHOT_DIR, { recursive: true });
+  const browser = await chromium.launch();
+  const page = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+    locale: "he-IL",
+  });
+
+  const failures = [];
+  for (const route of ROUTES) {
+    const path = `/learning/book/math/g2/${route.pageId}`;
+    await page.goto(`${BASE_URL}${path}`, { waitUntil: "networkidle" });
+    await page.getByLabel(`עמוד ${route.section}`).click();
+    await page.locator("[data-book-scroll]").waitFor({ state: "visible" });
+
+    const routeText = await getRouteLevelText(page);
+    const searchable = normalizeText([routeText.domText, ...routeText.visualRows].join("\n"));
+
+    for (const expected of route.expected) {
+      if (!searchable.includes(normalizeText(expected))) {
+        failures.push({
+          route: path,
+          section: route.section,
+          kind: "missing-expected",
+          value: expected,
+          rendered: searchable,
+        });
+      }
+    }
+
+    for (const forbidden of FORBIDDEN) {
+      if (searchable.includes(normalizeText(forbidden))) {
+        failures.push({
+          route: path,
+          section: route.section,
+          kind: "forbidden-visible",
+          value: forbidden,
+          rendered: searchable,
+        });
+      }
+    }
+
+    await page.screenshot({
+      path: `${SCREENSHOT_DIR}/g2-${route.pageId}-section-${route.section}.png`,
+      fullPage: true,
+    });
+  }
+
+  await browser.close();
+
+  console.log(`Route-level G2 scans : ${ROUTES.length}`);
+  console.log(`Forbidden patterns   : ${FORBIDDEN.length}`);
+  console.log(`Failures             : ${failures.length}`);
+
+  if (failures.length) {
+    for (const failure of failures) {
+      console.log("");
+      console.log(`[${failure.kind}] ${failure.route} section ${failure.section}`);
+      console.log(`value   : ${failure.value}`);
+      console.log(`rendered: ${failure.rendered}`);
+    }
+    process.exit(1);
+  }
+
+  console.log("PASS: route-level G2 visual BiDi scan is clean.");
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
