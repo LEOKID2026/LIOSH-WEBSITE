@@ -7,6 +7,7 @@ import {
   isMathLikeText,
 } from "../../lib/learning-book/book-math-display";
 import { splitMixedHebrewMathRuns } from "../../lib/bidi/mixed-hebrew-math-runs";
+import { parseTemplateRuns } from "../../lib/learning-book/learning-math-line-templates";
 import {
   splitCommaSeparatedFormulaDisplay,
   splitCommaVavEquationDisplay,
@@ -202,6 +203,11 @@ function renderMixedBodyInnerSingle(text) {
   const vavRow = renderVavPrefixedMathRow(input);
   if (vavRow) {
     return vavRow;
+  }
+
+  const stripped = stripStrayMarkdown(input);
+  if (parseTemplateRuns(stripped) || parseTemplateRuns(input)) {
+    return renderUnifiedMixedRuns(stripped);
   }
 
   const hasMarkdown = /[*`_]/.test(input);

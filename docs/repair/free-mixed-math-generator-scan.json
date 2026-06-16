@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T03:44:22.848Z",
+  "generatedAt": "2026-06-16T17:45:15.897Z",
   "summary": {
     "realHitsInScope": 0,
     "allowedStructuredFalsePositives": 64,
@@ -353,7 +353,7 @@
     "lib/learning-book/book-math-display.js": [
       {
         "file": "lib/learning-book/book-math-display.js",
-        "line": 69,
+        "line": 82,
         "pattern": "legacy-ltr-helper",
         "snippet": "* Detect text that should render LTR (equations, number lines, coin amounts)."
       }

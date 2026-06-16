@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-06-16T17:56:57.483Z",
+  "base": "http://localhost:3100",
+  "scope": "g1-g2-number-line-tens-make10-compare",
+  "captured": {
+    "01-place-value-mobile": "docs\\qa\\rtl-proof-screenshots\\01-place-value-mobile.png",
+    "02-carry-add-mobile": "docs\\qa\\rtl-proof-screenshots\\02-carry-add-mobile.png",
+    "03-subtraction-mobile": "docs\\qa\\rtl-proof-screenshots\\03-subtraction-mobile.png",
+    "04-fractions-mobile": "docs\\qa\\rtl-proof-screenshots\\04-fractions-mobile.png",
+    "05-percent-mobile": "docs\\qa\\rtl-proof-screenshots\\05-percent-mobile.png",
+    "06-pi-circle-mobile": "docs\\qa\\rtl-proof-screenshots\\06-pi-circle-mobile.png",
+    "07-area-units-mobile": "docs\\qa\\rtl-proof-screenshots\\07-area-units-mobile.png"
+  }
+}

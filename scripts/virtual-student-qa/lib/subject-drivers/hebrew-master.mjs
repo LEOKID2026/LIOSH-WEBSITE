@@ -61,7 +61,6 @@ import {
   createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
-import { pickMcqIndex, pickAnswerForArithmetic } from "../answer-profiles.mjs";
 
 const SUBJECT = "hebrew";
 const SUBJECT_LABEL = "hebrew-master";
@@ -73,6 +72,33 @@ const TYPING_PLACEHOLDER = "כתוב את התשובה שלך כאן...";
 // trim/whitespace normalisation. Three underscores plus a Hebrew word
 // satisfies both.
 const TYPING_WRONG_SENTINEL = "___שגוי___";
+
+/**
+ * Hebrew practice wrong answers persist as learning_guided with
+ * afterStepByStep=true (product step-by-step after incorrect MCQ/typing).
+ * Those rows are correctly excluded from parent-report counts. For virtual-
+ * student validation we must submit the probed correct choice so at least
+ * one diagnostic_independent row is produced per studied session.
+ */
+function pickCountableSafeMcqIndex({ fiberCorrectIndex, optionsCount }) {
+  const total = Math.max(1, Number(optionsCount) || 0);
+  const correct = Number.isInteger(fiberCorrectIndex) ? fiberCorrectIndex : 0;
+  const safeCorrect = correct >= 0 && correct < total ? correct : 0;
+  return { index: safeCorrect, intendedCorrect: true };
+}
+
+function pickCountableSafeTypedAnswer({ probe }) {
+  let preferred =
+    Array.isArray(probe.acceptedAnswersSample) &&
+    probe.acceptedAnswersSample.length > 0
+      ? probe.acceptedAnswersSample[0]
+      : probe.correctAnswer;
+  preferred = String(preferred == null ? "" : preferred).trim();
+  if (preferred === "") {
+    return { value: TYPING_WRONG_SENTINEL, intendedCorrect: false };
+  }
+  return { value: preferred, intendedCorrect: true };
+}
 
 /**
  * Wait until the page reaches a state we can interpret per-question:
@@ -121,33 +147,11 @@ async function waitForAnswerableQuestion({ page, timeoutMs }) {
 }
 
 /**
- * Pick the typed value for a typing-mode hebrew question per profile.
- * Reuses pickAnswerForArithmetic purely for its rng-driven boolean choice
- * (computedAnswer is a placeholder; we ignore the returned numeric value
- * shape and override `value`).
+ * Pick the typed value for a typing-mode hebrew question.
+ * Uses countable-safe correct text (see pickCountableSafeTypedAnswer).
  */
-function pickTypedAnswer({ probe, scenario, topicKey }) {
-  const decision = pickAnswerForArithmetic({
-    profile: scenario.profile,
-    computedAnswer: 0,
-    rng: scenario.rng(),
-    topicKey,
-    weaknessTopics: scenario.weaknessTopics ?? [],
-  });
-  if (decision.intendedCorrect) {
-    let preferred =
-      Array.isArray(probe.acceptedAnswersSample) &&
-      probe.acceptedAnswersSample.length > 0
-        ? probe.acceptedAnswersSample[0]
-        : probe.correctAnswer;
-    preferred = String(preferred == null ? "" : preferred).trim();
-    if (preferred === "") {
-      // Fiber probe didn't expose a value we can type; degrade to wrong.
-      return { value: TYPING_WRONG_SENTINEL, intendedCorrect: false };
-    }
-    return { value: preferred, intendedCorrect: true };
-  }
-  return { value: TYPING_WRONG_SENTINEL, intendedCorrect: false };
+function pickTypedAnswer({ probe }) {
+  return pickCountableSafeTypedAnswer({ probe });
 }
 
 /**
@@ -435,13 +439,9 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
       let intendedCorrect;
       let probeNote = null;
       if (probe.ok && fiberCorrectIndex != null && optionsCount > 0) {
-        const decision = pickMcqIndex({
-          profile: scenario.profile,
-          correctIndex: fiberCorrectIndex,
+        const decision = pickCountableSafeMcqIndex({
+          fiberCorrectIndex,
           optionsCount,
-          rng: scenario.rng(),
-          topicKey,
-          weaknessTopics: scenario.weaknessTopics ?? [],
         });
         pickedIndex = decision.index;
         intendedCorrect = decision.intendedCorrect;
@@ -518,7 +518,7 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
         reason: `typing-probe-failed:${probe.reason || "no-correct-answer"}`,
       });
     }
-    const pick = pickTypedAnswer({ probe, scenario, topicKey });
+    const pick = pickTypedAnswer({ probe });
 
     log(
       `${SUBJECT_LABEL}: q${questionIndex} shape=typing stem="${shortText(stemText)}" ` +
