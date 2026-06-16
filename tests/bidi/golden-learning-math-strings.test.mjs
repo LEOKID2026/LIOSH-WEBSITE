@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { splitMixedHebrewMathRuns } from "../../lib/bidi/mixed-hebrew-math-runs.js";
-import { flattenMixedHebrewMathVisibleText } from "../../lib/learning-book/book-visible-text-render.js";
+import {
+  flattenBookSectionVisibleLines,
+  flattenMixedHebrewMathVisibleText,
+} from "../../lib/learning-book/book-visible-text-render.js";
+import { simulateBookLineBidiRuns } from "../../lib/learning-book/simulate-book-bidi-runs.js";
 import {
   FORBIDDEN_LEARNING_MATH_STRINGS,
   assertNotForbiddenLearningMath,
@@ -182,6 +186,164 @@ test("g2 add_two draft: no 80+5+1 in visible flatten", () => {
     const flat = flattenMixedHebrewMathVisibleText(line);
     assertNotForbiddenLearningMath(flat);
     assertNotForbiddenLearningMath(line.replace(/\*\*/g, ""));
+  }
+});
+
+test("g2 real book lines keep bold result inside one visible equation island", () => {
+  const cases = [
+    {
+      pageId: "add_two",
+      source: "עשרות: 30 + 20 = **50**",
+      expected: "עשרות: 30 + 20 = 50",
+      math: "30 + 20 = 50",
+      forbidden: ["5030 + 20"],
+    },
+    {
+      pageId: "add_two",
+      source: "אחדות: 4 + 5 = **9**",
+      expected: "אחדות: 4 + 5 = 9",
+      math: "4 + 5 = 9",
+      forbidden: ["94 + 5", "5950 + 9"],
+    },
+    {
+      pageId: "add_two",
+      source: "סה״כ: 50 + 9 = **59**",
+      expected: "סה״כ: 50 + 9 = 59",
+      math: "50 + 9 = 59",
+      forbidden: ["5950 + 9"],
+    },
+    {
+      pageId: "sub_two",
+      source: "עשרות: 60 − 20 = **40**",
+      expected: "עשרות: 60 − 20 = 40",
+      math: "60 − 20 = 40",
+      forbidden: ["4060", "4060 - 20"],
+    },
+    {
+      pageId: "sub_two",
+      source: "אחדות: 8 − 4 = **4**",
+      expected: "אחדות: 8 − 4 = 4",
+      math: "8 − 4 = 4",
+      forbidden: ["48 − 4"],
+    },
+    {
+      pageId: "sub_two",
+      source: "סה״כ: 40 + 4 = **44**",
+      expected: "סה״כ: 40 + 4 = 44",
+      math: "40 + 4 = 44",
+      forbidden: ["4440 + 4"],
+    },
+    {
+      pageId: "mul",
+      source: "סה״כ: 6 + 6 + 6 + 6 = **24**",
+      expected: "סה״כ: 6 + 6 + 6 + 6 = 24",
+      math: "6 + 6 + 6 + 6 = 24",
+      forbidden: ["246 + 6 + 6"],
+    },
+    {
+      pageId: "mul",
+      source: "חיבור חוזר: 6 + 6 + 6 + 6 = **24**.",
+      expected: "חיבור חוזר: 6 + 6 + 6 + 6 = 24",
+      math: "6 + 6 + 6 + 6 = 24",
+      forbidden: ["246 + 6 + 6"],
+    },
+    {
+      pageId: "mul",
+      source: "**תשובה:** 4 × 6 = **24**",
+      expected: "תשובה: 4 × 6 = 24",
+      math: "4 × 6 = 24",
+      forbidden: ["244 × 6"],
+    },
+    {
+      pageId: "ns_even_odd",
+      source: "לכל כוכב יש **שותף** → **24** **זוגי**.",
+      expected: "לכל כוכב יש שותף → 24 זוגי.",
+      forbidden: ["24זוגי"],
+    },
+    {
+      pageId: "ns_even_odd",
+      source: "✓ **35** **אי-זוגי** — הספרה האחרונה **5** גם מסמנת **אי-זוגי**.",
+      expected: "✓ 35 אי-זוגי — הספרה האחרונה 5 גם מסמנת אי-זוגי.",
+      forbidden: ["35אי-זוגי"],
+    },
+  ];
+
+  const registry = {
+    batches: MATH_G2_BOOK_BATCHES,
+    pageOrder: MATH_G2_PAGE_ORDER,
+    meta: MATH_G2_BOOK_META,
+    getPageNeighbors: getMathG2PageNeighbors,
+    isValidPageId: isValidMathG2PageId,
+  };
+
+  for (const c of cases) {
+    const page = loadLearningBookPage(registry, c.pageId);
+    const inPage = page.sections.some((section) => String(section.body || "").includes(c.source));
+    assert.ok(inPage, `golden source must come from real g2 page ${c.pageId}: ${c.source}`);
+
+    const visible = flattenMixedHebrewMathVisibleText(c.source);
+    assert.equal(visible, c.expected);
+
+    const mathRuns = simulateBookLineBidiRuns(c.source).filter((r) => r.dir === "ltr");
+    if (c.math) {
+      assert.ok(
+        mathRuns.some((r) => r.value === c.math),
+        `expected one LTR island "${c.math}" in ${JSON.stringify(mathRuns)}`
+      );
+    }
+    for (const bad of c.forbidden) {
+      assert.ok(!visible.includes(bad), `visible text must not include ${bad}: ${visible}`);
+      assert.ok(
+        !mathRuns.some((r) => r.value.includes(bad)),
+        `math run must not include ${bad}: ${JSON.stringify(mathRuns)}`
+      );
+    }
+  }
+});
+
+test("g2 target pages have no forbidden visible output", () => {
+  const registry = {
+    batches: MATH_G2_BOOK_BATCHES,
+    pageOrder: MATH_G2_PAGE_ORDER,
+    meta: MATH_G2_BOOK_META,
+    getPageNeighbors: getMathG2PageNeighbors,
+    isValidPageId: isValidMathG2PageId,
+  };
+  const pageIds = [
+    "add_two",
+    "sub_two",
+    "sub_vertical",
+    "mul",
+    "ns_even_odd",
+    "ns_neighbors",
+    "ns_place_tens_units",
+  ];
+  const forbidden = [
+    /5030/u,
+    /3020/u,
+    /4060/u,
+    /5950/u,
+    /4440/u,
+    /2552/u,
+    /246\s*\+\s*6/u,
+    /137\s*\+\s*6/u,
+    /24זוגי/u,
+  ];
+
+  for (const pageId of pageIds) {
+    const page = loadLearningBookPage(registry, pageId);
+    for (const section of page.sections) {
+      const visibleLines = flattenBookSectionVisibleLines(section.body).lines;
+      for (const { source, rendered } of visibleLines) {
+        assertNotForbiddenLearningMath(rendered);
+        for (const bad of forbidden) {
+          assert.ok(
+            !bad.test(rendered),
+            `${pageId} §${section.number} rendered forbidden ${bad}: ${rendered} (source: ${source})`
+          );
+        }
+      }
+    }
   }
 });
 

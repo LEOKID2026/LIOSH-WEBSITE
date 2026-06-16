@@ -4,6 +4,7 @@ import {
   bookLabelIsolateStyle,
   bookMathIsolateStyle,
   bookProseIsolateStyle,
+  isFullEquationLine,
   isMathLikeText,
 } from "../../lib/learning-book/book-math-display";
 import { splitMixedHebrewMathRuns } from "../../lib/bidi/mixed-hebrew-math-runs";
@@ -65,8 +66,17 @@ function ProseSpan({ children, className = "" }) {
 function renderUnifiedMixedRuns(text, keyPrefix = "") {
   const input = String(text || "");
   const runs = splitMixedHebrewMathRuns(input);
+  if (!runs.length) return input;
+  const leadingSpace =
+    /^\s+/.test(input) && !/^\s/.test(runs[0]?.value || "")
+      ? input.match(/^\s+/)?.[0] || ""
+      : "";
+  const trailingSpace =
+    /\s+$/.test(input) && !/\s$/.test(runs[runs.length - 1]?.value || "")
+      ? input.match(/\s+$/)?.[0] || ""
+      : "";
 
-  return runs.map((run, i) => {
+  const nodes = runs.map((run, i) => {
     const key = `${keyPrefix}${run.type}-${i}`;
     if (run.value === "\n") {
       return <br key={key} />;
@@ -80,6 +90,9 @@ function renderUnifiedMixedRuns(text, keyPrefix = "") {
       <ProseSpan key={key}>{prose}</ProseSpan>
     );
   });
+  if (leadingSpace) nodes.unshift(<Fragment key={`${keyPrefix}leading-space`}>{leadingSpace}</Fragment>);
+  if (trailingSpace) nodes.push(<Fragment key={`${keyPrefix}trailing-space`}>{trailingSpace}</Fragment>);
+  return nodes;
 }
 
 function renderProseText(value) {
@@ -209,7 +222,10 @@ function renderMixedBodyInnerSingle(text) {
   }
 
   const stripped = stripStrayMarkdown(input);
-  if (parseTemplateRuns(stripped) || parseTemplateRuns(input)) {
+  const strippedIsMathLine =
+    isFullEquationLine(stripped) ||
+    (isMathLikeText(stripped) && !HEBREW_CHAR.test(stripped));
+  if (strippedIsMathLine || parseTemplateRuns(stripped) || parseTemplateRuns(input)) {
     return renderUnifiedMixedRuns(stripped);
   }
 

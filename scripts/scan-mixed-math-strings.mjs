@@ -23,6 +23,7 @@ import { fileURLToPath } from "url";
 import { parseLearningPageMarkdown } from "../lib/learning-book/parse-learning-page-markdown.js";
 import { splitBookMarkdownBlocks } from "../lib/learning-book/book-markdown-blocks.js";
 import { detectBookLineBidiBreakage } from "../lib/learning-book/simulate-book-bidi-runs.js";
+import { flattenMixedHebrewMathVisibleText } from "../lib/learning-book/book-visible-text-render.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -33,6 +34,17 @@ const SCAN_ROOTS = [
 
 const HEBREW = /[\u0590-\u05FF]/;
 const MATH_OP = /\d\s*[+\-−×÷=<>]\s*\d|\d\s*[+\-−×÷=<>]|[+\-−×÷=<>]\s*\d/;
+const FORBIDDEN_VISIBLE_PATTERNS = [
+  { label: "5030", re: /5030/u },
+  { label: "3020", re: /3020/u },
+  { label: "4060", re: /4060/u },
+  { label: "5950", re: /5950/u },
+  { label: "4440", re: /4440/u },
+  { label: "2552", re: /2552/u },
+  { label: "246", re: /246\s*\+\s*6/u },
+  { label: "137", re: /137\s*\+\s*6/u },
+  { label: "24זוגי", re: /24זוגי/u },
+];
 
 /**
  * Explicitly out-of-scope lines. Each entry MUST carry a reason. Keep empty —
@@ -61,6 +73,7 @@ const files = [];
 for (const root of SCAN_ROOTS) walk(root, files);
 
 const hits = [];
+const forbiddenHits = [];
 let mixedCount = 0;
 for (const filePath of files) {
   const rel = path.relative(ROOT, filePath).replace(/\\/g, "/");
@@ -83,11 +96,27 @@ for (const filePath of files) {
             : [];
       for (const line of lines) {
         const t = String(line || "").trim();
-        if (!HEBREW.test(t) || !MATH_OP.test(t)) continue;
-        mixedCount += 1;
-        const breakage = detectBookLineBidiBreakage(t);
-        if (breakage && !isAllowlisted(rel, t)) {
-          hits.push({ rel, section: section.number, t, breakage });
+        if (!t) continue;
+
+        const visible = flattenMixedHebrewMathVisibleText(t);
+        for (const bad of FORBIDDEN_VISIBLE_PATTERNS) {
+          if (bad.re.test(t) || bad.re.test(visible)) {
+            forbiddenHits.push({
+              rel,
+              section: section.number,
+              pattern: bad.label,
+              t,
+              visible,
+            });
+          }
+        }
+
+        if (HEBREW.test(t) && MATH_OP.test(t)) {
+          mixedCount += 1;
+          const breakage = detectBookLineBidiBreakage(t);
+          if (breakage && !isAllowlisted(rel, t)) {
+            hits.push({ rel, section: section.number, t, breakage });
+          }
         }
       }
     }
@@ -98,9 +127,15 @@ console.log(`Scanned files            : ${files.length}`);
 console.log(`Mixed Hebrew+math lines  : ${mixedCount}`);
 console.log(`Allowlisted (out-of-scope): ${ALLOWLIST.length}`);
 console.log(`REAL hits                : ${hits.length}`);
+console.log(`Forbidden visible hits   : ${forbiddenHits.length}`);
 
-if (hits.length) {
+if (hits.length || forbiddenHits.length) {
   console.log("");
+  for (const h of forbiddenHits) {
+    console.log(`  [${h.rel} §${h.section}] forbidden-visible:${h.pattern}`);
+    console.log(`     visible: ${h.visible}`);
+    console.log(`     line   : ${h.t}`);
+  }
   for (const h of hits) {
     console.log(`  [${h.rel} §${h.section}] ${h.breakage.kind}`);
     console.log(`     run : ${h.breakage.run}`);
