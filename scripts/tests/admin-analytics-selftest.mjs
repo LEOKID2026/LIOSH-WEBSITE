@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const root = process.cwd();
 const read = (rel) => readFileSync(path.join(root, rel), "utf8");
+const u = (rel) => pathToFileURL(path.join(root, rel)).href;
 
 const api = read("pages/api/admin/analytics.js");
 assert.match(api, /requireAdminApiContext/, "admin analytics API must use admin guard");
@@ -86,5 +88,59 @@ for (const eventName of [
 const catalogDoc = read("docs/qa/admin-analytics/ANALYTICS_EVENT_CATALOG.md");
 assert.match(catalogDoc, /fully instrumented/, "event catalog doc must state instrumentation status");
 assert.match(catalogDoc, /partially instrumented/, "event catalog doc must document partial instrumentation");
+
+const labelsPage = read("pages/admin/analytics.js");
+assert.match(labelsPage, /formatAnalyticsLabelHe/, "page must format visible table labels in Hebrew");
+assert.match(labelsPage, /formatAnalyticsGradeHe/, "page must format grade column labels in Hebrew");
+
+const labelsModule = read("lib/admin-portal/admin-analytics-labels.he.js");
+for (const fn of [
+  "formatAnalyticsSubjectHe",
+  "formatAnalyticsTopicHe",
+  "formatAnalyticsSkillHe",
+  "formatAnalyticsGradeHe",
+  "formatAnalyticsCompositeNameHe",
+  "formatAnalyticsFeatureHe",
+  "findAdminAnalyticsEnglishEnumLeaks",
+]) {
+  assert.match(labelsModule, new RegExp(`export function ${fn}\\(`), `labels module missing ${fn}`);
+}
+
+const {
+  formatAnalyticsLabelHe,
+  findAdminAnalyticsEnglishEnumLeaks,
+} = await import(u("lib/admin-portal/admin-analytics-labels.he.js"));
+
+const forbiddenFixtureLabels = [
+  "body",
+  "reading",
+  "multiplication",
+  "matter",
+  "angles",
+  "addition : g1",
+  "vocabulary : g4",
+  "area : g3",
+  "grade_2",
+  "grade_5",
+  "practice",
+  "learning_book",
+  "worksheet",
+  "parent_assigned_activity",
+  "teacher_dashboard_opened",
+  "private_teacher",
+];
+
+for (const raw of forbiddenFixtureLabels) {
+  const visible = formatAnalyticsLabelHe(raw);
+  const leaks = findAdminAnalyticsEnglishEnumLeaks(visible);
+  assert.equal(
+    leaks.length,
+    0,
+    `visible label for ${JSON.stringify(raw)} must be Hebrew-only, got "${visible}" leaks: ${leaks.join(", ")}`
+  );
+}
+
+assert.equal(formatAnalyticsLabelHe("addition : g1"), "חיבור · כיתה א׳");
+assert.equal(formatAnalyticsLabelHe("חשבון · grade_2"), "חשבון · כיתה ב׳");
 
 console.log("PASS admin analytics static selftest");
