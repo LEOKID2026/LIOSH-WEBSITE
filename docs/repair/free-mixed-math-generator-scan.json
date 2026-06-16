@@ -1,0 +1,501 @@
+{
+  "generatedAt": "2026-06-16T03:44:22.848Z",
+  "summary": {
+    "realHitsInScope": 0,
+    "allowedStructuredFalsePositives": 64,
+    "outOfScopeHits": 13,
+    "filesWithRealFindings": 0
+  },
+  "realFindings": {},
+  "allowedFalsePositives": {
+    "utils/math-explanations.js": [
+      {
+        "file": "utils/math-explanations.js",
+        "line": 320,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`1. יש מכנים שונים (${p.den1} ו-${p.den2}). נמצא מכנה משותף – כאן ${p.commonDen}.`,"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 522,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`2. למשל אחרי ${p.n} מגיע ${p.n + 1}, ולפניו ${p.n - 1}.`,"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 549,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`2. אם הספרה היא 0,2,4,6,8 – המספר זוגי. אם 1,3,5,7,9 – אי-זוגי.`,"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 711,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`1. יודעים ש-1 מ' = 100 ס\"מ.`,"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 724,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`1. יודעים ש-1 ק\\\"ג = 1000 גרם.`,"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 862,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`באחוזים טעות נפוצה היא להתבלבל בין חלק מתוך 100 לבין חיבור/חיסור רגיל. נסה לכתוב קודם את השבר (למשל ${M(\"25% "
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 1266,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`1. מבינים שהכפל הוא חיבור חוזר: למשל 3 × 4 זה כמו 4 + 4 + 4.`);"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 1361,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`${stepIndex}. מורידים את הספרה הבאה (${nextDigit}). המספר החדש לחלוקה הוא ${remainder * 10 + nextDigit}.`"
+      }
+    ],
+    "utils/math-animations.js": [
+      {
+        "file": "utils/math-animations.js",
+        "line": 572,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`שורה ${M(String(j + 1))}: כופלים ב-${M(String(bd))}${j === 0 ? \" (אחדות)\" : j === 1 ? \" (עשרות)\" : \" (מקום גבוה)\"}`"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 1067,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`מכנה משותף ל-${M(String(den1))} ו-${M(String(den2))} הוא ${M(String(commonDen))}`"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 1506,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "const baseRaw = String(base).replace(/\\u2066|\\u2069/g, \"\");"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 2184,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(dir === \"after\" ? mix`מספר אחד אחרי – מוסיפים 1: ${n} + 1 = ${answer}` : mix`מספר אחד לפני – מחסרי"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 2324,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`מסתכלים על ספרת האחדות של ${n}. אם הספרה היא 0,2,4,6,8 – המספר זוגי. אם 1,3,5,7,9 – אי-זוגי.`)"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 2961,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`לליאו יש ${coins1} מטבעות של שקל ו-${coins2} מטבעות של 2 שקלים. כמה כסף יש לו בסך הכל?`),"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 3131,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`1 מטר = 100 ס״מ. כדי להמיר מס״מ למטרים מחלקים ב-100.`),"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 3169,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`1 ק״ג = 1000 גרם. כדי להמיר מגרם לק״ג מחלקים ב-1000.`),"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 3201,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`לליאו ציונים ${s1}, ${s2} ו-${s3}. מה הממוצע (מעוגל למספר שלם)?`),"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 3499,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`מספר מתחלק ב-6 אם הוא מתחלק גם ב-2 וגם ב-3.`),"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 3507,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`ספרת האחדות היא ${lastDigit} ⇒ ${M(`${lastDigit % 2 === 0 ? \"מתחלק ב-2\" : \"לא מתחלק ב-2\"}.`)}`"
+      },
+      {
+        "file": "utils/math-animations.js",
+        "line": 3515,
+        "pattern": "mixed-template-literal",
+        "snippet": "...learningStepFields(mix`סכום הספרות הוא ${sumDigits} ⇒ ${M(`${sumDigits % 3 === 0 ? \"מתחלק ב-3\" : \"לא מתחלק ב-3\"}.`)}`"
+      }
+    ],
+    "utils/geometry-explanations.js": [
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 232,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`2. נוסחה: שטח טרפז = ((בסיס 1 + בסיס 2) × גובה) ÷ 2.`, \"2\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 249,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`3. נציב: ${M(`שטח = 3.14 × ${p.radius}²`)}.`, \"3\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 283,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. נוסחה: היקף משולש = צלע 1 + צלע 2 + צלע 3.`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 297,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. נוסחה: היקף עיגול = 2 × π × רדיוס.`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 316,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. נוסחה: נפח פירמידה = (1/3) × שטח בסיס × גובה.`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 336,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. נוסחה: נפח פירמידה = (1/3) × שטח בסיס × גובה.`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 355,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. נוסחה: נפח חרוט = (1/3) × π × רדיוס² × גובה (π ≈ 3.14).`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 435,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. נוסחה: נפח כדור = (4/3) × π × רדיוס³.`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 453,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`1. נזכור: סכום שלוש הזוויות הפנימיות במשולש תמיד 180° — לא לבלבל עם זווית ישרה בודדת (90°).`,"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 457,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`2. מה מצוין בשאלה: ${M(`זווית 1 = ${angle1}°`)} ו-${M(`זווית 2 = ${angle2}°`)} — מחפשים את הזווית השלישית.`,"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 531,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`3. במפתח התשובות: 1 = ריבוע, 2 = מלבן.`, \"3\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 559,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`2. בריבוע ובמלבן כל ארבע הזוויות ישרות (90°).`, \"2\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 581,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`3. לפי מפתח התשובות בשאלה: 1 = מקבילות, 2 = מאונכות.`,"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 603,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`3. מפתח בשאלה: 1 = שווה צלעות, 2 = שווה שוקיים, 3 = שונה צלעות.`,"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 627,
+        "pattern": "mixed-template-literal",
+        "snippet": "mix`3. מפתח: 1 = ריבוע, 2 = מלבן, 3 = מקבילית, 4 = טרפז.`,"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 645,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`3. במפתח: 1 = הזזה, 2 = שיקוף.`, \"3\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 691,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`3. נחשב: ${M(`אלכסון = √(${side}² + ${side}²) = √(${side * side * 2}) = ${correctAnswer}`)}.`, \"3\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 721,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`4. נחשב: ${M(`גובה = (${area} × 2) ÷ ${base} = ${correctAnswer}`)}.`, \"4\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 739,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`2. נוסחה: שטח = ((בסיס 1 + בסיס 2) × גובה) ÷ 2.`, \"2\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 741,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`4. נחשב: ${M(`${base1} + ${base2} = ${sumBases}`)}, ואז ${M(`גובה = (${area} × 2) ÷ ${sumBases} = ${correctAn"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 751,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. בריצוף סביב כל קודקוד סכום הזוויות החוצות צריך להסתדר אל 360°.`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 772,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`2. נציב: ${M(`שטח = 3.14 × ${radius}²`)}.`, \"2\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 777,
+        "pattern": "mixed-template-literal",
+        "snippet": "toSpan(mix`1. נוסחה: היקף מעגל = 2 × π × רדיוס.`, \"1\"),"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 836,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`נראה שחישבת היקף (${M(\"4 ×\")}צלע) במקום שטח (${M(\"צלע × צלע\")}).`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 850,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`נראה שחישבת היקף (${M(\"2πr\")}) במקום שטח (${M(\"π × רדיוס²\")}).`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 871,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`נראה שחישבת שטח (${M(\"צלע²\")}) במקום היקף (${M(\"4 ×\")}צלע).`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 923,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`חיברת את שתי הזוויות — צריך לחסר את הסכום מ ${M(\"180°\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 926,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`בדוק: הזווית השלישית היא ${M(\"180°\")} מינוס סכום שתי הזוויות הנתונות.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 930,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`תוצאה גדולה מדי: אולי חיברת במקום לחסר מ ${M(\"180°\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 932,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`במשולש סכום זוויות = ${M(\"180°\")}. הזווית החסרה = ${M(\"180° − (זווית 1 + זווית 2)\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 983,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`מקבילים: לא נפגשים באותו מישור. מאונחים: חיתוך ב ${M(\"90°\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 1003,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`בדקו אם נדרש רבע סיבוב (${M(\"90°\")}), חצי (${M(\"180°\")}) או שלושת רבעים (${M(\"270°\")}).`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 1019,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`אולי הכפלת צלע ב ${M(\"2\")} — באלכסון ריבוע משתמשים ב ${M(\"√2 × צלע\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 1038,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`גובה במשולש: ${M(\"(שטח × 2) ÷ בסיס\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 1044,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`במקבילית אין חלוקה ב ${M(\"2\")} בשטח — גובה = ${M(\"שטח ÷ בסיס\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 1058,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`זווית הריצוף היא הזווית הפנימית של צורת האריח (ריבוע ${M(\"90°\")}, משולש שווהצלעות ${M(\"60°\")}, משושה ${M(\"120"
+      }
+    ],
+    "lib/learning-book/book-math-display.js": [
+      {
+        "file": "lib/learning-book/book-math-display.js",
+        "line": 69,
+        "pattern": "legacy-ltr-helper",
+        "snippet": "* Detect text that should render LTR (equations, number lines, coin amounts)."
+      }
+    ],
+    "lib/learning-book/learning-math-line-build.js": [
+      {
+        "file": "lib/learning-book/learning-math-line-build.js",
+        "line": 168,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "return `\\u2066${expr}\\u2069`;"
+      },
+      {
+        "file": "lib/learning-book/learning-math-line-build.js",
+        "line": 189,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "const re = /\\u2066([^\\u2069]*)\\u2069/g;"
+      }
+    ],
+    "components/learning/geometry/GeometryStepLine.jsx": [
+      {
+        "file": "components/learning/geometry/GeometryStepLine.jsx",
+        "line": 11,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "return normalizeHebrewWordNumberSpacing(String(text).replace(/\\u2066|\\u2069/g, \"\"));"
+      }
+    ],
+    "components/learning/geometry/StepGeometryTextHighlights.jsx": [
+      {
+        "file": "components/learning/geometry/StepGeometryTextHighlights.jsx",
+        "line": 18,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "String(text || step?.plainText || step?.text || \"\").replace(/\\u2066|\\u2069/g, \"\")"
+      }
+    ],
+    "components/learning/StepExerciseViewRouter.jsx": [
+      {
+        "file": "components/learning/StepExerciseViewRouter.jsx",
+        "line": 15,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "const raw = String(step.pre).replace(/\\u2066|\\u2069/g, \"\");"
+      }
+    ],
+    "components/learning/StepExpressionExerciseView.jsx": [
+      {
+        "file": "components/learning/StepExpressionExerciseView.jsx",
+        "line": 7,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "const pre = String(step?.pre || \"\").replace(/\\u2066|\\u2069/g, \"\");"
+      }
+    ],
+    "components/learning/StepWordProblemExerciseView.jsx": [
+      {
+        "file": "components/learning/StepWordProblemExerciseView.jsx",
+        "line": 54,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "const text = String(step?.text || \"\").replace(/\\u2066|\\u2069/g, \"\");"
+      }
+    ]
+  },
+  "outOfScopeFindings": {
+    "utils/math-explanations.js": [
+      {
+        "file": "utils/math-explanations.js",
+        "line": 16,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "const M = (expr) => `\\u2066${expr}\\u2069`;"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 60,
+        "pattern": "mixed-template-literal",
+        "snippet": "return `פרק את המספר לעשרות/מאות/אחדות: למשל ${M(\"57\")} זה ${M(\"5\")} עשרות ו-${M(\"7\")} אחדות.`;"
+      },
+      {
+        "file": "utils/math-explanations.js",
+        "line": 69,
+        "pattern": "mixed-template-literal",
+        "snippet": "return `הסתכל על ספרת האחדות: ${M(\"0,2,4,6,8\")} – זוגי. ${M(\"1,3,5,7,9\")} – אי-זוגי.`;"
+      }
+    ],
+    "utils/geometry-explanations.js": [
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 24,
+        "pattern": "ltr-bidi-markers",
+        "snippet": "const M = (expr) => `\\u2066${expr}\\u2069`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 58,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`היקף מעגל = ${M(\"2 × π × רדיוס\")}. זה סיבוב שלם סביב — לא ${M(\"πr²\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 91,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`בכל משולש סכום זוויות פנימיות = ${M(\"180°\")}. חברי את שתי הזוויות הנתונות, ואז הפחיתי מהתוצאה מ‑${M(\"180°\")}."
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 112,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`מקבילים: לא נפגשים ומרחק קבוע ביניהם. מאונחים: נפגשים בזווית ישרה (${M(\"90°\")}). איזה תיאור מתאים לשם שבשאלה?"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 124,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`סיבוב נמדד במעלות סביב נקודה. חשבו אם מדובר ברבע, חצי או שלושת רבעי סיבוב מלא (${M(\"360°\")}).`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 131,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`בריבוע האלכסון יוצר משולש ישר זווית עם שתי צלעות שוות — אפשר ${M(\"√2 × צלע\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 140,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`מהנוסחה לשטח משולש הפכו גובה: גובה = ${M(\"(שטח × 2) ÷ בסיס\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 146,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`בטרפז קודם ${M(\"(בסיס 1 + בסיס 2)\")}, אחר כך קשרו לשטח וחלקו — גובה = ${M(\"(שטח × 2) ÷ (סכום הבסיסים)\")}.`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 151,
+        "pattern": "mixed-template-literal",
+        "snippet": "return mix`בריצוף סביב נקודה סכום הזוויות החוצות חייב להסתדר ל‑${M(\"360°\")}. מה הזווית הפנימית הבולטת של הצורה בשאלה?`;"
+      },
+      {
+        "file": "utils/geometry-explanations.js",
+        "line": 155,
+        "pattern": "mixed-template-literal",
+        "snippet": "? `שואלים שטח: ${M(\"π × רדיוס²\")}. שואלים היקף: ${M(\"2 × π × רדיוס\")}. בדקו מה המילה בשאלה.`"
+      }
+    ]
+  },
+  "note": "PASS requires realHitsInScope === 0. getHint bodies are out-of-scope. pureMathLtrDisplay/Block and mix/M() are allowed structured usage."
+}

@@ -851,11 +851,7 @@ export default function MathMaster() {
         {
           id: "fallback-basic-1",
           title: "שלב 1: נבין את השאלה",
-          content: qText ? (
-            <span dir="ltr" style={{ unicodeBidi: "plaintext" }}>
-              {qText}
-            </span>
-          ) : (
+          content: qText ? renderLearningMixedHebrewMathText(qText) : (
             <span>נסתכל על התרגיל.</span>
           ),
           text: "",
@@ -4392,7 +4388,7 @@ export default function MathMaster() {
                               data-testid="student-question-lead"
                               style={{
                                 direction: "rtl",
-                                unicodeBidi: "plaintext",
+                                unicodeBidi: "isolate",
                                 lineHeight:
                                   questionPressureLayout?.questionLineHeightByPressure,
                                 ...getQuestionFontStyle({
@@ -4814,7 +4810,7 @@ export default function MathMaster() {
                                       className={`${learningQuestionText} text-center`}
                                       style={{
                                         direction: "ltr",
-                                        unicodeBidi: "plaintext",
+                                        unicodeBidi: "isolate",
                                         wordBreak: "break-word",
                                         overflowWrap: "break-word",
                                       }}
@@ -4834,7 +4830,7 @@ export default function MathMaster() {
                                   )}
                                   <div
                                     className="space-y-2"
-                                    style={{ direction: "rtl", unicodeBidi: "plaintext" }}
+                                    style={{ direction: "rtl", unicodeBidi: "isolate" }}
                                   >
                                     {info.steps.map((step, idx) => (
                                       <div key={idx} className={learningExplBody}>
@@ -4969,7 +4965,10 @@ export default function MathMaster() {
                                     {activeStep.content ? (
                                       <div className={learningExplBody}>{activeStep.content}</div>
                                     ) : (
-                                      renderLearningMixedHebrewMathText(activeStep.text, learningExplBody)
+                                      renderLearningMixedHebrewMathText(
+                                        activeStep.runs || activeStep.text,
+                                        learningExplBody
+                                      )
                                     )}
                                   </div>
                                 </div>
@@ -5047,7 +5046,7 @@ export default function MathMaster() {
                                 <div className={`mb-3 ${learningQuestionBox}`} dir="ltr">
                                   <div
                                     className={`${learningQuestionText} mb-0`}
-                                    style={{ unicodeBidi: "plaintext" }}
+                                    style={{ unicodeBidi: "isolate" }}
                                   >
                                     {explanationQuestion.exerciseText || explanationQuestion.question}
                                   </div>
@@ -5078,7 +5077,10 @@ export default function MathMaster() {
                                   ) : activeStep.content ? (
                                     <div className={learningExplBody}>{activeStep.content}</div>
                                   ) : (
-                                    renderLearningMixedHebrewMathText(activeStep.text || "", learningExplBody)
+                                    renderLearningMixedHebrewMathText(
+                                      activeStep.runs || activeStep.text || "",
+                                      learningExplBody
+                                    )
                                   )}
                                 </div>
                               </div>

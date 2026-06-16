@@ -3439,7 +3439,7 @@ function saveScienceAnswerInParallel({
                                 ? MB.choiceCorrect
                                 : MB.choiceDefault
                             }`}
-                            style={{ direction: "rtl", unicodeBidi: "plaintext" }}
+                            style={{ direction: "rtl", unicodeBidi: "isolate" }}
                           >
                             {opt}
                           </button>
@@ -3521,7 +3521,7 @@ function saveScienceAnswerInParallel({
                           className={`${learningQuestionText} text-center`}
                           style={{
                             direction: "rtl",
-                            unicodeBidi: "plaintext",
+                            unicodeBidi: "isolate",
                           }}
                         >
                           {(() => {
@@ -3534,12 +3534,12 @@ function saveScienceAnswerInParallel({
                       </div>
                       <div
                         className="space-y-2.5"
-                        style={{ direction: "rtl", unicodeBidi: "plaintext" }}
+                        style={learningMixedHebrewMathStyle}
                       >
                         {getSolutionStepsScience(explanationQuestion).map(
                           (line, idx) => (
                             <div key={idx} className={learningExplBody}>
-                              {line}
+                              {renderLearningMixedHebrewMathText(line)}
                             </div>
                           )
                         )}

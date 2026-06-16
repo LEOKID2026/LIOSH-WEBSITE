@@ -1,5 +1,10 @@
 /** Comparison-sign MCQ (`params.kind === "cmp"` / `operation === "compare"`): exactly {>, =, <}. */
 
+import {
+  buildComparisonConclusionRuns,
+  proseRun,
+} from "../lib/learning-book/learning-math-line-templates.js";
+
 export const COMPARISON_SIGN_OPTIONS = [">", "=", "<"];
 
 /** Student-visible order: less, equal, greater — rendered inside `dir="ltr"`. */
@@ -90,25 +95,42 @@ export function formatCompareMathExpression(left, right, sign) {
 }
 
 /**
- * Wrong-answer feedback for comparison-sign questions (operands + canonical sign only).
+ * Structured wrong-answer explanation runs for comparison-sign questions.
  * @param {unknown} q
+ * @returns {import("../lib/learning-book/learning-math-line-templates.js").TemplateRun[]}
  */
-export function buildComparisonSignWrongAnswerExplanation(q) {
+export function buildComparisonSignWrongAnswerRuns(q) {
   const params = q?.params && typeof q.params === "object" ? q.params : {};
   const { a: left, b: right } = coerceComparisonOperands(params.a ?? q?.a, params.b ?? q?.b);
   const sign = getCanonicalComparisonSign(left, right);
   if (left == null || right == null || !sign) {
-    return "בדקו איזה מספר גדול יותר ואיזה סימן מתאים ביניהם.";
+    return [proseRun("בדקו איזה מספר גדול יותר ואיזה סימן מתאים ביניהם.")];
   }
+
+  const relation = sign === ">" ? "gt" : sign === "<" ? "lt" : "eq";
   const signInProse = embedComparisonSignInRtlProse(sign);
-  const mathExpr = formatCompareMathExpression(left, right, sign);
-  if (sign === "<") {
-    return `${mathExpr} כי ${left} קטן מ-${right}. לכן הסימן הנכון הוא ${signInProse}.`;
-  }
-  if (sign === ">") {
-    return `${mathExpr} כי ${left} גדול מ-${right}. לכן הסימן הנכון הוא ${signInProse}.`;
-  }
-  return `${mathExpr} כי שני המספרים שווים. לכן הסימן הנכון הוא ${signInProse}.`;
+  return [
+    ...buildComparisonConclusionRuns({ left, right, relation }),
+    proseRun(` הסימן הנכון הוא ${signInProse}.`),
+  ];
+}
+
+/**
+ * Wrong-answer feedback for comparison-sign questions (legacy string flatten).
+ * @param {unknown} q
+ */
+export function buildComparisonSignWrongAnswerExplanation(q) {
+  const runs = buildComparisonSignWrongAnswerRuns(q);
+  return runs.map((r) => r.value).join("");
+}
+
+/**
+ * Structured wrong-answer line object for React renderers.
+ * @param {unknown} q
+ */
+export function buildComparisonSignWrongAnswerLine(q) {
+  const runs = buildComparisonSignWrongAnswerRuns(q);
+  return { __learningRuns: runs };
 }
 
 /**

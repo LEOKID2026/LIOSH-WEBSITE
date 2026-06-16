@@ -1,4 +1,4 @@
-import { parsePlaceValueEquationLine } from "../../lib/learning-book/book-line-classifier";
+import { parseCanonicalPlaceValueEquation } from "../../lib/learning-book/place-value-equation-order";
 
 const islandStyle = {
   direction: "ltr",
@@ -6,10 +6,10 @@ const islandStyle = {
 };
 
 export default function BookPlaceValueEquation({ text }) {
-  const parsed = parsePlaceValueEquationLine(text);
+  const parsed = parseCanonicalPlaceValueEquation(text);
   if (!parsed) return null;
 
-  const { left, terms } = parsed;
+  const { terms, total } = parsed;
 
   return (
     <p
@@ -18,7 +18,7 @@ export default function BookPlaceValueEquation({ text }) {
       style={islandStyle}
       data-book-place-value-equation="true"
     >
-      {left} = {terms.join(" + ")}
+      {terms.join(" + ")} = {total}
     </p>
   );
 }

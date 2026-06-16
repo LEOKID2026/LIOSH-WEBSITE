@@ -97,6 +97,40 @@ export function attachLearningNetworkObserver(page) {
   };
 }
 
+/**
+ * Collect learningSessionId / answerId values observed after a marker.
+ * Used by Phase D2 per-student run windows to distinguish driver-created
+ * persistence from unrelated concurrent activity.
+ */
+export function extractDriverPersistenceIds(observer, marker) {
+  const events = observer?.eventsSince?.(marker) || [];
+  const sessionIds = [];
+  const answerIds = [];
+  let answerResponseCount = 0;
+  let sessionStartResponseCount = 0;
+  for (const event of events) {
+    if (event.kind !== "response") continue;
+    if (event.path === "/api/learning/session/start") {
+      sessionStartResponseCount += 1;
+      if (event.ok && event.body?.learningSessionId) {
+        sessionIds.push(event.body.learningSessionId);
+      }
+    }
+    if (event.path === "/api/learning/answer") {
+      answerResponseCount += 1;
+      if (event.ok && event.body?.answerId) {
+        answerIds.push(event.body.answerId);
+      }
+    }
+  }
+  return {
+    sessionIds,
+    answerIds,
+    answerResponseCount,
+    sessionStartResponseCount,
+  };
+}
+
 function sanitizeBody(path, body) {
   if (!body || typeof body !== "object") return null;
   if (path === "/api/learning/session/start") {

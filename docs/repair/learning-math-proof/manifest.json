@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-06-16T03:55:43.573Z",
+  "base": "http://localhost:3100",
+  "captured": {
+    "01-place-value": "docs\\repair\\learning-math-proof\\01-place-value-mobile.png",
+    "02-compare": "docs\\repair\\learning-math-proof\\02-compare-mobile.png",
+    "03-carry-add": "docs\\repair\\learning-math-proof\\03-carry-add-mobile.png",
+    "04-subtraction": "docs\\repair\\learning-math-proof\\04-subtraction-mobile.png",
+    "05-half": "docs\\repair\\learning-math-proof\\05-half-mobile.png",
+    "06-fractions": "docs\\repair\\learning-math-proof\\06-fractions-mobile.png",
+    "07-percent": "docs\\repair\\learning-math-proof\\07-percent-mobile.png",
+    "08-pi": "docs\\repair\\learning-math-proof\\08-pi-mobile.png",
+    "08b-geometry-area": "docs\\repair\\learning-math-proof\\08b-geometry-area-mobile.png",
+    "08c-geometry-angle": "docs\\repair\\learning-math-proof\\08c-geometry-angle-mobile.png",
+    "09-area-units": "docs\\repair\\learning-math-proof\\09-area-units-mobile.png",
+    "10-science-units": "docs\\repair\\learning-math-proof\\10-science-units-mobile.png"
+  }
+}

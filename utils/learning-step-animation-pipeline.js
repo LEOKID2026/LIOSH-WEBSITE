@@ -2,7 +2,27 @@
  * Post-process animation steps: exerciseView, topic-specific metadata, expression highlights.
  */
 
-import { annotateAnimationSteps } from "./learning-step-exercise-types.js";
+import { parseTemplateRuns } from "../lib/learning-book/learning-math-line-templates.js";
+import { flattenTemplateRuns } from "../lib/learning-book/learning-math-line-build.js";
+import { splitMixedHebrewMathRuns } from "../lib/bidi/mixed-hebrew-math-runs.js";
+
+/**
+ * @param {Record<string, unknown>} step
+ */
+function enrichAnimationStepRuns(step) {
+  if (!step || typeof step !== "object") return step;
+  if (Array.isArray(step.runs) && step.runs.length) return step;
+
+  const text = typeof step.text === "string" ? step.text : "";
+  if (!text.trim()) return step;
+
+  const runs = parseTemplateRuns(text) || splitMixedHebrewMathRuns(text);
+  return {
+    ...step,
+    runs,
+    text: flattenTemplateRuns(runs),
+  };
+}
 import { enrichExpressionSteps } from "./learning-step-expression-exercise.js";
 import { enrichMultiplicationSteps } from "./learning-step-multiplication-exercise.js";
 import { enrichDivisionSteps } from "./learning-step-division-exercise.js";
@@ -155,6 +175,7 @@ export function finalizeAnimationSteps(steps, question, operation) {
   out = out.map((s) => applyExpressionHighlightDefaults(s, op));
   out = enrichExpressionSteps(out);
   out = annotateAnimationSteps(out, question, op);
+  out = out.map(enrichAnimationStepRuns);
 
   if (op === "addition" || op === "subtraction" || op === "decimals") {
     out = out.map((s) =>

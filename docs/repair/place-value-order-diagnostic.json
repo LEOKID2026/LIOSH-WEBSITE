@@ -1,0 +1,216 @@
+{
+  "generatedAt": "2026-06-15T22:26:01.944Z",
+  "route": "/learning/book/math/g2/ns_place_tens_units",
+  "pageId": "ns_place_tens_units",
+  "sectionIndex": 3,
+  "sectionTitle": "דוגמה",
+  "finding": "Historical source used total-first (124 = 100 + 20 + 4). Root cause: draft template + BookPlaceValueEquation rendered {total} = {terms}. Fixed: canonicalizePlaceValueDecomposition at mathRun(), BookPlaceValueEquation renders terms-first, drafts corrected.",
+  "lines": [
+    {
+      "sourceRaw": "**טבלת ערך מקום — המספר 124:**",
+      "route": "/learning/book/math/g2/ns_place_tens_units",
+      "pageIndex": 3,
+      "renderer": "fallback",
+      "parsedBeforeRenderer": [
+        {
+          "type": "prose",
+          "value": "**טבלת ערך מקום — המספר 124:**"
+        }
+      ],
+      "canonicalized": "טבלת ערך מקום — המספר 124:",
+      "domAfterRenderer": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "טבלת ערך מקום — המספר 124:",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">טבלת ערך מקום — המספר 124:</span>"
+        }
+      ],
+      "visibleTextAfterRenderer": "טבלת ערך מקום — המספר 124:",
+      "sourceWasTotalFirst": false
+    },
+    {
+      "sourceRaw": "= 124",
+      "route": "/learning/book/math/g2/ns_place_tens_units",
+      "pageIndex": 3,
+      "renderer": "fallback",
+      "parsedBeforeRenderer": [
+        {
+          "type": "math",
+          "value": "= 124"
+        }
+      ],
+      "canonicalized": "= 124",
+      "domAfterRenderer": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "= 124",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">= 124</span>"
+        }
+      ],
+      "visibleTextAfterRenderer": "= 124",
+      "sourceWasTotalFirst": false
+    },
+    {
+      "sourceRaw": "- **1** מאה + **2** עשרות + **4** אחדות = **124**",
+      "route": "/learning/book/math/g2/ns_place_tens_units",
+      "pageIndex": 3,
+      "renderer": "fallback",
+      "parsedBeforeRenderer": [
+        {
+          "type": "prose",
+          "value": "- "
+        },
+        {
+          "type": "math",
+          "value": "1 מאה + 2 עשרות + 4 אחדות = 124"
+        }
+      ],
+      "canonicalized": "- 1 מאה + 2 עשרות + 4 אחדות = 124",
+      "domAfterRenderer": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "-",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">-</span>"
+        },
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "1 מאה + 2 עשרות + 4 אחדות = 124",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">1 מאה + 2 עשרות + 4 אחדות = 124</span>"
+        }
+      ],
+      "visibleTextAfterRenderer": "- 1 מאה + 2 עשרות + 4 אחדות = 124",
+      "sourceWasTotalFirst": false
+    },
+    {
+      "sourceRaw": "- 100 + 20 + 4 = 124",
+      "route": "/learning/book/math/g2/ns_place_tens_units",
+      "pageIndex": 3,
+      "renderer": "place_value_equation",
+      "parsedBeforeRenderer": [
+        {
+          "type": "prose",
+          "value": "- "
+        },
+        {
+          "type": "math",
+          "value": "100 + 20 + 4 = 124"
+        }
+      ],
+      "canonicalized": "- 100 + 20 + 4 = 124",
+      "domAfterRenderer": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "-",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">-</span>"
+        },
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "100 + 20 + 4 = 124",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">100 + 20 + 4 = 124</span>"
+        }
+      ],
+      "visibleTextAfterRenderer": "100 + 20 + 4 = 124",
+      "sourceWasTotalFirst": false
+    },
+    {
+      "sourceRaw": "**דוגמה נוספת — 405:**",
+      "route": "/learning/book/math/g2/ns_place_tens_units",
+      "pageIndex": 3,
+      "renderer": "fallback",
+      "parsedBeforeRenderer": [
+        {
+          "type": "prose",
+          "value": "**דוגמה נוספת — 405:**"
+        }
+      ],
+      "canonicalized": "דוגמה נוספת — 405:",
+      "domAfterRenderer": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "דוגמה נוספת — 405:",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">דוגמה נוספת — 405:</span>"
+        }
+      ],
+      "visibleTextAfterRenderer": "דוגמה נוספת — 405:",
+      "sourceWasTotalFirst": false
+    },
+    {
+      "sourceRaw": "- 400 + 0 + 5 = 405",
+      "route": "/learning/book/math/g2/ns_place_tens_units",
+      "pageIndex": 3,
+      "renderer": "place_value_equation",
+      "parsedBeforeRenderer": [
+        {
+          "type": "prose",
+          "value": "- "
+        },
+        {
+          "type": "math",
+          "value": "400 + 0 + 5 = 405"
+        }
+      ],
+      "canonicalized": "- 400 + 0 + 5 = 405",
+      "domAfterRenderer": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "-",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">-</span>"
+        },
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "400 + 0 + 5 = 405",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">400 + 0 + 5 = 405</span>"
+        }
+      ],
+      "visibleTextAfterRenderer": "400 + 0 + 5 = 405",
+      "sourceWasTotalFirst": false
+    },
+    {
+      "sourceRaw": "1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = **124** עפרונות.",
+      "route": "/learning/book/math/g2/ns_place_tens_units",
+      "pageIndex": 3,
+      "renderer": "fallback",
+      "parsedBeforeRenderer": [
+        {
+          "type": "math",
+          "value": "1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = 124 עפרונות"
+        }
+      ],
+      "canonicalized": "1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = 124 עפרונות.",
+      "domAfterRenderer": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = 124 עפרונות",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים = 124 עפרונות</span>"
+        }
+      ],
+      "visibleTextAfterRenderer": "1 חבילה של 100 + 2 חבילות של 10 + 4 עפרונות בודדים =124 עפרונות.",
+      "sourceWasTotalFirst": false
+    }
+  ],
+  "visualDomText": [
+    "100 + 20 + 4 = 124",
+    "400 + 0 + 5 = 405"
+  ],
+  "screenshotPath": "docs\\repair\\place-value-g2-section3-mobile.png"
+}

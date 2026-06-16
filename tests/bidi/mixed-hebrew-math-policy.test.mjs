@@ -88,10 +88,99 @@ test("parses addition step into three separate lines", () => {
   });
 });
 
+test("addition equation is one math island", () => {
+  const runs = splitMixedHebrewMathRuns("58 + 37 = 95");
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].type, "math");
+});
+
+test("Latin area formula is one math island", () => {
+  const runs = splitMixedHebrewMathRuns("A = πr²");
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].type, "math");
+  assert.match(runs[0].value, /πr²/);
+});
+
+test("percent with Hebrew label splits correctly", () => {
+  const runs = splitMixedHebrewMathRuns("10% מתוך 490");
+  assert.equal(runs[0].type, "math");
+  assert.match(runs[0].value, /10%/);
+  assert.equal(runs[1].type, "prose");
+  assert.match(runs[1].value, /מתוך/);
+});
+
+test("fraction stays in math island", () => {
+  const runs = splitMixedHebrewMathRuns("3/4");
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].type, "math");
+  assert.equal(runs[0].value, "3/4");
+});
+
+test("degree addition stays in math island", () => {
+  const runs = splitMixedHebrewMathRuns("52° + 101°");
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].type, "math");
+});
+
+test("Hebrew unit attached to number stays LTR", () => {
+  const runs = splitMixedHebrewMathRuns("12 ס״מ");
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].type, "math");
+  assert.match(runs[0].value, /12/);
+});
+
+test("square cm unit stays LTR", () => {
+  const runs = splitMixedHebrewMathRuns("24 סמ״ר");
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].type, "math");
+});
+
+test("thousands separator stays intact", () => {
+  const runs = splitMixedHebrewMathRuns("1,000");
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].type, "math");
+  assert.equal(runs[0].value, "1,000");
+});
+
+test("carry decomposition labels split correctly", () => {
+  const lines = [
+    "עשרות: 30 + 20 = 50",
+    "אחדות: 8 + 7 = 15",
+    "סה״כ: 50 + 9 = 59",
+  ];
+  for (const line of lines) {
+    const runs = splitMixedHebrewMathRuns(line);
+    assert.equal(runs[0].type, "prose");
+    assert.equal(runs[1].type, "math");
+  }
+});
+
+test("numbered list with equation keeps prefix RTL", () => {
+  const runs = splitMixedHebrewMathRuns("1. 100 + 20 + 4 = 124");
+  assert.equal(runs[0].type, "prose");
+  assert.match(runs[0].value, /^1\./);
+  assert.equal(runs[1].type, "math");
+});
+
 test("inline fallback keeps full equation before Hebrew explanation", () => {
   const runs = splitLearningMixedHebrewMathRuns(
     "6 + 2 = 8. כותבים 8 בעמודת המאות."
   );
   assert.equal(runs[0].type, "math");
   assert.equal(runs[0].value, "6 + 2 = 8");
+});
+
+test("detection flags no issues for owner examples", () => {
+  const samples = [
+    "100 + 20 + 4 = 124",
+    "1 מאה + 2 עשרות + 4 אחדות = 124",
+    "8 + 7 = 15 → 5, נשיאה 1",
+    "π ≈ 3.14",
+    "10% מתוך 490",
+    "52° + 101°",
+    "1,000",
+  ];
+  for (const sample of samples) {
+    assert.equal(detectMixedMathRenderIssues(sample).length, 0, sample);
+  }
 });

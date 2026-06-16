@@ -41,6 +41,10 @@ assert(
   !isExampleTitleLine("58 + 37 = 95")
 );
 assert(
+  "place value g2 124",
+  classifyBookLine("- 124 = 100 + 20 + 4") === "place_value_equation"
+);
+assert(
   "place value g4",
   classifyBookLine("7,056 = 7,000 + 0 + 50 + 6") === "place_value_equation"
 );
@@ -59,8 +63,20 @@ assert("parse title hebrew", parsedTitle?.hebrewPart === "פירוק לעשרו�
 assert("parse title colon", parsedTitle?.trailingColon === true);
 
 const parsedEq = parsePlaceValueEquationLine("7,056 = 7,000 + 0 + 50 + 6");
-assert("parse eq left", parsedEq?.left === "7,056");
+assert("parse eq total", parsedEq?.total === "7,056");
 assert("parse eq terms", parsedEq?.terms?.length === 4);
+assert(
+  "parse eq canonical order",
+  parsedEq?.terms?.join(" + ") + " = " + parsedEq?.total ===
+    "7,000 + 0 + 50 + 6 = 7,056"
+);
+
+const parsedG2 = parsePlaceValueEquationLine("- 124 = 100 + 20 + 4");
+assert("parse g2 total", parsedG2?.total === "124");
+assert(
+  "parse g2 canonical",
+  parsedG2?.terms?.join(" + ") === "100 + 20 + 4"
+);
 
 const subVertical = `  4 12
   52

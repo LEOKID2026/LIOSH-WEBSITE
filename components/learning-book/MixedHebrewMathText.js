@@ -4,76 +4,36 @@ import {
   bookLabelIsolateStyle,
   bookMathIsolateStyle,
   bookProseIsolateStyle,
-  isFormulaLikeBody,
   isMathLikeText,
-  splitFormulaTokens,
-  splitHebrewMathRuns,
-  splitTextAndMathRuns,
 } from "../../lib/learning-book/book-math-display";
-import { splitProseForBidiRendering, splitCommaSeparatedFormulaDisplay, splitCommaVavEquationDisplay, splitInlineHebrewTaskEquation } from "../../lib/learning-book/book-bidi-render";
+import { splitMixedHebrewMathRuns } from "../../lib/bidi/mixed-hebrew-math-runs";
+import {
+  splitCommaSeparatedFormulaDisplay,
+  splitCommaVavEquationDisplay,
+  splitInlineHebrewTaskEquation,
+} from "../../lib/learning-book/book-bidi-render";
 import { parseBookLineStructure, splitMixedBodyClauses } from "../../lib/learning-book/book-line-structure";
 import {
   parseInlineMarkdown,
   stripStrayMarkdown,
 } from "../../lib/learning-book/parse-inline-markdown";
-import { interRunGapText } from "../../lib/learning-book/book-visible-text-render";
 import { useBookGradeTheme } from "./BookGradeThemeContext";
 
 const HEBREW_CHAR = /[\u0590-\u05FF]/;
 
-function needsSpaceBefore(text, index) {
-  if (index <= 0) return false;
-  const prev = text[index - 1];
-  if (/\s/.test(prev)) return false;
-  return HEBREW_CHAR.test(prev) || /[,.:;!?)]/.test(prev);
-}
-
-function needsSpaceAfter(text, index) {
-  if (index >= text.length - 1) return false;
-  const next = text[index + 1];
-  if (/\s/.test(next)) return false;
-  return HEBREW_CHAR.test(next) || /[([״"']/.test(next);
-}
-
-function MathSpan({ value, sourceText, start, end }) {
+function MathSpan({ value, className = "" }) {
   const { classes: theme } = useBookGradeTheme();
   const display = stripStrayMarkdown(value).trim();
-  const padBefore = needsSpaceBefore(sourceText, start);
-  const padAfter = needsSpaceAfter(sourceText, end - 1);
 
   return (
-    <>
-      {padBefore ? " " : null}
-      <bdi
-        dir="ltr"
-        style={bookMathIsolateStyle}
-        className={`book-math-isolate font-semibold tabular-nums ${theme.mathText}`}
-        data-book-math-run="true"
-      >
-        {display}
-      </bdi>
-      {padAfter ? " " : null}
-    </>
-  );
-}
-
-function DigitSpan({ value, sourceText, start, end }) {
-  const padBefore = needsSpaceBefore(sourceText, start);
-  const padAfter = needsSpaceAfter(sourceText, end - 1);
-
-  return (
-    <>
-      {padBefore ? " " : null}
-      <bdi
-        dir="ltr"
-        style={bookMathIsolateStyle}
-        className="book-digit-isolate tabular-nums"
-        data-book-digit="true"
-      >
-        {value}
-      </bdi>
-      {padAfter ? " " : null}
-    </>
+    <span
+      dir="ltr"
+      style={bookMathIsolateStyle}
+      className={`book-math-isolate font-semibold tabular-nums ${theme.mathText} ${className}`.trim()}
+      data-book-math-run="true"
+    >
+      {display}
+    </span>
   );
 }
 
@@ -87,85 +47,50 @@ function MixedLineBody({ children, className = "" }) {
 
 function ProseSpan({ children, className = "" }) {
   return (
-    <bdi
+    <span
       dir="rtl"
       style={bookProseIsolateStyle}
       className={`book-prose-isolate ${className}`.trim()}
       data-book-prose-run="true"
     >
       {children}
-    </bdi>
+    </span>
   );
+}
+
+/**
+ * Unified BiDi policy: one LTR island per math run, RTL prose — no digit/token splitting.
+ */
+function renderUnifiedMixedRuns(text, keyPrefix = "") {
+  const input = String(text || "");
+  const runs = splitMixedHebrewMathRuns(input);
+
+  return runs.map((run, i) => {
+    const key = `${keyPrefix}${run.type}-${i}`;
+    if (run.value === "\n") {
+      return <br key={key} />;
+    }
+    if (run.type === "math") {
+      return <MathSpan key={key} value={run.value} />;
+    }
+    const prose = stripStrayMarkdown(run.value);
+    if (!prose) return null;
+    return (
+      <ProseSpan key={key}>{prose}</ProseSpan>
+    );
+  });
 }
 
 function renderProseText(value) {
   const cleaned = stripStrayMarkdown(value);
   if (!cleaned) return null;
-
-  const chunks = splitProseForBidiRendering(cleaned);
-  if (chunks.length <= 1) {
-    return <ProseSpan>{cleaned}</ProseSpan>;
-  }
-
-  return chunks.map((chunk, i) => (
-    <ProseSpan key={i}>{stripStrayMarkdown(chunk.value)}</ProseSpan>
-  ));
+  return <ProseSpan>{cleaned}</ProseSpan>;
 }
 
-function renderContentRuns(text, sourceText, sourceOffset = 0) {
-  const runs = splitHebrewMathRuns(text);
-  const scopedSource = sourceText || text;
-
-  return runs.map((run, i) => {
-    const relStart = run.start ?? 0;
-    const relEnd = run.end ?? relStart + run.value.length;
-    const start = sourceOffset + relStart;
-    const end = sourceOffset + relEnd;
-    const gap =
-      i > 0
-        ? interRunGapText(
-            scopedSource,
-            sourceOffset +
-              (runs[i - 1].end ??
-                (runs[i - 1].start ?? 0) + runs[i - 1].value.length),
-            start
-          )
-        : "";
-
-    const runNode =
-      run.type === "math" ? (
-        <MathSpan
-          key={i}
-          value={run.value}
-          sourceText={scopedSource}
-          start={start}
-          end={end}
-        />
-      ) : run.type === "digit" ? (
-        <DigitSpan
-          key={i}
-          value={run.value}
-          sourceText={scopedSource}
-          start={start}
-          end={end}
-        />
-      ) : (
-        renderProseText(run.value)
-      );
-
-    return (
-      <Fragment key={i}>
-        {gap || null}
-        {runNode}
-      </Fragment>
-    );
-  });
-}
-
-function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
+function renderFormattedSegment(type, value, sourceText) {
   const { classes: theme } = useBookGradeTheme();
   const cleaned = stripStrayMarkdown(value);
-  const content = renderContentRuns(value, sourceText, sourceOffset);
+  const content = renderUnifiedMixedRuns(value, `${type}-`);
   const mathOnly =
     isMathLikeText(cleaned) && !HEBREW_CHAR.test(cleaned.replace(/\*\*/g, ""));
 
@@ -173,18 +98,13 @@ function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
     if (mathOnly) {
       return (
         <strong className="font-bold text-white">
-          <MathSpan
-            value={value}
-            sourceText={sourceText}
-            start={sourceOffset}
-            end={sourceOffset + value.length}
-          />
+          <MathSpan value={value} />
         </strong>
       );
     }
     return (
       <strong className="font-bold text-white">
-        <ProseSpan>{content}</ProseSpan>
+        {content}
       </strong>
     );
   }
@@ -192,7 +112,7 @@ function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
   if (type === "italic") {
     return (
       <em className="text-white/85">
-        <ProseSpan>{content}</ProseSpan>
+        {content}
       </em>
     );
   }
@@ -215,61 +135,11 @@ function renderFormattedSegment(type, value, sourceText, sourceOffset = 0) {
 function renderProseSegment(text, sourceText, keyPrefix) {
   const tokens = parseInlineMarkdown(text);
 
-  return tokens.map((token, i) => {
-    const tokenStart = sourceText.indexOf(token.value);
-    const offset = tokenStart >= 0 ? tokenStart : 0;
-    return (
-      <Fragment key={`${keyPrefix}-${i}`}>
-        {renderFormattedSegment(token.type, token.value, sourceText, offset)}
-      </Fragment>
-    );
-  });
-}
-
-function renderFormulaBody(text) {
-  const tokens = splitFormulaTokens(text);
-  return tokens.map((token, i) => {
-    if (token.type === "space") {
-      return token.value;
-    }
-    if (token.type === "op") {
-      return (
-        <bdi
-          key={i}
-          dir="ltr"
-          style={bookMathIsolateStyle}
-          className="book-formula-op font-semibold tabular-nums"
-          data-book-formula-op="true"
-        >
-          {token.value}
-        </bdi>
-      );
-    }
-    if (token.type === "symbol") {
-      return (
-        <bdi
-          key={i}
-          dir="ltr"
-          style={bookMathIsolateStyle}
-          className="book-formula-symbol font-semibold tabular-nums"
-          data-book-formula-symbol="true"
-        >
-          {token.value}
-        </bdi>
-      );
-    }
-    return (
-      <bdi
-        key={i}
-        dir="rtl"
-        style={bookLabelIsolateStyle}
-        className="book-formula-term"
-        data-book-formula-term="true"
-      >
-        {token.value}
-      </bdi>
-    );
-  });
+  return tokens.map((token, i) => (
+    <Fragment key={`${keyPrefix}-${i}`}>
+      {renderFormattedSegment(token.type, token.value, sourceText)}
+    </Fragment>
+  ));
 }
 
 function renderInlineHebrewTaskEquation(text) {
@@ -280,21 +150,13 @@ function renderInlineHebrewTaskEquation(text) {
     <>
       <ProseSpan>{split.prefix}</ProseSpan>
       <LabelBodyGap />
-      <MathSpan
-        value={split.equation}
-        sourceText={text}
-        start={text.indexOf(split.equation)}
-        end={text.indexOf(split.equation) + split.equation.length}
-      />
+      <MathSpan value={split.equation} />
     </>
   );
 }
 
 function renderMixedBodyInner(text) {
   const input = String(text || "");
-  if (isFormulaLikeBody(input)) {
-    return renderFormulaBody(input);
-  }
 
   const inlineTask = renderInlineHebrewTaskEquation(input);
   if (inlineTask) {
@@ -328,15 +190,10 @@ function renderVavPrefixedMathRow(text) {
   if (!match?.[2]) return null;
 
   return (
-    <bdi
-      dir="ltr"
-      style={bookMathIsolateStyle}
-      className="book-vav-math-row font-semibold tabular-nums"
-      data-book-math-run="true"
-    >
-      {match[1]}
-      {stripStrayMarkdown(match[2])}
-    </bdi>
+    <MathSpan
+      value={`${match[1]}${stripStrayMarkdown(match[2])}`}
+      className="book-vav-math-row"
+    />
   );
 }
 
@@ -347,32 +204,12 @@ function renderMixedBodyInnerSingle(text) {
     return vavRow;
   }
 
-  const segments = splitTextAndMathRuns(input);
+  const hasMarkdown = /[*`_]/.test(input);
+  if (hasMarkdown) {
+    return renderProseSegment(input, input, "md-");
+  }
 
-  return segments.map((segment, i) => {
-    const gap =
-      i > 0 ? interRunGapText(input, segments[i - 1].end, segment.start) : "";
-
-    const segmentNode =
-      segment.type === "math" ? (
-        <MathSpan
-          key={i}
-          value={segment.value}
-          sourceText={input}
-          start={segment.start}
-          end={segment.end}
-        />
-      ) : (
-        renderProseSegment(segment.value, input, String(i))
-      );
-
-    return (
-      <Fragment key={i}>
-        {gap || null}
-        {segmentNode}
-      </Fragment>
-    );
-  });
+  return renderUnifiedMixedRuns(input);
 }
 
 function renderMixedClause(clause) {

@@ -90,6 +90,31 @@ Only after owner approval on this tiny run → resume larger backfill range.
 
 ---
 
+## Per-student snapshot gate (harness fix — owner approval required before run)
+
+After the batch-snapshot bleed false-failure on `2026-04-01`, D2 validation now uses
+**per-student** baseline → sessions → after windows (see `KNOWN-ISSUES.md`).
+
+| Field | Value |
+|-------|-------|
+| date | `2026-04-01` |
+| students | `AAA1`, `AAA5`, `AAA11` |
+| mode | `fast` |
+| reason | AAA1 had false batch bleed; AAA5 moledet/guided; AAA11 math practice |
+
+```powershell
+node scripts/virtual-student-qa/run.mjs `
+  --phase d2 `
+  --mode fast `
+  --date 2026-04-01 `
+  --students AAA1,AAA5,AAA11
+```
+
+Do **not** use `--force` unless explicitly re-running a completed date. State is still
+at `lastRunDate=2026-03-31`.
+
+---
+
 ## Operator env — parent preflight credentials
 
 When runs source `%LOCALAPPDATA%\liosh-qa\env\virtual-student-qa.env.ps1` first,

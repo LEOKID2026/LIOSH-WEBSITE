@@ -6,11 +6,13 @@ import {
   splitTextAndMathRuns,
   findInlineMathRuns,
 } from "../../lib/learning-book/book-math-display.js";
+import { splitMixedHebrewMathRuns } from "../../lib/bidi/mixed-hebrew-math-runs.js";
 import {
   analyzeBidiRenderStructure,
   assertBidiMathOrder,
   hasProseBetweenMathRuns,
 } from "../../lib/learning-book/book-bidi-render.js";
+import { describeMixedMathDomContract, hasForbiddenTokenSplit } from "../../lib/bidi/describe-mixed-math-dom.js";
 import {
   isPipeTableBlock,
   parsePipeTable,
@@ -43,10 +45,13 @@ function assertMathRuns(line, expectedMath) {
 
 /** @param {string} line */
 function assertNoUnisolatedMath(line) {
-  const parts = splitTextAndMathRuns(line);
-  for (const p of parts) {
-    if (p.type === "text" && /\d\s*[+−\-=×÷<>]\s*\d/.test(p.value)) {
-      fail(`un-isolated math in text for "${line}": ${JSON.stringify(p.value)}`);
+  for (const run of splitMixedHebrewMathRuns(line)) {
+    if (
+      run.type === "prose" &&
+      /\d\s*[+−\-=×÷→←<>]\s*\d/.test(run.value) &&
+      !/^[-•*\d.)]+\s*$/.test(run.value.trim())
+    ) {
+      fail(`un-isolated math in prose for "${line}": ${JSON.stringify(run.value)}`);
     }
   }
 }
@@ -169,6 +174,14 @@ for (const sample of REGRESSION_LINES) {
     assertBidiMathOrder(sample.line, sample.order);
   } catch (e) {
     fail(e.message);
+  }
+
+  if (hasForbiddenTokenSplit(sample.line)) {
+    fail(`token-split math detected for "${sample.line}"`);
+  }
+  const roles = analyzeBidiRenderStructure(sample.line).map((r) => r.role);
+  if (roles.some((r) => /^(digit|formula-op|formula-symbol|formula-term)$/.test(r))) {
+    fail(`legacy token-split roles in "${sample.line}": ${JSON.stringify(roles)}`);
   }
 
   const flat = flattenMixedHebrewMathVisibleText(sample.line);

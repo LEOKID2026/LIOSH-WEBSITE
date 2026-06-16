@@ -7,6 +7,7 @@ import StepLongDivisionExerciseView from "./StepLongDivisionExerciseView";
 import StepFractionExerciseView from "./StepFractionExerciseView";
 import StepExpressionExerciseView from "./StepExpressionExerciseView";
 import StepWordProblemExerciseView from "./StepWordProblemExerciseView";
+import { pureMathLtrDisplay } from "../../lib/learning-book/learning-math-line-build.js";
 
 function DivisionPreFallback({ step }) {
   const ex = useStepExerciseUi();
@@ -22,16 +23,16 @@ function DivisionPreFallback({ step }) {
           <pre
             dir="ltr"
             className={`text-center font-mono text-lg whitespace-pre-wrap w-full max-w-full ${ex.monoText}`}
-            style={{ unicodeBidi: "plaintext", margin: 0, transform: "translateY(6px)" }}
+            style={{ unicodeBidi: "isolate", margin: 0, transform: "translateY(6px)" }}
           >
-            {`\u2066${firstLine}\u2069`}
+            {pureMathLtrDisplay(firstLine)}
           </pre>
           <pre
             dir="ltr"
             className={`text-center font-mono text-lg leading-relaxed whitespace-pre-wrap w-full max-w-full ${ex.monoText}`}
-            style={{ unicodeBidi: "plaintext", margin: 0 }}
+            style={{ unicodeBidi: "isolate", margin: 0 }}
           >
-            {`\u2066${rest}\u2069`}
+            {pureMathLtrDisplay(rest)}
           </pre>
         </div>
       </div>
@@ -48,7 +49,7 @@ function PreFallback({ step }) {
         <pre
           dir="ltr"
           className={`text-center font-mono text-lg leading-relaxed whitespace-pre-wrap w-full max-w-full ${ex.monoText}`}
-          style={{ unicodeBidi: "plaintext" }}
+          style={{ unicodeBidi: "isolate" }}
         >
           {step.pre}
         </pre>

@@ -3842,6 +3842,7 @@ function summarizeSuiteForArtifact(suiteResult) {
       })),
       delta: r.delta || null,
       classification: r.classification || null,
+      runWindow: r.runWindow || null,
       tier1: r.tier1 || null,
       consoleErrors: (r.consoleErrors || []).slice(0, 20),
       consoleNoiseCount: (r.consoleNoise || []).length,
@@ -4093,22 +4094,78 @@ function renderSuiteMarkdown(suite, stateAdvance) {
   }
   if ((suite.crossStudentMatrix || []).length > 0) {
     lines.push("");
-    lines.push("### Cross-student / own-subject delta matrix");
+    lines.push("### Per-student snapshot windows + delta matrix");
     lines.push("");
     lines.push(
-      "| student | grade | ownSubjects | ownDeltaOk | bleedOk | bleedFindings | totalAnswered | finalStatus |"
+      "_Each student: baseline immediately before sessions → driver activity → " +
+        "after immediately after sessions. Non-planned-subject deltas are logged " +
+        "as external/concurrent activity — not product bleed failures._"
+    );
+    lines.push("");
+    lines.push(
+      "| student | grade | ownSubjects | ownDeltaOk | external? | baseline→after | driver answers | finalStatus |"
     );
     lines.push("|---|---|---|---|---|---|---|---|");
     for (const m of suite.crossStudentMatrix) {
-      const findings = (m.bleedFindings || [])
-        .map((f) => `${f.subject}+${f.delta}`)
-        .join(", ");
+      const rw = m.runWindow || {};
+      const window =
+        rw.baselineCapturedAt && rw.afterCapturedAt
+          ? `${rw.baselineCapturedAt} → ${rw.afterCapturedAt}`
+          : "—";
       lines.push(
         `| ${m.studentLabel} | ${m.grade} | ` +
           `${(m.ownSubjects || []).join("+") || "—"} | ` +
-          `${m.ownDeltaOk ?? "—"} | ${m.bleedOk ?? "—"} | ${findings || "—"} | ` +
-          `${m.totalAnswered ?? "—"} | ${m.finalStatus} |`
+          `${m.ownDeltaOk ?? "—"} | ` +
+          `${m.externalConcurrentDetected ? "yes" : "no"} | ` +
+          `${window} | ${rw.driverAnswerCount ?? "—"} | ${m.finalStatus} |`
       );
+    }
+    const anyExternal = (suite.crossStudentMatrix || []).some(
+      (m) => m.externalConcurrentDetected
+    );
+    if (anyExternal) {
+      lines.push("");
+      lines.push("#### External/concurrent same-student activity (informational)");
+      for (const m of suite.crossStudentMatrix || []) {
+        if (!m.bleedFindings || m.bleedFindings.length === 0) continue;
+        lines.push(`- **${m.studentLabel}**:`);
+        for (const f of m.bleedFindings) {
+          lines.push(
+            `  - subject=\`${f.subject}\` before=\`${f.before}\` ` +
+              `after=\`${f.after}\` delta=\`${f.delta}\``
+          );
+        }
+      }
+    }
+  }
+  if ((suite.students || []).some((r) => r.runWindow)) {
+    lines.push("");
+    lines.push("### Per-student run window detail");
+    for (const r of suite.students || []) {
+      const rw = r.runWindow;
+      if (!rw) continue;
+      lines.push("");
+      lines.push(`#### \`${r.label}\``);
+      lines.push(`- plannedSubjects: \`${(rw.plannedSubjects || []).join(", ") || "—"}\``);
+      lines.push(`- studentRunStartedAt: \`${rw.studentRunStartedAt || "—"}\``);
+      lines.push(`- baselineCapturedAt: \`${rw.baselineCapturedAt || "—"}\``);
+      lines.push(`- afterCapturedAt: \`${rw.afterCapturedAt || "—"}\``);
+      lines.push(`- studentRunEndedAt: \`${rw.studentRunEndedAt || "—"}\``);
+      lines.push(
+        `- driverSessionIds: \`${(rw.driverSessionIds || []).length}\` ` +
+          `(ids: \`${(rw.driverSessionIds || []).slice(0, 5).join(", ") || "—"}\`)`
+      );
+      lines.push(
+        `- driverAnswerIds: \`${(rw.driverAnswerIds || []).length}\` ` +
+          `driverAnswerCount: \`${rw.driverAnswerCount ?? "—"}\``
+      );
+      if ((rw.externalConcurrentActivity || []).length > 0) {
+        lines.push(
+          `- externalConcurrentActivity: \`${rw.externalConcurrentActivity
+            .map((f) => `${f.subject}+${f.delta}`)
+            .join(", ")}\``
+        );
+      }
     }
   }
   return lines.join("\n");

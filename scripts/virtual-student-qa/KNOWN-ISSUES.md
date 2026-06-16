@@ -29,6 +29,28 @@ not commit secrets or change repo env files for this.
 
 ## Resolved driver-quality issues
 
+### D2 parent-report validation — batch snapshot false bleed (RESOLVED 2026-06-15)
+
+**Status:** Fixed in QA harness only. No product change.
+
+**Symptom (before fix).** D2 full-run on `2026-04-01` failed AAA1 with
+`cross-subject bleed: math+13` even though drivers selected Practice and created
+countable practice evidence. Batch baselines were taken for all students, then ~22
+minutes of multi-student activity, then batch after-snapshots — unrelated concurrent
+activity on AAA1 before its driver sessions inflated the math delta.
+
+**Fix (QA harness only).** `phase-d2-orchestrator.mjs` now validates per student:
+baseline immediately before sessions → driver activity → after immediately after.
+Records `runWindow` (timestamps, planned subjects, driver session/answer ids).
+Non-planned-subject deltas are logged as `external/concurrent same-student activity`
+(informational) — not product bleed failures. Fails only on real evidence failures
+(own-subject delta miss, driver learning mode, wrong student report, etc.).
+
+**Do not:** change product report policy, relabel DB rows, or require stopping unrelated
+site work.
+
+---
+
 ### All subject drivers — Practice (תרגול) mode for countable parent-report evidence (RESOLVED 2026-06-15)
 
 **Status:** Fixed in QA tooling only. No product change.

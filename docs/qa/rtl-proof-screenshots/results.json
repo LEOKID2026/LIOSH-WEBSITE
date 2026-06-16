@@ -1,0 +1,197 @@
+{
+  "generatedAt": "2026-06-15T21:58:46.050Z",
+  "origin": "http://localhost:3100",
+  "policyFixtures": [
+    {
+      "line": "100 + 20 + 4 = 124",
+      "runs": [
+        {
+          "type": "math",
+          "value": "100 + 20 + 4 = 124"
+        }
+      ]
+    },
+    {
+      "line": "1 מאה + 2 עשרות + 4 אחדות = 124",
+      "runs": [
+        {
+          "type": "math",
+          "value": "1 מאה + 2 עשרות + 4 אחדות = 124"
+        }
+      ]
+    },
+    {
+      "line": "8 + 7 = 15 → 5, נשיאה 1",
+      "runs": [
+        {
+          "type": "math",
+          "value": "8 + 7 = 15 → 5"
+        },
+        {
+          "type": "prose",
+          "value": ", נשיאה 1"
+        }
+      ]
+    },
+    {
+      "line": "π ≈ 3.14",
+      "runs": [
+        {
+          "type": "math",
+          "value": "π ≈ 3.14"
+        }
+      ]
+    },
+    {
+      "line": "10% מתוך 490",
+      "runs": [
+        {
+          "type": "math",
+          "value": "10%"
+        },
+        {
+          "type": "prose",
+          "value": " מתוך 490"
+        }
+      ]
+    },
+    {
+      "line": "12 ס״מ",
+      "runs": [
+        {
+          "type": "math",
+          "value": "12 ס״מ"
+        }
+      ]
+    },
+    {
+      "line": "1,000",
+      "runs": [
+        {
+          "type": "math",
+          "value": "1,000"
+        }
+      ]
+    }
+  ],
+  "pass": false,
+  "results": [
+    {
+      "id": "01-place-value",
+      "label": "ערך מקום",
+      "path": "/learning/book/math/g2/ns_place_tens_units",
+      "screenshot": "docs/qa/rtl-proof-screenshots/01-place-value-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "02-carry-add",
+      "label": "חיבור עם נשיאה",
+      "path": "/learning/book/math/g2/add_vertical",
+      "screenshot": "docs/qa/rtl-proof-screenshots/02-carry-add-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "03-subtraction",
+      "label": "חיסור",
+      "path": "/learning/book/math/g1/sub_two",
+      "screenshot": "docs/qa/rtl-proof-screenshots/03-subtraction-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "04-fractions",
+      "label": "שברים",
+      "path": "/learning/book/math/g2/frac_half",
+      "screenshot": "docs/qa/rtl-proof-screenshots/04-fractions-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "05-percent",
+      "label": "אחוזים",
+      "path": "/learning/book/math/g6/perc_part_of",
+      "screenshot": "docs/qa/rtl-proof-screenshots/05-percent-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "06-pi-circle",
+      "label": "גאומטריה π",
+      "path": "/learning/book/geometry/g6/circle_area",
+      "screenshot": "docs/qa/rtl-proof-screenshots/06-pi-circle-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "07-area-units",
+      "label": "שטח/יחידות",
+      "path": "/learning/book/geometry/g5/triangle_area",
+      "screenshot": "docs/qa/rtl-proof-screenshots/07-area-units-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "08-perimeter",
+      "label": "היקף/יחידות",
+      "path": "/learning/book/geometry/g3/square_perimeter",
+      "screenshot": "docs/qa/rtl-proof-screenshots/08-perimeter-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "09-science-units",
+      "label": "מדעים יחידות",
+      "path": "/learning/book/science/g4/measurement_units",
+      "screenshot": "docs/qa/rtl-proof-screenshots/09-science-units-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "10-step-explanation",
+      "label": "הסבר צעד-צעד",
+      "path": "/learning/book/math/g2/add_vertical",
+      "screenshot": "docs/qa/rtl-proof-screenshots/10-step-explanation-mobile.png",
+      "blockers": [],
+      "issues": [],
+      "pass": true
+    },
+    {
+      "id": "11-math-practice-carry",
+      "label": "תרגול חיבור",
+      "pass": false,
+      "blockers": [
+        "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'תרגול', exact: true })\n"
+      ],
+      "issues": []
+    },
+    {
+      "id": "12-math-explanation",
+      "label": "הסבר תרגול",
+      "pass": false,
+      "blockers": [
+        "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'תרגול', exact: true })\n"
+      ],
+      "issues": []
+    },
+    {
+      "id": "13-geometry-practice",
+      "label": "תרגול גאומטריה",
+      "pass": false,
+      "blockers": [
+        "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'תרגול', exact: true })\n"
+      ],
+      "issues": []
+    }
+  ]
+}

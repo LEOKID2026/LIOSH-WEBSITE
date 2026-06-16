@@ -1,5 +1,8 @@
 import { resolveStudentQuestionDisplayParts } from "../../utils/student-question-display";
 import { getCompactEquationFontStyle } from "../../utils/learning-question-font";
+import { renderLearningMixedHebrewMathText } from "./LearningMixedHebrewMathText";
+import { learningProseIsolateStyle } from "../../utils/learning-mixed-hebrew-math-render";
+import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
 
 /**
  * Student-facing question: instruction (RTL) + body (LTR for equations/formulas).
@@ -54,7 +57,7 @@ export default function StudentQuestionDisplay({
           dir="rtl"
           style={{
             direction: "rtl",
-            unicodeBidi: "plaintext",
+            unicodeBidi: "isolate",
             ...fontLead,
             ...leadStyle,
           }}
@@ -64,15 +67,24 @@ export default function StudentQuestionDisplay({
       ) : null}
 
       {parts.bodyText ? (
+        parts.bodyKind === "mixed" ? (
+          <div
+            data-testid="student-question-body"
+            className={`w-full max-w-full flex justify-center overflow-visible ${bodyClassName} break-words`}
+            style={{ ...learningMixedHebrewMathStyle, ...fontBody, ...bodyStyle }}
+          >
+            {renderLearningMixedHebrewMathText(parts.bodyText)}
+          </div>
+        ) : (
         <div
           data-testid="student-question-body"
           className={`w-full max-w-full flex justify-center overflow-visible ${
             isEquation ? formulaClassName : `${bodyClassName} break-words`
           }`}
-          dir={isEquation ? "ltr" : "auto"}
+          dir={isEquation ? "ltr" : "rtl"}
           style={{
-            direction: isEquation ? "ltr" : undefined,
-            unicodeBidi: isEquation ? "isolate" : "plaintext",
+            direction: isEquation ? "ltr" : "rtl",
+            unicodeBidi: "isolate",
             ...fontBody,
             ...bodyStyle,
           }}
@@ -92,12 +104,13 @@ export default function StudentQuestionDisplay({
                     wordBreak: "normal",
                     overflowWrap: "break-word",
                   }
-                : undefined
+                : learningProseIsolateStyle
             }
           >
             {parts.bodyText}
           </span>
         </div>
+        )
       ) : null}
     </div>
   );

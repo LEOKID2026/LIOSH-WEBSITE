@@ -7,6 +7,13 @@ import {
   splitLearningMixedHebrewMathRuns,
 } from "../../utils/learning-mixed-hebrew-math-render";
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
+import {
+  renderLearningMathLine,
+  renderLearningMathRuns,
+} from "../../utils/learning-math-line-render.js";
+import { unwrapLearningRuns } from "../../lib/learning-book/learning-math-line-build.js";
+
+export { renderLearningMathRuns, renderLearningMathLine };
 
 function renderInlineMixedRuns(text) {
   const runs = splitLearningMixedHebrewMathRuns(text);
@@ -55,16 +62,21 @@ function renderThreeLineExplanation(blocks, className) {
  * @returns {import("react").ReactNode}
  */
 export function renderLearningMixedHebrewMathText(text, className = "") {
+  if (Array.isArray(text)) {
+    return renderLearningMathRuns(text, className);
+  }
+
+  const unwrapped = unwrapLearningRuns(text);
+  if (unwrapped.length) {
+    return renderLearningMathRuns(unwrapped, className);
+  }
+
   const blocks = parseStepExplanationThreeLines(text);
   if (blocks) {
     return renderThreeLineExplanation(blocks, className);
   }
 
-  return (
-    <div className={className} style={learningMixedHebrewMathStyle}>
-      {renderInlineMixedRuns(text)}
-    </div>
-  );
+  return renderLearningMathLine(text, className);
 }
 
 /**

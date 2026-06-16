@@ -1,14 +1,39 @@
 import React from "react";
-import { learningMathIsolateStyle } from "../../../utils/learning-mixed-hebrew-math-render";
+import {
+  learningMathIsolateStyle,
+  learningProseIsolateStyle,
+  splitLearningMixedHebrewMathRuns,
+} from "../../../utils/learning-mixed-hebrew-math-render";
+import { learningMixedHebrewMathStyle } from "../../../utils/learning-mixed-hebrew-math";
 import { normalizeHebrewWordNumberSpacing } from "../../../utils/learning-hebrew-number-spacing";
 
 function stripBidiMarks(text) {
   return normalizeHebrewWordNumberSpacing(String(text).replace(/\u2066|\u2069/g, ""));
 }
 
+function renderMixedRuns(text) {
+  const runs = splitLearningMixedHebrewMathRuns(text);
+  return runs.map((run, idx) => {
+    if (run.value === "\n") {
+      return <br key={`nl-${idx}`} />;
+    }
+    if (run.type === "math") {
+      return (
+        <span key={`math-${idx}`} style={learningMathIsolateStyle} dir="ltr">
+          {run.value}
+        </span>
+      );
+    }
+    return (
+      <span key={`prose-${idx}`} style={learningProseIsolateStyle} dir="rtl">
+        {run.value}
+      </span>
+    );
+  });
+}
+
 /**
- * Geometry step lines: keep Hebrew prose flowing inline.
- * Break to a new line only for a full formula after נציב/נחשב, or before ", ואז".
+ * Geometry step lines: unified Hebrew + math BiDi via shared splitter.
  */
 export default function GeometryStepLine({ text, stepKey }) {
   const stripped = stripBidiMarks(text).trim();
@@ -16,8 +41,7 @@ export default function GeometryStepLine({ text, stepKey }) {
 
   const baseClass = "geometry-step-line mb-2 last:mb-0 leading-7";
   const baseStyle = {
-    direction: "rtl",
-    unicodeBidi: "plaintext",
+    ...learningMixedHebrewMathStyle,
     whiteSpace: "pre-wrap",
     wordBreak: "break-word",
   };
@@ -28,34 +52,16 @@ export default function GeometryStepLine({ text, stepKey }) {
     const tail = stripped.slice(andThenIdx + 2);
     return (
       <p key={stepKey} className={baseClass} style={baseStyle}>
-        {head}
+        {renderMixedRuns(head)}
         <br />
-        {tail}
+        {renderMixedRuns(tail)}
       </p>
     );
   }
 
-  const formulaMatch = stripped.match(/^(.+?(?:נציב|נחשב):\s*)(.+)$/u);
-  if (formulaMatch) {
-    const [, lead, formula] = formulaMatch;
-    const looksLikeFormula =
-      /[=×÷+\-−]/.test(formula) &&
-      !/זווית\s*\d/.test(formula) &&
-      formula.length >= 8;
-    if (looksLikeFormula) {
-      return (
-        <p key={stepKey} className={baseClass} style={baseStyle}>
-          {lead}
-          <br />
-          <span style={learningMathIsolateStyle}>{formula}</span>
-        </p>
-      );
-    }
-  }
-
   return (
     <p key={stepKey} className={baseClass} style={baseStyle}>
-      {stripped}
+      {renderMixedRuns(stripped)}
     </p>
   );
 }

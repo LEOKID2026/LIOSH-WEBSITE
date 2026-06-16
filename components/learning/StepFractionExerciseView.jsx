@@ -19,7 +19,7 @@ export default function StepFractionExerciseView({ step, pre, stepIndex = 0, cla
     <StepExerciseShell step={step} stepIndex={stepIndex} className={className}>
       <div
         className={`flex flex-col items-center font-mono text-xl leading-relaxed gap-1 w-full max-w-full ${ex.monoText}`}
-        style={{ direction: "ltr", unicodeBidi: "plaintext" }}
+        style={{ direction: "ltr", unicodeBidi: "isolate" }}
       >
         {lines.map((line, li) => {
           const segments = highlightFractionLine(line, highlights);

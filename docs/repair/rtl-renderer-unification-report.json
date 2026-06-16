@@ -1,0 +1,359 @@
+{
+  "entries": [
+    {
+      "sourceText": "100 + 20 + 4 = 124",
+      "runs": [
+        {
+          "type": "math",
+          "value": "100 + 20 + 4 = 124"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "100 + 20 + 4 = 124",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">100 + 20 + 4 = 124</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "ltr",
+          "value": "100 + 20 + 4 = 124",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "1 מאה + 2 עשרות + 4 אחדות = 124",
+      "runs": [
+        {
+          "type": "math",
+          "value": "1 מאה + 2 עשרות + 4 אחדות = 124"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "1 מאה + 2 עשרות + 4 אחדות = 124",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">1 מאה + 2 עשרות + 4 אחדות = 124</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "ltr",
+          "value": "1 מאה + 2 עשרות + 4 אחדות = 124",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "58 + 37 = 95",
+      "runs": [
+        {
+          "type": "math",
+          "value": "58 + 37 = 95"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "58 + 37 = 95",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">58 + 37 = 95</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "ltr",
+          "value": "58 + 37 = 95",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "8 + 7 = 15 → 5, נשיאה 1",
+      "runs": [
+        {
+          "type": "math",
+          "value": "8 + 7 = 15 → 5"
+        },
+        {
+          "type": "prose",
+          "value": ", נשיאה 1"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "8 + 7 = 15 → 5",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">8 + 7 = 15 → 5</span>"
+        },
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": ", נשיאה 1",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">, נשיאה 1</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "ltr",
+          "value": "8 + 7 = 15 → 5",
+          "role": "math"
+        },
+        {
+          "dir": "rtl",
+          "value": ", נשיאה 1",
+          "role": "prose"
+        }
+      ]
+    },
+    {
+      "sourceText": "עשרות: 30 + 20 = 50",
+      "runs": [
+        {
+          "type": "prose",
+          "value": "עשרות:"
+        },
+        {
+          "type": "math",
+          "value": "30 + 20 = 50"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "עשרות:",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">עשרות:</span>"
+        },
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "30 + 20 = 50",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">30 + 20 = 50</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "rtl",
+          "value": "עשרות:",
+          "role": "label"
+        },
+        {
+          "dir": "ltr",
+          "value": "30 + 20 = 50",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "אחדות: 8 + 7 = 15",
+      "runs": [
+        {
+          "type": "prose",
+          "value": "אחדות:"
+        },
+        {
+          "type": "math",
+          "value": "8 + 7 = 15"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "אחדות:",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">אחדות:</span>"
+        },
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "8 + 7 = 15",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">8 + 7 = 15</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "rtl",
+          "value": "אחדות:",
+          "role": "label"
+        },
+        {
+          "dir": "ltr",
+          "value": "8 + 7 = 15",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "סה״כ: 50 + 9 = 59",
+      "runs": [
+        {
+          "type": "prose",
+          "value": "סה״כ:"
+        },
+        {
+          "type": "math",
+          "value": "50 + 9 = 59"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "סה״כ:",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">סה״כ:</span>"
+        },
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "50 + 9 = 59",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">50 + 9 = 59</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "rtl",
+          "value": "סה״כ:",
+          "role": "label"
+        },
+        {
+          "dir": "ltr",
+          "value": "50 + 9 = 59",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "7 + 8 = 15",
+      "runs": [
+        {
+          "type": "math",
+          "value": "7 + 8 = 15"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "7 + 8 = 15",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">7 + 8 = 15</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "ltr",
+          "value": "7 + 8 = 15",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "47 + 28 = 75",
+      "runs": [
+        {
+          "type": "math",
+          "value": "47 + 28 = 75"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "47 + 28 = 75",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">47 + 28 = 75</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "ltr",
+          "value": "47 + 28 = 75",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "π ≈ 3.14",
+      "runs": [
+        {
+          "type": "math",
+          "value": "π ≈ 3.14"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "π ≈ 3.14",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">π ≈ 3.14</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "ltr",
+          "value": "π ≈ 3.14",
+          "role": "math"
+        }
+      ]
+    },
+    {
+      "sourceText": "- 1 מאה + 2 עשרות + 4 אחדות = 124",
+      "runs": [
+        {
+          "type": "prose",
+          "value": "- "
+        },
+        {
+          "type": "math",
+          "value": "1 מאה + 2 עשרות + 4 אחדות = 124"
+        }
+      ],
+      "domNodes": [
+        {
+          "role": "prose",
+          "dir": "rtl",
+          "unicodeBidi": "isolate",
+          "textContent": "-",
+          "html": "<span dir=\"rtl\" style=\"direction:rtl;unicode-bidi:isolate;display:inline-block\">-</span>"
+        },
+        {
+          "role": "math",
+          "dir": "ltr",
+          "unicodeBidi": "isolate",
+          "textContent": "1 מאה + 2 עשרות + 4 אחדות = 124",
+          "html": "<span dir=\"ltr\" style=\"direction:ltr;unicode-bidi:isolate;display:inline-block\">1 מאה + 2 עשרות + 4 אחדות = 124</span>"
+        }
+      ],
+      "analyzeStructure": [
+        {
+          "dir": "rtl",
+          "value": "-",
+          "role": "prose"
+        },
+        {
+          "dir": "ltr",
+          "value": "1 מאה + 2 עשרות + 4 אחדות = 124",
+          "role": "math"
+        }
+      ]
+    }
+  ]
+}
