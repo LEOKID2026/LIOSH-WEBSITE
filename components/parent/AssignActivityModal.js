@@ -9,6 +9,7 @@ import {
 import { activitySubjectsForGrade, subjectLabelHe } from "../../lib/teacher-portal/teacher-ui.he.js";
 import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
 import ParentSentActivitiesPanel from "./ParentSentActivitiesPanel.jsx";
+import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
 const PARENT_ACTIVITY_MODE = "guided_practice";
 const MAX_QUESTION_COUNT = 30;
@@ -161,6 +162,19 @@ export default function AssignActivityModal({ student, accessToken, onClose, onS
         }
         return;
       }
+      void trackProductEvent({
+        eventName: "personal_activity_created",
+        actorType: "parent",
+        studentId: student.id,
+        subject,
+        topic,
+        grade: activityGradeKey,
+        metadata: {
+          activityId: json?.activityId,
+          mode: PARENT_ACTIVITY_MODE,
+          questionCount: count,
+        },
+      });
       onSuccess();
     } catch {
       setError("שגיאת רשת");

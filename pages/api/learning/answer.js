@@ -25,6 +25,7 @@ import {
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { classifyActivityEvidence } from "../../../lib/learning/activity-classification.js";
 import { normalizeQuestionEnginePayload } from "../../../lib/learning/question-engine-metadata.js";
+import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 
 async function verifyLearningSessionOwnership(supabase, learningSessionId, studentId) {
   const { data, error } = await supabase
@@ -197,6 +198,41 @@ export default async function handler(req, res) {
     });
     if (error || !data?.id) {
       return res.status(500).json({ ok: false, error: "Failed to record answer" });
+    }
+
+    void trackServerAnalyticsEvent(supabase, {
+      eventName: "question_answered",
+      actorType: "student",
+      actorId: auth.studentId,
+      studentId: auth.studentId,
+      sessionId: learningSessionId,
+      subject,
+      topic: answerPayload.topic,
+      grade: answerPayload.gradeLevel,
+      objectType: "answer",
+      objectId: data.id,
+      idempotencyKey: `question_answered:${data.id}`,
+      metadata: {
+        isCorrect: body.isCorrect,
+        gameMode: sessionMode,
+        evidenceCategory: classification.evidenceCategory,
+      },
+    });
+    if (afterStepByStep) {
+      void trackServerAnalyticsEvent(supabase, {
+        eventName: "explanation_opened",
+        actorType: "student",
+        actorId: auth.studentId,
+        studentId: auth.studentId,
+        sessionId: learningSessionId,
+        subject,
+        topic: answerPayload.topic,
+        grade: answerPayload.gradeLevel,
+        objectType: "answer",
+        objectId: data.id,
+        idempotencyKey: `explanation_opened:answer:${data.id}`,
+        metadata: { source: "after_step_by_step" },
+      });
     }
 
     return res.status(200).json({

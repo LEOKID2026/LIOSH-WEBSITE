@@ -18,6 +18,7 @@ import {
 } from "../../lib/parent-client/parent-teacher-code-access.js";
 import PasswordField from "../../components/auth/PasswordField";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
+import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
 async function storeSignupPolicyAcceptance(accessToken) {
   return postPolicyAcceptance(accessToken, {
@@ -144,6 +145,11 @@ export default function ParentLoginPage() {
         if (error) {
           setMessage(mapParentAuthError(error, "login"));
         } else {
+          void trackProductEvent({
+            eventName: "parent_login",
+            actorType: "parent",
+            idempotencyKey: `parent_login:${Date.now()}`,
+          });
           router.push("/parent/dashboard");
         }
       }

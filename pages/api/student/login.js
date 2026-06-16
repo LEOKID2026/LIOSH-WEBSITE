@@ -19,6 +19,7 @@ import {
   recordLoginSuccess,
 } from "../../../lib/security/login-rate-limit.js";
 import { safeApiLog } from "../../../lib/security/safe-log.js";
+import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 
 const GENERIC_LOGIN_FAILURE = { ok: false, error: "שם משתמש או PIN שגויים" };
 
@@ -115,17 +116,21 @@ export default async function handler(req, res) {
     const tokenHash = hashStudentSecret(token);
     const expiresAt = sessionExpiryIsoFromNow();
 
-    const { error: sessErr } = await supabase.from("student_sessions").insert({
-      student_id: accessCode.student_id,
-      access_code_id: accessCode.id,
-      session_token_hash: tokenHash,
-      started_at: nowIso,
-      last_seen_at: nowIso,
-      expires_at: expiresAt,
-      ended_at: null,
-      revoked_at: null,
-      client_meta: {},
-    });
+    const { data: sessionRow, error: sessErr } = await supabase
+      .from("student_sessions")
+      .insert({
+        student_id: accessCode.student_id,
+        access_code_id: accessCode.id,
+        session_token_hash: tokenHash,
+        started_at: nowIso,
+        last_seen_at: nowIso,
+        expires_at: expiresAt,
+        ended_at: null,
+        revoked_at: null,
+        client_meta: {},
+      })
+      .select("id")
+      .maybeSingle();
     if (sessErr) {
       recordLoginFailure(req, credential);
       clearStudentSessionCookie(res);
@@ -134,6 +139,17 @@ export default async function handler(req, res) {
 
     recordLoginSuccess(req, credential);
     setStudentSessionCookie(res, token);
+    void trackServerAnalyticsEvent(supabase, {
+      eventName: "student_login",
+      actorType: "student",
+      actorId: accessCode.student_id,
+      studentId: accessCode.student_id,
+      sessionId: sessionRow?.id,
+      grade: student.grade_level,
+      objectType: "student_session",
+      objectId: sessionRow?.id,
+      idempotencyKey: sessionRow?.id ? `student_login:${sessionRow.id}` : null,
+    });
     const debugStudentIdentity = devStudentIdentityPayload("student-login-api", student);
     if (isStudentIdentityDebugEnabled() && debugStudentIdentity) {
       safeApiLog("[LIOSH student identity] API", debugStudentIdentity);

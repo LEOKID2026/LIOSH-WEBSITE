@@ -9,6 +9,7 @@ import {
   setTeacherApiServerTiming,
   startTimer,
 } from "../../../lib/teacher-server/api-timing.server.js";
+import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -71,6 +72,16 @@ export default async function handler(req, res) {
       auth: tAuth,
       build: tBuild,
       total: elapsedMs(t0),
+    });
+
+    void trackServerAnalyticsEvent(ctx.serviceRole, {
+      eventName: "teacher_dashboard_opened",
+      actorType: "teacher",
+      actorId: ctx.teacherId,
+      objectType: "teacher_dashboard",
+      objectId: ctx.teacherId,
+      idempotencyKey: `teacher_dashboard_opened:${ctx.teacherId}:${new Date().toISOString().slice(0, 13)}:${phaseRaw}`,
+      metadata: { phase: phaseRaw },
     });
 
     return res.status(200).json({ data: result.payload });

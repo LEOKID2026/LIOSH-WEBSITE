@@ -64,6 +64,7 @@ import {
   parseParentReportRemoteSource,
 } from "../../lib/teacher-portal/parent-report-remote-source.js";
 import { PARENT_REPORT_PORTAL_GATE } from "../../lib/parent-report-server-truth.js";
+import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
 function parentReportPresetDays(period, customDates) {
   if (customDates) return null;
@@ -1130,6 +1131,14 @@ export default function ParentReport() {
           setCopilotDetailedPayload(out.detailed && typeof out.detailed === "object" ? out.detailed : null);
           setParentReportError("");
           setLoading(false);
+          if (isParentSource) {
+            void trackProductEvent({
+              eventName: "parent_report_opened",
+              actorType: "parent",
+              studentId: parentStudentId,
+              metadata: { period: uiPeriod, from, to },
+            });
+          }
         }
       } catch (loadErr) {
         if (process.env.NODE_ENV === "development") {
@@ -4016,6 +4025,14 @@ export default function ParentReport() {
                   } catch {
                     /* ignore */
                   }
+                }
+                if (isParentSource) {
+                  void trackProductEvent({
+                    eventName: "parent_report_pdf_exported",
+                    actorType: "parent",
+                    studentId: parentStudentId,
+                    metadata: { period },
+                  });
                 }
                 exportReportToPDF(report, pdfOpts);
               }}

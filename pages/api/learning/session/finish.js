@@ -20,6 +20,7 @@ import {
 import { awardLearningSessionCoins } from "../../../../lib/learning-supabase/learning-coin-award.server";
 import { updateDailyMissionProgress } from "../../../../lib/learning-supabase/mission-progress.server";
 import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
+import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
@@ -123,6 +124,25 @@ export default async function handler(req, res) {
       return res.status(500).json({ ok: false, error: "Failed to finish learning session" });
     }
 
+    void trackServerAnalyticsEvent(supabase, {
+      eventName: "practice_completed",
+      actorType: "student",
+      actorId: auth.studentId,
+      studentId: auth.studentId,
+      sessionId: learningSessionId,
+      subject: sessionRow.subject,
+      grade: metadata?.gradeLevel || summary.canonicalGradeLevelKey,
+      objectType: "learning_session",
+      objectId: learningSessionId,
+      idempotencyKey: `practice_completed:${learningSessionId}`,
+      metadata: {
+        durationSeconds: patch.duration_seconds,
+        totalQuestions: summary.totalQuestions,
+        accuracy: summary.accuracy,
+        mode: metadata?.mode || null,
+      },
+    });
+
     // Phase 1 — Child World: award Learning Coins for a completed session.
     // Controlled by ENABLE_SESSION_COIN_AWARDS env flag.
     // Failure is caught and logged; it must never affect the session-finish response.
@@ -133,6 +153,25 @@ export default async function handler(req, res) {
         durationSeconds: patch.duration_seconds,
         accuracy: summary.accuracy,
         subject: sessionRow.subject,
+      }).then((coinResult) => {
+        if (coinResult?.ok && !coinResult.skipped && !coinResult.duplicate && Number(coinResult.coinsAwarded) > 0) {
+          void trackServerAnalyticsEvent(supabase, {
+            eventName: "reward_earned",
+            actorType: "student",
+            actorId: auth.studentId,
+            studentId: auth.studentId,
+            sessionId: learningSessionId,
+            subject: sessionRow.subject,
+            grade: metadata?.gradeLevel || summary.canonicalGradeLevelKey,
+            objectType: "coin_transaction_source",
+            objectId: learningSessionId,
+            idempotencyKey: `reward_earned:learning_session:${learningSessionId}`,
+            metadata: {
+              sourceType: "learning_session",
+              coinsAwarded: coinResult.coinsAwarded,
+            },
+          });
+        }
       });
     } catch (coinErr) {
       logLearningPipelineDebug("session-finish-coin-award-error", {

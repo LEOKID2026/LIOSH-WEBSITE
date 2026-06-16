@@ -8,6 +8,7 @@ import {
 } from "../../lib/parent-server/parent-activity-labels.client.js";
 import AssignedActivityQuestionDisplay from "../classroom-activities/AssignedActivityQuestionDisplay.jsx";
 import AssignedActivityBidiText from "../classroom-activities/AssignedActivityBidiText.jsx";
+import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
 const POLL_MS = 8000;
 
@@ -284,7 +285,19 @@ function ParentSentActivitiesModal({ studentId, accessToken, refreshKey, onClose
                   <button
                     type="button"
                     className="mt-1 rounded bg-white/10 hover:bg-white/15 px-2 py-1 text-xs text-white"
-                    onClick={() => setResultsActivityId(activity.activityId)}
+                    onClick={() => {
+                      setResultsActivityId(activity.activityId);
+                      void trackProductEvent({
+                        eventName: "personal_activity_results_opened",
+                        actorType: "parent",
+                        studentId,
+                        subject: activity.subject,
+                        topic: activity.topic,
+                        objectType: "parent_assigned_activity",
+                        objectId: activity.activityId,
+                        idempotencyKey: `personal_activity_results_opened:${activity.activityId}:${Date.now()}`,
+                      });
+                    }}
                   >
                     {parentViewActivityResultsLabelHe()}
                   </button>

@@ -14,6 +14,7 @@ import {
   listTeacherWorksheets,
   parseCreateWorksheetBody,
 } from "../../../../lib/worksheet-activities/worksheet-teacher.server.js";
+import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 
 export default async function handler(req, res) {
   try {
@@ -80,6 +81,20 @@ export default async function handler(req, res) {
           classId: parsed.scope === "class" ? parsed.payload.classId : null,
           assignmentScope: parsed.scope,
           studentIds: parsed.scope === "selected_students" ? parsed.payload.studentIds : undefined,
+        },
+      });
+
+      void trackServerAnalyticsEvent(ctx.serviceRole, {
+        eventName: "teacher_worksheet_created",
+        actorType: "teacher",
+        actorId: ctx.teacherId,
+        subject: parsed.payload.subject,
+        objectType: "worksheet_activity",
+        objectId: created.worksheetId,
+        idempotencyKey: `teacher_worksheet_created:${created.worksheetId}`,
+        metadata: {
+          assignmentScope: parsed.scope,
+          questionCount: parsed.payload.questionCount,
         },
       });
 

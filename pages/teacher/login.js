@@ -12,6 +12,7 @@ import {
 } from "../../lib/auth/auth-post-reset-redirect";
 import PasswordField from "../../components/auth/PasswordField";
 import { AUTH_FORGOT_PASSWORD_LINK } from "../../lib/auth/auth-reset.he";
+import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 import {
   REG_TEACHER_INVITE_ONLY_LOGIN_NOTE,
   REG_TEACHER_LOGIN_TAB,
@@ -127,6 +128,11 @@ export default function TeacherLoginPage({ inviteOnly }) {
       }
       const me = await fetchTeacherMe(session.token);
       if (me.status === 200) {
+        void trackProductEvent({
+          eventName: "teacher_login",
+          actorType: "teacher",
+          idempotencyKey: `teacher_login:${Date.now()}`,
+        });
         router.replace(teacherPostLoginPath(me.body));
         return;
       }

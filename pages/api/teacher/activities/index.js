@@ -25,6 +25,7 @@ import {
   classGradeKeysMatch,
   resolveCanonicalGradeKey,
 } from "../../../../lib/teacher-portal/teacher-class-grade.js";
+import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 
 export default async function handler(req, res) {
   try {
@@ -158,6 +159,22 @@ export default async function handler(req, res) {
         metadata: {
           activityId: created.activityId,
           classId: parsed.payload.classId,
+          mode: parsed.payload.mode,
+          questionCount: parsed.payload.questionCount,
+        },
+      });
+
+      void trackServerAnalyticsEvent(ctx.serviceRole, {
+        eventName: "teacher_activity_created",
+        actorType: "teacher",
+        actorId: ctx.teacherId,
+        subject: parsed.payload.subject,
+        topic: parsed.payload.topic,
+        grade: classGrade,
+        objectType: "classroom_activity",
+        objectId: created.activityId,
+        idempotencyKey: `teacher_activity_created:${created.activityId}`,
+        metadata: {
           mode: parsed.payload.mode,
           questionCount: parsed.payload.questionCount,
         },

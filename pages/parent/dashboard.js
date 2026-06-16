@@ -7,6 +7,7 @@ import AssignActivityModal from "../../components/parent/AssignActivityModal";
 import ParentDashboardModal from "../../components/parent/ParentDashboardModal";
 import { getLearningSupabaseBrowserClient } from "../../lib/learning-supabase/client";
 import { shouldDisplayStudentAccessCode } from "../../lib/teacher-portal/student-access-display.js";
+import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
 const GRADE_OPTIONS = [
   { value: "grade_1", label: "כיתה א׳" },
@@ -55,6 +56,7 @@ const CHILD_PIN_INPUT_PROPS = {
 export default function ParentDashboardPage() {
   const router = useRouter();
   const supabaseRef = useRef(null);
+  const trackedDashboardOpenRef = useRef(false);
 
   const [session, setSession] = useState(null);
   const [students, setStudents] = useState([]);
@@ -150,6 +152,15 @@ export default function ParentDashboardPage() {
     };
   }, [clientReady, router]);
 
+  useEffect(() => {
+    if (!session?.access_token || trackedDashboardOpenRef.current) return;
+    trackedDashboardOpenRef.current = true;
+    void trackProductEvent({
+      eventName: "parent_dashboard_opened",
+      actorType: "parent",
+    });
+  }, [session?.access_token]);
+
   const createStudent = async (e) => {
     e.preventDefault();
     if (!session?.access_token) return;
@@ -183,6 +194,12 @@ export default function ParentDashboardPage() {
       setNewName("");
       setNewGrade("");
       setAddChildModalOpen(false);
+      void trackProductEvent({
+        eventName: "child_created",
+        actorType: "parent",
+        studentId: payload?.student?.id,
+        grade: payload?.student?.grade_level || newGrade,
+      });
       await fetchStudents(session);
       setMessage("Student created.");
     }

@@ -3,6 +3,7 @@ import {
   createStemPlaybackController,
   primeSpeechSynthesisVoices,
 } from "../utils/audio-playback-core";
+import { trackProductEvent } from "../lib/analytics/track-event.client.js";
 
 /**
  * Phonics practice listen button — reuses stem playback (mixed he-IL + en-US segments).
@@ -10,9 +11,11 @@ import {
  * @param {{
  *   stem: import("../utils/audio-task-contract.js").AudioStem & { tts_segments?: { locale?: string, text: string }[] },
  *   gameActive: boolean,
+ *   grade?: string,
+ *   topic?: string,
  * }} props
  */
-export default function EnglishPhonicsAudioPanel({ stem, gameActive }) {
+export default function EnglishPhonicsAudioPanel({ stem, gameActive, grade = null, topic = null }) {
   const [replayCount, setReplayCount] = useState(0);
   const [busy, setBusy] = useState(false);
   const [statusMsg, setStatusMsg] = useState("");
@@ -44,6 +47,18 @@ export default function EnglishPhonicsAudioPanel({ stem, gameActive }) {
       await ctrlRef.current?.play();
       const n = ctrlRef.current?.bumpReplay() ?? replayCount + 1;
       setReplayCount(n);
+      void trackProductEvent({
+        eventName: "audio_played",
+        actorType: "student",
+        subject: "english",
+        topic,
+        grade,
+        metadata: {
+          taskMode: stem.task_mode,
+          playbackKind: stem.playback_kind,
+          replayCount: n,
+        },
+      });
       setStatusMsg("");
     } catch (err) {
       const msg =

@@ -7,6 +7,7 @@ import { processBookEventsRequest } from "../../../lib/learning-supabase/book-ev
 import { readJsonBody } from "../../../lib/learning-supabase/learning-activity";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 import { isLearningBookTrackingEnabledServer } from "../../../lib/learning/book-dwell-policy.js";
+import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 
 export const config = {
   api: {
@@ -41,6 +42,47 @@ export default async function handler(req, res) {
     if (!result.ok) {
       return res.status(result.status || 400).json(result);
     }
+    const events = Array.isArray(body?.events) ? body.events : [body];
+    events.forEach((event, idx) => {
+      const type = String(event?.event || "");
+      if (type === "book_reading_session_start") {
+        void trackServerAnalyticsEvent(supabase, {
+          eventName: "book_opened",
+          actorType: "student",
+          actorId: auth.studentId,
+          studentId: auth.studentId,
+          subject: event.subject,
+          grade: event.grade,
+          objectType: "book_reading_session",
+          objectId: result.results?.[idx]?.bookReadingSessionId || result.bookReadingSessionId,
+          idempotencyKey: event.clientSessionToken
+            ? `book_opened:${auth.studentId}:${event.clientSessionToken}`
+            : null,
+          metadata: { entryPageId: event.entryPageId },
+        });
+      }
+      if (type === "book_page_visit_start") {
+        void trackServerAnalyticsEvent(supabase, {
+          eventName: "book_section_opened",
+          actorType: "student",
+          actorId: auth.studentId,
+          studentId: auth.studentId,
+          subject: event.subject,
+          topic: event.pageId,
+          grade: event.grade,
+          objectType: "book_page_visit",
+          objectId: result.results?.[idx]?.bookPageVisitId || result.bookPageVisitId,
+          idempotencyKey: event.clientVisitToken
+            ? `book_section_opened:${auth.studentId}:${event.clientVisitToken}`
+            : null,
+          metadata: {
+            pageId: event.pageId,
+            batchId: event.batchId,
+            sequenceIndex: Number(event.sequenceIndex),
+          },
+        });
+      }
+    });
     return res.status(200).json(result);
   } catch (error) {
     console.warn("[book-events] handler error", error);

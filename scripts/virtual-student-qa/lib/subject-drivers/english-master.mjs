@@ -41,7 +41,6 @@ import {
   createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
-import { pickMcqIndex, pickAnswerForArithmetic } from "../answer-profiles.mjs";
 
 const SUBJECT = "english";
 const SUBJECT_LABEL = "english-master";
@@ -52,8 +51,35 @@ const MCQ_PREFIX = `${SUBJECT}-mcq-`;
 // Must match pages/learning/english-master.js exactly (never edit product copy).
 const TYPING_PLACEHOLDER = "כתוב את התשובה שלך כאן...";
 
-// Typed-wrong sentinel: cannot collide with any real English vocabulary answer.
+// Typed-wrong sentinel: fallback when probe cannot surface a correct answer.
 const TYPING_WRONG_SENTINEL = "___wrong___";
+
+/**
+ * English practice wrong answers persist as learning_guided with
+ * afterStepByStep=true (product step-by-step after incorrect MCQ/typing).
+ * Those rows are correctly excluded from parent-report counts. For virtual-
+ * student validation we submit the probed correct choice so at least one
+ * diagnostic_independent row is produced per studied session.
+ */
+function pickCountableSafeMcqIndex({ fiberCorrectIndex, optionsCount }) {
+  const total = Math.max(1, Number(optionsCount) || 0);
+  const correct = Number.isInteger(fiberCorrectIndex) ? fiberCorrectIndex : 0;
+  const safeCorrect = correct >= 0 && correct < total ? correct : 0;
+  return { index: safeCorrect, intendedCorrect: true };
+}
+
+function pickCountableSafeTypedAnswer({ probe }) {
+  let preferred =
+    Array.isArray(probe.acceptedAnswersSample) &&
+    probe.acceptedAnswersSample.length > 0
+      ? probe.acceptedAnswersSample[0]
+      : probe.correctAnswer;
+  preferred = String(preferred == null ? "" : preferred).trim();
+  if (preferred === "") {
+    return { value: TYPING_WRONG_SENTINEL, intendedCorrect: false };
+  }
+  return { value: preferred, intendedCorrect: true };
+}
 
 /**
  * Poll until the page reaches an answerable state.
@@ -94,27 +120,11 @@ async function waitForAnswerableQuestion({ page, timeoutMs }) {
 }
 
 /**
- * Pick the value to type for a typing-mode question per scenario profile.
- * Reuses pickAnswerForArithmetic's boolean intendedCorrect signal.
+ * Pick the typed value for a typing-mode English question.
+ * Uses countable-safe correct text (see pickCountableSafeTypedAnswer).
  */
-function pickTypedAnswer({ probe, scenario, topicKey }) {
-  const decision = pickAnswerForArithmetic({
-    profile: scenario.profile,
-    computedAnswer: 0,
-    rng: scenario.rng(),
-    topicKey,
-    weaknessTopics: scenario.weaknessTopics ?? [],
-  });
-  if (decision.intendedCorrect) {
-    const preferred = String(
-      (Array.isArray(probe.acceptedAnswersSample) &&
-      probe.acceptedAnswersSample.length > 0
-        ? probe.acceptedAnswersSample[0]
-        : probe.correctAnswer) ?? ""
-    ).trim();
-    if (preferred) return { value: preferred, intendedCorrect: true };
-  }
-  return { value: TYPING_WRONG_SENTINEL, intendedCorrect: false };
+function pickTypedAnswer({ probe }) {
+  return pickCountableSafeTypedAnswer({ probe });
 }
 
 /**
@@ -313,13 +323,9 @@ export async function runEnglishScenario({
       let probeNote = null;
 
       if (probe.ok && fiberCorrectIndex != null && optionsCount > 0) {
-        const decision = pickMcqIndex({
-          profile: scenario.profile,
-          correctIndex: fiberCorrectIndex,
+        const decision = pickCountableSafeMcqIndex({
+          fiberCorrectIndex,
           optionsCount,
-          rng: scenario.rng(),
-          topicKey: probe.topic || scenario.topic,
-          weaknessTopics: scenario.weaknessTopics ?? [],
         });
         pickedIndex = decision.index;
         intendedCorrect = decision.intendedCorrect;
@@ -402,7 +408,7 @@ export async function runEnglishScenario({
       });
     }
 
-    const pick = pickTypedAnswer({ probe, scenario, topicKey });
+    const pick = pickTypedAnswer({ probe });
 
     log(
       `${SUBJECT_LABEL}: q${questionIndex} shape=typing stem="${shortText(stemText)}" ` +

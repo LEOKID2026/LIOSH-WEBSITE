@@ -2916,6 +2916,8 @@ export default function EnglishMaster() {
                       <EnglishPhonicsAudioPanel
                         stem={currentQuestion.params.audioStem}
                         gameActive={gameActive && !selectedAnswer}
+                        grade={grade}
+                        topic={currentQuestion.topic || currentQuestion.operation || "phonics"}
                       />
                     </div>
                   ) : null}
@@ -2984,6 +2986,8 @@ export default function EnglishMaster() {
                         <EnglishPhonicsAudioPanel
                           stem={currentQuestion.params.audioStem}
                           gameActive={gameActive && !selectedAnswer}
+                          grade={grade}
+                          topic={currentQuestion.topic || currentQuestion.operation || "phonics"}
                         />
                       ) : null
                     }

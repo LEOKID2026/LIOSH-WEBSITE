@@ -10,6 +10,7 @@ import {
   isWithinArtifactSizeLimit,
 } from "../utils/audio-submission-store";
 import { resolveScoreOrReviewRoute } from "../utils/audio-task-contract";
+import { trackProductEvent } from "../lib/analytics/track-event.client.js";
 
 /**
  * Compact toolbar audio controls only — no transcript UI in the student learning screen.
@@ -113,6 +114,18 @@ export default function HebrewAudioBuild1Panel({
       await ctrlRef.current?.play();
       const n = ctrlRef.current?.bumpReplay() ?? replayCount + 1;
       setReplayCount(n);
+      void trackProductEvent({
+        eventName: "audio_played",
+        actorType: "student",
+        subject: "hebrew",
+        topic,
+        grade,
+        metadata: {
+          taskMode: stem.task_mode,
+          playbackKind: stem.playback_kind,
+          replayCount: n,
+        },
+      });
       setStatusMsg("");
     } catch (err) {
       const code =

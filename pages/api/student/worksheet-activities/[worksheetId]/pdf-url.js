@@ -4,6 +4,7 @@ import {
   getAuthenticatedStudentSession,
 } from "../../../../../lib/learning-supabase/student-auth";
 import { recordStudentPdfOpenAndGetUrl } from "../../../../../lib/worksheet-activities/worksheet-student.server.js";
+import { trackServerAnalyticsEvent } from "../../../../../lib/analytics/track-event.server.js";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
@@ -37,6 +38,18 @@ export default async function handler(req, res) {
     if (!result.ok) {
       return res.status(result.status || 500).json({ ok: false, error: result.code });
     }
+
+    void trackServerAnalyticsEvent(supabase, {
+      eventName: "worksheet_opened",
+      actorType: "student",
+      actorId: auth.studentId,
+      studentId: auth.studentId,
+      sessionId: auth.studentSessionId,
+      objectType: "worksheet_activity",
+      objectId: worksheetId,
+      idempotencyKey: `worksheet_opened:${auth.studentId}:${worksheetId}:${new Date().toISOString().slice(0, 13)}`,
+      metadata: { fileRole: "worksheet" },
+    });
 
     return res.status(200).json({
       ok: true,

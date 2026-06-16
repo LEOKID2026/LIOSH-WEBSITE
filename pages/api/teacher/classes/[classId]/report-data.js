@@ -24,6 +24,7 @@ import {
   setTeacherApiServerTiming,
   startTimer,
 } from "../../../../../lib/teacher-server/api-timing.server.js";
+import { trackServerAnalyticsEvent } from "../../../../../lib/analytics/track-event.server.js";
 
 const ALLOWED_QUERY = new Set(["from", "to", "windowDays", "classId"]);
 
@@ -106,6 +107,15 @@ export default async function handler(req, res) {
 
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     res.setHeader("Pragma", "no-cache");
+    void trackServerAnalyticsEvent(ctx.serviceRole, {
+      eventName: "teacher_report_opened",
+      actorType: "teacher",
+      actorId: ctx.teacherId,
+      objectType: "teacher_class_report",
+      objectId: parsedId.classId,
+      idempotencyKey: `teacher_report_opened:class:${ctx.teacherId}:${parsedId.classId}:${range.fromDate.toISOString().slice(0, 10)}:${range.toDate.toISOString().slice(0, 10)}`,
+      metadata: { reportScope: "class" },
+    });
     return res.status(200).json(built.payload);
   } catch (_e) {
     safeApiLog("teacher_class_report_data_error", { route: "report-data" });

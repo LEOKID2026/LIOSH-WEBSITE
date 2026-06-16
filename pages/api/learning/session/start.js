@@ -21,6 +21,7 @@ import {
   resolveContentGradeForSessionWrite,
 } from "../../../../lib/learning-supabase/practice-grade-resolution.js";
 import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
+import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
 
 async function insertLearningSession(supabase, row) {
   const fullInsert = await supabase
@@ -114,6 +115,23 @@ export default async function handler(req, res) {
 
     if (error || !data?.id) {
       return res.status(500).json({ ok: false, error: "Failed to create learning session" });
+    }
+
+    for (const eventName of ["subject_opened", "topic_opened", "practice_started"]) {
+      void trackServerAnalyticsEvent(supabase, {
+        eventName,
+        actorType: "student",
+        actorId: auth.studentId,
+        studentId: auth.studentId,
+        sessionId: data.id,
+        subject,
+        topic,
+        grade: gradeEvidence.contentGradeLevel || gradeEvidence.registeredGradeLevel,
+        objectType: "learning_session",
+        objectId: data.id,
+        idempotencyKey: `${eventName}:${data.id}`,
+        metadata: { mode: clientMode, level },
+      });
     }
 
     return res.status(200).json({

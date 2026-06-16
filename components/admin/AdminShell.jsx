@@ -6,6 +6,7 @@ import {
   ADMIN_LOGOUT_BUSY,
   ADMIN_NAV_PARENTS,
   ADMIN_NAV_ALL_ACCOUNTS,
+  ADMIN_NAV_ANALYTICS,
   ADMIN_NAV_SCHOOLS,
   ADMIN_NAV_TEACHERS,
   ADMIN_NAV_TEACHER_PORTAL,
@@ -18,6 +19,7 @@ export const ADMIN_PAGE_CONTAINER =
 
 const NAV_ITEMS = [
   { href: "/admin/accounts", label: ADMIN_NAV_ALL_ACCOUNTS },
+  { href: "/admin/analytics", label: ADMIN_NAV_ANALYTICS },
   { href: "/admin/teachers", label: ADMIN_NAV_TEACHERS },
   { href: "/admin/schools", label: ADMIN_NAV_SCHOOLS },
   { href: "/admin/parents", label: ADMIN_NAV_PARENTS },
