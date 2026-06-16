@@ -6,8 +6,16 @@ import {
   ADMIN_ANALYTICS_TITLE,
   ADMIN_LOADING,
   ADMIN_LOAD_ERROR,
+  adminGradeLabelHe,
   apiErrorMessageHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
+import {
+  formatAnalyticsGradeHe,
+  formatAnalyticsLabelHe,
+  formatAnalyticsSourceHe,
+  formatAnalyticsTableHe,
+  formatAnalyticsUnitHe,
+} from "../../lib/admin-portal/admin-analytics-labels.he.js";
 import { trackProductEvent } from "../../lib/analytics/track-event.client.js";
 
 const PRESETS = [
@@ -26,12 +34,12 @@ const GRADES = [
   { value: "grade_4", label: "כיתה ד׳" },
   { value: "grade_5", label: "כיתה ה׳" },
   { value: "grade_6", label: "כיתה ו׳" },
-  { value: "g1", label: "g1" },
-  { value: "g2", label: "g2" },
-  { value: "g3", label: "g3" },
-  { value: "g4", label: "g4" },
-  { value: "g5", label: "g5" },
-  { value: "g6", label: "g6" },
+  { value: "g1", label: adminGradeLabelHe("g1") },
+  { value: "g2", label: adminGradeLabelHe("g2") },
+  { value: "g3", label: adminGradeLabelHe("g3") },
+  { value: "g4", label: adminGradeLabelHe("g4") },
+  { value: "g5", label: adminGradeLabelHe("g5") },
+  { value: "g6", label: adminGradeLabelHe("g6") },
 ];
 
 const SUBJECTS = [
@@ -63,10 +71,10 @@ function thirtyDaysAgoIso() {
 function valueText(metric) {
   if (!metric) return "—";
   if (metric.status === "not_tracked") return "עדיין לא נמדד";
-  if (metric.status === "requires_events") return "דורש מעקב אירועים";
+  if (metric.status === "requires_events") return "דורש איסוף אירועים";
   if (metric.status === "empty") return "אין נתונים עדיין";
   if (metric.status === "not_enough_data") return "אין מספיק נתונים עדיין";
-  if (metric.status === "unavailable") return "מקור נתונים חסר";
+  if (metric.status === "unavailable") return "מקור נתונים לא זמין";
   if (metric.value === null || metric.value === undefined) return metric.note || "עדיין לא נמדד";
   if (typeof metric.value === "number") {
     return new Intl.NumberFormat("he-IL", { maximumFractionDigits: 1 }).format(metric.value);
@@ -85,12 +93,12 @@ function statusClass(status) {
 function MetricCard({ item }) {
   return (
     <div className={`rounded-2xl border p-4 min-h-[7rem] ${statusClass(item.status)}`}>
-      <p className="text-xs text-white/55 mb-2">{item.label}</p>
+      <p className="text-xs text-white/55 mb-2">{formatAnalyticsLabelHe(item.label)}</p>
       <p className="text-2xl font-bold text-white leading-tight">{valueText(item)}</p>
-      {item.unit ? <p className="text-xs text-white/45 mt-1">{item.unit}</p> : null}
-      <p className="text-[11px] text-white/40 mt-2 break-words">מקור: {item.source || "—"}</p>
+      {item.unit ? <p className="text-xs text-white/45 mt-1">{formatAnalyticsUnitHe(item.unit)}</p> : null}
+      <p className="text-[11px] text-white/40 mt-2 break-words">מקור: {formatAnalyticsSourceHe(item.source)}</p>
       {item.note && item.status !== "available" ? (
-        <p className="text-[11px] text-amber-100/80 mt-1">{item.note}</p>
+        <p className="text-[11px] text-amber-100/80 mt-1">{formatAnalyticsLabelHe(item.note)}</p>
       ) : null}
     </div>
   );
@@ -139,7 +147,7 @@ function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }
             <tr key={row.key || row.date || `${idx}`}>
               {columns.map((col) => (
                 <td key={col.key} className="px-3 py-2 text-right whitespace-nowrap text-white/80">
-                  {col.render ? col.render(row) : row[col.key] ?? "—"}
+                  {col.render ? col.render(row) : formatAnalyticsLabelHe(row[col.key]) ?? "—"}
                 </td>
               ))}
             </tr>
@@ -157,7 +165,7 @@ function TopList({ title, rows }) {
       <SimpleTable
         rows={rows}
         columns={[
-          { key: "label", label: "שם", render: (row) => row.label || row.key },
+          { key: "label", label: "שם", render: (row) => formatAnalyticsLabelHe(row.label || row.key) },
           { key: "value", label: "כמות" },
         ]}
       />
@@ -174,16 +182,16 @@ function FunnelList({ funnels }) {
       {funnels.map((funnel) => (
         <div key={funnel.name} className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
           <div className="flex items-start justify-between gap-3 mb-3">
-            <h3 className="font-semibold text-white/90">{funnel.name}</h3>
-            {funnel.note ? <span className="text-xs text-white/45">{funnel.note}</span> : null}
+            <h3 className="font-semibold text-white/90">{formatAnalyticsLabelHe(funnel.name)}</h3>
+            {funnel.note ? <span className="text-xs text-white/45">{formatAnalyticsLabelHe(funnel.note)}</span> : null}
           </div>
           <SimpleTable
             rows={funnel.steps}
             columns={[
-              { key: "label", label: "שלב" },
+              { key: "label", label: "שלב", render: (row) => formatAnalyticsLabelHe(row.label) },
               { key: "value", label: "כמות", render: (row) => row.value == null ? valueText(row) : row.value },
               { key: "conversionFromPrevious", label: "המרה", render: (row) => row.conversionFromPrevious == null ? "—" : `${row.conversionFromPrevious}%` },
-              { key: "source", label: "מקור" },
+              { key: "source", label: "מקור", render: (row) => formatAnalyticsSourceHe(row.source) },
             ]}
           />
         </div>
@@ -259,7 +267,7 @@ export default function AdminAnalyticsPage() {
             <p className="text-xs text-white/50 mb-1">ניהול מערכת</p>
             <h1 className="text-xl md:text-2xl font-bold text-right">{ADMIN_ANALYTICS_TITLE}</h1>
             <p className="text-sm text-white/55 mt-2">
-              מספרים ממקורות DB קיימים בלבד. מדדים שאינם נמדדים מסומנים בגלוי.
+              מספרים ממקורות מאגר נתונים קיימים בלבד. מדדים שאינם נמדדים מסומנים בגלוי.
             </p>
           </div>
         }
@@ -326,19 +334,19 @@ export default function AdminAnalyticsPage() {
             <>
               {sourceErrors.length ? (
                 <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
-                  חלק ממקורות הנתונים חסרים או לא זמינים: {sourceErrors.map((e) => e.table).join(", ")}
+                  חלק ממקורות הנתונים חסרים או לא זמינים: {sourceErrors.map((e) => formatAnalyticsTableHe(e.table)).join(", ")}
                 </div>
               ) : null}
 
-              <Section title="סקירה כללית" subtitle="מדדי שימוש מרכזיים ממקורות DB קיימים">
+              <Section title="סקירה כללית" subtitle="מדדי שימוש מרכזיים ממקורות מאגר הנתונים הקיימים">
                 <MetricGrid items={sections.overview} />
               </Section>
 
-              <Section title="חשבונות וצמיחה" subtitle="Auth, פרסונות, תפקידים, חשבונות לא מקושרים והרשמות לאורך זמן">
+              <Section title="חשבונות והרשמות" subtitle="חשבונות אימות, פרסונות, תפקידים, חשבונות לא משויכים והרשמות לאורך זמן">
                 <MetricGrid items={sections.accounts?.cards} />
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
-                  <TopList title="חשבונות לפי persona" rows={sections.accounts?.byPersona} />
-                  <TopList title="חשבונות לפי role ב-Auth" rows={sections.accounts?.byAuthRole} />
+                  <TopList title="חשבונות לפי פרסונה" rows={sections.accounts?.byPersona} />
+                  <TopList title="חשבונות לפי תפקיד באימות" rows={sections.accounts?.byAuthRole} />
                   <TopList title="סטטוסי הרשאות" rows={sections.accounts?.byStatus} />
                   <TopList title="חשבונות לפי יום הצטרפות" rows={sections.accounts?.joinedByDay} />
                   <TopList title="חשבונות לפי שבוע הצטרפות" rows={sections.accounts?.joinedByWeek} />
@@ -346,7 +354,7 @@ export default function AdminAnalyticsPage() {
                 </div>
               </Section>
 
-              <Section title="הצטרפות הורים ואונבורדינג" subtitle="מתי הורים הצטרפו, האם יצרו ילדים וכמה מהר הגיעו ללמידה">
+              <Section title="הצטרפות הורים ותחילת שימוש" subtitle="מתי הורים הצטרפו, האם יצרו ילדים וכמה מהר הגיעו ללמידה">
                 <MetricGrid items={sections.parentJoin?.cards} />
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
                   <TopList title="הורים לפי יום הצטרפות" rows={sections.parentJoin?.byDay} />
@@ -358,7 +366,7 @@ export default function AdminAnalyticsPage() {
                 </div>
               </Section>
 
-              <Section title="הצטרפות ילדים" subtitle="מתי ילדים נוספו, מי התחיל ללמוד וכמה זמן עבר עד למידה ראשונה">
+              <Section title="הצטרפות ילדים ולמידה ראשונה" subtitle="מתי ילדים נוספו, מי התחיל ללמוד וכמה זמן עבר עד למידה ראשונה">
                 <MetricGrid items={sections.childJoin?.cards} />
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
                   <TopList title="ילדים לפי יום הוספה" rows={sections.childJoin?.byDay} />
@@ -367,7 +375,7 @@ export default function AdminAnalyticsPage() {
                 </div>
               </Section>
 
-              <Section title="מורים פרטיים" subtitle="מורי private teacher בלבד: הצטרפות, פעילות, דוחות, פעילויות ודפי עבודה">
+              <Section title="נתוני מורים פרטיים" subtitle="מורים פרטיים בלבד: הצטרפות, פעילות, דוחות, פעילויות ודפי עבודה">
                 <MetricGrid items={sections.teachers?.cards} />
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
                   <TopList title="מורים לפי יום הצטרפות" rows={sections.teachers?.byDay} />
@@ -383,7 +391,7 @@ export default function AdminAnalyticsPage() {
                   <SimpleTable
                     rows={sections.children?.byGrade}
                     columns={[
-                      { key: "grade", label: "כיתה" },
+                      { key: "grade", label: "כיתה", render: (row) => formatAnalyticsGradeHe(row.grade) },
                       { key: "children", label: "ילדים" },
                       { key: "activeChildren", label: "פעילים" },
                       { key: "minutes", label: "דקות" },
@@ -412,19 +420,19 @@ export default function AdminAnalyticsPage() {
                     { key: "accuracy", label: "דיוק %" },
                   ]} />
                   <SimpleTable rows={sections.learning?.usage?.highWrongTopics} columns={[
-                    { key: "topic", label: "שיעור טעויות גבוה" },
+                    { key: "topic", label: "שיעור טעויות גבוה", render: (row) => formatAnalyticsLabelHe(row.topic) },
                     { key: "answers", label: "תשובות" },
                     { key: "wrongRate", label: "טעויות %" },
                   ]} />
                   <SimpleTable rows={sections.learning?.usage?.highSuccessTopics} columns={[
-                    { key: "topic", label: "הצלחה גבוהה" },
+                    { key: "topic", label: "הצלחה גבוהה", render: (row) => formatAnalyticsLabelHe(row.topic) },
                     { key: "answers", label: "תשובות" },
                     { key: "accuracy", label: "דיוק %" },
                   ]} />
                 </div>
               </Section>
 
-              <Section title="הורים ואונבורדינג" subtitle="האם הורים יוצרים ילדים ומגיעים לשימוש משמעותי">
+              <Section title="פעילות הורים" subtitle="האם הורים יוצרים ילדים ומגיעים לשימוש משמעותי">
                 <MetricGrid items={sections.parents} />
               </Section>
 
@@ -437,7 +445,7 @@ export default function AdminAnalyticsPage() {
                 </div>
               </Section>
 
-              <Section title="אמת דוחות הורים / PDF" subtitle="בדיקות מקור גולמיות וחשדות לפערים ללא שינוי התנהגות הדוח">
+              <Section title="דוחות הורים / PDF / בדיקת אמת" subtitle="בדיקות מקור גולמיות וחשדות לפערים ללא שינוי התנהגות הדוח">
                 <MetricGrid items={sections.reportTruth?.cards} />
                 <div className="mt-4">
                   <h3 className="font-semibold mb-3">חשדות לפערים</h3>
@@ -445,14 +453,14 @@ export default function AdminAnalyticsPage() {
                 </div>
               </Section>
 
-              <Section title="ספרים, שמע, הסברים ודפי עבודה" subtitle="מה שנמדד היום מול מה שדורש analytics_events">
+              <Section title="ספרים, שמע, הסברים ודפי עבודה" subtitle="מה שנמדד היום מול מה שדורש איסוף אירועים">
                 <MetricGrid items={sections.booksAudioWorksheets} />
                 <div className="mt-4">
                   <TopList title="עמודי ספר מובילים" rows={sections.topBookPages} />
                 </div>
               </Section>
 
-              <Section title="פרסים ומטבעות" subtitle="מקור אמת: coin_transactions ויתרות תלמידים">
+              <Section title="פרסים ומטבעות" subtitle="מקור אמת: עסקאות מטבעות ויתרות ילדים">
                 <MetricGrid items={sections.rewards} />
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
                   <TopList title="מטבעות לפי יום" rows={sections.rewardsByDay} />
@@ -460,11 +468,11 @@ export default function AdminAnalyticsPage() {
                 </div>
               </Section>
 
-              <Section title="משפכים" subtitle="מסלולי שימוש קבועים: הורה, תלמיד, דוחות, פעילויות, ספרים ושמע">
+              <Section title="משפכי שימוש" subtitle="מסלולי שימוש קבועים: הורה, ילד, דוחות, פעילויות, ספרים ושמע">
                 <FunnelList funnels={sections.funnels} />
               </Section>
 
-              <Section title="שימור וחזרה לשימוש" subtitle="D1/D7/D30 מוצגים רק אחרי מספיק זמן ונתונים אמיתיים">
+              <Section title="חזרה לשימוש" subtitle="שימור יום 1 / 7 / 30 מוצג רק אחרי מספיק זמן ונתונים אמיתיים">
                 <MetricGrid items={sections.retention} />
               </Section>
 
@@ -472,7 +480,7 @@ export default function AdminAnalyticsPage() {
                 <MetricGrid items={sections.abandonment} />
               </Section>
 
-              <Section title="שימוש בתכונות" subtitle="מה משתמשים באמת פותחים, ומה כמעט לא מקבל שימוש">
+              <Section title="שימוש בפיצ׳רים" subtitle="מה משתמשים באמת פותחים, ומה כמעט לא מקבל שימוש">
                 <MetricGrid items={sections.featureUsage?.cards} />
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
                   <TopList title="התכונות הכי בשימוש" rows={sections.featureUsage?.mostUsed} />

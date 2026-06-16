@@ -17,14 +17,14 @@ const page = read("pages/admin/analytics.js");
 assert.match(page, /adminAuthFetch\(token, `\/api\/admin\/analytics\?/, "page must call admin API with bearer token");
 assert.doesNotMatch(page, /demo|mock|fake/i, "admin analytics page must not contain demo/mock/fake data");
 for (const label of [
-  "חשבונות וצמיחה",
-  "הצטרפות הורים ואונבורדינג",
-  "הצטרפות ילדים",
-  "מורים פרטיים",
-  "משפכים",
-  "שימור וחזרה לשימוש",
+  "חשבונות והרשמות",
+  "הצטרפות הורים ותחילת שימוש",
+  "הצטרפות ילדים ולמידה ראשונה",
+  "נתוני מורים פרטיים",
+  "משפכי שימוש",
+  "חזרה לשימוש",
   "נטישה ומועמדי נטישה",
-  "שימוש בתכונות",
+  "שימוש בפיצ׳רים",
 ]) {
   assert.match(page, new RegExp(label), `admin analytics page missing final section: ${label}`);
 }
