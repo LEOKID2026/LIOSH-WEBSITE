@@ -10,9 +10,20 @@
  *
  * No localStorage truth, no API mocks. We rely on the visible DOM and the
  * browser's URL after the click.
+ *
+ * Hardening (2026-05-18 halt): after long student sessions the parent page
+ * can land on /parent/report or a slow-hydrating dashboard. We retry
+ * navigation, wait for multiple dashboard signals (URL + heading/cards/API),
+ * and capture screenshot/html debug artifacts before failing.
  */
 
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
 const PARENT_REPORT_PATH = "/learning/parent-report";
+const PARENT_DASHBOARD_PATH = "/parent/dashboard";
+const MAX_DASHBOARD_ATTEMPTS = 3;
+const DASHBOARD_SIGNAL_TIMEOUT_MS = 45_000;
 const LEGACY_CHILDREN_HEADING = /^הילדים שלי \(\d+\)$/u;
 
 /** Current product dashboard: student cards live in a section with report links. */
@@ -34,15 +45,163 @@ function locateStudentCards(section) {
   return section.locator("div.grid > div");
 }
 
-/** Wait for the dashboard to finish loading the linked-students list. */
-async function waitForDashboardReady(page, log, expectedStudentName) {
-  // The auth check renders a "בודק התחברות הורה..." placeholder before
-  // session is hydrated. After hydration we expect the real dashboard heading.
-  await page
-    .getByRole("heading", { name: "דשבורד הורים" })
-    .waitFor({ state: "visible", timeout: 30_000 });
-  log?.("parent-dashboard: heading 'דשבורד הורים' visible");
+function isOnParentDashboardUrl(url) {
+  try {
+    return new URL(url).pathname === PARENT_DASHBOARD_PATH;
+  } catch {
+    return false;
+  }
+}
 
+async function navigateToParentDashboard(page, baseUrl, log) {
+  const target = new URL(PARENT_DASHBOARD_PATH, baseUrl).toString();
+  log?.(`parent-dashboard: goto ${target} (waitUntil=domcontentloaded)`);
+  await page.goto(target, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  await page
+    .waitForURL(`**${PARENT_DASHBOARD_PATH}**`, { timeout: 20_000 })
+    .catch(() => {});
+}
+
+async function waitForDashboardShellSignals(page, log) {
+  await page.waitForFunction(
+    () => {
+      let pathname = "";
+      try {
+        pathname = new URL(location.href).pathname;
+      } catch {
+        return false;
+      }
+      if (pathname !== "/parent/dashboard") return false;
+
+      const bodyText = document.body?.innerText || "";
+      if (bodyText.includes("בודק התחברות הורה")) return false;
+
+      const hasHeading = Array.from(document.querySelectorAll("h1, h2")).some(
+        (el) => (el.textContent || "").trim() === "דשבורד הורים"
+      );
+      const reportLinks = document.querySelectorAll(
+        'a[href*="/learning/parent-report"]'
+      ).length;
+      const hasAccountLine = bodyText.includes("ילדים בחשבון:");
+      const hasEmptyState = bodyText.includes("עדיין לא נוספו ילדים");
+
+      return hasHeading || reportLinks > 0 || hasAccountLine || hasEmptyState;
+    },
+    undefined,
+    { timeout: DASHBOARD_SIGNAL_TIMEOUT_MS }
+  );
+  const headingVisible = await page
+    .getByRole("heading", { name: "דשבורד הורים" })
+    .isVisible()
+    .catch(() => false);
+  if (headingVisible) {
+    log?.("parent-dashboard: heading 'דשבורד הורים' visible");
+  } else {
+    log?.(
+      "parent-dashboard: dashboard shell ready (heading not yet visible; cards/account line detected)"
+    );
+  }
+}
+
+async function captureDashboardFailureDebug({
+  page,
+  log,
+  artifacts,
+  screenshotPrefix,
+  reason,
+  attempt,
+}) {
+  const url = page.url();
+  let pathname = "";
+  try {
+    pathname = new URL(url).pathname;
+  } catch {
+    // ignore
+  }
+  log?.(
+    `parent-dashboard: attempt ${attempt}/${MAX_DASHBOARD_ATTEMPTS} failed — ${reason} url=${url} pathname=${pathname}`
+  );
+  if (artifacts?.saveScreenshot) {
+    await artifacts.saveScreenshot(
+      page,
+      `${screenshotPrefix}parent-dashboard-failure-attempt${attempt}`
+    );
+  }
+  if (artifacts?.root) {
+    try {
+      const logsDir = join(artifacts.root, "logs");
+      mkdirSync(logsDir, { recursive: true });
+      const safePrefix = String(screenshotPrefix).replace(/[^a-zA-Z0-9._-]/g, "_");
+      const html = await page.content().catch(() => "");
+      writeFileSync(
+        join(
+          logsDir,
+          `${safePrefix}parent-dashboard-failure-attempt${attempt}.html`
+        ),
+        html.slice(0, 120_000),
+        "utf8"
+      );
+    } catch (error) {
+      log?.(
+        `parent-dashboard: debug html capture failed: ${error?.message || error}`
+      );
+    }
+  }
+  if (artifacts?.appendLog) {
+    artifacts.appendLog(
+      "parent-dashboard-debug",
+      `attempt ${attempt} failed: ${reason} url=${url}`
+    );
+  }
+}
+
+async function ensureParentDashboardShell({
+  page,
+  baseUrl,
+  log,
+  artifacts,
+  screenshotPrefix,
+}) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= MAX_DASHBOARD_ATTEMPTS; attempt++) {
+    try {
+      if (!isOnParentDashboardUrl(page.url()) || attempt > 1) {
+        await navigateToParentDashboard(page, baseUrl, log);
+      }
+      await waitForDashboardShellSignals(page, log);
+      return;
+    } catch (error) {
+      lastError = error;
+      await captureDashboardFailureDebug({
+        page,
+        log,
+        artifacts,
+        screenshotPrefix,
+        reason: error?.message || String(error),
+        attempt,
+      });
+      if (attempt < MAX_DASHBOARD_ATTEMPTS) {
+        log?.(
+          `parent-dashboard: retrying dashboard navigation (${attempt + 1}/${MAX_DASHBOARD_ATTEMPTS})`
+        );
+        await page.waitForTimeout(1000 * attempt);
+      }
+    }
+  }
+  throw new Error(
+    `parent-dashboard: dashboard shell not ready after ${MAX_DASHBOARD_ATTEMPTS} attempts: ${
+      lastError?.message || lastError
+    }`
+  );
+}
+
+/** Wait for the dashboard to finish loading the linked-students list. */
+async function waitForDashboardReady(
+  page,
+  log,
+  expectedStudentName,
+  { artifacts, screenshotPrefix } = {}
+) {
   // Legacy deployments rendered "הילדים שלי (N)" as an h2; current product
   // uses a student card grid with "דוח הורים" links instead. Keep optional
   // wait so older deployments still converge.
@@ -175,8 +334,6 @@ function locateStudentCard(page, expectedName) {
   return modernCard.or(legacyCard).first();
 }
 
-const PARENT_DASHBOARD_PATH = "/parent/dashboard";
-
 /**
  * Verify the dashboard contains the expected student and click the real
  * parent-facing "דוח הורים" link to navigate to the report.
@@ -199,31 +356,29 @@ export async function verifyParentDashboardAndOpenReport({
 }) {
   const screenshotPrefix = artifactPrefix ? `${artifactPrefix}-` : "";
 
-  const currentUrl = page.url();
-  const isOnDashboard = (() => {
-    try {
-      const u = new URL(currentUrl);
-      return u.pathname === PARENT_DASHBOARD_PATH;
-    } catch {
-      return false;
-    }
-  })();
-  if (!isOnDashboard) {
-    if (!baseUrl) {
-      throw new Error(
-        "verifyParentDashboardAndOpenReport: baseUrl is required when the " +
-          "page is not already on /parent/dashboard"
-      );
-    }
-    const target = new URL(PARENT_DASHBOARD_PATH, baseUrl).toString();
-    log?.(
-      `parent-dashboard: navigating to ${target} (current=${currentUrl})`
+  if (!baseUrl) {
+    throw new Error(
+      "verifyParentDashboardAndOpenReport: baseUrl is required"
     );
-    await page.goto(target, { waitUntil: "domcontentloaded" });
   }
 
+  const currentUrl = page.url();
+  log?.(
+    `parent-dashboard: navigating to ${new URL(PARENT_DASHBOARD_PATH, baseUrl)} (current=${currentUrl})`
+  );
+  await ensureParentDashboardShell({
+    page,
+    baseUrl,
+    log,
+    artifacts,
+    screenshotPrefix,
+  });
+
   const dashboardUrl = page.url();
-  const dashReadyInfo = await waitForDashboardReady(page, log, expectedStudentName);
+  const dashReadyInfo = await waitForDashboardReady(page, log, expectedStudentName, {
+    artifacts,
+    screenshotPrefix,
+  });
 
   const card = locateStudentCard(page, expectedStudentName);
   const cardCount = await card.count();

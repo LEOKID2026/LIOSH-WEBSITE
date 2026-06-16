@@ -19,6 +19,9 @@ const {
   findReadabilityLeakSubstringsInString,
 } = await import(u("utils/parent-report-language/forbidden-terms.js"));
 const { normalizeParentFacingHe } = await import(u("utils/parent-report-language/parent-facing-normalize-he.js"));
+const { findParentReportEnglishEnumLeaks, formatParentReportModeHe } = await import(
+  u("utils/parent-report-language/parent-report-display-labels.he.js")
+);
 const { buildNarrativeContractV1, narrativeSectionTextHe } = await import(u("utils/contracts/narrative-contract-v1.js"));
 const {
   zeroEvidenceSubjectLineHe,
@@ -181,6 +184,13 @@ for (const [i, sample] of renderedSamples.entries()) {
   assert.equal(dupHits.length, 0, `rendered sample[${i}] duplicate pair: [${dupHits.join(", ")}]\n${sample.slice(0, 200)}`);
   const leakHits = findReadabilityLeakSubstringsInString(sample);
   assert.equal(leakHits.length, 0, `rendered sample[${i}] readability leak: [${leakHits.join(", ")}]\n${sample.slice(0, 200)}`);
+  const enumHits = findParentReportEnglishEnumLeaks(sample);
+  assert.equal(enumHits.length, 0, `rendered sample[${i}] english enum leak: [${enumHits.join(", ")}]\n${sample.slice(0, 200)}`);
+}
+
+for (const rawMode of ["practice", "guided_practice", "learning_book", "worksheet", "self_practice"]) {
+  const rendered = formatParentReportModeHe(rawMode);
+  assert.equal(findParentReportEnglishEnumLeaks(rendered).length, 0, `mode label leak for ${rawMode}: ${rendered}`);
 }
 
 const requiredInScan = [

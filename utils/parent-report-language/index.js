@@ -37,6 +37,21 @@ export {
   glossTopicRecommendationHeFields,
 } from "./parent-facing-normalize-he.js";
 export {
+  formatParentReportLabelHe,
+  formatParentReportSubjectHe,
+  formatParentReportTopicHe,
+  formatParentReportStatusHe,
+  formatParentReportSourceHe,
+  formatParentReportModeHe,
+  formatParentReportEvidenceHe,
+  formatParentReportLevelHe,
+  formatParentReportGradeHe,
+  findParentReportEnglishEnumLeaks,
+  PARENT_REPORT_FORBIDDEN_ENGLISH_ENUMS,
+  PARENT_REPORT_SUBJECT_LABELS_HE,
+  PARENT_REPORT_MODE_LABELS_HE,
+} from "./parent-report-display-labels.he.js";
+export {
   insufficientSubjectQuestionsLineHe,
   tierStableStrengthHe,
   tierWeaknessRecurringHe,

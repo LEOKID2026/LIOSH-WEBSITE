@@ -31,7 +31,15 @@ import {
 } from "../../utils/parent-report-ui-explain-he";
 import { TOPIC_EVIDENCE_THRESHOLDS } from "../../utils/parent-report-topic-evidence.js";
 import { normalizeParentFacingHe } from "../../utils/parent-report-language/parent-facing-normalize-he.js";
-import { diagnosticPrimarySourceParentLabelHe } from "../../utils/parent-report-language/index.js";
+import {
+  diagnosticPrimarySourceParentLabelHe,
+} from "../../utils/parent-report-language/index.js";
+import {
+  formatParentReportGradeHe,
+  formatParentReportLevelHe,
+  formatParentReportModeHe,
+  formatParentReportSubjectHe,
+} from "../../utils/parent-report-language/parent-report-display-labels.he.js";
 import { deriveParentDataPresenceForDiagnosticsView } from "../../utils/parent-data-presence.js";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -558,7 +566,7 @@ function buildParentReportDiagnosticsView(report) {
     if (!sub || !sub.hasAnySignal) continue;
     rows.push({
       subjectId: id,
-      subjectLabelHe: sub.subjectLabelHe || id,
+      subjectLabelHe: formatParentReportSubjectHe(sub.subjectLabelHe || id),
       sub,
     });
   }
@@ -888,11 +896,7 @@ export default function ParentReport() {
     return dateStr;
   };
 
-  const formatMode = (mode) => {
-    if (!mode) return "לא זמין";
-    if (typeof mode !== "string") return mode;
-    return mode.toLowerCase() === "marathon" ? "תרגול ארוך" : mode;
-  };
+  const formatMode = (mode) => formatParentReportModeHe(mode);
 
   // בדיקת גודל מסך
   useEffect(() => {
@@ -2121,10 +2125,10 @@ export default function ParentReport() {
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.level || "לא זמין"}
+                            {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.grade || "לא זמין"}
+                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatMode(data.mode)}
@@ -2174,10 +2178,10 @@ export default function ParentReport() {
                       <div className="font-semibold text-sm mb-2 text-blue-400">{subjectTopicLabelForParentHe("math", data, op)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{data.level || "לא זמין"}</span>
+                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{data.grade || "לא זמין"}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
@@ -2262,10 +2266,10 @@ export default function ParentReport() {
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.level || "לא זמין"}
+                            {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.grade || "לא זמין"}
+                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatMode(data.mode)}
@@ -2315,10 +2319,10 @@ export default function ParentReport() {
                       <div className="font-semibold text-sm mb-2 text-emerald-400">{subjectTopicLabelForParentHe("geometry", data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{data.level || "לא זמין"}</span>
+                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{data.grade || "לא זמין"}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
@@ -2404,10 +2408,10 @@ export default function ParentReport() {
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.level || "לא זמין"}
+                            {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.grade || "לא זמין"}
+                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatMode(data.mode)}
@@ -2457,10 +2461,10 @@ export default function ParentReport() {
                       <div className="font-semibold text-sm mb-2 text-purple-400">{subjectTopicLabelForParentHe("english", data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{data.level || "לא זמין"}</span>
+                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{data.grade || "לא זמין"}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
@@ -2546,10 +2550,10 @@ export default function ParentReport() {
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.level || "לא זמין"}
+                            {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.grade || "לא זמין"}
+                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatMode(data.mode)}
@@ -2603,10 +2607,10 @@ export default function ParentReport() {
                       <div className="font-semibold text-sm mb-2 text-green-400">{subjectTopicLabelForParentHe("science", data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{data.level || "לא זמין"}</span>
+                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{data.grade || "לא זמין"}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
@@ -2692,10 +2696,10 @@ export default function ParentReport() {
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.level || "לא זמין"}
+                            {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.grade || "לא זמין"}
+                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatMode(data.mode)}
@@ -2749,10 +2753,10 @@ export default function ParentReport() {
                       <div className="font-semibold text-sm mb-2 text-orange-400">{subjectTopicLabelForParentHe("hebrew", data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{data.level || "לא זמין"}</span>
+                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{data.grade || "לא זמין"}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>
@@ -2838,10 +2842,10 @@ export default function ParentReport() {
                             </span>
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.level || "לא זמין"}
+                            {formatParentReportLevelHe(data.levelKey || data.level)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
-                            {data.grade || "לא זמין"}
+                            {formatParentReportGradeHe(data.gradeKey || data.grade)}
                           </td>
                           <td className="py-1.5 px-0.5 text-center text-white/80 text-[11px] md:text-sm whitespace-nowrap">
                             {formatMode(data.mode)}
@@ -2895,10 +2899,10 @@ export default function ParentReport() {
                       <div className="font-semibold text-sm mb-2 text-cyan-400">{subjectTopicLabelForParentHe(MOLEDET_GEOGRAPHY_REPORT_SUBJECT_ID, data, topic)}</div>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{data.level || "לא זמין"}</span>
+                          <span className="text-white/60">רמה:</span> <span className="text-white/90">{formatParentReportLevelHe(data.levelKey || data.level)}</span>
                         </div>
                         <div>
-                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{data.grade || "לא זמין"}</span>
+                          <span className="text-white/60">כיתה:</span> <span className="text-white/90">{formatParentReportGradeHe(data.gradeKey || data.grade)}</span>
                         </div>
                         <div>
                           <span className="text-white/60">מצב:</span> <span className="text-white/90">{formatMode(data.mode)}</span>

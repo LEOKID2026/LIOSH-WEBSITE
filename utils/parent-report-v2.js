@@ -86,6 +86,11 @@ import {
   sanitizeDiagnosticEngineV2ForParentFacing,
   buildParentDiagnosticExplanationV1FromV2Unit,
 } from "./parent-report-language/index.js";
+import {
+  formatParentReportModeHe,
+  formatParentReportLevelHe,
+  formatParentReportSubjectHe,
+} from "./parent-report-language/parent-report-display-labels.he.js";
 import { withholdSummaryCopyHe } from "./parent-report-language/subject-withhold-summary-he.js";
 import { hardenBaseReportWithRowIdentity } from "./parent-report-output-integrity/harden-report-rows.js";
 import {
@@ -101,19 +106,9 @@ import {
   safeGetJsonObject,
 } from "./safe-local-storage.js";
 
-const LEVEL_LABELS = { easy: "קל", medium: "בינוני", hard: "קשה" };
-
-const MODE_LABELS = {
-  learning: "למידה",
-  practice: "תרגול",
-  challenge: "אתגר",
-  speed: "מהירות",
-  marathon: "תרגול ארוך",
-  graded: "מדורג",
-  normal: "רגיל",
-  mistakes: "טעויות",
-  practice_mistakes: "חזרה על שגיאות",
-};
+function modeLabel(m) {
+  return formatParentReportModeHe(m);
+}
 
 function evidenceContractsV1Enabled() {
   const envFlag = String(process?.env?.NEXT_PUBLIC_PARENT_REPORT_CONTRACTS_V1 ?? "1").trim().toLowerCase();
@@ -129,11 +124,6 @@ function evidenceContractsV1Enabled() {
     // Ignore storage read errors - keep additive trace enabled by default.
   }
   return true;
-}
-
-function modeLabel(m) {
-  if (m == null || m === "") return "לא זמין";
-  return MODE_LABELS[m] || String(m);
 }
 
 /** @returns {number|null} */
@@ -446,7 +436,7 @@ export function collapseTopicRowsToCanonicalTopicEntity(subjectId, rowsByKey) {
       gradeKey: gradeKey || null,
       grade: formatParentReportGradeLabel(gradeKey),
       levelKey: levelKey || null,
-      level: levelKey ? LEVEL_LABELS[levelKey] || levelKey : "לא זמין",
+      level: levelKey ? formatParentReportLevelHe(levelKey) : "לא זמין",
       displayName: String(representative?.displayName || "").trim() || String(representative?.bucketKey || bucketKey),
       lastSessionMs: Number.isFinite(Number(lastSessionMs)) ? Number(lastSessionMs) : null,
       lastSessionAt: lastSessionAt || representative?.lastSessionAt || "לא זמין",
@@ -637,7 +627,7 @@ function buildRowSummary({
     actualGradeKey: gradeEvidence.contentGradeLevel,
     gradeRelation: gradeEvidence.gradeRelation,
     gradeDelta: gradeEvidence.gradeDelta,
-    level: levelKey ? LEVEL_LABELS[levelKey] || levelKey : "לא זמין",
+    level: levelKey ? formatParentReportLevelHe(levelKey) : "לא זמין",
     levelKey,
     mode: modeStr,
     modeKey,
@@ -1688,13 +1678,13 @@ function buildPatternDiagnosticsFromV2(
     const subjectUnits = units.filter((u) => String(u?.subjectId || "") === sid);
     const topicMap = maps?.[sid] && typeof maps[sid] === "object" ? maps[sid] : {};
     const srQ = Math.max(0, Number(counts[sid]) || 0);
-    const labelHe = String(V2_SUBJECT_LABEL_HE[sid] || sid).trim();
+    const labelHe = formatParentReportSubjectHe(sid);
     const accRaw = accMap[sid];
     const reportAcc =
       accRaw != null && Number.isFinite(Number(accRaw)) ? Math.round(Number(accRaw)) : null;
     const rtq = Math.max(0, Number(reportTotalQuestions) || 0);
     subjects[sid] = {
-      subjectLabelHe: labelHe || sid,
+      subjectLabelHe: labelHe,
       ...summarizeV2UnitsForSubject(subjectUnits, {
         subjectReportQuestions: srQ,
         subjectLabelHe: labelHe,

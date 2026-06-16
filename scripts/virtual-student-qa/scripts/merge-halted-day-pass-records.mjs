@@ -71,9 +71,11 @@ function mapSummaryStudentToRecord(student) {
 
 const args = parseArgs(process.argv);
 const summary = JSON.parse(readFileSync(args.haltedSummary, "utf8"));
-const byLabel = new Map(
-  (summary.suite?.students || summary.students || []).map((s) => [s.label, s])
-);
+const studentsArr = summary.suite?.students;
+if (!Array.isArray(studentsArr)) {
+  throw new Error("halted summary missing suite.students array");
+}
+const byLabel = new Map(studentsArr.map((s) => [s.label, s]));
 
 const records = [];
 for (const label of args.students) {
