@@ -1,0 +1,342 @@
+{
+  "baseUrl": "http://127.0.0.1:3140",
+  "diagnosis": {
+    "route": "/learning/book/math/g2/add_two",
+    "section": 3,
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scrollRect": {
+      "left": 37,
+      "right": 353,
+      "width": 316
+    },
+    "title": {
+      "innerText": "58 + 37 — פירוק לעשרות ואחדות:",
+      "rect": {
+        "left": 39,
+        "right": 351,
+        "top": 251
+      }
+    },
+    "diagramLines": [
+      {
+        "index": 0,
+        "innerText": "58 = 50 + 8",
+        "rowDir": "rtl",
+        "rowClass": "book-diagram-line block w-full [&_.book-mixed-line-body]:flex [&_.book-mixed-line-body]:w-full [&_.book-mixed-line-body]:max-w-full [&_.book-mixed-line-body]:flex-row [&_.book-mixed-line-body]:items-baseline [&_[data-book-label]]:w-[4.5rem] [&_[data-book-label]]:shrink-0 [&_[data-book-label]]:text-right [&_[data-book-label-gap]]:w-[0.35em] [&_[data-book-label-gap]]:shrink-0 text-sm leading-relaxed sm:text-base",
+        "rowRect": {
+          "left": 52,
+          "right": 338,
+          "top": 314,
+          "width": 286
+        },
+        "renderer": "structured-mixed",
+        "labels": [],
+        "mathRuns": [
+          {
+            "text": "58 = 50 + 8",
+            "dir": "ltr",
+            "left": 187,
+            "right": 261
+          }
+        ],
+        "labelVisuallyBeforeMath": null,
+        "visualLines": [
+          {
+            "top": 314,
+            "visualText": "58 = 50 + 8",
+            "readingOrderRtl": "58 = 50 + 8",
+            "rightSide": "58 = 50 + 8",
+            "leftSide": "58 = 50 + 8",
+            "pieces": [
+              {
+                "role": "math-run",
+                "text": "58 = 50 + 8",
+                "dir": "ltr",
+                "left": 187,
+                "right": 261,
+                "centerX": 224
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "innerText": "37 = 30 + 7",
+        "rowDir": "rtl",
+        "rowClass": "book-diagram-line block w-full [&_.book-mixed-line-body]:flex [&_.book-mixed-line-body]:w-full [&_.book-mixed-line-body]:max-w-full [&_.book-mixed-line-body]:flex-row [&_.book-mixed-line-body]:items-baseline [&_[data-book-label]]:w-[4.5rem] [&_[data-book-label]]:shrink-0 [&_[data-book-label]]:text-right [&_[data-book-label-gap]]:w-[0.35em] [&_[data-book-label-gap]]:shrink-0 text-sm leading-relaxed sm:text-base",
+        "rowRect": {
+          "left": 52,
+          "right": 338,
+          "top": 341,
+          "width": 286
+        },
+        "renderer": "structured-mixed",
+        "labels": [],
+        "mathRuns": [
+          {
+            "text": "37 = 30 + 7",
+            "dir": "ltr",
+            "left": 188,
+            "right": 261
+          }
+        ],
+        "labelVisuallyBeforeMath": null,
+        "visualLines": [
+          {
+            "top": 341,
+            "visualText": "37 = 30 + 7",
+            "readingOrderRtl": "37 = 30 + 7",
+            "rightSide": "37 = 30 + 7",
+            "leftSide": "37 = 30 + 7",
+            "pieces": [
+              {
+                "role": "math-run",
+                "text": "37 = 30 + 7",
+                "dir": "ltr",
+                "left": 188,
+                "right": 261,
+                "centerX": 225
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "innerText": "עשרות: 50 + 30 = 80",
+        "rowDir": "rtl",
+        "rowClass": "book-diagram-line block w-full [&_.book-mixed-line-body]:flex [&_.book-mixed-line-body]:w-full [&_.book-mixed-line-body]:max-w-full [&_.book-mixed-line-body]:flex-row [&_.book-mixed-line-body]:items-baseline [&_[data-book-label]]:w-[4.5rem] [&_[data-book-label]]:shrink-0 [&_[data-book-label]]:text-right [&_[data-book-label-gap]]:w-[0.35em] [&_[data-book-label-gap]]:shrink-0 text-sm leading-relaxed sm:text-base",
+        "rowRect": {
+          "left": 52,
+          "right": 338,
+          "top": 368,
+          "width": 286
+        },
+        "renderer": "structured-mixed",
+        "labels": [
+          {
+            "text": "עשרות:",
+            "left": 266,
+            "right": 338
+          }
+        ],
+        "mathRuns": [
+          {
+            "text": "50 + 30 = 80",
+            "dir": "ltr",
+            "left": 180,
+            "right": 261
+          }
+        ],
+        "labelVisuallyBeforeMath": true,
+        "visualLines": [
+          {
+            "top": 368,
+            "visualText": "עשרות:50 + 30 = 80",
+            "readingOrderRtl": "עשרות: 50 + 30 = 80",
+            "rightSide": "עשרות:",
+            "leftSide": "50 + 30 = 80",
+            "pieces": [
+              {
+                "role": "label",
+                "text": "עשרות:",
+                "dir": "rtl",
+                "left": 266,
+                "right": 338,
+                "centerX": 302
+              },
+              {
+                "role": "math-run",
+                "text": "50 + 30 = 80",
+                "dir": "ltr",
+                "left": 180,
+                "right": 261,
+                "centerX": 220
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "innerText": "אחדות: 8 + 7 = 15 → 5 , נשיאה 1",
+        "rowDir": "rtl",
+        "rowClass": "book-diagram-line block w-full [&_.book-mixed-line-body]:flex [&_.book-mixed-line-body]:w-full [&_.book-mixed-line-body]:max-w-full [&_.book-mixed-line-body]:flex-row [&_.book-mixed-line-body]:items-baseline [&_[data-book-label]]:w-[4.5rem] [&_[data-book-label]]:shrink-0 [&_[data-book-label]]:text-right [&_[data-book-label-gap]]:w-[0.35em] [&_[data-book-label-gap]]:shrink-0 text-sm leading-relaxed sm:text-base",
+        "rowRect": {
+          "left": 52,
+          "right": 338,
+          "top": 394,
+          "width": 286
+        },
+        "renderer": "structured-mixed",
+        "labels": [
+          {
+            "text": "אחדות:",
+            "left": 266,
+            "right": 338
+          }
+        ],
+        "mathRuns": [
+          {
+            "text": "8 + 7 = 15 → 5",
+            "dir": "ltr",
+            "left": 168,
+            "right": 261
+          }
+        ],
+        "labelVisuallyBeforeMath": true,
+        "visualLines": [
+          {
+            "top": 394,
+            "visualText": "אחדות:8 + 7 = 15 → 5, נשיאה 1",
+            "readingOrderRtl": "אחדות: 8 + 7 = 15 → 5 , נשיאה 1",
+            "rightSide": "אחדות:",
+            "leftSide": ", נשיאה 1",
+            "pieces": [
+              {
+                "role": "label",
+                "text": "אחדות:",
+                "dir": "rtl",
+                "left": 266,
+                "right": 338,
+                "centerX": 302
+              },
+              {
+                "role": "math-run",
+                "text": "8 + 7 = 15 → 5",
+                "dir": "ltr",
+                "left": 168,
+                "right": 261,
+                "centerX": 215
+              },
+              {
+                "role": "prose-run",
+                "text": ", נשיאה 1",
+                "dir": "rtl",
+                "left": 107,
+                "right": 164,
+                "centerX": 135
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "innerText": "סה״כ: 80 + 15 = 95",
+        "rowDir": "rtl",
+        "rowClass": "book-diagram-line block w-full [&_.book-mixed-line-body]:flex [&_.book-mixed-line-body]:w-full [&_.book-mixed-line-body]:max-w-full [&_.book-mixed-line-body]:flex-row [&_.book-mixed-line-body]:items-baseline [&_[data-book-label]]:w-[4.5rem] [&_[data-book-label]]:shrink-0 [&_[data-book-label]]:text-right [&_[data-book-label-gap]]:w-[0.35em] [&_[data-book-label-gap]]:shrink-0 text-sm leading-relaxed sm:text-base",
+        "rowRect": {
+          "left": 52,
+          "right": 338,
+          "top": 421,
+          "width": 286
+        },
+        "renderer": "structured-mixed",
+        "labels": [
+          {
+            "text": "סה״כ:",
+            "left": 266,
+            "right": 338
+          }
+        ],
+        "mathRuns": [
+          {
+            "text": "80 + 15 = 95",
+            "dir": "ltr",
+            "left": 180,
+            "right": 261
+          }
+        ],
+        "labelVisuallyBeforeMath": true,
+        "visualLines": [
+          {
+            "top": 421,
+            "visualText": "סה״כ:80 + 15 = 95",
+            "readingOrderRtl": "סה״כ: 80 + 15 = 95",
+            "rightSide": "סה״כ:",
+            "leftSide": "80 + 15 = 95",
+            "pieces": [
+              {
+                "role": "label",
+                "text": "סה״כ:",
+                "dir": "rtl",
+                "left": 266,
+                "right": 338,
+                "centerX": 302
+              },
+              {
+                "role": "math-run",
+                "text": "80 + 15 = 95",
+                "dir": "ltr",
+                "left": 180,
+                "right": 261,
+                "centerX": 220
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "answerLines": [
+      "58 + 37 = 95"
+    ],
+    "allMixedLines": [
+      {
+        "text": "חיבור של שני מספרים — עד 100",
+        "top": 101,
+        "left": 16,
+        "right": 374,
+        "inDiagram": false
+      },
+      {
+        "text": "58 = 50 + 8",
+        "top": 314,
+        "left": 52,
+        "right": 338,
+        "inDiagram": true
+      },
+      {
+        "text": "37 = 30 + 7",
+        "top": 341,
+        "left": 52,
+        "right": 338,
+        "inDiagram": true
+      },
+      {
+        "text": "עשרות: 50 + 30 = 80",
+        "top": 368,
+        "left": 52,
+        "right": 338,
+        "inDiagram": true
+      },
+      {
+        "text": "אחדות: 8 + 7 = 15 → 5 , נשיאה 1",
+        "top": 394,
+        "left": 52,
+        "right": 338,
+        "inDiagram": true
+      },
+      {
+        "text": "סה״כ: 80 + 15 = 95",
+        "top": 421,
+        "left": 52,
+        "right": 338,
+        "inDiagram": true
+      },
+      {
+        "text": "58 + 37 = 95",
+        "top": 481,
+        "left": 39,
+        "right": 351,
+        "inDiagram": false
+      }
+    ],
+    "domText": "58 + 37 — פירוק לעשרות ואחדות: 58 = 50 + 8 37 = 30 + 7 עשרות: 50 + 30 = 80 אחדות: 8 + 7 = 15 → 5 , נשיאה 1 סה״כ: 80 + 15 = 95 58 + 37 = 95"
+  },
+  "screenshot": "C:\\Users\\ERAN YOSEF\\Desktop\\final projects\\FINAL-WEB\\LIOSH-WEB-TRY\\tmp\\diagnose-add-two-58-37.png"
+}

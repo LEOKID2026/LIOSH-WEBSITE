@@ -21,5 +21,5 @@ export default function BookContentLine({ text, context = "prose" }) {
     return <BookVerticalArithmetic content={text} />;
   }
 
-  return <MixedHebrewMathText text={text} />;
+  return <MixedHebrewMathText text={text} diagramLayout={context === "diagram"} />;
 }

@@ -282,20 +282,46 @@ function LabelBodyGap() {
   );
 }
 
-function renderLabelWithBody(label, body) {
+function DiagramLabelSpacer() {
+  return (
+    <>
+      <span aria-hidden="true" className="inline-block w-[4.5rem] shrink-0" />
+      <span aria-hidden="true" className="inline-block w-[0.35em] shrink-0" />
+    </>
+  );
+}
+
+function DiagramBodySlot({ children }) {
+  return (
+    <span
+      className="book-diagram-body-slot min-w-0 flex-1"
+      data-book-diagram-body="true"
+    >
+      {children}
+    </span>
+  );
+}
+
+function wrapDiagramBody(content, diagramLayout) {
+  if (!diagramLayout) return content;
+  return <DiagramBodySlot>{content}</DiagramBodySlot>;
+}
+
+function renderLabelWithBody(label, body, diagramLayout = false) {
   return (
     <>
       <BookLineLabel label={label} />
       <LabelBodyGap />
-      {renderMixedBodyInner(body)}
+      {wrapDiagramBody(renderMixedBodyInner(body), diagramLayout)}
     </>
   );
 }
 
 /**
  * Render Hebrew text with math isolated first, then markdown in prose segments.
+ * @param {{ text: string, className?: string, diagramLayout?: boolean }} props
  */
-export default function MixedHebrewMathText({ text, className = "" }) {
+export default function MixedHebrewMathText({ text, className = "", diagramLayout = false }) {
   const input = String(text || "");
   const structure = parseBookLineStructure(input);
 
@@ -305,7 +331,7 @@ export default function MixedHebrewMathText({ text, className = "" }) {
         className={`book-mixed-hebrew-math book-structured-line ${className}`.trim()}
       >
         {structure.body
-          ? renderLabelWithBody(structure.label, structure.body)
+          ? renderLabelWithBody(structure.label, structure.body, diagramLayout)
           : <BookLineLabel label={structure.label} />}
       </MixedLineBody>
     );
@@ -315,7 +341,14 @@ export default function MixedHebrewMathText({ text, className = "" }) {
   if (clauses.length <= 1) {
     return (
       <MixedLineBody className={`book-mixed-hebrew-math ${className}`.trim()}>
-        {renderMixedBodyInner(input)}
+        {diagramLayout ? (
+          <>
+            <DiagramLabelSpacer />
+            {wrapDiagramBody(renderMixedBodyInner(input), true)}
+          </>
+        ) : (
+          renderMixedBodyInner(input)
+        )}
       </MixedLineBody>
     );
   }
@@ -330,8 +363,13 @@ export default function MixedHebrewMathText({ text, className = "" }) {
             className={`book-mixed-hebrew-math ${className}`.trim()}
           >
             {sub?.label && sub?.body
-              ? renderLabelWithBody(sub.label, sub.body)
-              : (
+              ? renderLabelWithBody(sub.label, sub.body, diagramLayout)
+              : diagramLayout ? (
+                <>
+                  <DiagramLabelSpacer />
+                  {wrapDiagramBody(renderMixedBodyInner(sub?.body ?? clause), true)}
+                </>
+              ) : (
                 <>
                   {sub?.label ? <BookLineLabel label={sub.label} /> : null}
                   {renderMixedBodyInner(sub?.body ?? clause)}

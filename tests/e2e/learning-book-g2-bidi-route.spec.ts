@@ -239,6 +239,78 @@ async function getRenderedDiagramAndAnswerBlock(page: Page, answerText: string) 
   }, answerText);
 }
 
+type DiagramVisualRow = {
+  innerText: string;
+  visualText: string;
+  mathLeft: number | null;
+  mathRight: number | null;
+  labelRight: number | null;
+  labelToMathGapPx: number | null;
+  proseToMathGapPx: number | null;
+};
+
+async function getDiagramVisualLayout(page: Page): Promise<DiagramVisualRow[]> {
+  return page.locator('[role="img"][aria-label="דוגמה"]').evaluate((diagram) => {
+    const normalize = (value: string) =>
+      value
+        .replace(/\u00a0/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    return Array.from(diagram.querySelectorAll<HTMLElement>("[data-book-diagram-line]")).map(
+      (row) => {
+        const label = row.querySelector<HTMLElement>("[data-book-label]");
+        const gap = row.querySelector<HTMLElement>("[data-book-label-gap]");
+        const math = row.querySelector<HTMLElement>("[data-book-math-run]");
+        const prose = row.querySelector<HTMLElement>("[data-book-prose-run]");
+
+        const pieces: { text: string; right: number }[] = [];
+        const add = (el: HTMLElement | null) => {
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          if (rect.width === 0 && rect.height === 0) return;
+          pieces.push({
+            text: (el.textContent || "").replace(/\u00a0/g, " "),
+            right: rect.right,
+          });
+        };
+
+        add(label);
+        add(gap);
+        add(math);
+        add(prose);
+
+        const visualText = normalize(
+          pieces
+            .sort((a, b) => b.right - a.right)
+            .map((piece) => piece.text)
+            .join("")
+        );
+
+        const labelRect = label?.getBoundingClientRect();
+        const mathRect = math?.getBoundingClientRect();
+        const proseRect = prose?.getBoundingClientRect();
+
+        return {
+          innerText: normalize(row.innerText || row.textContent || ""),
+          visualText,
+          mathLeft: mathRect ? Math.round(mathRect.left) : null,
+          mathRight: mathRect ? Math.round(mathRect.right) : null,
+          labelRight: labelRect ? Math.round(labelRect.right) : null,
+          labelToMathGapPx:
+            labelRect && mathRect
+              ? Math.round(labelRect.left - mathRect.right)
+              : null,
+          proseToMathGapPx:
+            mathRect && proseRect
+              ? Math.round(mathRect.left - proseRect.right)
+              : null,
+        };
+      }
+    );
+  });
+}
+
 async function getStructuredLineTexts(page: Page) {
   return page.locator("[data-book-scroll]").evaluate((root) => {
     const normalize = (value: string) =>
@@ -329,6 +401,48 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/g2-add_two-section-3-exact-block.png`,
       fullPage: true,
+    });
+  });
+
+  test("חיבור עם נשיאה: diagram layout keeps one math column and label gaps", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openBookSection(page, "add_two", 3);
+
+    const layout = await getDiagramVisualLayout(page);
+    expect(layout).toHaveLength(5);
+
+    const pureMathRows = layout.filter((row) => row.innerText === "58 = 50 + 8" || row.innerText === "37 = 30 + 7");
+    const labeledRows = layout.filter((row) => /^(עשרות|אחדות|סה״כ):/.test(row.innerText));
+
+    expect(pureMathRows).toHaveLength(2);
+    expect(labeledRows).toHaveLength(3);
+
+    const baselineMathRight = pureMathRows[0]?.mathRight;
+    expect(baselineMathRight, "pure math row missing math-run box").not.toBeNull();
+
+    for (const row of labeledRows) {
+      expect(
+        row.mathRight,
+        `labeled row "${row.innerText}" math column drift`
+      ).not.toBeNull();
+      expect(
+        Math.abs((row.mathRight as number) - (baselineMathRight as number)),
+        `math column misaligned for "${row.innerText}"`
+      ).toBeLessThanOrEqual(4);
+    }
+
+    const tensRow = layout.find((row) => row.innerText.startsWith("עשרות:"));
+    expect(tensRow?.labelToMathGapPx ?? 0).toBeGreaterThanOrEqual(4);
+    expect(tensRow?.visualText).toMatch(/^עשרות:\s+50 \+ 30 = 80$/);
+
+    const onesRow = layout.find((row) => row.innerText.startsWith("אחדות:"));
+    expect(onesRow?.visualText).toMatch(/^אחדות:\s+8 \+ 7 = 15 → 5,\s*נשיאה 1$/);
+    expect(onesRow?.proseToMathGapPx ?? 99).toBeLessThanOrEqual(8);
+
+    await page.locator('[role="img"][aria-label="דוגמה"]').screenshot({
+      path: `${SCREENSHOT_DIR}/g2-add_two-section-3-diagram-layout.png`,
     });
   });
 

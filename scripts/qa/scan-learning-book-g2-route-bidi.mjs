@@ -307,17 +307,22 @@ async function getRouteLevelText(page) {
 
 async function openSection(page, pageId, section) {
   const path = `/learning/book/math/g2/${pageId}`;
-  await page.goto(`${BASE_URL}${path}`, { waitUntil: "domcontentloaded" });
-  await page.locator("[data-book-scroll]").waitFor({ state: "attached", timeout: 60_000 });
-  const sectionButton = page.getByLabel(`עמוד ${section}`);
-  await sectionButton.waitFor({ state: "attached", timeout: 60_000 });
-  await sectionButton.last().dispatchEvent("click");
-  await page.waitForFunction(
-    (expected) => document.body.innerText.includes(`עמוד ${expected} מתוך`),
-    section,
-    { timeout: 30_000 }
-  );
-  await page.locator("[data-book-scroll]").waitFor({ state: "attached", timeout: 60_000 });
+  await page.goto(`${BASE_URL}${path}`, { waitUntil: "load", timeout: 120_000 });
+  await page.locator("[data-book-scroll]").first().waitFor({ state: "attached", timeout: 60_000 });
+  await page.getByText(/עמוד \d+ מתוך/u).waitFor({ state: "visible", timeout: 60_000 });
+
+  const targetIndex = section - 1;
+  for (let i = 0; i < targetIndex; i += 1) {
+    const next = page.getByRole("button", { name: "עמוד הבא" });
+    await next.waitFor({ state: "visible", timeout: 60_000 });
+    await next.click();
+    await page.locator("[data-book-scroll]").first().waitFor({ state: "visible", timeout: 60_000 });
+    await page.waitForTimeout(200);
+  }
+
+  await page
+    .getByText(`עמוד ${section} מתוך`, { exact: false })
+    .waitFor({ state: "visible", timeout: 60_000 });
   return path;
 }
 

@@ -169,10 +169,25 @@ function NumberLineRow({ line }) {
   );
 }
 
-function DiagramCodeLineRow({ children, dir = "ltr", className = "" }) {
+/** Unified RTL diagram rows: fixed label column, gap, consistent math/body column. */
+const DIAGRAM_LINE_LAYOUT_CLASS = [
+  "w-full",
+  "[&_.book-mixed-line-body]:flex",
+  "[&_.book-mixed-line-body]:w-full",
+  "[&_.book-mixed-line-body]:max-w-full",
+  "[&_.book-mixed-line-body]:flex-row",
+  "[&_.book-mixed-line-body]:items-baseline",
+  "[&_[data-book-label]]:w-[4.5rem]",
+  "[&_[data-book-label]]:shrink-0",
+  "[&_[data-book-label]]:text-right",
+  "[&_[data-book-label-gap]]:w-[0.35em]",
+  "[&_[data-book-label-gap]]:shrink-0",
+].join(" ");
+
+function DiagramCodeLineRow({ children, dir = "rtl", className = "" }) {
   return (
     <div
-      className={`book-diagram-line block w-full text-center ${className}`.trim()}
+      className={`book-diagram-line block ${DIAGRAM_LINE_LAYOUT_CLASS} ${className}`.trim()}
       data-book-diagram-line="true"
       dir={dir}
     >
@@ -424,7 +439,7 @@ function FrameTextDiagram({ lines }) {
     <div className="space-y-2 rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4" dir="rtl">
       {lines.map((line, i) => (
         <DiagramCodeLineRow key={i} dir="rtl" className="text-right text-base sm:text-lg">
-          <MixedHebrewMathText text={line} />
+          <MixedHebrewMathText text={line} diagramLayout />
         </DiagramCodeLineRow>
       ))}
     </div>
