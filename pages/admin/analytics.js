@@ -61,20 +61,20 @@ const CHILD_STATUSES = [
 /** Main navigation tabs — only one tab panel visible at a time. */
 export const ANALYTICS_MAIN_TABS = [
   { id: "overview", label: "סקירה כללית" },
-  { id: "accounts", label: "חשבונות והרשמות" },
+  { id: "accounts", label: "חשבונות" },
   { id: "parents", label: "הורים" },
   { id: "children", label: "ילדים" },
   { id: "learning", label: "למידה" },
   { id: "reports", label: "דוחות" },
   { id: "parentActivities", label: "פעילויות אישיות" },
   { id: "teachers", label: "מורים פרטיים" },
-  { id: "books", label: "ספרים / שמע / דפי עבודה" },
+  { id: "books", label: "ספרים ושמע" },
   { id: "rewards", label: "פרסים" },
   { id: "funnels", label: "משפכי שימוש" },
   { id: "retention", label: "חזרה לשימוש" },
   { id: "abandonment", label: "נטישה" },
-  { id: "features", label: "שימוש בפיצ׳רים" },
-  { id: "quality", label: "בדיקות אמת / איכות" },
+  { id: "features", label: "שימוש" },
+  { id: "quality", label: "בדיקות אמת" },
 ];
 
 function todayIso() {
@@ -160,17 +160,44 @@ function MetricGrid({ items }) {
   );
 }
 
+function cellValue(row, col) {
+  return col.render ? col.render(row) : formatAnalyticsLabelHe(row[col.key]) ?? "—";
+}
+
 function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }) {
   if (!Array.isArray(rows) || rows.length === 0) {
     return <p className="text-sm text-white/50">{empty}</p>;
   }
+
+  const useCardLayout = columns.length > 3;
+
+  if (useCardLayout) {
+    return (
+      <div className="space-y-2 w-full max-w-full">
+        {rows.map((row, idx) => (
+          <div
+            key={row.key || row.date || `${idx}`}
+            className="rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-2"
+          >
+            {columns.map((col) => (
+              <div key={col.key} className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 text-sm">
+                <span className="text-white/50 shrink-0">{col.label}</span>
+                <span className="text-white/80 text-right break-words max-w-full">{cellValue(row, col)}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="overflow-x-auto rounded-2xl border border-white/10">
-      <table className="min-w-full text-sm">
+    <div className="w-full max-w-full overflow-x-hidden rounded-2xl border border-white/10">
+      <table className="w-full table-fixed text-sm">
         <thead className="bg-white/5 text-white/65">
           <tr>
             {columns.map((col) => (
-              <th key={col.key} className="px-3 py-2 text-right font-semibold whitespace-nowrap">
+              <th key={col.key} className="px-3 py-2 text-right font-semibold break-words">
                 {col.label}
               </th>
             ))}
@@ -180,8 +207,8 @@ function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }
           {rows.map((row, idx) => (
             <tr key={row.key || row.date || `${idx}`}>
               {columns.map((col) => (
-                <td key={col.key} className="px-3 py-2 text-right whitespace-nowrap text-white/80">
-                  {col.render ? col.render(row) : formatAnalyticsLabelHe(row[col.key]) ?? "—"}
+                <td key={col.key} className="px-3 py-2 text-right break-words text-white/80 align-top">
+                  {cellValue(row, col)}
                 </td>
               ))}
             </tr>
@@ -215,9 +242,11 @@ function FunnelList({ funnels }) {
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
       {funnels.map((funnel) => (
         <div key={funnel.name} className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-          <div className="flex items-start justify-between gap-3 mb-3">
-            <h4 className="font-semibold text-white/90">{formatAnalyticsLabelHe(funnel.name)}</h4>
-            {funnel.note ? <span className="text-xs text-white/45">{formatAnalyticsLabelHe(funnel.note)}</span> : null}
+          <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-3">
+            <h4 className="font-semibold text-white/90 break-words">{formatAnalyticsLabelHe(funnel.name)}</h4>
+            {funnel.note ? (
+              <span className="text-xs text-white/45 break-words">{formatAnalyticsLabelHe(funnel.note)}</span>
+            ) : null}
           </div>
           <SimpleTable
             rows={funnel.steps}
@@ -271,7 +300,7 @@ export function CollapsiblePanel({
           ◀
         </span>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-white/90 text-base">{title}</h3>
+          <h3 className="font-semibold text-white/90 text-base break-words">{title}</h3>
           {subtitle ? <p className="text-xs text-white/45 mt-1">{subtitle}</p> : null}
           {!open && summary ? <p className="text-sm text-amber-100/75 mt-1 truncate">{summary}</p> : null}
         </div>
@@ -287,17 +316,21 @@ export function CollapsiblePanel({
 
 function AnalyticsTabBar({ activeTab, onChange }) {
   return (
-    <nav className="rounded-2xl border border-white/10 bg-white/[0.03] p-2" aria-label="קטגוריות אנליטיקה">
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+    <nav
+      className="rounded-2xl border border-white/10 bg-white/[0.03] p-2 w-full max-w-full overflow-x-hidden"
+      aria-label="קטגוריות אנליטיקה"
+      data-analytics-tab-bar
+    >
+      <div className="flex flex-wrap gap-2 w-full max-w-full">
         {ANALYTICS_MAIN_TABS.map((tab) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => onChange(tab.id)}
             aria-current={activeTab === tab.id ? "page" : undefined}
-            className={`shrink-0 rounded-xl px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors ${
+            className={`rounded-xl px-3 py-2 text-sm font-semibold text-center break-words max-w-full transition-colors ${
               activeTab === tab.id
-                ? "bg-amber-500 text-slate-950 shadow"
+                ? "bg-amber-500 text-slate-950 shadow ring-2 ring-amber-300/40"
                 : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -314,18 +347,18 @@ function TabToolbar({ panelIds, openPanels, onOpenAll, onCloseAll }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-white/45">
       <span>{openCount} מתוך {panelIds.length} בלוקים פתוחים</span>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => onOpenAll(panelIds)}
-          className="rounded-lg border border-white/15 px-3 py-1.5 hover:bg-white/5 text-white/70"
+          className="rounded-lg border border-white/15 px-3 py-1.5 hover:bg-white/5 text-white/70 break-words"
         >
           פתח הכל בטאב
         </button>
         <button
           type="button"
           onClick={() => onCloseAll(panelIds)}
-          className="rounded-lg border border-white/15 px-3 py-1.5 hover:bg-white/5 text-white/70"
+          className="rounded-lg border border-white/15 px-3 py-1.5 hover:bg-white/5 text-white/70 break-words"
         >
           סגור הכל בטאב
         </button>
@@ -1113,8 +1146,8 @@ export default function AdminAnalyticsPage() {
           </div>
         }
       >
-        <div className="space-y-5" dir="rtl">
-          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-4">
+        <div className="space-y-5 max-w-full overflow-x-hidden" dir="rtl" data-analytics-page-root>
+          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-4 w-full max-w-full overflow-x-hidden">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               <label className="text-sm text-white/70">
                 טווח
@@ -1175,13 +1208,16 @@ export default function AdminAnalyticsPage() {
             <>
               {sourceErrors.length ? (
                 <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
-                  יש {sourceErrors.length} מקורות נתונים חסרים — פרטים בטאב «בדיקות אמת / איכות».
+                  יש {sourceErrors.length} מקורות נתונים חסרים — פרטים בטאב «בדיקות אמת».
                 </div>
               ) : null}
 
               <AnalyticsTabBar activeTab={activeTab} onChange={setActiveTab} />
 
-              <div className="rounded-3xl border border-white/10 bg-slate-950/40 p-4 md:p-5" data-analytics-active-tab={activeTab}>
+              <div
+                className="rounded-3xl border border-white/10 bg-slate-950/40 p-4 md:p-5 w-full max-w-full overflow-x-hidden"
+                data-analytics-active-tab={activeTab}
+              >
                 {renderTabContent()}
               </div>
             </>

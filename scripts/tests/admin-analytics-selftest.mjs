@@ -20,22 +20,30 @@ assert.match(page, /adminAuthFetch\(token, `\/api\/admin\/analytics\?/, "page mu
 assert.doesNotMatch(page, /demo|mock|fake/i, "admin analytics page must not contain demo/mock/fake data");
 for (const label of [
   "סקירה כללית",
-  "חשבונות והרשמות",
+  "חשבונות",
   "הורים",
   "ילדים",
   "למידה",
   "דוחות",
   "פעילויות אישיות",
   "מורים פרטיים",
+  "ספרים ושמע",
   "משפכי שימוש",
   "חזרה לשימוש",
   "נטישה",
-  "שימוש בפיצ׳רים",
-  "בדיקות אמת / איכות",
+  "שימוש",
+  "בדיקות אמת",
 ]) {
   assert.match(page, new RegExp(label), `admin analytics page missing main tab: ${label}`);
 }
 assert.match(page, /ANALYTICS_MAIN_TABS/, "page must define main tab navigation");
+assert.match(page, /data-analytics-tab-bar/, "page must mark tab bar for layout QA");
+assert.match(page, /data-analytics-page-root/, "page must mark root container for layout QA");
+assert.match(page, /flex flex-wrap gap-2 w-full max-w-full/, "tab bar must wrap tabs instead of horizontal scroll");
+assert.doesNotMatch(page, /overflow-x-auto/, "analytics page must not use horizontal scroll containers");
+assert.doesNotMatch(page, /overflow-x-scroll/, "analytics page must not use horizontal scroll containers");
+assert.doesNotMatch(page, /scrollbar-thin/, "analytics tab bar must not use inner scrollbar");
+assert.doesNotMatch(page, /whitespace-nowrap/, "analytics page must allow text wrap to prevent overflow");
 assert.match(page, /CollapsiblePanel/, "page must use collapsible panels");
 assert.match(page, /defaultOpen=\{false\}/, "collapsible panels must default to closed");
 assert.match(page, /aria-expanded/, "collapsible panels must expose expanded state");
