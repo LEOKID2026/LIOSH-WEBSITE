@@ -38,12 +38,18 @@ for (const label of [
 }
 assert.match(page, /ANALYTICS_MAIN_TABS/, "page must define main tab navigation");
 assert.match(page, /data-analytics-tab-bar/, "page must mark tab bar for layout QA");
+assert.match(page, /data-analytics-filter-summary/, "page must use compact collapsible filter summary");
+assert.match(page, /שינוי סינון/, "filters must open via compact toggle button");
+assert.match(page, /buildFilterSummary/, "page must build compact filter summary line");
+assert.match(page, /filtersOpen/, "filters must default to closed state");
 assert.match(page, /data-analytics-page-root/, "page must mark root container for layout QA");
-assert.match(page, /flex flex-wrap gap-2 w-full max-w-full/, "tab bar must wrap tabs instead of horizontal scroll");
+assert.match(page, /flex flex-wrap gap-1\.5 w-full max-w-full/, "tab bar must wrap tabs instead of horizontal scroll");
 assert.doesNotMatch(page, /overflow-x-auto/, "analytics page must not use horizontal scroll containers");
 assert.doesNotMatch(page, /overflow-x-scroll/, "analytics page must not use horizontal scroll containers");
 assert.doesNotMatch(page, /scrollbar-thin/, "analytics tab bar must not use inner scrollbar");
 assert.doesNotMatch(page, /whitespace-nowrap/, "analytics page must allow text wrap to prevent overflow");
+assert.doesNotMatch(page, /TopList title="מטבעות לפי סיבה"/, "panel content must not repeat accordion title");
+assert.doesNotMatch(page, /TopList title="מטבעות לפי יום"/, "panel content must not repeat accordion title");
 assert.match(page, /CollapsiblePanel/, "page must use collapsible panels");
 assert.match(page, /defaultOpen=\{false\}/, "collapsible panels must default to closed");
 assert.match(page, /aria-expanded/, "collapsible panels must expose expanded state");

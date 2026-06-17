@@ -77,6 +77,55 @@ export const ANALYTICS_MAIN_TABS = [
   { id: "quality", label: "בדיקות אמת" },
 ];
 
+function formatDateHe(iso) {
+  if (!iso || typeof iso !== "string") return iso || "—";
+  const [y, m, d] = iso.split("-");
+  if (!y || !m || !d) return iso;
+  return `${d}/${m}/${y}`;
+}
+
+function labelFromOptions(value, options, fallback = "—") {
+  return options.find((item) => item.value === value)?.label || fallback;
+}
+
+function buildFilterSummary({ preset, from, to, grade, subject, childStatus, dashboard }) {
+  const presetLabel = labelFromOptions(preset, PRESETS, preset);
+  const gradeLabel = labelFromOptions(grade, GRADES, grade);
+  const subjectLabel = labelFromOptions(subject, SUBJECTS, subject);
+  const childLabel = labelFromOptions(childStatus, CHILD_STATUSES, childStatus);
+  const rangeFrom = dashboard?.filters?.range?.fromDateOnly || from;
+  const rangeTo = dashboard?.filters?.range?.toDateOnly || to;
+  return `טווח: ${presetLabel} · ${formatDateHe(rangeFrom)} - ${formatDateHe(rangeTo)} · ${gradeLabel} · ${subjectLabel} · ${childLabel}`;
+}
+
+function FilterSummaryBar({
+  summary,
+  open,
+  onToggle,
+  children,
+}) {
+  return (
+    <section
+      className="rounded-xl border border-white/10 bg-white/[0.03] p-2 w-full max-w-full overflow-x-hidden"
+      data-analytics-filter-summary
+      data-analytics-filters-open={open ? "true" : "false"}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs sm:text-sm text-white/70 break-words flex-1 min-w-0">{summary}</p>
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          className="shrink-0 rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/5"
+        >
+          {open ? "סגור סינון" : "שינוי סינון"}
+        </button>
+      </div>
+      {open ? <div className="mt-2 pt-2 border-t border-white/10">{children}</div> : null}
+    </section>
+  );
+}
+
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -138,13 +187,13 @@ function rowsSummary(rows, emptyText = "אין נתונים בטווח") {
 
 function MetricCard({ item }) {
   return (
-    <div className={`rounded-2xl border p-4 min-h-[7rem] ${statusClass(item.status)}`}>
-      <p className="text-xs text-white/55 mb-2">{formatAnalyticsLabelHe(item.label)}</p>
-      <p className="text-2xl font-bold text-white leading-tight">{valueText(item)}</p>
-      {item.unit ? <p className="text-xs text-white/45 mt-1">{formatAnalyticsUnitHe(item.unit)}</p> : null}
-      <p className="text-[11px] text-white/40 mt-2 break-words">מקור: {formatAnalyticsSourceHe(item.source)}</p>
+    <div className={`rounded-xl border p-3 ${statusClass(item.status)}`}>
+      <p className="text-[11px] text-white/55 mb-1">{formatAnalyticsLabelHe(item.label)}</p>
+      <p className="text-xl font-bold text-white leading-tight">{valueText(item)}</p>
+      {item.unit ? <p className="text-[11px] text-white/45 mt-0.5">{formatAnalyticsUnitHe(item.unit)}</p> : null}
+      <p className="text-[10px] text-white/40 mt-1 break-words">מקור: {formatAnalyticsSourceHe(item.source)}</p>
       {item.note && item.status !== "available" ? (
-        <p className="text-[11px] text-amber-100/80 mt-1">{formatAnalyticsLabelHe(item.note)}</p>
+        <p className="text-[10px] text-amber-100/80 mt-1">{formatAnalyticsLabelHe(item.note)}</p>
       ) : null}
     </div>
   );
@@ -152,7 +201,7 @@ function MetricCard({ item }) {
 
 function MetricGrid({ items }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
       {(items || []).map((item, idx) => (
         <MetricCard key={`${item.label}-${idx}`} item={item} />
       ))}
@@ -221,8 +270,8 @@ function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }
 
 function TopList({ title, rows }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-      <h4 className="font-semibold mb-3 text-white/85">{title}</h4>
+    <div className={title ? "rounded-xl border border-white/10 bg-white/[0.02] p-2" : ""}>
+      {title ? <h4 className="font-semibold mb-2 text-sm text-white/85">{title}</h4> : null}
       <SimpleTable
         rows={rows}
         columns={[
@@ -239,10 +288,10 @@ function FunnelList({ funnels }) {
     return <p className="text-sm text-white/50">אין נתונים עדיין</p>;
   }
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
       {funnels.map((funnel) => (
-        <div key={funnel.name} className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-          <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-3">
+        <div key={funnel.name} className="rounded-xl border border-white/10 bg-white/[0.02] p-2">
+          <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1 mb-2">
             <h4 className="font-semibold text-white/90 break-words">{formatAnalyticsLabelHe(funnel.name)}</h4>
             {funnel.note ? (
               <span className="text-xs text-white/45 break-words">{formatAnalyticsLabelHe(funnel.note)}</span>
@@ -282,7 +331,7 @@ export function CollapsiblePanel({
   const open = isOpen ?? defaultOpen;
   return (
     <section
-      className={`rounded-2xl border border-white/10 shadow-sm ${nested ? "bg-white/[0.02]" : "bg-slate-950/60"}`}
+      className={`rounded-xl border border-white/10 ${nested ? "bg-white/[0.02]" : "bg-slate-950/60"}`}
       data-analytics-panel={panelId}
       data-analytics-panel-open={open ? "true" : "false"}
     >
@@ -291,22 +340,22 @@ export function CollapsiblePanel({
         onClick={() => onToggle(panelId)}
         aria-expanded={open}
         aria-controls={`panel-body-${panelId}`}
-        className="w-full flex items-center gap-3 p-4 text-right hover:bg-white/[0.03] transition-colors rounded-2xl"
+        className="w-full flex items-center gap-2 p-3 text-right hover:bg-white/[0.03] transition-colors rounded-xl"
       >
         <span
-          className={`shrink-0 text-white/50 text-lg leading-none transition-transform ${open ? "rotate-90" : ""}`}
+          className={`shrink-0 text-white/50 text-base leading-none transition-transform ${open ? "rotate-90" : ""}`}
           aria-hidden
         >
           ◀
         </span>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-white/90 text-base break-words">{title}</h3>
-          {subtitle ? <p className="text-xs text-white/45 mt-1">{subtitle}</p> : null}
-          {!open && summary ? <p className="text-sm text-amber-100/75 mt-1 truncate">{summary}</p> : null}
+          <h3 className="font-semibold text-white/90 text-sm break-words">{title}</h3>
+          {subtitle && open ? <p className="text-[11px] text-white/45 mt-0.5">{subtitle}</p> : null}
+          {!open && summary ? <p className="text-xs text-amber-100/75 mt-0.5 truncate">{summary}</p> : null}
         </div>
       </button>
       {open ? (
-        <div id={`panel-body-${panelId}`} className="px-4 pb-4 border-t border-white/10 pt-4 space-y-4">
+        <div id={`panel-body-${panelId}`} className="px-3 pb-3 border-t border-white/10 pt-2 space-y-2">
           {children}
         </div>
       ) : null}
@@ -317,18 +366,18 @@ export function CollapsiblePanel({
 function AnalyticsTabBar({ activeTab, onChange }) {
   return (
     <nav
-      className="rounded-2xl border border-white/10 bg-white/[0.03] p-2 w-full max-w-full overflow-x-hidden"
+      className="rounded-xl border border-white/10 bg-white/[0.03] p-1.5 w-full max-w-full overflow-x-hidden"
       aria-label="קטגוריות אנליטיקה"
       data-analytics-tab-bar
     >
-      <div className="flex flex-wrap gap-2 w-full max-w-full">
+      <div className="flex flex-wrap gap-1.5 w-full max-w-full">
         {ANALYTICS_MAIN_TABS.map((tab) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => onChange(tab.id)}
             aria-current={activeTab === tab.id ? "page" : undefined}
-            className={`rounded-xl px-3 py-2 text-sm font-semibold text-center break-words max-w-full transition-colors ${
+            className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold text-center break-words max-w-full transition-colors ${
               activeTab === tab.id
                 ? "bg-amber-500 text-slate-950 shadow ring-2 ring-amber-300/40"
                 : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
@@ -424,6 +473,7 @@ export default function AdminAnalyticsPage() {
   const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const trackedOpenKeyRef = useRef("");
   const { openPanels, togglePanel, openAllPanels, closeAllPanels, isPanelOpen } = usePanelToggleState();
 
@@ -542,13 +592,18 @@ export default function AdminAnalyticsPage() {
 
   const currentPanelIds = tabPanelIds[activeTab] || [];
 
+  const filterSummary = useMemo(
+    () => buildFilterSummary({ preset, from, to, grade, subject, childStatus, dashboard }),
+    [preset, from, to, grade, subject, childStatus, dashboard]
+  );
+
   const renderTabContent = () => {
     if (!dashboard) return null;
 
     switch (activeTab) {
       case "overview":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar
               panelIds={currentPanelIds}
               openPanels={openPanels}
@@ -570,7 +625,7 @@ export default function AdminAnalyticsPage() {
 
       case "accounts":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="accounts-totals"
@@ -589,10 +644,10 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("accounts-by-date")}
             >
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                <TopList title="חשבונות לפי יום הצטרפות" rows={sections.accounts?.joinedByDay} />
-                <TopList title="חשבונות לפי שבוע הצטרפות" rows={sections.accounts?.joinedByWeek} />
-                <TopList title="חשבונות לפי חודש הצטרפות" rows={sections.accounts?.joinedByMonth} />
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
+                <TopList title="לפי יום" rows={sections.accounts?.joinedByDay} />
+                <TopList title="לפי שבוע" rows={sections.accounts?.joinedByWeek} />
+                <TopList title="לפי חודש" rows={sections.accounts?.joinedByMonth} />
               </div>
             </Panel>
             <Panel
@@ -602,10 +657,10 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("accounts-by-type")}
             >
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                <TopList title="חשבונות לפי פרסונה" rows={sections.accounts?.byPersona} />
-                <TopList title="חשבונות לפי תפקיד באימות" rows={sections.accounts?.byAuthRole} />
-                <TopList title="סטטוסי הרשאות" rows={sections.accounts?.byStatus} />
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
+                <TopList title="פרסונה" rows={sections.accounts?.byPersona} />
+                <TopList title="תפקיד באימות" rows={sections.accounts?.byAuthRole} />
+                <TopList title="סטטוס הרשאות" rows={sections.accounts?.byStatus} />
               </div>
             </Panel>
           </div>
@@ -613,7 +668,7 @@ export default function AdminAnalyticsPage() {
 
       case "parents":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="parents-summary"
@@ -632,10 +687,10 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("parents-by-date")}
             >
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                <TopList title="הורים לפי יום הצטרפות" rows={sections.parentJoin?.byDay} />
-                <TopList title="הורים לפי שבוע הצטרפות" rows={sections.parentJoin?.byWeek} />
-                <TopList title="הורים לפי חודש הצטרפות" rows={sections.parentJoin?.byMonth} />
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
+                <TopList title="לפי יום" rows={sections.parentJoin?.byDay} />
+                <TopList title="לפי שבוע" rows={sections.parentJoin?.byWeek} />
+                <TopList title="לפי חודש" rows={sections.parentJoin?.byMonth} />
               </div>
             </Panel>
             <Panel
@@ -662,7 +717,7 @@ export default function AdminAnalyticsPage() {
 
       case "children":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="children-join-summary"
@@ -681,10 +736,10 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("children-by-date")}
             >
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                <TopList title="ילדים לפי יום הוספה" rows={sections.childJoin?.byDay} />
-                <TopList title="ילדים לפי שבוע הוספה" rows={sections.childJoin?.byWeek} />
-                <TopList title="ילדים לפי חודש הוספה" rows={sections.childJoin?.byMonth} />
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
+                <TopList title="לפי יום" rows={sections.childJoin?.byDay} />
+                <TopList title="לפי שבוע" rows={sections.childJoin?.byWeek} />
+                <TopList title="לפי חודש" rows={sections.childJoin?.byMonth} />
               </div>
             </Panel>
             <Panel
@@ -722,7 +777,7 @@ export default function AdminAnalyticsPage() {
 
       case "learning":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="learning-summary"
@@ -741,7 +796,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("learning-by-subject")}
             >
-              <TopList title="מקצועות מובילים" rows={sections.learning?.usage?.topSubjects} />
+              <TopList rows={sections.learning?.usage?.topSubjects} />
             </Panel>
             <Panel
               panelId="learning-by-topic"
@@ -750,7 +805,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("learning-by-topic")}
             >
-              <TopList title="נושאים מובילים" rows={sections.learning?.usage?.topTopics} />
+              <TopList rows={sections.learning?.usage?.topTopics} />
             </Panel>
             <Panel
               panelId="learning-by-grade"
@@ -759,9 +814,9 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("learning-by-grade")}
             >
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                <TopList title="שימוש מקצוע לפי כיתה" rows={sections.learning?.usage?.subjectByGrade} />
-                <TopList title="שימוש נושא לפי כיתה" rows={sections.learning?.usage?.topicByGrade} />
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                <TopList title="מקצוע × כיתה" rows={sections.learning?.usage?.subjectByGrade} />
+                <TopList title="נושא × כיתה" rows={sections.learning?.usage?.topicByGrade} />
               </div>
             </Panel>
             <Panel
@@ -819,7 +874,7 @@ export default function AdminAnalyticsPage() {
 
       case "reports":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="reports-open-export"
@@ -838,8 +893,8 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("reports-truth-check")}
             >
-              <p className="text-sm text-white/55">
-                המדדים למעלה כוללים בדיקות אמת מול מקורות מאגר הנתונים. פתחו את «פתיחת דוחות וייצוא PDF» לפירוט מלא.
+              <p className="text-xs text-white/55">
+                המדדים בבלוק «פתיחת דוחות וייצוא PDF» כוללים השוואה מול מקורות מאגר הנתונים.
               </p>
             </Panel>
             <Panel
@@ -857,7 +912,7 @@ export default function AdminAnalyticsPage() {
 
       case "parentActivities":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="parent-activities-summary"
@@ -876,7 +931,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("parent-activities-by-subject")}
             >
-              <TopList title="לפי מקצוע" rows={sections.parentActivities?.bySubject} />
+              <TopList rows={sections.parentActivities?.bySubject} />
             </Panel>
             <Panel
               panelId="parent-activities-by-topic"
@@ -885,7 +940,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("parent-activities-by-topic")}
             >
-              <TopList title="לפי נושא" rows={sections.parentActivities?.byTopic} />
+              <TopList rows={sections.parentActivities?.byTopic} />
             </Panel>
             <Panel
               panelId="parent-activities-by-grade"
@@ -894,14 +949,14 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("parent-activities-by-grade")}
             >
-              <TopList title="לפי כיתת ילד" rows={sections.parentActivities?.byChildGrade} />
+              <TopList rows={sections.parentActivities?.byChildGrade} />
             </Panel>
           </div>
         );
 
       case "teachers":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="teachers-summary"
@@ -920,10 +975,10 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("teachers-by-date")}
             >
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                <TopList title="מורים לפי יום הצטרפות" rows={sections.teachers?.byDay} />
-                <TopList title="מורים לפי שבוע הצטרפות" rows={sections.teachers?.byWeek} />
-                <TopList title="מורים לפי חודש הצטרפות" rows={sections.teachers?.byMonth} />
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
+                <TopList title="לפי יום" rows={sections.teachers?.byDay} />
+                <TopList title="לפי שבוע" rows={sections.teachers?.byWeek} />
+                <TopList title="לפי חודש" rows={sections.teachers?.byMonth} />
               </div>
             </Panel>
             <Panel
@@ -933,14 +988,14 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("teachers-activity")}
             >
-              <TopList title="פעילות מורים לפי יום" rows={sections.teachers?.activityByDay} />
+              <TopList rows={sections.teachers?.activityByDay} />
             </Panel>
           </div>
         );
 
       case "books":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="books-summary"
@@ -959,14 +1014,14 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("books-top-pages")}
             >
-              <TopList title="עמודי ספר מובילים" rows={sections.topBookPages} />
+              <TopList rows={sections.topBookPages} />
             </Panel>
           </div>
         );
 
       case "rewards":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="rewards-summary"
@@ -985,7 +1040,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("rewards-by-day")}
             >
-              <TopList title="מטבעות לפי יום" rows={sections.rewardsByDay} />
+              <TopList rows={sections.rewardsByDay} />
             </Panel>
             <Panel
               panelId="rewards-by-reason"
@@ -994,14 +1049,14 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("rewards-by-reason")}
             >
-              <TopList title="מטבעות לפי סיבה" rows={sections.rewardsByReason} />
+              <TopList rows={sections.rewardsByReason} />
             </Panel>
           </div>
         );
 
       case "funnels":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="funnels-all"
@@ -1018,7 +1073,7 @@ export default function AdminAnalyticsPage() {
 
       case "retention":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="retention-summary"
@@ -1035,7 +1090,7 @@ export default function AdminAnalyticsPage() {
 
       case "abandonment":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="abandonment-summary"
@@ -1052,7 +1107,7 @@ export default function AdminAnalyticsPage() {
 
       case "features":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="features-summary"
@@ -1070,7 +1125,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("features-most-used")}
             >
-              <TopList title="התכונות הכי בשימוש" rows={sections.featureUsage?.mostUsed} />
+              <TopList rows={sections.featureUsage?.mostUsed} />
             </Panel>
             <Panel
               panelId="features-least-used"
@@ -1079,7 +1134,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("features-least-used")}
             >
-              <TopList title="התכונות הכי פחות בשימוש" rows={sections.featureUsage?.leastUsed} />
+              <TopList rows={sections.featureUsage?.leastUsed} />
             </Panel>
             <Panel
               panelId="features-by-grade"
@@ -1088,7 +1143,7 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("features-by-grade")}
             >
-              <TopList title="שימוש לפי כיתה" rows={sections.featureUsage?.byGrade} />
+              <TopList rows={sections.featureUsage?.byGrade} />
             </Panel>
             <Panel
               panelId="features-by-subject"
@@ -1097,14 +1152,14 @@ export default function AdminAnalyticsPage() {
               toggle={togglePanel}
               isOpen={isPanelOpen("features-by-subject")}
             >
-              <TopList title="שימוש לפי מקצוע" rows={sections.featureUsage?.bySubject} />
+              <TopList rows={sections.featureUsage?.bySubject} />
             </Panel>
           </div>
         );
 
       case "quality":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
             <Panel
               panelId="quality-source-errors"
@@ -1115,7 +1170,7 @@ export default function AdminAnalyticsPage() {
               isOpen={isPanelOpen("quality-source-errors")}
             >
               {sourceErrors.length ? (
-                <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
+                <div className="rounded-xl border border-amber-400/25 bg-amber-400/10 p-2 text-xs text-amber-100">
                   חלק ממקורות הנתונים חסרים או לא זמינים:{" "}
                   {sourceErrors.map((e) => formatAnalyticsTableHe(e.table)).join(", ")}
                 </div>
@@ -1140,65 +1195,73 @@ export default function AdminAnalyticsPage() {
           <div>
             <p className="text-xs text-white/50 mb-1">ניהול מערכת</p>
             <h1 className="text-xl md:text-2xl font-bold text-right">{ADMIN_ANALYTICS_TITLE}</h1>
-            <p className="text-sm text-white/55 mt-2">
+            <p className="text-xs text-white/55 mt-1">
               מספרים ממקורות מאגר נתונים קיימים בלבד. בחרו קטגוריה ופתחו רק את הבלוקים שמעניינים אתכם.
             </p>
           </div>
         }
       >
-        <div className="space-y-5 max-w-full overflow-x-hidden" dir="rtl" data-analytics-page-root>
-          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-4 w-full max-w-full overflow-x-hidden">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-              <label className="text-sm text-white/70">
+        <div className="space-y-3 max-w-full overflow-x-hidden" dir="rtl" data-analytics-page-root>
+          <FilterSummaryBar
+            summary={filterSummary}
+            open={filtersOpen}
+            onToggle={() => setFiltersOpen((prev) => !prev)}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+              <label className="text-xs text-white/70">
                 טווח
-                <select value={preset} onChange={(e) => setPreset(e.target.value)} className="mt-1 w-full rounded-xl bg-slate-950 border border-white/15 px-3 py-2 text-white">
+                <select value={preset} onChange={(e) => setPreset(e.target.value)} className="mt-1 w-full rounded-lg bg-slate-950 border border-white/15 px-2 py-1.5 text-sm text-white">
                   {PRESETS.map((item) => (
                     <option key={item.value} value={item.value}>{item.label}</option>
                   ))}
                 </select>
               </label>
-              <label className="text-sm text-white/70">
+              <label className="text-xs text-white/70">
                 מתאריך
-                <input type="date" value={from} disabled={preset !== "custom"} onChange={(e) => setFrom(e.target.value)} className="mt-1 w-full rounded-xl bg-slate-950 border border-white/15 px-3 py-2 text-white disabled:opacity-50" />
+                <input type="date" value={from} disabled={preset !== "custom"} onChange={(e) => setFrom(e.target.value)} className="mt-1 w-full rounded-lg bg-slate-950 border border-white/15 px-2 py-1.5 text-sm text-white disabled:opacity-50" />
               </label>
-              <label className="text-sm text-white/70">
+              <label className="text-xs text-white/70">
                 עד תאריך
-                <input type="date" value={to} disabled={preset !== "custom"} onChange={(e) => setTo(e.target.value)} className="mt-1 w-full rounded-xl bg-slate-950 border border-white/15 px-3 py-2 text-white disabled:opacity-50" />
+                <input type="date" value={to} disabled={preset !== "custom"} onChange={(e) => setTo(e.target.value)} className="mt-1 w-full rounded-lg bg-slate-950 border border-white/15 px-2 py-1.5 text-sm text-white disabled:opacity-50" />
               </label>
-              <label className="text-sm text-white/70">
+              <label className="text-xs text-white/70">
                 כיתה
-                <select value={grade} onChange={(e) => setGrade(e.target.value)} className="mt-1 w-full rounded-xl bg-slate-950 border border-white/15 px-3 py-2 text-white">
+                <select value={grade} onChange={(e) => setGrade(e.target.value)} className="mt-1 w-full rounded-lg bg-slate-950 border border-white/15 px-2 py-1.5 text-sm text-white">
                   {GRADES.map((item) => (
                     <option key={item.value} value={item.value}>{item.label}</option>
                   ))}
                 </select>
               </label>
-              <label className="text-sm text-white/70">
+              <label className="text-xs text-white/70">
                 מקצוע
-                <select value={subject} onChange={(e) => setSubject(e.target.value)} className="mt-1 w-full rounded-xl bg-slate-950 border border-white/15 px-3 py-2 text-white">
+                <select value={subject} onChange={(e) => setSubject(e.target.value)} className="mt-1 w-full rounded-lg bg-slate-950 border border-white/15 px-2 py-1.5 text-sm text-white">
                   {SUBJECTS.map((item) => (
                     <option key={item.value} value={item.value}>{item.label}</option>
                   ))}
                 </select>
               </label>
-              <label className="text-sm text-white/70">
+              <label className="text-xs text-white/70">
                 סטטוס ילד
-                <select value={childStatus} onChange={(e) => setChildStatus(e.target.value)} className="mt-1 w-full rounded-xl bg-slate-950 border border-white/15 px-3 py-2 text-white">
+                <select value={childStatus} onChange={(e) => setChildStatus(e.target.value)} className="mt-1 w-full rounded-lg bg-slate-950 border border-white/15 px-2 py-1.5 text-sm text-white">
                   {CHILD_STATUSES.map((item) => (
                     <option key={item.value} value={item.value}>{item.label}</option>
                   ))}
                 </select>
               </label>
-              <div className="flex items-end">
-                <button type="button" onClick={() => accessToken && load(accessToken)} className="w-full rounded-xl bg-amber-500/90 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2">
+              <div className="flex items-end sm:col-span-2 lg:col-span-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFiltersOpen(false);
+                    if (accessToken) void load(accessToken);
+                  }}
+                  className="w-full rounded-lg bg-amber-500/90 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1.5 text-sm"
+                >
                   רענון נתונים
                 </button>
               </div>
             </div>
-            {dashboard?.filters?.range?.label ? (
-              <p className="text-xs text-white/45 mt-3">טווח מחושב: {dashboard.filters.range.label}</p>
-            ) : null}
-          </section>
+          </FilterSummaryBar>
 
           {state === "loading" || loading ? (
             <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>
@@ -1207,7 +1270,7 @@ export default function AdminAnalyticsPage() {
           ) : dashboard ? (
             <>
               {sourceErrors.length ? (
-                <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
+                <div className="rounded-xl border border-amber-400/25 bg-amber-400/10 p-2 text-xs text-amber-100">
                   יש {sourceErrors.length} מקורות נתונים חסרים — פרטים בטאב «בדיקות אמת».
                 </div>
               ) : null}
@@ -1215,7 +1278,7 @@ export default function AdminAnalyticsPage() {
               <AnalyticsTabBar activeTab={activeTab} onChange={setActiveTab} />
 
               <div
-                className="rounded-3xl border border-white/10 bg-slate-950/40 p-4 md:p-5 w-full max-w-full overflow-x-hidden"
+                className="rounded-xl border border-white/10 bg-slate-950/40 p-3 w-full max-w-full overflow-x-hidden"
                 data-analytics-active-tab={activeTab}
               >
                 {renderTabContent()}
