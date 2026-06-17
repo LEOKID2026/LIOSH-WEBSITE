@@ -180,7 +180,8 @@ const DIAGRAM_LINE_LAYOUT_CLASS = [
   "[&_[data-book-label]]:w-[3rem]",
   "[&_[data-book-label]]:shrink-0",
   "[&_[data-book-label]]:text-right",
-  "[&_[data-book-label-gap]]:w-[0.25em]",
+  "[&_[data-book-label-gap]]:w-[0.5em]",
+  "[&_[data-book-label-gap]]:min-w-[0.5em]",
   "[&_[data-book-label-gap]]:shrink-0",
 ].join(" ");
 

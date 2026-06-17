@@ -151,8 +151,34 @@ test("carry decomposition labels split correctly", () => {
   for (const line of lines) {
     const runs = splitMixedHebrewMathRuns(line);
     assert.equal(runs[0].type, "prose");
+    assert.match(runs[0].value, /:$/);
     assert.equal(runs[1].type, "math");
   }
+});
+
+test("labeled and pure equations drop trailing period", () => {
+  const cases = [
+    ["עשרות: 60 − 20 = 40.", "60 − 20 = 40"],
+    ["60 − 20 = 40.", "60 − 20 = 40"],
+    ["40 + 4 = 44.", "40 + 4 = 44"],
+    ["8 − 4 = 4.", "8 − 4 = 4"],
+  ];
+  for (const [input, expectedMath] of cases) {
+    const runs = splitMixedHebrewMathRuns(input);
+    const math = runs.find((run) => run.type === "math");
+    assert.equal(math?.value, expectedMath, input);
+    assert.equal(
+      runs.some((run) => run.type === "prose" && run.value === "."),
+      false,
+      input
+    );
+  }
+});
+
+test("decimal approximations keep their period", () => {
+  const runs = splitMixedHebrewMathRuns("π ≈ 3.14.");
+  assert.equal(runs[0].type, "math");
+  assert.match(runs[0].value, /3\.14/);
 });
 
 test("numbered list with equation keeps prefix RTL", () => {

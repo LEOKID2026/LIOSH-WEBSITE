@@ -492,8 +492,8 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
     }
 
     const tensRow = layout.find((row) => row.innerText.startsWith("עשרות:"));
-    expect(tensRow?.labelToMathGapPx ?? 0).toBeGreaterThanOrEqual(2);
-    expect(tensRow?.labelToMathGapPx ?? 99).toBeLessThanOrEqual(8);
+    expect(tensRow?.labelToMathGapPx ?? 0).toBeGreaterThanOrEqual(4);
+    expect(tensRow?.visualText).toMatch(/^עשרות:\s+60 − 20 = 40$/);
 
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/g2-sub_two-section-3-exact-block.png`,

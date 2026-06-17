@@ -6,6 +6,7 @@ import {
   bookProseIsolateStyle,
   isFullEquationLine,
   isMathLikeText,
+  stripTrailingEquationPeriod,
 } from "../../lib/learning-book/book-math-display";
 import { splitMixedHebrewMathRuns } from "../../lib/bidi/mixed-hebrew-math-runs";
 import { parseTemplateRuns } from "../../lib/learning-book/learning-math-line-templates";
@@ -25,7 +26,7 @@ const HEBREW_CHAR = /[\u0590-\u05FF]/;
 
 function MathSpan({ value, className = "" }) {
   const { classes: theme } = useBookGradeTheme();
-  const display = stripStrayMarkdown(value).trim();
+  const display = stripTrailingEquationPeriod(stripStrayMarkdown(value).trim());
 
   return (
     <span
@@ -294,7 +295,7 @@ function DiagramLabelSpacer() {
 function DiagramBodySlot({ children }) {
   return (
     <span
-      className="book-diagram-body-slot min-w-0 flex-1"
+      className="book-diagram-body-slot min-w-0 flex-1 [margin-inline-start:0.15em]"
       data-book-diagram-body="true"
     >
       {children}
@@ -308,11 +309,12 @@ function wrapDiagramBody(content, diagramLayout) {
 }
 
 function renderLabelWithBody(label, body, diagramLayout = false) {
+  const normalizedBody = stripTrailingEquationPeriod(String(body || "").trim());
   return (
     <>
       <BookLineLabel label={label} />
       <LabelBodyGap />
-      {wrapDiagramBody(renderMixedBodyInner(body), diagramLayout)}
+      {wrapDiagramBody(renderMixedBodyInner(normalizedBody), diagramLayout)}
     </>
   );
 }
