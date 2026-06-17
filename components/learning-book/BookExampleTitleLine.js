@@ -22,7 +22,7 @@ export default function BookExampleTitleLine({ text }) {
       <bdi dir="ltr" style={mathIslandStyle} className="tabular-nums">
         {mathPart}
       </bdi>
-      <span aria-hidden="true">{separator}</span>
+      <span>{separator}</span>
       <span>{hebrewPart}</span>
       {trailingColon ? <span>:</span> : null}
     </p>

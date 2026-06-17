@@ -1,0 +1,102 @@
+{
+  "scope": "learning-book/math visual renderers",
+  "forbiddenVisiblePatterns": [
+    "5030",
+    "3020",
+    "5950",
+    "4060",
+    "4440",
+    "2552",
+    "246 + 6 + 6",
+    "137 + 6",
+    "10 + 133",
+    "24זוגי",
+    "צעדים ימינה מ־2 3",
+    "? = 20 + 10",
+    "124 = 100 + 20 + 4",
+    "405 = 400 + 0 + 5"
+  ],
+  "renderers": [
+    {
+      "renderer": "BookVerticalArithmetic",
+      "status": "certified specialized renderer",
+      "routes": [
+        "/learning/book/math/g2/add_vertical#section-3",
+        "/learning/book/math/g2/sub_vertical#section-3"
+      ],
+      "tests": [
+        "tests/e2e/learning-book-g2-bidi-route.spec.ts",
+        "scripts/qa/scan-learning-book-g2-route-bidi.mjs"
+      ],
+      "screenshots": [
+        "docs/qa/rtl-route-regression-screenshots/g2-add_vertical-section-3.png",
+        "docs/qa/rtl-route-regression-screenshots/g2-sub_vertical-section-3.png"
+      ]
+    },
+    {
+      "renderer": "BookPlaceValueEquation",
+      "status": "certified specialized renderer",
+      "routes": ["/learning/book/math/g2/ns_place_tens_units#section-3"],
+      "tests": [
+        "tests/e2e/learning-book-g2-bidi-route.spec.ts",
+        "scripts/qa/scan-learning-book-g2-route-bidi.mjs"
+      ],
+      "screenshots": ["docs/qa/rtl-route-regression-screenshots/g2-ns_place_tens_units-section-3.png"]
+    },
+    {
+      "renderer": "NumberLineRow",
+      "status": "certified specialized renderer",
+      "routes": [
+        "/learning/book/math/g2/ns_neighbors#section-3",
+        "/learning/book/math/g1/ns_number_line#section-5"
+      ],
+      "tests": ["tests/e2e/learning-book-g2-bidi-route.spec.ts"],
+      "screenshots": ["docs/qa/rtl-route-regression-screenshots/g2-ns_neighbors-section-3.png"]
+    },
+    {
+      "renderer": "PlaceValueDiagram",
+      "status": "certified specialized renderer",
+      "routes": ["/learning/book/math/g2/ns_place_tens_units#section-3"],
+      "tests": ["tests/e2e/learning-book-g2-bidi-route.spec.ts"],
+      "screenshots": ["docs/qa/rtl-route-regression-screenshots/g2-ns_place_tens_units-section-3.png"]
+    },
+    {
+      "renderer": "FrameDiagram",
+      "status": "certified specialized renderer",
+      "routes": [
+        "/learning/book/math/g2/ns_complement10#section-3",
+        "/learning/book/math/g1/ns_complement10#section-3"
+      ],
+      "contract": "Frame border rows remain LTR; rows containing Hebrew are routed through MixedDiagramLine / BookContentLine / MixedHebrewMathText so prose never enters a full-row LTR island.",
+      "tests": [
+        "tests/e2e/learning-book-g2-bidi-route.spec.ts",
+        "scripts/qa/scan-learning-book-g2-route-bidi.mjs"
+      ],
+      "screenshots": ["docs/qa/rtl-route-regression-screenshots/g2-ns_complement10-section-3-frame.png"]
+    },
+    {
+      "renderer": "object/card/coin visual rows",
+      "status": "certified specialized renderer",
+      "routes": [
+        "/learning/book/math/g2/mul#section-3",
+        "/learning/book/math/g2/wp_groups_g2#section-3",
+        "/learning/book/math/g2/wp_coins#section-3"
+      ],
+      "tests": ["tests/e2e/learning-book-g2-bidi-route.spec.ts"],
+      "screenshots": ["docs/qa/rtl-route-regression-screenshots/g2-mul-section-3-exact-block.png"]
+    },
+    {
+      "renderer": "BookExampleTitleLine",
+      "status": "certified specialized renderer",
+      "routes": [
+        "/learning/book/math/g2/add_two#section-3",
+        "/learning/book/math/g2/sub_two#section-3"
+      ],
+      "tests": ["tests/e2e/learning-book-g2-bidi-route.spec.ts"],
+      "screenshots": [
+        "docs/qa/rtl-route-regression-screenshots/g2-add_two-section-3-exact-block.png",
+        "docs/qa/rtl-route-regression-screenshots/g2-sub_two-section-3-exact-block.png"
+      ]
+    }
+  ]
+}

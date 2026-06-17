@@ -274,10 +274,11 @@ function LabelBodyGap() {
   return (
     <span
       className="book-label-body-gap"
-      aria-hidden="true"
       style={bookLabelBodyGapStyle}
       data-book-label-gap="true"
-    />
+    >
+      {"\u00a0"}
+    </span>
   );
 }
 

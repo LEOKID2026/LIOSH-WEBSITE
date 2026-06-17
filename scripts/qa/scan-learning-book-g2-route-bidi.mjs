@@ -64,6 +64,18 @@ const ROUTES = [
     expected: ["100 + 20 + 4 = 124", "400 + 0 + 5 = 405"],
   },
   {
+    pageId: "ns_place_tens_units",
+    section: 3,
+    title: "עשרות ואחדות",
+    expected: [
+      "1 מאה + 2 עשרות + 4 אחדות = 124",
+      "100 + 20 + 4 = 124",
+      "דוגמה נוספת — 405:",
+      "4 מאות, 0 עשרות, 5 אחדות",
+      "400 + 0 + 5 = 405",
+    ],
+  },
+  {
     pageId: "cmp",
     section: 3,
     title: "השוואות",
@@ -88,10 +100,122 @@ const FORBIDDEN = [
   "405 = 400 + 0 + 5",
 ];
 
+const EXACT_BLOCKS = [
+  {
+    pageId: "add_two",
+    section: 3,
+    title: "חיבור עם נשיאה",
+    expected: [
+      "58 = 50 + 8",
+      "37 = 30 + 7",
+      "עשרות: 50 + 30 = 80",
+      "אחדות: 8 + 7 = 15 → 5, נשיאה 1",
+      "סה״כ: 80 + 15 = 95",
+      "58 + 37 = 95",
+    ],
+    requireStructuredDiagram: true,
+    answer: "58 + 37 = 95",
+  },
+  {
+    pageId: "sub_two",
+    section: 3,
+    title: "חיסור",
+    expected: [
+      "68 = 60 + 8",
+      "24 = 20 + 4",
+      "עשרות: 60 − 20 = 40",
+      "אחדות: 8 − 4 = 4",
+      "סה״כ: 40 + 4 = 44",
+      "68 − 24 = 44",
+    ],
+    requireStructuredDiagram: true,
+    answer: "68 − 24 = 44",
+  },
+  {
+    pageId: "add_vertical",
+    section: 3,
+    title: "חיבור מאונך",
+    expected: [
+      "אחדות: 7 + 8 = 15 → כותבים 5, מעבירים 1 לעשרות",
+      "עשרות: 4 + 2 + 1 (נשיאה) = 7",
+      "47 + 28 = 75",
+    ],
+  },
+  {
+    pageId: "sub_vertical",
+    section: 3,
+    title: "חיסור עם השאלה",
+    expected: [
+      "באחדות 2 קטן מ-7 → מחליפים עשרה: 52 → 42 + 12 (4 עשרות, 12 אחדות)",
+      "אחדות: 12 − 7 = 5",
+      "עשרות: 4 − 2 = 2",
+      "52 − 27 = 25",
+    ],
+  },
+  {
+    pageId: "mul",
+    section: 3,
+    title: "כפל קבוצות",
+    expected: ["4 × 6 = 24", "חיבור חוזר: 6 + 6 + 6 + 6 = 24"],
+  },
+  {
+    pageId: "ns_even_odd",
+    section: 3,
+    title: "זוגי ואי-זוגי",
+    expected: [
+      "24 — זוגי:",
+      "לכל כוכב יש שותף → 24 זוגי.",
+      "35 — אי-זוגי:",
+      "נשאר כוכב אחד לבד → 35 אי-זוגי.",
+      "טיפ: ב-35 הספרה האחרונה היא 5 → אי-זוגי.",
+    ],
+  },
+  {
+    pageId: "ns_neighbors",
+    section: 3,
+    title: "ציר מספרים",
+    expected: ["248 − 1 = 247", "248 + 1 = 249"],
+  },
+  {
+    pageId: "ns_place_tens_units",
+    section: 3,
+    title: "עשרות ואחדות",
+    expected: [
+      "1 מאה + 2 עשרות + 4 אחדות = 124",
+      "100 + 20 + 4 = 124",
+      "דוגמה נוספת — 405:",
+      "4 מאות, 0 עשרות, 5 אחדות",
+      "400 + 0 + 5 = 405",
+    ],
+  },
+  {
+    pageId: "cmp",
+    section: 3,
+    title: "השוואות",
+    expected: [
+      "מאות: 6 = 6 → שוות, ממשיכים",
+      "עשרות: 1 < 2",
+      "612 קטן מ-628, לכן: 612 < 628",
+    ],
+  },
+  {
+    pageId: "ns_complement10",
+    section: 3,
+    title: "FrameDiagram מסגרת עשר",
+    expected: [
+      "מסגרת עשר — 7 מקומות מלאים, 3 מקומות ריקים:",
+      "┌──┬──┬──┬──┬──┬──┬──┬──┬──┬──┐",
+      "└──┴──┴──┴──┴──┴──┴──┴──┴──┴──┘",
+      "7 מקומות מלאים 3 מקומות ריקים",
+    ],
+  },
+];
+
 function normalizeText(value) {
   return String(value || "")
     .replace(/\u00a0/g, " ")
     .replace(/-/g, "−")
+    .replace(/^[−\-•]\s+/u, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -102,6 +226,7 @@ async function getRouteLevelText(page) {
       String(value || "")
         .replace(/\u00a0/g, " ")
         .replace(/-/g, "−")
+        .replace(/^[−\-•]\s+/u, "")
         .replace(/\s+/g, " ")
         .trim();
 
@@ -180,6 +305,81 @@ async function getRouteLevelText(page) {
   });
 }
 
+async function openSection(page, pageId, section) {
+  const path = `/learning/book/math/g2/${pageId}`;
+  await page.goto(`${BASE_URL}${path}`, { waitUntil: "domcontentloaded" });
+  await page.locator("[data-book-scroll]").waitFor({ state: "attached", timeout: 60_000 });
+  const sectionButton = page.getByLabel(`עמוד ${section}`);
+  await sectionButton.waitFor({ state: "attached", timeout: 60_000 });
+  await sectionButton.last().dispatchEvent("click");
+  await page.waitForFunction(
+    (expected) => document.body.innerText.includes(`עמוד ${expected} מתוך`),
+    section,
+    { timeout: 30_000 }
+  );
+  await page.locator("[data-book-scroll]").waitFor({ state: "attached", timeout: 60_000 });
+  return path;
+}
+
+async function getStructuredLineTexts(page) {
+  return page.locator("[data-book-scroll]").evaluate((root) => {
+    const normalize = (value) =>
+      String(value || "")
+        .replace(/\u00a0/g, " ")
+        .replace(/-/g, "−")
+        .replace(/^[−\-•]\s+/u, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    return Array.from(
+      root.querySelectorAll("[data-book-example-title], [data-book-place-value-equation], .book-mixed-hebrew-math, [data-book-diagram-line]")
+    )
+      .map((line) => normalize(line.innerText || line.textContent || ""))
+      .filter((line) => line && !/[★●✕]/u.test(line));
+  });
+}
+
+async function getDiagramRenderers(page, answerText) {
+  return page.locator("[data-book-scroll]").evaluate((root, expectedAnswer) => {
+    const normalize = (value) =>
+      String(value || "")
+        .replace(/\u00a0/g, " ")
+        .replace(/-/g, "−")
+        .replace(/^[−\-•]\s+/u, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const diagram = root.querySelector('[role="img"][aria-label="דוגמה"]');
+    const rows = diagram
+      ? Array.from(diagram.querySelectorAll("[data-book-diagram-line]")).map((line) => ({
+          text: normalize(line.innerText || line.textContent || ""),
+          renderer: line.querySelector(".book-mixed-hebrew-math")
+            ? "structured-mixed"
+            : line.querySelector("[data-book-vertical-arithmetic]")
+              ? "vertical-arithmetic"
+              : line.querySelector("bdi")
+                ? "raw-bdi"
+                : "unknown",
+        }))
+      : [];
+    const answer = Array.from(root.querySelectorAll(".book-mixed-hebrew-math"))
+      .map((line) => normalize(line.innerText || line.textContent || ""))
+      .filter((line) => line === expectedAnswer);
+    return { rows, answer };
+  }, normalizeText(answerText));
+}
+
+function verifyExactBlock(lines, expectedBlock) {
+  const expected = expectedBlock.map(normalizeText);
+  const deduped = [];
+  for (const line of lines) {
+    if (line && deduped[deduped.length - 1] !== line) deduped.push(line);
+  }
+  const start = deduped.findIndex((line) => line === expected[0]);
+  if (start < 0) return false;
+  return JSON.stringify(deduped.slice(start, start + expected.length)) === JSON.stringify(expected);
+}
+
 async function main() {
   await mkdir(SCREENSHOT_DIR, { recursive: true });
   const browser = await chromium.launch();
@@ -190,10 +390,7 @@ async function main() {
 
   const failures = [];
   for (const route of ROUTES) {
-    const path = `/learning/book/math/g2/${route.pageId}`;
-    await page.goto(`${BASE_URL}${path}`, { waitUntil: "networkidle" });
-    await page.getByLabel(`עמוד ${route.section}`).click();
-    await page.locator("[data-book-scroll]").waitFor({ state: "visible" });
+    const path = await openSection(page, route.pageId, route.section);
 
     const routeText = await getRouteLevelText(page);
     const searchable = normalizeText([routeText.domText, ...routeText.visualRows].join("\n"));
@@ -228,9 +425,44 @@ async function main() {
     });
   }
 
+  for (const block of EXACT_BLOCKS) {
+    const path = await openSection(page, block.pageId, block.section);
+
+    const lines = await getStructuredLineTexts(page);
+    if (!verifyExactBlock(lines, block.expected)) {
+      failures.push({
+        route: path,
+        section: block.section,
+        kind: "exact-block-mismatch",
+        value: block.title,
+        rendered: lines.join(" | "),
+      });
+    }
+
+    if (block.requireStructuredDiagram) {
+      const { rows, answer } = await getDiagramRenderers(page, block.answer);
+      const rendererSet = [...new Set(rows.map((row) => row.renderer))];
+      if (JSON.stringify(rendererSet) !== JSON.stringify(["structured-mixed"]) || !answer.length) {
+        failures.push({
+          route: path,
+          section: block.section,
+          kind: "mixed-renderer-block",
+          value: block.title,
+          rendered: JSON.stringify({ rendererSet, rows, answer }),
+        });
+      }
+    }
+
+    await page.screenshot({
+      path: `${SCREENSHOT_DIR}/g2-${block.pageId}-section-${block.section}-exact-block.png`,
+      fullPage: true,
+    });
+  }
+
   await browser.close();
 
   console.log(`Route-level G2 scans : ${ROUTES.length}`);
+  console.log(`Exact block scans     : ${EXACT_BLOCKS.length}`);
   console.log(`Forbidden patterns   : ${FORBIDDEN.length}`);
   console.log(`Failures             : ${failures.length}`);
 

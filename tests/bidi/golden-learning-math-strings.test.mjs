@@ -158,11 +158,11 @@ test("forbidden strings are rejected", () => {
 
 test("buildComparisonConclusionRuns gt/lt", () => {
   assert.deepEqual(buildComparisonConclusionRuns({ left: 735, right: 708, relation: "gt" }), [
-    { type: "prose", value: "735 גדול מ-708, לכן:" },
+    { type: "prose", value: "735 גדול מ-708, לכן: " },
     { type: "math", value: "735 > 708" },
   ]);
   assert.deepEqual(buildComparisonConclusionRuns({ left: 612, right: 628, relation: "lt" }), [
-    { type: "prose", value: "612 קטן מ-628, לכן:" },
+    { type: "prose", value: "612 קטן מ-628, לכן: " },
     { type: "math", value: "612 < 628" },
   ]);
 });

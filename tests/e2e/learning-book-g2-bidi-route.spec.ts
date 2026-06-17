@@ -84,12 +84,13 @@ function normalizeText(value: string) {
   return value
     .replace(/\u00a0/g, " ")
     .replace(/-/g, "−")
+    .replace(/^[−\-•]\s+/u, "")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-async function openBookSection(page: Page, pageId: string, section: number) {
-  await page.goto(`/learning/book/math/g2/${pageId}`);
+async function openBookSection(page: Page, pageId: string, section: number, grade = "g2") {
+  await page.goto(`/learning/book/math/${grade}/${pageId}`);
   await page.getByRole("heading").first().waitFor();
   await page.getByLabel(`עמוד ${section}`).click();
   await expect(page.locator("[data-book-scroll]")).toBeVisible();
@@ -101,6 +102,7 @@ async function getRouteLevelText(page: Page) {
       value
         .replace(/\u00a0/g, " ")
         .replace(/-/g, "−")
+        .replace(/^[−\-•]\s+/u, "")
         .replace(/\s+/g, " ")
         .trim();
 
@@ -200,6 +202,78 @@ async function getRouteLevelText(page: Page) {
   });
 }
 
+async function getRenderedDiagramAndAnswerBlock(page: Page, answerText: string) {
+  return page.locator("[data-book-scroll]").evaluate((root, expectedAnswer) => {
+    const normalize = (value: string) =>
+      value
+        .replace(/\u00a0/g, " ")
+        .replace(/-/g, "−")
+        .replace(/^[−\-•]\s+/u, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const diagram = root.querySelector<HTMLElement>('[role="img"][aria-label="דוגמה"]');
+    const diagramRows = diagram
+      ? Array.from(diagram.querySelectorAll<HTMLElement>("[data-book-diagram-line]")).map(
+          (line) => ({
+            text: normalize(line.innerText || line.textContent || ""),
+            renderer: line.querySelector(".book-mixed-hebrew-math")
+              ? "structured-mixed"
+              : line.querySelector("[data-book-vertical-arithmetic]")
+                ? "vertical-arithmetic"
+                : line.querySelector("bdi")
+                  ? "raw-bdi"
+                  : "unknown",
+          })
+        )
+      : [];
+
+    const answerLines = Array.from(root.querySelectorAll<HTMLElement>(".book-mixed-hebrew-math"))
+      .map((line) => normalize(line.innerText || line.textContent || ""))
+      .filter((text) => text === expectedAnswer);
+
+    return {
+      lines: [...diagramRows.map((row) => row.text), ...answerLines],
+      diagramRenderers: diagramRows.map((row) => row.renderer),
+    };
+  }, answerText);
+}
+
+async function getStructuredLineTexts(page: Page) {
+  return page.locator("[data-book-scroll]").evaluate((root) => {
+    const normalize = (value: string) =>
+      value
+        .replace(/\u00a0/g, " ")
+        .replace(/-/g, "−")
+        .replace(/^[−\-•]\s+/u, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const lines = Array.from(
+      root.querySelectorAll<HTMLElement>(
+        "[data-book-example-title], [data-book-place-value-equation], .book-mixed-hebrew-math, [data-book-diagram-line]"
+      )
+    )
+      .map((line) => normalize(line.innerText || line.textContent || ""))
+      .filter(Boolean);
+
+    return lines;
+  });
+}
+
+function expectExactOrderedBlock(actualLines: string[], expectedBlock: string[]) {
+  const expected = expectedBlock.map(normalizeText);
+  const visibleContentLines = actualLines
+    .map(normalizeText)
+    .filter((line) => line && !/[★●✕]/u.test(line));
+  const start = visibleContentLines.findIndex((line) => line === expected[0]);
+  expect(
+    start,
+    `missing first block line "${expected[0]}" in ${JSON.stringify(visibleContentLines)}`
+  ).toBeGreaterThanOrEqual(0);
+  expect(visibleContentLines.slice(start, start + expected.length)).toEqual(expected);
+}
+
 test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
   test.beforeAll(async () => {
     await mkdir(SCREENSHOT_DIR, { recursive: true });
@@ -232,6 +306,239 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
         path: `${SCREENSHOT_DIR}/g2-${route.pageId}-section-${route.section}.png`,
         fullPage: true,
       });
+    });
+  }
+
+  test("חיבור עם נשיאה: exact ordered explanation block uses one structured renderer", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openBookSection(page, "add_two", 3);
+
+    const block = await getRenderedDiagramAndAnswerBlock(page, "58 + 37 = 95");
+    expect(block.lines).toEqual([
+      "58 = 50 + 8",
+      "37 = 30 + 7",
+      "עשרות: 50 + 30 = 80",
+      "אחדות: 8 + 7 = 15 → 5, נשיאה 1",
+      "סה״כ: 80 + 15 = 95",
+      "58 + 37 = 95",
+    ]);
+    expect(new Set(block.diagramRenderers)).toEqual(new Set(["structured-mixed"]));
+
+    await page.screenshot({
+      path: `${SCREENSHOT_DIR}/g2-add_two-section-3-exact-block.png`,
+      fullPage: true,
+    });
+  });
+
+  test("חיסור: exact ordered explanation block uses one structured renderer", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openBookSection(page, "sub_two", 3);
+
+    const block = await getRenderedDiagramAndAnswerBlock(page, "68 − 24 = 44");
+    expect(block.lines).toEqual([
+      "68 = 60 + 8",
+      "24 = 20 + 4",
+      "עשרות: 60 − 20 = 40",
+      "אחדות: 8 − 4 = 4",
+      "סה״כ: 40 + 4 = 44",
+      "68 − 24 = 44",
+    ]);
+    expect(new Set(block.diagramRenderers)).toEqual(new Set(["structured-mixed"]));
+  });
+
+  for (const blockCase of [
+    {
+      title: "חיבור מאונך",
+      pageId: "add_vertical",
+      section: 3,
+      expected: [
+        "אחדות: 7 + 8 = 15 → כותבים 5, מעבירים 1 לעשרות",
+        "עשרות: 4 + 2 + 1 (נשיאה) = 7",
+        "47 + 28 = 75",
+      ],
+    },
+    {
+      title: "חיסור עם השאלה",
+      pageId: "sub_vertical",
+      section: 3,
+      expected: [
+        "באחדות 2 קטן מ-7 → מחליפים עשרה: 52 → 42 + 12 (4 עשרות, 12 אחדות)",
+        "אחדות: 12 − 7 = 5",
+        "עשרות: 4 − 2 = 2",
+        "52 − 27 = 25",
+      ],
+    },
+    {
+      title: "כפל קבוצות",
+      pageId: "mul",
+      section: 3,
+      expected: ["4 × 6 = 24", "חיבור חוזר: 6 + 6 + 6 + 6 = 24"],
+    },
+    {
+      title: "זוגי ואי-זוגי",
+      pageId: "ns_even_odd",
+      section: 3,
+      expected: [
+        "24 — זוגי:",
+        "לכל כוכב יש שותף → 24 זוגי.",
+        "35 — אי-זוגי:",
+        "נשאר כוכב אחד לבד → 35 אי-זוגי.",
+        "טיפ: ב-35 הספרה האחרונה היא 5 → אי-זוגי.",
+      ],
+    },
+    {
+      title: "ציר מספרים",
+      pageId: "ns_neighbors",
+      section: 3,
+      expected: ["248 − 1 = 247", "248 + 1 = 249"],
+    },
+    {
+      title: "עשרות ואחדות",
+      pageId: "ns_place_tens_units",
+      section: 3,
+      expected: [
+        "1 מאה + 2 עשרות + 4 אחדות = 124",
+        "100 + 20 + 4 = 124",
+        "דוגמה נוספת — 405:",
+        "4 מאות, 0 עשרות, 5 אחדות",
+        "400 + 0 + 5 = 405",
+      ],
+    },
+    {
+      title: "השוואות",
+      pageId: "cmp",
+      section: 3,
+      expected: [
+        "מאות: 6 = 6 → שוות, ממשיכים",
+        "עשרות: 1 < 2",
+        "612 קטן מ-628, לכן: 612 < 628",
+      ],
+    },
+  ]) {
+    test(`${blockCase.title}: exact ordered explanation block`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await openBookSection(page, blockCase.pageId, blockCase.section);
+
+      const lines = await getStructuredLineTexts(page);
+      expectExactOrderedBlock(lines, blockCase.expected);
+    });
+  }
+
+  for (const contract of [
+    {
+      renderer: "BookVerticalArithmetic",
+      pageId: "add_vertical",
+      section: 3,
+      selector: "[data-book-vertical-arithmetic]",
+      expected: ["47", "+ 28", "75", "47 + 28 = 75"],
+      forbidden: ["7547 + 28", "4752", "5030"],
+    },
+    {
+      renderer: "BookVerticalArithmetic",
+      pageId: "sub_vertical",
+      section: 3,
+      selector: "[data-book-vertical-arithmetic]",
+      expected: ["52", "− 27", "25", "52 − 27 = 25"],
+      forbidden: ["2552", "5227", "4752"],
+    },
+    {
+      renderer: "BookPlaceValueEquation",
+      pageId: "ns_place_tens_units",
+      section: 3,
+      selector: "[data-book-place-value-equation]",
+      expected: ["100 + 20 + 4 = 124", "400 + 0 + 5 = 405"],
+      forbidden: ["124 = 100 + 20 + 4", "405 = 400 + 0 + 5"],
+    },
+    {
+      renderer: "NumberLineRow",
+      pageId: "ns_neighbors",
+      section: 3,
+      selector: "[dir='ltr']",
+      expected: ["246", "247", "248", "249", "250"],
+      forbidden: ["137 + 6", "10 + 133"],
+    },
+    {
+      renderer: "PlaceValueDiagram",
+      pageId: "ns_place_tens_units",
+      section: 3,
+      selector: "[aria-label='טבלת ערך מקום']",
+      expected: ["מאות", "עשרות", "אחדות", "1", "2", "4"],
+      forbidden: ["124 = 100 + 20 + 4", "405 = 400 + 0 + 5"],
+    },
+    {
+      renderer: "object visual rows",
+      pageId: "mul",
+      section: 3,
+      selector: "[role='img'][aria-label='דוגמה']",
+      expected: ["4 × 6 = 24", "חיבור חוזר: 6 + 6 + 6 + 6 = 24"],
+      forbidden: ["246 + 6 + 6", "24זוגי"],
+    },
+    {
+      renderer: "card visual rows",
+      pageId: "wp_groups_g2",
+      section: 3,
+      selector: "[role='img'][aria-label='דוגמה']",
+      expected: ["5 × 4 = 20"],
+      forbidden: ["2552", "5030"],
+    },
+    {
+      renderer: "coin visual rows",
+      pageId: "wp_coins",
+      section: 3,
+      selector: "[role='img'][aria-label='דוגמה']",
+      expected: ["4 × 5 = 20"],
+      forbidden: ["24זוגי", "5030"],
+    },
+    {
+      renderer: "BookExampleTitleLine",
+      pageId: "add_two",
+      section: 3,
+      selector: "[data-book-example-title]",
+      expected: ["58 + 37", "פירוק לעשרות ואחדות"],
+      forbidden: ["3758", "58 + 37פירוק"],
+    },
+    {
+      renderer: "FrameDiagram",
+      pageId: "ns_complement10",
+      section: 3,
+      selector: "[role='img'][aria-label='דוגמה']",
+      expected: [
+        "7 מקומות מלאים",
+        "3 מקומות ריקים",
+        "7 + 3 = 10",
+      ],
+      forbidden: ["37 מקומות", "73 מקומות", "5030", "3020"],
+      noLtrHebrewPhrase: true,
+    },
+  ]) {
+    test(`${contract.renderer} ${contract.grade || "g2"}/${contract.pageId}/${contract.section}: specialized renderer DOM contract`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await openBookSection(page, contract.pageId, contract.section, contract.grade || "g2");
+
+      const target = page.locator(contract.selector).first();
+      await expect(target).toBeVisible();
+      const text = normalizeText(await page.locator("[data-book-scroll]").innerText());
+      const targetText = normalizeText(await target.innerText());
+      const searchable = `${text} ${targetText}`;
+
+      for (const expected of contract.expected) {
+        expect(searchable, contract.renderer).toContain(normalizeText(expected));
+      }
+      for (const forbidden of contract.forbidden) {
+        expect(searchable, contract.renderer).not.toContain(normalizeText(forbidden));
+      }
+      if (contract.noLtrHebrewPhrase) {
+        const ltrHebrewPhrases = await target.evaluate((root) =>
+          Array.from(root.querySelectorAll<HTMLElement>("[dir='ltr'], bdi"))
+            .map((el) => (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim())
+            .filter((text) => /[\u0590-\u05FF]+\s+[\u0590-\u05FF]+/u.test(text))
+        );
+        expect(ltrHebrewPhrases, contract.renderer).toEqual([]);
+      }
     });
   }
 });

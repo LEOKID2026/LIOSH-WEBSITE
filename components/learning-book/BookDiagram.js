@@ -474,17 +474,23 @@ function FrameDiagram({ lines }) {
   const sizeClass = diagramTextSizeClass(lines.join("\n"));
   return (
     <div className="space-y-1">
-      {lines.map((line, i) => (
-        <DiagramCodeLineRow key={i} dir="ltr">
-          <bdi
-            dir="ltr"
-            style={bookMathIsolateStyle}
-            className={`font-medium tabular-nums ${theme.diagramSecondaryMuted} ${sizeClass}`}
-          >
-            {stripStrayMarkdown(line)}
-          </bdi>
-        </DiagramCodeLineRow>
-      ))}
+      {lines.map((line, i) => {
+        const cleaned = stripStrayMarkdown(line);
+        if (/[\u0590-\u05FF]/.test(cleaned)) {
+          return <MixedDiagramLine key={i} line={cleaned} sizeClass={sizeClass} />;
+        }
+        return (
+          <DiagramCodeLineRow key={i} dir="ltr">
+            <bdi
+              dir="ltr"
+              style={bookMathIsolateStyle}
+              className={`font-medium tabular-nums ${theme.diagramSecondaryMuted} ${sizeClass}`}
+            >
+              {cleaned}
+            </bdi>
+          </DiagramCodeLineRow>
+        );
+      })}
     </div>
   );
 }
@@ -526,14 +532,8 @@ function MixedDiagramLine({ line, sizeClass = "" }) {
 
   if (isPureMathDiagramLine(trimmed)) {
     return (
-      <DiagramCodeLineRow dir="ltr" className={textSize}>
-        <bdi
-          dir="ltr"
-          style={bookMathIsolateStyle}
-          className={`font-semibold tabular-nums ${theme.diagramSecondaryMuted}`}
-        >
-          {stripStrayMarkdown(trimmed)}
-        </bdi>
+      <DiagramCodeLineRow dir="rtl" className={textSize}>
+        <BookContentLine text={trimmed} context="diagram" />
       </DiagramCodeLineRow>
     );
   }
