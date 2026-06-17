@@ -54,6 +54,8 @@ const PURE_MATH = [
 const CANONICAL_FLIP = [
   { input: "124 = 100 + 20 + 4", math: "100 + 20 + 4 = 124" },
   { input: "405 = 400 + 0 + 5", math: "400 + 0 + 5 = 405" },
+  { input: "58 = 50 + 8", math: "50 + 8 = 58" },
+  { input: "68 = 60 + 8", math: "60 + 8 = 68" },
 ];
 
 /** Hebrew prose + math: math isolated LTR, the Hebrew kept as RTL prose. */
@@ -86,6 +88,10 @@ const FORBIDDEN_SUBSTRINGS = [
   "? = 20 + 10",
   "124 = 100 + 20 + 4",
   "405 = 400 + 0 + 5",
+  "58 = 50 + 8",
+  "37 = 30 + 7",
+  "68 = 60 + 8",
+  "24 = 20 + 4",
   "80 + 5 + 1 = 95",
 ];
 

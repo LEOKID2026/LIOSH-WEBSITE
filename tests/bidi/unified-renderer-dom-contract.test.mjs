@@ -79,6 +79,8 @@ test("place value decomposition math string order (not dir-only)", () => {
     ["124 = 100 + 20 + 4", "100 + 20 + 4 = 124"],
     ["405 = 400 + 0 + 5", "400 + 0 + 5 = 405"],
     ["- 124 = 100 + 20 + 4", "- 100 + 20 + 4 = 124"],
+    ["58 = 50 + 8", "50 + 8 = 58"],
+    ["68 = 60 + 8", "60 + 8 = 68"],
   ];
   for (const [raw, expected] of cases) {
     assert.equal(canonicalizePlaceValueDecomposition(raw), expected);

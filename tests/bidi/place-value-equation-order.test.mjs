@@ -32,6 +32,14 @@ const CASES = [
     input: "100 + 20 + 4 = 124",
     expected: "100 + 20 + 4 = 124",
   },
+  {
+    input: "58 = 50 + 8",
+    expected: "50 + 8 = 58",
+  },
+  {
+    input: "68 = 60 + 8",
+    expected: "60 + 8 = 68",
+  },
 ];
 
 for (const { input, expected } of CASES) {
@@ -42,11 +50,17 @@ for (const { input, expected } of CASES) {
 }
 
 test("forbidden reversed display string in math run", () => {
-  for (const raw of ["124 = 100 + 20 + 4", "- 124 = 100 + 20 + 4"]) {
+  const cases = [
+    { raw: "124 = 100 + 20 + 4", forbidden: /^124\s*=\s*100/, expected: /100 \+ 20 \+ 4 = 124/ },
+    { raw: "- 124 = 100 + 20 + 4", forbidden: /^124\s*=\s*100/, expected: /100 \+ 20 \+ 4 = 124/ },
+    { raw: "58 = 50 + 8", forbidden: /^58\s*=\s*50/, expected: /50 \+ 8 = 58/ },
+    { raw: "68 = 60 + 8", forbidden: /^68\s*=\s*60/, expected: /60 \+ 8 = 68/ },
+  ];
+  for (const { raw, forbidden, expected } of cases) {
     const runs = splitMixedHebrewMathRuns(raw);
     const math = runs.filter((r) => r.type === "math").map((r) => r.value).join("");
-    assert.doesNotMatch(math, /^124\s*=\s*100/);
-    assert.match(math, /100 \+ 20 \+ 4 = 124/);
+    assert.doesNotMatch(math, forbidden);
+    assert.match(math, expected);
   }
 });
 

@@ -285,8 +285,8 @@ function LabelBodyGap() {
 function DiagramLabelSpacer() {
   return (
     <>
-      <span aria-hidden="true" className="inline-block w-[4.5rem] shrink-0" />
-      <span aria-hidden="true" className="inline-block w-[0.35em] shrink-0" />
+      <span aria-hidden="true" className="inline-block w-[3rem] shrink-0" />
+      <span aria-hidden="true" className="inline-block w-[0.25em] shrink-0" />
     </>
   );
 }

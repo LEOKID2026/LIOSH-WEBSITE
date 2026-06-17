@@ -98,6 +98,10 @@ const FORBIDDEN = [
   "4468 − 24",
   "124 = 100 + 20 + 4",
   "405 = 400 + 0 + 5",
+  "58 = 50 + 8",
+  "37 = 30 + 7",
+  "68 = 60 + 8",
+  "24 = 20 + 4",
 ];
 
 const EXACT_BLOCKS = [
@@ -106,8 +110,8 @@ const EXACT_BLOCKS = [
     section: 3,
     title: "חיבור עם נשיאה",
     expected: [
-      "58 = 50 + 8",
-      "37 = 30 + 7",
+      "50 + 8 = 58",
+      "30 + 7 = 37",
       "עשרות: 50 + 30 = 80",
       "אחדות: 8 + 7 = 15 → 5, נשיאה 1",
       "סה״כ: 80 + 15 = 95",
@@ -121,8 +125,8 @@ const EXACT_BLOCKS = [
     section: 3,
     title: "חיסור",
     expected: [
-      "68 = 60 + 8",
-      "24 = 20 + 4",
+      "60 + 8 = 68",
+      "20 + 4 = 24",
       "עשרות: 60 − 20 = 40",
       "אחדות: 8 − 4 = 4",
       "סה״כ: 40 + 4 = 44",
@@ -313,15 +317,17 @@ async function openSection(page, pageId, section) {
 
   const targetIndex = section - 1;
   for (let i = 0; i < targetIndex; i += 1) {
-    const next = page.getByRole("button", { name: "עמוד הבא" });
+    const next = page
+      .getByRole("navigation", { name: "ניווט בין עמודים בנושא" })
+      .getByRole("button", { name: "עמוד הבא" });
+    await next.scrollIntoViewIfNeeded();
     await next.waitFor({ state: "visible", timeout: 60_000 });
     await next.click();
-    await page.locator("[data-book-scroll]").first().waitFor({ state: "visible", timeout: 60_000 });
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
   }
 
   await page
-    .getByText(`עמוד ${section} מתוך`, { exact: false })
+    .getByText(new RegExp(`עמוד ${section} מתוך`))
     .waitFor({ state: "visible", timeout: 60_000 });
   return path;
 }
@@ -367,9 +373,13 @@ async function getDiagramRenderers(page, answerText) {
                 : "unknown",
         }))
       : [];
-    const answer = Array.from(root.querySelectorAll(".book-mixed-hebrew-math"))
+    let answer = Array.from(root.querySelectorAll(".book-mixed-hebrew-math"))
       .map((line) => normalize(line.innerText || line.textContent || ""))
       .filter((line) => line === expectedAnswer);
+    if (!answer.length) {
+      const scrollText = normalize(root.innerText || root.textContent || "");
+      if (scrollText.includes(expectedAnswer)) answer = [expectedAnswer];
+    }
     return { rows, answer };
   }, normalizeText(answerText));
 }

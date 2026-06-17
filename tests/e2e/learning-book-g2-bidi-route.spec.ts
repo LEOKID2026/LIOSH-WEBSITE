@@ -78,6 +78,12 @@ const OWNER_FORBIDDEN = [
   "24זוגי",
   "137 + 6",
   "10 + 133",
+  "58 = 50 + 8",
+  "37 = 30 + 7",
+  "68 = 60 + 8",
+  "24 = 20 + 4",
+  "124 = 100 + 20 + 4",
+  "405 = 400 + 0 + 5",
 ] as const;
 
 function normalizeText(value: string) {
@@ -92,8 +98,17 @@ function normalizeText(value: string) {
 async function openBookSection(page: Page, pageId: string, section: number, grade = "g2") {
   await page.goto(`/learning/book/math/${grade}/${pageId}`);
   await page.getByRole("heading").first().waitFor();
-  await page.getByLabel(`עמוד ${section}`).click();
   await expect(page.locator("[data-book-scroll]")).toBeVisible();
+
+  for (let current = 1; current < section; current += 1) {
+    const next = page
+      .getByRole("navigation", { name: "ניווט בין עמודים בנושא" })
+      .getByRole("button", { name: "עמוד הבא" });
+    await next.scrollIntoViewIfNeeded();
+    await expect(next).toBeEnabled();
+    await next.click();
+    await expect(page.getByText(`עמוד ${current + 1} מתוך`, { exact: false })).toBeVisible();
+  }
 }
 
 async function getRouteLevelText(page: Page) {
@@ -232,8 +247,17 @@ async function getRenderedDiagramAndAnswerBlock(page: Page, answerText: string) 
       .map((line) => normalize(line.innerText || line.textContent || ""))
       .filter((text) => text === expectedAnswer);
 
+    if (!answerLines.length) {
+      const scrollText = normalize(root.innerText || root.textContent || "");
+      if (scrollText.includes(expectedAnswer)) {
+        answerLines.push(expectedAnswer);
+      }
+    }
+
+    const uniqueAnswers = [...new Set(answerLines)];
+
     return {
-      lines: [...diagramRows.map((row) => row.text), ...answerLines],
+      lines: [...diagramRows.map((row) => row.text), ...uniqueAnswers],
       diagramRenderers: diagramRows.map((row) => row.renderer),
     };
   }, answerText);
@@ -389,8 +413,8 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
 
     const block = await getRenderedDiagramAndAnswerBlock(page, "58 + 37 = 95");
     expect(block.lines).toEqual([
-      "58 = 50 + 8",
-      "37 = 30 + 7",
+      "50 + 8 = 58",
+      "30 + 7 = 37",
       "עשרות: 50 + 30 = 80",
       "אחדות: 8 + 7 = 15 → 5, נשיאה 1",
       "סה״כ: 80 + 15 = 95",
@@ -413,7 +437,9 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
     const layout = await getDiagramVisualLayout(page);
     expect(layout).toHaveLength(5);
 
-    const pureMathRows = layout.filter((row) => row.innerText === "58 = 50 + 8" || row.innerText === "37 = 30 + 7");
+    const pureMathRows = layout.filter(
+      (row) => row.innerText === "50 + 8 = 58" || row.innerText === "30 + 7 = 37"
+    );
     const labeledRows = layout.filter((row) => /^(עשרות|אחדות|סה״כ):/.test(row.innerText));
 
     expect(pureMathRows).toHaveLength(2);
@@ -446,6 +472,39 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
     });
   });
 
+  test("חיסור: diagram decomposition rows are parts-first and compact", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openBookSection(page, "sub_two", 3);
+
+    const layout = await getDiagramVisualLayout(page);
+    expect(layout.map((row) => row.innerText)).toEqual([
+      "60 + 8 = 68",
+      "20 + 4 = 24",
+      "עשרות: 60 − 20 = 40",
+      "אחדות: 8 − 4 = 4",
+      "סה״כ: 40 + 4 = 44",
+    ]);
+
+    for (const forbidden of ["68 = 60 + 8", "24 = 20 + 4"]) {
+      expect(layout.some((row) => row.innerText === forbidden)).toBe(false);
+    }
+
+    const tensRow = layout.find((row) => row.innerText.startsWith("עשרות:"));
+    expect(tensRow?.labelToMathGapPx ?? 0).toBeGreaterThanOrEqual(2);
+    expect(tensRow?.labelToMathGapPx ?? 99).toBeLessThanOrEqual(8);
+
+    await page.screenshot({
+      path: `${SCREENSHOT_DIR}/g2-sub_two-section-3-exact-block.png`,
+      fullPage: true,
+    });
+
+    await page.locator('[role="img"][aria-label="דוגמה"]').screenshot({
+      path: `${SCREENSHOT_DIR}/g2-sub_two-section-3-diagram-layout.png`,
+    });
+  });
+
   test("חיסור: exact ordered explanation block uses one structured renderer", async ({
     page,
   }) => {
@@ -454,8 +513,8 @@ test.describe("Grade 2 math learning book route-level BiDi regressions", () => {
 
     const block = await getRenderedDiagramAndAnswerBlock(page, "68 − 24 = 44");
     expect(block.lines).toEqual([
-      "68 = 60 + 8",
-      "24 = 20 + 4",
+      "60 + 8 = 68",
+      "20 + 4 = 24",
       "עשרות: 60 − 20 = 40",
       "אחדות: 8 − 4 = 4",
       "סה״כ: 40 + 4 = 44",

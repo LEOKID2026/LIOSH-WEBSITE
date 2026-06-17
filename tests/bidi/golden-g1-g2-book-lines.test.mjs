@@ -101,7 +101,7 @@ const BOOK_LINES = [
   {
     name: "make ten remainder step",
     input: "**שלב 2:** מ-6 נשארו **3** (6 = 3 + 3)",
-    math: ["6", "3", "6 = 3 + 3"],
+    math: ["6", "3", "3 + 3 = 6"],
     proseIncludes: ["נשארו"],
   },
   {

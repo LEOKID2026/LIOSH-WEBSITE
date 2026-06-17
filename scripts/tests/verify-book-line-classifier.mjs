@@ -53,8 +53,12 @@ assert(
   classifyBookLine("63,405 = 60,000 + 3,000 + 400 + 0 + 5") === "place_value_equation"
 );
 assert(
-  "not place value — short rhs",
-  !isPlaceValueEquationLine("58 = 50 + 8")
+  "two-term decomposition is place value",
+  isPlaceValueEquationLine("58 = 50 + 8")
+);
+assert(
+  "diagram context keeps decomposition on mixed renderer",
+  classifyBookLine("58 = 50 + 8", { context: "diagram" }) === "fallback"
 );
 
 const parsedTitle = parseExampleTitleLine("58 + 37 — פירוק לעשרות ואחדות:");

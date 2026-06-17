@@ -177,10 +177,10 @@ const DIAGRAM_LINE_LAYOUT_CLASS = [
   "[&_.book-mixed-line-body]:max-w-full",
   "[&_.book-mixed-line-body]:flex-row",
   "[&_.book-mixed-line-body]:items-baseline",
-  "[&_[data-book-label]]:w-[4.5rem]",
+  "[&_[data-book-label]]:w-[3rem]",
   "[&_[data-book-label]]:shrink-0",
   "[&_[data-book-label]]:text-right",
-  "[&_[data-book-label-gap]]:w-[0.35em]",
+  "[&_[data-book-label-gap]]:w-[0.25em]",
   "[&_[data-book-label-gap]]:shrink-0",
 ].join(" ");
 
