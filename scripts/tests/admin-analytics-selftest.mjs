@@ -19,17 +19,32 @@ const page = read("pages/admin/analytics.js");
 assert.match(page, /adminAuthFetch\(token, `\/api\/admin\/analytics\?/, "page must call admin API with bearer token");
 assert.doesNotMatch(page, /demo|mock|fake/i, "admin analytics page must not contain demo/mock/fake data");
 for (const label of [
+  "סקירה כללית",
   "חשבונות והרשמות",
-  "הצטרפות הורים ותחילת שימוש",
-  "הצטרפות ילדים ולמידה ראשונה",
-  "נתוני מורים פרטיים",
+  "הורים",
+  "ילדים",
+  "למידה",
+  "דוחות",
+  "פעילויות אישיות",
+  "מורים פרטיים",
   "משפכי שימוש",
   "חזרה לשימוש",
-  "נטישה ומועמדי נטישה",
+  "נטישה",
   "שימוש בפיצ׳רים",
+  "בדיקות אמת / איכות",
 ]) {
-  assert.match(page, new RegExp(label), `admin analytics page missing final section: ${label}`);
+  assert.match(page, new RegExp(label), `admin analytics page missing main tab: ${label}`);
 }
+assert.match(page, /ANALYTICS_MAIN_TABS/, "page must define main tab navigation");
+assert.match(page, /CollapsiblePanel/, "page must use collapsible panels");
+assert.match(page, /defaultOpen=\{false\}/, "collapsible panels must default to closed");
+assert.match(page, /aria-expanded/, "collapsible panels must expose expanded state");
+assert.match(page, /data-analytics-panel/, "collapsible panels must be identifiable for QA");
+assert.match(page, /activeTab/, "page must render one tab at a time");
+assert.match(page, /data-analytics-active-tab/, "page must mark active tab container");
+assert.match(page, /פתח הכל בטאב/, "page must offer expand-all in current tab");
+assert.match(page, /סגור הכל בטאב/, "page must offer collapse-all in current tab");
+assert.doesNotMatch(page, /function Section\(/, "page must not render all legacy open sections at once");
 assert.match(page, /אין נתונים עדיין/, "page must render empty state text");
 assert.match(page, /אין מספיק נתונים עדיין/, "page must render not-enough-data text");
 

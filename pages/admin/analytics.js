@@ -58,6 +58,25 @@ const CHILD_STATUSES = [
   { value: "inactive", label: "ילדים לא פעילים" },
 ];
 
+/** Main navigation tabs — only one tab panel visible at a time. */
+export const ANALYTICS_MAIN_TABS = [
+  { id: "overview", label: "סקירה כללית" },
+  { id: "accounts", label: "חשבונות והרשמות" },
+  { id: "parents", label: "הורים" },
+  { id: "children", label: "ילדים" },
+  { id: "learning", label: "למידה" },
+  { id: "reports", label: "דוחות" },
+  { id: "parentActivities", label: "פעילויות אישיות" },
+  { id: "teachers", label: "מורים פרטיים" },
+  { id: "books", label: "ספרים / שמע / דפי עבודה" },
+  { id: "rewards", label: "פרסים" },
+  { id: "funnels", label: "משפכי שימוש" },
+  { id: "retention", label: "חזרה לשימוש" },
+  { id: "abandonment", label: "נטישה" },
+  { id: "features", label: "שימוש בפיצ׳רים" },
+  { id: "quality", label: "בדיקות אמת / איכות" },
+];
+
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -90,6 +109,33 @@ function statusClass(status) {
   return "border-red-400/25 bg-red-400/10";
 }
 
+function metricsSummary(items) {
+  if (!Array.isArray(items) || items.length === 0) return "אין נתונים בטווח";
+  const available = items.find((item) => item?.status === "available" && item.value != null);
+  if (available) {
+    const unit = available.unit ? ` ${formatAnalyticsUnitHe(available.unit)}` : "";
+    return `${formatAnalyticsLabelHe(available.label)}: ${valueText(available)}${unit}`;
+  }
+  const noteItem = items.find((item) => item?.note);
+  if (noteItem?.note) return formatAnalyticsLabelHe(noteItem.note);
+  if (items.every((item) => item?.status === "empty")) return "אין נתונים עדיין";
+  if (items.every((item) => item?.status === "not_enough_data")) return "אין מספיק נתונים עדיין";
+  if (items.some((item) => item?.status === "requires_events" || item?.status === "not_tracked")) {
+    return "חלק מהמדדים דורשים איסוף אירועים";
+  }
+  return `${items.length} מדדים`;
+}
+
+function rowsSummary(rows, emptyText = "אין נתונים בטווח") {
+  if (!Array.isArray(rows) || rows.length === 0) return emptyText;
+  const top = rows[0];
+  if (top?.label != null && top?.value != null) {
+    return `${formatAnalyticsLabelHe(top.label || top.key)}: ${top.value}`;
+  }
+  if (top?.date != null) return `${rows.length} רשומות · אחרון: ${top.date}`;
+  return `${rows.length} רשומות`;
+}
+
 function MetricCard({ item }) {
   return (
     <div className={`rounded-2xl border p-4 min-h-[7rem] ${statusClass(item.status)}`}>
@@ -111,18 +157,6 @@ function MetricGrid({ items }) {
         <MetricCard key={`${item.label}-${idx}`} item={item} />
       ))}
     </div>
-  );
-}
-
-function Section({ title, subtitle, children }) {
-  return (
-    <section className="rounded-3xl border border-white/10 bg-slate-950/60 p-4 md:p-5 shadow-xl shadow-black/10">
-      <div className="mb-4">
-        <h2 className="text-lg md:text-xl font-bold">{title}</h2>
-        {subtitle ? <p className="text-sm text-white/55 mt-1">{subtitle}</p> : null}
-      </div>
-      {children}
-    </section>
   );
 }
 
@@ -161,7 +195,7 @@ function SimpleTable({ rows, columns, empty = "אין נתונים בטווח" }
 function TopList({ title, rows }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-      <h3 className="font-semibold mb-3 text-white/85">{title}</h3>
+      <h4 className="font-semibold mb-3 text-white/85">{title}</h4>
       <SimpleTable
         rows={rows}
         columns={[
@@ -182,21 +216,166 @@ function FunnelList({ funnels }) {
       {funnels.map((funnel) => (
         <div key={funnel.name} className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
           <div className="flex items-start justify-between gap-3 mb-3">
-            <h3 className="font-semibold text-white/90">{formatAnalyticsLabelHe(funnel.name)}</h3>
+            <h4 className="font-semibold text-white/90">{formatAnalyticsLabelHe(funnel.name)}</h4>
             {funnel.note ? <span className="text-xs text-white/45">{formatAnalyticsLabelHe(funnel.note)}</span> : null}
           </div>
           <SimpleTable
             rows={funnel.steps}
             columns={[
               { key: "label", label: "שלב", render: (row) => formatAnalyticsLabelHe(row.label) },
-              { key: "value", label: "כמות", render: (row) => row.value == null ? valueText(row) : row.value },
-              { key: "conversionFromPrevious", label: "המרה", render: (row) => row.conversionFromPrevious == null ? "—" : `${row.conversionFromPrevious}%` },
+              { key: "value", label: "כמות", render: (row) => (row.value == null ? valueText(row) : row.value) },
+              {
+                key: "conversionFromPrevious",
+                label: "המרה",
+                render: (row) => (row.conversionFromPrevious == null ? "—" : `${row.conversionFromPrevious}%`),
+              },
               { key: "source", label: "מקור", render: (row) => formatAnalyticsSourceHe(row.source) },
             ]}
           />
         </div>
       ))}
     </div>
+  );
+}
+
+/** Collapsible analytics block — closed by default (`defaultOpen={false}`). */
+export function CollapsiblePanel({
+  panelId,
+  title,
+  subtitle,
+  summary,
+  defaultOpen = false,
+  nested = false,
+  isOpen,
+  onToggle,
+  children,
+}) {
+  const open = isOpen ?? defaultOpen;
+  return (
+    <section
+      className={`rounded-2xl border border-white/10 shadow-sm ${nested ? "bg-white/[0.02]" : "bg-slate-950/60"}`}
+      data-analytics-panel={panelId}
+      data-analytics-panel-open={open ? "true" : "false"}
+    >
+      <button
+        type="button"
+        onClick={() => onToggle(panelId)}
+        aria-expanded={open}
+        aria-controls={`panel-body-${panelId}`}
+        className="w-full flex items-center gap-3 p-4 text-right hover:bg-white/[0.03] transition-colors rounded-2xl"
+      >
+        <span
+          className={`shrink-0 text-white/50 text-lg leading-none transition-transform ${open ? "rotate-90" : ""}`}
+          aria-hidden
+        >
+          ◀
+        </span>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-white/90 text-base">{title}</h3>
+          {subtitle ? <p className="text-xs text-white/45 mt-1">{subtitle}</p> : null}
+          {!open && summary ? <p className="text-sm text-amber-100/75 mt-1 truncate">{summary}</p> : null}
+        </div>
+      </button>
+      {open ? (
+        <div id={`panel-body-${panelId}`} className="px-4 pb-4 border-t border-white/10 pt-4 space-y-4">
+          {children}
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function AnalyticsTabBar({ activeTab, onChange }) {
+  return (
+    <nav className="rounded-2xl border border-white/10 bg-white/[0.03] p-2" aria-label="קטגוריות אנליטיקה">
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+        {ANALYTICS_MAIN_TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => onChange(tab.id)}
+            aria-current={activeTab === tab.id ? "page" : undefined}
+            className={`shrink-0 rounded-xl px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors ${
+              activeTab === tab.id
+                ? "bg-amber-500 text-slate-950 shadow"
+                : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function TabToolbar({ panelIds, openPanels, onOpenAll, onCloseAll }) {
+  const openCount = panelIds.filter((id) => openPanels[id]).length;
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-white/45">
+      <span>{openCount} מתוך {panelIds.length} בלוקים פתוחים</span>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => onOpenAll(panelIds)}
+          className="rounded-lg border border-white/15 px-3 py-1.5 hover:bg-white/5 text-white/70"
+        >
+          פתח הכל בטאב
+        </button>
+        <button
+          type="button"
+          onClick={() => onCloseAll(panelIds)}
+          className="rounded-lg border border-white/15 px-3 py-1.5 hover:bg-white/5 text-white/70"
+        >
+          סגור הכל בטאב
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function usePanelToggleState() {
+  const [openPanels, setOpenPanels] = useState({});
+
+  const togglePanel = useCallback((panelId) => {
+    setOpenPanels((prev) => ({ ...prev, [panelId]: !prev[panelId] }));
+  }, []);
+
+  const openAllPanels = useCallback((panelIds) => {
+    setOpenPanels((prev) => {
+      const next = { ...prev };
+      for (const id of panelIds) next[id] = true;
+      return next;
+    });
+  }, []);
+
+  const closeAllPanels = useCallback((panelIds) => {
+    setOpenPanels((prev) => {
+      const next = { ...prev };
+      for (const id of panelIds) next[id] = false;
+      return next;
+    });
+  }, []);
+
+  const isPanelOpen = useCallback((panelId) => !!openPanels[panelId], [openPanels]);
+
+  return { openPanels, togglePanel, openAllPanels, closeAllPanels, isPanelOpen };
+}
+
+function Panel({ panelId, title, subtitle, summary, nested, toggle, isOpen, children }) {
+  return (
+    <CollapsiblePanel
+      panelId={panelId}
+      title={title}
+      subtitle={subtitle}
+      summary={summary}
+      nested={nested}
+      defaultOpen={false}
+      isOpen={isOpen}
+      onToggle={toggle}
+    >
+      {children}
+    </CollapsiblePanel>
   );
 }
 
@@ -211,7 +390,9 @@ export default function AdminAnalyticsPage() {
   const [dashboard, setDashboard] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
   const trackedOpenKeyRef = useRef("");
+  const { openPanels, togglePanel, openAllPanels, closeAllPanels, isPanelOpen } = usePanelToggleState();
 
   const queryString = useMemo(() => {
     const qs = new URLSearchParams();
@@ -257,6 +438,666 @@ export default function AdminAnalyticsPage() {
   const sections = dashboard?.sections || {};
   const sourceErrors = dashboard?.sourceErrors || [];
 
+  const tabPanelIds = useMemo(
+    () => ({
+      overview: ["overview-summary"],
+      accounts: [
+        "accounts-totals",
+        "accounts-by-date",
+        "accounts-by-type",
+      ],
+      parents: [
+        "parents-summary",
+        "parents-by-date",
+        "parents-onboarding-funnel",
+        "parents-activity-metrics",
+      ],
+      children: [
+        "children-join-summary",
+        "children-by-date",
+        "children-usage-summary",
+        "children-by-grade",
+      ],
+      learning: [
+        "learning-summary",
+        "learning-by-subject",
+        "learning-by-topic",
+        "learning-by-grade",
+        "learning-daily-accuracy",
+        "learning-hard-topics",
+        "learning-success-topics",
+      ],
+      reports: [
+        "reports-open-export",
+        "reports-truth-check",
+        "reports-suspicious-gaps",
+      ],
+      parentActivities: [
+        "parent-activities-summary",
+        "parent-activities-by-subject",
+        "parent-activities-by-topic",
+        "parent-activities-by-grade",
+      ],
+      teachers: [
+        "teachers-summary",
+        "teachers-by-date",
+        "teachers-activity",
+      ],
+      books: [
+        "books-summary",
+        "books-top-pages",
+      ],
+      rewards: [
+        "rewards-summary",
+        "rewards-by-day",
+        "rewards-by-reason",
+      ],
+      funnels: ["funnels-all"],
+      retention: ["retention-summary"],
+      abandonment: ["abandonment-summary"],
+      features: [
+        "features-summary",
+        "features-most-used",
+        "features-least-used",
+        "features-by-grade",
+        "features-by-subject",
+      ],
+      quality: ["quality-source-errors"],
+    }),
+    []
+  );
+
+  const currentPanelIds = tabPanelIds[activeTab] || [];
+
+  const renderTabContent = () => {
+    if (!dashboard) return null;
+
+    switch (activeTab) {
+      case "overview":
+        return (
+          <div className="space-y-3">
+            <TabToolbar
+              panelIds={currentPanelIds}
+              openPanels={openPanels}
+              onOpenAll={openAllPanels}
+              onCloseAll={closeAllPanels}
+            />
+            <Panel
+              panelId="overview-summary"
+              title="סיכום כללי"
+              subtitle="מדדי שימוש מרכזיים ממקורות מאגר הנתונים הקיימים"
+              summary={metricsSummary(sections.overview)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("overview-summary")}
+            >
+              <MetricGrid items={sections.overview} />
+            </Panel>
+          </div>
+        );
+
+      case "accounts":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="accounts-totals"
+              title="סך חשבונות"
+              subtitle="חשבונות אימות, פרסונות, תפקידים והרשאות"
+              summary={metricsSummary(sections.accounts?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("accounts-totals")}
+            >
+              <MetricGrid items={sections.accounts?.cards} />
+            </Panel>
+            <Panel
+              panelId="accounts-by-date"
+              title="הרשמות לפי תאריך"
+              summary={rowsSummary(sections.accounts?.joinedByDay)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("accounts-by-date")}
+            >
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                <TopList title="חשבונות לפי יום הצטרפות" rows={sections.accounts?.joinedByDay} />
+                <TopList title="חשבונות לפי שבוע הצטרפות" rows={sections.accounts?.joinedByWeek} />
+                <TopList title="חשבונות לפי חודש הצטרפות" rows={sections.accounts?.joinedByMonth} />
+              </div>
+            </Panel>
+            <Panel
+              panelId="accounts-by-type"
+              title="חשבונות לפי סוג"
+              summary={rowsSummary(sections.accounts?.byPersona)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("accounts-by-type")}
+            >
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                <TopList title="חשבונות לפי פרסונה" rows={sections.accounts?.byPersona} />
+                <TopList title="חשבונות לפי תפקיד באימות" rows={sections.accounts?.byAuthRole} />
+                <TopList title="סטטוסי הרשאות" rows={sections.accounts?.byStatus} />
+              </div>
+            </Panel>
+          </div>
+        );
+
+      case "parents":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="parents-summary"
+              title="סיכום הורים"
+              subtitle="הצטרפות, ילדים, למידה ראשונה וימים עד שימוש"
+              summary={metricsSummary(sections.parentJoin?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parents-summary")}
+            >
+              <MetricGrid items={sections.parentJoin?.cards} />
+            </Panel>
+            <Panel
+              panelId="parents-by-date"
+              title="הורים לפי תאריך הצטרפות"
+              summary={rowsSummary(sections.parentJoin?.byDay)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parents-by-date")}
+            >
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                <TopList title="הורים לפי יום הצטרפות" rows={sections.parentJoin?.byDay} />
+                <TopList title="הורים לפי שבוע הצטרפות" rows={sections.parentJoin?.byWeek} />
+                <TopList title="הורים לפי חודש הצטרפות" rows={sections.parentJoin?.byMonth} />
+              </div>
+            </Panel>
+            <Panel
+              panelId="parents-onboarding-funnel"
+              title="משפך הצטרפות הורים"
+              summary="מסלול: כניסה → ילד → למידה → דוח"
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parents-onboarding-funnel")}
+            >
+              <FunnelList funnels={sections.parentJoin?.onboardingFunnel ? [sections.parentJoin.onboardingFunnel] : []} />
+            </Panel>
+            <Panel
+              panelId="parents-activity-metrics"
+              title="פעילות הורים"
+              subtitle="יצירת ילדים, דוחות ושימוש משמעותי"
+              summary={metricsSummary(sections.parents)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parents-activity-metrics")}
+            >
+              <MetricGrid items={sections.parents} />
+            </Panel>
+          </div>
+        );
+
+      case "children":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="children-join-summary"
+              title="הצטרפות ילדים"
+              subtitle="מתי ילדים נוספו וכמה זמן עד למידה ראשונה"
+              summary={metricsSummary(sections.childJoin?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("children-join-summary")}
+            >
+              <MetricGrid items={sections.childJoin?.cards} />
+            </Panel>
+            <Panel
+              panelId="children-by-date"
+              title="ילדים לפי תאריך הוספה"
+              summary={rowsSummary(sections.childJoin?.byDay)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("children-by-date")}
+            >
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                <TopList title="ילדים לפי יום הוספה" rows={sections.childJoin?.byDay} />
+                <TopList title="ילדים לפי שבוע הוספה" rows={sections.childJoin?.byWeek} />
+                <TopList title="ילדים לפי חודש הוספה" rows={sections.childJoin?.byMonth} />
+              </div>
+            </Panel>
+            <Panel
+              panelId="children-usage-summary"
+              title="שימוש בפועל"
+              subtitle="האם הילדים באמת לומדים, ולא רק רשומים"
+              summary={metricsSummary(sections.children?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("children-usage-summary")}
+            >
+              <MetricGrid items={sections.children?.cards} />
+            </Panel>
+            <Panel
+              panelId="children-by-grade"
+              title="ילדים לפי כיתה"
+              summary={rowsSummary(sections.children?.byGrade)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("children-by-grade")}
+            >
+              <SimpleTable
+                rows={sections.children?.byGrade}
+                columns={[
+                  { key: "grade", label: "כיתה", render: (row) => formatAnalyticsGradeHe(row.grade) },
+                  { key: "children", label: "ילדים" },
+                  { key: "activeChildren", label: "פעילים" },
+                  { key: "minutes", label: "דקות" },
+                  { key: "avgMinutes", label: "דקות ממוצעות" },
+                  { key: "answers", label: "תשובות" },
+                  { key: "accuracy", label: "דיוק %" },
+                ]}
+              />
+            </Panel>
+          </div>
+        );
+
+      case "learning":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="learning-summary"
+              title="סיכום למידה"
+              subtitle="מפגשים, דקות, תשובות ודיוק"
+              summary={metricsSummary(sections.learning?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("learning-summary")}
+            >
+              <MetricGrid items={sections.learning?.cards} />
+            </Panel>
+            <Panel
+              panelId="learning-by-subject"
+              title="שימוש לפי מקצוע"
+              summary={rowsSummary(sections.learning?.usage?.topSubjects)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("learning-by-subject")}
+            >
+              <TopList title="מקצועות מובילים" rows={sections.learning?.usage?.topSubjects} />
+            </Panel>
+            <Panel
+              panelId="learning-by-topic"
+              title="שימוש לפי נושא"
+              summary={rowsSummary(sections.learning?.usage?.topTopics)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("learning-by-topic")}
+            >
+              <TopList title="נושאים מובילים" rows={sections.learning?.usage?.topTopics} />
+            </Panel>
+            <Panel
+              panelId="learning-by-grade"
+              title="שימוש לפי כיתה"
+              summary={rowsSummary(sections.learning?.usage?.subjectByGrade)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("learning-by-grade")}
+            >
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <TopList title="שימוש מקצוע לפי כיתה" rows={sections.learning?.usage?.subjectByGrade} />
+                <TopList title="שימוש נושא לפי כיתה" rows={sections.learning?.usage?.topicByGrade} />
+              </div>
+            </Panel>
+            <Panel
+              panelId="learning-daily-accuracy"
+              title="שאלות ודיוק לפי יום"
+              summary={rowsSummary(sections.learning?.daily)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("learning-daily-accuracy")}
+            >
+              <SimpleTable
+                rows={sections.learning?.daily}
+                columns={[
+                  { key: "date", label: "יום" },
+                  { key: "sessions", label: "מפגשים" },
+                  { key: "minutes", label: "דקות" },
+                  { key: "questions", label: "שאלות" },
+                  { key: "accuracy", label: "דיוק %" },
+                ]}
+              />
+            </Panel>
+            <Panel
+              panelId="learning-hard-topics"
+              title="נושאים קשים"
+              summary={rowsSummary(sections.learning?.usage?.highWrongTopics)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("learning-hard-topics")}
+            >
+              <SimpleTable
+                rows={sections.learning?.usage?.highWrongTopics}
+                columns={[
+                  { key: "topic", label: "שיעור טעויות גבוה", render: (row) => formatAnalyticsLabelHe(row.topic) },
+                  { key: "answers", label: "תשובות" },
+                  { key: "wrongRate", label: "טעויות %" },
+                ]}
+              />
+            </Panel>
+            <Panel
+              panelId="learning-success-topics"
+              title="נושאים עם הצלחה גבוהה"
+              summary={rowsSummary(sections.learning?.usage?.highSuccessTopics)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("learning-success-topics")}
+            >
+              <SimpleTable
+                rows={sections.learning?.usage?.highSuccessTopics}
+                columns={[
+                  { key: "topic", label: "הצלחה גבוהה", render: (row) => formatAnalyticsLabelHe(row.topic) },
+                  { key: "answers", label: "תשובות" },
+                  { key: "accuracy", label: "דיוק %" },
+                ]}
+              />
+            </Panel>
+          </div>
+        );
+
+      case "reports":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="reports-open-export"
+              title="פתיחת דוחות וייצוא PDF"
+              summary={metricsSummary(sections.reportTruth?.cards?.slice(0, 4))}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("reports-open-export")}
+            >
+              <MetricGrid items={sections.reportTruth?.cards} />
+            </Panel>
+            <Panel
+              panelId="reports-truth-check"
+              title="בדיקת אמת מול מאגר נתונים"
+              subtitle="השוואת דוחות לנתוני DB קיימים"
+              summary="בדיקות מקור גולמיות"
+              toggle={togglePanel}
+              isOpen={isPanelOpen("reports-truth-check")}
+            >
+              <p className="text-sm text-white/55">
+                המדדים למעלה כוללים בדיקות אמת מול מקורות מאגר הנתונים. פתחו את «פתיחת דוחות וייצוא PDF» לפירוט מלא.
+              </p>
+            </Panel>
+            <Panel
+              panelId="reports-suspicious-gaps"
+              title="פערים חשודים"
+              subtitle="דוחות בלי מספיק מידע או חשד לפערים"
+              summary={metricsSummary(sections.reportTruth?.suspicious)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("reports-suspicious-gaps")}
+            >
+              <MetricGrid items={sections.reportTruth?.suspicious} />
+            </Panel>
+          </div>
+        );
+
+      case "parentActivities":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="parent-activities-summary"
+              title="סיכום פעילויות אישיות"
+              subtitle="יצירה, התחלה, השלמה וציון"
+              summary={metricsSummary(sections.parentActivities?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parent-activities-summary")}
+            >
+              <MetricGrid items={sections.parentActivities?.cards} />
+            </Panel>
+            <Panel
+              panelId="parent-activities-by-subject"
+              title="לפי מקצוע"
+              summary={rowsSummary(sections.parentActivities?.bySubject)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parent-activities-by-subject")}
+            >
+              <TopList title="לפי מקצוע" rows={sections.parentActivities?.bySubject} />
+            </Panel>
+            <Panel
+              panelId="parent-activities-by-topic"
+              title="לפי נושא"
+              summary={rowsSummary(sections.parentActivities?.byTopic)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parent-activities-by-topic")}
+            >
+              <TopList title="לפי נושא" rows={sections.parentActivities?.byTopic} />
+            </Panel>
+            <Panel
+              panelId="parent-activities-by-grade"
+              title="לפי כיתת ילד"
+              summary={rowsSummary(sections.parentActivities?.byChildGrade)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("parent-activities-by-grade")}
+            >
+              <TopList title="לפי כיתת ילד" rows={sections.parentActivities?.byChildGrade} />
+            </Panel>
+          </div>
+        );
+
+      case "teachers":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="teachers-summary"
+              title="סיכום מורים פרטיים"
+              subtitle="הצטרפות, פעילות, דוחות, פעילויות ודפי עבודה"
+              summary={metricsSummary(sections.teachers?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("teachers-summary")}
+            >
+              <MetricGrid items={sections.teachers?.cards} />
+            </Panel>
+            <Panel
+              panelId="teachers-by-date"
+              title="מורים לפי תאריך הצטרפות"
+              summary={rowsSummary(sections.teachers?.byDay)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("teachers-by-date")}
+            >
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                <TopList title="מורים לפי יום הצטרפות" rows={sections.teachers?.byDay} />
+                <TopList title="מורים לפי שבוע הצטרפות" rows={sections.teachers?.byWeek} />
+                <TopList title="מורים לפי חודש הצטרפות" rows={sections.teachers?.byMonth} />
+              </div>
+            </Panel>
+            <Panel
+              panelId="teachers-activity"
+              title="פעילות מורים לפי יום"
+              summary={rowsSummary(sections.teachers?.activityByDay)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("teachers-activity")}
+            >
+              <TopList title="פעילות מורים לפי יום" rows={sections.teachers?.activityByDay} />
+            </Panel>
+          </div>
+        );
+
+      case "books":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="books-summary"
+              title="ספרים, שמע, הסברים ודפי עבודה"
+              subtitle="מה שנמדד היום מול מה שדורש איסוף אירועים"
+              summary={metricsSummary(sections.booksAudioWorksheets)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("books-summary")}
+            >
+              <MetricGrid items={sections.booksAudioWorksheets} />
+            </Panel>
+            <Panel
+              panelId="books-top-pages"
+              title="עמודי ספר מובילים"
+              summary={rowsSummary(sections.topBookPages)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("books-top-pages")}
+            >
+              <TopList title="עמודי ספר מובילים" rows={sections.topBookPages} />
+            </Panel>
+          </div>
+        );
+
+      case "rewards":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="rewards-summary"
+              title="פרסים ומטבעות"
+              subtitle="עסקאות מטבעות ויתרות ילדים"
+              summary={metricsSummary(sections.rewards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("rewards-summary")}
+            >
+              <MetricGrid items={sections.rewards} />
+            </Panel>
+            <Panel
+              panelId="rewards-by-day"
+              title="מטבעות לפי יום"
+              summary={rowsSummary(sections.rewardsByDay)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("rewards-by-day")}
+            >
+              <TopList title="מטבעות לפי יום" rows={sections.rewardsByDay} />
+            </Panel>
+            <Panel
+              panelId="rewards-by-reason"
+              title="מטבעות לפי סיבה"
+              summary={rowsSummary(sections.rewardsByReason)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("rewards-by-reason")}
+            >
+              <TopList title="מטבעות לפי סיבה" rows={sections.rewardsByReason} />
+            </Panel>
+          </div>
+        );
+
+      case "funnels":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="funnels-all"
+              title="משפכי שימוש"
+              subtitle="מסלולי שימוש: הורה, ילד, דוחות, פעילויות, ספרים ושמע"
+              summary={`${(sections.funnels || []).length} משפכים`}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("funnels-all")}
+            >
+              <FunnelList funnels={sections.funnels} />
+            </Panel>
+          </div>
+        );
+
+      case "retention":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="retention-summary"
+              title="חזרה לשימוש"
+              subtitle="שימור יום 1 / 7 / 30 — רק אחרי מספיק זמן ונתונים"
+              summary={metricsSummary(sections.retention)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("retention-summary")}
+            >
+              <MetricGrid items={sections.retention} />
+            </Panel>
+          </div>
+        );
+
+      case "abandonment":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="abandonment-summary"
+              title="נטישה ומועמדי נטישה"
+              subtitle="אירועי נטישה מפורשים ומועמדים מוסקים"
+              summary={metricsSummary(sections.abandonment)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("abandonment-summary")}
+            >
+              <MetricGrid items={sections.abandonment} />
+            </Panel>
+          </div>
+        );
+
+      case "features":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="features-summary"
+              title="סיכום שימוש בפיצ׳רים"
+              summary={metricsSummary(sections.featureUsage?.cards)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("features-summary")}
+            >
+              <MetricGrid items={sections.featureUsage?.cards} />
+            </Panel>
+            <Panel
+              panelId="features-most-used"
+              title="התכונות הכי בשימוש"
+              summary={rowsSummary(sections.featureUsage?.mostUsed)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("features-most-used")}
+            >
+              <TopList title="התכונות הכי בשימוש" rows={sections.featureUsage?.mostUsed} />
+            </Panel>
+            <Panel
+              panelId="features-least-used"
+              title="התכונות הכי פחות בשימוש"
+              summary={rowsSummary(sections.featureUsage?.leastUsed)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("features-least-used")}
+            >
+              <TopList title="התכונות הכי פחות בשימוש" rows={sections.featureUsage?.leastUsed} />
+            </Panel>
+            <Panel
+              panelId="features-by-grade"
+              title="שימוש לפי כיתה"
+              summary={rowsSummary(sections.featureUsage?.byGrade)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("features-by-grade")}
+            >
+              <TopList title="שימוש לפי כיתה" rows={sections.featureUsage?.byGrade} />
+            </Panel>
+            <Panel
+              panelId="features-by-subject"
+              title="שימוש לפי מקצוע"
+              summary={rowsSummary(sections.featureUsage?.bySubject)}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("features-by-subject")}
+            >
+              <TopList title="שימוש לפי מקצוע" rows={sections.featureUsage?.bySubject} />
+            </Panel>
+          </div>
+        );
+
+      case "quality":
+        return (
+          <div className="space-y-3">
+            <TabToolbar panelIds={currentPanelIds} openPanels={openPanels} onOpenAll={openAllPanels} onCloseAll={closeAllPanels} />
+            <Panel
+              panelId="quality-source-errors"
+              title="מקורות נתונים חסרים / איכות"
+              subtitle="טבלאות או מקורות שלא נטענו במלואם"
+              summary={sourceErrors.length ? `${sourceErrors.length} מקורות חסרים` : "כל המקורות זמינים"}
+              toggle={togglePanel}
+              isOpen={isPanelOpen("quality-source-errors")}
+            >
+              {sourceErrors.length ? (
+                <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
+                  חלק ממקורות הנתונים חסרים או לא זמינים:{" "}
+                  {sourceErrors.map((e) => formatAnalyticsTableHe(e.table)).join(", ")}
+                </div>
+              ) : (
+                <p className="text-sm text-emerald-100/80">כל מקורות הנתונים המרכזיים נטענו בהצלחה בטווח הנוכחי.</p>
+              )}
+            </Panel>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <Layout>
       <AdminShell
@@ -267,12 +1108,12 @@ export default function AdminAnalyticsPage() {
             <p className="text-xs text-white/50 mb-1">ניהול מערכת</p>
             <h1 className="text-xl md:text-2xl font-bold text-right">{ADMIN_ANALYTICS_TITLE}</h1>
             <p className="text-sm text-white/55 mt-2">
-              מספרים ממקורות מאגר נתונים קיימים בלבד. מדדים שאינם נמדדים מסומנים בגלוי.
+              מספרים ממקורות מאגר נתונים קיימים בלבד. בחרו קטגוריה ופתחו רק את הבלוקים שמעניינים אתכם.
             </p>
           </div>
         }
       >
-        <div className="space-y-5">
+        <div className="space-y-5" dir="rtl">
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               <label className="text-sm text-white/70">
@@ -334,161 +1175,15 @@ export default function AdminAnalyticsPage() {
             <>
               {sourceErrors.length ? (
                 <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
-                  חלק ממקורות הנתונים חסרים או לא זמינים: {sourceErrors.map((e) => formatAnalyticsTableHe(e.table)).join(", ")}
+                  יש {sourceErrors.length} מקורות נתונים חסרים — פרטים בטאב «בדיקות אמת / איכות».
                 </div>
               ) : null}
 
-              <Section title="סקירה כללית" subtitle="מדדי שימוש מרכזיים ממקורות מאגר הנתונים הקיימים">
-                <MetricGrid items={sections.overview} />
-              </Section>
+              <AnalyticsTabBar activeTab={activeTab} onChange={setActiveTab} />
 
-              <Section title="חשבונות והרשמות" subtitle="חשבונות אימות, פרסונות, תפקידים, חשבונות לא משויכים והרשמות לאורך זמן">
-                <MetricGrid items={sections.accounts?.cards} />
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
-                  <TopList title="חשבונות לפי פרסונה" rows={sections.accounts?.byPersona} />
-                  <TopList title="חשבונות לפי תפקיד באימות" rows={sections.accounts?.byAuthRole} />
-                  <TopList title="סטטוסי הרשאות" rows={sections.accounts?.byStatus} />
-                  <TopList title="חשבונות לפי יום הצטרפות" rows={sections.accounts?.joinedByDay} />
-                  <TopList title="חשבונות לפי שבוע הצטרפות" rows={sections.accounts?.joinedByWeek} />
-                  <TopList title="חשבונות לפי חודש הצטרפות" rows={sections.accounts?.joinedByMonth} />
-                </div>
-              </Section>
-
-              <Section title="הצטרפות הורים ותחילת שימוש" subtitle="מתי הורים הצטרפו, האם יצרו ילדים וכמה מהר הגיעו ללמידה">
-                <MetricGrid items={sections.parentJoin?.cards} />
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
-                  <TopList title="הורים לפי יום הצטרפות" rows={sections.parentJoin?.byDay} />
-                  <TopList title="הורים לפי שבוע הצטרפות" rows={sections.parentJoin?.byWeek} />
-                  <TopList title="הורים לפי חודש הצטרפות" rows={sections.parentJoin?.byMonth} />
-                </div>
-                <div className="mt-4">
-                  <FunnelList funnels={sections.parentJoin?.onboardingFunnel ? [sections.parentJoin.onboardingFunnel] : []} />
-                </div>
-              </Section>
-
-              <Section title="הצטרפות ילדים ולמידה ראשונה" subtitle="מתי ילדים נוספו, מי התחיל ללמוד וכמה זמן עבר עד למידה ראשונה">
-                <MetricGrid items={sections.childJoin?.cards} />
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
-                  <TopList title="ילדים לפי יום הוספה" rows={sections.childJoin?.byDay} />
-                  <TopList title="ילדים לפי שבוע הוספה" rows={sections.childJoin?.byWeek} />
-                  <TopList title="ילדים לפי חודש הוספה" rows={sections.childJoin?.byMonth} />
-                </div>
-              </Section>
-
-              <Section title="נתוני מורים פרטיים" subtitle="מורים פרטיים בלבד: הצטרפות, פעילות, דוחות, פעילויות ודפי עבודה">
-                <MetricGrid items={sections.teachers?.cards} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
-                  <TopList title="מורים לפי יום הצטרפות" rows={sections.teachers?.byDay} />
-                  <TopList title="מורים לפי שבוע הצטרפות" rows={sections.teachers?.byWeek} />
-                  <TopList title="מורים לפי חודש הצטרפות" rows={sections.teachers?.byMonth} />
-                  <TopList title="פעילות מורים לפי יום" rows={sections.teachers?.activityByDay} />
-                </div>
-              </Section>
-
-              <Section title="ילדים ושימוש בפועל" subtitle="האם הילדים באמת לומדים, ולא רק רשומים">
-                <MetricGrid items={sections.children?.cards} />
-                <div className="mt-4">
-                  <SimpleTable
-                    rows={sections.children?.byGrade}
-                    columns={[
-                      { key: "grade", label: "כיתה", render: (row) => formatAnalyticsGradeHe(row.grade) },
-                      { key: "children", label: "ילדים" },
-                      { key: "activeChildren", label: "פעילים" },
-                      { key: "minutes", label: "דקות" },
-                      { key: "avgMinutes", label: "דקות ממוצעות" },
-                      { key: "answers", label: "תשובות" },
-                      { key: "accuracy", label: "דיוק %" },
-                    ]}
-                  />
-                </div>
-              </Section>
-
-              <Section title="למידה, מקצועות ונושאים" subtitle="מפגשים, דקות, תשובות, דיוק ונושאים חזקים/חלשים">
-                <MetricGrid items={sections.learning?.cards} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
-                  <TopList title="מקצועות מובילים" rows={sections.learning?.usage?.topSubjects} />
-                  <TopList title="נושאים מובילים" rows={sections.learning?.usage?.topTopics} />
-                  <TopList title="שימוש מקצוע לפי כיתה" rows={sections.learning?.usage?.subjectByGrade} />
-                  <TopList title="שימוש נושא לפי כיתה" rows={sections.learning?.usage?.topicByGrade} />
-                </div>
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
-                  <SimpleTable title="ימים" rows={sections.learning?.daily} columns={[
-                    { key: "date", label: "יום" },
-                    { key: "sessions", label: "מפגשים" },
-                    { key: "minutes", label: "דקות" },
-                    { key: "questions", label: "שאלות" },
-                    { key: "accuracy", label: "דיוק %" },
-                  ]} />
-                  <SimpleTable rows={sections.learning?.usage?.highWrongTopics} columns={[
-                    { key: "topic", label: "שיעור טעויות גבוה", render: (row) => formatAnalyticsLabelHe(row.topic) },
-                    { key: "answers", label: "תשובות" },
-                    { key: "wrongRate", label: "טעויות %" },
-                  ]} />
-                  <SimpleTable rows={sections.learning?.usage?.highSuccessTopics} columns={[
-                    { key: "topic", label: "הצלחה גבוהה", render: (row) => formatAnalyticsLabelHe(row.topic) },
-                    { key: "answers", label: "תשובות" },
-                    { key: "accuracy", label: "דיוק %" },
-                  ]} />
-                </div>
-              </Section>
-
-              <Section title="פעילות הורים" subtitle="האם הורים יוצרים ילדים ומגיעים לשימוש משמעותי">
-                <MetricGrid items={sections.parents} />
-              </Section>
-
-              <Section title="פעילויות אישיות של הורה" subtitle="יצירה, התחלה, השלמה וציון לפי מקור אמת קיים">
-                <MetricGrid items={sections.parentActivities?.cards} />
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-4">
-                  <TopList title="לפי מקצוע" rows={sections.parentActivities?.bySubject} />
-                  <TopList title="לפי נושא" rows={sections.parentActivities?.byTopic} />
-                  <TopList title="לפי כיתת ילד" rows={sections.parentActivities?.byChildGrade} />
-                </div>
-              </Section>
-
-              <Section title="דוחות הורים / PDF / בדיקת אמת" subtitle="בדיקות מקור גולמיות וחשדות לפערים ללא שינוי התנהגות הדוח">
-                <MetricGrid items={sections.reportTruth?.cards} />
-                <div className="mt-4">
-                  <h3 className="font-semibold mb-3">חשדות לפערים</h3>
-                  <MetricGrid items={sections.reportTruth?.suspicious} />
-                </div>
-              </Section>
-
-              <Section title="ספרים, שמע, הסברים ודפי עבודה" subtitle="מה שנמדד היום מול מה שדורש איסוף אירועים">
-                <MetricGrid items={sections.booksAudioWorksheets} />
-                <div className="mt-4">
-                  <TopList title="עמודי ספר מובילים" rows={sections.topBookPages} />
-                </div>
-              </Section>
-
-              <Section title="פרסים ומטבעות" subtitle="מקור אמת: עסקאות מטבעות ויתרות ילדים">
-                <MetricGrid items={sections.rewards} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
-                  <TopList title="מטבעות לפי יום" rows={sections.rewardsByDay} />
-                  <TopList title="מטבעות לפי סיבה" rows={sections.rewardsByReason} />
-                </div>
-              </Section>
-
-              <Section title="משפכי שימוש" subtitle="מסלולי שימוש קבועים: הורה, ילד, דוחות, פעילויות, ספרים ושמע">
-                <FunnelList funnels={sections.funnels} />
-              </Section>
-
-              <Section title="חזרה לשימוש" subtitle="שימור יום 1 / 7 / 30 מוצג רק אחרי מספיק זמן ונתונים אמיתיים">
-                <MetricGrid items={sections.retention} />
-              </Section>
-
-              <Section title="נטישה ומועמדי נטישה" subtitle="אירועי נטישה מפורשים לצד מועמדים מוסקים ממפגשים וסטטוסים">
-                <MetricGrid items={sections.abandonment} />
-              </Section>
-
-              <Section title="שימוש בפיצ׳רים" subtitle="מה משתמשים באמת פותחים, ומה כמעט לא מקבל שימוש">
-                <MetricGrid items={sections.featureUsage?.cards} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
-                  <TopList title="התכונות הכי בשימוש" rows={sections.featureUsage?.mostUsed} />
-                  <TopList title="התכונות הכי פחות בשימוש" rows={sections.featureUsage?.leastUsed} />
-                  <TopList title="שימוש לפי כיתה" rows={sections.featureUsage?.byGrade} />
-                  <TopList title="שימוש לפי מקצוע" rows={sections.featureUsage?.bySubject} />
-                </div>
-              </Section>
+              <div className="rounded-3xl border border-white/10 bg-slate-950/40 p-4 md:p-5" data-analytics-active-tab={activeTab}>
+                {renderTabContent()}
+              </div>
             </>
           ) : null}
         </div>
