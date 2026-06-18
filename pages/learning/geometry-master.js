@@ -3020,7 +3020,6 @@ export default function GeometryMaster() {
                       />
                     </>
                   )}
-                  </div>
 
                   <LearningMasterMobileQuestionActionDock
                     MB={MB}
@@ -3052,6 +3051,7 @@ export default function GeometryMaster() {
                       ) : null
                     }
                   />
+                  </div>
 
                     <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                       {currentQuestion.params?.kind !== "no_question" &&

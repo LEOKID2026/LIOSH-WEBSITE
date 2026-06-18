@@ -3368,7 +3368,6 @@ function saveScienceAnswerInParallel({
                     }}
                     wrapperClassName="w-full flex flex-col items-center justify-center gap-1 max-w-xl mx-auto"
                   />
-                </div>
 
                 <LearningMasterMobileQuestionActionDock
                   MB={MB}
@@ -3400,6 +3399,7 @@ function saveScienceAnswerInParallel({
                     ) : null
                   }
                 />
+                </div>
 
                 <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                   {currentQuestion && (

@@ -3482,7 +3482,6 @@ export default function MoledetGeographyMaster() {
                       }}
                     />
                   )}
-                  </div>
 
                   <LearningMasterMobileQuestionActionDock
                     MB={MB}
@@ -3515,6 +3514,7 @@ export default function MoledetGeographyMaster() {
                       ) : null
                     }
                   />
+                  </div>
 
                   <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                   <div

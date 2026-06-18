@@ -2961,7 +2961,6 @@ export default function EnglishMaster() {
                           questionPressureLayout?.questionLineHeightByPressure,
                       }}
                     />
-                  </div>
 
                   <LearningMasterMobileQuestionActionDock
                     MB={MB}
@@ -2992,6 +2991,7 @@ export default function EnglishMaster() {
                       ) : null
                     }
                   />
+                  </div>
 
                   <div className={LEARNING_MASTER_ANSWER_SURFACE_CLASS}>
                     {currentQuestion.qType === "typing" ? (

@@ -4145,7 +4145,6 @@ export default function HebrewMaster() {
                       bodyStyle={{ lineHeight: questionLineHeightByPressure }}
                     />
                   )}
-                  </div>
 
                   <LearningMasterMobileQuestionActionDock
                     MB={MB}
@@ -4182,6 +4181,7 @@ export default function HebrewMaster() {
                       ) : null
                     }
                   />
+                  </div>
 
                   <div className="w-full flex-1 min-h-0 mt-2 flex flex-col items-center justify-end">
                   {isTypingQuestion ? (
