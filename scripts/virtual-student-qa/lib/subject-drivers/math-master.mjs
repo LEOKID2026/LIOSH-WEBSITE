@@ -24,6 +24,7 @@ import {
   selectCountablePracticeMode,
   createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
+import { attachSessionPacingToScenario } from "../session-pacing.mjs";
 
 const MATH_PATH = "/learning/math-master";
 
@@ -106,6 +107,10 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
   const answeredQuestions = [];
 
   const evidenceTracker = createPracticeEvidenceTracker("math-master", log);
+  const pacing = attachSessionPacingToScenario(scenario, {
+    log,
+    subjectLabel: "math-master",
+  });
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
     log(
@@ -139,6 +144,8 @@ export async function runMathScenario({ page, baseUrl, scenario, log, screenshot
       `math-master: q${questionIndex} body="${shortText(exerciseText)}" computed=${computed} ` +
         `submit=${pick.value} intendedCorrect=${pick.intendedCorrect}`
     );
+
+    await pacing.waitBeforeAnswer(questionIndex);
 
     const answerRes = await waitForAnswerSave({
       page,

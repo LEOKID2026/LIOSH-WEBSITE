@@ -31,7 +31,7 @@ param(
   [string]$EndDate,
 
   [ValidateSet('realtime', 'fast')]
-  [string]$Mode = 'fast',
+  [string]$Mode = 'realtime',
 
   [string]$Students = '',
 

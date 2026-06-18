@@ -41,6 +41,7 @@ import {
   createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
+import { attachSessionPacingToScenario } from "../session-pacing.mjs";
 
 const SUBJECT = "english";
 const SUBJECT_LABEL = "english-master";
@@ -280,6 +281,10 @@ export async function runEnglishScenario({
   const shapeCounts = { mcq: 0, typing: 0 };
   let earlyExitReason = null;
   const evidenceTracker = createPracticeEvidenceTracker(SUBJECT_LABEL, log);
+  const pacing = attachSessionPacingToScenario(scenario, {
+    log,
+    subjectLabel: SUBJECT_LABEL,
+  });
 
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
@@ -345,6 +350,8 @@ export async function runEnglishScenario({
           `matchedByLabels=${probe.ok ? probe.matchedByLabels : "n/a"} ` +
           `pickedIndex=${pickedIndex}/${optionsCount} intendedCorrect=${intendedCorrect}`
       );
+
+      await pacing.waitBeforeAnswer(questionIndex);
 
       const answerRes = await waitForAnswerSave({
         page,
@@ -420,6 +427,8 @@ export async function runEnglishScenario({
       `input[placeholder="${TYPING_PLACEHOLDER}"]`
     );
     await typingInput.waitFor({ state: "visible", timeout: 10_000 });
+
+    await pacing.waitBeforeAnswer(questionIndex);
 
     const answerRes = await waitForAnswerSave({
       page,

@@ -673,13 +673,36 @@ export async function runPhaseD2Suite({
     }
   }
 
-  // ---- 5. Per-student loop: tight baseline → sessions → after ------------
-  for (let i = 0; i < records.length; i++) {
-    const record = records[i];
+  // ---- 5. Parallel per-student workers: baseline → sessions → after ----
+  const runnableRecords = records.filter((r) => r.status !== "blocked");
+  const runnableCount = runnableRecords.length;
+  const parallelRunStartedAt = Date.now();
+  log?.(
+    `phase-d2: parallel student execution — ${runnableCount} worker(s) ` +
+      `(each with own parent+student browser contexts, Promise.all)`
+  );
+
+  await Promise.all(
+    records.map(async (record, i) => {
     if (record.status === "blocked") {
       log?.(`phase-d2: skipping ${record.label} (status=blocked).`);
-      continue;
+      return;
     }
+
+    const workerStartedAt = Date.now();
+    log?.(
+      `worker-start ${record.label} timestamp=${new Date(workerStartedAt).toISOString()} ` +
+        `plannedMinutesForStudent=${record.intendedMinutes} ` +
+        `sessionsForStudent=${record.sessions.length}`
+    );
+
+    const workerLog = (line) => log?.(`[${record.label}] ${line}`);
+
+    const parentContext = await browser.newContext({
+      locale: "he-IL",
+      viewport: { width: 1280, height: 800 },
+    });
+    const workerParentPage = await parentContext.newPage();
 
     const tag = `s${String(i + 1).padStart(2, "0")}-${record.label}`;
     record.runWindow = {
@@ -693,6 +716,30 @@ export async function runPhaseD2Suite({
       driverAnswerCount: 0,
       externalConcurrentActivity: [],
     };
+
+    try {
+      await authenticateParent({
+        context: parentContext,
+        page: workerParentPage,
+        account: parentAccount,
+        baseUrl,
+        mode: parentAuthMode,
+        log: workerLog,
+      });
+    } catch (parentWorkerError) {
+      record.status = "fail";
+      record.stepFailed = "parent-auth-worker";
+      record.driverError = `parallel parent auth failed: ${
+        parentWorkerError?.message || parentWorkerError
+      }`;
+      workerLog(`FAIL — ${record.driverError}`);
+      try {
+        await parentContext.close();
+      } catch {
+        // ignore
+      }
+      return;
+    }
 
     log?.("");
     log?.(
@@ -708,10 +755,10 @@ export async function runPhaseD2Suite({
     record.runWindow.studentRunStartedAt = new Date().toISOString();
     try {
       record.baseline = await snapshotParentReportViaDashboard({
-        page: parentPage,
+        page: workerParentPage,
         baseUrl,
         expectedStudentName: record.expectedDisplayName,
-        log,
+        log: workerLog,
         artifacts,
         artifactPrefix: `${tag}-baseline`,
         studentLabel: record.label,
@@ -725,12 +772,14 @@ export async function runPhaseD2Suite({
       record.driverError = `baseline snapshot failed: ${error?.message || error}`;
       log?.(`phase-d2: ${record.label} FAIL — ${record.driverError}`);
       await artifacts
-        .saveScreenshot(parentPage, `${tag}-baseline-failure`)
+        .saveScreenshot(workerParentPage, `${tag}-baseline-failure`)
         .catch(() => {});
-      if (i < records.length - 1) {
-        await pacer.pauseBetweenStudents();
+      try {
+        await parentContext.close();
+      } catch {
+        // ignore
       }
-      continue;
+      return;
     }
 
     const studentContext = await newStudentContext(browser);
@@ -937,10 +986,10 @@ export async function runPhaseD2Suite({
     );
     try {
       record.after = await snapshotParentReportViaDashboard({
-        page: parentPage,
+        page: workerParentPage,
         baseUrl,
         expectedStudentName: record.expectedDisplayName,
-        log,
+        log: workerLog,
         artifacts,
         artifactPrefix: `${tag}-after`,
         studentLabel: record.label,
@@ -957,7 +1006,7 @@ export async function runPhaseD2Suite({
       }
       log?.(`phase-d2: ${record.label} FAIL — ${record.driverError}`);
       await artifacts
-        .saveScreenshot(parentPage, `${tag}-after-failure`)
+        .saveScreenshot(workerParentPage, `${tag}-after-failure`)
         .catch(() => {});
     }
 
@@ -971,10 +1020,56 @@ export async function runPhaseD2Suite({
       applyStudentVerdict(record, log);
     }
 
-    if (i < records.length - 1) {
-      await pacer.pauseBetweenStudents();
+    try {
+      await parentContext.close();
+    } catch {
+      // best-effort cleanup
     }
-  }
+
+    const workerEndedAt = Date.now();
+    const workerWallClockMs = workerEndedAt - workerStartedAt;
+    log?.(
+      `worker-end ${record.label} timestamp=${new Date(workerEndedAt).toISOString()} ` +
+        `actualWallClockMs=${workerWallClockMs} ` +
+        `actualWallClockMin=${(workerWallClockMs / 60_000).toFixed(1)}`
+    );
+    record.runWindow.workerWallClockMs = workerWallClockMs;
+    record.runWindow.workerStartedAt = new Date(workerStartedAt).toISOString();
+    record.runWindow.workerEndedAt = new Date(workerEndedAt).toISOString();
+    })
+  );
+
+  const parallelRunEndedAt = Date.now();
+  const actualParallelWallClockMs = parallelRunEndedAt - parallelRunStartedAt;
+  const studiedRecords = records.filter(
+    (r) => r.status !== "blocked" && r.sessions.length > 0
+  );
+  const totalPlannedMinutes = studiedRecords.reduce(
+    (acc, r) => acc + (Number(r.intendedMinutes) || 0),
+    0
+  );
+  const maxStudentPlannedMinutes = studiedRecords.reduce(
+    (acc, r) => Math.max(acc, Number(r.intendedMinutes) || 0),
+    0
+  );
+  const serialEquivalentMs = studiedRecords.reduce(
+    (acc, r) => acc + (r.runWindow?.workerWallClockMs || 0),
+    0
+  );
+  const parallelismEfficiency =
+    actualParallelWallClockMs > 0
+      ? serialEquivalentMs / actualParallelWallClockMs
+      : 0;
+
+  log?.(
+    `parallelism-summary studied=${studiedRecords.length} ` +
+      `totalPlannedMinutes=${totalPlannedMinutes} (sum, NOT wall-clock) ` +
+      `maxStudentPlannedMinutes=${maxStudentPlannedMinutes} ` +
+      `actualWallClockMs=${actualParallelWallClockMs} ` +
+      `actualWallClockMin=${(actualParallelWallClockMs / 60_000).toFixed(1)} ` +
+      `parallelismEfficiency=${parallelismEfficiency.toFixed(2)} ` +
+      `(serialEquivalent/wall-clock; ~${studiedRecords.length} if fully parallel)`
+  );
 
   // ---- 6. Cross-student matrix ------------------------------------------
   const crossStudentMatrix = records

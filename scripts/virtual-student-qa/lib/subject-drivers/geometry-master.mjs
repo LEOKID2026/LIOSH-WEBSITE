@@ -40,6 +40,7 @@ import {
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickAnswerForArithmetic } from "../answer-profiles.mjs";
+import { attachSessionPacingToScenario } from "../session-pacing.mjs";
 
 const GEOMETRY_PATH = "/learning/geometry-master";
 
@@ -114,6 +115,10 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
   const answeredQuestions = [];
 
   const evidenceTracker = createPracticeEvidenceTracker("geometry-master", log);
+  const pacing = attachSessionPacingToScenario(scenario, {
+    log,
+    subjectLabel: "geometry-master",
+  });
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
 
@@ -206,6 +211,8 @@ export async function runGeometryScenario({ page, baseUrl, scenario, log, screen
         `flavour=${questionFlavour} correctAnswer(probe)=${probe.ok ? probe.correctAnswer : "n/a"} ` +
         `submit=${pick.value} intendedCorrect=${pick.intendedCorrect}`
     );
+
+    await pacing.waitBeforeAnswer(questionIndex);
 
     const answerRes = await waitForAnswerSave({
       page,

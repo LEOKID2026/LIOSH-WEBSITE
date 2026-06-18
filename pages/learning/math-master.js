@@ -71,6 +71,7 @@ import {
   formatLearningWrongFeedbackHe,
 } from "../../utils/learning-live-feedback-he";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
+import MathLtrIsland from "../../components/learning/MathLtrIsland";
 import StepExerciseViewRouter from "../../components/learning/StepExerciseViewRouter";
 import StepWordProblemExerciseView from "../../components/learning/StepWordProblemExerciseView";
 import {
@@ -5253,9 +5254,9 @@ export default function MathMaster() {
                   {practiceMode && practiceQuestion && (
                     <div className="mb-4 p-4 rounded-lg bg-emerald-500/20 border border-emerald-400/50">
                       <div className="text-center mb-3">
-                        <div className="text-2xl font-bold text-white mb-2">
+                        <MathLtrIsland className="text-2xl font-bold text-white mb-2 block w-full">
                           {practiceQuestion.row} × {practiceQuestion.col} = ?
-                        </div>
+                        </MathLtrIsland>
                         <input
                           type="number"
                           value={practiceAnswer}
@@ -5354,8 +5355,11 @@ export default function MathMaster() {
                       selectedResult % selectedDivisor !== 0 && (
                         <div className="w-full px-4 py-1 rounded-lg bg-red-500/20 border border-red-400/50 text-center flex items-center justify-center gap-2">
                           <span className="text-sm text-red-200 font-semibold">
-                            ⚠️ שגיאה: {selectedResult} ÷ {selectedDivisor} הוא
-                            לא מספר שלם!
+                            ⚠️ שגיאה:{" "}
+                            <MathLtrIsland>
+                              {selectedResult} ÷ {selectedDivisor}
+                            </MathLtrIsland>{" "}
+                            הוא לא מספר שלם!
                           </span>
                           <span className="text-xs text-red-300">
                             (
@@ -5377,30 +5381,31 @@ export default function MathMaster() {
                               : "bg-red-500/20 border-red-400/50"
                           }`}
                         >
-                          <span className="text-base text-white/80">
+                          <MathLtrIsland className="text-base text-white/80">
                             {selectedRow || selectedCell.row} ×{" "}
-                            {selectedCol || selectedCell.col} =
-                          </span>
-                          <span
-                            className={`text-xl font-bold ${
-                              (selectedRow || selectedCell.row) *
-                                (selectedCol || selectedCell.col) ===
-                              selectedCell.value
-                                ? "text-emerald-300"
-                                : "text-red-300"
-                            }`}
-                          >
-                            {selectedCell.value}
-                          </span>
-                          {(selectedRow || selectedCell.row) *
-                            (selectedCol || selectedCell.col) !==
-                            selectedCell.value && (
-                            <span className="text-xs text-red-300 font-semibold">
-                              ⚠️ Should be{" "}
-                              {(selectedRow || selectedCell.row) *
-                                (selectedCol || selectedCell.col)}
+                            {selectedCol || selectedCell.col} ={" "}
+                            <span
+                              className={`text-xl font-bold ${
+                                (selectedRow || selectedCell.row) *
+                                  (selectedCol || selectedCell.col) ===
+                                selectedCell.value
+                                  ? "text-emerald-300"
+                                  : "text-red-300"
+                              }`}
+                            >
+                              {selectedCell.value}
                             </span>
-                          )}
+                            {(selectedRow || selectedCell.row) *
+                              (selectedCol || selectedCell.col) !==
+                              selectedCell.value && (
+                              <span className="text-xs text-red-300 font-semibold">
+                                {" "}
+                                ⚠️ Should be{" "}
+                                {(selectedRow || selectedCell.row) *
+                                  (selectedCol || selectedCell.col)}
+                              </span>
+                            )}
+                          </MathLtrIsland>
                         </div>
                       )}
 
@@ -5409,12 +5414,12 @@ export default function MathMaster() {
                       selectedDivisor &&
                       selectedResult % selectedDivisor === 0 && (
                         <div className="w-full px-4 py-1 rounded-lg bg-purple-500/20 border border-purple-400/50 text-center flex items-center justify-center gap-3">
-                          <span className="text-base text-white/80">
-                            {selectedResult} ÷ {selectedDivisor} =
-                          </span>
-                          <span className="text-xl font-bold text-purple-300">
-                            {selectedResult / selectedDivisor}
-                          </span>
+                          <MathLtrIsland className="text-base text-white/80">
+                            {selectedResult} ÷ {selectedDivisor} ={" "}
+                            <span className="text-xl font-bold text-purple-300">
+                              {selectedResult / selectedDivisor}
+                            </span>
+                          </MathLtrIsland>
                         </div>
                       )}
                   </div>

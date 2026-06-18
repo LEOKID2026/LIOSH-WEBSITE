@@ -41,13 +41,18 @@
  *   - Never schedules a session shorter than 3 minutes / fewer than 4
  *     questions (the subject drivers can't reliably produce useful
  *     evidence below those floors).
- *   - Caps the day's minutes by persona.dailyMinutesAbsoluteCap (defaults
- *     to 120 — see plan §11 "no student should be simulated as learning
- *     unrealistically all night").
+ *   - Caps the day's minutes by persona.dailyMinutesAbsoluteCap AND the
+ *     global owner budget (VIRTUAL_STUDENT_MAX_PLANNED_MINUTES_PER_DAY,
+ *     default 35). Outlier trims are logged on the PlanStudent.
  *   - Forces 'targeted' profile on weakness subjects regardless of the
  *     evolving defaultProfile in state.
  */
 import { makeRng } from "./answer-profiles.mjs";
+import {
+  resolveMaxStudentPlannedMinutesPerDay,
+  resolveMaxSessionsPerStudentPerDay,
+  computeParallelDayEstimateMinutes,
+} from "./planner-budget.mjs";
 import {
   PERSONAS,
   SUBJECTS,
@@ -84,11 +89,13 @@ function clampInt(n, lo, hi) {
 }
 
 /**
- * Pick how many sessions this student does today. Most students do 1-2;
- * AAA11 ('strong-persistent') is the only persona allowed up to 3.
+ * Pick how many sessions this student does today. Persona may allow up to 3
+ * (AAA11), but owner budget caps at resolveMaxSessionsPerStudentPerDay() (2).
  */
 function pickNumSessions(persona, rng) {
-  const max = clampInt(persona.maxSessions ?? 2, 1, 3);
+  const personaMax = clampInt(persona.maxSessions ?? 2, 1, 3);
+  const ownerMax = resolveMaxSessionsPerStudentPerDay();
+  const max = Math.min(personaMax, ownerMax);
   if (max === 1) return 1;
   if (max === 2) return rng() < 0.55 ? 1 : 2;
   // max === 3: 30% one, 50% two, 20% three.
@@ -195,12 +202,22 @@ export function generateDailyPlan({
     });
   }
 
+  const summary = summarizePlan(planStudents);
+  const estimate = computeParallelDayEstimateMinutes(
+    { students: planStudents },
+    { mode }
+  );
+  summary.parallelDayEstimateMinutes = estimate.parallelDayEstimateMinutes;
+  summary.budgetOutlierCount = Object.values(planStudents).filter(
+    (e) => e.budgetTrimmed
+  ).length;
+
   return {
     date,
     mode,
     generatedAt: new Date().toISOString(),
     students: planStudents,
-    summary: summarizePlan(planStudents),
+    summary,
   };
 }
 
@@ -228,8 +245,19 @@ function planForOneStudent({ label, persona, state, date, mode }) {
   const minMinutes = Number(persona.dailyMinutesRange?.[0] ?? 10);
   const maxMinutes = Number(persona.dailyMinutesRange?.[1] ?? 30);
   const sampledMinutes = rngInRange(dayRng, minMinutes, maxMinutes);
-  const cap = Number(persona.dailyMinutesAbsoluteCap || 120);
-  const intendedMinutes = Math.min(sampledMinutes, cap);
+  const personaCap = Number(persona.dailyMinutesAbsoluteCap || 120);
+  const globalMax = resolveMaxStudentPlannedMinutesPerDay();
+  const beforeBudget = Math.min(sampledMinutes, personaCap);
+  let intendedMinutes = Math.min(beforeBudget, globalMax);
+  let budgetNote = null;
+  let budgetTrimmed = false;
+
+  if (beforeBudget > globalMax) {
+    budgetTrimmed = true;
+    budgetNote =
+      `planner-budget outlier: ${label} sampled=${beforeBudget}min ` +
+      `trimmed to global cap ${globalMax}min (persona exceeded owner daily budget)`;
+  }
 
   if (intendedMinutes < 5) {
     return {
@@ -243,7 +271,31 @@ function planForOneStudent({ label, persona, state, date, mode }) {
     };
   }
 
-  const numSessions = pickNumSessions(persona, dayRng);
+  let numSessions = pickNumSessions(persona, dayRng);
+  const numSessionsRequested = numSessions;
+  const maxSessionsCap = resolveMaxSessionsPerStudentPerDay();
+  if (numSessions > maxSessionsCap) {
+    budgetTrimmed = true;
+    const sessionCapNote =
+      `planner-budget: ${label} reduced sessions ${numSessions}→${maxSessionsCap} ` +
+      `(owner max sessions/day cap)`;
+    budgetNote = budgetNote ? `${budgetNote}; ${sessionCapNote}` : sessionCapNote;
+    numSessions = maxSessionsCap;
+  }
+  const numSessionsBefore = numSessions;
+  while (
+    numSessions > 1 &&
+    Math.floor(intendedMinutes / numSessions) < 3
+  ) {
+    numSessions -= 1;
+    if (!budgetNote) {
+      budgetTrimmed = true;
+      budgetNote =
+        `planner-budget: ${label} reduced sessions ${numSessionsBefore}→${numSessions} ` +
+        `to keep >=3min/session at ${intendedMinutes}min/day`;
+    }
+  }
+
   const subjects = chooseSubjects({ persona, rng: dayRng, count: numSessions });
 
   if (subjects.length === 0) {
@@ -271,7 +323,6 @@ function planForOneStudent({ label, persona, state, date, mode }) {
       dayRng,
     });
     const topic = defaultTopicForSubject(subject, grade);
-    // Soft heuristic: ~1 question per 1.5 min, clamped 4..16.
     const questionCount = clampInt(minutesPerSession / 1.5, 4, 16);
     return {
       subject,
@@ -285,13 +336,20 @@ function planForOneStudent({ label, persona, state, date, mode }) {
     };
   });
 
+  const sessionMinutesSum = sessions.reduce(
+    (acc, s) => acc + (Number(s.intendedMinutes) || 0),
+    0
+  );
+
   return {
     studied: true,
     skipReason: null,
     grade,
     personaKind,
     defaultProfile,
-    intendedMinutes,
+    intendedMinutes: sessionMinutesSum,
+    budgetNote,
+    budgetTrimmed,
     sessions,
   };
 }
@@ -301,13 +359,25 @@ function summarizePlan(planStudents) {
   let skipped = 0;
   let totalSessions = 0;
   let totalMinutes = 0;
+  let maxStudentPlannedMinutes = 0;
+  let maxSessionsPerStudent = 0;
+  const perStudentPlannedMinutes = {};
   const subjectCounts = {};
   const profileCounts = {};
-  for (const entry of Object.values(planStudents)) {
+  for (const [label, entry] of Object.entries(planStudents)) {
     if (entry.studied) {
       studied += 1;
       totalSessions += entry.sessions.length;
       totalMinutes += entry.intendedMinutes;
+      perStudentPlannedMinutes[label] = entry.intendedMinutes;
+      maxSessionsPerStudent = Math.max(
+        maxSessionsPerStudent,
+        entry.sessions.length
+      );
+      maxStudentPlannedMinutes = Math.max(
+        maxStudentPlannedMinutes,
+        Number(entry.intendedMinutes) || 0
+      );
       for (const s of entry.sessions) {
         subjectCounts[s.subject] = (subjectCounts[s.subject] || 0) + 1;
         profileCounts[s.profile] = (profileCounts[s.profile] || 0) + 1;
@@ -316,7 +386,17 @@ function summarizePlan(planStudents) {
       skipped += 1;
     }
   }
-  return { studied, skipped, totalSessions, totalMinutes, subjectCounts, profileCounts };
+  return {
+    studied,
+    skipped,
+    totalSessions,
+    totalMinutes,
+    maxStudentPlannedMinutes,
+    maxSessionsPerStudent,
+    perStudentPlannedMinutes,
+    subjectCounts,
+    profileCounts,
+  };
 }
 
 /**
@@ -332,7 +412,8 @@ export function renderPlanMarkdown(plan, { stateMeta = {} } = {}) {
     `- summary: studied=\`${plan.summary.studied}\` ` +
       `skipped=\`${plan.summary.skipped}\` ` +
       `totalSessions=\`${plan.summary.totalSessions}\` ` +
-      `totalMinutes=\`${plan.summary.totalMinutes}\``
+      `totalMinutes=\`${plan.summary.totalMinutes}\` (sum across students) ` +
+      `maxStudentPlannedMinutes=\`${plan.summary.maxStudentPlannedMinutes}\` (parallel wall-clock driver)`
   );
   if (Object.keys(plan.summary.subjectCounts).length > 0) {
     lines.push(

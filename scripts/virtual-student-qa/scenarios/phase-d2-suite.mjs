@@ -54,6 +54,7 @@ function makeMathScenarioFromSession({ studentLabel, sessionIndex, session }) {
     operation: session.topic,
     topic: session.topic,
     questionCount: session.questionCount,
+    intendedMinutes: session.intendedMinutes,
     weaknessTopics: session.weaknessSubject ? [session.topic] : [],
     rng: () => rng,
     pickAnswer: makeArithmeticPickFn(rng),
@@ -77,6 +78,7 @@ function makeGeometryScenarioFromSession({
     grade: session.grade,
     topic: session.topic || "area",
     questionCount: session.questionCount,
+    intendedMinutes: session.intendedMinutes,
     weaknessTopics: session.weaknessSubject ? [session.topic] : [],
     rng: () => rng,
     pickAnswer: makeArithmeticPickFn(rng),
@@ -100,6 +102,7 @@ function makeMcqScenarioFromSession({
     // currentQuestion.topic when scenario.topic is null/undefined.
     topic: session.topic || null,
     questionCount: session.questionCount,
+    intendedMinutes: session.intendedMinutes,
     weaknessTopics: session.weaknessSubject ? [session.topic] : [],
     rng: () => rng,
   };

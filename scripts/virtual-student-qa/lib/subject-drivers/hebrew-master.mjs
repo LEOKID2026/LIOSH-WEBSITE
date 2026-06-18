@@ -61,6 +61,7 @@ import {
   createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
+import { attachSessionPacingToScenario } from "../session-pacing.mjs";
 
 const SUBJECT = "hebrew";
 const SUBJECT_LABEL = "hebrew-master";
@@ -363,6 +364,10 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
   const shapeCounts = { mcq: 0, typing: 0, audio_skipped: 0 };
   let earlyExitReason = null;
   const evidenceTracker = createPracticeEvidenceTracker(SUBJECT_LABEL, log);
+  const pacing = attachSessionPacingToScenario(scenario, {
+    log,
+    subjectLabel: SUBJECT_LABEL,
+  });
 
   for (let i = 0; i < scenario.questionCount; i++) {
     const questionIndex = i + 1;
@@ -463,6 +468,8 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
           `pickedIndex=${pickedIndex}/${optionsCount} intendedCorrect=${intendedCorrect}`
       );
 
+      await pacing.waitBeforeAnswer(questionIndex);
+
       const answerRes = await waitForAnswerSave({
         page,
         log,
@@ -528,6 +535,8 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
 
     const typingInput = page.locator(`input[placeholder="${TYPING_PLACEHOLDER}"]`);
     await typingInput.waitFor({ state: "visible", timeout: 10_000 });
+
+    await pacing.waitBeforeAnswer(questionIndex);
 
     const answerRes = await waitForAnswerSave({
       page,

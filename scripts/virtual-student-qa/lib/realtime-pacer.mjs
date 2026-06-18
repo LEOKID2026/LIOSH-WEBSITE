@@ -76,7 +76,7 @@ function sleep(ms) {
  * @param {(line: string) => void} [args.log]
  * @returns {DailyPacer}
  */
-export function makeDailyPacer({ mode, scale, rng, log } = {}) {
+export function makeDailyPacer({ mode, scale, rng, log, inSessionPacingEnabled = false } = {}) {
   const resolvedMode = mode === "fast" ? "fast" : "realtime";
   const bands = resolvedMode === "fast" ? FAST_BANDS : REALTIME_BANDS;
   const resolvedScale = clampNonNegative(
@@ -90,10 +90,13 @@ export function makeDailyPacer({ mode, scale, rng, log } = {}) {
     return Math.max(scaled, clampNonNegative(hardFloor));
   }
 
+  const inSessionPacing = !!inSessionPacingEnabled;
+
   return {
     mode: resolvedMode,
     scale: resolvedScale,
     bands,
+    inSessionPacingEnabled: inSessionPacing,
 
     /** Sleep for `ms` (after clamping). */
     async sleep(ms) {
@@ -105,7 +108,10 @@ export function makeDailyPacer({ mode, scale, rng, log } = {}) {
      * (scale 0) returns 0; in realtime, samples from REALTIME_BANDS.
      */
     async pauseBetweenSessions() {
-      const ms = pickWithScale({ band: bands.betweenSessionsMs });
+      let ms = pickWithScale({ band: bands.betweenSessionsMs });
+      if (inSessionPacing) {
+        ms = Math.min(ms, 2 * 60_000);
+      }
       log?.(`pacer: between-session pause = ${ms} ms`);
       return sleep(ms);
     },
@@ -139,10 +145,8 @@ export function makeDailyPacer({ mode, scale, rng, log } = {}) {
     },
 
     /**
-     * Estimate today's wall-clock budget in milliseconds, given the
-     * planned session count and student count. Used by the orchestrator
-     * to bail out cleanly when the configured
-     * VIRTUAL_STUDENT_DAILY_MAX_MINUTES would be exceeded.
+     * Serial estimate (legacy) — sums student gaps as if students ran one
+     * after another. Do NOT use for parallel orchestrator wall-clock.
      */
     estimateDayBudgetMs({ studentCount, totalSessionCount }) {
       const meanQuestion =
@@ -159,6 +163,30 @@ export function makeDailyPacer({ mode, scale, rng, log } = {}) {
         Math.max(0, totalSessionCount - studentCount) * meanSessionGap +
         totalSessionCount * perSessionInnerMs;
       return Math.round(total * resolvedScale);
+    },
+
+    /**
+     * Parallel day estimate: max(student planned in-session minutes) +
+     * per-student session gaps + fixed orchestration overhead.
+     * Matches Promise.all worker model in phase-d2-orchestrator.
+     */
+    estimateParallelDayBudgetMs({
+      maxStudentPlannedMinutes = 0,
+      maxStudentSessionCount = 1,
+      inSessionPacingEnabled: pacingEnabled = inSessionPacing,
+    }) {
+      const inSessionMs = clampNonNegative(maxStudentPlannedMinutes) * 60_000;
+      const sessionGapBand = pacingEnabled
+        ? { min: 30_000, max: 2 * 60_000 }
+        : bands.betweenSessionsMs;
+      const meanSessionGap =
+        (sessionGapBand.min + sessionGapBand.max) / 2;
+      const sessionGapsMs =
+        Math.max(0, maxStudentSessionCount - 1) *
+        meanSessionGap *
+        resolvedScale;
+      const orchestrationOverheadMs = pacingEnabled ? 8 * 60_000 : 8 * 60_000;
+      return Math.round(inSessionMs + sessionGapsMs + orchestrationOverheadMs);
     },
   };
 }

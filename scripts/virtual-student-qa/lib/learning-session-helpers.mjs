@@ -14,6 +14,11 @@
  * the same behaviour without copy-pasting it.
  */
 
+import {
+  assertPracticeSessionStart,
+  classifyPracticeAnswerEvidence,
+} from "./practice-only-guard.mjs";
+
 const SESSION_START_PATH = "/api/learning/session/start";
 const SESSION_ANSWER_PATH = "/api/learning/answer";
 const SESSION_FINISH_PATH = "/api/learning/session/finish";
@@ -39,11 +44,27 @@ const NON_COUNTABLE_SESSION_MODES = new Set([
  * mode=practice and answers classify as countable independent practice.
  */
 export async function selectCountablePracticeMode({ page, log, subjectLabel }) {
+  const learningTab = page.getByRole("button", { name: "למידה", exact: true });
   const practiceTab = page.getByRole("button", {
     name: COUNTABLE_PRACTICE_MODE_BUTTON_LABEL,
     exact: true,
   });
   await practiceTab.waitFor({ state: "visible", timeout: 15_000 });
+
+  if (await learningTab.count()) {
+    const learningSelected = await learningTab
+      .evaluate((el) => {
+        const cls = el.className || "";
+        return cls.includes("bg-") && !cls.includes("bg-white/10");
+      })
+      .catch(() => false);
+    if (learningSelected) {
+      log(
+        `${subjectLabel}: Learning (למידה) tab was active — switching to Practice before start`
+      );
+    }
+  }
+
   await practiceTab.click();
   log(
     `${subjectLabel}: selected Practice tab (${COUNTABLE_PRACTICE_MODE_BUTTON_LABEL}) ` +
@@ -75,6 +96,7 @@ export function readAnswerRequestBody(answerResponse) {
 
 /**
  * Fail only when session/start persisted a non-countable mode (e.g. learning).
+ * @deprecated Prefer assertPracticeSessionStart — kept for legacy callers.
  */
 export function assertCountableSessionMode({
   sessionStartResponse,
@@ -82,18 +104,13 @@ export function assertCountableSessionMode({
   log,
   strict = true,
 }) {
-  const startBody = readSessionStartRequestBody(sessionStartResponse);
-  const sessionMode = String(startBody?.mode || "").trim().toLowerCase();
-  if (!sessionMode || NON_COUNTABLE_SESSION_MODES.has(sessionMode)) {
-    const msg =
-      `${subjectLabel}: non-countable session.mode=${sessionMode || "(missing)"}. ` +
-      `Simulation must use Practice (תרגול), not Learning (למידה).`;
-    if (strict) throw new Error(msg);
-    log(`${subjectLabel}: WARN ${msg}`);
-    return { ok: false, sessionMode };
+  try {
+    return assertPracticeSessionStart({ sessionStartResponse, subjectLabel, log });
+  } catch (error) {
+    if (strict) throw error;
+    log(`${subjectLabel}: WARN ${error?.message || error}`);
+    return { ok: false, sessionMode: null };
   }
-  log(`${subjectLabel}: countable session.mode=${sessionMode}`);
-  return { ok: true, sessionMode };
 }
 
 /**
@@ -101,38 +118,7 @@ export function assertCountableSessionMode({
  * afterStepByStep / book-context rows are expected-excluded inside practice.
  */
 export function classifyAnswerEvidence({ answerResponse, subjectLabel, log }) {
-  const answerBody = readAnswerRequestBody(answerResponse);
-  const clientMeta =
-    answerBody?.clientMeta && typeof answerBody.clientMeta === "object"
-      ? answerBody.clientMeta
-      : {};
-  const gameMode = String(
-    clientMeta.gameMode || answerBody?.gameMode || answerBody?.mode || ""
-  )
-    .trim()
-    .toLowerCase();
-
-  if (gameMode === "learning") {
-    throw new Error(
-      `${subjectLabel}: gameMode=learning on answer payload — not countable`
-    );
-  }
-
-  if (
-    clientMeta.afterStepByStep === true ||
-    clientMeta.contextAfterBookReading === true
-  ) {
-    log(
-      `${subjectLabel}: excluded answer evidence ` +
-        `(afterStepByStep=${clientMeta.afterStepByStep === true}, ` +
-        `contextAfterBookReading=${clientMeta.contextAfterBookReading === true}) ` +
-        `— expected inside practice, not report-countable`
-    );
-    return { countable: false, excluded: true, gameMode: gameMode || "practice" };
-  }
-
-  log(`${subjectLabel}: countable answer evidence ok`);
-  return { countable: true, excluded: false, gameMode: gameMode || "practice" };
+  return classifyPracticeAnswerEvidence({ answerResponse, subjectLabel, log });
 }
 
 export function assertSessionHasCountableEvidence({
@@ -230,6 +216,11 @@ export async function waitForSessionStart({ page, log, subject, timeoutMs = 30_0
     log(
       `${subject}: observed ${SESSION_START_PATH} response (status=${res.status()})`
     );
+    assertPracticeSessionStart({
+      sessionStartResponse: res,
+      subjectLabel: subject,
+      log,
+    });
     return res;
   } catch (error) {
     throw new Error(

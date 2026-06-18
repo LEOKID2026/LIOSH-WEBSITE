@@ -79,6 +79,7 @@
  * Exit codes: 0 PASS, 1 FAIL or PARTIAL, 2 misuse.
  */
 import { pathToFileURL } from "node:url";
+import { join } from "node:path";
 import {
   loadAccounts,
   selectAccount,
@@ -97,7 +98,14 @@ import {
   resolveDailyDryRun,
   resolveDailyPreflightOnly,
   resolveDailyForce,
+  resolveInSessionPacingEnabled,
+  assertProductionRealisticPacingGuard,
 } from "./lib/config.mjs";
+import {
+  assertProductionPracticeOnlyGuard,
+  resolvePracticeOnlyEnabled,
+} from "./lib/practice-only-guard.mjs";
+import { assertPlannerBudgetGuard } from "./lib/planner-budget.mjs";
 import {
   launchBrowser,
   newStudentContext,
@@ -2536,6 +2544,51 @@ async function mainPhaseD2(args) {
   log(`stateDir=${stateDir}`);
   log(`dailyMaxMinutes=${dailyMaxMinutes} pacerScale=${pacerScale}`);
 
+  const inSessionPacingEnabled = resolveInSessionPacingEnabled();
+  log(`inSessionPacingEnabled=${inSessionPacingEnabled}`);
+  const practiceOnlyEnabled = resolvePracticeOnlyEnabled();
+  log(`practiceOnlyEnabled=${practiceOnlyEnabled}`);
+  try {
+    assertProductionPracticeOnlyGuard({
+      baseUrl: resolveBaseUrl(args.baseUrl),
+      dryRun,
+      preflightOnly,
+      practiceOnlyEnabled,
+      log,
+    });
+    assertProductionRealisticPacingGuard({
+      baseUrl: resolveBaseUrl(args.baseUrl),
+      mode,
+      pacerScale,
+      inSessionPacingEnabled,
+      dryRun,
+      preflightOnly,
+    });
+  } catch (guardError) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "production-guard",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath: join(stateDir, "state.json"),
+      stateFresh: false,
+      stateLastRunDate: null,
+      stateLastRunStatus: null,
+      dailyMaxMinutes,
+      pacerScale,
+      dailyArtifacts,
+      log,
+      message:
+        guardError?.message ||
+        "production-guard: refused unrealistic pacing configuration",
+    });
+  }
+
   // ---- Mutually exclusive mode flags ------------------------------------
   if (dryRun && preflightOnly) {
     return finalizePhaseD2({
@@ -2743,8 +2796,73 @@ async function mainPhaseD2(args) {
   log(
     `plan: studied=${plan.summary.studied} skipped=${plan.summary.skipped} ` +
       `totalSessions=${plan.summary.totalSessions} ` +
-      `totalMinutes=${plan.summary.totalMinutes}`
+      `totalMinutes=${plan.summary.totalMinutes} (sum across students, NOT wall-clock) ` +
+      `maxStudentPlannedMinutes=${plan.summary.maxStudentPlannedMinutes ?? 0}`
   );
+  for (const [label, entry] of Object.entries(plan.students || {})) {
+    if (!entry?.studied) continue;
+    log(
+      `plan-student: ${label} plannedMinutes=${entry.intendedMinutes} ` +
+        `sessions=${entry.sessions?.length ?? 0}`
+    );
+  }
+  let maxStudentSessions = 1;
+  for (const entry of Object.values(plan.students || {})) {
+    if (entry?.studied) {
+      maxStudentSessions = Math.max(
+        maxStudentSessions,
+        entry.sessions?.length || 0
+      );
+    }
+  }
+  const pacerEstimate = makeDailyPacer({
+    mode,
+    scale: pacerScale,
+    inSessionPacingEnabled: resolveInSessionPacingEnabled(),
+  });
+  const expectedParallelMs = pacerEstimate.estimateParallelDayBudgetMs({
+    maxStudentPlannedMinutes: plan.summary.maxStudentPlannedMinutes ?? 0,
+    maxStudentSessionCount: maxStudentSessions,
+    workerCount: plan.summary.studied,
+  });
+  log(
+    `plan-parallel-estimate: expectedWallClockMin=${(expectedParallelMs / 60_000).toFixed(0)} ` +
+      `(max student planned + session gaps + overhead; workers run in Promise.all) ` +
+      `parallelDayEstimateMin=${plan.summary.parallelDayEstimateMinutes ?? "?"} ` +
+      `budgetOutliers=${plan.summary.budgetOutlierCount ?? 0}`
+  );
+
+  try {
+    assertPlannerBudgetGuard({
+      plan,
+      mode,
+      pacerScale,
+      dryRun,
+      preflightOnly,
+      log,
+    });
+  } catch (guardError) {
+    return finalizePhaseD2({
+      status: "fail",
+      mode: "planner-budget-guard",
+      args,
+      mode_: mode,
+      date,
+      dryRun,
+      preflightOnly,
+      force,
+      stateDir,
+      stateFilePath: join(stateDir, "state.json"),
+      stateFresh: false,
+      stateLastRunDate: null,
+      stateLastRunStatus: null,
+      dailyMaxMinutes,
+      pacerScale,
+      dailyArtifacts,
+      plan,
+      reason: guardError?.message || String(guardError),
+    });
+  }
 
   // ---- Dry-run path: D2.1 fully implemented ----------------------------
   if (dryRun) {
@@ -3089,6 +3207,7 @@ async function runPhaseD2FullRun({
     const pacer = makeDailyPacer({
       mode,
       scale: pacerScale,
+      inSessionPacingEnabled: resolveInSessionPacingEnabled(),
       log: (line) => log(line),
     });
     log(

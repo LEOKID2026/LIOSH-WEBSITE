@@ -392,3 +392,63 @@ export function resolveDailyForce(cliFlag) {
   tryLoadDotenvFiles();
   return isTruthy(process.env.VIRTUAL_STUDENT_DAILY_FORCE);
 }
+
+/**
+ * In-session pacing (wait before each answer) — ON by default.
+ * Set VIRTUAL_STUDENT_IN_SESSION_PACING=0 to disable (blocked on production).
+ */
+export function resolveInSessionPacingEnabled(explicit) {
+  if (explicit === false) return false;
+  if (explicit === true) return true;
+  tryLoadDotenvFiles();
+  const raw = String(process.env.VIRTUAL_STUDENT_IN_SESSION_PACING || "1").trim();
+  return !isTruthy(raw === "0" || raw.toLowerCase() === "false" || raw.toLowerCase() === "off");
+}
+
+export function isProductionQaBaseUrl(baseUrl) {
+  const u = String(baseUrl || "").trim().toLowerCase();
+  return u.includes("liosh-website.vercel.app");
+}
+
+/**
+ * Block unrealistic fast automation writes to production QA.
+ * Requires in-session pacing on production; fast/pacerScale=0 allowed only
+ * when in-session pacing is enabled (synthetic realistic duration).
+ */
+export function assertProductionRealisticPacingGuard({
+  baseUrl,
+  mode,
+  pacerScale,
+  inSessionPacingEnabled,
+  dryRun = false,
+  preflightOnly = false,
+}) {
+  if (dryRun || preflightOnly) return;
+  if (!isProductionQaBaseUrl(baseUrl)) return;
+
+  if (!inSessionPacingEnabled) {
+    throw new Error(
+      "production-guard: in-session pacing is DISABLED. Refusing to write " +
+        "unrealistic duration_seconds to production QA. Enable " +
+        "VIRTUAL_STUDENT_IN_SESSION_PACING=1 (default) or use localhost."
+    );
+  }
+
+  const fastOrZero =
+    String(mode || "").toLowerCase() === "fast" ||
+    Number(pacerScale) === 0;
+  if (fastOrZero) {
+    console.warn(
+      "[production-guard] mode=fast or pacerScale=0 — allowed ONLY because " +
+        "in-session pacing is enabled (synthetic realistic duration per question)."
+    );
+  }
+}
+
+/** Max concurrent AAA students in parallel daily orchestrator. */
+export function resolveParallelStudentConcurrency() {
+  tryLoadDotenvFiles();
+  const raw = String(process.env.VIRTUAL_STUDENT_PARALLEL_STUDENTS || "12").trim();
+  const num = Number(raw);
+  return Number.isFinite(num) && num > 0 ? Math.min(12, Math.floor(num)) : 12;
+}

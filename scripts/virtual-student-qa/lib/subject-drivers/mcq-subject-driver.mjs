@@ -36,6 +36,7 @@ import {
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
 import { pickMcqIndex } from "../answer-profiles.mjs";
+import { attachSessionPacingToScenario } from "../session-pacing.mjs";
 
 /**
  * @param {object} cfg
@@ -126,6 +127,7 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
 
     let earlyExitReason = null;
     const evidenceTracker = createPracticeEvidenceTracker(subjectLabel, log);
+    const pacing = attachSessionPacingToScenario(scenario, { log, subjectLabel });
     for (let i = 0; i < scenario.questionCount; i++) {
       const questionIndex = i + 1;
 
@@ -225,6 +227,8 @@ export function makeMcqSubjectDriver({ subject, subjectLabel, path }) {
           `matchedByLabels=${probe.ok ? probe.matchedByLabels : "n/a"} ` +
           `pickedIndex=${pickedIndex}/${optionsCount} intendedCorrect=${intendedCorrect}`
       );
+
+      await pacing.waitBeforeAnswer(questionIndex);
 
       const answerRes = await waitForAnswerSave({
         page,
