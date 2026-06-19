@@ -138,6 +138,9 @@ export default function StudentCardsPage() {
   }, [student?.coin_balance]);
 
   const handlePurchase = async (cardId) => {
+    const shopCard = payload?.shop?.find((c) => c.id === cardId);
+    if (shopCard?.alreadyOwned || shopCard?.canAfford === false) return;
+
     setActionBusy(cardId);
     setMessageHe("");
     try {
@@ -153,6 +156,9 @@ export default function StudentCardsPage() {
         return;
       }
       setMessageHe(`קניתם את «${json.card?.name_he || json.card?.nameHe || "הקלף"}»!`);
+      if (json.balanceAfter != null) {
+        setStudent((prev) => (prev ? { ...prev, coin_balance: json.balanceAfter } : prev));
+      }
       await loadCards();
     } catch {
       setMessageHe("שגיאת רשת ברכישה.");
@@ -271,33 +277,43 @@ export default function StudentCardsPage() {
     if (activeTab === "shop") {
       return (
         <StudentCardsGrid emptyMessage="אין קלפים זמינים לרכישה כרגע." T={T}>
-          {(payload?.shop || []).map((card) => (
-            <StudentRewardCard
-              key={card.id}
-              card={card}
-              T={T}
-              footer={
-                <>
-                  <p className={`text-sm font-semibold ${T.statValue}`}>
-                    {formatCoinAmountHe(card.priceCoins)}
-                  </p>
-                  {!card.canAfford && card.missingCoins > 0 ? (
-                    <p className={`text-xs ${T.tileSub}`}>
-                      חסרים לך {formatCoinAmountHe(card.missingCoins)}
-                    </p>
-                  ) : null}
-                  <button
-                    type="button"
-                    disabled={actionBusy === card.id || card.canAfford === false}
-                    onClick={() => void handlePurchase(card.id)}
-                    className={`${T.ctaPrimary} text-xs w-full disabled:opacity-50`}
-                  >
-                    {actionBusy === card.id ? "קונה..." : "קנה קלף"}
-                  </button>
-                </>
-              }
-            />
-          ))}
+          {(payload?.shop || []).map((card) => {
+            const canBuy = card.canAfford === true && !card.alreadyOwned;
+            const priceLabel = Math.floor(Number(card.priceCoins) || 0).toLocaleString("he-IL");
+            return (
+              <StudentRewardCard
+                key={card.id}
+                card={card}
+                T={T}
+                footer={
+                  card.alreadyOwned ? (
+                    <p className={`text-xs font-semibold ${T.tileSub}`}>כבר באוסף שלך</p>
+                  ) : (
+                    <>
+                      <p className={`text-sm font-semibold ${T.statValue}`}>
+                        {formatCoinAmountHe(card.priceCoins)}
+                      </p>
+                      {!canBuy ? (
+                        <p className={`text-xs ${T.tileSub}`}>
+                          {card.missingCoins > 0
+                            ? `חסרים לך ${formatCoinAmountHe(card.missingCoins)}`
+                            : "אין מספיק מטבעות"}
+                        </p>
+                      ) : null}
+                      <button
+                        type="button"
+                        disabled={actionBusy === card.id || !canBuy}
+                        onClick={() => void handlePurchase(card.id)}
+                        className={`${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`}
+                      >
+                        {actionBusy === card.id ? "קונה..." : `קנה ב־${priceLabel}`}
+                      </button>
+                    </>
+                  )
+                }
+              />
+            );
+          })}
         </StudentCardsGrid>
       );
     }
@@ -327,7 +343,7 @@ export default function StudentCardsPage() {
         return <p className={`text-right py-6 ${T.emptyText}`}>עדיין אין סדרות קלפים.</p>;
       }
       return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 w-full min-w-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4 w-full min-w-0">
           {series.map((s) => (
             <StudentSeriesProgressCard key={s.seriesId} series={s} T={T} />
           ))}

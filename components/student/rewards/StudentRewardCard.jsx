@@ -54,26 +54,90 @@ export default function StudentRewardCard({ card, T, footer }) {
   );
 }
 
-/** Series progress row — same shell spacing as card grid items. */
+/** Series progress with card thumbnails — series tab. */
 export function StudentSeriesProgressCard({ series, T }) {
+  const [previewCard, setPreviewCard] = useState(null);
   const pct = series.totalCount > 0 ? Math.round((series.ownedCount / series.totalCount) * 100) : 0;
+  const cards = series.cards || [];
+
   return (
-    <article
-      className={`rounded-xl border shadow-sm p-3 sm:p-4 flex flex-col justify-center min-h-[120px] text-right min-w-0 ${T.subjectCard}`}
-    >
-      <div className="flex justify-between items-start gap-2 mb-2">
-        <span className={`font-bold text-sm sm:text-base leading-snug ${T.subjectTitle}`}>
-          {series.nameHe}
-        </span>
-        <span className={`text-xs sm:text-sm tabular-nums shrink-0 ${T.tileSub}`}>
-          {series.ownedCount}/{series.totalCount}
-        </span>
-      </div>
-      <div className={`${T.progressTrack} w-full`}>
-        <div className={T.progressFill} style={{ width: `${pct}%` }} />
-      </div>
-      <p className={`text-xs mt-2 ${T.tileSub}`}>{pct}% מהסדרה</p>
-    </article>
+    <>
+      <article
+        className={`rounded-xl border shadow-sm p-3 sm:p-4 flex flex-col min-h-[120px] text-right min-w-0 overflow-hidden ${T.subjectCard}`}
+      >
+        <div className="flex justify-between items-start gap-2 mb-2 min-w-0">
+          <span className={`font-bold text-sm sm:text-base leading-snug min-w-0 ${T.subjectTitle}`}>
+            {series.nameHe}
+          </span>
+          <span className={`text-xs sm:text-sm tabular-nums shrink-0 ${T.tileSub}`}>
+            {series.ownedCount} מתוך {series.totalCount}
+          </span>
+        </div>
+        <div className={`${T.progressTrack} w-full`}>
+          <div className={T.progressFill} style={{ width: `${pct}%` }} />
+        </div>
+        <p className={`text-xs mt-2 ${T.tileSub}`}>{pct}% מהסדרה</p>
+
+        {cards.length > 0 ? (
+          <div
+            className="mt-3 flex flex-wrap gap-1.5 sm:gap-2 w-full min-w-0"
+            role="list"
+            aria-label={`קלפים בסדרה ${series.nameHe}`}
+          >
+            {cards.map((card) => {
+              const imageSrc = card.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
+              if (card.owned) {
+                return (
+                  <button
+                    key={card.cardId}
+                    type="button"
+                    role="listitem"
+                    className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 rounded-md overflow-hidden bg-slate-100/80 dark:bg-white/5 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
+                    onClick={() => setPreviewCard(card)}
+                    aria-label={`הגדלת תמונת הקלף ${card.nameHe}`}
+                  >
+                    <img
+                      src={imageSrc}
+                      alt=""
+                      className="w-full h-full object-cover pointer-events-none"
+                      loading="lazy"
+                    />
+                  </button>
+                );
+              }
+              return (
+                <div
+                  key={card.cardId}
+                  role="listitem"
+                  className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 rounded-md overflow-hidden bg-slate-100/80 dark:bg-white/5"
+                  aria-label={`${card.nameHe} — נעול`}
+                >
+                  <img
+                    src={imageSrc}
+                    alt=""
+                    className="w-full h-full object-cover grayscale opacity-40 pointer-events-none"
+                    loading="lazy"
+                  />
+                  <span
+                    className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-xs opacity-90"
+                    aria-hidden
+                  >
+                    🔒
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
+      </article>
+
+      <StudentRewardCardPreviewModal
+        open={previewCard != null}
+        card={previewCard}
+        T={T}
+        onClose={() => setPreviewCard(null)}
+      />
+    </>
   );
 }
 
