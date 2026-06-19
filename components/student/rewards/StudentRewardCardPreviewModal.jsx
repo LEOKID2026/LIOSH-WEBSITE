@@ -3,9 +3,13 @@ import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import RewardCardLockedStamp, { lockedCardDimClassName } from "./RewardCardLockedStamp.jsx";
 import { downloadStudentRewardCardImage } from "../../../lib/rewards/download-student-card.client.js";
 
+const CARD_INFO_PILL_CLASS =
+  "rounded-full border border-[rgba(255,215,120,0.45)] bg-[rgba(15,23,42,0.55)] backdrop-blur-[3px] " +
+  "px-3.5 py-2 text-center shadow-[0_4px_16px_rgba(0,0,0,0.2)]";
 const CAPTION_CLASS =
-  "text-xl sm:text-2xl leading-snug text-[#00E5FF] font-black [text-shadow:0_0_10px_rgba(0,229,255,0.45),0_1px_3px_rgba(0,0,0,0.75)]";
-const SUB_CAPTION_CLASS = "text-sm text-[#FFFFFF] font-bold";
+  "text-lg sm:text-xl md:text-2xl leading-snug text-[#FFF8E7] font-extrabold [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]";
+const SUB_CAPTION_CLASS =
+  "text-xs sm:text-sm leading-snug text-white/90 font-semibold [text-shadow:0_1px_2px_rgba(0,0,0,0.45)]";
 const SWIPE_THRESHOLD_PX = 48;
 
 /**
@@ -138,7 +142,7 @@ export default function StudentRewardCardPreviewModal({
         onClick={(event) => event.stopPropagation()}
         dir="rtl"
       >
-        <div className="flex items-center justify-center gap-1 sm:gap-2 max-w-full min-w-0">
+        <div className="flex items-start justify-center gap-1 sm:gap-2 max-w-full min-w-0">
           <button
             type="button"
             onClick={goPrev}
@@ -149,34 +153,52 @@ export default function StudentRewardCardPreviewModal({
             ‹
           </button>
 
-          <div
-            className="relative bg-transparent p-0 m-0 w-fit max-w-full"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={onClose}
-              className={`absolute -top-2 -left-2 z-20 ${homeModalShell.closeBtn}`}
-              style={{ direction: "ltr" }}
-              aria-label="סגור"
+          <div className="flex flex-col items-center max-w-full min-w-0 gap-1.5">
+            <div
+              className="relative bg-transparent p-0 m-0 w-fit max-w-full"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
-              ×
-            </button>
-            <img
-              src={imageSrc}
-              alt={currentCard.nameHe || "תמונת קלף"}
-              className={`block max-w-full max-h-[80vh] w-auto h-auto object-contain select-none ${
-                showLocked ? lockedCardDimClassName(false) : ""
-              }`}
-              draggable={false}
-            />
-            {showLocked ? (
-              <div className="absolute inset-0 pointer-events-none">
-                <RewardCardLockedStamp />
-              </div>
-            ) : null}
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={onClose}
+                className={`absolute -top-2 -left-2 z-20 ${homeModalShell.closeBtn}`}
+                style={{ direction: "ltr" }}
+                aria-label="סגור"
+              >
+                ×
+              </button>
+              <img
+                src={imageSrc}
+                alt={currentCard.nameHe || "תמונת קלף"}
+                className={`block max-w-full max-h-[80vh] w-auto h-auto object-contain select-none ${
+                  showLocked ? lockedCardDimClassName(false) : ""
+                }`}
+                draggable={false}
+              />
+              {showLocked ? (
+                <div className="absolute inset-0 pointer-events-none">
+                  <RewardCardLockedStamp />
+                </div>
+              ) : null}
+            </div>
+
+            <div className={`${CARD_INFO_PILL_CLASS} space-y-1 min-w-0 w-full max-w-full`}>
+              <h2 id={titleId} className={`${CAPTION_CLASS} line-clamp-2`}>
+                {currentCard.nameHe}
+              </h2>
+              {currentCard.rarityHe || currentCard.seriesNameHe ? (
+                <p className={`${SUB_CAPTION_CLASS} truncate`}>
+                  {[
+                    currentCard.rarityHe ? `נדירות: ${currentCard.rarityHe}` : null,
+                    currentCard.seriesNameHe ? `סדרה: ${currentCard.seriesNameHe}` : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <button
@@ -188,18 +210,6 @@ export default function StudentRewardCardPreviewModal({
           >
             ›
           </button>
-        </div>
-
-        <div className="max-w-full min-w-0 text-center space-y-1 px-1">
-          <h2 id={titleId} className={CAPTION_CLASS}>
-            {currentCard.nameHe}
-          </h2>
-          {currentCard.rarityHe ? (
-            <p className={SUB_CAPTION_CLASS}>נדירות: {currentCard.rarityHe}</p>
-          ) : null}
-          {currentCard.seriesNameHe ? (
-            <p className={`truncate ${SUB_CAPTION_CLASS}`}>סדרה: {currentCard.seriesNameHe}</p>
-          ) : null}
         </div>
 
         {canDownload ? (
