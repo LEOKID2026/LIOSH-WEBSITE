@@ -11,7 +11,7 @@ import StudentRewardCard, {
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
-import { formatCoinAmountHe, formatCoinAmountNumberHe } from "../../lib/rewards/rewards-ui.he.js";
+import { formatCoinAmountHe, formatCoinAmountNumberHe, SHOP_CARD_ALREADY_OWNED_HE } from "../../lib/rewards/rewards-ui.he.js";
 
 const CARDS_PATH = "/api/student/rewards/cards";
 const PURCHASE_PATH = "/api/student/rewards/shop/purchase";
@@ -368,30 +368,30 @@ export default function StudentCardsPage() {
                 previewIndex={index}
                 showLockedStamp={!card.alreadyOwned}
                 footer={
-                  card.alreadyOwned ? (
-                    <p className={`text-xs font-semibold ${T.tileSub}`}>כבר באוסף שלך</p>
-                  ) : (
-                    <>
-                      <p className={`text-sm font-semibold ${T.statValue}`}>
-                        {formatCoinAmountHe(card.priceCoins)}
+                  <>
+                    <p className={`text-sm font-semibold ${T.statValue}`}>
+                      {formatCoinAmountHe(card.priceCoins)}
+                    </p>
+                    {!card.alreadyOwned && !canBuy ? (
+                      <p className={`text-xs ${T.tileSub}`}>
+                        {card.missingCoins > 0
+                          ? `חסרים לך ${formatCoinAmountHe(card.missingCoins)}`
+                          : "אין מספיק מטבעות"}
                       </p>
-                      {!canBuy ? (
-                        <p className={`text-xs ${T.tileSub}`}>
-                          {card.missingCoins > 0
-                            ? `חסרים לך ${formatCoinAmountHe(card.missingCoins)}`
-                            : "אין מספיק מטבעות"}
-                        </p>
-                      ) : null}
-                      <button
-                        type="button"
-                        disabled={actionBusy === card.id || !canBuy}
-                        onClick={() => void handlePurchase(card.id)}
-                        className={`${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`}
-                      >
-                        {actionBusy === card.id ? "קונה..." : `קנה ב־${priceLabel}`}
-                      </button>
-                    </>
-                  )
+                    ) : null}
+                    <button
+                      type="button"
+                      disabled={card.alreadyOwned || actionBusy === card.id || !canBuy}
+                      onClick={() => void handlePurchase(card.id)}
+                      className={`${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`}
+                    >
+                      {card.alreadyOwned
+                        ? SHOP_CARD_ALREADY_OWNED_HE
+                        : actionBusy === card.id
+                          ? "קונה..."
+                          : `קנה ב־${priceLabel}`}
+                    </button>
+                  </>
                 }
               />
             );
