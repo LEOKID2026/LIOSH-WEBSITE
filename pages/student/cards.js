@@ -50,6 +50,15 @@ function tabButtonClass(tabId, active) {
   return `${base} ${active ? palette.active : palette.idle}`;
 }
 
+function coinBalanceBadgeClass(theme) {
+  const shell =
+    "inline-flex justify-center items-center min-h-[3.25rem] rounded-xl font-bold px-4 sm:px-5 py-3 text-sm sm:text-base md:text-lg tabular-nums shadow-sm shrink min-w-0 max-w-[10.5rem] sm:max-w-[14rem] md:max-w-none";
+  if (theme === "classic") {
+    return `${shell} border border-amber-400/35 bg-amber-500/15 text-amber-100`;
+  }
+  return `${shell} border border-amber-400/50 bg-amber-500/15 text-amber-900`;
+}
+
 export default function StudentCardsPage() {
   const router = useRouter();
   const { tokens: T, theme } = useStudentTheme();
@@ -121,6 +130,13 @@ export default function StudentCardsPage() {
     [payload]
   );
 
+  const coinBalanceAmount = useMemo(() => {
+    if (student?.coin_balance == null) return null;
+    const n = Number(student.coin_balance);
+    if (!Number.isFinite(n)) return null;
+    return Math.floor(n);
+  }, [student?.coin_balance]);
+
   const handlePurchase = async (cardId) => {
     setActionBusy(cardId);
     setMessageHe("");
@@ -185,15 +201,23 @@ export default function StudentCardsPage() {
       <Layout studentTheme={theme} studentShell="home">
         <div className={`max-w-6xl mx-auto px-3 sm:px-4 py-8 text-right overflow-x-hidden ${T.pageWrap}`}>
           <p className={T.emptyText}>אוסף הקלפים עדיין לא זמין.</p>
-          <Link href="/student/home" className={`${T.ctaPrimary} inline-block mt-4`}>
-            חזרה לעולם הילד
-          </Link>
+          <div dir="ltr" className="mt-4 inline-flex max-w-full min-w-0 items-center gap-2 self-end">
+            <Link href="/student/home" className={`${T.ctaPrimary} shrink-0`}>
+              חזרה לעולם הילד
+            </Link>
+            {coinBalanceAmount != null ? (
+              <span
+                className={coinBalanceBadgeClass(theme)}
+                aria-label={formatCoinAmountHe(coinBalanceAmount)}
+              >
+                <span className="truncate">{formatCoinAmountHe(coinBalanceAmount)}</span>
+              </span>
+            ) : null}
+          </div>
         </div>
       </Layout>
     );
   }
-
-  void student;
 
   const renderTabContent = () => {
     if (cardsPhase === "loading") {
@@ -322,9 +346,19 @@ export default function StudentCardsPage() {
             <h1 className={T.heroTitle}>הקלפים שלי</h1>
             <p className={T.heroSub}>אוסף, חנות, קלפים נעולים וסדרות</p>
           </div>
-          <Link href="/student/home" className={`${T.ctaGames} shrink-0 self-end sm:self-auto`}>
-            חזרה לעולם הילד
-          </Link>
+          <div dir="ltr" className="flex flex-row items-center gap-2 shrink-0 self-end sm:self-auto min-w-0 max-w-full">
+            <Link href="/student/home" className={`${T.ctaGames} shrink-0`}>
+              חזרה לעולם הילד
+            </Link>
+            {coinBalanceAmount != null ? (
+              <span
+                className={coinBalanceBadgeClass(theme)}
+                aria-label={formatCoinAmountHe(coinBalanceAmount)}
+              >
+                <span className="truncate">{formatCoinAmountHe(coinBalanceAmount)}</span>
+              </span>
+            ) : null}
+          </div>
         </header>
 
         {messageHe ? (
