@@ -1,16 +1,31 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
+import RewardCardLockedStamp, { lockedCardDimClassName } from "./RewardCardLockedStamp.jsx";
+import { downloadStudentRewardCardImage } from "../../../lib/rewards/download-student-card.client.js";
 
 /**
- * Enlarged card image preview — image click only; RTL Hebrew metadata.
+ * Enlarged card image preview — RTL Hebrew metadata; optional owned-card download.
  */
-export default function StudentRewardCardPreviewModal({ open, card, T, onClose }) {
+export default function StudentRewardCardPreviewModal({
+  open,
+  card,
+  T,
+  onClose,
+  allowDownload = false,
+  studentFullName = "",
+}) {
   const { homeModalShell } = useStudentTheme();
   const titleId = useId();
   const closeRef = useRef(null);
+  const [downloadBusy, setDownloadBusy] = useState(false);
+  const [downloadError, setDownloadError] = useState("");
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open) {
+      setDownloadBusy(false);
+      setDownloadError("");
+      return undefined;
+    }
     const onKeyDown = (event) => {
       if (event.key === "Escape") onClose?.();
     };
@@ -27,6 +42,27 @@ export default function StudentRewardCardPreviewModal({ open, card, T, onClose }
   if (!open || !card) return null;
 
   const imageSrc = card.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
+  const showLocked = card.isLocked === true || card.showLockedStamp === true;
+  const canDownload =
+    allowDownload && !showLocked && Boolean(String(studentFullName ?? "").length);
+
+  const handleDownload = async () => {
+    if (!canDownload || downloadBusy) return;
+    setDownloadBusy(true);
+    setDownloadError("");
+    try {
+      await downloadStudentRewardCardImage({
+        imageUrl: imageSrc,
+        studentFullName: String(studentFullName),
+        cardNameHe: card.nameHe,
+        cardKey: card.cardKey,
+      });
+    } catch {
+      setDownloadError("לא הצלחנו להוריד את הקלף. נסו שוב.");
+    } finally {
+      setDownloadBusy(false);
+    }
+  };
 
   return (
     <div
@@ -53,11 +89,20 @@ export default function StudentRewardCardPreviewModal({ open, card, T, onClose }
             ×
           </button>
 
-          <img
-            src={imageSrc}
-            alt={card.nameHe || "תמונת קלף"}
-            className="w-full max-w-full max-h-[55vh] sm:max-h-[65vh] md:max-h-[78vh] object-contain rounded-lg bg-slate-100/80 dark:bg-white/5"
-          />
+          <div className="relative w-full max-w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5">
+            <img
+              src={imageSrc}
+              alt={card.nameHe || "תמונת קלף"}
+              className={`w-full max-w-full max-h-[55vh] sm:max-h-[65vh] md:max-h-[78vh] object-contain mx-auto ${
+                showLocked ? lockedCardDimClassName(false) : ""
+              }`}
+            />
+            {showLocked ? (
+              <div className="absolute inset-0">
+                <RewardCardLockedStamp />
+              </div>
+            ) : null}
+          </div>
 
           <div className="w-full min-w-0 text-center space-y-1">
             <h2 id={titleId} className={`font-bold text-base sm:text-lg leading-snug ${T.subjectTitle}`}>
@@ -70,6 +115,22 @@ export default function StudentRewardCardPreviewModal({ open, card, T, onClose }
               <p className={`text-sm truncate ${T.tileSub}`}>סדרה: {card.seriesNameHe}</p>
             ) : null}
           </div>
+
+          {canDownload ? (
+            <div className="w-full min-w-0 flex flex-col gap-1.5">
+              <button
+                type="button"
+                disabled={downloadBusy}
+                onClick={() => void handleDownload()}
+                className={`${T.ctaSecondary} text-sm w-full disabled:opacity-50`}
+              >
+                {downloadBusy ? "מוריד..." : "הורד את הקלף שלי"}
+              </button>
+              {downloadError ? (
+                <p className={`text-xs text-center ${T.tileSub}`}>{downloadError}</p>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

@@ -3,9 +3,18 @@
  */
 import { Children, useState } from "react";
 import StudentRewardCardPreviewModal from "./StudentRewardCardPreviewModal.jsx";
+import RewardCardLockedStamp, { lockedCardImageClassName } from "./RewardCardLockedStamp.jsx";
 
-export default function StudentRewardCard({ card, T, footer }) {
+export default function StudentRewardCard({
+  card,
+  T,
+  footer,
+  showLockedStamp = false,
+  allowDownload = false,
+  studentFullName = "",
+}) {
   const [previewOpen, setPreviewOpen] = useState(false);
+  const previewCard = showLockedStamp ? { ...card, showLockedStamp: true } : card;
 
   return (
     <>
@@ -14,16 +23,21 @@ export default function StudentRewardCard({ card, T, footer }) {
       >
         <button
           type="button"
-          className="aspect-[2/3] w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 shrink-0 mb-2 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
+          className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 shrink-0 mb-2 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
           onClick={() => setPreviewOpen(true)}
           aria-label={`הגדלת תמונת הקלף ${card.nameHe || ""}`.trim()}
         >
           <img
             src={card.imageUrl || "/rewards/cards/placeholders/regular/default.svg"}
             alt=""
-            className="w-full h-full object-cover pointer-events-none"
+            className={
+              showLockedStamp
+                ? lockedCardImageClassName(false)
+                : "w-full h-full object-cover pointer-events-none"
+            }
             loading="lazy"
           />
+          {showLockedStamp ? <RewardCardLockedStamp /> : null}
         </button>
         <div className="flex flex-col flex-1 gap-1 min-w-0">
           <h3 className={`font-bold text-sm leading-snug line-clamp-2 ${T.subjectTitle}`}>
@@ -46,16 +60,18 @@ export default function StudentRewardCard({ card, T, footer }) {
 
       <StudentRewardCardPreviewModal
         open={previewOpen}
-        card={card}
+        card={previewCard}
         T={T}
         onClose={() => setPreviewOpen(false)}
+        allowDownload={allowDownload}
+        studentFullName={studentFullName}
       />
     </>
   );
 }
 
 /** Series progress with card thumbnails — series tab. */
-export function StudentSeriesProgressCard({ series, T }) {
+export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
   const [previewCard, setPreviewCard] = useState(null);
   const pct = series.totalCount > 0 ? Math.round((series.ownedCount / series.totalCount) * 100) : 0;
   const cards = series.cards || [];
@@ -115,15 +131,10 @@ export function StudentSeriesProgressCard({ series, T }) {
                   <img
                     src={imageSrc}
                     alt=""
-                    className="w-full h-full object-cover grayscale opacity-40 pointer-events-none"
+                    className={lockedCardImageClassName(true)}
                     loading="lazy"
                   />
-                  <span
-                    className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-xs opacity-90"
-                    aria-hidden
-                  >
-                    🔒
-                  </span>
+                  <RewardCardLockedStamp compact />
                 </div>
               );
             })}
@@ -136,6 +147,8 @@ export function StudentSeriesProgressCard({ series, T }) {
         card={previewCard}
         T={T}
         onClose={() => setPreviewCard(null)}
+        allowDownload={Boolean(previewCard?.owned)}
+        studentFullName={studentFullName}
       />
     </>
   );

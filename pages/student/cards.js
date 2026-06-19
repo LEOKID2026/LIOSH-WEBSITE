@@ -225,6 +225,8 @@ export default function StudentCardsPage() {
     );
   }
 
+  const studentDisplayName = student?.full_name ?? "";
+
   const renderTabContent = () => {
     if (cardsPhase === "loading") {
       return (
@@ -256,6 +258,8 @@ export default function StudentCardsPage() {
               key={card.id}
               card={card}
               T={T}
+              allowDownload
+              studentFullName={studentDisplayName}
               footer={
                 card.canConvert ? (
                   <button
@@ -285,6 +289,7 @@ export default function StudentCardsPage() {
                 key={card.id}
                 card={card}
                 T={T}
+                showLockedStamp={!card.alreadyOwned}
                 footer={
                   card.alreadyOwned ? (
                     <p className={`text-xs font-semibold ${T.tileSub}`}>כבר באוסף שלך</p>
@@ -326,6 +331,7 @@ export default function StudentCardsPage() {
               key={card.id}
               card={card}
               T={T}
+              showLockedStamp
               footer={
                 card.lockMessageHe ? (
                   <p className={`text-xs leading-snug ${T.tileSub}`}>{card.lockMessageHe}</p>
@@ -345,7 +351,12 @@ export default function StudentCardsPage() {
       return (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4 w-full min-w-0">
           {series.map((s) => (
-            <StudentSeriesProgressCard key={s.seriesId} series={s} T={T} />
+            <StudentSeriesProgressCard
+              key={s.seriesId}
+              series={s}
+              T={T}
+              studentFullName={studentDisplayName}
+            />
           ))}
         </div>
       );
