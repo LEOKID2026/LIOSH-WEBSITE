@@ -4,9 +4,8 @@ import RewardCardLockedStamp, { lockedCardDimClassName } from "./RewardCardLocke
 import { downloadStudentRewardCardImage } from "../../../lib/rewards/download-student-card.client.js";
 
 const CAPTION_CLASS =
-  "font-bold text-base sm:text-lg leading-snug text-[#FFE8A3] [text-shadow:0_1px_4px_rgba(0,0,0,0.85)]";
-const SUB_CAPTION_CLASS =
-  "text-sm text-[#FFE8A3]/90 [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]";
+  "text-xl sm:text-2xl leading-snug text-[#00E5FF] font-black [text-shadow:0_0_10px_rgba(0,229,255,0.45),0_1px_3px_rgba(0,0,0,0.75)]";
+const SUB_CAPTION_CLASS = "text-sm text-[#FFFFFF] font-bold";
 const SWIPE_THRESHOLD_PX = 48;
 
 /**
