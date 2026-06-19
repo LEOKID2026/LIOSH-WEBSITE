@@ -1,31 +1,55 @@
-/** Diagonal "נעול" stamp for cards not owned by the student. */
+/** Soft "נעול" watermark for cards not owned by the student. */
 
-export function lockedCardDimClassName(compact = false) {
-  return compact ? "brightness-[0.87] opacity-[0.88]" : "brightness-[0.88] opacity-[0.92]";
+export function lockedCardDimClassName(_compact = false) {
+  return "";
 }
 
-export function lockedCardImageClassName(compact = false) {
-  return `w-full h-full object-cover pointer-events-none ${lockedCardDimClassName(compact)}`;
+export function lockedCardImageClassName(_compact = false) {
+  return "w-full h-full object-cover pointer-events-none";
 }
 
-export default function RewardCardLockedStamp({ compact = false }) {
+const WATERMARK_SHADOW = "0 2px 8px rgba(0,0,0,0.35)";
+const WATERMARK_STROKE = "1px rgba(15, 23, 42, 0.45)";
+
+/** @type {Record<string, { sizeClass: string; fontSize: string; opacity: number }>} */
+const VARIANTS = {
+  modal: {
+    sizeClass: "text-[34cqw]",
+    fontSize: "clamp(3rem, 34cqw, 11.5rem)",
+    opacity: 0.54,
+  },
+  card: {
+    sizeClass: "text-[30cqw]",
+    fontSize: "clamp(2.1rem, 30cqw, 7rem)",
+    opacity: 0.48,
+  },
+  compact: {
+    sizeClass: "text-[26cqw]",
+    fontSize: "clamp(1.05rem, 26cqw, 3.5rem)",
+    opacity: 0.48,
+  },
+};
+
+export default function RewardCardLockedStamp({ compact = false, modal = false }) {
+  const key = modal ? "modal" : compact ? "compact" : "card";
+  const variant = VARIANTS[key];
+
   return (
-    <>
-      <div className="absolute inset-0 bg-black/12 pointer-events-none" aria-hidden />
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
-        aria-hidden
+    <div
+      className="@container absolute inset-0 size-full flex items-center justify-center pointer-events-none overflow-hidden"
+      aria-hidden
+    >
+      <span
+        className={`font-black tracking-[0.04em] select-none -rotate-12 text-[#FFF8E7] leading-none whitespace-nowrap ${variant.sizeClass}`}
+        style={{
+          fontSize: variant.fontSize,
+          opacity: variant.opacity,
+          textShadow: WATERMARK_SHADOW,
+          WebkitTextStroke: WATERMARK_STROKE,
+        }}
       >
-        <span
-          className={
-            compact
-              ? "font-bold tracking-wide text-white border border-white/70 rounded bg-black/45 shadow-sm select-none -rotate-[22deg] text-[8px] sm:text-[9px] px-1 py-px leading-tight"
-              : "font-bold tracking-wide text-white border border-white/70 rounded-md bg-black/45 shadow-md select-none -rotate-[22deg] text-xs sm:text-sm px-2.5 py-0.5 leading-tight"
-          }
-        >
-          נעול
-        </span>
-      </div>
-    </>
+        נעול
+      </span>
+    </div>
   );
 }

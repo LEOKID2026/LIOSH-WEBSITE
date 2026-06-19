@@ -180,7 +180,7 @@ export default function StudentRewardCardPreviewModal({
               />
               {showLocked ? (
                 <div className="absolute inset-0 pointer-events-none">
-                  <RewardCardLockedStamp />
+                  <RewardCardLockedStamp modal />
                 </div>
               ) : null}
             </div>
