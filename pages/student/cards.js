@@ -71,8 +71,8 @@ function cardsHeaderCoinSizeClass() {
 
 function cardsBackButtonSizeClass() {
   return (
-    "w-auto shrink-0 min-h-[2.75rem] sm:min-h-[3.25rem] px-0.5 py-2 text-[11px] leading-tight " +
-    "sm:px-2 sm:py-2.5 sm:text-sm md:px-4 md:text-base whitespace-normal sm:whitespace-nowrap"
+    "w-auto shrink-0 min-h-[3rem] sm:min-h-[3.5rem] px-1 py-2 text-base leading-none " +
+    "sm:px-3 sm:py-2.5 sm:text-lg md:px-5 md:text-xl whitespace-nowrap"
   );
 }
 
@@ -113,7 +113,7 @@ function CardsPageHeaderActions({ theme, coinBalanceAmount, backVariant = "games
   return (
     <div dir="ltr" className={`grid ${gridCols} gap-1 sm:gap-2 w-full sm:w-auto min-w-0 items-stretch`}>
       <Link href="/student/home" className={cardsBackButtonClass(theme, backVariant)}>
-        חזרה לעולם הילד
+        עולם הילד
       </Link>
       {coinBalanceAmount != null ? (
         <span
