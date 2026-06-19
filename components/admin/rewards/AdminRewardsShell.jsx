@@ -1,11 +1,14 @@
 import { useMemo } from "react";
 import {
+  isAdminManualCoinCreditEnabledClient,
   isCardRewardsEnabledClient,
+  isRewardEconomySettingsEnabledClient,
 } from "../../../lib/rewards/reward-feature-flags.client.js";
 
 export const ADMIN_REWARDS_TABS = [
+  { id: "manual-coins", label: "מטבעות לילד", manualCoinOnly: true, cardOnly: false, economyOnly: false },
   { id: "general", label: "הגדרות כלליות", cardOnly: false },
-  { id: "economy", label: "כלכלת מטבעות", cardOnly: false },
+  { id: "economy", label: "כלכלת מטבעות", cardOnly: false, economyOnly: true },
   { id: "cards", label: "קלפים", cardOnly: true },
   { id: "series", label: "סדרות", cardOnly: true },
   { id: "box", label: "קופסת הפתעה", cardOnly: true },
@@ -23,10 +26,22 @@ function tabBtnClass(active) {
 
 export default function AdminRewardsShell({ activeTab, onTabChange, children }) {
   const cardsEnabled = isCardRewardsEnabledClient();
+  const economyEnabled = isRewardEconomySettingsEnabledClient();
+  const manualCoinsEnabled = isAdminManualCoinCreditEnabledClient();
+  const rewardsConfigEnabled = cardsEnabled || economyEnabled;
 
   const visibleTabs = useMemo(
-    () => ADMIN_REWARDS_TABS.filter((t) => !t.cardOnly || cardsEnabled),
-    [cardsEnabled]
+    () =>
+      ADMIN_REWARDS_TABS.filter((t) => {
+        if (t.manualCoinOnly) return manualCoinsEnabled;
+        if (t.economyOnly && !economyEnabled) return false;
+        if (t.cardOnly && !cardsEnabled) return false;
+        if (!t.manualCoinOnly && !t.cardOnly && !t.economyOnly && !rewardsConfigEnabled) {
+          return false;
+        }
+        return true;
+      }),
+    [cardsEnabled, economyEnabled, manualCoinsEnabled, rewardsConfigEnabled]
   );
 
   const safeTab = visibleTabs.some((t) => t.id === activeTab)
@@ -43,6 +58,11 @@ export default function AdminRewardsShell({ activeTab, onTabChange, children }) 
         <span>
           דגל כלכלה:{" "}
           {process.env.NEXT_PUBLIC_REWARD_ECONOMY_SETTINGS_ENABLED === "true" ? "פעיל" : "כבוי"}
+        </span>
+        <span>·</span>
+        <span>
+          מטבעות ידנית:{" "}
+          {process.env.NEXT_PUBLIC_ENABLE_ADMIN_MANUAL_COIN_CREDIT === "true" ? "פעיל" : "כבוי"}
         </span>
       </div>
 

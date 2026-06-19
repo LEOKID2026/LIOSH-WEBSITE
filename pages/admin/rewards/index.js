@@ -11,8 +11,12 @@ import AdminShopTab from "../../../components/admin/rewards/AdminShopTab";
 import AdminDuplicatesTab from "../../../components/admin/rewards/AdminDuplicatesTab";
 import AdminEventsTab from "../../../components/admin/rewards/AdminEventsTab";
 import AdminTestsTab from "../../../components/admin/rewards/AdminTestsTab";
+import AdminManualCoinsTab from "../../../components/admin/rewards/AdminManualCoinsTab";
 import { useAdminSession } from "../../../lib/admin-portal/use-admin-session";
-import { isRewardsAdminEnabledClient } from "../../../lib/rewards/reward-feature-flags.client.js";
+import {
+  isAdminManualCoinCreditEnabledClient,
+  isRewardsAdminEnabledClient,
+} from "../../../lib/rewards/reward-feature-flags.client.js";
 import {
   ADMIN_LOADING,
   ADMIN_NAV_REWARDS,
@@ -20,6 +24,8 @@ import {
 
 function renderTab(tabId, accessToken, setActiveTab) {
   switch (tabId) {
+    case "manual-coins":
+      return <AdminManualCoinsTab accessToken={accessToken} />;
     case "general":
       return <AdminGeneralTab accessToken={accessToken} />;
     case "economy":
@@ -45,14 +51,17 @@ function renderTab(tabId, accessToken, setActiveTab) {
 
 export default function AdminRewardsPage() {
   const { state, accessToken } = useAdminSession();
-  const [activeTab, setActiveTab] = useState("general");
+  const manualCoinsEnabled = isAdminManualCoinCreditEnabledClient();
+  const [activeTab, setActiveTab] = useState(manualCoinsEnabled ? "manual-coins" : "general");
   const rewardsAdminEnabled = isRewardsAdminEnabledClient();
 
   if (!rewardsAdminEnabled) {
     return (
       <Layout>
         <AdminShell title={ADMIN_NAV_REWARDS} showLogout>
-          <p className="text-white/60 text-sm text-right">עמוד תגמולים אינו זמין — דגלי CARD_REWARDS / REWARD_ECONOMY כבויים.</p>
+          <p className="text-white/60 text-sm text-right">
+            עמוד תגמולים אינו זמין — הפעל CARD_REWARDS, REWARD_ECONOMY או ENABLE_ADMIN_MANUAL_COIN_CREDIT.
+          </p>
         </AdminShell>
       </Layout>
     );
