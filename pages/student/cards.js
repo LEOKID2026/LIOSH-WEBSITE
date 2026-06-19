@@ -367,23 +367,29 @@ export default function StudentCardsPage() {
                 previewCards={shopPreviewCards}
                 previewIndex={index}
                 showLockedStamp={!card.alreadyOwned}
+                allowDownload={card.alreadyOwned}
+                studentFullName={studentDisplayName}
                 footer={
                   <>
                     <p className={`text-sm font-semibold ${T.statValue}`}>
                       {formatCoinAmountHe(card.priceCoins)}
                     </p>
-                    {!card.alreadyOwned && !canBuy ? (
-                      <p className={`text-xs ${T.tileSub}`}>
-                        {card.missingCoins > 0
+                    <p className={`text-xs leading-snug min-h-[1.125rem] ${T.tileSub}`}>
+                      {!card.alreadyOwned && !canBuy
+                        ? card.missingCoins > 0
                           ? `חסרים לך ${formatCoinAmountHe(card.missingCoins)}`
-                          : "אין מספיק מטבעות"}
-                      </p>
-                    ) : null}
+                          : "אין מספיק מטבעות"
+                        : "\u00a0"}
+                    </p>
                     <button
                       type="button"
                       disabled={card.alreadyOwned || actionBusy === card.id || !canBuy}
                       onClick={() => void handlePurchase(card.id)}
-                      className={`${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`}
+                      className={
+                        card.alreadyOwned
+                          ? `${T.ctaPrimary} text-xs w-full !bg-amber-500 hover:!bg-amber-500 !text-white shadow-md cursor-default disabled:!opacity-100`
+                          : `${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
+                      }
                     >
                       {card.alreadyOwned
                         ? SHOP_CARD_ALREADY_OWNED_HE

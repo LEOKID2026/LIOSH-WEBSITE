@@ -88,10 +88,11 @@ export default function StudentRewardCardPreviewModal({
   const imageSrc = currentCard.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
   const showLocked = currentCard.isLocked === true || currentCard.showLockedStamp === true;
   const canDownload =
-    allowDownload &&
     !showLocked &&
-    currentCard.owned !== false &&
-    Boolean(String(studentFullName ?? "").length);
+    Boolean(String(studentFullName ?? "").length) &&
+    (currentCard.alreadyOwned === true ||
+      currentCard.isOwned === true ||
+      allowDownload);
 
   const handleDownload = async () => {
     if (!canDownload || downloadBusy) return;
