@@ -1,0 +1,183 @@
+import { useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
+import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
+import { formatCoinAmountHe } from "../../../lib/rewards/rewards-ui.he.js";
+
+const OPEN_PATH = "/api/student/rewards/surprise-box/open";
+
+export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened }) {
+  const { homeModalShell, tokens: T, isBright } = useStudentTheme();
+  const titleId = useId();
+  const closeRef = useRef(null);
+  const [phase, setPhase] = useState("idle");
+  const [result, setResult] = useState(null);
+  const [errorHe, setErrorHe] = useState("");
+
+  useEffect(() => {
+    if (!open) {
+      setPhase("idle");
+      setResult(null);
+      setErrorHe("");
+      return undefined;
+    }
+
+    let cancelled = false;
+    setPhase("opening");
+    setErrorHe("");
+    setResult(null);
+
+    (async () => {
+      try {
+        const res = await fetch(OPEN_PATH, {
+          method: "POST",
+          credentials: "include",
+          headers: { Accept: "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify({ idempotencyKey: `box:${Date.now()}` }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (cancelled) return;
+        if (!res.ok || json?.ok !== true) {
+          if (json?.code === "no_pending_box") {
+            setErrorHe("אין קופסה מוכנה כרגע — נסו שוב מאוחר יותר.");
+          } else {
+            setErrorHe("לא הצלחנו לפתוח את הקופסה. נסו שוב.");
+          }
+          setPhase("error");
+          return;
+        }
+        setResult(json);
+        setPhase("done");
+        onOpened?.(json);
+      } catch {
+        if (cancelled) return;
+        setErrorHe("שגיאת רשת בפתיחת הקופסה.");
+        setPhase("error");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, onOpened]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape" && phase !== "opening") onClose?.();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open, onClose, phase]);
+
+  if (!open) return null;
+
+  const cards = Array.isArray(result?.cards) ? result.cards : [];
+
+  return (
+    <div
+      className={homeModalShell.overlay}
+      role="presentation"
+      onClick={() => {
+        if (phase !== "opening") onClose?.();
+      }}
+    >
+      <div
+        className={`${homeModalShell.panel} md:max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        dir="rtl"
+        lang="he"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header
+          className={`sticky top-0 z-10 flex items-center justify-between gap-3 border-b px-4 py-3 ${
+            isBright ? "border-amber-200 bg-gradient-to-l from-amber-50 to-white" : "border-white/10 bg-black/30"
+          }`}
+        >
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            disabled={phase === "opening"}
+            className={homeModalShell.closeBtn}
+            aria-label="סגור"
+          >
+            ✕
+          </button>
+          <h2 id={titleId} className={`text-lg font-bold text-right flex-1 ${T.tileTitle}`}>
+            {phase === "opening" ? "פותחים קופסה..." : phase === "done" ? "יש! קיבלתם פרסים!" : "קופסת הפתעה"}
+          </h2>
+          <span className="text-2xl shrink-0" aria-hidden>
+            🎁
+          </span>
+        </header>
+
+        <div className="p-4 md:p-5 space-y-4 text-right">
+          {phase === "opening" ? (
+            <div className="flex flex-col items-center py-8 gap-3">
+              <div className={T.loadingSpinner} aria-hidden />
+              <p className={T.loadingText}>מגלגלים את הפרסים...</p>
+            </div>
+          ) : null}
+
+          {phase === "error" ? (
+            <div className={T.errorBox}>
+              <p className={T.errorTitle}>{errorHe}</p>
+              <button type="button" onClick={onClose} className={T.errorBtn}>
+                סגור
+              </button>
+            </div>
+          ) : null}
+
+          {phase === "done" && result ? (
+            <>
+              <p className={`text-sm ${T.panelIntro}`}>בכל קופסה — מטבעות ושני קלפים. הנה מה שקיבלתם:</p>
+
+              <div className={`rounded-xl border p-4 ${T.statCard}`}>
+                <p className={`text-xs ${T.statLabel}`}>מטבעות</p>
+                <p className={`text-xl font-bold ${T.statValue}`}>
+                  {formatCoinAmountHe(result.coinsReward)}
+                </p>
+              </div>
+
+              <ul className="space-y-3">
+                {cards.map((card, i) => (
+                  <li
+                    key={`${card.nameHe}-${i}`}
+                    className={`rounded-xl border p-4 ${T.subjectCard}`}
+                  >
+                    <p className={`font-bold ${T.subjectTitle}`}>{card.nameHe}</p>
+                    <p className={`text-sm mt-1 ${T.tileSub}`}>נדירות: {card.rarityHe}</p>
+                    {card.wasDuplicate ? (
+                      <p className="text-sm mt-2 text-amber-700 dark:text-amber-300">
+                        {card.conversionProgressHe || "קיבלתם עותק נוסף — אפשר לאסוף ולהמיר כפילויות."}
+                      </p>
+                    ) : (
+                      <p className="text-sm mt-2 text-emerald-700 dark:text-emerald-300">קלף חדש באוסף!</p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                <Link href="/student/cards" className={`${T.ctaPrimary} text-center flex-1`}>
+                  לאוסף שלי
+                </Link>
+                <button type="button" onClick={onClose} className={`${T.ctaGames} flex-1`}>
+                  המשך לעולם הילד
+                </button>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}

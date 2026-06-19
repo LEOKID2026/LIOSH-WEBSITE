@@ -24,6 +24,9 @@ import { isClassroomActivitiesEnabled } from "../../lib/classroom-activities/cla
 import { normalizeStudentActivityScope } from "../../lib/classroom-activities/student-activity-scope-labels.client.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../../components/student/StudentThemePicker";
+import StudentSurpriseBoxWidget from "../../components/student/rewards/StudentSurpriseBoxWidget";
+import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
+import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 
 const HOME_PROFILE_PATH = "/api/student/home-profile";
 
@@ -319,6 +322,8 @@ export default function StudentHomePage() {
   const [personalActivitiesPhase, setPersonalActivitiesPhase] = useState("idle");
   const [heroAvatarImage, setHeroAvatarImage] = useState(null);
   const [heroAvatarEmoji, setHeroAvatarEmoji] = useState("👤");
+  const [boxModalOpen, setBoxModalOpen] = useState(false);
+  const cardRewardsEnabled = isCardRewardsEnabledClient();
 
   const loadHomeDashboard = useCallback(async () => {
     setProfilePhase("loading");
@@ -749,6 +754,10 @@ export default function StudentHomePage() {
           ) : null}
         </section>
 
+        {cardRewardsEnabled ? (
+          <StudentSurpriseBoxWidget onOpen={() => setBoxModalOpen(true)} />
+        ) : null}
+
         {profilePending ? (
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 animate-pulse">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -816,6 +825,10 @@ export default function StudentHomePage() {
       >
         {renderActivePanelContent()}
       </StudentHomeModal>
+      <StudentSurpriseBoxOpenModal
+        open={boxModalOpen}
+        onClose={() => setBoxModalOpen(false)}
+      />
       <StudentAvatarPickerModal
         open={showAvatarModal}
         onClose={() => setShowAvatarModal(false)}

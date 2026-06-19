@@ -13,6 +13,7 @@ import {
 import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-progress.server";
 import { evaluateMonthlyPersistenceReward } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
+import { evaluateAndGrantAchievementCards } from "../../../lib/rewards/server/achievement-evaluator.server.js";
 
 function shouldLogStudentHomeDebug() {
   return process.env.NEXT_PUBLIC_DEBUG_STUDENT_IDENTITY === "true";
@@ -107,6 +108,12 @@ export default async function handler(req, res) {
       monthlyPersistenceLoadError,
       updated_at: row.updated_at,
     };
+
+    try {
+      await evaluateAndGrantAchievementCards(supabase, studentId);
+    } catch {
+      /* non-fatal — home profile must still load */
+    }
 
     void trackServerAnalyticsEvent(supabase, {
       eventName: "student_home_opened",

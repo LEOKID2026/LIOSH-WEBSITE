@@ -9,6 +9,7 @@ import {
   ADMIN_NAV_ANALYTICS,
   ADMIN_NAV_SCHOOLS,
   ADMIN_NAV_TEACHERS,
+  ADMIN_NAV_REWARDS,
   ADMIN_NAV_TEACHER_PORTAL,
   ADMIN_PLATFORM_LABEL,
 } from "../../lib/admin-portal/admin-ui.he.js";
@@ -20,6 +21,7 @@ export const ADMIN_PAGE_CONTAINER =
 const NAV_ITEMS = [
   { href: "/admin/accounts", label: ADMIN_NAV_ALL_ACCOUNTS },
   { href: "/admin/analytics", label: ADMIN_NAV_ANALYTICS },
+  { href: "/admin/rewards", label: ADMIN_NAV_REWARDS },
   { href: "/admin/teachers", label: ADMIN_NAV_TEACHERS },
   { href: "/admin/schools", label: ADMIN_NAV_SCHOOLS },
   { href: "/admin/parents", label: ADMIN_NAV_PARENTS },

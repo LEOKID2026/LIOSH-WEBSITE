@@ -21,6 +21,7 @@ import { awardLearningSessionCoins } from "../../../../lib/learning-supabase/lea
 import { updateDailyMissionProgress } from "../../../../lib/learning-supabase/mission-progress.server";
 import { guardCookieMutationOrigin } from "../../../../lib/security/api-guards.js";
 import { trackServerAnalyticsEvent } from "../../../../lib/analytics/track-event.server.js";
+import { evaluateAndGrantAchievementCards } from "../../../../lib/rewards/server/achievement-evaluator.server.js";
 
 async function loadLearningSession(supabase, learningSessionId) {
   const { data, error } = await supabase
@@ -194,6 +195,15 @@ export default async function handler(req, res) {
       logLearningPipelineDebug("session-finish-mission-progress-error", {
         learningSessionId,
         error: missionErr?.message || String(missionErr),
+      });
+    }
+
+    try {
+      await evaluateAndGrantAchievementCards(supabase, auth.studentId);
+    } catch (achievementErr) {
+      logLearningPipelineDebug("session-finish-achievement-cards-error", {
+        learningSessionId,
+        error: achievementErr?.message || String(achievementErr),
       });
     }
 
