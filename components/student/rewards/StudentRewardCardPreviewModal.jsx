@@ -164,7 +164,7 @@ export default function StudentRewardCardPreviewModal({
                 ref={closeRef}
                 type="button"
                 onClick={onClose}
-                className={`absolute -top-2 -left-2 z-20 ${homeModalShell.closeBtn}`}
+                className="absolute -top-2 -left-2 z-20 inline-flex items-center justify-center rounded-lg border border-white/20 bg-black/35 text-[#FFE8A3] text-2xl leading-none min-h-11 min-w-11 hover:bg-black/50 transition"
                 style={{ direction: "ltr" }}
                 aria-label="סגור"
               >
