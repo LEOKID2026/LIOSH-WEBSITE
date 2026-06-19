@@ -11,7 +11,7 @@ import StudentRewardCard, {
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
-import { formatCoinAmountHe, formatCoinAmountNumberHe, SHOP_CARD_ALREADY_OWNED_HE } from "../../lib/rewards/rewards-ui.he.js";
+import { formatCoinAmountHe, formatCoinAmountNumberHe, SHOP_CARD_ALREADY_OWNED_HE, CATALOG_CARD_OWNED_HE } from "../../lib/rewards/rewards-ui.he.js";
 
 const CARDS_PATH = "/api/student/rewards/cards";
 const PURCHASE_PATH = "/api/student/rewards/shop/purchase";
@@ -424,9 +424,15 @@ export default function StudentCardsPage() {
               allowDownload={card.isOwned}
               studentFullName={studentDisplayName}
               footer={
-                !card.isOwned && card.lockMessageHe ? (
-                  <p className={`text-xs leading-snug ${T.tileSub}`}>{card.lockMessageHe}</p>
-                ) : null
+                <p
+                  className={`text-xs leading-snug min-h-[1.125rem] ${
+                    card.isOwned
+                      ? "font-bold text-amber-500 dark:text-amber-300"
+                      : T.tileSub
+                  }`}
+                >
+                  {card.isOwned ? CATALOG_CARD_OWNED_HE : card.lockMessageHe || "\u00a0"}
+                </p>
               }
             />
           ))}
