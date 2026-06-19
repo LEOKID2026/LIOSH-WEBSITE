@@ -1,38 +1,56 @@
 /**
  * Unified reward card tile — same layout in collection, shop, and locked tabs.
  */
-import { Children } from "react";
+import { Children, useState } from "react";
+import StudentRewardCardPreviewModal from "./StudentRewardCardPreviewModal.jsx";
+
 export default function StudentRewardCard({ card, T, footer }) {
+  const [previewOpen, setPreviewOpen] = useState(false);
+
   return (
-    <article
-      className={`rounded-xl border shadow-sm p-2.5 sm:p-3 flex flex-col h-full min-h-[240px] text-right overflow-hidden min-w-0 ${T.subjectCard}`}
-    >
-      <div className="aspect-[2/3] w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 shrink-0 mb-2">
-        <img
-          src={card.imageUrl || "/rewards/cards/placeholders/regular/default.svg"}
-          alt=""
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-      </div>
-      <div className="flex flex-col flex-1 gap-1 min-w-0">
-        <h3 className={`font-bold text-sm leading-snug line-clamp-2 ${T.subjectTitle}`}>
-          {card.nameHe}
-        </h3>
-        {card.seriesNameHe ? (
-          <p className={`text-xs truncate ${T.tileSub}`}>{card.seriesNameHe}</p>
-        ) : null}
-        {card.rarityHe ? (
-          <p className={`text-xs ${T.tileSub}`}>{card.rarityHe}</p>
-        ) : null}
-        {card.duplicateCount > 0 ? (
-          <p className="text-xs text-amber-700 dark:text-amber-300">
-            כפילויות: {card.duplicateCount}
-          </p>
-        ) : null}
-        {footer ? <div className="mt-auto pt-2 flex flex-col gap-2 min-w-0">{footer}</div> : null}
-      </div>
-    </article>
+    <>
+      <article
+        className={`rounded-xl border shadow-sm p-2.5 sm:p-3 flex flex-col h-full min-h-[240px] text-right overflow-hidden min-w-0 ${T.subjectCard}`}
+      >
+        <button
+          type="button"
+          className="aspect-[2/3] w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 shrink-0 mb-2 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
+          onClick={() => setPreviewOpen(true)}
+          aria-label={`הגדלת תמונת הקלף ${card.nameHe || ""}`.trim()}
+        >
+          <img
+            src={card.imageUrl || "/rewards/cards/placeholders/regular/default.svg"}
+            alt=""
+            className="w-full h-full object-cover pointer-events-none"
+            loading="lazy"
+          />
+        </button>
+        <div className="flex flex-col flex-1 gap-1 min-w-0">
+          <h3 className={`font-bold text-sm leading-snug line-clamp-2 ${T.subjectTitle}`}>
+            {card.nameHe}
+          </h3>
+          {card.seriesNameHe ? (
+            <p className={`text-xs truncate ${T.tileSub}`}>{card.seriesNameHe}</p>
+          ) : null}
+          {card.rarityHe ? (
+            <p className={`text-xs ${T.tileSub}`}>{card.rarityHe}</p>
+          ) : null}
+          {card.duplicateCount > 0 ? (
+            <p className="text-xs text-amber-700 dark:text-amber-300">
+              כפילויות: {card.duplicateCount}
+            </p>
+          ) : null}
+          {footer ? <div className="mt-auto pt-2 flex flex-col gap-2 min-w-0">{footer}</div> : null}
+        </div>
+      </article>
+
+      <StudentRewardCardPreviewModal
+        open={previewOpen}
+        card={card}
+        T={T}
+        onClose={() => setPreviewOpen(false)}
+      />
+    </>
   );
 }
 
