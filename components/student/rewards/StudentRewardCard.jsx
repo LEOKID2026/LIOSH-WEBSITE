@@ -102,40 +102,32 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
           >
             {cards.map((card) => {
               const imageSrc = card.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
-              if (card.owned) {
-                return (
-                  <button
-                    key={card.cardId}
-                    type="button"
-                    role="listitem"
-                    className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 rounded-md overflow-hidden bg-slate-100/80 dark:bg-white/5 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
-                    onClick={() => setPreviewCard(card)}
-                    aria-label={`הגדלת תמונת הקלף ${card.nameHe}`}
-                  >
-                    <img
-                      src={imageSrc}
-                      alt=""
-                      className="w-full h-full object-cover pointer-events-none"
-                      loading="lazy"
-                    />
-                  </button>
-                );
-              }
+              const previewPayload = card.owned ? card : { ...card, showLockedStamp: true };
               return (
-                <div
+                <button
                   key={card.cardId}
+                  type="button"
                   role="listitem"
-                  className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 rounded-md overflow-hidden bg-slate-100/80 dark:bg-white/5"
-                  aria-label={`${card.nameHe} — נעול`}
+                  className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 rounded-md overflow-hidden bg-slate-100/80 dark:bg-white/5 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
+                  onClick={() => setPreviewCard(previewPayload)}
+                  aria-label={
+                    card.owned
+                      ? `הגדלת תמונת הקלף ${card.nameHe}`
+                      : `${card.nameHe} — נעול`
+                  }
                 >
                   <img
                     src={imageSrc}
                     alt=""
-                    className={lockedCardImageClassName(true)}
+                    className={
+                      card.owned
+                        ? "w-full h-full object-cover pointer-events-none"
+                        : lockedCardImageClassName(true)
+                    }
                     loading="lazy"
                   />
-                  <RewardCardLockedStamp compact />
-                </div>
+                  {!card.owned ? <RewardCardLockedStamp compact /> : null}
+                </button>
               );
             })}
           </div>
