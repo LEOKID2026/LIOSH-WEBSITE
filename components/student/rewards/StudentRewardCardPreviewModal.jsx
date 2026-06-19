@@ -122,8 +122,9 @@ export default function StudentRewardCardPreviewModal({
     const delta = endX - touchStartX.current;
     touchStartX.current = null;
     if (Math.abs(delta) < SWIPE_THRESHOLD_PX) return;
-    if (delta < 0 && canNext) goNext();
-    else if (delta > 0 && canPrev) goPrev();
+    // RTL: swipe right → next, swipe left → prev (matches side arrow buttons)
+    if (delta > 0 && canNext) goNext();
+    else if (delta < 0 && canPrev) goPrev();
   };
 
   const navBtnClass =
@@ -142,18 +143,18 @@ export default function StudentRewardCardPreviewModal({
         onClick={(event) => event.stopPropagation()}
         dir="rtl"
       >
-        <div className="flex items-start justify-center gap-1 sm:gap-2 max-w-full min-w-0">
-          <button
-            type="button"
-            onClick={goPrev}
-            disabled={!canPrev}
-            className={navBtnClass}
-            aria-label="קלף קודם"
-          >
-            ‹
-          </button>
+        <div className="flex flex-col items-center max-w-full min-w-0 gap-1.5">
+          <div className="flex items-center justify-center gap-1 sm:gap-2 max-w-full min-w-0">
+            <button
+              type="button"
+              onClick={goPrev}
+              disabled={!canPrev}
+              className={navBtnClass}
+              aria-label="קלף קודם"
+            >
+              ‹
+            </button>
 
-          <div className="flex flex-col items-center max-w-full min-w-0 gap-1.5">
             <div
               className="relative bg-transparent p-0 m-0 w-fit max-w-full"
               onTouchStart={handleTouchStart}
@@ -184,32 +185,32 @@ export default function StudentRewardCardPreviewModal({
               ) : null}
             </div>
 
-            <div className={`${CARD_INFO_PILL_CLASS} space-y-1 min-w-0 w-full max-w-full`}>
-              <h2 id={titleId} className={`${CAPTION_CLASS} line-clamp-2`}>
-                {currentCard.nameHe}
-              </h2>
-              {currentCard.rarityHe || currentCard.seriesNameHe ? (
-                <p className={`${SUB_CAPTION_CLASS} truncate`}>
-                  {[
-                    currentCard.rarityHe ? `נדירות: ${currentCard.rarityHe}` : null,
-                    currentCard.seriesNameHe ? `סדרה: ${currentCard.seriesNameHe}` : null,
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-              ) : null}
-            </div>
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!canNext}
+              className={navBtnClass}
+              aria-label="קלף הבא"
+            >
+              ›
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={goNext}
-            disabled={!canNext}
-            className={navBtnClass}
-            aria-label="קלף הבא"
-          >
-            ›
-          </button>
+          <div className={`${CARD_INFO_PILL_CLASS} space-y-1 min-w-0 w-full max-w-full`}>
+            <h2 id={titleId} className={`${CAPTION_CLASS} line-clamp-2`}>
+              {currentCard.nameHe}
+            </h2>
+            {currentCard.rarityHe || currentCard.seriesNameHe ? (
+              <p className={`${SUB_CAPTION_CLASS} truncate`}>
+                {[
+                  currentCard.rarityHe ? `נדירות: ${currentCard.rarityHe}` : null,
+                  currentCard.seriesNameHe ? `סדרה: ${currentCard.seriesNameHe}` : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            ) : null}
+          </div>
         </div>
 
         {canDownload ? (
