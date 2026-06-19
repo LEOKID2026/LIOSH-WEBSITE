@@ -5,6 +5,36 @@ import { formatCoinAmountHe } from "../../../lib/rewards/rewards-ui.he.js";
 
 const OPEN_PATH = "/api/student/rewards/surprise-box/open";
 
+const CARD_THUMB_PLACEHOLDER = "/rewards/cards/placeholders/regular/default.svg";
+
+function SurpriseBoxCardPrizeRow({ card, T }) {
+  const imageSrc = card.imageUrl || CARD_THUMB_PLACEHOLDER;
+
+  return (
+    <li className={`rounded-xl border p-3 sm:p-4 min-w-0 overflow-hidden ${T.subjectCard}`}>
+      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <div className="flex-1 min-w-0 text-right">
+          <p className={`font-bold leading-snug ${T.subjectTitle}`}>{card.nameHe}</p>
+          <p className={`text-sm mt-1 ${T.tileSub}`}>נדירות: {card.rarityHe}</p>
+          {card.wasDuplicate ? (
+            <p className="text-sm mt-2 text-amber-700 dark:text-amber-300">
+              {card.conversionProgressHe || "קיבלתם עותק נוסף — אפשר לאסוף ולהמיר כפילויות."}
+            </p>
+          ) : (
+            <p className="text-sm mt-2 text-emerald-700 dark:text-emerald-300">קלף חדש באוסף!</p>
+          )}
+        </div>
+        <div
+          className="shrink-0 w-11 sm:w-14 aspect-[2/3] rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 border border-black/10 dark:border-white/10"
+          aria-hidden
+        >
+          <img src={imageSrc} alt="" className="w-full h-full object-cover" loading="lazy" />
+        </div>
+      </div>
+    </li>
+  );
+}
+
 export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened }) {
   const { homeModalShell, tokens: T, isBright } = useStudentTheme();
   const titleId = useId();
@@ -147,22 +177,9 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
                 </p>
               </div>
 
-              <ul className="space-y-3">
+              <ul className="space-y-3 min-w-0">
                 {cards.map((card, i) => (
-                  <li
-                    key={`${card.nameHe}-${i}`}
-                    className={`rounded-xl border p-4 ${T.subjectCard}`}
-                  >
-                    <p className={`font-bold ${T.subjectTitle}`}>{card.nameHe}</p>
-                    <p className={`text-sm mt-1 ${T.tileSub}`}>נדירות: {card.rarityHe}</p>
-                    {card.wasDuplicate ? (
-                      <p className="text-sm mt-2 text-amber-700 dark:text-amber-300">
-                        {card.conversionProgressHe || "קיבלתם עותק נוסף — אפשר לאסוף ולהמיר כפילויות."}
-                      </p>
-                    ) : (
-                      <p className="text-sm mt-2 text-emerald-700 dark:text-emerald-300">קלף חדש באוסף!</p>
-                    )}
-                  </li>
+                  <SurpriseBoxCardPrizeRow key={`${card.nameHe}-${i}`} card={card} T={T} />
                 ))}
               </ul>
 
