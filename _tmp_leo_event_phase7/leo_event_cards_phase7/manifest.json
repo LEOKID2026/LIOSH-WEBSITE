@@ -1,0 +1,38 @@
+[
+  {
+    "filename": "event_hanukkah.webp",
+    "titleHe": "ליאו חנוכה",
+    "rarityHe": "מיוחד",
+    "type": "event",
+    "group": "events",
+    "path": "/rewards/cards/events/event_hanukkah.webp",
+    "size": "768x1152"
+  },
+  {
+    "filename": "event_purim.webp",
+    "titleHe": "ליאו פורים",
+    "rarityHe": "מיוחד",
+    "type": "event",
+    "group": "events",
+    "path": "/rewards/cards/events/event_purim.webp",
+    "size": "768x1152"
+  },
+  {
+    "filename": "event_passover.webp",
+    "titleHe": "ליאו פסח",
+    "rarityHe": "מיוחד",
+    "type": "event",
+    "group": "events",
+    "path": "/rewards/cards/events/event_passover.webp",
+    "size": "768x1152"
+  },
+  {
+    "filename": "event_rosh_hashana.webp",
+    "titleHe": "ליאו ראש השנה",
+    "rarityHe": "נדיר",
+    "type": "event",
+    "group": "events",
+    "path": "/rewards/cards/events/event_rosh_hashana.webp",
+    "size": "768x1152"
+  }
+]

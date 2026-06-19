@@ -1,0 +1,121 @@
+{
+  "title": "Leo Cards - Packages 8 and 9 - Event Cards",
+  "created_for": "Cursor import",
+  "notes": [
+    "Final files are ready under public/rewards/cards/events/.",
+    "Use only the WebP files in public/ for the product.",
+    "Original PNG sources are included only for archive/reference.",
+    "No text, price, or card frame should be added inside these images."
+  ],
+  "image_size": {
+    "width": 768,
+    "height": 1075,
+    "format": "webp"
+  },
+  "cards": [
+    {
+      "package": 8,
+      "card_number": 69,
+      "name_he": "ליאו סוכות",
+      "rarity_he": "מיוחד",
+      "source_png": "sources/package_8_original_png/happy_shiba_inu_in_festive_sukkah.png",
+      "target_path": "public/rewards/cards/events/event_sukkot.webp",
+      "final_filename": "event_sukkot.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "66c568338ad059d4f60fa0899690fd89a0bbe0eb6616ba0a9ff6b24ac5bec8d1"
+    },
+    {
+      "package": 8,
+      "card_number": 70,
+      "name_he": "ליאו שבועות",
+      "rarity_he": "מיוחד",
+      "source_png": "sources/package_8_original_png/happy_shiba_inu_in_countryside_garden.png",
+      "target_path": "public/rewards/cards/events/event_shavuot.webp",
+      "final_filename": "event_shavuot.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "9a5d4cc46b58c2a28fab9450c3f0905aebeabe04326507cb2fbbba2f3115c792"
+    },
+    {
+      "package": 8,
+      "card_number": 71,
+      "name_he": "ליאו יום העצמאות",
+      "rarity_he": "נדיר",
+      "source_png": "sources/package_8_original_png/sunny_celebration_with_shiba_inu_and_flag.png",
+      "target_path": "public/rewards/cards/events/event_independence_day.webp",
+      "final_filename": "event_independence_day.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "ff021469d604d150fe43d000131c4ab2bf7da86c31cbef715fadd45168fc3951"
+    },
+    {
+      "package": 8,
+      "card_number": 72,
+      "name_he": "ליאו חזרה ללימודים",
+      "rarity_he": "רגיל",
+      "source_png": "sources/package_8_original_png/shiba_inu_ready_for_school.png",
+      "target_path": "public/rewards/cards/events/event_back_to_learning.webp",
+      "final_filename": "event_back_to_learning.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "4a380f190e0c80cda3fd801da59fae8a6f443684a2423c8c96d0f2c23b7c1c29"
+    },
+    {
+      "package": 9,
+      "card_number": 73,
+      "name_he": "ליאו חופשת קיץ",
+      "rarity_he": "רגיל",
+      "source_png": "sources/package_9_original_png/shiba_inu_enjoying_a_beach_day.png",
+      "target_path": "public/rewards/cards/events/event_summer.webp",
+      "final_filename": "event_summer.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "8ec0299ae6e8f547e2f587984b639d84474c932a6a8693f4e050f095e3e8ddc1"
+    },
+    {
+      "package": 9,
+      "card_number": 74,
+      "name_he": "ליאו חורף חם",
+      "rarity_he": "רגיל",
+      "source_png": "sources/package_9_original_png/whimsical_winter_wonderland_with_shiba_inu.png",
+      "target_path": "public/rewards/cards/events/event_winter.webp",
+      "final_filename": "event_winter.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "6576b47860c86f8d2b106259925529c029ea823d88bcbb92e8f90d23a1c3eeb3"
+    },
+    {
+      "package": 9,
+      "card_number": 75,
+      "name_he": "ליאו יום הולדת",
+      "rarity_he": "נדיר",
+      "source_png": "sources/package_9_original_png/shiba_inu_s_birthday_celebration_in_the_park.png",
+      "target_path": "public/rewards/cards/events/event_birthday.webp",
+      "final_filename": "event_birthday.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "78cfe986bb58a6dd6fac87a0214f657c3bacf77fd5daafd201a4ed1951b55068"
+    },
+    {
+      "package": 9,
+      "card_number": 76,
+      "name_he": "ליאו סוף שנה",
+      "rarity_he": "זהב",
+      "source_png": "sources/package_9_original_png/shiba_inu_s_graduation_celebration_in_the_park.png",
+      "target_path": "public/rewards/cards/events/event_end_of_year.webp",
+      "final_filename": "event_end_of_year.webp",
+      "format": "webp",
+      "width": 768,
+      "height": 1075,
+      "sha256": "eb595a07f9c4df28fab419771052ce4716de8937ecb0c931734d33e27db0e084"
+    }
+  ]
+}

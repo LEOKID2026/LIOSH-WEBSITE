@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import { adminRewardsSeriesUrl } from "../../../lib/admin-portal/admin-rewards-catalog.client.js";
+import AdminCatalogArchiveToggle from "./AdminCatalogArchiveToggle.jsx";
 
 export default function AdminSeriesTab({ accessToken }) {
   const [series, setSeries] = useState([]);
+  const [includeInactive, setIncludeInactive] = useState(false);
   const [phase, setPhase] = useState("loading");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
@@ -13,7 +16,7 @@ export default function AdminSeriesTab({ accessToken }) {
   const load = useCallback(async () => {
     if (!accessToken) return;
     setPhase("loading");
-    const res = await adminAuthFetch(accessToken, "/api/admin/rewards/series");
+    const res = await adminAuthFetch(accessToken, adminRewardsSeriesUrl(includeInactive));
     const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       setError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
@@ -22,7 +25,7 @@ export default function AdminSeriesTab({ accessToken }) {
     }
     setSeries(Array.isArray(body.series) ? body.series : []);
     setPhase("ok");
-  }, [accessToken]);
+  }, [accessToken, includeInactive]);
 
   useEffect(() => {
     void load();
@@ -73,6 +76,12 @@ export default function AdminSeriesTab({ accessToken }) {
 
   return (
     <div className="text-right overflow-x-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <p className="text-xs text-white/60">
+          מוצגות {series.length} סדרות{!includeInactive ? " (פעילות בלבד)" : " (כולל ארכיון)"}
+        </p>
+        <AdminCatalogArchiveToggle checked={includeInactive} onChange={setIncludeInactive} />
+      </div>
       {message ? <p className="text-sm text-emerald-300 mb-3">{message}</p> : null}
       <div className="overflow-x-auto mb-4">
         <table className="w-full text-xs text-right min-w-[520px]">

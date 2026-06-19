@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import {
+  adminRewardsCardsUrl,
+  eventCardDisplayStatusHe,
+  filterAdminEventCards,
+} from "../../../lib/admin-portal/admin-rewards-catalog.client.js";
+import AdminCatalogArchiveToggle from "./AdminCatalogArchiveToggle.jsx";
 
 export default function AdminEventsTab({ accessToken }) {
   const [cards, setCards] = useState([]);
+  const [includeInactive, setIncludeInactive] = useState(false);
   const [phase, setPhase] = useState("loading");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
@@ -12,16 +19,16 @@ export default function AdminEventsTab({ accessToken }) {
   const load = useCallback(async () => {
     if (!accessToken) return;
     setPhase("loading");
-    const res = await adminAuthFetch(accessToken, "/api/admin/rewards/cards");
+    const res = await adminAuthFetch(accessToken, adminRewardsCardsUrl(includeInactive));
     const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       setError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
       setPhase("error");
       return;
     }
-    setCards((body.cards || []).filter((c) => c.card_type === "event"));
+    setCards(filterAdminEventCards(body.cards));
     setPhase("ok");
-  }, [accessToken]);
+  }, [accessToken, includeInactive]);
 
   useEffect(() => {
     void load();
@@ -55,16 +62,23 @@ export default function AdminEventsTab({ accessToken }) {
 
   return (
     <div className="text-right overflow-x-hidden">
-      <p className="text-xs text-white/60 mb-3">קלפי אירוע — זמינות לפי תאריכי התחלה/סיום.</p>
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <p className="text-xs text-white/60">
+          {cards.length} קלפי אירוע · תצוגה בנעולים/סדרות בלבד, לא בחנות ולא בקופסה
+        </p>
+        <AdminCatalogArchiveToggle checked={includeInactive} onChange={setIncludeInactive} />
+      </div>
       {message ? <p className="text-sm text-emerald-300 mb-3">{message}</p> : null}
       {cards.length === 0 ? (
         <p className="text-white/50 text-sm">אין קלפי אירוע במערכת.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-right min-w-[560px]">
+          <table className="w-full text-xs text-right min-w-[640px]">
             <thead>
               <tr className="text-white/60 border-b border-white/10">
                 <th className="py-2 px-2">שם</th>
+                <th className="py-2 px-2">סדרה</th>
+                <th className="py-2 px-2">סטטוס</th>
                 <th className="py-2 px-2">התחלה</th>
                 <th className="py-2 px-2">סיום</th>
                 <th className="py-2 px-2">פעיל</th>
@@ -84,6 +98,12 @@ export default function AdminEventsTab({ accessToken }) {
                         )
                       }
                     />
+                  </td>
+                  <td className="py-2 px-2 whitespace-nowrap">
+                    {card.reward_card_series?.name_he || "—"}
+                  </td>
+                  <td className="py-2 px-2 whitespace-nowrap text-amber-200/90">
+                    {eventCardDisplayStatusHe(card)}
                   </td>
                   <td className="py-2 px-2">
                     <input

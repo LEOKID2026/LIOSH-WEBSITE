@@ -1,9 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import {
+  adminRewardsCardsUrl,
+  countCardsByType,
+} from "../../../lib/admin-portal/admin-rewards-catalog.client.js";
+import AdminCatalogArchiveToggle from "./AdminCatalogArchiveToggle.jsx";
 
 export default function AdminCardsTab({ accessToken }) {
   const [cards, setCards] = useState([]);
+  const [includeInactive, setIncludeInactive] = useState(false);
   const [phase, setPhase] = useState("loading");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
@@ -14,7 +20,7 @@ export default function AdminCardsTab({ accessToken }) {
   const load = useCallback(async () => {
     if (!accessToken) return;
     setPhase("loading");
-    const res = await adminAuthFetch(accessToken, "/api/admin/rewards/cards");
+    const res = await adminAuthFetch(accessToken, adminRewardsCardsUrl(includeInactive));
     const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       setError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
@@ -23,7 +29,7 @@ export default function AdminCardsTab({ accessToken }) {
     }
     setCards(Array.isArray(body.cards) ? body.cards : []);
     setPhase("ok");
-  }, [accessToken]);
+  }, [accessToken, includeInactive]);
 
   useEffect(() => {
     void load();
@@ -64,8 +70,19 @@ export default function AdminCardsTab({ accessToken }) {
   if (phase === "loading") return <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>;
   if (phase === "error") return <p className="text-red-300 text-sm text-right">{error}</p>;
 
+  const typeCounts = countCardsByType(cards);
+
   return (
     <div className="text-right overflow-x-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <p className="text-xs text-white/60">
+          מוצגים {cards.length} קלפים
+          {!includeInactive ? " (פעילים בלבד)" : " (כולל ארכיון)"}
+          {" · "}חנות {typeCounts.shop} · הישג {typeCounts.achievement} · אירוע{" "}
+          {typeCounts.event}
+        </p>
+        <AdminCatalogArchiveToggle checked={includeInactive} onChange={setIncludeInactive} />
+      </div>
       {message ? <p className="text-sm text-emerald-300 mb-3">{message}</p> : null}
       <div className="overflow-x-auto">
         <table className="w-full text-xs text-right min-w-[640px]">

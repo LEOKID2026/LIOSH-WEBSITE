@@ -16,12 +16,14 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "GET") {
-    const { data, error } = await ctx.serviceRole
-      .from("reward_card_series")
-      .select("*")
-      .order("display_order");
+    const includeInactive = req.query.includeInactive === "true";
+    let query = ctx.serviceRole.from("reward_card_series").select("*").order("display_order");
+    if (!includeInactive) {
+      query = query.eq("is_active", true);
+    }
+    const { data, error } = await query;
     if (error) return sendAdminApiError(res, 500, "db_error", error.message);
-    return res.status(200).json({ ok: true, series: data || [] });
+    return res.status(200).json({ ok: true, series: data || [], includeInactive });
   }
 
   if (req.method === "POST") {

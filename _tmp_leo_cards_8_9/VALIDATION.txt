@@ -1,0 +1,8 @@
+OK event_sukkot.webp 768x1075 252694 bytes
+OK event_shavuot.webp 768x1075 229854 bytes
+OK event_independence_day.webp 768x1075 197498 bytes
+OK event_back_to_learning.webp 768x1075 202606 bytes
+OK event_summer.webp 768x1075 210768 bytes
+OK event_winter.webp 768x1075 236788 bytes
+OK event_birthday.webp 768x1075 200228 bytes
+OK event_end_of_year.webp 768x1075 227660 bytes

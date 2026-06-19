@@ -34,15 +34,17 @@ export default function AdminTestsTab({ accessToken }) {
     { label: "הגדרות", path: "/api/admin/rewards/settings" },
     { label: "משימות יומיות", path: "/api/admin/rewards/economy/daily-missions" },
     { label: "מדרגות חודשיות", path: "/api/admin/rewards/economy/monthly-tiers" },
-    { label: "קלפים", path: "/api/admin/rewards/cards" },
-    { label: "סדרות", path: "/api/admin/rewards/series" },
+    { label: "קלפים (פעילים)", path: "/api/admin/rewards/cards" },
+    { label: "סדרות (פעילות)", path: "/api/admin/rewards/series" },
     { label: "יומן שינויים", path: "/api/admin/rewards/economy/change-log?limit=5" },
   ];
 
   return (
     <div className="text-right overflow-x-hidden">
       <p className="text-xs text-white/60 mb-4">
-        בדיקות קריאה ל-API — לוודא שה-migration 058 הורץ ושהדגלים מוגדרים.
+        בדיקות קריאה ל-API — קטלוג סגור (059/060/061): 40 חנות · 24 הישג · 12 אירוע = 76
+        קלפים פעילים. ברירת מחדל: רק פעילים; ארכיון דורש{" "}
+        <code className="text-white/80">?includeInactive=true</code>.
       </p>
       <div className="flex flex-wrap gap-2 justify-end mb-4">
         {checks.map((c) => (

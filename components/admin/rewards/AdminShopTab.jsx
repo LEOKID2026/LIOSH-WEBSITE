@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import {
+  adminRewardsCardsUrl,
+  filterAdminShopCatalogCards,
+} from "../../../lib/admin-portal/admin-rewards-catalog.client.js";
+import AdminCatalogArchiveToggle from "./AdminCatalogArchiveToggle.jsx";
 
 async function loadSettings(token) {
   const res = await adminAuthFetch(token, "/api/admin/rewards/settings");
@@ -21,6 +26,7 @@ async function saveSetting(token, key, value) {
 export default function AdminShopTab({ accessToken }) {
   const [prices, setPrices] = useState({});
   const [cards, setCards] = useState([]);
+  const [includeInactive, setIncludeInactive] = useState(false);
   const [phase, setPhase] = useState("loading");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
@@ -32,7 +38,7 @@ export default function AdminShopTab({ accessToken }) {
     try {
       const [settingsRes, cardsRes] = await Promise.all([
         adminAuthFetch(accessToken, "/api/admin/rewards/settings"),
-        adminAuthFetch(accessToken, "/api/admin/rewards/cards"),
+        adminAuthFetch(accessToken, adminRewardsCardsUrl(includeInactive)),
       ]);
       const settingsBody = await settingsRes.json().catch(() => ({}));
       const cardsBody = await cardsRes.json().catch(() => ({}));
@@ -40,13 +46,18 @@ export default function AdminShopTab({ accessToken }) {
         throw new Error(ADMIN_LOAD_ERROR);
       }
       setPrices(settingsBody.settings?.shop_default_prices || {});
-      setCards((cardsBody.cards || []).filter((c) => c.card_type === "shop"));
+      const allFetched = cardsBody.cards || [];
+      setCards(
+        includeInactive
+          ? allFetched.filter((c) => c.card_type === "shop")
+          : filterAdminShopCatalogCards(allFetched)
+      );
       setPhase("ok");
     } catch (e) {
       setError(e.message || ADMIN_LOAD_ERROR);
       setPhase("error");
     }
-  }, [accessToken]);
+  }, [accessToken, includeInactive]);
 
   useEffect(() => {
     void load();
@@ -90,6 +101,13 @@ export default function AdminShopTab({ accessToken }) {
 
   return (
     <div className="text-right space-y-4 overflow-x-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs text-white/60">
+          מוצגים {cards.length} קלפי חנות
+          {!includeInactive ? " (פעילים וניתנים לרכישה)" : " (כולל ארכיון)"}
+        </p>
+        <AdminCatalogArchiveToggle checked={includeInactive} onChange={setIncludeInactive} />
+      </div>
       {message ? <p className="text-sm text-emerald-300">{message}</p> : null}
 
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
