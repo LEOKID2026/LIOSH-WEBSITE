@@ -1,5 +1,5 @@
 /**
- * Unified reward card tile — same layout in collection, shop, and locked tabs.
+ * Unified reward card tile — same layout in collection, shop, and catalog tabs.
  */
 import { Children, useState } from "react";
 import StudentRewardCardPreviewModal from "./StudentRewardCardPreviewModal.jsx";
@@ -156,7 +156,7 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
   );
 }
 
-/** Shared responsive card grid for collection / shop / locked. */
+/** Shared responsive card grid for collection / shop / catalog. */
 export function StudentCardsGrid({ children, emptyMessage, T }) {
   const items = Children.toArray(children);
   if (!items.length) {

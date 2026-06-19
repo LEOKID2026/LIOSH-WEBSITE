@@ -20,7 +20,7 @@ const CONVERT_PATH = "/api/student/rewards/cards/convert-duplicates";
 const TABS = [
   { id: "collection", label: "האוסף שלי", shortLabel: "אוסף" },
   { id: "shop", label: "חנות קלפים", shortLabel: "חנות" },
-  { id: "locked", label: "קלפים נעולים", shortLabel: "נעולים" },
+  { id: "catalog", label: "כל הקלפים", shortLabel: "הכל" },
   { id: "series", label: "סדרות", shortLabel: "סדרות" },
 ];
 
@@ -33,7 +33,7 @@ const TAB_STYLES = {
     idle: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100 dark:bg-emerald-950/35 dark:border-emerald-700/45 dark:text-emerald-100 dark:hover:bg-emerald-900/45",
     active: "bg-emerald-500 border-emerald-600 text-white shadow-sm dark:bg-emerald-600 dark:border-emerald-500",
   },
-  locked: {
+  catalog: {
     idle: "bg-amber-50 border-amber-200 text-amber-900 hover:bg-amber-100 dark:bg-amber-950/35 dark:border-amber-700/45 dark:text-amber-100 dark:hover:bg-amber-900/45",
     active: "bg-amber-500 border-amber-600 text-white shadow-sm dark:bg-amber-600 dark:border-amber-500",
   },
@@ -400,21 +400,25 @@ export default function StudentCardsPage() {
       );
     }
 
-    if (activeTab === "locked") {
-      const lockedList = payload?.locked || [];
-      const lockedPreviewCards = lockedList.map((c) => ({ ...c, showLockedStamp: true }));
+    if (activeTab === "catalog") {
+      const catalogList = payload?.catalog || [];
+      const catalogPreviewCards = catalogList.map((c) =>
+        c.isOwned ? c : { ...c, showLockedStamp: true }
+      );
       return (
-        <StudentCardsGrid emptyMessage="אין קלפים נעולים — כל הכבוד!" T={T}>
-          {lockedList.map((card, index) => (
+        <StudentCardsGrid emptyMessage="אין קלפים להצגה." T={T}>
+          {catalogList.map((card, index) => (
             <StudentRewardCard
               key={card.id}
               card={card}
               T={T}
-              previewCards={lockedPreviewCards}
+              previewCards={catalogPreviewCards}
               previewIndex={index}
-              showLockedStamp
+              showLockedStamp={!card.isOwned}
+              allowDownload={card.isOwned}
+              studentFullName={studentDisplayName}
               footer={
-                card.lockMessageHe ? (
+                !card.isOwned && card.lockMessageHe ? (
                   <p className={`text-xs leading-snug ${T.tileSub}`}>{card.lockMessageHe}</p>
                 ) : null
               }
@@ -452,7 +456,7 @@ export default function StudentCardsPage() {
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 text-right min-w-0">
           <div className="min-w-0">
             <h1 className={T.heroTitle}>הקלפים שלי</h1>
-            <p className={T.heroSub}>אוסף, חנות, קלפים נעולים וסדרות</p>
+            <p className={T.heroSub}>אוסף, חנות, כל הקלפים וסדרות</p>
           </div>
           <div className="w-full min-w-0 sm:w-auto">
             <CardsPageHeaderActions theme={theme} coinBalanceAmount={coinBalanceAmount} />
