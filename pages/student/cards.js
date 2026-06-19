@@ -43,23 +43,49 @@ const TAB_STYLES = {
   },
 };
 
-function tabButtonClass(tabId, active) {
-  const base =
-    "min-w-0 w-full rounded-lg border text-center leading-tight transition-colors " +
-    "px-0.5 py-2 text-[11px] sm:text-sm sm:px-2 sm:py-2.5 font-semibold";
-  const palette = TAB_STYLES[tabId] || TAB_STYLES.collection;
-  return `${base} ${active ? palette.active : palette.idle}`;
+/** Shared row height for back / coins / theme / tabs — keep all items visually equal. */
+const CARDS_HEADER_ROW_HEIGHT = "min-h-[2.75rem] sm:min-h-[3.25rem]";
+
+function cardsHeaderRowMetricsClass() {
+  return (
+    `${CARDS_HEADER_ROW_HEIGHT} px-1 sm:px-2 md:px-3 py-0 ` +
+    "text-base sm:text-lg md:text-xl font-extrabold leading-none"
+  );
 }
 
 function cardsHeaderItemSizeClass() {
   return (
-    "min-w-0 w-full min-h-[2.75rem] sm:min-h-[3.25rem] px-0.5 py-2 text-[11px] leading-tight " +
+    "min-w-0 w-full inline-flex items-center justify-center " +
+    cardsHeaderRowMetricsClass() +
+    " whitespace-normal sm:whitespace-nowrap"
+  );
+}
+
+function cardsHeaderCoinSizeClass() {
+  return (
+    "inline-flex w-auto max-w-none shrink-0 items-center justify-center overflow-visible " +
+    cardsHeaderRowMetricsClass() +
+    " whitespace-nowrap"
+  );
+}
+
+function cardsBackButtonSizeClass() {
+  return (
+    "w-auto shrink-0 min-h-[2.75rem] sm:min-h-[3.25rem] px-0.5 py-2 text-[11px] leading-tight " +
     "sm:px-2 sm:py-2.5 sm:text-sm md:px-4 md:text-base whitespace-normal sm:whitespace-nowrap"
   );
 }
 
+function tabButtonClass(tabId, active) {
+  const base =
+    "min-w-0 w-full rounded-lg border text-center transition-colors " +
+    cardsHeaderItemSizeClass();
+  const palette = TAB_STYLES[tabId] || TAB_STYLES.collection;
+  return `${base} ${active ? palette.active : palette.idle}`;
+}
+
 function cardsBackButtonClass(theme, variant = "games") {
-  const shell = `inline-flex justify-center items-center rounded-xl font-bold text-center shadow-sm ${cardsHeaderItemSizeClass()}`;
+  const shell = `inline-flex justify-center items-center rounded-xl font-bold text-center shadow-sm ${cardsBackButtonSizeClass()}`;
   if (variant === "primary") {
     return theme === "classic"
       ? `${shell} border border-emerald-400/35 bg-emerald-500/90 text-white hover:bg-emerald-500`
@@ -80,25 +106,24 @@ function coinBalanceBadgeClass(theme) {
 }
 
 function CardsPageHeaderActions({ theme, coinBalanceAmount, backVariant = "games" }) {
-  const sizeClass = cardsHeaderItemSizeClass();
   const gridCols = coinBalanceAmount != null
-    ? "grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)_auto]"
-    : "grid-cols-[minmax(0,1fr)_auto]";
+    ? "grid-cols-[auto_auto_auto]"
+    : "grid-cols-[auto_auto]";
 
   return (
-    <div dir="ltr" className={`grid ${gridCols} gap-1 sm:gap-2 w-full min-w-0 items-stretch`}>
+    <div dir="ltr" className={`grid ${gridCols} gap-1 sm:gap-2 w-full sm:w-auto min-w-0 items-stretch`}>
       <Link href="/student/home" className={cardsBackButtonClass(theme, backVariant)}>
         חזרה לעולם הילד
       </Link>
       {coinBalanceAmount != null ? (
         <span
-          className={`${coinBalanceBadgeClass(theme)} ${sizeClass}`}
+          className={`${coinBalanceBadgeClass(theme)} ${cardsHeaderCoinSizeClass()}`}
           aria-label={formatCoinAmountHe(coinBalanceAmount)}
         >
-          <span aria-hidden className="text-base sm:text-lg leading-none shrink-0">
+          <span aria-hidden className="text-2xl sm:text-[1.75rem] leading-none shrink-0">
             🪙
           </span>
-          <span className="truncate max-w-full">{formatCoinAmountNumberHe(coinBalanceAmount)}</span>
+          <span className="shrink-0">{formatCoinAmountNumberHe(coinBalanceAmount)}</span>
         </span>
       ) : null}
       <div className="flex items-stretch justify-end min-w-0">

@@ -29,7 +29,7 @@ export default function StudentThemePicker({
 
   const baseBtn = isIcon
     ? isCtaIcon
-      ? "flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] sm:min-h-[3.25rem] sm:min-w-[3.25rem] rounded-xl text-base sm:text-xl leading-none font-bold transition border shrink-0"
+      ? "flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] sm:min-h-[3.25rem] sm:min-w-[3.25rem] rounded-xl text-2xl sm:text-[1.75rem] leading-none font-bold transition border shrink-0"
       : isNavIcon
         ? "flex items-center justify-center w-8 h-8 rounded-lg text-sm leading-none font-bold transition border shrink-0"
         : "flex items-center justify-center w-11 h-11 rounded-xl text-xl leading-none font-bold transition border shrink-0"
