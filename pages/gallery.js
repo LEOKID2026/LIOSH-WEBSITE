@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "../components/Layout";
+import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
+import StudentThemePicker from "../components/student/StudentThemePicker";
+import { useGalleryUi } from "../hooks/useGalleryUi.js";
 
 export default function Gallery() {
+  const { theme, tokens: T } = useStudentTheme();
+  const { GL } = useGalleryUi();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -25,82 +31,90 @@ export default function Gallery() {
   const nextItem = () => setSelectedIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
 
   return (
-    <Layout page="gallery">
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        className="fixed inset-0 w-full h-full object-cover -z-10 pointer-events-none"
-        aria-hidden
-      >
-        <source src="/videos/gallery-bg.mp4" type="video/mp4" />
-      </video>
+    <Layout studentTheme={theme} studentShell="home">
+      {GL.showVideoBg ? (
+        <>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="fixed inset-0 w-full h-full object-cover -z-10 pointer-events-none"
+            aria-hidden
+          >
+            <source src="/videos/gallery-bg.mp4" type="video/mp4" />
+          </video>
+          <div className={GL.videoOverlay} aria-hidden />
+        </>
+      ) : null}
 
-      <div className="fixed inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 -z-10 pointer-events-none" aria-hidden />
-
-      <div
-        dir="rtl"
-        className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 py-10 text-white"
-      >
-        <motion.h1
-          className="text-3xl sm:text-5xl md:text-6xl font-extrabold mb-3 text-center drop-shadow-lg"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-rose-300 bg-clip-text text-transparent">
-            גלריה
-          </span>
-        </motion.h1>
-
-        <motion.p
-          className="text-base sm:text-lg text-white/75 max-w-2xl text-center mb-8 px-2 mx-auto"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          רגעים מהאתר, מהמשחקים ומהחוויה הלימודית של הילדים.
-        </motion.p>
-
-        {loading ? (
-          <p className="text-white/60 text-lg sm:text-xl text-center">טוען גלריה...</p>
-        ) : items.length === 0 ? (
-          <p className="text-white/60 text-base sm:text-lg text-center max-w-md mx-auto px-4">
-            עדיין לא נוספו תמונות או סרטונים לגלריה.
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-5 w-full pb-6">
-            {items.map((item, index) => (
-              <motion.button
-                key={index}
-                type="button"
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: Math.min(index * 0.03, 0.5) }}
-                whileHover={{ scale: 1.04 }}
-                className="cursor-pointer rounded-xl overflow-hidden shadow-lg hover:shadow-amber-400/30 border border-white/15 aspect-square p-0 w-full"
-                onClick={() => openModal(index)}
-              >
-                {item.type === "image" ? (
-                  <img
-                    src={item.src}
-                    alt={`פריט גלריה ${index + 1}`}
-                    className="w-full h-full object-cover block"
-                  />
-                ) : (
-                  <video src={item.src} className="w-full h-full object-cover block" muted playsInline />
-                )}
-              </motion.button>
-            ))}
+      <div dir="rtl" className={GL.pageWrap}>
+        <div className={GL.container}>
+          <div className={`${T.hubTopBar} mb-1 md:mb-2`}>
+            <div className={T.hubTopBarBack}>
+              <Link href="/student/home" className={T.hubBackLink}>
+                חזרה
+              </Link>
+            </div>
+            <motion.h1
+              className={GL.titleInline}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              גלריה
+            </motion.h1>
+            <div className={T.hubTopBarTheme}>
+              <StudentThemePicker variant="icon" />
+            </div>
           </div>
-        )}
+
+          <motion.p
+            className={GL.subtitle}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            רגעים מהאתר, מהמשחקים ומהחוויה הלימודית של הילדים.
+          </motion.p>
+
+          {loading ? (
+            <p className={GL.loading}>טוען גלריה...</p>
+          ) : items.length === 0 ? (
+            <p className={GL.empty}>עדיין לא נוספו תמונות או סרטונים לגלריה.</p>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-5 w-full pb-6">
+              {items.map((item, index) => (
+                <motion.button
+                  key={index}
+                  type="button"
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: Math.min(index * 0.03, 0.5) }}
+                  whileHover={{ scale: 1.04 }}
+                  className={GL.gridItem}
+                  onClick={() => openModal(index)}
+                >
+                  {item.type === "image" ? (
+                    <img
+                      src={item.src}
+                      alt={`פריט גלריה ${index + 1}`}
+                      className="w-full h-full object-cover block"
+                    />
+                  ) : (
+                    <video src={item.src} className="w-full h-full object-cover block" muted playsInline />
+                  )}
+                </motion.button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {selectedIndex !== null && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          className={GL.modalOverlay}
           dir="rtl"
           onClick={closeModal}
         >
@@ -130,7 +144,7 @@ export default function Gallery() {
               type="button"
               onClick={closeModal}
               aria-label="סגור"
-              className="absolute top-4 start-4 bg-rose-600/90 text-white px-3 py-1 rounded-lg hover:bg-rose-700 text-lg"
+              className={GL.modalClose}
             >
               ✖
             </button>
@@ -138,7 +152,7 @@ export default function Gallery() {
               type="button"
               onClick={prevItem}
               aria-label="הקודם"
-              className="absolute top-1/2 start-4 -translate-y-1/2 bg-black/70 border border-white/20 text-white px-3 py-2 text-2xl rounded-full hover:bg-black/90"
+              className={`${GL.modalNav} ${GL.modalNavStart}`}
             >
               →
             </button>
@@ -146,7 +160,7 @@ export default function Gallery() {
               type="button"
               onClick={nextItem}
               aria-label="הבא"
-              className="absolute top-1/2 end-4 -translate-y-1/2 bg-black/70 border border-white/20 text-white px-3 py-2 text-2xl rounded-full hover:bg-black/90"
+              className={`${GL.modalNav} ${GL.modalNavEnd}`}
             >
               ←
             </button>

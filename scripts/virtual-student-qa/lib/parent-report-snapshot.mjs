@@ -20,6 +20,7 @@ import {
   buildParentReportEvidenceMarkdown,
   inferPhaseFromArtifactPrefix,
 } from "./parent-report-evidence.mjs";
+import { resolveTimestampStampingEnabled } from "./config.mjs";
 
 const HEADING_REGEX = /דוח להורים/u;
 const LOADING_TEXT = "טוען דוח...";
@@ -45,6 +46,36 @@ const SUBJECT_EMOJI = {
   "moledet-geography": "🗺️",
 };
 const ALL_SUBJECTS = Object.keys(SUBJECT_LABELS);
+
+/** First/last calendar day of the simulated month (YYYY-MM-DD). */
+export function monthRangeForSimDate(simDate) {
+  const m = /^(\d{4})-(\d{2})-\d{2}$/.exec(String(simDate || ""));
+  if (!m) throw new Error(`monthRangeForSimDate: invalid simDate=${simDate}`);
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  return {
+    start: `${m[1]}-${m[2]}-01`,
+    end: `${m[1]}-${m[2]}-${String(lastDay).padStart(2, "0")}`,
+  };
+}
+
+/**
+ * After dashboard click, reload the same report with a custom month range so
+ * backfilled May timestamps appear (default UI range is wall-clock week).
+ */
+async function applySimulatedReportDateRange(page, simDate, log) {
+  const { start, end } = monthRangeForSimDate(simDate);
+  const u = new URL(page.url());
+  u.searchParams.set("period", "custom");
+  u.searchParams.set("start", start);
+  u.searchParams.set("end", end);
+  if (!u.searchParams.get("source")) u.searchParams.set("source", "parent");
+  log?.(
+    `parent-report-snapshot: applying simulated month range ${start} → ${end}`
+  );
+  await page.goto(u.toString(), { waitUntil: "domcontentloaded", timeout: 60_000 });
+}
 
 function safeNumber(value) {
   const n = Number(value);
@@ -108,6 +139,7 @@ export async function snapshotParentReportViaDashboard({
   artifactPrefix,
   studentLabel = null,
   phase = null,
+  simulatedDate = null,
 }) {
   log?.(
     `parent-report-snapshot: navigating dashboard to capture ${artifactPrefix}`
@@ -121,6 +153,14 @@ export async function snapshotParentReportViaDashboard({
     artifacts,
     artifactPrefix,
   });
+
+  const useSimRange =
+    simulatedDate &&
+    resolveTimestampStampingEnabled() &&
+    /^\d{4}-\d{2}-\d{2}$/.test(String(simulatedDate));
+  if (useSimRange) {
+    await applySimulatedReportDateRange(page, simulatedDate, log);
+  }
 
   // Wait for one of three terminal states: populated report, explicit
   // empty-state, or loading-disappeared (covered by populated path).

@@ -720,7 +720,7 @@ export default function ScienceMaster() {
     fullName: sessionFullName,
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults({ requireGradeNumber: false });
-  const [mode, setMode] = useState("learning");
+  const [mode, setMode] = useState("practice");
   const [level, setLevel] = useState("easy");
   const [topic, setTopic] = useState("body");
   const bookIndexHref = grade ? getLearningBookIndexHref("science", grade) : null;
@@ -886,7 +886,7 @@ export default function ScienceMaster() {
   useEffect(() => {
     const snap = consumeAnyScienceBookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
-    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    setMode(typeof snap.mode === "string" ? snap.mode : "practice");
     if (typeof snap.grade === "string") setGrade(snap.grade);
     if (typeof snap.level === "string") setLevel(snap.level);
     if (typeof snap.topic === "string") setTopic(snap.topic);
@@ -3010,14 +3010,15 @@ function saveScienceAnswerInParallel({
             playerAvatarImage={playerAvatarImage}
           />
 
-          {/* MODES */}
+          {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
           <div
             className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
             dir="rtl"
           >
-            {["learning", "challenge", "speed", "marathon"].map((m) => (
+            {["practice", "learning", "speed", "marathon", "challenge"].map((m) => (
               <button
                 key={m}
+                type="button"
                 onClick={() => {
                   setMode(m);
                   setGameActive(false);
@@ -3028,27 +3029,14 @@ function saveScienceAnswerInParallel({
                 {MODES[m].name}
               </button>
             ))}
-            <div className="inline-flex items-center gap-1.5 md:gap-2.5 lg:gap-3 shrink-0">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("practice");
-                  setGameActive(false);
-                  setFeedback(null);
-                }}
-                className={mode === "practice" ? MB.modeTabActive : MB.modeTabInactive}
-              >
-                {MODES.practice.name}
-              </button>
-              <div
-                className={MB.coinBadgeDesktop}
-                title="מטבעות משחק"
-              >
-                <span className={MB.coinBadgeLabel}>מטבעות:</span>
-                <span dir="ltr" className={MB.coinBadgeValue}>
-                  {childCoinBalance}
-                </span>
-              </div>
+            <div
+              className={MB.coinBadgeDesktop}
+              title="מטבעות משחק"
+            >
+              <span className={MB.coinBadgeLabel}>מטבעות:</span>
+              <span dir="ltr" className={MB.coinBadgeValue}>
+                {childCoinBalance}
+              </span>
             </div>
           </div>
 

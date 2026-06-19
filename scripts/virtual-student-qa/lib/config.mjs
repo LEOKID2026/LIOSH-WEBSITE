@@ -405,6 +405,34 @@ export function resolveInSessionPacingEnabled(explicit) {
   return !isTruthy(raw === "0" || raw.toLowerCase() === "false" || raw.toLowerCase() === "off");
 }
 
+/** Post-session DB timestamp backfill to simulated calendar date (default OFF). */
+export function resolveTimestampStampingEnabled(explicit) {
+  if (explicit === false) return false;
+  if (explicit === true) return true;
+  tryLoadDotenvFiles();
+  return isTruthy(process.env.VIRTUAL_STUDENT_TIMESTAMP_STAMPING);
+}
+
+/**
+ * Production QA requires timestamp stamping so parent-report date filters
+ * match simulated calendar days (not wall-clock run date).
+ */
+export function assertProductionTimestampStampingGuard({
+  baseUrl,
+  dryRun = false,
+  preflightOnly = false,
+}) {
+  if (dryRun || preflightOnly) return;
+  if (!isProductionQaBaseUrl(baseUrl)) return;
+  if (!resolveTimestampStampingEnabled()) {
+    throw new Error(
+      "production-guard: VIRTUAL_STUDENT_TIMESTAMP_STAMPING=1 is required on " +
+        "production QA. Without it, learning_sessions.started_at uses wall-clock " +
+        "and parent reports filtered by simulated month show empty."
+    );
+  }
+}
+
 export function isProductionQaBaseUrl(baseUrl) {
   const u = String(baseUrl || "").trim().toLowerCase();
   return u.includes("liosh-website.vercel.app");

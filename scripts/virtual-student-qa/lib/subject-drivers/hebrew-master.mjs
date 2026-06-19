@@ -61,6 +61,7 @@ import {
   createPracticeEvidenceTracker,
 } from "../learning-session-helpers.mjs";
 import { probeCurrentQuestion } from "../mcq-fiber-probe.mjs";
+import { pickMcqIndex, pickCorrectnessIntent } from "../answer-profiles.mjs";
 import { attachSessionPacingToScenario } from "../session-pacing.mjs";
 
 const SUBJECT = "hebrew";
@@ -74,31 +75,42 @@ const TYPING_PLACEHOLDER = "כתוב את התשובה שלך כאן...";
 // satisfies both.
 const TYPING_WRONG_SENTINEL = "___שגוי___";
 
-/**
- * Hebrew practice wrong answers persist as learning_guided with
- * afterStepByStep=true (product step-by-step after incorrect MCQ/typing).
- * Those rows are correctly excluded from parent-report counts. For virtual-
- * student validation we must submit the probed correct choice so at least
- * one diagnostic_independent row is produced per studied session.
- */
-function pickCountableSafeMcqIndex({ fiberCorrectIndex, optionsCount }) {
-  const total = Math.max(1, Number(optionsCount) || 0);
-  const correct = Number.isInteger(fiberCorrectIndex) ? fiberCorrectIndex : 0;
-  const safeCorrect = correct >= 0 && correct < total ? correct : 0;
-  return { index: safeCorrect, intendedCorrect: true };
-}
-
-function pickCountableSafeTypedAnswer({ probe }) {
+function resolveTypedCorrectValue(probe) {
   let preferred =
     Array.isArray(probe.acceptedAnswersSample) &&
     probe.acceptedAnswersSample.length > 0
       ? probe.acceptedAnswersSample[0]
       : probe.correctAnswer;
   preferred = String(preferred == null ? "" : preferred).trim();
+  return preferred;
+}
+
+function pickProfileMcqIndex({ scenario, fiberCorrectIndex, optionsCount, topicKey }) {
+  return pickMcqIndex({
+    profile: scenario.profile,
+    correctIndex: fiberCorrectIndex,
+    optionsCount,
+    rng: scenario.rng(),
+    topicKey,
+    weaknessTopics: scenario.weaknessTopics ?? [],
+  });
+}
+
+function pickProfileTypedAnswer({ scenario, probe, topicKey }) {
+  const preferred = resolveTypedCorrectValue(probe);
   if (preferred === "") {
     return { value: TYPING_WRONG_SENTINEL, intendedCorrect: false };
   }
-  return { value: preferred, intendedCorrect: true };
+  const intendedCorrect = pickCorrectnessIntent({
+    profile: scenario.profile,
+    rng: scenario.rng(),
+    topicKey,
+    weaknessTopics: scenario.weaknessTopics ?? [],
+  });
+  return {
+    value: intendedCorrect ? preferred : TYPING_WRONG_SENTINEL,
+    intendedCorrect,
+  };
 }
 
 /**
@@ -148,11 +160,11 @@ async function waitForAnswerableQuestion({ page, timeoutMs }) {
 }
 
 /**
- * Pick the typed value for a typing-mode hebrew question.
- * Uses countable-safe correct text (see pickCountableSafeTypedAnswer).
+ * Pick the typed value for a typing-mode hebrew question (profile-driven).
  */
-function pickTypedAnswer({ probe }) {
-  return pickCountableSafeTypedAnswer({ probe });
+function pickTypedAnswer({ probe, scenario }) {
+  const topicKey = probe.topic || scenario.topic || "reading";
+  return pickProfileTypedAnswer({ scenario, probe, topicKey });
 }
 
 /**
@@ -444,9 +456,11 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
       let intendedCorrect;
       let probeNote = null;
       if (probe.ok && fiberCorrectIndex != null && optionsCount > 0) {
-        const decision = pickCountableSafeMcqIndex({
+        const decision = pickProfileMcqIndex({
+          scenario,
           fiberCorrectIndex,
           optionsCount,
+          topicKey: probe.topic || scenario.topic || null,
         });
         pickedIndex = decision.index;
         intendedCorrect = decision.intendedCorrect;
@@ -525,7 +539,7 @@ export async function runHebrewScenario({ page, baseUrl, scenario, log, screensh
         reason: `typing-probe-failed:${probe.reason || "no-correct-answer"}`,
       });
     }
-    const pick = pickTypedAnswer({ probe });
+    const pick = pickTypedAnswer({ probe, scenario });
 
     log(
       `${SUBJECT_LABEL}: q${questionIndex} shape=typing stem="${shortText(stemText)}" ` +

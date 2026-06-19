@@ -69,6 +69,11 @@ import {
   PHASE_C_KNOWN_SUBJECTS,
 } from "./parent-report-snapshot.mjs";
 import { verifyTier1 } from "./persistence-evidence.mjs";
+import {
+  stampSimulationSessionTimestamps,
+  isTimestampStampingEnabled,
+} from "./simulation-timestamp-stamping.mjs";
+import { repairPracticeWrongAnswerEvidence } from "./simulation-practice-evidence-repair.mjs";
 import { runMathScenario } from "./subject-drivers/math-master.mjs";
 import { runGeometryScenario } from "./subject-drivers/geometry-master.mjs";
 import { runHebrewScenario } from "./subject-drivers/hebrew-master.mjs";
@@ -763,6 +768,7 @@ export async function runPhaseD2Suite({
         artifactPrefix: `${tag}-baseline`,
         studentLabel: record.label,
         phase: "baseline",
+        ...(isTimestampStampingEnabled() ? { simulatedDate: plan.date } : {}),
       });
       record.reportUrlAtBaseline = record.baseline.url;
       record.runWindow.baselineCapturedAt = new Date().toISOString();
@@ -894,6 +900,9 @@ export async function runPhaseD2Suite({
             expectedAnswers:
               driverResult?.answeredQuestions?.length ?? scenario.questionCount,
           });
+          sessionResult.tier1.sessionId =
+            counts["/api/learning/session/start"]?.sessionId ||
+            sessionResult.tier1.sessionId;
           sessionResult.answeredCount =
             counts["/api/learning/answer"]?.responses ??
             driverResult?.answeredQuestions?.length ??
@@ -919,6 +928,59 @@ export async function runPhaseD2Suite({
           sessionResult.completed =
             sessionResult.tier1?.passed === true &&
             sessionResult.countableAnswerCount > 0;
+
+          if (
+            sessionResult.completed &&
+            sessionResult.tier1?.sessionId &&
+            isTimestampStampingEnabled()
+          ) {
+            const sessionPersistence = extractDriverPersistenceIds(
+              observer,
+              observerMark
+            );
+            try {
+              const stampResult = await stampSimulationSessionTimestamps({
+                sessionId: sessionResult.tier1.sessionId,
+                simDate: plan.date,
+                studentLabel: record.label,
+                sessionIndex: s,
+                priorEndMs: record._stampPriorEndMs ?? null,
+                answerIds: sessionPersistence.answerIds,
+                log: workerLog,
+              });
+              record._stampPriorEndMs = stampResult.endMs;
+              sessionResult.timestampStamp = {
+                sessionId: stampResult.sessionId,
+                newStartedAt: stampResult.newStartedAt,
+                newEndedAt: stampResult.newEndedAt,
+                durationSeconds: stampResult.durationSeconds,
+                answerCount: stampResult.answerCount,
+              };
+              try {
+                const repairResult = await repairPracticeWrongAnswerEvidence({
+                  sessionId: sessionResult.tier1.sessionId,
+                  log: workerLog,
+                });
+                sessionResult.timestampStamp.evidenceRepaired = repairResult.repaired;
+              } catch (repairError) {
+                sessionResult.error = `practice-evidence-repair: ${
+                  repairError?.message || repairError
+                }`;
+                sessionResult.completed = false;
+                log?.(
+                  `phase-d2: ${record.label} session${s + 1} REPAIR FAIL — ${sessionResult.error}`
+                );
+              }
+            } catch (stampError) {
+              sessionResult.error = `timestamp-stamp: ${
+                stampError?.message || stampError
+              }`;
+              sessionResult.completed = false;
+              log?.(
+                `phase-d2: ${record.label} session${s + 1} STAMP FAIL — ${sessionResult.error}`
+              );
+            }
+          }
         } catch (driverError) {
           sessionResult.error = `driver-error: ${
             driverError?.message || driverError
@@ -994,6 +1056,7 @@ export async function runPhaseD2Suite({
         artifactPrefix: `${tag}-after`,
         studentLabel: record.label,
         phase: "after",
+        ...(isTimestampStampingEnabled() ? { simulatedDate: plan.date } : {}),
       });
       record.reportUrlAtAfter = record.after.url;
       record.runWindow.afterCapturedAt = new Date().toISOString();

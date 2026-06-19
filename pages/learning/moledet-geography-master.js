@@ -260,7 +260,7 @@ export default function MoledetGeographyMaster() {
     bookSubjectForGrade && grade
       ? getLearningBookIndexHref(bookSubjectForGrade, grade)
       : null;
-  const [mode, setMode] = useState("learning");
+  const [mode, setMode] = useState("practice");
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("homeland"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
@@ -754,7 +754,7 @@ export default function MoledetGeographyMaster() {
   useEffect(() => {
     const snap = consumeAnyMoledetGeographyBookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
-    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    setMode(typeof snap.mode === "string" ? snap.mode : "practice");
     if (typeof snap.grade === "string") setGrade(snap.grade);
     if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
     if (typeof snap.level === "string") setLevel(snap.level);
@@ -2502,14 +2502,15 @@ export default function MoledetGeographyMaster() {
             formatValue={formatMathHudNumber}
           />
 
-          {/* בחירת מצב (Learning / Challenge) */}
+          {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) */}
           <div
             className="mx-auto flex items-center justify-center gap-1.5 md:gap-2 lg:gap-2.5 mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex-wrap px-1 md:px-2"
             dir="rtl"
           >
-            {["learning", "challenge", "speed", "marathon"].map((m) => (
+            {["practice", "learning", "speed", "marathon", "challenge"].map((m) => (
               <button
                 key={m}
+                type="button"
                 onClick={() => {
                   setMode(m);
                   setGameActive(false);
@@ -2520,24 +2521,11 @@ export default function MoledetGeographyMaster() {
                 {MODES[m].name}
               </button>
             ))}
-            <div className="inline-flex items-center gap-1.5 md:gap-2.5 lg:gap-3 shrink-0">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("practice");
-                  setGameActive(false);
-                  setFeedback(null);
-                }}
-                className={mode === "practice" ? MB.modeTabActive : MB.modeTabInactive}
-              >
-                {MODES.practice.name}
-              </button>
-              <div className={MB.coinBadgeDesktop} title="מטבעות משחק">
-                <span className={MB.coinBadgeLabel}>מטבעות:</span>
-                <span dir="ltr" className={MB.coinBadgeValue}>
-                  {childCoinBalance}
-                </span>
-              </div>
+            <div className={MB.coinBadgeDesktop} title="מטבעות משחק">
+              <span className={MB.coinBadgeLabel}>מטבעות:</span>
+              <span dir="ltr" className={MB.coinBadgeValue}>
+                {childCoinBalance}
+              </span>
             </div>
           </div>
 

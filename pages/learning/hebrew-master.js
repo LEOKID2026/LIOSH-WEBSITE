@@ -291,7 +291,7 @@ export default function HebrewMaster() {
     coinBalance: sessionCoinBalance,
   } = useSubjectSessionDefaults();
   const bookIndexHref = grade ? getLearningBookIndexHref("hebrew", grade) : null;
-  const [mode, setMode] = useState("learning");
+  const [mode, setMode] = useState("practice");
 
   const [level, setLevel] = useState("easy");
   const [operation, setOperation] = useState("reading"); // לא mixed כברירת מחדל כדי שה-modal לא יפתח אוטומטית
@@ -755,7 +755,7 @@ export default function HebrewMaster() {
   useEffect(() => {
     const snap = consumeAnyHebrewBookLearningSnapshot();
     if (!snap || snap.gameActive !== true) return;
-    setMode(typeof snap.mode === "string" ? snap.mode : "learning");
+    setMode(typeof snap.mode === "string" ? snap.mode : "practice");
     if (typeof snap.grade === "string") setGrade(snap.grade);
     if (typeof snap.gradeNumber === "number") setGradeNumber(snap.gradeNumber);
     if (typeof snap.level === "string") setLevel(snap.level);
@@ -3138,15 +3138,16 @@ export default function HebrewMaster() {
             playerAvatarImage={playerAvatarImage}
           />
 
-          {/* בחירת מצב (Learning / Challenge) + נגן שמע קומפקטי מתחת */}
+          {/* בחירת מצב (תרגול / למידה / מהירות / מרתון / אתגר) + נגן שמע קומפקטי מתחת */}
           <div className="mx-auto mb-3 md:mb-1 w-full max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-1 md:px-2">
             <div
               className="flex items-center justify-center gap-1.5 md:gap-2.5 lg:gap-3 flex-wrap"
               dir="rtl"
             >
-              {["learning", "challenge", "speed", "marathon"].map((m) => (
+              {["practice", "learning", "speed", "marathon", "challenge"].map((m) => (
                 <button
                   key={m}
+                  type="button"
                   onClick={() => {
                     setMode(m);
                     setGameActive(false);
@@ -3157,27 +3158,14 @@ export default function HebrewMaster() {
                   {MODES[m].name}
                 </button>
               ))}
-              <div className="inline-flex items-center gap-1.5 md:gap-2.5 lg:gap-3 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("practice");
-                    setGameActive(false);
-                    setFeedback(null);
-                  }}
-                  className={mode === "practice" ? MB.modeTabActive : MB.modeTabInactive}
-                >
-                  {MODES.practice.name}
-                </button>
-                <div
-                  className={MB.coinBadgeDesktop}
+              <div
+                className={MB.coinBadgeDesktop}
                 title="מטבעות משחק"
               >
                 <span className={MB.coinBadgeLabel}>מטבעות:</span>
                 <span dir="ltr" className={MB.coinBadgeValue}>
-                    {childCoinBalance}
-                  </span>
-                </div>
+                  {childCoinBalance}
+                </span>
               </div>
             </div>
           </div>

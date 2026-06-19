@@ -2,7 +2,8 @@ import StudentThemePicker from "../student/StudentThemePicker";
 
 /**
  * Integrated desktop top row: back + title + curriculum (md+ only).
- * Mobile keeps LearningMasterNavBar + separate title block.
+ * Side controls use the same physical left/right placement as LearningMasterNavBar
+ * so RTL page dir does not flip back vs curriculum on desktop.
  */
 export default function LearningMasterDesktopHeader({
   MB,
@@ -18,10 +19,17 @@ export default function LearningMasterDesktopHeader({
   return (
     <div
       ref={desktopHeaderRef}
-      className="hidden md:block shrink-0 relative z-50 px-2 md:px-4 pointer-events-none"
+      className="hidden md:block shrink-0 relative z-50 pointer-events-none"
     >
-      <div className="flex items-center justify-between gap-2 min-h-[2.25rem]">
-        <div className="flex items-center gap-2 pointer-events-auto shrink-0">
+      <div className="relative px-2 md:px-4 min-h-[2.25rem]">
+        {onCurriculumClick ? (
+          <div className="absolute right-2 md:right-4 top-0 flex gap-2 pointer-events-auto">
+            <button type="button" onClick={onCurriculumClick} className={MB.navBtn}>
+              {curriculumLabel}
+            </button>
+          </div>
+        ) : null}
+        <div className="absolute left-2 md:left-4 top-0 flex gap-2 pointer-events-auto items-center">
           <StudentThemePicker variant="icon" iconSize="nav" />
           <button type="button" onClick={onBack} className={MB.backBtn}>
             חזרה
@@ -29,7 +37,7 @@ export default function LearningMasterDesktopHeader({
         </div>
         <div
           ref={titleAnchorRef}
-          className="flex-1 min-w-0 text-center pointer-events-auto px-1"
+          className="text-center pointer-events-auto px-[clamp(6.5rem,22vw,12rem)]"
         >
           <div className="flex items-center justify-center gap-2">
             <h1 className={`${MB.pageTitle} md:text-2xl lg:text-3xl`}>{title}</h1>
@@ -56,16 +64,9 @@ export default function LearningMasterDesktopHeader({
             ) : null}
           </div>
         </div>
-        <div className="shrink-0 pointer-events-auto">
-          {onCurriculumClick ? (
-            <button type="button" onClick={onCurriculumClick} className={MB.navBtn}>
-              {curriculumLabel}
-            </button>
-          ) : null}
-        </div>
       </div>
       {subtitle ? (
-        <p className={`${MB.pageSub} text-center mb-1.5`}>{subtitle}</p>
+        <p className={`${MB.pageSub} text-center mb-1.5 px-2 md:px-4`}>{subtitle}</p>
       ) : null}
     </div>
   );

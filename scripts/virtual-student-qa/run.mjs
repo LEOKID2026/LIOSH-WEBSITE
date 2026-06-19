@@ -100,6 +100,8 @@ import {
   resolveDailyForce,
   resolveInSessionPacingEnabled,
   assertProductionRealisticPacingGuard,
+  resolveTimestampStampingEnabled,
+  assertProductionTimestampStampingGuard,
 } from "./lib/config.mjs";
 import {
   assertProductionPracticeOnlyGuard,
@@ -152,6 +154,7 @@ import {
 } from "./lib/daily-preflight.mjs";
 import { runPhaseD2Suite } from "./lib/phase-d2-orchestrator.mjs";
 import { makeDailyPacer } from "./lib/realtime-pacer.mjs";
+import { assertDailyDbSanity } from "./lib/daily-db-sanity-guard.mjs";
 
 function parseArgs(argv) {
   const args = {
@@ -2548,6 +2551,7 @@ async function mainPhaseD2(args) {
   log(`inSessionPacingEnabled=${inSessionPacingEnabled}`);
   const practiceOnlyEnabled = resolvePracticeOnlyEnabled();
   log(`practiceOnlyEnabled=${practiceOnlyEnabled}`);
+  log(`timestampStampingEnabled=${resolveTimestampStampingEnabled()}`);
   try {
     assertProductionPracticeOnlyGuard({
       baseUrl: resolveBaseUrl(args.baseUrl),
@@ -2561,6 +2565,11 @@ async function mainPhaseD2(args) {
       mode,
       pacerScale,
       inSessionPacingEnabled,
+      dryRun,
+      preflightOnly,
+    });
+    assertProductionTimestampStampingGuard({
+      baseUrl: resolveBaseUrl(args.baseUrl),
       dryRun,
       preflightOnly,
     });
@@ -3276,6 +3285,54 @@ async function runPhaseD2FullRun({
       reason: `suite-runtime: ${suiteRuntimeError}`,
       suiteResult: null,
     });
+  }
+
+  // ---- 3b. Daily DB sanity guard (post-stamp verification) ------------
+  let dbSanity = null;
+  if (suiteResult && suiteResult.verdict !== "fail") {
+    dbSanity = await assertDailyDbSanity({
+      simDate: date,
+      suiteResult,
+      log,
+    });
+    if (!dbSanity.passed && !dbSanity.skipped) {
+      log(
+        `db-sanity-guard: FAIL — blocking state-advance (${dbSanity.errors.length} issue(s))`
+      );
+      return finalizePhaseD2({
+        status: "fail",
+        mode: "db-sanity-guard",
+        args,
+        mode_: mode,
+        date,
+        dryRun,
+        preflightOnly,
+        force,
+        stateDir,
+        stateFilePath,
+        stateFresh,
+        plan,
+        dailyMaxMinutes,
+        pacerScale,
+        dailyArtifacts,
+        baseUrl,
+        parentAuthMode,
+        studentAuthMode,
+        preflightReport,
+        expectedStudentLabels,
+        stateLastRunDate: state.lastRunDate,
+        stateLastRunStatus: state.lastRunStatus,
+        reason: dbSanity.errors.join("; "),
+        suiteResult,
+        dbSanity,
+      });
+    }
+    if (dbSanity.passed) {
+      log(
+        `db-sanity-guard: PASS simDate=${date} sessions=${dbSanity.metrics.sessionsFound} ` +
+          `answers=${dbSanity.metrics.answersFound} duration_total=${dbSanity.metrics.durationSecondsTotal}s`
+      );
+    }
   }
 
   // ---- 4. State-advance gate ------------------------------------------

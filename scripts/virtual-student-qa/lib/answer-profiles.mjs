@@ -11,11 +11,32 @@
  */
 
 const PROFILES = {
-  strong: { correctRate: 0.95, jitterMin: 1, jitterMax: 3 },
-  average: { correctRate: 0.7, jitterMin: 1, jitterMax: 3 },
-  weak: { correctRate: 0.4, jitterMin: 1, jitterMax: 5 },
-  targeted: { correctRate: 0.85, weakTopicRate: 0.25, jitterMin: 1, jitterMax: 4 },
+  strong: { correctRate: 0.9, jitterMin: 1, jitterMax: 3 },
+  average: { correctRate: 0.75, jitterMin: 1, jitterMax: 3 },
+  weak: { correctRate: 0.575, jitterMin: 1, jitterMax: 5 },
+  targeted: { correctRate: 0.85, weakTopicRate: 0.35, jitterMin: 1, jitterMax: 4 },
 };
+
+export function resolveCorrectRate({ profile, topicKey, weaknessTopics }) {
+  const spec = profileSpec(profile);
+  let correctRate = spec.correctRate;
+  if (
+    profile === "targeted" &&
+    Array.isArray(weaknessTopics) &&
+    topicKey &&
+    weaknessTopics.includes(topicKey)
+  ) {
+    correctRate = spec.weakTopicRate ?? 0.35;
+  }
+  return correctRate;
+}
+
+/**
+ * Profile-only draw: should this question intentionally be answered correctly?
+ */
+export function pickCorrectnessIntent({ profile, rng, topicKey, weaknessTopics }) {
+  return rng() < resolveCorrectRate({ profile, topicKey, weaknessTopics });
+}
 
 export function profileSpec(profile) {
   return PROFILES[profile] || PROFILES.average;
@@ -40,20 +61,16 @@ export function pickAnswerForArithmetic({ profile, computedAnswer, rng, topicKey
       intendedCorrect: false,
     };
   }
-  const spec = profileSpec(profile);
-  let correctRate = spec.correctRate;
-  if (
-    profile === "targeted" &&
-    Array.isArray(weaknessTopics) &&
-    topicKey &&
-    weaknessTopics.includes(topicKey)
-  ) {
-    correctRate = spec.weakTopicRate ?? 0.25;
-  }
-  const wantsCorrect = rng() < correctRate;
+  const wantsCorrect = pickCorrectnessIntent({
+    profile,
+    rng,
+    topicKey,
+    weaknessTopics,
+  });
   if (wantsCorrect) {
     return { value: String(Math.trunc(computedAnswer)), intendedCorrect: true };
   }
+  const spec = profileSpec(profile);
   const jitterMin = spec.jitterMin ?? 1;
   const jitterMax = spec.jitterMax ?? 3;
   const span = Math.max(1, jitterMax - jitterMin + 1);
@@ -98,18 +115,12 @@ export function pickMcqIndex({
     return { index: 0, intendedCorrect: safeCorrect === 0 };
   }
 
-  const spec = profileSpec(profile);
-  let correctRate = spec.correctRate;
-  if (
-    profile === "targeted" &&
-    Array.isArray(weaknessTopics) &&
-    topicKey &&
-    weaknessTopics.includes(topicKey)
-  ) {
-    correctRate = spec.weakTopicRate ?? 0.25;
-  }
-
-  const wantsCorrect = rng() < correctRate;
+  const wantsCorrect = pickCorrectnessIntent({
+    profile,
+    rng,
+    topicKey,
+    weaknessTopics,
+  });
   if (wantsCorrect) {
     return { index: safeCorrect, intendedCorrect: true };
   }

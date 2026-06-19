@@ -7,7 +7,7 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isProductionQaBaseUrl } from "./config.mjs";
+import { isProductionQaBaseUrl, resolveTimestampStampingEnabled } from "./config.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DRIVERS_DIR = join(__dirname, "subject-drivers");
@@ -227,6 +227,26 @@ export function classifyPracticeAnswerEvidence({
     payloadFlags.contextAfterBookReading === true;
 
   if (afterStepByStep || contextAfterBookReading) {
+    const submittedCorrect = answerBody?.isCorrect === true;
+    if (
+      resolveTimestampStampingEnabled() &&
+      afterStepByStep &&
+      !contextAfterBookReading &&
+      submittedCorrect === false
+    ) {
+      log?.(
+        `${subjectLabel}: simulation pending repair — wrong answer mis-tagged ` +
+          `afterStepByStep; counting for session gate (DB repair follows stamp)`
+      );
+      return {
+        countable: true,
+        excluded: false,
+        pendingEvidenceRepair: true,
+        learningRowCreated: false,
+        gameMode: gameMode || REQUIRED_GAME_MODE,
+        evidenceCategory: evidenceCategory || "diagnostic_independent",
+      };
+    }
     log?.(
       `${subjectLabel}: excluded answer (afterStepByStep=${afterStepByStep}, ` +
         `contextAfterBookReading=${contextAfterBookReading}) — not countable`

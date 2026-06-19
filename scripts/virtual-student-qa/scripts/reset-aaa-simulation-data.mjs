@@ -116,7 +116,7 @@ function backupLocalState(backupDir) {
   return dest;
 }
 
-function resetLocalState() {
+function resetLocalState(fromDate) {
   const stateDir = resolveStateDir();
   const statePath = join(stateDir, "state.json");
   const state = existsSync(statePath)
@@ -124,7 +124,27 @@ function resetLocalState() {
     : {};
   state.lastRunDate = "2026-04-30";
   state.lastRunStatus = "pass";
+  state.lastRunMode = "realtime";
+  let attendanceRemoved = 0;
+  for (const label of Object.keys(state.students || {})) {
+    const arr = state.students[label]?.attendance;
+    if (!Array.isArray(arr)) continue;
+    const before = arr.length;
+    state.students[label].attendance = arr.filter((a) => !a?.date || a.date < fromDate);
+    attendanceRemoved += before - state.students[label].attendance.length;
+  }
   writeFileSync(statePath, JSON.stringify(state, null, 2), "utf8");
+
+  const timelinePath = join(stateDir, "timeline.md");
+  if (existsSync(timelinePath)) {
+    const lines = readFileSync(timelinePath, "utf8").split("\n");
+    const kept = lines.filter((line) => {
+      const m = line.match(/^\| (\d{4}-\d{2}-\d{2}) \|/);
+      return !m || m[1] < fromDate;
+    });
+    writeFileSync(timelinePath, kept.join("\n"), "utf8");
+  }
+  return { attendanceRemoved };
 }
 
 function removeLocalReportDirs(fromDate) {
@@ -217,7 +237,7 @@ if (sessionIds.length) {
 }
 
 const stateBackup = backupLocalState(backupDir);
-resetLocalState();
+const stateCleanup = resetLocalState(args.from);
 const reportDirsRemoved = removeLocalReportDirs(args.from);
 
 console.log(
@@ -235,6 +255,7 @@ console.log(
       local: {
         stateBackup,
         stateLastRunDate: "2026-04-30",
+        attendanceRowsRemoved: stateCleanup.attendanceRemoved,
         reportDirsRemoved,
       },
     },
