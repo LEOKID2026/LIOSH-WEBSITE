@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
+import StudentThemePicker from "../../components/student/StudentThemePicker";
 import StudentRewardCard, {
   StudentCardsGrid,
   StudentCardsTabPanel,
@@ -10,7 +11,7 @@ import StudentRewardCard, {
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
-import { formatCoinAmountHe } from "../../lib/rewards/rewards-ui.he.js";
+import { formatCoinAmountHe, formatCoinAmountNumberHe } from "../../lib/rewards/rewards-ui.he.js";
 
 const CARDS_PATH = "/api/student/rewards/cards";
 const PURCHASE_PATH = "/api/student/rewards/shop/purchase";
@@ -50,13 +51,61 @@ function tabButtonClass(tabId, active) {
   return `${base} ${active ? palette.active : palette.idle}`;
 }
 
+function cardsHeaderItemSizeClass() {
+  return (
+    "min-w-0 w-full min-h-[2.75rem] sm:min-h-[3.25rem] px-0.5 py-2 text-[11px] leading-tight " +
+    "sm:px-2 sm:py-2.5 sm:text-sm md:px-4 md:text-base whitespace-normal sm:whitespace-nowrap"
+  );
+}
+
+function cardsBackButtonClass(theme, variant = "games") {
+  const shell = `inline-flex justify-center items-center rounded-xl font-bold text-center shadow-sm ${cardsHeaderItemSizeClass()}`;
+  if (variant === "primary") {
+    return theme === "classic"
+      ? `${shell} border border-emerald-400/35 bg-emerald-500/90 text-white hover:bg-emerald-500`
+      : `${shell} bg-sky-600 text-white hover:bg-sky-700`;
+  }
+  return theme === "classic"
+    ? `${shell} border border-violet-400/35 bg-violet-500/20 text-white hover:bg-violet-500/30`
+    : `${shell} bg-violet-600 text-white hover:bg-violet-700`;
+}
+
 function coinBalanceBadgeClass(theme) {
   const shell =
-    "inline-flex justify-center items-center min-h-[3.25rem] rounded-xl font-bold px-4 sm:px-5 py-3 text-sm sm:text-base md:text-lg tabular-nums shadow-sm shrink min-w-0 max-w-[10.5rem] sm:max-w-[14rem] md:max-w-none";
+    "inline-flex justify-center items-center gap-0.5 sm:gap-1 rounded-xl font-bold tabular-nums shadow-sm border";
   if (theme === "classic") {
-    return `${shell} border border-amber-400/35 bg-amber-500/15 text-amber-100`;
+    return `${shell} border-amber-400/35 bg-amber-500/15 text-amber-100`;
   }
-  return `${shell} border border-amber-400/50 bg-amber-500/15 text-amber-900`;
+  return `${shell} border-amber-400/50 bg-amber-500/15 text-amber-900`;
+}
+
+function CardsPageHeaderActions({ theme, coinBalanceAmount, backVariant = "games" }) {
+  const sizeClass = cardsHeaderItemSizeClass();
+  const gridCols = coinBalanceAmount != null
+    ? "grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)_auto]"
+    : "grid-cols-[minmax(0,1fr)_auto]";
+
+  return (
+    <div dir="ltr" className={`grid ${gridCols} gap-1 sm:gap-2 w-full min-w-0 items-stretch`}>
+      <Link href="/student/home" className={cardsBackButtonClass(theme, backVariant)}>
+        חזרה לעולם הילד
+      </Link>
+      {coinBalanceAmount != null ? (
+        <span
+          className={`${coinBalanceBadgeClass(theme)} ${sizeClass}`}
+          aria-label={formatCoinAmountHe(coinBalanceAmount)}
+        >
+          <span aria-hidden className="text-base sm:text-lg leading-none shrink-0">
+            🪙
+          </span>
+          <span className="truncate max-w-full">{formatCoinAmountNumberHe(coinBalanceAmount)}</span>
+        </span>
+      ) : null}
+      <div className="flex items-stretch justify-end min-w-0">
+        <StudentThemePicker variant="icon" iconSize="cta" className="min-w-0" />
+      </div>
+    </div>
+  );
 }
 
 export default function StudentCardsPage() {
@@ -207,18 +256,12 @@ export default function StudentCardsPage() {
       <Layout studentTheme={theme} studentShell="home">
         <div className={`max-w-6xl mx-auto px-3 sm:px-4 py-8 text-right overflow-x-hidden ${T.pageWrap}`}>
           <p className={T.emptyText}>אוסף הקלפים עדיין לא זמין.</p>
-          <div dir="ltr" className="mt-4 inline-flex max-w-full min-w-0 items-center gap-2 self-end">
-            <Link href="/student/home" className={`${T.ctaPrimary} shrink-0`}>
-              חזרה לעולם הילד
-            </Link>
-            {coinBalanceAmount != null ? (
-              <span
-                className={coinBalanceBadgeClass(theme)}
-                aria-label={formatCoinAmountHe(coinBalanceAmount)}
-              >
-                <span className="truncate">{formatCoinAmountHe(coinBalanceAmount)}</span>
-              </span>
-            ) : null}
+          <div className="w-full min-w-0 sm:w-auto">
+            <CardsPageHeaderActions
+              theme={theme}
+              coinBalanceAmount={coinBalanceAmount}
+              backVariant="primary"
+            />
           </div>
         </div>
       </Layout>
@@ -251,13 +294,16 @@ export default function StudentCardsPage() {
     if (cardsPhase !== "ok") return null;
 
     if (activeTab === "collection") {
+      const collectionList = payload?.collection || [];
       return (
         <StudentCardsGrid emptyMessage="עדיין אין קלפים באוסף — פתחו קופסת הפתעה בעולם הילד או קנו בחנות!" T={T}>
-          {(payload?.collection || []).map((card) => (
+          {collectionList.map((card, index) => (
             <StudentRewardCard
               key={card.id}
               card={card}
               T={T}
+              previewCards={collectionList}
+              previewIndex={index}
               allowDownload
               studentFullName={studentDisplayName}
               footer={
@@ -279,9 +325,13 @@ export default function StudentCardsPage() {
     }
 
     if (activeTab === "shop") {
+      const shopList = payload?.shop || [];
+      const shopPreviewCards = shopList.map((c) =>
+        c.alreadyOwned ? c : { ...c, showLockedStamp: true }
+      );
       return (
         <StudentCardsGrid emptyMessage="אין קלפים זמינים לרכישה כרגע." T={T}>
-          {(payload?.shop || []).map((card) => {
+          {shopList.map((card, index) => {
             const canBuy = card.canAfford === true && !card.alreadyOwned;
             const priceLabel = Math.floor(Number(card.priceCoins) || 0).toLocaleString("he-IL");
             return (
@@ -289,6 +339,8 @@ export default function StudentCardsPage() {
                 key={card.id}
                 card={card}
                 T={T}
+                previewCards={shopPreviewCards}
+                previewIndex={index}
                 showLockedStamp={!card.alreadyOwned}
                 footer={
                   card.alreadyOwned ? (
@@ -324,13 +376,17 @@ export default function StudentCardsPage() {
     }
 
     if (activeTab === "locked") {
+      const lockedList = payload?.locked || [];
+      const lockedPreviewCards = lockedList.map((c) => ({ ...c, showLockedStamp: true }));
       return (
         <StudentCardsGrid emptyMessage="אין קלפים נעולים — כל הכבוד!" T={T}>
-          {(payload?.locked || []).map((card) => (
+          {lockedList.map((card, index) => (
             <StudentRewardCard
               key={card.id}
               card={card}
               T={T}
+              previewCards={lockedPreviewCards}
+              previewIndex={index}
               showLockedStamp
               footer={
                 card.lockMessageHe ? (
@@ -373,18 +429,8 @@ export default function StudentCardsPage() {
             <h1 className={T.heroTitle}>הקלפים שלי</h1>
             <p className={T.heroSub}>אוסף, חנות, קלפים נעולים וסדרות</p>
           </div>
-          <div dir="ltr" className="flex flex-row items-center gap-2 shrink-0 self-end sm:self-auto min-w-0 max-w-full">
-            <Link href="/student/home" className={`${T.ctaGames} shrink-0`}>
-              חזרה לעולם הילד
-            </Link>
-            {coinBalanceAmount != null ? (
-              <span
-                className={coinBalanceBadgeClass(theme)}
-                aria-label={formatCoinAmountHe(coinBalanceAmount)}
-              >
-                <span className="truncate">{formatCoinAmountHe(coinBalanceAmount)}</span>
-              </span>
-            ) : null}
+          <div className="w-full min-w-0 sm:w-auto">
+            <CardsPageHeaderActions theme={theme} coinBalanceAmount={coinBalanceAmount} />
           </div>
         </header>
 

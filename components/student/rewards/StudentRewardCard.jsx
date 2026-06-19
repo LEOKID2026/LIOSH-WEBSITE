@@ -12,9 +12,12 @@ export default function StudentRewardCard({
   showLockedStamp = false,
   allowDownload = false,
   studentFullName = "",
+  previewCards,
+  previewIndex = 0,
 }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const previewCard = showLockedStamp ? { ...card, showLockedStamp: true } : card;
+  const navigableCards = previewCards ?? [previewCard];
 
   return (
     <>
@@ -61,6 +64,8 @@ export default function StudentRewardCard({
       <StudentRewardCardPreviewModal
         open={previewOpen}
         card={previewCard}
+        cards={navigableCards}
+        initialIndex={previewIndex}
         T={T}
         onClose={() => setPreviewOpen(false)}
         allowDownload={allowDownload}
@@ -72,9 +77,11 @@ export default function StudentRewardCard({
 
 /** Series progress with card thumbnails — series tab. */
 export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
-  const [previewCard, setPreviewCard] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState(0);
   const pct = series.totalCount > 0 ? Math.round((series.ownedCount / series.totalCount) * 100) : 0;
   const cards = series.cards || [];
+  const previewCards = cards.map((c) => (c.owned ? c : { ...c, showLockedStamp: true }));
 
   return (
     <>
@@ -100,16 +107,18 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
             role="list"
             aria-label={`קלפים בסדרה ${series.nameHe}`}
           >
-            {cards.map((card) => {
+            {cards.map((card, index) => {
               const imageSrc = card.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
-              const previewPayload = card.owned ? card : { ...card, showLockedStamp: true };
               return (
                 <button
                   key={card.cardId}
                   type="button"
                   role="listitem"
                   className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 rounded-md overflow-hidden bg-slate-100/80 dark:bg-white/5 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
-                  onClick={() => setPreviewCard(previewPayload)}
+                  onClick={() => {
+                    setPreviewIndex(index);
+                    setPreviewOpen(true);
+                  }}
                   aria-label={
                     card.owned
                       ? `הגדלת תמונת הקלף ${card.nameHe}`
@@ -135,11 +144,12 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
       </article>
 
       <StudentRewardCardPreviewModal
-        open={previewCard != null}
-        card={previewCard}
+        open={previewOpen}
+        cards={previewCards}
+        initialIndex={previewIndex}
         T={T}
-        onClose={() => setPreviewCard(null)}
-        allowDownload={Boolean(previewCard?.owned)}
+        onClose={() => setPreviewOpen(false)}
+        allowDownload
         studentFullName={studentFullName}
       />
     </>

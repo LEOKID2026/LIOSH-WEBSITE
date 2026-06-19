@@ -1,14 +1,22 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import RewardCardLockedStamp, { lockedCardDimClassName } from "./RewardCardLockedStamp.jsx";
 import { downloadStudentRewardCardImage } from "../../../lib/rewards/download-student-card.client.js";
 
+const CAPTION_CLASS =
+  "font-bold text-base sm:text-lg leading-snug text-[#FFE8A3] [text-shadow:0_1px_4px_rgba(0,0,0,0.85)]";
+const SUB_CAPTION_CLASS =
+  "text-sm text-[#FFE8A3]/90 [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]";
+const SWIPE_THRESHOLD_PX = 48;
+
 /**
- * Enlarged card image preview — card sits directly on dark overlay, no panel behind image.
+ * Enlarged card preview — overlay only, swipe/arrows within tab card list.
  */
 export default function StudentRewardCardPreviewModal({
   open,
   card,
+  cards: cardsProp,
+  initialIndex = 0,
   T,
   onClose,
   allowDownload = false,
@@ -17,8 +25,26 @@ export default function StudentRewardCardPreviewModal({
   const { homeModalShell } = useStudentTheme();
   const titleId = useId();
   const closeRef = useRef(null);
+  const touchStartX = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [downloadBusy, setDownloadBusy] = useState(false);
   const [downloadError, setDownloadError] = useState("");
+
+  const cards = cardsProp?.length ? cardsProp : card ? [card] : [];
+  const safeIndex = cards.length ? Math.min(Math.max(activeIndex, 0), cards.length - 1) : 0;
+  const currentCard = cards[safeIndex] ?? null;
+  const canPrev = safeIndex > 0;
+  const canNext = safeIndex < cards.length - 1;
+
+  const goPrev = useCallback(() => {
+    setActiveIndex((i) => Math.max(0, i - 1));
+    setDownloadError("");
+  }, []);
+
+  const goNext = useCallback(() => {
+    setActiveIndex((i) => Math.min(cards.length - 1, i + 1));
+    setDownloadError("");
+  }, [cards.length]);
 
   useEffect(() => {
     if (!open) {
@@ -26,8 +52,23 @@ export default function StudentRewardCardPreviewModal({
       setDownloadError("");
       return undefined;
     }
+    setActiveIndex(initialIndex);
     const onKeyDown = (event) => {
-      if (event.key === "Escape") onClose?.();
+      if (event.key === "Escape") {
+        onClose?.();
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setActiveIndex((i) => Math.min(cards.length - 1, i + 1));
+        setDownloadError("");
+        return;
+      }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setActiveIndex((i) => Math.max(0, i - 1));
+        setDownloadError("");
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     const prevOverflow = document.body.style.overflow;
@@ -37,14 +78,17 @@ export default function StudentRewardCardPreviewModal({
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = prevOverflow;
     };
-  }, [open, onClose]);
+  }, [open, onClose, initialIndex, cards.length]);
 
-  if (!open || !card) return null;
+  if (!open || !currentCard) return null;
 
-  const imageSrc = card.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
-  const showLocked = card.isLocked === true || card.showLockedStamp === true;
+  const imageSrc = currentCard.imageUrl || "/rewards/cards/placeholders/regular/default.svg";
+  const showLocked = currentCard.isLocked === true || currentCard.showLockedStamp === true;
   const canDownload =
-    allowDownload && !showLocked && Boolean(String(studentFullName ?? "").length);
+    allowDownload &&
+    !showLocked &&
+    currentCard.owned !== false &&
+    Boolean(String(studentFullName ?? "").length);
 
   const handleDownload = async () => {
     if (!canDownload || downloadBusy) return;
@@ -54,8 +98,8 @@ export default function StudentRewardCardPreviewModal({
       await downloadStudentRewardCardImage({
         imageUrl: imageSrc,
         studentFullName: String(studentFullName),
-        cardNameHe: card.nameHe,
-        cardKey: card.cardKey,
+        cardNameHe: currentCard.nameHe,
+        cardKey: currentCard.cardKey,
       });
     } catch {
       setDownloadError("לא הצלחנו להוריד את הקלף. נסו שוב.");
@@ -63,6 +107,24 @@ export default function StudentRewardCardPreviewModal({
       setDownloadBusy(false);
     }
   };
+
+  const handleTouchStart = (event) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event) => {
+    if (touchStartX.current == null || cards.length < 2) return;
+    const endX = event.changedTouches[0]?.clientX;
+    if (endX == null) return;
+    const delta = endX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < SWIPE_THRESHOLD_PX) return;
+    if (delta < 0 && canNext) goNext();
+    else if (delta > 0 && canPrev) goPrev();
+  };
+
+  const navBtnClass =
+    "hidden md:inline-flex shrink-0 items-center justify-center rounded-lg border border-white/20 bg-black/35 text-[#FFE8A3] text-2xl leading-none min-h-11 min-w-11 hover:bg-black/50 disabled:opacity-30 disabled:pointer-events-none transition";
 
   return (
     <div
@@ -73,47 +135,71 @@ export default function StudentRewardCardPreviewModal({
       aria-labelledby={titleId}
     >
       <div
-        className="relative flex flex-col items-center gap-2 sm:gap-3 max-w-full min-w-0 bg-transparent p-0 m-0"
+        className="relative flex flex-col items-center gap-2 sm:gap-3 max-w-full min-w-0 bg-transparent p-0 m-0 touch-pan-y"
         onClick={(event) => event.stopPropagation()}
         dir="rtl"
       >
-        <div className="relative bg-transparent p-0 m-0 w-fit max-w-full">
+        <div className="flex items-center justify-center gap-1 sm:gap-2 max-w-full min-w-0">
           <button
-            ref={closeRef}
             type="button"
-            onClick={onClose}
-            className={`absolute -top-2 -left-2 z-20 ${homeModalShell.closeBtn}`}
-            style={{ direction: "ltr" }}
-            aria-label="סגור"
+            onClick={goPrev}
+            disabled={!canPrev}
+            className={navBtnClass}
+            aria-label="קלף קודם"
           >
-            ×
+            ‹
           </button>
-          <img
-            src={imageSrc}
-            alt={card.nameHe || "תמונת קלף"}
-            className={`block max-w-full max-h-[80vh] w-auto h-auto object-contain ${
-              showLocked ? lockedCardDimClassName(false) : ""
-            }`}
-          />
-          {showLocked ? (
-            <div className="absolute inset-0 pointer-events-none">
-              <RewardCardLockedStamp />
-            </div>
-          ) : null}
+
+          <div
+            className="relative bg-transparent p-0 m-0 w-fit max-w-full"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <button
+              ref={closeRef}
+              type="button"
+              onClick={onClose}
+              className={`absolute -top-2 -left-2 z-20 ${homeModalShell.closeBtn}`}
+              style={{ direction: "ltr" }}
+              aria-label="סגור"
+            >
+              ×
+            </button>
+            <img
+              src={imageSrc}
+              alt={currentCard.nameHe || "תמונת קלף"}
+              className={`block max-w-full max-h-[80vh] w-auto h-auto object-contain select-none ${
+                showLocked ? lockedCardDimClassName(false) : ""
+              }`}
+              draggable={false}
+            />
+            {showLocked ? (
+              <div className="absolute inset-0 pointer-events-none">
+                <RewardCardLockedStamp />
+              </div>
+            ) : null}
+          </div>
+
+          <button
+            type="button"
+            onClick={goNext}
+            disabled={!canNext}
+            className={navBtnClass}
+            aria-label="קלף הבא"
+          >
+            ›
+          </button>
         </div>
 
         <div className="max-w-full min-w-0 text-center space-y-1 px-1">
-          <h2
-            id={titleId}
-            className="font-bold text-base sm:text-lg leading-snug text-white drop-shadow-sm"
-          >
-            {card.nameHe}
+          <h2 id={titleId} className={CAPTION_CLASS}>
+            {currentCard.nameHe}
           </h2>
-          {card.rarityHe ? (
-            <p className="text-sm text-white/85 drop-shadow-sm">נדירות: {card.rarityHe}</p>
+          {currentCard.rarityHe ? (
+            <p className={SUB_CAPTION_CLASS}>נדירות: {currentCard.rarityHe}</p>
           ) : null}
-          {card.seriesNameHe ? (
-            <p className="text-sm truncate text-white/85 drop-shadow-sm">סדרה: {card.seriesNameHe}</p>
+          {currentCard.seriesNameHe ? (
+            <p className={`truncate ${SUB_CAPTION_CLASS}`}>סדרה: {currentCard.seriesNameHe}</p>
           ) : null}
         </div>
 
@@ -128,7 +214,7 @@ export default function StudentRewardCardPreviewModal({
               {downloadBusy ? "מוריד..." : "הורד את הקלף שלי"}
             </button>
             {downloadError ? (
-              <p className="text-xs text-center text-white/80 drop-shadow-sm">{downloadError}</p>
+              <p className={`text-xs text-center ${SUB_CAPTION_CLASS}`}>{downloadError}</p>
             ) : null}
           </div>
         ) : null}

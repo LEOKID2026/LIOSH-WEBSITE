@@ -7,7 +7,7 @@ import {
 /**
  * Toggle between bright and classic student UI themes.
  * @param {'default' | 'icon'} [variant] — `icon` for compact emoji-only (no labels).
- * @param {'default' | 'nav'} [iconSize] — `nav` matches math-master back/nav button height.
+ * @param {'default' | 'nav' | 'cta'} [iconSize] — `nav` compact nav; `cta` matches student CTA min-height.
  */
 export default function StudentThemePicker({
   className = "",
@@ -17,17 +17,22 @@ export default function StudentThemePicker({
   const { theme, setTheme, isBright } = useStudentTheme();
   const isIcon = variant === "icon";
   const isNavIcon = isIcon && iconSize === "nav";
+  const isCtaIcon = isIcon && iconSize === "cta";
 
   const shellClass = isIcon
-    ? isNavIcon
-      ? "flex gap-1 shrink-0 items-center"
-      : "flex gap-1 shrink-0 h-11 items-center"
+    ? isCtaIcon
+      ? "flex gap-0.5 sm:gap-1 shrink-0 items-center min-w-0"
+      : isNavIcon
+        ? "flex gap-1 shrink-0 items-center"
+        : "flex gap-1 shrink-0 h-11 items-center"
     : "rounded-xl border p-1 flex gap-1";
 
   const baseBtn = isIcon
-    ? isNavIcon
-      ? "flex items-center justify-center w-8 h-8 rounded-lg text-sm leading-none font-bold transition border shrink-0"
-      : "flex items-center justify-center w-11 h-11 rounded-xl text-xl leading-none font-bold transition border shrink-0"
+    ? isCtaIcon
+      ? "flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] sm:min-h-[3.25rem] sm:min-w-[3.25rem] rounded-xl text-base sm:text-xl leading-none font-bold transition border shrink-0"
+      : isNavIcon
+        ? "flex items-center justify-center w-8 h-8 rounded-lg text-sm leading-none font-bold transition border shrink-0"
+        : "flex items-center justify-center w-11 h-11 rounded-xl text-xl leading-none font-bold transition border shrink-0"
     : "flex-1 min-h-10 px-3 py-2 rounded-lg text-sm font-bold transition border";
 
   const shellThemeClass = isIcon
