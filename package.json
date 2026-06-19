@@ -6,6 +6,8 @@
     "dev": "next dev -p 3001",
     "dev:run-button": "next dev -p 3002",
     "build": "node scripts/run-production-build.mjs",
+    "rewards:generate-059": "node scripts/generate-059-leo-catalog-sql.mjs",
+    "rewards:verify-059": "node scripts/verify-059-leo-catalog.mjs",
     "extract:book-language-review": "node scripts/extract-book-language-review.mjs",
     "help:provision-demo": "node --env-file=.env.local scripts/help-center/provision-demo-account.mjs",
     "help:seed-demo-report": "node --env-file=.env.local scripts/help-center/seed-demo-report-data.mjs",

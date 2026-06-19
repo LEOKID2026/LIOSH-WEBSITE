@@ -7,7 +7,7 @@ export default function StudentRewardCard({ card, T, footer }) {
     <article
       className={`rounded-xl border shadow-sm p-2.5 sm:p-3 flex flex-col h-full min-h-[240px] text-right overflow-hidden min-w-0 ${T.subjectCard}`}
     >
-      <div className="aspect-[5/7] w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 shrink-0 mb-2">
+      <div className="aspect-[2/3] w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 shrink-0 mb-2">
         <img
           src={card.imageUrl || "/rewards/cards/placeholders/regular/default.svg"}
           alt=""

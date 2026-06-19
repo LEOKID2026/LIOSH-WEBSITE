@@ -1,0 +1,43 @@
+/** Approved rarity map — closed catalog (achievement + event only). */
+
+export const APPROVED_ACHIEVEMENT_RARITIES = {
+  achievement_strong_start: "regular",
+  achievement_20_questions: "regular",
+  achievement_3_day_streak: "special",
+  achievement_7_day_streak: "rare",
+  achievement_week_star: "gold",
+  achievement_never_give_up: "rare",
+  achievement_big_progress: "rare",
+  achievement_task_complete: "special",
+  achievement_number_explorer: "regular",
+  achievement_addition_champion: "special",
+  achievement_subtraction_champion: "special",
+  achievement_multiplication_champion: "rare",
+  achievement_division_champion: "rare",
+  achievement_shapes_master: "special",
+  achievement_young_reader: "regular",
+  achievement_word_discoverer: "special",
+  achievement_understanding_master: "rare",
+  achievement_hebrew_star: "rare",
+  achievement_english_star: "rare",
+  achievement_great_listener: "special",
+  achievement_science_explorer: "special",
+  achievement_moledet_explorer: "special",
+  achievement_personal_activity: "rare",
+  achievement_new_record: "gold",
+};
+
+export const APPROVED_EVENT_RARITIES = {
+  event_hanukkah: "special",
+  event_purim: "special",
+  event_passover: "special",
+  event_rosh_hashana: "rare",
+  event_sukkot: "special",
+  event_shavuot: "special",
+  event_independence_day: "rare",
+  event_back_to_learning: "regular",
+  event_summer: "regular",
+  event_winter: "regular",
+  event_birthday: "rare",
+  event_end_of_year: "gold",
+};
