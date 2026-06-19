@@ -89,16 +89,16 @@ export default function StudentRewardCardPreviewModal({
             ×
           </button>
 
-          <div className="relative w-full max-w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5">
+          <div className="relative w-fit max-w-full mx-auto min-w-0 px-1">
             <img
               src={imageSrc}
               alt={card.nameHe || "תמונת קלף"}
-              className={`w-full max-w-full max-h-[55vh] sm:max-h-[65vh] md:max-h-[78vh] object-contain mx-auto ${
+              className={`block max-w-full max-h-[55vh] sm:max-h-[65vh] md:max-h-[78vh] w-auto h-auto object-contain ${
                 showLocked ? lockedCardDimClassName(false) : ""
               }`}
             />
             {showLocked ? (
-              <div className="absolute inset-0">
+              <div className="absolute inset-0 pointer-events-none">
                 <RewardCardLockedStamp />
               </div>
             ) : null}
