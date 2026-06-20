@@ -16,6 +16,7 @@ import {
   parseManualCoinCreditAmount,
   parseManualCoinCreditCategory,
   parseManualCoinCreditNote,
+  parseParentLookupEmail,
 } from "../../lib/admin-server/admin-manual-coin-credit.server.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -89,6 +90,20 @@ describe("parseManualCoinClientRequestId", () => {
   });
 });
 
+describe("parseParentLookupEmail", () => {
+  test("accepts valid email", () => {
+    assert.deepEqual(parseParentLookupEmail("Parent@Example.COM"), {
+      ok: true,
+      email: "parent@example.com",
+    });
+  });
+
+  test("rejects invalid email", () => {
+    assert.equal(parseParentLookupEmail("").ok, false);
+    assert.equal(parseParentLookupEmail("not-email").ok, false);
+  });
+});
+
 describe("API route contract", () => {
   test("coin-credit uses applyArcadeCoinMove and earn only", () => {
     const serverSrc = readFileSync(
@@ -139,6 +154,14 @@ describe("API route contract", () => {
     assert.match(flagsSrc, /ENABLE_ADMIN_MANUAL_COIN_CREDIT/);
   });
 
+  test("parent by-email endpoint is admin-guarded", () => {
+    const src = readFileSync(join(ROOT, "pages/api/admin/parents/by-email.js"), "utf8");
+    assert.match(src, /requireAdminApiContext/);
+    assert.match(src, /lookupAdminParentStudentsByEmail/);
+    assert.match(src, /isAdminManualCoinCreditEnabled/);
+    assert.doesNotMatch(src, /parentUserId/);
+  });
+
   test("migration widens admin_audit_log for student", () => {
     const mig = readFileSync(
       join(ROOT, "supabase/migrations/062_admin_audit_log_student_target.sql"),
@@ -150,6 +173,20 @@ describe("API route contract", () => {
 });
 
 describe("Admin UI Hebrew-only labels", () => {
+  test("manual coins tab uses parent email flow", () => {
+    const uiSrc = readFileSync(
+      join(ROOT, "components/admin/rewards/AdminManualCoinsTab.jsx"),
+      "utf8"
+    );
+    assert.match(uiSrc, /כתובת מייל של הורה/);
+    assert.match(uiSrc, /טען ילדים/);
+    assert.match(uiSrc, /לא נמצא הורה עם כתובת המייל הזו/);
+    assert.match(uiSrc, /בחר ילד/);
+    assert.match(uiSrc, /ילד נבחר/);
+    assert.doesNotMatch(uiSrc, /מזהה ילד/);
+    assert.doesNotMatch(uiSrc, /coin-info/);
+  });
+
   test("manual coins tab uses Hebrew category labels", () => {
     const uiSrc = readFileSync(
       join(ROOT, "components/admin/rewards/AdminManualCoinsTab.jsx"),
