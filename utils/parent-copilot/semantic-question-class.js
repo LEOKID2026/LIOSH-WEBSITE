@@ -132,4 +132,35 @@ export function detectAggregateQuestionClass(utterance) {
   return "none";
 }
 
-export default { detectAggregateQuestionClass };
+/** Aggregate classes that bind to executive scope even when a topic name appears in the utterance. */
+export const EXECUTIVE_AGGREGATE_SCOPE_CLASSES = new Set([
+  "period_highlight",
+  "strongest_subject",
+  "weakest_subject",
+  "hardest_subject",
+  "subject_listing",
+  "comparison",
+  "most_practice",
+  "least_data",
+  "improved",
+  "needs_attention",
+  "still_unclear",
+  "most_stable",
+]);
+
+/** Semantic answer-first classes that must not be pre-empted by intent_composer. */
+export const INTENT_COMPOSER_DEFER_CLASSES = new Set([
+  "recommendation_action",
+  "clarify_reexplain",
+  "advance_or_hold_question",
+  ...EXECUTIVE_AGGREGATE_SCOPE_CLASSES,
+]);
+
+/**
+ * @param {string} questionClass
+ */
+export function shouldDeferIntentComposer(questionClass) {
+  return INTENT_COMPOSER_DEFER_CLASSES.has(String(questionClass || ""));
+}
+
+export default { detectAggregateQuestionClass, shouldDeferIntentComposer, EXECUTIVE_AGGREGATE_SCOPE_CLASSES, INTENT_COMPOSER_DEFER_CLASSES };

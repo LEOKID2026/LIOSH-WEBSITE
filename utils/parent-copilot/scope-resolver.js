@@ -10,7 +10,7 @@ import {
   subjectLabelHe,
   SUBJECT_ORDER,
 } from "./contract-reader.js";
-import { detectAggregateQuestionClass } from "./semantic-question-class.js";
+import { detectAggregateQuestionClass, EXECUTIVE_AGGREGATE_SCOPE_CLASSES } from "./semantic-question-class.js";
 import { foldUtteranceForHeMatch, normalizeFreeformParentUtteranceHe } from "./utterance-normalize-he.js";
 import { interpretFreeformStageA } from "./stage-a-freeform-interpretation.js";
 import { resolveReportRowFromUtterance, utteranceNamesTopicRow } from "./report-row-resolver.js";
@@ -272,9 +272,12 @@ export function resolveScope(input) {
   const topicNamedInAggregateQuestion =
     rowResPre.best && utteranceNamesTopicRow(foldedPre, rowResPre.best);
 
-  if (aggregateClass !== "none" && !topicNamedInAggregateQuestion) {
-    /** Next-step questions on a single anchored topic row should bind to that topic's contracts (ineligible hedges live in topic textSlots), not the executive rollup narrative. */
-    if (aggregateClass === "recommendation_action") {
+  if (
+    aggregateClass !== "none" &&
+    (EXECUTIVE_AGGREGATE_SCOPE_CLASSES.has(aggregateClass) || !topicNamedInAggregateQuestion)
+  ) {
+    /** Next-step / advance-hold questions on a single anchored topic row bind to that topic's contracts. */
+    if (aggregateClass === "recommendation_action" || aggregateClass === "advance_or_hold_question") {
       const anchors = listCopilotAnchoredTopicRows(payload);
       if (anchors.length === 1) {
         const tr = anchors[0].tr;
@@ -292,7 +295,10 @@ export function resolveScope(input) {
               stageA,
             ),
             scopeConfidence: 0.97,
-            scopeReason: "aggregate_class:recommendation_action_single_anchor",
+            scopeReason:
+              aggregateClass === "advance_or_hold_question"
+                ? "aggregate_class:advance_or_hold_question_single_anchor"
+                : "aggregate_class:recommendation_action_single_anchor",
             stageA,
           };
         }

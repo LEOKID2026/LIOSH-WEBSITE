@@ -1,0 +1,15 @@
+{
+  "artifact": "stage-s2-hebrew-gate",
+  "generatedAt": "2026-06-20T11:46:03.982Z",
+  "checks": {
+    "roboticityRate": true,
+    "leakagePer1000": true,
+    "authorityPer1000": true,
+    "normalizationSemanticPreservationRate": true,
+    "repetitionRate": true,
+    "insufficiencyRecall": true,
+    "authorityBalancePer1000": true
+  },
+  "failed": [],
+  "pass": true
+}

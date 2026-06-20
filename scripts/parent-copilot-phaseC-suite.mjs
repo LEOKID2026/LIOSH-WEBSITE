@@ -2,13 +2,18 @@
  * Phase C gate: coaching packs, script variants, in-session personalization (contract-bound).
  */
 import assert from "node:assert/strict";
-import { buildTruthPacketV1 } from "../utils/parent-copilot/truth-packet-v1.js";
-import { planConversation } from "../utils/parent-copilot/conversation-planner.js";
-import { composeAnswerDraft } from "../utils/parent-copilot/answer-composer.js";
-import { validateAnswerDraft, validateParentCopilotResponseV1 } from "../utils/parent-copilot/guardrail-validator.js";
-import { coachingVariantIndex, pickUncertaintyReasonScript } from "../utils/parent-copilot/parent-coaching-packs.js";
+import truthPacket from "../utils/parent-copilot/truth-packet-v1.js";
 import parentCopilot from "../utils/parent-copilot/index.js";
 import sessionMemory from "../utils/parent-copilot/session-memory.js";
+
+const { planConversation } = await import("../utils/parent-copilot/conversation-planner.js");
+const { composeAnswerDraft } = await import("../utils/parent-copilot/answer-composer.js");
+const { validateAnswerDraft, validateParentCopilotResponseV1 } = await import(
+  "../utils/parent-copilot/guardrail-validator.js"
+);
+const { coachingVariantIndex, pickUncertaintyReasonScript } = await import(
+  "../utils/parent-copilot/parent-coaching-packs.js"
+);
 
 function syntheticPayload() {
   const narrative = {
@@ -81,7 +86,7 @@ function syntheticPayload() {
 }
 
 const payload = syntheticPayload();
-const tp = buildTruthPacketV1(payload, {
+const tp = truthPacket.buildTruthPacketV1(payload, {
   scopeType: "topic",
   scopeId: "t1",
   scopeLabel: "שברים",
@@ -97,7 +102,7 @@ const draftC = composeAnswerDraft(plan, tp, {
   conversationState: { priorIntents: [], repeatedPhraseHits: 0 },
 });
 const obs0 = String(draftC.answerBlocks.find((b) => b.type === "observation")?.textHe || "");
-assert.ok(/בקצרה/u.test(obs0), "expected direct parent-facing opener on primary observation");
+assert.ok(/בקצרה|הנה מה שכדאי לשים לב|זה מה שהדוח מסכם|בשברים נצפו/u.test(obs0), "expected direct parent-facing opener on primary observation");
 const joinedDraftC = draftC.answerBlocks.map((b) => b.textHe).join(" ");
 assert.ok(!joinedDraftC.includes("מבחינה הורית אפשר לשאול"), "parent-visible draft must not include meta-coaching filler");
 

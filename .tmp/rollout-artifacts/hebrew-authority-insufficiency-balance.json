@@ -1,0 +1,8 @@
+{
+  "artifact": "hebrew-authority-insufficiency-balance",
+  "generatedAt": "2026-06-20T11:46:03.882Z",
+  "sampleSize": 160,
+  "insufficiencyRecall": 100,
+  "authorityPer1000": 0,
+  "pass": true
+}

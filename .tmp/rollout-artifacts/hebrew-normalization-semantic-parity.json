@@ -1,0 +1,7 @@
+{
+  "artifact": "hebrew-normalization-semantic-parity",
+  "generatedAt": "2026-06-20T11:46:01.428Z",
+  "sampleSize": 5,
+  "normalizationSemanticPreservationRate": 100,
+  "pass": true
+}

@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
-import { resolveIntentWithConfidence } from "../utils/parent-copilot/intent-resolver.js";
-import { resolveScope } from "../utils/parent-copilot/scope-resolver.js";
+import parentCopilot from "../utils/parent-copilot/index.js";
+
+const { resolveIntentWithConfidence } = await import("../utils/parent-copilot/intent-resolver.js");
+const { resolveScope } = await import("../utils/parent-copilot/scope-resolver.js");
 import { syntheticPayload } from "./parent-copilot-test-fixtures.mjs";
 import { pct, writeArtifact } from "./rollout-artifacts-lib.mjs";
 

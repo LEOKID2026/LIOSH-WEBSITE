@@ -1,0 +1,28 @@
+{
+  "artifact": "release-matrix-checklist",
+  "generatedAt": "2026-06-20T11:46:06.520Z",
+  "stage": "s3",
+  "requiredArtifacts": [
+    "stage-s2-classifier-gate",
+    "stage-s2-hebrew-gate",
+    "stage-s3-observability-gate"
+  ],
+  "requiredSigners": [
+    "eng",
+    "qa",
+    "product",
+    "lang",
+    "ops"
+  ],
+  "missingArtifacts": [],
+  "missingSigners": [],
+  "signerState": {
+    "eng": true,
+    "qa": true,
+    "product": true,
+    "lang": true,
+    "ops": true
+  },
+  "decision": "GO",
+  "pass": true
+}

@@ -13,7 +13,7 @@ import {
   sensitiveEducationChoiceJoinedFingerprintHe,
   ensureHomePracticePracticalMagnitudeDraft,
 } from "./answer-composer.js";
-import { detectAggregateQuestionClass } from "./semantic-question-class.js";
+import { detectAggregateQuestionClass, shouldDeferIntentComposer } from "./semantic-question-class.js";
 import { buildSemanticAggregateDraft } from "./semantic-aggregate-answers.js";
 import { validateAnswerDraft, validateParentCopilotResponseV1 } from "./guardrail-validator.js";
 import { buildDeterministicFallbackAnswer } from "./fallback-templates.js";
@@ -167,13 +167,16 @@ function contractNarrativeSlotBundleHe(truthPacket) {
  * are re-tagged as composed so contract_slot_mismatch does not fire on parent-facing copy.
  * @param {Array<{ type?: string; textHe?: string; source?: string }>} answerBlocks
  * @param {object|null} [truthPacket]
+ * @param {{ preserveContractSlotSources?: boolean }} [opts]
  */
-function normalizeAnswerBlocksHe(answerBlocks, truthPacket = null) {
+function normalizeAnswerBlocksHe(answerBlocks, truthPacket = null, opts = null) {
   const slotBundle = truthPacket ? contractNarrativeSlotBundleHe(truthPacket) : "";
+  const preserveSlot = !!(opts && opts.preserveContractSlotSources);
   return (Array.isArray(answerBlocks) ? answerBlocks : []).map((b) => {
     const textHe = normalizeParentFacingHe(String(b?.textHe || "").trim());
     let source = String(b?.source || "composed");
     if (
+      !preserveSlot &&
       slotBundle &&
       source === "contract_slot" &&
       String(b?.type || "") !== "observation" &&
@@ -471,7 +474,10 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     } else {
       draft = buildDeterministicFallbackAnswer(truthPacket, vDraft.failCodes);
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
+      draft = {
+        ...draft,
+        answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket, { preserveContractSlotSources: true }),
+      };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
@@ -495,19 +501,33 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
         draft = buildDeterministicFallbackAnswer(truthPacket, ["emergency_fallback"]);
       }
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
+      draft = {
+        ...draft,
+        answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket, { preserveContractSlotSources: true }),
+      };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
 
-  draft = enforceThinDataScarcityLead(draft, truthPacket, plannerIntent, input?.payload);
+  if (!fallbackUsed) {
+    draft = enforceThinDataScarcityLead(draft, truthPacket, plannerIntent, input?.payload);
+  }
   const responseIntentEarly = isClinicalBoundaryDraft(draft)
     ? "clinical_boundary"
     : isSensitiveEducationChoiceDraft(draft)
       ? "sensitive_education_choice"
       : plannerIntent;
-  draft = ensureHomePracticePracticalMagnitudeDraft(draft, responseIntentEarly, truthPacket);
-  draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+  if (!fallbackUsed) {
+    draft = ensureHomePracticePracticalMagnitudeDraft(draft, responseIntentEarly, truthPacket);
+  }
+  draft = {
+    ...draft,
+    answerBlocks: normalizeAnswerBlocksHe(
+      draft.answerBlocks,
+      truthPacket,
+      fallbackUsed ? { preserveContractSlotSources: true } : null,
+    ),
+  };
 
   const answerBlockTypes = draft.answerBlocks.map((b) => b.type);
   const answerBodyTextHe = draft.answerBlocks.map((b) => b.textHe).join(" ").trim();
@@ -773,6 +793,42 @@ function runDeterministicCore(input, options) {
 
   const utteranceStr = normalizeFreeformParentUtteranceHe(String(input?.utterance || ""));
 
+  if (!scopedInput?.payload || typeof scopedInput.payload !== "object") {
+    const stageAForMissing = interpretFreeformStageA(String(input?.utterance || ""), null);
+    const scopeResMissing = resolveScope({
+      payload: null,
+      utterance: utteranceStr,
+      selectedContextRef: scopedInput?.selectedContextRef ?? null,
+      stageA: stageAForMissing,
+      conversationState: conv,
+    });
+    const scopeMetaMissing = {
+      scopeConfidence: Number(scopeResMissing?.scopeConfidence || 0),
+      scopeReason: String(scopeResMissing?.scopeReason || "missing_payload"),
+      intentConfidence: Number(stageAForMissing?.confidence || 0),
+      intentReason: String(stageAForMissing?.reason || "missing_payload"),
+    };
+    const r = buildClarificationParentCopilotResponse({
+      clarificationQuestionHe:
+        scopeResMissing.clarificationQuestionHe ||
+        "לא נטען דוח מקיף — לא ניתן לענות מתוך נתוני התקופה. רעננו את הדף או בחרו תקופה אחרת.",
+      intent: stageAForMissing?.canonicalIntent || "uncertainty_boundary",
+      priorRepeated,
+      metadata: scopeMetaMissing,
+    });
+    validateParentCopilotResponseV1(r);
+    return {
+      response: r,
+      audience,
+      sessionId,
+      conv,
+      truthPacket: null,
+      intent: stageAForMissing?.canonicalIntent || "uncertainty_boundary",
+      scopeMeta: scopeMetaMissing,
+      utteranceStr,
+    };
+  }
+
   // ── FIRST PRODUCT GATE: classifier-first router before ANY report data access ──
   // Hard guarantees for off_topic / diagnostic_sensitive / ambiguous_or_unclear:
   //   - No truthPacket built. No answer-LLM call. No subject/topic name leakage.
@@ -849,6 +905,14 @@ function runDeterministicCore(input, options) {
     intent !== "off_topic_redirect"
   ) {
     intent = "explain_report";
+  }
+  if (
+    aggregateQuestionClass === "advance_or_hold_question" &&
+    intent !== "clinical_boundary" &&
+    intent !== "sensitive_education_choice" &&
+    intent !== "off_topic_redirect"
+  ) {
+    intent = "why_not_advance";
   }
   /** Fabrication / integrity asks must stay on refusal copy even when Stage A leans explain-like. */
   const reportDataFabricationProbe =
@@ -1008,16 +1072,19 @@ function runDeterministicCore(input, options) {
 
   const inheritedScope = String(scopeMeta.scopeReason || "").includes("conversation_inherited");
 
-  const intentAnswerDraft = tryComposeIntentAnswer({
-    utteranceStr,
-    truthPacket,
-    scope,
-    payload: scopedInput.payload,
-    plannerIntent: intent,
-    stageAIntent: intent,
-    inheritedScope,
-    conversationState: conv,
-  });
+  let intentAnswerDraft = null;
+  if (!shouldDeferIntentComposer(aggregateQuestionClass)) {
+    intentAnswerDraft = tryComposeIntentAnswer({
+      utteranceStr,
+      truthPacket,
+      scope,
+      payload: scopedInput.payload,
+      plannerIntent: intent,
+      stageAIntent: intent,
+      inheritedScope,
+      conversationState: conv,
+    });
+  }
   if (intentAnswerDraft?.answerBlocks?.length) {
     const compactedIntent = compactParentAnswerBlocks(
       intentAnswerDraft.answerBlocks.map((b) => ({
@@ -1228,7 +1295,10 @@ function runDeterministicCore(input, options) {
     } else {
       draft = buildDeterministicFallbackAnswer(truthPacket, vDraft.failCodes);
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
+      draft = {
+        ...draft,
+        answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket, { preserveContractSlotSources: true }),
+      };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
@@ -1253,20 +1323,34 @@ function runDeterministicCore(input, options) {
         draft = buildDeterministicFallbackAnswer(truthPacket, ["emergency_fallback"]);
       }
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
+      draft = {
+        ...draft,
+        answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket, { preserveContractSlotSources: true }),
+      };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
 
-  draft = enforceThinDataScarcityLead(draft, truthPacket, plannerIntent, scopedInput?.payload);
+  if (!fallbackUsed) {
+    draft = enforceThinDataScarcityLead(draft, truthPacket, plannerIntent, scopedInput?.payload);
+  }
   const responseIntent = isClinicalBoundaryDraft(draft)
     ? "clinical_boundary"
     : isSensitiveEducationChoiceDraft(draft)
       ? "sensitive_education_choice"
       : plannerIntent;
 
-  draft = ensureHomePracticePracticalMagnitudeDraft(draft, responseIntent, truthPacket);
-  draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+  if (!fallbackUsed) {
+    draft = ensureHomePracticePracticalMagnitudeDraft(draft, responseIntent, truthPacket);
+  }
+  draft = {
+    ...draft,
+    answerBlocks: normalizeAnswerBlocksHe(
+      draft.answerBlocks,
+      truthPacket,
+      fallbackUsed ? { preserveContractSlotSources: true } : null,
+    ),
+  };
 
   const answerBlockTypes = draft.answerBlocks.map((b) => b.type);
   const answerBodyTextHe = draft.answerBlocks.map((b) => b.textHe).join(" ").trim();
