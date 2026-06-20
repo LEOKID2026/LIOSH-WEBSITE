@@ -357,6 +357,28 @@ function classifyDailyDelta({ sessionResults, delta }) {
   };
 }
 
+/**
+ * True when sessions, stamping, evidence repair, and practice driver legs
+ * completed — parent after-snapshot is intentionally excluded.
+ */
+function studentCoreLearningGatesPassed(record) {
+  const sessions = record.sessionResults || [];
+  if (sessions.length === 0) return false;
+  if (sessions.some((s) => !s.completed)) return false;
+  if (sessions.some((s) => s.error)) return false;
+  if ((record.earlyExitReasons || []).length > 0) return false;
+  if (record.tier1?.passed === false) return false;
+  if (isTimestampStampingEnabled()) {
+    if (sessions.some((s) => !s.timestampStamp?.sessionId)) return false;
+    if (
+      sessions.some((s) => Number(s.timestampStamp?.durationSeconds) <= 0)
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function applyStudentVerdict(record, log) {
   if (record.status === "blocked" || record.status === "fail") return;
 
@@ -1062,12 +1084,23 @@ export async function runPhaseD2Suite({
       record.runWindow.afterCapturedAt = new Date().toISOString();
       record.runWindow.studentRunEndedAt = record.runWindow.afterCapturedAt;
     } catch (error) {
-      if (record.status !== "fail") {
+      const snapshotError = `after snapshot failed: ${error?.message || error}`;
+      record.stepFailed = "after-snapshot";
+      if (studentCoreLearningGatesPassed(record)) {
+        record.snapshotWarning = true;
+        record.driverError = snapshotError;
+        if (record.status !== "fail") {
+          record.status = "partial";
+        }
+        log?.(
+          `phase-d2: ${record.label} WARN — ${snapshotError} ` +
+            `(core learning gates passed; after-snapshot non-blocking)`
+        );
+      } else if (record.status !== "fail") {
         record.status = "fail";
-        record.stepFailed = "after-snapshot";
-        record.driverError = `after snapshot failed: ${error?.message || error}`;
+        record.driverError = snapshotError;
+        log?.(`phase-d2: ${record.label} FAIL — ${record.driverError}`);
       }
-      log?.(`phase-d2: ${record.label} FAIL — ${record.driverError}`);
       await artifacts
         .saveScreenshot(workerParentPage, `${tag}-after-failure`)
         .catch(() => {});

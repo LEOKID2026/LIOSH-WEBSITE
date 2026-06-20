@@ -23,6 +23,14 @@ function newClientRequestId() {
   return `req-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function lastActivityListLine(child) {
+  const la = child?.lastActivity;
+  if (!la?.hasActivity || !la?.atLabelHe) {
+    return "פעילות אחרונה: אין פעילות";
+  }
+  return `פעילות אחרונה: ${la.atLabelHe}`;
+}
+
 export default function AdminManualCoinsTab({ accessToken }) {
   const formId = useId();
   const [parentEmailInput, setParentEmailInput] = useState("");
@@ -32,6 +40,11 @@ export default function AdminManualCoinsTab({ accessToken }) {
   const [loadPhase, setLoadPhase] = useState("idle");
   const [loadError, setLoadError] = useState("");
 
+  const [eventsOpen, setEventsOpen] = useState(false);
+  const [eventsPhase, setEventsPhase] = useState("idle");
+  const [eventsError, setEventsError] = useState("");
+  const [recentEvents, setRecentEvents] = useState([]);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [clientRequestId, setClientRequestId] = useState("");
   const [amount, setAmount] = useState("");
@@ -40,6 +53,15 @@ export default function AdminManualCoinsTab({ accessToken }) {
   const [submitBusy, setSubmitBusy] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [success, setSuccess] = useState(null);
+
+  const patchChild = useCallback((studentId, patch) => {
+    setChildren((prev) =>
+      prev.map((c) => (c.studentId === studentId ? { ...c, ...patch } : c))
+    );
+    setSelectedStudent((prev) =>
+      prev?.studentId === studentId ? { ...prev, ...patch } : prev
+    );
+  }, []);
 
   const loadChildren = useCallback(async () => {
     const email = parentEmailInput.trim();
@@ -53,6 +75,8 @@ export default function AdminManualCoinsTab({ accessToken }) {
     setSelectedStudent(null);
     setChildren([]);
     setParentEmail("");
+    setRecentEvents([]);
+    setEventsOpen(false);
     try {
       const res = await adminAuthFetch(
         accessToken,
@@ -79,10 +103,80 @@ export default function AdminManualCoinsTab({ accessToken }) {
     }
   }, [accessToken, parentEmailInput]);
 
+  const refreshStudentActivity = useCallback(
+    async (studentId) => {
+      if (!studentId) return;
+      try {
+        const res = await adminAuthFetch(
+          accessToken,
+          `/api/admin/students/${encodeURIComponent(studentId)}/recent-events?limit=1`
+        );
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) return;
+        const events = Array.isArray(body.data?.events) ? body.data.events : [];
+        const latest = events[0];
+        const lastActivity = latest
+          ? {
+              hasActivity: true,
+              atLabelHe: latest.atLabelHe,
+              shortLineHe: latest.atLabelHe,
+              detailLineHe: latest.detailLineHe || latest.lineHe,
+            }
+          : {
+              hasActivity: false,
+              atLabelHe: null,
+              shortLineHe: "אין פעילות",
+              detailLineHe: null,
+            };
+        patchChild(studentId, { lastActivity });
+      } catch {
+        /* non-blocking */
+      }
+    },
+    [accessToken, patchChild]
+  );
+
+  const loadRecentEvents = useCallback(
+    async (studentId) => {
+      if (!studentId) return;
+      setEventsPhase("loading");
+      setEventsError("");
+      try {
+        const res = await adminAuthFetch(
+          accessToken,
+          `/api/admin/students/${encodeURIComponent(studentId)}/recent-events?limit=20`
+        );
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          setEventsPhase("error");
+          setEventsError(ADMIN_LOAD_ERROR);
+          return;
+        }
+        setRecentEvents(Array.isArray(body.data?.events) ? body.data.events : []);
+        setEventsPhase("ok");
+      } catch {
+        setEventsPhase("error");
+        setEventsError(ADMIN_LOAD_ERROR);
+      }
+    },
+    [accessToken]
+  );
+
   const selectStudent = (student) => {
     setSelectedStudent(student);
     setSuccess(null);
+    setEventsOpen(false);
+    setRecentEvents([]);
+    setEventsPhase("idle");
   };
+
+  const openEvents = () => {
+    if (!selectedStudent?.studentId) return;
+    setEventsOpen(true);
+    void loadRecentEvents(selectedStudent.studentId);
+  };
+
+  const closeEvents = () => setEventsOpen(false);
 
   const openModal = () => {
     if (!selectedStudent?.studentId) return;
@@ -97,15 +191,6 @@ export default function AdminManualCoinsTab({ accessToken }) {
   const closeModal = () => {
     if (submitBusy) return;
     setModalOpen(false);
-  };
-
-  const updateStudentBalance = (studentId, balanceAfter) => {
-    setChildren((prev) =>
-      prev.map((c) => (c.studentId === studentId ? { ...c, balance: balanceAfter } : c))
-    );
-    setSelectedStudent((prev) =>
-      prev?.studentId === studentId ? { ...prev, balance: balanceAfter } : prev
-    );
   };
 
   const submitCredit = async () => {
@@ -139,7 +224,11 @@ export default function AdminManualCoinsTab({ accessToken }) {
         amountCredited: data.amountCredited,
       });
       if (data.balanceAfter != null) {
-        updateStudentBalance(selectedStudent.studentId, data.balanceAfter);
+        patchChild(selectedStudent.studentId, { balance: data.balanceAfter });
+      }
+      void refreshStudentActivity(selectedStudent.studentId);
+      if (eventsOpen) {
+        void loadRecentEvents(selectedStudent.studentId);
       }
       setModalOpen(false);
     } catch {
@@ -149,10 +238,12 @@ export default function AdminManualCoinsTab({ accessToken }) {
     }
   };
 
+  const selectedActivity = selectedStudent?.lastActivity;
+
   return (
     <div className="text-right w-full max-w-full overflow-x-hidden">
       <p className="text-xs text-white/60 mb-4">
-        חיפוש לפי כתובת מייל של הורה, בחירת ילד והוספת מטבעות — הפעולה נרשמת ביומן המטבעות.
+        חיפוש לפי מייל הורה, בחירת ילד, מעקב פעילות והוספת מטבעות — לתמיכה ובקרה.
       </p>
 
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mb-4 w-full max-w-xl">
@@ -201,6 +292,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
                   <p className="text-sm text-amber-200 mt-1">
                     {formatBalance(child.balance)} מטבעות
                   </p>
+                  <p className="text-xs text-white/50 mt-1">{lastActivityListLine(child)}</p>
                 </div>
                 <button
                   type="button"
@@ -233,16 +325,40 @@ export default function AdminManualCoinsTab({ accessToken }) {
             {parentEmail || "—"}
           </p>
           <p className="text-sm text-white/50 mb-1">יתרה נוכחית</p>
-          <p className="text-lg font-bold text-amber-200 mb-4">
+          <p className="text-lg font-bold text-amber-200 mb-3">
             {formatBalance(selectedStudent.balance)} מטבעות
           </p>
-          <button
-            type="button"
-            onClick={openModal}
-            className="rounded-lg bg-emerald-600/40 border border-emerald-400/50 px-4 py-2 text-sm font-semibold hover:bg-emerald-600/50"
-          >
-            הוסף מטבעות
-          </button>
+
+          <div className="rounded-lg border border-white/10 bg-black/20 p-3 mb-4 text-sm">
+            <p className="text-white/50 text-xs mb-1">פעילות אחרונה</p>
+            {selectedActivity?.hasActivity && selectedActivity?.atLabelHe ? (
+              <>
+                <p className="font-semibold text-white mb-1">{selectedActivity.atLabelHe}</p>
+                <p className="text-white/80 text-xs leading-relaxed">
+                  {selectedActivity.detailLineHe || selectedActivity.shortLineHe}
+                </p>
+              </>
+            ) : (
+              <p className="text-white/70">אין פעילות מתועדת</p>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-2 justify-end">
+            <button
+              type="button"
+              onClick={openEvents}
+              className="rounded-lg border border-white/20 px-3 py-1.5 text-xs font-semibold hover:bg-white/5"
+            >
+              אירועים אחרונים
+            </button>
+            <button
+              type="button"
+              onClick={openModal}
+              className="rounded-lg bg-emerald-600/40 border border-emerald-400/50 px-4 py-2 text-sm font-semibold hover:bg-emerald-600/50"
+            >
+              הוסף מטבעות
+            </button>
+          </div>
         </section>
       ) : null}
 
@@ -261,6 +377,57 @@ export default function AdminManualCoinsTab({ accessToken }) {
               <> · נוספו: {formatBalance(success.amountCredited)}</>
             ) : null}
           </p>
+        </div>
+      ) : null}
+
+      {eventsOpen && selectedStudent ? (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={`${formId}-events-title`}
+          onClick={closeEvents}
+        >
+          <div
+            className="w-full max-w-lg rounded-xl border border-white/15 bg-[#1a1f2e] p-4 sm:p-5 shadow-xl overflow-x-hidden max-h-[85vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 id={`${formId}-events-title`} className="text-lg font-bold mb-1 shrink-0">
+              אירועים אחרונים
+            </h3>
+            <p className="text-xs text-white/50 mb-3 shrink-0">
+              {selectedStudent.fullName || "—"} · עד 20 אירועים
+            </p>
+            <div className="overflow-y-auto overflow-x-hidden flex-1 min-h-0">
+              {eventsPhase === "loading" ? (
+                <p className="text-sm text-white/60">{ADMIN_LOADING}</p>
+              ) : eventsPhase === "error" ? (
+                <p className="text-sm text-red-300">{eventsError}</p>
+              ) : recentEvents.length === 0 ? (
+                <p className="text-sm text-white/60">אין אירועים מתועדים</p>
+              ) : (
+                <ul className="space-y-2 text-xs text-white/85">
+                  {recentEvents.map((ev, i) => (
+                    <li
+                      key={`${ev.atIso}-${i}`}
+                      className="rounded border border-white/10 bg-black/25 px-2 py-1.5 leading-relaxed break-words"
+                    >
+                      {ev.displayLineHe || `${ev.atLabelHe} — ${ev.lineHe}`}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="mt-4 flex justify-end shrink-0">
+              <button
+                type="button"
+                onClick={closeEvents}
+                className="rounded-lg border border-white/20 px-4 py-2 text-sm"
+              >
+                סגור
+              </button>
+            </div>
+          </div>
         </div>
       ) : null}
 

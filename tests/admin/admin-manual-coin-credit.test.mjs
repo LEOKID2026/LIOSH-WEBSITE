@@ -209,4 +209,82 @@ describe("Admin UI Hebrew-only labels", () => {
     assert.match(shellSrc, /manualCoinOnly/);
     assert.match(shellSrc, /isAdminManualCoinCreditEnabledClient/);
   });
+
+  test("manual coins tab shows operational activity support", () => {
+    const uiSrc = readFileSync(
+      join(ROOT, "components/admin/rewards/AdminManualCoinsTab.jsx"),
+      "utf8"
+    );
+    assert.match(uiSrc, /פעילות אחרונה/);
+    assert.match(uiSrc, /אין פעילות מתועדת/);
+    assert.match(uiSrc, /אירועים אחרונים/);
+    assert.match(uiSrc, /recent-events/);
+  });
+});
+
+describe("Admin student support activity", () => {
+  test("summarizeLastStudentActivity handles empty and populated", async () => {
+    const { summarizeLastStudentActivity } = await import(
+      "../../lib/admin-server/admin-student-support-activity.server.js"
+    );
+    const empty = summarizeLastStudentActivity([]);
+    assert.equal(empty.hasActivity, false);
+    assert.equal(empty.shortLineHe, "אין פעילות");
+
+    const withEvent = summarizeLastStudentActivity([
+      {
+        atIso: "2026-06-20T02:04:00.000Z",
+        atLabelHe: "20/06/2026 02:04",
+        lineHe: "סיים תרגול חשבון — 16 שאלות — 75% — 26 דקות",
+        detailLineHe: "תרגול חשבון · 16 שאלות · 75% · 26 דקות",
+      },
+    ]);
+    assert.equal(withEvent.hasActivity, true);
+    assert.equal(withEvent.atLabelHe, "20/06/2026 02:04");
+    assert.equal(withEvent.detailLineHe, "תרגול חשבון · 16 שאלות · 75% · 26 דקות");
+  });
+
+  test("manual coin lines use Hebrew category in timeline source", () => {
+    const src = readFileSync(
+      join(ROOT, "lib/admin-server/admin-student-support-activity.server.js"),
+      "utf8"
+    );
+    assert.match(src, /מטבעות ידנית — סיבה:/);
+    assert.match(src, /ADMIN_MANUAL_COIN_REASON/);
+    assert.match(src, /learning_sessions/);
+    assert.match(src, /coin_transactions/);
+    assert.match(src, /parent_activity_status/);
+    assert.match(src, /analytics_events/);
+  });
+
+  test("parent lookup attaches lastActivity per child", () => {
+    const src = readFileSync(
+      join(ROOT, "lib/admin-server/admin-manual-coin-credit.server.js"),
+      "utf8"
+    );
+    assert.match(src, /getStudentsLastActivitySummaries/);
+    assert.match(src, /lastActivity/);
+  });
+
+  test("recent-events API is admin-guarded", () => {
+    const src = readFileSync(
+      join(ROOT, "pages/api/admin/students/[studentId]/recent-events.js"),
+      "utf8"
+    );
+    assert.match(src, /requireAdminApiContext/);
+    assert.match(src, /buildStudentSupportTimeline/);
+    assert.match(src, /isAdminManualCoinCreditEnabled/);
+  });
+
+  test("manual coin credit writes admin audit with balance before/after", () => {
+    const src = readFileSync(
+      join(ROOT, "lib/admin-server/admin-manual-coin-credit.server.js"),
+      "utf8"
+    );
+    assert.match(src, /writeAdminAuditRow/);
+    assert.match(src, /admin_manual_coin_credit/);
+    assert.match(src, /balanceBefore/);
+    assert.match(src, /balanceAfter/);
+    assert.match(src, /targetType:\s*["']student["']/);
+  });
 });
