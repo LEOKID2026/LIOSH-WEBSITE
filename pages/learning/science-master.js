@@ -31,9 +31,6 @@ import {
   getStreakReward,
 } from "../../utils/daily-streak";
 import { useSound } from "../../hooks/useSound";
-import {
-  MONTHLY_MINUTES_TARGET,
-} from "../../data/reward-options";
 
 import { learningMixedHebrewMathStyle } from "../../utils/learning-mixed-hebrew-math";
 import { renderLearningMixedHebrewMathText } from "../../components/learning/LearningMixedHebrewMathText";
@@ -2840,7 +2837,7 @@ function saveScienceAnswerInParallel({
         topicScopeKey: `${level}_${topic}`,
         monthlyState: {
           totalMinutes: monthlyPersistenceView?.currentMinutes ?? 0,
-          goalMinutes: monthlyPersistenceView?.goalMinutes ?? MONTHLY_MINUTES_TARGET,
+          goalMinutes: monthlyPersistenceView?.goalMinutes ?? null,
           yearMonth: monthlyPersistenceView?.yearMonthIsrael ?? "",
           celebrationShownForMonth: Boolean(monthlyPersistenceView?.alreadyAwarded),
         },
@@ -4051,7 +4048,7 @@ function saveScienceAnswerInParallel({
                   <div className="bg-black/30 border border-white/10 rounded-lg p-3">
                     <div className="text-sm text-white/60 mb-2">התקדמות חודשית</div>
                     <div className="flex justify-between text-xs text-white/60 mb-1">
-                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {MONTHLY_MINUTES_TARGET} דק׳</span>
+                      <span>{Math.round(monthlyPersistenceView?.currentMinutes ?? 0)} / {monthlyPersistenceView?.goalMinutes ?? "—"} דק׳</span>
                       <span>{monthlyPersistenceView?.progressPct ?? 0}%</span>
                     </div>
                     <div className="w-full bg-black/50 rounded-full h-3 mb-2">

@@ -1,2 +1,4 @@
-/** Monthly learning-minutes target for coin milestone tiers. */
-export const MONTHLY_MINUTES_TARGET = 600; // 10 שעות
+/**
+ * @deprecated Removed — monthly goals and tiers come from Admin/DB via economyConfig.
+ * This file is kept only for inventory script path references; do not import at runtime.
+ */

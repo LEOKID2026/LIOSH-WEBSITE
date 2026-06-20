@@ -5,13 +5,7 @@ import Layout from "../../components/Layout";
 import { useGamesHubUi } from "../../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../../components/student/StudentThemePicker";
-
-const ENTRY_OPTIONS = [
-  { label: "10", value: 10 },
-  { label: "100", value: 100 },
-  { label: "1K", value: 1000 },
-  { label: "10K", value: 10000 },
-];
+import { mapEntryCostOptionsForUi } from "../../lib/learning-client/economyConfigClient.js";
 
 const POLL_MS = 5000;
 
@@ -115,6 +109,7 @@ function roomTypeLabel(rt) {
 }
 
 function EntryCostSelector({
+  entryOptions,
   entryCost,
   setEntryCost,
   costDisabledReason,
@@ -129,7 +124,7 @@ function EntryCostSelector({
     <div className={className}>
       <span className={`mb-1.5 block ${entryLabel}`}>עלות כניסה</span>
       <div className="flex flex-wrap gap-1.5">
-        {ENTRY_OPTIONS.map((opt) => {
+        {(entryOptions || []).map((opt) => {
           const needMsg = costDisabledReason(opt.value);
           const selected = entryCost === opt.value;
           return (
@@ -160,6 +155,7 @@ function EntryCostSelector({
  * @param {string} props.gameKey
  * @param {boolean} props.active
  * @param {string | null} props.idleReason
+ * @param {Array<{ label: string, value: number }>} props.entryOptions
  * @param {number} props.entryCost
  * @param {(n: number) => void} props.setEntryCost
  * @param {(cost: number) => string | null} props.costDisabledReason
@@ -190,6 +186,7 @@ function ArcadeGameCard({
   gameKey,
   active,
   idleReason,
+  entryOptions,
   entryCost,
   setEntryCost,
   costDisabledReason,
@@ -242,6 +239,7 @@ function ArcadeGameCard({
       ) : null}
 
       <EntryCostSelector
+        entryOptions={entryOptions}
         entryCost={entryCost}
         setEntryCost={setEntryCost}
         costDisabledReason={costDisabledReason}
@@ -292,6 +290,7 @@ export default function StudentArcadePage() {
   const [studentName, setStudentName] = useState("");
   const [balance, setBalance] = useState(null);
   const [games, setGames] = useState([]);
+  const [entryOptions, setEntryOptions] = useState([]);
   const [entryCost, setEntryCost] = useState(10);
   const [userMessage, setUserMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -317,7 +316,14 @@ export default function StudentArcadePage() {
     if (gamesJson?.ok && Array.isArray(gamesJson.games)) {
       setGames(gamesJson.games);
     }
-  }, []);
+    if (gamesJson?.ok && Array.isArray(gamesJson.entryCostOptions)) {
+      const opts = mapEntryCostOptionsForUi(gamesJson.entryCostOptions);
+      setEntryOptions(opts);
+      if (opts.length && !opts.some((o) => o.value === entryCost)) {
+        setEntryCost(opts[0].value);
+      }
+    }
+  }, [entryCost]);
 
   const refreshOpenRooms = useCallback(async () => {
     const results = await Promise.all(
@@ -542,6 +548,7 @@ export default function StudentArcadePage() {
     hlStatus === "waiting" ? "ממתין לשחקן נוסף" : hlStatus === "active" ? "המשחק פעיל" : hlStatus;
 
   const arcadeCardProps = {
+    entryOptions,
     cardShell: GH.card,
     cardTitle: GH.cardTitle,
     cardBlurb: GH.cardBlurb,
@@ -664,7 +671,7 @@ export default function StudentArcadePage() {
                       {openRooms.map((row) => {
                         const full = row.playerCount >= row.maxPlayers;
                         const costLabel =
-                          ENTRY_OPTIONS.find((o) => o.value === row.entryCost)?.label ||
+                          entryOptions.find((o) => o.value === row.entryCost)?.label ||
                           String(row.entryCost);
                         return (
                           <li

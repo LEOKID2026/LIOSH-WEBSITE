@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-06-20T00:44:41.913Z",
+  "gates": [
+    {
+      "gate": "REWARD_CONTRACT_PASS",
+      "verdict": "FAIL",
+      "exitCode": 1,
+      "launchRequired": false,
+      "stdoutTail": "iled daily progress marked estimated\n      ---\n      duration_ms: 0.2055\n      type: 'test'\n      ...\n    # Subtest: monthly persistence load error surfaces unavailable\n    ok 6 - monthly persistence load error surfaces unavailable\n      ---\n      duration_ms: 0.3865\n      type: 'test'\n      ...\n    # Subtest: localStorage progress keys documented non-authoritative in client sync\n    ok 7 - localStorage progress keys documented non-authoritative in client sync\n      ---\n      duration_ms: 0.417\n      type: 'test'\n      ...\n    1..7\nok 6 - Phase 3 — student dashboard display truth\n  ---\n  duration_ms: 3.0358\n  type: 'suite'\n  ...\n# Subtest: Phase 9 — getCurrentYearMonth helper\n    # Subtest: getCurrentYearMonth returns YYYY-MM\n    ok 1 - getCurrentYearMonth returns YYYY-MM\n      ---\n      duration_ms: 0.2195\n      type: 'test'\n      ...\n    1..1\nok 7 - Phase 9 — getCurrentYearMonth helper\n  ---\n  duration_ms: 0.2782\n  type: 'suite'\n  ...\n1..7\n# tests 19\n# suites 7\n# pass 18\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 233.0533\nREWARD_CONTRACT_PASS: FAIL — failed: tests/learning/phase9-single-truth-progress.test.mjs\n{\n  \"gate\": \"REWARD_CONTRACT_PASS\",\n  \"verdict\": \"FAIL\",\n  \"layer\": \"contract\",\n  \"usesMock\": true,\n  \"usesArtifact\": false,\n  \"usesLiveDb\": false,\n  \"usesLiveApi\": false,\n  \"usesLiveUi\": false,\n  \"usesRealPdfBytes\": false,\n  \"message\": \"failed: tests/learning/phase9-single-truth-progress.test.mjs\",\n  \"details\": {},\n  \"at\": \"2026-06-20T00:44:42.747Z\"\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "skip": 0
+  },
+  "finishedAt": "2026-06-20T00:44:42.758Z"
+}

@@ -15,6 +15,7 @@ import {
 } from "../../../lib/learning-supabase/student-learning-profile.server";
 import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-progress.server";
 import { evaluateMonthlyPersistenceReward } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
+import { buildStudentEconomyConfigPayload } from "../../../lib/rewards/server/economy-config.server.js";
 import { guardCookieMutationOrigin } from "../../../lib/security/api-guards.js";
 
 function buildSubjectsResponse(normalized) {
@@ -25,6 +26,17 @@ function buildSubjectsResponse(normalized) {
     out[key] = v && typeof v === "object" && !Array.isArray(v) ? v : {};
   }
   return out;
+}
+
+async function loadEconomyConfigForProfile(supabase) {
+  let economyConfig = null;
+  let economyConfigLoadError = false;
+  try {
+    economyConfig = await buildStudentEconomyConfigPayload(supabase);
+  } catch {
+    economyConfigLoadError = true;
+  }
+  return { economyConfig, economyConfigLoadError };
 }
 
 export default async function handler(req, res) {
@@ -77,6 +89,8 @@ export default async function handler(req, res) {
         monthlyPersistenceLoadError = true;
       }
 
+      const { economyConfig, economyConfigLoadError } = await loadEconomyConfigForProfile(supabase);
+
       return res.status(200).json({
         ok: true,
         studentId,
@@ -92,6 +106,8 @@ export default async function handler(req, res) {
         derived,
         monthlyPersistenceStatus,
         monthlyPersistenceLoadError,
+        economyConfig,
+        economyConfigLoadError,
       });
     }
 
@@ -170,6 +186,7 @@ export default async function handler(req, res) {
       } catch {
         monthlyPersistenceLoadError = true;
       }
+      const { economyConfig, economyConfigLoadError } = await loadEconomyConfigForProfile(supabase);
       return res.status(200).json({
         ok: true,
         studentId,
@@ -185,6 +202,8 @@ export default async function handler(req, res) {
         derived,
         monthlyPersistenceStatus,
         monthlyPersistenceLoadError,
+        economyConfig,
+        economyConfigLoadError,
       });
     }
 

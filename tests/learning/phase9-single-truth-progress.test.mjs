@@ -55,21 +55,22 @@ describe("Phase 9 — progress storage authority", () => {
   });
 });
 
-describe("Phase 9 — coin formula unchanged", () => {
-  test("learning-coin-award tiered formula and daily cap unchanged in source", () => {
+describe("Phase 9 — coin formula from Admin/DB", () => {
+  test("learning-coin-award uses economy-config session settings (not hardcoded 10/15/20)", () => {
     const src = readFileSync(
       join(ROOT, "lib/learning-supabase/learning-coin-award.server.js"),
       "utf8"
     );
-    assert.match(src, /if \(acc >= 95\) return base \+ 10/);
-    assert.match(src, /if \(acc >= 80\) return base \+ 5/);
-    assert.match(src, /const base = 10/);
-    assert.match(src, /SESSION_DAILY_CAP = 300/);
+    assert.match(src, /requireSessionCoinSettings/);
+    assert.match(src, /calculateSessionCoinsFromSettings/);
+    assert.doesNotMatch(src, /SESSION_DAILY_CAP\s*=\s*300/);
+    assert.doesNotMatch(src, /const base = 10/);
+    assert.doesNotMatch(src, /legacy-economy/);
   });
 });
 
 describe("Phase 9 — monthly minutes from learning_sessions + parent activity", () => {
-  test("monthly persistence and derived minutes include parent_activity_attempts credited time", () => {
+  test("monthly persistence sums sessions + parent activity; tiers from Admin/DB", () => {
     const persistenceSrc = readFileSync(
       join(ROOT, "lib/learning-supabase/monthly-persistence-reward.server.js"),
       "utf8"
@@ -85,7 +86,16 @@ describe("Phase 9 — monthly minutes from learning_sessions + parent activity",
     assert.match(derivedSrc, /parent_activity_attempts/);
     assert.match(derivedSrc, /sumParentActivityCreditedMinutesInRange/);
     assert.doesNotMatch(derivedSrc, /book_reading/);
-    assert.match(persistenceSrc, /minutes: 600, coins: 100_000/);
+    assert.match(persistenceSrc, /getMonthlyPersistenceTiersFromSettings/);
+    assert.doesNotMatch(persistenceSrc, /legacy-economy/);
+    assert.doesNotMatch(persistenceSrc, /minutes: 600, coins: 100_000/);
+    const migration = readFileSync(
+      join(ROOT, "supabase/migrations/058_card_rewards_system.sql"),
+      "utf8"
+    );
+    assert.match(migration, /reward_economy_monthly_tiers/);
+    assert.match(migration, /600/);
+    assert.match(migration, /100000/);
   });
 });
 

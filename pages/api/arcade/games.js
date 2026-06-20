@@ -1,5 +1,6 @@
 import { requireArcadeStudent } from "../../../lib/arcade/server/arcade-auth";
 import { ARCADE_GAME_REGISTRY } from "../../../lib/arcade/game-registry";
+import { getEntryCostOptions } from "../../../lib/rewards/server/economy-config.server.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -10,16 +11,23 @@ export default async function handler(req, res) {
   if (!auth) return;
 
   try {
-    const { data: rows, error } = await auth.supabase
-      .from("arcade_games")
-      .select(
-        "game_key,title,enabled,foundation_only,min_players,max_players,supports_quick_match,supports_public_rooms,supports_private_rooms,allowed_entry_costs,created_at",
-      )
-      .order("game_key", { ascending: true });
+    const [gamesQuery, entryCostOptions] = await Promise.all([
+      auth.supabase
+        .from("arcade_games")
+        .select(
+          "game_key,title,enabled,foundation_only,min_players,max_players,supports_quick_match,supports_public_rooms,supports_private_rooms,allowed_entry_costs,created_at",
+        )
+        .order("game_key", { ascending: true }),
+      getEntryCostOptions(auth.supabase),
+    ]);
+
+    const { data: rows, error } = gamesQuery;
 
     if (error) {
       return res.status(500).json({ ok: false, error: "טעינת משחקים נכשלה", code: "db_error" });
     }
+
+    const catalogAmounts = new Set(entryCostOptions.map((o) => o.amount));
 
     const list = (rows || []).map((r) => ({
       gameKey: r.game_key,
@@ -31,8 +39,15 @@ export default async function handler(req, res) {
       supportsQuickMatch: r.supports_quick_match,
       supportsPublicRooms: r.supports_public_rooms,
       supportsPrivateRooms: r.supports_private_rooms,
-      allowedEntryCosts: r.allowed_entry_costs,
+      allowedEntryCosts: (Array.isArray(r.allowed_entry_costs) ? r.allowed_entry_costs : []).filter(
+        (c) => catalogAmounts.has(c)
+      ),
       createdAt: r.created_at,
+    }));
+
+    const entryCostPayload = entryCostOptions.map((o) => ({
+      amount: o.amount,
+      labelHe: o.labelHe,
     }));
 
     if (list.length === 0) {
@@ -48,15 +63,23 @@ export default async function handler(req, res) {
           supportsQuickMatch: true,
           supportsPublicRooms: true,
           supportsPrivateRooms: true,
-          allowedEntryCosts: [10, 100, 1000, 10000],
+          allowedEntryCosts: entryCostOptions.map((o) => o.amount),
           createdAt: null,
         })),
+        entryCostOptions: entryCostPayload,
         fallback: true,
       });
     }
 
-    return res.status(200).json({ ok: true, games: list });
-  } catch (_e) {
+    return res.status(200).json({ ok: true, games: list, entryCostOptions: entryCostPayload });
+  } catch (e) {
+    if (e?.name === "EconomyUnavailableError") {
+      return res.status(503).json({
+        ok: false,
+        error: e.code || "economy_unavailable",
+        unavailable: true,
+      });
+    }
     return res.status(500).json({ ok: false, error: "שגיאת שרת" });
   }
 }

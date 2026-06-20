@@ -34,13 +34,19 @@ test("partial / unanswered — legacy credits zero at 300s+; fairness credits on
 });
 
 test("learning-coin-award skips zero-duration / zero-coin sessions", () => {
-  const src = readFileSync(
+  const awardSrc = readFileSync(
     join(ROOT, "lib/learning-supabase/learning-coin-award.server.js"),
     "utf8"
   );
-  assert.match(src, /durationSeconds <= 0\) return 0/);
-  assert.match(src, /zero_coins_calculated/);
-  assert.match(src, /Idempotency key|Duplicate calls/i);
+  const economySrc = readFileSync(
+    join(ROOT, "lib/rewards/server/economy-config.server.js"),
+    "utf8"
+  );
+  assert.match(economySrc, /durationSeconds <= 0\) return 0/);
+  assert.match(awardSrc, /calculateSessionCoinsFromSettings/);
+  assert.match(awardSrc, /requireSessionCoinSettings/);
+  assert.match(awardSrc, /zero_coins_calculated/);
+  assert.match(awardSrc, /Idempotency key|coin_session_/i);
 });
 
 test("session finish invokes coin award helper once per request path", () => {

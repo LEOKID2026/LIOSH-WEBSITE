@@ -14,6 +14,7 @@ import { ensureDailyMissionsInDb } from "../../../lib/learning-supabase/mission-
 import { evaluateMonthlyPersistenceReward } from "../../../lib/learning-supabase/monthly-persistence-reward.server";
 import { trackServerAnalyticsEvent } from "../../../lib/analytics/track-event.server.js";
 import { evaluateAndGrantAchievementCards } from "../../../lib/rewards/server/achievement-evaluator.server.js";
+import { buildStudentEconomyConfigPayload } from "../../../lib/rewards/server/economy-config.server.js";
 
 function shouldLogStudentHomeDebug() {
   return process.env.NEXT_PUBLIC_DEBUG_STUDENT_IDENTITY === "true";
@@ -93,6 +94,14 @@ export default async function handler(req, res) {
       monthlyPersistenceLoadError = true;
     }
 
+    let economyConfig = null;
+    let economyConfigLoadError = false;
+    try {
+      economyConfig = await buildStudentEconomyConfigPayload(supabase);
+    } catch {
+      economyConfigLoadError = true;
+    }
+
     const payload = {
       ok: true,
       studentId,
@@ -106,6 +115,8 @@ export default async function handler(req, res) {
       subjectsProgressOnly,
       monthlyPersistenceStatus,
       monthlyPersistenceLoadError,
+      economyConfig,
+      economyConfigLoadError,
       updated_at: row.updated_at,
     };
 

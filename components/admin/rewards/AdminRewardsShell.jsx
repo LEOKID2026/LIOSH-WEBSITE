@@ -9,6 +9,7 @@ export const ADMIN_REWARDS_TABS = [
   { id: "manual-coins", label: "מטבעות לילד", manualCoinOnly: true, cardOnly: false, economyOnly: false },
   { id: "general", label: "הגדרות כלליות", cardOnly: false },
   { id: "economy", label: "כלכלת מטבעות", cardOnly: false, economyOnly: true },
+  { id: "arcade", label: "ארקייד", cardOnly: false, economyOnly: true },
   { id: "cards", label: "קלפים", cardOnly: true },
   { id: "series", label: "סדרות", cardOnly: true },
   { id: "box", label: "קופסת הפתעה", cardOnly: true },

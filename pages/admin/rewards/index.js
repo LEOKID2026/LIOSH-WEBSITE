@@ -4,6 +4,7 @@ import AdminShell from "../../../components/admin/AdminShell";
 import AdminRewardsShell from "../../../components/admin/rewards/AdminRewardsShell";
 import AdminGeneralTab from "../../../components/admin/rewards/AdminGeneralTab";
 import AdminEconomyTab from "../../../components/admin/rewards/AdminEconomyTab";
+import AdminArcadeTab from "../../../components/admin/rewards/AdminArcadeTab";
 import AdminCardsTab from "../../../components/admin/rewards/AdminCardsTab";
 import AdminSeriesTab from "../../../components/admin/rewards/AdminSeriesTab";
 import AdminBoxTab from "../../../components/admin/rewards/AdminBoxTab";
@@ -30,6 +31,8 @@ function renderTab(tabId, accessToken, setActiveTab) {
       return <AdminGeneralTab accessToken={accessToken} />;
     case "economy":
       return <AdminEconomyTab accessToken={accessToken} onNavigateTab={setActiveTab} />;
+    case "arcade":
+      return <AdminArcadeTab accessToken={accessToken} />;
     case "cards":
       return <AdminCardsTab accessToken={accessToken} />;
     case "series":
