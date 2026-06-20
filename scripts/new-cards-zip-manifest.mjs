@@ -207,7 +207,7 @@ export const NEW_CARDS = [
   {
     source: "החשמלאי.png",
     card_key: "leo_electrician",
-    name_he: "ליאו החשמלאי",
+    name_he: "ליאו הטכנאי",
     description_he: "ליאו מתקן חוטים ומדליק אורות!",
     series_slug: "professions",
     rarity: "regular",

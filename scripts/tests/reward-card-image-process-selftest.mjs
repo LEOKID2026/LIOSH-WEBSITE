@@ -6,7 +6,11 @@ import assert from "node:assert/strict";
 import {
   findRewardCardContentBounds,
   isRewardCardTrimPixel,
+  refineRewardCardEdgeCrop,
+  resolveRewardCardContentBounds,
   rewardCardCornerRadiusPx,
+  rewardCardEdgeCropMaxPx,
+  rewardCardEdgeDarkRatio,
   REWARD_CARD_BLACK_TRIM_THRESHOLD,
 } from "../../lib/rewards/reward-card-display.js";
 
@@ -46,12 +50,44 @@ ok("findRewardCardContentBounds trims black letterbox");
 const full = rgba(4, 4, () => [180, 90, 40, 255]);
 const fullBounds = findRewardCardContentBounds(full, 4, 4);
 assert.deepEqual(fullBounds, { x: 0, y: 0, width: 4, height: 4 });
-ok("findRewardCardContentBounds keeps full art when no trim");
+const refinedFull = refineRewardCardEdgeCrop(full, 4, 4, fullBounds);
+assert.deepEqual(refinedFull, fullBounds);
+ok("refineRewardCardEdgeCrop leaves clean cards unchanged");
 
 const empty = rgba(6, 6, () => [0, 0, 0, 255]);
 const emptyBounds = findRewardCardContentBounds(empty, 6, 6, REWARD_CARD_BLACK_TRIM_THRESHOLD);
 assert.deepEqual(emptyBounds, { x: 0, y: 0, width: 6, height: 6 });
 ok("findRewardCardContentBounds falls back to full canvas when all dark");
+
+const grayTopBar = rgba(12, 12, (x, y) => {
+  if (x === 0 || x === 11 || y === 0 || y === 11) return [0, 0, 0, 255];
+  if (y === 1) return [30, 30, 30, 255];
+  return [200, 120, 80, 255];
+});
+const grayInitial = findRewardCardContentBounds(grayTopBar, 12, 12);
+assert.deepEqual(grayInitial, { x: 1, y: 1, width: 10, height: 10 });
+assert.equal(rewardCardEdgeDarkRatio(grayTopBar, 12, grayInitial, "top"), 1);
+const grayRefined = refineRewardCardEdgeCrop(grayTopBar, 12, 12, grayInitial);
+assert.deepEqual(grayRefined, { x: 1, y: 2, width: 10, height: 9 });
+ok("refineRewardCardEdgeCrop removes near-black edge bar missed by global trim");
+
+const resolved = resolveRewardCardContentBounds(grayTopBar, 12, 12);
+assert.deepEqual(resolved, grayRefined);
+ok("resolveRewardCardContentBounds applies edge refinement");
+
+const thickEdge = rgba(460, 460, (x, y) => {
+  if (x < 10 || x >= 450 || y < 10 || y >= 450) return [0, 0, 0, 255];
+  if (x < 30 || x >= 430 || y < 30 || y >= 430) return [30, 30, 30, 255];
+  return [210, 140, 90, 255];
+});
+const thickInitial = findRewardCardContentBounds(thickEdge, 460, 460);
+assert.deepEqual(thickInitial, { x: 10, y: 10, width: 440, height: 440 });
+const maxCrop = rewardCardEdgeCropMaxPx(thickInitial.height);
+const thickRefined = refineRewardCardEdgeCrop(thickEdge, 460, 460, thickInitial);
+assert.equal(thickRefined.x - thickInitial.x, maxCrop);
+assert.equal(thickRefined.y - thickInitial.y, maxCrop);
+assert.equal(thickInitial.width - thickRefined.width, maxCrop * 2);
+ok("refineRewardCardEdgeCrop respects per-side max crop");
 
 const radiusSmall = rewardCardCornerRadiusPx(200, 300);
 assert.ok(radiusSmall >= 8 && radiusSmall <= 20);
