@@ -10,7 +10,6 @@ import {
   ADMIN_NAV_SCHOOLS,
   ADMIN_NAV_TEACHERS,
   ADMIN_NAV_REWARDS,
-  ADMIN_NAV_TEACHER_PORTAL,
   ADMIN_PLATFORM_LABEL,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
@@ -28,9 +27,12 @@ const NAV_ITEMS = [
 ];
 
 function navLinkClass(active) {
-  return active
-    ? "rounded-lg bg-amber-500/20 border border-amber-400/40 text-amber-200 font-semibold px-3 py-1.5"
-    : "rounded-lg border border-transparent text-white/70 hover:text-white hover:bg-white/5 px-3 py-1.5";
+  return [
+    "inline-flex items-center rounded-lg border px-3 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors",
+    active
+      ? "bg-amber-500/20 border-amber-400/40 text-amber-200"
+      : "border-transparent text-white/70 hover:text-white hover:bg-white/5",
+  ].join(" ");
 }
 
 export default function AdminShell({ title, header, children, showLogout = false }) {
@@ -40,20 +42,21 @@ export default function AdminShell({ title, header, children, showLogout = false
 
   return (
     <div className={`${ADMIN_PAGE_CONTAINER} text-white`} dir="rtl" lang="he">
-      <header className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-white/15 pb-4">
+      <header className="mb-6 border-b border-white/15 pb-4">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
         {header ? (
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <p className="text-xs text-white/50 mb-1">{ADMIN_PLATFORM_LABEL}</p>
             {header}
           </div>
         ) : (
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <p className="text-xs text-white/50 mb-1">{ADMIN_PLATFORM_LABEL}</p>
             <h1 className="text-xl md:text-2xl font-bold text-right">{title}</h1>
           </div>
         )}
         <nav
-          className="flex flex-wrap items-center gap-1 sm:gap-2 text-sm shrink-0 w-full sm:w-auto justify-end"
+          className="flex flex-nowrap items-center gap-1 sm:gap-2 text-sm shrink-0 overflow-x-auto max-w-full xl:justify-end"
           aria-label="ניווט מנהל מערכת"
         >
           {NAV_ITEMS.map((item) => {
@@ -64,20 +67,18 @@ export default function AdminShell({ title, header, children, showLogout = false
               </Link>
             );
           })}
-          <Link href="/teacher/dashboard" className="text-white/50 hover:underline px-2 py-1.5 text-xs">
-            {ADMIN_NAV_TEACHER_PORTAL}
-          </Link>
           {showLogout ? (
             <button
               type="button"
               onClick={() => void logout()}
               disabled={busy}
-              className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 font-semibold text-white disabled:opacity-60 min-h-[2rem]"
+              className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 font-semibold text-white disabled:opacity-60 min-h-[2rem] min-w-[4.5rem] whitespace-nowrap"
             >
               {busy ? ADMIN_LOGOUT_BUSY : ADMIN_LOGOUT}
             </button>
           ) : null}
         </nav>
+        </div>
       </header>
       {children}
     </div>

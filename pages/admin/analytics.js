@@ -1193,7 +1193,6 @@ export default function AdminAnalyticsPage() {
         showLogout
         header={
           <div>
-            <p className="text-xs text-white/50 mb-1">ניהול מערכת</p>
             <h1 className="text-xl md:text-2xl font-bold text-right">{ADMIN_ANALYTICS_TITLE}</h1>
             <p className="text-xs text-white/55 mt-1">
               מספרים ממקורות מאגר נתונים קיימים בלבד. בחרו קטגוריה ופתחו רק את הבלוקים שמעניינים אתכם.
