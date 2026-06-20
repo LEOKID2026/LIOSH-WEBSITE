@@ -6,10 +6,26 @@
 import { TELEMETRY_TRACE_SCHEMA_VERSION, validateTelemetryTraceEventV1 } from "./telemetry-contract-v1.js";
 
 const TRACE_STORE_KEY = "__parent_copilot_trace_store_v1__";
+const GLOBAL_MEMORY_KEY = "__liosh_parent_copilot_telemetry_memory_v1__";
 const DEFAULT_MAX_ENTRIES = 80;
 
-/** @type {Array<Record<string, unknown>>} */
-let memoryTraceBuffer = [];
+/**
+ * Node 20 can instantiate duplicate ESM copies of this module under circular imports.
+ * Keep the in-memory ring buffer on globalThis so runtime writes and test reads share one store.
+ * @returns {Array<Record<string, unknown>>}
+ */
+function getMemoryTraceBuffer() {
+  const g = typeof globalThis !== "undefined" && globalThis ? globalThis : {};
+  if (!Array.isArray(g[GLOBAL_MEMORY_KEY])) {
+    g[GLOBAL_MEMORY_KEY] = [];
+  }
+  return g[GLOBAL_MEMORY_KEY];
+}
+
+function setMemoryTraceBuffer(events) {
+  const g = typeof globalThis !== "undefined" && globalThis ? globalThis : {};
+  g[GLOBAL_MEMORY_KEY] = Array.isArray(events) ? [...events] : [];
+}
 
 function getLocalStorageOrNull() {
   try {
@@ -35,7 +51,7 @@ function normalizeStoreShape(raw) {
 function readStore() {
   const ls = getLocalStorageOrNull();
   if (!ls) {
-    return { schemaVersion: TELEMETRY_TRACE_SCHEMA_VERSION, events: [...memoryTraceBuffer] };
+    return { schemaVersion: TELEMETRY_TRACE_SCHEMA_VERSION, events: [...getMemoryTraceBuffer()] };
   }
   try {
     const raw = ls.getItem(TRACE_STORE_KEY);
@@ -50,7 +66,7 @@ function writeStore(store) {
   const safeStore = normalizeStoreShape(store);
   const ls = getLocalStorageOrNull();
   if (!ls) {
-    memoryTraceBuffer = [...safeStore.events];
+    setMemoryTraceBuffer(safeStore.events);
     return true;
   }
   try {
@@ -137,7 +153,7 @@ export function summarizeTelemetryEvents(events) {
 }
 
 export function resetTurnTelemetryTraceStoreForTests() {
-  memoryTraceBuffer = [];
+  setMemoryTraceBuffer([]);
   const ls = getLocalStorageOrNull();
   if (!ls) return;
   try {

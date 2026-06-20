@@ -255,6 +255,8 @@ export default function AdminCardsTab({ accessToken }) {
             draft={draft}
             setDraft={setDraft}
             series={series}
+            cardId={editId}
+            accessToken={accessToken}
             onCancel={() => setEditId(null)}
             onSave={() => void save()}
             busy={busy === editId}
@@ -264,6 +266,7 @@ export default function AdminCardsTab({ accessToken }) {
             setGrantStudentId={setGrantStudentId}
             onGrant={() => void grantCard()}
             grantBusy={busy === "grant"}
+            onImageUploaded={() => void load()}
           />
           <AdminCardRulesPanel
             accessToken={accessToken}
@@ -281,6 +284,8 @@ function CardForm({
   draft,
   setDraft,
   series,
+  cardId,
+  accessToken,
   onCancel,
   onSave,
   busy,
@@ -290,6 +295,7 @@ function CardForm({
   setGrantStudentId,
   onGrant,
   grantBusy,
+  onImageUploaded,
 }) {
   const isAchievement = draft.card_type === "achievement";
   const isEvent = draft.card_type === "event";
@@ -310,10 +316,31 @@ function CardForm({
           תיאור
           <textarea className={inputClass} rows={2} value={draft.description_he || ""} onChange={(e) => setDraft((d) => ({ ...d, description_he: e.target.value }))} />
         </label>
-        <label className="sm:col-span-2">
-          כתובת תמונה (image_url)
-          <input className={inputClass} value={draft.image_url || ""} onChange={(e) => setDraft((d) => ({ ...d, image_url: e.target.value }))} />
-        </label>
+        <div className="sm:col-span-2">
+          {cardId && accessToken ? (
+            <CardImageUpload
+              cardId={cardId}
+              accessToken={accessToken}
+              cardType={draft.card_type}
+              imageUrl={draft.image_url || ""}
+              imageAssetKey={draft.image_asset_key || ""}
+              cardKey={draft.card_key || ""}
+              seriesId={draft.series_id || ""}
+              onUploaded={(card) => {
+                setDraft((d) => ({
+                  ...d,
+                  image_url: card.image_url || "",
+                  image_asset_key: card.image_asset_key || "",
+                }));
+                onImageUploaded?.();
+              }}
+            />
+          ) : (
+            <p className="text-white/50 text-xs mt-1">
+              לאחר יצירת הקלף ניתן להעלות תמונה (PNG/WEBP). קלפים קיימים ב-public ימשיכו לעבוד ללא שינוי.
+            </p>
+          )}
+        </div>
         <label>
           סדרה
           <select className={inputClass} value={draft.series_id || ""} onChange={(e) => setDraft((d) => ({ ...d, series_id: e.target.value }))}>
@@ -443,6 +470,121 @@ function CardForm({
           {busy ? "שומר..." : saveLabel}
         </button>
       </div>
+    </div>
+  );
+}
+
+function CardImageUpload({ cardId, accessToken, cardType, imageUrl, imageAssetKey, cardKey, seriesId, onUploaded }) {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState("");
+  const [uploadBusy, setUploadBusy] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [uploadMessage, setUploadMessage] = useState("");
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setLocalPreviewUrl("");
+      return undefined;
+    }
+    const url = URL.createObjectURL(selectedFile);
+    setLocalPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [selectedFile]);
+
+  const previewSrc = localPreviewUrl || imageUrl || "";
+  const needsSeries = cardType !== "event";
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0] || null;
+    setSelectedFile(file);
+    setUploadError("");
+    setUploadMessage("");
+  };
+
+  const upload = async () => {
+    if (!selectedFile) {
+      setUploadError("בחרו קובץ תמונה.");
+      return;
+    }
+    if (!cardKey?.trim()) {
+      setUploadError("מפתח קלף (card_key) חובה לפני העלאה.");
+      return;
+    }
+    if (needsSeries && !seriesId?.trim()) {
+      setUploadError("בחרו סדרה לפני העלאת תמונה.");
+      return;
+    }
+    setUploadBusy(true);
+    setUploadError("");
+    setUploadMessage("");
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    const res = await adminAuthFetch(accessToken, `/api/admin/rewards/cards/${cardId}/image`, {
+      method: "POST",
+      body: formData,
+    });
+    const body = await res.json().catch(() => ({}));
+    setUploadBusy(false);
+    if (!res.ok) {
+      setUploadError(apiErrorMessageHe(body?.error, "העלאת תמונה נכשלה"));
+      return;
+    }
+    setUploadMessage("תמונה הועלתה ונשמרה.");
+    setSelectedFile(null);
+    if (body.card) onUploaded(body.card);
+  };
+
+  return (
+    <div className="rounded-lg border border-white/10 bg-black/20 p-3 space-y-3">
+      <p className="font-semibold text-xs">תמונת קלף</p>
+      <p className="text-white/45 text-[11px]">
+        העלאות חדשות נשמרות ב-Supabase Storage. קלפים עם נתיב יחסי ב-public ממשיכים לעבוד ללא שינוי.
+        אם שיניתם מפתח קלף או סדרה — שמרו את הקלף לפני העלאה.
+      </p>
+      {previewSrc ? (
+        <div className="flex justify-center">
+          <img
+            src={previewSrc}
+            alt="תצוגה מקדימה"
+            className="max-h-48 w-auto rounded border border-white/15 object-contain bg-black/40"
+          />
+        </div>
+      ) : (
+        <p className="text-white/40 text-xs">אין תמונה — העלו PNG או WEBP</p>
+      )}
+      {localPreviewUrl ? (
+        <p className="text-amber-200/80 text-[11px]">תצוגה מקדימה לפני שמירה — לחצו &quot;העלה תמונה&quot; לשמירה</p>
+      ) : null}
+      {imageUrl ? (
+        <p className="text-white/40 text-[11px] break-all" dir="ltr">
+          {imageUrl}
+          {imageAssetKey ? ` · storage: ${imageAssetKey}` : null}
+        </p>
+      ) : null}
+      <div className="flex flex-wrap gap-2 items-center">
+        <input
+          type="file"
+          accept="image/png,image/webp,image/jpeg"
+          onChange={handleFileChange}
+          className="text-xs text-white/70 max-w-full"
+        />
+        <button
+          type="button"
+          disabled={uploadBusy || !selectedFile}
+          onClick={() => void upload()}
+          className="rounded border border-emerald-400/40 bg-emerald-500/20 px-3 py-1 text-xs font-semibold disabled:opacity-50"
+        >
+          {uploadBusy ? "מעלה..." : imageUrl ? "החלף תמונה" : "העלה תמונה"}
+        </button>
+      </div>
+      {!cardKey?.trim() ? (
+        <p className="text-amber-200/70 text-[11px]">שמרו מפתח קלף (card_key) לפני העלאה.</p>
+      ) : null}
+      {needsSeries && !seriesId?.trim() ? (
+        <p className="text-amber-200/70 text-[11px]">בחרו סדרה לפני העלאת תמונה.</p>
+      ) : null}
+      {uploadError ? <p className="text-red-300 text-xs">{uploadError}</p> : null}
+      {uploadMessage ? <p className="text-emerald-300 text-xs">{uploadMessage}</p> : null}
     </div>
   );
 }
