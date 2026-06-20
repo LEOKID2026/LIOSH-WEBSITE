@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import { formatCoinAmountHe } from "../../../lib/rewards/rewards-ui.he.js";
+import RewardCardImage from "./RewardCardImage.jsx";
 
 const OPEN_PATH = "/api/student/rewards/surprise-box/open";
 
@@ -24,11 +25,8 @@ function SurpriseBoxCardPrizeRow({ card, T }) {
             <p className="text-sm mt-2 text-emerald-700 dark:text-emerald-300">קלף חדש באוסף!</p>
           )}
         </div>
-        <div
-          className="shrink-0 w-11 sm:w-14 aspect-[2/3] rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 border border-black/10 dark:border-white/10"
-          aria-hidden
-        >
-          <img src={imageSrc} alt="" className="w-full h-full object-cover" loading="lazy" />
+        <div className="shrink-0 w-11 sm:w-14 aspect-[2/3]" aria-hidden>
+          <RewardCardImage src={imageSrc} size="thumb" fit="cover" wrapperClassName="w-full h-full" />
         </div>
       </div>
     </li>

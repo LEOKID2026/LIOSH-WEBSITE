@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import RewardCardLockedStamp, { lockedCardDimClassName } from "./RewardCardLockedStamp.jsx";
+import RewardCardImage from "./RewardCardImage.jsx";
 import { downloadStudentRewardCardImage } from "../../../lib/rewards/download-student-card.client.js";
 
 const CARD_INFO_PILL_CLASS =
@@ -171,19 +172,17 @@ export default function StudentRewardCardPreviewModal({
               >
                 ×
               </button>
-              <img
+              <RewardCardImage
                 src={imageSrc}
                 alt={currentCard.nameHe || "תמונת קלף"}
-                className={`block max-w-full max-h-[80vh] w-auto h-auto object-contain select-none ${
-                  showLocked ? lockedCardDimClassName(false) : ""
-                }`}
+                size="modal"
+                fit="contain"
+                loading="eager"
                 draggable={false}
-              />
-              {showLocked ? (
-                <div className="absolute inset-0 pointer-events-none">
-                  <RewardCardLockedStamp modal />
-                </div>
-              ) : null}
+                imgClassName={showLocked ? lockedCardDimClassName(false) : ""}
+              >
+                {showLocked ? <RewardCardLockedStamp modal /> : null}
+              </RewardCardImage>
             </div>
 
             <button

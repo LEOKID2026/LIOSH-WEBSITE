@@ -3,7 +3,8 @@
  */
 import { Children, useState } from "react";
 import StudentRewardCardPreviewModal from "./StudentRewardCardPreviewModal.jsx";
-import RewardCardLockedStamp, { lockedCardImageClassName } from "./RewardCardLockedStamp.jsx";
+import RewardCardLockedStamp from "./RewardCardLockedStamp.jsx";
+import RewardCardImage from "./RewardCardImage.jsx";
 
 export default function StudentRewardCard({
   card,
@@ -26,21 +27,18 @@ export default function StudentRewardCard({
       >
         <button
           type="button"
-          className="relative aspect-[2/3] w-full rounded-lg overflow-hidden bg-slate-100/80 dark:bg-white/5 shrink-0 mb-2 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
+          className="relative aspect-[2/3] w-full shrink-0 mb-2 p-0 border-0 bg-transparent cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
           onClick={() => setPreviewOpen(true)}
           aria-label={`הגדלת תמונת הקלף ${card.nameHe || ""}`.trim()}
         >
-          <img
+          <RewardCardImage
             src={card.imageUrl || "/rewards/cards/placeholders/regular/default.svg"}
-            alt=""
-            className={
-              showLockedStamp
-                ? lockedCardImageClassName(false)
-                : "w-full h-full object-cover pointer-events-none"
-            }
-            loading="lazy"
-          />
-          {showLockedStamp ? <RewardCardLockedStamp /> : null}
+            size="tile"
+            fit="cover"
+            wrapperClassName="w-full h-full"
+          >
+            {showLockedStamp ? <RewardCardLockedStamp /> : null}
+          </RewardCardImage>
         </button>
         <div className="flex flex-col flex-1 gap-1 min-w-0">
           <h3 className={`font-bold text-sm leading-snug line-clamp-2 ${T.subjectTitle}`}>
@@ -114,7 +112,7 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
                   key={card.cardId}
                   type="button"
                   role="listitem"
-                  className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 rounded-md overflow-hidden bg-slate-100/80 dark:bg-white/5 p-0 border-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
+                  className="relative w-11 sm:w-14 md:w-[4.5rem] aspect-[2/3] shrink-0 p-0 border-0 bg-transparent cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70"
                   onClick={() => {
                     setPreviewIndex(index);
                     setPreviewOpen(true);
@@ -125,17 +123,9 @@ export function StudentSeriesProgressCard({ series, T, studentFullName = "" }) {
                       : `${card.nameHe} — נעול`
                   }
                 >
-                  <img
-                    src={imageSrc}
-                    alt=""
-                    className={
-                      card.owned
-                        ? "w-full h-full object-cover pointer-events-none"
-                        : lockedCardImageClassName(true)
-                    }
-                    loading="lazy"
-                  />
-                  {!card.owned ? <RewardCardLockedStamp compact /> : null}
+                  <RewardCardImage src={imageSrc} size="thumb" fit="cover" wrapperClassName="w-full h-full">
+                    {!card.owned ? <RewardCardLockedStamp compact /> : null}
+                  </RewardCardImage>
                 </button>
               );
             })}
