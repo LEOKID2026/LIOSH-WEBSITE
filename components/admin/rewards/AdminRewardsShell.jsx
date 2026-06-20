@@ -20,9 +20,12 @@ export const ADMIN_REWARDS_TABS = [
 ];
 
 function tabBtnClass(active) {
-  return active
-    ? "rounded-lg bg-amber-500/25 border border-amber-400/50 text-amber-100 font-semibold px-3 py-1.5 text-sm shrink-0"
-    : "rounded-lg border border-white/15 text-white/70 hover:text-white hover:bg-white/5 px-3 py-1.5 text-sm shrink-0";
+  return [
+    "inline-flex items-center justify-center rounded-lg border px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-semibold transition-colors text-center min-w-0 w-full xl:w-auto xl:whitespace-nowrap",
+    active
+      ? "bg-amber-500/25 border-amber-400/50 text-amber-100"
+      : "border-white/15 text-white/70 hover:text-white hover:bg-white/5",
+  ].join(" ");
 }
 
 export default function AdminRewardsShell({ activeTab, onTabChange, children }) {
@@ -52,7 +55,7 @@ export default function AdminRewardsShell({ activeTab, onTabChange, children }) 
   return (
     <div className="w-full max-w-full overflow-x-hidden">
       <nav
-        className="flex gap-2 overflow-x-auto pb-2 mb-6 -mx-1 px-1"
+        className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 sm:gap-2 w-full mb-6 xl:flex xl:flex-nowrap xl:justify-start xl:w-auto xl:gap-2"
         aria-label="לשוניות תגמולים"
       >
         {visibleTabs.map((tab) => (
