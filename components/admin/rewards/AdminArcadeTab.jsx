@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import { formatArcadeGameKeyHe } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
 
 function AdminSection({ title, children }) {
   return (
@@ -90,7 +91,7 @@ export default function AdminArcadeTab({ accessToken }) {
         return;
       }
       setSessionRow(json.row || sessionRow);
-      setMessage("נשמר — מטבעות סשן לימוד");
+      setMessage("נשמר — מטבעות מתרגול");
       void loadAll();
     } finally {
       setBusy("");
@@ -135,7 +136,7 @@ export default function AdminArcadeTab({ accessToken }) {
         ? JSON.parse(row.payout_rules_json)
         : row.payout_rules_json;
     } catch {
-      setMessage("JSON לא תקין בכללי תשלום");
+      setMessage("מבנה כללי התשלום לא תקין");
       setBusy("");
       return;
     }
@@ -174,7 +175,7 @@ export default function AdminArcadeTab({ accessToken }) {
     <div dir="rtl">
       {message ? <p className="text-emerald-300 text-sm mb-3 text-right">{message}</p> : null}
 
-      <AdminSection title="מטבעות סשן לימוד (נוסחה + תקרה יומית)">
+      <AdminSection title="מטבעות מתרגול (נוסחה + תקרה יומית)">
         {sessionRow ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
             {[
@@ -197,7 +198,7 @@ export default function AdminArcadeTab({ accessToken }) {
             ))}
           </div>
         ) : (
-          <p className="text-white/50 text-sm">אין שורה ב-DB</p>
+          <p className="text-white/50 text-sm">אין שורה במאגר הנתונים</p>
         )}
         <div className="mt-3">
           <AdminSaveButton busy={busy === "session"} onClick={() => void saveSession()} />
@@ -261,8 +262,7 @@ export default function AdminArcadeTab({ accessToken }) {
           {payoutRows.map((row) => (
             <div key={row.id} className="border-b border-white/5 pb-3">
               <p className="text-white font-semibold text-sm mb-1">
-                {row.game_key}
-                {row.arcade_games?.title ? ` — ${row.arcade_games.title}` : ""}
+                {formatArcadeGameKeyHe(row.game_key, row.arcade_games?.title)}
               </p>
               <textarea
                 className="w-full min-h-[80px] rounded border border-white/15 bg-black/30 px-2 py-1 text-white text-xs font-mono"
@@ -298,7 +298,7 @@ export default function AdminArcadeTab({ accessToken }) {
                 <AdminSaveButton
                   busy={busy === `payout-${row.id}`}
                   onClick={() => void savePayoutRow(row)}
-                  label="שמור JSON"
+                  label="שמור כללי תשלום"
                 />
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { useCallback, useId, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
-import { ADMIN_LOADING, ADMIN_LOAD_ERROR } from "../../../lib/admin-portal/admin-ui.he.js";
+import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
 
 const CATEGORIES = [
   { value: "compensation", label: "פיצוי" },
@@ -90,7 +90,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
       }
       if (!res.ok) {
         setLoadPhase("error");
-        setLoadError(ADMIN_LOAD_ERROR);
+        setLoadError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
         return;
       }
       const data = body.data || {};
@@ -149,7 +149,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
         const body = await res.json().catch(() => ({}));
         if (!res.ok) {
           setEventsPhase("error");
-          setEventsError(ADMIN_LOAD_ERROR);
+          setEventsError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
           return;
         }
         setRecentEvents(Array.isArray(body.data?.events) ? body.data.events : []);
@@ -213,7 +213,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
       );
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setSubmitError(ADMIN_LOAD_ERROR);
+        setSubmitError(apiErrorMessageHe(body?.error, ADMIN_LOAD_ERROR));
         return;
       }
       const data = body.data || {};
@@ -232,7 +232,7 @@ export default function AdminManualCoinsTab({ accessToken }) {
       }
       setModalOpen(false);
     } catch {
-      setSubmitError(ADMIN_LOAD_ERROR);
+      setSubmitError(apiErrorMessageHe(null, ADMIN_LOAD_ERROR));
     } finally {
       setSubmitBusy(false);
     }

@@ -74,7 +74,7 @@ export function SchoolTeacherAssignForm({ label, onAssign, busy, showForce = fal
       <input
         value={teacherId}
         onChange={(e) => setTeacherId(e.target.value)}
-        placeholder="מזהה מורה (UUID)"
+        placeholder="מזהה מורה"
         required
         className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 text-sm"
       />

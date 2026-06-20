@@ -65,7 +65,7 @@ export default function AllAccountsAdminTable({
     ["school_operator", "צוות / מזכירות"],
     ["unlinked", "לא מקושר"],
     ["pending_confirmation", "ממתין לאימות"],
-    ["qa_test", "QA"],
+    ["qa_test", "חשבון בדיקה"],
   ];
 
   return (

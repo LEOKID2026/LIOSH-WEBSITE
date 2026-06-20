@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import { formatRarityHe } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
 import {
   adminRewardsCardsUrl,
   filterAdminShopCatalogCards,
@@ -115,7 +116,7 @@ export default function AdminShopTab({ accessToken }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
           {["regular", "special", "rare", "gold"].map((r) => (
             <label key={r}>
-              {r}
+              {formatRarityHe(r)}
               <input
                 type="number"
                 className="block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"

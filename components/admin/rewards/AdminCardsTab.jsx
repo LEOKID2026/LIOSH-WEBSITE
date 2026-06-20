@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import { formatCardTypeHe, formatRarityHe } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
 import {
   adminRewardsCardsUrl,
   countCardsByType,
@@ -99,8 +100,8 @@ export default function AdminCardsTab({ accessToken }) {
             {cards.map((card) => (
               <tr key={card.id} className="border-b border-white/5">
                 <td className="py-2 px-2">{card.name_he || "—"}</td>
-                <td className="py-2 px-2">{card.card_type}</td>
-                <td className="py-2 px-2">{card.rarity}</td>
+                <td className="py-2 px-2">{formatCardTypeHe(card.card_type)}</td>
+                <td className="py-2 px-2">{formatRarityHe(card.rarity)}</td>
                 <td className="py-2 px-2">{card.is_active ? "כן" : "לא"}</td>
                 <td className="py-2 px-2">
                   <button

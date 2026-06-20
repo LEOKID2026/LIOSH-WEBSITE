@@ -11,6 +11,7 @@ import {
   ADMIN_LIFECYCLE_DELETE_SUCCESS,
   ADMIN_LIFECYCLE_NETWORK_ERROR,
   apiErrorMessageHe,
+  formatAdminDependencyLabelHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
 /**
@@ -82,7 +83,10 @@ export default function AdminUserDeleteSection({
         if (Array.isArray(blockers) && blockers.length) {
           setError(
             `${apiErrorMessageHe(json?.error, ADMIN_LIFECYCLE_DELETE_BLOCKED)} (${blockers
-              .map((b) => `${b.table}${b.count != null ? `: ${b.count}` : ""}`)
+              .map((b) => {
+                const label = formatAdminDependencyLabelHe(b.table);
+                return `${label}${b.count != null ? `: ${b.count}` : ""}`;
+              })
               .join(", ")})`
           );
         } else {
@@ -156,7 +160,7 @@ export default function AdminUserDeleteSection({
             <ul className="text-xs text-amber-200/90 list-disc list-inside">
               {deletePreview.blockers.map((b) => (
                 <li key={b.table}>
-                  {b.table}
+                  {formatAdminDependencyLabelHe(b.table)}
                   {b.count != null ? `: ${b.count}` : ""}
                 </li>
               ))}

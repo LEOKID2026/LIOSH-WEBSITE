@@ -888,7 +888,7 @@ export default function AdminAnalyticsPage() {
             <Panel
               panelId="reports-truth-check"
               title="בדיקת אמת מול מאגר נתונים"
-              subtitle="השוואת דוחות לנתוני DB קיימים"
+              subtitle="השוואת דוחות לנתוני מסד הנתונים הקיימים"
               summary="בדיקות מקור גולמיות"
               toggle={togglePanel}
               isOpen={isPanelOpen("reports-truth-check")}

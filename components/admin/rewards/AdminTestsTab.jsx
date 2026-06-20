@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
+import { formatApiOkHe } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
 
 export default function AdminTestsTab({ accessToken }) {
   const [result, setResult] = useState(null);
@@ -42,9 +43,12 @@ export default function AdminTestsTab({ accessToken }) {
   return (
     <div className="text-right overflow-x-hidden">
       <p className="text-xs text-white/60 mb-4">
-        בדיקות קריאה ל-API — קטלוג סגור (059/060/061): 40 חנות · 24 הישג · 12 אירוע = 76
+        בדיקות קריאה לשרת — קטלוג סגור (059/060/061): 40 חנות · 24 הישג · 12 אירוע = 76
         קלפים פעילים. ברירת מחדל: רק פעילים; ארכיון דורש{" "}
-        <code className="text-white/80">?includeInactive=true</code>.
+        <code className="text-white/80" dir="ltr">
+          ?includeInactive=true
+        </code>
+        .
       </p>
       <div className="flex flex-wrap gap-2 justify-end mb-4">
         {checks.map((c) => (
@@ -61,8 +65,8 @@ export default function AdminTestsTab({ accessToken }) {
       </div>
       {error ? <p className="text-red-300 text-sm mb-2">{error}</p> : null}
       {result ? (
-        <pre className="rounded-xl border border-white/10 bg-black/40 p-3 text-xs text-left overflow-x-auto whitespace-pre-wrap break-words max-h-96">
-          {`[${result.label}] HTTP ${result.status} · ok=${String(result.ok)}\n${result.preview}`}
+        <pre className="rounded-xl border border-white/10 bg-black/40 p-3 text-xs text-left overflow-x-auto whitespace-pre-wrap break-words max-h-96" dir="ltr">
+          {`[${result.label}] קוד תשובה ${result.status} · הצלחה=${formatApiOkHe(result.ok)}\n${result.preview}`}
         </pre>
       ) : null}
     </div>

@@ -74,7 +74,7 @@ export default function AdminAllAccountsPage() {
       <AdminShell title={ADMIN_ALL_ACCOUNTS_TITLE} showLogout>
         <div className="flex flex-wrap gap-3 justify-between items-center mb-4">
           <div className="text-sm text-white/60 space-y-1">
-            <p>תצוגה מאוחדת לכל משתמשי Auth · שורה אחת לכל חשבון</p>
+            <p>תצוגה מאוחדת לכל משתמשי האימות · שורה אחת לכל חשבון</p>
             {actorEmail ? (
               <p className="text-xs text-white/45" data-testid="all-accounts-actor-email">
                 {ADMIN_ALL_ACCOUNTS_LOGGED_IN_AS}{" "}

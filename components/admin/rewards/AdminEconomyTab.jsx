@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import {
+  formatEconomyEntityKeyHe,
+  formatEconomyFieldNameHe,
+  formatEconomySettingAreaHe,
+} from "../../../lib/admin-portal/admin-rewards-ui.he.js";
 
 const GRADE_BANDS = [
   { value: "g12", label: "כיתות א׳–ב׳" },
@@ -363,7 +368,7 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
             <AdminSaveButton busy={busy === "global"} onClick={() => void saveGlobal()} />
           </div>
         ) : (
-          <p className="text-white/50 text-sm">אין הגדרות גלובליות (הריצו migration 058).</p>
+          <p className="text-white/50 text-sm">אין הגדרות גלובליות — יש להריץ את עדכון מסד הנתונים של מערכת הקלפים.</p>
         )}
       </AdminSection>
 
@@ -417,9 +422,9 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
                     <td className="py-2 px-2 whitespace-nowrap">
                       {row.created_at ? new Date(row.created_at).toLocaleString("he-IL") : "—"}
                     </td>
-                    <td className="py-2 px-2">{row.setting_area || "—"}</td>
-                    <td className="py-2 px-2">{row.entity_key || "—"}</td>
-                    <td className="py-2 px-2">{row.field_name || "—"}</td>
+                    <td className="py-2 px-2">{formatEconomySettingAreaHe(row.setting_area)}</td>
+                    <td className="py-2 px-2">{formatEconomyEntityKeyHe(row.entity_key)}</td>
+                    <td className="py-2 px-2">{formatEconomyFieldNameHe(row.field_name)}</td>
                   </tr>
                 ))
               )}

@@ -64,10 +64,10 @@ export default function AdminGeneralTab({ accessToken }) {
             checked={systemEnabled}
             onChange={(e) => setSystemEnabled(e.target.checked)}
           />
-          מערכת קלפים פעילה (system_enabled ב-DB)
+          מערכת קלפים פעילה (במאגר הנתונים)
         </label>
         <p className="text-xs text-white/50">
-          דגל CARD_REWARDS_ENABLED ב-env חייב להיות פעיל כדי שה-UI יוצג. הגדרה זו שולטת גם ב-API.
+          דגל קלפים בשרת חייב להיות פעיל כדי שהממשק יוצג להורים וילדים. הגדרה זו שולטת גם בפעולות השרת.
         </p>
         <div className="grid sm:grid-cols-2 gap-3 text-xs">
           <label>

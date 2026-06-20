@@ -88,7 +88,7 @@ export default function AdminSeriesTab({ accessToken }) {
           <thead>
             <tr className="text-white/60 border-b border-white/10">
               <th className="py-2 px-2">שם</th>
-              <th className="py-2 px-2">slug</th>
+              <th className="py-2 px-2">כינוי מערכת</th>
               <th className="py-2 px-2">סדר</th>
               <th className="py-2 px-2">פעיל</th>
               <th className="py-2 px-2" />
@@ -168,7 +168,7 @@ export default function AdminSeriesTab({ accessToken }) {
             onChange={(e) => setNewRow((r) => ({ ...r, name_he: e.target.value }))}
           />
           <input
-            placeholder="slug"
+            placeholder="כינוי-מערכת"
             className="rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-sm"
             value={newRow.slug}
             onChange={(e) => setNewRow((r) => ({ ...r, slug: e.target.value }))}

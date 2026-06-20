@@ -22,6 +22,7 @@ import {
   ADMIN_LOADING,
   ADMIN_NAV_REWARDS,
 } from "../../../lib/admin-portal/admin-ui.he.js";
+import { ADMIN_REWARDS_PAGE_UNAVAILABLE } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
 
 function renderTab(tabId, accessToken, setActiveTab) {
   switch (tabId) {
@@ -63,7 +64,7 @@ export default function AdminRewardsPage() {
       <Layout>
         <AdminShell title={ADMIN_NAV_REWARDS} showLogout>
           <p className="text-white/60 text-sm text-right">
-            עמוד תגמולים אינו זמין — הפעל CARD_REWARDS, REWARD_ECONOMY או ENABLE_ADMIN_MANUAL_COIN_CREDIT.
+            {ADMIN_REWARDS_PAGE_UNAVAILABLE}
           </p>
         </AdminShell>
       </Layout>
