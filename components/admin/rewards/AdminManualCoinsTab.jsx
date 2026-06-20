@@ -1,6 +1,7 @@
 import { useCallback, useId, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
+import AdminModal, { AdminModalButton } from "../AdminModal.jsx";
 
 const CATEGORIES = [
   { value: "compensation", label: "פיצוי" },
@@ -381,155 +382,127 @@ export default function AdminManualCoinsTab({ accessToken }) {
       ) : null}
 
       {eventsOpen && selectedStudent ? (
-        <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`${formId}-events-title`}
-          onClick={closeEvents}
+        <AdminModal
+          open
+          onClose={closeEvents}
+          title="אירועים אחרונים"
+          titleId={`${formId}-events-title`}
+          size="lg"
+          footer={
+            <AdminModalButton onClick={closeEvents}>סגור</AdminModalButton>
+          }
         >
-          <div
-            className="w-full max-w-lg rounded-xl border border-white/15 bg-[#1a1f2e] p-4 sm:p-5 shadow-xl overflow-x-hidden max-h-[85vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 id={`${formId}-events-title`} className="text-lg font-bold mb-1 shrink-0">
-              אירועים אחרונים
-            </h3>
-            <p className="text-xs text-white/50 mb-3 shrink-0">
-              {selectedStudent.fullName || "—"} · עד 20 אירועים
-            </p>
-            <div className="overflow-y-auto overflow-x-hidden flex-1 min-h-0">
-              {eventsPhase === "loading" ? (
-                <p className="text-sm text-white/60">{ADMIN_LOADING}</p>
-              ) : eventsPhase === "error" ? (
-                <p className="text-sm text-red-300">{eventsError}</p>
-              ) : recentEvents.length === 0 ? (
-                <p className="text-sm text-white/60">אין אירועים מתועדים</p>
-              ) : (
-                <ul className="space-y-2 text-xs text-white/85">
-                  {recentEvents.map((ev, i) => (
-                    <li
-                      key={`${ev.atIso}-${i}`}
-                      className="rounded border border-white/10 bg-black/25 px-2 py-1.5 leading-relaxed break-words"
-                    >
-                      {ev.displayLineHe || `${ev.atLabelHe} — ${ev.lineHe}`}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="mt-4 flex justify-end shrink-0">
-              <button
-                type="button"
-                onClick={closeEvents}
-                className="rounded-lg border border-white/20 px-4 py-2 text-sm"
-              >
-                סגור
-              </button>
-            </div>
-          </div>
-        </div>
+          <p className="text-xs text-white/50 mb-3">
+            {selectedStudent.fullName || "—"} · עד 20 אירועים
+          </p>
+          {eventsPhase === "loading" ? (
+            <p className="text-sm text-white/60">{ADMIN_LOADING}</p>
+          ) : eventsPhase === "error" ? (
+            <p className="text-sm text-red-300">{eventsError}</p>
+          ) : recentEvents.length === 0 ? (
+            <p className="text-sm text-white/60">אין אירועים מתועדים</p>
+          ) : (
+            <ul className="space-y-2 text-xs text-white/85">
+              {recentEvents.map((ev, i) => (
+                <li
+                  key={`${ev.atIso}-${i}`}
+                  className="rounded border border-white/10 bg-black/25 px-2 py-1.5 leading-relaxed break-words"
+                >
+                  {ev.displayLineHe || `${ev.atLabelHe} — ${ev.lineHe}`}
+                </li>
+              ))}
+            </ul>
+          )}
+        </AdminModal>
       ) : null}
 
       {modalOpen && selectedStudent ? (
-        <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`${formId}-modal-title`}
-          onClick={closeModal}
+        <AdminModal
+          open
+          onClose={closeModal}
+          title="הוספת מטבעות לילד"
+          titleId={`${formId}-modal-title`}
+          size="md"
+          footer={
+            <>
+              <AdminModalButton onClick={closeModal} disabled={submitBusy}>
+                ביטול
+              </AdminModalButton>
+              <AdminModalButton
+                variant="primary"
+                onClick={() => void submitCredit()}
+                disabled={submitBusy || !amount}
+                busy={submitBusy}
+                busyLabel="מוסיף..."
+              >
+                הוסף מטבעות לילד
+              </AdminModalButton>
+            </>
+          }
         >
-          <div
-            className="w-full max-w-md rounded-xl border border-white/15 bg-[#1a1f2e] p-4 sm:p-5 shadow-xl overflow-x-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 id={`${formId}-modal-title`} className="text-lg font-bold mb-4">
-              הוספת מטבעות לילד
-            </h3>
-
-            <div className="space-y-3 text-sm">
-              <div>
-                <p className="text-white/50 mb-1">שם הילד</p>
-                <p className="font-semibold">{selectedStudent.fullName || "—"}</p>
-              </div>
-              <div>
-                <p className="text-white/50 mb-1">יתרה נוכחית</p>
-                <p className="font-semibold text-amber-200">
-                  {formatBalance(selectedStudent.balance)} מטבעות
-                </p>
-              </div>
-
-              <div>
-                <label htmlFor={`${formId}-amount`} className="block font-semibold mb-1">
-                  כמות מטבעות
-                </label>
-                <input
-                  id={`${formId}-amount`}
-                  type="number"
-                  min="1"
-                  step="1"
-                  inputMode="numeric"
-                  className="w-full rounded-lg bg-black/30 border border-white/15 px-3 py-2 text-white"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor={`${formId}-category`} className="block font-semibold mb-1">
-                  סיבה
-                </label>
-                <select
-                  id={`${formId}-category`}
-                  className="w-full rounded-lg bg-black/30 border border-white/15 px-3 py-2 text-white"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c.value} value={c.value}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor={`${formId}-note`} className="block font-semibold mb-1">
-                  הערה פנימית
-                </label>
-                <textarea
-                  id={`${formId}-note`}
-                  rows={3}
-                  className="w-full rounded-lg bg-black/30 border border-white/15 px-3 py-2 text-white resize-y min-h-[4rem]"
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="אופציונלי — לתיעוד פנימי"
-                />
-              </div>
+          <div className="space-y-3 text-sm">
+            <div>
+              <p className="text-white/50 mb-1">שם הילד</p>
+              <p className="font-semibold">{selectedStudent.fullName || "—"}</p>
+            </div>
+            <div>
+              <p className="text-white/50 mb-1">יתרה נוכחית</p>
+              <p className="font-semibold text-amber-200">
+                {formatBalance(selectedStudent.balance)} מטבעות
+              </p>
             </div>
 
-            {submitError ? <p className="text-red-300 text-sm mt-3">{submitError}</p> : null}
+            <div>
+              <label htmlFor={`${formId}-amount`} className="block font-semibold mb-1">
+                כמות מטבעות
+              </label>
+              <input
+                id={`${formId}-amount`}
+                type="number"
+                min="1"
+                step="1"
+                inputMode="numeric"
+                className="w-full rounded-lg bg-black/30 border border-white/15 px-3 py-2 text-white"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </div>
 
-            <div className="flex flex-col-reverse sm:flex-row gap-2 mt-5 justify-end">
-              <button
-                type="button"
-                disabled={submitBusy}
-                onClick={closeModal}
-                className="rounded-lg border border-white/20 px-4 py-2 text-sm disabled:opacity-50"
+            <div>
+              <label htmlFor={`${formId}-category`} className="block font-semibold mb-1">
+                סיבה
+              </label>
+              <select
+                id={`${formId}-category`}
+                className="w-full rounded-lg bg-black/30 border border-white/15 px-3 py-2 text-white"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
               >
-                ביטול
-              </button>
-              <button
-                type="button"
-                disabled={submitBusy || !amount}
-                onClick={() => void submitCredit()}
-                className="rounded-lg bg-emerald-600/50 border border-emerald-400/50 px-4 py-2 text-sm font-semibold disabled:opacity-50"
-              >
-                {submitBusy ? "מוסיף..." : "הוסף מטבעות לילד"}
-              </button>
+                {CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor={`${formId}-note`} className="block font-semibold mb-1">
+                הערה פנימית
+              </label>
+              <textarea
+                id={`${formId}-note`}
+                rows={3}
+                className="w-full rounded-lg bg-black/30 border border-white/15 px-3 py-2 text-white resize-y min-h-[4rem]"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="אופציונלי — לתיעוד פנימי"
+              />
             </div>
           </div>
-        </div>
+
+          {submitError ? <p className="text-red-300 text-sm mt-3">{submitError}</p> : null}
+        </AdminModal>
       ) : null}
     </div>
   );

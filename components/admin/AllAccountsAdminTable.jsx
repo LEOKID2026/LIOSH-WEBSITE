@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import AdminUserDeleteSection from "./AdminUserDeleteSection.jsx";
 import {
-  ADMIN_ALL_ACCOUNTS_DELETE_EXPAND,
   ADMIN_COL_ACTIONS,
   ADMIN_COL_CLASSIFICATION,
   ADMIN_COL_CONFIRMED,
@@ -38,7 +37,6 @@ export default function AllAccountsAdminTable({
 }) {
   const [query, setQuery] = useState("");
   const [classFilter, setClassFilter] = useState("all");
-  const [deleteOpenFor, setDeleteOpenFor] = useState(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -120,8 +118,6 @@ export default function AllAccountsAdminTable({
                 row={row}
                 accessToken={accessToken}
                 fullDeleteConfigured={fullDeleteConfigured}
-                deleteOpenFor={deleteOpenFor}
-                setDeleteOpenFor={setDeleteOpenFor}
                 onDeleted={onDeleted}
                 variant="desktop"
               />
@@ -137,8 +133,6 @@ export default function AllAccountsAdminTable({
             row={row}
             accessToken={accessToken}
             fullDeleteConfigured={fullDeleteConfigured}
-            deleteOpenFor={deleteOpenFor}
-            setDeleteOpenFor={setDeleteOpenFor}
             onDeleted={onDeleted}
             variant="mobile"
           />
@@ -152,14 +146,9 @@ function AllAccountsRow({
   row,
   accessToken,
   fullDeleteConfigured,
-  deleteOpenFor,
-  setDeleteOpenFor,
   onDeleted,
   variant,
 }) {
-  const deleteOpen = deleteOpenFor === row.userId;
-  const canShowDeleteTrigger = row.deletable && fullDeleteConfigured && !deleteOpen;
-
   const actions = (
     <div className="flex flex-wrap gap-2 justify-end items-center">
       {row.manageUrl ? (
@@ -167,15 +156,15 @@ function AllAccountsRow({
           {ADMIN_MANAGE}
         </Link>
       ) : null}
-      {canShowDeleteTrigger ? (
-        <button
-          type="button"
-          onClick={() => setDeleteOpenFor(row.userId)}
-          className="text-red-300 hover:underline text-sm"
-          data-testid="all-accounts-delete-trigger"
-        >
-          {ADMIN_ALL_ACCOUNTS_DELETE_EXPAND}
-        </button>
+      {row.deletable && fullDeleteConfigured ? (
+        <AdminUserDeleteSection
+          accessToken={accessToken}
+          userId={row.userId}
+          targetEmail={row.email}
+          variant="compact"
+          triggerTestId="all-accounts-delete-trigger"
+          onDeleted={onDeleted}
+        />
       ) : null}
     </div>
   );
@@ -200,64 +189,34 @@ function AllAccountsRow({
         </p>
         <p className="text-xs text-white/50">{row.linkedSummary}</p>
         {actions}
-        {deleteOpen ? (
-          <AdminUserDeleteSection
-            accessToken={accessToken}
-            userId={row.userId}
-            targetEmail={row.email}
-            variant="compact"
-            onDeleted={() => {
-              setDeleteOpenFor(null);
-              onDeleted?.();
-            }}
-          />
-        ) : null}
       </article>
     );
   }
 
   return (
-    <>
-      <tr className="border-t border-white/10 hover:bg-white/5" data-testid="all-accounts-row" data-user-id={row.userId}>
-        <td className="px-3 py-3 break-all" dir="ltr">
-          {row.email || "—"}
-        </td>
-        <td className="px-3 py-3 text-xs font-mono text-white/50" dir="ltr">
-          {row.userId}
-        </td>
-        <td className="px-3 py-3 text-xs">
-          {accountClassificationsLabelHe(row.classifications)}
-        </td>
-        <td className="px-3 py-3">{row.emailConfirmed ? ADMIN_YES : ADMIN_NO}</td>
-        <td className="px-3 py-3">{entitlementStatusLabelHe(row.statusSummary)}</td>
-        <td className="px-3 py-3">{row.frozen ? ADMIN_YES : ADMIN_NO}</td>
-        <td className="px-3 py-3 text-xs text-white/70 max-w-[12rem]">{row.linkedSummary}</td>
-        <td className="px-3 py-3 text-xs text-white/50 whitespace-nowrap">
-          {adminFormatDateHe(row.createdAt)}
-        </td>
-        <td className="px-3 py-3 text-xs text-white/50 whitespace-nowrap">
-          {adminFormatDateHe(row.lastSignInAt)}
-        </td>
-        <td className="px-3 py-3">{row.isProtected ? ADMIN_YES : ADMIN_NO}</td>
-        <td className="px-3 py-3">{row.deletable ? ADMIN_YES : ADMIN_NO}</td>
-        <td className="px-3 py-3">{actions}</td>
-      </tr>
-      {deleteOpen ? (
-        <tr className="border-t border-red-400/20 bg-red-950/10">
-          <td colSpan={12} className="px-3 py-3">
-            <AdminUserDeleteSection
-              accessToken={accessToken}
-              userId={row.userId}
-              targetEmail={row.email}
-              variant="compact"
-              onDeleted={() => {
-                setDeleteOpenFor(null);
-                onDeleted?.();
-              }}
-            />
-          </td>
-        </tr>
-      ) : null}
-    </>
+    <tr className="border-t border-white/10 hover:bg-white/5" data-testid="all-accounts-row" data-user-id={row.userId}>
+      <td className="px-3 py-3 break-all" dir="ltr">
+        {row.email || "—"}
+      </td>
+      <td className="px-3 py-3 text-xs font-mono text-white/50" dir="ltr">
+        {row.userId}
+      </td>
+      <td className="px-3 py-3 text-xs">
+        {accountClassificationsLabelHe(row.classifications)}
+      </td>
+      <td className="px-3 py-3">{row.emailConfirmed ? ADMIN_YES : ADMIN_NO}</td>
+      <td className="px-3 py-3">{entitlementStatusLabelHe(row.statusSummary)}</td>
+      <td className="px-3 py-3">{row.frozen ? ADMIN_YES : ADMIN_NO}</td>
+      <td className="px-3 py-3 text-xs text-white/70 max-w-[12rem]">{row.linkedSummary}</td>
+      <td className="px-3 py-3 text-xs text-white/50 whitespace-nowrap">
+        {adminFormatDateHe(row.createdAt)}
+      </td>
+      <td className="px-3 py-3 text-xs text-white/50 whitespace-nowrap">
+        {adminFormatDateHe(row.lastSignInAt)}
+      </td>
+      <td className="px-3 py-3">{row.isProtected ? ADMIN_YES : ADMIN_NO}</td>
+      <td className="px-3 py-3">{row.deletable ? ADMIN_YES : ADMIN_NO}</td>
+      <td className="px-3 py-3">{actions}</td>
+    </tr>
   );
 }

@@ -2,6 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
 import { formatArcadeGameKeyHe } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
+import AdminModal, { AdminModalButton } from "../AdminModal.jsx";
+
+const inputClass =
+  "block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-sm";
 
 function AdminSection({ title, children }) {
   return (
@@ -25,6 +29,72 @@ function AdminSaveButton({ busy, onClick, label = "שמירה" }) {
   );
 }
 
+function EntryCostFormFields({ draft, setDraft }) {
+  return (
+    <div className="space-y-3 text-sm">
+      <label className="block">
+        סכום
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.amount ?? ""}
+          onChange={(e) => setDraft((d) => ({ ...d, amount: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        תווית
+        <input
+          type="text"
+          className={inputClass}
+          value={draft.label_he || ""}
+          onChange={(e) => setDraft((d) => ({ ...d, label_he: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        סדר תצוגה
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.display_order ?? 0}
+          onChange={(e) => setDraft((d) => ({ ...d, display_order: e.target.value }))}
+        />
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={draft.is_active !== false}
+          onChange={(e) => setDraft((d) => ({ ...d, is_active: e.target.checked }))}
+        />
+        פעיל
+      </label>
+    </div>
+  );
+}
+
+function PayoutRulesFormFields({ draft, setDraft }) {
+  return (
+    <div className="space-y-3 text-sm">
+      <label className="block">
+        כללי תשלום (JSON)
+        <textarea
+          className={`${inputClass} min-h-[120px] font-mono text-xs`}
+          dir="ltr"
+          value={draft.payout_rules_json ?? ""}
+          onChange={(e) => setDraft((d) => ({ ...d, payout_rules_json: e.target.value }))}
+        />
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={draft.is_active !== false}
+          onChange={(e) => setDraft((d) => ({ ...d, is_active: e.target.checked }))}
+        />
+        פעיל
+      </label>
+    </div>
+  );
+}
+
 export default function AdminArcadeTab({ accessToken }) {
   const [sessionRow, setSessionRow] = useState(null);
   const [entryRows, setEntryRows] = useState([]);
@@ -33,6 +103,9 @@ export default function AdminArcadeTab({ accessToken }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
   const [message, setMessage] = useState("");
+  const [editKind, setEditKind] = useState(null);
+  const [editId, setEditId] = useState(null);
+  const [editDraft, setEditDraft] = useState({});
 
   const loadAll = useCallback(async () => {
     if (!accessToken) return;
@@ -68,6 +141,37 @@ export default function AdminArcadeTab({ accessToken }) {
     void loadAll();
   }, [loadAll]);
 
+  const closeEdit = () => {
+    setEditKind(null);
+    setEditId(null);
+    setEditDraft({});
+  };
+
+  const startEntryEdit = (row) => {
+    setMessage("");
+    setEditKind("entry");
+    setEditId(row.id);
+    setEditDraft({
+      amount: row.amount ?? "",
+      label_he: row.label_he || "",
+      display_order: row.display_order ?? 0,
+      is_active: row.is_active !== false,
+    });
+  };
+
+  const startPayoutEdit = (row) => {
+    setMessage("");
+    setEditKind("payout");
+    setEditId(row.id);
+    setEditDraft({
+      payout_rules_json:
+        typeof row.payout_rules_json === "string"
+          ? row.payout_rules_json
+          : JSON.stringify(row.payout_rules_json, null, 2),
+      is_active: row.is_active !== false,
+    });
+  };
+
   async function saveSession() {
     if (!sessionRow?.id) return;
     setBusy("session");
@@ -98,20 +202,21 @@ export default function AdminArcadeTab({ accessToken }) {
     }
   }
 
-  async function saveEntryRow(row) {
-    setBusy(`entry-${row.id}`);
+  async function saveEntryEdit() {
+    if (!editId || editKind !== "entry") return;
+    setBusy(`entry-${editId}`);
     setMessage("");
     try {
       const res = await adminAuthFetch(accessToken, "/api/admin/rewards/economy/entry-costs", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: row.id,
+          id: editId,
           patch: {
-            amount: Number(row.amount),
-            label_he: row.label_he,
-            display_order: Number(row.display_order),
-            is_active: row.is_active,
+            amount: Number(editDraft.amount),
+            label_he: editDraft.label_he,
+            display_order: Number(editDraft.display_order),
+            is_active: editDraft.is_active,
           },
         }),
       });
@@ -120,21 +225,21 @@ export default function AdminArcadeTab({ accessToken }) {
         setMessage(apiErrorMessageHe(json?.error, "שמירה נכשלה"));
         return;
       }
-      setMessage(`נשמר — עלות כניסה ${row.amount}`);
+      setMessage(`נשמר — עלות כניסה ${editDraft.amount}`);
+      closeEdit();
       void loadAll();
     } finally {
       setBusy("");
     }
   }
 
-  async function savePayoutRow(row) {
-    setBusy(`payout-${row.id}`);
+  async function savePayoutEdit() {
+    if (!editId || editKind !== "payout") return;
+    setBusy(`payout-${editId}`);
     setMessage("");
     let parsed;
     try {
-      parsed = typeof row.payout_rules_json === "string"
-        ? JSON.parse(row.payout_rules_json)
-        : row.payout_rules_json;
+      parsed = JSON.parse(editDraft.payout_rules_json);
     } catch {
       setMessage("מבנה כללי התשלום לא תקין");
       setBusy("");
@@ -145,10 +250,10 @@ export default function AdminArcadeTab({ accessToken }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: row.id,
+          id: editId,
           patch: {
             payout_rules_json: parsed,
-            is_active: row.is_active,
+            is_active: editDraft.is_active,
           },
         }),
       });
@@ -157,7 +262,9 @@ export default function AdminArcadeTab({ accessToken }) {
         setMessage(apiErrorMessageHe(json?.error, "שמירה נכשלה"));
         return;
       }
-      setMessage(`נשמר — ${row.game_key}`);
+      const row = payoutRows.find((r) => r.id === editId);
+      setMessage(`נשמר — ${row?.game_key || "משחק"}`);
+      closeEdit();
       void loadAll();
     } finally {
       setBusy("");
@@ -171,9 +278,30 @@ export default function AdminArcadeTab({ accessToken }) {
     return <p className="text-red-300 text-sm text-right">{error}</p>;
   }
 
+  const editingEntry = editKind === "entry" ? entryRows.find((r) => r.id === editId) : null;
+  const editingPayout = editKind === "payout" ? payoutRows.find((r) => r.id === editId) : null;
+  const editBusy =
+    editKind === "entry" ? busy === `entry-${editId}` : editKind === "payout" ? busy === `payout-${editId}` : false;
+  const modalMessage = message && editId;
+  const pageMessage = message && !editId;
+
+  const editTitle =
+    editKind === "entry"
+      ? editingEntry?.label_he
+        ? `עריכת עלות כניסה: ${editingEntry.label_he}`
+        : "עריכת עלות כניסה"
+      : editingPayout
+        ? `עריכת תשלום: ${formatArcadeGameKeyHe(editingPayout.game_key, editingPayout.arcade_games?.title)}`
+        : "עריכת כללי תשלום";
+
+  const handleSaveEdit = () => {
+    if (editKind === "entry") void saveEntryEdit();
+    else if (editKind === "payout") void savePayoutEdit();
+  };
+
   return (
     <div dir="rtl">
-      {message ? <p className="text-emerald-300 text-sm mb-3 text-right">{message}</p> : null}
+      {pageMessage ? <p className="text-emerald-300 text-sm mb-3 text-right">{pageMessage}</p> : null}
 
       <AdminSection title="מטבעות מתרגול (נוסחה + תקרה יומית)">
         {sessionRow ? (
@@ -206,105 +334,104 @@ export default function AdminArcadeTab({ accessToken }) {
       </AdminSection>
 
       <AdminSection title="עלויות כניסה לארקייד">
-        <div className="space-y-2">
-          {entryRows.map((row) => (
-            <div key={row.id} className="flex flex-wrap gap-2 items-end border-b border-white/5 pb-2">
-              <label className="text-xs text-white/60">
-                סכום
-                <input
-                  type="number"
-                  className="block mt-1 w-24 rounded border border-white/15 bg-black/30 px-2 py-1 text-white"
-                  value={row.amount}
-                  onChange={(e) =>
-                    setEntryRows((rows) =>
-                      rows.map((r) => (r.id === row.id ? { ...r, amount: e.target.value } : r))
-                    )
-                  }
-                />
-              </label>
-              <label className="text-xs text-white/60 flex-1 min-w-[120px]">
-                תווית
-                <input
-                  type="text"
-                  className="block mt-1 w-full rounded border border-white/15 bg-black/30 px-2 py-1 text-white"
-                  value={row.label_he || ""}
-                  onChange={(e) =>
-                    setEntryRows((rows) =>
-                      rows.map((r) => (r.id === row.id ? { ...r, label_he: e.target.value } : r))
-                    )
-                  }
-                />
-              </label>
-              <label className="text-xs text-white/60 flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={row.is_active !== false}
-                  onChange={(e) =>
-                    setEntryRows((rows) =>
-                      rows.map((r) => (r.id === row.id ? { ...r, is_active: e.target.checked } : r))
-                    )
-                  }
-                />
-                פעיל
-              </label>
-              <AdminSaveButton
-                busy={busy === `entry-${row.id}`}
-                onClick={() => void saveEntryRow(row)}
-                label="שמור"
-              />
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs text-right min-w-[420px]">
+            <thead>
+              <tr className="text-white/60 border-b border-white/10">
+                <th className="py-2 px-2">סכום</th>
+                <th className="py-2 px-2">תווית</th>
+                <th className="py-2 px-2">פעיל</th>
+                <th className="py-2 px-2" />
+              </tr>
+            </thead>
+            <tbody>
+              {entryRows.map((row) => (
+                <tr key={row.id} className="border-b border-white/5">
+                  <td className="py-2 px-2">{row.amount ?? "—"}</td>
+                  <td className="py-2 px-2">{row.label_he || "—"}</td>
+                  <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
+                  <td className="py-2 px-2">
+                    <button
+                      type="button"
+                      onClick={() => startEntryEdit(row)}
+                      className="rounded border border-white/15 px-2 py-1 hover:bg-white/5"
+                    >
+                      עריכה
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </AdminSection>
 
       <AdminSection title="כללי תשלום משחקי ארקייד">
-        <div className="space-y-3">
-          {payoutRows.map((row) => (
-            <div key={row.id} className="border-b border-white/5 pb-3">
-              <p className="text-white font-semibold text-sm mb-1">
-                {formatArcadeGameKeyHe(row.game_key, row.arcade_games?.title)}
-              </p>
-              <textarea
-                className="w-full min-h-[80px] rounded border border-white/15 bg-black/30 px-2 py-1 text-white text-xs font-mono"
-                dir="ltr"
-                value={
-                  typeof row.payout_rules_json === "string"
-                    ? row.payout_rules_json
-                    : JSON.stringify(row.payout_rules_json, null, 2)
-                }
-                onChange={(e) =>
-                  setPayoutRows((rows) =>
-                    rows.map((r) =>
-                      r.id === row.id ? { ...r, payout_rules_json: e.target.value } : r
-                    )
-                  )
-                }
-              />
-              <div className="mt-2 flex items-center gap-3">
-                <label className="text-xs text-white/60 flex items-center gap-1">
-                  <input
-                    type="checkbox"
-                    checked={row.is_active !== false}
-                    onChange={(e) =>
-                      setPayoutRows((rows) =>
-                        rows.map((r) =>
-                          r.id === row.id ? { ...r, is_active: e.target.checked } : r
-                        )
-                      )
-                    }
-                  />
-                  פעיל
-                </label>
-                <AdminSaveButton
-                  busy={busy === `payout-${row.id}`}
-                  onClick={() => void savePayoutRow(row)}
-                  label="שמור כללי תשלום"
-                />
-              </div>
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs text-right min-w-[420px]">
+            <thead>
+              <tr className="text-white/60 border-b border-white/10">
+                <th className="py-2 px-2">משחק</th>
+                <th className="py-2 px-2">פעיל</th>
+                <th className="py-2 px-2" />
+              </tr>
+            </thead>
+            <tbody>
+              {payoutRows.map((row) => (
+                <tr key={row.id} className="border-b border-white/5">
+                  <td className="py-2 px-2">
+                    {formatArcadeGameKeyHe(row.game_key, row.arcade_games?.title)}
+                  </td>
+                  <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
+                  <td className="py-2 px-2">
+                    <button
+                      type="button"
+                      onClick={() => startPayoutEdit(row)}
+                      className="rounded border border-white/15 px-2 py-1 hover:bg-white/5"
+                    >
+                      עריכה
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </AdminSection>
+
+      <AdminModal
+        open={!!editId}
+        onClose={closeEdit}
+        title={editTitle}
+        size={editKind === "payout" ? "lg" : "md"}
+        footer={
+          <>
+            <AdminModalButton onClick={closeEdit} disabled={editBusy}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant="primary"
+              onClick={handleSaveEdit}
+              disabled={editBusy}
+              busy={editBusy}
+              busyLabel="שומר..."
+            >
+              שמירה
+            </AdminModalButton>
+          </>
+        }
+      >
+        {modalMessage ? (
+          <p className={`text-sm mb-3 ${message.includes("נכשל") || message.includes("לא תקין") ? "text-red-300" : "text-emerald-300"}`}>
+            {message}
+          </p>
+        ) : null}
+        {editKind === "entry" ? (
+          <EntryCostFormFields draft={editDraft} setDraft={setEditDraft} />
+        ) : editKind === "payout" ? (
+          <PayoutRulesFormFields draft={editDraft} setDraft={setEditDraft} />
+        ) : null}
+      </AdminModal>
     </div>
   );
 }

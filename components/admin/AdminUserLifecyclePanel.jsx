@@ -23,6 +23,7 @@ import {
   ADMIN_REJECT_ACTION,
 } from "../../lib/auth/auth-registration.he.js";
 import AdminUserDeleteSection from "./AdminUserDeleteSection.jsx";
+import AdminModal, { AdminModalButton } from "./AdminModal.jsx";
 
 function statusBadgeClass(status) {
   if (status === "active") return "bg-emerald-500/20 text-emerald-200 border-emerald-400/30";
@@ -61,6 +62,7 @@ export default function AdminUserLifecyclePanel({
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [revokeConfirmOpen, setRevokeConfirmOpen] = useState(false);
 
   const load = useCallback(async () => {
     if (!accessToken || !userId) return;
@@ -94,7 +96,6 @@ export default function AdminUserLifecyclePanel({
 
   const runAction = async (action) => {
     if (!accessToken) return;
-    if (action === "revoke" && !window.confirm(ADMIN_LIFECYCLE_CONFIRM_REVOKE)) return;
 
     setBusy(action);
     setError("");
@@ -118,6 +119,7 @@ export default function AdminUserLifecyclePanel({
       if (json?.data?.passwordSetup?.ok) {
         setMessage("הבקשה אושרה · קישור להגדרת סיסמה נשלח");
       }
+      setRevokeConfirmOpen(false);
       onChanged?.();
       await load();
     } catch {
@@ -230,11 +232,11 @@ export default function AdminUserLifecyclePanel({
               <button
                 type="button"
                 disabled={!!busy}
-                onClick={() => void runAction("revoke")}
+                onClick={() => setRevokeConfirmOpen(true)}
                 className="rounded-lg border border-red-400/40 bg-red-500/15 hover:bg-red-500/25 px-3 py-1.5 text-sm disabled:opacity-50"
                 data-testid="lifecycle-revoke"
               >
-                {busy === "revoke" ? ADMIN_LIFECYCLE_BUSY : ADMIN_LIFECYCLE_REVOKE}
+                {ADMIN_LIFECYCLE_REVOKE}
               </button>
             ) : null}
           </div>
@@ -249,6 +251,33 @@ export default function AdminUserLifecyclePanel({
 
           {message ? <p className="text-emerald-300 text-sm mt-3">{message}</p> : null}
           {error ? <p className="text-red-300 text-sm mt-3">{error}</p> : null}
+
+          <AdminModal
+            open={revokeConfirmOpen}
+            onClose={() => {
+              if (!busy) setRevokeConfirmOpen(false);
+            }}
+            title={ADMIN_LIFECYCLE_REVOKE}
+            size="sm"
+            footer={
+              <>
+                <AdminModalButton onClick={() => setRevokeConfirmOpen(false)} disabled={!!busy}>
+                  ביטול
+                </AdminModalButton>
+                <AdminModalButton
+                  variant="danger"
+                  onClick={() => void runAction("revoke")}
+                  disabled={!!busy}
+                  busy={busy === "revoke"}
+                  busyLabel={ADMIN_LIFECYCLE_BUSY}
+                >
+                  {ADMIN_LIFECYCLE_REVOKE}
+                </AdminModalButton>
+              </>
+            }
+          >
+            <p className="text-sm text-white/80">{ADMIN_LIFECYCLE_CONFIRM_REVOKE}</p>
+          </AdminModal>
         </>
       )}
     </section>

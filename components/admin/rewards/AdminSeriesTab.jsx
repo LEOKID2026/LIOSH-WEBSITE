@@ -2,7 +2,54 @@ import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
 import { adminRewardsSeriesUrl } from "../../../lib/admin-portal/admin-rewards-catalog.client.js";
+import AdminModal, { AdminModalButton } from "../AdminModal.jsx";
 import AdminCatalogArchiveToggle from "./AdminCatalogArchiveToggle.jsx";
+
+const inputClass =
+  "block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-sm";
+
+const EMPTY_SERIES = { name_he: "", slug: "", display_order: 0, is_active: true };
+
+function SeriesFormFields({ draft, setDraft }) {
+  return (
+    <div className="space-y-3 text-sm">
+      <label className="block">
+        שם בעברית
+        <input
+          className={inputClass}
+          value={draft.name_he || ""}
+          onChange={(e) => setDraft((r) => ({ ...r, name_he: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        כינוי מערכת (slug)
+        <input
+          className={inputClass}
+          dir="ltr"
+          value={draft.slug || ""}
+          onChange={(e) => setDraft((r) => ({ ...r, slug: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        סדר תצוגה
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.display_order ?? 0}
+          onChange={(e) => setDraft((r) => ({ ...r, display_order: e.target.value }))}
+        />
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={draft.is_active !== false}
+          onChange={(e) => setDraft((r) => ({ ...r, is_active: e.target.checked }))}
+        />
+        פעיל
+      </label>
+    </div>
+  );
+}
 
 export default function AdminSeriesTab({ accessToken }) {
   const [series, setSeries] = useState([]);
@@ -11,7 +58,10 @@ export default function AdminSeriesTab({ accessToken }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
   const [message, setMessage] = useState("");
-  const [newRow, setNewRow] = useState({ name_he: "", slug: "", display_order: 0, is_active: true });
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createDraft, setCreateDraft] = useState(EMPTY_SERIES);
+  const [editId, setEditId] = useState(null);
+  const [editDraft, setEditDraft] = useState(EMPTY_SERIES);
 
   const load = useCallback(async () => {
     if (!accessToken) return;
@@ -31,16 +81,38 @@ export default function AdminSeriesTab({ accessToken }) {
     void load();
   }, [load]);
 
-  const saveRow = async (row) => {
-    setBusy(row.id);
+  const closeCreate = () => {
+    setCreateOpen(false);
+    setCreateDraft(EMPTY_SERIES);
+  };
+
+  const closeEdit = () => {
+    setEditId(null);
+    setEditDraft(EMPTY_SERIES);
+  };
+
+  const startEdit = (row) => {
     setMessage("");
-    const res = await adminAuthFetch(accessToken, `/api/admin/rewards/series/${row.id}`, {
+    setEditId(row.id);
+    setEditDraft({
+      name_he: row.name_he || "",
+      slug: row.slug || "",
+      display_order: row.display_order ?? 0,
+      is_active: row.is_active !== false,
+    });
+  };
+
+  const saveEdit = async () => {
+    if (!editId) return;
+    setBusy(editId);
+    setMessage("");
+    const res = await adminAuthFetch(accessToken, `/api/admin/rewards/series/${editId}`, {
       method: "PUT",
       body: JSON.stringify({
-        name_he: row.name_he,
-        slug: row.slug,
-        display_order: Number(row.display_order),
-        is_active: row.is_active !== false,
+        name_he: editDraft.name_he,
+        slug: editDraft.slug,
+        display_order: Number(editDraft.display_order),
+        is_active: editDraft.is_active !== false,
       }),
     });
     const body = await res.json().catch(() => ({}));
@@ -50,6 +122,7 @@ export default function AdminSeriesTab({ accessToken }) {
       return;
     }
     setMessage("סדרה נשמרה.");
+    closeEdit();
     void load();
   };
 
@@ -58,7 +131,7 @@ export default function AdminSeriesTab({ accessToken }) {
     setMessage("");
     const res = await adminAuthFetch(accessToken, "/api/admin/rewards/series", {
       method: "POST",
-      body: JSON.stringify(newRow),
+      body: JSON.stringify(createDraft),
     });
     const body = await res.json().catch(() => ({}));
     setBusy("");
@@ -67,12 +140,17 @@ export default function AdminSeriesTab({ accessToken }) {
       return;
     }
     setMessage("סדרה חדשה נוצרה.");
-    setNewRow({ name_he: "", slug: "", display_order: 0, is_active: true });
+    closeCreate();
     void load();
   };
 
   if (phase === "loading") return <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>;
   if (phase === "error") return <p className="text-red-300 text-sm text-right">{error}</p>;
+
+  const editingRow = series.find((s) => s.id === editId);
+  const editTitle = editingRow?.name_he ? `עריכת סדרה: ${editingRow.name_he}` : "עריכת סדרה";
+  const modalMessage = message && (createOpen || editId);
+  const pageMessage = message && !createOpen && !editId;
 
   return (
     <div className="text-right overflow-x-hidden">
@@ -80,10 +158,24 @@ export default function AdminSeriesTab({ accessToken }) {
         <p className="text-xs text-white/60">
           מוצגות {series.length} סדרות{!includeInactive ? " (פעילות בלבד)" : " (כולל ארכיון)"}
         </p>
-        <AdminCatalogArchiveToggle checked={includeInactive} onChange={setIncludeInactive} />
+        <div className="flex flex-wrap gap-2 items-center">
+          <button
+            type="button"
+            onClick={() => {
+              setMessage("");
+              setCreateOpen(true);
+              setEditId(null);
+            }}
+            className="rounded bg-emerald-500/20 border border-emerald-400/30 px-3 py-1 text-xs font-semibold"
+          >
+            סדרה חדשה
+          </button>
+          <AdminCatalogArchiveToggle checked={includeInactive} onChange={setIncludeInactive} />
+        </div>
       </div>
-      {message ? <p className="text-sm text-emerald-300 mb-3">{message}</p> : null}
-      <div className="overflow-x-auto mb-4">
+      {pageMessage ? <p className="text-sm text-emerald-300 mb-3">{pageMessage}</p> : null}
+
+      <div className="overflow-x-auto">
         <table className="w-full text-xs text-right min-w-[520px]">
           <thead>
             <tr className="text-white/60 border-b border-white/10">
@@ -97,59 +189,19 @@ export default function AdminSeriesTab({ accessToken }) {
           <tbody>
             {series.map((row) => (
               <tr key={row.id} className="border-b border-white/5">
-                <td className="py-2 px-2">
-                  <input
-                    className="w-full rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                    value={row.name_he || ""}
-                    onChange={(e) =>
-                      setSeries((prev) =>
-                        prev.map((s) => (s.id === row.id ? { ...s, name_he: e.target.value } : s))
-                      )
-                    }
-                  />
+                <td className="py-2 px-2">{row.name_he || "—"}</td>
+                <td className="py-2 px-2" dir="ltr">
+                  {row.slug || "—"}
                 </td>
-                <td className="py-2 px-2">
-                  <input
-                    className="w-full rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                    value={row.slug || ""}
-                    onChange={(e) =>
-                      setSeries((prev) =>
-                        prev.map((s) => (s.id === row.id ? { ...s, slug: e.target.value } : s))
-                      )
-                    }
-                  />
-                </td>
-                <td className="py-2 px-2">
-                  <input
-                    type="number"
-                    className="w-16 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                    value={row.display_order ?? 0}
-                    onChange={(e) =>
-                      setSeries((prev) =>
-                        prev.map((s) => (s.id === row.id ? { ...s, display_order: e.target.value } : s))
-                      )
-                    }
-                  />
-                </td>
-                <td className="py-2 px-2 text-center">
-                  <input
-                    type="checkbox"
-                    checked={row.is_active !== false}
-                    onChange={(e) =>
-                      setSeries((prev) =>
-                        prev.map((s) => (s.id === row.id ? { ...s, is_active: e.target.checked } : s))
-                      )
-                    }
-                  />
-                </td>
+                <td className="py-2 px-2">{row.display_order ?? 0}</td>
+                <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
                 <td className="py-2 px-2">
                   <button
                     type="button"
-                    disabled={busy === row.id}
-                    onClick={() => void saveRow(row)}
-                    className="rounded border border-white/15 px-2 py-1 hover:bg-white/5 disabled:opacity-50"
+                    onClick={() => startEdit(row)}
+                    className="rounded border border-white/15 px-2 py-1 hover:bg-white/5"
                   >
-                    שמירה
+                    עריכה
                   </button>
                 </td>
               </tr>
@@ -158,31 +210,65 @@ export default function AdminSeriesTab({ accessToken }) {
         </table>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-2">
-        <h4 className="font-bold text-sm">סדרה חדשה</h4>
-        <div className="grid sm:grid-cols-3 gap-2">
-          <input
-            placeholder="שם בעברית"
-            className="rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-sm"
-            value={newRow.name_he}
-            onChange={(e) => setNewRow((r) => ({ ...r, name_he: e.target.value }))}
-          />
-          <input
-            placeholder="כינוי-מערכת"
-            className="rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-sm"
-            value={newRow.slug}
-            onChange={(e) => setNewRow((r) => ({ ...r, slug: e.target.value }))}
-          />
-          <button
-            type="button"
-            disabled={busy === "new"}
-            onClick={() => void createRow()}
-            className="rounded bg-amber-500/30 border border-amber-400/40 px-3 py-1 text-sm font-semibold disabled:opacity-50"
-          >
-            {busy === "new" ? "יוצר..." : "הוסף סדרה"}
-          </button>
-        </div>
-      </div>
+      <AdminModal
+        open={createOpen}
+        onClose={closeCreate}
+        title="סדרה חדשה"
+        size="md"
+        footer={
+          <>
+            <AdminModalButton onClick={closeCreate} disabled={busy === "new"}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant="primary"
+              onClick={() => void createRow()}
+              disabled={busy === "new"}
+              busy={busy === "new"}
+              busyLabel="יוצר..."
+            >
+              הוסף סדרה
+            </AdminModalButton>
+          </>
+        }
+      >
+        {modalMessage ? (
+          <p className={`text-sm mb-3 ${message.includes("נכשל") ? "text-red-300" : "text-emerald-300"}`}>
+            {message}
+          </p>
+        ) : null}
+        <SeriesFormFields draft={createDraft} setDraft={setCreateDraft} />
+      </AdminModal>
+
+      <AdminModal
+        open={!!editId}
+        onClose={closeEdit}
+        title={editTitle}
+        size="md"
+        footer={
+          <>
+            <AdminModalButton onClick={closeEdit} disabled={busy === editId}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant="primary"
+              onClick={() => void saveEdit()}
+              disabled={busy === editId}
+              busy={busy === editId}
+              busyLabel="שומר..."
+            >
+              שמירה
+            </AdminModalButton>
+          </>
+        }
+      >
+        {modalMessage ? (
+          <p className={`text-sm mb-3 ${message.includes("נכשל") ? "text-red-300" : "text-emerald-300"}`}>
+            {message}
+          </p>
+        ) : null}
+        <SeriesFormFields draft={editDraft} setDraft={setEditDraft} />
+      </AdminModal>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../lib/admin-portal/use-admin-session";
+import AdminModal, { AdminModalButton } from "./AdminModal.jsx";
 import {
   ADMIN_LIFECYCLE_DELETE,
   ADMIN_LIFECYCLE_DELETE_BLOCKED,
@@ -23,6 +24,7 @@ import {
  *   onDeleted?: () => void,
  *   variant?: "default" | "compact",
  *   disabled?: boolean,
+ *   triggerTestId?: string,
  * }} props
  */
 export default function AdminUserDeleteSection({
@@ -32,6 +34,7 @@ export default function AdminUserDeleteSection({
   onDeleted,
   variant = "default",
   disabled = false,
+  triggerTestId = "lifecycle-delete",
 }) {
   const [deletePreview, setDeletePreview] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -61,6 +64,13 @@ export default function AdminUserDeleteSection({
   useEffect(() => {
     void loadPreview();
   }, [loadPreview]);
+
+  const closeConfirm = () => {
+    if (busy) return;
+    setDeleteConfirmOpen(false);
+    setDeleteConfirmCode("");
+    setError("");
+  };
 
   const runDelete = async () => {
     if (!accessToken || !deleteConfirmCode.trim()) return;
@@ -126,22 +136,37 @@ export default function AdminUserDeleteSection({
             setError("");
           }}
           className={deleteButtonClass}
-          data-testid="lifecycle-delete"
+          data-testid={triggerTestId}
         >
           {ADMIN_LIFECYCLE_DELETE}
         </button>
       ) : null}
 
-      {deleteConfirmOpen ? (
-        <div
-          className={
-            variant === "compact"
-              ? "mt-2 rounded border border-red-400/30 bg-red-950/20 p-3 space-y-2"
-              : "mt-4 rounded-lg border border-red-400/30 bg-red-950/20 p-4 space-y-3"
-          }
-          data-testid="lifecycle-delete-confirm"
-        >
-          <p className="text-sm text-white/80">{ADMIN_LIFECYCLE_DELETE_CONFIRM_LABEL}</p>
+      <AdminModal
+        open={deleteConfirmOpen}
+        onClose={closeConfirm}
+        title={ADMIN_LIFECYCLE_DELETE}
+        size="md"
+        footer={
+          <>
+            <AdminModalButton onClick={closeConfirm} disabled={busy} data-testid="lifecycle-delete-cancel">
+              {ADMIN_LIFECYCLE_DELETE_CANCEL}
+            </AdminModalButton>
+            <AdminModalButton
+              variant="danger"
+              onClick={() => void runDelete()}
+              disabled={busy || !deleteConfirmCode.trim()}
+              busy={busy}
+              busyLabel={ADMIN_LIFECYCLE_DELETE_BUSY}
+              data-testid="lifecycle-delete-submit"
+            >
+              {ADMIN_LIFECYCLE_DELETE_SUBMIT}
+            </AdminModalButton>
+          </>
+        }
+      >
+        <div className="space-y-3 text-sm" data-testid="lifecycle-delete-confirm">
+          <p className="text-white/80">{ADMIN_LIFECYCLE_DELETE_CONFIRM_LABEL}</p>
           {targetEmail || deletePreview?.email ? (
             <p className="text-xs text-white/50" dir="ltr">
               {targetEmail || deletePreview?.email}
@@ -166,39 +191,9 @@ export default function AdminUserDeleteSection({
               ))}
             </ul>
           ) : null}
-          <div className="flex flex-wrap gap-2 justify-end">
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => {
-                setDeleteConfirmOpen(false);
-                setDeleteConfirmCode("");
-              }}
-              className={
-                variant === "compact"
-                  ? "text-white/70 hover:underline text-xs"
-                  : "rounded-lg border border-white/20 px-3 py-1.5 text-sm"
-              }
-              data-testid="lifecycle-delete-cancel"
-            >
-              {ADMIN_LIFECYCLE_DELETE_CANCEL}
-            </button>
-            <button
-              type="button"
-              disabled={busy || !deleteConfirmCode.trim()}
-              onClick={() => void runDelete()}
-              className={
-                variant === "compact"
-                  ? "text-red-300 hover:underline text-xs disabled:opacity-50"
-                  : "rounded-lg border border-red-500/50 bg-red-600/30 hover:bg-red-600/40 px-3 py-1.5 text-sm disabled:opacity-50"
-              }
-              data-testid="lifecycle-delete-submit"
-            >
-              {busy ? ADMIN_LIFECYCLE_DELETE_BUSY : ADMIN_LIFECYCLE_DELETE_SUBMIT}
-            </button>
-          </div>
+          {error ? <p className="text-red-300 text-sm">{error}</p> : null}
         </div>
-      ) : null}
+      </AdminModal>
 
       {showDeleteProtectedNote ? (
         <p
@@ -214,7 +209,7 @@ export default function AdminUserDeleteSection({
           {message}
         </p>
       ) : null}
-      {error ? (
+      {error && !deleteConfirmOpen ? (
         <p className={variant === "compact" ? "text-red-300 text-xs mt-1" : "text-red-300 text-sm mt-3"}>
           {error}
         </p>

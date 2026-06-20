@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../lib/admin-portal/use-admin-session";
 import { schoolMembershipRoleToPersona } from "../../lib/admin-portal/admin-lifecycle-ui.js";
 import AdminUserDeleteSection from "./AdminUserDeleteSection.jsx";
+import AdminModal, { AdminModalButton } from "./AdminModal.jsx";
 import {
   ADMIN_LIFECYCLE_BUSY,
   ADMIN_LIFECYCLE_CONFIRM_REVOKE,
@@ -36,6 +37,7 @@ export default function AdminSchoolStaffLifecycleCompact({
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState(null);
   const [error, setError] = useState("");
+  const [revokeConfirmOpen, setRevokeConfirmOpen] = useState(false);
 
   const loadStatus = useCallback(async () => {
     const res = await adminAuthFetch(
@@ -54,7 +56,6 @@ export default function AdminSchoolStaffLifecycleCompact({
   }, [loadStatus]);
 
   const run = async (action) => {
-    if (action === "revoke" && !window.confirm(ADMIN_LIFECYCLE_CONFIRM_REVOKE)) return;
     setBusy(true);
     setError("");
     try {
@@ -69,6 +70,7 @@ export default function AdminSchoolStaffLifecycleCompact({
         return;
       }
       setStatus(json?.data?.entitlement?.status || status);
+      setRevokeConfirmOpen(false);
       onChanged?.();
       await loadStatus();
     } catch {
@@ -113,7 +115,7 @@ export default function AdminSchoolStaffLifecycleCompact({
           <button
             type="button"
             disabled={busy}
-            onClick={() => void run("revoke")}
+            onClick={() => setRevokeConfirmOpen(true)}
             className="text-red-300 hover:underline disabled:opacity-50"
           >
             {ADMIN_LIFECYCLE_REVOKE}
@@ -132,6 +134,33 @@ export default function AdminSchoolStaffLifecycleCompact({
         }}
       />
       {error ? <span className="text-red-300 block">{error}</span> : null}
+
+      <AdminModal
+        open={revokeConfirmOpen}
+        onClose={() => {
+          if (!busy) setRevokeConfirmOpen(false);
+        }}
+        title={ADMIN_LIFECYCLE_REVOKE}
+        size="sm"
+        footer={
+          <>
+            <AdminModalButton onClick={() => setRevokeConfirmOpen(false)} disabled={busy}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant="danger"
+              onClick={() => void run("revoke")}
+              disabled={busy}
+              busy={busy}
+              busyLabel={ADMIN_LIFECYCLE_BUSY}
+            >
+              {ADMIN_LIFECYCLE_REVOKE}
+            </AdminModalButton>
+          </>
+        }
+      >
+        <p className="text-sm text-white/80">{ADMIN_LIFECYCLE_CONFIRM_REVOKE}</p>
+      </AdminModal>
     </div>
   );
 }

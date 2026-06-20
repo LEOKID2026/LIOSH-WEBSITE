@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AdminModal, { AdminModalButton } from "./AdminModal.jsx";
 import AdminSchoolStaffLifecycleCompact from "./AdminSchoolStaffLifecycleCompact.jsx";
 import {
   ADMIN_SCHOOL_ASSIGN_MANAGER,
@@ -7,46 +8,55 @@ import {
   apiErrorMessageHe,
 } from "../../lib/admin-portal/admin-ui.he.js";
 
-export function SchoolCreateForm({ onCreate, busy }) {
-  const [name, setName] = useState("");
-  const [city, setCity] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
+const inputClass =
+  "mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2 text-sm";
 
+export function SchoolCreateFormFields({ draft, setDraft }) {
+  return (
+    <div className="space-y-3 text-sm text-right">
+      <label className="block">
+        <span className="text-white/70">שם בית הספר</span>
+        <input
+          value={draft.name}
+          onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
+          required
+          className={inputClass}
+        />
+      </label>
+      <label className="block">
+        <span className="text-white/70">עיר</span>
+        <input
+          value={draft.city}
+          onChange={(e) => setDraft((d) => ({ ...d, city: e.target.value }))}
+          className={inputClass}
+        />
+      </label>
+      <label className="block">
+        <span className="text-white/70">דוא״ל ליצירת קשר</span>
+        <input
+          type="email"
+          value={draft.contactEmail}
+          onChange={(e) => setDraft((d) => ({ ...d, contactEmail: e.target.value }))}
+          className={inputClass}
+        />
+      </label>
+    </div>
+  );
+}
+
+/** @deprecated Use SchoolCreateFormFields inside AdminModal on schools index */
+export function SchoolCreateForm({ onCreate, busy }) {
+  const [draft, setDraft] = useState({ name: "", city: "", contactEmail: "" });
   return (
     <form
       className="rounded-xl border border-white/15 bg-black/25 p-4 space-y-3 text-right"
       onSubmit={(e) => {
         e.preventDefault();
-        void onCreate({ name, city, contactEmail });
+        void onCreate(draft);
       }}
     >
       <h2 className="font-semibold text-base">יצירת בית ספר חדש</h2>
-      <label className="block text-sm">
-        <span className="text-white/70">שם בית הספר</span>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-        />
-      </label>
-      <label className="block text-sm">
-        <span className="text-white/70">עיר</span>
-        <input
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-        />
-      </label>
-      <label className="block text-sm">
-        <span className="text-white/70">דוא״ל ליצירת קשר</span>
-        <input
-          type="email"
-          value={contactEmail}
-          onChange={(e) => setContactEmail(e.target.value)}
-          className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
-        />
-      </label>
+      <SchoolCreateFormFields draft={draft} setDraft={setDraft} />
       <button
         type="submit"
         disabled={busy}
@@ -55,6 +65,33 @@ export function SchoolCreateForm({ onCreate, busy }) {
         {busy ? "שומר…" : "יצירה"}
       </button>
     </form>
+  );
+}
+
+export function SchoolTeacherAssignFormFields({ draft, setDraft, showForce = false }) {
+  return (
+    <div className="space-y-3 text-sm text-right">
+      <label className="block">
+        <span className="text-white/70">מזהה מורה</span>
+        <input
+          value={draft.teacherId}
+          onChange={(e) => setDraft((d) => ({ ...d, teacherId: e.target.value }))}
+          placeholder="מזהה מורה"
+          required
+          className={inputClass}
+        />
+      </label>
+      {showForce ? (
+        <label className="flex items-center gap-2 text-xs text-white/60">
+          <input
+            type="checkbox"
+            checked={draft.force}
+            onChange={(e) => setDraft((d) => ({ ...d, force: e.target.checked }))}
+          />
+          {ADMIN_SCHOOL_FORCE_REASSIGN}
+        </label>
+      ) : null}
+    </div>
   );
 }
 
@@ -71,19 +108,15 @@ export function SchoolTeacherAssignForm({ label, onAssign, busy, showForce = fal
       }}
     >
       <p className="text-sm font-medium text-white/80">{label}</p>
-      <input
-        value={teacherId}
-        onChange={(e) => setTeacherId(e.target.value)}
-        placeholder="מזהה מורה"
-        required
-        className="w-full rounded bg-black/40 border border-white/20 px-3 py-2 text-sm"
+      <SchoolTeacherAssignFormFields
+        draft={{ teacherId, force }}
+        setDraft={(updater) => {
+          const next = typeof updater === "function" ? updater({ teacherId, force }) : updater;
+          setTeacherId(next.teacherId);
+          setForce(next.force);
+        }}
+        showForce={showForce}
       />
-      {showForce ? (
-        <label className="flex items-center gap-2 text-xs text-white/60">
-          <input type="checkbox" checked={force} onChange={(e) => setForce(e.target.checked)} />
-          {ADMIN_SCHOOL_FORCE_REASSIGN}
-        </label>
-      ) : null}
       <button
         type="submit"
         disabled={busy}
@@ -98,10 +131,25 @@ export function SchoolTeacherAssignForm({ label, onAssign, busy, showForce = fal
 export function SchoolTeacherAssignPanel({ accessToken, schoolId, onReload }) {
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [assignKind, setAssignKind] = useState(null);
+  const [draft, setDraft] = useState({ teacherId: "", force: false });
 
-  const post = async (path, body) => {
+  const closeAssign = () => {
+    if (busy) return;
+    setAssignKind(null);
+    setDraft({ teacherId: "", force: false });
     setError("");
-    setBusy(path);
+  };
+
+  const openAssign = (kind) => {
+    setAssignKind(kind);
+    setDraft({ teacherId: "", force: false });
+    setError("");
+  };
+
+  const post = async (path, body, kind) => {
+    setError("");
+    setBusy(kind);
     try {
       const res = await fetch(path, {
         method: "POST",
@@ -115,36 +163,87 @@ export function SchoolTeacherAssignPanel({ accessToken, schoolId, onReload }) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(apiErrorMessageHe(data?.error, "שגיאה"));
-        return;
+        return false;
       }
       onReload?.();
+      closeAssign();
+      return true;
     } finally {
       setBusy("");
     }
   };
 
+  const saveAssign = async () => {
+    const teacherId = draft.teacherId.trim();
+    if (!teacherId) return;
+    if (assignKind === "teacher") {
+      await post(`/api/admin/schools/${schoolId}/assign-teacher`, {
+        teacherId,
+        force: draft.force,
+      }, "teacher");
+    } else if (assignKind === "manager") {
+      await post(`/api/admin/schools/${schoolId}/assign-manager`, { teacherId }, "manager");
+    }
+  };
+
+  const assignTitle =
+    assignKind === "manager" ? ADMIN_SCHOOL_ASSIGN_MANAGER : ADMIN_SCHOOL_ASSIGN_TEACHER;
+  const assignBusy =
+    assignKind === "teacher" ? busy === "teacher" : assignKind === "manager" ? busy === "manager" : false;
+
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <SchoolTeacherAssignForm
-        label={ADMIN_SCHOOL_ASSIGN_TEACHER}
-        showForce
-        busy={busy === "teacher"}
-        onAssign={({ teacherId, force }) =>
-          post(`/api/admin/schools/${schoolId}/assign-teacher`, { teacherId, force })
-        }
-      />
-      <SchoolTeacherAssignForm
-        label={ADMIN_SCHOOL_ASSIGN_MANAGER}
-        busy={busy === "manager"}
-        onAssign={({ teacherId }) =>
-          post(`/api/admin/schools/${schoolId}/assign-manager`, { teacherId })
-        }
-      />
-      {error ? (
-        <p className="md:col-span-2 text-red-300 text-sm" role="alert">
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2 justify-end">
+        <button
+          type="button"
+          onClick={() => openAssign("teacher")}
+          className="rounded-lg border border-white/20 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-sm font-semibold"
+        >
+          {ADMIN_SCHOOL_ASSIGN_TEACHER}
+        </button>
+        <button
+          type="button"
+          onClick={() => openAssign("manager")}
+          className="rounded-lg border border-white/20 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-sm font-semibold"
+        >
+          {ADMIN_SCHOOL_ASSIGN_MANAGER}
+        </button>
+      </div>
+      {error && !assignKind ? (
+        <p className="text-red-300 text-sm" role="alert">
           {error}
         </p>
       ) : null}
+
+      <AdminModal
+        open={!!assignKind}
+        onClose={closeAssign}
+        title={assignTitle}
+        size="md"
+        footer={
+          <>
+            <AdminModalButton onClick={closeAssign} disabled={!!busy}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant="primary"
+              onClick={() => void saveAssign()}
+              disabled={!!busy || !draft.teacherId.trim()}
+              busy={assignBusy}
+              busyLabel="מבצע…"
+            >
+              שיוך
+            </AdminModalButton>
+          </>
+        }
+      >
+        {error && assignKind ? <p className="text-red-300 text-sm mb-3">{error}</p> : null}
+        <SchoolTeacherAssignFormFields
+          draft={draft}
+          setDraft={setDraft}
+          showForce={assignKind === "teacher"}
+        />
+      </AdminModal>
     </div>
   );
 }

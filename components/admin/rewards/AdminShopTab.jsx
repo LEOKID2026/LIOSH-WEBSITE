@@ -6,7 +6,11 @@ import {
   adminRewardsCardsUrl,
   filterAdminShopCatalogCards,
 } from "../../../lib/admin-portal/admin-rewards-catalog.client.js";
+import AdminModal, { AdminModalButton } from "../AdminModal.jsx";
 import AdminCatalogArchiveToggle from "./AdminCatalogArchiveToggle.jsx";
+
+const inputClass =
+  "block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-sm";
 
 async function loadSettings(token) {
   const res = await adminAuthFetch(token, "/api/admin/rewards/settings");
@@ -24,6 +28,14 @@ async function saveSetting(token, key, value) {
   if (!res.ok) throw new Error(apiErrorMessageHe(body?.error, "שמירה נכשלה"));
 }
 
+function formatCardPriceDisplay(card, defaultPrices) {
+  if (card.use_default_price !== false) {
+    const fallback = defaultPrices?.[card.rarity];
+    return fallback != null ? `${fallback} (ברירת מחדל)` : "ברירת מחדל";
+  }
+  return card.price_coins != null ? String(card.price_coins) : "—";
+}
+
 export default function AdminShopTab({ accessToken }) {
   const [prices, setPrices] = useState({});
   const [cards, setCards] = useState([]);
@@ -32,6 +44,8 @@ export default function AdminShopTab({ accessToken }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
   const [message, setMessage] = useState("");
+  const [editCardId, setEditCardId] = useState(null);
+  const [priceDraft, setPriceDraft] = useState({ use_default_price: true, price_coins: "" });
 
   const load = useCallback(async () => {
     if (!accessToken) return;
@@ -64,6 +78,20 @@ export default function AdminShopTab({ accessToken }) {
     void load();
   }, [load]);
 
+  const closePriceEdit = () => {
+    setEditCardId(null);
+    setPriceDraft({ use_default_price: true, price_coins: "" });
+  };
+
+  const startPriceEdit = (card) => {
+    setMessage("");
+    setEditCardId(card.id);
+    setPriceDraft({
+      use_default_price: card.use_default_price !== false,
+      price_coins: card.price_coins ?? "",
+    });
+  };
+
   const saveDefaults = async () => {
     setBusy("defaults");
     setMessage("");
@@ -77,14 +105,19 @@ export default function AdminShopTab({ accessToken }) {
     }
   };
 
-  const saveCardPrice = async (card) => {
-    setBusy(card.id);
+  const saveCardPrice = async () => {
+    if (!editCardId) return;
+    const card = cards.find((c) => c.id === editCardId);
+    if (!card) return;
+    setBusy(editCardId);
     setMessage("");
-    const res = await adminAuthFetch(accessToken, `/api/admin/rewards/cards/${card.id}`, {
+    const res = await adminAuthFetch(accessToken, `/api/admin/rewards/cards/${editCardId}`, {
       method: "PUT",
       body: JSON.stringify({
-        price_coins: card.price_coins != null ? Number(card.price_coins) : null,
-        use_default_price: card.use_default_price !== false,
+        price_coins: priceDraft.price_coins != null && priceDraft.price_coins !== ""
+          ? Number(priceDraft.price_coins)
+          : null,
+        use_default_price: priceDraft.use_default_price !== false,
       }),
     });
     const body = await res.json().catch(() => ({}));
@@ -94,11 +127,17 @@ export default function AdminShopTab({ accessToken }) {
       return;
     }
     setMessage(`מחיר «${card.name_he}» נשמר.`);
+    closePriceEdit();
     void load();
   };
 
   if (phase === "loading") return <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>;
   if (phase === "error") return <p className="text-red-300 text-sm text-right">{error}</p>;
+
+  const editingCard = cards.find((c) => c.id === editCardId);
+  const editTitle = editingCard?.name_he ? `עריכת מחיר: ${editingCard.name_he}` : "עריכת מחיר";
+  const modalMessage = message && editCardId;
+  const pageMessage = message && !editCardId;
 
   return (
     <div className="text-right space-y-4 overflow-x-hidden">
@@ -109,7 +148,7 @@ export default function AdminShopTab({ accessToken }) {
         </p>
         <AdminCatalogArchiveToggle checked={includeInactive} onChange={setIncludeInactive} />
       </div>
-      {message ? <p className="text-sm text-emerald-300">{message}</p> : null}
+      {pageMessage ? <p className="text-sm text-emerald-300">{pageMessage}</p> : null}
 
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
         <h3 className="text-sm font-bold mb-3">מחירי ברירת מחדל לפי נדירות</h3>
@@ -143,8 +182,9 @@ export default function AdminShopTab({ accessToken }) {
             <thead>
               <tr className="text-white/60 border-b border-white/10">
                 <th className="py-2 px-2">שם</th>
-                <th className="py-2 px-2">ברירת מחדל</th>
+                <th className="py-2 px-2">נדירות</th>
                 <th className="py-2 px-2">מחיר</th>
+                <th className="py-2 px-2">ברירת מחדל</th>
                 <th className="py-2 px-2" />
               </tr>
             </thead>
@@ -152,42 +192,16 @@ export default function AdminShopTab({ accessToken }) {
               {cards.map((card) => (
                 <tr key={card.id} className="border-b border-white/5">
                   <td className="py-2 px-2">{card.name_he}</td>
-                  <td className="py-2 px-2 text-center">
-                    <input
-                      type="checkbox"
-                      checked={card.use_default_price !== false}
-                      onChange={(e) =>
-                        setCards((prev) =>
-                          prev.map((c) =>
-                            c.id === card.id ? { ...c, use_default_price: e.target.checked } : c
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <input
-                      type="number"
-                      disabled={card.use_default_price !== false}
-                      className="w-24 rounded bg-black/30 border border-white/15 px-2 py-1 text-white disabled:opacity-50"
-                      value={card.price_coins ?? ""}
-                      onChange={(e) =>
-                        setCards((prev) =>
-                          prev.map((c) =>
-                            c.id === card.id ? { ...c, price_coins: e.target.value } : c
-                          )
-                        )
-                      }
-                    />
-                  </td>
+                  <td className="py-2 px-2">{formatRarityHe(card.rarity)}</td>
+                  <td className="py-2 px-2">{formatCardPriceDisplay(card, prices)}</td>
+                  <td className="py-2 px-2">{card.use_default_price !== false ? "כן" : "לא"}</td>
                   <td className="py-2 px-2">
                     <button
                       type="button"
-                      disabled={busy === card.id}
-                      onClick={() => void saveCardPrice(card)}
-                      className="rounded border border-white/15 px-2 py-1 disabled:opacity-50"
+                      onClick={() => startPriceEdit(card)}
+                      className="rounded border border-white/15 px-2 py-1 hover:bg-white/5"
                     >
-                      שמירה
+                      עריכה
                     </button>
                   </td>
                 </tr>
@@ -196,6 +210,70 @@ export default function AdminShopTab({ accessToken }) {
           </table>
         </div>
       </section>
+
+      <AdminModal
+        open={!!editCardId}
+        onClose={closePriceEdit}
+        title={editTitle}
+        size="md"
+        footer={
+          <>
+            <AdminModalButton onClick={closePriceEdit} disabled={busy === editCardId}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant="primary"
+              onClick={() => void saveCardPrice()}
+              disabled={busy === editCardId}
+              busy={busy === editCardId}
+              busyLabel="שומר..."
+            >
+              שמירה
+            </AdminModalButton>
+          </>
+        }
+      >
+        {modalMessage ? (
+          <p className={`text-sm mb-3 ${message.includes("נכשל") ? "text-red-300" : "text-emerald-300"}`}>
+            {message}
+          </p>
+        ) : null}
+        {editingCard ? (
+          <div className="space-y-4 text-sm">
+            <div>
+              <p className="text-white/50 text-xs mb-1">שם הקלף</p>
+              <p className="font-semibold">{editingCard.name_he || "—"}</p>
+            </div>
+            <div>
+              <p className="text-white/50 text-xs mb-1">מחיר נוכחי</p>
+              <p className="font-semibold text-amber-200">
+                {formatCardPriceDisplay(editingCard, prices)}
+              </p>
+            </div>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={priceDraft.use_default_price !== false}
+                onChange={(e) =>
+                  setPriceDraft((d) => ({ ...d, use_default_price: e.target.checked }))
+                }
+              />
+              מחיר ברירת מחדל לפי נדירות
+            </label>
+            {!priceDraft.use_default_price ? (
+              <label className="block">
+                מחיר במטבעות
+                <input
+                  type="number"
+                  className={inputClass}
+                  value={priceDraft.price_coins ?? ""}
+                  onChange={(e) => setPriceDraft((d) => ({ ...d, price_coins: e.target.value }))}
+                />
+              </label>
+            ) : null}
+          </div>
+        ) : null}
+      </AdminModal>
     </div>
   );
 }

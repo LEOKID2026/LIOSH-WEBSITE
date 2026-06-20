@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { adminAuthFetch } from "../../lib/admin-portal/use-admin-session";
 import AdminPasswordSetupPanel from "./AdminPasswordSetupPanel.jsx";
+import AdminModal, { AdminModalButton } from "./AdminModal.jsx";
 import {
   ADMIN_APPROVE_ACTION,
   ADMIN_APPROVED_SUCCESS,
@@ -30,9 +31,16 @@ export default function AdminSchoolRegistrationPanel({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [reason, setReason] = useState("");
+  const [confirmAction, setConfirmAction] = useState(null);
 
   const req = registrationRequest;
   const isPendingSchool = school?.isActive === false;
+
+  const closeConfirm = () => {
+    if (busy) return;
+    setConfirmAction(null);
+    setError("");
+  };
 
   const run = async (action) => {
     if (!accessToken || !school?.schoolId) return;
@@ -62,6 +70,7 @@ export default function AdminSchoolRegistrationPanel({
       } else {
         setMessage(ADMIN_REJECTED_SUCCESS);
       }
+      setConfirmAction(null);
       onChanged?.();
     } catch {
       setError(ADMIN_LIFECYCLE_NETWORK_ERROR);
@@ -71,6 +80,9 @@ export default function AdminSchoolRegistrationPanel({
   };
 
   if (!req && !isPendingSchool) return null;
+
+  const confirmTitle =
+    confirmAction === "approve" ? "אישור בקשת רישום" : "דחיית בקשת רישום";
 
   return (
     <div className="space-y-4 mb-6">
@@ -134,41 +146,79 @@ export default function AdminSchoolRegistrationPanel({
           <p className="text-sm text-white/70 mb-4">
             בית ספר זה נרשם וממתין לאישור מנהל/ת המערכת.
           </p>
-          <label className="block text-sm mb-3">
+          <div className="flex flex-wrap gap-2 justify-end">
+            <button
+              type="button"
+              disabled={!!busy}
+              onClick={() => {
+                setError("");
+                setConfirmAction("approve");
+              }}
+              className="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-3 py-1.5 text-sm disabled:opacity-50"
+              data-testid="school-reg-approve"
+            >
+              {ADMIN_APPROVE_ACTION}
+            </button>
+            <button
+              type="button"
+              disabled={!!busy}
+              onClick={() => {
+                setError("");
+                setConfirmAction("reject");
+              }}
+              className="rounded-lg border border-red-400/40 bg-red-500/15 px-3 py-1.5 text-sm disabled:opacity-50"
+              data-testid="school-reg-reject"
+            >
+              {ADMIN_REJECT_ACTION}
+            </button>
+          </div>
+          {message ? <p className="text-emerald-300 text-sm mt-2">{message}</p> : null}
+          {error && !confirmAction ? <p className="text-red-300 text-sm mt-2">{error}</p> : null}
+        </section>
+      ) : null}
+
+      <AdminModal
+        open={!!confirmAction}
+        onClose={closeConfirm}
+        title={confirmTitle}
+        size="md"
+        footer={
+          <>
+            <AdminModalButton onClick={closeConfirm} disabled={!!busy}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant={confirmAction === "reject" ? "danger" : "primary"}
+              onClick={() => void run(confirmAction)}
+              disabled={!!busy}
+              busy={busy === confirmAction}
+              busyLabel="מעבד…"
+              data-testid={confirmAction === "approve" ? "school-reg-approve-submit" : "school-reg-reject-submit"}
+            >
+              {confirmAction === "approve" ? ADMIN_APPROVE_ACTION : ADMIN_REJECT_ACTION}
+            </AdminModalButton>
+          </>
+        }
+      >
+        {confirmAction === "approve" ? (
+          <p className="text-sm text-white/80">
+            לאשר את בקשת הרישום של «{school?.name || "בית הספר"}»?
+          </p>
+        ) : (
+          <label className="block text-sm">
             <span className="text-white/70">{ADMIN_REJECT_REASON_LABEL}</span>
             <input
               type="text"
               value={reason}
               onChange={(ev) => setReason(ev.target.value)}
               maxLength={500}
-              className="mt-1 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
+              className="mt-2 w-full rounded bg-black/40 border border-white/20 px-3 py-2"
               data-testid="school-reg-reject-reason"
             />
           </label>
-          <div className="flex flex-wrap gap-2 justify-end">
-            <button
-              type="button"
-              disabled={!!busy}
-              onClick={() => void run("approve")}
-              className="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-3 py-1.5 text-sm disabled:opacity-50"
-              data-testid="school-reg-approve"
-            >
-              {busy === "approve" ? "מעבד…" : ADMIN_APPROVE_ACTION}
-            </button>
-            <button
-              type="button"
-              disabled={!!busy}
-              onClick={() => void run("reject")}
-              className="rounded-lg border border-red-400/40 bg-red-500/15 px-3 py-1.5 text-sm disabled:opacity-50"
-              data-testid="school-reg-reject"
-            >
-              {busy === "reject" ? "מעבד…" : ADMIN_REJECT_ACTION}
-            </button>
-          </div>
-          {message ? <p className="text-emerald-300 text-sm mt-2">{message}</p> : null}
-          {error ? <p className="text-red-300 text-sm mt-2">{error}</p> : null}
-        </section>
-      ) : null}
+        )}
+        {error && confirmAction ? <p className="text-red-300 text-sm mt-3">{error}</p> : null}
+      </AdminModal>
 
       {req?.contactUserId && school?.isActive !== false ? (
         <AdminPasswordSetupPanel

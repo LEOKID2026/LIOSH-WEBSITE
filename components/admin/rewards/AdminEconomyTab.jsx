@@ -6,12 +6,16 @@ import {
   formatEconomyFieldNameHe,
   formatEconomySettingAreaHe,
 } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
+import AdminModal, { AdminModalButton } from "../AdminModal.jsx";
 
 const GRADE_BANDS = [
   { value: "g12", label: "כיתות א׳–ב׳" },
   { value: "g34", label: "כיתות ג׳–ד׳" },
   { value: "g56", label: "כיתות ה׳–ו׳" },
 ];
+
+const inputClass =
+  "block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-sm";
 
 function AdminSection({ title, children }) {
   return (
@@ -35,6 +39,106 @@ function AdminSaveButton({ busy, onClick, label = "שמירה" }) {
   );
 }
 
+function DailyMissionFormFields({ draft, setDraft }) {
+  return (
+    <div className="space-y-3 text-sm">
+      <label className="block">
+        טקסט לילד
+        <input
+          className={inputClass}
+          value={draft.text_he || ""}
+          onChange={(e) => setDraft((d) => ({ ...d, text_he: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        יעד
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.target_value ?? ""}
+          onChange={(e) => setDraft((d) => ({ ...d, target_value: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        מטבעות
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.reward_coins ?? ""}
+          onChange={(e) => setDraft((d) => ({ ...d, reward_coins: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        סדר תצוגה
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.display_order ?? 0}
+          onChange={(e) => setDraft((d) => ({ ...d, display_order: e.target.value }))}
+        />
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={draft.is_active !== false}
+          onChange={(e) => setDraft((d) => ({ ...d, is_active: e.target.checked }))}
+        />
+        פעיל
+      </label>
+    </div>
+  );
+}
+
+function MonthlyTierFormFields({ draft, setDraft }) {
+  return (
+    <div className="space-y-3 text-sm">
+      <label className="block">
+        דקות (סף)
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.minutes_threshold ?? ""}
+          onChange={(e) => setDraft((d) => ({ ...d, minutes_threshold: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        מטבעות
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.reward_coins ?? ""}
+          onChange={(e) => setDraft((d) => ({ ...d, reward_coins: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        שם לילד
+        <input
+          className={inputClass}
+          value={draft.label_he || ""}
+          onChange={(e) => setDraft((d) => ({ ...d, label_he: e.target.value }))}
+        />
+      </label>
+      <label className="block">
+        סדר תצוגה
+        <input
+          type="number"
+          className={inputClass}
+          value={draft.display_order ?? 0}
+          onChange={(e) => setDraft((d) => ({ ...d, display_order: e.target.value }))}
+        />
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={draft.is_active !== false}
+          onChange={(e) => setDraft((d) => ({ ...d, is_active: e.target.checked }))}
+        />
+        פעיל
+      </label>
+    </div>
+  );
+}
+
 export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
   const [band, setBand] = useState("g34");
   const [dailyRows, setDailyRows] = useState([]);
@@ -45,6 +149,9 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
   const [message, setMessage] = useState("");
+  const [editKind, setEditKind] = useState(null);
+  const [editId, setEditId] = useState(null);
+  const [editDraft, setEditDraft] = useState({});
 
   const loadAll = useCallback(async () => {
     if (!accessToken) return;
@@ -85,19 +192,52 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
 
   const filteredDaily = dailyRows.filter((r) => r.grade_band === band);
 
-  const saveDaily = async (row) => {
-    setBusy(`daily:${row.id}`);
+  const closeEdit = () => {
+    setEditKind(null);
+    setEditId(null);
+    setEditDraft({});
+  };
+
+  const startDailyEdit = (row) => {
+    setMessage("");
+    setEditKind("daily");
+    setEditId(row.id);
+    setEditDraft({
+      text_he: row.text_he || "",
+      target_value: row.target_value ?? "",
+      reward_coins: row.reward_coins ?? "",
+      is_active: row.is_active !== false,
+      display_order: row.display_order ?? 0,
+    });
+  };
+
+  const startMonthlyEdit = (row) => {
+    setMessage("");
+    setEditKind("monthly");
+    setEditId(row.id);
+    setEditDraft({
+      minutes_threshold: row.minutes_threshold ?? "",
+      reward_coins: row.reward_coins ?? "",
+      label_he: row.label_he || "",
+      is_active: row.is_active !== false,
+      display_order: row.display_order ?? 0,
+    });
+  };
+
+  const saveDaily = async () => {
+    if (!editId || editKind !== "daily") return;
+    setBusy(`daily:${editId}`);
     setMessage("");
     const res = await adminAuthFetch(accessToken, "/api/admin/rewards/economy/daily-missions", {
       method: "PUT",
       body: JSON.stringify({
-        id: row.id,
+        id: editId,
         patch: {
-          text_he: row.text_he,
-          target_value: Number(row.target_value),
-          reward_coins: Number(row.reward_coins),
-          is_active: row.is_active,
-          display_order: Number(row.display_order),
+          text_he: editDraft.text_he,
+          target_value: Number(editDraft.target_value),
+          reward_coins: Number(editDraft.reward_coins),
+          is_active: editDraft.is_active,
+          display_order: Number(editDraft.display_order),
         },
       }),
     });
@@ -108,22 +248,24 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
       return;
     }
     setMessage("משימה יומית נשמרה — השינוי יחול על פרסים עתידיים בלבד.");
+    closeEdit();
     void loadAll();
   };
 
-  const saveMonthly = async (row) => {
-    setBusy(`monthly:${row.id}`);
+  const saveMonthly = async () => {
+    if (!editId || editKind !== "monthly") return;
+    setBusy(`monthly:${editId}`);
     setMessage("");
     const res = await adminAuthFetch(accessToken, "/api/admin/rewards/economy/monthly-tiers", {
       method: "PUT",
       body: JSON.stringify({
-        id: row.id,
+        id: editId,
         patch: {
-          minutes_threshold: Number(row.minutes_threshold),
-          reward_coins: Number(row.reward_coins),
-          label_he: row.label_he,
-          is_active: row.is_active,
-          display_order: Number(row.display_order),
+          minutes_threshold: Number(editDraft.minutes_threshold),
+          reward_coins: Number(editDraft.reward_coins),
+          label_he: editDraft.label_he,
+          is_active: editDraft.is_active,
+          display_order: Number(editDraft.display_order),
         },
       }),
     });
@@ -134,6 +276,7 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
       return;
     }
     setMessage("מדרגת התמדה נשמרה — השינוי יחול על פרסים עתידיים בלבד.");
+    closeEdit();
     void loadAll();
   };
 
@@ -161,12 +304,32 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
   if (phase === "loading") return <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>;
   if (phase === "error") return <p className="text-red-300 text-sm text-right">{error}</p>;
 
+  const editingDaily = editKind === "daily" ? dailyRows.find((r) => r.id === editId) : null;
+  const editingMonthly = editKind === "monthly" ? monthlyRows.find((r) => r.id === editId) : null;
+  const editBusy = editKind === "daily" ? busy === `daily:${editId}` : busy === `monthly:${editId}`;
+  const modalMessage = message && editId;
+  const pageMessage = message && !editId;
+
+  const editTitle =
+    editKind === "daily"
+      ? editingDaily?.text_he
+        ? `עריכת משימה יומית: ${editingDaily.text_he}`
+        : "עריכת משימה יומית"
+      : editingMonthly?.label_he
+        ? `עריכת מדרגת התמדה: ${editingMonthly.label_he}`
+        : "עריכת מדרגת התמדה";
+
+  const handleSaveEdit = () => {
+    if (editKind === "daily") void saveDaily();
+    else if (editKind === "monthly") void saveMonthly();
+  };
+
   return (
     <div className="text-right">
       <p className="text-xs text-amber-200/80 mb-4">
         שינוי יחול על פרסים עתידיים בלבד — לא על מטבעות שכבר ניתנו.
       </p>
-      {message ? <p className="text-sm text-emerald-300 mb-3">{message}</p> : null}
+      {pageMessage ? <p className="text-sm text-emerald-300 mb-3">{pageMessage}</p> : null}
 
       <AdminSection title="משימות יומיות">
         <div className="flex flex-wrap gap-2 mb-3 justify-end">
@@ -199,60 +362,18 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
             <tbody>
               {filteredDaily.map((row) => (
                 <tr key={row.id} className="border-b border-white/5">
+                  <td className="py-2 px-2">{row.text_he || "—"}</td>
+                  <td className="py-2 px-2">{row.target_value ?? "—"}</td>
+                  <td className="py-2 px-2">{row.reward_coins ?? "—"}</td>
+                  <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
                   <td className="py-2 px-2">
-                    <input
-                      className="w-full rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                      value={row.text_he || ""}
-                      onChange={(e) =>
-                        setDailyRows((prev) =>
-                          prev.map((r) => (r.id === row.id ? { ...r, text_he: e.target.value } : r))
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <input
-                      type="number"
-                      className="w-20 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                      value={row.target_value ?? ""}
-                      onChange={(e) =>
-                        setDailyRows((prev) =>
-                          prev.map((r) =>
-                            r.id === row.id ? { ...r, target_value: e.target.value } : r
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <input
-                      type="number"
-                      className="w-20 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                      value={row.reward_coins ?? ""}
-                      onChange={(e) =>
-                        setDailyRows((prev) =>
-                          prev.map((r) =>
-                            r.id === row.id ? { ...r, reward_coins: e.target.value } : r
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2 text-center">
-                    <input
-                      type="checkbox"
-                      checked={row.is_active !== false}
-                      onChange={(e) =>
-                        setDailyRows((prev) =>
-                          prev.map((r) =>
-                            r.id === row.id ? { ...r, is_active: e.target.checked } : r
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <AdminSaveButton busy={busy === `daily:${row.id}`} onClick={() => void saveDaily(row)} />
+                    <button
+                      type="button"
+                      onClick={() => startDailyEdit(row)}
+                      className="rounded border border-white/15 px-2 py-1 hover:bg-white/5"
+                    >
+                      עריכה
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -276,62 +397,18 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
             <tbody>
               {monthlyRows.map((row) => (
                 <tr key={row.id} className="border-b border-white/5">
+                  <td className="py-2 px-2">{row.minutes_threshold ?? "—"}</td>
+                  <td className="py-2 px-2">{row.reward_coins ?? "—"}</td>
+                  <td className="py-2 px-2">{row.label_he || "—"}</td>
+                  <td className="py-2 px-2">{row.is_active !== false ? "כן" : "לא"}</td>
                   <td className="py-2 px-2">
-                    <input
-                      type="number"
-                      className="w-20 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                      value={row.minutes_threshold ?? ""}
-                      onChange={(e) =>
-                        setMonthlyRows((prev) =>
-                          prev.map((r) =>
-                            r.id === row.id ? { ...r, minutes_threshold: e.target.value } : r
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <input
-                      type="number"
-                      className="w-24 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                      value={row.reward_coins ?? ""}
-                      onChange={(e) =>
-                        setMonthlyRows((prev) =>
-                          prev.map((r) =>
-                            r.id === row.id ? { ...r, reward_coins: e.target.value } : r
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <input
-                      className="w-full rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                      value={row.label_he || ""}
-                      onChange={(e) =>
-                        setMonthlyRows((prev) =>
-                          prev.map((r) =>
-                            r.id === row.id ? { ...r, label_he: e.target.value } : r
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2 text-center">
-                    <input
-                      type="checkbox"
-                      checked={row.is_active !== false}
-                      onChange={(e) =>
-                        setMonthlyRows((prev) =>
-                          prev.map((r) =>
-                            r.id === row.id ? { ...r, is_active: e.target.checked } : r
-                          )
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <AdminSaveButton busy={busy === `monthly:${row.id}`} onClick={() => void saveMonthly(row)} />
+                    <button
+                      type="button"
+                      onClick={() => startMonthlyEdit(row)}
+                      className="rounded border border-white/15 px-2 py-1 hover:bg-white/5"
+                    >
+                      עריכה
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -432,6 +509,40 @@ export default function AdminEconomyTab({ accessToken, onNavigateTab }) {
           </table>
         </div>
       </AdminSection>
+
+      <AdminModal
+        open={!!editId}
+        onClose={closeEdit}
+        title={editTitle}
+        size="md"
+        footer={
+          <>
+            <AdminModalButton onClick={closeEdit} disabled={editBusy}>
+              ביטול
+            </AdminModalButton>
+            <AdminModalButton
+              variant="primary"
+              onClick={handleSaveEdit}
+              disabled={editBusy}
+              busy={editBusy}
+              busyLabel="שומר..."
+            >
+              שמירה
+            </AdminModalButton>
+          </>
+        }
+      >
+        {modalMessage ? (
+          <p className={`text-sm mb-3 ${message.includes("נכשל") ? "text-red-300" : "text-emerald-300"}`}>
+            {message}
+          </p>
+        ) : null}
+        {editKind === "daily" ? (
+          <DailyMissionFormFields draft={editDraft} setDraft={setEditDraft} />
+        ) : editKind === "monthly" ? (
+          <MonthlyTierFormFields draft={editDraft} setDraft={setEditDraft} />
+        ) : null}
+      </AdminModal>
     </div>
   );
 }

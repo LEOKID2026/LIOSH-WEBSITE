@@ -6,7 +6,7 @@ import { formatRuleTypeHe } from "../../../lib/admin-portal/admin-rewards-ui.he.
 const inputClass =
   "block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-xs";
 
-export default function AdminCardRulesPanel({ accessToken, cardId, cardName }) {
+export default function AdminCardRulesPanel({ accessToken, cardId, cardName, embedded = false }) {
   const [rules, setRules] = useState([]);
   const [ruleTypes, setRuleTypes] = useState([]);
   const [phase, setPhase] = useState("loading");
@@ -122,9 +122,13 @@ export default function AdminCardRulesPanel({ accessToken, cardId, cardName }) {
     return <p className="text-white/50 text-xs text-right">טוען חוקי קבלה...</p>;
   }
 
+  const shellClass = embedded
+    ? "space-y-3 text-right"
+    : "mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-3 text-right";
+
   return (
-    <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-3 text-right">
-      <h4 className="font-bold text-sm">חוקי קבלה — {cardName || "קלף"}</h4>
+    <div className={shellClass}>
+      {!embedded ? <h4 className="font-bold text-sm">חוקי קבלה — {cardName || "קלף"}</h4> : null}
       {message ? <p className="text-xs text-emerald-300">{message}</p> : null}
 
       {rules.length === 0 ? (
