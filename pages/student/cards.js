@@ -11,11 +11,11 @@ import StudentRewardCard, {
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
-import { formatCoinAmountHe, formatCoinAmountNumberHe, SHOP_CARD_ALREADY_OWNED_HE, CATALOG_CARD_OWNED_HE } from "../../lib/rewards/rewards-ui.he.js";
+import { formatCoinAmountHe, formatCoinAmountNumberHe, SHOP_CARD_ALREADY_OWNED_HE, SHOP_CARD_SELL_DUPLICATE_HE, CATALOG_CARD_OWNED_HE } from "../../lib/rewards/rewards-ui.he.js";
 
 const CARDS_PATH = "/api/student/rewards/cards";
 const PURCHASE_PATH = "/api/student/rewards/shop/purchase";
-const CONVERT_PATH = "/api/student/rewards/cards/convert-duplicates";
+const SELL_DUPLICATE_PATH = "/api/student/rewards/shop/sell-duplicate";
 
 const TABS = [
   { id: "collection", label: "האוסף שלי", shortLabel: "אוסף" },
@@ -226,11 +226,6 @@ export default function StudentCardsPage() {
     };
   }, [router.isReady, router, loadCards, rewardsEnabled]);
 
-  const convertibleCards = useMemo(
-    () => (payload?.collection || []).filter((c) => c.canConvert),
-    [payload]
-  );
-
   const coinBalanceAmount = useMemo(() => {
     if (student?.coin_balance == null) return null;
     const n = Number(student.coin_balance);
@@ -268,25 +263,46 @@ export default function StudentCardsPage() {
     }
   };
 
-  const handleConvert = async (cardId) => {
-    setActionBusy(`convert:${cardId}`);
+  const handleSellDuplicate = async (card) => {
+    if (!card?.canSellDuplicate || card?.sellbackCoins <= 0) return;
+
+    const confirmed = window.confirm(
+      `למכור עותק כפול של «${card.nameHe}» ולקבל ${formatCoinAmountHe(card.sellbackCoins)}?\n` +
+        "יישאר לך עותק אחד באוסף."
+    );
+    if (!confirmed) return;
+
+    const busyKey = `sell:${card.id}`;
+    setActionBusy(busyKey);
     setMessageHe("");
     try {
-      const res = await fetch(CONVERT_PATH, {
+      const res = await fetch(SELL_DUPLICATE_PATH, {
         method: "POST",
         credentials: "include",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({ cardId }),
+        body: JSON.stringify({
+          cardId: card.id,
+          idempotencyKey: `card:sellback:${card.id}:${Date.now()}`,
+        }),
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json?.ok !== true) {
-        setMessageHe("המרת הכפילויות לא הצליחה.");
+        setMessageHe(
+          json?.code === "no_duplicate"
+            ? "אין עותק כפול למכירה."
+            : "מכירת העותק הכפול לא הצליחה — נסו שוב."
+        );
         return;
       }
-      setMessageHe(`המרתם כפילויות וקיבלתם ${formatCoinAmountHe(json.coinsReceived || json.coinsAwarded || 0)}!`);
+      setMessageHe(
+        `מכרתם עותק כפול של «${json.card?.name_he || json.card?.nameHe || card.nameHe}» וקיבלתם ${formatCoinAmountHe(json.sellbackCoins || 0)}!`
+      );
+      if (json.balanceAfter != null) {
+        setStudent((prev) => (prev ? { ...prev, coin_balance: json.balanceAfter } : prev));
+      }
       await loadCards();
     } catch {
-      setMessageHe("שגיאת רשת בהמרה.");
+      setMessageHe("שגיאת רשת במכירה.");
     } finally {
       setActionBusy("");
     }
@@ -358,18 +374,7 @@ export default function StudentCardsPage() {
               previewIndex={index}
               allowDownload
               studentFullName={studentDisplayName}
-              footer={
-                card.canConvert ? (
-                  <button
-                    type="button"
-                    disabled={actionBusy === `convert:${card.id}`}
-                    onClick={() => void handleConvert(card.id)}
-                    className={`${T.recommendCta} text-xs w-full`}
-                  >
-                    {actionBusy === `convert:${card.id}` ? "ממיר..." : "המר כפילויות"}
-                  </button>
-                ) : null
-              }
+              footer={null}
             />
           ))}
         </StudentCardsGrid>
@@ -385,7 +390,11 @@ export default function StudentCardsPage() {
         <StudentCardsGrid emptyMessage="אין קלפים זמינים לרכישה כרגע." T={T}>
           {shopList.map((card, index) => {
             const canBuy = card.canAfford === true && !card.alreadyOwned;
+            const canSell = card.canSellDuplicate === true && card.sellbackCoins > 0;
+            const ownedOnly = card.alreadyOwned && !canSell;
             const priceLabel = Math.floor(Number(card.priceCoins) || 0).toLocaleString("he-IL");
+            const sellBusy = actionBusy === `sell:${card.id}`;
+            const buyBusy = actionBusy === card.id;
             return (
               <StudentRewardCard
                 key={card.id}
@@ -399,8 +408,15 @@ export default function StudentCardsPage() {
                 footer={
                   <>
                     <p className={`text-sm font-semibold ${T.statValue}`}>
-                      {formatCoinAmountHe(card.priceCoins)}
+                      מחיר קנייה: {formatCoinAmountHe(card.priceCoins)}
                     </p>
+                    {card.sellbackCoins > 0 ? (
+                      <p className={`text-xs leading-snug ${T.tileSub}`}>
+                        שווי מכירה: {formatCoinAmountHe(card.sellbackCoins)}
+                      </p>
+                    ) : (
+                      <p className={`text-xs min-h-[1.125rem] ${T.tileSub}`}>{"\u00a0"}</p>
+                    )}
                     <p className={`text-xs leading-snug min-h-[1.125rem] ${T.tileSub}`}>
                       {!card.alreadyOwned && !canBuy
                         ? card.missingCoins > 0
@@ -410,19 +426,26 @@ export default function StudentCardsPage() {
                     </p>
                     <button
                       type="button"
-                      disabled={card.alreadyOwned || actionBusy === card.id || !canBuy}
-                      onClick={() => void handlePurchase(card.id)}
+                      disabled={ownedOnly || sellBusy || buyBusy || (!canBuy && !canSell)}
+                      onClick={() => {
+                        if (canSell) void handleSellDuplicate(card);
+                        else if (canBuy) void handlePurchase(card.id);
+                      }}
                       className={
-                        card.alreadyOwned
+                        ownedOnly
                           ? `${T.ctaPrimary} text-xs w-full !bg-amber-500 hover:!bg-amber-500 !text-white shadow-md cursor-default disabled:!opacity-100`
                           : `${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
                       }
                     >
-                      {card.alreadyOwned
-                        ? SHOP_CARD_ALREADY_OWNED_HE
-                        : actionBusy === card.id
-                          ? "קונה..."
-                          : `קנה ב־${priceLabel}`}
+                      {canSell
+                        ? sellBusy
+                          ? "מוכר..."
+                          : SHOP_CARD_SELL_DUPLICATE_HE
+                        : card.alreadyOwned
+                          ? SHOP_CARD_ALREADY_OWNED_HE
+                          : buyBusy
+                            ? "קונה..."
+                            : `קנה ב־${priceLabel}`}
                     </button>
                   </>
                 }
@@ -500,28 +523,6 @@ export default function StudentCardsPage() {
 
         {messageHe ? (
           <p className="mb-3 text-sm text-emerald-700 dark:text-emerald-300 text-right">{messageHe}</p>
-        ) : null}
-
-        {convertibleCards.length > 0 ? (
-          <section className={`mb-4 rounded-xl border p-3 sm:p-4 min-w-0 overflow-hidden ${T.statCard}`}>
-            <p className={`font-semibold ${T.tileTitle}`}>יש לכם כפילויות להמרה!</p>
-            <p className={`text-sm mt-1 ${T.tileSub}`}>
-              {convertibleCards.length} קלפים מוכנים להמרה למטבעות.
-            </p>
-            <div className="flex flex-wrap gap-2 mt-3 justify-end">
-              {convertibleCards.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  disabled={actionBusy === `convert:${c.id}`}
-                  onClick={() => void handleConvert(c.id)}
-                  className={T.ctaPrimary}
-                >
-                  {actionBusy === `convert:${c.id}` ? "ממיר..." : `המר «${c.nameHe}»`}
-                </button>
-              ))}
-            </div>
-          </section>
         ) : null}
 
         <nav

@@ -14,7 +14,7 @@ export const ADMIN_REWARDS_TABS = [
   { id: "series", label: "סדרות", cardOnly: true },
   { id: "box", label: "קופסת הפתעה", cardOnly: true },
   { id: "shop", label: "חנות", cardOnly: true },
-  { id: "duplicates", label: "כפילויות", cardOnly: true },
+  { id: "duplicates", label: "מכירת כפילויות", cardOnly: true },
   { id: "events", label: "אירועים", cardOnly: true },
   { id: "tests", label: "בדיקות", cardOnly: true },
 ];

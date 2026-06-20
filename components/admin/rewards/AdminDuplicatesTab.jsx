@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { adminAuthFetch } from "../../../lib/admin-portal/use-admin-session.js";
 import { ADMIN_LOADING, ADMIN_LOAD_ERROR, apiErrorMessageHe } from "../../../lib/admin-portal/admin-ui.he.js";
-import { formatRarityHe } from "../../../lib/admin-portal/admin-rewards-ui.he.js";
 
 export default function AdminDuplicatesTab({ accessToken }) {
-  const [threshold, setThreshold] = useState(10);
-  const [values, setValues] = useState({});
+  const [sellbackPercent, setSellbackPercent] = useState(25);
   const [phase, setPhase] = useState("loading");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,8 +20,7 @@ export default function AdminDuplicatesTab({ accessToken }) {
       return;
     }
     const s = body.settings || {};
-    setThreshold(Number(s.duplicate_threshold ?? 10));
-    setValues(s.duplicate_conversion_values || {});
+    setSellbackPercent(Number(s.duplicate_sellback_percent ?? 25));
     setPhase("ok");
   }, [accessToken]);
 
@@ -35,16 +32,12 @@ export default function AdminDuplicatesTab({ accessToken }) {
     setBusy(true);
     setMessage("");
     try {
-      const tRes = await adminAuthFetch(accessToken, "/api/admin/rewards/settings", {
+      const res = await adminAuthFetch(accessToken, "/api/admin/rewards/settings", {
         method: "PUT",
-        body: JSON.stringify({ key: "duplicate_threshold", value: threshold }),
+        body: JSON.stringify({ key: "duplicate_sellback_percent", value: sellbackPercent }),
       });
-      const vRes = await adminAuthFetch(accessToken, "/api/admin/rewards/settings", {
-        method: "PUT",
-        body: JSON.stringify({ key: "duplicate_conversion_values", value: values }),
-      });
-      if (!tRes.ok || !vRes.ok) throw new Error("שמירה נכשלה");
-      setMessage("הגדרות כפילויות נשמרו.");
+      if (!res.ok) throw new Error("שמירה נכשלה");
+      setMessage("הגדרות מכירת כפילויות נשמרו.");
     } catch (e) {
       setMessage(e.message || "שמירה נכשלה");
     } finally {
@@ -59,31 +52,24 @@ export default function AdminDuplicatesTab({ accessToken }) {
     <div className="text-right overflow-x-hidden">
       {message ? <p className="text-sm text-emerald-300 mb-3">{message}</p> : null}
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-4">
+        <p className="text-sm text-white/75 leading-relaxed">
+          הילד/ה יכול/ה למכור עותק כפול של קלף חנות ידנית — רק מהכפתור בחנות, ותמיד נשאר עותק אחד באוסף.
+          המרת 10 כפילויות אוטומטית בוטלה.
+        </p>
         <label className="block text-xs text-white/70">
-          סף כפילויות להמרה
+          אחוז מכירת קלפים כפולים
           <input
             type="number"
+            min={0}
+            max={100}
             className="block w-32 mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-            value={threshold}
-            onChange={(e) => setThreshold(Number(e.target.value))}
+            value={sellbackPercent}
+            onChange={(e) => setSellbackPercent(Number(e.target.value))}
           />
         </label>
-        <div>
-          <p className="text-xs font-bold mb-2">ערך המרה לפי נדירות (מטבעות)</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-            {["regular", "special", "rare", "gold"].map((r) => (
-              <label key={r}>
-                {formatRarityHe(r)}
-                <input
-                  type="number"
-                  className="block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
-                  value={values[r] ?? 0}
-                  onChange={(e) => setValues((v) => ({ ...v, [r]: Number(e.target.value) }))}
-                />
-              </label>
-            ))}
-          </div>
-        </div>
+        <p className="text-xs text-white/55">
+          שווי מכירה = floor(מחיר הקלף × אחוז ÷ 100). לדוגמה: קלף ב-100 מטבעות ו-25% → 25 מטבעות.
+        </p>
         <button
           type="button"
           disabled={busy}
