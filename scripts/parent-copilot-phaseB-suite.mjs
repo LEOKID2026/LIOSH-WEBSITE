@@ -2,11 +2,12 @@
  * Phase B gate: follow-up ranking / memory de-dup / in-session continuity (no Phase C).
  */
 import assert from "node:assert/strict";
-import { planConversation } from "../utils/parent-copilot/conversation-planner.js";
-import { buildTruthPacketV1 } from "../utils/parent-copilot/truth-packet-v1.js";
-import { selectFollowUp } from "../utils/parent-copilot/followup-engine.js";
+import truthPacket from "../utils/parent-copilot/truth-packet-v1.js";
 import sessionMemory from "../utils/parent-copilot/session-memory.js";
 import parentCopilot from "../utils/parent-copilot/index.js";
+
+const { planConversation } = await import("../utils/parent-copilot/conversation-planner.js");
+const { selectFollowUp } = await import("../utils/parent-copilot/followup-engine.js");
 
 function syntheticPayload() {
   const narrative = {
@@ -79,7 +80,7 @@ function syntheticPayload() {
 }
 
 const payload = syntheticPayload();
-const tp = buildTruthPacketV1(payload, {
+const tp = truthPacket.buildTruthPacketV1(payload, {
   scopeType: "topic",
   scopeId: "t1",
   scopeLabel: "שברים",

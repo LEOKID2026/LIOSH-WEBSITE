@@ -151,11 +151,39 @@ function isSensitiveEducationChoiceDraft(draft) {
   return normalizeWsHeJoin(joined) === normalizeWsHeJoin(sensitiveEducationChoiceJoinedFingerprintHe());
 }
 
-function normalizeAnswerBlocksHe(answerBlocks) {
-  return (Array.isArray(answerBlocks) ? answerBlocks : []).map((b) => ({
-    ...b,
-    textHe: normalizeParentFacingHe(String(b?.textHe || "").trim()),
-  }));
+function contractNarrativeSlotBundleHe(truthPacket) {
+  const nar = truthPacket?.contracts?.narrative;
+  return [
+    String(nar?.textSlots?.observation || ""),
+    String(nar?.textSlots?.interpretation || ""),
+    String(nar?.textSlots?.action || ""),
+    String(nar?.textSlots?.uncertainty || ""),
+  ].join(" ");
+}
+
+/**
+ * Normalize parent-facing Hebrew. When truthPacket is provided, blocks marked contract_slot
+ * whose text no longer matches narrative slots verbatim (e.g. after paraphrase normalization)
+ * are re-tagged as composed so contract_slot_mismatch does not fire on parent-facing copy.
+ * @param {Array<{ type?: string; textHe?: string; source?: string }>} answerBlocks
+ * @param {object|null} [truthPacket]
+ */
+function normalizeAnswerBlocksHe(answerBlocks, truthPacket = null) {
+  const slotBundle = truthPacket ? contractNarrativeSlotBundleHe(truthPacket) : "";
+  return (Array.isArray(answerBlocks) ? answerBlocks : []).map((b) => {
+    const textHe = normalizeParentFacingHe(String(b?.textHe || "").trim());
+    let source = String(b?.source || "composed");
+    if (
+      slotBundle &&
+      source === "contract_slot" &&
+      String(b?.type || "") !== "observation" &&
+      textHe &&
+      !slotBundle.includes(textHe)
+    ) {
+      source = "composed";
+    }
+    return { ...b, textHe, source };
+  });
 }
 
 const THIN_DATA_APPROVED_SCARCITY_RE =
@@ -419,7 +447,7 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
   const plannerIntent = fb.plannerIntent;
   const scopeMeta = fb.scopeMeta;
   let draft = {
-    answerBlocks: compactParentAnswerBlocks(normalizeAnswerBlocksHe(fb.answerBlocks), {
+    answerBlocks: compactParentAnswerBlocks(normalizeAnswerBlocksHe(fb.answerBlocks, truthPacket), {
       scopeType: String(truthPacket.scopeType || ""),
       maxBlocks: 5,
       maxTotalChars: 2400,
@@ -438,12 +466,12 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     if (draftHasClinicalGuardrailFailure(vDraft.failCodes)) {
       draft = buildClinicalBoundaryAnswerDraft();
       fallbackUsed = false;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: "clinical_boundary" });
     } else {
       draft = buildDeterministicFallbackAnswer(truthPacket, vDraft.failCodes);
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
@@ -452,7 +480,7 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
     if (draftHasClinicalGuardrailFailure(vDraft.failCodes)) {
       draft = buildClinicalBoundaryAnswerDraft();
       fallbackUsed = false;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: "clinical_boundary" });
     } else {
       const nar = truthPacket.contracts?.narrative;
@@ -467,7 +495,7 @@ function packageParentResolvedEarlyTurn(input, sessionId, priorRepeated, conv, u
         draft = buildDeterministicFallbackAnswer(truthPacket, ["emergency_fallback"]);
       }
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
@@ -1149,9 +1177,9 @@ function runDeterministicCore(input, options) {
     };
   }
 
-  draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+  draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
   draft = augmentHighVolumeEvidenceAnchorDraft(draft, truthPacket, scopedInput.payload, { plannerIntent });
-  draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+  draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
   // Do NOT augment boundary or off-topic drafts with report data.
   // Do NOT add thin-evidence augmentation when global answer count is already high —
   // adding scarcity framing to a high-volume report is a truth contradiction.
@@ -1165,7 +1193,7 @@ function runDeterministicCore(input, options) {
     const isHighVolume = augGlobalQ >= STRONG_GLOBAL_QUESTION_FLOOR;
     if (!isBoundaryIntent && !isHighVolume) {
       draft = augmentPhaseEThinEvidenceDraft(draft, truthPacket);
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
     }
     // Post-composition safety-net: strip global scarcity phrases injected by the
     // truth-packet builder when global answer count is already high.
@@ -1195,12 +1223,12 @@ function runDeterministicCore(input, options) {
     if (draftHasClinicalGuardrailFailure(vDraft.failCodes)) {
       draft = buildClinicalBoundaryAnswerDraft();
       fallbackUsed = false;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: "clinical_boundary" });
     } else {
       draft = buildDeterministicFallbackAnswer(truthPacket, vDraft.failCodes);
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
@@ -1210,7 +1238,7 @@ function runDeterministicCore(input, options) {
     if (draftHasClinicalGuardrailFailure(vDraft.failCodes)) {
       draft = buildClinicalBoundaryAnswerDraft();
       fallbackUsed = false;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: "clinical_boundary" });
     } else {
       const nar = truthPacket.contracts?.narrative;
@@ -1225,7 +1253,7 @@ function runDeterministicCore(input, options) {
         draft = buildDeterministicFallbackAnswer(truthPacket, ["emergency_fallback"]);
       }
       fallbackUsed = true;
-      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks) };
+      draft = { ...draft, answerBlocks: normalizeAnswerBlocksHe(draft.answerBlocks, truthPacket) };
       vDraft = validateAnswerDraft(draft, truthPacket, { intent: plannerIntent });
     }
   }
