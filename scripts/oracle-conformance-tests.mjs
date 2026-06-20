@@ -162,12 +162,13 @@ test("diagnose_only canonical state has intensityCap RI2, not RI3", () => {
 console.log("\n--- Test group 5: Confidence templates match oracle exactly ---");
 
 const EXPECTED_CONFIDENCE = {
-  high: "כבר רואים כיוון ברור בנושא הזה.",
+  high: "כבר רואים כיוון עקבי בנושא הזה.",
   moderate: "יש כיוון ראשוני בנושא הזה, אבל צריך עוד תרגולים כדי לוודא שהוא יציב.",
   low: "עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה.",
-  early_signal_only: "זה סימן ראשוני בלבד, ולכן עדיין לא קובעים מסקנה בנושא הזה.",
-  insufficient_data: "כרגע עדיין אין מספיק נתונים כדי לקבוע מסקנה ברורה בנושא הזה.",
-  contradictory: "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע מסקנה.",
+  early_signal_only: "זה סימן ראשוני בלבד, ולכן עדיין לא קובעים כיוון סופי בנושא הזה.",
+  insufficient_data: "בתקופה שנבחרה עדיין מעט חומר לנושא — עוד קצת תרגול ייצר תמונה ברורה יותר.",
+  contradictory: "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע כיוון ברור.",
+  default: "עדיין לא ברור מה אפשר לקבוע בנושא הזה — נכון לעכשיו עדיף תרגול קצר ולבדוק שוב בהמשך.",
 };
 
 for (const [level, expected] of Object.entries(EXPECTED_CONFIDENCE)) {
@@ -177,9 +178,9 @@ for (const [level, expected] of Object.entries(EXPECTED_CONFIDENCE)) {
   });
 }
 
-test("confidence default (null) matches insufficient_data oracle text", () => {
+test("confidence default (null) matches oracle default text", () => {
   const actual = confidenceLevelParentSummaryHe(null);
-  assert.equal(actual, EXPECTED_CONFIDENCE.insufficient_data);
+  assert.equal(actual, EXPECTED_CONFIDENCE.default);
 });
 
 console.log("\n--- Test group 6: maintain/expand template text ---");

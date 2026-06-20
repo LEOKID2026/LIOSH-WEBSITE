@@ -16,7 +16,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | Surface | Expected output |
 |---------|----------------|
 | **Regular summary** | Topic does NOT appear as strength. No positive wording. `summaryHe` mentions the topic only if it is the highest-priority monitoring topic; otherwise omitted. |
-| **Detailed explanation** | `summaryHe` = `"אין מספיק נתונים בתקופה הנבחנת."` (if entire subject empty) or the topic is excluded from strengths/excellence lists. `confidenceSummaryHe` = one of: `"כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע מסקנה."` / `"כרגע עדיין אין מספיק נתונים כדי לקבוע מסקנה ברורה בנושא הזה."` |
+| **Detailed explanation** | `summaryHe` = `"אין מספיק נתונים בתקופה הנבחנת."` (if entire subject empty) or the topic is excluded from strengths/excellence lists. `confidenceSummaryHe` = one of: `"כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע כיוון ברור."` / `"בתקופה שנבחרה עדיין מעט חומר לנושא — עוד קצת תרגול ייצר תמונה ברורה יותר."` |
 | **Home action** | `resolveUnitParentActionHe` returns `null`. No home recommendation. |
 | **Executive block** | Topic appears in `monitoringOnlyAreasHe` list as `"{displayName} ({subjectLabel})"`. Does NOT appear in `topStrengthsAcrossHe` or `transferReadyAreasHe`. |
 | **AI Copilot — "Explain the report"** | Hybrid is **suppressed** (`canonical_action_blocked`). Copilot truth packet has `cannotConcludeYet=true`, `readiness="insufficient"`, `confidenceBand="low"`. Answer uses uncertainty template: `"לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע מסקנה ברורה בנושא הזה."` |
@@ -35,7 +35,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | Surface | Expected output |
 |---------|----------------|
 | **Regular summary** | Topic does NOT appear as strength. If it is the action anchor (no diagnosed topics), `summaryHe` uses: `"בנושא {name}: עדיף עוד קצת תרגול לפני שמקבעים מסקנה."` |
-| **Detailed explanation** | `confidenceSummaryHe` = `"עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה."` (low) or `"זה סימן ראשוני בלבד, ולכן עדיין לא קובעים מסקנה בנושא הזה."` (early signal). No strengths/excellence entries for this topic. |
+| **Detailed explanation** | `confidenceSummaryHe` = `"עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה."` (low) or `"זה סימן ראשוני בלבד, ולכן עדיין לא קובעים כיוון סופי בנושא הזה."` (early signal). No strengths/excellence entries for this topic. |
 | **Home action** | `resolveUnitParentActionHe` returns `null`. No home recommendation for probe_only. |
 | **Executive block** | Topic appears in `monitoringOnlyAreasHe`. Does NOT appear in `topStrengthsAcrossHe` or `transferReadyAreasHe`. |
 | **AI Copilot — "Explain the report"** | Hybrid is **suppressed** (`canonical_action_blocked`). Copilot answer uses probe/uncertainty framing. |
@@ -54,7 +54,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | Surface | Expected output |
 |---------|----------------|
 | **Regular summary** | Topic appears in `topWeaknesses` (if `diagnosis.allowed` and `taxonomy.patternHe` exists). `summaryHe` cites the pattern: `"בנושא {name}: {patternHe}"`. |
-| **Detailed explanation** | `confidenceSummaryHe` = `"יש כיוון ראשוני בנושא הזה, אבל צריך עוד תרגולים כדי לוודא שהוא יציב."` (moderate) or `"כבר רואים כיוון ברור בנושא הזה."` (high). `recommendedStepLabelHe` = `"חיזוק ממוקד לפני קידום"` or `"איסוף אות נוסף לפני החלטה"`. |
+| **Detailed explanation** | `confidenceSummaryHe` = `"יש כיוון ראשוני בנושא הזה, אבל צריך עוד תרגולים כדי לוודא שהוא יציב."` (moderate) or `"כבר רואים כיוון עקבי בנושא הזה."` (high, ≥12 questions). `recommendedStepLabelHe` = `"חיזוק ממוקד לפני קידום"` or `"איסוף אות נוסף לפני החלטה"`. |
 | **Home action** | `resolveUnitParentActionHe` returns engine intervention/probe text (`unit.intervention.immediateActionHe` or `unit.probe.specificationHe`). |
 | **Executive block** | Topic appears in `topFocusAreasHe` (as `"{patternHe} ({subjectLabel})"`). Appears in `reviewBeforeAdvanceAreasHe` if `probe.objectiveHe` exists. Does NOT appear in `topStrengthsAcrossHe`. |
 | **AI Copilot — "Explain the report"** | Hybrid mode = `rank_only` (moderate) or `assist` (high + recurrence). Explanation cites taxonomy pattern. |
@@ -112,7 +112,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | Surface | Expected output |
 |---------|----------------|
 | **Regular summary** | Topic appears in `stableExcellence` list. Tier = `"חוזקה עקבית"`. If it's the strength lead: `summaryHe` = `"בנושא {name}: חוזקה עקבית"`. |
-| **Detailed explanation** | Topic appears in `excellence` list with `excellent: true`. `confidenceSummaryHe` = `"כבר רואים כיוון ברור בנושא הזה."` |
+| **Detailed explanation** | Topic appears in `excellence` list with `excellent: true`. `confidenceSummaryHe` = `"כבר רואים כיוון עקבי בנושא הזה."` |
 | **Home action** | `resolveUnitParentActionHe` = `"ב{name} מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך — להוסיף קושי קטן ומדוד."` |
 | **Next goal** | Same as maintain: `"לשבוע הקרוב ב{name}: להמשיך באותה רמה, ואם ההצלחה נשמרת — לנסות צעד אחד מעט מאתגר יותר."` |
 | **Home method** | Same as maintain: `"ב{name} עדיף תרגול קצר וקבוע באותה רמה, בלי לקפוץ מהר קדימה."` |
@@ -224,9 +224,9 @@ For each `actionState`, the table below defines the complete expected product ou
 | **Max length** | 80 תווים |
 | **Tone** | זהיר, ישיר |
 | **Mandatory structure** | Short parent-facing sentence, no system terminology |
-| **Allowed terms** | כיוון, מסקנה, תרגול, נתונים, סימן ראשוני, לא אחידות |
-| **Forbidden terms** | confidence, band, level, tier, engine, נשמור על ניסוח, אפשר לנסח, נשאר עם מסקנות, במערכת |
-| **Exact values (by level)** | `high`: "כבר רואים כיוון ברור בנושא הזה." · `moderate`: "יש כיוון ראשוני בנושא הזה, אבל צריך עוד תרגולים כדי לוודא שהוא יציב." · `low`: "עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה." · `early_signal_only`: "זה סימן ראשוני בלבד, ולכן עדיין לא קובעים מסקנה בנושא הזה." · `insufficient_data`/default: "כרגע עדיין אין מספיק נתונים כדי לקבוע מסקנה ברורה בנושא הזה." · `contradictory`: "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע מסקנה." |
+| **Allowed terms** | כיוון, כיוון עקבי, כיוון סופי, תרגול, נתונים, סימן ראשוני, לא אחידות |
+| **Forbidden terms** | confidence, band, level, tier, engine, נשמור על ניסוח, אפשר לנסח, נשאר עם מסקנות, במערכת, מסקנה (when data is insufficient or contradictory) |
+| **Exact values (by level)** | `high` (≥12 questions): "כבר רואים כיוון עקבי בנושא הזה." · `high` (<12 questions): moderate text · `moderate`: "יש כיוון ראשוני בנושא הזה, אבל צריך עוד תרגולים כדי לוודא שהוא יציב." · `low`: "עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה." · `early_signal_only`: "זה סימן ראשוני בלבד, ולכן עדיין לא קובעים כיוון סופי בנושא הזה." · `insufficient_data`: "בתקופה שנבחרה עדיין מעט חומר לנושא — עוד קצת תרגול ייצר תמונה ברורה יותר." · `contradictory`: "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע כיוון ברור." · `default` (null/unknown): "עדיין לא ברור מה אפשר לקבוע בנושא הזה — נכון לעכשיו עדיף תרגול קצר ולבדוק שוב בהמשך." |
 
 ### 3.3 Home Action (`parentActionHe`)
 
@@ -385,7 +385,7 @@ For each `actionState`, the table below defines the complete expected product ou
 
 **Regular report:** Not in strengths. `summaryHe` does not mention as positive. If sole topic: `"בנושא חיסור: עדיף עוד קצת תרגול לפני שמקבעים מסקנה."`
 
-**Detailed block:** `confidenceSummaryHe` = "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע מסקנה." · `parentActionHe` = null
+**Detailed block:** `confidenceSummaryHe` = "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע כיוון ברור." · `parentActionHe` = null
 
 **Executive:** In `monitoringOnlyAreasHe`: `"חיסור (חשבון)"`. NOT in `topStrengthsAcrossHe`.
 
@@ -403,7 +403,7 @@ For each `actionState`, the table below defines the complete expected product ou
 
 **Regular report:** Not in any list. Subject may show "עדיין נאספו מעט תרגולים בנושא הזה".
 
-**Detailed block:** `confidenceSummaryHe` = "כרגע עדיין אין מספיק נתונים כדי לקבוע מסקנה ברורה בנושא הזה."
+**Detailed block:** `confidenceSummaryHe` = "בתקופה שנבחרה עדיין מעט חומר לנושא — עוד קצת תרגול ייצר תמונה ברורה יותר."
 
 **Executive:** In `monitoringOnlyAreasHe`.
 
@@ -473,7 +473,7 @@ For each `actionState`, the table below defines the complete expected product ou
 
 **Regular report:** In `topWeaknesses`.
 
-**Detailed block:** `confidenceSummaryHe` = "כבר רואים כיוון ברור בנושא הזה."
+**Detailed block:** `confidenceSummaryHe` = "כבר רואים כיוון עקבי בנושא הזה."
 
 **Home recommendation:** Engine intervention text.
 
@@ -553,7 +553,7 @@ For each `actionState`, the table below defines the complete expected product ou
 
 **Regular report:** In `stableExcellence`. Tier = "חוזקה עקבית". If strength lead: `summaryHe` = "בנושא חיבור: חוזקה עקבית"
 
-**Detailed block:** `confidenceSummaryHe` = "כבר רואים כיוון ברור בנושא הזה."
+**Detailed block:** `confidenceSummaryHe` = "כבר רואים כיוון עקבי בנושא הזה."
 
 **Home action:** "בחיבור מומלץ להישאר בינתיים באותה רמה, ורק אם ההצלחה נמשכת גם בהמשך — להוסיף קושי קטן ומדוד."
 
