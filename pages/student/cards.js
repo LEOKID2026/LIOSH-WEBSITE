@@ -46,6 +46,33 @@ const TAB_STYLES = {
 /** Shared row height for back / coins / theme / tabs — keep all items visually equal. */
 const CARDS_HEADER_ROW_HEIGHT = "min-h-[2.75rem] sm:min-h-[3.25rem]";
 
+function CardRequirementProgress({ card, T }) {
+  const target = Number(card.progressTarget);
+  const current = Math.max(0, Number(card.progressCurrent) || 0);
+  if (!Number.isFinite(target) || target <= 0) {
+    const text = card.requirementHe || card.lockMessageHe;
+    return text ? (
+      <p className={`text-xs leading-snug min-h-[1.125rem] ${T.tileSub}`}>{text}</p>
+    ) : (
+      <p className={`text-xs min-h-[1.125rem] ${T.tileSub}`}>{"\u00a0"}</p>
+    );
+  }
+  const pct = Math.min(100, Math.round((current / target) * 100));
+  return (
+    <div className="space-y-1 min-w-0">
+      <p className={`text-xs leading-snug ${T.tileSub}`}>
+        {card.requirementHe || card.progressHe || card.lockMessageHe}
+      </p>
+      <div className={`${T.progressTrack} w-full`}>
+        <div className={T.progressFill} style={{ width: `${pct}%` }} />
+      </div>
+      {card.progressHe ? (
+        <p className={`text-[10px] tabular-nums ${T.tileSub}`}>{card.progressHe}</p>
+      ) : null}
+    </div>
+  );
+}
+
 function cardsHeaderRowMetricsClass() {
   return (
     `${CARDS_HEADER_ROW_HEIGHT} px-1 sm:px-2 md:px-3 py-0 ` +
@@ -424,15 +451,11 @@ export default function StudentCardsPage() {
               allowDownload={card.isOwned}
               studentFullName={studentDisplayName}
               footer={
-                <p
-                  className={`text-xs leading-snug min-h-[1.125rem] ${
-                    card.isOwned
-                      ? "font-bold text-amber-500 dark:text-amber-300"
-                      : T.tileSub
-                  }`}
-                >
-                  {card.isOwned ? CATALOG_CARD_OWNED_HE : card.lockMessageHe || "\u00a0"}
-                </p>
+                card.isOwned ? (
+                  <p className="text-xs font-bold text-amber-500 dark:text-amber-300">{CATALOG_CARD_OWNED_HE}</p>
+                ) : (
+                  <CardRequirementProgress card={card} T={T} />
+                )
               }
             />
           ))}

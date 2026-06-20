@@ -12,6 +12,11 @@ const tests = [
   "tests/rewards/economy-resolution-chain.test.mjs",
   "tests/rewards/card-settings-required.test.mjs",
   "tests/rewards/admin-student-economy-parity.test.mjs",
+  "tests/rewards/card-catalog-baseline.test.mjs",
+  "tests/rewards/card-rules-no-hardcoded.test.mjs",
+  "tests/rewards/card-requirement-he.test.mjs",
+  "tests/rewards/card-acquisition-evaluator.test.mjs",
+  "tests/rewards/card-catalog-admin-parity.test.mjs",
   "tests/arcade/economy-entry-costs.test.mjs",
 ];
 

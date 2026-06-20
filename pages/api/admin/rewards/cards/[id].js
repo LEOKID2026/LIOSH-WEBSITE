@@ -4,6 +4,10 @@ import {
 } from "../../../../../lib/admin-server/admin-request.server.js";
 import { guardRewardsAdminApi } from "../../../../../lib/rewards/guards.server.js";
 import { isCardRewardsEnabled } from "../../../../../lib/rewards/reward-feature-flags.js";
+import {
+  pickCardWritableFields,
+  validateCardPayload,
+} from "../../../../../lib/rewards/server/admin-card-rules.server.js";
 
 export default async function handler(req, res) {
   if (!guardRewardsAdminApi(res)) return;
@@ -21,9 +25,22 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "PUT") {
-    const body = req.body || {};
-    if (body.card_type === "achievement" && (body.can_be_purchased || body.can_appear_in_surprise_box)) {
-      return sendAdminApiError(res, 400, "invalid_achievement", "קלף הישג לא יכול להיות בחנות או בקופסה");
+    const { data: existing, error: fetchErr } = await ctx.serviceRole
+      .from("reward_cards")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (fetchErr) return sendAdminApiError(res, 500, "db_error", fetchErr.message);
+    if (!existing) return sendAdminApiError(res, 404, "card_not_found", "קלף לא נמצא");
+
+    const body = pickCardWritableFields(req.body || {});
+    if (Object.prototype.hasOwnProperty.call(body, "id")) {
+      delete body.id;
+    }
+    const merged = { ...existing, ...body };
+    const validation = validateCardPayload(merged);
+    if (!validation.ok) {
+      return sendAdminApiError(res, 400, validation.code, validation.message);
     }
     const { data, error } = await ctx.serviceRole
       .from("reward_cards")
