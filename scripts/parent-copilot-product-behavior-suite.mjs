@@ -86,7 +86,7 @@ function payloadIneligibleRec() {
       observation: "בנושא נצפו 6 שאלות.",
       interpretation: "נכון לעכשיו התמונה עדיין רכה.",
       action: "להמשיך בתרגול קצר ומדוד.",
-      uncertainty: "נכון לעכשיו כדאי לאסוף עוד תרגול לפני מסקנה חזקה.",
+      uncertainty: "נכון לעכשיו כדאי לאסוף עוד תרגול לפני כיוון ברור.",
     },
   };
   const tr = {

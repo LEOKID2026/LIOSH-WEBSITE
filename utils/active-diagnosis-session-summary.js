@@ -14,7 +14,7 @@ export function getActiveDiagnosisSessionSummaryForReport() {
     return {
       version: 1,
       cautionHe:
-        "תמונת מצב סשן מקומית בלבד (לא אבחון קליני ולא מסקנה סופית).",
+        "תמונת מצב סשן מקומית בלבד (לא אבחון קליני ולא כיוון סופי).",
       pendingProbe: d.pendingProbe ?? null,
       hypothesisLedger: d.hypothesisLedger ?? null,
       lastProbeSelectionResult: d.lastProbeSelectionResult ?? null,

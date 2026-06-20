@@ -3,19 +3,8 @@
  * Run: npm run test:ai-hybrid-harness
  */
 import assert from "node:assert/strict";
-import diagnosticModule from "../utils/diagnostic-engine-v2/index.js";
-import safeHybridModule from "../utils/ai-hybrid-diagnostic/safe-build-hybrid-runtime.js";
-
-const runDiagnosticEngineV2 =
-  diagnosticModule.runDiagnosticEngineV2 ?? diagnosticModule.default?.runDiagnosticEngineV2;
-const safeBuildHybridRuntimeForReport =
-  safeHybridModule.safeBuildHybridRuntimeForReport ?? safeHybridModule.default?.safeBuildHybridRuntimeForReport;
-if (typeof runDiagnosticEngineV2 !== "function") {
-  throw new Error("runDiagnosticEngineV2 not resolved (tsx/CJS interop)");
-}
-if (typeof safeBuildHybridRuntimeForReport !== "function") {
-  throw new Error("safeBuildHybridRuntimeForReport not resolved (tsx/CJS interop)");
-}
+import { runDiagnosticEngineV2 } from "../utils/diagnostic-engine-v2/index.js";
+import { safeBuildHybridRuntimeForReport } from "../utils/ai-hybrid-diagnostic/safe-build-hybrid-runtime.js";
 
 const START_MS = Date.UTC(2026, 3, 1, 0, 0, 0, 0);
 const END_MS = Date.UTC(2026, 3, 14, 23, 59, 59, 999);

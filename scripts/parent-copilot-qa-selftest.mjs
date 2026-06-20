@@ -137,7 +137,7 @@ function thinDataPayload() {
   const tr = makeContract(
     "frac", "math",
     "ענה על 3 שאלות בשברים, עם דיוק של כ-67%.",
-    "נתונים ראשוניים בלבד — כיוון ראשוני, לא מסקנה.",
+    "נתונים ראשוניים בלבד — כיוון ראשוני, לא כיוון סופי.",
     "",
     "מכיוון שהנתונים מועטים, זהו כיוון ראשוני בלבד.",
     3, 67, false,
@@ -158,7 +158,7 @@ function scopedThinDataPayload() {
   const geoThin = makeContract(
     "geo", "math",
     "בגאומטריה ענה על 2 שאלות בלבד — נתונים ראשוניים.",
-    "בנושא גאומטריה בלבד יש מעט נתונים, לכן לגבי הנושא הזה המסקנה זהירה.",
+    "בנושא גאומטריה בלבד יש מעט נתונים, לכן לגבי הנושא הזה הכיוון זהיר.",
     "",
     "בגאומטריה בלבד יש מעט נתונים יחסית.",
     2, 50, false,
@@ -483,7 +483,7 @@ const HIGH_DATA_THIN_PHRASES = [
   /כיוון\s+ראשוני\s+בלבד(?!\s+(?:לגבי|ב))/u,
   /עדיין\s+לא\s+ניתן\s+להסיק(?!\s+(?:לגבי|ב))/u,
   /יש\s+כרגע\s+מעט\s+נתוני\s+תרגול/u,
-  /אין\s+עדיין\s+מספיק\s+מידע\s+למסקנה/u,
+  /אין\s+עדיין\s+מספיק\s+מידע\s+לכיוון/u,
 ];
 
 const highDataQuestions = [
@@ -680,7 +680,7 @@ const highVol = minimalTruthPacket({ surfaceFacts: { questions: 400, reportQuest
 // Original banned phrase (existing test)
 const badDraft1 = {
   answerBlocks: [
-    { type: "observation", textHe: "יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע למסקנה חזקה. זה תירוץ.", source: "composed" },
+    { type: "observation", textHe: "יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע לכיוון ברור. זה תירוץ.", source: "composed" },
     { type: "meaning", textHe: "המשך טקסט ארוך מספיק כדי לעבור חוקים בסיסיים של מבנה כאן.", source: "composed" },
   ],
 };

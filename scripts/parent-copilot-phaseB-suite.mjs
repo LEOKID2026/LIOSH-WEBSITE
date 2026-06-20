@@ -23,7 +23,7 @@ function syntheticPayload() {
     recommendationIntensityCap: "RI2",
     textSlots: {
       observation: "בשברים נצפו 12 שאלות, עם דיוק של כ־75%.",
-      interpretation: "יש כיוון עבודה סביר, ועדיין נדרש אישור נוסף לפני מסקנה חזקה.",
+      interpretation: "יש כיוון עבודה סביר, ועדיין נדרש אישור נוסף לפני כיוון ברור.",
       action: "מומלץ חיזוק ממוקד ובדיקת עצמאות קצרה לפני קידום.",
       uncertainty: "נכון לעכשיו כדאי להמשיך לעקוב ולאמת את הכיוון בסבב הקרוב.",
     },
@@ -97,7 +97,7 @@ assert.deepEqual(plan2.blockPlan.slice(0, 2), ["meaning", "observation"]);
 sessionMemory.resetParentCopilotSessionForTests("phaseB-mem");
 sessionMemory.applyConversationStateDelta("phaseB-mem", {
   suggestedFollowupTextHe: "רוצים לזהות יחד מה כדאי להימנע ממנו בשבוע הקרוב?",
-  assistantAnswerSummary: "יש כיוון עבודה סביר ועדיין נדרש אישור נוסף לפני מסקנה חזקה במשמעות ארוכה.",
+  assistantAnswerSummary: "יש כיוון עבודה סביר ועדיין נדרש אישור נוסף לפני כיוון ברור במשמעות ארוכה.",
 });
 const sm = sessionMemory.getConversationState("phaseB-mem");
 assert.ok(Array.isArray(sm.recentSuggestedFollowupTexts) && sm.recentSuggestedFollowupTexts.length === 1);

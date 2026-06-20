@@ -224,7 +224,7 @@ const SCENARIOS = {
               cannotConclude: true,
               eligible: false,
               observation: "נכון לעכשיו בצורות נצפו רק 3 שאלות.",
-              interpretation: "נכון לעכשיו עדיין מוקדם לסגור מסקנה יציבה.",
+              interpretation: "נכון לעכשיו עדיין מוקדם לקבוע כיוון עקבי.",
               action: null,
               uncertainty: "נכון לעכשיו כדאי לאסוף עוד תרגול לפני החלטה.",
             }),

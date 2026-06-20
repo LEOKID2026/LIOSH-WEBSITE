@@ -36,7 +36,7 @@ export const PARENT_NARRATIVE_SAFETY_FIXTURES = [
     id: "thin_data_cautious_wording",
     description: "Thin evidence but explicit cautious hedging — should not block.",
     narrativeText:
-      "עדיין מוקדם להסיק מסקנה סופית. ייתכן שכדאי חיזוק קל — כדאי לאסוף עוד מעט תרגול לפני שמחליטים על צעד הבא.",
+      "עדיין מוקדם לקבוע כיוון סופי. ייתכן שכדאי חיזוק קל — כדאי לאסוף עוד מעט תרגול לפני שמחליטים על צעד הבא.",
     engineOutput: {
       thinData: true,
       questionCount: 4,

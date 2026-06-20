@@ -1,6 +1,6 @@
 {
   "artifact": "stage-s2-hebrew-gate",
-  "generatedAt": "2026-06-20T12:08:16.783Z",
+  "generatedAt": "2026-06-20T13:57:21.121Z",
   "checks": {
     "roboticityRate": true,
     "leakagePer1000": true,

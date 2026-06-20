@@ -35,7 +35,7 @@ function syntheticPayload() {
     recommendationIntensityCap: "RI2",
     textSlots: {
       observation: "בשברים נצפו 12 שאלות, עם דיוק של כ־75%.",
-      interpretation: "יש כיוון עבודה סביר, ועדיין נדרש אישור נוסף לפני מסקנה חזקה.",
+      interpretation: "יש כיוון עבודה סביר, ועדיין נדרש אישור נוסף לפני כיוון ברור.",
       action: "מומלץ חיזוק ממוקד ובדיקת עצמאות קצרה לפני קידום.",
       uncertainty: "נכון לעכשיו כדאי להמשיך לעקוב ולאמת את הכיוון בסבב הקרוב.",
     },

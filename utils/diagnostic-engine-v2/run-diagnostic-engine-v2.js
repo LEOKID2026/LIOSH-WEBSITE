@@ -259,9 +259,9 @@ export function runDiagnosticEngineV2({ maps, rawMistakesBySubject, startMs, end
 
       /** @type {string[]} */
       const cannotConclude = [];
-      if (gating.cannotConcludeYet) cannotConclude.push("לא ניתן להסיק מסקנה יציבה כרגע — כדאי עוד תרגול בטווח");
+      if (gating.cannotConcludeYet) cannotConclude.push("לא ניתן לקבוע כיוון עקבי כרגע — כדאי עוד תרגול בטווח");
       if (weakTaxonomyFallbackBlocked) {
-        cannotConclude.push("האות עדיין לא מסווג לטקסונומיה יציבה — נשארים בשאלת בדיקה לפני מסקנה.");
+        cannotConclude.push("האות עדיין לא מסווג לטקסונומיה יציבה — נשארים בשאלת בדיקה לפני כיוון.");
       }
       if (!chosenId && wrongCountForRules > 0) cannotConclude.push("לא נמצאה התאמה ברורה לסוג טעות אחרי סינון חזרתיות");
 

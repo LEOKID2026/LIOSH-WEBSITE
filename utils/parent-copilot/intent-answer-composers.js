@@ -417,7 +417,7 @@ function composeTopicProblem(params) {
             " מבחינה לימודית, זה אומר שכדאי לחזק לפני שמסיקים שהכול יציב.",
     );
   } else if (polarity === POLARITY.thin) {
-    meaningParts.push(`ב${displayName} יש עדיין מעט תרגול (${q} שאלות) — מוקדם לסגור מסקנה חדה.`);
+    meaningParts.push(`ב${displayName} יש עדיין מעט תרגול (${q} שאלות) — מוקדם לקבוע כיוון ברור.`);
   } else {
     meaningParts.push(
       `ב${displayName} נראית יציבות יחסית (${acc}% על ${q} שאלות) — עדיין כדאי לוודא שזה חוזר.`,
@@ -997,7 +997,7 @@ function composeZeroEvidence(params) {
       },
       {
         type: "meaning",
-        textHe: "לכן אי אפשר להסיק מסקנה מהדוח הנוכחי על ביצועים במקצוע הזה.",
+        textHe: "לכן אי אפשר לקבוע כיוון מהדוח הנוכחי על ביצועים במקצוע הזה.",
         source: "intent_composer",
       },
     ],

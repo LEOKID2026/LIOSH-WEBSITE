@@ -266,7 +266,7 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
         {
           type: "meaning",
           textHe:
-            "לא ניתן להתעלם מהדוח או לעקוף את מה שנספר מתוך התרגול בטווח שבדוח בלבד. אם משהו נראה לא מסתדר, נכון לבדוק יחד תאריכים ונושאים לפני מסקנה.",
+            "לא ניתן להתעלם מהדוח או לעקוף את מה שנספר מתוך התרגול בטווח שבדוח בלבד. אם משהו נראה לא מסתדר, נכון לבדוק יחד תאריכים ונושאים לפני שקובעים כיוון.",
           source: "composed",
         },
       ],
@@ -429,7 +429,7 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
       if (
         sfQ >= 120 &&
         sfA >= 65 &&
-        /דקים מדי|לא ניתן לסגור מסקנה יציבה|מסקנה חד משמעית|שאלות פתוחות|עדיין לא מאפשר לסגור/u.test(reason)
+        /דקים מדי|לא ניתן לקבוע כיוון עקבי|כיוון ברור|שאלות פתוחות|עדיין לא מאפשר לקבוע/u.test(reason)
       ) {
         reason =
           "יש כאן נפח תרגול משמעותי בדוח; עדיין יש הבדל טבעי בין מה שקורה בבית לבין מה שנספר בטווח — נעדכן שוב אחרי עוד תרגול.";
@@ -498,7 +498,7 @@ export function composeAnswerDraft(plan, truthPacket, coachingCtx = null) {
   if (isMixedGradeReportQuestion(foldUtteranceForHeMatch(parentUtterance)) && gpm?.mixedGradePractice) {
     const note = String(gpm.mixedGradePracticeNoteHe || "").trim();
     const gradeLine = note
-      ? `${note} כל שורה בדוח מציגה את כיתת התוכן שבה בוצע התרגול — לא למזג בין כיתות כשמסיקים מסקנה.`
+      ? `${note} כל שורה בדוח מציגה את כיתת התוכן שבה בוצע התרגול — לא למזג בין כיתות כשקובעים כיוון.`
       : "כשאותו נושא מופיע בכיתות תוכן שונות, כל שורה בדוח נספרת בנפרד — לא למזג בין כיתות.";
     if (!composed.some((b) => String(b.textHe || "").includes("כיתה"))) {
       composed = [...composed, { type: "meaning", textHe: gradeLine, source: "composed" }];

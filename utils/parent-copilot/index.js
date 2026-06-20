@@ -190,8 +190,8 @@ function normalizeAnswerBlocksHe(answerBlocks, truthPacket = null, opts = null) 
 }
 
 const THIN_DATA_APPROVED_SCARCITY_RE =
-  /(יש\s+כרגע\s+מעט\s+נתוני\s+תרגול|נפח\s+הנתונים\s+עדיין\s+מצומצם|אין\s+עדיין\s+מספיק\s+מידע\s+למסקנה\s+חזקה)/u;
-const THIN_DATA_DEFAULT_LEAD = "יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע למסקנה חזקה.";
+  /(יש\s+כרגע\s+מעט\s+נתוני\s+תרגול|נפח\s+הנתונים\s+עדיין\s+מצומצם|אין\s+עדיין\s+מספיק\s+מידע\s+לכיוון\s+ברור)/u;
+const THIN_DATA_DEFAULT_LEAD = "יש כרגע מעט נתוני תרגול, ולכן אין עדיין מספיק מידע לכיוון ברור.";
 
 function shouldUseThinDataLead(truthPacket, intent, payload) {
   const tp = truthPacket && typeof truthPacket === "object" ? truthPacket : {};
@@ -268,7 +268,7 @@ function buildNoScopeCategorySpecificClarification(utterance) {
     return "יכול להיות פער בין הצלחה בבית לבין ביצוע בתרגול באפליקציה. לכן מסתכלים על דפוס חוזר בדוח לאורך זמן, ולא על תשובה בודדת.";
   }
   if (/תסביר\s*לי\s*כמו\s*להורה|בלי\s*מושגים|במשפט\s*אחד|רק\s*3\s*נקודות|בקיצור/i.test(t)) {
-    return "בקצרה: הדוח משווה בין נושאים לפי כמות שאלות ודיוק בתרגול. אם הנתונים עדיין מעטים, זה סימן ראשוני ולא מסקנה סופית — כדאי לצבור עוד קצת תרגול קצר לפני שמסיקים.";
+    return "בקצרה: הדוח משווה בין נושאים לפי כמות שאלות ודיוק בתרגול. אם הנתונים עדיין מעטים, זה סימן ראשוני ולא כיוון סופי — כדאי לצבור עוד קצת תרגול קצר לפני שקובעים כיוון.";
   }
   if (/מה\s*לעשות\s*מחר|מה\s*לתרגל\s*השבוע|תוכנית\s*קצרה|איך\s*לעזור\s*בלי\s*לחץ/i.test(t)) {
     return "אפשר להתחיל בתוכנית קצרה: 1) 10 דקות חזרה בנושא אחד, 2) 5-8 שאלות בנושא נוסף, 3) בדיקה חוזרת בעוד יומיים אם אותו דפוס נשמר.";
@@ -1266,7 +1266,7 @@ function runDeterministicCore(input, options) {
     // truth-packet builder when global answer count is already high.
     if (isHighVolume && !isBoundaryIntent) {
       const SCARCITY_STRIP_RE =
-        /(יש\s+כרגע\s+מעט\s+נתוני\s+תרגול,?\s*כלומר[^.]*\.?\s*|נפח\s+הנתונים\s+עדיין\s+מצומצם[^.]*\.?\s*|אין\s+עדיין\s+מספיק\s+מידע\s+למסקנה\s+חזקה[^.]*\.?\s*)/gu;
+        /(יש\s+כרגע\s+מעט\s+נתוני\s+תרגול,?\s*כלומר[^.]*\.?\s*|נפח\s+הנתונים\s+עדיין\s+מצומצם[^.]*\.?\s*|אין\s+עדיין\s+מספיק\s+מידע\s+לכיוון\s+ברור[^.]*\.?\s*)/gu;
       draft = {
         ...draft,
         answerBlocks: draft.answerBlocks.map((b) => ({

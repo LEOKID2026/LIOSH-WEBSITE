@@ -19,7 +19,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | **Detailed explanation** | `summaryHe` = `"אין מספיק נתונים בתקופה הנבחנת."` (if entire subject empty) or the topic is excluded from strengths/excellence lists. `confidenceSummaryHe` = one of: `"כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע כיוון ברור."` / `"בתקופה שנבחרה עדיין מעט חומר לנושא — עוד קצת תרגול ייצר תמונה ברורה יותר."` |
 | **Home action** | `resolveUnitParentActionHe` returns `null`. No home recommendation. |
 | **Executive block** | Topic appears in `monitoringOnlyAreasHe` list as `"{displayName} ({subjectLabel})"`. Does NOT appear in `topStrengthsAcrossHe` or `transferReadyAreasHe`. |
-| **AI Copilot — "Explain the report"** | Hybrid is **suppressed** (`canonical_action_blocked`). Copilot truth packet has `cannotConcludeYet=true`, `readiness="insufficient"`, `confidenceBand="low"`. Answer uses uncertainty template: `"לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע מסקנה ברורה בנושא הזה."` |
+| **AI Copilot — "Explain the report"** | Hybrid is **suppressed** (`canonical_action_blocked`). Copilot truth packet has `cannotConcludeYet=true`, `readiness="insufficient"`, `confidenceBand="low"`. Answer uses uncertainty template: `"לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע כיוון ברור בנושא הזה."` |
 | **AI Copilot — "What should we work on at home?"** | `recommendationEligible=false`. Answer: no actionable recommendation. Follow-ups limited to `uncertainty_boundary`, `explain_to_child`, `ask_teacher`. |
 | **AI Copilot — "Why is this not yet a strength?"** | Answer cites insufficient/contradictory data. Must include uncertainty marker. |
 | **AI Copilot — "What is going well?"** | Topic is NOT mentioned as going well. |
@@ -34,7 +34,7 @@ For each `actionState`, the table below defines the complete expected product ou
 
 | Surface | Expected output |
 |---------|----------------|
-| **Regular summary** | Topic does NOT appear as strength. If it is the action anchor (no diagnosed topics), `summaryHe` uses: `"בנושא {name}: עדיף עוד קצת תרגול לפני שמקבעים מסקנה."` |
+| **Regular summary** | Topic does NOT appear as strength. If it is the action anchor (no diagnosed topics), `summaryHe` uses: `"בנושא {name}: עדיף עוד קצת תרגול לפני שקובעים כיוון."` |
 | **Detailed explanation** | `confidenceSummaryHe` = `"עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה."` (low) or `"זה סימן ראשוני בלבד, ולכן עדיין לא קובעים כיוון סופי בנושא הזה."` (early signal). No strengths/excellence entries for this topic. |
 | **Home action** | `resolveUnitParentActionHe` returns `null`. No home recommendation for probe_only. |
 | **Executive block** | Topic appears in `monitoringOnlyAreasHe`. Does NOT appear in `topStrengthsAcrossHe` or `transferReadyAreasHe`. |
@@ -134,7 +134,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | **Allowed actions** | המשך תרגול רגיל; אין שינוי |
 | **Forbidden actions** | שינוי רמה, קפיצה לנושא חדש, הצהרה על חוזקה או חולשה |
 | **Urgency** | אין — ממתינים לנתונים נוספים |
-| **Good examples** | (1) "כרגע אין מספיק נתונים כדי לקבוע מסקנה יציבה בנושא הזה." (2) "התוצאות לא מסתדרות זו עם זו — עוד קצת תרגול לפני מסקנה." |
+| **Good examples** | (1) "כרגע אין מספיק נתונים כדי לקבוע כיוון עקבי בנושא הזה." (2) "התוצאות לא מסתדרות זו עם זו — עוד קצת תרגול לפני כיוון." |
 | **Bad examples** | (1) ~~"הילד מצליח יפה בנושא הזה!"~~ (2) ~~"מומלץ להרחיב לנושא הבא"~~ |
 
 ### 2.2 Family: `probe_only`
@@ -146,7 +146,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | **Allowed actions** | תרגול ממוקד באותו נושא; מעקב |
 | **Forbidden actions** | הכרזה על חוזקה, התערבות אינטנסיבית, שינוי כיוון |
 | **Urgency** | נמוכה — המשך איסוף ראיות |
-| **Good examples** | (1) "עדיף עוד קצת תרגול לפני שמקבעים מסקנה." (2) "זה עדיין אות מוקדם — לא נמהרים למסקנה חזקה." |
+| **Good examples** | (1) "עדיף עוד קצת תרגול לפני שקובעים כיוון." (2) "זה עדיין אות מוקדם — לא נמהרים לכיוון ברור." |
 | **Bad examples** | (1) ~~"שליטה טובה בנושא"~~ (2) ~~"יש בעיה חמורה שדורשת טיפול מיידי"~~ |
 
 ### 2.3 Family: `diagnose_only`
@@ -210,7 +210,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | **Max length** | 120 תווים (משפט אחד) |
 | **Tone** | ברור, מאופק, עובדתי |
 | **Mandatory structure** | `"בנושא {name}: {תיאור}"` |
-| **Allowed terms** | חוזקה עקבית, קושי חוזר, תחום לחיזוק, עוד תרגול, מסקנה |
+| **Allowed terms** | חוזקה עקבית, קושי חוזר, תחום לחיזוק, עוד תרגול, כיוון |
 | **Forbidden terms** | שום מונח מערכתי (ראו §5) |
 | **Before** | ~~"ברמת כפל: נדרש בירור נוסף"~~ |
 | **After** | "בנושא כפל: חוזקה עקבית" |
@@ -225,7 +225,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | **Tone** | זהיר, ישיר |
 | **Mandatory structure** | Short parent-facing sentence, no system terminology |
 | **Allowed terms** | כיוון, כיוון עקבי, כיוון סופי, תרגול, נתונים, סימן ראשוני, לא אחידות |
-| **Forbidden terms** | confidence, band, level, tier, engine, נשמור על ניסוח, אפשר לנסח, נשאר עם מסקנות, במערכת, מסקנה (when data is insufficient or contradictory) |
+| **Forbidden terms** | confidence, band, level, tier, engine, נשמור על ניסוח, אפשר לנסח, נשאר עם כיוונים, במערכת, מסקנה (when data is insufficient or contradictory) |
 | **Exact values (by level)** | `high` (≥12 questions): "כבר רואים כיוון עקבי בנושא הזה." · `high` (<12 questions): moderate text · `moderate`: "יש כיוון ראשוני בנושא הזה, אבל צריך עוד תרגולים כדי לוודא שהוא יציב." · `low`: "עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה." · `early_signal_only`: "זה סימן ראשוני בלבד, ולכן עדיין לא קובעים כיוון סופי בנושא הזה." · `insufficient_data`: "בתקופה שנבחרה עדיין מעט חומר לנושא — עוד קצת תרגול ייצר תמונה ברורה יותר." · `contradictory`: "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע כיוון ברור." · `default` (null/unknown): "עדיין לא ברור מה אפשר לקבוע בנושא הזה — נכון לעכשיו עדיף תרגול קצר ולבדוק שוב בהמשך." |
 
 ### 3.3 Home Action (`parentActionHe`)
@@ -249,7 +249,7 @@ For each `actionState`, the table below defines the complete expected product ou
 | **Max length** | `majorTrendsHe`: 2 שורות, ~100 תווים כל אחת · `mainHomeRecommendationHe`: 150 תווים · `overallConfidenceHe`: 100 תווים |
 | **Tone** | מקצועי, מאוזן |
 | **Mandatory structure** | Trends → Confidence → Home recommendation → Caution (if applicable) |
-| **Allowed terms** | נושאים, תקופה, חוזקה עקבית, תשומת לב, תרגול, מסקנה |
+| **Allowed terms** | נושאים, תקופה, חוזקה עקבית, תשומת לב, תרגול, כיוון |
 | **Forbidden terms** | כל מונח מערכתי (ראו §5) |
 
 ### 3.5 Empty Subject Stub
@@ -258,7 +258,7 @@ For each `actionState`, the table below defines the complete expected product ou
 |-------|-------|
 | **Target audience** | הורה |
 | **Purpose** | תחליף כשאין נתונים במקצוע |
-| **Exact text** | `summaryHe` = "אין מספיק נתונים בתקופה הנבחנת." · `confidenceSummaryHe` = "עדיין לא הצטבר מספיק מידע למסקנה ברורה." · all recommendation fields = `null` |
+| **Exact text** | `summaryHe` = "אין מספיק נתונים בתקופה הנבחנת." · `confidenceSummaryHe` = "עדיין לא הצטבר מספיק מידע לכיוון ברור." · all recommendation fields = `null` |
 | **Forbidden** | כל ניסוח שמציע מגמה, חוזקה, חולשה, או המלצה |
 
 ### 3.6 Strength Tier Label
@@ -383,13 +383,13 @@ For each `actionState`, the table below defines the complete expected product ou
 
 **Expected canonical state:** `actionState="withhold"`, `readiness="insufficient"`, `cannotConcludeYet=true`, `recommendation={family:"withhold", allowed:false}`, `hardDenyReason="contradictory"`
 
-**Regular report:** Not in strengths. `summaryHe` does not mention as positive. If sole topic: `"בנושא חיסור: עדיף עוד קצת תרגול לפני שמקבעים מסקנה."`
+**Regular report:** Not in strengths. `summaryHe` does not mention as positive. If sole topic: `"בנושא חיסור: עדיף עוד קצת תרגול לפני שקובעים כיוון."`
 
 **Detailed block:** `confidenceSummaryHe` = "כרגע התוצאות בנושא הזה לא אחידות, ולכן עוד מוקדם לקבוע כיוון ברור." · `parentActionHe` = null
 
 **Executive:** In `monitoringOnlyAreasHe`: `"חיסור (חשבון)"`. NOT in `topStrengthsAcrossHe`.
 
-**Copilot "Explain the report":** "לפי מה שנאסף עד עכשיו, עדיין מוקדם לקבוע מסקנה ברורה בנושא הזה."
+**Copilot "Explain the report":** "לפי מה שנאסף עד עכשיו, עדיין מוקדם לקבוע כיוון ברור בנושא הזה."
 
 **Home recommendation:** null (no recommendation)
 
@@ -419,7 +419,7 @@ For each `actionState`, the table below defines the complete expected product ou
 
 **Expected canonical state:** `actionState="probe_only"`, `readiness="insufficient"`, `cannotConcludeYet=false`, `recommendation={family:"probe_only", allowed:false}`
 
-**Regular report:** Not in strengths. `summaryHe` (if sole topic): `"בנושא שברים: עדיף עוד קצת תרגול לפני שמקבעים מסקנה."`
+**Regular report:** Not in strengths. `summaryHe` (if sole topic): `"בנושא שברים: עדיף עוד קצת תרגול לפני שקובעים כיוון."`
 
 **Detailed block:** `confidenceSummaryHe` = "עדיין מוקדם לקבוע בנושא הזה, ועוד תרגול יעזור להבין את התמונה."
 
@@ -645,7 +645,7 @@ For each `actionState`, the table below defines the complete expected product ou
 - [ ] "חוזקה עקבית" (not "חוזקה יציבה") everywhere
 - [ ] "בנושא" (not "ברמת") in all summary texts
 - [ ] No French guillemets (« ») in any text
-- [ ] No "מסקנה סופית" — use "מסקנה ברורה" or "לפני שמקבעים מסקנה"
+- [ ] No "כיוון סופי" overclaim — use "כיוון ברור" or "לפני שקובעים כיוון"
 - [ ] Confidence text matches exactly one of the 6 templates in §3.2
 - [ ] Evidence success body = "ביצועים גבוהים ועקביים — נראה שליטה טובה בנושא." (not "חוזקה עקבית")
 

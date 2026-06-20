@@ -293,7 +293,7 @@ export function buildScanRecord(q, sourceFile, objectPath, subjectHint, seqIndex
 export async function scanQuestionBankModule(rootAbs, relPath, subjectId) {
   const abs = join(rootAbs, relPath);
   const url = pathToFileURL(abs).href;
-  const mod = await import(url);
+  const mod = await import(/* webpackIgnore: true */ url);
   /** @type {object[]} */
   const out = [];
   const indexRef = [0];
@@ -313,7 +313,7 @@ export async function scanGeometryConceptualBank(rootAbs) {
   const rel = GEOMETRY_CONCEPTUAL_BANK.path;
   const abs = join(rootAbs, rel);
   const url = pathToFileURL(abs).href;
-  const mod = await import(url);
+  const mod = await import(/* webpackIgnore: true */ url);
   const items = mod[GEOMETRY_CONCEPTUAL_BANK.exportName];
   /** @type {object[]} */
   const out = [];

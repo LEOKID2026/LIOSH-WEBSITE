@@ -269,7 +269,7 @@ function buildNextProbe({ diagnosisStage, topicName, dominantTag, subjectId, w, 
 function buildParentSafeHe({ diagnosisStage, topicName, hypothesisHe, w, q, suspectedErrorTags, nextProbe }) {
   const stagePhrase =
     diagnosisStage === "early_signal"
-      ? "זהו סימן ראשוני בלבד — לא מסקנה סופית."
+      ? "זהו סימן ראשוני בלבד — לא כיוון סופי."
       : diagnosisStage === "working_hypothesis"
         ? "זוהי השערת עבודה — כדאי לאמת בתרגול המשך."
         : diagnosisStage === "stable_diagnosis"

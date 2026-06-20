@@ -247,7 +247,7 @@ export function augmentPhaseEThinEvidenceDraft(draft, truthPacket) {
     ? truthPacket.allowedClaimEnvelope.requiredHedges.map((h) => String(h || "").trim()).filter(Boolean)
     : [];
   const hedgeLead = hedges.length ? `${hedges[0]} — ` : "בשלב זה — ";
-  const caution = `${hedgeLead}אין בדוח מספיק ראיות על ילדכם בנושא «${topicLabel}» בטווח התאריכים שנבחר; מה שמוצג למטה נשען על מה שכבר מופיע בדוח, לא על מסקנה רשמית מחוץ לו.`;
+  const caution = `${hedgeLead}אין בדוח מספיק ראיות על ילדכם בנושא «${topicLabel}» בטווח התאריכים שנבחר; מה שמוצג למטה נשען על מה שכבר מופיע בדוח, לא על כיוון רשמי מחוץ לו.`;
 
   return {
     ...draft,

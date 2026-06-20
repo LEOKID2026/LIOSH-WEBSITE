@@ -188,7 +188,7 @@ function makeTopicRow({ subjectId, topicKey, displayName, questions, accuracy })
               : `נכון לעכשיו נראית יציבות סבירה ב${displayName}.`,
           action: eligible ? "נכון לעכשיו מומלץ תרגול קצר וממוקד." : null,
           uncertainty: cannot
-            ? "נכון לעכשיו כדאי לאסוף עוד תרגול לפני מסקנה."
+            ? "נכון לעכשיו כדאי לאסוף עוד תרגול לפני כיוון."
             : "נכון לעכשיו ממשיכים במעקב.",
         },
       },

@@ -80,7 +80,7 @@ function payloadIneligibleTopic() {
       observation: "בנושא נצפו 6 שאלות.",
       interpretation: "נכון לעכשיו התמונה עדיין רכה.",
       action: "להמשיך בתרגול קצר ומדוד.",
-      uncertainty: "נכון לעכשיו כדאי לאסוף עוד תרגול לפני מסקנה חזקה.",
+      uncertainty: "נכון לעכשיו כדאי לאסוף עוד תרגול לפני כיוון ברור.",
     },
   };
   const tr = {
@@ -328,7 +328,7 @@ const dualPayload = {
               requiredHedges: ["נכון לעכשיו"],
               allowedSections: ["summary", "finding"],
               recommendationIntensityCap: "RI1",
-              textSlots: { observation: "יש נתונים א.", interpretation: "מסקנה רכה.", action: null, uncertainty: "נכון לעכשיו." },
+              textSlots: { observation: "יש נתונים א.", interpretation: "כיוון רך.", action: null, uncertainty: "נכון לעכשיו." },
             },
             decision: { contractVersion: "v1", topicKey: "tA", subjectId: "math", decisionTier: 1, cannotConcludeYet: false },
             readiness: { contractVersion: "v1", topicKey: "tA", subjectId: "math", readiness: "emerging" },
@@ -364,7 +364,7 @@ const dualPayload = {
               requiredHedges: ["נכון לעכשיו"],
               allowedSections: ["summary", "finding"],
               recommendationIntensityCap: "RI1",
-              textSlots: { observation: "יש נתונים ב׳.", interpretation: "מסקנה רכה ב׳.", action: null, uncertainty: "נכון לעכשיו." },
+              textSlots: { observation: "יש נתונים ב׳.", interpretation: "כיוון רך ב׳.", action: null, uncertainty: "נכון לעכשיו." },
             },
             decision: { contractVersion: "v1", topicKey: "tB", subjectId: "math", decisionTier: 1, cannotConcludeYet: false },
             readiness: { contractVersion: "v1", topicKey: "tB", subjectId: "math", readiness: "emerging" },

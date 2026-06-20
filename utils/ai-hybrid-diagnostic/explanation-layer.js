@@ -42,7 +42,7 @@ export function buildHybridExplanations({ snapshot, ranking, probeIntel, gate, c
 
   function templateParent() {
     if (cannot) {
-      return "לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע מסקנה ברורה בנושא הזה.";
+      return "לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע כיוון ברור בנושא הזה.";
     }
     const base = taxonomyId
       ? `זוהה דפוס לימודי פעיל (${taxonomyId}) בהתאם לנתוני התרגול בטווח התאריכים. `
@@ -68,7 +68,7 @@ export function buildHybridExplanations({ snapshot, ranking, probeIntel, gate, c
 
   if (isProbeOnly && !cannot && textParent.includes("דפוס לימודי פעיל")) {
     textParent =
-      "לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע מסקנה ברורה בנושא הזה.";
+      "לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע כיוון ברור בנושא הזה.";
     outputStatus = "fallback";
     failureReason = "probe_only_framed_as_success";
   }
@@ -76,7 +76,7 @@ export function buildHybridExplanations({ snapshot, ranking, probeIntel, gate, c
   let validator = validateExplanationOutput({ text: textParent, requireUncertainty, evidenceRefs });
   if (!validator.overallPass) {
     textParent =
-      "לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע מסקנה ברורה בנושא הזה.";
+      "לפי מה שנאסף עד עכשיו, עדיין אין מספיק בסיס לקבוע כיוון ברור בנושא הזה.";
     outputStatus = "fallback";
     failureReason = validator.reasonCodes.join(";");
     validator = validateExplanationOutput({

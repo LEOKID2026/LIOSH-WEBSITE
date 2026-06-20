@@ -47,10 +47,10 @@ export function meaningHeForPolarity(displayName, q, acc) {
   const accuracy = Math.max(0, Math.min(100, Math.round(Number(acc) || 0)));
   const tier = classifyPracticePolarity(questions, accuracy);
   if (tier === POLARITY.none) {
-    return `ב${label} אין עדיין מספיק תרגול בטווח התקופה כדי להסיק מסקנה.`;
+    return `ב${label} אין עדיין מספיק תרגול בטווח התקופה כדי לקבוע כיוון.`;
   }
   if (tier === POLARITY.thin) {
-    return `ב${label} יש ${questions} שאלות בלבד — עדיין מוקדם לסגור מסקנה חזקה.`;
+    return `ב${label} יש ${questions} שאלות בלבד — עדיין מוקדם לקבוע כיוון ברור.`;
   }
   if (tier === POLARITY.strong) {
     return `ב${label} נראית יציבות טובה יחסית (${accuracy}% דיוק על ${questions} שאלות) — כדאי לשמר תרגול שגרתי.`;

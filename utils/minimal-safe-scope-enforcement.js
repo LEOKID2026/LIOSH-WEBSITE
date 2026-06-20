@@ -90,7 +90,7 @@ export function clampHebrewParentTextToMaxPS(text, maxPS, contentClass = "diagno
     out = out.replace(PS3_REGEX, "נאסוף עוד תצפית");
     out = out.replace(PS3_PROMO_REGEX, "לא משנים הגדרה דרמטית בשלב זה");
     if (contentClass === "diagnosis" && !/מוקדם|חלקי|אולי|נאסוף/.test(out)) {
-      out = `עדיין מוקדם לנעול מסקנה — ${out}`;
+      out = `עדיין מוקדם לנעול כיוון — ${out}`;
     }
     return out.replace(/\s+/g, " ").trim();
   }

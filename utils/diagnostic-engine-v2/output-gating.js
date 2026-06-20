@@ -156,7 +156,7 @@ export function applyOutputGating(p) {
     } else if (hintInvalidates && confidence === "early_signal_only") {
       out.probeOnly = true;
       out.confidenceOnly = true;
-      reasons.push("אות מוקדם בלבד — כדאי עוד תרגול קצר או מעקב לפני מסקנה חזקה");
+      reasons.push("אות מוקדם בלבד — כדאי עוד תרגול קצר או מעקב לפני כיוון ברור");
     }
     out.contractsV1 = buildContractsBundle(true);
     return out;
@@ -175,7 +175,7 @@ export function applyOutputGating(p) {
   if (confidence === "early_signal_only") {
     out.probeOnly = true;
     out.confidenceOnly = true;
-    reasons.push("אות מוקדם בלבד — כדאי עוד תרגול קצר או מעקב לפני מסקנה חזקה");
+    reasons.push("אות מוקדם בלבד — כדאי עוד תרגול קצר או מעקב לפני כיוון ברור");
   }
 
   if (confidence === "low") {

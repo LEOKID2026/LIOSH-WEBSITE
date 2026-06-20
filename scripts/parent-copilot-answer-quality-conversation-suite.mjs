@@ -134,7 +134,7 @@ const runParentCopilotTurn = parentCopilot.runParentCopilotTurn;
                 recommendationIntensityCap: "RI0",
                 textSlots: {
                   observation: "נכון לעכשיו יש כאן רק מעט תרגול ביחידה הקצרה.",
-                  interpretation: "נכון לעכשיו עדיין מוקדם לסגור מסקנה יציבה.",
+                  interpretation: "נכון לעכשיו עדיין מוקדם לקבוע כיוון עקבי.",
                   action: null,
                   uncertainty: "נכון לעכשיו כדאי להמשיך לאסוף עוד ניסיון לפני החלטה.",
                 },

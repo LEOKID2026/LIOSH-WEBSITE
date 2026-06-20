@@ -26,7 +26,7 @@ const BEHAVIOR_OR_DIAGNOSTIC_HE = {
 const CONF_BADGE_HE = {
   high: "יש מספיק שאלות בתקופה",
   medium: "כמות בינונית של שאלות בתקופה",
-  low: "מוקדם להסיק מסקנה לפי כמות השאלות הנוכחית",
+  low: "מוקדם לקבוע כיוון לפי כמות השאלות הנוכחית",
 };
 
 const SUFF_BADGE_HE = {
