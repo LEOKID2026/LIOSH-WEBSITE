@@ -6,7 +6,6 @@ import AllAccountsAdminTable from "../../../components/admin/AllAccountsAdminTab
 import { adminAuthFetch, useAdminSession } from "../../../lib/admin-portal/use-admin-session";
 import {
   ADMIN_ALL_ACCOUNTS_LIST_DEGRADED,
-  ADMIN_ALL_ACCOUNTS_LOGGED_IN_AS,
   ADMIN_ALL_ACCOUNTS_MAIN_ADMIN_ONLY,
   ADMIN_ALL_ACCOUNTS_SCHOOLS_LINK,
   ADMIN_ALL_ACCOUNTS_TITLE,
@@ -23,7 +22,6 @@ export default function AdminAllAccountsPage() {
   const [loadError, setLoadError] = useState("");
   const [forbidden, setForbidden] = useState(false);
   const [listNotice, setListNotice] = useState("");
-  const [actorEmail, setActorEmail] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   const load = useCallback(async (token) => {
@@ -55,7 +53,6 @@ export default function AdminAllAccountsPage() {
 
     setAccounts(body.data.accounts);
     setFullDeleteConfigured(body.data.fullDeleteConfigured === true);
-    setActorEmail(body.data.actorEmail || "");
     if (body.data.listMeta?.source === "db_fallback") {
       setListNotice(ADMIN_ALL_ACCOUNTS_LIST_DEGRADED);
     }
@@ -72,18 +69,7 @@ export default function AdminAllAccountsPage() {
   return (
     <Layout>
       <AdminShell title={ADMIN_ALL_ACCOUNTS_TITLE} showLogout>
-        <div className="flex flex-wrap gap-3 justify-between items-center mb-4">
-          <div className="text-sm text-white/60 space-y-1">
-            <p>תצוגה מאוחדת לכל משתמשי האימות · שורה אחת לכל חשבון</p>
-            {actorEmail ? (
-              <p className="text-xs text-white/45" data-testid="all-accounts-actor-email">
-                {ADMIN_ALL_ACCOUNTS_LOGGED_IN_AS}{" "}
-                <span dir="ltr" className="text-white/70">
-                  {actorEmail}
-                </span>
-              </p>
-            ) : null}
-          </div>
+        <div className="flex justify-end mb-4">
           <Link href="/admin/schools" className="text-amber-300 text-sm hover:underline">
             {ADMIN_ALL_ACCOUNTS_SCHOOLS_LINK}
           </Link>

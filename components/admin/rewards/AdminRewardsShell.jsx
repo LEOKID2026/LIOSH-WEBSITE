@@ -51,22 +51,6 @@ export default function AdminRewardsShell({ activeTab, onTabChange, children }) 
 
   return (
     <div className="w-full max-w-full overflow-x-hidden">
-      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-white/60">
-        <span>
-          דגל קלפים: {process.env.NEXT_PUBLIC_CARD_REWARDS_ENABLED === "true" ? "פעיל" : "כבוי"}
-        </span>
-        <span>·</span>
-        <span>
-          דגל כלכלה:{" "}
-          {process.env.NEXT_PUBLIC_REWARD_ECONOMY_SETTINGS_ENABLED === "true" ? "פעיל" : "כבוי"}
-        </span>
-        <span>·</span>
-        <span>
-          מטבעות ידנית:{" "}
-          {process.env.NEXT_PUBLIC_ENABLE_ADMIN_MANUAL_COIN_CREDIT === "true" ? "פעיל" : "כבוי"}
-        </span>
-      </div>
-
       <nav
         className="flex gap-2 overflow-x-auto pb-2 mb-6 -mx-1 px-1"
         aria-label="לשוניות תגמולים"

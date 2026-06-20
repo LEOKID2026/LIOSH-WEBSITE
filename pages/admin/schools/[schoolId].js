@@ -72,13 +72,6 @@ export default function AdminSchoolDetailPage() {
               <Link href="/admin/schools" className="text-amber-300 text-sm hover:underline">
                 ← חזרה לבתי ספר
               </Link>
-              <p className="text-white/60 text-sm mt-2">
-                {school.city ? `עיר: ${school.city}` : null}
-                {school.contactEmail ? ` · ${school.contactEmail}` : null}
-              </p>
-              <p className="text-white/50 text-xs mt-1">
-                מורים: {school.teacherCount} · ילדים רשומים: {school.enrolledStudentCount}
-              </p>
             </div>
 
             <AdminSchoolRegistrationPanel

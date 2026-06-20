@@ -112,11 +112,6 @@ async function main() {
     "invalid/missing accounts array shows error"
   );
   record(
-    "accounts_page_shows_actor_email",
-    page.includes("all-accounts-actor-email") && page.includes("actorEmail"),
-    "logged-in actor email shown"
-  );
-  record(
     "api_returns_actor_email",
     apiRoute.includes("actorEmail") && apiRoute.includes("listMeta"),
     "API diagnostic fields"

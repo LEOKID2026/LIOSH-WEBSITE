@@ -28,7 +28,7 @@ const NAV_ITEMS = [
 
 function navLinkClass(active) {
   return [
-    "inline-flex items-center rounded-lg border px-3 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors",
+    "inline-flex items-center justify-center rounded-lg border px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-semibold transition-colors text-center min-w-0 w-full xl:w-auto xl:whitespace-nowrap",
     active
       ? "bg-amber-500/20 border-amber-400/40 text-amber-200"
       : "border-transparent text-white/70 hover:text-white hover:bg-white/5",
@@ -56,7 +56,7 @@ export default function AdminShell({ title, header, children, showLogout = false
           </div>
         )}
         <nav
-          className="flex flex-nowrap items-center gap-1 sm:gap-2 text-sm shrink-0 overflow-x-auto max-w-full xl:justify-end"
+          className="grid grid-cols-4 gap-1.5 w-full sm:gap-2 xl:flex xl:flex-nowrap xl:justify-end xl:w-auto xl:gap-2"
           aria-label="ניווט מנהל מערכת"
         >
           {NAV_ITEMS.map((item) => {
@@ -72,7 +72,7 @@ export default function AdminShell({ title, header, children, showLogout = false
               type="button"
               onClick={() => void logout()}
               disabled={busy}
-              className="rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-3 py-1.5 font-semibold text-white disabled:opacity-60 min-h-[2rem] min-w-[4.5rem] whitespace-nowrap"
+              className="inline-flex items-center justify-center rounded-lg border border-white/25 bg-white/10 hover:bg-white/15 px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-semibold text-white disabled:opacity-60 min-h-[2rem] w-full xl:w-auto xl:min-w-[4.5rem] xl:whitespace-nowrap"
             >
               {busy ? ADMIN_LOGOUT_BUSY : ADMIN_LOGOUT}
             </button>

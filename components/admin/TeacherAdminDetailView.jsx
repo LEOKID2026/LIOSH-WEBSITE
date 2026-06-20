@@ -77,9 +77,6 @@ export function TeacherAdminDetailHeader({ teacher }) {
           <h1 className="text-xl md:text-2xl font-bold text-right break-words">
             {teacher.displayName || teacher.email || "—"}
           </h1>
-          {teacher.displayName && teacher.email ? (
-            <p className="text-sm text-white/70 mt-1 break-all leading-relaxed">{teacher.email}</p>
-          ) : null}
         </div>
         <StatusBadge teacher={teacher} />
       </div>

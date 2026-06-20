@@ -1188,18 +1188,7 @@ export default function AdminAnalyticsPage() {
 
   return (
     <Layout>
-      <AdminShell
-        title={ADMIN_ANALYTICS_TITLE}
-        showLogout
-        header={
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold text-right">{ADMIN_ANALYTICS_TITLE}</h1>
-            <p className="text-xs text-white/55 mt-1">
-              מספרים ממקורות מאגר נתונים קיימים בלבד. בחרו קטגוריה ופתחו רק את הבלוקים שמעניינים אתכם.
-            </p>
-          </div>
-        }
-      >
+      <AdminShell title={ADMIN_ANALYTICS_TITLE} showLogout>
         <div className="space-y-3 max-w-full overflow-x-hidden" dir="rtl" data-analytics-page-root>
           <FilterSummaryBar
             summary={filterSummary}
