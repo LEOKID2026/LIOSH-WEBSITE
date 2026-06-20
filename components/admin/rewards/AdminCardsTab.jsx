@@ -16,6 +16,7 @@ import {
 import AdminModal, { AdminModalButton } from "../AdminModal.jsx";
 import AdminCatalogArchiveToggle from "./AdminCatalogArchiveToggle.jsx";
 import AdminCardRulesPanel from "./AdminCardRulesPanel.jsx";
+import AdminCardGrantByParent from "./AdminCardGrantByParent.jsx";
 
 const inputClass =
   "block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white text-xs";
@@ -56,7 +57,6 @@ export default function AdminCardsTab({ accessToken }) {
   const [draft, setDraft] = useState({});
   const [createOpen, setCreateOpen] = useState(false);
   const [createDraft, setCreateDraft] = useState(EMPTY_CREATE);
-  const [grantStudentId, setGrantStudentId] = useState("");
 
   const load = useCallback(async () => {
     if (!accessToken) return;
@@ -89,7 +89,6 @@ export default function AdminCardsTab({ accessToken }) {
   const closeEdit = () => {
     setEditId(null);
     setEditTab("details");
-    setGrantStudentId("");
   };
 
   const startEdit = (card) => {
@@ -120,7 +119,6 @@ export default function AdminCardsTab({ accessToken }) {
       ends_at: card.ends_at ? card.ends_at.slice(0, 16) : "",
       grade_bands: Array.isArray(card.grade_bands) ? card.grade_bands : [],
     });
-    setGrantStudentId("");
   };
 
   const save = async () => {
@@ -167,25 +165,6 @@ export default function AdminCardsTab({ accessToken }) {
     closeCreate();
     void load();
     if (body.card?.id) startEdit(body.card);
-  };
-
-  const grantCard = async () => {
-    if (!editId || !grantStudentId.trim()) {
-      setMessage("הזינו מזהה תלמיד להענקה.");
-      return;
-    }
-    setBusy("grant");
-    const res = await adminAuthFetch(accessToken, `/api/admin/rewards/cards/${editId}/grant`, {
-      method: "POST",
-      body: JSON.stringify({ student_id: grantStudentId.trim() }),
-    });
-    const body = await res.json().catch(() => ({}));
-    setBusy("");
-    if (!res.ok) {
-      setMessage(apiErrorMessageHe(body?.error, "הענקה נכשלה"));
-      return;
-    }
-    setMessage(body.alreadyOwned ? "התלמיד כבר מחזיק בקלף." : "קלף הוענק לתלמיד.");
   };
 
   if (phase === "loading") return <p className="text-white/60 text-sm text-right">{ADMIN_LOADING}</p>;
@@ -354,10 +333,7 @@ export default function AdminCardsTab({ accessToken }) {
             cardId={editId}
             accessToken={accessToken}
             showGrant
-            grantStudentId={grantStudentId}
-            setGrantStudentId={setGrantStudentId}
-            onGrant={() => void grantCard()}
-            grantBusy={busy === "grant"}
+            onGrantMessage={setMessage}
             onImageUploaded={() => void load()}
           />
         ) : (
@@ -381,10 +357,7 @@ function CardForm({
   cardId,
   accessToken,
   showGrant,
-  grantStudentId,
-  setGrantStudentId,
-  onGrant,
-  grantBusy,
+  onGrantMessage,
   onImageUploaded,
 }) {
   const isAchievement = draft.card_type === "achievement";
@@ -529,22 +502,14 @@ function CardForm({
     </div>
   );
 
-  const grantSection = showGrant ? (
-    <div className="flex flex-wrap gap-2 items-end border-t border-white/10 pt-3 mt-3">
-      <label className="text-xs flex-1 min-w-[200px]">
-        הענקה ידנית — מזהה תלמיד
-        <input className={inputClass} value={grantStudentId || ""} onChange={(e) => setGrantStudentId(e.target.value)} />
-      </label>
-      <button
-        type="button"
-        disabled={grantBusy}
-        onClick={onGrant}
-        className="rounded border border-sky-400/40 bg-sky-500/20 px-3 py-1 text-xs font-semibold"
-      >
-        {grantBusy ? "מעניק..." : "הענק קלף"}
-      </button>
-    </div>
-  ) : null;
+  const grantSection =
+    showGrant && cardId ? (
+      <AdminCardGrantByParent
+        accessToken={accessToken}
+        cardId={cardId}
+        onMessage={onGrantMessage}
+      />
+    ) : null;
 
   if (embedded) {
     return (

@@ -108,6 +108,11 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
   if (!open) return null;
 
   const cards = Array.isArray(result?.cards) ? result.cards : [];
+  const coinAmounts = Array.isArray(result?.coinAmounts)
+    ? result.coinAmounts
+    : result?.coinsReward != null
+      ? [result.coinsReward]
+      : [];
 
   return (
     <div
@@ -168,20 +173,40 @@ export default function StudentSurpriseBoxOpenModal({ open, onClose, onOpened })
 
           {phase === "done" && result ? (
             <>
-              <p className={`text-sm ${T.panelIntro}`}>בכל קופסה — מטבעות ושני קלפים. הנה מה שקיבלתם:</p>
+              <p className={`text-sm ${T.panelIntro}`}>
+                {coinAmounts.length > 0 && cards.length > 0
+                  ? `קיבלתם ${coinAmounts.length} פרס${coinAmounts.length > 1 ? "י" : ""} מטבעות ו-${cards.length} קלפים:`
+                  : coinAmounts.length > 0
+                    ? `קיבלתם ${coinAmounts.length} פרס${coinAmounts.length > 1 ? "י" : ""} מטבעות:`
+                    : `קיבלתם ${cards.length} קלפים:`}
+              </p>
 
-              <div className={`rounded-xl border p-4 ${T.statCard}`}>
-                <p className={`text-xs ${T.statLabel}`}>מטבעות</p>
-                <p className={`text-xl font-bold ${T.statValue}`}>
-                  {formatCoinAmountHe(result.coinsReward)}
-                </p>
-              </div>
+              {coinAmounts.length > 0 ? (
+                <div className={`rounded-xl border p-4 space-y-2 ${T.statCard}`}>
+                  <p className={`text-xs ${T.statLabel}`}>מטבעות</p>
+                  {coinAmounts.length === 1 ? (
+                    <p className={`text-xl font-bold ${T.statValue}`}>
+                      {formatCoinAmountHe(coinAmounts[0])}
+                    </p>
+                  ) : (
+                    <ul className="space-y-1">
+                      {coinAmounts.map((amount, i) => (
+                        <li key={i} className={`text-base font-bold ${T.statValue}`}>
+                          פרס {i + 1}: {formatCoinAmountHe(amount)}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ) : null}
 
-              <ul className="space-y-3 min-w-0">
-                {cards.map((card, i) => (
-                  <SurpriseBoxCardPrizeRow key={`${card.nameHe}-${i}`} card={card} T={T} />
-                ))}
-              </ul>
+              {cards.length > 0 ? (
+                <ul className="space-y-3 min-w-0">
+                  {cards.map((card, i) => (
+                    <SurpriseBoxCardPrizeRow key={`${card.nameHe}-${i}`} card={card} T={T} />
+                  ))}
+                </ul>
+              ) : null}
 
               <div className="flex flex-col sm:flex-row gap-2 pt-2">
                 <Link href="/student/cards" className={`${T.ctaPrimary} text-center flex-1`}>

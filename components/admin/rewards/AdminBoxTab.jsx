@@ -146,7 +146,76 @@ export default function AdminBoxTab({ accessToken }) {
             />
             מניעת כפילות בקופסה
           </label>
+          <label>
+            מקסימום קופסאות נצברות לילד
+            <select
+              className="block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
+              value={general.max_pending_boxes ?? 1}
+              onChange={(e) =>
+                setSettings((s) => ({
+                  ...s,
+                  surprise_box_general_settings: {
+                    ...general,
+                    max_pending_boxes: Number(e.target.value),
+                  },
+                }))
+              }
+            >
+              {[1, 2, 3, 5, 10].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            מספר קלפים בפתיחת קופסה
+            <select
+              className="block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
+              value={general.cards_per_open ?? 2}
+              onChange={(e) =>
+                setSettings((s) => ({
+                  ...s,
+                  surprise_box_general_settings: {
+                    ...general,
+                    cards_per_open: Number(e.target.value),
+                  },
+                }))
+              }
+            >
+              {[0, 1, 2, 3].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            מספר פרסי מטבעות בפתיחת קופסה
+            <select
+              className="block w-full mt-1 rounded bg-black/30 border border-white/15 px-2 py-1 text-white"
+              value={general.coin_prizes_per_open ?? 1}
+              onChange={(e) =>
+                setSettings((s) => ({
+                  ...s,
+                  surprise_box_general_settings: {
+                    ...general,
+                    coin_prizes_per_open: Number(e.target.value),
+                  },
+                }))
+              }
+            >
+              {[0, 1, 2, 3].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
+        <p className="text-[11px] text-white/50 mt-2">
+          חייב להיות לפחות פרס אחד (קלפים + מטבעות). סכומי המטבעות נקבעים בטבלת פרסי מטבעות למטה.
+        </p>
         <button
           type="button"
           disabled={busy}

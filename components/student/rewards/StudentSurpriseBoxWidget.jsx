@@ -10,6 +10,7 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
   const { tokens: T } = useStudentTheme();
   const [phase, setPhase] = useState("idle");
   const [ready, setReady] = useState(false);
+  const [pendingBoxCount, setPendingBoxCount] = useState(0);
   const [secondsRemaining, setSecondsRemaining] = useState(null);
   const [errorHe, setErrorHe] = useState("");
 
@@ -29,6 +30,7 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
         return;
       }
       setReady(json.ready === true);
+      setPendingBoxCount(Math.max(0, Number(json.pendingBoxCount) || 0));
       setSecondsRemaining(
         json.secondsRemaining != null ? Math.max(0, Number(json.secondsRemaining) || 0) : null
       );
@@ -81,7 +83,9 @@ export default function StudentSurpriseBoxWidget({ onOpen }) {
             <p className="mt-1 text-sm text-rose-600">{errorHe}</p>
           ) : ready ? (
             <p className={`mt-1 text-sm font-semibold text-emerald-700 dark:text-emerald-300`}>
-              קופסת הפתעה מוכנה!
+              {pendingBoxCount > 1
+                ? `${pendingBoxCount} קופסאות מוכנות לפתיחה!`
+                : "קופסת הפתעה מוכנה!"}
             </p>
           ) : secondsRemaining != null ? (
             <p className={`mt-1 text-sm ${T.tileSub}`}>
