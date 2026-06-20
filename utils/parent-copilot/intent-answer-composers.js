@@ -31,6 +31,7 @@ import {
   gradeScopeMeaningHe,
   masteryReallocationHe,
 } from "../parent-report-language/grade-insight-he.js";
+import { detectAggregateQuestionClass } from "./semantic-question-class.js";
 
 const STRONG_ACC_MIN = 75;
 const STRONG_Q_MIN = 8;
@@ -92,6 +93,34 @@ function collectPracticeMetrics(payload) {
     if (m.q > 0) metas.push(m);
   }
   return metas;
+}
+
+/**
+ * Weighted subject accuracy rollups (matches aggregate semantic ranking).
+ * @param {unknown} payload
+ */
+function subjectWeightedAvgRows(payload) {
+  const profiles = Array.isArray(payload?.subjectProfiles) ? payload.subjectProfiles : [];
+  /** @type {Array<{ sid: string; label: string; totalQ: number; avg: number }>} */
+  const rows = [];
+  for (const sid of SUBJECT_ORDER) {
+    const sp = profiles.find((p) => normalizeSubjectId(p?.subject) === sid);
+    if (!sp) continue;
+    let totalQ = 0;
+    let wAcc = 0;
+    for (const tr of Array.isArray(sp.topicRecommendations) ? sp.topicRecommendations : []) {
+      const q = Math.max(0, Number(tr?.questions ?? tr?.questionCount) || 0);
+      const acc = Math.max(0, Math.min(100, Math.round(Number(tr?.accuracy) || 0)));
+      if (q > 0) {
+        totalQ += q;
+        wAcc += acc * q;
+      }
+    }
+    if (totalQ > 0) {
+      rows.push({ sid, label: subjectLabelHe(sid), totalQ, avg: Math.round(wAcc / totalQ) });
+    }
+  }
+  return rows;
 }
 
 /**
@@ -655,11 +684,27 @@ function composeStrength(params) {
     [relStep, reallocate].filter(Boolean).join(" ") ||
     "כדאי לשמר תרגול קצר ושגרתי שם, ולעלות רמה רק אם ההצלחה ממשיכה להופיע.";
 
+  const utteranceStr = String(params?.utteranceStr || "");
+  const isStrongestSubjectQ = detectAggregateQuestionClass(utteranceStr) === "strongest_subject";
+  const withAvg = subjectWeightedAvgRows(payload);
+  const strongestSub =
+    isStrongestSubjectQ && withAvg.length
+      ? [...withAvg].sort((a, b) => (b.avg || 0) - (a.avg || 0) || b.totalQ - a.totalQ)[0]
+      : null;
+
+  let observationHe = `${singleSubjectNote}לפי נתוני התרגול בטווח, אלה התחומים החזקים יחסית בתוך מה שתורגל:`;
+  if (strongestSub) {
+    observationHe =
+      withAvg.length === 1
+        ? `יש כרגע בעיקר מקצוע אחד עם מספיק תרגול מספרי בדוח — ${strongestSub.label}, עם דיוק ממוצע של כ ${strongestSub.avg}%.`
+        : `המקצוע החזק ביותר כרגע הוא ${strongestSub.label} — לפי ממוצע הדיוק הכללי על פני הנושאים עם תרגול בדוח (בערך ${strongestSub.avg}%).`;
+  }
+
   return {
     answerBlocks: [
       {
         type: "observation",
-        textHe: `${singleSubjectNote}לפי נתוני התרגול בטווח, אלה התחומים החזקים יחסית בתוך מה שתורגל:`,
+        textHe: observationHe,
         source: "intent_composer",
       },
       { type: "meaning", textHe: meaningHe, source: "intent_composer" },

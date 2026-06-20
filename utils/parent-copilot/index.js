@@ -52,7 +52,7 @@ import {
 } from "./question-router.js";
 import { classifyParentQuestionViaLlm } from "./question-classifier-llm.js";
 import { isContextualFollowUpUtterance } from "./contextual-follow-up-he.js";
-import { utteranceQualifiesAsReportQuestion } from "./report-row-resolver.js";
+import { utteranceQualifiesAsReportQuestion, hasAnchoredReportRows } from "./report-row-resolver.js";
 
 /**
  * @param {Record<string, unknown>} base
@@ -773,6 +773,23 @@ function runDeterministicCore(input, options) {
         classifierSignals: qaRoute.classifierSignals,
       };
     }
+  }
+  const isEmptyUtteranceWithAnchoredPayload =
+    utteranceStr.length < 2 &&
+    scopedInput?.payload &&
+    typeof scopedInput.payload === "object" &&
+    hasAnchoredReportRows(scopedInput.payload);
+  if (qaRoute.exitEarly && isEmptyUtteranceWithAnchoredPayload) {
+    qaRoute = {
+      routerIntent: "unknown_report_question",
+      requiresLlm: true,
+      deterministicResponse: null,
+      exitEarly: false,
+      classifierBucket: "report_related",
+      classifierConfidence: Math.max(Number(qaRoute.classifierConfidence) || 0, 0.56),
+      classifierSource: "deterministic",
+      classifierSignals: qaRoute.classifierSignals,
+    };
   }
   if (qaRoute.exitEarly && qaRoute.deterministicResponse) {
     const earlyExit = packageClassifierEarlyExit({
