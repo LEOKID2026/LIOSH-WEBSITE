@@ -1,6 +1,7 @@
 /** Shared Leo Kids UI bits for Solo Games V2 engines. */
 
 import { useEffect, useRef, useState } from "react";
+import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 export const SOLO_V2_ASSETS = {
   leo: "/images/leo.png",
   leoAlt: "/images/leo2.png",
@@ -77,20 +78,18 @@ export function SoloV2EndBanner({ title, subtitle = "", success = false }) {
  * @param {{ title: string, lines: string[], onStart: () => void }} props
  */
 export function SoloV2Intro({ title, lines, onStart }) {
+  const { SG } = useSoloGameShellUi();
+
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 px-4 text-center">
       <img src={SOLO_V2_ASSETS.leo} alt="" className="h-20 w-20 object-contain drop-shadow-lg sm:h-24 sm:w-24" />
-      <h2 className="text-lg font-extrabold text-yellow-300 sm:text-xl">{title}</h2>
-      <ul className="space-y-1 text-sm text-gray-200">
+      <h2 className={SG.introTitle}>{title}</h2>
+      <ul className={SG.introLines}>
         {lines.map((line) => (
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <button
-        type="button"
-        onClick={onStart}
-        className="min-h-[48px] rounded-xl bg-yellow-400 px-8 py-3 text-base font-bold text-black shadow-md"
-      >
+      <button type="button" onClick={onStart} className={SG.introStartBtn}>
         התחל משחק
       </button>
     </div>

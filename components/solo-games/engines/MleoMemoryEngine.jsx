@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import RewardCardImage from "../../student/rewards/RewardCardImage.jsx";
 import { buildMemoryDeckFromShop } from "../../../lib/solo-games/memory-shop-cards.client.js";
+import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 /**
- * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void }} props
+ * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void, onPreGameUiChange?: (active: boolean) => void }} props
  */
 export default function MleoMemoryEngine({
   autoStart = false,
   initialDifficulty = "medium",
   onSessionEnd,
+  onPreGameUiChange,
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
@@ -35,6 +37,13 @@ export default function MleoMemoryEngine({
   const [didWin, setDidWin] = useState(false);
   const [focusIndex, setFocusIndex] = useState(0);
   const scoreRef = useRef(0);
+  const { SG, pageBgStyle } = useSoloGameShellUi();
+  const isPreGame = deckLoading || deckError;
+
+  useEffect(() => {
+    onPreGameUiChange?.(isPreGame);
+    return () => onPreGameUiChange?.(false);
+  }, [isPreGame, onPreGameUiChange]);
 
   const flipSound = typeof Audio !== "undefined" ? new Audio("/sounds/flap.mp3") : null;
 
@@ -222,10 +231,14 @@ export default function MleoMemoryEngine({
     return false;
   });
 
+  const playWrap =
+    "relative flex h-full min-h-0 w-full flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white";
+
   return (
     <div
       id="game-wrapper"
-      className="relative flex h-full min-h-0 w-full flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white"
+      className={isPreGame ? SG.preGameWrap : playWrap}
+      style={isPreGame ? pageBgStyle : undefined}
     >
       {!showIntro && (
         <>
@@ -250,19 +263,19 @@ export default function MleoMemoryEngine({
 
           <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden px-2 pb-2">
             {deckLoading ? (
-              <p className="text-sm font-semibold text-yellow-200">טוען קלפים מהחנות…</p>
+              <p className={SG.preGameLoading}>טוען קלפים מהחנות…</p>
             ) : deckError ? (
               <div className="flex max-w-sm flex-col items-center gap-4 px-4 text-center">
-                <p className="text-base font-extrabold text-rose-200 sm:text-lg">
+                <p className={SG.preGameErrorTitle}>
                   לא נמצאו מספיק קלפי חנות למשחק זיכרון
                 </p>
-                <p className="text-sm text-gray-300">
+                <p className={SG.preGameErrorSub}>
                   חזור לחנות הקלפים ובדוק שיש קלפים זמינים
                 </p>
                 <button
                   type="button"
                   onClick={() => initGameWithDifficulty(difficulty)}
-                  className="min-h-[48px] rounded-xl bg-yellow-400 px-8 py-3 text-base font-bold text-black shadow-md"
+                  className={SG.introStartBtn}
                 >
                   נסה שוב
                 </button>

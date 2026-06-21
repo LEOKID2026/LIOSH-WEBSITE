@@ -1,6 +1,5 @@
 import Link from "next/link";
-
-import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
+import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 
 /**
  * @param {{
@@ -24,7 +23,7 @@ export default function SoloGameFinishScreen({
   onPlayAgain,
   busy = false,
 }) {
-  const { tokens: T } = useStudentTheme();
+  const { SG, tokens: T } = useSoloGameShellUi();
 
   return (
     <div
@@ -32,30 +31,28 @@ export default function SoloGameFinishScreen({
       dir="rtl"
     >
       <div className="mx-auto w-full max-w-md landscape:max-w-lg">
-        <div className="rounded-2xl border border-white/10 bg-gray-900/90 p-3 shadow-xl sm:p-5 landscape:max-h-[min(78dvh,100%)] landscape:overflow-hidden landscape:p-3">
-          <h2 className="text-xl font-extrabold text-yellow-300 sm:text-2xl landscape:text-lg">
+        <div className={SG.finishCard}>
+          <h2 className={SG.finishTitle}>
             {didWin ? "כל הכבוד! 🎉" : "כל הכבוד על המאמץ!"}
           </h2>
 
-          <div className="mt-3 space-y-1.5 text-sm text-gray-100 sm:mt-4 sm:space-y-2 sm:text-base landscape:mt-2 landscape:space-y-1 landscape:text-sm">
+          <div className={SG.finishBody}>
             <p>
-              <span className="text-gray-400">ניקוד: </span>
-              <span className="font-bold">{score}</span>
+              <span className={SG.finishLabel}>ניקוד: </span>
+              <span className={SG.finishValue}>{score}</span>
             </p>
             <p>
-              <span className="text-gray-400">רמה: </span>
-              <span className="font-bold">{displayLevelHe}</span>
+              <span className={SG.finishLabel}>רמה: </span>
+              <span className={SG.finishValue}>{displayLevelHe}</span>
             </p>
-            <p className="flex items-center justify-center gap-2 text-base font-extrabold text-amber-300 sm:text-lg landscape:text-sm">
+            <p className={SG.finishCoins}>
               <img src="/images/coin.png" alt="" className="h-6 w-6 sm:h-8 sm:w-8 landscape:h-5 landscape:w-5" />
               +{coinsAwarded} מטבעות
             </p>
-            {breakdownHe ? (
-              <p className="text-xs text-gray-400 sm:text-sm landscape:text-[11px]">{breakdownHe}</p>
-            ) : null}
+            {breakdownHe ? <p className={SG.finishMuted}>{breakdownHe}</p> : null}
             {balanceAfter != null ? (
-              <p className="text-xs text-gray-400 sm:text-sm landscape:text-[11px]">
-                יתרה חדשה: <span className="font-bold text-amber-200">{balanceAfter}</span>
+              <p className={SG.finishMuted}>
+                יתרה חדשה: <span className={SG.finishBalance}>{balanceAfter}</span>
               </p>
             ) : null}
           </div>

@@ -4,6 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { findSoloGame } from "../../lib/solo-games/solo-game-registry.js";
 import { useSoloGameSession } from "../../hooks/solo-games/useSoloGameSession.js";
+import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import SoloGameEntryScreen from "./SoloGameEntryScreen.jsx";
 import SoloGameFinishScreen from "./SoloGameFinishScreen.jsx";
 import SoloGameSettlingOverlay from "./SoloGameSettlingOverlay.jsx";
@@ -32,16 +33,21 @@ const ENGINE_MAP = {
   "sort-shapes": MleoSortShapesEngine,
 };
 
+const PLAY_SHELL =
+  "flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-gray-950 text-white";
+
 /**
  * @param {{ gameKey: string }} props
  */
 export default function SoloGameShell({ gameKey }) {
   const game = useMemo(() => findSoloGame(gameKey), [gameKey]);
   const Engine = ENGINE_MAP[gameKey];
+  const { SG, pageBgStyle } = useSoloGameShellUi();
 
   const [phase, setPhase] = useState("entry");
   const [difficulty, setDifficulty] = useState("medium");
   const [finishData, setFinishData] = useState(null);
+  const [enginePreGame, setEnginePreGame] = useState(false);
 
   const {
     sessionId,
@@ -85,6 +91,8 @@ export default function SoloGameShell({ gameKey }) {
   }, []);
 
   const showReservedAd = phase === "entry" || phase === "finish";
+  const themedShell =
+    phase === "entry" || phase === "finish" || phase === "settling" || enginePreGame;
 
   if (!game || !Engine) {
     return (
@@ -100,20 +108,23 @@ export default function SoloGameShell({ gameKey }) {
         <title>{game.titleHe} — משחקי ליאו</title>
       </Head>
       <div
-        className="flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-gray-950 text-white"
+        className={themedShell ? SG.shell : PLAY_SHELL}
+        style={themedShell ? pageBgStyle : undefined}
         dir="rtl"
       >
-        <header className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4">
+        <header className={themedShell ? SG.header : "flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-4"}>
           <Link
             href="/student/solo-games"
-            className="min-h-[44px] rounded-lg px-3 py-2 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white"
+            className={themedShell ? SG.navLink : "min-h-[44px] rounded-lg px-3 py-2 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white"}
           >
             ← משחקים
           </Link>
-          <h1 className="truncate text-sm font-extrabold sm:text-base">{game.titleHe}</h1>
+          <h1 className={themedShell ? SG.headerTitle : "truncate text-sm font-extrabold sm:text-base"}>
+            {game.titleHe}
+          </h1>
           <Link
             href="/student/home"
-            className="min-h-[44px] rounded-lg px-3 py-2 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white"
+            className={themedShell ? SG.navLink : "min-h-[44px] rounded-lg px-3 py-2 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white"}
           >
             בית
           </Link>
@@ -137,6 +148,7 @@ export default function SoloGameShell({ gameKey }) {
                 autoStart
                 initialDifficulty={game.hasDifficultyPicker ? difficulty : undefined}
                 onSessionEnd={handleSessionEnd}
+                onPreGameUiChange={setEnginePreGame}
               />
             </div>
           ) : null}

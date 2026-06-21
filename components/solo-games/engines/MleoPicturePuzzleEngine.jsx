@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SoloGameAdSlot from "../SoloGameAdSlot.jsx";
+import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 /** 10 תמונות ייעודיות לפאזל — public/images/puzzle/ */
@@ -89,12 +90,13 @@ function canMoveTile(tiles, index, gridSize) {
 }
 
 /**
- * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void }} props
+ * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void, onPreGameUiChange?: (active: boolean) => void }} props
  */
 export default function MleoPicturePuzzleEngine({
   autoStart = false,
   initialDifficulty = "medium",
   onSessionEnd,
+  onPreGameUiChange,
 }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
@@ -113,6 +115,12 @@ export default function MleoPicturePuzzleEngine({
   const [won, setWon] = useState(false);
   const [blockedMsg, setBlockedMsg] = useState("");
   const [showHintPreview, setShowHintPreview] = useState(false);
+  const { SG, pageBgStyle } = useSoloGameShellUi();
+
+  useEffect(() => {
+    onPreGameUiChange?.(showPicker);
+    return () => onPreGameUiChange?.(false);
+  }, [showPicker, onPreGameUiChange]);
 
   useEffect(() => {
     if (initialDifficulty) setDifficulty(initialDifficulty);
@@ -263,17 +271,21 @@ export default function MleoPicturePuzzleEngine({
   const tileMinClass =
     gridSize === 3 ? "min-h-[92px] sm:min-h-[108px]" : gridSize === 4 ? "min-h-[72px] sm:min-h-[84px]" : "min-h-[58px] sm:min-h-[68px]";
 
+  const playWrap =
+    "relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none";
+
   return (
     <div
       id="game-wrapper"
-      className="relative isolate flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-gray-900 text-white select-none"
+      className={showPicker ? SG.preGameWrap : playWrap}
+      style={showPicker ? pageBgStyle : undefined}
       dir="rtl"
     >
       {showPicker ? (
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden px-1 py-1 sm:px-2">
           <div className="shrink-0 text-center leading-tight">
-            <h2 className="text-sm font-extrabold text-yellow-300 sm:text-base">בחרו תמונה לפאזל</h2>
-            <p className="text-[10px] text-gray-400 sm:text-[11px]">לחצו · בחרו · התחילו</p>
+            <h2 className={SG.preGameTitle}>בחרו תמונה לפאזל</h2>
+            <p className={SG.preGameSub}>לחצו · בחרו · התחילו</p>
           </div>
 
           <div className="flex flex-1 items-center justify-center overflow-hidden py-2">
@@ -286,9 +298,7 @@ export default function MleoPicturePuzzleEngine({
                     type="button"
                     onClick={() => setPreviewImage(img)}
                     className={`relative h-[78px] w-[78px] shrink-0 overflow-hidden rounded-md border-2 p-0 transition sm:h-[96px] sm:w-[96px] sm:rounded-lg ${
-                      selected
-                        ? "border-yellow-400 shadow-md shadow-yellow-400/30 ring-2 ring-yellow-400/60"
-                        : "border-white/20 hover:border-white/45"
+                      selected ? SG.preGameImageBorderSelected : SG.preGameImageBorderDefault
                     }`}
                     style={{ touchAction: "manipulation" }}
                     aria-label={`${img.label}${selected ? " — נבחרה" : ""}`}
@@ -309,7 +319,7 @@ export default function MleoPicturePuzzleEngine({
             <button
               type="button"
               onClick={startGame}
-              className="min-h-[40px] w-full rounded-xl bg-yellow-400 px-4 py-2 text-sm font-bold text-black shadow-md sm:min-h-[44px] sm:text-base"
+              className={SG.preGameStartBtn}
               style={{ touchAction: "manipulation" }}
             >
               התחל משחק
