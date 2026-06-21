@@ -50,6 +50,11 @@ function RewardCardImage({
   const normalizedSrc = src || PLACEHOLDER;
   const usePreBaked = preBaked || isPreBakedRewardCardVariantUrl(normalizedSrc);
   const [displaySrc, setDisplaySrc] = useState(normalizedSrc);
+  const [imgFailed, setImgFailed] = useState(false);
+
+  useEffect(() => {
+    setImgFailed(false);
+  }, [normalizedSrc]);
 
   useEffect(() => {
     if (usePreBaked) {
@@ -88,17 +93,25 @@ function RewardCardImage({
 
   const clipClass = usePreBaked ? "" : CLIP_BY_SIZE[size] || REWARD_CARD_CLIP_CLASS_TILE;
 
+  const resolvedSrc =
+    imgFailed && normalizedSrc !== PLACEHOLDER ? PLACEHOLDER : displaySrc || PLACEHOLDER;
+
+  const handleImgError = () => {
+    if (normalizedSrc !== PLACEHOLDER) setImgFailed(true);
+  };
+
   return (
     <div
       className={`relative overflow-hidden bg-transparent ${clipClass} ${wrapperFitClass} ${wrapperClassName} ${className}`.trim()}
     >
       <img
-        src={displaySrc || PLACEHOLDER}
+        src={resolvedSrc}
         alt={alt}
         className={`block ${fitClass} pointer-events-none select-none ${imgClassName}`.trim()}
         loading={loading}
         draggable={draggable}
         decoding="async"
+        onError={handleImgError}
       />
       {children}
     </div>

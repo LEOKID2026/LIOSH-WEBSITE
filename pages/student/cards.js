@@ -7,7 +7,7 @@ import {
   StudentCardsTabPanel,
   StudentSeriesProgressCard,
 } from "../../components/student/rewards/StudentRewardCard";
-import VirtualizedStudentCardsGrid from "../../components/student/rewards/VirtualizedStudentCardsGrid.jsx";
+import WindowedStudentCardsGrid from "../../components/student/rewards/WindowedStudentCardsGrid.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
@@ -440,13 +440,12 @@ export default function StudentCardsPage() {
     if (activeTab === "collection") {
       const collectionList = payload?.collection || [];
       return (
-        <VirtualizedStudentCardsGrid
+        <WindowedStudentCardsGrid
           items={collectionList}
           emptyMessage="עדיין אין קלפים באוסף — פתחו קופסת הפתעה בעולם הילד או קנו בחנות!"
           T={T}
           previewCards={collectionList}
           studentFullName={studentDisplayName}
-          estimateRowHeight={320}
           getPreviewAllowDownload={() => true}
           renderCardProps={() => ({
             footer: null,
@@ -462,13 +461,12 @@ export default function StudentCardsPage() {
         c.alreadyOwned ? c : { ...c, showLockedStamp: true }
       );
       return (
-        <VirtualizedStudentCardsGrid
+        <WindowedStudentCardsGrid
           items={shopList}
           emptyMessage="אין קלפים זמינים לרכישה כרגע."
           T={T}
           previewCards={shopPreviewCards}
           studentFullName={studentDisplayName}
-          estimateRowHeight={400}
           getPreviewAllowDownload={(card) => card.alreadyOwned === true}
           renderCardProps={(card) => {
             const canBuy = card.canAfford === true && !card.alreadyOwned;
@@ -538,13 +536,12 @@ export default function StudentCardsPage() {
         c.isOwned ? c : { ...c, showLockedStamp: true }
       );
       return (
-        <VirtualizedStudentCardsGrid
+        <WindowedStudentCardsGrid
           items={catalogList}
           emptyMessage="אין קלפים להצגה."
           T={T}
           previewCards={catalogPreviewCards}
           studentFullName={studentDisplayName}
-          estimateRowHeight={360}
           getPreviewAllowDownload={(card) => card.isOwned === true}
           renderCardProps={(card) => ({
             showLockedStamp: !card.isOwned,

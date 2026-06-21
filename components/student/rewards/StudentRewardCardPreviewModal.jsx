@@ -3,6 +3,9 @@ import { useStudentTheme } from "../../../contexts/StudentThemeContext.jsx";
 import RewardCardLockedStamp, { lockedCardDimClassName } from "./RewardCardLockedStamp.jsx";
 import RewardCardImage from "./RewardCardImage.jsx";
 import { downloadStudentRewardCardImage } from "../../../lib/rewards/download-student-card.client.js";
+import { prefetchRewardCardNeighbors } from "../../../lib/rewards/reward-card-display-prefetch.client.js";
+
+const CARD_THUMB_PLACEHOLDER = "/rewards/cards/placeholders/regular/default.svg";
 
 const CARD_INFO_PILL_CLASS =
   "rounded-full border border-[rgba(255,215,120,0.45)] bg-[rgba(15,23,42,0.55)] backdrop-blur-[3px] " +
@@ -12,6 +15,82 @@ const CAPTION_CLASS =
 const SUB_CAPTION_CLASS =
   "text-xs sm:text-sm leading-snug text-white/90 font-semibold [text-shadow:0_1px_2px_rgba(0,0,0,0.45)]";
 const SWIPE_THRESHOLD_PX = 48;
+
+/** Overlay images fill the display-sized frame (thumb upscales inside it). */
+const MODAL_OVERLAY_IMG_CLASS =
+  "absolute inset-0 w-full h-full object-contain pointer-events-none select-none";
+
+/**
+ * Thumb-first modal image inside the original RewardCardImage layout box.
+ * Root cause of shrink: sizing the wrapper from thumb.webp (~280px intrinsic).
+ * max-h-[80vh] does not upscale — display must define the layout frame.
+ */
+function StudentRewardCardModalImage({ thumbSrc, displaySrc, alt, showLocked, preBaked }) {
+  const [displayReady, setDisplayReady] = useState(false);
+  const useDisplayLayer =
+    displayReady && Boolean(displaySrc) && displaySrc !== thumbSrc;
+  const lockedClass = showLocked ? lockedCardDimClassName(false) : "";
+
+  useEffect(() => {
+    setDisplayReady(false);
+    const target = String(displaySrc || "").trim();
+    if (!target || target === thumbSrc) return undefined;
+
+    let alive = true;
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = () => {
+      if (alive) setDisplayReady(true);
+    };
+    img.onerror = () => {
+      if (alive) setDisplayReady(false);
+    };
+    img.src = target;
+
+    return () => {
+      alive = false;
+    };
+  }, [displaySrc, thumbSrc]);
+
+  return (
+    <div className="relative inline-block max-w-full max-h-[80vh] w-fit bg-transparent">
+      {/* Layout sizer — identical to pre-#4 modal (display.webp intrinsic dimensions). */}
+      <RewardCardImage
+        src={displaySrc}
+        preBaked={preBaked}
+        size="modal"
+        fit="contain"
+        loading="eager"
+        alt=""
+        className="opacity-0 pointer-events-none select-none"
+        draggable={false}
+      />
+      <div className="absolute inset-0 overflow-hidden bg-transparent">
+        <img
+          src={thumbSrc || CARD_THUMB_PLACEHOLDER}
+          alt={alt}
+          className={`${MODAL_OVERLAY_IMG_CLASS} transition-opacity duration-200 ${
+            useDisplayLayer ? "opacity-0" : "opacity-100"
+          } ${lockedClass}`.trim()}
+          loading="eager"
+          draggable={false}
+          decoding="async"
+        />
+        {useDisplayLayer ? (
+          <img
+            src={displaySrc}
+            alt={alt}
+            className={`${MODAL_OVERLAY_IMG_CLASS} opacity-100 ${lockedClass}`.trim()}
+            loading="eager"
+            draggable={false}
+            decoding="async"
+          />
+        ) : null}
+        {showLocked ? <RewardCardLockedStamp modal /> : null}
+      </div>
+    </div>
+  );
+}
 
 /**
  * Enlarged card preview — overlay only, swipe/arrows within tab card list.
@@ -84,12 +163,23 @@ export default function StudentRewardCardPreviewModal({
     };
   }, [open, onClose, initialIndex, cards.length]);
 
+  useEffect(() => {
+    if (!open || !cards.length) return undefined;
+    prefetchRewardCardNeighbors(cards, safeIndex);
+    return undefined;
+  }, [open, cards, safeIndex]);
+
   if (!open || !currentCard) return null;
 
-  const imageSrc =
+  const thumbSrc =
+    currentCard.imageThumbUrl ||
+    currentCard.imageUrl ||
+    CARD_THUMB_PLACEHOLDER;
+  const displaySrc =
     currentCard.imageDisplayUrl ||
     currentCard.imageUrl ||
-    "/rewards/cards/placeholders/regular/default.svg";
+    thumbSrc;
+  const downloadImageSrc = displaySrc;
   const showLocked = currentCard.isLocked === true || currentCard.showLockedStamp === true;
   const canDownload =
     !showLocked &&
@@ -104,7 +194,7 @@ export default function StudentRewardCardPreviewModal({
     setDownloadError("");
     try {
       await downloadStudentRewardCardImage({
-        imageUrl: imageSrc,
+        imageUrl: downloadImageSrc,
         downloadUrl: currentCard.imageDownloadUrl,
         imageVariantsReady: currentCard.imageVariantsReady === true,
         studentFullName: String(studentFullName),
@@ -177,18 +267,13 @@ export default function StudentRewardCardPreviewModal({
               >
                 ×
               </button>
-              <RewardCardImage
-                src={imageSrc}
-                preBaked={currentCard.imageVariantsReady === true}
+              <StudentRewardCardModalImage
+                thumbSrc={thumbSrc}
+                displaySrc={displaySrc}
                 alt={currentCard.nameHe || "תמונת קלף"}
-                size="modal"
-                fit="contain"
-                loading="eager"
-                draggable={false}
-                imgClassName={showLocked ? lockedCardDimClassName(false) : ""}
-              >
-                {showLocked ? <RewardCardLockedStamp modal /> : null}
-              </RewardCardImage>
+                showLocked={showLocked}
+                preBaked={currentCard.imageVariantsReady === true}
+              />
             </div>
 
             <button

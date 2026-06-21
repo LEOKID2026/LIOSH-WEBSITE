@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Regenerate Hebrew card placeholder SVGs.
+ * Regenerate Hebrew card placeholder SVGs for LOCAL DEV ONLY.
+ * Do NOT run in production deploy — student world must not rely on these paths.
  * Run: node scripts/generate-card-placeholders.mjs
  */
 import { mkdir, writeFile } from "node:fs/promises";
