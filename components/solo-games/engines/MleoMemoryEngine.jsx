@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 import confetti from "canvas-confetti";
+import RewardCardImage from "../../student/rewards/RewardCardImage.jsx";
+import { buildMemoryDeckFromShop } from "../../../lib/solo-games/memory-shop-cards.client.js";
+import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 /**
  * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void }} props
@@ -13,10 +15,12 @@ export default function MleoMemoryEngine({
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const initialScoreRef = useRef(0);
+  const initSeqRef = useRef(0);
 
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [showIntro, setShowIntro] = useState(!autoStart);
+  const [deckLoading, setDeckLoading] = useState(false);
   const [score, setScore] = useState(0);
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]);
@@ -31,7 +35,6 @@ export default function MleoMemoryEngine({
   const [focusIndex, setFocusIndex] = useState(0);
   const scoreRef = useRef(0);
 
-  const allImages = Array.from({ length: 50 }, (_, i) => `/images/card/shiba${i + 1}.png`);
   const flipSound = typeof Audio !== "undefined" ? new Audio("/sounds/flap.mp3") : null;
 
   useEffect(() => {
@@ -39,9 +42,9 @@ export default function MleoMemoryEngine({
   }, [initialDifficulty]);
 
   const difficultySettings = {
-    easy: { num: 6, score: 1000, time: 120, label: "קל" },
-    medium: { num: 12, score: 3000, time: 240, label: "בינוני" },
-    hard: { num: 20, score: 6000, time: 360, label: "קשה" },
+    easy: { pairs: 6, score: 1000, time: 120, label: "קל" },
+    medium: { pairs: 8, score: 3000, time: 240, label: "בינוני" },
+    hard: { pairs: 12, score: 6000, time: 360, label: "קשה" },
   };
 
   const fireSessionEnd = (finalScore, won, timeLeft) => {
@@ -62,18 +65,15 @@ export default function MleoMemoryEngine({
     });
   };
 
-  function initGameWithDifficulty(diffKey) {
+  async function initGameWithDifficulty(diffKey) {
+    const seq = initSeqRef.current + 1;
+    initSeqRef.current = seq;
     sessionEndFiredRef.current = false;
     playStartedAtRef.current = Date.now();
-    const { score: startScore, time, num } = difficultySettings[diffKey];
+    const { score: startScore, time, pairs } = difficultySettings[diffKey] || difficultySettings.medium;
     initialScoreRef.current = startScore;
-    const cardImages = [...allImages].sort(() => Math.random() - 0.5).slice(0, num);
 
-    const duplicated = [...cardImages, ...cardImages]
-      .sort(() => Math.random() - 0.5)
-      .map((src, i) => ({ id: i, src }));
-
-    setCards(duplicated);
+    setDeckLoading(true);
     setFlipped([]);
     setMatched([]);
     setScore(startScore);
@@ -85,6 +85,12 @@ export default function MleoMemoryEngine({
     setStartedPlaying(false);
     setGameRunning(true);
     setFocusIndex(0);
+
+    const deck = await buildMemoryDeckFromShop(pairs);
+    if (initSeqRef.current !== seq) return;
+
+    setCards(deck);
+    setDeckLoading(false);
   }
 
   useEffect(() => {
@@ -92,7 +98,6 @@ export default function MleoMemoryEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart, initialDifficulty]);
 
-  // ✅ ספירה לאחור
   useEffect(() => {
     if (!timerRunning) return;
 
@@ -113,7 +118,6 @@ export default function MleoMemoryEngine({
     return () => clearInterval(interval);
   }, [timerRunning]);
 
-  // ✅ עצירה והכרזה על ניצחון + אפקט
   useEffect(() => {
     if (matched.length > 0 && matched.length === cards.length) {
       setTimerRunning(false);
@@ -139,7 +143,7 @@ export default function MleoMemoryEngine({
   }, []);
 
   function handleFlip(card) {
-    if (gameOver || !gameRunning) return;
+    if (gameOver || !gameRunning || deckLoading) return;
     if (!startedPlaying) {
       setStartedPlaying(true);
       setTimerRunning(true);
@@ -155,19 +159,23 @@ export default function MleoMemoryEngine({
       const card1 = cards.find((c) => c.id === first);
       const card2 = cards.find((c) => c.id === second);
 
-      if (card1.src === card2.src) setMatched((prev) => [...prev, first, second]);
-      else setScore((s) => {
-        const next = Math.max(0, s - 10);
-        scoreRef.current = next;
-        return next;
-      });
+      if (card1?.pairKey && card1.pairKey === card2?.pairKey) {
+        setMatched((prev) => [...prev, first, second]);
+      } else {
+        setScore((s) => {
+          const next = Math.max(0, s - 10);
+          scoreRef.current = next;
+          return next;
+        });
+      }
 
       setTimeout(() => setFlipped([]), 1200);
     }
   }
+
   const totalCards = cards.length;
   let columns = windowWidth < 600 ? Math.min(6, totalCards) : Math.min(10, totalCards);
-  const rows = Math.ceil(totalCards / columns);
+  const rows = Math.ceil(totalCards / Math.max(columns, 1));
   const containerWidth = windowWidth * 0.95;
   const containerHeight = typeof window !== "undefined" ? window.innerHeight * 0.55 : 500;
   const gapSize = windowWidth < 600 ? 4 : windowWidth < 1024 ? 6 : 10;
@@ -179,7 +187,7 @@ export default function MleoMemoryEngine({
     )
   );
 
-  useSoloGameKeyboard(gameRunning && !gameOver && !showIntro, (e) => {
+  useSoloGameKeyboard(gameRunning && !gameOver && !showIntro && !deckLoading, (e) => {
     if (e.code === "ArrowRight") {
       setFocusIndex((i) => Math.min(totalCards - 1, i + 1));
       return true;
@@ -205,30 +213,33 @@ export default function MleoMemoryEngine({
   });
 
   return (
-      <div
-        id="game-wrapper"
-        className="flex h-full min-h-0 flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white w-full relative"
-      >
-        {!showIntro && (
-          <>
-            <div className="flex shrink-0 justify-center items-center gap-3 py-2">
-              <div className="h-3 w-24 overflow-hidden rounded-full bg-gray-700 sm:w-32">
-                <div
-                  className={`h-full ${
-                    time / difficultySettings[difficulty].time > 0.6
-                      ? "bg-green-500"
-                      : time / difficultySettings[difficulty].time > 0.3
+    <div
+      id="game-wrapper"
+      className="relative flex h-full min-h-0 w-full flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white"
+    >
+      {!showIntro && (
+        <>
+          <div className="flex shrink-0 items-center justify-center gap-3 py-2">
+            <div className="h-3 w-24 overflow-hidden rounded-full bg-gray-700 sm:w-32">
+              <div
+                className={`h-full ${
+                  time / difficultySettings[difficulty].time > 0.6
+                    ? "bg-green-500"
+                    : time / difficultySettings[difficulty].time > 0.3
                       ? "bg-yellow-400"
                       : "bg-red-500"
-                  } transition-all duration-500`}
-                  style={{ width: `${(time / difficultySettings[difficulty].time) * 100}%` }}
-                />
-              </div>
-              <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⏳ {time}s</div>
-              <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⭐ {score}</div>
+                } transition-all duration-500`}
+                style={{ width: `${(time / difficultySettings[difficulty].time) * 100}%` }}
+              />
             </div>
+            <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⏳ {time}s</div>
+            <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⭐ {score}</div>
+          </div>
 
-            <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden px-2 pb-2">
+          <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden px-2 pb-2">
+            {deckLoading ? (
+              <p className="text-sm font-semibold text-yellow-200">טוען קלפים מהחנות…</p>
+            ) : (
               <div
                 className={`${gameOver ? "pointer-events-none opacity-50" : ""}`}
                 style={{
@@ -244,26 +255,44 @@ export default function MleoMemoryEngine({
                   const isFlipped = flipped.includes(card.id) || matched.includes(card.id);
                   const isFocused = idx === focusIndex;
                   return (
-                    <div
+                    <button
                       key={card.id}
+                      type="button"
                       onClick={() => handleFlip(card)}
-                      className={`flex cursor-pointer items-center justify-center rounded-lg bg-yellow-500 transition hover:scale-105 ${
-                        isFocused ? "ring-4 ring-sky-400" : ""
-                      }`}
+                      className={`relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 transition hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
+                        isFocused ? "ring-4 ring-sky-400" : "border-yellow-400/30"
+                      } ${isFlipped ? "border-yellow-300/70 bg-slate-900/40" : "border-amber-500/40 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700"}`}
                       style={{ width: `${cardWidth}px`, height: `${cardWidth * 1.35}px` }}
+                      aria-label={isFlipped ? card.nameHe || "קלף פתוח" : "קלף סגור"}
                     >
                       {isFlipped ? (
-                        <img src={card.src} alt="card" className="h-[90%] w-[90%] rounded-md object-cover" />
+                        <RewardCardImage
+                          src={card.src}
+                          preBaked={card.preBaked}
+                          size="tile"
+                          fit="cover"
+                          loading="eager"
+                          alt={card.nameHe || "קלף"}
+                          wrapperClassName="h-[92%] w-[88%]"
+                        />
                       ) : (
-                        <div className="h-[90%] w-[90%] rounded-md bg-gray-300" />
+                        <div className="flex h-[92%] w-[88%] flex-col items-center justify-center rounded-md bg-gradient-to-br from-amber-500/90 via-yellow-400/95 to-amber-600/90 shadow-inner ring-1 ring-amber-100/30">
+                          <img
+                            src="/images/leo-logo.png"
+                            alt=""
+                            className="h-[42%] w-[42%] object-contain opacity-90 drop-shadow"
+                            draggable={false}
+                          />
+                        </div>
                       )}
-                    </div>
+                    </button>
                   );
                 })}
               </div>
-            </div>
-          </>
-        )}
-      </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
