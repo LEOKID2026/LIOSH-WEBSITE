@@ -36,15 +36,10 @@ export function SoloV2Hud({ rows }) {
 /**
  * @param {{ children: import("react").ReactNode, bg?: string, className?: string }} props
  */
-export function SoloV2Playfield({ children, bg = SOLO_V2_ASSETS.bgSky, className = "" }) {
+export function SoloV2Playfield({ children, bg: _bg, className = "" }) {
   return (
     <div
-      className={`relative min-h-0 flex-1 w-full max-w-lg overflow-hidden rounded-2xl border-4 border-yellow-400 shadow-lg ${className}`}
-      style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(8,47,73,0.55), rgba(15,23,42,0.75)), url(${bg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      className={`relative min-h-0 flex-1 w-full max-w-lg overflow-hidden rounded-2xl border-4 border-yellow-400 bg-gradient-to-b from-slate-900 via-slate-950 to-gray-950 shadow-lg ${className}`}
     >
       {children}
     </div>
