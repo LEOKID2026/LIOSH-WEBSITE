@@ -282,7 +282,7 @@ export default function StudentCardsPage() {
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
           cardId: card.id,
-          idempotencyKey: `card:sellback:${card.id}:${Date.now()}`,
+          idempotencyKey: `card:sellback:${card.id}:${card.duplicateCount ?? 0}`,
         }),
       });
       const json = await res.json().catch(() => ({}));
@@ -434,7 +434,9 @@ export default function StudentCardsPage() {
                       className={
                         ownedOnly
                           ? `${T.ctaPrimary} text-xs w-full !bg-amber-500 hover:!bg-amber-500 !text-white shadow-md cursor-default disabled:!opacity-100`
-                          : `${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
+                          : canSell
+                            ? `${T.ctaGames} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
+                            : `${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
                       }
                     >
                       {canSell
