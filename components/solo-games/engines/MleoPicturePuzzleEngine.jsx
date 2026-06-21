@@ -101,6 +101,7 @@ export default function MleoPicturePuzzleEngine({
 
   const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [selectedImageId, setSelectedImageId] = useState(PUZZLE_IMAGES[0].id);
+  const [previewImage, setPreviewImage] = useState(null);
   const [showPicker, setShowPicker] = useState(true);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -243,56 +244,91 @@ export default function MleoPicturePuzzleEngine({
       dir="rtl"
     >
       {showPicker ? (
-        <div className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto px-3 py-4">
-          <div className="mx-auto w-full max-w-lg text-center">
-            <img src="/images/leo.png" alt="" className="mx-auto mb-3 h-16 w-16 object-contain" />
-            <h2 className="text-lg font-extrabold text-yellow-300 sm:text-xl">בחרו תמונה לפאזל</h2>
-            <p className="mt-1 text-sm text-gray-300">לחצו על תמונה ואז התחילו את המשחק</p>
+        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden px-1 py-1 sm:px-2">
+          <div className="shrink-0 text-center leading-tight">
+            <h2 className="text-sm font-extrabold text-yellow-300 sm:text-base">בחרו תמונה לפאזל</h2>
+            <p className="text-[10px] text-gray-400 sm:text-[11px]">לחצו · בחרו · התחילו</p>
           </div>
 
-          <div className="mx-auto mt-4 grid w-full max-w-lg grid-cols-2 gap-3 sm:grid-cols-3">
-            {PUZZLE_IMAGES.map((img) => {
-              const selected = selectedImageId === img.id;
-              return (
-                <button
-                  key={img.id}
-                  type="button"
-                  onClick={() => setSelectedImageId(img.id)}
-                  className={`flex flex-col items-center gap-1 rounded-xl border-4 p-1 transition ${
-                    selected
-                      ? "border-yellow-400 bg-yellow-400/10 shadow-lg shadow-yellow-400/20"
-                      : "border-white/20 bg-black/30 hover:border-white/40"
-                  }`}
-                >
-                  <img
-                    src={img.src}
-                    alt={img.label}
-                    className="aspect-square w-full rounded-lg object-cover"
-                    draggable={false}
-                  />
-                  <span className="pb-1 text-xs font-bold text-white">{img.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mx-auto mt-5 flex w-full max-w-lg flex-col items-center gap-3 pb-4">
-            <div className="flex items-center gap-3 rounded-xl border border-yellow-400/40 bg-black/40 px-4 py-2">
-              <img
-                src={puzzleImage}
-                alt=""
-                className="h-14 w-14 rounded-lg object-cover ring-2 ring-yellow-400"
-              />
-              <span className="text-sm font-semibold text-yellow-100">התמונה שנבחרה</span>
+          <div className="flex flex-1 items-center justify-center overflow-hidden py-2">
+            <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-2.5">
+              {PUZZLE_IMAGES.map((img) => {
+                const selected = selectedImageId === img.id;
+                return (
+                  <button
+                    key={img.id}
+                    type="button"
+                    onClick={() => setPreviewImage(img)}
+                    className={`relative h-[78px] w-[78px] shrink-0 overflow-hidden rounded-md border-2 p-0 transition sm:h-[96px] sm:w-[96px] sm:rounded-lg ${
+                      selected
+                        ? "border-yellow-400 shadow-md shadow-yellow-400/30 ring-2 ring-yellow-400/60"
+                        : "border-white/20 hover:border-white/45"
+                    }`}
+                    style={{ touchAction: "manipulation" }}
+                    aria-label={`${img.label}${selected ? " — נבחרה" : ""}`}
+                  >
+                    <img
+                      src={img.src}
+                      alt=""
+                      className="block h-full w-full object-cover"
+                      draggable={false}
+                    />
+                  </button>
+                );
+              })}
             </div>
+          </div>
+
+          <div className="shrink-0 px-1 pb-0.5 pt-1 sm:px-2">
             <button
               type="button"
               onClick={startGame}
-              className="min-h-[48px] w-full max-w-xs rounded-xl bg-yellow-400 px-8 py-3 text-base font-bold text-black shadow-md"
+              className="min-h-[40px] w-full rounded-xl bg-yellow-400 px-4 py-2 text-sm font-bold text-black shadow-md sm:min-h-[44px] sm:text-base"
+              style={{ touchAction: "manipulation" }}
             >
               התחל משחק
             </button>
           </div>
+
+          {previewImage ? (
+            <div
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/88 p-3"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`תצוגת ${previewImage.label}`}
+            >
+              <div className="flex w-full max-w-sm flex-col items-center gap-3">
+                <img
+                  src={previewImage.src}
+                  alt={previewImage.label}
+                  className="max-h-[min(52dvh,320px)] w-full max-w-[min(88vw,320px)] rounded-xl object-contain ring-2 ring-yellow-400"
+                  draggable={false}
+                />
+                <p className="text-sm font-bold text-yellow-100">{previewImage.label}</p>
+                <div className="flex w-full max-w-xs gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImageId(previewImage.id);
+                      setPreviewImage(null);
+                    }}
+                    className="min-h-[44px] flex-1 rounded-xl bg-yellow-400 px-3 py-2 text-sm font-bold text-black"
+                    style={{ touchAction: "manipulation" }}
+                  >
+                    בחר תמונה
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewImage(null)}
+                    className="min-h-[44px] flex-1 rounded-xl border-2 border-white/40 bg-black/50 px-3 py-2 text-sm font-bold text-white"
+                    style={{ touchAction: "manipulation" }}
+                  >
+                    סגור
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : (
         <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden px-1 pb-1 pt-1">
