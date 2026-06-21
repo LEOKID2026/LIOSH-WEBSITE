@@ -1,6 +1,6 @@
 /** Shared Leo Kids UI bits for Solo Games V2 engines. */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 export const SOLO_V2_ASSETS = {
   leo: "/images/leo.png",
   leoAlt: "/images/leo2.png",
@@ -161,3 +161,99 @@ export function useSoloBoardTap(boardRef, captureRef, runningRef, onTap, active)
     };
   }, [boardRef, captureRef, runningRef, active]);
 }
+
+const KEYBOARD_BLOCK =
+  "ArrowUp,ArrowDown,ArrowLeft,ArrowRight,Space,Enter,KeyW,KeyA,KeyS,KeyD,KeyH,Digit1,Digit2,Digit3,Tab";
+
+/**
+ * @param {boolean} active
+ * @param {(e: KeyboardEvent) => boolean | void} onKey Return true to preventDefault
+ */
+export function useSoloGameKeyboard(active, onKey) {
+  const onKeyRef = useRef(onKey);
+  onKeyRef.current = onKey;
+
+  useEffect(() => {
+    if (!active) return undefined;
+    const handler = (e) => {
+      if (e.target.closest?.("input, textarea, select")) return;
+      const block = onKeyRef.current(e);
+      if (block) e.preventDefault();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [active]);
+}
+
+/**
+ * Keyboard crosshair for tap-style solo games.
+ * @param {boolean} active
+ * @param {{ step?: number, onFire: (x: number, y: number, rect: DOMRect) => void, boardRef: React.RefObject<HTMLElement | null> }} opts
+ */
+export function useSoloAimKeyboard(active, { step = 2.4, onFire, boardRef }) {
+  const onFireRef = useRef(onFire);
+  onFireRef.current = onFire;
+  const aimRef = useRef({ xPct: 50, yPct: 50 });
+  const [aim, setAim] = useState({ xPct: 50, yPct: 50 });
+
+  useEffect(() => {
+    if (!active) return undefined;
+    const handler = (e) => {
+      if (e.target.closest?.("input, textarea, select")) return;
+      let moved = false;
+      if (e.code === "ArrowUp" || e.code === "KeyW") {
+        aimRef.current.yPct = Math.max(8, aimRef.current.yPct - step);
+        moved = true;
+      } else if (e.code === "ArrowDown" || e.code === "KeyS") {
+        aimRef.current.yPct = Math.min(92, aimRef.current.yPct + step);
+        moved = true;
+      } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
+        aimRef.current.xPct = Math.max(8, aimRef.current.xPct - step);
+        moved = true;
+      } else if (e.code === "ArrowRight" || e.code === "KeyD") {
+        aimRef.current.xPct = Math.min(92, aimRef.current.xPct + step);
+        moved = true;
+      } else if (e.code === "Space" || e.code === "Enter") {
+        const board = boardRef.current;
+        if (board) {
+          const rect = board.getBoundingClientRect();
+          const x = (aimRef.current.xPct / 100) * rect.width;
+          const y = (aimRef.current.yPct / 100) * rect.height;
+          onFireRef.current(x, y, rect);
+        }
+        e.preventDefault();
+        return;
+      }
+      if (moved) {
+        setAim({ ...aimRef.current });
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [active, boardRef, step]);
+
+  useEffect(() => {
+    if (active) {
+      aimRef.current = { xPct: 50, yPct: 50 };
+      setAim({ xPct: 50, yPct: 50 });
+    }
+  }, [active]);
+
+  return aim;
+}
+
+/** @param {{ xPct: number, yPct: number, className?: string }} props */
+export function SoloAimCrosshair({ xPct, yPct, className = "" }) {
+  return (
+    <div
+      className={`pointer-events-none absolute z-[60] h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-yellow-300 bg-yellow-300/15 shadow-[0_0_10px_rgba(253,224,71,0.55)] ${className}`}
+      style={{ left: `${xPct}%`, top: `${yPct}%` }}
+      aria-hidden
+    >
+      <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-200/80" />
+    </div>
+  );
+}
+
+export { KEYBOARD_BLOCK };

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 const SHAPES = [
   "heart.png",
@@ -34,6 +35,7 @@ export default function MleoPuzzleEngine({
   const [didWin, setDidWin] = useState(false);
   const [showIntro, setShowIntro] = useState(!autoStart);
   const [selected, setSelected] = useState(null);
+  const [focusIndex, setFocusIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
 
   const size = DIFFICULTY_SETTINGS[difficulty].grid;
@@ -241,8 +243,34 @@ export default function MleoPuzzleEngine({
     setDidWin(false);
     setScore(0);
     setTime(DIFFICULTY_SETTINGS[difficulty].time);
+    setFocusIndex(0);
     generateGrid();
   };
+
+  useSoloGameKeyboard(gameRunning && !gameOver && !showIntro, (e) => {
+    const [r, c] = getCoords(focusIndex);
+    if (e.code === "ArrowRight" && c < size - 1) {
+      setFocusIndex(focusIndex + 1);
+      return true;
+    }
+    if (e.code === "ArrowLeft" && c > 0) {
+      setFocusIndex(focusIndex - 1);
+      return true;
+    }
+    if (e.code === "ArrowDown" && r < size - 1) {
+      setFocusIndex(focusIndex + size);
+      return true;
+    }
+    if (e.code === "ArrowUp" && r > 0) {
+      setFocusIndex(focusIndex - size);
+      return true;
+    }
+    if (e.code === "Enter" || e.code === "Space") {
+      handleClick(focusIndex);
+      return true;
+    }
+    return false;
+  });
 
   useEffect(() => {
     if (autoStart) startGame();
@@ -277,7 +305,7 @@ export default function MleoPuzzleEngine({
                   onTouchStart={(e) => handleTouchStart(i, e)}
                   onTouchEnd={(e) => handleTouchEnd(i, e)}
                   className={`cursor-pointer select-none rounded bg-gray-700 p-0.5 transition ${
-                    selected === i ? "ring-4 ring-yellow-400" : ""
+                    selected === i ? "ring-4 ring-yellow-400" : focusIndex === i ? "ring-4 ring-sky-400" : ""
                   }`}
                 >
                   <img

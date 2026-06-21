@@ -6,6 +6,7 @@ import {
   SoloV2Hud,
   SoloV2Intro,
   SoloV2Playfield,
+  useSoloGameKeyboard,
 } from "./solo-v2-ui.jsx";
 
 const DIFFICULTY_SETTINGS = {
@@ -81,6 +82,7 @@ export default function MleoSortShapesEngine({
   const [timeLeft, setTimeLeft] = useState(90);
   const [queue, setQueue] = useState([]);
   const [sortedCount, setSortedCount] = useState(0);
+  const [selectedBin, setSelectedBin] = useState(0);
 
   useEffect(() => {
     if (initialDifficulty) setDifficulty(initialDifficulty);
@@ -133,6 +135,7 @@ export default function MleoSortShapesEngine({
     setLives(settings.maxLives);
     setTimeLeft(settings.durationSec);
     setQueue(buildQueue(settings.itemCount));
+    setSelectedBin(0);
     setGameRunning(true);
   };
 
@@ -170,6 +173,34 @@ export default function MleoSortShapesEngine({
       endGame(true, timeLeft);
     }
   };
+
+  useSoloGameKeyboard(gameRunning && !gameOver && !showIntro, (e) => {
+    if (e.code === "ArrowRight" || (e.code === "Tab" && !e.shiftKey)) {
+      setSelectedBin((b) => (b + 1) % BINS.length);
+      return true;
+    }
+    if (e.code === "ArrowLeft" || (e.code === "Tab" && e.shiftKey)) {
+      setSelectedBin((b) => (b + BINS.length - 1) % BINS.length);
+      return true;
+    }
+    if (e.code === "Digit1") {
+      setSelectedBin(0);
+      return true;
+    }
+    if (e.code === "Digit2") {
+      setSelectedBin(1);
+      return true;
+    }
+    if (e.code === "Digit3") {
+      setSelectedBin(2);
+      return true;
+    }
+    if (e.code === "Enter" || e.code === "Space") {
+      handleBinTap(BINS[selectedBin].id);
+      return true;
+    }
+    return false;
+  });
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full" dir="rtl">
@@ -211,13 +242,15 @@ export default function MleoSortShapesEngine({
             </div>
 
             <div className="grid min-h-0 flex-1 grid-cols-3 gap-2">
-              {BINS.map((bin) => (
+              {BINS.map((bin, binIdx) => (
                 <button
                   key={bin.id}
                   type="button"
                   disabled={!gameRunning || !currentItem}
                   onClick={() => handleBinTap(bin.id)}
-                  className={`flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 py-2 text-xs font-bold sm:text-sm ${bin.className} disabled:opacity-40`}
+                  className={`flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 py-2 text-xs font-bold sm:text-sm ${bin.className} disabled:opacity-40 ${
+                    selectedBin === binIdx && gameRunning && !gameOver ? "ring-4 ring-yellow-300" : ""
+                  }`}
                 >
                   <span className="text-2xl">{bin.emoji}</span>
                   <div className="flex gap-1">

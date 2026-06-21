@@ -13,32 +13,38 @@ const SCORE_CAP = { easy: 900, medium: 1100, hard: 1300 };
 
 const DIFFICULTY_SETTINGS = {
   easy: {
-    size: 7,
+    rows: 9,
+    cols: 7,
     timeSec: 180,
     maxMistakes: 20,
     starCount: 3,
     hintAfter: 4,
-    cellMin: 38,
+    cellMin: 30,
+    cellMinLg: 38,
     diamondChance: 0.75,
     diamondSec: 10,
   },
   medium: {
-    size: 9,
+    rows: 11,
+    cols: 9,
     timeSec: 210,
     maxMistakes: 14,
     starCount: 4,
     hintAfter: 99,
-    cellMin: 32,
+    cellMin: 24,
+    cellMinLg: 32,
     diamondChance: 0.7,
     diamondSec: 10,
   },
   hard: {
-    size: 11,
+    rows: 13,
+    cols: 11,
     timeSec: 240,
     maxMistakes: 10,
     starCount: 5,
     hintAfter: 99,
-    cellMin: 26,
+    cellMin: 20,
+    cellMinLg: 28,
     diamondChance: 0.65,
     diamondSec: 10,
   },
@@ -52,7 +58,9 @@ const MAZE_RULES = {
     minDeadEnds: 3,
     minStarsOffPath: 2,
     minKeySteps: 3,
-    maxKeySteps: 14,
+    maxKeySteps: 16,
+    extraPassages: 3,
+    minChoices: 2,
   },
   medium: {
     minSteps: 18,
@@ -61,7 +69,9 @@ const MAZE_RULES = {
     minDeadEnds: 5,
     minStarsOffPath: 2,
     minKeySteps: 5,
-    maxKeySteps: 22,
+    maxKeySteps: 24,
+    extraPassages: 4,
+    minChoices: 3,
   },
   hard: {
     minSteps: 24,
@@ -70,7 +80,9 @@ const MAZE_RULES = {
     minDeadEnds: 8,
     minStarsOffPath: 3,
     minKeySteps: 8,
-    maxKeySteps: 35,
+    maxKeySteps: 38,
+    extraPassages: 5,
+    minChoices: 4,
   },
 };
 
@@ -93,9 +105,9 @@ function shuffleWithRng(arr, rng) {
   return a;
 }
 
-function generateMaze(size, seed) {
+function generateMaze(rows, cols, seed) {
   const rng = mulberry32(seed);
-  const grid = Array.from({ length: size }, () => Array(size).fill(1));
+  const grid = Array.from({ length: rows }, () => Array(cols).fill(1));
   const baseDirs = [
     [0, 2],
     [2, 0],
@@ -110,7 +122,10 @@ function generateMaze(size, seed) {
     const dirs = shuffleWithRng(baseDirs, rng);
     const neighbors = dirs
       .map(([dr, dc]) => [r + dr, c + dc, r + dr / 2, c + dc / 2])
-      .filter(([nr, nc]) => nr > 0 && nc > 0 && nr < size - 1 && nc < size - 1 && grid[nr][nc] === 1);
+      .filter(
+        ([nr, nc]) =>
+          nr > 0 && nc > 0 && nr < rows - 1 && nc < cols - 1 && grid[nr][nc] === 1
+      );
 
     if (!neighbors.length) stack.pop();
     else {
@@ -123,6 +138,66 @@ function generateMaze(size, seed) {
   }
 
   return grid;
+}
+
+function wallBreakCandidates(maze) {
+  const rows = maze.length;
+  const cols = maze[0].length;
+  const out = [];
+  for (let r = 1; r < rows - 1; r += 1) {
+    for (let c = 1; c < cols - 1; c += 1) {
+      if (maze[r][c] !== 1) continue;
+      const up = maze[r - 1][c] === 0;
+      const down = maze[r + 1][c] === 0;
+      const left = maze[r][c - 1] === 0;
+      const right = maze[r][c + 1] === 0;
+      if (left && right && !up && !down) out.push({ r, c });
+      if (up && down && !left && !right) out.push({ r, c });
+    }
+  }
+  return out;
+}
+
+function openExtraPassages(maze, rng, count) {
+  const copy = maze.map((row) => [...row]);
+  const candidates = shuffleWithRng(wallBreakCandidates(copy), rng);
+  let opened = 0;
+  for (const cell of candidates) {
+    if (opened >= count) break;
+    copy[cell.r][cell.c] = 0;
+    opened += 1;
+  }
+  return copy;
+}
+
+function countPathChoices(maze) {
+  const rows = maze.length;
+  const cols = maze[0].length;
+  let choices = 0;
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      if (maze[r][c] !== 0) continue;
+      const up = maze[r - 1]?.[c] === 0;
+      const down = maze[r + 1]?.[c] === 0;
+      const left = maze[r][c - 1] === 0;
+      const right = maze[r][c + 1] === 0;
+      const n = [up, down, left, right].filter(Boolean).length;
+      if (n >= 3) choices += 1;
+      else if (n === 2 && ((up && left) || (up && right) || (down && left) || (down && right))) {
+        choices += 1;
+      }
+    }
+  }
+  return choices;
+}
+
+function validatePrizes(maze, start, exit, key, stars, bonusDiamond) {
+  if (!key || !findPath(maze, start, key).length || !findPath(maze, key, exit).length) return false;
+  for (const star of stars) {
+    if (!findPath(maze, start, star).length) return false;
+  }
+  if (bonusDiamond && !findPath(maze, start, bonusDiamond).length) return false;
+  return true;
 }
 
 function pathCells(maze) {
@@ -183,10 +258,11 @@ function countTurns(path) {
 }
 
 function countDeadEnds(maze) {
-  const size = maze.length;
+  const rows = maze.length;
+  const cols = maze[0].length;
   let dead = 0;
-  for (let r = 0; r < size; r += 1) {
-    for (let c = 0; c < size; c += 1) {
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
       if (maze[r][c] !== 0) continue;
       let neighbors = 0;
       for (const [dr, dc] of [
@@ -288,7 +364,7 @@ function placeBonusDiamond(maze, start, exit, rng, reserved) {
   return branches[Math.floor(rng() * branches.length)];
 }
 
-function buildMazeLevel(size, starCount, difficulty, withDiamond) {
+function buildMazeLevel(rows, cols, starCount, difficulty, withDiamond) {
   const rules = MAZE_RULES[difficulty] || MAZE_RULES.medium;
   const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
 
@@ -296,9 +372,11 @@ function buildMazeLevel(size, starCount, difficulty, withDiamond) {
     const seed =
       ((Date.now() ^ Math.floor(Math.random() * 0xffffffff)) + attempt * 9973) >>> 0;
     const rng = mulberry32(seed);
-    const maze = generateMaze(size, seed);
+    let maze = generateMaze(rows, cols, seed);
+    maze = openExtraPassages(maze, rng, rules.extraPassages);
 
     if (countDeadEnds(maze) < rules.minDeadEnds) continue;
+    if (countPathChoices(maze) < rules.minChoices) continue;
 
     const { start, exit, route } = pickStartExit(maze, rng, rules.minStartExitDist);
     const steps = route.length - 1;
@@ -307,7 +385,6 @@ function buildMazeLevel(size, starCount, difficulty, withDiamond) {
 
     const key = placeKey(maze, start, exit, rng, difficulty);
     if (!key) continue;
-    if (!findPath(maze, start, key).length || !findPath(maze, key, exit).length) continue;
 
     const reserved = new Set([
       `${start.r},${start.c}`,
@@ -329,6 +406,8 @@ function buildMazeLevel(size, starCount, difficulty, withDiamond) {
       if (cell) bonusDiamond = { ...cell, secondsLeft: settings.diamondSec, active: true };
     }
 
+    if (!validatePrizes(maze, start, exit, key, stars, bonusDiamond)) continue;
+
     return {
       maze,
       start,
@@ -341,10 +420,11 @@ function buildMazeLevel(size, starCount, difficulty, withDiamond) {
   }
 
   const seed = Date.now() >>> 0;
-  const maze = generateMaze(size, seed);
+  let maze = generateMaze(rows, cols, seed);
+  maze = openExtraPassages(maze, mulberry32(seed), 2);
   const start = { r: 1, c: 1 };
-  const exit = { r: size - 2, c: size - 2 };
-  const key = { r: 1, c: size - 4 };
+  const exit = { r: rows - 2, c: cols - 2 };
+  const key = { r: 1, c: Math.min(cols - 2, 3) };
   return {
     maze,
     start,
@@ -496,9 +576,15 @@ export default function MleoMazeEngine({
   );
 
   const loadNextMaze = useCallback(() => {
-    const level = buildMazeLevel(settings.size, settings.starCount, difficulty, true);
+    const level = buildMazeLevel(
+      settings.rows,
+      settings.cols,
+      settings.starCount,
+      difficulty,
+      true
+    );
     applyLevel(level);
-  }, [applyLevel, difficulty, settings.size, settings.starCount]);
+  }, [applyLevel, difficulty, settings.cols, settings.rows, settings.starCount]);
 
   const completeMaze = useCallback(() => {
     mazesCompletedRef.current += 1;
@@ -653,6 +739,31 @@ export default function MleoMazeEngine({
     }
   };
 
+  const tryMoveRef = useRef(tryMove);
+  tryMoveRef.current = tryMove;
+
+  useEffect(() => {
+    if (!gameRunning || gameOver) return undefined;
+    const onKey = (e) => {
+      const moves = {
+        ArrowUp: [-1, 0],
+        ArrowDown: [1, 0],
+        ArrowLeft: [0, -1],
+        ArrowRight: [0, 1],
+        KeyW: [-1, 0],
+        KeyS: [1, 0],
+        KeyA: [0, -1],
+        KeyD: [0, 1],
+      };
+      const mv = moves[e.code];
+      if (!mv) return;
+      e.preventDefault();
+      tryMoveRef.current(mv[0], mv[1]);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [gameRunning, gameOver]);
+
   const handleSwipeEnd = (clientX, clientY) => {
     const s = swipeRef.current;
     if (!s.active) return;
@@ -741,7 +852,7 @@ export default function MleoMazeEngine({
           </p>
 
           <div className="relative z-0 mx-auto mt-[5.2rem] flex h-full min-h-0 w-full max-w-[1180px] flex-1 flex-col overflow-hidden rounded-lg border-4 border-yellow-400 bg-gradient-to-b from-emerald-950/80 to-slate-950 shadow-lg sm:mt-[5.6rem]">
-            <div className="relative flex min-h-0 flex-1 flex-col items-center justify-between gap-1 overflow-hidden bg-gradient-to-b from-emerald-950/35 via-slate-950 to-slate-900 p-1.5 sm:gap-2 sm:p-3">
+            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-gradient-to-b from-emerald-950/35 via-slate-950 to-slate-900 p-1.5 sm:p-3">
               {statusMsg ? (
                 <div className="pointer-events-none absolute left-1/2 top-2 z-30 -translate-x-1/2 rounded-xl bg-orange-600/95 px-4 py-2 text-sm font-bold text-white shadow-lg">
                   {statusMsg}
@@ -754,26 +865,27 @@ export default function MleoMazeEngine({
                 </div>
               ) : null}
 
-              <div
-                ref={boardRef}
-                className="mx-auto w-full max-w-[min(94vw,520px)] shrink-0 rounded-2xl border-[3px] border-amber-700/50 bg-amber-950/20 p-1 shadow-inner sm:p-2"
-                style={{ touchAction: "manipulation" }}
-                onTouchStart={(e) => {
-                  const t = e.touches[0];
-                  if (!t) return;
-                  swipeRef.current = { x: t.clientX, y: t.clientY, active: true };
-                }}
-                onTouchEnd={(e) => {
-                  const t = e.changedTouches[0];
-                  if (t) handleSwipeEnd(t.clientX, t.clientY);
-                }}
-              >
+              <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 max-md:landscape:flex-row max-md:landscape:gap-3 md:flex-row md:gap-4">
                 <div
-                  className="grid gap-[3px] sm:gap-1"
-                  style={{
-                    gridTemplateColumns: `repeat(${settings.size}, minmax(0, 1fr))`,
+                  ref={boardRef}
+                  className="mx-auto w-full max-w-[min(96vw,760px)] shrink-0 rounded-2xl border-[3px] border-amber-700/50 bg-amber-950/20 p-1 shadow-inner sm:max-w-[min(88vw,820px)] sm:p-2 md:mx-0"
+                  style={{ touchAction: "manipulation" }}
+                  onTouchStart={(e) => {
+                    const t = e.touches[0];
+                    if (!t) return;
+                    swipeRef.current = { x: t.clientX, y: t.clientY, active: true };
+                  }}
+                  onTouchEnd={(e) => {
+                    const t = e.changedTouches[0];
+                    if (t) handleSwipeEnd(t.clientX, t.clientY);
                   }}
                 >
+                  <div
+                    className="grid gap-[3px] sm:gap-1"
+                    style={{
+                      gridTemplateColumns: `repeat(${settings.cols}, minmax(0, 1fr))`,
+                    }}
+                  >
                   {maze.map((row, r) =>
                     row.map((cell, c) => {
                       const isPlayer = player.r === r && player.c === c;
@@ -805,7 +917,10 @@ export default function MleoMazeEngine({
                                         ? "bg-teal-500/45 ring-1 ring-teal-200/50"
                                         : "bg-gradient-to-br from-teal-500/50 via-emerald-400/40 to-cyan-600/35 ring-1 ring-teal-300/30 shadow-[inset_0_1px_4px_rgba(255,255,255,0.1)]"
                           }`}
-                          style={{ minHeight: settings.cellMin }}
+                          style={{
+                            minHeight: `clamp(${settings.cellMin}px, 4vw, ${settings.cellMinLg}px)`,
+                            minWidth: 0,
+                          }}
                         >
                           {isWall ? (
                             <span
@@ -874,7 +989,10 @@ export default function MleoMazeEngine({
                 </div>
               </div>
 
-              <div className="mx-auto grid w-full max-w-[252px] shrink-0 grid-cols-3 gap-2 pb-1 pt-1">
+              <div
+                dir="ltr"
+                className="mx-auto grid w-full max-w-[252px] shrink-0 grid-cols-3 gap-2 pb-1 pt-1 max-md:landscape:mx-0 max-md:landscape:max-w-[196px] max-md:landscape:pb-0 md:mx-0 md:max-w-[196px] md:pb-0 md:pt-0"
+              >
                 <span />
                 <button
                   type="button"
@@ -893,7 +1011,7 @@ export default function MleoMazeEngine({
                   onClick={() => tryMove(0, -1)}
                   aria-label="שמאלה"
                 >
-                  →
+                  ←
                 </button>
                 <button
                   type="button"
@@ -911,8 +1029,9 @@ export default function MleoMazeEngine({
                   onClick={() => tryMove(0, 1)}
                   aria-label="ימינה"
                 >
-                  ←
+                  →
                 </button>
+              </div>
               </div>
             </div>
 

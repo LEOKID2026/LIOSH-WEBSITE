@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSoloBoardTap } from "./solo-v2-ui.jsx";
+import { useSoloBoardTap, useSoloAimKeyboard, SoloAimCrosshair } from "./solo-v2-ui.jsx";
 const BG_TARGET = "/images/game-park.png";
 const IMG_COIN = "/images/coin.png";
 const IMG_DIAMOND = "/images/diamond.png";
@@ -275,6 +275,11 @@ export default function MleoTargetTapEngine({
 
   useSoloBoardTap(boardRef, captureRef, runningRef, handleBoardTap, gameRunning && !gameOver);
 
+  const aim = useSoloAimKeyboard(gameRunning && !gameOver, {
+    boardRef,
+    onFire: handleBoardTap,
+  });
+
   const startGame = () => {
     const diff = difficultyRef.current;
     const cfg = levelConfig(1, diff);
@@ -434,6 +439,10 @@ export default function MleoTargetTapEngine({
                   רמה {level}!
                 </span>
               </div>
+            ) : null}
+
+            {gameRunning && !gameOver ? (
+              <SoloAimCrosshair xPct={aim.xPct} yPct={aim.yPct} />
             ) : null}
 
             <div

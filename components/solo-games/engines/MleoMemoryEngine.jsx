@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 import confetti from "canvas-confetti";
 
 /**
@@ -27,6 +28,7 @@ export default function MleoMemoryEngine({
   const [timerRunning, setTimerRunning] = useState(false);
   const [startedPlaying, setStartedPlaying] = useState(false);
   const [didWin, setDidWin] = useState(false);
+  const [focusIndex, setFocusIndex] = useState(0);
   const scoreRef = useRef(0);
 
   const allImages = Array.from({ length: 50 }, (_, i) => `/images/card/shiba${i + 1}.png`);
@@ -82,6 +84,7 @@ export default function MleoMemoryEngine({
     setTimerRunning(false);
     setStartedPlaying(false);
     setGameRunning(true);
+    setFocusIndex(0);
   }
 
   useEffect(() => {
@@ -176,6 +179,31 @@ export default function MleoMemoryEngine({
     )
   );
 
+  useSoloGameKeyboard(gameRunning && !gameOver && !showIntro, (e) => {
+    if (e.code === "ArrowRight") {
+      setFocusIndex((i) => Math.min(totalCards - 1, i + 1));
+      return true;
+    }
+    if (e.code === "ArrowLeft") {
+      setFocusIndex((i) => Math.max(0, i - 1));
+      return true;
+    }
+    if (e.code === "ArrowDown") {
+      setFocusIndex((i) => Math.min(totalCards - 1, i + columns));
+      return true;
+    }
+    if (e.code === "ArrowUp") {
+      setFocusIndex((i) => Math.max(0, i - columns));
+      return true;
+    }
+    if (e.code === "Enter" || e.code === "Space") {
+      const card = cards[focusIndex];
+      if (card) handleFlip(card);
+      return true;
+    }
+    return false;
+  });
+
   return (
       <div
         id="game-wrapper"
@@ -212,13 +240,16 @@ export default function MleoMemoryEngine({
                   maxHeight: `${containerHeight}px`,
                 }}
               >
-                {cards.map((card) => {
+                {cards.map((card, idx) => {
                   const isFlipped = flipped.includes(card.id) || matched.includes(card.id);
+                  const isFocused = idx === focusIndex;
                   return (
                     <div
                       key={card.id}
                       onClick={() => handleFlip(card)}
-                      className="flex cursor-pointer items-center justify-center rounded-lg bg-yellow-500 transition hover:scale-105"
+                      className={`flex cursor-pointer items-center justify-center rounded-lg bg-yellow-500 transition hover:scale-105 ${
+                        isFocused ? "ring-4 ring-sky-400" : ""
+                      }`}
                       style={{ width: `${cardWidth}px`, height: `${cardWidth * 1.35}px` }}
                     >
                       {isFlipped ? (

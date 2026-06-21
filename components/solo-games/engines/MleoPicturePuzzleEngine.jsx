@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 /** 10 תמונות ייעודיות לפאזל — public/images/puzzle/ */
 export const PUZZLE_IMAGES = Object.freeze([
@@ -221,6 +222,30 @@ export default function MleoPicturePuzzleEngine({
       endGame(true, timeLeft);
     }
   };
+
+  useSoloGameKeyboard(gameRunning && !gameOver && !showPicker, (e) => {
+    if (e.code === "KeyH" && isEasy) {
+      triggerHint();
+      return true;
+    }
+    const blank = tiles.indexOf(null);
+    if (blank < 0) return false;
+    const br = Math.floor(blank / gridSize);
+    const bc = blank % gridSize;
+    let target = null;
+    if (e.code === "ArrowUp" || e.code === "KeyW") {
+      if (br + 1 < gridSize) target = (br + 1) * gridSize + bc;
+    } else if (e.code === "ArrowDown" || e.code === "KeyS") {
+      if (br > 0) target = (br - 1) * gridSize + bc;
+    } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
+      if (bc + 1 < gridSize) target = br * gridSize + (bc + 1);
+    } else if (e.code === "ArrowRight" || e.code === "KeyD") {
+      if (bc > 0) target = br * gridSize + (bc - 1);
+    }
+    if (target == null) return true;
+    tryMove(target);
+    return true;
+  });
 
   const tileBg = (tile) => {
     const row = Math.floor(tile / gridSize);

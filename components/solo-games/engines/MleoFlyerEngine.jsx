@@ -338,7 +338,10 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
 
     const onKeyDown = (e) => {
       if (isUI(e.target)) return;
-      if (e.code === "Space" || e.code === "ArrowUp") flapOnce();
+      if (e.code === "Space" || e.code === "ArrowUp") {
+        e.preventDefault();
+        flapOnce();
+      }
     };
 
     const canvas = canvasRef.current;

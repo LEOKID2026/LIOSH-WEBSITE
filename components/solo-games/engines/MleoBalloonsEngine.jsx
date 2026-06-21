@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSoloBoardTap } from "./solo-v2-ui.jsx";
+import { useSoloBoardTap, useSoloAimKeyboard, SoloAimCrosshair } from "./solo-v2-ui.jsx";
 
 const BG_BALLOONS = "/images/game-balloons-bg.png";
 const IMG_BOMB = "/images/obstacle1.png";
@@ -261,6 +261,11 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
 
   useSoloBoardTap(boardRef, captureRef, runningRef, handleBoardTap, gameRunning && !gameOver);
 
+  const aim = useSoloAimKeyboard(gameRunning && !gameOver, {
+    boardRef,
+    onFire: handleBoardTap,
+  });
+
   const tick = () => {
     if (!runningRef.current) return;
     const cfg = levelConfig(levelRef.current);
@@ -442,6 +447,10 @@ export default function MleoBalloonsEngine({ autoStart = false, onSessionEnd }) 
                   רמה {level}!
                 </span>
               </div>
+            ) : null}
+
+            {gameRunning && !gameOver ? (
+              <SoloAimCrosshair xPct={aim.xPct} yPct={aim.yPct} />
             ) : null}
 
             <div
