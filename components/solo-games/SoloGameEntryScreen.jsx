@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
 import { SOLO_DIFFICULTY_OPTIONS } from "../../lib/solo-games/solo-game-registry.js";
 import { useSoloOrientationHint } from "../../hooks/solo-games/useSoloOrientationHint.js";
+import SoloGameNavButtons from "./SoloGameNavButtons.jsx";
 
 /**
  * @param {{
@@ -21,7 +21,7 @@ export default function SoloGameEntryScreen({
   busy = false,
   error = "",
 }) {
-  const { SG, GH, tokens: T } = useSoloGameShellUi();
+  const { SG, GH } = useSoloGameShellUi();
   const orientationHintMessage = useSoloOrientationHint(game.orientationHint);
 
   return (
@@ -68,26 +68,13 @@ export default function SoloGameEntryScreen({
 
         {error ? <p className={SG.errorBox}>{error}</p> : null}
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <button
-            type="button"
-            disabled={busy}
-            onClick={onStart}
-            className={`${T.ctaPrimary} min-h-[48px] w-full sm:w-auto sm:min-w-[10rem] justify-center`}
-          >
-            {busy ? "טוען…" : "התחל משחק"}
-          </button>
-          <Link
-            href="/student/solo-games"
-            className={`${T.ctaGames || T.ctaSecondary || "rounded-xl border px-4 py-3 text-center font-bold"} min-h-[48px] w-full sm:w-auto sm:min-w-[10rem] flex items-center justify-center`}
-          >
-            חזרה
-          </Link>
-        </div>
-
-        <Link href="/student/home" className={SG.footerLink}>
-          חזרה לעולם הילד
-        </Link>
+        <SoloGameNavButtons
+          primaryLabel="התחל משחק"
+          onPrimary={onStart}
+          primaryDisabled={busy}
+          primaryBusy={busy}
+          primaryBusyLabel="טוען…"
+        />
       </div>
     </div>
   );

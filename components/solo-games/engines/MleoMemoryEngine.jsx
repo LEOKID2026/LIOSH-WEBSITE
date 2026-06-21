@@ -4,6 +4,7 @@ import RewardCardImage from "../../student/rewards/RewardCardImage.jsx";
 import { buildMemoryDeckFromShop } from "../../../lib/solo-games/memory-shop-cards.client.js";
 import { useSoloGameShellUi } from "../../../hooks/solo-games/useSoloGameShellUi.js";
 import { useSoloGameKeyboard, loadImage } from "./solo-v2-ui.jsx";
+import SoloGameNavButtons from "../SoloGameNavButtons.jsx";
 
 const SHOP_CARD_BACK = "/rewards/cards/common/card_back.webp";
 const MISMATCH_HOLD_MS = 1200;
@@ -285,13 +286,10 @@ export default function MleoMemoryEngine({
                 <p className={SG.preGameErrorSub}>
                   חזור לחנות הקלפים ובדוק שיש קלפים זמינים
                 </p>
-                <button
-                  type="button"
-                  onClick={() => initGameWithDifficulty(difficulty)}
-                  className={SG.introStartBtn}
-                >
-                  נסה שוב
-                </button>
+                <SoloGameNavButtons
+                  primaryLabel="נסה שוב"
+                  onPrimary={() => initGameWithDifficulty(difficulty)}
+                />
               </div>
             ) : (
               <div

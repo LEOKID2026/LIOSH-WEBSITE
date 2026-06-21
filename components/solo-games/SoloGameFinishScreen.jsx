@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { useSoloGameShellUi } from "../../hooks/solo-games/useSoloGameShellUi.js";
+import SoloGameNavButtons from "./SoloGameNavButtons.jsx";
 
 /**
  * @param {{
@@ -23,7 +23,7 @@ export default function SoloGameFinishScreen({
   onPlayAgain,
   busy = false,
 }) {
-  const { SG, tokens: T } = useSoloGameShellUi();
+  const { SG } = useSoloGameShellUi();
 
   return (
     <div
@@ -57,21 +57,14 @@ export default function SoloGameFinishScreen({
             ) : null}
           </div>
 
-          <div className="mt-4 flex flex-col gap-2 sm:mt-5 landscape:mt-3 landscape:flex-row landscape:gap-2">
-            <button
-              type="button"
-              disabled={busy}
-              onClick={onPlayAgain}
-              className={`${T.ctaPrimary} min-h-[44px] w-full justify-center sm:min-h-[48px] landscape:min-h-[36px] landscape:flex-1 landscape:px-3 landscape:py-2 landscape:text-sm`}
-            >
-              שחק שוב
-            </button>
-            <Link
-              href="/student/home"
-              className={`${T.ctaGames || T.ctaSecondary || "rounded-xl border px-4 py-3 text-center font-bold"} min-h-[44px] w-full flex items-center justify-center sm:min-h-[48px] landscape:min-h-[36px] landscape:flex-1 landscape:px-3 landscape:py-2 landscape:text-sm`}
-            >
-              חזרה לעולם הילד
-            </Link>
+          <div className="mt-4 sm:mt-5 landscape:mt-3">
+            <SoloGameNavButtons
+              primaryLabel="שחק שוב"
+              onPrimary={onPlayAgain}
+              primaryDisabled={busy}
+              primaryBusy={busy}
+              compact
+            />
           </div>
         </div>
       </div>
