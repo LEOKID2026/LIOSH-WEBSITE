@@ -80,6 +80,7 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
   const leoRef = useRef(null);
   const itemsRef = useRef([]);
   const currentScoreRef = useRef(0);
+  const highScoreRef = useRef(0);
   const runningRef = useRef(false);
   const rafRef = useRef(0);
   const diffTimerRef = useRef({ lastSpawn: 0 });
@@ -146,6 +147,7 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
     if (typeof window === "undefined") return;
 
     const savedHighScore = Number(localStorage.getItem("mleoCatcherHighScore") || 0);
+    highScoreRef.current = savedHighScore;
     setHighScore(savedHighScore);
     const stored = JSON.parse(localStorage.getItem("mleoCatcherLeaderboard") || "[]");
     setLeaderboard(stored);
@@ -168,6 +170,7 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
     const hs = Number(localStorage.getItem("mleoCatcherHighScore") || 0);
     if (scoreVal > hs) {
       localStorage.setItem("mleoCatcherHighScore", String(scoreVal));
+      highScoreRef.current = scoreVal;
       setHighScore(scoreVal);
     }
   };
@@ -359,6 +362,21 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
       diffTimerRef.current.lastSpawn = now;
     }
 
+    const hudPadX = 20;
+    let hudY = 30;
+    const hudLine = 22;
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText(`ניקוד: ${currentScoreRef.current}`, hudPadX, hudY);
+    hudY += hudLine;
+    ctx.fillText(`רמה: ${diff.level}`, hudPadX, hudY);
+    if (highScoreRef.current > 0) {
+      hudY += hudLine;
+      ctx.fillText(`שיא: ${highScoreRef.current}`, hudPadX, hudY);
+    }
+
     rafRef.current = requestAnimationFrame(updateGame);
   }
 
@@ -455,21 +473,6 @@ export default function MleoCatcherEngine({ autoStart = false, onSessionEnd }) {
       >
         {!showIntro && (
           <div className="flex min-h-0 w-full flex-1 flex-col px-1 pb-2 pt-1">
-            <div className="pointer-events-none absolute left-1/2 top-2 z-20 hidden max-w-[98vw] -translate-x-1/2 rounded-lg bg-black/70 px-3 py-2 text-center text-sm font-bold leading-snug sm:text-base">
-              <span className="text-amber-300">ניקוד: {score}</span>
-              {" · "}
-              <span>שיא: {highScore}</span>
-              {" · "}
-              <span>רמה: {Math.floor(score / 10)}</span>
-            </div>
-            <div className="pointer-events-none absolute bottom-40 left-1/2 z-20 max-w-[98vw] -translate-x-1/2 rounded-md bg-black/70 px-3 py-2 text-center text-sm font-bold sm:hidden">
-              <span className="text-amber-300">ניקוד: {score}</span>
-              {" · "}
-              <span>שיא: {highScore}</span>
-              {" · "}
-              <span>רמה: {Math.floor(score / 10)}</span>
-            </div>
-
             <div
               ref={boardRef}
               className="relative z-0 mx-auto flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg"

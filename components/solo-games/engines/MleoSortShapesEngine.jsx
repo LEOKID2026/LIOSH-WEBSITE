@@ -206,6 +206,7 @@ export default function MleoSortShapesEngine({
   const mistakesRef = useRef(0);
   const sortedRef = useRef(0);
   const scoreRef = useRef(0);
+  const queueRef = useRef([]);
 
   const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [gameRunning, setGameRunning] = useState(false);
@@ -244,6 +245,7 @@ export default function MleoSortShapesEngine({
   };
 
   const endGame = (didWin, remaining) => {
+    if (sessionEndFiredRef.current) return;
     setGameRunning(false);
     setGameOver(true);
     setWon(didWin);
@@ -271,7 +273,9 @@ export default function MleoSortShapesEngine({
     setScore(0);
     setLives(settings.maxLives);
     setTimeLeft(settings.durationSec);
-    setQueue(buildQueue(settings.itemCount, settings.queueMode));
+    const builtQueue = buildQueue(settings.itemCount, settings.queueMode);
+    queueRef.current = builtQueue;
+    setQueue(builtQueue);
     setSelectedBin(0);
     setBinOrder([0, 1, 2]);
     setShuffleWarning(false);
@@ -296,8 +300,13 @@ export default function MleoSortShapesEngine({
   useEffect(() => {
     if (!gameRunning) return undefined;
     if (timeLeft <= 0) {
-      endGame(sortedRef.current >= settings.itemCount, 0);
-      return undefined;
+      const timerId = window.setTimeout(() => {
+        if (sessionEndFiredRef.current) return;
+        const won =
+          sortedRef.current >= settings.itemCount || queueRef.current.length === 0;
+        endGame(won, 0);
+      }, 0);
+      return () => window.clearTimeout(timerId);
     }
     const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
     return () => clearTimeout(t);
@@ -317,7 +326,9 @@ export default function MleoSortShapesEngine({
     scoreRef.current += SCORE_PER_SORT;
     setSortedCount(sortedRef.current);
     setScore(scoreRef.current);
-    setQueue((q) => q.slice(1));
+    const nextQueue = queueRef.current.slice(1);
+    queueRef.current = nextQueue;
+    setQueue(nextQueue);
     if (sortedRef.current >= settings.itemCount) {
       endGame(true, timeLeft);
     }

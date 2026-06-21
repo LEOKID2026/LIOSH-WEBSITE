@@ -19,8 +19,8 @@ const DIFFICULTY_SETTINGS = {
     maxMistakes: 20,
     starCount: 3,
     hintAfter: 4,
-    cellMin: 26,
-    cellMinLg: 30,
+    cellMin: 30,
+    cellMinLg: 38,
     diamondChance: 0.75,
     diamondSec: 10,
   },
@@ -31,8 +31,8 @@ const DIFFICULTY_SETTINGS = {
     maxMistakes: 14,
     starCount: 4,
     hintAfter: 99,
-    cellMin: 20,
-    cellMinLg: 26,
+    cellMin: 24,
+    cellMinLg: 32,
     diamondChance: 0.7,
     diamondSec: 10,
   },
@@ -43,8 +43,8 @@ const DIFFICULTY_SETTINGS = {
     maxMistakes: 10,
     starCount: 5,
     hintAfter: 99,
-    cellMin: 16,
-    cellMinLg: 22,
+    cellMin: 20,
+    cellMinLg: 28,
     diamondChance: 0.65,
     diamondSec: 10,
   },
@@ -527,14 +527,28 @@ export default function MleoMazeEngine({
     const compute = () => {
       const rect = area.getBoundingClientRect();
       const desktopSide = window.matchMedia("(min-width: 768px)").matches;
-      const dpadW = desktopSide ? 208 : 0;
-      const dpadH = desktopSide ? 0 : 196;
-      const availW = Math.max(100, rect.width - dpadW - 8);
+
+      if (desktopSide) {
+        const dpadW = 208;
+        const availW = Math.max(100, rect.width - dpadW - 8);
+        const availH = Math.max(100, rect.height - 4);
+        const fromW = availW / settings.cols;
+        const fromH = availH / settings.rows;
+        const cap = settings.cellMinLg;
+        setCellPx(Math.max(14, Math.min(cap, Math.floor(Math.min(fromW, fromH)))));
+        return;
+      }
+
+      const portrait = window.matchMedia("(orientation: portrait)").matches;
+      const dpadH = portrait ? 196 : 0;
+      const availW = Math.max(100, rect.width - 8);
       const availH = Math.max(100, rect.height - dpadH - 4);
       const fromW = availW / settings.cols;
       const fromH = availH / settings.rows;
-      const cap = desktopSide ? settings.cellMinLg : settings.cellMin;
-      setCellPx(Math.max(14, Math.min(cap, Math.floor(Math.min(fromW, fromH)))));
+      const vwCell = Math.floor(window.innerWidth * 0.04);
+      const fit = Math.floor(Math.min(fromW, fromH));
+      const cap = settings.cellMinLg + 4;
+      setCellPx(Math.max(settings.cellMin, Math.min(cap, Math.max(vwCell, fit))));
     };
 
     compute();
