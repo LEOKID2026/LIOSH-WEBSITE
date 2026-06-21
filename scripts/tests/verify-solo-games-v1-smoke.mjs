@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Solo Leo Games V1 — full smoke test (API + DB + browser + responsive).
+ * Solo Leo Games V1+V2 — smoke test (API + DB + browser + responsive).
  * Usage: node --env-file=.env.local --env-file=.env.e2e.local scripts/tests/verify-solo-games-v1-smoke.mjs
  */
 import assert from "node:assert/strict";
@@ -17,6 +17,12 @@ const HUB_GAMES = [
   "חידת ליאו",
   "זיכרון ליאו",
   "ליאו במטוס",
+  "ליאו קופץ",
+  "פיצוץ בלונים",
+  "מבוך ליאו",
+  "פאזל תמונה",
+  "קליעה למטרה",
+  "מיון צורות",
 ];
 
 const LEGACY_ROUTES = [
@@ -34,6 +40,25 @@ const SOLO_ROUTES = [
   "/student/solo-games/puzzle",
   "/student/solo-games/memory",
   "/student/solo-games/flyer",
+  "/student/solo-games/leo-jump",
+  "/student/solo-games/balloons",
+  "/student/solo-games/maze",
+  "/student/solo-games/picture-puzzle",
+  "/student/solo-games/target-tap",
+  "/student/solo-games/sort-shapes",
+];
+
+const ALL_GAME_KEYS = [
+  "catcher",
+  "flyer",
+  "puzzle",
+  "memory",
+  "leo-jump",
+  "balloons",
+  "maze",
+  "picture-puzzle",
+  "target-tap",
+  "sort-shapes",
 ];
 
 /** @type {{ pass: string[], fail: string[], warn: string[] }} */
@@ -135,6 +160,12 @@ const GAME_METRICS = {
   flyer: { score: 72, levelReached: 6, didWin: false },
   puzzle: { score: 120, didWin: false, difficulty: "easy", timeRemainingSec: 0 },
   memory: { score: 980, didWin: true, difficulty: "easy", mistakes: 2, timeRemainingSec: 110 },
+  "leo-jump": { score: 85, levelReached: 8, didWin: false },
+  balloons: { score: 150, levelReached: 0, didWin: true, timeRemainingSec: 10 },
+  maze: { score: 520, didWin: true, difficulty: "easy", mistakes: 5, timeRemainingSec: 80 },
+  "picture-puzzle": { score: 900, didWin: true, difficulty: "easy", mistakes: 10, timeRemainingSec: 100 },
+  "target-tap": { score: 240, didWin: true, difficulty: "easy", mistakes: 2, timeRemainingSec: 20, levelReached: 48 },
+  "sort-shapes": { score: 580, didWin: true, difficulty: "easy", mistakes: 2, timeRemainingSec: 40 },
 };
 
 async function verifyDbRules(supabase) {
@@ -145,22 +176,30 @@ async function verifyDbRules(supabase) {
     .order("game_key");
   if (error) throw error;
   const keys = (data || []).map((r) => r.game_key);
-  for (const k of ["catcher", "flyer", "memory", "puzzle"]) {
+  for (const k of ALL_GAME_KEYS) {
     assert.ok(keys.includes(k), `missing rule row for ${k}`);
   }
-  pass("reward_economy_solo_game_rules has 4 active games");
+  pass(`reward_economy_solo_game_rules has ${ALL_GAME_KEYS.length} games`);
 }
 
 async function verifyApiFlow(request, supabase, studentId) {
-  console.log("\n=== API: start/finish + DB + coins (4 games) ===");
+  console.log("\n=== API: start/finish + DB + coins (10 games) ===");
   const balanceBefore = await getBalance(supabase, studentId);
   pass(`Initial balance: ${balanceBefore}`);
 
   let totalCoinsAwarded = 0;
   const sessionIds = [];
 
-  for (const gameKey of ["catcher", "flyer", "puzzle", "memory"]) {
-    const diff = gameKey === "puzzle" || gameKey === "memory" ? "easy" : null;
+  for (const gameKey of ALL_GAME_KEYS) {
+    const diff =
+      gameKey === "puzzle" ||
+      gameKey === "memory" ||
+      gameKey === "maze" ||
+      gameKey === "picture-puzzle" ||
+      gameKey === "target-tap" ||
+      gameKey === "sort-shapes"
+        ? "easy"
+        : null;
     const start = await startSession(request, gameKey, diff);
     if (!start.ok) {
       fail(`${gameKey} start`, start.json?.error || start.status);
@@ -418,7 +457,7 @@ async function verifyBrowserFlow(supabase, studentId) {
 }
 
 async function main() {
-  console.log("=== Solo Leo Games V1 Smoke Test ===");
+  console.log("=== Solo Leo Games V1+V2 Smoke Test ===");
   console.log(`BASE=${BASE} student=${USERNAME}\n`);
 
   try {

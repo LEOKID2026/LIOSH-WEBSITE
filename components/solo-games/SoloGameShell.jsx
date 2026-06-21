@@ -11,12 +11,24 @@ import MleoCatcherEngine from "./engines/MleoCatcherEngine.jsx";
 import MleoFlyerEngine from "./engines/MleoFlyerEngine.jsx";
 import MleoPuzzleEngine from "./engines/MleoPuzzleEngine.jsx";
 import MleoMemoryEngine from "./engines/MleoMemoryEngine.jsx";
+import MleoJumpEngine from "./engines/MleoJumpEngine.jsx";
+import MleoBalloonsEngine from "./engines/MleoBalloonsEngine.jsx";
+import MleoMazeEngine from "./engines/MleoMazeEngine.jsx";
+import MleoPicturePuzzleEngine from "./engines/MleoPicturePuzzleEngine.jsx";
+import MleoTargetTapEngine from "./engines/MleoTargetTapEngine.jsx";
+import MleoSortShapesEngine from "./engines/MleoSortShapesEngine.jsx";
 
 const ENGINE_MAP = {
   catcher: MleoCatcherEngine,
   flyer: MleoFlyerEngine,
   puzzle: MleoPuzzleEngine,
   memory: MleoMemoryEngine,
+  "leo-jump": MleoJumpEngine,
+  balloons: MleoBalloonsEngine,
+  maze: MleoMazeEngine,
+  "picture-puzzle": MleoPicturePuzzleEngine,
+  "target-tap": MleoTargetTapEngine,
+  "sort-shapes": MleoSortShapesEngine,
 };
 
 /**
