@@ -54,7 +54,7 @@ export default function SoloGameEntryScreen({
 
     <div
 
-      className="flex h-full min-h-0 flex-col items-center justify-center overflow-y-auto overflow-x-hidden px-4 py-4 sm:py-6 text-center"
+      className="flex h-full min-h-0 flex-col items-center justify-center overflow-hidden overflow-x-hidden px-4 py-2 sm:py-3 text-center"
 
       dir="rtl"
 

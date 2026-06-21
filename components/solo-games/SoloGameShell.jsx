@@ -7,6 +7,7 @@ import { useSoloGameSession } from "../../hooks/solo-games/useSoloGameSession.js
 import SoloGameEntryScreen from "./SoloGameEntryScreen.jsx";
 import SoloGameFinishScreen from "./SoloGameFinishScreen.jsx";
 import SoloGameSettlingOverlay from "./SoloGameSettlingOverlay.jsx";
+import SoloGameAdSlot from "./SoloGameAdSlot.jsx";
 import MleoCatcherEngine from "./engines/MleoCatcherEngine.jsx";
 import MleoFlyerEngine from "./engines/MleoFlyerEngine.jsx";
 import MleoPuzzleEngine from "./engines/MleoPuzzleEngine.jsx";
@@ -83,6 +84,8 @@ export default function SoloGameShell({ gameKey }) {
     };
   }, []);
 
+  const showReservedAd = phase === "entry" || phase === "finish";
+
   if (!game || !Engine) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-gray-950 text-white" dir="rtl">
@@ -153,6 +156,8 @@ export default function SoloGameShell({ gameKey }) {
             />
           ) : null}
         </main>
+
+        {showReservedAd ? <SoloGameAdSlot /> : null}
       </div>
     </>
   );

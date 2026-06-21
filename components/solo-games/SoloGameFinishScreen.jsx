@@ -28,11 +28,11 @@ export default function SoloGameFinishScreen({
 
   return (
     <div
-      className="flex h-full min-h-0 flex-col items-center justify-center overflow-y-auto overflow-x-hidden px-2 py-2 landscape:py-1 sm:px-4 sm:py-4"
+      className="flex h-full min-h-0 flex-col items-center justify-center overflow-hidden overflow-x-hidden px-2 py-2 landscape:py-1 sm:px-4 sm:py-3"
       dir="rtl"
     >
       <div className="mx-auto w-full max-w-md landscape:max-w-lg">
-        <div className="rounded-2xl border border-white/10 bg-gray-900/90 p-3 shadow-xl sm:p-5 landscape:max-h-[min(88dvh,100%)] landscape:overflow-y-auto landscape:p-3">
+        <div className="rounded-2xl border border-white/10 bg-gray-900/90 p-3 shadow-xl sm:p-5 landscape:max-h-[min(78dvh,100%)] landscape:overflow-hidden landscape:p-3">
           <h2 className="text-xl font-extrabold text-yellow-300 sm:text-2xl landscape:text-lg">
             {didWin ? "כל הכבוד! 🎉" : "כל הכבוד על המאמץ!"}
           </h2>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import SoloGameAdSlot from "../SoloGameAdSlot.jsx";
 import { useSoloGameKeyboard } from "./solo-v2-ui.jsx";
 
 /** 10 תמונות ייעודיות לפאזל — public/images/puzzle/ */
@@ -304,7 +305,7 @@ export default function MleoPicturePuzzleEngine({
             </div>
           </div>
 
-          <div className="shrink-0 px-1 pb-0.5 pt-1 sm:px-2">
+          <div className="shrink-0 px-1 pb-1 pt-1 sm:px-2">
             <button
               type="button"
               onClick={startGame}
@@ -314,6 +315,8 @@ export default function MleoPicturePuzzleEngine({
               התחל משחק
             </button>
           </div>
+
+          <SoloGameAdSlot />
 
           {previewImage ? (
             <div
