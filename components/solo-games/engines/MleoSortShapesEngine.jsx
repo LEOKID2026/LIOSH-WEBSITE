@@ -1,29 +1,60 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  SOLO_V2_ASSETS,
+  SoloV2EndBanner,
+  SoloV2Goal,
+  SoloV2Hud,
+  SoloV2Intro,
+  SoloV2Playfield,
+} from "./solo-v2-ui.jsx";
 
 const DIFFICULTY_SETTINGS = {
-  easy: { itemCount: 12, durationSec: 90, startScore: 600 },
-  medium: { itemCount: 18, durationSec: 90, startScore: 900 },
-  hard: { itemCount: 24, durationSec: 90, startScore: 1200 },
+  easy: { itemCount: 12, durationSec: 90, maxLives: 3 },
+  medium: { itemCount: 18, durationSec: 90, maxLives: 3 },
+  hard: { itemCount: 24, durationSec: 90, maxLives: 3 },
 };
 
-const SHAPES = [
-  { id: "red-circle", emoji: "🔴", bin: "red", label: "אדום" },
-  { id: "blue-square", emoji: "🔵", bin: "blue", label: "כחול" },
-  { id: "yellow-triangle", emoji: "🟡", bin: "yellow", label: "צהוב" },
+const SCORE_PER_SORT = 50;
+
+const ITEM_TYPES = [
+  { id: "heart", bin: "warm", label: "לבבות", img: SOLO_V2_ASSETS.candy("heart.png"), binClass: "border-rose-400 bg-rose-950/50" },
+  { id: "star", bin: "warm", label: "לבבות", img: SOLO_V2_ASSETS.candy("star.png"), binClass: "border-rose-400 bg-rose-950/50" },
+  { id: "diamond", bin: "cool", label: "יהלומים", img: SOLO_V2_ASSETS.candy("diamond.png"), binClass: "border-sky-400 bg-sky-950/50" },
+  { id: "square", bin: "cool", label: "יהלומים", img: SOLO_V2_ASSETS.candy("square.png"), binClass: "border-sky-400 bg-sky-950/50" },
+  { id: "circle", bin: "fun", label: "כוכבים", img: SOLO_V2_ASSETS.candy("circle.png"), binClass: "border-amber-400 bg-amber-950/50" },
+  { id: "drop", bin: "fun", label: "כוכבים", img: SOLO_V2_ASSETS.candy("drop.png"), binClass: "border-amber-400 bg-amber-950/50" },
 ];
 
 const BINS = [
-  { id: "red", label: "אדום", className: "border-rose-400 bg-rose-950/60" },
-  { id: "blue", label: "כחול", className: "border-sky-400 bg-sky-950/60" },
-  { id: "yellow", label: "צהוב", className: "border-yellow-400 bg-yellow-950/60" },
+  {
+    id: "warm",
+    title: "קבוצה ורודה",
+    emoji: "💖",
+    previews: [SOLO_V2_ASSETS.candy("heart.png"), SOLO_V2_ASSETS.candy("star.png")],
+    className: "border-rose-400 bg-rose-950/50",
+  },
+  {
+    id: "cool",
+    title: "קבוצה כחולה",
+    emoji: "💎",
+    previews: [SOLO_V2_ASSETS.candy("diamond.png"), SOLO_V2_ASSETS.candy("square.png")],
+    className: "border-sky-400 bg-sky-950/50",
+  },
+  {
+    id: "fun",
+    title: "קבוצה צהובה",
+    emoji: "⭐",
+    previews: [SOLO_V2_ASSETS.candy("circle.png"), SOLO_V2_ASSETS.candy("drop.png")],
+    className: "border-amber-400 bg-amber-950/50",
+  },
 ];
 
 function buildQueue(count) {
-  const queue = [];
+  const pool = [];
   for (let i = 0; i < count; i += 1) {
-    queue.push(SHAPES[i % SHAPES.length]);
+    pool.push(ITEM_TYPES[i % ITEM_TYPES.length]);
   }
-  return queue.sort(() => Math.random() - 0.5);
+  return pool.sort(() => Math.random() - 0.5);
 }
 
 /**
@@ -38,15 +69,17 @@ export default function MleoSortShapesEngine({
   const playStartedAtRef = useRef(null);
   const mistakesRef = useRef(0);
   const sortedRef = useRef(0);
+  const scoreRef = useRef(0);
 
   const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [won, setWon] = useState(false);
   const [showIntro, setShowIntro] = useState(!autoStart);
   const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(3);
   const [timeLeft, setTimeLeft] = useState(90);
   const [queue, setQueue] = useState([]);
-  const [selected, setSelected] = useState(null);
   const [sortedCount, setSortedCount] = useState(0);
 
   useEffect(() => {
@@ -55,12 +88,12 @@ export default function MleoSortShapesEngine({
 
   const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
 
-  const fireSessionEnd = (finalScore, won, remaining) => {
+  const fireSessionEnd = (didWin, remaining) => {
     if (!onSessionEnd || sessionEndFiredRef.current) return;
     sessionEndFiredRef.current = true;
     onSessionEnd({
-      score: finalScore,
-      didWin: won,
+      score: scoreRef.current,
+      didWin,
       difficulty,
       mistakes: mistakesRef.current,
       timeRemainingSec: remaining,
@@ -71,11 +104,19 @@ export default function MleoSortShapesEngine({
     });
   };
 
-  const endGame = (won, remaining) => {
+  const endGame = (didWin, remaining) => {
     setGameRunning(false);
     setGameOver(true);
-    setSelected(null);
-    fireSessionEnd(score, won, remaining);
+    setWon(didWin);
+    fireSessionEnd(didWin, remaining);
+  };
+
+  const loseLife = (remaining) => {
+    setLives((prev) => {
+      const next = prev - 1;
+      if (next <= 0) endGame(false, remaining);
+      return next;
+    });
   };
 
   const startGame = () => {
@@ -83,13 +124,15 @@ export default function MleoSortShapesEngine({
     playStartedAtRef.current = Date.now();
     mistakesRef.current = 0;
     sortedRef.current = 0;
+    scoreRef.current = 0;
     setSortedCount(0);
     setShowIntro(false);
     setGameOver(false);
-    setScore(settings.startScore);
+    setWon(false);
+    setScore(0);
+    setLives(settings.maxLives);
     setTimeLeft(settings.durationSec);
     setQueue(buildQueue(settings.itemCount));
-    setSelected(null);
     setGameRunning(true);
   };
 
@@ -115,86 +158,88 @@ export default function MleoSortShapesEngine({
     if (!gameRunning || !currentItem) return;
     if (currentItem.bin !== binId) {
       mistakesRef.current += 1;
-      setScore((s) => Math.max(0, s - 10));
-      setSelected(null);
+      loseLife(timeLeft);
       return;
     }
     sortedRef.current += 1;
+    scoreRef.current += SCORE_PER_SORT;
     setSortedCount(sortedRef.current);
+    setScore(scoreRef.current);
     setQueue((q) => q.slice(1));
-    setSelected(null);
     if (sortedRef.current >= settings.itemCount) {
       endGame(true, timeLeft);
     }
   };
 
   return (
-    <div
-      className="flex h-full min-h-0 flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white w-full relative px-2 pb-2"
-      dir="rtl"
-    >
-      <div className="flex w-full max-w-lg shrink-0 items-center justify-between gap-2 py-2 text-sm font-bold">
-        <span>ניקוד: {score}</span>
-        <span>
-          ממוין: {sortedCount}/{settings.itemCount}
-        </span>
-        <span>זמן: {timeLeft}s</span>
-      </div>
+    <div className="flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full" dir="rtl">
+      <SoloV2Goal text="גררו את הצורה לקבוצה הנכונה! +50 על כל מיון נכון." />
+      {!showIntro ? (
+        <SoloV2Hud
+          rows={[
+            { label: "ניקוד", value: score, accent: "text-amber-300" },
+            { label: "ממוין", value: `${sortedCount}/${settings.itemCount}` },
+            { label: "חיים", value: "❤️".repeat(Math.max(0, lives)) },
+            { label: "זמן", value: `${timeLeft}s` },
+          ]}
+        />
+      ) : null}
 
-      {showIntro ? (
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 text-center">
-          <p className="text-lg font-bold">בחרו פריט ואז את התיבה הנכונה!</p>
-          <button
-            type="button"
-            onClick={startGame}
-            className="min-h-[48px] rounded-xl bg-yellow-400 px-8 py-3 font-bold text-black"
-          >
-            התחל
-          </button>
-        </div>
-      ) : (
-        <div className="flex min-h-0 flex-1 w-full max-w-lg flex-col gap-3">
-          <div className="flex shrink-0 flex-col items-center gap-2 rounded-2xl border border-white/10 bg-black/30 p-4">
-            <p className="text-sm text-gray-300">הפריט הבא:</p>
-            {currentItem ? (
-              <button
-                type="button"
-                className={`min-h-[72px] min-w-[72px] rounded-2xl border-4 text-4xl ${
-                  selected ? "border-yellow-400 scale-105" : "border-white/20"
-                }`}
-                onClick={() => setSelected(currentItem.id)}
-              >
-                {currentItem.emoji}
-              </button>
-            ) : (
-              <span className="text-lg font-bold text-emerald-300">סיימתם!</span>
-            )}
+      <SoloV2Playfield bg={SOLO_V2_ASSETS.bgPark} className="max-w-lg">
+        {showIntro ? (
+          <SoloV2Intro
+            title="מיון צורות"
+            lines={[
+              "בחרו את התיבה הנכונה לכל צורה",
+              "+50 על מיון נכון בלבד",
+              "טעות = מאבדים חיים",
+              "סיימו את כל הפריטים לפני שהזמן נגמר",
+            ]}
+            onStart={startGame}
+          />
+        ) : (
+          <div className="flex h-full min-h-0 flex-col gap-3 p-3">
+            <div className="flex shrink-0 flex-col items-center gap-2 rounded-2xl border border-yellow-400/40 bg-black/40 p-4">
+              <p className="text-sm font-semibold text-yellow-100">הפריט הבא:</p>
+              {currentItem ? (
+                <div className="flex h-24 w-24 items-center justify-center rounded-2xl border-4 border-yellow-300 bg-white/10 shadow-lg">
+                  <img src={currentItem.img} alt="" className="h-16 w-16 object-contain" />
+                </div>
+              ) : (
+                <span className="text-lg font-bold text-emerald-300">סיימתם!</span>
+              )}
+            </div>
+
+            <div className="grid min-h-0 flex-1 grid-cols-3 gap-2">
+              {BINS.map((bin) => (
+                <button
+                  key={bin.id}
+                  type="button"
+                  disabled={!gameRunning || !currentItem}
+                  onClick={() => handleBinTap(bin.id)}
+                  className={`flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 py-2 text-xs font-bold sm:text-sm ${bin.className} disabled:opacity-40`}
+                >
+                  <span className="text-2xl">{bin.emoji}</span>
+                  <div className="flex gap-1">
+                    {bin.previews.map((src) => (
+                      <img key={src} src={src} alt="" className="h-5 w-5 object-contain" />
+                    ))}
+                  </div>
+                  {bin.title}
+                </button>
+              ))}
+            </div>
+
+            {gameOver ? (
+              <SoloV2EndBanner
+                success={won}
+                title={won ? "כל הכבוד! מיינתם הכל!" : "לא הספקתם הפעם"}
+                subtitle={`ניקוד: ${score} · ממוין: ${sortedCount}/${settings.itemCount}`}
+              />
+            ) : null}
           </div>
-
-          <div className="grid min-h-0 flex-1 grid-cols-3 gap-2">
-            {BINS.map((bin) => (
-              <button
-                key={bin.id}
-                type="button"
-                disabled={!gameRunning || !currentItem}
-                onClick={() => handleBinTap(bin.id)}
-                className={`flex min-h-[88px] flex-col items-center justify-center rounded-2xl border-2 px-2 py-3 text-sm font-bold ${bin.className} disabled:opacity-40`}
-              >
-                <span className="text-2xl">
-                  {bin.id === "red" ? "🔴" : bin.id === "blue" ? "🔵" : "🟡"}
-                </span>
-                {bin.label}
-              </button>
-            ))}
-          </div>
-
-          {gameOver ? (
-            <p className="text-center text-lg font-bold text-yellow-300">
-              {sortedRef.current >= settings.itemCount ? "כל הכבוד!" : "הזמן נגמר"}
-            </p>
-          ) : null}
-        </div>
-      )}
+        )}
+      </SoloV2Playfield>
     </div>
   );
 }

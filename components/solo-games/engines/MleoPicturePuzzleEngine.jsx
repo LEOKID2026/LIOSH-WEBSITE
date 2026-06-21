@@ -1,9 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  SOLO_V2_ASSETS,
+  SoloV2EndBanner,
+  SoloV2Goal,
+  SoloV2Hud,
+  SoloV2Intro,
+  SoloV2Playfield,
+} from "./solo-v2-ui.jsx";
+
+const PUZZLE_IMAGE = SOLO_V2_ASSETS.leoAlt;
 
 const DIFFICULTY_SETTINGS = {
-  easy: { grid: 3, timeSec: 180, parMoves: 40 },
-  medium: { grid: 4, timeSec: 240, parMoves: 80 },
-  hard: { grid: 5, timeSec: 300, parMoves: 120 },
+  easy: { grid: 3, timeSec: 180, parMoves: 35 },
+  medium: { grid: 4, timeSec: 240, parMoves: 70 },
+  hard: { grid: 5, timeSec: 300, parMoves: 110 },
 };
 
 function createSolvedTiles(gridSize) {
@@ -36,8 +46,7 @@ function shuffleTiles(gridSize) {
 }
 
 function isSolved(tiles, gridSize) {
-  const solved = createSolvedTiles(gridSize);
-  return tiles.every((t, i) => t === solved[i]);
+  return tiles.every((t, i) => t === createSolvedTiles(gridSize)[i]);
 }
 
 /**
@@ -67,20 +76,20 @@ export default function MleoPicturePuzzleEngine({
 
   const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
   const gridSize = settings.grid;
-  const tileCount = gridSize * gridSize;
 
-  const computeScore = (remaining, moves) =>
-    Math.max(0, 1000 - moves * 15 + remaining * 2);
+  const computeWinScore = (remaining, moveCount) => {
+    const extra = Math.max(0, moveCount - settings.parMoves);
+    return Math.max(0, 400 + remaining * 3 - extra * 8);
+  };
 
-  const fireSessionEnd = (didWin, remaining, moves) => {
+  const fireSessionEnd = (didWin, remaining, moveCount, finalScore) => {
     if (!onSessionEnd || sessionEndFiredRef.current) return;
     sessionEndFiredRef.current = true;
-    const extraMoves = Math.max(0, moves - settings.parMoves);
     onSessionEnd({
-      score: computeScore(remaining, moves),
+      score: finalScore,
       didWin,
       difficulty,
-      mistakes: extraMoves,
+      mistakes: Math.max(0, moveCount - settings.parMoves),
       timeRemainingSec: remaining,
       durationMs:
         playStartedAtRef.current != null
@@ -93,7 +102,8 @@ export default function MleoPicturePuzzleEngine({
     setGameRunning(false);
     setGameOver(true);
     setWon(didWin);
-    fireSessionEnd(didWin, remaining, movesRef.current);
+    const finalScore = didWin ? computeWinScore(remaining, movesRef.current) : 0;
+    fireSessionEnd(didWin, remaining, movesRef.current, finalScore);
   };
 
   const startGame = () => {
@@ -142,68 +152,89 @@ export default function MleoPicturePuzzleEngine({
     movesRef.current += 1;
     setMoves(movesRef.current);
     setTiles(next);
-    if (isSolved(next, gridSize)) {
-      endGame(true, timeLeft);
-    }
+    if (isSolved(next, gridSize)) endGame(true, timeLeft);
   };
 
   return (
-    <div
-      className="flex h-full min-h-0 flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white w-full px-2 pb-2"
-      dir="rtl"
-    >
-      <div className="flex w-full max-w-md shrink-0 items-center justify-between py-2 text-sm font-bold">
-        <span>מהלכים: {moves}</span>
-        <span>זמן: {timeLeft}s</span>
-      </div>
+    <div className="flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full" dir="rtl">
+      <SoloV2Goal text="סדרו את תמונת ליאו! ניקוד רק כשמסיימים את הפאזל." />
+      {!showIntro ? (
+        <SoloV2Hud
+          rows={[
+            { label: "מהלכים", value: moves },
+            { label: "זמן", value: `${timeLeft}s` },
+            { label: "ניקוד", value: won ? computeWinScore(timeLeft, moves) : 0, accent: "text-amber-300" },
+          ]}
+        />
+      ) : null}
 
-      {showIntro ? (
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 text-center">
-          <p className="text-lg font-bold">סדרו את חלקי התמונה של ליאו!</p>
-          <button
-            type="button"
-            onClick={startGame}
-            className="min-h-[48px] rounded-xl bg-yellow-400 px-8 py-3 font-bold text-black"
-          >
-            התחל
-          </button>
-        </div>
-      ) : (
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
-          <div
-            className="grid w-full max-w-sm gap-1 rounded-xl border-2 border-yellow-400 bg-black/40 p-2"
-            style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` }}
-          >
-            {tiles.map((tile, index) => {
-              if (tile == null) {
-                return <div key={`blank-${index}`} className="aspect-square rounded-md bg-transparent" />;
-              }
-              const row = Math.floor(tile / gridSize);
-              const col = tile % gridSize;
-              return (
-                <button
-                  key={`tile-${index}`}
-                  type="button"
-                  className="aspect-square overflow-hidden rounded-md border border-white/20 bg-slate-700 touch-manipulation"
-                  style={{
-                    backgroundImage: "url(/images/dog.png)",
-                    backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
-                    backgroundPosition: `${(col / (gridSize - 1)) * 100}% ${(row / (gridSize - 1)) * 100}%`,
-                  }}
-                  onClick={() => tryMove(index)}
-                  aria-label={`חלק ${tile + 1}`}
-                />
-              );
-            })}
+      <SoloV2Playfield bg={SOLO_V2_ASSETS.bgDay} className="max-w-md">
+        {showIntro ? (
+          <SoloV2Intro
+            title="פאזל תמונה של ליאו"
+            lines={[
+              "החליקו/לחצו על אריח ליד הריק",
+              "ניקוד רק בסיום מוצלח",
+              "פחות מהלכים + זמן שנשאר = יותר ניקוד",
+              "נגמר הזמן = הפסד",
+            ]}
+            onStart={startGame}
+          />
+        ) : (
+          <div className="flex h-full min-h-0 flex-col items-center justify-center gap-3 p-3">
+            <div className="flex items-center gap-3 rounded-xl border border-white/20 bg-black/30 px-3 py-2">
+              <img src={PUZZLE_IMAGE} alt="" className="h-12 w-12 rounded-lg object-cover ring-2 ring-yellow-400" />
+              <p className="text-sm font-semibold text-yellow-100">כך צריכה להיראות התמונה 🐶</p>
+            </div>
+
+            <div
+              className="grid w-full max-w-sm gap-1 rounded-xl border-2 border-yellow-400 bg-black/50 p-2 shadow-inner"
+              style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` }}
+            >
+              {tiles.map((tile, index) => {
+                if (tile == null) {
+                  return (
+                    <div
+                      key={`blank-${index}`}
+                      className="aspect-square rounded-md border border-dashed border-white/20 bg-white/5"
+                    />
+                  );
+                }
+                const row = Math.floor(tile / gridSize);
+                const col = tile % gridSize;
+                const posX = gridSize > 1 ? (col / (gridSize - 1)) * 100 : 0;
+                const posY = gridSize > 1 ? (row / (gridSize - 1)) * 100 : 0;
+                return (
+                  <button
+                    key={`tile-${index}`}
+                    type="button"
+                    className="aspect-square overflow-hidden rounded-md border-2 border-yellow-300/70 bg-slate-800 shadow-md touch-manipulation active:scale-95"
+                    style={{
+                      backgroundImage: `url(${PUZZLE_IMAGE})`,
+                      backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
+                      backgroundPosition: `${posX}% ${posY}%`,
+                    }}
+                    onClick={() => tryMove(index)}
+                    aria-label={`חלק ${tile + 1}`}
+                  />
+                );
+              })}
+            </div>
+
+            {gameOver ? (
+              <SoloV2EndBanner
+                success={won}
+                title={won ? "מעולה! הפאזל מוכן!" : "הזמן נגמר — לא הספקתם"}
+                subtitle={
+                  won
+                    ? `ניקוד: ${computeWinScore(timeLeft, moves)} · מהלכים: ${moves}`
+                    : `נסו שוב עם פחות מהלכים`
+                }
+              />
+            ) : null}
           </div>
-
-          {gameOver ? (
-            <p className="font-bold text-yellow-300">
-              {won ? "כל הכבוד — הפאזל מוכן!" : "הזמן נגמר"}
-            </p>
-          ) : null}
-        </div>
-      )}
+        )}
+      </SoloV2Playfield>
     </div>
   );
 }

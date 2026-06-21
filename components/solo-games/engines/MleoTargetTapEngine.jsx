@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  SOLO_V2_ASSETS,
+  SoloV2EndBanner,
+  SoloV2Goal,
+  SoloV2Hud,
+  SoloV2Intro,
+  SoloV2Playfield,
+} from "./solo-v2-ui.jsx";
 
 const DIFFICULTY_SETTINGS = {
-  easy: { targetHits: 12, durationSec: 45, lifetimeMs: 1200 },
-  medium: { targetHits: 18, durationSec: 50, lifetimeMs: 1000 },
-  hard: { targetHits: 24, durationSec: 55, lifetimeMs: 800 },
+  easy: { targetHits: 12, durationSec: 45, lifetimeMs: 1300, maxMisses: 6 },
+  medium: { targetHits: 18, durationSec: 50, lifetimeMs: 1000, maxMisses: 5 },
+  hard: { targetHits: 24, durationSec: 55, lifetimeMs: 800, maxMisses: 4 },
 };
 
-const SCORE_PER_HIT = 20;
+const SCORE_GOOD = 20;
+const SCORE_BONUS = 25;
 
 /**
  * @param {{ autoStart?: boolean, initialDifficulty?: string, onSessionEnd?: (metrics: object) => void }} props
@@ -20,13 +29,16 @@ export default function MleoTargetTapEngine({
   const playStartedAtRef = useRef(null);
   const hitsRef = useRef(0);
   const missesRef = useRef(0);
+  const scoreRef = useRef(0);
 
   const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [won, setWon] = useState(false);
   const [showIntro, setShowIntro] = useState(!autoStart);
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
+  const [misses, setMisses] = useState(0);
   const [timeLeft, setTimeLeft] = useState(DIFFICULTY_SETTINGS.medium.durationSec);
   const [target, setTarget] = useState(null);
 
@@ -36,16 +48,32 @@ export default function MleoTargetTapEngine({
 
   const settings = DIFFICULTY_SETTINGS[difficulty] || DIFFICULTY_SETTINGS.medium;
 
-  const fireSessionEnd = (finalScore, won, remaining) => {
+  const spawnTarget = () => {
+    const roll = Math.random();
+    let kind = "good";
+    if (roll < 0.15) kind = "bad";
+    else if (roll < 0.28) kind = "bonus";
+    const pad = 10;
+    const size = kind === "bonus" ? 64 : 72;
+    setTarget({
+      id: Date.now(),
+      kind,
+      x: pad + Math.random() * (100 - pad * 2 - size / 5),
+      y: pad + Math.random() * (100 - pad * 2 - size / 5),
+      size,
+    });
+  };
+
+  const fireSessionEnd = (didWin, remaining) => {
     if (!onSessionEnd || sessionEndFiredRef.current) return;
     sessionEndFiredRef.current = true;
     onSessionEnd({
-      score: finalScore,
-      didWin: won,
+      score: scoreRef.current,
+      didWin,
       difficulty,
       mistakes: missesRef.current,
       timeRemainingSec: remaining,
-      levelReached: Math.floor(finalScore / 5),
+      levelReached: Math.floor(scoreRef.current / 5),
       durationMs:
         playStartedAtRef.current != null
           ? Math.max(0, Date.now() - playStartedAtRef.current)
@@ -53,19 +81,22 @@ export default function MleoTargetTapEngine({
     });
   };
 
-  const spawnTarget = () => {
-    const pad = 12;
-    const size = 72;
-    const x = pad + Math.random() * (100 - pad * 2 - size / 4);
-    const y = pad + Math.random() * (100 - pad * 2 - size / 4);
-    setTarget({ id: Date.now(), x, y, size });
+  const registerMiss = (remaining) => {
+    missesRef.current += 1;
+    setMisses(missesRef.current);
+    if (missesRef.current >= settings.maxMisses) {
+      endGame(false, remaining);
+      return true;
+    }
+    return false;
   };
 
-  const endGame = (won, remaining) => {
+  const endGame = (didWin, remaining) => {
     setGameRunning(false);
     setGameOver(true);
+    setWon(didWin);
     setTarget(null);
-    fireSessionEnd(score, won, remaining);
+    fireSessionEnd(didWin, remaining);
   };
 
   const startGame = () => {
@@ -73,10 +104,13 @@ export default function MleoTargetTapEngine({
     playStartedAtRef.current = Date.now();
     hitsRef.current = 0;
     missesRef.current = 0;
+    scoreRef.current = 0;
     setShowIntro(false);
     setGameOver(false);
+    setWon(false);
     setScore(0);
     setHits(0);
+    setMisses(0);
     setTimeLeft(settings.durationSec);
     setGameRunning(true);
     spawnTarget();
@@ -101,79 +135,114 @@ export default function MleoTargetTapEngine({
   useEffect(() => {
     if (!gameRunning || !target) return undefined;
     const t = setTimeout(() => {
-      missesRef.current += 1;
-      spawnTarget();
+      if (target.kind === "bad") {
+        spawnTarget();
+        return;
+      }
+      if (!registerMiss(timeLeft)) spawnTarget();
     }, settings.lifetimeMs);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameRunning, target, settings.lifetimeMs]);
 
-  const handleHit = () => {
+  const handleTap = () => {
     if (!gameRunning || !target) return;
-    const nextHits = hitsRef.current + 1;
-    hitsRef.current = nextHits;
-    setHits(nextHits);
-    const nextScore = nextHits * SCORE_PER_HIT;
-    setScore(nextScore);
-    if (nextHits >= settings.targetHits) {
+
+    if (target.kind === "bad") {
+      if (registerMiss(timeLeft)) return;
+      setTarget(null);
+      spawnTarget();
+      return;
+    }
+
+    const pts = target.kind === "bonus" ? SCORE_BONUS : SCORE_GOOD;
+    scoreRef.current += pts;
+    hitsRef.current += 1;
+    setScore(scoreRef.current);
+    setHits(hitsRef.current);
+
+    if (hitsRef.current >= settings.targetHits) {
       endGame(true, timeLeft);
       return;
     }
     spawnTarget();
   };
 
-  return (
-    <div
-      className="flex h-full min-h-0 flex-1 flex-col items-center justify-start overflow-hidden bg-gray-900 text-white w-full relative"
-      dir="rtl"
-    >
-      <div className="flex w-full max-w-lg shrink-0 items-center justify-between gap-2 px-3 py-2 text-sm font-bold">
-        <span>ניקוד: {score}</span>
-        <span>פגיעות: {hits}/{settings.targetHits}</span>
-        <span>זמן: {timeLeft}s</span>
-      </div>
+  const targetVisual = () => {
+    if (!target) return null;
+    if (target.kind === "bad") {
+      return <img src={SOLO_V2_ASSETS.bomb} alt="" className="h-full w-full object-contain p-2" />;
+    }
+    if (target.kind === "bonus") {
+      return <img src={SOLO_V2_ASSETS.diamond} alt="" className="h-full w-full object-contain p-1" />;
+    }
+    return <img src={SOLO_V2_ASSETS.coin} alt="" className="h-full w-full object-contain p-1" />;
+  };
 
-      <div className="relative min-h-0 flex-1 w-full max-w-lg overflow-hidden px-2 pb-2">
+  return (
+    <div className="flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white w-full" dir="rtl">
+      <SoloV2Goal text="לחצו על מטבעות ויהלומים — לא על 💣! הגיעו ליעד הפגיעות." />
+      {!showIntro ? (
+        <SoloV2Hud
+          rows={[
+            { label: "ניקוד", value: score, accent: "text-amber-300" },
+            { label: "פגיעות", value: `${hits}/${settings.targetHits}` },
+            { label: "טעויות", value: `${misses}/${settings.maxMisses}` },
+            { label: "זמן", value: `${timeLeft}s` },
+          ]}
+        />
+      ) : null}
+
+      <SoloV2Playfield bg={SOLO_V2_ASSETS.bgSky} className="min-h-[280px]">
         {showIntro ? (
-          <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
-            <p className="text-lg font-bold">לחצו על המטרות לפני שהן נעלמות!</p>
-            <button
-              type="button"
-              onClick={startGame}
-              className="min-h-[48px] rounded-xl bg-yellow-400 px-8 py-3 font-bold text-black"
-            >
-              התחל
-            </button>
-          </div>
+          <SoloV2Intro
+            title="קליעה למטרה"
+            lines={[
+              "מטבע = +20",
+              "יהלום = +25",
+              "💣 = טעות (לא ללחוץ!)",
+              "יותר מדי טעויות = הפסד",
+            ]}
+            onStart={startGame}
+          />
         ) : (
-          <button
-            type="button"
-            className="relative h-full w-full overflow-hidden rounded-2xl border-4 border-yellow-400 bg-gradient-to-b from-sky-900 to-sky-950 touch-none"
-            onClick={handleHit}
-            aria-label="אזור משחק"
-          >
+          <div className="relative h-full w-full">
             {target ? (
-              <span
-                className="absolute flex items-center justify-center rounded-full border-4 border-white bg-rose-500 text-2xl shadow-lg animate-pulse"
+              <button
+                type="button"
+                className={`absolute flex items-center justify-center rounded-full border-4 shadow-xl animate-pulse touch-manipulation active:scale-90 ${
+                  target.kind === "bad"
+                    ? "border-red-500 bg-gray-900/80"
+                    : target.kind === "bonus"
+                      ? "border-amber-300 bg-amber-500/30"
+                      : "border-yellow-300 bg-yellow-500/20"
+                }`}
                 style={{
                   left: `${target.x}%`,
                   top: `${target.y}%`,
                   width: target.size,
                   height: target.size,
                 }}
-                aria-hidden
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTap();
+                }}
+                aria-label="מטרה"
               >
-                🎯
-              </span>
+                {targetVisual()}
+              </button>
             ) : null}
+
             {gameOver ? (
-              <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-xl font-bold">
-                {hitsRef.current >= settings.targetHits ? "כל הכבוד!" : "הזמן נגמר"}
-              </span>
+              <SoloV2EndBanner
+                success={won}
+                title={won ? "קלעת מעולה!" : "לא עמדת ביעד"}
+                subtitle={`ניקוד: ${score} · פגיעות: ${hits}/${settings.targetHits}`}
+              />
             ) : null}
-          </button>
+          </div>
         )}
-      </div>
+      </SoloV2Playfield>
     </div>
   );
 }
