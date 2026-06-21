@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  SOLO_V2_ASSETS,
-  SoloV2EndBanner,
-  SoloV2Goal,
-  SoloV2Hud,
-  SoloV2Intro,
-  SoloV2Playfield,
-  loadImage,
-} from "./solo-v2-ui.jsx";
+
+const BG_IMAGES = ["/images/game-day.png", "/images/game1.png", "/images/game2.png", "/images/game-park.png"];
+const IMG_LEO = "/images/leo.png";
+const IMG_COIN = "/images/coin.png";
+const IMG_COIN2 = "/images/coin2.png";
+const IMG_DIAMOND = "/images/diamond.png";
+const IMG_MAGNET = "/images/magnet.png";
+const IMG_OBSTACLE = "/images/obstacle1.png";
 
 const SCORE_OBSTACLE = 5;
 const SCORE_COIN = 10;
+const SCORE_DIAMOND = 25;
+const SCORE_COMBO_EVERY = 5;
+const SCORE_COMBO_BONUS = 3;
+const MAGNET_MS = 5000;
+const MAGNET_RANGE_BASE = 150;
+const MAGNET_PULL = 4.5;
 
 /**
  * @param {{ autoStart?: boolean, onSessionEnd?: (metrics: object) => void }} props
@@ -19,41 +24,262 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
   const canvasRef = useRef(null);
+  const boardRef = useRef(null);
   const rafRef = useRef(null);
   const runningRef = useRef(false);
-  const scoreRef = useRef(0);
-  const assetsRef = useRef({ leo: null, coin: null, obstacle: null, bg: null });
 
-  const stateRef = useRef({
+  const scoreRef = useRef(0);
+  const levelRef = useRef(1);
+  const passedRef = useRef(0);
+  const comboRef = useRef(0);
+  const magnetUntilRef = useRef(0);
+
+  const assetsRef = useRef({
+    bgs: [],
+    leo: null,
+    coin: null,
+    coin2: null,
+    diamond: null,
+    magnet: null,
+    obstacle: null,
+  });
+
+  const worldRef = useRef({
     leoY: 0,
     leoVy: 0,
     grounded: true,
     obstacles: [],
-    coins: [],
+    items: [],
     spawnTimer: 0,
-    speed: 5,
+    ambientTimer: 0,
+    speed: 2.2,
+    spawnGap: 92,
+    bgIndex: 0,
+    bgX: 0,
+    showLevelUpUntil: 0,
+    w: 800,
+    h: 400,
+    scale: 1,
+    leoX: 96,
+    leoW: 70,
+    leoH: 70,
+    groundY: 344,
   });
 
   const [showIntro, setShowIntro] = useState(!autoStart);
+  const [gameRunning, setGameRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
   const [passed, setPassed] = useState(0);
   const [collected, setCollected] = useState(0);
+  const [magnetSec, setMagnetSec] = useState(0);
+  const [levelFlash, setLevelFlash] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      loadImage(SOLO_V2_ASSETS.leo),
-      loadImage(SOLO_V2_ASSETS.coin),
-      loadImage(SOLO_V2_ASSETS.obstacle),
-      loadImage(SOLO_V2_ASSETS.bgDay),
-    ]).then(([leo, coin, obstacle, bg]) => {
-      assetsRef.current = { leo, coin, obstacle, bg };
+    const loadImage = (src) =>
+      new Promise((res) => {
+        const img = new window.Image();
+        img.onload = () => res(img);
+        img.onerror = () => res(null);
+        img.src = src;
+        if (img.complete) res(img);
+      });
+
+    Promise.all(BG_IMAGES.map(loadImage)).then((imgs) => {
+      assetsRef.current.bgs = imgs.filter(Boolean);
+    });
+    loadImage(IMG_LEO).then((img) => {
+      assetsRef.current.leo = img;
+    });
+    loadImage(IMG_COIN).then((img) => {
+      assetsRef.current.coin = img;
+    });
+    loadImage(IMG_COIN2).then((img) => {
+      assetsRef.current.coin2 = img;
+    });
+    loadImage(IMG_DIAMOND).then((img) => {
+      assetsRef.current.diamond = img;
+    });
+    loadImage(IMG_MAGNET).then((img) => {
+      assetsRef.current.magnet = img;
+    });
+    loadImage(IMG_OBSTACLE).then((img) => {
+      assetsRef.current.obstacle = img;
     });
   }, []);
 
-  const addScore = (pts) => {
+  useEffect(() => {
+    const wrapper = document.getElementById("game-wrapper");
+    if (!wrapper) return undefined;
+    const preventMenu = (e) => {
+      if (e.target?.closest?.("button")) return;
+      e.preventDefault();
+    };
+    wrapper.addEventListener("contextmenu", preventMenu);
+    return () => wrapper.removeEventListener("contextmenu", preventMenu);
+  }, []);
+
+  const syncCanvasSize = () => {
+    const board = boardRef.current;
+    const canvas = canvasRef.current;
+    if (!board || !canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = board.clientWidth || 800;
+    const h = board.clientHeight || 400;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.imageSmoothingEnabled = true;
+    }
+    const scale = Math.max(0.75, Math.min(w, h) / 420);
+    worldRef.current.w = w;
+    worldRef.current.h = h;
+    worldRef.current.scale = scale;
+    worldRef.current.leoW = Math.round(72 * scale);
+    worldRef.current.leoH = Math.round(72 * scale);
+    worldRef.current.leoX = Math.round(w * 0.12);
+    worldRef.current.groundY = h - Math.round(52 * scale);
+  };
+
+  const applyDifficulty = (lvl) => {
+    const w = worldRef.current;
+    w.speed = 2.0 + (lvl - 1) * 0.32;
+    w.spawnGap = Math.max(48, 96 - (lvl - 1) * 5);
+  };
+
+  const addScore = (pts, reason) => {
+    if (pts <= 0) return;
     scoreRef.current += pts;
     setScore(scoreRef.current);
+
+    const nextLevel = Math.floor(scoreRef.current / 40) + 1;
+    if (nextLevel > levelRef.current) {
+      levelRef.current = nextLevel;
+      setLevel(nextLevel);
+      applyDifficulty(nextLevel);
+      worldRef.current.bgIndex = (nextLevel - 1) % Math.max(1, assetsRef.current.bgs.length);
+      worldRef.current.showLevelUpUntil = Date.now() + 1800;
+      setLevelFlash(true);
+      setTimeout(() => setLevelFlash(false), 1800);
+    }
+
+    if (reason === "obstacle") {
+      comboRef.current += 1;
+      if (comboRef.current > 0 && comboRef.current % SCORE_COMBO_EVERY === 0) {
+        scoreRef.current += SCORE_COMBO_BONUS;
+        setScore(scoreRef.current);
+      }
+    }
+  };
+
+  const magnetActive = () => Date.now() < magnetUntilRef.current;
+
+  const magnetRange = () => MAGNET_RANGE_BASE * worldRef.current.scale;
+
+  const leoBox = () => {
+    const w = worldRef.current;
+    const bottom = w.groundY + w.leoY;
+    return {
+      x: w.leoX,
+      y: bottom - w.leoH,
+      w: w.leoW,
+      h: w.leoH,
+      cx: w.leoX + w.leoW / 2,
+      cy: bottom - w.leoH / 2,
+    };
+  };
+
+  const hits = (a, b) =>
+    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+
+  const pullTowardLeo = (item) => {
+    const box = leoBox();
+    const dx = box.cx - item.x;
+    const dy = box.cy - item.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    item.x += (dx / dist) * MAGNET_PULL * worldRef.current.scale;
+    item.y += (dy / dist) * MAGNET_PULL * worldRef.current.scale;
+  };
+
+  const tryCollect = (item) => {
+    const box = leoBox();
+    const size = item.size;
+    const itemBox = { x: item.x, y: item.y, w: size, h: size };
+    const inMagnet =
+      magnetActive() &&
+      Math.abs(box.cx - (item.x + size / 2)) < magnetRange() &&
+      Math.abs(box.cy - (item.y + size / 2)) < magnetRange();
+    if (!hits(box, itemBox) && !inMagnet) return false;
+
+    if (item.type === "magnet") {
+      magnetUntilRef.current = Date.now() + MAGNET_MS;
+      return true;
+    }
+    if (item.type === "diamond") {
+      addScore(SCORE_DIAMOND, "item");
+      setCollected((n) => n + 1);
+      return true;
+    }
+    addScore(SCORE_COIN, "item");
+    setCollected((n) => n + 1);
+    return true;
+  };
+
+  const spawnObstacleGroup = () => {
+    const w = worldRef.current;
+    const { w: cw, groundY, scale } = w;
+    const oh = Math.round((42 + Math.random() * 22) * scale);
+    const ow = Math.round(38 * scale);
+    const ox = cw + 36;
+
+    w.obstacles.push({ x: ox, w: ow, h: oh, passed: false });
+    const itemSize = Math.round(34 * scale);
+
+    if (Math.random() < 0.72) {
+      w.items.push({
+        type: Math.random() < 0.35 ? "coin2" : "coin",
+        x: ox + ow + 28 + Math.random() * 40,
+        y: groundY - Math.round(28 * scale),
+        size: itemSize,
+      });
+    }
+    if (Math.random() < 0.55) {
+      w.items.push({
+        type: "coin",
+        x: ox + ow * 0.35,
+        y: groundY - oh - Math.round(52 * scale),
+        size: itemSize,
+      });
+    }
+    if (Math.random() < 0.14) {
+      w.items.push({
+        type: "diamond",
+        x: ox + ow + 18,
+        y: groundY - oh - Math.round(64 * scale),
+        size: Math.round(36 * scale),
+      });
+    }
+  };
+
+  const spawnAmbientItem = () => {
+    const w = worldRef.current;
+    const { w: cw, groundY, scale } = w;
+    const roll = Math.random();
+    const yBand = groundY - Math.round((30 + Math.random() * 110) * scale);
+    const size = Math.round(34 * scale);
+
+    if (roll < 0.62) {
+      w.items.push({ type: roll < 0.2 ? "coin2" : "coin", x: cw + 24, y: yBand, size });
+    } else if (roll < 0.74) {
+      w.items.push({ type: "diamond", x: cw + 24, y: yBand - 20 * scale, size: Math.round(36 * scale) });
+    } else if (roll < 0.8) {
+      w.items.push({ type: "magnet", x: cw + 24, y: yBand, size: Math.round(40 * scale) });
+    }
   };
 
   const fireSessionEnd = () => {
@@ -70,46 +296,59 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     });
   };
 
-  const jump = () => {
-    const s = stateRef.current;
-    if (s.grounded) {
-      s.leoVy = -12;
-      s.grounded = false;
-    }
-  };
-
-  const stopLoop = () => {
-    runningRef.current = false;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = null;
-  };
-
   const endGame = () => {
-    stopLoop();
+    runningRef.current = false;
+    setGameRunning(false);
     setGameOver(true);
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
     fireSessionEnd();
+  };
+
+  const jump = () => {
+    const s = worldRef.current;
+    if (!runningRef.current || !s.grounded) return;
+    s.leoVy = -11.5 * Math.max(0.9, s.scale);
+    s.grounded = false;
+  };
+
+  const resetWorld = () => {
+    scoreRef.current = 0;
+    levelRef.current = 1;
+    passedRef.current = 0;
+    comboRef.current = 0;
+    magnetUntilRef.current = 0;
+    setScore(0);
+    setLevel(1);
+    setPassed(0);
+    setCollected(0);
+    setMagnetSec(0);
+    setLevelFlash(false);
+
+    const w = worldRef.current;
+    w.leoY = 0;
+    w.leoVy = 0;
+    w.grounded = true;
+    w.obstacles = [];
+    w.items = [];
+    w.spawnTimer = 0;
+    w.ambientTimer = 0;
+    w.bgX = 0;
+    w.bgIndex = 0;
+    w.showLevelUpUntil = 0;
+    applyDifficulty(1);
   };
 
   const startGame = () => {
     sessionEndFiredRef.current = false;
     playStartedAtRef.current = Date.now();
-    scoreRef.current = 0;
-    setScore(0);
-    setPassed(0);
-    setCollected(0);
-    setGameOver(false);
     setShowIntro(false);
-    stateRef.current = {
-      leoY: 0,
-      leoVy: 0,
-      grounded: true,
-      obstacles: [],
-      coins: [],
-      spawnTimer: 0,
-      speed: 5,
-    };
+    setGameOver(false);
+    resetWorld();
+    syncCanvasSize();
+    setGameRunning(true);
     runningRef.current = true;
-    loop();
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(loop);
   };
 
   const loop = () => {
@@ -117,16 +356,11 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const w = canvas.width;
-    const h = canvas.height;
-    const groundY = h - 56;
-    const s = stateRef.current;
     const assets = assetsRef.current;
-    const leoX = 80;
-    const leoW = 56;
-    const leoH = 56;
+    const s = worldRef.current;
+    const { w, h, groundY, scale, leoX, leoW, leoH } = s;
 
-    s.leoVy += 0.58;
+    s.leoVy += 0.55 * scale;
     s.leoY += s.leoVy;
     if (s.leoY >= 0) {
       s.leoY = 0;
@@ -135,68 +369,67 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     }
 
     s.spawnTimer += 1;
-    if (s.spawnTimer > Math.max(45, 85 - s.speed * 4)) {
+    if (s.spawnTimer >= s.spawnGap) {
       s.spawnTimer = 0;
-      s.obstacles.push({
-        x: w + 30,
-        w: 36,
-        h: 40 + Math.random() * 20,
-        passed: false,
-      });
-      if (Math.random() < 0.5) {
-        s.coins.push({ x: w + 60, y: groundY - 90 - Math.random() * 50, r: 18 });
-      }
+      spawnObstacleGroup();
     }
+
+    s.ambientTimer += 1;
+    if (s.ambientTimer >= Math.max(28, 52 - levelRef.current * 2)) {
+      s.ambientTimer = 0;
+      if (Math.random() < 0.55) spawnAmbientItem();
+    }
+
+    s.bgX -= 0.9 * s.speed * scale;
+    if (s.bgX <= -w) s.bgX = 0;
 
     s.obstacles = s.obstacles
       .map((o) => {
-        const nx = o.x - s.speed;
+        const nx = o.x - s.speed * scale;
         if (!o.passed && nx + o.w < leoX) {
           o.passed = true;
-          addScore(SCORE_OBSTACLE);
-          setPassed((p) => p + 1);
+          passedRef.current += 1;
+          setPassed(passedRef.current);
+          addScore(SCORE_OBSTACLE, "obstacle");
         }
         return { ...o, x: nx };
       })
-      .filter((o) => o.x + o.w > -20);
+      .filter((o) => o.x + o.w > -30);
 
-    s.coins = s.coins
-      .map((c) => ({ ...c, x: c.x - s.speed }))
-      .filter((c) => {
-        if (c.x + c.r < -10) return false;
-        const leoBottom = groundY + s.leoY;
-        const leoTop = leoBottom - leoH;
-        const hit =
-          leoX + leoW > c.x - c.r &&
-          leoX < c.x + c.r &&
-          leoBottom > c.y - c.r &&
-          leoTop < c.y + c.r;
-        if (hit) {
-          addScore(SCORE_COIN);
-          setCollected((n) => n + 1);
-          return false;
-        }
-        return true;
-      });
+    const nextItems = [];
+    for (const item of s.items) {
+      const moved = { ...item, x: item.x - s.speed * scale };
+      if (magnetActive() && item.type !== "magnet") pullTowardLeo(moved);
+      if (moved.x + moved.size < -20) continue;
+      if (tryCollect(moved)) continue;
+      nextItems.push(moved);
+    }
+    s.items = nextItems;
 
     const leoBottom = groundY + s.leoY;
     const leoTop = leoBottom - leoH;
     for (const o of s.obstacles) {
-      if (leoX + leoW - 8 > o.x && leoX + 8 < o.x + o.w && leoBottom - 4 > groundY - o.h) {
+      const hit =
+        leoX + leoW - 10 > o.x &&
+        leoX + 10 < o.x + o.w &&
+        leoBottom - 6 > groundY - o.h;
+      if (hit) {
         endGame();
         return;
       }
     }
 
-    if (scoreRef.current >= 80 && scoreRef.current % 80 === 0) {
-      s.speed = Math.min(9, s.speed + 0.02);
-    }
+    const remain = Math.max(0, Math.ceil((magnetUntilRef.current - Date.now()) / 1000));
+    if (remain !== magnetSec) setMagnetSec(remain);
 
     ctx.clearRect(0, 0, w, h);
-    if (assets.bg) ctx.drawImage(assets.bg, 0, 0, w, h);
-    else {
+    const bg = assets.bgs[s.bgIndex];
+    if (bg) {
+      ctx.drawImage(bg, Math.round(s.bgX), 0, w, h);
+      ctx.drawImage(bg, Math.round(s.bgX + w), 0, w, h);
+    } else {
       const g = ctx.createLinearGradient(0, 0, 0, h);
-      g.addColorStop(0, "#38bdf8");
+      g.addColorStop(0, "#7dd3fc");
       g.addColorStop(1, "#1e3a8a");
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
@@ -205,24 +438,23 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     ctx.fillStyle = "#4ade80";
     ctx.fillRect(0, groundY, w, h - groundY);
     ctx.fillStyle = "#ca8a04";
-    ctx.fillRect(0, groundY, w, 8);
+    ctx.fillRect(0, groundY, w, Math.round(8 * scale));
 
     for (const o of s.obstacles) {
-      if (assets.obstacle) ctx.drawImage(assets.obstacle, o.x, groundY - o.h, o.w, o.h);
-      else {
+      if (assets.obstacle) {
+        ctx.drawImage(assets.obstacle, o.x, groundY - o.h, o.w, o.h);
+      } else {
         ctx.fillStyle = "#dc2626";
         ctx.fillRect(o.x, groundY - o.h, o.w, o.h);
       }
     }
 
-    for (const c of s.coins) {
-      if (assets.coin) ctx.drawImage(assets.coin, c.x - c.r, c.y - c.r, c.r * 2, c.r * 2);
-      else {
-        ctx.fillStyle = "#fbbf24";
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
+    for (const item of s.items) {
+      let img = assets.coin;
+      if (item.type === "coin2") img = assets.coin2 || assets.coin;
+      if (item.type === "diamond") img = assets.diamond;
+      if (item.type === "magnet") img = assets.magnet;
+      if (img) ctx.drawImage(img, item.x, item.y, item.size, item.size);
     }
 
     if (assets.leo) ctx.drawImage(assets.leo, leoX, leoTop, leoW, leoH);
@@ -231,25 +463,42 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
       ctx.fillRect(leoX, leoTop, leoW, leoH);
     }
 
+    if (magnetActive()) {
+      ctx.save();
+      ctx.strokeStyle = "rgba(96,165,250,0.45)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(leoX + leoW / 2, leoTop + leoH / 2, magnetRange(), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    if (Date.now() < s.showLevelUpUntil) {
+      ctx.save();
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "#fde047";
+      ctx.font = `bold ${Math.round(36 * scale)}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.fillText(`רמה ${levelRef.current}!`, w / 2, h * 0.28);
+      ctx.restore();
+    }
+
     rafRef.current = requestAnimationFrame(loop);
   };
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return undefined;
-    const resize = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      canvas.width = parent.clientWidth;
-      canvas.height = parent.clientHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
-    return () => {
-      window.removeEventListener("resize", resize);
-      stopLoop();
-    };
-  }, []);
+    if (!gameRunning || showIntro) return undefined;
+    syncCanvasSize();
+    const board = boardRef.current;
+    if (!board || typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", syncCanvasSize);
+      return () => window.removeEventListener("resize", syncCanvasSize);
+    }
+    const ro = new ResizeObserver(() => syncCanvasSize());
+    ro.observe(board);
+    return () => ro.disconnect();
+  }, [gameRunning, showIntro]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -264,65 +513,76 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   }, []);
 
   useEffect(() => {
-    if (autoStart && !runningRef.current && !gameOver && !showIntro) startGame();
+    if (autoStart) startGame();
+    return () => {
+      runningRef.current = false;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart]);
 
   return (
     <div
       id="game-wrapper"
-      className="relative flex h-full min-h-0 flex-1 flex-col items-center gap-2 overflow-hidden px-2 py-2 text-white select-none"
+      className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none"
       dir="rtl"
     >
-      <SoloV2Goal text="קפצו מעל מכשולים, אספו מטבעות — פגיעה במכשול מסיימת את המשחק!" />
-      {!showIntro ? (
-        <SoloV2Hud
-          rows={[
-            { label: "ניקוד", value: score, accent: "text-amber-300" },
-            { label: "מכשולים", value: passed },
-            { label: "מטבעות", value: collected },
-          ]}
-        />
-      ) : null}
+      {!showIntro && (
+        <div className="flex min-h-0 w-full flex-1 flex-col px-1 pb-2 pt-1">
+          <div className="pointer-events-none absolute left-1/2 top-2 z-20 hidden max-w-[95vw] -translate-x-1/2 rounded-lg bg-black/60 px-4 py-2 text-sm font-bold sm:text-lg">
+            ניקוד: {score} | רמה: {level} | מכשולים: {passed}
+            {magnetSec > 0 ? ` | 🧲 מגנט: ${magnetSec}s` : ""}
+          </div>
+          <div className="pointer-events-none absolute bottom-36 left-1/2 z-20 max-w-[95vw] -translate-x-1/2 rounded-md bg-black/60 px-3 py-1 text-xs font-bold sm:hidden">
+            ניקוד: {score} | רמה: {level}
+            {magnetSec > 0 ? ` | 🧲 ${magnetSec}s` : ""}
+          </div>
 
-      <SoloV2Playfield bg={SOLO_V2_ASSETS.bgDay} className="max-w-[1180px] w-full">
-        {showIntro ? (
-          <SoloV2Intro
-            title="ליאו קופץ!"
-            lines={[
-              "לחצו / רווח / קפיצה כדי לקפוץ",
-              "+5 על כל מכשול שעברתם",
-              "+10 על כל מטבע שאספתם",
-              "פגיעה במכשול = סוף משחק",
-            ]}
-            onStart={startGame}
-          />
-        ) : (
-          <>
-            <canvas
-              ref={canvasRef}
-              className="block h-full w-full touch-none"
+          <div
+            ref={boardRef}
+            className="relative z-0 mx-auto flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg"
+            onPointerDown={(e) => {
+              if (e.target?.closest?.("button")) return;
+              e.preventDefault();
+              jump();
+            }}
+          >
+            <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full touch-none" />
+
+            {levelFlash ? (
+              <div className="pointer-events-none absolute inset-0 z-30 flex items-start justify-center pt-[18%]">
+                <span className="rounded-xl bg-yellow-400/90 px-4 py-2 text-lg font-extrabold text-black shadow-lg">
+                  רמה {level}!
+                </span>
+              </div>
+            ) : null}
+
+            {gameOver ? (
+              <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 bg-black/80 px-4 text-center">
+                <h2 className="text-2xl font-extrabold text-red-400 sm:text-4xl">אוי! פגעת במכשול</h2>
+                <p className="text-sm font-semibold text-white/90 sm:text-base">
+                  ניקוד: {score} · מכשולים: {passed} · פריטים: {collected}
+                </p>
+                <p className="text-xs text-gray-300 sm:text-sm">המשחק הסתיים — אין המשך אחרי פגיעה</p>
+              </div>
+            ) : null}
+          </div>
+
+          {gameRunning && !gameOver ? (
+            <button
+              type="button"
+              className="fixed bottom-8 left-1/2 z-[200010] min-h-[48px] -translate-x-1/2 rounded-lg bg-yellow-400 px-10 py-3 text-lg font-bold text-black sm:hidden"
+              style={{ touchAction: "none" }}
               onPointerDown={(e) => {
                 e.preventDefault();
                 jump();
               }}
-            />
-            <button
-              type="button"
-              className="absolute bottom-3 left-3 z-30 min-h-[48px] rounded-xl bg-yellow-400 px-5 py-2 text-base font-bold text-black shadow-lg sm:hidden"
-              onClick={jump}
             >
               קפיצה 🦘
             </button>
-            {gameOver ? (
-              <SoloV2EndBanner
-                title="אוי! פגעת במכשול"
-                subtitle={`ניקוד: ${score} · מכשולים: ${passed} · מטבעות: ${collected}`}
-              />
-            ) : null}
-          </>
-        )}
-      </SoloV2Playfield>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }
