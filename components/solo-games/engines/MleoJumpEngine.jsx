@@ -6,7 +6,7 @@ const IMG_COIN = "/images/coin.png";
 const IMG_COIN2 = "/images/coin2.png";
 const IMG_DIAMOND = "/images/diamond.png";
 const IMG_MAGNET = "/images/magnet.png";
-const IMG_OBSTACLE = "/images/obstacle1.png";
+const IMG_OBSTACLE = "/images/obstacle.png";
 
 const SCORE_OBSTACLE = 5;
 const SCORE_COIN = 10;
