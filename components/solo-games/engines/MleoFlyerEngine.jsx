@@ -23,6 +23,7 @@ const sizeBomb = 50;
 export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
   const sessionEndFiredRef = useRef(false);
   const playStartedAtRef = useRef(null);
+  const boardRef = useRef(null);
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
   const runningRef = useRef(false);
@@ -171,15 +172,24 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
     return { level, spawnInterval, itemSpeed, bombBias, gravity, flapPower };
   }
 
+  function syncCanvasSize() {
+    const board = boardRef.current;
+    const canvas = canvasRef.current;
+    if (!board || !canvas) return false;
+    const w = Math.max(2, Math.floor(board.clientWidth));
+    const h = Math.max(2, Math.floor(board.clientHeight));
+    if (w < 8 || h < 8) return false;
+    canvas.width = w;
+    canvas.height = h;
+    return true;
+  }
+
   // ─────────────────────────────────────────────────────────────────────────────
   // Init
   function initGame() {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const W = Math.min(window.innerWidth * 0.95, 960);
-    const H = Math.min(Math.round(W * 0.52), window.innerHeight * 0.8);
-    canvas.width = W;
-    canvas.height = H;
+    if (!canvas || !syncCanvasSize()) return;
+    const H = canvas.height;
 
     dogRef.current = { x: canvas.width / 3, y: H / 2, w: 60, h: 50, vy: 0 };
     itemsRef.current = [];
@@ -375,27 +385,24 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
       canvas?.removeEventListener("pointercancel", onPointerUp);
       canvas?.removeEventListener("pointerleave", onPointerUp);
     };
-  }, [gameRunning, showIntro]);
+  }, [showIntro]);
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // Responsive canvas
+  // Responsive canvas – size to board container (same pattern as catcher)
   useEffect(() => {
-    const onResize = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const W = Math.min(window.innerWidth * 0.95, 960);
-      const H = Math.min(Math.round(W * 0.52), window.innerHeight * 0.8);
-      canvas.width = W;
-      canvas.height = H;
+    if (showIntro) return undefined;
+    const board = boardRef.current;
+    if (!board || typeof ResizeObserver === "undefined") return undefined;
+
+    const apply = () => {
+      syncCanvasSize();
     };
-    onResize();
-    window.addEventListener("resize", onResize);
-    window.addEventListener("orientationchange", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("orientationchange", onResize);
-    };
-  }, []);
+
+    apply();
+    const ro = new ResizeObserver(() => apply());
+    ro.observe(board);
+    return () => ro.disconnect();
+  }, [showIntro]);
 
   // ─────────────────────────────────────────────────────────────────────────────
   const fireSessionEnd = (finalScore) => {
@@ -416,12 +423,6 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
   function startGame() {
     sessionEndFiredRef.current = false;
     playStartedAtRef.current = Date.now();
-    // request fullscreen on mobile
-    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const wrapper = document.getElementById("game-wrapper");
-    if (isMobile && wrapper?.requestFullscreen) wrapper.requestFullscreen().catch(() => {});
-    else if (isMobile && wrapper?.webkitRequestFullscreen) wrapper.webkitRequestFullscreen?.();
-
     setShowIntro(false);
     if (!canvasRef.current) { requestAnimationFrame(startGame); return; }
 
@@ -452,32 +453,32 @@ export default function MleoFlyerEngine({ autoStart = false, onSessionEnd }) {
   return (
       <div
         id="game-wrapper"
-        className="relative flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none px-2 py-2"
+        className="relative isolate flex h-full min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-gray-900 text-white select-none"
+        dir="rtl"
       >
         {!showIntro && (
-          <>
-            <div className="pointer-events-none absolute left-1/2 top-2 z-20 hidden max-w-[95vw] -translate-x-1/2 rounded-lg bg-black/60 px-4 py-2 text-lg font-bold sm:block">
-              ניקוד: {score}
-            </div>
-            <div className="pointer-events-none absolute bottom-24 left-1/2 z-20 max-w-[95vw] -translate-x-1/2 rounded-md bg-black/60 px-3 py-1 text-base font-bold sm:hidden">
-              ניקוד: {score}
-            </div>
-
-            <div className="relative flex h-full min-h-0 w-full max-w-[960px] flex-1 flex-col">
+          <div className="flex min-h-0 w-full flex-1 flex-col px-1 pb-2 pt-1">
+            <div
+              ref={boardRef}
+              className="relative z-0 mx-auto flex h-full min-h-0 w-full max-w-[1180px] flex-1 overflow-hidden rounded-lg border-4 border-yellow-400 bg-black/30 shadow-lg"
+            >
+              <div className="pointer-events-none absolute left-1/2 top-2 z-20 max-w-[95vw] -translate-x-1/2 rounded-lg bg-black/60 px-4 py-2 text-base font-bold sm:text-lg">
+                ניקוד: {score}
+              </div>
               <canvas
                 ref={canvasRef}
-                className="h-full min-h-0 w-full flex-1 rounded-lg border-4 border-yellow-400 bg-black/20 touch-none"
+                className="absolute inset-0 block h-full w-full touch-none"
               />
             </div>
 
             <button
               type="button"
               onPointerDown={(e) => { e.preventDefault(); }}
-              className="sm:hidden fixed bottom-4 left-1/2 z-30 min-h-[48px] -translate-x-1/2 rounded-lg bg-yellow-400 px-8 py-3 text-lg font-bold text-black select-none"
+              className="sm:hidden fixed bottom-8 left-1/2 z-[200010] min-h-[48px] -translate-x-1/2 select-none rounded-lg bg-yellow-400 px-8 py-3 text-lg font-bold text-black"
             >
               החזק לטוס
             </button>
-          </>
+          </div>
         )}
       </div>
   );

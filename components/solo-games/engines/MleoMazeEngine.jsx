@@ -529,13 +529,12 @@ export default function MleoMazeEngine({
       const desktopSide = window.matchMedia("(min-width: 768px)").matches;
 
       if (desktopSide) {
-        const dpadW = 208;
-        const availW = Math.max(100, rect.width - dpadW - 8);
-        const availH = Math.max(100, rect.height - 4);
+        const dpadW = 200;
+        const availW = Math.max(100, rect.width - dpadW - 12);
+        const availH = Math.max(100, rect.height - 8);
         const fromW = availW / settings.cols;
         const fromH = availH / settings.rows;
-        const cap = settings.cellMinLg;
-        setCellPx(Math.max(14, Math.min(cap, Math.floor(Math.min(fromW, fromH)))));
+        setCellPx(Math.max(14, Math.floor(Math.min(fromW, fromH))));
         return;
       }
 
@@ -891,7 +890,7 @@ export default function MleoMazeEngine({
             </div>
           </div>
 
-          <p className="pointer-events-none absolute left-1/2 top-[4.1rem] z-[80] max-w-[95vw] -translate-x-1/2 truncate text-center text-[11px] font-semibold text-lime-200 sm:top-[4.4rem] sm:text-xs">
+          <p className="pointer-events-none absolute left-1/2 top-[5.25rem] z-[80] max-w-[95vw] -translate-x-1/2 px-2 text-center text-[11px] font-semibold leading-snug text-lime-200 sm:top-[4.4rem] sm:text-xs">
             🎯 {hasKey ? "הגיעו לשער!" : "מצאו את המפתח!"}
             {isEasy ? ` כיוון: ${goalArrow()}` : ""}
             {mazeId ? ` · מבוך #${mazeId}` : ""}

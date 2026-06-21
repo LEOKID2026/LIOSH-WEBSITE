@@ -20,7 +20,7 @@ export default function SoloGameNavButtons({
   primaryBusyLabel = "טוען…",
   compact = false,
 }) {
-  const { tokens: T } = useSoloGameShellUi();
+  const { SG, tokens: T } = useSoloGameShellUi();
   const minH = compact ? "min-h-[44px] landscape:min-h-[36px]" : "min-h-[48px]";
   const textSize = compact ? "landscape:px-3 landscape:py-2 landscape:text-sm" : "";
   const gamesBtn = T.ctaGames || T.ctaSecondary;
@@ -43,7 +43,7 @@ export default function SoloGameNavButtons({
       </Link>
       <Link
         href="/student/home"
-        className={`${T.ctaSecondary} ${minH} w-full flex items-center justify-center ${textSize}`}
+        className={`${SG.navHomeBtn} ${minH} w-full flex items-center justify-center ${textSize}`}
       >
         חזרה לעולם הילד
       </Link>
