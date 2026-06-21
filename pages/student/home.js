@@ -898,7 +898,7 @@ export default function StudentHomePage() {
                 >
                   התחל ללמוד
                 </Link>
-                <Link href="/student/solo-games" className={T.ctaGames}>
+                <Link href="/games" className={T.ctaGames}>
                   משחקים
                 </Link>
                 <button

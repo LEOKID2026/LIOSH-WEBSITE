@@ -16,10 +16,10 @@ export default function SoloGamesHubPage() {
         <div className="mx-auto w-full max-w-3xl space-y-6">
           <div className="flex items-center justify-between gap-3">
             <Link
-              href="/student/home"
+              href="/games"
               className="min-h-[44px] rounded-lg px-3 py-2 text-sm font-bold text-gray-300 hover:bg-white/5"
             >
-              ← חזרה לעולם הילד
+              ← חזרה למשחקים
             </Link>
             <StudentThemePicker variant="icon" iconSize="nav" />
           </div>

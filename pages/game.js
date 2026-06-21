@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useGamesHubUi } from "../hooks/useGamesHubUi.js";
 import { useStudentTheme } from "../contexts/StudentThemeContext.jsx";
 import StudentThemePicker from "../components/student/StudentThemePicker";
+import { SOLO_GAME_LIST } from "../lib/solo-games/solo-game-registry.js";
 
 const GAMES = [
   {
@@ -75,6 +76,46 @@ export default function Games() {
             </p>
           </header>
 
+          <section className="space-y-3">
+            <div className="text-center space-y-1">
+              <h2 className="text-lg font-extrabold">משחקי ליאו — עולם הילד</h2>              <p className={GH.hubSub}>
+                משחקי ילד יחיד עם מטבעות אמיתיים לעולם הילד.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
+              {SOLO_GAME_LIST.map((game) => (
+                <Link
+                  key={game.id}
+                  href={game.route}
+                  className={GH.card}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className={GH.cardEmoji}>{game.emoji}</div>
+                    <div>
+                      <h3 className={GH.cardTitle}>{game.titleHe}</h3>
+                      <p className={GH.cardMeta}>משחק יחיד · מטבעות</p>
+                    </div>
+                  </div>
+                  <p className={`${GH.cardBlurb} flex-1`}>{game.blurbHe}</p>
+                  <span className={GH.cardCta}>
+                    <span>←</span>
+                    שחק עכשיו
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <p className={`text-center text-sm ${GH.muted}`}>
+              <Link href="/student/solo-games" className="underline underline-offset-2">
+                לכל משחקי הילד היחיד
+              </Link>
+            </p>
+          </section>
+
+          <section className="space-y-3 pt-2">
+            <div className="text-center space-y-1">
+              <h2 className="text-lg font-extrabold">משחקי ליאו קלאסיים</h2>
+              <p className={GH.hubSub}>גרסאות ארקייד מקוריות — ללא מטבעות עולם הילד.</p>
+            </div>
           <section className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {GAMES.map((g) => (
               <Link
@@ -96,6 +137,7 @@ export default function Games() {
                 </span>
               </Link>
             ))}
+          </section>
           </section>
         </div>
       </main>

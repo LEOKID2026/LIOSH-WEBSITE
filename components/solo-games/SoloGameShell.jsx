@@ -1,13 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { findSoloGame } from "../../lib/solo-games/solo-game-registry.js";
 import { useSoloGameSession } from "../../hooks/solo-games/useSoloGameSession.js";
-import { useSoloLandscapeRequired } from "../../hooks/solo-games/useSoloLandscapeRequired.js";
 import SoloGameEntryScreen from "./SoloGameEntryScreen.jsx";
 import SoloGameFinishScreen from "./SoloGameFinishScreen.jsx";
 import SoloGameSettlingOverlay from "./SoloGameSettlingOverlay.jsx";
-import SoloLandscapeGate from "./SoloLandscapeGate.jsx";
 import MleoCatcherEngine from "./engines/MleoCatcherEngine.jsx";
 import MleoFlyerEngine from "./engines/MleoFlyerEngine.jsx";
 import MleoPuzzleEngine from "./engines/MleoPuzzleEngine.jsx";
@@ -39,8 +37,6 @@ export default function SoloGameShell({ gameKey }) {
     finishSession,
     resetSession,
   } = useSoloGameSession(gameKey);
-
-  const landscapeBlocked = useSoloLandscapeRequired(game?.requiresLandscape === true);
 
   const handleStart = useCallback(async () => {
     const diff = game?.hasDifficultyPicker ? difficulty : null;
@@ -75,8 +71,6 @@ export default function SoloGameShell({ gameKey }) {
       </div>
     );
   }
-
-  const showLandscapeGate = phase === "playing" && landscapeBlocked;
 
   return (
     <>
@@ -122,7 +116,6 @@ export default function SoloGameShell({ gameKey }) {
                 initialDifficulty={game.hasDifficultyPicker ? difficulty : undefined}
                 onSessionEnd={handleSessionEnd}
               />
-              <SoloLandscapeGate show={showLandscapeGate} />
             </div>
           ) : null}
 
