@@ -29,6 +29,9 @@ export default async function handler(req, res) {
       ok: true,
       studentId: auth.studentId,
       achievementGrants,
+      skipped: achievementGrants?.skipped === true,
+      skipReason: achievementGrants?.skipReason ?? null,
+      cooldownMsRemaining: achievementGrants?.cooldownMsRemaining ?? null,
     });
   } catch (e) {
     const msg = e && typeof e === "object" && "message" in e ? String(e.message) : String(e);

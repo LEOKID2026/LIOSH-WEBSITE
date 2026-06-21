@@ -16,6 +16,11 @@ import {
   mergeStudentHomePayloads,
   setCachedStudentHomePayload,
   invalidateStudentHomeProfileClientCache,
+  shouldSkipClientAchievementGrants,
+  markClientAchievementGrantsCompleted,
+  getClientAchievementGrantsInFlight,
+  setClientAchievementGrantsInFlight,
+  clearClientAchievementGrantsInFlight,
 } from "../../lib/learning-client/studentHomeProfileClient";
 import { invalidateStudentMeClientCache, getCachedStudentMe, setCachedStudentMe } from "../../lib/learning-client/studentMeClient";
 import { formatGradeLevelHe } from "../../lib/learning-student-defaults";
@@ -336,17 +341,35 @@ export default function StudentHomePage() {
   const [boxModalOpen, setBoxModalOpen] = useState(false);
   const cardRewardsEnabled = isCardRewardsEnabledClient();
 
-  const loadHomeAchievementGrants = useCallback(async () => {
-    try {
-      await fetch(HOME_ACHIEVEMENT_GRANTS_PATH, {
-        method: "POST",
-        credentials: "include",
-        cache: "no-store",
-        headers: { Accept: "application/json" },
-      });
-    } catch {
-      /* non-fatal — grants retried on next home visit */
-    }
+  const loadHomeAchievementGrants = useCallback(async (studentId) => {
+    const sid = String(studentId || "").trim();
+    if (!sid) return;
+    if (shouldSkipClientAchievementGrants(sid)) return;
+
+    const inFlight = getClientAchievementGrantsInFlight();
+    if (inFlight) return inFlight;
+
+    const flight = (async () => {
+      try {
+        const res = await fetch(HOME_ACHIEVEMENT_GRANTS_PATH, {
+          method: "POST",
+          credentials: "include",
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json?.ok === true) {
+          markClientAchievementGrantsCompleted(sid);
+        }
+      } catch {
+        /* non-fatal — grants retried after cooldown */
+      } finally {
+        clearClientAchievementGrantsInFlight();
+      }
+    })();
+
+    setClientAchievementGrantsInFlight(flight);
+    return flight;
   }, []);
 
   const loadHomeAnalytics = useCallback(async (studentId, summaryPayload) => {
@@ -451,7 +474,7 @@ export default function StudentHomePage() {
         setProfilePhase("ok");
 
         void loadHomeAnalytics(studentId, json);
-        void loadHomeAchievementGrants();
+        void loadHomeAchievementGrants(studentId);
       } catch (e) {
         if (!cached?.merged) {
           setProfileError("שגיאת רשת");
@@ -547,7 +570,7 @@ export default function StudentHomePage() {
           setHomePayload(mergeStudentHomePayloads(summaryJson, cached?.analytics));
           setProfilePhase("ok");
           void loadHomeAnalytics(payload.student.id, summaryJson);
-          void loadHomeAchievementGrants();
+          void loadHomeAchievementGrants(studentId);
           return;
         }
 
@@ -874,7 +897,7 @@ export default function StudentHomePage() {
                 >
                   התחל ללמוד
                 </Link>
-                <Link href="/games" className={T.ctaGames}>
+                <Link href="/student/solo-games" className={T.ctaGames}>
                   משחקים
                 </Link>
                 <button
