@@ -1,19 +1,25 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import StudentThemePicker from "../../components/student/StudentThemePicker";
-import StudentRewardCard, {
-  StudentCardsGrid,
+import {
   StudentCardsTabPanel,
   StudentSeriesProgressCard,
 } from "../../components/student/rewards/StudentRewardCard";
+import VirtualizedStudentCardsGrid from "../../components/student/rewards/VirtualizedStudentCardsGrid.jsx";
 import { syncStudentLocalStorageIdentity } from "../../lib/learning-student-local-sync";
 import { useStudentTheme } from "../../contexts/StudentThemeContext.jsx";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 import { formatCoinAmountHe, formatCoinAmountNumberHe, SHOP_CARD_ALREADY_OWNED_HE, SHOP_CARD_SELL_DUPLICATE_HE, CATALOG_CARD_OWNED_HE } from "../../lib/rewards/rewards-ui.he.js";
 
-const CARDS_PATH = "/api/student/rewards/cards";
+const CARDS_ENDPOINTS = {
+  summary: "/api/student/rewards/cards/summary",
+  collection: "/api/student/rewards/cards/collection",
+  shop: "/api/student/rewards/cards/shop",
+  catalog: "/api/student/rewards/cards/catalog",
+  series: "/api/student/rewards/cards/series",
+};
 const PURCHASE_PATH = "/api/student/rewards/shop/purchase";
 const SELL_DUPLICATE_PATH = "/api/student/rewards/shop/sell-duplicate";
 
@@ -169,33 +175,88 @@ export default function StudentCardsPage() {
   const [cardsPhase, setCardsPhase] = useState("idle");
   const [cardsError, setCardsError] = useState("");
   const [payload, setPayload] = useState(null);
+  const [loadedTabs, setLoadedTabs] = useState(() => new Set());
+  const [tabLoading, setTabLoading] = useState({});
+  const loadedTabsRef = useRef(new Set());
   const [actionBusy, setActionBusy] = useState("");
   const [messageHe, setMessageHe] = useState("");
 
   const rewardsEnabled = isCardRewardsEnabledClient();
 
-  const loadCards = useCallback(async () => {
+  const fetchCardsEndpoint = useCallback(async (path) => {
+    const res = await fetch(path, {
+      credentials: "include",
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || json?.ok !== true) {
+      throw new Error(json?.error || "cards_load_failed");
+    }
+    return json;
+  }, []);
+
+  const loadSummary = useCallback(async () => {
+    const json = await fetchCardsEndpoint(CARDS_ENDPOINTS.summary);
+    setPayload((prev) => ({
+      ...(prev || {}),
+      coinBalance: json.coinBalance,
+      counts: json.counts,
+    }));
+    return json;
+  }, [fetchCardsEndpoint]);
+
+  const loadTabData = useCallback(
+    async (tabId, { force = false } = {}) => {
+      if (!CARDS_ENDPOINTS[tabId]) return;
+      if (!force && loadedTabsRef.current.has(tabId)) return;
+
+      setTabLoading((prev) => ({ ...prev, [tabId]: true }));
+      try {
+        const json = await fetchCardsEndpoint(CARDS_ENDPOINTS[tabId]);
+        setPayload((prev) => {
+          const next = { ...(prev || {}) };
+          if (tabId === "collection") next.collection = json.collection;
+          if (tabId === "shop") next.shop = json.shop;
+          if (tabId === "catalog") next.catalog = json.catalog;
+          if (tabId === "series") next.seriesProgress = json.seriesProgress;
+          return next;
+        });
+        loadedTabsRef.current.add(tabId);
+        setLoadedTabs(new Set(loadedTabsRef.current));
+      } finally {
+        setTabLoading((prev) => ({ ...prev, [tabId]: false }));
+      }
+    },
+    [fetchCardsEndpoint]
+  );
+
+  const loadInitialCards = useCallback(async () => {
     setCardsPhase("loading");
     setCardsError("");
+    loadedTabsRef.current = new Set();
+    setLoadedTabs(new Set());
     try {
-      const res = await fetch(CARDS_PATH, {
-        credentials: "include",
-        cache: "no-store",
-        headers: { Accept: "application/json" },
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok || json?.ok !== true) {
-        setCardsError("לא הצלחנו לטעון את הקלפים.");
-        setCardsPhase("error");
-        return;
-      }
-      setPayload(json);
+      await Promise.all([loadSummary(), loadTabData("collection")]);
       setCardsPhase("ok");
     } catch {
-      setCardsError("שגיאת רשת בטעינת הקלפים.");
+      setCardsError("לא הצלחנו לטעון את הקלפים.");
       setCardsPhase("error");
     }
-  }, []);
+  }, [loadSummary, loadTabData]);
+
+  const refreshAfterCardAction = useCallback(async () => {
+    loadedTabsRef.current.delete("shop");
+    loadedTabsRef.current.delete("collection");
+    loadedTabsRef.current.delete("catalog");
+    loadedTabsRef.current.delete("series");
+    setLoadedTabs(new Set(loadedTabsRef.current));
+
+    const refreshes = [loadSummary(), loadTabData("shop", { force: true }), loadTabData("collection", { force: true })];
+    if (activeTab === "catalog") refreshes.push(loadTabData("catalog", { force: true }));
+    if (activeTab === "series") refreshes.push(loadTabData("series", { force: true }));
+    await Promise.all(refreshes);
+  }, [loadSummary, loadTabData, activeTab]);
 
   useEffect(() => {
     if (!router.isReady) return undefined;
@@ -214,7 +275,7 @@ export default function StudentCardsPage() {
         syncStudentLocalStorageIdentity(data.student, "student/cards after /me");
         setStudent(data.student);
         setAuthPhase("authed");
-        if (rewardsEnabled) void loadCards();
+        if (rewardsEnabled) void loadInitialCards();
       })
       .catch(() => {
         if (!mounted) return;
@@ -224,7 +285,13 @@ export default function StudentCardsPage() {
     return () => {
       mounted = false;
     };
-  }, [router.isReady, router, loadCards, rewardsEnabled]);
+  }, [router.isReady, router, loadInitialCards, rewardsEnabled]);
+
+  useEffect(() => {
+    if (cardsPhase !== "ok") return undefined;
+    void loadTabData(activeTab);
+    return undefined;
+  }, [activeTab, cardsPhase, loadTabData]);
 
   const coinBalanceAmount = useMemo(() => {
     if (student?.coin_balance == null) return null;
@@ -255,7 +322,7 @@ export default function StudentCardsPage() {
       if (json.balanceAfter != null) {
         setStudent((prev) => (prev ? { ...prev, coin_balance: json.balanceAfter } : prev));
       }
-      await loadCards();
+      await refreshAfterCardAction();
     } catch {
       setMessageHe("שגיאת רשת ברכישה.");
     } finally {
@@ -300,7 +367,7 @@ export default function StudentCardsPage() {
       if (json.balanceAfter != null) {
         setStudent((prev) => (prev ? { ...prev, coin_balance: json.balanceAfter } : prev));
       }
-      await loadCards();
+      await refreshAfterCardAction();
     } catch {
       setMessageHe("שגיאת רשת במכירה.");
     } finally {
@@ -352,7 +419,7 @@ export default function StudentCardsPage() {
       return (
         <div className={T.errorBox}>
           <p className={T.errorTitle}>{cardsError}</p>
-          <button type="button" onClick={() => void loadCards()} className={T.errorBtn}>
+          <button type="button" onClick={() => void loadInitialCards()} className={T.errorBtn}>
             נסו שוב
           </button>
         </div>
@@ -361,23 +428,31 @@ export default function StudentCardsPage() {
 
     if (cardsPhase !== "ok") return null;
 
+    if (tabLoading[activeTab] || !loadedTabs.has(activeTab)) {
+      return (
+        <div className="flex flex-col items-center py-12 gap-3">
+          <div className={T.loadingSpinner} aria-hidden />
+          <p className={T.loadingText}>טוען קלפים...</p>
+        </div>
+      );
+    }
+
     if (activeTab === "collection") {
       const collectionList = payload?.collection || [];
       return (
-        <StudentCardsGrid emptyMessage="עדיין אין קלפים באוסף — פתחו קופסת הפתעה בעולם הילד או קנו בחנות!" T={T}>
-          {collectionList.map((card, index) => (
-            <StudentRewardCard
-              key={card.id}
-              card={card}
-              T={T}
-              previewCards={collectionList}
-              previewIndex={index}
-              allowDownload
-              studentFullName={studentDisplayName}
-              footer={null}
-            />
-          ))}
-        </StudentCardsGrid>
+        <VirtualizedStudentCardsGrid
+          items={collectionList}
+          emptyMessage="עדיין אין קלפים באוסף — פתחו קופסת הפתעה בעולם הילד או קנו בחנות!"
+          T={T}
+          previewCards={collectionList}
+          studentFullName={studentDisplayName}
+          estimateRowHeight={320}
+          getPreviewAllowDownload={() => true}
+          renderCardProps={() => ({
+            footer: null,
+            allowDownload: true,
+          })}
+        />
       );
     }
 
@@ -387,74 +462,73 @@ export default function StudentCardsPage() {
         c.alreadyOwned ? c : { ...c, showLockedStamp: true }
       );
       return (
-        <StudentCardsGrid emptyMessage="אין קלפים זמינים לרכישה כרגע." T={T}>
-          {shopList.map((card, index) => {
+        <VirtualizedStudentCardsGrid
+          items={shopList}
+          emptyMessage="אין קלפים זמינים לרכישה כרגע."
+          T={T}
+          previewCards={shopPreviewCards}
+          studentFullName={studentDisplayName}
+          estimateRowHeight={400}
+          getPreviewAllowDownload={(card) => card.alreadyOwned === true}
+          renderCardProps={(card) => {
             const canBuy = card.canAfford === true && !card.alreadyOwned;
             const canSell = card.canSellDuplicate === true && card.sellbackCoins > 0;
             const ownedOnly = card.alreadyOwned && !canSell;
             const priceLabel = Math.floor(Number(card.priceCoins) || 0).toLocaleString("he-IL");
             const sellBusy = actionBusy === `sell:${card.id}`;
             const buyBusy = actionBusy === card.id;
-            return (
-              <StudentRewardCard
-                key={card.id}
-                card={card}
-                T={T}
-                previewCards={shopPreviewCards}
-                previewIndex={index}
-                showLockedStamp={!card.alreadyOwned}
-                allowDownload={card.alreadyOwned}
-                studentFullName={studentDisplayName}
-                footer={
-                  <>
-                    <p className={`text-sm font-semibold ${T.statValue}`}>
-                      מחיר קנייה: {formatCoinAmountHe(card.priceCoins)}
+            return {
+              showLockedStamp: !card.alreadyOwned,
+              allowDownload: card.alreadyOwned,
+              footer: (
+                <>
+                  <p className={`text-sm font-semibold ${T.statValue}`}>
+                    מחיר קנייה: {formatCoinAmountHe(card.priceCoins)}
+                  </p>
+                  {card.sellbackCoins > 0 ? (
+                    <p className={`text-xs leading-snug ${T.tileSub}`}>
+                      שווי מכירה: {formatCoinAmountHe(card.sellbackCoins)}
                     </p>
-                    {card.sellbackCoins > 0 ? (
-                      <p className={`text-xs leading-snug ${T.tileSub}`}>
-                        שווי מכירה: {formatCoinAmountHe(card.sellbackCoins)}
-                      </p>
-                    ) : (
-                      <p className={`text-xs min-h-[1.125rem] ${T.tileSub}`}>{"\u00a0"}</p>
-                    )}
-                    <p className={`text-xs leading-snug min-h-[1.125rem] ${T.tileSub}`}>
-                      {!card.alreadyOwned && !canBuy
-                        ? card.missingCoins > 0
-                          ? `חסרים לך ${formatCoinAmountHe(card.missingCoins)}`
-                          : "אין מספיק מטבעות"
-                        : "\u00a0"}
-                    </p>
-                    <button
-                      type="button"
-                      disabled={ownedOnly || sellBusy || buyBusy || (!canBuy && !canSell)}
-                      onClick={() => {
-                        if (canSell) void handleSellDuplicate(card);
-                        else if (canBuy) void handlePurchase(card.id);
-                      }}
-                      className={
-                        ownedOnly
-                          ? `${T.ctaPrimary} text-xs w-full !bg-amber-500 hover:!bg-amber-500 !text-white shadow-md cursor-default disabled:!opacity-100`
-                          : canSell
-                            ? `${T.ctaGames} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
-                            : `${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
-                      }
-                    >
-                      {canSell
-                        ? sellBusy
-                          ? "מוכר..."
-                          : SHOP_CARD_SELL_DUPLICATE_HE
-                        : card.alreadyOwned
-                          ? SHOP_CARD_ALREADY_OWNED_HE
-                          : buyBusy
-                            ? "קונה..."
-                            : `קנה ב־${priceLabel}`}
-                    </button>
-                  </>
-                }
-              />
-            );
-          })}
-        </StudentCardsGrid>
+                  ) : (
+                    <p className={`text-xs min-h-[1.125rem] ${T.tileSub}`}>{"\u00a0"}</p>
+                  )}
+                  <p className={`text-xs leading-snug min-h-[1.125rem] ${T.tileSub}`}>
+                    {!card.alreadyOwned && !canBuy
+                      ? card.missingCoins > 0
+                        ? `חסרים לך ${formatCoinAmountHe(card.missingCoins)}`
+                        : "אין מספיק מטבעות"
+                      : "\u00a0"}
+                  </p>
+                  <button
+                    type="button"
+                    disabled={ownedOnly || sellBusy || buyBusy || (!canBuy && !canSell)}
+                    onClick={() => {
+                      if (canSell) void handleSellDuplicate(card);
+                      else if (canBuy) void handlePurchase(card.id);
+                    }}
+                    className={
+                      ownedOnly
+                        ? `${T.ctaPrimary} text-xs w-full !bg-amber-500 hover:!bg-amber-500 !text-white shadow-md cursor-default disabled:!opacity-100`
+                        : canSell
+                          ? `${T.ctaGames} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
+                          : `${T.ctaPrimary} text-xs w-full disabled:opacity-50 disabled:pointer-events-none`
+                    }
+                  >
+                    {canSell
+                      ? sellBusy
+                        ? "מוכר..."
+                        : SHOP_CARD_SELL_DUPLICATE_HE
+                      : card.alreadyOwned
+                        ? SHOP_CARD_ALREADY_OWNED_HE
+                        : buyBusy
+                          ? "קונה..."
+                          : `קנה ב־${priceLabel}`}
+                  </button>
+                </>
+              ),
+            };
+          }}
+        />
       );
     }
 
@@ -464,27 +538,24 @@ export default function StudentCardsPage() {
         c.isOwned ? c : { ...c, showLockedStamp: true }
       );
       return (
-        <StudentCardsGrid emptyMessage="אין קלפים להצגה." T={T}>
-          {catalogList.map((card, index) => (
-            <StudentRewardCard
-              key={card.id}
-              card={card}
-              T={T}
-              previewCards={catalogPreviewCards}
-              previewIndex={index}
-              showLockedStamp={!card.isOwned}
-              allowDownload={card.isOwned}
-              studentFullName={studentDisplayName}
-              footer={
-                card.isOwned ? (
-                  <p className="text-xs font-bold text-amber-500 dark:text-amber-300">{CATALOG_CARD_OWNED_HE}</p>
-                ) : (
-                  <CardRequirementProgress card={card} T={T} />
-                )
-              }
-            />
-          ))}
-        </StudentCardsGrid>
+        <VirtualizedStudentCardsGrid
+          items={catalogList}
+          emptyMessage="אין קלפים להצגה."
+          T={T}
+          previewCards={catalogPreviewCards}
+          studentFullName={studentDisplayName}
+          estimateRowHeight={360}
+          getPreviewAllowDownload={(card) => card.isOwned === true}
+          renderCardProps={(card) => ({
+            showLockedStamp: !card.isOwned,
+            allowDownload: card.isOwned,
+            footer: card.isOwned ? (
+              <p className="text-xs font-bold text-amber-500 dark:text-amber-300">{CATALOG_CARD_OWNED_HE}</p>
+            ) : (
+              <CardRequirementProgress card={card} T={T} />
+            ),
+          })}
+        />
       );
     }
 
