@@ -17,51 +17,123 @@ const DIFFICULTY_SETTINGS = {
 
 const SCORE_PER_SORT = 50;
 
-/** 3 groups × 2 distinct colors — 6 colors total (no duplicate hues in one bin). */
-const ITEM_TYPES = [
-  { id: "star", bin: "bright", img: SOLO_V2_ASSETS.candy("star.png") },
-  { id: "square", bin: "bright", img: SOLO_V2_ASSETS.candy("square.png") },
-  { id: "diamond", bin: "cool", img: SOLO_V2_ASSETS.candy("diamond.png") },
-  { id: "circle", bin: "cool", img: SOLO_V2_ASSETS.candy("circle.png") },
-  { id: "heart", bin: "warm", img: SOLO_V2_ASSETS.candy("heart.png") },
-  { id: "drop", bin: "warm", img: SOLO_V2_ASSETS.candy("drop.png") },
-];
+/** @type {Record<string, { labelHe: string, ring: string }>} */
+const COLOR_META = Object.freeze({
+  red: { labelHe: "אדום", ring: "ring-rose-400" },
+  orange: { labelHe: "כתום", ring: "ring-orange-400" },
+  blue: { labelHe: "כחול", ring: "ring-sky-400" },
+  purple: { labelHe: "סגול", ring: "ring-violet-400" },
+  yellow: { labelHe: "צהוב", ring: "ring-yellow-400" },
+  green: { labelHe: "ירוק", ring: "ring-emerald-400" },
+});
 
-const BINS = [
+/**
+ * Single source of truth — each item maps to exactly one color.
+ * Asset colors (verified): heart=red, star=orange, square=blue, drop=yellow, circle=green.
+ * Purple uses an inline gem (no purple candy PNG in repo; diamond.png is blue — excluded).
+ */
+const SORT_ITEMS = Object.freeze([
+  { id: "heart", color: "red", render: { type: "img", src: SOLO_V2_ASSETS.candy("heart.png") } },
+  { id: "star", color: "orange", render: { type: "img", src: SOLO_V2_ASSETS.candy("star.png") } },
+  { id: "square", color: "blue", render: { type: "img", src: SOLO_V2_ASSETS.candy("square.png") } },
+  { id: "purple-jewel", color: "purple", render: { type: "purple-gem" } },
+  { id: "drop", color: "yellow", render: { type: "img", src: SOLO_V2_ASSETS.candy("drop.png") } },
+  { id: "circle", color: "green", render: { type: "img", src: SOLO_V2_ASSETS.candy("circle.png") } },
+]);
+
+const SORT_GROUP_DEFS = Object.freeze([
   {
     id: "bright",
-    title: "צהוב + ירוק",
+    colors: ["yellow", "green"],
     emoji: "🌟",
-    previews: [
-      { src: SOLO_V2_ASSETS.candy("star.png"), ring: "ring-yellow-400" },
-      { src: SOLO_V2_ASSETS.candy("square.png"), ring: "ring-emerald-400" },
-    ],
     className:
       "border-yellow-400/80 bg-gradient-to-b from-yellow-950/45 via-emerald-950/30 to-emerald-950/40",
   },
   {
     id: "cool",
-    title: "כחול + סגול",
+    colors: ["blue", "purple"],
     emoji: "💎",
-    previews: [
-      { src: SOLO_V2_ASSETS.candy("diamond.png"), ring: "ring-sky-400" },
-      { src: SOLO_V2_ASSETS.candy("circle.png"), ring: "ring-violet-400" },
-    ],
     className:
       "border-sky-400/80 bg-gradient-to-b from-sky-950/45 via-indigo-950/30 to-violet-950/40",
   },
   {
     id: "warm",
-    title: "אדום + כתום",
+    colors: ["red", "orange"],
     emoji: "🔥",
-    previews: [
-      { src: SOLO_V2_ASSETS.candy("heart.png"), ring: "ring-rose-400" },
-      { src: SOLO_V2_ASSETS.candy("drop.png"), ring: "ring-orange-400" },
-    ],
     className:
       "border-rose-400/80 bg-gradient-to-b from-rose-950/45 via-orange-950/30 to-orange-950/40",
   },
-];
+]);
+
+function groupTitle(colorA, colorB) {
+  return `${COLOR_META[colorA].labelHe} + ${COLOR_META[colorB].labelHe}`;
+}
+
+function itemsForColors(colorIds) {
+  return SORT_ITEMS.filter((item) => colorIds.includes(item.color));
+}
+
+function binForColor(color) {
+  return SORT_GROUP_DEFS.find((group) => group.colors.includes(color))?.id || null;
+}
+
+/** @type {readonly { id: string, title: string, emoji: string, className: string, colors: string[], items: typeof SORT_ITEMS }[]} */
+const BINS = Object.freeze(
+  SORT_GROUP_DEFS.map((group) => {
+    const items = itemsForColors(group.colors);
+    return {
+      id: group.id,
+      title: groupTitle(group.colors[0], group.colors[1]),
+      emoji: group.emoji,
+      className: group.className,
+      colors: group.colors,
+      items,
+    };
+  })
+);
+
+/** Playable queue entries — bin derived from color, never hand-written. */
+const ITEM_TYPES = Object.freeze(
+  SORT_ITEMS.map((item) => ({
+    ...item,
+    bin: binForColor(item.color),
+    colorRing: COLOR_META[item.color].ring,
+  }))
+);
+
+/** @param {{ render: { type: string, src?: string }, colorRing?: string, className?: string }} item */
+function SortShapeIcon({ item, className = "h-16 w-16", preview = false }) {
+  const sizeClass = preview ? "h-5 w-5" : className;
+  const ring = item.colorRing || COLOR_META[item.color]?.ring || "";
+
+  if (item.render.type === "img") {
+    return (
+      <img
+        src={item.render.src}
+        alt=""
+        className={`object-contain ${sizeClass} ${preview ? `rounded-sm ring-2 ${ring}` : ""}`}
+        draggable={false}
+      />
+    );
+  }
+
+  if (item.render.type === "purple-gem") {
+    return (
+      <span
+        className={`inline-flex items-center justify-center ${sizeClass} ${preview ? `rounded-sm p-0.5 ring-2 ${ring}` : ""}`}
+        aria-hidden
+      >
+        <span
+          className={`inline-block rotate-45 rounded-md bg-gradient-to-br from-violet-300 via-violet-500 to-purple-800 shadow-[inset_0_1px_4px_rgba(255,255,255,0.45)] ${
+            preview ? "h-full w-full min-h-[14px] min-w-[14px]" : "h-[72%] w-[72%]"
+          }`}
+        />
+      </span>
+    );
+  }
+
+  return null;
+}
 
 function shuffle(items) {
   const arr = [...items];
@@ -83,7 +155,6 @@ function buildBalancedPool(count) {
   return pool.slice(0, count);
 }
 
-/** Reduce back-to-back items from the same bin (medium). */
 function breakSameBinRuns(items) {
   const arr = [...items];
   for (let i = 1; i < arr.length; i += 1) {
@@ -94,7 +165,6 @@ function breakSameBinRuns(items) {
   return arr;
 }
 
-/** Round-robin across bins — faster switching (hard). */
 function interleaveBins(items) {
   const buckets = Object.fromEntries(BINS.map((bin) => [bin.id, []]));
   for (const item of items) buckets[item.bin]?.push(item);
@@ -291,7 +361,7 @@ export default function MleoSortShapesEngine({
               <p className="text-sm font-semibold text-yellow-100">הפריט הבא:</p>
               {currentItem ? (
                 <div className="flex h-24 w-24 items-center justify-center rounded-2xl border-4 border-yellow-300 bg-white/10 shadow-lg">
-                  <img src={currentItem.img} alt="" className="h-16 w-16 object-contain" />
+                  <SortShapeIcon item={currentItem} />
                 </div>
               ) : (
                 <span className="text-lg font-bold text-emerald-300">סיימתם!</span>
@@ -311,13 +381,8 @@ export default function MleoSortShapesEngine({
                 >
                   <span className="text-2xl">{bin.emoji}</span>
                   <div className="flex gap-1">
-                    {bin.previews.map((preview) => (
-                      <img
-                        key={preview.src}
-                        src={preview.src}
-                        alt=""
-                        className={`h-5 w-5 rounded-sm object-contain ring-2 ${preview.ring}`}
-                      />
+                    {bin.items.map((item) => (
+                      <SortShapeIcon key={item.id} item={item} preview />
                     ))}
                   </div>
                   {bin.title}

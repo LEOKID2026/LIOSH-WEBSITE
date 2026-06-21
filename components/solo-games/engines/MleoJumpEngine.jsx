@@ -17,6 +17,39 @@ const MAGNET_MS = 5000;
 const MAGNET_RANGE_BASE = 150;
 const MAGNET_PULL = 4.5;
 
+const COINS_PER_LEVEL = 30;
+const FIRST_SPAWN_DELAY_MS = 2400;
+const BASE_SPEED = 1.35;
+const SPEED_PER_LEVEL = 0.2;
+const LEO_HITBOX_SCALE = 0.72;
+const OBSTACLE_HITBOX_SCALE = 0.78;
+
+/** @param {number} level @param {number} scale */
+function getSpawnGapRange(level, scale) {
+  const lvl = Math.max(1, level);
+  const minBase = Math.max(150, 280 - (lvl - 1) * 16);
+  const maxBase = Math.max(minBase + 70, 380 - (lvl - 1) * 20);
+  return { min: minBase * scale, max: maxBase * scale };
+}
+
+/** @param {number} level @param {number} scale */
+function pickNextSpawnGap(level, scale) {
+  const { min, max } = getSpawnGapRange(level, scale);
+  return min + Math.random() * (max - min);
+}
+
+/** @param {{ x: number, y: number, w: number, h: number }} rect @param {number} shrink */
+function shrinkHitbox(rect, shrink) {
+  const padX = (rect.w * (1 - shrink)) / 2;
+  const padY = (rect.h * (1 - shrink)) / 2;
+  return {
+    x: rect.x + padX,
+    y: rect.y + padY,
+    w: rect.w * shrink,
+    h: rect.h * shrink,
+  };
+}
+
 /**
  * @param {{ autoStart?: boolean, onSessionEnd?: (metrics: object) => void }} props
  */
@@ -30,6 +63,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
 
   const scoreRef = useRef(0);
   const levelRef = useRef(1);
+  const coinsCollectedRef = useRef(0);
   const passedRef = useRef(0);
   const comboRef = useRef(0);
   const magnetUntilRef = useRef(0);
@@ -50,10 +84,11 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     grounded: true,
     obstacles: [],
     items: [],
-    spawnTimer: 0,
+    distanceSinceSpawn: 0,
+    nextSpawnGap: 280,
+    gameElapsedMs: 0,
     ambientTimer: 0,
-    speed: 2.2,
-    spawnGap: 92,
+    speed: BASE_SPEED,
     bgIndex: 0,
     bgX: 0,
     showLevelUpUntil: 0,
@@ -73,6 +108,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   const [level, setLevel] = useState(1);
   const [passed, setPassed] = useState(0);
   const [collected, setCollected] = useState(0);
+  const [coinsCollected, setCoinsCollected] = useState(0);
   const [magnetSec, setMagnetSec] = useState(0);
   const [levelFlash, setLevelFlash] = useState(false);
 
@@ -148,25 +184,30 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
 
   const applyDifficulty = (lvl) => {
     const w = worldRef.current;
-    w.speed = 2.0 + (lvl - 1) * 0.32;
-    w.spawnGap = Math.max(48, 96 - (lvl - 1) * 5);
+    w.speed = BASE_SPEED + (lvl - 1) * SPEED_PER_LEVEL;
+  };
+
+  const triggerLevelUp = (newLevel) => {
+    levelRef.current = newLevel;
+    setLevel(newLevel);
+    applyDifficulty(newLevel);
+    const w = worldRef.current;
+    w.bgIndex = (newLevel - 1) % Math.max(1, assetsRef.current.bgs.length);
+    w.showLevelUpUntil = Date.now() + 1800;
+    w.nextSpawnGap = pickNextSpawnGap(newLevel, w.scale);
+    setLevelFlash(true);
+    setTimeout(() => setLevelFlash(false), 1800);
+  };
+
+  const checkLevelFromCoins = () => {
+    const newLevel = Math.floor(coinsCollectedRef.current / COINS_PER_LEVEL) + 1;
+    if (newLevel > levelRef.current) triggerLevelUp(newLevel);
   };
 
   const addScore = (pts, reason) => {
     if (pts <= 0) return;
     scoreRef.current += pts;
     setScore(scoreRef.current);
-
-    const nextLevel = Math.floor(scoreRef.current / 40) + 1;
-    if (nextLevel > levelRef.current) {
-      levelRef.current = nextLevel;
-      setLevel(nextLevel);
-      applyDifficulty(nextLevel);
-      worldRef.current.bgIndex = (nextLevel - 1) % Math.max(1, assetsRef.current.bgs.length);
-      worldRef.current.showLevelUpUntil = Date.now() + 1800;
-      setLevelFlash(true);
-      setTimeout(() => setLevelFlash(false), 1800);
-    }
 
     if (reason === "obstacle") {
       comboRef.current += 1;
@@ -227,6 +268,9 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     }
     addScore(SCORE_COIN, "item");
     setCollected((n) => n + 1);
+    coinsCollectedRef.current += 1;
+    setCoinsCollected(coinsCollectedRef.current);
+    checkLevelFromCoins();
     return true;
   };
 
@@ -314,6 +358,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
   const resetWorld = () => {
     scoreRef.current = 0;
     levelRef.current = 1;
+    coinsCollectedRef.current = 0;
     passedRef.current = 0;
     comboRef.current = 0;
     magnetUntilRef.current = 0;
@@ -321,6 +366,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     setLevel(1);
     setPassed(0);
     setCollected(0);
+    setCoinsCollected(0);
     setMagnetSec(0);
     setLevelFlash(false);
 
@@ -330,12 +376,14 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     w.grounded = true;
     w.obstacles = [];
     w.items = [];
-    w.spawnTimer = 0;
+    w.distanceSinceSpawn = 0;
+    w.gameElapsedMs = 0;
     w.ambientTimer = 0;
     w.bgX = 0;
     w.bgIndex = 0;
     w.showLevelUpUntil = 0;
     applyDifficulty(1);
+    w.nextSpawnGap = pickNextSpawnGap(1, w.scale);
   };
 
   const startGame = () => {
@@ -345,6 +393,7 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
     setGameOver(false);
     resetWorld();
     syncCanvasSize();
+    worldRef.current.nextSpawnGap = pickNextSpawnGap(1, worldRef.current.scale);
     setGameRunning(true);
     runningRef.current = true;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -368,10 +417,14 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
       s.grounded = true;
     }
 
-    s.spawnTimer += 1;
-    if (s.spawnTimer >= s.spawnGap) {
-      s.spawnTimer = 0;
-      spawnObstacleGroup();
+    s.gameElapsedMs += 1000 / 60;
+    if (s.gameElapsedMs >= FIRST_SPAWN_DELAY_MS) {
+      s.distanceSinceSpawn += s.speed * scale;
+      if (s.distanceSinceSpawn >= s.nextSpawnGap) {
+        spawnObstacleGroup();
+        s.distanceSinceSpawn = 0;
+        s.nextSpawnGap = pickNextSpawnGap(levelRef.current, scale);
+      }
     }
 
     s.ambientTimer += 1;
@@ -408,12 +461,11 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
 
     const leoBottom = groundY + s.leoY;
     const leoTop = leoBottom - leoH;
+    const leoHit = shrinkHitbox({ x: leoX, y: leoTop, w: leoW, h: leoH }, LEO_HITBOX_SCALE);
     for (const o of s.obstacles) {
-      const hit =
-        leoX + leoW - 10 > o.x &&
-        leoX + 10 < o.x + o.w &&
-        leoBottom - 6 > groundY - o.h;
-      if (hit) {
+      const obsTop = groundY - o.h;
+      const obsHit = shrinkHitbox({ x: o.x, y: obsTop, w: o.w, h: o.h }, OBSTACLE_HITBOX_SCALE);
+      if (hits(leoHit, obsHit)) {
         endGame();
         return;
       }
@@ -530,11 +582,11 @@ export default function MleoJumpEngine({ autoStart = false, onSessionEnd }) {
       {!showIntro && (
         <div className="flex min-h-0 w-full flex-1 flex-col px-1 pb-2 pt-1">
           <div className="pointer-events-none absolute left-1/2 top-2 z-20 hidden max-w-[95vw] -translate-x-1/2 rounded-lg bg-black/60 px-4 py-2 text-sm font-bold sm:text-lg">
-            ניקוד: {score} | רמה: {level} | מכשולים: {passed}
+            ניקוד: {score} | רמה: {level} | מטבעות: {coinsCollected}
             {magnetSec > 0 ? ` | 🧲 מגנט: ${magnetSec}s` : ""}
           </div>
           <div className="pointer-events-none absolute bottom-36 left-1/2 z-20 max-w-[95vw] -translate-x-1/2 rounded-md bg-black/60 px-3 py-1 text-xs font-bold sm:hidden">
-            ניקוד: {score} | רמה: {level}
+            ניקוד: {score} | רמה: {level} | 🪙 {coinsCollected}
             {magnetSec > 0 ? ` | 🧲 ${magnetSec}s` : ""}
           </div>
 
