@@ -10,52 +10,109 @@ import {
 } from "./solo-v2-ui.jsx";
 
 const DIFFICULTY_SETTINGS = {
-  easy: { itemCount: 12, durationSec: 90, maxLives: 3 },
-  medium: { itemCount: 18, durationSec: 90, maxLives: 3 },
-  hard: { itemCount: 24, durationSec: 90, maxLives: 3 },
+  easy: { itemCount: 12, durationSec: 90, maxLives: 3, queueMode: "calm" },
+  medium: { itemCount: 18, durationSec: 72, maxLives: 3, queueMode: "mixed" },
+  hard: { itemCount: 24, durationSec: 58, maxLives: 2, queueMode: "rush" },
 };
 
 const SCORE_PER_SORT = 50;
 
+/** 3 groups × 2 distinct colors — 6 colors total (no duplicate hues in one bin). */
 const ITEM_TYPES = [
-  { id: "heart", bin: "warm", label: "לבבות", img: SOLO_V2_ASSETS.candy("heart.png"), binClass: "border-rose-400 bg-rose-950/50" },
-  { id: "star", bin: "warm", label: "לבבות", img: SOLO_V2_ASSETS.candy("star.png"), binClass: "border-rose-400 bg-rose-950/50" },
-  { id: "diamond", bin: "cool", label: "יהלומים", img: SOLO_V2_ASSETS.candy("diamond.png"), binClass: "border-sky-400 bg-sky-950/50" },
-  { id: "square", bin: "cool", label: "יהלומים", img: SOLO_V2_ASSETS.candy("square.png"), binClass: "border-sky-400 bg-sky-950/50" },
-  { id: "circle", bin: "fun", label: "כוכבים", img: SOLO_V2_ASSETS.candy("circle.png"), binClass: "border-amber-400 bg-amber-950/50" },
-  { id: "drop", bin: "fun", label: "כוכבים", img: SOLO_V2_ASSETS.candy("drop.png"), binClass: "border-amber-400 bg-amber-950/50" },
+  { id: "star", bin: "bright", img: SOLO_V2_ASSETS.candy("star.png") },
+  { id: "square", bin: "bright", img: SOLO_V2_ASSETS.candy("square.png") },
+  { id: "diamond", bin: "cool", img: SOLO_V2_ASSETS.candy("diamond.png") },
+  { id: "circle", bin: "cool", img: SOLO_V2_ASSETS.candy("circle.png") },
+  { id: "heart", bin: "warm", img: SOLO_V2_ASSETS.candy("heart.png") },
+  { id: "drop", bin: "warm", img: SOLO_V2_ASSETS.candy("drop.png") },
 ];
 
 const BINS = [
   {
-    id: "warm",
-    title: "קבוצה ורודה",
-    emoji: "💖",
-    previews: [SOLO_V2_ASSETS.candy("heart.png"), SOLO_V2_ASSETS.candy("star.png")],
-    className: "border-rose-400 bg-rose-950/50",
+    id: "bright",
+    title: "צהוב + ירוק",
+    emoji: "🌟",
+    previews: [
+      { src: SOLO_V2_ASSETS.candy("star.png"), ring: "ring-yellow-400" },
+      { src: SOLO_V2_ASSETS.candy("square.png"), ring: "ring-emerald-400" },
+    ],
+    className:
+      "border-yellow-400/80 bg-gradient-to-b from-yellow-950/45 via-emerald-950/30 to-emerald-950/40",
   },
   {
     id: "cool",
-    title: "קבוצה כחולה",
+    title: "כחול + סגול",
     emoji: "💎",
-    previews: [SOLO_V2_ASSETS.candy("diamond.png"), SOLO_V2_ASSETS.candy("square.png")],
-    className: "border-sky-400 bg-sky-950/50",
+    previews: [
+      { src: SOLO_V2_ASSETS.candy("diamond.png"), ring: "ring-sky-400" },
+      { src: SOLO_V2_ASSETS.candy("circle.png"), ring: "ring-violet-400" },
+    ],
+    className:
+      "border-sky-400/80 bg-gradient-to-b from-sky-950/45 via-indigo-950/30 to-violet-950/40",
   },
   {
-    id: "fun",
-    title: "קבוצה צהובה",
-    emoji: "⭐",
-    previews: [SOLO_V2_ASSETS.candy("circle.png"), SOLO_V2_ASSETS.candy("drop.png")],
-    className: "border-amber-400 bg-amber-950/50",
+    id: "warm",
+    title: "אדום + כתום",
+    emoji: "🔥",
+    previews: [
+      { src: SOLO_V2_ASSETS.candy("heart.png"), ring: "ring-rose-400" },
+      { src: SOLO_V2_ASSETS.candy("drop.png"), ring: "ring-orange-400" },
+    ],
+    className:
+      "border-rose-400/80 bg-gradient-to-b from-rose-950/45 via-orange-950/30 to-orange-950/40",
   },
 ];
 
-function buildQueue(count) {
-  const pool = [];
-  for (let i = 0; i < count; i += 1) {
-    pool.push(ITEM_TYPES[i % ITEM_TYPES.length]);
+function shuffle(items) {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return pool.sort(() => Math.random() - 0.5);
+  return arr;
+}
+
+function buildBalancedPool(count) {
+  const pool = [];
+  while (pool.length < count) {
+    for (const item of ITEM_TYPES) {
+      pool.push(item);
+      if (pool.length >= count) break;
+    }
+  }
+  return pool.slice(0, count);
+}
+
+/** Reduce back-to-back items from the same bin (medium). */
+function breakSameBinRuns(items) {
+  const arr = [...items];
+  for (let i = 1; i < arr.length; i += 1) {
+    if (arr[i].bin !== arr[i - 1].bin) continue;
+    const swapIdx = arr.findIndex((it, j) => j > i && it.bin !== arr[i - 1].bin);
+    if (swapIdx > i) [arr[i], arr[swapIdx]] = [arr[swapIdx], arr[i]];
+  }
+  return arr;
+}
+
+/** Round-robin across bins — faster switching (hard). */
+function interleaveBins(items) {
+  const buckets = Object.fromEntries(BINS.map((bin) => [bin.id, []]));
+  for (const item of items) buckets[item.bin]?.push(item);
+  const out = [];
+  while (out.length < items.length) {
+    for (const bin of BINS) {
+      const next = buckets[bin.id]?.shift();
+      if (next) out.push(next);
+    }
+  }
+  return out;
+}
+
+function buildQueue(count, queueMode = "calm") {
+  const pool = buildBalancedPool(count);
+  if (queueMode === "rush") return interleaveBins(pool);
+  if (queueMode === "mixed") return breakSameBinRuns(shuffle(pool));
+  return shuffle(pool);
 }
 
 /**
@@ -134,7 +191,7 @@ export default function MleoSortShapesEngine({
     setScore(0);
     setLives(settings.maxLives);
     setTimeLeft(settings.durationSec);
-    setQueue(buildQueue(settings.itemCount));
+    setQueue(buildQueue(settings.itemCount, settings.queueMode));
     setSelectedBin(0);
     setGameRunning(true);
   };
@@ -254,8 +311,13 @@ export default function MleoSortShapesEngine({
                 >
                   <span className="text-2xl">{bin.emoji}</span>
                   <div className="flex gap-1">
-                    {bin.previews.map((src) => (
-                      <img key={src} src={src} alt="" className="h-5 w-5 object-contain" />
+                    {bin.previews.map((preview) => (
+                      <img
+                        key={preview.src}
+                        src={preview.src}
+                        alt=""
+                        className={`h-5 w-5 rounded-sm object-contain ring-2 ${preview.ring}`}
+                      />
                     ))}
                   </div>
                   {bin.title}

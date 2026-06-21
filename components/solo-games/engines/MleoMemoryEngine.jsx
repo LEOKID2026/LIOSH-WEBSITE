@@ -21,6 +21,7 @@ export default function MleoMemoryEngine({
   const [gameOver, setGameOver] = useState(false);
   const [showIntro, setShowIntro] = useState(!autoStart);
   const [deckLoading, setDeckLoading] = useState(false);
+  const [deckError, setDeckError] = useState(false);
   const [score, setScore] = useState(0);
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]);
@@ -74,6 +75,7 @@ export default function MleoMemoryEngine({
     initialScoreRef.current = startScore;
 
     setDeckLoading(true);
+    setDeckError(false);
     setFlipped([]);
     setMatched([]);
     setScore(startScore);
@@ -83,13 +85,21 @@ export default function MleoMemoryEngine({
     setDidWin(false);
     setTimerRunning(false);
     setStartedPlaying(false);
-    setGameRunning(true);
     setFocusIndex(0);
+    setCards([]);
+    setGameRunning(false);
 
-    const deck = await buildMemoryDeckFromShop(pairs);
+    const result = await buildMemoryDeckFromShop(pairs);
     if (initSeqRef.current !== seq) return;
 
-    setCards(deck);
+    if (!result.ok) {
+      setDeckError(true);
+      setDeckLoading(false);
+      return;
+    }
+
+    setCards(result.deck);
+    setGameRunning(true);
     setDeckLoading(false);
   }
 
@@ -187,7 +197,7 @@ export default function MleoMemoryEngine({
     )
   );
 
-  useSoloGameKeyboard(gameRunning && !gameOver && !showIntro && !deckLoading, (e) => {
+  useSoloGameKeyboard(gameRunning && !gameOver && !showIntro && !deckLoading && !deckError, (e) => {
     if (e.code === "ArrowRight") {
       setFocusIndex((i) => Math.min(totalCards - 1, i + 1));
       return true;
@@ -219,26 +229,44 @@ export default function MleoMemoryEngine({
     >
       {!showIntro && (
         <>
-          <div className="flex shrink-0 items-center justify-center gap-3 py-2">
-            <div className="h-3 w-24 overflow-hidden rounded-full bg-gray-700 sm:w-32">
-              <div
-                className={`h-full ${
-                  time / difficultySettings[difficulty].time > 0.6
-                    ? "bg-green-500"
-                    : time / difficultySettings[difficulty].time > 0.3
-                      ? "bg-yellow-400"
-                      : "bg-red-500"
-                } transition-all duration-500`}
-                style={{ width: `${(time / difficultySettings[difficulty].time) * 100}%` }}
-              />
+          {!deckError ? (
+            <div className="flex shrink-0 items-center justify-center gap-3 py-2">
+              <div className="h-3 w-24 overflow-hidden rounded-full bg-gray-700 sm:w-32">
+                <div
+                  className={`h-full ${
+                    time / difficultySettings[difficulty].time > 0.6
+                      ? "bg-green-500"
+                      : time / difficultySettings[difficulty].time > 0.3
+                        ? "bg-yellow-400"
+                        : "bg-red-500"
+                  } transition-all duration-500`}
+                  style={{ width: `${(time / difficultySettings[difficulty].time) * 100}%` }}
+                />
+              </div>
+              <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⏳ {time}s</div>
+              <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⭐ {score}</div>
             </div>
-            <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⏳ {time}s</div>
-            <div className="rounded-lg bg-black/60 px-2 py-1 text-sm font-bold">⭐ {score}</div>
-          </div>
+          ) : null}
 
           <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden px-2 pb-2">
             {deckLoading ? (
               <p className="text-sm font-semibold text-yellow-200">טוען קלפים מהחנות…</p>
+            ) : deckError ? (
+              <div className="flex max-w-sm flex-col items-center gap-4 px-4 text-center">
+                <p className="text-base font-extrabold text-rose-200 sm:text-lg">
+                  לא נמצאו מספיק קלפי חנות למשחק זיכרון
+                </p>
+                <p className="text-sm text-gray-300">
+                  חזור לחנות הקלפים ובדוק שיש קלפים זמינים
+                </p>
+                <button
+                  type="button"
+                  onClick={() => initGameWithDifficulty(difficulty)}
+                  className="min-h-[48px] rounded-xl bg-yellow-400 px-8 py-3 text-base font-bold text-black shadow-md"
+                >
+                  נסה שוב
+                </button>
+              </div>
             ) : (
               <div
                 className={`${gameOver ? "pointer-events-none opacity-50" : ""}`}
