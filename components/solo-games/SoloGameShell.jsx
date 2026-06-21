@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { resetSoloGameDocumentShell } from "../../lib/solo-games/solo-game-document-cleanup.client.js";
 import Head from "next/head";
 import Link from "next/link";
 import { findSoloGame } from "../../lib/solo-games/solo-game-registry.js";
@@ -63,6 +64,12 @@ export default function SoloGameShell({ gameKey }) {
     setFinishData(null);
     setPhase("entry");
   }, [resetSession]);
+
+  useEffect(() => {
+    return () => {
+      resetSoloGameDocumentShell();
+    };
+  }, []);
 
   if (!game || !Engine) {
     return (

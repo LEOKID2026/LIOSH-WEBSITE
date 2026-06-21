@@ -74,11 +74,12 @@ export default function MleoPuzzleEngine({
     const preventTouchScroll = (e) => {
       if (e.target.closest(".grid")) e.preventDefault();
     };
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     document.addEventListener("touchmove", preventTouchScroll, { passive: false });
 
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = prevOverflow;
       document.removeEventListener("touchmove", preventTouchScroll);
     };
   }, []);
