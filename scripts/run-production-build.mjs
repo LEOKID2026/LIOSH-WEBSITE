@@ -55,6 +55,7 @@ function runNextBuild() {
   const env = {
     ...process.env,
     NODE_ENV: "production",
+    NODE_OPTIONS: process.env.NODE_OPTIONS || "--max-old-space-size=4096",
   };
 
   return new Promise((resolve) => {

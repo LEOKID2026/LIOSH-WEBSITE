@@ -1,16 +1,13 @@
-import { getLearningSupabaseServiceRoleClient } from "../../../lib/learning-supabase/server";
+import { getLearningSupabaseServiceRoleClient } from "../../../../lib/learning-supabase/server";
 import {
   clearStudentSessionCookie,
   getAuthenticatedStudentSession,
-} from "../../../lib/learning-supabase/student-auth";
+} from "../../../../lib/learning-supabase/student-auth";
 import {
-  buildLegacyStudentHomeProfilePayload,
+  createStudentHomeProfileTimer,
+  loadStudentHomeSummaryPayload,
   trackStudentHomeOpenedEvent,
-} from "../../../lib/learning-supabase/student-home-profile-load.server.js";
-
-function shouldLogStudentHomeDebug() {
-  return process.env.NEXT_PUBLIC_DEBUG_STUDENT_IDENTITY === "true";
-}
+} from "../../../../lib/learning-supabase/student-home-profile-load.server.js";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
@@ -30,20 +27,8 @@ export default async function handler(req, res) {
     }
 
     const supabase = getLearningSupabaseServiceRoleClient();
-    const payload = await buildLegacyStudentHomeProfilePayload(supabase, auth);
-
-    if (shouldLogStudentHomeDebug()) {
-      try {
-        console.info("[LIOSH student-home-profile]", {
-          studentId: auth.studentId,
-          snapshotLevel: payload.accountSnapshot?.summaryPlayerLevel,
-          snapshotStars: payload.accountSnapshot?.summaryStars,
-          achievementGrantsOk: payload.achievementGrants?.ok,
-        });
-      } catch {
-        /* ignore */
-      }
-    }
+    const timer = createStudentHomeProfileTimer("student-home-profile-summary");
+    const payload = await loadStudentHomeSummaryPayload(supabase, auth, { timer });
 
     trackStudentHomeOpenedEvent(supabase, {
       studentId: auth.studentId,
@@ -51,12 +36,10 @@ export default async function handler(req, res) {
       gradeLevel: auth.student?.grade_level ?? null,
     });
 
+    timer.finish({ studentId: auth.studentId, endpoint: "summary" });
     return res.status(200).json(payload);
   } catch (e) {
     const msg = e && typeof e === "object" && "message" in e ? String(e.message) : String(e);
-    if (shouldLogStudentHomeDebug()) {
-      console.error("[LIOSH student-home-profile] error", msg);
-    }
     return res.status(500).json({ ok: false, error: "Server error", detail: msg.slice(0, 500) });
   }
 }

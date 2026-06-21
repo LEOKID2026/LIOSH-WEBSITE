@@ -28,7 +28,10 @@ import StudentSurpriseBoxWidget from "../../components/student/rewards/StudentSu
 import StudentSurpriseBoxOpenModal from "../../components/student/rewards/StudentSurpriseBoxOpenModal";
 import { isCardRewardsEnabledClient } from "../../lib/rewards/reward-feature-flags.client.js";
 
-const HOME_PROFILE_PATH = "/api/student/home-profile";
+import { syncMonthlyProgressCacheFromServer } from "../../utils/progress-storage.js";
+
+const HOME_SUMMARY_PATH = "/api/student/home-profile/summary";
+const HOME_ANALYTICS_PATH = "/api/student/home-profile/analytics";
 
 function mapApiErrorToHebrew(raw) {
   const s = String(raw || "").trim();
@@ -312,6 +315,7 @@ export default function StudentHomePage() {
   const [student, setStudent] = useState(null);
   const [homePayload, setHomePayload] = useState(null);
   const [profilePhase, setProfilePhase] = useState("idle");
+  const [analyticsPhase, setAnalyticsPhase] = useState("idle");
   const [profileError, setProfileError] = useState("");
   const [logoutMessage, setLogoutMessage] = useState("");
   const [logoutBusy, setLogoutBusy] = useState(false);
@@ -325,12 +329,52 @@ export default function StudentHomePage() {
   const [boxModalOpen, setBoxModalOpen] = useState(false);
   const cardRewardsEnabled = isCardRewardsEnabledClient();
 
+  const loadHomeAnalytics = useCallback(async (summaryPayload) => {
+    setAnalyticsPhase("loading");
+    try {
+      const res = await fetch(HOME_ANALYTICS_PATH, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      });
+      const text = await res.text();
+      let json = {};
+      try {
+        json = text ? JSON.parse(text) : {};
+      } catch {
+        setAnalyticsPhase("error");
+        return;
+      }
+
+      if (!res.ok || json?.ok !== true) {
+        setAnalyticsPhase("error");
+        return;
+      }
+
+      if (json?.derived && summaryPayload?.studentId) {
+        syncMonthlyProgressCacheFromServer(summaryPayload.studentId, json.derived);
+      }
+
+      setHomePayload((prev) => ({
+        ...(prev && typeof prev === "object" ? prev : summaryPayload),
+        ...json,
+        challenges: json.challenges ?? prev?.challenges ?? summaryPayload?.challenges,
+        analyticsPending: false,
+      }));
+      setAnalyticsPhase("ok");
+    } catch {
+      setAnalyticsPhase("error");
+    }
+  }, []);
+
   const loadHomeDashboard = useCallback(async () => {
     setProfilePhase("loading");
+    setAnalyticsPhase("idle");
     setProfileError("");
     setHomePayload(null);
     try {
-      const res = await fetch(HOME_PROFILE_PATH, {
+      const res = await fetch(HOME_SUMMARY_PATH, {
         method: "GET",
         credentials: "include",
         cache: "no-store",
@@ -344,22 +388,24 @@ export default function StudentHomePage() {
         setProfileError(`תגובת השרת לא בפורמט תקין (קוד ${res.status}).`);
         setProfilePhase("error");
         if (isStudentIdentityDiagnosticsEnabled()) {
-          console.warn("[student/home] home-profile JSON parse failed", { status: res.status, textHead: text.slice(0, 200) });
+          console.warn("[student/home] home-profile summary JSON parse failed", {
+            status: res.status,
+            textHead: text.slice(0, 200),
+          });
         }
         return;
       }
 
       if (isStudentIdentityDiagnosticsEnabled()) {
-        console.info("[student/home] home-profile response", {
+        console.info("[student/home] home-profile summary response", {
           httpStatus: res.status,
           okFlag: json?.ok,
-          hasDerived: !!json?.derived,
-          hasAccountSnapshot: !!json?.accountSnapshot,
-          rowKeys: json?.subjectsProgressOnly ? Object.keys(json.subjectsProgressOnly) : [],
+          phase: json?.phase,
+          hasChallenges: !!json?.challenges,
         });
       }
 
-      if (!res.ok || json?.ok !== true || !json?.derived || !json?.accountSnapshot) {
+      if (!res.ok || json?.ok !== true || !json?.studentId) {
         const errRaw = json?.error != null ? String(json.error) : "";
         const detail = json?.detail != null ? String(json.detail) : "";
         const combined = [mapApiErrorToHebrew(errRaw), detail && isStudentIdentityDiagnosticsEnabled() ? `(${detail})` : ""]
@@ -372,14 +418,15 @@ export default function StudentHomePage() {
 
       setHomePayload(json);
       setProfilePhase("ok");
+      void loadHomeAnalytics(json);
     } catch (e) {
       setProfileError("שגיאת רשת");
       setProfilePhase("error");
       if (isStudentIdentityDiagnosticsEnabled()) {
-        console.warn("[student/home] home-profile fetch threw", e);
+        console.warn("[student/home] home-profile summary fetch threw", e);
       }
     }
-  }, []);
+  }, [loadHomeAnalytics]);
 
   useEffect(() => {
     if (!router.isReady) return undefined;
@@ -388,6 +435,7 @@ export default function StudentHomePage() {
     setStudent(null);
     setHomePayload(null);
     setProfilePhase("idle");
+    setAnalyticsPhase("idle");
     setProfileError("");
     setPersonalActivities([]);
     setPersonalActivityCount(0);
@@ -572,25 +620,35 @@ export default function StudentHomePage() {
     const missions = dashboardView.dailyMissions;
     const missionTotal = missions?.missions?.length ?? 0;
     const missionCompleted = missions?.totalCompleted ?? 0;
-    const progressMinutes =
-      dashboardView.monthlyPersistence?.currentMinutesDisplayHe ??
-      dashboardView.monthlyPersistence?.currentMinutes ??
-      dashboardView.monthlyJourney.minutesDisplayHe ??
-      dashboardView.monthlyJourney.minutesThisMonth ??
-      STUDENT_TRUTH_LABELS_HE.noData;
 
     return {
-      stats: `רמה ${dashboardView.accountStats.summaryLevel}`,
-      progress: `${progressMinutes} דק׳ החודש`,
+      stats:
+        dashboardView.meta?.analyticsPending
+          ? STUDENT_TRUTH_LABELS_HE.loading
+          : `רמה ${dashboardView.accountStats.summaryLevel}`,
+      progress: dashboardView.meta?.analyticsPending
+        ? STUDENT_TRUTH_LABELS_HE.loading
+        : `${
+            dashboardView.monthlyPersistence?.currentMinutesDisplayHe ??
+            dashboardView.monthlyJourney.minutesDisplayHe ??
+            dashboardView.monthlyJourney.minutesThisMonth ??
+            STUDENT_TRUTH_LABELS_HE.noData
+          } דק׳ החודש`,
       missions:
         missionTotal > 0
           ? `${missionCompleted}/${missionTotal} הושלמו`
           : STUDENT_TRUTH_LABELS_HE.noData,
       classroom: `${personalActivityCount} פעילויות`,
       worksheets: "0 דפי עבודה",
-      subjects: `${dashboardView.subjects.length} נושאים`,
-      badges: `${dashboardView.badges.length} תגים`,
-      recommendations: `${dashboardView.recommendations.length} המלצות`,
+      subjects: dashboardView.meta?.analyticsPending
+        ? STUDENT_TRUTH_LABELS_HE.loading
+        : `${dashboardView.subjects.length} נושאים`,
+      badges: dashboardView.meta?.analyticsPending
+        ? STUDENT_TRUTH_LABELS_HE.loading
+        : `${dashboardView.badges.length} תגים`,
+      recommendations: dashboardView.meta?.analyticsPending
+        ? STUDENT_TRUTH_LABELS_HE.loading
+        : `${dashboardView.recommendations.length} המלצות`,
     };
   }, [dashboardView, personalActivityCount]);
 
@@ -608,6 +666,7 @@ export default function StudentHomePage() {
       setStudent(null);
       setHomePayload(null);
       setProfilePhase("idle");
+    setAnalyticsPhase("idle");
       setAuthPhase("anon");
       await router.replace("/student/login");
     } catch {
@@ -629,10 +688,9 @@ export default function StudentHomePage() {
   const heroGrade =
     student.grade_level != null && student.grade_level !== "" ? formatGradeLevelHe(student.grade_level) : "";
   const heroCoinsDisplay =
-    authPhase === "checking" || profilePending
-      ? STUDENT_TRUTH_LABELS_HE.loading
-      : dashboardView?.identity?.coinBalanceDisplayHe ??
-        (student.coin_balance != null ? String(Number(student.coin_balance) || 0) : STUDENT_TRUTH_LABELS_HE.unavailable);
+    student.coin_balance != null
+      ? String(Number(student.coin_balance) || 0)
+      : dashboardView?.identity?.coinBalanceDisplayHe ?? STUDENT_TRUTH_LABELS_HE.unavailable;
   const heroTagline =
     dashboardView?.identity?.friendlyLineHe ?? "כאן מוצגים הנתונים מהשרת אחרי התחברות.";
 
@@ -813,6 +871,23 @@ export default function StudentHomePage() {
               ))}
             </div>
           </section>
+        ) : null}
+
+        {analyticsPhase === "error" && dashboardView && profilePhase === "ok" ? (
+          <div className={`mt-4 ${T.errorBox}`}>
+            <p className={T.errorTitle}>חלק מנתוני ההתקדמות עדיין לא נטענו</p>
+            <p className={T.errorBody}>
+              שם, כיתה, מטבעות וכפתורי הניווט זמינים. סטטיסטיקות מפורטות, דקות חודשיות ומשימות מעודכנות ייטענו
+              בניסיון חוזר.
+            </p>
+            <button
+              type="button"
+              onClick={() => homePayload && void loadHomeAnalytics(homePayload)}
+              className={T.errorBtn}
+            >
+              נסו שוב לטעון נתונים
+            </button>
+          </div>
         ) : null}
       </div>
       <StudentHomeModal
